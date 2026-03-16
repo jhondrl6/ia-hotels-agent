@@ -121,6 +121,60 @@ def run_tests(tests: List[str]) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT_DIR)
 
 
+def get_last_failed_tests() -> List[str]:
+    """Obtiene los tests que fallaron en la última ejecución fallida."""
+    if not REPORTS_DIR.exists():
+        return []
+    
+    # Buscar reportes sorted by modification time (most recent first)
+    reports = sorted(REPORTS_DIR.glob("*_v4_regression.md"), key=lambda p: p.stat().st_mtime, reverse=True)
+    
+    for report_path in reports:
+        try:
+            content = report_path.read_text(encoding='utf-8')
+            # Verificar si el reporte indica FAIL
+            if "FAIL" in content or "Veredicto:** FAIL" in content:
+                print(f"  [INFO] Found failed report: {report_path.name}")
+                
+                # Extraer módulos críticos afectados del reporte
+                failed_modules = []
+                lines = content.split('\n')
+                for i, line in enumerate(lines):
+                    if "Módulos Críticos Afectados:" in line:
+                        # La siguiente línea contiene los módulos
+                        if i + 1 < len(lines):
+                            module_line = lines[i + 1]
+                            # Extraer nombres de módulos
+                            for mod in CRITICAL_MODULES:
+                                if mod in module_line.lower():
+                                    failed_modules.append(mod)
+                    
+                    if "Tests fallaron" in line or "Tests fallidos" in line:
+                        # Intentar extraer información de tests fallidos
+                        pass
+                
+                # Mapear módulos a tests
+                module_map = load_module_map()
+                failed_tests = []
+                for mod in failed_modules:
+                    if mod in module_map.get("modules", {}):
+                        failed_tests.extend(module_map["modules"][mod].get("tests", []))
+                
+                if failed_tests:
+                    print(f"  [INFO] Tests to retry: {len(failed_tests)}")
+                    return failed_tests
+                
+                # Si no hay tests específicos, devolver baseline
+                return [BASELINE_REGRESSION]
+        except Exception as e:
+            print(f"  [WARN] Error reading report {report_path}: {e}")
+            continue
+    
+    # Si no hay reportes fallidos, devolver baseline
+    print("  [INFO] No failed reports found, running baseline")
+    return [BASELINE_REGRESSION]
+
+
 def check_module_imports(modules: Set[str]) -> bool:
     """Verifica que los módulos afectados puedan importarse correctamente."""
     print("\n[3.5/5] Verificando imports de módulos...")
@@ -349,9 +403,22 @@ def main():
             global ROOT_DIR
             ROOT_DIR = workdir_path
         else:
-            print(f"  ⚠️  Directorio de trabajo no encontrado: {workdir_path}")
+            print(f"  [WARN] Directorio de trabajo no encontrado: {workdir_path}")
     
-    tests = select_tests(affected_modules, module_map, args.quick, args.full)
+    # Handle retry-failed parameter
+    if args.retry_failed:
+        print("  [INFO] Modo retry-failed: buscando tests fallidos...")
+        failed_tests = get_last_failed_tests()
+        if failed_tests:
+            tests = failed_tests
+            affected_modules = set()  # Reset affected modules for retry
+            print(f"  [OK] Re-ejecutando {len(tests)} tests fallidos previamente")
+        else:
+            print("  [INFO] No se encontraron tests fallidos, ejecutando baseline")
+            tests = [BASELINE_REGRESSION]
+    else:
+        tests = select_tests(affected_modules, module_map, args.quick, args.full)
+    
     print(f"  [OK] Tests a ejecutar: {len(tests)}")
     for t in tests:
         print(f"    - [{t}]")
