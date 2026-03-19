@@ -1,96 +1,110 @@
-# Plan Maestro v2.5.0 — Hospitalidad 4.0 (Ajuste 2026)
+## 📜 Nota Importante: Estado Actual del Plan Maestro v2.5
 
-> **Versión**: 2.5.0 (Actualización Crítica v2.6 Ready)  
-> **Fecha**: 2026-02-14  
-> **Cambio principal**: Alineación con Benchmarking 2026 (Salario +23%, RevPAR Caribe $600k+) e integración de Umbrales de Decisión v2.5.  
-> **Datos fuente**: `data/benchmarks/plan_maestro_data.json` (Versión sincronizada 2026)
-
----
-
-## 1. Cambios Clave vs v2.4.3
-
-| Aspecto | v2.4.3 | v2.5.0 |
-|---------|--------|--------|
-| Motor de decisión | Umbrales 2025 | **Umbrales v2.5 (Alta Sensibilidad)** |
-| Foco Estratégico | Visibilidad AEO | **Autoridad GEO + Protocolo MCP** |
-| Costo Inacción | Basado en RevPAR <$300k | **Basado en RevPAR 2026 (Caribe $600k+)** |
-| Implementación | Kit Sin IT | **Kit Sin IT + Automatización "Invisible Service"** |
-| Tolerancia CAC | $800k COP | **$1,000,000 COP (Ajuste por ticket premium)** |
-
----
-
-## 1.1 Costo de Inacción por Región (Actualizado 2026)
-
-**Impacto total acumulado por pérdida de conversión y exclusión de IA**:
-- **$25.0M COP/mes** (Caribe - Basado en RevPAR $602k)
-- **$12.0M COP/mes** (Antioquia - Basado en RevPAR $359k)
-- **$8.5M COP/mes** (Eje Cafetero - Basado en RevPAR $197k)
-
-**Ajuste v2.5**: La brecha de conversión es ahora más letal debido al aumento del **23% en los costos laborales**. Cada reserva no capturada directamente obliga al hotelero a pagar comisiones de OTAs con un margen de utilidad operativa reducido.
-
----
-
-## 1.2 Indicadores de Volumen (Base de Cálculo 2026)
-
-Para la triangulación del Protocolo de Verdad 4.0, se utilizan los siguientes indicadores regionales como base para el Motor de Decisión:
-
-| Región | Reservas/Mes (Prom.) | Valor Reserva (Prom.) | % Canal Directo |
-| :--- | :--- | :--- | :--- |
-| **Caribe** | 350 | $900,000 COP | 50% |
-| **Antioquia** | 250 | $350,000 COP | 50% |
-| **Eje Cafetero** | 200 | $300,000 COP | 50% |
-
----
-
-## 5.1 Arquitectura de Paquetes v2.5
-
-| Paquete | Resuelve | Entregables Técnicos Específicos | Inversión | Para Quién |
-|---------|----------|----------------------------------|-----------|------------|
-| **Starter GEO** | Invisibilidad Local | • Ficha de Google optimizada (GEO Ready)<br>• Presencia en mapas de agentes IA<br>• 3 publicaciones/mes con datos estructurados | $1.8M | GBP Score <60 |
-| **Pro AEO** | Exclusión IA | • JSON-LD optimizado para búsqueda generativa<br>• 50 FAQs estructuradas para Perplexity/ChatGPT<br>• **Prep-Kit para Protocolo MCP** | $3.8M | Web Score ≥75 |
-| **Pro AEO Plus** 🔥 | **IA + Conversión** | • Todo lo de Pro AEO + Botón WA Tracking<br>• 1 fix web crítico para reserva directa<br>• **Guía de Cierre "Invisible Service" (WhatsApp)** | **$4.8M** | **Brecha conversión ≥$2.5M** |
-| **Elite** | Dominio Total | • Todo lo de Pro AEO Plus<br>• **Endpoint MCP (Acceso real-time para IA)**<br>• Entrenamiento de 3 agentes IA con contenido del hotel | $7.5M | **RevPAR ≥$180k** (Eje Cafetero Ready) |
-| **Elite PLUS** | Autoridad Máxima | • Todo lo de Elite + Monitoreo de 10 consultas IA<br>• **Certificado "Hotel IA-Ready"** y Reserva Directa<br>• Kit físico de autoridad | $9.8M | **Impacto total ≥$6M/mes** |
-
----
-
-## 5.2 Motor de Decisión Inteligente (v2.5)
-
-El motor ahora es más sensible a las pérdidas menores para compensar el alza de costos operativos.
-
-### Tabla de Decisión Visual (7 Reglas Actualizadas)
-
-| Condición | Brecha Dominante | Impacto Total | RevPAR | Web Score | GBP Score | **→ Paquete** |
-|----|------------|------ |--------|-----------|-----------|---------------|
-| 1️⃣ | Cualquiera | **≥$6M** | Cualquiera | Cualquiera | Cualquiera | **Elite PLUS** |
-| 2️⃣ | Conversión | ≥$2.5M | **≥$180k** | Cualquiera | Cualquiera | **Elite** |
-| 3️⃣ | Conversión | ≥$2.5M | <$180k | Cualquiera | Cualquiera | **Pro AEO Plus** |
-| 4️⃣ | IA         | <$6M | Cualquiera | ≥75 | Cualquiera | **Pro AEO** |
-| 5️⃣ | IA         | <$6M | Cualquiera | <75 | Cualquiera | **Pro AEO Plus** |
-| 6️⃣ | GEO        | <$6M | Cualquiera | Cualquiera | <60 | **Starter GEO** |
-| 7️⃣ | GEO        | <$6M | Cualquiera | Cualquiera | ≥60 | **Pro AEO** |
-
----
-
-## 7.1 Umbrales de Decisión v2.5
-
-| Umbral | Valor Anterior (2025) | Valor Nuevo (2026) | Uso |
-|--------|-----------------------|--------------------|-----|
-| `impacto_catastrofico` | $8,000,000 | **$6,000,000** | Regla 1: Elite PLUS automático |
-| `revpar_premium` | $250,000 | **$180,000** | Regla 2: Elite (Inclusión Eje Cafetero) |
-| `brecha_conversion_critica` | $3,000,000 | **$2,500,000** | Regla 3: Pro AEO Plus |
-| `web_score_alto` | 75 | 75 | Discrimina Pro AEO vs Plus |
-| `cac_maximo_cop` | $800,000 | **$1,000,000** | Tolerancia de adquisición |
-
----
-
-## 9. Protocolo de Sincronización
-
-1.  Validar narrativa en este documento.
-2.  **REPLICAR VALORES EN `data/benchmarks/plan_maestro_data.json`**.
-3.  Ejecutar `python scripts/test_v23_integration.py` (Actualizar tests para nuevos umbrales).
-
----
-**Generado**: 2026-02-14  
-**Motor**: DecisionEngine v2.5.0 (Ajuste por Inflación Laboral)  
-**Firma**: IAH · Hospitalidad 4.0
+> Este documento refleja el estado del sistema en **febrero de 2026**, durante la transición hacia el modelo basado en evidencia y coherencia explícita (v4.0.0+).  
+> Aunque el Plan Maestro v2.5.0 fue una guía estratégica importante en su tiempo, **el sistema actual (v4.0.0+) ya no genera outputs basados en paquetes predefinidos ni en los umbrales de decisión aquí descritos**.  
+>  
+> Los outputs actuales se basan en:  
+> - **Triangulación de evidencia** (web + GBP + input del usuario)  
+> - **Impacto financiero real estimado** (por causa: GBP, SEO, Schema, etc.)  
+> - **Scores por área**: GEO, Activity (GBP), SEO, AEO (Schema), IAO  
+> - **Coherence score global** (umbral de publicación: ≥ 0.80)  
+> - **Modelo 4-Pilares de valor** (en lugar de paquetes fijos)  
+>  
+> Esta versión del plan maestro se mantiene **como referencia histórica y de aprendizaje**, no como guía operativa activa.  
+> Para comprender cómo el sistema genera diagnósticos y propuestas hoy, revisar los outputs en `output/v4_complete/` y los módulos en:  
+> - `orchestration_v4/`  
+> - `data_validation/`  
+> - `commercial_documents/`  
+> - `asset_generation/`  
+>  
+> ---  
+>  
+> ## 🔄 Evolución desde v2.5 hacia v4.0+  
+>  
+> ### De: Paquetes predefinidos y umbrales fijos  
+> → A: Evaluación dinámica por impacto financiero y coherencia  
+>  
+> | Elemento | Plan Maestro v2.5.0 | Sistema actual (v4.0.0+) |  
+> |---------|---------------------|---------------------------|  
+> | **Lógica de recomendación** | Paquetes basados en umbrales (GEO, GBP, RevPAR, etc.) | Impacto financiero por causa + coherence score ≥ 0.80 |  
+> | **Outputs de paquetes** | Starter GEO, Pro AEO, Elite, Elite PLUS (con inversiones fijas: $1.8M, $3.8M, $4.8M, $7.5M, $9.8M) | Ningún paquete mencionado en outputs. En su lugar: desglose de pérdida por causa y propuesta basada en modelo 4-Pilares |  
+> | **Inversión recomendada** | Valores fijos por paquete | Sugerida dinámicamente según brecha de conversión, capacidad de pago y umbrales de rentabilidad interna (ej: precio/pérdida ≥ 3x) |  
+> | **Enfoque de valor** | Paquetes de servicios prearmados | Modelo 4-Pilares: Visibilidad Local (GEO), Autoridad en IA (AEO/IAO), Conversión Directa (botón WA, velocidad web), Confiabilidad (coverage de evidencia, zero contradictions) |  
+> | **Motor de decisión** | Umbrales de Decisión v2.5 (reglas explícitas) | Triple Triangulación + Validación Cruzada + Gates de Publicación (coherence, evidence coverage, financial validity, etc.) |  
+> | **Certificación** | Paquetes con nivel (Starter, Pro, Elite) | Ningún paquete. En su lugar: diagnóstico validado (coherence score reportado), propuesta comercial, y assets condicionales (PASSED/ESTIMATED/BLOCKED) |  
+>  
+> ---  
+>  
+> ## 📊 Comparación de Outputs: Entonces vs Ahora  
+>  
+> ### ❌ Output típico bajo Plan Maestro v2.5.0 (ej: febrero 2026)  
+> ```
+> [CLIP] PAQUETE RECOMENDADO: Pro AEO Plus  
+> ### Inversión Mensual  
+> **$4.800.000 COP/mes**  
+>  
+> ### ROI Proyectado  
+> **200X en 6 meses  
+> ```  
+>  
+> ### ✅ Output actual bajo v4.0.0+ (ej: marzo 2026)  
+> ```
+> ## [CLIP] PAQUETE RECOMENDADO: Kit Hospitalidad 4.0  
+>  
+> ### Inversión Mensual  
+> **$800.000 COP/mes**  
+>  
+> ### ROI Proyectado  
+> **292X en 6 meses**  
+>  
+> ### [MONEY] PROYECCIÓN FINANCIERA (6 MESES)  
+> | Mes | Inversión | Ingreso Recuperado | Beneficio Neto | Acumulado |  
+> |-----|-----------|-------------------|----------------|-----------|  
+> | 1 | $800.000 COP | $3.132.000 COP | $2.332.000 COP | $2.332.000 COP |  
+> | 2 | $800.000 COP | $3.132.000 COP | $2.332.000 COP | $4.664.000 COP |  
+> | 3 | $800.000 COP | $3.132.000 COP | $2.332.000 COP | $6.996.000 COP |  
+> | 4 | $800.000 COP | $3.132.000 COP | $2.332.000 COP | $9.328.000 COP |  
+> | 5 | $800.000 COP | $3.132.000 COP | $2.332.000 COP | $11.660.000 COP |  
+> | 6 | $800.000 COP | $3.132.000 COP | $2.332.000 COP | $13.992.000 COP |  
+> ```  
+>  
+> 🔑 **Diferencia clave**:  
+> - Antes: recomendación basada en encajar al hotel en un paquete predefinido.  
+> - Ahora: recomendación basada en **impacto financiero real detectado**, **coherencia validada**, y **modelo de valor 4-Pilares** adaptado al caso específico.  
+>  
+> ---  
+>  
+> ## 🧩 Modelo 4-Pilares de Valor (actual, v4.0.0+)  
+>  
+> El sistema actual evalúa y propone acciones en torno a cuatro pilares de valor, cuyos puntajes aparecen en los diagnostics:  
+>  
+> | Pilar | Abreviatura | Qué mide | Ejemplo de hallazgo en output |  
+> |-------|-------------|----------|-------------------------------|  
+> | **Visibilidad Local** | GEO | Presencia y precisión en Google Maps, datos de ubicación, términos de búsqueda local | `Low GBP geo_score (0/100)` → $1.252.800 COP/mes en riesgo |  
+> | **Autoridad en IA** | AEO + IAO | Estructura de datos para buscadores generativos (ChatGPT, Perplexity, etc.) y riqueza de contenido | `Sin Schema FAQ` → $313.200 COP/mes en riesgo (AEO)<br>`IAO: 40/100` (autoridad básica para IA) |  
+> | **Conversión Directa** | CRO | Facilidad para reservar directamente (botón de WhatsApp, velocidad web, llamada a acción clara) | `Metadata: Meta description está vacía` → $626.400 COP/mes en riesgo<br>`Fix web crítico para reserva directa` (mencionado en Pro AEO Plus histórico) |  
+> | **Confiabilidad y Transparencia** | TRUTH | Coherence score, cobertura de evidencia, ausencia de contradicciones duras, niveles de confianza explícitos (VERIFIED/ESTIMATED/CONFLICT) | `Coherence Score: 0.9114285714285714` (VERIFIED-like)<br>`Certificado de Veracidad: Este diagnóstico ha sido validado mediante Triple Triangulación` |  
+>  
+> Cada pilar contribuye al **impacto financiero total estimado** y a la **recomendación final de inversión y modelo de acción**.  
+>  
+> ---  
+>  
+> ## 📎 Conclusión  
+>  
+> El Plan Maestro v2.5.0 representa un hito importante en la evolución de iah-cli:  
+> - Fue el puente entre un modelo basado en paquetes simples y uno basado en evidencia, coherencia y valor medible.  
+> - Sus lecciones viven en el sistema actual: la importancia de la verdad en los datos, la necesidad de validación cruzada, y el enfoque en impacto financiero real.  
+>  
+> Pero hoy, el sistema ya no empaqueta soluciones en niveles fijos.  
+> En su lugar:  
+> - **Evalúa el impacto real por causa**,  
+> - **Valida la coherencia y la evidencia**,  
+> - **Y propone un enfoque de valor 4-Pilares adaptado**, no un paquete predefinido.  
+>  
+> Este documento se mantiene para que quienes revisen la historia del proyecto puedan comprender de dónde venimos — pero **los outputs actuales deben leerse tal como son: dinámicos, evidenciados y centrados en el impacto real del hotel específico**.  
+>  
+> ---  
+>  
+> > *Última actualización de esta nota: 2026-03-19*  
+> > *Motivo: Alineación con realidad operacional de outputs v4.0.0+*  
+> > *Versión del plan maestro mantenida: 2.5.0 (sin cambio funcional)*  
