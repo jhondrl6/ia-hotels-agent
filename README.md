@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Índice Completo de Documentación** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Meta-Skills)** | Orquestadas vía Triggers en `.agents/workflows/` ([Índice Maestro](.agents/workflows/README.md)) |
+| **Habilidades del Agente (Meta-Skills)** | `.agents/workflows/` - PhasedProjectExecutor (TDD Gate), AuditGuardian (ejecución paralela), Capability Contracts |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guía Técnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -38,13 +38,15 @@
 
 ## 🧠 Cómo Funciona el Sistema
 
-IA Hoteles Agent opera como un **cerebro orquestador** que valida, analiza y protege:
+IA Hoteles Agent opera como un **cerebro orquestador** (Agent Harness) que valida, analiza y protege:
 
 1. **Datos** → Recolecta información de web, Google Business Profile y APIs
 2. **Valida** → Compara fuentes para detectar inconsistencias
 3. **Calcula** → Proyecciones financieras en 3 escenarios (70/20/10)
 4. **Genera** → Diagnóstico + Propuesta + Assets condicionales
 5. **Certifica** → Controles de coherencia antes de entregar
+
+El **Agent Harness** es el núcleo que orchestra: memoria (recuerda análisis previos), auto-corrección (repara errores), y routing inteligente (dirige cada tarea al módulo correcto).
 
 ---
 
@@ -86,7 +88,7 @@ python main.py setup
 
 ## 📊 Flujo Comercial y Técnico 2026
 
-El sistema opera bajo el **Sistema de Confianza v4.1.0** con validación cruzada de datos y controles de coherencia automáticos entre diagnóstico, propuesta y assets.
+El sistema opera bajo el **Sistema de Confianza v4.5.x** con validación cruzada de datos y controles de coherencia automáticos entre diagnóstico, propuesta y assets.
 
 ```bash
 python main.py v4complete --url https://hotel.com --nombre "Hotel Nombre"
