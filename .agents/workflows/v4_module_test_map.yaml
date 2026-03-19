@@ -1,0 +1,70 @@
+# Mapeo de módulos v4 a tests de regresión
+# Usado por v4_regression_guardian.py
+
+modules:
+  data_validation:
+    paths:
+      - data_validation/
+      - data_models/
+    tests:
+      - tests/data_validation/
+      - tests/test_canonical_assessment.py
+      - tests/test_contradiction_engine.py
+      - tests/test_consistency_checker.py
+
+  financial_engine:
+    paths:
+      - modules/financial_engine/
+    tests:
+      - tests/financial_engine/
+      - tests/regression/test_fase3_guardrails_integration.py
+
+  asset_generation:
+    paths:
+      - modules/asset_generation/
+    tests:
+      - tests/asset_generation/
+
+  commercial_documents:
+    paths:
+      - commercial_documents/
+    tests:
+      - tests/test_commercial_documents_composer.py
+      - tests/test_commercial_documents_phase2.py
+
+  quality_gates:
+    paths:
+      - modules/quality_gates/
+    tests:
+      - tests/quality_gates/
+      - tests/regression/test_coherence_bloqueo.py
+
+  orchestration_v4:
+    paths:
+      - orchestration_v4/
+      - main.py
+    tests:
+      - tests/orchestration_v4/
+      - tests/e2e/test_v40_complete_flow.py
+
+  observability:
+    paths:
+      - observability/
+    tests:
+      - tests/observability/
+
+  auditors:
+    paths:
+      - auditors/
+    tests:
+      - tests/auditors/
+
+# Módulos que requieren validación completa si se modifican
+critical_modules:
+  - financial_engine
+  - quality_gates
+  - data_validation
+  - commercial_documents
+
+# Test de regresión base (siempre ejecutar)
+baseline_test: tests/regression/test_hotel_visperas.py

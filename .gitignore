@@ -1,0 +1,117 @@
+# ===============================
+# Python & Virtual Environments
+# ===============================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ===============================
+# Logs & Temporales
+# ===============================
+logs/*
+!logs/.gitkeep
+*.log
+temp/*
+!temp/.gitkeep
+
+# ===============================
+# Cache (NUNCA versionar)
+# ===============================
+data/cache/*
+!data/cache/.gitkeep
+.cache/
+*.cache
+
+# ===============================
+# Outputs (Solo delivery_assets versionado)
+# ===============================
+# Outputs generados por el pipeline - ignorar todos
+output/*/
+!output/.gitkeep
+
+# Excepciones específicas si se necesitan
+output/clientes/*
+!output/clientes/.gitkeep
+output/pilots/*
+!output/pilots/.gitkeep
+output/proposals/*
+!output/proposals/.gitkeep
+output/spark/*
+!output/spark/.gitkeep
+
+# delivery_assets/ SÍ se versionan (archivos plantilla)
+!output/delivery_assets/
+!output/delivery_assets/**/*
+
+# Outputs con valor documental
+!output/clientes_no_borrar/
+
+# ===============================
+# Secrets & Credentials
+# ===============================
+.env
+.env.local
+.env.*.local
+config/secrets.yaml
+*.pem
+*.key
+*.cert
+
+# ===============================
+# Documentos Generados
+# ===============================
+*.pdf
+!output/delivery_assets/*.pdf
+!output/.gitkeep
+!output/delivery_assets/
+
+# ===============================
+# SO & IDE
+# ===============================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ===============================
+# Archivos Históricos Comprimidos
+# ===============================
+archives/docs_superseded_backup_*.zip
+archives/deprecated_structure_*/
+archives/outputs/
+
+# ===============================
+# Node (si es aplicable en futuro)
+# ===============================
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# ===============================
+# Archivos Temporales de Desarrollo
+# ===============================
+*.tmp
+*.bak
+.#*
+*#
+.~*
+
+# Ignorar archivo problem�tico en Windows
+nul

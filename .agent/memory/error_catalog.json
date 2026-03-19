@@ -1,0 +1,155 @@
+{
+  "version": "1.0",
+  "description": "Error catalog for Agent Harness self-healing. Migrated from COMMON_ERRORS.md.",
+  "errors": [
+    {
+      "id": "ERR-001",
+      "name": "WPCode Plugin Required",
+      "pattern": "WPCodeError.*Plugin not installed|Plugin not installed on target site",
+      "pattern_type": "regex",
+      "category": "deployer",
+      "severity": "blocking",
+      "recovery": {
+        "strategy": "escalate",
+        "message": "Plugin WPCode no instalado. Usar deployment_assistant para via asistida.",
+        "retry_allowed": false
+      }
+    },
+    {
+      "id": "ERR-002",
+      "name": "No LLM API Key",
+      "pattern": "No LLM API key configured|DEEPSEEK_API_KEY|ANTHROPIC_API_KEY.*not set",
+      "pattern_type": "regex",
+      "category": "llm_provider",
+      "severity": "blocking",
+      "recovery": {
+        "strategy": "escalate",
+        "message": "API Key no configurada. Ejecutar env_rerun o verificar .env",
+        "retry_allowed": false
+      }
+    },
+    {
+      "id": "ERR-003",
+      "name": "Timeout Error",
+      "pattern": "TimeoutError|ReadTimeout|ConnectTimeout|Timeout|timed out",
+      "pattern_type": "regex",
+      "category": "network",
+      "severity": "transient",
+      "recovery": {
+        "strategy": "retry_with_params",
+        "message": "Timeout detectado. Reintentando con mayor espera.",
+        "retry_allowed": true,
+        "param_adjustments": {
+          "timeout": "multiply:2",
+          "wait_time": "add:5"
+        },
+        "max_retries": 2
+      }
+    },
+    {
+      "id": "ERR-004",
+      "name": "Connection Error",
+      "pattern": "ConnectionError|ConnectionRefused|MaxRetryError|NewConnectionError",
+      "pattern_type": "regex",
+      "category": "network",
+      "severity": "transient",
+      "recovery": {
+        "strategy": "retry_with_delay",
+        "message": "Error de conexión. Reintentando en 5 segundos.",
+        "retry_allowed": true,
+        "delay_seconds": 5,
+        "max_retries": 2
+      }
+    },
+    {
+      "id": "ERR-005",
+      "name": "WAF Blocking Code Injection",
+      "pattern": "code desaparece|WAF|ModSecurity|codigo no se guarda",
+      "pattern_type": "regex",
+      "category": "wordpress_waf",
+      "severity": "blocking",
+      "recovery": {
+        "strategy": "escalate",
+        "message": "WAF bloqueando. Usar Divi Theme Builder o contactar hosting.",
+        "retry_allowed": false
+      }
+    },
+    {
+      "id": "ERR-006",
+      "name": "Empty Scraper Result",
+      "pattern": "No data extracted|Empty result|scraper.*failed|Could not extract",
+      "pattern_type": "regex",
+      "category": "scraper",
+      "severity": "transient",
+      "recovery": {
+        "strategy": "fallback_handler",
+        "message": "Scraper principal falló. Usando fallback.",
+        "retry_allowed": true,
+        "fallback_function": "scraper_fallback.enrich_data"
+      }
+    },
+    {
+      "id": "ERR-007",
+      "name": "Rate Limit Exceeded",
+      "pattern": "RateLimitError|429|Too Many Requests|rate limit|quota exceeded",
+      "pattern_type": "regex",
+      "category": "api",
+      "severity": "transient",
+      "recovery": {
+        "strategy": "retry_with_delay",
+        "message": "Rate limit alcanzado. Esperando antes de reintentar.",
+        "retry_allowed": true,
+        "delay_seconds": 30,
+        "max_retries": 3
+      }
+    },
+    {
+      "id": "ERR-COHERENCE-001",
+      "name": "CoherenceScoreBelowThreshold",
+      "pattern": "coherence.*(0\\.[0-7]|0\\.8[0-9])|Coherencia insuficiente",
+      "pattern_type": "regex",
+      "category": "validation",
+      "severity": "blocking",
+      "recovery": {
+        "strategy": "retry_with_params",
+        "message": "Score de coherencia bajo. Reintentando con validacion adicional.",
+        "retry_allowed": true,
+        "max_retries": 1,
+        "param_adjustments": {
+          "require_validation": "set:true",
+          "skip_proposal": "set:true"
+        }
+      }
+    },
+    {
+      "id": "ERR-COHERENCE-002",
+      "name": "ValidationDataIncomplete",
+      "pattern": "ValidationSummary.*fields.*\\[\\]|Sin datos validados",
+      "pattern_type": "regex",
+      "category": "validation",
+      "severity": "blocking",
+      "recovery": {
+        "strategy": "escalate",
+        "message": "Datos de validacion incompletos. Se requiere auditoria completa.",
+        "retry_allowed": false
+      }
+    },
+    {
+      "id": "ERR-COHERENCE-003",
+      "name": "NegativeOptimisticScenario",
+      "pattern": "Escenario.*optimista.*negativo|optimistic.*negative",
+      "pattern_type": "regex",
+      "category": "financial",
+      "severity": "transient",
+      "recovery": {
+        "strategy": "retry_with_params",
+        "message": "Escenario optimista con valor negativo. Ajustando calculos.",
+        "retry_allowed": true,
+        "max_retries": 1,
+        "param_adjustments": {
+          "adjust_scenarios": "set:true"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "comparison_id": "20260302_174442_bce1fa64",
+  "timestamp": "2026-03-02T17:44:42.927014",
+  "hotel_id": null,
+  "hotel_name": null,
+  "legacy_scenarios": {
+    "conservative": {
+      "monthly_cop": 4375000.0
+    },
+    "realistic": {
+      "monthly_cop": 6125000.0
+    },
+    "optimistic": {
+      "monthly_cop": 7875000.0
+    }
+  },
+  "legacy_pricing": {
+    "monthly_price_cop": 437500.0,
+    "pain_ratio": 0.05,
+    "tier": "boutique"
+  },
+  "new_scenarios": {
+    "conservative": {
+      "monthly_cop": 4375000.0
+    },
+    "realistic": {
+      "monthly_cop": 6125000.0
+    },
+    "optimistic": {
+      "monthly_cop": 7875000.0
+    }
+  },
+  "new_pricing": {
+    "monthly_price_cop": 1200000,
+    "pain_ratio": 0.1371,
+    "tier": "boutique",
+    "is_compliant": false
+  },
+  "monthly_loss_delta": 0.0,
+  "monthly_loss_delta_pct": 0.0,
+  "pricing_delta": 762500.0,
+  "pricing_delta_pct": 174.29,
+  "would_use_new": false,
+  "rejection_reason": "Pain ratio outside GATE: 13.71%",
+  "flags_used": {
+    "pricing_hybrid_enabled": false,
+    "pricing_hybrid_mode": "shadow",
+    "shadow_logging_enabled": true
+  },
+  "validation_errors": []
+}

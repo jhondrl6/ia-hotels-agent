@@ -1,0 +1,41 @@
+<!-- Barra de Reserva Móvil - {{hotel_name}} -->
+<div id="mobile-booking-bar" class="mobile-booking-bar">
+  <div class="booking-info">
+    <span class="price">Desde ${{price}}/noche</span>
+    <span class="availability">{{availability}}</span>
+  </div>
+  <a href="{{booking_url}}" class="btn-book-now">
+    Reservar Ahora
+  </a>
+</div>
+
+<style>
+.mobile-booking-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 2px solid #28a745;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+.booking-info { display: flex; flex-direction: column; }
+.price { font-size: 18px; font-weight: bold; color: #28a745; }
+.availability { font-size: 12px; color: #666; }
+.btn-book-now {
+  background: #28a745;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+}
+@media (min-width: 768px) {
+  .mobile-booking-bar { display: none; }
+}
+</style>

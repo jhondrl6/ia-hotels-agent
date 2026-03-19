@@ -1,53 +1,83 @@
-# Documentación Post-Proyecto - Actualización v4_regression_guardian
+# Documentación Post-Proyecto - v4.5.4
 
-**Proyecto:** Actualización de v4_regression_guardian
-**Fecha inicio:** 2026-03-16
-**Fecha завершения:** -
-**Versión:** 1.0.0
+> Objetivo: Documentar las mejoras implementadas siguiendo CONTRIBUTING.md §5
 
 ---
 
 ## Sección A: Módulos Nuevos (Automático)
 
-### Archivos Python nuevos
-- [x] Ninguno (actualización de existente)
+### Archivos Modificados
 
-### Tests nuevos
-- [x] Tests de parsing de nuevos flags CLI
-- [x] Tests de integración con agent_harness
+| Archivo | Cambio |
+|---------|--------|
+| `.agents/workflows/phased_project_executor.md` | Agregado Step 0.5 TDD Gate |
+| `.agents/workflows/audit_guardian.md` | Modificado Steps 2-4 para ejecución paralela |
 
-**Conteo total de tests:** 2 (objetivo)
+### Archivos Nuevos (Plan)
+
+| Archivo | Descripción |
+|---------|-------------|
+| `.opencode/plans/README.md` | README del plan |
+| `.opencode/plans/matriz-capacidades.md` | Matriz de capabilities |
+| `.opencode/plans/dependencias-fases.md` | Dependencias entre fases |
+| `.opencode/plans/06-checklist-implementacion.md` | Checklist de implementación |
+| `.opencode/plans/09-documentacion-post-proyecto.md` | Este documento |
+
+### Tests
+
+| Archivo | Tests | Descripción |
+|---------|-------|-------------|
+| tests/ (existentes) | 1434+ | Suite de regresión |
+
+**Nota**: Esta implementación modifica workflows, no introduce nuevos módulos Python que requieran tests unitarios adicionales.
 
 ---
 
 ## Sección B: Cambios de Arquitectura (Manual)
 
-### Diagramas actualizados
-- [ ] No aplica - sin cambios arquitectónicos
+### Flujo de Ejecución
 
-### Flujos de datos modificados
-- Flujo de validación ahora incluye:
-  1. Detección de cambios → 2. Mapeo a módulos → 3. Selección tests → 4. Verificación imports → 5. Ejecución → 6. Reporte
+**Antes**:
+```
+Fase 1 → Fase 2 → Fase 3 → Fase 4 → Fase 5 (secuencial)
+```
 
-### Breaking changes
-- [ ] Ninguno identificado
+**Después**:
+```
+Fase 1 → [TDD Gate] → Fase 2 → [Parallel Execution] → Fase 3 (optimizado)
+```
+
+### Workflows Afectados
+
+1. **phased_project_executor.md**: Nuevo Step 0.5
+2. **audit_guardian.md**: Steps 2-4 en paralelo
+
+### Breaking Changes
+
+**NO** hay breaking changes. Las mejoras son adiciones retrocompatibles.
 
 ---
 
 ## Sección C: Validación Cruzada (Obligatorio)
 
-### Resultados de validación
+### Comandos de Validación
+
 ```bash
-# Ejecutar y documentar resultados:
-python scripts/validate_context_integrity.py
+# Validación rápida (recomendado)
 python scripts/run_all_validations.py --quick
+
+# Validación completa
+python scripts/run_all_validations.py
+
+# Sincronización de versiones
 python scripts/sync_versions.py --check
 ```
 
-**Checklist de validación:**
-- [ ] domain_primer_methods: PASS
-- [ ] version_sync: PASS
-- [ ] context_file_paths: PASS
+### Checklist de Validación
+
+- [ ] `domain_primer_methods`: PASS (sin métodos faltantes)
+- [ ] `version_sync`: PASS (todas las versiones sincronizadas)
+- [ ] `context_file_paths`: PASS (sin referencias rotas)
 - [ ] Sin hardcoded secrets detectados
 
 ---
@@ -56,25 +86,29 @@ python scripts/sync_versions.py --check
 
 | Métrica | Valor | Target | Estado |
 |---------|-------|--------|--------|
-| Tests新增 | 2 | > 0 | ⬜ |
-| Fases completadas | 0/5 | 5/5 | ⬜ |
-| Documentos actualizados | 1 | ≥ 1 | ⬜ |
-| Gates pasados | 0/2 | 2/2 | ⬜ |
+| Total tests | 1434+ | >= 1434 | ⏳ |
+| Evidence Coverage | >= 95% | >= 95% | ⏳ |
+| Hard contradictions | 0 | = 0 | ⏳ |
+| Validaciones passed | -/5 | 5/5 | ⏳ |
+| Coherence Score | >= 0.8 | >= 0.8 | ⏳ |
+| Capabilities huérfanas | 0 | 0 | ⏳ |
 
 ---
 
 ## Sección E: Archivos Afiliados por Tipo de Cambio
 
-### Cuando se modifican scripts de validación:
-- [ ] Probar regex con identificadores con números (v4)
-- [ ] Probar captura de métodos de 3 partes (mod.clase.metodo)
-- [ ] Verificar con --verbose que no hay falsos negativos
-- [ ] Documentar casos edge en comentarios del código
+### Cuando se modifican workflows
 
-### Cuando se modifica documentación:
-- [ ] Usar formato exacto de CONTRIBUTING.md §5
-- [ ] Sincronizar versiones después de cambiar VERSION.yaml
-- [ ] Verificar que todas las referencias sean válidas
+- [ ] `.agents/workflows/README.md` - Actualizar si hay nuevas skills (NO APLICA - se modifican existentes)
+- [ ] `AGENTS.md` - Tabla de módulos activos (actualizar versión)
+- [ ] `CHANGELOG.md` - Entrada de release (AGREGAR)
+
+### Cuando se modifican scripts de validación
+
+- [ ] Probar regex con identificadores con números (`v4`, `v2`)
+- [ ] Probar captura de métodos de 3 partes (`mod.clase.metodo`)
+- [ ] Verificar con `--verbose` que no hay falsos negativos
+- [ ] Documentar casos edge en comentarios del código
 
 ---
 
@@ -85,14 +119,53 @@ python scripts/sync_versions.py --check
 | 1 | Análisis del Plan | ✅ Completado |
 | 1.5 | Matriz de Capacidades | ✅ Completado |
 | 2 | Prompts por Fase | ✅ Completado |
-| 3 | Checklist Maestro | ⏳ Pendiente |
-| 4 | Documentación Post-Proyecto | ⏳ En curso |
-| 5 | README del Plan | ⏳ Pendiente |
-| 6 | Validación Numeración | ⏳ Pendiente |
-| 7 | Validación Técnica (5/5) | ⏳ Pendiente |
+| 3 | Checklist Maestro | ✅ Completado |
+| 4 | Documentación Post-Proyecto | ✅ Completado |
+| 5 | README del Plan | ✅ Completado |
+| 6 | Validación Numeración | ✅ Completado |
+| 7 | Validación Técnica | ⏳ Pendiente |
 | 7.4 | Runtime Invocation & Output | ⏳ Pendiente |
 | 8 | Gate de Calidad | ⏳ Pendiente |
 | 9 | Cumplimiento Skill | ⏳ Pendiente |
 
-**Versión Skill:** v1.4.0
-**Fecha Verificación:** 2026-03-16
+**Versión Skill**: v1.4.0  
+**Fecha Verificación**: 2026-03-17
+
+---
+
+## Lecciones Aprendidas
+
+### TDD Gate
+
+**Valor añadido**: 
+- Previene implementación sin test de cobertura
+- Crea evidencia de comportamiento esperado antes de codificar
+
+**Consideraciones**:
+- Requiere disciplina del implementador
+- No es blocking para la sesión, pero es gate de calidad
+
+### Parallel Execution
+
+**Valor añadido**:
+- Reduce tiempo de ejecución de stages independientes
+- Utiliza mejor los recursos disponibles
+
+**Consideraciones**:
+- Depende de soporte de `skill_executor.py`
+- Fallback necesario si no soporta `// turbo parallel`
+
+---
+
+## Checklist de Cierre
+
+- [ ] Validaciones completas ejecutadas
+- [ ] CHANGELOG.md actualizado
+- [ ] AGENTS.md actualizado (versión)
+- [ ] Capability contract verificado
+- [ ] Tests pasando (1434+)
+- [ ] Todos los archivos afiliados actualizados
+
+---
+
+*Este documento sigue la estructura definida en phased_project_executor.md v1.4.0*

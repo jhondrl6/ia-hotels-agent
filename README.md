@@ -1,0 +1,210 @@
+# IA Hoteles Agent CLI
+
+**Plataforma de Inteligencia Agéntica de Grado Industrial diseñada para la auditoría y blindaje financiero del sector hotelero.**
+
+**Version:** 4.5.3 (Communication Update) | **Última actualización:** 15 Marzo 2026
+
+---
+
+## 🧭 Índice de Navegación Rápida
+
+| Si buscas... | Ir a... |
+|--------------|---------|
+| **Índice Completo de Documentación** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
+| **Habilidades del Agente (Meta-Skills)** | Orquestadas vía Triggers en `.agents/workflows/` ([Índice Maestro](.agents/workflows/README.md)) |
+| **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
+| **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
+| **Guía Técnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
+| **Contexto Global del Agente** | [AGENTS.md](AGENTS.md) (canónico) + [.cursorrules](.cursorrules) (puente) |
+
+---
+
+> **🛡️ AGENT PLATFORM STATUS (v4.3.0 - Sistema de Evidencia y Confiabilidad)**:
+> *   **Sistema de Evidencia Trazable**: EvidenceLedger con hash e integridad, claims vinculados a fuentes.
+> *   **Motor de Contradicciones**: Detección automática de hard/soft conflicts entre fuentes de datos.
+> *   **Quality Gates de Pre-publicación**: Gates técnico, comercial, financiero y de coherencia (score ≥ 0.8).
+> *   **Estados de Publicación**: READY_FOR_CLIENT, DRAFT_INTERNAL, REQUIRES_REVIEW con validación estricta.
+> *   **No Defaults in Money**: Validación financiera que bloquea cálculos con valores por defecto.
+
+> *   **Controles de Coherencia**: Validación automática diagnosis↔propuesta↔assets con score ≥ 0.8.
+> *   **Observabilidad y Dashboard**: Métricas de calidad en tiempo real y calibración de umbrales.
+> *   **Suite de Regresión Permanente**: Test E2E automatizado con Hotel Vísperas como caso de referencia.
+> *   **Taxonomía de Confianza**: VERIFIED (≥0.9) / ESTIMATED (0.5-0.9) / CONFLICT (<0.5).
+> *   **CanonicalAssessment**: Estructura unificada de verdad que reemplaza assessment v4.2.
+
+---
+
+## Gobernanza de Contexto Global
+
+- `AGENTS.md` es la fuente canónica humano-curada para el contexto global del agente.
+- `.cursorrules` se mantiene como puente de compatibilidad para tooling legacy.
+- Procedimiento y checklist post-cambio contextual: `docs/CONTRIBUTING.md`.
+
+---
+
+## 🎯 ¿Qué es IA Hoteles Agent?
+
+Sistema de inteligencia agéntica que certifica la veracidad digital de hoteles mediante validación cruzada de datos y controles de coherencia automáticos.
+
+### Sistema de Evidencia y Confiabilidad v4.3.0
+
+- **Validación cruzada**: Datos verificados entre web, Google Business Profile y APIs
+- **Escenarios financieros**: Proyecciones con probabilidades (70%/20%/10%) en lugar de cifras únicas
+- **Gate de coherencia**: Score automático que valida alineación entre diagnóstico, propuesta y assets
+
+---
+
+## 🚀 Inicio Rápido (5 minutos)
+
+```bash
+# 1. Clonar e instalar
+git clone <repository-url>
+cd iah-cli
+python -m venv venv
+.\venv\Scripts\Activate.ps1   # Windows PowerShell
+pip install -r requirements.txt
+
+# 2. Configuración Inicial (Umbrales v2.6)
+python main.py setup
+```
+
+---
+
+## 📊 Flujo Comercial y Técnico 2026
+
+El sistema opera bajo el **Sistema de Confianza v4.1.0** con validación cruzada de datos y controles de coherencia automáticos entre diagnóstico, propuesta y assets.
+
+```bash
+python main.py v4complete --url https://hotel.com --nombre "Hotel Nombre"
+```
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      FLUJO V4COMPLETE (5 Fases)                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  FASE 1        FASE 2           FASE 3          FASE 4       FASE 5    │
+│  ───────       ───────          ───────         ───────      ───────   │
+│                                                                         │
+│  HOOK    →  VALIDACIÓN  →   MAPEO P→S   →   GATE COHERENCIA  → ASSETS  │
+│  Automático   APIs Cruzada   PainSolution    Score ≥0.8       Validados│
+│                              Mapper          (configurable)             │
+│                                                                         │
+│  Output: 01_DIAGNOSTICO_Y_OPORTUNIDAD.md (siempre)                     │
+│          02_PROPUESTA_COMERCIAL.md (si coherence ≥ 0.8)                │
+│          delivery_assets/ (según confianza de cada asset)              │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔍 COMANDO V4COMPLETE - Protocolo de Verdad 4.0
+
+**Propósito:** Ejecuta el flujo completo de certificación con validación cruzada, escenarios financieros y controles de coherencia automáticos.
+
+**Características:**
+- Validación cruzada de datos (Web + Google Business Profile + Input)
+- Cálculo de escenarios financieros (Conservador 70% / Realista 20% / Optimista 10%)
+- Gate de coherencia con score calculado vs umbral configurable (default ≥ 0.8)
+- Generación condicional: diagnóstico siempre, propuesta solo si pasa coherencia
+- PainSolutionMapper: mapeo automático problemas → assets con prioridades P1/P2/P3
+
+### Comandos Disponibles
+
+| Comando | Propósito | Output |
+|---------|-----------|--------|
+| `v4complete` | **Flujo completo con controles de coherencia** | Diagnóstico + Propuesta condicional + Assets |
+| `v4audit` | Auditoría técnica rápida con APIs | JSON con validación cruzada |
+| `execute` | Implementación de paquete usando análisis previo | Assets según paquete seleccionado |
+| `onboard` | Captura datos operativos reales del hotel | Mejora precisión del análisis (confidence: VERIFIED) |
+
+### Opciones de v4complete
+
+| Flag | Uso |
+|------|-----|
+| `--url` | URL del hotel a analizar (requerido) |
+| `--nombre` | Nombre del hotel (opcional, extraído de URL) |
+| `--output` | Directorio de salida (default: ./output) |
+| `--debug` | Modo verbose con información detallada |
+
+**Ejemplo:**
+```bash
+python main.py v4complete --url https://hotelvisperas.com --nombre "Hotel Vísperas"
+```
+
+---
+
+## 📋 COMANDO ONBOARD - Datos Operativos Reales
+
+**Propósito:** Capturar datos operativos reales del hotel para mejorar la precisión del análisis v4complete.
+
+**Diferencia con v4complete:**
+- `v4complete`: Usa datos estimados (benchmark regional, scraping)
+- `onboard`: Usa datos reales proporcionados por el hotel
+
+**Cuándo usar:**
+- Después de `v4complete` para mejorar coherence score (de 0.55 → 0.8+)
+- Cuando se requieren proyecciones financieras precisas
+- Para convertir assets de WARNING a PASSED
+
+### Opciones de onboard
+
+| Flag | Uso |
+|------|-----|
+| `--url` | URL del hotel (opcional) |
+| `--nombre` | Nombre del hotel |
+| `--run-audit` | Ejecuta auditoría después de capturar datos |
+
+**Ejemplo:**
+```bash
+python main.py onboard --url https://hotelvisperas.com --nombre "Hotel Vísperas"
+python main.py onboard --url https://hotelvisperas.com --run-audit
+```
+
+**Datos que captura:**
+- Número de habitaciones
+- Reservas por mes
+- Valor promedio de reserva (ADR real)
+- % Canal directo
+- % Ocupación
+- Tarifa promedio
+
+**Resultado:**
+- Confidence: ESTIMATED → VERIFIED
+- Coherence: Potencialmente ≥ 0.8
+- Assets: WARNING → PASSED
+
+---
+
+## 💵 Escenarios Financieros
+
+Cada hotel recibe proyecciones personalizadas basadas en sus datos validados:
+
+| Escenario | Probabilidad | Base de cálculo |
+|-----------|--------------|-----------------|
+| **Conservador** | 70% | Peor caso plausible |
+| **Realista** | 20% | Meta esperada |
+| **Optimista** | 10% | Mejor caso |
+
+El valor esperado ponderado determina el ROI proyectado y la propuesta comercial personalizada.
+
+---
+
+## ⚠️ Troubleshooting
+
+| Problema | Solución |
+|----------|----------|
+| Fallo Gate de Coherencia | Verifica que los datos tengan confianza suficiente (≥0.8) y no haya conflictos entre fuentes. |
+| No LLM API key configured | Ejecuta `python main.py setup` para configurar de forma segura. |
+
+---
+
+**IA HOTELES AGENT © 2026**  
+*Certificando la veracidad digital y blindando el margen hotelero.*
+
+---
+
+## Testing
+
+**1257 tests passing** - Suite completa de pruebas unitarias, integración y regresión E2E.

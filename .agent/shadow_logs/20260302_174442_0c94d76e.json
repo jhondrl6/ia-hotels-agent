@@ -1,0 +1,54 @@
+{
+  "comparison_id": "20260302_174442_0c94d76e",
+  "timestamp": "2026-03-02T17:44:42.926229",
+  "hotel_id": null,
+  "hotel_name": null,
+  "legacy_scenarios": {
+    "conservative": {
+      "monthly_cop": 6250000.0,
+      "adr_cop": 500000.0
+    },
+    "realistic": {
+      "monthly_cop": 8750000.0,
+      "adr_cop": 500000.0
+    },
+    "optimistic": {
+      "monthly_cop": 11250000.0,
+      "adr_cop": 500000.0
+    }
+  },
+  "legacy_pricing": {
+    "monthly_price_cop": 25000.0,
+    "pain_ratio": 0.05
+  },
+  "new_scenarios": {
+    "conservative": {
+      "monthly_cop": 3750000.0,
+      "adr_cop": 300000.0
+    },
+    "realistic": {
+      "monthly_cop": 5250000.0,
+      "adr_cop": 300000.0
+    },
+    "optimistic": {
+      "monthly_cop": 6750000.0,
+      "adr_cop": 300000.0
+    }
+  },
+  "new_pricing": {
+    "monthly_price_cop": 12000.0,
+    "pain_ratio": 0.04
+  },
+  "monthly_loss_delta": -3500000.0,
+  "monthly_loss_delta_pct": -40.0,
+  "pricing_delta": -13000.0,
+  "pricing_delta_pct": -52.0,
+  "would_use_new": true,
+  "rejection_reason": null,
+  "flags_used": {
+    "regional_adr_enabled": false,
+    "regional_adr_mode": "shadow",
+    "shadow_logging_enabled": true
+  },
+  "validation_errors": []
+}

@@ -1,0 +1,51 @@
+{
+  "comparison_id": "20260313_183544_8aa62cbe",
+  "timestamp": "2026-03-13T18:35:44.705609",
+  "hotel_id": "https://hotelvisperas.com",
+  "hotel_name": "Hotelvisperas",
+  "legacy_scenarios": {
+    "conservative": {
+      "monthly_cop": 1305000.0
+    },
+    "realistic": {
+      "monthly_cop": 1827000.0
+    },
+    "optimistic": {
+      "monthly_cop": 2349000.0
+    }
+  },
+  "legacy_pricing": {
+    "monthly_price_cop": 130500.0,
+    "pain_ratio": 0.05,
+    "tier": "boutique"
+  },
+  "new_scenarios": {
+    "conservative": {
+      "monthly_cop": 1305000.0
+    },
+    "realistic": {
+      "monthly_cop": 1827000.0
+    },
+    "optimistic": {
+      "monthly_cop": 2349000.0
+    }
+  },
+  "new_pricing": {
+    "monthly_price_cop": 1200000,
+    "pain_ratio": 0.4598,
+    "tier": "boutique",
+    "is_compliant": false
+  },
+  "monthly_loss_delta": 0.0,
+  "monthly_loss_delta_pct": 0.0,
+  "pricing_delta": 1069500.0,
+  "pricing_delta_pct": 819.54,
+  "would_use_new": false,
+  "rejection_reason": "Pain ratio outside GATE: 45.98%",
+  "flags_used": {
+    "pricing_hybrid_enabled": false,
+    "pricing_hybrid_mode": "shadow",
+    "shadow_logging_enabled": true
+  },
+  "validation_errors": []
+}

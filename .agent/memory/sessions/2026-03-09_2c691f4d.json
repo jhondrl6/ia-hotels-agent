@@ -1,0 +1,28 @@
+{
+  "session_id": "2026-03-09_2c691f4d",
+  "entries": [
+    {
+      "session_id": "2026-03-09_2c691f4d",
+      "timestamp": "2026-03-10T00:00:27.648503+00:00",
+      "task_name": "test_context",
+      "target_id": "https://test.com",
+      "duration_seconds": 0.03,
+      "outcome": "success",
+      "error_type": null,
+      "quality_metrics": {
+        "is_valid": true,
+        "checks_passed": [
+          "result_not_empty"
+        ],
+        "checks_failed": []
+      },
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 5,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    }
+  ],
+  "updated_at": "2026-03-10T00:00:27.648646+00:00"
+}

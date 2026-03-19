@@ -1,0 +1,54 @@
+{
+  "comparison_id": "20260313_004440_68aae254",
+  "timestamp": "2026-03-13T00:44:40.859735",
+  "hotel_id": "https://hotelvisperas.com",
+  "hotel_name": "Hotel Vísperas",
+  "legacy_scenarios": {
+    "conservative": {
+      "monthly_cop": 900000.0,
+      "adr_cop": 150000
+    },
+    "realistic": {
+      "monthly_cop": 1260000.0,
+      "adr_cop": 150000
+    },
+    "optimistic": {
+      "monthly_cop": 1620000.0,
+      "adr_cop": 150000
+    }
+  },
+  "legacy_pricing": {
+    "monthly_price_cop": 7500.0,
+    "pain_ratio": 0.05
+  },
+  "new_scenarios": {
+    "conservative": {
+      "monthly_cop": 2520000.0,
+      "adr_cop": 420000
+    },
+    "realistic": {
+      "monthly_cop": 3528000.0,
+      "adr_cop": 420000
+    },
+    "optimistic": {
+      "monthly_cop": 4536000.0,
+      "adr_cop": 420000
+    }
+  },
+  "new_pricing": {
+    "monthly_price_cop": 16800.0,
+    "pain_ratio": 0.04
+  },
+  "monthly_loss_delta": 2268000.0,
+  "monthly_loss_delta_pct": 180.0,
+  "pricing_delta": 9300.0,
+  "pricing_delta_pct": 124.0,
+  "would_use_new": false,
+  "rejection_reason": "Monthly loss delta too large: 180.0%",
+  "flags_used": {
+    "regional_adr_enabled": false,
+    "regional_adr_mode": "shadow",
+    "shadow_logging_enabled": true
+  },
+  "validation_errors": []
+}

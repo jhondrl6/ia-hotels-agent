@@ -1,0 +1,24 @@
+{
+  "asset_type": "org_schema",
+  "generated_at": "2026-03-16T12:41:53.302042",
+  "confidence_level": "1.0",
+  "validation_sources": [
+    "web_scraping",
+    "google_business_profile",
+    "user_input"
+  ],
+  "preflight_status": "WARNING",
+  "can_use": false,
+  "disclaimer": "Este asset fue generado con datos estimados o de una sola fuente. Se recomienda verificar antes de usar en producción.",
+  "source_data_hash": "2c6aec79e31da482",
+  "diagnostic_reference": "None",
+  "problems_solved": [
+    "Sin Schema Organization"
+  ],
+  "coherence_score": 0.91,
+  "problem_solved": "Ausencia de schema de organización",
+  "impact_cop": 200000,
+  "priority": "P3",
+  "timing": "Semana 2",
+  "why_this_asset": "Ayuda a Google a entender mejor la estructura del negocio hotelero"
+}

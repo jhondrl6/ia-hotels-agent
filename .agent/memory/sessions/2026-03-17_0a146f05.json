@@ -1,0 +1,28 @@
+{
+  "session_id": "2026-03-17_0a146f05",
+  "entries": [
+    {
+      "session_id": "2026-03-17_0a146f05",
+      "timestamp": "2026-03-17T22:08:16.131022+00:00",
+      "task_name": "v4_regional_resolver",
+      "target_id": "task:v4_regional_resolver",
+      "duration_seconds": 0.05,
+      "outcome": "success",
+      "error_type": null,
+      "quality_metrics": {
+        "is_valid": true,
+        "checks_passed": [
+          "result_not_empty"
+        ],
+        "checks_failed": []
+      },
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 5,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    }
+  ],
+  "updated_at": "2026-03-17T22:08:16.131283+00:00"
+}

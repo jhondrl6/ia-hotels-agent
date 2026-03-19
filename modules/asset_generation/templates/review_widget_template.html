@@ -1,0 +1,30 @@
+<!-- Widget de Reviews - {{hotel_name}} -->
+<div id="review-widget" class="review-widget">
+  <div class="review-header">
+    <h3>Lo que dicen nuestros huéspedes</h3>
+    <div class="overall-rating">
+      <span class="stars">★★★★★</span>
+      <span class="rating-number">{{rating}}/5.0</span>
+    </div>
+  </div>
+  
+  <div class="reviews-container">
+    <!-- Reviews se cargan dinámicamente -->
+    <p class="review-placeholder">Cargando reviews...</p>
+  </div>
+  
+  <div class="review-cta">
+    <a href="{{review_link}}" target="_blank" class="btn-leave-review">
+      Dejar mi opinión
+    </a>
+  </div>
+</div>
+
+<style>
+.review-widget { border: 1px solid #ddd; padding: 20px; border-radius: 8px; }
+.review-header { text-align: center; margin-bottom: 15px; }
+.stars { color: #ffc107; font-size: 24px; }
+.rating-number { font-size: 18px; font-weight: bold; }
+.review-cta { text-align: center; margin-top: 15px; }
+.btn-leave-review { background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; }
+</style>

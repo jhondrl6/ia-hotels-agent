@@ -1,0 +1,51 @@
+{
+  "comparison_id": "20260304_210435_537b3378",
+  "timestamp": "2026-03-04T21:04:35.941686",
+  "hotel_id": null,
+  "hotel_name": null,
+  "legacy_scenarios": {
+    "conservative": {
+      "monthly_cop": 25000000.0
+    },
+    "realistic": {
+      "monthly_cop": 35000000.0
+    },
+    "optimistic": {
+      "monthly_cop": 45000000.0
+    }
+  },
+  "legacy_pricing": {
+    "monthly_price_cop": 2500000.0,
+    "pain_ratio": 0.05,
+    "tier": "boutique"
+  },
+  "new_scenarios": {
+    "conservative": {
+      "monthly_cop": 25000000.0
+    },
+    "realistic": {
+      "monthly_cop": 35000000.0
+    },
+    "optimistic": {
+      "monthly_cop": 45000000.0
+    }
+  },
+  "new_pricing": {
+    "monthly_price_cop": 1500000.0,
+    "pain_ratio": 0.03,
+    "tier": "boutique",
+    "is_compliant": true
+  },
+  "monthly_loss_delta": 0.0,
+  "monthly_loss_delta_pct": 0.0,
+  "pricing_delta": -1000000.0,
+  "pricing_delta_pct": -40.0,
+  "would_use_new": true,
+  "rejection_reason": null,
+  "flags_used": {
+    "pricing_hybrid_enabled": false,
+    "pricing_hybrid_mode": "shadow",
+    "shadow_logging_enabled": true
+  },
+  "validation_errors": []
+}

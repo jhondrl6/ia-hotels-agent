@@ -1,0 +1,23 @@
+{
+  "session_id": "2026-02-27_6653b683",
+  "entries": [
+    {
+      "target_id": "https://hotelvisperas.com",
+      "task_name": "v4complete",
+      "url": "https://hotelvisperas.com",
+      "hotel_name": "Hotelvisperas",
+      "outcome": "success",
+      "outputs": {
+        "diagnostic_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\01_DIAGNOSTICO_Y_OPORTUNIDAD_20260227_212806.md",
+        "proposal_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\02_PROPUESTA_COMERCIAL_20260227_212806.md",
+        "audit_json": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\audit_report.json",
+        "coherence_json": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\v4_audit\\coherence_validation.json",
+        "assets_generated": [],
+        "asset_result_path": null
+      },
+      "timestamp": "2026-02-27T21:28:06.967117",
+      "session_id": "2026-02-27_6653b683"
+    }
+  ],
+  "updated_at": "2026-02-28T02:28:06.967190+00:00"
+}

@@ -1,0 +1,17 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "{{hotel_name}}",
+  "url": "{{hotel_url}}",
+  "logo": "{{logo_url}}",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "{{phone}}",
+    "contactType": "reservations"
+  },
+  "sameAs": [
+    "{{facebook_url}}",
+    "{{instagram_url}}",
+    "{{google_maps_url}}"
+  ]
+}

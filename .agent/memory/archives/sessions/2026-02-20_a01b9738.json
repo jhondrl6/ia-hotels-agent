@@ -1,0 +1,22 @@
+{
+  "session_id": "2026-02-20_a01b9738",
+  "entries": [
+    {
+      "session_id": "2026-02-20_a01b9738",
+      "timestamp": "2026-02-20T23:08:54.943220",
+      "task_name": "audit",
+      "target_id": "https://hoteltest.com",
+      "duration_seconds": 0.0,
+      "outcome": "error",
+      "error_type": "NameError",
+      "quality_metrics": {},
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 5,
+        "suggestions_applied": 1
+      },
+      "retries": 0
+    }
+  ],
+  "updated_at": "2026-02-20T23:08:54.943687"
+}

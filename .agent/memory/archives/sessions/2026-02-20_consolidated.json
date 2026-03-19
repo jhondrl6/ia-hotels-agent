@@ -1,0 +1,284 @@
+{
+  "session_id": "2026-02-20_consolidated",
+  "entries": [
+    {
+      "session_id": "2026-02-20_718c79fc",
+      "timestamp": "2026-02-20T23:04:35.048660",
+      "task_name": "geo_stage",
+      "target_id": "https://hoteltest.com",
+      "duration_seconds": 0.0,
+      "outcome": "error",
+      "error_type": "TypeError",
+      "quality_metrics": {},
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 2,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_718c79fc",
+      "timestamp": "2026-02-20T23:04:35.050143",
+      "task_name": "audit",
+      "target_id": "https://hoteltest.com",
+      "duration_seconds": 0.0,
+      "outcome": "success",
+      "error_type": null,
+      "quality_metrics": {
+        "is_valid": true,
+        "checks_passed": [
+          "result_not_empty"
+        ],
+        "checks_failed": []
+      },
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 2,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_7b3e9db0",
+      "timestamp": "2026-02-20T22:54:54.558457",
+      "task_name": "audit",
+      "target_id": "https://hoteltest.com",
+      "duration_seconds": 324.01,
+      "outcome": "success",
+      "error_type": null,
+      "quality_metrics": {
+        "is_valid": true,
+        "checks_passed": [
+          "result_not_empty"
+        ],
+        "checks_failed": []
+      },
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 0,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_861a7b43",
+      "timestamp": "2026-02-20T23:06:58.381896",
+      "task_name": "audit",
+      "target_id": "https://hoteltest.com",
+      "duration_seconds": 0.0,
+      "outcome": "error",
+      "error_type": "NameError",
+      "quality_metrics": {},
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 4,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_8df4ba27",
+      "timestamp": "2026-02-20T23:10:36.758022",
+      "task_name": "geo_stage",
+      "target_id": "https://hoteltest.com",
+      "duration_seconds": 0.0,
+      "outcome": "error",
+      "error_type": "TypeError",
+      "quality_metrics": {},
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 5,
+        "suggestions_applied": 1
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_8df4ba27",
+      "timestamp": "2026-02-20T23:10:36.758989",
+      "task_name": "audit",
+      "target_id": "https://hoteltest.com",
+      "duration_seconds": 0.01,
+      "outcome": "success",
+      "error_type": null,
+      "quality_metrics": {
+        "is_valid": true,
+        "checks_passed": [
+          "result_not_empty"
+        ],
+        "checks_failed": []
+      },
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 5,
+        "suggestions_applied": 1
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_93f7c4dc",
+      "timestamp": "2026-02-20T23:07:31.189466",
+      "task_name": "audit",
+      "target_id": "https://hoteltest.com",
+      "duration_seconds": 0.0,
+      "outcome": "error",
+      "error_type": "NameError",
+      "quality_metrics": {},
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 5,
+        "suggestions_applied": 1
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_a01b9738",
+      "timestamp": "2026-02-20T23:08:54.943220",
+      "task_name": "audit",
+      "target_id": "https://hoteltest.com",
+      "duration_seconds": 0.0,
+      "outcome": "error",
+      "error_type": "NameError",
+      "quality_metrics": {},
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 5,
+        "suggestions_applied": 1
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_b435b315",
+      "timestamp": "2026-02-21T00:28:20.478789+00:00",
+      "task_name": "geo_stage",
+      "target_id": "https://hotelvisperas.com",
+      "duration_seconds": 141.32,
+      "outcome": "success",
+      "error_type": null,
+      "quality_metrics": {
+        "is_valid": true,
+        "checks_passed": [
+          "result_not_empty"
+        ],
+        "checks_failed": []
+      },
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 1,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_b435b315",
+      "timestamp": "2026-02-21T00:29:01.740185+00:00",
+      "task_name": "seo_stage",
+      "target_id": "task:seo_stage",
+      "duration_seconds": 41.26,
+      "outcome": "success",
+      "error_type": null,
+      "quality_metrics": {
+        "is_valid": true,
+        "checks_passed": [
+          "result_not_empty"
+        ],
+        "checks_failed": []
+      },
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 0,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_b435b315",
+      "timestamp": "2026-02-21T00:29:41.026640+00:00",
+      "task_name": "ia_stage",
+      "target_id": "task:ia_stage",
+      "duration_seconds": 39.29,
+      "outcome": "success",
+      "error_type": null,
+      "quality_metrics": {
+        "is_valid": true,
+        "checks_passed": [
+          "result_not_empty"
+        ],
+        "checks_failed": []
+      },
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 0,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_b435b315",
+      "timestamp": "2026-02-21T00:29:41.042334+00:00",
+      "task_name": "outputs_stage",
+      "target_id": "task:outputs_stage",
+      "duration_seconds": 0.01,
+      "outcome": "success",
+      "error_type": null,
+      "quality_metrics": {
+        "is_valid": true,
+        "checks_passed": [
+          "result_not_empty"
+        ],
+        "checks_failed": []
+      },
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 0,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_b435b315",
+      "timestamp": "2026-02-21T00:29:41.043259+00:00",
+      "task_name": "audit",
+      "target_id": "https://hotelvisperas.com",
+      "duration_seconds": 221.88,
+      "outcome": "success",
+      "error_type": null,
+      "quality_metrics": {
+        "is_valid": true,
+        "checks_passed": [
+          "result_not_empty"
+        ],
+        "checks_failed": []
+      },
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 1,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    },
+    {
+      "session_id": "2026-02-20_f1429339",
+      "timestamp": "2026-02-20T23:01:35.323652",
+      "task_name": "audit",
+      "target_id": "https://hoteltest.com",
+      "duration_seconds": 315.53,
+      "outcome": "success",
+      "error_type": null,
+      "quality_metrics": {
+        "is_valid": true,
+        "checks_passed": [
+          "result_not_empty"
+        ],
+        "checks_failed": []
+      },
+      "background_tasks_count": 0,
+      "context_used": {
+        "previous_runs": 1,
+        "suggestions_applied": 0
+      },
+      "retries": 0
+    }
+  ],
+  "updated_at": "2026-02-21T00:29:41.054458+00:00"
+}

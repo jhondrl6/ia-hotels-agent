@@ -1,0 +1,91 @@
+{
+  "session_id": "2026-03-15_83bc1069",
+  "entries": [
+    {
+      "target_id": "https://hotelvisperas.com",
+      "task_name": "v4complete",
+      "url": "https://hotelvisperas.com",
+      "hotel_name": "Hotel Vísperas",
+      "outcome": "success",
+      "outputs": {
+        "diagnostic_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\01_DIAGNOSTICO_Y_OPORTUNIDAD_20260315_190141.md",
+        "proposal_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\02_PROPUESTA_COMERCIAL_20260315_190141.md",
+        "audit_json": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\audit_report.json",
+        "coherence_json": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\v4_audit\\coherence_validation.json",
+        "assets_generated": [
+          "geo_playbook",
+          "review_plan",
+          "llms_txt",
+          "faq_page",
+          "review_widget",
+          "org_schema"
+        ],
+        "asset_result_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\v4_audit\\asset_generation_report.json"
+      },
+      "timestamp": "2026-03-15T19:01:41.405347",
+      "session_id": "2026-03-15_83bc1069"
+    },
+    {
+      "target_id": "https://hotelvisperas.com",
+      "task_name": "v4complete",
+      "url": "https://hotelvisperas.com",
+      "hotel_name": "Hotel Vísperas",
+      "hotel_id": "hotel_hotelvisperas.com",
+      "outcome": "success",
+      "timestamp": "2026-03-15T19:01:41.406525",
+      "coherence_score": 0.9114285714285714,
+      "coherence_checks_passed": 6,
+      "coherence_checks_total": 6,
+      "phases_completed": [
+        "phase_1_hook",
+        "phase_2_validation",
+        "phase_3_scenarios",
+        "phase_3.5_documents",
+        "phase_4_assets",
+        "phase_5_report"
+      ],
+      "problems_detected": 7,
+      "assets_planned": 8,
+      "assets_generated": 6,
+      "assets_failed": 2,
+      "outputs": {
+        "diagnostic_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\01_DIAGNOSTICO_Y_OPORTUNIDAD_20260315_190141.md",
+        "proposal_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\02_PROPUESTA_COMERCIAL_20260315_190141.md",
+        "audit_json": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\audit_report.json",
+        "scenarios_json": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\financial_scenarios.json",
+        "report_json": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\v4_complete_report.json",
+        "coherence_json": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\hotel_vísperas\\v4_audit\\coherence_validation.json",
+        "assets_output_dir": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\hotel_vísperas"
+      },
+      "financial": {
+        "scenario_conservative": 5076000.0,
+        "scenario_realistic": 2610000.0,
+        "scenario_optimistic": -189000.0,
+        "expected_monthly": 2610000.0,
+        "price_proposed": 130500.0,
+        "roi_projected": 20.0
+      },
+      "validation": {
+        "whatsapp_status": "VERIFIED",
+        "whatsapp_confidence": 100.0,
+        "overall_confidence": "verified"
+      },
+      "session_id": "2026-03-15_83bc1069"
+    },
+    {
+      "target_id": "https://hotelvisperas.com",
+      "action": "analysis_reference",
+      "analysis_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete",
+      "outcome": "reference_saved",
+      "metadata": {
+        "type": "v4complete",
+        "coherence_score": 0.9114285714285714,
+        "hotel_name": "Hotel Vísperas",
+        "timestamp": "2026-03-15T19:01:41.406525"
+      },
+      "timestamp": "2026-03-16T00:01:41.427611+00:00",
+      "session_id": "2026-03-15_83bc1069"
+    }
+  ],
+  "updated_at": "2026-03-16T00:01:41.427624+00:00"
+}

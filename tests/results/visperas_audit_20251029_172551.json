@@ -1,0 +1,126 @@
+{
+  "existe": true,
+  "score": 75,
+  "issues": [
+    "Pocas fotos (9), meta: 15+"
+  ],
+  "reviews": 28,
+  "rating": 5.0,
+  "fotos": 9,
+  "horarios": false,
+  "descripcion": false,
+  "website": true,
+  "telefono": true,
+  "whatsapp_visible": false,
+  "posts": 0,
+  "tiene_qa": true,
+  "ultima_actividad_dias": null,
+  "fugas_detectadas": [
+    {
+      "tipo": "FOTOS_INSUFICIENTES",
+      "severidad": "ALTA",
+      "detalle": "Solo 9 fotos activas → Google te considera menos relevante que hoteles con 15+ fotos.",
+      "impacto_estimado_COP_mes": 735000,
+      "motivo": "Google Maps prioriza perfiles visuales ricos. Pareces abandonado.",
+      "urgencia": "ALTA - Booking muestra 40+ fotos de tu propio hotel"
+    },
+    {
+      "tipo": "SIN_WHATSAPP_VISIBLE",
+      "severidad": "ALTA",
+      "detalle": "Sin botón de WhatsApp → pierdes 30% de consultas inmediatas.",
+      "impacto_estimado_COP_mes": 630000,
+      "motivo": "68% de reservas directas en Colombia inician en WhatsApp.",
+      "urgencia": "ALTA - Configurable en 10 minutos"
+    },
+    {
+      "tipo": "PERFIL_ABANDONADO",
+      "severidad": "MEDIA",
+      "detalle": "Cero posts últimos 60 días → Google degrada tu ranking por inactividad.",
+      "impacto_estimado_COP_mes": 525000,
+      "motivo": "Google interpreta falta de actividad como cierre temporal.",
+      "urgencia": "MEDIA - 1 post semanal recupera posición en 21 días"
+    },
+    {
+      "tipo": "SIN_HORARIOS",
+      "severidad": "MEDIA",
+      "detalle": "Horarios vacíos → Google muestra “Horario desconocido”.",
+      "impacto_estimado_COP_mes": 315000,
+      "motivo": "Sin check-in visible pareces informal.",
+      "urgencia": "BAJA - 5 minutos de configuración"
+    }
+  ],
+  "perdida_total_mes_COP": 2205000,
+  "perdida_anual_COP": 26460000,
+  "prioridad_accion": "CRÍTICA - ACTUAR EN 72 HORAS",
+  "meta": {
+    "hotel_name": "Hotel Visperas",
+    "location": "Salento, Quindio",
+    "search_query": "Hotel Visperas Santa Rosa de Cabal, Risaralda",
+    "search_url": "https://www.google.com/maps/search/Hotel+Visperas+Santa+Rosa+de+Cabal,+Risaralda",
+    "search_location_used": "Santa Rosa de Cabal, Risaralda",
+    "location_requested": "Salento, Quindio",
+    "search_attempt": 1,
+    "location_attempts": 2,
+    "resolved_location": "Santa Rosa de Cabal, Risaralda",
+    "location_source": "geo_validation",
+    "scrape_debug": {
+      "html_sample_start": "<html itemscope=\"\" itemtype=\"http://schema.org/Place\" lang=\"es-CO\"><head>  <link href=\"https://fonts.gstatic.com/\" crossorigin=\"\" rel=\"preconnect\"> <link href=\"https://maps.gstatic.com/\" crossorigin=\"\" rel=\"preconnect\"> <link href=\"https://www.gstatic.com/\" crossorigin=\"\" rel=\"preconnect\"> <link href=\"https://fonts.gstatic.com/\" rel=\"dns-prefetch\"> <link href=\"https://maps.gstatic.com/\" rel=\"dns-prefetch\"> <link href=\"https://www.gstatic.com/\" rel=\"dns-prefetch\">   <link href=\"/maps/_/js/k=maps.m.es.vFrrVIeuT8c.es5.O/m=sc2,per,mo,lp,ep,ti,stx,ds,dwi,enr,pwd,dw,plm,log,b/am=5AAAEgEJ/rt=j/d=1/rs=ACT90oE5I-8aYVPCV2C1ew9Ppk-LmUdDtw?wli=m.biP8Qw5r7GY.loadSv.O%3A%3Bm.tL3-fPeLRgg.mapcore.O%3A%3B&amp;cb=M\" as=\"script\" rel=\"preload\" type=\"application/javascript\" nonce=\"\">  <link href=\"/maps/preview/opensearch.xml?hl=es\" title=\"Google Maps\" rel=\"search\" type=\"application/opensearchdescription+xml\"> <title>HOTEL VISPERAS - Google Maps</title> <meta content=\"Busca negocios locales, consulta mapas y consigue información sobre rutas en Google Maps.\" name=\"Description\">  <meta content=\"Google Maps\" itemprop=\"name\"> <meta content=\"Google Maps\" property=\"og:title\">  <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.8552945%2C-75.5834102&amp;zoom=17&amp;size=900x900&amp;language=en&amp;sensor=false&amp;client=google-maps-frontend&amp;signature=t3cYayuwIq5llcdc30OD79TsX64\" itemprop=\"image\"> <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.8552945%2C-75.5834102&amp;zoom=17&amp;size=900x900&amp;language=en&amp;sensor=false&amp;client=google-maps-frontend&amp;signature=t3cYayuwIq5llcdc30OD79TsX64\" property=\"og:image\"> <meta content=\"900\" property=\"og:image:width\"> <meta content=\"900\" property=\"og:image:height\">  <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" itemprop=\"description\"> <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" property=\"og:description\">  <meta con",
+      "html_sample_end": "03des\\u0026gl\\u003dco\",\"/s?tbm\\u003dmap\\u0026gs_ri\\u003dmaps\\u0026suggest\\u003dp\\u0026authuser\\u003d0\\u0026hl\\u003des\\u0026gl\\u003dco\",\"/maps/preview/directions?authuser\\u003d0\\u0026hl\\u003des\\u0026gl\\u003dco\",null,null,\"/maps/rpc/vp?authuser\\u003d0\\u0026hl\\u003des\\u0026gl\\u003dco\",[[\"/maps/vt\"],755,[\"/maps/vt/stream\"],null,0,null,1001,\"/maps/vt\",null,null,\"CscYYoEBCAISVhI0CAISB3RyYWZmaWMYv4Q9Ig4KCWluY2lkZW50cxIBMSITCg5pbmNpZGVudHNfdGV4dBIBMRocEgJlcxoCY29iEghEEg4KA3NldBIHUm9hZG1hcCABIhcAAQIDBAUGBwgJCgsMDQ4PEBESExQVFjC0ATh4Sgd0cmFmZmljYloIAxIuEgwIAhIEYmlrZRi/hD0aHBICZXMaAmNvYhIIRBIOCgNzZXQSB1JvYWRtYXAgASIXAAECAwQFBgcICQoLDA0ODxAREhMUFRYwgJqeATiAowVKBGJpa2ViZwgIEjgSDwgCEgd0cmFuc2l0GL+EPRojEgJlcxoCY29iGQhEEhUKA3NldBIOVHJhbnNpdEZvY3VzZWQgASIXAAECAwQFBgcICQoLDA0ODxAREhMUFRYwgJqeATiAowVKB3RyYW5zaXRieAgJElkSDggCEgZpbmRvb3IYv4Q9GhwSAmVzGgJjb2ISCEQSDgoDc2V0EgdSb2FkbWFwIAEyHggMEAI4AeABBoACAbgCAcgCAdgCAegCAZADAeADAaIBBhgBMAF4ASIIDxAREhMUFRYwgJqeATiAowVKBmluZG9vcmKSAQg6EmkSDQgAGL+EPSIFCgNvZGwaHBICZXMaAmNvYhIIRBIOCgNzZXQSB1JvYWRtYXAgASoFLQAAgD8yKAgMEAIwADgB0gECGAHgAQaAAgG4AgHIAgHYAgHoAgGQAwGwAwHgAwGiAQYYATABeAEYASIIDxAREhMUFRYwgJqeATiAowVKDmluZG9vcl9kZWZhdWx0Yo0BCD0SYxIYCAISA3BzbSIHCgJzcBIBMYrI790PAhABGhwSAmVzGgJjb2ISCEQSDgoDc2V0EgdSb2FkbWFwIAEyHggMEAI4AeABBoACAbgCAcgCAdgCAegCAZADAeADAaIBBhgBMAF4ASIXAAECAwQFBgcICQoLDA0ODxAREhMUFRYwgJqeATiIDkoDcHNtYoABCBYSUBocEgJlcxoCY29iEghEEg4KA3NldBIHUm9hZG1hcCABMiUIDBACMAA4AVgA4AEGgAIBuAIBwAIByAIB2AIB6AIBkAMB4AMBogEGGAEwAXgBIhcAAQIDBAUGBwgJCgsMDQ4PEBESExQVFjDoAjisAkoLbWFqb3JfZXZlbnRiuAEIHRKcARJOCAISCGxvcmUtcmVjGL+EPfKh6sQJLgjOxVMI0cVTCLrdqAII9oXnFQi/xMYiCNmT+CwIvfT4LAi0lvksKAYoCSgMKA/yzp21DAQYAzACGggSAmVzGgJjbyABMj4IDBACMAA4AeABBoACAbgCAcACAcgCAdgCAegCAZADAcgDAeADAfADBvADCfADDPADD/gDCPgDC/gDDvgDFSIEBgkMDzCAowU4iA5KCGxvcmUtcmVjYn0IHhJkEigIAhIJbG9yZS1wMTNuGL+EPYrVl6YJBRCl/rcWisfW0AsAkpf01gsAGggSAmVzGgJjbyABMiwIDBACMAA4AeABBoACAbgCAcACAcgCAdgCAegCAZADAcgDAeADAfADCvgDFSIBCjCAowU42ARKCWxvcmUtcDEzbmLDAQgfEogBEhoIAhISY2F0ZWdvcmljYWwtc2VhcmNoGL+EPRo4",
+      "rating_source": "aria-label",
+      "reviews_source": "aria-label",
+      "photos_method": "modal_scroll",
+      "photos_confidence": 85,
+      "photos_evidence": {
+        "method": "modal_scroll",
+        "warnings": [
+          "Modal no visible tras click en button[aria-label*='Foto']"
+        ],
+        "scroll_iterations": 4,
+        "unique_image_sources": 9,
+        "confidence_note": "Alto"
+      },
+      "photos_warnings": []
+    },
+    "geo_validation": {
+      "enabled": true,
+      "performed": true,
+      "is_valid": true,
+      "distance_km": 24.14,
+      "threshold_km": 30.0,
+      "confidence": 0.08,
+      "expected_location": {
+        "lat": 4.637365,
+        "lng": -75.5703107,
+        "address": "Salento, Quindío, Colombia",
+        "city": "Salento"
+      },
+      "actual_location": {
+        "lat": 4.855294499999999,
+        "lng": -75.5834102,
+        "address": "Km. 4 vía Termales, vereda La Leona, Santa Rosa de Cabal, San RAMON, Santa Rosa de Cabal, Risaralda, Colombia",
+        "city": "Santa Rosa de Cabal",
+        "state": "Risaralda",
+        "country": "Colombia",
+        "place_id": "ChIJpS416kyCOI4Rqk6mdT3LIiU"
+      },
+      "resolved_location": "Santa Rosa de Cabal, Risaralda",
+      "api_calls_used": 3,
+      "error_message": null,
+      "location_override_applied": true
+    },
+    "data_confidence": {
+      "rating": true,
+      "reviews": true,
+      "photos": true,
+      "horarios": false,
+      "website": true,
+      "telefono": true,
+      "whatsapp": false,
+      "posts": false,
+      "qa": true
+    },
+    "driver_available": true,
+    "driver_error": null,
+    "timestamp_utc": "2025-10-29T22:26:23.589062"
+  }
+}

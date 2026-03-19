@@ -1,0 +1,22 @@
+<!-- cursorrules_version: 4.5.3 → v4.5.3+ (process) | last_update: 2026-03-18 -->
+
+# IA Hoteles Agent - Compatibilidad
+
+Este archivo es un puente de compatibilidad.
+
+- Fuente canónica de contexto global: `AGENTS.md`
+- Proposito de este archivo: compatibilidad con herramientas legacy que aun leen `.cursorrules`
+- Regla de mantenimiento: no introducir reglas nuevas aqui sin reflejarlas primero en `AGENTS.md`
+
+## Carga de contexto
+
+1. Leer `AGENTS.md` como instruccion principal.
+2. Tratar este archivo como alias de compatibilidad.
+3. Si hay conflicto, prevalece `AGENTS.md`.
+
+## Validacion post-cambio contextual
+
+```bash
+python scripts/run_all_validations.py --quick
+python scripts/run_all_validations.py
+```

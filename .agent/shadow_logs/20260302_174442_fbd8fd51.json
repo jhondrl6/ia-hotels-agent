@@ -1,0 +1,51 @@
+{
+  "comparison_id": "20260302_174442_fbd8fd51",
+  "timestamp": "2026-03-02T17:44:42.761424",
+  "hotel_id": "hotel_test_001",
+  "hotel_name": "Hotel Test",
+  "legacy_scenarios": {
+    "conservative": {
+      "monthly_cop": 2450000.0
+    },
+    "realistic": {
+      "monthly_cop": 3430000.0
+    },
+    "optimistic": {
+      "monthly_cop": 4410000.0
+    }
+  },
+  "legacy_pricing": {
+    "monthly_price_cop": 245000.0,
+    "pain_ratio": 0.05,
+    "tier": "boutique"
+  },
+  "new_scenarios": {
+    "conservative": {
+      "monthly_cop": 2450000.0
+    },
+    "realistic": {
+      "monthly_cop": 3430000.0
+    },
+    "optimistic": {
+      "monthly_cop": 4410000.0
+    }
+  },
+  "new_pricing": {
+    "monthly_price_cop": 1200000,
+    "pain_ratio": 0.2449,
+    "tier": "boutique",
+    "is_compliant": false
+  },
+  "monthly_loss_delta": 0.0,
+  "monthly_loss_delta_pct": 0.0,
+  "pricing_delta": 955000.0,
+  "pricing_delta_pct": 389.8,
+  "would_use_new": false,
+  "rejection_reason": "Pain ratio outside GATE: 24.49%",
+  "flags_used": {
+    "pricing_hybrid_enabled": false,
+    "pricing_hybrid_mode": "shadow",
+    "shadow_logging_enabled": true
+  },
+  "validation_errors": []
+}

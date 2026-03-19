@@ -5,27 +5,32 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.5.4] - 2026-03-16
+## [4.5.4] - 2026-03-17
 
 ### 🎯 Objetivo
-Actualizar el v4_regression_guardian según el plan de actualización v4_regression_guardian
+Implementar mejoras incrementales al agent_harness inspiradas en Superpowers sin adopción de framework externo.
 
 ### ✅ Completado
 
-**Mejoras en el v4_regression_guardian:**
-- Añadido flag `--full` para validación completa
-- Añadido flag `--quiet` para modo CI
-- Añadido flag `--workdir` para directorio alternativo
-- Añadido flag `--retry-failed` para re-ejecutar pasos fallidos
-- Integración con agent_harness para registrar resultados
-- Validación de capability contracts
-- Mejorado manejo de encoding para evitar errores Unicode
+**Cambios Implementados**
+- `.agents/workflows/phased_project_executor.md` - Agregado Step 0.5 TDD Gate
+- `.agents/workflows/audit_guardian.md` - Modificado Steps 2-4 para ejecución paralela
 
 ### 📁 Archivos Modificados
 
 | Archivo | Cambio |
 |---------|--------|
-| .agents/workflows/v4_regression_guardian.py | Actualización completa con nuevas funcionalidades |
+| `.agents/workflows/phased_project_executor.md` | Agregado TDD Gate |
+| `.agents/workflows/audit_guardian.md` | Ejecución paralela |
+
+### Métricas
+
+| Métrica | Valor |
+|---------|-------|
+| Tests | 1434+ passing |
+| Coherence | ≥ 0.8 |
+| Desconexiones | 0 |
+| Hard contradictions | 0 |
 
 ## [4.5.3] - 2026-03-15
 

@@ -1,0 +1,24 @@
+{
+  "asset_type": "review_plan",
+  "generated_at": "2026-03-16T12:41:53.299384",
+  "confidence_level": "0.7",
+  "validation_sources": [
+    "web_scraping",
+    "google_business_profile",
+    "user_input"
+  ],
+  "preflight_status": "WARNING",
+  "can_use": false,
+  "disclaimer": "Este asset fue generado con datos estimados o de una sola fuente. Se recomienda verificar antes de usar en producción.",
+  "source_data_hash": "722f3fc1c5714aa5",
+  "diagnostic_reference": "None",
+  "problems_solved": [
+    "Bajo Score GBP"
+  ],
+  "coherence_score": 0.91,
+  "problem_solved": "Gestión ineficiente de reseñas online",
+  "impact_cop": 600000,
+  "priority": "P2",
+  "timing": "Día 3",
+  "why_this_asset": "Establece sistema para aumentar y gestionar reseñas, mejorando reputación online"
+}

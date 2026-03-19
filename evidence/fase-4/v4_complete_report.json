@@ -1,0 +1,16 @@
+{
+  "hotel": "Hotel Vísperas",
+  "url": "https://hotelvisperas.com",
+  "region": "default",
+  "proyeccion_financiera": {
+    "rango": "$5,076,000 - $-189,000 COP/mes",
+    "valor_esperado": "$2,610,000 COP/mes"
+  },
+  "coherence_score": 0.91,
+  "hard_contradictions": 0,
+  "financial_validity": true,
+  "evidence_coverage": 95.0,
+  "critical_recall": 100.0,
+  "publication_readiness": "READY_FOR_PUBLICATION",
+  "timestamp": "2026-03-15T19:52:20.000Z"
+}

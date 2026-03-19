@@ -1,0 +1,289 @@
+# IA Hoteles Agent - Configuracion Principal
+
+apis:
+  anthropic:
+    model: "claude-sonnet-4-20250514"
+    max_tokens: 4000
+    temperature: 0.7
+
+  deepseek:
+    model: "deepseek-chat"
+    max_tokens: 4000
+    temperature: 0.7
+    base_url: "https://api.deepseek.com/v1"
+
+  perplexity:
+    model: "llama-3.1-sonar-large-128k-online"
+
+  openai:
+    model: "gpt-4"
+
+llm_provider:
+  default: "auto"
+  fallback_enabled: true
+  cost_tracking: true
+
+data_acquisition:
+  strategy: "progressive_fallback"
+  timeout: 30
+  retry_attempts: 3
+  
+  sources:
+    primary: "web_scraping"
+    secondary: "google_maps_api"
+    fallback: "plan_maestro_benchmarks"
+  
+  fallback_data:
+    precio_promedio_regional:
+      eje_cafetero: 300000
+      caribe: 380000
+      bogota: 320000
+      antioquia: 250000
+    ocupacion_promedio: 0.62
+    comision_ota_default: 0.18
+    margen_operativo: 0.35
+
+scrapers:
+  selenium:
+    headless: true
+    timeout: 30
+    user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  
+  requests:
+    timeout: 15
+    verify_ssl: true
+    
+    # SSL Fallback - Manejo resiliente de certificados expirados
+    # Niveles: 1) HTTPS verify=True, 2) HTTPS verify=False, 3) HTTP (si allow_http_downgrade)
+    ssl_fallback:
+      enabled: true                    # Permite bypass SSL cuando certificado falla
+      allow_http_downgrade: false      # Si true, intenta HTTP como último recurso
+      log_to_file: true                # Escribe a logs/ssl_fallback.log
+      seo_penalty: 30                  # Puntos a restar del score SEO cuando SSL falla
+
+  posts:
+    enabled: true
+    max_wait: 12
+    nav_timeout: 8
+
+thresholds:
+  gbp_min_score: 60
+  schema_required: ["Hotel", "FAQPage"]
+  min_reviews: 10
+  min_photos: 15
+
+# Package Thresholds - Basados en BenchmarkingV2 Sección III
+# Umbrales de decisión por región para recomendación de paquetes
+package_thresholds:
+  eje_cafetero:
+    min_reviews: 8
+    min_gbp_score: 42
+    ocupacion_ref: 0.52
+    riesgo_ocupacion: "alto"
+    paquete_base: "starter_geo"
+    justificacion: "BM v2 Sec 3.1: Baja ocupacion (52%) compensada por ADR 330k. Mitigar estacionalidad."
+  
+  antioquia:
+    min_reviews: 10
+    min_gbp_score: 50
+    ocupacion_ref: 0.60
+    riesgo_ocupacion: "bajo"
+    paquete_base: "pro_aeo"
+    justificacion: "BM v2 Sec 3.3: Ocupacion estable (60%), ADR premium 280k. Pro AEO como estandar."
+  
+  caribe:
+    min_reviews: 15
+    min_gbp_score: 55
+    ocupacion_ref: 0.66
+    riesgo_ocupacion: "medio"
+    paquete_base: "elite"
+    justificacion: "BM v2 Sec 3.2: RevPAR 270.6k ultra-premium. Proteger margen vs OTI (Elite PLUS)."
+  
+  default:
+    min_reviews: 10
+    min_gbp_score: 48
+    ocupacion_ref: 0.58
+    riesgo_ocupacion: "medio"
+    paquete_base: "pro_aeo"
+    justificacion: "Valores por defecto para hoteles fuera de regiones priorizadas."
+
+communication_templates:
+  version: "v2_probado"
+  email_tone: "ejecutivo_cercano"
+  whatsapp_max_chars: 300
+  personalization_engine: "claude_api"
+
+output:
+  formats: ["md", "pdf", "html"]
+  include_certificado_preview: true
+  marca_campos_estimados: true
+  charts_engine: "matplotlib"
+  
+kpis:
+  objetivo_acs: 40
+  objetivo_aoir: 60
+  objetivo_dvl: 35
+  objetivo_oti: -25
+  objetivo_roas: 6  # v2.2: ajustado de 8X a 6X para credibilidad comercial
+
+# Paquetes de Implementación - Plan Maestro v2.3
+# "Estrategia EVIDENCIA-CONFIANZA-ESCALA"
+packages:
+  starter_geo:
+    nombre: "Activación GEO"
+    precio_cop: 1800000
+    incluye:
+      - "Optimización Google Business Profile"
+      - "50 directorios locales"
+      - "Monitoreo mensual"
+    tiempo_implementacion_dias: 7
+  
+  piloto_30d:
+    nombre: "Activación Visibilidad Inteligente 30 días"
+    precio_cop: 800000
+    incluye:
+      - "GBP optimizado (fotos, categoría, descripción)"
+      - "Schema JSON-LD básico"
+      - "10 FAQs optimizadas para IA"
+      - "Reporte semanal de visibilidad"
+      - "Garantía: +15% consultas directas o 50% reembolso"
+    tiempo_implementacion_dias: 3
+    es_piloto: true
+    maximo_faqs: 10
+    schema_basico: true
+    tracking_semanal: true
+  
+  pro_aeo:
+    nombre: "Plataforma Inteligencia Artificial"
+    precio_cop: 3800000
+    incluye:
+      - "Pro AEO: Schema JSON-LD completo"
+      - "50 FAQs mensuales optimizadas para IA"
+      - "5 posts GBP semanales"
+      - "Monitoreo IA 24/7"
+      - "Dashboard de visibilidad"
+      - "Garantía: ROI 3X en 6 meses"
+    tiempo_implementacion_dias: 5
+  
+elite:
+    nombre: "Suite Autónoma de Recepción IA"
+    precio_cop: 7500000
+    incluye:
+      - "Pro AEO completo"
+      - "Chatbot IA personalizado"
+      - "Integración motor de reservas"
+      - "Soporte 24/7 prioridad"
+      - "Garantía: ROI 5X en 6 meses"
+    tiempo_implementacion_dias: 10
+    requiere_pro_aeo_previo: true
+  
+  elite_plus:
+    nombre: "Suite Premium con Certificación"
+    precio_cop: 9800000
+    incluye:
+      - "Elite completo"
+      - "Dashboard monitoring 10 queries"
+      - "Certificado IA-Ready"
+      - "Kit físico autoridad"
+      - "Garantía: ROI 6X en 6 meses"
+    tiempo_implementacion_dias: 14
+
+# Buyer Persona - Plan Maestro v2.3
+# "Entender al decisor del Eje Cafetero"
+buyer_persona:
+  region: "Eje Cafetero"
+  edad_rango: "40-65 años"
+  perfil:
+    - "Dueño o familiar directo del hotel"
+    - "Maneja WhatsApp fluidamente, pero no entiende jerga digital"
+    - "Ciclo de decisión: 2-4 semanas"
+    - "Necesita consultar con pareja, contador, o hijo que 'sabe de tecnología'"
+    - "Toma decisiones basadas en casos de éxito comprobados"
+  
+  objeciones_comunes:
+    - objecion: "Mi sobrino me puede hacer la página web"
+      respuesta: "Tu sobrino hace web bonita. Nosotros hacemos web que VENDE. Diferencia: mientras tu competencia aparece en ChatGPT, tu hotel no. Eso cuesta $4.5M/mes en reservas perdidas."
+      tiempo_audio: "45 segundos"
+    
+    - objecion: "Ya tengo a alguien que me maneja las redes"
+      respuesta: "¿Tu persona maneja Instagram/Facebook? Bien. Nosotros manejamos donde la IA busca hoteles: Google Maps, ChatGPT, Perplexity. Son canales diferentes. Es como si alguien vende en Facebook pero no en tu puerta."
+      tiempo_audio: "50 segundos"
+    
+    - objecion: "Booking me trae clientes, ¿para qué cambiar?"
+      respuesta: "Exacto. Booking te trae clientes pero te cobra 18% de comisión. Nosotros traemos clientes que NO pasan por Booking. Reservas directas. Ejemplo: 10 reservas extra al mes directo = $18M anuales. Nuestro costo es $3.8M. La diferencia es tuya."
+      tiempo_audio: "55 segundos"
+    
+    - objecion: "Necesito pensarlo y te llamo"
+      respuesta: "Perfecto. Mientras piensas, hazme un favor: sube 5 fotos nuevas a tu Google Maps esta semana. Eso solo ya te gana 15% más visibilidad. Es gratis, toma 10 minutos. Prueba rápido que funciona. Si ves sentido, arreglamos esto con presupuesto. ¿Listo?"
+      tiempo_audio: "60 segundos"
+    
+    - objecion: "¿Y esto quién lo garantiza? Podría ser estafa"
+      respuesta: "Entendible. Por eso empezamos con un piloto de $800K por 30 días. Si en 30 días no ves al menos 15% más consultas directas, te devolvemos 50% del dinero. Cero riesgo. El único riesgo es no hacerlo y perder $4.5M/mes más."
+      tiempo_audio: "65 segundos"
+  
+  canales_preferidos:
+    - "WhatsApp"
+    - "Llamada telefónica"
+    - "Reunión cara a cara"
+  
+  no_funciona:
+    - "Email largo"
+    - "Jerga técnica"
+    - "PDFs de 30 páginas"
+    - "Videollamada sin agenda previa"
+
+# CAC Tracking - Plan Maestro v2.2
+# "Sin data no hay estrategia, solo esperanza"
+acquisition:
+  cac_max_cop: 800000                    # Plan v2.2 Sección 2.2
+  cac_alerta_umbral: 0.85               # Alertar si CAC > 85% del máximo
+  
+  canales:
+    linkedin:
+      nombre: "LinkedIn"
+      cpl_objetivo: 80000               # Costo por lead objetivo
+      descripcion: "Llegar a gerentes"
+      tasa_conversion: 0.30             # 30% piden diagnóstico
+    
+    webinar:
+      nombre: "Webinar/Taller"
+      cpl_objetivo: 120000
+      descripcion: "Mostrar pérdida real"
+      tasa_conversion: 0.30
+    
+    whatsapp:
+      nombre: "WhatsApp"
+      cpl_objetivo: 200000
+      descripcion: "Cerrar venta"
+      tasa_conversion: 0.25             # 1/4 firma en 30 días
+    
+    instagram:
+      nombre: "Instagram"
+      cpl_objetivo: 160000
+      descripcion: "Prueba social"
+      tasa_conversion: 0.05             # 5% de alcance convierte
+  
+  tracking:
+    enabled: true
+    database: "data/cache/clients.json"
+    exportar_reportes: true
+    frecuencia_alerta: "semanal"
+  
+  validacion_propuesta:
+    avisar_si_cac_alto: true
+    bloquear_si_excedera: false          # Advertencia, no bloqueo
+
+# Certificados - Plan Maestro v2.2
+# "Vende sueños y acorta ciclos de cierre"
+certificates:
+  auto_generate: true
+  reserva_directa:
+    umbral_reservas_directas: 0.60
+    umbral_ota_reduccion: 10             # p.p. de reducción
+    vigencia_meses: 12
+    auto_renovacion: true
+  
+  web_optimizada:
+    umbral_score: 80
+    vigencia_meses: 12
+    auto_renovacion: true

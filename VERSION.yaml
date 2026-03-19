@@ -1,0 +1,91 @@
+# VERSION.yaml - Fuente unica de verdad para el sistema de contexto
+project: "IA Hoteles Agent CLI"
+version: "4.5.3"
+codename: "Communication Update"
+release_date: "2026-03-15"
+plan_maestro_version: "v2.6.0"
+agent_harness_version: "3.3.4"
+
+# v4.5.3 - Communication Update (FASE-5 completada)
+# - Adopta enfoque de comunicación del diagnóstico antiguo (25/feb)
+# - Mantiene validaciones técnicas de v4.5.2
+# - Coherence score: 0.91 (umbral: 0.8) ✅
+# - Hard contradictions: 0 ✅
+# - Financial validity: 100% ✅
+# - Evidence coverage: 95.0% ✅
+# - Tests: 1434+ passing ✅
+# - Publication Ready: true ✅
+# - Coherence score: 0.64 → 0.91 (umbral: 0.8)
+# - Price bug fixed: $800k → $130k (ahora usa pricing wrapper correctamente)
+# - ConfidenceLevel enum unificado: arreglado conflicto entre data_validation y commercial_documents
+# - Publication gates: coherence = PASSED
+# - 1374+ tests passing
+# - Corrección de desconexiones estructurales entre módulos GEO y documentos comerciales
+# - PainSolutionMapper detecta problemas ai_crawler_blocked, low_citability, low_ia_readiness
+# - V4DiagnosticGenerator incluye sección de métricas GEO
+# - V4ProposalGenerator incluye assets GEO en propuesta
+# - Gate de contenido vacío implementado (mínimo 50 caracteres)
+# - Gate de placeholders implementado ($$VAR, {{VAR}}, [[VAR]])
+# - faq_page genera contenido real específico del hotel
+# - org_schema tiene campos poblados con fallback
+# - performance_audit usa datos reales del audit
+# - 1374 tests passing
+
+# v4.4.1 - Catálogo Unificado de Assets (FASE-ASSET-06 completada)
+# - Asset catalog centralizado en asset_catalog.py
+# - Gate de coherencia mejorado con promised_assets_exist
+# - Refactorización: PainSolutionMapper, ConditionalGenerator, PreflightChecker
+# - 9 assets implementados, 3 prometeros-no-implementados gestionados
+# - 1323 tests passing (17 geo_validation related)
+
+# v4.4.0 - Corrección de Inconsistencias Críticas
+# - Adaptador unificado de taxonomías de confianza (B-001)
+# - Corrección semántica financiera: escenarios negativos manejados (B-002)
+# - Alineación de unidades pricing vs coherence (M-001, m-001)
+# - Fuente única de problemas entre diagnóstico y propuesta (M-002)
+# - Observabilidad determinística: manifest.json por run
+# - 1261 tests pasando (1257 + 4 nuevos tests de integración)
+
+# v4.3.0 - Fase 6: Observabilidad y Regresión
+# - Sistema de evidencia trazable completo
+# - Motor de contradicciones (hard/soft conflicts)
+# - Quality gates de pre-publicación
+# - Composición documental determinística
+# - Dashboard de observabilidad y calibración
+# - Suite de regresión permanente (Hotel Vísperas)
+# - KPIs: Evidence Coverage >= 95%, Hard Contradictions = 0
+# - Estados de publicación: READY_FOR_CLIENT, DRAFT_INTERNAL, REQUIRES_REVIEW
+# - 1257 tests pasando
+
+# v4.2.0 - Cambios principales:
+# - Bug fixes: rationale attribute error corregido
+# - Flujo v4complete funcional end-to-end
+# - Integración completa Agent Harness con handlers
+# - Meta-Skills: v4_financial_calculation, v4_regional_resolver
+# - Preparado para transición SHADOW → ACTIVE
+# - 908 tests pasando
+
+# v4.2.0 - Cambios principales:
+# - Bug fixes: rationale attribute error corregido
+# - Flujo v4complete funcional end-to-end
+# - Integración completa Agent Harness con handlers
+# - Meta-Skills: v4_financial_calculation, v4_regional_resolver
+# - Preparado para transición SHADOW → ACTIVE
+# - 908 tests pasando
+
+# v4.1.0 - Cambios principales:
+# - Generación automática de documentos comerciales (diagnóstico + propuesta)
+# - Controles de coherencia entre diagnóstico, propuesta y assets
+# - CoherenceConfig: Umbrales configurables desde .conductor/guidelines.yaml
+# - PainSolutionMapper: Mapeo problemas→assets con validación de confianza
+# - Agent Harness mejorado: Logs enriquecidos con coherence_score
+# - Comando execute recupera análisis v4.0 con coherence >= 0.8
+# - 704 tests pasando (338 v4.0 + 21 commercial + 11 edge cases + 334 existentes)
+
+# v4.0.0 - Cambios principales:
+# - Nueva arquitectura: Validación cruzada, motor financiero, flujo dos fases
+# - Taxonomía de confianza: VERIFIED/ESTIMATED/CONFLICT
+# - Cálculo por escenarios: Conservador/Realista/Optimista
+# - Generación condicional de assets con gates de calidad
+# - Metadatos obligatorios en todos los assets
+

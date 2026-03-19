@@ -1,0 +1,26 @@
+{
+  "asset_name": "",
+  "asset_type": "hotel_schema",
+  "generated_at": "2026-03-16T12:41:53.252420",
+  "confidence_level": "estimated",
+  "confidence_score": 0.5,
+  "validation_sources": [],
+  "preflight_status": "warning",
+  "can_use": false,
+  "disclaimer": null,
+  "generated_by": "IAH_v4.0",
+  "version": "4.0.0",
+  "hotel_id": "hotel_vísperas",
+  "hotel_name": "Hotel Vísperas",
+  "status": "generated",
+  "source_data_hash": "7a5abe0e4f5d1466",
+  "fallback_used": true,
+  "fallback_reason": "Missing field hotel_data, using fallback: generate_basic_schema",
+  "disclaimers": [
+    "Missing field hotel_data, using fallback: generate_basic_schema"
+  ],
+  "tags": [
+    "conditional_generation",
+    "auto_generated"
+  ]
+}

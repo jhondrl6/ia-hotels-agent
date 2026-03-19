@@ -1,0 +1,775 @@
+{
+  "version": "v2.5.0",
+  "fecha_actualizacion": "2026-03-01T00:00:00Z",
+  "documento_oficial": "Plan_maestro_v2_5.md",
+  "plan_versions": {
+    "decision_core_v24": {
+      "version": "v2.5.0",
+      "documento_oficial": "Plan_maestro_v2_5.md",
+      "packages_key": "paquetes_servicios_v23",
+      "addons_key": "addons_v242",
+      "umbrales_key": "umbrales_decision",
+      "owner_bundles": [
+        "plan_7_30_60_90_por_region",
+        "kpis_cliente_por_region",
+        "dependencias_cliente_por_region",
+        "cadencia_mensual_por_region",
+        "triggers_upgrade_por_region",
+        "playbook_cierre_por_region"
+      ],
+      "descripcion": "Nucleo v2.5: Sensibilidad ajustada por inflacion laboral (Salario +23%) y RevPAR 2026."
+    },
+    "delivery_remote_v25": {
+      "version": "v2.5.0",
+      "documento_oficial": "Plan_maestro_v2_5.md",
+      "delivery_structure_ref": "v25_config.delivery_structure",
+      "deployment_ref": "v25_config.deployment",
+      "manifest_version": "2.5.0",
+      "roles": [
+        "01_PARA_EL_DUEÑO_HOY",
+        "02_PARA_EL_SITIO_WEB",
+        "03_PARA_TU_WEBMASTER",
+        "04_GUIA_MOTOR_RESERVAS"
+      ],
+      "descripcion": "Capa de materialización y despliegue remoto (assets por rol, manifest trazable, preflight/deploy dry-run)."
+    }
+  },
+  "v25_config": {
+    "cms_detection": {
+      "enabled": true,
+      "supported_cms": [
+        "wordpress",
+        "wix",
+        "squarespace",
+        "shopify",
+        "webflow"
+      ],
+      "fallback_guide": "guia_instalacion_unknown.md"
+    },
+    "booking_engine_detection": {
+      "enabled": true,
+      "supported_engines": [
+        "lobbypms",
+        "cloudbeds",
+        "sirvoy",
+        "beds24",
+        "littlehotelier",
+        "siteminder"
+      ]
+    },
+    "delivery_structure": {
+      "organize_by_roles": true,
+      "generate_manifest": true,
+      "generate_delegation_email": true
+    },
+    "deployment": {
+      "mvp_mode": "dry_run",
+      "supported_methods": [
+        "ftp",
+        "wp-api"
+      ],
+      "require_preflight": true
+    },
+    "content_standards_geo": {
+      "version": "1.0",
+      "source_doc": "guia_estrategia_geo_aeo.md",
+      "formats": {
+        "definition_page": {
+          "length_words": [
+            500,
+            1000
+          ],
+          "requires_table": true
+        },
+        "data_research": {
+          "length_words": [
+            1000,
+            2000
+          ],
+          "requires_data_table": true
+        },
+        "expert_take": {
+          "length_words": [
+            800,
+            1500
+          ],
+          "first_person": true
+        },
+        "structured_faq": {
+          "length_words": [
+            1000,
+            2000
+          ],
+          "binary_answers": true
+        }
+      },
+      "style_rules": {
+        "max_first_paragraph_words": 40,
+        "require_data_table": true,
+        "forbidden_words": [
+          "delve",
+          "comprehensive",
+          "in today's landscape",
+          "integral",
+          "profundicemos"
+        ]
+      },
+      "win_conditions": [
+        "ai_overview_citation",
+        "perplexity_source_link",
+        "chatgpt_mention"
+      ]
+    },
+    "conductor_config": {
+      "enabled": true,
+      "version": "3.1.0",
+      "spec_path": ".conductor/spec.md",
+      "guidelines_path": ".conductor/guidelines.yaml",
+      "blocking_severity": "HIGH",
+      "auto_sync": true,
+      "quality_gates": {
+        "core_modules": [
+          "modules/decision_engine.py",
+          "modules/orchestrator/pipeline.py"
+        ],
+        "delivery_assets": true
+      }
+    }
+  },
+  "regiones": {
+    "eje_cafetero": {
+      "revpar_cop": 197120,
+      "adr_cop": 385000,
+      "ocupacion": 0.512,
+      "segments": {
+        "boutique_10_25": {"adr_cop": 420000, "habitaciones_range": [10, 25]},
+        "standard_26_60": {"adr_cop": 350000, "habitaciones_range": [26, 60]}
+      },
+      "reservas_mensuales_promedio": 200,
+      "valor_reserva_promedio": 300000,
+      "canal_directo_porcentaje": 0.5,
+      "habitaciones_promedio": 15,
+      "factor_captura_aila": 0.55,
+      "comision_ota_min": 0.12,
+      "comision_ota_base": 0.15,
+      "comision_ota_max": 0.18,
+      "penalizacion_invisibilidad_ia": 0.05,
+      "factor_perdida_base": 0.09,
+      "factor_perdida_min": 0.077,
+      "factor_perdida_max": 0.103,
+      "factor_captura_fuente": "Indice AILA Colombia - Guia Benchmarking 2026",
+      "riesgo_ocupacion": "alto",
+      "geo_score_ref": 60,
+      "aeo_score_ref": 40,
+      "benchmarks": {
+        "gbp_score": 60,
+        "schema_score": 40,
+        "iao_score": 20
+      },
+      "_metadata": {
+        "tipo": "benchmark_regional",
+        "uso_recomendado": "comparacion_contextual",
+        "no_usar_como": "dato_hotel_especifico"
+      }
+    },
+    "caribe": {
+      "revpar_cop": 602800,
+      "adr_cop": 880000,
+      "ocupacion": 0.685,
+      "segments": {
+        "boutique_10_25": {"adr_cop": 950000, "habitaciones_range": [10, 25]},
+        "standard_26_60": {"adr_cop": 750000, "habitaciones_range": [26, 60]}
+      },
+      "reservas_mensuales_promedio": 350,
+      "valor_reserva_promedio": 900000,
+      "canal_directo_porcentaje": 0.5,
+      "habitaciones_promedio": 20,
+      "factor_captura_aila": 0.85,
+      "comision_ota_min": 0.12,
+      "comision_ota_base": 0.15,
+      "comision_ota_max": 0.18,
+      "penalizacion_invisibilidad_ia": 0.05,
+      "factor_perdida_base": 0.03,
+      "factor_perdida_min": 0.027,
+      "factor_perdida_max": 0.0345,
+      "factor_captura_fuente": "Indice AILA Colombia - Guia Benchmarking 2026",
+      "riesgo_ocupacion": "medio",
+      "geo_score_ref": 65,
+      "aeo_score_ref": 45,
+      "benchmarks": {
+        "gbp_score": 65,
+        "schema_score": 45,
+        "iao_score": 25
+      },
+      "_metadata": {
+        "tipo": "benchmark_regional",
+        "uso_recomendado": "comparacion_contextual",
+        "no_usar_como": "dato_hotel_especifico"
+      }
+    },
+    "antioquia": {
+      "revpar_cop": 359520,
+      "adr_cop": 560000,
+      "ocupacion": 0.642,
+      "segments": {
+        "boutique_10_25": {"adr_cop": 620000, "habitaciones_range": [10, 25]},
+        "standard_26_60": {"adr_cop": 480000, "habitaciones_range": [26, 60]}
+      },
+      "reservas_mensuales_promedio": 250,
+      "valor_reserva_promedio": 350000,
+      "canal_directo_porcentaje": 0.5,
+      "habitaciones_promedio": 12,
+      "factor_captura_aila": 0.72,
+      "comision_ota_min": 0.12,
+      "comision_ota_base": 0.15,
+      "comision_ota_max": 0.18,
+      "penalizacion_invisibilidad_ia": 0.05,
+      "factor_perdida_base": 0.056,
+      "factor_perdida_min": 0.0476,
+      "factor_perdida_max": 0.0664,
+      "factor_captura_fuente": "Indice AILA Colombia - Guia Benchmarking 2026",
+      "riesgo_ocupacion": "bajo",
+      "geo_score_ref": 50,
+      "aeo_score_ref": 40,
+      "benchmarks": {
+        "gbp_score": 50,
+        "schema_score": 40,
+        "iao_score": 20
+      },
+      "_metadata": {
+        "tipo": "benchmark_regional",
+        "uso_recomendado": "comparacion_contextual",
+        "no_usar_como": "dato_hotel_especifico"
+      }
+    },
+    "default": {
+      "revpar_cop": 250000,
+      "habitaciones_promedio": 15,
+      "factor_captura_aila": 0.7,
+      "comision_ota_min": 0.12,
+      "comision_ota_base": 0.15,
+      "comision_ota_max": 0.18,
+      "penalizacion_invisibilidad_ia": 0.05,
+      "factor_perdida_base": 0.06,
+      "factor_perdida_min": 0.051,
+      "factor_perdida_max": 0.069,
+      "factor_captura_fuente": "Indice AILA Colombia (estimado)",
+      "riesgo_ocupacion": "medio",
+      "geo_score_ref": 48,
+      "aeo_score_ref": 38,
+      "benchmarks": {
+        "gbp_score": 48,
+        "schema_score": 38,
+        "iao_score": 18
+      }
+    }
+  },
+  "paquetes_servicios_v23": {
+    "Starter GEO": {
+      "precio_cop": 1800000,
+      "roi_target": 3.0,
+      "componentes": [
+        "GBP optimizado",
+        "5 directorios",
+        "3 posts/mes",
+        "5 FAQs schema"
+      ],
+      "componentes_cliente": [
+        "Ficha de Google optimizada (GEO Ready)",
+        "Presencia en mapas de agentes IA",
+        "3 publicaciones al mes con datos estructurados"
+      ],
+      "plan_7_30_60_90_por_region": {
+        "default": [
+          "7d: Ficha de Google corregida (categorias, CTA, horarios) + fotos clave subidas",
+          "30d: 3 publicaciones y 5 Q&A publicados; enlaces de contacto medidos",
+          "60d: Limpieza de reseñas sin responder y protocolo de respuestas activado",
+          "90d: Alta en 5 guias/directorios locales + revisión de ranking en Maps"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "kpis_cliente_por_region": {
+        "default": [
+          "Clics a llamar/WhatsApp desde Google Maps",
+          "Publicaciones GBP realizadas/mes",
+          "% reseñas respondidas (propietario)"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "dependencias_cliente_por_region": {
+        "default": [
+          "Acceso administrador a ficha de Google",
+          "Logo y 10-15 fotos recientes",
+          "Numero de WhatsApp para contacto y tiempos de respuesta"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "cadencia_mensual_por_region": {
+        "default": [
+          "3 publicaciones nuevas",
+          "Revisión y respuesta de reseñas",
+          "Actualización de fotos y Q&A si cambian servicios"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "triggers_upgrade_por_region": {
+        "default": [
+          "GBP score >70 y consultas directas estables → evaluar Pro AEO",
+          "Activity <30 sostenida → activar addon GBP Activation"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "playbook_cierre_por_region": {
+        "default": [
+          "Responder mensajes en <10 minutos en horario comercial",
+          "Guion 30s: tarifa, disponibilidad, ubicacion corta, CTA a confirmar",
+          "Seguimiento 24h si no responde"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      }
+    },
+    "Pro AEO": {
+      "precio_cop": 3800000,
+      "roi_target": 4.0,
+      "componentes": [
+        "JSON-LD completo",
+        "50 FAQs",
+        "10 guias citables"
+      ],
+      "componentes_cliente": [
+        "Datos del hotel optimizados para busqueda generativa",
+        "50 preguntas frecuentes para Perplexity/ChatGPT",
+        "Prep-Kit para Protocolo MCP (IA Access)"
+      ],
+      "plan_7_30_60_90_por_region": {
+        "default": [
+          "7d: Datos base estructurados (schema) + FAQs prioritarias publicadas",
+          "30d: 50 FAQs listas y enlazadas; mini guía citables",
+          "60d: Ajustes de datos para coherencia en IA; seguimiento de menciones",
+          "90d: Optimización de contenido citado y ampliación de FAQs según preguntas reales"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "kpis_cliente_por_region": {
+        "default": [
+          "Menciones en IA (ChatGPT/Perplexity)",
+          "FAQs publicadas y vistas",
+          "Clics a WhatsApp/llamar desde ficha/web"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "dependencias_cliente_por_region": {
+        "default": [
+          "Acceso a CMS o quien publica FAQs",
+          "Logo/fotos y descripciones validadas",
+          "Tiempo de respuesta en WhatsApp"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "cadencia_mensual_por_region": {
+        "default": [
+          "Publicar/ajustar FAQs y guias citables",
+          "Revisión de coherencia de datos estructurados",
+          "Reporte de menciones IA y ajustes"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "triggers_upgrade_por_region": {
+        "default": [
+          "Menciones IA altas pero baja conversión → pasar a Pro AEO Plus",
+          "Necesidad de conversión directa (brecha >$2.5M) → Pro AEO Plus"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "playbook_cierre_por_region": {
+        "default": [
+          "Responder dudas frecuentes con plantillas",
+          "Enviar tarifa + CTA a confirmar por WhatsApp",
+          "Registro básico de contactos para seguimiento"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      }
+    },
+    "Pro AEO Plus": {
+      "precio_cop": 4800000,
+      "roi_target": 5.2,
+      "componentes": [
+        "TODO Pro AEO",
+        "Boton wa.me tracking",
+        "1 fix web critico",
+        "Protocolo reviews",
+        "Guia Invisible Service"
+      ],
+      "componentes_cliente": [
+        "Todo lo de Pro AEO (IA + GEO)",
+        "Boton de WhatsApp directo con medicion de clics",
+        "1 ajuste critico en la web para facilitar reserva",
+        "Guia de Cierre Invisible Service (Automatizacion WhatsApp)",
+        "1 articulo al mes enfocado en viajeros listos para reservar"
+      ],
+      "disclaimers_cliente": [
+        "no_software"
+      ],
+      "requiere_cambio_web": true,
+      "implementacion_sin_it": {
+        "guia_simplificada": true,
+        "kit_freelancer": true,
+        "proveedores_estimado_cop": {
+          "min": 200000,
+          "max": 500000
+        }
+      },
+      "proceso_onboarding": {
+        "dia_1": [
+          "Mensaje bienvenida WhatsApp",
+          "Enviar checklist [NECESITAMOS] y confirmar responsables"
+        ],
+        "dia_7": [
+          "Quick win: botón wa.me activo",
+          "Schema validado en Rich Results Test",
+          "FAQs publicadas en el sitio"
+        ],
+        "dia_30": [
+          "Reporte mensual entregado",
+          "Capacitación 1x1 (dueño/proveedor)"
+        ]
+      },
+      "plan_7_30_60_90_por_region": {
+        "default": [
+          "7d: Boton wa.me medido + guion de respuesta y SLA",
+          "30d: 1 fix web critico implementado + FAQs de conversión publicadas",
+          "60d: Protocolo de reseñas y objeciones activado",
+          "90d: 1 articulo enfocado en viajeros listos para reservar + ajuste de CTAs"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "kpis_cliente_por_region": {
+        "default": [
+          "Clics a WhatsApp/llamadas",
+          "Mensajes respondidos <10 minutos",
+          "% reseñas respondidas y rating",
+          "Conversion de consultas a reservas (proxy)"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "dependencias_cliente_por_region": {
+        "default": [
+          "Acceso a web/CMS para 1 fix critico",
+          "Numero oficial de WhatsApp y horario de respuesta",
+          "Políticas claras (precio, parqueadero, mascotas, cancelacion)"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "cadencia_mensual_por_region": {
+        "default": [
+          "Revisión de conversion y CTAs",
+          "Seguimiento a reseñas y objeciones",
+          "1 pieza de contenido orientada a cierre"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "triggers_upgrade_por_region": {
+        "default": [
+          "Consultas crecientes pero sin escalamiento IA → Elite",
+          "Si se requiere certificados o monitoreo avanzado → Elite PLUS"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "playbook_cierre_por_region": {
+        "default": [
+          "Respuesta en <10 minutos con tarifa + disponibilidad",
+          "Responder objeciones: parqueadero, mascotas, cancelacion, factura",
+          "Seguimiento 24h/48h con mensaje de cortesía"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      }
+    },
+    "Elite": {
+      "precio_cop": 7500000,
+      "roi_target": 5.0,
+      "componentes": [
+        "TODO Pro AEO Plus",
+        "Endpoint MCP",
+        "Training 3 agentes IA"
+      ],
+      "componentes_cliente": [
+        "Todo lo de Pro AEO Plus",
+        "Endpoint MCP (Acceso real-time para IA)",
+        "Entrenamiento de 3 agentes IA con contenido del hotel"
+      ],
+      "plan_7_30_60_90_por_region": {
+        "default": [
+          "7d: Conectar datos clave y guiones de respuesta consistentes",
+          "30d: Entrenamiento inicial de agentes IA con contenido validado",
+          "60d: Optimizar conversion multicanal (web + IA) con medicion",
+          "90d: Revisar escalamiento y preparar certificacion"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "kpis_cliente_por_region": {
+        "default": [
+          "Consultas directas totales",
+          "Tiempo de respuesta promedio",
+          "Menciones IA + coherencia de respuestas",
+          "Conversion de consultas a reservas (proxy)"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "dependencias_cliente_por_region": {
+        "default": [
+          "Accesos a fuentes de contenido (docs, tarifas, fotos)",
+          "Contacto responsable para validar respuestas",
+          "SLA de respuesta a clientes"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "cadencia_mensual_por_region": {
+        "default": [
+          "Mantenimiento de datos/guiones",
+          "Revisión de KPIs de conversion y ajustes",
+          "Optimización de agentes IA y CTAs"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "triggers_upgrade_por_region": {
+        "default": [
+          "Necesidad de certificacion o monitoreo avanzado → Elite PLUS",
+          "Si conversion estancada pero demanda alta → reforzar cierre/contenido"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "playbook_cierre_por_region": {
+        "default": [
+          "Responder en <10 minutos con tarifa + CTA",
+          "Plantilla de cierre con beneficios clave",
+          "Seguimiento 24h con incentivos suaves (sin descuentos agresivos)"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      }
+    },
+    "Elite PLUS": {
+      "precio_cop": 9800000,
+      "roi_target": 6.0,
+      "componentes": [
+        "TODO Elite",
+        "Dashboard monitoring 10 queries",
+        "Certificado IA-Ready",
+        "Kit fisico autoridad"
+      ],
+      "componentes_cliente": [
+        "Todo lo de Elite",
+        "Panel de monitoreo semanal de 10 consultas en IA",
+        "Certificado Hotel IA-Ready y Reserva Directa",
+        "Kit fisico de autoridad (Placa/Certificados)"
+      ],
+      "plan_7_30_60_90_por_region": {
+        "default": [
+          "7d: Monitoreo de consultas IA configurado",
+          "30d: Panel semanal en marcha + checklist de certificacion",
+          "60d: Ajustes para cumplir criterios de certificados",
+          "90d: Emision de certificados y plan de mantenimiento"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "kpis_cliente_por_region": {
+        "default": [
+          "Consultas monitoreadas/semana",
+          "Clics y mensajes directos",
+          "% criterios de certificacion cumplidos",
+          "Tiempo de respuesta"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "dependencias_cliente_por_region": {
+        "default": [
+          "Accesos for medicion (analytics/GBP)",
+          "Contacto para validar contenido y certificados",
+          "SLA de respuesta al cliente"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "cadencia_mensual_por_region": {
+        "default": [
+          "Revisión panel semanal y ajustes",
+          "Mantenimiento de contenido/FAQs",
+          "Validación de criterios de certificacion"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "triggers_upgrade_por_region": {
+        "default": [
+          "Si actividad cae <30 → addon GBP Activation",
+          "Si certificados pierden vigencia → ciclo de revalidacion"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      },
+      "playbook_cierre_por_region": {
+        "default": [
+          "Responder en <10 minutos",
+          "CTA directo a confirmar reserva",
+          "Seguimiento 24h/48h con estado de certificacion"
+        ],
+        "eje_cafetero": [],
+        "caribe": [],
+        "antioquia": []
+      }
+    }
+  },
+  "umbrales_decision": {
+    "impacto_catastrofico": 6000000,
+    "brecha_conversion_critica": 2500000,
+    "revpar_premium": 180000,
+    "web_score_alto": 75,
+    "gbp_score_bajo": 60,
+    "gbp_activity_score_bajo": 30,
+    "factor_gbp_punto": 50000,
+    "inactividad_max_mensual": 1600000,
+    "descuento_motor_inexistente": 0.45,
+    "descuento_motor_no_prominente": 0.18,
+    "comision_ota_min": 0.12,
+    "comision_ota_base": 0.15,
+    "comision_ota_max": 0.18,
+    "penalizacion_invisibilidad_ia": 0.05,
+    "exclusion_rating_bajo": 0.4
+  },
+  "addons_v242": {
+    "GBP Activation": {
+      "precio_cop": 800000,
+      "roi_target": 2.5,
+      "componentes": [
+        "4 posts/mes",
+        "10 fotos nuevas",
+        "Protocolo respuesta reviews"
+      ],
+      "condicion": "gbp_score >= 60 AND gbp_activity_score < 30"
+    },
+    "Implementacion Tecnica": {
+      "precio_cop": 500000,
+      "roi_target": 1.5,
+      "componentes": [
+        "Coordinación con proveedor web",
+        "Instalación schema.json",
+        "Implementación botón wa.me",
+        "Validación post-implementación"
+      ],
+      "condicion": "has_it_capacity == false AND paquete in ['Pro AEO', 'Pro AEO Plus', 'Elite']"
+    }
+  },
+  "actividad_gbp_pesos": {
+    "posts_90d_peso": 0.35,
+    "posts_90d_max": 5,
+    "fotos_mes_peso": 0.25,
+    "fotos_mes_max": 10,
+    "fotos_meta": 15,
+    "reviews_response_peso": 0.4
+  },
+  "detectores_motor_gbp": [
+    "engine.lobbypms.com",
+    "cloudbeds.com",
+    "sirvoy.",
+    "beds24.",
+    "myallocator.",
+    "siteminder.",
+    "littlehotelier."
+  ],
+  "terminologia_cliente": {
+    "GBP": "ficha de Google",
+    "UTM": "medicion de clics",
+    "Schema": "informacion clara del hotel",
+    "HTTPS": "web segura (con candado)",
+    "CTA": "boton principal"
+  },
+  "disclaimers_cliente": {
+    "no_software": "No desarrollamos software; optimizamos el flujo y recomendamos proveedor si se requiere motor de reservas."
+  },
+  "certificados": {
+    "allowed_packages": [
+      "Elite PLUS"
+    ],
+    "items": [
+      "Certificado Reserva Directa",
+      "Certificado Hotel IA-Ready"
+    ]
+  },
+  "kpis_objetivo_v23": {
+    "cac_maximo_cop": 1000000,
+    "roas_minimo_aceptable": 2.0,
+    "roas_objetivo_6m": 6.0,
+    "tasa_renovacion_objetivo": 0.8,
+    "tasa_precision_diagnostico": 0.9
+  },
+  "metadata": {
+    "uso": "contexto_comparativo",
+    "advertencia": "ESTOS SON BENCHMARKS REGIONALES, NO DATOS DEL HOTEL ESPECIFICO",
+    "no_usar_para": [
+      "calculo_perdidas_directo",
+      "input_primario_financiero"
+    ],
+    "usar_para": [
+      "comparacion_post_input",
+      "contexto_regional",
+      "hook_inicial_rango"
+    ],
+    "confianza_default": "ESTIMATED",
+    "requiere_validacion_cruzada": true,
+    "actualizado_v40": "2026-02-27"
+  }
+}
