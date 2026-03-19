@@ -15,6 +15,7 @@
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guía Técnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
+| **Dominio Hotelero-Digital** | [.agent/knowledge/DOMAIN_PRIMER.md](.agent/knowledge/DOMAIN_PRIMER.md) (Glosario y taxonomía) |
 | **Contexto Global del Agente** | [AGENTS.md](AGENTS.md) (canónico) + [.cursorrules](.cursorrules) (puente) |
 
 ---
@@ -31,6 +32,19 @@
 > *   **Suite de Regresión Permanente**: Test E2E automatizado con Hotel Vísperas como caso de referencia.
 > *   **Taxonomía de Confianza**: VERIFIED (≥0.9) / ESTIMATED (0.5-0.9) / CONFLICT (<0.5).
 > *   **CanonicalAssessment**: Estructura unificada de verdad que reemplaza assessment v4.2.
+> *   **Mejoras Recientes**: TDD Gate en workflows, ejecución paralela en auditorías
+
+---
+
+## 🧠 Cómo Funciona el Sistema
+
+IA Hoteles Agent opera como un **cerebro orquestador** que valida, analiza y protege:
+
+1. **Datos** → Recolecta información de web, Google Business Profile y APIs
+2. **Valida** → Compara fuentes para detectar inconsistencias
+3. **Calcula** → Proyecciones financieras en 3 escenarios (70/20/10)
+4. **Genera** → Diagnóstico + Propuesta + Assets condicionales
+5. **Certifica** → Controles de coherencia antes de entregar
 
 ---
 
@@ -83,16 +97,16 @@ python main.py v4complete --url https://hotel.com --nombre "Hotel Nombre"
 │                      FLUJO V4COMPLETE (5 Fases)                         │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
-│  FASE 1        FASE 2           FASE 3          FASE 4       FASE 5    │
-│  ───────       ───────          ───────         ───────      ───────   │
+│  FASE 1        FASE 2           FASE 3          FASE 4       FASE 5     │
+│  ───────       ───────          ───────         ───────      ───────    │
 │                                                                         │
-│  HOOK    →  VALIDACIÓN  →   MAPEO P→S   →   GATE COHERENCIA  → ASSETS  │
-│  Automático   APIs Cruzada   PainSolution    Score ≥0.8       Validados│
+│  HOOK    →  VALIDACIÓN  →   MAPEO P→S   →   GATE COHERENCIA  → ASSETS   │
+│  Automático   APIs Cruzada   PainSolution    Score ≥0.8       Validados │
 │                              Mapper          (configurable)             │
 │                                                                         │
-│  Output: 01_DIAGNOSTICO_Y_OPORTUNIDAD.md (siempre)                     │
-│          02_PROPUESTA_COMERCIAL.md (si coherence ≥ 0.8)                │
-│          delivery_assets/ (según confianza de cada asset)              │
+│  Output: 01_DIAGNOSTICO_Y_OPORTUNIDAD.md (siempre)                      │
+│          02_PROPUESTA_COMERCIAL.md (si coherence ≥ 0.8)                 │
+│          delivery_assets/ (según confianza de cada asset)               │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -112,13 +126,17 @@ python main.py v4complete --url https://hotel.com --nombre "Hotel Nombre"
 
 ### Comandos Disponibles
 
-| Comando | Propósito | Output |
-|---------|-----------|--------|
-| `v4complete` | **Flujo completo con controles de coherencia** | Diagnóstico + Propuesta condicional + Assets |
-| `v4audit` | Auditoría técnica rápida con APIs | JSON con validación cruzada |
-| `spark` | Diagnóstico rápido <5min + guion WhatsApp | Análisis express para prospección |
-| `execute` | Implementación de paquete usando análisis previo | Assets según paquete seleccionado |
-| `onboard` | Captura datos operativos reales del hotel | Mejora precisión del análisis (confidence: VERIFIED) |
+| Comando | Estado | Propósito | Output |
+|---------|--------|-----------|--------|
+| `v4complete` | ✅ | **Flujo completo con controles de coherencia** | Diagnóstico + Propuesta condicional + Assets |
+| `v4audit` | ✅ | Auditoría técnica rápida con APIs | JSON con validación cruzada |
+| `spark` | ✅ | Diagnóstico rápido <5min + guion WhatsApp | Análisis express para prospección |
+| `execute` | ✅ | Implementación de paquete usando análisis previo | Assets según paquete seleccionado |
+| `stage` | ✅ | Ejecuta etapas individuales (geo, ia, seo, outputs) | Resultado de fase específica |
+| `deploy` | ✅ | Despliegue remoto vía FTP/WP-API | Archivos subidos al servidor |
+| `setup` | ✅ | Configuración interactiva de API keys | Credenciales configuradas |
+| `onboard` | ✅ | Captura datos operativos reales del hotel | Mejora precisión del análisis |
+| `audit` | ⚠️ | Legacy v3.x (deprecado) | - |
 
 ### Opciones de v4complete
 
@@ -205,6 +223,16 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 |----------|----------|
 | Fallo Gate de Coherencia | Verifica que los datos tengan confianza suficiente (≥0.8) y no haya conflictos entre fuentes. |
 | No LLM API key configured | Ejecuta `python main.py setup` para configurar de forma segura. |
+
+---
+
+## ✅ Calidad Garantizada
+
+- **1434+ tests** pasando continuamente
+- **TDD Gate**: Todo cambio comienza con un test que falla
+- **Pre-commit hooks**: Validaciones automáticas en cada commit
+- **Suite de regresión**: Hotel Vísperas como caso de referencia permanente
+- **Coherence Score ≥ 0.8**: Validación cruzada documentos ↔ assets
 
 ---
 
