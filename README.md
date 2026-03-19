@@ -2,7 +2,7 @@
 
 **Plataforma de Inteligencia Agéntica de Grado Industrial diseñada para la auditoría y blindaje financiero del sector hotelero.**
 
-**Version:** 4.5.3 (Communication Update) | **Última actualización:** 15 Marzo 2026
+**Version:** 4.5.4 | **Última actualización:** 17 Marzo 2026
 
 ---
 
@@ -19,7 +19,7 @@
 
 ---
 
-> **🛡️ AGENT PLATFORM STATUS (v4.3.0 - Sistema de Evidencia y Confiabilidad)**:
+> **🛡️ AGENT PLATFORM STATUS (v4.5.4 - Communication Update)**:
 > *   **Sistema de Evidencia Trazable**: EvidenceLedger con hash e integridad, claims vinculados a fuentes.
 > *   **Motor de Contradicciones**: Detección automática de hard/soft conflicts entre fuentes de datos.
 > *   **Quality Gates de Pre-publicación**: Gates técnico, comercial, financiero y de coherencia (score ≥ 0.8).
@@ -116,6 +116,7 @@ python main.py v4complete --url https://hotel.com --nombre "Hotel Nombre"
 |---------|-----------|--------|
 | `v4complete` | **Flujo completo con controles de coherencia** | Diagnóstico + Propuesta condicional + Assets |
 | `v4audit` | Auditoría técnica rápida con APIs | JSON con validación cruzada |
+| `spark` | Diagnóstico rápido <5min + guion WhatsApp | Análisis express para prospección |
 | `execute` | Implementación de paquete usando análisis previo | Assets según paquete seleccionado |
 | `onboard` | Captura datos operativos reales del hotel | Mejora precisión del análisis (confidence: VERIFIED) |
 
@@ -128,9 +129,16 @@ python main.py v4complete --url https://hotel.com --nombre "Hotel Nombre"
 | `--output` | Directorio de salida (default: ./output) |
 | `--debug` | Modo verbose con información detallada |
 
-**Ejemplo:**
+**Ejemplos:**
 ```bash
-python main.py v4complete --url https://hotelvisperas.com --nombre "Hotel Vísperas"
+# Análisis completo nuevo
+python main.py v4complete --url https://hotel.com
+
+# Diagnóstico rápido para prospección
+python main.py spark --url https://hotel.com
+
+# Implementar paquete (usa análisis previo si existe)
+python main.py execute --url https://hotel.com --package starter_geo
 ```
 
 ---
@@ -207,4 +215,4 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ## Testing
 
-**1257 tests passing** - Suite completa de pruebas unitarias, integración y regresión E2E.
+**1434+ tests passing** - Suite completa de pruebas unitarias, integración y regresión E2E.
