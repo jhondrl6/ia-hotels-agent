@@ -1,5 +1,56 @@
 # Guia de Contribucion - IA Hoteles Agent
 
+> **Version Actual:** v4.5.3 (Communication Update)
+> **Coherence Score:** 0.91 (≥0.8) - Publication Ready
+> **Tests:** 1427+ passing
+
+## Comandos CLI Activos
+
+| Comando | Descripcion |
+|---------|-------------|
+| `v4complete` | Flujo completo: diagnostico, propuesta, assets, coherencia |
+| `v4audit` | Auditoria con APIs externas (Rich Results, Places, PageSpeed) |
+| `spark` | Diagnostico rapido <5min + guion WhatsApp |
+| `execute` | Implementa paquete, recupera analisis v4.0 con coherence ≥ 0.8 |
+| `stage` | Ejecuta etapas individuales (geo, ia, seo, outputs) |
+| `deploy` | Despliegue remoto via FTP/WP-API |
+| `setup` | Configuracion interactiva de API keys |
+| `onboard` | Captura datos operativos del hotel |
+| `audit` | Legacy v3.x (deprecado, usar `v4complete`) |
+
+## Modulos Activos (v4.5.3)
+
+| Modulo | Funcion | Ubicacion |
+|--------|---------|-----------|
+| `data_validation/` | Validacion cruzada web+GBP+input | `data_validation/` |
+| `evidence_ledger.py` | Almacen centralizado de evidencia | `data_validation/` |
+| `contradiction_engine.py` | Deteccion de hard/soft conflicts | `data_validation/` |
+| `consistency_checker.py` | Validacion inter-documento | `data_validation/` |
+| `metadata_validator.py` | Deteccion de CMS defaults | `data_validation/` |
+| `schema_validator_v2.py` | Coverage scoring | `data_validation/` |
+| `financial_engine/` | Escenarios: conservador/realista/optimista | `modules/financial_engine/` |
+| `calculator_v2.py` | FinancialCalculatorV2 con validacion | `modules/financial_engine/` |
+| `no_defaults_validator.py` | Validacion "No Defaults in Money" | `modules/financial_engine/` |
+| `orchestration_v4/` | Flujo dos fases: Hook → Validacion | `modules/orchestration_v4/` |
+| `asset_generation/` | Generacion condicional con gates | `modules/asset_generation/` |
+| `asset_catalog.py` | Catalogo centralizado de assets | `modules/asset_generation/` |
+| `llmstxt_generator.py` | Generacion de llms.txt | `modules/asset_generation/` |
+| `auditors/` | APIs externas (Rich Results, Places, PageSpeed) | `modules/auditors/` |
+| `ai_crawler_auditor.py` | Auditoria de robots.txt para IA crawlers | `modules/auditors/` |
+| `citability_scorer.py` | Score de citabilidad de contenido | `modules/auditors/` |
+| `ia_readiness_calculator.py` | Score compuesto IA-readiness | `modules/auditors/` |
+| `commercial_documents/` | Diagnostico, propuesta, coherencia | `commercial_documents/` |
+| `composer.py` | Generacion deterministica de documentos | `commercial_documents/` |
+| `coherence_validator.py` | Validador de coherencia | `commercial_documents/` |
+| `quality_gates/` | Gates tecnico, comercial, financiero, coherencia | `modules/quality_gates/` |
+| `publication_gates.py` | Gates de publicacion | `modules/quality_gates/` |
+| `coherence_gate.py` | Gate de coherencia | `modules/quality_gates/` |
+| `agent_harness/` | Memoria, auto-correccion, routing | `agent_harness/` |
+| `observability/dashboard.py` | Metricas y tendencias de calidad | `observability/` |
+| `observability/calibration.py` | Calibracion de umbrales de confianza | `observability/` |
+| `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence | `data_models/` |
+| `enums/` | Enumeraciones: Severity, ConfidenceLevel | `enums/` |
+
 ## Reglas Obligatorias para Documentacion Contextual
 
 ### 1. Control de Versiones
@@ -190,6 +241,14 @@ python scripts/run_all_validations.py
 | `validate.py` | CLI para validaciones especificas |
 | `structure_guard.py` | Detecta archivos residuales + valida Plan Maestro |
 | `.agents/workflows/v4_regression_guardian.py` | Validación post-cambios para flujo v4complete |
+| `extract_psi_metrics.py` | Extrae metricas de PageSpeed Insights |
+| `sync_conductor_spec.py` | Sincroniza especificaciones del Conductor |
+| `fill_upgrade_proposal.py` | Genera propuestas de upgrade |
+| `test_coordinates_extraction.py` | Prueba extraccion de coordenadas |
+| `validate_structure.py` | Valida estructura del proyecto |
+| `cleanup_workdirs.py` | Limpia directorios de trabajo |
+| `prune_outputs.py` | Elimina outputs antiguos |
+| `config_checker.py` | Verifica configuracion del proyecto |
 
 ## 8. Clasificacion de Archivos de Documentacion
 
@@ -267,12 +326,17 @@ Cuando trabajes con el agente, puedes usar:
 | Script | Cuando ejecutarlo |
 |--------|------------------|
 | `run_all_validations.py --quick` | Antes de cada commit (recomendado) |
+| `run_all_validations.py` | Validacion completa antes de release |
 | `pre-commit run --all-files` | Antes de cada commit (si no esta instalado) |
 | `sync_versions.py` | Despues de editar VERSION.yaml |
 | `generate_domain_primer.py` | Despues de modificar financial_engine/ |
 | `generate_system_status.py` | Despues de agregar/eliminar skill |
 | `validate.py --plan` | Despues de modificar Plan Maestro |
 | `validate.py --security` | Antes de push (verificar secrets) |
+| `validate_structure.py` | Validar estructura del proyecto |
+| `config_checker.py` | Verificar configuracion |
+| `extract_psi_metrics.py` | Extraer metricas PageSpeed |
+| `.agents/workflows/v4_regression_guardian.py --quick` | Despues de cambios en modulos v4 |
 
 ## 10. Solucion de Problemas
 
@@ -593,6 +657,15 @@ Crear `.opencode/plans/matriz-capacidades.md`:
 | PublicationGates | conectada | main.py:FASE 4.5 | gate_results | CRITICAL |
 | ConsistencyChecker | conectada | main.py:FASE 4.6 | consistency_report | HIGH |
 | FinancialCalculatorV2 |conectada | main.py:FASE 3 | scenarios | CRITICAL |
+| EvidenceLedger | conectada | v4complete:FASE 2 | evidence_ledger | HIGH |
+| ContradictionEngine | conectada | v4complete:FASE 2 | contradiction_report | CRITICAL |
+| CoherenceValidator | conectada | commercial_documents/ | coherence_score | CRITICAL |
+| NoDefaultsValidator | conectada | financial_engine/ | validation_result | CRITICAL |
+| AICrawlerAuditor | conectada | v4audit/ | crawler_audit | MEDIUM |
+| CitabilityScorer | conectada | v4audit/ | citability_score | MEDIUM |
+| IAReadinessCalculator | conectada | v4audit/ | ia_readiness_score | MEDIUM |
+| Dashboard | conectada | observability/ | metrics_report | LOW |
+| Calibration | conectada | observability/ | calibration_result | LOW |
 
 ### 13.6 Gate de Cierre
 
@@ -620,3 +693,86 @@ Este sistema se integra con la skill `.agents/workflows/phased_project_executor.
 - Paso 8: Disconnected Capability Gate
 
 Ver documentación completa en `phased_project_executor.md` v1.4.0.
+
+---
+
+## 14. Sistema de Evidence Ledger (v4.3.0)
+
+### 14.1 Proposito
+
+El Evidence Ledger es el almacen centralizado de evidencia que alimenta todo el sistema de validacion cruzada.
+
+### 14.2 Estructura
+
+```
+evidence/
+├── ledger.json          # Registro central
+├── claims/              # Claims por hotel
+│   └── {hotel_url}/
+│       └── claim_{id}.json
+└── evidence/            # Evidencias raw
+    └── {hotel_url}/
+        ├── web_{timestamp}.json
+        ├── gbp_{timestamp}.json
+        └── input_{timestamp}.json
+```
+
+### 14.3 Integracion
+
+Cuando agregues nueva evidencia:
+
+1. **Web scraping**: Guardar en `evidence/evidence/{hotel}/web_{ts}.json`
+2. **GBP API**: Guardar en `evidence/evidence/{hotel}/gbp_{ts}.json`
+3. **User input**: Guardar en `evidence/evidence/{hotel}/input_{ts}.json`
+4. **Ledger**: Agregar entrada en `evidence/ledger.json`
+
+### 14.4 Scripts relacionados
+
+| Script | Uso |
+|--------|-----|
+| `scripts/cleanup_sessions.py` | Limpia sesiones antiguas |
+| `scripts/normalize_cache_filenames.py` | Normaliza nombres de cache |
+
+---
+
+## 15. Taxonomia de Confianza
+
+| Nivel | Confidence | Criterio | Uso en Assets |
+|-------|------------|----------|---------------|
+| 🟢 VERIFIED | ≥ 0.9 | 2+ fuentes coinciden | Directo |
+| 🟡 ESTIMATED | 0.5-0.9 | 1 fuente o benchmark | Con disclaimer |
+| 🔴 CONFLICT | < 0.5 | Fuentes contradicen | Bloqueado |
+
+### 15.1 Gates de Assets
+
+| Asset | Threshold | Comportamiento |
+|-------|-----------|----------------|
+| WhatsApp | ≥ 0.9 | PASSED |
+| WhatsApp | 0.5-0.9 | ESTIMATED con disclaimer |
+| WhatsApp | < 0.5 | BLOCKED |
+| FAQ Page | ≥ 0.7 | PASSED |
+| FAQ Page | < 0.7 | ESTIMATED/BLOCKED |
+| Hotel Schema | ≥ 0.8 | PASSED |
+| Hotel Schema | < 0.8 | ESTIMATED/BLOCKED |
+
+---
+
+## 16. Quality Gates de Publicacion
+
+Antes de marcar un analisis como `READY_FOR_CLIENT`:
+
+| Gate | Umbral | Severidad |
+|------|--------|-----------|
+| hard_contradictions | = 0 | CRITICAL |
+| evidence_coverage | ≥ 95% | HIGH |
+| financial_validity | sin defaults | CRITICAL |
+| coherence | ≥ 0.8 | CRITICAL |
+| critical_recall | ≥ 90% | HIGH |
+
+### 16.1 Estados de Publicacion
+
+| Estado | Descripcion |
+|--------|-------------|
+| `DRAFT_INTERNAL` | Analisis en progreso |
+| `REQUIRES_REVIEW` | Gate fallido, requiere correccion |
+| `READY_FOR_CLIENT` | Todos los gates pasados |
