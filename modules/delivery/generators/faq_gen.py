@@ -1,5 +1,7 @@
 from typing import List, Dict, Any, Tuple
 from modules.providers.llm_provider import ProviderAdapter
+from datetime import datetime
+import pytz
 
 class FAQGenerator:
     """Generates optimized FAQs using the configured LLM provider."""
@@ -33,13 +35,44 @@ class FAQGenerator:
         
         faqs = self.generate_list(hotel_data, count)
         if not faqs:
-            return ("\n".join(header_sections) + "\nPregunta,Respuesta\nError generating FAQs", "")
+            return ("\n".join(header_sections) + "\nPregunta,Respuesta,Categoria,Fecha_Generacion\nError generating FAQs", "")
             
-        lines = ["Pregunta,Respuesta"]
+        def asignar_categoria(pregunta, respuesta):
+            texto = (pregunta + " " + respuesta).lower()
+            if any(kw in texto for kw in ["check-in", "check-out", "hora de entrada", "hora de salida", "llegada", "salida"]):
+                return "Hospedaje - Horarios"
+            if any(kw in texto for kw in ["desayuno", "almuerzo", "cena", "buffet", "comida"]):
+                return "Servicios - Alimentación"
+            if any(kw in texto for kw in ["cancelación", "cancelar", "reembolso", "reserva"]):
+                return "Reservas - Políticas"
+            if any(kw in texto for kw in ["wifi", "wi-fi", "internet"]):
+                return "Servicios - Conectividad"
+            if any(kw in texto for kw in ["estacionamiento", "parqueadero", "parking"]):
+                return "Servicios - Parqueadero"
+            if any(kw in texto for kw in ["mascota", "perro", "gato", "pet"]):
+                return "Servicios - Mascotas"
+            if any(kw in texto for kw in ["piscina", "pool"]):
+                return "Servicios - Piscina"
+            if any(kw in texto for kw in ["traslado", "aeropuerto", "taxi", "transporte"]):
+                return "Servicios - Transporte"
+            if any(kw in texto for kw in ["spa", "masaje", "bienestar"]):
+                return "Servicios - Spa"
+            if any(kw in texto for kw in ["dieta", "vegano", "vegetariano", "sin gluten"]):
+                return "Servicios - Dietas Especiales"
+            if any(kw in texto for kw in ["habitación", "cuarto", "suite", "cama"]):
+                return "Hospedaje - Habitaciones"
+            if any(kw in texto for kw in ["precio", "costo", "tarifa"]):
+                return "Reservas - Precios"
+            return "Información General"
+        
+        BOGOTA_TZ = pytz.timezone('America/Bogota')
+        ISO_TIMESTAMP = datetime.now(BOGOTA_TZ).isoformat(timespec='seconds')
+        lines = ['"Pregunta","Respuesta","Categoria","Fecha_Generacion"']
         for item in faqs:
             q = item["pregunta"].replace('"', '""')
             a = item["respuesta"].replace('"', '""')
-            lines.append(f'"{q}","{a}"')
+            c = asignar_categoria(item["pregunta"], item["respuesta"])
+            lines.append(f'"{q}","{a}","{c}","{ISO_TIMESTAMP}"')
         
         csv_content = "\n".join(header_sections) + "\n".join(lines)
         
