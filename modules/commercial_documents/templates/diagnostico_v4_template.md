@@ -40,7 +40,7 @@ generator: IA_Hoteles_v4
 | AEO (Schema) | ${aeo_score}/100 | 40/100 | ${aeo_status} |
 | IAO | ${iao_score}/100 | 20/100 | ${iao_status} |
 
-**Está perdiendo aproximadamente ${main_scenario_amount} COP/mes**
+**Está perdiendo aproximadamente ${main_scenario_amount}/mes**
 
 ---
 
@@ -64,7 +64,7 @@ generator: IA_Hoteles_v4
 ## ⏰ PARTE 4: ¿POR QUé ACTUAR AHORA?
 
 - Competencia consolida posiciones en IA
-- Pérdida acumulada 6 meses: ${loss_6_months} COP
+- Pérdida acumulada 6 meses: ${loss_6_months}
 
 ---
 
