@@ -2,7 +2,7 @@
 
 **Plataforma de Inteligencia Agéntica de Grado Industrial diseñada para la auditoría y blindaje financiero del sector hotelero.**
 
-**Version:** 4.5.4 | **Última actualización:** 17 Marzo 2026
+**Version:** 4.5.6 | **Última actualización:** 22 Marzo 2026
 
 ---
 
@@ -20,7 +20,7 @@
 
 ---
 
-> **🛡️ AGENT PLATFORM STATUS (v4.5.4 - Communication Update)**:
+> **🛡️ AGENT PLATFORM STATUS (v4.5.6 - NEVER_BLOCK Architecture)**:
 > *   **Sistema de Evidencia Trazable**: EvidenceLedger con hash e integridad, claims vinculados a fuentes.
 > *   **Motor de Contradicciones**: Detección automática de hard/soft conflicts entre fuentes de datos.
 > *   **Quality Gates de Pre-publicación**: Gates técnico, comercial, financiero y de coherencia (score ≥ 0.8).
@@ -30,6 +30,10 @@
 > *   **Controles de Coherencia**: Validación automática diagnosis↔propuesta↔assets con score ≥ 0.8.
 > *   **Observabilidad y Dashboard**: Métricas de calidad en tiempo real y calibración de umbrales.
 > *   **Suite de Regresión Permanente**: Test E2E automatizado con Hotel Vísperas como caso de referencia.
+> *   **NEVER_BLOCK Architecture**: El sistema nunca se bloquea, siempre entrega algo con benchmark regional + disclaimers honestos.
+> *   **Benchmark Resolver**: Fallback con datos regionales de Pereira/Santa Rosa de Cabal cuando faltan datos reales.
+> *   **Autonomous Researcher**: Investiga automáticamente en GBP, Booking, TripAdvisor, Instagram cuando datos son insuficientes.
+> *   **Disclaimer Generator**: Genera disclaimers honestos por nivel de confidence (≥0.9: sin disclaimer, <0.5: detallado).
 > *   **Taxonomía de Confianza**: VERIFIED (≥0.9) / ESTIMATED (0.5-0.9) / CONFLICT (<0.5).
 > *   **CanonicalAssessment**: Estructura unificada de verdad que reemplaza assessment v4.2.
 > *   **Mejoras Recientes**: TDD Gate en workflows, ejecución paralela en auditorías

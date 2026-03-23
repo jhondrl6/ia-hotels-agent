@@ -1,6 +1,6 @@
-# Indice de Documentacion - IA Hoteles Agent v4.5.3
+# Indice de Documentacion - IA Hoteles Agent v4.5.6
 
-**Ultima actualizacion:** 15 Marzo 2026
+**Ultima actualizacion:** 22 Marzo 2026
 
 Guia rapida para encontrar la informacion que necesitas tras la actualizacion Financial Centralization & ChatGPT Alternatives.
 
@@ -130,6 +130,15 @@ Guia rapida para encontrar la informacion que necesitas tras la actualizacion Fi
 | agent_harness/memory.py (save_analysis_reference) | Guarda referencia de análisis en historial |
 | agent_harness/memory.py (cleanup_old_sessions) | TTL de 20 días para sesiones |
 
+### Nuevos Módulos v4.5.6 (NEVER_BLOCK Architecture)
+
+| Modulo | Funcion |
+|--------|---------|
+| modules/providers/benchmark_resolver.py | Fallback con benchmark regional (Pereira/Santa Rosa de Cabal) |
+| modules/providers/autonomous_researcher.py | Investigacion en fuentes publicas (GBP, Booking, TripAdvisor, Instagram) |
+| modules/providers/disclaimer_generator.py | Disclaimers honestos por nivel de confidence |
+| modules/asset_generation/asset_metadata.py | Campo `disclaimers` para assets |
+
 ### Módulos Modificados v3.9
 
 | Modulo | Cambio |
@@ -186,9 +195,9 @@ Guia rapida para encontrar la informacion que necesitas tras la actualizacion Fi
 
 ---
 
-**Version:** 4.5.3
+**Version:** 4.5.6
 **Ultima actualizacion:** 15 Marzo 2026
-**IA Hoteles Agent v4.5.3**
+**IA Hoteles Agent v4.5.6**
 
 ---
 

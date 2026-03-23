@@ -397,9 +397,11 @@ class TestRegressionWithHotelVisperas:
     def test_hotelvisperas_outputs_have_no_placeholders(self):
         """Los outputs de Hotel Vísperas no deben tener placeholders."""
         import json
+        from pathlib import Path
         
-        # Verificar asset_generation_report.json
-        report_path = "/mnt/c/Users/Jhond/Github/iah-cli/output/v4_complete/hotelvisperas/v4_audit/asset_generation_report.json"
+        # Usar Path.cwd() para obtener el project root (donde se ejecuto pytest)
+        project_root = Path.cwd()
+        report_path = project_root / "output" / "v4_complete" / "hotelvisperas" / "v4_audit" / "asset_generation_report.json"
         
         try:
             with open(report_path, 'r') as f:
@@ -416,8 +418,10 @@ class TestRegressionWithHotelVisperas:
     def test_hotelvisperas_coherence_above_threshold(self):
         """Coherence de Hotel Vísperas debe ser >= 0.8."""
         import json
+        from pathlib import Path
         
-        report_path = "/mnt/c/Users/Jhond/Github/iah-cli/output/v4_complete/hotelvisperas/v4_audit/coherence_validation.json"
+        project_root = Path.cwd()
+        report_path = project_root / "output" / "v4_complete" / "hotelvisperas" / "v4_audit" / "coherence_validation.json"
         
         try:
             with open(report_path, 'r') as f:

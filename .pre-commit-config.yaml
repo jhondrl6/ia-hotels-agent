@@ -6,20 +6,20 @@
 repos:
   # === PYTHON CODE QUALITY ===
   - repo: https://github.com/psf/black
-    rev: 24.3.0
+    rev: 26.3.1
     hooks:
       - id: black
         language_version: python3.13
         args: [--line-length=100]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.4
+    rev: v0.15.7
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -67,7 +67,8 @@ repos:
       # NEW v4.0: Validate data validation module imports
       - id: validate-data-validation
         name: Validate Data Validation Module
-        entry: python -c "from modules.data_validation import CrossValidator, ConfidenceLevel, DataPoint; print('Data Validation: OK')"
+        entry: >-
+          python -c "from modules.data_validation import CrossValidator, ConfidenceLevel, DataPoint; print('Data Validation: OK')"
         language: system
         pass_filenames: false
         stages: [pre-commit]
@@ -76,7 +77,8 @@ repos:
       # NEW v4.0: Validate financial engine imports
       - id: validate-financial-engine
         name: Validate Financial Engine Module
-        entry: python -c "from modules.financial_engine import ScenarioCalculator, HotelFinancialData, FormulaTransparency; print('Financial Engine: OK')"
+        entry: >-
+          python -c "from modules.financial_engine import ScenarioCalculator, HotelFinancialData, FormulaTransparency; print('Financial Engine: OK')"
         language: system
         pass_filenames: false
         stages: [pre-commit]
@@ -85,7 +87,8 @@ repos:
       # NEW v4.0: Validate orchestration imports
       - id: validate-orchestration
         name: Validate Orchestration Module
-        entry: python -c "from modules.orchestration_v4 import OnboardingController, TwoPhaseOrchestrator; print('Orchestration: OK')"
+        entry: >-
+          python -c "from modules.orchestration_v4 import OnboardingController, TwoPhaseOrchestrator; print('Orchestration: OK')"
         language: system
         pass_filenames: false
         stages: [pre-commit]
@@ -94,7 +97,8 @@ repos:
       # NEW v4.0: Validate asset generation imports
       - id: validate-asset-generation
         name: Validate Asset Generation Module
-        entry: python -c "from modules.asset_generation import ConditionalGenerator, PreflightChecker; print('Asset Generation: OK')"
+        entry: >-
+          python -c "from modules.asset_generation import ConditionalGenerator, PreflightChecker; print('Asset Generation: OK')"
         language: system
         pass_filenames: false
         stages: [pre-commit]
@@ -103,26 +107,8 @@ repos:
       # NEW v4.0: Check v4.0 module structure
       - id: check-v4-structure
         name: Check v4.0 Module Structure
-        entry: python -c "
-import sys
-from pathlib import Path
-required_modules = [
-    'modules/data_validation/__init__.py',
-    'modules/data_validation/confidence_taxonomy.py',
-    'modules/data_validation/cross_validator.py',
-    'modules/financial_engine/__init__.py',
-    'modules/financial_engine/scenario_calculator.py',
-    'modules/orchestration_v4/__init__.py',
-    'modules/orchestration_v4/two_phase_flow.py',
-    'modules/asset_generation/__init__.py',
-    'modules/asset_generation/preflight_checks.py'
-]
-missing = [m for m in required_modules if not Path(m).exists()]
-if missing:
-    print(f'Missing v4.0 modules: {missing}')
-    sys.exit(1)
-print('v4.0 Structure: OK')
-"
+        entry: >-
+          python -c "import sys; from pathlib import Path; required_modules = ['modules/data_validation/__init__.py', 'modules/data_validation/confidence_taxonomy.py', 'modules/data_validation/cross_validator.py', 'modules/financial_engine/__init__.py', 'modules/financial_engine/scenario_calculator.py', 'modules/orchestration_v4/__init__.py', 'modules/orchestration_v4/two_phase_flow.py', 'modules/asset_generation/__init__.py', 'modules/asset_generation/preflight_checks.py']; missing = [m for m in required_modules if not Path(m).exists()]; sys.exit(1) if missing else print('v4.0 Structure: OK')"
         language: system
         pass_filenames: false
         stages: [pre-commit]

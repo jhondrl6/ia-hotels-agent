@@ -1,8 +1,8 @@
-<!-- agents_version: 4.5.3 | last_update: 2026-03-18 -->
+<!-- agents_version: 4.5.6 | last_update: {date} -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.5.3 — Communication Update**
+> **v4.5.6 — Mejora FAQGenerator**
 > FASE-5 completada: Adopta enfoque de comunicación diagnóstico antiguo, Coherence score 0.91 (≥0.8), 1434+ regression tests passing, Publication Ready
 
 ---
@@ -36,14 +36,14 @@ python scripts/run_all_validations.py
 
 | Aspecto | Estado |
 |---------|--------|
-| **Version** | v4.5.3 |
-| **Codename** | Communication Update |
+| **Version** | v4.5.6 |
+| **Codename** | NEVER_BLOCK Architecture|
 | **Piloto Activo** | Hotel Visperas (testeado) |
 | **Tests** | 1434+ passing |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ 0.91 (umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
-| **Mejoras** | TDD Gate, Parallel Execution |
+| **Mejoras** | TDD Gate, Parallel Execution, FAQGenerator mejorado con categorías y timestamp ISO 8601 |
 
 ---
 

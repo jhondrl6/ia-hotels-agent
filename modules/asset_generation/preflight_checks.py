@@ -45,7 +45,7 @@ class PreflightChecker:
     def ASSET_REQUIREMENTS(self) -> dict:
         """
         Derive asset requirements from ASSET_CATALOG.
-        Only includes IMPLEMENTED assets.
+        Includes IMPLEMENTED and MANUAL_ONLY assets (both can generate with fallback).
         
         Returns:
             Dict mapping asset_type to requirements dict
@@ -58,7 +58,7 @@ class PreflightChecker:
                 "fallback": v.fallback
             }
             for k, v in ASSET_CATALOG.items()
-            if v.status == AssetStatus.IMPLEMENTED
+            if v.status in (AssetStatus.IMPLEMENTED, AssetStatus.MANUAL_ONLY)
         }
 
     def __init__(self):

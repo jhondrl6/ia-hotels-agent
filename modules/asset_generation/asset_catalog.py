@@ -57,8 +57,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         output_name="{prefix}boton_whatsapp{suffix}.html",
         required_field="whatsapp",
         required_confidence=0.7,
-        fallback=None,
-        block_on_failure=True,
+        fallback="generate_basic_whatsapp",
+        block_on_failure=False,  # NEVER_BLOCK: generar botón básico aunque falte WhatsApp
         status=AssetStatus.IMPLEMENTED,
         promised_by=["no_whatsapp_visible"]
     ),

@@ -18,7 +18,7 @@
 | `onboard` | Captura datos operativos del hotel |
 | `audit` | Legacy v3.x (deprecado, usar `v4complete`) |
 
-## Modulos Activos (v4.5.3)
+## Modulos Activos (v4.5.6)
 
 | Modulo | Funcion | Ubicacion |
 |--------|---------|-----------|
@@ -35,6 +35,10 @@
 | `asset_generation/` | Generacion condicional con gates | `modules/asset_generation/` |
 | `asset_catalog.py` | Catalogo centralizado de assets | `modules/asset_generation/` |
 | `llmstxt_generator.py` | Generacion de llms.txt | `modules/asset_generation/` |
+| `providers/` | Benchmark, Researcher, Disclaimer (NEVER_BLOCK) | `modules/providers/` |
+| `benchmark_resolver.py` | Fallback con benchmark regional | `modules/providers/` |
+| `autonomous_researcher.py` | Investigacion en fuentes publicas | `modules/providers/` |
+| `disclaimer_generator.py` | Disclaimers honestos por confidence | `modules/providers/` |
 | `auditors/` | APIs externas (Rich Results, Places, PageSpeed) | `modules/auditors/` |
 | `ai_crawler_auditor.py` | Auditoria de robots.txt para IA crawlers | `modules/auditors/` |
 | `citability_scorer.py` | Score de citabilidad de contenido | `modules/auditors/` |
@@ -252,17 +256,34 @@ python scripts/run_all_validations.py
 
 ## 8. Clasificacion de Archivos de Documentacion
 
-### Archivos con actualizacion automatica total o parcial
+### Sistema de Sincronización (Config-Driven)
 
-| Archivo | Metodo de actualizacion |
-|---------|------------------------|
-| VERSION.yaml | Fuente unica de verdad (editar aqui para cambiar version) |
-| AGENTS.md | Edicion manual (contexto canónico) + sync de version via `python scripts/sync_versions.py` |
-| .cursorrules | Puente de compatibilidad (sin reglas nuevas); metadatos via `python scripts/sync_versions.py` |
-| GEMINI.md | Compatibilidad historica; version via `python scripts/sync_versions.py` |
-| README.md | python scripts/sync_versions.py |
-| .gemini/config.yaml | python scripts/sync_versions.py |
-| INDICE_DOCUMENTACION.md | python scripts/sync_versions.py |
+A partir de v4.5.6, el sistema de sincronización es **config-driven**:
+- **Configuración**: `scripts/sync_config.yaml` - declara qué sincronizar dónde
+- **Script**: `scripts/sync_versions.py` - ejecuta las reglas del config
+- **Extensible**: agregar sync = agregar 4 líneas al YAML
+
+**Flujo:**
+1. Editar `VERSION.yaml` con nueva versión
+2. Ejecutar `python scripts/sync_versions.py`
+3. El script sincroniza automáticamente según `sync_config.yaml`
+
+**Comandos:**
+```bash
+python scripts/sync_versions.py          # Sync all files
+python scripts/sync_versions.py --check   # Check if sync needed
+python scripts/sync_versions.py --list    # List all sync rules
+python scripts/sync_versions.py --validate # Validate config
+```
+
+### Archivos sincronizados automaticamente
+
+| Archivo | Qué sincroniza |
+|---------|---------------|
+| `README.md` | Version, fecha, status banner, codename |
+| `AGENTS.md` | Version, codename, fecha, status table |
+| `.cursorrules` | Version, fecha |
+| `INDICE_DOCUMENTACION.md` | Version, fecha |
 
 ### Archivos que se actualizan manualmente
 

@@ -157,12 +157,15 @@ class AssetMetadataEnforcer:
 
     def create_metadata(
         self,
-        asset_name: str,
-        asset_type: str,
-        confidence_level: ConfidenceLevel,
-        confidence_score: float,
-        validation_sources: List[str],
-        preflight_status: str
+        asset_name: str = "",
+        asset_type: str = "",
+        confidence_level: ConfidenceLevel = ConfidenceLevel.UNKNOWN,
+        confidence_score: float = 0.0,
+        validation_sources: List[str] = None,
+        preflight_status: str = "WARNING",
+        sources: List[str] = None,
+        gaps: List[str] = None,
+        **kwargs
     ) -> AssetMetadata:
         """
         Create a metadata object for an asset.
@@ -174,12 +177,28 @@ class AssetMetadataEnforcer:
             confidence_score: Numerical confidence (0.0 - 1.0)
             validation_sources: List of source types used for validation
             preflight_status: Result of preflight checks (PASSED, WARNING, BLOCKED)
+            sources: Alias for validation_sources (for backward compatibility)
+            gaps: List of data gaps for the disclaimer
+            **kwargs: Additional arguments for backward compatibility
             
         Returns:
             AssetMetadata instance with calculated fields
         """
+        # Handle aliases and backward compatibility
+        if sources is not None and validation_sources is None:
+            validation_sources = sources
+        if validation_sources is None:
+            validation_sources = []
+        
+        # Convert enum to string if needed
+        if hasattr(preflight_status, 'value'):
+            preflight_status = preflight_status.value
+        
+        # Normalize to uppercase for validation
+        preflight_status_upper = preflight_status.upper() if preflight_status else ""
+        
         # Validate preflight status
-        if preflight_status not in self.VALID_PREFLIGHT_STATUSES:
+        if preflight_status_upper not in [s.upper() for s in self.VALID_PREFLIGHT_STATUSES]:
             raise ValueError(
                 f"Invalid preflight_status: {preflight_status}. "
                 f"Must be one of: {self.VALID_PREFLIGHT_STATUSES}"
@@ -187,7 +206,7 @@ class AssetMetadataEnforcer:
 
         # Determine if asset can be used
         can_use = self._calculate_can_use(
-            confidence_level, confidence_score, preflight_status
+            confidence_level, confidence_score, preflight_status_upper
         )
 
         # Generate disclaimer if needed
@@ -197,16 +216,17 @@ class AssetMetadataEnforcer:
 
         return AssetMetadata(
             asset_name=asset_name,
-            asset_type=asset_type.lower(),
+            asset_type=asset_type.lower() if asset_type else "",
             generated_at=datetime.now(),
             confidence_level=confidence_level,
             confidence_score=confidence_score,
             validation_sources=validation_sources,
-            preflight_status=preflight_status,
+            preflight_status=preflight_status_upper,
             can_use=can_use,
             disclaimer=disclaimer,
             generated_by="IAH_v4.0",
-            version="4.0.0"
+            version="4.0.0",
+            disclaimers=[f"Data gaps: {', '.join(gaps)}"] if gaps else []
         )
 
     def validate_metadata(self, metadata: AssetMetadata) -> bool:

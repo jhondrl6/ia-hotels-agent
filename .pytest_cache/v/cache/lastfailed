@@ -1,13 +1,1 @@
-{
-  "tests/test_gbp_auditor_integration.py": true,
-  "tests/test_data_consistency.py::test_delivery_manager_passes_normalized_location": true,
-  "tests/test_gbp_photo_auditor_integration.py::test_low_confidence_adds_issue_warning": true,
-  "tests/test_geo_validator.py::TestGeoValidator::test_search_hotel_location_not_found": true,
-  "tests/test_geo_validator.py::TestGeoValidator::test_search_hotel_location_success": true,
-  "tests/test_geo_validator.py::TestGeoValidator::test_validate_hotel_location_failure": true,
-  "tests/test_geo_validator.py::TestGeoValidator::test_validate_hotel_location_success": true,
-  "tests/test_google_places_error_types.py::TestGooglePlacesErrorTypes::test_no_api_key_returns_error_place": true,
-  "tests/test_report_integration_adapter.py::test_report_builder_applies_integration_when_forced": true,
-  "tests/test_spark_command.py::TestSparkCommandIntegration::test_metrics_json_valid_format": true,
-  "tests/test_top_problems_consistency.py::TestTopProblemsConsistency::test_extract_top_problems_includes_whatsapp_conflict": true
-}
+{}

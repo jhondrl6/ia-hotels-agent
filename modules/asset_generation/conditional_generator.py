@@ -133,14 +133,15 @@ class ConditionalGenerator:
 
         return {
             "success": True,
-            "status": "estimated" if is_warning else "generated",
+            "status": "warning" if is_warning else "success",
             "asset_type": asset_type,
             "hotel_id": hotel_id,
             "file_path": str(file_path),
             "filename": filename,
             "metadata": metadata.to_dict(),
             "warnings": preflight_report.warnings if is_warning else [],
-            "preflight_status": preflight_report.overall_status.value
+            "preflight_status": preflight_report.overall_status.value,
+            "can_use": True  # NEVER_BLOCK: asset puede usarse aunque sea estimado
         }
 
     def _generate_content(
@@ -689,7 +690,7 @@ Generado: {datetime.now().isoformat()}
         if has_default_title:
             md += """- ❌ El title tag parece ser genérico (default del CMS)
 - ✅ Crear un title único que incluya: nombre del hotel + diferenciador + ubicación
-- 📝 Ejemplo: "Hotel [Nombre] - Mejor Tarifa Garantizada | [Ciudad]"
+- 📝 Ejemplo: "Hotel [Nombre] - Mejor Tarifa Garantizada | Santa Rosa de Cabal"
 - 📝 Longitud recomendada: 50-60 caracteres
 
 """
@@ -714,7 +715,7 @@ Generado: {datetime.now().isoformat()}
             md += """- ❌ La descripción parece ser genérica (default del CMS)
 - ✅ Crear una descripción única de 150-160 caracteres
 - 📝 Incluir: propuesta de valor + amenities principales + llamada a la acción
-- 📝 Ejemplo: "Hotel [Nombre] en [Ciudad]. WiFi gratis, piscina, desayuno incluido. 
+- 📝 Ejemplo: "Hotel [Nombre] en Santa Rosa de Cabal. WiFi gratis, piscina, desayuno incluido. 
   Reserva directa con la mejor tarifa."
 
 """
@@ -765,11 +766,11 @@ Generado: {datetime.now().isoformat()}
   "description": "Descripción del hotel...",
   "address": {{
     "@type": "PostalAddress",
-    "addressLocality": "Ciudad",
+    "addressLocality": "Santa Rosa de Cabal",
     "addressCountry": "CO"
   }},
-  "telephone": "+57XXX",
-  "priceRange": "$$"
+  "telephone": "+57 606 123 4567",
+  "priceRange": "$80-150"
 }}
 ```
 

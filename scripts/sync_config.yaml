@@ -1,0 +1,92 @@
+# Sync Configuration - Declarative version synchronization rules
+# Source of truth: VERSION.yaml
+# This file defines what gets synced where
+
+version: "1.0.0"
+description: "Config-driven sync for IA Hoteles Agent context files"
+
+# Field sources from VERSION.yaml
+sources:
+  version:
+    field: "version"
+    description: "Semantic version (e.g., 4.5.6)"
+  codename:
+    field: "codename"
+    description: "Release codename (e.g., NEVER_BLOCK Architecture)"
+  date:
+    field: "release_date"
+    description: "Release date"
+    transform: "date"  # special: use today's date
+
+# Sync rules - each rule targets a specific location in a file
+rules:
+
+  # README.md rules
+  - id: "readme_version_header"
+    file: "README.md"
+    description: "Version and date in README header"
+    replacements:
+      - pattern: '\*\*Version:\*\*\s*[\d.]+\s*\|\s*\*\*Última actualización:\*\*\s*[\d-]+\s*\w+\s*\d{4}'
+        template: '**Version:** {version} | **Última actualización:** {date_text}'
+
+  - id: "readme_status_banner"
+    file: "README.md"
+    description: "Agent Platform Status banner"
+    replacements:
+      - pattern: '>\s*\*\*🛡️ AGENT PLATFORM STATUS \([^)]+\):'
+        template: '> **🛡️ AGENT PLATFORM STATUS (v{version} - {codename}):**'
+        multiline: false
+
+  # AGENTS.md rules
+  - id: "agents_version_header"
+    file: "AGENTS.md"
+    description: "Version header in agents.md"
+    replacements:
+      - pattern: '<!--\s*agents_version:\s*[\d.]+\s*\|'
+        template: '<!-- agents_version: {version} |'
+      - pattern: 'last_update:\s*[\d-]+'
+        template: 'last_update: {date}'
+
+  - id: "agents_status_table"
+    file: "AGENTS.md"
+    description: "Status table version"
+    replacements:
+      - pattern: '\*\*Version\*\*\s*\|\s*v?[\d.]+'
+        template: '**Version** | v{version}'
+      - pattern: '\*\*Codename\*\*\s*\|\s*[^\|]+'
+        template: '**Codename** | {codename}'
+      - pattern: '>\s+\*\*\*v[\d.]+\s*-'
+        template: '> **v{version} - {codename}'
+        multiline: false
+
+  # .cursorrules rules
+  - id: "cursorrules_header"
+    file: ".cursorrules"
+    description: "Cursorrules version header"
+    replacements:
+      - pattern: 'cursorrules_version:\s*[\d.]+'
+        template: 'cursorrules_version: {version}'
+      - pattern: 'last_update:\s*[\d-]+'
+        template: 'last_update: {date}'
+      - pattern: '\*\*Version\*\*\s*\|\s*v?[\d.]+'
+        template: '**Version** | v{version}'
+
+  # INDICE_DOCUMENTACION.md rules
+  - id: "indice_version"
+    file: "INDICE_DOCUMENTACION.md"
+    description: "Version in indice header"
+    replacements:
+      - pattern: 'IA Hoteles Agent\s*v[\d.]+'
+        template: 'IA Hoteles Agent v{version}'
+      - pattern: '\*\*Última actualizacion:\*\*\s*[\d-]+'
+        template: '**Última actualizacion:** {date}'
+      - pattern: '\*\*Version:\*\*\s*[\d.]+'
+        template: '**Version:** {version}'
+
+  # .gemini/config.yaml rules
+  - id: "gemini_config"
+    file: ".gemini/config.yaml"
+    description: "Gemini config version"
+    replacements:
+      - pattern: 'IA Hoteles Agent\s*\(v[\d.]+\s*"[^"]*"\)'
+        template: 'IA Hoteles Agent (v{version} "{codename}")'

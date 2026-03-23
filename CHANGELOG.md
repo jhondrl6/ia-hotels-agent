@@ -5,6 +5,99 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.5.6] - 2026-03-22
+
+### 🎯 Objetivo
+Implementar arquitectura NEVER_BLOCK: el sistema nunca se bloquea, siempre entrega algo aunque sea subóptimo. Resolución de gaps con benchmark regional + disclaimers honestos.
+
+### ✅ Completado
+
+**FASE 1 - Benchmark Resolver**
+- `modules/providers/benchmark_resolver.py` - NUEVO módulo para resolver gaps con benchmark regional (Pereira/Santa Rosa de Cabal)
+- `modules/asset_generation/asset_metadata.py` - Campo `disclaimers` añadido
+- Tests en `tests/test_benchmark_resolver.py` - 11 tests
+
+**FASE 2 - Disclaimer Generator**
+- `modules/providers/disclaimer_generator.py` - NUEVO módulo genera disclaimers honestos por nivel de confidence
+- Tests en `tests/test_disclaimer_generator.py` - 15 tests
+
+**FASE 3 - Autonomous Researcher**
+- `modules/providers/autonomous_researcher.py` - NUEVO módulo investiga hotel en GBP, Booking, TripAdvisor, Instagram
+- Tests en `tests/test_autonomous_researcher.py` - 20 tests
+
+**FASE 4 - Never-Block Integration**
+- `modules/asset_generation/preflight_checks.py` - Integración benchmark fallback
+- `modules/asset_generation/conditional_generator.py` - Placeholders corregidos en optimization_guide
+- `modules/asset_generation/asset_content_validator.py` - Bloqueo de placeholders pre-generación
+- Tests en `tests/test_never_block_integration.py` - 23 tests
+
+**FASE 5 - Validación E2E**
+- Tests de regresión Hotel Vísperas - 2 tests skipping corregidos
+- 69/69 tests passing en suite NEVER_BLOCK
+
+### 📁 Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/providers/benchmark_resolver.py` | Benchmark regional para datos faltantes |
+| `modules/providers/disclaimer_generator.py` | Generador de disclaimers honestos |
+| `modules/providers/autonomous_researcher.py` | Investigador autónomo en fuentes públicas |
+| `tests/test_benchmark_resolver.py` | Tests TDD para BenchmarkResolver |
+| `tests/test_disclaimer_generator.py` | Tests TDD para DisclaimerGenerator |
+| `tests/test_autonomous_researcher.py` | Tests TDD para AutonomousResearcher |
+
+### 📁 Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/asset_metadata.py` | Añadido campo `disclaimers` |
+| `modules/asset_generation/preflight_checks.py` | Integración benchmark fallback |
+| `modules/asset_generation/conditional_generator.py` | Placeholders corregidos, benchmark fallback |
+| `modules/asset_generation/asset_content_validator.py` | Bloqueo pre-generación de placeholders |
+| `tests/test_never_block_integration.py` | Tests de regresión Hotel Vísperas |
+| `output/v4_complete/hotelvisperas/` | Outputs regenerados sin placeholders |
+
+### Métricas
+
+| Métrica | Valor |
+|---------|-------|
+| Tests NEVER_BLOCK | 69 passing |
+| Tests totales | 1434+ passing |
+| Coherence | ≥ 0.8 |
+| Placeholders en outputs | 0 |
+| Assets bloqueados | 0 (hotel_schema aún bloqueado por datos externos vacíos) |
+
+### Principios Implementados
+
+1. **NEVER_BLOCK**: El sistema nunca se bloquea, siempre entrega algo
+2. **BENCHMARK_FALLBACK**: Datos faltantes se resuelven con benchmark regional
+3. **HONEST_CONFIDENCE**: Todo output incluye confidence score real y fuentes
+4. **DELIVERY_READY**: Todo output es implementable, sin placeholders
+
+## [4.5.5] - 2026-03-21
+
+### 🎯 Objetivo
+Mejorar generador de FAQs con categorías y timestamp ISO 8601
+
+### ✅ Completado
+
+**Cambios Implementados**
+- `modules/delivery/generators/faq_gen.py` - Agregadas columnas Categoria y Fecha_Generacion
+- `tests/delivery/test_faq_generator_improvements.py` - Test para nueva funcionalidad
+
+### 📁 Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/delivery/generators/faq_gen.py` | Agregadas columnas Categoria y Fecha_Generacion |
+| `tests/delivery/test_faq_generator_improvements.py` | Test para nueva funcionalidad |
+
+### Métricas
+
+| Métrica | Valor |
+|---------|-------|
+| Tests | 1 nuevo test en `tests/delivery/test_faq_generator_improvements.py` |
+
 ## [4.5.4] - 2026-03-17
 
 ### 🎯 Objetivo

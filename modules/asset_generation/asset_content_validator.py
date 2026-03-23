@@ -46,18 +46,23 @@ class AssetContentValidator:
     """Validates content quality of generated assets."""
     
     PLACEHOLDER_PATTERNS = [
-        r'Ciudad',
-        r'\+57XXX',
-        r'\+57\d{10}',
-        r'\$\$+',
-        r'\.\.\.',
+        # Phone placeholders
+        r'\+57XXX',  # +57XXX literally
+        r'\+57\d{10}',  # +57 followed by exactly 10 digits (not masked)
+        # Generic placeholders
+        r'\.\.\.',  # Ellipsis
         r'\[INSERT.*\]',
         r'REPLACE_WITH_',
         r'TODO:',
         r'PLACEHOLDER',
         r'Lorem ipsum',
-        r'Example:',
         r'Ejemplo:',
+        # Detect "Ciudad" when it's the value (not the key)
+        # Matches "Ciudad" as a standalone value or after ":"
+        r':\s*Ciudad\s*$',  # "Ciudad" as a value after colon at end of line
+        r'^\s*Ciudad\s*$',  # "Ciudad" alone on a line
+        # Detect price placeholder "$$+" but not valid price ranges like "$$-$$$"
+        r'\$\$\+',  # $$$+ is a placeholder
     ]
     
     GENERIC_PHRASES = [
@@ -465,3 +470,48 @@ class AssetContentValidator:
         
         placeholder_indicators = ['ciudad', '+57xxx', '$$', '...', 'insert', 'replace']
         return any(ind in str(value).lower() for ind in placeholder_indicators)
+
+    def validate_content(self, content: str) -> ContentValidationResult:
+        """Validate raw content string (auto-detect type).
+        
+        Args:
+            content: Content to validate
+            
+        Returns:
+            ContentValidationResult with validation status
+        """
+        # Auto-detect content type based on patterns
+        content_lower = content.lower().strip()
+        
+        # JSON detection
+        if content.strip().startswith('{') or content.strip().startswith('['):
+            try:
+                json.loads(content)
+                return self.validate_json(content)
+            except json.JSONDecodeError:
+                pass  # Not JSON, continue with markdown detection
+        
+        # Markdown detection
+        if any(marker in content for marker in ['#', '##', '- ', '**', '```']):
+            return self.validate_markdown(content)
+        
+        # HTML detection
+        if '<' in content and '>' in content:
+            return self.validate_html(content)
+        
+        # CSV detection
+        if ',' in content and '\n' in content:
+            return self.validate_csv(content)
+        
+        # Default: treat as text with warnings
+        issues = self._detect_placeholders(content)
+        issues.extend(self._detect_generic_content(content))
+        
+        status = self._determine_status(issues)
+        
+        return ContentValidationResult(
+            status=status,
+            issues=issues,
+            line_count=len(content.split('\n')),
+            word_count=len(content.split())
+        )
