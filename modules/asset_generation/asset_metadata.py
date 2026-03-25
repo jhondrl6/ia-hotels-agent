@@ -16,12 +16,19 @@ from ..data_validation.confidence_taxonomy import ConfidenceLevel
 
 
 class AssetStatus(Enum):
-    """Status of an asset in the generation pipeline."""
+    """Status of an asset in the generation pipeline.
+    
+    FASE-CAUSAL-01: Agregados SKIPPED y REDUNDANT para manejar
+    casos donde el asset ya existe en sitio de producción.
+    """
     PENDING = "pending"
     GENERATED = "generated"
     VALIDATED = "validated"
     FAILED = "failed"
     DEPRECATED = "deprecated"
+    # FASE-CAUSAL-01: Estados de skip por presencia
+    SKIPPED = "skipped"           # Asset skippeado por no necesitarse
+    REDUNDANT = "redundant"       # Asset ya existe en sitio y fue entregado
 
 
 @dataclass
@@ -52,6 +59,11 @@ class AssetMetadata:
     fallback_reason: Optional[str] = None
     disclaimers: List[str] = field(default_factory=list)
     tags: List[str] = field(default_factory=list)
+    # FASE 9: Intelligent Disclaimer Generator v2 fields
+    missing_data: List[str] = field(default_factory=list)
+    benchmark_used: Optional[str] = None
+    improvement_steps: List[str] = field(default_factory=list)
+    confidence_after_fix: Optional[float] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert metadata to dictionary for serialization."""
@@ -75,6 +87,11 @@ class AssetMetadata:
             "fallback_reason": self.fallback_reason,
             "disclaimers": self.disclaimers,
             "tags": self.tags,
+            # FASE 9: Intelligent Disclaimer Generator v2
+            "missing_data": self.missing_data,
+            "benchmark_used": self.benchmark_used,
+            "improvement_steps": self.improvement_steps,
+            "confidence_after_fix": self.confidence_after_fix,
         }
         return result
 
@@ -98,7 +115,7 @@ class AssetMetadataEnforcer:
         "can_use"
     ]
 
-    VALID_PREFLIGHT_STATUSES = ["PASSED", "WARNING", "BLOCKED"]
+    VALID_PREFLIGHT_STATUSES = ["PASSED", "WARNING", "BLOCKED", "SKIPPED"]  # SKIPPED = FASE-CAUSAL-01
     VALID_ASSET_TYPES = ["html", "json", "csv", "markdown", "txt", "xml", "yaml"]
 
     def __init__(self):

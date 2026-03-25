@@ -269,3 +269,169 @@ class TestDisclaimerGeneratorEdgeCases:
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
+
+
+# =============================================================================
+# FASE 9: Intelligent Disclaimer Generator v2 - TESTS OBLIGATORIOS
+# =============================================================================
+
+class TestIntelligentDisclaimerGenerator:
+    """
+    FASE 9: Tests para IntelligentDisclaimerGenerator.
+    
+    Criterios:
+    - Disclaimer menciona datos específicos faltantes
+    - Disclaimer incluye improvement steps
+    - Improvement score se calcula correctamente
+    """
+    
+    def test_intelligent_disclaimer_content(self):
+        """Disclaimer menciona datos específicos (no genérico)."""
+        from modules.providers.disclaimer_generator import IntelligentDisclaimerGenerator
+        
+        generator = IntelligentDisclaimerGenerator()
+        disclaimer = generator.generate(
+            asset_type="hotel_schema",
+            confidence=0.3,
+            missing_data=["gbp_reviews", "photos", "ratings"],
+            benchmark_used="Pereira boutique avg benchmark",
+            improvement_steps=[
+                "Completar perfil de Google Business Profile",
+                "Agregar 10+ fotos de alta calidad"
+            ]
+        )
+        
+        # Debe mencionar datos específicos (Google Business Profile traduce gbp_reviews)
+        assert "google business" in disclaimer.lower() or "reviews" in disclaimer.lower() or "reseñas" in disclaimer.lower()
+        assert "fotos" in disclaimer.lower() or "photos" in disclaimer.lower()
+        # NO debe ser genérico
+        assert "datos estimados" not in disclaimer.lower()
+    
+    def test_disclaimer_includes_benchmark(self):
+        """Disclaimer incluye el benchmark usado."""
+        from modules.providers.disclaimer_generator import IntelligentDisclaimerGenerator
+        
+        generator = IntelligentDisclaimerGenerator()
+        disclaimer = generator.generate(
+            asset_type="description",
+            confidence=0.25,
+            missing_data=["gbp_reviews"],
+            benchmark_used="Medellín hotels average",
+            improvement_steps=["Solicitar 5+ reseñas"]
+        )
+        
+        assert "benchmark" in disclaimer.lower() or "medellín" in disclaimer.lower()
+    
+    def test_disclaimer_includes_steps(self):
+        """Disclaimer incluye numbered improvement steps."""
+        from modules.providers.disclaimer_generator import IntelligentDisclaimerGenerator
+        
+        generator = IntelligentDisclaimerGenerator()
+        disclaimer = generator.generate(
+            asset_type="hotel_schema",
+            confidence=0.3,
+            missing_data=["gbp_reviews", "photos"],
+            benchmark_used="Regional benchmark",
+            improvement_steps=[
+                "Agregar 10+ fotos a Google Business Profile",
+                "Solicitar 5+ reseñas a clientes reales",
+                "Verificar información de contacto"
+            ]
+        )
+        
+        # Debe tener pasos numerados
+        assert "1." in disclaimer
+        assert "2." in disclaimer
+        assert "3." in disclaimer
+        # Debe mencionar qué hacer para mejorar
+        assert "mejora" in disclaimer.lower() or "mejorar" in disclaimer.lower()
+    
+    def test_improvement_score_basic(self):
+        """Improvement score se calcula correctamente."""
+        from modules.providers.disclaimer_generator import calculate_improvement_score
+        
+        # Caso del plan: 0.3 -> 0.85 = 0.55
+        score = calculate_improvement_score(0.3, 0.85)
+        assert abs(score - 0.55) < 0.01, f"Expected 0.55, got {score}"
+    
+    def test_improvement_score_capped_at_one(self):
+        """Improvement score capped at 1.0."""
+        from modules.providers.disclaimer_generator import calculate_improvement_score
+        
+        # Muy alto target (más de 1.0 de gap)
+        score = calculate_improvement_score(0.2, 1.5)
+        assert score == 1.0, f"Expected 1.0 (capped), got {score}"
+    
+    def test_improvement_score_zero_when_target_lower(self):
+        """Improvement score es 0 cuando target < current."""
+        from modules.providers.disclaimer_generator import calculate_improvement_score
+        
+        score = calculate_improvement_score(0.8, 0.5)
+        assert score == 0.0, f"Expected 0.0, got {score}"
+    
+    def test_improvement_score_same_values(self):
+        """Improvement score es 0 cuando target == current."""
+        from modules.providers.disclaimer_generator import calculate_improvement_score
+        
+        score = calculate_improvement_score(0.7, 0.7)
+        assert score == 0.0, f"Expected 0.0, got {score}"
+    
+    def test_intelligent_disclaimer_includes_expected_confidence(self):
+        """Disclaimer incluye confidence esperado después de aplicar fixes."""
+        from modules.providers.disclaimer_generator import IntelligentDisclaimerGenerator
+        
+        generator = IntelligentDisclaimerGenerator()
+        disclaimer = generator.generate(
+            asset_type="hotel_schema",
+            confidence=0.3,
+            missing_data=["gbp_reviews"],
+            benchmark_used="Regional benchmark",
+            improvement_steps=["Solicitar reseñas", "Agregar fotos"]
+        )
+        
+        # Debe mencionar confianza esperada
+        assert "CONFIDENCIA ESPERADA" in disclaimer or "después" in disclaimer.lower()
+    
+    def test_intelligent_disclaimer_confidence_levels(self):
+        """Disclaimer adapta emoji/label según nivel de confianza."""
+        from modules.providers.disclaimer_generator import IntelligentDisclaimerGenerator
+        
+        generator = IntelligentDisclaimerGenerator()
+        
+        # Muy bajo < 0.4
+        d1 = generator.generate("schema", 0.3, ["reviews"], "bench", ["step"])
+        assert "🚨" in d1 or "MUY BAJA" in d1
+        
+        # Bajo 0.4-0.6
+        d2 = generator.generate("schema", 0.5, ["reviews"], "bench", ["step"])
+        assert "⚠️" in d2 or "BAJA" in d2
+        
+        # Moderado 0.6-0.8
+        d3 = generator.generate("schema", 0.7, ["reviews"], "bench", ["step"])
+        assert "⚡" in d3 or "MODERADA" in d3
+    
+    def test_generate_metadata_dict_complete(self):
+        """generate_metadata_dict retorna todos los campos requeridos."""
+        from modules.providers.disclaimer_generator import IntelligentDisclaimerGenerator
+        
+        generator = IntelligentDisclaimerGenerator()
+        result = generator.generate_metadata_dict(
+            asset_type="hotel_schema",
+            confidence=0.3,
+            missing_data=["gbp_reviews", "photos"],
+            benchmark_used="Pereira boutique avg",
+            improvement_steps=["Add photos", "Request reviews"]
+        )
+        
+        # Verificar estructura completa
+        assert "disclaimer" in result
+        assert "missing_data" in result
+        assert "benchmark_used" in result
+        assert "improvement_steps" in result
+        assert "confidence_after_fix" in result
+        
+        # Verificar valores
+        assert result["missing_data"] == ["gbp_reviews", "photos"]
+        assert result["benchmark_used"] == "Pereira boutique avg"
+        assert result["improvement_steps"] == ["Add photos", "Request reviews"]
+        assert isinstance(result["confidence_after_fix"], float)

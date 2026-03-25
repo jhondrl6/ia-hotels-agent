@@ -1,4 +1,4 @@
-<!-- agents_version: 4.5.6 | last_update: {date} -->
+<!-- agents_version: 4.8.0 | last_update: {date} -->
 
 # IA Hoteles Agent (iah-cli)
 
@@ -32,11 +32,48 @@ python scripts/run_all_validations.py
 
 ---
 
+## Gobernanza de Documentacion y Ejecucion
+
+### Conexiones Clave
+
+| Archivo | Proposito | Relacion |
+|---------|-----------|----------|
+| `docs/CONTRIBUTING.md` | Reglas de documentacion y mantenimiento | Index → fragmentos |
+| `.agents/workflows/phased_project_executor.md` | Motor de ejecucion por fases | Ejecuta → documenta |
+| `docs/contributing/REGISTRY.md` | Registro auto de fases completadas | Actualizado por executor |
+| `docs/contributing/documentation_rules.md` | Checklist docs obligatorias | Referenciado por executor |
+
+### Flujo Post-Fase
+
+Cuando se ejecuta `phased_project_executor.md`:
+
+```
+FASE completada
+    │
+    └── Paso 6: Documentacion Post-Fase
+        ├── Lee documentation_rules.md para checklist
+        ├── Ejecuta: python scripts/log_phase_completion.py --fase N
+        │   ├── Registra en REGISTRY.md (auto)
+        │   └── Muestra POR_HACER para docs manuales
+        └── Verifica capability contracts
+```
+
+### Version y Sincronizacion
+
+Archivos sincronizados automaticamente desde VERSION.yaml:
+- `AGENTS.md`, `README.md`, `.cursorrules`, `INDICE_DOCUMENTACION.md`
+
+Documentacion que se actualiza **manualmente** segun CONTRIBUTING.md:
+- `CHANGELOG.md`, `GUIA_TECNICA.md`, `ROADMAP.md`
+- `docs/PRECIOS_PAQUETES.md`, `.agents/workflows/README.md`
+
+---
+
 ## Estado Actual
 
 | Aspecto | Estado |
 |---------|--------|
-| **Version** | v4.5.6 |
+| **Version** | v4.8.0 |
 | **Codename** | NEVER_BLOCK Architecture|
 | **Piloto Activo** | Hotel Visperas (testeado) |
 | **Tests** | 1434+ passing |

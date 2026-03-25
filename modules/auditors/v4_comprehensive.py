@@ -14,6 +14,7 @@ Usage:
 """
 
 import json
+import logging
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -25,12 +26,17 @@ from modules.data_validation.external_apis import (
     PageSpeedClient,
 )
 from modules.scrapers.google_places_client import GooglePlacesClient, PlaceData
+from modules.scrapers.google_travel_scraper import GoogleTravelScraper
+from modules.scrapers.serpapi_client import SerpAPIClient
 from modules.analyzers.competitor_analyzer import CompetitorAnalyzer
 from data_validation.metadata_validator import MetadataValidator
 from modules.utils.http_client import HttpClient
 from modules.auditors.ai_crawler_auditor import AICrawlerAuditor
 from modules.auditors.citability_scorer import CitabilityScorer, CitabilityScore
 from modules.auditors.ia_readiness_calculator import IAReadinessCalculator, IAReadinessReport
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -570,56 +576,107 @@ class V4ComprehensiveAuditor:
         hotel_name: Optional[str],
         schema_props: Dict[str, Any]
     ) -> GBPApiResult:
-        """Audit GBP data via Google Places API."""
-        if not self.places.is_available:
-            return GBPApiResult(
-                place_found=False,
-                place_id=None,
-                name=hotel_name or schema_props.get("name") or "Unknown",
-                rating=0.0,
-                reviews=0,
-                photos=0,
-                phone=None,
-                website=None,
-                address="",
-                geo_score=0,
-                geo_score_breakdown={},
-                confidence=ConfidenceLevel.UNKNOWN.value,
-                error_type="API_NOT_AVAILABLE",
-                error_message="Google Places API not configured or unavailable",
-            )
+        """Audit GBP data via Google Places API with fallback chain.
         
-        # Try to find place by name from schema or parameter
-        search_name = hotel_name or schema_props.get("name")
+        FASE 11 Extension: Fallback chain: Places API (New) -> Google Travel -> SerpAPI -> schema_data
+        """
+        # Preferir schema_props name ya que es el nombre real del hotel desde el website
+        search_name = schema_props.get("name") or hotel_name
+        location = schema_props.get("address", "") or "Colombia"
         
-        if not search_name:
-            # Can't search without a name
-            return GBPApiResult(
-                place_found=False,
-                place_id=None,
-                name="Unknown",
-                rating=0.0,
-                reviews=0,
-                photos=0,
-                phone=None,
-                website=url,
-                address=schema_props.get("address", ""),
-                geo_score=0,
-                geo_score_breakdown={},
-                confidence=ConfidenceLevel.UNKNOWN.value,
-                error_type="NO_PLACE_FOUND",
-                error_message="Place not found in Google Places API",
-            )
+        # FASE 11 Extension: Try Places API (New) first - tiene 200M+ places
+        try:
+            places_result = self._search_places_new(search_name, location)
+            if places_result and places_result.place_found:
+                logger.info(f"Places API (New) found: {search_name}")
+                return GBPApiResult(
+                    place_found=True,
+                    place_id=places_result.place_id,
+                    name=places_result.name,
+                    rating=places_result.rating,
+                    reviews=places_result.reviews,
+                    photos=places_result.photos,
+                    phone=places_result.phone,
+                    website=places_result.website_url,
+                    address=places_result.address,
+                    geo_score=places_result.geo_score,
+                    geo_score_breakdown=places_result.geo_score_formula,
+                    confidence=ConfidenceLevel.VERIFIED.value,
+                    data_source="places_api_new",
+                    error_type=None,
+                    error_message=None,
+                )
+        except Exception as e:
+            logger.warning(f"Places API (New) failed: {e}")
         
-        # For now, we would need coordinates to search nearby
-        # In a real scenario, we'd geocode the address first
-        # For this implementation, we'll return a placeholder that indicates
-        # the API is available but we need more info
+        # Try Google Travel second
+        try:
+            travel_scraper = GoogleTravelScraper(timeout=15)
+            travel_result = travel_scraper.scrape_hotel(search_name, location)
+            
+            if travel_result.get('found', False):
+                travel_data = travel_result
+                logger.info(f"Google Travel found: {search_name}")
+                return GBPApiResult(
+                    place_found=True,
+                    place_id=travel_data.get('place_id'),
+                    name=travel_data.get('name', search_name),
+                    rating=float(travel_data.get('rating', 0.0)),
+                    reviews=int(travel_data.get('reviews', 0)),
+                    photos=int(travel_data.get('photos', 0)),
+                    phone=travel_data.get('phone'),
+                    website=travel_data.get('website', url),
+                    address=travel_data.get('address', schema_props.get("address", "")),
+                    geo_score=0,
+                    geo_score_breakdown={},
+                    confidence=ConfidenceLevel.VERIFIED.value,
+                    data_source="google_travel",
+                    error_type=None,
+                    error_message=None,
+                )
+        except Exception as e:
+            logger.warning(f"Google Travel fallback failed: {e}")
         
+        # Try SerpAPI as third fallback
+        try:
+            serp_client = SerpAPIClient(timeout=20)
+            if serp_client.is_available:
+                serp_result = serp_client.search_hotel(search_name, location)
+                
+                if serp_result.get('found', False):
+                    serp_data = serp_result
+                    serp_stats = serp_client.get_usage_stats()
+                    logger.info(f"SerpAPI found: {search_name} (used: {serp_stats['queries_used']}/{serp_stats['monthly_limit']})")
+                    return GBPApiResult(
+                        place_found=True,
+                        place_id=serp_data.get('place_id'),
+                        name=serp_data.get('name', search_name),
+                        rating=float(serp_data.get('rating', 0.0)),
+                        reviews=int(serp_data.get('reviews', 0)),
+                        photos=int(serp_data.get('photos', 0)),
+                        phone=serp_data.get('phone'),
+                        website=serp_data.get('website', url),
+                        address=serp_data.get('address', schema_props.get("address", "")),
+                        geo_score=0,
+                        geo_score_breakdown={},
+                        confidence=ConfidenceLevel.VERIFIED.value,
+                        data_source="serpapi",
+                        error_type=None,
+                        error_message=None,
+                    )
+                else:
+                    logger.info(f"SerpAPI: {serp_result.get('error_message', 'Hotel not found')}")
+            else:
+                logger.info("SerpAPI not available (no API key)")
+        except Exception as e:
+            logger.warning(f"SerpAPI fallback failed: {e}")
+        
+        # Final fallback: schema data
+        logger.info(f"Falling back to schema data for: {search_name}")
         return GBPApiResult(
             place_found=False,
             place_id=None,
-            name=search_name,
+            name=search_name or "Unknown",
             rating=0.0,
             reviews=0,
             photos=0,
@@ -631,9 +688,107 @@ class V4ComprehensiveAuditor:
             confidence=ConfidenceLevel.ESTIMATED.value,
             data_source="schema_data",
             error_type="NO_PLACE_FOUND",
-            error_message="Place not found in Google Places API",
+            error_message="Hotel not found in Places, Travel, or SerpAPI",
         )
     
+    def _search_places_new(self, hotel_name: str, location: str) -> Optional['PlaceData']:
+        """Busca hotel usando Google Places API (New).
+        
+        Args:
+            hotel_name: Nombre del hotel
+            location: Ubicacion
+            
+        Returns:
+            PlaceData si se encuentra, None si no
+        """
+        if not self.places.is_available:
+            logger.info("Places API (New) not available")
+            return None
+        
+        try:
+            import requests
+            
+            api_key = self.places.api_key
+            url = "https://places.googleapis.com/v1/places:searchText"
+            
+            headers = {
+                'Content-Type': 'application/json',
+                'X-Goog-Api-Key': api_key,
+                'X-Goog-FieldMask': 'places.id,places.displayName,places.rating,places.userRatingCount,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.photos'
+            }
+            
+            query = f"{hotel_name}, {location}"
+            data = {'textQuery': query}
+            
+            response = requests.post(url, headers=headers, json=data, timeout=20)
+            
+            if response.status_code != 200:
+                logger.warning(f"Places API (New) returned {response.status_code}")
+                return None
+            
+            result = response.json()
+            places = result.get('places', [])
+            
+            if not places:
+                return None
+            
+            # Tomar el primer resultado
+            place = places[0]
+            
+            # Parsear datos
+            name = place.get('displayName', {}).get('text', hotel_name)
+            rating = place.get('rating', 0.0) or 0.0
+            reviews = place.get('userRatingCount', 0) or 0
+            address = place.get('formattedAddress', location)
+            phone = place.get('nationalPhoneNumber')
+            website = place.get('websiteUri')
+            place_id = place.get('id')
+            
+            # Fotos
+            photos = len(place.get('photos', [])) if place.get('photos') else 0
+            
+            # Calcular geo_score
+            geo_breakdown = self.places.calculate_geo_score(
+                rating=rating,
+                reviews=reviews,
+                photos=photos,
+                has_hours=True,  # Asumimos que tiene horarios
+                has_website=bool(website)
+            )
+            
+            place_data = PlaceData(
+                place_id=place_id,
+                name=name,
+                rating=rating,
+                reviews=reviews,
+                photos=photos,
+                has_hours=True,
+                has_website=bool(website),
+                website_url=website,
+                phone=phone,
+                address=address,
+                city="",
+                lat=0.0,
+                lng=0.0,
+                geo_score=geo_breakdown.total,
+                geo_score_formula={
+                    'rating_score': geo_breakdown.rating_score,
+                    'reviews_score': geo_breakdown.reviews_score,
+                    'photos_score': geo_breakdown.photos_score,
+                    'hours_score': geo_breakdown.hours_score,
+                    'website_score': geo_breakdown.website_score,
+                },
+                data_source="places_api_new",
+                fetched_at="",
+                place_found=True
+            )
+            
+            return place_data
+            
+        except Exception as e:
+            logger.warning(f"Places API (New) search failed: {e}")
+            return None
+
     def _audit_competitors(self, gbp_result: GBPApiResult) -> List[Dict]:
         """Analyze nearby competitors using CompetitorAnalyzer."""
         if not gbp_result.place_found or not gbp_result.geo_score:

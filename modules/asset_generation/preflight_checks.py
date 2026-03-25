@@ -7,6 +7,9 @@ from enum import Enum
 from ..data_validation import ConfidenceLevel, DataPoint
 from .asset_catalog import ASSET_CATALOG, AssetStatus
 
+# B1: Import BenchmarkCrossValidator for ADR validation
+from ..providers.benchmark_cross_validator import BenchmarkCrossValidator
+
 
 class PreflightStatus(Enum):
     """Status of a preflight check."""
@@ -38,6 +41,18 @@ class PreflightReport:
     blocking_issues: List[str] = field(default_factory=list)
 
 
+# NEW HOTEL THRESHOLDS (B2)
+# Hotels with 0-10 reviews, 0 photos, or place_found=false are considered "new"
+NEW_HOTEL_THRESHOLDS = {
+    "whatsapp_button": 0.3,  # Reduced from 0.7
+    "faq_page": 0.4,         # Reduced from 0.5
+}
+
+# Threshold to consider a hotel as "new"
+NEW_HOTEL_MAX_REVIEWS = 10
+NEW_HOTEL_MAX_PHOTOS = 5
+
+
 class PreflightChecker:
     """Quality gates for asset generation."""
 
@@ -65,7 +80,63 @@ class PreflightChecker:
         """Initialize the preflight checker."""
         pass
 
-    def check_asset(self, asset_type: str, validated_data: Dict[str, DataPoint]) -> PreflightReport:
+    def is_new_hotel(self, hotel_context: Optional[Dict[str, Any]] = None) -> bool:
+        """
+        Determine if a hotel is "new" based on context.
+        
+        A hotel is considered new if:
+        - It has 0-10 reviews
+        - It has 0-5 photos
+        - place_found is false
+        
+        Args:
+            hotel_context: Dictionary with hotel metadata (reviews, photos, place_found)
+            
+        Returns:
+            True if hotel is new, False otherwise
+        """
+        if not hotel_context:
+            return False
+            
+        reviews = hotel_context.get("reviews", 999)  # Default to established if not specified
+        photos = hotel_context.get("photos", 999)
+        place_found = hotel_context.get("place_found", True)
+        
+        return (
+            reviews <= NEW_HOTEL_MAX_REVIEWS or
+            photos <= NEW_HOTEL_MAX_PHOTOS or
+            not place_found
+        )
+
+    def get_effective_threshold(
+        self, 
+        asset_type: str, 
+        is_new_hotel: bool
+    ) -> float:
+        """
+        Get the effective confidence threshold for an asset type.
+        
+        For new hotels, lower thresholds are used to allow generation
+        with less data quality.
+        
+        Args:
+            asset_type: Type of asset
+            is_new_hotel: Whether the hotel is new
+            
+        Returns:
+            Effective confidence threshold (0.0 - 1.0)
+        """
+        base_threshold = self.ASSET_REQUIREMENTS.get(asset_type, {}).get(
+            "required_confidence", 0.5
+        )
+        
+        if is_new_hotel and asset_type in NEW_HOTEL_THRESHOLDS:
+            return NEW_HOTEL_THRESHOLDS[asset_type]
+        
+        return base_threshold
+
+    def check_asset(self, asset_type: str, validated_data: Dict[str, DataPoint], 
+                    hotel_context: Optional[Dict[str, Any]] = None) -> PreflightReport:
         """Check if asset can be generated based on data quality.
 
         Args:
@@ -87,7 +158,11 @@ class PreflightChecker:
 
         requirements = self.ASSET_REQUIREMENTS[asset_type]
         required_field = requirements["required_field"]
-        required_confidence = requirements["required_confidence"]
+        
+        # B2: Check if hotel is "new" to use differentiated thresholds
+        hotel_is_new = self.is_new_hotel(hotel_context)
+        required_confidence = self.get_effective_threshold(asset_type, hotel_is_new)
+        
         block_on_failure = requirements["block_on_failure"]
         fallback = requirements.get("fallback")
 
@@ -334,3 +409,84 @@ class PreflightChecker:
             return fallback
 
         return check.fallback_action
+
+    def validate_adr_against_benchmark(
+        self,
+        actual_adr: float,
+        hotel_type: str = "standard"
+    ) -> Dict[str, Any]:
+        """
+        Validate ADR against benchmark ranges.
+
+        B1: Integration of BenchmarkCrossValidator into PreflightChecker.
+
+        Args:
+            actual_adr: Actual ADR value
+            hotel_type: Type of hotel for benchmark comparison
+
+        Returns:
+            Dictionary with deviation validation results
+        """
+        validator = BenchmarkCrossValidator()
+        min_adr, max_adr = validator.get_benchmark_range_for_type(hotel_type)
+        benchmark_adr = (min_adr + max_adr) / 2
+
+        deviation = validator.validate_adr_deviation(actual_adr, benchmark_adr, hotel_type)
+
+        return {
+            "actual_adr": actual_adr,
+            "benchmark_adr": benchmark_adr,
+            "min_adr": min_adr,
+            "max_adr": max_adr,
+            "deviation_percentage": deviation.deviation_percentage,
+            "severity": deviation.severity,
+            "message": deviation.message,
+            "can_proceed": deviation.severity != "error"
+        }
+
+    def check_asset_with_benchmark(
+        self,
+        asset_type: str,
+        validated_data: Dict[str, DataPoint],
+        hotel_context: Optional[Dict[str, Any]] = None
+    ) -> PreflightReport:
+        """
+        Enhanced check_asset that also validates ADR against benchmark.
+
+        B1: Combines preflight check with benchmark cross-validation.
+
+        Args:
+            asset_type: Type of asset to generate
+            validated_data: Dictionary of validated data points
+            hotel_context: Optional context about hotel for benchmark validation
+
+        Returns:
+            PreflightReport with benchmark deviation info if applicable
+        """
+        # Run standard preflight check
+        report = self.check_asset(asset_type, validated_data, hotel_context)
+
+        # B1: If hotel_context has adr, validate against benchmark
+        if hotel_context and "adr" in hotel_context:
+            adr_result = self.validate_adr_against_benchmark(
+                hotel_context["adr"],
+                hotel_context.get("hotel_type", "standard")
+            )
+
+            # Add benchmark deviation info to report warnings
+            if adr_result["severity"] != "ok":
+                benchmark_warning = (
+                    f"Benchmark ADR deviation: {adr_result['deviation_percentage']:.1%} "
+                    f"(Actual: ${adr_result['actual_adr']:,.0f} vs "
+                    f"Benchmark: ${adr_result['benchmark_adr']:,.0f})"
+                )
+                if adr_result["severity"] == "error":
+                    report.blocking_issues.append(benchmark_warning)
+                    report.overall_status = PreflightStatus.BLOCKED
+                    report.can_proceed = False
+                else:
+                    report.warnings.append(benchmark_warning)
+                    if report.overall_status == PreflightStatus.PASSED:
+                        report.overall_status = PreflightStatus.WARNING
+
+        return report

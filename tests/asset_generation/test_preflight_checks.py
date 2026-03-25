@@ -145,7 +145,7 @@ class TestPreflightCheckerCheckAsset:
     @pytest.mark.parametrize("sources_count,expected_status", [
         (2, PreflightStatus.PASSED),  # Multiple matching sources = high confidence
         (1, PreflightStatus.PASSED),  # Single source = 100% match
-        (0, PreflightStatus.BLOCKED),  # No sources = unknown
+        (0, PreflightStatus.WARNING),  # NEVER_BLOCK: No sources = fallback as WARNING
     ])
     def test_check_asset_confidence_levels(self, sources_count, expected_status):
         """Test check_asset returns correct status based on confidence."""
@@ -160,15 +160,18 @@ class TestPreflightCheckerCheckAsset:
         
         validated_data = {"whatsapp": dp}
         report = checker.check_asset("whatsapp_button", validated_data)
+        # NEVER_BLOCK: 0 sources with fallback becomes WARNING, not BLOCKED
         assert report.overall_status == expected_status
 
     def test_check_asset_missing_field(self):
-        """Test check_asset when required field is missing."""
+        """Test check_asset when required field is missing - NEVER_BLOCK: uses fallback."""
         checker = PreflightChecker()
         validated_data = {}  # Empty data
         report = checker.check_asset("whatsapp_button", validated_data)
-        assert report.overall_status == PreflightStatus.BLOCKED
-        assert "whatsapp" in report.blocking_issues[0].lower()
+        # NEVER_BLOCK: Even with missing field, uses fallback and becomes WARNING
+        assert report.overall_status == PreflightStatus.WARNING
+        assert report.can_proceed is True
+        assert len(report.warnings) > 0
 
 
 class TestPreflightCheckerEvaluateCheck:

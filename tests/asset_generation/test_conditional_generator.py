@@ -74,7 +74,8 @@ class TestConditionalGeneratorGenerate:
             hotel_id="hotel_123"
         )
         assert result["success"] is True
-        assert result["status"] == "generated"
+        # NEVER_BLOCK: status es "success" o "warning" (nunca "blocked")
+        assert result["status"] in ("success", "warning")
         assert result["asset_type"] == "whatsapp_button"
         assert result["hotel_id"] == "hotel_123"
 
@@ -97,9 +98,10 @@ class TestConditionalGeneratorGenerate:
         assert result["success"] is True
 
     def test_generate_with_blocked_returns_error(self, tmp_path):
-        """Test generate with BLOCKED returns error."""
+        """Test generate with BLOCKED returns error - NEVER_BLOCK: now returns success with warning."""
         generator = ConditionalGenerator(output_dir=str(tmp_path))
         # Empty DataPoint should give low confidence
+        # NEVER_BLOCK: Even with low confidence, generate succeeds with warning
         dp = DataPoint("whatsapp")
         validated_data = {"whatsapp": dp}
         
@@ -109,9 +111,12 @@ class TestConditionalGeneratorGenerate:
             hotel_name="Test Hotel",
             hotel_id="hotel_123"
         )
-        assert result["success"] is False
-        assert result["status"] == "blocked"
-        assert "Preflight check failed" in result["error"]
+        # NEVER_BLOCK: Nunca retorna error por confianza baja - usa fallback
+        assert result["success"] is True
+        assert result["status"] in ("warning", "success")  # NUNCA "blocked"
+        # El asset se genera igual con disclaimer
+        assert "can_use" in result
+        assert result["can_use"] is True
 
 
 class TestConditionalGeneratorNamingStrategy:

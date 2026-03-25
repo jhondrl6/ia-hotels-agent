@@ -1,10 +1,47 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.5.6"
+version: "4.8.0"
 codename: "NEVER_BLOCK Architecture"
-release_date: "2026-03-22"
+release_date: "2026-03-23"
 plan_maestro_version: "v2.6.0"
 agent_harness_version: "3.3.4"
+
+# v4.8.0 - PLACES API NEW INTEGRATION
+# - Places API (New) integrado como primer paso del fallback chain
+# - Fallback chain: Places API (New) -> Google Travel -> SerpAPI -> schema_data
+# - geo_score calculado con formula real (rating + reviews + photos + hours + website)
+# - Hotel Visperas encontrado: rating 4.7, 618 reviews, geo_score 72
+# - SerpAPIClient: backup cuando Places API no encuentra el hotel
+# - GoogleTravelScraper: scraper para Google Travel/Hotels
+# - Integracion en V4ComprehensiveAuditor como fallback
+# - Fallback chain: Places API -> Google Travel -> SerpAPI -> schema_data
+# - SerpAPIClient: integracion con SerpAPI (250 searches/mes)
+# - Tests: 9/12 passing en tests/scrapers/test_serpapi_client.py
+# - Coherence Score: 0.87 >= 0.85 ✅
+# - 7/7 assets generados exitosamente
+# - Publication Gates: 6/6 passed ✅
+# - Hotel Visperas encontrado via SerpAPI: rating 4.7, 618 reviews
+# - HealthMetricsCollector: dataclass ExecutionMetrics + HealthMetricsCollector
+# - HealthDashboardGenerator: HTML dashboard con Chart.js
+# - Integracion en main.py post-delivery (FASE 7)
+# - Tests: 14/14 passing en tests/monitoring/
+# - Dashboard output: output/{hotel_id}/health_dashboard/health_dashboard.html
+# - Dashboard features: summary cards, bar charts, doughnut chart, table
+
+# v4.5.9 - AI DISCLAIMER (FASE 9 completada)
+# - IntelligentDisclaimerGenerator v2
+# - Improvement scoring: calculate_improvement_score()
+# - Campos: missing_data, benchmark_used, improvement_steps, confidence_after_fix
+
+# v4.5.8 - AUTONOMOUS RESEARCH (FASE 8 completada)
+# - ResearchOutput schema con persistencia JSON
+# - Source Scrapers: BookingScraper, TripAdvisorScraper, InstagramScraper
+# - Research Confidence Scoring: 4/4=1.0, 3/4=0.75, 2/4=0.5, 1/4=0.25
+
+# v4.5.7 - DELIVERY-V2 (FASE 7 completada)
+# - DeliveryPackager: packaging automatizado ZIP
+# - templates/delivery_readme_template.md
+# - tests/delivery/test_delivery_packager.py
 
 # v4.5.6 - NEVER_BLOCK Architecture (FASE 1-5 completadas)
 # - BenchmarkResolver: fallback con benchmark regional (Pereira/Santa Rosa de Cabal)

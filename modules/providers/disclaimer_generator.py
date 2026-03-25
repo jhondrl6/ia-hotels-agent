@@ -3,9 +3,12 @@ Disclaimer Generator for IA Hoteles Agent v4.0
 
 Generates honest disclaimers based on confidence levels and data sources.
 Follows the NEVER_BLOCK principle - always provides output with transparency.
+
+v4.5.9: IntelligentDisclaimerGenerator adds contextual improvement steps,
+specific missing data details, and expected confidence after fixes.
 """
 
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 
 class DisclaimerGenerator:
@@ -170,3 +173,195 @@ class DisclaimerGenerator:
             disclaimer_parts.append(f"Datos faltantes: {gaps_str}")
         disclaimer_parts.append("Recomendación: verificación adicional sugerida.")
         return " ".join(disclaimer_parts)
+
+
+class IntelligentDisclaimerGenerator:
+    """
+    v4.5.9: Generates contextual disclaimers with specific missing data,
+    benchmark information, and actionable improvement steps.
+    
+    NEVER_BLOCK Principle:
+    - Shows EXACTLY what data is missing and why
+    - Names the benchmark used as fallback
+    - Provides numbered improvement steps with expected confidence gain
+    """
+
+    def generate(
+        self,
+        asset_type: str,
+        confidence: float,
+        missing_data: List[str],
+        benchmark_used: str,
+        improvement_steps: List[str]
+    ) -> str:
+        """
+        Generate contextual disclaimer with improvement guidance.
+        
+        Args:
+            asset_type: Type of asset (hotel_schema, description, etc.)
+            confidence: Current confidence score (0.0 - 1.0)
+            missing_data: List of specific missing data fields
+            benchmark_used: Description of benchmark used as fallback
+            improvement_steps: Numbered steps to improve confidence
+            
+        Returns:
+            Formatted disclaimer string with context and guidance
+        """
+        confidence_pct = int(confidence * 100)
+        
+        # Format missing data as bullet points
+        missing_bullets = self._format_missing_data(missing_data)
+        
+        # Determine confidence category
+        if confidence < 0.4:
+            confidence_label = "MUY BAJA"
+            emoji = "🚨"
+        elif confidence < 0.6:
+            confidence_label = "BAJA"
+            emoji = "⚠️"
+        elif confidence < 0.8:
+            confidence_label = "MODERADA"
+            emoji = "⚡"
+        else:
+            confidence_label = "ACEPTABLE"
+            emoji = "ℹ️"
+        
+        # Calculate expected confidence after improvements
+        expected_confidence = self._estimate_confidence_after_fix(confidence, len(improvement_steps))
+        
+        # Build disclaimer sections
+        disclaimer_parts = [
+            f"{emoji} ASSET CON CONFIANZA {confidence_label} ({confidence_pct}/100)",
+            "",
+            f"Este {asset_type} fue generado usando {benchmark_used} porque:",
+            missing_bullets,
+            "",
+            "PARA MEJORAR ESTE ASSET:",
+        ]
+        
+        # Add numbered improvement steps
+        for i, step in enumerate(improvement_steps, 1):
+            disclaimer_parts.append(f"{i}. {step}")
+        
+        disclaimer_parts.extend([
+            "",
+            f"CONFIDENCIA ESPERADA DESPUÉS DE APLICAR: {expected_confidence:.0%}+"
+        ])
+        
+        return "\n".join(disclaimer_parts)
+
+    def _format_missing_data(self, missing_data: List[str]) -> str:
+        """Format missing data as bullet points."""
+        if not missing_data:
+            return "• Sin datos faltantes específicos"
+        
+        bullets = []
+        for item in missing_data:
+            # Provide human-readable translations
+            item_lower = item.lower()
+            if "gbp" in item_lower or "google_business" in item_lower:
+                bullets.append("• Google Business Profile sin datos suficientes")
+            elif "reviews" in item_lower or "reseñas" in item_lower:
+                bullets.append(f"• Reseñas de clientes ({item})")
+            elif "photos" in item_lower or "fotos" in item_lower:
+                bullets.append(f"• Fotos de alta calidad ({item})")
+            elif "ratings" in item_lower or "calificaciones" in item_lower:
+                bullets.append(f"• Ratings/calificaciones ({item})")
+            elif "telephone" in item_lower or "phone" in item_lower:
+                bullets.append("• Teléfono del hotel")
+            elif "address" in item_lower or "direccion" in item_lower:
+                bullets.append("• Dirección física verificada")
+            elif "amenities" in item_lower or "servicios" in item_lower:
+                bullets.append("• Lista de amenities/servicios")
+            elif "description" in item_lower or "descripcion" in item_lower:
+                bullets.append("• Descripción del establecimiento")
+            elif "all" in item_lower:
+                bullets.append("• Múltiples campos críticos sin datos")
+            else:
+                bullets.append(f"• {item}")
+        
+        return "\n".join(bullets)
+
+    def _estimate_confidence_after_fix(self, current_confidence: float, num_steps: int) -> float:
+        """
+        Estimate confidence improvement after applying fix steps.
+        
+        Each improvement step adds approximately 8-12% confidence,
+        with diminishing returns for higher starting confidence.
+        """
+        if num_steps == 0:
+            return current_confidence
+        
+        # Base improvement per step (10% for low confidence, less for higher)
+        if current_confidence < 0.4:
+            improvement_per_step = 0.12
+        elif current_confidence < 0.6:
+            improvement_per_step = 0.10
+        elif current_confidence < 0.8:
+            improvement_per_step = 0.08
+        else:
+            improvement_per_step = 0.05
+        
+        total_improvement = num_steps * improvement_per_step
+        
+        # Cap at 0.95 (never claim 100% confidence)
+        estimated = current_confidence + total_improvement
+        return min(estimated, 0.95)
+
+    def generate_metadata_dict(
+        self,
+        asset_type: str,
+        confidence: float,
+        missing_data: List[str],
+        benchmark_used: str,
+        improvement_steps: List[str]
+    ) -> Dict[str, Any]:
+        """
+        Generate disclaimer and return metadata dict with all fields.
+        
+        Returns dict with:
+        - disclaimer: Formatted disclaimer text
+        - missing_data: Original missing data list
+        - benchmark_used: Benchmark used
+        - improvement_steps: Original steps list
+        - confidence_after_fix: Estimated confidence after applying fixes
+        """
+        disclaimer = self.generate(
+            asset_type, confidence, missing_data, 
+            benchmark_used, improvement_steps
+        )
+        
+        estimated_confidence = self._estimate_confidence_after_fix(
+            confidence, len(improvement_steps)
+        )
+        
+        return {
+            "disclaimer": disclaimer,
+            "missing_data": missing_data,
+            "benchmark_used": benchmark_used,
+            "improvement_steps": improvement_steps,
+            "confidence_after_fix": round(estimated_confidence, 2)
+        }
+
+
+def calculate_improvement_score(current_confidence: float, target_confidence: float) -> float:
+    """
+    Calculate the improvement score (gap to close).
+    
+    Args:
+        current_confidence: Current confidence score (0.0 - 1.0)
+        target_confidence: Target confidence score (0.0 - 1.0)
+        
+    Returns:
+        Improvement score = target - current (0.0 - 1.0 range)
+        
+    Example:
+        current: 0.3, target: 0.85 → improvement_score: 0.55
+    """
+    if target_confidence < current_confidence:
+        return 0.0
+    
+    improvement = target_confidence - current_confidence
+    
+    # Cap at 1.0
+    return min(improvement, 1.0)

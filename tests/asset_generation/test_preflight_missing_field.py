@@ -25,18 +25,19 @@ class TestPreflightMissingFieldFallback:
         assert "Missing field" in report.warnings[0] or "fallback" in report.warnings[0].lower()
 
     def test_missing_field_with_block_on_failure_true_is_blocked(self):
-        """When block_on_failure=True and field missing, should be BLOCKED."""
+        """When block_on_failure=True and field missing, NEVER_BLOCK: uses fallback as WARNING."""
         checker = PreflightChecker()
 
         # Empty validated_data - field "whatsapp" is missing
         validated_data = {}
 
-        # whatsapp_button has block_on_failure=True
+        # whatsapp_button has block_on_failure=True, but NEVER_BLOCK converts to WARNING
         report = checker.check_asset("whatsapp_button", validated_data)
 
-        assert report.overall_status == PreflightStatus.BLOCKED
-        assert report.can_proceed is False
-        assert len(report.blocking_issues) > 0
+        # NEVER_BLOCK: Even block_on_failure=True se convierte a WARNING con fallback
+        assert report.overall_status == PreflightStatus.WARNING
+        assert report.can_proceed is True
+        assert len(report.warnings) > 0
 
     def test_missing_field_fallback_action_is_set(self):
         """Fallback action should be set when field missing and block_on_failure=False."""

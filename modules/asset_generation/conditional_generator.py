@@ -1,4 +1,11 @@
-"""Generates assets conditionally based on preflight checks."""
+"""Generates assets conditionally based on preflight checks.
+
+INTEGRACION FASE-CAUSAL-01:
+- SitePresenceChecker se ejecuta ANTES de generar
+- Si el asset YA existe en sitio real → SKIP con理由
+- Si el asset fue entregado previamente → SKIP REDUNDANT
+- Solo genera si realmente necesita crearse
+"""
 
 import re
 from typing import Dict, List, Optional, Any
@@ -12,6 +19,8 @@ import hashlib
 from .preflight_checks import PreflightChecker, PreflightStatus, PreflightReport
 from .asset_metadata import AssetMetadata, AssetMetadataEnforcer, AssetStatus
 from .asset_catalog import ASSET_CATALOG
+from .data_assessment import DataAssessment, DataClassification
+from .site_presence_checker import SitePresenceChecker, PresenceStatus
 
 
 class ConditionalGenerator:
@@ -41,22 +50,38 @@ class ConditionalGenerator:
         self.preflight_checker = PreflightChecker()
         self.output_dir = Path(output_dir)
         self.metadata_enforcer = AssetMetadataEnforcer()
+        self.data_assessor = DataAssessment()
+        self.site_checker = SitePresenceChecker()  # FASE-CAUSAL-01
+        
+        # Asset sets per generation path (FASE 6: Orchestration V2)
+        self._fast_assets = ["whatsapp_button", "faq_page", "hotel_schema"]
+        self._standard_assets = ["whatsapp_button", "faq_page", "hotel_schema", 
+                                 "geo_playbook", "review_plan", "org_schema"]
+        self._full_assets = None  # Will use all IMPLEMENTED assets
 
     def generate(
         self,
         asset_type: str,
         validated_data: Dict,
         hotel_name: str,
-        hotel_id: str
+        hotel_id: str,
+        hotel_context: Optional[Dict[str, Any]] = None,
+        site_url: Optional[str] = None
     ) -> Dict[str, Any]:
         """Generate an asset conditionally based on preflight checks.
+        
+        FASE-CAUSAL-01: Ahora verifica sitio real ANTES de generar.
+        Si el asset ya existe en producción → SKIP
         
         Args:
             asset_type: Type of asset to generate
             validated_data: Validated data for generation
             hotel_name: Name of the hotel
             hotel_id: Unique hotel identifier
-            
+            hotel_context: Optional context about hotel (reviews, photos, place_found)
+            site_url: URL del sitio de producción para verificar si asset ya existe
+                         Si el asset ya existe en el sitio → SKIP
+        
         Returns:
             Result dictionary with status, content, and metadata
         """
@@ -68,8 +93,33 @@ class ConditionalGenerator:
                 "asset_type": asset_type,
                 "hotel_id": hotel_id
             }
-
-        preflight_report = self.preflight_checker.check_asset(asset_type, validated_data)
+        
+        # ═══════════════════════════════════════════════════════════════════
+        # FASE-CAUSAL-01: GATE DE PRESENCIA EN SITIO REAL
+        # ═══════════════════════════════════════════════════════════════════
+        if site_url:
+            presence_result = self.site_checker.get_full_presence_decision(
+                site_url, hotel_id, asset_type
+            )
+            
+            if not presence_result.should_generate:
+                return {
+                    "success": True,  # No es error, es skip válido
+                    "status": "skipped",
+                    "asset_type": asset_type,
+                    "hotel_id": hotel_id,
+                    "skip_reason": presence_result.skip_reason,
+                    "presence_status": presence_result.status.value,
+                    "site_verified": True,
+                    "can_use": False,
+                    "details": presence_result.details,
+                    "recommendations": presence_result.recommendations
+                }
+        # ═══════════════════════════════════════════════════════════════════
+        
+        preflight_report = self.preflight_checker.check_asset(
+            asset_type, validated_data, hotel_context
+        )
 
         if preflight_report.overall_status == PreflightStatus.BLOCKED:
             return {
@@ -1167,6 +1217,185 @@ dado que la mayoría del tráfico web proviene de estos dispositivos.
                 total_score += 0.0
         
         return total_score / len(preflight_report.checks)
+
+    # ========================================================================
+    # FASE 6: Orchestration V2 - Intelligent Branching
+    # ========================================================================
+    
+    def assess_data_quality(
+        self,
+        hotel_data: Optional[Dict[str, Any]] = None,
+        gbp_data: Optional[Dict[str, Any]] = None,
+        seo_data: Optional[Dict[str, Any]] = None,
+        scraping_success: bool = False
+    ) -> DataClassification:
+        """
+        Assess data quality and return classification (LOW/MED/HIGH).
+        
+        Args:
+            hotel_data: Core hotel data
+            gbp_data: Google Business Profile data
+            seo_data: SEO-related data
+            scraping_success: Whether web scraping succeeded
+            
+        Returns:
+            DataClassification enum value
+        """
+        result = self.data_assessor.assess(
+            hotel_data=hotel_data or {},
+            gbp_data=gbp_data,
+            seo_data=seo_data,
+            scraping_success=scraping_success
+        )
+        return result.classification
+    
+    def validate_before_generation(
+        self,
+        validated_data: Dict,
+        hotel_context: Optional[Dict[str, Any]] = None
+    ) -> tuple:
+        """
+        Validate data quality BEFORE generation.
+        
+        This is the key change in FASE 6: we validate data availability
+        first, and if it's too low, we fail fast instead of generating
+        assets with insufficient data.
+        
+        Args:
+            validated_data: The data to validate
+            hotel_context: Hotel context for assessment
+            
+        Returns:
+            Tuple of (is_valid, error_message, classification)
+        """
+        # Extract data components for assessment
+        hotel_data = validated_data.get("hotel_data", {})
+        if hasattr(hotel_data, 'value'):
+            hotel_data = hotel_data.value if isinstance(hotel_data.value, dict) else {}
+        
+        gbp_data = validated_data.get("gbp_data", {})
+        if hasattr(gbp_data, 'value'):
+            gbp_data = gbp_data.value if isinstance(gbp_data.value, dict) else {}
+        
+        seo_data = validated_data.get("seo_data", {})
+        if hasattr(seo_data, 'value'):
+            seo_data = seo_data.value if isinstance(seo_data.value, dict) else {}
+        
+        assessment = self.data_assessor.assess(
+            hotel_data=hotel_data if isinstance(hotel_data, dict) else {},
+            gbp_data=gbp_data if isinstance(gbp_data, dict) else {},
+            seo_data=seo_data if isinstance(seo_data, dict) else {},
+            scraping_success=bool(gbp_data)  # If we have GBP data, scraping was partially successful
+        )
+        
+        # If classification is LOW and missing data is severe, fail fast
+        if assessment.classification == DataClassification.LOW:
+            if len(assessment.missing_data) >= 5:
+                return (
+                    False,
+                    f"Data quality too low ({assessment.overall_score:.0%}). "
+                    f"Missing: {', '.join(assessment.missing_data[:3])}...",
+                    assessment.classification
+                )
+        
+        return True, "", assessment.classification
+    
+    def generate_fast(
+        self,
+        validated_data: Dict,
+        hotel_name: str,
+        hotel_id: str,
+        hotel_context: Optional[Dict[str, Any]] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate only essential assets (3-4) for LOW data quality hotels.
+        
+        Args:
+            validated_data: Validated data for generation
+            hotel_name: Name of the hotel
+            hotel_id: Unique hotel identifier
+            hotel_context: Optional context about hotel
+            
+        Returns:
+            List of generation result dictionaries
+        """
+        results = []
+        for asset_type in self._fast_assets:
+            result = self.generate(
+                asset_type=asset_type,
+                validated_data=validated_data,
+                hotel_name=hotel_name,
+                hotel_id=hotel_id,
+                hotel_context=hotel_context
+            )
+            result["generation_path"] = "fast"
+            results.append(result)
+        return results
+    
+    def generate_standard(
+        self,
+        validated_data: Dict,
+        hotel_name: str,
+        hotel_id: str,
+        hotel_context: Optional[Dict[str, Any]] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate moderate asset set (6-7) for MED data quality hotels.
+        
+        Args:
+            validated_data: Validated data for generation
+            hotel_name: Name of the hotel
+            hotel_id: Unique hotel identifier
+            hotel_context: Optional context about hotel
+            
+        Returns:
+            List of generation result dictionaries
+        """
+        results = []
+        for asset_type in self._standard_assets:
+            result = self.generate(
+                asset_type=asset_type,
+                validated_data=validated_data,
+                hotel_name=hotel_name,
+                hotel_id=hotel_id,
+                hotel_context=hotel_context
+            )
+            result["generation_path"] = "standard"
+            results.append(result)
+        return results
+    
+    def generate_full(
+        self,
+        validated_data: Dict,
+        hotel_name: str,
+        hotel_id: str,
+        hotel_context: Optional[Dict[str, Any]] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate complete asset suite (9+) for HIGH data quality hotels.
+        
+        Args:
+            validated_data: Validated data for generation
+            hotel_name: Name of the hotel
+            hotel_id: Unique hotel identifier
+            hotel_context: Optional context about hotel
+            
+        Returns:
+            List of generation result dictionaries
+        """
+        results = []
+        # Use all IMPLEMENTED assets from catalog
+        for asset_type in self.GENERATION_STRATEGIES.keys():
+            result = self.generate(
+                asset_type=asset_type,
+                validated_data=validated_data,
+                hotel_name=hotel_name,
+                hotel_id=hotel_id,
+                hotel_context=hotel_context
+            )
+            result["generation_path"] = "full"
+            results.append(result)
+        return results
 
     def _hash_data(self, data: Dict) -> str:
         """Create hash of data for tracking.

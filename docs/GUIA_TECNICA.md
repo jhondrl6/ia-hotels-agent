@@ -1,8 +1,74 @@
 # Guía Técnica IA Hoteles Agent CLI
 
-**Última actualización:** 22 Marzo 2026  
-**Versión:** 4.5.6 (NEVER_BLOCK Architecture)  
+**Última actualización:** 23 Marzo 2026
+**Versión:** 4.6.0 (NEVER_BLOCK Architecture)
 **Audiencia:** Desarrolladores, DevOps, Contribuidores
+
+## 📋 Notas de Cambios v4.6.0 - HEALTH DASHBOARD
+
+**Fecha:** 23 Marzo 2026
+
+### Resumen
+
+FASE 10: Health Dashboard - System Health Monitor para visibilidad del estado del sistema después de cada ejecución.
+
+### Nuevas Capacidades
+
+#### 1. HealthMetricsCollector (FASE 10A)
+
+**Propósito**: Recolectar métricas de ejecución por hotel.
+
+**Ubicación**: `modules/monitoring/health_metrics_collector.py`
+
+**Dataclass ExecutionMetrics**:
+```python
+@dataclass
+class ExecutionMetrics:
+    hotel_id: str
+    hotel_name: str
+    timestamp: datetime
+    assets_generated: int
+    assets_failed: int
+    success_rate: float
+    avg_confidence: float
+    execution_time: float
+    errors: List[str]
+    warnings: List[str]
+```
+
+**Tests**: 7 tests en `tests/monitoring/test_health_dashboard.py`
+
+#### 2. HealthDashboardGenerator (FASE 10B)
+
+**Propósito**: Generar dashboard HTML con Chart.js.
+
+**Ubicación**: `modules/monitoring/health_dashboard_generator.py`
+
+**Dashboard Features**:
+- Summary cards: Hotels Analyzed, Success Rate, Avg Confidence, Exec Time
+- Bar charts: Success Rate by Hotel, Execution Time
+- Doughnut chart: Confidence Distribution buckets (0.9+, 0.7-0.9, 0.5-0.7, <0.5)
+- Table: Hotel execution details con status badges (Healthy/Degraded/Critical)
+
+**Output**: `output/{hotel_id}/health_dashboard/health_dashboard.html`
+
+#### 3. Integración en main.py (FASE 10C)
+
+**Ubicación**: `main.py` línea ~2183
+
+**Flujo**: Después de FASE 7 (Delivery Packaging), se genera el dashboard automáticamente.
+
+**Tests**: 14/14 passing en `tests/monitoring/`
+
+### Métricas v4.6.0
+
+| Métrica | Valor |
+|---------|-------|
+| Tests FASE 10 | 14 passing |
+| Tests suite NEVER_BLOCK | Passing |
+| Dashboard HTML | Chart.js v4.4.1 |
+
+---
 
 ## 📋 Notas de Cambios v4.5.6 - NEVER_BLOCK Architecture
 
@@ -90,6 +156,69 @@ Implementación de arquitectura NEVER_BLOCK: el sistema nunca se bloquea, siempr
 **Tests de regresión Hotel Vísperas**: 2 tests skipping → 2 tests passing
 
 **Suite completa**: 69/69 tests passing
+
+#### 6. BenchmarkCrossValidator Integration (FASE 5 - Post-Integración)
+
+**Propósito**: Validación ADR contra benchmark regional integrado en PreflightChecker.
+
+**Ubicación**: `modules/asset_generation/preflight_checks.py`
+
+**Nuevos métodos**:
+
+```python
+def validate_adr_against_benchmark(
+    self,
+    actual_adr: float,
+    hotel_type: str = "standard"
+) -> Dict[str, Any]:
+    """
+    Valida ADR contra rangos de benchmark.
+    
+    Args:
+        actual_adr: Valor ADR real del hotel
+        hotel_type: Tipo de hotel para comparación (standard, boutique, luxury, budget)
+    
+    Returns:
+        Diccionario con:
+        - actual_adr: ADR proporcionado
+        - benchmark_adr: ADR de benchmark (punto medio)
+        - min_adr, max_adr: Rango de benchmark
+        - deviation_percentage: % de desviación
+        - severity: SeverityLevel (INFO, WARNING, ERROR)
+        - message: Descripción legible
+        - is_valid: Booleano según umbrales (|deviation| < 50% → True)
+    """
+
+def check_asset_with_benchmark(
+    self,
+    asset_type: str,
+    confidence: float,
+    adr: Optional[float] = None,
+    hotel_context: Optional[Dict[str, Any]] = None
+) -> PreflightReport:
+    """
+    Verifica un asset contra benchmark regional.
+    
+    Args:
+        asset_type: Tipo de asset (e.g., 'whatsapp_button', 'faq_page')
+        confidence: Nivel de confianza (0.0 - 1.0)
+        adr: ADR opcional para validación financiera
+        hotel_context: Contexto del hotel (reviews, photos, place_found)
+    
+    Returns:
+        PreflightReport con estado y advertencias
+    """
+```
+
+**Umbrales B1** (Benchmark Cross Validator):
+- WARNING: Desviación ADR > 20%
+- ERROR: Desviación ADR > 50%
+
+**Umbrales B2** (Hoteles nuevos - 0-10 reviews, 0-5 photos):
+- whatsapp_button: 0.3 (reducido de 0.7)
+- faq_page: 0.4 (reducido de 0.5)
+
+**Tests**: 256 passed, 2 skipped en suite NEVER_BLOCK
 
 ### Métricas v4.5.6
 

@@ -56,7 +56,7 @@ BENCHMARK_DESCRIPTIONS = {
         "eje_cafetero": "Hotel boutique ubicado en el corazón del Eje Cafetero, "
                        "ofreciendo una experiencia única que combina la calidez de la cultura cafetera "
                        "con comodidades modernas. Ideal para viajeros que buscan autenticidad y "
-                       "un servicio personalizado en un ambiente acogedor y Refinando.",
+                       "un servicio personalizado en un ambiente acogedor y exclusivo.",
         "default": "Hotel boutique que ofrece una experiencia única con servicios personalizados, "
                   "diseño exclusivo y una atmósfera acolhedora para los huéspedes."
     },

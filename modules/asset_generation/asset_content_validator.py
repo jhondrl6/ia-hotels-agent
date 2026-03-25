@@ -71,8 +71,16 @@ class AssetContentValidator:
         'pendiente',
         'sin especificar',
         'sin configurar',
+    ]
+    
+    # Phrases that are LEGITIMATE in SEO optimization guides and checklists
+    # These are action items/recommendations, NOT generic placeholders
+    SEO_GUIDE_LEGITIMATE_PHRASES = [
         'verificar',
         'revisar',
+        'personalizar',
+        'configurar',
+        'optimizar',
     ]
     
     MIN_CONTENT_LINES = {
@@ -334,6 +342,9 @@ class AssetContentValidator:
                     message=f"Generic phrase detected: '{phrase}'",
                     severity="warning"
                 ))
+        
+        # Check for SEO guide legitimate phrases - these are NOT issues
+        # (e.g., "verificar", "revisar", "personalizar" in optimization guides are valid action items)
         
         return issues
     

@@ -48,6 +48,7 @@ class AssetMetadata:
     diagnostic_reference: str  # Path al diagnóstico
     problems_solved: List[str]
     coherence_score: float
+    confidence_score: float = 0.0  # BUG B FIX: Added missing field (with default at end)
     # Campos de conexión con narrativa de diagnóstico
     problem_solved: str = ""
     impact_cop: int = 0
@@ -61,6 +62,7 @@ class AssetMetadata:
             "asset_type": self.asset_type,
             "generated_at": self.generated_at,
             "confidence_level": self.confidence_level,
+            "confidence_score": self.confidence_score,  # BUG B FIX: Include score
             "validation_sources": self.validation_sources,
             "preflight_status": self.preflight_status,
             "can_use": self.can_use,
@@ -134,7 +136,8 @@ class AssetDiagnosticLinker:
         base_metadata: Dict[str, Any],
         asset_spec: AssetSpec,
         diagnostic_doc: DiagnosticDocument,
-        coherence_report: CoherenceReport
+        coherence_report: CoherenceReport,
+        original_confidence_score: float = 0.0  # BUG B FIX: Added parameter
     ) -> AssetMetadata:
         """
         Enriquece la metadata base del asset con:
@@ -142,6 +145,13 @@ class AssetDiagnosticLinker:
         - Problemas que resuelve
         - Score de coherencia
         - Justificación de la recomendación
+        
+        Args:
+            base_metadata: Metadata original del asset
+            asset_spec: Especificación del asset
+            diagnostic_doc: Documento de diagnóstico
+            coherence_report: Reporte de coherencia
+            original_confidence_score: Score de confianza original del asset (BUG B FIX)
         """
         # Determine confidence level string
         if isinstance(asset_spec.confidence_level, ConfidenceLevel):
@@ -163,10 +173,27 @@ class AssetDiagnosticLinker:
         # Map asset type to narrative fields
         narrative_fields = self._get_narrative_fields(asset_spec.asset_type, diagnostic_doc)
         
+        # BUG B FIX: Use original confidence_score if available, otherwise derive from confidence_level
+        if original_confidence_score > 0:
+            final_confidence_score = original_confidence_score
+        else:
+            # Derive score from confidence_level if not provided
+            # Normalize to uppercase for comparison (confidence_level may come as string or enum)
+            conf_level_upper = conf_level.upper() if conf_level else ""
+            if conf_level_upper == "VERIFIED":
+                final_confidence_score = 0.9
+            elif conf_level_upper == "ESTIMATED":
+                final_confidence_score = 0.6
+            elif conf_level_upper == "CONFLICT":
+                final_confidence_score = 0.3
+            else:
+                final_confidence_score = 0.5
+        
         return AssetMetadata(
             asset_type=asset_spec.asset_type,
             generated_at=datetime.now().isoformat(),
             confidence_level=conf_level,
+            confidence_score=final_confidence_score,  # BUG B FIX: Use proper score
             validation_sources=["web_scraping", "google_business_profile", "user_input"],
             preflight_status="PASSED" if conf_level == "VERIFIED" else "WARNING",
             can_use=conf_level in ["VERIFIED", "ESTIMATED"],

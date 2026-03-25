@@ -2143,6 +2143,102 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     # Add consistency to assessment for later use
     assessment['consistency_report'] = consistency_report.to_dict()
     
+    # FASE 7: Delivery Packaging - Automated ZIP creation
+    print("\n📍 FASE 7: Delivery Packaging (Automated)")
+    print("-" * 70)
+
+    delivery_zip_path = None
+    try:
+        from modules.delivery.delivery_packager import DeliveryPackager
+
+        # Get hotel_id from hotel_name
+        hotel_id = hotel_name.lower().replace(" ", "_").replace("-", "_").replace(".", "")
+
+        packager = DeliveryPackager(
+            base_output_dir=str(output_dir),
+            deliveries_dir=str(output_dir / "deliveries")
+        )
+
+        # Find diagnostic and proposal paths
+        diag_path = str(diagnostic_path) if diagnostic_path else None
+        prop_path = str(proposal_path) if proposal_path else None
+
+        # Find output directory where assets were generated
+        asset_output_dir = str(output_dir / hotel_id)
+
+        delivery_zip_path = packager.package(
+            hotel_id=hotel_id,
+            output_dir=asset_output_dir,
+            diagnostic_path=diag_path,
+            proposal_path=prop_path
+        )
+
+        print(f"   [OK] Delivery package created: {delivery_zip_path}")
+
+    except Exception as e:
+        print(f"   [WARN] Delivery packaging failed: {e}")
+        delivery_zip_path = None
+
+    # FASE 10: Health Dashboard - System Health Metrics
+    print("\n📍 FASE 10: Health Dashboard (System Health Monitor)")
+    print("-" * 70)
+
+    health_dashboard_path = None
+    try:
+        from modules.monitoring import HealthMetricsCollector, HealthDashboardGenerator, ExecutionMetrics
+
+        # Collect metrics from this execution
+        collector = HealthMetricsCollector()
+        
+        if asset_result:
+            # Start timing for this hotel
+            collector.start_execution(hotel_id, hotel_name)
+            
+            # Collect metrics from asset result
+            metrics = collector.collect_from_result(asset_result)
+            
+            # End timing
+            collector.end_execution()
+        else:
+            # Create metrics with basic info if no asset result
+            metrics = ExecutionMetrics(
+                hotel_id=hotel_id,
+                hotel_name=hotel_name,
+                timestamp=datetime.now(),
+                assets_generated=0,
+                assets_failed=0,
+                success_rate=0.0,
+                avg_confidence=0.0,
+                execution_time=0.0,
+                errors=["Asset generation failed"],
+                warnings=[]
+            )
+            collector.add_metrics(metrics)
+
+        # Generate dashboard
+        generator = HealthDashboardGenerator()
+        
+        # Ensure output directory exists
+        health_output_dir = output_dir / "health_dashboard"
+        health_output_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Save dashboard
+        dashboard_files = generator.save_dashboard(
+            collector.get_all_metrics(),
+            str(health_output_dir / "health_dashboard.html")
+        )
+        
+        health_dashboard_path = dashboard_files.get("html")
+        health_summary_path = dashboard_files.get("json")
+        
+        print(f"   [OK] Health dashboard generated: {health_dashboard_path}")
+        if health_summary_path:
+            print(f"   [OK] Health summary: {health_summary_path}")
+
+    except Exception as e:
+        print(f"   [WARN] Health dashboard generation failed: {e}")
+        health_dashboard_path = None
+
     # Guardar referencia completa en Agent Harness
     memory.append_log({
         'target_id': args.url,
@@ -2156,7 +2252,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'audit_json': str(audit_path),
             'coherence_json': str(output_dir / 'v4_audit' / 'coherence_validation.json'),
             'assets_generated': [a.asset_type for a in asset_result.generated_assets] if asset_result else [],
-            'asset_result_path': str(output_dir / 'v4_audit' / 'asset_generation_report.json') if asset_result else None
+            'asset_result_path': str(output_dir / 'v4_audit' / 'asset_generation_report.json') if asset_result else None,
+            'delivery_zip_path': delivery_zip_path,
+            'health_dashboard_path': health_dashboard_path
         },
         'timestamp': datetime.now().isoformat()
     })

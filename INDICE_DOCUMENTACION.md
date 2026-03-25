@@ -1,6 +1,6 @@
-# Indice de Documentacion - IA Hoteles Agent v4.5.6
+# Indice de Documentacion - IA Hoteles Agent v4.8.0
 
-**Ultima actualizacion:** 22 Marzo 2026
+**Ultima actualizacion:** 23 Marzo 2026
 
 Guia rapida para encontrar la informacion que necesitas tras la actualizacion Financial Centralization & ChatGPT Alternatives.
 
@@ -132,12 +132,36 @@ Guia rapida para encontrar la informacion que necesitas tras la actualizacion Fi
 
 ### Nuevos Módulos v4.5.6 (NEVER_BLOCK Architecture)
 
+|| Modulo | Funcion |
+|--------|---------|
+|| modules/providers/benchmark_resolver.py | Fallback con benchmark regional (Pereira/Santa Rosa de Cabal) |
+|| modules/providers/autonomous_researcher.py | Investigacion en fuentes publicas (GBP, Booking, TripAdvisor, Instagram) |
+|| modules/providers/disclaimer_generator.py | Disclaimers honestos por nivel de confidence |
+|| modules/asset_generation/asset_metadata.py | Campo `disclaimers` para assets |
+
+### Nuevos Módulos v4.6.0 (HEALTH DASHBOARD - FASE 10)
+
+|| Modulo | Funcion |
+|--------|---------|
+|| modules/monitoring/__init__.py | Módulo de monitoring con exports |
+|| modules/monitoring/health_metrics_collector.py | ExecutionMetrics dataclass + HealthMetricsCollector |
+|| modules/monitoring/health_dashboard_generator.py | HealthDashboardGenerator con Chart.js |
+|| tests/monitoring/test_health_dashboard.py | 14 tests para FASE 10 |
+
+### Nuevos Módulos v4.8.0 (FASE-CAUSAL-01 - SITE PRESENCE CHECKER)
+
 | Modulo | Funcion |
 |--------|---------|
-| modules/providers/benchmark_resolver.py | Fallback con benchmark regional (Pereira/Santa Rosa de Cabal) |
-| modules/providers/autonomous_researcher.py | Investigacion en fuentes publicas (GBP, Booking, TripAdvisor, Instagram) |
-| modules/providers/disclaimer_generator.py | Disclaimers honestos por nivel de confidence |
-| modules/asset_generation/asset_metadata.py | Campo `disclaimers` para assets |
+| modules/asset_generation/site_presence_checker.py | Verificacion sitio real ANTES de generar assets |
+
+### Módulos Modificados v4.8.0 (FASE-CAUSAL-01)
+
+| Modulo | Cambio |
+|--------|--------|
+| modules/asset_generation/conditional_generator.py | Integración site_url + gate SitePresenceChecker |
+| modules/asset_generation/asset_metadata.py | Estados SKIPPED, REDUNDANT en AssetStatus |
+| modules/asset_generation/v4_asset_orchestrator.py | SkippedAsset dataclass + reporting mejorado |
+| tests/asset_generation/test_site_presence_checker.py | 10 tests para SitePresenceChecker |
 
 ### Módulos Modificados v3.9
 
@@ -195,9 +219,9 @@ Guia rapida para encontrar la informacion que necesitas tras la actualizacion Fi
 
 ---
 
-**Version:** 4.5.6
-**Ultima actualizacion:** 15 Marzo 2026
-**IA Hoteles Agent v4.5.6**
+**Version:** 4.8.0
+**Ultima actualizacion:** 23 Marzo 2026
+**IA Hoteles Agent v4.8.0**
 
 ---
 

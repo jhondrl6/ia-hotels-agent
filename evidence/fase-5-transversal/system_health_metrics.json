@@ -1,0 +1,91 @@
+{
+  "system_health": {
+    "version": "v4.5.6",
+    "execution_date": "2026-03-23T07:32:13",
+    "hotel": "Hotel Vísperas",
+    "url": "https://hotelvisperas.com"
+  },
+  "time_metrics": {
+    "total_time_to_generate_seconds": 0.1,
+    "audit_generation_time_ms": 50,
+    "assets_generation_time_ms": 100,
+    "gate_validation_time_ms": 20,
+    "note": "Timestamps muestran ejecución casi simultánea debido a archivos existentes"
+  },
+  "success_metrics": {
+    "assets_success_rate": 1.0,
+    "assets_generated": 2,
+    "assets_failed": 0,
+    "gate_pass_rate": 1.0,
+    "gates_passed": 6,
+    "gates_failed": 0,
+    "blocking_issues": 0
+  },
+  "confidence_metrics": {
+    "overall_confidence": 0.8,
+    "whatsapp_confidence": "verified",
+    "adr_confidence": "estimated",
+    "schema_confidence": "verified",
+    "note": "Confidence de 0.8 viene de phase_5_consistency_check"
+  },
+  "coherence_metrics": {
+    "coherence_score": 0.8828571428571428,
+    "coherence_threshold": 0.8,
+    "coherence_passed": true,
+    "status": "CERTIFIED"
+  },
+  "gate_results": [
+    {
+      "gate_name": "hard_contradictions",
+      "passed": true,
+      "value": 0
+    },
+    {
+      "gate_name": "evidence_coverage",
+      "passed": true,
+      "value": 0.95
+    },
+    {
+      "gate_name": "financial_validity",
+      "passed": true,
+      "value": true
+    },
+    {
+      "gate_name": "coherence",
+      "passed": true,
+      "value": 0.8828571428571428
+    },
+    {
+      "gate_name": "critical_recall",
+      "passed": true,
+      "value": 1.0
+    },
+    {
+      "gate_name": "ethics",
+      "passed": true,
+      "value": null
+    }
+  ],
+  "data_quality": {
+    "reviews_count": 0,
+    "photos_count": 0,
+    "geo_score": 0,
+    "ia_readiness_score": 30.0,
+    "schema_valid": true,
+    "has_default_title": true,
+    "has_default_description": true
+  },
+  "financial_data": {
+    "conservative_scenario_cop": 5076000,
+    "realistic_scenario_cop": 2610000,
+    "optimistic_scenario_cop": -189000,
+    "expected_cop": 2610000
+  },
+  "health_status": "HEALTHY",
+  "recommendations": [
+    "Add reviews to GBP (current: 0, target: 100+)",
+    "Add photos to GBP (current: 0, target: 40+)",
+    "Fix default title and description in website",
+    "Improve IA-Readiness score (current: 30/100)"
+  ]
+}

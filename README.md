@@ -2,7 +2,7 @@
 
 **Plataforma de Inteligencia Agéntica de Grado Industrial diseñada para la auditoría y blindaje financiero del sector hotelero.**
 
-**Version:** 4.5.6 | **Última actualización:** 22 Marzo 2026
+**Version:** 4.8.0 | **Última actualización:** 23 Marzo 2026
 
 ---
 
@@ -234,7 +234,7 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ## ✅ Calidad Garantizada
 
-- **1434+ tests** pasando continuamente
+- **256+ tests** pasando continuamente (suite NEVER_BLOCK)
 - **TDD Gate**: Todo cambio comienza con un test que falla
 - **Pre-commit hooks**: Validaciones automáticas en cada commit
 - **Suite de regresión**: Hotel Vísperas como caso de referencia permanente
@@ -249,4 +249,4 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ## Testing
 
-**1434+ tests passing** - Suite completa de pruebas unitarias, integración y regresión E2E.
+**256+ tests passing** - Suite completa de pruebas unitarias, integración y regresión E2E.

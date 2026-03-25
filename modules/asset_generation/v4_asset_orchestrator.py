@@ -28,6 +28,7 @@ from ..commercial_documents.coherence_validator import CoherenceValidator, Coher
 from .conditional_generator import ConditionalGenerator
 from .asset_diagnostic_linker import AssetDiagnosticLinker, AssetMetadata
 from .asset_content_validator import AssetContentValidator, ContentStatus
+from .site_presence_checker import SitePresenceChecker  # FASE-CAUSAL-01
 
 
 @dataclass
@@ -53,6 +54,18 @@ class FailedAsset:
     preflight_status: str  # BLOCKED
 
 
+# FASE-CAUSAL-01: Nuevo tipo para assets skippeados
+@dataclass
+class SkippedAsset:
+    """Represents an asset that was skipped due to already existing in production."""
+    asset_type: str
+    reason: str  # skip_reason del SitePresenceChecker
+    presence_status: str  # EXISTS, REDUNDANT, etc
+    site_verified: bool
+    recommendations: List[str] = field(default_factory=list)
+    pain_ids_affected: List[str] = field(default_factory=list)
+
+
 @dataclass
 class AssetGenerationResult:
     """Resultado de la generación de assets."""
@@ -60,9 +73,10 @@ class AssetGenerationResult:
     hotel_name: str
     generated_assets: List[GeneratedAsset]
     failed_assets: List[FailedAsset]
-    coherence_report: CoherenceReport
-    output_dir: str
-    timestamp: str
+    coherence_report: CoherenceReport  # No default - va antes
+    skipped_assets: List[SkippedAsset] = field(default_factory=list)  # FASE-CAUSAL-01
+    output_dir: str = ""
+    timestamp: str = ""
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert result to dictionary."""
@@ -82,12 +96,14 @@ class AssetGenerationResult:
             "timestamp": self.timestamp,
             "output_dir": self.output_dir,
             "summary": {
-                "total_assets": len(self.generated_assets) + len(self.failed_assets),
+                "total_assets": len(self.generated_assets) + len(self.failed_assets) + len(self.skipped_assets),
                 "generated": len(self.generated_assets),
                 "failed": len(self.failed_assets),
+                "skipped": len(self.skipped_assets),  # FASE-CAUSAL-01
                 "can_use": sum(1 for a in self.generated_assets if a.can_use),
                 "estimated": estimated_count,
-                "delivery_ready_percentage": round(delivery_ready_pct, 2)
+                "delivery_ready_percentage": round(delivery_ready_pct, 2),
+                "site_verification_applied": len(self.skipped_assets) > 0  # FASE-CAUSAL-01
             },
             "generated_assets": [
                 {
@@ -112,6 +128,18 @@ class AssetGenerationResult:
                 }
                 for a in self.failed_assets
             ],
+            # FASE-CAUSAL-01: Sección de assets skippeados
+            "skipped_assets": [
+                {
+                    "asset_type": a.asset_type,
+                    "reason": a.reason,
+                    "presence_status": a.presence_status,
+                    "site_verified": a.site_verified,
+                    "recommendations": a.recommendations,
+                    "pain_ids_affected": a.pain_ids_affected
+                }
+                for a in self.skipped_assets
+            ],
             "coherence_report": self.coherence_report.to_dict()
         }
 
@@ -128,6 +156,9 @@ class V4AssetOrchestrator:
     - Mapeo problemas → soluciones
     - Generación condicional (ConditionalGenerator)
     - Validación de coherencia
+    
+    FASE-CAUSAL-01: Integración de SitePresenceChecker para verificar
+    sitio real ANTES de generar, evitando assets redundantes.
     """
     
     def __init__(self, output_base_dir: str = "output"):
@@ -137,6 +168,7 @@ class V4AssetOrchestrator:
         self.coherence_validator = CoherenceValidator()
         self.diagnostic_linker = AssetDiagnosticLinker()
         self.content_validator = AssetContentValidator()
+        self.site_checker = SitePresenceChecker()  # FASE-CAUSAL-01
     
     def generate_assets(
         self,
@@ -145,7 +177,8 @@ class V4AssetOrchestrator:
         diagnostic_doc: DiagnosticDocument,
         proposal_doc: ProposalDocument,
         hotel_name: str,
-        hotel_url: str
+        hotel_url: str,  # FASE-CAUSAL-01: Ahora se requiere URL
+        site_url: Optional[str] = None  # Alias para backward compatibility
     ) -> AssetGenerationResult:
         """
         Flujo completo de generación de assets v4.0:
@@ -156,7 +189,13 @@ class V4AssetOrchestrator:
         4. Generar assets condicionalmente
         5. Vincular assets con problemas del diagnóstico
         6. Retornar resultado estructurado
+        
+        FASE-CAUSAL-01: Si site_url está disponible, se verifica el sitio real
+        ANTES de generar para evitar assets redundantes.
         """
+        # FASE-CAUSAL-01: Normalizar site_url
+        actual_site_url = site_url or hotel_url
+        
         # 1. Setup
         hotel_id = self._sanitize_hotel_id(hotel_name)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -183,13 +222,16 @@ class V4AssetOrchestrator:
         # 6. Generar assets condicionalmente
         generated = []
         failed = []
+        skipped = []  # FASE-CAUSAL-01
         
         for spec in asset_specs:
             result = self._generate_with_coherence_check(
-                spec, validated_data, output_dir, hotel_name, hotel_id
+                spec, validated_data, output_dir, hotel_name, hotel_id, actual_site_url
             )
             if isinstance(result, GeneratedAsset):
                 generated.append(result)
+            elif isinstance(result, SkippedAsset):  # FASE-CAUSAL-01
+                skipped.append(result)
             else:
                 failed.append(result)
         
@@ -211,7 +253,8 @@ class V4AssetOrchestrator:
                     base_metadata={},
                     asset_spec=spec,
                     diagnostic_doc=diagnostic_doc,
-                    coherence_report=coherence
+                    coherence_report=coherence,
+                    original_confidence_score=asset.confidence_score  # BUG B FIX: Pass original score
                 )
                 
                 # Save enriched metadata - pass original asset path, not the metadata path
@@ -230,6 +273,7 @@ class V4AssetOrchestrator:
             hotel_name=hotel_name,
             generated_assets=generated,
             failed_assets=failed,
+            skipped_assets=skipped,  # FASE-CAUSAL-01
             coherence_report=coherence,
             output_dir=str(output_dir),
             timestamp=datetime.now().isoformat()
@@ -322,22 +366,39 @@ class V4AssetOrchestrator:
         validated_data: Dict[str, Any],
         output_dir: Path,
         hotel_name: str,
-        hotel_id: str
-    ) -> Union[GeneratedAsset, FailedAsset]:
+        hotel_id: str,
+        site_url: str  # FASE-CAUSAL-01: URL para verificar sitio real
+    ) -> Union[GeneratedAsset, FailedAsset, SkippedAsset]:  # FASE-CAUSAL-01: Added SkippedAsset
         """
         Genera un asset individual con validación de coherencia previa.
+        
+        FASE-CAUSAL-01: Ahora pasa site_url a ConditionalGenerator para verificar
+        si el asset ya existe en el sitio real.
         """
-        # Use ConditionalGenerator
+        # Use ConditionalGenerator - FASE-CAUSAL-01: now passes site_url
         result = self.conditional_generator.generate(
             asset_type=asset_spec.asset_type,
             validated_data=validated_data,
             hotel_name=hotel_name,
-            hotel_id=hotel_id
+            hotel_id=hotel_id,
+            site_url=site_url  # FASE-CAUSAL-01: Verificación de sitio real
         )
         
         preflight_status = result.get("preflight_status", "BLOCKED").upper()
+        result_status = result.get("status", "")
         
-        if preflight_status == "BLOCKED" or result.get("status") == "blocked":
+        # FASE-CAUSAL-01: Handle SKIPPED status from site presence check
+        if result_status == "skipped":
+            return SkippedAsset(
+                asset_type=asset_spec.asset_type,
+                reason=result.get("skip_reason", "Asset ya existe en sitio de producción"),
+                presence_status=result.get("presence_status", "exists"),
+                site_verified=result.get("site_verified", True),
+                recommendations=result.get("recommendations", []),
+                pain_ids_affected=asset_spec.pain_ids
+            )
+        
+        if preflight_status == "BLOCKED" or result_status == "blocked":
             return FailedAsset(
                 asset_type=asset_spec.asset_type,
                 reason=result.get("error", "Preflight check failed"),
@@ -367,6 +428,19 @@ class V4AssetOrchestrator:
                     if content_result.status == ContentStatus.INVALID:
                         metadata['content_validation_status'] = 'invalid'
                         metadata['content_issues'] = content_issues
+                        
+                        # BUG A FIX: Delete the already-written file since validation failed
+                        # The file was saved by conditional_generator.generate() before we could validate
+                        if file_path and Path(file_path).exists():
+                            try:
+                                Path(file_path).unlink()
+                                # Also delete the metadata file
+                                metadata_path = Path(file_path).parent / f"{Path(file_path).stem}_metadata.json"
+                                if metadata_path.exists():
+                                    metadata_path.unlink()
+                            except Exception as delete_err:
+                                metadata['cleanup_error'] = str(delete_err)
+                        
                         return FailedAsset(
                             asset_type=asset_spec.asset_type,
                             reason=f"Content validation failed: {'; '.join(content_issues[:3])}",

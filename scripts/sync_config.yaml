@@ -90,3 +90,11 @@ rules:
     replacements:
       - pattern: 'IA Hoteles Agent\s*\(v[\d.]+\s*"[^"]*"\)'
         template: 'IA Hoteles Agent (v{version} "{codename}")'
+
+  # REGISTRY.md rules (phase registry - auto-updated by log_phase_completion.py)
+  - id: "registry_last_update"
+    file: "docs/contributing/REGISTRY.md"
+    description: "Last update timestamp in registry"
+    replacements:
+      - pattern: '> \*\*Ultima actualizacion:\*\*\s*[\d-]+'
+        template: '> **Ultima actualizacion:** {date}'
