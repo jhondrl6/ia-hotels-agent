@@ -22,6 +22,24 @@ temp/*
 !temp/.gitkeep
 
 # ===============================
+# Test Outputs (NUNCA versionar)
+# ===============================
+test_output/
+tmp_test/
+.pytest_cache/
+.coverage
+htmlcov/
+.xml
+.tox/
+
+# ===============================
+# Agent Memory & Shadow Logs
+# ===============================
+.agent/memory/sessions/
+.agent/shadow_logs/
+.agent/memory/current_state.json
+
+# ===============================
 # Cache (NUNCA versionar)
 # ===============================
 data/cache/*
@@ -46,7 +64,7 @@ output/proposals/*
 output/spark/*
 !output/spark/.gitkeep
 
-# delivery_assets/ SÍ se versionan (archivos plantilla)
+# delivery_assets/ SÝ se versionan (archivos plantilla)
 !output/delivery_assets/
 !output/delivery_assets/**/*
 
