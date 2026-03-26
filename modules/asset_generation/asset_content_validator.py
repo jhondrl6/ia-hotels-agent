@@ -47,8 +47,8 @@ class AssetContentValidator:
     
     PLACEHOLDER_PATTERNS = [
         # Phone placeholders
-        r'\+57XXX',  # +57XXX literally
-        r'\+57\d{10}',  # +57 followed by exactly 10 digits (not masked)
+        r'\+57XXX',  # +57XXX literally (placeholder)
+        r'\+57\s*XXX\s*XXX\s*XXX',  # +57 XXX XXX XXX (placeholder with spaces)
         # Generic placeholders
         r'\.\.\.',  # Ellipsis
         r'\[INSERT.*\]',

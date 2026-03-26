@@ -2,7 +2,7 @@
 
 **Plataforma de Inteligencia Agéntica de Grado Industrial diseñada para la auditoría y blindaje financiero del sector hotelero.**
 
-**Version:** 4.8.0 | **Última actualización:** 23 Marzo 2026
+**Version:** 4.9.0 | **Última actualización:** 26 Marzo 2026
 
 ---
 
@@ -20,12 +20,14 @@
 
 ---
 
-> **🛡️ AGENT PLATFORM STATUS (v4.5.6 - NEVER_BLOCK Architecture)**:
+> **🛡️ AGENT PLATFORM STATUS (v4.8.0 - NEVER_BLOCK Architecture + AEO Re-Architecture)**:
+> *   **AEO Re-Architecture**: Módulo AEO (Auditory Engine Optimization) alineado con voice assistants (Alexa, Siri, Google Assistant). SpeakableSpecification, FAQ TTS-ready (40-60 palabras), voice keywords Eje Cafetero.
 > *   **Sistema de Evidencia Trazable**: EvidenceLedger con hash e integridad, claims vinculados a fuentes.
 > *   **Motor de Contradicciones**: Detección automática de hard/soft conflicts entre fuentes de datos.
 > *   **Quality Gates de Pre-publicación**: Gates técnico, comercial, financiero y de coherencia (score ≥ 0.8).
 > *   **Estados de Publicación**: READY_FOR_CLIENT, DRAFT_INTERNAL, REQUIRES_REVIEW con validación estricta.
 > *   **No Defaults in Money**: Validación financiera que bloquea cálculos con valores por defecto.
+> *   **Voice Assistant Integration**: 3 blueprints (Google Assistant, Apple Business Connect, Alexa Skill) en delivery.
 
 > *   **Controles de Coherencia**: Validación automática diagnosis↔propuesta↔assets con score ≥ 0.8.
 > *   **Observabilidad y Dashboard**: Métricas de calidad en tiempo real y calibración de umbrales.

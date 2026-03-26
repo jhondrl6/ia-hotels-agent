@@ -22,8 +22,6 @@
 |-----------|-------------|-------------|
 | `docs/GUIA_TECNICA.md` | Guía técnica y arquitectura | Manual |
 | `docs/CONTRIBUTING.md` | Guía de contribución | Manual |
-| `docs/asset_catalog.md` | Catálogo de assets | FASE-ASSET |
-| `docs/api_examples.md` | Ejemplos de uso de API | Manual |
 | `docs/PRECIOS_PAQUETES.md` | Precios y paquetes comerciales | Manual |
 
 ---

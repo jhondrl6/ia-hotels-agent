@@ -19,6 +19,7 @@ from .data_structures import (
     confidence_to_icon,
     format_cop,
 )
+from modules.financial_engine.pricing_resolution_wrapper import PricingResolutionResult
 
 
 class V4ProposalGenerator:
@@ -71,6 +72,7 @@ class V4ProposalGenerator:
         price_monthly: Optional[int] = None,
         setup_fee: Optional[int] = None,
         audit_result: Optional[Any] = None,
+        pricing_result: Optional[PricingResolutionResult] = None,
     ) -> str:
         """
         Generate the proposal document.
@@ -83,12 +85,19 @@ class V4ProposalGenerator:
             output_dir: Directory to save the document
             price_monthly: Optional custom monthly price (calculated from scenarios if not provided)
             setup_fee: Optional custom setup fee (uses default if not provided)
-            
+            audit_result: Optional audit result for GEO metrics
+            pricing_result: Optional PricingResolutionResult from hybrid pricing model.
+                If provided, uses pricing_result.monthly_price_cop directly to ensure
+                consistency with financial_scenarios.json calculation.
+
         Returns:
             Path to the generated document
         """
-        # Calculate dynamic pricing if not provided
-        if price_monthly is None:
+        # Use pricing_result if available (from hybrid pricing model)
+        # This ensures consistency with financial_scenarios.json
+        if pricing_result is not None:
+            price_monthly = int(pricing_result.monthly_price_cop)
+        elif price_monthly is None:
             price_monthly = self._calculate_dynamic_price(financial_scenarios)
         if setup_fee is None:
             setup_fee = self.SETUP_FEE
@@ -98,16 +107,6 @@ class V4ProposalGenerator:
         self._current_setup_fee = setup_fee
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
-        
-        # Calculate dynamic pricing if not provided
-        if price_monthly is None:
-            price_monthly = self._calculate_dynamic_price(financial_scenarios)
-        if setup_fee is None:
-            setup_fee = self.SETUP_FEE
-        
-        # Store for use in template preparation
-        self._current_price_monthly = price_monthly
-        self._current_setup_fee = setup_fee
         
         # Load template
         template_content = self._load_template()
@@ -438,7 +437,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'web_score': "85",  # Placeholder - ideally from audit
         'web_status': "VERIFIED" if diagnostic_summary.overall_confidence.value == "VERIFIED" else "ESTIMATED",
         'package_name': "Kit Hospitalidad 4.0",  # From constants or config
-        'roi_6m': self._calculate_roi(monthly_investment, main_scenario.monthly_loss_max, 6).replace("%", ""),  # Just the number
+        'roi_6m': self._calculate_roi(monthly_investment, main_scenario.monthly_loss_max, 6).replace("%", "").rstrip("X").strip(),  # Just the number, no X suffix
         'total_investment_6m': format_cop(monthly_investment * 6),
         'recovered_6m': format_cop(main_scenario.monthly_loss_max * 6),
         'net_benefit_6m': format_cop((main_scenario.monthly_loss_max - monthly_investment) * 6),
@@ -488,15 +487,18 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         return template.safe_substitute(data)
     
     def _calculate_roi(self, investment: int, gain: int, months: int) -> str:
-        """Calculate ROI percentage."""
-        total_investment = getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE) * months
+        """Calculate ROI as ratio (e.g., '3.9X' instead of '292%').
+        
+        Returns ratio of total_gain / total_investment.
+        """
+        total_investment = investment * months
         total_gain = gain * months
         
         if total_investment == 0:
             return "N/A"
         
-        roi = ((total_gain - total_investment) / total_investment) * 100
-        return f"{roi:.0f}%"
+        roi_ratio = total_gain / total_investment
+        return f"{roi_ratio:.1f}X"
     
     def _calculate_break_even(self, investment: int, gain: int) -> int:
         """Calculate break-even point in months."""

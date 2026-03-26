@@ -371,8 +371,10 @@ ${quick_wins_list}
             'activity_status': self._get_score_status(self._calculate_activity_score(audit_result), 30),
             'web_score': self._calculate_web_score(audit_result),
             'web_status': self._get_score_status(self._calculate_web_score(audit_result), 70),
-            'aeo_score': self._calculate_aeo_score(audit_result),
-            'aeo_status': self._get_score_status(self._calculate_aeo_score(audit_result), 40),
+            'schema_infra_score': self._calculate_schema_infra_score(audit_result),
+            'schema_infra_status': self._get_score_status(self._calculate_schema_infra_score(audit_result), 40),
+            'voice_readiness_score': self._calculate_voice_readiness_score(),
+            'voice_readiness_status': '⏳ Pendiente',
             'iao_score': self._calculate_iao_score(audit_result),
             'iao_status': self._get_score_status(self._calculate_iao_score(audit_result), 20),
             
@@ -844,23 +846,28 @@ ${quick_wins_list}
             score += 10
         return str(min(100, int(score)))
     
-    def _calculate_aeo_score(self, audit_result: V4AuditResult) -> str:
-        """Calculate AEO (Schema/Infrastructure) score."""
+    def _calculate_schema_infra_score(self, audit_result: V4AuditResult) -> str:
+        """Calculate Schema Infrastructure score (renamed from AEO).
+        
+        NOTE: This measures the FOUNDATION for voice assistants (structured data).
+        Actual AEO (voice search optimization) requires FASE-B (SpeakableSpecification, etc.)
+        This score = voice_readiness placeholder + performance threshold.
+        """
         score = 0
-        # Hotel schema (up to 50 points)
-        if audit_result.schema.hotel_schema_detected:
-            score += 35
-            if audit_result.schema.hotel_schema_valid:
-                score += 15
-        # FAQ schema (up to 30 points)
-        if audit_result.schema.faq_schema_detected:
-            score += 25
-            if hasattr(audit_result.schema, 'faq_schema_valid') and audit_result.schema.faq_schema_valid:
-                score += 5
+        # Voice Readiness placeholder (FASE-B will add SpeakableSpecification)
+        # For now, no additional points until FASE-B implements voice-specific features
         # Performance threshold (up to 20 points)
         if audit_result.performance.mobile_score and audit_result.performance.mobile_score >= 50:
             score += 20
         return str(min(100, int(score)))
+    
+    def _calculate_voice_readiness_score(self) -> str:
+        """Calculate Voice Readiness (AEO) score - placeholder.
+        
+        REQUIRES FASE-B: SpeakableSpecification, FAQ conversacional, voice keywords.
+        Currently returns 0/100 as placeholder.
+        """
+        return "0"
     
     def _calculate_iao_score(self, audit_result: V4AuditResult) -> str:
         """Calculate IAO (AI Advanced) score."""

@@ -1,8 +1,9 @@
 # Guia de Contribucion - IA Hoteles Agent
 
-> **Version Actual:** v4.8.0 (NEVER_BLOCK Architecture)
-> **Coherence Score:** 0.91 (≥0.8) - Publication Ready
-> **Ultima fase completada:** FASE-CAUSAL-01 (SitePresenceChecker)
+> **Version Actual:** v4.9.0 (NEVER_BLOCK Architecture + AEO Re-Architecture)
+> **Coherence Score:** 0.84 (≥0.8) - Publication Ready
+> **Ultima fase completada:** FASE-H-08 (Certificación E2E V4COMPLETE)
+> **Version del sistema de docs:** v2.3.0 (Version Sync Gate + Documentation Audit)
 > **Consultar REGISTRY para historial de fases:** `docs/contributing/REGISTRY.md`
 
 ---
@@ -37,6 +38,50 @@ FASE completada
         python scripts/run_all_validations.py --quick
 ```
 
+### Version Sync Gate (Release Final)
+
+Cuando una fase marca un **release** (nueva version), usar el Version Sync Gate:
+
+```bash
+# Al completar fase final de un release
+python scripts/log_phase_completion.py --fase FASE-X \
+    --desc "Descripcion del release" \
+    --archivos-mod "modules/foo.py" \
+    --release 4.10.0 \
+    --auto-sync
+
+# O en dos pasos:
+# Paso 1: Registrar sin gate
+python scripts/log_phase_completion.py --fase FASE-X \
+    --desc "Descripcion del release" \
+    --archivos-mod "modules/foo.py"
+
+# Paso 2: Verificar sincronizacion (BLOCKING si hay gap)
+python scripts/log_phase_completion.py --fase FASE-X \
+    --release 4.10.0 \
+    --check-manual-docs
+```
+
+**El gate verifica:**
+1. CHANGELOG.md tiene entrada `[X.Y.Z]`
+2. CHANGELOG y VERSION.yaml coinciden en X.Y.Z
+3. Documentacion manual (GUIA_TECNICA.md) menciona la fase
+
+**Si hay desincronizacion:**
+```
+FAIL: Version desincronizada entre CHANGELOG y VERSION.yaml
+Pasos:
+  1. python scripts/version_consistency_checker.py  # Diagnosticar
+  2. python scripts/sync_versions.py                # Sincronizar
+  3. Reintentar con --release
+```
+
+**Consistency checker autonomo:**
+```bash
+python scripts/version_consistency_checker.py       # Verificar todo
+python scripts/version_consistency_checker.py --fix # Auto-reparar si es posible
+```
+
 ---
 
 ## Conexiones Clave
@@ -57,7 +102,7 @@ FASE completada
 | `log_phase_completion.py` | Registrar fase completada → REGISTRY.md |
 | `sync_versions.py` | Sincronizar VERSION.yaml → archivos de contexto |
 | `run_all_validations.py --quick` | Validacion antes de commit |
-| `v4_regression_guardian.py --quick` | Validacion post-cambios v4 |
+| `.agents/workflows/v4_regression_guardian.py --quick` | Validacion post-cambios v4 |
 
 ---
 
@@ -75,11 +120,11 @@ FASE completada
 
 ## Version y Sincronizacion
 
-**Version:** v4.8.0
+**Version:** v4.9.0
 
 Archivos sincronizados automaticamente desde VERSION.yaml:
 - `AGENTS.md`, `README.md`, `.cursorrules`, `INDICE_DOCUMENTACION.md`
 
 Archivos que se actualizan **manualmente** (ver `documentation_rules.md`):
 - `CHANGELOG.md`, `GUIA_TECNICA.md`, `ROADMAP.md`
-- `docs/PRECIOS_PAQUETES.md`, `.agents/workflows/README.md`
+- `.agents/workflows/README.md`

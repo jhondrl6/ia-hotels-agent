@@ -60,7 +60,7 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_basic_whatsapp",
         block_on_failure=False,  # NEVER_BLOCK: generar botón básico aunque falte WhatsApp
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["no_whatsapp_visible"]
+        promised_by=["no_whatsapp_visible", "whatsapp_conflict"]  # FASE-H-02: Added whatsapp_conflict
     ),
     "faq_page": AssetCatalogEntry(
         asset_type="faq_page",
@@ -194,6 +194,18 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
         promised_by=["missing_llmstxt"]
+    ),
+    # FASE-C: Voice Assistant Platforms Integration
+    "voice_assistant_guide": AssetCatalogEntry(
+        asset_type="voice_assistant_guide",
+        template="voice_guide_template",
+        output_name="voice_assistant_guide",
+        required_field="hotel_data",
+        required_confidence=0.3,
+        fallback="generate_voice_guide",
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=[]
     ),
 }
 

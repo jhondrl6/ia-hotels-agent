@@ -110,7 +110,8 @@ Este archivo contiene FAQs optimizadas para SEO y búsqueda por voz.
         1. Salida estricta en formato CSV: Pregunta,Respuesta
         2. Sin encabezados, sin numeración, sin texto introductorio.
         3. Las respuestas deben ser naturales, conversacionales y mencionar el nombre del hotel y la ubicación.
-        4. Incluye preguntas sobre: ubicación, mascotas, check-in/out, desayuno, wifi, parking, parejas, familia, turismo cercano.
+        4. Las RESPUESTAS deben tener entre 40 y 60 palabras para optimización TTS (Text-to-Speech).
+        5. Incluye preguntas sobre: ubicación, mascotas, check-in/out, desayuno, wifi, parking, parejas, familia, turismo cercano.
         """
         
         try:

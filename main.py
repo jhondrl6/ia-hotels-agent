@@ -1702,6 +1702,15 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             match_percentage=whatsapp_validation._validation_result.match_percentage if whatsapp_validation else 0.0,
             can_use_in_assets=True
         ))
+    elif whatsapp_validation and whatsapp_validation.confidence == ConfidenceLevel.CONFLICT:
+        validated_fields.append(ValidatedField(
+            field_name="whatsapp_number",
+            value=whatsapp_web,
+            confidence=ConfidenceLevel.CONFLICT,
+            sources=["Web", "GBP"],
+            match_percentage=whatsapp_validation._validation_result.match_percentage if whatsapp_validation else 0.0,
+            can_use_in_assets=True
+        ))
     elif whatsapp_web:
         validated_fields.append(ValidatedField(
             field_name="whatsapp_number",
@@ -1991,7 +2000,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             asset_plan=asset_plan,
             hotel_name=hotel_name,
             output_dir=str(output_dir),
-            audit_result=audit_result  # NUEVO: Pasar audit_result para métricas GEO
+            audit_result=audit_result,
+            pricing_result=pricing_result  # FASE 13: Usar pricing_result para consistencia con financial_scenarios.json
         )
     if proposal_path:
         print(f"[OK] Propuesta generada: {proposal_path}")

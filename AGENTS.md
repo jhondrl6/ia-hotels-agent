@@ -1,4 +1,4 @@
-<!-- agents_version: 4.8.0 | last_update: {date} -->
+<!-- agents_version: 4.9.0 | last_update: {date} -->
 
 # IA Hoteles Agent (iah-cli)
 
@@ -65,7 +65,18 @@ Archivos sincronizados automaticamente desde VERSION.yaml:
 
 Documentacion que se actualiza **manualmente** segun CONTRIBUTING.md:
 - `CHANGELOG.md`, `GUIA_TECNICA.md`, `ROADMAP.md`
-- `docs/PRECIOS_PAQUETES.md`, `.agents/workflows/README.md`
+- `.agents/workflows/README.md`
+
+### Version Sync Gate (Release)
+
+Cuando una fase marca un release, usar el Version Sync Gate:
+```bash
+python scripts/log_phase_completion.py --fase FASE-X \
+    --release 4.10.0 --auto-sync --check-manual-docs
+```
+Verifica: CHANGELOG y VERSION.yaml sincronizados + docs manuales actualizadas.
+
+Consistency checker: `python scripts/version_consistency_checker.py`
 
 ---
 
@@ -73,8 +84,8 @@ Documentacion que se actualiza **manualmente** segun CONTRIBUTING.md:
 
 | Aspecto | Estado |
 |---------|--------|
-| **Version** | v4.8.0 |
-| **Codename** | NEVER_BLOCK Architecture|
+| **Version** | v4.9.0 |
+| **Codename** | NEVER_BLOCK Architecture + AEO Re-Architecture|
 | **Piloto Activo** | Hotel Visperas (testeado) |
 | **Tests** | 1434+ passing |
 | **Bloqueante** | Ninguno |

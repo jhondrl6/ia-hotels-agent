@@ -213,7 +213,10 @@ class ConditionalGenerator:
         content = ""
         
         if asset_type == "whatsapp_button":
-            phone_data = validated_data.get("whatsapp", {})
+            # FASE-H-02 FIX: Accept both "whatsapp" and "whatsapp_number" field names
+            # The field is stored as "whatsapp_number" in ValidationSummary but
+            # some code paths use "whatsapp". Check both for compatibility.
+            phone_data = validated_data.get("whatsapp") or validated_data.get("whatsapp_number", {})
             phone = getattr(phone_data, 'value', str(phone_data)) if not isinstance(phone_data, str) else phone_data
             content = self._generate_whatsapp_button(phone, hotel_name)
         
@@ -275,6 +278,21 @@ class ConditionalGenerator:
             data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
             content = generator.generate(data if isinstance(data, dict) else {})
         
+        elif asset_type == "faq_conversational":
+            faqs_data = validated_data.get("faqs", [])
+            faqs = getattr(faqs_data, 'value', faqs_data) if not isinstance(faqs_data, list) else faqs_data
+            hotel_data = validated_data.get("hotel_data", {})
+            hotel_dict = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
+            content = self._generate_faq_conversational(
+                faqs if isinstance(faqs, list) else [],
+                hotel_dict if isinstance(hotel_dict, dict) else {}
+            )
+
+        elif asset_type == "voice_assistant_guide":
+            hotel_data = validated_data.get("hotel_data", validated_data)
+            hotel_dict = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
+            content = self._generate_voice_assistant_guide(hotel_dict if isinstance(hotel_dict, dict) else {})
+
         else:
             raise ValueError(f"Unknown asset type: {asset_type}")
         
@@ -500,7 +518,12 @@ class ConditionalGenerator:
                 "@type": "AggregateRating",
                 "ratingValue": hotel_data.get("rating", 4.0),
                 "reviewCount": hotel_data.get("review_count", 0)
-            } if hotel_data.get("rating") else None
+            } if hotel_data.get("rating") else None,
+            # FASE-B: SpeakableSpecification for voice search readiness
+            "speakable": {
+                "@type": "SpeakableSpecification",
+                "cssSelector": ["#descripcion", "#servicios", "#habitaciones", "#amenities"]
+            }
         }
         
         if schema["geo"] is None:
@@ -509,6 +532,83 @@ class ConditionalGenerator:
             del schema["aggregateRating"]
         
         return json.dumps(schema, indent=2, ensure_ascii=False)
+
+    def _generate_faq_conversational(self, faqs: List[Dict], hotel_data: Dict) -> str:
+        """Generate TTS-ready conversational FAQ in Markdown + JSON-LD format.
+        
+        FASE-B: Cada respuesta debe tener entre 40-60 palabras para optimizacion TTS.
+        
+        Args:
+            faqs: List of FAQ dictionaries with 'question' and 'answer'
+            hotel_data: Dictionary with hotel information
+            
+        Returns:
+            Markdown string with conversational FAQs (40-60 palabras por respuesta)
+        """
+        hotel_name = hotel_data.get("name", "Hotel")
+        city = hotel_data.get("city", hotel_data.get("address", "Colombia"))
+        
+        md = f"""# Preguntas Frecuentes - {hotel_name}
+
+> FAQs optimizadas para lectura por voz (TTS). Cada respuesta: 40-60 palabras.
+
+"""
+        
+        # JSON-LD for structured data
+        faq_main_entity = []
+        
+        for idx, faq in enumerate(faqs[:10], 1):  # Max 10 FAQs for quality
+            question = faq.get("question", faq.get("pregunta", ""))
+            answer = faq.get("answer", faq.get("respuesta", ""))
+            
+            # Count words in answer
+            answer_words = len(answer.split()) if answer else 0
+            
+            # Add conversational filler if too short (TTS optimization)
+            if answer_words < 40:
+                filler = f" {hotel_name} en {city} ofrece esta caracteristica para tu comodidad."
+                answer = answer + filler
+                answer_words = len(answer.split())
+            
+            md += f"""## {question}
+
+{answer}
+
+*({answer_words} palabras)*
+
+"""
+            
+            # JSON-LD entry with speakable
+            faq_main_entity.append({
+                "@type": "Question",
+                "name": question,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": answer,
+                    "cssSelector": "#faq"
+                }
+            })
+        
+        # Add JSON-LD structured data
+        faq_jsonld = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faq_main_entity
+        }
+        
+        md += f"""
+---
+
+## Schema JSON-LD (para implementar en tu sitio)
+
+```json
+{json.dumps(faq_jsonld, indent=2, ensure_ascii=False)}
+```
+
+*Generado: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - FASE-B AEO Voice-Ready*
+"""
+        
+        return md
 
     def _generate_financial_projection(
         self,
@@ -694,8 +794,8 @@ Generado: {datetime.now().isoformat()}
         """
         has_default_title = metadata_data.get("has_default_title", False)
         has_default_description = metadata_data.get("has_default_description", False)
-        title_tag = metadata_data.get("title_tag", "No configurado")
-        meta_description = metadata_data.get("meta_description", "No configurado")
+        title_tag = metadata_data.get("title_tag", None)
+        meta_description = metadata_data.get("meta_description", None)
         title_length = metadata_data.get("title_length", 0)
         description_length = metadata_data.get("description_length", 0)
         missing_h1 = metadata_data.get("missing_h1", True)
@@ -730,7 +830,7 @@ Generado: {datetime.now().isoformat()}
 
 | Aspecto | Estado |
 |---------|--------|
-| Valor actual | {title_tag} |
+| Valor actual | {title_tag if title_tag else "⚠️ Sin title tag configurado"} |
 | Longitud | {title_length} caracteres {title_length_status} |
 | Estado general | {title_status} |
 
@@ -740,7 +840,7 @@ Generado: {datetime.now().isoformat()}
         if has_default_title:
             md += """- ❌ El title tag parece ser genérico (default del CMS)
 - ✅ Crear un title único que incluya: nombre del hotel + diferenciador + ubicación
-- 📝 Ejemplo: "Hotel [Nombre] - Mejor Tarifa Garantizada | Santa Rosa de Cabal"
+- 📝 Referencia: "Hotel [Nombre] - Mejor Tarifa Garantizada | Santa Rosa de Cabal"
 - 📝 Longitud recomendada: 50-60 caracteres
 
 """
@@ -754,7 +854,7 @@ Generado: {datetime.now().isoformat()}
 
 | Aspecto | Estado |
 |---------|--------|
-| Valor actual | {meta_description[:80]}... |
+| Valor actual | {(meta_description[:80] + " (resumen de 80 caracteres)") if meta_description else "⚠️ Sin meta description"} |
 | Longitud | {description_length} caracteres {description_length_status} |
 | Estado general | {description_status} |
 
@@ -765,7 +865,7 @@ Generado: {datetime.now().isoformat()}
             md += """- ❌ La descripción parece ser genérica (default del CMS)
 - ✅ Crear una descripción única de 150-160 caracteres
 - 📝 Incluir: propuesta de valor + amenities principales + llamada a la acción
-- 📝 Ejemplo: "Hotel [Nombre] en Santa Rosa de Cabal. WiFi gratis, piscina, desayuno incluido. 
+- 📝 Referencia: "Hotel [Nombre] en Santa Rosa de Cabal. WiFi gratis, piscina, desayuno incluido. 
   Reserva directa con la mejor tarifa."
 
 """
@@ -813,7 +913,7 @@ Generado: {datetime.now().isoformat()}
   "@context": "https://schema.org",
   "@type": "Hotel",
   "name": "{hotel_name}",
-  "description": "Descripción del hotel...",
+  "description": "Descripción del hotel y propuesta de valor principal",
   "address": {{
     "@type": "PostalAddress",
     "addressLocality": "Santa Rosa de Cabal",
@@ -852,7 +952,28 @@ Generado: {datetime.now().isoformat()}
 
 ---
 
-*Documento generado automáticamente por IA Hoteles*
+## 5. Voice Search Keywords - Eje Cafetero (FASE-B AEO)
+
+**Keywords de voz para consultas en español en la region del Eje Cafetero:**
+
+| Keyword de Voz | Intencion |
+|----------------|-----------|
+| "hoteles boutique cerca del Valle del Cocora" | Busqueda de alojamiento cerca de naturaleza |
+| "hotel con spa en Santa Rosa de Cabal" | Busqueda de bienestar relaxation |
+| "lugar donde tomar cafe de origen en Pereira" | Experiencia cafe de especialidad |
+| "hoteles termales en el Eje Cafetero" | Busqueda de turismo termal |
+| "hotel familiar cerca de Salento" | Alojamiento familiar rural |
+| "mejores restaurantes en el Valle del Cocora" | Informacion complementaria |
+| "clima en Pereira hoy" | Utilidad viaje |
+
+**Implementacion:**
+- Incluir estas keywords en el contenido de la pagina de inicio
+- Usar naturalmente en meta description y headings
+- Crear contenido especifico sobre experiencias locales
+
+---
+
+*Documento generado automáticamente por IA Hoteles - FASE-B AEO Voice-Ready*
 """
         return md
 
@@ -1117,6 +1238,84 @@ dado que la mayoría del tráfico web proviene de estos dispositivos.
 """
         return md
 
+    def _generate_voice_assistant_guide(self, hotel_data: Dict) -> str:
+        """Generate voice assistant integration guide (FASE-C).
+        
+        Generates 3 subdocuments:
+        - google_assistant_checklist.md
+        - apple_business_connect_guide.md
+        - alexa_skill_blueprint.md
+        
+        These are written as separate files by save_asset when asset_type is voice_assistant_guide.
+        The return value is the index/overview file.
+        
+        Args:
+            hotel_data: Dictionary with hotel information
+            
+        Returns:
+            Markdown content with the voice assistant guide index
+        """
+        from modules.delivery.generators.voice_guide import VoiceGuideGenerator
+        
+        nombre = hotel_data.get("nombre") or hotel_data.get("name", "Hotel Boutique")
+        ubicacion = hotel_data.get("ubicacion") or hotel_data.get("city", "Eje Cafetero, Colombia")
+        
+        # Generate the 3 subdocuments
+        voice_gen = VoiceGuideGenerator()
+        guides = voice_gen.generate(hotel_data)
+        
+        # Store guides in instance for save_asset to use
+        if not hasattr(self, '_voice_guide_subdocuments'):
+            self._voice_guide_subdocuments = {}
+        self._voice_guide_subdocuments[hotel_data.get("hotel_id", "unknown")] = guides
+        
+        return f"""# Voice Assistant Integration Package
+
+**Hotel**: {nombre}  
+**Ubicación**: {ubicacion}  
+**Fecha de generación**: {datetime.now().strftime("%Y-%m-%d")}
+
+---
+
+## Overview
+
+Este paquete contiene 3 guías para integrar {nombre} con las principales plataformas de voz:
+- **Google Assistant** (Asistente de Google)
+- **Apple Siri** (Apple Business Connect)
+- **Amazon Alexa** (Alexa Skills Kit)
+
+---
+
+## Contenido del Paquete
+
+1. `google_assistant_checklist.md` - Checklist de integración con Google Assistant
+2. `apple_business_connect_guide.md` - Guía de setup para Apple Business Connect  
+3. `alexa_skill_blueprint.md` - Blueprint técnico para Alexa Skill
+
+---
+
+## Resumen de Compatibilidad
+
+| Plataforma | Voice Search | Reservas por Voz | Info en Maps |
+|------------|--------------|------------------|--------------|
+| Google Assistant | ✅ | ✅ (con API) | ✅ |
+| Apple Siri | ✅ | ⚠️ Parcial | ✅ |
+| Amazon Alexa | ✅ | ⚠️ Requiere Skill | ⚠️ Solo con Skill |
+
+---
+
+## Próximos Pasos
+
+1. **Revisar** las 3 guías incluidas en este paquete
+2. **Prioritizar** Google Assistant (mayor alcance en Colombia)
+3. **Obtener D-U-N-S Number** (requerido para Apple Business Connect)
+4. **Contactar** a AWS si interesa ASP for Hospitality (experiencia in-room)
+
+---
+
+*Generado automáticamente por iah-cli - FASE-C: Integración Plataformas de Voz*
+"""
+
     def save_asset(
         self,
         asset_type: str,
@@ -1140,6 +1339,19 @@ dado que la mayoría del tráfico web proviene de estos dispositivos.
         
         asset_type_dir = hotel_dir / asset_type
         asset_type_dir.mkdir(exist_ok=True)
+        
+        # FASE-C: Special handling for voice_assistant_guide - write subdocuments
+        if asset_type == "voice_assistant_guide" and hasattr(self, '_voice_guide_subdocuments'):
+            guides = self._voice_guide_subdocuments.get(metadata.hotel_id, {})
+            # Fallback: subdocuments may have been stored under "unknown" if hotel_data lacked hotel_id
+            if not guides:
+                guides = self._voice_guide_subdocuments.get("unknown", {})
+            for subdoc_filename, subdoc_content in guides.items():
+                file_path = asset_type_dir / subdoc_filename
+                file_path.write_text(subdoc_content, encoding='utf-8')
+            # Clean up to avoid memory leak
+            delattr(self, '_voice_guide_subdocuments')
+            return asset_type_dir / "google_assistant_checklist.md"
         
         file_path = asset_type_dir / filename
         file_path.write_text(content, encoding='utf-8')

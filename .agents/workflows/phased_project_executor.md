@@ -14,6 +14,18 @@ version: 2.1.0
 > **REGLA MANDATORIA - Sin excepciones**
 > Una fase por sesión. No se permite ejecutar múltiples fases en una misma sesión.
 
+> [!TIP]
+> **Convenciones de Nomenclatura de Fases**
+>
+> | Tipo | Formato | Ejemplo | Significado |
+> |------|---------|---------|-------------|
+> | Iteracion | `FASE-N` | `FASE-12` | Iteration de desarrollo |
+> | Feature | `FASE-{LETRA}` | `FASE-A`, `FASE-B` | Sub-fase de un feature (A..Z) |
+> | Release | `FASE-RELEASE-X.Y.Z` | `FASE-RELEASE-4.10.0` | **Markers explícito de release** |
+>
+> **Regla:** Si la fase cambia la versión (nueva release), usar `FASE-RELEASE-X.Y.Z`.
+> Esto activa automaticamente el Version Sync Gate.
+
 **Fases del workflow:**
 1. **Preparación** (esta sesión): Crear prompts, checklists, docs para todas las fases
 2. **Implementación** (sesión por fase): Cada fase se ejecuta en su propia sesión nueva
@@ -96,52 +108,131 @@ ls -la .opencode/plans/
 
 ### 6. Documentación Post-Fase (OBLIGATORIO - Según CONTRIBUTING.md)
 
-Después de completar cada fase, ejecutar el registro de documentación:
+---
 
-**Fuentes:**
-- Checklist de documentación: `docs/contributing/documentation_rules.md` §5
-- Archivos manuales: `docs/contributing/documentation_rules.md` §8
-- Capability contracts: `docs/contributing/capabilities.md` §13
+#### DONDE: Ubicación en el Workflow
 
-**Comando:**
-```bash
-python scripts/log_phase_completion.py \
-    --fase {FASE-N} \
-    --desc "{descripcion de lo implementado}" \
-    --archivos-nuevos "{ruta/archivo.py,ruta/test.py}" \
-    --archivos-mod "{ruta/existente.py}" \
-    --tests "{numero}" \
-    --coherence {score}
+```
+FASE completada (checklist muestra ✅)
+    │
+    └── Paso 6: Documentación Post-Fase ← AQUÍ
+               │
+               └─→ Ejecutar log_phase_completion.py
 ```
 
-**Ejemplo:**
+---
+
+#### CUANDO: Cuándo se Activa
+
+**INMEDIATAMENTE** después de que la fase se considera completa:
+- Checklist de la fase muestra ✅ en todos los items
+- Tests pasan (si aplica)
+- No hay errores pendientes
+
+**NO esperar** a la siguiente sesión. Ejecutar en la misma sesión donde se completó la fase.
+
+---
+
+#### COMO: Comandos Exactos
+
+**Caso 1: Fase de iteración (FASE-N, FASE-A, etc.)**
+
 ```bash
+# Minimo (registra en REGISTRY nomas)
+python scripts/log_phase_completion.py --fase FASE-12 --desc "Descripcion"
+```
+
+```bash
+# Recomendado (con verificacion de docs manuales)
 python scripts/log_phase_completion.py \
     --fase FASE-12 \
     --desc "Google Travel Scraper integration" \
     --archivos-nuevos "modules/scrapers/google_travel.py,tests/scrapers/test_google_travel.py" \
     --archivos-mod "modules/providers/benchmark_resolver.py" \
     --tests "15" \
-    --coherence 0.91
+    --coherence 0.91 \
+    --check-manual-docs
 ```
 
-**Lo que hace el script:**
-1. Registra en `docs/contributing/REGISTRY.md` (automático)
-2. Muestra POR_HACER para documentación manual
-3. Genera checklist de verificación
+**Caso 2: Fase de RELEASE (FASE-RELEASE-X.Y.Z)**
 
-**Documentación que se actualiza MANUALMENTE (no con el script):**
-| Archivo | Cuando |
-|---------|--------|
-| `CHANGELOG.md` | Al final del release |
-| `GUIA_TECNICA.md` | Si hay cambios arquitectónicos |
-| `ROADMAP.md` | Si hay hitos de monetización |
-| `.agents/workflows/README.md` | Si se agrega/elimina skill |
+```bash
+# Convencion: FASE-RELEASE-4.10.0 = release marker
+# El script detecta automaticamente que es un release
 
-**Verificación de Capability Contracts (capabilities.md §13):**
-- [ ] Nueva capability tiene punto de invocación
-- [ ] Output serializable en to_dict/export/report
-- [ ] Matriz de capacidades actualizada
+python scripts/log_phase_completion.py \
+    --fase FASE-RELEASE-4.10.0 \
+    --desc "Release 4.10.0" \
+    --archivos-mod "modules/foo.py" \
+    --check-manual-docs
+
+# Verificar consistency antes de commit:
+python scripts/version_consistency_checker.py
+```
+
+**Caso 3: Forzar skip (excepciones)**
+
+```bash
+# Solo si hay razon valida: no-aplica, en-release-posterior, etc.
+python scripts/log_phase_completion.py \
+    --fase FASE-X --desc "..." \
+    --check-manual-docs --force-skip-docs --skip-reason "no-aplica"
+```
+
+---
+
+#### QUE HACE: Salida del Script
+
+```
+1. Registra en REGISTRY.md (automatico)
+2. Muestra POR_HACER para documentacion manual
+3. DOCUMENTATION AUDIT (automatico si hay --archivos-mod)
+4. Version Sync Gate (automatico si fase es FASE-RELEASE-X.Y.Z)
+5. Checklist final en pantalla
+```
+
+---
+
+#### VERSION SYNC GATE: Como Saber si Fallo
+
+```
+[VERSION GATE] Release: 4.10.0
+
+  (!) CHANGELOG no tiene entrada [4.10.0]
+      CHANGELOG dice: 4.9.0
+
+  ACCION: Crear entrada en CHANGELOG.md antes de continuar
+```
+
+Si ves esto → El commit sera bloqueado por el pre-commit hook.
+
+---
+
+#### DOCUMENTATION AUDIT: Como Saber si Hay Gaps
+
+```
+DOCUMENTATION AUDIT - Documentacion Huérfana
+
+  [GAP] GUIA_TECNICA.md
+        Archivos de codigo que REQUIEREN actualizacion:
+          - modules/asset_generation/conditional_generator.py
+
+  Para resolver: Editar manualmente y agregar referencia a la fase
+```
+
+Si ves [GAP] → Editar GUIA_TECNICA.md y agregar la fase.
+
+---
+
+#### Checklist Post-Ejecucion
+
+Después de ejecutar `log_phase_completion.py`, verificar:
+
+- [ ] REGISTRY.md actualizado (nueva entrada visible)
+- [ ] No hay [GAP] en DOCUMENTATION AUDIT
+- [ ] Si fue RELEASE: VERSION SYNC GATE pasó (no hubo `(!)`)
+- [ ] CHANGELOG.md actualizado (si fue release)
+- [ ] `git add -A && git commit`
 
 ---
 
@@ -158,7 +249,8 @@ python scripts/log_phase_completion.py \
 - Prompts muy grandes → dividir en secciones dentro del mismo archivo
 
 ## Versiones
-- **v2.1.0** (2026-03-23): Agregado Paso 6 - Documentación Post-Fase según CONTRIBUTING.md. Ejecuta log_phase_completion.py y verifica capability contracts.
+- **v2.3.0** (2026-03-26): Version Sync Gate + Documentation Audit + FASE-RELEASE auto-detect. Convencion FASE-RELEASE-X.Y.Z para releases. Pre-commit hook para consistencia de versiones.
+- **v2.2.0** (2026-03-25): Enforcement de docs manuales --check-manual-docs. Si hay cambios arquitectonicos en archivos de REQUIRE_ArchitectURAL_CHANGE (conditional_generator.py, faq_gen.py, voice_guide.py, aeo_kpis.py, etc.) y GUIA_TECNICA.md no menciona la fase, el script FAIL. Uso --force-skip-docs --skip-reason para excepciones.
 - **v2.0.0** (2026-03-23): Simplificado — preparación en una sesión, implementación en sesión propia por fase. Elimina TDD Gate, Capability Contract, lecciones extensas.
 - **v1.5.0** (2026-03-18): Regla de Sesión Única, TDD Gate
 - **v1.0.0** (2026-03-03): Versión inicial

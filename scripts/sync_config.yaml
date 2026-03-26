@@ -72,24 +72,13 @@ rules:
         template: '**Version** | v{version}'
 
   # INDICE_DOCUMENTACION.md rules
-  - id: "indice_version"
-    file: "INDICE_DOCUMENTACION.md"
-    description: "Version in indice header"
-    replacements:
-      - pattern: 'IA Hoteles Agent\s*v[\d.]+'
-        template: 'IA Hoteles Agent v{version}'
-      - pattern: '\*\*Última actualizacion:\*\*\s*[\d-]+'
-        template: '**Última actualizacion:** {date}'
-      - pattern: '\*\*Version:\*\*\s*[\d.]+'
-        template: '**Version:** {version}'
-
-  # .gemini/config.yaml rules
-  - id: "gemini_config"
-    file: ".gemini/config.yaml"
-    description: "Gemini config version"
-    replacements:
-      - pattern: 'IA Hoteles Agent\s*\(v[\d.]+\s*"[^"]*"\)'
-        template: 'IA Hoteles Agent (v{version} "{codename}")'
+  # .gemini/config.yaml rules (DESHABILITADO - archivo no existe en repo)
+  # - id: "gemini_config"
+  #   file: ".gemini/config.yaml"
+  #   description: "Gemini config version"
+  #   replacements:
+  #     - pattern: 'IA Hoteles Agent\s*\(v[\d.]+\s*"[^"]*"\)'
+  #       template: 'IA Hoteles Agent (v{version} "{codename}")'
 
   # REGISTRY.md rules (phase registry - auto-updated by log_phase_completion.py)
   - id: "registry_last_update"

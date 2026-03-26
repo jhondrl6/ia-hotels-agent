@@ -59,6 +59,15 @@ class PainSolutionMapper:
             "name": "Sin WhatsApp Visible",
             "description": "No se detecta botón o enlace de WhatsApp en la web"
         },
+        "whatsapp_conflict": {
+            "assets": ["whatsapp_button"],
+            "confidence_required": 0.5,
+            "priority": 1,
+            "validation_fields": ["whatsapp_number"],
+            "estimated_impact": "high",
+            "name": "Conflicto de WhatsApp",
+            "description": "Número de WhatsApp diferente entre fuentes (web vs Google)"
+        },
         "no_faq_schema": {
             "assets": ["faq_page"],
             "confidence_required": 0.7,
@@ -222,7 +231,7 @@ class PainSolutionMapper:
         
         # Check WhatsApp visibility
         whatsapp_field = validation_summary.get_field("whatsapp_number")
-        if not whatsapp_field or whatsapp_field.confidence == ConfidenceLevel.UNKNOWN:
+        if not whatsapp_field or whatsapp_field.confidence in (ConfidenceLevel.UNKNOWN, ConfidenceLevel.CONFLICT):
             pains.append(Pain(
                 id="no_whatsapp_visible",
                 name="Sin WhatsApp Visible",
@@ -230,6 +239,17 @@ class PainSolutionMapper:
                 severity="high",
                 detected_by="validation",
                 confidence=0.5 if not whatsapp_field else self._confidence_to_float(whatsapp_field.confidence)
+            ))
+        
+        # Check for WhatsApp conflict (different numbers in web vs GBP)
+        if whatsapp_field and whatsapp_field.confidence == ConfidenceLevel.CONFLICT:
+            pains.append(Pain(
+                id="whatsapp_conflict",
+                name="Conflicto de WhatsApp",
+                description="Número de WhatsApp diferente entre fuentes",
+                severity="high",
+                detected_by="validation",
+                confidence=0.5
             ))
         
         # Check FAQ schema
@@ -465,7 +485,13 @@ class PainSolutionMapper:
             ]
             
             avg_confidence = sum(field_confidences) / len(field_confidences) if field_confidences else 0.0
-            can_generate = avg_confidence >= min_confidence
+            
+            # Special case: whatsapp_conflict always generates whatsapp_button
+            # because the conflict itself justifies the asset as solution
+            if pain_id == "whatsapp_conflict":
+                can_generate = True  # El conflicto justifica generar el asset
+            else:
+                can_generate = avg_confidence >= min_confidence
             
             # Determine confidence level
             if avg_confidence >= 0.9:

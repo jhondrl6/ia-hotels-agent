@@ -1,8 +1,116 @@
 # Guía Técnica IA Hoteles Agent CLI
 
-**Última actualización:** 23 Marzo 2026
-**Versión:** 4.6.0 (NEVER_BLOCK Architecture)
+**Última actualización:** 25 Marzo 2026
+**Versión:** 4.8.0 (NEVER_BLOCK Architecture + AEO Re-Architecture)
 **Audiencia:** Desarrolladores, DevOps, Contribuidores
+
+## 📋 Notas de Cambios v4.8.0 - AEO Re-Architecture
+
+**Fecha:** 25 Marzo 2026
+
+### Resumen
+
+AEO Re-Architecture: Alineación del módulo AEO (Auditory Engine Optimization) del sistema iah-cli con la definición real de optimización para asistentes de voz (Alexa, Siri, Google Assistant). Incluye speakable specifications, FAQ conversacional TTS-ready, y blueprints de integración con plataformas de voz.
+
+### Problema Resuelto
+
+- "AEO (Schema)" renombrado a "Schema Infrastructure" (el old naming era engañoso)
+- Dual counting eliminado (mismo Schema ya no cuenta para AEO y IAO simultáneamente)
+- SpeakableSpecification añadido al schema para indicar contenido optimizado para voz
+- FAQ ahora tiene respuestas de 40-60 palabras (optimización TTS)
+
+### Fases Implementadas
+
+#### FASE-A: Corrección Conceptual
+
+**Cambios:**
+- Renombrado "AEO (Schema)" → "Schema Infrastructure" en PainSolutionMapper
+- Dual counting eliminado de gap_analyzer.py
+- Métrica placeholder "Voice Readiness" añadida
+
+**Archivos modificados:**
+- `modules/commercial_documents/pain_solution_mapper.py`
+- `modules/analyzers/gap_analyzer.py`
+
+#### FASE-B: AEO Voice-Ready Module
+
+**Cambios:**
+- SpeakableSpecification añadida al schema generator
+- FAQ conversacional con respuestas de 40-60 palabras para optimización TTS
+- Voice keywords para Eje Cafetero (Armenia, Pereira, Santa Rosa de Cabal)
+- llms.txt mejorado con contexto geográfico voice-friendly
+
+**Archivos modificados:**
+- `modules/asset_generation/conditional_generator.py`
+- `modules/asset_generation/llmstxt_generator.py`
+
+**Tests:** 19 tests en `tests/asset_generation/test_fase_b_aeo_voice.py`
+
+#### FASE-C: Integración Plataformas de Voz
+
+**Cambios:**
+- 3 blueprints generados: Google Assistant Checklist, Apple Business Connect Guide, Alexa Skill Blueprint
+- Asset `voice_assistant_guide` integrado en conditional_generator
+
+**Archivos nuevos:**
+- `modules/delivery/generators/google_assistant_checklist.md`
+- `modules/delivery/generators/apple_business_connect_guide.md`
+- `modules/delivery/generators/alexa_skill_blueprint.md`
+- `modules/delivery/generators/voice_guide.py`
+
+**Archivos modificados:**
+- `modules/asset_generation/conditional_generator.py`
+- `modules/asset_generation/asset_catalog.py`
+
+#### FASE-D: Medición AEO Real
+
+**Cambios:**
+- KPI Framework con AEOKPIs, VoiceReadinessScore, DataSource
+- Mock clients para Profound/Semrush
+- Dashboard template aeo_metrics_report.md
+- Generador aeo_metrics_gen.py
+
+**Archivos nuevos:**
+- `data_models/aeo_kpis.py`
+- `modules/analytics/mock_profound_client.py`
+- `modules/analytics/mock_semrush_client.py`
+- `modules/delivery/generators/aeo_metrics_report.md`
+- `modules/delivery/generators/aeo_metrics_gen.py`
+
+#### FASE-E: Validación E2E
+
+**Cambios:**
+- E2E con hotelvisperas: delivery genera correctamente
+- Speakable ✓, FAQ ✓, Coherence 0.84 ✓
+- 26/28 regression tests passing
+- Brechas identificadas para FASE-F
+
+#### FASE-F: Corrección Brechas E2E
+
+**Cambios:**
+- FAQ respuestas ahora 40-60 palabras (prompt de LLM corregido)
+- voice_assistant_guide con 3 archivos .md en delivery (bug de keys sin extensión corregido)
+- commercial_documents/__init__.py creado (módulo sin __init__ no era importable)
+- 52/52 regression tests PASS
+
+**Archivos nuevos:**
+- `commercial_documents/__init__.py`
+
+**Archivos modificados:**
+- `modules/delivery/generators/faq_gen.py`
+- `modules/delivery/generators/voice_guide.py`
+- `modules/asset_generation/conditional_generator.py`
+
+### Métricas v4.8.0
+
+| Métrica | Valor |
+|---------|-------|
+| Tests FASE-A..F | 52 passing |
+| Tests suite NEVER_BLOCK | Passing |
+| Coherence Score | 0.84 (>= 0.8) |
+| Regression Tests | 52/52 PASS |
+
+---
 
 ## 📋 Notas de Cambios v4.6.0 - HEALTH DASHBOARD
 

@@ -5,6 +5,63 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.9.0] - 2026-03-25
+
+### 🎯 Objetivo
+AEO Re-Architecture: Alineación conceptual y técnica del módulo AEO (Auditory Engine Optimization)
+
+### ✅ Completado
+
+**FASE-A - Corrección Conceptual**
+- "AEO (Schema)" renombrado a "Schema Infrastructure"
+- Dual counting eliminado en favor de Schema Infrastructure score
+- Voice Readiness como módulo separado de schema_markup
+
+**FASE-B - AEO Voice-Ready Module**
+- SpeakableSpecification añadida a hotel_schema
+- FAQ conversacional con 40-60 palabras por respuesta
+- Voice Keywords para Eje Cafetero
+- llms.txt voice-ready con structured data
+
+**FASE-C - Integración Plataformas de Voz**
+- Google Assistant checklist
+- Apple Business Connect guide
+- Alexa Skill blueprint
+- 3 blueprints implementados en modules/delivery/generators/
+
+**FASE-D - Medición AEO Real**
+- KPI Framework: AEOKPIs, VoiceReadinessScore, DataSource en data_models/
+- Mock clients Profound/Semrush en modules/analytics/
+- Dashboard template aeo_metrics_report.md
+- 17 tests de regresión
+
+**FASE-E - Validación E2E**
+- Delivery genera sin errores
+- Speakable presente en schema
+- Coherence score: 0.84 (≥ 0.80)
+- 26/28 tests pasan
+
+**FASE-F - Corrección Brechas E2E**
+- FAQ respuestas 40-60 palabras (prompt LLM corregido en faq_gen.py)
+- voice_assistant_guide con 3 archivos .md en delivery (voice_guide.py + conditional_generator.py)
+- commercial_documents/__init__.py creado (módulo ahora importable)
+- 52/52 regression tests PASS
+
+### 📁 Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `data_models/aeo_kpis.py` | KPI framework para AEO |
+| `modules/analytics/profound_client.py` | Mock client para Profound API |
+| `modules/analytics/semrush_client.py` | Mock client para Semrush API |
+| `modules/delivery/generators/google_assistant_checklist.md` | Blueprint Google Assistant |
+| `modules/delivery/generators/apple_business_connect_guide.md` | Blueprint Apple Business |
+| `modules/delivery/generators/alexa_skill_blueprint.md` | Blueprint Alexa Skill |
+| `docs/aeo_metrics_report.md` | Dashboard template |
+| `commercial_documents/__init__.py` | Paquete formalizado (importable) |
+
+---
+
 ## [4.8.0] - 2026-03-23
 
 ### 🎯 Objetivo

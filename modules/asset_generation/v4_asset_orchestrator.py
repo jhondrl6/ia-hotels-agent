@@ -216,8 +216,8 @@ class V4AssetOrchestrator:
         if not coherence.is_coherent and coherence.overall_score < 0.5:
             raise CoherenceError(f"Coherencia insuficiente: {coherence.overall_score}")
         
-        # 5. Extraer datos validados
-        validated_data = self._extract_validated_fields(validation_summary)
+        # 5. Extraer datos validados (FASE 12: ahora incluye hotel_data del audit)
+        validated_data = self._extract_validated_fields(validation_summary, audit_result)
         
         # 6. Generar assets condicionalmente
         generated = []
@@ -347,16 +347,32 @@ class V4AssetOrchestrator:
     
     def _extract_validated_fields(
         self,
-        validation_summary: ValidationSummary
+        validation_summary: ValidationSummary,
+        audit_result: V4AuditResult = None  # FASE 12: audit_data_pipeline
     ) -> Dict[str, Any]:
         """
         Extrae campos validados para pasar a ConditionalGenerator.
         Incluye metadata de confianza.
+        
+        FASE 12: Ahora incluye hotel_data del audit_result.schema.properties
+        para que los assets usen datos reales del hotel.
         """
         validated_data = {}
         
         for field in validation_summary.fields:
             validated_data[field.field_name] = field
+        
+        # FASE 12: Agregar hotel_data del audit schema
+        if audit_result and audit_result.schema and audit_result.schema.properties:
+            validated_data["hotel_data"] = {
+                "name": audit_result.schema.properties.get("name"),
+                "description": audit_result.schema.properties.get("description"),
+                "telephone": audit_result.schema.properties.get("telephone"),
+                "url": audit_result.schema.properties.get("url"),
+                "address": audit_result.schema.properties.get("address"),
+                "image": audit_result.schema.properties.get("image"),
+                "price_range": audit_result.schema.properties.get("price_range"),
+            }
         
         return validated_data
     

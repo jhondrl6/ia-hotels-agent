@@ -1,8 +1,8 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.8.0"
-codename: "NEVER_BLOCK Architecture"
-release_date: "2026-03-23"
+version: "4.9.0"
+codename: "NEVER_BLOCK Architecture + AEO Re-Architecture"
+release_date: "2026-03-25"
 plan_maestro_version: "v2.6.0"
 agent_harness_version: "3.3.4"
 
