@@ -1,9 +1,9 @@
-<!-- agents_version: 4.9.0 | last_update: {date} -->
+<!-- agents_version: 4.10.0 | last_update: 2026-03-27 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.5.6 — Mejora FAQGenerator**
-> FASE-5 completada: Adopta enfoque de comunicación diagnóstico antiguo, Coherence score 0.91 (≥0.8), 1434+ regression tests passing, Publication Ready
+> **v4.10.0 — V6 E2E Certification**
+> Formato V6 de documentos comerciales con datos reales para Hotel Vísperas. Coherence score 0.84 (≥0.8), 52/52 regression tests PASS, Delivery package hotelvisperas_20260327.zip
 
 ---
 
@@ -84,12 +84,12 @@ Consistency checker: `python scripts/version_consistency_checker.py`
 
 | Aspecto | Estado |
 |---------|--------|
-| **Version** | v4.9.0 |
-| **Codename** | NEVER_BLOCK Architecture + AEO Re-Architecture|
+| **Version** | v4.10.0 |
+| **Codename** | V6 E2E Certification - Commercial Documents Format|
 | **Piloto Activo** | Hotel Visperas (testeado) |
-| **Tests** | 1434+ passing |
+| **Tests** | 1700+ test functions, 52/52 regression suite |
 | **Bloqueante** | Ninguno |
-| **Coherence Score** | ✅ 0.91 (umbral: 0.8) - PASA el gate |
+| **Coherence Score** | ✅ 0.84 (umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
 | **Mejoras** | TDD Gate, Parallel Execution, FAQGenerator mejorado con categorías y timestamp ISO 8601 |
 
@@ -101,7 +101,7 @@ Consistency checker: `python scripts/version_consistency_checker.py`
 |---------|--------|-------------|
 | `v4complete` | ✅ Recomendado | Flujo completo: diagnóstico, propuesta, assets, coherencia |
 | `v4audit` | ✅ Funcional | Auditoría con APIs externas (Rich Results, Places, PageSpeed) |
-| `spark` | ✅ Funcional | Diagnóstico rápido <5min + guion WhatsApp |
+| `spark` | ⚠️ Deprecado | Legacy, usar `v4complete` |
 | `execute` | ✅ Funcional | Implementa paquete, recupera análisis v4.0 con coherence ≥ 0.8 |
 | `stage` | ✅ Funcional | Ejecuta etapas individuales (geo, ia, seo, outputs) |
 | `deploy` | ✅ Funcional | Despliegue remoto via FTP/WP-API |

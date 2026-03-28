@@ -170,8 +170,12 @@ class AssetDiagnosticLinker:
         # Generate disclaimer based on confidence
         disclaimer = self._generate_disclaimer(conf_level, asset_spec.asset_type)
         
-        # Map asset type to narrative fields
-        narrative_fields = self._get_narrative_fields(asset_spec.asset_type, diagnostic_doc)
+        # Map asset type to narrative fields (pass financial_impact for dynamic impact_cop)
+        narrative_fields = self._get_narrative_fields(
+            asset_spec.asset_type, 
+            diagnostic_doc,
+            financial_scenario=diagnostic_doc.financial_impact if hasattr(diagnostic_doc, 'financial_impact') else None
+        )
         
         # BUG B FIX: Use original confidence_score if available, otherwise derive from confidence_level
         if original_confidence_score > 0:
@@ -357,13 +361,38 @@ class AssetDiagnosticLinker:
         
         return base_disclaimer
     
-    def _get_narrative_fields(self, asset_type: str, diagnostic_doc: DiagnosticDocument) -> Dict[str, Any]:
+    def _get_narrative_fields(
+        self, 
+        asset_type: str, 
+        diagnostic_doc: DiagnosticDocument,
+        financial_scenario: Optional[Any] = None
+    ) -> Dict[str, Any]:
         """
         Get narrative fields for an asset type based on the diagnostic.
+        
+        Args:
+            asset_type: Type of asset
+            diagnostic_doc: Diagnostic document
+            financial_scenario: Optional financial scenario (Scenario object) for dynamic impact_cop calculation.
+                               If not provided, uses default hardcoded values.
         
         Returns:
             Dict with problem_solved, impact_cop, priority, timing, why_this_asset
         """
+        # Asset weight mapping based on estimated_impact
+        ASSET_WEIGHTS = {
+            "high": 0.40,
+            "medium": 0.25,
+            "low": 0.15
+        }
+        
+        def _get_asset_estimated_impact(asset_type: str) -> Optional[str]:
+            """Look up estimated_impact for an asset type from PAIN_SOLUTION_MAP."""
+            for pain_data in self.pain_mapper.PAIN_SOLUTION_MAP.values():
+                if asset_type in pain_data.get("assets", []):
+                    return pain_data.get("estimated_impact")
+            return None
+        
         # Default values
         narrative_fields = {
             "problem_solved": "Problema identificado en el diagnóstico",
@@ -373,103 +402,111 @@ class AssetDiagnosticLinker:
             "why_this_asset": "Mejora la presencia online del hotel"
         }
         
-        # Map asset types to specific narrative fields
+        # Map asset types to specific narrative fields (problem_solved, priority, timing, why_this_asset)
+        # impact_cop is calculated dynamically from financial_scenario when available
         asset_narratives = {
             "whatsapp_button": {
                 "problem_solved": "Falta de canal directo de comunicación",
-                "impact_cop": 1500000,
                 "priority": "P1",
                 "timing": "30 minutos",
                 "why_this_asset": "Permite contacto instantáneo con huéspedes, aumentando reservas directas"
             },
             "faq_page": {
                 "problem_solved": "Ausencia de Schema FAQ que pierde rich snippets",
-                "impact_cop": 1100000,
                 "priority": "P1",
                 "timing": "30 minutos",
                 "why_this_asset": "Activa rich snippets en Google y mejora citación en ChatGPT"
             },
             "hotel_schema": {
                 "problem_solved": "Falta de schema de hotel estructurado",
-                "impact_cop": 900000,
                 "priority": "P1",
                 "timing": "1 hora",
                 "why_this_asset": "Muestra información enriquecida en Google (precios, disponibilidad, reseñas)"
             },
             "geo_playbook": {
                 "problem_solved": "Baja puntuación en Google Business Profile",
-                "impact_cop": 750000,
                 "priority": "P1",
                 "timing": "Día 2",
                 "why_this_asset": "Optimiza perfil de Google Maps para atraer búsquedas locales con intención de reserva"
             },
             "review_plan": {
                 "problem_solved": "Gestión ineficiente de reseñas online",
-                "impact_cop": 600000,
                 "priority": "P2",
                 "timing": "Día 3",
                 "why_this_asset": "Establece sistema para aumentar y gestionar reseñas, mejorando reputación online"
             },
             "review_widget": {
                 "problem_solved": "Falta de widget de reseñas visible en sitio web",
-                "impact_cop": 400000,
                 "priority": "P2",
                 "timing": "Día 2",
                 "why_this_asset": "Muestra reseñas recientes para generar confianza en potenciales huéspedes"
             },
             "org_schema": {
                 "problem_solved": "Ausencia de schema de organización",
-                "impact_cop": 200000,
                 "priority": "P3",
                 "timing": "Semana 2",
                 "why_this_asset": "Ayuda a Google a entender mejor la estructura del negocio hotelero"
             },
             "barra_reserva_movil": {
                 "problem_solved": "Falta de motor de reservas visible en móvil",
-                "impact_cop": 2000000,
                 "priority": "P1",
                 "timing": "Semana 1",
                 "why_this_asset": "Facilita reservas directas desde dispositivos móviles, reduciendo dependencia de OTAs"
             },
             "financial_projection": {
                 "problem_solved": "Falta de proyección financiera cuantificada",
-                "impact_cop": 0,  # Este es un análisis, no genera impacto directo
                 "priority": "P2",
                 "timing": "Día 1",
                 "why_this_asset": "Proporciona base objetiva para toma de decisiones y demuestra ROI esperado"
             },
             "performance_audit": {
                 "problem_solved": "Problemas de rendimiento web que afectan experiencia de usuario",
-                "impact_cop": 500000,
                 "priority": "P2",
                 "timing": "Día 2",
                 "why_this_asset": "Analiza Core Web Vitals y ofrece recomendaciones para mejorar velocidad de carga"
             },
             "optimization_guide": {
                 "problem_solved": "Metadatos por defecto del CMS que dañan SEO",
-                "impact_cop": 300000,
                 "priority": "P2",
                 "timing": "Día 3",
                 "why_this_asset": "Aborda problemas de títulos, descripciones y schema markup para mejorar visibilidad orgánica"
             },
             "direct_booking_campaign": {
                 "problem_solved": "Dependencia excesiva de OTAs con altas comisiones",
-                "impact_cop": 1800000,
                 "priority": "P1",
                 "timing": "Semana 2",
                 "why_this_asset": "Campaña de email/SMS personalizada para aumentar reservas directas"
             },
             "llms_txt": {
                 "problem_solved": "Falta de archivo llms.txt para orientación de crawlers de IA",
-                "impact_cop": 100000,
                 "priority": "P3",
                 "timing": "30 minutos",
                 "why_this_asset": "Facilita que los modelos de lenguaje entiendan y representen correctamente el hotel"
             }
         }
         
-        # Return specific narrative if available, otherwise defaults
-        return asset_narratives.get(asset_type, narrative_fields)
+        # Start with defaults
+        result = narrative_fields.copy()
+        
+        # Override with asset-specific narrative if available
+        if asset_type in asset_narratives:
+            result.update(asset_narratives[asset_type])
+        
+        # Calculate impact_cop dynamically if financial_scenario is available
+        # and has valid numeric monthly_loss_max
+        if financial_scenario is not None:
+            monthly_loss_max = getattr(financial_scenario, 'monthly_loss_max', None)
+            # Only calculate if monthly_loss_max is a valid number
+            if monthly_loss_max is not None and isinstance(monthly_loss_max, (int, float)) and monthly_loss_max > 0:
+                estimated_impact = _get_asset_estimated_impact(asset_type)
+                if estimated_impact and estimated_impact in ASSET_WEIGHTS:
+                    weight = ASSET_WEIGHTS[estimated_impact]
+                    result["impact_cop"] = int(monthly_loss_max * weight)
+                else:
+                    # Fallback for assets not in PAIN_SOLUTION_MAP - use medium weight
+                    result["impact_cop"] = int(monthly_loss_max * 0.25)
+        
+        return result
 
     def _hash_data(self, data: Dict) -> str:
         """Create hash of data for tracking."""

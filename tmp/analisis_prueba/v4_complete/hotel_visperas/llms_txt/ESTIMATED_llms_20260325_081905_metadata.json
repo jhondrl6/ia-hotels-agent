@@ -1,0 +1,25 @@
+{
+  "asset_type": "llms_txt",
+  "generated_at": "2026-03-25T08:19:06.019633",
+  "confidence_level": "0.25",
+  "confidence_score": 0.5,
+  "validation_sources": [
+    "web_scraping",
+    "google_business_profile",
+    "user_input"
+  ],
+  "preflight_status": "WARNING",
+  "can_use": false,
+  "disclaimer": "Este asset fue generado con datos estimados o de una sola fuente. Se recomienda verificar antes de usar en producción.",
+  "source_data_hash": "81a5efa678e6b062",
+  "diagnostic_reference": "None",
+  "problems_solved": [
+    "Baja Preparación para IA"
+  ],
+  "coherence_score": 0.87,
+  "problem_solved": "Falta de archivo llms.txt para orientación de crawlers de IA",
+  "impact_cop": 100000,
+  "priority": "P3",
+  "timing": "30 minutos",
+  "why_this_asset": "Facilita que los modelos de lenguaje entiendan y representen correctamente el hotel"
+}

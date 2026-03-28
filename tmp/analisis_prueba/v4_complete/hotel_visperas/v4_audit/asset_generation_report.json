@@ -1,0 +1,133 @@
+{
+  "hotel_id": "hotel_visperas",
+  "hotel_name": "Hotel Visperas",
+  "timestamp": "2026-03-25T08:19:06.021977",
+  "output_dir": "C:\\Users\\Jhond\\Github\\iah-cli\\tmp\\analisis_prueba\\v4_complete\\hotel_visperas",
+  "summary": {
+    "total_assets": 5,
+    "generated": 4,
+    "failed": 1,
+    "skipped": 0,
+    "can_use": 4,
+    "estimated": 4,
+    "delivery_ready_percentage": 0.0,
+    "site_verification_applied": false
+  },
+  "generated_assets": [
+    {
+      "asset_type": "hotel_schema",
+      "filename": "ESTIMATED_hotel_schema_20260325_081905.json",
+      "delivery_filename": "hotel_schema_20260325_081905.json",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\tmp\\analisis_prueba\\v4_complete\\hotel_visperas\\hotel_schema\\ESTIMATED_hotel_schema_20260325_081905.json",
+      "metadata_path": "C:\\Users\\Jhond\\Github\\iah-cli\\tmp\\analisis_prueba\\v4_complete\\hotel_visperas\\hotel_schema\\ESTIMATED_hotel_schema_20260325_081905_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "low_ia_readiness"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "llms_txt",
+      "filename": "ESTIMATED_llms_20260325_081905.txt",
+      "delivery_filename": "llms_20260325_081905.txt",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\tmp\\analisis_prueba\\v4_complete\\hotel_visperas\\llms_txt\\ESTIMATED_llms_20260325_081905.txt",
+      "metadata_path": "C:\\Users\\Jhond\\Github\\iah-cli\\tmp\\analisis_prueba\\v4_complete\\hotel_visperas\\llms_txt\\ESTIMATED_llms_20260325_081905_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "low_ia_readiness"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "faq_page",
+      "filename": "ESTIMATED_faqs_20260325_081906.csv",
+      "delivery_filename": "faqs_20260325_081906.csv",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\tmp\\analisis_prueba\\v4_complete\\hotel_visperas\\faq_page\\ESTIMATED_faqs_20260325_081906.csv",
+      "metadata_path": "C:\\Users\\Jhond\\Github\\iah-cli\\tmp\\analisis_prueba\\v4_complete\\hotel_visperas\\faq_page\\ESTIMATED_faqs_20260325_081906_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_faq_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "org_schema",
+      "filename": "ESTIMATED_org_schema_20260325_081906.json",
+      "delivery_filename": "org_schema_20260325_081906.json",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\tmp\\analisis_prueba\\v4_complete\\hotel_visperas\\org_schema\\ESTIMATED_org_schema_20260325_081906.json",
+      "metadata_path": "C:\\Users\\Jhond\\Github\\iah-cli\\tmp\\analisis_prueba\\v4_complete\\hotel_visperas\\org_schema\\ESTIMATED_org_schema_20260325_081906_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_org_schema"
+      ],
+      "can_use": true
+    }
+  ],
+  "failed_assets": [
+    {
+      "asset_type": "optimization_guide",
+      "reason": "Content validation failed: placeholder: Placeholder detected: \\.\\.\\.; generic_phrase: Generic phrase detected: 'no configurado'",
+      "pain_ids_affected": [
+        "metadata_defaults"
+      ],
+      "preflight_status": "BLOCKED"
+    }
+  ],
+  "skipped_assets": [],
+  "coherence_report": {
+    "is_coherent": true,
+    "overall_score": 0.87,
+    "checks": [
+      {
+        "name": "problems_have_solutions",
+        "passed": true,
+        "score": 0.67,
+        "message": "Solo 66% de problemas tienen solución (4/6)",
+        "severity": "warning"
+      },
+      {
+        "name": "assets_are_justified",
+        "passed": true,
+        "score": 1.0,
+        "message": "100% de assets justificados",
+        "severity": "info"
+      },
+      {
+        "name": "financial_data_validated",
+        "passed": true,
+        "score": 0.7,
+        "message": "Datos financieros validados (confidence promedio: 0.70)",
+        "severity": "info"
+      },
+      {
+        "name": "whatsapp_verified",
+        "passed": true,
+        "score": 1.0,
+        "message": "No hay asset de WhatsApp button",
+        "severity": "info"
+      },
+      {
+        "name": "price_matches_pain",
+        "passed": true,
+        "score": 1.0,
+        "message": "Precio (4.2x del dolor) en rango ideal (4.5x)",
+        "severity": "info"
+      },
+      {
+        "name": "promised_assets_exist",
+        "passed": true,
+        "score": 1.0,
+        "message": "Todos los assets prometidos están implementados",
+        "severity": "info"
+      }
+    ],
+    "errors": [],
+    "warnings": [],
+    "timestamp": "2026-03-25T08:19:04.356828",
+    "version": "4.2.0"
+  }
+}

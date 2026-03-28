@@ -1,8 +1,8 @@
 # Guia de Contribucion - IA Hoteles Agent
 
-> **Version Actual:** v4.9.0 (NEVER_BLOCK Architecture + AEO Re-Architecture)
+> **Version Actual:** v4.10.0 (NEVER_BLOCK Architecture + AEO Re-Architecture)
 > **Coherence Score:** 0.84 (≥0.8) - Publication Ready
-> **Ultima fase completada:** FASE-H-08 (Certificación E2E V4COMPLETE)
+> **Ultima fase completada:** FASE-I-01 (Integración Autonomous Researcher)
 > **Version del sistema de docs:** v2.3.0 (Version Sync Gate + Documentation Audit)
 > **Consultar REGISTRY para historial de fases:** `docs/contributing/REGISTRY.md`
 
@@ -120,11 +120,11 @@ python scripts/version_consistency_checker.py --fix # Auto-reparar si es posible
 
 ## Version y Sincronizacion
 
-**Version:** v4.9.0
+**Version:** v4.10.0
 
 Archivos sincronizados automaticamente desde VERSION.yaml:
-- `AGENTS.md`, `README.md`, `.cursorrules`, `INDICE_DOCUMENTACION.md`
+- `AGENTS.md`, `README.md`, `.cursorrules`
 
 Archivos que se actualizan **manualmente** (ver `documentation_rules.md`):
-- `CHANGELOG.md`, `GUIA_TECNICA.md`, `ROADMAP.md`
+- `CHANGELOG.md`, `GUIA_TECNICA.md`, `ROADMAP.md`, `INDICE_DOCUMENTACION.md`
 - `.agents/workflows/README.md`

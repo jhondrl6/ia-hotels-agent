@@ -1,8 +1,0 @@
-id,question,answer,category,generated_at
-1,¿Cuáles son los horarios de check-in y check-out en Hotel Vísperas?,Check-in desde las 15:00 horas. Check-out hasta las 12:00 horas.,Hospedaje,2026-03-16T12:41:53.271589
-2,¿Hotel Vísperas incluye desayuno?,"Sí, todos nuestros planes incluyen desayuno tipo buffet.",Servicios,2026-03-16T12:41:53.271601
-3,¿Hotel Vísperas tiene políticas de cancelación?,Cancelación gratuita hasta 48 horas antes de la fecha de llegada.,Reservas,2026-03-16T12:41:53.271607
-
-metadata,,,,
-actual_count,3,,,
-generated_at,2026-03-16T12:41:53.271615,,,

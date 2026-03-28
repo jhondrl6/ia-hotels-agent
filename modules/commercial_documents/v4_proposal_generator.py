@@ -60,7 +60,10 @@ class V4ProposalGenerator:
         if template_dir is None:
             template_dir = Path(__file__).parent / "templates"
         self.template_dir = Path(template_dir)
-        self.template_path = self.template_dir / "propuesta_v4_template.md"
+        # Prefer V6 template, fall back to V4
+        self.template_path = self.template_dir / "propuesta_v6_template.md"
+        if not self.template_path.exists():
+            self.template_path = self.template_dir / "propuesta_v4_template.md"
     
     def generate(
         self,

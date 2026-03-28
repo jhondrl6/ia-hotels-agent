@@ -1,0 +1,25 @@
+{
+  "asset_type": "hotel_schema",
+  "generated_at": "2026-03-25T08:19:06.018937",
+  "confidence_level": "0.25",
+  "confidence_score": 0.5,
+  "validation_sources": [
+    "web_scraping",
+    "google_business_profile",
+    "user_input"
+  ],
+  "preflight_status": "WARNING",
+  "can_use": false,
+  "disclaimer": "Este asset fue generado con datos estimados o de una sola fuente. Se recomienda verificar antes de usar en producción. Verifique que todos los datos del hotel son correctos.",
+  "source_data_hash": "ddb2209d009cf9e7",
+  "diagnostic_reference": "None",
+  "problems_solved": [
+    "Baja Preparación para IA"
+  ],
+  "coherence_score": 0.87,
+  "problem_solved": "Falta de schema de hotel estructurado",
+  "impact_cop": 900000,
+  "priority": "P1",
+  "timing": "1 hora",
+  "why_this_asset": "Muestra información enriquecida en Google (precios, disponibilidad, reseñas)"
+}

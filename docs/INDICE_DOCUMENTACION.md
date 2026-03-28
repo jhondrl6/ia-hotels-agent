@@ -1,7 +1,7 @@
 # Índice de Documentación - IA Hoteles Agent CLI
 
-**Versión:** 4.4.1  
-**Última actualización:** 10 Marzo 2026
+**Versión:** 4.10.0  
+**Última actualización:** 27 Marzo 2026
 
 ---
 
@@ -56,21 +56,25 @@
 
 ### Commercial Documents
 
-| Módulo | Descripción | Ubicación |
+|| Módulo | Descripción | Ubicación |
 |--------|-------------|-----------|
 | `commercial_documents/` | Documentos comerciales | `modules/` |
+| `v4_diagnostic_generator.py` | Generador diagnóstico V6 | `modules/commercial_documents/` |
+| `v4_proposal_generator.py` | Generador propuesta V6 | `modules/commercial_documents/` |
 | `composer.py` | Generación determinística | `modules/commercial_documents/` |
 | `coherence_validator.py` | Validador de coherencia | `modules/commercial_documents/` |
 | `pain_solution_mapper.py` | Mapeo problemas→assets | `modules/commercial_documents/` |
 
 ### Assets
 
-| Módulo | Descripción | Ubicación |
+|| Módulo | Descripción | Ubicación |
 |--------|-------------|-----------|
 | `asset_generation/` | Generación condicional | `modules/` |
 | `asset_catalog.py` | Catálogo centralizado | `modules/asset_generation/` |
+| `asset_diagnostic_linker.py` | Link assets a diagnóstico | `modules/asset_generation/` |
 | `conditional_generator.py` | Generador condicional | `modules/asset_generation/` |
 | `preflight_checks.py` | Gates de calidad | `modules/asset_generation/` |
+| `v4_asset_orchestrator.py` | Orchestrator de assets V4 | `modules/asset_generation/` |
 
 ### Quality Gates
 
@@ -83,10 +87,10 @@
 
 ### Auditors
 
-| Módulo | Descripción | Ubicación |
+|| Módulo | Descripción | Ubicación |
 |--------|-------------|-----------|
 | `auditors/` | APIs externas | `modules/` |
-| `v4_comprehensive.py` | Auditor comprehensivo | `modules/auditors/` |
+| `v4_comprehensive_auditor.py` | Auditor comprehensivo V4 | `modules/auditors/` |
 
 ### Observabilidad
 

@@ -350,7 +350,7 @@ class PainSolutionMapper:
                 pains.append(Pain(
                     id="metadata_defaults",
                     name="Metadatos por Defecto",
-                    description=f"使用 valores por defecto del CMS: {', '.join(issue_messages)}",
+                    description=f"Valores por defecto del CMS: {', '.join(issue_messages)}",
                     severity="high",
                     detected_by="metadata",
                     confidence=0.9

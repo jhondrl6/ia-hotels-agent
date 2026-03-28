@@ -1,0 +1,99 @@
+{
+  "v4_complete": true,
+  "hotel_name": "Hotel Visperas",
+  "url": "https://www.hotelvisperas.com/",
+  "region": "default",
+  "hotel_id": "hotel_hotelvisperas.com_",
+  "phases": {
+    "phase_1_hook": {
+      "completed": true,
+      "progress": 0
+    },
+    "phase_2_validation": {
+      "whatsapp_status": "CONFLICT",
+      "whatsapp_confidence": "conflict"
+    },
+    "phase_3_scenarios": {
+      "conservative": 5076000.0,
+      "realistic": 2610000.0,
+      "optimistic": -189000.0,
+      "expected": 2610000.0
+    },
+    "phase_4_publication_gates": {
+      "ready": true,
+      "status": "READY_FOR_PUBLICATION",
+      "gate_results": [
+        {
+          "gate_name": "hard_contradictions",
+          "passed": true,
+          "status": "PASSED",
+          "message": "No hard contradictions detected (count: 0)",
+          "value": 0,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "evidence_coverage",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Evidence coverage at 95.0% (threshold: 95%)",
+          "value": 0.95,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "financial_validity",
+          "passed": true,
+          "status": "PASSED",
+          "message": "All financial data validated - no default values detected",
+          "value": true,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "coherence",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Coherence score 0.87 meets threshold 0.8",
+          "value": 0.8733333333333333,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "critical_recall",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Critical recall at 100.0% (threshold: 90%)",
+          "value": 1.0,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "ethics",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Ethics validation passed",
+          "value": null,
+          "suggestion": "",
+          "details": {}
+        }
+      ],
+      "blocking_issues": []
+    },
+    "phase_5_consistency_check": {
+      "is_consistent": true,
+      "hard_conflicts": 0,
+      "soft_conflicts": 0,
+      "confidence_score": 0.8,
+      "inconsistencies": []
+    }
+  },
+  "modules_used": [
+    "orchestration_v4.OnboardingController",
+    "data_validation.CrossValidator",
+    "data_validation.MetadataValidator",
+    "financial_engine.ScenarioCalculator",
+    "auditors.V4ComprehensiveAuditor",
+    "quality_gates.publication_gates"
+  ]
+}

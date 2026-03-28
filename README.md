@@ -2,7 +2,7 @@
 
 **Plataforma de Inteligencia Agéntica de Grado Industrial diseñada para la auditoría y blindaje financiero del sector hotelero.**
 
-**Version:** 4.9.0 | **Última actualización:** 26 Marzo 2026
+**Version:** 4.10.0 | **Última actualización:** 27 Marzo 2026
 
 ---
 
@@ -20,10 +20,10 @@
 
 ---
 
-> **🛡️ AGENT PLATFORM STATUS (v4.8.0 - NEVER_BLOCK Architecture + AEO Re-Architecture)**:
+> **🛡️ AGENT PLATFORM STATUS (v4.10.0 - NEVER_BLOCK Architecture + AEO Re-Architecture)**:
 > *   **AEO Re-Architecture**: Módulo AEO (Auditory Engine Optimization) alineado con voice assistants (Alexa, Siri, Google Assistant). SpeakableSpecification, FAQ TTS-ready (40-60 palabras), voice keywords Eje Cafetero.
-> *   **Sistema de Evidencia Trazable**: EvidenceLedger con hash e integridad, claims vinculados a fuentes.
-> *   **Motor de Contradicciones**: Detección automática de hard/soft conflicts entre fuentes de datos.
+> *   **Coherence Validator**: Detección de hard/soft conflicts entre fuentes de datos, score de coherencia ≥ 0.8 requerido.
+> *   **Evidence Coverage Tracking**: Cobertura de evidence en documentos (≥ 95% coverage).
 > *   **Quality Gates de Pre-publicación**: Gates técnico, comercial, financiero y de coherencia (score ≥ 0.8).
 > *   **Estados de Publicación**: READY_FOR_CLIENT, DRAFT_INTERNAL, REQUIRES_REVIEW con validación estricta.
 > *   **No Defaults in Money**: Validación financiera que bloquea cálculos con valores por defecto.
@@ -37,7 +37,7 @@
 > *   **Autonomous Researcher**: Investiga automáticamente en GBP, Booking, TripAdvisor, Instagram cuando datos son insuficientes.
 > *   **Disclaimer Generator**: Genera disclaimers honestos por nivel de confidence (≥0.9: sin disclaimer, <0.5: detallado).
 > *   **Taxonomía de Confianza**: VERIFIED (≥0.9) / ESTIMATED (0.5-0.9) / CONFLICT (<0.5).
-> *   **CanonicalAssessment**: Estructura unificada de verdad que reemplaza assessment v4.2.
+> *   **V4 Assessment Schema**: Estructura de datos unificada para diagnóstico (reemplaza schema v4.2).
 > *   **Mejoras Recientes**: TDD Gate en workflows, ejecución paralela en auditorías
 
 ---
@@ -66,7 +66,7 @@ El **Agent Harness** es el núcleo que orchestra: memoria (recuerda análisis pr
 
 ## 🎯 ¿Qué es IA Hoteles Agent?
 
-Sistema de inteligencia agéntica que certifica la veracidad digital de hoteles mediante validación cruzada de datos y controles de coherencia automáticos.
+Sistema de inteligencia agéntica que genera diagnósticos comerciales y propuestas de mejora para hoteles, con validación cruzada de datos, controles de coherencia automáticos y proyección financiera por escenarios (70/20/10).
 
 ### Sistema de Evidencia y Confiabilidad v4.3.0
 
@@ -138,7 +138,7 @@ python main.py v4complete --url https://hotel.com --nombre "Hotel Nombre"
 |---------|--------|-----------|--------|
 | `v4complete` | ✅ | **Flujo completo con controles de coherencia** | Diagnóstico + Propuesta condicional + Assets |
 | `v4audit` | ✅ | Auditoría técnica rápida con APIs | JSON con validación cruzada |
-| `spark` | ✅ | Diagnóstico rápido <5min + guion WhatsApp | Análisis express para prospección |
+| `spark` | ⚠️ | Legacy v3.x (deprecado, usar `v4complete`) | - |
 | `execute` | ✅ | Implementación de paquete usando análisis previo | Assets según paquete seleccionado |
 | `stage` | ✅ | Ejecuta etapas individuales (geo, ia, seo, outputs) | Resultado de fase específica |
 | `deploy` | ✅ | Despliegue remoto vía FTP/WP-API | Archivos subidos al servidor |
@@ -160,8 +160,8 @@ python main.py v4complete --url https://hotel.com --nombre "Hotel Nombre"
 # Análisis completo nuevo
 python main.py v4complete --url https://hotel.com
 
-# Diagnóstico rápido para prospección
-python main.py spark --url https://hotel.com
+# Análisis completo nuevo (recomendado)
+python main.py v4complete --url https://hotel.com
 
 # Implementar paquete (usa análisis previo si existe)
 python main.py execute --url https://hotel.com --package starter_geo
@@ -236,7 +236,7 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ## ✅ Calidad Garantizada
 
-- **256+ tests** pasando continuamente (suite NEVER_BLOCK)
+- **52 tests** de regresión pasando al 100% (suite NEVER_BLOCK)
 - **TDD Gate**: Todo cambio comienza con un test que falla
 - **Pre-commit hooks**: Validaciones automáticas en cada commit
 - **Suite de regresión**: Hotel Vísperas como caso de referencia permanente
@@ -251,4 +251,4 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ## Testing
 
-**256+ tests passing** - Suite completa de pruebas unitarias, integración y regresión E2E.
+**1700+ test functions** across unit, integration and E2E suites | **52/52 regression tests** in NEVER_BLOCK suite

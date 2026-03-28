@@ -1,0 +1,25 @@
+{
+  "asset_type": "faq_page",
+  "generated_at": "2026-03-25T08:19:06.020176",
+  "confidence_level": "1.0",
+  "confidence_score": 0.5,
+  "validation_sources": [
+    "web_scraping",
+    "google_business_profile",
+    "user_input"
+  ],
+  "preflight_status": "WARNING",
+  "can_use": false,
+  "disclaimer": "Este asset fue generado con datos estimados o de una sola fuente. Se recomienda verificar antes de usar en producción.",
+  "source_data_hash": "7e9f8b24477c1049",
+  "diagnostic_reference": "None",
+  "problems_solved": [
+    "Sin Schema FAQ"
+  ],
+  "coherence_score": 0.87,
+  "problem_solved": "Ausencia de Schema FAQ que pierde rich snippets",
+  "impact_cop": 1100000,
+  "priority": "P1",
+  "timing": "30 minutos",
+  "why_this_asset": "Activa rich snippets en Google y mejora citación en ChatGPT"
+}

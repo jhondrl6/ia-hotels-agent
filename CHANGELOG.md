@@ -5,6 +5,55 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.10.0] - 2026-03-27
+
+### 🎯 Objetivo
+V6 E2E Certification - Formato V6 de documentos comerciales con datos reales para Hotel Vísperas
+
+### ✅ Completado
+
+**FASE V6-5 - E2E Certification**
+- Ejecución E2E completa del flujo v4complete
+- Documentos generados en formato V6 (DIAGNOSTICO_V6, PROPUESTA_V6)
+- Frontmatter YAML con version, coherence_score, document_type
+- Coherence score: 0.84 (umbral: 0.80)
+- 6 assets planificados y generados
+- Delivery package: hotelvisperas_20260327.zip
+- No texto mixed-language detectado
+- 52/52 regression tests PASS
+
+**FASE V6-4 - Pain Solution Mapper Integration**
+- PainSolutionMapper integrado en pipeline de documentos
+- Mapeo dinámico de problemas a soluciones
+- Financial impact calculado por problema
+
+**FASE V6-3 - Proposal Generator V6**
+- Pricing real extraído de ValidationSummary
+- Hybrid pricing model (tier-based)
+- ROI calculation dinámico
+- GATE compliance verificado
+
+**FASE V6-2 - Diagnostic Generator V6**
+- Estructura V6 con YAML frontmatter
+- Regional context dinámico
+- Coherence scoring pre-generation
+
+**FASE V6-1 - V6 Template Foundation**
+- Templates con placeholders ${}
+- Conditional content system
+- Multi-section document structure
+
+### 📁 Archivos Modificados
+
+|| Archivo | Descripción ||
+|---------|-------------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Generator V6 con coherence scoring |
+| `modules/commercial_documents/v4_proposal_generator.py` | Proposal con pricing real |
+| `modules/commercial_documents/pain_solution_mapper.py` | Mapper problemas→soluciones |
+| `modules/asset_generation/asset_diagnostic_linker.py` | Link assets a diagnostics |
+
+---
+
 ## [4.9.0] - 2026-03-25
 
 ### 🎯 Objetivo

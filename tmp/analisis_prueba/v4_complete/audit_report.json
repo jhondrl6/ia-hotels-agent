@@ -1,0 +1,233 @@
+{
+  "url": "https://www.hotelvisperas.com/",
+  "hotel_name": "Hotel Visperas",
+  "timestamp": "2026-03-25T08:19:04.256991",
+  "schema": {
+    "hotel_schema_detected": true,
+    "hotel_schema_valid": true,
+    "hotel_confidence": "verified",
+    "faq_schema_detected": false,
+    "faq_schema_valid": false,
+    "faq_confidence": "unknown",
+    "org_schema_detected": false,
+    "total_schemas": 1,
+    "errors": [],
+    "warnings": [
+      {
+        "field": "priceRange",
+        "message": "Recommended field 'priceRange' is missing",
+        "severity": "WARNING"
+      }
+    ],
+    "properties": {
+      "name": "Hotel Vísperas",
+      "telephone": "+573000000000",
+      "url": "https://hotelvisperas.com",
+      "address": "Santa Rosa de Cabal",
+      "image": "https://xwzoqvyydthsjfjfwbhs.supabase.co/storage/v1/object/sign/documentos/instalaciones%202.jpg",
+      "description": "Hotel boutique de lujo en Santa Rosa de Cabal, Eje Cafetero. Experiencia de naturaleza, spa y descan"
+    }
+  },
+  "gbp": {
+    "place_found": true,
+    "place_id": "ChIJpS416kyCOI4Rqk6mdT3LIiU",
+    "name": "HOTEL VISPERAS",
+    "rating": 4.7,
+    "reviews": 618,
+    "photos": 10,
+    "phone": "311 3973744",
+    "website": "https://engine.lobbypms.com/hotel-visperas",
+    "address": "Km. 4 vía Termales, vereda La Leona, Santa Rosa de Cabal, San RAMON, Santa Rosa de Cabal, Risaralda, Colombia",
+    "geo_score": 72,
+    "geo_score_breakdown": {
+      "rating_score": 28.2,
+      "reviews_score": 12.36,
+      "photos_score": 5.0,
+      "hours_score": 10.0,
+      "website_score": 10.0
+    },
+    "confidence": "verified",
+    "error_type": null,
+    "error_message": null
+  },
+  "performance": {
+    "has_field_data": false,
+    "mobile_score": 97,
+    "desktop_score": 97,
+    "lcp": 0.8405580264633359,
+    "fid": null,
+    "cls": 0.0005158204578390202,
+    "status": "LAB_DATA_ONLY",
+    "message": "Lighthouse lab data available. Field data not yet available from Chrome User Experience Report."
+  },
+  "validation": {
+    "whatsapp_status": "conflict",
+    "phone_web": "+573000000000",
+    "phone_gbp": "311 3973744",
+    "adr_status": "unknown",
+    "conflicts": [
+      {
+        "field_name": "whatsapp",
+        "value": "3000000000",
+        "confidence": "conflict",
+        "can_use": false,
+        "match_percentage": 0.0,
+        "sources_count": 2,
+        "sources": [
+          {
+            "source_type": "web_scraping",
+            "value": "3000000000",
+            "timestamp": "2026-03-25T08:19:03.729444",
+            "metadata": {
+              "original": "+573000000000"
+            }
+          },
+          {
+            "source_type": "gbp_api",
+            "value": "3113973744",
+            "timestamp": "2026-03-25T08:19:03.729493",
+            "metadata": {
+              "original": "311 3973744"
+            }
+          }
+        ],
+        "discrepancies": [
+          "web_scraping (3000000000) != gbp_api (3113973744)"
+        ],
+        "requires_manual_review": true,
+        "disclaimer": "Conflicto detectado en 'whatsapp'. Requiere revisión manual.",
+        "icon": "⚠"
+      }
+    ]
+  },
+  "overall": {
+    "confidence": "estimated",
+    "critical_issues": [
+      "WhatsApp number conflict between sources",
+      "Metadata: El título de la página está vacío",
+      "Metadata: Meta description está vacía"
+    ],
+    "recommendations": [
+      "Fix 1 schema warnings",
+      "Add FAQPage schema to capture rich snippets",
+      "Add more photos to GBP (current: 10, target: 40+)",
+      "No Core Web Vitals data - site may be new or low traffic"
+    ]
+  },
+  "competitors": [
+    {
+      "nombre": "",
+      "rating": 0.0,
+      "reviews": 0,
+      "distancia_km": 0.0,
+      "fotos": 0,
+      "geo_score": 0,
+      "geo_score_formula": {},
+      "place_id": "error",
+      "score_source": "places_api_real",
+      "has_hours": false,
+      "has_website": false,
+      "data_source": "error"
+    }
+  ],
+  "execution_trace": {
+    "executed": [
+      "schema_validation",
+      "metadata_validation",
+      "gbp_api",
+      "competitor_analysis",
+      "ai_crawler_audit",
+      "citability_audit",
+      "pagespeed_api",
+      "cross_validation"
+    ],
+    "skipped": [
+      "pagespeed_api"
+    ]
+  },
+  "metadata": {
+    "cms_detected": "custom",
+    "has_default_title": true,
+    "title": "<empty>",
+    "has_default_description": true,
+    "description": "<empty>",
+    "has_issues": true,
+    "issues": [
+      {
+        "type": "default_title",
+        "severity": "critical",
+        "message": "El título de la página está vacío"
+      },
+      {
+        "type": "default_description",
+        "severity": "high",
+        "message": "Meta description está vacía"
+      }
+    ],
+    "confidence": "estimated"
+  },
+  "ai_crawlers": {
+    "robots_exists": false,
+    "overall_score": 0.5,
+    "allowed_crawlers": [
+      "GPTBot",
+      "ChatGPT-User",
+      "ClaudeBot",
+      "Claude-User",
+      "PerplexityBot",
+      "Google-Extended",
+      "Bytespider",
+      "FacebookBot",
+      "Applebot",
+      "DuckDuckBot",
+      "Baiduspider",
+      "YandexBot",
+      "Bingbot",
+      "Googlebot"
+    ],
+    "blocked_crawlers": [],
+    "recommendations": [
+      "Crear robots.txt para controlar acceso de GPTBot",
+      "Crear robots.txt para controlar acceso de ChatGPT-User",
+      "Crear robots.txt para controlar acceso de ClaudeBot",
+      "Crear robots.txt para controlar acceso de Claude-User",
+      "Crear robots.txt para controlar acceso de PerplexityBot",
+      "Crear robots.txt para controlar acceso de Google-Extended",
+      "Crear robots.txt para controlar acceso de Bytespider",
+      "Crear robots.txt para controlar acceso de FacebookBot",
+      "Crear robots.txt para controlar acceso de Applebot",
+      "Crear robots.txt para controlar acceso de DuckDuckBot",
+      "Crear robots.txt para controlar acceso de Baiduspider",
+      "Crear robots.txt para controlar acceso de YandexBot",
+      "Crear robots.txt para controlar acceso de Bingbot",
+      "Crear robots.txt para controlar acceso de Googlebot"
+    ]
+  },
+  "citability": {
+    "overall_score": 0,
+    "blocks_analyzed": 0,
+    "high_citability_blocks": 0,
+    "recommendations": [
+      "Content structure is good. Maintain current paragraph lengths."
+    ],
+    "confidence": "ADVISORY"
+  },
+  "ia_readiness": {
+    "overall_score": 25.0,
+    "components": {
+      "schema_quality": 20.0,
+      "crawler_access": 50.0,
+      "citability": 0,
+      "llms_txt": 0,
+      "brand_signals": 50.0
+    },
+    "status": "Critical",
+    "actionable_items": [
+      "Improve structured data markup (JSON-LD) for better AI understanding",
+      "Review robots.txt to ensure AI crawler access is permitted",
+      "Add clear author attribution and citeable content sections",
+      "Create /llms.txt file with content inventory for AI crawlers",
+      "Strengthen brand signals: consistent NAP, social profiles, and entity markup"
+    ]
+  }
+}

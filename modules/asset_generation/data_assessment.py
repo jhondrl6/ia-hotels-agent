@@ -19,6 +19,9 @@ Metrics evaluated:
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Any
 from enum import Enum
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class DataClassification(Enum):
@@ -294,7 +297,78 @@ class DataAssessment:
             recommendations.append("All data sources are well populated")
         
         return recommendations
-    
+
+    def research_if_low_data(
+        self,
+        hotel_name: str,
+        hotel_url: str,
+        assessment_result: 'DataAssessmentResult',
+        output_dir: Optional[str] = None
+    ) -> 'DataAssessmentResult':
+        """
+        FASE-I-01: Si la clasificación es LOW, ejecuta AutonomousResearcher
+        para enriquecer los datos antes de la generación.
+
+        Args:
+            hotel_name: Nombre del hotel
+            hotel_url: URL del hotel para investigación
+            assessment_result: Resultado de la evaluación de datos
+            output_dir: Directorio para persistir resultados de investigación
+
+        Returns:
+            DataAssessmentResult actualizado con datos de investigación
+        """
+        # Solo investigar si los datos son LOW
+        if assessment_result.classification != DataClassification.LOW:
+            logger.info(
+                f"[DataAssessment] Skip research - classification is "
+                f"{assessment_result.classification.value} (not LOW)"
+            )
+            return assessment_result
+
+        logger.info(
+            f"[DataAssessment] LOW data detected for {hotel_name} - "
+            f"triggering AutonomousResearcher"
+        )
+
+        try:
+            # Importar aquí para evitar dependencia circular
+            from modules.providers.autonomous_researcher import AutonomousResearcher
+
+            researcher = AutonomousResearcher(output_dir=output_dir)
+
+            # Ejecutar investigación silenciosa (NEVER_BLOCK)
+            research_result = researcher.research(
+                hotel_name=hotel_name,
+                url=hotel_url,
+                persist=True
+            )
+
+            logger.info(
+                f"[DataAssessment] Research completed - "
+                f"confidence: {research_result.confidence:.2f}, "
+                f"sources: {research_result.sources}"
+            )
+
+            # Log gaps detectados
+            if research_result.conflicts:
+                logger.warning(
+                    f"[DataAssessment] Research gaps: {research_result.conflicts}"
+                )
+
+            researcher.close()
+
+            # TODO: Re-evaluar clasificación con datos encontrados
+            # Por ahora, el resultado de investigación se adjunta al assessment
+            # La re-clasificación se hará en ConditionalGenerator con enrichment
+
+            return assessment_result
+
+        except Exception as e:
+            logger.error(f"[DataAssessment] Research failed: {e}")
+            # Nunca crashea - retorna assessment original
+            return assessment_result
+
     def get_generation_path(self, classification: DataClassification) -> str:
         """
         Get the appropriate generation path name for a classification.

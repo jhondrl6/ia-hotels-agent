@@ -1,3 +1,10 @@
 {
-  "modules/asset_generation/conditional_generator.py": "FASE-TEST"
+  "modules/asset_generation/conditional_generator.py": "FASE-TEST",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "V6-5",
+  "modules/commercial_documents/v4_proposal_generator.py": "V6-5",
+  "modules/commercial_documents/pain_solution_mapper.py": "V6-5",
+  "modules/asset_generation/asset_diagnostic_linker.py": "V6-5",
+  "modules/asset_generation/data_assessment.py": "FASE-I-01",
+  "modules/asset_generation/v4_asset_orchestrator.py": "FASE-I-01",
+  "docs/contributing/capabilities.md": "FASE-I-01"
 }

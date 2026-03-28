@@ -29,6 +29,7 @@ from .conditional_generator import ConditionalGenerator
 from .asset_diagnostic_linker import AssetDiagnosticLinker, AssetMetadata
 from .asset_content_validator import AssetContentValidator, ContentStatus
 from .site_presence_checker import SitePresenceChecker  # FASE-CAUSAL-01
+from .data_assessment import DataAssessment, DataClassification  # FASE-I-01
 
 
 @dataclass
@@ -169,6 +170,7 @@ class V4AssetOrchestrator:
         self.diagnostic_linker = AssetDiagnosticLinker()
         self.content_validator = AssetContentValidator()
         self.site_checker = SitePresenceChecker()  # FASE-CAUSAL-01
+        self.data_assessor = DataAssessment()  # FASE-I-01
     
     def generate_assets(
         self,
@@ -218,7 +220,32 @@ class V4AssetOrchestrator:
         
         # 5. Extraer datos validados (FASE 12: ahora incluye hotel_data del audit)
         validated_data = self._extract_validated_fields(validation_summary, audit_result)
-        
+
+        # ═══════════════════════════════════════════════════════════════════
+        # FASE-I-01: ENRICHMENT CON AUTONOMOUS RESEARCHER
+        # Si los datos son LOW, ejecutar investigación para enriquecer
+        # ═══════════════════════════════════════════════════════════════════
+        assessment_result = self.data_assessor.assess(
+            hotel_data=validated_data.get("hotel_data", {}),
+            gbp_data=validated_data.get("gbp_data", {}),
+            seo_data=validated_data.get("seo_data", {}),
+            scraping_success=validated_data.get("scraping_success", False)
+        )
+
+        # Si classification es LOW, ejecutar AutonomousResearcher para enrichment
+        if assessment_result.classification == DataClassification.LOW:
+            logger.info(
+                f"[V4AssetOrchestrator] LOW data detected - "
+                f"executing AutonomousResearcher enrichment"
+            )
+            assessment_result = self.data_assessor.research_if_low_data(
+                hotel_name=hotel_name,
+                hotel_url=actual_site_url,
+                assessment_result=assessment_result,
+                output_dir=str(output_dir)
+            )
+        # ═══════════════════════════════════════════════════════════════════
+
         # 6. Generar assets condicionalmente
         generated = []
         failed = []

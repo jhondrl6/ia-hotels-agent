@@ -1,6 +1,6 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-03-26
+> **Ultima actualizacion:** 2026-03-27
 > **Total fases completadas:** 20
 > **Version actual:** v4.8.0
 
@@ -438,6 +438,52 @@ _Ninguno_
 - [x] Capability contract verificado
 
 ---
+
+## V6-5 - 2026-03-27
+**Descripcion:** E2E Certification V6 - Documentos comerciales en formato V6 con datos reales para Hotel Vísperas
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/pain_solution_mapper.py` | Pain Solution Mapper |
+| `modules/asset_generation/asset_diagnostic_linker.py` | Asset Diagnostic Linker |
+
+### Validaciones
+- [x] Tests passing (regression)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.84 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-I-01 - 2026-03-27
+**Descripcion:** Integración Autonomous Researcher: Nuevo método research_if_low_data() en DataAssessment que ejecuta investigación automática cuando datos son LOW. V4AssetOrchestrator ahora integra este flujo de enrichment. AutonomousResearcher aparece como 'conectada' en capabilities.md.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/e2e/test_v4complete_autonomous_researcher.py` | NUEVO | Test V4Complete Autonomous Researcher |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/data_assessment.py` | Data Assessment |
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `docs/contributing/capabilities.md` | Capabilities |
+
+### Validaciones
+- [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
 
 ## Formato de Entrada de Fase
 

@@ -62,6 +62,7 @@ La matriz de capacidades documenta el estado de cada capability en el sistema.
 | Dashboard | conectada | observability/ | metrics_report | LOW |
 | Calibration | conectada | observability/ | calibration_result | LOW |
 | SitePresenceChecker | conectada | asset_generation/ | presence_status | HIGH |
+| AutonomousResearcher | conectada | v4_asset_orchestrator.py | research_result | HIGH |
 
 ### 13.6 Gate de Cierre
 
