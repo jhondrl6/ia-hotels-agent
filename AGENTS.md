@@ -1,9 +1,9 @@
-<!-- agents_version: 4.10.0 | last_update: 2026-03-27 -->
+<!-- agents_version: 4.19.0 | last_update: 2026-04-03 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.10.0 — V6 E2E Certification**
-> Formato V6 de documentos comerciales con datos reales para Hotel Vísperas. Coherence score 0.84 (≥0.8), 52/52 regression tests PASS, Delivery package hotelvisperas_20260327.zip
+> **v4.19.0 -- Agent Ecosystem Integration COMPLETADO**
+> PLAN ANALYTICS-E2E-BRIDGE 100%: Analytics Transparency → Proposal Generator → Asset Bridge via PainSolutionMapper. Coherence score 0.84 (>= 0.8), PainSolutionMapper con 3 pain types analytics, 2 nuevos assets con templates.
 
 ---
 
@@ -84,8 +84,8 @@ Consistency checker: `python scripts/version_consistency_checker.py`
 
 | Aspecto | Estado |
 |---------|--------|
-| **Version** | v4.10.0 |
-| **Codename** | V6 E2E Certification - Commercial Documents Format|
+| **Version** | v4.12.0 |
+| **Codename** | GA4 Integration - Indirect Traffic Measurement|
 | **Piloto Activo** | Hotel Visperas (testeado) |
 | **Tests** | 1700+ test functions, 52/52 regression suite |
 | **Bloqueante** | Ninguno |
@@ -138,6 +138,7 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `modules/asset_generation/asset_catalog.py` | Catálogo centralizado de assets con is_asset_implemented | v4complete |
 | `auditors/` | APIs externas (Rich Results, Places, PageSpeed) | v4audit, v4complete |
 | `modules/auditors/ai_crawler_auditor.py` | Auditoría de robots.txt para IA crawlers | v4audit, v4complete |
+| `modules/analytics/google_analytics_client.py` | Cliente GA4 para tráfico indirecto (Método #5 KB) | v4audit (ADVISORY) |
 | `modules/asset_generation/llmstxt_generator.py` | Generación de llms.txt estándar | v4complete, execute |
 | `modules/auditors/citability_scorer.py` | Score de citabilidad de contenido | v4audit (ADVISORY) |
 | `modules/auditors/ia_readiness_calculator.py` | Score compuesto IA-readiness | v4audit (ADVISORY) |
@@ -156,8 +157,6 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `data_validation/evidence_ledger.py` | Almacén centralizado de evidencia | v4complete, v4audit |
 | `data_validation/contradiction_engine.py` | Detección de hard/soft conflicts | v4complete |
 | `data_validation/schema_validator_v2.py` | Coverage scoring | v4audit |
-
-**Ver docs/api_examples.md para ejemplos de uso detallados.**
 
 ---
 

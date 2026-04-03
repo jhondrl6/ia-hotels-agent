@@ -1,9 +1,62 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.10.0"
-codename: "V6 E2E Certification - Commercial Documents Format"
-release_date: "2026-03-27"
+version: "4.19.0"
+codename: "Agent Ecosystem Integration"
+release_date: "2026-04-03"
 plan_maestro_version: "v2.6.0"
+
+# v4.18.0 - ANALYTICS E2E 100% CERTIFICATION (ANALYTICS-E2E-CERT-01)
+# - Deteccion fallback de low_organic_visibility cuando GA4 no disponible
+# - 12/12 checklist items PASADOS
+# - AMBOS assets analytics generados: analytics_setup_guide (4952 bytes) + indirect_traffic_optimization (5226 bytes)
+# - Certificado E2E: output/CERTIFICADO_ANALYTICS_E2E.md
+# - Coherence: 0.87, Publication: READY_FOR_PUBLICATION, Consistency: CONSISTENTE
+#
+# v4.15.0 - ANALYTICS E2E BRIDGE (ANALYTICS-01 + 02 + 04 COMPLETADAS)
+# - ANALYTICS-01: analytics_status persistido en v4_complete_report.json
+# - ANALYTICS-02: V4ProposalGenerator._inject_analytics() con 2 modos (GA4 configurado/fallback)
+# - ANALYTICS-04: Analytics → Asset bridge via PainSolutionMapper
+#   * 3 nuevos pain types: no_analytics_configured, low_organic_visibility, no_ga4_enhanced
+#   * 2 nuevos assets: analytics_setup_guide, indirect_traffic_optimization
+#   * detect_pains() acepta analytics_data como parametro opcional
+#   * detect_pains_for_analytics() para deteccion standalone sin audit
+#   * Templates de guia GA4 y optimizacion de trafico indirecto
+
+# v4.14.0 - ANALYTICS DOCUMENTATION (ANALYTICS-03 COMPLETADA)
+# - ProfoundClient: docstring con instrucciones de activacion (PROFOUND_API_KEY)
+# - SemrushClient: docstring con instrucciones de activacion (SEMRUSH_API_KEY)
+# - modules/analytics/README.md: tabla de configuracion de todos los providers analytics
+# - Fallback a mock documentado y graceful
+
+# v4.13.0 - ANALYTICS TRANSPARENCY LOOP (FASE-IAO-06)
+# - NUEVO: data_models/analytics_status.py (121 lineas)
+#   * AnalyticsStatus dataclass con campos ga4/profound/semrush
+#   * Metodos: is_complete(), is_any_missing(), missing_credentials(), summary_for_template()
+#   * Per-source status fragments para template granular
+# - V4DiagnosticGenerator:
+#   * Import de AnalyticsStatus
+#   * Nuevo flag: show_analytics_transparency (default True)
+#   * _check_analytics_status(): verifica estado SIN llamadas API
+#   * _build_transparency_section(): seccion opcional en diagnostico
+#   * Inyeccion en _prepare_template_data: ga4_status_text, profound_status_text, semrush_status_text
+#   * analytics_transparency_section visible SOLO cuando alguna fuente falta
+# - Template v6: nuevo placeholder ${analytics_transparency_section}
+# - capabilities.md: 4 nuevas capacidades agregadas a la matriz
+# - DIAGNOSTICO ahora explica POR QUE no hay datos en vez de ceros/guiones silenciosos
+# - Backwards compatible: transparencia se puede desactivar con show_analytics_transparency=False
+
+# v4.12.0 - GA4 INTEGRATION (GAP-IAO-01-05 completada)
+# - GoogleAnalyticsClient: cliente real con lazy init, graceful fallback
+# - IndirectTrafficMetrics consolidado en data_models/aeo_kpis.py (date_range, note, from_ga4_response)
+# - Eliminado duplicado de IndirectTrafficMetrics de google_analytics_client.py
+# - GoogleAnalyticsClient exportado desde modules/analytics/__init__.py
+# - _calculate_score_ia() integrado con GA4: construye AEOKPIs, calcula composite_score
+# - _calculate_iao_score() fallback fix: retorna schema_infra_score cuando IATester falla
+# - IAReadinessCalculator: ga4_indirect weight 0.10, redistribution cuando GA4 no disponible
+# - 17 tests nuevos en test_google_analytics_client.py
+# - 5 tests GA4 agregados a test_ia_readiness_calculator.py
+# - 46/46 tests passing (0 regresiones)
+# - Backwards compatible: GA4 completamente opcional
 agent_harness_version: "3.3.4"
 
 # v4.8.0 - PLACES API NEW INTEGRATION

@@ -83,23 +83,25 @@ python scripts/sync_versions.py --validate # Validate config
 
 ### Archivos Sincronizados Automaticamente
 
-| Archivo | Qué sincroniza |
+| Archivo | Que sincroniza |
 |---------|---------------|
-| `README.md` | Version, fecha, status banner, codename |
-| `AGENTS.md` | Version, codename, fecha, status table |
+| `README.md` | Version, fecha |
+| `AGENTS.md` | HTML comment version + date, header banner con version y codename |
 | `.cursorrules` | Version, fecha |
-| `INDICE_DOCUMENTACION.md` | Version, fecha |
+| `docs/CONTRIBUTING.md` | Version header, version footer |
+| `docs/GUIA_TECNICA.md` | Version, fecha |
+| `docs/contributing/REGISTRY.md` | Fecha ultima actualizacion |
 
 ### Archivos que se Actualizan Manualmente
 
 | Archivo | Cuando actualizar |
 |---------|------------------|
 | `CHANGELOG.md` | Nueva release (registro historico de cambios) |
-| `GUIA_TECNICA.md` | Cambios arquitectonicos o tecnicos |
 | `ROADMAP.md` | Cambios en estrategia de monetizacion |
-| `CONTRIBUTING.md` | Nuevos procedimientos de mantenimiento |
 | `.agents/workflows/README.md` | Agregar o eliminar skills |
 | `docs/PRECIOS_PAQUETES.md` | Cambios en precios o paquetes |
+| `INDICE_DOCUMENTACION.md` | Si hay nuevos scripts o modulos |
+| `docs/contributing/documentation_rules.md` | Nuevos scripts o flujos de doc |
 
 ### Casos en que NO se Utiliza CONTRIBUTING
 
@@ -149,12 +151,16 @@ Consulta esta tabla para determinar el procedimiento correcto:
 | `run_all_validations.py --quick` | Antes de cada commit (recomendado) |
 | `run_all_validations.py` | Validacion completa antes de release |
 | `pre-commit run --all-files` | Antes de cada commit (si no esta instalado) |
-| `sync_versions.py` | Despues de editar VERSION.yaml |
+| `sync_versions.py` | Despues de editar VERSION.yaml (tambien auto en pre-commit) |
+| `doctor.py` | Diagnostico completo del ecosistema (o `main.py --doctor`) |
+| `doctor.py --status` | Regenerar SYSTEM_STATUS.md |
+| `doctor.py --agent` | Solo validar ecosistema de agentes (tambien auto en pre-commit) |
+| `validate_agent_ecosystem.py` | 8 checks automatizados del ecosistema de agentes |
+| `validate_context_integrity.py` | Validar referencias cruzadas en AGENTS.md |
 | `generate_domain_primer.py` | Despues de modificar financial_engine/ |
 | `generate_system_status.py` | Despues de agregar/eliminar skill |
 | `validate.py --plan` | Despues de modificar Plan Maestro |
 | `validate.py --security` | Antes de push (verificar secrets) |
 | `validate_structure.py` | Validar estructura del proyecto |
 | `config_checker.py` | Verificar configuracion |
-| `extract_psi_metrics.py` | Extraer metricas PageSpeed |
 | `.agents/workflows/v4_regression_guardian.py --quick` | Despues de cambios en modulos v4 |

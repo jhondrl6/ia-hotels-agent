@@ -1,9 +1,326 @@
-# Changelog - IA Hoteles Agent
+# Changelog
+
+## [4.19.0] - 2026-04-03
+
+### INTEGRACION ECOSISTEMA DE AGENTES: Doctor + Pre-commit + Validacion Automatica
+
+**NUEVOS SCRIPTS:**
+- `scripts/doctor.py` (354 lineas) - Punto de entrada unificado para diagnostico del ecosistema
+  - `--doctor` flag integrado en `main.py`
+  - Soporta --agent, --context, --status, --json
+  - Regenera SYSTEM_STATUS.md automaticamente desde datos reales
+- `scripts/validate_agent_ecosystem.py` (259 lineas) - 8 checks automatizados
+  - Symlink integrity, README refs, skills tracking, shadow logs, memory, gitignore, knowledge, agents dir
+  - Manejo gracefully de errores Windows symlink
+
+**PRE-COMIT HOOKS (2 nuevos):**
+- `agent-ecosystem` - Valida skills, refs, symlink, shadow logs, memoria antes de cada commit
+- `version-sync` - Sincroniza VERSION.yaml con README, AGENTS, CONTRIBUTING, GUIA_TECNICA, etc.
+
+**WORKFLOWS (.agents/workflows/):**
+- ELIMINADO: `audit_guardian.md` (deprecated, reemplazado por `v4_complete.md`)
+- ELIMINADO: `qa_guardian.md` + `v4_coherence_validator.md` -> `v4_quality_validator.md` (unificado)
+- ELIMINADO: `v4_financial_calculation.md` -> merged en `v4_financial_scenarios.md`
+- MOVIDO: `v4_module_test_map.yaml` -> `templates/` (junto a `v4_regression_guardian.py`)
+- ELIMINADO: `__pycache__/` (basura de ejecucion)
+- FIX: Symlink `.agent/workflows` -> `.agents/workflows` (estaba roto)
+- README.md reescrito con estructura actualizada (17 skills)
+
+**DOCUMENTACION:**
+- NUEVO: `.agent/CONVENTION.md` - Contrato de arquitectura para cualquier futuro agente
+- REGENERADO: `.agent/SYSTEM_STATUS.md` desde datos reales (estaba stale desde Feb 2026)
+- FIX: `scripts/validate_context_integrity.py` (error Windows symlink stat)
+- FIX: `scripts/sync_config.yaml` (patterns actualizados)
+
+**FIX CLI:**
+- `main.py` con `--doctor` flag integrado
+- Manejo de errores Windows symlink en ambos validadores
+
+**Resultado:** Las carpetas .agent/ y .agents/workflows/ dejaron de ser "islas" y ahora son parte del flujo diario con validacion automatica pre-commit.
+
+## [4.18.0] - 2026-04-02
+
+### CERTIFICACION E2E 100% ANALYTICS: ANALYTICS-E2E-CERT-01
+
+**Cambio de codigo (1 archivo, +10 lineas):**
+- `modules/commercial_documents/pain_solution_mapper.py` — metodo `_detect_analytics_pains()`
+  - Agrega pain `low_organic_visibility` cuando `ga4_available=False`
+  - Sin GA4 no se puede medir trafico organico → deteccion implicita de baja visibilidad
+
+**Resultado de certificacion E2E (12/12 PASADOS):**
+- D1: analytics_data definido antes de detect_pains ✅
+- D2: analytics_data llega a PainSolutionMapper ✅
+- D3: analytics_data inyectado en diagnostico ✅
+- D4: analytics_data inyectado en propuesta ✅
+- D5: analytics persistido en v4_complete_report.json ✅
+- D6: Pains no_analytics_configured + low_organic_visibility detectados ✅
+- D7: AMBOS assets analytics generados (analytics_setup_guide + indirect_traffic_optimization) ✅
+- D8: GoogleAnalyticsClient graceful fallback ✅
+- D9: Profound/Semrush stubs graceful ✅
+- D-A: V4AssetOrchestrator recibe analytics_data ✅
+- D-B: analytics_setup_guide = 4952 bytes, 120 lineas ✅
+- D-C: indirect_traffic_optimization = 5226 bytes, 128 lineas ✅
+
+**Assets generados:**
+- 9 assets totales (antes 8)
+- analytics_setup_guide: 4952 bytes, guia GA4 paso a paso
+- indirect_traffic_optimization: 5226 bytes, estrategias trafico indirecto
+
+**Certificado:** output/CERTIFICADO_ANALYTICS_E2E.md
+
+## [v4.17.0] - 2026-04-02
+
+### FIX HANDLERS FALTANTES: analytics_setup_guide + indirect_traffic_optimization
+
+**Handlers implementados:**
+- `AnalyticsSetupGuideGenerator` (modules/delivery/generators/analytics_setup_guide_gen.py)
+  - Carga template + personaliza con nombre/ciudad/URL del hotel
+  - Fallback con contenido estatico si template no existe
+- `IndirectTrafficOptimizationGenerator` (modules/delivery/generators/indirect_traffic_optimization_gen.py)
+  - Carga template + personaliza con nombre del hotel
+  - Fallback con contenido estatico si template no existe
+
+**Handlers registrados en ConditionalGenerator._generate_content():**
+- `elif asset_type == "analytics_setup_guide"` → AnalyticsSetupGuideGenerator
+- `elif asset_type == "indirect_traffic_optimization"` → IndirectTrafficOptimizationGenerator
+
+**D-A FIX: Analytics data pasado al V4AssetOrchestrator:**
+- `generate_assets()` ahora acepta `analytics_data` opcional
+- `detect_pains()` interno ahora recibe analytics_data (antes: None)
+- pain `no_analytics_configured` ahora se detecta en el orchestrator
+- main.py pasa analytics_data al orchestrator (L2092)
+
+**Resultado de validacion:**
+- Assets generados: 8 (antes 7)
+- analytics_setup_guide: GENERADO (4952 bytes, 120 lineas)
+- archivo: hotel_visperas/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_*.md
+- Contenido completo con 7 pasos de configuracion GA4
+
+## [v4.16.0] - 2026-04-02
+
+### ANALYTICS-FIX-01: Fix critico UnboundLocalError + Analisis de Assets
+
+**FASE A: Fix de orden en main.py (CRITICO)**
+- Movido bloque analytics_data de L1958 a L1871, ANTES de PainSolutionMapper.detect_pains()
+- Corregido UnboundLocalError: analytics_data undefined en L1851
+- Import de GoogleAnalyticsClient y AnalyticsStatus: sin duplicados (1 ocurrencia cada uno)
+- Pipeline ahora ejecuta completo: v4complete exit code 0
+
+**FASE B: Analisis de assets de analytics (READ-ONLY)**
+- D-B CONFIRMADO: analytics_setup_guide sin handler en ConditionalGenerator._generate_content()
+- D-C CONFIRMADO: indirect_traffic_optimization sin handler en ConditionalGenerator._generate_content()
+- Ambos assets estan en ASSET_CATALOG como IMPLEMENTED con templates existentes
+- Assets fueron planificados pero NO generados (7 de 8 assets generados)
+
+**FASE C: Verificacion**
+- v4complete completo sin crash
+- analytics persistido en v4_complete_report.json (seccion lines 163-174)
+- Diagnostic incluye footer de transparencia analytics
+- 8 pains detectados (vs 0 antes del fix)
+- Reporte generado: ANALYTICS_FIX_REPORT_20260402.md
+
+
+## [v4.15.0] - 2026-04-02
+
+### Analytics E2E Bridge - COMPLETADO (01 + 02 + 04)
+
+**ANALYTICS-01: Persistir analytics en JSON**
+- `v4_complete_report.json` ahora incluye seccion `analytics` con:
+  - `ga4_available`, `ga4_status`, `ga4_error`
+  - `profound_available`, `profound_status`
+  - `semrush_available`, `semrush_status`
+  - `is_complete`, `missing_credentials`, `timestamp`
+- Backwards compatible: sin cambios en report existente
+
+**ANALYTICS-02: V4ProposalGenerator recibe analytics_data**
+- `V4ProposalGenerator.generate()` acepta `analytics_data: Optional[Dict] = None`
+- Metodo `_inject_analytics()` con 2 modos:
+  - GA4 configurado: muestra metricas reales de trafico indirecto
+  - Fallback: indica que GA4 no esta configurado
+- main.py pasa `analytics_data` al proposal generator (L2040)
+- Template V6 soporta placeholder `${analytics_transparency_section}`
+
+**ANALYTICS-04: Analytics → Asset bridge via PainSolutionMapper**
+- 3 nuevos pain types: `no_analytics_configured`, `low_organic_visibility`, `no_ga4_enhanced`
+- Deteccion automatica:
+  - GA4 no disponible → pain "Sin Analytics Configurado" (medium severity)
+  - GA4 sin enhanced ecommerce → pain "GA4 sin Configuracion Avanzada" (low severity)
+  - Trafico organico < 1000 sesiones/mes → pain "Baja Visibilidad Organica" (medium severity)
+- 2 nuevos assets con templates completos:
+  - `analytics_setup_guide` (guia_configuracion_ga4.md)
+  - `indirect_traffic_optimization` (optimizacion_trafico_indirecto.md)
+- Main.py detecta pains de analytics incluso sin audit_result completo
+- Registro en asset_catalog.py con status IMPLEMENTED
+- Refactor DRY: `_detect_analytics_pains()` metodo privado compartido
+
+**PLAN ANALYTICS-E2E-BRIDGE: 100% COMPLETADO**
+
+## [v4.14.0] - 2026-04-02
+
+### Analytics E2E Bridge - Fases de Documentacion
+
+**ANALYTICS-03: Documentacion de Stubs**
+- ProfoundClient: docstring completo con instrucciones de activacion paso a paso
+- SemrushClient: docstring completo con instrucciones de activacion paso a paso
+- `modules/analytics/README.md`: nuevo archivo con tabla de todos los providers analytics
+- Fallback a mock documentado y graceful (sin excepciones, retorna None)
+- Variables de entorno documentadas: PROFOUND_API_KEY, SEMRUSH_API_KEY
+
+## [v4.13.0] - 2026-04-01
+
+### Analytics Transparency Loop (FASE-IAO-06)
+- **NUEVO**: `data_models/analytics_status.py` - Clase AnalyticsStatus para rastrear disponibilidad de fuentes de datos
+- **NUEVO**: Metodo `_check_analytics_status()` en V4DiagnosticGenerator - verifica estado de GA4/Profound/Semrush SIN hacer llamadas API
+- **NUEVO**: Metodo `_build_transparency_section()` - genera seccion opcional "Fuentes de Datos Usadas en Este Diagnostico"
+- **Cambio**: Diagnostico ahora informa POR QUE no hay datos (credenciales faltantes, APIs no configuradas) en vez de silenciar con ceros/guiones
+- **Cambio**: Nuevo flag `show_analytics_transparency` en generador (default: True)
+- **Template**: `${analytics_transparency_section}` en diagnostico_v6_template.md - solo aparece cuando alguna fuente falta
+- **Docs**: capabilities.md actualizada con 4 nuevas capacidades (AnalyticsStatus, GoogleAnalyticsClient, ProfoundClient, SemrushClient) - IA Hoteles Agent
 
 Todos los cambios notables de este proyecto serán documentados en este archivo.
 
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [4.12.0] - 2026-04-01
+
+### Objetivo
+GA4 Integration - Tráfico Indirecto como Método #5 de Medición IA (GAP-IAO-01-05)
+
+### Completado
+
+**GAP-IAO-01-05: GA4 para Tráfico Indirecto**
+- GoogleAnalyticsClient: cliente real con lazy init, graceful fallback, sin romper pipeline
+- IndirectTrafficMetrics consolidado en data_models/aeo_kpis.py (eliminado duplicado)
+- Campos date_range y note agregados a IndirectTrafficMetrics
+- Método from_ga4_response() para crear métricas desde respuesta de GA4
+- GoogleAnalyticsClient exportado desde modules/analytics/__init__.py
+- _calculate_score_ia() integrado con GA4: construye AEOKPIs, calcula composite_score
+- _calculate_iao_score() fallback fix: retorna schema_infra_score cuando IATester falla
+- IAReadinessCalculator: ga4_indirect weight 0.10, redistribución proporcional cuando GA4 no disponible
+- Backwards compatible: GA4 completamente opcional, try/except en todos los paths
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| tests/test_google_analytics_client.py | 17 tests para GoogleAnalyticsClient |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| modules/analytics/google_analytics_client.py | Cliente real + eliminado duplicado IndirectTrafficMetrics |
+| data_models/aeo_kpis.py | IndirectTrafficMetrics: date_range, note, from_ga4_response() |
+| modules/analytics/__init__.py | Export GoogleAnalyticsClient |
+| modules/commercial_documents/v4_diagnostic_generator.py | _calculate_score_ia() GA4 wiring, _calculate_iao_score() fallback |
+| modules/auditors/ia_readiness_calculator.py | ga4_indirect weight 0.10, weight redistribution |
+| tests/data_validation/test_aeo_kpis.py | Weights fijos + indirect_traffic en required fields |
+| tests/auditors/test_ia_readiness_calculator.py | Weights fijos + 5 tests GA4 nuevos |
+
+### Tests
+- 17 tests nuevos en test_google_analytics_client.py
+- 5 tests GA4 agregados a test_ia_readiness_calculator.py
+- 46/46 tests passing (0 regresiones en módulos afectados)
+- 1755/1829 tests passing (74 failures pre-existentes, no relacionados)
+
+### Características
+- **Método #5 de KB**: GA4 como método de medición de tráfico indirecto post-consulta IA
+- **Graceful Fallback**: Sin credenciales → retorna data_source: N/A sin romper pipeline
+- **Weight Redistribution**: Cuando GA4 no disponible, peso se redistribuye proporcionalmente
+- **AEOKPIs Integration**: Construye objeto AEOKPIs con IATester + GA4 datos para composite score
+
+---
+
+## [4.12.0] - 2026-04-01
+
+### Objetivo
+GA4 Integration - Tráfico Indirecto como Método #5 de Medición IA (GAP-IAO-01-05)
+
+### Completado
+
+**GAP-IAO-01-05: GA4 para Tráfico Indirecto**
+- GoogleAnalyticsClient: cliente real con lazy init, graceful fallback, sin romper pipeline
+- IndirectTrafficMetrics consolidado en data_models/aeo_kpis.py (eliminado duplicado)
+- Campos date_range y note agregados a IndirectTrafficMetrics
+- Método from_ga4_response() para crear métricas desde respuesta de GA4
+- GoogleAnalyticsClient exportado desde modules/analytics/__init__.py
+- _calculate_score_ia() integrado con GA4: construye AEOKPIs, calcula composite_score
+- _calculate_iao_score() fallback fix: retorna schema_infra_score cuando IATester falla
+- IAReadinessCalculator: ga4_indirect weight 0.10, redistribución proporcional cuando GA4 no disponible
+- Backwards compatible: GA4 completamente opcional, try/except en todos los paths
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| tests/test_google_analytics_client.py | 17 tests para GoogleAnalyticsClient |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| modules/analytics/google_analytics_client.py | Cliente real + eliminado duplicado IndirectTrafficMetrics |
+| data_models/aeo_kpis.py | IndirectTrafficMetrics: date_range, note, from_ga4_response() |
+| modules/analytics/__init__.py | Export GoogleAnalyticsClient |
+| modules/commercial_documents/v4_diagnostic_generator.py | _calculate_score_ia() GA4 wiring, _calculate_iao_score() fallback |
+| modules/auditors/ia_readiness_calculator.py | ga4_indirect weight 0.10, weight redistribution |
+| tests/data_validation/test_aeo_kpis.py | Weights fijos + indirect_traffic en required fields |
+| tests/auditors/test_ia_readiness_calculator.py | Weights fijos + 5 tests GA4 nuevos |
+
+### Tests
+- 17 tests nuevos en test_google_analytics_client.py
+- 5 tests GA4 agregados a test_ia_readiness_calculator.py
+- 46/46 tests passing (0 regresiones en módulos afectados)
+- 1755/1829 tests passing (74 failures pre-existentes, no relacionados)
+
+### Características
+- **Método #5 de KB**: GA4 como método de medición de tráfico indirecto post-consulta IA
+- **Graceful Fallback**: Sin credenciales → retorna data_source: N/A sin romper pipeline
+- **Weight Redistribution**: Cuando GA4 no disponible, peso se redistribuye proporcionalmente
+- **AEOKPIs Integration**: Construye objeto AEOKPIs con IATester + GA4 datos para composite score
+
+---
+
+## [4.11.0] - 2026-03-30
+
+### 🎯 Objetivo
+Documentación Oficial - Actualización según CONTRIBUTING.md R8: GEO Enrichment Integration
+
+### ✅ Completado
+
+**FASE-7 - Documentación Oficial**
+- CHANGELOG.md: Entrada v4.11.0 con features GEO
+- GUIA_TECNICA.md: Nueva sección "GEO Enrichment Integration"
+- .agents/workflows/README.md: geo_flow y módulos GEO listados
+- capabilities.md: 4 nuevas capacidades actualizadas
+- REGISTRY.md: FASE-1 a FASE-8 registradas
+
+**FASE-1 a FASE-6 - GEO Integration (Previa)**
+- FASE-1: Diagnóstico - Mapeo hotel_data a 42 métodos GEO
+- FASE-2: GEO Flow Orchestrator - geo_flow.py integrado en v4_asset_orchestrator
+- FASE-3: GEO Enrichment Layer - Asset generation enriquecido con datos GEO
+- FASE-4: Sync Contract Analyzer - 8 combinaciones de sincronización
+- FASE-5: Asset Responsibility Contract - Orden de implementación
+- FASE-6: GEO Diagnostic - Dashboard y checklist GEO
+
+### 📁 Módulos GEO Documentados
+
+|| Módulo | Descripción | Estado ||
+||--------|-------------|--------|
+|| `geo_flow.py` | Orchestrator del flujo GEO | conectada |
+|| `GEOEnrichmentLayer` | Enriquecimiento de assets con datos GEO | conectada |
+|| `SyncContractAnalyzer` | Análisis de sincronización cross-platform | conectada |
+|| `AssetResponsibilityContract` | Contrato de responsabilidad de assets | conectada |
+
+### 🔧 Características
+
+- **GEO Flow**: Orquestación completa del pipeline GEO
+- **Sync Contract**: 8 combinaciones de sincronización (EXACT, SURFACE, SEMANTIC, etc.)
+- **Responsibility Contract**: Orden de implementación de assets (Schema → Onsite → Offsite)
+- **Backward Compatibility**: ✅ Preservada
+
+### 🔗 Links
+- [Plan FASE-7](./.opencode/plans/05-prompt-inicio-sesion-fase-7.md)
+- [Tracking fases](./.opencode/plans/README-FASES-TRACKING.md)
+
+---
 
 ## [4.10.0] - 2026-03-27
 

@@ -2,7 +2,7 @@
 
 **Plataforma de Inteligencia Agéntica de Grado Industrial diseñada para la auditoría y blindaje financiero del sector hotelero.**
 
-**Version:** 4.10.0 | **Última actualización:** 27 Marzo 2026
+**Version:** 4.19.0 | **Última actualización:** 3 Abril 2026
 
 ---
 
@@ -20,7 +20,7 @@
 
 ---
 
-> **🛡️ AGENT PLATFORM STATUS (v4.10.0 - NEVER_BLOCK Architecture + AEO Re-Architecture)**:
+> **🛡️ AGENT PLATFORM STATUS (v4.18.0 - GA4 Multi-Hotel Architecture)**:
 > *   **AEO Re-Architecture**: Módulo AEO (Auditory Engine Optimization) alineado con voice assistants (Alexa, Siri, Google Assistant). SpeakableSpecification, FAQ TTS-ready (40-60 palabras), voice keywords Eje Cafetero.
 > *   **Coherence Validator**: Detección de hard/soft conflicts entre fuentes de datos, score de coherencia ≥ 0.8 requerido.
 > *   **Evidence Coverage Tracking**: Cobertura de evidence en documentos (≥ 95% coverage).
@@ -144,6 +144,7 @@ python main.py v4complete --url https://hotel.com --nombre "Hotel Nombre"
 | `deploy` | ✅ | Despliegue remoto vía FTP/WP-API | Archivos subidos al servidor |
 | `setup` | ✅ | Configuración interactiva de API keys | Credenciales configuradas |
 | `onboard` | ✅ | Captura datos operativos reales del hotel | Mejora precisión del análisis |
+| `--doctor` | ✅ | Diagnóstico del ecosistema de agentes | Reporte de salud completo |
 | `audit` | ⚠️ | Legacy v3.x (deprecado) | - |
 
 ### Opciones de v4complete
@@ -208,6 +209,37 @@ python main.py onboard --url https://hotelvisperas.com --run-audit
 - Confidence: ESTIMATED → VERIFIED
 - Coherence: Potencialmente ≥ 0.8
 - Assets: WARNING → PASSED
+
+---
+
+## 🩺 Doctor - Diagnostico del Ecosistema de Agentes
+
+**Propósito:** Verificar la salud completa del ecosistema de agentes (skills, validaciones, contexto).
+
+**Comando:**
+```bash
+# Desde main.py (integrado al CLI)
+python main.py --doctor
+
+# O directo desde scripts
+python scripts/doctor.py           # Check completo
+python scripts/doctor.py --agent   # Solo ecosistema de agentes
+python scripts/doctor.py --context # Solo integridad de contexto
+python scripts/doctor.py --status  # Regenerar SYSTEM_STATUS.md
+python scripts/doctor.py --json    # Output maquina-legible
+```
+
+**Que verifica:**
+| Check | Descripción |
+|-------|-------------|
+| Symlink integrity | `.agent/workflows` -> `.agents/workflows` |
+| README dead references | Skills referenciados pero inexistentes |
+| Skills tracked | Todos los archivos .md en workflows reflejados en README |
+| Shadow logs health | JSON validos y estructura correcta |
+| Memory structure | current_state.json, error_catalog, sesiones |
+| Gitignore patterns | Datos runtime excluidos de version control |
+| Knowledge base | DOMAIN_PRIMER.md existe |
+| Agents directory | Contenido consistente |
 
 ---
 
