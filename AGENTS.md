@@ -39,9 +39,11 @@ python scripts/run_all_validations.py
 | Archivo | Proposito | Relacion |
 |---------|-----------|----------|
 | `docs/CONTRIBUTING.md` | Reglas de documentacion y mantenimiento | Index → fragmentos |
-| `.agents/workflows/phased_project_executor.md` | Motor de ejecucion por fases | Ejecuta → documenta |
-| `docs/contributing/REGISTRY.md` | Registro auto de fases completadas | Actualizado por executor |
 | `docs/contributing/documentation_rules.md` | Checklist docs obligatorias | Referenciado por executor |
+| `docs/contributing/REGISTRY.md` | Registro auto de fases completadas | Actualizado por executor |
+| `.agents/workflows/phased_project_executor.md` | Motor de ejecucion por fases | Ejecuta → documenta |
+| `.agent/CONVENTION.md` | Contrato arquitectura ecosistema agentes | `.agent/` ↔ `.agents/` |
+| `.agent/SYSTEM_STATUS.md` | Dashboard auto-regenerable | `main.py --doctor --status` |
 
 ### Flujo Post-Fase
 
@@ -60,23 +62,30 @@ FASE completada
 
 ### Version y Sincronizacion
 
-Archivos sincronizados automaticamente desde VERSION.yaml:
-- `AGENTS.md`, `README.md`, `.cursorrules`, `INDICE_DOCUMENTACION.md`
+Archivos sincronizados automaticamente desde VERSION.yaml (pre-commit):
+- `AGENTS.md`, `README.md`, `.cursorrules`
+- `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md`, `docs/contributing/REGISTRY.md`
+
+Regenerable (1 comando):
+- `.agent/SYSTEM_STATUS.md` → `python main.py --doctor --status`
 
 Documentacion que se actualiza **manualmente** segun CONTRIBUTING.md:
 - `CHANGELOG.md`, `GUIA_TECNICA.md`, `ROADMAP.md`
-- `.agents/workflows/README.md`
+- `INDICE_DOCUMENTACION.md`, `.agents/workflows/README.md`
 
-### Version Sync Gate (Release)
+### Flujo de Actualizacion de Documentacion
 
-Cuando una fase marca un release, usar el Version Sync Gate:
-```bash
-python scripts/log_phase_completion.py --fase FASE-X \
-    --release 4.10.0 --auto-sync --check-manual-docs
-```
-Verifica: CHANGELOG y VERSION.yaml sincronizados + docs manuales actualizadas.
+**Automatico (pre-commit en cada commit):**
+- Version sync VERSION.yaml → 6 archivos
+- Agent ecosystem check (8 validaciones)
 
-Consistency checker: `python scripts/version_consistency_checker.py`
+**Regenerable (1 comando):**
+- `.agent/SYSTEM_STATUS.md` → `python main.py --doctor --status`
+
+**Manual (requiere agente):**
+- `CHANGELOG.md`, `INDICE_DOCUMENTACION.md`, `documentation_rules.md`
+
+**Prompt:** "Actualizar documentacion oficial del repositorio"
 
 ---
 
@@ -84,14 +93,14 @@ Consistency checker: `python scripts/version_consistency_checker.py`
 
 | Aspecto | Estado |
 |---------|--------|
-| **Version** | v4.12.0 |
-| **Codename** | GA4 Integration - Indirect Traffic Measurement|
+| **Version** | v4.19.0 |
+| **Codename** | Agent Ecosystem Integration |
 | **Piloto Activo** | Hotel Visperas (testeado) |
 | **Tests** | 1700+ test functions, 52/52 regression suite |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ 0.84 (umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
-| **Mejoras** | TDD Gate, Parallel Execution, FAQGenerator mejorado con categorías y timestamp ISO 8601 |
+| **Mejoras** | TDD Gate, Parallel Execution, FAQGenerator, GA4 Multi-Hotel, **Doctor CLI**, **Pre-commit ecosystem validation**, **v4_quality_validator unificado** |
 
 ---
 
@@ -107,6 +116,7 @@ Consistency checker: `python scripts/version_consistency_checker.py`
 | `deploy` | ✅ Funcional | Despliegue remoto via FTP/WP-API |
 | `setup` | ✅ Funcional | Configuración interactiva de API keys |
 | `onboard` | ✅ Funcional | Captura datos operativos del hotel |
+| `--doctor` | ✅ Nuevo v4.19.0 | Diagnóstico del ecosistema de agentes |
 | `audit` | ⚠️ Deprecado | Legacy v3.x, usar `v4complete` |
 
 ### Uso Recomendado
@@ -115,8 +125,8 @@ Consistency checker: `python scripts/version_consistency_checker.py`
 # Análisis completo nuevo
 python main.py v4complete --url https://hotel.com
 
-# Diagnóstico rápido para prospección
-python main.py spark --url https://hotel.com
+# Diagnóstico del ecosistema de agentes
+python main.py --doctor
 
 # Implementar paquete (usa análisis previo si existe)
 python main.py execute --url https://hotel.com --package starter_geo

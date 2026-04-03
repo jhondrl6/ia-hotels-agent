@@ -37,7 +37,7 @@ FASE completada
     │   └── Verificar capability contracts (capabilities.md §13)
     │
     └── Validar con:
-        python scripts/run_all_validations.py --quick
+        python main.py --doctor            # Ecosistema + contexto (NUEVO v4.19.0)
 ```
 
 ### Version Sync Gate (Release Final)
@@ -101,22 +101,33 @@ python scripts/version_consistency_checker.py --fix # Auto-reparar si es posible
 
 | Script | Uso |
 |--------|-----|
+| `main.py --doctor` | Diagnóstico completo (ecosistema + contexto + versión) |
+| `scripts/doctor.py --status` | Regenerar SYSTEM_STATUS.md |
 | `log_phase_completion.py` | Registrar fase completada → REGISTRY.md |
 | `sync_versions.py` | Sincronizar VERSION.yaml → archivos de contexto |
-| `run_all_validations.py --quick` | Validacion antes de commit |
-| `.agents/workflows/v4_regression_guardian.py --quick` | Validacion post-cambios v4 |
+| `validate_agent_ecosystem.py` | 8 checks automatizados del ecosistema de agentes |
+| `validate_context_integrity.py` | Validar referencias cruzadas en AGENTS.md |
+| `.agents/workflows/v4_regression_guardian.py --quick` | Validación post-cambios v4 |
+
+**Pre-commit hooks automáticos** (se ejecutan en cada commit):
+- `agent-ecosystem` → Ejecuta `doctor.py --agent`
+- `version-sync` → Ejecuta `sync_versions.py`
 
 ---
 
 ## Comandos CLI Activos
 
-| Comando | Descripcion |
+| Comando | Descripción |
 |---------|-------------|
 | `v4complete` | Flujo completo con coherencia ≥0.8 |
-| `v4audit` | Auditoria con APIs externas |
-| `spark` | Diagnostico rapido <5min |
+| `v4audit` | Auditoría con APIs externas |
 | `execute` | Implementa paquete recuperado |
 | `deploy` | Despliegue remoto FTP/WP-API |
+| `setup` | Configuración interactiva de API keys |
+| `onboard` | Captura datos operativos del hotel |
+| `--doctor` | Diagnóstico del ecosistema de agentes |
+| `spark` | ⚠️ Legacy (usar `v4complete`) |
+| `stage` | Ejecuta etapas individuales |
 
 ---
 
@@ -240,9 +251,27 @@ print('Available:', c.is_available())  # Debe ser False
 
 **Version:** v4.19.0
 
-Archivos sincronizados automaticamente desde VERSION.yaml:
-- `AGENTS.md`, `README.md`, `.cursorrules`
+### Sincronizacion Automatica (pre-commit)
 
-Archivos que se actualizan **manualmente** (ver `documentation_rules.md`):
-- `CHANGELOG.md`, `GUIA_TECNICA.md`, `ROADMAP.md`, `INDICE_DOCUMENTACION.md`
-- `.agents/workflows/README.md`
+Estos archivos se sincronizan automaticamente en cada commit:
+- `AGENTS.md`, `README.md`, `.cursorrules`
+- `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md`
+- `docs/contributing/REGISTRY.md`
+
+### Regenerable (1 comando)
+
+- `.agent/SYSTEM_STATUS.md` → `python main.py --doctor --status`
+
+### Actualizacion Manual Requerida
+
+- `CHANGELOG.md` -- Historico de cambios por release
+- `GUIA_TECNICA.md` -- Notas tecnicas de arquitectura
+- `ROADMAP.md` -- Estrategia de monetizacion
+- `INDICE_DOCUMENTACION.md` -- Indice de modulos y scripts
+- `.agents/workflows/README.md` -- Skills del agente
+- `docs/contributing/documentation_rules.md` -- Reglas de documentacion
+
+### Prompt para IA
+
+Para actualizar toda la documentacion oficial, usar:
+> "Actualizar documentacion oficial del repositorio"
