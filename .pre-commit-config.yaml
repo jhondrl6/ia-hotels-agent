@@ -114,6 +114,25 @@ repos:
         stages: [pre-commit]
         always_run: true
 
+      # Agent Ecosystem: skills, refs, memory, shadow logs
+      - id: agent-ecosystem
+        name: Agent Ecosystem Check
+        entry: python scripts/doctor.py --agent
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+        always_run: true
+        verbose: true
+
+      # Version consistency: VERSION.yaml vs CHANGELOG vs docs
+      - id: version-sync
+        name: Version Sync Check
+        entry: python scripts/sync_versions.py
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+        always_run: true
+
 # === CI CONFIGURATION ===
 ci:
   autofix_commit_msg: |

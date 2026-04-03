@@ -372,10 +372,13 @@ class ContextIntegrityValidator:
         agent_matches = re.findall(agent_pattern, content)
         
         agents_exists = (self.project_root / ".agents" / "workflows").exists()
-        agent_exists = (self.project_root / ".agent" / "workflows").exists()
-        
+        try:
+            agent_exists = (self.project_root / ".agent" / "workflows").exists()
+        except OSError:
+            agent_exists = True  # Symlink exists but Windows stat fails
+            
         result.details.append(f".agents/workflows exists: {agents_exists}")
-        result.details.append(f".agent/workflows exists: {agent_exists}")
+        result.details.append(f".agent/workflows exists: {agent_exists} (may need elevated access for stat)")
         result.details.append(f"References to .agents/workflows: {len(agents_matches)}")
         result.details.append(f"References to .agent/workflows: {len(agent_matches)}")
         

@@ -278,3 +278,67 @@ print(f'💾 Financial scenarios saved to: {output_path}')
   }
 }
 ```
+
+---
+
+## Motor Financiero v4.1.0 (Technical Spec)
+
+> Referencia tecnica del modulo `modules.financial_engine` para calculos programaticos.
+
+### Inputs Requeridos
+
+| Input | Tipo | Descripcion | Ejemplo |
+|-------|------|-------------|---------|
+| rooms | int | Numero de habitaciones | 45 |
+| adr_cop | float | ADR en COP (o null para resolucion regional) | 350000.0 |
+| occupancy_rate | float | Porcentaje de ocupacion (0-1) | 0.65 |
+| direct_channel_percentage | float | Porcentaje canal directo (0-1) | 0.25 |
+| region | str | Region para benchmarks | eje_cafetero |
+| hotel_id | str | Identificador unico (URL) | https://hotel.com |
+| hotel_name | str | Nombre del hotel | Hotel Ejemplo |
+
+### Flujo de Ejecucion (Agent Harness)
+
+1. **ADR Resolution** (si no proporcionado):
+   - Usar `modules.financial_engine.resolve_adr_with_shadow()`
+   - Prioridad: user_provided > regional_benchmark > legacy_default
+   - Feature flags controlan shadow/canary/active mode
+
+2. **Scenario Calculation**:
+   - Usar `modules.financial_engine.ScenarioCalculator`
+   - Conservador (70%), Realista (20%), Optimista (10%)
+   - Validar orden: Conservador >= Realista >= Optimista
+
+3. **Pricing Calculation** (Hybrid Model):
+   - Usar `modules.financial_engine.calculate_price_with_shadow()`
+   - GATE validation (3%-6% pain ratio)
+   - Tier segun numero de habitaciones
+
+4. **Confidence Scoring**:
+   - VERIFIED (>=0.9): 2+ fuentes coinciden
+   - ESTIMATED (0.5-0.9): 1 fuente o benchmark
+   - CONFLICT (<0.5): Fuentes contradicen
+
+### Outputs del Motor
+
+| Output | Tipo | Descripcion |
+|--------|------|-------------|
+| scenarios | dict | Conservador, Realista, Optimista con probabilidades |
+| expected_monthly_cop | float | Valor esperado ponderado |
+| pricing | dict | Tier, precio mensual, pain ratio, compliance |
+| adr_resolution | dict | ADR usado, fuente, confianza |
+
+### Feature Flags
+
+| Flag | Valores | Default |
+|------|---------|---------|
+| FINANCIAL_REGIONAL_ADR_ENABLED | true/false | true |
+| FINANCIAL_PRICING_HYBRID_ENABLED | true/false | true |
+| FINANCIAL_REGIONAL_ADR_MODE | shadow/canary/active/legacy | shadow |
+| FINANCIAL_PRICING_HYBRID_MODE | shadow/canary/active/legacy | shadow |
+
+### Plan de Recuperacion
+- Si ADR resolution falla: usar default regional
+- Si escenarios son inconsistentes: aplicar ajustes automaticos
+- Si pricing no pasa GATE: documentar y usar fallback
+```
