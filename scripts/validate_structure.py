@@ -40,7 +40,7 @@ def validate_structure():
     # ========================================
     print("[1/5] Verificando módulos críticos...")
     required_modules = [
-        'modules/generators/report_builder_fixed.py',
+        'modules/generators/report_builder.py',
         'modules/generators/toolkit_consultor_gen.py',
         'modules/orchestrator/pipeline.py',
         'modules/analyzers/competitor_analyzer.py',  # NUEVO
@@ -61,13 +61,13 @@ def validate_structure():
     # ========================================
     print("[2/5] Verificando métodos nuevos implementados...")
     
-    report_builder_path = Path('modules/generators/report_builder_fixed.py')
+    report_builder_path = Path('modules/generators/report_builder.py')
     if report_builder_path.exists():
         report_builder = report_builder_path.read_text(encoding='utf-8')
         
         # Métodos de reestructuración
         if '_generate_diagnostico_y_oportunidad' not in report_builder:
-            errors.append("Método _generate_diagnostico_y_oportunidad no encontrado en report_builder_fixed.py")
+            errors.append("Método _generate_diagnostico_y_oportunidad no encontrado en report_builder.py")
         else:
             print("   ✓ _generate_diagnostico_y_oportunidad()")
         
@@ -88,7 +88,7 @@ def validate_structure():
         else:
             print("   ✓ Parámetro competitors_data integrado")
     else:
-        errors.append("report_builder_fixed.py no encontrado")
+        errors.append("report_builder.py no encontrado")
     
     if not errors:
         print("   [OK] Métodos nuevos implementados correctamente")
@@ -101,7 +101,7 @@ def validate_structure():
     
     if report_builder_path.exists():
         if 'diagnostico_ejecutivo.md' in report_builder:
-            warnings.append("Template diagnostico_ejecutivo.md aún referenciado en report_builder_fixed.py")
+            warnings.append("Template diagnostico_ejecutivo.md aún referenciado en report_builder.py")
         else:
             print("   ✓ Template diagnostico_ejecutivo.md no referenciado")
     print()

@@ -214,7 +214,6 @@ class BookingScraper:
         try:
             # T8B: Integration point - en producción usaría Playwright/Selenium
             # Por ahora retorna estructura válida para demostrar el flujo
-            result['found'] = True
             result['data'] = {
                 'source': self.source_name,
                 'hotel_name': hotel_name,
@@ -225,129 +224,21 @@ class BookingScraper:
                 'photos': [],
                 'price_range': None
             }
-            logger.info(f"[BookingScraper] Scraped {hotel_name}")
+            # Solo marcar found=True si tiene datos reales (no todo null)
+            has_real_data = any([
+                result['data'].get('rating'),
+                result['data'].get('review_count'),
+                result['data'].get('reviews'),
+                result['data'].get('amenities'),
+                result['data'].get('price_range')
+            ])
+            result['found'] = has_real_data
+            if has_real_data:
+                logger.info(f"[BookingScraper] Scraped {hotel_name} with real data")
+            else:
+                logger.info(f"[BookingScraper] Scraped {hotel_name} but no real data found")
         except Exception as e:
             logger.warning(f"[BookingScraper] Failed: {e}")
-            result['found'] = False
-        
-        return result
-
-
-class TripAdvisorScraper:
-    """Scraper para TripAdvisor."""
-    
-    def __init__(self):
-        self.source_name = 'tripadvisor'
-    
-    def scrape(self, hotel_name: str, url: Optional[str] = None) -> Dict[str, Any]:
-        """
-        Extrae datos de TripAdvisor.
-        
-        Returns:
-            Dict con reviews, rankings, ratings
-        """
-        result = {
-            'source': self.source_name,
-            'found': False,
-            'data': {},
-            'url': url or f"https://www.tripadvisor.com/Search?q={hotel_name}"
-        }
-        
-        try:
-            # T8B: Integration point - en producción usaría Playwright/Selenium
-            result['found'] = True
-            result['data'] = {
-                'source': self.source_name,
-                'hotel_name': hotel_name,
-                'rating': None,
-                'rank': None,
-                'reviews': [],
-                'ranking_string': None,
-                'photos': []
-            }
-            logger.info(f"[TripAdvisorScraper] Scraped {hotel_name}")
-        except Exception as e:
-            logger.warning(f"[TripAdvisorScraper] Failed: {e}")
-            result['found'] = False
-        
-        return result
-
-
-class InstagramScraper:
-    """Scraper para Instagram/Facebook."""
-    
-    def __init__(self):
-        self.source_name = 'instagram'
-    
-    def scrape(self, hotel_name: str, url: Optional[str] = None) -> Dict[str, Any]:
-        """
-        Extrae datos de Instagram.
-        
-        Returns:
-            Dict con photos, engagement, hashtags
-        """
-        result = {
-            'source': self.source_name,
-            'found': False,
-            'data': {},
-            'url': url or f"https://www.instagram.com/explore/tags/{hotel_name.replace(' ', '')}/"
-        }
-        
-        try:
-            # T8B: Integration point - en producción usaría Instagram API
-            result['found'] = True
-            result['data'] = {
-                'source': self.source_name,
-                'hotel_name': hotel_name,
-                'posts': [],
-                'followers': None,
-                'hashtags': [],
-                'recent_photos': []
-            }
-            logger.info(f"[InstagramScraper] Scraped {hotel_name}")
-        except Exception as e:
-            logger.warning(f"[InstagramScraper] Failed: {e}")
-            result['found'] = False
-        
-        return result
-
-
-class GBPScraper:
-    """Scraper para Google Business Profile."""
-    
-    def __init__(self):
-        self.source_name = 'gbp'
-    
-    def scrape(self, hotel_name: str, url: Optional[str] = None) -> Dict[str, Any]:
-        """
-        Extrae datos de GBP.
-        
-        Returns:
-            Dict con business info, reviews, photos, posts
-        """
-        result = {
-            'source': self.source_name,
-            'found': False,
-            'data': {},
-            'url': url
-        }
-        
-        try:
-            result['found'] = True
-            result['data'] = {
-                'source': self.source_name,
-                'hotel_name': hotel_name,
-                'rating': None,
-                'reviews': [],
-                'photos': [],
-                'posts': [],
-                'address': None,
-                'phone': None,
-                'hours': None
-            }
-            logger.info(f"[GBPScraper] Scraped {hotel_name}")
-        except Exception as e:
-            logger.warning(f"[GBPScraper] Failed: {e}")
             result['found'] = False
         
         return result
@@ -365,9 +256,12 @@ class AutonomousResearcher:
     Flujo: Audit → Research → Assessment → Generation → Report
     
     T8C: Integración en orchestration
+    
+    NOTE: Solo BookingScraper está activo (ADR/Price Range).
+    GBP, TripAdvisor, Instagram fueron deprecados (datos cubiertos por Google Places API).
     """
     
-    ALL_SOURCES = ['gbp', 'booking', 'tripadvisor', 'instagram']
+    ALL_SOURCES = ['booking']  # Solo fuentes activas
     
     def __init__(self, output_dir: Optional[Path] = None):
         """
@@ -381,29 +275,26 @@ class AutonomousResearcher:
         self.output_dir = output_dir
         self.last_research_output: Optional[ResearchOutput] = None  # T8C: Para acceso completo al output
         
-        # Inicializar scrapers
+        # Solo BookingScraper activo (ADR/Price Range - dato no disponible en Google Places)
         self.scrapers = {
-            'gbp': GBPScraper(),
-            'booking': BookingScraper(),
-            'tripadvisor': TripAdvisorScraper(),
-            'instagram': InstagramScraper()
+            'booking': BookingScraper()
         }
     
     def _search_gbp(self, hotel_name: str, url: str) -> Dict[str, Any]:
-        """Busca en Google Business Profile."""
-        return self.scrapers['gbp'].scrape(hotel_name, url)
+        """OBSOLETO: GBP datos ahora vienen de Google Places API (GEO Enrichment)."""
+        return {'found': False, 'data': {}, 'source': 'gbp', 'url': url}
 
     def _search_booking(self, hotel_name: str, url: str) -> Dict[str, Any]:
-        """Busca en Booking.com."""
+        """Busca en Booking.com (ADR/Price Range)."""
         return self.scrapers['booking'].scrape(hotel_name, url)
 
     def _search_tripadvisor(self, hotel_name: str, url: str) -> Dict[str, Any]:
-        """Busca en TripAdvisor."""
-        return self.scrapers['tripadvisor'].scrape(hotel_name, url)
+        """OBSOLETO: TripAdvisor deprecado (anti-bot, marginal value)."""
+        return {'found': False, 'data': {}, 'source': 'tripadvisor', 'url': url}
 
     def _search_social(self, hotel_name: str, url: str) -> Dict[str, Any]:
-        """Busca en Instagram/Facebook."""
-        return self.scrapers['instagram'].scrape(hotel_name, url)
+        """OBSOLETO: Instagram deprecado (anti-bot, marginal value)."""
+        return {'found': False, 'data': {}, 'source': 'instagram', 'url': url}
 
     def _calculate_confidence(self, sources_count: int, conflicts: List[str], 
                               matching_fields: int) -> float:

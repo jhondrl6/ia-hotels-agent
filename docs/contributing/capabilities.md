@@ -61,8 +61,21 @@ La matriz de capacidades documenta el estado de cada capability en el sistema.
 | IAReadinessCalculator | conectada | v4audit/ | ia_readiness_score | MEDIUM |
 | Dashboard | conectada | observability/ | metrics_report | LOW |
 | Calibration | conectada | observability/ | calibration_result | LOW |
-| SitePresenceChecker | conectada | asset_generation/ | presence_status | HIGH |
-| AutonomousResearcher | conectada | v4_asset_orchestrator.py | research_result | HIGH |
+|| SitePresenceChecker | conectada | asset_generation/ | presence_status | HIGH |
+|| AutonomousResearcher | conectada | v4_asset_orchestrator.py | research_result | HIGH |
+|| geo_flow | conectada | v4_asset_orchestrator.py:339 | geo_flow_result | HIGH |
+|| GEOEnrichmentLayer | conectada | geo_flow.py | enrichment_layer | HIGH |
+|| SyncContractAnalyzer | conectada | geo_flow.py | sync_results | HIGH |
+| AssetResponsibilityContract | conectada | delivery_packager.py:124 | implementation_order | MEDIUM |
+| SSLGuideGenerator | conectada | conditional_generator.py | ssl_guide content | LOW |
+| OGTagsGuideGenerator | conectada | conditional_generator.py | og_tags_guide content | LOW |
+| AltTextGuideGenerator | conectada | conditional_generator.py | alt_text_guide content | LOW |
+| BlogStrategyGuideGenerator | conectada | conditional_generator.py | blog_strategy_guide content | LOW |
+| GoogleAnalyticsClient | conectada | v4_diagnostic_generator.py:_check_analytics_status() | analytics_transparency_section, indirect_traffic | HIGH |
+| ProfoundClient | conectada (stub) | v4_diagnostic_generator.py:_check_analytics_status() | profound_status_text en diagnostico | MEDIUM |
+| SemrushClient | conectada (stub) | v4_diagnostic_generator.py:_check_analytics_status() | semrush_status_text en diagnostico | MEDIUM |
+| AnalyticsStatus | conectada | v4_diagnostic_generator.py:_prepare_template_data() | status_text, missing_credentials, transparency_section | HIGH |
+| SocialStrategyGuideGenerator | conectada | conditional_generator.py | social_strategy_guide content | LOW |
 
 ### 13.6 Gate de Cierre
 

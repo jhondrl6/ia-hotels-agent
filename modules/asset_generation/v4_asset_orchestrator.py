@@ -9,6 +9,9 @@ Orquesta la generación de assets conectando:
 """
 
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 import hashlib
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -30,6 +33,14 @@ from .asset_diagnostic_linker import AssetDiagnosticLinker, AssetMetadata
 from .asset_content_validator import AssetContentValidator, ContentStatus
 from .site_presence_checker import SitePresenceChecker  # FASE-CAUSAL-01
 from .data_assessment import DataAssessment, DataClassification  # FASE-I-01
+from ..geo_enrichment.geo_flow import GeoFlow  # FASE-6: GEO Flow
+from data_models.canonical_assessment import (  # FASE-6: Canonical Assessment
+    CanonicalAssessment,
+    SiteMetadata,
+    SchemaAnalysis,
+    PerformanceAnalysis,
+    PerformanceMetrics
+)
 
 
 @dataclass
@@ -171,6 +182,7 @@ class V4AssetOrchestrator:
         self.content_validator = AssetContentValidator()
         self.site_checker = SitePresenceChecker()  # FASE-CAUSAL-01
         self.data_assessor = DataAssessment()  # FASE-I-01
+        self.geo_flow = GeoFlow()  # FASE-6: GEO Flow
     
     def generate_assets(
         self,
@@ -180,7 +192,8 @@ class V4AssetOrchestrator:
         proposal_doc: ProposalDocument,
         hotel_name: str,
         hotel_url: str,  # FASE-CAUSAL-01: Ahora se requiere URL
-        site_url: Optional[str] = None  # Alias para backward compatibility
+        site_url: Optional[str] = None,  # Alias para backward compatibility
+        analytics_data: Optional[Dict[str, Any]] = None  # ANALYTICS-FIX-01: analytics pains
     ) -> AssetGenerationResult:
         """
         Flujo completo de generación de assets v4.0:
@@ -204,7 +217,7 @@ class V4AssetOrchestrator:
         output_dir = self._prepare_output_directory(hotel_id, timestamp)
         
         # 2. Detectar problemas
-        pains = self.pain_mapper.detect_pains(audit_result, validation_summary)
+        pains = self.pain_mapper.detect_pains(audit_result, validation_summary, analytics_data)
         
         # 3. Mapear a soluciones
         solutions = self.pain_mapper.map_to_solutions(pains)
@@ -305,7 +318,42 @@ class V4AssetOrchestrator:
             output_dir=str(output_dir),
             timestamp=datetime.now().isoformat()
         )
-        
+
+        # ═══════════════════════════════════════════════════════════════════
+        # FASE-6: GEO FLOW - POST-PIPELINE ENRICHMENT
+        # ═══════════════════════════════════════════════════════════════════
+        try:
+            # Build CanonicalAssessment from validated_data
+            canonical_data = self._build_canonical_assessment(
+                hotel_name=hotel_name,
+                hotel_url=actual_site_url,
+                validated_data=validated_data,
+                diagnostic_doc=diagnostic_doc
+            )
+
+            commercial_diagnosis = self._build_commercial_diagnosis(
+                diagnostic_doc=diagnostic_doc,
+                proposal_doc=proposal_doc
+            )
+
+            logger.info("[V4AssetOrchestrator] FASE-6: Running GEO Flow...")
+            geo_result = self.geo_flow.execute(
+                hotel_data=canonical_data,
+                commercial_diagnosis=commercial_diagnosis,
+                output_dir=str(output_dir)
+            )
+
+            # Save GEO Flow result
+            if geo_result:
+                geo_result_path = output_dir / "v4_audit" / "geo_flow_result.json"
+                import json as json_module
+                with open(geo_result_path, 'w', encoding='utf-8') as f:
+                    json_module.dump(geo_result.to_dict(), f, indent=2, ensure_ascii=False)
+                logger.info(f"[V4AssetOrchestrator]   GEO Flow complete: {len(geo_result.assets_generated)} assets, case={geo_result.case.value}")
+
+        except Exception as e:
+            logger.warning(f"[V4AssetOrchestrator]   GEO Flow skipped due to error: {e}")
+
         # 10. Guardar reporte de generación
         self.save_generation_report(result)
         
@@ -314,6 +362,100 @@ class V4AssetOrchestrator:
     def _sanitize_hotel_id(self, hotel_name: str) -> str:
         """Convert hotel name to safe ID."""
         return hotel_name.lower().replace(" ", "_").replace("-", "_").replace(".", "")
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # FASE-6: GEO FLOW HELPER METHODS
+    # ═══════════════════════════════════════════════════════════════════════
+
+    def _build_canonical_assessment(
+        self,
+        hotel_name: str,
+        hotel_url: str,
+        validated_data: Dict[str, Any],
+        diagnostic_doc: DiagnosticDocument
+    ) -> CanonicalAssessment:
+        """
+        Construye un CanonicalAssessment desde validated_data para GEO Flow.
+
+        FASE-6: Provee los datos canónicos que geo_flow necesita para
+        ejecutar diagnóstico y enrichment.
+        """
+        hotel_data = validated_data.get("hotel_data", {})
+
+        # SiteMetadata
+        site_metadata = SiteMetadata(
+            title=hotel_data.get("name", hotel_name),
+            description=hotel_data.get("description", "")
+        )
+
+        # SchemaAnalysis - extraer del audit si disponible
+        schema_props = validated_data.get("schema_properties", {})
+        coverage_score = 0.5  # Default
+        present_fields = []
+        missing_critical = []
+
+        if schema_props:
+            # Calcular coverage basado en campos presentes
+            critical_fields = ["name", "description", "url", "address", "telephone"]
+            present_fields = [f for f in critical_fields if schema_props.get(f)]
+            coverage_score = len(present_fields) / len(critical_fields) if critical_fields else 0.5
+            missing_critical = [f for f in critical_fields if not schema_props.get(f)]
+
+        schema_analysis = SchemaAnalysis(
+            schema_type="Hotel",
+            coverage_score=coverage_score,
+            missing_critical_fields=missing_critical,
+            present_fields=present_fields
+        )
+
+        # PerformanceAnalysis - score default de 70
+        performance_analysis = PerformanceAnalysis(
+            performance_score=70.0,
+            metrics=PerformanceMetrics()
+        )
+
+        # Construir y retornar CanonicalAssessment
+        return CanonicalAssessment(
+            url=hotel_url,
+            site_metadata=site_metadata,
+            schema_analysis=schema_analysis,
+            performance_analysis=performance_analysis
+        )
+
+    def _build_commercial_diagnosis(
+        self,
+        diagnostic_doc: DiagnosticDocument,
+        proposal_doc: ProposalDocument
+    ) -> Dict[str, Any]:
+        """
+        Construye el dict de commercial_diagnosis para GEO Flow.
+
+        FASE-6: Extrae loss_amount y problemas del DiagnosticDocument
+        para sync contract analysis.
+        """
+        # Extraer loss_amount del financial_impact (Scenario)
+        loss_amount = 0
+        if diagnostic_doc and diagnostic_doc.financial_impact:
+            # Scenario tiene monthly_loss_min/max
+            scenario = diagnostic_doc.financial_impact
+            loss_amount = scenario.monthly_loss_min  # Usar min como baseline
+
+        # Extraer problemas detectados
+        problems = []
+        if diagnostic_doc and diagnostic_doc.problems:
+            problems = [
+                {
+                    "id": getattr(p, "id", str(i)),
+                    "description": getattr(p, "description", str(p)),
+                    "severity": getattr(p, "severity", "UNKNOWN").value if hasattr(getattr(p, "severity", None), 'value') else "UNKNOWN"
+                }
+                for i, p in enumerate(diagnostic_doc.problems)
+            ]
+
+        return {
+            "loss_amount": loss_amount,
+            "problems": problems
+        }
     
     def _prepare_output_directory(
         self, 
@@ -400,6 +542,14 @@ class V4AssetOrchestrator:
                 "image": audit_result.schema.properties.get("image"),
                 "price_range": audit_result.schema.properties.get("price_range"),
             }
+        
+        # WhatsApp conflict data for whatsapp_conflict_guide asset
+        if audit_result and audit_result.validation:
+            validated_data["phone_web"] = audit_result.validation.phone_web
+            validated_data["phone_gbp"] = audit_result.validation.phone_gbp
+        if audit_result and audit_result.gbp:
+            validated_data["gbp_rating"] = audit_result.gbp.rating
+            validated_data["gbp_review_count"] = audit_result.gbp.reviews
         
         return validated_data
     

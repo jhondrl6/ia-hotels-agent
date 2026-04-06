@@ -79,7 +79,10 @@ class SyncEngine:
         
         # Interpolate other variables
         for key, value in self.version_data.items():
-            if key != "date":  # date already processed
+            if key == "date":
+                # Handle plain {date} (not transformed)
+                result = result.replace("{date}", str(value))
+            else:
                 result = result.replace(f"{{{key}}}", str(value))
         
         return result

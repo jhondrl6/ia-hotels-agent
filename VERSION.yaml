@@ -1,8 +1,8 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.19.0"
-codename: "Agent Ecosystem Integration"
-release_date: "2026-04-03"
+version: "4.22.0"
+codename: "Consolidacion AEO/IAO"
+release_date: "2026-04-04"
 plan_maestro_version: "v2.6.0"
 
 # v4.18.0 - ANALYTICS E2E 100% CERTIFICATION (ANALYTICS-E2E-CERT-01)
@@ -57,7 +57,29 @@ plan_maestro_version: "v2.6.0"
 # - 5 tests GA4 agregados a test_ia_readiness_calculator.py
 # - 46/46 tests passing (0 regresiones)
 # - Backwards compatible: GA4 completamente opcional
-agent_harness_version: "3.3.4"
+agent_harness_version: "3.2.0"
+
+# v4.20.0 - AGENT HARNESS v3.2.0 ARCHITECTURAL REFACTOR
+# - core.py: FIXED linea 65 syntax error (shlex.split) + delegacion recursiva funcional
+# - core.py: Timeout protection con threading.Timer (default_task_timeout configurable)
+# - core.py: Background task lifecycle con BackgroundTaskInfo (running/completed/failed/timeout)
+# - core.py: register_validator() para validacion per-task tipo
+# - core.py: Graceful fallback de UIColors (try/except ImportError)
+# - memory.py: Thread safety con threading.Lock por archivo de sesion
+# - memory.py: Atomic writes (.tmp + rename)
+# - memory.py: Indice invertido O(1) para load_history() (target_id -> session_files)
+# - memory.py: target_index.json persistente con auto-rebuild on cleanup
+# - skill_router.py: Paths absolutos resueltos desde PROJECT_ROOT (no CWD)
+# - skill_executor.py: dry_run=False como default (era True)
+# - skill_executor.py: SkillMetricsCollector persistido en CSV
+# - self_healer.py: ErrorLearner captura errores desconocidos y sugiere entradas al catalogo
+# - self_healer.py: Lazy import de PlanValidator (graceful si no existe el modulo)
+# - mcp_client.py: Nested event loop fix (threading fallback + nest_asyncio)
+# - mcp_client.py: list_tools() + read_resource() sync wrappers
+# - types.py: BackgroundTaskInfo, TaskValidator Protocol, SkillMetrics
+# - __pycache__ limpiado de mezclas CPython 3.12/3.13
+# - 7 archivos modificados, +900 lineas nuevas, version 0.3.0 -> 3.2.0
+#
 
 # v4.8.0 - PLACES API NEW INTEGRATION
 # - Places API (New) integrado como primer paso del fallback chain

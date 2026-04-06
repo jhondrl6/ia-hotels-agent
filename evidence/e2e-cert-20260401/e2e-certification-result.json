@@ -1,0 +1,96 @@
+{
+  "hotel": "Hotel Visperas",
+  "url": "https://www.hotelvisperas.com/",
+  "date": "2026-04-01",
+  "version": "v4.12.0",
+  "passed": 21,
+  "total": 21,
+  "rate": 100.0,
+  "certified": true,
+  "results": {
+    "D-DOC-01": {
+      "status": "PASS",
+      "detail": "Coherence consistent: Report=0.86, Diag=0.86. Proposal V6 template does not include coherence text in body (by design - coherence is in diagnostic + JSON report)"
+    },
+    "D-V6-01": {
+      "status": "PASS",
+      "detail": "Found 0 unresolved placeholders"
+    },
+    "D-V6-02": {
+      "status": "PASS",
+      "detail": "Found 0 unresolved placeholders"
+    },
+    "D-ASSET-01": {
+      "status": "PASS",
+      "detail": "6 assets, all implemented: True"
+    },
+    "D-GATE-01": {
+      "status": "PASS",
+      "detail": "Status: READY_FOR_PUBLICATION"
+    },
+    "D-CONS-01": {
+      "status": "PASS",
+      "detail": "Hard=0, Soft=0, Confidence=0.8"
+    },
+    "D-FIN-01": {
+      "status": "PASS",
+      "detail": "Cons=5,076,000 >= Real=2,610,000"
+    },
+    "D-FIN-02": {
+      "status": "PASS",
+      "detail": "Ratio: 20.0x"
+    },
+    "D-DOC-03": {
+      "status": "PASS",
+      "detail": "All match: True"
+    },
+    "E2E-G1": {
+      "status": "PASS",
+      "detail": "Pipeline executed without fatal errors"
+    },
+    "E2E-G2": {
+      "status": "PASS",
+      "detail": "Diagnostic exists"
+    },
+    "E2E-G3": {
+      "status": "PASS",
+      "detail": "Proposal exists"
+    },
+    "E2E-G4": {
+      "status": "PASS",
+      "detail": "Coherence: 0.86"
+    },
+    "E2E-G5": {
+      "status": "PASS",
+      "detail": "Assets: 6"
+    },
+    "E2E-G8": {
+      "status": "PASS",
+      "detail": "Hard conflicts: 0"
+    },
+    "E2E-G9": {
+      "status": "PASS",
+      "detail": "3 scenarios"
+    },
+    "E2E-G10": {
+      "status": "PASS",
+      "detail": "Publication ready: True"
+    },
+    "E2E-G11": {
+      "status": "PASS",
+      "detail": "Delivery packages: 1"
+    },
+    "E2E-G12": {
+      "status": "PASS",
+      "detail": "Missing: []"
+    },
+    "E2E-G13": {
+      "status": "PASS",
+      "detail": "WhatsApp validation documented"
+    },
+    "E2E-G15": {
+      "status": "PASS",
+      "detail": "Health dashboard: 1"
+    }
+  }
+}

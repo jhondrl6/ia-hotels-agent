@@ -1,8 +1,138 @@
 # Guía Técnica IA Hoteles Agent CLI
 
-**Última actualización:** 2 Abril 2026
-**Versión:** 4.18.0 (GA4 Multi-Hotel Architecture)
+**Última actualización:** 4 Abril 2026
+**Versión:** 4.21.0 (Consolidacion AEO/IAO)
 **Audiencia:** Desarrolladores, DevOps, Contribuidores
+
+## Notas de Cambios v4.21.0 - Consolidacion AEO/IAO
+
+**Fecha:** 4 Abril 2026
+
+### Resumen
+
+Eliminacion de redundancia entre scores AEO e IAO (ambos median infraestructura de datos estructurados) y score de Voice Readiness (hardcodeado "--"). Se unifico todo bajo un unico score AEO. Adicionalmente, gap_analyzer se reestructuro de 3 a 2 pilares.
+
+### Modulos Afectados
+
+#### 1. v4_diagnostic_generator.py
+**Problema**: 3 metodos redundantes o dead code: `_calculate_iao_score()` (fallback a `_calculate_schema_infra_score()`), `_calculate_score_ia()` (duplicado), `_calculate_voice_readiness_score()` (retornaba "--" hardcodeado).
+**Solucion**:
+- Eliminados `_calculate_iao_score()`, `_calculate_score_ia()`, `_calculate_voice_readiness_score()`
+- Renombrado `_calculate_schema_infra_score()` -> `_calculate_aeo_score()`
+- Template v6: scorecard de 5 filas a 4 filas (GEO, GBP, AEO, SEO)
+- Variables de template eliminadas: `iao_score`, `iao_status`, `voice_readiness_score`, `voice_readiness_status`
+
+#### 2. gap_analyzer.py
+**Problema**: Modelo de 3 pilares incluia "Momentum IA" (basado en IAO, score redundante).
+**Solucion**:
+- Eliminada referencia a "Momentum IA" / 3 pilares
+- Redistribuido a 2 pilares: Pilar 1 (GBP & Voz Cercana) + Pilar 2 (Datos JSON-LD para IA / AEO)
+- Prompt del LLM actualizado al modelo 2-Pilares
+
+#### 3. report_builder.py
+**Problema**: Metodo `_calculate_iao_score()` duplicado + referencias a IAO en scorecards.
+**Solucion**:
+- Eliminado `_calculate_iao_score()` y todas las referencias a IAO
+- Scorecard V6 simplificado: eliminada fila "Score IA Avanzado (IAO)"
+
+### Backwards Compatibility
+
+- Variables de template eliminadas (iao_score, iao_status, voice_readiness_score, voice_readiness_status): si algun template personalizado las referencia, fallara con KeyError en Template.safe_substitute()
+- Metodos eliminados son internos, no son API publica del modulo
+- El score AEO (_calculate_aeo_score) mantiene la misma logica de calculo que el anterior schema_infra_score
+- aeo_metrics_gen.py se mantiene como modulo tecnico interno
+
+## Notas de Cambios v4.20.0 - Agent Harness v3.2.0 Refactor
+
+**Fecha:** 3 Abril 2026
+
+### Resumen
+
+Refactor arquitectonico completo del modulo `agent_harness`. Se corrigio un syntax error critico en core.py linea 65 que impedia la delegacion recursiva de tareas, y se agregaron mejoras de fondo en thread safety, timeout protection, background task lifecycle, validacion per-task, y error learning. Version del harness: 0.3.0 -> 3.2.0.
+
+### Modulos Afectados
+
+#### 1. agent_harness/core.py (Orchestrator)
+**Problema**: Linea 65 tenia codigo corrupto (`tokens=shlex....cmd)`) que causaba SyntaxError al intentar delegacion recursiva. Ademas, sin timeout, sin background tracking, sin validacion por tipo.
+**Solucion**: 
+- Fix sintaxis: `tokens = shlex.split(command)`
+- `_execute_with_timeout()` con threading.Timer y configurable `default_task_timeout`
+- BackgroundTaskInfo lifecycle con poll automatico
+- `register_validator(task_name, fn)` para validacion per-task
+- Graceful fallback de UIColors si el modulo no existe
+
+#### 2. agent_harness/memory.py (Memory Manager)
+**Problema**: Race conditions en append_log() concurrente, scan lineal O(N) de todas las sesiones por cada lookup.
+**Solucion**:
+- Thread safety con threading.Lock por archivo de sesion
+- Escritura atomica con .tmp + rename
+- Indice invertido `target_index.json` para lookup O(1) de target_id a sesiones relevantes
+- `rebuild_index()` para reconstruccion en caso de corrupcion
+
+#### 3. agent_harness/skill_router.py (Skill Router)
+**Problema**: Paths relativos al CWD que fallan si se ejecuta desde otro directorio.
+**Solucion**: PROJECT_ROOT resuelto como `Path(__file__).resolve().parent.parent`, todos los paths absolutos.
+
+#### 4. agent_harness/skill_executor.py (Skill Executor)
+**Problema**: dry_run=True como default (footgun), sin metricas de uso de skills.
+**Solucion**: dry_run=False como default, SkillMetricsCollector persistido en CSV con stats de invocaciones, tasa de exito y duracion promedio.
+
+#### 5. agent_harness/self_healer.py (Self Healer)
+**Problema**: PlanValidator import hard al inicio, errores desconocidos se perdian sin tracking.
+**Solucion**: Lazy import de PlanValidator con graceful fallback, ErrorLearner que captura y sugiere entradas al catalogo de errores.
+
+#### 6. agent_harness/mcp_client.py (MCP Client)
+**Problema**: asyncio.run() falla si hay event loop corriendo (nested loop error).
+**Solucion**: Deteccion de loop + threading fallback + soporte para nest_asyncio.
+
+#### 7. agent_harness/types.py (Type Definitions)
+**Nuevo**: BackgroundTaskInfo, TaskValidator Protocol, SkillMetrics dataclass con properties success_rate y avg_duration.
+
+## Notas de Cambios v4.19.0 - Agent Ecosystem Integration
+
+**Fecha:** 3 Abril 2026
+
+### Resumen
+
+Integracion del ecosistema de agentes (.agent/, .agents/workflows/) al flujo de desarrollo diario con validacion automatica pre-commit. DOMAIN_PRIMER.md deja de ser una isla de documentacion stale y ahora tiene ciclo de vida semi-automatico con regeneracion via Doctor CLI.
+
+### Modulos de Documentacion Afectados
+
+#### 1. DOMAIN_PRIMER.md (v4.0.0 -> v4.19.0)
+
+**Problema**: El archivo llevaba 5 versiones y ~5 semanas desactualizado. Modulos como analytics, geo_enrichment, quality_gates, auditors no estaban documentados. Conteo de tests falso (decia 338, directorio vacio).
+
+**Solucion**: Regeneracion completa con escaneo en vivo de 19 modulos, 138 archivos Python, 248 clases.
+
+#### 2. CONTRIBUTING.md
+
+**Cambio**: Agregado DOMAIN_PRIMER.md a tablas de actualizacion manual y seccion Regenerable. Nuevo Paso 5b para verificacion post-documentacion.
+
+#### 3. procedures.md §4
+
+**Cambio**: Renombrado "Modificar Decision Engine" -> "Modificar Financial Engine o agregar modulos nuevos". Eliminada referencia a script fantasma `generate_domain_primer.py`.
+
+#### 4. scripts/validate_context_integrity.py
+
+**Cambio**: Agregados 7 modulos nuevos al mapa de validacion: analytics, geo_enrichment, quality_gates, auditors, commercial_documents, delivery, providers. Removido modulo muerto decision_engine.
+
+#### 5. scripts/doctor.py
+
+**Nuevo flag**: `--regenerate-domain-primer` - escanea modulos en vivo y regenera DOMAIN_PRIMER.md automaticamente.
+
+### Scripts Afectados
+
+| Script | Cambio |
+|--------|--------|
+| `doctor.py` | Nuevo flag `--regenerate-domain-primer` |
+| `log_phase_completion.py` | Nuevo flag `--check-domain-primer`, DOMAIN_PRIMER en MANUAL_DOCS |
+| `validate_context_integrity.py` | Modulos nuevos en module_files map |
+
+### Backwards Compatibility
+
+Sin cambios breaking. Solo documentacion y nuevo flag en doctor.py.
+
+---
 
 ## Notas de Cambios v4.12.0 - GA4 Integration
 

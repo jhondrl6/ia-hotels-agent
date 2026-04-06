@@ -153,8 +153,8 @@ class TestAEOKPIs:
             share_of_voice=20.0,
             # citation_rate and voice_readiness not set
         )
-        # Expected: 80*0.4 + 20*0.2 = 32 + 4 = 36
-        assert kpis.calculate_composite_score() == 36.0
+        # Expected: 80*0.35 + 20*0.2 = 28 + 4 = 32
+        assert kpis.calculate_composite_score() == 32.0
 
     def test_composite_score_full_data(self):
         """Test composite score calculation with all metrics."""
@@ -172,12 +172,12 @@ class TestAEOKPIs:
             citation_rate=60.0,
             voice_readiness=vrs,
         )
-        # AI Visibility: 80 * 0.4 = 32
+        # AI Visibility: 80 * 0.35 = 28
         # SoV: 20 * 0.2 = 4
         # Citation: 60 * 0.2 = 12
-        # Voice Readiness: 80 * 0.2 = 16
-        # Total = 64
-        assert kpis.calculate_composite_score() == 64.0
+        # Voice Readiness: 80 * 0.15 = 12
+        # Total = 56
+        assert kpis.calculate_composite_score() == 56.0
 
     def test_composite_score_no_data(self):
         """Test composite score returns -1 when no data available."""
@@ -244,8 +244,8 @@ class TestAEOKPIsSerialization:
         required_fields = [
             "hotel_name", "url", "ai_visibility_score", "share_of_voice",
             "citation_rate", "voice_search_impressions", "voice_readiness",
-            "competitors_analyzed", "competitor_avg_viscosity", "data_source",
-            "composite_score", "generated_at", "version"
+            "competitors_analyzed", "competitor_avg_viscosity", "indirect_traffic",
+            "data_source", "composite_score", "generated_at", "version"
         ]
         for field in required_fields:
             assert field in result, f"Missing field: {field}"

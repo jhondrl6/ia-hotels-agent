@@ -2,7 +2,7 @@
 
 **Plataforma de Inteligencia Agéntica de Grado Industrial diseñada para la auditoría y blindaje financiero del sector hotelero.**
 
-**Version:** 4.19.0 | **Última actualización:** 3 Abril 2026
+**Version:** 4.22.0 | **Última actualización:** 5 Abril 2026
 
 ---
 
@@ -20,8 +20,9 @@
 
 ---
 
-> **🛡️ AGENT PLATFORM STATUS (v4.18.0 - GA4 Multi-Hotel Architecture)**:
-> *   **AEO Re-Architecture**: Módulo AEO (Auditory Engine Optimization) alineado con voice assistants (Alexa, Siri, Google Assistant). SpeakableSpecification, FAQ TTS-ready (40-60 palabras), voice keywords Eje Cafetero.
+> **🛡️ AGENT PLATFORM STATUS (v4.22.0 - Orthogonal Metrics Fix)**:
+> *   **Orthogonal Diagnostic Metrics (v4.22.0)**: Eliminada duplicacion entre "Google Maps (GEO)" y "Activity Score (GBP)". Nuevo sistema de 4 pilares independientes: GEO (completitud), Posicion Competitiva (ranking vs competidores), Web/SEO (credibilidad del sitio), AEO (legibilidad para IAs). Cada score usa datos no solapados.
+> *   **AEO Re-Architecture**: Modulo AEO (Auditory Engine Optimization) alineado con voice assistants (Alexa, Siri, Google Assistant). SpeakableSpecification, FAQ TTS-ready (40-60 palabras), voice keywords Eje Cafetero.
 > *   **Coherence Validator**: Detección de hard/soft conflicts entre fuentes de datos, score de coherencia ≥ 0.8 requerido.
 > *   **Evidence Coverage Tracking**: Cobertura de evidence en documentos (≥ 95% coverage).
 > *   **Quality Gates de Pre-publicación**: Gates técnico, comercial, financiero y de coherencia (score ≥ 0.8).
@@ -56,13 +57,11 @@ El **Agent Harness** es el núcleo que orchestra: memoria (recuerda análisis pr
 
 ---
 
-## Gobernanza de Contexto Global
+## Contexto Global del Agente
 
-- `AGENTS.md` es la fuente canónica humano-curada para el contexto global del agente.
-- `.cursorrules` se mantiene como puente de compatibilidad para tooling legacy.
-- Procedimiento y checklist post-cambio contextual: `docs/CONTRIBUTING.md`.
-
----
+- `AGENTS.md` — Fuente canónica de contexto global, modulos activos y flujo de trabajo
+- `.cursorrules` — Puente de compatibilidad legacy
+- Procedimiento para actualizar documentacion: `docs/CONTRIBUTING.md`
 
 ## 🎯 ¿Qué es IA Hoteles Agent?
 

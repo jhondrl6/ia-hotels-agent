@@ -1,8 +1,15 @@
 # Sync Configuration - Declarative version synchronization rules
 # Source of truth: VERSION.yaml
 # This file defines what gets synced where
+#
+# CRITICAL: After adding/removing rules here, also update:
+#   - docs/contributing/documentation_rules.md §8 (manual vs auto list)
+#   - docs/CONTRIBUTING.md (sincronizacion section)
+#
+# Run sync: python scripts/sync_versions.py
+# Check only: python scripts/sync_versions.py --check
 
-version: "1.0.0"
+version: "2.0.0"
 description: "Config-driven sync for IA Hoteles Agent context files"
 
 # Field sources from VERSION.yaml
@@ -12,7 +19,7 @@ sources:
     description: "Semantic version (e.g., 4.5.6)"
   codename:
     field: "codename"
-    description: "Release codename (e.g., NEVER_BLOCK Architecture)"
+    description: "Release codename (e.g., Analytics E2E Bridge)"
   date:
     field: "release_date"
     description: "Release date"
@@ -21,45 +28,39 @@ sources:
 # Sync rules - each rule targets a specific location in a file
 rules:
 
-  # README.md rules
+  # ============================================================
+  # README.md
+  # ============================================================
   - id: "readme_version_header"
     file: "README.md"
     description: "Version and date in README header"
     replacements:
-      - pattern: '\*\*Version:\*\*\s*[\d.]+\s*\|\s*\*\*Última actualización:\*\*\s*[\d-]+\s*\w+\s*\d{4}'
+      - pattern: '\*\*Version:\*\*\s*[\d.]+\s*\|\s*\*\*Última actualización:\*\*\s*\d+\s+\w+\s+\d{4}'
         template: '**Version:** {version} | **Última actualización:** {date_text}'
 
-  - id: "readme_status_banner"
-    file: "README.md"
-    description: "Agent Platform Status banner"
-    replacements:
-      - pattern: '>\s*\*\*🛡️ AGENT PLATFORM STATUS \([^)]+\):'
-        template: '> **🛡️ AGENT PLATFORM STATUS (v{version} - {codename}):**'
-        multiline: false
-
-  # AGENTS.md rules
-  - id: "agents_version_header"
+  # ============================================================
+  # AGENTS.md
+  # ============================================================
+  - id: "agents_version_comment"
     file: "AGENTS.md"
-    description: "Version header in agents.md"
+    description: "HTML comment header: version and date"
     replacements:
       - pattern: '<!--\s*agents_version:\s*[\d.]+\s*\|'
         template: '<!-- agents_version: {version} |'
-      - pattern: 'last_update:\s*[\d-]+'
-        template: 'last_update: {date}'
+      - pattern: 'last_update:\s*[\d-]+\s*-->'
+        template: 'last_update: {date} -->'
 
-  - id: "agents_status_table"
+  - id: "agents_header_banner"
     file: "AGENTS.md"
-    description: "Status table version"
+    description: "Blockquote banner with version and codename"
     replacements:
-      - pattern: '\*\*Version\*\*\s*\|\s*v?[\d.]+'
-        template: '**Version** | v{version}'
-      - pattern: '\*\*Codename\*\*\s*\|\s*[^\|]+'
-        template: '**Codename** | {codename}'
-      - pattern: '>\s+\*\*\*v[\d.]+\s*-'
-        template: '> **v{version} - {codename}'
+      - pattern: '> \*\*v[\d.]+\s*--[^*]+\*\*'
+        template: '> **v{version} -- {codename} COMPLETADO**'
         multiline: false
 
-  # .cursorrules rules
+  # ============================================================
+  # .cursorrules
+  # ============================================================
   - id: "cursorrules_header"
     file: ".cursorrules"
     description: "Cursorrules version header"
@@ -71,16 +72,40 @@ rules:
       - pattern: '\*\*Version\*\*\s*\|\s*v?[\d.]+'
         template: '**Version** | v{version}'
 
-  # INDICE_DOCUMENTACION.md rules
-  # .gemini/config.yaml rules (DESHABILITADO - archivo no existe en repo)
-  # - id: "gemini_config"
-  #   file: ".gemini/config.yaml"
-  #   description: "Gemini config version"
-  #   replacements:
-  #     - pattern: 'IA Hoteles Agent\s*\(v[\d.]+\s*"[^"]*"\)'
-  #       template: 'IA Hoteles Agent (v{version} "{codename}")'
+  # ============================================================
+  # CONTRIBUTING.md (version header + footer)
+  # ============================================================
+  - id: "contributing_version_header"
+    file: "docs/CONTRIBUTING.md"
+    description: "Version in CONTRIBUTING.md header blockquote"
+    replacements:
+      - pattern: '>\s*\*\*Version Actual:\*\*\s*v?[\d]+\.[\d]+\.[\d]+\s*\([^)]*\)'
+        template: '> **Version Actual:** v{version} ({codename})'
+      - pattern: '>\s*\*\*Ultima fase completada:\*\*\s*[^\n]+'
+        template: '> **Ultima fase completada:** (ver REGISTRY.md)'
 
-  # REGISTRY.md rules (phase registry - auto-updated by log_phase_completion.py)
+  - id: "contributing_version_footer"
+    file: "docs/CONTRIBUTING.md"
+    description: "Version in CONTRIBUTING.md footer sync section"
+    replacements:
+      - pattern: '^\*\*Version:\*\*\s*v?[\d]+\.[\d]+\.[\d]+'
+        template: '**Version:** v{version}'
+
+  # ============================================================
+  # GUIA_TECNICA.md
+  # ============================================================
+  - id: "guia_tecnica_header"
+    file: "docs/GUIA_TECNICA.md"
+    description: "Version and date in GUIA_TECNICA.md header"
+    replacements:
+      - pattern: '\\*\\*Última actualización:\\*\\*\\s*\\d+\\s+\\w+\\s+\\d{4}'
+        template: '**Última actualización:** {date_text}'
+      - pattern: '\\*\\*Versión:\\*\\*\\s*[\\d]+\\.[\\d]+\\.[\\d]+[^\(\n]*'
+        template: '**Versión:** {version} ({codename})'
+
+  # ============================================================
+  # REGISTRY.md
+  # ============================================================
   - id: "registry_last_update"
     file: "docs/contributing/REGISTRY.md"
     description: "Last update timestamp in registry"

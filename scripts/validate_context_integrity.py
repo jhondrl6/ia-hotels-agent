@@ -243,13 +243,20 @@ class ContextIntegrityValidator:
         result.details.append(f"Found {len(referenced_methods)} method references in DOMAIN_PRIMER.md")
         
         module_files = {
-            'decision_engine': self.project_root / "modules" / "decision_engine.py",
             'web_scraper': self.project_root / "modules" / "scrapers" / "web_scraper.py",
             'gap_analyzer': self.project_root / "modules" / "analyzers" / "gap_analyzer.py",
             'deployer': self.project_root / "modules" / "deployer" / "manager.py",
             'package_recommender': self.project_root / "modules" / "utils" / "package_recommender.py",
             'orchestration_v4': self.project_root / "modules" / "orchestration_v4" / "onboarding_controller.py",
             'financial_engine': self.project_root / "modules" / "financial_engine" / "scenario_calculator.py",
+            'analytics': self.project_root / "modules" / "analytics" / "google_analytics_client.py",
+            'geo_enrichment': self.project_root / "modules" / "geo_enrichment" / "geo_flow.py",
+            'quality_gates': self.project_root / "modules" / "quality_gates" / "coherence_gate.py",
+            'auditors': self.project_root / "modules" / "auditors" / "v4_comprehensive.py",
+            'scrapers': self.project_root / "modules" / "scrapers" / "web_scraper.py",
+            'commercial_documents': self.project_root / "modules" / "commercial_documents" / "v4_diagnostic_generator.py",
+            'delivery': self.project_root / "modules" / "delivery" / "manager.py",
+            'providers': self.project_root / "modules" / "providers" / "llm_provider.py",
         }
         
         for method_ref in sorted(referenced_methods):

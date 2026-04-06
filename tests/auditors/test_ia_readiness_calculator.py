@@ -23,12 +23,15 @@ class TestIAReadinessCalculator:
         expected_llms = 100.0
         expected_brand = 80.0
         
+        # When ga4_indirect_score is None, weight is redistributed proportionally
+        available_weights = {"schema_quality": 0.22, "crawler_access": 0.22, "citability": 0.23, "llms_txt": 0.09, "brand_signals": 0.14}
+        total_w = sum(available_weights.values())
         expected_overall = (
-            expected_schema * 0.25 +
-            expected_crawler * 0.25 +
-            expected_citability * 0.25 +
-            expected_llms * 0.10 +
-            expected_brand * 0.15
+            expected_schema * (available_weights["schema_quality"] / total_w) +
+            expected_crawler * (available_weights["crawler_access"] / total_w) +
+            expected_citability * (available_weights["citability"] / total_w) +
+            expected_llms * (available_weights["llms_txt"] / total_w) +
+            expected_brand * (available_weights["brand_signals"] / total_w)
         )
 
         assert report.overall_score == expected_overall
@@ -58,9 +61,9 @@ class TestIAReadinessCalculator:
         calculator = IAReadinessCalculator()
         
         report = calculator.calculate(
-            schema_coverage=0.60,
-            crawler_score=60.0,
-            citability_score=50.0,
+            schema_coverage=0.65,
+            crawler_score=65.0,
+            citability_score=55.0,
             has_llmstxt=False,
             brand_score=50.0
         )
@@ -108,7 +111,8 @@ class TestIAReadinessCalculator:
             crawler_score=90.0,
             citability_score=90.0,
             has_llmstxt=True,
-            brand_score=90.0
+            brand_score=90.0,
+            ga4_indirect_score=80.0
         )
 
         assert len(report.actionable_items) == 0
@@ -162,3 +166,93 @@ class TestIAReadinessCalculator:
         total = sum(calculator.WEIGHTS.values())
         
         assert total == 1.0
+
+
+class TestIAReadinessCalculatorGA4:
+    """Tests for GA4 integration in IA readiness calculator."""
+
+    def test_ga4_score_included_in_components(self):
+        """GA4 score is included in components when provided."""
+        calculator = IAReadinessCalculator()
+        
+        report = calculator.calculate(
+            schema_coverage=0.80,
+            crawler_score=80.0,
+            citability_score=70.0,
+            has_llmstxt=True,
+            brand_score=60.0,
+            ga4_indirect_score=50.0,
+        )
+        
+        assert "ga4_indirect" in report.components
+        assert report.components["ga4_indirect"] == 50.0
+
+    def test_ga4_score_affects_overall(self):
+        """GA4 score contributes to overall score when provided."""
+        calculator = IAReadinessCalculator()
+        
+        report_with_ga4 = calculator.calculate(
+            schema_coverage=0.80,
+            crawler_score=80.0,
+            citability_score=70.0,
+            has_llmstxt=True,
+            brand_score=60.0,
+            ga4_indirect_score=50.0,
+        )
+        report_without_ga4 = calculator.calculate(
+            schema_coverage=0.80,
+            crawler_score=80.0,
+            citability_score=70.0,
+            has_llmstxt=True,
+            brand_score=60.0,
+        )
+        
+        # Scores should differ since GA4 adds a component
+        assert report_with_ga4.overall_score != report_without_ga4.overall_score
+
+    def test_ga4_unavailable_adds_actionable_item(self):
+        """An actionable item is added when GA4 is not configured."""
+        calculator = IAReadinessCalculator()
+        
+        report = calculator.calculate(
+            schema_coverage=0.90,
+            crawler_score=90.0,
+            citability_score=90.0,
+            has_llmstxt=True,
+            brand_score=90.0,
+        )
+        
+        ga4_items = [item for item in report.actionable_items if "Google Analytics" in item]
+        assert len(ga4_items) == 1
+
+    def test_ga4_available_no_ga4_actionable_item(self):
+        """No GA4 actionable item when GA4 score is provided."""
+        calculator = IAReadinessCalculator()
+        
+        report = calculator.calculate(
+            schema_coverage=0.90,
+            crawler_score=90.0,
+            citability_score=90.0,
+            has_llmstxt=True,
+            brand_score=90.0,
+            ga4_indirect_score=80.0,
+        )
+        
+        ga4_items = [item for item in report.actionable_items if "Google Analytics" in item]
+        assert len(ga4_items) == 0
+
+    def test_ga4_zero_score(self):
+        """GA4 score of 0 is treated as available (not None)."""
+        calculator = IAReadinessCalculator()
+        
+        report = calculator.calculate(
+            schema_coverage=0.80,
+            crawler_score=80.0,
+            citability_score=70.0,
+            has_llmstxt=True,
+            brand_score=60.0,
+            ga4_indirect_score=0.0,
+        )
+        
+        assert "ga4_indirect" in report.components
+        assert report.components["ga4_indirect"] == 0.0

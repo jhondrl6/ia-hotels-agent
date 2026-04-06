@@ -62,6 +62,17 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         status=AssetStatus.IMPLEMENTED,
         promised_by=["no_whatsapp_visible", "whatsapp_conflict"]  # FASE-H-02: Added whatsapp_conflict
     ),
+    "whatsapp_conflict_guide": AssetCatalogEntry(
+        asset_type="whatsapp_conflict_guide",
+        template="whatsapp_conflict_guide_template.md",
+        output_name="{prefix}guia_conflicto_whatsapp{suffix}.md",
+        required_field="whatsapp_conflict",
+        required_confidence=0.5,
+        fallback=None,
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=["whatsapp_conflict"]
+    ),
     "faq_page": AssetCatalogEntry(
         asset_type="faq_page",
         template="faq_template.csv",
@@ -206,6 +217,85 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
         promised_by=[]
+    ),
+    # === IAO ASSETS (GAP-IAO-01-02-C) ===
+    "ssl_guide": AssetCatalogEntry(
+        asset_type="ssl_guide",
+        template="ssl_guide_template.md",
+        output_name="{prefix}guia_ssl{suffix}.md",
+        required_field="ssl_detected",
+        required_confidence=0.0,
+        fallback="generate_ssl_guide",
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=["no_ssl"]
+    ),
+    "og_tags_guide": AssetCatalogEntry(
+        asset_type="og_tags_guide",
+        template="og_tags_guide_template.md",
+        output_name="{prefix}guia_og_tags{suffix}.md",
+        required_field="og_tags_detected",
+        required_confidence=0.0,
+        fallback="generate_og_tags_guide",
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=["no_og_tags"]
+    ),
+    "alt_text_guide": AssetCatalogEntry(
+        asset_type="alt_text_guide",
+        template="alt_text_guide_template.md",
+        output_name="{prefix}guia_alt_text{suffix}.md",
+        required_field="alt_text_detected",
+        required_confidence=0.0,
+        fallback="generate_alt_text_guide",
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=["missing_alt_text"]
+    ),
+    "blog_strategy_guide": AssetCatalogEntry(
+        asset_type="blog_strategy_guide",
+        template="blog_strategy_template.md",
+        output_name="{prefix}estrategia_blog{suffix}.md",
+        required_field="blog_detected",
+        required_confidence=0.0,
+        fallback="generate_blog_strategy_guide",
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=["no_blog_content"]
+    ),
+    "social_strategy_guide": AssetCatalogEntry(
+        asset_type="social_strategy_guide",
+        template="social_strategy_template.md",
+        output_name="{prefix}estrategia_social{suffix}.md",
+        required_field="social_links_detected",
+        required_confidence=0.0,
+        fallback="generate_social_strategy_guide",
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=["no_social_links"]
+    ),
+    # === ANALYTICS ASSETS (ANALYTICS-04) ===
+    "analytics_setup_guide": AssetCatalogEntry(
+        asset_type="analytics_setup_guide",
+        template="analytics_setup_guide_template.md",
+        output_name="{prefix}guia_configuracion_ga4{suffix}.md",
+        required_field="ga4_available",
+        required_confidence=0.0,
+        fallback="generate_analytics_guide",
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=["no_analytics_configured", "no_ga4_enhanced"]
+    ),
+    "indirect_traffic_optimization": AssetCatalogEntry(
+        asset_type="indirect_traffic_optimization",
+        template="indirect_traffic_optimization_template.md",
+        output_name="{prefix}optimizacion_trafico_indirecto{suffix}.md",
+        required_field="organic_traffic",
+        required_confidence=0.0,
+        fallback="generate_traffic_optimization_guide",
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=["low_organic_visibility"]
     ),
 }
 

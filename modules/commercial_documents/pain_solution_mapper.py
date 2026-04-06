@@ -60,7 +60,7 @@ class PainSolutionMapper:
             "description": "No se detecta botón o enlace de WhatsApp en la web"
         },
         "whatsapp_conflict": {
-            "assets": ["whatsapp_button"],
+            "assets": ["whatsapp_button", "whatsapp_conflict_guide"],
             "confidence_required": 0.5,
             "priority": 1,
             "validation_fields": ["whatsapp_number"],
@@ -158,6 +158,34 @@ class PainSolutionMapper:
             "name": "Sin llms.txt",
             "description": "No existe archivo /llms.txt para indexación IA"
         },
+        # === ANALYTICS PAIN TYPES (ANALYTICS-04) ===
+        "no_analytics_configured": {
+            "assets": ["analytics_setup_guide"],
+            "confidence_required": 0.0,
+            "priority": 2,
+            "validation_fields": ["ga4_available"],
+            "estimated_impact": "medium",
+            "name": "Sin Analytics Configurado",
+            "description": "No se detecto Google Analytics 4 ni fuentes de trafico indirecto"
+        },
+        "low_organic_visibility": {
+            "assets": ["indirect_traffic_optimization"],
+            "confidence_required": 0.0,
+            "priority": 2,
+            "validation_fields": ["organic_traffic"],
+            "estimated_impact": "medium",
+            "name": "Baja Visibilidad Organica",
+            "description": "Trafico organico por debajo del umbral esperado para el segmento hotelero"
+        },
+        "no_ga4_enhanced": {
+            "assets": ["analytics_setup_guide"],
+            "confidence_required": 0.0,
+            "priority": 3,
+            "validation_fields": ["ga4_enhanced"],
+            "estimated_impact": "low",
+            "name": "GA4 sin Configuracion Avanzada",
+            "description": "GA4 existe pero sin eventos de conversion ni medicion de revenue mejorada"
+        },
         # === PROBLEMAS GEO (Fase 2) ===
         "ai_crawler_blocked": {
             "assets": ["llms_txt"],
@@ -185,7 +213,71 @@ class PainSolutionMapper:
             "estimated_impact": "high",
             "name": "Baja Preparación IA",
             "description": "El sitio no está optimizado para ser descubierto por IA"
-        }
+        },
+        # === ELEMENTOS KB CON DEFAULT (GAP-IAO-01-02) ===
+        "no_schema_reviews": {
+            "assets": ["hotel_schema"],
+            "confidence_required": 0.7,
+            "priority": 1,
+            "validation_fields": ["aggregateRating_detected"],
+            "estimated_impact": "high",
+            "name": "Sin Schema de Reviews",
+            "description": "No se detecta markup aggregateRating en el Schema Hotel"
+        },
+        "no_ssl": {
+            "assets": ["ssl_guide"],
+            "confidence_required": 0.0,
+            "priority": 1,
+            "validation_fields": ["ssl_detected"],
+            "estimated_impact": "high",
+            "name": "Sin SSL/HTTPS",
+            "description": "El sitio no tiene certificado SSL o no fuerza HTTPS"
+        },
+        "no_og_tags": {
+            "assets": ["og_tags_guide"],
+            "confidence_required": 0.0,
+            "priority": 2,
+            "validation_fields": ["og_tags_detected"],
+            "estimated_impact": "medium",
+            "name": "Sin Open Graph Tags",
+            "description": "Faltan meta tags de Open Graph para redes sociales"
+        },
+        "missing_alt_text": {
+            "assets": ["alt_text_guide"],
+            "confidence_required": 0.0,
+            "priority": 3,
+            "validation_fields": ["alt_text_detected"],
+            "estimated_impact": "medium",
+            "name": "Imágenes sin Texto Alternativo",
+            "description": "Las imágenes no tienen atributo alt descriptivo"
+        },
+        "no_blog_content": {
+            "assets": ["blog_strategy_guide"],
+            "confidence_required": 0.0,
+            "priority": 3,
+            "validation_fields": ["blog_detected"],
+            "estimated_impact": "low",
+            "name": "Blog Inactivo",
+            "description": "No se detecta blog activo en el sitio"
+        },
+        "no_social_links": {
+            "assets": ["social_strategy_guide"],
+            "confidence_required": 0.0,
+            "priority": 3,
+            "validation_fields": ["social_links_detected"],
+            "estimated_impact": "low",
+            "name": "Sin Presencia en Redes Sociales",
+            "description": "No se detectan enlaces a redes sociales"
+        },
+        "low_content_length": {
+            "assets": ["optimization_guide"],
+            "confidence_required": 0.0,
+            "priority": 2,
+            "validation_fields": ["content_length"],
+            "estimated_impact": "medium",
+            "name": "Contenido Muy Corto",
+            "description": "El contenido es demasiado corto para ser citado por IA"
+        },
     }
     
     ASSET_NAMES = {
@@ -200,7 +292,9 @@ class PainSolutionMapper:
         "org_schema": "Schema Organization",
         "review_widget": "Widget de Reviews",
         "direct_booking_campaign": "Campaña de Reserva Directa",
-        "llms_txt": "Archivo llms.txt"
+        "llms_txt": "Archivo llms.txt",
+        "analytics_setup_guide": "Guia de Configuracion GA4",
+        "indirect_traffic_optimization": "Guia de Optimizacion de Trafico Indirecto"
     }
     
     def __init__(self):
@@ -215,7 +309,8 @@ class PainSolutionMapper:
     def detect_pains(
         self, 
         audit_result: V4AuditResult,
-        validation_summary: ValidationSummary
+        validation_summary: ValidationSummary,
+        analytics_data: Optional[Dict[str, Any]] = None
     ) -> List[Pain]:
         """
         Analyze audit result and detect problems.
@@ -223,6 +318,7 @@ class PainSolutionMapper:
         Args:
             audit_result: Complete v4.0 audit result
             validation_summary: Validation summary with confidence data
+            analytics_data: Optional dict with analytics_status and use_ga4
             
         Returns:
             List of detected Pain objects
@@ -357,6 +453,10 @@ class PainSolutionMapper:
                 ))
         
 
+        # === ANALYTICS PAIN DETECTION (ANALYTICS-04) ===
+        if analytics_data:
+            pains.extend(self._detect_analytics_pains(analytics_data))
+
         # === FASE 2: DETECCIÓN DE PROBLEMAS GEO ===
         
         # Check AI Crawler access
@@ -399,6 +499,87 @@ class PainSolutionMapper:
         severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
         pains.sort(key=lambda p: severity_order.get(p.severity, 4))
         
+        return pains
+    
+    def detect_pains_for_analytics(
+        self,
+        analytics_data: Dict[str, Any]
+    ) -> List[Pain]:
+        """
+        Detect analytics-specific pains when no audit_result is available.
+        
+        Used when the system runs without a full site audit but has
+        analytics_data available (e.g., standalone analytics run).
+        
+        Args:
+            analytics_data: Dict with analytics_status, use_ga4, organic_traffic
+            
+        Returns:
+            List of detected analytics Pain objects
+        """
+        return self._detect_analytics_pains(analytics_data)
+    
+    def _detect_analytics_pains(
+        self,
+        analytics_data: Dict[str, Any]
+    ) -> List[Pain]:
+        """
+        Internal method: detect analytics-related pains from analytics_data.
+        
+        Shared between detect_pains() and detect_pains_for_analytics().
+        """
+        pains = []
+        status = analytics_data.get("analytics_status")
+        ga4_available = analytics_data.get("use_ga4", False)
+
+        if not ga4_available:
+            error_text = ""
+            if status and hasattr(status, "ga4_error") and status.ga4_error:
+                error_text = f" - Error: {status.ga4_error}"
+            elif status and hasattr(status, "ga4_status_text"):
+                error_text = f" - Estado: {status.ga4_status_text}"
+
+            pains.append(Pain(
+                id="no_analytics_configured",
+                name="Sin Analytics Configurado",
+                description=f"Google Analytics 4 no configurado o sin credenciales.{error_text}",
+                severity="medium",
+                detected_by="analytics",
+                confidence=0.9
+            ))
+
+            # Sin GA4 no se puede medir trafico organico → implicitamente baja visibilidad
+            pains.append(Pain(
+                id="low_organic_visibility",
+                name="Baja Visibilidad de Trafico Organico",
+                description="Sin analytics configurado, no se puede medir ni optimizar el trafico organico.",
+                severity="medium",
+                detected_by="analytics",
+                confidence=0.8
+            ))
+
+        elif status and hasattr(status, "is_enhanced"):
+            if not status.is_enhanced:
+                pains.append(Pain(
+                    id="no_ga4_enhanced",
+                    name="GA4 sin Configuracion Avanzada",
+                    description="GA4 detectado pero sin eventos de conversion ni enhanced ecommerce",
+                    severity="low",
+                    detected_by="analytics",
+                    confidence=0.6
+                ))
+
+        organic = analytics_data.get("organic_traffic")
+        if organic is not None and isinstance(organic, (int, float)) and organic < 1000:
+            pains.append(Pain(
+                id="low_organic_visibility",
+                name="Baja Visibilidad Organica",
+                description=f"Trafico organico estimado: {organic} sesiones/mes (umbral hotelero: 1000)",
+                severity="medium",
+                detected_by="analytics",
+                confidence=0.7
+            ))
+
         return pains
     
     def map_to_solutions(

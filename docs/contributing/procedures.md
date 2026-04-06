@@ -35,12 +35,16 @@ Cuando elimines una skill:
 
 ---
 
-## 4. Modificar Decision Engine
+## 4. Modificar Financial Engine o agregar modulos nuevos
 
-Cuando modifiques `modules/financial_engine/`:
+Cuando modifiques `modules/financial_engine/` o agregues/elimines un modulo dentro de `modules/`:
 1. Hacer los cambios de codigo
-2. Ejecutar `python scripts/generate_domain_primer.py`
-3. Verificar que DOMAIN_PRIMER.md refleje los cambios
+2. Verificar que DOMAIN_PRIMER.md refleje los cambios:
+   - Modulo documentado en tabla de modulos
+   - Clases clave listadas
+   - Pipeline actualizado si cambio flujo
+3. Si hubo cambios estructurales significativos:
+   `python main.py --doctor --regenerate-domain-primer`
 
 ---
 
@@ -118,8 +122,9 @@ El executor de proyectos por fases (`.agents/workflows/phased_project_executor.m
 | Script | Uso |
 |--------|-----|
 | `sync_versions.py` | Sincroniza versiones desde VERSION.yaml |
-| `generate_domain_primer.py` | Regenera DOMAIN_PRIMER desde codigo |
-| `validate_context_integrity.py` | Valida referencias cruzadas |
+| `doctor.py` | Diagnostico del ecosistema + regenerar DOMAIN_PRIMER (`--regenerate-domain-primer`) |
+| `validate_context_integrity.py` | Valida referencias cruzadas (incluye DOMAIN_PRIMER) |
+| `validate_agent_ecosystem.py` | Valida integridad del ecosistema (knowledge, skills, symlinks) |
 | `cleanup_sessions.py` | Limpia sesiones antiguas |
 | `normalize_cache_filenames.py` | Normaliza nombres de cache |
 | `generate_system_status.py` | Genera dashboard de estado |

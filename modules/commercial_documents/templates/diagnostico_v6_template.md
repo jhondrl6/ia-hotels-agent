@@ -42,13 +42,16 @@ ${regional_context}
 
 ### Score de Visibilidad Digital
 
-| Indicador | Su Negocio | Promedio Regional | Estado |
-|-----------|------------|------------------|--------|
-| **Google Maps** (GEO) | ${geo_score}/100 | 55/100 | ${geo_status} |
-| **Perfil de Google Business** | ${gbp_score}/100 | 30/100 | ${gbp_status} |
-| **Visibilidad en IA** (AEO) | ${aeo_score}/100 | 15/100 | ${aeo_status} |
-| **Optimización ChatGPT** | ${iao_score}/100 | 10/100 | ${iao_status} |
-| **SEO Local** | ${seo_score}/100 | 65/100 | ${seo_status} |
+||| Indicador | Su Negocio | Promedio Regional | Estado |
+|||-----------|------------|------------------|--------|
+||| **Google Maps** (GEO) | ${geo_score}/100 | 55/100 | ${geo_status} |
+||| **Perfil de Google Business** | ${gbp_score}/100 | 30/100 | ${gbp_status} |
+||| **AEO - Infraestructura para IAs** | ${aeo_score}/100 | 15/100 | ${aeo_status} |
+||| **SEO Local** | ${seo_score}/100 | 65/100 | ${seo_status} |
+
+### Resumen de Visibilidad en IA
+
+${analytics_summary_text}
 
 ### Impacto Financiero
 
@@ -125,5 +128,9 @@ Incluye:
 
 ---
 
-*Diagnóstico generado por IA Hoteles Agent*  
+*Diagnostico generado por IA Hoteles Agent*  
 *Especialistas en visibilidad digital para hoteles boutique y negocios locales del Eje Cafetero*
+
+${analytics_footnote}
+
+${analytics_transparency_section}

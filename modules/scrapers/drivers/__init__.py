@@ -1,13 +1,12 @@
 """
 Browser Drivers Module.
 
-Exports driver implementations for browser automation abstraction layer.
-Provides a unified interface for switching between Selenium and Playwright.
+Exports driver implementation for browser automation abstraction layer.
+Selenium es el driver activo para este proyecto.
 """
 
 from .driver_interface import DriverInterface
 from .selenium_driver import SeleniumDriver
-from .playwright_driver import PlaywrightDriver
 from .humanized import (
     random_delay,
     type_humanlike,
@@ -19,7 +18,6 @@ from .humanized import (
 __all__ = [
     "DriverInterface",
     "SeleniumDriver",
-    "PlaywrightDriver",
     "random_delay",
     "type_humanlike",
     "scroll_natural",
@@ -28,16 +26,16 @@ __all__ = [
 ]
 
 
-def create_driver(driver_type: str = "playwright", **kwargs):
+def create_driver(driver_type: str = "selenium", **kwargs):
     """
     Factory function to create a driver instance.
     
     Args:
-        driver_type: Type of driver ("selenium" or "playwright").
+        driver_type: Type of driver (must be "selenium").
         **kwargs: Additional arguments passed to the driver constructor.
         
     Returns:
-        DriverInterface implementation.
+        SeleniumDriver instance.
         
     Raises:
         ValueError: If driver_type is not recognized.
@@ -46,7 +44,5 @@ def create_driver(driver_type: str = "playwright", **kwargs):
     
     if driver_type == "selenium":
         return SeleniumDriver(**kwargs)
-    elif driver_type == "playwright":
-        return PlaywrightDriver(**kwargs)
     else:
-        raise ValueError(f"Unknown driver type: {driver_type}. Use 'selenium' or 'playwright'.")
+        raise ValueError(f"Unknown driver type: {driver_type}. Use 'selenium'.")

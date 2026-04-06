@@ -236,6 +236,42 @@ Después de ejecutar `log_phase_completion.py`, verificar:
 
 ---
 
+### Paso 7: Actualizacion de Documentacion Oficial del Repositorio
+
+**Cuándo**: Una vez completadas TODAS las fases de implementación del proyecto. No se ejecuta por fase individual — es el cierre del ciclo.
+
+**Qué hace**: Ejecuta el procedimiento definido en docs/CONTRIBUTING.md §55-163 (sección "Trigger del Usuario: Actualizar documentacion oficial del repositorio").
+
+**Ejecutar en orden**:
+```bash
+# Contributing §61-67: Diagnóstico
+python scripts/version_consistency_checker.py
+python main.py --doctor
+
+# Contributing §70-76: Sync automático VERSION.yaml → 6 headers
+python scripts/sync_versions.py
+
+# Contributing §78-85: Verificar CHANGELOG.md (manual)
+# Contributing §86-93: Verificar GUIA_TECNICA.md (manual)
+# Contributing §94-106: Verificar skills/workflows (manual)
+# Contributing §107-111: Regenerar SYSTEM_STATUS.md
+# Contributing §113-128: Verificar symlink + validación pre-commit
+```
+
+**Qué NO hace**: NO modifica ROADMAP.md, NO edita código fuente, NO ejecuta `v4complete`.
+
+**Dónde está el detalle completo**: docs/CONTRIBUTING.md §55-163 — el procedimiento está documentado ahí. Este paso solo orquesta su ejecución.
+
+**Checklist:**
+- [ ] docs/CONTRIBUTING.md §55-163 ejecutado completo
+- [ ] version_consistency_checker.py pasó sin discrepancias
+- [ ] CHANGELOG.md y GUIA_TECNICA.md verificados/actualizados
+- [ ] SYSTEM_STATUS.md regenerado
+- [ ] Symlink .agent/workflows → .agents/workflows verificado
+- [ ] git diff --stat muestra todos los archivos modificados
+
+---
+
 ## Criterios de Éxito
 - [ ] Prompts creados para todas las fases (1 por fase)
 - [ ] Checklist maestro con estados

@@ -224,6 +224,89 @@ class CrossValidator:
 
         return conflicts
 
+    def validate_address(self, web_value: str = None, gbp_value: str = None) -> Optional[DataPoint]:
+        """
+        Validate address consistency between web and GBP.
+        
+        Returns:
+            DataPoint with confidence level, or None if cannot validate.
+        """
+        if not web_value or not gbp_value:
+            return None
+        
+        field_name = "address"
+        
+        # Clear existing data for this field
+        if field_name in self.data_points:
+            del self.data_points[field_name]
+        
+        # Normalize for comparison
+        web_normalized = self._normalize_address(web_value)
+        gbp_normalized = self._normalize_address(gbp_value)
+        
+        self.add_scraped_data(field_name, web_value, {"normalized": web_normalized})
+        self.add_gbp_data(field_name, gbp_value, {"normalized": gbp_normalized})
+        
+        dp = self.data_points.get(field_name)
+        
+        # Override confidence based on match
+        if web_normalized == gbp_normalized and dp and dp._validation_result:
+            dp._validation_result = dp._validation_result.__class__(
+                confidence_level=ConfidenceLevel.VERIFIED,
+                final_value=web_value,
+                sources_used=dp._validation_result.sources_used,
+                match_percentage=100.0,
+                discrepancies=[],
+                requires_manual_review=False,
+                can_use_in_assets=True,
+                disclaimer="Dirección verificada entre web y GBP.",
+                icon="✓"
+            )
+        
+        return dp
+
+    def validate_email(self, web_value: str = None, gbp_value: str = None) -> Optional[DataPoint]:
+        """
+        Validate email consistency.
+        
+        Returns:
+            DataPoint with confidence level, or None if cannot validate.
+        """
+        if not web_value:
+            return None
+        
+        field_name = "email"
+        
+        # Clear existing data for this field
+        if field_name in self.data_points:
+            del self.data_points[field_name]
+        
+        # GBP typically doesn't have email, so just verify web email is valid
+        if self._is_valid_email(web_value):
+            self.add_scraped_data(field_name, web_value, {"original": web_value})
+            if gbp_value:
+                self.add_gbp_data(field_name, gbp_value, {"original": gbp_value})
+            return self.data_points.get(field_name)
+        return None
+
+    def _normalize_address(self, address: str) -> str:
+        """Normalize address for comparison."""
+        import re
+        if not address:
+            return ""
+        # Remove extra spaces, lowercase
+        normalized = re.sub(r'\s+', ' ', address.lower().strip())
+        # Remove common abbreviations
+        normalized = normalized.replace('carrera', 'kr').replace('calle', 'cl')
+        normalized = normalized.replace('no.', '#').replace(' No ', ' #')
+        return normalized
+
+    def _is_valid_email(self, email: str) -> bool:
+        """Basic email validation."""
+        import re
+        pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        return bool(re.match(pattern, email))
+
 
 def normalize_phone_number(phone: str) -> str:
     """

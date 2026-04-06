@@ -67,12 +67,50 @@ class VoiceReadinessScore:
 
 
 @dataclass
+class IndirectTrafficMetrics:
+    """Métricas de tráfico indirecto de GA4 (Método #5 KB)."""
+    sessions_indirect: int = 0
+    sessions_direct: int = 0
+    sessions_referral: int = 0
+    data_source: str = "N/A"
+    top_sources: list = field(default_factory=list)
+    date_range: Optional[str] = None
+    note: Optional[str] = None
+
+    def to_dict(self) -> dict:
+        return {
+            "sessions_indirect": self.sessions_indirect,
+            "sessions_direct": self.sessions_direct,
+            "sessions_referral": self.sessions_referral,
+            "data_source": self.data_source,
+            "top_sources": self.top_sources,
+            "date_range": self.date_range,
+            "note": self.note,
+        }
+
+    @classmethod
+    def from_ga4_response(cls, response: dict) -> "IndirectTrafficMetrics":
+        """Factory method para crear desde respuesta de GA4."""
+        return cls(
+            sessions_indirect=response.get("sessions_indirect", 0),
+            sessions_direct=response.get("sessions_direct", 0),
+            sessions_referral=response.get("sessions_referral", 0),
+            data_source=response.get("data_source", "N/A"),
+            top_sources=response.get("top_sources", []),
+            date_range=response.get("date_range"),
+            note=response.get("note"),
+        )
+
+
+@dataclass
 class AEOKPIs:
     """
     Framework completo de KPIs para AEO.
     
     Incluye AI Visibility Score, Share of Voice, Tasa de Citación,
     y Voice Readiness Index composite.
+    
+    GAP-IAO-01-05: Agregado indirect_traffic (GA4) como método #5.
     """
     hotel_name: str
     url: str
@@ -90,6 +128,9 @@ class AEOKPIs:
     competitors_analyzed: int = 0
     competitor_avg_viscosity: Optional[float] = None
     
+    # GAP-IAO-01-05: GA4 indirect traffic (Método #5)
+    indirect_traffic: Optional[IndirectTrafficMetrics] = None
+    
     # Metadata
     data_source: DataSource = DataSource.MOCK
     generated_at: datetime = field(default_factory=datetime.now)
@@ -99,22 +140,31 @@ class AEOKPIs:
         """
         Calcula un AI Visibility Score composite combinando métricas disponibles.
         
+        GAP-IAO-01-05: Incluye GA4 (indirect_traffic) como método #5 cuando disponible.
+        
         Returns:
             float: Score 0-100, o -1 si no hay datos suficientes.
         """
         scores = []
         
         if self.ai_visibility_score is not None:
-            scores.append(self.ai_visibility_score * 0.4)
+            scores.append(self.ai_visibility_score * 0.35)  # Reducido de 0.40
         
         if self.share_of_voice is not None:
-            scores.append(self.share_of_voice * 0.2)
+            scores.append(self.share_of_voice * 0.20)
         
         if self.citation_rate is not None:
-            scores.append(self.citation_rate * 0.2)
+            scores.append(self.citation_rate * 0.20)
         
         if self.voice_readiness is not None:
-            scores.append(self.voice_readiness.overall * 0.2)
+            scores.append(self.voice_readiness.overall * 0.15)  # Reducido de 0.20
+        
+        # GAP-IAO-01-05: GA4 como método #5 (25% cuando disponible)
+        if (self.indirect_traffic is not None and 
+            self.indirect_traffic.data_source == "GA4"):
+            # Normalizar: 100 sesiones = 10 puntos, máximo 100 sesiones = 10 pts
+            indirect_normalized = min(10, self.indirect_traffic.sessions_indirect / 10)
+            scores.append(indirect_normalized * 0.10)  # 10% del score total
         
         if not scores:
             return -1.0
@@ -133,6 +183,8 @@ class AEOKPIs:
             "voice_readiness": self.voice_readiness.to_dict() if self.voice_readiness else None,
             "competitors_analyzed": self.competitors_analyzed,
             "competitor_avg_viscosity": self.competitor_avg_viscosity,
+            # GAP-IAO-01-05: GA4 indirect traffic
+            "indirect_traffic": self.indirect_traffic.to_dict() if self.indirect_traffic else None,
             "data_source": self.data_source.value,
             "composite_score": self.calculate_composite_score(),
             "generated_at": self.generated_at.isoformat(),

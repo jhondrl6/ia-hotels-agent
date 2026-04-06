@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from modules.generators.report_builder_fixed import (
+from modules.generators.report_builder import (
     ReportBuilder,
     ReportDataBundle,
     ReportIntegrationAdapter,

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 
 @dataclass
@@ -15,11 +15,12 @@ class IAReadinessCalculator:
     """Calculator for IA readiness scoring based on multiple components."""
 
     WEIGHTS = {
-        "schema_quality": 0.25,
-        "crawler_access": 0.25,
-        "citability": 0.25,
-        "llms_txt": 0.10,
-        "brand_signals": 0.15,
+        "schema_quality": 0.22,
+        "crawler_access": 0.22,
+        "citability": 0.23,
+        "llms_txt": 0.09,
+        "brand_signals": 0.14,
+        "ga4_indirect": 0.10,
     }
 
     def calculate(
@@ -28,7 +29,8 @@ class IAReadinessCalculator:
         crawler_score: float,
         citability_score: float,
         has_llmstxt: bool,
-        brand_score: float
+        brand_score: float,
+        ga4_indirect_score: Optional[float] = None,
     ) -> IAReadinessReport:
         """Calculate IA readiness report from component scores.
         
@@ -38,6 +40,8 @@ class IAReadinessCalculator:
             citability_score: Citability score (0-100)
             has_llmstxt: Whether /llms.txt exists
             brand_score: Brand signals score (0-100)
+            ga4_indirect_score: GA4 indirect traffic score (0-100), optional.
+                               None means GA4 is not available.
             
         Returns:
             IAReadinessReport with overall score, components, status, and actionable items
@@ -49,7 +53,17 @@ class IAReadinessCalculator:
         components["llms_txt"] = 100 if has_llmstxt else 0
         components["brand_signals"] = brand_score
 
-        overall = sum(components[k] * self.WEIGHTS[k] for k in self.WEIGHTS)
+        if ga4_indirect_score is not None:
+            components["ga4_indirect"] = ga4_indirect_score
+            overall = sum(components[k] * self.WEIGHTS[k] for k in self.WEIGHTS)
+        else:
+            # GA4 unavailable: redistribute its weight proportionally
+            available = {k: v for k, v in self.WEIGHTS.items() if k != "ga4_indirect"}
+            total_weight = sum(available.values())
+            overall = sum(
+                components[k] * (available[k] / total_weight)
+                for k in available
+            )
 
         if overall >= 70:
             status = "Ready"
@@ -85,5 +99,8 @@ class IAReadinessCalculator:
 
         if components.get("brand_signals", 0) < 70:
             items.append("Strengthen brand signals: consistent NAP, social profiles, and entity markup")
+
+        if "ga4_indirect" not in components:
+            items.append("Configure Google Analytics 4 to measure indirect traffic from AI referrals")
 
         return items

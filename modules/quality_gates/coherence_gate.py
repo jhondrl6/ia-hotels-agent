@@ -334,28 +334,17 @@ class CoherenceGate:
             return (CoherenceStatus.DRAFT_INTERNAL, PublicationStatus.DRAFT_INTERNAL)
     
     @staticmethod
-    def from_guidelines(guidelines_path: str = ".conductor/guidelines.yaml") -> "CoherenceGate":
-        """Crea gate desde archivo de guidelines.
+    def from_guidelines(guidelines_path: str | None = None) -> "CoherenceGate":
+        """Crea gate desde configuracion centralizada.
         
-        Args:
-            guidelines_path: Ruta al archivo YAML
-            
+        Nota: .conductor/guidelines.yaml fue eliminado. Este metodo ahora
+        delega en CoherenceConfig (fuente unica de verdad en defaults).
+        El parametro guidelines_path se ignora por compatibilidad.
+        
         Returns:
-            CoherenceGate configurado
+            CoherenceGate con umbrales canonicos
         """
-        import yaml
-        
-        try:
-            with open(guidelines_path, 'r') as f:
-                guidelines = yaml.safe_load(f)
-            
-            v4_rules = guidelines.get("v4_coherence_rules", {})
-            overall = v4_rules.get("overall_coherence", {})
-            threshold = overall.get("confidence_threshold", 0.8)
-            
-            return CoherenceGate(config={"threshold": threshold})
-        except Exception:
-            return CoherenceGate()
+        return CoherenceGate()
 
 
 def check_coherence(

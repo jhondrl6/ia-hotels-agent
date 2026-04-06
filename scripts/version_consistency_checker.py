@@ -32,13 +32,16 @@ CONTRIBUTING_FILE = ROOT_DIR / "docs" / "CONTRIBUTING.md"
 
 
 def extract_latest_version_from_changelog(changelog_path: Path) -> Optional[str]:
-    """Extrae la version mas reciente del CHANGELOG.md (primera entrada)."""
+    """Extrae la version mas reciente del CHANGELOG.md (primera entrada).
+    
+    Soporta formatos: [v4.15.0], [4.15.0], [X.Y.Z]
+    """
     if not changelog_path.exists():
         return None
     
     content = changelog_path.read_text(encoding="utf-8")
-    # Buscar ## [X.Y.Z] - fecha
-    match = re.search(r'^##\s+\[(\d+\.\d+\.\d+)\]', content, re.MULTILINE)
+    # Buscar ## [vX.Y.Z] o ## [X.Y.Z] - fecha (la v es opcional)
+    match = re.search(r'^##\s+\[v?(\d+\.\d+\.\d+)\]', content, re.MULTILINE)
     if match:
         return match.group(1)
     return None
@@ -58,15 +61,31 @@ def extract_version_from_yaml(yaml_path: Path) -> Optional[str]:
 
 
 def extract_latest_phase_from_registry(registry_path: Path) -> Optional[str]:
-    """Extrae la fase mas reciente del REGISTRY.md."""
+    """Extrae la fase mas reciente del REGISTRY.md.
+    
+    Soporta formatos: ## FASE-XXX, ## FASE-XXX-XXX, ## XXX-01, etc.
+    REGISTRY ordena fases de forma cronologica (lo mas nuevo primero),
+    pero el scan de regex es lineal. Por eso tomamos la match con
+    la fecha mas reciente, no la primera.
+    """
     if not registry_path.exists():
         return None
     
     content = registry_path.read_text(encoding="utf-8")
-    # Buscar ## FASE-XXX - fecha
-    matches = re.findall(r'^##\s+(FASE-[A-Za-z0-9\'\-]+)\s+-\s+(\d{4}-\d{2}-\d{2})', content, re.MULTILINE)
+    matches = re.findall(
+        r'^##\s+(FASE-[A-Za-z0-9\-\']+|[A-Za-z]+-[\d]+(?:-[A-Z]+)?)\s+-\s+(\d{4}-\d{2}-\d{2})',
+        content, re.MULTILINE
+    )
     if matches:
-        # Devolver la primera (mas reciente)
+        # Ordenar: primero por fecha descendente, despues por nombre
+        # (para desempatar fases del mismo dia, tomar el numero mayor)
+        def sort_key(m):
+            phase_name, date_str = m
+            # Extraer numero de la fase para desempatar
+            nums = re.findall(r'(\d+)', phase_name)
+            phase_num = int(nums[-1]) if nums else 0
+            return (date_str, phase_num)
+        matches.sort(key=sort_key, reverse=True)
         return matches[0][0]
     return None
 
@@ -139,7 +158,11 @@ def check_consistency() -> Tuple[bool, str, list]:
 
 def check_contributing_consistency() -> Tuple[bool, list]:
     """
-    Verifica que CONTRIBUTING.md este sincronizado con la realidad del proyecto.
+    Verifica que CONTRIBUTING.md este sincronizado con VERSION.yaml.
+    
+    Valida que la version mencionada en CONTRIBUTING coincida con VERSION.yaml.
+    No valida keywords de features -- CONTRIBUTING es un documento de
+    procedimientos, no un tracker de caracteristicas.
     
     Returns:
         (is_consistent, gaps)
@@ -151,13 +174,25 @@ def check_contributing_consistency() -> Tuple[bool, list]:
         return False, gaps
     
     content = CONTRIBUTING_FILE.read_text(encoding="utf-8")
+    yaml_ver = extract_version_from_yaml(VERSION_FILE)
     
-    # Detectar si menciona AEO (deberia, ya que es la fase mas reciente)
-    if "AEO" not in content and "FASE-A" not in content:
-        gaps.append("CONTRIBUTING.md no menciona AEO Re-Architecture")
+    # Extraer version del header de CONTRIBUTING (formato: **Version Actual:** vX.Y.Z)
+    contrib_ver_match = re.search(r'Version Actual.*?v?(\d+\.\d+\.\d+)', content, re.DOTALL)
+    if contrib_ver_match:
+        contrib_ver = contrib_ver_match.group(1)
+        if yaml_ver and contrib_ver != yaml_ver:
+            gaps.append(
+                f"CONTRIBUTING.md version {contrib_ver} != VERSION.yaml {yaml_ver}"
+            )
     
-    # Verificar que lista de manuales coincide con documentation_rules
-    # (esto es verificacion cruzada, no exhaustiva)
+    # Extraer version del footer (formato: **Version:** vX.Y.Z)
+    footer_ver_match = re.search(r'^\*\*Version:\*\*\s+v?(\d+\.\d+\.\d+)', content, re.MULTILINE)
+    if footer_ver_match:
+        footer_ver = footer_ver_match.group(1)
+        if yaml_ver and footer_ver != yaml_ver:
+            gaps.append(
+                f"CONTRIBUTING.md footer version {footer_ver} != VERSION.yaml {yaml_ver}"
+            )
     
     return len(gaps) == 0, gaps
 

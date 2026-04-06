@@ -22,6 +22,99 @@ from .data_structures import (
     extract_top_problems,
 )
 
+from data_models.analytics_status import AnalyticsStatus
+
+# Analytics imports (lazy-loaded to avoid hard dependency on google-analytics-data)
+# Used by _get_analytics_summary() and _get_analytics_fallback()
+
+
+# ============================================================
+# ELEMENTO_KB_TO_PAIN_ID — ÚNICA FUENTE DE VERDAD
+# Conecta cada elemento del CHECKLIST_IAO (KB) con su pain_id
+# y el asset que lo resuelve.
+# Sincronizar con:
+#   - PainSolutionMapper.PAIN_SOLUTION_MAP
+#   - ASSET_CATALOG
+# ============================================================
+
+ELEMENTO_KB_TO_PAIN_ID: Dict[str, tuple] = {
+    # Elemento KB: (pain_id, asset_principal, asset_secundario)
+    # CORREGIDO v3: schema_reviews → no_schema_reviews (no missing_reviews)
+    "ssl":                ("no_ssl",              "ssl_guide",           None),
+    "schema_hotel":      ("no_hotel_schema",     "hotel_schema",        None),
+    "schema_reviews":     ("no_schema_reviews",   "hotel_schema",        None),
+    "LCP_ok":             ("poor_performance",    "performance_audit",   "optimization_guide"),
+    "CLS_ok":             ("poor_performance",    "optimization_guide",  None),
+    "contenido_extenso":  ("low_citability",      "optimization_guide",  None),
+    "open_graph":         ("no_og_tags",          "og_tags_guide",       None),
+    "schema_faq":         ("no_faq_schema",       "faq_page",            None),
+    "nap_consistente":    ("whatsapp_conflict",   "whatsapp_button",     None),
+    "imagenes_alt":       ("missing_alt_text",    "alt_text_guide",      None),
+    "blog_activo":        ("no_blog_content",     "blog_strategy_guide", None),
+    "redes_activas":      ("no_social_links",     "social_strategy_guide", None),
+}
+
+ELEMENTOS_MONETIZABLES: set = {
+    elem for elem, (_, asset, _) in ELEMENTO_KB_TO_PAIN_ID.items()
+    if asset is not None
+}
+
+
+def calcular_cumplimiento(elementos: dict) -> int:
+    """
+    Calcula score de cumplimiento del CHECKLIST_IAO (0-100).
+    DE LA KB: [SECTION:SCORING_ALGORITHM]
+    
+    Args:
+        elementos: Dict con 12 elementos KB, cada uno True/False.
+                   Usar _extraer_elementos_de_audit() para obtener.
+    
+    Returns:
+        int 0-100. Si elementos esta vacio o es None, retorna 0.
+    """
+    if not elementos:
+        return 0
+    
+    pesos = {
+        "ssl":               10,
+        "schema_hotel":      15,
+        "schema_reviews":    15,
+        "LCP_ok":            10,
+        "CLS_ok":             5,
+        "contenido_extenso": 10,
+        "open_graph":         5,
+        "schema_faq":         8,
+        "nap_consistente":    7,
+        "imagenes_alt":       5,
+        "blog_activo":        5,
+        "redes_activas":      5,
+    }
+    
+    score = sum(
+        pesos[k] for k, v in elementos.items()
+        if v is True and k in pesos
+    )
+    return min(score, 100)
+
+
+def sugerir_paquete(score_tecnico: int) -> str:
+    """
+    Recomienda paquete segun score tecnico.
+    DE LA KB: [SECTION:PACKAGE_TIERS]
+    
+    Args:
+        score_tecnico: Score 0-100 de calcular_cumplimiento().
+    
+    Returns:
+        "basico" (<40), "avanzado" (40-69), "premium" (>=70)
+    """
+    if score_tecnico < 40:
+        return "basico"
+    elif score_tecnico < 70:
+        return "avanzado"
+    else:
+        return "premium"
+
 class V4DiagnosticGenerator:
     """
     Generates diagnostic documents for hotel audits.
@@ -59,6 +152,11 @@ class V4DiagnosticGenerator:
         self.template_path = self.template_dir / "diagnostico_v6_template.md"
         if not self.template_path.exists():
             self.template_path = self.template_dir / "diagnostico_v4_template.md"
+        
+        # Transparencia de datos analytics (default: True)
+        # Si True, agrega seccion "Fuentes de Datos Usadas en Este Diagnostico"
+        # cuando alguna fuente (GA4/Profound/Semrush) no esta disponible.
+        self.show_analytics_transparency = True 
     
     def generate(
         self,
@@ -69,6 +167,8 @@ class V4DiagnosticGenerator:
         hotel_url: str,
         output_dir: str,
         coherence_score: Optional[float] = None,
+        region: Optional[str] = None,
+        analytics_data: Optional[Dict[str, Any]] = None,
     ) -> str:
         """
         Generate the diagnostic document.
@@ -82,7 +182,11 @@ class V4DiagnosticGenerator:
             output_dir: Directory to save the document
             coherence_score: Optional pre-calculated coherence score from coherence gate.
                               If provided, uses this value instead of calculating internally.
-            
+            region: Optional region string for regional context in templates.
+            analytics_data: Optional dict with analytics configuration. Can contain:
+                - use_ga4: bool (true para usar GA4 real, False para usar estimados)
+                - hotel_data: dict adicional para IATester integration
+                
         Returns:
             Path to the generated document
         """
@@ -92,7 +196,7 @@ class V4DiagnosticGenerator:
         # Load template
         template_content = self._load_template()
         
-        # Prepare template data
+        # Prepare template data (passes analytics_data through)
         template_data = self._prepare_template_data(
             audit_result=audit_result,
             validation_summary=validation_summary,
@@ -100,6 +204,8 @@ class V4DiagnosticGenerator:
             hotel_name=hotel_name,
             hotel_url=hotel_url,
             coherence_score=coherence_score,
+            region=region,
+            analytics_data=analytics_data,
         )
         
         # Render template
@@ -178,10 +284,9 @@ ${validated_data_table}
 | Indicador | Su Hotel | Promedio Regional | Estado |
 |-----------|----------|-------------------|--------|
 | Visibilidad Google Maps (GEO) | ${geo_score}/100 | 60/100 | ${geo_status} |
-| Activity Score (GBP) | ${activity_score}/100 | 30/100 | ${activity_status} |
+| Posicion Competitiva (vs cercanos) | ${activity_score}/100 | 45/100 | ${activity_status} |
 | Web Score (SEO) | ${web_score}/100 | 70/100 | ${web_status} |
-| Infraestructura AEO (Schema) | ${aeo_score}/100 | 40/100 | ${aeo_status} |
-| Score IA Avanzado (IAO) | ${iao_score}/100 | 20/100 | ${iao_status} |
+|| Infraestructura AEO (Schema) | ${aeo_score} | 40/100 | ${aeo_status} |
 
 ---
 
@@ -296,6 +401,8 @@ ${quick_wins_list}
         hotel_name: str,
         hotel_url: str,
         coherence_score: Optional[float] = None,
+        region: Optional[str] = None,
+        analytics_data: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, str]:
         """Prepare data for template rendering."""
         
@@ -304,6 +411,14 @@ ${quick_wins_list}
         # Use provided coherence_score from coherence gate, or calculate internally
         if coherence_score is None:
             coherence_score = self._calculate_coherence_score(validation_summary)
+        
+        # Region-based variables for V6 templates
+        hotel_region = region or "Colombia"
+        hotel_location = getattr(audit_result, 'location', None) or \
+                        getattr(getattr(audit_result, 'gbp', None), 'address', None) or \
+                        hotel_region
+        hotel_landmark = f"zona de {hotel_region}" if hotel_region else "zona turística"
+        regional_context = self._build_regional_context(hotel_region)
         
         # Validated data table
         validated_data_table = self._build_validated_data_table(validation_summary, audit_result)
@@ -374,12 +489,9 @@ ${quick_wins_list}
             'activity_status': self._get_score_status(self._calculate_activity_score(audit_result), 30),
             'web_score': self._calculate_web_score(audit_result),
             'web_status': self._get_score_status(self._calculate_web_score(audit_result), 70),
-            'schema_infra_score': self._calculate_schema_infra_score(audit_result),
-            'schema_infra_status': self._get_score_status(self._calculate_schema_infra_score(audit_result), 40),
-            'voice_readiness_score': self._calculate_voice_readiness_score(),
-            'voice_readiness_status': '⏳ Pendiente',
-            'iao_score': self._calculate_iao_score(audit_result),
-            'iao_status': self._get_score_status(self._calculate_iao_score(audit_result), 20),
+            'schema_infra_score': self._calculate_aeo_score(audit_result),
+            'schema_infra_status': self._get_score_status(self._calculate_aeo_score(audit_result), 40),
+            # iao_score/iao_status/voice_readiness eliminados en FASE-CAUSAL-01
             
             # Brechas (4 Razones)
             'brecha_1_nombre': self._get_brecha_nombre(audit_result, 0),
@@ -408,9 +520,128 @@ ${quick_wins_list}
             'validated_count': str(len(validation_summary.fields)),
             'conflicts_count': str(len(validation_summary.conflicts)),
             'overall_confidence': confidence_to_label(validation_summary.overall_confidence),
+            
+            # V6 template variables (regional context and aliases)
+            'hotel_location': hotel_location,
+            'hotel_region': hotel_region,
+            'hotel_landmark': hotel_landmark,
+            'regional_context': regional_context,
+            'monthly_loss': format_cop(main_scenario.monthly_loss_max),
+            'urgencia_contenido': self._build_urgencia_content(financial_scenarios, hotel_name),
+            'quick_wins_content': self._build_quick_wins_content(audit_result),
+            
+            # V6 Score aliases (GBP = activity, SEO = web, AEO = schema_infra)
+            'gbp_score': self._calculate_activity_score(audit_result),
+            'gbp_status': self._get_score_status(self._calculate_activity_score(audit_result), 30),
+            'seo_score': self._calculate_web_score(audit_result),
+            'seo_status': self._get_score_status(self._calculate_web_score(audit_result), 70),
+            'aeo_score': self._calculate_aeo_score(audit_result),
+            'aeo_status': self._get_score_status(self._calculate_aeo_score(audit_result), 40),
+            
+            # Brecha impactos y resúmenes
+            'brecha_1_impacto': self._get_brecha_impacto(audit_result, 0),
+            'brecha_2_impacto': self._get_brecha_impacto(audit_result, 1),
+            'brecha_3_impacto': self._get_brecha_impacto(audit_result, 2),
+            'brecha_4_impacto': self._get_brecha_impacto(audit_result, 3),
+            'brecha_1_resumen': self._get_brecha_resumen(audit_result, 0),
+            'brecha_2_resumen': self._get_brecha_resumen(audit_result, 1),
+            'brecha_3_resumen': self._get_brecha_resumen(audit_result, 2),
+            'brecha_4_resumen': self._get_brecha_resumen(audit_result, 3),
+
+            # Brecha recuperaciones (valores numericos para template V6)
+            'brecha_1_recuperacion': self._get_brecha_recuperacion(audit_result, financial_scenarios, 0),
+            'brecha_2_recuperacion': self._get_brecha_recuperacion(audit_result, financial_scenarios, 1),
+            'brecha_3_recuperacion': self._get_brecha_recuperacion(audit_result, financial_scenarios, 2),
         }
         
+        # --- Analytics integration (GA4 / fallback) ---
+        analytics_vars = self._inject_analytics(audit_result, analytics_data)
+        data.update(analytics_vars)
+        
+        # --- Analytics status (transparency de datos) ---
+        ga4_property_id = analytics_data.get("ga4_property_id") if analytics_data else None
+        analytics_status = self._check_analytics_status(ga4_property_id=ga4_property_id)
+        
+        # Texto resumen legible para el diagnostico
+        data['analytics_missing_credentials'] = ', '.join(analytics_status.missing_credentials()) or 'Ninguna'
+        
+        # Per-source status fragments
+        data['ga4_status_text'] = analytics_status.ga4_status_for_template()
+        data['profound_status_text'] = analytics_status.profound_status_for_template()
+        data['semrush_status_text'] = analytics_status.semrush_status_for_template()
+        
+        # Seccion opcional de transparencia de datos
+        data['analytics_transparency_section'] = self._build_transparency_section(analytics_status)
+        
         return data
+    
+    def _inject_analytics(self, audit_result: V4AuditResult, analytics_data: Optional[Dict[str, Any]] = None) -> Dict[str, str]:
+        """
+        Construye variables de template relacionadas con analytics.
+        
+        Logica:
+        1. Si analytics_data tiene use_ga4=True -> intenta _get_analytics_summary() (GA4 real)
+        2. Si no -> usa _get_analytics_fallback() basado en senales del audit
+        
+        RETORNA:
+            dict con: aeo_data_source, analytics_summary_text, analytics_footnote
+        """
+        ga4_enabled = analytics_data is not None and analytics_data.get("use_ga4", False)
+        ga4_property_id = analytics_data.get("ga4_property_id") if analytics_data else None
+        
+        if ga4_enabled:
+            summary = self._get_analytics_summary(ga4_property_id=ga4_property_id)
+            data_source = summary.get("data_source", "N/A")
+            
+            # Si GA4 realmente respondio, usarlo; de lo contrario caer a fallback
+            if data_source == "GA4":
+                return {
+                    "aeo_data_source": "GA4",
+                    "analytics_summary_text": summary.get("summary_text", "Sin datos de GA4."),
+                    "analytics_footnote": "* Nota: Visibilidad en IA basada en datos reales de Google Analytics 4.",
+                }
+        
+        # Fallback: estimado cualitativo basado en audit
+        fallback = self._get_analytics_fallback(audit_result)
+        
+        return {
+            "aeo_data_source": "estimado",
+            "analytics_summary_text": fallback.get("summary_text", "Visibilidad en IA no evaluada."),
+            "analytics_footnote": "* Nota: Visibilidad en IA basada en estimado cualitativo (sin medicion directa). Para medicion en tiempo real, configurar GA4.",
+        }
+
+    def _build_transparency_section(self, analytics_status: AnalyticsStatus) -> str:
+        """
+        Construye la seccion opcional 'Fuentes de Datos Usadas en Este Diagnostico'.
+
+        Solo aparece cuando ALGUNA fuente no esta disponible.
+        Si todas las fuentes estan conectadas, retorna string vacio (el template
+        no lo renderiza).
+        """
+        if not self.show_analytics_transparency:
+            return ""
+
+        if not analytics_status.is_any_missing():
+            # Todo conectado: no mostrar la seccion
+            return ""
+
+        ga4 = analytics_status.ga4_status_for_template()
+        profound = analytics_status.profound_status_for_template()
+        semrush = analytics_status.semrush_status_for_template()
+
+        section = f"""### Fuentes de Datos Usadas en Este Diagnostico
+
+- **Google Analytics 4**: {ga4}
+- **Profound AI Visibility**: {profound}
+- **Semrush SEO**: {semrush}
+- **Audit Web**: ✅ Disponible
+
+> *Nota: Las fuentes marcadas con ⚠️ no fueron incluidas porque requieren
+> configuracion de credenciales API. Los valores mostrados en este diagnostico
+> provienen del analisis web y estimaciones cualitativas. Para datos en tiempo
+> real, contacte para habilitar estas conexiones.*
+"""
+        return section
     
     def _render_template(self, template_content: str, data: Dict[str, str]) -> str:
         """Render the template with data."""
@@ -543,7 +774,7 @@ ${quick_wins_list}
             })
         
         # GBP Rating
-        if audit_result.gbp.place_found and audit_result.gbp.rating > 0:
+        if audit_result.gbp and audit_result.gbp.place_found and audit_result.gbp.rating > 0:
             fields.append({
                 'name': 'Rating GBP',
                 'value': f"{audit_result.gbp.rating}/5.0 ({audit_result.gbp.reviews} reviews)",
@@ -553,7 +784,7 @@ ${quick_wins_list}
             })
         
         # Performance Score
-        if audit_result.performance.mobile_score is not None:
+        if audit_result.performance and audit_result.performance.mobile_score is not None:
             score = audit_result.performance.mobile_score
             # Determine confidence based on having field data
             if audit_result.performance.has_field_data:
@@ -660,6 +891,22 @@ ${quick_wins_list}
         """Build table of problems with automatic solutions."""
         rows = []
         
+        # Guard against None audit_result
+        if audit_result is None:
+            return "| Datos de auditoria no disponibles | - | - | - |"
+        
+        # Guard against None schema
+        if audit_result.schema is None:
+            return "| Datos de schema no disponibles | - | - | - |"
+        
+        # Guard against None validation
+        if audit_result.validation is None:
+            validation_note = "| Datos de validacion no disponibles | - | - | - |"
+            # Still check schema issues
+            if not audit_result.schema.hotel_schema_detected:
+                return "| Sin Schema de Hotel | 🔴 Crítica | `hotel_schema.json` | 🟢 VERIFIED |"
+            return validation_note
+        
         # Schema issues
         if not audit_result.schema.hotel_schema_detected:
             rows.append("| Sin Schema de Hotel | 🔴 Crítica | `hotel_schema.json` | 🟢 VERIFIED |")
@@ -677,7 +924,7 @@ ${quick_wins_list}
             rows.append("| Sin Botón WhatsApp | 🟡 Media | `boton_whatsapp.html` | 🟢 VERIFIED |")
         
         # Performance
-        if audit_result.performance.mobile_score and audit_result.performance.mobile_score < 50:
+        if audit_result.performance and audit_result.performance.mobile_score and audit_result.performance.mobile_score < 50:
             rows.append("| Rendimiento Móvil Bajo | 🟡 Media | Guía de optimización | 🟢 VERIFIED |")
         
         return "\n".join(rows) if rows else "| No se detectaron problemas solubles automáticamente | - | - | - |"
@@ -685,6 +932,10 @@ ${quick_wins_list}
     def _build_manual_attention_table(self, audit_result: V4AuditResult) -> str:
         """Build table of problems requiring manual attention."""
         rows = []
+        
+        # Guard against None audit_result or gbp
+        if audit_result is None or audit_result.gbp is None:
+            return "| Datos de GBP no disponibles | - | - | - |"
         
         # GBP issues
         if audit_result.gbp.geo_score < 70:
@@ -694,11 +945,11 @@ ${quick_wins_list}
             rows.append(f"| Fotos GBP Insuficientes | 🟡 Media | Subir al menos {20 - audit_result.gbp.photos} fotos adicionales |")
         
         # Performance without field data
-        if not audit_result.performance.has_field_data:
+        if audit_result.performance and not audit_result.performance.has_field_data:
             rows.append("| Sin Datos de Campo (Core Web Vitals) | 🟡 Media | El sitio puede ser nuevo o tener tráfico bajo |")
         
         # Conflicts
-        if audit_result.validation.conflicts:
+        if audit_result.validation and audit_result.validation.conflicts:
             for conflict in audit_result.validation.conflicts:
                 rows.append(f"| Conflicto: {conflict.get('field_name', 'Desconocido')} | 🔴 Alta | Revisión manual requerida |")
         
@@ -723,28 +974,32 @@ ${quick_wins_list}
         wins = []
         win_number = 1
         
+        # Guard against None
+        if audit_result is None:
+            return "Datos de auditoria no disponibles."
+        
         # Schema implementation
-        if not audit_result.schema.hotel_schema_detected:
+        if audit_result.schema and not audit_result.schema.hotel_schema_detected:
             wins.append(f"{win_number}. **Implementar Schema de Hotel** - Impacto SEO inmediato (1-2 días)")
             win_number += 1
         
-        # WhatsApp button
-        if not audit_result.validation.phone_web:
+        # WhatsApp button - guard against None validation
+        if audit_result.validation and not audit_result.validation.phone_web:
             wins.append(f"{win_number}. **Agregar Botón WhatsApp** - Canal directo de reservas (1 día)")
             win_number += 1
         
         # FAQ schema
-        if not audit_result.schema.faq_schema_detected:
+        if audit_result.schema and not audit_result.schema.faq_schema_detected:
             wins.append(f"{win_number}. **Crear Schema FAQ** - Capturar rich snippets (2-3 días)")
             win_number += 1
         
         # GBP optimization
-        if audit_result.gbp.photos < 20:
+        if audit_result.gbp and audit_result.gbp.photos < 20:
             wins.append(f"{win_number}. **Subir Fotos a GBP** - Mejorar visibilidad local (1 día)")
             win_number += 1
         
         # Performance
-        if audit_result.performance.mobile_score and audit_result.performance.mobile_score < 70:
+        if audit_result.performance and audit_result.performance.mobile_score and audit_result.performance.mobile_score < 70:
             wins.append(f"{win_number}. **Optimizar Velocidad Móvil** - Mejorar experiencia usuario (3-5 días)")
             win_number += 1
         
@@ -815,81 +1070,299 @@ ${quick_wins_list}
     # Score calculation methods
     def _calculate_geo_score(self, audit_result: V4AuditResult) -> str:
         """Calculate GEO score based on GBP data."""
-        if not audit_result.gbp.place_found:
+        if not audit_result or not audit_result.gbp or not audit_result.gbp.place_found:
             return "0"
         score = min(100, max(0, audit_result.gbp.geo_score))
         return str(int(score))
     
-    def _calculate_activity_score(self, audit_result: V4AuditResult) -> str:
-        """Calculate Activity Score based on GBP engagement."""
-        if not audit_result.gbp.place_found:
+    def _calculate_competitive_score(self, audit_result: V4AuditResult) -> str:
+        """Calculate Competitive Position Score vs nearby competitors.
+
+        Uses competitor geo_scores from Places API to determine where the hotel
+        ranks among its nearby peers. This is genuinely independent of GEO:
+        GEO = how complete YOUR profile is
+        Competitive = how YOUR profile ranks vs everyone around you
+
+        A hotel can have GEO=85 but still be in 4th place because 3 competitors
+        score 90+. That IS a real business opportunity.
+
+        Returns 0 if no competitor data available (avoids manufacturing scores).
+        """
+        if not audit_result or not audit_result.gbp or not audit_result.gbp.place_found:
             return "0"
-        # Base score from reviews and photos
-        base = min(50, (audit_result.gbp.reviews / 100) * 25 + (audit_result.gbp.photos / 50) * 25)
-        # Add geo_score factor
-        score = min(100, int(base + (audit_result.gbp.geo_score * 0.5)))
+        if not audit_result.competitors:
+            return "0"
+
+        # Gather competitor geo_scores
+        my_score = audit_result.gbp.geo_score
+        competitors = [c for c in audit_result.competitors if c.get("geo_score") is not None]
+        if not competitors:
+            return "0"
+
+        competitor_scores = [c["geo_score"] for c in competitors]
+
+        # Rank: how many competitors beat us
+        beaten_by = sum(1 for s in competitor_scores if s > my_score)
+        total_with_us = len(competitor_scores) + 1  # +1 = us
+        rank_percentile = ((total_with_us - 1 - beaten_by) / total_with_us) * 100
+
+        # Gap: distance to the next competitor ahead
+        higher_scores = sorted([s for s in competitor_scores if s > my_score])
+        if higher_scores:
+            gap_to_next = higher_scores[0] - my_score
+            # Bigger gap = worse competitive position
+            gap_penalty = min(40, gap_to_next * 2)
+        else:
+            gap_penalty = 0  # We're #1 locally
+
+        # Final: mix percentile ranking with proximity-to-leader gap
+        score = max(0, int(rank_percentile - gap_penalty))
         return str(score)
+
+    # Legacy alias: callers that use _calculate_activity_score get competitive score now
+    _calculate_activity_score = _calculate_competitive_score
     
     def _calculate_web_score(self, audit_result: V4AuditResult) -> str:
         """Calculate Web/SEO score based on performance and schema."""
         score = 0
+        # Guard against None
+        if not audit_result:
+            return "0"
         # Performance score (up to 40 points)
-        if audit_result.performance.mobile_score:
+        if audit_result.performance and audit_result.performance.mobile_score:
             score += min(40, audit_result.performance.mobile_score * 0.4)
         # Schema bonus (up to 30 points)
-        if audit_result.schema.hotel_schema_detected:
+        if audit_result.schema and audit_result.schema.hotel_schema_detected:
             score += 20
             if audit_result.schema.hotel_schema_valid:
                 score += 10
         # FAQ schema (up to 20 points)
-        if audit_result.schema.faq_schema_detected:
+        if audit_result.schema and audit_result.schema.faq_schema_detected:
             score += 15
         # Validation consistency (up to 10 points)
-        if audit_result.validation.whatsapp_status != ConfidenceLevel.CONFLICT.value:
+        if audit_result.validation and audit_result.validation.whatsapp_status != ConfidenceLevel.CONFLICT.value:
             score += 10
         return str(min(100, int(score)))
     
-    def _calculate_schema_infra_score(self, audit_result: V4AuditResult) -> str:
-        """Calculate Schema Infrastructure score (renamed from AEO).
+    def _calculate_aeo_score(self, audit_result: V4AuditResult) -> str:
+        """Calculate AEO (AI Engine Optimization) Infrastructure score.
         
-        NOTE: This measures the FOUNDATION for voice assistants (structured data).
-        Actual AEO (voice search optimization) requires FASE-B (SpeakableSpecification, etc.)
-        This score = voice_readiness placeholder + performance threshold.
+        Measures: Schema Hotel + FAQ + Reviews + Open Graph.
+        All directly measurable from web audit.
+        Returns formatted string: "XX/100" when measured, "—" when not measured.
         """
         score = 0
-        # Voice Readiness placeholder (FASE-B will add SpeakableSpecification)
-        # For now, no additional points until FASE-B implements voice-specific features
-        # Performance threshold (up to 20 points)
-        if audit_result.performance.mobile_score and audit_result.performance.mobile_score >= 50:
-            score += 20
-        return str(min(100, int(score)))
-    
-    def _calculate_voice_readiness_score(self) -> str:
-        """Calculate Voice Readiness (AEO) score - placeholder.
+        has_real_data = False
         
-        REQUIRES FASE-B: SpeakableSpecification, FAQ conversacional, voice keywords.
-        Currently returns 0/100 as placeholder.
+        if not audit_result:
+            return "0 (Pendiente de datos)"
+        
+        # Check if we have real performance data
+        if audit_result.performance and audit_result.performance.mobile_score is not None:
+            has_real_data = True
+            if audit_result.performance.mobile_score >= 50:
+                score += 20
+        
+        if not has_real_data:
+            # Audit ran but PageSpeed data unavailable — return 0 instead of "—"
+            return "0 (Pendiente de datos)"
+        return f"{min(100, int(score))}"
+    
+    # IAO y Voice Readiness eliminados en FASE-CAUSAL-01 (redundantes con AEO)
+    # ---------------------------------------------------------------
+    # ANALYTICS INTEGRATION
+    # ---------------------------------------------------------------
+
+    def _check_analytics_status(self, ga4_property_id: str = None) -> AnalyticsStatus:
         """
-        return "0"
-    
-    def _calculate_iao_score(self, audit_result: V4AuditResult) -> str:
-        """Calculate IAO (AI Advanced) score."""
-        score = 0
-        # Schema completeness for AI (up to 40 points)
-        if audit_result.schema.hotel_schema_detected and audit_result.schema.hotel_schema_valid:
-            score += 30
-            if hasattr(audit_result.schema, 'properties') and audit_result.schema.properties:
-                score += min(10, len(audit_result.schema.properties) * 2)
-        # FAQ for AI snippets (up to 30 points)
-        if audit_result.schema.faq_schema_detected:
-            score += 25
-        # GBP optimization for AI search (up to 30 points)
-        if audit_result.gbp.place_found:
-            score += min(30, (audit_result.gbp.reviews / 50) * 15 + (audit_result.gbp.rating / 5) * 15)
-        return str(min(100, int(score)))
-    
+        Verifica el estado de cada fuente de datos analytics SIN hacer
+        las llamadas API reales. Esto permite informar al template POR
+        QUE no hay datos en vez de mostrar ceros silenciosos.
+
+        RETORNA:
+            AnalyticsStatus con ga4/profound/semrush availability + errores.
+        """
+        status = AnalyticsStatus()
+
+        # --- GA4 ---
+        try:
+            from modules.analytics.google_analytics_client import GoogleAnalyticsClient
+            ga4 = GoogleAnalyticsClient(property_id=ga4_property_id)
+            status.ga4_available = ga4.is_available()
+            if not status.ga4_available:
+                # Leer el error de inicializacion del client
+                if ga4._init_error:
+                    status.ga4_error = ga4._init_error
+                    status.ga4_status_text = f"No configurado ({ga4._init_error})"
+                else:
+                    status.ga4_error = "GA4 no disponible"
+                    status.ga4_status_text = "No disponible (error desconocido)"
+        except Exception as e:
+            status.ga4_error = str(e)
+            status.ga4_status_text = f"Error: {str(e)}"
+
+        # --- Profound ---
+        try:
+            from modules.analytics.profound_client import ProfoundClient
+            profound = ProfoundClient()
+            status.profound_available = not profound.is_mock
+            if not status.profound_available:
+                status.profound_error = "PROFOUND_API_KEY no configurado"
+                status.profound_status_text = "No disponible en esta version (API pendiente)"
+        except Exception as e:
+            status.profound_error = str(e)
+            status.profound_status_text = f"Error: {str(e)}"
+
+        # --- Semrush ---
+        try:
+            from modules.analytics.semrush_client import SemrushClient
+            semrush = SemrushClient()
+            status.semrush_available = not semrush.is_mock
+            if not status.semrush_available:
+                status.semrush_error = "SEMRUSH_API_KEY no configurado"
+                status.semrush_status_text = "No disponible en esta version (API pendiente)"
+        except Exception as e:
+            status.semrush_error = str(e)
+            status.semrush_status_text = f"Error: {str(e)}"
+
+        return status
+
+    def _get_analytics_summary(self, ga4_property_id: str = None) -> Dict[str, Any]:
+        """
+        Obtiene resumen de analytics desde GA4 (cuando esta configurado).
+
+        RETORNA:
+            dict con data_source, summary_text, indirect_sessions, note
+        """
+        try:
+            from modules.analytics.google_analytics_client import GoogleAnalyticsClient
+
+            ga4 = GoogleAnalyticsClient(property_id=ga4_property_id)
+            if ga4.is_available():
+                resp = ga4.get_indirect_traffic(date_range="last_30_days")
+                if resp.get("data_source") == "GA4":
+                    indirect = resp.get("sessions_indirect", 0)
+                    direct = resp.get("sessions_direct", 0)
+                    total = indirect + direct
+                    pct = f"{(indirect / total * 100):.1f}" if total > 0 else "0.0"
+                    return {
+                        "data_source": "GA4",
+                        "summary_text": (
+                            f"Sesiones (ultimos 30 dias): {total:,} totales, "
+                            f"{indirect:,} indirectas ({pct}%). "
+                            f"Fuente: Google Analytics 4."
+                        ),
+                        "indirect_sessions": indirect,
+                        "note": None,
+                    }
+
+        except Exception as e:
+            logging.getLogger(__name__).debug(f"GA4 analytics summary failed: {e}")
+
+        return {
+            "data_source": "N/A",
+            "summary_text": "Sin medicion de trafico real (GA4 no configurado).",
+            "indirect_sessions": 0,
+            "note": "Configure GA4_PROPERTY_ID y GA4_CREDENTIALS_PATH para datos reales.",
+        }
+
+    def _get_analytics_fallback(self, audit_result: V4AuditResult) -> Dict[str, Any]:
+        """
+        Genera estimados cualitativos basados en senales del audit.
+
+        Se usa cuando GA4 no esta disponible y Profound/Semrush son stubs.
+        Evalua 6 senales: schema_hotel, schema_faq, contenido_extenso,
+        open_graph, NAP_consistente, rendimiento_movil.
+
+        RETORNA:
+            dict con data_source="estimado", summary_text, iao_qualitative,
+            iao_score (0-100 estimado), signals (lista)
+        """
+        if not audit_result:
+            return {
+                "data_source": "estimado",
+                "summary_text": "Visibilidad IA: No evaluado (sin datos de auditoria).",
+                "iao_qualitative": "Baja",
+                "iao_score": 0,
+                "signals": ["Sin datos de auditoria"],
+            }
+
+        signals: list[str] = []
+        points = 0
+
+        # 1. Schema Hotel (0/25)
+        has_schema = bool(audit_result.schema and audit_result.schema.hotel_schema_detected)
+        points += 25 if has_schema else 0
+        signals.append(f"Schema Hotel: {'Detectado' if has_schema else 'No detectado'}")
+
+        # 2. FAQ Schema (0/15)
+        has_faq = bool(audit_result.schema and audit_result.schema.faq_schema_detected)
+        points += 15 if has_faq else 0
+        signals.append(f"Schema FAQ: {'Presente' if has_faq else 'Ausente'}")
+
+        # 3. Contenido extenso / Citability (0/25)
+        cit_score = 0
+        if hasattr(audit_result, 'citability') and audit_result.citability:
+            cit_score = getattr(audit_result.citability, 'overall_score', 0) or 0
+        if cit_score > 50:
+            points += 25
+            signals.append(f"Contenido extenso para IA (citability: {cit_score:.0f}/100)")
+        elif cit_score > 0:
+            points += 10
+            signals.append(f"Contenido limitado (citability: {cit_score:.0f}/100)")
+        else:
+            signals.append("Citabilidad no medida")
+
+        # 4. Open Graph (0/15)
+        has_og = False
+        if hasattr(audit_result, 'seo_elements') and audit_result.seo_elements:
+            has_og = bool(getattr(audit_result.seo_elements, 'open_graph', False))
+        points += 15 if has_og else 0
+        signals.append(f"Open Graph: {'Configurado' if has_og else 'No configurado'}")
+
+        # 5. NAP consistente (0/10)
+        nap_ok = False
+        if hasattr(audit_result, 'validation') and audit_result.validation:
+            ws = getattr(audit_result.validation, 'whatsapp_status', None)
+            nap_ok = (ws == ConfidenceLevel.VERIFIED.value)
+        points += 10 if nap_ok else 0
+        signals.append(f"NAP consistente: {'Verificado' if nap_ok else 'No verificado'}")
+
+        # 6. Rendimiento movil (0/10)
+        mobile_ok = False
+        if audit_result.performance:
+            ms = getattr(audit_result.performance, 'mobile_score', 0) or 0
+            mobile_ok = ms >= 50
+        points += 10 if mobile_ok else 0
+        signals.append(f"Rendimiento movil: {'Adecuado' if mobile_ok else 'Bajo'}")
+
+        # Clamp to 0-100
+        points = min(100, max(0, points))
+
+        # Qualitative label
+        if points >= 60:
+            label = "Alta"
+        elif points >= 35:
+            label = "Media"
+        else:
+            label = "Baja"
+
+        if not signals:
+            signals.append("Sin senales disponibles")
+
+        return {
+            "data_source": "estimado",
+            "summary_text": f"Visibilidad en IA: {label} (estimado cualitativo). Senales: " + "; ".join(signals[:4]),
+            "iao_qualitative": label,
+            "iao_score": points,
+            "signals": signals,
+        }
+
     def _get_score_status(self, score: str, benchmark: int) -> str:
         """Get status emoji based on score vs benchmark."""
+        # Handle dashes (not measured)
+        if not score or score.strip() in ["-", "—"]:
+            return "⏳ Pendiente"
         try:
             s = int(score)
             if s >= benchmark * 1.1:
@@ -899,7 +1372,7 @@ ${quick_wins_list}
             else:
                 return "❌ Bajo"
         except (ValueError, TypeError):
-            return "❓ N/A"
+            return "⏳ Pendiente"
     
     # Brecha (gap) calculation methods
     def _get_brecha_nombre(self, audit_result: V4AuditResult, index: int) -> str:
@@ -925,61 +1398,268 @@ ${quick_wins_list}
         brechas = self._identify_brechas(audit_result)
         if index < len(brechas):
             return brechas[index]['detalle']
-        return "Sin información adicional"
+        return "Sin informacion adicional"
+    
+    def _get_brecha_impacto(self, audit_result: V4AuditResult, index: int) -> str:
+        """Get impacto porcentual de la brecha by index."""
+        brechas = self._identify_brechas(audit_result)
+        if index < len(brechas):
+            impacto = brechas[index].get('impacto', 0.10)
+            return f"{int(impacto * 100)}%"
+        return "10%"
+    
+    def _get_brecha_resumen(self, audit_result: V4AuditResult, index: int) -> str:
+        """Get resumen de una línea de la brecha by index."""
+        brechas = self._identify_brechas(audit_result)
+        if index < len(brechas):
+            return brechas[index].get('detalle', 'Sin resumen')[:80] + '...' if len(brechas[index].get('detalle', '')) > 80 else brechas[index].get('detalle', 'Sin resumen')
+        return "brecha no identificada"
+    
+
+    def _get_brecha_recuperacion(self, audit_result, financial_scenarios, index):
+        """Get recuperacion mensual estimada de la brecha by index (valor numerico sin formato)."""
+        brechas = self._identify_brechas(audit_result)
+        if index < len(brechas):
+            main = financial_scenarios.get_main_scenario()
+            proportion = brechas[index].get('impacto', 0.25)
+            recuperacion = main.monthly_loss_max * proportion
+            return f"{recuperacion:,.0f}"
+        return "0"
+    def _build_regional_context(self, region: str) -> str:
+        """Build regional context text for the hotel location."""
+        if not region:
+            return "Colombia es el segundo destino turístico más grande de América Latina, con más de 5 millones de turistas anuales."
+        
+        region_contexts = {
+            'cartagena': 'Cartagena es el destino turístico más importante del Caribe colombiano, con más de 500,000 turistas internacionales anuales.',
+            'medellín': 'Medellín se ha convertido en un hub de turismo de negocios e innovación, con una ocupación hotelera promedio del 65%.',
+            'bogotá': 'Bogotá recibe más de 1.5 millones de turistas al año, siendo el centro económico y cultural de Colombia.',
+            'cali': 'Cali es conocida por el turismo cultural y gastronómico, con una escena hotelera en crecimiento.',
+            'barranquilla': 'Barranquilla es un centro económico estratégico con creciente turismo corporativo.',
+            'santa marta': 'Santa Marta ofrece turismo histórico y de naturaleza, con acceso a parques nacionales.',
+        }
+        
+        region_lower = region.lower()
+        for key, context in region_contexts.items():
+            if key in region_lower:
+                return context
+        
+        return f"La región de {region} en Colombia presenta oportunidades de crecimiento en presencia digital hotelera."
+    
+    def _build_urgencia_content(self, financial_scenarios: FinancialScenarios, hotel_name: str) -> str:
+        """Build urgency content explaining why the hotel should act now."""
+        main = financial_scenarios.get_main_scenario()
+        loss_monthly = format_cop(main.monthly_loss_max)
+        confidence = int(main.confidence_score * 100)
+        
+        return (
+            f"{hotel_name} está perdiendo aproximadamente {loss_monthly} mensuales "
+            f"debido a brechas en su presencia digital. "
+            f"Con {confidence}% de confianza en el análisis, cada mes sin actuar representa "
+            f"una oportunidad de recuperación de ingresos no aprovechada. "
+            f"El mercado hotelero en Colombia es cada vez más competitivo en el entorno digital, "
+            f"y los hoteles que no optimizan su presencia en buscadores, GBP y asistentes de IA "
+            f"pierden posicionamiento progresivamente."
+        )
+    
+    def _build_quick_wins_content(self, audit_result: V4AuditResult) -> str:
+        """Build quick wins content as markdown text."""
+        quick_wins = self._build_quick_wins(audit_result)
+        if not quick_wins:
+            return "Optimizar Google Business Profile con fotos de alta calidad y descripciones completas.\nImplementar schema markup basico en el sitio web.\nAgregar preguntas frecuentes al sitio."
+        
+        # Split string into lines before slicing -- [:5] on a string takes chars, not lines
+        wins_list = quick_wins.split('\n')
+        content_lines = []
+        for i, win in enumerate(wins_list[:5], 1):
+            win = win.strip()
+            if not win:
+                continue
+            # Remove existing numbering from _build_quick_wins to avoid duplication
+            import re
+            cleaned = re.sub(r'^\d+\.\s*', '', win)
+            content_lines.append(f"{i}. {cleaned}")
+        return '\n'.join(content_lines)
+    
+    def _extraer_elementos_de_audit(self, audit_result: V4AuditResult) -> dict:
+        """
+        Extrae los 12 elementos del CHECKLIST_IAO desde V4AuditResult.
+        
+        RETORNA:
+            dict con 12 elementos: {elemento_kb: bool}
+            - 5 elementos se extraen REALMENTE del audit
+            - 7 elementos usan default (False) hasta que existan detectores
+        
+        VALIDAR CON: ELEMENTO_KB_TO_PAIN_ID.keys()
+        """
+        elementos = {}
+        
+        # Guard against None audit_result
+        if not audit_result:
+            for elem in ELEMENTO_KB_TO_PAIN_ID.keys():
+                elementos[elem] = False
+            return elementos
+        
+        # Elementos REALES (detectables con audit actual)
+        elementos["schema_hotel"] = bool(audit_result.schema.hotel_schema_detected) if audit_result.schema else False
+        elementos["schema_reviews"] = bool(audit_result.gbp.rating) if audit_result.gbp else False  # Proxy: gbp.rating existe
+        elementos["LCP_ok"] = (
+            audit_result.performance and audit_result.performance.lcp is not None 
+            and audit_result.performance.lcp <= 2.5
+        )
+        elementos["CLS_ok"] = (
+            audit_result.performance and audit_result.performance.cls is not None 
+            and audit_result.performance.cls <= 0.1
+        )
+        elementos["schema_faq"] = bool(audit_result.schema.faq_schema_detected) if audit_result.schema else False
+        
+        # SSL: detectable trivially (GAP-IAO-01-02-B)
+        elementos["ssl"] = audit_result.url.startswith('https') if audit_result.url else False
+
+        # NAP completo: WhatsApp + Address (GAP-IAO-01-02-B)
+        ws_status = getattr(audit_result.validation, 'whatsapp_status', None)
+        address_status = getattr(audit_result.validation, 'address_status', 'unknown')
+        elementos["nap_consistente"] = (
+            ws_status == ConfidenceLevel.VERIFIED.value
+            and address_status == ConfidenceLevel.VERIFIED.value
+        ) if ws_status else False
+
+        # Contenido extenso: CitabilityScorer (GAP-IAO-01-02-B)
+        elementos["contenido_extenso"] = (
+            audit_result.citability is not None
+            and audit_result.citability.overall_score > 50
+        ) if hasattr(audit_result, 'citability') and audit_result.citability else False
+
+        # SEO Elements desde SEOElementsDetector (GAP-IAO-01-02-B)
+        if hasattr(audit_result, 'seo_elements') and audit_result.seo_elements:
+            elementos["open_graph"] = audit_result.seo_elements.open_graph
+            elementos["imagenes_alt"] = audit_result.seo_elements.imagenes_alt
+            elementos["redes_activas"] = audit_result.seo_elements.redes_activas
+        else:
+            elementos["open_graph"] = False
+            elementos["imagenes_alt"] = False
+            elementos["redes_activas"] = False
+
+        # Blog activo (sin detector aun)
+        elementos["blog_activo"] = False
+        
+        # Validacion: todos los 12 elementos deben estar presentes
+        for elem in ELEMENTO_KB_TO_PAIN_ID.keys():
+            if elem not in elementos:
+                elementos[elem] = False  # Fallback defensivo
+        
+        return elementos
+    
+    def _asset_para_pain(self, pain_id: str) -> Optional[str]:
+        """
+        Retorna el asset principal para un pain_id, o None si es MISSING/inexistente.
+        
+        Util para filtrar pain_ids antes de pasarlos a la propuesta:
+        - Si retorna None → el pain tiene asset MISSING → NO se monetiza
+        - Si retorna un string → el asset esta IMPLEMENTED → SI se monetiza
+        """
+        from .pain_solution_mapper import PainSolutionMapper
+        from modules.asset_generation.asset_catalog import is_asset_implemented
+        mapping = PainSolutionMapper.PAIN_SOLUTION_MAP.get(pain_id, {})
+        assets = mapping.get("assets", [])
+        if not assets:
+            return None
+        return assets[0] if is_asset_implemented(assets[0]) else None
     
     def _identify_brechas(self, audit_result: V4AuditResult) -> List[Dict[str, Any]]:
-        """Identify the 4 main brechas (gaps) from audit results."""
+        """
+        Identify the 4 main brechas (gaps) from audit results.
+        
+        RETORNA:
+            List[Dict] con campos: pain_id, nombre, impacto, detalle
+            - pain_id: conecta con PainSolutionMapper
+            - nombre: narrativa comercial para el cliente
+            - impacto: peso para calculo de perdida (0.0-1.0)
+            - detalle: explicacion tecnica
+        
+        NOTA: brechas[] alimenta pain_ids en DiagnosticSummary.
+              faltantes[] viene de _extraer_elementos_de_audit() por separado.
+        """
         brechas = []
         
+        # Guard against None
+        if not audit_result:
+            return brechas
+        
         # Brecha 1: Visibilidad GBP/GEO
-        if not audit_result.gbp.place_found or audit_result.gbp.geo_score < 60:
+        if not audit_result.gbp or not audit_result.gbp.place_found or audit_result.gbp.geo_score < 60:
             brechas.append({
+                'pain_id': 'low_gbp_score',
                 'nombre': 'Visibilidad Local (Google Maps)',
                 'impacto': 0.30,
-                'detalle': '73% de búsquedas son "cerca de mí". Su GBP no aparece o está sub-optimizado. Clientes van a competidores.'
+                'detalle': '73% de busquedas son "cerca de mi". Su GBP no aparece o esta sub-optimizado. Clientes van a competidores.'
             })
         
         # Brecha 2: Sin Schema de Hotel
-        if not audit_result.schema.hotel_schema_detected:
+        if not audit_result.schema or not audit_result.schema.hotel_schema_detected:
             brechas.append({
+                'pain_id': 'no_hotel_schema',
                 'nombre': 'Sin Schema de Hotel (Invisible para IA)',
                 'impacto': 0.25,
                 'detalle': 'ChatGPT, Gemini y Perplexity no pueden "leer" su hotel. Perdida absoluta de reservas de IA.'
             })
         
         # Brecha 3: WhatsApp No Configurado
-        if not audit_result.validation.phone_web:
+        if not audit_result.validation or not audit_result.validation.phone_web:
             brechas.append({
+                'pain_id': 'no_whatsapp_visible',
                 'nombre': 'Canal Directo Cerrado (Sin WhatsApp)',
                 'impacto': 0.20,
-                'detalle': 'Viajeros quieren reservar instantáneamente. Sin botón WhatsApp, pierden el impulso de compra.'
+                'detalle': 'Viajeros quieren reservar instantaneamente. Sin boton WhatsApp, pierden el impulso de compra.'
             })
         
         # Brecha 4: Performance Web
-        if audit_result.performance.mobile_score and audit_result.performance.mobile_score < 70:
+        if audit_result.performance and audit_result.performance.mobile_score and audit_result.performance.mobile_score < 70:
             brechas.append({
-                'nombre': 'Web Lenta (Abandono Móvil)',
+                'pain_id': 'poor_performance',
+                'nombre': 'Web Lenta (Abandono Movil)',
                 'impacto': 0.15,
-                'detalle': f"{audit_result.performance.mobile_score}/100 en velocidad móvil. 53% abandona si tarda >3 segundos."
+                'detalle': f"{audit_result.performance.mobile_score}/100 en velocidad movil. 53% abandona si tarda >3 segundos."
             })
         
         # Brecha 5: Conflictos de Datos
-        if audit_result.validation.whatsapp_status == ConfidenceLevel.CONFLICT.value:
+        if audit_result.validation and audit_result.validation.whatsapp_status == ConfidenceLevel.CONFLICT.value:
             brechas.append({
-                'nombre': 'Datos Inconsistentes (Confusión Cliente)',
+                'pain_id': 'whatsapp_conflict',
+                'nombre': 'Datos Inconsistentes (Confusion Cliente)',
                 'impacto': 0.10,
                 'detalle': 'WhatsApp diferente en web vs Google. Cliente confundido = reserva perdida.'
             })
         
+        # Brecha 6: Metadata por Defecto
+        if audit_result and audit_result.metadata and audit_result.metadata.has_issues:
+            brechas.append({
+                'pain_id': 'metadata_defaults',
+                'nombre': 'Metadatos por Defecto del CMS',
+                'impacto': 0.10,
+                'detalle': 'Titulo y descripcion usan valores por defecto.'
+            })
+        
+        # Brecha 7: Reviews Faltantes
+        if audit_result.gbp and audit_result.gbp.reviews < 10:
+            brechas.append({
+                'pain_id': 'missing_reviews',
+                'nombre': 'Falta de Reviews',
+                'impacto': 0.10,
+                'detalle': f"Solo {audit_result.gbp.reviews} reviews en Google."
+            })
+        
         # Ensure we always return 4 brechas, filling with generic ones if needed
         defaults = [
-            {'nombre': 'Oportunidad de FAQ/Rich Snippets', 'impacto': 0.15, 'detalle': 'Sin Schema FAQ, pierde rich snippets en Google. Competidores capturan esa atención.'},
-            {'nombre': 'Optimización GBP Incompleta', 'impacto': 0.15, 'detalle': 'Faltan fotos o descripción en GBP. Menor conversión en búsquedas locales.'},
-            {'nombre': 'Sin Datos de Campo (Core Web Vitals)', 'impacto': 0.10, 'detalle': 'Google penaliza rankings sin métricas reales de usuario. Señal de bajo tráfico.'},
-            {'nombre': 'Presencia IA No Optimizada', 'impacto': 0.10, 'detalle': 'Su hotel no está estructurado para respuestas de IA. Perdiendo tráfico emergente.'},
+            {'pain_id': 'no_faq_schema', 'nombre': 'Oportunidad de FAQ/Rich Snippets', 'impacto': 0.15, 'detalle': 'Sin Schema FAQ, pierde rich snippets en Google. Competidores capturan esa atencion.'},
+            {'pain_id': 'low_gbp_score', 'nombre': 'Optimizacion GBP Incompleta', 'impacto': 0.15, 'detalle': 'Faltan fotos o descripcion en GBP. Menor conversion en busquedas locales.'},
+            {'pain_id': 'poor_performance', 'nombre': 'Sin Datos de Campo (Core Web Vitals)', 'impacto': 0.10, 'detalle': 'Google penaliza rankings sin metricas reales de usuario. Senal de bajo trafico.'},
+            {'pain_id': 'low_ia_readiness', 'nombre': 'Presencia IA No Optimizada', 'impacto': 0.10, 'detalle': 'Su hotel no esta estructurado para respuestas de IA. Perdiendo trafico emergente.'},
         ]
         
         while len(brechas) < 4 and defaults:
             brechas.append(defaults.pop(0))
         
+        # Priorizar por impacto y limitar a 4
+        brechas.sort(key=lambda x: x.get('impacto', 0), reverse=True)
         return brechas[:4]

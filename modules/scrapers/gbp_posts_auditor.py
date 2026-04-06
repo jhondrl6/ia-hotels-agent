@@ -87,10 +87,10 @@ class GBPPostsAuditor:
         
         Returns:
             'selenium': Selenium WebDriver nativo
-            'playwright': DriverInterface (PlaywrightDriver o SeleniumDriver)
+            'selenium': DriverInterface (SeleniumDriver)
         """
         if hasattr(self._driver, 'page') and hasattr(self._driver, 'find_elements'):
-            return 'playwright'
+            return 'selenium'
         elif hasattr(self._driver, 'find_elements') and hasattr(self._driver, 'execute_script'):
             return 'selenium'
         else:
@@ -472,7 +472,7 @@ def integrate_posts_auditor(gbp_auditor_instance):
     """
     Agrega auditoria de posts al flujo de GBPAuditor.
     
-    Soporta multi-driver (Selenium y Playwright/DriverInterface).
+    Soporta Selenium WebDriver.
     
     Usage:
         auditor = GBPAuditor(headless=True)

@@ -4,6 +4,7 @@ import argparse
 import sys
 import json
 from pathlib import Path
+from dataclasses import asdict
 from typing import Any, Dict, List, Sequence
 from uuid import uuid4
 from dotenv import load_dotenv
@@ -88,6 +89,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Omitir analisis de competidores cercanos (opcional)",
     )
     parser.add_argument(
+        "--ga4-property-id",
+        help="GA4 Property ID del hotel (opcional). Si no se pasa, analytics funciona en modo fallback.",
+    )
+    parser.add_argument(
         "--stages",
         nargs="+",
         help="Listado de etapas a ejecutar (geo ia seo outputs). Solo valido con 'stage'.",
@@ -144,7 +149,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--run-audit",
         action="store_true",
-        help="Ejecutar auditoría automáticamente después del onboarding",
+        help="Ejecutar auditoria automaticamente despues del onboarding",
+    )
+    parser.add_argument(
+        "--doctor",
+        action="store_true",
+        help="Ejecutar diagnostico completo del ecosistema de agentes (skills + contexto)",
     )
     return parser
 
@@ -1272,6 +1282,12 @@ def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
 
+    # Doctor: full ecosystem health check (--doctor)
+    if args.doctor:
+        import subprocess as _sub
+        _sub.run([sys.executable, str(Path(__file__).parent / "scripts" / "doctor.py")])
+        sys.exit(0)
+
     ensure_url(parser, args)
 
     # Persistir URL si se proporcionó o se cargó
@@ -1433,6 +1449,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     except Exception as e:
         print(f"⚠️  Auditoría falló: {e}")
         audit_result = None
+        audit_path = None
     
     # Cross-validation checks
     print("\n🔍 Validación Cruzada:")
@@ -1842,10 +1859,50 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     diagnostic_path = None
     print("[INFO] Diagnóstico se generará después de validación de coherencia...")
 
-    # Detectar problemas y generar plan de assets
-    print("\n📍 Generando plan de assets...")
+
+    # Construir analytics_data para V4DiagnosticGenerator
+    # Esto activa la seccion de transparencia analytics en el diagnostico
+    from modules.analytics.google_analytics_client import GoogleAnalyticsClient
+    from data_models.analytics_status import AnalyticsStatus
+
+    # GA4 Property ID por hotel (CLI flag) — NO global en .env
+    # GA4_CREDENTIALS_PATH si es global (mismo service account para todos)
+    ga4_hotel_property_id = getattr(args, 'ga4_property_id', None) or None
+    ga4_client = GoogleAnalyticsClient(property_id=ga4_hotel_property_id)
+    ga4_available = ga4_client.is_available()
+
+    analytics_status = AnalyticsStatus()
+    analytics_status.ga4_available = ga4_available
+    analytics_status.ga4_status_text = (
+        f"✅ Conectado — datos de GA4 incluidos (Property: {ga4_hotel_property_id})"
+        if ga4_available
+        else "⚠️ No configurado (use --ga4-property-id para conectar)"
+    )
+    # Profound y Semrush son stubs en esta version
+    analytics_status.profound_available = False
+    analytics_status.profound_status_text = "⚠️ No disponible en esta version (API pendiente)"
+    analytics_status.semrush_available = False
+    analytics_status.semrush_status_text = "⚠️ No disponible en esta version (API pendiente)"
+
+    # analytics_data activa el flujo GA4 o fallback cualitativo en _inject_analytics()
+    # even when GA4 is not configured (use_ga4=False -> fallback to audit signals)
+    analytics_data = {
+        "use_ga4": ga4_available,  # True only if GA4 credentials exist
+        "analytics_status": analytics_status,
+        "ga4_property_id": ga4_hotel_property_id,  # por hotel, no global
+        # hotel_data puede agregarse aqui para IATester integration futura
+        "hotel_data": None,
+    }
+
+    print("\n Generando plan de assets...")
     pain_mapper = PainSolutionMapper()
-    detected_pains = pain_mapper.detect_pains(audit_result, validation_summary) if audit_result else []
+    if audit_result:
+        detected_pains = pain_mapper.detect_pains(audit_result, validation_summary, analytics_data)
+    elif analytics_data:
+        # Sin audit pero con analytics: detectar solo pains de analytics
+        detected_pains = pain_mapper.detect_pains_for_analytics(analytics_data)
+    else:
+        detected_pains = []
 
     print(f"   Problemas detectados: {len(detected_pains)}")
     for pain in detected_pains[:5]:  # Mostrar top 5
@@ -1947,6 +2004,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         print(f"   [OK] Coherencia aceptable - Generando propuesta completa")
         generate_proposal = True
 
+
     # Regenerar diagnóstico con coherence_score correcto del gate
     print("\n📍 Regenerando diagnóstico con coherence_score validado...")
     diagnostic_gen = V4DiagnosticGenerator()
@@ -1958,6 +2016,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         hotel_url=args.url,
         output_dir=str(output_dir),
         coherence_score=pre_coherence_score,
+        region=region,  # FASE-DRECONEXION-V6: Pasar region para templates V6
+        analytics_data=analytics_data,  # INTEGRACION-ANALYTICS-E2E: activa transparencia analytics
     )
     print(f"[OK] Diagnóstico regenerado con coherence_score: {pre_coherence_score:.2f}")
 
@@ -2001,7 +2061,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             hotel_name=hotel_name,
             output_dir=str(output_dir),
             audit_result=audit_result,
-            pricing_result=pricing_result  # FASE 13: Usar pricing_result para consistencia con financial_scenarios.json
+            pricing_result=pricing_result,  # FASE 13: Usar pricing_result para consistencia con financial_scenarios.json
+            region=region,  # FASE-DRECONEXION-V6: Pasar region para templates V6
+            analytics_data=analytics_data,  # ANALYTICS-02: pasar analytics_data al proposal
         )
     if proposal_path:
         print(f"[OK] Propuesta generada: {proposal_path}")
@@ -2037,14 +2099,18 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
 
     asset_result = None
     try:
-        asset_result = orchestrator.generate_assets(
-            audit_result=audit_result,
-            validation_summary=validation_summary,
-            diagnostic_doc=diagnostic_doc,
-            proposal_doc=proposal_doc,
-            hotel_name=hotel_name,
-            hotel_url=args.url
-        )
+        if audit_result is None:
+            print("   [SKIP] Sin audit_result - generacion de assets omitida")
+        else:
+            asset_result = orchestrator.generate_assets(
+                audit_result=audit_result,
+                validation_summary=validation_summary,
+                diagnostic_doc=diagnostic_doc,
+                proposal_doc=proposal_doc,
+                hotel_name=hotel_name,
+                hotel_url=args.url,
+                analytics_data=analytics_data  # ANALYTICS-FIX-01: activar pains de analytics
+            )
 
         print(f"[OK] Assets generados: {len(asset_result.generated_assets)}")
         print(f"   Fallidos: {len(asset_result.failed_assets)}")
@@ -2259,7 +2325,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         'outputs': {
             'diagnostic_path': str(diagnostic_path),
             'proposal_path': str(proposal_path),
-            'audit_json': str(audit_path),
+            'audit_json': str(audit_path) if audit_path else None,
             'coherence_json': str(output_dir / 'v4_audit' / 'coherence_validation.json'),
             'assets_generated': [a.asset_type for a in asset_result.generated_assets] if asset_result else [],
             'asset_result_path': str(output_dir / 'v4_audit' / 'asset_generation_report.json') if asset_result else None,
@@ -2315,7 +2381,47 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'financial_engine.ScenarioCalculator',
             'auditors.V4ComprehensiveAuditor',
             'quality_gates.publication_gates'
-        ]
+        ],
+        'coherence_score': pre_coherence_score,
+        'assets_generated': [
+            {
+                'asset_type': a.asset_type,
+                'filename': a.filename,
+                'path': a.path,
+                'preflight_status': a.preflight_status,
+                'confidence_score': a.confidence_score
+            }
+            for a in asset_result.generated_assets
+        ] if asset_result else [],
+        'financial_data': {
+            'scenarios': {
+                'conservative': get_scenario_value(scenarios, ScenarioType.CONSERVATIVE),
+                'realistic': get_scenario_value(scenarios, ScenarioType.REALISTIC),
+                'optimistic': get_scenario_value(scenarios, ScenarioType.OPTIMISTIC),
+            },
+            'expected_monthly': expected_monthly,
+        },
+        'pricing': {
+            'monthly_price_cop': pricing_result.monthly_price_cop if pricing_result else None,
+            'tier': pricing_result.tier if pricing_result else None,
+        },
+        # ANALYTICS-01: Persistir analytics_status en v4_complete_report.json
+        'analytics': (
+            {
+                'ga4_available': analytics_data.get('analytics_status').ga4_available,
+                'ga4_status': analytics_data.get('analytics_status').ga4_status_text,
+                'ga4_error': analytics_data.get('analytics_status').ga4_error,
+                'profound_available': analytics_data.get('analytics_status').profound_available,
+                'profound_status': analytics_data.get('analytics_status').profound_status_text,
+                'semrush_available': analytics_data.get('analytics_status').semrush_available,
+                'semrush_status': analytics_data.get('analytics_status').semrush_status_text,
+                'missing_credentials': analytics_data.get('analytics_status').missing_credentials(),
+                'is_complete': analytics_data.get('analytics_status').is_complete(),
+                'timestamp': analytics_data.get('analytics_status').timestamp.isoformat(),
+            }
+            if analytics_data and analytics_data.get('analytics_status')
+            else {'available': False, 'status': 'analytics_data no disponible'}
+        )
     }
     
     report_path = output_dir / "v4_complete_report.json"
@@ -2359,7 +2465,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         'outputs': {
             'diagnostic_path': str(diagnostic_path) if 'diagnostic_path' in locals() else None,
             'proposal_path': str(proposal_path) if 'proposal_path' in locals() else None,
-            'audit_json': str(audit_path),
+            'audit_json': str(audit_path) if audit_path else None,
             'scenarios_json': str(scenarios_path),
             'report_json': str(report_path),
             'coherence_json': str(Path(asset_result.output_dir) / 'v4_audit' / 'coherence_validation.json') if asset_result and asset_result.output_dir else None,

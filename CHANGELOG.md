@@ -1,5 +1,123 @@
 # Changelog
 
+## [4.22.0] - 2026-04-05
+
+### FIX CRITICO - Duplicacion de metricas en scorecard diagnostico
+
+**Problema identificado:**
+- `v4_diagnostic_generator.py:1078-1085`: `_calculate_activity_score()` inyectaba `geo_score * 0.5` en su resultado
+- Esto causaba que la fila "Activity Score (GBP)" compartiera ~50% de sus datos con "Google Maps (GEO)"
+- El diagnostico presentaba dos scores independientes cuando uno contenia al otro
+- Ejemplo: GEO=72 inflaba automaticamente Activity=86 (36 puntos venian de la inyeccion directa)
+
+**Solucion aplicada:**
+- Nueva funcion `_calculate_competitive_score(audit_result)`: usa geo_scores de competidores reales (Places API) para calcular posicionamiento relativo
+- La formula ahora mide: ranking percentile vs competidores cercanos + gap penalty al siguiente competidor
+- Legacy alias `_calculate_activity_score = _calculate_competitive_score` mantiene compatibilidad con callers existentes
+- Template renombrado: "Activity Score (GBP)" -> "Posicion Competitiva (vs cercanos)"
+- Benchmark regional ajustado: 30/100 -> 45/100
+
+**Metricas ahora ortogonales:**
+| Pilar | Fuente de datos | Que mide |
+|-------|-----------------|----------|
+| GEO | Places API (perfil propio) | Completitud absoluta del perfil |
+| Posicion Competitiva | Places API (competidores + ranking) | Posicion relativa vs competidores cercanos |
+| Web/SEO | PageSpeed + Schema web | Credibilidad del sitio |
+| AEO | Schema Hotel + FAQ + Open Graph + Citability | Legibilidad para IAs |
+
+**Archivos modificados (2):**
+- `v4_diagnostic_generator.py`: funcion corregida + template renombrado
+- `output/v4_complete/`: nuevo diagnostico con scores validados
+
+**Validacion:**
+- 18/18 tests relacionados pasaron sin regresiones
+- Comparacion linea base: GEO=72 antes y despues (sin cambio competitivo=50, antes 86)
+
+### NOTAS
+- `gbp_auditor._calcular_activity_score` (pipeline legacy via report_builder.py) NO modificado -- usa datos distintos (posts, respuestas) pero comparte el problema conceptual de overlapping con GEO
+- Pendiente de tratamiento cuando se active ese pipeline
+
+## [4.21.0] - 2026-04-04
+
+### ELIMINADO - Redundancia AEO/IAO en scorecard diagnostico
+- Template V6: eliminadas filas "Visibilidad en IA (AEO)" y "Optimizacion ChatGPT (IAO)"
+- Scorecard unificado bajo "AEO - Infraestructura para IAs" (XX/100) -- dato 100% medible del audit web
+- Regla de negocio: sin Asset = sin score en el diagnostico
+
+### ELIMINADO - Metodos IAO/Voice de modulos internos
+- v4_diagnostic_generator.py: eliminados _calculate_iao_score(), _calculate_score_ia(), _calculate_voice_readiness_score()
+- v4_diagnostic_generator.py: renombrado _calculate_schema_infra_score() -> _calculate_aeo_score()
+- gap_analyzer.py: eliminado pilar "Momentum IA", redistribucion 3->2 pilares (GBP + AEO)
+- report_builder.py: eliminado _calculate_iao_score() y filas IAO de scorecards
+
+### LIMPIEZA - Dead code
+- Voice readiness eliminado (retornaba "--" hardcodeado)
+- IATester wrapper eliminado (requiere GA4 real, no funciona en produccion actual)
+
+### NOTAS
+- aeo_metrics_gen.py se mantiene como modulo tecnico interno (no comercial)
+- GA4 no modificado: puede enriquecer mediciones AEO en el futuro pero no genera score separado
+
+## [4.20.0] - 2026-04-03
+
+### ARCHIVO - Modulo observability deprecado
+- `observability/` movido a `archives/deprecated_modules_20260304/observability/`
+- Motivo: modulo huérfano (0 imports), persistencia inactiva, calibracion hardcodeada, sin integracion con flujo operacional
+- Los validadores actuales (CoherenceValidator, contradiction_engine, consistency_checker) cubren la calidad per-corrida
+
+### AGENT HARNESS v3.2.0 - REFACTOR ARQUITECTONICO COMPLETO
+
+**CRITICAL FIX:**
+- `agent_harness/core.py` linea 65: `tokens=shlex....cmd)` -> `tokens = shlex.split(command)`. Delegacion recursiva ahora funcional.
+- `agent_harness/core.py` linea 80: `token=***` -> `token = tokens[i]`.
+
+**ARCHITECTURAL IMPROVEMENTS (7 archivos, +900 lineas):**
+
+**core.py - Orchestrator (306 -> 506 lines):**
+- Timeout protection: `_execute_with_timeout()` via threading.Timer, configurable via `default_task_timeout`
+- Background task lifecycle: `BackgroundTaskInfo` con estados running/completed/failed/timeout
+- `_poll_background_tasks()`: detecta procesos terminados, limpia zombies >1h, reporta timeout >5min
+- `register_validator(task_name, fn)`: validacion por tipo de tarea (fallback a generico si no hay)
+- `_get_ui_colors()`: graceful fallback si modules.utils.ui_colors no existe
+- `get_skill_metrics()`, `get_error_learning_report()`: metodos de introspeccion
+- Handler ejecutado con timeout -- ya no hay riesgo de freeze indefinido
+
+**memory.py - Memory Manager (328 -> 387 lines):**
+- Thread safety: `threading.Lock` por archivo de sesion, previene race conditions
+- Escritura atomica: escribe a `.tmp` + `rename`
+- Indice invertido: `target_index.json` mapea `target_id -> [session_files]`
+- `load_history()` consulta indice O(1) en lugar de scan lineal O(N) sobre todas las sesiones
+- `rebuild_index()`: for-rebuild si el indice se corrompe
+- `cleanup_old_sessions()` actualiza el indice al remover archivos viejos
+
+**skill_router.py (191 lines):**
+- Paths absolutos: `PROJECT_ROOT = Path(__file__).resolve().parent.parent`
+- `.agents/workflows`, `skills`, `.agents/skills` resueltos desde ubicacion del modulo, no CWD
+- Ya no depende del directorio de trabajo actual
+
+**skill_executor.py (313 -> 433 lines):**
+- `dry_run=False` como default (antes era `True` -- footgun que ocultaba errores)
+- `SkillMetricsCollector`: persiste stats en `.agent/memory/skill_metrics.csv`
+- Cada skill ejecutada registra: invocaciones, tasa de exito, duracion promedio
+
+**self_healer.py (334 -> 445 lines):**
+- `ErrorLearner`: captura errores no-matched, los agrupa, persiste en `unknown_errors.json`
+- `get_learning_report()`: sugiere entradas para error_catalog.json (ocurrencias >= 2)
+- PlanValidator: lazy import con try/except ImportError (graceful si modulo no existe)
+- Si PlanValidator no disponible, retorna "skipped" en vez de crashear
+
+**mcp_client.py (54 -> 250 lines):**
+- Nested event loop fix: detecta loop corriendo, usa threading + new_event_loop como fallback
+- Si `nest_asyncio` disponible, lo aplica automaticamente
+- `list_tools()`, `list_tools_sync()`, `read_resource_sync()`: wrappers nuevos
+- Import de `mcp` package deferred (no crash si no instalado)
+
+**types.py (+86 lines):**
+- Nuevas clases: `BackgroundTaskInfo`, `TaskValidator` (Protocol), `SkillMetrics`
+- `SkillMetrics.record()`, `success_rate`, `avg_duration` properties
+
+**Version:** 0.3.0 -> 3.2.0
+
 ## [4.19.0] - 2026-04-03
 
 ### INTEGRACION ECOSISTEMA DE AGENTES: Doctor + Pre-commit + Validacion Automatica
@@ -29,12 +147,16 @@
 **DOCUMENTACION:**
 - NUEVO: `.agent/CONVENTION.md` - Contrato de arquitectura para cualquier futuro agente
 - REGENERADO: `.agent/SYSTEM_STATUS.md` desde datos reales (estaba stale desde Feb 2026)
-- FIX: `scripts/validate_context_integrity.py` (error Windows symlink stat)
+- REGENERADO: `.agent/knowledge/DOMAIN_PRIMER.md` (v4.0.0 stale -> v4.19.0, 21 modulos, 138 archivos Python)
+- FIX: `scripts/validate_context_integrity.py` (error Windows symlink stat + modulos nuevos agregados: analytics, geo_enrichment, quality_gates, auditors, commercial_documents, delivery, providers)
 - FIX: `scripts/sync_config.yaml` (patterns actualizados)
+- FIX: `docs/contributing/procedures.md` §4 - renombrado "Decision Engine" -> "Financial Engine", eliminada referencia a script fantasma `generate_domain_primer.py`
+- FIX: `docs/CONTRIBUTING.md` - agregado DOMAIN_PRIMER.md a flujo de contribucion (Paso 5b, tabla manual docs, seccion Regenerable)
 
 **FIX CLI:**
 - `main.py` con `--doctor` flag integrado
 - Manejo de errores Windows symlink en ambos validadores
+- NUEVO: `doctor.py --regenerate-domain-primer` - regenera DOMAIN_PRIMER.md desde modulos reales en vivo
 
 **Resultado:** Las carpetas .agent/ y .agents/workflows/ dejaron de ser "islas" y ahora son parte del flujo diario con validacion automatica pre-commit.
 

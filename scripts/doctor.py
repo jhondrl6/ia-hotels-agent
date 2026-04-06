@@ -7,6 +7,7 @@ Integrates all validation scripts into a single CLI entry point:
 - `python scripts/doctor.py --agent` -- only agent ecosystem
 - `python scripts/doctor.py --context` -- only context integrity
 - `python scripts/doctor.py --status` -- regenerate SYSTEM_STATUS.md
+- `python scripts/doctor.py --regenerate-domain-primer` -- regenerate DOMAIN_PRIMER.md
 - `python scripts/doctor.py --json` -- machine-readable output
 
 Also callable from main.py as `python main.py --doctor`
@@ -276,6 +277,269 @@ Scripts de validacion:
     return True
 
 
+def run_regenerate_domain_primer() -> bool:
+    """Regenerate DOMAIN_PRIMER.md from live module data and VERSION.yaml.
+
+    Scans both:
+    - modules/ (application modules)
+    - Top-level packages: agent_harness/, data_models/, enums/
+    """
+    from collections import defaultdict
+
+    DOMAIN_PRIMER_PATH = AGENT_ROOT / "knowledge" / "DOMAIN_PRIMER.md"
+    FALLBACK_PATH = PROJECT_ROOT / ".agents" / "knowledge" / "DOMAIN_PRIMER.md"
+    target_path = DOMAIN_PRIMER_PATH if DOMAIN_PRIMER_PATH.exists() else FALLBACK_PATH
+
+    # Get version info
+    version = "unknown"
+    codename = "unknown"
+    plan_maestro = "unknown"
+    version_file = PROJECT_ROOT / "VERSION.yaml"
+    if version_file.exists():
+        for line in version_file.read_text().split("\n"):
+            if line.startswith("version:"):
+                version = line.split('"')[1].strip('"') if '"' in line else line.split(":")[1].strip()
+            elif line.startswith("codename:"):
+                codename = line.split('"')[1].strip('"') if '"' in line else line.split(":")[1].strip()
+            elif line.startswith("plan_maestro_version:"):
+                plan_maestro = line.split('"')[1].strip('"') if '"' in line else line.split(":")[1].strip()
+
+    # Helper: scan a package directory for modules
+    def scan_package(pkg_path: Path) -> dict:
+        pkg_info = {}
+        for d in sorted(pkg_path.iterdir()):
+            if not d.is_dir() or d.name.startswith("_") or d.name == "__pycache__":
+                continue
+            py_files = [f for f in d.rglob("*.py") if f.name != "__init__.py" and "__pycache__" not in str(f)]
+            classes = defaultdict(list)
+            for pyf in py_files:
+                try:
+                    text = pyf.read_text(encoding="utf-8", errors="ignore")
+                    for ln in text.split("\n"):
+                        stripped = ln.strip()
+                        if stripped.startswith("class "):
+                            cls_name = stripped.split("class ", 1)[1].split("(")[0].split(":")[0].strip()
+                            if cls_name:
+                                classes[pyf.name].append(cls_name)
+                except Exception:
+                    pass
+            key_classes = {}
+            for fname in sorted(classes.keys()):
+                for cls in classes[fname][:4]:
+                    key_classes.setdefault(fname, []).append(cls)
+            pkg_info[d.name] = {"file_count": len(py_files), "classes": key_classes}
+        return pkg_info
+
+    def scan_agent_harness(pkg_path: Path) -> dict:
+        """Scan agent_harness/ as a root-level package."""
+        info = {}
+        py_files = [f for f in pkg_path.rglob("*.py") if "__pycache__" not in str(f)]
+        info["agent_harness"] = {"file_count": len(py_files), "classes": {}}
+        # Also scan submodules individually
+        for d in sorted(pkg_path.iterdir()):
+            if d.is_dir() and d.name != "__pycache__":
+                sub_files = [f for f in d.glob("*.py")]
+                classes = defaultdict(list)
+                for pyf in sub_files:
+                    try:
+                        text = pyf.read_text(encoding="utf-8", errors="ignore")
+                        for ln in text.split("\n"):
+                            stripped = ln.strip()
+                            if stripped.startswith("class "):
+                                cls_name = stripped.split("class ", 1)[1].split("(")[0].split(":")[0].strip()
+                                if cls_name:
+                                    classes[pyf.name].append(cls_name)
+                    except Exception:
+                        pass
+                key_classes = {}
+                for fname in sorted(classes.keys()):
+                    for cls in classes[fname][:4]:
+                        key_classes.setdefault(fname, []).append(cls)
+                sub_name = f"agent_harness/{d.name}"
+                info[sub_name] = {
+                    "file_count": len([f for f in sub_files if f.name != "__init__.py"]),
+                    "classes": key_classes,
+                }
+        # Scan root-level files
+        root_files = [f for f in pkg_path.glob("*.py") if f.name != "__init__.py"]
+        root_classes = defaultdict(list)
+        for pyf in root_files:
+            try:
+                text = pyf.read_text(encoding="utf-8", errors="ignore")
+                for ln in text.split("\n"):
+                    stripped = ln.strip()
+                    if stripped.startswith("class "):
+                        cls_name = stripped.split("class ", 1)[1].split("(")[0].split(":")[0].strip()
+                        if cls_name:
+                            root_classes[pyf.name].append(cls_name)
+            except Exception:
+                pass
+        root_key = {}
+        for fname in sorted(root_classes.keys()):
+            for cls in root_classes[fname][:4]:
+                root_key.setdefault(fname, []).append(cls)
+        info["agent_harness/root"] = {"file_count": len(root_files), "classes": root_key}
+        return info
+
+    mod_info = {}
+    # 1. modules/
+    if (PROJECT_ROOT / "modules").exists():
+        mod_info.update(scan_package(PROJECT_ROOT / "modules"))
+    # 2. agent_harness/ (top-level orchestration)
+    if (PROJECT_ROOT / "agent_harness").exists():
+        mod_info.update(scan_agent_harness(PROJECT_ROOT / "agent_harness"))
+    # 3. data_models/
+    if (PROJECT_ROOT / "data_models").exists():
+        mod_info.update(scan_package(PROJECT_ROOT / "data_models"))
+    # 4. enums/
+    if (PROJECT_ROOT / "enums").exists():
+        mod_info.update(scan_package(PROJECT_ROOT / "enums"))
+
+    mod = mod_info
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    def mod_table_rows(mod_keys):
+        rows = []
+        for key in mod_keys:
+            if key not in mod:
+                continue
+            info = mod[key]
+            classes_str = ""
+            for fname, cls_list in sorted(info["classes"].items()):
+                classes_str += ", ".join(cls_list) + "; "
+            classes_str = classes_str.rstrip("; ")
+            if classes_str:
+                rows.append(f"| **{key}/** | {info['file_count']} | {classes_str[:200]} |")
+            else:
+                rows.append(f"| **{key}/** | {info['file_count']} | (util/constantes) |")
+        return "\n".join(rows)
+
+    core_mods = ["scrapers", "data_validation", "financial_engine", "orchestration_v4", "onboarding"]
+    analysis_mods = ["auditors", "analyzers", "providers"]
+    generation_mods = ["commercial_documents", "asset_generation", "delivery", "generators", "geo_enrichment"]
+    data_mods = ["analytics", "deployer"]
+    quality_mods = ["quality_gates"]
+    util_mods = ["utils", "monitoring", "validation"]
+    top_level_mods = ["agent_harness/root", "agent_harness/core", "agent_harness/memory",
+                      "agent_harness/observer", "agent_harness/self_healer", "agent_harness/skill_router",
+                      "agent_harness/skill_executor", "agent_harness/types", "agent_harness/mcp_client"]
+
+    modules_count = sum(1 for k in mod if k not in top_level_mods)
+    top_level_count = sum(1 for k in mod if k in top_level_mods)
+    total_files = sum(i['file_count'] for i in mod.values())
+
+    tables = mod_table_rows(core_mods)
+    tables2 = mod_table_rows(analysis_mods)
+    tables3 = mod_table_rows(generation_mods)
+    tables4 = mod_table_rows(data_mods)
+    tables5 = mod_table_rows(quality_mods)
+    tables6 = mod_table_rows(util_mods)
+    tables7 = mod_table_rows(top_level_mods)
+
+    # Get agent_harness version from __init__.py
+    harness_version = "unknown"
+    harness_init = PROJECT_ROOT / "agent_harness" / "__init__.py"
+    if harness_init.exists():
+        try:
+            text = harness_init.read_text()
+            for line in text.split("\n"):
+                if line.startswith("__version__"):
+                    harness_version = line.split("=")[1].strip().strip('"').strip("'")
+                    break
+        except Exception:
+            pass
+
+    all_mods = sorted(mod.keys())
+    pipeline_stages = " -> ".join([m for m in all_mods if m not in ("utils", "validation")])
+
+    content = f"""# Domain Primer - IA Hoteles Agent CLI
+
+> **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
+> Consultar para entender conceptos de negocio y su mapeo a codigo.
+>
+> **Version del sistema**: {version} | **Codename**: {codename}
+> **Release date**: {now} | **Plan Maestro**: {plan_maestro}
+> **Agent Harness**: v{harness_version}
+
+---
+
+## Modulos del Repositorio (auto-generado)
+
+> {modules_count} modulos detectados en `modules/` + {top_level_count} paquetes de nivel root. {total_files} archivos Python en total.
+
+### CORE - Pipeline de diagnostico
+
+| Modulo | Archivos | Clases/Funciones Clave |
+|--------|----------|------------------------|
+{tables}
+
+### ANALISIS Y AUDITORIA
+
+| Modulo | Archivos | Clases/Funciones Clave |
+|--------|----------|------------------------|
+{tables2}
+
+### GENERACION DE CONTENIDO Y ASSETS
+
+| Modulo | Archivos | Clases/Funciones Clave |
+|--------|----------|------------------------|
+{tables3}
+
+### DATOS EXTERNOS Y DEPLOY
+
+| Modulo | Archivos | Clases/Funciones Clave |
+|--------|----------|------------------------|
+{tables4}
+
+### QUALITY GATES
+
+| Modulo | Archivos | Clases/Funciones Clave |
+|--------|----------|------------------------|
+{tables5}
+
+### UTILIDADES Y VALIDACION
+
+| Modulo | Archivos | Clases/Funciones Clave |
+|--------|----------|------------------------|
+{tables6}
+
+### ORQUESTACION: AGENT HARNESS & PAQUETES ROOT
+
+> Paquetes de primer nivel fuera de `modules/`. Agent Harness es el orquestador de tareas.
+
+| Paquete | Archivos | Clases Clave |
+|---------|----------|-------------|
+{tables7}
+
+---
+
+## Referencias
+
+- `docs/GUIA_TECNICA.md` - Notas tecnicas y arquitectura
+- `docs/contributing/` - Procedimientos de contribucion
+- `README.md` - Navegacion rapida del proyecto
+- `AGENTS.md` - Contexto global del agente
+
+---
+
+*Auto-generado: {now} | v{version} {codename}*
+*Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
+*NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
+"""
+
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    target_path.write_text(content, encoding="utf-8")
+    total_classes = sum(
+        sum(len(cls_list) for cls_list in info["classes"].values())
+        for info in mod.values()
+    )
+    print(f"[OK] DOMAIN_PRIMER.md regenerado en {target_path.relative_to(PROJECT_ROOT)}")
+    print(f"     {total_files} archivos Python, {total_classes} clases en {len(mod)} modulos ({modules_count} en modules/, {top_level_count} root)")
+    return True
+
+
+
+
 def run_json() -> bool:
     """Run all checks and output JSON."""
     result = {
@@ -320,11 +584,16 @@ def main():
     parser.add_argument("--agent", action="store_true", help="Only run agent ecosystem check")
     parser.add_argument("--context", action="store_true", help="Only run context integrity check")
     parser.add_argument("--status", action="store_true", help="Regenerate SYSTEM_STATUS.md")
+    parser.add_argument("--regenerate-domain-primer", action="store_true", help="Regenerate DOMAIN_PRIMER.md from live module data")
     parser.add_argument("--json", action="store_true", help="Output as JSON")
     args = parser.parse_args()
 
     if args.status:
         ok = run_status()
+        sys.exit(0 if ok else 1)
+
+    if args.regenerate_domain_primer:
+        ok = run_regenerate_domain_primer()
         sys.exit(0 if ok else 1)
 
     if args.json:

@@ -3,6 +3,7 @@
 Parses and executes workflow steps from markdown files.
 """
 
+import csv
 import re
 from dataclasses import dataclass, field
 from enum import Enum
@@ -10,6 +11,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from agent_harness.skill_router import SkillDefinition
+from agent_harness.types import SkillMetrics
 
 
 class StepType(Enum):
@@ -63,6 +65,82 @@ class ExecutionResult:
     background_tasks: List[Dict[str, Any]] = field(default_factory=list)
 
 
+class SkillMetricsCollector:
+    """Persistent statistics collector for skill invocations.
+    
+    Writes metrics to a simple CSV file that survives across sessions.
+    """
+    
+    DEFAULT_METRICS_PATH = Path(__file__).parent.parent / ".agent" / "memory" / "skill_metrics.csv"
+    
+    def __init__(self, metrics_path: Optional[Path] = None):
+        self.metrics_path = metrics_path or self.DEFAULT_METRICS_PATH
+        self.metrics: Dict[str, SkillMetrics] = {}
+        self._load_metrics()
+        self._ensure_dir()
+    
+    def _ensure_dir(self):
+        self.metrics_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    def _load_metrics(self):
+        """Load metrics from CSV file."""
+        if not self.metrics_path.exists():
+            return
+        
+        try:
+            with open(self.metrics_path, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    m = SkillMetrics(
+                        name=row["name"],
+                        invocations=int(row.get("invocations", 0)),
+                        successes=int(row.get("successes", 0)),
+                        failures=int(row.get("failures", 0)),
+                        total_duration_seconds=float(row.get("total_duration_seconds", 0.0)),
+                        last_used=row.get("last_used") or None,
+                        last_error=row.get("last_error") or None,
+                    )
+                    if m.name:
+                        self.metrics[m.name] = m
+        except (IOError, KeyError, ValueError):
+            self.metrics = {}
+    
+    def _save_metrics(self):
+        """Persist metrics to CSV."""
+        try:
+            with open(self.metrics_path, "w", encoding="utf-8", newline="") as f:
+                writer = csv.writer(f)
+                writer.writerow([
+                    "name", "invocations", "successes", "failures",
+                    "total_duration_seconds", "last_used", "last_error"
+                ])
+                for m in self.metrics.values():
+                    writer.writerow([
+                        m.name, m.invocations, m.successes, m.failures,
+                        round(m.total_duration_seconds, 3), m.last_used or "",
+                        m.last_error or ""
+                    ])
+        except IOError:
+            pass  # Non-critical
+    
+    def record(self, skill_name: str, duration: float, success: bool, error: Optional[str] = None) -> SkillMetrics:
+        """Record a skill execution and persist."""
+        if skill_name not in self.metrics:
+            self.metrics[skill_name] = SkillMetrics(name=skill_name)
+        
+        self.metrics[skill_name].record(duration, success, error)
+        self._save_metrics()
+        return self.metrics[skill_name]
+    
+    def get(self, skill_name: str) -> Optional[SkillMetrics]:
+        """Get metrics for a skill."""
+        return self.metrics.get(skill_name)
+    
+    def get_all(self) -> Dict[str, SkillMetrics]:
+        """Get all skill metrics."""
+        return dict(self.metrics)
+
+
 class SkillExecutor:
     """Parses and executes workflow steps.
     
@@ -86,6 +164,7 @@ class SkillExecutor:
         self.command_runner = command_runner
         self.verbose = verbose
         self.auto_turbo = auto_turbo
+        self.metrics = SkillMetricsCollector()
     
     def parse_workflow(self, skill: SkillDefinition) -> List[WorkflowStep]:
         """Parse a workflow file into steps.
@@ -100,7 +179,7 @@ class SkillExecutor:
             content = skill.path.read_text(encoding="utf-8")
         except IOError as e:
             if self.verbose:
-                print(f"[EXECUTOR] ❌ Failed to read workflow: {e}")
+                print(f"[EXECUTOR] Failed to read workflow: {e}")
             return []
         
         # Check for turbo-all annotation
@@ -177,7 +256,7 @@ class SkillExecutor:
     def execute_skill(
         self, 
         skill: SkillDefinition,
-        dry_run: bool = True,
+        dry_run: bool = False,
         context_data: Optional[Dict[str, Any]] = None,
     ) -> ExecutionResult:
         """Execute a skill workflow.
@@ -185,11 +264,14 @@ class SkillExecutor:
         Args:
             skill: SkillDefinition to execute.
             dry_run: If True, only report what would be executed.
+                DRY_RUN defaults to False -- set True to skip actual execution.
             context_data: Optional data for placeholder resolution ({{key}}).
             
         Returns:
             ExecutionResult with execution details.
         """
+        import time
+        
         steps = self.parse_workflow(skill)
         
         if not steps:
@@ -199,13 +281,13 @@ class SkillExecutor:
             )
         
         if self.verbose:
-            print(f"[EXECUTOR] 📋 Workflow '{skill.name}' has {len(steps)} steps")
+            print(f"[EXECUTOR] Workflow '{skill.name}' has {len(steps)} steps")
         
         executable = self.get_executable_steps(steps)
         manual_steps = [s for s in steps if s not in executable]
         
         if self.verbose:
-            print(f"[EXECUTOR] ⚡ {len(executable)} auto-executable, {len(manual_steps)} manual")
+            print(f"[EXECUTOR] {len(executable)} auto-executable, {len(manual_steps)} manual")
         
         if dry_run:
             return ExecutionResult(
@@ -220,6 +302,7 @@ class SkillExecutor:
         executed = []
         skipped = []
         bg_tasks = []
+        error = None
         
         for step in steps:
             if step in executable and self.command_runner:
@@ -233,13 +316,12 @@ class SkillExecutor:
                             command = command.replace(placeholder, str(value))
                 
                 if self.verbose:
-                    print(f"[EXECUTOR] ▶️ Step {step.number}: {step.title}")
-                    if "//" not in command: # Avoid logging sensitive stuff if it was a complex command
-                        print(f"           Command: {command}")
+                    print(f"[EXECUTOR] Step {step.number}: {step.title}")
                     if step.is_background:
-                        print(f"[EXECUTOR] 🔄 Running in BACKGROUND")
+                        print(f"[EXECUTOR] Running in BACKGROUND")
                 
                 # Adapt command_runner to accept is_background if possible
+                start = time.time()
                 try:
                     import inspect
                     sig = inspect.signature(self.command_runner)
@@ -247,10 +329,10 @@ class SkillExecutor:
                         exit_code, output = self.command_runner(command, is_background=step.is_background)
                     else:
                         exit_code, output = self.command_runner(command)
-                except Exception:
-                    # Fallback for simple callables
-                    exit_code, output = self.command_runner(command)
+                except Exception as e:
+                    exit_code, output = 1, str(e)
                 
+                duration = time.time() - start
                 outputs.append(f"Step {step.number}: {output}")
                 
                 if step.is_background:
@@ -262,20 +344,24 @@ class SkillExecutor:
                     })
                 
                 if exit_code != 0 and not step.is_background:
+                    error = f"Step {step.number} failed with exit code {exit_code}"
+                    self.metrics.record(skill.name, duration, success=False, error=error)
                     return ExecutionResult(
                         success=False,
                         steps_executed=executed,
                         steps_skipped=skipped,
                         output="\n".join(outputs),
-                        error=f"Step {step.number} failed with exit code {exit_code}",
+                        error=error,
                         background_tasks=bg_tasks,
                     )
                 
                 executed.append(step.number)
             else:
                 if self.verbose:
-                    print(f"[EXECUTOR] ⏭️ Step {step.number} (manual): {step.title}")
+                    print(f"[EXECUTOR] Step {step.number} (manual): {step.title}")
                 skipped.append(step.number)
+        
+        self.metrics.record(skill.name, time.time() - start, success=True)
         
         return ExecutionResult(
             success=True,

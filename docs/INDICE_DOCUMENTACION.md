@@ -1,7 +1,7 @@
 # Índice de Documentación - IA Hoteles Agent CLI
 
-**Versión:** 4.19.0
-**Última actualización:** 3 Abril 2026
+**Versión:** 4.20.0
+**Última actualización:** 4 Abril 2026
 
 ---
 

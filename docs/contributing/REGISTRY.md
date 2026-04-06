@@ -1,12 +1,89 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-03
-> **Total fases completadas:** 33
-> **Version actual:** v4.17.0
+> **Ultima actualizacion:** 2026-04-04
+> **Total fases completadas:** 35
+> **Version actual:** v4.20.0
 
 ---
 
-## FASE-CAUSAL-01 - 2026-03-23
+## FASE-HARNESS-REFACTOR (v3.2.0) - 2026-04-03
+
+**Descripcion:** Agent Harness v3.2.0 - Refactor arquitectonico completo (7 archivos, +900 lineas)
+
+**Problemas resueltos:**
+- Syntax error en core.py linea 65 (`tokens=shlex....cmd)`) impedia delegacion recursiva
+- MemoryManager sin thread safety - race conditions en append_log() concurrente
+- load_history() hacia scan lineal O(N) de todas las sesiones
+- SkillRouter con paths relativos al CWD (fallan desde otros directorios)
+- SkillExecutor con dry_run=True como default (footgun silencioso)
+- Sin timeout protection en run_task() (freeze indefinido si handler se cuelga)
+- Background tasks sin lifecycle (lista crecia indefinidamente, zombies)
+- SelfHealer importaba PlanValidator a nivel modulo (crash si no existe)
+- Errores desconocidos se perdian sin tracking
+- MCP client fallaba con nested event loop
+
+### Archivos Nuevos
+
+| Archivo | Descripcion |
+|---------|-------------|
+| `.agent/memory/target_index.json` | Indice invertido para lookup O(1) de sesiones por target_id |
+| `.agent/memory/skill_metrics.csv` | Stats de invocaciones de skills (persistido en CSV) |
+| `.agent/memory/unknown_errors.json` | Registro de errores no-matched para sugerir al catalogo |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `agent_harness/core.py` | Fix sintaxis linea 65 + timeout + bg lifecycle + validators + fallback UI |
+| `agent_harness/memory.py` | Thread safety (Lock) + atomic writes + indice invertido O(1) |
+| `agent_harness/skill_router.py` | Paths absolutos desde PROJECT_ROOT |
+| `agent_harness/skill_executor.py` | dry_run=False default + SkillMetricsCollector CSV |
+| `agent_harness/self_healer.py` | ErrorLearner + lazy PlanValidator import |
+| `agent_harness/mcp_client.py` | Nested loop fix + list_tools() + read_resource_sync() |
+| `agent_harness/types.py` | BackgroundTaskInfo, TaskValidator Protocol, SkillMetrics |
+| `agent_harness/__init__.py` | Nuevos exports, version 0.3.0 -> 3.2.0 |
+| `VERSION.yaml` | agent_harness_version: 3.2.0, entry v4.20.0 |
+| `CHANGELOG.md` | Entrada v4.20.0 completa |
+| `docs/GUIA_TECNICA.md` | Seccion v4.20.0 con detalle por modulo |
+| `docs/CONTRIBUTING.md` | Version header actualizado a v4.20.0 |
+
+### Validaciones
+
+- [x] Todos los archivos sin syntax errors
+- [x] __pycache__ limpiado de mezclas CPython 3.12/3.13
+- [x] CHANGELOG.md actualizado
+- [x] VERSION.yaml actualizado (v4.20.0)
+- [x] docs/GUIA_TECNICA.md actualizado
+- [x] docs/CONTRIBUTING.md versión actualizada
+- [x] REGISTRY.md actualizado (esta entrada)
+
+### Arquitectura
+
+```
+Antes (v0.3.0):                    Despues (v3.2.0):
+┌──────────────────┐               ┌──────────────────────┐
+│  AgentHarness    │               │  AgentHarness        │
+│  - sin timeout   │               │  + timeout guard     │
+│  - bg tasks leak │               │  + bg lifecycle      │
+│  - validacion    │               │  + per-task validators│
+│    generica      │               │  + skill metrics     │
+└──────────────────┘               └──────────────────────┘
+┌──────────────────┐               ┌──────────────────────┐
+│  MemoryManager   │               │  MemoryManager       │
+│  - sin locks     │               │  + thread-safe Lock  │
+│  - O(N) scan     │               │  + O(1) inv. index   │
+│  - writes racy   │               │  + atomic writes     │
+└──────────────────┘               └──────────────────────┘
+┌──────────────────┐               ┌──────────────────────┐
+│  SkillRouter     │               │  SkillRouter         │
+│  - paths CWD     │               │  + abs PROJECT_ROOT  │
+└──────────────────┘               └──────────────────────┘
+┌──────────────────┐               ┌──────────────────────┐
+│  SkillExecutor   │               │  SkillExecutor       │
+│  - dry_run=True  │               │  + dry_run=False     │
+│  - sin metrics   │               │  + CSV metrics       │
+└──────────────────┘               └──────────────────────┘
+
 
 **Descripcion:** SitePresenceChecker - Verificacion de sitio real ANTES de generar assets
 
@@ -1122,6 +1199,107 @@ _Ninguno_
 ---
 
 
+## FASE-CAUSAL-01 - 2026-04-04
+**Descripcion:** Eliminacion IAO/Voice del scorecard, unificacion bajo AEO
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-02 - 2026-04-04
+**Descripcion:** Reestructurar gap_analyzer: modelo 3 pilares -> 2 pilares (GBP + AEO), eliminacion de pilar "Momentum IA", redistribucion de perdida de peso
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/analyzers/gap_analyzer.py` | Gap Analyzer - modelo 2-Pilares |
+
+### Validaciones
+- [x] gap_analyzer.py usa modelo 2-Pilares (GBP & Voz Cercana + JSON-LD para IA)
+- [x] No hay referencias a IAO/Momentum/3 pilares
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-03 - 2026-04-04
+**Descripcion:** Eliminacion IAO de report_builder.py y verificacion de modulos tecnicos
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/generators/report_builder.py` | Report Builder |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.21.0 - 2026-04-04
+**Descripcion:** Release 4.21.0: Consolidacion AEO/IAO - eliminacion scores redundantes
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `modules/analyzers/gap_analyzer.py` | Gap Analyzer |
+| `modules/generators/report_builder.py` | Report Builder |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-E2E-CAUSAL - 2026-04-04
+**Descripcion:** E2E Certification post-consolidacion AEO/IAO. AEO retorna 0 en vez de em-dash. 27/28 tests passed, 1 preexisting failure.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (27/28)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.87 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
@@ -1154,9 +1332,11 @@ _Ninguno_
 ## Estadisticas
 
 ||| Fase | Fecha | Tests | Status |
-||------|-------|-------|--------|
-|| FASE-CAUSAL-01 | 2026-03-23 | 10 | ✅ Complete |
-|| FASE-12 | 2026-03-25 | 4 | ✅ Complete |
+|||------|-------|-------|--------|
+||| FASE-CAUSAL-01 | 2026-04-04 | 10 | ✅ Complete |
+||| FASE-CAUSAL-02 | 2026-04-04 | N/A | ✅ Complete |
+||| FASE-CAUSAL-03 | 2026-04-04 | N/A | ✅ Complete |
+||| FASE-12
 || FASE-13 | 2026-03-25 | 4 | ✅ Complete |
 || FASE-A | 2026-03-25 | 5 | ✅ Complete |
 || FASE-B | 2026-03-25 | 23 | ✅ Complete |

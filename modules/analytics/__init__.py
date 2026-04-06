@@ -6,5 +6,6 @@ implemented for real data retrieval in production environments.
 """
 from modules.analytics.profound_client import ProfoundClient
 from modules.analytics.semrush_client import SemrushClient
+from modules.analytics.google_analytics_client import GoogleAnalyticsClient
 
-__all__ = ["ProfoundClient", "SemrushClient"]
+__all__ = ["ProfoundClient", "SemrushClient", "GoogleAnalyticsClient"]

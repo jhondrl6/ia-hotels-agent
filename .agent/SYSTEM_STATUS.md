@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-04-03 14:05:17 UTC
+> Auto-generado: 2026-04-04 18:13:28 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -9,7 +9,7 @@
 
 | Componente | Version | Fuente |
 |------------|---------|--------|
-| Proyecto | 4.18.0 | VERSION.yaml |
+| Proyecto | 4.21.0 | VERSION.yaml |
 | Ecosystem Convention | 1.0.0 | .agent/CONVENTION.md |
 
 ## Skills Activas (16)
@@ -38,13 +38,13 @@
 
 | Metrica | Valor |
 |---------|-------|
-| Shadow logs | 725 archivos JSON |
-| Sesiones activas | 209 |
+| Shadow logs | 727 archivos JSON |
+| Sesiones activas | 184 |
 | Sesiones archivadas | 6 |
-| Ultimo shadow log | 20260402_234117_7484c8fb.json |
-| Ultima sesion activa | 2026-04-02_ee7e0d52.json |
-| Ultimo contexto actualizado | 2026-04-02T23:40:06.583323+00:00 |
-| Ultima URL procesada | https://www.hotelvisperas.com/es |
+| Ultimo shadow log | 20260404_165620_5135b469.json |
+| Ultima sesion activa | 2026-04-04_92b3e41d.json |
+| Ultimo contexto actualizado | 2026-04-04T16:55:02.848159+00:00 |
+| Ultima URL procesada | https://www.hotelvisperas.com/es/ |
 
 ## Validaciones
 

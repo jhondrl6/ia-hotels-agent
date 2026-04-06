@@ -8,6 +8,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+# Project root is always the parent of agent_harness/
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
 
 @dataclass
 class SkillDefinition:
@@ -39,10 +42,11 @@ class SkillRouter:
     """
     
     # New official semantic path (Meta-Architecture Level 3)
-    OFFICIAL_SKILLS_PATH = Path(".agents/workflows")
+    # Resolved to absolute paths based on project root
+    OFFICIAL_SKILLS_PATH = PROJECT_ROOT / ".agents" / "workflows"
     # Legacy paths (To be deprecated)
-    LEGACY_SKILLS_PATH_1 = Path("skills")
-    LEGACY_SKILLS_PATH_2 = Path(".agents/skills")
+    LEGACY_SKILLS_PATH_1 = PROJECT_ROOT / "skills"
+    LEGACY_SKILLS_PATH_2 = PROJECT_ROOT / ".agents" / "skills"
     
     def __init__(self, workflows_path: Optional[Path] = None, verbose: bool = True):
         """Initialize SkillRouter.
@@ -62,7 +66,11 @@ class SkillRouter:
         if self.workflows_path:
             paths_to_scan.append(self.workflows_path)
         else:
-            paths_to_scan.extend([self.OFFICIAL_SKILLS_PATH, self.LEGACY_SKILLS_PATH_1, self.LEGACY_SKILLS_PATH_2])
+            paths_to_scan.extend([
+                self.OFFICIAL_SKILLS_PATH,
+                self.LEGACY_SKILLS_PATH_1,
+                self.LEGACY_SKILLS_PATH_2,
+            ])
         
         for base_path in paths_to_scan:
             if not base_path.exists():
@@ -82,7 +90,7 @@ class SkillRouter:
                         self._add_skill(skill_file, name=skill_dir.name)
         
         if self.verbose:
-            print(f"[ROUTER] 📚 Loaded {len(set(s.slug for s in self._skills.values()))} skills")
+            print(f"[ROUTER] Loaded {len(set(s.slug for s in self._skills.values()))} skills")
 
     def _add_skill(self, file_path: Path, name: Optional[str] = None) -> None:
         """Parse and add a skill to the catalog."""

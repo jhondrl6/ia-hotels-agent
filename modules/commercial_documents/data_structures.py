@@ -245,7 +245,17 @@ class ProposalDocument:
 
 @dataclass
 class DiagnosticSummary:
-    """Summary of diagnostic for proposal generation."""
+    """Summary of diagnostic for proposal generation.
+    
+    Atributos KB (GAP-IAO-01-02):
+        score_tecnico: Score 0-100 del CHECKLIST_IAO (calcular_cumplimiento)
+        score_ia: None=sin datos, -1=error, >=0=score real de IATester
+        paquete: "basico" (<40), "avanzado" (40-69), "premium" (>=70)
+        faltantes: Lista de elementos KB que fallan
+        pain_ids: Lista de pain_ids desde brechas[] (conecta con PainSolutionMapper)
+        faltantes_monetizables: Elementos KB que fallan y tienen asset IMPLEMENTED
+        faltantes_no_monetizables: Elementos KB que fallan y tienen asset MISSING/None
+    """
     hotel_name: str
     critical_problems_count: int
     quick_wins_count: int
@@ -253,6 +263,15 @@ class DiagnosticSummary:
     top_problems: List[str] = field(default_factory=list)
     validated_data_summary: Dict[str, Any] = field(default_factory=dict)
     coherence_score: Optional[float] = None
+    # === CAMPOS KB (GAP-IAO-01-02) ===
+    score_tecnico: Optional[int] = None   # 0-100, None si sin datos
+    score_ia: Optional[int] = None        # None=sin intentarlo, -1=error, >=0=score
+    paquete: Optional[str] = None          # "basico" | "avanzado" | "premium" | None
+    faltantes: Optional[List[str]] = None  # Elementos KB que fallan (e.g. ["ssl", "open_graph"])
+    pain_ids: Optional[List[str]] = None  # Pain IDs de brechas[] para PainSolutionMapper
+    faltantes_monetizables: List[str] = field(default_factory=list)  # Con asset IMPLEMENTED
+    faltantes_no_monetizables: List[str] = field(default_factory=list)  # Con asset MISSING/None
+    data_source: Optional[str] = None     # "IATester+BingProxy" | "KB" | "N/A" | None
 
 
 def confidence_to_icon(confidence) -> str:
@@ -305,6 +324,26 @@ def calculate_quick_wins(audit_result: V4AuditResult, validation_summary: Option
     """
     quick_wins = 0
     
+    # Guard against None audit_result
+    if not audit_result:
+        return quick_wins
+    
+    # Guard against None schema
+    if not audit_result.schema:
+        return quick_wins
+    
+    # Guard against None validation
+    if not audit_result.validation:
+        return quick_wins
+    
+    # Guard against None performance
+    if not audit_result.performance:
+        return quick_wins
+    
+    # Guard against None gbp
+    if not audit_result.gbp:
+        return quick_wins
+    
     if not audit_result.schema.hotel_schema_detected:
         quick_wins += 1
     if not audit_result.validation.phone_web:
@@ -337,34 +376,39 @@ def extract_top_problems(audit_result: V4AuditResult, limit: int = 5) -> List[st
     """
     problems = []
     
+    # Guard against None audit_result
+    if audit_result is None:
+        return problems
+    
     # 1. Add critical issues from audit
-    for issue in audit_result.critical_issues[:limit]:
-        problems.append(issue)
+    if audit_result.critical_issues:
+        for issue in audit_result.critical_issues[:limit]:
+            problems.append(issue)
     
     # 2. Add validation conflicts if any
     remaining = limit - len(problems)
-    if remaining > 0 and audit_result.validation.conflicts:
+    if remaining > 0 and audit_result.validation and audit_result.validation.conflicts:
         for conflict in audit_result.validation.conflicts[:remaining]:
             field_name = conflict.get('field_name', 'Dato')
             problems.append(f"Conflicto de {field_name}: discrepancia entre fuentes")
     
     # 3. Add schema issues
     remaining = limit - len(problems)
-    if remaining > 0 and not audit_result.schema.hotel_schema_detected:
+    if remaining > 0 and audit_result.schema and not audit_result.schema.hotel_schema_detected:
         problems.append("Sin Schema de Hotel (invisible para IA)")
         remaining -= 1
     
-    if remaining > 0 and audit_result.validation.whatsapp_status == ConfidenceLevel.CONFLICT.value:
+    if remaining > 0 and audit_result.validation and audit_result.validation.whatsapp_status == ConfidenceLevel.CONFLICT.value:
         problems.append("WhatsApp inconsistente entre Web y Google Business Profile")
         remaining -= 1
     
-    if remaining > 0 and not audit_result.schema.faq_schema_detected:
+    if remaining > 0 and audit_result.schema and not audit_result.schema.faq_schema_detected:
         problems.append("Sin Schema FAQ (pierde rich snippets)")
         remaining -= 1
     
     # 4. Fill with recommendations if needed
     remaining = limit - len(problems)
-    if remaining > 0:
+    if remaining > 0 and audit_result.recommendations:
         for rec in audit_result.recommendations[:remaining]:
             problems.append(rec)
     
@@ -379,6 +423,26 @@ def calculate_quick_wins(audit_result: V4AuditResult, validation_summary: Option
     """
     quick_wins = 0
     
+    # Guard against None audit_result
+    if not audit_result:
+        return quick_wins
+    
+    # Guard against None schema
+    if not audit_result.schema:
+        return quick_wins
+    
+    # Guard against None validation
+    if not audit_result.validation:
+        return quick_wins
+    
+    # Guard against None performance
+    if not audit_result.performance:
+        return quick_wins
+    
+    # Guard against None gbp
+    if not audit_result.gbp:
+        return quick_wins
+    
     if not audit_result.schema.hotel_schema_detected:
         quick_wins += 1
     if not audit_result.validation.phone_web:
@@ -411,34 +475,39 @@ def extract_top_problems(audit_result: V4AuditResult, limit: int = 5) -> List[st
     """
     problems = []
     
+    # Guard against None audit_result
+    if audit_result is None:
+        return problems
+    
     # 1. Add critical issues from audit
-    for issue in audit_result.critical_issues[:limit]:
-        problems.append(issue)
+    if audit_result.critical_issues:
+        for issue in audit_result.critical_issues[:limit]:
+            problems.append(issue)
     
     # 2. Add validation conflicts if any
     remaining = limit - len(problems)
-    if remaining > 0 and audit_result.validation.conflicts:
+    if remaining > 0 and audit_result.validation and audit_result.validation.conflicts:
         for conflict in audit_result.validation.conflicts[:remaining]:
             field_name = conflict.get('field_name', 'Dato')
             problems.append(f"Conflicto de {field_name}: discrepancia entre fuentes")
     
     # 3. Add schema issues
     remaining = limit - len(problems)
-    if remaining > 0 and not audit_result.schema.hotel_schema_detected:
+    if remaining > 0 and audit_result.schema and not audit_result.schema.hotel_schema_detected:
         problems.append("Sin Schema de Hotel (invisible para IA)")
         remaining -= 1
     
-    if remaining > 0 and audit_result.validation.whatsapp_status == ConfidenceLevel.CONFLICT.value:
+    if remaining > 0 and audit_result.validation and audit_result.validation.whatsapp_status == ConfidenceLevel.CONFLICT.value:
         problems.append("WhatsApp inconsistente entre Web y Google Business Profile")
         remaining -= 1
     
-    if remaining > 0 and not audit_result.schema.faq_schema_detected:
+    if remaining > 0 and audit_result.schema and not audit_result.schema.faq_schema_detected:
         problems.append("Sin Schema FAQ (pierde rich snippets)")
         remaining -= 1
     
     # 4. Fill with recommendations if needed
     remaining = limit - len(problems)
-    if remaining > 0:
+    if remaining > 0 and audit_result.recommendations:
         for rec in audit_result.recommendations[:remaining]:
             problems.append(rec)
     

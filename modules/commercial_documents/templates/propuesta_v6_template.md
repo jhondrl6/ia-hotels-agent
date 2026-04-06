@@ -121,6 +121,10 @@ Para que su negocio brillen en Google Maps, necesitamos fotos de calidad. Esto e
 
 ---
 
+## 📊 METRICAS DE VISIBILIDAD
+
+${analytics_section}
+
 ## 🛡️ GARANTÍAS: Proteção total para usted
 
 ### 1. Resultados garantizados

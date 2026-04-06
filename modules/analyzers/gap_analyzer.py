@@ -282,18 +282,15 @@ class GapAnalyzer:
         # En lugar de distribución fija 40%/35%/25%, calcular proporcionalmente
         geo_benchmark = region_data.get('geo_score_ref', 42)
         aeo_benchmark = region_data.get('aeo_score_ref', 18)
-        iao_benchmark = region_data.get('iao_score_ref', 8)
         
         aeo_score = schema_data.get('score_schema', 0)
-        iao_score = ia_test.get('iao_score', self._calculate_iao_score(ia_test))
         
-        # Calcular gaps (máximo 0 si score > benchmark)
+        # Calcular gaps (maximo 2 pilares: GBP + AEO)
         gap_geo = max(0, geo_benchmark - gbp_score)
         gap_aeo = max(0, aeo_benchmark - aeo_score)
-        gap_iao = max(0, iao_benchmark - iao_score)
         
-        # Distribuir proporcionalmente solo si hay gaps
-        suma_gaps = gap_geo + gap_aeo + gap_iao
+        # Distribuir proporcionalmente solo si hay gaps (2 pilares)
+        suma_gaps = gap_geo + gap_aeo
         
         brechas_criticas = []
         
@@ -320,18 +317,6 @@ class GapAnalyzer:
                     "prioridad": 1,
                     "gap_actual": f"{aeo_score}/100",
                     "benchmark_regional": f"{aeo_benchmark}/100"
-                })
-            
-            # Pilar 3: IAO (Momentum IA)
-            if gap_iao > 0:
-                peso_iao = gap_iao / suma_gaps
-                brechas_criticas.append({
-                    "nombre": "Momentum IA pendiente",
-                    "impacto_mensual": int(perdida_mensual * peso_iao),
-                    "descripcion": "Perplexity y ChatGPT no mencionan al hotel; oportunidad de voz/comparadores IA.",
-                    "prioridad": 2,
-                    "gap_actual": f"{iao_score}/100",
-                    "benchmark_regional": f"{iao_benchmark}/100"
                 })
         else:
             # Si no hay gaps, retornar lista vacía (hotel ya cumple benchmarks)
@@ -381,16 +366,6 @@ class GapAnalyzer:
                 "formula": "RevPAR x hab x 30 x (1 - AILA) x (comision + penalizacion)"
             }
         }
-
-    def _calculate_iao_score(self, ia_test: dict) -> int:
-        """Calculate IAO score based on mentions in Perplexity and ChatGPT."""
-        total_menciones = (
-            ia_test.get('perplexity', {}).get('menciones', 0) +
-            ia_test.get('chatgpt', {}).get('menciones', 0)
-        )
-        total_queries = ia_test.get('total_queries', 1) * 2
-        score = (total_menciones / max(total_queries, 1)) * 100
-        return int(score)
 
     def analyze_with_claude(self, hotel_data, gbp_data, schema_data, ia_test):
         """Alias retained for backwards compatibility with main.py."""

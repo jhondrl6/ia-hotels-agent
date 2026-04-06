@@ -194,6 +194,145 @@ class ConditionalGenerator:
             "can_use": True  # NEVER_BLOCK: asset puede usarse aunque sea estimado
         }
 
+    # ============================================================
+    # GAP-IAO-01-04: PAIN_ID → ASSET MAPPING
+    # Única fuente de verdad: ELEMENTO_KB_TO_PAIN_ID
+    # ============================================================
+    PAIN_TO_ASSET = {
+        # KB element: (pain_id, asset_principal)
+        # ssl
+        "no_ssl": "ssl_guide",
+        # schema
+        "no_hotel_schema": "hotel_schema",
+        "no_schema_reviews": "hotel_schema",  # Usa el mismo asset con aggregateRating
+        # performance
+        "poor_performance": "performance_audit",  # CLS_ok también mapea aquí
+        # contenido
+        "low_citability": "optimization_guide",
+        # open graph
+        "no_og_tags": "og_tags_guide",
+        # FAQ
+        "no_faq_schema": "faq_page",
+        # NAP/WhatsApp
+        "whatsapp_conflict": "whatsapp_button",
+        "whatsapp_conflict": ["whatsapp_button", "whatsapp_conflict_guide"],
+        # imágenes
+        "missing_alt_text": "alt_text_guide",
+        # blog
+        "no_blog_content": "blog_strategy_guide",
+        # redes
+        "no_social_links": "social_strategy_guide",
+    }
+
+    def generate_for_faltantes(
+        self,
+        faltantes: List[str],
+        validated_data: Dict,
+        hotel_name: str,
+        hotel_id: str,
+        hotel_context: Optional[Dict[str, Any]] = None,
+        site_url: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
+        """
+        Genera assets SOLO para los faltantes/pain_ids detectados.
+
+        GAP-IAO-01-04: Conecta el diagnóstico con conditional_generator
+        usando PainSolutionMapper como puente.
+
+        Args:
+            faltantes: Lista de pain_ids detectados (ej: ["no_hotel_schema", "no_faq_schema"])
+                       También acepta elementos KB (e.g., "ssl", "open_graph")
+            validated_data: Validated data for generation
+            hotel_name: Name of the hotel
+            hotel_id: Unique hotel identifier
+            hotel_context: Optional context about hotel
+            site_url: URL del sitio para verificar presencia de assets
+
+        Returns:
+            List of generation result dictionaries (uno por asset generado)
+        """
+        from modules.commercial_documents.v4_diagnostic_generator import ELEMENTO_KB_TO_PAIN_ID
+
+        results = []
+        assets_generated = set()
+
+        # Normalizar: si es elemento KB, convertir a pain_id
+        # ELEMENTO_KB_TO_PAIN_ID["ssl"] = ("no_ssl", "ssl_guide", None)
+        for item in faltantes:
+            pain_id = item
+
+            # Si es elemento KB (no pain_id), buscar su pain_id
+            if item in ELEMENTO_KB_TO_PAIN_ID:
+                pain_id = ELEMENTO_KB_TO_PAIN_ID[item][0]
+
+            # Mapear pain_id → asset
+            # Support both string and list values in PAIN_TO_ASSET
+            asset_types_raw = self.PAIN_TO_ASSET.get(pain_id)
+            
+            # Process all pain_ids to asset_type(s) mapping
+            if not asset_types_raw:
+                # No hay asset mapeado para este pain_id
+                results.append({
+                    'success': False,
+                    'status': 'no_asset_mapping',
+                    'pain_id': pain_id,
+                    'original_item': item,
+                    'error': f'No asset mapped for pain_id: {pain_id}'
+                })
+                continue
+            
+            # Normalize to list
+            if isinstance(asset_types_raw, str):
+                _asset_list = [asset_types_raw]
+            else:
+                _asset_list = asset_types_raw
+            
+            for asset_type in _asset_list:
+                # Evitar duplicados
+                if asset_type in assets_generated:
+                    results.append({
+                        'success': True,
+                        'status': 'skipped_duplicate',
+                        'pain_id': pain_id,
+                        'original_item': item,
+                        'asset_type': asset_type,
+                        'skip_reason': f'Asset {asset_type} already generated'
+                    })
+                    continue
+                
+                # Verificar que el asset este implementado
+                if asset_type not in self.GENERATION_STRATEGIES:
+                    results.append({
+                        'success': False,
+                        'status': 'asset_not_implemented',
+                        'pain_id': pain_id,
+                        'original_item': item,
+                        'asset_type': asset_type,
+                        'error': f'Asset {asset_type} is not implemented'
+                    })
+                    continue
+                
+                # Generar el asset
+                result = self.generate(
+                    asset_type=asset_type,
+                    validated_data=validated_data,
+                    hotel_name=hotel_name,
+                    hotel_id=hotel_id,
+                    hotel_context=hotel_context,
+                    site_url=site_url
+                )
+                
+                result['pain_id'] = pain_id
+                result['original_item'] = item
+                result['generation_path'] = 'faltantes'
+                
+                if result.get('success'):
+                    assets_generated.add(asset_type)
+                
+                results.append(result)
+
+        return results
+
     def _generate_content(
         self,
         asset_type: str,
@@ -219,6 +358,21 @@ class ConditionalGenerator:
             phone_data = validated_data.get("whatsapp") or validated_data.get("whatsapp_number", {})
             phone = getattr(phone_data, 'value', str(phone_data)) if not isinstance(phone_data, str) else phone_data
             content = self._generate_whatsapp_button(phone, hotel_name)
+        
+        elif asset_type == "whatsapp_conflict_guide":
+            from .whatsapp_conflict_guide import WhatsAppConflictGuideGenerator
+            generator = WhatsAppConflictGuideGenerator()
+            phone_web = validated_data.get("phone_web", "")
+            phone_gbp = validated_data.get("phone_gbp", "")
+            gbp_rating = validated_data.get("gbp_rating", None)
+            gbp_review_count = validated_data.get("gbp_review_count", None)
+            content = generator.generate(
+                hotel_name=hotel_name,
+                phone_web=phone_web,
+                phone_gbp=phone_gbp,
+                gbp_rating=gbp_rating,
+                gbp_review_count=gbp_review_count,
+            )
         
         elif asset_type == "faq_page":
             faqs_data = validated_data.get("faqs", [])
@@ -292,6 +446,45 @@ class ConditionalGenerator:
             hotel_data = validated_data.get("hotel_data", validated_data)
             hotel_dict = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
             content = self._generate_voice_assistant_guide(hotel_dict if isinstance(hotel_dict, dict) else {})
+
+        elif asset_type == "ssl_guide":
+            from modules.delivery.generators.ssl_guide_gen import SSLGuideGenerator
+            generator = SSLGuideGenerator()
+            content = generator.generate(validated_data)
+
+        elif asset_type == "og_tags_guide":
+            from modules.delivery.generators.og_tags_guide_gen import OGTagsGuideGenerator
+            generator = OGTagsGuideGenerator()
+            content = generator.generate(validated_data)
+
+        elif asset_type == "alt_text_guide":
+            from modules.delivery.generators.alt_text_guide_gen import AltTextGuideGenerator
+            generator = AltTextGuideGenerator()
+            content = generator.generate(validated_data)
+
+        elif asset_type == "blog_strategy_guide":
+            from modules.delivery.generators.blog_strategy_guide_gen import BlogStrategyGuideGenerator
+            generator = BlogStrategyGuideGenerator()
+            content = generator.generate(validated_data)
+
+        elif asset_type == "social_strategy_guide":
+            from modules.delivery.generators.social_strategy_guide_gen import SocialStrategyGuideGenerator
+            generator = SocialStrategyGuideGenerator()
+            content = generator.generate(validated_data)
+
+        elif asset_type == "analytics_setup_guide":
+            from modules.delivery.generators.analytics_setup_guide_gen import AnalyticsSetupGuideGenerator
+            generator = AnalyticsSetupGuideGenerator()
+            hotel_data = validated_data.get("hotel_data", validated_data)
+            data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
+            content = generator.generate(data if isinstance(data, dict) else {})
+
+        elif asset_type == "indirect_traffic_optimization":
+            from modules.delivery.generators.indirect_traffic_optimization_gen import IndirectTrafficOptimizationGenerator
+            generator = IndirectTrafficOptimizationGenerator()
+            hotel_data = validated_data.get("hotel_data", validated_data)
+            data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
+            content = generator.generate(data if isinstance(data, dict) else {})
 
         else:
             raise ValueError(f"Unknown asset type: {asset_type}")

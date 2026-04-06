@@ -1,15 +1,9 @@
-"""Data Validation Module - Fase 2: Motor de Contradicciones."""
+"""Data Validation Module - Motor de Contradicciones y Consistencia."""
 
-# Fase 1 (existente)
+# Validadores operativos
 from .metadata_validator import MetadataValidator, DEFAULT_WORDPRESS_STRINGS
-from .schema_validator_v2 import SchemaValidatorV2
 
-# Fase 2 (nuevo)
-from .evidence_ledger import (
-    EvidenceLedger,
-    Evidence,
-    EvidenceType
-)
+# Motor de contradicciones
 from .contradiction_engine import (
     ContradictionEngine,
     Conflict,
@@ -23,14 +17,10 @@ from .consistency_checker import (
 )
 
 __all__ = [
-    # Fase 1
+    # Validadores
     'MetadataValidator',
     'DEFAULT_WORDPRESS_STRINGS',
-    'SchemaValidatorV2',
-    # Fase 2
-    'EvidenceLedger',
-    'Evidence',
-    'EvidenceType',
+    # Contradicciones
     'ContradictionEngine',
     'Conflict',
     'ConflictType',

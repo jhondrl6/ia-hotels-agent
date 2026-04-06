@@ -34,6 +34,7 @@ from modules.utils.http_client import HttpClient
 from modules.auditors.ai_crawler_auditor import AICrawlerAuditor
 from modules.auditors.citability_scorer import CitabilityScorer, CitabilityScore
 from modules.auditors.ia_readiness_calculator import IAReadinessCalculator, IAReadinessReport
+from modules.auditors.seo_elements_detector import SEOElementsDetector, SEOElementsResult
 
 
 logger = logging.getLogger(__name__)
@@ -99,6 +100,12 @@ class CrossValidationResult:
     adr_benchmark: Optional[float]
     conflicts: List[Dict] = field(default_factory=list)
     validated_fields: Dict[str, Any] = field(default_factory=dict)
+    
+    # NUEVOS CAMPOS (GAP-IAO-01-02-B):
+    address_status: str = "unknown"
+    email_status: str = "unknown"
+    address_web: Optional[str] = None
+    address_gbp: Optional[str] = None
 
 
 @dataclass
@@ -170,6 +177,9 @@ class V4AuditResult:
     
     # IA Readiness (optional, advisory)
     ia_readiness: Optional[IAReadinessReport] = None
+    
+    # SEO Elements (GAP-IAO-01-02-B)
+    seo_elements: Optional[SEOElementsResult] = None
     
     # Execution trace
     executed_validators: List[str] = field(default_factory=list)
@@ -380,13 +390,21 @@ class V4ComprehensiveAuditor:
         print("\n[2.8/5] Analyzing content citability...")
         http_client = HttpClient()
         html_for_citability, _ = http_client.get(url)
+        html_content = html_for_citability.text if html_for_citability and html_for_citability.text else ""
         citability_result = None
-        if html_for_citability and html_for_citability.text:
-            citability_result = self._audit_citability(url, html_for_citability.text)
+        if html_content:
+            citability_result = self._audit_citability(url, html_content)
             print(f"      Score: {citability_result.overall_score:.1f}/100")
             print(f"      [ADVISORY] Blocks analyzed: {citability_result.blocks_analyzed}")
         else:
             print("      HTML content not available")
+        
+        # Step 2.9: SEO Elements detection (GAP-IAO-01-02-B)
+        print("\n[2.9/5] Detecting SEO elements...")
+        seo_elements = self._run_seo_elements_audit(html_content, url)
+        print(f"      Open Graph: {seo_elements.open_graph}")
+        print(f"      Images with Alt: {seo_elements.imagenes_alt}")
+        print(f"      Active Social: {seo_elements.redes_activas}")
         
         # Step 3: Performance metrics
         print("\n[3/5] Checking performance metrics...")
@@ -479,6 +497,7 @@ class V4ComprehensiveAuditor:
             ai_crawlers=ai_crawler_result,
             citability=citability_result,
             ia_readiness=ia_readiness_result,
+            seo_elements=seo_elements,
             executed_validators=executed_validators,
             skipped_validators=skipped_validators,
         )
@@ -889,7 +908,41 @@ class V4ComprehensiveAuditor:
                 status="Error",
                 actionable_items=[f"IA readiness calculation failed: {str(e)}"]
             )
-    
+
+    def _run_seo_elements_audit(self, html: str, url: str) -> SEOElementsResult:
+        """Run SEO elements detection."""
+        detector = SEOElementsDetector()
+        return detector.detect(html, url)
+
+    def _check_ssl(self, url: str) -> bool:
+        """
+        SSL detection is trivial - just check URL scheme.
+
+        Returns:
+            True if URL uses https://, False otherwise.
+        """
+        return url.startswith("https://") if url else False
+
+    def _es_nap_consistente(self, audit_result: 'V4AuditResult') -> bool:
+        """NAP es consistente si WhatsApp Y dirección Y email están verificados."""
+        validation = audit_result.validation
+
+        # WhatsApp verificado
+        whatsapp_ok = (
+            getattr(validation, 'whatsapp_status', None) == ConfidenceLevel.VERIFIED.value
+        )
+
+        # Dirección verificada (si existe el campo)
+        address_status = getattr(validation, 'address_status', 'unknown')
+        address_ok = address_status == ConfidenceLevel.VERIFIED.value
+
+        # Email verificado (si existe el campo)
+        email_status = getattr(validation, 'email_status', 'unknown')
+        email_ok = email_status in [ConfidenceLevel.VERIFIED.value, ConfidenceLevel.ESTIMATED.value]
+
+        # NAP completo = WhatsApp + Address (email es bonus)
+        return whatsapp_ok and address_ok
+
     def _audit_performance(self, url: str) -> PerformanceResult:
         """Audit performance via PageSpeed API."""
         if not self.pagespeed:
@@ -971,7 +1024,17 @@ class V4ComprehensiveAuditor:
         
         # Get conflicts
         conflicts = self.cross_validator.get_conflict_report()
-        
+
+        # NUEVO: Validate address
+        web_address = schema.properties.get("address")
+        gbp_address = gbp.address
+        address_dp = self.cross_validator.validate_address(web_address, gbp_address)
+
+        # NUEVO: Validate email
+        web_email = schema.properties.get("email")
+        gbp_email = None  # GBP no typically provides email
+        email_dp = self.cross_validator.validate_email(web_email, gbp_email)
+
         return CrossValidationResult(
             whatsapp_status=whatsapp_dp.confidence.value if whatsapp_dp else ConfidenceLevel.UNKNOWN.value,
             phone_web=web_phone,
@@ -983,7 +1046,14 @@ class V4ComprehensiveAuditor:
             validated_fields={
                 "whatsapp": whatsapp_dp.to_dict() if whatsapp_dp else None,
                 "adr": adr_dp.to_dict() if adr_dp else None,
-            }
+                "address": address_dp.to_dict() if address_dp else None,
+                "email": email_dp.to_dict() if email_dp else None,
+            },
+            # NUEVOS CAMPOS:
+            address_status=address_dp.confidence.value if address_dp else "unknown",
+            email_status=email_dp.confidence.value if email_dp else "unknown",
+            address_web=web_address,
+            address_gbp=gbp_address,
         )
     
     def _calculate_overall_confidence(

@@ -58,6 +58,7 @@ MANUAL_DOCS = {
     "GUIA_TECNICA.md": "Cambios arquitectonicos o tecnicos",
     "ROADMAP.md": "Cambios en estrategia de monetizacion",
     ".agents/workflows/README.md": "Agregar o eliminar skills",
+    ".agent/knowledge/DOMAIN_PRIMER.md": "Semauto via --doctor --regenerate-domain-primer (agregar/eliminar modulos, cambiar clases o flujo)",
 }
 
 # Archivos que requieren actualizacion para esta fase (se llena detectando cambios en codigo)
@@ -136,6 +137,11 @@ def parse_args():
         "--dry-run",
         action="store_true",
         help="Solo mostrar lo que se hara sin escribir archivos"
+    )
+    parser.add_argument(
+        "--check-domain-primer",
+        action="store_true",
+        help="Verificar que DOMAIN_PRIMER.md este alineado con modulos actuales"
     )
     return parser.parse_args()
 
@@ -749,6 +755,46 @@ def main():
     
     if args.release:
         print("       (X) Version Sync Gate: PASSED (" + args.release + ")")
+
+    # ============================================================
+    # CHECK: DOMAIN_PRIMER alignment con modulos actuales
+    # ============================================================
+    if args.check_domain_primer:
+        print("\n[DOMAIN PRIMER CHECK] Verificando alineacion...")
+        try:
+            primer_path = root_dir / ".agent" / "knowledge" / "DOMAIN_PRIMER.md"
+            if not primer_path.exists():
+                primer_path = root_dir / ".agents" / "knowledge" / "DOMAIN_PRIMER.md"
+
+            if not primer_path.exists():
+                print("  [WARN] DOMAIN_PRIMER.md no encontrado en ubicaciones esperadas")
+            else:
+                # Get actual modules
+                modules_dir = root_dir / "modules"
+                actual_modules = set()
+                if modules_dir.exists():
+                    for d in modules_dir.iterdir():
+                        if d.is_dir() and not d.name.startswith("_") and d.name != "__pycache__":
+                            actual_modules.add(d.name)
+
+                # Check which are mentioned in DOMAIN_PRIMER
+                primer_content = primer_path.read_text(encoding="utf-8")
+                mentioned_modules = set()
+                for mod in actual_modules:
+                    if mod in primer_content:
+                        mentioned_modules.add(mod)
+
+                missing = actual_modules - mentioned_modules
+                if missing:
+                    print(f"  [WARN] Modulos no mencionados en DOMAIN_PRIMER.md:")
+                    for m in sorted(missing):
+                        print(f"         - {m}/")
+                    print("\n  ACCION: Ejecutar python scripts/doctor.py --regenerate-domain-primer")
+                    print("         o actualizar DOMAIN_PRIMER.md manualmente")
+                else:
+                    print(f"  [OK] ({len(actual_modules)}/{len(actual_modules)}) modulos referenciados en DOMAIN_PRIMER.md")
+        except Exception as e:
+            print(f"  [WARN] Error verificando DOMAIN_PRIMER: {e}")
     
     print("\n(R) Fase registrada exitosamente")
     return 0

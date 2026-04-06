@@ -4,7 +4,7 @@ These dataclasses define the contract between the Harness and its consumers.
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional, Protocol
 from datetime import datetime, timezone
 
 
@@ -88,3 +88,89 @@ class AgentResult:
                 "suggestions_applied": len(context.suggestions),
             },
         }
+
+
+@dataclass
+class BackgroundTaskInfo:
+    """Tracks a background task with its lifecycle state.
+    
+    Attributes:
+        task_id: Unique identifier for the background task.
+        step_number: Step number that spawned it (if from a skill workflow).
+        title: Human-readable title.
+        command: The command executed.
+        process_id: OS process ID if applicable.
+        started_at: ISO timestamp when the task started.
+        status: One of 'running', 'completed', 'failed', 'timeout'.
+        exit_code: Process exit code when completed.
+        output: Captured output when available.
+        error: Error message if failed.
+    """
+    task_id: str = field(default_factory=lambda: f"bg_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}")
+    step_number: int = 0
+    title: str = ""
+    command: str = ""
+    process_id: Optional[int] = None
+    started_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    status: str = "running"
+    exit_code: Optional[int] = None
+    output: str = ""
+    error: Optional[str] = None
+
+
+class TaskValidator(Protocol):
+    """Protocol for per-task validators.
+    
+    A validator receives the result data and returns a dict of quality metrics.
+    """
+    def __call__(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate task result data and return metrics."""
+        ...
+
+
+@dataclass
+class SkillMetrics:
+    """Persistent metrics for a skill's usage and performance.
+    
+    Attributes:
+        name: Skill name.
+        invocations: Total number of times the skill was called.
+        successes: Number of successful executions.
+        failures: Number of failed executions.
+        total_duration_seconds: Cumulative execution time.
+        last_used: ISO timestamp of the most recent use.
+        last_error: Most recent error message, if any.
+    """
+    name: str = ""
+    invocations: int = 0
+    successes: int = 0
+    failures: int = 0
+    total_duration_seconds: float = 0.0
+    last_used: Optional[str] = None
+    last_error: Optional[str] = None
+
+    @property
+    def success_rate(self) -> float:
+        """Return success rate as a float between 0.0 and 1.0."""
+        if self.invocations == 0:
+            return 0.0
+        return self.successes / self.invocations
+
+    @property
+    def avg_duration(self) -> float:
+        """Return average execution time per invocation."""
+        if self.invocations == 0:
+            return 0.0
+        return self.total_duration_seconds / self.invocations
+
+    def record(self, duration: float, success: bool, error: Optional[str] = None) -> None:
+        """Record a single skill execution result."""
+        self.invocations += 1
+        self.total_duration_seconds += duration
+        self.last_used = datetime.now(timezone.utc).isoformat()
+        if success:
+            self.successes += 1
+        else:
+            self.failures += 1
+            if error:
+                self.last_error = error

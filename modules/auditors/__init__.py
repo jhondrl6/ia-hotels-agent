@@ -17,6 +17,8 @@ from .v4_comprehensive import (
 
 from .ia_readiness_calculator import IAReadinessCalculator, IAReadinessReport
 
+from .seo_elements_detector import SEOElementsDetector, SEOElementsResult
+
 __all__ = [
     "V4ComprehensiveAuditor",
     "V4AuditResult",
@@ -29,4 +31,6 @@ __all__ = [
     "get_v4_auditor",
     "IAReadinessCalculator",
     "IAReadinessReport",
+    "SEOElementsDetector",
+    "SEOElementsResult",
 ]

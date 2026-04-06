@@ -25,7 +25,7 @@ from modules.financial_engine.pricing_resolution_wrapper import PricingResolutio
 class V4ProposalGenerator:
     """
     Generates commercial proposal documents for hotels.
-    
+
     Creates a comprehensive proposal with:
     - Summary of certified problems
     - Solution kit mapping problems to assets
@@ -34,7 +34,7 @@ class V4ProposalGenerator:
     - 7/30/60/90 day plan
     - Payment options
     - Acceptance signature section
-    
+
     Usage:
         generator = V4ProposalGenerator()
         path = generator.generate(
@@ -45,10 +45,82 @@ class V4ProposalGenerator:
             output_dir="output/"
         )
     """
-    
+
     # Default pricing
     MONTHLY_PACKAGE_PRICE = 1200000  # $1.2M COP
     SETUP_FEE = 2500000  # $2.5M COP one-time
+
+    # === TABLA DE MONETIZACION (GAP-IAO-01-03) ===
+    # Basado en KB [SECTION:CHECKLIST_IAO] + [SECTION:PRIORITY_MATRIX]
+    FALTANTE_MONETIZACION = {
+        "ssl": {
+            "impacto": "Riesgo de seguridad - HTTPS es requisito",
+            "monetizacion": "Posicionamiento Google afectado - perdida de visibilidad",
+            "asset": None,  # Guia SSL manual
+        },
+        "schema_hotel": {
+            "impacto": "Invisible para ChatGPT, Gemini, Perplexity",
+            "monetizacion": "15-25% menos apariciones en respuestas de IA",
+            "asset": "hotel_schema",
+        },
+        "schema_reviews": {
+            "impacto": "Sin estrellas en Google (rich snippets)",
+            "monetizacion": "8-12% menor CTR en busquedas organicas",
+            "asset": "hotel_schema",  # Con aggregateRating
+        },
+        "LCP_ok": {
+            "impacto": "53% abandono si >3 segundos (mobile)",
+            "monetizacion": "Perdida de reservas moviles",
+            "asset": None,  # Guia optimizacion LCP
+        },
+        "CLS_ok": {
+            "impacto": ">0.1 = inestable - UX deficiente",
+            "monetizacion": "Abandono de usuarios - menor conversion",
+            "asset": None,  # Guia CLS
+        },
+        "schema_faq": {
+            "impacto": "Sin rich snippets en Google",
+            "monetizacion": "10-15% menor visibilidad en busquedas",
+            "asset": "faq_page",
+        },
+        "contenido_extenso": {
+            "impacto": "<300 palabras = SEO debil",
+            "monetizacion": "Menor autoridad de dominio - menos traf organico",
+            "asset": None,  # Estrategia contenido
+        },
+        "open_graph": {
+            "impacto": "Sin social cards - menor comparticion",
+            "monetizacion": "30% menos comparticiones en redes sociales",
+            "asset": "meta_tags",
+        },
+        "nap_consistente": {
+            "impacto": "Nombre/Direccion/Telefono inconsistente",
+            "monetizacion": "Desconfianza del usuario - menor conversion",
+            "asset": None,  # Guia NAP
+        },
+        "imagenes_alt": {
+            "impacto": "Sin alt text - IA no entiende imagenes",
+            "monetizacion": "0% indexacion de imagenes en busqueda IA",
+            "asset": "image_optimization",
+        },
+        "blog_activo": {
+            "impacto": "Sin blog = autoridad baja",
+            "monetizacion": "Competidores con blog capturan mas traf organico",
+            "asset": "content_strategy",
+        },
+        "redes_activas": {
+            "impacto": "Sin senales sociales = autoridad secundaria",
+            "monetizacion": "Menor confianza percibida por usuarios",
+            "asset": "social_recommendations",
+        },
+    }
+
+    # Paquete sugerido basado en score tecnico
+    PAQUETE_UMBRALES = {
+        "basico": 40,      # score < 40
+        "avanzado": 70,    # 40 <= score < 70
+        "premium": 100,    # score >= 70
+    }
     
     def __init__(self, template_dir: Optional[str] = None):
         """
@@ -76,6 +148,8 @@ class V4ProposalGenerator:
         setup_fee: Optional[int] = None,
         audit_result: Optional[Any] = None,
         pricing_result: Optional[PricingResolutionResult] = None,
+        region: Optional[str] = None,
+        analytics_data: Optional[Dict[str, Any]] = None,
     ) -> str:
         """
         Generate the proposal document.
@@ -92,6 +166,7 @@ class V4ProposalGenerator:
             pricing_result: Optional PricingResolutionResult from hybrid pricing model.
                 If provided, uses pricing_result.monthly_price_cop directly to ensure
                 consistency with financial_scenarios.json calculation.
+            region: Optional region string for regional context in templates.
 
         Returns:
             Path to the generated document
@@ -121,6 +196,8 @@ class V4ProposalGenerator:
             asset_plan=asset_plan,
             hotel_name=hotel_name,
             audit_result=audit_result,
+            region=region,
+            analytics_data=analytics_data,
         )
         
         # Render template
@@ -356,6 +433,8 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         asset_plan: List[AssetSpec],
         hotel_name: str,
         audit_result: Optional[Any] = None,
+        region: Optional[str] = None,
+        analytics_data: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, str]:
         """Prepare data for template rendering."""
         
@@ -363,6 +442,12 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         generated_at = datetime.now()
         from datetime import timedelta
         valid_until = generated_at + timedelta(days=15)
+        
+        # Region-based variables for V6 templates
+        hotel_region = region or "Colombia"
+        hotel_location = getattr(audit_result, 'location', None) or \
+                        getattr(getattr(audit_result, 'gbp', None), 'address', None) or \
+                        hotel_region
         
         # Main scenario for primary display
         main_scenario = financial_scenarios.get_main_scenario()
@@ -460,6 +545,15 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'brecha_4_nombre': diagnostic_summary.top_problems[3] if len(diagnostic_summary.top_problems) > 3 else "Cuarto problema",
         'brecha_4_costo': format_cop(int(main_scenario.monthly_loss_max * 0.1)),
 
+        # V6 template variables (regional context and investment summary)
+        'hotel_location': hotel_location,
+        'hotel_region': hotel_region,
+        'monthly_loss': format_cop(main_scenario.monthly_loss_max),
+        'monthly_investment': format_cop(monthly_investment),
+        'total_investment': format_cop(monthly_investment * 6),
+        'total_recovered': format_cop(main_scenario.monthly_loss_max * 6),
+        'net_benefit': format_cop((main_scenario.monthly_loss_max - monthly_investment) * 6),
+
         # Coherence checklist
         'coherence_checklist': self._build_coherence_checklist(diagnostic_summary),
         
@@ -477,12 +571,65 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'single_payment_savings': format_cop(int((getattr(self, '_current_setup_fee', self.SETUP_FEE) + getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE) * 6) * 0.1)),
         'quarterly_fee': format_cop(int(getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE) * 3 * 0.95)),
         'quarterly_savings': format_cop(int(getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE) * 3 * 0.05)),
-        
-        # GEO Section (NUEVO)
-        'geo_section': self._build_geo_section(audit_result) if audit_result else "",
+
+        # GEO Section (NUEVO) + GAP-IAO-01-03 Monetary Impact
+        'geo_section': (self._build_geo_section(audit_result) if audit_result else "") + self._build_monetary_impact_section(diagnostic_summary),
+
+        # ANALYTICS-02: Analytics section in proposal
+        'analytics_section': self._inject_analytics(analytics_data),
     }
-        
+
         return data
+
+    def _inject_analytics(self, analytics_data: Optional[Dict[str, Any]]) -> str:
+        """Construye seccion de analytics para la propuesta comercial.
+        
+        Cuando GA4 esta disponible, incluye metricas reales.
+        Cuando no, omite la seccion para no mostrar datos inexistentes.
+        
+        Args:
+            analytics_data: Dict con analytics_status, use_ga4, hotel_data
+            
+        Returns:
+            Seccion markdown o string vacio
+        """
+        if not analytics_data:
+            return ""
+            
+        status = analytics_data.get("analytics_status")
+        ga4_available = analytics_data.get("use_ga4", False)
+        
+        if not status:
+            return ""
+            
+        # GA4 disponible -> incluir seccion con datos reales
+        if ga4_available and status.ga4_available:
+            return f"""---
+
+## 📈 DATOS DE TRAFICO (Google Analytics)
+
+Tenemos acceso a las metricas reales de su sitio web. Esto nos permite:
+
+- **Medir con precision** el impacto de cada cambio implementado
+- **Identificar canales** que traen mas reservas directas
+- **Optimizar basados en datos**, no en suposiciones
+
+**Estado de conexion:** {status.ga4_status_text}
+
+---
+"""
+        
+        # GA4 no configurado -> seccion breve con invitacion a conectar
+        return f"""---
+
+## 📈 DATOS DE TRAFICO (Google Analytics)
+
+**Estado:** {status.ga4_status_text}
+
+Cuando configuremos Google Analytics, podremos medir con precision el impacto de cada cambio y optimizar basados en datos reales de su sitio web.
+
+---
+"""
     
     def _render_template(self, template_content: str, data: Dict[str, str]) -> str:
         """Render the template with data."""
@@ -546,6 +693,115 @@ Contrato mes a mes. Cancela sin penalizaciones.
 ---
 """
     
+    def _determinar_paquete(self, diagnostic_summary: DiagnosticSummary) -> dict:
+        """
+        Usa score_tecnico de KB para sugerir paquete.
+        BASADO EN: KB sugerir_paquete()
+        """
+        score = diagnostic_summary.score_tecnico if diagnostic_summary.score_tecnico is not None else 50
+
+        if score < 40:
+            paquete = "basico"
+        elif score < 70:
+            paquete = "avanzado"
+        else:
+            paquete = "premium"
+
+        # Ajustar por score IA si disponible
+        if diagnostic_summary.score_ia is not None and diagnostic_summary.score_ia >= 0:
+            score_ia = diagnostic_summary.score_ia
+            # Si score IA es muy bajo, puede recomendar paquete mayor
+            if score_ia < 30 and paquete == "basico":
+                paquete = "avanzado"  # IAI bajo necesita mas work
+
+        confianza = "ALTA" if diagnostic_summary.score_ia is not None and diagnostic_summary.score_ia >= 0 else "N/A"
+
+        return {
+            "paquete": paquete,
+            "score_final": score,
+            "score_ia": diagnostic_summary.score_ia if diagnostic_summary.score_ia is not None else "N/A",
+            "confianza": confianza,
+        }
+
+    def _monetizar_faltante(self, faltante: str) -> dict:
+        """
+        Retorna informacion de monetizacion para un faltante KB.
+
+        Args:
+            faltante: ID del elemento KB (e.g. "ssl", "schema_hotel")
+
+        Returns:
+            Dict con keys: impacto, monetizacion, asset
+        """
+        return self.FALTANTE_MONETIZACION.get(faltante, {
+            "impacto": "Elemento KB no categorizado",
+            "monetizacion": "Impacto por determinar",
+            "asset": None,
+        })
+
+    def _build_monetary_impact_section(self, diagnostic_summary: DiagnosticSummary) -> str:
+        """
+        Construir seccion de impacto monetario basado en faltantes KB.
+
+        GAP-IAO-01-03: Muestra score real y monetizacion de cada faltante.
+        """
+        # Score KB
+        score_tecnico = diagnostic_summary.score_tecnico if diagnostic_summary.score_tecnico is not None else "N/A"
+        score_ia = diagnostic_summary.score_ia if diagnostic_summary.score_ia is not None else "N/A"
+        paquete = diagnostic_summary.paquete if diagnostic_summary.paquete else "por determinar"
+        data_source = diagnostic_summary.data_source if diagnostic_summary.data_source else "N/A"
+
+        # Benchmark regional (aproximado)
+        benchmark_score = 58  # Promedio regional hotels pequenos
+        benchmark_status = "encima" if (isinstance(score_tecnico, int) and score_tecnico > benchmark_score) else "debajo"
+
+        # Faltantes
+        faltantes = diagnostic_summary.faltantes if diagnostic_summary.faltantes else []
+
+        # Construir tabla de monetizacion
+        rows = []
+        for faltante in faltantes:
+            info = self._monetizar_faltante(faltante)
+            asset = info.get("asset", "Guia manual") or "Guia manual"
+            rows.append(f"| {faltante} | {info['impacto']} | {info['monetizacion']} | {asset} |")
+
+        table_content = "\n".join(rows) if rows else "| Sin faltantes detectados | - | - | - |"
+
+        section = f"""
+## [TARGET] SU PUNTAJE ACTUAL
+
+<div style="background: #e7f3ff; padding: 20px; border-radius: 8px; border-left: 4px solid #2196F3;">
+
+### 📊 Diagnostico KB - Score de Cumplimiento IAO
+
+| Metrica | Valor | Benchmark Regional |
+|---------|-------|-------------------|
+| **Score Tecnico** | {score_tecnico}/100 | ~{benchmark_score}/100 ({benchmark_status} del promedio) |
+| **Score IA-Readiness** | {score_ia}/100 | N/A |
+| **Paquete Sugerido** | {paquete.upper()} | - |
+| **Fuente de Datos** | {data_source} | - |
+
+</div>
+
+---
+
+## [TARGET] IMPACTO MONETARIO DE SUS FALTANTES
+
+<div style="background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107;">
+
+### 🔍 Elementos KB que requieren atencion
+
+| Faltante KB | Impacto | Monetizacion | Solucion |
+|------------|---------|--------------|----------|
+{table_content}
+
+**Nota**: Cada faltante representa una oportunidad de mejora. La solucion de todos los faltantes
+monetizables incrementara su score y mejorara su visibilidad en Busqueda Google y Respuestas de IA.
+
+</div>
+"""
+        return section
+
     def _calculate_dynamic_price(self, financial_scenarios: FinancialScenarios) -> int:
         """Calculate dynamic monthly price based on financial scenarios.
         

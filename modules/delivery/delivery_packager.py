@@ -12,16 +12,28 @@ Creates structured delivery:
         │   ├── geo_playbook.md
         │   └── ...
         ├── MANIFEST.json
+        ├── IMPLEMENTATION_ORDER.md  (FASE-5)
         └── README_DELIVERY.md
 
 Created as part of FASE-7-DELIVERY-V2: Delivery Pipeline Automation.
+FASE-5: Integrated AssetResponsibilityContract for implementation order.
 """
 
 import json
+import logging
 import zipfile
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional
+
+logger = logging.getLogger(__name__)
+
+# FASE-5: Import for implementation order generation
+try:
+    from modules.geo_enrichment import AssetResponsibilityContract
+    HAS_ASSET_CONTRACT = True
+except ImportError:
+    HAS_ASSET_CONTRACT = False
 
 
 class DeliveryPackager:
@@ -44,7 +56,12 @@ class DeliveryPackager:
         hotel_id: str,
         output_dir: Optional[str] = None,
         diagnostic_path: Optional[str] = None,
-        proposal_path: Optional[str] = None
+        proposal_path: Optional[str] = None,
+        # FASE-5: Asset Responsibility parameters
+        hotel_name: Optional[str] = None,
+        geo_score: Optional[int] = None,
+        core_assets: Optional[List[str]] = None,
+        geo_assets: Optional[List[str]] = None,
     ) -> str:
         """
         Create a ZIP package with all assets for a hotel.
@@ -54,6 +71,10 @@ class DeliveryPackager:
             output_dir: Override path to output directory (auto-detected if None)
             diagnostic_path: Optional path to DIAGNOSTICO.md
             proposal_path: Optional path to PROPUESTA_COMERCIAL.md
+            hotel_name: FASE-5 - Hotel name for implementation order
+            geo_score: FASE-5 - GEO score to determine mandatory GEO assets
+            core_assets: FASE-5 - List of CORE asset filenames generated
+            geo_assets: FASE-5 - List of GEO asset filenames generated
 
         Returns:
             Path to created ZIP file
@@ -96,15 +117,34 @@ class DeliveryPackager:
         with open(manifest_path, 'w', encoding='utf-8') as f:
             json.dump(manifest, f, indent=2, ensure_ascii=False)
 
+        # FASE-5: Create IMPLEMENTATION_ORDER.md based on AssetResponsibilityContract
+        implementation_order_path = None
+        if HAS_ASSET_CONTRACT and (core_assets or geo_assets):
+            try:
+                contract = AssetResponsibilityContract()
+                impl_order_content = contract.generate_delivery_template(
+                    hotel_name=hotel_name or hotel_id,
+                    core_assets=core_assets,
+                    geo_assets=geo_assets,
+                    geo_score=geo_score
+                )
+                implementation_order_path = self.deliveries_dir / "IMPLEMENTATION_ORDER.md"
+                implementation_order_path.write_text(impl_order_content, encoding='utf-8')
+            except Exception as e:
+                logger.warning(f"[DeliveryPackager] Could not generate implementation order: {e}")
+
         # Create README
         self.create_readme(self.deliveries_dir, hotel_id, manifest)
 
-        # Update ZIP with manifest and README
+        # Update ZIP with manifest, README, and IMPLEMENTATION_ORDER
         with zipfile.ZipFile(zip_path, 'a', zipfile.ZIP_DEFLATED) as zf:
             zf.write(manifest_path, arcname="MANIFEST.json")
             readme_path = self.deliveries_dir / "README_DELIVERY.md"
             if readme_path.exists():
                 zf.write(readme_path, arcname="README_DELIVERY.md")
+            # FASE-5: Add implementation order to ZIP
+            if implementation_order_path and implementation_order_path.exists():
+                zf.write(implementation_order_path, arcname="IMPLEMENTATION_ORDER.md")
 
         # Remove temp manifest
         if manifest_path.exists():

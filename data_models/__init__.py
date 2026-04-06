@@ -1,14 +1,10 @@
 """
 Modelos de datos del sistema.
 """
-# Legacy models (dataclass)
-from .assessment import (
-    Claim as LegacyClaim,
-    Evidence as LegacyEvidence,
-    CanonicalAssessment as LegacyCanonicalAssessment,
-)
+# Lightweight dataclass models (no external deps)
+from .analytics_status import AnalyticsStatus
 
-# Sprint 1, Fase 0 - Pydantic models
+# Pydantic models - canonical assessment
 from .canonical_assessment import (
     CanonicalAssessment,
     Claim,
@@ -20,11 +16,7 @@ from .canonical_assessment import (
 )
 
 __all__ = [
-    # Legacy
-    "LegacyClaim",
-    "LegacyEvidence",
-    "LegacyCanonicalAssessment",
-    # Pydantic (nuevo)
+    "AnalyticsStatus",
     "CanonicalAssessment",
     "Claim",
     "SiteMetadata",

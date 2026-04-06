@@ -59,6 +59,14 @@ Estas iniciativas no son tácticas de marketing, pero **crean las condiciones pa
 
 ---
 
+## 🔧 Deuda Técnica y Mejoras Pendientes
+
+> Temas identificados que requieren atencion pero no son urgentes.
+
+- **Ortogonalidad de metricas en pipeline legacy (gbp_auditor.py)**: El `gbp_auditor.py:_calcular_activity_score` (usado por `report_builder.py`) mide una mezcla entre completitud y engagement que no es ortogonal al GEO score. El pipeline `v4complete` ya usa el score competitivo corregido en `v4_diagnostic_generator.py`. Cuando se active ese pipeline legacy, aplicar el mismo principio de metricas independientes. Tracking: CHANGELOG v4.22.0.
+
+---
+
 ## 🔭 Exploración Futura (No comprometido – Ideas a largo plazo)
 
 > Estas son líneas de investigación o experimentación que **no están comprometidas aún**, pero que vale la pena seguir.
