@@ -473,15 +473,14 @@ class GBPPhotoAuditor:
     CACHE_FALLBACK_MAX_DAYS = 7
     CACHE_FALLBACK_MIN_CONFIDENCE = 70
 
-    def __init__(self, driver, max_wait: int = 15, debug_dir: str = "logs/gbp_debug", 
+    def __init__(self, driver, max_wait: int = 15,
                  cache_data: Optional[Dict] = None, places_api_data: Optional[Dict] = None):
         """
         Args:
             driver: Selenium WebDriver, Playwright Page, or DriverAdapterBase instance
             max_wait: Tiempo maximo de espera para elementos (segundos)
-            debug_dir: Directorio para guardar screenshots y HTML dumps
             cache_data: Diccionario opcional con datos de cache previos del hotel
-                        Formato esperado: {'fotos': int, 'photos_confidence': int, 
+                        Formato esperado: {'fotos': int, 'photos_confidence': int,
                                           'photos_method': str, 'cache_age_days': int}
             places_api_data: Diccionario opcional con datos de Places API
                         Formato esperado: {'place_id': str, 'photos': int, 'name': str}
@@ -492,47 +491,40 @@ class GBPPhotoAuditor:
             self.driver = driver
         else:
             self.driver = wrap_driver(driver)
-        
+
         self._raw_driver = driver
         self.max_wait = max_wait
         self._network_log = []
-        self._debug_dir = Path(debug_dir)
-        self._debug_dir.mkdir(parents=True, exist_ok=True)
         self._cache_data = cache_data or {}
         self._places_api_data = places_api_data or {}
 
-    def _save_debug_artifacts(self, context: str = "unknown") -> Dict:
+    def _log_debug_context(self, context: str = "unknown") -> Dict:
         """
-        Guarda screenshot y HTML dump para debugging post-mortem.
-        
+        Registra informacion de debug estructurada en logs en vez de
+        escribir archivos de screenshot/HTML (que en practica nunca
+        produjeron contenido diagnostico util).
+
         Args:
             context: Identificador del contexto (ej: 'photo_extraction_failed')
-            
+
         Returns:
-            Dict con paths de los archivos guardados
+            Dict con metadata que se inyecta en el evidence del resultado.
         """
-        artifacts = {}
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
         try:
-            screenshot_path = self._debug_dir / f"{context}_{timestamp}.png"
-            self.driver.save_screenshot(str(screenshot_path))
-            artifacts['screenshot'] = str(screenshot_path)
-            logger.info(f"Screenshot guardado: {screenshot_path}")
-        except Exception as e:
-            logger.warning(f"No se pudo guardar screenshot: {e}")
-            artifacts['screenshot_error'] = str(e)
-        
-        try:
-            html_path = self._debug_dir / f"{context}_{timestamp}.html"
-            html_path.write_text(self.driver.page_source, encoding='utf-8')
-            artifacts['html_dump'] = str(html_path)
-            logger.info(f"HTML dump guardado: {html_path}")
-        except Exception as e:
-            logger.warning(f"No se pudo guardar HTML: {e}")
-            artifacts['html_error'] = str(e)
-        
-        return artifacts
+            page_title = self.driver.title if self.driver else 'N/A'
+            current_url = self.driver.current_url if self.driver else 'N/A'
+        except Exception:
+            page_title = 'N/A'
+            current_url = 'N/A'
+
+        logger.warning(
+            "GBP Photo Auditor debug [%s] | url=%s | title=%s",
+            context, current_url, page_title,
+        )
+        return {
+            'page_title': page_title,
+            'current_url': current_url,
+        }
 
     # ====================================================================
     # CAPA 0: EXTRACCIÓN DEL CONTADOR VISIBLE (MÉTODO MEJORADO)
@@ -1034,19 +1026,17 @@ class GBPPhotoAuditor:
             )
         
         warnings.append("Todas las capas de extraccion fallaron (incluyendo cache)")
-        logger.warning("ALERTA: Todas las capas de extraccion de fotos fallaron - Guardando artifacts de debug")
+        logger.warning("ALERTA: Todas las capas de extraccion de fotos fallaron")
         
-        debug_artifacts = self._save_debug_artifacts(context="photo_extraction_failed")
-        
+        debug_context = self._log_debug_context(context="photo_extraction_failed")
+
         return PhotoAuditResult(
             count=0,
             confidence=0,
             method='none',
             evidence={
                 'attempts': attempts,
-                'debug_artifacts': debug_artifacts,
-                'page_title': self.driver.title if self.driver else 'N/A',
-                'current_url': self.driver.current_url if self.driver else 'N/A',
+                'debug_context': debug_context,
             },
             warnings=warnings,
             timestamp=time.time()

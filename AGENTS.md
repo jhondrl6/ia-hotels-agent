@@ -1,8 +1,8 @@
-<!-- agents_version: 4.21.0 | last_update: 2026-04-04 -->
+<!-- agents_version: 4.22.0 | last_update: 2026-04-05 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.21.0 -- Consolidacion AEO/IAO COMPLETADO**
+> **v4.22.0 -- Orthogonal Metrics Fix (eliminada duplicacion GEO/Activity)**
 
 ---
 

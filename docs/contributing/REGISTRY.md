@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-04
-> **Total fases completadas:** 35
-> **Version actual:** v4.20.0
+> **Ultima actualizacion:** 2026-04-05
+> **Total fases completadas:** 36
+> **Version actual:** v4.22.0
 
 ---
 
@@ -1254,6 +1254,31 @@ _Ninguno_
 - [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.22.0 - 2026-04-05
+**Descripcion:** Release 4.22.0: Orthogonal Metrics Fix - eliminada duplicacion GEO/Activity en scorecard
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Reemplaza _calculate_activity_score por _calculate_competitive_score (ranking vs competidores reales) |
+| `CHANGELOG.md` | Entrada v4.22.0 documentada |
+| `README.md` | Version y status block actualizados |
+| `ROADMAP.md` | Seccion deuda tecnica agregada |
+| `VERSION.yaml` | 4.21.0 -> 4.22.0 |
+| `AGENTS.md` | Header version y banner actualizados |
+| `docs/contributing/REGISTRY.md` | Ultima actualizacion y version actual |
+
+### Validaciones
+- [x] Tests passing (18/18)
+- [x] Version consistency check PASSED
+- [x] Comparacion linea base vs nuevo run: GEO=72 invariante, Activity 86->50
 
 ---
 
