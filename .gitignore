@@ -78,6 +78,7 @@ output/spark/*
 .env.local
 .env.*.local
 config/secrets.yaml
+config/*.json
 *.pem
 *.key
 *.cert
