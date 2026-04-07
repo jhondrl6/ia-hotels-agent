@@ -1884,7 +1884,7 @@ ${quick_wins_list}
             return None
 
         try:
-            brechas_list = self._build_brechas(audit_result)
+            brechas_list = self._identify_brechas(audit_result)
             pain_to_type = {
                 'no_faq_schema': 'faq_schema_missing',
                 'low_gbp_score': 'gbp_incomplete',
@@ -1944,6 +1944,15 @@ ${quick_wins_list}
         Retorna dict con brecha_N_score, brecha_N_severity, etc.
         """
         scores = self._compute_opportunity_scores(audit_result, financial_scenarios)
+        # Obtener perdida total del escenario principal para calcular proporcion real
+        total_monthly_loss = None
+        if financial_scenarios:
+            try:
+                main = financial_scenarios.get_main_scenario()
+                if main:
+                    total_monthly_loss = main.monthly_loss_max
+            except Exception:
+                pass
         result = {}
         for i in range(1, 5):
             n = str(i)
@@ -1953,6 +1962,12 @@ ${quick_wins_list}
                 result[f'brecha_{n}_severity'] = f"{s['severity_score']:.0f}/40"
                 result[f'brecha_{n}_effort'] = f"{s['effort_score']:.0f}/30"
                 result[f'brecha_{n}_impact_score'] = f"{s['impact_score']:.0f}/30"
+                # Proporcion real de esta brecha sobre la perdida total
+                if total_monthly_loss and total_monthly_loss > 0:
+                    impacto_pct = (s['estimated_monthly_cop'] / total_monthly_loss) * 100
+                    result[f'brecha_{n}_impacto'] = f"{int(impacto_pct)}%"
+                else:
+                    result[f'brecha_{n}_impacto'] = f"{int(s['impact_score'] / 30 * 100)}%"
                 result[f'brecha_{n}_justification'] = s['justification']
                 result[f'brecha_{n}_rank'] = f"#{s['rank']}"
                 result[f'brecha_{n}_costo'] = format_cop(s['estimated_monthly_cop'])

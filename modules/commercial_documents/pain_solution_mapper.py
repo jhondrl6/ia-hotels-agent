@@ -278,6 +278,16 @@ class PainSolutionMapper:
             "name": "Contenido Muy Corto",
             "description": "El contenido es demasiado corto para ser citado por IA"
         },
+        # HOTFIX-3: Conectar LocalContentGenerator al flujo
+        "low_ia_readiness": {
+            "assets": ["local_content_page"],
+            "confidence_required": 0.0,
+            "priority": 3,
+            "validation_fields": [],
+            "estimated_impact": "medium",
+            "name": "Baja Citabilidad IA",
+            "description": "El hotel no tiene paginas de contenido local para ser citado por IA y asistentes"
+        },
     }
     
     ASSET_NAMES = {
