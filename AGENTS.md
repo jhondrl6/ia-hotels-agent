@@ -1,8 +1,8 @@
-<!-- agents_version: 4.25.0 | last_update: 2026-04-07 -->
+<!-- agents_version: 4.25.1 | last_update: 2026-04-07 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.25.0 -- FASE-E: Micro-Content Local Generator COMPLETADO**
+> **v4.25.1 -- Calibration: Financial Factors Research COMPLETADO**
 
 ---
 
