@@ -48,6 +48,92 @@ Cuando modifiques `modules/financial_engine/` o agregues/elimines un modulo dent
 
 ---
 
+## 5. Actualizar Benchmarks Regionales
+
+**Periodicidad recomendada:** Cada 3-6 meses.
+
+Los benchmarks regionales (GEO, AEO, SEO) se usan en el diagnostico como "Promedio Regional" en la tabla de visibilidad. Se actualizan con datos reales de investigacion de mercado via LLM deep research.
+
+### Flujo completo
+
+```
+1. Investigacion
+   ├── Ejecutar prompt de deep research (ver abajo)
+   └── LLM devuelve JSON con datos de 15+ hoteles por region
+
+2. Guardar resultado
+   └── Guardar como: data/benchmarks/research_output.json
+
+3. Calcular y aplicar
+   ├── Revisar:  python scripts/update_benchmarks.py --dry-run
+   └── Aplicar:  python scripts/update_benchmarks.py
+
+4. Verificar
+   └── El script actualiza plan_maestro_data.json y reporta cambios
+```
+
+### Archivos involucrados
+
+| Archivo | Rol |
+|---------|-----|
+| `data/benchmarks/research_output.json` | Input: datos crudos del LLM (se sobrescribe cada vez) |
+| `data/benchmarks/plan_maestro_data.json` | Output: valores calculados que el sistema consume |
+| `modules/scrapers/scraper_fallback.py` | Fallback si plan_maestro no carga (sincronizar manualmente si se actualiza) |
+| `scripts/update_benchmarks.py` | Script que calcula promedios y actualiza plan_maestro |
+
+### Que calcula el script
+
+Aplica las mismas formulas del sistema a cada hotel de la muestra:
+
+- **GEO**: Identica a `google_places_client.calculate_geo_score()` - rating, reviews, fotos, horarios, website
+- **AEO**: Proxy basado en schema_hotel + schema_faq + open_graph + robots_ai
+- **SEO**: Proxy basado en has_own_website + schema_hotel + schema_faq + mobile_speed
+
+Luego promedia por region y actualiza los campos `geo_score_ref`, `aeo_score_ref`, `seo_score_ref` en cada region de `plan_maestro_data.json`.
+
+### Prompt de deep research
+
+Usar el siguiente prompt con un LLM con capacidad de deep research (Gemini, ChatGPT, Claude):
+
+```
+Investiga el estado promedio de visibilidad digital de hoteles boutique y
+pequenos en 3 regiones turísticas de Colombia.
+
+REGIONES: Eje Cafetero, Antioquia, Caribe colombiano.
+
+Para cada región, consulta Google Maps/Places para 15-20 hoteles boutique
+(10-60 habitaciones). Para CADA hotel registra:
+
+A) GEO: nombre, ciudad, rating (0-5), reviews, fotos, has_hours, has_website
+B) AEO: schema_hotel, schema_faq, open_graph, robots_ai_friendly
+C) SEO: has_own_website, mobile_speed (buena/regular/mala)
+
+FORMATO DE ENTREGA - JSON:
+{
+  "regiones": {
+    "eje_cafetero": { "hotels": [/* objs con campos A+B+C */] },
+    "antioquia":   { "hotels": [...] },
+    "caribe":      { "hotels": [...] }
+  }
+}
+
+REGLAS: Solo hoteles independientes (no cadenas). Si no puedes verificar un
+campo, omitelo (no inventes). Mínimo 10 hoteles por región.
+```
+
+### Nota sobre el fallback
+
+`scraper_fallback.py` tiene los mismos valores hardcoded como safety net. Si actualizas benchmarks via `update_benchmarks.py`, esos valores quedan desincronizados. Para sincronizar manualmente:
+
+```bash
+# Verificar diferencia entre plan_maestro y fallback
+grep "geo_score_ref\|aeo_score_ref\|seo_score_ref" \
+  data/benchmarks/plan_maestro_data.json \
+  modules/scrapers/scraper_fallback.py
+```
+
+---
+
 ## 7. Politica de Contexto Global
 
 ### WHY
@@ -129,3 +215,4 @@ El executor de proyectos por fases (`.agents/workflows/phased_project_executor.m
 | `normalize_cache_filenames.py` | Normaliza nombres de cache |
 | `generate_system_status.py` | Genera dashboard de estado |
 | `log_phase_completion.py` | Registra fase completada en REGISTRY.md |
+| `update_benchmarks.py` | Actualiza benchmarks regionales desde research JSON |

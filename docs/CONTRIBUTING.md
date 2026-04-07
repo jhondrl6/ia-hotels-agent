@@ -29,8 +29,9 @@ Si quieres actualizar **cualquier documento** del repositorio, sigue este flujo:
 | Agregar nuevo modulo Python | `docs/contributing/documentation_rules.md` §5 | Checklist de documentacion obligatoria |
 | Hacer commit | `docs/contributing/validation.md` §6 | Pre-commit hooks + validaciones manuales |
 | Agregar/modificar checks de coherencia | `docs/contributing/validation.md` §11 | Donde definir, implementar y testear |
-| Validar regresion | `docs/contributing/validation.md` §12 | Scripts de regresion + checklist pre-release |
-| Verificar capabilities nuevas | `docs/contributing/capabilities.md` §13 | Matriz de capacidades + gate de cierre |
+|| Validar regresion | `docs/contributing/validation.md` §12 | Scripts de regresion + checklist pre-release |
+|| Actualizar benchmarks regionales | `docs/contributing/procedures.md` §5 | Script update_benchmarks.py + research JSON |
+|| Verificar capabilities nuevas | `docs/contributing/capabilities.md` §13 | Matriz de capacidades + gate de cierre |
 | Gestionar evidencia | `docs/contributing/capabilities.md` §14 | Estructura del Evidence Ledger |
 
 ---

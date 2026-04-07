@@ -1,4 +1,4 @@
-<!-- agents_version: 4.25.0 | last_update: 2026-04-06 -->
+<!-- agents_version: 4.25.0 | last_update: 2026-04-07 -->
 
 # IA Hoteles Agent (iah-cli)
 
@@ -143,7 +143,7 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `modules/analytics/google_search_console_client.py` | Cliente GSC para keywords, posiciones, CTR | v4audit, v4complete (ADVISORY) |
 | `modules/analytics/data_aggregator.py` | Unifica GA4 + GSC en datos consolidados | v4complete (ADVISORY) |
 | `modules/commercial_documents/` | Diagnóstico, propuesta, coherencia | v4complete |
-| `modules/commercial_documents/composer.py` | Generación determinística de documentos | v4complete |
+
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
@@ -156,7 +156,7 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
 | `modules/scrapers/` | Scrapers externos (Booking, TripAdvisor, etc.) | v4audit |
 | `modules/delivery/` | Packaging y entrega de resultados | execute |
-| `modules/analytics/pain_solution_mapper.py` | Mapeo problemas→assets con pain types analytics | v4complete |
+| `modules/commercial_documents/pain_solution_mapper.py` | Mapeo problemas→assets con pain types analytics | v4complete |
 
 ---
 
