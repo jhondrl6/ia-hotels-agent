@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.25.1] - 2026-04-07
+
+### Calibracion Factores Financieros
+
+- `modules/utils/financial_factors.py` - Actualiza comisiones OTA:
+  - comision_ota_base: 0.15 → 0.20 (proxy México/LatAm 2024-2025)
+  - comision_ota_min: 0.12 → 0.18
+  - comision_ota_max: 0.18 → 0.22
+  - Agrega nuevos campos: reservas_ota_proporcion (0.65), reservas_directo_proporcion (0.35),
+    uso_ia_proporcion_min/max (0.10-0.20)
+- `data/benchmarks/plan_maestro_data.json` - Agrega seccion `thresholds` con nota de fuentes
+  (Skift Research State of Travel 2024, Mordor Intelligence Mexico 2024, PwC/ITU 2024-2025)
+- Fuentes: investigacion "Más Allá de la OTA: Cuantificando la Pérdida Económica por Invisibilidad
+  Digital e IA en Hoteles Boutique del Eje Cafetero" (benchmarks/)
+- Impacto: factor_perdida_base sube de ~0.043 a ~0.060, pérdida estimada más realista
+
 ## [4.25.0] - 2026-04-06
 
 ### FASE-E: Micro-Content Local Generator
