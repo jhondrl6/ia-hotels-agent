@@ -1,0 +1,110 @@
+# Provider Registry -- Configuracion centralizada de todas las fuentes de datos
+# Patron inspirado en Goose (provider catalog / provider_metadata.json)
+# Un solo lugar donde agregar/quitar/ver proveedores.
+
+providers:
+  # === ANALYTICS ===
+  ga4:
+    type: analytics
+    description: Google Analytics 4 - Trafico organico y comportamiento
+    auth_type: service_account
+    credentials_file: config/google-analytics-key.json
+    env_vars:
+      - GA4_PROPERTY_ID
+    enabled: true
+    cost_per_call: 0.00  # service account, gratis
+    retry_count: 3
+    timeout_seconds: 30
+
+  gsc:
+    type: analytics
+    description: Google Search Console - Keywords, posiciones, CTR organico
+    auth_type: service_account
+    credentials_file: config/google-analytics-key.json
+    env_vars:
+      - GSC_SITE_URL
+    enabled: false  # requiere site_url del hotel
+    cost_per_call: 0.00  # GSC API es gratis
+    retry_count: 3
+    timeout_seconds: 30
+
+  profound:
+    type: analytics
+    description: Profound - Search visibility y keyword tracking
+    auth_type: api_key
+    env_vars:
+      - PROFOUND_API_KEY
+    enabled: false  # requiere key del usuario
+    cost_per_call: 0.01  # estimado
+    retry_count: 2
+    timeout_seconds: 15
+
+  semrush:
+    type: analytics
+    description: Semrush - Analisis SEO competitivo
+    auth_type: api_key
+    env_vars:
+      - SEMRUSH_API_KEY
+    enabled: false  # requiere key del usuario
+    cost_per_call: 0.01  # estimado
+    retry_count: 2
+    timeout_seconds: 15
+
+  # === SEARCH / PLACES ===
+  places_api:
+    type: search
+    description: Google Places API (New) - Datos de perfil GBP
+    auth_type: api_key
+    env_vars:
+      - GOOGLE_API_KEY
+    enabled: true
+    cost_per_call: 0.008  # $0.005-0.010 por request
+    retry_count: 3
+    timeout_seconds: 10
+
+  serpapi:
+    type: search
+    description: SerpAPI - Busqueda en Google Maps alternativo
+    auth_type: api_key
+    env_vars:
+      - SERPAPI_API_KEY
+    enabled: false  # 250 searches/mes (free tier)
+    cost_per_call: 0.01
+    retry_count: 2
+    timeout_seconds: 15
+
+  # === PERFORMANCE ===
+  pagespeed:
+    type: performance
+    description: Google PageSpeed Insights
+    auth_type: api_key
+    env_vars:
+      - GOOGLE_API_KEY
+    enabled: true
+    cost_per_call: 0.00  # gratis dentro de quota
+    retry_count: 2
+    timeout_seconds: 30
+
+  rich_results:
+    type: performance
+    description: Google Rich Results Test
+    auth_type: none
+    env_vars: []
+    enabled: true
+    cost_per_call: 0.00
+    retry_count: 2
+    timeout_seconds: 15
+
+  # === LLM (para diagnostico/propuesta/assets) ===
+  openrouter:
+    type: llm
+    description: OpenRouter - Gateway multi-modelo
+    endpoint: https://openrouter.ai/api/v1
+    auth_type: api_key
+    env_vars:
+      - OPENROUTER_API_KEY
+    default_model: qwen/qwen3.6-plus:free
+    enabled: true
+    cost_per_call: variable
+    retry_count: 2
+    timeout_seconds: 120

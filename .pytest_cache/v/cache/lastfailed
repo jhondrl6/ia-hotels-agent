@@ -89,5 +89,12 @@
   "tests/test_never_block_architecture/test_autonomous_researcher.py::TestAutonomousResearcherMultiSource::test_attempts_tripadvisor": true,
   "tests/test_never_block_architecture/test_autonomous_researcher.py::TestAutonomousResearcherMultiSource::test_attempts_social_media": true,
   "tests/regression/test_hotel_visperas.py": true,
-  "tests/commercial_documents/test_pain_solution_mapper.py::TestPainSolutionMapperWhatsApp::test_pain_solution_map_contains_whatsapp_conflict": true
+  "tests/commercial_documents/test_pain_solution_mapper.py::TestPainSolutionMapperWhatsApp::test_pain_solution_map_contains_whatsapp_conflict": true,
+  "tests/data_validation/test_evidence_ledger.py": true,
+  "tests/quality_gates/test_publication_gates.py::TestPublicationGatesOrchestrator::test_all_gates_pass": true,
+  "tests/quality_gates/test_publication_gates.py::TestPublicationGatesOrchestrator::test_run_publication_gates_function": true,
+  "tests/quality_gates/test_publication_gates.py::TestPublicationGatesOrchestrator::test_check_publication_readiness_function": true,
+  "tests/asset_generation/test_audit_data_pipeline.py::TestAuditDataPipeline::test_extract_validated_fields_with_audit_result": true,
+  "tests/asset_generation/test_audit_data_pipeline.py::TestAuditDataPipeline::test_extract_validated_fields_with_partial_schema": true,
+  "tests/asset_generation/test_audit_data_pipeline.py::TestAuditDataPipeline::test_hotel_data_flows_to_conditional_generator": true
 }

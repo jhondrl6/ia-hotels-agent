@@ -1,6 +1,6 @@
 {
   "modules/asset_generation/conditional_generator.py": "GAP-IAO-01-04",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-E2E-CAUSAL",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-D",
   "modules/commercial_documents/v4_proposal_generator.py": "GAP-IAO-01-03",
   "modules/commercial_documents/pain_solution_mapper.py": "ANALYTICS-E2E-CERT-01",
   "modules/asset_generation/asset_diagnostic_linker.py": "V6-5",
@@ -20,10 +20,10 @@
   "CHANGELOG.md": "FASE-7",
   "docs/GUIA_TECNICA.md": "GAP-IAO-01-04",
   ".agents/workflows/README.md": "FASE-7",
-  "modules/asset_generation/asset_catalog.py": "FASE-ANALYTICS-04",
+  "modules/asset_generation/asset_catalog.py": "FASE-E",
   "modules/commercial_documents/data_structures.py": "GAP-IAO-01-03",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
-  "main.py": "FASE-ANALYTICS-04",
+  "main.py": "FASE-B",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "E2E-CERT-0331",
   "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-RELEASE-4.21.0",
@@ -36,5 +36,14 @@
   "modules/asset_generation/templates/analytics_setup_guide_template.md": "FASE-ANALYTICS-04",
   "modules/asset_generation/templates/indirect_traffic_optimization_template.md": "FASE-ANALYTICS-04",
   "modules/generators/report_builder.py": "FASE-RELEASE-4.21.0",
-  "modules/analyzers/gap_analyzer.py": "FASE-RELEASE-4.21.0"
+  "modules/analyzers/gap_analyzer.py": "FASE-RELEASE-4.21.0",
+  "modules/quality_gates/publication_gates.py": "FASE-B",
+  "modules/asset_generation/asset_content_validator.py": "FASE-B",
+  "data_models/canonical_assessment.py": "FASE-C",
+  "modules/financial_engine/calculator_v2.py": "FASE-C",
+  "AGENTS.md": "FASE-C",
+  "VERSION.yaml": "FASE-C",
+  "config/provider_registry.yaml": "FASE-D",
+  "data_models/analytics_status.py": "FASE-D",
+  "modules/analytics/__init__.py": "FASE-D"
 }

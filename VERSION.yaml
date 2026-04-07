@@ -1,8 +1,8 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.22.0"
-codename: "Consolidacion AEO/IAO"
-release_date: "2026-04-04"
+version: "4.25.0"
+codename: "FASE-E: Micro-Content Local Generator"
+release_date: "2026-04-06"
 plan_maestro_version: "v2.6.0"
 
 # v4.18.0 - ANALYTICS E2E 100% CERTIFICATION (ANALYTICS-E2E-CERT-01)
@@ -58,6 +58,18 @@ plan_maestro_version: "v2.6.0"
 # - 46/46 tests passing (0 regresiones)
 # - Backwards compatible: GA4 completamente opcional
 agent_harness_version: "3.2.0"
+
+# v4.25.0 - FASE-E: Micro-Content Local Generator
+# - NUEVO: modules/asset_generation/local_content_generator.py (LocalContentPage, LocalContentSet, LocalContentGenerator)
+#   * KEYWORD_TEMPLATES por tipo: termales, parque_natural, pueblo_patrimonio, cafe, boutique, general
+#   * Contenido 800-1200 palabras, 6 secciones por pagina
+#   * Schema Article JSON-LD, meta description, internal links
+#   * content_passes_scrubber(): deteccion de frases AI genericas
+#   * NO bloqueante, add-on vendible ($50K COP por 3 paginas)
+# - NUEVO: templates/local_content/page_template.md + keyword_selection.md
+# - asset_catalog.py: entrada local_content_page (IMPLEMENTED)
+# - 15 tests nuevos en tests/asset_generation/test_local_content_generator.py
+# - 0 regresiones
 
 # v4.20.0 - AGENT HARNESS v3.2.0 ARCHITECTURAL REFACTOR
 # - core.py: FIXED linea 65 syntax error (shlex.split) + delegacion recursiva funcional

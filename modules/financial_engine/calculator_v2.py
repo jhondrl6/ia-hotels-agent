@@ -2,6 +2,10 @@
 
 Calculador financiero que integra validacion de datos antes
 de generar proyecciones. Implementa "No Defaults in Money".
+
+Integracion FASE-C: soporte para pesos dinamicos via opportunity_scores.
+Si se proveen opportunity_scores, se usan para calcular pesos dinamicos
+en vez de porcentajes fijos.
 """
 
 from dataclasses import dataclass, field
@@ -20,6 +24,57 @@ from modules.financial_engine.no_defaults_validator import (
     NoDefaultsValidator,
     NoDefaultsValidationResult,
 )
+
+
+# ============================================================
+# FASE-C: Funciones para pesos dinamicos via opportunity_scores
+# ============================================================
+
+def _compute_dynamic_brecha_weights(
+    opportunity_scores: List[Any],
+) -> Dict[str, float]:
+    """Calcula pesos desde opportunity_scores normalizados a suma 1.0.
+
+    Args:
+        opportunity_scores: Lista de OpportunityScore o dicts con total_score.
+
+    Returns:
+        Dict mapeando brecha_id -> peso normalizado (0-1).
+    """
+    if not opportunity_scores:
+        return {}
+
+    raw: Dict[str, float] = {}
+    for item in opportunity_scores:
+        if isinstance(item, dict):
+            bid = item.get("brecha_id", str(item))
+            score = item.get("total_score", item.get("score", 0))
+        else:
+            bid = getattr(item, "brecha_id", str(item))
+            score = getattr(item, "total_score", 0)
+        raw[bid] = max(float(score), 0)
+
+    total = sum(raw.values())
+    if total <= 0:
+        return {k: 1.0 / len(raw) for k in raw} if raw else {}
+    return {k: v / total for k, v in raw.items()}
+
+
+def _estimate_brecha_cop(
+    weight: float,
+    total_monthly_loss: float,
+) -> float:
+    """Estima COP mensual para una brecha basado en su peso.
+
+    Args:
+        weight: Peso normalizado (0-1).
+        total_monthly_loss: Perdida mensual total del escenario realista.
+
+    Returns:
+        Monto en COP > 0 (nunca <= 0, pasa no_defaults_validator).
+    """
+    cop = round(total_monthly_loss * weight, 0)
+    return max(cop, 1.0)  # Floor de 1 COP para no defaults
 
 
 class CalculationStatus(Enum):
@@ -125,7 +180,11 @@ class FinancialCalculatorV2:
         self.validator = NoDefaultsValidator()
         self.scenario_calculator = ScenarioCalculator()
 
-    def calculate(self, financial_data: Dict[str, Any]) -> FinancialCalculationResult:
+    def calculate(
+        self,
+        financial_data: Dict[str, Any],
+        opportunity_scores: Optional[List[Any]] = None,
+    ) -> FinancialCalculationResult:
         """Calcula escenarios financieros con validacion previa.
 
         Args:
@@ -135,10 +194,13 @@ class FinancialCalculatorV2:
                 - occupancy_rate: float
                 - direct_channel_percentage: float (optional)
                 - ota_commission_rate: float (optional)
+            opportunity_scores: Lista opcional de OpportunityScore para pesos dinamicos.
 
         Returns:
             FinancialCalculationResult con escenarios o bloqueo
         """
+        # FASE-C: registrar si se usan pesos dinamicos
+        _opp_scores = opportunity_scores  # capture for later use
         # Paso 1: Validar No Defaults
         validation_result = self.validator.validate(financial_data)
 
@@ -172,6 +234,8 @@ class FinancialCalculatorV2:
                     "adr_cop": hotel_data.adr_cop,
                     "occupancy_rate": hotel_data.occupancy_rate,
                     "direct_channel_percentage": hotel_data.direct_channel_percentage,
+                    "uses_dynamic_weights": _opp_scores is not None,
+                    "opportunity_scores_count": len(_opp_scores) if _opp_scores else 0,
                 },
             )
 
@@ -188,6 +252,7 @@ class FinancialCalculatorV2:
         financial_data: Dict[str, Any],
         coherence_score: float = 0.0,
         min_coherence: float = 0.8,
+        opportunity_scores: Optional[List[Any]] = None,
     ) -> FinancialCalculationResult:
         """Calcula escenarios solo si coherencia es suficiente.
 
@@ -195,6 +260,9 @@ class FinancialCalculatorV2:
             financial_data: Datos financieros del hotel
             coherence_score: Score de coherencia actual
             min_coherence: Minimo de coherencia requerido
+            opportunity_scores: Lista opcional de OpportunityScore para pesos dinamicos.
+                Si se proveen, se usan para calcular pesos dinamicos en vez de
+                porcentajes fijos.
 
         Returns:
             FinancialCalculationResult con escenarios o bloqueo
@@ -215,12 +283,16 @@ class FinancialCalculatorV2:
                 },
             )
 
-        # Si pasa la validacion de coherencia, proceder con calculo normal
-        result = self.calculate(financial_data)
+        # Si pasa la validacion de coherencia, proceder con calculo (con oportunidades)
+        result = self.calculate(financial_data, opportunity_scores=opportunity_scores)
 
         # Agregar metadata de coherencia
         result.metadata["coherence_score"] = coherence_score
         result.metadata["min_coherence"] = min_coherence
+        if opportunity_scores:
+            weights = _compute_dynamic_brecha_weights(opportunity_scores)
+            result.metadata["opportunity_weights"] = weights
+            result.metadata["uses_dynamic_weights"] = True
 
         return result
 
@@ -381,6 +453,7 @@ def calculate_financial_scenarios(
     ota_commission_rate: float = 0.15,
     coherence_score: float = 0.0,
     min_coherence: float = 0.8,
+    opportunity_scores: Optional[List[Any]] = None,
 ) -> FinancialCalculationResult:
     """Funcion helper para calcular escenarios facilmente.
 
@@ -392,6 +465,7 @@ def calculate_financial_scenarios(
         ota_commission_rate: Comision OTA promedio (0-1)
         coherence_score: Score de coherencia actual
         min_coherence: Minimo de coherencia requerido
+        opportunity_scores: Lista opcional de OpportunityScore para pesos dinamicos
 
     Returns:
         FinancialCalculationResult con escenarios o bloqueo
@@ -407,5 +481,6 @@ def calculate_financial_scenarios(
     }
 
     return calculator.calculate_conditional(
-        financial_data, coherence_score=coherence_score, min_coherence=min_coherence
+        financial_data, coherence_score=coherence_score, min_coherence=min_coherence,
+        opportunity_scores=opportunity_scores,
     )

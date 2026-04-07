@@ -2,7 +2,7 @@
 
 **Plataforma de Inteligencia Agéntica de Grado Industrial diseñada para la auditoría y blindaje financiero del sector hotelero.**
 
-**Version:** 4.22.0 | **Última actualización:** 5 Abril 2026
+**Version:** 4.25.0 | **Última actualización:** 6 Abril 2026
 
 ---
 
@@ -20,7 +20,7 @@
 
 ---
 
-> **🛡️ AGENT PLATFORM STATUS (v4.22.0 - Orthogonal Metrics Fix)**:
+> **🛡️ AGENT PLATFORM STATUS (v4.24.0 - FASE-D: Google Search Console Integration)**:
 > *   **Orthogonal Diagnostic Metrics (v4.22.0)**: Eliminada duplicacion entre "Google Maps (GEO)" y "Activity Score (GBP)". Nuevo sistema de 4 pilares independientes: GEO (completitud), Posicion Competitiva (ranking vs competidores), Web/SEO (credibilidad del sitio), AEO (legibilidad para IAs). Cada score usa datos no solapados.
 > *   **AEO Re-Architecture**: Modulo AEO (Auditory Engine Optimization) alineado con voice assistants (Alexa, Siri, Google Assistant). SpeakableSpecification, FAQ TTS-ready (40-60 palabras), voice keywords Eje Cafetero.
 > *   **Coherence Validator**: Detección de hard/soft conflicts entre fuentes de datos, score de coherencia ≥ 0.8 requerido.

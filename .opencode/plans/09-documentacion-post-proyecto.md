@@ -1,63 +1,84 @@
+# Documentacion Post-Proyecto — Plan Unificado v2 (2026-04-06)
 
-# Documentacion Post-Proyecto: Consolidacion AEO/IAO
+## A. Modulos Nuevos
 
-**Proyecto**: Eliminacion de scores redundantes AEO/IAO
-**Version resultante**: 4.21.0
+### FASE-A: Canonical Metrics + Provider Registry + Permission Modes
 
----
+| Modulo | Archivo | Descripcion |
+|--------|---------|-------------|
+| Canonical Metrics | `modules/utils/canonical_metrics.py` | Normaliza nombres de metricas entre fuentes |
+| Provider Registry | `modules/utils/provider_registry.py` | Singleton que gestiona proveedores desde YAML |
+| Permission Mode | `modules/utils/permission_mode.py` | Enum y funcion para modos de aprobacion |
+| Provider Config | `config/provider_registry.yaml` | Config centralizada de 8+ proveedores (incluye gsc anticipado) |
 
-## Seccion A: Modulos Modificados
+### FASE-B: Document Quality Gate + Content Scrubber
 
-| Modulo | Cambio | Fases |
-|--------|--------|-------|
-| `modules/commercial_documents/v4_diagnostic_generator.py` | Eliminados 3 metodos (IAO, score_ia, voice), renombrado schema_infra->aeo | CAUSAL-01 |
-| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Scorecard: 5 filas -> 4 filas | CAUSAL-01 |
-| `modules/analyzers/gap_analyzer.py` | 3 pilares -> 2 pilares (GBP + AEO) | CAUSAL-02 |
-| `modules/generators/report_builder.py` | Eliminadas referencias IAO | CAUSAL-03 |
+| Modulo | Archivo | Descripcion |
+|--------|---------|-------------|
+| Document Quality Gate | `modules/postprocessors/document_quality_gate.py` | Gate de calidad para documentos comerciales |
+| Content Scrubber | `modules/postprocessors/content_scrubber.py` | Limpieza de output LLM |
 
----
+### FASE-C: Opportunity Scorer
 
-## Seccion B: Modulos Verificados (Sin Cambios)
+| Modulo | Archivo | Descripcion |
+|--------|---------|-------------|
+| Opportunity Scorer | `modules/financial_engine/opportunity_scorer.py` | Modelo ponderado 3 factores |
 
-| Modulo | Razon de no cambio |
-|--------|-------------------|
-| `modules/delivery/generators/aeo_metrics_gen.py` | Modulo tecnico interno, no comercial |
-| `data_models/aeo_kpis.py` | Modelos de datos validos para otros modulos |
+### FASE-D: Google Search Console
 
----
+| Modulo | Archivo | Descripcion |
+|--------|---------|-------------|
+| GSC Client | `modules/analytics/google_search_console_client.py` | Cliente Google Search Console API |
+| Data Aggregator | `modules/analytics/data_aggregator.py` | Unifica GA4 + GSC |
 
-## Seccion C: Codigo Eliminado
+### FASE-E: Micro-Content Local Generator
 
-| Elemento | Archivo Original | Motivo |
-|----------|-----------------|--------|
-| `_calculate_iao_score()` | v4_diagnostic_generator.py | Redundante: sin GA4 = schema_infra_score |
-| `_calculate_score_ia()` | v4_diagnostic_generator.py | Require GA4 real, no funciona en produccion actual |
-| `_calculate_voice_readiness_score()` | v4_diagnostic_generator.py | Retornaba "--" hardcodeado |
-| Fila "Optimizacion ChatGPT" | diagnostico_v6_template.md | Score redundant con AEO |
-| Fila "Visibilidad en IA" | diagnostico_v6_template.md | Score duplicado, sin valor numerico |
-| `_calculate_iao_score()` | report_builder.py | Implementacion duplicada |
-| Pilar 3: Momentum IA | gap_analyzer.py | Medida redundante con AEO |
+| Modulo | Archivo | Descripcion |
+|--------|---------|-------------|
+| Local Content Generator | `modules/asset_generation/local_content_generator.py` | Paginas contenido local (3-5) para hoteles boutique con keywords long-tail |
+| Page Template | `modules/asset_generation/templates/local_content/page_template.md` | Template de prompt LLM para contenido local |
+| Keyword Guide | `modules/asset_generation/templates/local_content/keyword_selection.md` | Guia de seleccion de keywords por tipo de hotel |
+| Tests | `tests/asset_generation/test_local_content_generator.py` | 15 tests unitarios |
 
----
+## B. Modulos Modificados
 
-## Seccion D: Metricas Acumulativas
+| Fase | Archivo | Cambio |
+|------|---------|--------|
+| FASE-A | `main.py` | Argumento `--mode` |
+| FASE-B | `modules/quality_gates/publication_gates.py` | Gate #6 content_quality_gate |
+| FASE-B | `modules/asset_generation/asset_content_validator.py` | Agregar "default" a PLACEHOLDER_PATTERNS |
+| FASE-B | `main.py` | Inyectar scrub en v4complete |
+| FASE-C | `data_models/canonical_assessment.py` | Campo `opportunity_scores` |
+| FASE-C | `modules/commercial_documents/composer.py` | Inyectar scores en brechas |
+| FASE-C | `modules/financial_engine/calculator_v2.py` | Pesos dinamicos |
+| FASE-D | `modules/onboarding/onboarding_flow.py` | Paso GSC verification |
+| FASE-D | `modules/commercial_documents/composer.py` | Inyectar datos GSC |
+| FASE-D | `config/provider_registry.yaml` | Activar entrada gsc |
+| FASE-E | `modules/asset_generation/asset_catalog.py` | Tipo `local_content_page` |
 
-| Metrica | Antes | Despues |
-|---------|-------|---------|
-| Scores en scorecard V6 | 5 | 4 |
-| Scores fantasmas | 1 | 0 |
-| Scores redundantes | 1 | 0 |
-| Modulos con IAO | 3 | 0 |
-| Lineas eliminadas | - | ~100 |
-| Version | 4.20.0 | 4.21.0 |
+## C. Configurados por Fase
 
----
+| Fase | Estado | Archivos Nuevos | Archivos Modificados | Tests Nuevos |
+|------|--------|-----------------|---------------------|--------------|
+| FASE-A | ⏳ Pendiente | 4 | 1 | 22 |
+| FASE-B | ⏳ Pendiente | 3 | 2 | 22 |
+| FASE-C | ⏳ Pendiente | 1 | 3 | 14 |
+| FASE-D | ⏳ Pendiente | 2 | 3 | 18 |
+| FASE-E | ✅ Completado | 4 | 1 | 15 |
 
-## Seccion E: Archivos Afiliados
+## D. Metricas Acumulativas
 
-| Archivo | Estado | Accion requerida |
-|---------|--------|-----------------|
-| `CHANGELOG.md` | MODIFICAR | Agregar entrada 4.21.0 |
-| `REGISTRY.md` | MODIFICAR | Registrar 4 fases |
-| `GUIA_TECNICA.md` | VERIFICAR | Si existe, revisar menciones a IAO |
-| `CONTRIBUTING.md` | VERIFICAR | Si hay version, actualizar |
+| Metrica | A (est) | B (est) | C (est) | D (est) | E (real) | Total acumulado |
+|---------|---------|---------|---------|---------|----------|-----------------|
+| Tests nuevos | 22 | 22 | 14 | 18 | 15 | 91 |
+| Archivos nuevos | 4 | 3 | 1 | 2 | 4 | 14 |
+| Archivos modificados | 1 | 2 | 3 | 3 | 1 | 10 |
+
+## E. Archivos Afiliados — Estado FASE-E
+
+- [x] CHANGELOG.md — Entrada [4.25.0] agregada con detalle FASE-E
+- [x] VERSION.yaml — Bump 4.24.0 -> 4.25.0, codename "FASE-E: Micro-Content Local Generator"
+- [x] REGISTRY.md — Actualizado por log_phase_completion.py (2026-04-06)
+- [x] docs/GUIA_TECNICA.md — Notas tecnicas v4.25.0 agregadas
+- [ ] AGENTS.md — Agregar postprocessors a tabla de modulos + GSC a analytics
+- [ ] docs/CONTRIBUTING.md — Verificar que referencia FASE-E en REGISTRY.md sea consistente

@@ -33,6 +33,7 @@ from modules.financial_engine.no_defaults_validator import (
     NoDefaultsValidationResult
 )
 from modules.quality_gates.ethics_gate import EthicsGate, EthicsStatus
+from modules.postprocessors.document_quality_gate import DocumentQualityGate
 
 
 # =============================================================================
@@ -138,8 +139,10 @@ class PublicationGatesOrchestrator:
             "coherence": self._coherence_gate,
             "critical_recall": self._critical_recall_gate,
             "ethics": self._ethics_gate,
+            "content_quality": self._content_quality_gate,
         }
         self.ethics_gate = EthicsGate()
+        self.content_quality_gate = DocumentQualityGate()
     
     def run_all(self, assessment: Dict[str, Any]) -> List[PublicationGateResult]:
         """
@@ -555,6 +558,89 @@ class PublicationGatesOrchestrator:
                 suggestion="Review pricing and projected returns. Proposal must show viable ROI.",
                 details=result.to_dict()
             )
+
+    def _content_quality_gate(self, assessment: Dict[str, Any]) -> PublicationGateResult:
+        """
+        Gate 7: Content Quality Check
+
+        Validates commercial documents for visible errors that damage
+        client credibility: placeholder regions, duplicate currency,
+        zero-confidence statements, mixed languages.
+
+        Blocker issues cause the gate to fail. Warnings pass with advisory.
+
+        Reads documents from assessment["diagnostico_text"] and/or
+        assessment["propuesta_text"] when available.
+
+        Args:
+            assessment: Assessment dictionary with document text.
+
+        Returns:
+            PublicationGateResult with status.
+        """
+        gate_name = "content_quality"
+
+        diag_text = assessment.get("diagnostico_text", "")
+        prop_text = assessment.get("propuesta_text", "")
+        hotel_data = assessment.get("hotel_data", {})
+
+        diag_result = self.content_quality_gate.validate_document(
+            diag_text, "diagnostico", hotel_data
+        ) if diag_text else None
+
+        prop_result = self.content_quality_gate.validate_document(
+            prop_text, "propuesta", hotel_data
+        ) if prop_text else None
+
+        # Collect all issues
+        all_issues = []
+        if diag_result:
+            all_issues.extend(diag_result.issues)
+        if prop_result:
+            all_issues.extend(prop_result.issues)
+
+        blockers = [i for i in all_issues if i.severity == "blocker"]
+        warnings = [i for i in all_issues if i.severity == "warning"]
+
+        if not all_issues:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,
+                status=GateStatus.PASSED,
+                message="Document quality checks passed: no issues detected",
+                value=1.0,
+                suggestion="",
+            )
+
+        if blockers:
+            blocker_msgs = [i.message for i in blockers[:3]]
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=False,
+                status=GateStatus.BLOCKED,
+                message=f"Content quality blockers: {len(blockers)} - {'; '.join(blocker_msgs)}",
+                value=diag_result.score if diag_result else 0.0,
+                suggestion=(
+                    "Run ContentScrubber to auto-fix issues, then re-validate. "
+                    "If scrubber cannot fix, review LLM prompt quality."
+                ),
+                details={
+                    "blockers": [i.to_dict() if hasattr(i, "to_dict") else str(i.__dict__) for i in blockers],
+                    "warnings": len(warnings),
+                },
+            )
+
+        # Only warnings — gate passes but signals advisory
+        warning_msgs = [i.message for i in warnings[:3]]
+        return PublicationGateResult(
+            gate_name=gate_name,
+            passed=True,
+            status=GateStatus.PASSED,
+            message=f"Content quality: {len(warnings)} warning(s) - {'; '.join(warning_msgs)}",
+            value=0.0 if diag_result is None else max(diag_result.score, prop_result.score if prop_result else diag_result.score),
+            suggestion="Consider running ContentScrubber for cleaner documents",
+            details={"warnings": warning_msgs},
+        )
     
     # Helper methods for extracting data from assessment
     

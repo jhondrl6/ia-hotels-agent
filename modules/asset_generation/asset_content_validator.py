@@ -63,6 +63,10 @@ class AssetContentValidator:
         r'^\s*Ciudad\s*$',  # "Ciudad" alone on a line
         # Detect price placeholder "$$+" but not valid price ranges like "$$-$$$"
         r'\$\$\+',  # $$$+ is a placeholder
+        # Region placeholder (added FASE-B): "en default" where city should be
+        r'\b(?:en|de)\s+default\b',
+        # Duplicate currency (added FASE-B): "COP COP"
+        r'\bCOP\s+COP\b',
     ]
     
     GENERIC_PHRASES = [

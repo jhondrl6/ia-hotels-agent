@@ -1,77 +1,119 @@
+# Checklist de Implementacion — Plan Unificado v2 (2026-04-06)
 
-# Checklist de Implementacion: Consolidacion AEO/IAO
+## Nota de Reorganizacion
 
-**Proyecto**: iah-cli - Eliminacion de redundancia AEO/IAO en scorecards
-**Version target**: 4.21.0
-**Fecha inicio**: 2026-04-03
+Los prompts originales A/B (Review Response Rate) fueron archivados en `archived/`.
+Las fases se renumeran A-E. Las fases historicas A/B del CHANGELOG (ciclo AEO) no se tocan.
 
----
+## Fases del Proyecto
 
-## Estado de Fases
-
-| # | Fase | ID | Estado | Sesion | Fecha |
-|---|------|-----|--------|--------|-------|
-| 1 | Scorecard + Generator | `FASE-CAUSAL-01` | completado | sesion-actual | 2026-04-04 |
-| 2 | GAP Analyzer | `FASE-CAUSAL-02` | pendiente | nueva | - |
-| 3 | Report Builder + Cleanup | `FASE-CAUSAL-03` | pendiente | nueva | - |
-| 4 | Release Docs | `FASE-RELEASE-4.21.0` | pendiente | nueva | - |
-
----
-
-## Checklist Detallado por Fase
-
-### FASE CAUSAL-01: Scorecard + Generator
-- [ ] `_calculate_iao_score()` eliminado de v4_diagnostic_generator.py
-- [ ] `_calculate_score_ia()` eliminado de v4_diagnostic_generator.py
-- [ ] `_calculate_voice_readiness_score()` eliminado de v4_diagnostic_generator.py
-- [ ] `_calculate_schema_infra_score()` renombrado a `_calculate_aeo_score()`
-- [ ] Variables `iao_score/iao_status/voice_readiness` eliminadas de `_prepare_template_data()`
-- [ ] Referencias a `iao_score` eliminadas de `_inject_analytics()`
-- [ ] diagnostico_v6_template.md: fila "Optimizacion ChatGPT" eliminada
-- [ ] diagnostico_v6_template.md: fila "Visibilidad en IA (AEO)" eliminada
-- [ ] diagnostico_v6_template.md: nueva fila "AEO - Infraestructura para IAs" con `${aeo_score}/100`
-- [ ] Scorecard final tiene 4 filas (GEO, GBP, AEO, SEO)
-- [ ] Python syntax valida en todos los archivos
-- [ ] `log_phase_completion.py --fase FASE-CAUSAL-01` ejecutado
-
-### FASE CAUSAL-02: GAP Analyzer
-- [ ] `iao_benchmark` eliminado de gap_analyzer.py
-- [ ] `iao_score` eliminado de gap_analyzer.py
-- [ ] `gap_iao` eliminado de gap_analyzer.py
-- [ ] `suma_gaps = gap_geo + gap_aeo` (solo 2 pilares)
-- [ ] Bloque "Pilar 3: Momentum IA" eliminado
-- [ ] `_calculate_iao_score()` de gap_analyzer eliminado si existe
-- [ ] Perdida distribuida correctamente entre 2 pilares
-- [ ] Python syntax valida
-- [ ] `log_phase_completion.py --fase FASE-CAUSAL-02` ejecutado
-
-### FASE CAUSAL-03: Report Builder + Cleanup
-- [ ] `_calculate_iao_score()` eliminado de report_builder.py
-- [ ] Variables `iao_score/iao_ref/iao_diff` eliminadas de report_builder.py
-- [ ] Filas IAO eliminadas de scorecards generados por report_builder.py
-- [ ] aeo_metrics_gen.py verificado sin errores de import
-- [ ] data_models/aeo_kpis.py verificado importable
-- [ ] Python syntax valida
-- [ ] `log_phase_completion.py --fase FASE-CAUSAL-03` ejecutado
-
-### FASE RELEASE-4.21.0: Documentacion
-- [ ] CHANGELOG.md con entrada 4.21.0
-- [ ] REGISTRY.md actualizado (automatico via log_phase_completion)
-- [ ] Version Sync Gate paso sin errores
-- [ ] Modulos importan sin errores
-- [ ] v4complete de prueba exitoso (opcional)
-- [ ] `log_phase_completion.py --fase FASE-RELEASE-4.21.0` ejecutado
-- [ ] `git add -A && git commit` realizado
+| # | ID | Descripcion | Estado | Sesion |
+|---|----|-------------|--------|--------|
+| 1 | FASE-A | Canonical Metrics + Provider Registry + Permission Modes | ✅ Completada | Sesion 1 |
+| 2 | FASE-B | Document Quality Gate + Content Scrubber | ✅ Completada | Sesion 2 |
+| 3 | FASE-C | Priorizacion Ponderada con Impacto Estimado | ⏳ Pendiente | Sesion 3 |
+| 4 | FASE-D | Google Search Console Integration | ⏳ Pendiente | Sesion 4 |
+| 5 | FASE-E | Micro-Content Local Generator | ⏳ Pendiente | Sesion 5 |
 
 ---
 
-## Metricas del Proyecto
+## FASE-A: Canonical Metrics + Provider Registry + Permission Modes
 
-| Metrica | Valor Inicial | Valor Final |
-|---------|--------------|-------------|
-| Scores en scorecard V6 | 5 | 4 |
-| Scores fantasmas (--) | 1 (AEO/Voice) | 0 |
-| Scores redundantes (IAO=AEO) | 1 | 0 |
-| Modulos que usan IAO | 3 | 0 |
-| Lineas de dead code | ~100 | 0 |
-| Version del proyecto | 4.20.0 | 4.21.0 |
+**Archivo prompt**: `.opencode/plans/05-prompt-inicio-sesion-fase-A.md`
+**Dependencias**: Ninguna
+**Prioridad**: Media (base para FASE-D)
+
+### Checklist
+- [x] `modules/utils/canonical_metrics.py` creado
+- [x] `tests/utils/test_canonical_metrics.py` — 22/22 tests passing
+- [x] `config/provider_registry.yaml` creado (8 proveedores configurados)
+- [x] `modules/utils/provider_registry.py` creado
+- [x] `tests/utils/test_provider_registry.py` — 13/13 tests passing
+- [x] `modules/utils/permission_mode.py` creado
+- [x] `tests/utils/test_permission_mode.py` — 22/22 tests passing
+- [x] `main.py` modificado con argumento `--permission-mode`
+- [x] `python main.py --help` muestra `--permission-mode`
+- [x] Backward compatible
+- [x] CHANGELOG.md actualizado retroactivamente (v4.23.0)
+- [x] REGISTRY.md actualizado (stats table)
+
+---
+
+## FASE-B: Document Quality Gate + Content Scrubber
+
+**Archivo prompt**: `.opencode/plans/05-prompt-inicio-sesion-fase-B.md`
+**Dependencias**: Ninguna obligatoria (FASE-A es nice-to-have)
+**Prioridad**: ALTA — Previene documentos con errores visibles al cliente
+**Origen**: Analisis comparativo seomachine #1,#2
+
+### Checklist
+- [ ] `modules/postprocessors/__init__.py` creado
+- [ ] `modules/postprocessors/document_quality_gate.py` creado (3 blocker + 2 warning checks)
+- [ ] `modules/postprocessors/content_scrubber.py` creado (5 reglas, idempotente)
+- [ ] `modules/quality_gates/publication_gates.py` modificado — gate #6
+- [ ] `modules/asset_generation/asset_content_validator.py` modificado — nuevos patterns
+- [ ] Integracion en flujo v4complete (scrub → validate → log → delivery)
+- [ ] `tests/postprocessors/test_document_quality_gate.py` — 12/12 passing
+- [ ] `tests/postprocessors/test_content_scrubber.py` — 10/10 passing
+- [ ] Diagnostico de prueba limpio (sin "default", "COP COP", portugues, "0% confianza")
+- [ ] `python scripts/run_all_validations.py --quick` pasa
+- [ ] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
+
+---
+
+## FASE-C: Priorizacion Ponderada con Impacto Estimado
+
+**Archivo prompt**: `.opencode/plans/05-prompt-inicio-sesion-fase-C.md`
+**Dependencias**: FASE-B ✅
+**Prioridad**: Alta — Mejora argumento comercial
+**Origen**: Analisis comparativo seomachine #3
+
+### Checklist
+- [ ] `modules/financial_engine/opportunity_scorer.py` creado (modelo 3 factores)
+- [ ] `data_models/canonical_assessment.py` modificado — campo `opportunity_scores`
+- [ ] `modules/commercial_documents/composer.py` modificado — scores en brechas
+- [ ] `modules/financial_engine/calculator_v2.py` modificado — pesos dinamicos
+- [ ] `tests/financial_engine/test_opportunity_scorer.py` — 14/14 passing
+- [ ] Backward compatible (sin scorer = pesos fijos)
+- [ ] `python scripts/run_all_validations.py --quick` pasa
+- [ ] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
+
+---
+
+## FASE-D: Google Search Console Integration
+
+**Archivo prompt**: `.opencode/plans/05-prompt-inicio-sesion-fase-D.md`
+**Dependencias**: FASE-A ✅ (provider_registry), FASE-C ✅ (opportunity_scorer)
+**Prioridad**: Media-Alta — Datos reales vs estimaciones
+**Origen**: Analisis comparativo seomachine #4
+
+### Checklist
+- [ ] `modules/analytics/google_search_console_client.py` creado
+- [ ] `modules/analytics/data_aggregator.py` creado (unifica GA4 + GSC)
+- [ ] `modules/onboarding/onboarding_flow.py` modificado — paso GSC opcional
+- [ ] `modules/commercial_documents/composer.py` modificado — datos GSC en diagnostico
+- [ ] `config/provider_registry.yaml` modificado — entrada gsc (o ya incluida en FASE-A)
+- [ ] `tests/analytics/test_google_search_console_client.py` — 10/10 passing
+- [ ] `tests/analytics/test_data_aggregator.py` — 8/8 passing
+- [ ] Graceful degradation: sin GSC = flujo normal funciona
+- [ ] `python scripts/run_all_validations.py --quick` pasa
+- [ ] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
+
+---
+
+## FASE-E: Micro-Content Local Generator
+
+**Archivo prompt**: `.opencode/plans/05-prompt-inicio-sesion-fase-E.md`
+**Dependencias**: FASE-B ✅ (content pasa por quality gate)
+**Prioridad**: Baja — Add-on comercial
+**Origen**: Analisis comparativo seomachine #5
+
+### Checklist
+- [ ] `modules/asset_generation/local_content_generator.py` creado
+- [ ] `modules/asset_generation/asset_catalog.py` modificado — tipo `local_content_page`
+- [ ] `templates/local_content/` creado
+- [ ] `tests/asset_generation/test_local_content_generator.py` — 10/10 passing
+- [ ] Genera 3-5 paginas de contenido local por hotel
+- [ ] Contenido pasa Content Scrubber
+- [ ] `python scripts/run_all_validations.py --quick` pasa
+- [ ] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado

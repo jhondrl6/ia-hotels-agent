@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-05
-> **Total fases completadas:** 36
-> **Version actual:** v4.22.0
+> **Ultima actualizacion:** 2026-04-06
+> **Version actual:** v4.23.0
+> **Total fases completadas:** 42
 
 ---
 
@@ -1325,6 +1325,182 @@ _Ninguno_
 ---
 
 
+## FASE-A - 2026-04-06
+**Descripcion:** Canonical Metrics + Provider Registry + Permission Modes (patrones Goose)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/utils/canonical_metrics.py` | NUEVO | Canonical Metrics |
+| `modules/utils/provider_registry.py` | NUEVO | Provider Registry |
+| `modules/utils/permission_mode.py` | NUEVO | Permission Mode |
+| `config/provider_registry.yaml` | NUEVO | Provider Registry |
+| `tests/utils/test_canonical_metrics.py` | NUEVO | Test Canonical Metrics |
+| `tests/utils/test_provider_registry.py` | NUEVO | Test Provider Registry |
+| `tests/utils/test_permission_mode.py` | NUEVO | Test Permission Mode |
+| `tests/utils/__init__.py` | NUEVO |   Init   |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (57)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+
+---
+
+## FASE-B - 2026-04-06 (Document Quality Gate + Content Scrubber)
+
+**Descripcion:** Validacion de calidad post-generacion y limpieza de contenido LLM para documentos comerciales.
+Modulo DocumentQualityGate con 3 blocker checks (placeholder_region, duplicate_currency, zero_confidence) y 2 warning checks (mixed_language, generic_ai_phrases). ContentScrubber idempotente con 5 reglas de correccion automatica.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| modules/postprocessors/__init__.py | NUEVO | Paquete postprocessors |
+| modules/postprocessors/document_quality_gate.py | NUEVO | Blocker + warning checks |
+| modules/postprocessors/content_scrubber.py | NUEVO | Correcciones automaticas idempotentes |
+| tests/postprocessors/__init__.py | NUEVO | Init tests postprocessors |
+| tests/postprocessors/test_document_quality_gate.py | NUEVO | 22 tests quality gate |
+| tests/postprocessors/test_content_scrubber.py | NUEVO | 16 tests scrubber |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| modules/quality_gates/publication_gates.py | Gate #7: content_quality_gate agregado |
+| modules/asset_generation/asset_content_validator.py | Nuevos patterns: en default, COP COP |
+| main.py | FASE 3.6: Scrubber + Quality Gate en flujo v4complete |
+
+### Validaciones
+- [x] Tests passing (38)
+- [x] Import verification OK
+- [x] Sintaxis valida en todos los archivos
+- [x] Idempotencia verificada (double scrub = single scrub)
+
+---
+
+
+## FASE-B - 2026-04-06
+**Descripcion:** Document Quality Gate + Content Scrubber (3 blocker + 2 warning checks, 5-rule idempotent scrubber, gate #7 in publication_gates, FASE 3.6 in main.py) + FASE-A retroactive: Canonical Metrics + Provider Registry + Permission Modes (57 tests, 3 new modules, provider_registry.yaml)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/postprocessors/__init__.py` | NUEVO |   Init   |
+| `modules/postprocessors/document_quality_gate.py` | NUEVO | Document Quality Gate |
+| `modules/postprocessors/content_scrubber.py` | NUEVO | Content Scrubber |
+| `tests/postprocessors/__init__.py` | NUEVO |   Init   |
+| `tests/postprocessors/test_document_quality_gate.py` | NUEVO | Test Document Quality Gate |
+| `tests/postprocessors/test_content_scrubber.py` | NUEVO | Test Content Scrubber |
+| `modules/utils/canonical_metrics.py` | NUEVO | Canonical Metrics |
+| `modules/utils/provider_registry.py` | NUEVO | Provider Registry |
+| `modules/utils/permission_mode.py` | NUEVO | Permission Mode |
+| `config/provider_registry.yaml` | NUEVO | Provider Registry |
+| `tests/utils/__init__.py` | NUEVO |   Init   |
+| `tests/utils/test_canonical_metrics.py` | NUEVO | Test Canonical Metrics |
+| `tests/utils/test_provider_registry.py` | NUEVO | Test Provider Registry |
+| `tests/utils/test_permission_mode.py` | NUEVO | Test Permission Mode |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `modules/asset_generation/asset_content_validator.py` | Asset Content Validator |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (95)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-C - 2026-04-06
+**Descripcion:** Priorizacion Ponderada con Impacto Estimado - Opportunity Scorer con modelo 3 factores
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/financial_engine/opportunity_scorer.py` | NUEVO | Opportunity Scorer |
+| `tests/financial_engine/test_opportunity_scorer.py` | NUEVO | Test Opportunity Scorer |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `data_models/canonical_assessment.py` | Canonical Assessment |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/financial_engine/calculator_v2.py` | Calculator V2 |
+| `AGENTS.md` | Agents |
+| `VERSION.yaml` | Version |
+
+### Validaciones
+- [x] Tests passing (18)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-D - 2026-04-06
+**Descripcion:** Google Search Console Integration
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/analytics/google_search_console_client.py` | NUEVO | Google Search Console Client |
+| `modules/analytics/data_aggregator.py` | NUEVO | Data Aggregator |
+| `modules/onboarding/add_gsc_step.py` | NUEVO | Add Gsc Step |
+| `tests/analytics/test_google_search_console_client.py` | NUEVO | Test Google Search Console Client |
+| `tests/analytics/test_data_aggregator.py` | NUEVO | Test Data Aggregator |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `config/provider_registry.yaml` | Provider Registry |
+| `data_models/analytics_status.py` | Analytics Status |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/analytics/__init__.py` |   Init   |
+
+### Validaciones
+- [x] Tests passing (33)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-E - 2026-04-06
+**Descripcion:** Micro-Content Local Generator - 3-5 paginas de contenido local orientadas a keywords long-tail para hoteles boutique
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/asset_generation/local_content_generator.py` | NUEVO | Local Content Generator |
+| `modules/asset_generation/templates/local_content/page_template.md` | NUEVO | Page Template |
+| `modules/asset_generation/templates/local_content/keyword_selection.md` | NUEVO | Keyword Selection |
+| `tests/asset_generation/test_local_content_generator.py` | NUEVO | Test Local Content Generator |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/asset_catalog.py` | Asset Catalog |
+
+### Validaciones
+- [x] Tests passing (15)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
@@ -1364,7 +1540,10 @@ _Ninguno_
 ||| FASE-12
 || FASE-13 | 2026-03-25 | 4 | ✅ Complete |
 || FASE-A | 2026-03-25 | 5 | ✅ Complete |
+|| FASE-A (Canonical Metrics) | 2026-04-06 | 57 | ✅ Complete |
+|| FASE-B (Quality Gate) | 2026-04-06 | 38 | ✅ Complete |
 || FASE-B | 2026-03-25 | 23 | ✅ Complete |
+|| FASE-C (Priorizacion Ponderada) | 2026-04-06 | 18 | ✅ Complete |
 || FASE-C | 2026-03-25 | 28 | ✅ Complete |
 || FASE-D | 2026-03-25 | N/A | ❌ Fallida |
 || FASE-E | 2026-03-25 | 28 | ✅ Complete |

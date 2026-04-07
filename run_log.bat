@@ -1,2 +1,0 @@
-@echo off
-C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe C:\Users\Jhond\Github\iah-cli\scripts\log_phase_completion.py --fase GAP-IAO-01-02-B --desc Integracion de 6 elementos al pipeline --archivos-nuevos modules/auditors/seo_elements_detector.py --archivos-mod modules/auditors/v4_comprehensive.py --archivos-mod modules/data_validation/cross_validator.py --archivos-mod modules/commercial_documents/v4_diagnostic_generator.py --tests 28_passed --coherence 0

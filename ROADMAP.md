@@ -1,3 +1,88 @@
+## 🧠 Hotel Graph — Knowledge Graph para el Dominio Hotelero (Iniciativa Estratégica v5.0)
+
+> Inspirado por el patrón de knowledge graph de GitNexus (grafo de código → insights), adaptado al dominio hotelero: entidades, métricas, canales y recomendaciones conectados en un grafo consultable.
+
+### Visión
+
+Construir un **grafo de conocimiento hotelero** donde cada nodo es una entidad del dominio (canal, metrica, servicio, tipo de huésped, activo digital) y cada arista es una relación cuantificada (AFECTA, OPTIMIZA, GENERA, DEPENDE_DE). Esto permite:
+
+- **Análisis de impacto en lenguaje natural**: "¿Qué pasa con el revenue si elimino photos de GBP?" → traza todas las aristas descendentes.
+- **Recomendaciones justificables por grafo**: cada score en el diagnóstico se explica como path en el grafo, no como número mágico.
+- **Detección automática de comunidades**: clusteres tipo Leiden agrupan servicios correlacionados (ej: "termas + gastronomía + experiencias de café" se detectan como comunidad sin configuración manual).
+- **Impact propagation**: cambiar un input (ej: occupancy_rate) propaga por el grafo → actualiza todos los scores, proyecciones y assets afectados.
+- **Consultas estructuradas**: "¿Qué métricas dependen de reviews_score?" → respuesta determinística del grafo, no del LLM.
+
+### Arquitectura propuesta
+
+```
+Hotel Graph (LadybugDB o Neo4j local)
+├── Nodos
+│   ├── Canal (booking_channel, GBP, sitio_web, OTAs, PMS)
+│   ├── Metrica (geo_score, coherence_score, occupancy_rate, ADR, RevPAR, review_rating)
+│   ├── Activo (faq_page, org_schema, aeo_faq, whatsapp_widget, booking_engine)
+│   ├── Servicio (restaurante, spa, pool, wifi, tours, termas)
+│   ├── HuéspedTipo (business, leisure, couple, family, digital_nomad)
+│   ├── Fuente (ga4, profound, semrush, places_api, pagespeed, manual)
+│   └── Dolor (low_visibility, no_booking_engine, outdated_photos, no_ga4)
+├── Aristas (CodeRelation → HotelRelation)
+│   ├── AFECTA (metrica → metrica, con peso cuantificable)
+│   ├── OPTIMIZA (activo → metrica, con ganancia estimada)
+│   ├── DEPENDE_DE (metrica → fuente, con nivel de confianza)
+│   ├── GENERA (dolor → pérdida_estimada en COP)
+│   └── PERTENECE_A (servicio → comunidad funcional)
+└── Motores
+    ├── CommunityDetector (Leiden algorithm sobre el grafo hotelero)
+    ├── ImpactAnalyzer (blast radius de cambios en inputs)
+    ├── RecommendationEngine (paths de optimización de mayor ROI)
+    └── NaturalQuery (BM25 + embeddings sobre nodos/aristas para preguntas en lenguaje natural)
+```
+
+### Fases de implementación (con milestones por escala de clientes)
+
+| Fase | Entregable | Dependencias | Estimación | Disparador de inicio |
+|------|-----------|-------------|-----------|---------------------|
+| **HG-01: Schema Definition** | Definir nodos, aristas, propiedades. Script que genera schema desde data_models/ actuales | data_models/canonical_assessment.py, aeo_kpis.py | 1 sesión | 5+ hoteles activos |
+| **HG-02: Graph Builder** | Python module que lee output/v4_complete/*.json → construye grafo en memoria (NetworkX) | HG-01 | 1-2 sesiones | HG-01 completada |
+| **HG-03: Persistence Layer** | Persistir grafo en LadybugDB (.gitnexus equivalente) o SQLite con extension graph | HG-02 | 1 sesión | HG-02 completada |
+| **HG-04: Impact Analyzer** | Función `analyze_impact(cambio) → blast_radius, métricas_afectadas, riesgo` | HG-03 | 1 sesión | 10+ hoteles activos |
+| **HG-05: Community Detection** | Leiden sobre grafo hotelero → agrupación automática de áreas del negocio | HG-03 | 1 sesión | 15+ hoteles activos |
+| **HG-06: Diagnostic Integration** | Reemplazar scores numéricos aislados → scores explicados como paths en el grafo | HG-02, HG-04 | 2 sesiones | 20+ hoteles activos |
+| **HG-07: NaturalQuery** | BM25 + embeddings sobre grafo → preguntas como "¿por qué mi review_score es bajo?" | HG-03, embeddings locales | 1-2 sesiones | 25+ hoteles activos |
+| **HG-08: Regional Graph** | Grafo multi-hotel anonimizado del Eje Cafetero → benchmark real, no estático | HG-03, 5+ hoteles indexados | Futuro | 25+ hoteles activos (piloto ya corriendo) |
+
+**Criterio de parada por fase**: No avanzar a la siguiente HG hasta cumplir el disparador de escala O hasta que el beneficio comercial sea verificable (hotelero pide explicacion del score, necesita benchmark regional, etc.).
+
+### Patrones aprendidos de referencia
+
+| Fuente | Patrón | Adaptación a Hotel Graph |
+|--------|--------|------------------------|
+| GitNexus | Code graph con Tree-sitter | Hotel graph con canonical_assessment + GA4 + GBP como "parsers" |
+| GitNexus | Leiden communities (áreas funcionales) | Clusteres hoteleros: F&B, Rooms, Digital, F&E detectados automáticamente |
+| GitNexus | Execution flows (entry → terminal) | Cadena de impacto: "Baja en reviews → menos clicks GBP → menos ocupación → menor revenue" |
+| GitNexus | Hybrid search (BM25 + vectors) | Preguntas sobre el grafo en lenguaje natural del hotelero |
+| GitNexus | Impact analysis (blast radius) | "Si subes precio 15%, ¿qué scores cambian y en cuánto?" |
+| Goose | 82 providers, canonical models | Canonical metrics: normalizar nombres de métricas entre fuentes (GA4 vs SerpAPI vs manual) |
+| Goose | Recipes (YAML workflows) | HotelGraph queries predefinidas: "auditoria_rapida", "benchmark_regional", "impacto_cambio" |
+
+### Principios de diseño
+
+1. **Grafo vivo, no snapshot**: se actualiza con cada análisis v4complete. Historial de cambios en el tiempo.
+2. **Explicabilidad sobre complejidad**: el hotelero debe entender en 10 segundos por qué su score es X.
+3. **Honesto por defecto**: si una arista no tiene datos reales, usa `ESTIMATED` con nota explicativa. Nunca inventar conexiones.
+4. **Dominio primero**: este grafo NO es un grafo de código. Es un modelo mental del negocio hotelero del Eje Cafetero.
+5. **Complemento, no reemplazo**: el Hotel Graph potencia el pipeline existente (v4complete → diagnóstico → propuesta → assets). No lo reemplaza.
+
+### Métricas de éxito para Hotel Graph
+
+| Métrica | Objetivo | Por qué importa |
+|---------|----------|----------------|
+| % de scores del diagnóstico explicables como path en el grafo | ≥ 90% | Elimina "números mágicos" del scorecard |
+| Tiempo de respuesta query natural sobre grafo | < 500ms | Experiencia fluida en CLI y portal |
+| Comunidades detectadas con coherencia > 0.7 | ≥ 3 por hotel | Demuestra que el grafo captura estructuras reales del negocio |
+| Impact predictions correctas (vs resultado real) | ≥ 80% | Confianza en recomendaciones del sistema |
+
+---
+
 ## 📊 Métricas de Éxito (OKRs Trimestrales)
 
 | Métrica | Objetivo Q2 2026 | Umbral de éxito | Frecuencia de medición |
@@ -73,8 +158,8 @@ Estas iniciativas no son tácticas de marketing, pero **crean las condiciones pa
 
 - 🤖 **Modo autónomo semanal**: Ejecutar análisis completo cada lunes por la mañana y notificar cambios significativos en coherence, ranking o assets.
 - 🌐 **Multi-idioma nativo**: Generar diagnóstico, propuesta y assets automáticamente en inglés y portugués (además de español), con validación cruzada en fuentes locales.
-- 🔗 **Red de referencia verificada (opt-in)**: Permitir que hoteles participantes vean (anonimizado, agregado) cómo hoteles similares mejoraron su score tras implementar ciertas mejoras (ej: "Hoteles que mejoraron su GBP subieron 0.15 en coherence en promedio").
-- 📈 **Benchmark dinámico regional**: Actualizar rangos de referencia mensualmente usando nuevos datos de alta confianza (VERIFIED) de hoteles en la misma zona.
+|- ~~🔗 Red de referencia verificada (opt-in)~~ — **Absorbido por Hotel Graph HG-08: Regional Graph**. El grafo multi-hotel anonimizado cubre esta capacidad con más precisión: no solo comparaciones agregadas sino paths de impacto reales entre hoteles similares.
+|- ~~📈 Benchmark dinámico regional~~ — **Absorbido por Hotel Graph HG-05 + HG-08**. La deteccion de comunidades (Leiden) + el grafo regional hacen que los benchmarks sean automaticamente dinamicos y basados en estructura, no en rangos estaticos.
 - 🛡️ **Modo cumplimiento turístico**: Validar automáticamente alignment con leyes locales de publicidad turística, precios mostrados y privacidad de datos (ej: Ley de Protección de Datos Personales en Colombia, GDPR para turistas EU).
 - 🧠 **Asistente de implementación**: Guiar paso a paso al hoteleros en la puesta en marcha de assets recomendados (ej: "Así insertas el botón de WhatsApp en tu WordPress").
 - ⚡ **Modo lite para emergencias**: Versión ultra-rápida (<90s) que da solo hook + recomendación crítica cuando se necesita velocidad absoluta (ej: en llamadas de ventas).

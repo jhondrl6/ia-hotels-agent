@@ -299,6 +299,12 @@ class CanonicalAssessment(BaseModel):
     )
     hard_contradictions: int = Field(default=0, ge=0, description="Contradicciones duras")
 
+    # Opportunity scores (FASE-C: priorizacion ponderada de brechas)
+    opportunity_scores: Optional[List[Dict[str, Any]]] = Field(
+        default=None,
+        description="Lista de brechas con score ponderado (severidad, esfuerzo, impacto, COP)",
+    )
+
     @field_validator("coherence_score", "evidence_coverage")
     @classmethod
     def validate_score_range(cls, v: float) -> float:

@@ -24,6 +24,15 @@ from .data_structures import (
 
 from data_models.analytics_status import AnalyticsStatus
 
+
+def _get_opportunity_scorer():
+    """Lazy import del OpportunityScorer para evitar import circular."""
+    try:
+        from modules.financial_engine.opportunity_scorer import OpportunityScorer
+        return OpportunityScorer()
+    except Exception:
+        return None
+
 # Analytics imports (lazy-loaded to avoid hard dependency on google-analytics-data)
 # Used by _get_analytics_summary() and _get_analytics_fallback()
 
@@ -506,6 +515,32 @@ ${quick_wins_list}
             'brecha_4_nombre': self._get_brecha_nombre(audit_result, 3),
             'brecha_4_costo': self._get_brecha_costo(audit_result, financial_scenarios, 3),
             'brecha_4_detalle': self._get_brecha_detalle(audit_result, 3),
+
+            'brecha_1_score': self._get_brecha_score_placeholder(0),
+            'brecha_1_severity': self._get_brecha_severity_placeholder(0),
+            'brecha_1_effort': self._get_brecha_effort_placeholder(0),
+            'brecha_1_impact_score': self._get_brecha_impact_score_placeholder(0),
+            'brecha_1_justification': self._get_brecha_justification_placeholder(0),
+            'brecha_1_rank': self._get_brecha_rank_placeholder(0),
+            'brecha_2_score': self._get_brecha_score_placeholder(1),
+            'brecha_2_severity': self._get_brecha_severity_placeholder(1),
+            'brecha_2_effort': self._get_brecha_effort_placeholder(1),
+            'brecha_2_impact_score': self._get_brecha_impact_score_placeholder(1),
+            'brecha_2_justification': self._get_brecha_justification_placeholder(1),
+            'brecha_2_rank': self._get_brecha_rank_placeholder(1),
+            'brecha_3_score': self._get_brecha_score_placeholder(2),
+            'brecha_3_severity': self._get_brecha_severity_placeholder(2),
+            'brecha_3_effort': self._get_brecha_effort_placeholder(2),
+            'brecha_3_impact_score': self._get_brecha_impact_score_placeholder(2),
+            'brecha_3_justification': self._get_brecha_justification_placeholder(2),
+            'brecha_3_rank': self._get_brecha_rank_placeholder(2),
+            'brecha_4_score': self._get_brecha_score_placeholder(3),
+            'brecha_4_severity': self._get_brecha_severity_placeholder(3),
+            'brecha_4_effort': self._get_brecha_effort_placeholder(3),
+            'brecha_4_impact_score': self._get_brecha_impact_score_placeholder(3),
+            'brecha_4_justification': self._get_brecha_justification_placeholder(3),
+            'brecha_4_rank': self._get_brecha_rank_placeholder(3),
+
             
             # Additional variables for sales template
             'year': str(year),
@@ -553,6 +588,11 @@ ${quick_wins_list}
             'brecha_2_recuperacion': self._get_brecha_recuperacion(audit_result, financial_scenarios, 1),
             'brecha_3_recuperacion': self._get_brecha_recuperacion(audit_result, financial_scenarios, 2),
         }
+
+        # --- FASE-C: Opportunity Scores injection ---
+        score_vars = self._inject_brecha_scores(audit_result, financial_scenarios)
+        # Only override if scores are available (non-empty string or value)
+        data.update(score_vars)
         
         # --- Analytics integration (GA4 / fallback) ---
         analytics_vars = self._inject_analytics(audit_result, analytics_data)
@@ -569,6 +609,7 @@ ${quick_wins_list}
         data['ga4_status_text'] = analytics_status.ga4_status_for_template()
         data['profound_status_text'] = analytics_status.profound_status_for_template()
         data['semrush_status_text'] = analytics_status.semrush_status_for_template()
+        data['gsc_status_text'] = analytics_status.gsc_status_for_template()
         
         # Seccion opcional de transparencia de datos
         data['analytics_transparency_section'] = self._build_transparency_section(analytics_status)
@@ -628,12 +669,14 @@ ${quick_wins_list}
         ga4 = analytics_status.ga4_status_for_template()
         profound = analytics_status.profound_status_for_template()
         semrush = analytics_status.semrush_status_for_template()
+        gsc = analytics_status.gsc_status_for_template()
 
         section = f"""### Fuentes de Datos Usadas en Este Diagnostico
 
 - **Google Analytics 4**: {ga4}
 - **Profound AI Visibility**: {profound}
 - **Semrush SEO**: {semrush}
+- **Google Search Console**: {gsc}
 - **Audit Web**: ✅ Disponible
 
 > *Nota: Las fuentes marcadas con ⚠️ no fueron incluidas porque requieren
@@ -1225,6 +1268,21 @@ ${quick_wins_list}
             status.semrush_error = str(e)
             status.semrush_status_text = f"Error: {str(e)}"
 
+        # --- GSC (FASE-D) ---
+        try:
+            from modules.analytics.google_search_console_client import GoogleSearchConsoleClient
+            gsc = GoogleSearchConsoleClient()
+            status.gsc_available = gsc.is_configured()
+            if not status.gsc_available:
+                if gsc._init_error:
+                    status.gsc_error = gsc._init_error
+                    status.gsc_status_text = f"No configurado ({gsc._init_error})"
+                else:
+                    status.gsc_status_text = "No configurado (agregue GSC_SITE_URL)"
+        except Exception as e:
+            status.gsc_error = str(e)
+            status.gsc_status_text = f"Error: {str(e)}"
+
         return status
 
     def _get_analytics_summary(self, ga4_property_id: str = None) -> Dict[str, Any]:
@@ -1425,6 +1483,149 @@ ${quick_wins_list}
             recuperacion = main.monthly_loss_max * proportion
             return f"{recuperacion:,.0f}"
         return "0"
+    # ===== Opportunity Scoring Integration Methods =====
+
+    def _compute_opportunity_scores(
+        self,
+        audit_result: V4AuditResult,
+        financial_scenarios: FinancialScenarios,
+    ) -> Optional[list]:
+        """
+        Calcula opportunity_scores desde el audit result.
+        Retorna list de OpportunityScore o None si falla.
+        Backward compatible: si OpportunityScorer no esta disponible, retorna None.
+        """
+        try:
+            scorer = _get_opportunity_scorer()
+            if scorer is None:
+                return None
+
+            # Obtener brechas actuales (para mantener consistencia)
+            brechas = self._identify_brechas(audit_result)
+            if not brechas:
+                return None
+
+            # Convertir brechas al formato que espera OpportunityScorer
+            brecha_dicts = []
+            for idx, b in enumerate(brechas):
+                pain_id = b.get('pain_id', '')
+                brecha_type = self._map_pain_to_scorer_type(pain_id)
+                brecha_dicts.append({
+                    'id': f"brecha_{idx+1}",
+                    'type': brecha_type,
+                    'name': b.get('nombre', ''),
+                    'pain_id': pain_id,
+                })
+
+            # Obtener monthly loss del escenario principal
+            total_monthly_loss = None
+            if financial_scenarios:
+                main = financial_scenarios.get_main_scenario()
+                if main:
+                    total_monthly_loss = main.monthly_loss_max
+
+            # Calcular scores
+            scores = scorer.score_brechas(
+                brecha_dicts,
+                assessment=audit_result,
+                competitor_data=None,
+                total_monthly_loss=total_monthly_loss,
+            )
+            return scores
+
+        except Exception as e:
+            # Fallback silencioso - no romper generacion
+            print(f"[WARNING] Opportunity scoring failed (falling back): {e}")
+            return None
+
+    def _map_pain_to_scorer_type(self, pain_id: str) -> str:
+        """Mapea pain_id de brechas al formato de OpportunityScorer."""
+        mapping = {
+            'no_hotel_schema': 'no_hotel_schema',
+            'no_faq_schema': 'faq_schema_missing',
+            'low_gbp_score': 'gbp_incomplete',
+            'whatsapp_conflict': 'whatsapp_conflict',
+            'data_inconsistent': 'data_inconsistent',
+            'metadata_defaults': 'cms_defaults',
+            'poor_performance': 'poor_performance',
+            'missing_reviews': 'gbp_incomplete',
+            'no_og_tags': 'cms_defaults',
+            'low_citability': 'cms_defaults',
+        }
+        return mapping.get(pain_id, 'no_hotel_schema')
+
+    def _inject_brecha_scores(
+        self,
+        audit_result: V4AuditResult,
+        financial_scenarios: FinancialScenarios,
+    ) -> Dict[str, Any]:
+        """
+        Inyecta variables de score para cada brecha en el template.
+        Si hay opportunity_scores disponibles, usa valores calculados.
+        Si no, retorna valores placeholder vacios (fallback al impacto %).
+        """
+        try:
+            scores = self._compute_opportunity_scores(audit_result, financial_scenarios)
+            if scores is None:
+                return self._brecha_scores_empty(4)
+
+            result = {}
+            for i in range(4):
+                prefix = f"brecha_{i+1}"
+                if i < len(scores):
+                    s = scores[i]
+                    result[f"{prefix}_score"] = f"{int(s.total_score)}/100"
+                    result[f"{prefix}_severity"] = f"{int(s.severity_score)}/40"
+                    result[f"{prefix}_effort"] = f"{int(s.effort_score)}/30"
+                    result[f"{prefix}_impact_score"] = f"{int(s.impact_score)}/30"
+                    result[f"{prefix}_justification"] = s.justification
+                    result[f"{prefix}_rank"] = f"#{s.rank}"
+                else:
+                    result[f"{prefix}_score"] = "N/A"
+                    result[f"{prefix}_severity"] = "N/A"
+                    result[f"{prefix}_effort"] = "N/A"
+                    result[f"{prefix}_impact_score"] = "N/A"
+                    result[f"{prefix}_justification"] = "Sin datos disponibles"
+                    result[f"{prefix}_rank"] = "N/A"
+
+            return result
+
+        except Exception:
+            return self._brecha_scores_empty(4)
+
+    def _brecha_scores_empty(self, count: int = 4) -> Dict[str, str]:
+        """Retorna variables de score vacias para backward compatibility."""
+        result = {}
+        for i in range(count):
+            prefix = f"brecha_{i+1}"
+            result[f"{prefix}_score"] = ""
+            result[f"{prefix}_severity"] = ""
+            result[f"{prefix}_effort"] = ""
+            result[f"{prefix}_impact_score"] = ""
+            result[f"{prefix}_justification"] = ""
+            result[f"{prefix}_rank"] = ""
+        return result
+
+    # Placeholder methods para backward compatibility (fallback en template)
+    def _get_brecha_score_placeholder(self, index: int) -> str:
+        """Placeholder para score - reemplazado por _inject_brecha_scores."""
+        return ""
+
+    def _get_brecha_severity_placeholder(self, index: int) -> str:
+        return ""
+
+    def _get_brecha_effort_placeholder(self, index: int) -> str:
+        return ""
+
+    def _get_brecha_impact_score_placeholder(self, index: int) -> str:
+        return ""
+
+    def _get_brecha_justification_placeholder(self, index: int) -> str:
+        return ""
+
+    def _get_brecha_rank_placeholder(self, index: int) -> str:
+        return ""
+
     def _build_regional_context(self, region: str) -> str:
         """Build regional context text for the hotel location."""
         if not region:
@@ -1663,3 +1864,106 @@ ${quick_wins_list}
         # Priorizar por impacto y limitar a 4
         brechas.sort(key=lambda x: x.get('impacto', 0), reverse=True)
         return brechas[:4]
+
+
+    # ========================================================
+    # FASE-C: Oportunidad Ponderada (Opportunity Scores)
+    # ========================================================
+
+    def _compute_opportunity_scores(
+        self,
+        audit_result,
+        financial_scenarios: FinancialScenarios,
+    ) -> Optional[List[Dict[str, Any]]]:
+        """Calcula opportunity_scores desde audit_result usando OpportunityScorer.
+        
+        Retorna None si el scorer no esta disponible o falla (fallback).
+        """
+        scorer = _get_opportunity_scorer()
+        if scorer is None or audit_result is None:
+            return None
+
+        try:
+            brechas_list = self._build_brechas(audit_result)
+            pain_to_type = {
+                'no_faq_schema': 'faq_schema_missing',
+                'low_gbp_score': 'gbp_incomplete',
+                'whatsapp_conflict': 'whatsapp_conflict',
+                'metadata_defaults': 'cms_defaults',
+                'missing_reviews': 'gbp_incomplete',
+                'poor_performance': 'poor_performance',
+                'low_ia_readiness': 'cms_defaults',
+                'no_hotel_schema': 'no_hotel_schema',
+            }
+            brechas_for_scorer = []
+            for b in brechas_list:
+                pain_id = b.get('pain_id', '')
+                scorer_type = pain_to_type.get(pain_id, 'cms_defaults')
+                brechas_for_scorer.append({
+                    'id': pain_id,
+                    'type': scorer_type,
+                    'name': b.get('nombre', pain_id),
+                })
+
+            total_loss = None
+            if financial_scenarios:
+                try:
+                    main = financial_scenarios.get_main_scenario()
+                    total_loss = main.monthly_loss_max
+                except Exception:
+                    pass
+
+            from dataclasses import dataclass as _dc
+            scores = scorer.score_brechas(
+                brechas_for_scorer,
+                assessment=None,
+                total_monthly_loss=total_loss,
+            )
+
+            return [{
+                'brecha_id': s.brecha_id,
+                'brecha_name': s.brecha_name,
+                'severity_score': s.severity_score,
+                'effort_score': s.effort_score,
+                'impact_score': s.impact_score,
+                'total_score': s.total_score,
+                'estimated_monthly_cop': s.estimated_monthly_cop,
+                'justification': s.justification,
+                'rank': s.rank,
+            } for s in scores]
+        except Exception:
+            return None
+
+    def _inject_brecha_scores(
+        self,
+        audit_result,
+        financial_scenarios: FinancialScenarios,
+    ) -> Dict[str, str]:
+        """Inyecta variables de opportunity_scores para el template.
+
+        Retorna dict con brecha_N_score, brecha_N_severity, etc.
+        """
+        scores = self._compute_opportunity_scores(audit_result, financial_scenarios)
+        result = {}
+        for i in range(1, 5):
+            n = str(i)
+            if scores and len(scores) >= i:
+                s = scores[i - 1]
+                result[f'brecha_{n}_score'] = f"{s['total_score']:.0f}/100"
+                result[f'brecha_{n}_severity'] = f"{s['severity_score']:.0f}/40"
+                result[f'brecha_{n}_effort'] = f"{s['effort_score']:.0f}/30"
+                result[f'brecha_{n}_impact_score'] = f"{s['impact_score']:.0f}/30"
+                result[f'brecha_{n}_justification'] = s['justification']
+                result[f'brecha_{n}_rank'] = f"#{s['rank']}"
+                result[f'brecha_{n}_costo'] = format_cop(s['estimated_monthly_cop'])
+                result[f'brecha_{n}_nombre'] = s['brecha_name']
+                result[f'brecha_{n}_detalle'] = s['justification']
+            else:
+                result[f'brecha_{n}_score'] = ''
+                result[f'brecha_{n}_severity'] = ''
+                result[f'brecha_{n}_effort'] = ''
+                result[f'brecha_{n}_impact_score'] = ''
+                result[f'brecha_{n}_justification'] = ''
+                result[f'brecha_{n}_rank'] = ''
+
+        return result

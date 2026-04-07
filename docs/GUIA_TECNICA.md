@@ -6,6 +6,88 @@
 
 ## Notas de Cambios v4.21.0 - Consolidacion AEO/IAO
 
+**Fecha:** 6 Abril 2026
+**Version:** 4.25.0 (FASE-E: Micro-Content Local Generator)
+
+## Notas de Cambios v4.25.0 - Micro-Content Local Generator
+
+**Fecha:** 6 Abril 2026
+**Version:** 4.25.0 (FASE-E: Micro-Content Local Generator)
+
+### Resumen
+
+Generador de 3-5 paginas de contenido local orientadas a keywords long-tail para hoteles boutique del Eje Cafetero. Add-on comercial vendible ($50K COP por 3 paginas) al Kit Hospitalidad Digital. Cada pagina tiene keyword target, 800-1200 palabras, schema Article JSON-LD, y link a reservas directas.
+
+### Modulos Afectados
+
+#### 1. modules/asset_generation/local_content_generator.py (NUEVO)
+- Dataclasses: LocalContentPage (keyword_target, title, slug, content_md, schema_article, internal_links, meta_description, word_count), LocalContentSet (hotel_name, location, pages, total_word_count)
+- LocalContentGenerator.generate_content_set(): genera 3-5 paginas segun tipo de hotel
+- KEYWORD_TEMPLATES por tipo: termales (5), parque_natural (5), pueblo_patrimonio (5), cafe (5), boutique (5), general (5)
+- KEYWORD_PRIORITY: heuristica de volumen estimado para ordenar keywords
+- Contenido expandible: 6-8 secciones por pagina (intro, contexto, informacion, practica, cultura, recomendaciones, datos_utiles, conclusion)
+- Schema Article JSON-LD con @context, @type, headline, description, author, publisher, keywords, inLanguage
+- Meta description 150-160 chars
+- Internal links: home del hotel + link a reservas WhatsApp
+- content_passes_scrubber(): metodo estatico que detecta frases AI genericas
+- Compatible con ContentScrubber de FASE-B
+
+#### 2. modules/asset_generation/templates/local_content/page_template.md (NUEVO)
+- Template de prompt para generacion LLM
+- Reglas: 800-1200 palabras, 4-5 secciones H2, tono informativo no vendedor
+
+#### 3. modules/asset_generation/templates/local_content/keyword_selection.md (NUEVO)
+- Guia para seleccionar keywords por tipo de hotel con priorizacion
+
+#### 4. modules/asset_generation/asset_catalog.py (MODIFICADO)
+- Entrada local_content_page registrada con status IMPLEMENTED
+
+### Tests
+15 tests nuevos en test_local_content_generator.py. 0 regresiones.
+
+**Version:** 4.23.0 (FASE-D: Google Search Console Integration)
+
+### Resumen
+
+Integracion de Google Search Console como fuente de datos para el diagnostico, pasando de estimaciones cualitativas ("0% confianza") a datos reales de keywords, posiciones y CTR del hotel. GSC es 100% opcional -- el flujo v4complete funciona completamente sin GSC.
+
+### Modulos Afectados
+
+#### 1. modules/analytics/google_search_console_client.py (NUEVO)
+- Cliente GSC usando webmasters v3 API con service account
+- Dataclasses: GSCQueryData, GSCPageData, GSCReport
+- Metodos: is_configured(), get_search_analytics(), get_top_opportunities()
+- Graceful fallback: retorna GSCReport con is_available=False sin credenciales
+- Reutiliza las mismas credenciales de GA4 (config/google-analytics-key.json)
+- Scope: https://www.googleapis.com/auth/webmasters.readonly
+- Costo API: GRATIS
+
+#### 2. modules/analytics/data_aggregator.py (NUEVO)
+- Unifica datos GA4 + GSC en UnifiedAnalyticsData
+- Confidence level: LOW (0 fuentes), MEDIUM (1 fuente), HIGH (2 fuentes)
+- Metricas derivadas: estimated_ia_visibility, organic_health_score
+- Graceful degradation: funciona sin GSC, sin GA4, o sin ambos
+
+#### 3. modules/onboarding/add_gsc_step.py (NUEVO)
+- Paso GSC opcional en onboarding del hotel
+- ask_gsc_during_onboarding(): pregunta si tiene GSC, pide site_url
+- apply_gsc_config(): guarda configuracion GSC en config del hotel
+
+#### 4. modules/commercial_documents/v4_diagnostic_generator.py (MODIFICADO)
+- Integration GSC en seccion "Fuentes de Datos" del diagnostico
+- Con GSC: muestra impresiones, posiciones, CTR reales
+- Sin GSC: fallback honesto con instruccion de activacion
+
+#### 5. data_models/analytics_status.py (MODIFICADO)
+- Agregados campos: gsc_available, gsc_error, gsc_status_text
+- Nueva funcion: gsc_status_for_template()
+
+### Tests
+
+33 tests nuevos: 14 en test_google_search_console_client.py + 19 en test_data_aggregator.py.
+
+## Notas de Cambios v4.21.0 - Consolidacion AEO/IAO
+
 **Fecha:** 4 Abril 2026
 
 ### Resumen

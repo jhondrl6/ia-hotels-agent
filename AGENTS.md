@@ -1,8 +1,8 @@
-<!-- agents_version: 4.22.0 | last_update: 2026-04-05 -->
+<!-- agents_version: 4.25.0 | last_update: 2026-04-06 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.22.0 -- Orthogonal Metrics Fix (eliminada duplicacion GEO/Activity)**
+> **v4.25.0 -- FASE-E: Micro-Content Local Generator COMPLETADO**
 
 ---
 
@@ -133,12 +133,15 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `modules/asset_generation/` | Generación condicional con gates | v4complete |
 | `modules/asset_generation/asset_catalog.py` | Catálogo centralizado de assets con is_asset_implemented | v4complete |
 | `modules/asset_generation/llmstxt_generator.py` | Generación de llms.txt estándar | v4complete, execute |
+| `modules/asset_generation/local_content_generator.py` | Generación de contenido local 3-5 paginas boutique (FASE-E) | v4complete |
 | `modules/auditors/` | APIs externas (Rich Results, Places, PageSpeed) | v4audit, v4complete |
 | `modules/auditors/ai_crawler_auditor.py` | Auditoría de robots.txt para IA crawlers | v4audit, v4complete |
 | `modules/auditors/citability_scorer.py` | Score de citabilidad de contenido | v4audit (ADVISORY) |
 | `modules/auditors/ia_readiness_calculator.py` | Score compuesto IA-readiness | v4audit (ADVISORY) |
-| `modules/analytics/` | GA4, Profound, Semrush clients | v4audit |
+| `modules/analytics/` | GA4, GSC, Profound, Semrush clients | v4audit |
 | `modules/analytics/google_analytics_client.py` | Cliente GA4 para tráfico indirecto | v4audit (ADVISORY) |
+| `modules/analytics/google_search_console_client.py` | Cliente GSC para keywords, posiciones, CTR | v4audit, v4complete (ADVISORY) |
+| `modules/analytics/data_aggregator.py` | Unifica GA4 + GSC en datos consolidados | v4complete (ADVISORY) |
 | `modules/commercial_documents/` | Diagnóstico, propuesta, coherencia | v4complete |
 | `modules/commercial_documents/composer.py` | Generación determinística de documentos | v4complete |
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |

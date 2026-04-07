@@ -1,5 +1,102 @@
 # Changelog
 
+## [4.25.0] - 2026-04-06
+
+### FASE-E: Micro-Content Local Generator
+- `modules/asset_generation/local_content_generator.py` - Generador de paginas de contenido
+  local orientadas a keywords long-tail para hoteles boutique (NUEVO)
+  - Dataclasses: LocalContentPage, LocalContentSet
+  - KEYWORD_TEMPLATES por tipo: termales, parque_natural, pueblo_patrimonio, cafe, boutique, general
+  - 6 secciones por pagina: intro, contexto, informacion, practica, recomendaciones, conclusion
+  - Contenido 800-1200 palabras con clamp automatico al maximo
+  - Schema Article JSON-LD por pagina
+  - Meta description 150-160 chars, internal links (home + WhatsApp)
+  - content_passes_scrubber(): deteccion de frases AI genericas
+  - Content passes ContentScrubber de FASE-B
+- `modules/asset_generation/templates/local_content/page_template.md` - Template de prompt LLM
+- `modules/asset_generation/templates/local_content/keyword_selection.md` - Guia de seleccion keywords
+- `modules/asset_generation/asset_catalog.py` - Entrada local_content_page registrada
+- `tests/asset_generation/test_local_content_generator.py` - 15 tests:
+  - keyword_selection_termales, keyword_selection_boutique
+  - page_structure, word_count_range (800-1200), internal_links (min 2)
+  - article_schema JSON-LD valido, hotel_mention_natural (no vendedora)
+  - content_scrubber_pass, max_5_pages, asset_catalog_entry
+  - slug_generation, content_scrubber_compatibility_method
+  - eco_hotel_type, hotel_without_phone, meta_description_length
+- Total: 15 tests nuevos, 0 regresiones
+- Add-on comercial vendible ($50K COP por 3 paginas)
+
+## [4.24.0] - 2026-04-07
+
+### FASE-D: Google Search Console Integration
+- `modules/analytics/google_search_console_client.py` - Cliente GSC con webmasters v3 API (NUEVO)
+  - Dataclasses: GSCQueryData, GSCPageData, GSCReport
+  - Metodos: is_configured(), get_search_analytics(), get_top_opportunities()
+  - Graceful fallback: is_available=False sin credenciales
+  - Reutiliza service account de GA4 (config/google-analytics-key.json)
+  - Costo API: GRATIS
+- `modules/analytics/data_aggregator.py` - Unifica GA4 + GSC (NUEVO)
+  - UnifiedAnalyticsData con confidence: LOW/MEDIUM/HIGH
+  - Metricas derivadas: estimated_ia_visibility, organic_health_score
+  - Graceful degradation: funciona sin GSC, sin GA4, o sin ambos
+- `modules/onboarding/add_gsc_step.py` - Paso GSC opcional en onboarding (NUEVO)
+- `modules/commercial_documents/v4_diagnostic_generator.py` - Integracion GSC en diagnostico
+- `data_models/analytics_status.py` - Campos gsc_available, gsc_error, gsc_status_text
+- `config/provider_registry.yaml` - Entrada gsc agregada
+- `tests/analytics/test_google_search_console_client.py` - 14 tests
+- `tests/analytics/test_data_aggregator.py` - 19 tests
+- Total: 33 tests nuevos, 0 regresiones
+
+## [4.23.0] - 2026-04-06
+
+### FASE-A: Canonical Metrics + Provider Registry + Permission Modes
+**Nota:** FASE-A se implemento en sesion anterior sin completar actualizacion de registros. Se documenta aqui retroactivamente.
+- `modules/utils/canonical_metrics.py` - Diccionario maestro de metricas canonicas (7 metricas, 24 aliases)
+- `modules/utils/provider_registry.py` - Singleton que centraliza configuracion de proveedores
+- `modules/utils/permission_mode.py` - 4 modos de permiso: auto, smart_approve, approve, chat
+- `config/provider_registry.yaml` - 8 proveedores configurados (ga4, profound, semrush, places_api, serpapi, pagespeed, rich_results, openrouter)
+- `tests/utils/` - 57 tests (22 + 13 + 22)
+- `main.py` - Argumento --permission-mode agregado
+
+### FASE-B: Document Quality Gate + Content Scrubber
+- `modules/postprocessors/document_quality_gate.py` - 3 blocker checks + 2 warning checks
+  - placeholder_region: Detecta "default" como region (blocker)
+  - duplicate_currency: Detecta "COP COP" (blocker)
+  - zero_confidence: Detecta "0% de confianza" en documentos comerciales (blocker)
+  - mixed_language: Portugues/ingles en texto espanol (warning)
+  - generic_ai_phrases: Frases boilerplate de LLM (warning)
+- `modules/postprocessors/content_scrubber.py` - Post-procesador idempotente con 5 reglas
+  - Reemplaza "en default" con ciudad real del hotel
+  - Elimina "COP COP" duplicado
+  - Reemplaza "0% confianza" con texto comercial seguro
+  - Convierte pt->es e en->es (diccionario contextual)
+  - Suaviza frases genericas de AI
+- `publication_gates.py` - Gate #7: content_quality_gate integrado
+- `asset_content_validator.py` - Nuevos patterns: "en default", "COP COP"
+- `main.py` - FASE 3.6: Content Scrubber + Quality Gate inyectado en flujo v4complete
+
+### FASE-C: Priorizacion Ponderada con Impacto Estimado
+- `modules/financial_engine/opportunity_scorer.py` (NUEVO) - OpportunityScorer con modelo de 3 factores:
+  - Severidad del Gap (0-40 pts): gravedad vs competencia
+  - Esfuerzo de Implementacion (0-30 pts): facilidad de implementar
+  - Impacto en Conversion Directa (0-30 pts): impacto directo en reservas
+  - Total 0-100 pts, ranking automatico, justificacion legible para hotelero
+- `modules/financial_engine/calculator_v2.py` - Soporte para pesos dinamicos via opportunity_scores
+  - Nuevo parametro opportunity_scores en calculate() y calculate_conditional()
+  - _compute_dynamic_brecha_weights() para normalizar pesos
+  - Backward compatible: sin scores = pesos fijos actuales
+- `data_models/canonical_assessment.py` - Campo opportunity_scores opcional agregado
+- `modules/commercial_documents/v4_diagnostic_generator.py` - Inyeccion de scores en template
+  - _compute_opportunity_scores(): calcula scores desde audit_result
+  - _inject_brecha_scores(): agrega brecha_N_score, severity, effort, impact, justification, rank
+  - Backward compatible: sin scores = comportamiento actual
+- `tests/financial_engine/test_opportunity_scorer.py` - 18 tests nuevos:
+  - Severidad con/sin competidores, esfuerzo FAQ/GBP, impacto WhatsApp
+  - Total score range 0-100, ranking, COP estimation, justificacion
+  - Backward compat, extractor, score from assessment, weights summary, empty brechas
+
+---
+
 ## [4.22.0] - 2026-04-05
 
 ### FIX CRITICO - Duplicacion de metricas en scorecard diagnostico

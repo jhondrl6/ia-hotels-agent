@@ -297,6 +297,18 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         status=AssetStatus.IMPLEMENTED,
         promised_by=["low_organic_visibility"]
     ),
+    # FASE-E: Micro-Content Local Generator
+    "local_content_page": AssetCatalogEntry(
+        asset_type="local_content_page",
+        template="local_content/page_template.md",
+        output_name="{prefix}contenido_local_{slug}{suffix}.md",
+        required_field="hotel_data",
+        required_confidence=0.5,
+        fallback="generate_basic_local_content",
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=[]
+    ),
 }
 
 
