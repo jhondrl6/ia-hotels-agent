@@ -92,7 +92,7 @@
 | `commercial_documents/` | Documentos comerciales | `modules/commercial_documents/` |
 | `v4_diagnostic_generator.py` | Generador diagnóstico V4 | `modules/commercial_documents/` |
 | `v4_proposal_generator.py` | Generador propuesta V4 | `modules/commercial_documents/` |
-| `composer.py` | Generación determinística | `modules/commercial_documents/` |
+
 | `coherence_validator.py` | Validador de coherencia | `modules/commercial_documents/` |
 | `pain_solution_mapper.py` | Mapeo problemas→assets | `modules/commercial_documents/` |
 
