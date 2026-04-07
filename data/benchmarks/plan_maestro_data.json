@@ -118,6 +118,17 @@
       ],
       "currency": "COP"
     },
+    "thresholds": {
+      "nota": "Valores calibrados con investigación: Más Allá de la OTA (investigación propia, abril 2026). Fuentes: Skift Research State of Travel 2024 (proporción OTA/Directo), Mordor Intelligence Mexico 2024 (comisiones OTA), PwC/ITU 2024-2025 (adopción IA)",
+      "comision_ota_min": 0.18,
+      "comision_ota_base": 0.20,
+      "comision_ota_max": 0.22,
+      "penalizacion_invisibilidad_ia": 0.05,
+      "reservas_ota_proporcion": 0.65,
+      "reservas_directo_proporcion": 0.35,
+      "uso_ia_proporcion_min": 0.10,
+      "uso_ia_proporcion_max": 0.20
+    },
     "regiones": {
       "default": {
         "precio_promedio": 280000,

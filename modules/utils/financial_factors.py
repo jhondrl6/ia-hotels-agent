@@ -50,16 +50,23 @@ class FinancialFactors:
     SUPERPOSITION_FACTOR = 0.7
     
     DEFAULTS = {
-        'factor_captura_aila': 0.70,
-        'comision_ota_min': 0.12,
-        'comision_ota_base': 0.15,
-        'comision_ota_max': 0.18,
+        'factor_captura_aila': 0.70,  # Renombrar a factor_optimizacion_digital en siguiente versión
+        'comision_ota_min': 0.18,     # Actualizado: proxy México/LatAm 2024-2025
+        'comision_ota_base': 0.20,    # Actualizado: proxy México/LatAm 2024-2025
+        'comision_ota_max': 0.22,     # Actualizado: proxy México/LatAm 2024-2025
         'penalizacion_invisibilidad_ia': 0.05,
         'exclusion_rating_bajo': 0.40,
         'factor_perdida_base': 0.09,
         'factor_perdida_min': 0.077,
         'factor_perdida_max': 0.103,
         'revpar_cop': 197120,
+        # Nuevos campos derivados de investigación:
+        # Fuente: Skift Research State of Travel 2024 (65% OTA LatAm)
+        'reservas_ota_proporcion': 0.65,
+        'reservas_directo_proporcion': 0.35,
+        # Fuente: Estimado PwC/ITU 2024-2025 (10-20% adopción IA viajeros)
+        'uso_ia_proporcion_min': 0.10,
+        'uso_ia_proporcion_max': 0.20,
     }
     
     def __init__(self, loader: Optional[BenchmarkLoader] = None):
