@@ -1,6 +1,6 @@
 {
   "version": "v2.5.0",
-  "fecha_actualizacion": "2026-03-01T00:00:00Z",
+  "fecha_actualizacion": "2026-04-07T11:27:49Z",
   "documento_oficial": "Plan_maestro_v2_5.md",
   "nota_historica": {
     "estado_actual": "No en uso operativo desde la transición a v4.0.0+",
@@ -112,12 +112,49 @@
           "descripcion": "Mejor caso"
         }
       },
-      "price_loss_ratio_range": [3, 6],
+      "price_loss_ratio_range": [
+        3,
+        6
+      ],
       "currency": "COP"
+    },
+    "regiones": {
+      "default": {
+        "precio_promedio": 280000,
+        "ocupacion": 0.6,
+        "habitaciones_promedio": 15,
+        "geo_score_ref": 85,
+        "aeo_score_ref": 40,
+        "seo_score_ref": 59
+      },
+      "antioquia": {
+        "precio_promedio": 280000,
+        "ocupacion": 0.6,
+        "habitaciones_promedio": 18,
+        "geo_score_ref": 84,
+        "aeo_score_ref": 43,
+        "seo_score_ref": 65
+      },
+      "eje_cafetero": {
+        "precio_promedio": 330000,
+        "ocupacion": 0.52,
+        "habitaciones_promedio": 12,
+        "geo_score_ref": 89,
+        "aeo_score_ref": 44,
+        "seo_score_ref": 59
+      },
+      "caribe": {
+        "precio_promedio": 410000,
+        "ocupacion": 0.66,
+        "habitaciones_promedio": 25,
+        "geo_score_ref": 82,
+        "aeo_score_ref": 32,
+        "seo_score_ref": 53
+      }
     },
     "coherence_gate": {
       "enabled": true,
-      "threshold": 0.80,
+      "threshold": 0.8,
       "description": "Coherence score mínimo para considerar un análisis como válido para publicación"
     },
     "evidence_coverage_gate": {
@@ -131,7 +168,7 @@
     },
     "critical_recall_gate": {
       "enabled": true,
-      "threshold": 0.90,
+      "threshold": 0.9,
       "description": "Recall mínimo de problemas críticos detectados vs reales"
     },
     "umbrales_decision": {

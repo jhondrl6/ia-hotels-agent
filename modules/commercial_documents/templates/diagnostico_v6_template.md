@@ -44,10 +44,12 @@ ${regional_context}
 
 ||| Indicador | Su Negocio | Promedio Regional | Estado |
 |||-----------|------------|------------------|--------|
-||| **Google Maps** (GEO) | ${geo_score}/100 | 55/100 | ${geo_status} |
-||| **Perfil de Google Business** | ${gbp_score}/100 | 30/100 | ${gbp_status} |
-||| **AEO - Infraestructura para IAs** | ${aeo_score}/100 | 15/100 | ${aeo_status} |
-||| **SEO Local** | ${seo_score}/100 | 65/100 | ${seo_status} |
+||||| **Google Maps** (GEO) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
+||||| **Posición Competitiva Local** (vs cercanos) | ${competitive_score}/100 | ${competitive_regional_avg}/100 | ${competitive_status} |
+||||| **AEO** - Infraestructura para IAs | ${aeo_score}/100 | ${aeo_regional_avg}/100 | ${aeo_status} |
+||||| **SEO Local** (Web) | ${seo_score}/100 | ${seo_regional_avg}/100 | ${seo_status} |
+
+${regional_transparency}
 
 ### Resumen de Visibilidad en IA
 

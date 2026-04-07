@@ -44,22 +44,34 @@ class ScraperFallback:
                     "default": {
                         "precio_promedio": 280000,
                         "ocupacion": 0.60,
-                        "habitaciones_promedio": 15
+                        "habitaciones_promedio": 15,
+                        "geo_score_ref": 85,
+                        "aeo_score_ref": 40,
+                        "seo_score_ref": 59
                     },
                     "antioquia": {
                         "precio_promedio": 280000,
                         "ocupacion": 0.60,
-                        "habitaciones_promedio": 18
+                        "habitaciones_promedio": 18,
+                        "geo_score_ref": 84,
+                        "aeo_score_ref": 43,
+                        "seo_score_ref": 65
                     },
                     "eje_cafetero": {
                         "precio_promedio": 330000,
                         "ocupacion": 0.52,
-                        "habitaciones_promedio": 12
+                        "habitaciones_promedio": 12,
+                        "geo_score_ref": 89,
+                        "aeo_score_ref": 44,
+                        "seo_score_ref": 59
                     },
                     "caribe": {
                         "precio_promedio": 410000,
                         "ocupacion": 0.66,
-                        "habitaciones_promedio": 25
+                        "habitaciones_promedio": 25,
+                        "geo_score_ref": 82,
+                        "aeo_score_ref": 32,
+                        "seo_score_ref": 53
                     }
                 }
             }

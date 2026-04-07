@@ -21,7 +21,7 @@ while i < len(lines):
             gsc_block = '''        # --- GSC (FASE-D) ---
         try:
             from modules.analytics.google_search_console_client import GoogleSearchConsoleClient
-            gsc = GoogleSearchConsoleClient()
+            gsc = GoogleSearchConsoleClient(site_url=hotel_url)
             status.gsc_available = gsc.is_configured()
             if not status.gsc_available:
                 if gsc._init_error:

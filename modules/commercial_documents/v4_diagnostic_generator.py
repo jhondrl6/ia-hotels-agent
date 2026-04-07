@@ -292,10 +292,10 @@ ${validated_data_table}
 
 | Indicador | Su Hotel | Promedio Regional | Estado |
 |-----------|----------|-------------------|--------|
-| Visibilidad Google Maps (GEO) | ${geo_score}/100 | 60/100 | ${geo_status} |
-| Posicion Competitiva (vs cercanos) | ${activity_score}/100 | 45/100 | ${activity_status} |
-| Web Score (SEO) | ${web_score}/100 | 70/100 | ${web_status} |
-|| Infraestructura AEO (Schema) | ${aeo_score} | 40/100 | ${aeo_status} |
+|| Visibilidad Google Maps (GEO) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
+|| Posicion Competitiva (vs cercanos) | ${activity_score}/100 | ${competitive_regional_avg}/100 | ${activity_status} |
+|| Web Score (SEO) | ${web_score}/100 | ${seo_regional_avg}/100 | ${web_status} |
+||| Infraestructura AEO (Schema) | ${aeo_score} | ${aeo_regional_avg}/100 | ${aeo_status} |
 
 ---
 
@@ -491,15 +491,27 @@ ${quick_wins_list}
             'quick_wins_list': self._build_quick_wins(audit_result),
             'geo_table': self._build_geo_problems_table(audit_result),
             
-            # 4 Pilares Scores
+            # Regional averages (3-tier fallback: competitors > regional config > default)
+            # Computed here so both template sections can reference them
+            geo_regional = self._calculate_regional_average(audit_result, 'geo', hotel_region),
+            competitive_regional = self._calculate_regional_average(audit_result, 'competitive', hotel_region),
+            seo_regional = self._calculate_regional_average(audit_result, 'seo', hotel_region),
+            aeo_regional = self._calculate_regional_average(audit_result, 'aeo', hotel_region),
+            
+            # 4 Pilares Scores (using dynamic regional benchmarks)
             'geo_score': self._calculate_geo_score(audit_result),
-            'geo_status': self._get_score_status(self._calculate_geo_score(audit_result), 60),
-            'activity_score': self._calculate_activity_score(audit_result),
-            'activity_status': self._get_score_status(self._calculate_activity_score(audit_result), 30),
+            'geo_status': self._get_score_status(self._calculate_geo_score(audit_result), geo_regional['value']),
+            'activity_score': self._calculate_competitive_score(audit_result),
+            'activity_status': self._get_score_status(self._calculate_competitive_score(audit_result), competitive_regional['value']),
             'web_score': self._calculate_web_score(audit_result),
-            'web_status': self._get_score_status(self._calculate_web_score(audit_result), 70),
+            'web_status': self._get_score_status(self._calculate_web_score(audit_result), seo_regional['value']),
             'schema_infra_score': self._calculate_aeo_score(audit_result),
-            'schema_infra_status': self._get_score_status(self._calculate_aeo_score(audit_result), 40),
+            'schema_infra_status': self._get_score_status(self._calculate_aeo_score(audit_result), aeo_regional['value']),
+            # Regional averages for internal template
+            'geo_regional_avg': str(geo_regional['value']),
+            'competitive_regional_avg': str(competitive_regional['value']),
+            'seo_regional_avg': str(seo_regional['value']),
+            'aeo_regional_avg': str(aeo_regional['value']),
             # iao_score/iao_status/voice_readiness eliminados en FASE-CAUSAL-01
             
             # Brechas (4 Razones)
@@ -565,13 +577,22 @@ ${quick_wins_list}
             'urgencia_contenido': self._build_urgencia_content(financial_scenarios, hotel_name),
             'quick_wins_content': self._build_quick_wins_content(audit_result),
             
-            # V6 Score aliases (GBP = activity, SEO = web, AEO = schema_infra)
-            'gbp_score': self._calculate_activity_score(audit_result),
-            'gbp_status': self._get_score_status(self._calculate_activity_score(audit_result), 30),
+            # V6 Score aliases (competitive = activity, SEO = web, AEO = schema_infra)
+            'competitive_score': self._calculate_competitive_score(audit_result),
+            'competitive_status': self._get_score_status(self._calculate_competitive_score(audit_result), competitive_regional['value']),
             'seo_score': self._calculate_web_score(audit_result),
-            'seo_status': self._get_score_status(self._calculate_web_score(audit_result), 70),
+            'seo_status': self._get_score_status(self._calculate_web_score(audit_result), seo_regional['value']),
             'aeo_score': self._calculate_aeo_score(audit_result),
-            'aeo_status': self._get_score_status(self._calculate_aeo_score(audit_result), 40),
+            'aeo_status': self._get_score_status(self._calculate_aeo_score(audit_result), aeo_regional['value']),
+            
+            # Regional average display values
+            'geo_regional_avg': str(geo_regional['value']),
+            'competitive_regional_avg': str(competitive_regional['value']),
+            'seo_regional_avg': str(seo_regional['value']),
+            'aeo_regional_avg': str(aeo_regional['value']),
+            'regional_transparency': self._build_regional_transparency(
+                geo_regional, competitive_regional, seo_regional, aeo_regional
+            ),
             
             # Brecha impactos y resúmenes
             'brecha_1_impacto': self._get_brecha_impacto(audit_result, 0),
@@ -600,7 +621,7 @@ ${quick_wins_list}
         
         # --- Analytics status (transparency de datos) ---
         ga4_property_id = analytics_data.get("ga4_property_id") if analytics_data else None
-        analytics_status = self._check_analytics_status(ga4_property_id=ga4_property_id)
+        analytics_status = self._check_analytics_status(ga4_property_id=ga4_property_id, hotel_url=hotel_url)
         
         # Texto resumen legible para el diagnostico
         data['analytics_missing_credentials'] = ', '.join(analytics_status.missing_credentials()) or 'Ninguna'
@@ -667,22 +688,25 @@ ${quick_wins_list}
             return ""
 
         ga4 = analytics_status.ga4_status_for_template()
-        profound = analytics_status.profound_status_for_template()
-        semrush = analytics_status.semrush_status_for_template()
         gsc = analytics_status.gsc_status_for_template()
+
+        # Construir lista de fuentes con solo las que tienen estado
+        sources = []
+        sources.append(f"- **Google Analytics 4**: {ga4}")
+        sources.append(f"- **Google Search Console**: {gsc}")
+        sources.append("- **Audit Web (schema, metadatos, contenido)**: ✅ Disponible")
+        sources.append("- **Google Places / GBP**: ✅ Disponible")
+
+        # Solo mostrar nota si alguna fuente real falta
+        has_missing = not analytics_status.ga4_available or not analytics_status.gsc_available
+        note = ""
+        if has_missing:
+            note = "\n> *Nota: Las fuentes marcadas como no configuradas requieren credenciales API.\n> Los valores mostrados provienen del análisis web, Places API y estimaciones cualitativas.*"
 
         section = f"""### Fuentes de Datos Usadas en Este Diagnostico
 
-- **Google Analytics 4**: {ga4}
-- **Profound AI Visibility**: {profound}
-- **Semrush SEO**: {semrush}
-- **Google Search Console**: {gsc}
-- **Audit Web**: ✅ Disponible
-
-> *Nota: Las fuentes marcadas con ⚠️ no fueron incluidas porque requieren
-> configuracion de credenciales API. Los valores mostrados en este diagnostico
-> provienen del analisis web y estimaciones cualitativas. Para datos en tiempo
-> real, contacte para habilitar estas conexiones.*
+{chr(10).join(sources)}
+{note}
 """
         return section
     
@@ -1111,6 +1135,113 @@ ${quick_wins_list}
         return table
     
     # Score calculation methods
+
+    def _build_regional_transparency(
+        self,
+        geo: Dict, competitive: Dict, seo: Dict, aeo: Dict
+    ) -> str:
+        """Build transparency footnote explaining data sources for regional averages.
+
+        Only includes entries where source is NOT the default (to avoid noise).
+        """
+        sources = []
+        for label, data in [
+            ('GEO', geo), ('Competitiva', competitive),
+            ('SEO', seo), ('AEO', aeo),
+        ]:
+            if data['source'] != 'default':
+                sources.append(f"- **{label}**: {data['detail']}")
+        
+        if not sources:
+            return ''
+        
+        return (
+            '\n> **Fuente de promedios regionales**\n>\n'
+            + '\n'.join(f'> {s}' for s in sources)
+        )
+
+    def _get_regional_benchmarks(self, region: str) -> Dict[str, int]:
+        """Load regional benchmark scores from plan_maestro_data.json.
+
+        Returns dict with geo_score_ref, aeo_score_ref, seo_score_ref
+        for the given region, falling back to 'default' if region not found.
+        """
+        try:
+            from modules.scrapers.scraper_fallback import ScraperFallback
+            fallback = ScraperFallback()
+            regiones = fallback.benchmarks.get('regiones', {})
+            region_data = regiones.get(region.lower().replace(' ', '_'), regiones.get('default', {}))
+            return {
+                'geo_score_ref': region_data.get('geo_score_ref', 55),
+                'aeo_score_ref': region_data.get('aeo_score_ref', 20),
+                'seo_score_ref': region_data.get('seo_score_ref', 50),
+            }
+        except Exception:
+            return {'geo_score_ref': 85, 'aeo_score_ref': 40, 'seo_score_ref': 59}
+
+    def _calculate_regional_average(
+        self,
+        audit_result: V4AuditResult,
+        pillar: str,
+        region: str,
+        min_competitors: int = 3
+    ) -> Dict[str, Any]:
+        """Calculate regional average with 3-tier fallback chain.
+
+        Tier 1 (REAL): If >= min_competitors have valid scores, use their mean.
+        Tier 2 (REGION): Use regional benchmark from plan_maestro_data.json.
+        Tier 3 (DEFAULT): Use hardcoded national default.
+
+        Args:
+            audit_result: Full audit result with competitors data.
+            pillar: One of 'geo', 'competitive', 'seo', 'aeo'.
+            region: Region string (e.g., 'eje_cafetero', 'antioquia').
+            min_competitors: Minimum valid competitors for Tier 1.
+
+        Returns:
+            Dict with:
+              - value (int): The average score to display.
+              - source (str): 'competidores', 'benchmark_regional', or 'default'.
+              - detail (str): Human-readable explanation for transparency.
+        """
+        # --- TIER 1: Real competitor data (only for GEO, which competitors have) ---
+        if pillar == 'geo' and audit_result and audit_result.competitors:
+            valid = [
+                c['geo_score']
+                for c in audit_result.competitors
+                if isinstance(c.get('geo_score'), (int, float)) and c['geo_score'] > 0
+            ]
+            if len(valid) >= min_competitors:
+                avg = int(sum(valid) / len(valid))
+                return {
+                    'value': avg,
+                    'source': 'competidores',
+                    'detail': f'Promedio de {len(valid)} competidores cercanos auditados',
+                }
+
+        # --- TIER 2: Regional benchmark from config ---
+        benchmarks = self._get_regional_benchmarks(region)
+        key = f'{pillar}_score_ref'
+        if key in benchmarks:
+            return {
+                'value': benchmarks[key],
+                'source': 'benchmark_regional',
+                'detail': f'Benchmark regional ({region.replace("_", " ").title()}, Q1 2026)',
+            }
+
+        # --- TIER 3: National default ---
+        defaults = {
+            'geo': 85,
+            'competitive': 50,
+            'seo': 59,
+            'aeo': 40,
+        }
+        return {
+            'value': defaults.get(pillar, 50),
+            'source': 'default',
+            'detail': 'Promedio nacional estimado',
+        }
+
     def _calculate_geo_score(self, audit_result: V4AuditResult) -> str:
         """Calculate GEO score based on GBP data."""
         if not audit_result or not audit_result.gbp or not audit_result.gbp.place_found:
@@ -1161,9 +1292,6 @@ ${quick_wins_list}
         # Final: mix percentile ranking with proximity-to-leader gap
         score = max(0, int(rank_percentile - gap_penalty))
         return str(score)
-
-    # Legacy alias: callers that use _calculate_activity_score get competitive score now
-    _calculate_activity_score = _calculate_competitive_score
     
     def _calculate_web_score(self, audit_result: V4AuditResult) -> str:
         """Calculate Web/SEO score based on performance and schema."""
@@ -1216,7 +1344,7 @@ ${quick_wins_list}
     # ANALYTICS INTEGRATION
     # ---------------------------------------------------------------
 
-    def _check_analytics_status(self, ga4_property_id: str = None) -> AnalyticsStatus:
+    def _check_analytics_status(self, ga4_property_id: str = None, hotel_url: str = None) -> AnalyticsStatus:
         """
         Verifica el estado de cada fuente de datos analytics SIN hacer
         las llamadas API reales. Esto permite informar al template POR
@@ -1244,34 +1372,10 @@ ${quick_wins_list}
             status.ga4_error = str(e)
             status.ga4_status_text = f"Error: {str(e)}"
 
-        # --- Profound ---
-        try:
-            from modules.analytics.profound_client import ProfoundClient
-            profound = ProfoundClient()
-            status.profound_available = not profound.is_mock
-            if not status.profound_available:
-                status.profound_error = "PROFOUND_API_KEY no configurado"
-                status.profound_status_text = "No disponible en esta version (API pendiente)"
-        except Exception as e:
-            status.profound_error = str(e)
-            status.profound_status_text = f"Error: {str(e)}"
-
-        # --- Semrush ---
-        try:
-            from modules.analytics.semrush_client import SemrushClient
-            semrush = SemrushClient()
-            status.semrush_available = not semrush.is_mock
-            if not status.semrush_available:
-                status.semrush_error = "SEMRUSH_API_KEY no configurado"
-                status.semrush_status_text = "No disponible en esta version (API pendiente)"
-        except Exception as e:
-            status.semrush_error = str(e)
-            status.semrush_status_text = f"Error: {str(e)}"
-
         # --- GSC (FASE-D) ---
         try:
             from modules.analytics.google_search_console_client import GoogleSearchConsoleClient
-            gsc = GoogleSearchConsoleClient()
+            gsc = GoogleSearchConsoleClient(site_url=hotel_url)
             status.gsc_available = gsc.is_configured()
             if not status.gsc_available:
                 if gsc._init_error:

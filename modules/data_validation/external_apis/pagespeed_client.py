@@ -22,7 +22,7 @@ class PageSpeedResult:
 
 class PageSpeedClient:
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv("PAGESPEED_API_KEY") or os.getenv("GOOGLE_API_KEY")
+        self.api_key = api_key or os.getenv("PAGESPEED_API_KEY") or os.getenv("GOOGLE_PAGESPEED_API_KEY") or os.getenv("GOOGLE_API_KEY")
         self.base_url = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
 
         if not self.api_key:
