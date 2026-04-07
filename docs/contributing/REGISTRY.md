@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
 > **Ultima actualizacion:** 2026-04-07
-> **Version actual:** v4.23.0
-> **Total fases completadas:** 42
+> **Version actual:** v4.25.1
+> **Total fases completadas:** 43
 
 ---
 
@@ -1499,6 +1499,25 @@ Modulo DocumentQualityGate con 3 blocker checks (placeholder_region, duplicate_c
 - [x] Capability contract verificado
 
 ---
+
+## FASE-CALIBRATION - 2026-04-07
+**Descripcion:** Calibracion de factores financieros con investigacion "Más Allá de la OTA"
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/utils/financial_factors.py` | Comisiones OTA 0.15→0.20, min 0.12→0.18, max 0.18→0.22 |
+| `data/benchmarks/plan_maestro_data.json` | Sección thresholds con notas de fuente |
+
+### Fuentes
+- Skift Research State of Travel 2024 (proporción OTA/Directo)
+- Mordor Intelligence Mexico 2024 (comisiones OTA)
+- PwC/ITU 2024-2025 (adopción IA viajeros)
+
+### Validaciones
+- [x] Commit passing (pre-commit hooks verificados)
+- [x] Changelog actualizado (v4.25.1)
+
 
 
 ## Estadisticas
