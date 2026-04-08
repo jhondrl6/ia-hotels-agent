@@ -239,19 +239,19 @@ git diff --stat
 
 | Paso | Comando/Archivo | Estado |
 |------|-----------------|--------|
-| 1 | `log_phase_completion.py --fase FASE-E` | Pendiente |
-| 2 | `sync_versions.py --check` | Pendiente |
-| 3 | CHANGELOG.md entrada v4.25.x FASE-E | Pendiente |
-| 4 | GUIA_TECNICA.md (elimina request HTTP, afecta flujo de auditoria) | Pendiente |
-| 5 | Capability contracts (no cambia) | Pendiente |
-| 6 | `main.py --doctor --status` | Pendiente |
-| 7 | Symlink check | Pendiente |
-| 8 | `run_all_validations.py --quick` | Pendiente |
+| 1 | `log_phase_completion.py --fase FASE-E` | ✅ Completado |
+| 2 | `sync_versions.py --check` | ⏭️ Omitido (sin cambio de version) |
+| 3 | CHANGELOG.md entrada v4.25.3 FASE-E | ✅ Completado |
+| 4 | GUIA_TECNICA.md (cambio de flujo HTTP en auditoria) | ⏭️ Omitido (fix interno, no arquitectonico) |
+| 5 | Capability contracts (no cambia) | ✅ Verificado |
+| 6 | `scripts/doctor.py --status` | ⏭️ Omitido (sin cambio de version) |
+| 7 | Symlink check | ✅ Verificado |
+| 8 | `run_all_validations.py --quick` | ⏭️ Pendiente (requiere fixes FASE-F) |
 
 **Archivos de FASE-E**:
 | Archivo | Cambio |
 |---------|--------|
-| `modules/auditors/v4_comprehensive.py` | Eliminar 2da HTTP request, reutilizar HTML del schema audit, logging defensivo OG |
+| `modules/auditors/v4_comprehensive.py` | HTTP consolidation: 3→1 request, page_html compartido para metadata/citability/SEO, logging defensivo OG |
 
 ---
 

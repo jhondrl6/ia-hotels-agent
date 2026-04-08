@@ -48,5 +48,5 @@
   "modules/analytics/__init__.py": "FASE-D",
   "modules/auditors/seo_elements_detector.py": "FASE-A",
   "tests/commercial_documents/test_diagnostic_brechas.py": "FASE-C",
-  "modules/auditors/v4_comprehensive.py": "FASE-D"
+  "modules/auditors/v4_comprehensive.py": "FASE-E"
 }

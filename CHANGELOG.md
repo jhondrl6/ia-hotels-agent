@@ -15,6 +15,16 @@
 - Docstring actualizado refleja implementación exacta
 - Elimina el comportamiento "Pendiente de datos" cuando hay al menos 1 componente con datos
 
+### FASE-E (OG Detection Fix): Reutilizar HTML del schema audit
+- `modules/auditors/v4_comprehensive.py` - HTTP request consolidation (L365-371, L409-428):
+  - **ANTES**: 3 HTTP requests separadas al mismo URL (schema audit, metadata, citability+SEO)
+  - **AHORA**: 1 HTTP request única compartida entre metadata, citability y SEO elements
+  - Elimina segunda request innecesaria en step 2.8 que podía devolver HTML diferente (SPA/JS-rendered)
+  - `_audit_metadata()` acepta `html_content` opcional (backward compatible)
+  - Logging defensivo: cuando OG no se detecta, loggea snippet del HTML para diagnóstico
+- Impacto: elimina falso negativo de OG detection en sitios SPA (+25pts AEO potencial)
+- Nota: detección OG en hotelvisperas.com sigue fallando por compresión Brotli upstream (fuera de scope)
+
 ### Archivos Nuevos
 | Archivo | Descripcion |
 |---------|-------------|

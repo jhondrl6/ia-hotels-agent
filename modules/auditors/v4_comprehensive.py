@@ -362,9 +362,17 @@ class V4ComprehensiveAuditor:
         print(f"      Hotel: {schema_result.hotel_confidence}")
         print(f"      FAQ: {schema_result.faq_confidence}")
         
+        # Fetch HTML ONCE for metadata, citability, and SEO elements
+        # (avoids redundant HTTP requests that may return different HTML for SPA sites)
+        http_client = HttpClient()
+        html_response, _ = http_client.get(url)
+        page_html = html_response.text if html_response and html_response.text else ""
+        if not page_html:
+            logger.warning(f"Empty HTML response for {url}")
+        
         # Step 1.5: Metadata validation
         print("\n[1.5/5] Validating metadata (CMS defaults)...")
-        metadata_result = self._audit_metadata(url)
+        metadata_result = self._audit_metadata(url, html_content=page_html)
         if metadata_result:
             print(f"      CMS Detected: {metadata_result.cms_detected}")
             print(f"      Default Title: {metadata_result.has_default_title}")
@@ -400,12 +408,9 @@ class V4ComprehensiveAuditor:
         
         # Step 2.8: Citability audit (ADVISORY)
         print("\n[2.8/5] Analyzing content citability...")
-        http_client = HttpClient()
-        html_for_citability, _ = http_client.get(url)
-        html_content = html_for_citability.text if html_for_citability and html_for_citability.text else ""
         citability_result = None
-        if html_content:
-            citability_result = self._audit_citability(url, html_content)
+        if page_html:
+            citability_result = self._audit_citability(url, page_html)
             print(f"      Score: {citability_result.overall_score:.1f}/100")
             print(f"      [ADVISORY] Blocks analyzed: {citability_result.blocks_analyzed}")
         else:
@@ -413,10 +418,15 @@ class V4ComprehensiveAuditor:
         
         # Step 2.9: SEO Elements detection (GAP-IAO-01-02-B)
         print("\n[2.9/5] Detecting SEO elements...")
-        seo_elements = self._run_seo_elements_audit(html_content, url)
+        seo_elements = self._run_seo_elements_audit(page_html, url)
         print(f"      Open Graph: {seo_elements.open_graph}")
         print(f"      Images with Alt: {seo_elements.imagenes_alt}")
         print(f"      Active Social: {seo_elements.redes_activas}")
+        
+        # Defensive logging: diagnose OG false negatives
+        if seo_elements and not seo_elements.open_graph:
+            html_snippet = page_html[:500] if page_html else "EMPTY"
+            logger.warning(f"OG not detected for {url}. HTML snippet: {html_snippet}")
         
         # Step 3: Performance metrics
         print("\n[3/5] Checking performance metrics...")
@@ -540,16 +550,23 @@ class V4ComprehensiveAuditor:
             properties=report.get("properties", {}),
         )
     
-    def _audit_metadata(self, url: str) -> Optional[MetadataAuditResult]:
-        """Audit HTML metadata for default CMS values."""
+    def _audit_metadata(self, url: str, html_content: Optional[str] = None) -> Optional[MetadataAuditResult]:
+        """Audit HTML metadata for default CMS values.
+        
+        Args:
+            url: Hotel website URL
+            html_content: Pre-fetched HTML (avoids redundant HTTP request).
+                         If None, fetches internally (legacy behavior).
+        """
         try:
-            http_client = HttpClient()
-            response, _ = http_client.get(url)
-            
-            if not response or not response.text:
-                return None
-            
-            html_content = response.text
+            if html_content is None:
+                http_client = HttpClient()
+                response, _ = http_client.get(url)
+                
+                if not response or not response.text:
+                    return None
+                
+                html_content = response.text
             validator = MetadataValidator()
             
             cms_detected = validator.detect_cms(html_content)
