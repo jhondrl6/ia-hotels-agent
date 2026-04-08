@@ -22,6 +22,10 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Any, Optional
 import re
 from datetime import datetime
+from pathlib import Path
+
+
+_TEMPLATES_DIR = Path(__file__).resolve().parent.parent.parent / "templates" / "local_content"
 
 
 @dataclass
@@ -136,8 +140,16 @@ class LocalContentGenerator:
         "te va a encantar",
     ]
 
-    def __init__(self):
+    def __init__(self, templates_dir: Optional[Path] = None):
         self._current_year = datetime.now().year
+        self._templates_dir = templates_dir or _TEMPLATES_DIR
+
+    def load_template(self, name: str) -> str:
+        """Carga un template markdown desde templates/local_content/."""
+        path = self._templates_dir / name
+        if path.exists():
+            return path.read_text(encoding="utf-8")
+        return ""
 
     def generate_content_set(
         self,

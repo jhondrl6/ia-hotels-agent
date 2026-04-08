@@ -89,5 +89,5 @@
 - [x] VERSION.yaml — Bump 4.24.0 -> 4.25.0, codename "FASE-E: Micro-Content Local Generator"
 - [x] REGISTRY.md — Actualizado por log_phase_completion.py (2026-04-06)
 - [x] docs/GUIA_TECNICA.md — Notas tecnicas v4.25.0 agregadas
-- [ ] AGENTS.md — Agregar postprocessors a tabla de modulos + GSC a analytics
-- [ ] docs/CONTRIBUTING.md — Verificar que referencia FASE-E en REGISTRY.md sea consistente
+- [x] AGENTS.md — Agregar postprocessors a tabla de modulos + GSC a analytics
+- [x] docs/CONTRIBUTING.md — Verificar que referencia FASE-E en REGISTRY.md sea consistente

@@ -110,11 +110,11 @@ Las fases se renumeran A-E. Las fases historicas A/B del CHANGELOG (ciclo AEO) n
 **Origen**: Analisis comparativo seomachine #5
 
 ### Checklist
-- [ ] `modules/asset_generation/local_content_generator.py` creado
-- [ ] `modules/asset_generation/asset_catalog.py` modificado — tipo `local_content_page`
-- [ ] `templates/local_content/` creado
-- [ ] `tests/asset_generation/test_local_content_generator.py` — 10/10 passing
-- [ ] Genera 3-5 paginas de contenido local por hotel
-- [ ] Contenido pasa Content Scrubber
-- [ ] `python scripts/run_all_validations.py --quick` pasa
-- [ ] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
+- [x] `modules/asset_generation/local_content_generator.py` creado
+- [x] `modules/asset_generation/asset_catalog.py` modificado — tipo `local_content_page`
+- [x] `templates/local_content/` creado
+- [x] `tests/asset_generation/test_local_content_generator.py` — 15/15 passing
+- [x] Genera 3-5 paginas de contenido local por hotel
+- [x] Contenido pasa Content Scrubber
+- [x] `python scripts/run_all_validations.py --quick` pasa
+- [x] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado

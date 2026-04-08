@@ -279,15 +279,15 @@ Al finalizar esta fase, actualizar INMEDIATAMENTE:
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] **Tests nuevos pasan**: 10/10 tests
-- [ ] **Validaciones del proyecto**: `python scripts/run_all_validations.py --quick` pasa
-- [ ] **Sin regresiones**: Tests existentes siguen pasando
-- [ ] **Prueba real**: Generar 3 paginas para Hotel Visperas con keywords de Santa Rosa de Cabal
-- [ ] **Contenido limpio**: Pasa content scrubber sin warnings
-- [ ] **Asset catalog**: local_content_page registrado
-- [ ] **dependencias-fases.md actualizado**
-- [ ] **Documentacion afiliada**: CHANGELOG.md, AGENTS.md
-- [ ] **Post-ejecucion completada**: log_phase_completion.py ejecutado
+- [x] **Tests nuevos pasan**: 15/15 tests
+- [x] **Validaciones del proyecto**: `python scripts/run_all_validations.py --quick` pasa
+- [x] **Sin regresiones**: Tests existentes siguen pasando
+- [x] **Prueba real**: Generar 3 paginas para Hotel Visperas con keywords de Santa Rosa de Cabal
+- [x] **Contenido limpio**: Pasa content scrubber sin warnings
+- [x] **Asset catalog**: local_content_page registrado
+- [x] **dependencias-fases.md actualizado**
+- [x] **Documentacion afiliada**: CHANGELOG.md, AGENTS.md
+- [x] **Post-ejecucion completada**: log_phase_completion.py ejecutado
 
 ---
 
