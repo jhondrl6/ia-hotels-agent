@@ -144,7 +144,7 @@ python -m pytest tests/ -x --tb=short -q
 
 ```bash
 # Validacion E2E con hotel de referencia
-./venv/Scripts/python.exe main.py v4complete --url https://amaziliahotel.com/
+./venv/Scripts/python.exe main.py v4complete --url https://www.hotelvisperas.com/es
 ```
 
 ---
@@ -168,7 +168,7 @@ python -m pytest tests/ -x --tb=short -q
 - [ ] **F13**: Todos los tests pasan (sin regresion vs FASE-D)
 - [ ] **F14**: `log_phase_completion.py --fase FASE-F` ejecutado
 - [ ] **F15**: Commit realizado con mensaje descriptivo
-- [ ] **F16**: v4complete con amaziliahotel.com ejecutado (validacion final)
+- [ ] **F16**: v4complete con https://www.hotelvisperas.com/es ejecutado (validacion final)
 
 ### Condiciones de Exito
 
@@ -178,7 +178,7 @@ python -m pytest tests/ -x --tb=short -q
 | Validaciones | `--quick` sin errores |
 | Bugs corregidos | 4/4 zombies + 7/7 code smells |
 | Sin nuevos fallos | 0 nuevos test failures |
-| Validacion E2E | v4complete amaziliahotel.com exitoso |
+| Validacion E2E | v4complete https://www.hotelvisperas.com/es exitoso |
 
 ### Condiciones de Rollback
 

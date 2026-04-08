@@ -9,7 +9,7 @@
 [x] FASE-D: 5 Bugs Medios + Serializacion
 [          ] FASE-E: OG Detection HTML Reuse
 [          ] FASE-F: Zombies + Code Smells
-[          ] VALIDACION FINAL: v4complete amaziliahotel.com
+[          ] VALIDACION FINAL: v4complete https://www.hotelvisperas.com/es
 ```
 
 ---
@@ -125,7 +125,7 @@
 
 ## VALIDACION FINAL (post-FASE-F)
 
-- [ ] **V1**: `v4complete --url https://amaziliahotel.com/` ejecutado exitosamente
+- [ ] **V1**: `v4complete --url https://www.hotelvisperas.com/es` ejecutado exitosamente
 - [ ] **V2**: Diagnostico generado sin errores
 - [ ] **V3**: Brechas 9 y 10 detectables (OG + citability corregidos)
 - [ ] **V4**: Score AEO refleja OG tags correctamente
@@ -134,7 +134,7 @@
 ### Post-Ejecucion
 
 - Fecha de completion: ___
-- Hotel de prueba: amaziliahotel.com
+- Hotel de prueba: https://www.hotelvisperas.com/es
 - Score AEO final: ___
 - Brechas detectadas: ___
 
@@ -148,7 +148,7 @@
 | FASE-D | `fix(FASE-D): 5 medium bugs + seo_elements serialization in v4_comprehensive` |
 | FASE-E | `fix(FASE-E): reuse schema audit HTML for OG detection, eliminate redundant HTTP request` |
 | FASE-F | `fix(FASE-F): remove zombie IAO/voice refs + fix 7 code smells in v4_diagnostic_generator` |
-| FINAL | `test: v4complete E2E validation on amaziliahotel.com post-bugfix-sprint` |
+| FINAL | `test: v4complete E2E validation on https://www.hotelvisperas.com/es post-bugfix-sprint` |
 
 ---
 

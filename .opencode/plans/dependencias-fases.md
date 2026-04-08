@@ -31,7 +31,7 @@ FASE-F (Zombies + Code Smells)
   |
   v
 VALIDACION FINAL
-  v4complete --url https://amaziliahotel.com/
+  v4complete --url https://www.hotelvisperas.com/es
 ```
 
 ---
@@ -63,7 +63,7 @@ VALIDACION FINAL
 2. FASE-D depende de FASE-C (misma funcion `_inject_brecha_scores` se limpia en C, se elimina duplicado en D)
 3. FASE-E puede ejecutarse en paralelo con FASE-C o FASE-D (archivos diferentes) **PERO** el workflow exige 1 fase/sesion
 4. FASE-F depende de FASE-D (confianza en que el generador esta limpio antes de tocar templates)
-5. Validacion v4complete con amaziliahotel.com al final
+5. Validacion v4complete con https://www.hotelvisperas.com/es al final
 
 ---
 

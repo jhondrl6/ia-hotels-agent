@@ -316,7 +316,7 @@ python main.py --doctor --status
 
 # 8. Validacion final
 python scripts/run_all_validations.py --quick
-./venv/Scripts/python.exe main.py v4complete --url https://amaziliahotel.com/
+./venv/Scripts/python.exe main.py v4complete --url https://www.hotelvisperas.com/es
 ```
 
 ---
