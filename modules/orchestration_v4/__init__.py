@@ -1,6 +1,6 @@
 """Orchestration v4.0 for IA Hoteles Agent.
 
-Manages two-phase user flow: Hook → Input → Validation → Assets
+Manages two-phase user flow: Hook -> Input -> Validation -> Assets
 """
 
 from .two_phase_flow import (
@@ -17,6 +17,13 @@ from .onboarding_controller import (
     OnboardingController,
 )
 
+# Re-export permission mode for convenience
+from ..utils.permission_mode import (
+    PermissionMode,
+    OperationPermission,
+    check_permission,
+)
+
 __all__ = [
     # Two Phase Flow
     "Phase1Result",
@@ -28,4 +35,8 @@ __all__ = [
     "OnboardingStatus",
     "OnboardingState",
     "OnboardingController",
+    # Permission Mode
+    "PermissionMode",
+    "OperationPermission",
+    "check_permission",
 ]

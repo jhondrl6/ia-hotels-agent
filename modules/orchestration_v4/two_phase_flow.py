@@ -8,11 +8,17 @@ Phase 2 (Input): Collect detailed hotel data and calculate precise scenarios
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime
 from ..data_validation.cross_validator import CrossValidator
 from ..data_validation.confidence_taxonomy import ConfidenceLevel
 from ..financial_engine.scenario_calculator import ScenarioCalculator, HotelFinancialData
+from ..utils.permission_mode import (
+    PermissionMode,
+    OperationPermission,
+    check_permission,
+    DEFAULT_MODE,
+)
 
 
 @dataclass
@@ -82,17 +88,35 @@ class TwoPhaseOrchestrator:
     This approach minimizes friction by showing value before asking for detailed data.
     """
 
-    def __init__(self, plan_maestro_data: Dict = None):
+    def __init__(
+        self,
+        plan_maestro_data: Dict = None,
+        permission_mode: PermissionMode = DEFAULT_MODE,
+        on_ask_permission: Optional[Callable] = None,
+    ):
         """
         Initialize the two-phase orchestrator.
 
         Args:
             plan_maestro_data: Optional benchmark data for regional calculations.
                               If not provided, default conservative estimates are used.
+            permission_mode: Controls approval granularity for external operations.
+            on_ask_permission: Callback for interactive approval (receives name, cost -> bool).
         """
         self.plan_maestro_data = plan_maestro_data or {}
         self.scenario_calculator = ScenarioCalculator()
         self.cross_validator = CrossValidator()
+        self.permission_mode = permission_mode
+        self.on_ask_permission = on_ask_permission
+
+    def check_external_operation(
+        self, name: str, estimated_cost: float = 0.0
+    ) -> bool:
+        """Verifica si una operacion externa puede ejecutarse segun el modo activo."""
+        op = OperationPermission(
+            name=name, estimated_cost=estimated_cost, is_external=True
+        )
+        return check_permission(op, self.permission_mode, self.on_ask_permission)
 
     def phase_1_hook(self, hotel_url: str, hotel_name: str = None, region: str = "default") -> Phase1Result:
         """

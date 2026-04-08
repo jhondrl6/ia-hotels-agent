@@ -7,9 +7,10 @@ and phase transitions.
 
 from enum import Enum
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime
 from .two_phase_flow import TwoPhaseOrchestrator, Phase1Result, Phase2Result, HotelInputs
+from ..utils.permission_mode import PermissionMode, DEFAULT_MODE
 
 
 class OnboardingPhase(Enum):
@@ -47,8 +48,17 @@ class OnboardingState:
 
 class OnboardingController:
 
-    def __init__(self):
-        self._orchestrator = TwoPhaseOrchestrator()
+    def __init__(
+        self,
+        permission_mode: PermissionMode = DEFAULT_MODE,
+        on_ask_permission: Optional[Callable] = None,
+    ):
+        self.permission_mode = permission_mode
+        self.on_ask_permission = on_ask_permission
+        self._orchestrator = TwoPhaseOrchestrator(
+            permission_mode=permission_mode,
+            on_ask_permission=on_ask_permission,
+        )
         self._states: Dict[str, OnboardingState] = {}
 
     def start_onboarding(

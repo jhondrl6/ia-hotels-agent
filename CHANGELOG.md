@@ -74,6 +74,15 @@
 - `tests/utils/` - 57 tests (22 + 13 + 22)
 - `main.py` - Argumento --permission-mode agregado
 
+### FASE-A: Permission Modes - Integracion Completa (Tarea 3)
+**Problema:** El argumento --permission-mode se parseaba en main.py pero nunca se usaba. El import de PermissionMode era un "flag fantasma" sin efecto en el flujo.
+- `modules/orchestration_v4/two_phase_flow.py` - TwoPhaseOrchestrator acepta `permission_mode` + `on_ask_permission`. Nuevo metodo `check_external_operation()`.
+- `modules/orchestration_v4/onboarding_controller.py` - OnboardingController acepta `permission_mode` y lo pasa al orchestrator.
+- `modules/orchestration_v4/__init__.py` - Re-exporta PermissionMode, OperationPermission, check_permission.
+- `main.py` - `args.permission_mode` parseado a `PermissionMode` enum. Gate antes de `auditor.audit()` (~$0.03 USD). Modo `chat` omite auditoria externa.
+- Tests: 19 pasando (existentes, sin regresiones)
+- Arquitectura: `modules/orchestration_v4/orchestrator.py` (referenciado en plan) nunca existio. Integracion correcta en archivos reales.
+
 ### FASE-B: Document Quality Gate + Content Scrubber
 - `modules/postprocessors/document_quality_gate.py` - 3 blocker checks + 2 warning checks
   - placeholder_region: Detecta "default" como region (blocker)
