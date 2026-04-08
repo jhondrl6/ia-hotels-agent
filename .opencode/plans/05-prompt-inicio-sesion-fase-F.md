@@ -1,135 +1,219 @@
-# FASE-F: Limpieza Legacy - gap_analyzer.py + report_builder.py
+# FASE-F: Limpieza de Zombie References + 6 Code Smells
 
-**ID**: FASE-F
-**Objetivo**: Alinear módulos legacy (gap_analyzer.py, report_builder.py) con el nuevo modelo dinámico de brechas, eliminando hardcoded "4" y "3" que generan inconsistencias.
-**Dependencias**: FASE-A ✅ (puede ejecutarse en paralelo con FASE-B o C)
-**Duración estimada**: 1-2 horas
-**Skill**: `iah-cli-phased-execution`
-
----
-
-## Contexto
-
-### Estado de Fases Anteriores
-| Fase | Estado |
-|------|--------|
-| FASE-A | ✅ Completada |
-
-### Problema Actual
-Dos módulos legacy tienen hardcoded que choca con el nuevo modelo dinámico:
-
-1. **`gap_analyzer.py`** (línea 38): Prompt pide "3 brechas criticas" al LLM
-2. **`gap_analyzer.py`** (línea 162): Toma `[:5]` top alerts del scraper
-3. **`report_builder.py`** (línea 1164): `[:4]` maximo 4 brechas
-
-Nota: `gap_analyzer.py` es legacy (comando `spark` deprecado), pero `_basic_analysis()` sigue siendo usado como fallback cuando el LLM falla en v4complete. El `_basic_analysis()` usa un modelo de "2 Pilares" diferente al de `_identify_brechas()`, lo que genera inconsistencia.
-
-### Base Técnica
-- `modules/analyzers/gap_analyzer.py` (450 líneas)
-  - `analyze_with_llm()`: Prompt pide "3 brechas" (línea 38)
-  - `_summarize_scraper_alerts()`: `[:5]` top alerts (línea 162)
-  - `_basic_analysis()`: Modelo "2 Pilares" genera máximo 2 brechas (líneas 199-368)
-- `modules/generators/report_builder.py` (línea 1164): `[:4]` truncation
+> **Skill**: `phased_project_executor`
+> **Version Base**: 4.25.3 (post-FASE-D)
+> **Tests Base**: 1782 funciones (baseline post-FASE-D)
+> **Dependencias**: FASE-D (debe estar completada)
+> **Archivos Principales**: 4 archivos (templates + generators + benchmarks)
+> **Sesion**: 1 fase = 1 sesion
 
 ---
 
-## Tareas
+## CONTEXTO
 
-### Tarea 1: Alinear gap_analyzer.py con modelo dinámico
+FASE-C corrigio 4 bugs criticos. FASE-D corrigio 5 bugs medios + serializacion seo_elements. FASE-E corrigio la reutilizacion HTML para OG detection. Esta fase limpia referencias zombie a IAO/Voice Readiness eliminados en FASE-CAUSAL-01 y corrige 6 code smells menores en `v4_diagnostic_generator.py`.
 
-**Objetivo**: gap_analyzer ya no impone número fijo de brechas.
+Los placeholders `${iao_score}`, `${voice_readiness_score}`, `${iao_status}`, `${voice_readiness_status}` persisten en templates pero ningun codigo Python vivo los popula. Ademas, `diagnostico_ejecutivo.md` usa `.format()` (no `safe_substitute`), lo que causa **KeyError en runtime** si se ejecuta con datos que no incluyen `iao_score`.
 
-**Archivos afectados**:
-- `modules/analyzers/gap_analyzer.py`
+---
 
-**Cambios**:
-1. Línea 38: Cambiar `"Identifica las 3 brechas criticas MAS costosas"` por `"Identifica las brechas criticas detectadas (todas las que tengan evidencia real)"`
-2. Línea 162: Cambiar `[:5]` por eliminar truncamiento o usar una constante `MAX_BRECHAS = 10`
-3. En el JSON format del prompt (líneas 52-74): El array `brechas_criticas` ya no dice "3 items", permite N
+## TAREAS A EJECUTAR
 
-**Nota CRÍTICA sobre `_basic_analysis()`**:
-El fallback local genera exactamente 2 brechas (Pilar 1: GBP, Pilar 2: AEO). Esto es CORRECTO porque es un modelo simplificado de emergencia. NO es necesario expandirlo a N categorías - su trabajo es dar un resultado rápido cuando el LLM falla. Lo que sí debe hacer es:
-- NO mentir diciendo que son "3" si genera 2
-- Documentar que genera "2 Pilares" como fallback
+### ZMB-1: Eliminar fila IAO de diagnostico_ejecutivo.md (CRITICO)
 
-**Criterios de aceptación**:
-- [ ] Prompt LLM no pide número fijo de brechas
-- [ ] `_summarize_scraper_alerts()` no trunca a 5 (o usa constante explícita)
-- [ ] Tests existentes de gap_analyzer pasan
+**Ubicacion**: `templates/diagnostico_ejecutivo.md` linea 15
+**Sintoma**: `.format()` crashea con KeyError porque `report_builder.py` NO pasa `iao_score`, `iao_comparativo`, ni `iao_icon` en el dict.
+**Fix**: Eliminar la fila IAO completa del template.
 
-### Tarea 2: Alinear report_builder.py con modelo dinámico
+### ZMB-2: Eliminar filas IAO + Voice Readiness de diagnostico_v4_template.md
 
-**Objetivo**: report_builder no trunca a 4.
+**Ubicacion**: `templates/diagnostico_v4_template.md` lineas 41-42
+**Sintoma**: Placeholders `${iao_score}`, `${voice_readiness_score}` sin reemplazo. `safe_substitute` no crashea pero genera texto basura.
+**Fix**: Eliminar las 2 filas del template.
 
-**Archivos afectados**:
-- `modules/generators/report_builder.py` (línea 1164)
+### ZMB-3: Limpiar iao_score del dict en _get_analytics_fallback()
 
-**Cambios**:
-1. Línea 1164: Cambiar `[:4]` por eliminar truncamiento o usar constante configurable
-2. Verificar si report_builder.py está activo o es legacy
+**Ubicacion**: `modules/commercial_documents/v4_diagnostic_generator.py` (~linea 1486, 1557)
+**Sintoma**: `iao_score` en fallback dict se calcula pero nunca se consume.
+**Fix**: Eliminar la clave `iao_score` del dict retornado por `_get_analytics_fallback()`.
 
-**Criterios de aceptación**:
-- [ ] No hay `[:4]` en lógica de brechas
-- [ ] Tests existentes pasan
+### ZMB-4: Evaluar iao_score en benchmarks.py
 
-### Tarea 3: Documentar modelo de brechas unificado
+**Ubicacion**: `modules/utils/benchmarks.py:33`
+**Sintoma**: `iao_score: 18` hardcoded sin consumidor.
+**Fix**: Eliminar la key `iao_score` del benchmark dict.
 
-**Objetivo**: Un comentario/docstring que explique la arquitectura de brechas.
+### MEN-1: Import redundante de datetime
 
-**Archivos afectados**:
-- `modules/commercial_documents/v4_diagnostic_generator.py` (docstring de clase)
+**Ubicacion**: `v4_diagnostic_generator.py` linea 443
+**Problema**: `from datetime import datetime` redundante (ya importado linea 11).
+**Fix**: Eliminar la linea 443.
 
-**Agregar**:
-```python
-# ARQUITECTURA DE BRECHAS (fuente: FASE-A)
-# ===========================================
-# _identify_brechas() es la UNICA fuente de verdad para brechas del diagnóstico.
-# Detecta hasta 10 categorías de problemas basadas en evidencia real del audit.
-# Retorna N brechas (0-10) sin defaults genéricos.
-#
-# Cadena de flujo:
-#   V4AuditResult → _identify_brechas() → DiagnosticSummary.brechas
-#       → v4_diagnostic_generator (template con N brechas)
-#       → v4_proposal_generator (distribución proporcional)
-#       → PainSolutionMapper (pain_ids → assets)
-#
-# Módulos legacy con modelos propios:
-#   gap_analyzer._basic_analysis(): "2 Pilares" (solo fallback, no diagnóstico)
-#   report_builder: legacy spark, usa datos de gap_analyzer
-#
-# NO agregar hardcoded "4" en ninguna parte de esta cadena.
-```
+### MEN-2: Scores calculados 2 veces
 
-**Comando de validación**:
+**Ubicacion**: `v4_diagnostic_generator.py` lineas 508-515
+**Problema**: Scores calculados 2 veces cada uno en vez de guardar en variable.
+**Fix**: Guardar en variable temporal y reutilizar.
+
+### MEN-3: _format_scenario_amount() inconsistente
+
+**Ubicacion**: `v4_diagnostic_generator.py` linea 490
+**Problema**: `_format_scenario_amount()` inconsistente con `format_cop()` de otros escenarios.
+**Fix**: Unificar a `format_cop()`.
+
+### MEN-4: audit_result.competitors sin hasattr() guard
+
+**Ubicacion**: `v4_diagnostic_generator.py` lineas 1214/1273/1278
+**Problema**: `audit_result.competitors` sin `hasattr()` guard (fragil ante refactor). Otras lineas (1096-1098) ya tienen el guard.
+**Fix**: Agregar `hasattr(audit_result, 'competitors')` como en 1096-1098.
+
+### MEN-5: print() en lugar de logging
+
+**Ubicacion**: `v4_diagnostic_generator.py` linea 1680
+**Problema**: `print()` en lugar de `logging.warning()`.
+**Fix**: Cambiar a `logging.warning()`.
+
+### MEN-6: Import re dentro de un loop
+
+**Ubicacion**: `v4_diagnostic_generator.py` linea 1822
+**Problema**: `import re` dentro de un loop -- se ejecuta cada iteracion.
+**Fix**: Mover `import re` a los imports del modulo.
+
+### MEN-7: Expresion ternaria con precedencia ambigua
+
+**Ubicacion**: `v4_diagnostic_generator.py` linea 1615
+**Problema**: Expresion ternaria con precedencia ambigua -- dificil de leer.
+**Fix**: Refactorizar con parentesis claros.
+
+---
+
+## PLAN DE EJECUCION
+
+### Paso 1: Verificacion pre-fix (5 min)
+
+1. Confirmar que FASE-D fue completada
+2. Verificar lineas exactas de cada ZMB/MEN en el archivo actual
+3. Confirmar que `diagnostico_ejecutivo.md` usa `.format()` (no `safe_substitute`)
+4. Confirmar que `iao_score` no tiene consumidores activos
+5. Ejecutar test baseline: `python -m pytest tests/ -x --tb=short -q 2>&1 | tail -5`
+
+### Paso 2: Aplicar fixes (15 min)
+
+Aplicar en orden, de menor riesgo a mayor:
+
+| Orden | Tarea | Archivo | Cambio | Riesgo |
+|-------|-------|---------|--------|--------|
+| 1 | ZMB-1 | diagnostico_ejecutivo.md:15 | Eliminar fila IAO | Bajo |
+| 2 | ZMB-2 | diagnostico_v4_template.md:41-42 | Eliminar filas IAO+Voice | Bajo |
+| 3 | ZMB-3 | v4_diagnostic_generator.py:~1486 | Limpiar iao_score dict | Bajo |
+| 4 | ZMB-4 | benchmarks.py:33 | Eliminar iao_score key | Bajo |
+| 5 | MEN-1 | v4_diagnostic_generator.py:443 | Eliminar import dup | Bajo |
+| 6 | MEN-6 | v4_diagnostic_generator.py:1822 | Mover import re | Bajo |
+| 7 | MEN-5 | v4_diagnostic_generator.py:1680 | print -> logging | Bajo |
+| 8 | MEN-7 | v4_diagnostic_generator.py:1615 | Parentesis ternaria | Bajo |
+| 9 | MEN-4 | v4_diagnostic_generator.py:1214/1273/1278 | hasattr() guard | Bajo |
+| 10 | MEN-2 | v4_diagnostic_generator.py:508-515 | Variable temporal | Bajo |
+| 11 | MEN-3 | v4_diagnostic_generator.py:490 | Unificar format_cop | Bajo |
+
+### Paso 3: Validacion post-fix (10 min)
+
 ```bash
-cd /mnt/c/Users/Jhond/Github/iah-cli
-python -m pytest tests/analyzers/test_gap_analyzer.py -v 2>/dev/null || echo "No tests file - verify manually"
+# Validacion rapida del ecosistema
 python scripts/run_all_validations.py --quick
+
+# Tests de regresion completos
+python -m pytest tests/ -x --tb=short -q
+```
+
+### Paso 4: Verificacion manual (5 min)
+
+1. **ZMB-1**: Confirmar que `diagnostico_ejecutivo.md` NO tiene fila IAO
+2. **ZMB-2**: Confirmar que `diagnostico_v4_template.md` NO tiene placeholders IAO/Voice
+3. **ZMB-3**: Confirmar que `_get_analytics_fallback()` NO retorna `iao_score`
+4. **ZMB-4**: Confirmar que `benchmarks.py` NO tiene `iao_score`
+5. **MEN-1..7**: Verificar cada fix segun ubicacion
+
+### Paso 5: Post-ejecucion (5 min)
+
+1. Marcar checklist de completitud (ver `06-checklist-implementacion.md`)
+2. Actualizar `dependencias-fases.md` con estado FASE-F
+3. Ejecutar: `python scripts/log_phase_completion.py --fase FASE-F`
+4. Commit: `git add -A && git commit -m "fix(FASE-F): remove zombie IAO/voice refs + fix 7 code smells in v4_diagnostic_generator"`
+
+### Paso 6: Validacion Final (post-FASE-F)
+
+```bash
+# Validacion E2E con hotel de referencia
+./venv/Scripts/python.exe main.py v4complete --url https://amaziliahotel.com/
 ```
 
 ---
 
-## Post-Ejecución (OBLIGATORIO)
+## CRITERIOS DE COMPLETITUD
 
-1. **`dependencias-fases.md`**: Marcar FASE-F como ✅ Completada
-2. **`06-checklist-implementacion.md`**: Actualizar estado FASE-F
-3. Ejecutar:
+### Checklist de Verificacion
+
+- [ ] **F1**: Fila IAO eliminada de `diagnostico_ejecutivo.md`
+- [ ] **F2**: Filas IAO + Voice Readiness eliminadas de `diagnostico_v4_template.md`
+- [ ] **F3**: `iao_score` eliminado de `_get_analytics_fallback()` dict
+- [ ] **F4**: `iao_score` eliminado de `benchmarks.py`
+- [ ] **F5**: Import redundante datetime eliminado (MEN-1)
+- [ ] **F6**: Scores calculados 1 sola vez (MEN-2)
+- [ ] **F7**: `format_cop()` unificado (MEN-3)
+- [ ] **F8**: `hasattr()` guard en competitors (MEN-4)
+- [ ] **F9**: `print()` reemplazado por `logging.warning()` (MEN-5)
+- [ ] **F10**: `import re` movido a imports del modulo (MEN-6)
+- [ ] **F11**: Ternaria refactorizada con parentesis (MEN-7)
+- [ ] **F12**: `run_all_validations.py --quick` pasa sin errores
+- [ ] **F13**: Todos los tests pasan (sin regresion vs FASE-D)
+- [ ] **F14**: `log_phase_completion.py --fase FASE-F` ejecutado
+- [ ] **F15**: Commit realizado con mensaje descriptivo
+- [ ] **F16**: v4complete con amaziliahotel.com ejecutado (validacion final)
+
+### Condiciones de Exito
+
+| Criterio | Condicion |
+|----------|-----------|
+| Tests pasan | >= baseline post-FASE-D (sin regresion) |
+| Validaciones | `--quick` sin errores |
+| Bugs corregidos | 4/4 zombies + 7/7 code smells |
+| Sin nuevos fallos | 0 nuevos test failures |
+| Validacion E2E | v4complete amaziliahotel.com exitoso |
+
+### Condiciones de Rollback
+
+Si algo falla:
 ```bash
-python scripts/log_phase_completion.py --fase FASE-F --desc "Limpieza legacy gap_analyzer + report_builder" --archivos-mod "modules/analyzers/gap_analyzer.py,modules/generators/report_builder.py,modules/commercial_documents/v4_diagnostic_generator.py" --check-manual-docs
+git stash
+git stash drop
+# Revisar error y reintentar
 ```
-4. `git add -A && git commit -m "FASE-F: limpieza legacy - sin hardcoded brechas en gap_analyzer y report_builder"`
 
-## Criterios de Completitud (CHECKLIST)
+---
 
-- [ ] gap_analyzer.py no pide "3 brechas" fijas al LLM
-- [ ] report_builder.py no trunca a `[:4]`
-- [ ] Docstring de arquitectura de brechas agregado
-- [ ] Tests existentes pasan sin regresión
-- [ ] `python scripts/run_all_validations.py --quick` pasa
-- [ ] No hay `[:4]` relacionado con brechas en todo el codebase (excluyendo venv)
+## ARCHIVOS AFECTADOS
 
-## Restricciones
+| Archivo | Tipo | Cambio |
+|---------|------|--------|
+| `templates/diagnostico_ejecutivo.md` | MODIFICAR | Eliminar fila IAO (ZMB-1) |
+| `templates/diagnostico_v4_template.md` | MODIFICAR | Eliminar filas IAO+Voice (ZMB-2) |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | MODIFICAR | ZMB-3 + MEN-1..7 (~20 lineas) |
+| `modules/utils/benchmarks.py` | MODIFICAR | ZMB-4 (1 linea) |
 
-- NO expandir `_basic_analysis()` a N categorías (es fallback simplificado, correcto con 2)
-- NO eliminar gap_analyzer (aún usado como fallback)
-- Verificar que `v4complete` no depende de gap_analyzer para el diagnóstico principal
+## ARCHIVOS DE REFERENCIA (solo lectura)
+
+| Archivo | Uso |
+|---------|-----|
+| `modules/commercial_documents/report_builder.py` | Confirmar que NO pasa iao_score |
+| `templates/diagnostico_ejecutivo.md` | Confirmar uso de .format() |
+| `tests/` | Baseline y validacion post-fix |
+
+---
+
+## NOTAS
+
+- ZMB-1 es CRITICO: si `diagnostico_ejecutivo.md` se ejecuta con `.format()`, crashea con KeyError.
+- ZMB-2 es de baja severidad: `safe_substitute` no crashea pero genera texto basura `${iao_score}`.
+- MEN-1..7 son code smells que degradan mantenibilidad sin afectar produccion directamente.
+- FASE-F es la ultima fase antes de la validacion final con v4complete.
+- La dependencia con FASE-D es por confianza: el generador debe estar limpio antes de tocar templates.

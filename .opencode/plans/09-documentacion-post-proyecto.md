@@ -1,166 +1,325 @@
-# Documentación Post-Proyecto: Fix AEO Score "Pendiente de datos"
+# Documentacion Post-Proyecto: Bugfix Sprint post-FASE-B
 
-> Documentación incremental. Se actualiza DESPUÉS de cada fase completada.
-> Basado en `docs/CONTRIBUTING.md` §5 (documentation_rules.md) y §8.
-
----
-
-## Sección A: Módulos Nuevos/Modificados
-
-### FASE-A: Data Foundation
-| Archivo | Tipo | Descripción |
-|---------|------|-------------|
-| `modules/auditors/seo_elements_detector.py` | MODIFICADO | Stubs reemplazados por implementación real con BeautifulSoup |
-| `tests/auditors/test_seo_elements_detector.py` | NUEVO | 8 tests: OG detection, images alt, social links, graceful errors |
-
-**Cambio arquitectónico**: `SEOElementsDetector.detect()` pasa de retornar
-valores hardcodeados (`open_graph=False`) a usar BeautifulSoup para detectar
-`og:title`, `og:description`, `og:image` en el HTML real.
-
-### FASE-B: AEO Scoring Rewrite
-| Archivo | Tipo | Descripción |
-|---------|------|-------------|
-| `modules/commercial_documents/v4_diagnostic_generator.py` | MODIFICADO | Método `_calculate_aeo_score()` reescrito (líneas 1324-1346) |
-|| `tests/commercial_documents/test_aeo_score.py` | NUEVO | 15 tests: scoring 4 componentes, tiers citabilidad, edge cases |
-
-**Cambio arquitectónico**: `_calculate_aeo_score()` pasa de usar solo
-`performance.mobile_score` (max 20pts) a scoring de 4 componentes × 25pts:
-Schema válido + FAQ válido + OG detectado + Citabilidad.
-
-### FASE-C: Integration & Validación
-| Archivo | Tipo | Descripción |
-|---------|------|-------------|
-| — | — | Sin cambios de código. Solo verificación y documentación. |
+> **Fuente normativa**: `docs/CONTRIBUTING.md` - Flujo Post-Fase Obligatorio (Paso 6)
+> **Checklist**: `docs/contributing/documentation_rules.md` §5 + §36-58
+> **Version Base**: 4.25.3
+> **Fecha**: 2026-04-08
+> **Estado**: PENDIENTE DE EJECUCION (se ejecuta DESPUES de cada fase)
 
 ---
 
-## Sección B: Notas Técnicas para GUIA_TECNICA.md
+## Como Usar Este Documento
 
-> Copiar esta sección a `docs/GUIA_TECNICA.md` como nueva entrada
-> "Notas de Cambios" al completar todas las fases.
+Este documento es el **procedimiento paso a paso** de documentacion post-fase para el bugfix sprint. Se ejecuta **al completar cada fase** (C, D, E, F). No es un resumen -- es un checklist ejecutable.
 
-### Notas de Cambios v4.25.3/v4.25.4 - Fix AEO Score
-
-**Resumen**: El score AEO del diagnóstico v4complete mostraba "0 (Pendiente de datos)"
-en todos los hoteles porque `_calculate_aeo_score()` solo usaba PageSpeed API.
-Se implementó scoring completo de 4 componentes y detección real de Open Graph.
-
-**Módulos afectados**:
-- `modules/auditors/seo_elements_detector.py` — Stub → BeautifulSoup real
-- `modules/commercial_documents/v4_diagnostic_generator.py` — `_calculate_aeo_score()` reescrito
-
-**Arquitectura**:
-- `SEOElementsDetector` ahora usa BeautifulSoup para parsear HTML y detectar
-  `og:*` meta tags, imágenes sin `alt`, y enlaces a redes sociales.
-- `_calculate_aeo_score()` evalúa 4 componentes independientes (25pts c/u):
-  Schema válido, FAQ válido, OG detectado, Citabilidad.
-- Componentes opcionales (citability, seo_elements) tienen fallback graceful
-  si son None — no causan "Pendiente de datos".
-
-**Backwards compatibility**:
-- Interfaz de `SEOElementsResult` sin cambios (mismos campos, mismos tipos)
-- `_calculate_aeo_score()` retorna string numérico compatible con `_get_score_status()`
-- Templates no requieren cambios (`${aeo_score}` renderiza número como antes)
-- Benchmark regional `aeo_score_ref` (default 20) sigue siendo coherente
-
-**Archivos modificados**:
-- `modules/auditors/seo_elements_detector.py` — 3 métodos stub → real + `detect()` conectado
-- `modules/commercial_documents/v4_diagnostic_generator.py` — `_calculate_aeo_score()` reescrito (22 → ~45 líneas)
+**Regla**: "Actualiza los registros" = ejecutar TODOS los pasos de esta seccion para la fase completada.
 
 ---
 
-## Sección C: Entrada CHANGELOG.md
+## Paso 1: Registrar Fase Completada (AUTO)
 
-> Copiar esta sección a `CHANGELOG.md` al completar todas las fases.
-> Formato según `docs/contributing/documentation_rules.md` §36-58.
+```bash
+python scripts/log_phase_completion.py --fase FASE-X
+```
 
-## [4.25.3] - 2026-04-08
+**Que hace**:
+- Registra entrada en `docs/contributing/REGISTRY.md` (automatico)
+- Muestra POR_HACER para docs manuales (si los hay)
 
-### FASE-C (Integration & Validación): Verificación End-to-End Fix AEO Score
+**Verificacion**:
+- [ ] `REGISTRY.md` tiene entrada para FASE-X con fecha, descripcion, archivos, validaciones
 
-#### Objetivo
-Verificar que el fix completo funciona end-to-end: templates renderizan correctamente,
-no hay regresión en diagnósticos existentes, y la documentación está actualizada.
+---
 
-#### Verificaciones Realizadas
-- Template v6: `${aeo_score}` renderiza número (ej: "50/100"), NO "Pendiente de datos"
-- Template v4: `${schema_infra_score}` mapeado a `_calculate_aeo_score()` (L514)
-- Tests: 24/24 pasan (9 FASE-A + 15 FASE-B), 0 regresiones
-- Validaciones: `run_all_validations.py --quick` 4/4 pasan
-- Benchmark regional: `aeo_score_ref` = 20 (regional) / 40 (global), coherente
+## Paso 2: Sincronizacion Automatica de Versiones (AUTO)
 
-#### Archivos Nuevos
-| Archivo | Descripción |
+```bash
+# Verificar si hay desincronizacion
+python scripts/sync_versions.py --check
+
+# Si hay desincronizacion, auto-reparar
+python scripts/sync_versions.py --fix
+```
+
+**Que sincroniza** (desde VERSION.yaml):
+- `AGENTS.md` -- version + fecha (HTML comment + header banner)
+- `README.md` -- version + fecha
+- `.cursorrules` -- version + fecha
+- `docs/CONTRIBUTING.md` -- version header + footer
+- `docs/GUIA_TECNICA.md` -- version + fecha
+- `docs/contributing/REGISTRY.md` -- fecha ultima actualizacion
+
+**Verificacion**:
+- [ ] `sync_versions.py --check` reporta "All files in sync"
+- [ ] No hay discrepancias de version entre archivos
+
+---
+
+## Paso 3: Verificar/Actualizar CHANGELOG.md (MANUAL)
+
+> **Formato obligatorio**: `docs/contributing/documentation_rules.md` §36-58
+
+### Plantilla de Entrada
+
+```markdown
+## v4.25.x - Bugfix Sprint: FASE-{X} (2026-04-08)
+
+### Objetivo
+{Descripcion breve del cambio realizado en esta fase}
+
+### Cambios Implementados
+- `ruta/archivo.py` - Descripcion del cambio realizado
+
+### Archivos Nuevos
+| Archivo | Descripcion |
 |---------|-------------|
-| `tests/auditors/test_seo_elements_detector.py` | 9 tests para detección OG, alt, social |
-| `tests/commercial_documents/test_aeo_score.py` | 15 tests para scoring AEO completo |
+| (ninguno si no aplica) | |
 
-#### Archivos Modificados
+### Archivos Modificados
 | Archivo | Cambio |
 |---------|--------|
-| `modules/auditors/seo_elements_detector.py` | Stubs → BeautifulSoup real |
-| `modules/commercial_documents/v4_diagnostic_generator.py` | `_calculate_aeo_score()` reescrito |
+| `ruta/existente.py` | Descripcion del cambio |
 
-#### Tests
-- 24 tests nuevos (9 FASE-A + 15 FASE-B)
-- 0 regresiones
+### Tests
+- Baseline: 1782 funciones, 140 archivos, 52 regresion
+- Post-fase: {N} funciones (sin regresion)
+```
 
----
+### Checklist CHANGELOG
 
-## Sección D: Métricas Acumulativas
-
-| Métrica | Inicio | FASE-A | FASE-B | FASE-C |
-|---------|--------|--------|--------|--------|
-| Tests nuevos | 0 | +9 | +15 | — |
-| Tests total (acumulado) | 1782 | 1790 | 1805 | 1805 |
-| Archivos nuevos | 0 | +1 | +1 | — |
-| Archivos modificados | 0 | +1 | +1 | — |
-| Coherence score | 0.84 | 0.84 | 0.84 | 0.84 |
-| AEO score típico (output) | "0 (Pendiente de datos)" | — | "50" | ✅ verificado |
-| Validaciones run_all | — | 3/4 | 4/4 | 4/4 |
-| REGISTRY.md | — | entrada | entrada | entrada |
+- [ ] CHANGELOG.md tiene entrada para la version actual de VERSION.yaml
+- [ ] La entrada describe archivos nuevos/modificados de esta fase
+- [ ] Formato sigue plantilla de documentation_rules.md §36-58
+- [ ] No hay entradas duplicadas
+- [ ] Seccion "Tests" documenta baseline y post-fase
 
 ---
 
-## Sección E: Checklist de Documentación Afiliada
+## Paso 4: Verificar/Actualizar GUIA_TECNICA.md (MANUAL)
 
-> Marcar ✅ después de completar cada fase y actualizar el doc correspondiente.
+> Solo si la fase afecta arquitectura, stack o flujos
 
-### FASE-A completada → actualizar:
-- [x] `dependencias-fases.md` — FASE-A marcada ✅
-- [x] `06-checklist-implementacion.md` — FASE-A marcada ✅
-- [x] Sección D de este archivo — Métricas actualizadas
-- [x] `log_phase_completion.py --fase FASE-A` ejecutado
+### Plantilla de Seccion
 
-### FASE-B completada → actualizar:
-- [x] `dependencias-fases.md` — FASE-B marcada ✅
-- [x] `06-checklist-implementacion.md` — FASE-B marcada ✅
-- [x] Sección D de este archivo — Métricas actualizadas
-- [x] Sección B de este archivo — Nota técnica lista para GUIA_TECNICA.md
-- [x] Sección C de este archivo — Entrada CHANGELOG lista
-- [x] `log_phase_completion.py --fase FASE-B` ejecutado
+```markdown
+### Notas de Cambios v4.25.x - Bugfix Sprint FASE-{X}
 
-### FASE-C completada → actualizar:
-- [x] `dependencias-fases.md` — FASE-C marcada ✅
-- [x] `06-checklist-implementacion.md` — FASE-C marcada ✅
-- [x] Sección D de este archivo — Métricas finales actualizadas
-- [x] `log_phase_completion.py --fase FASE-C` ejecutado
-- [x] Sección B copiada a `docs/GUIA_TECNICA.md` — Sección v4.25.3/v4.25.4 agregada + línea 124 corregida
-- [x] Sección C copiada a `CHANGELOG.md` — Entrada FASE-C [4.25.4] agregada
-- [x] `python scripts/run_all_validations.py --quick` pasa (4/4)
-- [x] `git diff --stat` verificado
+**Resumen**: {Descripcion tecnica concisa}
+
+**Modulos afectados**:
+- `modules/commercial_documents/v4_diagnostic_generator.py` - {cambios}
+- `modules/auditors/v4_comprehensive.py` - {cambios}
+
+**Arquitectura**: {Cambios arquitectonicos si los hay, o "Sin cambios arquitectonicos"}
+
+**Backwards compatibility**: {Impacto en backwards compat, o "Totalmente backwards compatible"}
+
+**Archivos modificados con descripcion**:
+| Archivo | Cambio |
+|---------|--------|
+| `ruta/archivo.py` | Descripcion |
+```
+
+### Checklist GUIA_TECNICA
+
+- [ ] GUIA_TECNICA.md tiene nota tecnica para la fase (si aplica arquitectura/stack/flujos)
+- [ ] La nota incluye modulos afectados
+- [ ] La nota incluye archivos modificados con descripcion
+- [ ] Backwards compatibility documentado
 
 ---
 
-## Sección F: Archivos del Plan
+## Paso 5: Verificar Capability Contracts (MANUAL)
 
-| Archivo | Propósito |
-|---------|-----------|
-| `README.md` | Índice del plan |
-| `dependencias-fases.md` | Diagrama de dependencias + conflictos |
-| `05-prompt-inicio-sesion-fase-A.md` | Prompt completo para sesión FASE-A |
-| `05-prompt-inicio-sesion-fase-B.md` | Prompt completo para sesión FASE-B |
-| `05-prompt-inicio-sesion-fase-C.md` | Prompt completo para sesión FASE-C |
-| `06-checklist-implementacion.md` | Checklist maestro |
-| `09-documentacion-post-proyecto.md` | Este archivo |
-| `context/00-problema-aeo-score.md` | Contexto del problema |
+> Solo si la fase agrega/modifica capacidades del sistema
+
+```bash
+python scripts/validate_agent_ecosystem.py
+```
+
+### Checklist Capabilities
+
+- [ ] 0 capacidades sin invocacion en runtime (no huerfanas)
+- [ ] 0 capacidades sin output observable
+- [ ] Toda capacidad nueva tiene punto de invocacion identificado
+- [ ] Toda capacidad nueva tiene output serializable (to_dict/export/report)
+
+---
+
+## Paso 6: Regenerar SYSTEM_STATUS.md (AUTO)
+
+```bash
+python main.py --doctor --status
+```
+
+**Verificacion**:
+- [ ] `.agent/SYSTEM_STATUS.md` regenerado sin errores
+- [ ] Doctor no reporta warnings nuevos
+
+---
+
+## Paso 7: Verificar Symlink .agent/ vs .agents/ (AUTO)
+
+```bash
+python main.py --doctor
+```
+
+**Verificacion**:
+- [ ] `.agent/workflows/` es symlink que apunta a `.agents/workflows/`
+- [ ] Doctor no reporta error de "Symlink integrity"
+
+**Si esta roto**:
+```bash
+ln -sf ../.agents/workflows .agent/workflows
+```
+
+---
+
+## Paso 8: Validacion Final Pre-Commit
+
+```bash
+# Validacion rapida
+python scripts/run_all_validations.py --quick
+
+# Verificar que no hay cambios no intencionados
+git diff --stat
+```
+
+**Verificacion**:
+- [ ] `run_all_validations.py --quick` pasa sin errores
+- [ ] `git diff --stat` solo muestra archivos intencionados
+- [ ] Tests pasan: `python -m pytest tests/ -x --tb=short -q`
+
+---
+
+## Resumen por Fase
+
+### FASE-C: 4 Bugs Criticos
+
+| Paso | Comando/Archivo | Estado |
+|------|-----------------|--------|
+| 1 | `log_phase_completion.py --fase FASE-C` | Pendiente |
+| 2 | `sync_versions.py --check` | Pendiente |
+| 3 | CHANGELOG.md entrada v4.25.x FASE-C | Pendiente |
+| 4 | GUIA_TECNICA.md (si aplica) | Pendiente |
+| 5 | Capability contracts (si aplica) | Pendiente |
+| 6 | `main.py --doctor --status` | Pendiente |
+| 7 | Symlink check | Pendiente |
+| 8 | `run_all_validations.py --quick` | Pendiente |
+
+**Archivos de FASE-C**:
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | 4 fixes: import logging, overall_score attr, open_graph attr, mobile_score is_not_None |
+
+---
+
+### FASE-D: 5 Bugs Medios + Serializacion
+
+| Paso | Comando/Archivo | Estado |
+|------|-----------------|--------|
+| 1 | `log_phase_completion.py --fase FASE-D` | Pendiente |
+| 2 | `sync_versions.py --check` | Pendiente |
+| 3 | CHANGELOG.md entrada v4.25.x FASE-D | Pendiente |
+| 4 | GUIA_TECNICA.md (serializacion seo_elements afecta arquitectura de persistencia) | Pendiente |
+| 5 | Capability contracts (seo_elements_detection como validator ejecutado) | Pendiente |
+| 6 | `main.py --doctor --status` | Pendiente |
+| 7 | Symlink check | Pendiente |
+| 8 | `run_all_validations.py --quick` | Pendiente |
+
+**Archivos de FASE-D**:
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | 5 fixes: dead code elimination, dup keys, confidence case, pipe dup, /100 suffix |
+| `modules/auditors/v4_comprehensive.py` | Serializacion seo_elements en to_dict() + executed_validators |
+
+---
+
+### FASE-E: OG Detection HTML Reuse
+
+| Paso | Comando/Archivo | Estado |
+|------|-----------------|--------|
+| 1 | `log_phase_completion.py --fase FASE-E` | Pendiente |
+| 2 | `sync_versions.py --check` | Pendiente |
+| 3 | CHANGELOG.md entrada v4.25.x FASE-E | Pendiente |
+| 4 | GUIA_TECNICA.md (elimina request HTTP, afecta flujo de auditoria) | Pendiente |
+| 5 | Capability contracts (no cambia) | Pendiente |
+| 6 | `main.py --doctor --status` | Pendiente |
+| 7 | Symlink check | Pendiente |
+| 8 | `run_all_validations.py --quick` | Pendiente |
+
+**Archivos de FASE-E**:
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | Eliminar 2da HTTP request, reutilizar HTML del schema audit, logging defensivo OG |
+
+---
+
+### FASE-F: Zombies + Code Smells
+
+| Paso | Comando/Archivo | Estado |
+|------|-----------------|--------|
+| 1 | `log_phase_completion.py --fase FASE-F` | Pendiente |
+| 2 | `sync_versions.py --check` | Pendiente |
+| 3 | CHANGELOG.md entrada v4.25.x FASE-F | Pendiente |
+| 4 | GUIA_TECNICA.md (limpieza, no afecta arquitectura -- puede omitirse) | Opcional |
+| 5 | Capability contracts (no cambia) | Pendiente |
+| 6 | `main.py --doctor --status` | Pendiente |
+| 7 | Symlink check | Pendiente |
+| 8 | `run_all_validations.py --quick` | Pendiente |
+
+**Archivos de FASE-F**:
+| Archivo | Cambio |
+|---------|--------|
+| `templates/diagnostico_ejecutivo.md` | Eliminar fila IAO (ZMB-1) |
+| `templates/diagnostico_v4_template.md` | Eliminar filas IAO+Voice (ZMB-2) |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | ZMB-3 + MEN-1..7 (~20 lineas) |
+| `modules/utils/benchmarks.py` | ZMB-4: eliminar iao_score key |
+
+---
+
+## Commit Messages Recomendados (por Fase)
+
+| Fase | Mensaje |
+|------|---------|
+| FASE-C | `fix(FASE-C): 4 critical bugs in v4_diagnostic_generator - logging import, citability attr, OG attr, mobile_score short-circuit` |
+| FASE-D | `fix(FASE-D): 5 medium bugs + seo_elements serialization in v4_comprehensive` |
+| FASE-E | `fix(FASE-E): reuse schema audit HTML for OG detection, eliminate redundant HTTP request` |
+| FASE-F | `fix(FASE-F): remove zombie IAO/voice refs + fix 7 code smells in v4_diagnostic_generator` |
+
+---
+
+## Validacion Final Post-Sprint (despues de FASE-F)
+
+```bash
+# 1. Diagnostico completo del ecosistema
+python scripts/version_consistency_checker.py
+python main.py --doctor
+
+# 2. Sincronizacion final
+python scripts/sync_versions.py
+
+# 3. CHANGELOG verificado para todas las fases
+# (entradas C, D, E, F presentes)
+
+# 4. GUIA_TECNICA actualizada
+# (notas tecnicas para D y E)
+
+# 5. Skills/workflows verificados
+# (sin cambios en este sprint)
+
+# 6. SYSTEM_STATUS regenerado
+python main.py --doctor --status
+
+# 7. Symlink verificado
+# (.agent/workflows -> .agents/workflows OK)
+
+# 8. Validacion final
+python scripts/run_all_validations.py --quick
+./venv/Scripts/python.exe main.py v4complete --url https://amaziliahotel.com/
+```
+
+---
+
+*Documento alineado con docs/CONTRIBUTING.md (Flujo Post-Fase Obligatorio, Paso 6)*
+*Formato CHANGELOG sigue docs/contributing/documentation_rules.md §36-58*

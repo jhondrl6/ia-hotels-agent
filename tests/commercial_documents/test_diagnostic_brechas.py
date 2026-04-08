@@ -59,13 +59,13 @@ def mock_metadata(has_issues=False):
 
 def mock_seo_elements(has_open_graph=True):
     m = MagicMock()
-    m.has_open_graph = has_open_graph
+    m.open_graph = has_open_graph
     return m
 
 
 def mock_citability(score=50):
     m = MagicMock()
-    m.score = score
+    m.overall_score = score
     return m
 
 
@@ -282,10 +282,11 @@ def test_identify_brechas_with_citability_detection():
     assert 'low_citability' in pain_ids
 
 
-def test_identify_brechas_7_detected_returns_7():
-    """Un audit que dispara 7 brechas retorna las 7 (no trunca a 4)."""
+def test_identify_brechas_8_detected_returns_8():
+    """Un audit que dispara 8 brechas retorna las 8 (no trunca a 4)."""
     audit = create_audit(
         schema_detected=False,       # Brecha 2: no_hotel_schema
+        faq_detected=False,          # Brecha 8: no_faq_schema
         gbp_geo_score=50,           # Brecha 1: low_gbp_score
         phone_web=None,             # Brecha 3: no_whatsapp_visible
         mobile_score=60,            # Brecha 4: poor_performance
@@ -293,11 +294,11 @@ def test_identify_brechas_7_detected_returns_7():
         metadata_has_issues=True,    # Brecha 6: metadata_defaults
         gbp_reviews=5,              # Brecha 7: missing_reviews
     )
-    
+
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(audit)
-    
-    assert len(brechas) == 7, f"Expected 7, got {len(brechas)}: {[b['pain_id'] for b in brechas]}"
+
+    assert len(brechas) == 8, f"Expected 8, got {len(brechas)}: {[b['pain_id'] for b in brechas]}"
 
 
 def test_inject_brecha_scores_dynamic_count():

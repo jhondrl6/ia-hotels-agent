@@ -1,338 +1,193 @@
-# FASE-E: Micro-Content Local Generator
+# FASE-E: OG Detection - Reutilizar HTML del schema audit en vez de segunda request
 
-**ID**: FASE-E  
-**Objetivo**: Generador de paginas de contenido local (3-5 por hotel) orientadas a keywords de alto valor para hoteles boutique, como add-on comercial al Kit Hospitalidad Digital.  
-**Dependencias**: FASE-B ✅ (content pasa por quality gate)  
-**Duracion estimada**: 2-3 horas  
-**Skill**: `phased_project_executor` v2.3.0
-
----
-
-## Contexto
-
-### Por que esta fase es necesaria
-
-Los hoteles boutique del Eje Cafetero NO necesitan 20 articulos de blog (patron seomachine). Necesitan 3-5 paginas que capturen busquedas locales de alto valor:
-
-```
-"termales santa rosa de cabal precios"     → 1.200 busquedas/mes
-"hotel boutique cerca termales"            → 800 busquedas/mes  
-"donde hospedarse en santa rosa de cabal"  → 600 busquedas/mes
-"hotel con termales incluidas"             → 400 busquedas/mes
-```
-
-Estas paginas son:
-- FACILES de posicionar (long-tail local, poca competencia)
-- CONVierten bien (el que busca ya quiere reservar)
-- El hotelero NO las va a escribir solo
-- Son un ADD-ON vendible ($50K COP extra por 3 paginas)
-
-### Inspiracion
-
-Adaptacion simplificada de seomachine `topic_cluster_strategy.md`:
-- NO pillar cluster de 20 articulos (eso es para SaaS)
-- SI micro-contenido local (3-5 paginas por hotel)
-- Cada pagina: keyword target + schema Article + link a reservas directas
-
-### Estado de Fases Anteriores
-
-| Fase | Estado |
-|------|--------|
-| FASE-A | ✅ Completada |
-| FASE-B | ✅ Completada |
-| FASE-A | ✅ Completada |
-| FASE-B | ✅ Completada |
-| FASE-A | ✅ Completada |
-| FASE-B | ✅ Completada |
-
-### Base Tecnica Disponible
-
-- `modules/asset_generation/` — Generadores existentes con patron condicional
-- `modules/asset_generation/asset_catalog.py` — Catalogo de tipos de asset
-- `modules/providers/` — LLM providers (DeepSeek/Anthropic)
-- Templates en `templates/` — Patrones de generacion
-- Content Scrubber (FASE-B) — Limpieza post-generacion
-- Tests base: 1782 + 22 (D) + 14 (E) + 18 (F)
+> **Skill**: `phased_project_executor`
+> **Version Base**: 4.25.3
+> **Tests Base**: 1782 funciones, 140 archivos, 52 regresion
+> **Dependencias**: Ninguna (independiente de C y D por archivos)
+> **Archivo Principal**: `modules/auditors/v4_comprehensive.py`
+> **Sesion**: 1 fase = 1 sesion
 
 ---
 
-## Tareas
+## CONTEXTO
 
-### Tarea 1: Crear Local Content Generator
+`SEOElementsDetector` (creado en FASE-A) funciona correctamente y 9 tests pasan. El wiring existe: `v4_comprehensive.py` L404 ejecuta el detector y L500 asigna el resultado al `V4AuditResult`.
 
-**Objetivo**: Generador de paginas de contenido local orientadas a keywords.
+**El problema**: El detector recibe HTML sin OG tags aunque el sitio los tiene. Esto ocurre porque `v4_comprehensive.py` hace una **segunda request HTTP** en step 2.8/2.9 (linea 391-393) que devuelve HTML diferente al del schema audit (step 2.1). Sitios SPA/JS-rendered pueden servir shells HTML sin metadatos en requests subsecuentes.
 
-**Archivos afectados**:
-- `modules/asset_generation/local_content_generator.py` (NUEVO)
+**Evidencia**: Para hotelvisperas.com, el sitio tiene OG tags verificados via curl, pero el log E2E muestra `Open Graph: False`. Citability tambien dio 0.0/100 con 0 bloques analizados, confirmando HTML transitorio.
 
-**Estructura**:
+**Impacto comercial**: +25pts AEO por hotel tipico al corregir este falso negativo.
+
+---
+
+## TAREA: Reutilizar HTML del schema audit (step 2.1)
+
+### Cambio requerido
+
+**Archivo**: `modules/auditors/v4_comprehensive.py`
+
+**Flujo actual** (problematico):
+```
+Step 2.1: schema audit
+  -> HttpClient().get(url) -> html_content_1  (con OG tags)
+
+Step 2.8: citability
+  -> HttpClient().get(url) -> html_for_citability  (HTML diferente!)
+
+Step 2.9: SEO elements  
+  -> usa html_for_citability.text  (sin OG tags!)
+```
+
+**Flujo corregido**:
+```
+Step 2.1: schema audit
+  -> HttpClient().get(url) -> html_content_1  (con OG tags)
+  -> Guardar html_content_1.text en variable accesible
+
+Step 2.8: citability
+  -> Reutilizar html_content_1.text  (evitar 2da request)
+
+Step 2.9: SEO elements
+  -> Reutilizar html_content_1.text  (mismo HTML con OG tags)
+```
+
+### Ubicacion del cambio
+
+**v4_comprehensive.py lineas ~391-404**:
+
+Codigo actual (aproximado):
+```python
+# Linea ~391-393: Segunda request (innecesaria)
+html_for_citability = HttpClient().get(url)
+html_content = html_for_citability.text
+
+# Linea ~404: Detector usa html_content de la segunda request
+seo_elements = self._run_seo_elements_audit(html_content, url)
+```
+
+Fix:
+```python
+# Reutilizar html_content del schema audit (step 2.1)
+# NO hacer segunda request
+seo_elements = self._run_seo_elements_audit(self.html_content, url)
+# Donde self.html_content fue guardado en step 2.1
+```
+
+### Logging defensivo
+
+Agregar logging cuando OG no se detecta, para facilitar diagnostico futuro:
 
 ```python
-# modules/asset_generation/local_content_generator.py
-
-@dataclass
-class LocalContentPage:
-    keyword_target: str          # "termales santa rosa de cabal"
-    title: str                   # "Guia de Termales de Santa Rosa de Cabal 2026"
-    slug: str                    # "termales-santa-rosa-de-cabal"
-    content_md: str              # Contenido markdown 800-1200 palabras
-    schema_article: dict         # JSON-LD Article schema
-    internal_links: List[str]    # Links a pagina principal y reservas
-    meta_description: str        # 150-160 chars
-    word_count: int
-
-@dataclass
-class LocalContentSet:
-    hotel_name: str
-    location: str
-    pages: List[LocalContentPage]
-    total_word_count: int
-
-class LocalContentGenerator:
-    """Generates local content pages for boutique hotels."""
-    
-    # Templates de keywords por tipo de hotel/ubicacion
-    KEYWORD_TEMPLATES = {
-        "termales": [
-            "termales {location} precios",
-            "hotel cerca termales {location}",
-            "que llevar a termales {location}",
-        ],
-        "boutique": [
-            "hotel boutique {location}",
-            "donde hospedarse en {location}",
-            "mejor hotel boutique {region}",
-        ],
-        "general": [
-            "que hacer en {location}",
-            "como llegar a {location}",
-            "restaurantes cerca de {location}",
-        ]
-    }
-    
-    CONTENT_RULES = {
-        "word_count_min": 800,
-        "word_count_max": 1200,
-        "internal_links_min": 2,     # Link a home + link a reservas
-        "heading_count_min": 4,      # H2 sections
-        "paragraph_max_sentences": 4, # Legibilidad
-    }
-    
-    def generate_content_set(self, hotel_data: dict, hotel_type: str = "boutique",
-                              location_context: dict = None) -> LocalContentSet:
-        """Generate 3-5 local content pages for a hotel."""
-        
-        # 1. Seleccionar keyword templates segun tipo de hotel
-        keywords = self._select_keywords(hotel_data, hotel_type, location_context)
-        
-        # 2. Generar pagina por keyword (via LLM)
-        pages = []
-        for kw in keywords[:5]:  # Max 5 paginas
-            page = self._generate_page(kw, hotel_data, location_context)
-            pages.append(page)
-        
-        return LocalContentSet(
-            hotel_name=hotel_data.get("name", ""),
-            location=hotel_data.get("city", ""),
-            pages=pages,
-            total_word_count=sum(p.word_count for p in pages)
-        )
-    
-    def _generate_page(self, keyword: str, hotel_data: dict, 
-                        location_context: dict) -> LocalContentPage:
-        """Generate a single local content page via LLM."""
-        
-        # Prompt al LLM:
-        # - Eres experto en contenido turistico local
-        # - Escribe sobre {keyword} en {location}
-        # - Menciona naturalmente {hotel_name} como opcion de hospedaje
-        # - Incluye link a reservas directas (WhatsApp)
-        # - Longitud: 800-1200 palabras
-        # - Estructura: intro + 4 secciones H2 + conclusion
-        # - Tono: informativo, no vendedor (el hotel se menciona naturalmente)
-        # - Idioma: espanol neutro latinoamericano
-        
-        pass
-    
-    def _select_keywords(self, hotel_data, hotel_type, location_context) -> list:
-        """Select best keywords based on hotel type and location."""
-        # Combinar templates de "termales" + "boutique" + "general"
-        # Rellenar {location} y {region} con datos reales
-        # Priorizar por volumen estimado (heuristica basada en tipo)
-        pass
-    
-    def _generate_article_schema(self, page: LocalContentPage, 
-                                  hotel_data: dict) -> dict:
-        """Generate JSON-LD Article schema for the page."""
-        return {
-            "@context": "https://schema.org",
-            "@type": "Article",
-            "headline": page.title,
-            "description": page.meta_description,
-            "author": {
-                "@type": "Organization",
-                "name": hotel_data.get("name", "")
-            },
-            "publisher": {
-                "@type": "Organization", 
-                "name": hotel_data.get("name", "")
-            }
-        }
+if seo_elements and not seo_elements.open_graph:
+    import logging
+    logger = logging.getLogger(__name__)
+    # Guardar snippet del HTML para diagnostico
+    html_snippet = html_content[:500] if html_content else "EMPTY"
+    logger.warning(f"OG not detected. HTML snippet: {html_snippet}")
 ```
-
-**Criterios de aceptacion**:
-- [ ] Genera 3-5 paginas por hotel
-- [ ] Cada pagina tiene keyword target, titulo, slug, contenido, schema
-- [ ] Contenido 800-1200 palabras
-- [ ] Mencion natural del hotel (no vendedora)
-- [ ] Link a reservas directas (WhatsApp)
-- [ ] Schema Article JSON-LD generado
-- [ ] Pasa por Content Scrubber (FASE-B)
-
-### Tarea 2: Registrar en Asset Catalog
-
-**Objetivo**: Agregar `local_content_page` como tipo de asset en el catalogo.
-
-**Archivos afectados**:
-- `modules/asset_generation/asset_catalog.py` (MODIFICAR)
-
-**Cambios**:
-- Agregar `local_content_page` al enum/catalogo de tipos
-- Agregar metadata: formato (.md), dependencias (hotel_data), es_condicional (True)
-
-**Criterios de aceptacion**:
-- [ ] `local_content_page` aparece en el catalogo
-- [ ] `is_asset_implemented("local_content_page")` retorna True
-
-### Tarea 3: Crear Templates
-
-**Objetivo**: Templates de prompts para generacion de contenido local.
-
-**Archivos afectados**:
-- `templates/local_content/page_template.md` (NUEVO)
-- `templates/local_content/keyword_selection.md` (NUEVO)
-
-**Contenido del page_template.md**:
-```markdown
-## Prompt Template: Local Content Page
-
-Eres un escritor de contenido turistico local para el Eje Cafetero colombiano.
-
-CONTEXTO:
-- Hotel: {hotel_name} ({hotel_type})
-- Ubicacion: {city}, {state}
-- Keyword objetivo: {keyword}
-- Servicios: {services}
-
-REGLAS:
-1. Escribe 800-1200 palabras sobre {keyword}
-2. Menciona {hotel_name} naturalmente como opcion de hospedaje (NO vendedor)
-3. Incluye informacion util y verificable sobre la zona
-4. Estructura: intro + 4 secciones H2 + conclusion con CTA suave
-5. Agrega link: "Para reservar: [WhatsApp {hotel_name}](https://wa.me/{phone})"
-6. Tono: informativo, calido, local (no corporativo)
-7. Idioma: espanol neutro latinoamericano
-8. SIN frases genericas AI ("en el vibrante corazon", "descubre la magia")
-
-OUTPUT FORMAT: Markdown con frontmatter YAML
-```
-
-**Criterios de aceptacion**:
-- [ ] Templates existen en `templates/local_content/`
-- [ ] Son referenciados por `LocalContentGenerator`
 
 ---
 
-## Tests Obligatorios
+## PLAN DE EJECUCION
 
-| Test | Archivo | Criterio de Exito |
-|------|---------|-------------------|
-| Test keyword selection termales | `tests/asset_generation/test_local_content_generator.py` | Genera keywords con {location} reemplazado |
-| Test keyword selection boutique | `tests/asset_generation/test_local_content_generator.py` | Genera keywords de hotel boutique |
-| Test page structure | `tests/asset_generation/test_local_content_generator.py` | Tiene titulo, slug, contenido, schema |
-| Test word count range | `tests/asset_generation/test_local_content_generator.py` | 800-1200 palabras por pagina |
-| Test internal links | `tests/asset_generation/test_local_content_generator.py` | Minimo 2 links (home + reservas) |
-| Test article schema | `tests/asset_generation/test_local_content_generator.py` | JSON-LD Article valido |
-| Test hotel mention natural | `tests/asset_generation/test_local_content_generator.py` | Hotel mencionado pero no vendedor |
-| Test content scrubber pass | `tests/asset_generation/test_local_content_generator.py` | Pasa quality gate de FASE-B |
-| Test max 5 pages | `tests/asset_generation/test_local_content_generator.py` | No genera mas de 5 paginas |
-| Test asset catalog entry | `tests/asset_generation/test_local_content_generator.py` | local_content_page en catalogo |
+### Paso 1: Verificacion pre-fix (5 min)
 
-**Comando de validacion**:
+1. Leer `v4_comprehensive.py` completo, identificar exactamente donde se hace cada request HTTP
+2. Confirmar que `self.html_content` (o equivalente) ya existe del step 2.1
+3. Verificar que citability scorer y SEO elements detector pueden compartir el mismo HTML
+4. Confirmar firma de `_run_seo_elements_audit(html_content, url)`
+5. Ejecutar test baseline: `python -m pytest tests/ -x --tb=short -q 2>&1 | tail -5`
+
+### Paso 2: Aplicar fix (10 min)
+
+1. Eliminar la segunda request HTTP en step 2.8/2.9
+2. Reutilizar `html_content` del step 2.1 para citability y SEO elements
+3. Agregar logging defensivo cuando OG no se detecta
+4. Verificar que no hay otros consumidores del HTML de la segunda request
+
+### Paso 3: Validacion post-fix (10 min)
+
 ```bash
-python -m pytest tests/asset_generation/test_local_content_generator.py -v
+# Validacion rapida del ecosistema
 python scripts/run_all_validations.py --quick
+
+# Tests especificos de SEO elements
+python -m pytest tests/ -k "seo_elements" -x --tb=short -v
+
+# Tests de regresion completos
+python -m pytest tests/ -x --tb=short -q
+```
+
+### Paso 4: Verificacion manual E2E (5 min)
+
+Si es posible ejecutar v4complete contra un hotel real:
+```bash
+./venv/Scripts/python.exe main.py v4complete --url https://www.hotelvisperas.com/es --debug
+grep "Open Graph" evidence/*/ejecucion.log
+# Esperado: "Open Graph: True"
+```
+
+### Paso 5: Post-ejecucion (5 min)
+
+1. Marcar checklist de completitud
+2. Actualizar `dependencias-fases.md` con estado FASE-E
+3. Ejecutar: `python scripts/log_phase_completion.py --fase FASE-E`
+4. Commit: `git add -A && git commit -m "fix(FASE-E): reuse schema audit HTML for OG detection, eliminate redundant HTTP request"`
+
+---
+
+## CRITERIOS DE COMPLETITUD
+
+### Checklist de Verificacion
+
+- [ ] **E1**: Segunda request HTTP eliminada (o reutilizada) en step 2.8/2.9
+- [ ] **E2**: SEO elements detector usa el mismo HTML del schema audit
+- [ ] **E3**: Logging defensivo agregado para OG no detectado
+- [ ] **E4**: `run_all_validations.py --quick` pasa sin errores
+- [ ] **E5**: Tests existentes pasan (sin regresion)
+- [ ] **E6**: `log_phase_completion.py --fase FASE-E` ejecutado exitosamente
+- [ ] **E7**: Commit realizado con mensaje descriptivo
+
+### Condiciones de Exito
+
+| Criterio | Condicion |
+|----------|-----------|
+| Tests pasan | >= baseline (sin regresion) |
+| Validaciones | `--quick` sin errores |
+| HTTP requests | Reducidas en 1 (eliminada segunda request) |
+| OG deteccion | Falso negativo eliminado (verificable con logging) |
+
+### Condiciones de Rollback
+
+Si algo falla:
+```bash
+git stash
+git stash drop
+# Revisar error y reintentar
 ```
 
 ---
 
-## Post-Ejecucion (OBLIGATORIO)
+## ARCHIVOS AFECTADOS
 
-Al finalizar esta fase, actualizar INMEDIATAMENTE:
+| Archivo | Tipo | Cambio |
+|---------|------|--------|
+| `modules/auditors/v4_comprehensive.py` | MODIFICAR | Eliminar 2da request, reutilizar HTML, agregar logging |
 
-1. **`dependencias-fases.md`** — Marcar FASE-A como ✅ Completada
-2. **`06-checklist-implementacion.md`** — Marcar todos los items de FASE-A como ✅
-3. **`09-documentacion-post-proyecto.md`** — Secciones A, B, D, E
-4. **Ejecutar**: `python scripts/log_phase_completion.py --fase FASE-A --desc "Micro-Content Local Generator" --archivos-nuevos "modules/asset_generation/local_content_generator.py,templates/local_content/page_template.md,templates/local_content/keyword_selection.md,tests/asset_generation/test_local_content_generator.py" --archivos-mod "modules/asset_generation/asset_catalog.py" --tests "10" --check-manual-docs`
+## ARCHIVOS DE REFERENCIA (solo lectura)
 
----
-
-## Criterios de Completitud (CHECKLIST)
-
-- [x] **Tests nuevos pasan**: 15/15 tests
-- [x] **Validaciones del proyecto**: `python scripts/run_all_validations.py --quick` pasa
-- [x] **Sin regresiones**: Tests existentes siguen pasando
-- [x] **Prueba real**: Generar 3 paginas para Hotel Visperas con keywords de Santa Rosa de Cabal
-- [x] **Contenido limpio**: Pasa content scrubber sin warnings
-- [x] **Asset catalog**: local_content_page registrado
-- [x] **dependencias-fases.md actualizado**
-- [x] **Documentacion afiliada**: CHANGELOG.md, AGENTS.md
-- [x] **Post-ejecucion completada**: log_phase_completion.py ejecutado
+| Archivo | Uso |
+|---------|-----|
+| `modules/auditors/seo_elements_detector.py` | Confirmar que funciona con cualquier HTML |
+| `modules/auditors/citability_scorer.py` | Confirmar que puede compartir HTML |
+| `tests/` | Baseline y validacion post-fix |
 
 ---
 
-## Restricciones
+## NOTAS
 
-- NO generar mas de 5 paginas por hotel (no es un blog completo)
-- NO usar keywords competitivos genericos ("hotel Colombia")
-- SI usar long-tail local ("hotel boutique termales santa rosa de cabal")
-- El contenido pasa por Content Scrubber (FASE-B) antes de entrega
-- NO es una fase bloqueante — es add-on comercial
-- El LLM debe usar prompt en espanol neutro (no argentino, no espanol)
-- Sin datos reales de volumen de busqueda (usar heuristica por tipo de keyword)
-
----
-
-## Prompt de Ejecucion
-
-```
-Actua como desarrollador Python senior especializado en generacion de contenido SEO local.
-
-OBJETIVO: Implementar FASE-A — Micro-Content Local Generator para iah-cli.
-
-CONTEXTO:
-- Proyecto: iah-cli v4.22.0+ (FASE-A,D,E,F completadas)
-- Cliente: Hoteles boutique pequenos del Eje Cafetero
-- Necesidad: 3-5 paginas de contenido local por hotel
-- LLM disponible: DeepSeek/Anthropic via providers existentes
-- Content Scrubber activo (FASE-B)
-
-TAREAS:
-1. Crear modules/asset_generation/local_content_generator.py
-2. Crear templates/local_content/page_template.md + keyword_selection.md
-3. Modificar modules/asset_generation/asset_catalog.py
-4. Crear 10 tests en tests/asset_generation/test_local_content_generator.py
-
-CRITERIOS:
-- 3-5 paginas por hotel, 800-1200 palabras cada una
-- Keywords long-tail locales (no genericos)
-- Mencion natural del hotel (no vendedora)
-- Schema Article JSON-LD por pagina
-- Link a reservas directas (WhatsApp)
-- Pasa content scrubber
-- Espanol neutro latinoamericano
-
-VALIDACIONES:
-- pytest tests/asset_generation/test_local_content_generator.py -v (10/10)
-- python scripts/run_all_validations.py --quick
-```
+- Este fix es independiente de FASE-C y FASE-D (archivos diferentes) pero el workflow exige 1 fase/sesion.
+- El beneficio principal es eliminar un falso negativo que subestima el AEO score en ~25pts.
+- Sitios con HTML estatico (no SPA) no se benefician porque ambas requests devuelven lo mismo, pero tampoco se perjudican.
+- Reducir requests HTTP tambien mejora velocidad de ejecucion.

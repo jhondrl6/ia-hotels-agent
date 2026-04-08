@@ -5,6 +5,7 @@ Generates the 01_DIAGNOSTICO_Y_OPORTUNIDAD.md document based on
 v4.0 audit results with confidence-based validation.
 """
 
+import logging
 import os
 from pathlib import Path
 from typing import Dict, List, Optional, Any
@@ -997,7 +998,7 @@ ${quick_wins_list}
             rows.append("| Sin Botón WhatsApp | 🟡 Media | `boton_whatsapp.html` | 🟢 VERIFIED |")
         
         # Performance
-        if audit_result.performance and audit_result.performance.mobile_score and audit_result.performance.mobile_score < 50:
+        if audit_result.performance and audit_result.performance.mobile_score is not None and audit_result.performance.mobile_score < 50:
             rows.append("| Rendimiento Móvil Bajo | 🟡 Media | Guía de optimización | 🟢 VERIFIED |")
         
         return "\n".join(rows) if rows else "| No se detectaron problemas solubles automáticamente | - | - | - |"
@@ -2003,7 +2004,7 @@ ${quick_wins_list}
             })
         
         # Brecha 9: Sin Open Graph / SEO social
-        if audit_result.seo_elements and not getattr(audit_result.seo_elements, 'has_open_graph', True):
+        if audit_result.seo_elements and not getattr(audit_result.seo_elements, 'open_graph', False):
             brechas.append({
                 'pain_id': 'no_og_tags',
                 'nombre': 'Sin Meta Tags Sociales (Open Graph)',
@@ -2014,7 +2015,7 @@ ${quick_wins_list}
         # Brecha 10: Contenido no citable por IA
         citability_score = getattr(audit_result, 'citability', None)
         if citability_score is not None:
-            score_val = getattr(citability_score, 'score', None)
+            score_val = getattr(citability_score, 'overall_score', None)
             if isinstance(score_val, (int, float)) and score_val < 30:
                 brechas.append({
                     'pain_id': 'low_citability',
