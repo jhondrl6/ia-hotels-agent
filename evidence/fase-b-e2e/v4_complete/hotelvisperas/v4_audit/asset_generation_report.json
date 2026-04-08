@@ -1,0 +1,174 @@
+{
+  "hotel_id": "hotelvisperas",
+  "hotel_name": "Hotelvisperas",
+  "timestamp": "2026-04-07T18:40:23.040430",
+  "output_dir": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas",
+  "summary": {
+    "total_assets": 8,
+    "generated": 7,
+    "failed": 1,
+    "skipped": 0,
+    "can_use": 7,
+    "estimated": 7,
+    "delivery_ready_percentage": 0.0,
+    "site_verification_applied": false
+  },
+  "generated_assets": [
+    {
+      "asset_type": "whatsapp_button",
+      "filename": "ESTIMATED_boton_whatsapp_20260407_184022.html",
+      "delivery_filename": "boton_whatsapp_20260407_184022.html",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\whatsapp_button\\ESTIMATED_boton_whatsapp_20260407_184022.html",
+      "metadata_path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\whatsapp_button\\ESTIMATED_boton_whatsapp_20260407_184022_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_whatsapp_visible"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "whatsapp_conflict_guide",
+      "filename": "ESTIMATED_guia_conflicto_whatsapp_20260407_184022.md",
+      "delivery_filename": "guia_conflicto_whatsapp_20260407_184022.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\whatsapp_conflict_guide\\ESTIMATED_guia_conflicto_whatsapp_20260407_184022.md",
+      "metadata_path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\whatsapp_conflict_guide\\ESTIMATED_guia_conflicto_whatsapp_20260407_184022_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "whatsapp_conflict"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "optimization_guide",
+      "filename": "ESTIMATED_guia_optimizacion_20260407_184022.md",
+      "delivery_filename": "guia_optimizacion_20260407_184022.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\optimization_guide\\ESTIMATED_guia_optimizacion_20260407_184022.md",
+      "metadata_path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\optimization_guide\\ESTIMATED_guia_optimizacion_20260407_184022_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "metadata_defaults"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "faq_page",
+      "filename": "ESTIMATED_faqs_20260407_184022.csv",
+      "delivery_filename": "faqs_20260407_184022.csv",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\faq_page\\ESTIMATED_faqs_20260407_184022.csv",
+      "metadata_path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\faq_page\\ESTIMATED_faqs_20260407_184022_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_faq_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "analytics_setup_guide",
+      "filename": "ESTIMATED_guia_configuracion_ga4_20260407_184023.md",
+      "delivery_filename": "guia_configuracion_ga4_20260407_184023.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\analytics_setup_guide\\ESTIMATED_guia_configuracion_ga4_20260407_184023.md",
+      "metadata_path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\analytics_setup_guide\\ESTIMATED_guia_configuracion_ga4_20260407_184023_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_analytics_configured"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "indirect_traffic_optimization",
+      "filename": "ESTIMATED_optimizacion_trafico_indirecto_20260407_184023.md",
+      "delivery_filename": "optimizacion_trafico_indirecto_20260407_184023.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\indirect_traffic_optimization\\ESTIMATED_optimizacion_trafico_indirecto_20260407_184023.md",
+      "metadata_path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\indirect_traffic_optimization\\ESTIMATED_optimizacion_trafico_indirecto_20260407_184023_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "low_organic_visibility"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "org_schema",
+      "filename": "ESTIMATED_org_schema_20260407_184023.json",
+      "delivery_filename": "org_schema_20260407_184023.json",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\org_schema\\ESTIMATED_org_schema_20260407_184023.json",
+      "metadata_path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\org_schema\\ESTIMATED_org_schema_20260407_184023_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_org_schema"
+      ],
+      "can_use": true
+    }
+  ],
+  "failed_assets": [
+    {
+      "asset_type": "local_content_page",
+      "reason": "Generation failed: Unknown asset type: local_content_page",
+      "pain_ids_affected": [
+        "low_ia_readiness"
+      ],
+      "preflight_status": "BLOCKED"
+    }
+  ],
+  "skipped_assets": [],
+  "coherence_report": {
+    "is_coherent": false,
+    "overall_score": 0.87,
+    "checks": [
+      {
+        "name": "problems_have_solutions",
+        "passed": true,
+        "score": 0.89,
+        "message": "88% de problemas tienen solución automática",
+        "severity": "info"
+      },
+      {
+        "name": "assets_are_justified",
+        "passed": true,
+        "score": 1.0,
+        "message": "100% de assets justificados",
+        "severity": "info"
+      },
+      {
+        "name": "financial_data_validated",
+        "passed": true,
+        "score": 0.7,
+        "message": "Datos financieros validados (confidence promedio: 0.70)",
+        "severity": "info"
+      },
+      {
+        "name": "whatsapp_verified",
+        "passed": false,
+        "score": 0.3,
+        "message": "WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9",
+        "severity": "error"
+      },
+      {
+        "name": "price_matches_pain",
+        "passed": true,
+        "score": 1.0,
+        "message": "Precio (4.2x del dolor) en rango ideal (4.5x)",
+        "severity": "info"
+      },
+      {
+        "name": "promised_assets_exist",
+        "passed": true,
+        "score": 1.0,
+        "message": "Todos los assets prometidos están implementados",
+        "severity": "info"
+      }
+    ],
+    "errors": [
+      "[whatsapp_verified] WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9"
+    ],
+    "warnings": [],
+    "timestamp": "2026-04-07T18:40:21.668128",
+    "version": "4.2.0"
+  }
+}

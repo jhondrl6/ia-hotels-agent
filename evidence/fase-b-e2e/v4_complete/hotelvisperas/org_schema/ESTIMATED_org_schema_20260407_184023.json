@@ -1,0 +1,12 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Hotelvisperas",
+  "url": "https://example.com",
+  "logo": "",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "",
+    "contactType": "Reservations"
+  }
+}

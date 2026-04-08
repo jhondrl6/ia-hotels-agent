@@ -1,0 +1,49 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Hotel",
+      "name": "Hotel Vísperas",
+      "url": "https://www.hotelvisperas.com/es",
+      "description": "Hotel boutique de lujo en Santa Rosa de Cabal, Eje Cafetero. Experiencia de naturaleza, spa y descan",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "40.7128",
+        "longitude": "-74.0060"
+      },
+      "image": "https://www.hotelvisperas.com/es",
+      "priceRange": "$$",
+      "amenityFeature": [
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "WiFi gratuito",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Recepción 24 horas",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Aire acondicionado",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Restaurante",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Servicio de limpieza",
+          "value": "true"
+        }
+      ],
+      "starRating": "4",
+      "numberOfRooms": "10",
+      "checkinTime": "15:00",
+      "checkoutTime": "12:00"
+    }
+  ]
+}

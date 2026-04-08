@@ -1,0 +1,54 @@
+{
+  "is_coherent": false,
+  "overall_score": 0.87,
+  "checks": [
+    {
+      "name": "problems_have_solutions",
+      "passed": true,
+      "score": 0.89,
+      "message": "88% de problemas tienen solución automática",
+      "severity": "info"
+    },
+    {
+      "name": "assets_are_justified",
+      "passed": true,
+      "score": 1.0,
+      "message": "100% de assets justificados",
+      "severity": "info"
+    },
+    {
+      "name": "financial_data_validated",
+      "passed": true,
+      "score": 0.7,
+      "message": "Datos financieros validados (confidence promedio: 0.70)",
+      "severity": "info"
+    },
+    {
+      "name": "whatsapp_verified",
+      "passed": false,
+      "score": 0.3,
+      "message": "WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9",
+      "severity": "error"
+    },
+    {
+      "name": "price_matches_pain",
+      "passed": true,
+      "score": 1.0,
+      "message": "Precio (4.2x del dolor) en rango ideal (4.5x)",
+      "severity": "info"
+    },
+    {
+      "name": "promised_assets_exist",
+      "passed": true,
+      "score": 1.0,
+      "message": "Todos los assets prometidos están implementados",
+      "severity": "info"
+    }
+  ],
+  "errors": [
+    "[whatsapp_verified] WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9"
+  ],
+  "warnings": [],
+  "timestamp": "2026-04-07T18:40:21.668128",
+  "version": "4.2.0"
+}

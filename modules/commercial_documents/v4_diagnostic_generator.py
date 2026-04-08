@@ -454,6 +454,13 @@ ${quick_wins_list}
         plan_60d = "Desarrollar presencia en asistentes de IA y monitorear resultados"
         plan_90d = "Consolidar estrategia de IA y evaluar retorno de inversión"
         
+        # Regional averages (3-tier fallback: competitors > regional config > default)
+        # Computed here so both template sections can reference them
+        geo_regional = self._calculate_regional_average(audit_result, 'geo', hotel_region)
+        competitive_regional = self._calculate_regional_average(audit_result, 'competitive', hotel_region)
+        seo_regional = self._calculate_regional_average(audit_result, 'seo', hotel_region)
+        aeo_regional = self._calculate_regional_average(audit_result, 'aeo', hotel_region)
+        
         data = {
             'generated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'version': '4.0.0',
@@ -492,11 +499,10 @@ ${quick_wins_list}
             'geo_table': self._build_geo_problems_table(audit_result),
             
             # Regional averages (3-tier fallback: competitors > regional config > default)
-            # Computed here so both template sections can reference them
-            geo_regional = self._calculate_regional_average(audit_result, 'geo', hotel_region),
-            competitive_regional = self._calculate_regional_average(audit_result, 'competitive', hotel_region),
-            seo_regional = self._calculate_regional_average(audit_result, 'seo', hotel_region),
-            aeo_regional = self._calculate_regional_average(audit_result, 'aeo', hotel_region),
+            'geo_regional': geo_regional,
+            'competitive_regional': competitive_regional,
+            'seo_regional': seo_regional,
+            'aeo_regional': aeo_regional,
             
             # 4 Pilares Scores (using dynamic regional benchmarks)
             'geo_score': self._calculate_geo_score(audit_result),
@@ -1873,7 +1879,7 @@ ${quick_wins_list}
     
     def _identify_brechas(self, audit_result: V4AuditResult) -> List[Dict[str, Any]]:
         """
-        Identify the 4 main brechas (gaps) from audit results.
+        Identify N brechas (gaps) from audit results based on real evidence.
         
         RETORNA:
             List[Dict] con campos: pain_id, nombre, impacto, detalle
@@ -1884,6 +1890,7 @@ ${quick_wins_list}
         
         NOTA: brechas[] alimenta pain_ids en DiagnosticSummary.
               faltantes[] viene de _extraer_elementos_de_audit() por separado.
+              Retorna TODAS las brechas detectadas (0 a 10+), sin relleno artificial.
         """
         brechas = []
         
@@ -1954,20 +1961,39 @@ ${quick_wins_list}
                 'detalle': f"Solo {audit_result.gbp.reviews} reviews en Google."
             })
         
-        # Ensure we always return 4 brechas, filling with generic ones if needed
-        defaults = [
-            {'pain_id': 'no_faq_schema', 'nombre': 'Oportunidad de FAQ/Rich Snippets', 'impacto': 0.15, 'detalle': 'Sin Schema FAQ, pierde rich snippets en Google. Competidores capturan esa atencion.'},
-            {'pain_id': 'low_gbp_score', 'nombre': 'Optimizacion GBP Incompleta', 'impacto': 0.15, 'detalle': 'Faltan fotos o descripcion en GBP. Menor conversion en busquedas locales.'},
-            {'pain_id': 'poor_performance', 'nombre': 'Sin Datos de Campo (Core Web Vitals)', 'impacto': 0.10, 'detalle': 'Google penaliza rankings sin metricas reales de usuario. Senal de bajo trafico.'},
-            {'pain_id': 'low_ia_readiness', 'nombre': 'Presencia IA No Optimizada', 'impacto': 0.10, 'detalle': 'Su hotel no esta estructurado para respuestas de IA. Perdiendo trafico emergente.'},
-        ]
+        # Brecha 8: Sin FAQ Schema para Rich Snippets
+        if audit_result.schema and not audit_result.schema.faq_schema_detected:
+            brechas.append({
+                'pain_id': 'no_faq_schema',
+                'nombre': 'Sin FAQ para Rich Snippets',
+                'impacto': 0.12,
+                'detalle': 'Google no puede mostrar sus preguntas frecuentes en resultados. Competidores con FAQ capturan ese trafico.'
+            })
         
-        while len(brechas) < 4 and defaults:
-            brechas.append(defaults.pop(0))
+        # Brecha 9: Sin Open Graph / SEO social
+        if audit_result.seo_elements and not getattr(audit_result.seo_elements, 'has_open_graph', True):
+            brechas.append({
+                'pain_id': 'no_og_tags',
+                'nombre': 'Sin Meta Tags Sociales (Open Graph)',
+                'impacto': 0.08,
+                'detalle': 'Cuando alguien comparte su hotel en WhatsApp/Facebook, aparece sin imagen ni descripcion atractiva.'
+            })
         
-        # Priorizar por impacto y limitar a 4
+        # Brecha 10: Contenido no citable por IA
+        citability_score = getattr(audit_result, 'citability', None)
+        if citability_score is not None:
+            score_val = getattr(citability_score, 'score', None)
+            if isinstance(score_val, (int, float)) and score_val < 30:
+                brechas.append({
+                    'pain_id': 'low_citability',
+                    'nombre': 'Contenido No Citable por IA',
+                    'impacto': 0.10,
+                    'detalle': 'ChatGPT y Perplexity no recomiendan su hotel porque el contenido es insuficiente o poco estructurado.'
+                })
+        
+        # Priorizar por impacto (todas las detectadas, sin truncamiento ni relleno)
         brechas.sort(key=lambda x: x.get('impacto', 0), reverse=True)
-        return brechas[:4]
+        return brechas
 
 
     # ========================================================
@@ -2058,7 +2084,8 @@ ${quick_wins_list}
             except Exception:
                 pass
         result = {}
-        for i in range(1, 5):
+        scores_count = len(scores) if scores else 0
+        for i in range(1, min(scores_count, 4) + 1):
             n = str(i)
             if scores and len(scores) >= i:
                 s = scores[i - 1]

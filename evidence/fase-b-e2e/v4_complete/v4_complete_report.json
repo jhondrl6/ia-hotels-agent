@@ -1,0 +1,190 @@
+{
+  "v4_complete": true,
+  "hotel_name": "Hotelvisperas",
+  "url": "https://www.hotelvisperas.com/es",
+  "region": "eje_cafetero",
+  "hotel_id": "hotel_hotelvisperas.com_es",
+  "phases": {
+    "phase_1_hook": {
+      "completed": true,
+      "progress": 0
+    },
+    "phase_2_validation": {
+      "whatsapp_status": "CONFLICT",
+      "whatsapp_confidence": "conflict"
+    },
+    "phase_3_scenarios": {
+      "conservative": 5076000.0,
+      "realistic": 2610000.0,
+      "optimistic": -189000.0,
+      "expected": 2610000.0
+    },
+    "phase_4_publication_gates": {
+      "ready": true,
+      "status": "READY_FOR_PUBLICATION",
+      "gate_results": [
+        {
+          "gate_name": "hard_contradictions",
+          "passed": true,
+          "status": "PASSED",
+          "message": "No hard contradictions detected (count: 0)",
+          "value": 0,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "evidence_coverage",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Evidence coverage at 95.0% (threshold: 95%)",
+          "value": 0.95,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "financial_validity",
+          "passed": true,
+          "status": "PASSED",
+          "message": "All financial data validated - no default values detected",
+          "value": true,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "coherence",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Coherence score 0.87 meets threshold 0.8",
+          "value": 0.8711111111111111,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "critical_recall",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Critical recall at 100.0% (threshold: 90%)",
+          "value": 1.0,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "ethics",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Ethics validation passed",
+          "value": null,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "content_quality",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Content quality: 3 warning(s) - Reemplazo: proxima -> proxima; Reemplazo: reserva -> reserva; Reemplazo: reserva -> reserva",
+          "value": 0.95,
+          "suggestion": "Consider running ContentScrubber for cleaner documents",
+          "details": {
+            "warnings": [
+              "Reemplazo: proxima -> proxima",
+              "Reemplazo: reserva -> reserva",
+              "Reemplazo: reserva -> reserva"
+            ]
+          }
+        }
+      ],
+      "blocking_issues": []
+    },
+    "phase_5_consistency_check": {
+      "is_consistent": true,
+      "hard_conflicts": 0,
+      "soft_conflicts": 0,
+      "confidence_score": 0.8,
+      "inconsistencies": []
+    }
+  },
+  "modules_used": [
+    "orchestration_v4.OnboardingController",
+    "data_validation.CrossValidator",
+    "data_validation.MetadataValidator",
+    "financial_engine.ScenarioCalculator",
+    "auditors.V4ComprehensiveAuditor",
+    "quality_gates.publication_gates"
+  ],
+  "coherence_score": 0.8711111111111111,
+  "assets_generated": [
+    {
+      "asset_type": "whatsapp_button",
+      "filename": "ESTIMATED_boton_whatsapp_20260407_184022.html",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\whatsapp_button\\ESTIMATED_boton_whatsapp_20260407_184022.html",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "whatsapp_conflict_guide",
+      "filename": "ESTIMATED_guia_conflicto_whatsapp_20260407_184022.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\whatsapp_conflict_guide\\ESTIMATED_guia_conflicto_whatsapp_20260407_184022.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "optimization_guide",
+      "filename": "ESTIMATED_guia_optimizacion_20260407_184022.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\optimization_guide\\ESTIMATED_guia_optimizacion_20260407_184022.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "faq_page",
+      "filename": "ESTIMATED_faqs_20260407_184022.csv",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\faq_page\\ESTIMATED_faqs_20260407_184022.csv",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "analytics_setup_guide",
+      "filename": "ESTIMATED_guia_configuracion_ga4_20260407_184023.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\analytics_setup_guide\\ESTIMATED_guia_configuracion_ga4_20260407_184023.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "indirect_traffic_optimization",
+      "filename": "ESTIMATED_optimizacion_trafico_indirecto_20260407_184023.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\indirect_traffic_optimization\\ESTIMATED_optimizacion_trafico_indirecto_20260407_184023.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "org_schema",
+      "filename": "ESTIMATED_org_schema_20260407_184023.json",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\org_schema\\ESTIMATED_org_schema_20260407_184023.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    }
+  ],
+  "financial_data": {
+    "scenarios": {
+      "conservative": 5076000.0,
+      "realistic": 2610000.0,
+      "optimistic": -189000.0
+    },
+    "expected_monthly": 2610000.0
+  },
+  "pricing": {
+    "monthly_price_cop": 130500.0,
+    "tier": "boutique"
+  },
+  "analytics": {
+    "ga4_available": false,
+    "ga4_status": "⚠️ No configurado (use --ga4-property-id para conectar)",
+    "ga4_error": null,
+    "profound_available": false,
+    "profound_status": "⚠️ No disponible en esta version (API pendiente)",
+    "semrush_available": false,
+    "semrush_status": "⚠️ No disponible en esta version (API pendiente)",
+    "missing_credentials": [],
+    "is_complete": false,
+    "timestamp": "2026-04-07T18:40:21.571809"
+  }
+}

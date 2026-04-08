@@ -1,0 +1,25 @@
+{
+  "asset_type": "whatsapp_conflict_guide",
+  "generated_at": "2026-04-07T18:40:23.034561",
+  "confidence_level": "0.5",
+  "confidence_score": 0.5,
+  "validation_sources": [
+    "web_scraping",
+    "google_business_profile",
+    "user_input"
+  ],
+  "preflight_status": "WARNING",
+  "can_use": false,
+  "disclaimer": "Este asset fue generado con datos estimados o de una sola fuente. Se recomienda verificar antes de usar en producción.",
+  "source_data_hash": "20e1cbfdb560fd2c",
+  "diagnostic_reference": "None",
+  "problems_solved": [
+    "Conflicto de WhatsApp"
+  ],
+  "coherence_score": 0.87,
+  "problem_solved": "Problema identificado en el diagnóstico",
+  "impact_cop": 1252800,
+  "priority": "P3",
+  "timing": "Semana 1",
+  "why_this_asset": "Mejora la presencia online del hotel"
+}

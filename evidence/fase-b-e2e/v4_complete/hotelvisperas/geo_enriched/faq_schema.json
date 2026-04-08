@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Hotel Vísperas acepta reservaciones en línea?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí, Hotel Vísperas acepta reservaciones a través de su sitio web oficial. Para mejores tarifas y disponibilidad, recomendamos reservar directamente."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hotel Vísperas ofrece WiFi gratuito?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí, Hotel Vísperas ofrece WiFi gratuito a todos sus huéspedes en las áreas comunes y habitaciones."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuál es el horario de check-in y check-out en Hotel Vísperas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "El check-in típico es a partir de las 15:00 y el check-out es hasta las 12:00. Estos horarios pueden variar, consulte directamente con el hotel."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hotel Vísperas tiene restaurante?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hotel Vísperas cuenta con servicios de restaurante. Para más información sobre horarios y menús, visite nuestro sitio web."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hotel Vísperas acepta mascotas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Para información sobre políticas de mascotas, por favor contacte directamente al hotel antes de su llegada."
+      }
+    }
+  ]
+}

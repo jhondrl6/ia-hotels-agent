@@ -1,0 +1,114 @@
+{
+  "success": true,
+  "case": "critical",
+  "geo_assessment": {
+    "total_score": 29,
+    "band": "critical"
+  },
+  "assets_generated": [
+    "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\geo_badge.md",
+    "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\geo_dashboard.md",
+    "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\geo_checklist_min.md",
+    "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\llms.txt",
+    "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\hotel_schema_rich.json",
+    "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\faq_schema.json",
+    "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\geo_fix_kit.md",
+    "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\robots_fix.txt",
+    "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\seo_fix_kit.md",
+    "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\sync_report.md"
+  ],
+  "sync_result": {
+    "is_consistent": true,
+    "combination_tag": "Crisis técnica confirma pérdida",
+    "recommendation": "CRISIS TÉCNICA: El sitio tiene score GEO crítico que contribuye directamente a la pérdida comercial. La propuesta debe ser urgente, con enfoque técnico prioritario. Resolver gaps críticos (llms.txt, robots.txt, schema.org) es condición necesaria para reducir pérdidas.",
+    "sync_score": 0.75
+  },
+  "responsibility_guide": {
+    "asset_inventory": [
+      {
+        "filename": "geo_badge.md",
+        "type": "geo",
+        "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\geo_badge.md",
+        "priority": 2,
+        "mandatory": false,
+        "enriched_by": null
+      },
+      {
+        "filename": "geo_dashboard.md",
+        "type": "geo",
+        "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\geo_dashboard.md",
+        "priority": 2,
+        "mandatory": false,
+        "enriched_by": null
+      },
+      {
+        "filename": "geo_checklist_min.md",
+        "type": "geo",
+        "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\geo_checklist_min.md",
+        "priority": 2,
+        "mandatory": false,
+        "enriched_by": null
+      },
+      {
+        "filename": "llms.txt",
+        "type": "geo",
+        "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\llms.txt",
+        "priority": 3,
+        "mandatory": false,
+        "enriched_by": null
+      },
+      {
+        "filename": "hotel_schema_rich.json",
+        "type": "geo",
+        "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\hotel_schema_rich.json",
+        "priority": 2,
+        "mandatory": false,
+        "enriched_by": "hotel_schema.json"
+      },
+      {
+        "filename": "faq_schema.json",
+        "type": "geo",
+        "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\faq_schema.json",
+        "priority": 3,
+        "mandatory": false,
+        "enriched_by": null
+      },
+      {
+        "filename": "geo_fix_kit.md",
+        "type": "geo",
+        "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\geo_fix_kit.md",
+        "priority": 2,
+        "mandatory": false,
+        "enriched_by": null
+      },
+      {
+        "filename": "robots_fix.txt",
+        "type": "geo",
+        "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\robots_fix.txt",
+        "priority": 3,
+        "mandatory": false,
+        "enriched_by": null
+      },
+      {
+        "filename": "seo_fix_kit.md",
+        "type": "geo",
+        "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\seo_fix_kit.md",
+        "priority": 3,
+        "mandatory": false,
+        "enriched_by": null
+      },
+      {
+        "filename": "sync_report.md",
+        "type": "geo",
+        "path": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\fase-b-e2e\\v4_complete\\hotelvisperas\\geo_enriched\\sync_report.md",
+        "priority": 3,
+        "mandatory": false,
+        "enriched_by": null
+      }
+    ],
+    "geo_band": "critical",
+    "total_score": 29,
+    "implementation_note": "CORE assets first, GEO assets as enrichment after"
+  },
+  "errors": []
+}
