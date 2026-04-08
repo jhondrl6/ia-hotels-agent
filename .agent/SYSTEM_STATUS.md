@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-04-08 21:34:21 UTC
+> Auto-generado: 2026-04-08 21:53:16 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -38,10 +38,10 @@
 
 | Metrica | Valor |
 |---------|-------|
-| Shadow logs | 775 archivos JSON |
+| Shadow logs | 777 archivos JSON |
 | Sesiones activas | 101 |
 | Sesiones archivadas | 6 |
-| Ultimo shadow log | 20260408_145950_de54d5f3.json |
+| Ultimo shadow log | 20260408_214630_f05a8da4.json |
 | Ultima sesion activa | 2026-04-08_3790eb40.json |
 | Ultimo contexto actualizado | 2026-04-08T14:58:38.082463+00:00 |
 | Ultima URL procesada | https://www.hotelvisperas.com/es |

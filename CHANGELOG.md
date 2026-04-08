@@ -54,6 +54,30 @@
 - Documentación: dependencias-fases, checklist, REGISTRY.md, GUIA_TECNICA.md actualizadas
 - Gap no-bloqueante: GUIA_TECNICA.md línea 124 corregida
 
+### FASE-D (Bugfix Medios): 5 Bugs + seo_elements Serialization
+- `modules/commercial_documents/v4_diagnostic_generator.py` - 5 correcciones medias:
+  - **MED-1 (L1624-1771)**: Eliminación de 148 líneas dead code — dos definiciones de `_compute_opportunity_scores`, `_inject_brecha_scores`, `_map_pain_to_scorer_type`, `_brecha_scores_empty` + 6 métodos placeholder. La segunda definición (L2031+) es la que corre en producción.
+  - **MED-2 (L517-521)**: Eliminadas claves `geo_regional_avg`, `competitive_regional_avg`, `seo_regional_avg`, `aeo_regional_avg` duplicadas en dict de template data (primera ocurrencia eliminada, segunda en L595-599 permanece).
+  - **MED-3 (L823)**: `confidence.value` → `confidence.value.upper()` en campo WhatsApp para consistencia con otros campos que usan 'ESTIMATED'/'VERIFIED' en mayúsculas.
+  - **MED-4 (L296-299)**: Corregidos pipes extra en tabla markdown de scorecard. 4 filas tenían `||` o `|||` al inicio en vez de `|`. Alineación de tabla corregida.
+  - **MED-5 (L299)**: AEO score ahora muestra `${aeo_score}/100` en vez de `${aeo_score}` — consistencia visual con GEO, SEO, Competitive.
+- `modules/auditors/v4_comprehensive.py` - Serialización seo_elements:
+  - **SER-1 (to_dict)**: Agregado bloque `if self.seo_elements:` que serializa 8 campos (open_graph, imagenes_alt, redes_activas, confidence, notes, open_graph_tags, images_without_alt, social_links_found) en `V4AuditResult.to_dict()`. Sin este fix, `audit_report.json` perdía datos OG, imágenes sin alt y redes sociales.
+  - **SER-1 (executed_validators)**: Agregado `"seo_elements_detection"` a la lista de validators ejecutados.
+- Tests: 209 passed, 7 failures preexistentes sin relación con cambios (asset_generation, pain_solution_mapper mock desactualizado)
+- Validaciones: pre-commit version consistency PASSED
+
+### Archivos Nuevos
+| Archivo | Descripcion |
+|---------|-------------|
+| (ninguno) | |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | MED-1..5: dead code elim, dup keys, confidence .upper(), pipe fix, /100 suffix |
+| `modules/auditors/v4_comprehensive.py` | SER-1: seo_elements serialization in to_dict() + executed_validators |
+
 ## [4.25.2] - 2026-04-08
 
 ### FASE-A (AEO OG Fix): Deteccion Real de Open Graph

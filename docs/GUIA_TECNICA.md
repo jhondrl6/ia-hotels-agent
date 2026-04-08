@@ -46,6 +46,27 @@ El score AEO del diagnostico v4complete mostraba "0 (Pendiente de datos)" en tod
 - 0 regresiones
 - `run_all_validations.py --quick` 4/4 pasan
 
+### FASE-D: 5 Bugs Medios + seo_elements Serialization
+
+**Resumen**: Corrección de 5 bugs medios (dead code, claves duplicadas, inconsistencia de confidence, pipe markdown, sufijo /100) + serialización faltante de `seo_elements` en `V4AuditResult.to_dict()`.
+
+**Modulos afectados**:
+
+#### 3a. v4_diagnostic_generator.py (FASE-D)
+- **MED-1**: Eliminación de 148 líneas dead code — dos definiciones de `_compute_opportunity_scores` e `_inject_brecha_scores`. La segunda definición (FASE-C) es la productiva; la primera (FASE-B legacy) silenciaba a la segunda por shadowing.
+- **MED-2**: Eliminadas 4 claves `*_regional_avg` duplicadas en dict de template data. Python usaba la última silenciosamente.
+- **MED-3**: `confidence.value` → `confidence.value.upper()` en WhatsApp. Otros campos ya usaban 'ESTIMATED'/'VERIFIED' en mayúsculas.
+- **MED-4**: Tabla markdown scorecard — filas tenían `||` o `|||` al inicio en vez de `|`, rompiendo alineación.
+- **MED-5**: AEO score en template ahora incluye `/100` para consistencia visual.
+
+#### 3b. v4_comprehensive.py (FASE-D)
+- **SER-1**: `V4AuditResult.to_dict()` ahora serializa campo `seo_elements` completo (8 campos: open_graph, imagenes_alt, redes_activas, confidence, notes, open_graph_tags, images_without_alt, social_links_found). Sin este fix, `audit_report.json` perdía datos OG, imágenes sin alt y enlaces sociales.
+- **SER-1**: `"seo_elements_detection"` agregado a `executed_validators` en la auditoría.
+
+**Arquitectura**: `to_dict()` es el serializador usado por `main.py` para persistir `audit_report.json`. Antes de SER-1, el detector `SEOElementsDetector` ejecutaba y asignaba resultado a `V4AuditResult.seo_elements`, pero el JSON persistido no contenía esos datos. El pipeline de datos fluye: Detector → V4AuditResult.seo_elements → to_dict() → audit_report.json. SER-1 cierra la brecha de persistencia.
+
+**Backwards Compatibility**: Totalmente backwards compatible. `seo_elements` es campo opcional (`Optional[SEOElementsResult]`). El bloque `if self.seo_elements:` solo agrega al dict si existe. Eliminación de dead code no afecta comportamiento (métodos eliminados nunca se ejecutaban).
+
 ---
 
 ## Notas de Cambios v4.21.0 - Consolidacion AEO/IAO
