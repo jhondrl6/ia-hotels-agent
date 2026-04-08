@@ -1,12 +1,17 @@
-"""SEO Elements Detector - Stubs para elementos sin detector real.
+"""SEO Elements Detector - Detección real de elementos SEO.
 
-Este módulo proporciona detectores básicos para elementos SEO.
-Actualmente son stubs que retornan默认值 False hasta que se implementen
-detectores reales usando BeautifulSoup/Playwright.
+Detecta Open Graph tags, imágenes sin alt, y enlaces sociales
+usando BeautifulSoup para parseo de HTML.
 """
 
 from dataclasses import dataclass
 from typing import Optional, Dict, List
+
+
+SOCIAL_DOMAINS = [
+    'facebook.com', 'instagram.com', 'twitter.com', 'x.com',
+    'linkedin.com', 'youtube.com', 'tiktok.com', 'pinterest.com'
+]
 
 
 @dataclass
@@ -31,52 +36,68 @@ class SEOElementsResult:
 
 
 class SEOElementsDetector:
-    """
-    Detecta presencia de elementos SEO en páginas web.
-    
-    Stacy actual: Stub que retorna todos默认值 False.
-    Implementación completa requiere BeautifulSoup.
-    """
-    
-    def __init__(self):
-        self.confidence = "estimated"
-    
+    """Detecta presencia de elementos SEO en páginas web usando BeautifulSoup."""
+
     def detect(self, html: str, url: str) -> SEOElementsResult:
         """
         Detecta presencia de elementos SEO en el HTML.
-        
+
         Args:
             html: Contenido HTML de la página
-            url: URL de la página (para validación)
-            
+            url: URL de la página (para validación de redes sociales)
+
         Returns:
             SEOElementsResult con campos individuales
-            
-        TODO (implementación completa):
-        - Usar BeautifulSoup para parseo
-        - Detectar og:image, og:title, og:description
-        - Contar imágenes sin atributo alt
-        - Buscar enlaces a redes sociales conocidas
         """
-        return SEOElementsResult(
-            open_graph=False,  # TODO: implementar con BeautifulSoup
-            imagenes_alt=False,  # TODO: implementar con BeautifulSoup
-            redes_activas=False,  # TODO: implementar con BeautifulSoup
-            confidence="estimated",
-            notes="Stub detector - awaiting BeautifulSoup implementation"
-        )
-    
+        try:
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(html, 'html.parser')
+
+            og_detected, og_tags = self._detect_open_graph(soup)
+            alt_good, images_without_alt = self._detect_images_alt(soup)
+            social_found, social_links = self._detect_social_links(soup, url)
+
+            return SEOElementsResult(
+                open_graph=og_detected,
+                imagenes_alt=alt_good,
+                redes_activas=social_found,
+                confidence="high",
+                notes=f"Detected {len(og_tags)} OG tags, {images_without_alt} imgs without alt",
+                open_graph_tags=og_tags,
+                images_without_alt=images_without_alt,
+                social_links_found=social_links
+            )
+        except Exception as e:
+            return SEOElementsResult(
+                confidence="low",
+                notes=f"Detection error: {str(e)}"
+            )
+
     def _detect_open_graph(self, soup) -> tuple[bool, Dict[str, str]]:
-        """Detect Open Graph tags. Requires BeautifulSoup."""
-        # PLACEHOLDER - would use soup.find_all('meta', property='og:*')
-        return False, {}
-    
+        """Detect Open Graph tags using BeautifulSoup."""
+        og_tags = {}
+        for meta in soup.find_all('meta', property=True):
+            prop = meta.get('property', '')
+            if prop.startswith('og:'):
+                og_tags[prop] = meta.get('content', '')
+        # Mínimo: og:title + og:description para considerar "detectado"
+        has_essential = 'og:title' in og_tags and 'og:description' in og_tags
+        return has_essential, og_tags
+
     def _detect_images_alt(self, soup) -> tuple[bool, int]:
-        """Count images without alt text. Requires BeautifulSoup."""
-        # PLACEHOLDER - would use soup.find_all('img')
-        return False, 0
-    
+        """Count images without alt text."""
+        images = soup.find_all('img')
+        without_alt = sum(1 for img in images if not img.get('alt', '').strip())
+        # "Bueno" si <20% de imágenes sin alt
+        has_good_alt = (without_alt / max(len(images), 1)) < 0.2 if images else True
+        return has_good_alt, without_alt
+
     def _detect_social_links(self, soup, url: str) -> tuple[bool, List[str]]:
-        """Detect social media links. Requires BeautifulSoup."""
-        # PLACEHOLDER - would search for known social domain patterns
-        return False, []
+        """Detect social media links."""
+        found = []
+        for a in soup.find_all('a', href=True):
+            href = a['href'].lower()
+            if any(domain in href for domain in SOCIAL_DOMAINS):
+                if href not in found:
+                    found.append(href)
+        return len(found) > 0, found

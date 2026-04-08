@@ -1,5 +1,26 @@
 # Changelog
 
+## [4.25.2] - 2026-04-08
+
+### FASE-A (AEO OG Fix): Deteccion Real de Open Graph
+- `modules/auditors/seo_elements_detector.py` - Stub reemplazado con implementacion real BeautifulSoup
+  - `_detect_open_graph()`: detecta `<meta property="og:*">`, requiere og:title + og:description
+  - `_detect_images_alt()`: cuenta imagenes sin atributo alt, pasa si <20%
+  - `_detect_social_links()`: detecta 8 dominios sociales (FB, IG, X, LinkedIn, YT, TikTok, Pinterest)
+  - `detect()`: conecta los 3 metodos, maneja errores con confidence="low"
+  - Eliminado `__init__` hardcodeado con `self.confidence = "estimated"`
+- Parte del fix AEO score: `seo_elements.open_graph` ahora retorna datos reales (antes siempre False)
+- Dependencia: beautifulsoup4==4.14.3 (ya existia en requirements.txt)
+
+### Archivos Nuevos
+| Archivo | Descripcion |
+|---------|-------------|
+| `tests/auditors/test_seo_elements_detector.py` | 9 tests: OG positive/negative/partial, alt good/bad, social/no-social, edge cases |
+
+### Tests
+- 9 tests nuevos en `tests/auditors/test_seo_elements_detector.py`
+- 0 regresiones
+
 ## [4.25.1] - 2026-04-07
 
 ### Calibracion Factores Financieros

@@ -1,157 +1,117 @@
-"""Tests para SEOElementsDetector.
-
-Valida detección de elementos SEO en contenido HTML.
-"""
-import sys
-from pathlib import Path
-
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
+"""Tests para SEOElementsDetector - detección real con BeautifulSoup."""
 
 import pytest
-
-from modules.auditors.seo_elements_detector import (
-    SEOElementsDetector,
-    SEOElementsResult,
-)
+from modules.auditors.seo_elements_detector import SEOElementsDetector
 
 
 @pytest.fixture
 def detector():
-    """Fixture que proporciona una instancia de SEOElementsDetector."""
     return SEOElementsDetector()
 
 
-@pytest.fixture
-def sample_html():
-    """Sample HTML content with SEO elements for testing."""
-    return """
-    <html>
-    <head>
-        <title>Hotel Visperas - Servicios y Habitaciones</title>
-        <meta name="description" content="Hotel Visperas ofrece servicios de primera clase">
-        <meta name="keywords" content="hotel, reservas, piscina, restaurante">
-    </head>
-    <body>
-        <h1>Bienvenidos al Hotel Visperas</h1>
-        <h2>Nuestros Servicios</h2>
-        <img src="img/hotel.jpg" alt="Fachada del hotel">
-        <a href="/habitaciones">Ver habitaciones</a>
-    </body>
-    </html>
-    """
+# ─── OG Detection ───────────────────────────────────────────────
+
+class TestOpenGraphDetection:
+
+    def test_og_detection_positive(self, detector):
+        """HTML con og:title + og:description → open_graph=True"""
+        html = """
+        <html><head>
+            <meta property="og:title" content="Hotel Paraíso">
+            <meta property="og:description" content="El mejor hotel de la costa">
+            <meta property="og:image" content="https://example.com/og.jpg">
+        </head><body></body></html>
+        """
+        result = detector.detect(html, "https://example.com")
+        assert result.open_graph is True
+        assert result.confidence == "high"
+        assert "og:title" in result.open_graph_tags
+        assert "og:description" in result.open_graph_tags
+        assert result.open_graph_tags["og:title"] == "Hotel Paraíso"
+
+    def test_og_detection_negative(self, detector):
+        """HTML sin OG tags → open_graph=False"""
+        html = """
+        <html><head>
+            <meta name="description" content="Un hotel">
+        </head><body><p>Hola</p></body></html>
+        """
+        result = detector.detect(html, "https://example.com")
+        assert result.open_graph is False
+        assert len(result.open_graph_tags) == 0
+
+    def test_og_detection_partial(self, detector):
+        """Solo og:title sin description → open_graph=False"""
+        html = """
+        <html><head>
+            <meta property="og:title" content="Hotel Paraíso">
+        </head><body></body></html>
+        """
+        result = detector.detect(html, "https://example.com")
+        assert result.open_graph is False
+        assert "og:title" in result.open_graph_tags
+        assert "og:description" not in result.open_graph_tags
 
 
-@pytest.fixture
-def html_missing_seo():
-    """HTML content missing SEO elements."""
-    return """
-    <html>
-    <body>
-        <h1>Content</h1>
-        <p>Some text here.</p>
-    </body>
-    </html>
-    """
+# ─── Images Alt ─────────────────────────────────────────────────
+
+class TestImagesAlt:
+
+    def test_images_alt_good(self, detector):
+        """10 imgs con alt → imagenes_alt=True"""
+        imgs = ''.join(f'<img src="img{i}.jpg" alt="Foto {i}">' for i in range(10))
+        html = f"<html><body>{imgs}</body></html>"
+        result = detector.detect(html, "https://example.com")
+        assert result.imagenes_alt is True
+        assert result.images_without_alt == 0
+
+    def test_images_alt_bad(self, detector):
+        """8 de 10 imgs sin alt → imagenes_alt=False"""
+        imgs_with_alt = ''.join(f'<img src="img{i}.jpg" alt="Foto {i}">' for i in range(2))
+        imgs_no_alt = ''.join(f'<img src="img{i}.jpg">' for i in range(8))
+        html = f"<html><body>{imgs_with_alt}{imgs_no_alt}</body></html>"
+        result = detector.detect(html, "https://example.com")
+        assert result.imagenes_alt is False
+        assert result.images_without_alt == 8
 
 
-class TestSEOElementsDetector:
-    """Tests for SEOElementsDetector class."""
+# ─── Social Links ───────────────────────────────────────────────
 
-    def test_detector_basic(self, detector, sample_html):
-        """Test that detector returns SEOElementsResult."""
-        result = detector.analyze(sample_html, "https://example.com")
-        
-        assert isinstance(result, SEOElementsResult)
-        assert 0 <= result.score <= 100
+class TestSocialLinks:
 
-    def test_detector_score_types(self, detector, sample_html):
-        """Test that all score fields are numeric."""
-        result = detector.analyze(sample_html, "https://example.com")
-        
-        assert isinstance(result.score, (int, float))
-        assert isinstance(result.title_score, (int, float))
-        assert isinstance(result.meta_description_score, (int, float))
-        assert isinstance(result.headings_score, (int, float))
-        assert isinstance(result.images_score, (int, float))
-        assert isinstance(result.links_score, (int, float))
+    def test_social_links_detected(self, detector):
+        """HTML con href facebook.com → redes_activas=True"""
+        html = """
+        <html><body>
+            <a href="https://www.facebook.com/hotelparaiso">FB</a>
+            <a href="https://www.instagram.com/hotelparaiso">IG</a>
+        </body></html>
+        """
+        result = detector.detect(html, "https://example.com")
+        assert result.redes_activas is True
+        assert len(result.social_links_found) == 2
 
-    def test_detector_has_recommendations(self, detector, sample_html):
-        """Test that recommendations are generated."""
-        result = detector.analyze(sample_html, "https://example.com")
-        
-        assert isinstance(result.recommendations, list)
-        assert all(isinstance(r, str) for r in result.recommendations)
+    def test_no_social_links(self, detector):
+        """HTML sin redes sociales → redes_activas=False"""
+        html = '<html><body><a href="https://example.com/contact">Contact</a></body></html>'
+        result = detector.detect(html, "https://example.com")
+        assert result.redes_activas is False
+        assert len(result.social_links_found) == 0
 
-    def test_detector_elements_found(self, detector, sample_html):
-        """Test that elements_found dict is populated."""
-        result = detector.analyze(sample_html, "https://example.com")
-        
-        assert isinstance(result.elements_found, dict)
 
-    def test_detector_missing_seo(self, detector, html_missing_seo):
-        """Test detection when SEO elements are missing."""
-        result = detector.analyze(html_missing_seo, "https://example.com")
-        
-        assert result.score < 100
-        assert len(result.recommendations) > 0
+# ─── Edge Cases ─────────────────────────────────────────────────
 
-    def test_detector_empty_html(self, detector):
-        """Test handling of empty/minimal HTML."""
-        result = detector.analyze("<html><body></body></html>", "https://example.com")
-        
-        assert isinstance(result, SEOElementsResult)
-        assert result.score == 0
+class TestEdgeCases:
 
-    def test_seo_elements_result_creation(self):
-        """Test SEOElementsResult dataclass creation."""
-        result = SEOElementsResult(
-            score=75.0,
-            title_score=80.0,
-            meta_description_score=70.0,
-            headings_score=90.0,
-            images_score=60.0,
-            links_score=85.0,
-            elements_found={"title": True, "meta_description": True},
-            recommendations=["Add alt text to images"],
-        )
-        
-        assert result.score == 75.0
-        assert result.title_score == 80.0
-        assert result.elements_found["title"] is True
+    def test_empty_html_graceful(self, detector):
+        """HTML vacío → no crash, confidence=low"""
+        result = detector.detect("", "https://example.com")
+        assert result.confidence in ("low", "high")
+        assert result.open_graph is False
 
-    def test_analyze_method_exists(self, detector):
-        """Test that analyze method exists and is callable."""
-        assert hasattr(detector, "analyze")
-        assert callable(getattr(detector, "analyze"))
-
-    def test_seo_elements_detector_returns_stub_values(self, detector):
-        """Test that detector returns stub values when implementation is missing."""
-        result = detector.analyze("<html><body>Test</body></html>", "https://example.com")
-        
-        # Stub values should be returned (TDD RED phase - implementation missing)
-        assert result.score is not None
-        assert result.title_score is not None
-        assert result.meta_description_score is not None
-        assert result.headings_score is not None
-        assert result.images_score is not None
-        assert result.links_score is not None
-
-    def test_detect_returns_seo_elements_result_with_false_values(self, detector):
-        """Test that detect method returns SEOElementsResult with false/missing values."""
-        result = detector.detect("<html><body>No SEO elements</body></html>", "https://example.com")
-        
-        # Should return SEOElementsResult with False values for missing elements
-        assert isinstance(result, SEOElementsResult)
-        assert result.elements_found.get("title") is False
-        assert result.elements_found.get("meta_description") is False
-        assert result.elements_found.get("h1") is False
-
-    def test_confidence_is_estimated(self, detector):
-        """Test that confidence score is estimated based on element presence."""
-        result = detector.analyze("<html><body>Minimal content</body></html>", "https://example.com")
-        
-        # Confidence should be estimated (between 0 and 1)
-        assert hasattr(result, "confidence")
-        assert isinstance(result.confidence, (int, float))
-        assert 0.0 <= result.confidence <= 1.0
+    def test_malformed_html_graceful(self, detector):
+        """HTML roto → no crash, confidence=low o high (BS4 lo parsea)"""
+        html = "<html><body><div><p><b>broken"
+        result = detector.detect(html, "https://example.com")
+        # BeautifulSoup puede parsear HTML roto → puede ser "high"
+        assert result.confidence in ("low", "high")

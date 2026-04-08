@@ -2,7 +2,7 @@
 
 **Plataforma de Inteligencia Agéntica de Grado Industrial diseñada para la auditoría y blindaje financiero del sector hotelero.**
 
-**Version:** 4.25.1 | **Última actualización:** 7 Abril 2026
+**Version:** 4.25.2 | **Última actualización:** 8 Abril 2026
 
 ---
 

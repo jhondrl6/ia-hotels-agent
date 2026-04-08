@@ -1,8 +1,8 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.25.1"
-codename: "Calibration: Financial Factors Research"
-release_date: "2026-04-07"
+version: "4.25.2"
+codename: "AEO OG Fix - FASE-A"
+release_date: "2026-04-08"
 plan_maestro_version: "v2.6.0"
 
 # v4.18.0 - ANALYTICS E2E 100% CERTIFICATION (ANALYTICS-E2E-CERT-01)

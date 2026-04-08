@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-07
+> **Ultima actualizacion:** 2026-04-08
 > **Version actual:** v4.25.1
-> **Total fases completadas:** 45
+> **Total fases completadas:** 47
 
 ---
 
@@ -1571,6 +1571,44 @@ Modulo DocumentQualityGate con 3 blocker checks (placeholder_region, duplicate_c
 ---
 
 
+## FASE-A (AEO OG Fix) - 2026-04-08
+**Descripcion:** Reemplazar stub de SEOElementsDetector con implementacion real usando BeautifulSoup para detectar Open Graph, imagenes sin alt, y enlaces sociales. Parte del fix del AEO score que siempre mostraba "0 (Pendiente de datos)".
+
+**Problema resuelto:** `_calculate_aeo_score()` en `v4_diagnostic_generator.py:1324` solo verificaba `performance.mobile_score`. Si PageSpeed API fallaba → "0 (Pendiente de datos)". El dato OG disponible en `seo_elements.open_graph` era un stub que siempre retornaba False.
+
+**Implementacion:**
+- `_detect_open_graph()`: detecta `<meta property="og:*">`, requiere og:title + og:description como minimo
+- `_detect_images_alt()`: cuenta imagenes sin atributo alt, pasa si <20%
+- `_detect_social_links()`: detecta 8 dominios sociales (FB, IG, X, LinkedIn, YT, TikTok, Pinterest)
+- `detect()`: conecta los 3 metodos via BeautifulSoup, maneja errores con confidence="low"
+- Eliminado `__init__` hardcodeado con `self.confidence = "estimated"`
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/auditors/test_seo_elements_detector.py` | NUEVO | 9 tests: OG positive/negative/partial, alt good/bad, social/no-social, empty/malformed HTML |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/seo_elements_detector.py` | Stub reemplazado con implementacion real BS4 (82→116 lineas) |
+
+### Dependencias
+- beautifulsoup4==4.14.3 (ya en requirements.txt, NO nueva dependencia)
+
+### Bloquea
+- FASE-B: reescribir `_calculate_aeo_score()` con 4 componentes x 25pts
+
+### Validaciones
+- [x] Tests passing (9/9)
+- [x] `run_all_validations.py --quick` 3/4 (Version Sync pre-existente)
+- [x] log_phase_completion.py ejecutado
+- [x] dependencias-fases.md actualizado
+- [x] 06-checklist-implementacion.md actualizado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
@@ -1628,3 +1666,4 @@ Modulo DocumentQualityGate con 3 blocker checks (placeholder_region, duplicate_c
 | FASE-RELEASE-4.11.0 | 2026-03-30 | N/A | ✅ Complete |
 | GAP-IAO-01-05 | 2026-03-31 | N/A | ✅ Complete |
 | GAP-IAO-01-05-REFINEMENT | 2026-04-01 | 22 | ✅ Complete |
+| FASE-A (AEO OG Fix) | 2026-04-08 | 9 | ✅ Complete |

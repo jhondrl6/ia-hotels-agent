@@ -1,120 +1,72 @@
-# Checklist de Implementacion — Plan Unificado v2 (2026-04-06)
+# Checklist Maestro - Fix AEO Score "Pendiente de datos"
 
-## Nota de Reorganizacion
+## Proyecto
+Reemplazar `_calculate_aeo_score()` stub con scoring completo de 4 componentes:
+Schema 25pts + FAQ 25pts + OG 25pts + Citabilidad 25pts.
 
-Los prompts originales A/B (Review Response Rate) fueron archivados en `archived/`.
-Las fases se renumeran A-E. Las fases historicas A/B del CHANGELOG (ciclo AEO) no se tocan.
-
-## Fases del Proyecto
-
-| # | ID | Descripcion | Estado | Sesion |
-|---|----|-------------|--------|--------|
-| 1 | FASE-A | Canonical Metrics + Provider Registry + Permission Modes | ✅ Completada | Sesion unificada 2026-04-06 |
-| 2 | FASE-B | Document Quality Gate + Content Scrubber | ✅ Completada | Sesion 2 (2026-04-06) |
-| 3 | FASE-C | Priorizacion Ponderada con Impacto Estimado | ✅ Completada | Sesion unificada 2026-04-06 |
-| 4 | FASE-D | Google Search Console Integration | ✅ Completada | Sesion unificada 2026-04-06 |
-| 5 | FASE-E | Micro-Content Local Generator | ✅ Completada | Sesion unificada 2026-04-06 |
+## Root Cause
+`_calculate_aeo_score()` en `v4_diagnostic_generator.py:1324` solo verifica
+`performance.mobile_score`. Si PageSpeed API no retorna datos → "0 (Pendiente de datos)".
+Los datos de Schema, FAQ, OG y Citabilidad existen en `V4AuditResult` pero no se usan.
 
 ---
 
-## FASE-A: Canonical Metrics + Provider Registry + Permission Modes
+## Estado de Fases
 
-**Archivo prompt**: `.opencode/plans/05-prompt-inicio-sesion-fase-A.md`
-**Dependencias**: Ninguna
-**Prioridad**: Media (base para FASE-D)
-
-### Checklist
-- [x] `modules/utils/canonical_metrics.py` creado
-- [x] `tests/utils/test_canonical_metrics.py` — 22/22 tests passing
-- [x] `config/provider_registry.yaml` creado (8 proveedores configurados)
-- [x] `modules/utils/provider_registry.py` creado
-- [x] `tests/utils/test_provider_registry.py` — 13/13 tests passing
-- [x] `modules/utils/permission_mode.py` creado
-- [x] `tests/utils/test_permission_mode.py` — 22/22 tests passing
-- [x] `main.py` modificado con argumento `--permission-mode`
-- [x] `python main.py --help` muestra `--permission-mode`
-- [x] Backward compatible
-- [x] CHANGELOG.md actualizado retroactivamente (v4.23.0)
-- [x] REGISTRY.md actualizado (stats table)
+| Fase | Descripción | Estado | Fecha | Tests |
+|------|-------------|--------|-------|-------|
+|| FASE-A | Implementar detección real OG en `seo_elements_detector.py` | ✅ Completada | 2026-04-08 | 9/8 ||
+| FASE-B | Reescribir `_calculate_aeo_score()` con 4 componentes | ⏳ Pendiente | — | 0/10 |
+| FASE-C | Integración, regresión, documentación | ⏳ Pendiente | — | 0/verif |
 
 ---
 
-## FASE-B: Document Quality Gate + Content Scrubber
+## Métricas Acumulativas
 
-**Archivo prompt**: `.opencode/plans/05-prompt-inicio-sesion-fase-B.md`
-**Dependencias**: Ninguna obligatoria (FASE-A es nice-to-have)
-**Prioridad**: ALTA — Previene documentos con errores visibles al cliente
-**Origen**: Analisis comparativo seomachine #1,#2
-
-### Checklist
-- [x] `modules/postprocessors/__init__.py` creado
-- [x] `modules/postprocessors/document_quality_gate.py` creado (3 blocker + 2 warning checks)
-- [x] `modules/postprocessors/content_scrubber.py` creado (5 reglas, idempotente)
-- [x] `modules/quality_gates/publication_gates.py` modificado — gate #6
-- [x] `modules/asset_generation/asset_content_validator.py` modificado — nuevos patterns
-- [x] Integracion en flujo v4complete (scrub → validate → log → delivery)
-- [x] `tests/postprocessors/test_document_quality_gate.py` — 12/12 passing
-- [x] `tests/postprocessors/test_content_scrubber.py` — 10/10 passing
-- [x] Diagnostico de prueba limpio (sin "default", "COP COP", portugues, "0% confianza")
-- [x] `python scripts/run_all_validations.py --quick` pasa
-- [x] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
+| Métrica | Inicio | FASE-A | FASE-B | FASE-C |
+|---------|--------|--------|--------|--------|
+|| Tests nuevos | 0 | +9 | +10 | — ||
+| Tests total (acumulado) | 1782 | 1790 | 1800 | 1800 |
+| Archivos nuevos | 0 | +1 | +1 | — |
+| Archivos modificados | 0 | +1 | +1 | — |
+| AEO score típico | "0 (Pendiente de datos)" | — | "50" (hotel típico) | ✅ verificado |
 
 ---
 
-## FASE-C: Priorizacion Ponderada con Impacto Estimado
+## Dependencias
 
-**Archivo prompt**: `.opencode/plans/05-prompt-inicio-sesion-fase-C.md`
-**Dependencias**: FASE-B ✅
-**Prioridad**: Alta — Mejora argumento comercial
-**Origen**: Analisis comparativo seomachine #3
+```
+FASE-A ──→ FASE-B ──→ FASE-C
+ (datos)   (scoring)   (validación)
+```
 
-### Checklist
-- [x] `modules/financial_engine/opportunity_scorer.py` creado (modelo 3 factores: severidad 0-40 + esfuerzo 0-30 + impacto 0-30)
-- [x] `data_models/canonical_assessment.py` modificado — campo `opportunity_scores`
-- [x] `modules/commercial_documents/v4_diagnostic_generator.py` modificado — scores en brechas (reemplaza composer.py)
-- [x] `modules/financial_engine/calculator_v2.py` modificado — pesos dinamicos con fallback a fijos
-- [x] `tests/financial_engine/test_opportunity_scorer.py` — 18/18 passing (supera criterio de 14)
-- [x] Backward compatible (sin scorer = pesos fijos)
-- [x] `python scripts/run_all_validations.py --quick` pasa
-- [x] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
+Sin conflictos de archivos entre fases.
 
 ---
 
-## FASE-D: Google Search Console Integration
+## Checklists por Fase
 
-**Archivo prompt**: `.opencode/plans/05-prompt-inicio-sesion-fase-D.md`
-**Dependencias**: FASE-A ✅ (provider_registry), FASE-C ✅ (opportunity_scorer)
-**Prioridad**: Media-Alta — Datos reales vs estimaciones
-**Origen**: Analisis comparativo seomachine #4
+### FASE-A: Data Foundation ✅
+- [x] `_detect_open_graph()` implementado con BeautifulSoup
+- [x] `_detect_images_alt()` implementado
+- [x] `_detect_social_links()` implementado
+- [x] `detect()` conecta métodos reales
+- [x] 9 tests pasan (8 obligatorios + 1 extra: no social links)
+- [x] `run_all_validations.py --quick` pasa (3/4, version sync pre-existente)
+- [x] `log_phase_completion.py --fase FASE-A` ejecutado
 
-### Checklist
-- [x] `modules/analytics/google_search_console_client.py` creado (10,275 bytes)
-- [x] `modules/analytics/data_aggregator.py` creado — unifica GA4 + GSC (11,447 bytes)
-- [x] `modules/onboarding/add_gsc_step.py` creado — paso GSC opcional (4,319 bytes)
-- [x] `modules/commercial_documents/v4_diagnostic_generator.py` modificado — datos GSC en diagnostico
-- [x] `data_models/analytics_status.py` modificado — campos gsc_available, gsc_error, gsc_status_text
-- [x] `config/provider_registry.yaml` modificado — entrada gsc agregada
-- [x] `tests/analytics/test_google_search_console_client.py` — 14/14 passing
-- [x] `tests/analytics/test_data_aggregator.py` — 19/19 passing
-- [x] Graceful degradation: sin GSC = flujo normal funciona
-- [x] `python scripts/run_all_validations.py --quick` pasa
-- [x] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
+### FASE-B: AEO Scoring Rewrite
+- [ ] `_calculate_aeo_score()` reescrito con 4 componentes × 25pts
+- [ ] Docstring actualizado
+- [ ] 10 tests pasan
+- [ ] Compatibilidad con `_get_score_status()` verificada
+- [ ] `run_all_validations.py --quick` pasa
+- [ ] `log_phase_completion.py --fase FASE-B` ejecutado
 
----
-
-## FASE-E: Micro-Content Local Generator
-
-**Archivo prompt**: `.opencode/plans/05-prompt-inicio-sesion-fase-E.md`
-**Dependencias**: FASE-B ✅ (content pasa por quality gate)
-**Prioridad**: Baja — Add-on comercial
-**Origen**: Analisis comparativo seomachine #5
-
-### Checklist
-- [x] `modules/asset_generation/local_content_generator.py` creado
-- [x] `modules/asset_generation/asset_catalog.py` modificado — tipo `local_content_page`
-- [x] `templates/local_content/` creado
-- [x] `tests/asset_generation/test_local_content_generator.py` — 15/15 passing
-- [x] Genera 3-5 paginas de contenido local por hotel
-- [x] Contenido pasa Content Scrubber
-- [x] `python scripts/run_all_validations.py --quick` pasa
-- [x] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
+### FASE-C: Integration & Validación
+- [ ] Template v6 renderiza AEO como número
+- [ ] 0 regresiones en tests existentes
+- [ ] Benchmark regional verificado
+- [ ] Documentación afiliada actualizada
+- [ ] `log_phase_completion.py --fase FASE-C` ejecutado
+- [ ] Fix verificado: output real ya no muestra "Pendiente de datos"

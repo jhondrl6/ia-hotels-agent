@@ -1,8 +1,8 @@
-<!-- agents_version: 4.25.1 | last_update: 2026-04-07 -->
+<!-- agents_version: 4.25.2 | last_update: 2026-04-08 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.25.1 -- Calibration: Financial Factors Research COMPLETADO**
+> **v4.25.2 -- AEO OG Fix - FASE-A COMPLETADO**
 
 ---
 
