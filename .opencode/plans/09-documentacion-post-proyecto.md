@@ -1,93 +1,166 @@
-# Documentacion Post-Proyecto — Plan Unificado v2 (2026-04-06)
+# Documentación Post-Proyecto: Fix AEO Score "Pendiente de datos"
 
-## A. Modulos Nuevos
+> Documentación incremental. Se actualiza DESPUÉS de cada fase completada.
+> Basado en `docs/CONTRIBUTING.md` §5 (documentation_rules.md) y §8.
 
-### FASE-A: Canonical Metrics + Provider Registry + Permission Modes
+---
 
-| Modulo | Archivo | Descripcion |
-|--------|---------|-------------|
-| Canonical Metrics | `modules/utils/canonical_metrics.py` | Normaliza nombres de metricas entre fuentes |
-| Provider Registry | `modules/utils/provider_registry.py` | Singleton que gestiona proveedores desde YAML |
-| Permission Mode | `modules/utils/permission_mode.py` | Enum y funcion para modos de aprobacion |
-| Provider Config | `config/provider_registry.yaml` | Config centralizada de 8+ proveedores (incluye gsc anticipado) |
+## Sección A: Módulos Nuevos/Modificados
 
-### FASE-B: Document Quality Gate + Content Scrubber
+### FASE-A: Data Foundation
+| Archivo | Tipo | Descripción |
+|---------|------|-------------|
+| `modules/auditors/seo_elements_detector.py` | MODIFICADO | Stubs reemplazados por implementación real con BeautifulSoup |
+| `tests/auditors/test_seo_elements_detector.py` | NUEVO | 8 tests: OG detection, images alt, social links, graceful errors |
 
-| Modulo | Archivo | Descripcion |
-|--------|---------|-------------|
-| Document Quality Gate | `modules/postprocessors/document_quality_gate.py` | Gate de calidad para documentos comerciales |
-| Content Scrubber | `modules/postprocessors/content_scrubber.py` | Limpieza de output LLM |
+**Cambio arquitectónico**: `SEOElementsDetector.detect()` pasa de retornar
+valores hardcodeados (`open_graph=False`) a usar BeautifulSoup para detectar
+`og:title`, `og:description`, `og:image` en el HTML real.
 
-### FASE-C: Opportunity Scorer
+### FASE-B: AEO Scoring Rewrite
+| Archivo | Tipo | Descripción |
+|---------|------|-------------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | MODIFICADO | Método `_calculate_aeo_score()` reescrito (líneas 1324-1346) |
+|| `tests/commercial_documents/test_aeo_score.py` | NUEVO | 15 tests: scoring 4 componentes, tiers citabilidad, edge cases |
 
-| Modulo | Archivo | Descripcion |
-|--------|---------|-------------|
-| Opportunity Scorer | `modules/financial_engine/opportunity_scorer.py` | Modelo ponderado 3 factores |
+**Cambio arquitectónico**: `_calculate_aeo_score()` pasa de usar solo
+`performance.mobile_score` (max 20pts) a scoring de 4 componentes × 25pts:
+Schema válido + FAQ válido + OG detectado + Citabilidad.
 
-### FASE-D: Google Search Console
+### FASE-C: Integration & Validación
+| Archivo | Tipo | Descripción |
+|---------|------|-------------|
+| — | — | Sin cambios de código. Solo verificación y documentación. |
 
-| Modulo | Archivo | Descripcion |
-|--------|---------|-------------|
-| GSC Client | `modules/analytics/google_search_console_client.py` | Cliente Google Search Console API (10,275 bytes) |
-| Data Aggregator | `modules/analytics/data_aggregator.py` | Unifica GA4 + GSC (11,447 bytes) |
-| GSC Onboarding Step | `modules/onboarding/add_gsc_step.py` | Paso opcional GSC en onboarding (4,319 bytes) |
-| Tests GSC | `tests/analytics/test_google_search_console_client.py` | 14 tests unitarios |
-| Tests Aggregator | `tests/analytics/test_data_aggregator.py` | 19 tests unitarios |
+---
 
-### FASE-E: Micro-Content Local Generator
+## Sección B: Notas Técnicas para GUIA_TECNICA.md
 
-| Modulo | Archivo | Descripcion |
-|--------|---------|-------------|
-| Local Content Generator | `modules/asset_generation/local_content_generator.py` | Paginas contenido local (3-5) para hoteles boutique con keywords long-tail |
-| Page Template | `modules/asset_generation/templates/local_content/page_template.md` | Template de prompt LLM para contenido local |
-| Keyword Guide | `modules/asset_generation/templates/local_content/keyword_selection.md` | Guia de seleccion de keywords por tipo de hotel |
-| Tests | `tests/asset_generation/test_local_content_generator.py` | 15 tests unitarios |
+> Copiar esta sección a `docs/GUIA_TECNICA.md` como nueva entrada
+> "Notas de Cambios" al completar todas las fases.
 
-## B. Modulos Modificados
+### Notas de Cambios v4.25.3/v4.25.4 - Fix AEO Score
 
-| Fase | Archivo | Cambio |
-|------|---------|--------|
-| FASE-A | `main.py` | Argumento `--mode` |
-| FASE-B | `modules/quality_gates/publication_gates.py` | Gate #6 content_quality_gate |
-| FASE-B | `modules/asset_generation/asset_content_validator.py` | Agregar "default" a PLACEHOLDER_PATTERNS |
-| FASE-B | `main.py` | Inyectar scrub en v4complete |
-| FASE-C | `data_models/canonical_assessment.py` | Campo `opportunity_scores` |
-| FASE-C | `modules/commercial_documents/v4_diagnostic_generator.py` | Inyectar scores en brechas (reemplaza composer.py) |
-| FASE-C | `modules/financial_engine/calculator_v2.py` | Pesos dinamicos |
-| FASE-D | `modules/commercial_documents/v4_diagnostic_generator.py` | Integracion GSC en diagnostico |
-| FASE-D | `data_models/analytics_status.py` | Campos gsc_available, gsc_error, gsc_status_text |
-| FASE-D | `config/provider_registry.yaml` | Entrada gsc agregada |
-| FASE-E | `modules/asset_generation/asset_catalog.py` | Tipo `local_content_page` |
+**Resumen**: El score AEO del diagnóstico v4complete mostraba "0 (Pendiente de datos)"
+en todos los hoteles porque `_calculate_aeo_score()` solo usaba PageSpeed API.
+Se implementó scoring completo de 4 componentes y detección real de Open Graph.
 
-## C. Configurados por Fase
+**Módulos afectados**:
+- `modules/auditors/seo_elements_detector.py` — Stub → BeautifulSoup real
+- `modules/commercial_documents/v4_diagnostic_generator.py` — `_calculate_aeo_score()` reescrito
 
-| Fase | Estado | Archivos Nuevos | Archivos Modificados | Tests Nuevos |
-|------|--------|-----------------|---------------------|--------------|
-| FASE-A | ✅ Completado | 4 | 1 | 22 |
-| FASE-B | ✅ Completado | 3 | 2 | 22 |
-| FASE-C | ✅ Completado | 1 | 3 | 18 |
-| FASE-D | ✅ Completado | 5 | 3 | 33 |
-| FASE-E | ✅ Completado | 4 | 1 | 15 |
+**Arquitectura**:
+- `SEOElementsDetector` ahora usa BeautifulSoup para parsear HTML y detectar
+  `og:*` meta tags, imágenes sin `alt`, y enlaces a redes sociales.
+- `_calculate_aeo_score()` evalúa 4 componentes independientes (25pts c/u):
+  Schema válido, FAQ válido, OG detectado, Citabilidad.
+- Componentes opcionales (citability, seo_elements) tienen fallback graceful
+  si son None — no causan "Pendiente de datos".
 
-## D. Metricas Acumulativas
+**Backwards compatibility**:
+- Interfaz de `SEOElementsResult` sin cambios (mismos campos, mismos tipos)
+- `_calculate_aeo_score()` retorna string numérico compatible con `_get_score_status()`
+- Templates no requieren cambios (`${aeo_score}` renderiza número como antes)
+- Benchmark regional `aeo_score_ref` (default 20) sigue siendo coherente
 
-|| Metrica | A | B | C | D | E | Total acumulado |
-||---------|---|---|---|---|---|-----------------|
-|| Tests nuevos | 22 | 22 | 18 | 33 | 15 | 110 |
-|| Archivos nuevos | 4 | 3 | 1 | 5 | 4 | 17 |
-|| Archivos modificados | 1 | 2 | 3 | 3 | 1 | 10 |
+**Archivos modificados**:
+- `modules/auditors/seo_elements_detector.py` — 3 métodos stub → real + `detect()` conectado
+- `modules/commercial_documents/v4_diagnostic_generator.py` — `_calculate_aeo_score()` reescrito (22 → ~45 líneas)
 
-## E. Archivos Afiliados — Estado FASE-D
+---
 
-- [x] CHANGELOG.md — Entrada [4.24.0] agregada con detalle FASE-D
-- [x] REGISTRY.md — Actualizado por log_phase_completion.py (2026-04-06)
-- [x] config/provider_registry.yaml — Entrada gsc agregada
+## Sección C: Entrada CHANGELOG.md
 
-## E2. Archivos Afiliados — Estado FASE-E
+> Copiar esta sección a `CHANGELOG.md` al completar todas las fases.
+> Formato según `docs/contributing/documentation_rules.md` §36-58.
 
-- [x] CHANGELOG.md — Entrada [4.25.0] agregada con detalle FASE-E
-- [x] VERSION.yaml — Bump 4.24.0 -> 4.25.0, codename "FASE-E: Micro-Content Local Generator"
-- [x] REGISTRY.md — Actualizado por log_phase_completion.py (2026-04-06)
-- [x] docs/GUIA_TECNICA.md — Notas tecnicas v4.25.0 agregadas
-- [x] AGENTS.md — Agregar postprocessors a tabla de modulos + GSC a analytics
-- [x] docs/CONTRIBUTING.md — Verificar que referencia FASE-E en REGISTRY.md sea consistente
+## [4.25.4] - 2026-04-08
+
+### FASE-C (Integration & Validación): Verificación End-to-End Fix AEO Score
+
+#### Objetivo
+Verificar que el fix completo funciona end-to-end: templates renderizan correctamente,
+no hay regresión en diagnósticos existentes, y la documentación está actualizada.
+
+#### Verificaciones Realizadas
+- Template v6: `${aeo_score}` renderiza número (ej: "50/100"), NO "Pendiente de datos"
+- Template v4: `${schema_infra_score}` mapeado a `_calculate_aeo_score()` (L514)
+- Tests: 24/24 pasan (9 FASE-A + 15 FASE-B), 0 regresiones
+- Validaciones: `run_all_validations.py --quick` 4/4 pasan
+- Benchmark regional: `aeo_score_ref` = 20 (regional) / 40 (global), coherente
+
+#### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/auditors/test_seo_elements_detector.py` | 9 tests para detección OG, alt, social |
+| `tests/commercial_documents/test_aeo_score.py` | 15 tests para scoring AEO completo |
+
+#### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/seo_elements_detector.py` | Stubs → BeautifulSoup real |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | `_calculate_aeo_score()` reescrito |
+
+#### Tests
+- 24 tests nuevos (9 FASE-A + 15 FASE-B)
+- 0 regresiones
+
+---
+
+## Sección D: Métricas Acumulativas
+
+| Métrica | Inicio | FASE-A | FASE-B | FASE-C |
+|---------|--------|--------|--------|--------|
+| Tests nuevos | 0 | +9 | +15 | — |
+| Tests total (acumulado) | 1782 | 1790 | 1805 | 1805 |
+| Archivos nuevos | 0 | +1 | +1 | — |
+| Archivos modificados | 0 | +1 | +1 | — |
+| Coherence score | 0.84 | 0.84 | 0.84 | 0.84 |
+| AEO score típico (output) | "0 (Pendiente de datos)" | — | "50" | ✅ verificado |
+| Validaciones run_all | — | 3/4 | 4/4 | 4/4 |
+| REGISTRY.md | — | entrada | entrada | entrada |
+
+---
+
+## Sección E: Checklist de Documentación Afiliada
+
+> Marcar ✅ después de completar cada fase y actualizar el doc correspondiente.
+
+### FASE-A completada → actualizar:
+- [x] `dependencias-fases.md` — FASE-A marcada ✅
+- [x] `06-checklist-implementacion.md` — FASE-A marcada ✅
+- [x] Sección D de este archivo — Métricas actualizadas
+- [x] `log_phase_completion.py --fase FASE-A` ejecutado
+
+### FASE-B completada → actualizar:
+- [x] `dependencias-fases.md` — FASE-B marcada ✅
+- [x] `06-checklist-implementacion.md` — FASE-B marcada ✅
+- [x] Sección D de este archivo — Métricas actualizadas
+- [x] Sección B de este archivo — Nota técnica lista para GUIA_TECNICA.md
+- [x] Sección C de este archivo — Entrada CHANGELOG lista
+- [x] `log_phase_completion.py --fase FASE-B` ejecutado
+
+### FASE-C completada → actualizar:
+- [x] `dependencias-fases.md` — FASE-C marcada ✅
+- [x] `06-checklist-implementacion.md` — FASE-C marcada ✅
+- [x] Sección D de este archivo — Métricas finales actualizadas
+- [x] `log_phase_completion.py --fase FASE-C` ejecutado
+- [x] Sección B copiada a `docs/GUIA_TECNICA.md` — Sección v4.25.3/v4.25.4 agregada + línea 124 corregida
+- [x] Sección C copiada a `CHANGELOG.md` — Entrada FASE-C [4.25.4] agregada
+- [x] `python scripts/run_all_validations.py --quick` pasa (4/4)
+- [x] `git diff --stat` verificado
+
+---
+
+## Sección F: Archivos del Plan
+
+| Archivo | Propósito |
+|---------|-----------|
+| `README.md` | Índice del plan |
+| `dependencias-fases.md` | Diagrama de dependencias + conflictos |
+| `05-prompt-inicio-sesion-fase-A.md` | Prompt completo para sesión FASE-A |
+| `05-prompt-inicio-sesion-fase-B.md` | Prompt completo para sesión FASE-B |
+| `05-prompt-inicio-sesion-fase-C.md` | Prompt completo para sesión FASE-C |
+| `06-checklist-implementacion.md` | Checklist maestro |
+| `09-documentacion-post-proyecto.md` | Este archivo |
+| `context/00-problema-aeo-score.md` | Contexto del problema |

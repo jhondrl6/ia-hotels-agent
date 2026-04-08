@@ -1,5 +1,30 @@
 # Changelog
 
+## [4.25.4] - 2026-04-08
+
+### FASE-C (Integration & Validación): Verificación End-to-End Fix AEO Score
+- Verificación completa del fix AEO score — sin cambios de código, solo validación:
+  - **Template v6**: `${aeo_score}` renderiza número (ej: "50/100"), NO "0 (Pendiente de datos)/100"
+  - **Template v4**: `${schema_infra_score}` mapeado a `_calculate_aeo_score()` (L514) — renderiza correcto
+  - **Tests**: 24/24 pasan (9 FASE-A + 15 FASE-B), 0 regresiones
+  - **Validaciones**: `run_all_validations.py --quick` 4/4 pasan
+  - **Benchmark regional**: `aeo_score_ref` = 20 (regional) / 40 (global), coherente con scoring 0-100
+  - **_get_score_status("50", 20)** → "✅ Superior" (50 ≥ 22) — correcto
+
+### Dependencias
+- FASE-A ✅ + FASE-B ✅ completadas
+- No modifica código fuente
+- No modifica templates
+
+### Documentación
+- `dependencias-fases.md` actualizada (FASE-C ✅)
+- `06-checklist-implementacion.md` actualizada (6/6 items ✅)
+- `09-documentacion-post-proyecto.md` actualizada (métricas + checklist)
+- `REGISTRY.md` entrada FASE-C 2026-04-08 registrada vía log_phase_completion.py
+
+### Gap documentado (no-bloqueante)
+- `docs/GUIA_TECNICA.md` línea 124: "El score AEO mantiene la misma lógica" — desactualizado post-FASE-B
+
 ## [4.25.3] - 2026-04-08
 
 ### FASE-B (AEO Scoring Rewrite): _calculate_aeo_score() con 4 componentes

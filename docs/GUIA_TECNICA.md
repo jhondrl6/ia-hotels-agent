@@ -1,8 +1,52 @@
 # Guía Técnica IA Hoteles Agent CLI
 
-**Última actualización:** 4 Abril 2026
-**Versión:** 4.21.0 (Consolidacion AEO/IAO)
+**Ultima actualizacion:** 8 Abril 2026
+**Version:** 4.25.4 (Fix AEO Score - Pendiente de datos eliminado)
 **Audiencia:** Desarrolladores, DevOps, Contribuidores
+
+## Notas de Cambios v4.25.3/v4.25.4 - Fix AEO Score "Pendiente de datos"
+
+**Fecha:** 8 Abril 2026
+
+### Resumen
+
+El score AEO del diagnostico v4complete mostraba "0 (Pendiente de datos)" en todos los hoteles porque `_calculate_aeo_score()` solo usaba PageSpeed API. Se implemento scoring completo de 4 componentes y deteccion real de Open Graph. FASE-C verifico la integracion end-to-end sin regresiones.
+
+### Modulos Afectados
+
+#### 1. seo_elements_detector.py (FASE-A)
+- Stub reemplazado con implementacion real BeautifulSoup
+- `_detect_open_graph()`: detecta `<meta property="og:*">`, requiere og:title + og:description
+- `_detect_images_alt()`: cuenta imagenes sin atributo alt, pasa si <20%
+- `_detect_social_links()`: detecta 8 dominios sociales
+
+#### 2. v4_diagnostic_generator.py (FASE-B)
+- `_calculate_aeo_score()` reescrito (lineas 1324-1378):
+  - **ANTES**: solo verificaba `performance.mobile_score` → "0 (Pendiente de datos)" si PageSpeed fallaba
+  - **AHORA**: scoring de 4 componentes x 25pts = 100pts:
+    - Schema Hotel valido → +25pts (detectado no valido → +10pts)
+    - FAQ Schema valido → +25pts (detectado no valido → +10pts)
+    - Open Graph detectado → +25pts (via `hasattr` para compatibilidad)
+    - Citabilidad tiers → 70→+25, 40→+15, >0→+5, None→0pts
+  - Retorna string numerico ("0", "25", "50", etc.) compatible con `_get_score_status()`
+  - Usa `hasattr()` para `seo_elements` y `citability` (campos opcionales en V4AuditResult)
+
+#### 3. Templates (FASE-C verificado, sin cambios)
+- v6 linea 49: `${aeo_score}/100` → renderiza numero (ej: "50/100")
+- v4 linea 40: `${schema_infra_score}` → mapeado a `_calculate_aeo_score()` (L514)
+
+### Backwards Compatibility
+- Interfaz de `SEOElementsResult` sin cambios (mismos campos, mismos tipos)
+- `_calculate_aeo_score()` retorna string numerico compatible con `_get_score_status()`
+- Templates no requieren cambios (`${aeo_score}` renderiza numero como antes)
+- Benchmark regional `aeo_score_ref` (default 20) sigue siendo coherente
+
+### Tests
+- 24 tests nuevos (9 FASE-A + 15 FASE-B)
+- 0 regresiones
+- `run_all_validations.py --quick` 4/4 pasan
+
+---
 
 ## Notas de Cambios v4.21.0 - Consolidacion AEO/IAO
 
@@ -121,7 +165,7 @@ Eliminacion de redundancia entre scores AEO e IAO (ambos median infraestructura 
 
 - Variables de template eliminadas (iao_score, iao_status, voice_readiness_score, voice_readiness_status): si algun template personalizado las referencia, fallara con KeyError en Template.safe_substitute()
 - Metodos eliminados son internos, no son API publica del modulo
-- El score AEO (_calculate_aeo_score) mantiene la misma logica de calculo que el anterior schema_infra_score
+- El score AEO (_calculate_aeo_score) fue reescrito en v4.25.3: scoring de 4 componentes x 25pts (Schema valido + FAQ valido + OG detectado + Citabilidad). Ya NO mantiene la logica del anterior schema_infra_score
 - aeo_metrics_gen.py se mantiene como modulo tecnico interno
 
 ## Notas de Cambios v4.20.0 - Agent Harness v3.2.0 Refactor
