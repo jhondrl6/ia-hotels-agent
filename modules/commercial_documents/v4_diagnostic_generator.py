@@ -293,10 +293,10 @@ ${validated_data_table}
 
 | Indicador | Su Hotel | Promedio Regional | Estado |
 |-----------|----------|-------------------|--------|
-|| Visibilidad Google Maps (GEO) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
-|| Posicion Competitiva (vs cercanos) | ${activity_score}/100 | ${competitive_regional_avg}/100 | ${activity_status} |
-|| Web Score (SEO) | ${web_score}/100 | ${seo_regional_avg}/100 | ${web_status} |
-||| Infraestructura AEO (Schema) | ${aeo_score} | ${aeo_regional_avg}/100 | ${aeo_status} |
+| Visibilidad Google Maps (GEO) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
+| Posicion Competitiva (vs cercanos) | ${activity_score}/100 | ${competitive_regional_avg}/100 | ${activity_status} |
+| Web Score (SEO) | ${web_score}/100 | ${seo_regional_avg}/100 | ${web_status} |
+| Infraestructura AEO (Schema) | ${aeo_score}/100 | ${aeo_regional_avg}/100 | ${aeo_status} |
 
 ---
 
@@ -514,11 +514,6 @@ ${quick_wins_list}
             'web_status': self._get_score_status(self._calculate_web_score(audit_result), seo_regional['value']),
             'schema_infra_score': self._calculate_aeo_score(audit_result),
             'schema_infra_status': self._get_score_status(self._calculate_aeo_score(audit_result), aeo_regional['value']),
-            # Regional averages for internal template
-            'geo_regional_avg': str(geo_regional['value']),
-            'competitive_regional_avg': str(competitive_regional['value']),
-            'seo_regional_avg': str(seo_regional['value']),
-            'aeo_regional_avg': str(aeo_regional['value']),
             # iao_score/iao_status/voice_readiness eliminados en FASE-CAUSAL-01
             
             # Brechas (4 Razones)
@@ -820,7 +815,7 @@ ${quick_wins_list}
             fields.append({
                 'name': 'WhatsApp',
                 'value': phone_display,
-                'confidence': confidence.value,
+                'confidence': confidence.value.upper() if hasattr(confidence, 'value') else str(confidence).upper(),
                 'icon': icon,
                 'sources': sources
             })
@@ -1626,148 +1621,6 @@ ${quick_wins_list}
             recuperacion = main.monthly_loss_max * proportion
             return f"{recuperacion:,.0f}"
         return "0"
-    # ===== Opportunity Scoring Integration Methods =====
-
-    def _compute_opportunity_scores(
-        self,
-        audit_result: V4AuditResult,
-        financial_scenarios: FinancialScenarios,
-    ) -> Optional[list]:
-        """
-        Calcula opportunity_scores desde el audit result.
-        Retorna list de OpportunityScore o None si falla.
-        Backward compatible: si OpportunityScorer no esta disponible, retorna None.
-        """
-        try:
-            scorer = _get_opportunity_scorer()
-            if scorer is None:
-                return None
-
-            # Obtener brechas actuales (para mantener consistencia)
-            brechas = self._identify_brechas(audit_result)
-            if not brechas:
-                return None
-
-            # Convertir brechas al formato que espera OpportunityScorer
-            brecha_dicts = []
-            for idx, b in enumerate(brechas):
-                pain_id = b.get('pain_id', '')
-                brecha_type = self._map_pain_to_scorer_type(pain_id)
-                brecha_dicts.append({
-                    'id': f"brecha_{idx+1}",
-                    'type': brecha_type,
-                    'name': b.get('nombre', ''),
-                    'pain_id': pain_id,
-                })
-
-            # Obtener monthly loss del escenario principal
-            total_monthly_loss = None
-            if financial_scenarios:
-                main = financial_scenarios.get_main_scenario()
-                if main:
-                    total_monthly_loss = main.monthly_loss_max
-
-            # Calcular scores
-            scores = scorer.score_brechas(
-                brecha_dicts,
-                assessment=audit_result,
-                competitor_data=None,
-                total_monthly_loss=total_monthly_loss,
-            )
-            return scores
-
-        except Exception as e:
-            # Fallback silencioso - no romper generacion
-            print(f"[WARNING] Opportunity scoring failed (falling back): {e}")
-            return None
-
-    def _map_pain_to_scorer_type(self, pain_id: str) -> str:
-        """Mapea pain_id de brechas al formato de OpportunityScorer."""
-        mapping = {
-            'no_hotel_schema': 'no_hotel_schema',
-            'no_faq_schema': 'faq_schema_missing',
-            'low_gbp_score': 'gbp_incomplete',
-            'whatsapp_conflict': 'whatsapp_conflict',
-            'data_inconsistent': 'data_inconsistent',
-            'metadata_defaults': 'cms_defaults',
-            'poor_performance': 'poor_performance',
-            'missing_reviews': 'gbp_incomplete',
-            'no_og_tags': 'cms_defaults',
-            'low_citability': 'cms_defaults',
-        }
-        return mapping.get(pain_id, 'no_hotel_schema')
-
-    def _inject_brecha_scores(
-        self,
-        audit_result: V4AuditResult,
-        financial_scenarios: FinancialScenarios,
-    ) -> Dict[str, Any]:
-        """
-        Inyecta variables de score para cada brecha en el template.
-        Si hay opportunity_scores disponibles, usa valores calculados.
-        Si no, retorna valores placeholder vacios (fallback al impacto %).
-        """
-        try:
-            scores = self._compute_opportunity_scores(audit_result, financial_scenarios)
-            if scores is None:
-                return self._brecha_scores_empty(4)
-
-            result = {}
-            for i in range(4):
-                prefix = f"brecha_{i+1}"
-                if i < len(scores):
-                    s = scores[i]
-                    result[f"{prefix}_score"] = f"{int(s.total_score)}/100"
-                    result[f"{prefix}_severity"] = f"{int(s.severity_score)}/40"
-                    result[f"{prefix}_effort"] = f"{int(s.effort_score)}/30"
-                    result[f"{prefix}_impact_score"] = f"{int(s.impact_score)}/30"
-                    result[f"{prefix}_justification"] = s.justification
-                    result[f"{prefix}_rank"] = f"#{s.rank}"
-                else:
-                    result[f"{prefix}_score"] = "N/A"
-                    result[f"{prefix}_severity"] = "N/A"
-                    result[f"{prefix}_effort"] = "N/A"
-                    result[f"{prefix}_impact_score"] = "N/A"
-                    result[f"{prefix}_justification"] = "Sin datos disponibles"
-                    result[f"{prefix}_rank"] = "N/A"
-
-            return result
-
-        except Exception:
-            return self._brecha_scores_empty(4)
-
-    def _brecha_scores_empty(self, count: int = 4) -> Dict[str, str]:
-        """Retorna variables de score vacias para backward compatibility."""
-        result = {}
-        for i in range(count):
-            prefix = f"brecha_{i+1}"
-            result[f"{prefix}_score"] = ""
-            result[f"{prefix}_severity"] = ""
-            result[f"{prefix}_effort"] = ""
-            result[f"{prefix}_impact_score"] = ""
-            result[f"{prefix}_justification"] = ""
-            result[f"{prefix}_rank"] = ""
-        return result
-
-    # Placeholder methods para backward compatibility (fallback en template)
-    def _get_brecha_score_placeholder(self, index: int) -> str:
-        """Placeholder para score - reemplazado por _inject_brecha_scores."""
-        return ""
-
-    def _get_brecha_severity_placeholder(self, index: int) -> str:
-        return ""
-
-    def _get_brecha_effort_placeholder(self, index: int) -> str:
-        return ""
-
-    def _get_brecha_impact_score_placeholder(self, index: int) -> str:
-        return ""
-
-    def _get_brecha_justification_placeholder(self, index: int) -> str:
-        return ""
-
-    def _get_brecha_rank_placeholder(self, index: int) -> str:
-        return ""
 
     def _build_regional_context(self, region: str) -> str:
         """Build regional context text for the hotel location."""

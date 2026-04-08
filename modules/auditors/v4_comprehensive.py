@@ -287,6 +287,18 @@ class V4AuditResult:
                 "actionable_items": self.ia_readiness.actionable_items,
             }
         
+        if self.seo_elements:
+            result["seo_elements"] = {
+                "open_graph": self.seo_elements.open_graph,
+                "imagenes_alt": self.seo_elements.imagenes_alt,
+                "redes_activas": self.seo_elements.redes_activas,
+                "confidence": self.seo_elements.confidence,
+                "notes": self.seo_elements.notes,
+                "open_graph_tags": self.seo_elements.open_graph_tags,
+                "images_without_alt": self.seo_elements.images_without_alt,
+                "social_links_found": self.seo_elements.social_links_found,
+            }
+        
         return result
 
 
@@ -457,6 +469,7 @@ class V4ComprehensiveAuditor:
             "competitor_analysis",
             "ai_crawler_audit",
             "citability_audit",
+            "seo_elements_detection",
             "pagespeed_api",
             "cross_validation"
         ]
