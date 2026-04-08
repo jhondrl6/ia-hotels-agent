@@ -74,7 +74,7 @@ Se implementó scoring completo de 4 componentes y detección real de Open Graph
 > Copiar esta sección a `CHANGELOG.md` al completar todas las fases.
 > Formato según `docs/contributing/documentation_rules.md` §36-58.
 
-## [4.25.4] - 2026-04-08
+## [4.25.3] - 2026-04-08
 
 ### FASE-C (Integration & Validación): Verificación End-to-End Fix AEO Score
 

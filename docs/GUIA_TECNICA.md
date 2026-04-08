@@ -1,10 +1,10 @@
 # Guía Técnica IA Hoteles Agent CLI
 
 **Ultima actualizacion:** 8 Abril 2026
-**Version:** 4.25.4 (Fix AEO Score - Pendiente de datos eliminado)
+**Version:** 4.25.3 (Fix AEO Score - Pendiente de datos eliminado)
 **Audiencia:** Desarrolladores, DevOps, Contribuidores
 
-## Notas de Cambios v4.25.3/v4.25.4 - Fix AEO Score "Pendiente de datos"
+## Notas de Cambios v4.25.3 - Fix AEO Score "Pendiente de datos"
 
 **Fecha:** 8 Abril 2026
 
