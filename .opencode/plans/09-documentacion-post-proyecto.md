@@ -49,10 +49,10 @@
 | FASE-B | `modules/asset_generation/asset_content_validator.py` | Agregar "default" a PLACEHOLDER_PATTERNS |
 | FASE-B | `main.py` | Inyectar scrub en v4complete |
 | FASE-C | `data_models/canonical_assessment.py` | Campo `opportunity_scores` |
-| FASE-C | `modules/commercial_documents/composer.py` | Inyectar scores en brechas |
+| FASE-C | `modules/commercial_documents/v4_diagnostic_generator.py` | Inyectar scores en brechas (reemplaza composer.py) |
 | FASE-C | `modules/financial_engine/calculator_v2.py` | Pesos dinamicos |
 | FASE-D | `modules/onboarding/onboarding_flow.py` | Paso GSC verification |
-| FASE-D | `modules/commercial_documents/composer.py` | Inyectar datos GSC |
+| FASE-D | `modules/commercial_documents/v4_diagnostic_generator.py` | Inyectar datos GSC (reemplaza composer.py) |
 | FASE-D | `config/provider_registry.yaml` | Activar entrada gsc |
 | FASE-E | `modules/asset_generation/asset_catalog.py` | Tipo `local_content_page` |
 
@@ -62,7 +62,7 @@
 |------|--------|-----------------|---------------------|--------------|
 | FASE-A | ⏳ Pendiente | 4 | 1 | 22 |
 | FASE-B | ⏳ Pendiente | 3 | 2 | 22 |
-| FASE-C | ⏳ Pendiente | 1 | 3 | 14 |
+| FASE-C | ✅ Completado | 1 | 3 | 18 |
 | FASE-D | ⏳ Pendiente | 2 | 3 | 18 |
 | FASE-E | ✅ Completado | 4 | 1 | 15 |
 

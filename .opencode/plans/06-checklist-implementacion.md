@@ -9,11 +9,11 @@ Las fases se renumeran A-E. Las fases historicas A/B del CHANGELOG (ciclo AEO) n
 
 | # | ID | Descripcion | Estado | Sesion |
 |---|----|-------------|--------|--------|
-| 1 | FASE-A | Canonical Metrics + Provider Registry + Permission Modes | ✅ Completada | Sesion 1 |
-| 2 | FASE-B | Document Quality Gate + Content Scrubber | ✅ Completada | Sesion 2 |
-| 3 | FASE-C | Priorizacion Ponderada con Impacto Estimado | ⏳ Pendiente | Sesion 3 |
-| 4 | FASE-D | Google Search Console Integration | ⏳ Pendiente | Sesion 4 |
-| 5 | FASE-E | Micro-Content Local Generator | ⏳ Pendiente | Sesion 5 |
+| 1 | FASE-A | Canonical Metrics + Provider Registry + Permission Modes | ✅ Completada | Sesion unificada 2026-04-06 |
+| 2 | FASE-B | Document Quality Gate + Content Scrubber | ✅ Completada | Sesion 2 (2026-04-06) |
+| 3 | FASE-C | Priorizacion Ponderada con Impacto Estimado | ✅ Completada | Sesion unificada 2026-04-06 |
+| 4 | FASE-D | Google Search Console Integration | ✅ Completada | Sesion unificada 2026-04-06 |
+| 5 | FASE-E | Micro-Content Local Generator | ✅ Completada | Sesion unificada 2026-04-06 |
 
 ---
 
@@ -47,17 +47,17 @@ Las fases se renumeran A-E. Las fases historicas A/B del CHANGELOG (ciclo AEO) n
 **Origen**: Analisis comparativo seomachine #1,#2
 
 ### Checklist
-- [ ] `modules/postprocessors/__init__.py` creado
-- [ ] `modules/postprocessors/document_quality_gate.py` creado (3 blocker + 2 warning checks)
-- [ ] `modules/postprocessors/content_scrubber.py` creado (5 reglas, idempotente)
-- [ ] `modules/quality_gates/publication_gates.py` modificado — gate #6
-- [ ] `modules/asset_generation/asset_content_validator.py` modificado — nuevos patterns
-- [ ] Integracion en flujo v4complete (scrub → validate → log → delivery)
-- [ ] `tests/postprocessors/test_document_quality_gate.py` — 12/12 passing
-- [ ] `tests/postprocessors/test_content_scrubber.py` — 10/10 passing
-- [ ] Diagnostico de prueba limpio (sin "default", "COP COP", portugues, "0% confianza")
-- [ ] `python scripts/run_all_validations.py --quick` pasa
-- [ ] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
+- [x] `modules/postprocessors/__init__.py` creado
+- [x] `modules/postprocessors/document_quality_gate.py` creado (3 blocker + 2 warning checks)
+- [x] `modules/postprocessors/content_scrubber.py` creado (5 reglas, idempotente)
+- [x] `modules/quality_gates/publication_gates.py` modificado — gate #6
+- [x] `modules/asset_generation/asset_content_validator.py` modificado — nuevos patterns
+- [x] Integracion en flujo v4complete (scrub → validate → log → delivery)
+- [x] `tests/postprocessors/test_document_quality_gate.py` — 12/12 passing
+- [x] `tests/postprocessors/test_content_scrubber.py` — 10/10 passing
+- [x] Diagnostico de prueba limpio (sin "default", "COP COP", portugues, "0% confianza")
+- [x] `python scripts/run_all_validations.py --quick` pasa
+- [x] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
 
 ---
 
@@ -69,14 +69,14 @@ Las fases se renumeran A-E. Las fases historicas A/B del CHANGELOG (ciclo AEO) n
 **Origen**: Analisis comparativo seomachine #3
 
 ### Checklist
-- [ ] `modules/financial_engine/opportunity_scorer.py` creado (modelo 3 factores)
-- [ ] `data_models/canonical_assessment.py` modificado — campo `opportunity_scores`
-- [ ] `modules/commercial_documents/composer.py` modificado — scores en brechas
-- [ ] `modules/financial_engine/calculator_v2.py` modificado — pesos dinamicos
-- [ ] `tests/financial_engine/test_opportunity_scorer.py` — 14/14 passing
-- [ ] Backward compatible (sin scorer = pesos fijos)
-- [ ] `python scripts/run_all_validations.py --quick` pasa
-- [ ] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
+- [x] `modules/financial_engine/opportunity_scorer.py` creado (modelo 3 factores: severidad 0-40 + esfuerzo 0-30 + impacto 0-30)
+- [x] `data_models/canonical_assessment.py` modificado — campo `opportunity_scores`
+- [x] `modules/commercial_documents/v4_diagnostic_generator.py` modificado — scores en brechas (reemplaza composer.py)
+- [x] `modules/financial_engine/calculator_v2.py` modificado — pesos dinamicos con fallback a fijos
+- [x] `tests/financial_engine/test_opportunity_scorer.py` — 18/18 passing (supera criterio de 14)
+- [x] Backward compatible (sin scorer = pesos fijos)
+- [x] `python scripts/run_all_validations.py --quick` pasa
+- [x] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
 
 ---
 

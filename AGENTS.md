@@ -129,6 +129,7 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `modules/financial_engine/calculator_v2.py` | FinancialCalculatorV2 con validación | v4complete |
 | `modules/financial_engine/no_defaults_validator.py` | Validación "No Defaults in Money" | v4complete |
 | `modules/financial_engine/harness_handlers.py` | Handlers para Agent Harness | v4complete |
+| `modules/financial_engine/opportunity_scorer.py` | Scoring ponderado 3 factores (severidad+esfuerzo+impacto) para priorizar brechas (FASE-C) | v4complete |
 | `modules/orchestration_v4/` | Flujo dos fases: Hook → Validación | v4complete |
 | `modules/asset_generation/` | Generación condicional con gates | v4complete |
 | `modules/asset_generation/asset_catalog.py` | Catálogo centralizado de assets con is_asset_implemented | v4complete |
