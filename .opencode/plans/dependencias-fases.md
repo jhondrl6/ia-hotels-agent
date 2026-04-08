@@ -14,10 +14,11 @@ FASE-A (Data Foundation)
   │  Implementa detección real de OG en seo_elements_detector.py
   │  Output: SEOElementsResult.open_graph funciona con datos reales
   │
-  ├──→ FASE-B (AEO Scoring Rewrite)
+  ├──→ FASE-B (AEO Scoring Rewrite) ✅ COMPLETADA
   │      │
-  │      │  Reescribe _calculate_aeo_score() usando datos de FASE-A
+  │      │  Reescribe _calculate_aeo_score() con 4 componentes × 25pts
   │      │  Output: AEO score calcula 0-100 en vez de "Pendiente de datos"
+  │      │  Tests: 15/15 pasan. 0 regresiones.
   │      │
   │      ├──→ FASE-C (Integration & Validation)
   │             │

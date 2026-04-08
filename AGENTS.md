@@ -1,8 +1,8 @@
-<!-- agents_version: 4.25.2 | last_update: 2026-04-08 -->
+<!-- agents_version: 4.25.3 | last_update: 2026-04-08 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.25.2 -- AEO OG Fix - FASE-A COMPLETADO**
+> **v4.25.3 -- AEO Scoring Rewrite - FASE-B COMPLETADO**
 
 ---
 

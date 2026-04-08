@@ -1,5 +1,36 @@
 # Changelog
 
+## [4.25.3] - 2026-04-08
+
+### FASE-B (AEO Scoring Rewrite): _calculate_aeo_score() con 4 componentes
+- `modules/commercial_documents/v4_diagnostic_generator.py` - `_calculate_aeo_score()` reescrito (método 1324-1346):
+  - **ANTES**: solo verificaba `performance.mobile_score` → "0 (Pendiente de datos)" si PageSpeed fallaba
+  - **AHORA**: scoring de 4 componentes × 25pts = 100pts:
+    - Schema Hotel válido → +25pts (detectado no válido → +10pts)
+    - FAQ Schema válido → +25pts (detectado no válido → +10pts)
+    - Open Graph detectado → +25pts (vía `hasattr` para compatibilidad)
+    - Citabilidad tiers → ≥70→+25, ≥40→+15, >0→+5, None→0pts
+  - Retorna string numérico ("0", "25", "50", etc.) compatible con `_get_score_status()`
+  - Usa `hasattr()` para `seo_elements` y `citability` (campos opcionales en V4AuditResult)
+- Docstring actualizado refleja implementación exacta
+- Elimina el comportamiento "Pendiente de datos" cuando hay al menos 1 componente con datos
+
+### Archivos Nuevos
+| Archivo | Descripcion |
+|---------|-------------|
+| `tests/commercial_documents/test_aeo_score.py` | 15 tests: all_valid, only_schema, schema_detected_not_valid, only_og, citability_tiers (4 niveles), no_data, none_result, max_100, int_conversion, get_score_status (2), realistic_hotel |
+
+### Dependencias
+- FASE-A completada (OG detection funcional en seo_elements_detector.py)
+- No modifica seo_elements_detector.py
+- No modifica templates (eso es FASE-C)
+- No agrega campos nuevos a V4AuditResult
+
+### Tests
+- 15 tests nuevos en `tests/commercial_documents/test_aeo_score.py`
+- 0 regresiones en suite existente
+- `run_all_validations.py --quick` 4/4 pasan
+
 ## [4.25.2] - 2026-04-08
 
 ### FASE-A (AEO OG Fix): Deteccion Real de Open Graph

@@ -1323,27 +1323,59 @@ ${quick_wins_list}
     
     def _calculate_aeo_score(self, audit_result: V4AuditResult) -> str:
         """Calculate AEO (AI Engine Optimization) Infrastructure score.
-        
-        Measures: Schema Hotel + FAQ + Reviews + Open Graph.
-        All directly measurable from web audit.
-        Returns formatted string: "XX/100" when measured, "—" when not measured.
+
+        Measures 4 components (25pts each, 100pts total):
+        - Schema Hotel válido (25pts): hotel_schema_valid detectado y válido
+        - FAQ Schema válido (25pts): faq_schema_valid detectado y válido
+        - Open Graph detectado (25pts): og:title + og:description presentes
+        - Citabilidad (25pts): contenido citable por IAs (score > umbral)
+
+        Returns: "XX" string when measured, "0" when no data available.
         """
-        score = 0
-        has_real_data = False
-        
         if not audit_result:
-            return "0 (Pendiente de datos)"
-        
-        # Check if we have real performance data
-        if audit_result.performance and audit_result.performance.mobile_score is not None:
-            has_real_data = True
-            if audit_result.performance.mobile_score >= 50:
-                score += 20
-        
-        if not has_real_data:
-            # Audit ran but PageSpeed data unavailable — return 0 instead of "—"
-            return "0 (Pendiente de datos)"
-        return f"{min(100, int(score))}"
+            return "0"
+
+        score = 0
+        components_measured = 0
+
+        # 1. Schema Hotel válido (25 pts)
+        if audit_result.schema:
+            components_measured += 1
+            if audit_result.schema.hotel_schema_valid:
+                score += 25
+            elif audit_result.schema.hotel_schema_detected:
+                score += 10  # Detectado pero no válido = puntos parciales
+
+        # 2. FAQ Schema válido (25 pts)
+        if audit_result.schema:
+            components_measured += 1
+            if audit_result.schema.faq_schema_valid:
+                score += 25
+            elif audit_result.schema.faq_schema_detected:
+                score += 10  # Detectado pero no válido = puntos parciales
+
+        # 3. Open Graph detectado (25 pts)
+        if hasattr(audit_result, 'seo_elements') and audit_result.seo_elements:
+            components_measured += 1
+            if getattr(audit_result.seo_elements, 'open_graph', False):
+                score += 25
+
+        # 4. Citabilidad (25 pts)
+        if hasattr(audit_result, 'citability') and audit_result.citability and audit_result.citability.overall_score is not None:
+            components_measured += 1
+            cit_score = audit_result.citability.overall_score
+            if cit_score >= 70:
+                score += 25
+            elif cit_score >= 40:
+                score += 15
+            elif cit_score > 0:
+                score += 5
+
+        # Solo retornar "0" si NINGÚN componente tuvo datos
+        if components_measured == 0:
+            return "0"
+
+        return str(min(100, score))
     
     # IAO y Voice Readiness eliminados en FASE-CAUSAL-01 (redundantes con AEO)
     # ---------------------------------------------------------------

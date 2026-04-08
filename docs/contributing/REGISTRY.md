@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
 > **Ultima actualizacion:** 2026-04-08
-> **Version actual:** v4.25.1
-> **Total fases completadas:** 47
+> **Version actual:** v4.25.2
+> **Total fases completadas:** 49
 
 ---
 
@@ -1609,6 +1609,44 @@ Modulo DocumentQualityGate con 3 blocker checks (placeholder_region, duplicate_c
 ---
 
 
+## FASE-B (AEO Scoring Rewrite) - 2026-04-08
+**Descripcion:** Reescribir `_calculate_aeo_score()` con scoring de 4 componentes × 25pts (Schema Hotel + FAQ + OG + Citabilidad). Elimina el stub que siempre retornaba "0 (Pendiente de datos)" cuando PageSpeed API no retornaba datos.
+
+**Problema resuelto:** `_calculate_aeo_score()` (v4_diagnostic_generator.py:1324) solo verificaba `performance.mobile_score`. Si PageSpeed API fallaba → "0 (Pendiente de datos)" incluso cuando schema, FAQ y OG estaban disponibles. Los datos existían en `V4AuditResult` pero no se usaban para el scoring AEO.
+
+**Implementacion:**
+- Componente 1: Schema Hotel válido → +25pts (detectado no válido → +10pts)
+- Componente 2: FAQ Schema válido → +25pts (detectado no válido → +10pts)
+- Componente 3: Open Graph detectado → +25pts (vía `hasattr` por compatibilidad con `V4AuditResult` de data_structures.py)
+- Componente 4: Citabilidad tiers → ≥70→+25, ≥40→+15, >0→+5, None→0pts
+- Compatibilidad con `_get_score_status()` verificada (retorna string numérico, `int()` no falla)
+- Docstring actualizado refleja exactamente la implementación
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/commercial_documents/test_aeo_score.py` | NUEVO | 15 tests: all_valid, only_schema, schema_detected_not_valid, only_og, citability_tiers (4), no_data, none_result, max_100, int_compat (2), realistic_hotel |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | `_calculate_aeo_score()` reescrito (1324-1346→1324-1378): lógica 4 componentes con `hasattr` para seo_elements/citability |
+
+### Dependencias
+- FASE-A completada (OG detection funcional en seo_elements_detector.py)
+- No modifica seo_elements_detector.py, no modifica templates, no agrega campos a V4AuditResult
+
+### Validaciones
+- [x] Tests passing (15/15 AEO + 0 regresiones)
+- [x] `run_all_validations.py --quick` 4/4 pasan
+- [x] log_phase_completion.py ejecutado
+- [x] dependencias-fases.md actualizado
+- [x] 06-checklist-implementacion.md actualizado
+- [x] CHANGELOG.md actualizado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
@@ -1664,6 +1702,7 @@ Modulo DocumentQualityGate con 3 blocker checks (placeholder_region, duplicate_c
 | FASE-7 | 2026-03-30 | N/A | ✅ Complete |
 | FASE-8 | 2026-03-30 | N/A | ✅ E2E Pass |
 | FASE-RELEASE-4.11.0 | 2026-03-30 | N/A | ✅ Complete |
+|| FASE-A (AEO OG Fix) | 2026-04-08 | 9 | ✅ Complete |
+|| FASE-B (AEO Scoring) | 2026-04-08 | 15 | ✅ Complete |
 | GAP-IAO-01-05 | 2026-03-31 | N/A | ✅ Complete |
 | GAP-IAO-01-05-REFINEMENT | 2026-04-01 | 22 | ✅ Complete |
-| FASE-A (AEO OG Fix) | 2026-04-08 | 9 | ✅ Complete |
