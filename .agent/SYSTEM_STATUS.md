@@ -1,43 +1,56 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-04-07 12:08:30
-> NO EDITAR MANUALMENTE - Este archivo se regenera automáticamente
+> Auto-generado: 2026-04-08 21:34:21 UTC
+> Fuente de verdad para version: VERSION.yaml en raiz del proyecto
+> REGENERAR CON: python scripts/doctor.py --status
+> NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
 
 ## Versiones
 
-| Componente | Versión | Fuente |
+| Componente | Version | Fuente |
 |------------|---------|--------|
-| Proyecto | 4.25.0 | VERSION.yaml |
-| Plan Maestro | v2.6.0 | plan_maestro_data.json |
-| Agent Harness | 3.2.0 | agent_harness/__init__.py |
+| Proyecto | 4.25.3 | VERSION.yaml |
+| Ecosystem Convention | 1.0.0 | .agent/CONVENTION.md |
 
 ## Skills Activas (16)
 
-| Skill | Trigger | Ubicación |
-|-------|---------|-----------|
-| Generar el kit de entrega completo para el hotel. | materializa la propuesta | delivery_wizard.md |
-| Asistente para el despliegue de kits AEO en sitios WordPress del hotel. | ayúdame a instalar | deployment_assistant.md |
-| Solucionar fallos de entorno y configuración de API Keys. | Fallo de API key | env_rerun.md |
-| Protocolo de auto-mantenimiento para la arquitectura de skills. | Audita el sistema de skills | maintenance_autopilot.md |
-| Fábrica agéntica para la creación de nuevas Meta-Skills. | Aprende a... | meta_skill_creator.md |
-| Monitoreo y control de tareas ejecutadas en segundo plano. | monitorea tareas | monitor_bg.md |
-| Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. | Ejecuta por fases | phased_project_executor.md |
-| Auditoría técnica y aceleración de credibilidad web para hoteles. | mejorar velocidad | seo_technical.md |
-| Validar y certificar la veracidad de los datos financieros de un hotel antes de emitir un diagnóstico. | Usar SIEMPRE que se inicie una auditoría (`audi... | truth_protocol.md |
-| Generate assets conditionally based on preflight checks and confidence gates. | Execute ONLY after coherence validation passes ... | v4_asset_conditional.md |
-| Complete v4.0 workflow - Two-phase onboarding with validation, scenarios, and conditional asset generation. | Main entry point for v4.0 comprehensive analysi... | v4_complete.md |
-| Calculate financial scenarios (Conservative, Realistic, Optimistic) using v4.0 financial engine. | Execute during Phase 2 of onboarding after rece... | v4_financial_scenarios.md |
-| Validador integral de calidad del flujo v4. Fase A (pre-generación): coherencia estructural. Fase B (post-entrega): QA de entregables. | N/A | v4_quality_validator.md |
-| Resolve regional ADR and benchmarks using plan_maestro_data.json with Agent Harness. | N/A | v4_regional_resolver.md |
-| Ejecutor de validación post-implementación para el flujo v4complete. | validar v4complete | v4_regression_guardian.md |
-| Escáner de vigilancia ligera y alertas de anomalías. | escáner ligero | watchdog_check.md |
+| Skill | Descripcion |
+|-------|-------------|
+| delivery_wizard.md | Generar el kit de entrega completo para el hotel. |
+| deployment_assistant.md | Asistente para el despliegue de kits AEO en sitios WordPress del hotel. |
+| env_rerun.md | Solucionar fallos de entorno y configuración de API Keys. |
+| maintenance_autopilot.md | Protocolo de auto-mantenimiento para la arquitectura de skills. |
+| meta_skill_creator.md | Fábrica agéntica para la creación de nuevas Meta-Skills. |
+| monitor_bg.md | Monitoreo y control de tareas ejecutadas en segundo plano. |
+| phased_project_executor.md | Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. |
+| seo_technical.md | Auditoría técnica y aceleración de credibilidad web para hoteles. |
+| truth_protocol.md | Validar y certificar la veracidad de los datos financieros de un hotel antes de emitir un diagnóstico. |
+| v4_asset_conditional.md | Generate assets conditionally based on preflight checks and confidence gates. |
+| v4_complete.md | Complete v4.0 workflow - Two-phase onboarding with validation, scenarios, and conditional asset generation. |
+| v4_financial_scenarios.md | Calculate financial scenarios (Conservative, Realistic, Optimistic) using v4.0 financial engine. |
+| v4_quality_validator.md | Validador integral de calidad del flujo v4. Fase A (pre-generación): coherencia estructural. Fase B (post-entrega): QA de entregables. |
+| v4_regional_resolver.md | Resolve regional ADR and benchmarks using plan_maestro_data.json with Agent Harness. |
+| v4_regression_guardian.md | Ejecutor de validación post-implementación para el flujo v4complete. |
+| watchdog_check.md | Escáner de vigilancia ligera y alertas de anomalías. |
 
-## Última Validación
 
-- Fecha: 2026-04-07 12:08:30
-- Estado: ⏳ Pendiente de ejecución
+## Estado de Datos
 
-## Próximos Pasos
+| Metrica | Valor |
+|---------|-------|
+| Shadow logs | 775 archivos JSON |
+| Sesiones activas | 101 |
+| Sesiones archivadas | 6 |
+| Ultimo shadow log | 20260408_145950_de54d5f3.json |
+| Ultima sesion activa | 2026-04-08_3790eb40.json |
+| Ultimo contexto actualizado | 2026-04-08T14:58:38.082463+00:00 |
+| Ultima URL procesada | https://www.hotelvisperas.com/es |
 
-1. Ejecutar `python scripts/validate_context_integrity.py`
-2. Revisar resultados arriba
+## Validaciones
+
+Ejecuta `python main.py --doctor` para verificar el estado completo del ecosistema.
+
+Scripts de validacion:
+- `python scripts/validate_agent_ecosystem.py` -- Ecosistema de agentes
+- `python scripts/validate_context_integrity.py` -- Integridad de contexto
+- `python scripts/doctor.py --status` -- Regenerar este archivo

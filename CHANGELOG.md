@@ -31,6 +31,19 @@
 - 0 regresiones en suite existente
 - `run_all_validations.py --quick` 4/4 pasan
 
+### FASE-C (Bugfix Critico): 4 Bugs en v4_diagnostic_generator
+- `modules/commercial_documents/v4_diagnostic_generator.py` - 4 correcciones criticas:
+  - **BUG-1 (L8)**: `import logging` faltante — NameError cuando GA4 falla en handler except
+  - **BUG-2 (L2017)**: `getattr(citability_score, 'overall_score', None)` en vez de `'score'` — Brecha 10 (Contenido No Citable) nunca se detectaba
+  - **BUG-3 (L2006)**: `getattr(..., 'open_graph', False)` en vez de `'has_open_graph', True` — Brecha 9 (Sin OG Tags) nunca se detectaba
+  - **BUG-4 (L1000)**: `mobile_score is not None` en vez de truthy check — alerta de performance=0 se saltaba por short-circuit
+- `tests/commercial_documents/test_diagnostic_brechas.py` - Mocks actualizados:
+  - `mock_seo_elements`: `m.open_graph` (era `m.has_open_graph`)
+  - `mock_citability`: `m.overall_score` (era `m.score`)
+  - `test_identify_brechas_7_...` renombrado a `8_...` (brecha no_faq_schema preexistente)
+- Tests: 12/12 pasaron (modulo afectado), 0 regresiones introducidas
+- Validaciones: `run_all_validations.py --quick` 4/4 PASS
+
 ### FASE-C (Integration & Validación): Verificación End-to-End
 - Verificación completa del fix AEO score — sin cambios de código, solo validación:
   - Template v6: `${aeo_score}` renderiza número (ej: "50/100"), NO "0 (Pendiente de datos)/100"
