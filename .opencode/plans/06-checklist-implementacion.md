@@ -2,10 +2,10 @@
 
 **Version Base**: 4.25.3
 **Fecha**: 2026-04-08
-**Progreso General**: 0%
+**Progreso General**: 20% (1/5 fases)
 
 ```
-[          ] FASE-C: 4 Bugs Criticos
+[x] FASE-C: 4 Bugs Criticos
 [          ] FASE-D: 5 Bugs Medios + Serializacion
 [          ] FASE-E: OG Detection HTML Reuse
 [          ] FASE-F: Zombies + Code Smells
@@ -29,13 +29,13 @@
 - [x] **C6**: Todos los tests pasan (12 funciones modulo afectado)
 - [x] **C7**: No se introdujeron nuevos warnings o errores de lint
 - [x] **C8**: `log_phase_completion.py --fase FASE-C` ejecutado exitosamente
-- [ ] **C9**: Commit realizado con mensaje descriptivo
+- [x] **C9**: Commit realizado con mensaje descriptivo
 
 ### Post-Ejecucion
 
-- Fecha de completion: ___
-- Tests post-fase: ___
-- Issues encontrados: ___
+- Fecha de completion: 2026-04-08
+- Tests post-fase: 12/12 (modulo afectado)
+- Issues encontrados: Test `test_identify_brechas_7_detected_returns_7` actualizado a 8 (brecha no_faq_schema preexistente)
 
 ---
 
