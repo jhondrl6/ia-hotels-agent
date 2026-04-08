@@ -7,6 +7,7 @@ v4.0 audit results with confidence-based validation.
 
 import logging
 import os
+import re
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 from datetime import datetime
@@ -441,7 +442,6 @@ ${quick_wins_list}
         
         # Additional variables for the sales template
         # Extract year from generated_at or use current year
-        from datetime import datetime
         year = datetime.now().year
         prev_year = year - 1
         
@@ -488,7 +488,7 @@ ${quick_wins_list}
             'realistic_description': financial_scenarios.realistic.description,
             'realistic_assumptions': self._format_list(financial_scenarios.realistic.assumptions),
             
-            'optimistic_range': f"{self._format_scenario_amount(financial_scenarios.optimistic.monthly_loss_min)} - {self._format_scenario_amount(financial_scenarios.optimistic.monthly_loss_max)}",
+            'optimistic_range': f"{format_cop(financial_scenarios.optimistic.monthly_loss_min)} - {format_cop(financial_scenarios.optimistic.monthly_loss_max)}",
             'optimistic_description': financial_scenarios.optimistic.description,
             'optimistic_assumptions': self._format_list(financial_scenarios.optimistic.assumptions),
             
@@ -506,14 +506,14 @@ ${quick_wins_list}
             'aeo_regional': aeo_regional,
             
             # 4 Pilares Scores (using dynamic regional benchmarks)
-            'geo_score': self._calculate_geo_score(audit_result),
-            'geo_status': self._get_score_status(self._calculate_geo_score(audit_result), geo_regional['value']),
-            'activity_score': self._calculate_competitive_score(audit_result),
-            'activity_status': self._get_score_status(self._calculate_competitive_score(audit_result), competitive_regional['value']),
-            'web_score': self._calculate_web_score(audit_result),
-            'web_status': self._get_score_status(self._calculate_web_score(audit_result), seo_regional['value']),
-            'schema_infra_score': self._calculate_aeo_score(audit_result),
-            'schema_infra_status': self._get_score_status(self._calculate_aeo_score(audit_result), aeo_regional['value']),
+            'geo_score': (geo_sc := self._calculate_geo_score(audit_result)),
+            'geo_status': self._get_score_status(geo_sc, geo_regional['value']),
+            'activity_score': (act_sc := self._calculate_competitive_score(audit_result)),
+            'activity_status': self._get_score_status(act_sc, competitive_regional['value']),
+            'web_score': (web_sc := self._calculate_web_score(audit_result)),
+            'web_status': self._get_score_status(web_sc, seo_regional['value']),
+            'schema_infra_score': (aeo_sc := self._calculate_aeo_score(audit_result)),
+            'schema_infra_status': self._get_score_status(aeo_sc, aeo_regional['value']),
             # iao_score/iao_status/voice_readiness eliminados en FASE-CAUSAL-01
             
             # Brechas (4 Razones)
@@ -530,30 +530,7 @@ ${quick_wins_list}
             'brecha_4_costo': self._get_brecha_costo(audit_result, financial_scenarios, 3),
             'brecha_4_detalle': self._get_brecha_detalle(audit_result, 3),
 
-            'brecha_1_score': self._get_brecha_score_placeholder(0),
-            'brecha_1_severity': self._get_brecha_severity_placeholder(0),
-            'brecha_1_effort': self._get_brecha_effort_placeholder(0),
-            'brecha_1_impact_score': self._get_brecha_impact_score_placeholder(0),
-            'brecha_1_justification': self._get_brecha_justification_placeholder(0),
-            'brecha_1_rank': self._get_brecha_rank_placeholder(0),
-            'brecha_2_score': self._get_brecha_score_placeholder(1),
-            'brecha_2_severity': self._get_brecha_severity_placeholder(1),
-            'brecha_2_effort': self._get_brecha_effort_placeholder(1),
-            'brecha_2_impact_score': self._get_brecha_impact_score_placeholder(1),
-            'brecha_2_justification': self._get_brecha_justification_placeholder(1),
-            'brecha_2_rank': self._get_brecha_rank_placeholder(1),
-            'brecha_3_score': self._get_brecha_score_placeholder(2),
-            'brecha_3_severity': self._get_brecha_severity_placeholder(2),
-            'brecha_3_effort': self._get_brecha_effort_placeholder(2),
-            'brecha_3_impact_score': self._get_brecha_impact_score_placeholder(2),
-            'brecha_3_justification': self._get_brecha_justification_placeholder(2),
-            'brecha_3_rank': self._get_brecha_rank_placeholder(2),
-            'brecha_4_score': self._get_brecha_score_placeholder(3),
-            'brecha_4_severity': self._get_brecha_severity_placeholder(3),
-            'brecha_4_effort': self._get_brecha_effort_placeholder(3),
-            'brecha_4_impact_score': self._get_brecha_impact_score_placeholder(3),
-            'brecha_4_justification': self._get_brecha_justification_placeholder(3),
-            'brecha_4_rank': self._get_brecha_rank_placeholder(3),
+
 
             
             # Additional variables for sales template
@@ -898,7 +875,6 @@ ${quick_wins_list}
                 # Parse price range like "$100 - $200" or "$150"
                 price_str = str(props['priceRange'])
                 # Extract numbers from string
-                import re
                 numbers = re.findall(r'[\d,]+', price_str)
                 if numbers:
                     # Take the average of min and max if range, or just the number
@@ -1207,7 +1183,7 @@ ${quick_wins_list}
               - detail (str): Human-readable explanation for transparency.
         """
         # --- TIER 1: Real competitor data (only for GEO, which competitors have) ---
-        if pillar == 'geo' and audit_result and audit_result.competitors:
+        if pillar == 'geo' and audit_result and hasattr(audit_result, 'competitors') and audit_result.competitors:
             valid = [
                 c['geo_score']
                 for c in audit_result.competitors
@@ -1266,7 +1242,7 @@ ${quick_wins_list}
         """
         if not audit_result or not audit_result.gbp or not audit_result.gbp.place_found:
             return "0"
-        if not audit_result.competitors:
+        if not hasattr(audit_result, 'competitors') or not audit_result.competitors:
             return "0"
 
         # Gather competitor geo_scores
@@ -1479,7 +1455,6 @@ ${quick_wins_list}
                 "data_source": "estimado",
                 "summary_text": "Visibilidad IA: No evaluado (sin datos de auditoria).",
                 "iao_qualitative": "Baja",
-                "iao_score": 0,
                 "signals": ["Sin datos de auditoria"],
             }
 
@@ -1550,7 +1525,6 @@ ${quick_wins_list}
             "data_source": "estimado",
             "summary_text": f"Visibilidad en IA: {label} (estimado cualitativo). Senales: " + "; ".join(signals[:4]),
             "iao_qualitative": label,
-            "iao_score": points,
             "signals": signals,
         }
 
@@ -1608,7 +1582,8 @@ ${quick_wins_list}
         """Get resumen de una línea de la brecha by index."""
         brechas = self._identify_brechas(audit_result)
         if index < len(brechas):
-            return brechas[index].get('detalle', 'Sin resumen')[:80] + '...' if len(brechas[index].get('detalle', '')) > 80 else brechas[index].get('detalle', 'Sin resumen')
+            detalle = brechas[index].get('detalle', 'Sin resumen')
+            return detalle[:80] + '...' if len(detalle) > 80 else detalle
         return "brecha no identificada"
     
 
@@ -1673,7 +1648,6 @@ ${quick_wins_list}
             if not win:
                 continue
             # Remove existing numbering from _build_quick_wins to avoid duplication
-            import re
             cleaned = re.sub(r'^\d+\.\s*', '', win)
             content_lines.append(f"{i}. {cleaned}")
         return '\n'.join(content_lines)

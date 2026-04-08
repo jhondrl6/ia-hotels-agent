@@ -246,7 +246,7 @@ git diff --stat
 | 5 | Capability contracts (no cambia) | ✅ Verificado |
 | 6 | `scripts/doctor.py --status` | ⏭️ Omitido (sin cambio de version) |
 | 7 | Symlink check | ✅ Verificado |
-| 8 | `run_all_validations.py --quick` | ⏭️ Pendiente (requiere fixes FASE-F) |
+| 8 | `run_all_validations.py --quick` | ✅ Resuelto por FASE-F |
 
 **Archivos de FASE-E**:
 | Archivo | Cambio |
@@ -259,22 +259,22 @@ git diff --stat
 
 | Paso | Comando/Archivo | Estado |
 |------|-----------------|--------|
-| 1 | `log_phase_completion.py --fase FASE-F` | Pendiente |
-| 2 | `sync_versions.py --check` | Pendiente |
-| 3 | CHANGELOG.md entrada v4.25.x FASE-F | Pendiente |
-| 4 | GUIA_TECNICA.md (limpieza, no afecta arquitectura -- puede omitirse) | Opcional |
-| 5 | Capability contracts (no cambia) | Pendiente |
-| 6 | `main.py --doctor --status` | Pendiente |
-| 7 | Symlink check | Pendiente |
-| 8 | `run_all_validations.py --quick` | Pendiente |
+| 1 | `log_phase_completion.py --fase FASE-F` | ✅ Completado |
+| 2 | `sync_versions.py --check` | ⏭️ Pendiente |
+| 3 | CHANGELOG.md entrada v4.25.x FASE-F | ⏭️ Pendiente (al final de release) |
+| 4 | GUIA_TECNICA.md (limpieza, no afecta arquitectura -- puede omitirse) | ⏭️ Opcional |
+| 5 | Capability contracts (no cambia) | ✅ N/A |
+| 6 | `main.py --doctor --status` | ⏭️ Pendiente |
+| 7 | Symlink check | ⏭️ Pendiente |
+| 8 | `run_all_validations.py --quick` | ⏭️ Pendiente |
 
 **Archivos de FASE-F**:
 | Archivo | Cambio |
 |---------|--------|
-| `templates/diagnostico_ejecutivo.md` | Eliminar fila IAO (ZMB-1) |
-| `templates/diagnostico_v4_template.md` | Eliminar filas IAO+Voice (ZMB-2) |
-| `modules/commercial_documents/v4_diagnostic_generator.py` | ZMB-3 + MEN-1..7 (~20 lineas) |
-| `modules/utils/benchmarks.py` | ZMB-4: eliminar iao_score key |
+| `templates/diagnostico_ejecutivo.md` | ✅ IAO row eliminada (ZMB-1) |
+| `templates/diagnostico_v4_template.md` | ✅ IAO+Voice rows eliminadas (ZMB-2) |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | ✅ ZMB-3 + MEN-1..7 + 24 phantom placeholders eliminados (~50 lineas) |
+| `modules/utils/benchmarks.py` | ✅ ZMB-4: iao_score key eliminada |
 
 ---
 

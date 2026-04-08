@@ -30,7 +30,7 @@ DEFAULT_DATA: Dict[str, Any] = {
             "factor_perdida_base": 0.06,
             "factor_captura_fuente": "Indice AILA Colombia (estimado)",
             "riesgo_ocupacion": "medio",
-            "benchmarks": {"gbp_score": 48, "schema_score": 38, "iao_score": 18},
+            "benchmarks": {"gbp_score": 48, "schema_score": 38},
         }
     },
     "paquetes_servicios_v23": {

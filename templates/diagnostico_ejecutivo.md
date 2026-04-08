@@ -12,7 +12,6 @@ Su hotel esta dejando de percibir **~= ${perdida_mensual:,.0f} COP/mes** en rese
 |-------|-------|----------------------|
 | GEO   | {geo_score}/100 | {geo_comparativo} {geo_icon} |
 | AEO   | {aeo_score}/100 | {aeo_comparativo} {aeo_icon} |
-| IAO   | {iao_score}/100 | {iao_comparativo} {iao_icon} |
 
 > Benchmark: {benchmark_referencia}
 

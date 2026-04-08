@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-08
 > **Version actual:** v4.25.2
-> **Total fases completadas:** 51
+> **Total fases completadas:** 52
 
 ---
 
@@ -1718,6 +1718,28 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (62 passed, 1 pre-existing fail)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-F - 2026-04-08
+**Descripcion:** Remove zombie IAO/voice refs (ZMB-1..4) + fix 7 code smells (MEN-1..7) + remove 24 phantom placeholder calls in v4_diagnostic_generator
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/templates/diagnostico_v4_template.md` | Diagnostico V4 Template |
+| `templates/diagnostico_ejecutivo.md` | Diagnostico Ejecutivo |
+| `modules/utils/benchmarks.py` | Benchmarks |
+
+### Validaciones
+- [x] Tests passing (51 passed)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

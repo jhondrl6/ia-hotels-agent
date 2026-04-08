@@ -38,8 +38,7 @@ generator: IA_Hoteles_v4
 | Activity (GBP) | ${activity_score}/100 | 30/100 | ${activity_status} |
 | SEO | ${web_score}/100 | 70/100 | ${web_status} |
 | Schema Infrastructure | ${schema_infra_score} | 40/100 | ${schema_infra_status} |
-| Voice Readiness (AEO) | ${voice_readiness_score} | — | ${voice_readiness_status} |
-| IAO | ${iao_score} | 20/100 | ${iao_status} |
+
 
 **Está perdiendo aproximadamente ${main_scenario_amount}/mes**
 
