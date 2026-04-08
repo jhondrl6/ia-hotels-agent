@@ -38,11 +38,11 @@ FASE-D (GSC Integration) ◄── usa provider_registry + canonical_metrics de 
 
 | # | ID | Descripcion | Depende de | Prioridad | Origen |
 |---|-----|-------------|-----------|-----------|--------|
-| 1 | FASE-A | Canonical Metrics + Provider Registry + Permission Modes | Ninguna | MEDIA | Goose patterns |
-| 2 | FASE-B | Document Quality Gate + Content Scrubber | Ninguna (A es nice-to-have) | **ALTA** | seomachine #1,#2 |
-| 3 | FASE-C | Priorizacion Ponderada con Impacto Estimado | B (docs pasan QA) | ALTA | seomachine #3 |
-| 4 | FASE-D | Google Search Console Integration | A (registry), C (scores) | MEDIA | seomachine #4 |
-| 5 | FASE-E | Micro-Content Local Generator | B (QA del contenido) | BAJA | seomachine #5 |
+| 1 | FASE-A | Canonical Metrics + Provider Registry + Permission Modes | Ninguna | MEDIA | Goose patterns | ✅ COMPLETADO |
+| 2 | FASE-B | Document Quality Gate + Content Scrubber | Ninguna (A es nice-to-have) | **ALTA** | seomachine #1,#2 | ✅ COMPLETADO |
+| 3 | FASE-C | Priorizacion Ponderada con Impacto Estimado | B (docs pasan QA) | ALTA | seomachine #3 | ✅ COMPLETADO |
+| 4 | FASE-D | Google Search Console Integration | A (registry), C (scores) | MEDIA | seomachine #4 | ✅ COMPLETADO |
+| 5 | FASE-E | Micro-Content Local Generator | B (QA del contenido) | BAJA | seomachine #5 | ✅ COMPLETADO |
 
 ## FASE-CORRECCION: Bug Fixes (E2E Crash Recovery) — 2026-04-07 ✅ COMPLETADO
 
@@ -121,7 +121,7 @@ de FASE-C tendran bugs de contenido visibles al cliente.
 | `main.py` | HOTFIX-1 (Path fix + region), HOTFIX-3 (LocalContent) | Secciones distintas, sin conflicto |
 | `v4_diagnostic_generator.py` | HOTFIX-1 (region fallback), HOTFIX-2 (scores, COP COP) | HOTFIX-2 va despues de HOTFIX-1 |
 | `templates/` | HOTFIX-2 (COP COP en templates) | Solo HOTFIX-2 |
-| `composer.py` | C (scores), D (GSC data) | D va despues de C, sin conflicto |
+| `v4_diagnostic_generator.py` | C (scores), D (GSC data) | D va despues de C, sin conflicto |
 | `config/provider_registry.yaml` | A (crea con gsc anticipado), D (verifica) | A incluye entrada gsc con status pending |
 | `publication_gates.py` | B (agrega gate #6) | Solo B lo toca |
 

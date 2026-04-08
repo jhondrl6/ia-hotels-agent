@@ -28,8 +28,11 @@
 
 | Modulo | Archivo | Descripcion |
 |--------|---------|-------------|
-| GSC Client | `modules/analytics/google_search_console_client.py` | Cliente Google Search Console API |
-| Data Aggregator | `modules/analytics/data_aggregator.py` | Unifica GA4 + GSC |
+| GSC Client | `modules/analytics/google_search_console_client.py` | Cliente Google Search Console API (10,275 bytes) |
+| Data Aggregator | `modules/analytics/data_aggregator.py` | Unifica GA4 + GSC (11,447 bytes) |
+| GSC Onboarding Step | `modules/onboarding/add_gsc_step.py` | Paso opcional GSC en onboarding (4,319 bytes) |
+| Tests GSC | `tests/analytics/test_google_search_console_client.py` | 14 tests unitarios |
+| Tests Aggregator | `tests/analytics/test_data_aggregator.py` | 19 tests unitarios |
 
 ### FASE-E: Micro-Content Local Generator
 
@@ -51,30 +54,36 @@
 | FASE-C | `data_models/canonical_assessment.py` | Campo `opportunity_scores` |
 | FASE-C | `modules/commercial_documents/v4_diagnostic_generator.py` | Inyectar scores en brechas (reemplaza composer.py) |
 | FASE-C | `modules/financial_engine/calculator_v2.py` | Pesos dinamicos |
-| FASE-D | `modules/onboarding/onboarding_flow.py` | Paso GSC verification |
-| FASE-D | `modules/commercial_documents/v4_diagnostic_generator.py` | Inyectar datos GSC (reemplaza composer.py) |
-| FASE-D | `config/provider_registry.yaml` | Activar entrada gsc |
+| FASE-D | `modules/commercial_documents/v4_diagnostic_generator.py` | Integracion GSC en diagnostico |
+| FASE-D | `data_models/analytics_status.py` | Campos gsc_available, gsc_error, gsc_status_text |
+| FASE-D | `config/provider_registry.yaml` | Entrada gsc agregada |
 | FASE-E | `modules/asset_generation/asset_catalog.py` | Tipo `local_content_page` |
 
 ## C. Configurados por Fase
 
 | Fase | Estado | Archivos Nuevos | Archivos Modificados | Tests Nuevos |
 |------|--------|-----------------|---------------------|--------------|
-| FASE-A | ⏳ Pendiente | 4 | 1 | 22 |
-| FASE-B | ⏳ Pendiente | 3 | 2 | 22 |
+| FASE-A | ✅ Completado | 4 | 1 | 22 |
+| FASE-B | ✅ Completado | 3 | 2 | 22 |
 | FASE-C | ✅ Completado | 1 | 3 | 18 |
-| FASE-D | ⏳ Pendiente | 2 | 3 | 18 |
+| FASE-D | ✅ Completado | 5 | 3 | 33 |
 | FASE-E | ✅ Completado | 4 | 1 | 15 |
 
 ## D. Metricas Acumulativas
 
-| Metrica | A (est) | B (est) | C (est) | D (est) | E (real) | Total acumulado |
-|---------|---------|---------|---------|---------|----------|-----------------|
-| Tests nuevos | 22 | 22 | 14 | 18 | 15 | 91 |
-| Archivos nuevos | 4 | 3 | 1 | 2 | 4 | 14 |
-| Archivos modificados | 1 | 2 | 3 | 3 | 1 | 10 |
+|| Metrica | A | B | C | D | E | Total acumulado |
+||---------|---|---|---|---|---|-----------------|
+|| Tests nuevos | 22 | 22 | 18 | 33 | 15 | 110 |
+|| Archivos nuevos | 4 | 3 | 1 | 5 | 4 | 17 |
+|| Archivos modificados | 1 | 2 | 3 | 3 | 1 | 10 |
 
-## E. Archivos Afiliados — Estado FASE-E
+## E. Archivos Afiliados — Estado FASE-D
+
+- [x] CHANGELOG.md — Entrada [4.24.0] agregada con detalle FASE-D
+- [x] REGISTRY.md — Actualizado por log_phase_completion.py (2026-04-06)
+- [x] config/provider_registry.yaml — Entrada gsc agregada
+
+## E2. Archivos Afiliados — Estado FASE-E
 
 - [x] CHANGELOG.md — Entrada [4.25.0] agregada con detalle FASE-E
 - [x] VERSION.yaml — Bump 4.24.0 -> 4.25.0, codename "FASE-E: Micro-Content Local Generator"

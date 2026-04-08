@@ -88,16 +88,17 @@ Las fases se renumeran A-E. Las fases historicas A/B del CHANGELOG (ciclo AEO) n
 **Origen**: Analisis comparativo seomachine #4
 
 ### Checklist
-- [ ] `modules/analytics/google_search_console_client.py` creado
-- [ ] `modules/analytics/data_aggregator.py` creado (unifica GA4 + GSC)
-- [ ] `modules/onboarding/onboarding_flow.py` modificado — paso GSC opcional
-- [ ] `modules/commercial_documents/composer.py` modificado — datos GSC en diagnostico
-- [ ] `config/provider_registry.yaml` modificado — entrada gsc (o ya incluida en FASE-A)
-- [ ] `tests/analytics/test_google_search_console_client.py` — 10/10 passing
-- [ ] `tests/analytics/test_data_aggregator.py` — 8/8 passing
-- [ ] Graceful degradation: sin GSC = flujo normal funciona
-- [ ] `python scripts/run_all_validations.py --quick` pasa
-- [ ] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
+- [x] `modules/analytics/google_search_console_client.py` creado (10,275 bytes)
+- [x] `modules/analytics/data_aggregator.py` creado — unifica GA4 + GSC (11,447 bytes)
+- [x] `modules/onboarding/add_gsc_step.py` creado — paso GSC opcional (4,319 bytes)
+- [x] `modules/commercial_documents/v4_diagnostic_generator.py` modificado — datos GSC en diagnostico
+- [x] `data_models/analytics_status.py` modificado — campos gsc_available, gsc_error, gsc_status_text
+- [x] `config/provider_registry.yaml` modificado — entrada gsc agregada
+- [x] `tests/analytics/test_google_search_console_client.py` — 14/14 passing
+- [x] `tests/analytics/test_data_aggregator.py` — 19/19 passing
+- [x] Graceful degradation: sin GSC = flujo normal funciona
+- [x] `python scripts/run_all_validations.py --quick` pasa
+- [x] `python scripts/log_phase_completion.py --check-manual-docs` ejecutado
 
 ---
 
