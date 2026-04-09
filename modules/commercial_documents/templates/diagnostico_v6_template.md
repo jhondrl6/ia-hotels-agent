@@ -24,7 +24,7 @@ Cada mes, miles de turistas buscan dónde hospedarse en la región. Pero la form
 
 | Antes (2023) | Ahora (2026) |
 |--------------|--------------|
-| Entran a Google yRevisan 5 webs | Le preguntan a ChatGPT: "¿Hotel boutique en ${hotel_region}?" |
+| Entran a Google y revisan 5 webs | Le preguntan a ChatGPT: "¿Hotel boutique en ${hotel_region}?" |
 | Comparan en Booking | Esperan que la IA recomiende |
 | Llaman o escriben por WhatsApp | Prefieren el primero que la IA menciona |
 

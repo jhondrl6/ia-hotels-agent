@@ -1,6 +1,6 @@
 {
   "modules/asset_generation/conditional_generator.py": "GAP-IAO-01-04",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-A",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-C",
   "modules/commercial_documents/v4_proposal_generator.py": "GAP-IAO-01-03",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-D",
   "modules/asset_generation/asset_diagnostic_linker.py": "V6-5",
@@ -26,7 +26,7 @@
   "main.py": "FASE-B",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "E2E-CERT-0331",
-  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-A",
+  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-C",
   "data_models/__init__.py": "FASE-IAO-06",
   "v4_proposal_generator.py": "ANALYTICS-02",
   "propuesta_v6_template.md": "ANALYTICS-02",
@@ -47,11 +47,11 @@
   "data_models/analytics_status.py": "FASE-D",
   "modules/analytics/__init__.py": "FASE-D",
   "modules/auditors/seo_elements_detector.py": "FASE-A",
-  "tests/commercial_documents/test_diagnostic_brechas.py": "FASE-C",
+  "tests/commercial_documents/test_diagnostic_brechas.py": "FASE-B",
   "modules/auditors/v4_comprehensive.py": "FASE-A",
   "modules/commercial_documents/templates/diagnostico_v4_template.md": "FASE-A",
   "templates/diagnostico_ejecutivo.md": "FASE-F",
   "modules/utils/benchmarks.py": "FASE-F",
-  "modules/financial_engine/opportunity_scorer.py": "FASE-C",
+  "modules/financial_engine/opportunity_scorer.py": "FASE-B",
   "tests/commercial_documents/test_pain_solution_mapper.py": "FASE-D"
 }

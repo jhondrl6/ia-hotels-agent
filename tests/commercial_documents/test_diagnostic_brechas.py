@@ -63,9 +63,10 @@ def mock_seo_elements(has_open_graph=True):
     return m
 
 
-def mock_citability(score=50):
+def mock_citability(score=50, blocks_analyzed=0):
     m = MagicMock()
     m.overall_score = score
+    m.blocks_analyzed = blocks_analyzed
     return m
 
 
@@ -280,6 +281,53 @@ def test_identify_brechas_with_citability_detection():
     
     pain_ids = [b['pain_id'] for b in brechas]
     assert 'low_citability' in pain_ids
+    # blocks_analyzed=0 (default) → narrativa "No Discoverable"
+    cit_brecha = next(b for b in brechas if b['pain_id'] == 'low_citability')
+    assert 'No Discoverable' in cit_brecha['nombre']
+
+
+def test_citability_blocks_zero_narrative_no_discoverable():
+    """blocks_analyzed=0 → narrativa 'Contenido No Discoverable por IA'."""
+    audit = create_audit(
+        schema_detected=True, faq_detected=True, gbp_geo_score=80,
+        phone_web="+573****4567", mobile_score=85, gbp_reviews=50,
+        citability=mock_citability(score=0, blocks_analyzed=0),
+    )
+    gen = V4DiagnosticGenerator()
+    brechas = gen._identify_brechas(audit)
+    cit_brecha = next(b for b in brechas if b['pain_id'] == 'low_citability')
+    assert 'No Discoverable' in cit_brecha['nombre']
+    assert 'no es discoverable' in cit_brecha['detalle']
+
+
+def test_citability_blocks_analyzed_low_score_narrative_poco_estructurado():
+    """blocks_analyzed > 0 y score < 30 → narrativa 'Contenido Poco Estructurado para IA'."""
+    audit = create_audit(
+        schema_detected=True, faq_detected=True, gbp_geo_score=80,
+        phone_web="+573****4567", mobile_score=85, gbp_reviews=50,
+        citability=mock_citability(score=15, blocks_analyzed=5),
+    )
+    gen = V4DiagnosticGenerator()
+    brechas = gen._identify_brechas(audit)
+    cit_brecha = next(b for b in brechas if b['pain_id'] == 'low_citability')
+    assert 'Poco Estructurado' in cit_brecha['nombre']
+    assert 'insuficiente o poco estructurado' in cit_brecha['detalle']
+
+
+def test_citability_blocks_none_narrative_no_discoverable():
+    """blocks_analyzed=None → narrativa 'No Discoverable' (sin datos = no analizable)."""
+    cit = MagicMock()
+    cit.overall_score = 0
+    cit.blocks_analyzed = None
+    audit = create_audit(
+        schema_detected=True, faq_detected=True, gbp_geo_score=80,
+        phone_web="+573****4567", mobile_score=85, gbp_reviews=50,
+        citability=cit,
+    )
+    gen = V4DiagnosticGenerator()
+    brechas = gen._identify_brechas(audit)
+    cit_brecha = next(b for b in brechas if b['pain_id'] == 'low_citability')
+    assert 'No Discoverable' in cit_brecha['nombre']
 
 
 def test_identify_brechas_8_detected_returns_8():

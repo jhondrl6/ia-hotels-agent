@@ -15,6 +15,8 @@
 | FASE-A | data_structures | data_structures.py | Campo whatsapp_html_detected en ValidationSummary |
 | FASE-A | commercial_documents | v4_diagnostic_generator.py | 4 zonas: brecha, tabla, quick wins, condicion WhatsApp |
 | FASE-B | commercial_documents | v4_diagnostic_generator.py | Logica citability con blocks_analyzed |
+| FASE-B | financial_engine | opportunity_scorer.py | Justificacion low_citability generica |
+| FASE-B | tests | test_diagnostic_brechas.py | 3 nuevos tests blocks_analyzed |
 | FASE-C | commercial_documents | diagnostico_v6_template.md | Typo yRevisan |
 | FASE-C | commercial_documents | v4_diagnostic_generator.py | Mapping regional + fallback |
 
@@ -34,9 +36,9 @@
 
 | Fase | Tests ejecutados | Resultado |
 |------|-----------------|-----------|
-| FASE-A | [completar] | [completar] |
-| FASE-B | [completar] | [completar] |
-| FASE-C | [completar] | [completar] |
+| FASE-A | test_pain_solution_mapper.py + test_diagnostic_brechas.py | 25 passed, whatsapp_html_detected validated |
+| FASE-B | test_diagnostic_brechas.py (25 tests) + test_pain_solution_mapper.py (5) | 25 passed, 3 nuevos tests blocks_analyzed |
+|| FASE-C | test suite completo (commercial_documents + asset_generation) | 218 passed, 7 pre-existentes |
 | FASE-D | E2E v4complete | [completar] |
 
 ---
@@ -45,11 +47,11 @@
 
 | Metrica | Pre-fix | Post-fix |
 |---------|---------|----------|
-| Falsos positivos WhatsApp (amazilia) | 1 | [completar] |
-| Narrativa citability incorrecta | 1 | [completar] |
-| Typos en template | 1 | [completar] |
-| Regiones mapeadas | 6 | [completar] |
-| Coherence score (amazilia) | 0.84 | [completar] |
+| Falsos positivos WhatsApp (amazilia) | 1 | 0 (corregido, whatsapp_html_detected en pipeline) |
+| Narrativa citability incorrecta | 1 | 0 (corregido, ambas narrativas diferenciadas) |
+|| Typos en template | 1 | 0 (corregido "yRevisan" → "y revisan") |
+|| Regiones mapeadas | 6 | 10 (+eje cafetero, san andrés, llanos orientales, costa atlántica) |
+|| Coherence score (amazilia) | 0.84 | [completar en FASE-D] |
 
 ---
 

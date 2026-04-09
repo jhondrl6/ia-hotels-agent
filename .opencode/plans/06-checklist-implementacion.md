@@ -13,28 +13,28 @@
 
 | # | Tarea | Estado |
 |---|-------|--------|
-| T1 | Conectar scraper `_detectar_whatsapp()` al pipeline de validacion | [ ] Pendiente |
-| T2 | Agregar `whatsapp_html_detected` a `ValidationSummary` en data_structures.py | [ ] Pendiente |
-| T3 | Actualizar condicion brecha WhatsApp en v4_diagnostic_generator.py:1788 | [ ] Pendiente |
-| T4 | Actualizar quick wins (linea 1005-1009) | [ ] Pendiente |
-| T5 | Actualizar tabla brechas (linea 941-944) | [ ] Pendiente |
-| T6 | Tests de regresion pasan | [ ] Pendiente |
-| T7 | log_phase_completion.py ejecutado | [ ] Pendiente |
+| T1 | Conectar scraper `_detectar_whatsapp()` al pipeline de validacion | [x] Completado |
+| T2 | Agregar `whatsapp_html_detected` a `ValidationSummary` en data_structures.py | [x] Completado |
+| T3 | Actualizar condicion brecha WhatsApp en v4_diagnostic_generator.py:1799-1810 | [x] Completado |
+| T4 | Actualizar quick wins (linea 1013-1018) | [x] Completado |
+| T5 | Actualizar tabla brechas (linea 941-949) | [x] Completado |
+| T6 | Tests de regresion pasan (25/25) | [x] Completado |
+| T7 | log_phase_completion.py ejecutado | [x] Completado |
 
 ---
 
 ## FASE-B: Citability Narrative Fix
 
 **Dependencias:** Ninguna (independiente de FASE-A)  
-**Archivos:** v4_diagnostic_generator.py
+**Archivos:** v4_diagnostic_generator.py, opportunity_scorer.py, test_diagnostic_brechas.py
 
 | # | Tarea | Estado |
 |---|-------|--------|
-| T1 | Diferenciar `blocks_analyzed=0` vs score real bajo en `_detect_brechas` (lineas 1850-1860) | [ ] Pendiente |
-| T2 | Actualizar narrativa IA readiness para citability (~1044-1061) | [ ] Pendiente |
-| T3 | Verificar pain_solution_mapper alignment | [ ] Pendiente |
-| T4 | Tests de regresion pasan | [ ] Pendiente |
-| T5 | log_phase_completion.py ejecutado | [ ] Pendiente |
+| T1 | Diferenciar `blocks_analyzed=0` vs score real bajo en `_detect_brechas` (lineas 1868-1890) | [x] Completado |
+| T2 | Actualizar narrativa opportunity_scorer.py justificacion low_citability | [x] Completado |
+| T3 | Verificar pain_solution_mapper alignment (sin cambios, optimization_guide) | [x] Completado |
+| T4 | Tests de regresion pasan (218 passed, 7 pre-existentes) | [x] Completado |
+| T5 | log_phase_completion.py ejecutado | [x] Completado |
 
 ---
 
@@ -45,12 +45,12 @@
 
 | # | Tarea | Estado |
 |---|-------|--------|
-| T1 | Corregir typo `yRevisan` en template linea 27 | [ ] Pendiente |
-| T2 | Agregar "Eje Cafetero" al mapping `region_contexts` (lineas 1613-1620) | [ ] Pendiente |
-| T3 | Corregir fallback regional generico (linea 1627) | [ ] Pendiente |
-| T4 | Verificar hotel_region fallback (linea 413) | [ ] Pendiente |
-| T5 | Tests de regresion pasan | [ ] Pendiente |
-| T6 | log_phase_completion.py ejecutado | [ ] Pendiente |
+|| T1 | Corregir typo `yRevisan` en template linea 27 | [x] Completado |
+|| T2 | Agregar "Eje Cafetero" al mapping `region_contexts` (lineas 1613-1620) | [x] Completado |
+|| T3 | Corregir fallback regional generico (linea 1627) | [x] Completado |
+|| T4 | Verificar hotel_region fallback (linea 413) | [x] Completado |
+|| T5 | Tests de regresion pasan (218 passed, 7 pre-existentes) | [x] Completado |
+|| T6 | log_phase_completion.py ejecutado | [x] Completado |
 
 ---
 
@@ -75,7 +75,7 @@
 
 | Fase | Estado | Tests | Coherence |
 |------|--------|-------|-----------|
-| FASE-A | Pendiente | - | - |
-| FASE-B | Pendiente | - | - |
-| FASE-C | Pendiente | - | - |
-| FASE-D | Pendiente | - | - |
+| FASE-A | Completado | 25/25 passed | N/A |
+|| FASE-B | Completado | 218 passed (+3 nuevos) | N/A |
+|| FASE-C | Completado | 218 passed | N/A |
+|| FASE-D | Pendiente | - | - |

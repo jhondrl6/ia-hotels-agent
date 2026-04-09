@@ -1627,6 +1627,10 @@ ${quick_wins_list}
             'cali': 'Cali es conocida por el turismo cultural y gastronómico, con una escena hotelera en crecimiento.',
             'barranquilla': 'Barranquilla es un centro económico estratégico con creciente turismo corporativo.',
             'santa marta': 'Santa Marta ofrece turismo histórico y de naturaleza, con acceso a parques nacionales.',
+            'eje cafetero': 'El Eje Cafetero (Caldas, Quindío, Risaralda) es una de las principales regiones cafeteras del mundo y un destino turístico en crecimiento. Los viajeros buscan experiencias auténticas de naturaleza, café y cultura. La presencia digital hotelera es clave para captar tanto turismo nacional como internacional.',
+            'san andrés': 'San Andrés es un destino caribeño con alta demanda turística internacional, conocido por sus playas y el mar de los siete colores.',
+            'llanos orientales': 'Los Llanos Orientales ofrecen turismo de naturaleza y ganadería, con creciente interés en experiencias rurales auténticas.',
+            'costa atlántica': 'La Costa Atlántica colombiana concentra importantes destinos turísticos con playa, cultura e historia, liderados por Cartagena y Barranquilla.',
         }
         
         region_lower = region.lower()
@@ -1634,7 +1638,8 @@ ${quick_wins_list}
             if key in region_lower:
                 return context
         
-        return f"La región de {region} en Colombia presenta oportunidades de crecimiento en presencia digital hotelera."
+        region_display = region if region and region.lower() not in ("nacional", "colombia", "general", "") else "esta zona"
+        return f"{region_display} en Colombia presenta oportunidades de crecimiento en presencia digital hotelera."
     
     def _build_urgencia_content(self, financial_scenarios: FinancialScenarios, hotel_name: str) -> str:
         """Build urgency content explaining why the hotel should act now."""
@@ -1868,13 +1873,25 @@ ${quick_wins_list}
         citability_score = getattr(audit_result, 'citability', None)
         if citability_score is not None:
             score_val = getattr(citability_score, 'overall_score', None)
+            blocks = getattr(citability_score, 'blocks_analyzed', None)
+
             if isinstance(score_val, (int, float)) and score_val < 30:
-                brechas.append({
-                    'pain_id': 'low_citability',
-                    'nombre': 'Contenido No Citable por IA',
-                    'impacto': 0.10,
-                    'detalle': 'ChatGPT y Perplexity no recomiendan su hotel porque el contenido es insuficiente o poco estructurado.'
-                })
+                if blocks == 0 or blocks is None:
+                    # Caso: contenido ausente/no discoverable (score=0 por default, no evaluacion real)
+                    brechas.append({
+                        'pain_id': 'low_citability',
+                        'nombre': 'Contenido No Discoverable por IA',
+                        'impacto': 0.10,
+                        'detalle': 'ChatGPT y Perplexity no pueden recomendar su hotel porque el contenido no es discoverable para crawlers de IA.'
+                    })
+                else:
+                    # Caso: contenido existe pero de baja calidad (score real bajo)
+                    brechas.append({
+                        'pain_id': 'low_citability',
+                        'nombre': 'Contenido Poco Estructurado para IA',
+                        'impacto': 0.10,
+                        'detalle': 'ChatGPT y Perplexity no recomiendan su hotel porque el contenido es insuficiente o poco estructurado.'
+                    })
         
         # Priorizar por impacto (todas las detectadas, sin truncamiento ni relleno)
         brechas.sort(key=lambda x: x.get('impacto', 0), reverse=True)

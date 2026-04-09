@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-09
 > **Version actual:** v4.25.2
-> **Total fases completadas:** 58
+> **Total fases completadas:** 60
 
 ---
 
@@ -1860,6 +1860,47 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-B - 2026-04-09
+**Descripcion:** Citability Narrative Fix: diferencia blocks_analyzed=0 (no discoverable) vs score real bajo (poco estructurado)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/financial_engine/opportunity_scorer.py` | Opportunity Scorer |
+| `tests/commercial_documents/test_diagnostic_brechas.py` | Test Diagnostic Brechas |
+
+### Validaciones
+- [x] Tests passing (218 passed, 3 nuevos tests, 7 pre-existentes)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-C - 2026-04-09
+**Descripcion:** Corrección typo yRevisan en template, mapeo regional Eje Cafetero+3 regiones, fix fallback genérico
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (218 passed, 7 pre-existing failures)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

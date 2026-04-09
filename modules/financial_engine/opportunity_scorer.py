@@ -197,7 +197,7 @@ class OpportunityScorer:
             "Impacto: mejor primera impresion en redes sociales."
         ),
         "low_citability": (
-            "ChatGPT y Perplexity no recomiendan su hotel porque el contenido es insuficiente o poco estructurado. "
+            "ChatGPT y Perplexity no pueden recomendar su hotel porque el contenido no es discoverable o esta poco estructurado. "
             "Solucion: crear contenido estructurado con datos marcados. "
             "Impacto: ser recomendado por asistentes de IA."
         ),
