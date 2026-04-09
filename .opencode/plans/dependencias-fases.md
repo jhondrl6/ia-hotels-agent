@@ -17,8 +17,8 @@ FASE-A: Templates dinámicos
                 │  Modifica: opportunity_scorer.py (SEVERITY/EFFORT/IMPACT_MAP, _extract_brechas)
                 │  Depende de: FASE-B (los pain_ids del generator deben estar completos)
                 │
-                └──→ FASE-D: PainSolutionMapper fix + coherencia
-                       │  Modifica: pain_solution_mapper.py, coherence_config.py (verificar)
+                └──→ FASE-D: PainSolutionMapper fix + coherencia ✅
+                       │  Modifica: pain_solution_mapper.py, asset_catalog.py
                        │  Depende de: FASE-C (scorer debe tener todos los pain_ids mapeados)
                        │
                        └──→ FASE-E: Validación v4complete
@@ -38,7 +38,8 @@ FASE-A: Templates dinámicos
 | `v4_diagnostic_generator.py` | B | Ninguno (A solo toca templates) |
 | `opportunity_scorer.py` | C | Ninguno |
 | `pain_solution_mapper.py` | D | Ninguno |
-| `coherence_config.py` | D | Solo verificación, no modificación probable |
+| `asset_catalog.py` | D | Fix optimization_guide promised_by |
+| `coherence_config.py` | D | Solo verificación, no modificación |
 | `tests/commercial_documents/test_diagnostic_brechas.py` | B | Se amplía, no se sobreescribe |
 | `tests/financial_engine/test_opportunity_scorer.py` | C | Se amplía |
 

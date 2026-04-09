@@ -182,7 +182,7 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_basic_guide",
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["metadata_defaults", "pain_solution_mapper"]
+        promised_by=["metadata_defaults", "poor_performance", "low_citability", "low_content_length"]
     ),
     "direct_booking_campaign": AssetCatalogEntry(
         asset_type="direct_booking_campaign",

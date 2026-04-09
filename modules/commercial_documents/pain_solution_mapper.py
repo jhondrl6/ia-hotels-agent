@@ -205,9 +205,10 @@ class PainSolutionMapper:
             "name": "Contenido Poco Citable",
             "description": "El contenido es muy corto para ser citado por LLMs"
         },
+        # FASE-D: Combinado HOTFIX-3 (local_content_page) con entrada original (hotel_schema, llms_txt)
         "low_ia_readiness": {
-            "assets": ["hotel_schema", "llms_txt"],
-            "confidence_required": 0.5,
+            "assets": ["hotel_schema", "llms_txt", "local_content_page"],
+            "confidence_required": 0.0,
             "priority": 2,
             "validation_fields": ["ia_readiness_score"],
             "estimated_impact": "high",
@@ -278,16 +279,7 @@ class PainSolutionMapper:
             "name": "Contenido Muy Corto",
             "description": "El contenido es demasiado corto para ser citado por IA"
         },
-        # HOTFIX-3: Conectar LocalContentGenerator al flujo
-        "low_ia_readiness": {
-            "assets": ["local_content_page"],
-            "confidence_required": 0.0,
-            "priority": 3,
-            "validation_fields": [],
-            "estimated_impact": "medium",
-            "name": "Baja Citabilidad IA",
-            "description": "El hotel no tiene paginas de contenido local para ser citado por IA y asistentes"
-        },
+
     }
     
     ASSET_NAMES = {

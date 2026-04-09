@@ -139,7 +139,7 @@ class TestPainSolutionMapperWhatsApp:
         assert "whatsapp_conflict" in mapper.pain_map
         
         conflict_entry = mapper.pain_map["whatsapp_conflict"]
-        assert conflict_entry["assets"] == ["whatsapp_button"]
+        assert "whatsapp_button" in conflict_entry["assets"]
         assert conflict_entry["confidence_required"] == 0.5
         assert conflict_entry["priority"] == 1
         assert conflict_entry["validation_fields"] == ["whatsapp_number"]

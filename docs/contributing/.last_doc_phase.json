@@ -2,7 +2,7 @@
   "modules/asset_generation/conditional_generator.py": "GAP-IAO-01-04",
   "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-C",
   "modules/commercial_documents/v4_proposal_generator.py": "GAP-IAO-01-03",
-  "modules/commercial_documents/pain_solution_mapper.py": "ANALYTICS-E2E-CERT-01",
+  "modules/commercial_documents/pain_solution_mapper.py": "FASE-D",
   "modules/asset_generation/asset_diagnostic_linker.py": "V6-5",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
   "modules/asset_generation/v4_asset_orchestrator.py": "FASE-6",
@@ -20,7 +20,7 @@
   "CHANGELOG.md": "FASE-7",
   "docs/GUIA_TECNICA.md": "GAP-IAO-01-04",
   ".agents/workflows/README.md": "FASE-7",
-  "modules/asset_generation/asset_catalog.py": "FASE-E",
+  "modules/asset_generation/asset_catalog.py": "FASE-D",
   "modules/commercial_documents/data_structures.py": "GAP-IAO-01-03",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
   "main.py": "FASE-B",
@@ -52,5 +52,6 @@
   "modules/commercial_documents/templates/diagnostico_v4_template.md": "FASE-A",
   "templates/diagnostico_ejecutivo.md": "FASE-F",
   "modules/utils/benchmarks.py": "FASE-F",
-  "modules/financial_engine/opportunity_scorer.py": "FASE-C"
+  "modules/financial_engine/opportunity_scorer.py": "FASE-C",
+  "tests/commercial_documents/test_pain_solution_mapper.py": "FASE-D"
 }
