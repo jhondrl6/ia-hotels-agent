@@ -238,36 +238,115 @@ Después de ejecutar `log_phase_completion.py`, verificar:
 
 ### Paso 7: Actualizacion de Documentacion Oficial del Repositorio
 
-**Cuándo**: Una vez completadas TODAS las fases de implementación del proyecto. No se ejecuta por fase individual — es el cierre del ciclo.
+**Cuando**: Una vez completadas TODAS las fases de implementacion del proyecto. No se ejecuta por fase individual — es el cierre del ciclo.
 
-**Qué hace**: Ejecuta el procedimiento definido en docs/CONTRIBUTING.md §55-163 (sección "Trigger del Usuario: Actualizar documentacion oficial del repositorio").
+**Fuente de verdad**: `docs/CONTRIBUTING.md §55-163`. Los pasos E1-E8 abajo son la transcripcion operativa de esa seccion. Si CONTRIBUTING.md cambia, este paso se actualiza para reflejarlo.
 
-**Ejecutar en orden**:
+**Que NO hace**: NO modifica ROADMAP.md, NO edita codigo fuente, NO ejecuta `v4complete`.
+
+---
+
+#### E1. Diagnostico Inicial (CONTRIBUTING §60-67)
+
 ```bash
-# Contributing §61-67: Diagnóstico
-python scripts/version_consistency_checker.py
-python main.py --doctor
-
-# Contributing §70-76: Sync automático VERSION.yaml → 6 headers
-python scripts/sync_versions.py
-
-# Contributing §78-85: Verificar CHANGELOG.md (manual)
-# Contributing §86-93: Verificar GUIA_TECNICA.md (manual)
-# Contributing §94-106: Verificar skills/workflows (manual)
-# Contributing §107-111: Regenerar SYSTEM_STATUS.md
-# Contributing §113-128: Verificar symlink + validación pre-commit
+./venv/Scripts/python.exe scripts/version_consistency_checker.py
+./venv/Scripts/python.exe main.py --doctor
 ```
 
-**Qué NO hace**: NO modifica ROADMAP.md, NO edita código fuente, NO ejecuta `v4complete`.
+- [ ] version_consistency_checker.py pasa sin discrepancias
+- [ ] doctor no reporta errores criticos
 
-**Dónde está el detalle completo**: docs/CONTRIBUTING.md §55-163 — el procedimiento está documentado ahí. Este paso solo orquesta su ejecución.
+#### E2. Sincronizacion Automatica (CONTRIBUTING §70-76)
 
-**Checklist:**
-- [ ] docs/CONTRIBUTING.md §55-163 ejecutado completo
-- [ ] version_consistency_checker.py pasó sin discrepancias
-- [ ] CHANGELOG.md y GUIA_TECNICA.md verificados/actualizados
-- [ ] SYSTEM_STATUS.md regenerado
-- [ ] Symlink .agent/workflows → .agents/workflows verificado
+```bash
+./venv/Scripts/python.exe scripts/sync_versions.py
+```
+
+Sincroniza VERSION.yaml → 6 archivos: AGENTS.md, README.md, .cursorrules, CONTRIBUTING.md, GUIA_TECNICA.md, REGISTRY.md
+
+- [ ] sync_versions.py ejecutado sin errores
+
+#### E3. CHANGELOG.md (CONTRIBUTING §78-85, MANUAL)
+
+Formato segun `docs/contributing/documentation_rules.md §36-58`:
+
+```markdown
+## [X.Y.Z] - Titulo (Fecha)
+
+### Objetivo
+{Descripcion breve}
+
+### Cambios Implementados
+- `ruta/archivo.py` - Descripcion del cambio
+
+### Archivos Nuevos
+| Archivo | Descripcion |
+|---------|-------------|
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+
+### Tests
+- N tests en `test_xxx.py`
+```
+
+**Regla de validacion-only**: Si la fase NO modifica codigo (solo validacion/documentacion), NO crear entrada `[X.Y.Z+1]`. Agregar como subsection dentro de la version existente.
+
+- [ ] CHANGELOG.md tiene entrada para la version actual
+- [ ] No hay entradas duplicadas
+- [ ] CHANGELOG describe archivos nuevos y modificados de cada fase
+
+#### E4. GUIA_TECNICA.md (CONTRIBUTING §86-93, MANUAL)
+
+Agregar seccion "Notas de Cambios vX.Y.Z" con:
+
+| Campo requerido | Contenido |
+|----------------|-----------|
+| Modulos afectados | Lista de modulos tocados por las fases |
+| Problema | Que estaba roto o incorrecto |
+| Solucion | Que se cambio y por que |
+| Backwards compatibility | Si la API publica cambia o no |
+
+- [ ] GUIA_TECNICA.md tiene nota tecnica para las fases del proyecto
+- [ ] Nota incluye modulos afectados, problema/solucion, backwards compatibility
+
+#### E5. Skills/Workflows (CONTRIBUTING §94-106, MANUAL)
+
+```bash
+ls -la .agents/workflows/*.md
+```
+
+- [ ] Todos los .md en .agents/workflows/ listados en .agents/workflows/README.md
+- [ ] No hay skills huerfanos
+
+#### E6. Regenerar SYSTEM_STATUS.md (CONTRIBUTING §107-111)
+
+```bash
+./venv/Scripts/python.exe scripts/doctor.py --status
+```
+
+- [ ] SYSTEM_STATUS.md regenerado con version actual
+
+#### E7. Verificar DOMAIN_PRIMER.md (CONTRIBUTING §145-157)
+
+```bash
+./venv/Scripts/python.exe scripts/doctor.py --context
+```
+
+- [ ] Todo modulo en `modules/` documentado en DOMAIN_PRIMER.md
+- [ ] Todo archivo referenciado en DOMAIN_PRIMER.md existe en disco
+
+#### E8. Symlink + Validacion Final (CONTRIBUTING §113-128)
+
+```bash
+ls -la .agent/workflows    # Debe mostrar → .agents/workflows
+./venv/Scripts/python.exe scripts/run_all_validations.py --quick
+git diff --stat
+```
+
+- [ ] Symlink .agent/workflows → .agents/workflows intacto
+- [ ] run_all_validations.py --quick pasa sin errores
 - [ ] git diff --stat muestra todos los archivos modificados
 
 ---

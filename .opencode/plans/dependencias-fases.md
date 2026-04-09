@@ -1,50 +1,51 @@
-# DEPENDENCIAS: BRECHAS-DINAMICAS
-
-**Generado**: 2026-04-08
+# Dependencias entre Fases
 
 ## Diagrama de Dependencias
 
 ```
-FASE-A: Templates dinámicos
-  │  Modifica: diagnostico_v6_template.md, diagnostico_v4_template.md
-  │  No depende de ninguna fase previa.
+FASE-A (WhatsApp Detection Fix)
   │
-  └──→ FASE-B: Generator dinámico
-         │  Modifica: v4_diagnostic_generator.py (_prepare_template_data, _inject_brecha_scores)
-         │  Depende de: FASE-A (los templates deben tener ${brechas_section})
-         │
-         └──→ FASE-C: OpportunityScorer completar mappings ✅
-                │  Modifica: opportunity_scorer.py (SEVERITY/EFFORT/IMPACT_MAP, _extract_brechas)
-                │  Depende de: FASE-B (los pain_ids del generator deben estar completos)
-                │
-                └──→ FASE-D: PainSolutionMapper fix + coherencia ✅
-                       │  Modifica: pain_solution_mapper.py, asset_catalog.py
-                       │  Depende de: FASE-C (scorer debe tener todos los pain_ids mapeados)
-                       │
-                       └──→ FASE-E: Validación v4complete ✅
-                              │  Ejecuta: main.py v4complete --url https://amaziliahotel.com
-                              │  Depende de: A+B+C+D completas
-                              │  Output: análisis de resultados del diagnóstico generado
-                              │  Resultado: 6 brechas mostradas (no 4), coherence 0.84, READY_FOR_PUBLICATION
-                              │
-                              └──→ DONE
+  ├─→ FASE-B (Citability Narrative Fix)     [independiente de A]
+  │
+  ├─→ FASE-C (Regional Template Fixes)      [independiente de A]
+  │
+  └───────┬─────────────┘
+          │
+     FASE-D (Validacion E2E)    [depende de A+B+C]
 ```
+
+FASE-A, FASE-B y FASE-C son **independientes entre si** (modifican archivos distintos o secciones distintas del mismo archivo sin overlap).
+
+FASE-D (validacion E2E) requiere que A+B+C esten completas.
+
+---
 
 ## Tabla de Conflictos de Archivos
 
-| Archivo | Fase(es) | Conflicto potencial |
-|---------|----------|-------------------|
-| `diagnostico_v6_template.md` | A | Ninguno (solo esta fase lo toca) |
-| `diagnostico_v4_template.md` | A | Ninguno |
-| `v4_diagnostic_generator.py` | B | Ninguno (A solo toca templates) |
-| `opportunity_scorer.py` | C | Ninguno |
-| `pain_solution_mapper.py` | D | Ninguno |
-| `asset_catalog.py` | D | Fix optimization_guide promised_by |
-| `coherence_config.py` | D | Solo verificación, no modificación |
-| `tests/commercial_documents/test_diagnostic_brechas.py` | B | Se amplía, no se sobreescribe |
-| `tests/financial_engine/test_opportunity_scorer.py` | C | Se amplía |
+| Archivo | FASE-A | FASE-B | FASE-C | Conflicto? |
+|---------|--------|--------|--------|------------|
+| v4_diagnostic_generator.py | Lineas 750-776, 941-944, 1005-1009, 1786-1794 | Lineas 1850-1860, narrativa citability | Lineas 413, 1608-1627 | BAJO (zonas distintas) |
+| v4_comprehensive.py | Lineas 1021-1070 (cross_validation) | - | - | NINGUNO |
+| data_structures.py | Linea 184 (whatsapp_status) | - | - | NINGUNO |
+| diagnostico_v6_template.md | - | - | Lineas 21, 27 | NINGUNO |
+| pain_solution_mapper.py | Solo lectura | - | - | NINGUNO |
+| asset_catalog.py | Solo lectura | - | - | NINGUNO |
 
-## Notas
+### Analisis de Riesgo: v4_diagnostic_generator.py
 
-- No hay conflictos de archivos entre fases (cada fase toca archivos distintos).
-- FASE-E es solo ejecución + análisis, no modifica código fuente.
+Unico archivo compartido. Las zonas de cada fase NO se superponen:
+
+- **FASE-A**: Lineas 750-776 (phone_web/phone_gbp), 941-944 (tabla brechas), 1005-1009 (quick wins), 1786-1794 (brecha WhatsApp)
+- **FASE-B**: Lineas 1850-1860 (low_citability brecha) y narrativa alrededor de 1044-1061
+- **FASE-C**: Lineas 413 (hotel_region fallback) y 1608-1627 (_build_regional_context)
+
+**Riesgo: BAJO**. Las zonas estan claramente separadas. Si FASE-A y FASE-B se ejecutan en sesiones distintas (como dicta el workflow), no hay colision.
+
+---
+
+## Orden de Ejecucion Recomendado
+
+1. **FASE-A** — Mayor impacto comercial (falso positivo WhatsApp = brecha falsa en diagnostico entregado al cliente)
+2. **FASE-B** — Impacto narrativo (explicacion incorrecta al cliente)
+3. **FASE-C** — Impacto visual/template (errores de texto)
+4. **FASE-D** — Validacion E2E completa con amaziliahotel.com

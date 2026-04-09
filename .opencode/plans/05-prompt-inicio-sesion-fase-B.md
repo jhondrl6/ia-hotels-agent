@@ -1,183 +1,109 @@
-# FASE-B: Generator Dinámico — Construir N Brechas en Runtime
-
-**ID**: FASE-B
-**Objetivo**: Modificar `_prepare_template_data()` para construir `${brechas_section}` y `${brechas_resumen_section}` dinámicamente desde `_identify_brechas()`, y eliminar `min(..., 4)` en `_inject_brecha_scores()`.
-**Dependencias**: FASE-A (templates deben tener placeholders `${brechas_section}` y `${brechas_resumen_section}`)
-**Duración estimada**: 1-1.5h
-**Skill**: phased_project_executor
-
----
+# Prompt de Inicio de Sesion — FASE-B: Citability Narrative Fix
 
 ## Contexto
 
-FASE-A reemplazó las ranuras fijas por placeholders. Ahora el generator necesita llenar esos placeholders con markdown generado dinámicamente basado en las N brechas de `_identify_brechas()`.
-
-Ver contexto: `.opencode/plans/context/01-causa-raiz-limite-4-brechas.md` secciones CAPA 2 y CAPA 3.
+### Documento de referencia
+`/mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/context/whatsapp_false_positive.md` (seccion "BRECHA 5 - Narrativa Imprecisa")
 
 ### Estado de Fases Anteriores
+- FASE-A (WhatsApp Detection Fix): Completada en sesion previa
 
-| Fase | Estado |
-|------|--------|
-| FASE-A | ✅ Completada |
+### Problema
+El diagnostico dice "contenido es insuficiente o poco estructurado" cuando el score de citability es 0. Pero ese score viene de `blocks_analyzed: 0` — el auditor no pudo analizar contenido. El score es un default por ausencia, no una evaluacion real.
 
-### Base Técnica Disponible
-- `_identify_brechas()` ya retorna lista dinámica (0-10 brechas)
-- Cada brecha tiene: `pain_id`, `nombre`, `impacto`, `detalle`
-- Tests existentes en `tests/commercial_documents/test_diagnostic_brechas.py` verifican dinámico
+La recomendacion del propio audit lo confirma: "Content structure is good. Maintain current paragraph lengths."
+
+---
+
+## Objetivo
+
+Corregir la narrativa para que distinga entre:
+- "contenido poco estructurado" (score real bajo, ej: 15/100) → narrativa actual correcta
+- "contenido no discoverable por IA" (blocks_analyzed=0) → nueva narrativa: "IA no puede descubrir ni citar el contenido"
 
 ---
 
 ## Tareas
 
-### Tarea 1: Agregar `_build_brechas_section()` al generator
+### T1: Diferenciar score=0 real vs ausencia en _detect_brechas
 
-**Objetivo**: Nuevo método que genera markdown para N brechas.
+**Archivo:** `modules/commercial_documents/v4_diagnostic_generator.py` (lineas 1850-1860)
 
-**Archivo afectado**: `modules/commercial_documents/v4_diagnostic_generator.py`
-
-**Implementación**:
+Logica actual:
 ```python
-def _build_brechas_section(self, audit_result: V4AuditResult, financial_scenarios: FinancialScenarios) -> str:
-    """Genera sección markdown con TODAS las brechas detectadas (0-10+)."""
-    brechas = self._identify_brechas(audit_result)
-    if not brechas:
-        return "No se detectaron brechas críticas. Su presencia digital está en buen estado."
+citability_score = getattr(audit_result, 'citability', None)
+if citability_score is not None:
+    score_val = getattr(citability_score, 'overall_score', None)
+    if isinstance(score_val, (int, float)) and score_val < 30:
+        brechas.append({'pain_id': 'low_citability', ...})
+```
+
+Nueva logica:
+```python
+citability_score = getattr(audit_result, 'citability', None)
+if citability_score is not None:
+    score_val = getattr(citability_score, 'overall_score', None)
+    blocks = getattr(citability_score, 'blocks_analyzed', None)
     
-    sections = []
-    for i, b in enumerate(brechas, 1):
-        costo = self._get_brecha_costo(audit_result, financial_scenarios, i-1)
-        sections.append(
-            f"### [BRECHA {i}] {b['nombre']}\n"
-            f"- **Detalle:** {b['detalle']}\n"
-            f"- **Por qué importa:** {int(b.get('impacto', 0) * 100)}%\n"
-            f"- **Costo:** {costo} COP/mes\n"
-        )
-    return "\n".join(sections)
+    if isinstance(score_val, (int, float)) and score_val < 30:
+        if blocks == 0 or blocks is None:
+            # Caso: contenido ausente/no discoverable
+            brechas.append({
+                'pain_id': 'low_citability',
+                'nombre': 'Contenido No Discoverable por IA',
+                'impacto': 0.10,
+                'narrativa': 'ChatGPT y Perplexity no pueden recomendar su hotel porque el contenido no es discoverable para crawlers de IA.'
+            })
+        else:
+            # Caso: contenido existe pero de baja calidad
+            brechas.append({
+                'pain_id': 'low_citability',
+                'nombre': 'Contenido Poco Estructurado para IA',
+                'impacto': 0.10,
+                'narrativa': 'ChatGPT y Perplexity no recomiendan su hotel porque el contenido es insuficiente o poco estructurado.'
+            })
 ```
 
-**Criterios de aceptación**:
-- [ ] Genera markdown para 0, 1, 4, 7, 10 brechas sin error
-- [ ] Usa `format_cop()` para costo
-- [ ] Numeración secuencial correcta
+### T2: Actualizar narrativa del diagnostico (seccion IA readiness)
 
-### Tarea 2: Agregar `_build_brechas_resumen_section()` al generator
+**Archivo:** `modules/commercial_documents/v4_diagnostic_generator.py` (lineas ~1044-1061)
 
-**Objetivo**: Genera tabla markdown dinámica para sección resumen.
+Donde se genera la seccion de IA readiness/citability, verificar si la narrativa usa "poco estructurado" cuando deberia decir "no discoverable".
 
-**Implementación**:
-```python
-def _build_brechas_resumen_section(self, audit_result: V4AuditResult, financial_scenarios: FinancialScenarios) -> str:
-    """Genera tabla resumen dinámica de N brechas → oportunidades."""
-    brechas = self._identify_brechas(audit_result)
-    if not brechas:
-        return "| Sin brechas detectadas | — |"
-    
-    rows = []
-    for i, b in enumerate(brechas):
-        detalle_corto = b.get('detalle', 'Sin resumen')[:80]
-        if len(b.get('detalle', '')) > 80:
-            detalle_corto += '...'
-        recuperacion = self._get_brecha_recuperacion(audit_result, financial_scenarios, i)
-        rows.append(f"| {detalle_corto} | +{recuperacion}/mes |")
-    return "\n".join(rows)
-```
+Buscar `citability` en la generacion del texto del diagnostico y ajustar para que use la narrativa correcta segun `blocks_analyzed`.
 
-**Criterios de aceptación**:
-- [ ] Tabla tiene N filas (no siempre 4)
-- [ ] Cada fila tiene recuperación estimada
+### T3: Verificar pain_solution_mapper alignment
 
-### Tarea 3: Integrar en `_prepare_template_data()`
+**Archivo:** `modules/commercial_documents/pain_solution_mapper.py`
 
-**Archivo afectado**: `modules/commercial_documents/v4_diagnostic_generator.py`
-
-**Cambios**:
-1. En el dict `data` (alrededor línea 465), agregar:
-   ```python
-   'brechas_section': self._build_brechas_section(audit_result, financial_scenarios),
-   'brechas_resumen_section': self._build_brechas_resumen_section(audit_result, financial_scenarios),
-   ```
-
-2. Mantener las variables `brecha_1_*` a `brecha_4_*` por retrocompatibilidad (no eliminar de inmediato para no romper templates legacy que aun no se actualicen). Pero las NUEVAS secciones serán la fuente de verdad.
-
-**Criterios de aceptación**:
-- [ ] `data['brechas_section']` contiene markdown para N brechas
-- [ ] `data['brechas_resumen_section']` contiene tabla para N filas
-- [ ] Variables brecha_1..4 siguen existiendo (retrocompatibilidad)
-
-### Tarea 4: Eliminar `min(..., 4)` en `_inject_brecha_scores()`
-
-**Archivo afectado**: `modules/commercial_documents/v4_diagnostic_generator.py` línea 1934
-
-**Cambios**:
-```python
-# ANTES:
-for i in range(1, min(scores_count, 4) + 1):
-
-# DESPUÉS:
-MAX_BRECHAS_SCORES = 10  # O el número que _identify_brechas() puede retornar
-for i in range(1, min(scores_count, MAX_BRECHAS_SCORES) + 1):
-```
-
-**Criterios de aceptación**:
-- [ ] `_inject_brecha_scores()` genera scores para N brechas (no limitado a 4)
-- [ ] Cada score tiene: nombre, costo, detalle, severity, effort, impact_score
-
-### Tarea 5: Ampliar tests
-
-**Archivo afectado**: `tests/commercial_documents/test_diagnostic_brechas.py`
-
-**Tests nuevos a agregar**:
-1. `test_build_brechas_section_with_5_brechas` — Verifica que genera 5 secciones markdown
-2. `test_build_brechas_section_with_0_brechas` — Verifica mensaje alternativo
-3. `test_build_brechas_resumen_section_dynamic` — Tabla con N filas
-4. `test_inject_brecha_scores_no_truncation` — Scores para 7+ brechas, no 4
-5. `test_brecha_section_markdown_valid` — Cada sección tiene headers, detalle, costo
+Verificar que `low_citability` en el mapper genera el asset correcto (`llms.txt` o `local_content_page`) independientemente de si el contenido es "poco estructurado" o "no discoverable" — el asset sugerido es el mismo.
 
 ---
 
-## Tests Obligatorios
+## Criterios de Completitud
+
+- [ ] Brecha `low_citability` con `blocks_analyzed=0` genera narrativa "no discoverable"
+- [ ] Brecha `low_citability` con `blocks_analyzed>0` y score<30 genera narrativa "poco estructurado"
+- [ ] pain_id `low_citability` sigue mapeando al mismo asset
+- [ ] Tests existentes pasan
+
+---
+
+## Archivos a Modificar
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Lineas 1850-1860 (logica brecha), ~1044-1061 (narrativa) |
+
+## Post-Ejecucion
+
+- Marcar checklist en `06-checklist-implementacion.md`
+- Ejecutar `log_phase_completion.py --fase FASE-B`
+- Actualizar `09-documentacion-post-proyecto.md`
+
+## Evidence
 
 ```bash
-cd /mnt/c/Users/Jhond/Github/iah-cli
-
-# Tests de brechas
-.venv/Scripts/python.exe -m pytest tests/commercial_documents/test_diagnostic_brechas.py -v
-
-# Tests del generator
-.venv/Scripts/python.exe -m pytest tests/test_commercial_documents_composer.py -v
-.venv/Scripts/python.exe -m pytest tests/test_commercial_documents_phase2.py -v
-
-# Validaciones rápidas
-.venv/Scripts/python.exe scripts/run_all_validations.py --quick
+mkdir -p evidence/fase-b
+./venv/Scripts/python.exe -m pytest tests/commercial_documents/ tests/asset_generation/ -v --tb=short 2>&1 | tee evidence/fase-b/regression_pre.log
 ```
-
----
-
-## Post-Ejecución (OBLIGATORIO)
-
-1. **`dependencias-fases.md`**: Marcar FASE-B como ✅ Completada
-2. **`06-checklist-implementacion.md`**: Marcar items de FASE-B
-3. **`09-documentacion-post-proyecto.md`**: Sección A (métodos nuevos) + Sección D (tests)
-4. **`log_phase_completion.py`**:
-```bash
-.venv/Scripts/python.exe scripts/log_phase_completion.py \
-    --fase FASE-B \
-    --desc "Generator dinamico N brechas" \
-    --archivos-mod "modules/commercial_documents/v4_diagnostic_generator.py" \
-    --archivos-nuevos "" \
-    --tests "5" \
-    --check-manual-docs
-```
-
----
-
-## Criterios de Completitud (CHECKLIST)
-
-- [ ] `_build_brechas_section()` genera markdown para N brechas
-- [ ] `_build_brechas_resumen_section()` genera tabla para N filas
-- [ ] `_prepare_template_data()` incluye ambos placeholders
-- [ ] `min(..., 4)` eliminado de `_inject_brecha_scores()`
-- [ ] 5 tests nuevos pasan
-- [ ] Tests existentes no se rompen
-- [ ] `dependencias-fases.md` actualizado
-- [ ] `log_phase_completion.py` ejecutado

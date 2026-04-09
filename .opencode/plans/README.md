@@ -1,34 +1,47 @@
-# PLAN MAESTRO: BRECHAS-DINAMICAS
+# Plan: Corrección Falsos Positivos y Errores de Contexto
 
-**ID**: BRECHAS-DINAMICAS
-**Fecha**: 2026-04-08
-**Estado**: PREPARACION
+> **Proyecto:** iah-cli v4.25.x  
+> **Fecha creación:** 2026-04-09  
+> **Contexto fuente:** `.opencode/plans/context/whatsapp_false_positive.md`  
+> **Hotel de validación:** amaziliahotel.com
 
-## Objetivo
+---
 
-Eliminar el hardcode "LAS 4 BRECHAS" del pipeline de diagnóstico para que el documento muestre TODAS las brechas detectadas (0-10) dinámicamente, sin desconectar la cadena diagnóstico → propuesta comercial → assets → coherencia.
+## Resumen
 
-## Progreso
+El documento de contexto documenta 3 problemas confirmados (auditados 2026-04-09, 10/10 afirmaciones CONFIRMADAS contra el codigo actual):
 
-| Fase | Estado | Descripción |
-|------|--------|-------------|
-| FASE-A | ✅ Completada | Templates dinámicos (V4 + V6) |
-| FASE-B | ⬜ Pendiente | Generator dinámico (`_prepare_template_data` + `_inject_brecha_scores`) |
-| FASE-C | ⬜ Pendiente | OpportunityScorer — completar mappings faltantes |
-| FASE-D | ⬜ Pendiente | PainSolutionMapper — fix duplicate + verificar cadena coherencia |
-| FASE-E | ⬜ Pendiente | Validación v4complete amaziliahotel.com + análisis de resultados |
+1. **Falso Positivo WhatsApp** — Boton existe visualmente pero el sistema reporta "Sin WhatsApp"
+2. **Narrativa Imprecisa Citabilidad** — Dice "contenido poco estructurado" cuando el score es 0 por ausencia de datos (no por mala calidad)
+3. **Errores Regionales Template** — "nacional" en lugar de region real + typo "yRevisan"
 
-## Dependencias
+---
 
-```
-FASE-A ──→ FASE-B ──→ FASE-C ──→ FASE-D ──→ FASE-E
-(templates) (generator)  (scorer)   (mapper)    (validacion)
-```
+## Estructura de Fases
 
-FASE-E requiere que A, B, C, D estén completas para ejecutar v4complete correctamente.
+| Fase | Nombre | Tipo | Archivos principales |
+|------|--------|------|---------------------|
+| FASE-A | WhatsApp Detection Fix | Codigo | v4_comprehensive.py, v4_diagnostic_generator.py, data_structures.py |
+| FASE-B | Citability Narrative Fix | Codigo | v4_diagnostic_generator.py |
+| FASE-C | Regional Template Fixes | Codigo + Template | diagnostico_v6_template.md, v4_diagnostic_generator.py |
+| FASE-D | Validacion E2E | Validacion | Ninguno (prueba v4complete amaziliahotel.com) |
 
-## Convención
+---
 
-- Una fase por sesión. Sin excepciones.
-- Cada fase termina con `python scripts/log_phase_completion.py`.
-- Documentación incremental en `09-documentacion-post-proyecto.md`.
+## Ejecucion
+
+- **1 fase por sesion** (regla mandatoria del workflow)
+- Cada fase tiene su prompt en `05-prompt-inicio-sesion-fase-{LETRA}.md`
+- Al completar: ejecutar `log_phase_completion.py`
+- Al final: prueba E2E con `v4complete --url https://amaziliahotel.com/`
+
+---
+
+## Estado
+
+| Fase | Estado | Sesion |
+|------|--------|--------|
+| FASE-A | Pendiente | - |
+| FASE-B | Pendiente | - |
+| FASE-C | Pendiente | - |
+| FASE-D | Pendiente | - |

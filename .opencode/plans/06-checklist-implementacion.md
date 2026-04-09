@@ -1,56 +1,81 @@
-# CHECKLIST DE IMPLEMENTACIÓN: BRECHAS-DINAMICAS
+# Checklist de Implementacion — Correccion Falsos Positivos
 
-**Última actualización**: 2026-04-08
-
-## Progreso Global
-
-| Fase | Estado | Fecha | Notas |
-|------|--------|-------|-------|
-| FASE-A | ✅ Completada | 2026-04-08 | Templates dinámicos |
-| FASE-B | ✅ Completada | 2026-04-08 | Generator dinámico |
-| FASE-C | ✅ Completada | 2026-04-08 | OpportunityScorer mappings |
-|| FASE-D | ✅ Completada | 2026-04-08 | PainSolutionMapper fix + coherencia |
-|| FASE-E | ✅ Completada | 2026-04-08 | Validación amaziliahotel.com |
+> **Proyecto:** iah-cli v4.25.x  
+> **Hotel validacion:** amaziliahotel.com  
+> **Fecha:** 2026-04-09
 
 ---
 
-## FASE-A: Templates Dinámicos
-- [x] V6 template: reemplazar 4 ranuras por `${brechas_section}`
-- [x] V6 template: reemplazar tabla 4 filas por `${brechas_resumen_section}`
-- [x] V4 template: reemplazar 4 ranuras por `${brechas_section}`
-- [x] Default template inline: reemplazar 4 ranuras
-- [x] grep confirma 0 ocurrencias de "4 BRECHAS/RAZONES"
+## FASE-A: WhatsApp Detection Fix
 
-## FASE-B: Generator Dinámico ✅
-- [x] Método `_build_brechas_section()` implementado
-- [x] Método `_build_brechas_resumen_section()` implementado
-- [x] `_prepare_template_data()` incluye ambos placeholders
-- [x] `min(..., 4)` eliminado de `_inject_brecha_scores()` (ahora 10)
-- [x] 5 tests nuevos pasan
-- [x] Tests existentes no se rompen (17/17 total)
+**Dependencias:** Ninguna  
+**Archivos:** v4_comprehensive.py, data_structures.py, v4_diagnostic_generator.py
 
-## FASE-C: OpportunityScorer Mappings ✅
-- [x] 5 nuevos tipos en BRECHA_SEVERITY_MAP
-- [x] 5 nuevos tipos en BRECHA_EFFORT_MAP
-- [x] 5 nuevos tipos en BRECHA_IMPACT_MAP
-- [x] 5 nuevos tipos en _JUSTIFICATION_TEMPLATES
-- [x] pain_to_type mapper actualizado en generator
-- [x] 6 tests nuevos pasan
+| # | Tarea | Estado |
+|---|-------|--------|
+| T1 | Conectar scraper `_detectar_whatsapp()` al pipeline de validacion | [ ] Pendiente |
+| T2 | Agregar `whatsapp_html_detected` a `ValidationSummary` en data_structures.py | [ ] Pendiente |
+| T3 | Actualizar condicion brecha WhatsApp en v4_diagnostic_generator.py:1788 | [ ] Pendiente |
+| T4 | Actualizar quick wins (linea 1005-1009) | [ ] Pendiente |
+| T5 | Actualizar tabla brechas (linea 941-944) | [ ] Pendiente |
+| T6 | Tests de regresion pasan | [ ] Pendiente |
+| T7 | log_phase_completion.py ejecutado | [ ] Pendiente |
 
-## FASE-D: PainSolutionMapper Fix + Coherencia
-- [ ] Duplicate `low_ia_readiness` corregido (1 entrada, 3 assets)
-- [ ] 10 pain_ids de `_identify_brechas()` verificados en PAIN_SOLUTION_MAP
-- [ ] Coherence >= 0.8 con 7+ brechas verificado
-- [ ] `optimization_guide.promised_by` sin "pain_solution_mapper"
-- [ ] Tests de integración pasan
+---
 
-## FASE-E: Validación amaziliahotel.com ✅
-- [x] v4complete ejecutado sin errores
-- [x] Diagnóstico muestra N brechas (no 4) → 6 brechas
-- [x] Header no dice "4 BRECHAS" → dice "BRECHAS CRÍTICAS IDENTIFICADAS"
-- [x] Cada brecha traza a asset vía pain_id
-- [x] Tabla resumen tiene N filas → 6 filas
-- [x] Propuesta comercial coherente con diagnóstico
-- [x] Assets cubren >= 50% de brechas → 9/11 generados
-- [x] Coherence score >= 0.80 → 0.84
-- [x] Reporte de validación documentado en context/02-validacion-amaziliahotel.md
+## FASE-B: Citability Narrative Fix
+
+**Dependencias:** Ninguna (independiente de FASE-A)  
+**Archivos:** v4_diagnostic_generator.py
+
+| # | Tarea | Estado |
+|---|-------|--------|
+| T1 | Diferenciar `blocks_analyzed=0` vs score real bajo en `_detect_brechas` (lineas 1850-1860) | [ ] Pendiente |
+| T2 | Actualizar narrativa IA readiness para citability (~1044-1061) | [ ] Pendiente |
+| T3 | Verificar pain_solution_mapper alignment | [ ] Pendiente |
+| T4 | Tests de regresion pasan | [ ] Pendiente |
+| T5 | log_phase_completion.py ejecutado | [ ] Pendiente |
+
+---
+
+## FASE-C: Regional Template Fixes
+
+**Dependencias:** Ninguna (independiente de FASE-A/B)  
+**Archivos:** diagnostico_v6_template.md, v4_diagnostic_generator.py
+
+| # | Tarea | Estado |
+|---|-------|--------|
+| T1 | Corregir typo `yRevisan` en template linea 27 | [ ] Pendiente |
+| T2 | Agregar "Eje Cafetero" al mapping `region_contexts` (lineas 1613-1620) | [ ] Pendiente |
+| T3 | Corregir fallback regional generico (linea 1627) | [ ] Pendiente |
+| T4 | Verificar hotel_region fallback (linea 413) | [ ] Pendiente |
+| T5 | Tests de regresion pasan | [ ] Pendiente |
+| T6 | log_phase_completion.py ejecutado | [ ] Pendiente |
+
+---
+
+## FASE-D: Validacion E2E amaziliahotel.com
+
+**Dependencias:** FASE-A + FASE-B + FASE-C completadas  
+**Archivos:** Ninguno (solo validacion)
+
+| # | Tarea | Estado |
+|---|-------|--------|
+| T1 | v4complete ejecuta sin crashes | [ ] Pendiente |
+| T2 | Fix WhatsApp verificado (no aparece "Sin WhatsApp") | [ ] Pendiente |
+| T3 | Fix Citability verificado (narrativa correcta segun blocks_analyzed) | [ ] Pendiente |
+| T4 | Fix Regional verificado (no "yRevisan", no "Nacional") | [ ] Pendiente |
+| T5 | Coherence >= 0.80 | [ ] Pendiente |
+| T6 | Evidence capturada en evidence/fase-d/ | [ ] Pendiente |
+| T7 | log_phase_completion.py ejecutado | [ ] Pendiente |
+
+---
+
+## Resumen Global
+
+| Fase | Estado | Tests | Coherence |
+|------|--------|-------|-----------|
+| FASE-A | Pendiente | - | - |
+| FASE-B | Pendiente | - | - |
+| FASE-C | Pendiente | - | - |
+| FASE-D | Pendiente | - | - |

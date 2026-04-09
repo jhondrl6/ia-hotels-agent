@@ -1,132 +1,181 @@
-# DOCUMENTACIÓN POST-PROYECTO: BRECHAS-DINAMICAS
+# Documentacion Post-Proyecto — Correccion Falsos Positivos
 
-**Proyecto**: Eliminación del hardcode "LAS 4 BRECHAS"
-**Fecha inicio**: 2026-04-08
-**Referencia**: docs/CONTRIBUTING.md §39-52 (Flujo Post-Fase) + §56-163 (Actualizar docs oficial)
-
----
-
-## Sección A: Módulos Nuevos/Modificados
-
-*(Se completa después de cada fase)*
-
-### FASE-A: Templates ✅ 2026-04-08
-- `modules/commercial_documents/templates/diagnostico_v6_template.md` — Modificado (4 ranuras → ${brechas_section}, tabla → ${brechas_resumen_section})
-- `modules/commercial_documents/templates/diagnostico_v4_template.md` — Modificado (4 ranuras → ${brechas_section})
-- `modules/commercial_documents/v4_diagnostic_generator.py` (solo `_get_default_template`) — Modificado (4 ranuras → ${brechas_section})
-
-### FASE-B: Generator ✅ 2026-04-08
-- `modules/commercial_documents/v4_diagnostic_generator.py` — Métodos nuevos: `_build_brechas_section()`, `_build_brechas_resumen_section()`. Integrados en `_prepare_template_data()`. `min(..., 4)` → `min(..., 10)` en `_inject_brecha_scores()`.
-- `tests/commercial_documents/test_diagnostic_brechas.py` — 5 tests nuevos: `test_build_brechas_section_with_5_brechas`, `test_build_brechas_section_with_0_brechas`, `test_build_brechas_resumen_section_dynamic`, `test_inject_brecha_scores_no_truncation`, `test_brecha_section_markdown_valid`
-
-### FASE-C: Scorer
-- `modules/financial_engine/opportunity_scorer.py` — 5 entries nuevas en maps
-- `tests/financial_engine/test_opportunity_scorer.py` — Tests nuevos
-
-### FASE-D: Mapper + Coherencia
-- `modules/commercial_documents/pain_solution_mapper.py` — Fix duplicate
-- `modules/asset_generation/asset_catalog.py` — Fix promised_by
-
-### FASE-E: Validación
-- Sin cambios de código. Solo ejecución + análisis.
+> **Proyecto:** iah-cli v4.25.x  
+> **Fecha inicio:** 2026-04-09  
+> **Contexto:** `.opencode/plans/context/whatsapp_false_positive.md`  
+> **Alineado con:** `docs/CONTRIBUTING.md` §55-163 (Trigger: "Actualizar documentacion oficial del repositorio")
 
 ---
 
-## Sección B: Decisiones de Diseño
+## Seccion A: Modulos Afectados
 
-*(Se completa durante implementación)*
-
-1. **Template approach vs code approach**: Se eligió `${brechas_section}` placeholder (inyección desde generator) en vez de lógica condicional dentro del template. Razón: templates son markdown puro, no soportan loops.
-2. **min(10) vs ilimitado**: Se fijó máximo 10 brechas en `_inject_brecha_scores()` como protección contra runaway detection. 10 es suficiente para cualquier hotel.
-3. **FASE-D fix scope**: Solo corrección de duplicate y promised_by, no refactoring mayor del mapper. Mantener cambio mínimo para reducir riesgo.
-4. **Validación con amaziliahotel.com**: Hotel real con datos mixtos (GBP OK, schema ausente, citabilidad baja). Caso de uso representativo.
-
----
-
-## Sección C: Lecciones Aprendidas
-
-*(Se completa al final del proyecto)*
-
-1. El límite de 4 brechas venía de 3 capas (template, generator, scorer) que se reforzaban mutuamente.
-2. `_identify_brechas()` ya era dinámico (0-10) pero nunca se explotó porque las capas superiores truncaban.
-3. La propuesta comercial (propuesta_v6_template) NO consume brechas directamente — usa servicios fijos. Esto es un gap arquitectónico que este proyecto NO aborda (queda como mejora futura).
+| Fase | Modulo | Archivo | Cambio |
+|------|--------|---------|--------|
+| FASE-A | auditors | v4_comprehensive.py | Conectar scraper whatsapp detection al cross_validator |
+| FASE-A | data_structures | data_structures.py | Campo whatsapp_html_detected en ValidationSummary |
+| FASE-A | commercial_documents | v4_diagnostic_generator.py | 4 zonas: brecha, tabla, quick wins, condicion WhatsApp |
+| FASE-B | commercial_documents | v4_diagnostic_generator.py | Logica citability con blocks_analyzed |
+| FASE-C | commercial_documents | diagnostico_v6_template.md | Typo yRevisan |
+| FASE-C | commercial_documents | v4_diagnostic_generator.py | Mapping regional + fallback |
 
 ---
 
-## Sección D: Métricas Acumulativas
+## Seccion B: Problemas Resueltos
 
-|| Métrica | Antes | FASE-A | FASE-B | FASE-C | FASE-D | Final |
-||---------|-------|--------|--------|--------|--------|-------|
-|| Max brechas mostradas | 4 | Dinámico (N) | Dinámico (N) | — | — | 6 (amaziliahotel) |
-|| Pain IDs con scorer | 7 | — | — | 12 (+5) | — | 12 |
-|| Tests brechas | 12 | 12 | 17 (+5) | 23 (+6) | 23 | 23 |
-|| Coherence score | 0.8552 | — | — | — | — | 0.84 (E2E) |
-|| Lines modified (cumulative) | 0 | ~40 | +33 | +15 | +5 | ~93 |
-|| Backward compatibility | OK | OK | OK (17/17) | OK (23/23) | OK | OK |
-|| E2E amaziliahotel | — | — | — | — | — | 6 brechas, READY |
+| ID | Problema | Causa Raiz | Fase | Solucion |
+|----|----------|------------|------|----------|
+| FP-1 | Falso positivo "Sin WhatsApp" | scraper detection no conectado al pipeline | FASE-A | Conectar _detectar_whatsapp() → cross_validator |
+| FP-2 | Narrativa "poco estructurado" con score=0 | No distinguir blocks_analyzed=0 | FASE-B | Diferenciar ausencia vs baja calidad |
+| FP-3 | "La region de Nacional" en diagnostico | Fallback generico + typo template | FASE-C | Agregar regiones + corregir fallback + typo |
 
 ---
 
-## Sección E: Archivos Afiliados Actualizados
+## Seccion C: Tests
 
-### Manuales (según documentation_rules.md §17-25)
-
-- [x] `CHANGELOG.md` — Entrada BRECHAS-DINAMICAS agregada a [4.25.3]
-- [x] `docs/GUIA_TECNICA.md` — Sección "Notas de Cambios BRECHAS-DINAMICAS" agregada
-- [x] `INDICE_DOCUMENTACION.md` — Módulos ya documentados (diagnostic_generator, pain_solution_mapper)
-- [x] `VERSION.yaml` — Sin cambio (no release, validación only)
-
-### Auto-sync (via sync_versions.py o log_phase_completion.py)
-
-- [x] `AGENTS.md` — sync_versions.py: OK, in sync
-- [x] `README.md` — sync_versions.py: OK, in sync
-- [x] `.cursorrules` — sync_versions.py: OK, in sync
-- [x] `docs/CONTRIBUTING.md` — sync_versions.py: OK, in sync
-- [x] `docs/contributing/REGISTRY.md` — log_phase_completion.py ejecutado
-- [x] `.agent/SYSTEM_STATUS.md` — Existe, actualizado
-- [x] `.agent/knowledge/DOMAIN_PRIMER.md` — Existe, sin cambios necesarios (mismos módulos)
-
-### Verificación post-proyecto (según CONTRIBUTING §56-163)
-
-- [x] `python scripts/version_consistency_checker.py` — Versiones sincronizadas (4.25.3, UnicodeEncodeError en emoji pero versiones OK)
-- [x] `python scripts/sync_versions.py` — All files in sync
-- [x] Symlink `.agent/workflows` → `.agents/workflows` — Verificado previamente
+| Fase | Tests ejecutados | Resultado |
+|------|-----------------|-----------|
+| FASE-A | [completar] | [completar] |
+| FASE-B | [completar] | [completar] |
+| FASE-C | [completar] | [completar] |
+| FASE-D | E2E v4complete | [completar] |
 
 ---
 
-## Sección F: Checklist de Capability Contract (documentation_rules.md §26-34)
+## Seccion D: Metricas Acumulativas
 
-Aplica cuando se agregan capabilities nuevas (métodos públicos en módulos).
-
-| Capability | Módulo | Punto de Invocación | Output Serializable | No Huérfana |
-|------------|--------|--------------------|--------------------:|-------------|
-| `_build_brechas_section()` | v4_diagnostic_generator | `_prepare_template_data()` | str (markdown) | SI (alimenta template) |
-| `_build_brechas_resumen_section()` | v4_diagnostic_generator | `_prepare_template_data()` | str (markdown) | SI (alimenta template) |
-| 5 nuevos scorer types | opportunity_scorer | `_compute_opportunity_scores()` | OpportunityScore dataclass | SI (via generator) |
-
-- [x] Cada capability nueva documentada en GUIA_TECNICA.md — Sección "Notas de Cambios BRECHAS-DINAMICAS" agregada
-- [x] Ninguna capability huérfana (todas invocadas en flujo principal) — Verificado: `_build_brechas_section()` se llama desde `_prepare_template_data()`
+| Metrica | Pre-fix | Post-fix |
+|---------|---------|----------|
+| Falsos positivos WhatsApp (amazilia) | 1 | [completar] |
+| Narrativa citability incorrecta | 1 | [completar] |
+| Typos en template | 1 | [completar] |
+| Regiones mapeadas | 6 | [completar] |
+| Coherence score (amazilia) | 0.84 | [completar] |
 
 ---
 
-## Sección G: log_phase_completion.py (OBLIGATORIO por fase)
+## Seccion E: Documentacion Oficial (CONTRIBUTING.md §55-163)
 
-Según CONTRIBUTING §42-52, ejecutar al final de CADA fase:
+### Flujo Post-Proyecto Obligatorio (TODAS las fases completadas)
+
+Este es el Paso 7 del `phased_project_executor.md`. Ejecutar UNA VEZ al cerrar el proyecto.
+El registro por fase (log_phase_completion.py) ya se ejecuto en el Paso 6 de cada fase individual.
+
+#### E1. Diagnostico Inicial (CONTRIBUTING §60-67)
 
 ```bash
-# Ejemplo FASE-B:
-venv/Scripts/python.exe scripts/log_phase_completion.py \
-    --fase FASE-B \
-    --desc "Generator dinamico N brechas" \
-    --archivos-mod "modules/commercial_documents/v4_diagnostic_generator.py" \
-    --archivos-nuevos "" \
-    --tests "5" \
-    --coherence 0.85 \
-    --check-manual-docs
+./venv/Scripts/python.exe scripts/version_consistency_checker.py
+./venv/Scripts/python.exe main.py --doctor
 ```
 
-- [x] FASE-A registrada en REGISTRY.md
-- [x] FASE-B registrada en REGISTRY.md
-- [x] FASE-C registrada en REGISTRY.md (via log_phase_completion previa sesión)
-- [x] FASE-D registrada en REGISTRY.md (via log_phase_completion previa sesión)
-- [x] FASE-E registrada en REGISTRY.md (log_phase_completion.py ejecutado en esta sesión)
+- [ ] version_consistency_checker.py pasa sin discrepancias
+- [ ] doctor no reporta errores criticos
+
+#### E2. Sincronizacion Automatica (CONTRIBUTING §70-76)
+
+```bash
+./venv/Scripts/python.exe scripts/sync_versions.py
+```
+
+Sincroniza VERSION.yaml → 6 archivos: AGENTS.md, README.md, .cursorrules, CONTRIBUTING.md, GUIA_TECNICA.md, REGISTRY.md
+
+- [ ] sync_versions.py ejecutado sin errores
+
+#### E3. CHANGELOG.md (CONTRIBUTING §78-85, MANUAL)
+
+Formato segun documentation_rules.md §36-58:
+
+```markdown
+## [4.25.4] - Correccion Falsos Positivos Diagnosticos (2026-04-09)
+
+### Objetivo
+Eliminar 3 falsos positivos y errores de narrativa detectados en diagnostico de amaziliahotel.com
+
+### Cambios Implementados
+- `modules/auditors/v4_comprehensive.py` - Conectar _detectar_whatsapp() al cross_validator
+- `modules/commercial_documents/data_structures.py` - Campo whatsapp_html_detected
+- `modules/commercial_documents/v4_diagnostic_generator.py` - Fix WhatsApp + citability + regional
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` - Typo yRevisan
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| [completar por fase] | [completar] |
+
+### Tests
+- N tests pasando
+```
+
+**NOTA:** FASE-D es validacion-only → NO bump version. Agregar como subsection dentro de la version de FASE-A/B/C.
+
+- [ ] CHANGELOG.md tiene entrada para la version actual
+- [ ] No hay entradas duplicadas
+- [ ] CHANGELOG describe archivos modificados de cada fase
+
+#### E4. GUIA_TECNICA.md (CONTRIBUTING §86-93, MANUAL)
+
+Agregar seccion "Notas de Cambios v4.25.4":
+
+```markdown
+### Notas de Cambios v4.25.4 - Correccion Falsos Positivos
+
+**Modulos afectados:** auditors, commercial_documents, data_structures
+
+**Problema:** Tres falsos positivos/errores en diagnosticos generados para amaziliahotel.com:
+1. WhatsApp detectado como ausente cuando boton HTML existe visualmente
+2. Narrativa citability incorrecta ("poco estructurado" cuando blocks_analyzed=0)
+3. Errores regionales ("nacional" en lugar de region real) + typo template
+
+**Solucion:**
+- [FASE-A] _detectar_whatsapp() del scraper alimenta cross_validator via whatsapp_html_detected
+- [FASE-B] Logica citability distingue blocks_analyzed=0 (no discoverable) vs score real bajo
+- [FASE-C] Eje Cafetero agregado a region_contexts, fallback mejorado, typo corregido
+
+**Backwards compatibility:** Sin cambios en API publica. Validacion existente no afectada.
+```
+
+- [ ] GUIA_TECNICA.md tiene nota tecnica para cada fase con cambios
+- [ ] Nota incluye modulos afectados, problema/solucion, backwards compatibility
+
+#### E5. Skills/Workflows (CONTRIBUTING §94-106, MANUAL)
+
+```bash
+ls -la .agents/workflows/*.md
+```
+
+- [ ] Todos los .md en .agents/workflows/ listados en .agents/workflows/README.md
+- [ ] No hay skills huerfanos
+
+#### E6. Regenerar SYSTEM_STATUS.md (CONTRIBUTING §107-111)
+
+```bash
+./venv/Scripts/python.exe scripts/doctor.py --status
+```
+
+- [ ] SYSTEM_STATUS.md regenerado con version actual
+
+#### E7. Verificar DOMAIN_PRIMER.md (CONTRIBUTING §145-157)
+
+```bash
+./venv/Scripts/python.exe scripts/doctor.py --context
+```
+
+- [ ] Todo modulo en `modules/` documentado en DOMAIN_PRIMER.md
+- [ ] Todo archivo referenciado en DOMAIN_PRIMER.md existe en disco
+
+#### E8. Symlink + Validacion Final (CONTRIBUTING §113-128)
+
+```bash
+ls -la .agent/workflows    # Debe mostrar → .agents/workflows
+./venv/Scripts/python.exe scripts/run_all_validations.py --quick
+git diff --stat
+```
+
+- [ ] Symlink .agent/workflows → .agents/workflows intacto
+- [ ] run_all_validations.py --quick pasa sin errores
+- [ ] git diff --stat muestra todos los archivos modificados
+
+---
+
+## Seccion F: Lecciones Aprendidas
+
+[Espacio para lecciones que surjan durante la implementacion]
