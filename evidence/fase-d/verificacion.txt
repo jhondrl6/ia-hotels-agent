@@ -1,0 +1,67 @@
+===============================================================
+FASE-D: VALIDACION E2E - amaziliahotel.com
+Fecha: 2026-04-09 11:36
+===============================================================
+
+T3: VERIFICACION FIX WHATSAPP (FASE-A)
+---------------------------------------------------------------
+[-] Diagnostico muestra "Sin WhatsApp" como brecha: SI (BRECHA 2)
+[-] Quick Wins sugiere "Agregar Boton WhatsApp": SI
+[?] WhatsApp detectado en cross-validation: estimated
+
+ANALISIS: El sitio NO tiene boton WhatsApp en HTML.
+  - No wa.me, no api.whatsapp.com, no whatsapp://
+  - Tel link existe (tel:3104019049) pero no es WhatsApp
+  - phone_web=null (schema no detecta telefono)
+  - whatsapp_html_detected=False (correcto - no hay boton)
+
+VEREDICTO: FASE-A fix FUNCIONAL. La brecha "Sin WhatsApp" es
+CORRECTA para este sitio. El fix detecta correctamente que no
+hay WhatsApp. El problema anterior (HTML comprimido = false
+negativo) NO se reproduce - el requests library descomprime
+automaticamente.
+
+PERO: phone_web=null es problematico - el tel: link existe en
+HTML pero no se captura. Esto es un NUEVO hallazgo, no un fallo
+del fix FASE-A.
+
+T4: VERIFICACION FIX CITABILITY (FASE-B)
+---------------------------------------------------------------
+[+] blocks_analyzed=0, score=0
+[+] Narrativa dice "Contenido No Discoverable por IA" (NO "poco estructurado")
+[+] No aparece "contenido es insuficiente o poco estructurado"
+
+VEREDICTO: FASE-B fix FUNCIONA. Cuando blocks=0, la narrativa
+correctamente dice "No Discoverable" en vez de "poco estructurado".
+
+T5: VERIFICACION FIX REGIONAL (FASE-C)
+---------------------------------------------------------------
+[+] NO aparece "yRevisan" (concatenacion corregida)
+[-] Aparece "Lo que esta pasando en nacional"
+[-] Region detectada: "nacional" (fallback, no region real)
+
+VEREDICTO: PARCIAL. La correccion de concatenacion "yRevisan"
+FUNCIONA, pero la deteccion de region sigue cayendo a "nacional"
+como default. "Lo que esta pasando en nacional" aparece porque
+el template recibe region="nacional" del detector.
+
+T6: COHERENCIA GENERAL
+---------------------------------------------------------------
+[+] audit_report.json existe y es valido JSON
+[+] Coherence score: 0.84 >= 0.80
+[+] Publication readiness: READY_FOR_PUBLICATION
+[+] No crashes ni tracebacks en ejecucion
+[5/6] Gate checks pasados (whatsapp_verified=0.000 fallo)
+
+===============================================================
+RESUMEN
+===============================================================
+FASE-A (WhatsApp):  FUNCIONAL - brecha correcta para este sitio
+FASE-B (Citability): FUNCIONA - narrativa correcta blocks=0
+FASE-C (Regional):  PARCIAL - concatenacion OK, region=nacional
+Coherencia:         0.84 PASS, READY_FOR_PUBLICATION
+
+HALLAZGOS ADICIONALES:
+1. phone_web=null cuando tel: link existe en HTML (nuevo)
+2. Region detectada como "nacional" en vez de region real
+3. 9/11 assets generados como WARNING (confidence insuficiente)

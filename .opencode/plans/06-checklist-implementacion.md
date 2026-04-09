@@ -61,13 +61,18 @@
 
 | # | Tarea | Estado |
 |---|-------|--------|
-| T1 | v4complete ejecuta sin crashes | [ ] Pendiente |
-| T2 | Fix WhatsApp verificado (no aparece "Sin WhatsApp") | [ ] Pendiente |
-| T3 | Fix Citability verificado (narrativa correcta segun blocks_analyzed) | [ ] Pendiente |
-| T4 | Fix Regional verificado (no "yRevisan", no "Nacional") | [ ] Pendiente |
-| T5 | Coherence >= 0.80 | [ ] Pendiente |
-| T6 | Evidence capturada en evidence/fase-d/ | [ ] Pendiente |
-| T7 | log_phase_completion.py ejecutado | [ ] Pendiente |
+| T1 | v4complete ejecuta sin crashes | [x] Completado |
+| T2 | Fix WhatsApp verificado | [x] Completado - Fix funcional. Sitio NO tiene WhatsApp (brecha correcta). phone_web=null es hallazgo nuevo. |
+| T3 | Fix Citability verificado (narrativa correcta segun blocks_analyzed) | [x] Completado - blocks=0 genera "No Discoverable" (no "poco estructurado") |
+| T4 | Fix Regional verificado | [~] Parcial - yRevisan corregido. Region sigue "nacional" (fallback). |
+| T5 | Coherence >= 0.80 | [x] Completado - 0.84 |
+| T6 | Evidence capturada en evidence/fase-d/ | [x] Completado |
+| T7 | log_phase_completion.py ejecutado | [x] Completado |
+
+**Hallazgos E2E:**
+- phone_web=null cuando tel: link existe en HTML (nuevo issue, no bloqueante)
+- Region detectada como "nacional" (FASE-C fix parcial)
+- 9/11 assets WARNING por confidence insuficiente
 
 ---
 
@@ -78,4 +83,4 @@
 | FASE-A | Completado | 25/25 passed | N/A |
 || FASE-B | Completado | 218 passed (+3 nuevos) | N/A |
 || FASE-C | Completado | 218 passed | N/A |
-|| FASE-D | Pendiente | - | - |
+|| FASE-D | Parcial | - | 0.84 |

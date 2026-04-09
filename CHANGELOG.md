@@ -148,6 +148,14 @@ Proyecto para eliminar el hardcode de 4 brechas y mostrar dinámicamente N brech
 - 0 regresiones en suite existente
 - E2E validado con amaziliahotel.com
 
+### FASE-D (Validacion E2E): Validacion sin cambios de codigo
+- v4complete ejecutado contra amaziliahotel.com — sin crashes, coherence 0.84, READY_FOR_PUBLICATION
+- **Fix WhatsApp (FASE-A)**: Funcional. `_detect_whatsapp_from_html()` opera correctamente; sitio genuinamente no tiene WhatsApp (brecha legítima). Hallazgo nuevo: `phone_web=null` cuando `tel:` link existe en HTML (no-bloqueante).
+- **Fix Citability (FASE-B)**: Funcional. `blocks_analyzed=0` genera narrativa "Contenido No Discoverable por IA" (no "poco estructurado").
+- **Fix Regional (FASE-C)**: Parcial. Concatenación "yRevisan" corregida. Región detectada como "nacional" (fallback) — "Lo que está pasando en nacional" aparece en template.
+- No cambios de código en esta fase.
+- Evidence: `evidence/fase-d/` (ejecucion.log, verificacion.txt)
+
 ## [4.25.2] - 2026-04-08
 
 ### FASE-A (AEO OG Fix): Deteccion Real de Open Graph
