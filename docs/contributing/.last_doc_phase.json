@@ -1,6 +1,6 @@
 {
   "modules/asset_generation/conditional_generator.py": "GAP-IAO-01-04",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-A",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-B",
   "modules/commercial_documents/v4_proposal_generator.py": "GAP-IAO-01-03",
   "modules/commercial_documents/pain_solution_mapper.py": "ANALYTICS-E2E-CERT-01",
   "modules/asset_generation/asset_diagnostic_linker.py": "V6-5",

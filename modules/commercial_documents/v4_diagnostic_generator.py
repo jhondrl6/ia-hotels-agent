@@ -516,9 +516,12 @@ ${quick_wins_list}
             'brecha_4_costo': self._get_brecha_costo(audit_result, financial_scenarios, 3),
             'brecha_4_detalle': self._get_brecha_detalle(audit_result, 3),
 
+            # Brechas dinamicas (N brechas, no fijo 4) - fuente de verdad para templates V6
+            'brechas_section': self._build_brechas_section(audit_result, financial_scenarios),
+            'brechas_resumen_section': self._build_brechas_resumen_section(audit_result, financial_scenarios),
 
 
-            
+
             # Additional variables for sales template
             'year': str(year),
             'prev_year': str(prev_year),
@@ -1569,6 +1572,39 @@ ${quick_wins_list}
             return f"{recuperacion:,.0f}"
         return "0"
 
+    def _build_brechas_section(self, audit_result: V4AuditResult, financial_scenarios: FinancialScenarios) -> str:
+        """Genera seccion markdown con TODAS las brechas detectadas (0-10+)."""
+        brechas = self._identify_brechas(audit_result)
+        if not brechas:
+            return "No se detectaron brechas criticas. Su presencia digital esta en buen estado."
+
+        sections = []
+        for i, b in enumerate(brechas, 1):
+            costo = self._get_brecha_costo(audit_result, financial_scenarios, i - 1)
+            impacto_pct = int(b.get('impacto', 0) * 100)
+            sections.append(
+                f"### [BRECHA {i}] {b['nombre']}\n"
+                f"- **Detalle:** {b['detalle']}\n"
+                f"- **Por que importa:** {impacto_pct}%\n"
+                f"- **Costo:** {costo}/mes\n"
+            )
+        return "\n".join(sections)
+
+    def _build_brechas_resumen_section(self, audit_result: V4AuditResult, financial_scenarios: FinancialScenarios) -> str:
+        """Genera tabla resumen dinamica de N brechas -> oportunidades."""
+        brechas = self._identify_brechas(audit_result)
+        if not brechas:
+            return "| Sin brechas detectadas | — |"
+
+        rows = []
+        for i, b in enumerate(brechas):
+            detalle_corto = b.get('detalle', 'Sin resumen')[:80]
+            if len(b.get('detalle', '')) > 80:
+                detalle_corto += '...'
+            recuperacion = self._get_brecha_recuperacion(audit_result, financial_scenarios, i)
+            rows.append(f"| {detalle_corto} | +{recuperacion}/mes |")
+        return "\n".join(rows)
+
     def _build_regional_context(self, region: str) -> str:
         """Build regional context text for the hotel location."""
         if not region:
@@ -1917,7 +1953,7 @@ ${quick_wins_list}
                 pass
         result = {}
         scores_count = len(scores) if scores else 0
-        for i in range(1, min(scores_count, 4) + 1):
+        for i in range(1, min(scores_count, 10) + 1):
             n = str(i)
             if scores and len(scores) >= i:
                 s = scores[i - 1]

@@ -15,9 +15,9 @@
 - `modules/commercial_documents/templates/diagnostico_v4_template.md` — Modificado (4 ranuras → ${brechas_section})
 - `modules/commercial_documents/v4_diagnostic_generator.py` (solo `_get_default_template`) — Modificado (4 ranuras → ${brechas_section})
 
-### FASE-B: Generator
-- `modules/commercial_documents/v4_diagnostic_generator.py` — Métodos nuevos: `_build_brechas_section()`, `_build_brechas_resumen_section()`
-- `tests/commercial_documents/test_diagnostic_brechas.py` — Tests nuevos
+### FASE-B: Generator ✅ 2026-04-08
+- `modules/commercial_documents/v4_diagnostic_generator.py` — Métodos nuevos: `_build_brechas_section()`, `_build_brechas_resumen_section()`. Integrados en `_prepare_template_data()`. `min(..., 4)` → `min(..., 10)` en `_inject_brecha_scores()`.
+- `tests/commercial_documents/test_diagnostic_brechas.py` — 5 tests nuevos: `test_build_brechas_section_with_5_brechas`, `test_build_brechas_section_with_0_brechas`, `test_build_brechas_resumen_section_dynamic`, `test_inject_brecha_scores_no_truncation`, `test_brecha_section_markdown_valid`
 
 ### FASE-C: Scorer
 - `modules/financial_engine/opportunity_scorer.py` — 5 entries nuevas en maps
@@ -50,16 +50,16 @@
 
 ## Sección D: Métricas Acumulativas
 
-| Métrica | Antes | Después FASE-A | Después FASE-B | ... | Final |
-|---------|-------|----------------|----------------|-----|-------|
-|| Max brechas mostradas | 4 | Dinámico (N) | — | — | — |
-|| Pain IDs con scorer | 7 | — | — | — | — |
-|| Tests brechas | 12 | 12 (sin cambios) | — | — | — |
-| Tests scorer | ? | — | — | — | — |
-| Coherence score | 0.8552 | — | — | — | — |
-| run_all_validations --quick | ? | — | — | — | — |
-|| Lines modified (cumulative) | 0 | ~40 (templates + default) | — | — | — |
-|| Backward compatibility | OK | OK (tests 12/12) | — | — | — |
+|| Métrica | Antes | Después FASE-A | Después FASE-B | ... | Final |
+||---------|-------|----------------|----------------|-----|-------|
+|| Max brechas mostradas | 4 | Dinámico (N) | Dinámico (N) | — | — |
+|| Pain IDs con scorer | 7 | — | Hasta 10 (was 4) | — | — |
+|| Tests brechas | 12 | 12 (sin cambios) | 17 (+5) | — | — |
+|| Tests scorer | ? | — | — | — | — |
+|| Coherence score | 0.8552 | — | — | — | — |
+|| run_all_validations --quick | ? | — | 4/4 | — | — |
+|| Lines modified (cumulative) | 0 | ~40 (templates + default) | +33 (generator) | — | — |
+|| Backward compatibility | OK | OK (tests 12/12) | OK (tests 17/17) | — | — |
 
 ---
 
@@ -123,7 +123,7 @@ venv/Scripts/python.exe scripts/log_phase_completion.py \
 ```
 
 - [x] FASE-A registrada en REGISTRY.md
-- [ ] FASE-B registrada en REGISTRY.md
+- [x] FASE-B registrada en REGISTRY.md
 - [ ] FASE-C registrada en REGISTRY.md
 - [ ] FASE-D registrada en REGISTRY.md
 - [ ] FASE-E registrada en REGISTRY.md

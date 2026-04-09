@@ -7,7 +7,7 @@
 | Fase | Estado | Fecha | Notas |
 |------|--------|-------|-------|
 | FASE-A | ✅ Completada | 2026-04-08 | Templates dinámicos |
-| FASE-B | ⬜ Pendiente | — | Generator dinámico |
+|| FASE-B | ✅ Completada | 2026-04-08 | Generator dinámico |
 | FASE-C | ⬜ Pendiente | — | OpportunityScorer mappings |
 | FASE-D | ⬜ Pendiente | — | PainSolutionMapper fix + coherencia |
 | FASE-E | ⬜ Pendiente | — | Validación amaziliahotel.com |
@@ -21,13 +21,13 @@
 - [x] Default template inline: reemplazar 4 ranuras
 - [x] grep confirma 0 ocurrencias de "4 BRECHAS/RAZONES"
 
-## FASE-B: Generator Dinámico
-- [ ] Método `_build_brechas_section()` implementado
-- [ ] Método `_build_brechas_resumen_section()` implementado
-- [ ] `_prepare_template_data()` incluye ambos placeholders
-- [ ] `min(..., 4)` eliminado de `_inject_brecha_scores()`
-- [ ] 5 tests nuevos pasan
-- [ ] Tests existentes no se rompen
+## FASE-B: Generator Dinámico ✅
+- [x] Método `_build_brechas_section()` implementado
+- [x] Método `_build_brechas_resumen_section()` implementado
+- [x] `_prepare_template_data()` incluye ambos placeholders
+- [x] `min(..., 4)` eliminado de `_inject_brecha_scores()` (ahora 10)
+- [x] 5 tests nuevos pasan
+- [x] Tests existentes no se rompen (17/17 total)
 
 ## FASE-C: OpportunityScorer Mappings
 - [ ] 5 nuevos tipos en BRECHA_SEVERITY_MAP

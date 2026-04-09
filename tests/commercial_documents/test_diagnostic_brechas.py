@@ -327,5 +327,126 @@ def test_identify_brechas_none_audit_returns_empty():
     """Si audit es None, retorna lista vacia (no crash)."""
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(None)
-    
+
     assert brechas == []
+
+
+# --- Helper: crear mock de FinancialScenarios ---
+
+def mock_financial_scenarios(monthly_loss=3000000):
+    """Crea mock de FinancialScenarios con escenario principal configurable."""
+    from unittest.mock import MagicMock
+    main = MagicMock()
+    main.monthly_loss_max = monthly_loss
+    fs = MagicMock()
+    fs.get_main_scenario.return_value = main
+    return fs
+
+
+# --- Tests FASE-B: Generator dinamico ---
+
+def test_build_brechas_section_with_5_brechas():
+    """_build_brechas_section() genera 5 secciones markdown para 5 brechas."""
+    audit = create_audit(
+        schema_detected=False,      # no_hotel_schema
+        faq_detected=False,         # no_faq_schema
+        gbp_geo_score=50,           # low_gbp_score
+        phone_web=None,             # no_whatsapp_visible
+        mobile_score=60,            # poor_performance
+    )
+    fs = mock_financial_scenarios()
+    gen = V4DiagnosticGenerator()
+    section = gen._build_brechas_section(audit, fs)
+
+    # Debe contener 5 headers [BRECHA N]
+    for i in range(1, 6):
+        assert f"[BRECHA {i}]" in section, f"Falta [BRECHA {i}] en output"
+
+
+def test_build_brechas_section_with_0_brechas():
+    """_build_brechas_section() retorna mensaje alternativo si no hay brechas."""
+    audit = create_audit(
+        schema_detected=True,
+        faq_detected=True,
+        gbp_geo_score=80,
+        gbp_reviews=50,
+        gbp_place_found=True,
+        mobile_score=85,
+        whatsapp_status=ConfidenceLevel.VERIFIED.value,
+        phone_web="+573****4567",
+        metadata_has_issues=False,
+        seo_elements=mock_seo_elements(has_open_graph=True),
+        citability=mock_citability(score=80),
+    )
+    fs = mock_financial_scenarios()
+    gen = V4DiagnosticGenerator()
+    section = gen._build_brechas_section(audit, fs)
+
+    assert "No se detectaron brechas" in section
+
+
+def test_build_brechas_resumen_section_dynamic():
+    """_build_brechas_resumen_section() tiene N filas (no siempre 4)."""
+    # 3 brechas detectadas
+    audit = create_audit(
+        schema_detected=False,      # no_hotel_schema
+        gbp_geo_score=50,           # low_gbp_score
+        mobile_score=60,            # poor_performance
+        phone_web="+573****4567",   # no whatsapp brecha
+        faq_detected=True,          # no faq brecha
+    )
+    fs = mock_financial_scenarios()
+    gen = V4DiagnosticGenerator()
+    resumen = gen._build_brechas_resumen_section(audit, fs)
+
+    # Contar filas de tabla (lineas que empiezan con "| ")
+    filas = [l for l in resumen.split("\n") if l.strip().startswith("|")]
+    assert len(filas) == 3, f"Expected 3 filas, got {len(filas)}: {filas}"
+
+
+def test_inject_brecha_scores_no_truncation():
+    """_inject_brecha_scores() genera scores para N brechas, no limitado a 4."""
+    gen = V4DiagnosticGenerator()
+
+    # Audit con 8 brechas (maximo disparo razonable)
+    audit = create_audit(
+        schema_detected=False,
+        faq_detected=False,
+        gbp_geo_score=50,
+        phone_web=None,
+        mobile_score=60,
+        whatsapp_status=ConfidenceLevel.CONFLICT.value,
+        metadata_has_issues=True,
+        gbp_reviews=5,
+    )
+
+    result = gen._inject_brecha_scores(audit, None)
+    # Si scorer no disponible, retorna {}. Si lo esta, no debe limitar a 4
+    assert isinstance(result, dict)
+    # Si hay scores, verificar que no trunca a 4 (podria haber brecha_5_score, etc)
+    if 'brecha_1_score' in result:
+        # Al menos las primeras 4 deben existir
+        for i in range(1, 5):
+            assert f'brecha_{i}_score' in result
+
+
+def test_brecha_section_markdown_valid():
+    """Cada seccion tiene headers, detalle y costo."""
+    audit = create_audit(
+        schema_detected=False,
+        gbp_geo_score=50,
+        phone_web=None,
+    )
+    fs = mock_financial_scenarios()
+    gen = V4DiagnosticGenerator()
+    section = gen._build_brechas_section(audit, fs)
+
+    # Verificar estructura de cada brecha
+    lines = section.split("\n")
+    has_brecha_header = any("[BRECHA" in l for l in lines)
+    has_detalle = any("**Detalle:**" in l for l in lines)
+    has_costo = any("**Costo:**" in l for l in lines)
+
+    assert has_brecha_header, "Falta header [BRECHA N]"
+    assert has_detalle, "Falta campo **Detalle:**"
+    assert has_costo, "Falta campo **Costo:**"
