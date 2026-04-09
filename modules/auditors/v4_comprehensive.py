@@ -1038,6 +1038,7 @@ class V4ComprehensiveAuditor:
             return False
         import re
         whatsapp_patterns = [
+            # Direct WhatsApp links
             r'wa\.me/',
             r'api\.whatsapp\.com',
             r'web\.whatsapp\.com',
@@ -1045,6 +1046,13 @@ class V4ComprehensiveAuditor:
             r'whatsapp\.com/send',
             r'class="[^"]*whatsapp[^"]*"',  # CSS classes like "whatsapp-button"
             r'id="[^"]*whatsapp[^"]*"',      # IDs like "whatsapp-float"
+            # WordPress WhatsApp plugins (top 3: 1M+ combined installs)
+            r'joinchat',                      # Joinchat/creame-whatsapp-me (500K+)
+            r'creame-whatsapp-me',           # Plugin path variant
+            r'ht-ctc',                        # Click to Chat for WhatsApp (200K+)
+            r'click-to-chat',                 # Click to Chat variant
+            r'wa-chat',                       # WA Chat widgets
+            r'data-settings.*telephone',      # Joinchat stores number in data-settings JSON
         ]
         html_lower = html.lower()
         for pattern in whatsapp_patterns:

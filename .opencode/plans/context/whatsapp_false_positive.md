@@ -1,7 +1,7 @@
 # Contexto: Falsos Positivos en Diagnostico v4 - FASE-E
 
 ## Fecha creacion: 2026-04-08
-## Fecha actualizacion: 2026-04-09
+## Fecha actualizacion: 2026-04-09 (micro-sesion W0)
 ## Hotel referencia: amaziliahotel.com
 ## FASE: E - Integridad de Datos Diagnosticos
 
@@ -21,7 +21,7 @@ pero NO se propagan a los consumidores intermedios/finales del diagnostico.
 
 ## WORKSTREAM 1: WhatsApp - Propagacion de `whatsapp_html_detected`
 
-### Estado: Fix parcial (FASE-A) -- solo v4_diagnostic_generator corregido
+### Estado: Fix W0 aplicado (patrones), BRECHA 2 persiste -- debug pendiente
 
 ---
 
@@ -74,17 +74,94 @@ CAPA 6: coherence_validator.py [linea 370-379]
 | 2 | `pain_solution_mapper.py:331` | Pain ID | Agrega `no_whatsapp_visible` sin consultar HTML |
 | 3 | `coherence_validator.py:370` | Coherence gate | `whatsapp_verified = 0.0` sin consultar HTML |
 
-### Confirmacion E2E (FASE-D, amaziliahotel.com):
+### Confirmacion E2E (FASE-D, amaziliahotel.com) -- CORREGIDO 2026-04-09:
 
-El fix de FASE-A (`_detect_whatsapp_from_html` en v4_comprehensive.py) funciona correctamente.
-El sitio genuinamente NO tiene WhatsApp (no hay wa.me ni whatsapp:// en HTML).
-La brecha "Sin WhatsApp" es legitima para este hotel.
+**CONCLUSION ANTERIOR (ERRONEA):** "El sitio genuinamente NO tiene WhatsApp."
+**CONCLUSION CORRECTA:** El sitio SI tiene WhatsApp. La deteccion falla por gaps en los patrones de busqueda.
 
-El problema es estructural: para un hotel que SI tenga boton WhatsApp en HTML
-pero NO telephone en Schema, se generaria un falso positivo en pain_solution_mapper
-y coherence_validator aunque v4_diagnostic_generator no lo reporte como brecha.
+#### Investigacion con browser real (2026-04-09, post-FASE-E):
+
+El hotel amaziliahotel.com SI tiene boton WhatsApp funcional, implementado via plugin
+WordPress "Joinchat" (creame-whatsapp-me) v5.2.1:
+- Numero: +57 310 401 9049
+- Ubicacion: esquina inferior derecha
+- Tooltip: "Bienvenido al Hotel Amazilia, ¿En qué te podemos ayudar?"
+- Config: WhatsApp Web, button_delay=3s, message_delay=5s
+
+#### Causa raiz del falso negativo -- Patrones insuficientes:
+
+El HTML crudo (sin ejecutar JS) contiene:
+- `class="joinchat"` (21 ocurrencias) -- NO contiene la palabra "whatsapp"
+- `data-settings='{"telephone":"573104019049"}'`
+- Script: `creame-whatsapp-me/public/js/joinchat.min.js`
+- SVG con titulo "WhatsApp" dentro del widget
+
+Pero `_detect_whatsapp_from_html()` busca SOLO estos 7 patrones:
+```
+1. r'wa\.me/'                          -> 0 matches (Joinchat construye el link via JS)
+2. r'api\.whatsapp\.com'               -> 0 matches
+3. r'web\.whatsapp\.com'               -> 0 matches
+4. r'whatsapp://'                      -> 0 matches
+5. r'whatsapp\.com/send'               -> 0 matches
+6. r'class="[^"]*whatsapp[^"]*"'       -> 0 matches (la clase es "joinchat", no "whatsapp")
+7. r'id="[^"]*whatsapp[^"]*"'          -> 0 matches
+```
+
+**Ninguno de los 7 patrones matchea.** El patron `class="*whatsapp*"` falla porque
+Joinchat usa `class="joinchat"` sin la palabra whatsapp en el nombre de clase.
+El link `wa.me/573104019049` se genera dinamicamente via JavaScript al hacer click,
+NO existe como href en el HTML estatico.
+
+#### Patrones que SI existen en el HTML crudo y deberian detectarse:
+- `joinchat` (clase CSS del plugin, 21 matches)
+- `creame-whatsapp-me` (path del plugin en script src)
+- `data-settings` con JSON conteniendo `"telephone"`
+- `<title>WhatsApp</title>` dentro de SVG del widget
+
+#### Implicacion:
+
+Esta no es solo una "desconexion entre capas" (como se creia en FASE-A/D).
+El problema es mas fundamental: `_detect_whatsapp_from_html()` no puede detectar
+el plugin de WhatsApp mas popular de WordPress (Joinchat/creame-whatsapp-me).
+
+BRECHA 2 "Sin WhatsApp" en el diagnostico de amaziliahotel.com es FALSA.
+El hotel pierde la oportunidad reportada ($626.400 COP/mes) solo en el papel,
+no en la realidad.
 
 ### Fixes Requeridos
+
+**NOTA:** Los fixes W1-W4 originales siguen siendo validos para propagacion entre capas,
+pero el fix W0 (nuevo) es el PREREQUISITO -- sin el, ninguna capa recibe el dato correcto.
+
+#### Fix W0 (P0 - CRITICO): v4_comprehensive.py:1040-1048 - Ampliar patrones de deteccion
+
+Los 7 patrones actuales fallan para Joinchat, el plugin de WhatsApp mas usado en WordPress (500K+ installs).
+El link `wa.me/` se construye via JavaScript, NO existe en el HTML estatico.
+
+```python
+whatsapp_patterns = [
+    # --- Patrones originales (links directos) ---
+    r'wa\.me/',
+    r'api\.whatsapp\.com',
+    r'web\.whatsapp\.com',
+    r'whatsapp://',
+    r'whatsapp\.com/send',
+    r'class="[^"]*whatsapp[^"]*"',
+    r'id="[^"]*whatsapp[^"]*"',
+    # --- NUEVOS: Plugins WordPress comunes ---
+    r'class="[^"]*joinchat[^"]*"',          # Joinchat/creame-whatsapp-me (500K+ installs)
+    r'creame-whatsapp-me',                   # Path del plugin Joinchat
+    r'whatsapp-me',                          # Variacion del plugin
+    r'class="[^"]*wa-chat[^"]*"',           # WA Chat widgets
+    r'class="[^"]*click-to-chat[^"]*"',     # Click to Chat (another popular WP plugin)
+    r'class="[^"]*ht-ctc[^"]*"',            # Click to Chat for WhatsApp (200K+ installs)
+    r'data-phone.*whatsapp',                 # Generic data attributes
+    r'data-settings.*telephone',            # Joinchat stores number in data-settings JSON
+    r'joinchat',                             # Joinchat class name (catch-all)
+]
+```
+
+Con estos patrones adicionales, amaziliahotel.com pasaria de 0/7 a 3+ matches.
 
 #### Fix W1 (P1): main.py:1766+ - Agregar rama para HTML-detect
 
@@ -319,11 +396,14 @@ Archivos relacionados:
 | problems_have_solutions | 0.818 | OK |
 | assets_are_justified | 1.000 | OK |
 | financial_data_validated | 0.700 | OK |
-| whatsapp_verified | 0.000 | NO-BLOCK (legitimo: hotel no tiene WhatsApp) |
+|| whatsapp_verified | 0.000 | NO-BLOCK (FALSO NEGATIVO: hotel SI tiene WhatsApp via Joinchat) |
 | price_matches_pain | 1.000 | OK |
 | promised_assets_exist | 1.000 | OK |
 
-5/6 pasados. `whatsapp_verified=0.000` es resultado correcto para este hotel.
+5/6 pasados. `whatsapp_verified=0.000` es FALSO NEGATIVO -- el hotel SI tiene WhatsApp
+via plugin Joinchat, pero `_detect_whatsapp_from_html()` no lo detecta porque los patrones
+no cubren la clase CSS "joinchat" ni el plugin "creame-whatsapp-me".
+Ver "Causa raiz del falso negativo" arriba.
 
 ### Hallazgo NO-bloqueante
 
@@ -335,19 +415,158 @@ Ver Fix W3 arriba.
 
 ## Resumen FASE-E: Alcance Completo
 
-| Workstream | Fixes | Archivos | Complejidad |
-|------------|-------|----------|-------------|
-| WhatsApp (W1-W4) | 4 fixes propagacion | main.py, pain_solution_mapper, web_scraper, coherence_validator | Media |
-| Regional (R1-R3) | 3 fixes deteccion+sanitizacion | main.py, v4_diagnostic_generator | Baja-Media |
+| Workstream | Fixes | Archivos | Complejidad | Estado |
+|------------|-------|----------|-------------|--------|
+| WhatsApp (W0-W4) | 5 fixes (W0 deteccion + W1-W4 propagacion) | v4_comprehensive.py, main.py, pain_solution_mapper, web_scraper, coherence_validator | Media-Alta | W0 aplicado, BRECHA 2 persiste (ver abajo) |
+| Regional (R1-R3) | 3 fixes deteccion+sanitizacion | main.py, v4_diagnostic_generator | Baja-Media | PENDIENTE |
 
-**Total:** 7 fixes, 6 archivos, 0 dependencias cruzadas entre workstreams.
+**Total:** 8 fixes, 6 archivos, 0 dependencias cruzadas entre workstreams.
 
-### Orden de implementacion sugerido:
+---
 
-1. Fix R2 (sanitizacion hotel_region) -- 1 linea, efecto inmediato
-2. Fix W1 (rama elif whatsapp_html) -- ~8 lineas, desbloquea W2/W4
-3. Fix R1 (region desde GBP) -- nueva funcion + llamada, elimina causa raiz
-4. Fix W2 (pain_solution_mapper) -- 3 lineas, elimina falso positivo pain
-5. Fix W3 (web_scraper tel:) -- ~5 lineas, captura telefonos perdidos
-6. Fix W4 (coherence_validator) -- 3 lineas, coherence gate realista
-7. Fix R3 (ampliar keywords) -- 1 linea, reduce falsos "nacional"
+## SESION 2026-04-09 (post-FASE-E): Micro-sesion W0
+
+### Que se hizo:
+
+**Fix W0 APLICADO en 2 archivos:**
+
+1. `modules/auditors/v4_comprehensive.py:1040-1055` -- Se agregaron 6 patrones nuevos:
+   - `joinchat`, `creame-whatsapp-me`, `ht-ctc`, `click-to-chat`, `wa-chat`, `data-settings.*telephone`
+
+2. `modules/scrapers/web_scraper.py:394-410` -- Mismos 6 patrones en `_detectar_whatsapp()`.
+
+**Verificacion unitaria PASA:**
+```python
+# Test directo de la funcion con HTML simulado de Joinchat:
+html_test = '<div class="joinchat" data-settings="telephone..."></div>'
+auditor._detect_whatsapp_from_html(html_test)  # → True ✅
+
+# HTML sin WA:
+auditor._detect_whatsapp_from_html('<p>Sin whatsapp</p>')  # → False ✅
+```
+
+### Resultado de v4complete post-fix:
+
+**BRECHA 2 "Sin WhatsApp" PERSISTE en el diagnostico generado.**
+
+Evidencia del reporte:
+```
+audit_report.json:
+  validation.whatsapp_status = "estimated"     (detecto algo via GBP phone)
+  validation.phone_web = None                  (Schema no tiene telephone)
+  validation.phone_gbp = "310 4019049"         (GBP SI tiene telefono)
+  # whatsapp_html_detected: NO APARECE en el JSON
+```
+
+Output del v4complete:
+```
+WhatsApp: estimated
+Sin WhatsApp Visible: high
+whatsapp_verified: score=0.000, passed=False
+```
+
+### Diagnostico del problema restante:
+
+El fix W0 de patrones funciona correctamente en la funcion `_detect_whatsapp_from_html()`,
+pero el valor `whatsapp_html_detected=True` NO llega al `_identify_brechas()` del
+diagnostic generator. Hay un eslabon roto entre la deteccion y el consumo.
+
+**Flujo que deberia funcionar pero no lo hace:**
+```
+v4_comprehensive.py:444  whatsapp_html_detected = _detect_whatsapp_from_html(page_html)
+                          ↓ (ahora retorna True)
+v4_comprehensive.py:447  validation_result = _run_cross_validation(..., whatsapp_html_detected=True)
+                          ↓
+v4_comprehensive.py:1130 CrossValidationResult(whatsapp_html_detected=True)
+                          ↓
+main.py:1463             audit_result = auditor.audit(url)
+                          ↓
+main.py:2058             diagnostic_gen.generate(audit_result=audit_result)
+                          ↓
+v4_diagnostic_generator.py:1810  getattr(audit_result.validation, 'whatsapp_html_detected', None)
+                          ↓
+                          DEBERIA ser True, pero probablemente llega None o False
+```
+
+**Hipotesis principal (VERIFICAR en proxima sesion):**
+
+El parametro `page_html` que recibe `_detect_whatsapp_from_html()` en la linea 444
+podria ser None, vacio, o texto sin clases CSS en la ejecucion real del `audit()`.
+
+El metodo `audit()` en v4_comprehensive.py obtiene `page_html` de alguna fuente
+interna (scraping, HTTP request, etc.) que podria:
+- No ejecutarse correctamente
+- Retornar solo texto plano (sin HTML tags/clases)
+- Ser filtrado antes de llegar a la funcion de deteccion
+
+### ACCIONES PENDIENTES para proxima sesion:
+
+#### PASO 1 (DEBUG): Verificar page_html en audit()
+
+Agregar log temporal en `v4_comprehensive.py:444-446`:
+
+```python
+whatsapp_html_detected = self._detect_whatsapp_from_html(page_html)
+print(f"[DEBUG-W0] page_html length: {len(page_html) if page_html else 0}")
+print(f"[DEBUG-W0] whatsapp_html_detected: {whatsapp_html_detected}")
+if page_html and 'joinchat' in page_html.lower():
+    print(f"[DEBUG-W0] joinchat FOUND in page_html")
+elif page_html:
+    print(f"[DEBUG-W0] joinchat NOT in page_html (first 200 chars: {page_html[:200]})")
+```
+
+Ejecutar: `venv/Scripts/python.exe main.py v4complete --url https://amaziliahotel.com/`
+Ver si page_html tiene contenido y si contiene "joinchat".
+
+#### PASO 2 (SEgun resultado del debug):
+
+**SI page_html esta vacio/None:**
+- Rastrear como `audit()` obtiene page_html. Buscar en v4_comprehensive.py
+  donde se hace el HTTP request o scraping.
+- Puede que el scraper de v4_comprehensive use un metodo diferente al WebScraper.
+
+**SI page_html tiene contenido pero sin "joinchat":**
+- El scraper puede estar parseando solo texto (BeautifulSoup.get_text())
+  en vez de HTML crudo. Verificar que pasa el HTML original.
+
+**SI page_html tiene "joinchat" pero whatsapp_html_detected=False:**
+- Los nuevos patrones no compilaron correctamente. Limpiar __pycache__
+  y re-ejecutar.
+
+#### PASO 3: Fixes W1-W4 y R1-R3 (solo despues de que W0 funcione E2E)
+
+Una vez que `whatsapp_html_detected=True` llegue al diagnostic generator y
+BRECHA 2 desaparezca del diagnostico, proceder con:
+
+1. Fix W1 (main.py:1766+ -- rama elif para HTML-detect en ValidationSummary)
+2. Fix R2 (v4_diagnostic_generator.py:413 -- sanitizar "nacional")
+3. Fix R1 (main.py -- _infer_region_from_address post-audit)
+4. Fix W2 (pain_solution_mapper.py -- consultar whatsapp_html_detected)
+5. Fix W3 (web_scraper.py -- capturar tel: del HTML)
+6. Fix W4 (coherence_validator.py -- consultar whatsapp_html_detected)
+7. Fix R3 (main.py -- ampliar keywords URL)
+
+### Orden de implementacion sugerido (ACTUALIZADO):
+
+1. ~~Fix W0 (patrones deteccion)~~ -- APLICADO, pendiente debug E2E
+2. **DEBUG: Verificar page_html en audit()** -- PROXIMO PASO INMEDIATO
+3. Fix R2 (sanitizacion hotel_region) -- 1 linea, efecto inmediato
+4. Fix W1 (rama elif whatsapp_html) -- ~8 lineas, desbloquea W2/W4
+5. Fix R1 (region desde GBP) -- nueva funcion + llamada, elimina causa raiz
+6. Fix W2 (pain_solution_mapper) -- 3 lineas, elimina falso positivo pain
+7. Fix W3 (web_scraper tel:) -- ~5 lineas, captura telefonos perdidos
+8. Fix W4 (coherence_validator) -- 3 lineas, coherence gate realista
+9. Fix R3 (ampliar keywords) -- 1 linea, reduce falsos "nacional"
+
+### Validacion final:
+
+Despues de todos los fixes, regenerar:
+```bash
+venv/Scripts/python.exe main.py v4complete --url https://amaziliahotel.com/
+```
+
+Verificar:
+- BRECHA 2 "Sin WhatsApp" NO aparece en `01_DIAGNOSTICO_Y_OPORTUNIDAD_*.md`
+- `whatsapp_verified` score > 0 en output
+- `region` = "eje_cafetero" (no "nacional")
+- Coherence >= 0.80

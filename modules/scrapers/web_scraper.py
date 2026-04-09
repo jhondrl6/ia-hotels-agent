@@ -393,10 +393,18 @@ class WebScraper:
 
     def _detectar_whatsapp(self, soup, html_text):
         whatsapp_patterns = [
+            # Direct WhatsApp links
             r'wa\.me',
             r'api\.whatsapp\.com',
             r'whatsapp://send',
-            r'web\.whatsapp\.com'
+            r'web\.whatsapp\.com',
+            # WordPress WhatsApp plugins (top 3: 1M+ combined installs)
+            r'joinchat',                      # Joinchat/creame-whatsapp-me (500K+)
+            r'creame-whatsapp-me',           # Plugin path variant
+            r'ht-ctc',                        # Click to Chat for WhatsApp (200K+)
+            r'click-to-chat',                 # Click to Chat variant
+            r'wa-chat',                       # WA Chat widgets
+            r'data-settings.*telephone',      # Joinchat stores number in data-settings JSON
         ]
 
         for pattern in whatsapp_patterns:
