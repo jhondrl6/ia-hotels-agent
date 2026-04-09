@@ -1,6 +1,6 @@
 # Guía Técnica IA Hoteles Agent CLI
 
-**Ultima actualizacion:** 8 Abril 2026
+**Ultima actualizacion:** 9 Abril 2026
 **Version:** 4.25.3 (Fix AEO Score - Pendiente de datos eliminado)
 **Audiencia:** Desarrolladores, DevOps, Contribuidores
 
@@ -66,6 +66,46 @@ El score AEO del diagnostico v4complete mostraba "0 (Pendiente de datos)" en tod
 **Arquitectura**: `to_dict()` es el serializador usado por `main.py` para persistir `audit_report.json`. Antes de SER-1, el detector `SEOElementsDetector` ejecutaba y asignaba resultado a `V4AuditResult.seo_elements`, pero el JSON persistido no contenía esos datos. El pipeline de datos fluye: Detector → V4AuditResult.seo_elements → to_dict() → audit_report.json. SER-1 cierra la brecha de persistencia.
 
 **Backwards Compatibility**: Totalmente backwards compatible. `seo_elements` es campo opcional (`Optional[SEOElementsResult]`). El bloque `if self.seo_elements:` solo agrega al dict si existe. Eliminación de dead code no afecta comportamiento (métodos eliminados nunca se ejecutaban).
+
+---
+
+### Corrección Falsos Positivos — FASE-A/B/C/D (v4.25.3)
+
+**Fecha:** 9 Abril 2026
+
+#### Resumen
+
+Tres falsos positivos/errores de narrativa detectados en diagnóstico de amaziliahotel.com. FASE-D validó E2E sin cambios de código — coherence 0.84, READY_FOR_PUBLICATION.
+
+#### Modulos Afectados
+
+**FASE-A — WhatsApp Detection Fix:**
+- `v4_comprehensive.py`: `_detect_whatsapp_from_html(html)` escanea HTML por patrones wa.me, api.whatsapp.com, whatsapp://, clases CSS whatsapp. Conectado a `_run_cross_validation()` via `whatsapp_html_detected`.
+- `data_structures.py`: Campo `whatsapp_html_detected: bool = False` en `ValidationSummary`.
+- `v4_diagnostic_generator.py`: Condición de brecha WhatsApp ahora verifica `phone_web` OR `whatsapp_html_detected` (L1806-1808). Quick wins y tabla brechas actualizados.
+
+**FASE-B — Citability Narrative Fix:**
+- `v4_diagnostic_generator.py`: Lógica distingue `blocks_analyzed=0` (narrativa "no discoverable") vs score bajo real (narrativa "poco estructurado").
+- `opportunity_scorer.py`: Justificación `low_citability` genérico en vez de asumir contenido malo.
+
+**FASE-C — Regional Template Fix:**
+- `diagnostico_v6_template.md`: Typo "yRevisan" → "y Revisan" corregido.
+- `v4_diagnostic_generator.py`: `_build_regional_context()` — Eje Cafetero, San Andrés, Llanos Orientales, Costa Atlántica agregados a `region_contexts`. Fallback genérico mejorado.
+
+#### Backwards Compatibility
+- Sin cambios en API pública. `ValidationSummary.whatsapp_html_detected` default `False` (backward compatible).
+- Templates no requieren regeneración (cambios son en lógica de generación, no en output format).
+
+#### Tests
+- 3 nuevos tests `blocks_analyzed=0` en `test_diagnostic_brechas.py`
+- 218 passed, 7 pre-existentes (sin relación con cambios)
+- FASE-D E2E: coherence 0.84, 5/6 gate checks
+
+#### Validación E2E (FASE-D)
+- Hotel: amaziliahotel.com
+- Fix WhatsApp: funcional (sitio genuinamente no tiene WhatsApp — brecha legítima)
+- Fix Citability: funcional (blocks=0 genera "No Discoverable", no "poco estructurado")
+- Fix Regional: parcial (yRevisan corregido, región=nacional persiste como fallback)
 
 ---
 

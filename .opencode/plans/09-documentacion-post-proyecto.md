@@ -39,7 +39,7 @@
 | FASE-A | test_pain_solution_mapper.py + test_diagnostic_brechas.py | 25 passed, whatsapp_html_detected validated |
 | FASE-B | test_diagnostic_brechas.py (25 tests) + test_pain_solution_mapper.py (5) | 25 passed, 3 nuevos tests blocks_analyzed |
 || FASE-C | test suite completo (commercial_documents + asset_generation) | 218 passed, 7 pre-existentes |
-| FASE-D | E2E v4complete | [completar] |
+| FASE-D | E2E v4complete | coherence 0.84, 5/6 gate checks, READY |
 
 ---
 
@@ -51,7 +51,7 @@
 | Narrativa citability incorrecta | 1 | 0 (corregido, ambas narrativas diferenciadas) |
 || Typos en template | 1 | 0 (corregido "yRevisan" → "y revisan") |
 || Regiones mapeadas | 6 | 10 (+eje cafetero, san andrés, llanos orientales, costa atlántica) |
-|| Coherence score (amazilia) | 0.84 | [completar en FASE-D] |
+|| Coherence score (amazilia) | 0.84 | 0.84 (sin cambios, validación-only) |
 
 ---
 
@@ -69,8 +69,8 @@ El registro por fase (log_phase_completion.py) ya se ejecuto en el Paso 6 de cad
 ./venv/Scripts/python.exe main.py --doctor
 ```
 
-- [ ] version_consistency_checker.py pasa sin discrepancias
-- [ ] doctor no reporta errores criticos
+- [x] version_consistency_checker.py pasa sin discrepancias (v4.25.3 sincronizado, crash Unicode pre-existente en emoji output)
+- [x] doctor no reporta errores criticos (1 issue no-critico: agents_path_consistency symlink)
 
 #### E2. Sincronizacion Automatica (CONTRIBUTING §70-76)
 
@@ -80,7 +80,7 @@ El registro por fase (log_phase_completion.py) ya se ejecuto en el Paso 6 de cad
 
 Sincroniza VERSION.yaml → 6 archivos: AGENTS.md, README.md, .cursorrules, CONTRIBUTING.md, GUIA_TECNICA.md, REGISTRY.md
 
-- [ ] sync_versions.py ejecutado sin errores
+- [x] sync_versions.py ejecutado sin errores (3 archivos actualizados: README, AGENTS, .cursorrules)
 
 #### E3. CHANGELOG.md (CONTRIBUTING §78-85, MANUAL)
 
@@ -109,9 +109,9 @@ Eliminar 3 falsos positivos y errores de narrativa detectados en diagnostico de 
 
 **NOTA:** FASE-D es validacion-only → NO bump version. Agregar como subsection dentro de la version de FASE-A/B/C.
 
-- [ ] CHANGELOG.md tiene entrada para la version actual
-- [ ] No hay entradas duplicadas
-- [ ] CHANGELOG describe archivos modificados de cada fase
+- [x] CHANGELOG.md tiene entrada para la version actual (FASE-D Validacion E2E en v4.25.3)
+- [x] No hay entradas duplicadas
+- [x] CHANGELOG describe archivos modificados de cada fase
 
 #### E4. GUIA_TECNICA.md (CONTRIBUTING §86-93, MANUAL)
 
@@ -135,8 +135,8 @@ Agregar seccion "Notas de Cambios v4.25.4":
 **Backwards compatibility:** Sin cambios en API publica. Validacion existente no afectada.
 ```
 
-- [ ] GUIA_TECNICA.md tiene nota tecnica para cada fase con cambios
-- [ ] Nota incluye modulos afectados, problema/solucion, backwards compatibility
+- [x] GUIA_TECNICA.md tiene nota tecnica para cada fase con cambios ("Corrección Falsos Positivos — FASE-A/B/C/D")
+- [x] Nota incluye modulos afectados, problema/solucion, backwards compatibility
 
 #### E5. Skills/Workflows (CONTRIBUTING §94-106, MANUAL)
 
@@ -144,8 +144,8 @@ Agregar seccion "Notas de Cambios v4.25.4":
 ls -la .agents/workflows/*.md
 ```
 
-- [ ] Todos los .md en .agents/workflows/ listados en .agents/workflows/README.md
-- [ ] No hay skills huerfanos
+- [x] Todos los .md en .agents/workflows/ listados en .agents/workflows/README.md (doctor PASS)
+- [x] No hay skills huerfanos
 
 #### E6. Regenerar SYSTEM_STATUS.md (CONTRIBUTING §107-111)
 
@@ -153,7 +153,7 @@ ls -la .agents/workflows/*.md
 ./venv/Scripts/python.exe scripts/doctor.py --status
 ```
 
-- [ ] SYSTEM_STATUS.md regenerado con version actual
+- [x] SYSTEM_STATUS.md regenerado con version actual (16 skills, 795 shadow logs, 110 sesiones)
 
 #### E7. Verificar DOMAIN_PRIMER.md (CONTRIBUTING §145-157)
 
@@ -161,8 +161,8 @@ ls -la .agents/workflows/*.md
 ./venv/Scripts/python.exe scripts/doctor.py --context
 ```
 
-- [ ] Todo modulo en `modules/` documentado en DOMAIN_PRIMER.md
-- [ ] Todo archivo referenciado en DOMAIN_PRIMER.md existe en disco
+- [x] Todo modulo en `modules/` documentado en DOMAIN_PRIMER.md (doctor PASS)
+- [x] Todo archivo referenciado en DOMAIN_PRIMER.md existe en disco (doctor PASS)
 
 #### E8. Symlink + Validacion Final (CONTRIBUTING §113-128)
 
@@ -172,12 +172,20 @@ ls -la .agent/workflows    # Debe mostrar → .agents/workflows
 git diff --stat
 ```
 
-- [ ] Symlink .agent/workflows → .agents/workflows intacto
-- [ ] run_all_validations.py --quick pasa sin errores
-- [ ] git diff --stat muestra todos los archivos modificados
+- [x] Symlink .agent/workflows → .agents/workflows intacto
+- [x] run_all_validations.py --quick pasa sin errores (4/4 PASS)
+- [x] git diff --stat muestra todos los archivos modificados
 
 ---
 
 ## Seccion F: Lecciones Aprendidas
 
-[Espacio para lecciones que surjan durante la implementacion]
+1. **HTML comprimido no es problema en iah-cli**: `requests` descomprime automáticamente gzip/deflate/brotli. El falso negativo de WhatsApp no fue por compresión — el sitio genuinamente no tiene botón WhatsApp.
+
+2. **Distinguir "ausencia de dato" de "dato malo"**: `blocks_analyzed=0` ≠ contenido malo. La narrativa debe diferenciar entre "no hay contenido para analizar" y "el contenido analizado es de baja calidad".
+
+3. **Region "nacional" como fallback persiste**: `_build_regional_context()` necesita que cada hotel tenga una región real. Sin onboarding que capture región, el fallback siempre será "nacional".
+
+4. **phone_web vs whatsapp_html_detected son campos distintos**: Uno viene del Schema JSON-LD, otro del escaneo HTML. Un hotel puede tener teléfono sin WhatsApp y viceversa.
+
+5. **version_consistency_checker.py tiene bug Unicode**: Los emojis (✅) en output crashean con console cp1252 de Windows. Pre-existente, no relacionado con este proyecto.

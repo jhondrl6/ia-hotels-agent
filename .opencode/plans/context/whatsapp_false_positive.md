@@ -287,3 +287,69 @@ El template debe ser corregido para que las próximas generaciones salgan bien.
 
 - `/mnt/c/Users/Jhond/Github/iah-cli/modules/commercial_documents/templates/diagnostico_v6_template.md` → corregir typo yRevisan
 - `/mnt/c/Users/Jhond/Github/iah-cli/modules/commercial_documents/v4_diagnostic_generator.py:1627` → corregir texto fallback regional
+
+---
+
+## FASE-D: Validación E2E — Resultados (2026-04-09)
+
+**Hotel:** amaziliahotel.com
+**Comando:** `v4complete --url https://amaziliahotel.com/ --debug`
+**Coherence:** 0.84 (umbral 0.80) — PASS
+**Publication:** READY_FOR_PUBLICATION
+
+---
+
+### Fix WhatsApp (FASE-A): FUNCIONAL
+
+El fix `_detect_whatsapp_from_html()` en `v4_comprehensive.py` opera correctamente.
+
+**Hallazgo clave:** El sitio genuinamente NO tiene botón WhatsApp. No hay `wa.me/`, `api.whatsapp.com`, ni `whatsapp://` en el HTML. El `tel:3104019049` existe pero NO es un enlace de WhatsApp.
+
+La brecha "Sin WhatsApp" es **legítima** para este hotel — no es falso positivo. El problema original (HTML comprimido = falso negativo) no se reproduce; `requests` descomprime automáticamente.
+
+**Nuevo hallazgo (no-bloqueante):** `phone_web=null` cuando `tel:` link existe en el HTML. El scraper no captura el teléfono del atributo `tel:` — solo del JSON-LD Schema.
+
+| Dato | Valor |
+|------|-------|
+| whatsapp_html_detected | False (correcto — no hay botón) |
+| phone_web | null (Schema no tiene telephone) |
+| phone_gbp | 310 4019049 (de Google Business Profile) |
+| whatsapp_status | estimated (de GBP phone, no de HTML) |
+
+---
+
+### Fix Citability (FASE-B): FUNCIONA
+
+`blocks_analyzed=0` genera narrativa "Contenido No Discoverable por IA" — NO "poco estructurado". El fix diferencia correctamente entre score bajo (blocks>0, score<30) y contenido ausente (blocks=0).
+
+---
+
+### Fix Regional (FASE-C): PARCIAL
+
+- ✅ **yRevisan corregido** — no aparece en diagnóstico generado 2026-04-09
+- ❌ **Región = "nacional" persiste** — template muestra "Lo que está pasando en nacional"
+
+El concatenation fix funciona (typo corregido en template). Pero la detección de región sigue cayendo a fallback "nacional" porque el hotel no mapea a una región específica en `region_contexts`.
+
+**Líneas afectadas en diagnóstico 20260409_113611:**
+- L21: "Lo que está pasando en nacional"
+- L27: "¿Hotel boutique en nacional?"
+- L37: "zona de nacional"
+- L55-57: "Benchmark regional (Nacional, Q1 2026)" x3
+
+**Root cause:** `_build_regional_context()` no tiene mapping para "nacional" → usa fallback genérico con `{region}` interpolado.
+
+---
+
+### Gate Checks
+
+| Check | Score | Pass |
+|-------|-------|------|
+| problems_have_solutions | 0.818 | ✅ |
+| assets_are_justified | 1.000 | ✅ |
+| financial_data_validated | 0.700 | ✅ |
+| whatsapp_verified | 0.000 | ❌ |
+| price_matches_pain | 1.000 | ✅ |
+| promised_assets_exist | 1.000 | ✅ |
+
+**5/6 pasados.** `whatsapp_verified=0.000` porque `whatsapp_html_detected=False` (sitio no tiene WhatsApp) — no es un bug del sistema, es resultado correcto.
