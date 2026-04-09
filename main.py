@@ -1477,6 +1477,13 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             audit_result = None
             audit_path = None
     
+    # Re-evaluar region si fallback a "nacional" y GBP address disponible
+    if region == "nacional" and audit_result and hasattr(audit_result, 'gbp') and audit_result.gbp:
+        inferred = _infer_region_from_address(audit_result.gbp.address)
+        if inferred:
+            region = inferred
+            print(f"   Region inferida desde GBP: {region}")
+    
     # Cross-validation checks
     print("\n🔍 Validación Cruzada:")
     
@@ -1764,6 +1771,16 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             match_percentage=0.5,
             can_use_in_assets=True
         ))
+    elif getattr(audit_result.validation, 'whatsapp_html_detected', False):
+        # WhatsApp boton existe en HTML pero no hay telefono en Schema
+        validated_fields.append(ValidatedField(
+            field_name="whatsapp_number",
+            value="detected_via_html",
+            confidence=ConfidenceLevel.ESTIMATED,
+            sources=["HTML"],
+            match_percentage=0.6,
+            can_use_in_assets=True
+        ))
 
     # Rooms field (del onboarding o audit o schema)
     if rooms and rooms > 0:
@@ -1924,7 +1941,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     print("\n Generando plan de assets...")
     pain_mapper = PainSolutionMapper()
     if audit_result:
-        detected_pains = pain_mapper.detect_pains(audit_result, validation_summary, analytics_data)
+        detected_pains = pain_mapper.detect_pains(audit_result, validation_summary, analytics_data,
+                                                   whatsapp_html_detected=getattr(audit_result.validation, 'whatsapp_html_detected', False))
     elif analytics_data:
         # Sin audit pero con analytics: detectar solo pains de analytics
         detected_pains = pain_mapper.detect_pains_for_analytics(analytics_data)
@@ -2000,7 +2018,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         temp_diagnostic,
         temp_proposal,
         asset_plan,
-        validation_summary
+        validation_summary,
+        whatsapp_html_detected=getattr(audit_result.validation, 'whatsapp_html_detected', False) if audit_result else False
     )
     pre_coherence_score = pre_coherence_report.overall_score
     
@@ -2688,7 +2707,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
 def _detect_region_from_url(url: str) -> str:
     """Detecta la región basada en la URL o contenido."""
     url_lower = url.lower()
-    if any(x in url_lower for x in ['visperas', 'salento', 'armenia', 'quindio', 'calarca']):
+    if any(x in url_lower for x in ['visperas', 'salento', 'armenia', 'quindio', 'calarca',
+          'cafetero', 'finca', 'montenegro', 'filandia', 'circasia', 'termales']):
         return 'eje_cafetero'
     elif any(x in url_lower for x in ['cartagena', 'santa marta', 'barranquilla']):
         return 'caribe'
@@ -2697,6 +2717,29 @@ def _detect_region_from_url(url: str) -> str:
     elif any(x in url_lower for x in ['bogota', 'cundinamarca']):
         return 'centro'
     return 'nacional'
+
+
+def _infer_region_from_address(address: str) -> str | None:
+    """Infiere region turistica desde direccion del GBP."""
+    if not address:
+        return None
+    addr_lower = address.lower()
+    REGION_PATTERNS = {
+        'eje_cafetero': ['armenia', 'quindio', 'quindío', 'pereira', 'risaralda',
+                         'manizales', 'caldas', 'salento', 'filandia', 'calarca',
+                         'montenegro', 'circasia'],
+        'caribe': ['cartagena', 'barranquilla', 'santa marta', 'sincelejo'],
+        'antioquia': ['medellin', 'medellín', 'antioquia', 'guatape', 'guatapé',
+                       'rionegro', 'jardin', 'jardín'],
+        'centro': ['bogota', 'bogotá', 'cundinamarca', 'chia', 'cajica'],
+        'valle': ['cali', 'valle del cauca', 'palmira', 'buga'],
+        'llanos': ['villavicencio', 'meta', 'yopal', 'casanare'],
+        'san_andres': ['san andres', 'san andrés', 'providencia'],
+    }
+    for region_key, patterns in REGION_PATTERNS.items():
+        if any(p in addr_lower for p in patterns):
+            return region_key
+    return None
 
 
 def _load_latest_onboarding_data(hotel_url: str, hotel_name: str) -> Dict[str, Any] | None:

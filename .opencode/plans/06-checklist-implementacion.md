@@ -45,12 +45,12 @@
 
 | # | Tarea | Estado |
 |---|-------|--------|
-|| T1 | Corregir typo `yRevisan` en template linea 27 | [x] Completado |
-|| T2 | Agregar "Eje Cafetero" al mapping `region_contexts` (lineas 1613-1620) | [x] Completado |
-|| T3 | Corregir fallback regional generico (linea 1627) | [x] Completado |
-|| T4 | Verificar hotel_region fallback (linea 413) | [x] Completado |
-|| T5 | Tests de regresion pasan (218 passed, 7 pre-existentes) | [x] Completado |
-|| T6 | log_phase_completion.py ejecutado | [x] Completado |
+| T1 | Corregir typo `yRevisan` en template linea 27 | [x] Completado |
+| T2 | Agregar "Eje Cafetero" al mapping `region_contexts` (lineas 1613-1620) | [x] Completado |
+| T3 | Corregir fallback regional generico (linea 1627) | [x] Completado |
+| T4 | Verificar hotel_region fallback (linea 413) | [x] Completado |
+| T5 | Tests de regresion pasan (218 passed, 7 pre-existentes) | [x] Completado |
+| T6 | log_phase_completion.py ejecutado | [x] Completado |
 
 ---
 
@@ -76,11 +76,46 @@
 
 ---
 
+## FASE-E: Integridad de Datos Diagnosticos
+
+**Dependencias:** FASE-A completada (usa `whatsapp_html_detected` de v4_comprehensive)  
+**Archivos:** main.py, pain_solution_mapper.py, coherence_validator.py, web_scraper.py, v4_diagnostic_generator.py
+
+### Workstream WhatsApp (W1-W4)
+
+| # | Tarea | Fix | Estado |
+|---|-------|-----|--------|
+|| W1 | Agregar rama elif whatsapp_html_detected en ValidationSummary (main.py:1766+) | Campo "whatsapp_number" siempre existe si boton HTML detectado | [x] Completado ||
+|| W2 | pain_solution_mapper consulta whatsapp_html_detected (lineas 315, 332) | No genera pain "no_whatsapp_visible" si boton HTML existe | [x] Completado ||
+|| W3 | web_scraper captura tel: links (_extract_contact, linea 1112+) | Telefonos en href="tel:" capturados | [x] Completado ||
+|| W4 | coherence_validator consulta whatsapp_html_detected (linea 370+) | No penaliza whatsapp_verified si boton HTML existe | [x] Completado |
+
+### Workstream Regional (R1-R3)
+
+| # | Tarea | Fix | Estado |
+|---|-------|-----|--------|
+|| R1 | Inferir region desde GBP address post-auditoria (main.py:1470+, nueva funcion) | Region real desde GBP cuando URL no tiene keywords | [x] Completado ||
+|| R2 | Sanitizar hotel_region (v4_diagnostic_generator.py:413) | "nacional" nunca llega al template | [x] Completado ||
+|| R3 | Ampliar keywords URL Eje Cafetero (main.py:2691) | Reduccion de falsos "nacional" | [x] Completado |
+
+### Validacion
+
+| # | Tarea | Estado |
+|---|-------|--------|
+|| V1 | Tests de regresion pasan | [x] Completado - 8 errores pre-existentes (módulos faltantes, no relacionados) ||
+|| V2 | v4complete --url https://amaziliahotel.com/ sin crashes | [x] Completado ||
+|| V3 | Region muestra "Eje Cafetero" (no "nacional") en diagnostico | [x] Completado - region=eje_cafetero ||
+|| V4 | pain_solution_mapper no genera no_whatsapp_visible falso | [x] Completado - whatsapp_button generado ||
+|| V5 | log_phase_completion.py ejecutado | [x] Completado |
+
+---
+
 ## Resumen Global
 
 | Fase | Estado | Tests | Coherence |
 |------|--------|-------|-----------|
 | FASE-A | Completado | 25/25 passed | N/A |
-|| FASE-B | Completado | 218 passed (+3 nuevos) | N/A |
-|| FASE-C | Completado | 218 passed | N/A |
-|| FASE-D | Parcial | - | 0.84 |
+| FASE-B | Completado | 218 passed (+3 nuevos) | N/A |
+| FASE-C | Completado | 218 passed | N/A |
+| FASE-D | Completado (parcial) | - | 0.84 |
+|| FASE-E | Completado | 8 errores pre-existentes | 0.84 |

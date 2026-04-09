@@ -1,7 +1,7 @@
 # Guía Técnica IA Hoteles Agent CLI
 
 **Ultima actualizacion:** 9 Abril 2026
-**Version:** 4.25.3 (Fix AEO Score - Pendiente de datos eliminado)
+**Version:** 4.25.3 (Fix AEO Score + Integridad de Datos FASE-E)
 **Audiencia:** Desarrolladores, DevOps, Contribuidores
 
 ## Notas de Cambios v4.25.3 - Fix AEO Score "Pendiente de datos"
@@ -106,6 +106,42 @@ Tres falsos positivos/errores de narrativa detectados en diagnóstico de amazili
 - Fix WhatsApp: funcional (sitio genuinamente no tiene WhatsApp — brecha legítima)
 - Fix Citability: funcional (blocks=0 genera "No Discoverable", no "poco estructurado")
 - Fix Regional: parcial (yRevisan corregido, región=nacional persiste como fallback)
+
+---
+
+### Corrección Integridad de Datos — FASE-E (v4.25.3)
+
+**Fecha:** 9 Abril 2026
+
+#### Resumen
+
+Datos detectados correctamente en capas tempranas del pipeline no se propagaban a consumidores intermedios/finales. FASE-E elimina 2 persistencias de datos incorrectos: (1) `whatsapp_html_detected` no llegaba a pain_solution_mapper, ValidationSummary ni coherence_validator; (2) región se quedaba en "nacional" cuando la URL no contenía keywords geográficas pero GBP sí tenía dirección regional.
+
+#### Módulos Afectados
+
+**FASE-E Workstream WhatsApp (W1-W4):**
+- `main.py` (W1): Nueva rama `elif getattr(audit_result.validation, 'whatsapp_html_detected', False)` después de `elif whatsapp_web:` (L1766+). Crea `ValidatedField("whatsapp_number", "detected_via_html", ESTIMATED, sources=["HTML"], 0.6)`.
+- `modules/commercial_documents/pain_solution_mapper.py` (W2): `detect_pains()` recibe `whatsapp_html_detected=False`. Condición L332: `if (not whatsapp_field or ...) and not whatsapp_html_detected`. Caller en main.py pasa `whatsapp_html_detected=getattr(audit_result.validation, 'whatsapp_html_detected', False)`.
+- `modules/scrapers/web_scraper.py` (W3): `_extract_contact()` agrega parseo de `tel:` links después de regex patterns. Solo si `'telefono' not in contact` (fallback, no override).
+- `modules/commercial_documents/coherence_validator.py` (W4): `validate()` recibe `whatsapp_html_detected=False`, lo pasa a `_check_whatsapp_verified()`. Si `not whatsapp_field and whatsapp_html_detected` → score 0.5 parcial (no 0.0 penalizante).
+
+**FASE-E Workstream Regional (R1-R3):**
+- `main.py` (R1): Nueva función `_infer_region_from_address(address) -> str | None`. REGION_PATTERNS: eje_cafetero (armenia, quindio, pereira, etc.), caribe, antioquia, centro, valle, llanos, san_andres. Inserción post-audit (~L1479): si `region == "nacional"` y `audit_result.gbp.address` existe → re-evalúa.
+- `modules/commercial_documents/v4_diagnostic_generator.py` (R2): L413 sanitización: `if _raw.lower() in ("nacional", "general", "default", "unknown") → "Colombia"`, else `_raw.replace("_", " ").title()`.
+- `main.py` (R3): `_detect_region_from_url()` keywords Eje Cafetero ampliadas: +cafetero, finca, montenegro, filandia, circasia, termales.
+
+#### Backwards Compatibility
+- `pain_solution_mapper.detect_pains()`: nuevo parámetro `whatsapp_html_detected=False` es backward compatible.
+- `coherence_validator.validate()` y `_check_whatsapp_verified()`: nuevo parámetro `whatsapp_html_detected=False` es backward compatible.
+- `_infer_region_from_address()`: función nueva, no afecta código existente.
+- Scraper: fallback `tel:` solo agrega si `'telefono' not in contact` — no override de datos existentes.
+
+#### Validación E2E
+- Hotel: amaziliahotel.com
+- **Región: eje_cafetero** (antes persistía "nacional" a pesar de FASE-C fix parcial)
+- Coherence: 0.84 ≥ 0.80 — Pasa gate
+- Publication: READY_FOR_PUBLICATION
+- whatsapp_button generado — no generó pain falso "no_whatsapp_visible"
 
 ---
 

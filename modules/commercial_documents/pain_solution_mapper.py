@@ -312,7 +312,8 @@ class PainSolutionMapper:
         self, 
         audit_result: V4AuditResult,
         validation_summary: ValidationSummary,
-        analytics_data: Optional[Dict[str, Any]] = None
+        analytics_data: Optional[Dict[str, Any]] = None,
+        whatsapp_html_detected: bool = False
     ) -> List[Pain]:
         """
         Analyze audit result and detect problems.
@@ -329,7 +330,7 @@ class PainSolutionMapper:
         
         # Check WhatsApp visibility
         whatsapp_field = validation_summary.get_field("whatsapp_number")
-        if not whatsapp_field or whatsapp_field.confidence in (ConfidenceLevel.UNKNOWN, ConfidenceLevel.CONFLICT):
+        if (not whatsapp_field or whatsapp_field.confidence in (ConfidenceLevel.UNKNOWN, ConfidenceLevel.CONFLICT)) and not whatsapp_html_detected:
             pains.append(Pain(
                 id="no_whatsapp_visible",
                 name="Sin WhatsApp Visible",

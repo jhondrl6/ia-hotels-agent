@@ -19,6 +19,11 @@
 | FASE-B | tests | test_diagnostic_brechas.py | 3 nuevos tests blocks_analyzed |
 | FASE-C | commercial_documents | diagnostico_v6_template.md | Typo yRevisan |
 | FASE-C | commercial_documents | v4_diagnostic_generator.py | Mapping regional + fallback |
+| FASE-E | orchestration | main.py | Rama elif whatsapp_html en ValidationSummary + region desde GBP + keywords URL |
+| FASE-E | commercial_documents | v4_diagnostic_generator.py | Sanitizar hotel_region (nacional → Colombia) |
+| FASE-E | commercial_documents | pain_solution_mapper.py | Consultar whatsapp_html_detected antes de pain |
+| FASE-E | scrapers | web_scraper.py | Capturar telefonos de enlaces tel: |
+| FASE-E | commercial_documents | coherence_validator.py | Consultar whatsapp_html_detected en coherence gate |
 
 ---
 
@@ -29,6 +34,10 @@
 | FP-1 | Falso positivo "Sin WhatsApp" | scraper detection no conectado al pipeline | FASE-A | Conectar _detectar_whatsapp() → cross_validator |
 | FP-2 | Narrativa "poco estructurado" con score=0 | No distinguir blocks_analyzed=0 | FASE-B | Diferenciar ausencia vs baja calidad |
 | FP-3 | "La region de Nacional" en diagnostico | Fallback generico + typo template | FASE-C | Agregar regiones + corregir fallback + typo |
+| FP-4 | pain no_whatsapp_visible falso positivo | whatsapp_html_detected no llega a pain_solution_mapper | FASE-E | Propagar campo a ValidationSummary + pain_mapper |
+| FP-5 | Region "nacional" persiste en template | Solo URL consulta, ignora GBP address | FASE-E | Inferir region desde GBP + sanitizar hotel_region |
+| FP-6 | phone_web=null cuando tel: existe | Scraper no parsea href="tel:" | FASE-E | Capturar tel: links en _extract_contact() |
+| FP-7 | whatsapp_verified=0.0 incorrecto | coherence_validator no consulta HTML | FASE-E | Consultar whatsapp_html_detected en coherence gate |
 
 ---
 
@@ -38,20 +47,24 @@
 |------|-----------------|-----------|
 | FASE-A | test_pain_solution_mapper.py + test_diagnostic_brechas.py | 25 passed, whatsapp_html_detected validated |
 | FASE-B | test_diagnostic_brechas.py (25 tests) + test_pain_solution_mapper.py (5) | 25 passed, 3 nuevos tests blocks_analyzed |
-|| FASE-C | test suite completo (commercial_documents + asset_generation) | 218 passed, 7 pre-existentes |
+| FASE-C | test suite completo (commercial_documents + asset_generation) | 218 passed, 7 pre-existentes |
 | FASE-D | E2E v4complete | coherence 0.84, 5/6 gate checks, READY |
+| FASE-E | [pendiente] tests whatsapp + region + pain + coherence | [pendiente] |
 
 ---
 
 ## Seccion D: Metricas Acumulativas
 
-| Metrica | Pre-fix | Post-fix |
-|---------|---------|----------|
-| Falsos positivos WhatsApp (amazilia) | 1 | 0 (corregido, whatsapp_html_detected en pipeline) |
-| Narrativa citability incorrecta | 1 | 0 (corregido, ambas narrativas diferenciadas) |
-|| Typos en template | 1 | 0 (corregido "yRevisan" → "y revisan") |
-|| Regiones mapeadas | 6 | 10 (+eje cafetero, san andrés, llanos orientales, costa atlántica) |
-|| Coherence score (amazilia) | 0.84 | 0.84 (sin cambios, validación-only) |
+| Metrica | Pre-fix | Post-FASE-D | Post-FASE-E (esperado) |
+|---------|---------|-------------|------------------------|
+| Falsos positivos WhatsApp (amazilia) | 1 | 0 (diagnostico corregido) | 0 (pain + coherence tambien) |
+| Pain IDs falsos no_whatsapp_visible | 1 (no medido) | 1 (persiste) | 0 |
+| whatsapp_verified score falso 0.0 | 1 (no medido) | 1 (persiste) | 0.5+ (parcial si HTML existe) |
+| Region "nacional" en template | 7+ instancias | 7+ instancias | 0 |
+| Regiones detectables por URL | 4 | 4 | 4+ (keywords ampliadas) |
+| Telefonos capturados (tel: links) | 0 | 0 | Capturados via scraper |
+| Regiones mapeadas | 6 | 10 | 10 + 7 inferibles desde GBP |
+| Coherence score (amazilia) | 0.84 | 0.84 | >= 0.84 |
 
 ---
 
@@ -180,12 +193,16 @@ git diff --stat
 
 ## Seccion F: Lecciones Aprendidas
 
-1. **HTML comprimido no es problema en iah-cli**: `requests` descomprime automáticamente gzip/deflate/brotli. El falso negativo de WhatsApp no fue por compresión — el sitio genuinamente no tiene botón WhatsApp.
+1. **HTML comprimido no es problema en iah-cli**: `requests` descomprime automaticamente gzip/deflate/brotli. El falso negativo de WhatsApp no fue por compresion -- el sitio genuinamente no tiene boton WhatsApp.
 
-2. **Distinguir "ausencia de dato" de "dato malo"**: `blocks_analyzed=0` ≠ contenido malo. La narrativa debe diferenciar entre "no hay contenido para analizar" y "el contenido analizado es de baja calidad".
+2. **Distinguir "ausencia de dato" de "dato malo"**: `blocks_analyzed=0` no es contenido malo. La narrativa debe diferenciar entre "no hay contenido para analizar" y "el contenido analizado es de baja calidad".
 
-3. **Region "nacional" como fallback persiste**: `_build_regional_context()` necesita que cada hotel tenga una región real. Sin onboarding que capture región, el fallback siempre será "nacional".
+3. **Region "nacional" como fallback persiste**: `_build_regional_context()` necesita que cada hotel tenga una region real. Sin onboarding que capture region, el fallback siempre sera "nacional". Solucion: consultar GBP address.
 
-4. **phone_web vs whatsapp_html_detected son campos distintos**: Uno viene del Schema JSON-LD, otro del escaneo HTML. Un hotel puede tener teléfono sin WhatsApp y viceversa.
+4. **phone_web vs whatsapp_html_detected son campos distintos**: Uno viene del Schema JSON-LD, otro del escaneo HTML. Un hotel puede tener telefono sin WhatsApp y viceversa.
 
-5. **version_consistency_checker.py tiene bug Unicode**: Los emojis (✅) en output crashean con console cp1252 de Windows. Pre-existente, no relacionado con este proyecto.
+5. **version_consistency_checker.py tiene bug Unicode**: Los emojis en output crashean con console cp1252 de Windows. Pre-existente, no relacionado con este proyecto.
+
+6. **Fix de 1 consumidor no es suficiente**: FASE-A corrigio v4_diagnostic_generator (1 de 4 consumidores). El dato `whatsapp_html_detected` necesitaba propagarse a ValidationSummary, pain_solution_mapper, y coherence_validator. Regla: por cada dato nuevo, identificar TODOS los consumidores antes de cerrar.
+
+7. **Deteccion por URL sola es insuficiente**: `_detect_region_from_url()` solo consulta la URL. Hoteles sin keywords geograficas en su dominio (amaziliahotel.com) siempre caen a "nacional". GBP address ya esta disponible y contiene la ciudad real -- usarla como fallback.

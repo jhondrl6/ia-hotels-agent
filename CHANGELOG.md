@@ -88,6 +88,37 @@
 | `modules/commercial_documents/v4_diagnostic_generator.py` | MED-1..5: dead code elim, dup keys, confidence .upper(), pipe fix, /100 suffix |
 | `modules/auditors/v4_comprehensive.py` | SER-1: seo_elements serialization in to_dict() + executed_validators |
 
+### FASE-E (Integridad de Datos): Propagación WhatsApp + Inferencia Regional
+- Problema: datos detectados correctamente en capas tempranas del pipeline NO se propagaban a consumidores intermedios/finales.
+- 5 archivos modificados, 7 fixes (W1-W4 WhatsApp, R1-R3 Regional):
+
+**Workstream WhatsApp (W1-W4):**
+- `main.py` (W1): Nueva rama `elif whatsapp_html_detected` en ValidationSummary (L1766+). Campo `whatsapp_number` siempre existe cuando botón HTML detectado — confidence ESTIMATED, sources=["HTML"], match=0.6.
+- `modules/commercial_documents/pain_solution_mapper.py` (W2): Parámetro `whatsapp_html_detected=False` en `detect_pains()`. Condición WhatsApp actualizada: no genera pain `no_whatsapp_visible` cuando botón HTML existe.
+- `modules/scrapers/web_scraper.py` (W3): `_extract_contact()` parsea enlaces `tel:` del HTML (`soup.find_all('a', href=re.compile(r'^tel:'))`). Captura teléfonos que no aparecen como texto visible.
+- `modules/commercial_documents/coherence_validator.py` (W4): `validate()` y `_check_whatsapp_verified()` aceptan `whatsapp_html_detected`. Si botón HTML existe pero no campo en ValidationSummary → score 0.5 (no 0.0 penalizante).
+
+**Workstream Regional (R1-R3):**
+- `main.py` (R1): Nueva función `_infer_region_from_address(address)` — infiere región turística (eje_cafetero, caribe, antioquia, centro, valle, llanos, san_andres) desde dirección GBP. Llamada post-audit: si `region == "nacional"` y `audit_result.gbp.address` disponible, re-evalúa.
+- `modules/commercial_documents/v4_diagnostic_generator.py` (R2): Sanitización de `hotel_region` — "nacional"/"general"/"default"/"unknown" → "Colombia". Underscores → Title Case ("eje_cafetero" → "Eje Cafetero").
+- `main.py` (R3): Keywords URL ampliadas para Eje Cafetero: +cafetero, finca, montenegro, filandia, circasia, termales.
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | W1: ValidationSummary rama html; R1: _infer_region_from_address(); R3: keywords URL |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | R2: sanitización hotel_region |
+| `modules/commercial_documents/pain_solution_mapper.py` | W2: parámetro + condición whatsapp_html_detected |
+| `modules/commercial_documents/coherence_validator.py` | W4: validate() + _check_whatsapp_verified() con whatsapp_html_detected |
+| `modules/scrapers/web_scraper.py` | W3: captura tel: links |
+
+### Validación E2E
+- Hotel: amaziliahotel.com
+- **Región: eje_cafetero** (antes persistía "nacional") — R1+R2+R3 FUNCIONALES
+- Coherence: 0.84 ≥ 0.80 — Pasa gate
+- Publication: READY_FOR_PUBLICATION (todos los gates pasan)
+- whatsapp_button generado en delivery — W1/W2 evitó pain falso "no_whatsapp_visible"
+
 ### FASE-F (Zombie References + Code Smells): Limpieza de referencias IAO/voice + 7 code smells
 - `templates/diagnostico_ejecutivo.md` - ZMB-1: fila IAO eliminada del template
 - `templates/diagnostico_v4_template.md` - ZMB-2: filas IAO + Voice Readiness eliminadas

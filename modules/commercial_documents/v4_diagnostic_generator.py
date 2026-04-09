@@ -410,7 +410,11 @@ ${quick_wins_list}
             coherence_score = self._calculate_coherence_score(validation_summary)
         
         # Region-based variables for V6 templates
-        hotel_region = region or "Colombia"
+        _raw = region or "Colombia"
+        if _raw.lower() in ("nacional", "general", "default", "unknown"):
+            hotel_region = "Colombia"
+        else:
+            hotel_region = _raw.replace("_", " ").title()
         hotel_location = getattr(audit_result, 'location', None) or \
                         getattr(getattr(audit_result, 'gbp', None), 'address', None) or \
                         hotel_region

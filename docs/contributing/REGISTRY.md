@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-09
 > **Version actual:** v4.25.2
-> **Total fases completadas:** 61
+> **Total fases completadas:** 62
 
 ---
 
@@ -1919,6 +1919,30 @@ _Ninguno_
 ### Validaciones
 - [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-E - 2026-04-09
+**Descripcion:** Integridad de Datos Diagnosticos: Propagacion whatsapp_html_detected a pain_solution_mapper, coherence_validator, ValidationSummary. Inferencia region desde GBP address. Sanitizacion hotel_region. Captura tel: links. Keywords URL ampliadas.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/pain_solution_mapper.py` | Pain Solution Mapper |
+| `modules/commercial_documents/coherence_validator.py` | Coherence Validator |
+| `modules/scrapers/web_scraper.py` | Web Scraper |
+
+### Validaciones
+- [x] Tests passing (8 errores pre-existentes (modulos faltantes, no relacionados FASE-E))
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.84 (PASO)
 - [x] Capability contract verificado
 
 ---

@@ -1128,6 +1128,15 @@ class WebScraper:
                 contact['telefono'] = match.group(0)
                 break
 
+        # Parsear enlaces tel: que no aparecen como texto visible
+        if 'telefono' not in contact:
+            tel_links = soup.find_all('a', href=re.compile(r'^tel:', re.I))
+            for link in tel_links:
+                phone = link.get('href', '').replace('tel:', '').strip()
+                if phone:
+                    contact['telefono'] = phone
+                    break
+
         return contact
 
     def _extract_description(self, soup):

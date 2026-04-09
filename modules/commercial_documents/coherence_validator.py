@@ -115,7 +115,8 @@ class CoherenceValidator:
         diagnostic: DiagnosticDocument,
         proposal: ProposalDocument,
         assets: List[AssetSpec],
-        validation_summary: ValidationSummary
+        validation_summary: ValidationSummary,
+        whatsapp_html_detected: bool = False
     ) -> CoherenceReport:
         """
         Execute all coherence validations.
@@ -135,7 +136,7 @@ class CoherenceValidator:
         self.checks.append(self._check_problems_have_solutions(diagnostic, assets))
         self.checks.append(self._check_assets_are_justified(assets, diagnostic))
         self.checks.append(self._check_financial_data_validated(proposal, validation_summary))
-        self.checks.append(self._check_whatsapp_verified(assets, validation_summary))
+        self.checks.append(self._check_whatsapp_verified(assets, validation_summary, whatsapp_html_detected))
         self.checks.append(self._check_price_matches_pain(proposal, diagnostic))
         self.checks.append(self._check_promised_assets_exist(assets, diagnostic))
         
@@ -341,7 +342,8 @@ class CoherenceValidator:
     def _check_whatsapp_verified(
         self,
         assets: List[AssetSpec],
-        validation_summary: ValidationSummary
+        validation_summary: ValidationSummary,
+        whatsapp_html_detected: bool = False
     ) -> CoherenceCheck:
         """
         If there's a whatsapp_button asset, validate that the number has sufficient confidence.
@@ -368,6 +370,16 @@ class CoherenceValidator:
         
         # Check WhatsApp field confidence
         whatsapp_field = validation_summary.get_field("whatsapp_number")
+        
+        # Si hay WhatsApp en HTML pero no en ValidationSummary, no penalizar
+        if not whatsapp_field and whatsapp_html_detected:
+            return CoherenceCheck(
+                name="whatsapp_verified",
+                passed=not is_blocking,
+                score=0.5,
+                message="WhatsApp detectado en HTML (sin verificacion cruzada)",
+                severity="warning" if not is_blocking else "info"
+            )
         
         if not whatsapp_field:
             return CoherenceCheck(
