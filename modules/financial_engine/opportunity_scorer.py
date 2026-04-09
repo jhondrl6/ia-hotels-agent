@@ -75,6 +75,31 @@ class OpportunityScorer:
             "competitor_factor": False,
             "label": "Rendimiento web bajo",
         },
+        "low_gbp_score": {
+            "base": 35,
+            "competitor_factor": True,
+            "label": "Visibilidad Local (Google Maps)",
+        },
+        "no_whatsapp_visible": {
+            "base": 35,
+            "competitor_factor": False,
+            "label": "Canal Directo Cerrado (Sin WhatsApp)",
+        },
+        "missing_reviews": {
+            "base": 25,
+            "competitor_factor": True,
+            "label": "Falta de Reviews",
+        },
+        "no_og_tags": {
+            "base": 15,
+            "competitor_factor": False,
+            "label": "Sin Meta Tags Sociales (Open Graph)",
+        },
+        "low_citability": {
+            "base": 20,
+            "competitor_factor": False,
+            "label": "Contenido No Citable por IA",
+        },
     }
 
     # Esfuerzo por tipo de brecha (0-30)
@@ -86,6 +111,11 @@ class OpportunityScorer:
         "cms_defaults": 15,          # Modificar metadatos CMS
         "no_hotel_schema": 30,       # Ya generamos el asset
         "poor_performance": 10,      # Requiere trabajo tecnico avanzado
+        "low_gbp_score": 25,         # Optimizar perfil GBP
+        "no_whatsapp_visible": 25,   # Agregar boton WhatsApp
+        "missing_reviews": 20,       # Implementar estrategia reviews
+        "no_og_tags": 25,            # Agregar Open Graph tags
+        "low_citability": 15,        # Crear contenido estructurado
     }
 
     # Impacto en conversion directa (0-30)
@@ -97,6 +127,11 @@ class OpportunityScorer:
         "cms_defaults": 20,          # SEO mediano plazo
         "no_hotel_schema": 25,       # Visibilidad en asistentes IA
         "poor_performance": 25,      # Abandono mobile inmediato
+        "low_gbp_score": 30,         # Impacto inmediato en reservas locales
+        "no_whatsapp_visible": 30,   # Reserva directa perdida
+        "missing_reviews": 20,       # Confianza del viajero
+        "no_og_tags": 15,            # Social sharing
+        "low_citability": 25,        # Recomendacion IA
     }
 
     # Justificaciones template
@@ -138,6 +173,33 @@ class OpportunityScorer:
             "53% de los usuarios abandonan si tarda mas de 3 segundos. "
             "Solucion: optimizar imagenes y caching. "
             "Impacto: menos abandonos, mas reservas."
+        ),
+        "low_gbp_score": (
+            "73% de busquedas son 'cerca de mi'. Su GBP no aparece o esta sub-optimizado. "
+            "Clientes van a competidores. "
+            "Solucion: optimizar perfil GBP con fotos, horarios y servicios. "
+            "Impacto: mas clics y llamadas desde Google Maps."
+        ),
+        "no_whatsapp_visible": (
+            "Viajeros quieren reservar instantaneamente. Sin boton WhatsApp, pierden el impulso de compra. "
+            "Solucion: agregar boton flotante de WhatsApp en la web. "
+            "Impacto: reservas directas inmediatas."
+        ),
+        "missing_reviews": (
+            "Tiene pocas reviews en Google. "
+            "Los viajeros confian en hoteles con 50+ reviews. "
+            "Solucion: implementar estrategia de solicitud post-estadia. "
+            "Impacto: mas confianza, mas reservas."
+        ),
+        "no_og_tags": (
+            "Cuando alguien comparte su hotel en WhatsApp/Facebook, aparece sin imagen ni descripcion atractiva. "
+            "Solucion: agregar Open Graph tags a todas las paginas. "
+            "Impacto: mejor primera impresion en redes sociales."
+        ),
+        "low_citability": (
+            "ChatGPT y Perplexity no recomiendan su hotel porque el contenido es insuficiente o poco estructurado. "
+            "Solucion: crear contenido estructurado con datos marcados. "
+            "Impacto: ser recomendado por asistentes de IA."
         ),
     }
 

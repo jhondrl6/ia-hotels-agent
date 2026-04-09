@@ -1885,13 +1885,16 @@ ${quick_wins_list}
             brechas_list = self._identify_brechas(audit_result)
             pain_to_type = {
                 'no_faq_schema': 'faq_schema_missing',
-                'low_gbp_score': 'gbp_incomplete',
+                'low_gbp_score': 'low_gbp_score',
                 'whatsapp_conflict': 'whatsapp_conflict',
                 'metadata_defaults': 'cms_defaults',
-                'missing_reviews': 'gbp_incomplete',
+                'missing_reviews': 'missing_reviews',
                 'poor_performance': 'poor_performance',
                 'low_ia_readiness': 'cms_defaults',
                 'no_hotel_schema': 'no_hotel_schema',
+                'no_whatsapp_visible': 'no_whatsapp_visible',
+                'no_og_tags': 'no_og_tags',
+                'low_citability': 'low_citability',
             }
             brechas_for_scorer = []
             for b in brechas_list:

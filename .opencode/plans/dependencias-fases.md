@@ -13,7 +13,7 @@ FASE-A: Templates dinámicos
          │  Modifica: v4_diagnostic_generator.py (_prepare_template_data, _inject_brecha_scores)
          │  Depende de: FASE-A (los templates deben tener ${brechas_section})
          │
-         └──→ FASE-C: OpportunityScorer completar mappings
+         └──→ FASE-C: OpportunityScorer completar mappings ✅
                 │  Modifica: opportunity_scorer.py (SEVERITY/EFFORT/IMPACT_MAP, _extract_brechas)
                 │  Depende de: FASE-B (los pain_ids del generator deben estar completos)
                 │

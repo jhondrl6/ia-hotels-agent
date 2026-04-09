@@ -88,6 +88,34 @@
 | `modules/commercial_documents/v4_diagnostic_generator.py` | MED-1..5: dead code elim, dup keys, confidence .upper(), pipe fix, /100 suffix |
 | `modules/auditors/v4_comprehensive.py` | SER-1: seo_elements serialization in to_dict() + executed_validators |
 
+### FASE-F (Zombie References + Code Smells): Limpieza de referencias IAO/voice + 7 code smells
+- `templates/diagnostico_ejecutivo.md` - ZMB-1: fila IAO eliminada del template
+- `templates/diagnostico_v4_template.md` - ZMB-2: filas IAO + Voice Readiness eliminadas
+- `modules/commercial_documents/v4_diagnostic_generator.py` - Limpieza completa:
+  - **ZMB-3**: `iao_score` eliminado de `_get_analytics_fallback()` dict + 24 phantom placeholders eliminados
+  - **MEN-1**: Import redundante `datetime` eliminado
+  - **MEN-2**: Scores calculados 1 sola vez (eliminado recálculo duplicado)
+  - **MEN-3**: `format_cop()` unificado (eliminada duplicación)
+  - **MEN-4**: `hasattr()` guard agregado para acceso seguro a competitors
+  - **MEN-5**: `print()` reemplazado por `logging.warning()`
+  - **MEN-6**: `import re` movido a imports del módulo
+  - **MEN-7**: Ternaria refactorizada con paréntesis para claridad
+  - Método muerto `_format_scenario_amount()` eliminado (sin callers)
+- `modules/utils/benchmarks.py` - ZMB-4: `iao_score` key eliminada
+- Docstring `_get_analytics_fallback()` corregida: removida ref a `iao_score (0-100)`
+
+### Archivos Modificados (FASE-F)
+| Archivo | Cambio |
+|---------|--------|
+| `templates/diagnostico_ejecutivo.md` | ZMB-1: IAO row eliminada |
+| `templates/diagnostico_v4_template.md` | ZMB-2: IAO+Voice rows eliminadas |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | ZMB-3 + MEN-1..7 + dead code elim |
+| `modules/utils/benchmarks.py` | ZMB-4: iao_score key eliminada |
+
+### Tests (FASE-F)
+- Sin tests nuevos (limpieza, sin cambio de comportamiento)
+- `run_all_validations.py --quick` 4/4 PASS
+
 ## [4.25.2] - 2026-04-08
 
 ### FASE-A (AEO OG Fix): Deteccion Real de Open Graph

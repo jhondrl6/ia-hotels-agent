@@ -373,3 +373,114 @@ def test_weights_summary(scorer: OpportunityScorer):
 def test_empty_brechas_returns_empty(scorer: OpportunityScorer):
     """Lista vacia genera lista vacia de scores."""
     assert scorer.score_brechas([]) == []
+
+
+# ------------------------------------------------------------------
+# 15-20. Tests para mappings faltantes (FASE-C BRECHAS-DINAMICAS)
+# ------------------------------------------------------------------
+
+
+def test_score_brechas_with_low_gbp_score(scorer: OpportunityScorer):
+    """Score para GBP bajo — severity 35, effort 25, impact 30 = 90."""
+    brechas = [_make_brecha("b1", "low_gbp_score", "Visibilidad Local")]
+    scores = scorer.score_brechas(brechas)
+    assert len(scores) == 1
+    s = scores[0]
+    assert 0 <= s.total_score <= 100
+    assert s.severity_score == 35.0
+    assert s.effort_score == 25.0
+    assert s.impact_score == 30.0
+    assert "GBP" in s.justification or "Google Maps" in s.justification
+
+
+def test_score_brechas_with_no_whatsapp_visible(scorer: OpportunityScorer):
+    """Score para WhatsApp ausente — severity 35, effort 25, impact 30 = 90."""
+    brechas = [_make_brecha("b1", "no_whatsapp_visible", "Sin WhatsApp")]
+    scores = scorer.score_brechas(brechas)
+    assert len(scores) == 1
+    s = scores[0]
+    assert s.severity_score == 35.0
+    assert s.effort_score == 25.0
+    assert s.impact_score == 30.0
+    assert "WhatsApp" in s.justification
+
+
+def test_score_brechas_with_no_og_tags(scorer: OpportunityScorer):
+    """Score para Open Graph faltante — severity 15, effort 25, impact 15 = 55."""
+    brechas = [_make_brecha("b1", "no_og_tags", "Sin OG Tags")]
+    scores = scorer.score_brechas(brechas)
+    assert len(scores) == 1
+    s = scores[0]
+    assert s.severity_score == 15.0
+    assert s.effort_score == 25.0
+    assert s.impact_score == 15.0
+    assert "Open Graph" in s.justification or "WhatsApp/Facebook" in s.justification
+
+
+def test_score_brechas_with_low_citability(scorer: OpportunityScorer):
+    """Score para citabilidad baja — severity 20, effort 15, impact 25 = 60."""
+    brechas = [_make_brecha("b1", "low_citability", "No Citable")]
+    scores = scorer.score_brechas(brechas)
+    assert len(scores) == 1
+    s = scores[0]
+    assert s.severity_score == 20.0
+    assert s.effort_score == 15.0
+    assert s.impact_score == 25.0
+    assert "ChatGPT" in s.justification or "IA" in s.justification
+
+
+def test_score_brechas_with_missing_reviews(scorer: OpportunityScorer):
+    """Score para reviews faltantes — severity 25, effort 20, impact 20 = 65."""
+    brechas = [_make_brecha("b1", "missing_reviews", "Falta Reviews")]
+    scores = scorer.score_brechas(brechas)
+    assert len(scores) == 1
+    s = scores[0]
+    assert s.severity_score == 25.0
+    assert s.effort_score == 20.0
+    assert s.impact_score == 20.0
+    assert "reviews" in s.justification.lower()
+
+
+def test_all_identify_brechas_types_have_scorer_mapping(scorer: OpportunityScorer):
+    """Verifica que TODOS los pain_ids de _identify_brechas() tienen mapping en scorer."""
+    # Pain_ids que _identify_brechas() genera (v4_diagnostic_generator.py)
+    all_pain_ids = [
+        "low_gbp_score",
+        "no_hotel_schema",
+        "no_whatsapp_visible",
+        "poor_performance",
+        "whatsapp_conflict",
+        "metadata_defaults",
+        "missing_reviews",
+        "no_faq_schema",
+        "no_og_tags",
+        "low_citability",
+    ]
+    # pain_to_type mapper actualizado (sin aliases forzados)
+    pain_to_type = {
+        "no_faq_schema": "faq_schema_missing",
+        "low_gbp_score": "low_gbp_score",
+        "whatsapp_conflict": "whatsapp_conflict",
+        "metadata_defaults": "cms_defaults",
+        "missing_reviews": "missing_reviews",
+        "poor_performance": "poor_performance",
+        "no_hotel_schema": "no_hotel_schema",
+        "no_whatsapp_visible": "no_whatsapp_visible",
+        "no_og_tags": "no_og_tags",
+        "low_citability": "low_citability",
+    }
+    for pain_id in all_pain_ids:
+        scorer_type = pain_to_type.get(pain_id)
+        assert scorer_type is not None, f"pain_id {pain_id} sin mapping en pain_to_type"
+        assert scorer_type in scorer.BRECHA_SEVERITY_MAP, (
+            f"scorer_type '{scorer_type}' (from {pain_id}) missing in BRECHA_SEVERITY_MAP"
+        )
+        assert scorer_type in scorer.BRECHA_EFFORT_MAP, (
+            f"scorer_type '{scorer_type}' (from {pain_id}) missing in BRECHA_EFFORT_MAP"
+        )
+        assert scorer_type in scorer.BRECHA_IMPACT_MAP, (
+            f"scorer_type '{scorer_type}' (from {pain_id}) missing in BRECHA_IMPACT_MAP"
+        )
+        assert scorer_type in scorer._JUSTIFICATION_TEMPLATES, (
+            f"scorer_type '{scorer_type}' (from {pain_id}) missing in _JUSTIFICATION_TEMPLATES"
+        )

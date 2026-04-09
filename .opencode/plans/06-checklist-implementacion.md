@@ -7,8 +7,8 @@
 | Fase | Estado | Fecha | Notas |
 |------|--------|-------|-------|
 | FASE-A | ✅ Completada | 2026-04-08 | Templates dinámicos |
-|| FASE-B | ✅ Completada | 2026-04-08 | Generator dinámico |
-| FASE-C | ⬜ Pendiente | — | OpportunityScorer mappings |
+| FASE-B | ✅ Completada | 2026-04-08 | Generator dinámico |
+| FASE-C | ✅ Completada | 2026-04-08 | OpportunityScorer mappings |
 | FASE-D | ⬜ Pendiente | — | PainSolutionMapper fix + coherencia |
 | FASE-E | ⬜ Pendiente | — | Validación amaziliahotel.com |
 
@@ -29,13 +29,13 @@
 - [x] 5 tests nuevos pasan
 - [x] Tests existentes no se rompen (17/17 total)
 
-## FASE-C: OpportunityScorer Mappings
-- [ ] 5 nuevos tipos en BRECHA_SEVERITY_MAP
-- [ ] 5 nuevos tipos en BRECHA_EFFORT_MAP
-- [ ] 5 nuevos tipos en BRECHA_IMPACT_MAP
-- [ ] 5 nuevos tipos en _JUSTIFICATION_TEMPLATES
-- [ ] pain_to_type mapper actualizado en generator
-- [ ] 6 tests nuevos pasan
+## FASE-C: OpportunityScorer Mappings ✅
+- [x] 5 nuevos tipos en BRECHA_SEVERITY_MAP
+- [x] 5 nuevos tipos en BRECHA_EFFORT_MAP
+- [x] 5 nuevos tipos en BRECHA_IMPACT_MAP
+- [x] 5 nuevos tipos en _JUSTIFICATION_TEMPLATES
+- [x] pain_to_type mapper actualizado en generator
+- [x] 6 tests nuevos pasan
 
 ## FASE-D: PainSolutionMapper Fix + Coherencia
 - [ ] Duplicate `low_ia_readiness` corregido (1 entrada, 3 assets)
