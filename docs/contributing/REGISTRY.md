@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-08
+> **Ultima actualizacion:** 2026-04-09
 > **Version actual:** v4.25.2
-> **Total fases completadas:** 57
+> **Total fases completadas:** 58
 
 ---
 
@@ -1836,6 +1836,27 @@ _Ninguno_
 
 ### Archivos Modificados
 _Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-A - 2026-04-09
+**Descripcion:** WhatsApp Detection Fix: deteccion HTML del boton WhatsApp conectada al pipeline de validacion. CrossValidationResult.whatsapp_html_detected distingue boton visual vs Schema telephone. Brecha 'Sin WhatsApp' ya NO se genera como falso positivo cuando el boton existe en HTML.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
+| `modules/commercial_documents/data_structures.py` | Data Structures |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
 
 ### Validaciones
 - [x] Tests passing

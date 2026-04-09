@@ -100,7 +100,8 @@ class CrossValidationResult:
     adr_benchmark: Optional[float]
     conflicts: List[Dict] = field(default_factory=list)
     validated_fields: Dict[str, Any] = field(default_factory=dict)
-    
+    whatsapp_html_detected: bool = False  # True si scraper detecto boton WhatsApp en HTML
+
     # NUEVOS CAMPOS (GAP-IAO-01-02-B):
     address_status: str = "unknown"
     email_status: str = "unknown"
@@ -440,7 +441,10 @@ class V4ComprehensiveAuditor:
         
         # Step 4: Cross-validation
         print("\n[4/5] Running cross-validation...")
-        validation_result = self._run_cross_validation(url, schema_result, gbp_result)
+        whatsapp_html_detected = self._detect_whatsapp_from_html(page_html)
+        if whatsapp_html_detected:
+            print("      WhatsApp button detected in HTML")
+        validation_result = self._run_cross_validation(url, schema_result, gbp_result, whatsapp_html_detected)
         print(f"      WhatsApp: {validation_result.whatsapp_status}")
         print(f"      ADR: {validation_result.adr_status}")
         if validation_result.conflicts:
@@ -1018,11 +1022,42 @@ class V4ComprehensiveAuditor:
                 message=str(e),
             )
     
+    def _detect_whatsapp_from_html(self, html: str) -> bool:
+        """Detect WhatsApp button/link presence in raw HTML.
+
+        Searches for common WhatsApp patterns: wa.me, api.whatsapp.com,
+        web.whatsapp.com, whatsapp:// protocol, and floating button classes.
+
+        Args:
+            html: Raw HTML content of the page.
+
+        Returns:
+            True if WhatsApp link/button detected in HTML.
+        """
+        if not html:
+            return False
+        import re
+        whatsapp_patterns = [
+            r'wa\.me/',
+            r'api\.whatsapp\.com',
+            r'web\.whatsapp\.com',
+            r'whatsapp://',
+            r'whatsapp\.com/send',
+            r'class="[^"]*whatsapp[^"]*"',  # CSS classes like "whatsapp-button"
+            r'id="[^"]*whatsapp[^"]*"',      # IDs like "whatsapp-float"
+        ]
+        html_lower = html.lower()
+        for pattern in whatsapp_patterns:
+            if re.search(pattern, html_lower):
+                return True
+        return False
+
     def _run_cross_validation(
         self,
         url: str,
         schema: SchemaAuditResult,
         gbp: GBPApiResult,
+        whatsapp_html_detected: bool = False,
     ) -> CrossValidationResult:
         """Run cross-validation between data sources."""
         # Validate WhatsApp/phone
@@ -1084,6 +1119,7 @@ class V4ComprehensiveAuditor:
             email_status=email_dp.confidence.value if email_dp else "unknown",
             address_web=web_address,
             address_gbp=gbp_address,
+            whatsapp_html_detected=whatsapp_html_detected,
         )
     
     def _calculate_overall_confidence(

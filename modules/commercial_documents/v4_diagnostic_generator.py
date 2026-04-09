@@ -937,10 +937,15 @@ ${quick_wins_list}
         if not audit_result.schema.faq_schema_detected:
             rows.append("| Sin Schema FAQ | 🟡 Media | `faqs.csv` | 🟡 ESTIMATED |")
         
-        # WhatsApp issues
-        if audit_result.validation.whatsapp_status == ConfidenceLevel.CONFLICT.value:
+        # WhatsApp issues - distinguir visual vs Schema
+        whatsapp_status = getattr(audit_result.validation, 'whatsapp_status', 'unknown')
+        phone_web = getattr(audit_result.validation, 'phone_web', None)
+        raw_whatsapp_html = getattr(audit_result.validation, 'whatsapp_html_detected', None)
+        whatsapp_html = raw_whatsapp_html if isinstance(raw_whatsapp_html, bool) else False
+        if whatsapp_status == ConfidenceLevel.CONFLICT.value:
             rows.append("| WhatsApp Inconsistente | 🔴 Crítica | `boton_whatsapp.html` | 🔴 CONFLICT |")
-        elif not audit_result.validation.phone_web:
+        elif not phone_web and not whatsapp_html:
+            # Ni Schema ni HTML → brecha real
             rows.append("| Sin Botón WhatsApp | 🟡 Media | `boton_whatsapp.html` | 🟢 VERIFIED |")
         
         # Performance
@@ -1004,9 +1009,14 @@ ${quick_wins_list}
             win_number += 1
         
         # WhatsApp button - guard against None validation
-        if audit_result.validation and not audit_result.validation.phone_web:
-            wins.append(f"{win_number}. **Agregar Botón WhatsApp** - Canal directo de reservas (1 día)")
-            win_number += 1
+        # Solo sugerir si NO hay boton HTML ni Schema telephone
+        if audit_result.validation:
+            phone_web = getattr(audit_result.validation, 'phone_web', None)
+            raw_whatsapp_html = getattr(audit_result.validation, 'whatsapp_html_detected', None)
+            whatsapp_html = raw_whatsapp_html if isinstance(raw_whatsapp_html, bool) else False
+            if not phone_web and not whatsapp_html:
+                wins.append(f"{win_number}. **Agregar Botón WhatsApp** - Canal directo de reservas (1 día)")
+                win_number += 1
         
         # FAQ schema
         if audit_result.schema and not audit_result.schema.faq_schema_detected:
@@ -1785,13 +1795,20 @@ ${quick_wins_list}
             })
         
         # Brecha 3: WhatsApp No Configurado
-        if not audit_result.validation or not audit_result.validation.phone_web:
-            brechas.append({
-                'pain_id': 'no_whatsapp_visible',
-                'nombre': 'Canal Directo Cerrado (Sin WhatsApp)',
-                'impacto': 0.20,
-                'detalle': 'Viajeros quieren reservar instantaneamente. Sin boton WhatsApp, pierden el impulso de compra.'
-            })
+        # Distinguimos: WhatsApp visual (boton HTML) vs Schema telephone
+        if audit_result.validation:
+            phone_web = getattr(audit_result.validation, 'phone_web', None)
+            raw_whatsapp_html = getattr(audit_result.validation, 'whatsapp_html_detected', None)
+            whatsapp_html = raw_whatsapp_html if isinstance(raw_whatsapp_html, bool) else False
+            if not phone_web and not whatsapp_html:
+                # Ni Schema telephone ni boton HTML → brecha real
+                brechas.append({
+                    'pain_id': 'no_whatsapp_visible',
+                    'nombre': 'Canal Directo Cerrado (Sin WhatsApp)',
+                    'impacto': 0.20,
+                    'detalle': 'Viajeros quieren reservar instantaneamente. Sin boton WhatsApp, pierden el impulso de compra.'
+                })
+            # Si whatsapp_html=True pero phone_web=None → boton existe, NO es brecha
         
         # Brecha 4: Performance Web
         if audit_result.performance and audit_result.performance.mobile_score and audit_result.performance.mobile_score < 70:

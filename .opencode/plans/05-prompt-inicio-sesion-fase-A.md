@@ -82,12 +82,12 @@ Si `whatsapp_html_detected=True` pero `phone_web=None`, NO mostrar "Sin Boton Wh
 
 ## Criterios de Completitud
 
-- [ ] `_detectar_whatsapp()` del scraper alimenta el pipeline de validacion
-- [ ] `CrossValidationResult` tiene campo `whatsapp_html_detected`
-- [ ] Brecha "Sin WhatsApp" NO se genera cuando boton HTML existe
-- [ ] Quick wins NO sugiere "Agregar WhatsApp" cuando boton existe
-- [ ] Tests existentes pasan (sin regresion)
-- [ ] `search_files('WHATSAPP_AUSENTE')` en v4_comprehensive sigue vacio (no es necesario propagar, solo usar el nuevo campo)
+- [x] `_detectar_whatsapp()` del scraper alimenta el pipeline de validacion
+- [x] `CrossValidationResult` tiene campo `whatsapp_html_detected`
+- [x] Brecha "Sin WhatsApp" NO se genera cuando boton HTML existe
+- [x] Quick wins NO sugiere "Agregar WhatsApp" cuando boton existe
+- [x] Tests existentes pasan (sin regresion)
+- [x] `search_files('WHATSAPP_AUSENTE')` en v4_comprehensive sigue vacio (no es necesario propagar, solo usar el nuevo campo)
 
 ---
 

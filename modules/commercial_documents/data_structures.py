@@ -189,6 +189,7 @@ class CrossValidationResult:
     adr_benchmark: Optional[float]
     conflicts: List[Dict] = field(default_factory=list)
     validated_fields: Dict[str, Any] = field(default_factory=dict)
+    whatsapp_html_detected: bool = False  # True si scraper detecto boton WhatsApp en HTML
 
 
 @dataclass
