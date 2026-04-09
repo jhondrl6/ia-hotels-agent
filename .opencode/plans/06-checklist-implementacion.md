@@ -9,8 +9,8 @@
 | FASE-A | ✅ Completada | 2026-04-08 | Templates dinámicos |
 | FASE-B | ✅ Completada | 2026-04-08 | Generator dinámico |
 | FASE-C | ✅ Completada | 2026-04-08 | OpportunityScorer mappings |
-| FASE-D | ⬜ Pendiente | — | PainSolutionMapper fix + coherencia |
-| FASE-E | ⬜ Pendiente | — | Validación amaziliahotel.com |
+|| FASE-D | ✅ Completada | 2026-04-08 | PainSolutionMapper fix + coherencia |
+|| FASE-E | ✅ Completada | 2026-04-08 | Validación amaziliahotel.com |
 
 ---
 
@@ -44,13 +44,13 @@
 - [ ] `optimization_guide.promised_by` sin "pain_solution_mapper"
 - [ ] Tests de integración pasan
 
-## FASE-E: Validación amaziliahotel.com
-- [ ] v4complete ejecutado sin errores
-- [ ] Diagnóstico muestra N brechas (no 4)
-- [ ] Header no dice "4 BRECHAS"
-- [ ] Cada brecha traza a asset vía pain_id
-- [ ] Tabla resumen tiene N filas
-- [ ] Propuesta comercial coherente
-- [ ] Assets cubren >= 50% de brechas
-- [ ] Coherence score >= 0.80
-- [ ] Reporte de validación documentado
+## FASE-E: Validación amaziliahotel.com ✅
+- [x] v4complete ejecutado sin errores
+- [x] Diagnóstico muestra N brechas (no 4) → 6 brechas
+- [x] Header no dice "4 BRECHAS" → dice "BRECHAS CRÍTICAS IDENTIFICADAS"
+- [x] Cada brecha traza a asset vía pain_id
+- [x] Tabla resumen tiene N filas → 6 filas
+- [x] Propuesta comercial coherente con diagnóstico
+- [x] Assets cubren >= 50% de brechas → 9/11 generados
+- [x] Coherence score >= 0.80 → 0.84
+- [x] Reporte de validación documentado en context/02-validacion-amaziliahotel.md

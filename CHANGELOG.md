@@ -116,6 +116,38 @@
 - Sin tests nuevos (limpieza, sin cambio de comportamiento)
 - `run_all_validations.py --quick` 4/4 PASS
 
+### BRECHAS-DINAMICAS (FASE-A a FASE-E): Eliminacion hardcode "LAS 4 BRECHAS"
+Proyecto para eliminar el hardcode de 4 brechas y mostrar dinámicamente N brechas detectadas (0-10).
+
+**FASE-A (Templates)**:
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` — 4 ranuras hardcode → `${brechas_section}`, tabla 4 filas → `${brechas_resumen_section}`
+- `modules/commercial_documents/templates/diagnostico_v4_template.md` — 4 ranuras hardcode → `${brechas_section}`
+- `modules/commercial_documents/v4_diagnostic_generator.py` (`_get_default_template`) — 4 ranuras → `${brechas_section}`
+
+**FASE-B (Generator)**:
+- `v4_diagnostic_generator.py` — Métodos nuevos: `_build_brechas_section()`, `_build_brechas_resumen_section()`
+- `_inject_brecha_scores()`: `min(..., 4)` → `min(..., 10)`
+- 5 tests nuevos en `test_diagnostic_brechas.py`
+
+**FASE-C (Scorer)**:
+- `modules/financial_engine/opportunity_scorer.py` — 5 nuevos tipos en SEVERITY/EFFORT/IMPACT_MAP, _JUSTIFICATION_TEMPLATES
+- 6 tests nuevos en `test_opportunity_scorer.py`
+
+**FASE-D (Mapper Fix)**:
+- `pain_solution_mapper.py` — Duplicate `low_ia_readiness` corregido
+- `asset_catalog.py` — `optimization_guide.promised_by` fix
+
+**FASE-E (Validación)**:
+- v4complete amaziliahotel.com: 6 brechas mostradas dinámicamente (NO hardcode 4)
+- Coherence score: 0.84 (umbral 0.80)
+- Publication gates: READY_FOR_PUBLICATION
+- Header: "BRECHAS CRÍTICAS IDENTIFICADAS" (no "LAS 4 BRECHAS")
+
+### Tests (BRECHAS-DINAMICAS)
+- 5 tests FASE-B + 6 tests FASE-C = 11 tests nuevos
+- 0 regresiones en suite existente
+- E2E validado con amaziliahotel.com
+
 ## [4.25.2] - 2026-04-08
 
 ### FASE-A (AEO OG Fix): Deteccion Real de Open Graph

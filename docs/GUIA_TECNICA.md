@@ -507,3 +507,33 @@ google-analytics-data  # Instalada como dependencia del proyecto
 - Pipeline funciona completamente offline sin GA4
 
 ---
+
+## Notas de Cambios BRECHAS-DINAMICAS (v4.25.3)
+
+### Problema
+El pipeline mostraba máximo 4 brechas en el diagnóstico debido a hardcode en 3 capas:
+1. **Templates**: 4 ranuras hardcodeadas (`${brecha_1_detalle}`, etc.)
+2. **Generator**: `min(..., 4)` truncaba a 4 brechas
+3. **Scorer**: Solo 7 tipos mapeados en SEVERITY/EFFORT/IMPACT_MAP
+
+### Solución
+- Templates: ranuras hardcode → `${brechas_section}` dinámica
+- Generator: métodos `_build_brechas_section()` y `_build_brechas_resumen_section()` generan N secciones
+- Scorer: 5 nuevos tipos mapeados (total: 12 tipos)
+- Mapper: fix duplicate `low_ia_readiness`, fix `optimization_guide.promised_by`
+
+### Módulos Afectados
+| Módulo | Cambio | Fase |
+|--------|--------|------|
+| `v4_diagnostic_generator.py` | `_build_brechas_section()`, `_build_brechas_resumen_section()`, `_inject_brecha_scores()` truncation fix | A+B |
+| `templates/diagnostico_v6_template.md` | `${brechas_section}` placeholder | A |
+| `templates/diagnostico_v4_template.md` | `${brechas_section}` placeholder | A |
+| `opportunity_scorer.py` | 5 nuevos tipos en maps | C |
+| `pain_solution_mapper.py` | Duplicate fix | D |
+| `asset_catalog.py` | `promised_by` fix | D |
+
+### Backward Compatibility
+- Diagnóstico con ≤4 brechas: formato idéntico al anterior
+- Diagnóstico con >4 brechas: secciones adicionales, tabla resumen expandida
+- Coherence score: unaffected (0.84 en validación E2E)
+- Tests existentes: 0 regresiones
