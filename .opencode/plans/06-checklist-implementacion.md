@@ -1,170 +1,56 @@
-# Checklist de Implementacion - Bugfix Sprint post-FASE-B
+# CHECKLIST DE IMPLEMENTACIÓN: BRECHAS-DINAMICAS
 
-**Version Base**: 4.25.3
-**Fecha**: 2026-04-08
-**Progreso General**: 60% (3/5 fases)
+**Última actualización**: 2026-04-08
 
-```
-[x] FASE-C: 4 Bugs Criticos
-[x] FASE-D: 5 Bugs Medios + Serializacion
-[x] FASE-E: OG Detection HTML Reuse
-[          ] FASE-F: Zombies + Code Smells
-[          ] VALIDACION FINAL: v4complete https://www.hotelvisperas.com/es
-```
+## Progreso Global
 
----
-
-## FASE-C: Correccion de 4 BUGS CRITICOS (4/4) ✅
-
-### Tareas
-
-- [x] **C1**: `import logging` agregado en imports del modulo (linea ~8)
-- [x] **C2**: Linea 2017 usa `'overall_score'` en vez de `'score'`
-- [x] **C3**: Linea 2006 usa `'open_graph'` con default `False` en vez de `'has_open_graph'` con default `True`
-- [x] **C4**: Linea 1000 usa `is not None` check para `mobile_score`
-
-### Validacion
-
-- [x] **C5**: `run_all_validations.py --quick` pasa sin errores
-- [x] **C6**: Todos los tests pasan (12 funciones modulo afectado)
-- [x] **C7**: No se introdujeron nuevos warnings o errores de lint
-- [x] **C8**: `log_phase_completion.py --fase FASE-C` ejecutado exitosamente
-- [x] **C9**: Commit realizado con mensaje descriptivo
-
-### Post-Ejecucion
-
-- Fecha de completion: 2026-04-08
-- Tests post-fase: 12/12 (modulo afectado)
-- Issues encontrados: Test `test_identify_brechas_7_detected_returns_7` actualizado a 8 (brecha no_faq_schema preexistente)
+| Fase | Estado | Fecha | Notas |
+|------|--------|-------|-------|
+| FASE-A | ✅ Completada | 2026-04-08 | Templates dinámicos |
+| FASE-B | ⬜ Pendiente | — | Generator dinámico |
+| FASE-C | ⬜ Pendiente | — | OpportunityScorer mappings |
+| FASE-D | ⬜ Pendiente | — | PainSolutionMapper fix + coherencia |
+| FASE-E | ⬜ Pendiente | — | Validación amaziliahotel.com |
 
 ---
 
-## FASE-D: Correccion de 5 BUGS MEDIOS + Serializacion (6/6) - COMPLETADA 2026-04-08
+## FASE-A: Templates Dinámicos
+- [x] V6 template: reemplazar 4 ranuras por `${brechas_section}`
+- [x] V6 template: reemplazar tabla 4 filas por `${brechas_resumen_section}`
+- [x] V4 template: reemplazar 4 ranuras por `${brechas_section}`
+- [x] Default template inline: reemplazar 4 ranuras
+- [x] grep confirma 0 ocurrencias de "4 BRECHAS/RAZONES"
 
-### Tareas
+## FASE-B: Generator Dinámico
+- [ ] Método `_build_brechas_section()` implementado
+- [ ] Método `_build_brechas_resumen_section()` implementado
+- [ ] `_prepare_template_data()` incluye ambos placeholders
+- [ ] `min(..., 4)` eliminado de `_inject_brecha_scores()`
+- [ ] 5 tests nuevos pasan
+- [ ] Tests existentes no se rompen
 
-- [x] **D1**: Metodos `_compute_opportunity_scores` y `_inject_brecha_scores` tienen una sola definicion cada uno
-- [x] **D2**: Claves `*_regional_avg` aparecen una sola vez en el dict de template data
-- [x] **D3**: Confidence usa mayusculas consistentemente (`.upper()`)
-- [x] **D4**: Tabla AEO no tiene pipe duplicado (`|` no `||`)
-- [x] **D5**: AEO score incluye `/100`
-- [x] **D6**: `V4AuditResult.to_dict()` serializa `seo_elements` completo
-- [x] **D7**: `executed_validators` incluye `"seo_elements_detection"`
+## FASE-C: OpportunityScorer Mappings
+- [ ] 5 nuevos tipos en BRECHA_SEVERITY_MAP
+- [ ] 5 nuevos tipos en BRECHA_EFFORT_MAP
+- [ ] 5 nuevos tipos en BRECHA_IMPACT_MAP
+- [ ] 5 nuevos tipos en _JUSTIFICATION_TEMPLATES
+- [ ] pain_to_type mapper actualizado en generator
+- [ ] 6 tests nuevos pasan
 
-### Validacion
+## FASE-D: PainSolutionMapper Fix + Coherencia
+- [ ] Duplicate `low_ia_readiness` corregido (1 entrada, 3 assets)
+- [ ] 10 pain_ids de `_identify_brechas()` verificados en PAIN_SOLUTION_MAP
+- [ ] Coherence >= 0.8 con 7+ brechas verificado
+- [ ] `optimization_guide.promised_by` sin "pain_solution_mapper"
+- [ ] Tests de integración pasan
 
-- [x] **D8**: Tests pasan (209 passed, 7 failures preexistentes no relacionados)
-- [x] **D9**: Sin regresion vs FASE-C (misma cuenta de failures preexistentes)
-- [ ] **D10**: `log_phase_completion.py --fase FASE-D` ejecutado exitosamente
-- [ ] **D11**: Commit realizado con mensaje descriptivo
-
-### Post-Ejecucion
-
-- Fecha de completion: ___
-- Tests post-fase: ___
-- Issues encontrados: ___
-
----
-
-## FASE-E: OG Detection - HTML Reuse (7/7) ✅ - COMPLETADA 2026-04-08
-
-### Tareas
-
-- [x] **E1**: Segunda request HTTP eliminada (reutilizada) en step 2.8/2.9
-- [x] **E2**: SEO elements detector usa el mismo HTML del schema audit
-- [x] **E3**: Logging defensivo agregado para OG no detectado
-
-### Validacion
-
-- [x] **E4**: Tests SEO elements pasan (9 passed, 1 skipped)
-- [x] **E5**: Tests existentes pasan (62 passed, 1 pre-existente fail, sin regresion)
-- [x] **E6**: `log_phase_completion.py --fase FASE-E` ejecutado exitosamente
-- [x] **E7**: CHANGELOG.md actualizado (seccion FASE-E dentro de v4.25.3)
-
-### Post-Ejecucion
-
-- Fecha de completion: 2026-04-08
-- Tests post-fase: 62 passed (1 pre-existente fail en test_audit_data_pipeline, no relacionado)
-- Issues encontrados: E2E crash pre-existente por metodos _get_brecha_*_placeholder sin definir en V4DiagnosticGenerator (fuera de scope FASE-E)
-
----
-
-## FASE-F: Zombie References + Code Smells (0/11)
-
-### Tareas - Zombies
-
-- [ ] **F1**: Fila IAO eliminada de `diagnostico_ejecutivo.md`
-- [ ] **F2**: Filas IAO + Voice Readiness eliminadas de `diagnostico_v4_template.md`
-- [ ] **F3**: `iao_score` eliminado de `_get_analytics_fallback()` dict
-- [ ] **F4**: `iao_score` eliminado de `benchmarks.py`
-
-### Tareas - Code Smells
-
-- [ ] **F5**: Import redundante datetime eliminado (MEN-1)
-- [ ] **F6**: Scores calculados 1 sola vez (MEN-2)
-- [ ] **F7**: `format_cop()` unificado (MEN-3)
-- [ ] **F8**: `hasattr()` guard en competitors (MEN-4)
-- [ ] **F9**: `print()` reemplazado por `logging.warning()` (MEN-5)
-- [ ] **F10**: `import re` movido a imports del modulo (MEN-6)
-- [ ] **F11**: Ternaria refactorizada con parentesis (MEN-7)
-
-### Validacion
-
-- [ ] **F12**: `run_all_validations.py --quick` pasa sin errores
-- [ ] **F13**: Todos los tests pasan (sin regresion vs FASE-D)
-- [ ] **F14**: `log_phase_completion.py --fase FASE-F` ejecutado exitosamente
-- [ ] **F15**: Commit realizado con mensaje descriptivo
-
-### Post-Ejecucion
-
-- Fecha de completion: ___
-- Tests post-fase: ___
-- Issues encontrados: ___
-
----
-
-## VALIDACION FINAL (post-FASE-F)
-
-- [ ] **V1**: `v4complete --url https://www.hotelvisperas.com/es` ejecutado exitosamente
-- [ ] **V2**: Diagnostico generado sin errores
-- [ ] **V3**: Brechas 9 y 10 detectables (OG + citability corregidos)
-- [ ] **V4**: Score AEO refleja OG tags correctamente
-- [ ] **V5**: No hay placeholders `${iao_score}` ni `${voice_readiness_score}` en output
-
-### Post-Ejecucion
-
-- Fecha de completion: ___
-- Hotel de prueba: https://www.hotelvisperas.com/es
-- Score AEO final: ___
-- Brechas detectadas: ___
-
----
-
-## Resumen de Commits Recomendados
-
-| Fase | Mensaje |
-|------|---------|
-| FASE-C | `fix(FASE-C): 4 critical bugs in v4_diagnostic_generator - logging import, citability attr, OG attr, mobile_score short-circuit` |
-| FASE-D | `fix(FASE-D): 5 medium bugs + seo_elements serialization in v4_comprehensive` |
-| FASE-E | `fix(FASE-E): reuse schema audit HTML for OG detection, eliminate redundant HTTP request` |
-| FASE-F | `fix(FASE-F): remove zombie IAO/voice refs + fix 7 code smells in v4_diagnostic_generator` |
-| FINAL | `test: v4complete E2E validation on https://www.hotelvisperas.com/es post-bugfix-sprint` |
-
----
-
-## Metricas del Sprint
-
-| Metrica | Baseline | Target | Estado |
-|---------|----------|--------|--------|
-| Tests | 1782 | >= 1782 | Pendiente |
-| Bugs criticos | 4 | 0 | Pendiente |
-| Bugs medios | 5 | 0 | Pendiente |
-| Serializacion SEO | Ausente | Completa | Pendiente |
-| Zombie refs | 4 | 0 | Pendiente |
-| Code smells | 7 | 0 | Pendiente |
-| Validaciones | - | PASS | Pendiente |
-
----
-
-*Este checklist sigue el formato de `phased_project_executor.md` v1.4.0*
-*1 fase = 1 sesion. Secuencia obligatoria: C -> D -> E -> F -> VALIDACION*
+## FASE-E: Validación amaziliahotel.com
+- [ ] v4complete ejecutado sin errores
+- [ ] Diagnóstico muestra N brechas (no 4)
+- [ ] Header no dice "4 BRECHAS"
+- [ ] Cada brecha traza a asset vía pain_id
+- [ ] Tabla resumen tiene N filas
+- [ ] Propuesta comercial coherente
+- [ ] Assets cubren >= 50% de brechas
+- [ ] Coherence score >= 0.80
+- [ ] Reporte de validación documentado

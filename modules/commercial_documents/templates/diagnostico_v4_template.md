@@ -44,20 +44,9 @@ generator: IA_Hoteles_v4
 
 ---
 
-## 🚨 PARTE 3: LAS 4 RAZONES EXACTAS DE SUS PÉRDIDAS
+## 🚨 PARTE 3: BRECHAS CRÍTICAS IDENTIFICADAS
 
-### [RAZÓN 1] ${brecha_1_nombre}
-**Impacto mensual:** ${brecha_1_costo}
-**Detalle:** ${brecha_1_detalle}
-
-### [RAZÓN 2] ${brecha_2_nombre}
-**Impacto mensual:** ${brecha_2_costo}
-
-### [RAZÓN 3] ${brecha_3_nombre}
-**Impacto mensual:** ${brecha_3_costo}
-
-### [RAZÓN 4] ${brecha_4_nombre}
-**Impacto mensual:** ${brecha_4_costo}
+${brechas_section}
 
 ---
 

@@ -1,325 +1,129 @@
-# Documentacion Post-Proyecto: Bugfix Sprint post-FASE-B
+# DOCUMENTACIÓN POST-PROYECTO: BRECHAS-DINAMICAS
 
-> **Fuente normativa**: `docs/CONTRIBUTING.md` - Flujo Post-Fase Obligatorio (Paso 6)
-> **Checklist**: `docs/contributing/documentation_rules.md` §5 + §36-58
-> **Version Base**: 4.25.3
-> **Fecha**: 2026-04-08
-> **Estado**: PENDIENTE DE EJECUCION (se ejecuta DESPUES de cada fase)
+**Proyecto**: Eliminación del hardcode "LAS 4 BRECHAS"
+**Fecha inicio**: 2026-04-08
+**Referencia**: docs/CONTRIBUTING.md §39-52 (Flujo Post-Fase) + §56-163 (Actualizar docs oficial)
 
 ---
 
-## Como Usar Este Documento
+## Sección A: Módulos Nuevos/Modificados
 
-Este documento es el **procedimiento paso a paso** de documentacion post-fase para el bugfix sprint. Se ejecuta **al completar cada fase** (C, D, E, F). No es un resumen -- es un checklist ejecutable.
+*(Se completa después de cada fase)*
 
-**Regla**: "Actualiza los registros" = ejecutar TODOS los pasos de esta seccion para la fase completada.
+### FASE-A: Templates ✅ 2026-04-08
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` — Modificado (4 ranuras → ${brechas_section}, tabla → ${brechas_resumen_section})
+- `modules/commercial_documents/templates/diagnostico_v4_template.md` — Modificado (4 ranuras → ${brechas_section})
+- `modules/commercial_documents/v4_diagnostic_generator.py` (solo `_get_default_template`) — Modificado (4 ranuras → ${brechas_section})
+
+### FASE-B: Generator
+- `modules/commercial_documents/v4_diagnostic_generator.py` — Métodos nuevos: `_build_brechas_section()`, `_build_brechas_resumen_section()`
+- `tests/commercial_documents/test_diagnostic_brechas.py` — Tests nuevos
+
+### FASE-C: Scorer
+- `modules/financial_engine/opportunity_scorer.py` — 5 entries nuevas en maps
+- `tests/financial_engine/test_opportunity_scorer.py` — Tests nuevos
+
+### FASE-D: Mapper + Coherencia
+- `modules/commercial_documents/pain_solution_mapper.py` — Fix duplicate
+- `modules/asset_generation/asset_catalog.py` — Fix promised_by
+
+### FASE-E: Validación
+- Sin cambios de código. Solo ejecución + análisis.
 
 ---
 
-## Paso 1: Registrar Fase Completada (AUTO)
+## Sección B: Decisiones de Diseño
+
+*(Se completa durante implementación)*
+
+---
+
+## Sección C: Lecciones Aprendidas
+
+*(Se completa al final del proyecto)*
+
+1. El límite de 4 brechas venía de 3 capas (template, generator, scorer) que se reforzaban mutuamente.
+2. `_identify_brechas()` ya era dinámico (0-10) pero nunca se explotó porque las capas superiores truncaban.
+3. La propuesta comercial (propuesta_v6_template) NO consume brechas directamente — usa servicios fijos. Esto es un gap arquitectónico que este proyecto NO aborda (queda como mejora futura).
+
+---
+
+## Sección D: Métricas Acumulativas
+
+| Métrica | Antes | Después FASE-A | Después FASE-B | ... | Final |
+|---------|-------|----------------|----------------|-----|-------|
+|| Max brechas mostradas | 4 | Dinámico (N) | — | — | — |
+|| Pain IDs con scorer | 7 | — | — | — | — |
+|| Tests brechas | 12 | 12 (sin cambios) | — | — | — |
+| Tests scorer | ? | — | — | — | — |
+| Coherence score | 0.8552 | — | — | — | — |
+| run_all_validations --quick | ? | — | — | — | — |
+|| Lines modified (cumulative) | 0 | ~40 (templates + default) | — | — | — |
+|| Backward compatibility | OK | OK (tests 12/12) | — | — | — |
+
+---
+
+## Sección E: Archivos Afiliados Actualizados
+
+### Manuales (según documentation_rules.md §17-25)
+
+- [ ] `CHANGELOG.md` — Entrada con archivos nuevos/modificados (formato §36-58)
+- [ ] `docs/GUIA_TECNICA.md` — Sección "Notas de Cambios" con módulos afectados, arquitectura, backward compat
+- [ ] `INDICE_DOCUMENTACION.md` — Si los módulos modificados son públicos/utilizados (diagnostic_generator, opportunity_scorer)
+- [ ] `VERSION.yaml` — Solo si se produce release (FASE-RELEASE)
+
+### Auto-sync (via sync_versions.py o log_phase_completion.py)
+
+- [ ] `AGENTS.md` — Auto via sync_versions.py (verificar post-release)
+- [ ] `README.md` — Auto via sync_versions.py
+- [ ] `.cursorrules` — Auto via sync_versions.py
+- [ ] `docs/CONTRIBUTING.md` — Header auto via sync_versions.py
+- [ ] `docs/contributing/REGISTRY.md` — Auto via log_phase_completion.py
+- [ ] `.agent/SYSTEM_STATUS.md` — Regenerar: `python main.py --doctor --status`
+- [ ] `.agent/knowledge/DOMAIN_PRIMER.md` — Verificar: `python scripts/doctor.py --context` (regenerar si faltan módulos nuevos)
+
+### Verificación post-proyecto (según CONTRIBUTING §56-163)
+
+- [ ] `python scripts/version_consistency_checker.py` — Sin discrepancias
+- [ ] `python main.py --doctor` — Sin errores (incluye symlink integrity)
+- [ ] `python scripts/sync_versions.py` — Headers sincronizados
+- [ ] Symlink `.agent/workflows` → `.agents/workflows` verificado
+
+---
+
+## Sección F: Checklist de Capability Contract (documentation_rules.md §26-34)
+
+Aplica cuando se agregan capabilities nuevas (métodos públicos en módulos).
+
+| Capability | Módulo | Punto de Invocación | Output Serializable | No Huérfana |
+|------------|--------|--------------------|--------------------:|-------------|
+| `_build_brechas_section()` | v4_diagnostic_generator | `_prepare_template_data()` | str (markdown) | SI (alimenta template) |
+| `_build_brechas_resumen_section()` | v4_diagnostic_generator | `_prepare_template_data()` | str (markdown) | SI (alimenta template) |
+| 5 nuevos scorer types | opportunity_scorer | `_compute_opportunity_scores()` | OpportunityScore dataclass | SI (via generator) |
+
+- [ ] Cada capability nueva documentada en GUIA_TECNICA.md
+- [ ] Ninguna capability huérfana (todas invocadas en flujo principal)
+
+---
+
+## Sección G: log_phase_completion.py (OBLIGATORIO por fase)
+
+Según CONTRIBUTING §42-52, ejecutar al final de CADA fase:
 
 ```bash
-python scripts/log_phase_completion.py --fase FASE-X
+# Ejemplo FASE-B:
+venv/Scripts/python.exe scripts/log_phase_completion.py \
+    --fase FASE-B \
+    --desc "Generator dinamico N brechas" \
+    --archivos-mod "modules/commercial_documents/v4_diagnostic_generator.py" \
+    --archivos-nuevos "" \
+    --tests "5" \
+    --coherence 0.85 \
+    --check-manual-docs
 ```
 
-**Que hace**:
-- Registra entrada en `docs/contributing/REGISTRY.md` (automatico)
-- Muestra POR_HACER para docs manuales (si los hay)
-
-**Verificacion**:
-- [ ] `REGISTRY.md` tiene entrada para FASE-X con fecha, descripcion, archivos, validaciones
-
----
-
-## Paso 2: Sincronizacion Automatica de Versiones (AUTO)
-
-```bash
-# Verificar si hay desincronizacion
-python scripts/sync_versions.py --check
-
-# Si hay desincronizacion, auto-reparar
-python scripts/sync_versions.py --fix
-```
-
-**Que sincroniza** (desde VERSION.yaml):
-- `AGENTS.md` -- version + fecha (HTML comment + header banner)
-- `README.md` -- version + fecha
-- `.cursorrules` -- version + fecha
-- `docs/CONTRIBUTING.md` -- version header + footer
-- `docs/GUIA_TECNICA.md` -- version + fecha
-- `docs/contributing/REGISTRY.md` -- fecha ultima actualizacion
-
-**Verificacion**:
-- [ ] `sync_versions.py --check` reporta "All files in sync"
-- [ ] No hay discrepancias de version entre archivos
-
----
-
-## Paso 3: Verificar/Actualizar CHANGELOG.md (MANUAL)
-
-> **Formato obligatorio**: `docs/contributing/documentation_rules.md` §36-58
-
-### Plantilla de Entrada
-
-```markdown
-## v4.25.x - Bugfix Sprint: FASE-{X} (2026-04-08)
-
-### Objetivo
-{Descripcion breve del cambio realizado en esta fase}
-
-### Cambios Implementados
-- `ruta/archivo.py` - Descripcion del cambio realizado
-
-### Archivos Nuevos
-| Archivo | Descripcion |
-|---------|-------------|
-| (ninguno si no aplica) | |
-
-### Archivos Modificados
-| Archivo | Cambio |
-|---------|--------|
-| `ruta/existente.py` | Descripcion del cambio |
-
-### Tests
-- Baseline: 1782 funciones, 140 archivos, 52 regresion
-- Post-fase: {N} funciones (sin regresion)
-```
-
-### Checklist CHANGELOG
-
-- [ ] CHANGELOG.md tiene entrada para la version actual de VERSION.yaml
-- [ ] La entrada describe archivos nuevos/modificados de esta fase
-- [ ] Formato sigue plantilla de documentation_rules.md §36-58
-- [ ] No hay entradas duplicadas
-- [ ] Seccion "Tests" documenta baseline y post-fase
-
----
-
-## Paso 4: Verificar/Actualizar GUIA_TECNICA.md (MANUAL)
-
-> Solo si la fase afecta arquitectura, stack o flujos
-
-### Plantilla de Seccion
-
-```markdown
-### Notas de Cambios v4.25.x - Bugfix Sprint FASE-{X}
-
-**Resumen**: {Descripcion tecnica concisa}
-
-**Modulos afectados**:
-- `modules/commercial_documents/v4_diagnostic_generator.py` - {cambios}
-- `modules/auditors/v4_comprehensive.py` - {cambios}
-
-**Arquitectura**: {Cambios arquitectonicos si los hay, o "Sin cambios arquitectonicos"}
-
-**Backwards compatibility**: {Impacto en backwards compat, o "Totalmente backwards compatible"}
-
-**Archivos modificados con descripcion**:
-| Archivo | Cambio |
-|---------|--------|
-| `ruta/archivo.py` | Descripcion |
-```
-
-### Checklist GUIA_TECNICA
-
-- [ ] GUIA_TECNICA.md tiene nota tecnica para la fase (si aplica arquitectura/stack/flujos)
-- [ ] La nota incluye modulos afectados
-- [ ] La nota incluye archivos modificados con descripcion
-- [ ] Backwards compatibility documentado
-
----
-
-## Paso 5: Verificar Capability Contracts (MANUAL)
-
-> Solo si la fase agrega/modifica capacidades del sistema
-
-```bash
-python scripts/validate_agent_ecosystem.py
-```
-
-### Checklist Capabilities
-
-- [ ] 0 capacidades sin invocacion en runtime (no huerfanas)
-- [ ] 0 capacidades sin output observable
-- [ ] Toda capacidad nueva tiene punto de invocacion identificado
-- [ ] Toda capacidad nueva tiene output serializable (to_dict/export/report)
-
----
-
-## Paso 6: Regenerar SYSTEM_STATUS.md (AUTO)
-
-```bash
-python main.py --doctor --status
-```
-
-**Verificacion**:
-- [ ] `.agent/SYSTEM_STATUS.md` regenerado sin errores
-- [ ] Doctor no reporta warnings nuevos
-
----
-
-## Paso 7: Verificar Symlink .agent/ vs .agents/ (AUTO)
-
-```bash
-python main.py --doctor
-```
-
-**Verificacion**:
-- [ ] `.agent/workflows/` es symlink que apunta a `.agents/workflows/`
-- [ ] Doctor no reporta error de "Symlink integrity"
-
-**Si esta roto**:
-```bash
-ln -sf ../.agents/workflows .agent/workflows
-```
-
----
-
-## Paso 8: Validacion Final Pre-Commit
-
-```bash
-# Validacion rapida
-python scripts/run_all_validations.py --quick
-
-# Verificar que no hay cambios no intencionados
-git diff --stat
-```
-
-**Verificacion**:
-- [ ] `run_all_validations.py --quick` pasa sin errores
-- [ ] `git diff --stat` solo muestra archivos intencionados
-- [ ] Tests pasan: `python -m pytest tests/ -x --tb=short -q`
-
----
-
-## Resumen por Fase
-
-### FASE-C: 4 Bugs Criticos
-
-| Paso | Comando/Archivo | Estado |
-|------|-----------------|--------|
-| 1 | `log_phase_completion.py --fase FASE-C` | ✅ Completado |
-| 2 | `sync_versions.py --check` | ✅ All files in sync |
-| 3 | CHANGELOG.md entrada v4.25.3 FASE-C | ✅ Completado |
-| 4 | GUIA_TECNICA.md (no aplica - solo bug fixes) | ✅ Verificado - sin cambios |
-| 5 | Capability contracts (no aplica - sin nuevas capacidades) | ✅ Verificado |
-| 6 | `scripts/doctor.py --status` | ✅ SYSTEM_STATUS.md regenerado |
-| 7 | Symlink check | ✅ .agent/workflows -> ../.agents/workflows |
-| 8 | `run_all_validations.py --quick` | ✅ 4/4 PASS |
-
-**Archivos de FASE-C**:
-| Archivo | Cambio |
-|---------|--------|
-| `modules/commercial_documents/v4_diagnostic_generator.py` | 4 fixes: import logging, overall_score attr, open_graph attr, mobile_score is_not_None |
-
----
-
-### FASE-D: 5 Bugs Medios + Serializacion
-
-| Paso | Comando/Archivo | Estado |
-|------|-----------------|--------|
-| 1 | `log_phase_completion.py --fase FASE-D` | ✅ Completado |
-| 2 | `sync_versions.py --check` | ✅ All files in sync |
-| 3 | CHANGELOG.md entrada v4.25.3 FASE-D | ✅ Completado |
-| 4 | GUIA_TECNICA.md (serializacion seo_elements) | ✅ Completado |
-| 5 | Capability contracts (seo_elements_detection verificado) | ✅ Verificado |
-| 6 | `scripts/doctor.py --status` | ✅ SYSTEM_STATUS.md regenerado |
-| 7 | Symlink check | ✅ .agent/workflows -> ../.agents/workflows |
-| 8 | `run_all_validations.py --quick` | ✅ 4/4 PASS |
-
-**Archivos de FASE-D**:
-| Archivo | Cambio |
-|---------|--------|
-| `modules/commercial_documents/v4_diagnostic_generator.py` | 5 fixes: dead code elimination, dup keys, confidence case, pipe dup, /100 suffix |
-| `modules/auditors/v4_comprehensive.py` | Serializacion seo_elements en to_dict() + executed_validators |
-
----
-
-### FASE-E: OG Detection HTML Reuse
-
-| Paso | Comando/Archivo | Estado |
-|------|-----------------|--------|
-| 1 | `log_phase_completion.py --fase FASE-E` | ✅ Completado |
-| 2 | `sync_versions.py --check` | ⏭️ Omitido (sin cambio de version) |
-| 3 | CHANGELOG.md entrada v4.25.3 FASE-E | ✅ Completado |
-| 4 | GUIA_TECNICA.md (cambio de flujo HTTP en auditoria) | ⏭️ Omitido (fix interno, no arquitectonico) |
-| 5 | Capability contracts (no cambia) | ✅ Verificado |
-| 6 | `scripts/doctor.py --status` | ⏭️ Omitido (sin cambio de version) |
-| 7 | Symlink check | ✅ Verificado |
-| 8 | `run_all_validations.py --quick` | ✅ Resuelto por FASE-F |
-
-**Archivos de FASE-E**:
-| Archivo | Cambio |
-|---------|--------|
-| `modules/auditors/v4_comprehensive.py` | HTTP consolidation: 3→1 request, page_html compartido para metadata/citability/SEO, logging defensivo OG |
-
----
-
-### FASE-F: Zombies + Code Smells
-
-| Paso | Comando/Archivo | Estado |
-|------|-----------------|--------|
-| 1 | `log_phase_completion.py --fase FASE-F` | ✅ Completado |
-| 2 | `sync_versions.py --check` | ⏭️ Pendiente |
-| 3 | CHANGELOG.md entrada v4.25.x FASE-F | ⏭️ Pendiente (al final de release) |
-| 4 | GUIA_TECNICA.md (limpieza, no afecta arquitectura -- puede omitirse) | ⏭️ Opcional |
-| 5 | Capability contracts (no cambia) | ✅ N/A |
-| 6 | `main.py --doctor --status` | ⏭️ Pendiente |
-| 7 | Symlink check | ⏭️ Pendiente |
-| 8 | `run_all_validations.py --quick` | ⏭️ Pendiente |
-
-**Archivos de FASE-F**:
-| Archivo | Cambio |
-|---------|--------|
-| `templates/diagnostico_ejecutivo.md` | ✅ IAO row eliminada (ZMB-1) |
-| `templates/diagnostico_v4_template.md` | ✅ IAO+Voice rows eliminadas (ZMB-2) |
-| `modules/commercial_documents/v4_diagnostic_generator.py` | ✅ ZMB-3 + MEN-1..7 + 24 phantom placeholders eliminados (~50 lineas) |
-| `modules/utils/benchmarks.py` | ✅ ZMB-4: iao_score key eliminada |
-
----
-
-## Commit Messages Recomendados (por Fase)
-
-| Fase | Mensaje |
-|------|---------|
-| FASE-C | `fix(FASE-C): 4 critical bugs in v4_diagnostic_generator - logging import, citability attr, OG attr, mobile_score short-circuit` |
-| FASE-D | `fix(FASE-D): 5 medium bugs + seo_elements serialization in v4_comprehensive` |
-| FASE-E | `fix(FASE-E): reuse schema audit HTML for OG detection, eliminate redundant HTTP request` |
-| FASE-F | `fix(FASE-F): remove zombie IAO/voice refs + fix 7 code smells in v4_diagnostic_generator` |
-
----
-
-## Validacion Final Post-Sprint (despues de FASE-F)
-
-```bash
-# 1. Diagnostico completo del ecosistema
-python scripts/version_consistency_checker.py
-python main.py --doctor
-
-# 2. Sincronizacion final
-python scripts/sync_versions.py
-
-# 3. CHANGELOG verificado para todas las fases
-# (entradas C, D, E, F presentes)
-
-# 4. GUIA_TECNICA actualizada
-# (notas tecnicas para D y E)
-
-# 5. Skills/workflows verificados
-# (sin cambios en este sprint)
-
-# 6. SYSTEM_STATUS regenerado
-python main.py --doctor --status
-
-# 7. Symlink verificado
-# (.agent/workflows -> .agents/workflows OK)
-
-# 8. Validacion final
-python scripts/run_all_validations.py --quick
-./venv/Scripts/python.exe main.py v4complete --url https://www.hotelvisperas.com/es
-```
-
----
-
-*Documento alineado con docs/CONTRIBUTING.md (Flujo Post-Fase Obligatorio, Paso 6)*
-*Formato CHANGELOG sigue docs/contributing/documentation_rules.md §36-58*
+- [x] FASE-A registrada en REGISTRY.md
+- [ ] FASE-B registrada en REGISTRY.md
+- [ ] FASE-C registrada en REGISTRY.md
+- [ ] FASE-D registrada en REGISTRY.md
+- [ ] FASE-E registrada en REGISTRY.md

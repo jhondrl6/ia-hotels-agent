@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-08
 > **Version actual:** v4.25.2
-> **Total fases completadas:** 52
+> **Total fases completadas:** 53
 
 ---
 
@@ -1741,6 +1741,28 @@ _Ninguno_
 ### Validaciones
 - [x] Tests passing (51 passed)
 - [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-A - 2026-04-08
+**Descripcion:** Templates dinamicos: eliminar hardcode 4 brechas en V6, V4 y default template
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `modules/commercial_documents/templates/diagnostico_v4_template.md` | Diagnostico V4 Template |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (12)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.8552 (PASO)
 - [x] Capability contract verificado
 
 ---

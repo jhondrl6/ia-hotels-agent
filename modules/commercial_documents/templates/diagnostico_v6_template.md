@@ -63,27 +63,9 @@ Esta cifra representa reservas directas que van a competidores que aparecen prim
 
 ---
 
-## 🚨 LAS 4 BRECHAS CRÍTICAS IDENTIFICADAS
+## 🚨 BRECHAS CRÍTICAS IDENTIFICADAS
 
-### [BRECHA 1] ${brecha_1_nombre}
-- **Detalle:** ${brecha_1_detalle}
-- **Por qué importa:** ${brecha_1_impacto}
-- **Costo:** ${brecha_1_costo} COP/mes
-
-### [BRECHA 2] ${brecha_2_nombre}
-- **Detalle:** ${brecha_2_detalle}
-- **Por qué importa:** ${brecha_2_impacto}
-- **Costo:** ${brecha_2_costo} COP/mes
-
-### [BRECHA 3] ${brecha_3_nombre}
-- **Detalle:** ${brecha_3_detalle}
-- **Por qué importa:** ${brecha_3_impacto}
-- **Costo:** ${brecha_3_costo} COP/mes
-
-### [BRECHA 4] ${brecha_4_nombre}
-- **Detalle:** ${brecha_4_detalle}
-- **Por qué importa:** ${brecha_4_impacto}
-- **Costo:** ${brecha_4_costo} COP/mes
+${brechas_section}
 
 ---
 
@@ -109,12 +91,7 @@ ${quick_wins_content}
 
 ## 📋 RESUMEN DE BRECHAS → OPORTUNIDADES
 
-| Brecha Actual | Oportunidad de Recuperación |
-|--------------|----------------------------|
-| ${brecha_1_resumen} | Reservas directas (+${brecha_1_recuperacion}/mes) |
-| ${brecha_2_resumen} | Visibilidad local (+${brecha_2_recuperacion}/mes) |
-| ${brecha_3_resumen} | Viajeros digitales (+${brecha_3_recuperacion}/mes) |
-| ${brecha_4_resumen} | siguiente generación de guests |
+${brechas_resumen_section}
 
 ---
 

@@ -364,23 +364,9 @@ ${manual_attention_table}
 
 ---
 
-## 🚨 LAS 4 RAZONES EXACTAS DE SUS PÉRDIDAS
+## 🚨 BRECHAS CRÍTICAS IDENTIFICADAS
 
-### [RAZÓN 1] ${brecha_1_nombre}
-**Impacto mensual:** ${brecha_1_costo}  
-**Detalle:** ${brecha_1_detalle}
-
-### [RAZÓN 2] ${brecha_2_nombre}
-**Impacto mensual:** ${brecha_2_costo}  
-**Detalle:** ${brecha_2_detalle}
-
-### [RAZÓN 3] ${brecha_3_nombre}
-**Impacto mensual:** ${brecha_3_costo}  
-**Detalle:** ${brecha_3_detalle}
-
-### [RAZÓN 4] ${brecha_4_nombre}
-**Impacto mensual:** ${brecha_4_costo}  
-**Detalle:** ${brecha_4_detalle}
+${brechas_section}
 
 ---
 
@@ -917,21 +903,7 @@ ${quick_wins_list}
             return "  - Sin supuestos definidos"
         return "\n".join([f"  - {item}" for item in items])
 
-    def _format_scenario_amount(self, amount: int, description: str = "") -> str:
-        """Format scenario amount with semantic handling for negative values.
-        
-        Args:
-            amount: Monthly loss amount (can be negative for equilibrium/gain)
-            description: Optional description to append
-            
-        Returns:
-            Formatted string with proper semantics
-        """
-        if amount <= 0:
-            # Negative or zero = Equilibrium or gain
-            return f"Equilibrio (ahorro: {format_cop(abs(amount))})"
-        return format_cop(amount)
-    
+
     def _build_solvable_problems_table(self, audit_result: V4AuditResult) -> str:
         """Build table of problems with automatic solutions."""
         rows = []
@@ -1448,7 +1420,7 @@ ${quick_wins_list}
 
         RETORNA:
             dict con data_source="estimado", summary_text, iao_qualitative,
-            iao_score (0-100 estimado), signals (lista)
+            signals (lista)
         """
         if not audit_result:
             return {
