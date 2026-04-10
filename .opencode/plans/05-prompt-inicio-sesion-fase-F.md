@@ -1,287 +1,214 @@
-# Prompt de Inicio de Sesion — FASE-F: Fix Brotli Encoding + Defensa en Profundidad
+# FASE-F: Phantom Cost Fix + Dead Code Removal
 
-## Contexto
-
-### Documento de referencia
-`/mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/context/whatsapp_false_positive.md`
-
-### Estado de Fases Anteriores
-
-FASE-A a FASE-E completadas. Todos los fixes de codigo (W0-W4, R1-R3, citability, typo) estan
-aplicados correctamente. Sin embargo, BRECHA 2 "Sin WhatsApp" persiste en el diagnostico generado
-porque NINGUN fix tenia efecto: el HTML llega como basura binaria al pipeline.
-
-### Causa Raiz Confirmada
-
-`HttpClient` (`modules/utils/http_client.py:47`) envia `Accept-Encoding: gzip, deflate, br`.
-Servidores LiteSpeed/nginx responden con `Content-Encoding: br` (Brotli). El venv NO tiene `brotli`
-instalada. `requests` no puede decodificar y `response.text` entrega binario crudo como UTF-8.
-
-Resultado: 33KB de basura en vez de 236KB de HTML real. TODO el pipeline de diagnostico opera
-sobre HTML ilegible: deteccion WhatsApp, metadata, SEO elements, citability, schemas.
-
-### Evidencia
-
-```
-# HttpClient actual (con br, sin libreria):
-HTML length: 33190, class= count: 0, joinchat: False, Content-Encoding: br
-
-# Sin br:
-HTML length: 236640, class= count: 694, joinchat: True, Content-Encoding: gzip
-```
-
-### Principio rector
-
-Un falso diagnostico ("Sin WhatsApp" cuando el hotel SI lo tiene) destruye credibilidad al
-primer vistazo del cliente. No hay margen de error. Este fix no puede limitarse a resolver
-Brotli: debe anticipar CUALQUIER causa futura de HTML corrupto/ilegible.
+**ID**: FASE-F
+**Objetivo**: Eliminar el bug crítico de costos fantasma (brechas inexistentes con valores COP reales) y remover código muerto de distribución fija 40/30/20/10
+**Dependencias**: Ninguna (primera fase del proyecto)
+**Duración estimada**: 2-3 horas
+**Skill**: `iah-cli-phased-execution`
 
 ---
 
-## Objetivo
+## Contexto
 
-1. Corregir la causa raiz inmediata (Brotli)
-2. Agregar validacion de integridad HTML que detecte CUALQUIER tipo de HTML corrupto
-3. Validar E2E que todos los fixes de FASE-A/E funcionan contra HTML real
-4. Agregar test de regresion para que esto no vuelva a pasar
+### Problema Detectado
+
+El generador de propuestas (`v4_proposal_generator.py`) usa una distribución fija 40/30/20/10 sobre `monthly_loss_max` para calcular el costo de cada brecha. Cuando existen menos de 4 problemas reales, las brechas faltantes muestran placeholders ("Tercer problema", "Cuarto problema") con valores COP no-cero, atribuyendo pérdidas ficticias al cliente.
+
+**Ejemplo del bug**: Si solo hay 1 brecha real de $10M COP, el sistema muestra:
+- Brecha 1: $4M COP (real)
+- Brecha 2: $3M COP ("Segundo problema" → FICTICIO)
+- Brecha 3: $2M COP ("Tercer problema" → FICTICIO)
+- Brecha 4: $1M COP ("Cuarto problema" → FICTICIO)
+
+El cliente ve $6M COP de pérdidas que no existen.
+
+### Estado de Fases Anteriores
+| Fase | Estado |
+|------|--------|
+| FASE-F (esta) | 🔲 Pendiente |
+
+### Base Técnica Disponible
+- Archivo principal: `modules/commercial_documents/v4_proposal_generator.py`
+- Template V6: `modules/commercial_documents/templates/propuesta_v6_template.md` — NO usa brechas
+- Template V4: `modules/commercial_documents/templates/propuesta_v4_template.md` — SÍ usa brecha_1..4
+- Tests existentes: `tests/test_proposal_alignment.py`
+- `diagnostic_summary.top_problems: List[str]` — fuente actual de nombres
+- `audit_result: Optional[Any]` — disponible pero NO se usa para brechas
 
 ---
 
 ## Tareas
 
-### T1: Instalar libreria brotli
+### Tarea 1: Eliminar distribución fija y código muerto
 
-```bash
-venv/Scripts/pip.exe install brotli
+**Objetivo**: Reemplazar la distribución fija 40/30/20/10 con lógica que respete la cantidad real de problemas
+
+**Archivos afectados**:
+- `modules/commercial_documents/v4_proposal_generator.py` (líneas 538-546)
+
+**Código actual** (ELIMINAR):
+```python
+# Líneas 538-546 — DISTRIBUCIÓN FIJA (el gap)
+'brecha_1_nombre': diagnostic_summary.top_problems[0] if len(diagnostic_summary.top_problems) > 0 else "Problema no identificado",
+'brecha_1_costo': format_cop(int(main_scenario.monthly_loss_max * 0.4)),
+'brecha_2_nombre': diagnostic_summary.top_problems[1] if len(diagnostic_summary.top_problems) > 1 else "Segundo problema",
+'brecha_2_costo': format_cop(int(main_scenario.monthly_loss_max * 0.3)),
+'brecha_3_nombre': diagnostic_summary.top_problems[2] if len(diagnostic_summary.top_problems) > 2 else "Tercer problema",
+'brecha_3_costo': format_cop(int(main_scenario.monthly_loss_max * 0.2)),
+'brecha_4_nombre': diagnostic_summary.top_problems[3] if len(diagnostic_summary.top_problems) > 3 else "Cuarto problema",
+'brecha_4_costo': format_cop(int(main_scenario.monthly_loss_max * 0.1)),
 ```
 
-Libreria local de compresion, sin API keys, sin servicios externos.
-Una vez instalada, `requests`/`urllib3` decodifican `Content-Encoding: br` automaticamente.
-
----
-
-### T2: Agregar _validate_html_integrity() en v4_comprehensive.py
-
-**Archivo:** `modules/auditors/v4_comprehensive.py`
-**Ubicacion:** Nuevo metodo en la clase `V4ComprehensiveAuditor`
-
-Este metodo es el guardian que detecta CUALQUIER forma de HTML corrupto, no solo Brotli:
-
+**Código nuevo** (REEMPLAZAR CON):
 ```python
-def _validate_html_integrity(self, html: str, url: str) -> bool:
-    """
-    Valida que el HTML sea legible y no basura binaria/comprimida.
-    
-    Detecta: Brotli sin decodificar, binario crudo, paginas de error,
-    respuestas vacias, JavaScript-only shells sin contenido.
-    
-    Returns:
-        True si el HTML es valido para analisis, False si es ilegible.
-    """
-    if not html or len(html) < 200:
-        logger.warning(f"HTML too short or empty for {url} ({len(html) if html else 0} chars)")
-        return False
-    
-    html_lower = html.lower()
-    
-    # Check 1: Debe tener estructura HTML basica
-    has_structure = any(tag in html_lower for tag in ['<html', '<head', '<body', '<!doctype', '<div'])
-    if not has_structure:
-        logger.error(
-            f"HTML integrity failed for {url}: no HTML structure found. "
-            f"First 100 chars: {repr(html[:100])}"
+# Brecha variables — dinámicas, zero para slots sin problema real
+# Las brechas consumen top_problems (V4 compat) con guard contra phantom costs
+top_problems = diagnostic_summary.top_problems or []
+max_brechas = 4
+brecha_data = {}
+for i in range(max_brechas):
+    slot = i + 1
+    if i < len(top_problems) and top_problems[i]:
+        brecha_data[f'brecha_{slot}_nombre'] = top_problems[i]
+        # Distribución proporcional: divide pérdida entre las brechas reales
+        brecha_data[f'brecha_{slot}_costo'] = format_cop(
+            int(main_scenario.monthly_loss_max / max(len(top_problems), 1))
         )
-        return False
-    
-    # Check 2: No debe tener alto ratio de caracteres no imprimibles (binario)
-    sample = html[:2000]
-    non_printable = sum(1 for c in sample if ord(c) < 32 and c not in '\n\r\t')
-    if len(sample) > 0 and non_printable / len(sample) > 0.15:
-        logger.error(
-            f"HTML integrity failed for {url}: {non_printable} non-printable chars in first 2000 "
-            f"({non_printable/len(sample)*100:.1f}%). Likely binary/compressed data."
-        )
-        return False
-    
-    return True
+    else:
+        brecha_data[f'brecha_{slot}_nombre'] = ""
+        brecha_data[f'brecha_{slot}_costo'] = "$0"
 ```
+
+**Nota sobre distribución**: La distribución equitativa (`len / max`) es un placeholder temporal. FASE-G conectará los impactos reales desde `_identify_brechas()`. Lo importante aquí es que:
+1. No haya phantom costs
+2. Los slots vacíos muestren "$0" y nombre vacío
+3. top_problems None-safe
+
+**Criterios de aceptación**:
+- [ ] Si hay 1 problema: solo brecha_1 tiene costo no-cero; brechas 2-4 = "$0"
+- [ ] Si hay 0 problemas: todas las brechas = "$0", nombre = ""
+- [ ] Si top_problems es None: no TypeError (guard con `or []`)
+- [ ] Template V6 generado exitosamente (no usa estas variables, pero no debe romper)
+- [ ] Template V4 generado exitosamente (SÍ usa estas variables, debe mostrar correctly)
+
+### Tarea 2: Tests de regresión para phantom cost fix
+
+**Objetivo**: Garantizar que el fix no rompe el comportamiento correcto y elimina los phantom costs
+
+**Archivos afectados**:
+- `tests/test_proposal_alignment.py` (agregar tests nuevos)
+
+**Tests a crear**:
+
+1. `test_no_phantom_costs_with_one_problem`: Con 1 top_problem, brechas 2-4 deben tener "$0"
+2. `test_no_phantom_costs_with_zero_problems`: Con 0 top_problems, todas las brechas = "$0"
+3. `test_no_phantom_costs_with_none_problems`: Con top_problems=None, no TypeError, todas = "$0"
+4. `test_costs_distributed_when_4_problems`: Con 4 problemas, todos tienen costo no-cero
+5. `test_empty_name_for_missing_brechas`: Slots sin problema tienen nombre vacío, no placeholder genérico
+
+**Criterios de aceptación**:
+- [ ] 5 tests nuevos pasando
+- [ ] Tests existentes en `test_proposal_alignment.py` siguen pasando (0 regresiones)
+
+### Tarea 3: Guard contra None en top_problems
+
+**Objetivo**: Agregar validación defensiva en `_prepare_template_data`
+
+**Archivos afectados**:
+- `modules/commercial_documents/v4_proposal_generator.py`
+
+**Criterios de aceptación**:
+- [ ] `diagnostic_summary.top_problems` puede ser None sin crash
+- [ ] No se asume que siempre hay exactamente 4 problemas
 
 ---
 
-### T3: Integrar _validate_html_integrity en audit()
+## Tests Obligatorios
 
-**Archivo:** `modules/auditors/v4_comprehensive.py`
-**Linea:** despues de la 370 (donde se asigna `page_html`)
+| Test | Archivo | Criterio de Éxito |
+|------|---------|-------------------|
+| `test_no_phantom_costs_with_one_problem` | `tests/test_proposal_alignment.py` | brechas 2-4 = "$0" |
+| `test_no_phantom_costs_with_zero_problems` | `tests/test_proposal_alignment.py` | todas = "$0" |
+| `test_no_phantom_costs_with_none_problems` | `tests/test_proposal_alignment.py` | sin TypeError |
+| `test_costs_distributed_when_4_problems` | `tests/test_proposal_alignment.py` | 4 costos no-cero |
+| `test_empty_name_for_missing_brechas` | `tests/test_proposal_alignment.py` | nombres = "" |
 
-Reemplazar:
-
-```python
-page_html = html_response.text if html_response and html_response.text else ""
-if not page_html:
-    logger.warning(f"Empty HTML response for {url}")
-```
-
-Con:
-
-```python
-page_html = html_response.text if html_response and html_response.text else ""
-if page_html and not self._validate_html_integrity(page_html, url):
-    logger.error(f"HTML response for {url} is corrupted/unreadable — falling back to empty")
-    page_html = ""
-elif not page_html:
-    logger.warning(f"Empty HTML response for {url}")
-```
-
-Cuando el HTML es ilegible por CUALQUIER causa, se usa string vacio y los downstream checks
-manejan la ausencia gracefully (ya lo hacen: brechas se marcan como "no detectado", no como falsos).
-
----
-
-### T4: Test de regresion para integridad HTML
-
-**Archivo:** `tests/test_html_integrity.py` (nuevo)
-
-```python
-"""Test de regresion: HTML ilegible nunca debe generar diagnosticos falsos.
-
-Caso original: Brotli encoding no decodificado producia basura binaria que
-el pipeline trataba como HTML valido, generando falsos positivos en brechas.
-"""
-import pytest
-
-
-class TestHtmlIntegrity:
-    """Valida _validate_html_integrity contra escenarios de HTML corrupto."""
-
-    @pytest.fixture
-    def auditor(self):
-        from modules.auditors.v4_comprehensive import V4ComprehensiveAuditor
-        return V4ComprehensiveAuditor.__new__(V4ComprehensiveAuditor)
-
-    def test_brotli_binary_rejected(self, auditor):
-        """HTML binario (Brotli sin decodificar) debe rechazarse."""
-        # Simula basura binaria real del bug original
-        binary_html = '\x1f\x8b\x08\x00\x00\x00\x00\x00' + 'A' * 500
-        assert auditor._validate_html_integrity(binary_html, 'https://test.com') is False
-
-    def test_empty_html_rejected(self, auditor):
-        """HTML vacio o muy corto debe rechazarse."""
-        assert auditor._validate_html_integrity('', 'https://test.com') is False
-        assert auditor._validate_html_integrity('<p>hi</p>', 'https://test.com') is False
-
-    def test_valid_html_accepted(self, auditor):
-        """HTML real debe aceptarse."""
-        valid = '<!DOCTYPE html><html><head><title>Test</title></head><body><div class="content">Hello</div></body></html>'
-        assert auditor._validate_html_integrity(valid, 'https://test.com') is True
-
-    def test_html_with_joinchat_accepted(self, auditor):
-        """HTML con plugin Joinchat debe aceptarse (caso amaziliahotel.com)."""
-        html = '<html><body><div class="joinchat" data-settings=\'{"telephone":"573104019049"}\'></div></body></html>'
-        assert auditor._validate_html_integrity(html, 'https://test.com') is True
-
-    def test_error_page_rejected(self, auditor):
-        """Pagina de error/redirect sin estructura debe rechazarse."""
-        # Cloudflare challenge page (JavaScript only, sin HTML real)
-        js_only = '<script>challenge_platform()</script>' + 'x' * 500
-        assert auditor._validate_html_integrity(js_only, 'https://test.com') is False
-```
-
----
-
-### T5: Verificacion directa del fix
-
-Antes de ejecutar v4complete, verificar que HttpClient ahora entrega HTML real:
-
+**Comando de validación**:
 ```bash
-venv/Scripts/python.exe -c "
-import sys; sys.path.insert(0, '.')
-from modules.utils.http_client import HttpClient
-r, _ = HttpClient().get('https://amaziliahotel.com/')
-html = r.text if r else ''
-print('Length:', len(html))
-print('joinchat:', ('joinchat' in html.lower()))
-print('class= count:', html.lower().count('class='))
-print('Content-Encoding:', r.headers.get('Content-Encoding', 'none'))
-print('Has <html:', ('<html' in html.lower()))
-"
+cd /mnt/c/Users/Jhond/Github/iah-cli
+./venv/Scripts/python.exe -m pytest tests/test_proposal_alignment.py -v
+./venv/Scripts/python.exe scripts/run_all_validations.py --quick
 ```
-
-Esperado: Length ~236000, joinchat=True, class= ~694, Has <html=True.
 
 ---
 
-### T6: Tests de regresion
+## Post-Ejecución (OBLIGATORIO)
 
+Al finalizar esta fase, actualizar INMEDIATAMENTE:
+
+1. **`dependencias-fases.md`**: Marcar FASE-F como ✅ Completada
+2. **`06-checklist-implementacion.md`**: Marcar items de FASE-F como ✅
+3. **`09-documentacion-post-proyecto.md`**: Sección A (módulos), D (métricas), E (archivos)
+4. **`scripts/log_phase_completion.py`**:
 ```bash
-venv/Scripts/python.exe -m pytest tests/test_html_integrity.py -v
-venv/Scripts/python.exe -m pytest tests/ -v --tb=short -k "whatsapp or region or pain or coherence"
+./venv/Scripts/python.exe scripts/log_phase_completion.py \
+    --fase FASE-F \
+    --desc "Phantom cost fix + dead code removal in proposal generator" \
+    --archivos-mod "modules/commercial_documents/v4_proposal_generator.py" \
+    --tests "5" \
+    --check-manual-docs
 ```
 
 ---
 
-### T7: Validacion E2E completa
+## Criterios de Completitud (CHECKLIST)
 
-```bash
-venv/Scripts/python.exe main.py v4complete --url https://amaziliahotel.com/
+- [ ] **Tests nuevos pasan**: 5/5 phantom cost tests exitosos
+- [ ] **Tests existentes pasan**: 0 regresiones en suite completa
+- [ ] **Validaciones del proyecto**: `run_all_validations.py --quick` pasa
+- [ ] **Phantom costs eliminados**: Ninguna brecha sin problema muestra costo > $0
+- [ ] **None-safe**: top_problems=None no causa TypeError
+- [ ] **Post-ejecución completada**: dependencias, checklist, docs actualizados
+
+**NO marcar la fase como completada si algún criterio falla.**
+
+---
+
+## Restricciones
+
+- NO modificar `v4_diagnostic_generator.py` (es responsabilidad de FASE-G/H)
+- NO modificar `data_structures.py` (es responsabilidad de FASE-I)
+- NO modificar template V6 (no usa brechas, no necesita cambios)
+- Mantener compatibilidad con template V4 (usa brecha_1..4)
+- Preservar firma de `_prepare_template_data()` — solo cambiar implementación interna
+
+---
+
+## Prompt de Ejecución
+
 ```
+Actúa como ingeniero Python senior especializado en bugs financieros.
 
-Verificar en el diagnostico generado:
+OBJETIVO: Eliminar phantom costs del proposal generator v4.
 
-| Check | Esperado | Antes (roto) |
-|-------|----------|--------------|
-| BRECHA 2 "Sin WhatsApp" | **NO aparece** | Aparecia (falso positivo) |
-| whatsapp_verified score | > 0 (0.5 o 1.0) | 0.000 |
-| Region | "Eje Cafetero" | "nacional" |
-| Open Graph | detectado (si existe) | False (siempre) |
-| Metadata CMS defaults | detectado (si aplica) | No detectaba |
-| Coherence score | >= 0.80 | 0.84 |
+CONTEXTO:
+- v4_proposal_generator.py líneas 538-546 tienen distribución fija 40/30/20/10
+- Bug: slots sin problema real muestran costos ficticios en COP
+- Template V6 no usa estas variables (código muerto parcial)
+- Template V4 SÍ las usa (debe seguir funcionando)
 
-### T8: Verificar fixes previos contra HTML real
+TAREAS:
+1. Reemplazar líneas 538-546 con lógica dinámica que zeroee slots vacíos
+2. Agregar guard contra top_problems=None
+3. Crear 5 tests en test_proposal_alignment.py
 
-Confirmar que los fixes de FASE-A/E ahora tienen efecto:
+CRITERIOS:
+- 0 phantom costs cuando hay < 4 problemas
+- 0 regresiones en tests existentes
+- run_all_validations.py --quick pasa
 
-- W0: `_detect_whatsapp_from_html()` encuentra "joinchat" → whatsapp_html_detected=True
-- W1: ValidationSummary recibe campo whatsapp_number via rama elif
-- W2: pain_solution_mapper NO genera pain no_whatsapp_visible
-- W4: coherence_validator da score parcial (0.5+) en whatsapp_verified
-- R1: Region inferida desde GBP address → "eje_cafetero"
-
----
-
-## Criterios de Completitud
-
-- [ ] T1: brotli instalada en venv
-- [ ] T2: _validate_html_integrity() implementada en v4_comprehensive.py
-- [ ] T3: audit() usa _validate_html_integrity para rechazar HTML ilegible
-- [ ] T4: test_html_integrity.py creado, 5 tests pasan
-- [ ] T5: HTML de amaziliahotel.com contiene "joinchat" y "class="
-- [ ] T6: Tests de regresion pasan (sin regresion)
-- [ ] T7: v4complete ejecuta sin crashes
-- [ ] T7: BRECHA 2 "Sin WhatsApp" NO aparece en diagnostico generado
-- [ ] T7: Region muestra "Eje Cafetero" (no "nacional")
-- [ ] T7: Coherence >= 0.80
-- [ ] T8: whatsapp_verified score > 0
-- [ ] log_phase_completion.py ejecutado
-
----
-
-## Archivos a Modificar
-
-| Archivo | Cambio | Zona |
-|---------|--------|------|
-| `modules/auditors/v4_comprehensive.py` | Nuevo metodo `_validate_html_integrity()` + integracion en `audit()` | Clase auditor |
-| `tests/test_html_integrity.py` | Nuevo archivo, 5 tests de regresion | N/A |
-
-**Comando:** `venv/Scripts/pip.exe install brotli`
-
-**Riesgo:** MINIMO. Metodo nuevo + 2 lineas de integracion. Sin impacto en modulos existentes.
-
----
-
-## Post-Ejecucion
-
-- Marcar checklist en `06-checklist-implementacion.md`
-- Ejecutar `log_phase_completion.py --fase FASE-F`
-- Actualizar `09-documentacion-post-proyecto.md`
-- Actualizar contexto `whatsapp_false_positive.md` con resultado E2E
-- Agregar `brotli` a requirements.txt o requirements-dev.txt si existe
+VALIDACIONES:
+- pytest tests/test_proposal_alignment.py -v
+- pytest tests/ -k proposal -v
+- python scripts/run_all_validations.py --quick
+```

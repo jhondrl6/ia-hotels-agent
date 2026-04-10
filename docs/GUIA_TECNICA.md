@@ -1,8 +1,51 @@
 # Guía Técnica IA Hoteles Agent CLI
 
 **Ultima actualizacion:** 9 Abril 2026
-**Version:** 4.25.3 (Fix AEO Score + Integridad de Datos FASE-E)
+|**Version:** 4.26.0 (Brecha Architectural Fix)
 **Audiencia:** Desarrolladores, DevOps, Contribuidores
+
+## Notas de Cambios v4.26.0 - Brecha Architectural Fix
+
+**Fecha:** 10 Abril 2026
+
+### Resumen
+
+La propuesta V6 no consumía brechas reales del diagnóstico — usaba distribución fija 40/30/20/10 generando "phantom costs" (brechas ficticias con costo > $0 cuando el hotel tenía < 4 problemas reales). También había conflicto dual source (_inject_brecha_scores vs _get_brecha_*) y _identify_brechas ejecutándose 9x por generación.
+
+### Módulos Afectados
+
+#### 1. modules/commercial_documents/v4_proposal_generator.py (FASE-F)
+- Eliminada distribución fija 40/30/20/10 en `_build_brecha_data()`
+- Ahora consume `brechas_reales` con `impacto` real de `_identify_brechas()`
+- Fallback a `top_problems` cuando `brechas_reales=None`
+
+#### 2. modules/commercial_documents/v4_diagnostic_generator.py (FASE-G, FASE-H)
+- `_inject_brecha_scores()` ya no sobrescribe nombre/costo/detalle (solo actualiza scores)
+- Cache implementado para `_identify_brechas()`: 9x → 1x por generación
+- `pain_to_type` cleanup: `low_ia_readiness` removido
+
+#### 3. modules/commercial_documents/data_structures.py (FASE-I)
+- Scenario: eliminada definición muerta (12 líneas)
+- `calculate_quick_wins`: eliminada definición muerta (40 líneas)
+- `extract_top_problems`: eliminada definición muerta (55 líneas)
+- DiagnosticSummary: agregado campo `brechas_reales`
+
+### Backwards Compatibility
+- Si `brechas_reales=None`, proposal generator usa `top_problems` (comportamiento anterior preservado)
+- Templates V4/V6 backward compatible con datos新旧混合
+
+### Tests
+- FASE-F: 5 testsphantom costs (todos PASS)
+- FASE-G: 5 tests dual source (todos PASS)
+- FASE-H: 4 tests cache + cleanup (todos PASS)
+- FASE-I: 4 tests deduplication (todos PASS)
+- Total: 18 tests nuevos, 0 regresiones
+
+### Validación E2E (amaziliahotel.com)
+- Brechas detectadas: 4 (antes: 6 con phantom costs)
+- Costos por brecha: $783.000, $375.840, $313.200, $250.560 COP (proporcionales, no 40/30/20/10)
+- Coherence: 0.92 (antes: 0.84)
+- Publication: READY_FOR_PUBLICATION
 
 ## Notas de Cambios v4.25.3 - Fix AEO Score "Pendiente de datos"
 

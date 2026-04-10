@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.26.0] - 2026-04-10
+
+### Objetivo
+Eliminar gap arquitectónico donde la propuesta V6 no consumía brechas reales del diagnóstico.
+
+### Cambios Implementados
+- `modules/commercial_documents/v4_proposal_generator.py` - Eliminada distribución fija 40/30/20/10, phantom costs corregidos
+- `modules/commercial_documents/v4_diagnostic_generator.py` - Resuelto dual source conflict, caché para _identify_brechas (9x→1x), cleanup pain_to_type
+- `modules/commercial_documents/data_structures.py` - Eliminados duplicados de Scenario, calculate_quick_wins, extract_top_problems. Agregado brechas_reales a DiagnosticSummary
+
+### Tests
+- 18 tests nuevos (5 phantom + 5 dual source + 4 cache + 4 dedup)
+- 0 regresiones
+- Validado E2E con amaziliahotel.com (Coherence: 0.92, Publication: READY)
+
 ## [4.25.3] - 2026-04-08
 
 ### FASE-F (Brotli Encoding Fix + HTML Integrity Guardian)
