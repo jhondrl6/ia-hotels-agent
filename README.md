@@ -21,25 +21,20 @@
 ---
 
 > **🛡️ AGENT PLATFORM STATUS (v4.24.0 - FASE-D: Google Search Console Integration)**:
-> *   **Orthogonal Diagnostic Metrics (v4.22.0)**: Eliminada duplicacion entre "Google Maps (GEO)" y "Activity Score (GBP)". Nuevo sistema de 4 pilares independientes: GEO (completitud), Posicion Competitiva (ranking vs competidores), Web/SEO (credibilidad del sitio), AEO (legibilidad para IAs). Cada score usa datos no solapados.
-> *   **AEO Re-Architecture**: Modulo AEO (Auditory Engine Optimization) alineado con voice assistants (Alexa, Siri, Google Assistant). SpeakableSpecification, FAQ TTS-ready (40-60 palabras), voice keywords Eje Cafetero.
-> *   **Coherence Validator**: Detección de hard/soft conflicts entre fuentes de datos, score de coherencia ≥ 0.8 requerido.
+> **🛡️ AGENT PLATFORM STATUS (v4.26.0 - Brecha Architectural Fix)**:
+> *   **Brecha Architectural Fix (v4.26.0)**: Resuelto gap entre propuesta V6 y diagnóstico. Eliminada distribución fija 40/30/20/10, phantom costs corregidos. Propuesta ahora consume `brechas_reales` con impacto real de `_identify_brechas()`.
+> *   **Phantom Costs Eliminados**: Si hotel tiene < 4 brechas reales, las extras NO tienen costo ficticio. Fallback a `top_problems` preservado para backward compatibility.
+> *   **Dual Source Resolved**: `_inject_brecha_scores()` ya no sobrescribe nombre/costo/detalle — solo actualiza scores.
+> *   **Performance Cache**: `_identify_brechas()` ejecuta 1x por generación (antes: 9x). Cache instance-level con reset en `generate()`.
+> *   **Data Structures Deduplicated**: `data_structures.py` limpio — Scenario, `calculate_quick_wins`, `extract_top_problems` sin duplicados.
+> *   **Coherence Validator**: Score ≥ 0.8 requerido. E2E amaziliahotel.com: 0.92.
 > *   **Evidence Coverage Tracking**: Cobertura de evidence en documentos (≥ 95% coverage).
-> *   **Quality Gates de Pre-publicación**: Gates técnico, comercial, financiero y de coherencia (score ≥ 0.8).
-> *   **Estados de Publicación**: READY_FOR_CLIENT, DRAFT_INTERNAL, REQUIRES_REVIEW con validación estricta.
+> *   **Quality Gates de Pre-publicación**: Gates técnico, comercial, financiero y de coherencia.
 > *   **No Defaults in Money**: Validación financiera que bloquea cálculos con valores por defecto.
-> *   **Voice Assistant Integration**: 3 blueprints (Google Assistant, Apple Business Connect, Alexa Skill) en delivery.
-
-> *   **Controles de Coherencia**: Validación automática diagnosis↔propuesta↔assets con score ≥ 0.8.
-> *   **Observabilidad y Dashboard**: Métricas de calidad en tiempo real y calibración de umbrales.
-> *   **Suite de Regresión Permanente**: Test E2E automatizado con Hotel Vísperas como caso de referencia.
 > *   **NEVER_BLOCK Architecture**: El sistema nunca se bloquea, siempre entrega algo con benchmark regional + disclaimers honestos.
 > *   **Benchmark Resolver**: Fallback con datos regionales de Pereira/Santa Rosa de Cabal cuando faltan datos reales.
-> *   **Autonomous Researcher**: Investiga automáticamente en GBP, Booking, TripAdvisor, Instagram cuando datos son insuficientes.
-> *   **Disclaimer Generator**: Genera disclaimers honestos por nivel de confidence (≥0.9: sin disclaimer, <0.5: detallado).
-> *   **Taxonomía de Confianza**: VERIFIED (≥0.9) / ESTIMATED (0.5-0.9) / CONFLICT (<0.5).
-> *   **V4 Assessment Schema**: Estructura de datos unificada para diagnóstico (reemplaza schema v4.2).
-> *   **Mejoras Recientes**: TDD Gate en workflows, ejecución paralela en auditorías
+> *   **Controles de Coherencia**: Validación automática diagnosis↔propuesta↔assets con score ≥ 0.8.
+> *   **V4 Assessment Schema**: Estructura de datos unificada para diagnóstico.
 
 ---
 
