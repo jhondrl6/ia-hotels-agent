@@ -1,6 +1,6 @@
 # Registro de Fases - IA Hoteles Agent
 
-|> **Ultima actualizacion:** 2026-04-09
+|> **Ultima actualizacion:** 2026-04-10
 |> **Version actual:** v4.25.3
 |> **Total fases completadas:** 64
 
@@ -2092,6 +2092,28 @@ _Ninguno_
 ### Validaciones
 - [x] Tests passing (4)
 - [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.26.0 - 2026-04-10
+**Descripcion:** Brecha Architectural Fix - phantom costs, dual source, cache, dedup (FASE-F/G/H/I/J)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/data_structures.py` | Data Structures |
+
+### Validaciones
+- [x] Tests passing (18)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.92 (PASO)
 - [x] Capability contract verificado
 
 ---

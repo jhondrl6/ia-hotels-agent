@@ -1,7 +1,7 @@
 {
   "modules/asset_generation/conditional_generator.py": "GAP-IAO-01-04",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-H",
-  "modules/commercial_documents/v4_proposal_generator.py": "FASE-G",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-RELEASE-4.26.0",
+  "modules/commercial_documents/v4_proposal_generator.py": "FASE-RELEASE-4.26.0",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-E",
   "modules/asset_generation/asset_diagnostic_linker.py": "V6-5",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
@@ -21,7 +21,7 @@
   "docs/GUIA_TECNICA.md": "GAP-IAO-01-04",
   ".agents/workflows/README.md": "FASE-7",
   "modules/asset_generation/asset_catalog.py": "FASE-D",
-  "modules/commercial_documents/data_structures.py": "FASE-I",
+  "modules/commercial_documents/data_structures.py": "FASE-RELEASE-4.26.0",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
   "main.py": "FASE-G",
   "cross_validator.py": "E2E-CERT-0331",
