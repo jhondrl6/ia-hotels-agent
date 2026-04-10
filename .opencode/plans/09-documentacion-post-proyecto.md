@@ -76,7 +76,7 @@
 - [x] `README.md` — Version sync
 - [x] `.cursorrules` — Version sync
 - [x] `CONTRIBUTING.md` — Version sync
-- [ ] `.agent/SYSTEM_STATUS.md` — Regenerado con doctor --status (pendiente)
+- [x] `.agent/SYSTEM_STATUS.md` — Regenerado con doctor --status (c412ea3)
 
 ---
 
