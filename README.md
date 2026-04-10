@@ -1,6 +1,6 @@
 # IA Hoteles Agent CLI
 
-**Plataforma de Inteligencia Agéntica de Grado Industrial diseñada para la auditoría y blindaje financiero del sector hotelero.**
+**Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt, geo_playbook) para recuperar ingresos que hoy van a OTAs y competidores.**
 
 **Version:** 4.25.3 | **Última actualización:** 9 Abril 2026
 
@@ -65,7 +65,9 @@ El **Agent Harness** es el núcleo que orchestra: memoria (recuerda análisis pr
 
 ## 🎯 ¿Qué es IA Hoteles Agent?
 
-Sistema de inteligencia agéntica que genera diagnósticos comerciales y propuestas de mejora para hoteles, con validación cruzada de datos, controles de coherencia automáticos y proyección financiera por escenarios (70/20/10).
+Sistema que responde a la pregunta: "¿Por qué este hotel pierde reservas que van a Booking, competidores o ChatGPT?". Audita 4 pilares (GEO, SEO, AEO, posición competitiva), asigna un costo en COP a cada brecha detectada, y genera un paquete de assets técnicos listos para deploy con validación cruzada de coherencia.
+
+El diagnóstico siempre se entrega. La propuesta comercial solo se genera cuando los datos alcanzan score de coherencia ≥ 0.8. Los assets se etiquetan como VERIFIED o ESTIMATED según la fuente de datos disponible.
 
 ### Sistema de Evidencia y Confiabilidad v4.3.0
 
@@ -276,7 +278,7 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 ---
 
 **IA HOTELES AGENT © 2026**  
-*Certificando la veracidad digital y blindando el margen hotelero.*
+*Diagnosticando la invisibilidad digital hotelera y recuperando reservas que hoy van a OTAs.*
 
 ---
 
