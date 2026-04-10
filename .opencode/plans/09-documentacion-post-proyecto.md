@@ -14,7 +14,7 @@
 |--------|------|------|-------------|
 || `v4_proposal_generator.py` | F | MODIFICADO | Eliminada distribución fija 40/30/20/10, phantom cost fix. Nuevo método `_build_brecha_data()` |
 || `tests/test_proposal_alignment.py` | F | MODIFICADO | 5 tests phantom cost + skipif para import roto preexistente |
-| `v4_diagnostic_generator.py` | G | MODIFICADO | Dual source conflict resuelto |
+|| `v4_diagnostic_generator.py` | G | MODIFICADO | Dual source conflict: _inject_brecha_scores ya NO sobrescribe _nombre/_costo/_detalle |
 | `v4_diagnostic_generator.py` | H | MODIFICADO | Caché _identify_brechas, pain_to_type cleanup |
 | `data_structures.py` | G | MODIFICADO | Agregado brechas_reales a DiagnosticSummary |
 | `data_structures.py` | I | MODIFICADO | Eliminados duplicados Scenario, calculate_quick_wins, extract_top_problems |
@@ -35,10 +35,11 @@
 
 > Completar después de cada fase.
 
-| Archivo | Fase | Tests Agregados |
-|---------|------|----------------|
-| `tests/test_proposal_alignment.py` | F | 5 (phantom costs) |
-| `tests/commercial_documents/test_diagnostic_brechas.py` | G | 5 (dual source) |
+|| Archivo | Fase | Tests Agregados |
+||---------|------|----------------|
+|| `tests/test_proposal_alignment.py` | F | 5 (phantom costs) |
+|| `tests/commercial_documents/test_diagnostic_brechas.py` | G | 3 (dual source) |
+|| `tests/test_proposal_alignment.py` | G | 2 (real impact weights) |
 | `tests/commercial_documents/test_diagnostic_brechas.py` | H | 4 (cache, cleanup) |
 | `tests/commercial_documents/test_data_structures.py` | I | 4 (dedup) |
 | **TOTAL** | | **18** |
@@ -52,10 +53,10 @@
 | Métrica | Baseline (v4.25.3) | Post-F | Post-G | Post-H | Post-I | Final (v4.26.0) |
 |---------|--------------------|--------|--------|--------|--------|-----------------|
 | Tests totales | ~1782 | | | | | |
-|| Tests nuevos proyecto | 0 | 5 | | | | |
-|| Regresiones | — | 0 | | | | |
-|| Phantom costs | PRESENTES | ELIMINADOS | | | | |
-| Impactos reales en propuesta | NO | | | | | |
+|| Tests nuevos proyecto | 0 | 5 | 10 | | | |
+|| Regresiones | — | 0 | 0 | | | |
+|| Phantom costs | PRESENTES | ELIMINADOS | ELIMINADOS | | | |
+|| Impactos reales en propuesta | NO | NO | SI (via brechas_reales) | | | |
 | _identify_brechas calls/generate | 9 | | | | | |
 | Duplicados data_structures | 3 | | | | | |
 | Coherence (amazilia) | 0.84 | — | — | — | — | |

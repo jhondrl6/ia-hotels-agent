@@ -273,6 +273,7 @@ class DiagnosticSummary:
     faltantes_monetizables: List[str] = field(default_factory=list)  # Con asset IMPLEMENTED
     faltantes_no_monetizables: List[str] = field(default_factory=list)  # Con asset MISSING/None
     data_source: Optional[str] = None     # "IATester+BingProxy" | "KB" | "N/A" | None
+    brechas_reales: Optional[List[Dict[str, Any]]] = None  # FASE-G: desde _identify_brechas con impacto real
 
 
 def confidence_to_icon(confidence) -> str:

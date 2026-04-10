@@ -2010,9 +2010,9 @@ ${quick_wins_list}
                     result[f'brecha_{n}_impacto'] = f"{int(s['impact_score'] / 30 * 100)}%"
                 result[f'brecha_{n}_justification'] = s['justification']
                 result[f'brecha_{n}_rank'] = f"#{s['rank']}"
-                result[f'brecha_{n}_costo'] = format_cop(s['estimated_monthly_cop'])
-                result[f'brecha_{n}_nombre'] = s['brecha_name']
-                result[f'brecha_{n}_detalle'] = s['justification']
+                # NOTE: costo, nombre, detalle are set by _get_brecha_*() using real
+                # impactos from _identify_brechas(). We do NOT set them here to avoid
+                # the dual-source conflict (FASE-G). Score vars only.
             else:
                 result[f'brecha_{n}_score'] = ''
                 result[f'brecha_{n}_severity'] = ''

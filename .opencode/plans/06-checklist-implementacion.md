@@ -11,7 +11,7 @@
 | Fase | Descripción | Estado | Tests | Dependencias |
 |------|-------------|--------|-------|--------------|
 || FASE-F | Phantom Cost Fix + Dead Code | ✅ Completada | 5/5 pasan | Ninguna |
-| FASE-G | Dual Source Conflict Resolution | 🔲 Pendiente | 5 nuevos | FASE-F |
+|| FASE-G | Dual Source Conflict Resolution | ✅ Completada | 5/5 pasan | FASE-F |
 | FASE-H | Performance Cache + Cleanup | 🔲 Pendiente | 4 nuevos | FASE-G |
 | FASE-I | data_structures Deduplication | 🔲 Pendiente | 4 nuevos | FASE-H |
 | FASE-J | E2E Validation + Release | 🔲 Pendiente | E2E test | FASE-F/G/H/I |
@@ -39,23 +39,23 @@
 
 ---
 
-## FASE-G: Dual Source Conflict Resolution
+## FASE-G: Dual Source Conflict Resolution ✅ COMPLETADA (2026-04-10)
 
-- [ ] Tarea 1: _inject_brecha_scores NO sobrescribe nombre/costo/detalle
-  - [ ] data.update() reemplazado con merge selectivo
-  - [ ] Score vars (_score, _severity, _effort, _priority) sí se actualizan
-- [ ] Tarea 2: Conectar impactos reales al proposal generator
-  - [ ] brechas_reales agregado a DiagnosticSummary
-  - [ ] Diagnostic generator popula brechas_reales
-  - [ ] Proposal generator consume brechas_reales.impacto
-  - [ ] Fallback a top_problems cuando brechas_reales=None
-- [ ] Tarea 3: Tests
-  - [ ] test_brecha_scores_dont_overwrite_nombre
-  - [ ] test_brecha_scores_dont_overwrite_costo
-  - [ ] test_diagnostic_summary_includes_brechas_reales
-  - [ ] test_proposal_uses_real_impact_weights
-  - [ ] test_backward_compatible_without_brechas_reales
-- [ ] Post-ejecución: dependencias, docs, log_phase_completion.py
+- [x] Tarea 1: _inject_brecha_scores NO sobrescribe nombre/costo/detalle
+  - [x] Líneas 2013-2015 reemplazadas (ya no setean _costo, _nombre, _detalle)
+  - [x] Score vars (_score, _severity, _effort, _priority) sí se actualizan
+- [x] Tarea 2: Conectar impactos reales al proposal generator
+  - [x] brechas_reales agregado a DiagnosticSummary (data_structures.py)
+  - [x] Diagnostic generator popula brechas_reales via _identify_brechas() (main.py)
+  - [x] Proposal generator consume brechas_reales.impacto en _build_brecha_data()
+  - [x] Fallback a top_problems cuando brechas_reales=None
+- [x] Tarea 3: Tests
+  - [x] test_brecha_scores_dont_overwrite_nombre — PASSED
+  - [x] test_brecha_scores_dont_overwrite_costo — PASSED
+  - [x] test_diagnostic_summary_includes_brechas_reales — PASSED
+  - [x] test_proposal_uses_real_impact_weights — PASSED
+  - [x] test_backward_compatible_without_brechas_reales — PASSED
+- [x] Post-ejecución: dependencias, docs, log_phase_completion.py
 
 ---
 

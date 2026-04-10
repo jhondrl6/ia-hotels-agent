@@ -498,3 +498,70 @@ def test_brecha_section_markdown_valid():
     assert has_brecha_header, "Falta header [BRECHA N]"
     assert has_detalle, "Falta campo **Detalle:**"
     assert has_costo, "Falta campo **Costo:**"
+
+
+# --- Tests FASE-G: Dual Source Conflict Resolution ---
+
+def test_brecha_scores_dont_overwrite_nombre():
+    """_inject_brecha_scores() NO debe incluir brecha_N_nombre en su output (FASE-G)."""
+    gen = V4DiagnosticGenerator()
+    audit = create_audit(
+        schema_detected=False,
+        gbp_geo_score=50,
+        phone_web=None,
+        mobile_score=60,
+    )
+    result = gen._inject_brecha_scores(audit, None)
+
+    # Score vars DEBEN estar (si scorer disponible)
+    # nombre/costo/detalle NO deben estar en el dict retornado
+    for key in result:
+        assert not key.endswith('_nombre'), f"_inject_brecha_scores returned {key} — dual source conflict!"
+        assert not key.endswith('_costo'), f"_inject_brecha_scores returned {key} — dual source conflict!"
+        assert not key.endswith('_detalle'), f"_inject_brecha_scores returned {key} — dual source conflict!"
+
+
+def test_brecha_scores_dont_overwrite_costo():
+    """Costo calculado por _get_brecha_costo() con impacto real NO es sobrescrito (FASE-G)."""
+    gen = V4DiagnosticGenerator()
+    fs = mock_financial_scenarios(monthly_loss=10_000_000)
+    audit = create_audit(
+        schema_detected=False,   # no_hotel_schema (impacto 0.25)
+        gbp_geo_score=50,        # low_gbp_score (impacto 0.30)
+        phone_web="+573****4567",
+        mobile_score=80,
+        faq_detected=True,
+        gbp_reviews=50,
+    )
+
+    # Fuente A: _get_brecha_costo usa impacto real (0.30 para low_gbp)
+    costo_brecha1 = gen._get_brecha_costo(audit, fs, 0)
+    # 10M * 0.30 = 3.000.000
+    assert "3.000.000" in costo_brecha1, f"Expected 3M for impacto 0.30, got {costo_brecha1}"
+
+    # Fuente B: _inject_brecha_scores NO debe contener _costo keys
+    score_result = gen._inject_brecha_scores(audit, fs)
+    for key in score_result:
+        assert not key.endswith('_costo'), f"Score injector returned {key} — would overwrite real costo!"
+
+
+def test_diagnostic_summary_includes_brechas_reales():
+    """DiagnosticSummary tiene campo brechas_reales y acepta lista de dicts (FASE-G)."""
+    from modules.commercial_documents.data_structures import DiagnosticSummary
+
+    brechas_mock = [
+        {'pain_id': 'low_gbp_score', 'nombre': 'Visibilidad Local', 'impacto': 0.30, 'detalle': 'Test'},
+        {'pain_id': 'no_hotel_schema', 'nombre': 'Sin Schema', 'impacto': 0.25, 'detalle': 'Test'},
+    ]
+    diag = DiagnosticSummary(
+        hotel_name="Hotel Test",
+        critical_problems_count=2,
+        quick_wins_count=1,
+        overall_confidence=ConfidenceLevel.ESTIMATED,
+        top_problems=["Visibilidad Local", "Sin Schema"],
+        brechas_reales=brechas_mock,
+    )
+    assert diag.brechas_reales is not None
+    assert len(diag.brechas_reales) == 2
+    assert diag.brechas_reales[0]['impacto'] == 0.30
+    assert diag.brechas_reales[1]['impacto'] == 0.25

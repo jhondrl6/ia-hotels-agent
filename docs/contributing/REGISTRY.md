@@ -2037,6 +2037,28 @@ _Ninguno_
 ---
 
 
+## FASE-G - 2026-04-10
+**Descripcion:** Dual source conflict resolution + real impact weights in proposal
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/data_structures.py` | Data Structures |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (5)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown

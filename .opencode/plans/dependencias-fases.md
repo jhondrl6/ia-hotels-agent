@@ -14,7 +14,7 @@ FASE-F ─── Phantom Cost Fix + Dead Code Removal ✅ COMPLETADA (2026-04-10
   │           (propuesta: líneas 539-546, template V4)
   │
   ▼
-FASE-G ─── Dual Source Conflict Resolution
+FASE-G ─── Dual Source Conflict Resolution ✅ COMPLETADA (2026-04-10)
   │           (diagnostic: _inject_brecha_scores vs _get_brecha_*)
   │
   ▼

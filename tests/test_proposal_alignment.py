@@ -168,3 +168,66 @@ def test_empty_name_for_missing_brechas() -> None:
     # Sin phantom costs
     for slot in range(2, 5):
         assert result[f"brecha_{slot}_costo"] == "$0"
+
+
+# ── FASE-G: Real Impact Weights — Tests ────────────────────────────────
+
+def test_proposal_uses_real_impact_weights() -> None:
+    """Con brechas_reales, costo = impacto * monthly_loss (no distribución equitativa)."""
+    gen = V4ProposalGenerator()
+    scenario = _make_scenario(10_000_000)
+
+    brechas_reales = [
+        {'pain_id': 'low_gbp_score', 'nombre': 'Visibilidad Local', 'impacto': 0.30, 'detalle': 'GBP bajo'},
+        {'pain_id': 'no_hotel_schema', 'nombre': 'Sin Schema', 'impacto': 0.25, 'detalle': 'Sin schema'},
+    ]
+    diag = DiagnosticSummary(
+        hotel_name="Hotel Test",
+        critical_problems_count=2,
+        quick_wins_count=1,
+        overall_confidence=ConfidenceLevel.ESTIMATED,
+        top_problems=["Visibilidad Local", "Sin Schema"],
+        brechas_reales=brechas_reales,
+    )
+
+    result = gen._build_brecha_data(diag, scenario)
+
+    # brecha_1: impacto 0.30 → 10M * 0.30 = 3.000.000
+    assert "3.000.000" in result["brecha_1_costo"], f"Expected 3M, got {result['brecha_1_costo']}"
+    assert result["brecha_1_nombre"] == "Visibilidad Local"
+
+    # brecha_2: impacto 0.25 → 10M * 0.25 = 2.500.000
+    assert "2.500.000" in result["brecha_2_costo"], f"Expected 2.5M, got {result['brecha_2_costo']}"
+    assert result["brecha_2_nombre"] == "Sin Schema"
+
+    # brecha_3 y 4: sin datos → $0
+    assert result["brecha_3_costo"] == "$0"
+    assert result["brecha_4_costo"] == "$0"
+
+
+def test_backward_compatible_without_brechas_reales() -> None:
+    """Sin brechas_reales (None), _build_brecha_data usa top_problems con fallback (FASE-G)."""
+    gen = V4ProposalGenerator()
+    scenario = _make_scenario(12_000_000)
+    problems = ["Problema A", "Problema B", "Problema C"]
+
+    # brechas_reales NO está presente (None) — backward compat
+    diag = DiagnosticSummary(
+        hotel_name="Hotel Legacy",
+        critical_problems_count=3,
+        quick_wins_count=1,
+        overall_confidence=ConfidenceLevel.ESTIMATED,
+        top_problems=problems,
+        # brechas_reales=None (default)
+    )
+
+    result = gen._build_brecha_data(diag, scenario)
+
+    # Fallback: distribución equitativa 12M / 3 = 4.000.000
+    for slot in range(1, 4):
+        assert result[f"brecha_{slot}_nombre"] == problems[slot - 1]
+        assert "4.000.000" in result[f"brecha_{slot}_costo"]
+
+    # Slot 4: sin problema → $0
+    assert result["brecha_4_costo"] == "$0"
+    assert result["brecha_4_nombre"] == ""

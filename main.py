@@ -2080,6 +2080,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     quick_wins_count = calculate_quick_wins(audit_result, validation_summary)
     top_problems = extract_top_problems(audit_result, limit=5)
 
+    # FASE-G: Extraer brechas reales con impacto desde _identify_brechas
+    brechas_reales = diagnostic_gen._identify_brechas(audit_result) if audit_result else []
+
     diagnostic_summary = DiagnosticSummary(
         hotel_name=hotel_name,
         critical_problems_count=critical_problems_count,
@@ -2093,7 +2096,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'occupancy_rate': occupancy_rate,
             'direct_channel_percentage': direct_channel_pct,
         },
-        coherence_score=pre_coherence_score  # Usar el score calculado por CoherenceValidator
+        coherence_score=pre_coherence_score,  # Usar el score calculado por CoherenceValidator
+        brechas_reales=brechas_reales,  # FASE-G: impactos reales para proposal
     )
 
     # Generar propuesta solo si pasa el gate (o si no es bloqueante)

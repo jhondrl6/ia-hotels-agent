@@ -841,20 +841,29 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         return "\n".join(rows) if rows else "| Sin assets planificados | - | - | - | - |"
     
     def _build_brecha_data(self, diagnostic_summary, main_scenario) -> Dict[str, str]:
-        """Build brecha_1..4 nombre/costo dynamically. Slots without real problems get $0.
+        """Build brecha_1..4 nombre/costo dynamically using real impact weights.
 
-        Elimina phantom costs: solo las brechas con problema real muestran valor COP > 0.
-        Distribución equitativa temporal (FASE-G conectará impactos reales desde _identify_brechas).
+        FASE-G: Usa brechas_reales (con impacto real de _identify_brechas) cuando
+        está disponible. Fallback a top_problems con distribución equitativa.
+        Slots without real problems get $0.
         """
         max_brechas = 4
         top_problems = diagnostic_summary.top_problems or []
-        real_count = len(top_problems)
-        distribucion = int(main_scenario.monthly_loss_max / max(real_count, 1))
-
+        brechas_reales = getattr(diagnostic_summary, 'brechas_reales', None) or []
         brecha_data: Dict[str, str] = {}
+
         for i in range(max_brechas):
             slot = i + 1
-            if i < real_count and top_problems[i]:
+            if i < len(brechas_reales):
+                # Fuente primaria: impacto real de _identify_brechas
+                brecha = brechas_reales[i]
+                impacto = brecha.get('impacto', 1.0 / max(len(brechas_reales), 1))
+                costo = int(main_scenario.monthly_loss_max * impacto)
+                brecha_data[f'brecha_{slot}_nombre'] = brecha.get('nombre', '')
+                brecha_data[f'brecha_{slot}_costo'] = format_cop(costo)
+            elif i < len(top_problems):
+                # Fallback: top_problems sin impacto real (distribución equitativa)
+                distribucion = int(main_scenario.monthly_loss_max / max(len(top_problems), 1))
                 brecha_data[f'brecha_{slot}_nombre'] = top_problems[i]
                 brecha_data[f'brecha_{slot}_costo'] = format_cop(distribucion)
             else:
