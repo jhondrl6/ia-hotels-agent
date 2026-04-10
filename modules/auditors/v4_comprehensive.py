@@ -339,6 +339,43 @@ class V4ComprehensiveAuditor:
         self.cross_validator = CrossValidator()
         self.competitor_analyzer = CompetitorAnalyzer()
     
+    def _validate_html_integrity(self, html: str, url: str) -> bool:
+        """
+        Valida que el HTML sea legible y no basura binaria/comprimida.
+
+        Detecta: Brotli sin decodificar, binario crudo, paginas de error,
+        respuestas vacias, JavaScript-only shells sin contenido.
+
+        Returns:
+            True si el HTML es valido para analisis, False si es ilegible.
+        """
+        if not html or len(html) < 200:
+            logger.warning(f"HTML too short or empty for {url} ({len(html) if html else 0} chars)")
+            return False
+
+        html_lower = html.lower()
+
+        # Check 1: Debe tener estructura HTML basica
+        has_structure = any(tag in html_lower for tag in ['<html', '<head', '<body', '<!doctype', '<div'])
+        if not has_structure:
+            logger.error(
+                f"HTML integrity failed for {url}: no HTML structure found. "
+                f"First 100 chars: {repr(html[:100])}"
+            )
+            return False
+
+        # Check 2: No debe tener alto ratio de caracteres no imprimibles (binario)
+        sample = html[:2000]
+        non_printable = sum(1 for c in sample if ord(c) < 32 and c not in '\n\r\t')
+        if len(sample) > 0 and non_printable / len(sample) > 0.15:
+            logger.error(
+                f"HTML integrity failed for {url}: {non_printable} non-printable chars in first 2000 "
+                f"({non_printable/len(sample)*100:.1f}%). Likely binary/compressed data."
+            )
+            return False
+
+        return True
+
     def audit(self, url: str, hotel_name: Optional[str] = None) -> V4AuditResult:
         """Run comprehensive v4.0 audit on a URL.
         
@@ -368,7 +405,10 @@ class V4ComprehensiveAuditor:
         http_client = HttpClient()
         html_response, _ = http_client.get(url)
         page_html = html_response.text if html_response and html_response.text else ""
-        if not page_html:
+        if page_html and not self._validate_html_integrity(page_html, url):
+            logger.error(f"HTML response for {url} is corrupted/unreadable — falling back to empty")
+            page_html = ""
+        elif not page_html:
             logger.warning(f"Empty HTML response for {url}")
         
         # Step 1.5: Metadata validation

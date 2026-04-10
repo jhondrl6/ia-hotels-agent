@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-09
-> **Version actual:** v4.25.2
-> **Total fases completadas:** 62
+|> **Ultima actualizacion:** 2026-04-09
+|> **Version actual:** v4.25.3
+|> **Total fases completadas:** 64
 
 ---
 
@@ -84,6 +84,54 @@ Antes (v0.3.0):                    Despues (v3.2.0):
 │  - sin metrics   │               │  + CSV metrics       │
 └──────────────────┘               └──────────────────────┘
 
+
+## FASE-F-BROTLI - 2026-04-09
+
+**Descripcion:** Fix Brotli Encoding + HTML Integrity Guardian
+
+**Problema resuelto:**
+- HttpClient enviaba `Accept-Encoding: br`. venv sin `brotli` → `requests` entregaba binario crudo (33KB basura vs 236KB HTML real)
+- Pipeline operaba sobre HTML ileible → BRECHA 2 "Sin WhatsApp" falsa + Region "nacional" + Open Graph no detectado
+
+### Archivos Nuevos
+
+| Archivo | Descripcion |
+|---------|-------------|
+| `tests/test_html_integrity.py` | 5 tests de regresion (brotli_binary, empty, valid_html, joinchat, error_page) |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | `_validate_html_integrity()` + integracion en `audit()` |
+
+### Validaciones
+
+- [x] Tests passing (5/5 test_html_integrity.py)
+- [x] Suite regression: 0 regresiones introducidas
+- [x] Coherence >= 0.8: 0.92 (PASO)
+- [x] E2E: amaziliahotel.com - BRECHA 2 NO aparece, Region "eje_cafetero", whatsapp_verified=1.000
+- [x] REGISTRY.md actualizado
+- [x] CHANGELOG.md actualizado
+
+### Arquitectura
+
+```
+ANTES (roto):                      DESPUES (fix):
+┌──────────────┐                   ┌────────────────────┐
+│ HttpClient   │                   │ HttpClient + brotli │
+│ + br header  │──▶ 33KB basura ──▶ │ + _validate_html   │
+└──────────────┘                   └────────┬───────────┘
+                                           │
+                   ┌──────────────────────▼───────────┐
+                   │ audit()                  │
+                   │ - _validate_html_integrity()     │
+                   │ - Si corrupto → page_html=""     │
+                   │ - Si valido → procesa normal    │
+                   └───────────────────────────────┘
+```
+
+---
 
 **Descripcion:** SitePresenceChecker - Verificacion de sitio real ANTES de generar assets
 
@@ -1943,6 +1991,28 @@ _Ninguno_
 - [x] Tests passing (8 errores pre-existentes (modulos faltantes, no relacionados FASE-E))
 - [x] Suite NEVER_BLOCK passing
 - [x] Coherence >= 0.8: 0.84 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-F - 2026-04-09
+**Descripcion:** Fix Brotli encoding + HTML integrity validation + 5 regression tests
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/test_html_integrity.py` | NUEVO | Test Html Integrity |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
+
+### Validaciones
+- [x] Tests passing (5 passed)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.92 (PASO)
 - [x] Capability contract verificado
 
 ---

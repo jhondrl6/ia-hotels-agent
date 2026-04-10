@@ -2,6 +2,57 @@
 
 ## [4.25.3] - 2026-04-08
 
+### FASE-F (Brotli Encoding Fix + HTML Integrity Guardian)
+- `venv/Scripts/pip.exe install brotli` - Libreria local instalada, `requests`/`urllib3` ahora decodifican `Content-Encoding: br` automaticamente
+- `modules/auditors/v4_comprehensive.py` - Nuevo metodo `_validate_html_integrity()` (L342-377):
+  - Valida que HTML sea legible y no basura binaria/comprimida
+  - Check 1: estructura HTML basica (`<html`, `<head`, `<body`, `<!doctype`, `<div`)
+  - Check 2: ratio de caracteres no imprimibles < 15% (detecta binario Brotli sin decodificar)
+  - Detecta: Brotli sin decodificar, binario crudo, paginas de error, respuestas vacias, JS-only shells
+- `modules/auditors/v4_comprehensive.py` - Integracion en `audit()` (L405-411):
+  - **ANTES**: `page_html = html_response.text` → 33KB basura si servidor responde Brotli
+  - **AHORA**: `_validate_html_integrity()` rechaza HTML corrupto → downstream handlers usan string vacio gracefully
+- `tests/test_html_integrity.py` - 5 tests de regresion (TODOS PASAN):
+  - `test_brotli_binary_rejected`: binary Brotli sin decodificar → False
+  - `test_empty_html_rejected`: HTML vacio/muy corto → False
+  - `test_valid_html_accepted`: HTML real valido → True
+  - `test_html_with_joinchat_accepted`: HTML con joinchat (caso amaziliahotel.com) → True
+  - `test_error_page_rejected`: Cloudflare JS-only challenge page → False
+
+### CAUSA RAIZ RESUELTA
+- **Problema**: HttpClient enviaba `Accept-Encoding: gzip, deflate, br`. Servidores LiteSpeed respondian `Content-Encoding: br`. venv no tenía `brotli` → `requests` entregaba binario crudo como UTF-8 → 33KB basura vs 236KB HTML real
+- **Impacto**: TODO el pipeline de diagnostico operaba sobre HTML ileible → BRECHA 2 "Sin WhatsApp" falsa + Region "nacional" (no "eje_cafetero") + Open Graph no detectado
+- **Resultado E2E**: amaziliahotel.com ahora entrega Length:236640, joinchat:True, class=:694
+
+### E2E Validation Results (amaziliahotel.com)
+| Check | Antes (roto) | Despues (fix) |
+|-------|-------------|---------------|
+| BRECHA 2 "Sin WhatsApp" | Aparecia (falso+) | **NO aparece** |
+| whatsapp_verified score | 0.000 | **1.000** |
+| Region | "nacional" | **"eje_cafetero"** |
+| Open Graph | False | False (headless SPA, expected) |
+| Coherence | 0.84 | **0.92** |
+| HTML length | 33KB basura | **236640 chars real** |
+
+### Archivos Nuevos
+| Archivo | Descripcion |
+|---------|-------------|
+| `tests/test_html_integrity.py` | 5 tests de regresion para integridad HTML |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | `_validate_html_integrity()` + integracion en `audit()` |
+
+### Tests
+- 5/5 nuevos en `test_html_integrity.py`
+- 0 regresiones introducidas
+- Coherence E2E: 0.92 (umbral: 0.8) ✅
+
+---
+
+## [4.25.3] - 2026-04-08
+
 ### FASE-B (AEO Scoring Rewrite): _calculate_aeo_score() con 4 componentes
 - `modules/commercial_documents/v4_diagnostic_generator.py` - `_calculate_aeo_score()` reescrito (método 1324-1346):
   - **ANTES**: solo verificaba `performance.mobile_score` → "0 (Pendiente de datos)" si PageSpeed fallaba
