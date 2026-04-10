@@ -203,7 +203,10 @@ class V4DiagnosticGenerator:
         """
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
-        
+
+        # Reset brechas cache per generate() call (FASE-H)
+        self._cached_brechas = None
+
         # Load template
         template_content = self._load_template()
         
@@ -1611,11 +1614,11 @@ ${quick_wins_list}
             return "| Sin brechas detectadas | — |"
 
         rows = []
-        for i, b in enumerate(brechas):
+        for i, b in enumerate(brechas, 1):
             detalle_corto = b.get('detalle', 'Sin resumen')[:80]
             if len(b.get('detalle', '')) > 80:
                 detalle_corto += '...'
-            recuperacion = self._get_brecha_recuperacion(audit_result, financial_scenarios, i)
+            recuperacion = self._get_brecha_recuperacion(audit_result, financial_scenarios, i - 1)
             rows.append(f"| {detalle_corto} | +{recuperacion}/mes |")
         return "\n".join(rows)
 
@@ -1779,6 +1782,10 @@ ${quick_wins_list}
               faltantes[] viene de _extraer_elementos_de_audit() por separado.
               Retorna TODAS las brechas detectadas (0 a 10+), sin relleno artificial.
         """
+        # Cache: audit_result es inmutable durante generate(), resultado idéntico (FASE-H)
+        if hasattr(self, '_cached_brechas') and self._cached_brechas is not None:
+            return self._cached_brechas
+
         brechas = []
         
         # Guard against None
@@ -1899,6 +1906,9 @@ ${quick_wins_list}
         
         # Priorizar por impacto (todas las detectadas, sin truncamiento ni relleno)
         brechas.sort(key=lambda x: x.get('impacto', 0), reverse=True)
+
+        # Store cache (FASE-H)
+        self._cached_brechas = brechas
         return brechas
 
 
@@ -1928,7 +1938,6 @@ ${quick_wins_list}
                 'metadata_defaults': 'cms_defaults',
                 'missing_reviews': 'missing_reviews',
                 'poor_performance': 'poor_performance',
-                'low_ia_readiness': 'cms_defaults',
                 'no_hotel_schema': 'no_hotel_schema',
                 'no_whatsapp_visible': 'no_whatsapp_visible',
                 'no_og_tags': 'no_og_tags',

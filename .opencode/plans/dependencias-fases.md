@@ -18,8 +18,8 @@ FASE-G ─── Dual Source Conflict Resolution ✅ COMPLETADA (2026-04-10)
   │           (diagnostic: _inject_brecha_scores vs _get_brecha_*)
   │
   ▼
-FASE-H ─── Performance Cache + Cleanup
-  │           (_identify_brechas 9x → 1x, pain_to_type muerto)
+FASE-H ─── Performance Cache + Cleanup ✅ COMPLETADA (2026-04-10)
+  │           (_identify_brechas 9x → 1x, pain_to_type cleanup, loop normalization)
   │
   ▼
 FASE-I ─── data_structures.py Deduplication

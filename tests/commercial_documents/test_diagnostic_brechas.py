@@ -565,3 +565,93 @@ def test_diagnostic_summary_includes_brechas_reales():
     assert len(diag.brechas_reales) == 2
     assert diag.brechas_reales[0]['impacto'] == 0.30
     assert diag.brechas_reales[1]['impacto'] == 0.25
+
+
+# --- Tests FASE-H: Performance Cache + Cleanup ---
+
+def test_identify_brechas_cached_once():
+    """_identify_brechas() ejecuta su cuerpo 1 vez por generate(), no 9 (FASE-H)."""
+    audit = create_audit(
+        schema_detected=False,
+        faq_detected=False,
+        gbp_geo_score=50,
+        phone_web=None,
+        mobile_score=60,
+    )
+    gen = V4DiagnosticGenerator()
+
+    # Primera llamada: cache miss → ejecuta lógica
+    brechas1 = gen._identify_brechas(audit)
+    # Segunda llamada: cache hit → retorna sin re-ejecutar
+    brechas2 = gen._identify_brechas(audit)
+    # Tercera llamada: cache hit
+    brechas3 = gen._identify_brechas(audit)
+
+    # Mismo objeto retornado (identidad, no solo igualdad)
+    assert brechas1 is brechas2, "Cache miss en segunda llamada — no reusa caché"
+    assert brechas2 is brechas3, "Cache miss en tercera llamada — no reusa caché"
+    assert len(brechas1) == 5
+
+
+def test_cache_cleared_between_generates():
+    """Caché se limpia entre llamadas a generate() — sin stale data (FASE-H)."""
+    # Audit A: 5 brechas
+    audit_a = create_audit(
+        schema_detected=False, faq_detected=False, gbp_geo_score=50,
+        phone_web=None, mobile_score=60,
+    )
+    # Audit B: 0 brechas (hotel perfecto)
+    audit_b = create_audit(
+        schema_detected=True, faq_detected=True, gbp_geo_score=80,
+        gbp_reviews=50, gbp_place_found=True, mobile_score=85,
+        whatsapp_status=ConfidenceLevel.VERIFIED.value,
+        phone_web="+573****4567", metadata_has_issues=False,
+        seo_elements=mock_seo_elements(has_open_graph=True),
+        citability=mock_citability(score=80),
+    )
+
+    gen = V4DiagnosticGenerator()
+
+    # Simular: generate() con audit_a → cache poblado
+    gen._cached_brechas = None  # reset como lo haría generate()
+    brechas_a = gen._identify_brechas(audit_a)
+    assert len(brechas_a) == 5
+
+    # Simular: generate() con audit_b → cache reset
+    gen._cached_brechas = None  # reset como lo haría generate()
+    brechas_b = gen._identify_brechas(audit_b)
+    assert len(brechas_b) == 0, f"Stale data: cache de audit_a contaminó audit_b"
+
+
+def test_no_low_ia_readiness_in_pain_to_type():
+    """Entrada muerta 'low_ia_readiness' fue removida de pain_to_type (FASE-H)."""
+    import inspect
+    from modules.commercial_documents import v4_diagnostic_generator
+
+    source = inspect.getsource(v4_diagnostic_generator)
+    # Verificar que no existe la key muerta en el dict
+    assert "'low_ia_readiness'" not in source, "low_ia_readiness aun presente en pain_to_type"
+    assert '"low_ia_readiness"' not in source, "low_ia_readiness aun presente en pain_to_type"
+
+
+def test_loop_conventions_consistent():
+    """_build_brechas_section y _build_brechas_resumen_section usan misma convención (FASE-H)."""
+    audit = create_audit(
+        schema_detected=False, faq_detected=False, gbp_geo_score=50,
+        phone_web=None, mobile_score=60,
+    )
+    fs = mock_financial_scenarios()
+    gen = V4DiagnosticGenerator()
+
+    brechas = gen._identify_brechas(audit)
+    section = gen._build_brechas_section(audit, fs)
+    resumen = gen._build_brechas_resumen_section(audit, fs)
+
+    # Ambos deben tener N filas/secciones igual al número de brechas
+    n = len(brechas)
+    # Section: headers [BRECHA 1] .. [BRECHA N]
+    for i in range(1, n + 1):
+        assert f"[BRECHA {i}]" in section, f"Section falta [BRECHA {i}]"
+    # Resumen: N filas de tabla
+    filas = [l for l in resumen.split("\n") if l.strip().startswith("|")]
+    assert len(filas) == n, f"Resumen: esperado {n} filas, got {len(filas)}"
