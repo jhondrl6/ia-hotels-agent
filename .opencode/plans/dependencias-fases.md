@@ -1,57 +1,95 @@
-# Dependencias entre Fases
+# Dependencias entre Fases — Gap Arquitectónico Brechas V6
+
+**Proyecto**: Brecha Architectural Fix — propuesta_v6 no consume brechas reales
+**Version Base**: v4.25.3
+**Version Target**: v4.26.0 (FASE-RELEASE-4.26.0)
+**Creado**: 2026-04-10
+
+---
 
 ## Diagrama de Dependencias
 
 ```
-FASE-A (WhatsApp Detection Fix)
-  |
-  +-> FASE-B (Citability Narrative Fix)     [independiente de A]
-  |
-  +-> FASE-C (Regional Template Fixes)      [independiente de A]
-  |
-  +--------+------------+
-           |
-      FASE-D (Validacion E2E)    [depende de A+B+C]
-           |
-      FASE-E (Integridad Datos)  [depende de A (usa whatsapp_html_detected)]
-           |
-      FASE-F (Fix Brotli)        [descubre causa raiz: fixes E no tenian efecto]
+FASE-F ─── Phantom Cost Fix + Dead Code Removal ✅ COMPLETADA (2026-04-10)
+  │           (propuesta: líneas 539-546, template V4)
+  │
+  ▼
+FASE-G ─── Dual Source Conflict Resolution
+  │           (diagnostic: _inject_brecha_scores vs _get_brecha_*)
+  │
+  ▼
+FASE-H ─── Performance Cache + Cleanup
+  │           (_identify_brechas 9x → 1x, pain_to_type muerto)
+  │
+  ▼
+FASE-I ─── data_structures.py Deduplication
+  │           (Scenario duplicado, funciones duplicadas)
+  │
+  ▼
+FASE-J ─── E2E Validation + Release
+              (v4complete amaziliahotel.com + FASE-RELEASE-4.26.0)
 ```
 
-FASE-A, FASE-B y FASE-C son **independientes entre si**.
-
-FASE-D requiere A+B+C completas.
-
-FASE-E requiere FASE-A completada.
-
-FASE-F descubre que la causa raiz de todas las persistencias es Brotli encoding:
-los fixes de FASE-A/E son correctos pero operaban sobre HTML ilegible.
+**Todas las fases son secuenciales** — cada una depende de la anterior.
+No hay paralelismo posible porque todas tocan los mismos archivos o dependencias encadenadas.
 
 ---
 
-## Archivos Tocados por Fase
+## Tabla de Conflictos Potenciales
 
-| Archivo | A | B | C | E | F |
-|---------|---|---|---|---|---|
-| v4_comprehensive.py | W0 patrones | | | | defensive check |
-| v4_diagnostic_generator.py | brecha condicion | narrativa | region contexts, sanitizacion | | |
-| main.py | | | | W1, R1, R3 | |
-| pain_solution_mapper.py | | | | W2 | |
-| coherence_validator.py | | | | W4 | |
-| web_scraper.py | | | | W3 | |
-| data_structures.py | whatsapp_html_detected | | | | |
-| diagnostico_v6_template.md | | | typo | | |
-| **http_client.py** | | | | | **Accept-Encoding** |
+| Archivo | Fases que lo modifican | Tipo de Conflicto |
+|---------|----------------------|-------------------|
+| `v4_proposal_generator.py` | FASE-F | Exclusivo — solo esta fase lo toca |
+| `v4_diagnostic_generator.py` | FASE-G, FASE-H | **COMPARTIDO** — G modifica _inject_brecha_scores, H agrega caché |
+| `data_structures.py` | FASE-I | Exclusivo |
+| `propuesta_v4_template.md` | FASE-F | Exclusivo (si necesita ajuste) |
+| `tests/commercial_documents/test_diagnostic_brechas.py` | FASE-G, FASE-H | **COMPARTIDO** — ambos agregan/actualizan tests |
+| `tests/test_proposal_alignment.py` | FASE-F | Exclusivo |
 
-**Riesgo FASE-F:** MINIMO. Solo toca http_client.py linea 47. No hay overlap con ninguna fase previa.
+### Riesgos
+
+| Riesgo | Mitigación |
+|--------|-----------|
+| FASE-G y FASE-H ambas tocan diagnostic_generator.py | G modifica lógica de scores, H agrega caché. Sectores distintos, bajo riesgo de merge conflict |
+| Tests compartidos entre G y H | Cada fase agrega sus propios tests, no modifica los del otro |
+| FASE-J depende de que F,G,H,I estén 100% completas | Checklist obligatorio antes de ejecutar J |
 
 ---
 
-## Historial de Ejecucion
+## Archivos Involucrados por Fase
 
-1. **FASE-A** — Mayor impacto comercial (falso positivo WhatsApp)
-2. **FASE-B** — Impacto narrativo (explicacion incorrecta al cliente)
-3. **FASE-C** — Impacto visual/template (errores de texto)
-4. **FASE-D** — Validacion E2E con amaziliahotel.com (region "nacional" persiste)
-5. **FASE-E** — Propagacion de datos (W0-W4, R1-R3 aplicados)
-6. **FASE-F** — Fix Brotli encoding (causa raiz: HTML binario hace inefectivos todos los fixes)
+### FASE-F (Phantom Cost Fix) ✅ COMPLETADA
+- `modules/commercial_documents/v4_proposal_generator.py` — distribución fija 40/30/20/10 reemplazada por `_build_brecha_data()` dinámico
+- `tests/test_proposal_alignment.py` — 5 tests nuevos (phantom costs), 0 regresiones
+- Template V4: funciona correctamente con variables dinámicas
+
+### FASE-G (Dual Source Conflict)
+- `modules/commercial_documents/v4_diagnostic_generator.py` (líneas 510-521 vs 586, 1976-2024)
+- `tests/commercial_documents/test_diagnostic_brechas.py` (tests nuevos)
+
+### FASE-H (Performance Cache + Cleanup)
+- `modules/commercial_documents/v4_diagnostic_generator.py` (líneas 1539-1923, pain_to_type 1931)
+- `tests/commercial_documents/test_diagnostic_brechas.py` (tests nuevos)
+
+### FASE-I (data_structures Dedup)
+- `modules/commercial_documents/data_structures.py` (líneas 83-114 duplicadas, 320/419, 362/461)
+- Tests existentes deben seguir pasando sin cambios
+
+### FASE-J (E2E Validation + Release)
+- `main.py` (ejecutar v4complete, sin modificar)
+- `scripts/log_phase_completion.py` (registro)
+- Documentación: CHANGELOG.md, GUIA_TECNICA.md, VERSION.yaml
+
+---
+
+## Orden de Ejecución Obligatorio
+
+```
+Sesión 1 → FASE-F  (Phantom Cost Fix)
+Sesión 2 → FASE-G  (Dual Source Conflict)
+Sesión 3 → FASE-H  (Cache + Cleanup)
+Sesión 4 → FASE-I  (Deduplication)
+Sesión 5 → FASE-J  (E2E + Release)
+```
+
+**Regla**: 1 fase por sesión. Sin excepciones.

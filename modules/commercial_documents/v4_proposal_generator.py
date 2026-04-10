@@ -535,15 +535,9 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'plan_90d': self._build_90_day_plan(),
         'coherence_score': str(int(diagnostic_summary.coherence_score * 100)) if diagnostic_summary.coherence_score is not None else '70',
         
-        # Brecha variables (using top problems)
-        'brecha_1_nombre': diagnostic_summary.top_problems[0] if len(diagnostic_summary.top_problems) > 0 else "Problema no identificado",
-        'brecha_1_costo': format_cop(int(main_scenario.monthly_loss_max * 0.4)),  # Estimated distribution
-        'brecha_2_nombre': diagnostic_summary.top_problems[1] if len(diagnostic_summary.top_problems) > 1 else "Segundo problema",
-        'brecha_2_costo': format_cop(int(main_scenario.monthly_loss_max * 0.3)),
-        'brecha_3_nombre': diagnostic_summary.top_problems[2] if len(diagnostic_summary.top_problems) > 2 else "Tercer problema",
-        'brecha_3_costo': format_cop(int(main_scenario.monthly_loss_max * 0.2)),
-        'brecha_4_nombre': diagnostic_summary.top_problems[3] if len(diagnostic_summary.top_problems) > 3 else "Cuarto problema",
-        'brecha_4_costo': format_cop(int(main_scenario.monthly_loss_max * 0.1)),
+        # Brecha variables — dinámicas, zero para slots sin problema real
+        # Las brechas consumen top_problems (V4 compat) con guard contra phantom costs
+        **self._build_brecha_data(diagnostic_summary, main_scenario),
 
         # V6 template variables (regional context and investment summary)
         'hotel_location': hotel_location,
@@ -846,6 +840,28 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         
         return "\n".join(rows) if rows else "| Sin assets planificados | - | - | - | - |"
     
+    def _build_brecha_data(self, diagnostic_summary, main_scenario) -> Dict[str, str]:
+        """Build brecha_1..4 nombre/costo dynamically. Slots without real problems get $0.
+
+        Elimina phantom costs: solo las brechas con problema real muestran valor COP > 0.
+        Distribución equitativa temporal (FASE-G conectará impactos reales desde _identify_brechas).
+        """
+        max_brechas = 4
+        top_problems = diagnostic_summary.top_problems or []
+        real_count = len(top_problems)
+        distribucion = int(main_scenario.monthly_loss_max / max(real_count, 1))
+
+        brecha_data: Dict[str, str] = {}
+        for i in range(max_brechas):
+            slot = i + 1
+            if i < real_count and top_problems[i]:
+                brecha_data[f'brecha_{slot}_nombre'] = top_problems[i]
+                brecha_data[f'brecha_{slot}_costo'] = format_cop(distribucion)
+            else:
+                brecha_data[f'brecha_{slot}_nombre'] = ""
+                brecha_data[f'brecha_{slot}_costo'] = "$0"
+        return brecha_data
+
     def _build_coherence_checklist(self, diagnostic_summary: DiagnosticSummary) -> str:
         """Build the coherence guarantee checklist with real validation data."""
         # FASE 5: Usar datos reales del validated_data_summary

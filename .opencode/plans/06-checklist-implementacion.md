@@ -1,145 +1,141 @@
-# Checklist de Implementacion — Correccion Falsos Positivos
+# Checklist de Implementación — Brecha Architectural Fix
 
-> **Proyecto:** iah-cli v4.25.x  
-> **Hotel validacion:** amaziliahotel.com  
-> **Fecha:** 2026-04-09
-
----
-
-## FASE-A: WhatsApp Detection Fix
-
-**Dependencias:** Ninguna  
-**Archivos:** v4_comprehensive.py, data_structures.py, v4_diagnostic_generator.py
-
-| # | Tarea | Estado |
-|---|-------|--------|
-| T1 | Conectar scraper `_detectar_whatsapp()` al pipeline de validacion | [x] Completado |
-| T2 | Agregar `whatsapp_html_detected` a `ValidationSummary` | [x] Completado |
-| T3 | Actualizar condicion brecha WhatsApp en v4_diagnostic_generator.py | [x] Completado |
-| T4 | Actualizar quick wins (linea 1013-1018) | [x] Completado |
-| T5 | Actualizar tabla brechas (linea 941-949) | [x] Completado |
-| T6 | Tests de regresion pasan (25/25) | [x] Completado |
-| T7 | log_phase_completion.py ejecutado | [x] Completado |
+**Proyecto**: Eliminar gap entre diagnóstico y propuesta V6
+**Versión Target**: v4.26.0
+**Creado**: 2026-04-10
 
 ---
 
-## FASE-B: Citability Narrative Fix
+## Progreso General
 
-**Dependencias:** Ninguna (independiente de FASE-A)  
-**Archivos:** v4_diagnostic_generator.py, opportunity_scorer.py
+| Fase | Descripción | Estado | Tests | Dependencias |
+|------|-------------|--------|-------|--------------|
+|| FASE-F | Phantom Cost Fix + Dead Code | ✅ Completada | 5/5 pasan | Ninguna |
+| FASE-G | Dual Source Conflict Resolution | 🔲 Pendiente | 5 nuevos | FASE-F |
+| FASE-H | Performance Cache + Cleanup | 🔲 Pendiente | 4 nuevos | FASE-G |
+| FASE-I | data_structures Deduplication | 🔲 Pendiente | 4 nuevos | FASE-H |
+| FASE-J | E2E Validation + Release | 🔲 Pendiente | E2E test | FASE-F/G/H/I |
 
-| # | Tarea | Estado |
-|---|-------|--------|
-| T1 | Diferenciar `blocks_analyzed=0` vs score bajo | [x] Completado |
-| T2 | Actualizar narrativa opportunity_scorer.py | [x] Completado |
-| T3 | Verificar pain_solution_mapper alignment | [x] Completado |
-| T4 | Tests de regresion pasan (218 passed) | [x] Completado |
-| T5 | log_phase_completion.py ejecutado | [x] Completado |
-
----
-
-## FASE-C: Regional Template Fixes
-
-**Dependencias:** Ninguna  
-**Archivos:** diagnostico_v6_template.md, v4_diagnostic_generator.py
-
-| # | Tarea | Estado |
-|---|-------|--------|
-| T1 | Corregir typo `yRevisan` en template linea 27 | [x] Completado |
-| T2 | Agregar "Eje Cafetero" al mapping `region_contexts` | [x] Completado |
-| T3 | Corregir fallback regional generico | [x] Completado |
-| T4 | Verificar hotel_region fallback | [x] Completado |
-| T5 | Tests de regresion pasan | [x] Completado |
-| T6 | log_phase_completion.py ejecutado | [x] Completado |
+**Total tests nuevos esperados**: 18
+**Release**: FASE-RELEASE-4.26.0 (al completar FASE-J)
 
 ---
 
-## FASE-D: Validacion E2E amaziliahotel.com
+## FASE-F: Phantom Cost Fix + Dead Code Removal ✅ COMPLETADA (2026-04-10)
 
-**Dependencias:** FASE-A + FASE-B + FASE-C
-
-| # | Tarea | Estado |
-|---|-------|--------|
-| T1 | v4complete ejecuta sin crashes | [x] Completado |
-| T2 | Fix WhatsApp verificado | [~] Parcial — BRECHA 2 persiste |
-| T3 | Fix Citability verificado | [x] Completado |
-| T4 | Fix Regional verificado | [~] Parcial — "nacional" persiste |
-| T5 | Coherence >= 0.80 | [x] 0.84 |
-| T6 | Evidence capturada | [x] Completado |
-| T7 | log_phase_completion.py ejecutado | [x] Completado |
-
-**NOTA:** Las persistencias de T2 y T4 se resolvieron en FASE-E con fixes W1-W4 y R1-R3,
-pero el efecto real no se validó hasta descubrir la causa raiz Brotli (FASE-F).
-
----
-
-## FASE-E: Integridad de Datos Diagnosticos
-
-**Dependencias:** FASE-A completada  
-**Archivos:** main.py, pain_solution_mapper.py, coherence_validator.py, web_scraper.py, v4_diagnostic_generator.py
-
-### Workstream WhatsApp (W1-W4)
-
-| # | Tarea | Estado |
-|---|-------|--------|
-| W1 | Agregar rama elif whatsapp_html_detected en ValidationSummary | [x] Completado |
-| W2 | pain_solution_mapper consulta whatsapp_html_detected | [x] Completado |
-| W3 | web_scraper captura tel: links | [x] Completado |
-| W4 | coherence_validator consulta whatsapp_html_detected | [x] Completado |
-
-### Workstream Regional (R1-R3)
-
-| # | Tarea | Estado |
-|---|-------|--------|
-| R1 | Inferir region desde GBP address post-auditoria | [x] Completado |
-| R2 | Sanitizar hotel_region ("nacional" → "Colombia") | [x] Completado |
-| R3 | Ampliar keywords URL Eje Cafetero | [x] Completado |
-
-### Validacion
-
-| # | Tarea | Estado |
-|---|-------|--------|
-| V1 | Tests de regresion pasan | [x] Completado |
-| V2 | v4complete sin crashes | [x] Completado |
-| V3 | Region muestra "Eje Cafetero" | [x] Completado |
-| V4 | pain_solution_mapper no genera falso no_whatsapp_visible | [x] Completado |
-| V5 | log_phase_completion.py ejecutado | [x] Completado |
-
-**NOTA:** Todos los checks pasaron contra HTML binario (Brotli). Los fixes son correctos
-pero el efecto real se validara en FASE-F cuando el HTML llegue decodificado.
+- [x] Tarea 1: Distribución fija 40/30/20/10 eliminada del proposal generator
+  - [x] Líneas 538-546 reemplazadas con lógica dinámica (`_build_brecha_data`)
+  - [x] Guard contra top_problems=None implementado (`or []`)
+- [x] Tarea 2: Tests de regresión
+  - [x] test_no_phantom_costs_with_one_problem — PASSED
+  - [x] test_no_phantom_costs_with_zero_problems — PASSED
+  - [x] test_no_phantom_costs_with_none_problems — PASSED
+  - [x] test_costs_distributed_when_4_problems — PASSED
+  - [x] test_empty_name_for_missing_brechas — PASSED
+- [x] Tarea 3: Validación
+  - [x] run_all_validations.py --quick: 3/4 pasan (version sync preexistente)
+  - [x] 0 regresiones en tests existentes
+- [x] Post-ejecución: dependencias, docs, log_phase_completion.py
 
 ---
 
-## FASE-F: Fix Brotli Encoding + Defensa en Profundidad
+## FASE-G: Dual Source Conflict Resolution
 
-**Dependencias:** FASE-A a FASE-E completadas  
-**Archivos:** v4_comprehensive.py (nuevo metodo + integracion), tests/test_html_integrity.py (nuevo)  
-**Principio:** Un falso diagnostico destruye credibilidad. No hay margen para que HTML corrupto genere diagnosticas falsos otra vez.
-
-| # | Tarea | Estado |
-|---|-------|--------|
-| T1 | Instalar brotli (`venv/Scripts/pip.exe install brotli`) | [ ] Pendiente |
-| T2 | Implementar `_validate_html_integrity()` en v4_comprehensive.py | [ ] Pendiente |
-| T3 | Integrar validacion en `audit()` linea 370+ | [ ] Pendiente |
-| T4 | Crear `tests/test_html_integrity.py` con 5 tests regresion | [ ] Pendiente |
-| T5 | Verificar HTML decodificado contiene "joinchat" | [ ] Pendiente |
-| T6 | Tests de regresion pasan | [ ] Pendiente |
-| T7 | v4complete --url https://amaziliahotel.com/ sin crashes | [ ] Pendiente |
-| T8 | BRECHA 2 "Sin WhatsApp" NO aparece en diagnostico | [ ] Pendiente |
-| T9 | Region muestra "Eje Cafetero" (no "nacional") | [ ] Pendiente |
-| T10 | Coherence >= 0.80 | [ ] Pendiente |
-| T11 | whatsapp_verified score > 0 | [ ] Pendiente |
-| T12 | log_phase_completion.py ejecutado | [ ] Pendiente |
+- [ ] Tarea 1: _inject_brecha_scores NO sobrescribe nombre/costo/detalle
+  - [ ] data.update() reemplazado con merge selectivo
+  - [ ] Score vars (_score, _severity, _effort, _priority) sí se actualizan
+- [ ] Tarea 2: Conectar impactos reales al proposal generator
+  - [ ] brechas_reales agregado a DiagnosticSummary
+  - [ ] Diagnostic generator popula brechas_reales
+  - [ ] Proposal generator consume brechas_reales.impacto
+  - [ ] Fallback a top_problems cuando brechas_reales=None
+- [ ] Tarea 3: Tests
+  - [ ] test_brecha_scores_dont_overwrite_nombre
+  - [ ] test_brecha_scores_dont_overwrite_costo
+  - [ ] test_diagnostic_summary_includes_brechas_reales
+  - [ ] test_proposal_uses_real_impact_weights
+  - [ ] test_backward_compatible_without_brechas_reales
+- [ ] Post-ejecución: dependencias, docs, log_phase_completion.py
 
 ---
 
-## Resumen Global
+## FASE-H: Performance Cache + Cleanup
 
-| Fase | Estado | Tests | Coherence |
-|------|--------|-------|-----------|
-| FASE-A | Completado | 25/25 passed | N/A |
-| FASE-B | Completado | 218 passed | N/A |
-| FASE-C | Completado | 218 passed | N/A |
-| FASE-D | Completado (parcial) | - | 0.84 |
-| FASE-E | Completado | 8 errores pre-existentes | 0.84 |
-| **FASE-F** | **Pendiente** | - | - |
+- [ ] Tarea 1: Caché para _identify_brechas
+  - [ ] Caché implementado (instance-level)
+  - [ ] Reset en generate() para evitar stale data
+  - [ ] _identify_brechas ejecuta 1x, no 9x
+- [ ] Tarea 2: pain_to_type cleanup
+  - [ ] low_ia_readiness removido de pain_to_type
+- [ ] Tarea 3: Loop normalization
+  - [ ] _build_brechas_section y _build_brechas_resumen_section usan misma convención
+- [ ] Tarea 4: Tests
+  - [ ] test_identify_brechas_cached_once
+  - [ ] test_cache_cleared_between_generates
+  - [ ] test_no_low_ia_readiness_in_pain_to_type
+  - [ ] test_loop_conventions_consistent
+- [ ] Post-ejecución: dependencias, docs, log_phase_completion.py
+
+---
+
+## FASE-I: data_structures.py Deduplication
+
+- [ ] Tarea 1: Análisis de duplicados
+  - [ ] Scenario: versión viva identificada vs muerta
+  - [ ] calculate_quick_wins: versión viva identificada vs muerta
+  - [ ] extract_top_problems: versión viva identificada vs muerta
+- [ ] Tarea 2: Eliminación de definiciones muertas
+  - [ ] Scenario sin campos duplicados
+  - [ ] calculate_quick_wins con 1 sola definición
+  - [ ] extract_top_problems con 1 sola definición
+  - [ ] Import limpio funciona
+- [ ] Tarea 3: brechas_reales en DiagnosticSummary verificado
+- [ ] Tarea 4: Tests
+  - [ ] test_scenario_no_duplicate_fields
+  - [ ] test_calculate_quick_wins_single_definition
+  - [ ] test_extract_top_problems_single_definition
+  - [ ] test_diagnostic_summary_has_brechas_reales
+- [ ] Post-ejecución: dependencias, docs, log_phase_completion.py
+
+---
+
+## FASE-J: E2E Validation + Release
+
+- [ ] Tarea 1: Pre-flight checks
+  - [ ] Imports limpios
+  - [ ] Tests FASE-F/G/H/I pasan
+  - [ ] run_all_validations.py --quick pasa
+- [ ] Tarea 2: v4complete ejecutado para amaziliahotel.com
+  - [ ] Exit code 0
+  - [ ] Coherence >= 0.80
+  - [ ] Assets generados
+- [ ] Tarea 3: Verificación de resultados
+  - [ ] 0 phantom costs en propuesta
+  - [ ] Costos reflejan impactos reales
+  - [ ] Nombres consistentes entre diagnóstico y propuesta
+  - [ ] Sin errores de import
+- [ ] Tarea 4: Veredicto emitido
+  - [ ] Template de veredicto completado
+  - [ ] Documentado: EXITOSO / PERSISTENCIA PARCIAL / FALLIDO
+- [ ] Tarea 5: Release v4.26.0 (solo si EXITOSO)
+  - [ ] VERSION.yaml actualizado a 4.26.0
+  - [ ] CHANGELOG.md con entrada completa
+  - [ ] log_phase_completion.py --fase FASE-RELEASE-4.26.0
+  - [ ] sync_versions.py ejecutado
+  - [ ] version_consistency_checker.py pasa
+  - [ ] GUIA_TECNICA.md actualizado
+  - [ ] SYSTEM_STATUS.md regenerado
+  - [ ] Git commit + tag
+
+---
+
+## Métricas Acumuladas
+
+| Métrica | Antes | Después F | Después G | Después H | Después I | Final |
+|---------|-------|-----------|-----------|-----------|-----------|-------|
+| Tests nuevos | 0 | 5 | 10 | 14 | 18 | 18 |
+| Regresiones | — | 0 | 0 | 0 | 0 | 0 |
+| Phantom costs | Sí | No | No | No | No | No |
+| Impactos reales | No | No | Sí | Sí | Sí | Sí |
+| _identify_brechas calls | 9x | 9x | 9x | 1x | 1x | 1x |
+| Duplicados DS | 3 | 3 | 3 | 3 | 0 | 0 |
