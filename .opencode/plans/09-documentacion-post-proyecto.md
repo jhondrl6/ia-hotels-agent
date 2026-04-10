@@ -53,12 +53,12 @@
 | Métrica | Baseline (v4.25.3) | Post-F | Post-G | Post-H | Post-I | Final (v4.26.0) |
 |---------|--------------------|--------|--------|--------|--------|-----------------|
 | Tests totales | ~1782 | | | | | |
-|| Tests nuevos proyecto | 0 | 5 | 10 | 14 | | ||
-|| Regresiones | — | 0 | 0 | 0 | | ||
-|| Phantom costs | PRESENTES | ELIMINADOS | ELIMINADOS | | | |
-|| Impactos reales en propuesta | NO | NO | SI (via brechas_reales) | | | |
-|| _identify_brechas calls/generate | 9 | | | 1 | | ||
-| Duplicados data_structures | 3 | | | | | |
+|| Tests nuevos proyecto | 0 | 5 | 10 | 14 | 18 | ||
+|| Regresiones | — | 0 | 0 | 0 | 0 | ||
+|| Phantom costs | PRESENTES | ELIMINADOS | ELIMINADOS | ELIMINADOS | ELIMINADOS | ||
+|| Impactos reales en propuesta | NO | NO | SI (via brechas_reales) | SI | SI | ||
+|| _identify_brechas calls/generate | 9 | | | 1 | 1 | ||
+|| Duplicados data_structures | 3 | | | | 0 | |
 | Coherence (amazilia) | 0.84 | — | — | — | — | |
 | Publication Ready | true | — | — | — | — | |
 
@@ -70,7 +70,7 @@
 
 - [ ] `CHANGELOG.md` — Entrada v4.26.0
 - [ ] `VERSION.yaml` — version: "4.26.0"
-- [x] `REGISTRY.md` — FASE-H registrada via log_phase_completion.py
+- [x] `REGISTRY.md` — FASE-I registrada via log_phase_completion.py
 - [ ] `GUIA_TECNICA.md` — Notas de cambios v4.26.0
 - [ ] `AGENTS.md` — Estado actualizado
 - [ ] `README.md` — Version sync
@@ -97,10 +97,10 @@ VEREDICTO: [PENDIENTE — solo FASE-F completada]
 
 Correcciones Verificadas:
 - [x] Phantom Costs eliminados (FASE-F ✅)
-- [ ] Impactos reales conectados
-- [ ] Dual source resuelto
-- [ ] Caché funcionando
-- [ ] Sin duplicados
+- [x] Impactos reales conectados (FASE-G ✅)
+- [x] Dual source resuelto (FASE-G ✅)
+- [x] Caché funcionando (FASE-H ✅)
+- [x] Sin duplicados (FASE-I ✅)
 
 Métricas E2E:
 - Brechas detectadas: [PENDIENTE]

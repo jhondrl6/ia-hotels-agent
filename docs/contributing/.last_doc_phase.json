@@ -21,7 +21,7 @@
   "docs/GUIA_TECNICA.md": "GAP-IAO-01-04",
   ".agents/workflows/README.md": "FASE-7",
   "modules/asset_generation/asset_catalog.py": "FASE-D",
-  "modules/commercial_documents/data_structures.py": "FASE-G",
+  "modules/commercial_documents/data_structures.py": "FASE-I",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
   "main.py": "FASE-G",
   "cross_validator.py": "E2E-CERT-0331",

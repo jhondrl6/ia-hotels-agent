@@ -100,18 +100,6 @@ class Scenario:
     def is_equilibrium_or_gain(self) -> bool:
         """Check if this scenario represents equilibrium or gain."""
         return self.monthly_loss_max <= 0
-    monthly_opportunity_cop: int = 0  # Valor absoluto cuando loss <= 0 (ganancia/equilibrio)
-    
-    def format_loss_cop(self) -> str:
-        """Format loss amount with semantic handling for negative values."""
-        amount = self.monthly_loss_max  # Usar max para representar el escenario
-        if amount <= 0:
-            return f"Equilibrio (ahorro: {format_cop(abs(amount))})"
-        return format_cop(amount)
-    
-    def is_equilibrium_or_gain(self) -> bool:
-        """Check if this scenario represents equilibrium or gain."""
-        return self.monthly_loss_max <= 0
 
 
 @dataclass
@@ -318,103 +306,8 @@ def format_cop(amount: int) -> str:
     return f"${formatted} COP"
 
 
-def calculate_quick_wins(audit_result: V4AuditResult, validation_summary: Optional[ValidationSummary] = None) -> int:
-    """Calcula quick wins dinámicamente basado en audit_result.
-    
-    Un quick win es un problema fácilmente solucionable que tiene alto impacto.
-    Basado en: schema detection, WhatsApp visibility, FAQ schema.
-    """
-    quick_wins = 0
-    
-    # Guard against None audit_result
-    if not audit_result:
-        return quick_wins
-    
-    # Guard against None schema
-    if not audit_result.schema:
-        return quick_wins
-    
-    # Guard against None validation
-    if not audit_result.validation:
-        return quick_wins
-    
-    # Guard against None performance
-    if not audit_result.performance:
-        return quick_wins
-    
-    # Guard against None gbp
-    if not audit_result.gbp:
-        return quick_wins
-    
-    if not audit_result.schema.hotel_schema_detected:
-        quick_wins += 1
-    if not audit_result.validation.phone_web:
-        quick_wins += 1
-    if not audit_result.schema.faq_schema_detected:
-        quick_wins += 1
-    if audit_result.performance.mobile_score is not None and audit_result.performance.mobile_score < 70:
-        quick_wins += 1
-    if audit_result.gbp.photos < 20:
-        quick_wins += 1
-    
-    return quick_wins
 
 
-def extract_top_problems(audit_result: V4AuditResult, limit: int = 5) -> List[str]:
-    """Extrae top problems desde audit_result de forma consistente.
-    
-    Prioriza:
-    1. Critical issues del audit
-    2. Conflictos de validación
-    3. Problemas de schema críticos
-    4. Recomendaciones restantes
-    
-    Args:
-        audit_result: Resultado completo del audit
-        limit: Máximo número de problemas a retornar
-        
-    Returns:
-        Lista de problemas como strings
-    """
-    problems = []
-    
-    # Guard against None audit_result
-    if audit_result is None:
-        return problems
-    
-    # 1. Add critical issues from audit
-    if audit_result.critical_issues:
-        for issue in audit_result.critical_issues[:limit]:
-            problems.append(issue)
-    
-    # 2. Add validation conflicts if any
-    remaining = limit - len(problems)
-    if remaining > 0 and audit_result.validation and audit_result.validation.conflicts:
-        for conflict in audit_result.validation.conflicts[:remaining]:
-            field_name = conflict.get('field_name', 'Dato')
-            problems.append(f"Conflicto de {field_name}: discrepancia entre fuentes")
-    
-    # 3. Add schema issues
-    remaining = limit - len(problems)
-    if remaining > 0 and audit_result.schema and not audit_result.schema.hotel_schema_detected:
-        problems.append("Sin Schema de Hotel (invisible para IA)")
-        remaining -= 1
-    
-    if remaining > 0 and audit_result.validation and audit_result.validation.whatsapp_status == ConfidenceLevel.CONFLICT.value:
-        problems.append("WhatsApp inconsistente entre Web y Google Business Profile")
-        remaining -= 1
-    
-    if remaining > 0 and audit_result.schema and not audit_result.schema.faq_schema_detected:
-        problems.append("Sin Schema FAQ (pierde rich snippets)")
-        remaining -= 1
-    
-    # 4. Fill with recommendations if needed
-    remaining = limit - len(problems)
-    if remaining > 0 and audit_result.recommendations:
-        for rec in audit_result.recommendations[:remaining]:
-            problems.append(rec)
-    
-    return problems[:limit]
 
 
 def calculate_quick_wins(audit_result: V4AuditResult, validation_summary: Optional[ValidationSummary] = None) -> int:
