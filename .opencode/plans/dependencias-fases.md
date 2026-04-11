@@ -1,95 +1,65 @@
-# Dependencias entre Fases — Gap Arquitectónico Brechas V6
+# Dependencias entre Fases — Rediseño Motor Financiero (Opción C)
 
-**Proyecto**: Brecha Architectural Fix — propuesta_v6 no consume brechas reales
-**Version Base**: v4.25.3
-**Version Target**: v4.26.0 (FASE-RELEASE-4.26.0)
-**Creado**: 2026-04-10
+**Proyecto**: Motor de Cuantificación Financiera v2
+**Fecha**: 2026-04-10
+**Contexto**: `.opencode/plans/context/diagnostico_3132_cop_investigacion.md`
 
 ---
 
 ## Diagrama de Dependencias
 
 ```
-FASE-F ─── Phantom Cost Fix + Dead Code Removal ✅ COMPLETADA (2026-04-10)
-  │           (propuesta: líneas 539-546, template V4)
+FASE-A ──→ FASE-B ──→ FASE-E ──→ FASE-F ──→ FASE-G
+  │           │                      ↑
+  │           └──→ FASE-C ──────────┘
   │
-  ▼
-FASE-G ─── Dual Source Conflict Resolution ✅ COMPLETADA (2026-04-10)
-  │           (diagnostic: _inject_brecha_scores vs _get_brecha_*)
-  │
-  ▼
-FASE-H ─── Performance Cache + Cleanup ✅ COMPLETADA (2026-04-10)
-  │           (_identify_brechas 9x → 1x, pain_to_type cleanup, loop normalization)
-  │
-  ▼
-FASE-I ─── data_structures.py Deduplication ✅ COMPLETADA (2026-04-10)
-  │           (Scenario duplicado, funciones duplicadas)
-  │
-  ▼
-FASE-J ─── E2E Validation + Release ✅ COMPLETADA (2026-04-10)
-              (v4complete amaziliahotel.com + FASE-RELEASE-4.26.0)
+  └──→ FASE-D (independiente, paralela a B y C)
 ```
 
-**Todas las fases son secuenciales** — cada una depende de la anterior.
-No hay paralelismo posible porque todas tocan los mismos archivos o dependencias encadenadas.
+## Tabla de Fases
+
+| Fase | Nombre | Archivos principales | Depende de | Estado |
+|------|--------|---------------------|------------|--------|
+| FASE-A | Data Structures + FinancialBreakdown | `data_structures.py` | Ninguna | ✅ 2026-04-10 |
+| FASE-B | ScenarioCalculator narrativa por capas | `scenario_calculator.py`, `financial_calculator_v2.py` | FASE-A | ✅ 2026-04-11 |
+| FASE-C | Pesos normalizados + DynamicImpact | `v4_diagnostic_generator.py` (pesos), `dynamic_impact.py` | FASE-A |
+| FASE-D | Scraper→ADR conexión | `adr_resolution_wrapper.py`, `web_scraper.py`, `main.py:1526` | FASE-A |
+| FASE-E | Consumidores actualización | `v4_proposal_generator.py`, `coherence_validator.py`, `asset_diagnostic_linker.py` | FASE-B, FASE-C |
+| FASE-F | Template diagnóstico + Evidence Tiers | `diagnostico_v6_template.md`, `v4_diagnostic_generator.py` (placeholders) | FASE-E |
+| FASE-G | Integración main.py + end-to-end | `main.py:1664-1910`, tests de regresión | FASE-F, FASE-D |
+
+## Conflictos Potenciales (archivos compartidos)
+
+| Archivo | Fases que lo tocan | Riesgo |
+|---------|-------------------|--------|
+| `data_structures.py` | A (crear campos), B (ajustar Scenario) | BAJO — A crea, B consume |
+| `v4_diagnostic_generator.py` | C (pesos), F (placeholders/template) | MEDIO — distintas secciones |
+| `main.py` | D (línea 1526), G (líneas 1664-1910) | BAJO — distintas zonas |
+| `scenario_calculator.py` | B (rediseño completo) | BAJO — una sola fase |
+| `v4_proposal_generator.py` | E (22 puntos de consumo) | BAJO — una sola fase |
+| `coherence_validator.py` | E (línea 433) | BAJO — una sola fase |
+
+## Orden de Ejecución
+
+```
+Sesión 1: FASE-A (fundación — nuevas estructuras de datos)
+Sesión 2: FASE-B (motor de cálculo por capas) + FASE-D puede ejecutarse en paralelo
+Sesión 3: FASE-C (normalización de pesos) [o FASE-D si no se hizo en paralelo]
+Sesión 4: FASE-D (si no se ejecutó) o FASE-E (consumidores)
+Sesión 5: FASE-E (consumidores) o FASE-F (template)
+Sesión 6: FASE-F (template + evidence tiers)
+Sesión 7: FASE-G (integración main.py + end-to-end)
+```
+
+**Nota**: FASE-B, C y D son parcialmente paralelas (no compiten por archivos).
+La regla de "una fase por sesión" aplica estrictamente. El paralelismo es lógico, no temporal.
 
 ---
 
-## Tabla de Conflictos Potenciales
+## Criterios de Éxito Globales
 
-| Archivo | Fases que lo modifican | Tipo de Conflicto |
-|---------|----------------------|-------------------|
-| `v4_proposal_generator.py` | FASE-F | Exclusivo — solo esta fase lo toca |
-| `v4_diagnostic_generator.py` | FASE-G, FASE-H | **COMPARTIDO** — G modifica _inject_brecha_scores, H agrega caché |
-| `data_structures.py` | FASE-I | Exclusivo |
-| `propuesta_v4_template.md` | FASE-F | Exclusivo (si necesita ajuste) |
-| `tests/commercial_documents/test_diagnostic_brechas.py` | FASE-G, FASE-H | **COMPARTIDO** — ambos agregan/actualizan tests |
-| `tests/test_proposal_alignment.py` | FASE-F | Exclusivo |
-
-### Riesgos
-
-| Riesgo | Mitigación |
-|--------|-----------|
-| FASE-G y FASE-H ambas tocan diagnostic_generator.py | G modifica lógica de scores, H agrega caché. Sectores distintos, bajo riesgo de merge conflict |
-| Tests compartidos entre G y H | Cada fase agrega sus propios tests, no modifica los del otro |
-| FASE-J depende de que F,G,H,I estén 100% completas | Checklist obligatorio antes de ejecutar J |
-
----
-
-## Archivos Involucrados por Fase
-
-### FASE-F (Phantom Cost Fix) ✅ COMPLETADA
-- `modules/commercial_documents/v4_proposal_generator.py` — distribución fija 40/30/20/10 reemplazada por `_build_brecha_data()` dinámico
-- `tests/test_proposal_alignment.py` — 5 tests nuevos (phantom costs), 0 regresiones
-- Template V4: funciona correctamente con variables dinámicas
-
-### FASE-G (Dual Source Conflict)
-- `modules/commercial_documents/v4_diagnostic_generator.py` (líneas 510-521 vs 586, 1976-2024)
-- `tests/commercial_documents/test_diagnostic_brechas.py` (tests nuevos)
-
-### FASE-H (Performance Cache + Cleanup)
-- `modules/commercial_documents/v4_diagnostic_generator.py` (líneas 1539-1923, pain_to_type 1931)
-- `tests/commercial_documents/test_diagnostic_brechas.py` (tests nuevos)
-
-### FASE-I (data_structures Dedup)
-- `modules/commercial_documents/data_structures.py` (líneas 83-114 duplicadas, 320/419, 362/461)
-- Tests existentes deben seguir pasando sin cambios
-
-### FASE-J (E2E Validation + Release)
-- `main.py` (ejecutar v4complete, sin modificar)
-- `scripts/log_phase_completion.py` (registro)
-- Documentación: CHANGELOG.md, GUIA_TECNICA.md, VERSION.yaml
-
----
-
-## Orden de Ejecución Obligatorio
-
-```
-Sesión 1 → FASE-F  (Phantom Cost Fix)
-Sesión 2 → FASE-G  (Dual Source Conflict)
-Sesión 3 → FASE-H  (Cache + Cleanup)
-Sesión 4 → FASE-I  (Deduplication)
-Sesión 5 → FASE-J  (E2E + Release)
-```
-
-**Regla**: 1 fase por sesión. Sin excepciones.
+1. Cada costo en COP es **rastreable** a una fuente (onboarding, scraping, benchmark)
+2. Pesos de brechas **normalizados** (suma siempre = 100%)
+3. Valores etiquetados como **VERIFIED** o **ESTIMATED**
+4. **Hecho verificable** (comisión OTA real) como dato principal
+5. Promesa README línea 63: "asigna un costo en COP a cada brecha detectada, y genera un paquete de assets técnicos listos para deploy con validación cruzada de coherencia"

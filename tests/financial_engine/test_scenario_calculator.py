@@ -12,6 +12,7 @@ from modules.financial_engine.scenario_calculator import (
     HotelFinancialData,
     ScenarioCalculator,
 )
+from modules.commercial_documents.data_structures import FinancialBreakdown
 
 
 class TestHotelFinancialData:
@@ -543,3 +544,75 @@ class TestInterpretScenarioForHotelier:
         interpretation = ScenarioCalculator.interpret_scenario_for_hotelier(scenario)
 
         assert scenario.disclaimer in interpretation
+
+
+class TestCalculateBreakdown:
+    """Test cases for calculate_breakdown method (FASE-B)."""
+
+    @pytest.fixture
+    def calculator(self):
+        """Provide a ScenarioCalculator instance."""
+        return ScenarioCalculator()
+
+    def test_breakdown_ota_commission_amazilia(self, calculator):
+        """Comisión OTA = $5,400,000 para hotel de prueba."""
+        hotel = HotelFinancialData(
+            rooms=10,
+            adr_cop=300000,
+            occupancy_rate=0.5,
+            direct_channel_percentage=0.2,
+            ota_commission_rate=0.15
+        )
+        breakdown = calculator.calculate_breakdown(hotel)
+        # 10 rooms × 0.5 occupancy × 30 days = 150 nights/mes
+        # 80% OTA = 120 nights
+        # 120 × 300K × 15% = 5,400,000
+        assert breakdown.monthly_ota_commission_cop == 5400000
+
+    def test_breakdown_layers_separated(self, calculator):
+        """Capa 1 (comisión OTA) debe ser mayor que capas 2A y 2B."""
+        hotel = HotelFinancialData(
+            rooms=10,
+            adr_cop=300000,
+            occupancy_rate=0.5
+        )
+        breakdown = calculator.calculate_breakdown(hotel)
+        # Comisión OTA (Capa 1) debe ser > shift_savings (Capa 2A) + ia_revenue (Capa 2B)
+        assert breakdown.monthly_ota_commission_cop > breakdown.shift_savings_cop
+        assert breakdown.monthly_ota_commission_cop > breakdown.ia_revenue_cop
+
+    def test_breakdown_evidence_tier_c(self, calculator):
+        """Evidence tier es C por defecto (sin GA4)."""
+        hotel = HotelFinancialData(
+            rooms=10,
+            adr_cop=300000,
+            occupancy_rate=0.5
+        )
+        breakdown = calculator.calculate_breakdown(hotel)
+        assert breakdown.evidence_tier == "C"
+        assert "limitados" in breakdown.disclaimer
+
+    def test_breakdown_data_sources(self, calculator):
+        """Cada dato tiene fuente rastreable."""
+        hotel = HotelFinancialData(
+            rooms=10,
+            adr_cop=300000,
+            occupancy_rate=0.5,
+            adr_source="onboarding"
+        )
+        breakdown = calculator.calculate_breakdown(hotel)
+        assert breakdown.hotel_data_sources['adr'] == "onboarding"
+        assert 'shift' in breakdown.hotel_data_sources
+        assert 'ia_boost' in breakdown.hotel_data_sources
+
+    def test_backward_compat_calculate_scenarios(self, calculator):
+        """Métodos existentes siguen funcionando (backward compat)."""
+        hotel = HotelFinancialData(
+            rooms=10,
+            adr_cop=300000,
+            occupancy_rate=0.5
+        )
+        scenarios = calculator.calculate_scenarios(hotel)
+        assert scenarios is not None
+        assert len(scenarios) == 3
+        assert ScenarioType.CONSERVATIVE in scenarios

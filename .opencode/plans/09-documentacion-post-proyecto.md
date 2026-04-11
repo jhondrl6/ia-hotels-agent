@@ -1,120 +1,112 @@
-# Documentación Post-Proyecto — Brecha Architectural Fix
+# Documentación Post-Proyecto — Rediseño Motor Financiero
 
-**Proyecto**: Eliminar gap arquitectónico entre diagnóstico y propuesta V6
-**Versión**: v4.25.3 → v4.26.0
-**Fecha Inicio**: 2026-04-10
-
----
-
-## Sección A: Módulos Nuevos/Modificados
-
-> Completar después de cada fase.
-
-| Módulo | Fase | Tipo | Descripción |
-|--------|------|------|-------------|
-|| `v4_proposal_generator.py` | F | MODIFICADO | Eliminada distribución fija 40/30/20/10, phantom cost fix. Nuevo método `_build_brecha_data()` |
-|| `tests/test_proposal_alignment.py` | F | MODIFICADO | 5 tests phantom cost + skipif para import roto preexistente |
-|| `v4_diagnostic_generator.py` | G | MODIFICADO | Dual source conflict: _inject_brecha_scores ya NO sobrescribe _nombre/_costo/_detalle |
-|| `v4_diagnostic_generator.py` | H | MODIFICADO | Caché _identify_brechas (9x→1x), pain_to_type cleanup, loop normalization |
-| `data_structures.py` | G | MODIFICADO | Agregado brechas_reales a DiagnosticSummary |
-| `data_structures.py` | I | MODIFICADO | Eliminados duplicados Scenario, calculate_quick_wins, extract_top_problems |
+**Proyecto**: Motor de Cuantificación Financiera v2
+**Fecha inicio**: 2026-04-10
+**Estado**: En preparación
 
 ---
 
-## Sección B: Archivos Nuevos
+## Sección A: Módulos Nuevos / Modificados
 
-> Completar después de cada fase.
+*(Completar después de cada fase)*
 
-| Archivo | Fase | Descripción |
-|---------|------|-------------|
-| (ninguno esperado — solo modificaciones) | | |
+| Fase | Archivo | Tipo | Descripción |
+|------|---------|------|-------------|
+| A | `modules/commercial_documents/data_structures.py` | Modificado | Agregado FinancialBreakdown, EvidenceTier, Scenario.monthly_loss_central | 2026-04-10 |
+| A | `tests/test_financial_breakdown.py` | Nuevo | Tests de nuevas estructuras | 2026-04-10 |
+| B | `modules/financial_engine/scenario_calculator.py` | Modificado | Agregado calculate_breakdown(), HotelFinancialData con adr_source/occupancy_source/channel_source | 2026-04-11 |
+| B | `tests/financial_engine/test_scenario_calculator.py` | Modificado | 5 tests nuevos: breakdown OTA, layers, tier, sources, backward compat | 2026-04-11 |
+| C | `modules/commercial_documents/v4_diagnostic_generator.py` | Modificado | Pesos normalizados + DynamicImpactCalculator |
+| D | `modules/financial_engine/adr_resolution_wrapper.py` | Modificado | ADRSource.WEB_SCRAPING |
+| D | `main.py` | Modificado | hotel_data → adr_resolver (scraping fallback) |
+| E | `modules/commercial_documents/v4_proposal_generator.py` | Modificado | 22 puntos max→central |
+| E | `modules/validation/coherence_validator.py` | Modificado | pain usa central |
+| E | `modules/asset_generation/asset_diagnostic_linker.py` | Modificado | impacto usa central |
+| F | `modules/commercial_documents/templates/diagnostico_v6_template.md` | Modificado | Narrativa Comisión OTA + evidence tiers |
+| F | `modules/commercial_documents/v4_diagnostic_generator.py` | Modificado | Nuevos placeholders financieros |
+| G | `main.py` | Modificado | Integración FinancialBreakdown + E2E |
 
 ---
 
-## Sección C: Tests Nuevos
+## Sección B: Problema → Solución
 
-> Completar después de cada fase.
+| Problema | Severidad | Fase que resuelve | Solución |
+|----------|-----------|-------------------|----------|
+| Inflación x1.2 sistemática (techo como principal) | ALTA | A, G | Valor central separado del rango |
+| Pesos sin base empírica (suma hasta 150%) | ALTA | C | Normalización (siempre 100%) |
+| 45% de pérdida sin explicar | ALTA | C | Pesos normalizados cubren 100% |
+| Fórmula mezcla hechos + supuestos | CRÍTICA | B | FinancialBreakdown separa capas |
+| Comisión OTA nunca visible | CRÍTICA | B, F | Capa 1 = comisión OTA verificable |
+| Scraper precio desconectado del ADR | MEDIA | D | WEB_SCRAPING como fuente intermedia |
+| Sin trazabilidad del cálculo | ALTA | A, B | data_sources + EvidenceTier |
+| 22 consumidores usan monthly_loss_max | MEDIA | E | Cambio a central con fallback |
 
-|| Archivo | Fase | Tests Agregados |
-||---------|------|----------------|
-|| `tests/test_proposal_alignment.py` | F | 5 (phantom costs) |
-|| `tests/commercial_documents/test_diagnostic_brechas.py` | G | 3 (dual source) |||
-|| `tests/test_proposal_alignment.py` | G | 2 (real impact weights) |||
-|| `tests/commercial_documents/test_diagnostic_brechas.py` | H | 4 (cached_once, cache_cleared, no_low_ia_readiness, loop_conventions) ||
-|| `tests/commercial_documents/test_data_structures.py` | I | 4 (dedup) ||
-|| **TOTAL** | | **18** ||
+---
+
+## Sección C: Cambios Arquitectónicos
+
+### Antes (modelo actual)
+```
+ScenarioCalculator
+  → monthly_loss_cop (1 número)
+    → FinancialScenarios
+      → Scenario(monthly_loss_max)  ← consumido como principal
+        → v4_diagnostic_generator (6 puntos)
+        → v4_proposal_generator (22 puntos)
+        → coherence_validator (1 punto)
+        → asset_linker (3 puntos)
+```
+
+### Después (modelo rediseñado)
+```
+ScenarioCalculator
+  ├── calculate_scenarios() → FinancialScenarios (EXISTENTE, no modificado)
+  └── calculate_breakdown() → FinancialBreakdown (NUEVO)
+        ├── Capa 1: Comisión OTA verificable + fuente
+        ├── Capa 2A: Shift savings + fuente
+        ├── Capa 2B: IA revenue + fuente
+        └── META: evidence_tier + disclaimer + data_sources
+
+FinancialScenarios
+  └── Scenario(monthly_loss_central)  ← consumido como principal
+        → v4_diagnostic_generator (usa central, NO max)
+        → v4_proposal_generator (usa central, NO max)
+        → coherence_validator (usa central, NO max)
+        → asset_linker (usa central, NO max)
+```
 
 ---
 
 ## Sección D: Métricas Acumulativas
 
-> Actualizar después de cada fase.
-
-| Métrica | Baseline (v4.25.3) | Post-F | Post-G | Post-H | Post-I | Final (v4.26.0) |
-|---------|--------------------|--------|--------|--------|--------|-----------------|
-| Tests totales | ~1782 | | | | | |
-|| Tests nuevos proyecto | 0 | 5 | 10 | 14 | 18 | ||
-|| Regresiones | — | 0 | 0 | 0 | 0 | ||
-|| Phantom costs | PRESENTES | ELIMINADOS | ELIMINADOS | ELIMINADOS | ELIMINADOS | ||
-|| Impactos reales en propuesta | NO | NO | SI (via brechas_reales) | SI | SI | ||
-|| _identify_brechas calls/generate | 9 | | | 1 | 1 | ||
-|| Duplicados data_structures | 3 | | | | 0 | |
-| Coherence (amazilia) | 0.84 | — | — | — | — | |
-| Publication Ready | true | — | — | — | — | |
+| Fase | Tests nuevos | Tests totales | Archivos modificados | Archivos nuevos |
+|------|-------------|---------------|---------------------|----------------|
+| A | 9 | +9 | 1 | 1 |
+| B | 5 | +14 | 1 | 0 |
+| C | 4 | +14 | 1 | 0 |
+| D | 5 | +19 | 2 | 0 |
+| E | 4 | +23 | 3 | 0 |
+| F | 4 | +27 | 2 | 0 |
+| G | E2E | +E2E | 1 | 0 |
+| **Total** | **27+E2E** | — | **11** | **1** |
 
 ---
 
 ## Sección E: Archivos Afiliados Actualizados
 
-> Marcar [x] cuando cada archivo sea actualizado.
+*(Marcar [x] cuando se actualice cada archivo)*
 
-- [x] `CHANGELOG.md` — Entrada v4.26.0
-- [x] `VERSION.yaml` — version: "4.26.0"
-- [x] `REGISTRY.md` — FASE-RELEASE-4.26.0 registrada via log_phase_completion.py
-- [x] `GUIA_TECNICA.md` — Notas de cambios v4.26.0
-- [x] `AGENTS.md` — Estado actualizado (sync via sync_versions.py)
-- [x] `README.md` — Version sync
-- [x] `.cursorrules` — Version sync
-- [x] `CONTRIBUTING.md` — Version sync
-- [x] `.agent/SYSTEM_STATUS.md` — Regenerado con doctor --status (c412ea3)
+- [ ] `CHANGELOG.md` — Entrada para el rediseño del motor financiero
+- [ ] `GUIA_TECNICA.md` — Notas técnicas del nuevo FinancialBreakdown
+- [ ] `CONTRIBUTING.md` — Si hay cambios en convenciones
+- [ ] `REGISTRY.md` — Vía log_phase_completion.py
+- [ ] `README.md` — Si la promesa línea 63 necesita actualización
+- [ ] `SYSTEM_STATUS.md` — Vía doctor.py --status
+- [ ] `.agents/workflows/README.md` — Si se agrega skill nueva
+- [ ] `VERSION.yaml` — Si hay bump de versión
 
 ---
 
 ## Sección F: Lecciones Aprendidas
 
-> Completar al final del proyecto (FASE-J).
-
-*(Vacío — completar al finalizar)*
-
----
-
-## Sección G: Veredicto E2E
-
-> Completar en FASE-J después de v4complete amaziliahotel.com.
-
-```
-VEREDICTO: EXITOSO ✅
-
-Correcciones Verificadas:
-- [x] Phantom Costs eliminados: 0 phantom costs en propuesta. 4 brechas reales con costos proporcionales
-- [x] Impactos reales conectados: $783.000 (25%), $375.840 (12%), $313.200 (10%), $250.560 (8%)
-- [x] Dual source resuelto: _inject_brecha_scores ya no sobrescribe nombre/costo/detalle
-- [x] Caché funcionando: _identify_brechas ejecuta 1x (no 9x)
-- [x] Sin duplicados: data_structures.py limpio, imports OK
-
-Métricas E2E:
-- Brechas detectadas: 4 (antes: 6 con phantom costs)
-- Coherence: 0.92 (antes: 0.84)
-- Assets generados: 9/10 (WARNING status — estimated, no GA4)
-- Publication Ready: READY_FOR_PUBLICATION
-
-Persistencias: Ninguna. Todas las correcciones FASE-F/G/H/I se manifiestan correctamente.
-```
-
----
-
-## Sección H: Git Commit
-
-> Solo cuando todas las fases estén completadas y documentadas.
-
-- [x] Commit con tag v4.26.0 (commit 89fafa6)
+*(Completar al final del proyecto)*

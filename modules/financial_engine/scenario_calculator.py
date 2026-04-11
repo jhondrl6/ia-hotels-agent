@@ -10,6 +10,8 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 from enum import Enum
 
+from modules.commercial_documents.data_structures import FinancialBreakdown, EvidenceTier
+
 
 class ScenarioType(Enum):
     """Types of financial scenarios for hotel revenue projections."""
@@ -55,6 +57,9 @@ class HotelFinancialData:
         ota_commission_rate: Average OTA commission rate (0.0 - 1.0, default 0.15)
         direct_channel_percentage: Percentage of direct bookings (0.0 - 1.0)
         ota_presence: List of OTAs where the hotel is present
+        adr_source: Source of ADR data (for traceability)
+        occupancy_source: Source of occupancy data (for traceability)
+        channel_source: Source of direct channel percentage (for traceability)
     """
 
     rooms: int
@@ -63,6 +68,10 @@ class HotelFinancialData:
     ota_commission_rate: float = 0.15  # 0.0 - 1.0 (default 0.15)
     direct_channel_percentage: float = 0.0  # 0.0 - 1.0
     ota_presence: List[str] = field(default_factory=lambda: ["booking", "expedia"])
+    # NUEVOS — trazabilidad de fuente
+    adr_source: str = "unknown"
+    occupancy_source: str = "unknown"
+    channel_source: str = "unknown"
 
 
 class ScenarioCalculator:
@@ -359,3 +368,75 @@ class ScenarioCalculator:
         interpretation += f"\n{'=' * 50}\n"
 
         return interpretation
+
+    def calculate_breakdown(self, hotel_data: HotelFinancialData) -> FinancialBreakdown:
+        """
+        Calcula desglose financiero por capas.
+
+        CAPA 1: Comisión OTA verificable (hechos)
+        CAPA 2A: Ahorro por migración OTA→directo (hipótesis con fuente)
+        CAPA 2B: Ingresos por visibilidad IA (hipótesis con fuente)
+        """
+        # Capa 1: Comisión OTA = noches_OTA × ADR × comisión_rate
+        nights_per_month = hotel_data.rooms * hotel_data.occupancy_rate * 30
+        ota_nights = nights_per_month * (1 - hotel_data.direct_channel_percentage)
+        monthly_ota_commission = ota_nights * hotel_data.adr_cop * hotel_data.ota_commission_rate
+
+        # Capa 2A: Shift OTA→directo
+        shift_percentage = self._get_shift_percentage(hotel_data)
+        shift_savings = monthly_ota_commission * shift_percentage
+
+        # Capa 2B: IA revenue boost
+        ia_boost_percentage = self._get_ia_boost_percentage(hotel_data)
+        ia_revenue = nights_per_month * hotel_data.adr_cop * ia_boost_percentage
+
+        # Evidence tier
+        tier = self._determine_evidence_tier(hotel_data)
+
+        # Fuentes de datos
+        sources = self._trace_data_sources(hotel_data)
+
+        return FinancialBreakdown(
+            monthly_ota_commission_cop=monthly_ota_commission,
+            ota_commission_basis=f"{int(ota_nights)} noches OTA × ${int(hotel_data.adr_cop):,} ADR × {hotel_data.ota_commission_rate*100:.0f}% comisión",
+            ota_commission_source=sources.get('ota_commission', 'unknown'),
+            shift_savings_cop=shift_savings,
+            shift_percentage=shift_percentage,
+            shift_source=sources.get('shift', 'hardcoded: sin GA4'),
+            ia_revenue_cop=ia_revenue,
+            ia_boost_percentage=ia_boost_percentage,
+            ia_source=sources.get('ia_boost', 'estimado: sin datos GA4'),
+            evidence_tier=tier.value,
+            disclaimer=tier.disclaimer,
+            hotel_data_sources=sources
+        )
+
+    def _determine_evidence_tier(self, hotel_data: HotelFinancialData) -> EvidenceTier:
+        """Determina tier basado en disponibilidad de datos."""
+        # Si tiene GA4+GSC → A
+        # Si tiene benchmarks regionales → B
+        # Si solo tiene scraping → C
+        # Lógica: por ahora siempre C hasta que GA4 se integre
+        return EvidenceTier.C
+
+    def _get_shift_percentage(self, hotel_data: HotelFinancialData) -> float:
+        """Porcentaje de migración OTA→directo. Documentar fuente."""
+        # TODO: Reemplazar con dato de GA4 cuando esté disponible
+        return 0.10  # Benchmark: hoteles con mejora digital
+
+    def _get_ia_boost_percentage(self, hotel_data: HotelFinancialData) -> float:
+        """Porcentaje de boost por visibilidad IA. Documentar fuente."""
+        # TODO: Reemplazar con dato de GA4 cuando esté disponible
+        return 0.05  # Estimado: sin datos GA4
+
+    def _trace_data_sources(self, hotel_data: HotelFinancialData) -> Dict[str, str]:
+        """Trazabilidad: mapea cada input a su fuente."""
+        return {
+            'adr': getattr(hotel_data, 'adr_source', 'unknown'),
+            'rooms': 'hotel_data',
+            'occupancy': getattr(hotel_data, 'occupancy_source', 'unknown'),
+            'ota_commission': 'industry_standard_15pct',
+            'direct_channel': getattr(hotel_data, 'channel_source', 'unknown'),
+            'shift': 'hardcoded: sin GA4',
+            'ia_boost': 'estimado: sin datos GA4'
+        }

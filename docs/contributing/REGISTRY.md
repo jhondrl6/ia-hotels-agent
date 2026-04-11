@@ -2119,6 +2119,47 @@ _Ninguno_
 ---
 
 
+## FASE-A - 2026-04-10
+**Descripcion:** Data Structures: FinancialBreakdown + Scenario.monthly_loss_central + EvidenceTier
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/test_financial_breakdown.py` | NUEVO | Test Financial Breakdown |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/data_structures.py` | Data Structures |
+
+### Validaciones
+- [x] Tests passing (9)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-B - 2026-04-11
+**Descripcion:** ScenarioCalculator: calculate_breakdown() con narrativa por capas verificable→hipótesis. HotelFinancialData con adr_source/occupancy_source/channel_source.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/scenario_calculator.py` | Scenario Calculator |
+| `tests/financial_engine/test_scenario_calculator.py` | Test Scenario Calculator |
+
+### Validaciones
+- [x] Tests passing (5)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
@@ -2178,3 +2219,4 @@ _Ninguno_
 || FASE-B (AEO Scoring) | 2026-04-08 | 15 | ✅ Complete |
 | GAP-IAO-01-05 | 2026-03-31 | N/A | ✅ Complete |
 | GAP-IAO-01-05-REFINEMENT | 2026-04-01 | 22 | ✅ Complete |
+| FASE-B (Financial Redesign) | 2026-04-11 | 5 | ✅ Complete |
