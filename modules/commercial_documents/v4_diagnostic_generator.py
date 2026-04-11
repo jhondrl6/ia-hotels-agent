@@ -439,8 +439,9 @@ ${quick_wins_list}
         year = datetime.now().year
         prev_year = year - 1
         
-        # Calculate 6-month loss
-        loss_6_months_value = main_scenario.monthly_loss_max * 6
+        # Calculate 6-month projection using central value (not max)
+        base_value = getattr(main_scenario, 'monthly_loss_central', None) or main_scenario.monthly_loss_max
+        loss_6_months_value = base_value * 6
         
         # Plan variables - for now, we set them based on quick wins or default values
         # In a real implementation, these would be derived from audit results and strategy
@@ -549,7 +550,7 @@ ${quick_wins_list}
             'hotel_region': hotel_region,
             'hotel_landmark': hotel_landmark,
             'regional_context': regional_context,
-            'monthly_loss': format_cop(main_scenario.monthly_loss_max),
+            'monthly_loss': format_cop(base_value),
             'urgencia_contenido': self._build_urgencia_content(financial_scenarios, hotel_name),
             'quick_wins_content': self._build_quick_wins_content(audit_result),
             
@@ -610,6 +611,10 @@ ${quick_wins_list}
         
         # Seccion opcional de transparencia de datos
         data['analytics_transparency_section'] = self._build_transparency_section(analytics_status)
+        
+        # --- Financial Placeholders (FASE-F: Comisión OTA + Evidence Tiers) ---
+        financial_ph = self._build_financial_placeholders(financial_scenarios, analytics_data)
+        data.update(financial_ph)
         
         return data
     
@@ -685,6 +690,76 @@ ${quick_wins_list}
 {note}
 """
         return section
+    
+    def _build_scenario_table_rows(self, scenarios: FinancialScenarios) -> str:
+        """Construye filas de tabla markdown para los 3 escenarios de recuperación."""
+        rows = []
+        for name, scenario in [
+            ("Conservador", scenarios.conservative),
+            ("Realista", scenarios.realistic),
+            ("Optimista", scenarios.optimistic),
+        ]:
+            central = getattr(scenario, 'monthly_loss_central', None) or scenario.monthly_loss_max
+            prob_pct = int(scenario.probability * 100)
+            rows.append(
+                f"| {name} | {format_cop(central)} COP/mes | {prob_pct}% |"
+            )
+        return "\n".join(rows)
+    
+    def _build_financial_placeholders(
+        self,
+        scenarios: FinancialScenarios,
+        analytics_data: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Construye los placeholders financieros para el template V6.
+        
+        Presenta "Comisión OTA verificable" como dato principal + escenarios
+        de recuperación con evidence tier.
+        """
+        main = scenarios.get_main_scenario()
+        base_value = getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max
+        
+        # Determine evidence tier based on available data sources
+        ga4_enabled = analytics_data is not None and analytics_data.get("use_ga4", False)
+        if ga4_enabled:
+            tier = "A"
+            disclaimer = (
+                "Este diagnóstico usa datos reales de Google Analytics 4 y Search Console. "
+                "Los escenarios representan el potencial de mejora basado en su tráfico actual."
+            )
+        else:
+            tier = "C"
+            disclaimer = (
+                "Este diagnóstico se basa en datos limitados de su web y benchmarks regionales. "
+                "Los valores son estimaciones. Para mayor precisión, configure GA4 y Search Console."
+            )
+        
+        # OTA commission: derive from the scenario value
+        # The monthly_loss_max represents the opportunity cost (commissions going to OTAs)
+        ota_commission = format_cop(base_value)
+        
+        # Build scenario table
+        scenario_table = self._build_scenario_table_rows(scenarios)
+        
+        return {
+            'ota_commission_formatted': ota_commission,
+            'ota_commission_basis': (
+                f"Estimación basada en escenario {main.description.lower()}"
+                if main.description else "Estimación basada en datos del hotel"
+            ),
+            'ota_commission_source': 'onboarding' if ga4_enabled else 'benchmark',
+            'scenario_table_rows': scenario_table,
+            'evidence_tier': tier,
+            'financial_disclaimer': disclaimer,
+            'financial_source_ref': 'financial_scenarios.json#realistic',
+            'financial_value_central': str(base_value),
+            'financial_value_min': str(main.monthly_loss_min),
+            'financial_value_max': str(main.monthly_loss_max),
+            'financial_method': 'proportional_normalized',
+            # Backward compatibility
+            'loss_6_months': format_cop(base_value * 6),
+        }
     
     def _render_template(self, template_content: str, data: Dict[str, str]) -> str:
         """Render the template with data."""
@@ -895,7 +970,7 @@ ${quick_wins_list}
     def _build_empathy_message(self, scenarios: FinancialScenarios, hotel_name: str) -> str:
         """Build an empathy message for the hotel owner."""
         main = scenarios.get_main_scenario()
-        amount = format_cop(main.monthly_loss_max)
+        amount = format_cop(getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max)
         
         messages = [
             f"Cada mes que pasa, **{hotel_name}** deja de recibir aproximadamente **{amount}** en reservas que podrían ser directas.",

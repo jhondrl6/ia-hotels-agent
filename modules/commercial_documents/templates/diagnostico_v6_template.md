@@ -5,6 +5,11 @@ hotel_id: ${hotel_id}
 coherence_score: ${coherence_score}
 document_type: DIAGNOSTICO_V6
 generator: IA_Hoteles_v4
+financial_evidence_tier: "${evidence_tier}"
+financial_source: "${financial_source_ref}"
+financial_value_central: ${financial_value_central}
+financial_value_range: [${financial_value_min}, ${financial_value_max}]
+financial_method: "${financial_method}"
 ---
 
 # 🚨 DIAGNÓSTICO DIGITAL
@@ -55,15 +60,42 @@ ${regional_transparency}
 
 ${analytics_summary_text}
 
-### Impacto Financiero
+## 💰 Impacto Financiero
 
-**Pérdida estimada mensual: ${monthly_loss} COP**
+### Comisión OTA Actual (verificable)
 
-Esta cifra representa reservas directas que van a competidores que aparecen primero en Google Maps, en búsquedas por voz, y en las recomendaciones de ChatGPT.
+**${ota_commission_formatted} COP/mes**
+
+Desglose:
+- ${ota_commission_basis}
+- Fuente del dato: ${ota_commission_source}
 
 ---
 
-## 🚨 BRECHAS CRÍTICAS IDENTIFICADAS
+### Oportunidad de Mejora
+
+Brechas detectadas que afectan su presencia digital y reservas directas:
+
+${brechas_section}
+
+---
+
+### Escenarios de Recuperación
+
+${scenario_table_rows}
+
+**Proyección 6 meses:** ${loss_6_months} COP
+
+> ⚠️ ${financial_disclaimer}
+>
+> *Nivel de evidencia: **Tier ${evidence_tier}***
+> - Tier A: Basado en Google Analytics + Search Console
+> - Tier B: Basado en benchmarks regionales + datos web
+> - Tier C: Basado en datos limitados de su web
+
+---
+
+## 🚨 BRECHAS CRÍTICAS IDENTIFICADAS (DETALLE)
 
 ${brechas_section}
 

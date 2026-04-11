@@ -1,6 +1,6 @@
 {
   "modules/asset_generation/conditional_generator.py": "GAP-IAO-01-04",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-C",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-F",
   "modules/commercial_documents/v4_proposal_generator.py": "FASE-E",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-E",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-E",
@@ -26,7 +26,7 @@
   "main.py": "FASE-D",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "E2E-CERT-0331",
-  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-C",
+  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-F",
   "data_models/__init__.py": "FASE-IAO-06",
   "v4_proposal_generator.py": "ANALYTICS-02",
   "propuesta_v6_template.md": "ANALYTICS-02",
