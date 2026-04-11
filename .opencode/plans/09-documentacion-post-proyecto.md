@@ -97,7 +97,7 @@ FinancialScenarios
 *(Marcar [x] cuando se actualice cada archivo)*
 
 - [ ] `CHANGELOG.md` — Entrada para el rediseño del motor financiero
-- [x] `REGISTRY.md` — Vía log_phase_completion.py (FASE-E ✅ 2026-04-11)
+- [x] `REGISTRY.md` — Vía log_phase_completion.py (FASE-E ✅ 2026-04-11, FASE-G pendiente)
 - [ ] `GUIA_TECNICA.md` — Notas técnicas del nuevo FinancialBreakdown
 - [ ] `CONTRIBUTING.md` — Si hay cambios en convenciones
 - [ ] `README.md` — Si la promesa línea 63 necesita actualización
@@ -109,4 +109,7 @@ FinancialScenarios
 
 ## Sección F: Lecciones Aprendidas
 
-*(Completar al final del proyecto)*
+### FASE-G (2026-04-11)
+- **has_onboarding scope**: La variable se define tarde (L1801) pero el breakdown la necesita antes. Usar `onboarding_data is not None` directamente.
+- **Flag desactualizado**: El plan decía `--full-audit` pero no existe. El comando correcto es `v4complete`.
+- **Patch tool pipe count**: Al reemplazar líneas de tablas markdown, el patch puede duplicar el `|` inicial. Verificar siempre.

@@ -181,6 +181,7 @@ class V4DiagnosticGenerator:
         coherence_score: Optional[float] = None,
         region: Optional[str] = None,
         analytics_data: Optional[Dict[str, Any]] = None,
+        financial_breakdown: Optional['FinancialBreakdown'] = None,
     ) -> str:
         """
         Generate the diagnostic document.

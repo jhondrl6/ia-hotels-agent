@@ -1360,6 +1360,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     from modules.data_validation import CrossValidator
     from modules.data_validation.confidence_taxonomy import ConfidenceLevel
     from modules.financial_engine import ScenarioCalculator, HotelFinancialData
+    from modules.commercial_documents.data_structures import FinancialBreakdown
     from modules.financial_engine.scenario_calculator import ScenarioType
     from modules.financial_engine import resolve_adr_with_shadow, ADRResolutionResult
     from modules.financial_engine import calculate_price_with_shadow, PricingResolutionResult
@@ -1714,6 +1715,47 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         'optimistic': get_scenario_value(scenarios, ScenarioType.OPTIMISTIC),
     }
     
+    # FASE-G: Calcular FinancialBreakdown para trazabilidad y evidence tiers
+    financial_breakdown = None
+    try:
+        from modules.financial_engine.scenario_calculator import ScenarioCalculator as _SC
+        _calculator = _SC()
+        _hotel_fin_data = HotelFinancialData(
+            rooms=rooms,
+            adr_cop=adr_cop,
+            occupancy_rate=occupancy_rate,
+            direct_channel_percentage=direct_channel_pct,
+            ota_commission_rate=0.15,
+            adr_source=adr_source if 'adr_source' in dir() else 'unknown',
+            occupancy_source='onboarding' if onboarding_data is not None else 'default',
+            channel_source='onboarding' if onboarding_data is not None else 'default',
+        )
+        financial_breakdown = _calculator.calculate_breakdown(_hotel_fin_data)
+        print(f"[FASE-G] FinancialBreakdown calculado:")
+        print(f"   Comisión OTA: ${financial_breakdown.monthly_ota_commission_cop:,.0f} COP")
+        print(f"   Evidence Tier: {financial_breakdown.evidence_tier}")
+        print(f"   Data sources: {list(financial_breakdown.hotel_data_sources.keys())}")
+    except Exception as e:
+        print(f"[FASE-G] Warning: FinancialBreakdown falló: {e}")
+
+    # Build breakdown dict for JSON (safe even if financial_breakdown is None)
+    _breakdown_dict = {}
+    if financial_breakdown:
+        _breakdown_dict = {
+            'ota_commission_cop': financial_breakdown.monthly_ota_commission_cop,
+            'ota_commission_basis': financial_breakdown.ota_commission_basis,
+            'ota_commission_source': financial_breakdown.ota_commission_source,
+            'shift_savings_cop': financial_breakdown.shift_savings_cop,
+            'shift_percentage': financial_breakdown.shift_percentage,
+            'shift_source': financial_breakdown.shift_source,
+            'ia_revenue_cop': financial_breakdown.ia_revenue_cop,
+            'ia_boost_percentage': financial_breakdown.ia_boost_percentage,
+            'ia_source': financial_breakdown.ia_source,
+            'evidence_tier': financial_breakdown.evidence_tier,
+            'disclaimer': financial_breakdown.disclaimer,
+            'data_sources': financial_breakdown.hotel_data_sources,
+        }
+
     # Save scenarios
     scenarios_path = output_dir / "financial_scenarios.json"
     with open(scenarios_path, 'w', encoding='utf-8') as f:
@@ -1728,6 +1770,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             },
             'scenarios': scenarios_dict,
             'expected_monthly_cop': expected_monthly,
+            'breakdown': _breakdown_dict,
             'pricing': {
                 'tier': pricing_result.tier,
                 'monthly_price_cop': pricing_result.monthly_price_cop,
@@ -1891,18 +1934,21 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         conservative=Scenario(
             monthly_loss_min=conservative_value,
             monthly_loss_max=int(conservative_value * 1.2),
+            monthly_loss_central=conservative_value,  # FASE-G: valor central
             probability=0.70,
             description="Peor caso plausible",
             monthly_opportunity_cop=0),
         realistic=Scenario(
             monthly_loss_min=int(realistic_value * 0.8),
             monthly_loss_max=int(realistic_value * 1.2),
+            monthly_loss_central=realistic_value,  # FASE-G: valor central
             probability=0.20,
             description="Meta esperada",
             monthly_opportunity_cop=0),
         optimistic=Scenario(
             monthly_loss_min=int(optimistic_value * 0.8) if optimistic_value > 0 else int(optimistic_value * 1.2),
             monthly_loss_max=optimistic_value,
+            monthly_loss_central=optimistic_value,  # FASE-G: valor central
             probability=0.10,
             description="Mejor caso" if optimistic_value > 0 else "Caso de equilibrio (ahorro en comisiones)",
             monthly_opportunity_cop=optimistic_opportunity)
@@ -2079,6 +2125,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         coherence_score=pre_coherence_score,
         region=region,  # FASE-DRECONEXION-V6: Pasar region para templates V6
         analytics_data=analytics_data,  # INTEGRACION-ANALYTICS-E2E: activa transparencia analytics
+        financial_breakdown=financial_breakdown,  # FASE-G: breakdown con evidence tiers
     )
     print(f"[OK] Diagnóstico regenerado con coherence_score: {pre_coherence_score:.2f}")
 
@@ -2129,6 +2176,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             pricing_result=pricing_result,  # FASE 13: Usar pricing_result para consistencia con financial_scenarios.json
             region=region,  # FASE-DRECONEXION-V6: Pasar region para templates V6
             analytics_data=analytics_data,  # ANALYTICS-02: pasar analytics_data al proposal
+            financial_breakdown=financial_breakdown,  # FASE-G: breakdown con evidence tiers
         )
     if proposal_path:
         print(f"[OK] Propuesta generada: {proposal_path}")

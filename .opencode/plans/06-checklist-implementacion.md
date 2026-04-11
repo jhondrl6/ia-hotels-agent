@@ -68,10 +68,11 @@ A → D → G
 - Disclaimer honesto por tier
 
 ### FASE-G (Integración + E2E)
-- main.py orquesta todo
-- Prueba con Amaziliahotel
-- Verificar 4 criterios de éxito
-- Git commit final
+- [x] main.py orquesta FinancialBreakdown + monthly_loss_central + paso a generadores
+- [x] Prueba con Amaziliahotel — exit code 0
+- [x] 4 criterios de éxito verificados (breakdown poblado, evidence tier C, $2.610.000 central, data_sources)
+- [x] 453 tests pasados, 0 failures
+- [x] Git commit final
 
 ---
 
@@ -92,3 +93,4 @@ A → D → G
 | Sesión | Fase | Fecha | Resultado |
 |--------|------|-------|-----------|
 | 1 | FASE-A | 2026-04-10 | ✅ Completada — 9/9 tests pasan, 418 tests suite intacta |
+| 7 | FASE-G | 2026-04-11 | ✅ Completada — 453 tests, E2E Amaziliahotel exit code 0, breakdown poblado |

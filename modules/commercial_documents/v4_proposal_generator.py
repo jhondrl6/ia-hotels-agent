@@ -154,6 +154,7 @@ class V4ProposalGenerator:
         pricing_result: Optional[PricingResolutionResult] = None,
         region: Optional[str] = None,
         analytics_data: Optional[Dict[str, Any]] = None,
+        financial_breakdown: Optional[Any] = None,
     ) -> str:
         """
         Generate the proposal document.

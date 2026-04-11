@@ -2278,6 +2278,28 @@ _Ninguno_
 ---
 
 
+## FASE-G - 2026-04-11
+**Descripcion:** Integración main.py + validación end-to-end rediseño motor financiero
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (453 passed E2E Amaziliahotel exit 0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.91 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
