@@ -471,7 +471,7 @@ ${quick_wins_list}
             
             # Financial impact
             'empathy_message': empathy_message,
-            'main_scenario_amount': format_cop(main_scenario.monthly_loss_max),
+            'main_scenario_amount': main_scenario.format_loss_cop(),
             'main_scenario_description': main_scenario.description,
             'main_confidence': str(int(main_scenario.confidence_score * 100)),
             
@@ -1731,7 +1731,7 @@ ${quick_wins_list}
     def _build_urgencia_content(self, financial_scenarios: FinancialScenarios, hotel_name: str) -> str:
         """Build urgency content explaining why the hotel should act now."""
         main = financial_scenarios.get_main_scenario()
-        loss_monthly = format_cop(main.monthly_loss_max)
+        loss_monthly = main.format_loss_cop()
         confidence = int(main.confidence_score * 100)
         
         return (
