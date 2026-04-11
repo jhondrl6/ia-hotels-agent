@@ -1,4 +1,4 @@
-<!-- agents_version: 4.26.0 | last_update: 2026-04-10 -->
+<!-- agents_version: 4.26.0 | last_update: 2026-04-11 -->
 
 # IA Hoteles Agent (iah-cli)
 

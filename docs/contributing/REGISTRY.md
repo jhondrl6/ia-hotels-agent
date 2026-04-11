@@ -1,8 +1,46 @@
 # Registro de Fases - IA Hoteles Agent
 
-|> **Ultima actualizacion:** 2026-04-10
-|> **Version actual:** v4.25.3
-|> **Total fases completadas:** 64
+|> **Ultima actualizacion:** 2026-04-11
+|> **Version actual:** v4.26.0
+|> **Total fases completadas:** 66
+
+---
+
+## FASE-D: Scraper→ADR — Precio Web como Fuente de ADR (v4.26.0) - 2026-04-11
+
+**Descripcion:** Conexión del precio scrapeado (`precio_promedio`) como fuente intermedia de ADR en la cadena de fallback.
+
+**Archivos Modificados:**
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/adr_resolution_wrapper.py` | ADRSource.WEB_SCRAPING + resolve() con parámetro web_scraping_adr |
+| `main.py` | Extrae precio_promedio del scraper y pasa a adr_resolver |
+| `tests/financial_engine/test_adr_resolution_wrapper.py` | 5 tests nuevos |
+
+**Validaciones:**
+- [x] 42/42 tests ADR pasan (37 existentes + 5 nuevos)
+- [x] Fallback chain: onboarding > scraping > benchmark > hardcode
+- [x] log_phase_completion.py ejecutado
+
+---
+
+## FASE-C: Pesos Normalizados + DynamicImpactCalculator (v4.26.0) - 2026-04-11
+
+**Descripcion:** Normalización de pesos de brechas (suma siempre 100%) + integración DynamicImpactCalculator como fuente dinámica.
+
+**Archivos Modificados:**
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | _normalize_weights(), _get_brecha_pesos(), _map_brecha_to_issue_type() |
+| `tests/commercial_documents/test_diagnostic_brechas.py` | 7 tests nuevos |
+
+**Validaciones:**
+- [x] 649 tests suite pasan (4 pre-existing failures ajenas)
+- [x] Suma de pesos siempre 100% ±0.1
+- [x] DynamicImpactCalculator integrado con fallback limpio
+- [x] log_phase_completion.py ejecutado
 
 ---
 
