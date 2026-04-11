@@ -59,5 +59,9 @@
   "modules/financial_engine/scenario_calculator.py": "FASE-B",
   "tests/financial_engine/test_scenario_calculator.py": "FASE-B",
   "modules/financial_engine/adr_resolution_wrapper.py": "FASE-D",
-  "modules/validation/coherence_validator.py": "FASE-E"
+  "modules/validation/coherence_validator.py": "FASE-E",
+  "modules/financial_engine/regional_adr_resolver.py": "FASE-H",
+  "modules/scrapers/scraper_fallback.py": "FASE-H",
+  "tests/financial_engine/test_regional_adr_resolver.py": "FASE-H",
+  ".opencode/plans/context/diagnostico_3132_cop_investigacion.md": "FASE-H"
 }
