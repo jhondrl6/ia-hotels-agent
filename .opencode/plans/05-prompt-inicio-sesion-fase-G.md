@@ -1,8 +1,8 @@
-# FASE-G: Dual Source Conflict Resolution
+# FASE-G: Integración main.py + Validación End-to-End
 
 **ID**: FASE-G
-**Objetivo**: Eliminar el conflicto de fuentes duales donde `_inject_brecha_scores()` sobrescribe silenciosamente las variables `brecha_{N}_nombre/costo/detalle` que `_get_brecha_*()` ya populó, y conectar impactos reales de brechas al proposal generator
-**Dependencias**: FASE-F completada (phantom cost fix en proposal generator)
+**Objetivo**: Conectar todos los componentes en `main.py`: construir `FinancialBreakdown` con datos de FASE-B, pasar `monthly_loss_central` a los Scenarios, propagar breakdown a los generadores, y ejecutar prueba end-to-end con Amaziliahotel para verificar que el documento final cumple los 4 criterios de éxito.
+**Dependencias**: FASE-F (template + evidence tiers), FASE-D (scraper→ADR)
 **Duración estimada**: 3-4 horas
 **Skill**: `iah-cli-phased-execution`
 
@@ -10,146 +10,232 @@
 
 ## Contexto
 
-### Problema Detectado
+Esta es la fase de integración. Todos los componentes existen:
+- `FinancialBreakdown` (FASE-A)
+- `ScenarioCalculator.calculate_breakdown()` (FASE-B)
+- Pesos normalizados (FASE-C)
+- Scraper→ADR (FASE-D)
+- Consumidores actualizados (FASE-E)
+- Template con evidence tiers (FASE-F)
 
-En `v4_diagnostic_generator.py` existen dos fuentes que populan las mismas variables de template:
-
-1. **Fuente A** (líneas 510-521): `_get_brecha_nombre()`, `_get_brecha_costo()`, `_get_brecha_detalle()` — usan `_identify_brechas()` con impactos reales
-2. **Fuente B** (línea 586): `_inject_brecha_scores()` (FASE-C) — usa `OpportunityScorer` con datos potencialmente diferentes
-
-El problema: `_inject_brecha_scores()` hace `data.update(score_vars)` en líneas 2014-2015, **sobrescribiendo** los valores que la Fuente A ya estableció. Esto puede producir:
-- Nombres diferentes para la misma brecha
-- Costos diferentes para la misma brecha
-- Detalles inconsistentes en el documento final
-
-Además, la conexión entre diagnóstico y propuesta está rota: el proposal generator no consume los `impacto` reales de `_identify_brechas()`.
+Ahora `main.py` debe orquestar todo:
+1. Resolver ADR con scraping fallback (FASE-D ya tocó la llamada)
+2. Calcular FinancialBreakdown vía ScenarioCalculator
+3. Construir FinancialScenarios con `monthly_loss_central`
+4. Pasar breakdown a los generadores
+5. Verificar documento final end-to-end
 
 ### Estado de Fases Anteriores
 | Fase | Estado |
 |------|--------|
-| FASE-F | ✅ Completada — phantom costs eliminados |
+| FASE-A | ✅ Completada |
+| FASE-B | ✅ Completada |
+| FASE-C | ✅ Completada |
+| FASE-D | ✅ Completada |
+| FASE-E | ✅ Completada |
+| FASE-F | ✅ Completada |
 
 ### Base Técnica Disponible
-- Archivo: `modules/commercial_documents/v4_diagnostic_generator.py`
-- `_identify_brechas()` → detecta brechas con `impacto` real (0.30, 0.25, etc.)
-- `_get_brecha_costo(audit_result, financial_scenarios, index)` → calcula costo con impacto real
-- `_inject_brecha_scores()` (líneas 1976-2024) → OpportunityScorer scores, SOBRESCRIBE nombres/costos
-- `OpportunityScorer` en `modules/financial_engine/opportunity_scorer.py`
-- Tests: `tests/commercial_documents/test_diagnostic_brechas.py`
+- `main.py` — función `cmd_v4complete()` (~2000 líneas)
+- Bloques clave:
+  - Líneas 507-508: Scraper ejecuta, `hotel_data` disponible
+  - Línea 1526: ADR resolution (FASE-D ya pasó web_scraping_adr)
+  - Líneas 1664-1715: Cálculo financiero y guardado en JSON
+  - Líneas 1875-1894: Construcción de FinancialScenarios
+  - Líneas 1900+: Llamada a generadores (diagnostic, proposal)
+- Caso de prueba: Amaziliahotel (datos en Sección 8 del archivo de investigación)
 
 ---
 
 ## Tareas
 
-### Tarea 1: Unificar fuentes — _inject_brecha_scores NO debe sobrescribir
+### Tarea 1: Construir FinancialBreakdown en el bloque financiero de main.py
 
-**Objetivo**: Modificar `_inject_brecha_scores()` para que no sobrescriba `brecha_{N}_nombre`, `brecha_{N}_costo`, `brecha_{N}_detalle` si ya están populados por la fuente principal
+**Objetivo**: Después de obtener ADR y hotel_data, llamar `calculate_breakdown()`.
 
-**Archivos afectados**:
-- `modules/commercial_documents/v4_diagnostic_generator.py` (líneas 1976-2024)
+**Archivo afectado**: `main.py` (~línea 1664, después del cálculo de escenarios)
 
-**Estrategia**:
-- `_inject_brecha_scores()` debe inyectar SOLO las variables de score: `brecha_{N}_score`, `brecha_{N}_severity`, `brecha_{N}_effort`, `brecha_{N}_priority`
-- NO debe sobrescribir `nombre`, `costo`, `detalle` que ya fueron establecidos por `_get_brecha_*()`
-- Si un score no existe para una brecha dada, dejar el valor existente sin tocar
-
-**Código a modificar** (líneas ~2014-2015):
+**Cambios**:
 ```python
-# ANTES (sobrescribe):
-data.update(score_vars)
+# Después del cálculo de escenarios existente:
+calc_result = calculator.calculate_scenarios(hotel_financial_data)
+expected_monthly = calc_result.get_realistic_loss()
 
-# DESPUÉS (selectivo):
-for key, value in score_vars.items():
-    if key not in data or not data[key]:
-        data[key] = value
-    elif key.endswith(('_score', '_severity', '_effort', '_priority')):
-        data[key] = value  # Score vars siempre se actualizan
-    # nombre, costo, detalle: NO sobrescribir si ya tienen valor
+# NUEVO: Calcular breakdown con los mismos datos
+financial_breakdown = calculator.calculate_breakdown(hotel_financial_data)
+
+# Guardar breakdown en financial_scenarios.json para auditoría
+financial_data['breakdown'] = {
+    'ota_commission_cop': financial_breakdown.monthly_ota_commission_cop,
+    'ota_commission_basis': financial_breakdown.ota_commission_basis,
+    'ota_commission_source': financial_breakdown.ota_commission_source,
+    'shift_savings_cop': financial_breakdown.shift_savings_cop,
+    'shift_percentage': financial_breakdown.shift_percentage,
+    'shift_source': financial_breakdown.shift_source,
+    'ia_revenue_cop': financial_breakdown.ia_revenue_cop,
+    'ia_boost_percentage': financial_breakdown.ia_boost_percentage,
+    'ia_source': financial_breakdown.ia_source,
+    'evidence_tier': financial_breakdown.evidence_tier,
+    'disclaimer': financial_breakdown.disclaimer,
+    'data_sources': financial_breakdown.hotel_data_sources,
+}
 ```
 
 **Criterios de aceptación**:
-- [ ] `brecha_{N}_nombre` de `_get_brecha_nombre()` NO es sobrescrito por `_inject_brecha_scores()`
-- [ ] `brecha_{N}_costo` de `_get_brecha_costo()` NO es sobrescrito
-- [ ] `brecha_{N}_score/severity/effort/priority` SÍ se actualizan (comportamiento correcto)
-- [ ] El diagnóstico generado muestra nombres y costos consistentes
+- [ ] `calculate_breakdown()` se llama con `hotel_financial_data`
+- [ ] Breakdown se guarda en `financial_scenarios.json`
+- [ ] Si falla, no crashea el flujo (try/except con log)
 
-### Tarea 2: Conectar impactos reales al proposal generator via DiagnosticSummary
+### Tarea 2: Construir FinancialScenarios con `monthly_loss_central`
 
-**Objetivo**: Extender `DiagnosticSummary` para incluir brechas con impacto real, y consumirlas en el proposal generator
+**Objetivo**: Las instancias de Scenario ahora incluyen el valor central.
 
-**Archivos afectados**:
-- `modules/commercial_documents/data_structures.py` (agregar campo a DiagnosticSummary)
-- `modules/commercial_documents/v4_proposal_generator.py` (consumir brechas reales)
+**Archivo afectado**: `main.py` líneas 1875-1894
 
-**Implementación**:
-
-1. En `data_structures.py`, agregar a `DiagnosticSummary`:
+**Cambios**:
 ```python
-@dataclass
-class DiagnosticSummary:
-    # ... campos existentes ...
-    brechas_reales: Optional[List[Dict[str, Any]]] = None  # NUEVO: desde _identify_brechas
-```
+# ANTES:
+realistic_value = calc_result.get_realistic_loss()  # $2,610,000
+financial_scenarios_obj = FinancialScenarios(
+    realistic=Scenario(
+        monthly_loss_min=int(realistic_value * 0.8),     # $2,088,000
+        monthly_loss_max=int(realistic_value * 1.2),     # $3,132,000
+        probability=0.20,
+        description="Meta esperada",
+        monthly_opportunity_cop=0),
+    ...
+)
 
-2. En `v4_diagnostic_generator.py`, donde se construye `DiagnosticSummary`:
-```python
-# Incluir brechas reales
-brechas_reales = self._identify_brechas(audit_result)
-diagnostic_summary = DiagnosticSummary(
-    # ... campos existentes ...
-    brechas_reales=brechas_reales,  # NUEVO
+# DESPUÉS:
+realistic_value = calc_result.get_realistic_loss()  # $2,610,000
+financial_scenarios_obj = FinancialScenarios(
+    realistic=Scenario(
+        monthly_loss_min=int(realistic_value * 0.8),     # $2,088,000 (piso)
+        monthly_loss_max=int(realistic_value * 1.2),     # $3,132,000 (techo, para rangos)
+        monthly_loss_central=realistic_value,             # $2,610,000 ← VALOR CENTRAL
+        probability=0.20,
+        description="Meta esperada",
+        monthly_opportunity_cop=0),
+    conservative=Scenario(
+        monthly_loss_min=conservative_value,
+        monthly_loss_max=int(conservative_value * 1.2),
+        monthly_loss_central=conservative_value,           # NUEVO
+        probability=0.70,
+        description="Peor caso plausible",
+        monthly_opportunity_cop=0),
+    optimistic=Scenario(
+        monthly_loss_min=int(optimistic_value * 0.8) if optimistic_value > 0 else int(optimistic_value * 1.2),
+        monthly_loss_max=optimistic_value,
+        monthly_loss_central=optimistic_value,              # NUEVO
+        probability=0.10,
+        description="Mejor caso",
+        monthly_opportunity_cop=optimistic_opportunity),
 )
 ```
 
-3. En `v4_proposal_generator.py` `_prepare_template_data()` (reemplazando el código de FASE-F):
-```python
-# Consumir brechas reales si están disponibles
-top_problems = diagnostic_summary.top_problems or []
-brechas_reales = getattr(diagnostic_summary, 'brechas_reales', None) or []
-max_brechas = 4
-brecha_data = {}
+**Criterios de aceptación**:
+- [ ] Los 3 Scenarios tienen `monthly_loss_central` poblado
+- [ ] `monthly_loss_max` se mantiene como techo del rango (NO se elimina)
+- [ ] El valor central es el valor calculado (sin x1.2)
 
-for i in range(max_brechas):
-    slot = i + 1
-    if i < len(brechas_reales):
-        # Fuente primaria: impacto real de _identify_brechas
-        brecha = brechas_reales[i]
-        impacto = brecha.get('impacto', 1.0 / max(len(brechas_reales), 1))
-        brecha_data[f'brecha_{slot}_nombre'] = brecha.get('nombre', '')
-        brecha_data[f'brecha_{slot}_costo'] = format_cop(
-            int(main_scenario.monthly_loss_max * impacto)
-        )
-    elif i < len(top_problems):
-        # Fallback: top_problems sin impacto real
-        brecha_data[f'brecha_{slot}_nombre'] = top_problems[i]
-        brecha_data[f'brecha_{slot}_costo'] = format_cop(
-            int(main_scenario.monthly_loss_max / len(top_problems))
-        )
-    else:
-        brecha_data[f'brecha_{slot}_nombre'] = ""
-        brecha_data[f'brecha_{slot}_costo'] = "$0"
+### Tarea 3: Pasar breakdown a los generadores
+
+**Objetivo**: Los generadores de diagnóstico y propuesta reciben el breakdown.
+
+**Archivo afectado**: `main.py` (~líneas 1900+)
+
+**Cambios**:
+```python
+# Pasar breakdown a generador de diagnóstico
+diagnostic_result = diagnostic_generator.generate(
+    audit_result=audit_result,
+    financial_scenarios=financial_scenarios_obj,
+    financial_breakdown=financial_breakdown,  # NUEVO parámetro
+    ...
+)
+
+# Pasar breakdown a generador de propuesta (si aplica)
+proposal_result = proposal_generator.generate(
+    financial_scenarios=financial_scenarios_obj,
+    financial_breakdown=financial_breakdown,  # NUEVO parámetro
+    ...
+)
+```
+
+**Nota**: Verificar las firmas de los generadores. Si el parámetro `financial_breakdown` no existe en sus firmas, agregarlo como opcional (`financial_breakdown=None`). Los generadores deben funcionar sin breakdown (backward compat).
+
+**Criterios de aceptación**:
+- [ ] `financial_breakdown` se pasa a ambos generadores
+- [ ] Si los generadores no lo soportan, se agrega como parámetro opcional
+- [ ] Si el generador no recibe breakdown, funciona como antes
+
+### Tarea 4: Prueba End-to-End con Amaziliahotel
+
+**Objetivo**: Ejecutar el flujo completo y verificar los 4 criterios de éxito.
+
+**Datos de Amaziliahotel**:
+```
+hotel: amaziliahotel.com
+region: eje_cafetero
+rooms: 10, adr: 300,000, occupancy: 50%, direct_channel: 20%
+```
+
+**Criterios de éxito del documento generado**:
+
+| # | Criterio | Verificación | Valor esperado |
+|---|----------|-------------|----------------|
+| 1 | Rastreable a fuente | Cada dato tiene fuente documentada | `hotel_data_sources` no vacío |
+| 2 | Proporcional | Pesos de brechas suman 100% | Suma de impactos = ~100% |
+| 3 | Etiquetado VERIFIED/ESTIMATED | Evidence tier visible | Tier C en YAML + disclaimer |
+| 4 | Basado en hecho verificable | Comisión OTA como dato principal | $5,400,000 COP visible |
+| 5 | Valor central (no techo) | Cifra principal = realistic sin x1.2 | $2,610,000 (no $3,132,000) |
+| 6 | Pesos normalizados | No hay porción "sin explicar" | 4 brechas = 100% |
+
+**Comando de prueba**:
+```bash
+cd /mnt/c/Users/Jhond/Github/iah-cli
+./venv/Scripts/python.exe main.py --url https://amaziliahotel.com --full-audit
+```
+
+**Verificar en output**:
+```bash
+# 1. Comisión OTA aparece como dato principal
+grep "5.400.000" output/v4_complete/diagnostico_*.md
+
+# 2. Evidence tier en YAML
+grep "evidence_tier" output/v4_complete/diagnostico_*.md
+
+# 3. Valor central (no inflado)
+grep "2.610.000" output/v4_complete/diagnostico_*.md
+
+# 4. No muestra el valor inflado
+# grep "3.132.000" NO debe aparecer como cifra principal
+
+# 5. Breakdown en JSON
+cat output/v4_complete/financial_scenarios.json | grep -A 20 "breakdown"
 ```
 
 **Criterios de aceptación**:
-- [ ] `DiagnosticSummary.brechas_reales` contiene las brechas con `impacto` real
-- [ ] Proposal generator usa `impacto` real cuando `brechas_reales` está disponible
-- [ ] Fallback a `top_problems` cuando `brechas_reales` es None (backward compatible)
-- [ ] Los costos en la propuesta reflejan los pesos reales de cada brecha
-- [ ] Si low_gbp_score tiene impacto 0.30, su costo = 30% de monthly_loss_max
+- [ ] End-to-end ejecuta sin errores
+- [ ] Documento muestra comisión OTA como dato principal
+- [ ] Evidence tier (C) visible en YAML header
+- [ ] Valor central ($2.6M) no valor inflado ($3.1M)
+- [ ] Pesos de brechas suman 100%
+- [ ] Disclaimer aparece en el documento
 
-### Tarea 3: Tests para dual source resolution
+### Tarea 5: Suite de regresión completa
 
-**Tests a crear**:
+**Objetivo**: Verificar que NO se rompió nada existente.
 
-1. `test_brecha_scores_dont_overwrite_nombre`: Verificar que `_inject_brecha_scores` no cambia nombres
-2. `test_brecha_scores_dont_overwrite_costo`: Verificar que costos de impacto real se preservan
-3. `test_diagnostic_summary_includes_brechas_reales`: DiagnosticSummary tiene brechas_reales populadas
-4. `test_proposal_uses_real_impact_weights`: Proposal usa impacto real, no distribución fija
-5. `test_backward_compatible_without_brechas_reales`: Sin brechas_reales, usa top_problems como fallback
+**Comando**:
+```bash
+cd /mnt/c/Users/Jhond/Github/iah-cli
+./venv/Scripts/python.exe -m pytest tests/ -x -q 2>&1 | tail -30
+```
 
 **Criterios de aceptación**:
-- [ ] 5 tests nuevos pasando
-- [ ] Tests existentes en `test_diagnostic_brechas.py` sin regresiones
+- [ ] 0 failures
+- [ ] 0 errors
 
 ---
 
@@ -157,91 +243,69 @@ for i in range(max_brechas):
 
 | Test | Archivo | Criterio de Éxito |
 |------|---------|-------------------|
-| `test_brecha_scores_dont_overwrite_nombre` | `tests/commercial_documents/test_diagnostic_brechas.py` | nombre preservado |
-| `test_brecha_scores_dont_overwrite_costo` | `tests/commercial_documents/test_diagnostic_brechas.py` | costo preservado |
-| `test_diagnostic_summary_includes_brechas_reales` | `tests/commercial_documents/test_diagnostic_brechas.py` | campo populado |
-| `test_proposal_uses_real_impact_weights` | `tests/test_proposal_alignment.py` | costo = impacto * loss |
-| `test_backward_compatible_without_brechas_reales` | `tests/test_proposal_alignment.py` | fallback funciona |
+| E2E Amaziliahotel | `output/v4_complete/` | Genera sin errores |
+| Comisión OTA visible | output diagnostico | $5,400,000 aparece |
+| Evidence tier | output diagnostico YAML | Tier C |
+| Valor central | output diagnostico | $2,610,000 |
+| Pesos normalizados | output diagnostico | Suma ~100% |
+| Suite completa | `tests/` | 0 failures |
 
 **Comando de validación**:
 ```bash
-cd /mnt/c/Users/Jhond/Github/iah-cli
-./venv/Scripts/python.exe -m pytest tests/commercial_documents/test_diagnostic_brechas.py tests/test_proposal_alignment.py -v
+./venv/Scripts/python.exe -m pytest tests/ -x -q 2>&1 | tail -30
 ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
 ```
 
 ---
 
+## Restricciones
+
+- Esta fase toca `main.py` en zonas específicas. NO refactorizar main.py más allá de lo necesario
+- Los bloques de construcción de Scenario (con/optimistic) siguen teniendo monthly_loss_max como TECHO del rango — NO eliminarlo
+- Si el end-to-end falla, debuggear y fixear antes de marcar como completa
+- La ejecución de v4complete puede requerir conexión a internet (scraping real)
+
+---
+
 ## Post-Ejecución (OBLIGATORIO)
 
-Al finalizar esta fase, actualizar INMEDIATAMENTE:
-
-1. **`dependencias-fases.md`**: Marcar FASE-G como ✅ Completada
-2. **`06-checklist-implementacion.md`**: Marcar items de FASE-G como ✅
-3. **`09-documentacion-post-proyecto.md`**: Sección A, D, E
-4. **`scripts/log_phase_completion.py`**:
+1. **`dependencias-fases.md`** — Marcar FASE-G como ✅ Completada
+2. **`06-checklist-implementacion.md`** — Marcar FASE-G, proyecto completo
+3. **`09-documentacion-post-proyecto.md`** — Completar todas las secciones
+4. **Ejecutar**:
 ```bash
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-G \
-    --desc "Dual source conflict resolution + real impact weights in proposal" \
-    --archivos-mod "modules/commercial_documents/v4_diagnostic_generator.py,modules/commercial_documents/v4_proposal_generator.py" \
-    --archivos-nuevos "" \
-    --tests "5" \
+    --desc "Integración main.py + validación end-to-end rediseño motor financiero" \
+    --archivos-mod "main.py" \
+    --tests "e2e" \
+    --coherence 0.91 \
     --check-manual-docs
+```
+5. **Git commit**:
+```bash
+git add -A && git commit -m "Rediseño motor financiero: FinancialBreakdown + narrativa verificable + pesos normalizados + evidence tiers
+
+- FASE-A: FinancialBreakdown dataclass + EvidenceTier enum
+- FASE-B: ScenarioCalculator.calculate_breakdown() por capas
+- FASE-C: Pesos normalizados (suma=100%) + DynamicImpactCalculator
+- FASE-D: Scraper→ADR con WEB_SCRAPING como fuente
+- FASE-E: 22 consumidores actualizados de max a central
+- FASE-F: Template narrativa Comisión OTA + evidence tiers
+- FASE-G: Integración main.py + validación end-to-end"
 ```
 
 ---
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] **Tests nuevos pasan**: 5/5 dual source tests exitosos
-- [ ] **Tests existentes pasan**: 0 regresiones en suite completa
-- [ ] **Validaciones del proyecto**: `run_all_validations.py --quick` pasa
-- [ ] **No overwrite silencioso**: `_inject_brecha_scores` no cambia nombre/costo/detalle
-- [ ] **Impactos reales conectados**: Proposal muestra costos basados en pesos reales
-- [ ] **Backward compatible**: Sin brechas_reales, el sistema funciona como antes
-- [ ] **Post-ejecución completada**: dependencias, checklist, docs actualizados
-
----
-
-## Restricciones
-
-- NO modificar template archivos en esta fase
-- NO modificar `data_structures.py` más allá de agregar `brechas_reales` (dedup es FASE-I)
-- NO modificar `OpportunityScorer` directamente — solo cómo se consumen sus resultados
-- Preservar retrocompatibilidad con DiagnosticSummary existente
-- El cambio debe ser transparente para el template V6 (no usa brechas)
-
----
-
-## Prompt de Ejecución
-
-```
-Actúa como arquitecto Python senior especializado en integridad de datos.
-
-OBJETIVO: Eliminar dual source conflict y conectar impactos reales de brechas al proposal.
-
-CONTEXTO:
-- v4_diagnostic_generator.py tiene 2 fuentes que populan las mismas variables
-- _inject_brecha_scores() sobrescribe _get_brecha_*() silenciosamente
-- FASE-F ya eliminó phantom costs en proposal generator
-- DiagnosticSummary necesita campo nuevo: brechas_reales
-
-TAREAS:
-1. Modificar _inject_brecha_scores para NO sobrescribir nombre/costo/detalle
-2. Agregar brechas_reales a DiagnosticSummary
-3. Proposal generator consume brechas_reales.impacto para costos reales
-4. Fallback a top_problems cuando brechas_reales=None
-5. 5 tests nuevos
-
-CRITERIOS:
-- 0 overwrites silenciosos
-- Costos reflejan pesos reales (0.30, 0.25, etc.)
-- Backward compatible
-- run_all_validations.py --quick pasa
-
-VALIDACIONES:
-- pytest tests/commercial_documents/test_diagnostic_brechas.py -v
-- pytest tests/test_proposal_alignment.py -v
-- python scripts/run_all_validations.py --quick
-```
+- [ ] `main.py` construye FinancialBreakdown y lo pasa a generadores
+- [ ] FinancialScenarios incluye `monthly_loss_central` en los 3 escenarios
+- [ ] End-to-end ejecuta sin errores con Amaziliahotel
+- [ ] Documento final cumple los 4 criterios de éxito (rastreable, proporcional, etiquetado, verificable)
+- [ ] Valor central ($2.6M) no valor inflado ($3.1M)
+- [ ] Comisión OTA ($5.4M) aparece como dato principal verificable
+- [ ] Evidence tier visible en YAML header
+- [ ] Suite de tests completa pasa (0 failures)
+- [ ] `log_phase_completion.py` ejecutado
+- [ ] Git commit realizado

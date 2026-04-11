@@ -1,82 +1,55 @@
-# Plan: Brecha Architectural Fix
+# Plan: Rediseño Motor Financiero (Opción C)
 
-**Proyecto**: Eliminar gap entre detección de brechas (diagnóstico) y presentación (propuesta)
-**Versión Base**: v4.25.3
-**Versión Target**: v4.26.0
-**Creado**: 2026-04-10
-**Estado**: 🔲 PREPARACIÓN COMPLETA — Listo para implementación por fases
+**Proyecto**: iah-cli — Motor de Cuantificación Financiera v2
+**Fecha**: 2026-04-10
+**Estado**: Preparación completa — listo para ejecución por fases
 
 ---
 
-## Resumen del Problema
+## Resumen
 
-El diagnóstico detecta brechas reales con impactos específicos (0.30, 0.25, etc.) pero la propuesta usa una distribución fija 40/30/20/10. Esto produce:
+Rediseño completo del motor financiero para que cada costo en COP sea:
+1. Rastreable a una fuente
+2. Proporcional (pesos que suman 100%)
+3. Honestamente etiquetado (VERIFIED vs ESTIMATED)
+4. Basado en un hecho verificable cuando sea posible
 
-1. **Phantom costs**: Brechas inexistentes con valores COP reales
-2. **Costos no proporcionales**: No reflejan la severidad real de cada problema
-3. **Dual source conflict**: Dos sistemas sobrescriben las mismas variables
-4. **Performance**: _identify_brechas calculado 9 veces innecesariamente
-5. **Deuda técnica**: Código duplicado en data_structures.py
+## Contexto
 
----
-
-## Estructura del Plan
-
-```
-.opencode/plans/
-├── README.md                              ← ESTE ARCHIVO
-├── dependencias-fases.md                  ← Diagrama y conflictos
-├── 05-prompt-inicio-sesion-fase-F.md      ← Phantom Cost Fix
-├── 05-prompt-inicio-sesion-fase-G.md      ← Dual Source Resolution
-├── 05-prompt-inicio-sesion-fase-H.md      ← Cache + Cleanup
-├── 05-prompt-inicio-sesion-fase-I.md      ← Deduplication
-├── 05-prompt-inicio-sesion-fase-J.md      ← E2E Validation + Release
-├── 06-checklist-implementacion.md         ← Checklist maestro
-├── 09-documentacion-post-proyecto.md      ← Docs incrementales
-└── context/
-    └── gap-arquitectonico-propuesta-v6-brechas.md  ← Contexto original
-```
-
----
+- Investigación completa: `.opencode/plans/context/diagnostico_3132_cop_investigacion.md` (766 líneas)
+- Decisión: Opción C — Rediseño completo (3 capas: presentación + pesos + conceptual)
+- Justificación: "Las soluciones a medias no son soluciones, es aplazar el problema."
+- Promesa del producto (README línea 63): "asigna un costo en COP a cada brecha detectada"
 
 ## Fases
 
-| # | ID | Descripción | Prioridad | Tests | Archivo |
-|---|------|-------------|-----------|-------|---------|
-| 1 | FASE-F | Phantom Cost Fix + Dead Code | CRÍTICA | 5 | `05-prompt-fase-F.md` |
-| 2 | FASE-G | Dual Source Conflict + Impactos Reales | ALTA | 5 | `05-prompt-fase-G.md` |
-| 3 | FASE-H | Cache Performance + Cleanup | MEDIA | 4 | `05-prompt-fase-H.md` |
-| 4 | FASE-I | data_structures Deduplication | MEDIA | 4 | `05-prompt-fase-I.md` |
-| 5 | FASE-J | E2E Validation + Release | ALTA | E2E | `05-prompt-fase-J.md` |
+| Fase | Archivo prompt | Descripción |
+|------|---------------|-------------|
+| A | `05-prompt-inicio-sesion-fase-A.md` | Data Structures + FinancialBreakdown |
+| B | `05-prompt-inicio-sesion-fase-B.md` | ScenarioCalculator narrativa por capas |
+| C | `05-prompt-inicio-sesion-fase-C.md` | Pesos normalizados + DynamicImpact |
+| D | `05-prompt-inicio-sesion-fase-D.md` | Scraper→ADR conexión |
+| E | `05-prompt-inicio-sesion-fase-E.md` | Consumidores (proposal, coherence, asset) |
+| F | `05-prompt-inicio-sesion-fase-F.md` | Template + Evidence Tiers |
+| G | `05-prompt-inicio-sesion-fase-G.md` | Integración main.py + E2E |
 
-**Total**: 5 sesiones de implementación + 18 tests nuevos + 1 release
+## Archivos de Soporte
 
----
+| Archivo | Descripción |
+|---------|-------------|
+| `dependencias-fases.md` | Diagrama de dependencias y conflictos |
+| `06-checklist-implementacion.md` | Estado de cada fase |
+| `09-documentacion-post-proyecto.md` | Documentación incremental |
 
 ## Progreso
 
-| Fase | Estado | Fecha | Commit |
-|------|--------|-------|--------|
-| FASE-F | 🔲 Pendiente | — | — |
-| FASE-G | 🔲 Pendiente | — | — |
-| FASE-H | 🔲 Pendiente | — | — |
-| FASE-I | 🔲 Pendiente | — | — |
-| FASE-J | 🔲 Pendiente | — | — |
-| RELEASE-4.26.0 | 🔲 Pendiente | — | — |
+```
+[A] ⬜ → [B] ⬜ → [E] ⬜ → [F] ⬜ → [G] ⬜
+            ↗                ↑
+       [C] ⬜ ──────────────┘
+       [D] ⬜ ─────────────────────→ [G]
 
----
-
-## Archivos a Modificar (resumen)
-
-| Archivo | Fases | Líneas Clave |
-|---------|-------|-------------|
-| `v4_proposal_generator.py` | F, G | 538-546 (F), _prepare_template_data (G) |
-| `v4_diagnostic_generator.py` | G, H | 510-521 vs 586 (G), 1767-1923 (H) |
-| `data_structures.py` | G, I | DiagnosticSummary (G), Scenario+funcs (I) |
-| `templates/propuesta_v4_template.md` | F (si aplica) | — |
-
----
-
-## Validación Final
-
-Ejecución E2E con `v4complete --url https://amaziliahotel.com` al final de FASE-J para verificar que todas las correcciones funcionan integradas. Baseline previo: 6 brechas, coherence 0.84, READY.
+⬜ = Pendiente
+🔄 = En progreso
+✅ = Completada
+```

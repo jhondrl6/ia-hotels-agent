@@ -1,8 +1,8 @@
-# FASE-F: Phantom Cost Fix + Dead Code Removal
+# FASE-F: Template Diagnóstico + Evidence Tiers en YAML
 
 **ID**: FASE-F
-**Objetivo**: Eliminar el bug crítico de costos fantasma (brechas inexistentes con valores COP reales) y remover código muerto de distribución fija 40/30/20/10
-**Dependencias**: Ninguna (primera fase del proyecto)
+**Objetivo**: Rediseñar el template `diagnostico_v6_template.md` para la narrativa de "Comisión OTA verificable → escenarios de mejora" con evidence tiers. Actualizar `v4_diagnostic_generator.py` para llenar los nuevos placeholders.
+**Dependencias**: FASE-E (consumidores usan valor central)
 **Duración estimada**: 2-3 horas
 **Skill**: `iah-cli-phased-execution`
 
@@ -10,116 +10,244 @@
 
 ## Contexto
 
-### Problema Detectado
+El template actual (`diagnostico_v6_template.md`, 115 líneas) presenta:
+```
+**Pérdida estimada mensual: $3,132,000 COP**
+```
 
-El generador de propuestas (`v4_proposal_generator.py`) usa una distribución fija 40/30/20/10 sobre `monthly_loss_max` para calcular el costo de cada brecha. Cuando existen menos de 4 problemas reales, las brechas faltantes muestran placeholders ("Tercer problema", "Cuarto problema") con valores COP no-cero, atribuyendo pérdidas ficticias al cliente.
+Esto es el techo del rango (x1.2), mezcla hechos con supuestos, y no tiene disclaimers.
 
-**Ejemplo del bug**: Si solo hay 1 brecha real de $10M COP, el sistema muestra:
-- Brecha 1: $4M COP (real)
-- Brecha 2: $3M COP ("Segundo problema" → FICTICIO)
-- Brecha 3: $2M COP ("Tercer problema" → FICTICIO)
-- Brecha 4: $1M COP ("Cuarto problema" → FICTICIO)
+El nuevo template debe presentar:
+```
+COMISIÓN OTA ACTUAL (verificable): $5,400,000 COP/mes
+Desglose: 120 noches OTA × $300,000 ADR × 15% comisión
 
-El cliente ve $6M COP de pérdidas que no existen.
+Potencial de recuperación con mejora digital:
+  Escenario conservador: $X COP/mes
+  Escenario realista: $Y COP/mes
+  Escenario optimista: $Z COP/mes
+  *Estimación basada en benchmarks regionales.
+```
+
+Y en el YAML header:
+```yaml
+financial_evidence_tier: C
+financial_source: financial_scenarios.json#realistic
+financial_value_central: 2610000
+financial_value_range: [2088000, 3132000]
+financial_method: proportional_normalized
+```
+
+### GAP D del archivo de investigación (Sección 14.4):
+El template tiene 4 placeholders financieros (líneas 60, 62, 68, 82) que deben cambiar de "Pérdida" a "Comisión OTA + escenarios".
 
 ### Estado de Fases Anteriores
 | Fase | Estado |
 |------|--------|
-| FASE-F (esta) | 🔲 Pendiente |
+| FASE-A | ✅ Completada |
+| FASE-B | ✅ Completada |
+| FASE-C | ✅ Completada |
+| FASE-D | ✅/⬜ (puede estar pendiente, es independiente) |
+| FASE-E | ✅ Completada |
 
 ### Base Técnica Disponible
-- Archivo principal: `modules/commercial_documents/v4_proposal_generator.py`
-- Template V6: `modules/commercial_documents/templates/propuesta_v6_template.md` — NO usa brechas
-- Template V4: `modules/commercial_documents/templates/propuesta_v4_template.md` — SÍ usa brecha_1..4
-- Tests existentes: `tests/test_proposal_alignment.py`
-- `diagnostic_summary.top_problems: List[str]` — fuente actual de nombres
-- `audit_result: Optional[Any]` — disponible pero NO se usa para brechas
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` (115 líneas)
+- `modules/commercial_documents/v4_diagnostic_generator.py` — llena el template
+- Archivo de investigación Secciones 11.1-11.5 (narrativa propuesta)
+- Archivo de investigación Sección 14.4 (GAP D — estructura exacta del template)
 
 ---
 
 ## Tareas
 
-### Tarea 1: Eliminar distribución fija y código muerto
+### Tarea 1: Rediseñar `diagnostico_v6_template.md`
 
-**Objetivo**: Reemplazar la distribución fija 40/30/20/10 con lógica que respete la cantidad real de problemas
+**Objetivo**: Nuevo template con narrativa por capas y evidence tier.
 
-**Archivos afectados**:
-- `modules/commercial_documents/v4_proposal_generator.py` (líneas 538-546)
+**Archivo afectado**: `modules/commercial_documents/templates/diagnostico_v6_template.md`
 
-**Código actual** (ELIMINAR):
-```python
-# Líneas 538-546 — DISTRIBUCIÓN FIJA (el gap)
-'brecha_1_nombre': diagnostic_summary.top_problems[0] if len(diagnostic_summary.top_problems) > 0 else "Problema no identificado",
-'brecha_1_costo': format_cop(int(main_scenario.monthly_loss_max * 0.4)),
-'brecha_2_nombre': diagnostic_summary.top_problems[1] if len(diagnostic_summary.top_problems) > 1 else "Segundo problema",
-'brecha_2_costo': format_cop(int(main_scenario.monthly_loss_max * 0.3)),
-'brecha_3_nombre': diagnostic_summary.top_problems[2] if len(diagnostic_summary.top_problems) > 2 else "Tercer problema",
-'brecha_3_costo': format_cop(int(main_scenario.monthly_loss_max * 0.2)),
-'brecha_4_nombre': diagnostic_summary.top_problems[3] if len(diagnostic_summary.top_problems) > 3 else "Cuarto problema",
-'brecha_4_costo': format_cop(int(main_scenario.monthly_loss_max * 0.1)),
+**Estructura propuesta** (reemplazar líneas 55-85):
+
+```markdown
+## 💰 Impacto Financiero
+
+### Comisión OTA Actual (verificable)
+
+**${ota_commission_formatted} COP/mes**
+
+Desglose:
+- ${ota_commission_basis}
+- Fuente del dato: ${ota_commission_source}
+
+---
+
+### Oportunidad de Mejora
+
+Brechas detectadas que afectan su presencia digital y reservas directas:
+
+${brechas_section}
+
+---
+
+### Escenarios de Recuperación
+
+| Escenario | Ahorro mensual | Probabilidad |
+|-----------|---------------|--------------|
+| ${scenario_table_rows} |
+
+**Proyección 6 meses:** ${loss_6_months} COP
+
+> ⚠️ ${financial_disclaimer}
+> 
+> *Nivel de evidencia: **Tier ${evidence_tier}***
+> - Tier A: Basado en Google Analytics + Search Console
+> - Tier B: Basado en benchmarks regionales + datos web
+> - Tier C: Basado en datos limitados de su web
 ```
 
-**Código nuevo** (REEMPLAZAR CON):
+**Nuevos placeholders**:
+- `${ota_commission_formatted}` — Comisión OTA formateada en COP
+- `${ota_commission_basis}` — "120 noches OTA × $300K ADR × 15%"
+- `${ota_commission_source}` — "onboarding" / "scraping" / "benchmark"
+- `${scenario_table_rows}` — 3 filas de escenarios
+- `${financial_disclaimer}` — Disclaimer del EvidenceTier
+- `${evidence_tier}` — A, B o C
+
+**Placeholders eliminados/renombrados**:
+- `${monthly_loss}` → reemplazado por comisión OTA + escenarios
+- `${loss_6_months}` → se mantiene pero recalculado con valor central
+
+**Criterios de aceptación**:
+- [ ] Template tiene sección "Comisión OTA Actual (verificable)"
+- [ ] Template tiene sección "Escenarios de Recuperación"
+- [ ] Template tiene evidence tier disclaimer
+- [ ] Template tiene YAML front matter con campos financieros
+
+### Tarea 2: Actualizar YAML front matter del template
+
+**Objetivo**: Agregar metadata financiera rastreable.
+
+**Archivo afectado**: `modules/commercial_documents/templates/diagnostico_v6_template.md`
+
+**Agregar al YAML front matter**:
+```yaml
+financial_evidence_tier: "${evidence_tier}"
+financial_source: "${financial_source_ref}"
+financial_value_central: ${financial_value_central}
+financial_value_range: [${financial_value_min}, ${financial_value_max}]
+financial_method: "${financial_method}"
+```
+
+**Criterios de aceptación**:
+- [ ] YAML header tiene los 5 campos financieros
+- [ ] Los valores son placeholders que el generador llenará
+
+### Tarea 3: Actualizar `v4_diagnostic_generator.py` para llenar nuevos placeholders
+
+**Objetivo**: El generador debe llenar los nuevos placeholders del template con datos de FinancialBreakdown.
+
+**Archivo afectado**: `modules/commercial_documents/v4_diagnostic_generator.py`
+
+**Cambios principales**:
+
+1. Línea ~471 (título del impacto financiero):
 ```python
-# Brecha variables — dinámicas, zero para slots sin problema real
-# Las brechas consumen top_problems (V4 compat) con guard contra phantom costs
-top_problems = diagnostic_summary.top_problems or []
-max_brechas = 4
-brecha_data = {}
-for i in range(max_brechas):
-    slot = i + 1
-    if i < len(top_problems) and top_problems[i]:
-        brecha_data[f'brecha_{slot}_nombre'] = top_problems[i]
-        # Distribución proporcional: divide pérdida entre las brechas reales
-        brecha_data[f'brecha_{slot}_costo'] = format_cop(
-            int(main_scenario.monthly_loss_max / max(len(top_problems), 1))
-        )
+# ANTES: main_scenario_amount = main.monthly_loss_max
+# DESPUÉS: ota_commission = breakdown.monthly_ota_commission_cop si existe
+# Si no hay breakdown, fallback a valor central o max
+```
+
+2. Línea ~442 (proyección 6 meses):
+```python
+# ANTES: loss_6_months_value = main.monthly_loss_max * 6
+# DESPUÉS: loss_6_months_value = self._get_base_value(main) * 6
+```
+
+3. Línea ~551 (template V6):
+```python
+# ANTES: monthly_loss = format_cop(main.monthly_loss_max)
+# DESPUÉS: llenar ota_commission_formatted, ota_commission_basis, etc.
+```
+
+4. Línea ~897 (empathy message):
+```python
+# ANTES: usa monthly_loss_max
+# DESPUÉS: usa valor central con disclaimer
+```
+
+5. Nuevo: método `_build_financial_placeholders()`:
+```python
+def _build_financial_placeholders(self, financial_scenarios, breakdown=None):
+    """Construye los placeholders financieros para el template."""
+    main = financial_scenarios.get_main_scenario()
+    base_value = getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max
+    
+    if breakdown:
+        ota_commission = format_cop(breakdown.monthly_ota_commission_cop)
+        ota_basis = breakdown.ota_commission_basis
+        ota_source = breakdown.ota_commission_source
+        tier = breakdown.evidence_tier
+        disclaimer = breakdown.disclaimer
     else:
-        brecha_data[f'brecha_{slot}_nombre'] = ""
-        brecha_data[f'brecha_{slot}_costo'] = "$0"
+        ota_commission = format_cop(base_value)
+        ota_basis = "No disponible"
+        ota_source = "unknown"
+        tier = "C"
+        disclaimer = EvidenceTier.C.disclaimer
+    
+    return {
+        'ota_commission_formatted': ota_commission,
+        'ota_commission_basis': ota_basis,
+        'ota_commission_source': ota_source,
+        'evidence_tier': tier,
+        'financial_disclaimer': disclaimer,
+        'financial_source_ref': 'financial_scenarios.json#realistic',
+        'financial_value_central': base_value,
+        'financial_value_min': main.monthly_loss_min,
+        'financial_value_max': main.monthly_loss_max,
+        'financial_method': 'proportional_normalized',
+        # Mantener compatibilidad con template viejo:
+        'monthly_loss': ota_commission,
+        'loss_6_months': format_cop(base_value * 6),
+    }
 ```
 
-**Nota sobre distribución**: La distribución equitativa (`len / max`) es un placeholder temporal. FASE-G conectará los impactos reales desde `_identify_brechas()`. Lo importante aquí es que:
-1. No haya phantom costs
-2. Los slots vacíos muestren "$0" y nombre vacío
-3. top_problems None-safe
+**Criterios de aceptación**:
+- [ ] Todos los placeholders nuevos se llenan correctamente
+- [ ] Si no hay breakdown, fallback a datos del Scenario (backward compat)
+- [ ] Evidence tier aparece en el documento generado
+- [ ] Disclaimer aparece en el documento generado
+
+### Tarea 4: Test de generación end-to-end (parcial)
+
+**Objetivo**: Verificar que el generador produce un documento con la nueva estructura.
+
+**Archivo afectado**: tests del generador de diagnóstico
+
+**Tests requeridos**:
+```python
+# 1. Placeholders financieros se llenan
+def test_financial_placeholders_filled():
+    # Generar diagnóstico con FinancialBreakdown
+    # Verificar que ota_commission_formatted no es "${...}"
+
+# 2. Evidence tier aparece
+def test_evidence_tier_in_output():
+    # Verificar que el output contiene "Tier C" o similar
+
+# 3. Disclaimer aparece
+def test_disclaimer_in_output():
+    # Verificar que el output contiene el disclaimer
+
+# 4. Sin breakdown (backward compat)
+def test_no_breakdown_backward_compat():
+    # Generar diagnóstico sin FinancialBreakdown
+    # Verificar que funciona con fallback a Scenario
+```
 
 **Criterios de aceptación**:
-- [ ] Si hay 1 problema: solo brecha_1 tiene costo no-cero; brechas 2-4 = "$0"
-- [ ] Si hay 0 problemas: todas las brechas = "$0", nombre = ""
-- [ ] Si top_problems es None: no TypeError (guard con `or []`)
-- [ ] Template V6 generado exitosamente (no usa estas variables, pero no debe romper)
-- [ ] Template V4 generado exitosamente (SÍ usa estas variables, debe mostrar correctly)
-
-### Tarea 2: Tests de regresión para phantom cost fix
-
-**Objetivo**: Garantizar que el fix no rompe el comportamiento correcto y elimina los phantom costs
-
-**Archivos afectados**:
-- `tests/test_proposal_alignment.py` (agregar tests nuevos)
-
-**Tests a crear**:
-
-1. `test_no_phantom_costs_with_one_problem`: Con 1 top_problem, brechas 2-4 deben tener "$0"
-2. `test_no_phantom_costs_with_zero_problems`: Con 0 top_problems, todas las brechas = "$0"
-3. `test_no_phantom_costs_with_none_problems`: Con top_problems=None, no TypeError, todas = "$0"
-4. `test_costs_distributed_when_4_problems`: Con 4 problemas, todos tienen costo no-cero
-5. `test_empty_name_for_missing_brechas`: Slots sin problema tienen nombre vacío, no placeholder genérico
-
-**Criterios de aceptación**:
-- [ ] 5 tests nuevos pasando
-- [ ] Tests existentes en `test_proposal_alignment.py` siguen pasando (0 regresiones)
-
-### Tarea 3: Guard contra None en top_problems
-
-**Objetivo**: Agregar validación defensiva en `_prepare_template_data`
-
-**Archivos afectados**:
-- `modules/commercial_documents/v4_proposal_generator.py`
-
-**Criterios de aceptación**:
-- [ ] `diagnostic_summary.top_problems` puede ser None sin crash
-- [ ] No se asume que siempre hay exactamente 4 problemas
+- [ ] 4 tests nuevos pasan
+- [ ] Tests existentes del generador pasan
 
 ---
 
@@ -127,88 +255,51 @@ for i in range(max_brechas):
 
 | Test | Archivo | Criterio de Éxito |
 |------|---------|-------------------|
-| `test_no_phantom_costs_with_one_problem` | `tests/test_proposal_alignment.py` | brechas 2-4 = "$0" |
-| `test_no_phantom_costs_with_zero_problems` | `tests/test_proposal_alignment.py` | todas = "$0" |
-| `test_no_phantom_costs_with_none_problems` | `tests/test_proposal_alignment.py` | sin TypeError |
-| `test_costs_distributed_when_4_problems` | `tests/test_proposal_alignment.py` | 4 costos no-cero |
-| `test_empty_name_for_missing_brechas` | `tests/test_proposal_alignment.py` | nombres = "" |
+| test_financial_placeholders_filled | tests del generador | Placeholders llenos |
+| test_evidence_tier_in_output | tests del generador | Tier visible |
+| test_disclaimer_in_output | tests del generador | Disclaimer visible |
+| test_no_breakdown_backward_compat | tests del generador | Funciona sin breakdown |
+| Suite completa | `tests/` | 0 failures |
 
 **Comando de validación**:
 ```bash
 cd /mnt/c/Users/Jhond/Github/iah-cli
-./venv/Scripts/python.exe -m pytest tests/test_proposal_alignment.py -v
-./venv/Scripts/python.exe scripts/run_all_validations.py --quick
+./venv/Scripts/python.exe -m pytest tests/ -x -q 2>&1 | tail -30
 ```
+
+---
+
+## Restricciones
+
+- NO modificar main.py — eso es FASE-G
+- El template viejo debe seguir funcionando si no hay FinancialBreakdown
+- NO cambiar los placeholders de brechas (${brecha_1}, etc.) — esos se llenan con pesos normalizados de FASE-C
+- El YAML front matter es metadata del documento generado, NO del template mismo. Los placeholders tipo `${...}` se resuelven en generación
 
 ---
 
 ## Post-Ejecución (OBLIGATORIO)
 
-Al finalizar esta fase, actualizar INMEDIATAMENTE:
-
-1. **`dependencias-fases.md`**: Marcar FASE-F como ✅ Completada
-2. **`06-checklist-implementacion.md`**: Marcar items de FASE-F como ✅
-3. **`09-documentacion-post-proyecto.md`**: Sección A (módulos), D (métricas), E (archivos)
-4. **`scripts/log_phase_completion.py`**:
+1. **`dependencias-fases.md`** — Marcar FASE-F como ✅ Completada
+2. **`06-checklist-implementacion.md`** — Marcar FASE-F
+3. **Ejecutar**:
 ```bash
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-F \
-    --desc "Phantom cost fix + dead code removal in proposal generator" \
-    --archivos-mod "modules/commercial_documents/v4_proposal_generator.py" \
-    --tests "5" \
-    --check-manual-docs
+    --desc "Template diagnóstico: narrativa Comisión OTA + Evidence Tiers en YAML" \
+    --archivos-mod "modules/commercial_documents/templates/diagnostico_v6_template.md,modules/commercial_documents/v4_diagnostic_generator.py" \
+    --tests "4"
 ```
 
 ---
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] **Tests nuevos pasan**: 5/5 phantom cost tests exitosos
-- [ ] **Tests existentes pasan**: 0 regresiones en suite completa
-- [ ] **Validaciones del proyecto**: `run_all_validations.py --quick` pasa
-- [ ] **Phantom costs eliminados**: Ninguna brecha sin problema muestra costo > $0
-- [ ] **None-safe**: top_problems=None no causa TypeError
-- [ ] **Post-ejecución completada**: dependencias, checklist, docs actualizados
-
-**NO marcar la fase como completada si algún criterio falla.**
-
----
-
-## Restricciones
-
-- NO modificar `v4_diagnostic_generator.py` (es responsabilidad de FASE-G/H)
-- NO modificar `data_structures.py` (es responsabilidad de FASE-I)
-- NO modificar template V6 (no usa brechas, no necesita cambios)
-- Mantener compatibilidad con template V4 (usa brecha_1..4)
-- Preservar firma de `_prepare_template_data()` — solo cambiar implementación interna
-
----
-
-## Prompt de Ejecución
-
-```
-Actúa como ingeniero Python senior especializado en bugs financieros.
-
-OBJETIVO: Eliminar phantom costs del proposal generator v4.
-
-CONTEXTO:
-- v4_proposal_generator.py líneas 538-546 tienen distribución fija 40/30/20/10
-- Bug: slots sin problema real muestran costos ficticios en COP
-- Template V6 no usa estas variables (código muerto parcial)
-- Template V4 SÍ las usa (debe seguir funcionando)
-
-TAREAS:
-1. Reemplazar líneas 538-546 con lógica dinámica que zeroee slots vacíos
-2. Agregar guard contra top_problems=None
-3. Crear 5 tests en test_proposal_alignment.py
-
-CRITERIOS:
-- 0 phantom costs cuando hay < 4 problemas
-- 0 regresiones en tests existentes
-- run_all_validations.py --quick pasa
-
-VALIDACIONES:
-- pytest tests/test_proposal_alignment.py -v
-- pytest tests/ -k proposal -v
-- python scripts/run_all_validations.py --quick
-```
+- [ ] Template rediseñado con "Comisión OTA verificable" como dato principal
+- [ ] Evidence tier disclaimer en el documento
+- [ ] YAML front matter con metadata financiera
+- [ ] Generador llena todos los placeholders nuevos
+- [ ] Backward compatible (funciona sin FinancialBreakdown)
+- [ ] 4 tests nuevos pasan
+- [ ] Suite completa pasa
+- [ ] `log_phase_completion.py` ejecutado
