@@ -1,16 +1,62 @@
 # Diagnóstico $3,132,000 COP — Investigación Completa
-## Amaziliahotel | 2026-04-10 | Actualizado con auditoría de código
+## Amaziliahotel | 2026-04-10 | Actualizado post-FASE-G (2026-04-11)
 
 ---
 
-## 1. Resumen Ejecutivo
+## 0. Estado Post-FASE-G (RESUMEN DE AVANCE)
 
-El documento diagnóstico generado para Amaziliahotel muestra "$3,132,000 COP" como pérdida mensual.
-El motor financiero calcula correctamente $2,610,000 (escenario realista).
-La diferencia ($522,000 / 20%) proviene de un diseño de rangos en `main.py:1884` que infla el valor,
-sumado a que el generador consume el TECHO del rango como cifra principal.
+### Fases ejecutadas (Opción C — Rediseño completo)
 
-**Veredicto: El método actual NO es sustentable.** Requiere rediseño.
+| Fase | Estado | Qué hizo | Fecha |
+|------|--------|----------|-------|
+| FASE-A | ✅ | `FinancialBreakdown` dataclass + `EvidenceTier` enum + `Scenario.monthly_loss_central` | 2026-04-10 |
+| FASE-B | ✅ | `ScenarioCalculator.calculate_breakdown()` por capas | 2026-04-11 |
+| FASE-C | ✅ | Pesos normalizados (suma=100%) + `DynamicImpactCalculator` | 2026-04-11 |
+| FASE-D | ✅ | Scraper→ADR con `WEB_SCRAPING` como fuente | 2026-04-11 |
+| FASE-E | ✅ | 22 consumidores actualizados de `max` a `central` | 2026-04-11 |
+| FASE-F | ✅ | Template narrativa Comisión OTA + evidence tiers | 2026-04-11 |
+| FASE-G | ✅ | Integración `main.py` + validación E2E | 2026-04-11 |
+| FASE-H | ✅ | `RegionalADRResolver` activado SHADOW + parcheo `precio_promedio` + occupancy regional | 2026-04-11 |
+
+### Verificación E2E (Amaziliahotel, 2026-04-11)
+
+- Exit code: 0
+- Valor central: $2,610,000 COP (realistic, no inflado x1.2)
+- Comisión OTA visible: $5,400,000 (en breakdown)
+- Evidence tier: "C" con disclaimer completo
+- Breakdown con 7 data_sources rastreables
+- 453 tests pasados, 0 failures
+- Commit: `5171ce4`
+
+### HALLAZGO NUEVO: $300.000 ADR es HARDCODE, no usa benchmarks regionales
+
+El ADR de Amaziliahotel ($300.000) NO viene de benchmarks ni scraping.
+Viene de `LEGACY_DEFAULT_ADR = 300000.0` en `adr_resolution_wrapper.py:45`.
+
+El archivo `data/benchmarks/plan_maestro_data.json` SÍ tiene ADR por región:
+- eje_cafetero: $330.000
+- antioquia: $280.000
+- caribe: $410.000
+
+Pero `RegionalADRResolver` está **desactivado** por feature flag:
+```python
+# feature_flags.py:30
+regional_adr_enabled: bool = False  ← APAGADO
+```
+
+**Consecuencia**: De 4 datos de entrada, solo rooms=10 es real. ADR ($300K), occupancy (50%), y direct_channel (20%) son defaults.
+El $2.610.000 es correcto aritméticamente pero construido sobre datos genéricos, no datos del hotel.
+
+### GAPs residuales post-FASE-H
+
+| # | GAP | Severidad | Estado |
+|---|-----|-----------|--------|
+| G1 | ADR regional activado en SHADOW | ALTA | ✅ RESUELTO — resolver parcheado, lee `precio_promedio` de `v25_config.regiones` |
+| G2 | Occupancy regional disponible vía `resolve_occupancy()` | ALTA | ✅ RESUELTO — método añadido a `RegionalADRResolver` |
+| G3 | Supuestos de mejora (10% shift, 5% IA boost) hardcodeados sin evidencia | MEDIA | Sin cambios — Evidence tier C lo reconoce |
+| G4 | Promoción a ACTIVE pendiente | ALTA | ⚠️ PENDIENTE — Caribe muestra 36.7% diff (mercado real, no error). Activar vía `.env`: `FINANCIAL_REGIONAL_ADR_ENABLED=True` + `FINANCIAL_REGIONAL_ADR_MODE=active` |
+| G5 | Generadores aceptan `financial_breakdown` pero no lo consumen internamente aún | BAJA | Sin cambios |
+| G6 | Integración occupancy regional en `main.py` fallback path | MEDIA | GAP MENOR — resolver tiene el método, integración en flujo pendiente |
 
 ---
 
@@ -198,36 +244,37 @@ financial_method: proportional_normalized
 
 ---
 
-## 8. Datos del Caso de Prueba (Amaziliahotel)
+## 8. Datos del Caso de Prueba (Amaziliahotel) — ACTUALIZADO post-FASE-G
 
 ```
 hotel: Amaziliahotel
 url: https://amaziliahotel.com
 region: eje_cafetero
-rooms: 10
-adr_cop: 300,000
-occupancy_rate: 0.5
-direct_channel_percentage: 0.2
+rooms: 10           (fuente: hotel_data — DATO REAL)
+adr_cop: 300,000    (fuente: legacy_hardcode — NO ES DATO DEL HOTEL)
+                   (plan_maestro eje_cafetero = $330,000 — NO SE USA)
+                   (RegionalADRResolver DESACTIVADO por feature flag)
+occupancy_rate: 0.5 (fuente: default — NO ES DATO DEL HOTEL)
+direct_channel: 0.2 (fuente: default — NO ES DATO DEL HOTEL)
 
 Escenarios (financial_scenarios.json):
   conservative: $5,076,000
-  realistic:    $2,610,000  ← Valor calculado correcto
+  realistic:    $2,610,000  ← Valor central (monthly_loss_central)
   optimistic:   -$189,000
 
-Valor mostrado en documento: $3,132,000  ← Techo del rango (x1.2)
-Diferencia: $522,000 (20% inflado)
+Valor mostrado en documento: $2,610,000 (ANTES: $3,132,000 inflado x1.2)
+Inflación x1.2: ELIMINADA (FASE-E cambió consumo de max a central)
 
-Brechas detectadas: 4
-  Schema Hotel  → 25% → $783,000
-  FAQ Schema    → 12% → $375,840
-  Metadata      → 10% → $313,200
-  Open Graph    →  8% → $250,560
-  Suma: 55% → $1,722,600
-  Sin explicar: 45% → $1,409,400
+Breakdown (NUEVO — FASE-G):
+  ota_commission_cop: $5,400,000 (verificable: 120 noches × $300K × 15%)
+  shift_savings_cop: $540,000 (10% OTA→directo, supuesto sin GA4)
+  ia_revenue_cop: $2,250,000 (5% boost IA, supuesto sin GA4)
+  evidence_tier: "C"
+  data_sources: adr=legacy_hardcode, rooms=hotel_data, occupancy=default,
+                direct_channel=default, shift=hardcoded, ia_boost=estimado
 
-coherence_score: 0.9177
-generated: 2026-04-10 11:38:31
-output_dir: output/v4_complete/
+coherence_score: 0.91
+commit: 5171ce4 (2026-04-11)
 ```
 
 ---
@@ -526,130 +573,56 @@ Lo importante es INTENTAR el scraping primero y documentar la fuente del dato.
 
 ---
 
-## 14. GAPs para la sesión de planificación — Lo que FALTA
+## 14. GAPs — Estado post-FASE-G (ORIGINALMENTE PRE-IMPLEMENTACIÓN)
 
-### 14.1 GAP A: La variable `hotel_data` (scraping) NO está disponible en el bloque financiero
+### 14.1 GAP A: Variable `hotel_data` del scraper — RESUELTO (FASE-D)
+- FASE-D conectó scraper → ADR resolution chain
+- `adr_from_scraping` ahora es fuente #2 en la cadena de fallback
+- `ADRSource.WEB_SCRAPING` existe en el enum
 
-El scraper ejecuta en `main.py:507-508` (fase inicial) y guarda `hotel_data` como dict local.
-Pero el bloque financiero ejecuta ~1000 líneas después (`main.py:1500+`) y solo consulta:
-- `onboarding_data` → `datos_operativos.get('valor_reserva_cop')`
-- Nunca accede a `hotel_data['precio_promedio']`
+### 14.2 GAP B: `v4_proposal_generator.py` consume `monthly_loss_max` 22 veces — RESUELTO (FASE-E)
+- Los 22 puntos cambiados a `monthly_loss_central`
+- `format_loss_cop()` y `is_equilibrium_or_gain()` usan central
 
-**Problema**: `hotel_data` es variable local del bloque `v4complete`. El plan necesita saber
-cómo pasar `hotel_data` al bloque financiero. Posibles opciones:
-- Variable global del scope (ya es local compartido si está en la misma función)
-- Guardar en `args` o dict de contexto
-- Cargar desde archivo intermedio
+### 14.3 GAP C: `Scenario.format_loss_cop()` e `is_equilibrium_or_gain()` — RESUELTO (FASE-A + E)
+- Ambos métodos ahora prefieren `monthly_loss_central` sobre `monthly_loss_max`
 
-**Verificar en la sesión de plan**: inspeccionar el scope de `hotel_data` vs el bloque financiero en `main.py`. Ambos están dentro de la función `cmd_v4complete()` así que probablemente ya es accesible. Confirmar.
+### 14.4 GAP D: Template diagnostico_v6_template.md — RESUELTO (FASE-F)
+- Template actualizado con placeholders de evidence tier y breakdown
 
-### 14.2 GAP B: `v4_proposal_generator.py` consume `monthly_loss_max` 22 veces
+### 14.5 GAP E: Decisión de scope — RESUELTO
+- **Opción C ejecutada completa** (7 fases, FASE-A a FASE-G)
+- Commit: 5171ce4
 
-El generador de propuestas (`v4_proposal_generator.py`) usa `monthly_loss_max` en:
+**Scope Opción C — estado final:**
+- [x] FinancialBreakdown como nuevo dataclass (FASE-A)
+- [x] Reformulación narrativa: Comisión OTA verificable → escenarios de mejora (FASE-F)
+- [x] Nuevo template de diagnóstico con desglose por fuente (FASE-F)
+- [x] Normalización de pesos de brechas (suma siempre = 100%) (FASE-C)
+- [x] Conexión scraper → ADR (web_scraping como fuente) (FASE-D)
+- [x] Evidence tier en YAML header (A/B/C) (FASE-F)
+- [x] Actualización de v4_proposal_generator.py (22 puntos de consumo) (FASE-E)
+- [x] Actualización de coherence_validator.py (FASE-E)
+- [x] Actualización de asset_diagnostic_linker.py (FASE-E)
+- [x] Actualización de data_structures.py (Scenario + FinancialBreakdown) (FASE-A)
+- [x] Tests de regresión completos (453 passed) (FASE-G)
+- [x] Integración main.py + E2E validación (FASE-G)
 
-- Línea 457: `projected_monthly_gain = main_scenario.monthly_loss_max`
-- Líneas 489-494: gains y ROI para los 3 escenarios
-- Líneas 503-514: recuperación mensual M1-M6 y neto M1-M6
-- Todas usan `monthly_loss_max` como valor de "ganancia" del escenario
+### 14.6 GAPs NUEVOS descubiertos durante FASE-G (noexistentes pre-implementación)
 
-**Si se cambia `monthly_loss_max`**, el proposal también se rompe.
-El plan DEBE incluir `v4_proposal_generator.py` en el scope de cambios.
-No está en la Sección 7 actual.
-
-### 14.3 GAP C: `Scenario.format_loss_cop()` y `is_equilibrium_or_gain()` también usan max
-
-`data_structures.py` líneas 93-102:
-
-```python
-def format_loss_cop(self) -> str:
-    amount = self.monthly_loss_max  # ← usa max
-    ...
-
-def is_equilibrium_or_gain(self) -> bool:
-    return self.monthly_loss_max <= 0  # ← usa max
-```
-
-Ambos métodos usan `monthly_loss_max`. Si se agrega un campo `monthly_loss_central`
-o se cambia la semántica de `max`, estos métodos deben actualizarse.
-Están en la Sección 7 pero sin detalle de qué cambiar.
-
-### 14.4 GAP D: Template diagnostico_v6_template.md — estructura exacta
-
-El template actual (115 líneas) tiene estos placeholders financieros:
-
-```
-Línea 60: **Pérdida estimada mensual: ${monthly_loss} COP**
-Línea 62: Texto fijo: "Esta cifra representa reservas directas..."
-Línea 68: ${brechas_section}
-Línea 82: **Pérdida acumulada:** ${loss_6_months} COP
-```
-
-Si el modelo cambia a "Comisión OTA" + rangos, el template necesita:
-- Reemplazar `${monthly_loss}` por desglose (comisión OTA + fuente)
-- Agregar placeholder para evidence tier disclaimer
-- Cambiar narrativa de "Pérdida" a "Comisión OTA verificable"
-- Agregar sección de escenarios de recuperación con disclaimer
-
-### 14.5 GAP E: No hay decisión tomada sobre scope (fix mínimo vs rediseño)
-
-El archivo documenta 3 capas de problema (Sección 12) y una propuesta completa (Sección 11),
-pero NO tiene una decisión sobre cuál implementar. La sesión nueva necesita saber:
-
-**Opción A — Fix mínimo (capa presentación)**:
-- Cambiar `monthly_loss_max` → valor central
-- Normalizar pesos de brechas
-- No tocar ScenarioCalculator ni agregar FinancialBreakdown
-- Archivos: ~5
-
-**Opción B — Fix medio (A + conectar scraper)**:
-- Lo anterior + conectar `precio_promedio` del scraper al ADR
-- Agregar `web_scraping` a ADRSource
-- Archivos: ~8
-
-**Opción C — Rediseño completo (3 capas)**:
-- FinancialBreakdown como nuevo dataclass
-- Reformulación narrativa (comisión OTA → escenarios de mejora)
-- Nuevo template de diagnóstico
-- Conexión scraper → ADR
-- Cambios en proposal_generator, coherence_validator, asset_linker
-- Archivos: ~13+
-
-**DECISIÓN TOMADA: Opción C — Rediseño completo (3 capas).**
-
-Justificación del usuario: "Las soluciones a medias no son soluciones, es aplazar el problema."
-
-Además, el README.md línea 63 define la promesa del producto:
-> "asigna un costo en COP a cada brecha detectada, y genera un paquete de
-> assets técnicos listos para deploy con validación cruzada de coherencia"
-
-El modelo actual NO cumple esa promesa:
-- "asigna un costo en COP" → el costo viene de supuestos inventados, no de datos
-- "validación cruzada de coherencia" → no hay validación cruzada del valor financiero
-
-El rediseño DEBE alinearse con esa definición. El costo en COP de cada brecha debe ser:
-1. Rastreable a una fuente (onboarding, scraping, benchmark)
-2. Proporcional (pesos normalizados que sumen 100%)
-3. Honestamente etiquetado (VERIFIED vs ESTIMATED, como ya hace con assets)
-4. Basado en un hecho verificable (comisión OTA real) cuando sea posible
-
-**Scope completo Opción C:**
-- [ ] FinancialBreakdown como nuevo dataclass (Sección 11.3)
-- [ ] Reformulación narrativa: "Comisión OTA verificable" → escenarios de mejora
-- [ ] Nuevo template de diagnóstico con desglose por fuente
-- [ ] Normalización de pesos de brechas (suma siempre = 100%)
-- [ ] Conexión scraper → ADR (web_scraping como fuente)
-- [ ] Evidence tier en YAML header (A/B/C)
-- [ ] Actualización de v4_proposal_generator.py (22 puntos de consumo)
-- [ ] Actualización de coherence_validator.py
-- [ ] Actualización de asset_diagnostic_linker.py
-- [ ] Actualización de data_structures.py (Scenario + FinancialBreakdown)
-- [ ] Tests de regresión completos
+| GAP | Descripción | Acción requerida |
+|-----|-------------|-----------------|
+| G1 | `regional_adr_enabled=False` — RegionalADRResolver existe pero no se invoca | Activar flag en .env o config |
+| G2 | `LEGACY_DEFAULT_ADR=300000` ignora `plan_maestro_data.json` regiones | Activar G1 elimina este problema |
+| G3 | Occupancy y direct_channel son defaults sin fuente cuando no hay onboarding | Requiere onboarding o benchmark lookup |
+| G4 | Supuestos 10% shift / 5% IA boost hardcodeados en `scenario_calculator.py` | Con GA4 real se reemplazan con datos |
+| G5 | Generadores aceptan `financial_breakdown` pero no lo consumen en templates | Conectar en siguiente iteración |
 
 ---
 
-## 15. Estructuras de Datos Actuales (referencia rápida)
+## 15. Estructuras de Datos Actuales (referencia rápida) — ACTUALIZADO post-FASE-A
 
-### Scenario (data_structures.py:83-102)
+### Scenario (data_structures.py:83-102) — CON monthly_loss_central
 ```python
 @dataclass
 class Scenario:
@@ -660,6 +633,37 @@ class Scenario:
     assumptions: List[str] = field(default_factory=list)
     confidence_score: float = 0.0
     monthly_opportunity_cop: int = 0
+    monthly_loss_central: Optional[int] = None  # FASE-A: valor central de presentación
+
+    def format_loss_cop(self) -> str:
+        # FASE-A: usa central si disponible, sino max
+        amount = self.monthly_loss_central if self.monthly_loss_central is not None else self.monthly_loss_max
+```
+
+### FinancialBreakdown (data_structures.py:142-165) — NUEVO FASE-A
+```python
+@dataclass
+class FinancialBreakdown:
+    monthly_ota_commission_cop: float      # CAPA 1: verificable
+    ota_commission_basis: str              # "120 noches OTA × $300K ADR × 15%"
+    ota_commission_source: str             # "onboarding" | "scraping" | "benchmark"
+    shift_savings_cop: float               # CAPA 2A: hipótesis
+    shift_percentage: float                # 0.10
+    shift_source: str                      # "benchmark: ..."
+    ia_revenue_cop: float                  # CAPA 2B: hipótesis
+    ia_boost_percentage: float             # 0.05
+    ia_source: str                         # "estimado: sin GA4"
+    evidence_tier: str                     # "A" | "B" | "C"
+    disclaimer: str                        # Texto honesto sobre confianza
+    hotel_data_sources: Dict[str, str] = field(default_factory=dict)
+```
+
+### EvidenceTier (data_structures.py:126-139) — NUEVO FASE-A
+```python
+class EvidenceTier(Enum):
+    A = "A"  # GA4 + GSC conectados
+    B = "B"  # Benchmarks regionales + scraping
+    C = "C"  # Solo scraping básico
 ```
 
 ### FinancialScenarios (data_structures.py:105-120)
@@ -709,39 +713,28 @@ class RolloutMode(Enum):
 
 ---
 
-## 16. Consumidores de monthly_loss_max — Mapa Completo
+## 16. Consumidores de monthly_loss_max — Mapa Completo (ACTUALIZADO post-FASE-E)
 
-| Archivo | Línea | Uso | Impacto del cambio |
-|---------|-------|-----|-------------------|
-| `data_structures.py` | 95 | `format_loss_cop()` → display | Cambiar a central |
-| `data_structures.py` | 102 | `is_equilibrium_or_gain()` | Cambiar a central |
-| `data_structures.py` | 118 | `format_range_cop()` → conservative.min | No cambia (usa min) |
+**FASE-E actualizó ~20 puntos de `max` a `central`.** Los marcados con ✅ ya usan `monthly_loss_central`.
+
+| Archivo | Línea | Uso | Estado FASE-E |
+|---------|-------|-----|---------------|
+| `data_structures.py` | 95 | `format_loss_cop()` | ✅ central |
+| `data_structures.py` | 102 | `is_equilibrium_or_gain()` | ✅ central |
+| `data_structures.py` | 118 | `format_range_cop()` → min | No cambia |
 | `data_structures.py` | 119 | `format_range_cop()` → optimistic.max | No cambia |
-| `v4_diagnostic_generator.py` | 471 | `main_scenario_amount` (título) | Cambiar a central |
-| `v4_diagnostic_generator.py` | 442 | `loss_6_months_value` (×6) | Cambiar a central |
-| `v4_diagnostic_generator.py` | 551 | `monthly_loss` (template V6) | Cambiar a central |
-| `v4_diagnostic_generator.py` | 897 | `empathy_message` | Cambiar a central |
-| `v4_diagnostic_generator.py` | 1554 | `costo = max * proportion` (brechas) | Cambiar a central |
-| `v4_diagnostic_generator.py` | 1588 | `recuperacion = max * proportion` | Cambiar a central |
-| `v4_proposal_generator.py` | 457 | `projected_monthly_gain` | Cambiar a central |
-| `v4_proposal_generator.py` | 489 | `conservative_gain` | Cambiar a central |
-| `v4_proposal_generator.py` | 490 | `conservative_roi` | Cambiar a central |
-| `v4_proposal_generator.py` | 491 | `realistic_gain` | Cambiar a central |
-| `v4_proposal_generator.py` | 492 | `realistic_roi` | Cambiar a central |
-| `v4_proposal_generator.py` | 493 | `optimistic_gain` | Cambiar a central |
-| `v4_proposal_generator.py` | 494 | `optimistic_roi` | Cambiar a central |
-| `v4_proposal_generator.py` | 503-508 | `rec_m1` a `rec_m6` | Cambiar a central |
-| `v4_proposal_generator.py` | 509-514 | `net_m1` a `net_m6` | Cambiar a central |
-| `coherence_validator.py` | 433 | `pain = .monthly_loss_max` | Cambiar a central |
-| `asset_diagnostic_linker.py` | 498 | `monthly_loss_max` en impacto | Cambiar a central |
-| `asset_diagnostic_linker.py` | 504 | `impact_cop = max * weight` | Cambiar a central |
-| `asset_diagnostic_linker.py` | 507 | `impact_cop = max * 0.25` fallback | Cambiar a central |
-| `main.py` | 1877-1878 | `conservative.monthly_loss_max` | Mantener como techo (rango) |
-| `main.py` | 1884 | `realistic.monthly_loss_max` | Mantener como techo, agregar central |
-| `main.py` | 1890 | `optimistic.monthly_loss_max` | Mantener (caso especial) |
-
-**Total: 22 puntos de consumo.** De estos, ~20 deben cambiar de `max` a `central`.
-Los 3 de `main.py` (construcción) se mantienen como techo del rango.
+| `v4_diagnostic_generator.py` | 471 | `main_scenario_amount` (título) | ✅ central |
+| `v4_diagnostic_generator.py` | 442 | `loss_6_months_value` (×6) | ✅ central |
+| `v4_diagnostic_generator.py` | 551 | `monthly_loss` (template V6) | ✅ central |
+| `v4_diagnostic_generator.py` | 897 | `empathy_message` | ✅ central |
+| `v4_diagnostic_generator.py` | 1554 | `costo = max * proportion` (brechas) | ✅ central |
+| `v4_diagnostic_generator.py` | 1588 | `recuperacion = max * proportion` | ✅ central |
+| `v4_proposal_generator.py` | 457 | `projected_monthly_gain` | ✅ central |
+| `v4_proposal_generator.py` | 489-494 | gains y ROI 3 escenarios | ✅ central |
+| `v4_proposal_generator.py` | 503-514 | recuperación M1-M6, neto M1-M6 | ✅ central |
+| `coherence_validator.py` | 433 | `pain = .monthly_loss_max` | ✅ central |
+| `asset_diagnostic_linker.py` | 498, 504, 507 | impacto por asset | ✅ central |
+| `main.py` | construcción escenarios | `monthly_loss_max` como TECHO | ✅ central añadido |
 
 ---
 

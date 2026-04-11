@@ -36,7 +36,13 @@ class ScraperFallback:
         """Carga datos de benchmarks del Plan Maestro"""
         try:
             with open(self.benchmarks_path, 'r', encoding='utf-8') as f:
-                return json.load(f)
+                data = json.load(f)
+            # Normalize: support both top-level 'regiones' and 'v25_config.regiones'
+            if 'regiones' not in data and 'v25_config' in data:
+                v25 = data.get('v25_config', {})
+                if 'regiones' in v25:
+                    data['regiones'] = v25['regiones']
+            return data
         except:
             # Benchmarks por defecto si no existe el archivo
             return {

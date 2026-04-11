@@ -87,7 +87,10 @@ class RegionalADRResolver:
     def _get_region_data(self, region: str) -> Dict[str, Any]:
         if not self._data:
             return {}
-        regiones = self._data.get("regiones", {})
+        # Try v25_config.regiones first (actual structure), then legacy regiones
+        regiones = self._data.get("v25_config", {}).get("regiones", {})
+        if not regiones:
+            regiones = self._data.get("regiones", {})
         return regiones.get(region, regiones.get("default", {}))
     
     def _get_adr_for_segment(self, region_data: Dict, segment: str) -> float:
@@ -97,12 +100,13 @@ class RegionalADRResolver:
         segments = region_data.get("segments", {})
         
         if segment == self.SEGMENT_BOUTIQUE and "boutique_10_25" in segments:
-            return segments["boutique_10_25"].get("adr_cop", region_data.get("adr_cop", 300000.0))
+            return segments["boutique_10_25"].get("adr_cop", region_data.get("adr_cop", region_data.get("precio_promedio", 300000.0)))
         
         if segment == self.SEGMENT_STANDARD and "standard_26_60" in segments:
-            return segments["standard_26_60"].get("adr_cop", region_data.get("adr_cop", 300000.0))
+            return segments["standard_26_60"].get("adr_cop", region_data.get("adr_cop", region_data.get("precio_promedio", 300000.0)))
         
-        return region_data.get("adr_cop", 300000.0)
+        # Support both adr_cop (new) and precio_promedio (plan_maestro_data.json)
+        return region_data.get("adr_cop", region_data.get("precio_promedio", 300000.0))
     
     def _determine_confidence(self, region: str, user_provided_adr: Optional[float], benchmark_adr: float) -> str:
         if region not in self._get_known_regions():
@@ -127,15 +131,31 @@ class RegionalADRResolver:
     def _get_known_regions(self) -> set:
         if not self._data:
             return {"default"}
-        return set(self._data.get("regiones", {}).keys())
+        regiones = self._data.get("v25_config", {}).get("regiones", {})
+        if not regiones:
+            regiones = self._data.get("regiones", {})
+        return set(regiones.keys())
+    
+    def resolve_occupancy(self, region: str) -> float:
+        """Resolve occupancy rate for a region from plan_maestro_data.
+        
+        Returns the calibrated occupancy or 0.50 as default.
+        """
+        region_data = self._get_region_data(region)
+        return region_data.get("ocupacion", 0.50)
     
     def get_segment_adr_table(self) -> Dict[str, Dict[str, float]]:
         table = {}
-        for region_code, region_data in self._data.get("regiones", {}).items():
+        regiones = self._data.get("v25_config", {}).get("regiones", {})
+        if not regiones:
+            regiones = self._data.get("regiones", {})
+        for region_code, region_data in regiones.items():
+            # Support both adr_cop (legacy/test) and precio_promedio (plan_maestro_data.json)
+            avg = region_data.get("precio_promedio", region_data.get("adr_cop"))
             table[region_code] = {
-                "boutique": region_data.get("segments", {}).get("boutique_10_25", {}).get("adr_cop", region_data.get("adr_cop")),
-                "standard": region_data.get("segments", {}).get("standard_26_60", {}).get("adr_cop", region_data.get("adr_cop")),
-                "average": region_data.get("adr_cop"),
+                "boutique": region_data.get("segments", {}).get("boutique_10_25", {}).get("adr_cop", avg),
+                "standard": region_data.get("segments", {}).get("standard_26_60", {}).get("adr_cop", avg),
+                "average": avg,
             }
         return table
 

@@ -340,7 +340,7 @@ class TestUnknownRegion:
 
     def test_empty_data_returns_default_adr(self):
         """Test with empty data returns default ADR of 300000."""
-        resolver = RegionalADRResolver()
+        resolver = RegionalADRResolver("/nonexistent/path/plan_maestro_data.json")
         result = resolver.resolve("any_region", 30)
 
         assert result.adr_cop == 300000.0
