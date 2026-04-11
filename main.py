@@ -1518,7 +1518,13 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         if reservas_mes and rooms:
             occupancy_rate = reservas_mes / (rooms * 30)
         else:
-            occupancy_rate = 0.50
+            # Use regional occupancy if region is validated
+            if feature_flags.should_use_regional_for(region):
+                from modules.financial_engine import RegionalADRResolver
+                resolver = RegionalADRResolver()
+                occupancy_rate = resolver.resolve_occupancy(region)
+            else:
+                occupancy_rate = 0.50
         
         canal_directo = datos_operativos.get('canal_directo_pct', 20.0)
         direct_channel_pct = canal_directo / 100
@@ -1537,7 +1543,13 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         # _extract_region_from_audit() always returns "default" (deprecated)
         # region = _extract_region_from_audit(audit_result) if audit_result else "default"
         
-        occupancy_rate = 0.50  # Default 50%
+        # Use regional occupancy if region is validated
+        if feature_flags.should_use_regional_for(region):
+            from modules.financial_engine import RegionalADRResolver
+            resolver = RegionalADRResolver()
+            occupancy_rate = resolver.resolve_occupancy(region)
+        else:
+            occupancy_rate = 0.50  # Default 50%
         direct_channel_pct = 0.20  # Default 20%
         
         # No ADR from onboarding available

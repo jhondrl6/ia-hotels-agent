@@ -614,7 +614,13 @@ ${quick_wins_list}
         data['analytics_transparency_section'] = self._build_transparency_section(analytics_status)
         
         # --- Financial Placeholders (FASE-F: Comisión OTA + Evidence Tiers) ---
-        financial_ph = self._build_financial_placeholders(financial_scenarios, analytics_data)
+        # FASE-J: pass source_reliability from analytics_data if available
+        _source_reliability = "verified"
+        if analytics_data and isinstance(analytics_data, dict):
+            _source_reliability = analytics_data.get("source_reliability", "verified")
+        financial_ph = self._build_financial_placeholders(
+            financial_scenarios, analytics_data, source_reliability=_source_reliability,
+        )
         data.update(financial_ph)
         
         return data
@@ -707,20 +713,37 @@ ${quick_wins_list}
             )
         return "\n".join(rows)
     
+    def _build_financial_title_label(self, source_reliability: str) -> str:
+        """Retorna label honesto para la seccion financiera segun confiabilidad de datos.
+
+        Args:
+            source_reliability: "verified" o "unverified"
+
+        Returns:
+            Label para el titulo de la seccion financiera.
+        """
+        labels = {
+            "verified": "Comisión OTA Actual (verificable)",
+            "unverified": "Comisión OTA Estimada (benchmarks regionales)",
+        }
+        return labels.get(source_reliability, "Comisión OTA Estimada")
+
     def _build_financial_placeholders(
         self,
         scenarios: FinancialScenarios,
         analytics_data: Optional[Dict[str, Any]] = None,
+        source_reliability: str = "verified",
     ) -> Dict[str, Any]:
         """
         Construye los placeholders financieros para el template V6.
-        
+
         Presenta "Comisión OTA verificable" como dato principal + escenarios
         de recuperación con evidence tier.
+        FASE-J: label condicional segun source_reliability.
         """
         main = scenarios.get_main_scenario()
         base_value = getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max
-        
+
         # Determine evidence tier based on available data sources
         ga4_enabled = analytics_data is not None and analytics_data.get("use_ga4", False)
         if ga4_enabled:
@@ -735,14 +758,23 @@ ${quick_wins_list}
                 "Este diagnóstico se basa en datos limitados de su web y benchmarks regionales. "
                 "Los valores son estimaciones. Para mayor precisión, configure GA4 y Search Console."
             )
-        
+
         # OTA commission: derive from the scenario value
         # The monthly_loss_max represents the opportunity cost (commissions going to OTAs)
         ota_commission = format_cop(base_value)
-        
+
         # Build scenario table
         scenario_table = self._build_scenario_table_rows(scenarios)
-        
+
+        # FASE-J: conditional labels and asterisk
+        is_verified = source_reliability == "verified"
+        financial_title_label = self._build_financial_title_label(source_reliability)
+        estimate_asterisk = "" if is_verified else "*"
+        estimate_footnote = "" if is_verified else (
+            "> * Dato basado en estimaciones. "
+            "Conecte GA4 para mayor precisión."
+        )
+
         return {
             'ota_commission_formatted': ota_commission,
             'ota_commission_basis': (
@@ -758,6 +790,10 @@ ${quick_wins_list}
             'financial_value_min': str(main.monthly_loss_min),
             'financial_value_max': str(main.monthly_loss_max),
             'financial_method': 'proportional_normalized',
+            # FASE-J: source-aware template honesty
+            'financial_title_label': financial_title_label,
+            'estimate_asterisk': estimate_asterisk,
+            'estimate_footnote': estimate_footnote,
             # Backward compatibility
             'loss_6_months': format_cop(base_value * 6),
         }

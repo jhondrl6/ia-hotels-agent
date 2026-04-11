@@ -234,10 +234,11 @@ class TestActiveMode:
     """Test ACTIVE mode resolution."""
 
     def test_active_mode_uses_regional_resolver(self, temp_plan_maestro_file):
-        """Test ACTIVE mode uses new regional resolver."""
+        """"Test ACTIVE mode uses new regional resolver."""
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.ACTIVE,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -256,6 +257,7 @@ class TestActiveMode:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.ACTIVE,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -276,6 +278,7 @@ class TestActiveMode:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.ACTIVE,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -293,6 +296,7 @@ class TestActiveMode:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.ACTIVE,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -316,6 +320,7 @@ class TestShadowMode:
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.SHADOW,
             shadow_logging_enabled=True,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -336,6 +341,7 @@ class TestShadowMode:
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.SHADOW,
             shadow_logging_enabled=True,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -363,6 +369,7 @@ class TestShadowMode:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.SHADOW,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -381,6 +388,7 @@ class TestShadowMode:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.SHADOW,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -398,6 +406,7 @@ class TestShadowMode:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.SHADOW,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -420,6 +429,7 @@ class TestCanaryMode:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.CANARY,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -439,6 +449,7 @@ class TestCanaryMode:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.CANARY,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
 
         # Create a mock logger that rejects the new result
@@ -469,6 +480,7 @@ class TestCanaryMode:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.CANARY,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -527,6 +539,7 @@ class TestShadowLoggingData:
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.SHADOW,
             shadow_logging_enabled=True,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(feature_flags=flags)
 
@@ -545,6 +558,7 @@ class TestResolveADRWithShadowFunction:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.ACTIVE,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
 
         result = resolve_adr_with_shadow(
@@ -562,6 +576,7 @@ class TestResolveADRWithShadowFunction:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.SHADOW,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
 
         result = resolve_adr_with_shadow(
@@ -614,6 +629,7 @@ class TestEdgeCases:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.ACTIVE,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -631,6 +647,7 @@ class TestEdgeCases:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.ACTIVE,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -644,10 +661,11 @@ class TestEdgeCases:
         assert result.adr_cop == 280000.0  # region average
 
     def test_unknown_region(self, temp_plan_maestro_file):
-        """Test resolution with unknown region."""
+        """"Test resolution with unknown region falls back to legacy."""
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.ACTIVE,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -656,14 +674,17 @@ class TestEdgeCases:
 
         result = wrapper.resolve("unknown_region", 30)
 
-        assert result.metadata["is_default"] is True
-        assert result.metadata["region"] == "default"
+        # Region not in validated_regions -> falls back to legacy
+        assert result.adr_cop == 300000.0
+        assert result.source == "legacy_hardcode"
+        assert result.used_new_calculation is False
 
     def test_missing_plan_maestro_file(self):
         """Test resolution when plan maestro file is missing."""
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.ACTIVE,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,
@@ -692,6 +713,7 @@ class TestIntegration:
                 regional_adr_mode=RolloutMode.SHADOW,
                 shadow_logging_enabled=True,
                 shadow_log_path=log_dir,
+                validated_regions=("coffee_axis", "bogota", "default"),
             )
 
             real_logger = ShadowLogger(log_path=log_dir)
@@ -730,6 +752,7 @@ class TestIntegration:
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.ACTIVE,
+            validated_regions=("coffee_axis", "bogota", "default"),
         )
         wrapper = ADRResolutionWrapper(
             feature_flags=flags,

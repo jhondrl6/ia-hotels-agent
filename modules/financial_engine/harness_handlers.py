@@ -87,6 +87,16 @@ def financial_calculation_handler(payload: Dict[str, Any], context: TaskContext)
         # Extract occupancy and channel data from payload
         occupancy_rate = payload.get("occupancy_rate", 0.50)
         direct_channel_percentage = payload.get("direct_channel_percentage", 0.20)
+        
+        # Override occupancy with regional data if available and validated
+        from modules.financial_engine.feature_flags import get_flags
+        flags = get_flags()
+        if flags.should_use_regional_for(region):
+            from modules.financial_engine import RegionalADRResolver
+            resolver = RegionalADRResolver()
+            regional_occupancy = resolver.resolve_occupancy(region)
+            if regional_occupancy is not None:
+                occupancy_rate = regional_occupancy
 
         # Step 4: Generate financial scenarios
         calculator = ScenarioCalculator()

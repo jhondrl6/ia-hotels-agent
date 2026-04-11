@@ -2322,6 +2322,54 @@ _Ninguno_
 ---
 
 
+## FASE-I - 2026-04-11
+**Descripcion:** Activar RegionalADRResolver por regiones validadas (eje_cafetero, antioquia)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/feature_flags.py` | Feature Flags |
+| `modules/financial_engine/adr_resolution_wrapper.py` | Adr Resolution Wrapper |
+| `modules/financial_engine/harness_handlers.py` | Harness Handlers |
+| `main.py` | Main |
+| `.env` | .Env |
+| `tests/financial_engine/test_feature_flags.py` | Test Feature Flags |
+| `tests/financial_engine/test_adr_resolution_wrapper.py` | Test Adr Resolution Wrapper |
+
+### Validaciones
+- [x] Tests passing (4)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-J - 2026-04-11
+**Descripcion:** NoDefaultsValidator source-aware + template honesto (Estimada vs verificable)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/no_defaults_validator.py` | No Defaults Validator |
+| `modules/financial_engine/calculator_v2.py` | Calculator V2 |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `tests/financial_engine/test_no_defaults_source_aware.py` | Test No Defaults Source Aware |
+
+### Validaciones
+- [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown

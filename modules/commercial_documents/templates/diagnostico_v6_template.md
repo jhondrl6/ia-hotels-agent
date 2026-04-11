@@ -62,9 +62,9 @@ ${analytics_summary_text}
 
 ## 💰 Impacto Financiero
 
-### Comisión OTA Actual (verificable)
+### ${financial_title_label}
 
-**${ota_commission_formatted} COP/mes**
+**${ota_commission_formatted} COP/mes${estimate_asterisk}**
 
 Desglose:
 - ${ota_commission_basis}
@@ -92,6 +92,8 @@ ${scenario_table_rows}
 > - Tier A: Basado en Google Analytics + Search Console
 > - Tier B: Basado en benchmarks regionales + datos web
 > - Tier C: Basado en datos limitados de su web
+
+${estimate_footnote}
 
 ---
 

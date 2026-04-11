@@ -23,15 +23,26 @@ Rediseño completo del motor financiero para que cada costo en COP sea:
 
 ## Fases
 
-| Fase | Archivo prompt | Descripción |
+### Ciclo 1: Rediseño Motor Financiero (COMPLETADO)
+
+| Fase | Archivo prompt | Descripcion |
 |------|---------------|-------------|
 | A | `05-prompt-inicio-sesion-fase-A.md` | Data Structures + FinancialBreakdown |
 | B | `05-prompt-inicio-sesion-fase-B.md` | ScenarioCalculator narrativa por capas |
 | C | `05-prompt-inicio-sesion-fase-C.md` | Pesos normalizados + DynamicImpact |
-| D | `05-prompt-inicio-sesion-fase-D.md` | Scraper→ADR conexión |
+| D | `05-prompt-inicio-sesion-fase-D.md` | Scraper→ADR conexion |
 | E | `05-prompt-inicio-sesion-fase-E.md` | Consumidores (proposal, coherence, asset) |
 | F | `05-prompt-inicio-sesion-fase-F.md` | Template + Evidence Tiers |
-| G | `05-prompt-inicio-sesion-fase-G.md` | Integración main.py + E2E |
+| G | `05-prompt-inicio-sesion-fase-G.md` | Integracion main.py + E2E |
+| H | `05-prompt-inicio-sesion-fase-H.md` | RegionalADRResolver SHADOW |
+
+### Ciclo 2: Causa Raiz — Datos No Verificables (PENDIENTE)
+
+| Fase | Archivo prompt | Descripcion | Paralelizable |
+|------|---------------|-------------|---------------|
+| I | `05-prompt-inicio-sesion-fase-I.md` | Activar RegionalADRResolver por regiones validadas | SI (con J) |
+| J | `05-prompt-inicio-sesion-fase-J.md` | NoDefaultsValidator source-aware + template honesto | SI (con I) |
+| K | `05-prompt-inicio-sesion-fase-K.md` | Unificar camino dual + fix optimista negativo | NO (req I+J) |
 
 ## Archivos de Soporte
 
@@ -43,13 +54,25 @@ Rediseño completo del motor financiero para que cada costo en COP sea:
 
 ## Progreso
 
+### Ciclo 1 (COMPLETADO):
 ```
-[A] ⬜ → [B] ⬜ → [E] ⬜ → [F] ⬜ → [G] ⬜
-            ↗                ↑
-       [C] ⬜ ──────────────┘
-       [D] ⬜ ─────────────────────→ [G]
+[A] ✅ → [B] ✅ → [E] ✅ → [F] ✅ → [G] ✅
+               ↗                ↑
+       [C] ✅ ──────────────┘
+       [D] ✅ ─────────────────────→ [G]
+[H] ✅ (SHADOW, NO promovido a ACTIVE)
+```
+
+### Ciclo 2 (PENDIENTE):
+```
+[I] ⬜ ──┐
+         ├──→ [K] ⬜ → v4complete validacion final
+[J] ⬜ ──┘
 
 ⬜ = Pendiente
 🔄 = En progreso
 ✅ = Completada
+
+FASE-I + FASE-J → paralelizables via subagentes (delegate_task)
+FASE-K → requiere I + J completadas
 ```

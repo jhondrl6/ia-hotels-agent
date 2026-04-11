@@ -184,6 +184,7 @@ class FinancialCalculatorV2:
         self,
         financial_data: Dict[str, Any],
         opportunity_scores: Optional[List[Any]] = None,
+        data_sources: Optional[Dict[str, str]] = None,
     ) -> FinancialCalculationResult:
         """Calcula escenarios financieros con validacion previa.
 
@@ -195,14 +196,16 @@ class FinancialCalculatorV2:
                 - direct_channel_percentage: float (optional)
                 - ota_commission_rate: float (optional)
             opportunity_scores: Lista opcional de OpportunityScore para pesos dinamicos.
+            data_sources: Diccionario opcional campo -> fuente para deteccion de
+                fuentes sospechosas (FASE-J). Ej: {"adr_cop": "legacy_hardcode"}.
 
         Returns:
             FinancialCalculationResult con escenarios o bloqueo
         """
         # FASE-C: registrar si se usan pesos dinamicos
         _opp_scores = opportunity_scores  # capture for later use
-        # Paso 1: Validar No Defaults
-        validation_result = self.validator.validate(financial_data)
+        # Paso 1: Validar No Defaults (con sources opcionales FASE-J)
+        validation_result = self.validator.validate(financial_data, sources=data_sources)
 
         # Paso 2: Si falla, retornar bloqueo con mensaje
         if not validation_result.can_calculate:
@@ -210,7 +213,12 @@ class FinancialCalculatorV2:
                 status=CalculationStatus.BLOCKED_BY_DEFAULTS,
                 validation_result=validation_result,
                 error_message=validation_result.to_user_message(),
-                metadata={"reason": "validation_failed", "blocks": len(validation_result.blocks)},
+                metadata={
+                    "reason": "validation_failed",
+                    "blocks": len(validation_result.blocks),
+                    "source_reliability": validation_result.source_reliability,
+                    "suspect_fields": validation_result.suspect_fields,
+                },
             )
 
         try:
@@ -236,6 +244,9 @@ class FinancialCalculatorV2:
                     "direct_channel_percentage": hotel_data.direct_channel_percentage,
                     "uses_dynamic_weights": _opp_scores is not None,
                     "opportunity_scores_count": len(_opp_scores) if _opp_scores else 0,
+                    # FASE-J: source reliability info
+                    "source_reliability": validation_result.source_reliability,
+                    "suspect_fields": validation_result.suspect_fields,
                 },
             )
 

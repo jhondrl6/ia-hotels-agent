@@ -5,7 +5,7 @@ en campos críticos del hotel.
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, Set
 from enum import Enum
 
 
@@ -41,16 +41,46 @@ class ValidationBlock:
 
 
 @dataclass
+class ValidationWarning:
+    """Registro de un warning por fuente sospechosa."""
+    field: str
+    source: str
+    message: str
+
+
+# Fuentes que no son verificacion real de datos
+SUSPECT_SOURCES: Set[str] = {
+    "legacy_hardcode", "default", "unknown", "hardcoded", "estimated",
+}
+
+
+@dataclass
 class NoDefaultsValidationResult:
     """Resultado de validación No Defaults."""
     can_calculate: bool
     blocks: List[ValidationBlock] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
+    source_warnings: List[ValidationWarning] = field(default_factory=list)
     
     @property
     def has_blocks(self) -> bool:
         return len(self.blocks) > 0
-    
+
+    @property
+    def has_suspect_sources(self) -> bool:
+        """True si alguna fuente es sospechosa (no verificacion real)."""
+        return len(self.source_warnings) > 0
+
+    @property
+    def suspect_fields(self) -> List[str]:
+        """Lista de campos con fuentes sospechosas."""
+        return [w.field for w in self.source_warnings]
+
+    @property
+    def source_reliability(self) -> str:
+        """Retorna 'verified' si no hay fuentes sospechosas, 'unverified' si las hay."""
+        return "unverified" if self.has_suspect_sources else "verified"
+
     def to_user_message(self) -> str:
         """Genera mensaje descriptivo para el usuario."""
         if self.can_calculate:
@@ -116,34 +146,57 @@ class NoDefaultsValidator:
     def __init__(self):
         self.blocks: List[ValidationBlock] = []
     
-    def validate(self, data: Dict[str, Any]) -> NoDefaultsValidationResult:
+    def validate(
+        self,
+        data: Dict[str, Any],
+        sources: Optional[Dict[str, str]] = None,
+    ) -> NoDefaultsValidationResult:
         """Valida que no haya valores por defecto en campos críticos.
-        
+
         Args:
             data: Diccionario con datos financieros del hotel
-            
+            sources: Diccionario opcional campo -> fuente (ej {"adr_cop": "legacy_hardcode"})
+                     Si se pasa, se detectan fuentes sospechosas y se generan warnings.
+
         Returns:
             NoDefaultsValidationResult con resultado de validación
         """
         self.blocks = []
-        warnings = []
-        
+        general_warnings: List[str] = []
+        source_warnings: List[ValidationWarning] = []
+
         for field_name in self.CRITICAL_FIELDS:
             if isinstance(data, dict):
                 value = data.get(field_name)
             else:
                 value = getattr(data, field_name, None)
             block = self._check_field(field_name, value)
-            
+
             if block:
                 self.blocks.append(block)
-        
+
+            # FASE-J: detectar fuentes sospechosas (no bloquea, solo advierte)
+            if sources and field_name in sources:
+                src = sources[field_name]
+                if src in SUSPECT_SOURCES:
+                    msg = (
+                        f"Campo '{field_name}' usa fuente '{src}' "
+                        f"(no verificacion real). Los datos podrian ser estimados."
+                    )
+                    source_warnings.append(ValidationWarning(
+                        field=field_name,
+                        source=src,
+                        message=msg,
+                    ))
+                    general_warnings.append(msg)
+
         can_calculate = len(self.blocks) == 0
-        
+
         return NoDefaultsValidationResult(
             can_calculate=can_calculate,
             blocks=self.blocks,
-            warnings=warnings
+            warnings=general_warnings,
+            source_warnings=source_warnings,
         )
     
     def _check_field(self, field_name: str, value: Any) -> Optional[ValidationBlock]:

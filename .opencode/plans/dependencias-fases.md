@@ -9,14 +9,27 @@
 ## Diagrama de Dependencias
 
 ```
+CICLO 1 (COMPLETADO):
 FASE-A ──→ FASE-B ──→ FASE-E ──→ FASE-F ──→ FASE-G
   │           │                      ↑
   │           └──→ FASE-C ──────────┘
   │
   └──→ FASE-D (independiente, paralela a B y C)
+
+FASE-H (validación regional, SHADOW — NO promovido a ACTIVE)
+
+CICLO 2 (CAUSA RAIZ):
+FASE-I ──────┐
+             ├──→ FASE-K → v4complete validacion final
+FASE-J ──────┘
+
+FASE-I y FASE-J son INDEPENDIENTES → paralelizables via subagentes
+FASE-K depende de AMBAS (I + J completadas)
 ```
 
 ## Tabla de Fases
+
+### Ciclo 1: Rediseño Motor Financiero (Opcion C)
 
 | Fase | Nombre | Archivos principales | Depende de | Estado |
 |------|--------|---------------------|------------|--------|
@@ -27,32 +40,52 @@ FASE-A ──→ FASE-B ──→ FASE-E ──→ FASE-F ──→ FASE-G
 | FASE-E | Consumidores actualización | `v4_proposal_generator.py`, `coherence_validator.py`, `asset_diagnostic_linker.py` | FASE-B, FASE-C | ✅ 2026-04-11 |
 | FASE-F | Template diagnóstico + Evidence Tiers | `diagnostico_v6_template.md`, `v4_diagnostic_generator.py` (placeholders) | FASE-E | ✅ 2026-04-11 |
 | FASE-G | Integración main.py + end-to-end | `main.py:1664-1910`, tests de regresión | FASE-F, FASE-D | ✅ 2026-04-11 |
+| FASE-H | Activar RegionalADRResolver (SHADOW) | `feature_flags.py`, `regional_adr_resolver.py` | FASE-A..G | ✅ 2026-04-11 |
 
-## Conflictos Potenciales (archivos compartidos)
+### Ciclo 2: Causa Raiz — Datos No Verificables
 
-| Archivo | Fases que lo tocan | Riesgo |
-|---------|-------------------|--------|
-| `data_structures.py` | A (crear campos), B (ajustar Scenario) | BAJO — A crea, B consume |
-| `v4_diagnostic_generator.py` | C (pesos), F (placeholders/template) | MEDIO — distintas secciones |
-| `main.py` | D (línea 1526), G (líneas 1664-1910) | BAJO — distintas zonas |
-| `scenario_calculator.py` | B (rediseño completo) | BAJO — una sola fase |
-| `v4_proposal_generator.py` | E (22 puntos de consumo) | BAJO — una sola fase |
-| `coherence_validator.py` | E (línea 433) | BAJO — una sola fase |
+| Fase | Nombre | Archivos principales | Depende de | Estado |
+|------|--------|---------------------|------------|--------|
+|| FASE-I | Activar RegionalADRResolver por regiones validadas | `feature_flags.py`, `harness_handlers.py`, `main.py` | FASE-H | ✅ 2026-04-11 |
+|| FASE-J | NoDefaultsValidator source-aware + template honesto | `no_defaults_validator.py`, `calculator_v2.py`, `diagnostico_v6_template.md`, `v4_diagnostic_generator.py` | FASE-F | ✅ 2026-04-11 |
+|| FASE-K | Unificar camino dual + fix optimista negativo | `main.py`, `harness_handlers.py`, `scenario_calculator.py` | FASE-I, FASE-J | ⬜ Pendiente |
 
-## Orden de Ejecución
+## Conflictos Potenciales (archivos compartidos) — Ciclo 2
+
+| Archivo | FASE-I | FASE-J | FASE-K | Resolucion |
+|---------|--------|--------|--------|------------|
+| `feature_flags.py` | TOCA | - | - | Solo I |
+| `harness_handlers.py` | TOCA (datos regionales) | - | TOCA (usar calc_v2) | K despues de I |
+| `main.py L1600-1650` | TOCA | - | - | Solo I |
+| `main.py L1720-1733` | - | - | TOCA | Solo K |
+| `no_defaults_validator.py` | - | TOCA | - | Solo J |
+| `calculator_v2.py` | - | TOCA | - | Solo J |
+| `diagnostico_v6_template.md` | - | TOCA | - | Solo J |
+| `v4_diagnostic_generator.py` | - | TOCA | - | Solo J |
+| `scenario_calculator.py` | - | - | TOCA | Solo K |
+
+**FASE-I y FASE-J son 100% independientes** → paralelizables via delegate_task.
+FASE-K toca 2 archivos que I tambien toca (harness_handlers, main.py) → requiere que I termine primero.
+
+## Orden de Ejecucion — Ciclo 2
 
 ```
-Sesión 1: FASE-A (fundación — nuevas estructuras de datos)
-Sesión 2: FASE-B (motor de cálculo por capas) + FASE-D puede ejecutarse en paralelo
-Sesión 3: FASE-C (normalización de pesos) [o FASE-D si no se hizo en paralelo]
-Sesión 4: FASE-D (si no se ejecutó) o FASE-E (consumidores)
-Sesión 5: FASE-E (consumidores) o FASE-F (template)
-Sesión 6: FASE-F (template + evidence tiers)
-Sesión 7: FASE-G (integración main.py + end-to-end)
+Sesion 1: FASE-I + FASE-J en PARALELO (via delegate_task, 2 subagentes)
+Sesion 2: FASE-K (requiere I + J completadas) + v4complete validacion final
 ```
 
-**Nota**: FASE-B, C y D son parcialmente paralelas (no compiten por archivos).
-La regla de "una fase por sesión" aplica estrictamente. El paralelismo es lógico, no temporal.
+**Alternativa secuencial** (si paralelo no es viable):
+```
+Sesion 1: FASE-I (regional ADR)
+Sesion 2: FASE-J (validator + template)
+Sesion 3: FASE-K (unificar + fix optimista) + v4complete
+```
+
+### Validacion Pre-Paralelo (CHECKLIST antes de ejecutar I+J en paralelo)
+- [ ] FASE-I y FASE-J NO comparten archivos (verificado arriba)
+- [ ] Ambas dependen solo de fases COMPLETADAS (A..H)
+- [ ] Tests directories no se solapan
+- [ ] Ambas tienen post-ejecucion INDEPENDIENTE (REGISTRY/log_phase)
 
 ---
 

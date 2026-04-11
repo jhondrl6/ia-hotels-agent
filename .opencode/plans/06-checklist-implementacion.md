@@ -8,7 +8,7 @@
 
 ## Progreso General
 
-| Fase | Nombre | Estado | Archivos | Tests nuevos | Sesión |
+| Fase | Nombre | Estado | Archivos | Tests nuevos | Sesion |
 |------|--------|--------|----------|-------------|--------|
 | A | Data Structures + FinancialBreakdown | ✅ Completada | `data_structures.py` | 9 | 2026-04-10 |
 | B | ScenarioCalculator por capas | ✅ Completada | `scenario_calculator.py` | 5 | 2026-04-11 |
@@ -16,22 +16,34 @@
 | D | Scraper→ADR conexión | ✅ Completada | `adr_resolution_wrapper.py`, `main.py` | 5 | 2026-04-11 |
 | E | Consumidores (proposal, coherence, asset) | ✅ Completada | 3 archivos | 4 | 2026-04-11 |
 | F | Template + Evidence Tiers | ✅ Completada | `diagnostico_v6_template.md`, `v4_diagnostic_generator.py` | 9 | 2026-04-11 |
-| G | Integración main.py + E2E | ⬜ Pendiente | `main.py` | E2E | — |
+| G | Integración main.py + E2E | ✅ Completada | `main.py` | E2E | 2026-04-11 |
+| H | RegionalADRResolver SHADOW | ✅ Completada | `feature_flags.py`, `regional_adr_resolver.py` | 0 | 2026-04-11 |
+|| I | Activar RegionalADRResolver por regiones | ✅ 2026-04-11 | `feature_flags.py`, `harness_handlers.py`, `main.py` | 4 | 2026-04-11 |
+|| J | Validator source-aware + template | ✅ 2026-04-11 | `no_defaults_validator.py`, `template`, `generator` | 8 | 2026-04-11 |
+|| K | Unificar camino dual + fix optimista | ⬜ Pendiente | `main.py`, `harness_handlers.py`, `scenario_calculator.py` | 5 | — |
 
-**Total**: 7 fases, ~27 tests nuevos + E2E
+**Total Ciclo 1**: 8 fases, ~27 tests nuevos + E2E
+**Total Ciclo 2**: 3 fases, ~16 tests nuevos + E2E final
 
 ---
 
 ## Dependencias
 
+### Ciclo 1 (COMPLETADO):
 ```
 A → B → E → F → G
 A → C → E
 A → D → G
+H (validacion, no activado)
 ```
 
-**Paralelismo lógico**: B, C, D pueden ejecutarse en paralelo (no compiten por archivos).
-**Restricción**: Una fase por sesión (regla del workflow).
+### Ciclo 2 (PENDIENTE):
+```
+I + J (paralelo) → K → v4complete validacion
+```
+
+**Paralelismo**: FASE-I y FASE-J son 100% independientes → subagentes en paralelo.
+**Restriccion**: Una fase por sesion (regla del workflow). K requiere I+J.
 
 ---
 
@@ -74,6 +86,37 @@ A → D → G
 - [x] 453 tests pasados, 0 failures
 - [x] Git commit final
 
+### FASE-H (Validacion RegionalADRResolver)
+- [x] RegionalADRResolver funciona en SHADOW
+- [x] Caribe muestra 36.7% diff → NO promovido a ACTIVE
+- [x] eje_cafetero y antioquia coherentes
+- [x] resolve_occupancy() implementado
+- [x] NO promovido a ACTIVE (pendiente whitelist por region)
+
+### FASE-I (Activar RegionalADRResolver por regiones validadas)
+- [x] Feature flag con whitelist de regiones (eje_cafetero, antioquia)
+- [x] Caribe protegido (no usa regional)
+- [x] harness_handlers usa occupancy regional
+- [x] adr_resolution_wrapper usa should_use_regional_for()
+- [x] 4 tests nuevos pasan + 16 tests wrapper fix (validated_regions)
+- [x] REGISTRY.md actualizado via log_phase_completion.py
+
+### FASE-J (NoDefaultsValidator source-aware + template honesto)
+- [x] Validator genera warnings para fuentes sospechosas (no blocks)
+- [x] source_reliability populated en calc_result metadata
+- [x] Template condicional: ${financial_title_label} (verificable vs estimada)
+- [x] Asterisco de estimacion + nota condicional
+- [x] 8 tests nuevos pasan (backward compatible)
+- [x] REGISTRY.md actualizado via log_phase_completion.py
+
+### FASE-K (Unificar camino dual + fix optimista negativo)
+- [ ] Camino unico en main.py (no segundo ScenarioCalculator)
+- [ ] Harness handler usa FinancialCalculatorV2
+- [ ] Optimista negativo muestra "ganancia neta"
+- [ ] display_label funciona para positivo y negativo
+- [ ] 5 tests nuevos pasan
+- [ ] E2E validacion final (con I+J completos)
+
 ---
 
 ## Criterios de Éxito Globales
@@ -92,5 +135,6 @@ A → D → G
 
 | Sesión | Fase | Fecha | Resultado |
 |--------|------|-------|-----------|
-| 1 | FASE-A | 2026-04-10 | ✅ Completada — 9/9 tests pasan, 418 tests suite intacta |
-| 7 | FASE-G | 2026-04-11 | ✅ Completada — 453 tests, E2E Amaziliahotel exit code 0, breakdown poblado |
+|| 1 | FASE-A | 2026-04-10 | ✅ Completada — 9/9 tests pasan, 418 tests suite intacta |
+|| 7 | FASE-G | 2026-04-11 | ✅ Completada — 453 tests, E2E Amaziliahotel exit code 0, breakdown poblado |
+|| 8 | FASE-I+J | 2026-04-11 | ✅ Paralelo — I: whitelist regional ADR, J: validator source-aware. 12 tests nuevos, 0 regresiones |

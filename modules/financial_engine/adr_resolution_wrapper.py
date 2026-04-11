@@ -93,6 +93,7 @@ class ADRResolutionWrapper:
             rooms = 10
 
         mode = self.flags.regional_adr_mode
+        use_regional = self.flags.should_use_regional_for(region)
 
         # Determine which calculation path to use
         if mode == RolloutMode.FORCE_LEGACY:
@@ -101,15 +102,27 @@ class ADRResolutionWrapper:
             )
 
         elif mode == RolloutMode.ACTIVE:
-            return self._new_resolution_with_scraping(
-                region, rooms, user_provided_adr, web_scraping_adr
-            )
+            if use_regional:
+                return self._new_resolution_with_scraping(
+                    region, rooms, user_provided_adr, web_scraping_adr
+                )
+            else:
+                # Region not validated, use legacy
+                return self._legacy_resolution_with_scraping(
+                    user_provided_adr, web_scraping_adr
+                )
 
         elif mode in (RolloutMode.SHADOW, RolloutMode.CANARY):
-            return self._shadow_resolution_with_scraping(
-                region, rooms, user_provided_adr, web_scraping_adr,
-                hotel_id, hotel_name
-            )
+            if use_regional:
+                return self._shadow_resolution_with_scraping(
+                    region, rooms, user_provided_adr, web_scraping_adr,
+                    hotel_id, hotel_name
+                )
+            else:
+                # Region not validated, use legacy (no shadow comparison)
+                return self._legacy_resolution_with_scraping(
+                    user_provided_adr, web_scraping_adr
+                )
 
         # Fallback to legacy for unknown modes
         return self._legacy_resolution_with_scraping(

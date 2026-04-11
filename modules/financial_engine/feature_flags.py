@@ -44,6 +44,9 @@ class FinancialFeatureFlags:
     shadow_logging_enabled: bool = True
     shadow_log_path: str = ".agent/shadow_logs"
     
+    # Regional ADR whitelist (validated regions)
+    validated_regions: tuple = ("eje_cafetero", "antioquia")
+    
     @classmethod
     def from_env(cls) -> "FinancialFeatureFlags":
         """Load flags from environment variables."""
@@ -71,6 +74,9 @@ class FinancialFeatureFlags:
             ),
             shadow_log_path=os.getenv(
                 "FINANCIAL_SHADOW_LOG_PATH", ".agent/shadow_logs"
+            ),
+            validated_regions=tuple(
+                os.getenv("FINANCIAL_REGIONAL_VALIDATED_REGIONS", "eje_cafetero,antioquia").split(",")
             ),
         )
     
@@ -100,6 +106,26 @@ class FinancialFeatureFlags:
         """Check if regional ADR should be used."""
         return self.regional_adr_enabled and \
                self.regional_adr_mode != RolloutMode.FORCE_LEGACY
+    
+    def should_use_regional_for(self, region: str) -> bool:
+        """Check if regional ADR should be used for a specific region.
+        
+        Only uses regional ADR if:
+        1. regional_adr_enabled is True
+        2. regional_adr_mode is not FORCE_LEGACY
+        3. region is in validated_regions whitelist
+        
+        Args:
+            region: Hotel region code
+            
+        Returns:
+            True if regional ADR should be used for this region
+        """
+        if not self.regional_adr_enabled:
+            return False
+        if self.regional_adr_mode == RolloutMode.FORCE_LEGACY:
+            return False
+        return region in self.validated_regions
     
     def should_use_hybrid_pricing(self) -> bool:
         """Check if hybrid pricing should be used."""

@@ -132,3 +132,55 @@ class TestFeatureFlags:
                 assert flags.shadow_logging_enabled is True, f"Failed for {value}"
             else:
                 assert flags.shadow_logging_enabled is False, f"Failed for {value}"
+    
+    def test_validated_regions_default(self):
+        """Test that default validated regions are eje_cafetero and antioquia."""
+        flags = FinancialFeatureFlags()
+        assert flags.validated_regions == ("eje_cafetero", "antioquia")
+    
+    def test_should_use_regional_for(self):
+        """Test region-specific regional ADR usage."""
+        flags = FinancialFeatureFlags(
+            regional_adr_enabled=True,
+            regional_adr_mode=RolloutMode.ACTIVE,
+            validated_regions=("eje_cafetero", "antioquia"),
+        )
+        
+        # Validated regions should use regional
+        assert flags.should_use_regional_for("eje_cafetero") is True
+        assert flags.should_use_regional_for("antioquia") is True
+        
+        # Non-validated regions should not use regional
+        assert flags.should_use_regional_for("caribe") is False
+        assert flags.should_use_regional_for("centro") is False
+        assert flags.should_use_regional_for("default") is False
+    
+    def test_disabled_flag_never_uses_regional(self):
+        """Test that disabled flag never uses regional ADR."""
+        flags = FinancialFeatureFlags(
+            regional_adr_enabled=False,
+            validated_regions=("eje_cafetero", "antioquia"),
+        )
+        
+        # Even validated regions should not use regional when disabled
+        assert flags.should_use_regional_for("eje_cafetero") is False
+        assert flags.should_use_regional_for("antioquia") is False
+    
+    def test_from_env_validated_regions(self, monkeypatch):
+        """Test loading validated regions from environment variable."""
+        monkeypatch.setenv("FINANCIAL_REGIONAL_VALIDATED_REGIONS", "eje_cafetero,antioquia,caribe")
+        
+        flags = FinancialFeatureFlags.from_env()
+        
+        assert flags.validated_regions == ("eje_cafetero", "antioquia", "caribe")
+        assert flags.should_use_regional_for("eje_cafetero") is False  # Not enabled
+        assert flags.should_use_regional_for("caribe") is False  # Not enabled
+        
+        # Enable regional ADR
+        monkeypatch.setenv("FINANCIAL_REGIONAL_ADR_ENABLED", "true")
+        flags = FinancialFeatureFlags.from_env()
+        
+        assert flags.should_use_regional_for("eje_cafetero") is True
+        assert flags.should_use_regional_for("antioquia") is True
+        assert flags.should_use_regional_for("caribe") is True
+        assert flags.should_use_regional_for("centro") is False

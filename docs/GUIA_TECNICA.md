@@ -1,8 +1,70 @@
 # Guía Técnica IA Hoteles Agent CLI
 
-**Ultima actualizacion:** 9 Abril 2026
+**Ultima actualizacion:** 11 Abril 2026
 |**Version:** 4.26.0 (Brecha Architectural Fix)
 **Audiencia:** Desarrolladores, DevOps, Contribuidores
+
+## Notas de Cambios — Ciclo 2: RegionalADR + Validator Source-Aware
+
+**Fecha:** 11 Abril 2026
+
+### Resumen
+
+Dos fases independientes ejecutadas en paralelo: FASE-I activa el RegionalADRResolver con whitelist por regiones validadas (eje_cafetero, antioquia), FASE-J extiende el NoDefaultsValidator para detectar fuentes sospechosas (legacy_hardcode, default) y hace el template honesto sobre la verificabilidad de los datos.
+
+### Módulos Afectados
+
+#### 1. modules/financial_engine/feature_flags.py (FASE-I)
+- Nuevo campo `validated_regions: tuple = ("eje_cafetero", "antioquia")` — whitelist de regiones donde se usa ADR regional
+- Nuevo método `should_use_regional_for(region: str) -> bool` — combina flag enabled + whitelist
+- `from_env()` lee `FINANCIAL_REGIONAL_VALIDATED_REGIONS` (comma-separated)
+- Caribe explícitamente excluido (36.7% diff vs legacy detectado en FASE-H)
+
+#### 2. modules/financial_engine/adr_resolution_wrapper.py (FASE-I)
+- `resolve()` llama `flags.should_use_regional_for(region)` ANTES de resolver regional
+- Regiones no validadas caen a legacy ($300K hardcode) sin shadow comparison
+- Cadena: user_provided > web_scraping > regional (si validada) > legacy
+
+#### 3. modules/financial_engine/harness_handlers.py (FASE-I)
+- `financial_calculation_handler()` resuelve occupancy regional si la región está validada
+- Fallback a default 0.50 si región no validada
+
+#### 4. modules/financial_engine/no_defaults_validator.py (FASE-J)
+- Nuevo `SUSPECT_SOURCES = {"legacy_hardcode", "default", "unknown", "hardcoded", "estimated"}`
+- `validate()` acepta `sources: Optional[Dict[str, str]]` (backward compatible)
+- Warnings por fuentes sospechosas NO bloquean el cálculo (solo documentan)
+- Propiedades nuevas: `has_suspect_sources`, `suspect_fields`, `source_reliability` (verified/estimated/unverified)
+
+#### 5. modules/financial_engine/calculator_v2.py (FASE-J)
+- `calculate()` acepta `data_sources` opcional, lo pasa al validator
+- Metadata del resultado incluye `source_reliability` y `suspect_fields`
+
+#### 6. modules/commercial_documents/templates/diagnostico_v6_template.md (FASE-J)
+- Título condicional: `${financial_title_label}` (antes: hardcoded "Comisión OTA Actual (verificable)")
+- Monto con asterisco: `${ota_commission_formatted} COP/mes${estimate_asterisk}`
+- Nota condicional: `* Dato basado en estimaciones. Conecte GA4 para mayor precision.`
+
+#### 7. modules/commercial_documents/v4_diagnostic_generator.py (FASE-J)
+- `_build_financial_title_label(source_reliability)` → label según verificabilidad
+- Placeholders: `financial_title_label`, `estimate_asterisk`, `estimate_footnote`
+
+### Backwards Compatibility
+- Sin `sources` param en validate() = comportamiento idéntico al anterior
+- `can_calculate` sigue bloqueando solo 0/None/"" (warnings nunca bloquean)
+- Regiones no validadas en whitelist = legacy automático (sin breaking change)
+
+### Tests
+- FASE-I: 4 tests feature_flags + 16 fixtures fix adr_wrapper (todos PASS)
+- FASE-J: 8 tests source-aware (todos PASS)
+- Suite regresión: 385/385 PASS, 0 regresiones
+
+### Configuración (.env)
+```
+FINANCIAL_REGIONAL_ADR_ENABLED=True
+FINANCIAL_REGIONAL_VALIDATED_REGIONS=eje_cafetero,antioquia
+```
+
+---
 
 ## Notas de Cambios v4.26.0 - Brecha Architectural Fix
 
