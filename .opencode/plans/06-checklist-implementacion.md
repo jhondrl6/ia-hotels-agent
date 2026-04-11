@@ -12,8 +12,8 @@
 |------|--------|--------|----------|-------------|--------|
 | A | Data Structures + FinancialBreakdown | ✅ Completada | `data_structures.py` | 9 | 2026-04-10 |
 | B | ScenarioCalculator por capas | ✅ Completada | `scenario_calculator.py` | 5 | 2026-04-11 |
-| C | Pesos normalizados + DynamicImpact | ⬜ Pendiente | `v4_diagnostic_generator.py` | 4 | — |
-| D | Scraper→ADR conexión | ⬜ Pendiente | `adr_resolution_wrapper.py`, `main.py` | 5 | — |
+| C | Pesos normalizados + DynamicImpact | ✅ Completada | `v4_diagnostic_generator.py` | 7 | 2026-04-11 |
+| D | Scraper→ADR conexión | ✅ Completada | `adr_resolution_wrapper.py`, `main.py` | 5 | 2026-04-11 |
 | E | Consumidores (proposal, coherence, asset) | ⬜ Pendiente | 3 archivos | 4 | — |
 | F | Template + Evidence Tiers | ⬜ Pendiente | `diagnostico_v6_template.md`, `v4_diagnostic_generator.py` | 4 | — |
 | G | Integración main.py + E2E | ⬜ Pendiente | `main.py` | E2E | — |

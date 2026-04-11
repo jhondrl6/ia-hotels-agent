@@ -25,6 +25,7 @@ class ADRSource(Enum):
     REGIONAL_V410 = "regional_v410"
     LEGACY_HARDCODE = "legacy_hardcode"
     USER_PROVIDED = "user_provided"
+    WEB_SCRAPING = "web_scraping"      # Precio extraído de la web del hotel
 
 
 @dataclass
@@ -63,39 +64,108 @@ class ADRResolutionWrapper:
     def resolve(
         self,
         region: str,
-        rooms: int,
+        rooms: Optional[int] = None,
         user_provided_adr: Optional[float] = None,
         hotel_id: Optional[str] = None,
         hotel_name: Optional[str] = None,
+        web_scraping_adr: Optional[float] = None,
     ) -> ADRResolutionResult:
         """Resolve ADR with shadow mode support.
+
+        Cadena de fallback del ADR:
+            1. user_provided_adr (onboarding) -> ADRSource.USER_PROVIDED
+            2. web_scraping_adr (scraper)     -> ADRSource.WEB_SCRAPING
+            3. regional benchmark             -> ADRSource.REGIONAL_V410
+            4. hardcode $300K                 -> ADRSource.LEGACY_HARDCODE
 
         Args:
             region: Hotel region code
             rooms: Number of rooms
-            user_provided_adr: Optional ADR provided by user
+            user_provided_adr: Optional ADR provided by user (onboarding)
             hotel_id: Optional hotel identifier for logging
             hotel_name: Optional hotel name for logging
+            web_scraping_adr: Optional ADR extracted from hotel website
 
         Returns:
             ADRResolutionResult with ADR value and metadata
         """
+        if rooms is None:
+            rooms = 10
+
         mode = self.flags.regional_adr_mode
 
         # Determine which calculation path to use
         if mode == RolloutMode.FORCE_LEGACY:
-            return self._legacy_resolution(user_provided_adr)
+            return self._legacy_resolution_with_scraping(
+                user_provided_adr, web_scraping_adr
+            )
 
         elif mode == RolloutMode.ACTIVE:
-            return self._new_resolution(region, rooms, user_provided_adr)
+            return self._new_resolution_with_scraping(
+                region, rooms, user_provided_adr, web_scraping_adr
+            )
 
         elif mode in (RolloutMode.SHADOW, RolloutMode.CANARY):
-            return self._shadow_resolution(
-                region, rooms, user_provided_adr, hotel_id, hotel_name
+            return self._shadow_resolution_with_scraping(
+                region, rooms, user_provided_adr, web_scraping_adr,
+                hotel_id, hotel_name
             )
 
         # Fallback to legacy for unknown modes
+        return self._legacy_resolution_with_scraping(
+            user_provided_adr, web_scraping_adr
+        )
+
+    def _web_scraping_result(self, web_scraping_adr: float) -> ADRResolutionResult:
+        """Build an ADRResolutionResult from web scraping data."""
+        return ADRResolutionResult(
+            adr_cop=web_scraping_adr,
+            source=ADRSource.WEB_SCRAPING.value,
+            confidence="medium",
+            used_new_calculation=True,
+            metadata={
+                'fallback_chain': 'web_scraping',
+                'note': 'Precio extraído de la página web del hotel'
+            }
+        )
+
+    def _legacy_resolution_with_scraping(
+        self,
+        user_provided_adr: Optional[float] = None,
+        web_scraping_adr: Optional[float] = None,
+    ) -> ADRResolutionResult:
+        """Legacy resolution with web scraping fallback."""
+        if not user_provided_adr and web_scraping_adr and web_scraping_adr > 0:
+            return self._web_scraping_result(web_scraping_adr)
         return self._legacy_resolution(user_provided_adr)
+
+    def _new_resolution_with_scraping(
+        self,
+        region: str,
+        rooms: int,
+        user_provided_adr: Optional[float] = None,
+        web_scraping_adr: Optional[float] = None,
+    ) -> ADRResolutionResult:
+        """New resolution with web scraping fallback."""
+        if not user_provided_adr and web_scraping_adr and web_scraping_adr > 0:
+            return self._web_scraping_result(web_scraping_adr)
+        return self._new_resolution(region, rooms, user_provided_adr)
+
+    def _shadow_resolution_with_scraping(
+        self,
+        region: str,
+        rooms: int,
+        user_provided_adr: Optional[float] = None,
+        web_scraping_adr: Optional[float] = None,
+        hotel_id: Optional[str] = None,
+        hotel_name: Optional[str] = None,
+    ) -> ADRResolutionResult:
+        """Shadow resolution with web scraping fallback."""
+        if not user_provided_adr and web_scraping_adr and web_scraping_adr > 0:
+            return self._web_scraping_result(web_scraping_adr)
+        return self._shadow_resolution(
+            region, rooms, user_provided_adr, hotel_id, hotel_name
+        )
 
     def _legacy_resolution(
         self, user_provided_adr: Optional[float] = None
@@ -248,13 +318,14 @@ class ADRResolutionWrapper:
 
 def resolve_adr_with_shadow(
     region: str,
-    rooms: int,
+    rooms: Optional[int] = None,
     user_provided_adr: Optional[float] = None,
     hotel_id: Optional[str] = None,
     hotel_name: Optional[str] = None,
     feature_flags: Optional[FinancialFeatureFlags] = None,
     plan_maestro_path: Optional[str] = None,
     shadow_logger: Optional[ShadowLogger] = None,
+    web_scraping_adr: Optional[float] = None,
 ) -> ADRResolutionResult:
     """Convenience function to resolve ADR with shadow mode support.
 
@@ -267,6 +338,7 @@ def resolve_adr_with_shadow(
         feature_flags: Optional feature flags override
         plan_maestro_path: Optional path to plan maestro data
         shadow_logger: Optional shadow logger instance
+        web_scraping_adr: Optional ADR extracted from hotel website
 
     Returns:
         ADRResolutionResult with ADR value and metadata
@@ -276,4 +348,7 @@ def resolve_adr_with_shadow(
         plan_maestro_path=plan_maestro_path,
         shadow_logger=shadow_logger,
     )
-    return wrapper.resolve(region, rooms, user_provided_adr, hotel_id, hotel_name)
+    return wrapper.resolve(
+        region, rooms, user_provided_adr, hotel_id, hotel_name,
+        web_scraping_adr=web_scraping_adr
+    )

@@ -1612,6 +1612,19 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     
     # Fallback to direct calculation if harness not used or failed
     if not use_harness_for_financials:
+        # Extract price from web scraping if available
+        adr_from_scraping = None
+        try:
+            from modules.scrapers.web_scraper import WebScraper
+            _scraper = WebScraper()
+            _hotel_data = _scraper.extract_hotel_data(args.url) or {}
+            scraped_price = _hotel_data.get('precio_promedio')
+            if scraped_price and scraped_price > 0:
+                adr_from_scraping = float(scraped_price)
+                print(f"   🌐 Precio web scrapeado: ${adr_from_scraping:,.0f} COP")
+        except Exception as e:
+            print(f"   ⚠️  Web scraping para ADR no disponible: {e}")
+
         # Resolve ADR using v4.1.0 wrapper (backward compatible via feature flags)
         adr_result = resolve_adr_with_shadow(
             region=region,
@@ -1619,15 +1632,17 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             user_provided_adr=adr_from_onboarding,
             hotel_id=args.url,
             hotel_name=hotel_name,
+            web_scraping_adr=adr_from_scraping,
         )
         adr_cop = adr_result.adr_cop
         adr_source = adr_result.source
-        
+
         # Log ADR source for transparency
         source_display = {
             "regional_v410": "regional",
             "legacy_hardcode": "legacy",
             "user_provided": "onboarding",
+            "web_scraping": "web scraping",
         }.get(adr_result.source, adr_result.source)
         print(f"   ADR: ${adr_cop:,.0f} COP ({source_display}, confidence: {adr_result.confidence})")
         

@@ -1,6 +1,6 @@
 {
   "modules/asset_generation/conditional_generator.py": "GAP-IAO-01-04",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-RELEASE-4.26.0",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-C",
   "modules/commercial_documents/v4_proposal_generator.py": "FASE-RELEASE-4.26.0",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-E",
   "modules/asset_generation/asset_diagnostic_linker.py": "V6-5",
@@ -23,7 +23,7 @@
   "modules/asset_generation/asset_catalog.py": "FASE-D",
   "modules/commercial_documents/data_structures.py": "FASE-A",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
-  "main.py": "FASE-G",
+  "main.py": "FASE-D",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "E2E-CERT-0331",
   "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-C",
@@ -57,5 +57,6 @@
   "modules/commercial_documents/coherence_validator.py": "FASE-E",
   "modules/scrapers/web_scraper.py": "FASE-E",
   "modules/financial_engine/scenario_calculator.py": "FASE-B",
-  "tests/financial_engine/test_scenario_calculator.py": "FASE-B"
+  "tests/financial_engine/test_scenario_calculator.py": "FASE-B",
+  "modules/financial_engine/adr_resolution_wrapper.py": "FASE-D"
 }

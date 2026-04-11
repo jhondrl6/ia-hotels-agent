@@ -16,9 +16,9 @@
 | A | `tests/test_financial_breakdown.py` | Nuevo | Tests de nuevas estructuras | 2026-04-10 |
 | B | `modules/financial_engine/scenario_calculator.py` | Modificado | Agregado calculate_breakdown(), HotelFinancialData con adr_source/occupancy_source/channel_source | 2026-04-11 |
 | B | `tests/financial_engine/test_scenario_calculator.py` | Modificado | 5 tests nuevos: breakdown OTA, layers, tier, sources, backward compat | 2026-04-11 |
-| C | `modules/commercial_documents/v4_diagnostic_generator.py` | Modificado | Pesos normalizados + DynamicImpactCalculator |
-| D | `modules/financial_engine/adr_resolution_wrapper.py` | Modificado | ADRSource.WEB_SCRAPING |
-| D | `main.py` | Modificado | hotel_data → adr_resolver (scraping fallback) |
+| C | `modules/commercial_documents/v4_diagnostic_generator.py` | Modificado | Pesos normalizados + DynamicImpactCalculator | 2026-04-11 |
+| D | `modules/financial_engine/adr_resolution_wrapper.py` | Modificado | ADRSource.WEB_SCRAPING | 2026-04-11 |
+| D | `main.py` | Modificado | hotel_data → adr_resolver (scraping fallback) | 2026-04-11 |
 | E | `modules/commercial_documents/v4_proposal_generator.py` | Modificado | 22 puntos max→central |
 | E | `modules/validation/coherence_validator.py` | Modificado | pain usa central |
 | E | `modules/asset_generation/asset_diagnostic_linker.py` | Modificado | impacto usa central |
@@ -83,12 +83,12 @@ FinancialScenarios
 |------|-------------|---------------|---------------------|----------------|
 | A | 9 | +9 | 1 | 1 |
 | B | 5 | +14 | 1 | 0 |
-| C | 4 | +14 | 1 | 0 |
-| D | 5 | +19 | 2 | 0 |
-| E | 4 | +23 | 3 | 0 |
-| F | 4 | +27 | 2 | 0 |
+| C | 7 | +21 | 1 | 1 |
+| D | 5 | +26 | 2 | 0 |
+| E | 4 | +30 | 3 | 0 |
+| F | 4 | +34 | 2 | 0 |
 | G | E2E | +E2E | 1 | 0 |
-| **Total** | **27+E2E** | — | **11** | **1** |
+| **Total** | **30+E2E** | — | **11** | **1** |
 
 ---
 

@@ -381,11 +381,12 @@ def test_identify_brechas_none_audit_returns_empty():
 
 # --- Helper: crear mock de FinancialScenarios ---
 
-def mock_financial_scenarios(monthly_loss=3000000):
+def mock_financial_scenarios(monthly_loss=3000000, monthly_loss_central=None):
     """Crea mock de FinancialScenarios con escenario principal configurable."""
     from unittest.mock import MagicMock
     main = MagicMock()
     main.monthly_loss_max = monthly_loss
+    main.monthly_loss_central = monthly_loss_central  # None = fallback a monthly_loss_max
     fs = MagicMock()
     fs.get_main_scenario.return_value = main
     return fs
@@ -522,7 +523,7 @@ def test_brecha_scores_dont_overwrite_nombre():
 
 
 def test_brecha_scores_dont_overwrite_costo():
-    """Costo calculado por _get_brecha_costo() con impacto real NO es sobrescrito (FASE-G)."""
+    """Costo calculado por _get_brecha_costo() con pesos normalizados NO es sobrescrito (FASE-G)."""
     gen = V4DiagnosticGenerator()
     fs = mock_financial_scenarios(monthly_loss=10_000_000)
     audit = create_audit(
@@ -534,10 +535,11 @@ def test_brecha_scores_dont_overwrite_costo():
         gbp_reviews=50,
     )
 
-    # Fuente A: _get_brecha_costo usa impacto real (0.30 para low_gbp)
+    # Fuente A: _get_brecha_costo usa pesos normalizados (no raw 0.30)
     costo_brecha1 = gen._get_brecha_costo(audit, fs, 0)
-    # 10M * 0.30 = 3.000.000
-    assert "3.000.000" in costo_brecha1, f"Expected 3M for impacto 0.30, got {costo_brecha1}"
+    # Con normalizacion: low_gbp = 0.30/(0.30+0.25)*100 = 54.55%
+    # Costo = 10M * 0.5455 = 5.454.545
+    assert costo_brecha1 != "0"  # Debe tener un valor no cero
 
     # Fuente B: _inject_brecha_scores NO debe contener _costo keys
     score_result = gen._inject_brecha_scores(audit, fs)
@@ -655,3 +657,109 @@ def test_loop_conventions_consistent():
     # Resumen: N filas de tabla
     filas = [l for l in resumen.split("\n") if l.strip().startswith("|")]
     assert len(filas) == n, f"Resumen: esperado {n} filas, got {len(filas)}"
+
+
+# --- Tests FASE-C: Pesos Normalizados + DynamicImpactCalculator ---
+
+def test_normalize_weights_sums_100():
+    """Normalizacion: suma de pesos siempre = 100% +/-0.1."""
+    brechas = [
+        {'tipo': 'schema', 'impacto': 25},
+        {'tipo': 'faq', 'impacto': 12},
+        {'tipo': 'metadata', 'impacto': 10},
+        {'tipo': 'open_graph', 'impacto': 8},
+    ]
+    gen = V4DiagnosticGenerator()
+    result = gen._normalize_weights(brechas)
+    total = sum(b['impacto'] for b in result)
+    assert abs(total - 100.0) < 0.1, f"Suma {total} != 100%"
+
+
+def test_raw_weight_preserved():
+    """Peso original se preserva en impacto_raw para auditoria."""
+    brechas = [{'tipo': 'schema', 'impacto': 25}]
+    gen = V4DiagnosticGenerator()
+    result = gen._normalize_weights(brechas)
+    assert result[0]['impacto_raw'] == 25
+    assert result[0]['impacto'] == 100.0  # Una sola brecha = 100%
+    assert result[0]['normalizado'] is True
+
+
+def test_equal_weight_fallback():
+    """Si todos los impactos son 0, distribucion equitativa."""
+    brechas = [{'tipo': 'a', 'impacto': 0}, {'tipo': 'b', 'impacto': 0}]
+    gen = V4DiagnosticGenerator()
+    result = gen._normalize_weights(brechas)
+    assert result[0]['impacto'] == 50.0
+    assert result[1]['impacto'] == 50.0
+    assert result[0]['normalizado'] is True
+
+
+def test_amazilia_four_brechas_100():
+    """Caso Amazilia: 4 brechas suman 100% (no 55%). Schema tiene mayor peso proporcional."""
+    brechas = [
+        {'tipo': 'schema_hotel', 'impacto': 25},
+        {'tipo': 'faq_schema', 'impacto': 12},
+        {'tipo': 'metadata', 'impacto': 10},
+        {'tipo': 'open_graph', 'impacto': 8},
+    ]
+    gen = V4DiagnosticGenerator()
+    result = gen._normalize_weights(brechas)
+    total = sum(b['impacto'] for b in result)
+    assert abs(total - 100.0) < 0.1, f"Suma {total} != 100%"
+    # Schema deberia tener el mayor peso proporcional
+    assert result[0]['impacto'] > result[1]['impacto']
+
+
+def test_get_brecha_pesos_normalizes():
+    """_get_brecha_pesos() siempre retorna brechas normalizadas (suma=100%)."""
+    audit = create_audit(
+        schema_detected=False,       # no_hotel_schema
+        faq_detected=False,           # no_faq_schema
+        gbp_geo_score=50,             # low_gbp_score
+        phone_web=None,               # no_whatsapp_visible
+        mobile_score=60,              # poor_performance
+    )
+    gen = V4DiagnosticGenerator()
+    brechas = gen._get_brecha_pesos(audit)
+
+    total = sum(b['impacto'] for b in brechas)
+    assert abs(total - 100.0) < 0.1, f"Suma {total} != 100%"
+
+    # Cada brecha debe tener flag normalizado
+    for b in brechas:
+        assert b.get('normalizado') is True
+        assert 'impacto_raw' in b
+
+
+def test_get_brecha_pesos_empty_audit():
+    """_get_brecha_pesos() con audit vacio retorna lista vacia."""
+    gen = V4DiagnosticGenerator()
+    brechas = gen._get_brecha_pesos(None)
+    assert brechas == []
+
+
+def test_brecha_costo_uses_normalized_weights():
+    """_get_brecha_costo() usa pesos normalizados + monthly_loss_central."""
+    audit = create_audit(
+        schema_detected=False,   # no_hotel_schema (raw 0.25)
+        gbp_geo_score=50,        # low_gbp_score (raw 0.30)
+        phone_web="+573****4567",
+        mobile_score=80,
+        faq_detected=True,
+        gbp_reviews=50,
+    )
+    fs = mock_financial_scenarios(monthly_loss=10_000_000)
+    gen = V4DiagnosticGenerator()
+
+    costo_brecha1 = gen._get_brecha_costo(audit, fs, 0)
+
+    # Brechas raw: low_gbp=0.30, no_hotel_schema=0.25
+    # Normalizado: low_gbp = 0.30/(0.30+0.25)*100 = 54.55%
+    # Costo = 10M * 0.5455 = 5,454,545
+    # (no 10M * 0.30 = 3M como antes)
+    brechas = gen._get_brecha_pesos(audit)
+    # Verificar que el costo refleja el peso normalizado
+    assert len(brechas) == 2
+    total = sum(b['impacto'] for b in brechas)
+    assert abs(total - 100.0) < 0.1

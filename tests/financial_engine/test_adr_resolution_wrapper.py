@@ -92,6 +92,7 @@ class TestADRSource:
         assert ADRSource.REGIONAL_V410.value == "regional_v410"
         assert ADRSource.LEGACY_HARDCODE.value == "legacy_hardcode"
         assert ADRSource.USER_PROVIDED.value == "user_provided"
+        assert ADRSource.WEB_SCRAPING.value == "web_scraping"
 
 
 class TestADRResolutionResult:
@@ -746,3 +747,50 @@ class TestIntegration:
         # CONFLICT: > 40%
         result = wrapper.resolve("coffee_axis", 20, user_provided_adr=450000.0)
         assert result.confidence == "CONFLICT"
+
+
+class TestWebScrapingADR:
+    """Test cases for web_scraping_adr parameter in ADR resolution."""
+
+    def test_web_scraping_as_source(self):
+        """Test WEB_SCRAPING as source when no user_provided."""
+        wrapper = ADRResolutionWrapper()
+        result = wrapper.resolve(region="eje_cafetero", web_scraping_adr=280000)
+        assert result.source == "web_scraping"
+        assert result.confidence == "medium"
+        assert result.adr_cop == 280000
+        assert result.metadata["fallback_chain"] == "web_scraping"
+
+    def test_user_provided_priority_over_scraping(self):
+        """Test user_provided has priority over scraping."""
+        wrapper = ADRResolutionWrapper()
+        result = wrapper.resolve(
+            region="eje_cafetero",
+            user_provided_adr=300000,
+            web_scraping_adr=280000,
+        )
+        assert result.source == "user_provided"
+        assert result.adr_cop == 300000
+
+    def test_full_fallback_chain(self):
+        """Test fallback chain works without scraping or user."""
+        wrapper = ADRResolutionWrapper()
+        # Sin user_provided ni scraping → va a regional/legacy
+        result = wrapper.resolve(region="eje_cafetero")
+        assert result.source in ("regional_v410", "legacy_hardcode")
+        assert result.adr_cop > 0
+
+    def test_scraping_none_no_crash(self):
+        """Test scraping=None does not crash."""
+        wrapper = ADRResolutionWrapper()
+        result = wrapper.resolve(region="eje_cafetero", web_scraping_adr=None)
+        # Debe caer a regional/legacy sin error
+        assert result.adr_cop > 0
+        assert result.source != "web_scraping"
+
+    def test_scraping_zero_ignored(self):
+        """Test scraping=0 is not used as source."""
+        wrapper = ADRResolutionWrapper()
+        result = wrapper.resolve(region="eje_cafetero", web_scraping_adr=0)
+        assert result.source != "web_scraping"
+        assert result.adr_cop > 0

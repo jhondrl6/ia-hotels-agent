@@ -5,6 +5,7 @@ Generates the 01_DIAGNOSTICO_Y_OPORTUNIDAD.md document based on
 v4.0 audit results with confidence-based validation.
 """
 
+import copy
 import logging
 import os
 import re
@@ -1539,40 +1540,42 @@ ${quick_wins_list}
     # Brecha (gap) calculation methods
     def _get_brecha_nombre(self, audit_result: V4AuditResult, index: int) -> str:
         """Get nombre de la brecha (razón) by index."""
-        brechas = self._identify_brechas(audit_result)
+        brechas = self._get_brecha_pesos(audit_result)
         if index < len(brechas):
             return brechas[index]['nombre']
         return "Sin identificar"
     
     def _get_brecha_costo(self, audit_result: V4AuditResult, financial_scenarios: FinancialScenarios, index: int) -> str:
-        """Get costo estimado de la brecha by index."""
-        brechas = self._identify_brechas(audit_result)
+        """Get costo estimado de la brecha by index (usa pesos normalizados + valor central)."""
+        brechas = self._get_brecha_pesos(audit_result)
         if index < len(brechas):
-            # Calculate proportional cost from main scenario
             main = financial_scenarios.get_main_scenario()
-            proportion = brechas[index].get('impacto', 0.25)
-            costo = main.monthly_loss_max * proportion
+            # Valor central si existe, sino max (legacy fallback)
+            base_value = getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max
+            proportion = brechas[index].get('impacto', 0) / 100.0  # peso normalizado a proporcion
+            costo = base_value * proportion
             return format_cop(costo)
         return format_cop(0)
     
     def _get_brecha_detalle(self, audit_result: V4AuditResult, index: int) -> str:
         """Get detalle/explicación de la brecha by index."""
-        brechas = self._identify_brechas(audit_result)
+        brechas = self._get_brecha_pesos(audit_result)
         if index < len(brechas):
             return brechas[index]['detalle']
         return "Sin informacion adicional"
     
     def _get_brecha_impacto(self, audit_result: V4AuditResult, index: int) -> str:
-        """Get impacto porcentual de la brecha by index."""
-        brechas = self._identify_brechas(audit_result)
+        """Get impacto porcentual de la brecha by index (usa pesos normalizados)."""
+        brechas = self._get_brecha_pesos(audit_result)
         if index < len(brechas):
-            impacto = brechas[index].get('impacto', 0.10)
-            return f"{int(impacto * 100)}%"
-        return "10%"
+            impacto = brechas[index].get('impacto', 0)
+            # impacto ya esta en escala 0-100 (normalizado)
+            return f"{int(impacto)}%"
+        return "0%"
     
     def _get_brecha_resumen(self, audit_result: V4AuditResult, index: int) -> str:
         """Get resumen de una línea de la brecha by index."""
-        brechas = self._identify_brechas(audit_result)
+        brechas = self._get_brecha_pesos(audit_result)
         if index < len(brechas):
             detalle = brechas[index].get('detalle', 'Sin resumen')
             return detalle[:80] + '...' if len(detalle) > 80 else detalle
@@ -1580,25 +1583,26 @@ ${quick_wins_list}
     
 
     def _get_brecha_recuperacion(self, audit_result, financial_scenarios, index):
-        """Get recuperacion mensual estimada de la brecha by index (valor numerico sin formato)."""
-        brechas = self._identify_brechas(audit_result)
+        """Get recuperacion mensual estimada de la brecha by index (usa pesos normalizados + valor central)."""
+        brechas = self._get_brecha_pesos(audit_result)
         if index < len(brechas):
             main = financial_scenarios.get_main_scenario()
-            proportion = brechas[index].get('impacto', 0.25)
-            recuperacion = main.monthly_loss_max * proportion
+            base_value = getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max
+            proportion = brechas[index].get('impacto', 0) / 100.0
+            recuperacion = base_value * proportion
             return f"{recuperacion:,.0f}"
         return "0"
 
     def _build_brechas_section(self, audit_result: V4AuditResult, financial_scenarios: FinancialScenarios) -> str:
         """Genera seccion markdown con TODAS las brechas detectadas (0-10+)."""
-        brechas = self._identify_brechas(audit_result)
+        brechas = self._get_brecha_pesos(audit_result)
         if not brechas:
             return "No se detectaron brechas criticas. Su presencia digital esta en buen estado."
 
         sections = []
         for i, b in enumerate(brechas, 1):
             costo = self._get_brecha_costo(audit_result, financial_scenarios, i - 1)
-            impacto_pct = int(b.get('impacto', 0) * 100)
+            impacto_pct = int(b.get('impacto', 0))  # ya normalizado a 0-100
             sections.append(
                 f"### [BRECHA {i}] {b['nombre']}\n"
                 f"- **Detalle:** {b['detalle']}\n"
@@ -1609,7 +1613,7 @@ ${quick_wins_list}
 
     def _build_brechas_resumen_section(self, audit_result: V4AuditResult, financial_scenarios: FinancialScenarios) -> str:
         """Genera tabla resumen dinamica de N brechas -> oportunidades."""
-        brechas = self._identify_brechas(audit_result)
+        brechas = self._get_brecha_pesos(audit_result)
         if not brechas:
             return "| Sin brechas detectadas | — |"
 
@@ -1911,6 +1915,96 @@ ${quick_wins_list}
         self._cached_brechas = brechas
         return brechas
 
+
+    # ========================================================
+    # FASE-C: Pesos Normalizados + DynamicImpactCalculator
+    # ========================================================
+
+    def _normalize_weights(self, brechas: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """
+        Normaliza pesos de brechas para que sumen exactamente 100%.
+
+        Regla: peso_bruto / suma(pesos_brutos) * 100
+        Cada brecha recibe peso proporcional a su impacto relativo.
+        La suma siempre sera 100%, sin porcion "sin explicar".
+        """
+        if not brechas:
+            return brechas
+
+        total = sum(b.get('impacto', 0) for b in brechas)
+        if total == 0:
+            # Distribucion equitativa como fallback
+            equal_weight = 100.0 / len(brechas)
+            for b in brechas:
+                b['impacto'] = round(equal_weight, 2)
+                b['impacto_raw'] = 0
+                b['normalizado'] = True
+            return brechas
+
+        for b in brechas:
+            raw = b.get('impacto', 0)
+            b['impacto_raw'] = raw  # preservar peso original para auditoria
+            b['impacto'] = round(raw / total * 100, 2)
+            b['normalizado'] = True
+
+        return brechas
+
+    def _map_brecha_to_issue_type(self, brecha_tipo: str) -> str:
+        """Mapea tipo de brecha del diagnostico a issue_type del DynamicImpactCalculator."""
+        mapping = {
+            'low_gbp_score': 'PERFIL_NO_RECLAMADO',
+            'no_hotel_schema': 'PERFIL_ABANDONADO',
+            'no_whatsapp_visible': 'SIN_WHATSAPP',
+            'poor_performance': 'SIN_WEBSITE',
+            'whatsapp_conflict': 'SIN_WHATSAPP',
+            'metadata_defaults': 'CERO_ACTIVIDAD_RECIENTE',
+            'missing_reviews': 'RESENAS_CRITICAS',
+            'no_faq_schema': 'SIN_FAQ',
+            'no_og_tags': 'FOTOS_INSUFICIENTES',
+            'low_citability': 'PERFIL_ABANDONADO',
+        }
+        return mapping.get(brecha_tipo, '')
+
+    def _get_brecha_pesos(
+        self,
+        audit_result: V4AuditResult,
+        hotel_data: Optional[Dict[str, Any]] = None,
+        region: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        """
+        Obtiene pesos de brechas con escalera de fuentes:
+        1. DynamicImpactCalculator (si hay hotel_data + region)
+        2. _identify_brechas() hardcoded normalizado (fallback)
+        """
+        brechas = copy.deepcopy(self._identify_brechas(audit_result))
+
+        # Intentar pesos dinamicos si hay datos
+        if hotel_data and region:
+            try:
+                from modules.utils.dynamic_impact import DynamicImpactCalculator
+                calc = DynamicImpactCalculator()
+                detected_issues = [
+                    self._map_brecha_to_issue_type(b.get('pain_id', ''))
+                    for b in brechas
+                ]
+                # Filtrar vacios
+                detected_issues = [i for i in detected_issues if i]
+                if detected_issues:
+                    impact_report = calc.calculate_impacts(region, detected_issues, hotel_data)
+
+                    # Mapear factores de DynamicImpactCalculator a pesos de brechas
+                    impact_map = {r.issue_type: r.factor for r in impact_report.impacts}
+                    for b in brechas:
+                        issue_type = self._map_brecha_to_issue_type(b.get('pain_id', ''))
+                        if issue_type in impact_map:
+                            b['impacto'] = impact_map[issue_type] * 100  # factor -> porcentaje
+                            b['peso_source'] = 'dynamic_impact'
+            except Exception:
+                pass  # Fallback a pesos hardcoded
+
+        # Siempre normalizar
+        brechas = self._normalize_weights(brechas)
+        return brechas
 
     # ========================================================
     # FASE-C: Oportunidad Ponderada (Opportunity Scores)

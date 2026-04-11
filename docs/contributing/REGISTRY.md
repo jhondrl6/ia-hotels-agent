@@ -2160,6 +2160,45 @@ _Ninguno_
 ---
 
 
+## FASE-D - 2026-04-11
+**Descripcion:** Scraper→ADR: precio web como fuente intermedia de ADR
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/adr_resolution_wrapper.py` | Adr Resolution Wrapper |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (5)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-C - 2026-04-11
+**Descripcion:** Pesos normalizados (suma=100%) + integración DynamicImpactCalculator
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (7)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
