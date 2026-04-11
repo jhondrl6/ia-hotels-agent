@@ -3,7 +3,7 @@
 
 ---
 
-## 0. Estado Post-FASE-G (RESUMEN DE AVANCE)
+## 0. Estado Post-FASE-H + Fix F1 residual (RESUMEN DE AVANCE)
 
 ### Fases ejecutadas (Opción C — Rediseño completo)
 
@@ -17,6 +17,7 @@
 | FASE-F | ✅ | Template narrativa Comisión OTA + evidence tiers | 2026-04-11 |
 | FASE-G | ✅ | Integración `main.py` + validación E2E | 2026-04-11 |
 | FASE-H | ✅ | `RegionalADRResolver` activado SHADOW + parcheo `precio_promedio` + occupancy regional | 2026-04-11 |
+| Fix F1 | ✅ | Título + urgencia: `monthly_loss_max` → `format_loss_cop()` (central) | 2026-04-11 |
 
 ### Verificación E2E (Amaziliahotel, 2026-04-11)
 
@@ -177,14 +178,14 @@ Este módulo YA TIENE la lógica correcta para impacto dinámico:
 
 ## 5. Fallas Estructurales (Resumen)
 
-| # | Falla | Severidad | Impacto en el cliente |
-|---|-------|-----------|----------------------|
-| F1 | Inflación 20% sistemática | ALTA | Cifra engañosa, pierde credibilidad si el hotelero verifica |
-| F2 | Pesos sin base empírica | ALTA | Atribución incorrecta de prioridades |
-| F3 | Suma puede superar 100% | MEDIA | Inconsistencia matemática visible |
-| F4 | 45% de pérdida sin explicar | ALTA | El cliente pregunta "¿y el resto?" y no hay respuesta |
-| F5 | DynamicImpactCalculator ignorado | MEDIA | Solución parcial ya existe pero no está conectada |
-| F6 | Sin trazabilidad del cálculo | ALTA | Imposible auditar el número ante un tercero |
+|| # | Falla | Severidad | Impacto en el cliente | Estado |
+||---|-------|-----------|----------------------|--------|
+|| F1 | Inflación 20% sistemática | ALTA | Cifra engañosa, pierde credibilidad si el hotelero verifica | ✅ RESUELTO — título (L474) + urgencia (L1734) usan `format_loss_cop()` (central). Commit db649e8 |
+|| F2 | Pesos sin base empírica | ALTA | Atribución incorrecta de prioridades | ✅ RESUELTO — FASE-C: pesos normalizados |
+|| F3 | Suma puede superar 100% | MEDIA | Inconsistencia matemática visible | ✅ RESUELTO — FASE-C: normalización |
+|| F4 | 45% de pérdida sin explicar | ALTA | El cliente pregunta "¿y el resto?" y no hay respuesta | ✅ RESUELTO — FASE-C: suma = 100% |
+|| F5 | DynamicImpactCalculator ignorado | MEDIA | Solución parcial ya existe pero no está conectada | ✅ RESUELTO — FASE-C: integrado como fuente |
+|| F6 | Sin trazabilidad del cálculo | ALTA | Imposible auditar el número ante un tercero | ✅ RESUELTO — FASE-A: FinancialBreakdown + EvidenceTier |
 
 ---
 
