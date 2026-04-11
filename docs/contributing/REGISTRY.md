@@ -2300,6 +2300,28 @@ _Ninguno_
 ---
 
 
+## FASE-H - 2026-04-11
+**Descripcion:** RegionalADRResolver activado SHADOW + parcheo precio_promedio + occupancy regional. Parchea v25_config.regiones + precio_promedio. Añade resolve_occupancy() calibrado. Normaliza scraper_fallback.py. Fix test. Active pendiente por Caribe 36.7% diff.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/regional_adr_resolver.py` | Regional Adr Resolver |
+| `modules/scrapers/scraper_fallback.py` | Scraper Fallback |
+| `tests/financial_engine/test_regional_adr_resolver.py` | Test Regional Adr Resolver |
+| `.opencode/plans/context/diagnostico_3132_cop_investigacion.md` | Diagnostico 3132 Cop Investigacion |
+
+### Validaciones
+- [x] Tests passing (373 financial_engine passed, 1963 total passed)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
