@@ -6,6 +6,7 @@ diagnostic and proposal documents in the v4.0 system.
 """
 
 from dataclasses import dataclass, field
+from enum import Enum
 from typing import Dict, List, Optional, Any, TYPE_CHECKING
 from datetime import datetime
 
@@ -89,17 +90,19 @@ class Scenario:
     assumptions: List[str] = field(default_factory=list)
     confidence_score: float = 0.0
     monthly_opportunity_cop: int = 0  # Valor absoluto cuando loss <= 0 (ganancia/equilibrio)
+    monthly_loss_central: Optional[int] = None  # NUEVO — valor central de presentación
     
     def format_loss_cop(self) -> str:
         """Format loss amount with semantic handling for negative values."""
-        amount = self.monthly_loss_max  # Usar max para representar el escenario
+        amount = self.monthly_loss_central if self.monthly_loss_central is not None else self.monthly_loss_max
         if amount <= 0:
             return f"Equilibrio (ahorro: {format_cop(abs(amount))})"
         return format_cop(amount)
     
     def is_equilibrium_or_gain(self) -> bool:
         """Check if this scenario represents equilibrium or gain."""
-        return self.monthly_loss_max <= 0
+        amount = self.monthly_loss_central if self.monthly_loss_central is not None else self.monthly_loss_max
+        return amount <= 0
 
 
 @dataclass
@@ -118,6 +121,48 @@ class FinancialScenarios:
         min_val = f"{self.conservative.monthly_loss_min:,.0f}".replace(",", ".")
         max_val = f"{self.optimistic.monthly_loss_max:,.0f}".replace(",", ".")
         return f"${min_val} - ${max_val} COP/mes"
+
+
+class EvidenceTier(Enum):
+    """Clasificación de calidad de evidencia financiera."""
+    A = "A"  # GA4 + GSC conectados — datos verificables
+    B = "B"  # Benchmarks regionales + scraping — estimado con base
+    C = "C"  # Solo scraping básico — estimado con baja confianza
+    
+    @property
+    def disclaimer(self) -> str:
+        if self == EvidenceTier.A:
+            return "Basado en datos de Google Analytics y Search Console verificados."
+        elif self == EvidenceTier.B:
+            return "Estimación basada en benchmarks regionales y datos de su web. Para mayor precisión, conecte Google Analytics 4."
+        else:
+            return "Estimación basada en datos limitados de su web. Conecte Google Analytics 4 para un diagnóstico más preciso."
+
+
+@dataclass
+class FinancialBreakdown:
+    """Desglose financiero por capas: verificable vs estimado."""
+    
+    # CAPA 1: Datos verificables (hechos del hotel + comisión OTA)
+    monthly_ota_commission_cop: float      # Ej: $5,400,000
+    ota_commission_basis: str              # Ej: "120 noches OTA × $300K ADR × 15%"
+    ota_commission_source: str             # Ej: "onboarding" | "scraping" | "benchmark"
+    
+    # CAPA 2A: Ahorro por migración OTA→directo (hipótesis)
+    shift_savings_cop: float               # Ej: $540,000
+    shift_percentage: float                # Ej: 0.10
+    shift_source: str                      # Ej: "benchmark: hoteles con presencia digital mejorada"
+    
+    # CAPA 2B: Ingresos nuevos por visibilidad IA (hipótesis)
+    ia_revenue_cop: float                  # Ej: $2,250,000
+    ia_boost_percentage: float             # Ej: 0.05
+    ia_source: str                         # Ej: "estimado: sin datos GA4"
+    
+    # META
+    evidence_tier: str                     # "A" | "B" | "C"
+    disclaimer: str                        # Texto honesto sobre confianza del dato
+    hotel_data_sources: Dict[str, str] = field(default_factory=dict)
+    # Dict de fuente por dato: {"adr": "onboarding", "rooms": "onboarding", "occupancy": "benchmark"}
 
 
 @dataclass
