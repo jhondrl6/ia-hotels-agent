@@ -97,9 +97,9 @@ FinancialScenarios
 *(Marcar [x] cuando se actualice cada archivo)*
 
 - [ ] `CHANGELOG.md` — Entrada para el rediseño del motor financiero
+- [x] `REGISTRY.md` — Vía log_phase_completion.py (FASE-E ✅ 2026-04-11)
 - [ ] `GUIA_TECNICA.md` — Notas técnicas del nuevo FinancialBreakdown
 - [ ] `CONTRIBUTING.md` — Si hay cambios en convenciones
-- [ ] `REGISTRY.md` — Vía log_phase_completion.py
 - [ ] `README.md` — Si la promesa línea 63 necesita actualización
 - [ ] `SYSTEM_STATUS.md` — Vía doctor.py --status
 - [ ] `.agents/workflows/README.md` — Si se agrega skill nueva

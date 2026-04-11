@@ -493,18 +493,19 @@ class AssetDiagnosticLinker:
             result.update(asset_narratives[asset_type])
         
         # Calculate impact_cop dynamically if financial_scenario is available
-        # and has valid numeric monthly_loss_max
+        # and has valid numeric monthly_loss_central (with fallback to monthly_loss_max)
         if financial_scenario is not None:
-            monthly_loss_max = getattr(financial_scenario, 'monthly_loss_max', None)
-            # Only calculate if monthly_loss_max is a valid number
-            if monthly_loss_max is not None and isinstance(monthly_loss_max, (int, float)) and monthly_loss_max > 0:
+            base_value = getattr(financial_scenario, 'monthly_loss_central', None) or \
+                         getattr(financial_scenario, 'monthly_loss_max', None)
+            # Only calculate if base_value is a valid number
+            if base_value is not None and isinstance(base_value, (int, float)) and base_value > 0:
                 estimated_impact = _get_asset_estimated_impact(asset_type)
                 if estimated_impact and estimated_impact in ASSET_WEIGHTS:
                     weight = ASSET_WEIGHTS[estimated_impact]
-                    result["impact_cop"] = int(monthly_loss_max * weight)
+                    result["impact_cop"] = int(base_value * weight)
                 else:
                     # Fallback for assets not in PAIN_SOLUTION_MAP - use medium weight
-                    result["impact_cop"] = int(monthly_loss_max * 0.25)
+                    result["impact_cop"] = int(base_value * 0.25)
         
         return result
 

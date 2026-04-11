@@ -50,6 +50,10 @@ class V4ProposalGenerator:
     MONTHLY_PACKAGE_PRICE = 1200000  # $1.2M COP
     SETUP_FEE = 2500000  # $2.5M COP one-time
 
+    def _get_main_value(self, scenario) -> int:
+        """Obtiene valor central de presentacion, con fallback a max."""
+        return getattr(scenario, 'monthly_loss_central', None) or scenario.monthly_loss_max
+
     # === TABLA DE MONETIZACION (GAP-IAO-01-03) ===
     # Basado en KB [SECTION:CHECKLIST_IAO] + [SECTION:PRIORITY_MATRIX]
     FALTANTE_MONETIZACION = {
@@ -454,7 +458,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         
         # Calculate ROI
         monthly_investment = getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE)
-        projected_monthly_gain = main_scenario.monthly_loss_max
+        projected_monthly_gain = self._get_main_value(main_scenario)
         roi_6_months = self._calculate_roi(monthly_investment, projected_monthly_gain, 6)
         break_even = self._calculate_break_even(monthly_investment, projected_monthly_gain)
         
@@ -486,12 +490,12 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             'break_even_months': str(break_even),
             
         # All scenarios
-        'conservative_gain': format_cop(financial_scenarios.conservative.monthly_loss_max),
-        'conservative_roi': self._calculate_roi(monthly_investment, financial_scenarios.conservative.monthly_loss_max, 6),
-        'realistic_gain': format_cop(financial_scenarios.realistic.monthly_loss_max),
-        'realistic_roi': self._calculate_roi(monthly_investment, financial_scenarios.realistic.monthly_loss_max, 6),
-        'optimistic_gain': self._format_scenario_amount(financial_scenarios.optimistic.monthly_loss_max),
-        'optimistic_roi': self._calculate_roi(monthly_investment, financial_scenarios.optimistic.monthly_loss_max, 6),
+        'conservative_gain': format_cop(self._get_main_value(financial_scenarios.conservative)),
+        'conservative_roi': self._calculate_roi(monthly_investment, self._get_main_value(financial_scenarios.conservative), 6),
+        'realistic_gain': format_cop(self._get_main_value(financial_scenarios.realistic)),
+        'realistic_roi': self._calculate_roi(monthly_investment, self._get_main_value(financial_scenarios.realistic), 6),
+        'optimistic_gain': self._format_scenario_amount(self._get_main_value(financial_scenarios.optimistic)),
+        'optimistic_roi': self._calculate_roi(monthly_investment, self._get_main_value(financial_scenarios.optimistic), 6),
         
         # Monthly projection variables for 6 months
         'inv_m1': format_cop(monthly_investment),
@@ -500,35 +504,35 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'inv_m4': format_cop(monthly_investment),
         'inv_m5': format_cop(monthly_investment),
         'inv_m6': format_cop(monthly_investment),
-        'rec_m1': format_cop(main_scenario.monthly_loss_max),
-        'rec_m2': format_cop(main_scenario.monthly_loss_max),
-        'rec_m3': format_cop(main_scenario.monthly_loss_max),
-        'rec_m4': format_cop(main_scenario.monthly_loss_max),
-        'rec_m5': format_cop(main_scenario.monthly_loss_max),
-        'rec_m6': format_cop(main_scenario.monthly_loss_max),
-        'net_m1': format_cop(main_scenario.monthly_loss_max - monthly_investment),
-        'net_m2': format_cop(main_scenario.monthly_loss_max - monthly_investment),
-        'net_m3': format_cop(main_scenario.monthly_loss_max - monthly_investment),
-        'net_m4': format_cop(main_scenario.monthly_loss_max - monthly_investment),
-        'net_m5': format_cop(main_scenario.monthly_loss_max - monthly_investment),
-        'net_m6': format_cop(main_scenario.monthly_loss_max - monthly_investment),
-        'acc_m1': format_cop(main_scenario.monthly_loss_max - monthly_investment),
-        'acc_m2': format_cop(2 * (main_scenario.monthly_loss_max - monthly_investment)),
-        'acc_m3': format_cop(3 * (main_scenario.monthly_loss_max - monthly_investment)),
-        'acc_m4': format_cop(4 * (main_scenario.monthly_loss_max - monthly_investment)),
-        'acc_m5': format_cop(5 * (main_scenario.monthly_loss_max - monthly_investment)),
-        'acc_m6': format_cop(6 * (main_scenario.monthly_loss_max - monthly_investment)),
+        'rec_m1': format_cop(self._get_main_value(main_scenario)),
+        'rec_m2': format_cop(self._get_main_value(main_scenario)),
+        'rec_m3': format_cop(self._get_main_value(main_scenario)),
+        'rec_m4': format_cop(self._get_main_value(main_scenario)),
+        'rec_m5': format_cop(self._get_main_value(main_scenario)),
+        'rec_m6': format_cop(self._get_main_value(main_scenario)),
+        'net_m1': format_cop(self._get_main_value(main_scenario) - monthly_investment),
+        'net_m2': format_cop(self._get_main_value(main_scenario) - monthly_investment),
+        'net_m3': format_cop(self._get_main_value(main_scenario) - monthly_investment),
+        'net_m4': format_cop(self._get_main_value(main_scenario) - monthly_investment),
+        'net_m5': format_cop(self._get_main_value(main_scenario) - monthly_investment),
+        'net_m6': format_cop(self._get_main_value(main_scenario) - monthly_investment),
+        'acc_m1': format_cop(self._get_main_value(main_scenario) - monthly_investment),
+        'acc_m2': format_cop(2 * (self._get_main_value(main_scenario) - monthly_investment)),
+        'acc_m3': format_cop(3 * (self._get_main_value(main_scenario) - monthly_investment)),
+        'acc_m4': format_cop(4 * (self._get_main_value(main_scenario) - monthly_investment)),
+        'acc_m5': format_cop(5 * (self._get_main_value(main_scenario) - monthly_investment)),
+        'acc_m6': format_cop(6 * (self._get_main_value(main_scenario) - monthly_investment)),
         
         # Additional variables for sales template
         'generated_date': generated_at.strftime("%Y-%m-%d"),
-        'main_scenario_amount': format_cop(main_scenario.monthly_loss_max),
+        'main_scenario_amount': format_cop(self._get_main_value(main_scenario)),
         'web_score': "85",  # Placeholder - ideally from audit
         'web_status': "VERIFIED" if diagnostic_summary.overall_confidence.value == "VERIFIED" else "ESTIMATED",
         'package_name': "Kit Hospitalidad 4.0",  # From constants or config
-        'roi_6m': self._calculate_roi(monthly_investment, main_scenario.monthly_loss_max, 6).replace("%", "").rstrip("X").strip(),  # Just the number, no X suffix
+        'roi_6m': self._calculate_roi(monthly_investment, self._get_main_value(main_scenario), 6).replace("%", "").rstrip("X").strip(),  # Just the number, no X suffix
         'total_investment_6m': format_cop(monthly_investment * 6),
-        'recovered_6m': format_cop(main_scenario.monthly_loss_max * 6),
-        'net_benefit_6m': format_cop((main_scenario.monthly_loss_max - monthly_investment) * 6),
+        'recovered_6m': format_cop(self._get_main_value(main_scenario) * 6),
+        'net_benefit_6m': format_cop((self._get_main_value(main_scenario) - monthly_investment) * 6),
         'plan_7d': self._build_7_day_plan(asset_plan),
         'plan_30d': self._build_30_day_plan(asset_plan),
         'plan_60d': self._build_60_day_plan(),
@@ -542,11 +546,11 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         # V6 template variables (regional context and investment summary)
         'hotel_location': hotel_location,
         'hotel_region': hotel_region,
-        'monthly_loss': format_cop(main_scenario.monthly_loss_max),
+        'monthly_loss': format_cop(self._get_main_value(main_scenario)),
         'monthly_investment': format_cop(monthly_investment),
         'total_investment': format_cop(monthly_investment * 6),
-        'total_recovered': format_cop(main_scenario.monthly_loss_max * 6),
-        'net_benefit': format_cop((main_scenario.monthly_loss_max - monthly_investment) * 6),
+        'total_recovered': format_cop(self._get_main_value(main_scenario) * 6),
+        'net_benefit': format_cop((self._get_main_value(main_scenario) - monthly_investment) * 6),
 
         # Coherence checklist
         'coherence_checklist': self._build_coherence_checklist(diagnostic_summary),
@@ -803,9 +807,9 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         Aligns with price/pain ratio validation in coherence validator.
         """
         # Calculate expected value from scenarios (70/20/10 weighting)
-        conservative = financial_scenarios.conservative.monthly_loss_max
-        realistic = financial_scenarios.realistic.monthly_loss_max
-        optimistic = financial_scenarios.optimistic.monthly_loss_max
+        conservative = self._get_main_value(financial_scenarios.conservative)
+        realistic = self._get_main_value(financial_scenarios.realistic)
+        optimistic = self._get_main_value(financial_scenarios.optimistic)
         
         expected_monthly = int(conservative * 0.70 + realistic * 0.20 + optimistic * 0.10)
         
@@ -858,12 +862,12 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
                 # Fuente primaria: impacto real de _identify_brechas
                 brecha = brechas_reales[i]
                 impacto = brecha.get('impacto', 1.0 / max(len(brechas_reales), 1))
-                costo = int(main_scenario.monthly_loss_max * impacto)
+                costo = int(self._get_main_value(main_scenario) * impacto)
                 brecha_data[f'brecha_{slot}_nombre'] = brecha.get('nombre', '')
                 brecha_data[f'brecha_{slot}_costo'] = format_cop(costo)
             elif i < len(top_problems):
                 # Fallback: top_problems sin impacto real (distribución equitativa)
-                distribucion = int(main_scenario.monthly_loss_max / max(len(top_problems), 1))
+                distribucion = int(self._get_main_value(main_scenario) / max(len(top_problems), 1))
                 brecha_data[f'brecha_{slot}_nombre'] = top_problems[i]
                 brecha_data[f'brecha_{slot}_costo'] = format_cop(distribucion)
             else:

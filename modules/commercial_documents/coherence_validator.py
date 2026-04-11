@@ -430,7 +430,8 @@ class CoherenceValidator:
         - Muestra notación x en mensajes para legibilidad (3.0x = 3%)
         """
         price = proposal.price_monthly
-        pain = diagnostic.financial_impact.monthly_loss_max
+        main = diagnostic.financial_impact
+        pain = getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max
         
         if pain <= 0:
             return CoherenceCheck(

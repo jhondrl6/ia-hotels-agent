@@ -24,7 +24,7 @@ FASE-A ──→ FASE-B ──→ FASE-E ──→ FASE-F ──→ FASE-G
 | FASE-B | ScenarioCalculator narrativa por capas | `scenario_calculator.py`, `financial_calculator_v2.py` | FASE-A | ✅ 2026-04-11 |
 | FASE-C | Pesos normalizados + DynamicImpact | `v4_diagnostic_generator.py` (pesos), `dynamic_impact.py` | FASE-A | ✅ 2026-04-11 |
 | FASE-D | Scraper→ADR conexión | `adr_resolution_wrapper.py`, `web_scraper.py`, `main.py:1526` | FASE-A | ✅ 2026-04-11 |
-| FASE-E | Consumidores actualización | `v4_proposal_generator.py`, `coherence_validator.py`, `asset_diagnostic_linker.py` | FASE-B, FASE-C |
+| FASE-E | Consumidores actualización | `v4_proposal_generator.py`, `coherence_validator.py`, `asset_diagnostic_linker.py` | FASE-B, FASE-C | ✅ 2026-04-11 |
 | FASE-F | Template diagnóstico + Evidence Tiers | `diagnostico_v6_template.md`, `v4_diagnostic_generator.py` (placeholders) | FASE-E |
 | FASE-G | Integración main.py + end-to-end | `main.py:1664-1910`, tests de regresión | FASE-F, FASE-D |
 
