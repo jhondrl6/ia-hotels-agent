@@ -42,6 +42,14 @@
 - 628 tests passing (0 regresiones)
 - Errors pre-existentes en `data_validation/` y `observability/` (módulos faltantes, no relacionados)
 
+### Documentacion Post-Implementacion (docs-only)
+
+- **README.md** - Seccion "Que es IA Hoteles Agent" expandida: 4 pilares progresivos con tabla de siglas/proposito/ejemplo + progresion SEO->AEO->IAO con GEO lateral + score_global como metrica principal. Nueva seccion "Voice Readiness Proxy (v4.28.0)" con componentes, niveles y restricciones. Test count actualizado (628->2150).
+- **AGENTS.md** - Tests: 1782->2150 funciones, 52->0 regresion. Modulo voice_readiness_proxy.py agregado a tabla. Mejoras: agrega "4 Pilares Alignment" y "Voice Readiness Proxy".
+- **gap_analyzer.py** - `modelo_pilares` residual corregido: "2 Pilares GEO + JSON" -> "4 Pilares SEO+GEO+AEO+IAO".
+- **GUIA_TECNICA.md** - Nota tecnica agregada: progresion 4 pilares, CHECKLIST redistribuido, VoiceReadinessProxy, gap_analyzer modelo_pilares.
+- **docs/contributing/REGISTRY.md** - Entrada FASE-DOCS-01 registrada via log_phase_completion.py.
+
 ## [4.27.0] - 2026-04-11
 
 ### Motor Financiero Verificable — Opción C

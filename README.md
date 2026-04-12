@@ -28,7 +28,7 @@
 > *   **Datos Regionales Reales**: ADR y occupancy por región (eje_cafetero, antioquia) activados. Caribe protegido (no usa regional).
 > *   **Ganancia Neta vs Pérdida**: Escenario optimista negativo se presenta como "+$189,000 COP/mes (ganancia neta)" en vez de pérdida confusa.
 > *   **Evidence Tiers**: A (datos reales) → B (scraping) → C (estimación) con disclaimers honestos por tier.
-> *   **628 tests** pasando, 0 regresiones.
+> *   **2,150 test functions** (2150 en 140 archivos), 0 regresiones.
 > *   **NEVER_BLOCK Architecture**: El sistema nunca se bloquea, siempre entrega algo con benchmark regional + disclaimers honestos.
 > *   **Coherence Validator**: Score ≥ 0.8 requerido. Quality Gates de pre-publicación.
 
@@ -56,7 +56,18 @@ El **Agent Harness** es el núcleo que orchestra: memoria (recuerda análisis pr
 
 ## 🎯 ¿Qué es IA Hoteles Agent?
 
-Sistema que responde a la pregunta: "¿Por qué este hotel pierde reservas que van a Booking, competidores o ChatGPT?". Audita 4 pilares (GEO, SEO, AEO, posición competitiva), asigna un costo en COP a cada brecha detectada, y genera un paquete de assets técnicos listos para deploy con validación cruzada de coherencia.
+Sistema que responde a la pregunta: "¿Por qué este hotel pierde reservas que van a Booking, competidores o ChatGPT?". Audita 4 pilares progresivos (SEO → AEO → IAO, con GEO como pilar lateral), asigna un costo en COP a cada brecha detectada, y genera un paquete de assets técnicos listos para deploy con validación cruzada de coherencia.
+
+**Los 4 Pilares de Visibilidad Digital:**
+
+| Pilar | Sigla | Propósito | Ejemplo |
+|-------|-------|-----------|---------|
+| SEO | Search Engine Optimization | **Para que te ENCUENTREN** | Apareces en top 10 de Google orgánico |
+| GEO | Geographic Optimization | **Para que te UBICQUEN** | Sales en Google Maps con reseñas y fotos |
+| AEO | Answer Engine Optimization | **Para que te CITEN** | Siri lee tu ficha: "Cierra a las 8:00 PM" |
+| IAO | Intelligent Agent Optimization | **Para que te RECOMIENDEN** | ChatGPT te recomienda vs competidores |
+
+Cada pilar sigue una progresión: sin SEO base no hay AEO, sin AEO no hay IAO. GEO complementa todos. El `score_global` (0-100) es el promedio ponderado de los 4 pilares como métrica principal de Visibilidad Digital.
 
 El diagnóstico siempre se entrega. La propuesta comercial solo se genera cuando los datos alcanzan score de coherencia ≥ 0.8. Los assets se etiquetan como VERIFIED o ESTIMATED según la fuente de datos disponible.
 
@@ -251,6 +262,33 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ---
 
+## 🎤 Voice Readiness Proxy (v4.28.0)
+
+**Propósito:** Evaluar qué tan preparado está un hotel para que asistentes de voz (Siri, Google Assistant, Alexa) lo mencionen como respuesta directa.
+
+**Enfoque:** PROXY — mide los INPUTS que alimentan los asistentes de voz, NO consulta Siri/Alexa directamente (no existe API para ello).
+
+| Componente | Peso | Qué evalúa |
+|------------|------|------------|
+| GBP Completeness | 30% | NAP, categorías, horarios, fotos, atributos |
+| Schema for Voice | 25% | Hotel/LocalBusiness, FAQ, Speakable markup |
+| Featured Snippets | 25% | Optimización para posición cero en Google |
+| Factual Coverage | 20% | Datos factuales accesibles (horarios, precios, dirección) |
+
+| Nivel | Rango | Significado |
+|-------|-------|-------------|
+| Critical | 0-25 | Sin presencia detectable por asistentes de voz |
+| Basic | 26-50 | Presencia mínima, datos parciales |
+| Good | 51-75 | Optimización sólida, capturable por voz |
+| Excellent | 76-100 | Presencia completa y consistente para voz |
+
+**Restricciones (por diseño):**
+- NO consulta APIs de Siri, Alexa, Google Assistant directamente
+- NO simula queries de voz con TTS/STT
+- Voice Readiness es sub-score de AEO, no un 5to pilar independiente
+
+---
+
 ## ⚠️ Troubleshooting
 
 | Problema | Solución |
@@ -268,6 +306,7 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 - **Suite de regresión**: Hotel Vísperas + Amaziliahotel como casos de referencia
 - **Coherence Score ≥ 0.8**: Validación cruzada documentos ↔ assets
 - **5 tests FASE-K**: Validación de ganancia neta, display_label, hook_range
+- **22 tests Voice Readiness Proxy**: Score proxy basado en inputs (GBP, Schema, Snippets, Factual)
 
 ---
 
@@ -278,4 +317,4 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ## Testing
 
-**1700+ test functions** across unit, integration and E2E suites | **390/390 regression tests** in financial_engine suite | **Motor Financiero Verificable — Opción C (11 fases A→K)**
+**2,150+ test functions** across unit, integration and E2E suites | **390/390 regression tests** in financial_engine suite | **22 Voice Readiness Proxy tests** | **Motor Financiero Verificable — Opción C (11 fases A→K)**

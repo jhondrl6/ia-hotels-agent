@@ -77,11 +77,11 @@ Para actualizar cualquier documento del repositorio (CHANGELOG, VERSION, docs):
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 1782 funciones, 140 archivos, 52 regresion |
+| **Tests** | 2150 funciones, 140 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ 0.84 (umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
-| **Mejoras** | TDD Gate, Parallel Execution, FAQGenerator, GA4 Multi-Hotel, **Doctor CLI**, **Pre-commit ecosystem validation**, **v4_quality_validator unificado** |
+| **Mejoras** | TDD Gate, Parallel Execution, FAQGenerator, GA4 Multi-Hotel, **Doctor CLI**, **Pre-commit ecosystem validation**, **v4_quality_validator unificado**, **4 Pilares Alignment**, **Voice Readiness Proxy** |
 
 ---
 
@@ -139,6 +139,7 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `modules/auditors/ai_crawler_auditor.py` | Auditoría de robots.txt para IA crawlers | v4audit, v4complete |
 | `modules/auditors/citability_scorer.py` | Score de citabilidad de contenido | v4audit (ADVISORY) |
 | `modules/auditors/ia_readiness_calculator.py` | Score compuesto IA-readiness | v4audit (ADVISORY) |
+| `modules/auditors/voice_readiness_proxy.py` | Voice Readiness Proxy (GBP 30%, Schema 25%, Snippets 25%, Factual 20%) | v4complete (FASE-E) |
 | `modules/analytics/` | GA4, GSC, Profound, Semrush clients | v4audit |
 | `modules/analytics/google_analytics_client.py` | Cliente GA4 para tráfico indirecto | v4audit (ADVISORY) |
 | `modules/analytics/google_search_console_client.py` | Cliente GSC para keywords, posiciones, CTR | v4audit, v4complete (ADVISORY) |

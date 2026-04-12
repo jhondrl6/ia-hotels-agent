@@ -390,7 +390,7 @@ class GapAnalyzer:
             "campos_estimados": hotel_data.get('campos_estimados', []),
             "fecha_analisis": time.strftime('%Y-%m-%d'),
             "proveedor_llm": "fallback",
-            "modelo_pilares": "2 Pilares GEO + JSON",
+            "modelo_pilares": "4 Pilares SEO+GEO+AEO+IAO",
             "fuente_habitaciones": fuente_habitaciones,
             "factor_captura_regional": factor_perdida_base,
 "modelo_perdidas": {

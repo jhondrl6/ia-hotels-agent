@@ -84,6 +84,17 @@ FASE-D alinea toda la cadena de generación (diagnóstico → propuesta → gap 
 - 628 tests passing (0 regresiones)
 - Errors pre-existentes en `data_validation/` y `observability/` (módulos faltantes)
 
+### Documentacion Post-Implementacion (v4.28.0 docs-only)
+
+**Problema:** README.md y AGENTS.md no reflejaban la implementacion de 4 pilares (SEO/GEO/AEO/IAO) ni Voice Readiness Proxy. Test count desactualizado. Residual `modelo_pilares: "2 Pilares GEO + JSON"` en gap_analyzer.py.
+
+**Solucion:**
+- README.md: seccion "Que es" expandida con tabla 4 pilares + progresion + score_global. Nueva seccion Voice Readiness Proxy con componentes/niveles/restricciones. Test count actualizado.
+- AGENTS.md: modulo voice_readiness_proxy.py en tabla, mejoras actualizadas, tests corregidos.
+- gap_analyzer.py: `modelo_pilares` corregido de "2 Pilares" a "4 Pilares SEO+GEO+AEO+IAO".
+
+**Backwards-compat:** Cambios puramente documentales. Sin impacto en APIs, scores ni outputs.
+
 ---
 
 ## Notas de Cambios — Ciclo 2: RegionalADR + Validator Source-Aware
