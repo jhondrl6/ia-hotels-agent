@@ -1668,7 +1668,14 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             "direct_channel_percentage": direct_channel_pct,
         }
 
-        calc_result = calc_v2.calculate(financial_input)
+        # Construir dict de fuentes para validacion source-aware (FASE-J)
+        data_sources = {
+            "adr_cop": adr_source,
+            "occupancy": "regional" if feature_flags.should_use_regional_for(region) else ("onboarding" if onboarding_data is not None else "default"),
+            "direct_channel": "onboarding" if onboarding_data is not None else "default",
+        }
+
+        calc_result = calc_v2.calculate(financial_input, data_sources=data_sources)
         
         if calc_result.blocked:
             print(f"   ⚠️  FinancialCalculatorV2 blocked: {calc_result.status.value}")
@@ -1686,7 +1693,11 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         if ScenarioType.REALISTIC in scenarios:
             print(f"   Realista: ${scenarios[ScenarioType.REALISTIC].monthly_loss_cop:,.0f} COP/mes (20%)")
         if ScenarioType.OPTIMISTIC in scenarios:
-            print(f"   Optimista: ${scenarios[ScenarioType.OPTIMISTIC].monthly_loss_cop:,.0f} COP/mes (10%)")
+            opt = scenarios[ScenarioType.OPTIMISTIC]
+            if opt.is_net_gain:
+                print(f"   Optimista: +${abs(opt.monthly_loss_cop):,.0f} COP/mes (ganancia neta, 10%)")
+            else:
+                print(f"   Optimista: ${opt.monthly_loss_cop:,.0f} COP/mes (10%)")
         
         # Use FinancialCalculatorV2's weighted expected value
         expected_monthly = calc_result.get_realistic_loss() or 0.0
@@ -1727,28 +1738,26 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         'optimistic': get_scenario_value(scenarios, ScenarioType.OPTIMISTIC),
     }
     
-    # FASE-G: Calcular FinancialBreakdown para trazabilidad y evidence tiers
+    # FASE-K: Calcular FinancialBreakdown desde camino unico (derivado de calc_v2)
     financial_breakdown = None
     try:
-        from modules.financial_engine.scenario_calculator import ScenarioCalculator as _SC
-        _calculator = _SC()
+        _sc = ScenarioCalculator()
         _hotel_fin_data = HotelFinancialData(
             rooms=rooms,
             adr_cop=adr_cop,
             occupancy_rate=occupancy_rate,
             direct_channel_percentage=direct_channel_pct,
             ota_commission_rate=0.15,
-            adr_source=adr_source if 'adr_source' in dir() else 'unknown',
-            occupancy_source='onboarding' if onboarding_data is not None else 'default',
+            adr_source=adr_source,
+            occupancy_source='regional' if feature_flags.should_use_regional_for(region) else ('onboarding' if onboarding_data is not None else 'default'),
             channel_source='onboarding' if onboarding_data is not None else 'default',
         )
-        financial_breakdown = _calculator.calculate_breakdown(_hotel_fin_data)
-        print(f"[FASE-G] FinancialBreakdown calculado:")
-        print(f"   Comisión OTA: ${financial_breakdown.monthly_ota_commission_cop:,.0f} COP")
-        print(f"   Evidence Tier: {financial_breakdown.evidence_tier}")
-        print(f"   Data sources: {list(financial_breakdown.hotel_data_sources.keys())}")
+        financial_breakdown = _sc.calculate_breakdown(_hotel_fin_data)
+        print(f"[FASE-K] FinancialBreakdown derivado (camino unico):")
+        print(f"   Comision OTA: ${financial_breakdown.monthly_ota_commission_cop:,.0f} COP")
+        print(f"   Source reliability: {calc_result.metadata.get('source_reliability', 'unknown')}")
     except Exception as e:
-        print(f"[FASE-G] Warning: FinancialBreakdown falló: {e}")
+        print(f"[FASE-K] Warning: FinancialBreakdown fallo: {e}")
 
     # Build breakdown dict for JSON (safe even if financial_breakdown is None)
     _breakdown_dict = {}

@@ -48,7 +48,7 @@ FASE-K depende de AMBAS (I + J completadas)
 |------|--------|---------------------|------------|--------|
 || FASE-I | Activar RegionalADRResolver por regiones validadas | `feature_flags.py`, `harness_handlers.py`, `main.py` | FASE-H | ✅ 2026-04-11 |
 || FASE-J | NoDefaultsValidator source-aware + template honesto | `no_defaults_validator.py`, `calculator_v2.py`, `diagnostico_v6_template.md`, `v4_diagnostic_generator.py` | FASE-F | ✅ 2026-04-11 |
-|| FASE-K | Unificar camino dual + fix optimista negativo | `main.py`, `harness_handlers.py`, `scenario_calculator.py` | FASE-I, FASE-J | ⬜ Pendiente |
+|| FASE-K | Unificar camino dual + fix optimista negativo | `main.py`, `harness_handlers.py`, `scenario_calculator.py` | FASE-I, FASE-J | ✅ 2026-04-11 |
 
 ## Conflictos Potenciales (archivos compartidos) — Ciclo 2
 

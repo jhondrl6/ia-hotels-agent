@@ -20,7 +20,7 @@
 | H | RegionalADRResolver SHADOW | ✅ Completada | `feature_flags.py`, `regional_adr_resolver.py` | 0 | 2026-04-11 |
 || I | Activar RegionalADRResolver por regiones | ✅ 2026-04-11 | `feature_flags.py`, `harness_handlers.py`, `main.py` | 4 | 2026-04-11 |
 || J | Validator source-aware + template | ✅ 2026-04-11 | `no_defaults_validator.py`, `template`, `generator` | 8 | 2026-04-11 |
-|| K | Unificar camino dual + fix optimista | ⬜ Pendiente | `main.py`, `harness_handlers.py`, `scenario_calculator.py` | 5 | — |
+|| K | Unificar camino dual + fix optimista | ✅ Completada | `main.py`, `harness_handlers.py`, `scenario_calculator.py` | 5 | 2026-04-11 |
 
 **Total Ciclo 1**: 8 fases, ~27 tests nuevos + E2E
 **Total Ciclo 2**: 3 fases, ~16 tests nuevos + E2E final
@@ -110,12 +110,12 @@ I + J (paralelo) → K → v4complete validacion
 - [x] REGISTRY.md actualizado via log_phase_completion.py
 
 ### FASE-K (Unificar camino dual + fix optimista negativo)
-- [ ] Camino unico en main.py (no segundo ScenarioCalculator)
-- [ ] Harness handler usa FinancialCalculatorV2
-- [ ] Optimista negativo muestra "ganancia neta"
-- [ ] display_label funciona para positivo y negativo
-- [ ] 5 tests nuevos pasan
-- [ ] E2E validacion final (con I+J completos)
+- [x] Camino unico en main.py (no segundo ScenarioCalculator)
+- [x] Harness handler usa FinancialCalculatorV2
+- [x] Optimista negativo muestra "ganancia neta"
+- [x] display_label funciona para positivo y negativo
+- [x] 5 tests nuevos pasan
+- [x] E2E validacion final (con I+J completos)
 
 ---
 
@@ -138,3 +138,4 @@ I + J (paralelo) → K → v4complete validacion
 || 1 | FASE-A | 2026-04-10 | ✅ Completada — 9/9 tests pasan, 418 tests suite intacta |
 || 7 | FASE-G | 2026-04-11 | ✅ Completada — 453 tests, E2E Amaziliahotel exit code 0, breakdown poblado |
 || 8 | FASE-I+J | 2026-04-11 | ✅ Paralelo — I: whitelist regional ADR, J: validator source-aware. 12 tests nuevos, 0 regresiones |
+|| 9 | FASE-K | 2026-04-11 | ✅ Completada — Camino unico + fix optimista negativo. 5 tests nuevos, 390 total, E2E exit 0 |

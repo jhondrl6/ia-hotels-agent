@@ -98,15 +98,39 @@ def financial_calculation_handler(payload: Dict[str, Any], context: TaskContext)
             if regional_occupancy is not None:
                 occupancy_rate = regional_occupancy
 
-        # Step 4: Generate financial scenarios
-        calculator = ScenarioCalculator()
-        hotel_data = HotelFinancialData(
-            rooms=rooms,
-            adr_cop=adr_result.adr_cop,
-            occupancy_rate=occupancy_rate,
-            direct_channel_percentage=direct_channel_percentage,
-        )
-        scenarios = calculator.calculate_scenarios(hotel_data)
+        # Step 4: Generate financial scenarios using FinancialCalculatorV2
+        from modules.financial_engine.calculator_v2 import FinancialCalculatorV2
+        from modules.financial_engine.no_defaults_validator import NoDefaultsValidator
+
+        calc_v2 = FinancialCalculatorV2()
+        financial_data = {
+            "rooms": rooms,
+            "adr_cop": adr_result.adr_cop,
+            "occupancy_rate": occupancy_rate,
+            "direct_channel_percentage": direct_channel_percentage,
+        }
+
+        # Construir dict de fuentes para validacion source-aware (FASE-J)
+        data_sources = {
+            "adr_cop": adr_result.source,
+            "occupancy": "regional" if flags.should_use_regional_for(region) else payload.get("occupancy_source", "default"),
+            "direct_channel": payload.get("channel_source", "default"),
+        }
+
+        calc_result = calc_v2.calculate(financial_data, data_sources=data_sources)
+
+        if calc_result.blocked:
+            # Fallback a ScenarioCalculator directo si calc_v2 bloquea
+            calculator = ScenarioCalculator()
+            hotel_data = HotelFinancialData(
+                rooms=rooms,
+                adr_cop=adr_result.adr_cop,
+                occupancy_rate=occupancy_rate,
+                direct_channel_percentage=direct_channel_percentage,
+            )
+            scenarios = calculator.calculate_scenarios(hotel_data)
+        else:
+            scenarios = calc_result.scenarios
 
         # Access scenarios using ScenarioType enum keys
         from modules.financial_engine.scenario_calculator import ScenarioType

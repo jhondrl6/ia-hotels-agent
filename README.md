@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt, geo_playbook) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.26.0 | **Última actualización:** 11 Abril 2026
+**Version:** 4.27.0 | **Última actualización:** 11 Abril 2026
 
 ---
 
@@ -20,21 +20,17 @@
 
 ---
 
-> **🛡️ AGENT PLATFORM STATUS (v4.24.0 - FASE-D: Google Search Console Integration)**:
-> **🛡️ AGENT PLATFORM STATUS (v4.26.0 - Brecha Architectural Fix)**:
-> *   **Brecha Architectural Fix (v4.26.0)**: Resuelto gap entre propuesta V6 y diagnóstico. Eliminada distribución fija 40/30/20/10, phantom costs corregidos. Propuesta ahora consume `brechas_reales` con impacto real de `_identify_brechas()`.
-> *   **Phantom Costs Eliminados**: Si hotel tiene < 4 brechas reales, las extras NO tienen costo ficticio. Fallback a `top_problems` preservado para backward compatibility.
-> *   **Dual Source Resolved**: `_inject_brecha_scores()` ya no sobrescribe nombre/costo/detalle — solo actualiza scores.
-> *   **Performance Cache**: `_identify_brechas()` ejecuta 1x por generación (antes: 9x). Cache instance-level con reset en `generate()`.
-> *   **Data Structures Deduplicated**: `data_structures.py` limpio — Scenario, `calculate_quick_wins`, `extract_top_problems` sin duplicados.
-> *   **Coherence Validator**: Score ≥ 0.8 requerido. E2E amaziliahotel.com: 0.92.
-> *   **Evidence Coverage Tracking**: Cobertura de evidence en documentos (≥ 95% coverage).
-> *   **Quality Gates de Pre-publicación**: Gates técnico, comercial, financiero y de coherencia.
-> *   **No Defaults in Money**: Validación financiera que bloquea cálculos con valores por defecto.
+> **🛡️ AGENT PLATFORM STATUS (v4.27.0 - Motor Financiero Verificable — Opción C)**:
+> *   **Motor Financiero Verificable (v4.27.0)**: 11 fases (A→K) en 2 ciclos. Cada COP cuantificado tiene origen trazable, peso proporcional, etiqueta honesta y base verificable. *"Las soluciones a medias no son soluciones, es aplazar el problema."*
+> *   **Camino Único**: Eliminado cálculo dual en main.py. Una sola fuente de verdad vía FinancialCalculatorV2 con validación source-aware.
+> *   **Datos Regionales Reales**: ADR y occupancy por región (eje_cafetero, antioquia) activados. Caribe protegido (no usa regional).
+> *   **Ganancia Neta vs Pérdida**: Escenario optimista negativo se presenta como "+$189,000 COP/mes (ganancia neta)" en vez de pérdida confusa.
+> *   **NoDefaultsValidator Source-Aware**: Warnings para fuentes sospechosas. source_reliability populated en metadata.
+> *   **Evidence Tiers**: A (datos reales) → B (scraping) → C (estimación) con disclaimers honestos por tier.
+> *   **390 tests** pasando, 0 regresiones. E2E amaziliahotel.com exit code 0.
+> *   **Brecha Architectural Fix (v4.26.0)**: Resuelto gap entre propuesta V6 y diagnóstico. Phantom costs eliminados.
 > *   **NEVER_BLOCK Architecture**: El sistema nunca se bloquea, siempre entrega algo con benchmark regional + disclaimers honestos.
-> *   **Benchmark Resolver**: Fallback con datos regionales de Pereira/Santa Rosa de Cabal cuando faltan datos reales.
-> *   **Controles de Coherencia**: Validación automática diagnosis↔propuesta↔assets con score ≥ 0.8.
-> *   **V4 Assessment Schema**: Estructura de datos unificada para diagnóstico.
+> *   **Coherence Validator**: Score ≥ 0.8 requerido. Quality Gates de pre-publicación.
 
 ---
 
@@ -247,9 +243,11 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados:
 |-----------|--------------|-----------------|
 | **Conservador** | 70% | Peor caso plausible |
 | **Realista** | 20% | Meta esperada |
-| **Optimista** | 10% | Mejor caso |
+| **Optimista** | 10% | Mejor caso (puede ser ganancia neta) |
 
 El valor esperado ponderado determina el ROI proyectado y la propuesta comercial personalizada.
+
+**Motor Financiero Verificable**: Cada COP tiene origen trazable (ADR regional, occupancy validada), peso proporcional, etiqueta honesta (VERIFIED/ESTIMATED) y base verificable (comisión OTA). Escenario optimista con valor negativo se presenta como "ganancia neta" en vez de pérdida.
 
 ---
 
@@ -264,11 +262,12 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ## ✅ Calidad Garantizada
 
-- **52 tests** de regresión pasando al 100% (suite NEVER_BLOCK)
+- **390 tests** de regresión pasando al 100% (financial_engine suite)
 - **TDD Gate**: Todo cambio comienza con un test que falla
 - **Pre-commit hooks**: Validaciones automáticas en cada commit
-- **Suite de regresión**: Hotel Vísperas como caso de referencia permanente
+- **Suite de regresión**: Hotel Vísperas + Amaziliahotel como casos de referencia
 - **Coherence Score ≥ 0.8**: Validación cruzada documentos ↔ assets
+- **5 tests FASE-K**: Validación de ganancia neta, display_label, hook_range
 
 ---
 
@@ -279,4 +278,4 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ## Testing
 
-**1700+ test functions** across unit, integration and E2E suites | **52/52 regression tests** in NEVER_BLOCK suite
+**1700+ test functions** across unit, integration and E2E suites | **390/390 regression tests** in financial_engine suite | **Motor Financiero Verificable — Opción C (11 fases A→K)**

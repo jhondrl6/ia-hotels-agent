@@ -616,3 +616,83 @@ class TestCalculateBreakdown:
         assert scenarios is not None
         assert len(scenarios) == 3
         assert ScenarioType.CONSERVATIVE in scenarios
+
+
+# ============================================================
+# FASE-K: Tests para fix escenario optimista negativo
+# ============================================================
+
+class TestOptimistaFix:
+    """Test cases for FASE-K: fix escenario optimista negativo."""
+
+    def test_optimista_negative_is_net_gain(self):
+        """Escenario optimista con monthly_loss_cop negativo es ganancia neta."""
+        # Crear escenario manualmente con valor negativo
+        scenario = FinancialScenario(
+            scenario_type=ScenarioType.OPTIMISTIC,
+            monthly_loss_cop=-189000,
+            probability=0.10,
+            calculation_basis="test",
+            confidence_score=0.50,
+        )
+        assert scenario.is_net_gain == True
+        assert "ganancia" in scenario.display_label.lower() or "Ganancia" in scenario.display_label
+
+    def test_conservador_is_not_net_gain(self):
+        """Escenario conservador nunca es ganancia neta."""
+        calc = ScenarioCalculator()
+        data = HotelFinancialData(rooms=10, adr_cop=300000, occupancy_rate=0.50)
+        scenarios = calc.calculate_scenarios(data)
+        cons = scenarios[ScenarioType.CONSERVATIVE]
+        assert cons.is_net_gain == False
+        assert "perdida" in cons.display_label.lower() or "Perdida" in cons.display_label
+
+    def test_display_label_positive_loss(self):
+        """display_label muestra correctamente perdida positiva."""
+        scenario = FinancialScenario(
+            scenario_type=ScenarioType.REALISTIC,
+            monthly_loss_cop=2610000,
+            probability=0.20,
+            calculation_basis="test",
+            confidence_score=0.70,
+        )
+        assert "2.610.000" in scenario.display_label
+
+    def test_display_label_negative_gain(self):
+        """display_label muestra correctamente ganancia neta."""
+        scenario = FinancialScenario(
+            scenario_type=ScenarioType.OPTIMISTIC,
+            monthly_loss_cop=-189000,
+            probability=0.10,
+            calculation_basis="test",
+            confidence_score=0.50,
+        )
+        assert "189.000" in scenario.display_label
+        assert scenario.is_net_gain == True
+
+    def test_hook_range_handles_negative(self):
+        """get_hook_range maneja optimista negativo sin valor negativo visible."""
+        # Crear escenarios manualmente con optimista negativo
+        scenarios = {
+            ScenarioType.CONSERVATIVE: FinancialScenario(
+                scenario_type=ScenarioType.CONSERVATIVE,
+                monthly_loss_cop=6345000,
+                probability=0.70,
+                calculation_basis="test",
+                confidence_score=0.80,
+            ),
+            ScenarioType.OPTIMISTIC: FinancialScenario(
+                scenario_type=ScenarioType.OPTIMISTIC,
+                monthly_loss_cop=-189000,
+                probability=0.10,
+                calculation_basis="test",
+                confidence_score=0.50,
+            ),
+        }
+        calc = ScenarioCalculator()
+        hook = calc.get_hook_range(scenarios)
+        # Hook range debe mostrar optimista como valor positivo (abs)
+        # No debe haber un número negativo en el formato
+        parts = hook.split(" - ")
+        optimistic_part = parts[1].split(" COP")[0] if len(parts) > 1 else ""
+        assert not optimistic_part.startswith("-"), f"Optimista no debe ser negativo: {hook}"

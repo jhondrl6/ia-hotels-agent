@@ -44,6 +44,25 @@ class FinancialScenario:
     assumptions: List[str] = field(default_factory=list)
     disclaimer: Optional[str] = None
 
+    @property
+    def monthly_impact_cop(self) -> float:
+        """Impacto mensual en COP. Negativo = ganancia neta."""
+        return self.monthly_loss_cop
+
+    @property
+    def is_net_gain(self) -> bool:
+        """True si el escenario representa ganancia neta (no perdida)."""
+        return self.monthly_loss_cop < 0
+
+    @property
+    def display_label(self) -> str:
+        """Label legible para UI (notación colombiana)."""
+        if self.is_net_gain:
+            formatted = f"{abs(self.monthly_loss_cop):,.0f}".replace(",", ".")
+            return f"Ganancia neta: ${formatted} COP/mes"
+        formatted = f"{self.monthly_loss_cop:,.0f}".replace(",", ".")
+        return f"Perdida estimada: ${formatted} COP/mes"
+
 
 @dataclass
 class HotelFinancialData:
@@ -318,6 +337,11 @@ class ScenarioCalculator:
         conservative = scenarios[ScenarioType.CONSERVATIVE].monthly_loss_cop
         optimistic = scenarios[ScenarioType.OPTIMISTIC].monthly_loss_cop
 
+        # Hook range siempre muestra como perdida potencial
+        # Si optimista es ganancia, mostrar como "ahorro"
+        if optimistic < 0:
+            optimistic = abs(optimistic)  # Mostrar como monto positivo de ahorro
+
         # Format with Colombian notation (dots for thousands)
         conservative_formatted = f"{conservative:,.0f}".replace(",", ".")
         optimistic_formatted = f"{optimistic:,.0f}".replace(",", ".")
@@ -341,7 +365,6 @@ class ScenarioCalculator:
             ScenarioType.OPTIMISTIC: "Optimista",
         }
 
-        loss_formatted = f"{scenario.monthly_loss_cop:,.0f}".replace(",", ".")
         probability_pct = int(scenario.probability * 100)
 
         interpretation = (
@@ -349,7 +372,7 @@ class ScenarioCalculator:
             f"ESCENARIO: {scenario_names.get(scenario.scenario_type, 'Desconocido')}\n"
             f"{'=' * 50}\n"
             f"\n"
-            f"Perdida mensual estimada: ${loss_formatted} COP\n"
+            f"{scenario.display_label}\n"
             f"Probabilidad: {probability_pct}%\n"
             f"Confianza en el calculo: {int(scenario.confidence_score * 100)}%\n"
             f"\n"
