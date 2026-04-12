@@ -1,8 +1,8 @@
-<!-- agents_version: 4.26.0 | last_update: 2026-04-11 -->
+<!-- agents_version: 4.27.0 | last_update: 2026-04-11 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.26.0 -- Brecha Architectural Fix COMPLETADO**
+> **v4.27.0 -- Motor Financiero Verificable COMPLETADO**
 
 ---
 
