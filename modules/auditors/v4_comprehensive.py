@@ -36,6 +36,7 @@ from modules.auditors.citability_scorer import CitabilityScorer, CitabilityScore
 from modules.auditors.ia_readiness_calculator import IAReadinessCalculator, IAReadinessReport
 from modules.auditors.seo_elements_detector import SEOElementsDetector, SEOElementsResult
 from modules.auditors.aeo_snippet_tracker import AEOSnippetReport, AEOSnippetTracker
+from modules.auditors.llm_mention_checker import LLMReport, LLMMentionChecker
 
 
 logger = logging.getLogger(__name__)
@@ -185,7 +186,10 @@ class V4AuditResult:
 
     # AEO Snippet Tracker (FASE-B): featured snippet measurement via SerpAPI
     aeo_snippets: Optional[AEOSnippetReport] = None
-    
+
+    # LLM Mention Checker (FASE-C): IAO measurement via LLM queries
+    llm_report: Optional[LLMReport] = None
+
     # Execution trace
     executed_validators: List[str] = field(default_factory=list)
     skipped_validators: List[str] = field(default_factory=list)
@@ -313,6 +317,19 @@ class V4AuditResult:
                 "snippet_score": self.aeo_snippets.snippet_score,
                 "source": self.aeo_snippets.source,
                 "timestamp": self.aeo_snippets.timestamp,
+            }
+
+        if self.llm_report:
+            result["llm_report"] = {
+                "hotel_name": self.llm_report.hotel_name,
+                "queries_tested": self.llm_report.queries_tested,
+                "total_mentions": self.llm_report.total_mentions,
+                "mention_rate": self.llm_report.mention_rate,
+                "mention_score": self.llm_report.mention_score,
+                "avg_ranking": self.llm_report.avg_ranking,
+                "share_of_voice": self.llm_report.share_of_voice,
+                "providers_used": self.llm_report.providers_used,
+                "source": self.llm_report.source,
             }
 
         return result
@@ -506,7 +523,31 @@ class V4ComprehensiveAuditor:
         except Exception as e:
             logger.warning(f"AEO Snippet Tracker failed: {e}")
             print(f"      [ADVISORY] Snippet tracker no disponible: {e}")
-        
+
+        # Step 2.11: LLM Mention Checker — IAO measurement (FASE-C)
+        # Consulta LLMs para detectar menciones del hotel en recomendaciones
+        print("\n[2.11/5] Checking LLM mentions (IAO)... [ADVISORY]")
+        llm_report = None
+        try:
+            mention_checker = LLMMentionChecker()
+            llm_report = mention_checker.check_mentions(
+                hotel_name=final_hotel_name,
+                hotel_url=url,
+                location=gbp_result.address if gbp_result.place_found else "",
+                landmark="",
+            )
+            print(f"      Source: {llm_report.source}")
+            if llm_report.source == "llm_check":
+                print(f"      Mentions: {llm_report.total_mentions}/{llm_report.queries_tested}")
+                print(f"      Mention rate: {llm_report.mention_rate:.0%}")
+                print(f"      Mention score: {llm_report.mention_score}/100")
+                print(f"      Providers: {', '.join(llm_report.providers_used)}")
+            else:
+                print(f"      [STUB] Sin API keys LLM - medicion no disponible")
+        except Exception as e:
+            logger.warning(f"LLM Mention Checker failed: {e}")
+            print(f"      [ADVISORY] LLM mention checker no disponible: {e}")
+
         # Step 3: Performance metrics
         print("\n[3/5] Checking performance metrics...")
         perf_result = self._audit_performance(url)
@@ -565,6 +606,7 @@ class V4ComprehensiveAuditor:
             "pagespeed_api",
             "cross_validation",
             "aeo_snippet_tracker",
+            "llm_mention_checker",
         ]
 
         skipped_validators = []
@@ -604,6 +646,7 @@ class V4ComprehensiveAuditor:
             ia_readiness=ia_readiness_result,
             seo_elements=seo_elements,
             aeo_snippets=aeo_snippet_report,
+            llm_report=llm_report,
             executed_validators=executed_validators,
             skipped_validators=skipped_validators,
         )

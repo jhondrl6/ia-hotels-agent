@@ -318,6 +318,13 @@ class DiagnosticSummary:
     elementos_geo: Optional[Dict[str, bool]] = None
     elementos_aeo: Optional[Dict[str, bool]] = None
     elementos_iao: Optional[Dict[str, bool]] = None
+    # === CAMPOS IAO ADICIONALES (FASE-C) ===
+    iao_status: Optional[str] = None           # "Excelente" | "Bueno" | "Regular" | "Bajo"
+    iao_regional_avg: Optional[int] = None     # Benchmark regional IAO
+    llm_report_summary: Optional[Dict] = None  # Resumen del LLM report (source, mention_score, etc.)
+    # === CAMPOS VOICE READINESS (TAREA-2) ===
+    voice_readiness_score: Optional[int] = None  # 0-100 score from VoiceReadinessProxy
+    voice_readiness_level: Optional[str] = None   # critical | basic | good | excellent
 
 
 def confidence_to_icon(confidence) -> str:

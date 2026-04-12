@@ -1,5 +1,47 @@
 # Changelog
 
+## [4.28.0] - 2026-04-12
+
+### 4 Pilares Alignment + Voice Readiness Proxy
+
+2 fases ejecutadas en paralelo: FASE-D alinea toda la cadena de generación (diagnóstico → propuesta → gap analyzer → benchmarks) al modelo de 4 pilares (SEO+GEO+AEO+IAO). FASE-E introduce Voice Readiness Proxy como sub-score de AEO basado en inputs medibles (no medición directa Siri/Alexa).
+
+*"Las soluciones a medias no son soluciones, es aplazar el problema."*
+
+### FASE-D: Package & Template Alignment — 4 Pilares
+
+- `modules/analyzers/gap_analyzer.py` — Expandido de 2 gaps (GEO+AEO) a 4 gaps (SEO+GEO+AEO+IAO) con ponderación proporcional
+- `modules/financial_engine/opportunity_scorer.py` — Nuevas brechas IAO: `no_llms_txt`, `ia_crawler_blocked`, `weak_brand_signals`. Nuevas brechas SEO: `no_meta_descriptions`, `poor_heading_structure`
+- `scripts/update_benchmarks.py` — Nueva función `calculate_iao_score()` con 5 checks (20pts c/u, max 100). `iao_avg` en promedios regionales. `iao_score_ref` por región
+- `modules/utils/benchmarks.py` — `iao_score_ref` en defaults regionales
+- `modules/generators/report_builder.py` — ⚠️ DEPRECATED (comando spark deprecado). Sección ANALISIS 4-PILARES expandida a SEO+GEO+AEO+IAO
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` — Fila IAO (Para que te RECOMIENDEN) + Score Global con narrativa comercial
+- `modules/commercial_documents/v4_diagnostic_generator.py` — `_get_regional_benchmarks()` retorna 4 scores incluyendo `iao_score_ref`
+- `modules/commercial_documents/v4_proposal_generator.py` — `score_global` como métrica principal con fallback a `score_tecnico` (backward compat)
+
+### FASE-E: Voice Readiness Proxy Score
+
+- `modules/auditors/voice_readiness_proxy.py` — **NUEVO** módulo que calcula readiness para asistentes de voz basado en PROXY (inputs que alimentan Siri/Google Assistant, no medición directa):
+  - GBP completeness: 30pts (nombre, dirección, teléfono, horarios, website)
+  - Schema for voice: 25pts (LocalBusiness, FAQ, Speakable)
+  - Featured snippets: 25pts (AEOSnippetTracker o fallback schema)
+  - Factual coverage: 20pts (horarios, teléfono, dirección, precios en página)
+  - Niveles: critical (0-25), basic (26-50), good (51-75), excellent (76-100)
+- `tests/auditors/test_voice_readiness_proxy.py` — **NUEVO** 22 tests
+- `modules/commercial_documents/data_structures.py` — `voice_readiness_score` + `voice_readiness_level` en DiagnosticSummary
+- `modules/commercial_documents/v4_diagnostic_generator.py` — Integración no-bloqueante con fallback si FASE-B no completada
+- `main.py` — Pasa voice readiness al DiagnosticSummary
+
+### Restricciones FASE-E
+- NO consulta APIs de Siri, Alexa, Google Assistant directamente
+- NO usa TTS/STT para simular queries de voz
+- NO crea webhooks ni subscripciones a plataformas de voz
+- Voice Readiness es SUB-SCORE de AEO, no un 5to pilar
+
+### Tests
+- 628 tests passing (0 regresiones)
+- Errors pre-existentes en `data_validation/` y `observability/` (módulos faltantes, no relacionados)
+
 ## [4.27.0] - 2026-04-11
 
 ### Motor Financiero Verificable — Opción C

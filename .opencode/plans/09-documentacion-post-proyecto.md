@@ -2,7 +2,7 @@
 
 **Proyecto**: AEO-IAO-PROGRESSION-REFACTOR
 **Fecha creación**: 2026-04-12
-**Estado**: Estructura base, se actualiza incrementalmente por fase
+**Estado**: Estructura base, se actualiza incrementally por fase
 
 ---
 
@@ -67,9 +67,9 @@
 
 | Métrica | Pre-refactor | Post-FASE-A | Post-FASE-B | Post-FASE-C | Post-FASE-D | Post-FASE-E | Post-FASE-F |
 |---------|-------------|-------------|-------------|-------------|-------------|-------------|-------------|
-| Tests totales | ~385 | ~430 | — | — | — | — | — |
-| Regresiones | 0 | 0 | — | — | — | — | — |
-| Módulos nuevos | 0 | 0 | 1 | 1 | 0 | 1 | 0 |
+| Tests totales | ~385 | ~430 | — | 472 | — | — | — |
+| Regresiones | 0 | 0 | — | 0 | — | — | — |
+| Módulos nuevos | 0 | 0 | 1 | 2 | 0 | 1 | 0 |
 | Pilares scoring | 3 (GEO/AEO/SEO) | 4 | 4 | 4 | 4 | 4 | 4 |
 | Benchmarks | 3 | 4 | 4 | 4 | 4 | 4 | 4 |
 | APIs externas | 3 (Places/PageSpeed/RichResults) | 3 | 4 (+SerpAPI) | 4-7 (+OpenRouter/Gemini/Perplexity) | 4-7 | 4-7 | 4-7 |
@@ -84,7 +84,7 @@
 | Archivo | FASE-A | FASE-B | FASE-C | FASE-D | FASE-E | FASE-F |
 |---------|--------|--------|--------|--------|--------|--------|
 | CHANGELOG.md | — | — | — | — | — | ✅ |
-| GUIA_TECNICA.md | — | — | — | — | — | ✅ |
+| GUIA_TECNICA.md | — | — | ✅ | — | — | ✅ |
 | REGISTRY.md | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | VERSION.yaml | — | — | — | — | — | ✅ |
 | AGENTS.md | — | — | — | — | — | ✅ |
@@ -109,7 +109,11 @@
 -
 
 ### FASE-C
--
+- LLMMentionChecker usa requests directamente (lazy import), no openai SDK. OpenRouter como provider principal.
+- _extraer_elementos_iao() mejorado: crawler_access usa ai_crawlers.overall_score, schema_advanced usa org_schema_detected, brand_signals detecta SameAs en schema.properties.
+- LLM report ponderación 50/50: cuando source != "stub", el mention_score real pondera 50% con checklist base.
+- 42 tests nuevos (23 LLM checker + 19 IAO score). Mocks de requests deben parchearse en 'requests.post' (no en módulo específico) porque el import es lazy.
+- Tests stub requieren @patch.dict('os.environ', {}, clear=True) para limpiar API keys del entorno.
 
 ### FASE-D
 -

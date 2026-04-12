@@ -93,8 +93,8 @@ Cada celda indica si la fase MODIFICA (M), LEE (L), o CREA (C) el archivo.
 | Fase | Estado | Fecha Inicio | Fecha Fin | Notas |
 |------|--------|-------------|-----------|-------|
 | FASE-A | ✅ Completada | 2026-04-12 | 2026-04-12 | Score Redistribution: 4 pilares, 101 tests, 0 regresiones |
-| FASE-B | ⏳ Pendiente | — | — | AEO Real Measurement |
-| FASE-C | ⏳ Pendiente | — | — | IAO Restoration + LLM Checker |
+| FASE-B | ✅ Completada | 2026-04-08 | 2026-04-08 | AEO Scoring Rewrite (4 componentes × 25pts) |
+| FASE-C | ✅ Completada | 2026-04-12 | 2026-04-12 | IAO Restoration + LLM Mention Checker: 42 tests, 0 regresiones |
 | FASE-D | ⏳ Pendiente | — | — | Package & Template Alignment |
 | FASE-E | ⏳ Pendiente | — | — | Voice Readiness Proxy |
 | FASE-F | ⏳ Pendiente | — | — | Documentation & Validation |

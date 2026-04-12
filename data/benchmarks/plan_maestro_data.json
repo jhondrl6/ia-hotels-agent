@@ -136,7 +136,8 @@
         "habitaciones_promedio": 15,
         "geo_score_ref": 85,
         "aeo_score_ref": 40,
-        "seo_score_ref": 59
+        "seo_score_ref": 59,
+        "iao_score_ref": 15
       },
       "antioquia": {
         "precio_promedio": 280000,
@@ -144,7 +145,8 @@
         "habitaciones_promedio": 18,
         "geo_score_ref": 84,
         "aeo_score_ref": 43,
-        "seo_score_ref": 65
+        "seo_score_ref": 65,
+        "iao_score_ref": 18
       },
       "eje_cafetero": {
         "precio_promedio": 330000,
@@ -152,7 +154,8 @@
         "habitaciones_promedio": 12,
         "geo_score_ref": 89,
         "aeo_score_ref": 44,
-        "seo_score_ref": 59
+        "seo_score_ref": 59,
+        "iao_score_ref": 20
       },
       "caribe": {
         "precio_promedio": 410000,
@@ -160,7 +163,8 @@
         "habitaciones_promedio": 25,
         "geo_score_ref": 82,
         "aeo_score_ref": 32,
-        "seo_score_ref": 53
+        "seo_score_ref": 53,
+        "iao_score_ref": 12
       }
     },
     "coherence_gate": {

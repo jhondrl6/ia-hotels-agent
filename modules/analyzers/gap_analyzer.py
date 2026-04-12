@@ -176,20 +176,30 @@ class GapAnalyzer:
     def _map_brecha_to_paquete(self, tipo: str) -> str:
         """
         Mapea tipo de brecha detectada al paquete sugerido.
-        
+
         Args:
             tipo: Tipo de brecha (gbp_incompleto, schema_faltante, etc.)
-        
+
         Returns:
             str: Nombre del paquete recomendado
         """
         mapping = {
+            # Brechas GEO
             "gbp_incompleto": "Starter GEO",
             "gbp_sin_optimizar": "Starter GEO",
             "reviews_insuficientes": "Starter GEO",
+            # Brechas SEO
+            "no_meta_descriptions": "Starter GEO",
+            "poor_heading_structure": "Starter GEO",
+            # Brechas AEO
             "schema_faltante": "Pro AEO",
             "json_ld_incompleto": "Pro AEO",
             "ia_invisibilidad": "Pro AEO",
+            # Brechas IAO
+            "no_llms_txt": "Pro AEO",
+            "ia_crawler_blocked": "Pro AEO",
+            "weak_brand_signals": "Pro AEO",
+            # Brechas CRO/Web
             "web_obsoleta": "Elite PLUS",
             "sin_automatizacion": "Elite",
             "conversion_baja": "Elite PLUS"
@@ -279,44 +289,74 @@ class GapAnalyzer:
         )
 
         # Distribución dinámica de brechas basada en gaps reales vs benchmarks regionales
-        # En lugar de distribución fija 40%/35%/25%, calcular proporcionalmente
+        # 4 pilares: SEO, GEO, AEO, IAO con distribución proporcional
+        seo_benchmark = region_data.get('seo_score_ref', 50)
         geo_benchmark = region_data.get('geo_score_ref', 42)
         aeo_benchmark = region_data.get('aeo_score_ref', 18)
-        
+        iao_benchmark = region_data.get('iao_score_ref', 15)
+
         aeo_score = schema_data.get('score_schema', 0)
-        
-        # Calcular gaps (maximo 2 pilares: GBP + AEO)
+        seo_score = hotel_data.get('seo_score', 0)
+        iao_score = hotel_data.get('iao_score', 0)
+
+        # Calcular gaps (4 pilares)
+        gap_seo = max(0, seo_benchmark - seo_score)
         gap_geo = max(0, geo_benchmark - gbp_score)
         gap_aeo = max(0, aeo_benchmark - aeo_score)
-        
-        # Distribuir proporcionalmente solo si hay gaps (2 pilares)
-        suma_gaps = gap_geo + gap_aeo
-        
+        gap_iao = max(0, iao_benchmark - iao_score)
+
+        # Distribuir proporcionalmente solo si hay gaps (4 pilares)
+        suma_gaps = gap_seo + gap_geo + gap_aeo + gap_iao
+
         brechas_criticas = []
-        
+
         if suma_gaps > 0:
-            # Pilar 1: GBP
+            # Pilar 1: SEO
+            if gap_seo > 0:
+                peso_seo = gap_seo / suma_gaps
+                brechas_criticas.append({
+                    "nombre": "Pilar 1: SEO sin optimizar",
+                    "impacto_mensual": int(perdida_mensual * peso_seo),
+                    "descripcion": "Meta descripciones, headings y estructura web deficiente reducen visibilidad organica.",
+                    "prioridad": 1,
+                    "gap_actual": f"{seo_score}/100",
+                    "benchmark_regional": f"{seo_benchmark}/100"
+                })
+
+            # Pilar 2: GEO (GBP)
             if gap_geo > 0:
                 peso_geo = gap_geo / suma_gaps
                 brechas_criticas.append({
-                    "nombre": "Pilar 1: GBP sin optimizar",
+                    "nombre": "Pilar 2: GBP sin optimizar",
                     "impacto_mensual": int(perdida_mensual * peso_geo),
                     "descripcion": "GBP y reseñas insuficientes restan visibilidad en mapas y voz cercana.",
                     "prioridad": 1,
                     "gap_actual": f"{gbp_score}/100",
                     "benchmark_regional": f"{geo_benchmark}/100"
                 })
-            
-            # Pilar 2: AEO (JSON)
+
+            # Pilar 3: AEO (JSON)
             if gap_aeo > 0:
                 peso_aeo = gap_aeo / suma_gaps
                 brechas_criticas.append({
-                    "nombre": "Pilar 2: Datos JSON incompletos",
+                    "nombre": "Pilar 3: Datos JSON incompletos",
                     "impacto_mensual": int(perdida_mensual * peso_aeo),
                     "descripcion": "Sin Schema estructurado el hotel no entra en respuestas de IA generativa.",
                     "prioridad": 1,
                     "gap_actual": f"{aeo_score}/100",
                     "benchmark_regional": f"{aeo_benchmark}/100"
+                })
+
+            # Pilar 4: IAO (AI Optimization)
+            if gap_iao > 0:
+                peso_iao = gap_iao / suma_gaps
+                brechas_criticas.append({
+                    "nombre": "Pilar 4: IAO deficiente",
+                    "impacto_mensual": int(perdida_mensual * peso_iao),
+                    "descripcion": "Sin archivo llms.txt, crawlers IA bloqueados o senales debiles de marca, el hotel no es recomendable por IAs.",
+                    "prioridad": 1,
+                    "gap_actual": f"{iao_score}/100",
+                    "benchmark_regional": f"{iao_benchmark}/100"
                 })
         else:
             # Si no hay gaps, retornar lista vacía (hotel ya cumple benchmarks)

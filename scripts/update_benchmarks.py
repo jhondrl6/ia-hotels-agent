@@ -100,21 +100,43 @@ def calculate_seo_score(hotel: Dict[str, Any]) -> int:
     return score
 
 
+def calculate_iao_score(hotel: Dict[str, Any]) -> int:
+    """Proxy IAO (AI Optimization) basado en datos verificables por deep research.
+
+    Peso: has_llms_txt(20) + has_schema_entity(20) + citability_score>50(20) +
+          allows_ai_crawlers(20) + has_same_as_links(20) = 100
+    """
+    score = 0
+    if hotel.get("has_llms_txt"):
+        score += 20
+    if hotel.get("has_schema_entity"):
+        score += 20
+    if hotel.get("citability_score", 0) > 50:
+        score += 20
+    if hotel.get("allows_ai_crawlers"):
+        score += 20
+    if hotel.get("has_same_as_links"):
+        score += 20
+    return min(100, score)
+
+
 # ─── Cálculo de promedios ────────────────────────────────────────────────
 
 def compute_region_averages(hotels: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Calcula promedios de GEO, AEO, SEO para una lista de hoteles."""
+    """Calcula promedios de GEO, AEO, SEO, IAO para una lista de hoteles."""
     if not hotels:
-        return {"geo_avg": 0, "aeo_avg": 0, "seo_avg": 0, "count": 0}
+        return {"geo_avg": 0, "aeo_avg": 0, "seo_avg": 0, "iao_avg": 0, "count": 0}
 
     geo_scores = [calculate_geo_score(h) for h in hotels]
     aeo_scores = [calculate_aeo_score(h) for h in hotels]
     seo_scores = [calculate_seo_score(h) for h in hotels]
+    iao_scores = [calculate_iao_score(h) for h in hotels]
 
     return {
         "geo_avg": round(sum(geo_scores) / len(geo_scores)),
         "aeo_avg": round(sum(aeo_scores) / len(aeo_scores)),
         "seo_avg": round(sum(seo_scores) / len(seo_scores)),
+        "iao_avg": round(sum(iao_scores) / len(iao_scores)),
         "count": len(hotels),
     }
 
@@ -135,7 +157,7 @@ def compute_all_regions(research_data: Dict[str, Any]) -> Dict[str, Dict[str, An
     if all_hotels:
         results["default"] = compute_region_averages(all_hotels)
     else:
-        results["default"] = {"geo_avg": 55, "aeo_avg": 20, "seo_avg": 50, "count": 0}
+        results["default"] = {"geo_avg": 55, "aeo_avg": 20, "seo_avg": 50, "iao_avg": 15, "count": 0}
 
     return results
 
@@ -163,15 +185,18 @@ def update_plan_maestro(
             old_geo = str(regiones[region_name].get("geo_score_ref", "?"))
             old_aeo = str(regiones[region_name].get("aeo_score_ref", "?"))
             old_seo = str(regiones[region_name].get("seo_score_ref", "?"))
+            old_iao = str(regiones[region_name].get("iao_score_ref", "?"))
 
             regiones[region_name]["geo_score_ref"] = avg["geo_avg"]
             regiones[region_name]["aeo_score_ref"] = avg["aeo_avg"]
             regiones[region_name]["seo_score_ref"] = avg["seo_avg"]
+            regiones[region_name]["iao_score_ref"] = avg["iao_avg"]
 
             updated.append(
                 f"  {region_name:15s}  GEO {old_geo:>2s} -> {avg['geo_avg']:>2d}  "
                 f"AEO {old_aeo:>2s} -> {avg['aeo_avg']:>2d}  "
                 f"SEO {old_seo:>2s} -> {avg['seo_avg']:>2d}  "
+                f"IAO {old_iao:>2s} -> {avg['iao_avg']:>2d}  "
                 f"(n={avg['count']})"
             )
         else:
@@ -273,7 +298,7 @@ def main():
         label = region_name.replace("_", " ").title()
         print(
             f"  {label:20s}  GEO {avg['geo_avg']:>2d}/100  "
-            f"AEO {avg['aeo_avg']:>2d}/100  SEO {avg['seo_avg']:>2d}/100  (n={avg['count']})"
+            f"AEO {avg['aeo_avg']:>2d}/100  SEO {avg['seo_avg']:>2d}/100  IAO {avg['iao_avg']:>2d}/100  (n={avg['count']})"
         )
 
     # Actualizar plan_maestro

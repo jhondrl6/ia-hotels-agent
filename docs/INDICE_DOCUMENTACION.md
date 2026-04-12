@@ -1,7 +1,7 @@
 # Índice de Documentación - IA Hoteles Agent CLI
 
-**Versión:** 4.20.0
-**Última actualización:** 4 Abril 2026
+**Versión:** 4.28.0
+**Última actualización:** 12 Abril 2026
 
 ---
 
@@ -44,9 +44,10 @@
 | `google_analytics_client.py` | Cliente GA4 multi-hotel | `modules/analytics/` |
 | `profound_client.py` | Cliente Profound SEO | `modules/analytics/` |
 | `semrush_client.py` | Cliente Semrush | `modules/analytics/` |
-| `auditors/` |APIs externas de auditoria | `modules/auditors/` |
-| `v4_comprehensive_auditor.py` | Auditor comprehensivo V4 | `modules/auditors/` |
-| `pagespeed_auditor_v2.py` | PageSpeed Insights | `modules/auditors/` |
+|| `auditors/` |APIs externas de auditoria | `modules/auditors/` |
+|| `v4_comprehensive_auditor.py` | Auditor comprehensivo V4 | `modules/auditors/` |
+|| `pagespeed_auditor_v2.py` | PageSpeed Insights | `modules/auditors/` |
+|| `voice_readiness_proxy.py` | Voice readiness proxy (FASE-E v4.28.0) | `modules/auditors/` |
 
 ### Scanners y Scrapers
 

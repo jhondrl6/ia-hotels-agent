@@ -1,8 +1,66 @@
 # Registro de Fases - IA Hoteles Agent
 
-|> **Ultima actualizacion:** 2026-04-11
-|> **Version actual:** v4.26.0
-|> **Total fases completadas:** 66
+|> **Ultima actualizacion:** 2026-04-12
+|> **Version actual:** v4.28.0
+|> **Total fases completadas:** 68
+
+---
+
+## FASE-E: Voice Readiness Proxy Score (v4.28.0) - 2026-04-12
+
+**Descripcion:** Voice Readiness Proxy — score basado en PROXY (inputs que alimentan asistentes de voz) en lugar de medicion directa Siri/Alexa. Mide los FACTORES que determinan si voz te menciona, no lo que voz responde.
+
+**Problema resuelto:**
+- NO existe API para consultar que responde Siri programaticamente
+- NO hay "Siri Search Console" ni "Alexa Rank Tracker"
+- La alternativa viable: medir los INPUTS que Siri/Google Assistant consumen
+
+**Archivos Nuevos:**
+
+| Archivo | Descripcion |
+|---------|-------------|
+| `modules/auditors/voice_readiness_proxy.py` | VoiceReadinessResult + VoiceReadinessProxy con 4 componentes (GBP 30%, Schema 25%, Snippets 25%, Factual 20%) |
+| `tests/auditors/test_voice_readiness_proxy.py` | 22 tests |
+
+**Archivos Modificados:**
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/data_structures.py` | voice_readiness_score + voice_readiness_level en DiagnosticSummary |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Integracion no-bloqueante con fallback si FASE-B no completada |
+| `main.py` | Pasa voice readiness al DiagnosticSummary |
+
+**Validaciones:**
+- [x] 22 tests voice_readiness_proxy.py passing
+- [x] Integracion no-bloqueante (fallback si aeo_snippets no disponible)
+- [x] Voice Readiness es SUB-SCORE de AEO, no un 5to pilar
+- [x] log_phase_completion.py ejecutado
+
+---
+
+## FASE-D: Package & Template Alignment — 4 Pilares (v4.28.0) - 2026-04-12
+
+**Descripcion:** Alinear toda la cadena de generacion (diagnostico → propuesta → gap analyzer → benchmarks) al modelo de 4 pilares (SEO + GEO + AEO + IAO).
+
+**Archivos Modificados:**
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/analyzers/gap_analyzer.py` | 4 gaps (seo, geo, aeo, iao) con ponderacion proporcional |
+| `modules/financial_engine/opportunity_scorer.py` | Nuevas brechas IAO (no_llms_txt, ia_crawler_blocked, weak_brand_signals) y SEO (no_meta_descriptions, poor_heading_structure) |
+| `scripts/update_benchmarks.py` | calculate_iao_score() + iao_avg + iao_score_ref regional |
+| `modules/utils/benchmarks.py` | iao_score_ref en defaults regionales |
+| `modules/generators/report_builder.py` | ⚠️ DEPRECATED + seccion ANALISIS 4-PILARES expandida |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Fila IAO + Score Global con narrativa comercial |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | _get_regional_benchmarks() retorna 4 scores + iao_score_ref |
+| `modules/commercial_documents/v4_proposal_generator.py` | score_global como metrica principal (fallback score_tecnico) |
+
+**Validaciones:**
+- [x] 628 tests passing (0 regresiones)
+- [x] 4 gaps calculados correctamente
+- [x] Ponderacion proporcional por pilar
+- [x] score_global como metrica principal en propuesta
+- [x] log_phase_completion.py ejecutado
 
 ---
 
@@ -2428,6 +2486,82 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (395)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-C - 2026-04-12
+**Descripcion:** IAO Restoration: LLMMentionChecker creado, _calculate_iao_score_from_audit con ponderacion 50/50, integracion en v4_comprehensive, _extraer_elementos_iao mejorado con datos reales, DiagnosticSummary ampliado
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/auditors/llm_mention_checker.py` | NUEVO | Llm Mention Checker |
+| `tests/auditors/test_llm_mention_checker.py` | NUEVO | Test Llm Mention Checker |
+| `tests/commercial_documents/test_iao_score.py` | NUEVO | Test Iao Score |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/data_structures.py` | Data Structures |
+
+### Validaciones
+- [x] Tests passing (42)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-D - 2026-04-12
+**Descripcion:** Package & Template Alignment: 4 pilares en diagnóstico, propuesta, gap analyzer, report builder
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | NUEVO | Diagnostico V6 Template |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/analyzers/gap_analyzer.py` | Gap Analyzer |
+| `modules/financial_engine/opportunity_scorer.py` | Opportunity Scorer |
+| `modules/utils/benchmarks.py` | Benchmarks |
+| `modules/generators/report_builder.py` | Report Builder |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `scripts/update_benchmarks.py` | Update Benchmarks |
+
+### Validaciones
+- [x] Tests passing (628)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-E - 2026-04-12
+**Descripcion:** Voice Readiness Proxy: score basado en inputs (no medicion directa Siri/Alexa)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/auditors/voice_readiness_proxy.py` | NUEVO | Voice Readiness Proxy |
+| `tests/auditors/test_voice_readiness_proxy.py` | NUEVO | Test Voice Readiness Proxy |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/data_structures.py` | Data Structures |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (628)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

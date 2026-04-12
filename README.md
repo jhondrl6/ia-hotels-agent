@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt, geo_playbook) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.27.0 | **Última actualización:** 11 Abril 2026
+**Version:** 4.28.0 | **Última actualización:** 12 Abril 2026
 
 ---
 
@@ -20,15 +20,15 @@
 
 ---
 
-> **🛡️ AGENT PLATFORM STATUS (v4.27.0 - Motor Financiero Verificable — Opción C)**:
-> *   **Motor Financiero Verificable (v4.27.0)**: 11 fases (A→K) en 2 ciclos. Cada COP cuantificado tiene origen trazable, peso proporcional, etiqueta honesta y base verificable. *"Las soluciones a medias no son soluciones, es aplazar el problema."*
+> **🛡️ AGENT PLATFORM STATUS (v4.28.0 - 4 Pilares Alignment + Voice Readiness Proxy)**:
+> *   **4 Pilares Alignment (v4.28.0)**: Diagnóstico → Propuesta → Gap Analyzer → Benchmarks alineados a SEO + GEO + AEO + IAO. 4 gaps con ponderación proporcional. score_global como métrica principal.
+> *   **Voice Readiness Proxy (v4.28.0)**: Score de readiness para asistentes de voz basado en PROXY (GBP 30%, Schema 25%, Snippets 25%, Factual 20%). No consulta APIs Siri/Alexa directamente.
+> *   **Motor Financiero Verificable (v4.27.0)**: 11 fases (A→K) en 2 ciclos. Cada COP cuantificado tiene origen trazable, peso proporcional, etiqueta honesta y base verificable.
 > *   **Camino Único**: Eliminado cálculo dual en main.py. Una sola fuente de verdad vía FinancialCalculatorV2 con validación source-aware.
 > *   **Datos Regionales Reales**: ADR y occupancy por región (eje_cafetero, antioquia) activados. Caribe protegido (no usa regional).
 > *   **Ganancia Neta vs Pérdida**: Escenario optimista negativo se presenta como "+$189,000 COP/mes (ganancia neta)" en vez de pérdida confusa.
-> *   **NoDefaultsValidator Source-Aware**: Warnings para fuentes sospechosas. source_reliability populated en metadata.
 > *   **Evidence Tiers**: A (datos reales) → B (scraping) → C (estimación) con disclaimers honestos por tier.
-> *   **390 tests** pasando, 0 regresiones. E2E amaziliahotel.com exit code 0.
-> *   **Brecha Architectural Fix (v4.26.0)**: Resuelto gap entre propuesta V6 y diagnóstico. Phantom costs eliminados.
+> *   **628 tests** pasando, 0 regresiones.
 > *   **NEVER_BLOCK Architecture**: El sistema nunca se bloquea, siempre entrega algo con benchmark regional + disclaimers honestos.
 > *   **Coherence Validator**: Score ≥ 0.8 requerido. Quality Gates de pre-publicación.
 

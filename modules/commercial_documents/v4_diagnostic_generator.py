@@ -36,6 +36,15 @@ def _get_opportunity_scorer():
     except Exception:
         return None
 
+
+def _get_voice_readiness_proxy():
+    """Lazy import del VoiceReadinessProxy para evitar import circular."""
+    try:
+        from modules.auditors.voice_readiness_proxy import VoiceReadinessProxy
+        return VoiceReadinessProxy()
+    except Exception:
+        return None
+
 # Analytics imports (lazy-loaded to avoid hard dependency on google-analytics-data)
 # Used by _get_analytics_summary() and _get_analytics_fallback()
 
@@ -315,6 +324,10 @@ class V4DiagnosticGenerator:
             analytics_data=analytics_data,
         )
         
+        # Store voice readiness values for access via DiagnosticSummary (TAREA-2)
+        self._last_voice_score = template_data.get('voice_readiness_score')
+        self._last_voice_level = template_data.get('voice_readiness_level')
+        
         # Render template
         document_content = self._render_template(template_content, template_data)
         
@@ -548,7 +561,10 @@ ${quick_wins_list}
         competitive_regional = self._calculate_regional_average(audit_result, 'competitive', hotel_region)
         seo_regional = self._calculate_regional_average(audit_result, 'seo', hotel_region)
         aeo_regional = self._calculate_regional_average(audit_result, 'aeo', hotel_region)
-        
+
+        # Regional benchmarks for IAO score reference
+        benchmarks = self._get_regional_benchmarks(hotel_region)
+
         data = {
             'generated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'version': '4.0.0',
@@ -604,8 +620,8 @@ ${quick_wins_list}
 
             # === 4-PILAR SCORING (FASE-A) ===
             'iao_score': (iao_sc := self._calculate_iao_score_from_audit(audit_result)),
-            'iao_status': self._get_score_status(iao_sc, 50),  # Regional default 50 (sin benchmarks IAO)
-            'iao_regional_avg': '50',
+            'iao_status': self._get_score_status(iao_sc, benchmarks.get('iao_score_ref', 15)),
+            'iao_regional_avg': str(benchmarks.get('iao_score_ref', 15)),
             'score_global': (sg_sc := self._calculate_score_global_from_audit(audit_result)),
             'score_global_status': self._get_score_status(sg_sc, 50),
             
@@ -719,6 +735,22 @@ ${quick_wins_list}
             financial_scenarios, analytics_data, source_reliability=_source_reliability,
         )
         data.update(financial_ph)
+        
+        # --- Voice Readiness (TAREA-2) ---
+        voice_proxy = _get_voice_readiness_proxy()
+        if voice_proxy:
+            try:
+                snippet_report = getattr(audit_result, 'aeo_snippets', None)
+                voice_result = voice_proxy.calculate(audit_result, snippet_report)
+                data['voice_readiness_score'] = str(int(voice_result.score))
+                data['voice_readiness_level'] = voice_result.level
+            except Exception:
+                # Voice readiness is non-blocking - continue if it fails
+                data['voice_readiness_score'] = '0'
+                data['voice_readiness_level'] = 'unknown'
+        else:
+            data['voice_readiness_score'] = '0'
+            data['voice_readiness_level'] = 'unknown'
         
         return data
     
@@ -1355,9 +1387,10 @@ ${quick_wins_list}
                 'geo_score_ref': region_data.get('geo_score_ref', 55),
                 'aeo_score_ref': region_data.get('aeo_score_ref', 20),
                 'seo_score_ref': region_data.get('seo_score_ref', 50),
+                'iao_score_ref': region_data.get('iao_score_ref', 15),
             }
         except Exception:
-            return {'geo_score_ref': 85, 'aeo_score_ref': 40, 'seo_score_ref': 59}
+            return {'geo_score_ref': 85, 'aeo_score_ref': 40, 'seo_score_ref': 59, 'iao_score_ref': 15}
 
     def _calculate_regional_average(
         self,
@@ -1525,10 +1558,22 @@ ${quick_wins_list}
         return str(min(100, max(0, base_score)))
 
     def _calculate_iao_score_from_audit(self, audit_result: V4AuditResult) -> str:
-        """Calculate IAO score from audit using 4-pilar extraction (FASE-A)."""
+        """
+        Calculate IAO score from audit using 4-pilar extraction (FASE-A).
+
+        Si hay datos reales de LLM mentions (FASE-C), pondera:
+        50% checklist + 50% resultado real de LLMs.
+        """
         elementos_iao = self._extraer_elementos_iao(audit_result)
-        score = calcular_score_iao(elementos_iao)
-        return str(score)
+        base_score = calcular_score_iao(elementos_iao)
+
+        # FASE-C: Si hay datos reales de LLM mentions, ajustar score
+        llm_report = getattr(audit_result, 'llm_report', None)
+        if llm_report and llm_report.source != "stub":
+            real_score = llm_report.mention_score
+            base_score = int(base_score * 0.5 + real_score * 0.5)
+
+        return str(min(100, max(0, base_score)))
 
     def _calculate_score_global_from_audit(self, audit_result: V4AuditResult) -> str:
         """Calculate score global from 4 pilar scores (FASE-A)."""
@@ -2004,20 +2049,38 @@ ${quick_wins_list}
             and audit_result.citability.overall_score > 50
         )
 
-        # LLMS.txt (nuevo, default False - sin detector aun)
-        elementos["llms_txt_exists"] = False
+        # LLMS.txt — check if llms.txt was detected in schema or metadata
+        elementos["llms_txt_exists"] = (
+            hasattr(audit_result, 'schema') and audit_result.schema
+            and hasattr(audit_result.schema, 'properties')
+            and 'llms_txt' in str(audit_result.schema.properties).lower()
+        )
 
-        # Crawler access (nuevo, default False - sin detector aun)
-        elementos["crawler_access"] = False
+        # Crawler access — use ai_crawlers audit (FASE-C: ya existe ai_crawler_auditor)
+        elementos["crawler_access"] = (
+            hasattr(audit_result, 'ai_crawlers') and audit_result.ai_crawlers
+            and audit_result.ai_crawlers.overall_score is not None
+            and audit_result.ai_crawlers.overall_score > 50
+        )
 
-        # Brand signals (nuevo, default False - sin detector aun)
-        elementos["brand_signals"] = False
+        # Brand signals — check SameAs and social links in schema
+        elementos["brand_signals"] = (
+            hasattr(audit_result, 'schema') and audit_result.schema
+            and hasattr(audit_result.schema, 'properties')
+            and (
+                'sameas' in str(audit_result.schema.properties).lower()
+                or 'social' in str(audit_result.schema.properties).lower()
+            )
+        )
 
-        # GA4 indirect (nuevo, default False - sin detector aun)
-        elementos["ga4_indirect"] = False
+        # GA4 indirect — check if GA4 data exists with indirect traffic
+        elementos["ga4_indirect"] = False  # Requires real GA4 connection
 
-        # Schema advanced (nuevo, default False - sin detector aun)
-        elementos["schema_advanced"] = False
+        # Schema advanced — Entity schema + SameAs
+        elementos["schema_advanced"] = (
+            hasattr(audit_result, 'schema') and audit_result.schema
+            and audit_result.schema.org_schema_detected
+        )
 
         return elementos
 

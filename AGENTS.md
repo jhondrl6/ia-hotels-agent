@@ -1,8 +1,8 @@
-<!-- agents_version: 4.27.0 | last_update: 2026-04-11 -->
+<!-- agents_version: 4.28.0 | last_update: 2026-04-12 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.27.0 -- Motor Financiero Verificable COMPLETADO**
+> **v4.28.0 -- 4 Pilares Alignment + Voice Readiness Proxy**
 
 ---
 

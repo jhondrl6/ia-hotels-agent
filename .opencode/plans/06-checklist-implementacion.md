@@ -42,18 +42,18 @@
 
 ## FASE-C: IAO Restoration + LLM Checker
 
-| # | Item | Estado |
-|---|------|--------|
-| C1 | modules/auditors/llm_mention_checker.py creado | ⏳ |
-| C2 | _calculate_iao_score() restaurado | ⏳ |
-| C3 | LLMMentionChecker integrado en v4_comprehensive.py | ⏳ |
-| C4 | Variables template iao_score/iao_status restauradas | ⏳ |
-| C5 | DiagnosticSummary: campos IAO completos | ⏳ |
-| C6 | Citabilidad está en IAO (no en AEO) | ⏳ |
-| C7 | OpenRouter como provider (NUNCA openai SDK directo) | ⏳ |
-| C8 | Tests nuevos pasan | ⏳ |
-| C9 | Suite completa pasa (0 regresiones) | ⏳ |
-| C10 | log_phase_completion.py ejecutado | ⏳ |
+|| # | Item | Estado |
+||---|------|--------|
+|| C1 | modules/auditors/llm_mention_checker.py creado | ✅ |
+|| C2 | _calculate_iao_score() restaurado (ponderación 50/50 con LLM data) | ✅ |
+|| C3 | LLMMentionChecker integrado en v4_comprehensive.py | ✅ |
+|| C4 | Variables template iao_score/iao_status restauradas | ✅ |
+|| C5 | DiagnosticSummary: campos IAO completos (iao_status, iao_regional_avg, llm_report_summary) | ✅ |
+|| C6 | Citabilidad está en IAO (no en AEO) | ✅ |
+|| C7 | OpenRouter como provider (NUNCA openai SDK directo) | ✅ |
+|| C8 | Tests nuevos pasan (42 tests) | ✅ |
+|| C9 | Suite completa pasa (0 regresiones) | ✅ |
+|| C10 | log_phase_completion.py ejecutado | ✅ |
 
 ---
 
@@ -108,12 +108,12 @@
 
 ## Resumen de Progreso
 
-| Fase | Items | Completados | Pendientes | Estado |
-|------|-------|------------|------------|--------|
-| FASE-A | 12 | 12 | 0 | ✅ Completada |
-| FASE-B | 8 | 0 | 8 | ⏳ Pendiente |
-| FASE-C | 10 | 0 | 10 | ⏳ Pendiente |
-| FASE-D | 9 | 0 | 9 | ⏳ Pendiente |
-| FASE-E | 8 | 0 | 8 | ⏳ Pendiente |
-| FASE-F | 11 | 0 | 11 | ⏳ Pendiente |
-| **TOTAL** | **58** | **0** | **58** | — |
+|| Fase | Items | Completados | Pendientes | Estado |
+||------|-------|------------|------------|--------|
+|| FASE-A | 12 | 12 | 0 | ✅ Completada |
+|| FASE-B | 8 | 0 | 8 | ⏳ Pendiente |
+|| FASE-C | 10 | 10 | 0 | ✅ Completada |
+|| FASE-D | 9 | 0 | 9 | ⏳ Pendiente |
+|| FASE-E | 8 | 0 | 8 | ⏳ Pendiente |
+|| FASE-F | 11 | 0 | 11 | ⏳ Pendiente |
+|| **TOTAL** | **58** | **22** | **36** | — |

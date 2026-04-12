@@ -539,7 +539,12 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'plan_60d': self._build_60_day_plan(),
         'plan_90d': self._build_90_day_plan(),
         'coherence_score': str(int(diagnostic_summary.coherence_score * 100)) if diagnostic_summary.coherence_score is not None else '70',
-        
+
+        # Backward compatibility: score_tecnico alias for score_global
+        'score_tecnico': diagnostic_summary.score_global if diagnostic_summary.score_global is not None else (
+            diagnostic_summary.score_tecnico if diagnostic_summary.score_tecnico is not None else 50
+        ),
+
         # Brecha variables — dinámicas, zero para slots sin problema real
         # Las brechas consumen top_problems (V4 compat) con guard contra phantom costs
         **self._build_brecha_data(diagnostic_summary, main_scenario),

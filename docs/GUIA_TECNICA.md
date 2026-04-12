@@ -1,8 +1,90 @@
 # Guía Técnica IA Hoteles Agent CLI
 
-**Ultima actualizacion:** 11 Abril 2026
-|**Version:** 4.26.0 (Brecha Architectural Fix)
-**Audiencia:** Desarrolladores, DevOps, Contribuidores
+**Ultima actualizacion:** 12 Abril 2026
+|**Version:** 4.28.0 (4 Pilares Alignment + Voice Readiness Proxy)
+|**Audiencia:** Desarrolladores, DevOps, Contribuidores
+
+## Notas de Cambios — v4.28.0: 4 Pilares Alignment + Voice Readiness Proxy
+
+**Fecha:** 12 Abril 2026
+
+### Resumen
+
+FASE-D alinea toda la cadena de generación (diagnóstico → propuesta → gap analyzer → benchmarks) al modelo de 4 pilares (SEO+GEO+AEO+IAO). FASE-E introduce Voice Readiness Proxy como sub-score de AEO basado en inputs medibles (no medición directa Siri/Alexa).
+
+### Módulos Afectados
+
+#### 1. modules/analyzers/gap_analyzer.py (FASE-D)
+- Expandido de 2 gaps (GEO+AEO) a **4 gaps (SEO+GEO+AEO+IAO)**
+- Nuevos benchmarks: `seo_score_ref=50`, `iao_score_ref=15`
+- Ponderación proporcional por pilar (suma = 1.0)
+- `_map_brecha_to_paquete()` actualizado para 6 nuevos tipos de brecha
+
+#### 2. modules/financial_engine/opportunity_scorer.py (FASE-D)
+- Nuevas brechas IAO: `no_llms_txt`, `ia_crawler_blocked`, `weak_brand_signals`
+- Nuevas brechas SEO: `no_meta_descriptions`, `poor_heading_structure`
+
+#### 3. scripts/update_benchmarks.py (FASE-D)
+- Nueva función `calculate_iao_score(hotel)` con 5 checks (20pts c/u, max 100):
+  - `has_llms_txt`, `has_schema_entity`, `citability_score>50`, `allows_ai_crawlers`, `has_sames_as_links`
+- `iao_avg` calculado por región
+- `iao_score_ref` guardado por región en `plan_maestro_data.json`
+
+#### 4. modules/utils/benchmarks.py (FASE-D)
+- `iao_score_ref` añadido a `DEFAULT_DATA["regiones"]["default"]`
+
+#### 5. modules/generators/report_builder.py (FASE-D) — ⚠️ DEPRECATED
+- Comentario DEPRECATED añadido: "Este módulo pertenece al comando 'spark' (deprecado). El pipeline activo 'v4complete' usa V4DiagnosticGenerator + V4ProposalGenerator"
+- Sección ANALISIS 4-PILARES expandida para mostrar SEO, GEO, AEO, IAO con scores
+
+#### 6. modules/commercial_documents/templates/diagnostico_v6_template.md (FASE-D)
+- Fila IAO añadida: `${iao_score}/100` (Para que te RECOMIENDEN)
+- Labels de tabla alineados a narrativa comercial:
+  - SEO Local (Para que te ENCUENTREN)
+  - Google Maps (Para que te UBICQUEN)
+  - AEO (Para que te CITEN)
+  - IAO (Para que te RECOMIENDEN)
+- Fila Visibilidad Digital (Global) con `${score_global}`
+
+#### 7. modules/commercial_documents/v4_diagnostic_generator.py (FASE-D, FASE-E)
+- `_get_regional_benchmarks()` ahora retorna 4 benchmarks incluyendo `iao_score_ref`
+- Integración de `VoiceReadinessProxy.calculate()` en `_prepare_template_data()`
+- Campos `voice_readiness_score` y `voice_readiness_level` disponibles en templates
+
+#### 8. modules/commercial_documents/v4_proposal_generator.py (FASE-D)
+- `score_global` es ahora la métrica principal para sugerir paquete
+- Fallback: `score_tecnico` (backward compatibility)
+- Alias `score_tecnico` mantenido en template data
+
+#### 9. modules/auditors/voice_readiness_proxy.py (FASE-E) — NUEVO
+- Módulo que calcula Voice Readiness basado en PROXY (inputs que alimentan asistentes de voz)
+- **NO consulta APIs de Siri/Alexa/Google Assistant directamente**
+- 4 componentes con pesos:
+  - GBP completeness: 30pts (nombre, dirección, teléfono, horarios, website)
+  - Schema for voice: 25pts (LocalBusiness, FAQ, Speakable)
+  - Featured snippets: 25pts (AEOSnippetTracker o fallback desde schema)
+  - Factual coverage: 20pts (horarios, teléfono, dirección, precios en texto)
+- Niveles: critical (0-25), basic (26-50), good (51-75), excellent (76-100)
+- Fallback graceful si FASE-B no completada (usa schema como proxy de snippets)
+
+#### 10. modules/commercial_documents/data_structures.py (FASE-E)
+- `DiagnosticSummary` tiene ahora:
+  - `voice_readiness_score: Optional[int] = None`
+  - `voice_readiness_level: Optional[str] = None`
+
+#### 11. main.py (FASE-E)
+- Pasa `voice_readiness_score` y `voice_readiness_level` al DiagnosticSummary
+
+### Backwards Compatibility
+- `score_tecnico` mantenido como alias de `score_global` (no breaking change)
+- `report_builder.py` marcado DEPRECATED pero funcional
+- Voice Readiness usa fallback si `aeo_snippets` no disponible (FASE-B no ejecutada)
+
+### Tests
+- 628 tests passing (0 regresiones)
+- Errors pre-existentes en `data_validation/` y `observability/` (módulos faltantes)
+
+---
 
 ## Notas de Cambios — Ciclo 2: RegionalADR + Validator Source-Aware
 
@@ -367,6 +449,25 @@ Eliminacion de redundancia entre scores AEO e IAO (ambos median infraestructura 
 
 - Variables de template eliminadas (iao_score, iao_status, voice_readiness_score, voice_readiness_status): si algun template personalizado las referencia, fallara con KeyError en Template.safe_substitute()
 - Metodos eliminados son internos, no son API publica del modulo
+
+---
+
+### RESTAURACION: FASE-C (2026-04-12) — IAO como pilar independiente
+
+**Problema**: FASE-CAUSAL elimino `_calculate_iao_score()` asumiendo que IAO y AEO "ambos median infraestructura de datos estructurados". Esto era INCORRECTO: AEO mide posicion cero en Google (buscador), IAO mide recomendacion en LLMs (agentes). Son canales diferentes.
+
+**Restauracion**:
+- `_calculate_iao_score_from_audit()` restaurado en `v4_diagnostic_generator.py` con logica correcta de 7 componentes (CHECKLIST_IAO)
+- Nuevo modulo `modules/auditors/llm_mention_checker.py`: consulta OpenRouter/Gemini/Perplexity para detectar menciones del hotel
+- Ponderacion 50/50: 50% checklist infraestructura + 50% resultado real de LLM mentions
+- `_extraer_elementos_iao()` mejorado: crawler_access usa ai_crawlers, schema_advanced usa org_schema_detected, brand_signals detecta SameAs
+- Variables template `iao_score/iao_status/iao_regional_avg` restauradas
+- `DiagnosticSummary` ampliado con `iao_status`, `iao_regional_avg`, `llm_report_summary`
+- Integracion en `v4_comprehensive.py`: Step 2.11 ejecuta LLMMentionChecker
+
+**Arquitectura**: SEO (base) -> AEO (posicion cero) -> IAO (recomendacion IA). GEO lateral complementario.
+
+**Costo**: $0-0.30/hotel (5 queries x 3 providers). Sin API keys: modo stub sin crashear.
 - El score AEO (_calculate_aeo_score) fue reescrito en v4.25.3: scoring de 4 componentes x 25pts (Schema valido + FAQ valido + OG detectado + Citabilidad). Ya NO mantiene la logica del anterior schema_infra_score
 - aeo_metrics_gen.py se mantiene como modulo tecnico interno
 

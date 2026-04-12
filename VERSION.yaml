@@ -1,8 +1,8 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.27.0"
-codename: "Motor Financiero Verificable"
-release_date: "2026-04-11"
+version: "4.28.0"
+codename: "4 Pilares Alignment + Voice Readiness Proxy"
+release_date: "2026-04-12"
 plan_maestro_version: "v2.6.0"
 
 # v4.18.0 - ANALYTICS E2E 100% CERTIFICATION (ANALYTICS-E2E-CERT-01)

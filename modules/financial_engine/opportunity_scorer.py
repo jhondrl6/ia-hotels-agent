@@ -100,6 +100,33 @@ class OpportunityScorer:
             "competitor_factor": False,
             "label": "Contenido No Citable por IA",
         },
+        # Brechas IAO (AI Optimization)
+        "no_llms_txt": {
+            "base": 35,
+            "competitor_factor": True,
+            "label": "Sin archivo llms.txt",
+        },
+        "ia_crawler_blocked": {
+            "base": 40,
+            "competitor_factor": False,
+            "label": "Crawlers IA bloqueados",
+        },
+        "weak_brand_signals": {
+            "base": 25,
+            "competitor_factor": True,
+            "label": "Senales debiles de marca",
+        },
+        # Brechas SEO
+        "no_meta_descriptions": {
+            "base": 20,
+            "competitor_factor": True,
+            "label": "Sin meta descripciones",
+        },
+        "poor_heading_structure": {
+            "base": 15,
+            "competitor_factor": False,
+            "label": "Estructura de headings deficiente",
+        },
     }
 
     # Esfuerzo por tipo de brecha (0-30)
@@ -116,6 +143,13 @@ class OpportunityScorer:
         "missing_reviews": 20,       # Implementar estrategia reviews
         "no_og_tags": 25,            # Agregar Open Graph tags
         "low_citability": 15,        # Crear contenido estructurado
+        # Brechas IAO (AI Optimization)
+        "no_llms_txt": 25,           # Generar archivo llms.txt
+        "ia_crawler_blocked": 20,    # Modificar robots.txt
+        "weak_brand_signals": 15,     # Crear contenido de marca
+        # Brechas SEO
+        "no_meta_descriptions": 20,  # Editar meta tags
+        "poor_heading_structure": 15, # Reorganizar estructura H1-H6
     }
 
     # Impacto en conversion directa (0-30)
@@ -132,6 +166,13 @@ class OpportunityScorer:
         "missing_reviews": 20,       # Confianza del viajero
         "no_og_tags": 15,            # Social sharing
         "low_citability": 25,        # Recomendacion IA
+        # Brechas IAO (AI Optimization)
+        "no_llms_txt": 25,           # Recomendacion en IAs generativas
+        "ia_crawler_blocked": 30,    # Exclusion completa de IAs
+        "weak_brand_signals": 20,     # Baja autoridad percibida por IAs
+        # Brechas SEO
+        "no_meta_descriptions": 15,   # CTR en resultados organicos
+        "poor_heading_structure": 10, # Relevancia SEO menor
     }
 
     # Justificaciones template

@@ -6,6 +6,10 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+# ⚠️ DEPRECATED: Este módulo pertenece al comando 'spark' (deprecado).
+# El pipeline activo 'v4complete' usa V4DiagnosticGenerator + V4ProposalGenerator
+# en modules/commercial_documents/. No modificar este archivo para cambios funcionales.
+
 from modules.scrapers.scraper_fallback import ScraperFallback
 from modules.utils.benchmarks import BenchmarkLoader
 from datetime import datetime
@@ -1008,6 +1012,34 @@ class ReportBuilder:
 **Campos Faltantes en Schema:**
 
 {self._format_list(schema_data.get('campos_faltantes', []))}
+
+---
+
+### [WEB] PILAR 3: SEO (Search Engine Optimization)
+
+**Score SEO: {seo_data.get('score', 0) if seo_data else 0}/100**
+
+|| Metrica | Valor | Status |
+|---------|-------|--------|
+|| score SEO | {seo_data.get('score', 0) if seo_data else 0}/100 | {'[OK] OK' if (seo_data.get('score', 0) if seo_data else 0) >= 50 else '[WARN] Mejorar'} |
+|| Domain Authority | {seo_data.get('domain_authority', 'N/D') if seo_data else 'N/D'} | - |
+|| DA Regional Avg | ~45/100 | Referencia |
+|| Backlinks | {seo_data.get('backlinks', 0) if seo_data else 0} | - |
+|| Keywords Top 10 | {seo_data.get('keywords_top10', 0) if seo_data else 0} | - |
+
+---
+
+### [AI] PILAR 4: IAO (AI Optimization)
+
+**Score IAO: {ia_data.get('score', 0) if ia_data else 0}/100**
+
+|| Metrica | Valor | Status |
+|---------|-------|--------|
+|| score IAO | {ia_data.get('score', 0) if ia_data else 0}/100 | {'[OK] OK' if (ia_data.get('score', 0) if ia_data else 0) >= 30 else '[WARN] Mejorar'} |
+|| IA Readiness | {ia_data.get('ia_readiness', 'N/D') if ia_data else 'N/D'}/100 | - |
+|| citabilidad | {ia_data.get('citabilidad_score', 'N/D') if ia_data else 'N/D'}/100 | - |
+|| contenido_optimizado | {ia_data.get('contenido_ia_optimizado', 'N/D') if ia_data else 'N/D'} | - |
+|| referenced_by_ai | {ia_data.get('referenced_by_ai', False) if ia_data else False} | - |
 
 ---
 

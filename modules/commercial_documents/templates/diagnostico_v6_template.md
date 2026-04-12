@@ -49,10 +49,11 @@ ${regional_context}
 
 ||| Indicador | Su Negocio | Promedio Regional | Estado |
 |||-----------|------------|------------------|--------|
-||||| **Google Maps** (GEO) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
-||||| **Posición Competitiva Local** (vs cercanos) | ${competitive_score}/100 | ${competitive_regional_avg}/100 | ${competitive_status} |
-||||| **AEO** - Infraestructura para IAs | ${aeo_score}/100 | ${aeo_regional_avg}/100 | ${aeo_status} |
-||||| **SEO Local** (Web) | ${seo_score}/100 | ${seo_regional_avg}/100 | ${seo_status} |
+| **SEO Local** (Para que te ENCUENTREN) | ${seo_score}/100 | ${seo_regional_avg}/100 | ${seo_status} |
+| **Google Maps** (Para que te UBICQUEN) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
+| **AEO** (Para que te CITEN) | ${aeo_score}/100 | ${aeo_regional_avg}/100 | ${aeo_status} |
+| **IAO** (Para que te RECOMIENDEN) | ${iao_score}/100 | ${iao_regional_avg}/100 | ${iao_status} |
+| **Visibilidad Digital** (Global) | ${score_global}/100 | - | - |
 
 ${regional_transparency}
 
@@ -94,12 +95,6 @@ ${scenario_table_rows}
 > - Tier C: Basado en datos limitados de su web
 
 ${estimate_footnote}
-
----
-
-## 🚨 BRECHAS CRÍTICAS IDENTIFICADAS (DETALLE)
-
-${brechas_section}
 
 ---
 

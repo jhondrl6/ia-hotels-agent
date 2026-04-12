@@ -2181,6 +2181,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         },
         coherence_score=pre_coherence_score,  # Usar el score calculado por CoherenceValidator
         brechas_reales=brechas_reales,  # FASE-G: impactos reales para proposal
+        voice_readiness_score=getattr(diagnostic_gen, '_last_voice_score', None),
+        voice_readiness_level=getattr(diagnostic_gen, '_last_voice_level', None),
     )
 
     # Generar propuesta solo si pasa el gate (o si no es bloqueante)
