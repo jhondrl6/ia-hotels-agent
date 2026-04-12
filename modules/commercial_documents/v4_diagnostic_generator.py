@@ -64,6 +64,13 @@ ELEMENTO_KB_TO_PAIN_ID: Dict[str, tuple] = {
     "imagenes_alt":       ("missing_alt_text",    "alt_text_guide",      None),
     "blog_activo":        ("no_blog_content",     "blog_strategy_guide", None),
     "redes_activas":      ("no_social_links",     "social_strategy_guide", None),
+    # Nuevos elementos (FASE-A: 4-pilar scoring)
+    "speakable_schema":   ("no_speakable",        "voice_guide",         None),
+    "llms_txt_exists":    ("no_llms_txt",         "llms_txt",            None),
+    "crawler_access":     ("ia_crawler_blocked",  "optimization_guide",  None),
+    "brand_signals":      ("weak_brand_signals",  "org_schema",          None),
+    "schema_advanced":    ("no_entity_schema",    "org_schema",          None),
+    "contenido_factual":  ("no_factual_data",     "hotel_schema",        None),
 }
 
 ELEMENTOS_MONETIZABLES: set = {
@@ -72,15 +79,98 @@ ELEMENTOS_MONETIZABLES: set = {
 }
 
 
+# ============================================================
+# 4-PILAR CHECKLISTS (FASE-A)
+# Reemplazan el CHECKLIST_IAO monolico por 4 pilares coherentes.
+# Cada diccionario suma exactamente 100pts.
+# ============================================================
+
+CHECKLIST_SEO: Dict[str, int] = {
+    "ssl":              15,
+    "schema_hotel":     20,  # Schema base = SEO fundamental
+    "LCP_ok":           20,
+    "CLS_ok":           10,
+    "imagenes_alt":     15,
+    "blog_activo":      10,
+    "schema_reviews":   10,  # Reviews en schema = credibility SEO
+}
+# Total: 100pts
+
+CHECKLIST_GEO: Dict[str, int] = {
+    "nap_consistente":      15,
+    "redes_activas":        10,
+    "geo_score_gbp":        30,  # Ya existe: audit_result.gbp.geo_score
+    "fotos_gbp":            15,  # Ya existe: audit_result.gbp.photos
+    "horario_gbp":          15,  # Ya existe: audit_result.gbp (check horarios)
+    "schema_reviews_geo":   15,  # Reviews con ubicacion
+}
+# Total: 100pts
+
+CHECKLIST_AEO: Dict[str, int] = {
+    "schema_faq":           25,  # FAQ = fuente directa para snippets
+    "open_graph":           15,  # OG = metadatos para posicion cero
+    "schema_hotel_aeo":     15,  # Schema detallado para extraccion factual
+    "contenido_factual":    20,  # Horarios, precios, servicios accesibles
+    "speakable_schema":     10,  # Schema especifico voz (nuevo campo, default False)
+    "imagenes_alt_aeo":     15,  # Alt text como fuente para image snippets
+}
+# Total: 100pts
+
+CHECKLIST_IAO: Dict[str, int] = {
+    "citability_score":     20,  # Ya existe: audit_result.citability.overall_score
+    "contenido_extenso":    15,  # Ya existe como elemento KB
+    "llms_txt_exists":      15,  # Nuevo: check si llms.txt generado
+    "crawler_access":       15,  # Ya existe: ai_crawler_auditor
+    "brand_signals":        10,  # Nuevo: SameAs, enlaces sociales
+    "ga4_indirect":         10,  # Ya existe (ADVISORY): GA4 indirect traffic
+    "schema_advanced":      15,  # Schema Entity + SameAs (nuevo campo)
+}
+# Total: 100pts
+
+
+def calcular_score_seo(elementos: dict) -> int:
+    """Score SEO: Para que te ENCUENTREN (0-100)."""
+    if not elementos:
+        return 0
+    return min(100, sum(CHECKLIST_SEO[k] for k, v in elementos.items() if v is True and k in CHECKLIST_SEO))
+
+
+def calcular_score_geo(elementos: dict) -> int:
+    """Score GEO: Para que te UBICQUEN (0-100)."""
+    if not elementos:
+        return 0
+    return min(100, sum(CHECKLIST_GEO[k] for k, v in elementos.items() if v is True and k in CHECKLIST_GEO))
+
+
+def calcular_score_aeo(elementos: dict) -> int:
+    """Score AEO: Para que te CITEN (0-100)."""
+    if not elementos:
+        return 0
+    return min(100, sum(CHECKLIST_AEO[k] for k, v in elementos.items() if v is True and k in CHECKLIST_AEO))
+
+
+def calcular_score_iao(elementos: dict) -> int:
+    """Score IAO: Para que te RECOMIENDEN (0-100)."""
+    if not elementos:
+        return 0
+    return min(100, sum(CHECKLIST_IAO[k] for k, v in elementos.items() if v is True and k in CHECKLIST_IAO))
+
+
+def calcular_score_global(seo: int, geo: int, aeo: int, iao: int) -> int:
+    """Visibilidad Digital = promedio ponderado 4 pilares (0-100)."""
+    return int((seo * 0.25) + (geo * 0.25) + (aeo * 0.25) + (iao * 0.25))
+
+
 def calcular_cumplimiento(elementos: dict) -> int:
     """
+    DEPRECATED: Usar calcular_score_global(calcular_score_seo(...), ...) en su lugar.
     Calcula score de cumplimiento del CHECKLIST_IAO (0-100).
     DE LA KB: [SECTION:SCORING_ALGORITHM]
-    
+
     Args:
         elementos: Dict con 12 elementos KB, cada uno True/False.
                    Usar _extraer_elementos_de_audit() para obtener.
-    
+
     Returns:
         int 0-100. Si elementos esta vacio o es None, retorna 0.
     """
@@ -111,12 +201,13 @@ def calcular_cumplimiento(elementos: dict) -> int:
 
 def sugerir_paquete(score_tecnico: int) -> str:
     """
-    Recomienda paquete segun score tecnico.
+    Recomienda paquete segun score (tecnico o global).
     DE LA KB: [SECTION:PACKAGE_TIERS]
-    
+
     Args:
-        score_tecnico: Score 0-100 de calcular_cumplimiento().
-    
+        score_tecnico: Score 0-100. Acepta calcular_cumplimiento() (legacy)
+                      o calcular_score_global() (4-pilar).
+
     Returns:
         "basico" (<40), "avanzado" (40-69), "premium" (>=70)
     """
@@ -510,7 +601,13 @@ ${quick_wins_list}
             'web_status': self._get_score_status(web_sc, seo_regional['value']),
             'schema_infra_score': (aeo_sc := self._calculate_aeo_score(audit_result)),
             'schema_infra_status': self._get_score_status(aeo_sc, aeo_regional['value']),
-            # iao_score/iao_status/voice_readiness eliminados en FASE-CAUSAL-01
+
+            # === 4-PILAR SCORING (FASE-A) ===
+            'iao_score': (iao_sc := self._calculate_iao_score_from_audit(audit_result)),
+            'iao_status': self._get_score_status(iao_sc, 50),  # Regional default 50 (sin benchmarks IAO)
+            'iao_regional_avg': '50',
+            'score_global': (sg_sc := self._calculate_score_global_from_audit(audit_result)),
+            'score_global_status': self._get_score_status(sg_sc, 50),
             
             # Brechas (4 Razones)
             'brecha_1_nombre': self._get_brecha_nombre(audit_result, 0),
@@ -1453,8 +1550,25 @@ ${quick_wins_list}
             return "0"
 
         return str(min(100, score))
-    
-    # IAO y Voice Readiness eliminados en FASE-CAUSAL-01 (redundantes con AEO)
+
+    def _calculate_iao_score_from_audit(self, audit_result: V4AuditResult) -> str:
+        """Calculate IAO score from audit using 4-pilar extraction (FASE-A)."""
+        elementos_iao = self._extraer_elementos_iao(audit_result)
+        score = calcular_score_iao(elementos_iao)
+        return str(score)
+
+    def _calculate_score_global_from_audit(self, audit_result: V4AuditResult) -> str:
+        """Calculate score global from 4 pilar scores (FASE-A)."""
+        elementos_seo = self._extraer_elementos_seo(audit_result)
+        elementos_geo = self._extraer_elementos_geo(audit_result)
+        elementos_aeo = self._extraer_elementos_aeo(audit_result)
+        elementos_iao = self._extraer_elementos_iao(audit_result)
+        seo = calcular_score_seo(elementos_seo)
+        geo = calcular_score_geo(elementos_geo)
+        aeo = calcular_score_aeo(elementos_aeo)
+        iao = calcular_score_iao(elementos_iao)
+        return str(calcular_score_global(seo, geo, aeo, iao))
+
     # ---------------------------------------------------------------
     # ANALYTICS INTEGRATION
     # ---------------------------------------------------------------
@@ -1798,73 +1912,174 @@ ${quick_wins_list}
             content_lines.append(f"{i}. {cleaned}")
         return '\n'.join(content_lines)
     
-    def _extraer_elementos_de_audit(self, audit_result: V4AuditResult) -> dict:
-        """
-        Extrae los 12 elementos del CHECKLIST_IAO desde V4AuditResult.
-        
-        RETORNA:
-            dict con 12 elementos: {elemento_kb: bool}
-            - 5 elementos se extraen REALMENTE del audit
-            - 7 elementos usan default (False) hasta que existan detectores
-        
-        VALIDAR CON: ELEMENTO_KB_TO_PAIN_ID.keys()
-        """
+    # ----------------------------------------------------------------
+    # 4-PILAR EXTRACTION (FASE-A)
+    # ----------------------------------------------------------------
+
+    def _extraer_elementos_seo(self, audit_result: V4AuditResult) -> dict:
+        """Extrae elementos del pilar SEO (Para que te ENCUENTREN)."""
         elementos = {}
-        
-        # Guard against None audit_result
         if not audit_result:
-            for elem in ELEMENTO_KB_TO_PAIN_ID.keys():
-                elementos[elem] = False
-            return elementos
-        
-        # Elementos REALES (detectables con audit actual)
+            return {k: False for k in CHECKLIST_SEO}
+
+        # SSL
+        elementos["ssl"] = audit_result.url.startswith('https') if audit_result.url else False
+        # Schema hotel
         elementos["schema_hotel"] = bool(audit_result.schema.hotel_schema_detected) if audit_result.schema else False
-        elementos["schema_reviews"] = bool(audit_result.gbp.rating) if audit_result.gbp else False  # Proxy: gbp.rating existe
+        # Performance
         elementos["LCP_ok"] = (
-            audit_result.performance and audit_result.performance.lcp is not None 
+            audit_result.performance and audit_result.performance.lcp is not None
             and audit_result.performance.lcp <= 2.5
         )
         elementos["CLS_ok"] = (
-            audit_result.performance and audit_result.performance.cls is not None 
+            audit_result.performance and audit_result.performance.cls is not None
             and audit_result.performance.cls <= 0.1
         )
-        elementos["schema_faq"] = bool(audit_result.schema.faq_schema_detected) if audit_result.schema else False
-        
-        # SSL: detectable trivially (GAP-IAO-01-02-B)
-        elementos["ssl"] = audit_result.url.startswith('https') if audit_result.url else False
+        # Imagenes alt
+        if hasattr(audit_result, 'seo_elements') and audit_result.seo_elements:
+            elementos["imagenes_alt"] = audit_result.seo_elements.imagenes_alt
+        else:
+            elementos["imagenes_alt"] = False
+        # Blog activo (sin detector aun)
+        elementos["blog_activo"] = False
+        # Schema reviews (proxy: gbp.rating existe)
+        elementos["schema_reviews"] = bool(audit_result.gbp.rating) if audit_result.gbp else False
 
-        # NAP completo: WhatsApp + Address (GAP-IAO-01-02-B)
-        ws_status = getattr(audit_result.validation, 'whatsapp_status', None)
-        address_status = getattr(audit_result.validation, 'address_status', 'unknown')
+        return elementos
+
+    def _extraer_elementos_geo(self, audit_result: V4AuditResult) -> dict:
+        """Extrae elementos del pilar GEO (Para que te UBICQUEN)."""
+        elementos = {}
+        if not audit_result:
+            return {k: False for k in CHECKLIST_GEO}
+
+        # NAP consistente: WhatsApp + Address
+        ws_status = getattr(audit_result.validation, 'whatsapp_status', None) if audit_result.validation else None
+        address_status = getattr(audit_result.validation, 'address_status', 'unknown') if audit_result.validation else 'unknown'
         elementos["nap_consistente"] = (
             ws_status == ConfidenceLevel.VERIFIED.value
             and address_status == ConfidenceLevel.VERIFIED.value
         ) if ws_status else False
 
-        # Contenido extenso: CitabilityScorer (GAP-IAO-01-02-B)
-        elementos["contenido_extenso"] = (
-            audit_result.citability is not None
-            and audit_result.citability.overall_score > 50
-        ) if hasattr(audit_result, 'citability') and audit_result.citability else False
-
-        # SEO Elements desde SEOElementsDetector (GAP-IAO-01-02-B)
+        # Redes activas
         if hasattr(audit_result, 'seo_elements') and audit_result.seo_elements:
-            elementos["open_graph"] = audit_result.seo_elements.open_graph
-            elementos["imagenes_alt"] = audit_result.seo_elements.imagenes_alt
             elementos["redes_activas"] = audit_result.seo_elements.redes_activas
         else:
-            elementos["open_graph"] = False
-            elementos["imagenes_alt"] = False
             elementos["redes_activas"] = False
 
-        # Blog activo (sin detector aun)
-        elementos["blog_activo"] = False
-        
-        # Validacion: todos los 12 elementos deben estar presentes
-        for elem in ELEMENTO_KB_TO_PAIN_ID.keys():
-            if elem not in elementos:
-                elementos[elem] = False  # Fallback defensivo
-        
+        # GBP-derived elements
+        if audit_result.gbp:
+            elementos["geo_score_gbp"] = audit_result.gbp.geo_score >= 70
+            elementos["fotos_gbp"] = bool(getattr(audit_result.gbp, 'photos', 0) >= 3)
+            elementos["horario_gbp"] = bool(getattr(audit_result.gbp, 'hours', None))
+            elementos["schema_reviews_geo"] = bool(audit_result.gbp.rating)
+        else:
+            elementos["geo_score_gbp"] = False
+            elementos["fotos_gbp"] = False
+            elementos["horario_gbp"] = False
+            elementos["schema_reviews_geo"] = False
+
+        return elementos
+
+    def _extraer_elementos_aeo(self, audit_result: V4AuditResult) -> dict:
+        """Extrae elementos del pilar AEO (Para que te CITEN)."""
+        elementos = {}
+        if not audit_result:
+            return {k: False for k in CHECKLIST_AEO}
+
+        # Schema FAQ
+        elementos["schema_faq"] = bool(audit_result.schema.faq_schema_detected) if audit_result.schema else False
+        # Open Graph
+        if hasattr(audit_result, 'seo_elements') and audit_result.seo_elements:
+            elementos["open_graph"] = audit_result.seo_elements.open_graph
+            elementos["imagenes_alt_aeo"] = audit_result.seo_elements.imagenes_alt
+        else:
+            elementos["open_graph"] = False
+            elementos["imagenes_alt_aeo"] = False
+
+        # Schema hotel AEO (same source, separate pilar weight)
+        elementos["schema_hotel_aeo"] = bool(audit_result.schema.hotel_schema_valid) if audit_result.schema else False
+
+        # Contenido factual: schema valido + tiene horarios/precios
+        elementos["contenido_factual"] = (
+            audit_result.schema and audit_result.schema.hotel_schema_valid
+            and bool(getattr(audit_result.gbp, 'hours', None) if audit_result.gbp else False)
+        )
+
+        # Speakable schema (nuevo, default False - sin detector aun)
+        elementos["speakable_schema"] = False
+
+        return elementos
+
+    def _extraer_elementos_iao(self, audit_result: V4AuditResult) -> dict:
+        """Extrae elementos del pilar IAO (Para que te RECOMIENDEN)."""
+        elementos = {}
+        if not audit_result:
+            return {k: False for k in CHECKLIST_IAO}
+
+        # Citability score
+        elementos["citability_score"] = (
+            hasattr(audit_result, 'citability') and audit_result.citability
+            and audit_result.citability.overall_score is not None
+            and audit_result.citability.overall_score > 50
+        )
+
+        # Contenido extenso
+        elementos["contenido_extenso"] = (
+            hasattr(audit_result, 'citability') and audit_result.citability
+            and audit_result.citability.overall_score is not None
+            and audit_result.citability.overall_score > 50
+        )
+
+        # LLMS.txt (nuevo, default False - sin detector aun)
+        elementos["llms_txt_exists"] = False
+
+        # Crawler access (nuevo, default False - sin detector aun)
+        elementos["crawler_access"] = False
+
+        # Brand signals (nuevo, default False - sin detector aun)
+        elementos["brand_signals"] = False
+
+        # GA4 indirect (nuevo, default False - sin detector aun)
+        elementos["ga4_indirect"] = False
+
+        # Schema advanced (nuevo, default False - sin detector aun)
+        elementos["schema_advanced"] = False
+
+        return elementos
+
+    def _extraer_elementos_de_audit(self, audit_result: V4AuditResult) -> dict:
+        """
+        Wrapper backward-compat: llama las 4 funciones de pilar y combina.
+
+        RETORNA:
+            dict con todos los elementos de los 4 pilares (backward compat).
+            Los elementos originales del CHECKLIST_IAO se mantienen para
+            que calcular_cumplimiento() siga funcionando.
+
+        VALIDAR CON: CHECKLIST_SEO/GEO/AEO/IAO keys + ELEMENTO_KB_TO_PAIN_ID.keys()
+        """
+        seo = self._extraer_elementos_seo(audit_result)
+        geo = self._extraer_elementos_geo(audit_result)
+        aeo = self._extraer_elementos_aeo(audit_result)
+        iao = self._extraer_elementos_iao(audit_result)
+
+        # Combinar todos (4 pilares)
+        elementos = {}
+        elementos.update(seo)
+        elementos.update(geo)
+        elementos.update(aeo)
+        elementos.update(iao)
+
+        # Backward compat: asegurar que los 12 elementos originales existan
+        if not audit_result:
+            for elem in ELEMENTO_KB_TO_PAIN_ID.keys():
+                elementos[elem] = False
+        else:
+            for elem in ELEMENTO_KB_TO_PAIN_ID.keys():
+                if elem not in elementos:
+                    elementos[elem] = False
+
         return elementos
     
     def _asset_para_pain(self, pain_id: str) -> Optional[str]:

@@ -308,6 +308,17 @@ class DiagnosticSummary:
     data_source: Optional[str] = None     # "IATester+BingProxy" | "KB" | "N/A" | None
     brechas_reales: Optional[List[Dict[str, Any]]] = None  # FASE-G: desde _identify_brechas con impacto real
 
+    # === NUEVOS CAMPOS 4 PILARES (FASE-A) ===
+    score_seo: Optional[int] = None       # 0-100
+    score_geo: Optional[int] = None       # 0-100
+    score_aeo: Optional[int] = None       # 0-100
+    score_iao: Optional[int] = None       # 0-100
+    score_global: Optional[int] = None    # Promedio ponderado 4 pilares
+    elementos_seo: Optional[Dict[str, bool]] = None
+    elementos_geo: Optional[Dict[str, bool]] = None
+    elementos_aeo: Optional[Dict[str, bool]] = None
+    elementos_iao: Optional[Dict[str, bool]] = None
+
 
 def confidence_to_icon(confidence) -> str:
     """Convert confidence level to display icon."""
