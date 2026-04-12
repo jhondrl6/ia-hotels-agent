@@ -380,16 +380,22 @@ class ContextIntegrityValidator:
         
         agents_exists = (self.project_root / ".agents" / "workflows").exists()
         try:
-            agent_exists = (self.project_root / ".agent" / "workflows").exists()
+            agent_path = self.project_root / ".agent" / "workflows"
+            agent_exists = agent_path.exists()
+            # Check if .agent/workflows is a valid symlink to .agents/workflows
+            is_valid_symlink = agent_path.is_symlink() and agents_exists
         except OSError:
             agent_exists = True  # Symlink exists but Windows stat fails
+            is_valid_symlink = agents_exists  # Assume valid if target exists
             
         result.details.append(f".agents/workflows exists: {agents_exists}")
         result.details.append(f".agent/workflows exists: {agent_exists} (may need elevated access for stat)")
         result.details.append(f"References to .agents/workflows: {len(agents_matches)}")
         result.details.append(f"References to .agent/workflows: {len(agent_matches)}")
+        result.details.append(f"Valid symlink .agent/workflows -> .agents/workflows: {is_valid_symlink}")
         
-        if agents_exists and agent_matches:
+        # Only flag if .agent/workflows references exist but symlink is NOT valid
+        if agents_exists and agent_matches and not is_valid_symlink:
             result.passed = False
             issue = "Found .agent/workflows references but .agents/workflows is the active directory"
             result.issues.append(issue)
