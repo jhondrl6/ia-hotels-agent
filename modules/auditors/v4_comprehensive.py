@@ -35,6 +35,7 @@ from modules.auditors.ai_crawler_auditor import AICrawlerAuditor
 from modules.auditors.citability_scorer import CitabilityScorer, CitabilityScore
 from modules.auditors.ia_readiness_calculator import IAReadinessCalculator, IAReadinessReport
 from modules.auditors.seo_elements_detector import SEOElementsDetector, SEOElementsResult
+from modules.auditors.aeo_snippet_tracker import AEOSnippetReport, AEOSnippetTracker
 
 
 logger = logging.getLogger(__name__)
@@ -181,6 +182,9 @@ class V4AuditResult:
     
     # SEO Elements (GAP-IAO-01-02-B)
     seo_elements: Optional[SEOElementsResult] = None
+
+    # AEO Snippet Tracker (FASE-B): featured snippet measurement via SerpAPI
+    aeo_snippets: Optional[AEOSnippetReport] = None
     
     # Execution trace
     executed_validators: List[str] = field(default_factory=list)
@@ -299,7 +303,18 @@ class V4AuditResult:
                 "images_without_alt": self.seo_elements.images_without_alt,
                 "social_links_found": self.seo_elements.social_links_found,
             }
-        
+
+        if self.aeo_snippets:
+            result["aeo_snippets"] = {
+                "queries_tested": self.aeo_snippets.queries_tested,
+                "snippets_captured": self.aeo_snippets.snippets_captured,
+                "snippets_competitor": self.aeo_snippets.snippets_competitor,
+                "paa_presence": self.aeo_snippets.paa_presence,
+                "snippet_score": self.aeo_snippets.snippet_score,
+                "source": self.aeo_snippets.source,
+                "timestamp": self.aeo_snippets.timestamp,
+            }
+
         return result
 
 
@@ -468,6 +483,29 @@ class V4ComprehensiveAuditor:
         if seo_elements and not seo_elements.open_graph:
             html_snippet = page_html[:500] if page_html else "EMPTY"
             logger.warning(f"OG not detected for {url}. HTML snippet: {html_snippet}")
+
+        # Step 2.10: AEO Snippet Tracker via SerpAPI (FASE-B)
+        # Nota: 5 queries por hotel, free tier 100/mes
+        print("\n[2.10/5] Checking featured snippets (AEO)... [ADVISORY]")
+        aeo_snippet_report = None
+        try:
+            snippet_tracker = AEOSnippetTracker()
+            aeo_snippet_report = snippet_tracker.check_snippets(
+                hotel_name=final_hotel_name,
+                hotel_url=url,
+                location=gbp_result.address if gbp_result.place_found else "",
+                landmark="",
+            )
+            print(f"      Source: {aeo_snippet_report.source}")
+            if aeo_snippet_report.source == "serpapi":
+                print(f"      Snippets captured: {aeo_snippet_report.snippets_captured}/{aeo_snippet_report.queries_tested}")
+                print(f"      PAA presence: {aeo_snippet_report.paa_presence}")
+                print(f"      Snippet score: {aeo_snippet_report.snippet_score}/100")
+            else:
+                print(f"      [STUB] Sin API key SerpAPI - medicion no disponible")
+        except Exception as e:
+            logger.warning(f"AEO Snippet Tracker failed: {e}")
+            print(f"      [ADVISORY] Snippet tracker no disponible: {e}")
         
         # Step 3: Performance metrics
         print("\n[3/5] Checking performance metrics...")
@@ -518,19 +556,19 @@ class V4ComprehensiveAuditor:
         
         executed_validators = [
             "schema_validation",
-            "metadata_validation", 
+            "metadata_validation",
             "gbp_api",
             "competitor_analysis",
             "ai_crawler_audit",
             "citability_audit",
             "seo_elements_detection",
             "pagespeed_api",
-            "cross_validation"
+            "cross_validation",
+            "aeo_snippet_tracker",
         ]
-        
+
         skipped_validators = []
-        
-        # Check which validators actually executed
+
         if not metadata_result:
             skipped_validators.append("metadata_validation")
         
@@ -565,6 +603,7 @@ class V4ComprehensiveAuditor:
             citability=citability_result,
             ia_readiness=ia_readiness_result,
             seo_elements=seo_elements,
+            aeo_snippets=aeo_snippet_report,
             executed_validators=executed_validators,
             skipped_validators=skipped_validators,
         )

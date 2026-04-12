@@ -1496,60 +1496,33 @@ ${quick_wins_list}
         return str(min(100, int(score)))
     
     def _calculate_aeo_score(self, audit_result: V4AuditResult) -> str:
-        """Calculate AEO (AI Engine Optimization) Infrastructure score.
+        """Calculate AEO (AI Engine Optimization) score - Para que te CITEN.
 
-        Measures 4 components (25pts each, 100pts total):
-        - Schema Hotel válido (25pts): hotel_schema_valid detectado y válido
-        - FAQ Schema válido (25pts): faq_schema_valid detectado y válido
-        - Open Graph detectado (25pts): og:title + og:description presentes
-        - Citabilidad (25pts): contenido citable por IAs (score > umbral)
+        AEO score measures featured snippet capture (position zero) readiness.
+        Uses CHECKLIST_AEO from FASE-A (no hardcoded weights).
+        If SerpAPI data available, weights 60% checklist + 40% real result.
 
-        Returns: "XX" string when measured, "0" when no data available.
+        NOTA: Citabilidad fue movida a IAO (FASE-A). AEO NO incluye citability.
+
+        Returns: "XX" string score 0-100, "0" when no data available.
         """
         if not audit_result:
             return "0"
 
-        score = 0
-        components_measured = 0
+        # Extraer elementos AEO usando la interfaz de FASE-A
+        elementos = self._extraer_elementos_aeo(audit_result)
 
-        # 1. Schema Hotel válido (25 pts)
-        if audit_result.schema:
-            components_measured += 1
-            if audit_result.schema.hotel_schema_valid:
-                score += 25
-            elif audit_result.schema.hotel_schema_detected:
-                score += 10  # Detectado pero no válido = puntos parciales
+        # Score base del checklist
+        base_score = calcular_score_aeo(elementos)
 
-        # 2. FAQ Schema válido (25 pts)
-        if audit_result.schema:
-            components_measured += 1
-            if audit_result.schema.faq_schema_valid:
-                score += 25
-            elif audit_result.schema.faq_schema_detected:
-                score += 10  # Detectado pero no válido = puntos parciales
+        # Si hay datos reales de snippets (SerpAPI), ajustar score con ponderacion 60/40
+        snippet_report = getattr(audit_result, 'aeo_snippets', None)
+        if snippet_report and snippet_report.source != "stub":
+            # Ponderar: 60% checklist + 40% resultado real de SerpAPI
+            real_score = snippet_report.snippet_score
+            base_score = int(base_score * 0.6 + real_score * 0.4)
 
-        # 3. Open Graph detectado (25 pts)
-        if hasattr(audit_result, 'seo_elements') and audit_result.seo_elements:
-            components_measured += 1
-            if getattr(audit_result.seo_elements, 'open_graph', False):
-                score += 25
-
-        # 4. Citabilidad (25 pts)
-        if hasattr(audit_result, 'citability') and audit_result.citability and audit_result.citability.overall_score is not None:
-            components_measured += 1
-            cit_score = audit_result.citability.overall_score
-            if cit_score >= 70:
-                score += 25
-            elif cit_score >= 40:
-                score += 15
-            elif cit_score > 0:
-                score += 5
-
-        # Solo retornar "0" si NINGÚN componente tuvo datos
-        if components_measured == 0:
-            return "0"
-
-        return str(min(100, score))
+        return str(min(100, max(0, base_score)))
 
     def _calculate_iao_score_from_audit(self, audit_result: V4AuditResult) -> str:
         """Calculate IAO score from audit using 4-pilar extraction (FASE-A)."""
