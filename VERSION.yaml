@@ -1,8 +1,8 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.26.0"
-codename: "Brecha Architectural Fix"
-release_date: "2026-04-10"
+version: "4.27.0"
+codename: "Motor Financiero Verificable"
+release_date: "2026-04-11"
 plan_maestro_version: "v2.6.0"
 
 # v4.18.0 - ANALYTICS E2E 100% CERTIFICATION (ANALYTICS-E2E-CERT-01)

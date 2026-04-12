@@ -1,5 +1,44 @@
 # Changelog
 
+## [4.27.0] - 2026-04-11
+
+### Motor Financiero Verificable — Opción C
+
+11 fases (A→K) en 2 ciclos. Cada COP cuantificado tiene origen trazable, peso proporcional, etiqueta honesta y base verificable.
+
+*"Las soluciones a medias no son soluciones, es aplazar el problema."*
+
+### Ciclo 1: Rediseño Motor Financiero (A→H)
+- **FASE-A**: FinancialBreakdown + EvidenceTier + Scenario.monthly_loss_central
+- **FASE-B**: ScenarioCalculator.calculate_breakdown() narrativa por capas
+- **FASE-C**: Pesos normalizados (suma=100%) + DynamicImpactCalculator
+- **FASE-D**: Scraper→ADR con WEB_SCRAPING como fuente
+- **FASE-E**: 22 consumidores actualizados de max→central
+- **FASE-F**: Template narrativa Comisión OTA + evidence tiers
+- **FASE-G**: Integración main.py + E2E validación
+- **FASE-H**: RegionalADRResolver activado SHADOW
+
+### Ciclo 2: Causa Raíz — Datos No Verificables (I→K)
+- **FASE-I**: RegionalADRResolver por regiones validadas (eje_cafetero, antioquia). Caribe protegido.
+- **FASE-J**: NoDefaultsValidator source-aware + template honesto (verificable vs estimada)
+- **FASE-K**: Unificar camino dual + fix escenario optimista negativo
+
+### Cambios FASE-K (esta release)
+- `main.py` — Eliminado cálculo dual. Unica fuente de verdad vía FinancialCalculatorV2 con data_sources
+- `modules/financial_engine/harness_handlers.py` — Usa FinancialCalculatorV2 con fallback a ScenarioCalculator
+- `modules/financial_engine/scenario_calculator.py` — Propiedades is_net_gain, display_label, monthly_impact_cop. Fix hook_range para optimista negativo
+- `scripts/validate_context_integrity.py` — Fix: reconoce symlink válido .agent/workflows→.agents/workflows
+
+### Resultado
+- Escenario optimista negativo se presenta como "+$189,000 COP/mes (ganancia neta)" en vez de pérdida confusa
+- Cada COP tiene: fuente regional (ADR/occupancy), peso proporcional, evidence tier (A/B/C), disclaimer honesto
+- 390 tests pasando, 0 regresiones
+- E2E amaziliahotel.com exit code 0
+
+### Tests
+- 5 tests nuevos (TestOptimistaFix: is_net_gain, conservador, display_label positivo/negativo, hook_range)
+- 390/390 regression tests financial_engine suite
+
 ## [4.26.0] - 2026-04-10
 
 ### Objetivo
