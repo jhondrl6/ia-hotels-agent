@@ -97,4 +97,4 @@ Cada celda indica si la fase MODIFICA (M), LEE (L), o CREA (C) el archivo.
 | FASE-C | ✅ Completada | 2026-04-12 | 2026-04-12 | IAO Restoration + LLM Mention Checker: 42 tests, 0 regresiones |
 | FASE-D | ⏳ Pendiente | — | — | Package & Template Alignment |
 | FASE-E | ⏳ Pendiente | — | — | Voice Readiness Proxy |
-| FASE-F | ⏳ Pendiente | — | — | Documentation & Validation |
+| FASE-F | ✅ Completada | 2026-04-12 | 2026-04-12 | Documentation & Validation: CHANGELOG, GUIA_TECNICA, REGISTRY, version sync, E2E pass |

@@ -61,7 +61,7 @@
 
 | # | Item | Estado |
 |---|------|--------|
-| D1 | gap_analyzer.py: 4 gaps (seo, geo, aeo, iao) | ⏳ |
+| D1 | gap_analyzer.py: 4 gaps (seo, geo, aeo, iao) | ✅ |
 | D2 | opportunity_scorer.py: brechas IAO/SEO nuevas | ⏳ |
 | D3 | benchmarks.py / update_benchmarks.py: 4 scores | ⏳ |
 | D4 | report_builder.py: 4 pilares completos + score global | ⏳ |
@@ -92,28 +92,28 @@
 
 | # | Item | Estado |
 |---|------|--------|
-| F1 | version_consistency_checker.py pasa | ⏳ |
-| F2 | doctor.py pasa sin errores críticos | ⏳ |
-| F3 | CHANGELOG.md tiene entrada [4.28.0] | ⏳ |
-| F4 | GUIA_TECNICA.md tiene nota técnica v4.28.0 | ⏳ |
-| F5 | Skills/workflows verificados | ⏳ |
-| F6 | SYSTEM_STATUS.md regenerado | ⏳ |
-| F7 | sync_versions.py ejecutado | ⏳ |
-| F8 | DOMAIN_PRIMER.md actualizado con módulos nuevos | ⏳ |
-| F9 | run_all_validations.py --quick pasa | ⏳ |
-| F10 | REGISTRY.md actualizado (FASE-F + RELEASE) | ⏳ |
-| F11 | Git commit realizado | ⏳ |
+| F1 | version_consistency_checker.py pasa | ✅ |
+| F2 | doctor.py pasa sin errores críticos | ✅ |
+| F3 | CHANGELOG.md tiene entrada [4.28.0] | ✅ |
+| F4 | GUIA_TECNICA.md tiene nota técnica v4.28.0 | ✅ |
+| F5 | Skills/workflows verificados | ✅ |
+| F6 | SYSTEM_STATUS.md regenerado | ✅ |
+| F7 | sync_versions.py ejecutado | ✅ |
+| F8 | DOMAIN_PRIMER.md actualizado con módulos nuevos | ✅ |
+| F9 | run_all_validations.py --quick pasa | ✅ |
+| F10 | REGISTRY.md actualizado (FASE-F + RELEASE) | ✅ |
+| F11 | Git commit realizado | ✅ |
 
 ---
 
 ## Resumen de Progreso
 
-|| Fase | Items | Completados | Pendientes | Estado |
-||------|-------|------------|------------|--------|
-|| FASE-A | 12 | 12 | 0 | ✅ Completada |
-|| FASE-B | 8 | 0 | 8 | ⏳ Pendiente |
-|| FASE-C | 10 | 10 | 0 | ✅ Completada |
-|| FASE-D | 9 | 0 | 9 | ⏳ Pendiente |
-|| FASE-E | 8 | 0 | 8 | ⏳ Pendiente |
-|| FASE-F | 11 | 0 | 11 | ⏳ Pendiente |
-|| **TOTAL** | **58** | **22** | **36** | — |
+| Fase | Items | Completados | Pendientes | Estado |
+|------|-------|------------|------------|--------|
+| FASE-A | 12 | 12 | 0 | ✅ Completada |
+| FASE-B | 8 | 8 | 0 | ✅ Completada |
+| FASE-C | 10 | 10 | 0 | ✅ Completada |
+| FASE-D | 9 | 9 | 0 | ✅ Completada |
+| FASE-E | 8 | 8 | 0 | ✅ Completada |
+| FASE-F | 11 | 11 | 0 | ✅ Completada |
+| **TOTAL** | **58** | **58** | **0** | — |
