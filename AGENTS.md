@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.28.0 -- 4 Pilares Alignment + Voice Readiness Proxy**
+> **v4.28.0 -- 4 Pilares Alignment + Voice Readiness Proxy COMPLETADO**
 
 ---
 

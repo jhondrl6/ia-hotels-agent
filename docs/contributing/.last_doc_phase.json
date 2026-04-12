@@ -17,8 +17,8 @@
   "modules/geo_enrichment/geo_enrichment_layer.py": "FASE-4",
   "modules/delivery/delivery_packager.py": "FASE-5",
   "modules/geo_enrichment/geo_flow.py": "FASE-6",
-  "CHANGELOG.md": "FASE-7",
-  "docs/GUIA_TECNICA.md": "GAP-IAO-01-04",
+  "CHANGELOG.md": "FASE-F",
+  "docs/GUIA_TECNICA.md": "FASE-F",
   ".agents/workflows/README.md": "FASE-7",
   "modules/asset_generation/asset_catalog.py": "FASE-D",
   "modules/commercial_documents/data_structures.py": "FASE-E",
@@ -71,5 +71,6 @@
   "tests/financial_engine/test_adr_resolution_wrapper.py": "FASE-I",
   "modules/financial_engine/no_defaults_validator.py": "FASE-J",
   "tests/financial_engine/test_no_defaults_source_aware.py": "FASE-J",
-  "scripts/update_benchmarks.py": "FASE-D"
+  "scripts/update_benchmarks.py": "FASE-D",
+  "REGISTRY.md": "FASE-F"
 }

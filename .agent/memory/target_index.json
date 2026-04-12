@@ -1,10 +1,8 @@
 {
   "https://hotelvisperas.com": [
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_fb89cf3b.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-04-02_ee7e0d52.json"
   ],
   "https://test.com": [
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_2c9361f3.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-25_4834901d.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-27_41ae4050.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-27_e9ef06b0.json",
@@ -12,8 +10,6 @@
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-04-01_b47b02e2.json"
   ],
   "task:v4_financial_calculation": [
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_08a0d6d1.json",
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_13b99b55.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-25_d840bbdd.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-25_ef8b1b94.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-27_0c8e3c82.json",
@@ -26,22 +22,11 @@
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-04-01_d96aab7e.json"
   ],
   "task:v4_regional_resolver": [
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_915ecd2c.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-25_d5e26d28.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-27_15aead5a.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-27_fdfb1721.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-04-01_15f85365.json",
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-04-01_cb7567b8.json"
-  ],
-  "https://hotelvisperas.com/": [
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_310c45f8.json",
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_541f007f.json",
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_5b0e53df.json",
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_a8d18918.json",
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_b2a2dcd1.json",
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_d6c1bd6f.json",
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_da7580fd.json",
-    "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-23_dc919a44.json"
   ],
   "https://www.hotelvisperas.com/": [
     "C:\\Users\\Jhond\\Github\\iah-cli\\.agent\\memory\\sessions\\2026-03-25_2b1df201.json",

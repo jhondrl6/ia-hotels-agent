@@ -508,7 +508,7 @@ class V4ComprehensiveAuditor:
         try:
             snippet_tracker = AEOSnippetTracker()
             aeo_snippet_report = snippet_tracker.check_snippets(
-                hotel_name=final_hotel_name,
+                hotel_name=hotel_name or gbp_result.name or "Unknown Hotel",
                 hotel_url=url,
                 location=gbp_result.address if gbp_result.place_found else "",
                 landmark="",
@@ -531,7 +531,7 @@ class V4ComprehensiveAuditor:
         try:
             mention_checker = LLMMentionChecker()
             llm_report = mention_checker.check_mentions(
-                hotel_name=final_hotel_name,
+                hotel_name=hotel_name or gbp_result.name or "Unknown Hotel",
                 hotel_url=url,
                 location=gbp_result.address if gbp_result.place_found else "",
                 landmark="",
