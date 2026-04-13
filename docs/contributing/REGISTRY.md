@@ -2791,6 +2791,48 @@ _Ninguno_
 ---
 
 
+## FASE-RELEASE - 2026-04-13
+**Descripcion:** v4.29.0 Fix geo_enriched to Delivery Bridge + Assets Completos - 7 fases completadas
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Version |
+| `CHANGELOG.md` | Changelog |
+| `8 archivos via sync_versions.py` | 8 Archivos Via Sync Versions |
+
+### Validaciones
+- [x] Tests passing (134 passing (1 pre-existing failure in test_audit_data_pipeline))
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.84 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-D4-OPENROUTER - 2026-04-13
+**Descripcion:** FIX-D4: 3 assets promised_by=always ahora se planifican (whatsapp_button, voice_assistant_guide, monthly_report). FIX-OPENROUTER: LLMReport con campos cost_usd/tokens_used; costo impreso en audit log; seccion IAO transparency stub en propuesta.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py modules/auditors/llm_mention_checker.py modules/auditors/v4_comprehensive.py modules/commercial_documents/templates/propuesta_v6_template.md modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (20 passed (proposal_alignment + gate), 28 passed (pain_mapper + conditional_generator))
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.84 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
@@ -2852,3 +2894,10 @@ _Ninguno_
 | GAP-IAO-01-05-REFINEMENT | 2026-04-01 | 22 | ✅ Complete |
 | FASE-B (Financial Redesign) | 2026-04-11 | 5 | ✅ Complete |
 | FASE-GEO-BRIDGE | 2026-04-13 | 13 | ✅ Complete |
+| FASE-CONF-GATE | 2026-04-13 | N/A | ✅ Complete |
+| FASE-LLMSTXT-FIX | 2026-04-13 | 8 | ✅ Complete |
+| FASE-ASSETS-VALIDACION | 2026-04-13 | 52 | ✅ Complete |
+| FASE-CONFIDENCE-DISCLOSURE | 2026-04-13 | 5 | ✅ Complete |
+| FASE-TEMPLATE-DEBT | 2026-04-13 | N/A | ✅ Complete |
+| FASE-CONTENT-SCRUBBER | 2026-04-13 | 9 | ✅ Complete |
+| FASE-RELEASE-4.29.0 | 2026-04-13 | N/A | ✅ Complete |

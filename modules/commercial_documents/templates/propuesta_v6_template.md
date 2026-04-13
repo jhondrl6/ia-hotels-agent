@@ -133,6 +133,19 @@ Para que su negocio brillen en Google Maps, necesitamos fotos de calidad. Esto e
 
 ${analytics_section}
 
+## 🌐 Transparencia de IAO (Inteligencia Artificial Outside)
+
+El análisis de IAO utiliza APIs de terceros (OpenRouter, Google AI, Perplexity) para evaluar si tu hotel aparece en recomendaciones de ChatGPT, Google AI Overviews y otros sistemas de IA.
+
+| Proveedor | Queries | Costo Aprox. |
+|-----------|---------|---------------|
+| OpenRouter | ${openrouter_queries} | ${openrouter_cost} USD |
+| Gemini | ${gemini_queries} | ${gemini_cost} USD |
+| Perplexity | ${perplexity_queries} | ${perplexity_cost} USD |
+| **Total** | **${total_iao_queries}** | **${total_iao_cost} USD** |
+
+*Este costo es Absorption por IAH-CLI y no se carga al cliente.*
+
 ## 🛡️ GARANTÍAS: Proteção total para usted
 
 ### 1. Resultados garantizados

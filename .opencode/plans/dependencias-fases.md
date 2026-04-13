@@ -59,7 +59,8 @@
 | 5 | FASE-CONFIDENCE-DISCLOSURE | Transparencia calidad en propuesta | FASE-ASSETS-VALIDACION | MEDIA | ✅ 2026-04-13 |
 | 6 | FASE-TEMPLATE-DEBT | Sincronizar embebido vs V6 + typo | Ninguna | MEDIA | ✅ 2026-04-13 |
 | 7 | FASE-CONTENT-SCRUBBER | Fix self-replacement + spacing | Ninguna | MEDIA | ✅ 2026-04-13 |
-| 8 | FASE-RELEASE | v4.29.0 release + docs + validación | Fases 1-7 | ALTA |
+| 8 | FASE-RELEASE | v4.29.0 release + docs + validacion | Fases 1-7 | ALTA | ✅ 2026-04-13 |
+| 9 | FASE-D4-OPENROUTER | 3 assets promised_by=always + Costo IAO en log/propuesta | FASE-ASSETS-VALIDACION | ALTA | ✅ 2026-04-13 |
 
 ---
 

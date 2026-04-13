@@ -44,13 +44,15 @@ El pipeline de iah-cli generaba assets de delivery con datos placeholder (confid
 | Módulo | Cambio | Fase |
 |--------|--------|------|
 | `modules/asset_generation/conditional_generator.py` | Bridge integration + voice/whatsapp fix | GEO-BRIDGE, ASSETS-VALID |
-| `modules/asset_generation/v4_asset_orchestrator.py` | Llamada al bridge post-generación | GEO-BRIDGE |
+| `modules/asset_generation/v4_asset_orchestrator.py` | Llamada al bridge post-generacion + FIX-D4: promised_by=always | GEO-BRIDGE, ASSETS-VALID, D4-OPENROUTER |
+| `modules/auditors/llm_mention_checker.py` | OPENROUTER-A: cost_usd/tokens_used/provider_name en LLMReport | D4-OPENROUTER |
+| `modules/auditors/v4_comprehensive.py` | OPENROUTER-B: print costo IAO en audit | D4-OPENROUTER |
 | `modules/asset_generation/asset_catalog.py` | Agregar monthly_report, fix promised_by | ASSETS-VALID |
 | `modules/quality_gates/publication_gates.py` | Gate #8 confidence + gate #9 alignment | CONF-GATE, ASSETS-VALID |
 | `modules/asset_generation/llmstxt_generator.py` | Fallback a geo_enriched/llms.txt | LLMSTXT-FIX |
 | `modules/commercial_documents/v4_diagnostic_generator.py` | Sincronizar/eliminar embebido | TEMPLATE-DEBT |
-| `modules/commercial_documents/templates/propuesta_v6_template.md` | Typo fix + tabla calidad | TEMPLATE-DEBT, CONFIDENCE-DISC |
-| `modules/commercial_documents/v4_proposal_generator.py` | Generación tabla calidad dinámica | CONFIDENCE-DISC |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Typo fix + tabla calidad + seccion transparencia IAO | TEMPLATE-DEBT, CONFIDENCE-DISC, D4-OPENROUTER |
+| `modules/commercial_documents/v4_proposal_generator.py` | Tabla calidad dinamica + stubs iao_cost_transparency (partial — muestra "—" hasta que llm_report fluya al proposal) | CONFIDENCE-DISC, D4-OPENROUTER |
 | `modules/postprocessors/document_quality_gate.py` | Self-replacement + spacing fixes | CONTENT-SCRUBBER |
 | `main.py` | Cableado assets_generated a proposal generator | CONFIDENCE-DISC |
 
@@ -84,7 +86,9 @@ El pipeline de iah-cli generaba assets de delivery con datos placeholder (confid
 
 | API | Uso | Costo Estimado | Observaciones |
 |-----|-----|-----------------|---------------|
-| OpenRouter (Hermes fallback) | Fallback si MiniMax falla | $0 si no se activa | Verificar logs post-ejecución |
+| OpenRouter (IAO) | Queries LLM para IAO (5 queries) | ~$0.0013 USD/ejecucion | FASE-D4-OPENROUTER: gemini-2.0-flash-001, $0.075/1M prompt + $0.30/1M completion |
+| Gemini (IAO) | Queries LLM para IAO | $0 (free tier) | Available si GEMINI_API_KEY configurada |
+| Perplexity (IAO) | Queries LLM para IAO | ~$0.0002 USD/ejecucion | Available si PERPLEXITY_API_KEY configurada |
 | GA4 API | Tráfico indirecto | $0 (hasta 10M events/mes) | Solo si --ga4-property-id |
 | PageSpeed API | Auditoría rendimiento | $0 | Rate limited |
 | SerpAPI / GSC | Keywords y posiciones | $0 (cuota gratuita) | Advisory mode |

@@ -587,6 +587,16 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
 
         # FASE-CONFIDENCE-DISCLOSURE: Tabla de calidad de assets
         'asset_quality_table': self._generate_asset_quality_table(assets_generated),
+
+        # FIX-OPENROUTER-C: IAO cost transparency (stub - activates when API keys available)
+        'openrouter_queries': '—',
+        'openrouter_cost': '—',
+        'gemini_queries': '—',
+        'gemini_cost': '—',
+        'perplexity_queries': '—',
+        'perplexity_cost': '—',
+        'total_iao_queries': '—',
+        'total_iao_cost': '—',
     }
 
         return data

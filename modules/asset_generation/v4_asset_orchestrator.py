@@ -560,6 +560,34 @@ class V4AssetOrchestrator:
                 can_generate=True
             ))
         
+        # D4-FIX: Include assets with promised_by=["always"] or ["always_aeo"]
+        from modules.asset_generation.asset_catalog import ASSET_CATALOG
+        
+        for asset_type, entry in ASSET_CATALOG.items():
+            # Skip if already in specs
+            if any(s.asset_type == asset_type for s in specs):
+                continue
+            
+            # Check promised_by for "always" or "always_aeo"
+            promised = getattr(entry, 'promised_by', []) or []
+            if not any(p in promised for p in ['always', 'always_aeo']):
+                continue
+            
+            # Get priority from entry or default
+            priority = getattr(entry, 'priority', 5)
+            
+            specs.append(AssetSpec(
+                asset_type=asset_type,
+                problem_solved=f"promised_by_catalog_{asset_type}",
+                description=f"Asset prometido: {asset_type}",
+                confidence_level="ESTIMATED",
+                priority=priority,
+                has_automatic_solution=True,
+                pain_ids=[],
+                confidence_required=getattr(entry, 'required_confidence', 0.5),
+                can_generate=True
+            ))
+        
         return specs
     
     def _extract_validated_fields(

@@ -542,6 +542,9 @@ class V4ComprehensiveAuditor:
                 print(f"      Mention rate: {llm_report.mention_rate:.0%}")
                 print(f"      Mention score: {llm_report.mention_score}/100")
                 print(f"      Providers: {', '.join(llm_report.providers_used)}")
+                if llm_report.cost_usd is not None:
+                    print(f"      Costo IAO: ${llm_report.cost_usd:.4f} USD")
+                    print(f"      Tokens: {llm_report.tokens_used}")
             else:
                 print(f"      [STUB] Sin API keys LLM - medicion no disponible")
         except Exception as e:

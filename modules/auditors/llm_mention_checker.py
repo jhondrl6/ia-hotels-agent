@@ -47,6 +47,9 @@ class LLMReport:
     query_results: List[LLMQueryResult] = field(default_factory=list)
     mention_score: int = 0        # 0-100
     source: str = "stub"          # "llm_check" | "stub"
+    cost_usd: Optional[float] = None  # Costo total en USD
+    tokens_used: Optional[int] = None  # Tokens totales consumidos
+    provider_name: Optional[str] = None  # "openrouter" | "gemini" | "perplexity"
 
     @property
     def share_of_voice(self) -> float:
@@ -122,6 +125,9 @@ class LLMMentionChecker:
 
         query_results: List[LLMQueryResult] = []
         providers_used = []
+        # Accumulate cost/token data per provider
+        provider_costs: Dict[str, float] = {}
+        provider_tokens: Dict[str, int] = {}
 
         for template in self.PROBING_QUERIES:
             query = template.format(
@@ -131,21 +137,30 @@ class LLMMentionChecker:
 
             # Try each available provider
             for provider in self._available_providers:
-                response = self._query_provider(provider, query)
-                if response is None:
+                result = self._query_provider(provider, query)
+                if result is None:
                     continue
 
-                parsed = self._parse_mentions(response, hotel_name)
-                result = LLMQueryResult(
+                # Extract text and cost data from dict response
+                response_text = result["text"]
+                cost_usd = result.get("cost_usd", 0.0) or 0.0
+                tokens_used = result.get("tokens_used", 0) or 0
+
+                # Accumulate per-provider totals
+                provider_costs[provider] = provider_costs.get(provider, 0.0) + cost_usd
+                provider_tokens[provider] = provider_tokens.get(provider, 0) + tokens_used
+
+                parsed = self._parse_mentions(response_text, hotel_name)
+                query_result = LLMQueryResult(
                     provider=provider,
                     query=query,
-                    response_text=response,
+                    response_text=response_text,
                     hotel_mentioned=parsed["mentioned"],
                     mention_context=parsed["context"],
                     ranking_position=parsed["ranking_position"],
                     competitors_mentioned=parsed["competitors"],
                 )
-                query_results.append(result)
+                query_results.append(query_result)
 
                 if provider not in providers_used:
                     providers_used.append(provider)
@@ -170,6 +185,12 @@ class LLMMentionChecker:
             mention_rate, avg_ranking, total_mentions, queries_tested
         )
 
+        # Aggregate cost and tokens across all providers
+        total_cost = sum(provider_costs.values())
+        total_tokens = sum(provider_tokens.values())
+        # Dominant provider name
+        dominant_provider = max(provider_costs, key=provider_costs.get) if provider_costs else None
+
         return LLMReport(
             hotel_name=hotel_name,
             hotel_url=hotel_url,
@@ -182,10 +203,13 @@ class LLMMentionChecker:
             query_results=query_results,
             mention_score=mention_score,
             source="llm_check",
+            cost_usd=total_cost if total_cost > 0 else None,
+            tokens_used=total_tokens if total_tokens > 0 else None,
+            provider_name=dominant_provider,
         )
 
     def _query_provider(self, provider: str, query: str) -> Optional[str]:
-        """Dispatch query to the appropriate provider."""
+        """Dispatch query to the appropriate provider. Returns response text or None."""
         try:
             if provider == "openrouter":
                 return self._query_openrouter(query)
@@ -197,10 +221,11 @@ class LLMMentionChecker:
             logger.warning(f"LLM query failed for {provider}: {e}")
             return None
 
-    def _query_openrouter(self, query: str) -> Optional[str]:
+    def _query_openrouter(self, query: str) -> Optional[dict]:
         """
         Llama OpenRouter API. NUNCA usar openai SDK directo.
         Usa google/gemini-2.0-flash-001 como modelo barato.
+        Returns dict with 'text', 'cost_usd', 'tokens_used' or None on failure.
         """
         import requests
 
@@ -224,9 +249,17 @@ class LLMMentionChecker:
         )
         response.raise_for_status()
         data = response.json()
-        return data["choices"][0]["message"]["content"]
+        text = data["choices"][0]["message"]["content"]
+        # OpenRouter returns usage with prompt/completion tokens
+        usage = data.get("usage", {})
+        prompt_tokens = usage.get("prompt_tokens", 0)
+        completion_tokens = usage.get("completion_tokens", 0)
+        total_tokens = prompt_tokens + completion_tokens
+        # Cost: gemini-2.0-flash at $0.075/1M prompt + $0.30/1M completion
+        cost = (prompt_tokens / 1_000_000) * 0.075 + (completion_tokens / 1_000_000) * 0.30
+        return {"text": text, "cost_usd": cost, "tokens_used": total_tokens}
 
-    def _query_gemini(self, query: str) -> Optional[str]:
+    def _query_gemini(self, query: str) -> Optional[dict]:
         """Llama Gemini API directo (no via OpenRouter)."""
         import requests
 
@@ -242,9 +275,13 @@ class LLMMentionChecker:
         response = requests.post(url, json=payload, timeout=30)
         response.raise_for_status()
         data = response.json()
-        return data["candidates"][0]["content"]["parts"][0]["text"]
+        text = data["candidates"][0]["content"]["parts"][0]["text"]
+        # Gemini free tier: no cost
+        usage = data.get("usageMetadata", {})
+        total_tokens = usage.get("totalTokenCount", 0)
+        return {"text": text, "cost_usd": 0.0, "tokens_used": total_tokens}
 
-    def _query_perplexity(self, query: str) -> Optional[str]:
+    def _query_perplexity(self, query: str) -> Optional[dict]:
         """Llama Perplexity API. Mejor para IAO porque cita fuentes."""
         import requests
 
@@ -266,7 +303,12 @@ class LLMMentionChecker:
         )
         response.raise_for_status()
         data = response.json()
-        return data["choices"][0]["message"]["content"]
+        text = data["choices"][0]["message"]["content"]
+        usage = data.get("usage", {})
+        total_tokens = usage.get("total_tokens", 0)
+        # Perplexity sonar: ~$0.05/1M tokens approximate
+        cost = (total_tokens / 1_000_000) * 0.05
+        return {"text": text, "cost_usd": cost, "tokens_used": total_tokens}
 
     def _parse_mentions(self, response: str, hotel_name: str) -> dict:
         """

@@ -17,6 +17,7 @@
 | Fase 6 | FASE-TEMPLATE-DEBT | ✅ Completada | 2026-04-13 | Paralela | MEDIA |
 | Fase 7 | FASE-CONTENT-SCRUBBER | ✅ Completada | 2026-04-13 | Paralela | MEDIA |
 | Fase 8 | FASE-RELEASE | ⏳ Pendiente | — | Fases 1-7 | ALTA |
+| Fase 9 | FASE-D4-OPENROUTER | ✅ Completada | 2026-04-13 | FASE-ASSETS-VALIDACION | ALTA |
 
 ---
 
@@ -143,9 +144,32 @@
 
 ---
 
+### FASE-D4-OPENROUTER (Fase 9)
+
+**Objetivo:** 2 fixes criticos: (D4) 3 assets promised_by=always no se planificaban; (OPENROUTER) costo IAO no visible
+
+**Tareas:**
+- [x] FIX-D4-A: Modificar `_solutions_to_asset_specs()` para incluir assets con promised_by=["always"] o ["always_aeo"]
+- [x] FIX-D4-B: Verificar voice_assistant_guide (promised_by=["always_aeo"]) incluido
+- [x] FIX-OPENROUTER-A: Agregar cost_usd, tokens_used, provider_name a LLMReport
+- [x] FIX-OPENROUTER-B: Imprimir costo IAO en v4_comprehensive.py (~line 544)
+- [x] FIX-OPENROUTER-C: Seccion transparencia IAO stub en propuesta_v6_template.md (partial — necesita flujo llm_report→proposal)
+
+**Criterios de aceptacion:**
+- [x] Gate 9: aligned_count >= 6 (antes 3), missing_count <= 1 (antes 3)
+- [x] whatsapp_button, voice_assistant_guide, monthly_report en disco
+- [x] Costo IAO impreso en log de audit
+- [x] Seccion IAO transparency visible en PROPUESTA_COMERCIAL.md
+- [x] Tests pasan: 20/20 (proposal_alignment + gate) + 28/28 (pain_mapper + conditional_generator)
+
+**Conocidos gaps (no bloqueantes):**
+- FIX-OPENROUTER-C stub: la tabla IAO en la propuesta muestra "—" porque `llm_report` no fluye a `_prepare_template_data()`. Para activar datos reales se requiere: (a) agregar `llm_report` a `V4AuditResult` o `DiagnosticSummary`, o (b) pasar como parametro separado. Architecture gap — no bloquea operacion.
+
+---
+
 ### FASE-RELEASE (Fase 8)
 
-**Objetivo:** Release v4.29.0 con validación completa
+**Objetivo:** Release v4.29.0 con validacion completa
 
 **Tareas:**
 - [ ] Ejecutar `log_phase_completion.py` para cada fase (1-7)
