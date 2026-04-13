@@ -1,119 +1,196 @@
-# Checklist de Implementación — Refactor 4 Pilares SEO/GEO/AEO/IAO
+# Checklist de Implementación — Fix geo_enriched → Delivery Bridge + Assets Completos
 
-**Proyecto**: AEO-IAO-PROGRESSION-REFACTOR
-**Fecha creación**: 2026-04-12
-**Estado**: Preparación completa, listo para implementación
-
----
-
-## FASE-A: Score Redistribution
-
-| # | Item | Estado |
-|---|------|--------|
-| A1 | 4 diccionarios CHECKLIST_SEO/GEO/AEO/IAO creados (cada uno 100pts) | ✅ |
-| A2 | 4 funciones calcular_score_{pilar}() implementadas | ✅ |
-| A3 | calcular_score_global() implementado (25% c/u) | ✅ |
-| A4 | calcular_cumplimiento() marcada deprecated pero funcional | ✅ |
-| A5 | sugerir_paquete() usa score_global | ✅ |
-| A6 | _extraer_elementos_de_audit() → wrapper 4 funciones | ✅ |
-| A7 | DiagnosticSummary: campos score_seo/geo/aeo/iao/global | ✅ |
-| A8 | _prepare_template_data(): iao_score + score_global inyectados | ✅ |
-| A9 | ELEMENTO_KB_TO_PAIN_ID: nuevos elementos (speakable, llms_txt, etc.) | ✅ |
-| A10 | Tests existentes pasan (0 regresiones) | ✅ |
-| A11 | Tests nuevos para 4-pilar scoring pasan | ✅ |
-| A12 | log_phase_completion.py ejecutado | ✅ |
+**Proyecto:** AUDIT-PIPELINE-DESALINEACIONES-ASSETS
+**Fecha:** 2026-04-12 (v2 — ampliado)
 
 ---
 
-## FASE-B: AEO Real Measurement
+## Estado General
 
-| # | Item | Estado |
-|---|------|--------|
-| B1 | modules/auditors/aeo_snippet_tracker.py creado | ⏳ |
-| B2 | _calculate_aeo_score() refactorizado (usa CHECKLIST_AEO + SerpAPI) | ⏳ |
-| B3 | Citabilidad eliminada de AEO (movida a IAO) | ⏳ |
-| B4 | AEOSnippetTracker integrado en v4_comprehensive.py | ⏳ |
-| B5 | Graceful degradation sin API key | ⏳ |
-| B6 | Tests nuevos pasan | ⏳ |
-| B7 | Tests existentes pasan (0 regresiones) | ⏳ |
-| B8 | log_phase_completion.py ejecutado | ⏳ |
-
----
-
-## FASE-C: IAO Restoration + LLM Checker
-
-|| # | Item | Estado |
-||---|------|--------|
-|| C1 | modules/auditors/llm_mention_checker.py creado | ✅ |
-|| C2 | _calculate_iao_score() restaurado (ponderación 50/50 con LLM data) | ✅ |
-|| C3 | LLMMentionChecker integrado en v4_comprehensive.py | ✅ |
-|| C4 | Variables template iao_score/iao_status restauradas | ✅ |
-|| C5 | DiagnosticSummary: campos IAO completos (iao_status, iao_regional_avg, llm_report_summary) | ✅ |
-|| C6 | Citabilidad está en IAO (no en AEO) | ✅ |
-|| C7 | OpenRouter como provider (NUNCA openai SDK directo) | ✅ |
-|| C8 | Tests nuevos pasan (42 tests) | ✅ |
-|| C9 | Suite completa pasa (0 regresiones) | ✅ |
-|| C10 | log_phase_completion.py ejecutado | ✅ |
+| Fase | ID | Estado | Completada | Dependencias | Prioridad |
+|------|----|--------|------------|--------------|-----------|
+| Fase 1 | FASE-GEO-BRIDGE | ✅ Completada | 2026-04-13 | Ninguna | ALTA |
+| Fase 2 | FASE-CONF-GATE | ⏳ Pendiente | — | FASE-GEO-BRIDGE | ALTA |
+| Fase 3 | FASE-LLMSTXT-FIX | ⏳ Pendiente | — | FASE-GEO-BRIDGE | ALTA |
+| Fase 4 | FASE-ASSETS-VALIDACION | ⏳ Pendiente | — | FASE-GEO-BRIDGE | ALTA |
+| Fase 5 | FASE-CONFIDENCE-DISCLOSURE | ⏳ Pendiente | — | FASE-ASSETS-VALIDACION | MEDIA |
+| Fase 6 | FASE-TEMPLATE-DEBT | ⏳ Pendiente | — | Paralela | MEDIA |
+| Fase 7 | FASE-CONTENT-SCRUBBER | ⏳ Pendiente | — | Paralela | MEDIA |
+| Fase 8 | FASE-RELEASE | ⏳ Pendiente | — | Fases 1-7 | ALTA |
 
 ---
 
-## FASE-D: Package & Template Alignment
+## Detalle por Fase
 
-| # | Item | Estado |
-|---|------|--------|
-| D1 | gap_analyzer.py: 4 gaps (seo, geo, aeo, iao) | ✅ |
-| D2 | opportunity_scorer.py: brechas IAO/SEO nuevas | ⏳ |
-| D3 | benchmarks.py / update_benchmarks.py: 4 scores | ⏳ |
-| D4 | report_builder.py: 4 pilares completos + score global | ⏳ |
-| D5 | diagnostico_v6_template.md: fila IAO + score global | ⏳ |
-| D6 | v4_proposal_generator.py: score_global como métrica principal | ⏳ |
-| D7 | _get_regional_benchmarks(): 4 benchmarks con IAO | ⏳ |
-| D8 | Suite completa pasa (0 regresiones) | ⏳ |
-| D9 | log_phase_completion.py ejecutado | ⏳ |
+### FASE-GEO-BRIDGE (Fase 1)
 
----
+**Objetivo:** Crear el bridge que conecta geo_enriched/ con el pipeline de delivery
 
-## FASE-E: Voice Readiness Proxy
+**Tareas:**
+- [x] Mapear exactamente dónde se generan los assets (hotel_schema, llms_txt)
+- [x] Identificar por qué no usan datos de geo_enriched/
+- [x] Crear función de enrichment: si asset confidence < 0.7, poblar desde geo_enriched/
+- [x] Integrar enrichment en V4AssetOrchestrator
+- [x] Tests nuevos para el bridge
 
-| # | Item | Estado |
-|---|------|--------|
-| E1 | modules/auditors/voice_readiness_proxy.py creado | ⏳ |
-| E2 | 4 componentes proxy con pesos correctos | ⏳ |
-| E3 | Integrado en pipeline de diagnóstico | ⏳ |
-| E4 | Fallback funciona sin AEOSnippetTracker | ⏳ |
-| E5 | DiagnosticSummary: campos voice_readiness_* | ⏳ |
-| E6 | Tests nuevos pasan | ⏳ |
-| E7 | Suite completa pasa (0 regresiones) | ⏳ |
-| E8 | log_phase_completion.py ejecutado | ⏳ |
+**Criterios de aceptación:**
+- [x] `hotel_schema` usa datos de `geo_enriched/hotel_schema_rich.json` cuando está disponible
+- [x] `confidence_score` del asset refleja datos reales (no 0.5 por defecto)
+- [x] Tests pasan
 
 ---
 
-## FASE-F: Documentation & Validation
+### FASE-CONF-GATE (Fase 2)
 
-| # | Item | Estado |
-|---|------|--------|
-| F1 | version_consistency_checker.py pasa | ✅ |
-| F2 | doctor.py pasa sin errores críticos | ✅ |
-| F3 | CHANGELOG.md tiene entrada [4.28.0] | ✅ |
-| F4 | GUIA_TECNICA.md tiene nota técnica v4.28.0 | ✅ |
-| F5 | Skills/workflows verificados | ✅ |
-| F6 | SYSTEM_STATUS.md regenerado | ✅ |
-| F7 | sync_versions.py ejecutado | ✅ |
-| F8 | DOMAIN_PRIMER.md actualizado con módulos nuevos | ✅ |
-| F9 | run_all_validations.py --quick pasa | ✅ |
-| F10 | REGISTRY.md actualizado (FASE-F + RELEASE) | ✅ |
-| F11 | Git commit realizado | ✅ |
+**Objetivo:** Crear gate de confidence en publication gates
+
+**Tareas:**
+- [ ] Crear `asset_confidence_gate` en publication_gates.py (gate #8)
+- [ ] Gate falla si algún asset `confidence_score < 0.7`
+- [ ] Opciones: FAIL completo, o `READY_FOR_PUBLICATION_WITH_WARNINGS`
+- [ ] Tests para el nuevo gate
+
+**Criterios de aceptación:**
+- [ ] Publication gates refleja confidence real de assets
+- [ ] Tests pasan
 
 ---
 
-## Resumen de Progreso
+### FASE-LLMSTXT-FIX (Fase 3)
 
-| Fase | Items | Completados | Pendientes | Estado |
-|------|-------|------------|------------|--------|
-| FASE-A | 12 | 12 | 0 | ✅ Completada |
-| FASE-B | 8 | 8 | 0 | ✅ Completada |
-| FASE-C | 10 | 10 | 0 | ✅ Completada |
-| FASE-D | 9 | 9 | 0 | ✅ Completada |
-| FASE-E | 8 | 8 | 0 | ✅ Completada |
-| FASE-F | 11 | 11 | 0 | ✅ Completada |
-| **TOTAL** | **58** | **58** | **0** | — |
+**Objetivo:** Fix generador llms.txt para usar datos reales
+
+**Tareas:**
+- [ ] Modificar `LLMSTXTGenerator.generate()` para recibir datos enriquecidos
+- [ ] Usar `geo_enriched/llms.txt` como source de verdad si existe
+- [ ] Si `name="Hotel"` y URL vacía → marcar como PENDIENTE_ONBOARDING
+- [ ] No generar con placeholders vacíos
+
+**Criterios de aceptación:**
+- [ ] `llms_txt` contiene nombre real del hotel
+- [ ] Tests pasan
+
+---
+
+### FASE-ASSETS-VALIDACION (Fase 4) — NUEVA
+
+**Objetivo:** Que CADA servicio prometido en la propuesta tenga un asset generado
+
+**Tareas:**
+- [ ] Crear asset `monthly_report` en catálogo + generador
+- [ ] Fix `voice_assistant_guide` — asegurar generación (agregar a pain mapping)
+- [ ] Fix `whatsapp_button` — investigar por qué no se genera, corregir
+- [ ] Crear mapeo `PROPOSAL_SERVICE_TO_ASSET` verificable
+- [ ] Crear gate #9 `proposal_asset_alignment_gate`
+- [ ] Tests para cada asset nuevo/fixed
+
+**Criterios de aceptación:**
+- [ ] 7/7 servicios de la propuesta tienen asset generado
+- [ ] `monthly_report` genera plantilla funcional
+- [ ] `voice_assistant_guide` se genera
+- [ ] `whatsapp_button` se genera
+- [ ] Gate 9 integrado en publication_gates
+- [ ] Tests pasan
+
+---
+
+### FASE-CONFIDENCE-DISCLOSURE (Fase 5) — NUEVA
+
+**Objetivo:** Que la propuesta informe al cliente sobre la calidad de cada asset
+
+**Tareas:**
+- [ ] Agregar sección "Estado de los Entregables" en propuesta template
+- [ ] Generar tabla dinámica desde confidence scores reales
+- [ ] Tests de disclosure
+
+**Criterios de aceptación:**
+- [ ] Propuesta incluye tabla con nivel de cada entregable
+- [ ] Tabla refleja confidence real (Completo/Requiere datos/En desarrollo)
+- [ ] Tests pasan
+
+---
+
+### FASE-TEMPLATE-DEBT (Fase 6)
+
+**Objetivo:** Sincronizar template embebido vs V6 y fixear typo
+
+**Tareas:**
+- [ ] Eliminar o sincronizar template embebido con V6
+- [ ] Fix typo "debeproveer" → "debe prover" en propuesta_v6_template.md
+- [ ] Sincronizar `package_name`
+
+**Criterios de aceptación:**
+- [ ] Template embebido y V6 sincronizados
+- [ ] Typo corregido
+- [ ] Tests pasan
+
+---
+
+### FASE-CONTENT-SCRUBBER (Fase 7)
+
+**Objetivo:** Fix content scrubber para errores de espaciado y self-replacement
+
+**Tareas:**
+- [ ] Fix self-replacement warnings: skip si `old == new`
+- [ ] Agregar regex para palabras pegadas
+- [ ] Tests del content scrubber
+
+**Criterios de aceptación:**
+- [ ] No más warnings de self-replacement
+- [ ] Tests pasan
+
+---
+
+### FASE-RELEASE (Fase 8)
+
+**Objetivo:** Release v4.29.0 con validación completa
+
+**Tareas:**
+- [ ] Ejecutar `log_phase_completion.py` para cada fase (1-7)
+- [ ] Actualizar CHANGELOG.md con entrada v4.29.0
+- [ ] Sync versions
+- [ ] Ejecutar `run_all_validations.py --quick`
+- [ ] **Ejecutar v4complete --url https://amaziliahotel.com/ como prueba final**
+
+**VALIDACIÓN FINAL — 3 DIMENSIONES:**
+
+#### 1. Presencia (que no falte nada)
+- [ ] `assets_generated` contiene 13+ tipos de asset
+- [ ] `monthly_report` generado
+- [ ] `voice_assistant_guide` generado
+- [ ] `whatsapp_button` generado
+- [ ] 7/7 servicios de la propuesta tienen asset
+
+#### 2. Efectividad (que materialice soluciones)
+- [ ] `hotel_schema` → name: "Amaziliahotel" (no "Hotel")
+- [ ] `llms_txt` → URL real, servicios reales
+- [ ] `voice_assistant_guide` → checklist Google/Apple/Alexa
+- [ ] `whatsapp_button` → número de teléfono o disclaimer
+- [ ] `monthly_report` → plantilla con KPIs definidos
+- [ ] `indirect_traffic_optimization` → contenido específico de IAO/ChatGPT
+
+#### 3. Calidad y Transparencia
+- [ ] Todos los assets con `confidence_score >= 0.7`
+- [ ] Propuesta incluye tabla de calidad de assets
+- [ ] Publication gates = 9 (incluye asset_confidence + proposal_alignment)
+- [ ] Tests pasando (385+)
+
+#### 4. Monitoreo API — OpenRouter Fallback
+- [ ] **OpenRouter fallback NO se activó** (verificar en logs)
+- [ ] Si fallback == 0 → MiniMax funcionó correctamente ✅
+- [ ] Si fallback > 0 → documentar modelo usado y costo estimado
+- [ ] Si fallback > 3 → abrir issue de estabilidad MiniMax
+
+---
+
+## Métricas Acumulativas
+
+| Métrica | Inicio (v4.28.0) | Fin (v4.29.0) |
+|---------|------------------|---------------|
+| Tests | 2150+ | TBD (mínimo 2150) |
+| Assets con confidence < 0.7 | 10/10 (100%) | 0 (0%) |
+| Servicios prometidos con asset | 4/7 (57%) | 7/7 (100%) |
+| Placeholders en assets | 2 (hotel_schema, llms_txt) | 0 |
+| Publication gates | 7 | 9 |
+| Typos | 1 ("debeproveer") | 0 |
+| Self-replacement warnings | 3 | 0 |

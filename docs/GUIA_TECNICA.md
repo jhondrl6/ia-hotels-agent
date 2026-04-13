@@ -1,8 +1,31 @@
 # Guía Técnica IA Hoteles Agent CLI
 
-**Ultima actualizacion:** 12 Abril 2026
-|**Version:** 4.28.0 (4 Pilares Alignment + Voice Readiness Proxy)
-|**Audiencia:** Desarrolladores, DevOps, Contribuidores
+**Ultima actualizacion:** 13 Abril 2026
+||**Version:** 4.28.0 (4 Pilares Alignment + Voice Readiness Proxy)
+||**Audiencia:** Desarrolladores, DevOps, Contribuidores
+
+## Notas de Cambios — v4.29.0: geo_enriched Bridge (EN PROGRESO)
+
+**Fecha:** 13 Abril 2026
+**Fase:** FASE-GEO-BRIDGE
+
+### Resumen
+FASE-GEO-BRIDGE crea el bridge que conecta `geo_enriched/` (datos reales del GEO Flow) con el pipeline de delivery de assets. Anteriormente, los assets se generaban con confidence 0.5 (placeholders) mientras `geo_enriched/` contenía los datos reales pero nunca se entregaban al cliente.
+
+### Módulos Afectados
+
+#### 1. modules/asset_generation/geo_enriched_bridge.py (NUEVO)
+- Nueva función `try_enrich_from_geo_enriched()`: dados asset_type, content, y confidence < 0.7, busca versión enriquecida en `geo_enriched/`
+- Mapeo de assets: `hotel_schema` → `hotel_schema_rich.json`, `llms_txt` → `llms.txt`, `faq_page` → `faq_schema.json`
+- Confidence boost: 0.5 → 0.85 cuando enrichment disponible
+- Detección de placeholders: rechaza contenido genérico ("Hotel", "https://your-website.com")
+
+#### 2. modules/asset_generation/v4_asset_orchestrator.py (FASE-GEO-BRIDGE)
+- Import de `try_enrich_from_geo_enriched`
+- Integration point: después de `_generate_with_coherence_check()`, antes de agregar a lista `generated`
+- Si `confidence < 0.7` y archivo existe en `geo_enriched/`: sobreescribe archivo en disco y actualiza `GeneratedAsset.confidence_score = 0.85`
+
+---
 
 ## Notas de Cambios — v4.28.0: 4 Pilares Alignment + Voice Readiness Proxy
 

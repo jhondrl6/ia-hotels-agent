@@ -1,100 +1,164 @@
-# Dependencias entre Fases — Refactor 4 Pilares SEO/GEO/AEO/IAO
+# Dependencias de Fases — Fix geo_enriched → Delivery Bridge + Assets Completos
 
-**Proyecto**: AEO-IAO-PROGRESSION-REFACTOR
-**Fecha creación**: 2026-04-12
-**Total fases**: 6 (FASE-A a FASE-F)
+**Proyecto:** AUDIT-PIPELINE-DESALINEACIONES-ASSETS
+**Fecha:** 2026-04-12
+**Estado:** Planificación completada (v2 — ampliado con D4/R9)
+
+---
+
+## Diagnóstico del Problema
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    PIPELINE ACTUAL (ROTO) — DOS RUPTURAS                    │
+│                                                                             │
+│  RUPTURA 1: geo_enriched → delivery (D2, D3, D8)                           │
+│  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌─────────────────────┐   │
+│  │  Hook    │───▶│ Validation │───▶│ Scenarios │───▶│ 4. Publication     │   │
+│  └──────────┘    └──────────┘    └──────────┘    └─────────────────────┘   │
+│                                                           │                 │
+│                                                           ▼                 │
+│                                               ┌─────────────────────┐       │
+│                                               │ 5. V4AssetOrchestrator│     │
+│                                               │ (genera 10 assets)    │     │
+│                                               └─────────────────────┘       │
+│                                                           │                 │
+│                                                           ▼                 │
+│                                               ┌─────────────────────┐       │
+│                                               │ DELIVERY PACKAGE    │     │
+│                                               │ ❌ NO incluye        │       │
+│                                               │ geo_enriched/       │       │
+│                                               │ ❌ confidence 0.5    │       │
+│                                               └─────────────────────┘       │
+│                                                                             │
+│  RUPTURA 2: propuesta → assets (D4)                                         │
+│  ┌─────────────────────────┐    ┌──────────────────────────────────┐       │
+│  │ PROPUESTA (7 servicios) │    │ ASSETS GENERADOS (10)            │       │
+│  │ ✅ Google Maps           │───▶│ geo_playbook ✅                   │       │
+│  │ ✅ ChatGPT               │───▶│ indirect_traffic_opt. ✅          │       │
+│  │ ✅ Busqueda por Voz      │───▶│ voice_assistant_guide ❌ MISSING  │       │
+│  │ ✅ SEO Local             │───▶│ optimization_guide ✅             │       │
+│  │ ✅ Boton WhatsApp        │───▶│ whatsapp_button ❌ MISSING        │       │
+│  │ ✅ Datos Estructurados   │───▶│ hotel_schema ⚠️ placeholder       │       │
+│  │ ✅ Informe Mensual       │───▶│ (no existe) ❌ MISSING            │       │
+│  └─────────────────────────┘    └──────────────────────────────────┘       │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Fases del Proyecto
+
+| Fase | ID | Nombre | Dependencias | Prioridad |
+|------|----|--------|---------------|-----------|
+| 1 | FASE-GEO-BRIDGE | geo_enriched → asset enrichment bridge | Ninguna (root fix) | ALTA | ✅ 2026-04-13 |
+| 2 | FASE-CONF-GATE | Asset confidence gate en publication | FASE-GEO-BRIDGE | ALTA |
+| 3 | FASE-LLMSTXT-FIX | Fix llms.txt generator + fallback | FASE-GEO-BRIDGE | ALTA |
+| 4 | FASE-ASSETS-VALIDACION | Propuesta → Assets: 7/7 servicios | FASE-GEO-BRIDGE | ALTA |
+| 5 | FASE-CONFIDENCE-DISCLOSURE | Transparencia calidad en propuesta | FASE-ASSETS-VALIDACION | MEDIA |
+| 6 | FASE-TEMPLATE-DEBT | Sincronizar embebido vs V6 + typo | Ninguna | MEDIA |
+| 7 | FASE-CONTENT-SCRUBBER | Fix self-replacement + spacing | Ninguna | MEDIA |
+| 8 | FASE-RELEASE | v4.29.0 release + docs + validación | Fases 1-7 | ALTA |
 
 ---
 
 ## Diagrama de Dependencias
 
 ```
-FASE-A (Score Redistribution)     ← FUNDACIÓN, sin dependencias
-  │
-  ├──→ FASE-B (AEO Real + SerpAPI)
-  │       │
-  │       └──→ FASE-C (IAO Restoration + LLM Checker)
-  │               │
-  │               └──→ FASE-D (Package & Template Alignment)
-  │                       │
-  │                       └──→ FASE-E (Voice Readiness Proxy)
-  │                               │
-  │                               └──→ FASE-F (Documentation & Validation)
-  │
-  └──→ FASE-E puede iniciarse después de FASE-A (no requiere B/C/D)
+                         ┌──────────────────────────┐
+                         │     FASE-GEO-BRIDGE      │  (root cause fix)
+                         │  geo_enriched → assets   │
+                         └────────────┬─────────────┘
+                                      │
+                    ┌─────────────────┼─────────────────┐
+                    │                 │                  │
+                    ▼                 ▼                  ▼
+          ┌─────────────────┐ ┌──────────────┐  ┌──────────────────┐
+          │  FASE-CONF-GATE │ │ FASE-LLMS-   │  │ FASE-ASSETS-     │
+          │ confidence >=0.7│ │ TXT-FIX      │  │ VALIDACION       │
+          │ gate #8         │ │ fallback a   │  │ 7/7 servicios    │
+          └────────┬────────┘ │ geo_enriched │  │ con asset        │
+                   │          └──────┬───────┘  └────────┬─────────┘
+                   │                 │                    │
+                   │                 │                    ▼
+                   │                 │          ┌──────────────────┐
+                   │                 │          │ FASE-CONFIDENCE- │
+                   │                 │          │ DISCLOSURE       │
+                   │                 │          │ tabla calidad en │
+                   │                 │          │ propuesta        │
+                   │                 │          └────────┬─────────┘
+                   │                 │                   │
+                   └─────────────────┼───────────────────┘
+                                     │
+                                     ▼
+                           ┌─────────────────────┐
+                           │   FASE-RELEASE      │
+                           │   v4.29.0 + docs    │
+                           │   VALIDACIÓN FINAL  │
+                           └─────────────────────┘
+
+          ┌─────────────────────────────────┐
+          │       FASE-TEMPLATE-DEBT         │  (paralelo, independiente)
+          │   sincronizar embebido + V6      │
+          └─────────────────────────────────┘
+
+          ┌─────────────────────────────────┐
+          │     FASE-CONTENT-SCRUBBER        │  (paralelo, independiente)
+          │   self-replacement + spacing    │
+          └─────────────────────────────────┘
 ```
 
-## Orden de Ejecución Obligatorio
+---
 
-| Orden | Fase | Depende de | Razón |
-|-------|------|-----------|-------|
-| 1 | FASE-A | — | Base: redistribuye CHECKLIST_IAO a 4 pilares |
-| 2 | FASE-B | FASE-A | Requiere estructura 4 pilares para inyectar SerpAPI |
-| 3 | FASE-C | FASE-B | Requiere AEO score correcto antes de añadir IAO |
-| 4 | FASE-D | FASE-C | Requiere 4 scores funcionales para alinear paquetes |
-| 5 | FASE-E | FASE-A | Solo requiere estructura base (independiente de B/C/D) |
-| 6 | FASE-F | TODAS | Cierra ciclo: documenta todo |
+## Conflictos Potenciales de Archivos
+
+| Archivo | Fases que lo modifican | Riesgo |
+|---------|----------------------|--------|
+| `modules/asset_generation/conditional_generator.py` | GEO-BRIDGE, LLMSTXT-FIX, ASSETS-VALID | ALTO — 3 fases |
+| `modules/asset_generation/asset_catalog.py` | ASSETS-VALID | BAJO |
+| `modules/quality_gates/publication_gates.py` | CONF-GATE, ASSETS-VALID | MEDIO — 2 fases |
+| `modules/commercial_documents/propuesta_v6_template.md` | CONFIDENCE-DISC, TEMPLATE-DEBT | MEDIO — 2 fases |
+| `modules/commercial_documents/v4_proposal_generator.py` | CONFIDENCE-DISC | BAJO |
+| `modules/geo_enrichment/geo_enrichment_layer.py` | GEO-BRIDGE (solo lectura) | BAJO |
+| `modules/asset_generation/llmstxt_generator.py` | LLMSTXT-FIX | BAJO |
+
+**RECOMENDACIÓN**: Ejecutar FASE-GEO-BRIDGE primero, luego ASSETS-VALIDACION antes de LLMSTXT-FIX y CONF-GATE para reducir conflictos en conditional_generator.py.
 
 ---
 
-## Tabla de Conflictos de Archivos
+## Restricciones del Proyecto
 
-Cada celda indica si la fase MODIFICA (M), LEE (L), o CREA (C) el archivo.
-
-| Archivo | FASE-A | FASE-B | FASE-C | FASE-D | FASE-E | FASE-F |
-|---------|--------|--------|--------|--------|--------|--------|
-| `v4_diagnostic_generator.py` | **M** (L75-129, L504-570, L1401-1455, L1801-1860) | **M** (_calculate_aeo_score) | **M** (restaurar _calculate_iao_score) | L | L | L |
-| `data_structures.py` | **M** (L280-308 DiagnosticSummary) | L | **M** (añadir iao fields) | L | L | L |
-| `aeo_kpis.py` | **M** (reasignar campos) | L | **C** (IAO models) | L | L | L |
-| `gap_analyzer.py` | L | L | L | **M** (gap_aeo → 4 gaps) | L | L |
-| `report_builder.py` | — | — | — | **M** (DEPRECATED + 4-pilar, legado spark) | — | — |
-| `pain_solution_mapper.py` | L | L | L | **M** (pain→package mapping) | L | L |
-| `opportunity_scorer.py` | L | L | L | **M** (brechas 4 pilares) | L | L |
-| `benchmarks.py` | L | L | L | **M** (3→4 benchmarks) | L | L |
-| `package_recommender.py` | L | L | L | **M** (inputs 4 pilares) | L | L |
-| `update_benchmarks.py` | L | L | L | **M** (3→4 scores) | L | L |
-| `diagnostico_v6_template.md` | L | L | L | **M** (añadir IAO row) | L | L |
-| `propuesta_v6_template.md` | L | L | L | L (ya correcto) | L | L |
-| `llm_mention_checker.py` | — | — | **C** (nuevo) | L | L | L |
-| `aeo_snippet_tracker.py` | — | **C** (nuevo) | L | L | L | L |
-| `voice_readiness_proxy.py` | — | — | — | — | **C** (nuevo) | L |
-| `test_aeo_score.py` | **M** | **M** | L | L | L | L |
-| `test_aeo_kpis.py` | **M** | L | **M** | L | L | L |
-| `test_fase_b_aeo_voice.py` | **M** | **M** | L | L | **M** | L |
-| `test_audit_alignment.py` | L | L | L | **M** | L | L |
-| `test_iao_score.py` | — | — | **C** (nuevo) | L | L | L |
-| `CHANGELOG.md` | L | L | L | L | L | **M** |
-| `GUIA_TECNICA.md` | L | L | L | L | L | **M** |
-| `REGISTRY.md` | L | L | L | L | L | **M** |
-
-### Conflictos potenciales (archivos compartidos)
-
-| Archivo | Fases que lo modifican | Riesgo | Mitigación |
-|---------|----------------------|--------|------------|
-| `v4_diagnostic_generator.py` | A, B, C | **ALTO**: 3 fases tocan el mismo archivo de 2239 líneas | Cada fase toca funciones distintas: A→calcular_cumplimiento, B→_calculate_aeo_score, C→_calculate_iao_score |
-| `data_structures.py` | A, C | **MEDIO**: 2 fases tocan DiagnosticSummary | A→renombrar campos, C→añadir campos IAO nuevos |
-| `aeo_kpis.py` | A, C | **MEDIO**: A reasigna, C crea modelos nuevos | A no elimina campos, solo reasigna significado |
-| `test_aeo_score.py` | A, B | **BAJO**: A cambia estructura, B cambia lógica AEO | A prepara tests para 4 componentes, B añade SerpAPI |
+1. **No romper la cadena financiera** — cualquier cambio NO debe alterar los cálculos financieros ya validados
+2. **No tocar el template V6 de diagnóstico** — los 4 pilares están correctos
+3. **Mantener backward compat** — si se elimina template embebido, asegurar que V6 siempre exista
+4. **Testing** — 385+ tests deben seguir pasando después de cambios
+5. **Trazabilidad** — cada fase requiere log_phase_completion.py + REGISTRY.md
+6. **Costo API** — NO ejecutar v4complete innecesariamente para testing
+7. **Una fase por sesión** — no implementar todas las correcciones de una vez
 
 ---
 
-## Justificación del Orden
+## Criterio de Éxito Global
 
-1. **FASE-A primero**: Es la base. Sin redistribuir CHECKLIST_IAO a 4 pilares, ninguna otra fase tiene dónde inyectar sus scores.
-2. **FASE-B antes que C**: AEO (posición cero) es prerequisito conceptual de IAO (recomendación IA). Necesitamos AEO correcto antes de medir IAO.
-3. **FASE-C antes que D**: Los paquetes comerciales dependen de los 4 scores funcionando. No podemos alinear paquetes hasta que IAO exista.
-4. **FASE-E es flexible**: Voice Readiness Proxy solo requiere la estructura de FASE-A. Puede ejecutarse en paralelo lógico con B/C/D.
-5. **FASE-F siempre al final**: Documenta todo lo implementado.
+Después de FASE-RELEASE, al ejecutar `v4complete --url https://amaziliahotel.com/`:
 
----
+### Presencia — Que no falte nada
+1. `assets_generated` contiene TODOS los tipos: hotel_schema, geo_playbook, optimization_guide, llms_txt, indirect_traffic_optimization, voice_assistant_guide, whatsapp_button, monthly_report, faq_page, review_plan, review_widget, org_schema, analytics_setup_guide
+2. Cada servicio ✅ de la propuesta tiene un asset en disco
 
-## Estado de Fases
+### Efectividad — Que materialice soluciones
+3. `hotel_schema` contiene `name: "Amaziliahotel"` (no "Hotel")
+4. `llms_txt` contiene URL real `https://amaziliahotel.com/` y servicios reales
+5. `voice_assistant_guide` tiene checklist Google Assistant + Apple + Alexa
+6. `whatsapp_button` tiene número de teléfono o disclaimer claro de pendiente
+7. `monthly_report` tiene plantilla con KPIs definidos
 
-| Fase | Estado | Fecha Inicio | Fecha Fin | Notas |
-|------|--------|-------------|-----------|-------|
-| FASE-A | ✅ Completada | 2026-04-12 | 2026-04-12 | Score Redistribution: 4 pilares, 101 tests, 0 regresiones |
-| FASE-B | ✅ Completada | 2026-04-08 | 2026-04-08 | AEO Scoring Rewrite (4 componentes × 25pts) |
-| FASE-C | ✅ Completada | 2026-04-12 | 2026-04-12 | IAO Restoration + LLM Mention Checker: 42 tests, 0 regresiones |
-| FASE-D | ⏳ Pendiente | — | — | Package & Template Alignment |
-| FASE-E | ⏳ Pendiente | — | — | Voice Readiness Proxy |
-| FASE-F | ✅ Completada | 2026-04-12 | 2026-04-12 | Documentation & Validation: CHANGELOG, GUIA_TECNICA, REGISTRY, version sync, E2E pass |
+### Calidad — Que sea usable
+8. Todos los assets tienen `confidence_score >= 0.7`
+9. Propuesta incluye tabla de calidad de assets (nivel de cada entregable)
+10. Publication gates = 9 gates (incluye asset_confidence + proposal_alignment)
+
+### Integridad
+11. Los 385+ tests siguen pasando
+12. Cadena financiera intacta (mismos valores en diagnóstico, propuesta, financial_scenarios.json)

@@ -33,6 +33,7 @@ from .asset_diagnostic_linker import AssetDiagnosticLinker, AssetMetadata
 from .asset_content_validator import AssetContentValidator, ContentStatus
 from .site_presence_checker import SitePresenceChecker  # FASE-CAUSAL-01
 from .data_assessment import DataAssessment, DataClassification  # FASE-I-01
+from .geo_enriched_bridge import try_enrich_from_geo_enriched  # FASE-GEO-BRIDGE
 from ..geo_enrichment.geo_flow import GeoFlow  # FASE-6: GEO Flow
 from data_models.canonical_assessment import (  # FASE-6: Canonical Assessment
     CanonicalAssessment,
@@ -269,6 +270,53 @@ class V4AssetOrchestrator:
                 spec, validated_data, output_dir, hotel_name, hotel_id, actual_site_url
             )
             if isinstance(result, GeneratedAsset):
+                # FASE-GEO-BRIDGE: Attempt to enrich from geo_enriched/
+                if result.confidence_score < 0.7 and result.path:
+                    geo_enriched_dir = output_dir / "geo_enriched"
+                    # Read current content from disk
+                    current_content = ""
+                    if Path(result.path).exists():
+                        try:
+                            with open(result.path, 'r', encoding='utf-8') as f:
+                                current_content = f.read()
+                        except Exception:
+                            current_content = ""
+
+                    enriched_content, new_score = try_enrich_from_geo_enriched(
+                        asset_type=result.asset_type,
+                        current_content=current_content,
+                        current_confidence=result.confidence_score,
+                        geo_enriched_dir=geo_enriched_dir,
+                        hotel_id=hotel_id
+                    )
+
+                    if new_score > result.confidence_score:
+                        # Write enriched content back to disk
+                        try:
+                            with open(result.path, 'w', encoding='utf-8') as f:
+                                f.write(enriched_content)
+                            # Update metadata to reflect enrichment
+                            result = GeneratedAsset(
+                                asset_type=result.asset_type,
+                                filename=result.filename,
+                                path=result.path,
+                                metadata_path=result.metadata_path,
+                                preflight_status="PASSED",
+                                confidence_score=new_score,
+                                pain_ids_resolved=result.pain_ids_resolved,
+                                can_use=True,
+                                delivery_filename=result.delivery_filename
+                            )
+                            logger.info(
+                                f"[V4AssetOrchestrator] GEO-Bridge enriched "
+                                f"{result.asset_type}: {new_score:.2f}"
+                            )
+                        except Exception as e:
+                            logger.warning(
+                                f"[V4AssetOrchestrator] Failed to write enriched "
+                                f"content for {result.asset_type}: {e}"
+                            )
+
                 generated.append(result)
             elif isinstance(result, SkippedAsset):  # FASE-CAUSAL-01
                 skipped.append(result)
