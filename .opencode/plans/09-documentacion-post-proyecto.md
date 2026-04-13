@@ -52,6 +52,7 @@ El pipeline de iah-cli generaba assets de delivery con datos placeholder (confid
 | `modules/commercial_documents/templates/propuesta_v6_template.md` | Typo fix + tabla calidad | TEMPLATE-DEBT, CONFIDENCE-DISC |
 | `modules/commercial_documents/v4_proposal_generator.py` | Generación tabla calidad dinámica | CONFIDENCE-DISC |
 | `modules/postprocessors/document_quality_gate.py` | Self-replacement + spacing fixes | CONTENT-SCRUBBER |
+| `main.py` | Cableado assets_generated a proposal generator | CONFIDENCE-DISC |
 
 ---
 
@@ -72,7 +73,7 @@ El pipeline de iah-cli generaba assets de delivery con datos placeholder (confid
 | Servicios prometidos con asset | 4/7 (57%) | 7/7 (100%) | +3 |
 | Assets placeholders | 2 (hotel_schema, llms_txt) | 0 | -2 |
 | Confidence promedio assets | 0.50 | TBD | +0.35 |
-|| Publication gates | 7 | 9 (incluye confidence + alignment) | +2 |
+| Publication gates | 7 | 9 (incluye confidence + alignment) | +2 |
 | Self-replacement warnings | 3 | 0 | -3 |
 | Typos de espaciado | 1 ("debeproveer") | 0 | -1 |
 | Líneas dead code eliminadas | ~150 (template embebido + package_name) | 0 | -150 |
@@ -118,7 +119,7 @@ grep -i "fallback\|openrouter\|provider.*switch" ~/.hermes/logs/*.log 2>/dev/nul
 ## Sección E: Archivos Afiliados Actualizados
 
 ### CHANGELOG.md
-- [ ] Entrada [4.29.0] con todos los cambios (pendiente al final release)
+- [x] Entrada [4.28.0] actualizada con FASE-CONFIDENCE-DISCLOSURE (pendiente v4.29.0 entry completa al final release)
 
 ### GUIA_TECNICA.md
 - [x] Nota técnica: "geo_enriched bridge para assets" ✅ (FASE-GEO-BRIDGE)
@@ -128,20 +129,20 @@ grep -i "fallback\|openrouter\|provider.*switch" ~/.hermes/logs/*.log 2>/dev/nul
 - [x] Nota técnica: "proposal_asset_alignment_gate" ✅ (FASE-ASSETS-VALIDACION)
 - [ ] Nota técnica: "llms.txt fallback"
 - [x] Nota técnica: "monthly_report generator" ✅ (FASE-ASSETS-VALIDACION)
-- [ ] Nota técnica: "confidence disclosure en propuesta"
+- [x] Nota técnica: "confidence disclosure en propuesta" ✅ (FASE-CONFIDENCE-DISCLOSURE)
 
 ### REGISTRY.md
 - [x] FASE-GEO-BRIDGE ✅ (2026-04-13)
 - [x] FASE-CONF-GATE ✅ (2026-04-13)
 - [ ] FASE-LLMSTXT-FIX ✅
 - [x] FASE-ASSETS-VALIDACION ✅ (2026-04-13)
-- [ ] FASE-CONFIDENCE-DISCLOSURE ✅
+- [x] FASE-CONFIDENCE-DISCLOSURE ✅ (2026-04-13)
 - [x] FASE-TEMPLATE-DEBT ✅ (2026-04-13)
 - [x] FASE-CONTENT-SCRUBBER ✅ (2026-04-13) — sin cambios arquitectónicos
 - [ ] FASE-RELEASE v4.29.0 ✅
 
 ### docs/CONTRIBUTING.md
-- [ ] Verificar que Sección E checklist se actualizó
+- [x] Sin cambios de convenciones (FASE-CONFIDENCE-DISCLOSURE agrega parámetro opcional, no cambia convenciones) ✅
 
 ---
 

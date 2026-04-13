@@ -54,9 +54,9 @@
 |------|----|--------|---------------|-----------|
 | 1 | FASE-GEO-BRIDGE | geo_enriched → asset enrichment bridge | Ninguna (root fix) | ALTA | ✅ 2026-04-13 |
 | 2 | FASE-CONF-GATE | Asset confidence gate en publication | FASE-GEO-BRIDGE | ALTA | ✅ 2026-04-13 |
-| 3 | FASE-LLMSTXT-FIX | Fix llms.txt generator + fallback | FASE-GEO-BRIDGE | ALTA |
-|| 4 | FASE-ASSETS-VALIDACION | Propuesta → Assets: 7/7 servicios | FASE-GEO-BRIDGE | ALTA | ✅ 2026-04-13 |
-| 5 | FASE-CONFIDENCE-DISCLOSURE | Transparencia calidad en propuesta | FASE-ASSETS-VALIDACION | MEDIA |
+| 3 | FASE-LLMSTXT-FIX | Fix llms.txt generator + fallback | FASE-GEO-BRIDGE | ALTA | ✅ 2026-04-13 |
+| 4 | FASE-ASSETS-VALIDACION | Propuesta → Assets: 7/7 servicios | FASE-GEO-BRIDGE | ALTA | ✅ 2026-04-13 |
+| 5 | FASE-CONFIDENCE-DISCLOSURE | Transparencia calidad en propuesta | FASE-ASSETS-VALIDACION | MEDIA | ✅ 2026-04-13 |
 | 6 | FASE-TEMPLATE-DEBT | Sincronizar embebido vs V6 + typo | Ninguna | MEDIA | ✅ 2026-04-13 |
 | 7 | FASE-CONTENT-SCRUBBER | Fix self-replacement + spacing | Ninguna | MEDIA | ✅ 2026-04-13 |
 | 8 | FASE-RELEASE | v4.29.0 release + docs + validación | Fases 1-7 | ALTA |

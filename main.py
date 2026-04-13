@@ -2188,6 +2188,18 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     # Generar propuesta solo si pasa el gate (o si no es bloqueante)
     proposal_path = None
     if generate_proposal:
+        # FASE-CONFIDENCE-DISCLOSURE: Convertir asset_plan a formato para quality table
+        _CONFIDENCE_TO_SCORE = {"verified": 0.8, "estimated": 0.6, "conflict": 0.3, "unknown": 0.0}
+        assets_for_quality = [
+            {
+                "asset_type": spec.asset_type,
+                "confidence_score": _CONFIDENCE_TO_SCORE.get(
+                    spec.confidence_level.value if hasattr(spec.confidence_level, 'value') else str(spec.confidence_level).lower(),
+                    0.0
+                ),
+            }
+            for spec in asset_plan
+        ]
         proposal_gen = V4ProposalGenerator()
         proposal_path = proposal_gen.generate(
             diagnostic_summary=diagnostic_summary,
@@ -2200,6 +2212,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             region=region,  # FASE-DRECONEXION-V6: Pasar region para templates V6
             analytics_data=analytics_data,  # ANALYTICS-02: pasar analytics_data al proposal
             financial_breakdown=financial_breakdown,  # FASE-G: breakdown con evidence tiers
+            assets_generated=assets_for_quality,  # FASE-CONFIDENCE-DISCLOSURE: quality table
         )
     if proposal_path:
         print(f"[OK] Propuesta generada: {proposal_path}")

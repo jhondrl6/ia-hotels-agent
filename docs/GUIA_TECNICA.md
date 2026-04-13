@@ -118,6 +118,44 @@ Gate #8 en publication gates que valida `confidence_score` de assets generados. 
 
 ---
 
+### FASE-CONFIDENCE-DISCLOSURE: Transparencia de Calidad en Propuesta
+
+**Fecha:** 13 Abril 2026
+**Fase:** FASE-CONFIDENCE-DISCLOSURE
+
+#### Resumen
+La propuesta comercial ahora incluye una sección "Estado de los Entregables" que informa al cliente sobre el nivel de preparación de cada asset. Cada servicio prometido muestra un indicador de calidad (Completo / Requiere datos / En desarrollo) basado en el confidence_score real del asset generado.
+
+#### Módulos Afectados
+
+##### 1. modules/commercial_documents/templates/propuesta_v6_template.md
+- Nueva sección `📋 Estado de los Entregables` entre la tabla de servicios y la sección de fotos
+- Placeholder `${asset_quality_table}` para renderizado dinámico
+
+##### 2. modules/commercial_documents/v4_proposal_generator.py
+- Import de `PROPOSAL_SERVICE_TO_ASSET` desde `proposal_asset_alignment.py`
+- Nuevo parámetro `assets_generated: Optional[List[Dict]]` en `generate()` y `_prepare_template_data()`
+- Nuevo método `_generate_asset_quality_table()`: mapea cada servicio → asset via `PROPOSAL_SERVICE_TO_ASSET`, lookup confidence_score, genera tabla markdown con umbrales:
+  - confidence >= 0.7 → "✅ Completo" (Listo para implementar)
+  - 0.4 <= confidence < 0.7 → "⚠️ Requiere datos" (Necesitamos info adicional)
+  - confidence < 0.4 → "🔧 En desarrollo" (En proceso de mejora)
+  - asset faltante → "❌ No generado"
+  - assets_generated=None → "⏳ Pendiente" (backward compat)
+
+##### 3. main.py
+- Conversión de `asset_plan` (List[AssetSpec]) a formato dict para quality table
+- Mapeo ConfidenceLevel → float: verified=0.8, estimated=0.6, conflict=0.3, unknown=0.0
+
+#### Tests
+- test_proposal_confidence_disclosure.py: 5 tests (tabla incluida, confidence real, missing, pending, low confidence)
+- **Total: 5/5 passing, 0 regresiones**
+
+#### Backwards Compatibility
+- `assets_generated` es Optional (default None) → tabla muestra "Pendiente" si no se pasa
+- No altera cálculos financieros ni estructura de la propuesta existente
+
+---
+
 ## Notas de Cambios — v4.28.0: 4 Pilares Alignment + Voice Readiness Proxy
 
 **Fecha:** 12 Abril 2026

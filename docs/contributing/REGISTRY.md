@@ -2770,6 +2770,27 @@ _Ninguno_
 ---
 
 
+## FASE-CONFIDENCE-DISCLOSURE - 2026-04-13
+**Descripcion:** Transparencia de calidad de assets en propuesta comercial. Template V6 con seccion Estado de Entregables. Metodo _generate_asset_quality_table genera tabla dinamica desde confidence scores. 5 tests nuevos (5/5 pasan).
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (test_proposal_confidence_disclosure.py (5/5))
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown

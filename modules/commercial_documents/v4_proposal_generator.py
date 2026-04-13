@@ -20,6 +20,7 @@ from .data_structures import (
     format_cop,
 )
 from modules.financial_engine.pricing_resolution_wrapper import PricingResolutionResult
+from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
 
 
 class V4ProposalGenerator:
@@ -155,6 +156,7 @@ class V4ProposalGenerator:
         region: Optional[str] = None,
         analytics_data: Optional[Dict[str, Any]] = None,
         financial_breakdown: Optional[Any] = None,
+        assets_generated: Optional[List[Dict[str, Any]]] = None,
     ) -> str:
         """
         Generate the proposal document.
@@ -203,6 +205,7 @@ class V4ProposalGenerator:
             audit_result=audit_result,
             region=region,
             analytics_data=analytics_data,
+            assets_generated=assets_generated,
         )
         
         # Render template
@@ -440,6 +443,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         audit_result: Optional[Any] = None,
         region: Optional[str] = None,
         analytics_data: Optional[Dict[str, Any]] = None,
+        assets_generated: Optional[List[Dict[str, Any]]] = None,
     ) -> Dict[str, str]:
         """Prepare data for template rendering."""
         
@@ -580,6 +584,9 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
 
         # ANALYTICS-02: Analytics section in proposal
         'analytics_section': self._inject_analytics(analytics_data),
+
+        # FASE-CONFIDENCE-DISCLOSURE: Tabla de calidad de assets
+        'asset_quality_table': self._generate_asset_quality_table(assets_generated),
     }
 
         return data
@@ -633,6 +640,54 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
 
 ---
 """
+ 
+    def _generate_asset_quality_table(self, assets_generated: Optional[List[Dict[str, Any]]]) -> str:
+        """Genera tabla de calidad de assets para la propuesta.
+        
+        Mapea cada servicio de la propuesta a su asset generado y muestra
+        el nivel de preparacion basado en confidence_score.
+        
+        Args:
+            assets_generated: Lista de assets generados (cada uno con 'asset_type' y 'confidence_score').
+                Si es None, muestra 'Pendiente' para todos los servicios.
+        
+        Returns:
+            String markdown con la tabla de calidad.
+        """
+        # Build lookup: asset_type -> confidence_score
+        asset_lookup = {}
+        if assets_generated:
+            for asset in assets_generated:
+                asset_type = asset.get("asset_type", "") if isinstance(asset, dict) else getattr(asset, "asset_type", "")
+                confidence = asset.get("confidence_score", 0) if isinstance(asset, dict) else getattr(asset, "confidence_score", 0)
+                if asset_type:
+                    asset_lookup[asset_type] = confidence
+        
+        # Table header
+        rows = ["| Entregable | Nivel | Que significa |", "|------------|-------|---------------|"]
+        
+        for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
+            if asset_type in asset_lookup:
+                confidence = asset_lookup[asset_type]
+                if confidence >= 0.7:
+                    nivel = "✅ Completo"
+                    significado = "Listo para implementar"
+                elif confidence >= 0.4:
+                    nivel = "⚠️ Requiere datos"
+                    significado = "Necesitamos informacion adicional"
+                else:
+                    nivel = "🔧 En desarrollo"
+                    significado = "En proceso de mejora"
+            elif assets_generated is None:
+                nivel = "⏳ Pendiente"
+                significado = "Se genera al activar el servicio"
+            else:
+                nivel = "❌ No generado"
+                significado = "No se pudo generar - revisaremos"
+            
+            rows.append(f"| {service_name} | {nivel} | {significado} |")
+        
+        return "\n".join(rows)
     
     def _render_template(self, template_content: str, data: Dict[str, str]) -> str:
         """Render the template with data."""
@@ -1015,3 +1070,52 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
 
 """
         return section
+
+    def _generate_asset_quality_table(self, assets_generated: Optional[List[Dict[str, Any]]]) -> str:
+        """Genera tabla de calidad de assets para la propuesta.
+        
+        Mapea cada servicio de la propuesta a su asset generado y muestra
+        el nivel de preparacion basado en confidence_score.
+        
+        Args:
+            assets_generated: Lista de assets generados (cada uno con 'asset_type' y 'confidence_score').
+                Si es None, muestra 'Pendiente' para todos los servicios.
+        
+        Returns:
+            String markdown con la tabla de calidad.
+        """
+        # Build lookup: asset_type -> confidence_score
+        asset_lookup = {}
+        if assets_generated:
+            for asset in assets_generated:
+                asset_type = asset.get("asset_type", "") if isinstance(asset, dict) else getattr(asset, "asset_type", "")
+                confidence = asset.get("confidence_score", 0) if isinstance(asset, dict) else getattr(asset, "confidence_score", 0)
+                if asset_type:
+                    asset_lookup[asset_type] = confidence
+        
+        # Table header
+        rows = ["| Entregable | Nivel | Que significa |", "|------------|-------|---------------|"]
+        
+        for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
+            if asset_type in asset_lookup:
+                confidence = asset_lookup[asset_type]
+                if confidence >= 0.7:
+                    nivel = "✅ Completo"
+                    significado = "Listo para implementar"
+                elif confidence >= 0.4:
+                    nivel = "⚠️ Requiere datos"
+                    significado = "Necesitamos informacion adicional"
+                else:
+                    nivel = "🔧 En desarrollo"
+                    significado = "En proceso de mejora"
+            elif assets_generated is None:
+                nivel = "⏳ Pendiente"
+                significado = "Se genera al activar el servicio"
+            else:
+                nivel = "❌ No generado"
+                significado = "No se pudo generar - revisaremos"
+            
+            rows.append(f"| {service_name} | {nivel} | {significado} |")
+        
+        return "\n".join(rows)
+

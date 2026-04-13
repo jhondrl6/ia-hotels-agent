@@ -11,9 +11,9 @@
 |------|----|--------|------------|--------------|-----------|
 | Fase 1 | FASE-GEO-BRIDGE | ✅ Completada | 2026-04-13 | Ninguna | ALTA |
 | Fase 2 | FASE-CONF-GATE | ✅ Completada | 2026-04-13 | FASE-GEO-BRIDGE | ALTA |
-| Fase 3 | FASE-LLMSTXT-FIX | ⏳ Pendiente | — | FASE-GEO-BRIDGE | ALTA |
+| Fase 3 | FASE-LLMSTXT-FIX | ✅ Completada | 2026-04-13 | FASE-GEO-BRIDGE | ALTA |
 | Fase 4 | FASE-ASSETS-VALIDACION | ✅ Completada | 2026-04-13 | FASE-GEO-BRIDGE | ALTA |
-| Fase 5 | FASE-CONFIDENCE-DISCLOSURE | ⏳ Pendiente | — | FASE-ASSETS-VALIDACION | MEDIA |
+| Fase 5 | FASE-CONFIDENCE-DISCLOSURE | ✅ Completada | 2026-04-13 | FASE-ASSETS-VALIDACION | MEDIA |
 | Fase 6 | FASE-TEMPLATE-DEBT | ✅ Completada | 2026-04-13 | Paralela | MEDIA |
 | Fase 7 | FASE-CONTENT-SCRUBBER | ✅ Completada | 2026-04-13 | Paralela | MEDIA |
 | Fase 8 | FASE-RELEASE | ⏳ Pendiente | — | Fases 1-7 | ALTA |
@@ -61,14 +61,14 @@
 **Objetivo:** Fix generador llms.txt para usar datos reales
 
 **Tareas:**
-- [ ] Modificar `LLMSTXTGenerator.generate()` para recibir datos enriquecidos
-- [ ] Usar `geo_enriched/llms.txt` como source de verdad si existe
-- [ ] Si `name="Hotel"` y URL vacía → marcar como PENDIENTE_ONBOARDING
-- [ ] No generar con placeholders vacíos
+- [x] Modificar `LLMSTXTGenerator.generate()` para recibir datos enriquecidos
+- [x] Usar `geo_enriched/llms.txt` como source de verdad si existe
+- [x] Si `name="Hotel"` y URL vacía → warning log + PENDIENTE_ONBOARDING
+- [x] No generar con placeholders vacíos
 
 **Criterios de aceptación:**
-- [ ] `llms_txt` contiene nombre real del hotel
-- [ ] Tests pasan
+- [x] `llms_txt` contiene nombre real del hotel
+- [x] Tests pasan (8/8)
 
 ---
 
@@ -77,20 +77,20 @@
 **Objetivo:** Que CADA servicio prometido en la propuesta tenga un asset generado
 
 **Tareas:**
-- [ ] Crear asset `monthly_report` en catálogo + generador
-- [ ] Fix `voice_assistant_guide` — asegurar generación (agregar a pain mapping)
-- [ ] Fix `whatsapp_button` — investigar por qué no se genera, corregir
-- [ ] Crear mapeo `PROPOSAL_SERVICE_TO_ASSET` verificable
-- [ ] Crear gate #9 `proposal_asset_alignment_gate`
-- [ ] Tests para cada asset nuevo/fixed
+- [x] Crear asset `monthly_report` en catálogo + generador
+- [x] Fix `voice_assistant_guide` — asegurar generación (promised_by="always_aeo")
+- [x] Fix `whatsapp_button` — promised_by="always" para generarse siempre
+- [x] Crear mapeo `PROPOSAL_SERVICE_TO_ASSET` verificable
+- [x] Crear gate #9 `proposal_asset_alignment_gate`
+- [x] Tests para cada asset nuevo/fixed
 
 **Criterios de aceptación:**
-- [ ] 7/7 servicios de la propuesta tienen asset generado
-- [ ] `monthly_report` genera plantilla funcional
-- [ ] `voice_assistant_guide` se genera
-- [ ] `whatsapp_button` se genera
-- [ ] Gate 9 integrado en publication_gates
-- [ ] Tests pasan
+- [x] 7/7 servicios de la propuesta tienen asset generado
+- [x] `monthly_report` genera plantilla funcional
+- [x] `voice_assistant_guide` se genera
+- [x] `whatsapp_button` se genera
+- [x] Gate 9 integrado en publication_gates
+- [x] Tests pasan (52/52)
 
 ---
 
@@ -99,14 +99,14 @@
 **Objetivo:** Que la propuesta informe al cliente sobre la calidad de cada asset
 
 **Tareas:**
-- [ ] Agregar sección "Estado de los Entregables" en propuesta template
-- [ ] Generar tabla dinámica desde confidence scores reales
-- [ ] Tests de disclosure
+- [x] Agregar sección "Estado de los Entregables" en propuesta template
+- [x] Generar tabla dinámica desde confidence scores reales
+- [x] Tests de disclosure
 
 **Criterios de aceptación:**
-- [ ] Propuesta incluye tabla con nivel de cada entregable
-- [ ] Tabla refleja confidence real (Completo/Requiere datos/En desarrollo)
-- [ ] Tests pasan
+- [x] Propuesta incluye tabla con nivel de cada entregable
+- [x] Tabla refleja confidence real (Completo/Requiere datos/En desarrollo)
+- [x] Tests pasan (5/5)
 
 ---
 

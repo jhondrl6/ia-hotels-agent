@@ -56,6 +56,14 @@ Le proponemos un plan integral donde **nosotros implementamos todo** — usted n
 
 ---
 
+### 📋 Estado de los Entregables
+
+Cada entregable incluye un nivel de preparación:
+
+${asset_quality_table}
+
+---
+
 ## 📸 Fotos: Lo único que necesitamos de usted
 
 Para que su negocio brillen en Google Maps, necesitamos fotos de calidad. Esto es lo que debe prover:

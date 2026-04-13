@@ -13,6 +13,13 @@
 - `modules/postprocessors/document_quality_gate.py` — Skip self-replacement warnings (PT_TO_ES: old==new). 9 spacing error patterns + `detect_spacing_errors()`. `_check_spacing_errors()` method en gate.
 - `tests/postprocessors/test_document_quality_gate.py` — 9 tests nuevos: 3 self-replacement, 3 spacing detection, 3 gate integration. Total: 28/28 passing.
 
+### FASE-CONFIDENCE-DISCLOSURE (2026-04-13): Transparencia de Calidad en Propuesta
+
+- `modules/commercial_documents/templates/propuesta_v6_template.md` — Nueva sección "Estado de los Entregables" con placeholder `${asset_quality_table}`
+- `modules/commercial_documents/v4_proposal_generator.py` — Nuevo método `_generate_asset_quality_table()` que mapea servicios → assets via `PROPOSAL_SERVICE_TO_ASSET`. Nuevo parámetro `assets_generated`. Umbrales: ≥0.7 Completo, ≥0.4 Requiere datos, <0.4 En desarrollo
+- `main.py` — Conversión `asset_plan` (AssetSpec) a formato dict con mapeo ConfidenceLevel→float
+- `tests/commercial_documents/test_proposal_confidence_disclosure.py` — 5 tests: tabla incluida, confidence real, missing asset, pending, low confidence. Total: 5/5 passing
+
 ### FASE-D: Package & Template Alignment — 4 Pilares
 
 - `modules/analyzers/gap_analyzer.py` — Expandido de 2 gaps (GEO+AEO) a 4 gaps (SEO+GEO+AEO+IAO) con ponderación proporcional
