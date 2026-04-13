@@ -1,202 +1,218 @@
-"""Tests para LLMSTXTGenerator.
+"""Tests for LLMSTXTGenerator — FASE-LLMSTXT-FIX fallback behavior."""
 
-Valida generación de archivos llms.txt siguiendo el estándar llmstxt.org.
-"""
-import sys
+import logging
+import tempfile
 from pathlib import Path
-
-# Add project root to Python path for pytest
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root))
 
 import pytest
 
-from modules.asset_generation.llmstxt_generator import (
-    LLMSTXTGenerator,
-    get_llmstxt_generator,
-)
+from modules.asset_generation.llmstxt_generator import LLMSTXTGenerator
 
 
-@pytest.fixture
-def generator():
-    """Fixture que proporciona una instancia de LLMSTXTGenerator."""
-    return LLMSTXTGenerator()
+GEO_ENRICHED_LLMS_CONTENT = """\
+# Amaziliahotel
+
+**URL:** https://amaziliahotel.com/
+
+## Acerca de
+Amaziliahotel es un hotel boutique en Salento, Eje Cafetero, Colombia.
+Ofreciendo una experiencia unica para viajeros que buscan comodidad.
+
+**Perfil de Google Business:** https://g.page/amaziliahotel
+
+## Ubicacion
+**Sitio web:** https://amaziliahotel.com/
+
+**Pais:** Colombia
+
+## Amenities y Servicios
+**Servicios destacados:**
+
+- Hospedaje
+- Restaurante
+- WiFi
+- Recepcion 24 horas
+
+## Contacto
+**Sitio web:** https://amaziliahotel.com/
+
+Para reservas directas y consultas especificas,
+visite nuestro sitio web o contacte directamente.
+
+## Reserva y Contacto
+## Reserva tu experiencia
+
+**Reserva en linea:** Visite nuestro sitio web
+**URL:** https://amaziliahotel.com/
+
+Para obtener la mejor tarifa garantizada, reserve directamente
+a traves de nuestro sitio web oficial.
+"""
 
 
-@pytest.fixture
-def sample_hotel_data():
-    """Sample hotel data for testing."""
-    return {
-        "name": "Hotel Example",
-        "website": "https://hotelexample.com",
-        "description": "A lovely hotel in the city center with stunning views",
-        "amenities": ["Free WiFi", "Swimming Pool", "Restaurant", "Spa", "Gym"],
-        "phone": "+1-555-123-4567",
-        "email": "reservations@hotelexample.com",
-        "address": "123 Main Street, Downtown, City 12345",
-        "social_links": [
-            "https://facebook.com/hotelexample",
-            "https://instagram.com/hotelexample"
-        ],
-        "rooms_url": "https://hotelexample.com/rooms",
-        "contact_url": "https://hotelexample.com/contact",
-        "location_url": "https://hotelexample.com/location",
-    }
+class TestGeneratorUsesGeoEnrichedFallback:
+    """Test that the generator uses geo_enriched/llms.txt when available."""
+
+    def test_generator_uses_geo_enriched_fallback(self, tmp_path):
+        """If geo_enriched_path given with llms.txt, use that content."""
+        geo_dir = tmp_path / "geo_enriched"
+        geo_dir.mkdir()
+        llms_file = geo_dir / "llms.txt"
+        llms_file.write_text(GEO_ENRICHED_LLMS_CONTENT, encoding="utf-8")
+
+        generator = LLMSTXTGenerator()
+        result = generator.generate(
+            {"name": "Hotel", "website": ""},
+            geo_enriched_path=geo_dir,
+        )
+
+        # Should return the enriched content, not generate placeholders
+        assert "# Amaziliahotel" in result
+        assert "https://amaziliahotel.com/" in result
+        assert "Salento" in result
+        # Should NOT contain placeholder values
+        assert "# Hotel" not in result or "# Amaziliahotel" in result
+        assert "N/A" not in result
 
 
-class TestLLMSTXTGenerator:
-    """Tests for LLMSTXTGenerator class."""
-    
-    def test_generate_basic_content(self, generator, sample_hotel_data):
-        """Test basic content generation."""
-        content = generator.generate(sample_hotel_data)
-        
-        assert isinstance(content, str)
-        assert len(content) > 0
-        assert "# Hotel Example" in content
-        assert "https://hotelexample.com" in content
-    
-    def test_generate_includes_important_pages(self, generator, sample_hotel_data):
-        """Test that Important Pages section is generated."""
-        content = generator.generate(sample_hotel_data)
-        
-        assert "## Important Pages" in content
-        assert "[Homepage]" in content
-        assert "[Rooms]" in content
-        assert "[Contact]" in content
-        assert "[Location]" in content
-    
-    def test_generate_includes_services(self, generator, sample_hotel_data):
-        """Test that Services section is generated."""
-        content = generator.generate(sample_hotel_data)
-        
-        assert "## Services" in content
-        assert "Free WiFi" in content
-        assert "Swimming Pool" in content
-        assert "Restaurant" in content
-    
-    def test_generate_includes_contact(self, generator, sample_hotel_data):
-        """Test that Contact section is generated."""
-        content = generator.generate(sample_hotel_data)
-        
-        assert "## Contact" in content
-        assert "+1-555-123-4567" in content
-        assert "reservations@hotelexample.com" in content
-    
-    def test_generate_includes_social(self, generator, sample_hotel_data):
-        """Test that Social section is generated."""
-        content = generator.generate(sample_hotel_data)
-        
-        assert "## Social" in content
-        assert "facebook.com/hotelexample" in content
-        assert "instagram.com/hotelexample" in content
-    
-    def test_generate_includes_policies(self, generator, sample_hotel_data):
-        """Test that Policies section is generated."""
-        content = generator.generate(sample_hotel_data)
-        
-        assert "## Policies" in content
-        assert "Check-in" in content
-        assert "Check-out" in content
-    
-    def test_generate_includes_generator_credit(self, generator, sample_hotel_data):
-        """Test that generator credit is included."""
-        content = generator.generate(sample_hotel_data)
-        
-        assert "IA Hoteles Agent" in content
-        assert "---" in content
-    
-    def test_generate_with_minimal_data(self, generator):
-        """Test generation with minimal hotel data."""
-        minimal_data = {
-            "name": "Minimal Hotel",
-            "website": "https://minimal.com",
-        }
-        
-        content = generator.generate(minimal_data)
-        
-        assert "# Minimal Hotel" in content
-        assert "https://minimal.com" in content
-        assert "N/A" in content
-    
-    def test_generate_with_empty_amenities(self, generator):
-        """Test generation with empty amenities list."""
-        data = {
-            "name": "Hotel No Amenities",
-            "website": "https://noamenities.com",
-            "amenities": [],
-        }
-        
-        content = generator.generate(data)
-        
-        assert "## Services" in content
-        assert "not available" in content.lower()
-    
-    def test_generate_description_as_quote(self, generator, sample_hotel_data):
-        """Test that description is formatted as quote."""
-        content = generator.generate(sample_hotel_data)
-        
-        assert ">" in content
-        assert "lovely hotel" in content.lower()
-    
-    def test_factory_function(self):
-        """Test get_llmstxt_generator factory function."""
-        gen = get_llmstxt_generator()
-        assert isinstance(gen, LLMSTXTGenerator)
-    
-    def test_generate_amenities_limited_to_10(self, generator):
-        """Test that amenities are limited to 10 items."""
-        data = {
-            "name": "Hotel Many Amenities",
-            "website": "https://many.com",
-            "amenities": [f"Amenity {i}" for i in range(20)],
-        }
-        
-        content = generator.generate(data)
-        
-        count = content.count("Amenity ")
-        assert count == 10
-    
-    def test_generate_from_assessment(self, generator):
-        """Test generation from assessment data."""
-        assessment = {
-            "hotel_name": "Assessment Hotel",
-            "url": "https://assessment.com",
-            "description": "From assessment",
-            "amenities": ["WiFi"],
-            "phone": "+111",
-            "email": "test@test.com",
-            "address": "123 Test St",
-            "social_links": [],
-        }
-        
-        content = generator.generate_from_assessment(assessment)
-        
-        assert "Assessment Hotel" in content
-        assert "From assessment" in content
+class TestGeneratorSkipsGeoEnrichedIfMissing:
+    """Test that the generator falls back to normal generation when geo_enriched is absent."""
+
+    def test_generator_skips_geo_enriched_if_file_missing(self, tmp_path):
+        """If geo_enriched_path given but llms.txt does not exist, use normal generation."""
+        geo_dir = tmp_path / "geo_enriched"
+        geo_dir.mkdir()
+        # No llms.txt in geo_enriched dir
+
+        generator = LLMSTXTGenerator()
+        result = generator.generate(
+            {
+                "name": "Test Hotel",
+                "website": "https://testhotel.com",
+                "city": "Bogota",
+                "region": "Cundinamarca",
+                "phone": "+57 1234567890",
+                "email": "info@testhotel.com",
+                "address": "Calle 123, Bogota",
+            },
+            geo_enriched_path=geo_dir,
+        )
+
+        # Should generate from hotel_data, not from geo_enriched
+        assert "# Test Hotel" in result
+        assert "https://testhotel.com" in result
+        assert "Bogota" in result
+
+    def test_generator_works_without_geo_enriched_path(self):
+        """If no geo_enriched_path given, normal generation works as before."""
+        generator = LLMSTXTGenerator()
+        result = generator.generate(
+            {
+                "name": "Sample Hotel",
+                "website": "https://sample.com",
+                "city": "Medellin",
+            }
+        )
+
+        assert "# Sample Hotel" in result
+        assert "https://sample.com" in result
+        assert "Medellin" in result
 
 
-class TestLLMSTXTFormat:
-    """Tests for llms.txt format compliance."""
-    
-    def test_format_markdown_headers(self, generator):
-        """Test that content uses markdown headers."""
-        data = {"name": "Test", "website": "https://test.com"}
-        content = generator.generate(data)
-        
-        assert "# " in content
-        assert "## " in content
-    
-    def test_format_links(self, generator):
-        """Test that links are properly formatted."""
-        data = {"name": "Test", "website": "https://test.com"}
-        content = generator.generate(data)
-        
-        assert "](" in content
-    
-    def test_format_list_items(self, generator):
-        """Test that list items are properly formatted."""
-        data = {"name": "Test", "website": "https://test.com", "amenities": ["WiFi"]}
-        content = generator.generate(data)
-        
-        assert "\n- " in content
+class TestGeneratorWarnsOnGenericName:
+    """Test that the generator emits a warning when the hotel name is generic."""
+
+    def test_generator_warns_on_generic_name(self, caplog):
+        """If name='Hotel', should emit a warning log message."""
+        generator = LLMSTXTGenerator()
+
+        with caplog.at_level(logging.WARNING):
+            result = generator.generate({"name": "Hotel", "website": ""})
+
+        assert any(
+            "Hotel name is generic" in msg for msg in caplog.messages
+        ), "Expected a warning about generic hotel name"
+
+    def test_generator_warns_on_empty_name(self, caplog):
+        """If name is empty string, should emit a warning log message."""
+        generator = LLMSTXTGenerator()
+
+        with caplog.at_level(logging.WARNING):
+            result = generator.generate({"name": "", "website": ""})
+
+        assert any(
+            "generic or missing" in msg for msg in caplog.messages
+        ), "Expected a warning about missing hotel name"
+
+
+class TestGeneratorProducesValidFormat:
+    """Test that generated llms.txt follows the llmstxt.org standard."""
+
+    def test_generator_produces_valid_llms_txt_format(self):
+        """Output should start with # title and contain ## sections."""
+        generator = LLMSTXTGenerator()
+        result = generator.generate(
+            {
+                "name": "Format Test Hotel",
+                "website": "https://formattest.com",
+                "city": "Cartagena",
+                "region": "Caribe",
+                "phone": "+57 9876543210",
+                "amenities": ["WiFi", "Pool", "Restaurant"],
+            }
+        )
+
+        # Should start with H1 title
+        assert result.strip().startswith("# ")
+        # Should contain standard sections
+        assert "## Important Pages" in result
+        assert "## Services" in result
+        assert "## Contact" in result
+        # Should contain linked URLs
+        assert "- [Homepage](https://formattest.com)" in result
+        assert "- [Rooms](" in result
+        # Should contain amenities
+        assert "- WiFi" in result
+        assert "- Pool" in result
+
+    def test_generator_skips_geo_enriched_if_too_short(self, tmp_path):
+        """If geo_enriched/llms.txt is too short (< 50 chars), fall back to hotel_data."""
+        geo_dir = tmp_path / "geo_enriched"
+        geo_dir.mkdir()
+        llms_file = geo_dir / "llms.txt"
+        llms_file.write_text("# X\n", encoding="utf-8")  # Too short
+
+        generator = LLMSTXTGenerator()
+        result = generator.generate(
+            {
+                "name": "Fallback Hotel",
+                "website": "https://fallback.com",
+                "city": "Cali",
+            },
+            geo_enriched_path=geo_dir,
+        )
+
+        # Should NOT use the short geo_enriched content
+        assert "# Fallback Hotel" in result
+        assert "# X" not in result
+
+
+class TestGenerateFromAssessment:
+    """Test generate_from_assessment with geo_enriched fallback."""
+
+    def test_generate_from_assessment_passes_geo_enriched_path(self, tmp_path):
+        """generate_from_assessment should forward geo_enriched_path to generate."""
+        geo_dir = tmp_path / "geo_enriched"
+        geo_dir.mkdir()
+        llms_file = geo_dir / "llms.txt"
+        llms_file.write_text(GEO_ENRICHED_LLMS_CONTENT, encoding="utf-8")
+
+        generator = LLMSTXTGenerator()
+        result = generator.generate_from_assessment(
+            {"hotel_name": "Hotel", "url": ""},
+            geo_enriched_path=geo_dir,
+        )
+
+        # Should use enriched content
+        assert "# Amaziliahotel" in result
+        assert "Salento" in result

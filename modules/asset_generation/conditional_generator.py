@@ -135,7 +135,7 @@ class ConditionalGenerator:
         is_warning = preflight_report.overall_status == PreflightStatus.WARNING
         
         try:
-            content = self._generate_content(asset_type, validated_data, hotel_name)
+            content = self._generate_content(asset_type, validated_data, hotel_name, hotel_id)
         except Exception as e:
             return {
                 "success": False,
@@ -337,7 +337,8 @@ class ConditionalGenerator:
         self,
         asset_type: str,
         validated_data: Dict,
-        hotel_name: str
+        hotel_name: str,
+        hotel_id: str = ""
     ) -> str:
         """Generate content based on asset type.
         
@@ -345,6 +346,7 @@ class ConditionalGenerator:
             asset_type: Type of asset to generate
             validated_data: Validated data for generation
             hotel_name: Name of the hotel
+            hotel_id: Unique hotel identifier (used for geo_enriched fallback)
             
         Returns:
             Generated content as string
@@ -430,7 +432,12 @@ class ConditionalGenerator:
             generator = LLMSTXTGenerator()
             hotel_data = validated_data.get("hotel_data", {})
             data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
-            content = generator.generate(data if isinstance(data, dict) else {})
+            # FASE-LLMSTXT-FIX: Pass geo_enriched_path as fallback
+            geo_enriched_path = self.output_dir / hotel_id / "geo_enriched" if hotel_id else None
+            content = generator.generate(
+                data if isinstance(data, dict) else {},
+                geo_enriched_path=geo_enriched_path
+            )
         
         elif asset_type == "faq_conversational":
             faqs_data = validated_data.get("faqs", [])
@@ -446,6 +453,13 @@ class ConditionalGenerator:
             hotel_data = validated_data.get("hotel_data", validated_data)
             hotel_dict = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
             content = self._generate_voice_assistant_guide(hotel_dict if isinstance(hotel_dict, dict) else {})
+
+        elif asset_type == "monthly_report":
+            from .monthly_report_generator import MonthlyReportGenerator
+            generator = MonthlyReportGenerator()
+            hotel_data = validated_data.get("hotel_data", validated_data)
+            hotel_dict = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
+            content = generator.generate(hotel_dict if isinstance(hotel_dict, dict) else {})
 
         elif asset_type == "ssl_guide":
             from modules.delivery.generators.ssl_guide_gen import SSLGuideGenerator

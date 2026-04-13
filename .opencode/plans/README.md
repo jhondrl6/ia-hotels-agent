@@ -1,94 +1,123 @@
-# Plan: Refactor 4 Pilares SEO/GEO/AEO/IAO
+# Plan: Fix geo_enriched → Delivery Bridge + Assets Completos
 
-**Proyecto**: AEO-IAO-PROGRESSION-REFACTOR
-**Fecha**: 2026-04-12
-**Contexto**: `.opencode/plans/context/AEO-IAO-PROGRESSION-REFACTOR.md`
-**Workflow**: `.agents/workflows/phased_project_executor.md`
-**Estado**: PREPARACIÓN COMPLETA — Listo para implementación
+**Estado**: Planificación completada — Listo para implementación
+**Fases**: 8 (1 raíz + 3 específicas + 2 gaps + 1 release + 1 docs)
+**Prioridad**: ALTA (impacta calidad del deliverable al cliente — captación y crecimiento)
 
 ---
 
-## Resumen
+## Resumen del Problema
 
-Refactor de la arquitectura de scores de visibilidad del sistema iah-cli.
-El código actual trata GEO, AEO, SEO e IAO como pilares paralelos independientes con sistema dual de scoring.
-El refactor redistribuye CHECKLIST_IAO a 4 pilares coherentes con progresión SEO→AEO→IAO y GEO lateral.
+El pipeline de `iah-cli` genera assets de delivery (hotel_schema, llms_txt, etc.) con **datos placeholder** (confidence 0.5, nombre "Hotel", URL vacía).
+Simultáneamente, el **GEO Flow** genera `geo_enriched/` con los **mismos assets** pero con **datos reales** (nombre del hotel, URL, amenities).
+**El delivery package NUNCA consume geo_enriched/** — el cliente recibe placeholders.
 
-**Arquitectura correcta:**
-```
-SEO (base) → AEO (construye sobre SEO) → IAO (construye sobre AEO)
-  │              │                           │
-  └──── GEO (lateral, complementario) ───────┘
-```
+**Agravante**: La propuesta comercial promete 7 servicios con ✅, pero 3 de ellos NO generan asset:
+- "Busqueda por Voz (AEO)" → voice_assistant_guide no se genera
+- "Boton de WhatsApp" → whatsapp_button no se genera
+- "Informe Mensual" → no existe en catálogo
+
+**Si no entregamos lo que prometemos, no captamos clientes y no crecemos.**
+
+---
+
+## Fases
+
+| # | ID | Nombre | Deps | Estado | Prioridad |
+|---|-----|--------|------|--------|-----------|
+| 1 | FASE-GEO-BRIDGE | geo_enriched → asset enrichment bridge | Ninguna | ⏳ Pendiente | ALTA |
+| 2 | FASE-CONF-GATE | Asset confidence gate en publication | GEO-BRIDGE | ⏳ Pendiente | ALTA |
+| 3 | FASE-LLMSTXT-FIX | Fix llms.txt generator + fallback | GEO-BRIDGE | ⏳ Pendiente | ALTA |
+| 4 | FASE-ASSETS-VALIDACION | Propuesta → Assets: 7/7 servicios con asset | GEO-BRIDGE | ⏳ Pendiente | ALTA |
+| 5 | FASE-CONFIDENCE-DISCLOSURE | Transparencia calidad assets en propuesta | ASSETS-VALID | ⏳ Pendiente | MEDIA |
+| 6 | FASE-TEMPLATE-DEBT | Sincronizar template embebido vs V6 + typo | Paralela | ⏳ Pendiente | MEDIA |
+| 7 | FASE-CONTENT-SCRUBBER | Fix self-replacement + spacing errors | Paralela | ⏳ Pendiente | MEDIA |
+| 8 | FASE-RELEASE | v4.29.0 release + validación completa | 1-7 | ⏳ Pendiente | ALTA |
 
 ---
 
 ## Archivos del Plan
 
-| Archivo | Descripción |
-|---------|-------------|
-| `context/AEO-IAO-PROGRESSION-REFACTOR.md` | Contexto completo del refactor (problema, arquitectura, APIs, decisiones) |
-| `05-prompt-FASE-A.md` | Score Redistribution (base, sin dependencias) |
-| `05-prompt-FASE-B.md` | AEO Real Measurement + SerpAPI |
-| `05-prompt-FASE-C.md` | IAO Restoration + LLM Mention Checker |
-| `05-prompt-FASE-D.md` | Package & Template Alignment |
-| `05-prompt-FASE-E.md` | Voice Readiness Proxy |
-| `05-prompt-FASE-F.md` | Documentation & Validation |
-| `06-checklist-implementacion.md` | Checklist maestro (58 items) |
-| `09-documentacion-post-proyecto.md` | Documentación incremental |
-| `dependencias-fases.md` | Diagrama dependencias + tabla conflictos |
-| `README.md` | Este archivo |
-
----
-
-## Progreso
-
-| Fase | Nombre | Dependencias | Estado |
-|------|--------|-------------|--------|
-| FASE-A | Score Redistribution | — | ⏳ Pendiente |
-| FASE-B | AEO Real Measurement | FASE-A | ⏳ Pendiente |
-| FASE-C | IAO Restoration + LLM Checker | FASE-B | ⏳ Pendiente |
-| FASE-D | Package & Template Alignment | FASE-C | ⏳ Pendiente |
-| FASE-E | Voice Readiness Proxy | FASE-A | ⏳ Pendiente |
-| FASE-F | Documentation & Validation | TODAS | ⏳ Pendiente |
-
----
-
-## Reglas del Proyecto
-
-1. **Una fase por sesión** — Sin excepciones
-2. **Prompts son auto-contenidos** — Cada prompt tiene todo el contexto necesario
-3. **Costo API explícito** — Cada componente declara su costo mensual
-4. **No romper outputs existentes** — Backward compatibility obligatoria
-5. **No medición directa de voz** — Proxy measurement únicamente
-6. **OpenAI siempre via OpenRouter** — Nunca SDK directo
-7. **Python: `./venv/Scripts/python.exe`** — No python3, no .venv
-
----
-
-## Cómo Ejecutar
-
-Para ejecutar una fase, iniciar una nueva sesión y cargar el prompt correspondiente:
-
 ```
-Lee y ejecuta: .opencode/plans/05-prompt-FASE-A.md
-```
-
-Después de completar, iniciar nueva sesión para la siguiente fase:
-```
-Lee y ejecuta: .opencode/plans/05-prompt-FASE-B.md
+.opencode/plans/
+├── README.md                                    # Este archivo
+├── dependencias-fases.md                         # Diagrama de deps + conflictos
+├── 06-checklist-implementacion.md                # Checklist maestro
+├── 09-documentacion-post-proyecto.md             # Docs incrementales
+├── 05-prompt-inicio-sesion-fase-GEO-BRIDGE.md
+├── 05-prompt-inicio-sesion-fase-CONF-GATE.md
+├── 05-prompt-inicio-sesion-fase-LLMSTXT-FIX.md
+├── 05-prompt-inicio-sesion-fase-ASSETS-VALIDACION.md    # NUEVA
+├── 05-prompt-inicio-sesion-fase-CONFIDENCE-DISCLOSURE.md # NUEVA
+├── 05-prompt-inicio-sesion-fase-TEMPLATE-DEBT.md
+└── 05-prompt-inicio-sesion-fase-CONTENT-SCRUBBER.md
 ```
 
 ---
 
-## Métricas Objetivo
+## Uso
 
-| Métrica | Antes | Después |
-|---------|-------|---------|
-| Pilares de scoring | 3 (GEO/AEO/SEO) | 4 (SEO/GEO/AEO/IAO) |
-| Sistema de scoring | Dual (CHECKLIST + 4-Pilar) | Unificado (4 checklists) |
-| AEO mide | Infraestructura (schema) | Resultado (snippets) |
-| IAO | Eliminado | Restaurado con LLM Checker |
-| Voice Readiness | No existe | Proxy score |
-| Benchmarks regionales | 3 scores | 4 scores |
-| Costo API/hotel/mes | $0 | $0.20-0.50 USD |
+1. **Sesión de preparación** (esta): Generar todos los prompts ✅
+2. **Sesión por fase**: Ejecutar cada prompt en su propia sesión
+3. **Post-fase**: Ejecutar `log_phase_completion.py` + actualizar docs
+4. **FASE-RELEASE**: Ejecutar v4complete y verificar TODOS los criterios
+
+---
+
+## Criterio de Éxito Global
+
+Después de FASE-RELEASE, al ejecutar `v4complete --url https://amaziliahotel.com/`:
+
+### Presencia de Assets (no faltar)
+- [ ] Los 10+ assets del catálogo se generan (incluyendo monthly_report, voice_assistant_guide, whatsapp_button)
+- [ ] 7/7 servicios de la propuesta tienen asset correspondiente
+
+### Efectividad de Assets (materializar soluciones)
+- [ ] `hotel_schema` contiene nombre real del hotel (no "Hotel")
+- [ ] `llms_txt` contiene URL real y datos de contacto
+- [ ] `whatsapp_button` tiene número de teléfono o marcador claro de pendiente
+- [ ] `monthly_report` tiene plantilla funcional con KPIs definidos
+- [ ] `voice_assistant_guide` tiene checklist por plataforma (Google, Apple, Alexa)
+
+### Calidad y Transparencia
+- [ ] Assets con confidence >= 0.7 (post-bridge enrichment)
+- [ ] Propuesta incluye tabla de calidad de assets (nivel de cada entregable)
+- [ ] Publication gates = 9 (incluye asset_confidence + proposal_alignment)
+
+### Integridad
+- [ ] 385+ tests pasando
+- [ ] Cadena financiera intacta
+
+---
+
+## Monitoreo de APIs Externas — OpenRouter
+
+Durante la ejecución de v4complete, OpenRouter puede activarse como **fallback de Hermes** si MiniMax falla (códigos 429/503/529).
+
+### Qué Rastrear
+
+| Indicador | Método | Umbral de Alerta |
+|-----------|--------|------------------|
+| Fallback activations | Logs de Hermes (`~/.hermes/logs/`) | > 0 por ejecución |
+| Modelo usado en fallback | Log de provider switch | Cualquier uso = investigar |
+| Tokens consumidos (fallback) | OpenRouter dashboard | > $0.10 por ejecución = optimizar |
+| Latencia adicional | Time delta provider switch | > 5s adicional = degradación |
+
+### Cómo Verificar Después de v4complete
+
+```bash
+# 1. Buscar activaciones de fallback en logs
+grep -i "fallback\|openrouter\|provider.*switch" ~/.hermes/logs/*.log | tail -50
+
+# 2. Verificar costo en OpenRouter dashboard
+# https://openrouter.ai/analytics
+
+# 3. Checkpoint: si fallback == 0, MiniMax funcionó correctamente
+```
+
+### Integración en FASE-RELEASE
+
+Agregar a la checklist de validación final:
+- [ ] **OpenRouter fallback NO se activó** (MiniMax funcionó bien)
+- [ ] **Si fallback se activó**: documentar qué modelo se usó y costo estimado
+- [ ] **Si fallback se activó >3 veces**: abrir issue de estabilidad de MiniMax

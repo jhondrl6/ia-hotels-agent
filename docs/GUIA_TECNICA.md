@@ -4,6 +4,70 @@
 ||**Version:** 4.28.0 (4 Pilares Alignment + Voice Readiness Proxy)
 ||**Audiencia:** Desarrolladores, DevOps, Contribuidores
 
+## Notas de Cambios — v4.28.0 (FASE-LLMSTXT-FIX + FASE-ASSETS-VALIDACION)
+
+**Fecha:** 13 Abril 2026
+**Fases:** FASE-LLMSTXT-FIX + FASE-ASSETS-VALIDACION (ejecutadas en paralelo)
+
+### Resumen
+
+Dos fases complementarias que cierran desconexiones críticas del pipeline de generación de assets.
+
+**FASE-LLMSTXT-FIX** resuelve D3 del AUDIT: el generador de llms.txt producía placeholders vacíos ("Hotel", URL "", "N/A") a pesar de que `geo_enriched/llms.txt` ya contenía datos reales. El fix agrega una cadena de fallback: generador → geo_enriched → hotel_data del audit → PENDIENTE_ONBOARDING. Nunca placeholders engañosos.
+
+**FASE-ASSETS-VALIDACION** resuelve D4 del AUDIT: 3 de 7 servicios prometidos en la propuesta comercial no generaban asset (voice_assistant_guide, whatsapp_button, monthly_report). El cliente pagaba por servicios que no recibía. Ahora 7/7 servicios tienen asset garantizado.
+
+### Módulos Afectados
+
+#### 1. modules/asset_generation/llmstxt_generator.py
+- Nuevo parámetro `geo_enriched_path: Optional[Path]` en `generate()` y `generate_from_assessment()`
+- Si `geo_enriched_path / "llms.txt"` existe y tiene >50 chars → retorna ese contenido directamente
+- Warning log cuando hotel name es genérico ("Hotel") o vacío
+- **Cadena de fallback**: geo_enriched → GEO bridge (post-generación) → hotel_data → PENDIENTE_ONBOARDING
+
+#### 2. modules/asset_generation/conditional_generator.py
+- `_generate_content()` acepta `hotel_id: str = ""` (backward compat)
+- En branch `llms_txt`: construye `geo_enriched_path = output_dir / hotel_id / "geo_enriched"` y pasa al generador
+- Nuevo handler de contenido para `monthly_report`
+
+#### 3. modules/asset_generation/monthly_report_generator.py (NUEVO)
+- Generador de informe mensual con KPIs de seguimiento
+- Contenido: hotel + período, KPIs monitoreados (tráfico web, GBP views, reservas directas, WhatsApp clicks), checklist acciones mensuales, "Próximos pasos" basado en assets entregados
+- No requiere datos reales — plantilla de seguimiento para el cliente
+
+#### 4. modules/asset_generation/proposal_asset_alignment.py (NUEVO)
+- Verificador propuesta→asset con mapeo de 7 servicios
+- `verify_proposal_asset_alignment()`: retorna AlignmentReport (aligned/missing/low_quality)
+- `PROPOSAL_SERVICE_TO_ASSET`: fuente de verdad (7 mapeos servicio → asset)
+
+#### 5. modules/asset_generation/asset_catalog.py
+- Nuevo entry `monthly_report` (promised_by=["always"])
+- `whatsapp_button.promised_by` += "always" (se genera siempre)
+- `voice_assistant_guide.promised_by` += "always_aeo" (se genera siempre que propuesta promete AEO)
+
+#### 6. modules/quality_gates/publication_gates.py
+- Gate 9: `proposal_asset_alignment_gate` (WARNING mode)
+- Verifica que los 7 servicios de la propuesta tengan assets generados
+- Total gates: 8 → 9
+
+### Tests
+- test_llmstxt_generator.py: 8 tests (fallback, warnings, backward compat)
+- test_monthly_report.py: 12 tests
+- test_voice_guide_generation.py: 9 tests
+- test_whatsapp_button.py: 11 tests
+- test_proposal_alignment.py: 13 tests
+- test_proposal_alignment_gate.py: 7 tests
+- **Total nuevos: 60 tests, 0 regresiones**
+
+### Backwards Compatibility
+- `generate(hotel_data)` sin `geo_enriched_path` funciona igual (default None)
+- `generate_from_assessment` forwarda el parámetro opcional
+- Gate 9 es WARNING (no bloquea publicación)
+- Assets nuevos funcionan sin datos de onboarding (plantillas genéricas)
+- `proposed_by` es aditivo — no altera lógica existente
+
+---
+
 ## Notas de Cambios — v4.29.0: geo_enriched Bridge (EN PROGRESO)
 
 **Fecha:** 13 Abril 2026

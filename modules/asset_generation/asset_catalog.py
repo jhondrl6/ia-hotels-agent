@@ -60,7 +60,7 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_basic_whatsapp",
         block_on_failure=False,  # NEVER_BLOCK: generar botón básico aunque falte WhatsApp
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["no_whatsapp_visible", "whatsapp_conflict"]  # FASE-H-02: Added whatsapp_conflict
+        promised_by=["no_whatsapp_visible", "whatsapp_conflict", "always"]  # FASE-ASSETS-VALIDACION: always
     ),
     "whatsapp_conflict_guide": AssetCatalogEntry(
         asset_type="whatsapp_conflict_guide",
@@ -216,7 +216,7 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_voice_guide",
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
-        promised_by=[]
+        promised_by=["low_voice_readiness", "always_aeo"]  # FASE-ASSETS-VALIDACION: always for AEO
     ),
     # === IAO ASSETS (GAP-IAO-01-02-C) ===
     "ssl_guide": AssetCatalogEntry(
@@ -308,6 +308,18 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
         promised_by=[]
+    ),
+    # FASE-ASSETS-VALIDACION: Monthly report - always generated
+    "monthly_report": AssetCatalogEntry(
+        asset_type="monthly_report",
+        template="monthly_report_template.md",
+        output_name="{prefix}informe_mensual{suffix}.md",
+        required_field="hotel_data",
+        required_confidence=0.4,
+        fallback="generate_basic_monthly_report",
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=["always"]  # SIEMPRE generar - la propuesta SIEMPRE lo promete
     ),
 }
 

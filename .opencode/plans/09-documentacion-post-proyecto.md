@@ -72,7 +72,7 @@ El pipeline de iah-cli generaba assets de delivery con datos placeholder (confid
 | Servicios prometidos con asset | 4/7 (57%) | 7/7 (100%) | +3 |
 | Assets placeholders | 2 (hotel_schema, llms_txt) | 0 | -2 |
 | Confidence promedio assets | 0.50 | TBD | +0.35 |
-| Publication gates | 7 | 8 (incluye confidence) | +1 |
+|| Publication gates | 7 | 9 (incluye confidence + alignment) | +2 |
 | Self-replacement warnings | 3 | 0 | -3 |
 | Typos de espaciado | 1 ("debeproveer") | 0 | -1 |
 | Líneas dead code eliminadas | ~150 (template embebido + package_name) | 0 | -150 |
@@ -125,16 +125,16 @@ grep -i "fallback\|openrouter\|provider.*switch" ~/.hermes/logs/*.log 2>/dev/nul
 - [x] Nota técnica: "asset_confidence_gate" ✅ (gate #8 conservative: WARNING, no bloquea)
 - [x] FASE-TEMPLATE-DEBT: Sin cambios arquitectónicos (eliminación dead code + typo fix) ✅
 - [x] FASE-CONTENT-SCRUBBER: Sin cambios arquitectónicos (fix self-replacement + spacing detection) ✅
-- [ ] Nota técnica: "proposal_asset_alignment_gate"
+- [x] Nota técnica: "proposal_asset_alignment_gate" ✅ (FASE-ASSETS-VALIDACION)
 - [ ] Nota técnica: "llms.txt fallback"
-- [ ] Nota técnica: "monthly_report generator"
+- [x] Nota técnica: "monthly_report generator" ✅ (FASE-ASSETS-VALIDACION)
 - [ ] Nota técnica: "confidence disclosure en propuesta"
 
 ### REGISTRY.md
 - [x] FASE-GEO-BRIDGE ✅ (2026-04-13)
 - [x] FASE-CONF-GATE ✅ (2026-04-13)
 - [ ] FASE-LLMSTXT-FIX ✅
-- [ ] FASE-ASSETS-VALIDACION ✅
+- [x] FASE-ASSETS-VALIDACION ✅ (2026-04-13)
 - [ ] FASE-CONFIDENCE-DISCLOSURE ✅
 - [x] FASE-TEMPLATE-DEBT ✅ (2026-04-13)
 - [x] FASE-CONTENT-SCRUBBER ✅ (2026-04-13) — sin cambios arquitectónicos

@@ -31,16 +31,16 @@
 │                                               │ ❌ confidence 0.5    │       │
 │                                               └─────────────────────┘       │
 │                                                                             │
-│  RUPTURA 2: propuesta → assets (D4)                                         │
+│  RUPTURA 2: propuesta → assets (D4) — RESUELTA ✅                               │
 │  ┌─────────────────────────┐    ┌──────────────────────────────────┐       │
-│  │ PROPUESTA (7 servicios) │    │ ASSETS GENERADOS (10)            │       │
+│  │ PROPUESTA (7 servicios) │    │ ASSETS GENERADOS (7/7)           │       │
 │  │ ✅ Google Maps           │───▶│ geo_playbook ✅                   │       │
 │  │ ✅ ChatGPT               │───▶│ indirect_traffic_opt. ✅          │       │
-│  │ ✅ Busqueda por Voz      │───▶│ voice_assistant_guide ❌ MISSING  │       │
+│  │ ✅ Busqueda por Voz      │───▶│ voice_assistant_guide ✅          │       │
 │  │ ✅ SEO Local             │───▶│ optimization_guide ✅             │       │
-│  │ ✅ Boton WhatsApp        │───▶│ whatsapp_button ❌ MISSING        │       │
-│  │ ✅ Datos Estructurados   │───▶│ hotel_schema ⚠️ placeholder       │       │
-│  │ ✅ Informe Mensual       │───▶│ (no existe) ❌ MISSING            │       │
+│  │ ✅ Boton WhatsApp        │───▶│ whatsapp_button ✅                │       │
+│  │ ✅ Datos Estructurados   │───▶│ hotel_schema ✅                   │       │
+│  │ ✅ Informe Mensual       │───▶│ monthly_report ✅ (NEW)           │       │
 │  └─────────────────────────┘    └──────────────────────────────────┘       │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -55,7 +55,7 @@
 | 1 | FASE-GEO-BRIDGE | geo_enriched → asset enrichment bridge | Ninguna (root fix) | ALTA | ✅ 2026-04-13 |
 | 2 | FASE-CONF-GATE | Asset confidence gate en publication | FASE-GEO-BRIDGE | ALTA | ✅ 2026-04-13 |
 | 3 | FASE-LLMSTXT-FIX | Fix llms.txt generator + fallback | FASE-GEO-BRIDGE | ALTA |
-| 4 | FASE-ASSETS-VALIDACION | Propuesta → Assets: 7/7 servicios | FASE-GEO-BRIDGE | ALTA |
+|| 4 | FASE-ASSETS-VALIDACION | Propuesta → Assets: 7/7 servicios | FASE-GEO-BRIDGE | ALTA | ✅ 2026-04-13 |
 | 5 | FASE-CONFIDENCE-DISCLOSURE | Transparencia calidad en propuesta | FASE-ASSETS-VALIDACION | MEDIA |
 | 6 | FASE-TEMPLATE-DEBT | Sincronizar embebido vs V6 + typo | Ninguna | MEDIA | ✅ 2026-04-13 |
 | 7 | FASE-CONTENT-SCRUBBER | Fix self-replacement + spacing | Ninguna | MEDIA | ✅ 2026-04-13 |

@@ -142,6 +142,7 @@ class PublicationGatesOrchestrator:
             "ethics": self._ethics_gate,
             "content_quality": self._content_quality_gate,
             "asset_confidence": self._asset_confidence_gate,
+            "proposal_asset_alignment": self._proposal_asset_alignment_gate,
         }
         self.ethics_gate = EthicsGate()
         self.content_quality_gate = DocumentQualityGate()
@@ -720,7 +721,68 @@ class PublicationGatesOrchestrator:
         )
     
     # Helper methods for extracting data from assessment
-    
+
+    def _proposal_asset_alignment_gate(self, assessment: Dict[str, Any]) -> PublicationGateResult:
+        """
+        Gate 9: Proposal-Asset Alignment Check
+
+        Verifies that every service promised in the commercial proposal
+        has a corresponding generated asset. Missing assets mean the client
+        is paying for something they don't receive.
+
+        Status: WARNING (not blocking) if assets are missing.
+        Threshold: All 7 promised services should have assets.
+
+        Args:
+            assessment: Assessment dictionary with generated_assets and/or proposal_services
+
+        Returns:
+            PublicationGateResult with status WARNING if missing assets
+        """
+        gate_name = "proposal_asset_alignment"
+
+        from modules.asset_generation.proposal_asset_alignment import (
+            verify_proposal_asset_alignment,
+            ALL_PROMISED_SERVICES,
+        )
+
+        generated_assets = assessment.get("generated_assets", [])
+        proposal_services = assessment.get("proposal_services", ALL_PROMISED_SERVICES)
+
+        report = verify_proposal_asset_alignment(
+            proposal_services=proposal_services,
+            generated_assets=generated_assets,
+        )
+
+        if report.all_aligned:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,
+                status=GateStatus.PASSED,
+                message=f"All {report.total_services} promised services have corresponding assets (7/7)",
+                value=report.alignment_percentage,
+                suggestion="",
+                details=report.to_dict(),
+            )
+
+        missing_names = [s.service_name for s in report.missing]
+        return PublicationGateResult(
+            gate_name=gate_name,
+            passed=True,  # WARNING, not blocking — warns but doesn't block publication
+            status=GateStatus.WARNING,
+            message=(
+                f"{len(report.missing)} promised service(s) missing assets: "
+                f"{', '.join(missing_names)}"
+            ),
+            value=report.alignment_percentage,
+            suggestion=(
+                "Review asset generation pipeline to ensure all promised services "
+                "produce deliverables. The following services lack assets: "
+                f"{', '.join(missing_names)}"
+            ),
+            details=report.to_dict(),
+        )
+
     def _extract_conflicts(self, assessment: Dict[str, Any]) -> List[Dict]:
         """Extract conflicts list from assessment."""
         # Try different paths where conflicts might be stored

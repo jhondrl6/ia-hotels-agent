@@ -62,6 +62,33 @@ Fila redundante "Visibilidad Digital (Global)" eliminada de la tabla de diagnós
 - **GUIA_TECNICA.md** - Nota tecnica agregada: progresion 4 pilares, CHECKLIST redistribuido, VoiceReadinessProxy, gap_analyzer modelo_pilares.
 - **docs/contributing/REGISTRY.md** - Entrada FASE-DOCS-01 registrada via log_phase_completion.py.
 
+### FASE-LLMSTXT-FIX (2026-04-13): Fix llms.txt Generator — Fallback a geo_enriched
+
+- `modules/asset_generation/llmstxt_generator.py` — Parámetro `geo_enriched_path: Optional[Path]` en `generate()`. Si geo_enriched/llms.txt existe (>50 chars), retorna ese contenido directamente. Warning cuando hotel name es genérico ("Hotel") o vacío.
+- `modules/asset_generation/conditional_generator.py` — `_generate_content()` acepta `hotel_id`. Construye `geo_enriched_path = output_dir / hotel_id / "geo_enriched"` y lo pasa al generador.
+- `tests/asset_generation/test_llmstxt_generator.py` — **NUEVO** 8 tests: fallback usado, fallback ignorado si archivo missing, fallback ignorado si <50 chars, warning genérico, warning vacío, formato válido llmstxt.org, backward compat sin parámetro, forwarding desde generate_from_assessment.
+- **Problema resuelto**: D3 del AUDIT — llms.txt generaba placeholders vacíos ("Hotel", URL "", "N/A") a pesar de que geo_enriched/llms.txt ya contenía datos reales.
+- **Cadena de fallback**: Generador lee geo_enriched → GEO bridge (post-generación) → hotel_data del audit → PENDIENTE_ONBOARDING. Nunca placeholders engañosos.
+
+### FASE-ASSETS-VALIDACION (2026-04-13): Propuesta → Assets — Cero Desconexiones
+
+- `modules/asset_generation/monthly_report_generator.py` — **NUEVO** generador de informe mensual con KPIs de seguimiento (tráfico web, GBP views, reservas directas, WhatsApp clicks), checklist acciones mensuales, disclaimer GA4/GSC.
+- `modules/asset_generation/proposal_asset_alignment.py` — **NUEVO** verificador propuesta→asset con mapeo de 7 servicios. `verify_proposal_asset_alignment()` retorna AlignmentReport (aligned/missing/low_quality).
+- `modules/asset_generation/asset_catalog.py` — Nuevo entry `monthly_report` (promised_by=["always"]). `whatsapp_button.promised_by` += "always". `voice_assistant_guide.promised_by` += "always_aeo".
+- `modules/asset_generation/conditional_generator.py` — Handler de generación de contenido para monthly_report.
+- `modules/quality_gates/publication_gates.py` — Gate 9: `proposal_asset_alignment_gate` (WARNING mode). Verifica 7/7 servicios con asset.
+- `tests/asset_generation/test_monthly_report.py` — **NUEVO** 12 tests
+- `tests/asset_generation/test_voice_guide_generation.py` — **NUEVO** 9 tests
+- `tests/asset_generation/test_whatsapp_button.py` — **NUEVO** 11 tests
+- `tests/asset_generation/test_proposal_alignment.py` — **NUEVO** 13 tests
+- `tests/quality_gates/test_proposal_alignment_gate.py` — **NUEVO** 7 tests
+- **Problema resuelto**: D4 del AUDIT — 3/7 servicios prometidos NO generaban asset (voice_assistant_guide, whatsapp_button, monthly_report). Cliente pagaba por servicios que no recibía.
+- **Resultado**: 7/7 servicios con asset garantizado. Servicios con asset: 3/7 → 7/7.
+
+### Tests
+- 60 tests nuevos pasando (8 LLMSTXT-FIX + 52 ASSETS-VALIDACION)
+- 0 regresiones
+
 ## [4.27.0] - 2026-04-11
 
 ### Motor Financiero Verificable — Opción C
