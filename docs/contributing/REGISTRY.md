@@ -2695,6 +2695,27 @@ _Ninguno_
 ---
 
 
+## FASE-TEMPLATE-DEBT - 2026-04-13
+**Descripcion:** Eliminacion de template embebido dead code (~150 lineas) + fix typo debeproveer + eliminacion package_name dead code
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (28/28)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown

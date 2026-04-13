@@ -171,9 +171,8 @@ def calcular_score_global(seo: int, geo: int, aeo: int, iao: int) -> int:
 
 
 def calcular_cumplimiento(elementos: dict) -> int:
-    """
-    DEPRECATED: Usar calcular_score_global(calcular_score_seo(...), ...) en su lugar.
-    Calcula score de cumplimiento del CHECKLIST_IAO (0-100).
+    """Calcula score de cumplimiento del CHECKLIST_IAO (0-100).
+    Deprecated: ver _extraer_elementos_de_audit() para la extraccion de elementos.
     DE LA KB: [SECTION:SCORING_ALGORITHM]
 
     Args:
@@ -347,157 +346,11 @@ class V4DiagnosticGenerator:
             with open(self.template_path, 'r', encoding='utf-8') as f:
                 return f.read()
         else:
-            # Return default template if file doesn't exist
-            return self._get_default_template()
-    
-    def _get_default_template(self) -> str:
-        """Get the default template content."""
-        return """---
-generated_at: ${generated_at}
-version: ${version}
-hotel_id: ${hotel_id}
-coherence_score: ${coherence_score}
-document_type: DIAGNOSTICO_V4
-generator: IA_Hoteles_v4
----
-
-# 📊 DIAGNÓSTICO Y OPORTUNIDAD
-## ${hotel_name}
-
-**URL:** ${hotel_url}  
-**Fecha de generación:** ${generated_at}  
-**Versión del sistema:** ${version}  
-**Coherence Score:** ${coherence_score}%
-
----
-
-## 📍 PARTE 1: ¿QUÉ ESTÁ PASANDO EN EL EJE CAFETERO?
-
-### El Cambio en la Industria Hotelera (2024-2025)
-**Antes:** Huésped busca en Google → Click en web → Reserva  
-**Ahora:** Huésped pregunta a ChatGPT → **Si no está, pierde la reserva**
-
-### Los Nuevos "Gerentes Digitales"
-1. **ChatGPT** → 65% de viajeros jóvenes
-2. **Google Maps** → 73% de búsquedas "cerca de mí"
-3. **Perplexity, Gemini** → Crecimiento 300%
-
----
-
-## [CERTIFIED] DATOS VALIDADOS
-
-Los siguientes datos han sido validados cruzando múltiples fuentes (Web, Google Business Profile, Input del hotelero, Benchmarks regionales):
-
-| Dato | Valor | Confianza | Fuentes |
-|------|-------|-----------|---------|
-${validated_data_table}
-
-**Leyenda de Confianza:**
-- 🟢 **VERIFIED**: 2+ fuentes coinciden (≥90% match)
-- 🟡 **ESTIMATED**: 1 fuente disponible o discrepancia menor
-- 🔴 **CONFLICT**: Fuentes contradicen - requiere revisión
-
----
-
-## 📊 SU POSICIÓN HOY vs PROMEDIO REGIONAL
-
-| Indicador | Su Hotel | Promedio Regional | Estado |
-|-----------|----------|-------------------|--------|
-| Visibilidad Google Maps (GEO) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
-| Posicion Competitiva (vs cercanos) | ${activity_score}/100 | ${competitive_regional_avg}/100 | ${activity_status} |
-| Web Score (SEO) | ${web_score}/100 | ${seo_regional_avg}/100 | ${web_status} |
-| Infraestructura AEO (Schema) | ${aeo_score}/100 | ${aeo_regional_avg}/100 | ${aeo_status} |
-
----
-
-## [TARGET] IMPACTO FINANCIERO CERTIFICADO
-
-### ${empathy_message}
-
-<div style="background: #f0f8ff; padding: 20px; border-radius: 8px; border-left: 4px solid #0066cc;">
-
-### 💰 Pérdida Mensual Estimada (Escenario Realista)
-
-**${main_scenario_amount}**
-
-*${main_scenario_description}*
-
-**Probabilidad:** 20% | **Confianza:** ${main_confidence}%
-
-</div>
-
-> ✅ **Label:** Escenario más probable basado en datos validados
-
-<details>
-<summary>📋 Ver Anexo Técnico con Todos los Escenarios</summary>
-
-### Escenario Conservador (70% probabilidad)
-- **Rango:** ${conservative_range}
-- **Descripción:** ${conservative_description}
-- **Supuestos:**
-${conservative_assumptions}
-
-### Escenario Realista (20% probabilidad) - PRINCIPAL
-- **Rango:** ${realistic_range}
-- **Descripción:** ${realistic_description}
-- **Supuestos:**
-${realistic_assumptions}
-
-### Escenario Optimista (10% probabilidad)
-- **Rango:** ${optimistic_range}
-- **Descripción:** ${optimistic_description}
-- **Supuestos:**
-${optimistic_assumptions}
-
-</details>
-
----
-
-## [ALERT] PROBLEMAS IDENTIFICADOS
-
-### Con Solución Inmediata (Assets Automáticos)
-
-Estos problemas tienen solución mediante assets generados automáticamente:
-
-| Problema | Severidad | Asset Generado | Confianza |
-|----------|-----------|----------------|-----------|
-${solvable_problems_table}
-
-### Requieren Atención (Sin Asset Automático)
-
-Estos problemas requieren acción manual o decisión del hotelero:
-
-| Problema | Severidad | Recomendación |
-|----------|-----------|---------------|
-${manual_attention_table}
-
----
-
-## 🚨 BRECHAS CRÍTICAS IDENTIFICADAS
-
-${brechas_section}
-
----
-
-## [OK] QUICK WINS (30 DÍAS)
-
-Acciones de alto impacto que pueden implementarse en los próximos 30 días:
-
-${quick_wins_list}
-
----
-
-## 📋 RESUMEN DE VALIDACIÓN
-
-- **Datos Validados:** ${validated_count}
-- **Conflictos Detectados:** ${conflicts_count}
-- **Nivel de Confianza Global:** ${overall_confidence}
-
----
-
-*Documento generado por IA Hoteles v4.0 - Sistema de Confianza*  
-*Validación cruzada: Web + GBP + Input + Benchmarks*
-"""
+            raise FileNotFoundError(
+                f"Template V6 no encontrado: {self.template_path}. "
+                "El template V6 es obligatorio (diagnostico_v6_template.md). "
+                "No se permite fallback embebido."
+            )
     
     def _prepare_template_data(
         self,
@@ -623,7 +476,6 @@ ${quick_wins_list}
             'iao_status': self._get_score_status(iao_sc, benchmarks.get('iao_score_ref', 15)),
             'iao_regional_avg': str(benchmarks.get('iao_score_ref', 15)),
             'score_global': (sg_sc := self._calculate_score_global_from_audit(audit_result)),
-            'score_global_status': self._get_score_status(sg_sc, 50),
             
             # Brechas (4 Razones)
             'brecha_1_nombre': self._get_brecha_nombre(audit_result, 0),

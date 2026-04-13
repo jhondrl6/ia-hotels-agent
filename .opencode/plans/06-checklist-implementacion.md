@@ -14,7 +14,7 @@
 | Fase 3 | FASE-LLMSTXT-FIX | ⏳ Pendiente | — | FASE-GEO-BRIDGE | ALTA |
 | Fase 4 | FASE-ASSETS-VALIDACION | ⏳ Pendiente | — | FASE-GEO-BRIDGE | ALTA |
 | Fase 5 | FASE-CONFIDENCE-DISCLOSURE | ⏳ Pendiente | — | FASE-ASSETS-VALIDACION | MEDIA |
-| Fase 6 | FASE-TEMPLATE-DEBT | ⏳ Pendiente | — | Paralela | MEDIA |
+| Fase 6 | FASE-TEMPLATE-DEBT | ✅ Completada | 2026-04-13 | Paralela | MEDIA |
 | Fase 7 | FASE-CONTENT-SCRUBBER | ⏳ Pendiente | — | Paralela | MEDIA |
 | Fase 8 | FASE-RELEASE | ⏳ Pendiente | — | Fases 1-7 | ALTA |
 
@@ -115,14 +115,14 @@
 **Objetivo:** Sincronizar template embebido vs V6 y fixear typo
 
 **Tareas:**
-- [ ] Eliminar o sincronizar template embebido con V6
-- [ ] Fix typo "debeproveer" → "debe prover" en propuesta_v6_template.md
-- [ ] Sincronizar `package_name`
+- [x] Eliminar template embebido (~150 líneas dead code) + fallback → error explícito si V6 falta
+- [x] Fix typo "debeproveer" → "debe prover" en propuesta_v6_template.md
+- [x] Eliminar `package_name` dead code ("Kit Hospitalidad 4.0") de v4_proposal_generator.py
 
 **Criterios de aceptación:**
-- [ ] Template embebido y V6 sincronizados
-- [ ] Typo corregido
-- [ ] Tests pasan
+- [x] Template embebido eliminado; V6 es obligatorio (FileNotFoundError si falta)
+- [x] Typo corregido; no otros typos similares encontrados
+- [x] Tests pasan (28/28)
 
 ---
 

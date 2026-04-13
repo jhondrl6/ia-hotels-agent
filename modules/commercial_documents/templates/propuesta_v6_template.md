@@ -58,7 +58,7 @@ Le proponemos un plan integral donde **nosotros implementamos todo** — usted n
 
 ## 📸 Fotos: Lo único que necesitamos de usted
 
-Para que su negocio brillen en Google Maps, necesitamos fotos de calidad. Esto es lo que debeproveer:
+Para que su negocio brillen en Google Maps, necesitamos fotos de calidad. Esto es lo que debe prover:
 
 **Tipos de fotos requeridas:**
 - 1 fachada (entrada principal)

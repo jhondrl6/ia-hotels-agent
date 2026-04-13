@@ -529,7 +529,6 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'main_scenario_amount': format_cop(self._get_main_value(main_scenario)),
         'web_score': "85",  # Placeholder - ideally from audit
         'web_status': "VERIFIED" if diagnostic_summary.overall_confidence.value == "VERIFIED" else "ESTIMATED",
-        'package_name': "Kit Hospitalidad 4.0",  # From constants or config
         'roi_6m': self._calculate_roi(monthly_investment, self._get_main_value(main_scenario), 6).replace("%", "").rstrip("X").strip(),  # Just the number, no X suffix
         'total_investment_6m': format_cop(monthly_investment * 6),
         'recovered_6m': format_cop(self._get_main_value(main_scenario) * 6),

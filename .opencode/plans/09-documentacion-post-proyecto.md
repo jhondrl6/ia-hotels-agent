@@ -57,7 +57,10 @@ El pipeline de iah-cli generaba assets de delivery con datos placeholder (confid
 
 ## Sección C: Archivos Eliminados
 
-*(Ninguno de momento — template embebido pendiente de decisión en FASE-TEMPLATE-DEBT)*
+| Archivo | Razón | Fase |
+|---------|-------|------|
+| `_get_default_template()` en `v4_diagnostic_generator.py` (~150 líneas) | Template embebido dead code — V6 es obligatorio | FASE-TEMPLATE-DEBT |
+| `'package_name': "Kit Hospitalidad 4.0"` en `v4_proposal_generator.py` | Dead code — V6 hardcodea "Kit Hospitalidad Digital" | FASE-TEMPLATE-DEBT |
 
 ---
 
@@ -72,6 +75,7 @@ El pipeline de iah-cli generaba assets de delivery con datos placeholder (confid
 | Publication gates | 7 | 8 (incluye confidence) | +1 |
 | Self-replacement warnings | 3 | TBD | -3 |
 | Typos de espaciado | 1 ("debeproveer") | 0 | -1 |
+| Líneas dead code eliminadas | ~150 (template embebido + package_name) | 0 | -150 |
 
 ---
 
@@ -119,6 +123,7 @@ grep -i "fallback\|openrouter\|provider.*switch" ~/.hermes/logs/*.log 2>/dev/nul
 ### GUIA_TECNICA.md
 - [x] Nota técnica: "geo_enriched bridge para assets" ✅ (FASE-GEO-BRIDGE)
 - [x] Nota técnica: "asset_confidence_gate" ✅ (gate #8 conservative: WARNING, no bloquea)
+- [x] FASE-TEMPLATE-DEBT: Sin cambios arquitectónicos (eliminación dead code + typo fix) ✅
 - [ ] Nota técnica: "proposal_asset_alignment_gate"
 - [ ] Nota técnica: "llms.txt fallback"
 - [ ] Nota técnica: "monthly_report generator"
@@ -130,7 +135,7 @@ grep -i "fallback\|openrouter\|provider.*switch" ~/.hermes/logs/*.log 2>/dev/nul
 - [ ] FASE-LLMSTXT-FIX ✅
 - [ ] FASE-ASSETS-VALIDACION ✅
 - [ ] FASE-CONFIDENCE-DISCLOSURE ✅
-- [ ] FASE-TEMPLATE-DEBT ✅
+- [x] FASE-TEMPLATE-DEBT ✅ (2026-04-13)
 - [ ] FASE-CONTENT-SCRUBBER ✅
 - [ ] FASE-RELEASE v4.29.0 ✅
 
