@@ -166,3 +166,90 @@ class TestDocumentQualityResult:
     def test_document_type_stored(self, gate):
         result = gate.validate_document("ok", "propuesta", {})
         assert result.document_type == "propuesta"
+
+
+# ==============================================================================
+# T1: Self-replacement fix — "proxima" -> "proxima" should NOT generate warning
+# ==============================================================================
+class TestSkipSelfReplacement:
+    def test_proxima_not_flagged(self, gate):
+        doc = "La proxima semana tendremos disponibilidad."
+        result = gate.validate_document(doc, "diagnostico", {})
+        warnings = [i for i in result.issues if i.severity == "warning"]
+        assert all(
+            i.detected_value.lower() != "proxima"
+            for i in warnings
+        ), "Self-replacement 'proxima' -> 'proxima' should be skipped"
+
+    def test_reserva_not_flagged(self, gate):
+        doc = "La reserva fue confirmada para el huesped."
+        result = gate.validate_document(doc, "diagnostico", {})
+        warnings = [i for i in result.issues if i.severity == "warning"]
+        assert all(
+            i.detected_value.lower() != "reserva"
+            for i in warnings
+        ), "Self-replacement 'reserva' -> 'reserva' should be skipped"
+
+    def test_real_portuguese_still_flagged(self, gate):
+        doc = "El proximo passo es la protecao."
+        result = gate.validate_document(doc, "diagnostico", {})
+        warnings = [i for i in result.issues if i.severity == "warning"]
+        # passo -> paso (real replacement) and protecao -> proteccion should be flagged
+        detected = [i.detected_value.lower() for i in warnings if i.check_name == "mixed_language"]
+        assert "passo" in detected, "Real Portuguese 'passo' should still be flagged"
+        assert "protecao" in detected, "Real Portuguese 'protecao' should still be flagged"
+
+
+# ==============================================================================
+# T2: Spacing error detection
+# ==============================================================================
+class TestDetectSpacingErrors:
+    def test_debeproveer_detected(self, gate):
+        doc = "El hotel debeproveer mejores servicios."
+        result = gate.validate_document(doc, "diagnostico", {})
+        warnings = [i for i in result.issues if i.severity == "warning"]
+        assert any(
+            i.check_name == "spacing_errors" and "debeproveer" in i.detected_value.lower()
+            for i in warnings
+        ), "'debeproveer' should be detected as spacing error"
+
+    def test_paramas_detected(self, gate):
+        doc = "Necesita paramas informacion."
+        result = gate.validate_document(doc, "diagnostico", {})
+        warnings = [i for i in result.issues if i.severity == "warning"]
+        assert any(
+            i.check_name == "spacing_errors" and "paramas" in i.detected_value.lower()
+            for i in warnings
+        ), "'paramas' should be detected as spacing error"
+
+    def test_clean_content_no_spacing_errors(self, gate):
+        doc = "El hotel debe proveer mejores servicios para mas informacion."
+        result = gate.validate_document(doc, "diagnostico", {})
+        spacing_issues = [i for i in result.issues if i.check_name == "spacing_errors"]
+        assert len(spacing_issues) == 0, "Clean text should have no spacing errors"
+
+
+# ==============================================================================
+# T3: Content quality gate includes spacing errors in warnings
+# ==============================================================================
+class TestContentQualityGateWithSpacing:
+    def test_spacing_errors_in_warnings(self, gate):
+        doc = "Los huespedes debeproveer documentacion."
+        result = gate.validate_document(doc, "diagnostico", {})
+        assert result.warnings_count >= 1
+        assert any(
+            i.check_name == "spacing_errors"
+            for i in result.issues
+        )
+
+    def test_spacing_error_not_blocker(self, gate):
+        doc = "debeproveer es un error de espaciado."
+        result = gate.validate_document(doc, "diagnostico", {})
+        spacing = [i for i in result.issues if i.check_name == "spacing_errors"]
+        assert all(i.severity == "warning" for i in spacing), "Spacing errors are warnings, not blockers"
+
+    def test_not_auto_fixable(self, gate):
+        doc = "debeproveer"
+        result = gate.validate_document(doc, "diagnostico", {})
+        spacing = [i for i in result.issues if i.check_name == "spacing_errors"]
+        assert all(not i.auto_fixable for i in spacing), "Spacing errors should NOT be auto-fixable"

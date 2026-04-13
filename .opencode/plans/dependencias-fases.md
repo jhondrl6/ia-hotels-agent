@@ -58,7 +58,7 @@
 | 4 | FASE-ASSETS-VALIDACION | Propuesta → Assets: 7/7 servicios | FASE-GEO-BRIDGE | ALTA |
 | 5 | FASE-CONFIDENCE-DISCLOSURE | Transparencia calidad en propuesta | FASE-ASSETS-VALIDACION | MEDIA |
 | 6 | FASE-TEMPLATE-DEBT | Sincronizar embebido vs V6 + typo | Ninguna | MEDIA | ✅ 2026-04-13 |
-| 7 | FASE-CONTENT-SCRUBBER | Fix self-replacement + spacing | Ninguna | MEDIA |
+| 7 | FASE-CONTENT-SCRUBBER | Fix self-replacement + spacing | Ninguna | MEDIA | ✅ 2026-04-13 |
 | 8 | FASE-RELEASE | v4.29.0 release + docs + validación | Fases 1-7 | ALTA |
 
 ---

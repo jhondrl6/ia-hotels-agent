@@ -63,6 +63,35 @@ EN_TO_ES = {
     "staff": "personal",
 }
 
+# Spacing error patterns — words stuck together without space
+# These are detected but NOT auto-corrected (too risky for content changes)
+SPACING_ERROR_PATTERNS = [
+    (r'\bdebeproveer\b', 'debe proveer'),
+    (r'\bdebeen\b', 'deben'),
+    (r'\bparamas\b', 'para mas'),
+    (r'\bestees\b', 'este es'),
+    (r'\bporel\b', 'por el'),
+    (r'\bporla\b', 'por la'),
+    (r'\balhotel\b', 'al hotel'),
+    (r'\bdela\b', 'de la'),  # common contraction
+    (r'\benel\b', 'en el'),
+]
+
+
+def detect_spacing_errors(content: str) -> List[Dict[str, str]]:
+    """Detecta errores de espaciado comun sin auto-corregir."""
+    errors = []
+    for pattern, correction in SPACING_ERROR_PATTERNS:
+        matches = list(re.finditer(pattern, content, re.IGNORECASE))
+        for m in matches:
+            errors.append({
+                "found": m.group(0),
+                "suggested": correction,
+                "type": "spacing_error",
+            })
+    return errors
+
+
 # Generic AI phrases that suggest boilerplate content
 GENERIC_AI_PHRASES = [
     "oportunidades de crecimiento en presencia digital",
@@ -119,6 +148,7 @@ class DocumentQualityGate:
     WARNING_CHECKS = [
         "mixed_language",            # Portuguese or English in Spanish doc
         "generic_ai_phrases",        # Typical LLM boilerplate
+        "spacing_errors",            # Words stuck together (missing spaces)
     ]
 
     def validate_document(
@@ -147,6 +177,7 @@ class DocumentQualityGate:
         # Warning checks
         issues.extend(self._check_mixed_language(content))
         issues.extend(self._check_generic_ai_phrases(content))
+        issues.extend(self._check_spacing_errors(content))
 
         has_blockers = any(i.severity == "blocker" for i in issues)
 
@@ -233,8 +264,10 @@ class DocumentQualityGate:
         issues: List[DocumentQualityIssue] = []
         content_lower = content.lower()
 
-        # Check Portuguese
+        # Check Portuguese — skip self-replacement (pt word == es word)
         for word in PORTUGUESE_WORDS:
+            if PT_TO_ES.get(word, word) == word:
+                continue  # e.g., "proxima" -> "proxima", "reserva" -> "reserva"
             if word.lower() in content_lower:
                 # Find first occurrence line
                 for i, line in enumerate(content.split('\n'), 1):
@@ -284,4 +317,22 @@ class DocumentQualityGate:
                             auto_fixable=False,
                         ))
                         break
+        return issues
+
+    def _check_spacing_errors(self, content: str) -> List[DocumentQualityIssue]:
+        """Detect words stuck together without spaces (spacing errors)."""
+        issues: List[DocumentQualityIssue] = []
+        errors = detect_spacing_errors(content)
+        for error in errors:
+            for i, line in enumerate(content.split('\n'), 1):
+                if error['found'].lower() in line.lower():
+                    issues.append(DocumentQualityIssue(
+                        check_name="spacing_errors",
+                        severity="warning",
+                        line_number=i,
+                        detected_value=error['found'],
+                        message=f"Espaciado: '{error['found']}' → '{error['suggested']}'",
+                        auto_fixable=False,
+                    ))
+                    break
         return issues

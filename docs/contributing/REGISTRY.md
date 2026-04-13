@@ -2716,6 +2716,26 @@ _Ninguno_
 ---
 
 
+## FASE-CONTENT-SCRUBBER - 2026-04-13
+**Descripcion:** Fix content scrubber: skip self-replacement (proxima->proxima, reserva->reserva) + detect spacing errors (debeproveer, paramas, etc.)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/postprocessors/document_quality_gate.py` | Document Quality Gate |
+| `tests/postprocessors/test_document_quality_gate.py` | Test Document Quality Gate |
+
+### Validaciones
+- [x] Tests passing (28/28 passed)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown

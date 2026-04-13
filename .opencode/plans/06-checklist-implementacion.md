@@ -15,7 +15,7 @@
 | Fase 4 | FASE-ASSETS-VALIDACION | ⏳ Pendiente | — | FASE-GEO-BRIDGE | ALTA |
 | Fase 5 | FASE-CONFIDENCE-DISCLOSURE | ⏳ Pendiente | — | FASE-ASSETS-VALIDACION | MEDIA |
 | Fase 6 | FASE-TEMPLATE-DEBT | ✅ Completada | 2026-04-13 | Paralela | MEDIA |
-| Fase 7 | FASE-CONTENT-SCRUBBER | ⏳ Pendiente | — | Paralela | MEDIA |
+| Fase 7 | FASE-CONTENT-SCRUBBER | ✅ Completada | 2026-04-13 | Paralela | MEDIA |
 | Fase 8 | FASE-RELEASE | ⏳ Pendiente | — | Fases 1-7 | ALTA |
 
 ---
@@ -131,13 +131,15 @@
 **Objetivo:** Fix content scrubber para errores de espaciado y self-replacement
 
 **Tareas:**
-- [ ] Fix self-replacement warnings: skip si `old == new`
-- [ ] Agregar regex para palabras pegadas
-- [ ] Tests del content scrubber
+- [x] Fix self-replacement warnings: skip si `old == new`
+- [x] Agregar regex para palabras pegadas (spacing errors)
+- [x] Integrar spacing errors en content_quality gate
+- [x] Tests del content scrubber (9 tests nuevos)
 
 **Criterios de aceptación:**
-- [ ] No más warnings de self-replacement
-- [ ] Tests pasan
+- [x] No más warnings de self-replacement ("proxima"->"proxima", "reserva"->"reserva")
+- [x] Spacing errors detectados (debeproveer, paramas, etc.) como warnings
+- [x] Tests pasan (28/28 = 19 existentes + 9 nuevos)
 
 ---
 

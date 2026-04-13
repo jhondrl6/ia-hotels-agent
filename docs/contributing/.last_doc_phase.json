@@ -76,5 +76,7 @@
   "templates/diagnostico_v6_template.md": "FASE-1",
   "modules/asset_generation/geo_enriched_bridge.py (NUEVO)": "FASE-GEO-BRIDGE",
   "modules/asset_generation/v4_asset_orchestrator.py (modificado)": "FASE-GEO-BRIDGE",
-  "modules/commercial_documents/templates/propuesta_v6_template.md": "FASE-TEMPLATE-DEBT"
+  "modules/commercial_documents/templates/propuesta_v6_template.md": "FASE-TEMPLATE-DEBT",
+  "modules/postprocessors/document_quality_gate.py": "FASE-CONTENT-SCRUBBER",
+  "tests/postprocessors/test_document_quality_gate.py": "FASE-CONTENT-SCRUBBER"
 }

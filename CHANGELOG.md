@@ -8,6 +8,11 @@
 
 *"Las soluciones a medias no son soluciones, es aplazar el problema."*
 
+### FASE-CONTENT-SCRUBBER (2026-04-13): Fix Self-Replacement + Spacing Detection
+
+- `modules/postprocessors/document_quality_gate.py` — Skip self-replacement warnings (PT_TO_ES: old==new). 9 spacing error patterns + `detect_spacing_errors()`. `_check_spacing_errors()` method en gate.
+- `tests/postprocessors/test_document_quality_gate.py` — 9 tests nuevos: 3 self-replacement, 3 spacing detection, 3 gate integration. Total: 28/28 passing.
+
 ### FASE-D: Package & Template Alignment — 4 Pilares
 
 - `modules/analyzers/gap_analyzer.py` — Expandido de 2 gaps (GEO+AEO) a 4 gaps (SEO+GEO+AEO+IAO) con ponderación proporcional

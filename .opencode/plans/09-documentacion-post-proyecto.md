@@ -73,7 +73,7 @@ El pipeline de iah-cli generaba assets de delivery con datos placeholder (confid
 | Assets placeholders | 2 (hotel_schema, llms_txt) | 0 | -2 |
 | Confidence promedio assets | 0.50 | TBD | +0.35 |
 | Publication gates | 7 | 8 (incluye confidence) | +1 |
-| Self-replacement warnings | 3 | TBD | -3 |
+| Self-replacement warnings | 3 | 0 | -3 |
 | Typos de espaciado | 1 ("debeproveer") | 0 | -1 |
 | Líneas dead code eliminadas | ~150 (template embebido + package_name) | 0 | -150 |
 
@@ -124,6 +124,7 @@ grep -i "fallback\|openrouter\|provider.*switch" ~/.hermes/logs/*.log 2>/dev/nul
 - [x] Nota técnica: "geo_enriched bridge para assets" ✅ (FASE-GEO-BRIDGE)
 - [x] Nota técnica: "asset_confidence_gate" ✅ (gate #8 conservative: WARNING, no bloquea)
 - [x] FASE-TEMPLATE-DEBT: Sin cambios arquitectónicos (eliminación dead code + typo fix) ✅
+- [x] FASE-CONTENT-SCRUBBER: Sin cambios arquitectónicos (fix self-replacement + spacing detection) ✅
 - [ ] Nota técnica: "proposal_asset_alignment_gate"
 - [ ] Nota técnica: "llms.txt fallback"
 - [ ] Nota técnica: "monthly_report generator"
@@ -136,7 +137,7 @@ grep -i "fallback\|openrouter\|provider.*switch" ~/.hermes/logs/*.log 2>/dev/nul
 - [ ] FASE-ASSETS-VALIDACION ✅
 - [ ] FASE-CONFIDENCE-DISCLOSURE ✅
 - [x] FASE-TEMPLATE-DEBT ✅ (2026-04-13)
-- [ ] FASE-CONTENT-SCRUBBER ✅
+- [x] FASE-CONTENT-SCRUBBER ✅ (2026-04-13) — sin cambios arquitectónicos
 - [ ] FASE-RELEASE v4.29.0 ✅
 
 ### docs/CONTRIBUTING.md
