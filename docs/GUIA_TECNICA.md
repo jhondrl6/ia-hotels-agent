@@ -27,6 +27,33 @@ FASE-GEO-BRIDGE crea el bridge que conecta `geo_enriched/` (datos reales del GEO
 
 ---
 
+### FASE-CONF-GATE: Asset Confidence Gate (Gate #8)
+
+**Fecha:** 13 Abril 2026
+**Fase:** FASE-CONF-GATE
+
+#### Resumen
+Gate #8 en publication gates que valida `confidence_score` de assets generados. Usa estrategia conservadora (Opción A): assets con confidence < 0.7 generan WARNING (no bloquean publicación). El cliente recibe alerta de calidad sin impedir la entrega.
+
+#### Módulos Afectados
+
+##### modules/quality_gates/publication_gates.py
+- `GateStatus.WARNING` agregado al enum (4 estados: PASSED, FAILED, BLOCKED, WARNING)
+- `_asset_confidence_gate()`: nuevo gate #8 en `PublicationGatesOrchestrator`
+- Threshold: 0.7 (configurable)
+- Comportamiento:
+  - Sin `generated_assets` en assessment → PASSED (backward compat)
+  - Todos >= 0.7 → PASSED
+  - Algunos < 0.7 → WARNING con detalles (tipo, score de cada asset bajo)
+- Total gates: 7 → 8
+
+#### Backwards Compatibility
+- Gate registrado en orchestrator junto a gates 1-7
+- Assessment sin `generated_assets` → gate pasa (no rompe flujos existentes)
+- `passed=True` en WARNING → `is_ready_for_publication()` sigue retornando True
+
+---
+
 ## Notas de Cambios — v4.28.0: 4 Pilares Alignment + Voice Readiness Proxy
 
 **Fecha:** 12 Abril 2026

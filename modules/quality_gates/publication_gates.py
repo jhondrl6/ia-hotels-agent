@@ -47,6 +47,7 @@ class GateStatus(str, Enum):
     PASSED = "PASSED"
     FAILED = "FAILED"
     BLOCKED = "BLOCKED"
+    WARNING = "WARNING"
 
 
 @dataclass
@@ -140,6 +141,7 @@ class PublicationGatesOrchestrator:
             "critical_recall": self._critical_recall_gate,
             "ethics": self._ethics_gate,
             "content_quality": self._content_quality_gate,
+            "asset_confidence": self._asset_confidence_gate,
         }
         self.ethics_gate = EthicsGate()
         self.content_quality_gate = DocumentQualityGate()
@@ -640,6 +642,81 @@ class PublicationGatesOrchestrator:
             value=0.0 if diag_result is None else max(diag_result.score, prop_result.score if prop_result else diag_result.score),
             suggestion="Consider running ContentScrubber for cleaner documents",
             details={"warnings": warning_msgs},
+        )
+
+    def _asset_confidence_gate(self, assessment: Dict[str, Any]) -> PublicationGateResult:
+        """
+        Gate 8: Asset Confidence Check
+
+        Validates that generated assets have acceptable confidence scores.
+        Assets with confidence_score < threshold are flagged as warnings
+        (not blocking) to alert the client about quality concerns.
+
+        Uses Option A (Conservative): WARNING status, not BLOCKED.
+        Threshold: configurable, default 0.7.
+
+        Args:
+            assessment: Assessment dictionary with generated_assets data
+
+        Returns:
+            PublicationGateResult with status PASSED or WARNING
+        """
+        gate_name = "asset_confidence"
+        threshold = 0.7
+
+        generated_assets = assessment.get("generated_assets", [])
+
+        if not generated_assets:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,
+                status=GateStatus.PASSED,
+                message="No generated assets to evaluate",
+                value=1.0,
+                suggestion="",
+                details={"total_assets": 0, "above_threshold": 0, "below_threshold": 0}
+            )
+
+        low_confidence_assets = [
+            a for a in generated_assets
+            if a.get("confidence_score", 0) < threshold
+        ]
+
+        if not low_confidence_assets:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,
+                status=GateStatus.PASSED,
+                message=f"All {len(generated_assets)} assets meet confidence threshold ({threshold})",
+                value=1.0,
+                suggestion="",
+                details={
+                    "total_assets": len(generated_assets),
+                    "above_threshold": len(generated_assets),
+                    "below_threshold": 0
+                }
+            )
+
+        avg_confidence = sum(
+            a.get("confidence_score", 0) for a in generated_assets
+        ) / len(generated_assets)
+
+        return PublicationGateResult(
+            gate_name=gate_name,
+            passed=True,  # Conservative: warns but does not block
+            status=GateStatus.WARNING,
+            message=f"{len(low_confidence_assets)} asset(s) below confidence threshold ({threshold})",
+            value=avg_confidence,
+            suggestion="Run enrichment phase to improve asset quality",
+            details={
+                "total_assets": len(generated_assets),
+                "above_threshold": len(generated_assets) - len(low_confidence_assets),
+                "below_threshold": len(low_confidence_assets),
+                "low_confidence_assets": [
+                    {"type": a["asset_type"], "score": a["confidence_score"]}
+                    for a in low_confidence_assets
+                ]
+            }
         )
     
     # Helper methods for extracting data from assessment

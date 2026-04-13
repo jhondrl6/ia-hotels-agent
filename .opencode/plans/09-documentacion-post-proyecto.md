@@ -69,7 +69,7 @@ El pipeline de iah-cli generaba assets de delivery con datos placeholder (confid
 | Servicios prometidos con asset | 4/7 (57%) | 7/7 (100%) | +3 |
 | Assets placeholders | 2 (hotel_schema, llms_txt) | 0 | -2 |
 | Confidence promedio assets | 0.50 | TBD | +0.35 |
-| Publication gates | 7 | 9 | +2 |
+| Publication gates | 7 | 8 (incluye confidence) | +1 |
 | Self-replacement warnings | 3 | TBD | -3 |
 | Typos de espaciado | 1 ("debeproveer") | 0 | -1 |
 
@@ -118,7 +118,7 @@ grep -i "fallback\|openrouter\|provider.*switch" ~/.hermes/logs/*.log 2>/dev/nul
 
 ### GUIA_TECNICA.md
 - [x] Nota técnica: "geo_enriched bridge para assets" ✅ (FASE-GEO-BRIDGE)
-- [ ] Nota técnica: "asset_confidence_gate"
+- [x] Nota técnica: "asset_confidence_gate" ✅ (gate #8 conservative: WARNING, no bloquea)
 - [ ] Nota técnica: "proposal_asset_alignment_gate"
 - [ ] Nota técnica: "llms.txt fallback"
 - [ ] Nota técnica: "monthly_report generator"
@@ -126,7 +126,7 @@ grep -i "fallback\|openrouter\|provider.*switch" ~/.hermes/logs/*.log 2>/dev/nul
 
 ### REGISTRY.md
 - [x] FASE-GEO-BRIDGE ✅ (2026-04-13)
-- [ ] FASE-CONF-GATE ✅
+- [x] FASE-CONF-GATE ✅ (2026-04-13)
 - [ ] FASE-LLMSTXT-FIX ✅
 - [ ] FASE-ASSETS-VALIDACION ✅
 - [ ] FASE-CONFIDENCE-DISCLOSURE ✅

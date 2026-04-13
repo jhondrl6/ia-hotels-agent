@@ -53,7 +53,7 @@
 | Fase | ID | Nombre | Dependencias | Prioridad |
 |------|----|--------|---------------|-----------|
 | 1 | FASE-GEO-BRIDGE | geo_enriched → asset enrichment bridge | Ninguna (root fix) | ALTA | ✅ 2026-04-13 |
-| 2 | FASE-CONF-GATE | Asset confidence gate en publication | FASE-GEO-BRIDGE | ALTA |
+| 2 | FASE-CONF-GATE | Asset confidence gate en publication | FASE-GEO-BRIDGE | ALTA | ✅ 2026-04-13 |
 | 3 | FASE-LLMSTXT-FIX | Fix llms.txt generator + fallback | FASE-GEO-BRIDGE | ALTA |
 | 4 | FASE-ASSETS-VALIDACION | Propuesta → Assets: 7/7 servicios | FASE-GEO-BRIDGE | ALTA |
 | 5 | FASE-CONFIDENCE-DISCLOSURE | Transparencia calidad en propuesta | FASE-ASSETS-VALIDACION | MEDIA |

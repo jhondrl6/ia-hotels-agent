@@ -570,7 +570,7 @@ class TestPublicationGatesOrchestrator:
         """
         results = orchestrator.run_all(valid_assessment)
         
-        assert len(results) == 6  # 6 gates (including ethics)
+        assert len(results) == 8  # 8 gates (including confidence #8)
         assert all(r.passed for r in results)
         assert orchestrator.is_ready_for_publication(results) is True
 
@@ -654,7 +654,7 @@ class TestPublicationGatesOrchestrator:
         assert orchestrator.is_ready_for_publication(results) is False
         
         blocking = orchestrator.get_blocking_gates(results)
-        assert len(blocking) == 6  # All gates should block
+        assert len(blocking) == 6  # 6 original gates block; #8 passes (no assets)
 
     def test_run_publication_gates_function(self, valid_assessment):
         """
@@ -662,7 +662,7 @@ class TestPublicationGatesOrchestrator:
         """
         results = run_publication_gates(valid_assessment)
         
-        assert len(results) == 6
+        assert len(results) == 8
         assert all(r.passed for r in results)
 
     def test_check_publication_readiness_function(self):
@@ -685,7 +685,7 @@ class TestPublicationGatesOrchestrator:
         
         assert report["ready"] is True
         assert report["status"] == "READY_FOR_PUBLICATION"
-        assert report["summary"]["passed"] == 6
+        assert report["summary"]["passed"] == 8  # All 8 gates pass
         assert report["summary"]["failed"] == 0
         assert len(report["blocking_issues"]) == 0
 
@@ -803,7 +803,7 @@ class TestHotelVisperasScenario:
         assert len(report["blocking_issues"]) >= 4
         
         # Summary should show failures
-        assert report["summary"]["passed"] < 2  # At most 1 gate passes
+        assert report["summary"]["passed"] < 4  # At most 3 gates pass (ethics, content_quality, confidence)
         assert report["summary"]["failed"] >= 4  # At least 4 gates fail
         
         # Verify timestamp exists

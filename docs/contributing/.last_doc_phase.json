@@ -37,7 +37,7 @@
   "modules/asset_generation/templates/indirect_traffic_optimization_template.md": "FASE-ANALYTICS-04",
   "modules/generators/report_builder.py": "FASE-D",
   "modules/analyzers/gap_analyzer.py": "FASE-D",
-  "modules/quality_gates/publication_gates.py": "FASE-B",
+  "modules/quality_gates/publication_gates.py": "FASE-CONF-GATE",
   "modules/asset_generation/asset_content_validator.py": "FASE-B",
   "data_models/canonical_assessment.py": "FASE-C",
   "modules/financial_engine/calculator_v2.py": "FASE-J",
@@ -73,5 +73,7 @@
   "tests/financial_engine/test_no_defaults_source_aware.py": "FASE-J",
   "scripts/update_benchmarks.py": "FASE-D",
   "REGISTRY.md": "FASE-F",
-  "templates/diagnostico_v6_template.md": "FASE-1"
+  "templates/diagnostico_v6_template.md": "FASE-1",
+  "modules/asset_generation/geo_enriched_bridge.py (NUEVO)": "FASE-GEO-BRIDGE",
+  "modules/asset_generation/v4_asset_orchestrator.py (modificado)": "FASE-GEO-BRIDGE"
 }

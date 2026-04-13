@@ -10,7 +10,7 @@
 | Fase | ID | Estado | Completada | Dependencias | Prioridad |
 |------|----|--------|------------|--------------|-----------|
 | Fase 1 | FASE-GEO-BRIDGE | ✅ Completada | 2026-04-13 | Ninguna | ALTA |
-| Fase 2 | FASE-CONF-GATE | ⏳ Pendiente | — | FASE-GEO-BRIDGE | ALTA |
+| Fase 2 | FASE-CONF-GATE | ✅ Completada | 2026-04-13 | FASE-GEO-BRIDGE | ALTA |
 | Fase 3 | FASE-LLMSTXT-FIX | ⏳ Pendiente | — | FASE-GEO-BRIDGE | ALTA |
 | Fase 4 | FASE-ASSETS-VALIDACION | ⏳ Pendiente | — | FASE-GEO-BRIDGE | ALTA |
 | Fase 5 | FASE-CONFIDENCE-DISCLOSURE | ⏳ Pendiente | — | FASE-ASSETS-VALIDACION | MEDIA |
@@ -45,14 +45,14 @@
 **Objetivo:** Crear gate de confidence en publication gates
 
 **Tareas:**
-- [ ] Crear `asset_confidence_gate` en publication_gates.py (gate #8)
-- [ ] Gate falla si algún asset `confidence_score < 0.7`
-- [ ] Opciones: FAIL completo, o `READY_FOR_PUBLICATION_WITH_WARNINGS`
-- [ ] Tests para el nuevo gate
+- [x] Crear `asset_confidence_gate` en publication_gates.py (gate #8)
+- [x] Gate usa Opción A (conservative): WARNING, no bloquea
+- [x] GateStatus.WARNING agregado al enum
+- [x] Tests para el nuevo gate (6 tests)
 
 **Criterios de aceptación:**
-- [ ] Publication gates refleja confidence real de assets
-- [ ] Tests pasan
+- [x] Publication gates refleja confidence real de assets
+- [x] Tests pasan (6/6)
 
 ---
 
