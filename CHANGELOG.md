@@ -42,6 +42,13 @@
 - 628 tests passing (0 regresiones)
 - Errors pre-existentes en `data_validation/` y `observability/` (módulos faltantes, no relacionados)
 
+### Post-FASE-1: Eliminar Score Global de Tabla Diagnóstico
+
+Fila redundante "Visibilidad Digital (Global)" eliminada de la tabla de diagnóstico del cliente. `score_global` se mantiene como cálculo interno (usado por propuesta comercial como `score_tecnico`). Dead code `score_global_status` eliminado.
+
+- `templates/diagnostico_v6_template.md` — Eliminada fila "Visibilidad Digital (Global)" (5→4 filas)
+- `v4_diagnostic_generator.py` — Eliminada variable dead code `score_global_status`, corregido docstring `calcular_cumplimiento()`
+
 ### Documentacion Post-Implementacion (docs-only)
 
 - **README.md** - Seccion "Que es IA Hoteles Agent" expandida: 4 pilares progresivos con tabla de siglas/proposito/ejemplo + progresion SEO->AEO->IAO con GEO lateral + score_global como metrica principal. Nueva seccion "Voice Readiness Proxy (v4.28.0)" con componentes, niveles y restricciones. Test count actualizado (628->2150).

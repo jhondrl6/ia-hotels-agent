@@ -2606,6 +2606,26 @@ _Ninguno_
 ---
 
 
+## FASE-1 - 2026-04-12
+**Descripcion:** Eliminar fila redundante 'Visibilidad Digital (Global)' de tabla de diagnostico. Eliminada dead code score_global_status. 4 pilares vs 5 filas.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown

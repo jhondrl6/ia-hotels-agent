@@ -1,125 +1,93 @@
-# Documentación Post-Proyecto — Refactor 4 Pilares SEO/GEO/AEO/IAO
+# Documentación Post-Proyecto — ELIMINAR-SCORE-GLOBAL-TABLA-DIAGNOSTICO
 
-**Proyecto**: AEO-IAO-PROGRESSION-REFACTOR
-**Fecha creación**: 2026-04-12
-**Estado**: Estructura base, se actualiza incrementally por fase
-
----
-
-## Sección A: Módulos Nuevos
-
-*(Se actualiza después de cada fase que crea módulos)*
-
-### FASE-B
-| Módulo | Ruta | Función |
-|--------|------|---------|
-| AEOSnippetTracker | `modules/auditors/aeo_snippet_tracker.py` | Verificación de featured snippets via SerpAPI |
-
-### FASE-C
-| Módulo | Ruta | Función |
-|--------|------|---------|
-| LLMMentionChecker | `modules/auditors/llm_mention_checker.py` | Detección de menciones en LLMs via OpenRouter/Gemini/Perplexity |
-
-### FASE-E
-| Módulo | Ruta | Función |
-|--------|------|---------|
-| VoiceReadinessProxy | `modules/auditors/voice_readiness_proxy.py` | Score proxy de readiness para voz |
+**Proyecto:** Eliminar fila "Visibilidad Digital (Global)" de tabla de diagnóstico
+**Fecha:** 2026-04-12
+**Fases completadas:** FASE-1
 
 ---
 
-## Sección B: Módulos Modificados
+## Sección A: Resumen Ejecutivo
 
-| Fase | Módulo | Cambio Principal |
-|------|--------|-----------------|
-| A | `v4_diagnostic_generator.py` | CHECKLIST redistribution, 4 scores, deprecated calcular_cumplimiento |
-| A | `data_structures.py` | DiagnosticSummary ampliado con 4 pilares |
-| B | `v4_diagnostic_generator.py` | _calculate_aeo_score refactorizado |
-| B | `v4_comprehensive.py` | AEOSnippetTracker integrado |
-| C | `v4_diagnostic_generator.py` | _calculate_iao_score restaurado |
-| C | `v4_comprehensive.py` | LLMMentionChecker integrado |
-| C | `data_structures.py` | Campos IAO en DiagnosticSummary |
-| D | `gap_analyzer.py` | 4 gaps |
-| D | `opportunity_scorer.py` | Brechas IAO/SEO |
-| D | `report_builder.py` | 4 pilares completos |
-| D | `benchmarks.py` | 4 benchmarks |
-| D | `update_benchmarks.py` | calculate_iao_score |
-| D | `v4_proposal_generator.py` | score_global |
-| D | `diagnostico_v6_template.md` | Fila IAO |
-| E | `v4_diagnostic_generator.py` | voice_readiness_score |
-| E | `data_structures.py` | voice_readiness fields |
+**Objetivo alcanzado:** Eliminar la fila redundante "Visibilidad Digital (Global)" de la tabla de diagnóstico del cliente, manteniendo el cálculo interno de `score_global` para la propuesta comercial.
+
+**Impacto:**
+- Mejora la claridad del diagnóstico para el cliente (4 pilares vs. 5 filas)
+- Elimina dato sin benchmark regional (fila Global mostraba `- | -`)
+- Refuerza la arquitectura de 4 pilares diferenciados
 
 ---
 
-## Sección C: Decisiones de Diseño
+## Sección B: Módulos Nuevos
 
-| Decisión | Opción elegida | Razón | Contexto |
-|----------|---------------|-------|----------|
-| Modelo de score | OPCION A: independientes con advertencia | Cliente necesita ver todos los scores | §6.2 del contexto |
-| AEO scoring | 60% checklist + 40% resultado real | Infraestructura es necesaria pero no suficiente | §6.1 del contexto |
-| IAO scoring | 50% checklist + 50% resultado real | LLM mentions son la prueba definitiva de IAO | §6.1 del contexto |
-| Voice measurement | PROXY (inputs), no directo (Siri/Alexa) | No existe API para consultar respuestas de voz | §5C del contexto |
-| OpenAI provider | SIEMPRE via OpenRouter | Regla del proyecto, nunca SDK directo | §5D del contexto |
-| CHECKLIST_IAO | REEMPLAZAR por 4 checklists | Unifica sistema dual | §6.3 del contexto |
+**No aplica** — No se crearon módulos nuevos en este proyecto.
+
+---
+
+## Sección C: Módulos Modificados
+
+| Módulo | Cambio realizado |
+|--------|-----------------|
+| `templates/diagnostico_v6_template.md` | Eliminada línea 56 (fila "Visibilidad Digital (Global)") |
+| `v4_diagnostic_generator.py` | Eliminada línea 626 (`score_global_status` — dead code). Corregido docstring en `calcular_cumplimiento()` |
 
 ---
 
 ## Sección D: Métricas Acumulativas
 
-| Métrica | Pre-refactor | Post-FASE-A | Post-FASE-B | Post-FASE-C | Post-FASE-D | Post-FASE-E | Post-FASE-F |
-|---------|-------------|-------------|-------------|-------------|-------------|-------------|-------------|
-| Tests totales | ~385 | ~430 | — | 472 | — | — | — |
-| Regresiones | 0 | 0 | — | 0 | — | — | — |
-| Módulos nuevos | 0 | 0 | 1 | 2 | 0 | 1 | 0 |
-| Pilares scoring | 3 (GEO/AEO/SEO) | 4 | 4 | 4 | 4 | 4 | 4 |
-| Benchmarks | 3 | 4 | 4 | 4 | 4 | 4 | 4 |
-| APIs externas | 3 (Places/PageSpeed/RichResults) | 3 | 4 (+SerpAPI) | 4-7 (+OpenRouter/Gemini/Perplexity) | 4-7 | 4-7 | 4-7 |
-| Costo API/hotel | $0 | $0 | $0-0.05 | $0.05-0.30 | $0.05-0.30 | $0.05-0.30 | $0.05-0.30 |
-
-*(Llenar "—" después de completar cada fase)*
+| Métrica | Antes | Después |
+|---------|-------|---------|
+| Filas en tabla de diagnóstico | 5 | 4 |
+| Variables dead code eliminadas | 0 | 1 (`score_global_status`) |
+| Tests con regresión | — | 0 |
+| Archivos modificados | — | 2 |
 
 ---
 
 ## Sección E: Archivos Afiliados Actualizados
 
-| Archivo | FASE-A | FASE-B | FASE-C | FASE-D | FASE-E | FASE-F |
-|---------|--------|--------|--------|--------|--------|--------|
-| CHANGELOG.md | — | — | — | — | — | ✅ |
-| GUIA_TECNICA.md | — | — | ✅ | — | — | ✅ |
-| REGISTRY.md | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| VERSION.yaml | — | — | — | — | — | ✅ |
-| AGENTS.md | — | — | — | — | — | ✅ |
-| README.md | — | — | — | — | — | ✅ |
-| CONTRIBUTING.md | — | — | — | — | — | ✅ |
-| DOMAIN_PRIMER.md | — | — | — | — | — | ✅ |
-| SYSTEM_STATUS.md | ✅ | — | — | — | — | ✅ |
+**Completado 2026-04-12**
+
+- [x] REGISTRY.md — entrada FASE-1 registrada via log_phase_completion.py (duplicado eliminado)
+- [x] CHANGELOG.md — sección "Post-FASE-1: Eliminar Score Global de Tabla Diagnóstico" agregada bajo [4.28.0]
+- [x] GUIA_TECNICA.md — NO APLICA (archivo no existe en repo; lección aprendida L3)
 
 ---
 
-## Sección F: Lecciones Aprendidas
+## Sección F: Decisiones de Diseño Documentadas
 
-*(Se documenta durante la implementación)*
+**Decisión 1:** `score_global` se mantiene como cálculo interno
+- **Razón:** Usado por `v4_proposal_generator.py` como `score_tecnico` para determinar el paquete recomendado (básico/avanzado/premium)
+- **Alternativa descartada:** Eliminar completamente `score_global` — No viable porque rompería la recomendación de paquete
 
-### FASE-A
-- Las funciones de pilar (seo/geo/aeo/iao) son independientes y cada una retorna 0-100.
-- El wrapper _extraer_elementos_de_audit() mantiene backward compat con los 12 elementos originales.
-- ELEMENTO_KB_TO_PAIN_ID creció de 12 a 18 elementos (6 nuevos con default False).
-- calcular_cumplimiento() deprecada pero funcional: sugerir_paquete() acepta score_global.
+**Decisión 2:** `score_global_status` eliminado
+- **Razón:** Nunca fue referenciado en ningún template ni en código posterior — pure dead code
+- **Verificación:** Grep confirma 0 referencias externas a la variable
 
-### FASE-B
--
+---
 
-### FASE-C
-- LLMMentionChecker usa requests directamente (lazy import), no openai SDK. OpenRouter como provider principal.
-- _extraer_elementos_iao() mejorado: crawler_access usa ai_crawlers.overall_score, schema_advanced usa org_schema_detected, brand_signals detecta SameAs en schema.properties.
-- LLM report ponderación 50/50: cuando source != "stub", el mention_score real pondera 50% con checklist base.
-- 42 tests nuevos (23 LLM checker + 19 IAO score). Mocks de requests deben parchearse en 'requests.post' (no en módulo específico) porque el import es lazy.
-- Tests stub requieren @patch.dict('os.environ', {}, clear=True) para limpiar API keys del entorno.
+## Sección G: Lecciones Aprendidas
 
-### FASE-D
--
+**L1: Dead code con dependencia indirecta es riesgoso**
+- `score_global_status` parecía dead code simple pero `score_global` SÍ se usa en `v4_proposal_generator.py`. Verificar siempre grep antes de eliminar variables que comparten prefijo.
 
-### FASE-E
--
+**L2: Cambios "simples" requieren trazabilidad completa**
+- Eliminar 1 línea de template + 1 variable suena trivial, pero el plan post-proyecto exigió 6 herramientas/archivos diferentes. No saltar el proceso por aparentar simplicidad.
 
-### General
--
+**L3: GUIA_TECNICA.md no existe como archivo**
+- El plan asume su existencia pero no está en el repo. Referencia obsoleta que debe actualizarse en CONTRIBUTING.md o crearse si realmente se necesita.
+
+---
+
+## Sección H: Artefactos de Verificación
+
+**Logs de tests:**
+```
+tests/commercial_documents/test_iao_score.py — PASA (0 regresión)
+tests/commercial_documents/ -k "diagnostic" — PASA
+```
+
+**Grep de verificación:**
+```
+grep "Visibilidad Digital" templates/diagnostico_v6_template.md → 0 resultados
+grep "score_global_status" v4_diagnostic_generator.py → 0 resultados
+```
