@@ -1,8 +1,50 @@
 # Guía Técnica IA Hoteles Agent CLI
 
 **Ultima actualizacion:** 13 Abril 2026
-||**Version:** 4.29.0 (Fix geo_enriched to Delivery Bridge + Assets Completos)
+||**Version:** 4.30.0 (Fix Places API search with garbage schema data)
 ||**Audiencia:** Desarrolladores, DevOps, Contribuidores
+
+## Notas de Cambios — v4.30.0 (PLACES-API-FIX)
+
+**Fecha:** 13 Abril 2026
+**Fase:** PLACES-API-FIX
+
+### Resumen
+
+Fix critico: Places API (New) devolvia score Google Maps 0/100 para hoteles que SÍ existen en Google Maps. Causa raiz: la query de busqueda usaba datos directos del schema.org del sitio web sin validarlos.
+
+### Problema
+
+El metodo `_audit_gbp()` construia la query de Places API asi:
+```python
+search_name = schema_props.get("name") or hotel_name
+location = schema_props.get("address", "") or "Colombia"
+```
+Cuando el schema tiene datos basura (ej: "Amaziliahotel" sin espacio, coordenadas NYC), la query falla y el pipeline asigna geo_score=0.
+
+### Solucion
+
+Nuevo metodo `_build_search_queries()` genera multiples variaciones de query validando schema_props:
+- Rechaza nombres sin espacios (usa hotel_name en su lugar)
+- Rechaza coordenadas fuera de Colombia (lat 0-13, lng -82 to -66)
+- Genera variaciones con espacios insertados en diferentes posiciones
+- Loop en `_audit_gbp()` intenta cada query hasta encontrar el hotel
+
+### Modulos Afectados
+
+#### 1. modules/auditors/v4_comprehensive.py
+- Nuevo metodo `_build_search_queries(schema_props, hotel_name, url) -> List[tuple]`
+- Retorna lista priorizada de (nombre, ubicacion) para Places API
+- Loop de busqueda en `_audit_gbp()` reemplaza query unica
+- +90 lineas
+
+### Backwards Compatibility
+
+- Si el schema tiene datos validos, el comportamiento es identico al anterior
+- Si el schema tiene datos basura, ahora genera queries alternativas (antes fallaba)
+- No hay cambios en la interfaz publica ni en los datos de salida
+
+---
 
 ## Notas de Cambios — v4.28.0 (FASE-LLMSTXT-FIX + FASE-ASSETS-VALIDACION)
 

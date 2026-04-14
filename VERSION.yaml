@@ -1,7 +1,7 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.29.0"
-codename: "Fix geo_enriched to Delivery Bridge + Assets Completos"
+version: "4.30.0"
+codename: "Fix Places API search with garbage schema data"
 release_date: "2026-04-13"
 plan_maestro_version: "v2.6.0"
 

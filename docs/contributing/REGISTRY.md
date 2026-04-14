@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-|> **Ultima actualizacion:** 2026-04-13
-|> **Version actual:** v4.29.0
-|> **Total fases completadas:** 69
+> **Ultima actualizacion:** 2026-04-13
+> **Version actual:** v4.30.0
+> **Total fases completadas:** 123
 
 ---
 
@@ -2828,6 +2828,25 @@ _Ninguno_
 - [x] Tests passing (20 passed (proposal_alignment + gate), 28 passed (pain_mapper + conditional_generator))
 - [x] Suite NEVER_BLOCK passing
 - [x] Coherence >= 0.8: 0.84 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## PLACES-API-FIX - 2026-04-13
+**Descripcion:** Fix critico: Places API (New) no encontraba hoteles cuando schema.org tiene datos basura (nombre sin espacios, coordenadas placeholder NYC). Nuevo metodo _build_search_queries() genera multiples variaciones de query validando schema_props antes de usarlos. Bug causaba score 0/100 falso en Google Maps.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
 ---

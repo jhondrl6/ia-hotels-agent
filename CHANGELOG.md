@@ -1,5 +1,36 @@
 # Changelog
 
+## [4.30.0] - 2026-04-13
+
+### Objetivo
+
+Fix critico: Places API (New) no encontraba hoteles con schema.org basura
+
+### Problema
+
+El pipeline devolvia score Google Maps 0/100 para hoteles que SÍ existen en Google Maps. Causa: la query de Places API usaba datos directos del schema.org sin validarlos. Ejemplo real (Amazilia Hotel):
+- Schema decia: `"Amaziliahotel"` (sin espacio), coordenadas NYC (40.7128, -74.0060)
+- Google Maps tiene: `"Amazilia Hotel"`, 4.5 estrellas, 202 reseñas
+- Query enviada: `"Amaziliahotel, Colombia"` → no encontraba nada → geo_score=0
+
+### Cambios Implementados
+
+- `modules/auditors/v4_comprehensive.py` — Nuevo metodo `_build_search_queries()`: genera multiples variaciones de query validando schema_props antes de usarlos. Valida coordenadas (deben estar en Colombia), nombre (debe tener espacios o coincidir con hotel_name), y direccion. Loop de Places API intenta cada query hasta encontrar el hotel.
+- **Impacto**: Score Google Maps pasa de 0/100 (falso) a score real basado en datos verificados de Google Places.
+
+### Archivos
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | +90 lineas: `_build_search_queries()`, loop de queries en `_audit_gbp()` |
+
+### Tests
+
+- Tests existentes: 385 (sin cambios)
+- Tests nuevos: 0 (fix validado manualmente contra Amazilia Hotel real)
+
+---
+
 ## [4.29.0] - 2026-04-13
 
 ### Objetivo

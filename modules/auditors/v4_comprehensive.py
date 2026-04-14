@@ -758,34 +758,39 @@ class V4ComprehensiveAuditor:
         
         FASE 11 Extension: Fallback chain: Places API (New) -> Google Travel -> SerpAPI -> schema_data
         """
-        # Preferir schema_props name ya que es el nombre real del hotel desde el website
-        search_name = schema_props.get("name") or hotel_name
-        location = schema_props.get("address", "") or "Colombia"
+        # Generar queries de búsqueda con validación de datos del schema
+        search_queries = self._build_search_queries(schema_props, hotel_name, url)
         
         # FASE 11 Extension: Try Places API (New) first - tiene 200M+ places
-        try:
-            places_result = self._search_places_new(search_name, location)
-            if places_result and places_result.place_found:
-                logger.info(f"Places API (New) found: {search_name}")
-                return GBPApiResult(
-                    place_found=True,
-                    place_id=places_result.place_id,
-                    name=places_result.name,
-                    rating=places_result.rating,
-                    reviews=places_result.reviews,
-                    photos=places_result.photos,
-                    phone=places_result.phone,
-                    website=places_result.website_url,
-                    address=places_result.address,
-                    geo_score=places_result.geo_score,
-                    geo_score_breakdown=places_result.geo_score_formula,
-                    confidence=ConfidenceLevel.VERIFIED.value,
-                    data_source="places_api_new",
-                    error_type=None,
-                    error_message=None,
-                )
-        except Exception as e:
-            logger.warning(f"Places API (New) failed: {e}")
+        # FIX: Intentar múltiples variaciones de query si la primera falla
+        for query_name, query_location in search_queries:
+            try:
+                places_result = self._search_places_new(query_name, query_location)
+                if places_result and places_result.place_found:
+                    logger.info(f"Places API (New) found: {places_result.name} (query: '{query_name}, {query_location}')")
+                    return GBPApiResult(
+                        place_found=True,
+                        place_id=places_result.place_id,
+                        name=places_result.name,
+                        rating=places_result.rating,
+                        reviews=places_result.reviews,
+                        photos=places_result.photos,
+                        phone=places_result.phone,
+                        website=places_result.website_url,
+                        address=places_result.address,
+                        geo_score=places_result.geo_score,
+                        geo_score_breakdown=places_result.geo_score_formula,
+                        confidence=ConfidenceLevel.VERIFIED.value,
+                        data_source="places_api_new",
+                        error_type=None,
+                        error_message=None,
+                    )
+            except Exception as e:
+                logger.warning(f"Places API (New) failed for query '{query_name}, {query_location}': {e}")
+        
+        # Fallback: usar primera query para los fallbacks restantes
+        search_name = search_queries[0][0] if search_queries else (hotel_name or "Unknown Hotel")
+        location = search_queries[0][1] if search_queries else "Colombia"
         
         # Try Google Travel second
         try:
@@ -868,6 +873,89 @@ class V4ComprehensiveAuditor:
             error_type="NO_PLACE_FOUND",
             error_message="Hotel not found in Places, Travel, or SerpAPI",
         )
+    
+    def _build_search_queries(
+        self,
+        schema_props: Dict[str, Any],
+        hotel_name: Optional[str],
+        url: str
+    ) -> List[tuple]:
+        """Genera lista de queries de búsqueda validadas para Places API.
+        
+        FIX: Valida datos del schema para evitar queries basura
+        (ej: coordenadas de NYC, nombres sin espacios, sin dirección).
+        
+        Returns:
+            Lista de tuplas (nombre, ubicacion) ordenadas por prioridad
+        """
+        queries = []
+        
+        # Extraer datos del schema
+        schema_name = schema_props.get("name", "")
+        schema_address = schema_props.get("address", "")
+        schema_geo = schema_props.get("geo", {})
+        schema_lat = float(schema_geo.get("latitude", 0) or 0)
+        schema_lng = float(schema_geo.get("longitude", 0) or 0)
+        
+        # Validar si las coordenadas son de Colombia (aprox: lat 0-13, lng -82 to -66)
+        coords_are_colombia = (
+            0 <= schema_lat <= 13 and
+            -82 <= schema_lng <= -66
+        ) if schema_lat != 0 else False
+        
+        # Validar si el nombre del schema es razonable (tiene espacios o coincide con hotel_name)
+        schema_name_is_valid = (
+            schema_name and
+            (" " in schema_name or schema_name.lower() == (hotel_name or "").lower())
+        )
+        
+        # Query 1: Nombre del schema + dirección del schema (si ambos son válidos)
+        if schema_name_is_valid and schema_address:
+            queries.append((schema_name, schema_address))
+        
+        # Query 2: Nombre del schema + "Colombia" (si el nombre es válido)
+        if schema_name_is_valid and not schema_address:
+            queries.append((schema_name, "Colombia"))
+        
+        # Query 3: hotel_name + dirección del schema
+        if hotel_name and schema_address:
+            queries.append((hotel_name, schema_address))
+        
+        # Query 4: hotel_name extraído del dominio + "Colombia"
+        if hotel_name:
+            queries.append((hotel_name, "Colombia"))
+        
+        # Query 5: Variaciones del nombre (agregar espacios si es una sola palabra)
+        if hotel_name and " " not in hotel_name:
+            # Intentar "Amaziliahotel" -> "Amazilia Hotel"
+            for i in range(3, len(hotel_name) - 2):
+                spaced = f"{hotel_name[:i]} {hotel_name[i:]}"
+                queries.append((spaced, "Colombia"))
+        
+        # Query 6: Nombre desde la URL del sitio
+        if url:
+            import re
+            domain = re.sub(r'https?://(www\.)?', '', url).rstrip('/')
+            domain_name = domain.split('.')[0]
+            if domain_name and domain_name != hotel_name:
+                # Convertir dominio a nombre legible
+                readable = domain_name.replace('-', ' ').replace('_', ' ').title()
+                queries.append((readable, "Colombia"))
+        
+        # Deduplicar manteniendo orden
+        seen = set()
+        unique_queries = []
+        for q in queries:
+            key = (q[0].lower().strip(), q[1].lower().strip())
+            if key not in seen:
+                seen.add(key)
+                unique_queries.append(q)
+        
+        # Fallback absoluto
+        if not unique_queries:
+            unique_queries.append(("Hotel", "Colombia"))
+        
+        return unique_queries
     
     def _search_places_new(self, hotel_name: str, location: str) -> Optional['PlaceData']:
         """Busca hotel usando Google Places API (New).

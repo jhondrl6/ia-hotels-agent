@@ -1,8 +1,8 @@
-<!-- agents_version: 4.29.0 | last_update: 2026-04-13 -->
+<!-- agents_version: 4.30.0 | last_update: 2026-04-13 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.29.0 -- Fix geo_enriched to Delivery Bridge + Assets Completos COMPLETADO**
+> **v4.30.0 -- Fix Places API search with garbage schema data COMPLETADO**
 
 ---
 
