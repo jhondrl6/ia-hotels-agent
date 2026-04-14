@@ -2430,7 +2430,20 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         except Exception:
             assessment["propuesta_text"] = ""
     assessment["hotel_data"] = {"region": region} if region else {}
-    
+
+    # Inject generated_assets for gate 8 (asset_confidence) and gate 9 (proposal_alignment)
+    if asset_result and asset_result.generated_assets:
+        assessment["generated_assets"] = [
+            {
+                "asset_type": a.asset_type,
+                "filename": a.filename,
+                "confidence_score": a.confidence_score,
+                "preflight_status": a.preflight_status,
+                "path": a.path,
+            }
+            for a in asset_result.generated_assets
+        ]
+
     # Run publication gates
     gate_config = PublicationGateConfig()
     gate_results = run_publication_gates(assessment, gate_config)

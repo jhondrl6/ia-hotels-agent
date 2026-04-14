@@ -1,8 +1,8 @@
-<!-- agents_version: 4.28.0 | last_update: 2026-04-13 -->
+<!-- agents_version: 4.29.0 | last_update: 2026-04-13 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.28.0 -- 4 Pilares Alignment + Voice Readiness Proxy COMPLETADO**
+> **v4.29.0 -- Fix geo_enriched to Delivery Bridge + Assets Completos COMPLETADO**
 
 ---
 
@@ -70,6 +70,30 @@ Para actualizar cualquier documento del repositorio (CHANGELOG, VERSION, docs):
 
 **Prompt para el agente:** "Actualizar documentacion oficial:VERSION sync + CHANGELOG + REGISTRY via scripts/log_phase_completion.py"
 
+### Flujo Documental Obligatorio (Resumen)
+
+Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto.md`):
+
+```
+1. log_phase_completion.py --fase FASE-X --desc "..." --check-manual-docs
+   → Registra en REGISTRY.md automáticamente
+
+2. sync_versions.py
+   → Sincroniza VERSION.yaml → 6 archivos (AGENTS, README, .cursorrules, CONTRIBUTING, GUIA_TECNICA, REGISTRY)
+
+3. Verificar CHANGELOG.md formato CONTRIBUTING.md:
+   ### Objetivo / ### Cambios / ### Archivos Nuevos / ### Archivos Modificados / ### Tests
+
+4. Verificar GUIA_TECNICA.md tiene nota técnica por fase
+
+5. run_all_validations.py --quick
+   → Validación final (4/4 checks)
+```
+
+**Regla**: NO ejecutar planes de documentación directamente. SIEMPRE seguir el flujo anterior.
+
+**Detalle completo**: `.agents/workflows/phased_project_executor.md` §4.5
+
 **Regenerable (1 comando):**
 - `.agent/SYSTEM_STATUS.md` → `python main.py --doctor --status`
 
@@ -77,7 +101,7 @@ Para actualizar cualquier documento del repositorio (CHANGELOG, VERSION, docs):
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 2150 funciones, 140 archivos, 0 regresion |
+| **Tests** | 2224 funciones, 140 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ 0.84 (umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |

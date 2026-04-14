@@ -2,7 +2,7 @@
 
 **Proyecto:** AUDIT-PIPELINE-DESALINEACIONES-ASSETS
 **Fecha inicio:** 2026-04-12 (v2 — ampliado)
-**Estado:** EN PROGRESO
+**Estado:** COMPLETADO
 
 ---
 
@@ -95,7 +95,7 @@ El pipeline de iah-cli generaba assets de delivery con datos placeholder (confid
 
 | Métrica | Antes (v4.28.0) | Después (v4.29.0) | Cambio |
 |---------|-----------------|-------------------|--------|
-| Tests totales | 2150+ | TBD (+13) | +13 |
+| Tests totales | 2150+ | 2224 | +74 |
 
 ---
 
@@ -131,19 +131,19 @@ grep -i "fallback\|openrouter\|provider.*switch" ~/.hermes/logs/*.log 2>/dev/nul
 - [x] FASE-TEMPLATE-DEBT: Sin cambios arquitectónicos (eliminación dead code + typo fix) ✅
 - [x] FASE-CONTENT-SCRUBBER: Sin cambios arquitectónicos (fix self-replacement + spacing detection) ✅
 - [x] Nota técnica: "proposal_asset_alignment_gate" ✅ (FASE-ASSETS-VALIDACION)
-- [ ] Nota técnica: "llms.txt fallback"
+- [x] Nota técnica: "llms.txt fallback" ✅ (cadena fallback: generador → geo_enriched → hotel_data → PENDIENTE_ONBOARDING)
 - [x] Nota técnica: "monthly_report generator" ✅ (FASE-ASSETS-VALIDACION)
 - [x] Nota técnica: "confidence disclosure en propuesta" ✅ (FASE-CONFIDENCE-DISCLOSURE)
 
 ### REGISTRY.md
 - [x] FASE-GEO-BRIDGE ✅ (2026-04-13)
 - [x] FASE-CONF-GATE ✅ (2026-04-13)
-- [ ] FASE-LLMSTXT-FIX ✅
+- [x] FASE-LLMSTXT-FIX ✅ (2026-04-13)
 - [x] FASE-ASSETS-VALIDACION ✅ (2026-04-13)
 - [x] FASE-CONFIDENCE-DISCLOSURE ✅ (2026-04-13)
 - [x] FASE-TEMPLATE-DEBT ✅ (2026-04-13)
-- [x] FASE-CONTENT-SCRUBBER ✅ (2026-04-13) — sin cambios arquitectónicos
-- [ ] FASE-RELEASE v4.29.0 ✅
+- [x] FASE-CONTENT-SCRUBBER ✅ (2026-04-13)
+- [x] FASE-RELEASE v4.29.0 ✅ (2026-04-13)
 
 ### docs/CONTRIBUTING.md
 - [x] Sin cambios de convenciones (FASE-CONFIDENCE-DISCLOSURE agrega parámetro opcional, no cambia convenciones) ✅

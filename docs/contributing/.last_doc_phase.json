@@ -17,7 +17,7 @@
   "modules/geo_enrichment/geo_enrichment_layer.py": "FASE-4",
   "modules/delivery/delivery_packager.py": "FASE-5",
   "modules/geo_enrichment/geo_flow.py": "FASE-6",
-  "CHANGELOG.md": "FASE-F",
+  "CHANGELOG.md": "FASE-RELEASE",
   "docs/GUIA_TECNICA.md": "FASE-F",
   ".agents/workflows/README.md": "FASE-7",
   "modules/asset_generation/asset_catalog.py": "FASE-D",
@@ -42,7 +42,7 @@
   "data_models/canonical_assessment.py": "FASE-C",
   "modules/financial_engine/calculator_v2.py": "FASE-J",
   "AGENTS.md": "FASE-C",
-  "VERSION.yaml": "FASE-C",
+  "VERSION.yaml": "FASE-RELEASE",
   "config/provider_registry.yaml": "FASE-D",
   "data_models/analytics_status.py": "FASE-D",
   "modules/analytics/__init__.py": "FASE-D",
@@ -78,5 +78,7 @@
   "modules/asset_generation/v4_asset_orchestrator.py (modificado)": "FASE-GEO-BRIDGE",
   "modules/commercial_documents/templates/propuesta_v6_template.md": "FASE-CONFIDENCE-DISCLOSURE",
   "modules/postprocessors/document_quality_gate.py": "FASE-CONTENT-SCRUBBER",
-  "tests/postprocessors/test_document_quality_gate.py": "FASE-CONTENT-SCRUBBER"
+  "tests/postprocessors/test_document_quality_gate.py": "FASE-CONTENT-SCRUBBER",
+  "8 archivos via sync_versions.py": "FASE-RELEASE",
+  "modules/asset_generation/v4_asset_orchestrator.py modules/auditors/llm_mention_checker.py modules/auditors/v4_comprehensive.py modules/commercial_documents/templates/propuesta_v6_template.md modules/commercial_documents/v4_proposal_generator.py": "FASE-D4-OPENROUTER"
 }

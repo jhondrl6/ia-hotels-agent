@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.28.0 | **Codename**: 4 Pilares Alignment + Voice Readiness Proxy
-> **Release date**: 2026-04-13 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.29.0 | **Codename**: Fix geo_enriched to Delivery Bridge + Assets Completos
+> **Release date**: 2026-04-14 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-04-13 | v4.28.0 4 Pilares Alignment + Voice Readiness Proxy*
+*Auto-generado: 2026-04-14 | v4.29.0 Fix geo_enriched to Delivery Bridge + Assets Completos*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

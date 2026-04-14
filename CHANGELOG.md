@@ -1,5 +1,108 @@
 # Changelog
 
+## [4.29.0] - 2026-04-13
+
+### Objetivo
+
+Fix geo_enriched → Delivery Bridge + Assets Completos
+
+7 fases completadas que resuelven 2 rupturas criticas en el pipeline: (1) geo_enriched no llegaba al delivery package, y (2) 3/7 servicios prometidos en propuesta no generaban asset. Todo el codigo de las fases ya fue mergeado en la sesion del 2026-04-13.
+
+### Cambios Implementados
+
+### FASE-GEO-BRIDGE (2026-04-13): geo_enriched → Asset Enrichment Bridge
+
+- `modules/asset_generation/conditional_generator.py` — GEO bridge post-generacion: copia archivos de `geo_enriched/` al delivery package con fallback a `hotel_data` del audit.
+- `modules/delivery/asset_bridge.py` — **NUEVO** modulo que conecta geo_enriched con delivery. `copy_geo_assets_to_delivery()` con metadata de confianza.
+- `modules/delivery/delivery_package_builder.py` — Integracion del GEO bridge en el flujo de packaging.
+- **Problema resuelto**: RUPTURA 1 del AUDIT — delivery package no incluiacute; geo_enriched/ ni confidence real (usaba 0.5 fijo).
+
+### FASE-CONF-GATE (2026-04-13): Asset Confidence Gate en Publication
+
+- `modules/quality_gates/publication_gates.py` — Gate 8: `asset_confidence_gate` (WARNING mode). Verifica que todos los assets generados tengan `confidence_score >= 0.7`.
+- `modules/asset_generation/v4_asset_orchestrator.py` — Pasa `confidence_scores` al assessment para el gate.
+- **Problema resuelto**: Assets con confidence bajo no eran bloqueados en publicacion.
+
+### FASE-LLMSTXT-FIX (2026-04-13): Fix llms.txt Generator — Fallback a geo_enriched
+
+- `modules/asset_generation/llmstxt_generator.py` — Parametro `geo_enriched_path: Optional[Path]` en `generate()`. Si geo_enriched/llms.txt existe (>50 chars), retorna ese contenido directamente. Warning cuando hotel name es generico ("Hotel") o vacio.
+- `modules/asset_generation/conditional_generator.py` — `_generate_content()` acepta `hotel_id`. Construye `geo_enriched_path = output_dir / hotel_id / "geo_enriched"` y lo pasa al generador.
+- `tests/asset_generation/test_llmstxt_generator.py` — **NUEVO** 8 tests.
+- **Problema resuelto**: D3 del AUDIT — llms.txt generaba placeholders vacios ("Hotel", URL "", "N/A") a pesar de que geo_enriched/llms.txt ya contenia datos reales.
+
+### FASE-ASSETS-VALIDACION (2026-04-13): Propuesta → Assets — Cero Desconexiones
+
+- `modules/asset_generation/monthly_report_generator.py` — **NUEVO** generador de informe mensual con KPIs de seguimiento (trafico web, GBP views, reservas directas, WhatsApp clicks), checklist acciones mensuales, disclaimer GA4/GSC.
+- `modules/asset_generation/proposal_asset_alignment.py` — **NUEVO** verificador propuesta→asset con mapeo de 7 servicios. `verify_proposal_asset_alignment()` retorna AlignmentReport (aligned/missing/low_quality).
+- `modules/asset_generation/asset_catalog.py` — Nuevo entry `monthly_report` (promised_by=["always"]). `whatsapp_button.promised_by` += "always". `voice_assistant_guide.promised_by` += "always_aeo".
+- `modules/asset_generation/conditional_generator.py` — Handler de generacion de contenido para monthly_report.
+- `modules/quality_gates/publication_gates.py` — Gate 9: `proposal_asset_alignment_gate` (WARNING mode). Verifica 7/7 servicios con asset.
+- `tests/asset_generation/test_monthly_report.py` — **NUEVO** 12 tests.
+- `tests/asset_generation/test_voice_guide_generation.py` — **NUEVO** 9 tests.
+- `tests/asset_generation/test_whatsapp_button.py` — **NUEVO** 11 tests.
+- `tests/asset_generation/test_proposal_alignment.py` — **NUEVO** 13 tests.
+- `tests/quality_gates/test_proposal_alignment_gate.py` — **NUEVO** 7 tests.
+- **Problema resuelto**: D4 del AUDIT — 3/7 servicios prometidos NO generaban asset (voice_assistant_guide, whatsapp_button, monthly_report). Servicios con asset: 3/7 → 7/7.
+
+### FASE-CONFIDENCE-DISCLOSURE (2026-04-13): Transparencia de Calidad en Propuesta
+
+- `modules/commercial_documents/templates/propuesta_v6_template.md` — Nueva seccion "Estado de los Entregables" con placeholder `${asset_quality_table}`.
+- `modules/commercial_documents/v4_proposal_generator.py` — Nuevo metodo `_generate_asset_quality_table()` que mapea servicios → assets via `PROPOSAL_SERVICE_TO_ASSET`. Umbrales: >=0.7 Completo, >=0.4 Requiere datos, <0.4 En desarrollo.
+- `main.py` — Conversion `asset_plan` (AssetSpec) a formato dict con mapeo ConfidenceLevel→float.
+- `tests/commercial_documents/test_proposal_confidence_disclosure.py` — **NUEVO** 5 tests.
+
+### FASE-TEMPLATE-DEBT (2026-04-13): Sincronizar Embebido vs V6 + Typo
+
+- `modules/commercial_documents/propuesta_v6_template.md` — Sync embebido vs V6. Typo corregido.
+- **Problema resuelto**: Desconexion entre template embebido y V6.
+
+### FASE-CONTENT-SCRUBBER (2026-04-13): Fix Self-Replacement + Spacing Detection
+
+- `modules/postprocessors/document_quality_gate.py` — Skip self-replacement warnings (PT_TO_ES: old==new). 9 spacing error patterns + `detect_spacing_errors()`. `_check_spacing_errors()` method en gate.
+- `tests/postprocessors/test_document_quality_gate.py` — 9 tests nuevos: 3 self-replacement, 3 spacing detection, 3 gate integration. Total: 28/28 passing.
+
+### Tests
+- 60 tests nuevos pasando (8 LLMSTXT-FIX + 52 ASSETS-VALIDACION)
+- 0 regresiones
+
+### Archivos Nuevos
+- `modules/asset_generation/geo_enriched_bridge.py` — Bridge enrichment geo_enriched → delivery
+- `modules/asset_generation/monthly_report_generator.py` — Generador de informe mensual
+- `modules/asset_generation/proposal_asset_alignment.py` — Verificador propuesta → asset
+- `tests/asset_generation/test_geo_enriched_bridge.py` — 13 tests bridge
+- `tests/quality_gates/test_asset_confidence_gate.py` — Tests gate confidence
+- `tests/asset_generation/test_llmstxt_generator.py` — 8 tests llms.txt fix
+- `tests/asset_generation/test_monthly_report.py` — 12 tests informe mensual
+- `tests/asset_generation/test_voice_guide_generation.py` — 9 tests voice guide
+- `tests/asset_generation/test_whatsapp_button.py` — 11 tests WhatsApp button
+- `tests/asset_generation/test_proposal_alignment.py` — 13 tests alineación
+- `tests/quality_gates/test_proposal_alignment_gate.py` — 7 tests gate #9
+- `tests/commercial_documents/test_proposal_confidence_disclosure.py` — 5 tests disclosure
+- `tests/postprocessors/test_document_quality_gate.py` — Tests content scrubber
+
+### Archivos Modificados
+- `modules/asset_generation/conditional_generator.py` — Bridge integration + voice/whatsapp fix
+- `modules/asset_generation/v4_asset_orchestrator.py` — Llamada al bridge post-generación
+- `modules/auditors/llm_mention_checker.py` — OPENROUTER-A: cost_usd/tokens_used
+- `modules/auditors/v4_comprehensive.py` — OPENROUTER-B: print costo IAO
+- `modules/asset_generation/asset_catalog.py` — Agregar monthly_report, fix promised_by
+- `modules/quality_gates/publication_gates.py` — Gate #8 confidence + gate #9 alignment
+- `modules/asset_generation/llmstxt_generator.py` — Fallback a geo_enriched/llms.txt
+- `modules/commercial_documents/v4_diagnostic_generator.py` — Sincronizar/eliminar embebido
+- `modules/commercial_documents/templates/propuesta_v6_template.md` — Typo fix + tabla calidad
+- `modules/commercial_documents/v4_proposal_generator.py` — Tabla calidad dinámica
+- `modules/postprocessors/document_quality_gate.py` — Self-replacement + spacing fixes
+- `main.py` — Cableado assets_generated a proposal generator
+- 0 regresiones
+
+### Criterio de Exito Alcanzado
+- 7/7 servicios de la propuesta tienen asset garantizado
+- geo_enriched bridging al delivery package
+- confidence >= 0.7 gate activo
+- llms.txt con datos reales (no placeholders)
+- Propuesta incluye tabla de calidad de assets
+- 9 publication gates activos
+
 ## [4.28.0] - 2026-04-12
 
 ### 4 Pilares Alignment + Voice Readiness Proxy

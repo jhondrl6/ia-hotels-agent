@@ -1,7 +1,7 @@
 # Contribuir con la Documentacion Oficial
 
 > Este archivo responde a **una sola pregunta**: como se actualiza la documentacion oficial del repositorio con suficiencia y claridad.
-> **Version actual:** v4.28.0 | Consulta REGISTRY.md para el historial de fases completadas.
+> **Version actual:** v4.29.0 | Consulta REGISTRY.md para el historial de fases completadas.
 
 ---
 

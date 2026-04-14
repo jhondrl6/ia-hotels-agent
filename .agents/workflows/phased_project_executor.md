@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones.
-version: 2.1.0
+version: 2.4.0
 ---
 
 # Skill: Phased Project Executor
@@ -86,6 +86,164 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
 - Sección A: Módulos nuevos
 - Sección D: Métricas acumulativas
 - Sección E: Archivos afiliados actualizados
+
+---
+
+### 4.5. Ejecución de Plan de Documentación (OBLIGATORIO)
+
+> [!CAUTION]
+> **REGLA MANDATORIA**: Cuando se ejecute un plan de documentación (como `09-documentacion-post-proyecto.md`), SE DEBE seguir este procedimiento. NO ejecutar el plan directamente sin estas validaciones.
+
+#### Flujo de Ejecución
+
+```
+Plan de documentación (09-documentacion-post-proyecto.md)
+    │
+    ├── Paso 4.5.1: Ejecutar log_phase_completion.py por cada fase
+    │   └── Registrar en REGISTRY.md (automático)
+    │
+    ├── Paso 4.5.2: Ejecutar sync_versions.py
+    │   └── Sincronizar VERSION.yaml → 6 archivos
+    │
+    ├── Paso 4.5.3: Validar CHANGELOG.md formato
+    │   └── Verificar secciones requeridas por CONTRIBUTING.md
+    │
+    ├── Paso 4.5.4: Validar GUIA_TECNICA.md
+    │   └── Verificar notas técnicas por fase
+    │
+    └── Paso 4.5.5: Validación final
+        └── run_all_validations.py --quick
+```
+
+#### Paso 4.5.1: Registrar Fases en REGISTRY.md
+
+Para cada fase mencionada en el plan, ejecutar:
+
+```bash
+# Ejemplo: Registrar FASE-GEO-BRIDGE
+./venv/Scripts/python.exe scripts/log_phase_completion.py \
+    --fase FASE-GEO-BRIDGE \
+    --desc "Bridge enrichment geo_enriched → delivery" \
+    --archivos-nuevos "modules/asset_generation/geo_enriched_bridge.py,tests/asset_generation/test_geo_enriched_bridge.py" \
+    --archivos-mod "modules/asset_generation/v4_asset_orchestrator.py" \
+    --tests "13" \
+    --check-manual-docs
+```
+
+**Regla**: Ejecutar UNA vez por cada fase documentada en el plan.
+
+#### Paso 4.5.2: Sincronizar Versiones
+
+```bash
+# Sincronizar VERSION.yaml → AGENTS.md, README.md, .cursorrules, CONTRIBUTING.md, GUIA_TECNICA.md, REGISTRY.md
+./venv/Scripts/python.exe scripts/sync_versions.py
+
+# Verificar sincronización
+./venv/Scripts/python.exe scripts/version_consistency_checker.py
+```
+
+#### Paso 4.5.3: Validar CHANGELOG.md
+
+Verificar que la entrada de CHANGELOG tenga el formato requerido por `docs/CONTRIBUTING.md §78-85`:
+
+```markdown
+## [X.Y.Z] - Fecha
+
+### Objetivo
+{Descripción breve del cambio}
+
+### Cambios Implementados
+- Descripción de cambios realizados
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+
+### Tests
+- N tests nuevos, 0 regresiones
+```
+
+**Checklist CHANGELOG:**
+- [ ] Entrada `[X.Y.Z]` existe
+- [ ] Tiene sección `### Objetivo`
+- [ ] Tiene sección `### Cambios Implementados`
+- [ ] Tiene sección `### Archivos Nuevos` (si aplica)
+- [ ] Tiene sección `### Archivos Modificados` (si aplica)
+- [ ] Tiene sección `### Tests`
+- [ ] No hay entradas duplicadas
+
+#### Paso 4.5.4: Validar GUIA_TECNICA.md
+
+Verificar que `docs/GUIA_TECNICA.md` tenga nota técnica para cada fase:
+
+**Checklist GUIA_TECNICA:**
+- [ ] Cada fase tiene una sección "Notas de Cambios vX.Y.Z"
+- [ ] Incluye módulos afectados
+- [ ] Incluye problema/solución
+- [ ] Incluye backwards compatibility
+- [ ] Incluye tests (si aplica)
+
+#### Paso 4.5.5: Validación Final
+
+```bash
+# Ejecutar todas las validaciones
+./venv/Scripts/python.exe scripts/run_all_validations.py --quick
+
+# Verificar estado del sistema
+./venv/Scripts/python.exe scripts/doctor.py --status
+
+# Verificar DOMAIN_PRIMER (si hubo cambios arquitectónicos)
+./venv/Scripts/python.exe scripts/doctor.py --context
+```
+
+**Checklist Final:**
+- [ ] `run_all_validations.py --quick` pasa (4/4)
+- [ ] `doctor.py --status` ejecutado sin errores
+- [ ] `version_consistency_checker.py` pasa
+- [ ] `sync_versions.py` ejecutado
+- [ ] Todos los archivos de documentación actualizados
+
+#### Ejemplo Completo de Ejecución
+
+```bash
+# 1. Registrar cada fase del plan
+./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-GEO-BRIDGE --desc "..." --check-manual-docs
+./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-CONF-GATE --desc "..." --check-manual-docs
+# ... repetir para cada fase
+
+# 2. Sincronizar versiones
+./venv/Scripts/python.exe scripts/sync_versions.py
+
+# 3. Verificar consistencia
+./venv/Scripts/python.exe scripts/version_consistency_checker.py
+
+# 4. Validar documentación manual
+# Verificar CHANGELOG.md tiene formato correcto
+# Verificar GUIA_TECNICA.md tiene notas técnicas
+
+# 5. Validación final
+./venv/Scripts/python.exe scripts/run_all_validations.py --quick
+./venv/Scripts/python.exe scripts/doctor.py --status
+```
+
+#### Checklist de Completitud del Plan de Documentación
+
+Después de ejecutar el plan, verificar:
+
+| Verificación | Comando | Estado |
+|--------------|---------|--------|
+| Fases registradas en REGISTRY.md | `grep "## FASE-" docs/contributing/REGISTRY.md` | [ ] |
+| Versiones sincronizadas | `scripts/sync_versions.py` | [ ] |
+| CHANGELOG formato correcto | Manual: verificar secciones | [ ] |
+| GUIA_TECNICA actualizada | Manual: verificar notas técnicas | [ ] |
+| Validaciones pasan | `scripts/run_all_validations.py --quick` | [ ] |
+| Doctor sin errores | `scripts/doctor.py --status` | [ ] |
+
+---
 
 ### 5. Validación Final de Preparación
 Antes de cerrar la sesión de preparación:
@@ -364,6 +522,7 @@ git diff --stat
 - Prompts muy grandes → dividir en secciones dentro del mismo archivo
 
 ## Versiones
+- **v2.4.0** (2026-04-13): Paso 4.5: Ejecución de Plan de Documentación. Prevención de desajustes documentales al ejecutar planes como 09-documentacion-post-proyecto.md. Incluye gates de validación: log_phase_completion.py por fase, sync_versions.py, validación CHANGELOG formato CONTRIBUTING.md, validación GUIA_TECNICA.md, run_all_validations.py --quick. Checklist de completitud integrado.
 - **v2.3.0** (2026-03-26): Version Sync Gate + Documentation Audit + FASE-RELEASE auto-detect. Convencion FASE-RELEASE-X.Y.Z para releases. Pre-commit hook para consistencia de versiones.
 - **v2.2.0** (2026-03-25): Enforcement de docs manuales --check-manual-docs. Si hay cambios arquitectonicos en archivos de REQUIRE_ArchitectURAL_CHANGE (conditional_generator.py, faq_gen.py, voice_guide.py, aeo_kpis.py, etc.) y GUIA_TECNICA.md no menciona la fase, el script FAIL. Uso --force-skip-docs --skip-reason para excepciones.
 - **v2.0.0** (2026-03-23): Simplificado — preparación en una sesión, implementación en sesión propia por fase. Elimina TDD Gate, Capability Contract, lecciones extensas.

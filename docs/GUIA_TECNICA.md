@@ -1,7 +1,7 @@
 # Guía Técnica IA Hoteles Agent CLI
 
 **Ultima actualizacion:** 13 Abril 2026
-||**Version:** 4.28.0 (4 Pilares Alignment + Voice Readiness Proxy)
+||**Version:** 4.29.0 (Fix geo_enriched to Delivery Bridge + Assets Completos)
 ||**Audiencia:** Desarrolladores, DevOps, Contribuidores
 
 ## Notas de Cambios — v4.28.0 (FASE-LLMSTXT-FIX + FASE-ASSETS-VALIDACION)
@@ -68,7 +68,7 @@ Dos fases complementarias que cierran desconexiones críticas del pipeline de ge
 
 ---
 
-## Notas de Cambios — v4.29.0: geo_enriched Bridge (EN PROGRESO)
+## Notas de Cambios — v4.29.0: geo_enriched Bridge (COMPLETADA)
 
 **Fecha:** 13 Abril 2026
 **Fase:** FASE-GEO-BRIDGE
