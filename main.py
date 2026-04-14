@@ -2824,7 +2824,8 @@ def _detect_region_from_url(url: str) -> str:
     """Detecta la región basada en la URL o contenido."""
     url_lower = url.lower()
     if any(x in url_lower for x in ['visperas', 'salento', 'armenia', 'quindio', 'calarca',
-          'cafetero', 'finca', 'montenegro', 'filandia', 'circasia', 'termales']):
+          'cafetero', 'finca', 'montenegro', 'filandia', 'circasia', 'termales',
+          'pereira', 'risaralda', 'manizales', 'caldas', 'amazilia']):
         return 'eje_cafetero'
     elif any(x in url_lower for x in ['cartagena', 'santa marta', 'barranquilla']):
         return 'caribe'

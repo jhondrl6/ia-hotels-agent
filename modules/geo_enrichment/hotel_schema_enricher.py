@@ -181,13 +181,20 @@ class HotelSchemaEnricher:
 
     def _build_geo(self, hotel_data: CanonicalAssessment) -> Optional[Dict[str, Any]]:
         """Build geographic coordinates structure."""
-        # Note: actual lat/lng would come from GBP or site scraping
-        # For now, provide structure hint
-        return {
-            "@type": "GeoCoordinates",
-            "latitude": "40.7128",  # Placeholder - would need actual data
-            "longitude": "-74.0060",
-        }
+        # Try to get real coordinates from GBP data first
+        if hotel_data.gbp_analysis:
+            gbp = hotel_data.gbp_analysis
+            lat = getattr(gbp, 'lat', 0.0) or 0.0
+            lng = getattr(gbp, 'lng', 0.0) or 0.0
+            # Validate coordinates are in Colombia range (lat 0-13, lng -82 to -66)
+            if 0 <= lat <= 13 and -82 <= lng <= -66:
+                return {
+                    "@type": "GeoCoordinates",
+                    "latitude": str(lat),
+                    "longitude": str(lng),
+                }
+        # No valid coordinates available — return None instead of hardcoding NYC
+        return None
 
     def _build_image(self, hotel_data: CanonicalAssessment) -> Optional[str]:
         """Build image URL."""

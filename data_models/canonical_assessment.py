@@ -178,6 +178,8 @@ class GBPAnalysis(BaseModel):
     categories: List[str] = Field(default_factory=list, description="Categorías")
     hours_available: Optional[bool] = Field(None, description="Tiene horarios")
     phone_matches: Optional[bool] = Field(None, description="Teléfono coincide con web")
+    lat: Optional[float] = Field(None, description="Latitud GPS")
+    lng: Optional[float] = Field(None, description="Longitud GPS")
 
     @field_validator("rating")
     @classmethod

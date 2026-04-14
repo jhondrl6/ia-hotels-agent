@@ -73,6 +73,8 @@ class GBPApiResult:
     geo_score: int
     geo_score_breakdown: Dict[str, float]
     confidence: str
+    lat: float = 0.0
+    lng: float = 0.0
     data_source: str = "places_api"
     error_type: Optional[str] = None
     error_message: Optional[str] = None
@@ -566,7 +568,7 @@ class V4ComprehensiveAuditor:
         whatsapp_html_detected = self._detect_whatsapp_from_html(page_html)
         if whatsapp_html_detected:
             print("      WhatsApp button detected in HTML")
-        validation_result = self._run_cross_validation(url, schema_result, gbp_result, whatsapp_html_detected)
+        validation_result = self._run_cross_validation(url, schema_result, gbp_result, whatsapp_html_detected, page_html=page_html)
         print(f"      WhatsApp: {validation_result.whatsapp_status}")
         print(f"      ADR: {validation_result.adr_status}")
         if validation_result.conflicts:
@@ -767,6 +769,10 @@ class V4ComprehensiveAuditor:
             try:
                 places_result = self._search_places_new(query_name, query_location)
                 if places_result and places_result.place_found:
+                    # Validate: reject search results (not real profiles)
+                    if not self._is_valid_gbp_result(places_result):
+                        logger.info(f"Places API result rejected (search result, not profile): {places_result.name}")
+                        continue
                     logger.info(f"Places API (New) found: {places_result.name} (query: '{query_name}, {query_location}')")
                     return GBPApiResult(
                         place_found=True,
@@ -781,6 +787,8 @@ class V4ComprehensiveAuditor:
                         geo_score=places_result.geo_score,
                         geo_score_breakdown=places_result.geo_score_formula,
                         confidence=ConfidenceLevel.VERIFIED.value,
+                        lat=places_result.lat,
+                        lng=places_result.lng,
                         data_source="places_api_new",
                         error_type=None,
                         error_message=None,
@@ -874,6 +882,38 @@ class V4ComprehensiveAuditor:
             error_message="Hotel not found in Places, Travel, or SerpAPI",
         )
     
+    def _is_valid_gbp_result(self, place_data: 'PlaceData') -> bool:
+        """Validate that a Places API result is a real business profile, not a search result.
+        
+        Rejects results that are generic search pages (e.g., "Hotels in Colombia: search results").
+        A valid profile should have at least: address OR phone OR rating > 0.
+        """
+        name = (place_data.name or "").lower()
+        
+        # Reject if name contains search-result indicators
+        search_indicators = [
+            "búsqueda de", "busqueda de", "search results", "resultados de búsqueda",
+            "hoteles en", "hoteles de", "hotels in", "hotels of",
+            ": búsqueda", ": busqueda", ": search",
+            "google travel", "google maps",
+        ]
+        for indicator in search_indicators:
+            if indicator in name:
+                return False
+        
+        # Reject if result has no meaningful business data
+        has_address = bool(place_data.address and place_data.address.strip())
+        has_phone = bool(place_data.phone)
+        has_rating = place_data.rating > 0
+        has_website = bool(place_data.website_url)
+        
+        # A real profile should have at least 2 of these signals
+        signals = sum([has_address, has_phone, has_rating, has_website])
+        if signals < 2:
+            return False
+        
+        return True
+    
     def _build_search_queries(
         self,
         schema_props: Dict[str, Any],
@@ -921,16 +961,16 @@ class V4ComprehensiveAuditor:
         if hotel_name and schema_address:
             queries.append((hotel_name, schema_address))
         
-        # Query 4: hotel_name extraído del dominio + "Colombia"
-        if hotel_name:
-            queries.append((hotel_name, "Colombia"))
-        
-        # Query 5: Variaciones del nombre (agregar espacios si es una sola palabra)
+        # Query 4: Variaciones del nombre con espacios (antes que sin espacio)
         if hotel_name and " " not in hotel_name:
-            # Intentar "Amaziliahotel" -> "Amazilia Hotel"
+            # Intentar "Amaziliahotel" -> "Amazilia Hotel", "Amazilia Hote L", etc.
             for i in range(3, len(hotel_name) - 2):
                 spaced = f"{hotel_name[:i]} {hotel_name[i:]}"
                 queries.append((spaced, "Colombia"))
+        
+        # Query 5: hotel_name extraído del dominio + "Colombia" (último recurso)
+        if hotel_name:
+            queries.append((hotel_name, "Colombia"))
         
         # Query 6: Nombre desde la URL del sitio
         if url:
@@ -1273,16 +1313,47 @@ class V4ComprehensiveAuditor:
                 return True
         return False
 
+    def _extract_phone_from_html(self, html: str) -> Optional[str]:
+        """Extract phone number from <a href='tel:...'> links in HTML.
+        
+        D9 FIX: Captura teléfonos de enlaces tel: cuando el schema no tiene telephone.
+        Normaliza números colombianos: 3XXXXXXXXX -> +57 3XXXXXXXXX
+        """
+        import re
+        # Match href="tel:+573104019049" or href="tel:3104019049"
+        tel_matches = re.findall(r'href=["\']tel:([^"\']+)["\']', html, re.IGNORECASE)
+        if not tel_matches:
+            return None
+        for raw_phone in tel_matches:
+            # Clean: remove spaces, dashes, parens
+            cleaned = re.sub(r'[\s\-\(\)]', '', raw_phone)
+            # Normalize Colombian mobile: 3XXXXXXXXX (10 digits starting with 3)
+            if re.match(r'^3\d{9}$', cleaned):
+                return f"+57 {cleaned}"
+            # Already has country code
+            if cleaned.startswith('+57'):
+                return cleaned
+            if cleaned.startswith('57') and len(cleaned) == 12:
+                return f"+{cleaned}"
+            # Return first valid-looking number
+            if len(cleaned) >= 7:
+                return cleaned
+        return None
+
     def _run_cross_validation(
         self,
         url: str,
         schema: SchemaAuditResult,
         gbp: GBPApiResult,
         whatsapp_html_detected: bool = False,
+        page_html: str = "",
     ) -> CrossValidationResult:
         """Run cross-validation between data sources."""
         # Validate WhatsApp/phone
         web_phone = schema.properties.get("telephone")
+        # D9 FIX: Fallback — extract phone from HTML tel: links if schema has none
+        if not web_phone and page_html:
+            web_phone = self._extract_phone_from_html(page_html)
         gbp_phone = gbp.phone
         
         whatsapp_dp = self.cross_validator.validate_whatsapp(

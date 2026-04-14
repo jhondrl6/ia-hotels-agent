@@ -686,6 +686,15 @@ class ConditionalGenerator:
             },
         ]
 
+    def _is_valid_colombia_coords(self, lat, lng) -> bool:
+        """Validate coordinates are in Colombia range (lat 0-13, lng -82 to -66)."""
+        try:
+            lat_f = float(lat) if lat else 0.0
+            lng_f = float(lng) if lng else 0.0
+            return 0 <= lat_f <= 13 and -82 <= lng_f <= -66
+        except (ValueError, TypeError):
+            return False
+
     def _generate_hotel_schema(self, hotel_data: Dict) -> str:
         """Generate JSON-LD schema for hotel.
         
@@ -712,9 +721,9 @@ class ConditionalGenerator:
             },
             "geo": {
                 "@type": "GeoCoordinates",
-                "latitude": hotel_data.get("latitude"),
-                "longitude": hotel_data.get("longitude")
-            } if hotel_data.get("latitude") and hotel_data.get("longitude") else None,
+                "latitude": str(hotel_data.get("latitude")),
+                "longitude": str(hotel_data.get("longitude"))
+            } if self._is_valid_colombia_coords(hotel_data.get("latitude"), hotel_data.get("longitude")) else None,
             "amenityFeature": [
                 {"@type": "LocationFeatureSpecification", "name": amenity}
                 for amenity in hotel_data.get("amenities", [])

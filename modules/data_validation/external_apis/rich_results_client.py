@@ -158,6 +158,19 @@ class RichResultsTestClient:
             microdata_schemas = self._extract_microdata(soup)
             schemas.extend(microdata_schemas)
             
+            # Fallback: extract phone from tel: links if no schema has telephone
+            has_telephone = any(
+                s.properties.get("telephone") for s in schemas
+            )
+            if not has_telephone:
+                tel_phone = self._extract_phone_from_html(soup)
+                if tel_phone:
+                    # Add to first Hotel/LodgingBusiness/LocalBusiness schema
+                    for s in schemas:
+                        if s.schema_type in ("Hotel", "LodgingBusiness", "LocalBusiness"):
+                            s.properties["telephone"] = tel_phone
+                            break
+            
             # Calculate summary
             detected = len(schemas)
             valid = sum(1 for s in schemas if s.valid)
@@ -405,6 +418,51 @@ class RichResultsTestClient:
                     properties[field] = str(value)[:100]  # Limit length
         
         return properties
+    
+    def _extract_phone_from_html(self, soup) -> Optional[str]:
+        """Extract phone number from tel: links in HTML as fallback.
+        
+        Searches for <a href="tel:..."> links and normalizes the number
+        to a displayable format. Prefers Colombian numbers (+57).
+        """
+        import re
+        
+        # Find all tel: links
+        tel_links = soup.find_all('a', href=re.compile(r'^tel:', re.I))
+        
+        if not tel_links:
+            # Also check for tel: in any attribute (e.g., data-settings)
+            tel_pattern = re.compile(r'tel:([+\d]+)')
+            page_text = str(soup)
+            matches = tel_pattern.findall(page_text)
+            if matches:
+                tel_links = [{'href': f'tel:{m}'} for m in matches]
+        
+        if not tel_links:
+            return None
+        
+        # Extract and normalize phone numbers
+        phones = []
+        for link in tel_links:
+            href = link.get('href', '') if hasattr(link, 'get') else str(link)
+            # Extract number from tel: URI
+            match = re.search(r'tel:([+\d]+)', href)
+            if match:
+                raw = match.group(1)
+                # Normalize: strip leading +, add Colombian prefix if local
+                digits = raw.lstrip('+')
+                if len(digits) == 10 and digits.startswith('3'):
+                    # Colombian mobile: 3XXXXXXXXX → +57 3XXXXXXXXX
+                    phones.append(f'+57 {digits}')
+                elif len(digits) == 12 and digits.startswith('57'):
+                    phones.append(f'+{digits}')
+                elif len(digits) >= 7:
+                    phones.append(raw)
+        
+        if phones:
+            # Return the first valid phone
+            return phones[0]
+        return None
     
     def _extract_microdata(self, soup) -> List[SchemaValidationResult]:
         """Extract schema information from Microdata markup."""

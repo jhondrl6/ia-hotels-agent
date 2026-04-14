@@ -40,6 +40,8 @@ def _create_mock_hotel_data() -> CanonicalAssessment:
         gbp_analysis=GBPAnalysis(
             profile_url="https://business.google.com/hotelvisperas",
             categories=["Hotel", "Boutique Hotel", "Alojamiento", "WiFi"],
+            lat=4.8133,
+            lng=-75.6916,
         ),
     )
 

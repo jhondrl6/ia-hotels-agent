@@ -618,14 +618,22 @@ class V4AssetOrchestrator:
                 "image": audit_result.schema.properties.get("image"),
                 "price_range": audit_result.schema.properties.get("price_range"),
             }
+            # D1 FIX: Pasar coordenadas GPS del GBP al hotel_data
+            if audit_result.gbp:
+                gbp_lat = getattr(audit_result.gbp, 'lat', 0.0) or 0.0
+                gbp_lng = getattr(audit_result.gbp, 'lng', 0.0) or 0.0
+                # Validar rango Colombia (lat 0-13, lng -82 a -66)
+                if 0 <= gbp_lat <= 13 and -82 <= gbp_lng <= -66:
+                    validated_data["hotel_data"]["latitude"] = gbp_lat
+                    validated_data["hotel_data"]["longitude"] = gbp_lng
         
         # WhatsApp conflict data for whatsapp_conflict_guide asset
         if audit_result and audit_result.validation:
-            validated_data["phone_web"] = audit_result.validation.phone_web
-            validated_data["phone_gbp"] = audit_result.validation.phone_gbp
+            validated_data["phone_web"] = getattr(audit_result.validation, 'phone_web', None)
+            validated_data["phone_gbp"] = getattr(audit_result.validation, 'phone_gbp', None)
         if audit_result and audit_result.gbp:
-            validated_data["gbp_rating"] = audit_result.gbp.rating
-            validated_data["gbp_review_count"] = audit_result.gbp.reviews
+            validated_data["gbp_rating"] = getattr(audit_result.gbp, 'rating', 0.0)
+            validated_data["gbp_review_count"] = getattr(audit_result.gbp, 'reviews', 0)
         
         return validated_data
     

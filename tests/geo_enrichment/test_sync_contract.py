@@ -166,7 +166,7 @@ class TestSyncFoundationAlta:
         assert result.is_consistent is True
         assert result.combination_tag == "Brecha técnica confirma pérdida"
         assert result.sync_score == 0.8
-        assert "prioridad" in result.recommendation.lower() or "urgente" in result.recommendation.lower()
+        assert "priorizar" in result.recommendation.lower() or "urgencia" in result.recommendation.lower()
 
 
 # =============================================================================
