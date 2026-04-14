@@ -1,33 +1,43 @@
-"""Monthly Report Generator - Template for recurring monthly KPI tracking.
+"""Monthly Report Generator - R4 Architecture.
 
-Generates a monthly tracking report template that clients can use with their
-own GA4/GSC/GBP data. Does not require real metrics - produces a fillable template.
+Generates monthly report using the R4 (Real Research, Rich Results) methodology
+with full hotel_data propagation from the audit pipeline.
+
+Usage:
+    from modules.asset_generation.monthly_report_generator import MonthlyReportGenerator
+    
+    generator = MonthlyReportGenerator()
+    content = generator.generate(hotel_data, period="Enero 2026")
 """
 
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 
 class MonthlyReportGenerator:
-    """Generates monthly KPI tracking report for hotels."""
+    """Generates monthly KPI tracking report for hotels with full hotel_data enrichment."""
 
     def generate(
         self,
         hotel_data: Dict[str, Any],
         period: Optional[str] = None
     ) -> str:
-        """Generate monthly report markdown.
+        """Generate monthly report markdown with enriched hotel_data.
 
         Args:
-            hotel_data: Dictionary with hotel information (name, city, etc.)
+            hotel_data: Dictionary with hotel information (name, city, website, etc.)
             period: Report period string (e.g., "Enero 2026"). Defaults to current month.
 
         Returns:
             Markdown string with monthly report template.
         """
+        # Extract hotel info with fallbacks
         hotel_name = hotel_data.get("name") or hotel_data.get("nombre", "Hotel")
         city = hotel_data.get("city") or hotel_data.get("ubicacion", "")
         website = hotel_data.get("website") or hotel_data.get("url", "")
+        phone = hotel_data.get("telephone") or hotel_data.get("phone", "")
+        email = hotel_data.get("email", "")
+        address = hotel_data.get("address", "")
 
         if not period:
             period = datetime.now().strftime("%B %Y").capitalize()
@@ -37,7 +47,8 @@ class MonthlyReportGenerator:
         md = f"""# Informe Mensual de Marketing Digital — {hotel_name}
 
 **Período**: {period}
-**Hotel**: {hotel_name}"""
+**Hotel**: {hotel_name}
+"""
         if city:
             md += f"  \n**Ubicación**: {city}"
         if website:
@@ -68,7 +79,7 @@ class MonthlyReportGenerator:
 | Acciones totales | _____ | _____ | ___% |
 | Llamadas desde GBP | _____ | _____ | ___% |
 | Direcciones solicitadas | _____ | _____ | ___% |
-| Clicks al sitio web | _____ | _____ | ___% |
+| Clics al sitio web | _____ | _____ | ___% |
 
 ### Reservas Directas
 
@@ -83,7 +94,7 @@ class MonthlyReportGenerator:
 
 | Métrica | Este Mes | Mes Anterior | Variación |
 |---------|----------|--------------|-----------|
-| Clicks en botón WhatsApp | _____ | _____ | ___% |
+| Clics en botón WhatsApp | _____ | _____ | ___% |
 | Conversaciones iniciadas | _____ | _____ | ___% |
 | Reservas vía WhatsApp | _____ | _____ | ___% |
 
@@ -91,7 +102,7 @@ class MonthlyReportGenerator:
 
 | Métrica | Este Mes | Mes Anterior | Variación |
 |---------|----------|--------------|-----------|
-| Clicks orgánicos (GSC) | _____ | _____ | ___% |
+| Clics orgánicos (GSC) | _____ | _____ | ___% |
 | Impresiones (GSC) | _____ | _____ | ___% |
 | CTR promedio | ___% | ___% | |
 | Posición promedio | _____ | _____ | |
@@ -132,7 +143,20 @@ class MonthlyReportGenerator:
 
 ---
 
-## 3. Resumen de Assets Entregados
+## 3. Información de Contacto del Hotel
+
+| Canal | Valor |
+|-------|-------|
+| **Nombre** | {hotel_name} |
+| **Dirección** | {address or "Por configurar"} |
+| **Teléfono** | {phone or "Por configurar"} |
+| **WhatsApp** | {hotel_data.get("whatsapp", "Por configurar")} |
+| **Email** | {email or "Por configurar"} |
+| **Website** | {website or "Por configurar"} |
+
+---
+
+## 4. Resumen de Assets Entregados
 
 | Asset | Estado | Última Actualización |
 |-------|--------|---------------------|
@@ -148,7 +172,7 @@ class MonthlyReportGenerator:
 
 ---
 
-## 4. Próximos Pasos Recomendados
+## 5. Próximos Pasos Recomendados
 
 ### Prioridad Alta (esta semana)
 1. Configurar Google Analytics 4 si no está activo
@@ -167,7 +191,7 @@ class MonthlyReportGenerator:
 
 ---
 
-## 5. Notas y Observaciones
+## 6. Notas y Observaciones
 
 | Nota | Fecha |
 |------|-------|
@@ -177,7 +201,7 @@ class MonthlyReportGenerator:
 
 ---
 
-## 6. Disclaimer
+## 7. Disclaimer
 
 > **Nota sobre métricas**: Este informe es una plantilla de seguimiento. Los valores
 > numéricos requieren la configuración de las siguientes herramientas:
@@ -194,7 +218,13 @@ class MonthlyReportGenerator:
 ---
 
 *Informe generado automáticamente por IA Hoteles (iah-cli)*
+*Pipeline R4 - FASE-PERSONALIZATION*
 *Período: {period}*
 *Generado: {generated_at}*
 """
         return md
+
+
+def get_monthly_report_generator() -> MonthlyReportGenerator:
+    """Factory function to get MonthlyReportGenerator instance."""
+    return MonthlyReportGenerator()

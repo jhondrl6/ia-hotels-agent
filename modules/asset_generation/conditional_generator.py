@@ -398,9 +398,13 @@ class ConditionalGenerator:
             )
 
         elif asset_type == "geo_playbook":
+            from .geo_playbook_generator import GeoPlaybookGenerator
+            generator = GeoPlaybookGenerator()
+            hotel_data = validated_data.get("hotel_data", {})
+            data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
             gbp_data = validated_data.get("gbp_data", {})
-            data = getattr(gbp_data, 'value', gbp_data) if not isinstance(gbp_data, dict) else gbp_data
-            content = self._generate_geo_playbook(data if isinstance(data, dict) else {}, hotel_name)
+            gbp_dict = getattr(gbp_data, 'value', gbp_data) if not isinstance(gbp_data, dict) else gbp_data
+            content = generator.generate(data if isinstance(data, dict) else {}, gbp_dict)
 
         elif asset_type == "review_plan":
             review_data = validated_data.get("gbp_reviews", {})
@@ -418,9 +422,13 @@ class ConditionalGenerator:
             content = self._generate_org_schema(data if isinstance(data, dict) else {}, hotel_name)
 
         elif asset_type == "optimization_guide":
+            from .optimization_guide_generator import OptimizationGuideGenerator
+            generator = OptimizationGuideGenerator()
+            hotel_data = validated_data.get("hotel_data", {})
+            data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
             metadata_data = validated_data.get("metadata_data", {})
-            data = getattr(metadata_data, 'value', metadata_data) if not isinstance(metadata_data, dict) else metadata_data
-            content = self._generate_optimization_guide(data if isinstance(data, dict) else {}, hotel_name)
+            meta_dict = getattr(metadata_data, 'value', metadata_data) if not isinstance(metadata_data, dict) else metadata_data
+            content = generator.generate(data if isinstance(data, dict) else {}, meta_dict if isinstance(meta_dict, dict) else {})
 
         elif asset_type == "performance_audit":
             performance_data = validated_data.get("performance_data", {})
@@ -897,31 +905,13 @@ Las proyecciones se calculan utilizando:
         return md
 
     def _generate_geo_playbook(self, gbp_data: Dict, hotel_name: str) -> str:
-        """Generate geo playbook markdown."""
-        return f"""# Geo Playbook: {hotel_name}
+        """Generate geo playbook markdown (legacy wrapper)."""
+        from .geo_playbook_generator import GeoPlaybookGenerator
+        generator = GeoPlaybookGenerator()
+        # Create minimal hotel_data from hotel_name for legacy compatibility
+        hotel_data = {"name": hotel_name}
+        return generator.generate(hotel_data, gbp_data)
 
-## Optimización de Google Business Profile
-
-### Checklist de Acciones
-
-- [ ] Verificar información básica (nombre, dirección, teléfono)
-- [ ] Actualizar horarios de atención
-- [ ] Agregar 10+ fotos de alta calidad
-- [ ] Configurar atributos del hotel
-- [ ] Activar mensajería
-- [ ] Configurar reservas
-
-### Publicaciones Semanales
-
-- [ ] Semana 1: Fotos de instalaciones
-- [ ] Semana 2: Promoción especial
-- [ ] Semana 3: Testimonios de huéspedes
-- [ ] Semana 4: Eventos locales
-
----
-
-Generado: {datetime.now().isoformat()}
-"""
 
     def _generate_review_plan(self, review_data: Dict, hotel_name: str) -> str:
         """Generate review plan markdown."""
@@ -952,13 +942,43 @@ Generado: {datetime.now().isoformat()}
 """
 
     def _generate_review_widget(self, review_data: Dict, hotel_name: str) -> str:
-        """Generate review widget HTML."""
+        """Generate review widget HTML.
+        
+        Args:
+            review_data: Dict with 'rating' (float) and 'review_count' (int) keys.
+                         If rating==0.0 or review_count==0, show empty state.
+            hotel_name: Name of the hotel
+        """
+        rating = review_data.get("rating", 0.0) if isinstance(review_data, dict) else 0.0
+        review_count = review_data.get("review_count", 0) if isinstance(review_data, dict) else 0
+
+        if not rating or not review_count:
+            return f"""<!-- Review Widget for {hotel_name} -->
+<div class="review-widget">
+    <h3>Lo que dicen nuestros huéspedes</h3>
+    <p class="review-empty">Aún no hay reseñas disponibles</p>
+</div>
+
+<style>
+.review-widget {{
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}}
+.review-empty {{
+    color: #888;
+    font-style: italic;
+}}
+</style>
+"""
+
+        stars = "★" * int(rating) + "☆" * (5 - int(rating))
         return f"""<!-- Review Widget for {hotel_name} -->
 <div class="review-widget">
     <h3>Lo que dicen nuestros huéspedes</h3>
-    <div class="review-stars">★★★★★</div>
-    <p class="review-text">"Excelente servicio y ubicación"</p>
-    <a href="#" class="review-link">Ver más reseñas</a>
+    <div class="review-stars">{stars}</div>
+    <p class="review-rating">{rating:.1f} / 5.0 ({review_count} reseñas)</p>
 </div>
 
 <style>
@@ -972,6 +992,10 @@ Generado: {datetime.now().isoformat()}
     color: #ffc107;
     font-size: 24px;
 }}
+.review-rating {{
+    color: #555;
+    font-size: 14px;
+}}
 </style>
 """
 
@@ -984,214 +1008,34 @@ Generado: {datetime.now().isoformat()}
             "@context": "https://schema.org",
             "@type": "Organization",
             "name": hotel_name,
-            "url": org_data.get("website", ""),
-            "logo": org_data.get("logo", ""),
-            "contactPoint": {
+        }
+
+        # Bug D6 fix: Only include fields with real data — never placeholder
+        website = org_data.get("website", "")
+        if website:
+            schema["url"] = website
+
+        logo = org_data.get("logo", "")
+        if logo:
+            schema["logo"] = logo
+
+        phone = org_data.get("phone", "")
+        if phone:
+            schema["contactPoint"] = {
                 "@type": "ContactPoint",
-                "telephone": org_data.get("phone", ""),
+                "telephone": phone,
                 "contactType": "Reservations"
             }
-        }
-        
-        if not schema["url"]:
-            schema["url"] = "https://example.com"
-        
+
         return json.dumps(schema, indent=2, ensure_ascii=False)
 
     def _generate_optimization_guide(self, metadata_data: Dict, hotel_name: str) -> str:
-        """Generate SEO optimization guide markdown.
-        
-        Args:
-            metadata_data: Dictionary with metadata analysis data
-            hotel_name: Name of the hotel
-            
-        Returns:
-            Markdown string with optimization guide
-        """
-        has_default_title = metadata_data.get("has_default_title", False)
-        has_default_description = metadata_data.get("has_default_description", False)
-        title_tag = metadata_data.get("title_tag", None)
-        meta_description = metadata_data.get("meta_description", None)
-        title_length = metadata_data.get("title_length", 0)
-        description_length = metadata_data.get("description_length", 0)
-        missing_h1 = metadata_data.get("missing_h1", True)
-        h1_count = metadata_data.get("h1_count", 0)
-        schema_types = metadata_data.get("schema_types", [])
-        
-        title_status = "⚠️ Necesita atención" if has_default_title else "✅ Correcto"
-        description_status = "⚠️ Necesita atención" if has_default_description else "✅ Correcto"
-        
-        title_length_status = "⚠️ Longitud no óptima" if title_length < 30 or title_length > 60 else "✅ Longitud correcta"
-        description_length_status = "⚠️ Longitud no óptima" if description_length < 120 or description_length > 160 else "✅ Longitud correcta"
-        
-        schema_recommendations = ""
-        if "Hotel" not in schema_types:
-            schema_recommendations += "- Implementar schema Hotel\n"
-        if "BreadcrumbList" not in schema_types:
-            schema_recommendations += "- Implementar schema BreadcrumbList\n"
-        if "FAQPage" not in schema_types:
-            schema_recommendations += "- Considerar schema FAQPage si hay sección de preguntas frecuentes\n"
-        if not schema_recommendations:
-            schema_recommendations = "- Schema markup ya implementado correctamente"
-        
-        md = f"""# Guía de Optimización SEO para {hotel_name}
-
-**Fecha de generación:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-
----
-
-## 1. Revisión de Metadatos
-
-### Title Tag (Título de Página)
-
-| Aspecto | Estado |
-|---------|--------|
-| Valor actual | {title_tag if title_tag else "⚠️ Sin title tag configurado"} |
-| Longitud | {title_length} caracteres {title_length_status} |
-| Estado general | {title_status} |
-
-**Recomendaciones:**
-"""
-        
-        if has_default_title:
-            md += """- ❌ El title tag parece ser genérico (default del CMS)
-- ✅ Crear un title único que incluya: nombre del hotel + diferenciador + ubicación
-- 📝 Referencia: "Hotel [Nombre] - Mejor Tarifa Garantizada | Santa Rosa de Cabal"
-- 📝 Longitud recomendada: 50-60 caracteres
-
-"""
-        else:
-            md += """- ✅ Title tag personalizado detectado
-- 📝 Verificar que incluya palabras clave relevantes
-
-"""
-
-        md += f"""### Meta Description (Descripción Meta)
-
-| Aspecto | Estado |
-|---------|--------|
-| Valor actual | {(meta_description[:80] + " (resumen de 80 caracteres)") if meta_description else "⚠️ Sin meta description"} |
-| Longitud | {description_length} caracteres {description_length_status} |
-| Estado general | {description_status} |
-
-**Recomendaciones:**
-"""
-        
-        if has_default_description:
-            md += """- ❌ La descripción parece ser genérica (default del CMS)
-- ✅ Crear una descripción única de 150-160 caracteres
-- 📝 Incluir: propuesta de valor + amenities principales + llamada a la acción
-- 📝 Referencia: "Hotel [Nombre] en Santa Rosa de Cabal. WiFi gratis, piscina, desayuno incluido. 
-  Reserva directa con la mejor tarifa."
-
-"""
-        else:
-            md += """- ✅ Descripción personalizada detectada
-- 📝 Verificar que incluya palabras clave y llamada a la acción
-
-"""
-
-        md += f"""---
-
-## 2. Checklist de Implementación
-
-### Metadatos (Prioridad Alta)
-
-- [ ] Revisar y personalizar title tag
-- [ ] Revisar y personalizar meta description
-- [ ] Verificar que title y description sean únicos en cada página
-- [ ] Incluir palabras clave principal en los primeros 50 caracteres
-
-### Estructura de Encabezados (Prioridad Alta)
-
-- [ ] {"❌ Falta etiqueta H1 principal" if missing_h1 else "✅ Etiqueta H1 presente (" + str(h1_count) + " encontrada(s))"}
-- [ ] Usar solo una etiqueta H1 por página
-- [ ] Usar encabezados H2-H6 de forma jerárquica
-
-### Schema Markup (Prioridad Media)
-
-{schema_recommendations}
-
-### URLs Amigables (Prioridad Media)
-
-- [ ] URLs limpioas con guiones (ej: /habitaciones/deluxe)
-- [ ] Evitar parámetros largos
-- [ ] Incluir palabra clave principal en URL
-
----
-
-## 3. Recomendaciones de Schema Markup
-
-### Schema Hotel (Obligatorio)
-
-```json
-{{
-  "@context": "https://schema.org",
-  "@type": "Hotel",
-  "name": "{hotel_name}",
-  "description": "Descripción del hotel y propuesta de valor principal",
-  "address": {{
-    "@type": "PostalAddress",
-    "addressLocality": "Santa Rosa de Cabal",
-    "addressCountry": "CO"
-  }},
-  "telephone": "+57 606 123 4567",
-  "priceRange": "$80-150"
-}}
-```
-
-### Schema AggregateRating (Recomendado)
-
-```json
-{{
-  "@type": "AggregateRating",
-  "ratingValue": "4.5",
-  "reviewCount": "150"
-}}
-```
-
----
-
-## 4. Próximos Pasos
-
-1. **Inmediato (esta semana):**
-   - Corregir title tag si es genérico
-   - Corregir meta description si es genérica
-
-2. **Corto plazo (próximas 2 semanas):**
-   - Implementar schema Hotel
-   - Revisar estructura de encabezados
-
-3. **Mediano plazo (próximo mes):**
-   - Auditoría completa de contenido
-   - Optimización de imágenes
-
----
-
-## 5. Voice Search Keywords - Eje Cafetero (FASE-B AEO)
-
-**Keywords de voz para consultas en español en la region del Eje Cafetero:**
-
-| Keyword de Voz | Intencion |
-|----------------|-----------|
-| "hoteles boutique cerca del Valle del Cocora" | Busqueda de alojamiento cerca de naturaleza |
-| "hotel con spa en Santa Rosa de Cabal" | Busqueda de bienestar relaxation |
-| "lugar donde tomar cafe de origen en Pereira" | Experiencia cafe de especialidad |
-| "hoteles termales en el Eje Cafetero" | Busqueda de turismo termal |
-| "hotel familiar cerca de Salento" | Alojamiento familiar rural |
-| "mejores restaurantes en el Valle del Cocora" | Informacion complementaria |
-| "clima en Pereira hoy" | Utilidad viaje |
-
-**Implementacion:**
-- Incluir estas keywords en el contenido de la pagina de inicio
-- Usar naturalmente en meta description y headings
-- Crear contenido especifico sobre experiencias locales
-
----
-
-*Documento generado automáticamente por IA Hoteles - FASE-B AEO Voice-Ready*
-"""
-        return md
+        """Generate SEO optimization guide markdown (legacy wrapper)."""
+        from .optimization_guide_generator import OptimizationGuideGenerator
+        generator = OptimizationGuideGenerator()
+        # Create minimal hotel_data from hotel_name for legacy compatibility
+        hotel_data = {"name": hotel_name}
+        return generator.generate(hotel_data, metadata_data)
 
     def _generate_performance_audit(self, performance_data: Dict, hotel_name: str) -> str:
         """Generate Core Web Vitals performance audit markdown.

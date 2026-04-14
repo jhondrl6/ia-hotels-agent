@@ -146,7 +146,11 @@ class TestOrgSchemaGeneration:
         return ConditionalGenerator(output_dir="test_output")
 
     def test_org_schema_with_empty_data(self, generator):
-        """Test org schema generation with empty data."""
+        """Test org schema generation with empty data.
+        
+        Bug D6 fix: When URL is missing, field is OMITTED (not placeholder).
+        Bug D6 fix: When phone is missing, field is OMITTED (not placeholder).
+        """
         validated_data = {"org_data": {}}
         
         content = generator._generate_content("org_schema", validated_data, "Test Hotel")
@@ -154,7 +158,11 @@ class TestOrgSchemaGeneration:
         schema = json.loads(content)
         assert schema["@type"] == "Organization"
         assert schema["name"] == "Test Hotel"
-        assert "url" in schema
+        # Bug D6 fix: url must NOT be in schema when empty — never use placeholder
+        assert "url" not in schema, "url should be omitted when empty, not placeholder"
+        assert "logo" not in schema, "logo should be omitted when empty"
+        # contactPoint only included if phone is non-empty
+        assert "contactPoint" not in schema, "contactPoint should be omitted when phone is empty"
 
     def test_org_schema_with_valid_data(self, generator):
         """Test org schema generation with valid data."""

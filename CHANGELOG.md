@@ -1,5 +1,59 @@
 # Changelog
 
+## [4.31.0] - 2026-04-14
+
+### Objetivo
+
+FASE-PERSONALIZATION + FASE-BUGFIXES ejecutadas en paralelo.
+
+---
+
+## FASE-PERSONALIZATION: Generators con Audit Data
+
+**Problema:** Generators producían assets genéricos (name="Hotel", url vacía) porque no recibían datos del audit.
+
+**Archivos Nuevos:**
+
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/asset_generation/geo_playbook_generator.py` | Reimplementado con hotel_data + gbp_data |
+| `modules/asset_generation/optimization_guide_generator.py` | Reimplementado con hotel_data + metadata_data |
+
+**Archivos Modificados:**
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | Propaga hotel_data a todos los generators. Wrappers legacy para backward compatibility |
+| `modules/asset_generation/monthly_report_generator.py` | Refactorizado — extrae name, city, website, phone, email, address de hotel_data |
+
+**Tests:** 223 passed (5 failures preexistentes voice_assistant/voice_keywords)
+
+---
+
+## FASE-BUGFIXES: Corrección Bugs Específicos
+
+**D4 — WhatsApp:** `detected_via_html` no existía en iah-cli (0 matches).
+
+**D5 — Review Widget:** hardcoded ★★★★★ con "Excelente servicio" → lógica condicional:
+- Si rating==0 o review_count==0 → "Aún no hay reseñas disponibles"
+- Si hay datos → estrellas reales + rating numérico + conteo
+
+**D6 — Organization Schema:** `url: "https://example.com"` fallback → campos omitidos del JSON si no tienen datos reales.
+
+**D7 — Propuesta:** `Path(asset.path).exists()` para verificar existencia real antes de marcar ✅/❌.
+
+**Archivos Modificados:**
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | _generate_review_widget() condicional; _generate_org_schema() elimina placeholder |
+| `tests/asset_generation/test_content_gates.py` | test_org_schema_with_empty_data actualizado para comportamiento correcto |
+| `main.py` | Línea 2375: `Path(asset.path).exists()` para verificar archivos |
+
+**Tests:** 223 passed | Greps: 0 detected_via_html, 0 Excelente servicio, 0 example.com
+
+---
+
 ## [4.30.0] - 2026-04-13
 
 ### Objetivo

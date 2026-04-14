@@ -2372,7 +2372,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         print(f"   Coherencia: {asset_result.coherence_report.overall_score:.2f}")
 
         for asset in asset_result.generated_assets:
-            print(f"   📄 {asset.asset_type}: {asset.preflight_status}")
+            icon = "✅" if Path(asset.path).exists() else "❌"
+            print(f"   {icon} {asset.asset_type}: {asset.preflight_status}")
 
     except Exception as e:
         print(f"⚠️  Generación de assets falló: {e}")
