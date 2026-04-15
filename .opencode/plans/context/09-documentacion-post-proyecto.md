@@ -44,18 +44,17 @@
 ---
 
 ### FASE-BUGFIXES
-**Fecha:** ___  
+**Fecha:** 2026-04-14
 **Módulos tocados:**
-- `modules/asset_generation/whatsapp_button_generator.py`
-- `modules/asset_generation/review_widget_generator.py`
-- `modules/asset_generation/org_schema_generator.py`
-- `main.py` (propuesta)
+- `modules/asset_generation/review_widget_generator.py` (D5: lógica condicional rating/review_count)
+- `modules/asset_generation/org_schema_generator.py` (D6: omite campos vacíos)
+- `main.py` (D7: propuesta verifica Path.exists())
 
 **Cambios:**
-- WhatsApp con número real o PENDIENTE
-- Review widget honesto (no estrellas falsas)
-- org_schema con URL real
-- Propuesta refleja estado real de assets
+- D4: detected_via_html NO existía (0 matches) — no action needed
+- Review widget: ★★★★★ hardcodeado → condicional (rating real o vacío)
+- org_schema: example.com/logo vacío/telephone → omite si vacíos
+- Propuesta: verifica Path(asset.path).exists() antes de marcar
 
 ---
 
@@ -121,9 +120,9 @@ AUDIT (datos reales) → GENERATORS (reciben audit_report) → ASSETS (personali
 || Datos GPS correctos | NO (NYC) | ✅ Validación Colombia range |
 || Región correcta | NO ("nacional") | ✅ eje_cafetero |
 || Teléfono capturado | NO (null) | ✅ tel: HTML fallback |
-|| WhatsApp funcional | NO (roto) | Pendiente FASE-BUGFIXES |
-|| org_schema real | NO (example.com) | Pendiente FASE-BUGFIXES |
-|| review_widget honesto | NO (falso) | Pendiente FASE-BUGFIXES |
+|| WhatsApp funcional | NO (roto) | ✅ detected_via_html no existe (0 matches) |
+|| org_schema real | NO (example.com) | ✅ Omite campos vacíos |
+|| review_widget honesto | NO (falso) | ✅ Lógica condicional rating/reviews |
 || llms_txt específico | NO (genérico) | ✅ Contenido dinámico hotel_data |
 || monthly_report nombre real | NO ("Hotel") | ✅ hotel_data.name verificado |
 || GBP query correcta | NO ("amaziliahotel") | ✅ Queries reordenadas + validación |
@@ -178,7 +177,7 @@ Ejecutar v4complete solo al final reduce drásticamente el consumo de APIs. Dura
 |------|----|-----------------|--------|
 | Fase 1 | FASE-DATASOURCE | 2026-04-14 | ✅ |
 | Fase 2 | FASE-PERSONALIZATION | 2026-04-14 | ✅ |
-| Fase 3 | FASE-BUGFIXES | ___ | ⏳ |
+| Fase 3 | FASE-BUGFIXES | 2026-04-14 | ✅ |
 | Fase 4 | FASE-CONTENT-FIXES | 2026-04-14 | ✅ |
 | Fase 5 | FASE-VALIDATION-GATE | ___ | ⏳ |
 | Fase 6 | FASE-RELEASE | ___ | ⏳ |

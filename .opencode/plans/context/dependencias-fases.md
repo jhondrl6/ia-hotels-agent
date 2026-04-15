@@ -139,11 +139,11 @@
 - [x] Assets contienen datos reales del sitio (nombre, URL, servicios)
 - [x] No más placeholders genéricos
 
-### FASE-BUGFIXES
-- [ ] WhatsApp con número real o marcador claro
-- [ ] Review widget sin estrellas falsas
-- [ ] org_schema con URL real
-- [ ] Propuesta refleja estado real de assets
+### FASE-BUGFIXES — ✅ Completada (2026-04-14)
+- [x] WhatsApp: detected_via_html NO existía en iah-cli (0 matches) — no action needed
+- [x] Review widget: hardcoded ★★★★★ y "Excelente servicio" → lógica condicional (rating/review_count reales o estado vacío)
+- [x] org_schema: example.com/logo vacío/telephone vacío → omite campos faltantes
+- [x] Propuesta: main.py verifica Path(asset.path).exists() antes de marcar ✅/❌
 
 ### FASE-CONTENT-FIXES — ✅ Completada (2026-04-14)
 - [x] optimization_guide sin contradicciones — title_status/description_status unificados: combinan default CMS + longitud óptima

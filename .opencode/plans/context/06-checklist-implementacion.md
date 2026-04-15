@@ -12,7 +12,7 @@
 |------|----|--------|------------|--------------|-----------|
 || 1 | FASE-DATASOURCE | ✅ Completada | 2026-04-14 | Ninguna | CRÍTICA |
 | 2 | FASE-PERSONALIZATION | ✅ Completada | 2026-04-14 | FASE-DATASOURCE | ALTA |
-| 3 | FASE-BUGFIXES | ⏳ Pendiente | — | FASE-DATASOURCE | ALTA |
+| 3 | FASE-BUGFIXES | ✅ Completada | 2026-04-14 | FASE-DATASOURCE | ALTA |
 | 4 | FASE-CONTENT-FIXES | ✅ Completada | 2026-04-14 | FASE-PERSONALIZATION | MEDIA |
 | 5 | FASE-VALIDATION-GATE | ⏳ Pendiente | — | FASE-1..4 | ALTA |
 | 6 | FASE-RELEASE | ⏳ Pendiente | — | FASE-5 | CRÍTICA |
@@ -72,28 +72,28 @@
 
 ---
 
-### FASE-BUGFIXES (Fase 3)
+### FASE-BUGFIXES (Fase 3) — ✅ Completada
 
 **Objetivo:** Corrección de 4 bugs específicos
 
 **Hallazgos:** D4, D5, D6, D7
 
 **Tareas:**
-- [ ] D4: Fix WhatsApp href="detected_via_html" → número real o PENDIENTE
-- [ ] D5: Fix Review widget ★★★★★ falso → mostrar rating real (0 reviews)
-- [ ] D6: Fix org_schema url="example.com" → amaziliahotel.com
-- [ ] D7: Fix propuesta "No generado" vs assets reales
+- [x] D4: Fix WhatsApp href="detected_via_html" → NO existía (0 matches) — no action needed
+- [x] D5: Fix Review widget ★★★★★ falso → lógica condicional (rating/review_count reales o vacío)
+- [x] D6: Fix org_schema url="example.com" → omite campos vacíos
+- [x] D7: Fix propuesta "No generado" → verifica Path(asset.path).exists()
 
 **Criterios de aceptación:**
-- [ ] `grep "detected_via_html" modules/` → 0 matches
-- [ ] `grep "Excelente servicio" modules/` → 0 matches
-- [ ] `grep "example.com" modules/` → 0 matches
-- [ ] Propuesta refleja estado real de assets
+- [x] `grep "detected_via_html" modules/` → 0 matches
+- [x] `grep "Excelente servicio" modules/` → 0 matches
+- [x] `grep "example.com" modules/` → 0 matches
+- [x] Propuesta refleja estado real de assets
 
 **Post-fase:**
-- [ ] REGISTRY.md actualizado
-- [ ] dependencias-fases.md marcado ✅
-- [ ] 09-documentacion-post-proyecto.md actualizado
+- [x] REGISTRY.md actualizado
+- [x] dependencias-fases.md marcado ✅
+- [x] 09-documentacion-post-proyecto.md actualizado
 
 ---
 
