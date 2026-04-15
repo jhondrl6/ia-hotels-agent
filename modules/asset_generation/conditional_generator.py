@@ -412,7 +412,7 @@ class ConditionalGenerator:
             content = self._generate_review_plan(data if isinstance(data, dict) else {}, hotel_name)
 
         elif asset_type == "review_widget":
-            review_data = validated_data.get("review_data", {})
+            review_data = validated_data.get("hotel_data", {})
             data = getattr(review_data, 'value', review_data) if not isinstance(review_data, dict) else review_data
             content = self._generate_review_widget(data if isinstance(data, dict) else {}, hotel_name)
 
@@ -594,12 +594,14 @@ class ConditionalGenerator:
         Returns:
             HTML string with WhatsApp button
         """
+        # FIX-C1: Clean phone number for wa.me URL (digits only, no + or spaces)
+        clean_phone = ''.join(c for c in str(phone_number) if c.isdigit())
         tracking_code = f"wa_{hotel_name.lower().replace(' ', '_')}_{datetime.now().strftime('%Y%m')}"
         
         html = f"""<!-- WhatsApp Button for {hotel_name} -->
 <!-- Generated: {datetime.now().isoformat()} -->
 <!-- Tracking: {tracking_code} -->
-<a href="https://wa.me/{phone_number}?text=Hola%20{hotel_name.replace(' ', '%20')},%20estoy%20interesado%20en%20hacer%20una%20reserva"
+<a href="https://wa.me/{clean_phone}?text=Hola%20{hotel_name.replace(' ', '%20')},%20estoy%20interesado%20en%20hacer%20una%20reserva"
    class="whatsapp-button"
    data-tracking="{tracking_code}"
    target="_blank"

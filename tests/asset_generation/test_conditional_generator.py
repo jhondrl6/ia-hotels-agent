@@ -175,14 +175,15 @@ class TestConditionalGeneratorContentGeneration:
     """Tests for ConditionalGenerator content generation methods."""
 
     def test_generate_whatsapp_button_returns_html(self):
-        """Test _generate_whatsapp_button returns HTML."""
+        """Test _generate_whatsapp_button returns HTML with cleaned phone number."""
         generator = ConditionalGenerator()
-        html = generator._generate_whatsapp_button("+573001234567", "Test Hotel")
+        html = generator._generate_whatsapp_button("+573104019049", "Test Hotel")
         assert "<a" in html
         assert "whatsapp-button" in html
         assert "wa.me" in html
         assert "Test Hotel" in html
-        assert "+573001234567" in html
+        # FIX-C1: Phone number is cleaned to digits only for wa.me URL
+        assert "wa.me/573104019049" in html
         assert "</a>" in html
         assert "<style>" in html
 
