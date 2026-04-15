@@ -134,10 +134,10 @@
 
 **Notas:** Verificación por tests de regresión (496/500 passed, 4 fallas preexistentes). v4complete NO ejecutado (reservado para FASE-RELEASE). API key de Google Maps inválida en entorno — D12 inverificable en E2E hasta FASE-RELEASE.
 
-### FASE-PERSONALIZATION
-- [ ] Todos los generators reciben audit_report.json como contexto
-- [ ] Assets contienen datos reales del sitio (nombre, URL, servicios)
-- [ ] No más placeholders genéricos
+### FASE-PERSONALIZATION — ✅ Completada (2026-04-14)
+- [x] Todos los generators reciben audit_report.json como contexto — conditional_generator pasa hotel_data a cada generator
+- [x] Assets contienen datos reales del sitio (nombre, URL, servicios)
+- [x] No más placeholders genéricos
 
 ### FASE-BUGFIXES
 - [ ] WhatsApp con número real o marcador claro

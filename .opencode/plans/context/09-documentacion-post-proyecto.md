@@ -31,15 +31,15 @@
 ---
 
 ### FASE-PERSONALIZATION
-**Fecha:** ___  
+**Fecha:** 2026-04-14
 **Módulos tocados:**
-- `modules/asset_generation/v4_asset_orchestrator.py`
-- `modules/asset_generation/conditional_generator.py`
-- `modules/asset_generation/*_generator.py` (todos)
+- `modules/asset_generation/v4_asset_orchestrator.py` (pass audit_report a generators)
+- `modules/asset_generation/conditional_generator.py` (hotel_data integration)
+- `modules/asset_generation/*_generator.py` (todos reciben hotel_data)
 
 **Cambios:**
-- Generators reciben `audit_report` como contexto
-- Personalización de assets con datos reales
+- Generators reciben `hotel_data` del validated_data como contexto
+- Personalización de assets con datos reales (name, region, amenities)
 
 ---
 
@@ -177,7 +177,7 @@ Ejecutar v4complete solo al final reduce drásticamente el consumo de APIs. Dura
 | Fase | ID | Fecha Completada | Estado |
 |------|----|-----------------|--------|
 | Fase 1 | FASE-DATASOURCE | 2026-04-14 | ✅ |
-| Fase 2 | FASE-PERSONALIZATION | ___ | ⏳ |
+| Fase 2 | FASE-PERSONALIZATION | 2026-04-14 | ✅ |
 | Fase 3 | FASE-BUGFIXES | ___ | ⏳ |
 | Fase 4 | FASE-CONTENT-FIXES | 2026-04-14 | ✅ |
 | Fase 5 | FASE-VALIDATION-GATE | ___ | ⏳ |

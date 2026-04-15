@@ -11,7 +11,7 @@
 | Fase | ID | Estado | Completada | Dependencias | Prioridad |
 |------|----|--------|------------|--------------|-----------|
 || 1 | FASE-DATASOURCE | ✅ Completada | 2026-04-14 | Ninguna | CRÍTICA |
-| 2 | FASE-PERSONALIZATION | ⏳ Pendiente | — | FASE-DATASOURCE | ALTA |
+| 2 | FASE-PERSONALIZATION | ✅ Completada | 2026-04-14 | FASE-DATASOURCE | ALTA |
 | 3 | FASE-BUGFIXES | ⏳ Pendiente | — | FASE-DATASOURCE | ALTA |
 | 4 | FASE-CONTENT-FIXES | ✅ Completada | 2026-04-14 | FASE-PERSONALIZATION | MEDIA |
 | 5 | FASE-VALIDATION-GATE | ⏳ Pendiente | — | FASE-1..4 | ALTA |
@@ -47,28 +47,28 @@
 
 ---
 
-### FASE-PERSONALIZATION (Fase 2)
+### FASE-PERSONALIZATION (Fase 2) — ✅ Completada
 
 **Objetivo:** Generators reciben audit_report como contexto
 
 **Hallazgos:** D2 (causa raíz)
 
 **Tareas:**
-- [ ] Diagnosticar flujo actual de datos hacia generators
-- [ ] Modificar v4_asset_orchestrator.py para pasar audit_report
-- [ ] Modificar conditional_generator.py para pasar audit_report
-- [ ] Modificar cada generator para usar audit_report["name"], ["region"], etc.
+- [x] Diagnosticar flujo actual de datos hacia generators
+- [x] Modificar v4_asset_orchestrator.py para pasar audit_report
+- [x] Modificar conditional_generator.py para pasar audit_report
+- [x] Modificar cada generator para usar audit_report["name"], ["region"], etc.
 
 **Criterios de aceptación:**
-- [ ] Generators reciben audit_report dict
-- [ ] hotel_schema usa name del audit (no "Hotel")
-- [ ] llms_txt usa URL real amaziliahotel.com
-- [ ] geo_playbook usa región correcta
+- [x] Generators reciben audit_report dict
+- [x] hotel_schema usa name del audit (no "Hotel")
+- [x] llms_txt usa URL real amaziliahotel.com
+- [x] geo_playbook usa región correcta
 
 **Post-fase:**
-- [ ] REGISTRY.md actualizado
-- [ ] dependencias-fases.md marcado ✅
-- [ ] 09-documentacion-post-proyecto.md actualizado
+- [x] REGISTRY.md actualizado
+- [x] dependencias-fases.md marcado ✅
+- [x] 09-documentacion-post-proyecto.md actualizado
 
 ---
 

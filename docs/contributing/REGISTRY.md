@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-14
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 106
+> **Total fases completadas:** 107
 
 ---
 
@@ -2921,6 +2921,26 @@ _Ninguno_
 | `modules/asset_generation/optimization_guide_generator.py` | Optimization Guide Generator |
 | `modules/asset_generation/monthly_report_generator.py` | Monthly Report Generator |
 | `modules/asset_generation/llmstxt_generator.py` | Llmstxt Generator |
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PERSONALIZATION - 2026-04-14
+**Descripcion:** Generators reciben hotel_data del validated_data: conditional_generator pasa hotel_data a cada generator, v4_asset_orchestrator extrae datos reales del schema
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
 | `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
 
 ### Validaciones
