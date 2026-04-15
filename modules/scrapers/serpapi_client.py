@@ -45,7 +45,7 @@ class SerpHotelData:
 
     def to_dict(self) -> Dict[str, Any]:
         """Convierte a dict para compatibilidad con ResearchOutput."""
-        return {
+        d = {
             'name': self.name,
             'address': self.address,
             'rating': self.rating,
@@ -60,6 +60,13 @@ class SerpHotelData:
             'source': self.source,
             'serpapi_qty_used': self.serpapi_qty_used
         }
+        if self.error_type is not None:
+            d['error_type'] = self.error_type
+        if self.error_message is not None:
+            d['error_message'] = self.error_message
+        if self.search_query is not None:
+            d['search_query'] = self.search_query
+        return d
 
 
 class SerpAPIClient:

@@ -1,0 +1,48 @@
+# robots.txt - Recomendaciones de GEO
+
+# ===========================================================================
+# REGISTRO DE CAMBIOS
+# ===========================================================================
+# Fecha: 2026-03-30
+# Score GEO: 23/100
+
+# ===========================================================================
+# USER AGENTS
+# ===========================================================================
+
+# Permitir crawlers de IA principales
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# ===========================================================================
+# SITEMAP
+# ===========================================================================
+Sitemap: https://amaziliahotel.com//sitemap.xml
+
+# ===========================================================================
+# RATE LIMITING (opcional)
+# ===========================================================================
+# Crawl-delay: 1
+
+# ===========================================================================
+# GAPS BLOQUEANTES DETECTADOS
+# ===========================================================================
+# ATENCION: S1: No Hotel schema detected
+# ATENCION: M2: Meta description missing or too short
+# ATENCION: C2: No statistics (rating/reviews) available
+# ATENCION: C3: External citations require content scraping
+# ATENCION: C4: Heading hierarchy requires content scraping
+# ATENCION: C5: Content length requires content scraping
+# ATENCION: B2: Knowledge graph links require external API
+# ATENCION: B3: Wikipedia/Wikidata presence requires external search
+# ATENCION: B4: No GBP data to verify social profiles
+# ATENCION: A6: Q&A content requires content scraping

@@ -1,6 +1,6 @@
 # Plan: Corrección de Bugs Críticos — Caso Amazilia Hotel
 
-**Estado**: ✅ 4/6 fases completadas  
+**Estado**: ✅ 5/6 fases completadas  
 **Fases**: 6  
 **Hotel de prueba**: https://amaziliahotel.com/  
 **Validación**: UNA única prueba v4complete al final (minimizar costos API)  
@@ -30,8 +30,8 @@ La ejecución v4complete para **Amazilia Hotel** (https://amaziliahotel.com/, Go
 | 2 | FASE-PERSONALIZATION | Personalización generators con audit data | FASE-DATASOURCE | ✅ 2026-04-14 | ALTA |
 | 3 | FASE-BUGFIXES | Corrección bugs específicos (whatsapp, review, org_schema) | FASE-DATASOURCE | ✅ 2026-04-14 | ALTA |
 | 4 | FASE-CONTENT-FIXES | Corrección contenido (optimization_guide, monthly_report, llms_txt) | FASE-PERSONALIZATION | ✅ 2026-04-14 | MEDIA |
-| 5 | FASE-VALIDATION-GATE | Gate validación pre-release | FASE-1..4 | ⏳ Pendiente | ALTA |
-| 6 | FASE-RELEASE | v4.30.1 release + ÚNICA prueba v4complete | FASE-5 | ⏳ Pendiente | CRÍTICA |
+|| 5 | FASE-VALIDATION-GATE | Gate validación pre-release | FASE-1..4 | ✅ 2026-04-14 | ALTA |
+|| 6 | FASE-RELEASE | v4.30.1 release + ÚNICA prueba v4complete | FASE-5 | ⏳ Pendiente | CRÍTICA |
 
 ---
 

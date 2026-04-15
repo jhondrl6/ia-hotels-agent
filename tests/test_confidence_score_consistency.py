@@ -123,7 +123,8 @@ class TestConfidenceScoreConsistency:
                 validated_data={},
                 output_dir=Path("/tmp/test_output"),
                 hotel_name="Test Hotel",
-                hotel_id="test_hotel"
+                hotel_id="test_hotel",
+                site_url="https://example.com"
             )
         
         # Verificar que el confidence_score se preservó
@@ -172,7 +173,8 @@ class TestConfidenceScoreConsistency:
                     validated_data={},
                     output_dir=Path("/tmp/test_output"),
                     hotel_name="Test",
-                    hotel_id="test"
+                    hotel_id="test",
+                    site_url="https://example.com"
                 )
                 
                 assert isinstance(result, GeneratedAsset)

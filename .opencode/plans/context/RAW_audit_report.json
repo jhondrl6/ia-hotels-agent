@@ -1,0 +1,202 @@
+{
+  "url": "https://amaziliahotel.com/",
+  "hotel_name": "Amaziliahotel",
+  "timestamp": "2026-04-14T09:13:18.015973",
+  "schema": {
+    "hotel_schema_detected": false,
+    "hotel_schema_valid": false,
+    "hotel_confidence": "unknown",
+    "faq_schema_detected": false,
+    "faq_schema_valid": false,
+    "faq_confidence": "unknown",
+    "org_schema_detected": false,
+    "total_schemas": 0,
+    "errors": [],
+    "warnings": [],
+    "properties": {}
+  },
+  "gbp": {
+    "place_found": true,
+    "place_id": null,
+    "name": "Amaziliahotel, Colombia: búsqueda de hoteles de Google",
+    "rating": 0.0,
+    "reviews": 0,
+    "photos": 0,
+    "phone": null,
+    "website": null,
+    "address": "",
+    "geo_score": 0,
+    "geo_score_breakdown": {},
+    "confidence": "verified",
+    "error_type": null,
+    "error_message": null
+  },
+  "performance": {
+    "has_field_data": false,
+    "mobile_score": null,
+    "desktop_score": null,
+    "lcp": null,
+    "fid": null,
+    "cls": null,
+    "status": "ERROR",
+    "message": "Invalid URL or request: API key not valid. Please pass a valid API key."
+  },
+  "validation": {
+    "whatsapp_status": "unknown",
+    "phone_web": null,
+    "phone_gbp": null,
+    "adr_status": "unknown",
+    "conflicts": []
+  },
+  "overall": {
+    "confidence": "estimated",
+    "critical_issues": [
+      "No Hotel schema detected - critical for SEO",
+      "Low GBP geo_score (0/100) - optimization needed",
+      "Metadata: Meta description está vacía"
+    ],
+    "recommendations": [
+      "Implement Hotel schema markup for better search visibility",
+      "Add FAQPage schema to capture rich snippets",
+      "Add more photos to GBP (current: 0, target: 40+)",
+      "Encourage more reviews (current: 0, target: 100+)",
+      "No Core Web Vitals data - site may be new or low traffic"
+    ]
+  },
+  "competitors": [],
+  "execution_trace": {
+    "executed": [
+      "schema_validation",
+      "metadata_validation",
+      "gbp_api",
+      "competitor_analysis",
+      "ai_crawler_audit",
+      "citability_audit",
+      "seo_elements_detection",
+      "pagespeed_api",
+      "cross_validation",
+      "aeo_snippet_tracker",
+      "llm_mention_checker"
+    ],
+    "skipped": [
+      "pagespeed_api"
+    ]
+  },
+  "metadata": {
+    "cms_detected": "wordpress",
+    "has_default_title": false,
+    "title": "",
+    "has_default_description": true,
+    "description": "<empty>",
+    "has_issues": true,
+    "issues": [
+      {
+        "type": "default_description",
+        "severity": "high",
+        "message": "Meta description está vacía"
+      }
+    ],
+    "confidence": "estimated"
+  },
+  "ai_crawlers": {
+    "robots_exists": true,
+    "overall_score": 0.5,
+    "allowed_crawlers": [],
+    "blocked_crawlers": [
+      "GPTBot",
+      "ChatGPT-User",
+      "ClaudeBot",
+      "Claude-User",
+      "PerplexityBot",
+      "Google-Extended",
+      "Bytespider",
+      "FacebookBot",
+      "Applebot",
+      "DuckDuckBot",
+      "Baiduspider",
+      "YandexBot",
+      "Bingbot",
+      "Googlebot"
+    ],
+    "recommendations": [
+      "Bloqueado: Considerar permitir GPTBot para mejora en IA",
+      "Bloqueado: Considerar permitir ChatGPT-User para mejora en IA",
+      "Bloqueado: Considerar permitir ClaudeBot para mejora en IA",
+      "Bloqueado: Considerar permitir Claude-User para mejora en IA",
+      "Bloqueado: Considerar permitir PerplexityBot para mejora en IA",
+      "Bloqueado: Considerar permitir Google-Extended para mejora en IA",
+      "Bloqueado: Considerar permitir Bytespider para mejora en IA",
+      "Bloqueado: Considerar permitir FacebookBot para mejora en IA",
+      "Bloqueado: Considerar permitir Applebot para mejora en IA",
+      "Bloqueado: Considerar permitir DuckDuckBot para mejora en IA",
+      "Bloqueado: Considerar permitir Baiduspider para mejora en IA",
+      "Bloqueado: Considerar permitir YandexBot para mejora en IA",
+      "Bloqueado: Considerar permitir Bingbot para mejora en IA",
+      "Bloqueado: Considerar permitir Googlebot para mejora en IA"
+    ]
+  },
+  "citability": {
+    "overall_score": 51.67,
+    "blocks_analyzed": 3,
+    "high_citability_blocks": 0,
+    "recommendations": [
+      "Found 3 blocks under 100 words. Expand content to improve citability (aim for 134-167 words per block)."
+    ],
+    "confidence": "ADVISORY"
+  },
+  "ia_readiness": {
+    "overall_score": 33.20455555555555,
+    "components": {
+      "schema_quality": 0.0,
+      "crawler_access": 50.0,
+      "citability": 51.67,
+      "llms_txt": 0,
+      "brand_signals": 50.0
+    },
+    "status": "Critical",
+    "actionable_items": [
+      "Improve structured data markup (JSON-LD) for better AI understanding",
+      "Review robots.txt to ensure AI crawler access is permitted",
+      "Add clear author attribution and citeable content sections",
+      "Create /llms.txt file with content inventory for AI crawlers",
+      "Strengthen brand signals: consistent NAP, social profiles, and entity markup",
+      "Configure Google Analytics 4 to measure indirect traffic from AI referrals"
+    ]
+  },
+  "seo_elements": {
+    "open_graph": false,
+    "imagenes_alt": false,
+    "redes_activas": true,
+    "confidence": "high",
+    "notes": "Detected 0 OG tags, 20 imgs without alt",
+    "open_graph_tags": {},
+    "images_without_alt": 20,
+    "social_links_found": [
+      "https://www.facebook.com/amaziliahotel",
+      "https://www.instagram.com/amaziliahotel/",
+      "https://www.youtube.com/@amaziliahotel7871/"
+    ]
+  },
+  "aeo_snippets": {
+    "queries_tested": 5,
+    "snippets_captured": 0,
+    "snippets_competitor": 0,
+    "paa_presence": 0,
+    "snippet_score": 0,
+    "source": "stub",
+    "timestamp": "2026-04-14T09:12:36.984818"
+  },
+  "llm_report": {
+    "hotel_name": "Amaziliahotel",
+    "queries_tested": 5,
+    "total_mentions": 0,
+    "mention_rate": 0.0,
+    "mention_score": 0,
+    "avg_ranking": null,
+    "share_of_voice": 0.0,
+    "providers_used": [
+      "openrouter"
+    ],
+    "source": "llm_check"
+  }
+}

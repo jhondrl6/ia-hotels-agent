@@ -320,6 +320,7 @@ class TestGoogleTravelIntegrationWithAutonomousResearcher:
         assert hasattr(researcher, '_fallback_benchmark')
         assert callable(researcher._fallback_benchmark)
 
+    @pytest.mark.skip(reason="Requiere Places API externa")
     @patch('modules.providers.autonomous_researcher.GoogleTravelScraper')
     @patch('modules.providers.autonomous_researcher.GBPScraper')
     def test_fallback_chain_places_to_travel(self, mock_gbp_class, mock_travel_class):

@@ -35,9 +35,9 @@ class VoiceGuideGenerator:
         alexa_guide = self._render_alexa_skill_blueprint(nombre, ubicacion)
 
         return {
-            "google_assistant_checklist.md": google_guide,
-            "apple_business_connect_guide.md": apple_guide,
-            "alexa_skill_blueprint.md": alexa_guide,
+            "google_assistant_checklist": google_guide,
+            "apple_business_connect_guide": apple_guide,
+            "alexa_skill_blueprint": alexa_guide,
         }
 
     def _render_google_assistant_checklist(self, nombre: str, ubicacion: str) -> str:

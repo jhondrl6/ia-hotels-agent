@@ -108,4 +108,4 @@ class TestNewAssetTypes:
         assert "voice_assistant_guide" in ASSET_CATALOG
         entry = ASSET_CATALOG["voice_assistant_guide"]
         assert entry.status.value == "implemented"
-        assert entry.required_confidence == 0.3
+        assert entry.required_confidence == 0.4

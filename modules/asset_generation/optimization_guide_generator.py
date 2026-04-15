@@ -196,6 +196,44 @@ class OptimizationGuideGenerator:
 
 ---
 
+## Voice Search Keywords - Eje Cafetero
+
+### Keywords Primarias
+
+| Keyword | Volumen estimado | Dificultad |
+|---------|-----------------|------------|
+| hotel en Pereira | Alto | Media |
+| hospedaje en el Eje Cafetero | Medio | Baja |
+| hotel boutique Pereira | Medio | Baja |
+| donde quedarse en el Eje Cafetero | Medio | Baja |
+
+### Keywords de Voz (Long-tail)
+
+- "¿Cuál es el mejor hotel cerca del Valle del Cocora?"
+- "Hoteles con vista en Santa Rosa de Cabal"
+- "Hotel boutique en Pereira con desayuno incluido"
+- "Mejor cafe de origen cerca de mi hotel"
+- "¿Qué hacer en el Eje Cafetero?"
+
+### Keywords Locales por Zona
+
+| Zona | Keywords sugeridas |
+|------|-------------------|
+| Pereira | hotel Pereira centro, hospedaje Pereira, hotel cerca aeropuerto Pereira |
+| Valle del Cocora | hotel cerca Valle del Cocora, hospedaje Salento, cabañas Valle del Cocora |
+| Santa Rosa de Cabal | hotel Santa Rosa de Cabal, termas de Santa Rosa hospedaje, hotel termales |
+| Quindío | hotel en Armenia Quindío, finca cafetera hospedaje, glamping Eje Cafetero |
+
+### Implementacion de Keywords (Implementación)
+
+- [ ] Incluir keywords primarias en title tag y meta description
+- [ ] Crear contenido dedicado por zona geográfica (Pereira, Valle del Cocora, Santa Rosa de Cabal)
+- [ ] Usar keywords de voz en FAQs y headings H2/H3
+- [ ] Implementar schema SpeakableSpecification para asistentes de voz
+- [ ] Optimizar Google Business Profile con categorías locales
+
+---
+
 ## 4. KPI's a Monitorear
 
 | Métrica | Meta | Herramienta |

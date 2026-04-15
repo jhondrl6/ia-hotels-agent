@@ -1407,7 +1407,8 @@ Este paquete contiene 3 guías para integrar {nombre} con las principales plataf
             if not guides:
                 guides = self._voice_guide_subdocuments.get("unknown", {})
             for subdoc_filename, subdoc_content in guides.items():
-                file_path = asset_type_dir / subdoc_filename
+                fname = subdoc_filename if subdoc_filename.endswith('.md') else f"{subdoc_filename}.md"
+                file_path = asset_type_dir / fname
                 file_path.write_text(subdoc_content, encoding='utf-8')
             # Clean up to avoid memory leak
             delattr(self, '_voice_guide_subdocuments')

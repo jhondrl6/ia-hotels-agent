@@ -306,8 +306,18 @@ Compara semana 1 vs semana 3. Deberías ver +10-15% más consultas."""
         """Prepara JSON con métricas para CRM/tracking."""
         return {
             "hotel": context["hotel_name"],
+            "hotel_nombre": context["hotel_name"],
             "region": context["region"],
             "analysis_date": context["analysis_date"],
+            "perdida_mensual": context["monthly_loss"],
+            "gbp_score": context["gbp_score"],
+            "quick_win": {
+                "action": quick_win.get("action", ""),
+                "expected_impact": quick_win.get("expected_impact", ""),
+                "time_to_complete": quick_win.get("time_to_complete", ""),
+                "difficulty": quick_win.get("difficulty", ""),
+                "case": quick_win.get("case", ""),
+            },
             "metrics": {
                 "gbp_score": context["gbp_score"],
                 "reviews": context["reviews"],
@@ -318,13 +328,6 @@ Compara semana 1 vs semana 3. Deberías ver +10-15% más consultas."""
                 "booking_commissions_loss": context["booking_loss_monthly"],
                 "ia_visibility_loss": context["ia_loss_monthly"],
                 "geo_visibility_loss": context["geo_loss_monthly"],
-            },
-            "quick_win": {
-                "action": quick_win.get("action", ""),
-                "expected_impact": quick_win.get("expected_impact", ""),
-                "time_to_complete": quick_win.get("time_to_complete", ""),
-                "difficulty": quick_win.get("difficulty", ""),
-                "case": quick_win.get("case", ""),
             },
             "competitors": [context["top_competitor_1"], context["top_competitor_2"]],
             "cta": "Ver Spark Report y video Loom",

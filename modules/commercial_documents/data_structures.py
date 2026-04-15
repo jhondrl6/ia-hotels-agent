@@ -455,7 +455,7 @@ def extract_top_problems(audit_result: V4AuditResult, limit: int = 5) -> List[st
         problems.append("Sin Schema de Hotel (invisible para IA)")
         remaining -= 1
     
-    if remaining > 0 and audit_result.validation and audit_result.validation.whatsapp_status == ConfidenceLevel.CONFLICT.value:
+    if remaining > 0 and audit_result.validation and audit_result.validation.whatsapp_status and audit_result.validation.whatsapp_status.lower() == ConfidenceLevel.CONFLICT.value:
         problems.append("WhatsApp inconsistente entre Web y Google Business Profile")
         remaining -= 1
     

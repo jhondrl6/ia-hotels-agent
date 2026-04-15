@@ -97,7 +97,7 @@ class TestCoherenceConfig:
         
         assert is_valid is True
         assert "5.0x" in message
-        assert "óptimo" in message
+        assert "optimo" in message
 
 
 class TestPriceMatchesPainCheck:

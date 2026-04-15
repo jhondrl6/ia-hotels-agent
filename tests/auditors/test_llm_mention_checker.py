@@ -108,7 +108,7 @@ class TestLLMMentionCheckerWithKeys:
         result = checker._query_openrouter("Recomiendame un hotel en Manizales")
 
         assert result is not None
-        assert "Hotel Visperas" in result
+        assert "Hotel Visperas" in result["text"]
         mock_post.assert_called_once()
 
     @patch('requests.post')
@@ -136,7 +136,7 @@ class TestLLMMentionCheckerWithKeys:
         result = checker._query_gemini("Recomiendame un hotel")
 
         assert result is not None
-        assert "Hotel Visperas" in result
+        assert "Hotel Visperas" in result["text"]
 
 
 class TestMentionParsing:

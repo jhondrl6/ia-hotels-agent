@@ -107,7 +107,8 @@ class TestAssetWriteValidationOrder:
                 {"metadata_data": mock_field},  # validated_data
                 temp_output_dir,
                 "Test Hotel",
-                hotel_id
+                hotel_id,
+                ""  # site_url
             )
         
         # Verificar que el archivo FUE BORRADO después de la validación fallida
@@ -168,7 +169,8 @@ class TestAssetWriteValidationOrder:
                 {},
                 temp_output_dir,
                 "Test Hotel",
-                hotel_id
+                hotel_id,
+                ""  # site_url
             )
         
         # Ambos archivos deben ser borrados
@@ -218,7 +220,8 @@ class TestAssetWriteValidationOrder:
                 {},
                 temp_output_dir,
                 "Test Hotel",
-                hotel_id
+                hotel_id,
+                ""  # site_url
             )
         
         # Archivo debe seguir existiendo
@@ -266,7 +269,7 @@ class TestAssetGenerationReportValidationConsistency:
         
         with patch.object(orchestrator.conditional_generator, 'generate', return_value=mock_result):
             result = orchestrator._generate_with_coherence_check(
-                spec, {}, tmp_path, "Test", hotel_id
+                spec, {}, tmp_path, "Test", hotel_id, ""  # site_url
             )
         
         # Debe ser FailedAsset
