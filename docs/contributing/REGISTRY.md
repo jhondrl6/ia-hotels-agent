@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-14
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 103
+> **Total fases completadas:** 106
 
 ---
 
@@ -2869,6 +2869,62 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (270 passed (auditors+geo_enrichment), 496 total (auditors+geo+asset_gen))
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PERSONALIZATION - 2026-04-14
+**Descripcion:** Generators ahora reciben hotel_data para personalizar contenido. geo_playbook_generator y optimization_guide_generator reimplementados con arquitectura R4. llmstxt_generator ya usaba hotel_data. conditional_generator pasa hotel_data a todos los generators. Tests: 223 passed (5 failures preexistentes en voice_assistant/voice_keywords de causa raíz diferente).
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-BUGFIXES - 2026-04-14
+**Descripcion:** D4: detected_via_html NO existía en iah-cli (0 matches). D5: _generate_review_widget hardcoded ★★★★★ y 'Excelente servicio' reemplazado con lógica condicional (rating/review_count reales o estado vacío). D6: _generate_org_schema eliminó example.com/logo vacío/telephone vacío — ahora omite campos faltantes. D7: main.py línea 2375 ahora verifica Path(asset.path).exists() antes de marcar ✅/❌. Greps: 0 detected_via_html, 0 Excelente servicio, 0 example.com.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CONTENT-FIXES - 2026-04-14
+**Descripcion:** Fix contenido: optimization_guide contradicciones (title_status unificado), monthly_report verificado hotel_data.name, llms_txt contenido dinámico desde hotel_data
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/optimization_guide_generator.py` | Optimization Guide Generator |
+| `modules/asset_generation/monthly_report_generator.py` | Monthly Report Generator |
+| `modules/asset_generation/llmstxt_generator.py` | Llmstxt Generator |
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+
+### Validaciones
+- [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

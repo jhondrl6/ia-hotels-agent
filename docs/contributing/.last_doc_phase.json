@@ -1,11 +1,11 @@
 {
-  "modules/asset_generation/conditional_generator.py": "GAP-IAO-01-04",
+  "modules/asset_generation/conditional_generator.py": "FASE-DATASOURCE",
   "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-TEMPLATE-DEBT",
   "modules/commercial_documents/v4_proposal_generator.py": "FASE-CONFIDENCE-DISCLOSURE",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-E",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-E",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
-  "modules/asset_generation/v4_asset_orchestrator.py": "FASE-6",
+  "modules/asset_generation/v4_asset_orchestrator.py": "FASE-CONTENT-FIXES",
   "docs/contributing/capabilities.md": "FASE-IAO-06",
   "GEO_FIELD_MAPPING.md": "FASE-1",
   "06-checklist-implementacion.md": "FASE-1",
@@ -23,7 +23,7 @@
   "modules/asset_generation/asset_catalog.py": "FASE-D",
   "modules/commercial_documents/data_structures.py": "FASE-E",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
-  "main.py": "FASE-CONFIDENCE-DISCLOSURE",
+  "main.py": "FASE-DATASOURCE",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "FASE-1",
   "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-1",
@@ -48,7 +48,7 @@
   "modules/analytics/__init__.py": "FASE-D",
   "modules/auditors/seo_elements_detector.py": "FASE-A",
   "tests/commercial_documents/test_diagnostic_brechas.py": "FASE-B",
-  "modules/auditors/v4_comprehensive.py": "PLACES-API-FIX",
+  "modules/auditors/v4_comprehensive.py": "FASE-DATASOURCE",
   "modules/commercial_documents/templates/diagnostico_v4_template.md": "FASE-A",
   "templates/diagnostico_ejecutivo.md": "FASE-F",
   "modules/utils/benchmarks.py": "FASE-D",
@@ -80,5 +80,9 @@
   "modules/postprocessors/document_quality_gate.py": "FASE-CONTENT-SCRUBBER",
   "tests/postprocessors/test_document_quality_gate.py": "FASE-CONTENT-SCRUBBER",
   "8 archivos via sync_versions.py": "FASE-RELEASE",
-  "modules/asset_generation/v4_asset_orchestrator.py modules/auditors/llm_mention_checker.py modules/auditors/v4_comprehensive.py modules/commercial_documents/templates/propuesta_v6_template.md modules/commercial_documents/v4_proposal_generator.py": "FASE-D4-OPENROUTER"
+  "modules/asset_generation/v4_asset_orchestrator.py modules/auditors/llm_mention_checker.py modules/auditors/v4_comprehensive.py modules/commercial_documents/templates/propuesta_v6_template.md modules/commercial_documents/v4_proposal_generator.py": "FASE-D4-OPENROUTER",
+  "modules/geo_enrichment/hotel_schema_enricher.py": "FASE-DATASOURCE",
+  "modules/asset_generation/optimization_guide_generator.py": "FASE-CONTENT-FIXES",
+  "modules/asset_generation/monthly_report_generator.py": "FASE-CONTENT-FIXES",
+  "modules/asset_generation/llmstxt_generator.py": "FASE-CONTENT-FIXES"
 }

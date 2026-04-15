@@ -62,11 +62,14 @@ class OptimizationGuideGenerator:
             h1_count = metadata_data.get("h1_count", 0)
             schema_types = metadata_data.get("schema_types", [])
 
-        # Status indicators
-        title_status = "⚠️ Necesita atención" if has_default_title else "✅ Correcto"
-        description_status = "⚠️ Necesita atención" if has_default_description else "✅ Correcto"
+        # Status indicators - unified logic considering both default CMS and optimal length
         title_length_status = "⚠️ Longitud no óptima" if title_length < 30 or title_length > 60 else "✅ Longitud correcta"
         description_length_status = "⚠️ Longitud no óptima" if description_length < 120 or description_length > 160 else "✅ Longitud correcta"
+        # General status considers BOTH: default CMS flag AND length optimization
+        title_needs_attention = has_default_title or (title_length < 30 or title_length > 60)
+        description_needs_attention = has_default_description or (description_length < 120 or description_length > 160)
+        title_status = "⚠️ Necesita atención" if title_needs_attention else "✅ Correcto"
+        description_status = "⚠️ Necesita atención" if description_needs_attention else "✅ Correcto"
         
         # Schema recommendations
         schema_recommendations = ""

@@ -60,16 +60,17 @@
 ---
 
 ### FASE-CONTENT-FIXES
-**Fecha:** ___  
+**Fecha:** 2026-04-14
 **Módulos tocados:**
-- `modules/asset_generation/optimization_guide_generator.py`
-- `modules/asset_generation/monthly_report_generator.py`
-- `modules/asset_generation/llmstxt_generator.py`
+- `modules/asset_generation/optimization_guide_generator.py` (D8: title_status/description_status unificados)
+- `modules/asset_generation/monthly_report_generator.py` (GAP-2: verificado hotel_data.name)
+- `modules/asset_generation/llmstxt_generator.py` (GAP-3: contenido dinámico desde hotel_data)
+- `modules/asset_generation/v4_asset_orchestrator.py` (GAP-3: _extract_validated_fields extrae region/city/amenities)
 
 **Cambios:**
-- optimization_guide sin contradicciones
-- monthly_report con nombre real
-- llms_txt con contenido del sitio
+- optimization_guide: lógica unificada — title_needs_attention/description_needs_attention combinan default CMS + longitud óptima
+- monthly_report: hotel_data.name como fuente primaria (ya aplicado en FASE-PERSONALIZATION, verificado OK)
+- llms_txt: region default "" (no hardcodeado), USP dinámico desde description/hotel_data, Geographic Context solo incluye datos presentes
 
 ---
 
@@ -123,8 +124,8 @@ AUDIT (datos reales) → GENERATORS (reciben audit_report) → ASSETS (personali
 || WhatsApp funcional | NO (roto) | Pendiente FASE-BUGFIXES |
 || org_schema real | NO (example.com) | Pendiente FASE-BUGFIXES |
 || review_widget honesto | NO (falso) | Pendiente FASE-BUGFIXES |
-|| llms_txt específico | NO (genérico) | Pendiente FASE-CONTENT-FIXES |
-|| monthly_report nombre real | NO ("Hotel") | Pendiente FASE-CONTENT-FIXES |
+|| llms_txt específico | NO (genérico) | ✅ Contenido dinámico hotel_data |
+|| monthly_report nombre real | NO ("Hotel") | ✅ hotel_data.name verificado |
 || GBP query correcta | NO ("amaziliahotel") | ✅ Queries reordenadas + validación |
 
 ---
@@ -178,7 +179,7 @@ Ejecutar v4complete solo al final reduce drásticamente el consumo de APIs. Dura
 | Fase 1 | FASE-DATASOURCE | 2026-04-14 | ✅ |
 | Fase 2 | FASE-PERSONALIZATION | ___ | ⏳ |
 | Fase 3 | FASE-BUGFIXES | ___ | ⏳ |
-| Fase 4 | FASE-CONTENT-FIXES | ___ | ⏳ |
+| Fase 4 | FASE-CONTENT-FIXES | 2026-04-14 | ✅ |
 | Fase 5 | FASE-VALIDATION-GATE | ___ | ⏳ |
 | Fase 6 | FASE-RELEASE | ___ | ⏳ |
 

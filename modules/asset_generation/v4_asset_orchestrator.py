@@ -609,14 +609,22 @@ class V4AssetOrchestrator:
         
         # FASE 12: Agregar hotel_data del audit schema
         if audit_result and audit_result.schema and audit_result.schema.properties:
+            props = audit_result.schema.properties
             validated_data["hotel_data"] = {
-                "name": audit_result.schema.properties.get("name"),
-                "description": audit_result.schema.properties.get("description"),
-                "telephone": audit_result.schema.properties.get("telephone"),
-                "url": audit_result.schema.properties.get("url"),
-                "address": audit_result.schema.properties.get("address"),
-                "image": audit_result.schema.properties.get("image"),
-                "price_range": audit_result.schema.properties.get("price_range"),
+                "name": props.get("name"),
+                "description": props.get("description"),
+                "telephone": props.get("telephone"),
+                "url": props.get("url"),
+                "address": props.get("address"),
+                "image": props.get("image"),
+                "price_range": props.get("price_range"),
+                # GAP-3: Pass real hotel data fields from schema for llms.txt
+                "email": props.get("email", ""),
+                "amenities": props.get("amenityFeature", []) or props.get("amenities", []),
+                "region": props.get("addressRegion", ""),
+                "city": props.get("addressLocality", ""),
+                "rating": props.get("rating", None),
+                "review_count": props.get("reviewCount", None),
             }
             # D1 FIX: Pasar coordenadas GPS del GBP al hotel_data
             if audit_result.gbp:
@@ -626,6 +634,15 @@ class V4AssetOrchestrator:
                 if 0 <= gbp_lat <= 13 and -82 <= gbp_lng <= -66:
                     validated_data["hotel_data"]["latitude"] = gbp_lat
                     validated_data["hotel_data"]["longitude"] = gbp_lng
+                # GAP-3: Enrich hotel_data with GBP rating/reviews if schema lacks them
+                if not validated_data["hotel_data"].get("rating"):
+                    gbp_rating = getattr(audit_result.gbp, 'rating', None)
+                    if gbp_rating:
+                        validated_data["hotel_data"]["rating"] = gbp_rating
+                if not validated_data["hotel_data"].get("review_count"):
+                    gbp_reviews = getattr(audit_result.gbp, 'reviews', None)
+                    if gbp_reviews:
+                        validated_data["hotel_data"]["review_count"] = gbp_reviews
         
         # WhatsApp conflict data for whatsapp_conflict_guide asset
         if audit_result and audit_result.validation:

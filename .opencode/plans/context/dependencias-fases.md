@@ -145,10 +145,10 @@
 - [ ] org_schema con URL real
 - [ ] Propuesta refleja estado real de assets
 
-### FASE-CONTENT-FIXES
-- [ ] optimization_guide sin contradicciones
-- [ ] monthly_report con nombre real
-- [ ] llms_txt con contenido del sitio (Pereira, spa, Eje Cafetero)
+### FASE-CONTENT-FIXES — ✅ Completada (2026-04-14)
+- [x] optimization_guide sin contradicciones — title_status/description_status unificados: combinan default CMS + longitud óptima
+- [x] monthly_report con nombre real — verificado: hotel_data.name como fuente primaria, "Hotel" solo como último fallback
+- [x] llms_txt con contenido del sitio — region default "" (no "Eje Cafetero" hardcodeado), USP dinámico, Geographic Context en hotel_data
 
 ### FASE-RELEASE (ÚNICA prueba v4complete)
 - [ ] v4complete --url https://amaziliahotel.com/ ejecuta exitosamente
