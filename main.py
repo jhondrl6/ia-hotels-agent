@@ -2185,58 +2185,11 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         voice_readiness_level=getattr(diagnostic_gen, '_last_voice_level', None),
     )
 
-    # Generar propuesta solo si pasa el gate (o si no es bloqueante)
+    # FIX-D7: Proposal generation moved to AFTER assets (see L2361+)
+    # This allows assets_for_quality to use asset_result.generated_assets
+    # instead of asset_plan (which misses promised_by=always assets)
     proposal_path = None
-    if generate_proposal:
-        # FASE-CONFIDENCE-DISCLOSURE: Convertir asset_plan a formato para quality table
-        _CONFIDENCE_TO_SCORE = {"verified": 0.8, "estimated": 0.6, "conflict": 0.3, "unknown": 0.0}
-        assets_for_quality = [
-            {
-                "asset_type": spec.asset_type,
-                "confidence_score": _CONFIDENCE_TO_SCORE.get(
-                    spec.confidence_level.value if hasattr(spec.confidence_level, 'value') else str(spec.confidence_level).lower(),
-                    0.0
-                ),
-            }
-            for spec in asset_plan
-        ]
-        proposal_gen = V4ProposalGenerator()
-        proposal_path = proposal_gen.generate(
-            diagnostic_summary=diagnostic_summary,
-            financial_scenarios=financial_scenarios_obj,
-            asset_plan=asset_plan,
-            hotel_name=hotel_name,
-            output_dir=str(output_dir),
-            audit_result=audit_result,
-            pricing_result=pricing_result,  # FASE 13: Usar pricing_result para consistencia con financial_scenarios.json
-            region=region,  # FASE-DRECONEXION-V6: Pasar region para templates V6
-            analytics_data=analytics_data,  # ANALYTICS-02: pasar analytics_data al proposal
-            financial_breakdown=financial_breakdown,  # FASE-G: breakdown con evidence tiers
-            assets_generated=assets_for_quality,  # FASE-CONFIDENCE-DISCLOSURE: quality table
-        )
-    if proposal_path:
-        print(f"[OK] Propuesta generada: {proposal_path}")
-    else:
-        print("⚠️  Propuesta NO generada debido a baja coherencia")
-
-    # Usar el precio del pricing wrapper (calculado correctamente con 5% pain ratio)
-    # NO recalcular con fórmula legacy que tiene mínimo de 800k
-    price_monthly = pricing_result.monthly_price_cop
-
-    # Calcular ROI proyectado (ahorro anual / costo anual)
-    # Usar expected_monthly del financial calculator
-    annual_savings = expected_monthly * 12
-    annual_cost = price_monthly * 12
-    roi_projected = round((annual_savings / annual_cost), 2) if annual_cost > 0 else 3.5
-
-    proposal_doc = ProposalDocument(
-        path=str(proposal_path) if proposal_path else "",
-        price_monthly=price_monthly,
-        assets_proposed=asset_plan,
-        roi_projected=roi_projected,
-        generated_at=datetime.now().isoformat()
-    )
-    print(f"   💵 Precio calculado: ${price_monthly:,.0f} COP/mes | ROI: {roi_projected:.1f}x")
+    proposal_doc = None
 
     # FASE 3.6: Content Scrubber + Document Quality Gate (FASE-B)
     print("\n📍 FASE 3.6: Content Scrubber + Quality Gate (FASE-B)")
@@ -2344,6 +2297,22 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         quality_gate_blockers = []
         quality_gate_warnings = []
 
+    # FIX-D7: Proposal generation moved to AFTER assets
+    # Create a minimal proposal_doc for asset generation (coherence validation needs price_monthly)
+    # Full proposal_doc with proposal_path will be created after assets are generated
+    price_monthly = pricing_result.monthly_price_cop
+    annual_savings = expected_monthly * 12
+    annual_cost = price_monthly * 12
+    roi_projected = round((annual_savings / annual_cost), 2) if annual_cost > 0 else 3.5
+    
+    proposal_doc = ProposalDocument(
+        path="",  # Will be updated after proposal generation
+        price_monthly=price_monthly,
+        assets_proposed=asset_plan,
+        roi_projected=roi_projected,
+        generated_at=datetime.now().isoformat()
+    )
+    
     # FASE 4: Generación de Assets con Coherencia
     print("\n📍 FASE 4: Generación de Assets Validados")
     print("-" * 70)
@@ -2378,6 +2347,59 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     except Exception as e:
         print(f"⚠️  Generación de assets falló: {e}")
         asset_result = None
+    
+    # FIX-D7: Proposal generation now AFTER assets so we can use asset_result.generated_assets
+    # (which includes promised_by=always assets like voice_assistant_guide, whatsapp_button, monthly_report)
+    if generate_proposal:
+        print("\n📍 FASE 3.5: Generación de Propuesta Comercial")
+        print("-" * 70)
+        
+        # Build assets_for_quality from asset_result (has 12 items with promised_by=always)
+        # Fallback to asset_plan if asset_result not available (backward compat)
+        if asset_result and asset_result.generated_assets:
+            assets_for_quality = [
+                {
+                    "asset_type": a.asset_type,
+                    "confidence_score": a.confidence_score if hasattr(a, 'confidence_score') else 0.0,
+                }
+                for a in asset_result.generated_assets
+            ]
+        else:
+            _CONFIDENCE_TO_SCORE = {"verified": 0.8, "estimated": 0.6, "conflict": 0.3, "unknown": 0.0}
+            assets_for_quality = [
+                {
+                    "asset_type": spec.asset_type,
+                    "confidence_score": _CONFIDENCE_TO_SCORE.get(
+                        spec.confidence_level.value if hasattr(spec.confidence_level, 'value') else str(spec.confidence_level).lower(),
+                        0.0
+                    ),
+                }
+                for spec in asset_plan
+            ]
+        
+        proposal_gen = V4ProposalGenerator()
+        proposal_path = proposal_gen.generate(
+            diagnostic_summary=diagnostic_summary,
+            financial_scenarios=financial_scenarios_obj,
+            asset_plan=asset_plan,
+            hotel_name=hotel_name,
+            output_dir=str(output_dir),
+            audit_result=audit_result,
+            pricing_result=pricing_result,
+            region=region,
+            analytics_data=analytics_data,
+            financial_breakdown=financial_breakdown,
+            assets_generated=assets_for_quality,
+        )
+        
+        # Update proposal_doc with the actual path
+        proposal_doc.path = str(proposal_path) if proposal_path else ""
+        
+        if proposal_path:
+            print(f"[OK] Propuesta generada: {proposal_path}")
+            print(f"   💵 Precio: ${price_monthly:,.0f} COP/mes | ROI: {roi_projected:.1f}x")
+        else:
+            print("⚠️  Propuesta NO generada debido a baja coherencia")
     
     # FASE 4.5: Publication Gates - Verificar readiness para publicación
     print("\n📍 FASE 4.5: Publication Gates (Quality Checks)")

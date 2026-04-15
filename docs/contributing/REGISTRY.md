@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-14
+> **Ultima actualizacion:** 2026-04-15
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 108
+> **Total fases completadas:** 110
 
 ---
 
@@ -2852,29 +2852,6 @@ _Ninguno_
 ---
 
 
-## FASE-DATASOURCE - 2026-04-14
-**Descripcion:** Corrección datos fuente: coords GPS (D1), región eje_cafetero (D3), teléfono tel: HTML (D9), validación GBP búsqueda (D12)
-
-### Archivos Nuevos
-_Ninguno_
-
-### Archivos Modificados
-| Archivo | Cambio |
-|---------|--------|
-| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
-| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
-| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
-| `modules/geo_enrichment/hotel_schema_enricher.py` | Hotel Schema Enricher |
-| `main.py` | Main |
-
-### Validaciones
-- [x] Tests passing (270 passed (auditors+geo_enrichment), 496 total (auditors+geo+asset_gen))
-- [x] Suite NEVER_BLOCK passing
-- [x] Capability contract verificado
-
----
-
-
 ## FASE-PERSONALIZATION - 2026-04-14
 **Descripcion:** Generators ahora reciben hotel_data para personalizar contenido. geo_playbook_generator y optimization_guide_generator reimplementados con arquitectura R4. llmstxt_generator ya usaba hotel_data. conditional_generator pasa hotel_data a todos los generators. Tests: 223 passed (5 failures preexistentes en voice_assistant/voice_keywords de causa raíz diferente).
 
@@ -2959,6 +2936,66 @@ _Ninguno_
 
 ### Archivos Modificados
 _Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-DATASOURCE - 2026-04-15
+**Descripcion:** Corrección coords GPS, región, teléfono, GBP
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (496/500 passed)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.31.1 - 2026-04-15
+**Descripcion:** Release v4.31.1 - Certificación completa AMAZILIA-BUGFIX
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-INTERVENCION - 2026-04-15
+**Descripcion:** Fixes A1(review_data key), A2(whatsapp propagation), A3(hotel name fallback), B1(asset path check), C1(wa.me clean URL)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `conditional_generator.py` | Conditional Generator |
+| `v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `main.py` | Main |
 
 ### Validaciones
 - [x] Tests passing

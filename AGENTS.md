@@ -1,8 +1,8 @@
-<!-- agents_version: 4.30.0 | last_update: 2026-04-13 -->
+<!-- agents_version: 4.31.1 | last_update: 2026-04-15 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.30.0 -- Fix Places API search with garbage schema data COMPLETADO**
+> **v4.31.1 -- AMAZILIA-BUGFIX Release Complete COMPLETADO**
 
 ---
 

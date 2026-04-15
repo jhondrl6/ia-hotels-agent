@@ -1,5 +1,60 @@
 # Changelog
 
+## [4.31.1] - 2026-04-15
+
+### Objetivo
+
+FASE-RELEASE: Certificación completa del proyecto AMAZILIA-BUGFIX. Integración de todas las fases (FASE-DATASOURCE, FASE-PERSONALIZATION, FASE-BUGFIXES, FASE-CONTENT-FIXES, FASE-VALIDATION-GATE) y liberación final v4.31.1.
+
+### Cambios Implementados
+
+Release final que consolidad todas las correcciones del proyecto AMAZILIA-BUGFIX:
+- **FASE-DATASOURCE**: Pipeline de datos enriquecido con hotel_schema_enricher y v4_asset_orchestrator
+- **FASE-PERSONALIZATION**: Generators reciben datos reales del audit (hotel_data, gbp_data, metadata_data)
+- **FASE-BUGFIXES**: Review widget condicional, org_schema sin placeholders, verificación de assets reales
+- **FASE-CONTENT-FIXES**: optimization_guide, monthly_report, llms_txt con datos contextualizados
+- **FASE-VALIDATION-GATE**: Gates de validación en asset_catalog, conditional_generator, serpapi_client
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | Bridge de datos entre fases |
+| `modules/asset_generation/conditional_generator.py` | Propagación hotel_data a generators, review widget condicional, org_schema limpio |
+| `modules/auditors/v4_comprehensive.py` | _build_search_queries() para Places API robusto |
+| `modules/auditors/hotel_schema_enricher.py` | Enriquecimiento de schema data |
+| `modules/asset_generation/review_widget_generator.py` | Lógica condicional de estrellas |
+| `modules/asset_generation/org_schema_generator.py` | Eliminación de placeholder example.com |
+| `modules/asset_generation/optimization_guide_generator.py` | Datos reales del audit |
+| `modules/asset_generation/monthly_report_generator.py` | Extracción de hotel_data |
+| `modules/asset_generation/llmstxt_generator.py` | Contenido contextualizado |
+| `modules/asset_generation/asset_catalog.py` | Gates de validación |
+| `main.py` | Verificación Path.exists() para assets |
+| `scripts/sync_versions.py` | Sincronización de versiones |
+
+### Tests
+
+- Suite completa: 2224 funciones, 140 archivos, 0 regresiones
+- Coherence score: 0.84 >= 0.8 (PASA gate)
+- Publication Ready: true
+
+### Resumen de Fixes Residuales (A3 + D7)
+
+|| Fix | Descripcion | Resultado |
+|-----|-----|------------|-----------|
+| A3 | hotel_data vacio en schema vacio | `hotel_data = {}` ahora SIEMPRE se crea (fuera del `if schema.properties`). Fallback chain: `audit_result.hotel_name` → `gbp.name` → `metadata.title`. Monthly report recibe `{name: "Amaziliahotel"}` en vez de `None` → fallback "Hotel" |
+| D7 | Propuesta marcaba assets generados como ❌ | `assets_for_quality` ahora usa `asset_result.generated_assets` (12 items) en vez de `asset_plan` (10 items). Los 3 assets `promised_by="always"` (voice_assistant_guide, whatsapp_button, monthly_report) ya aparecen correctamente |
+
+**Archivos adicionales modificados por A3+D7:**
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | `_extract_validated_fields()` crea `hotel_data` siempre + fallback chain name |
+| `main.py` | `assets_for_quality` usa `asset_result.generated_assets` |
+| `tests/asset_generation/test_audit_data_pipeline.py` | Test actualizado para esperar `hotel_data` presente (vacio) |
+
+---
+
 ## [4.31.0] - 2026-04-14
 
 ### Objetivo

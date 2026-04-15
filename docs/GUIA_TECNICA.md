@@ -1,12 +1,46 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.30.0
-**Última actualización:** 2026-04-14
+**Versión:** v4.31.1
+**Última actualización:** 2026-04-15
 **Proyecto:** IA Hoteles Agent CLI
 
 ---
 
 ## Notas de Cambios
+
+### v4.31.1 - 2026-04-15 (Fixes Residuales A3 + D7)
+
+#### Fix A3: hotel_data nunca se creaba con schema vacio
+
+**Causa Raiz:** `hotel_data = {}` estaba dentro del bloque `if schema.properties:` en `_extract_validated_fields()`. Cuando `schema.properties = {}` (dict vacio, evaluado como falsy en Python), el bloque se saltaba completamente y `hotel_data` nunca se creaba. El Monthly Report recibia `None` para `name` y caia al fallback generico "Hotel".
+
+**Solucion:**
+
+1. `hotel_data = {}` ahora se crea SIEMPRE (antes del `if schema.properties:`)
+2. Se usa `.update()` para enriquecer desde schema cuando este tiene datos
+3. Fallback chain para `name`: `audit_result.hotel_name` (siempre disponible) → `gbp.name` → `metadata.title`
+
+**Archivo:** `modules/asset_generation/v4_asset_orchestrator.py`
+
+#### Fix D7: Propuesta mostraba ❌ para assets generados
+
+**Causa Raiz:** La tabla de calidad en la propuesta usaba `asset_plan` (10 items - solo pain-mapped) en vez de `asset_result.generated_assets` (12 items - incluye `promised_by="always"`). Los 3 assets automaticos (voice_assistant_guide, whatsapp_button, monthly_report) no estaban en `asset_plan` y aparecian como "❌ No generado".
+
+**Solucion:**
+
+1. `assets_for_quality` ahora se construye desde `asset_result.generated_assets` cuando esta disponible
+2. Fallback a `asset_plan` si `asset_result` no esta disponible o `generated_assets` esta vacio
+3. La propuesta ahora muestra los 12 assets generados con su confidence_score real
+
+**Archivo:** `main.py` (~L2190-2215)
+
+#### Tests
+
+- 109 tests de regresion pasan
+- `py_compile` en ambos archivos: OK
+- v4complete en amaziliahotel.com: 12 assets generados (incluye los 3 problematicos)
+
+---
 
 ### v4.31.0 - 2026-04-14 (FASE-PERSONALIZATION + FASE-BUGFIXES)
 

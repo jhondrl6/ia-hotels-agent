@@ -1,11 +1,11 @@
 {
-  "modules/asset_generation/conditional_generator.py": "FASE-PERSONALIZATION",
+  "modules/asset_generation/conditional_generator.py": "FASE-DATASOURCE",
   "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-TEMPLATE-DEBT",
   "modules/commercial_documents/v4_proposal_generator.py": "FASE-CONFIDENCE-DISCLOSURE",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-E",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-E",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
-  "modules/asset_generation/v4_asset_orchestrator.py": "FASE-PERSONALIZATION",
+  "modules/asset_generation/v4_asset_orchestrator.py": "FASE-DATASOURCE",
   "docs/contributing/capabilities.md": "FASE-IAO-06",
   "GEO_FIELD_MAPPING.md": "FASE-1",
   "06-checklist-implementacion.md": "FASE-1",
@@ -23,7 +23,7 @@
   "modules/asset_generation/asset_catalog.py": "FASE-D",
   "modules/commercial_documents/data_structures.py": "FASE-E",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
-  "main.py": "FASE-DATASOURCE",
+  "main.py": "FASE-INTERVENCION",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "FASE-1",
   "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-1",
@@ -84,5 +84,7 @@
   "modules/geo_enrichment/hotel_schema_enricher.py": "FASE-DATASOURCE",
   "modules/asset_generation/optimization_guide_generator.py": "FASE-CONTENT-FIXES",
   "modules/asset_generation/monthly_report_generator.py": "FASE-CONTENT-FIXES",
-  "modules/asset_generation/llmstxt_generator.py": "FASE-CONTENT-FIXES"
+  "modules/asset_generation/llmstxt_generator.py": "FASE-CONTENT-FIXES",
+  "conditional_generator.py": "FASE-INTERVENCION",
+  "v4_asset_orchestrator.py": "FASE-INTERVENCION"
 }

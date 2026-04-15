@@ -1,8 +1,8 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.30.0"
-codename: "Fix Places API search with garbage schema data"
-release_date: "2026-04-13"
+version: "4.31.1"
+codename: "AMAZILIA-BUGFIX Release Complete"
+release_date: "2026-04-15"
 plan_maestro_version: "v2.6.0"
 
 # v4.18.0 - ANALYTICS E2E 100% CERTIFICATION (ANALYTICS-E2E-CERT-01)

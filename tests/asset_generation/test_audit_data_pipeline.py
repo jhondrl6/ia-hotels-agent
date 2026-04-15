@@ -128,6 +128,8 @@ class TestAuditDataPipeline:
     def test_extract_validated_fields_without_audit_result(self):
         """
         BACKWARD COMPATIBILITY: Should work without audit_result (default None).
+        FIX-A3: hotel_data is now ALWAYS created (even if empty) to ensure
+        fallback chain works properly.
         """
         orchestrator = V4AssetOrchestrator(output_base_dir="output")
         
@@ -141,8 +143,10 @@ class TestAuditDataPipeline:
         assert "rooms" in validated_data
         assert "adr" in validated_data
         
-        # hotel_data should NOT be present when audit_result is None
-        assert "hotel_data" not in validated_data
+        # FIX-A3: hotel_data IS NOW PRESENT even when audit_result is None (but empty)
+        # This is correct - we always create hotel_data now for the fallback chain to work
+        assert "hotel_data" in validated_data
+        assert validated_data["hotel_data"] == {}
 
     def test_extract_validated_fields_with_partial_schema(self):
         """

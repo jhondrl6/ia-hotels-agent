@@ -607,10 +607,13 @@ class V4AssetOrchestrator:
         for field in validation_summary.fields:
             validated_data[field.field_name] = field
         
-        # FASE 12: Agregar hotel_data del audit schema
+        # FIX-A3: SIEMPRE crear hotel_data (antes estaba dentro del if schema.properties)
+        validated_data["hotel_data"] = {}
+        
+        # FASE 12: Agregar hotel_data del audit schema si properties existe
         if audit_result and audit_result.schema and audit_result.schema.properties:
             props = audit_result.schema.properties
-            validated_data["hotel_data"] = {
+            validated_data["hotel_data"].update({
                 "name": props.get("name"),
                 "description": props.get("description"),
                 "telephone": props.get("telephone"),
@@ -625,7 +628,7 @@ class V4AssetOrchestrator:
                 "city": props.get("addressLocality", ""),
                 "rating": props.get("rating", None),
                 "review_count": props.get("reviewCount", None),
-            }
+            })
             # D1 FIX: Pasar coordenadas GPS del GBP al hotel_data
             if audit_result.gbp:
                 gbp_lat = getattr(audit_result.gbp, 'lat', 0.0) or 0.0
@@ -644,10 +647,33 @@ class V4AssetOrchestrator:
                     if gbp_reviews:
                         validated_data["hotel_data"]["review_count"] = gbp_reviews
         
+        # FIX-A3: Fallback name priority: hotel_name > gbp.name > metadata.title
+        # (El bloque original solo usaba metadata.title, que era vacío en amaziliahotel)
+        if not validated_data["hotel_data"].get("name"):
+            # Fuente 1: hotel_name del audit (siempre disponible)
+            if audit_result and getattr(audit_result, 'hotel_name', None):
+                validated_data["hotel_data"]["name"] = audit_result.hotel_name
+            # Fuente 2: GBP name
+            elif audit_result and audit_result.gbp:
+                gbp_name = getattr(audit_result.gbp, 'name', None)
+                if gbp_name:
+                    validated_data["hotel_data"]["name"] = gbp_name
+            # Fuente 3: metadata title (último recurso, puede ser vacío)
+            elif audit_result and audit_result.metadata:
+                title_name = getattr(audit_result.metadata, 'title', None)
+                if title_name:
+                    validated_data["hotel_data"]["name"] = title_name
+        
+        # Asegurar URL mínima en hotel_data siempre
+        if not validated_data["hotel_data"].get("url") and audit_result:
+            validated_data["hotel_data"]["url"] = getattr(audit_result, 'url', '')
+        
         # WhatsApp conflict data for whatsapp_conflict_guide asset
         if audit_result and audit_result.validation:
             validated_data["phone_web"] = getattr(audit_result.validation, 'phone_web', None)
             validated_data["phone_gbp"] = getattr(audit_result.validation, 'phone_gbp', None)
+            # FIX-A2: Propagate phone_web to whatsapp key for whatsapp_button handler
+            validated_data["whatsapp"] = validated_data.get("phone_web", "")
         if audit_result and audit_result.gbp:
             validated_data["gbp_rating"] = getattr(audit_result.gbp, 'rating', 0.0)
             validated_data["gbp_review_count"] = getattr(audit_result.gbp, 'reviews', 0)
@@ -696,6 +722,15 @@ class V4AssetOrchestrator:
             return FailedAsset(
                 asset_type=asset_spec.asset_type,
                 reason=result.get("error", "Preflight check failed"),
+                pain_ids_affected=asset_spec.pain_ids,
+                preflight_status="BLOCKED"
+            )
+        
+        # FIX-B1: Handle generation errors that return status "error" without file_path
+        if result_status == "error" or not result.get("success", True):
+            return FailedAsset(
+                asset_type=asset_spec.asset_type,
+                reason=result.get("error", "Generation failed"),
                 pain_ids_affected=asset_spec.pain_ids,
                 preflight_status="BLOCKED"
             )
