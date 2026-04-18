@@ -1,5 +1,33 @@
 # Changelog
 
+## [DOCS] - 2026-04-18 — Reescritura ROADMAP.md (audit v2)
+
+### Objetivo
+
+Reescribir ROADMAP.md con base en ROADMAP_AUDIT_2026-04-18.md (audit v2). Corrección técnica: v4lite no existe, se usa spark. Enfoque cambia de "tracción" a "supervivencia comercial" — primer cliente pago en 6 semanas.
+
+### Cambios Implementados
+
+- ROADMAP.md completamente reescrito: estructura FASE 0 (COMPLETADO) → FASE 0.5 (Validación) → FASE 1 (Outreach + Express) → FASE 1.5 (Instagram) → FASE 2 (Implementación + Palanca) → FASE 3 (Caso publicable) → FASE 4 (Monetización) + ANEXO (Visión 12-24 meses)
+- Diagnóstico gratuito eliminado como estrategia. Reemplazado por Diagnóstico Express ($120k COP) como filtro
+- OKRs de supervivencia: métricas de tracción (ranking Google, leads orgánicos) diferidas a mes 4+
+- ICP definido con 4 condiciones verificables (8-25 hab, propiedad familiar, fuera de Booking total, ticket >$280k COP)
+- Palancas asimétricas documentadas: Cotelco, Fontur, agencias, universidades
+- v4lite → spark en todas las referencias operativas
+- Gate de validación semana 3: si no hay 1 Express vendido, replantear
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `ROADMAP.md` | Reescritura completa basada en audit v2. Estructura de 7 fases operativas + anexo 12-24 meses. Horizonte 90 días |
+
+### Tests
+
+- No aplica (cambio documental, no de código)
+
+---
+
 ## [4.31.1] - 2026-04-15
 
 ### Objetivo

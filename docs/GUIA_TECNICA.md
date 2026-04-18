@@ -8,6 +8,29 @@
 
 ## Notas de Cambios
 
+### v4.31.1 - 2026-04-18 (Reescritura ROADMAP.md — audit v2)
+
+**Resumen:** ROADMAP.md reescrito completamente con base en ROADMAP_AUDIT_2026-04-18.md. Cambio de paradigma: de "tracción y escalamiento" a "supervivencia comercial — primer cliente pago en 6 semanas".
+
+**Corrección técnica:** `v4lite` no existe como comando CLI. Lo que existe es `spark` (diagnóstico rápido <5 min, stages geo+ia). Todas las referencias operativas corregidas en ROADMAP.md.
+
+**Cambios estructurales:**
+- FASE 0.5 nueva: Validación de dolor + ICP + outreach con spark pre-ejecutado
+- FASE 1 redefinida: Landing mínima + outreach personalizado + primer Express pago ($120k COP)
+- FASE 1.5 nueva: Instagram como canal de captura activa (paralelo)
+- FASE 2 redefinida: 3-5 Express + 1 implementación + 1 palanca asimétrica
+- FASES 3-4: diferidas hasta tener datos reales de clientes
+- FASES 5-7: movidas a ANEXO "Visión 12-24 meses" con disparadores endurecidos
+- Diagnóstico gratuito eliminado como estrategia 1:1 (solo como contenido público)
+- OKRs redefinidas: métricas de supervivencia, no de tracción
+
+**Archivos modificados:**
+- `ROADMAP.md` — Reescritura completa. Horizonte 90 días. Fuente: audit temporal 2026-04-18
+
+**Backwards compatibility:** No aplica (cambio documental, no de código). Pipeline v4complete y spark funcionan igual.
+
+---
+
 ### v4.31.1 - 2026-04-15 (Fixes Residuales A3 + D7)
 
 #### Fix A3: hotel_data nunca se creaba con schema vacio
