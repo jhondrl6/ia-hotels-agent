@@ -1,5 +1,37 @@
 # Changelog
 
+## [FIX] - 2026-04-18 — FASE-SPARK-FIX: Reparación comando spark
+
+### Objetivo
+
+Reparar el comando `spark` que fallaba con TypeError porque dependía del módulo `modules.orchestrator.pipeline` (AnalysisPipeline/PipelineOptions) que nunca existió en el repositorio. spark es crítico para el funnel de outreach del ROADMAP v2.0.
+
+### Cambios Implementados
+
+- **Nueva función `_map_audit_to_spark_data()`**: Mapea V4AuditResult → GeoStageResult + IAStageResult para alimentar SparkGenerator sin dependencia del pipeline legacy
+- **Nueva función `_detect_financial_region()`**: Detecta región financiera (eje_cafetero/caribe/antioquia/default) desde dirección para cálculo correcto de pérdida
+- **`_spark_handler()` reescrito**: Usa V4ComprehensiveAuditor en lugar de AnalysisPipeline/None
+- **`_run_spark_legacy()` reescrito**: Usa V4ComprehensiveAuditor en lugar de build_pipeline_options()/AnalysisPipeline
+- **Estrategia B implementada**: Bridge directo V4ComprehensiveAuditor → SparkGenerator, bypassing pipeline inexistente
+- **Cálculo financiero integrado**: Usa FinancialFactors.get_config(region) para pérdida mensual estimada (REVPAR × hab × 30 × factores)
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | +130 líneas nuevas (_map_audit_to_spark_data, _detect_financial_region). Reescritura de _spark_handler y _run_spark_legacy |
+
+### Tests
+
+- 9 passed, 2 skipped en tests/test_spark_command.py
+- Verificación real: `spark --url "https://hotelvisperas.com" --bypass-harness` → GBP Score 72/100, Pérdida $20.6M COP/mes, 4 archivos generados
+
+### Hallazgo Crítico
+
+`modules/orchestrator/` **nunca existió** en git history. El plan original asumía que fue archivado, pero nunca fue committeado. La import try/except en main.py línea 21 siempre fallaba silenciosamente.
+
+---
+
 ## [DOCS] - 2026-04-18 — Reescritura ROADMAP.md (audit v2)
 
 ### Objetivo

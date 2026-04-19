@@ -1,0 +1,245 @@
+diff --git a/main.py b/main.py
+index 6da29db..2e5fb0f 100644
+--- a/main.py
++++ b/main.py
+@@ -295,42 +295,127 @@ def _audit_handler(payload: dict, context) -> dict:
+     }
+ 
+ 
++def _map_audit_to_spark_data(audit_result):
++    """Mapea V4AuditResult → (GeoStageResult, IAStageResult) para SparkGenerator."""
++    from modules.generators.spark_generator import GeoStageResult, IAStageResult
++
++    gbp = audit_result.gbp
++    schema = audit_result.schema
++
++    # GeoStageResult
++    geo_result = GeoStageResult(
++        hotel_data={
++            "nombre": audit_result.hotel_name,
++            "ubicacion": gbp.address or "",
++            "url": audit_result.url,
++        },
++        gbp_data={
++            "score": gbp.geo_score,
++            "reviews": gbp.reviews,
++            "rating": gbp.rating,
++            "photos": gbp.photos,
++            "phone": gbp.phone,
++            "address": gbp.address,
++        },
++        schema_data={
++            "hotel_schema_detected": schema.hotel_schema_detected,
++            "hotel_schema_valid": schema.hotel_schema_valid,
++            "faq_schema_detected": schema.faq_schema_detected,
++            "faq_schema_valid": schema.faq_schema_valid,
++            "total_schemas": schema.total_schemas,
++        },
++        competitors_data=[
++            {"nombre": c.get("name", ""), "rating": c.get("rating", 0)}
++            for c in (audit_result.competitors or [])
++        ],
++    )
++
++    # IAStageResult
++    ia_test = {}
++    llm_analysis = {}
++    if audit_result.llm_report:
++        llm_rpt = audit_result.llm_report
++        ia_test = {
++            "mentioned": llm_rpt.total_mentions > 0,
++            "mention_rate": llm_rpt.mention_rate,
++            "mention_score": llm_rpt.mention_score,
++            "avg_ranking": llm_rpt.avg_ranking,
++            "share_of_voice": llm_rpt.share_of_voice,
++        }
++        # Calcular pérdida mensual estimada si hay datos suficientes
++        if gbp.rating > 0 and gbp.reviews > 0:
++            from modules.utils.financial_factors import FinancialFactors
++            ff = FinancialFactors()
++            region_key = _detect_financial_region(gbp.address or "")
++            config = ff.get_config(region_key)
++            revpar = config.revpar_cop
++            hab = 20  # estimación conservadora para hoteles boutique
++            aila = llm_rpt.mention_rate if llm_rpt.mention_rate < 1 else config.factor_captura_aila
++            perdida = revpar * hab * 30 * (1 - aila) * (
++                config.comision_ota_base + config.penalizacion_invisibilidad_ia
++            ) * FinancialFactors.SUPERPOSITION_FACTOR
++            llm_analysis = {"perdida_mensual_total": round(perdida)}
++
++    ia_result = IAStageResult(
++        ia_test=ia_test,
++        llm_analysis=llm_analysis,
++        roi_data={},
++        current_provider="deepseek",
++        decision_result={},
++        region=_detect_region_from_address(gbp.address or ""),
++    )
++
++    return geo_result, ia_result
++
++
++def _detect_financial_region(address: str) -> str:
++    """Detecta región financiera (keys de FinancialFactors) desde dirección."""
++    addr = address.lower()
++    if any(k in addr for k in ["armenia", "pereira", "manizales", "caldas", "risaralda", "quindío", "salento"]):
++        return "eje_cafetero"
++    elif any(k in addr for k in ["cartagena", "santa marta", "barranquilla", "bolívar", "atlántico"]):
++        return "caribe"
++    elif any(k in addr for k in ["medellín", "envigado", "rionegro", "antioquia"]):
++        return "antioquia"
++    return "default"
++
++
++def _detect_region_from_address(address: str) -> str:
++    """Detecta región legible de una dirección."""
++    addr = address.lower()
++    region_map = {
++        "Eje Cafetero": ["armenia", "pereira", "manizales", "caldas", "risaralda", "quindío"],
++        "Caribe": ["cartagena", "santa marta", "barranquilla", "bolívar", "atlántico"],
++        "Antioquia": ["medellín", "envigado", "rionegro", "antioquia"],
++        "Bogotá/Cundinamarca": ["bogotá", "cundinamarca"],
++    }
++    for region, keywords in region_map.items():
++        if any(k in addr for k in keywords):
++            return region
++    return "Colombia"
++
++
+ def _spark_handler(payload: dict, context) -> dict:
+-    """Harness-compatible handler for spark command (DEPRECATED - use v4complete instead)."""
+-    if not ORCHESTRATOR_AVAILABLE:
+-        return {"status": "error", "message": "Comando spark deprecado. Use v4complete en su lugar."}
++    """Harness-compatible handler for spark command."""
++    from modules.auditors.v4_comprehensive import V4ComprehensiveAuditor
+     from modules.generators.spark_generator import SparkGenerator
+-    
++
+     output_dir = Path(payload.get("output", "./output")).resolve() / "spark"
+     output_dir.mkdir(parents=True, exist_ok=True)
+-    
+-    options = PipelineOptions(
+-        url=payload["url"],
+-        output_dir=output_dir.parent,
+-        provider=payload.get("provider", "auto"),
+-        mode=payload.get("mode", "generativo"),
+-        skip_posts=payload.get("skip_posts", False),
+-        posts_max_wait=payload.get("posts_max_wait"),
+-        skip_competitors=payload.get("skip_competitors", False),
+-        debug=payload.get("debug", False),
+-    )
+-    pipeline = AnalysisPipeline(options, harness=context.harness)
+-    
+-    # Log context if available
+-    if context.previous_runs > 0:
+-        print(f"[SPARK] Contexto previo disponible: {context.previous_runs} ejecuciones.")
+-    
+-    results = pipeline.run(["geo", "ia"])
+-    
+-    if "geo" not in results or "ia" not in results:
+-        raise RuntimeError("Análisis incompleto: falta geo o ia")
+-    
+-    geo_result = results["geo"]
+-    ia_result = results["ia"]
+-    
++
++    url = payload["url"]
++    print(f"[SPARK] Ejecutando auditoría v4 sobre: {url}")
++
++    auditor = V4ComprehensiveAuditor()
++    audit_result = auditor.audit(url)
++
++    print("[SPARK] Mapeando datos para SparkGenerator...")
++    geo_result, ia_result = _map_audit_to_spark_data(audit_result)
++
++    print("[SPARK] Generando reportes spark...")
+     spark_gen = SparkGenerator(provider_type=payload.get("provider", "auto"))
+     spark_gen.generate_spark_report(geo_result, ia_result, output_dir)
+-    
++
+     return {
+         "hotel_name": geo_result.hotel_data.get("nombre", "Hotel"),
+         "gbp_score": geo_result.gbp_data.get("score", 0),
+@@ -402,35 +487,32 @@ def run_spark_mode(args: argparse.Namespace) -> None:
+ 
+ 
+ def _run_spark_legacy(args: argparse.Namespace) -> None:
+-    """Legacy spark mode (bypass harness)."""
++    """Legacy spark mode (bypass harness). Usa V4ComprehensiveAuditor directamente."""
++    from modules.auditors.v4_comprehensive import V4ComprehensiveAuditor
+     from modules.generators.spark_generator import SparkGenerator
+-    
++
+     print("=" * 60)
+     print("MODO SPARK - Diagnóstico Rápido (<5 minutos)")
+     print("[LEGACY] Modo CLI Sin Harness")
+     print("=" * 60)
+-    
+-    options = build_pipeline_options(args)
+-    pipeline = AnalysisPipeline(options)
+-    
++
++    url = args.url
++    print(f"\nEjecutando auditoría v4 sobre: {url}")
++
+     try:
+-        print("\nEjecutando análisis ligero (GEO + IA)...")
+-        results = pipeline.run(["geo", "ia"])
+-        
+-        if "geo" not in results or "ia" not in results:
+-            print("[ERROR] Análisis incompleto")
+-            sys.exit(1)
+-        
+-        geo_result = results["geo"]
+-        ia_result = results["ia"]
+-        
++        auditor = V4ComprehensiveAuditor()
++        audit_result = auditor.audit(url)
++
++        print("\nMapeando datos para SparkGenerator...")
++        geo_result, ia_result = _map_audit_to_spark_data(audit_result)
++
+         output_dir = Path(args.output).resolve() / "spark"
+         output_dir.mkdir(parents=True, exist_ok=True)
+-        
++
+         print("\nGenerando Spark Report...")
+         spark_gen = SparkGenerator(provider_type=args.provider)
+         spark_gen.generate_spark_report(geo_result, ia_result, output_dir)
+-        
++
+         print("\n" + "=" * 60)
+         print("SPARK REPORT GENERADO")
+         print("=" * 60)
+@@ -439,24 +521,25 @@ def _run_spark_legacy(args: argparse.Namespace) -> None:
+         print(f"  ✓ whatsapp_script.txt (guion 60 segundos)")
+         print(f"  ✓ quick_win_action.md (acción gratuita)")
+         print(f"  ✓ metrics_summary.json (datos para CRM)")
+-        
++
+         hotel_name = geo_result.hotel_data.get("nombre", "Hotel")
+         monthly_loss = ia_result.llm_analysis.get("perdida_mensual_total", 0)
+-        
++        gbp_score = geo_result.gbp_data.get("score", 0)
++
+         print(f"\n📊 RESUMEN PARA {hotel_name}:")
+         print(f"   Pérdida estimada: ${monthly_loss:,.0f} COP/mes")
+-        print(f"   GBP Score: {geo_result.gbp_data.get('score', 0)}/100")
++        print(f"   GBP Score: {gbp_score}/100")
+         print(f"   Competidores analizados: {len(geo_result.competitors_data) if geo_result.competitors_data else 0}")
+-        
++
+         print(f"\n🚀 PRÓXIMO PASO:")
+         print(f"   1. Copia el guion de: whatsapp_script.txt")
+         print(f"   2. Graba video Loom (2 minutos)")
+         print(f"   3. Envía video + spark_report.md por WhatsApp")
+         print(f"   4. Cuando muestre interés, presenta el piloto de $800K")
+-        
++
+     except Exception as error:
+         print(f"\nERROR: {error}")
+-        if args.debug:
++        if getattr(args, "debug", False):
+             import traceback
+             traceback.print_exc()
+         sys.exit(1)

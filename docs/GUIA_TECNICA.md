@@ -8,6 +8,26 @@
 
 ## Notas de Cambios
 
+### SPARK-FIX - 2026-04-18 (Reparación comando spark)
+
+**Resumen:** Comando `spark` reparado. Fallaba con `TypeError: 'NoneType' object is not callable` porque dependía de `modules.orchestrator.pipeline` (AnalysisPipeline/PipelineOptions) que nunca existió en el repositorio.
+
+**Causa Raíz:** `modules/orchestrator/` nunca fue committeado. El import try/except en main.py:21 siempre caía a `ORCHESTRATOR_AVAILABLE = False`, `PipelineOptions = None`. El harness traga el error (success=True, datos vacíos en 0.07s) y el modo legacy falla con TypeError.
+
+**Arquitectura nueva:** Bridge directo V4ComprehensiveAuditor → SparkGenerator.
+- `_map_audit_to_spark_data()`: Mapea V4AuditResult → GeoStageResult + IAStageResult
+- `_detect_financial_region()`: Detecta región para FinancialFactors
+- Usa FinancialFactors.get_config(region) para cálculo de pérdida mensual
+- Dos paths corregidos: _spark_handler (harness) y _run_spark_legacy (CLI directo)
+
+**Módulos afectados:** `main.py` (+130 líneas). SparkGenerator, GapAnalyzer, FinancialFactors sin cambios.
+
+**Backwards compatible:** Sí. SparkGenerator recibe los mismos tipos (GeoStageResult, IAStageResult). Output idéntico (4 archivos).
+
+**Verificación:** `spark --url "https://hotelvisperas.com" --bypass-harness` → GBP 72/100, Pérdida $20.6M COP/mes. 9 tests pasados.
+
+---
+
 ### v4.31.1 - 2026-04-18 (Reescritura ROADMAP.md — audit v2)
 
 **Resumen:** ROADMAP.md reescrito completamente con base en ROADMAP_AUDIT_2026-04-18.md. Cambio de paradigma: de "tracción y escalamiento" a "supervivencia comercial — primer cliente pago en 6 semanas".
