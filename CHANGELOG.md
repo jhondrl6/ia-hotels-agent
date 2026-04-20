@@ -1,5 +1,31 @@
 # Changelog
 
+## [AMAZILIAHOTEL-REFACTOR] - 2026-04-20 — FASE-5: Fix faq_page JSON-LD + monthly_report Blanks
+
+### Objetivo
+
+FASE-5: Corregir G4 (faq_page genera .csv en vez de JSON-LD) y G7 (monthly_report con 27 blanks "_____").
+
+### Cambios
+
+- **faq_page → JSON-LD**: Handler `_generate_faq_page` en `conditional_generator.py` ahora genera `faq_page.json` con `@type: FAQPage` schema.org. Formato CSV antiguo eliminado.
+- **monthly_report sin blanks**: 27 "_____" reemplazados con datos reales del audit (GBP: 202 reviews, rating 4.5, 10 fotos). Datos no disponibles: "Por confirmar".
+
+### Archivos Modificados
+
+|| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | `_generate_faq_page()` ahora genera JSON-LD FAQPage |
+| `modules/asset_generation/faq_generator.py` | FAQ generator actualizado |
+| `docs/contributing/capabilities.md` | FAQPageGenerator y MonthlyReportGenerator agregados a matriz |
+
+### Tests
+
+- 23 tests passaram en `test_conditional_generator.py`
+- 0 regresiones
+
+---
+
 ## [AMAZILIAHOTEL-REFACTOR] - 2026-04-20 — FASE-5 + FASE-6: Decisiones Producto + Docs Comerciales
 
 ### Objetivo

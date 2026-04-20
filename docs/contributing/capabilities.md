@@ -76,6 +76,8 @@ La matriz de capacidades documenta el estado de cada capability en el sistema.
 | SemrushClient | conectada (stub) | v4_diagnostic_generator.py:_check_analytics_status() | semrush_status_text en diagnostico | MEDIUM |
 | AnalyticsStatus | conectada | v4_diagnostic_generator.py:_prepare_template_data() | status_text, missing_credentials, transparency_section | HIGH |
 | SocialStrategyGuideGenerator | conectada | conditional_generator.py | social_strategy_guide content | LOW |
+| FAQPageGenerator (JSON-LD) | conectada | conditional_generator.py:_generate_faq_page() | faq_page.json | HIGH |
+| MonthlyReportGenerator | conectada | conditional_generator.py | monthly_report.md | HIGH |
 
 ### 13.6 Gate de Cierre
 

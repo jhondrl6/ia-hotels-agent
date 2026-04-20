@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-20
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 123
+> **Total fases completadas:** 126
 
 ---
 
@@ -3284,6 +3284,65 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (28)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3 - 2026-04-20
+**Descripcion:** Activar Content Scrubber — integrado en main.py L2282-2348 (era dead code)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/postprocessors/content_scrubber.py` | Content Scrubber |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (47)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-4 - 2026-04-20
+**Descripcion:** Fix ROI — eliminar 24X hardcodeado de template V6, usar solo cálculo dinámico
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (6)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-5 - 2026-04-20
+**Descripcion:** Fix faq_page → JSON-LD + monthly_report sin blanks
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `modules/asset_generation/faq_generator.py` | Faq Generator |
+
+### Validaciones
+- [x] Tests passing (7)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
