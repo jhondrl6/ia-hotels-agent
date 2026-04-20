@@ -961,25 +961,63 @@ class V4ComprehensiveAuditor:
         if hotel_name and schema_address:
             queries.append((hotel_name, schema_address))
         
-        # Query 4: Variaciones del nombre con espacios (antes que sin espacio)
+        # Query 4: hotel_name sin espacios → separar por camelCase o heuristica KnownSuffix
         if hotel_name and " " not in hotel_name:
-            # Intentar "Amaziliahotel" -> "Amazilia Hotel", "Amazilia Hote L", etc.
-            for i in range(3, len(hotel_name) - 2):
-                spaced = f"{hotel_name[:i]} {hotel_name[i:]}"
-                queries.append((spaced, "Colombia"))
+            import re as re_module
+            # Primero: intentar camelCase standard
+            readable = re_module.sub(r'([a-z])([A-Z])', r'\1 \2', hotel_name)
+            readable = readable.replace('-', ' ').replace('_', ' ').strip()
+            # Si NO se separo nada (todo lowercase/uppercase): usar KnownSuffix heuristic
+            if readable == hotel_name:
+                # "amaziliahotel" -> "amazilia hotel"
+                known_suffixes = ['hotel', 'hostal', 'resort', 'suites', 'inn', 'boutique', 'apartamentos', 'apartamentos']
+                lower_name = hotel_name.lower()
+                for suffix in known_suffixes:
+                    if suffix in lower_name:
+                        idx = lower_name.index(suffix)
+                        readable = f"{hotel_name[:idx].title()} {hotel_name[idx:].title()}"
+                        break
+                else:
+                    # No known suffix: separar ultimas 6 letras como "Hotel" por defecto
+                    if len(hotel_name) > 6:
+                        readable = f"{hotel_name[:-6].title()} {hotel_name[-6:].title()}"
+                    else:
+                        readable = f"{hotel_name.title()} Hotel"
+            # Si "hotel" no esta en el nombre, agregarlo
+            if "hotel" not in readable.lower():
+                readable = f"{readable} Hotel"
+            queries.append((readable, "Colombia"))
         
-        # Query 5: hotel_name extraído del dominio + "Colombia" (último recurso)
+        # Query 5: hotel_name original como fallback
         if hotel_name:
             queries.append((hotel_name, "Colombia"))
         
         # Query 6: Nombre desde la URL del sitio
         if url:
-            import re
-            domain = re.sub(r'https?://(www\.)?', '', url).rstrip('/')
+            import re as re_module
+            domain = re_module.sub(r'https?://(www\.)?', '', url).rstrip('/')
             domain_name = domain.split('.')[0]
             if domain_name and domain_name != hotel_name:
-                # Convertir dominio a nombre legible
-                readable = domain_name.replace('-', ' ').replace('_', ' ').title()
+                # Primero: intentar camelCase standard
+                readable = re_module.sub(r'([a-z])([A-Z])', r'\1 \2', domain_name)
+                readable = readable.replace('-', ' ').replace('_', ' ').strip()
+                # Si NO se separo nada: usar KnownSuffix heuristic
+                if readable == domain_name:
+                    known_suffixes = ['hotel', 'hostal', 'resort', 'suites', 'inn', 'boutique', 'apartamentos']
+                    lower_name = domain_name.lower()
+                    for suffix in known_suffixes:
+                        if suffix in lower_name:
+                            idx = lower_name.index(suffix)
+                            readable = f"{domain_name[:idx].title()} {domain_name[idx:].title()}"
+                            break
+                    else:
+                        if len(domain_name) > 6:
+                            readable = f"{domain_name[:-6].title()} {domain_name[-6:].title()}"
+                        else:
+                            readable = f"{domain_name.title()} Hotel"
+                # Si "hotel" no esta en el nombre, agregarlo
+                if "hotel" not in readable.lower():
+                    readable = f"{readable} Hotel"
                 queries.append((readable, "Colombia"))
         
         # Deduplicar manteniendo orden
