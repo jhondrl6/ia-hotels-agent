@@ -140,9 +140,9 @@ ls output/v4_complete/amaziliahotel/voice_assistant_guide/ # NO debe existir (el
 ||| 3a | 2026-04-19 | FASE-2B | Hermes | ✅ COMPLETADA - monthly_report con datos reales GBP (reviews=202, rating=4.5) |
 || 3b | 2026-04-19 | FASE-2C | Hermes | ✅ COMPLETADA - Contradiccion title tag corregida |
 | 4 | 2026-04-19 | FASE-3 | Hermes | ✅ COMPLETADA - 4 bugs: H3(faq ext), H4(duplicados), H10(coherence unificado), H12(paths) |
-| 5 | 2026-04-19 | FASE-4 | Hermes | ✅ COMPLETADA - open_graph_generator.py + ESTIMATED_open_graph.html |
-| 6 | - | FASE-5 | - | ⏳ PENDIENTE |
-| 7 | - | FASE-6 | - | ⏳ PENDIENTE |
+|| 5 | 2026-04-19 | FASE-4 | Hermes | ✅ COMPLETADA - open_graph_generator.py + ESTIMATED_open_graph.html |
+|| 6 | 2026-04-20 | FASE-5 | Hermes | ✅ COMPLETADA - WhatsApp ELIMINADO (bug always), Voice ELIMINADO pipeline, 4/4 tests |
+|| 7 | - | FASE-6 | - | ⏳ PENDIENTE |
 
 ---
 

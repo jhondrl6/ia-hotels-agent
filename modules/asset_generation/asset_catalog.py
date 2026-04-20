@@ -60,7 +60,7 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_basic_whatsapp",
         block_on_failure=False,  # NEVER_BLOCK: generar botón básico aunque falte WhatsApp
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["no_whatsapp_visible", "whatsapp_conflict", "always"]  # FASE-ASSETS-VALIDACION: always
+        promised_by=["no_whatsapp_visible", "whatsapp_conflict"]  # FASE-5: "always" ELIMINADO - bug sistemico
     ),
     "whatsapp_conflict_guide": AssetCatalogEntry(
         asset_type="whatsapp_conflict_guide",
@@ -75,8 +75,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
     ),
     "faq_page": AssetCatalogEntry(
         asset_type="faq_page",
-        template="faq_template.csv",
-        output_name="{prefix}faqs{suffix}.csv",
+        template="faq_template.json",
+        output_name="{prefix}faqs{suffix}.json",
         required_field="faqs",
         required_confidence=0.5,
         fallback="generate_with_actual_count",
@@ -216,7 +216,7 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_voice_guide",
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["low_voice_readiness", "always_aeo"]  # FASE-ASSETS-VALIDACION: always for AEO
+        promised_by=[]  # FASE-5: ELIMINADO de pipeline automatico - sin brecha real
     ),
     # === IAO ASSETS (GAP-IAO-01-02-C) ===
     "ssl_guide": AssetCatalogEntry(
@@ -320,6 +320,18 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
         promised_by=["always"]  # SIEMPRE generar - la propuesta SIEMPRE lo promete
+    ),
+    # FASE-4: Open Graph Meta Tags - closes gap B4 ($379K/month exposed)
+    "open_graph": AssetCatalogEntry(
+        asset_type="open_graph",
+        template="open_graph_template.html",
+        output_name="{prefix}open_graph_meta{suffix}.html",
+        required_field="hotel_data",
+        required_confidence=0.5,
+        fallback=None,
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=["no_og_tags"]  # Promised by OG tags gap
     ),
 }
 
