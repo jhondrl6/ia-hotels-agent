@@ -7,12 +7,12 @@
 |------|-------------|--------|------------|--------------|
 | FASE-1 | Fix Google Maps query en v4_comprehensive | ✅ Completada | - | `modules/auditors/v4_comprehensive.py` |
 | FASE-2 | Fix hotel_schema con datos reales | ✅ Completada | FASE-1 | `modules/asset_generation/conditional_generator.py` + `v4_asset_orchestrator.py` |
-| FASE-3 | Activar Content Scrubber (dead code) | ⏳ Pendiente | - | `modules/postprocessors/content_scrubber.py` + `v4_complete_orchestrator.py` |
-| FASE-4 | Fix ROI — eliminar 24X hardcodeado template V6 | ⏳ Pendiente | - | `templates/propuesta_v6_template.md` + `v4_proposal_generator.py` |
-| FASE-5 | Fix faq_page JSON-LD + monthly_report blanks | ⏳ Pendiente | - | `modules/asset_generation/conditional_generator.py` |
-| FASE-6 | Fix Voice/AEO deprecated en propuesta | ⏳ Pendiente | - | `templates/propuesta_v6_template.md` + `proposal_asset_alignment.py` |
-| FASE-7 | Fix capitalización region → .title() | ⏳ Pendiente | - | `modules/commercial_documents/v4_proposal_generator.py` |
-| FASE-8 | Validación E2E + Documentación | ⏳ Pendiente | FASE-1 a FASE-7 | Varios |
+| FASE-3 | Activar Content Scrubber | ✅ Completada | - | `modules/postprocessors/content_scrubber.py` + `main.py` L2282-2348 |
+| FASE-4 | Fix ROI — eliminar 24X hardcodeado template V6 | ✅ Completada | - | `templates/propuesta_v6_template.md` + `v4_proposal_generator.py` |
+| FASE-5 | Fix faq_page JSON-LD + monthly_report blanks | ✅ Completada | 2026-04-20 | `conditional_generator.py`, `monthly_report_generator.py` |
+| FASE-6 | Fix Voice/AEO deprecated en propuesta | ✅ Completada | 2026-04-20 | `propuesta_v6_template.md`, `proposal_asset_alignment.py` |
+| FASE-7 | Fix capitalización region → .title() | ✅ Completada | 2026-04-20 | `v4_proposal_generator.py` |
+| FASE-8 | Validación E2E + Documentación | ✅ Completada | 2026-04-20 | Varios |
 
 ## Estados
 
@@ -68,9 +68,9 @@ FASE-7 ────────────────────────�
 |------|-------|--------|------------|
 | FASE-1 | 2026-04-20 | 134 tests | ✅ Completada |
 | FASE-2 | 2026-04-20 | 28 tests | ✅ Completada |
-| FASE-3 | - | - | [ ] |
-| FASE-4 | - | - | [ ] |
-| FASE-5 | - | - | [ ] |
-| FASE-6 | - | - | [ ] |
-| FASE-7 | - | - | [ ] |
-| FASE-8 | - | - | [ ] |
+| FASE-3 | 2026-04-20 | 47 tests | ✅ Completada |
+| FASE-4 | 2026-04-20 | 6 tests | ✅ Completada |
+| FASE-5 | 2026-04-20 | 9 tests | ✅ Completada |
+| FASE-6 | 2026-04-20 | 2 tests | ✅ Completada |
+| FASE-7 | 2026-04-20 | 0 (sin cambios código) | ✅ Completada |
+| FASE-8 | 2026-04-20 | 0 (docs) | ✅ Completada |

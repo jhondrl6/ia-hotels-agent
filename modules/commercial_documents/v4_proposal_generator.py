@@ -453,7 +453,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         valid_until = generated_at + timedelta(days=15)
         
         # Region-based variables for V6 templates
-        hotel_region = region or "Colombia"
+        hotel_region = (region or "Colombia").replace("_", " ").title()
         hotel_location = getattr(audit_result, 'location', None) or \
                         getattr(getattr(audit_result, 'gbp', None), 'address', None) or \
                         hotel_region

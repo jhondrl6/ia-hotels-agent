@@ -21,11 +21,11 @@ class TestProposalAssetMapping:
 
     def test_all_7_services_mapped(self):
         """All 7 promised services must have a mapping."""
-        assert len(PROPOSAL_SERVICE_TO_ASSET) == 7
+        assert len(PROPOSAL_SERVICE_TO_ASSET) == 6
 
     def test_all_promised_services_count(self):
         """ALL_PROMISED_SERVICES must have 7 entries."""
-        assert len(ALL_PROMISED_SERVICES) == 7
+        assert len(ALL_PROMISED_SERVICES) == 6
 
     def test_mapping_covers_all_services(self):
         """Every service in ALL_PROMISED_SERVICES must be in the mapping."""
@@ -42,7 +42,6 @@ class TestProposalAssetMapping:
         assert PROPOSAL_SERVICE_TO_ASSET["Google Maps Optimizado"] == "geo_playbook"
         assert PROPOSAL_SERVICE_TO_ASSET["Boton de WhatsApp"] == "whatsapp_button"
         assert PROPOSAL_SERVICE_TO_ASSET["Informe Mensual"] == "monthly_report"
-        assert PROPOSAL_SERVICE_TO_ASSET["Busqueda por Voz"] == "voice_assistant_guide"
 
 
 class TestVerifyAlignment:
@@ -53,7 +52,6 @@ class TestVerifyAlignment:
         assets = [
             {"asset_type": "geo_playbook", "confidence_score": 0.8},
             {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
-            {"asset_type": "voice_assistant_guide", "confidence_score": 0.8},
             {"asset_type": "optimization_guide", "confidence_score": 0.8},
             {"asset_type": "whatsapp_button", "confidence_score": 0.8},
             {"asset_type": "hotel_schema", "confidence_score": 0.8},
@@ -65,21 +63,20 @@ class TestVerifyAlignment:
         )
         assert report.all_aligned is True
         assert len(report.missing) == 0
-        assert len(report.aligned) == 7
+        assert len(report.aligned) == 6
 
     def test_missing_assets_detected(self):
         """Missing assets must be detected."""
         assets = [
             {"asset_type": "geo_playbook", "confidence_score": 0.8},
-            # Missing: indirect_traffic_optimization, voice_assistant_guide,
-            # optimization_guide, whatsapp_button, hotel_schema, monthly_report
+            # Missing: indirect_traffic_optimization, optimization_guide, whatsapp_button, hotel_schema, monthly_report
         ]
         report = verify_proposal_asset_alignment(
             proposal_services=ALL_PROMISED_SERVICES,
             generated_assets=assets,
         )
         assert report.all_aligned is False
-        assert len(report.missing) == 6
+        assert len(report.missing) == 5
         assert len(report.aligned) == 1
 
     def test_low_quality_assets_detected(self):
@@ -87,7 +84,6 @@ class TestVerifyAlignment:
         assets = [
             {"asset_type": "geo_playbook", "confidence_score": 0.3},  # low
             {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
-            {"asset_type": "voice_assistant_guide", "confidence_score": 0.8},
             {"asset_type": "optimization_guide", "confidence_score": 0.8},
             {"asset_type": "whatsapp_button", "confidence_score": 0.8},
             {"asset_type": "hotel_schema", "confidence_score": 0.8},
@@ -106,7 +102,7 @@ class TestVerifyAlignment:
             proposal_services=ALL_PROMISED_SERVICES,
             generated_assets=[],
         )
-        assert len(report.missing) == 7
+        assert len(report.missing) == 6
         assert len(report.aligned) == 0
         assert report.alignment_percentage == 0.0
 
@@ -115,7 +111,6 @@ class TestVerifyAlignment:
         assets = [
             {"asset_type": "geo_playbook", "confidence_score": 0.8},
             {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
-            {"asset_type": "voice_assistant_guide", "confidence_score": 0.8},
             {"asset_type": "optimization_guide", "confidence_score": 0.8},
             {"asset_type": "whatsapp_button", "confidence_score": 0.8},
             {"asset_type": "hotel_schema", "confidence_score": 0.8},
@@ -126,7 +121,7 @@ class TestVerifyAlignment:
             generated_assets=assets,
         )
         assert report.all_aligned is True
-        assert report.total_services == 7
+        assert report.total_services == 6
 
 
 class TestAlignmentReport:
@@ -145,7 +140,7 @@ class TestAlignmentReport:
         assert "total_services" in d
         assert "aligned_count" in d
         assert "missing_count" in d
-        assert d["total_services"] == 7
+        assert d["total_services"] == 6
 
 
 class TestHelpers:
@@ -158,7 +153,7 @@ class TestHelpers:
             generated_assets=[],
         )
         missing = get_missing_services(report)
-        assert len(missing) == 7
+        assert len(missing) == 6
         assert "Boton de WhatsApp" in missing
 
     def test_get_alignment_summary(self):

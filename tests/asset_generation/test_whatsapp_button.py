@@ -2,7 +2,7 @@
 
 Validates that whatsapp_button:
 - Is in the catalog as IMPLEMENTED
-- Has promised_by including "always"
+- Has promised_by WITHOUT "always" (FASE-5: bug sistemico corregido)
 - Generates HTML even without WhatsApp data (fallback)
 - Is in fast_assets and standard_assets lists
 """
@@ -24,10 +24,18 @@ class TestWhatsAppButtonCatalog:
         entry = ASSET_CATALOG["whatsapp_button"]
         assert entry.status == AssetStatus.IMPLEMENTED
 
-    def test_whatsapp_button_has_promised_by_always(self):
-        """whatsapp_button promised_by must include 'always'."""
+    def test_whatsapp_button_no_always_in_promised_by(self):
+        """whatsapp_button promised_by must NOT include 'always' (FASE-5 fix)."""
         entry = ASSET_CATALOG["whatsapp_button"]
-        assert "always" in entry.promised_by
+        assert "always" not in entry.promised_by
+
+    def test_whatsapp_button_has_real_pain_ids(self):
+        """whatsapp_button promised_by must have real pain IDs."""
+        entry = ASSET_CATALOG["whatsapp_button"]
+        assert len(entry.promised_by) > 0
+        # Real pain IDs, not "always"
+        valid_ids = {"no_whatsapp_visible", "whatsapp_conflict"}
+        assert any(pid in valid_ids for pid in entry.promised_by)
 
     def test_whatsapp_button_not_blocking(self):
         """whatsapp_button must not block on failure (has fallback)."""
@@ -61,7 +69,7 @@ class TestWhatsAppButtonGeneration:
 
         gen = ConditionalGenerator(output_dir=str(tmp_path))
         dp = DataPoint("whatsapp")
-        dp.add_source(DataSource("test", "+573001234567", datetime.now().isoformat()))
+        dp.add_source(DataSource("test", "+573****4567", datetime.now().isoformat()))
         validated_data = {"whatsapp": dp}
 
         result = gen.generate(

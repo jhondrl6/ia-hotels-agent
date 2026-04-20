@@ -75,48 +75,48 @@ class MonthlyReportGenerator:
 
 | Métrica | Este Mes | Mes Anterior | Variación |
 |---------|----------|--------------|-----------|
-| Sesiones totales | _____ | _____ | ___% |
-| Usuarios nuevos | _____ | _____ | ___% |
-| Tasa de rebote | ___% | ___% | |
-| Páginas/sesión | _____ | _____ | |
-| Duración promedio sesión | _____ | _____ | |
+| Sesiones totales | Por confirmar | Por confirmar | —% |
+| Usuarios nuevos | Por confirmar | Por confirmar | —% |
+| Tasa de rebote | —% | —% | |
+| Páginas/sesión | Por confirmar | Por confirmar | |
+| Duración promedio sesión | Por confirmar | Por confirmar | |
 
 ### Google Business Profile (GBP)
 
 | Métrica | Valor Actual | Fuente |
 |---------|-------------|--------|
-| Reseñas totales | {total_reviews if total_reviews else "_____"} | {data_source_label} |
-| Rating promedio | {average_rating if average_rating else "_____"} | {data_source_label} |
-| Fotos totales | {total_photos if total_photos else "_____"} | {data_source_label} |
-| Vistas en búsqueda | _____ | Requiere GA4/GSC |
-| Vistas en Maps | _____ | Requiere GA4/GSC |
-| Acciones totales | _____ | Requiere GA4/GSC |
+| Reseñas totales | {total_reviews if total_reviews else "Por confirmar"} | {data_source_label} |
+| Rating promedio | {average_rating if average_rating else "Por confirmar"} | {data_source_label} |
+| Fotos totales | {total_photos if total_photos else "Por confirmar"} | {data_source_label} |
+| Vistas en búsqueda | Por confirmar | Requiere GA4/GSC |
+| Vistas en Maps | Por confirmar | Requiere GA4/GSC |
+| Acciones totales | Por confirmar | Requiere GA4/GSC |
 
 ### Reservas Directas
 
 | Métrica | Este Mes | Mes Anterior | Variación |
 |---------|----------|--------------|-----------|
-| Reservas directas (canal propio) | _____ | _____ | ___% |
-| Ingresos por reservas directas | $_____ | $_____ | ___% |
-| Tasa de conversión | ___% | ___% | |
-| ADR (Tarifa Promedio Diaria) | $_____ | $_____ | ___% |
+| Reservas directas (canal propio) | Por confirmar | Por confirmar | —% |
+| Ingresos por reservas directas | $Por confirmar | $Por confirmar | —% |
+| Tasa de conversión | —% | —% | |
+| ADR (Tarifa Promedio Diaria) | $Por confirmar | $Por confirmar | —% |
 
 ### WhatsApp
 
 | Métrica | Este Mes | Mes Anterior | Variación |
 |---------|----------|--------------|-----------|
-| Clics en botón WhatsApp | _____ | _____ | ___% |
-| Conversaciones iniciadas | _____ | _____ | ___% |
-| Reservas vía WhatsApp | _____ | _____ | ___% |
+| Clics en botón WhatsApp | Por confirmar | Por confirmar | —% |
+| Conversaciones iniciadas | Por confirmar | Por confirmar | —% |
+| Reservas vía WhatsApp | Por confirmar | Por confirmar | —% |
 
 ### SEO y Visibilidad
 
 | Métrica | Este Mes | Mes Anterior | Variación |
 |---------|----------|--------------|-----------|
-| Clics orgánicos (GSC) | _____ | _____ | ___% |
-| Impresiones (GSC) | _____ | _____ | ___% |
-| CTR promedio | ___% | ___% | |
-| Posición promedio | _____ | _____ | |
+| Clics orgánicos (GSC) | Por confirmar | Por confirmar | —% |
+| Impresiones (GSC) | Por confirmar | Por confirmar | —% |
+| CTR promedio | —% | —% | |
+| Posición promedio | Por confirmar | Por confirmar | |
 
 ---
 
@@ -171,15 +171,15 @@ class MonthlyReportGenerator:
 
 | Asset | Estado | Última Actualización |
 |-------|--------|---------------------|
-| Schema Hotel (JSON-LD) | ✅ Entregado | _____ |
-| Geo Playbook | ✅ Entregado | _____ |
-| Guía de Optimización SEO | ✅ Entregado | _____ |
-| Plan de Reseñas | ✅ Entregado | _____ |
-| Botón WhatsApp | ✅ Entregado | _____ |
-| Voice Assistant Guide | ✅ Entregado | _____ |
+| Schema Hotel (JSON-LD) | ✅ Entregado | Por confirmar |
+| Geo Playbook | ✅ Entregado | Por confirmar |
+| Guía de Optimización SEO | ✅ Entregado | Por confirmar |
+| Plan de Reseñas | ✅ Entregado | Por confirmar |
+| Botón WhatsApp | ✅ Entregado | Por confirmar |
+| Voice Assistant Guide | ✅ Entregado | Por confirmar |
 | Informe Mensual | ✅ Este documento | {generated_at} |
-| FAQ Page | ✅ Entregado | _____ |
-| Guía de Tráfico Indirecto | ✅ Entregado | _____ |
+| FAQ Page | ✅ Entregado | Por confirmar |
+| Guía de Tráfico Indirecto | ✅ Entregado | Por confirmar |
 
 ---
 

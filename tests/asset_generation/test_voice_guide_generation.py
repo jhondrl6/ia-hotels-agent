@@ -1,37 +1,32 @@
-"""Tests for voice_assistant_guide asset generation.
+"""Tests for voice_assistant_guide asset.
 
 Validates that voice_assistant_guide:
-- Is in the catalog as IMPLEMENTED
-- Has promised_by entries (not empty)
-- Generates content even without specific pain detection
+- Exists in the catalog as DEPRECATED (FASE-5: sin brecha real)
+- Has empty promised_by (no pain point justifica este asset)
+- Does not block pipeline on failure
+- Generation returns failure for DEPRECATED assets
 """
 
 import pytest
 from modules.asset_generation.asset_catalog import ASSET_CATALOG, AssetStatus
-from modules.asset_generation.conditional_generator import ConditionalGenerator
 
 
 class TestVoiceAssistantGuideCatalog:
-    """Test voice_assistant_guide catalog entry."""
+    """Test voice_assistant_guide catalog entry (DEPRECATED)."""
 
     def test_voice_guide_exists_in_catalog(self):
         """voice_assistant_guide must exist in the catalog."""
         assert "voice_assistant_guide" in ASSET_CATALOG
 
-    def test_voice_guide_is_implemented(self):
-        """voice_assistant_guide must be IMPLEMENTED."""
+    def test_voice_guide_is_deprecated(self):
+        """voice_assistant_guide must be DEPRECATED (FASE-5: sin brecha real)."""
         entry = ASSET_CATALOG["voice_assistant_guide"]
-        assert entry.status == AssetStatus.IMPLEMENTED
+        assert entry.status == AssetStatus.DEPRECATED
 
-    def test_voice_guide_has_promised_by(self):
-        """voice_assistant_guide promised_by must NOT be empty."""
+    def test_voice_guide_promised_by_empty(self):
+        """voice_assistant_guide promised_by must be empty (no pain point)."""
         entry = ASSET_CATALOG["voice_assistant_guide"]
-        assert len(entry.promised_by) > 0
-
-    def test_voice_guide_promised_by_aeo(self):
-        """voice_assistant_guide promised_by should include 'always_aeo' for AEO coverage."""
-        entry = ASSET_CATALOG["voice_assistant_guide"]
-        assert "always_aeo" in entry.promised_by
+        assert len(entry.promised_by) == 0
 
     def test_voice_guide_not_blocking(self):
         """voice_assistant_guide must not block on failure."""
@@ -40,10 +35,17 @@ class TestVoiceAssistantGuideCatalog:
 
 
 class TestVoiceAssistantGuideGeneration:
-    """Test voice_assistant_guide content generation."""
+    """Test voice_assistant_guide generation behavior (DEPRECATED)."""
 
-    def test_voice_guide_generates_content(self, tmp_path):
-        """voice_assistant_guide should generate valid content."""
+    def test_voice_guide_not_in_generation_strategies(self):
+        """DEPRECATED asset must NOT be in GENERATION_STRATEGIES."""
+        from modules.asset_generation.conditional_generator import ConditionalGenerator
+        gen = ConditionalGenerator()
+        assert "voice_assistant_guide" not in gen.GENERATION_STRATEGIES
+
+    def test_voice_guide_generation_skips_deprecated(self, tmp_path):
+        """Generating a DEPRECATED asset should return failure or skip."""
+        from modules.asset_generation.conditional_generator import ConditionalGenerator
         gen = ConditionalGenerator(output_dir=str(tmp_path))
         hotel_data = {
             "hotel_data": {
@@ -57,22 +59,5 @@ class TestVoiceAssistantGuideGeneration:
             hotel_name="Hotel Test",
             hotel_id="test_hotel",
         )
-        assert result["success"] is True
-        assert result["status"] in ("success", "warning")
-
-    def test_voice_guide_generates_without_specific_pain(self, tmp_path):
-        """voice_assistant_guide should generate even without pain detection trigger."""
-        gen = ConditionalGenerator(output_dir=str(tmp_path))
-        # Minimal data — no specific voice readiness pain
-        result = gen.generate(
-            asset_type="voice_assistant_guide",
-            validated_data={},
-            hotel_name="Basic Hotel",
-            hotel_id="basic_hotel",
-        )
-        assert result["success"] is True
-
-    def test_voice_guide_in_generation_strategies(self):
-        """voice_assistant_guide must be in GENERATION_STRATEGIES."""
-        gen = ConditionalGenerator()
-        assert "voice_assistant_guide" in gen.GENERATION_STRATEGIES
+        # DEPRECATED assets should not succeed
+        assert result.get("success") is not True

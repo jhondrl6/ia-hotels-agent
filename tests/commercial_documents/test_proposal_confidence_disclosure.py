@@ -23,11 +23,10 @@ class TestAssetQualityTable:
         assert "| Nivel |" in table
         assert "| Que significa |" in table
 
-        # Must have all 7 services from PROPOSAL_SERVICE_TO_ASSET
+        # Must have all 6 services from PROPOSAL_SERVICE_TO_ASSET
         expected_services = [
             "Google Maps Optimizado",
             "Visibilidad en ChatGPT",
-            "Busqueda por Voz",
             "SEO Local",
             "Boton de WhatsApp",
             "Datos Estructurados",
@@ -42,7 +41,6 @@ class TestAssetQualityTable:
             {"asset_type": "hotel_schema", "confidence_score": 0.5},
             {"asset_type": "geo_playbook", "confidence_score": 0.9},
             {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
-            {"asset_type": "voice_assistant_guide", "confidence_score": 0.7},
             {"asset_type": "optimization_guide", "confidence_score": 0.85},
             {"asset_type": "whatsapp_button", "confidence_score": 0.6},
             {"asset_type": "monthly_report", "confidence_score": 0.75},

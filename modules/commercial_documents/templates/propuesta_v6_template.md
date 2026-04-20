@@ -25,7 +25,6 @@ Cada mes, viajeros buscan hotels en ${hotel_region}. Pero no lo encuentran.
 |---------------------|-------------|--------------|
 | Le pregunta a ChatGPT | No aparece | Reserva va a otro |
 | Busca en Google Maps | Aparece último | No lo ven |
-| Dice "Ok Google..." | No existe | Pierde la búsqueda por voz |
 | Entra a su web | No hay botón de WhatsApp | No reserva directo |
 
 **Su pérdida mensual estimada: ${monthly_loss} COP**
@@ -45,8 +44,6 @@ Le proponemos un plan integral donde **nosotros implementamos todo** — usted n
 | Servicio | Qué obtiene |
 |----------|-------------|
 | **✅ Google Maps Optimizado** (GEO) | Aparece primero cuando alguien busca "hotel cerca de..." en ${hotel_region} |
-| **✅ Visibilidad en ChatGPT** (IAO) | Que cuando alguien pregunte a la IA, su hotel sea recomendado |
-| **✅ Búsqueda por Voz** (AEO) | Aparece cuando alguien dice "Ok Google, hotel en ${hotel_region}" o usa Siri/Assistant |
 | **✅ SEO Local** (SEO) | Para aparecer en las primeras posiciones de Google tradicional |
 | **✅ Botón de WhatsApp** | Sus guests reservan con 1 clic desde su web |
 | **✅ Datos Estructurados** | Información que Google y la IA leen automáticamente |
@@ -102,7 +99,7 @@ Para que su negocio brillen en Google Maps, necesitamos fotos de calidad. Esto e
 - Invierte: ${total_investment} COP
 - Recupera: ${total_recovered} COP
 - **Beneficio neto: ${net_benefit} COP**
-- **ROI: ${roi_6m}** (24X en 6 meses)
+- **ROI: ${roi_6m}** en 6 meses
 
 ---
 

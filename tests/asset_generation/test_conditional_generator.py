@@ -187,19 +187,22 @@ class TestConditionalGeneratorContentGeneration:
         assert "</a>" in html
         assert "<style>" in html
 
-    def test_generate_faq_page_returns_csv(self):
-        """Test _generate_faq_page returns CSV."""
+    def test_generate_faq_page_returns_json_ld(self):
+        """Test _generate_faq_page returns JSON-LD FAQPage (FASE-5 fix)."""
         generator = ConditionalGenerator()
         faqs = [
             {"question": "What time is check-in?", "answer": "3:00 PM", "category": "Check-in"},
             {"question": "Do you have wifi?", "answer": "Yes, free wifi", "category": "Amenities"},
         ]
-        csv_content = generator._generate_faq_page(faqs, len(faqs))
-        assert "id,question,answer,category" in csv_content
-        assert "What time is check-in?" in csv_content
-        assert "3:00 PM" in csv_content
-        assert "metadata" in csv_content
-        assert "actual_count" in csv_content
+        json_content = generator._generate_faq_page(faqs, len(faqs))
+        # FASE-5: Now returns JSON-LD FAQPage, not CSV
+        import json
+        parsed = json.loads(json_content)
+        assert parsed["@type"] == "FAQPage"
+        assert parsed["@context"] == "https://schema.org"
+        assert len(parsed["mainEntity"]) == 2
+        assert parsed["mainEntity"][0]["name"] == "What time is check-in?"
+        assert parsed["mainEntity"][0]["acceptedAnswer"]["text"] == "3:00 PM"
 
     def test_generate_hotel_schema_returns_json(self):
         """Test _generate_hotel_schema returns JSON."""
@@ -401,12 +404,16 @@ class TestConditionalGeneratorHelperMethods:
         assert "wa.me" in content
 
     def test_generate_content_faq(self):
-        """Test _generate_content for faq_page."""
+        """Test _generate_content for faq_page returns JSON-LD (FASE-5 fix)."""
         generator = ConditionalGenerator()
         dp = DataPoint("faqs")
         faqs = [{"question": "Q1", "answer": "A1"}]
         dp.add_source(DataSource("test", faqs, datetime.now().isoformat()))
         validated_data = {"faqs": dp}
-        
+
         content = generator._generate_content("faq_page", validated_data, "Test Hotel")
-        assert "id,question,answer" in content
+        # FASE-5: Now returns JSON-LD, not CSV
+        import json
+        parsed = json.loads(content)
+        assert parsed["@type"] == "FAQPage"
+        assert len(parsed["mainEntity"]) == 1

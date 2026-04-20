@@ -19,15 +19,13 @@ from typing import Dict, List, Any, Optional
 
 PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
     "Google Maps Optimizado": "geo_playbook",
-    "Visibilidad en ChatGPT": "indirect_traffic_optimization",
-    "Busqueda por Voz": "voice_assistant_guide",
     "SEO Local": "optimization_guide",
     "Boton de WhatsApp": "whatsapp_button",
     "Datos Estructurados": "hotel_schema",
     "Informe Mensual": "monthly_report",
 }
 
-# All 7 services that the proposal always promises
+# All 5 services that the proposal always promises
 ALL_PROMISED_SERVICES: List[str] = list(PROPOSAL_SERVICE_TO_ASSET.keys())
 
 

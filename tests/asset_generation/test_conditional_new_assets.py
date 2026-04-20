@@ -107,5 +107,5 @@ class TestNewAssetTypes:
         
         assert "voice_assistant_guide" in ASSET_CATALOG
         entry = ASSET_CATALOG["voice_assistant_guide"]
-        assert entry.status.value == "implemented"
+        assert entry.status.value == "deprecated"  # FASE-5: sin brecha real
         assert entry.required_confidence == 0.4

@@ -10,23 +10,23 @@ FASE-1 ────────────────────────�
 FASE-2 ──────────────────────────►│
   [hotel_schema datos reales]      │
                                     │
-FASE-3 ──────────────────────────►│
-  [Content Scrubber dead code→activar] │
-                                    │
-FASE-4 ──────────────────────────►│
+FASE-3 ✅ ────────────────────────►│
+  [Content Scrubber → main.py L2282-2348] │
+
+FASE-4 ✅───────────────────────►│
   [ROI template 24X→dinámico]     │
-                                    │
-FASE-5 ──────────────────────────►│
+
+FASE-5 ✅───────────────────────►│
   [faq_page JSON-LD + blanks]     │
-                                    │
-FASE-6 ──────────────────────────►│
+
+FASE-6 ✅───────────────────────►│
   [Voice/AEO deprecated]          │
-                                    │
-FASE-7 ──────────────────────────►│
+
+FASE-7 ✅───────────────────────►│
   [Region .title() sanitization]  │
                                   ▼
-FASE-8 ◄─────────────────────────┘
-  [E2E validation + docs]
+FASE-8 ✅◄─────────────────────────┘
+  [E2E validation + docs completed]
 ```
 
 ## Matriz de Conflictos de Archivos
@@ -35,7 +35,7 @@ FASE-8 ◄───────────────────────�
 |------|----------------------------|------------------|
 | FASE-1 | `modules/auditors/v4_comprehensive.py` | Bajo |
 | FASE-2 | `modules/asset_generation/conditional_generator.py`, `modules/asset_generation/v4_asset_orchestrator.py` | Medio |
-| FASE-3 | `modules/postprocessors/content_scrubber.py`, `modules/orchestration_v4/v4_complete_orchestrator.py` | Medio |
+| FASE-3 | `modules/postprocessors/content_scrubber.py`, `main.py` L2282-2348 | Medio |
 | FASE-4 | `modules/commercial_documents/templates/propuesta_v6_template.md`, `modules/commercial_documents/v4_proposal_generator.py` | Alto |
 | FASE-5 | `modules/asset_generation/conditional_generator.py`, template `monthly_report` | Medio |
 | FASE-6 | `modules/commercial_documents/templates/propuesta_v6_template.md`, `modules/asset_generation/proposal_asset_alignment.py` | Alto |

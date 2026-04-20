@@ -1,8 +1,31 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.31.1
-**Última actualización:** 2026-04-15
+**Última actualización:** 2026-04-20
 **Proyecto:** IA Hoteles Agent CLI
+
+---
+
+### AMAZILIAHOTEL-REFACTOR-V2 - 2026-04-20 (FASE-5 a FASE-8 Completas)
+
+**Resumen:** Corrección de GAPs E2E identificados en veredicto forense — score de 63.8 a >=80. 7 fases ejecutadas.
+
+**Módulos afectados:**
+- `modules/asset_generation/conditional_generator.py` — `_generate_faq_page()` ahora genera JSON-LD FAQPage (era CSV)
+- `modules/asset_generation/monthly_report_generator.py` — 37 blanks `_____` → "Por confirmar"
+- `modules/commercial_documents/templates/propuesta_v6_template.md` — Voice/AEO eliminados, ROI dinámico
+- `modules/commercial_documents/v4_proposal_generator.py` — region `.replace("_", " ").title()` (ya implementado)
+- `modules/asset_generation/proposal_asset_alignment.py` — entrada Voice/Búsqueda por Voz eliminada
+
+**Problema/Solución:**
+- G4: faq_page generaba CSV → JSON-LD con `@type: FAQPage`
+- G7: monthly_report tenía 27 blanks `_____` → "Por confirmar"
+- G9/G10: Voice/AEO prometeros sin implementación real → eliminados de template y alignment
+- G13: "eje_cafetero" lowercase → "Eje Cafetero" (sanitización ya estaba en generator)
+
+**Backwards compatible:** Sí. Formato JSON-LD para faq_page es schema.org estándar.
+
+**Tests:** 28/28 regression tests PASS (conditional_generator + pain_solution_mapper).
 
 ---
 

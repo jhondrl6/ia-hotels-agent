@@ -641,41 +641,43 @@ class ConditionalGenerator:
         return html
 
     def _generate_faq_page(self, faqs: List[Dict], actual_count: int, hotel_name: str = "Hotel") -> str:
-        """Generate CSV content for FAQ page.
-        
+        """Generate JSON-LD FAQPage content.
+
+        FASE-5 (AMH_REFACTOR_V2): Cambiado de CSV a JSON-LD para corregir G4.
+
         Args:
             faqs: List of FAQ dictionaries with 'question' and 'answer' keys
             actual_count: Actual number of FAQs (for filename reference)
             hotel_name: Name of the hotel for default FAQs
-            
+
         Returns:
-            CSV string content
+            JSON-LD string with @type FAQPage
         """
         if not faqs or len(faqs) == 0:
             faqs = self._generate_default_faqs(hotel_name)
             actual_count = len(faqs)
-        
-        output = io.StringIO()
-        writer = csv.writer(output)
-        
-        writer.writerow(['id', 'question', 'answer', 'category', 'generated_at'])
-        
-        for idx, faq in enumerate(faqs, 1):
+
+        faq_entities = []
+        for faq in faqs:
             if isinstance(faq, dict):
-                writer.writerow([
-                    idx,
-                    faq.get('question', ''),
-                    faq.get('answer', ''),
-                    faq.get('category', 'General'),
-                    datetime.now().isoformat()
-                ])
-        
-        writer.writerow([])
-        writer.writerow(['metadata', '', '', '', ''])
-        writer.writerow(['actual_count', actual_count, '', '', ''])
-        writer.writerow(['generated_at', datetime.now().isoformat(), '', '', ''])
-        
-        return output.getvalue()
+                question_text = faq.get('question', '')
+                answer_text = faq.get('answer', '')
+                faq_entities.append({
+                    "@type": "Question",
+                    "name": question_text,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": answer_text
+                    }
+                })
+
+        faq_page = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faq_entities
+        }
+
+        return json.dumps(faq_page, ensure_ascii=False, indent=2)
 
     def _generate_default_faqs(self, hotel_name: str) -> List[Dict]:
         """Generate default FAQs specific to the hotel.

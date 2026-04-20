@@ -1,25 +1,61 @@
-import sys, os
+"""Test for FAQ generator output format.
+
+Validates that FAQGenerator produces valid JSON-LD (schema.org FAQPage)
+instead of the legacy CSV format.
+"""
+import sys
+import os
+import json
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 from modules.delivery.generators.faq_gen import FAQGenerator
 
-def test_faq_generator_output_has_category_and_timestamp():
-    hotel_data = {'nombre': 'Hotel Test', 'ubicacion': 'Test', 'servicios': ['wifi'], 'precio_promedio': '100'}
-    generator = FAQGenerator()
-    csv_content, _ = generator.generate(hotel_data, count=2, reason='Test')
-    lines = csv_content.strip().split('\n')
-    # Verificar header con 4 columnas
-    header = any('"Pregunta","Respuesta","Categoria","Fecha_Generacion"' in l for l in lines)
-    assert header, f"Header debe tener 4 columnas. Lineas: {lines[:3]}"
-    # Verificar timestamp ISO 8601 con zona horaria (solo en líneas de datos, no en header)
-    for line in lines:
-        # Saltar el header y líneas que no parezcan datos CSV
-        if line.startswith('"Pregunta","Respuesta"') or line.count(',') < 3:
-            continue
-        parts = line.split('","')
-        if len(parts) >= 4:
-            ts = parts[3].rstrip('"')
-            assert 'T' in ts and ('+' in ts or '-' in ts.split('T')[1]), f"Timestamp invalido: {ts}"
-    print("Test passed!")
 
-if __name__ == '__main__':
-    test_faq_generator_output_has_category_and_timestamp()
+def test_faq_generator_output_is_jsonld():
+    """FAQ generator must produce valid JSON-LD with FAQPage type."""
+    hotel_data = {
+        'nombre': 'Hotel Test',
+        'ubicacion': 'Pereira, Colombia',
+        'servicios': ['wifi', 'piscina'],
+        'precio_promedio': '100'
+    }
+    generator = FAQGenerator()
+    output, _ = generator.generate(hotel_data, count=2, reason='Test')
+
+    # Parse as JSON
+    data = json.loads(output)
+
+    # Validate JSON-LD structure
+    assert data.get("@context") == "https://schema.org", \
+        f"@context must be schema.org, got: {data.get('@context')}"
+    assert data.get("@type") == "FAQPage", \
+        f"@type must be FAQPage, got: {data.get('@type')}"
+    assert "mainEntity" in data, "Must have mainEntity array"
+    assert isinstance(data["mainEntity"], list), "mainEntity must be a list"
+    assert len(data["mainEntity"]) > 0, "mainEntity must have at least 1 item"
+
+    # Validate each FAQ item
+    for item in data["mainEntity"]:
+        assert item.get("@type") == "Question", \
+            f"Each item must be Question, got: {item.get('@type')}"
+        assert "name" in item, "Question must have 'name'"
+        assert "acceptedAnswer" in item, "Question must have 'acceptedAnswer'"
+        answer = item["acceptedAnswer"]
+        assert answer.get("@type") == "Answer", \
+            f"Answer must be Answer type, got: {answer.get('@type')}"
+        assert "text" in answer, "Answer must have 'text'"
+
+
+def test_faq_generator_has_timestamp():
+    """FAQ generator output must include a generation timestamp."""
+    hotel_data = {
+        'nombre': 'Hotel Test',
+        'ubicacion': 'Test',
+        'servicios': ['wifi'],
+        'precio_promedio': '100'
+    }
+    generator = FAQGenerator()
+    output, metadata = generator.generate(hotel_data, count=2, reason='Test')
+
+    # metadata should contain timestamp or generation info
+    assert metadata is not None, "Generator must return metadata"

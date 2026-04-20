@@ -43,8 +43,10 @@ class TestNeverBlockPrinciple:
         # Caso: Sin datos en absoluto
         validated_data = {}  
         
-        # Para cualquier asset
-        for asset_type in ASSET_CATALOG.keys():
+        # Para cualquier asset ACTIVO (no DEPRECATED)
+        for asset_type, entry in ASSET_CATALOG.items():
+            if entry.status.name == 'DEPRECATED':
+                continue
             report = checker.check_asset(asset_type, validated_data)
             
             # NEVER BLOCK - debe ser WARNING o PASSED, nunca BLOCKED
@@ -310,7 +312,9 @@ class TestOutputDelivery:
         checker = PreflightChecker()
         validated_data = {}
         
-        for asset_type in ASSET_CATALOG.keys():
+        for asset_type, entry in ASSET_CATALOG.items():
+            if entry.status.name == 'DEPRECATED':
+                continue
             report = checker.check_asset(asset_type, validated_data)
             
             # Debe tener al menos un check con confidence
