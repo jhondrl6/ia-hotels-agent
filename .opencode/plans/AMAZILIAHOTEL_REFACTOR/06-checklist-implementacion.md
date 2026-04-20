@@ -16,8 +16,8 @@
 || 4 | FASE-2C: optimization_guide | ✅ COMPLETADA | 2026-04-19 | 2026-04-19 | Contradiccion title tag corregida |
 | 5 | FASE-3: Bugs generadores | ✅ COMPLETADA | 2026-04-19 | 2026-04-19 | 4 bugs: H3(faq ext), H4(duplicados), H10(coherence), H12(paths) |
 | 6 | FASE-4: Open Graph | ✅ COMPLETADA | 2026-04-19 | 2026-04-19 | Asset B4 Open Graph generado con datos GBP |
-| 7 | FASE-5: Decisiones + Gates | ⏳ PENDIENTE | - | - | D1:WhatsApp ELIMINAR, D2:Voice ELIMINAR |
-| 8 | FASE-6: Docs comerciales | ⏳ PENDIENTE | - | - | ROI 3X Tier C, servicios alineados |
+|| 7 | FASE-5: Decisiones + Gates | ✅ COMPLETADA | 2026-04-20 | 2026-04-20 | D1:WhatsApp ELIMINADO, D2:Voice ELIMINADO, 4/4 tests |
+|| 8 | FASE-6: Docs comerciales | ✅ COMPLETADA | 2026-04-20 | 2026-04-20 | WhatsApp/Voice eliminados, ROI 3X Tier C, 105/105 tests |
 
 ---
 
@@ -142,7 +142,7 @@ ls output/v4_complete/amaziliahotel/voice_assistant_guide/ # NO debe existir (el
 | 4 | 2026-04-19 | FASE-3 | Hermes | ✅ COMPLETADA - 4 bugs: H3(faq ext), H4(duplicados), H10(coherence unificado), H12(paths) |
 || 5 | 2026-04-19 | FASE-4 | Hermes | ✅ COMPLETADA - open_graph_generator.py + ESTIMATED_open_graph.html |
 || 6 | 2026-04-20 | FASE-5 | Hermes | ✅ COMPLETADA - WhatsApp ELIMINADO (bug always), Voice ELIMINADO pipeline, 4/4 tests |
-|| 7 | - | FASE-6 | - | ⏳ PENDIENTE |
+|| 7 | - | FASE-6 | - | ✅ COMPLETADA - 2026-04-20 - WhatsApp/Voice eliminados, ROI 3X Tier C, Informe reclasificado, 105/105 tests |
 
 ---
 

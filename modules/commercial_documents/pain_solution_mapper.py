@@ -235,7 +235,7 @@ class PainSolutionMapper:
             "description": "El sitio no tiene certificado SSL o no fuerza HTTPS"
         },
         "no_og_tags": {
-            "assets": ["og_tags_guide"],
+            "assets": ["og_tags_guide", "open_graph"],  # FASE-4: Added open_graph asset
             "confidence_required": 0.0,
             "priority": 2,
             "validation_fields": ["og_tags_detected"],

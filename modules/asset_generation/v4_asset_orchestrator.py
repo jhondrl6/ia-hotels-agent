@@ -91,6 +91,31 @@ class AssetGenerationResult:
     output_dir: str = ""
     timestamp: str = ""
     
+    @staticmethod
+    def _to_relative_path(path_str: str) -> str:
+        """Convert absolute path to relative path for portability.
+        
+        H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+        Returns relative path when possible.
+        """
+        if not path_str:
+            return path_str
+        try:
+            path = Path(path_str)
+            if path.is_absolute():
+                # Try to make relative to current working directory
+                try:
+                    return str(path.relative_to(Path.cwd()))
+                except ValueError:
+                    # If can't make relative to cwd, return just the last 3 parts
+                    parts = path.parts
+                    if len(parts) > 3:
+                        return str(Path(*parts[-3:]))
+                    return path_str
+            return path_str
+        except Exception:
+            return path_str
+    
     def to_dict(self) -> Dict[str, Any]:
         """Convert result to dictionary."""
         generated_count = len(self.generated_assets)
@@ -107,7 +132,7 @@ class AssetGenerationResult:
             "hotel_id": self.hotel_id,
             "hotel_name": self.hotel_name,
             "timestamp": self.timestamp,
-            "output_dir": self.output_dir,
+            "output_dir": self._to_relative_path(self.output_dir),
             "summary": {
                 "total_assets": len(self.generated_assets) + len(self.failed_assets) + len(self.skipped_assets),
                 "generated": len(self.generated_assets),
@@ -123,8 +148,8 @@ class AssetGenerationResult:
                     "asset_type": a.asset_type,
                     "filename": a.filename,
                     "delivery_filename": a.delivery_filename or a.filename,
-                    "path": a.path,
-                    "metadata_path": a.metadata_path,
+                    "path": self._to_relative_path(a.path),
+                    "metadata_path": self._to_relative_path(a.metadata_path),
                     "preflight_status": a.preflight_status,
                     "confidence_score": round(a.confidence_score, 2),
                     "pain_ids_resolved": a.pain_ids_resolved,

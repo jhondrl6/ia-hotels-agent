@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-20
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 118
+> **Total fases completadas:** 120
 
 ---
 
@@ -3188,6 +3188,43 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (9)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-5 - 2026-04-20
+**Descripcion:** Decisiones producto: WhatsApp ELIMINADO (hotel ya tiene, bug always), Voice ELIMINADO de pipeline; gates 80%+
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/asset_catalog.py` | Asset Catalog |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+
+### Validaciones
+- [x] Tests passing (4)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-6 - 2026-04-20
+**Descripcion:** Documentos comerciales corregidos: WhatsApp eliminado (hotel ya tiene), Voice eliminado, Informe reclasificado como servicio incluido, ROI corregido a 3X Tier C (20X solo con GA4). 105/105 tests pasaron.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

@@ -61,6 +61,9 @@ class OptimizationGuideGenerator:
             missing_h1 = metadata_data.get("missing_h1", True)
             h1_count = metadata_data.get("h1_count", 0)
             schema_types = metadata_data.get("schema_types", [])
+        
+        # City display: use actual city or fallback
+        city_display = city if city else "destino"
 
         # Status indicators - unified logic considering both default CMS and optimal length
         title_length_status = "⚠️ Longitud no óptima" if title_length < 30 or title_length > 60 else "✅ Longitud correcta"
@@ -105,7 +108,14 @@ class OptimizationGuideGenerator:
 **Recomendaciones:**
 """
 
-        if has_default_title:
+        if not title_tag:
+            md += """- ❌ No hay title tag configurado
+- ✅ Crear un title único que incluya: nombre del hotel + diferenciador + ubicación
+- 📝 Referencia: "Hotel [Nombre] - Mejor Tarifa Garantizada | [Ciudad]"
+- 📝 Longitud recomendada: 50-60 caracteres
+
+"""
+        elif has_default_title:
             md += """- ❌ El title tag parece ser genérico (default del CMS)
 - ✅ Crear un title único que incluya: nombre del hotel + diferenciador + ubicación
 - 📝 Referencia: "Hotel [Nombre] - Mejor Tarifa Garantizada | [Ciudad]"
@@ -129,7 +139,14 @@ class OptimizationGuideGenerator:
 **Recomendaciones:**
 """
 
-        if has_default_description:
+        if not meta_description:
+            md += """- ❌ No hay meta description configurada
+- ✅ Crear una descripción única de 150-160 caracteres
+- 📝 Incluir: propuesta de valor + amenities principales + llamada a la acción
+- 📝 Referencia: "Hotel [Nombre] en [Ciudad]. WiFi gratis, piscina, desayuno incluido. Reserva directa con la mejor tarifa."
+
+"""
+        elif has_default_description:
             md += """- ❌ La descripción parece ser genérica (default del CMS)
 - ✅ Crear una descripción única de 150-160 caracteres
 - 📝 Incluir: propuesta de valor + amenities principales + llamada a la acción
@@ -148,7 +165,7 @@ class OptimizationGuideGenerator:
 
 ### Metadatos (Prioridad Alta)
 
-- [ ] Crear title tag único: "{hotel_name} - [Diferenciador] | {city}"
+- [ ] Crear title tag único: "{hotel_name} - [Diferenciador] | {city_display}"
 - [ ] Crear meta description de 150-160 caracteres
 - [ ] Verificar que title y description sean diferentes
 
@@ -182,14 +199,14 @@ class OptimizationGuideGenerator:
 
 ### Blog Recomendado (4 artículos/mes)
 
-1. **Guía de destino**: "Qué hacer en {city} en 3 días"
+1. **Guía de destino**: "Qué hacer en {city_display} en 3 días"
 2. **Lista práctica**: "10 restaurantes cerca de nuestro hotel"
-3. **Contenido estacional**: "Mejor época para visitar {city}"
+3. **Contenido estacional**: "Mejor época para visitar {city_display}"
 4. **Experiencia única**: "Rutas secretas cerca del hotel"
 
 ### Optimización para Voz (AEO)
 
-- Usar preguntas como títulos: "¿Cuál es el mejor hotel en {city}?"
+- Usar preguntas como títulos: "¿Cuál es el mejor hotel en {city_display}?"
 - Respuestas directas de 40-60 palabras debajo del título
 - FAQ page con preguntas frecuentes reales
 - Markup SpeakableSpecification para Alexa/Google Assistant

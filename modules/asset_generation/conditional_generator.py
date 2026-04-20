@@ -210,7 +210,7 @@ class ConditionalGenerator:
         # contenido
         "low_citability": "optimization_guide",
         # open graph
-        "no_og_tags": "og_tags_guide",
+        "no_og_tags": ["og_tags_guide", "open_graph"],  # FASE-4: Added open_graph asset
         # FAQ
         "no_faq_schema": "faq_page",
         # NAP/WhatsApp
@@ -479,6 +479,14 @@ class ConditionalGenerator:
             generator = OGTagsGuideGenerator()
             content = generator.generate(validated_data)
 
+        elif asset_type == "open_graph":
+            from .open_graph_generator import OpenGraphGenerator
+            generator = OpenGraphGenerator()
+            hotel_data = validated_data.get("hotel_data", validated_data)
+            hotel_dict = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
+            # Open Graph generator returns HTML content, not file path
+            content = generator._generate_html(generator._extract_og_data(hotel_dict if isinstance(hotel_dict, dict) else {}))
+
         elif asset_type == "alt_text_guide":
             from modules.delivery.generators.alt_text_guide_gen import AltTextGuideGenerator
             generator = AltTextGuideGenerator()
@@ -714,13 +722,21 @@ class ConditionalGenerator:
         Returns:
             JSON string with schema markup
         """
+        # FASE-2A FIX: Format phone with Colombia +57 prefix if missing
+        raw_phone = hotel_data.get("phone", "")
+        formatted_phone = raw_phone
+        if raw_phone and not raw_phone.startswith("+"):
+            digits_only = raw_phone.replace(" ", "").replace("-", "")
+            if len(digits_only) >= 7:
+                formatted_phone = f"+57 {raw_phone}"
+
         schema = {
             "@context": "https://schema.org",
             "@type": "LodgingBusiness",
             "name": hotel_data.get("name", "Hotel"),
             "description": hotel_data.get("description", ""),
             "url": hotel_data.get("website", ""),
-            "telephone": hotel_data.get("phone", ""),
+            "telephone": formatted_phone,
             "address": {
                 "@type": "PostalAddress",
                 "streetAddress": hotel_data.get("address", ""),

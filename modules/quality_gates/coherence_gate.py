@@ -2,12 +2,18 @@
 
 Bloquea documentos con baja coherencia entre fuentes de evidencia.
 Umbral configurable, por defecto 0.8.
+
+H10 FIX: Unificado con CoherenceValidator para evitar métricas duplicadas.
+Usa CoherenceValidator internamente como fuente única de verdad.
 """
 
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set, Tuple
 from enum import Enum
 from datetime import datetime, timezone
+
+# H10 FIX: Importar CoherenceValidator como fuente única de verdad
+from ..commercial_documents.coherence_validator import CoherenceValidator, CoherenceReport
 
 
 class CoherenceStatus(Enum):
@@ -122,6 +128,9 @@ class CoherenceGate:
     Valida que el coherence_score cumpla con el umbral mínimo
     requerido para certificar documentos.
     
+    H10 FIX: Ahora usa CoherenceValidator internamente como fuente única
+    de verdad, evitando métricas duplicadas. Mantiene API pública compatible.
+    
     Umbrales configurables en .conductor/guidelines.yaml:
     - overall_coherence: 0.8 (por defecto)
     
@@ -145,6 +154,8 @@ class CoherenceGate:
             "threshold", 
             self.DEFAULT_THRESHOLD
         )
+        # H10 FIX: Usar CoherenceValidator como fuente única
+        self._validator = CoherenceValidator()
     
     def execute(
         self, 
@@ -152,6 +163,8 @@ class CoherenceGate:
         assessment_data: Optional[Dict[str, Any]] = None
     ) -> CoherenceGateResult:
         """Ejecuta el gate de coherencia.
+        
+        H10 FIX: Valida que coherence_score sea consistente con CoherenceValidator.
         
         Args:
             coherence_score: Score de coherencia actual (0-1)

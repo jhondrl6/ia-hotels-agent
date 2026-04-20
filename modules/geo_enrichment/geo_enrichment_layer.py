@@ -222,10 +222,16 @@ class GEOEnrichmentLayer:
         generated.append(str(checklist_path))
         
         # FOUNDATION+ assets
-        # llms.txt
+        # llms.txt - DEPRECATED: Fuente oficial es llms_txt/ (FASE-3 H4 fix)
         llms_path = geo_dir / FILENAME_LLMS_TXT
         llms_content = self.llms_generator.generate(hotel_data)
-        llms_path.write_text(llms_content, encoding="utf-8")
+        # Marcar como deprecated - fuente oficial es llms_txt/
+        deprecated_header = (
+            "<!-- DEPRECATED: Este archivo es generado por compatibilidad. "
+            "La fuente oficial de llms.txt está en la carpeta llms_txt/. "
+            "Generado por: modules/asset_generation/llmstxt_generator.py -->\n\n"
+        )
+        llms_path.write_text(deprecated_header + llms_content, encoding="utf-8")
         generated.append(str(llms_path))
         
         # hotel_schema_rich.json

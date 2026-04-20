@@ -39,6 +39,16 @@ class MonthlyReportGenerator:
         email = hotel_data.get("email", "")
         address = hotel_data.get("address", "")
 
+        # GBP real data
+        total_reviews = hotel_data.get("total_reviews") or hotel_data.get("review_count")
+        average_rating = hotel_data.get("average_rating") or hotel_data.get("rating")
+        total_photos = hotel_data.get("total_photos") or hotel_data.get("photo_count")
+        whatsapp = hotel_data.get("whatsapp", "")
+
+        # Determine if we have real GBP data
+        has_real_data = bool(total_reviews or average_rating)
+        data_source_label = "GBP (Google Business Profile)" if has_real_data else "N/D"
+
         if not period:
             period = datetime.now().strftime("%B %Y").capitalize()
 
@@ -48,6 +58,7 @@ class MonthlyReportGenerator:
 
 **Período**: {period}
 **Hotel**: {hotel_name}
+**Datos reales**: {"✅ Sí" if has_real_data else "⚠️ Requiere fuentes adicionales"} ({data_source_label})
 """
         if city:
             md += f"  \n**Ubicación**: {city}"
@@ -72,14 +83,14 @@ class MonthlyReportGenerator:
 
 ### Google Business Profile (GBP)
 
-| Métrica | Este Mes | Mes Anterior | Variación |
-|---------|----------|--------------|-----------|
-| Vistas en búsqueda | _____ | _____ | ___% |
-| Vistas en Maps | _____ | _____ | ___% |
-| Acciones totales | _____ | _____ | ___% |
-| Llamadas desde GBP | _____ | _____ | ___% |
-| Direcciones solicitadas | _____ | _____ | ___% |
-| Clics al sitio web | _____ | _____ | ___% |
+| Métrica | Valor Actual | Fuente |
+|---------|-------------|--------|
+| Reseñas totales | {total_reviews if total_reviews else "_____"} | {data_source_label} |
+| Rating promedio | {average_rating if average_rating else "_____"} | {data_source_label} |
+| Fotos totales | {total_photos if total_photos else "_____"} | {data_source_label} |
+| Vistas en búsqueda | _____ | Requiere GA4/GSC |
+| Vistas en Maps | _____ | Requiere GA4/GSC |
+| Acciones totales | _____ | Requiere GA4/GSC |
 
 ### Reservas Directas
 
@@ -150,7 +161,7 @@ class MonthlyReportGenerator:
 | **Nombre** | {hotel_name} |
 | **Dirección** | {address or "Por configurar"} |
 | **Teléfono** | {phone or "Por configurar"} |
-| **WhatsApp** | {hotel_data.get("whatsapp", "Por configurar")} |
+|| **WhatsApp** | {whatsapp or phone or "Por configurar"} |
 | **Email** | {email or "Por configurar"} |
 | **Website** | {website or "Por configurar"} |
 

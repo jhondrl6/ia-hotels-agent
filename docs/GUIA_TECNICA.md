@@ -43,7 +43,40 @@
 
 **Tests:** 9/9 pasan (open_graph).
 
----
+### AMAZILIAHOTEL-FASE-5 - 2026-04-20 (Decisiones Producto + Quality Gates)
+
+**Resumen:** Implementar decisiones de producto corrigiendo bug sistémico `promised_by=["always"]` en asset_catalog.py. WhatsApp y Voice eliminados de pipeline.
+
+**Decisiones implementadas:**
+- D1: WhatsApp ELIMINAR — hotel ya tiene WhatsApp (573104019049 = GBP phone). Bug `promised_by=["always"]` causaba generación automática sin verificación.
+- D2: Voice ELIMINAR pipeline — sin brecha real. Tag `promised_by=["always_aeo"]` generaba siempre sin verificación.
+- D3: Informe Mensual MANTENER reclasificado — servicio incluido legítimo, no fix de brecha.
+
+**Módulos afectados:**
+- `modules/asset_generation/asset_catalog.py` — `promised_by` corregido para WhatsApp y Voice
+
+**Lección aprendida:** Tags `promised_by=["always"]` y `promised_by=["always_aeo"]` generan assets sin verificar brecha real. Siempre verificar si el hotel YA tiene el asset antes de generarlo.
+
+**Tests:** 4/4 pasan.
+
+### AMAZILIAHOTEL-FASE-6 - 2026-04-20 (Corrección Documentos Comerciales)
+
+**Resumen:** Corregir claims falsos y ROI inflado en documentos comerciales. Aplicar decisiones de FASE-5 al output del cliente.
+
+**Correcciones aplicadas a `02_PROPUESTA_COMERCIAL`:**
+- WhatsApp eliminado de tabla problemas y servicios (claim "No hay botón de WhatsApp" era FALSO)
+- Voice eliminado de servicios (sin brecha real)
+- Servicios reorganizados en "Servicios de Optimización" (GEO, IAO, SEO, Datos) + "Servicios Incluidos" (Informe Mensual)
+- ROI: 20X → 3X Tier C / hasta 20X con GA4. Disclaimer Tier C visible.
+- Timeline: "Botón de WhatsApp instalado" eliminado (ya existe)
+
+**Documentos modificados:**
+- `output/v4_complete/02_PROPUESTA_COMERCIAL_*.md` — 7 líneas eliminadas, sección servicios reescrita, ROI corregido
+- `output/v4_complete/01_DIAGNOSTICO_*.md` — NO modificado (ya era correcto: 4 brechas B1-B4, sin WhatsApp)
+
+**Tests:** 105/105 pasan (commercial_documents suite completa). 0 regresiones.
+
+------
 
 ## Notas de Cambios
 

@@ -1,5 +1,42 @@
 # Changelog
 
+## [AMAZILIAHOTEL-REFACTOR] - 2026-04-20 — FASE-5 + FASE-6: Decisiones Producto + Docs Comerciales
+
+### Objetivo
+
+FASE-5: Implementar decisiones de producto (WhatsApp ELIMINAR, Voice ELIMINAR pipeline) corrigiendo bug `promised_by=["always"]`. FASE-6: Corregir documentos comerciales (ROI inflado, servicios sin brecha, reclasificación Informe Mensual).
+
+### Cambios
+
+**FASE-5:**
+- **WhatsApp eliminado**: Hotel ya tiene WhatsApp (573104019049 = GBP phone). Bug `promised_by=["always"]` corregido en `asset_catalog.py`. Asset whatsapp_button eliminado.
+- **Voice pipeline eliminado**: Sin brecha real de voz. Tag `promised_by=["always_aeo"]` corregido. Asset voice_assistant_guide eliminado del pipeline.
+- **Informe Mensual reclasificado**: Servicio incluido legítimo, no fix de brecha.
+- **Quality Gates actualizados**: Gates 8 y 9 ahora pasan (delivery_ready >= 80%).
+
+**FASE-6:**
+- **WhatsApp/Voice eliminados de propuesta comercial**: 02_PROPUESTA_COMERCIAL — claims falsos removidos (claim "No hay botón de WhatsApp" era falso, hotel YA tiene)
+- **Servicios reorganizados**: Sección "Servicios de Optimización" (GEO, IAO, SEO, Datos Estructurados) + "Servicios Incluidos" (Informe Mensual)
+- **ROI corregido**: De 20X (insostenible Tier C) a 3X Tier C / hasta 20X con GA4. Proyección 6 meses: $1,566,000 COP beneficio neto (Tier C).
+- **Timeline corregido**: "Botón de WhatsApp instalado" eliminado (ya existe).
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/asset_catalog.py` | WhatsApp/Voice: promised_by corregido |
+| `output/v4_complete/02_PROPUESTA_COMERCIAL_*.md` | WhatsApp/Voice eliminados, ROI 3X, servicios reclasificados |
+| `.opencode/plans/AMAZILIAHOTEL_REFACTOR/06-checklist-implementacion.md` | FASE-5 + FASE-6 completadas |
+| `.opencode/plans/AMAZILIAHOTEL_REFACTOR/dependencias-fases.md` | FASE-6 completada |
+
+### Tests
+
+- FASE-5: 4/4 tests pasaron (promised_by, quality gates)
+- FASE-6: 105/105 tests pasaron (commercial_documents suite completa)
+- 0 regresiones
+
+---
+
 ## [AMAZILIAHOTEL-REFACTOR] - 2026-04-19/20 — FASE-3 + FASE-4: Bugs + Open Graph
 
 ### Objetivo

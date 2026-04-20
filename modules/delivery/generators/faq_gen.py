@@ -1,3 +1,4 @@
+import json
 from typing import List, Dict, Any, Tuple
 from modules.providers.llm_provider import ProviderAdapter
 from datetime import datetime
@@ -11,7 +12,7 @@ class FAQGenerator:
 
     def generate(self, hotel_data: Dict[str, Any], count: int = 50, reason: str = None) -> Tuple[str, str]:
         """
-        Generates a list of FAQs optimized for AI discovery in CSV format.
+        Generates a list of FAQs optimized for AI discovery in JSON-LD format.
         
         Args:
             hotel_data: Datos del hotel
@@ -19,75 +20,54 @@ class FAQGenerator:
             reason: Justificación de por qué se genera este archivo
             
         Returns:
-            Tuple de (csv_content, implementation_guide)
+            Tuple de (jsonld_content, implementation_guide)
         """
-        header_sections = []
-        
-        if reason:
-            header_sections.append(f"> **🎯 Por qué este archivo:** {reason}")
-            header_sections.append("")
-        
         hotel_name = hotel_data.get('nombre', 'Hotel')
-        header_sections.append(f"# FAQs Optimizadas - {hotel_name}")
-        header_sections.append("")
-        header_sections.append("Preguntas frecuentes optimizadas para búsqueda por voz y asistentes de IA.")
-        header_sections.append("")
+        url = hotel_data.get('website', hotel_data.get('url', ''))
         
         faqs = self.generate_list(hotel_data, count)
         if not faqs:
-            return ("\n".join(header_sections) + "\nPregunta,Respuesta,Categoria,Fecha_Generacion\nError generating FAQs", "")
-            
-        def asignar_categoria(pregunta, respuesta):
-            texto = (pregunta + " " + respuesta).lower()
-            if any(kw in texto for kw in ["check-in", "check-out", "hora de entrada", "hora de salida", "llegada", "salida"]):
-                return "Hospedaje - Horarios"
-            if any(kw in texto for kw in ["desayuno", "almuerzo", "cena", "buffet", "comida"]):
-                return "Servicios - Alimentación"
-            if any(kw in texto for kw in ["cancelación", "cancelar", "reembolso", "reserva"]):
-                return "Reservas - Políticas"
-            if any(kw in texto for kw in ["wifi", "wi-fi", "internet"]):
-                return "Servicios - Conectividad"
-            if any(kw in texto for kw in ["estacionamiento", "parqueadero", "parking"]):
-                return "Servicios - Parqueadero"
-            if any(kw in texto for kw in ["mascota", "perro", "gato", "pet"]):
-                return "Servicios - Mascotas"
-            if any(kw in texto for kw in ["piscina", "pool"]):
-                return "Servicios - Piscina"
-            if any(kw in texto for kw in ["traslado", "aeropuerto", "taxi", "transporte"]):
-                return "Servicios - Transporte"
-            if any(kw in texto for kw in ["spa", "masaje", "bienestar"]):
-                return "Servicios - Spa"
-            if any(kw in texto for kw in ["dieta", "vegano", "vegetariano", "sin gluten"]):
-                return "Servicios - Dietas Especiales"
-            if any(kw in texto for kw in ["habitación", "cuarto", "suite", "cama"]):
-                return "Hospedaje - Habitaciones"
-            if any(kw in texto for kw in ["precio", "costo", "tarifa"]):
-                return "Reservas - Precios"
-            return "Información General"
+            empty_schema = {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": []
+            }
+            return (json.dumps(empty_schema, indent=2, ensure_ascii=False), "")
         
-        BOGOTA_TZ = pytz.timezone('America/Bogota')
-        ISO_TIMESTAMP = datetime.now(BOGOTA_TZ).isoformat(timespec='seconds')
-        lines = ['"Pregunta","Respuesta","Categoria","Fecha_Generacion"']
+        # Build JSON-LD FAQPage schema
+        main_entities = []
         for item in faqs:
-            q = item["pregunta"].replace('"', '""')
-            a = item["respuesta"].replace('"', '""')
-            c = asignar_categoria(item["pregunta"], item["respuesta"])
-            lines.append(f'"{q}","{a}","{c}","{ISO_TIMESTAMP}"')
+            entity = {
+                "@type": "Question",
+                "name": item["pregunta"],
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": item["respuesta"]
+                }
+            }
+            main_entities.append(entity)
         
-        csv_content = "\n".join(header_sections) + "\n".join(lines)
+        faq_schema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": main_entities
+        }
+        
+        jsonld_content = json.dumps(faq_schema, indent=2, ensure_ascii=False)
         
         implementation_guide = f"""# Guía de Implementación - FAQs
 ## {hotel_name}
 
-Este archivo contiene FAQs optimizadas para SEO y búsqueda por voz.
+Este archivo contiene FAQs en formato JSON-LD (schema.org FAQPage).
+Optimizado para SEO y búsqueda por voz.
 
 ## Instrucciones
-1. Copia las preguntas y respuestas a tu sitio web
-2. Agrega cada pregunta en una sección FAQ o página dedicada
-3. Usa schema FAQPage para maximizar visibilidad en buscadores
+1. Inserta el JSON-LD en un <script type="application/ld+json"> en tu página de FAQs
+2. Cada pregunta/respuesta está estructurada como schema.org Question/Answer
+3. Google y otros buscadores reconocerán automáticamente el formato FAQPage
 """
         
-        return (csv_content, implementation_guide)
+        return (jsonld_content, implementation_guide)
 
     def generate_list(self, hotel_data: Dict[str, Any], count: int = 50) -> List[Dict[str, str]]:
         """
