@@ -3,15 +3,15 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.29.0 | **Codename**: Fix geo_enriched to Delivery Bridge + Assets Completos
-> **Release date**: 2026-04-14 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.31.1 | **Codename**: AMAZILIA-BUGFIX Release Complete
+> **Release date**: 2026-04-20 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
 
 ## Modulos del Repositorio (auto-generado)
 
-> 21 modulos detectados en `modules/` + 1 paquetes de nivel root. 171 archivos Python en total.
+> 21 modulos detectados en `modules/` + 1 paquetes de nivel root. 174 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
@@ -36,7 +36,7 @@
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
 | **commercial_documents/** | 6 | CoherenceRule, PriceValidationRule, CoherenceConfig; CoherenceCheck, CoherenceReport, CoherenceValidator; ValidatedField, Conflict, ValidationSummary, Scenario; Pain, Solution, PainSolutionMapper; V4D |
-| **asset_generation/** | 15 | AssetStatus, AssetCatalogEntry; ContentStatus, ContentIssue, ContentValidationResult, AssetContentValidator; AssetDiagnosticLink, AssetMetadata, AssetDiagnosticLinker; AssetStatus, AssetMetadata, Asse |
+| **asset_generation/** | 18 | AssetStatus, AssetCatalogEntry; ContentStatus, ContentIssue, ContentValidationResult, AssetContentValidator; AssetDiagnosticLink, AssetMetadata, AssetDiagnosticLinker; AssetStatus, AssetMetadata, Asse |
 | **delivery/** | 23 | AltTextGuideGenerator; AnalyticsSetupGuideGenerator; BlogStrategyGuideGenerator; BookingBarGenerator; CertificateGenerator; ContentGenerator; DeliveryContext; DeliveryPackager; DeployInstructionsGener |
 | **generators/** | 3 | OutreachGenerator; ReportDataBundle, ReportIntegrationAudit, ReportIntegrationAdapter, ReportBuilder; GeoStageResult, IAStageResult, SparkGenerator |
 | **geo_enrichment/** | 8 | AssetType, AssetResponsibility, AssetResponsibilityContract; GEODashboard; GEOBand, ScoreBreakdown, GEOAssessment, GEODiagnostic; GEOEnrichmentLayer; GeoFlowResult, GeoFlow; HotelSchemaEnricher; LLMsT |
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-04-14 | v4.29.0 Fix geo_enriched to Delivery Bridge + Assets Completos*
+*Auto-generado: 2026-04-20 | v4.31.1 AMAZILIA-BUGFIX Release Complete*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

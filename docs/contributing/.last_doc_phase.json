@@ -89,5 +89,7 @@
   "v4_asset_orchestrator.py": "FASE-INTERVENCION",
   "modules/providers/autonomous_researcher.py": "FASE-1",
   "modules/delivery/generators/faq_gen.py": "FASE-3",
-  "modules/quality_gates/coherence_gate.py": "FASE-3"
+  "modules/quality_gates/coherence_gate.py": "FASE-3",
+  "docs/contributing/REGISTRY.md": "FASE-DOC-09",
+  ".opencode/plans/AMAZILIAHOTEL_REFACTOR/09-documentacion-post-proyecto.md": "FASE-DOC-09"
 }

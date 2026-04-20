@@ -96,14 +96,15 @@ cd /mnt/c/Users/Jhond/Github/iah-cli
 
 ### Checklist Documentación E1-E8
 - [x] E1: `version_consistency_checker.py` pasa — All files in sync (sync_versions.py 2026-04-20)
-- [ ] E1: `doctor.py --doctor` sin errores criticos — Pendiente post-FASE-5
+- [x] E1: `doctor.py --agent` sin errores criticos — All checks passed (2026-04-20)
 - [x] E2: `sync_versions.py` ejecutado — 2026-04-20, All files in sync
 - [x] E3: CHANGELOG.md con entrada AMAZILIAHOTEL-REFACTOR (FASE-3 + FASE-4) — Formato CONTRIBUTING.md (Objetivo/Cambios/Archivos/Tests)
-- [x] E4: GUIA_TECNICA.md con notas FASE-3 y FASE-4 — 2026-04-20
-- [ ] E5: Workflows listados en README — Pendiente post-FASE-5
-- [ ] E6: SYSTEM_STATUS.md regenerado — Pendiente post-FASE-5 (`doctor.py --status`)
-- [ ] E7: DOMAIN_PRIMER.md actualizado si hay nuevos modulos — Pendiente post-FASE-5
-- [ ] E8: Symlink y validación final — Pendiente post-FASE-5
+- [x] E3b: CHANGELOG.md con entrada FASE-5 + FASE-6 — 2026-04-20
+- [x] E4: GUIA_TECNICA.md con notas FASE-3, FASE-4, FASE-5, FASE-6 — 2026-04-20
+- [x] E5: Workflows listados en README — 5 referencias encontradas (2026-04-20)
+- [x] E6: SYSTEM_STATUS.md regenerado — 2026-04-20 (16 skills, 1037 shadow logs, 171 sesiones)
+- [x] E7: DOMAIN_PRIMER.md actualizado — 2026-04-20 (174 archivos Python, 334 clases, 22 modulos)
+- [x] E8: Symlink y validación final — All checks passed (2026-04-20)
 
 ---
 
