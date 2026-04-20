@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-18
+> **Ultima actualizacion:** 2026-04-20
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 111
+> **Total fases completadas:** 118
 
 ---
 
@@ -3022,6 +3022,178 @@ _Ninguno_
 ---
 
 
+## FASE-1 - 2026-04-19
+**Descripcion:** BookingScraper real implementado - reemplazo STUB por scraping real con fallback verificado GBP
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/providers/autonomous_researcher.py` | Autonomous Researcher |
+
+### Validaciones
+- [x] Tests passing (9)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2C - 2026-04-19
+**Descripcion:** optimization_guide regenerado - eliminada contradiccion title tag
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `output/v4_complete/amaziliahotel/optimization_guide/ESTIMATED_guia_optimizacion_20260415_113915.md` | NUEVO | Estimated Guia Optimizacion 20260415 113915 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/optimization_guide_generator.py` | Optimization Guide Generator |
+
+### Validaciones
+- [x] Tests passing (1)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2A - 2026-04-19
+**Descripcion:** hotel_schema regenerado con datos reales - elimino duplicado geo_enriched
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `output/v4_complete/amaziliahotel/hotel_schema/ESTIMATED_hotel_schema.json` | NUEVO | Estimated Hotel Schema |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+
+### Validaciones
+- [x] Tests passing (1)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2B - 2026-04-19
+**Descripcion:** monthly_report regenerado con datos reales del GBP
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/monthly_report_generator.py` | Monthly Report Generator |
+
+### Validaciones
+- [x] Tests passing (1)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-4 - 2026-04-19
+**Descripcion:** Asset B4 Open Graph generado - cierra brecha 79K/mes
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/asset_generation/open_graph_generator.py` | NUEVO | Open Graph Generator |
+| `output/v4_complete/amaziliahotel/open_graph_meta/ESTIMATED_open_graph.html` | NUEVO | Estimated Open Graph |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `modules/asset_generation/asset_catalog.py` | Asset Catalog |
+
+### Validaciones
+- [x] Tests passing (2)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3 - 2026-04-19
+**Descripcion:** 4 bugs corregidos: H3(faq ext), H4(duplicados), H10(coherence), H12(paths)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/asset_catalog.py` | Asset Catalog |
+| `modules/delivery/generators/faq_gen.py` | Faq Gen |
+| `modules/geo_enrichment/geo_enrichment_layer.py` | Geo Enrichment Layer |
+| `modules/quality_gates/coherence_gate.py` | Coherence Gate |
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+
+### Validaciones
+- [x] Tests passing (4)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+
+## FASE-3 - 2026-04-20
+**Descripcion:** 4 bugs corregidos: H3(faq ext .json), H4(llms.txt consolidado), H10(coherence unificado via CoherenceValidator), H12(paths relativos)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/delivery/generators/faq_gen.py` | Faq Gen |
+| `modules/geo_enrichment/geo_enrichment_layer.py` | Geo Enrichment Layer |
+| `modules/quality_gates/coherence_gate.py` | Coherence Gate |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (39)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-4 - 2026-04-20
+**Descripcion:** Asset B4 Open Graph generado - cierra brecha $379K/mes. OpenGraphGenerator + catalog integration + output con datos reales GBP.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/asset_generation/open_graph_generator.py` | NUEVO | Open Graph Generator |
+| `tests/asset_generation/test_open_graph_generator.py` | NUEVO | Test Open Graph Generator |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/asset_catalog.py` | Asset Catalog |
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+
+### Validaciones
+- [x] Tests passing (9)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
@@ -3090,3 +3262,5 @@ _Ninguno_
 | FASE-TEMPLATE-DEBT | 2026-04-13 | N/A | ✅ Complete |
 | FASE-CONTENT-SCRUBBER | 2026-04-13 | 9 | ✅ Complete |
 | FASE-RELEASE-4.29.0 | 2026-04-13 | N/A | ✅ Complete |
+| FASE-3 (AMAZILIAHOTEL) | 2026-04-19 | 4 | ✅ Complete |
+| FASE-4 (AMAZILIAHOTEL) | 2026-04-19 | 2 | ✅ Complete |

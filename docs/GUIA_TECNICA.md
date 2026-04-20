@@ -6,6 +6,45 @@
 
 ---
 
+### AMAZILIAHOTEL-FASE-3 - 2026-04-19 (Corrección Bugs Generadores)
+
+**Resumen:** 4 bugs sistémicos corregidos en generadores independientes de BookingScraper.
+
+**Módulos afectados:**
+- `modules/quality_gates/coherence_gate.py` — H10: Importa CoherenceValidator como fuente única de verdad para coherence score
+- `modules/commercial_documents/v4_diagnostic_generator.py` — H10: Fallback `_calculate_coherence_score()` documentado; solo se ejecuta cuando el gate no pasa score pre-calculado
+- `modules/geo_enrichment/geo_enrichment_layer.py` — H4: Generación legacy de llms.txt marcada DEPRECATED; fuente oficial es `llms_txt/`
+- `modules/asset_generation/asset_catalog.py` — H3: `faq_page` output_name corregido a extensión `.json`
+
+**Problema/Solución:**
+- H3: faq_page generaba .csv con contenido JSON-LD → output_name corregido en catalog
+- H4: 2 generators creaban llms.txt en 2 carpetas → geo_enrichment_layer marca como DEPRECATED
+- H10: coherence_gate y diagnostic_generator tenían cálculos diferentes → gate usa CoherenceValidator
+- H12: paths Windows (`C:\`) en output → eliminados
+
+**Backwards compatible:** Sí. API pública de coherence_score sin cambios. geo_enriched/llms.txt se mantiene como deprecated por compatibilidad.
+
+**Tests:** 39/39 pasan (coherence 31 + llmstxt 8).
+
+---
+
+### AMAZILIAHOTEL-FASE-4 - 2026-04-19 (Asset B4 Open Graph)
+
+**Resumen:** Nuevo asset Open Graph Meta Tags creado para cerrar brecha B4 ($379K/mes expuesto).
+
+**Módulos afectados:**
+- `modules/asset_generation/open_graph_generator.py` — NUEVO: OpenGraphGenerator con datos GBP verificados
+- `modules/asset_generation/asset_catalog.py` — Entry `open_graph` con status IMPLEMENTED
+- `modules/asset_generation/conditional_generator.py` — Handler `open_graph` en `_generate_content()` L482
+
+**Arquitectura:** OpenGraphGenerator genera HTML con meta tags OG, Twitter Card, y JSON-LD Hotel schema. Se integra al pipeline via ConditionalGenerator (handler automático desde ASSET_CATALOG). Datos fuente: GBP verificado (rating, reviews, address, phone).
+
+**Backwards compatible:** Sí. Asset nuevo, no afecta generación existente.
+
+**Tests:** 9/9 pasan (open_graph).
+
+---
+
 ## Notas de Cambios
 
 ### SPARK-FIX - 2026-04-18 (Reparación comando spark)
@@ -98,6 +137,44 @@
 | Archivo | Descripción |
 |---------|-------------|
 | `modules/asset_generation/geo_playbook_generator.py` | Reimplementado con hotel_data + gbp_data. Genera playbook geográfico personalizado. |
+
+### FASE-3 - 2026-04-19 (Corrección Bugs Generadores)
+
+**Resumen:** Corrección de 4 bugs independientes de generadores de assets. Mejora de consistencia y portabilidad.
+
+**Cambios:**
+
+1. **H3: faq_page extensión .csv → .json (JSON-LD)**
+   - `modules/asset_generation/asset_catalog.py`: Cambio template/output_name de .csv a .json
+   - `modules/delivery/generators/faq_gen.py`: Genera JSON-LD schema.org FAQPage en lugar de CSV
+   - Formato: `{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [...]}`
+
+2. **H4: llms.txt duplicado consolidado**
+   - `modules/geo_enrichment/geo_enrichment_layer.py`: geo_enriched/llms.txt marcado como DEPRECATED
+   - Fuente oficial: llms_txt/ (generado por modules/asset_generation/llmstxt_generator.py)
+   - Header HTML comment indica deprecation y apunta a fuente oficial
+
+3. **H10: Coherence metric unificada**
+   - `modules/quality_gates/coherence_gate.py`: Importa CoherenceValidator como fuente única
+   - CoherenceGate ahora usa CoherenceValidator internamente
+   - API pública mantiene compatibilidad (CoherenceGateResult)
+   - Evita métricas duplicadas (0.89 vs FALSE)
+
+4. **H12: Paths Windows (WSL) relativos**
+   - `modules/asset_generation/v4_asset_orchestrator.py`: Método _to_relative_path()
+   - AssetGenerationResult.to_dict() convierte paths absolutos a relativos
+   - Evita paths C:\Users\Jhond\... en JSON de reportes
+
+**Archivos modificados:**
+- `modules/asset_generation/asset_catalog.py` (faq_page .csv → .json)
+- `modules/delivery/generators/faq_gen.py` (CSV → JSON-LD)
+- `modules/geo_enrichment/geo_enrichment_layer.py` (deprecated header)
+- `modules/quality_gates/coherence_gate.py` (unificación coherence)
+- `modules/asset_generation/v4_asset_orchestrator.py` (paths relativos)
+
+**Backwards compatible:** Sí. Cambios internos, API pública sin cambios.
+
+---
 | `modules/asset_generation/optimization_guide_generator.py` | Reimplementado con hotel_data + metadata_data. Genera guía SEO personalizada. |
 
 **Archivos Modificados:**

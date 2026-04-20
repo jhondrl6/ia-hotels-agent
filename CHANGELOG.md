@@ -1,5 +1,49 @@
 # Changelog
 
+## [AMAZILIAHOTEL-REFACTOR] - 2026-04-19/20 — FASE-3 + FASE-4: Bugs + Open Graph
+
+### Objetivo
+
+FASE-3: Corregir 4 bugs sistémicos en generadores (H3, H4, H10, H12). FASE-4: Cerrar brecha B4 Open Graph ($379K/mes expuesto) creando asset condicional con datos reales GBP.
+
+### Cambios
+
+**FASE-3:**
+- **H3**: faq_page genera extensión .json (no .csv) — asset_catalog.py output_name corregido
+- **H4**: llms.txt consolidado — geo_enrichment_layer.py marca generación legacy como DEPRECATED, fuente oficial es llms_txt/
+- **H10**: Coherence unificado — coherence_gate.py usa CoherenceValidator como fuente única de verdad. diagnostic_generator.py mantiene fallback documentado para uso standalone
+- **H12**: Paths Windows eliminados — 0 matches de `C:\` en modules/
+
+**FASE-4:**
+- **OpenGraphGenerator** creado: genera meta tags OG + Twitter Card + JSON-LD Hotel schema con datos GBP verificados
+- **Integración en pipeline**: Handler en ConditionalGenerator._generate_content() L482, catalogado como AssetStatus.IMPLEMENTED
+- **Asset generado**: ESTIMATED_open_graph.html con datos reales (rating 4.5, 202 reviews, dirección, teléfono)
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/asset_generation/open_graph_generator.py` | OpenGraphGenerator (341 líneas) |
+| `tests/asset_generation/test_open_graph_generator.py` | 9 tests |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/coherence_gate.py` | Importa CoherenceValidator (H10 fix) |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Documentación H10 fallback + comentario fix |
+| `modules/asset_generation/asset_catalog.py` | Entry open_graph IMPLEMENTED |
+| `modules/asset_generation/conditional_generator.py` | Handler open_graph en _generate_content() |
+| `modules/geo_enrichment/geo_enrichment_layer.py` | DEPRECATED marker llms.txt (H4) |
+
+### Tests
+
+- FASE-3: 39 tests pasan (coherence 31 + llmstxt 8)
+- FASE-4: 9 tests pasan (open_graph)
+- 0 regresiones
+
+---
+
 ## [FIX] - 2026-04-18 — FASE-SPARK-FIX: Reparación comando spark
 
 ### Objetivo

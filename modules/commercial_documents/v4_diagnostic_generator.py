@@ -67,7 +67,7 @@ ELEMENTO_KB_TO_PAIN_ID: Dict[str, tuple] = {
     "LCP_ok":             ("poor_performance",    "performance_audit",   "optimization_guide"),
     "CLS_ok":             ("poor_performance",    "optimization_guide",  None),
     "contenido_extenso":  ("low_citability",      "optimization_guide",  None),
-    "open_graph":         ("no_og_tags",          "og_tags_guide",       None),
+    "open_graph":         ("no_og_tags",          "open_graph",          "og_tags_guide"),  # FASE-4: Primary is now open_graph
     "schema_faq":         ("no_faq_schema",       "faq_page",            None),
     "nap_consistente":    ("whatsapp_conflict",   "whatsapp_button",     None),
     "imagenes_alt":       ("missing_alt_text",    "alt_text_guide",      None),
@@ -368,6 +368,8 @@ class V4DiagnosticGenerator:
         # Basic metadata
         hotel_id = hotel_name.lower().replace(" ", "_").replace("-", "_")
         # Use provided coherence_score from coherence gate, or calculate internally
+        # H10 FIX: Primary path uses CoherenceValidator (coherence_gate.py).
+        # Fallback to self._calculate_coherence_score only when gate didn't pass score.
         if coherence_score is None:
             coherence_score = self._calculate_coherence_score(validation_summary)
         
@@ -786,7 +788,17 @@ class V4DiagnosticGenerator:
         return template.safe_substitute(data)
     
     def _calculate_coherence_score(self, validation_summary: ValidationSummary) -> int:
-        """Calculate overall coherence score from validation summary."""
+        """Calculate overall coherence score from validation summary.
+        
+        H10 FIX: This is a FALLBACK calculator. The canonical source of truth
+        is CoherenceValidator in modules/quality_gates/coherence_gate.py.
+        This method only runs when no pre-calculated coherence_score is passed
+        from the coherence gate (see _prepare_template_data line 371).
+        
+        For E2E flow: coherence_gate.py → CoherenceValidator → passes score
+        to _prepare_template_data(coherence_score=...) → this method NOT called.
+        For standalone use: this method provides reasonable fallback scoring.
+        """
         if not validation_summary.fields:
             return 0
         
