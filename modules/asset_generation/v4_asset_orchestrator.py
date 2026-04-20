@@ -654,23 +654,43 @@ class V4AssetOrchestrator:
                 "rating": props.get("rating", None),
                 "review_count": props.get("reviewCount", None),
             })
-            # D1 FIX: Pasar coordenadas GPS del GBP al hotel_data
-            if audit_result.gbp:
-                gbp_lat = getattr(audit_result.gbp, 'lat', 0.0) or 0.0
-                gbp_lng = getattr(audit_result.gbp, 'lng', 0.0) or 0.0
-                # Validar rango Colombia (lat 0-13, lng -82 a -66)
-                if 0 <= gbp_lat <= 13 and -82 <= gbp_lng <= -66:
-                    validated_data["hotel_data"]["latitude"] = gbp_lat
-                    validated_data["hotel_data"]["longitude"] = gbp_lng
-                # GAP-3: Enrich hotel_data with GBP rating/reviews if schema lacks them
-                if not validated_data["hotel_data"].get("rating"):
-                    gbp_rating = getattr(audit_result.gbp, 'rating', None)
-                    if gbp_rating:
-                        validated_data["hotel_data"]["rating"] = gbp_rating
-                if not validated_data["hotel_data"].get("review_count"):
-                    gbp_reviews = getattr(audit_result.gbp, 'reviews', None)
-                    if gbp_reviews:
-                        validated_data["hotel_data"]["review_count"] = gbp_reviews
+        
+        # FASE-2 FIX: Inyectar datos del GBP SIEMPRE (schema.properties puede estar vacío)
+        if audit_result and audit_result.gbp:
+            gbp = audit_result.gbp
+            # Coordenadas GPS
+            gbp_lat = getattr(gbp, 'lat', 0.0) or 0.0
+            gbp_lng = getattr(gbp, 'lng', 0.0) or 0.0
+            if 0 <= gbp_lat <= 13 and -82 <= gbp_lng <= -66:
+                validated_data["hotel_data"].setdefault("latitude", gbp_lat)
+                validated_data["hotel_data"].setdefault("longitude", gbp_lng)
+            # Phone del GBP (clave "phone" para _generate_hotel_schema)
+            gbp_phone = getattr(gbp, 'phone', None)
+            if gbp_phone and not validated_data["hotel_data"].get("telephone"):
+                validated_data["hotel_data"]["telephone"] = gbp_phone
+                validated_data["hotel_data"]["phone"] = gbp_phone
+            # Address del GBP
+            gbp_address = getattr(gbp, 'address', None)
+            if gbp_address and not validated_data["hotel_data"].get("address"):
+                validated_data["hotel_data"]["address"] = gbp_address
+            # Rating/reviews del GBP
+            if not validated_data["hotel_data"].get("rating"):
+                gbp_rating = getattr(gbp, 'rating', None)
+                if gbp_rating:
+                    validated_data["hotel_data"]["rating"] = gbp_rating
+            if not validated_data["hotel_data"].get("review_count"):
+                gbp_reviews = getattr(gbp, 'reviews', None)
+                if gbp_reviews:
+                    validated_data["hotel_data"]["review_count"] = gbp_reviews
+            # Name del GBP como fallback
+            if not validated_data["hotel_data"].get("name"):
+                gbp_name = getattr(gbp, 'name', None)
+                if gbp_name:
+                    validated_data["hotel_data"]["name"] = gbp_name
+            # Website del GBP
+            gbp_website = getattr(gbp, 'website', None)
+            if gbp_website and not validated_data["hotel_data"].get("url"):
+                validated_data["hotel_data"]["url"] = gbp_website
         
         # FIX-A3: Fallback name priority: hotel_name > gbp.name > metadata.title
         # (El bloque original solo usaba metadata.title, que era vacío en amaziliahotel)

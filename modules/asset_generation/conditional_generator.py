@@ -722,8 +722,8 @@ class ConditionalGenerator:
         Returns:
             JSON string with schema markup
         """
-        # FASE-2A FIX: Format phone with Colombia +57 prefix if missing
-        raw_phone = hotel_data.get("phone", "")
+        # FASE-2 FIX: Read phone from both "phone" and "telephone" keys (GBP vs schema)
+        raw_phone = hotel_data.get("phone") or hotel_data.get("telephone", "")
         formatted_phone = raw_phone
         if raw_phone and not raw_phone.startswith("+"):
             digits_only = raw_phone.replace(" ", "").replace("-", "")
@@ -735,7 +735,7 @@ class ConditionalGenerator:
             "@type": "LodgingBusiness",
             "name": hotel_data.get("name", "Hotel"),
             "description": hotel_data.get("description", ""),
-            "url": hotel_data.get("website", ""),
+            "url": hotel_data.get("url") or hotel_data.get("website", ""),
             "telephone": formatted_phone,
             "address": {
                 "@type": "PostalAddress",

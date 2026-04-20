@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-20
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 121
+> **Total fases completadas:** 123
 
 ---
 
@@ -3245,6 +3245,45 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1 - 2026-04-20
+**Descripcion:** Fix Google Maps query — _build_search_queries usa KnownSuffix heuristic para separar 'amaziliahotel' → 'Amazilia Hotel' + ubicacion, NO domain.split()[0] directo. camelCase regex como primer intento, KnownSuffix ('hotel') como fallback para todo-lowercase.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
+
+### Validaciones
+- [x] Tests passing (134)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-04-20
+**Descripcion:** Fix hotel_schema usa datos reales de GBP (telephone, address, geo coords, url) cuando schema.properties esta vacio
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+
+### Validaciones
+- [x] Tests passing (28)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
