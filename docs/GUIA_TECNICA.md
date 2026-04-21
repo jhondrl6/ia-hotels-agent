@@ -1,8 +1,36 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.31.1
-**Última actualización:** 2026-04-20
+**Versión:** v4.33.0
+**Última actualización:** 2026-04-21
 **Proyecto:** IA Hoteles Agent CLI
+
+---
+
+### v4.33.0 - 2026-04-21 — AMH REFACTOR V3-ALT Release
+
+**Resumen:** Fix hotel_schema vacio — datos GBP no llegaban a validated_data. Fallbacks completos chain: schema → cross_validation → gbp → hardcode.
+
+**Módulos afectados:**
+1. `v4_asset_orchestrator.py` — `_extract_validated_fields()` con fallbacks completos para telephone, geo, address, rating, review_count
+2. `geo_enriched_bridge.py` — GEO-BRIDGE quality gate rechaza reemplazos de calidad inferior
+3. `conditional_generator.py` — MINIMUM-DATA-GUARANTEE + Data Rescue flag (penaliza a 0.3 si fallbacks fallan)
+
+**Problema:**
+- hotel_schema generaba `@type: LodgingBusiness` pero con campos vacios
+- Causa raiz: `_extract_validated_fields()` no extraia datos del audit_result correctamente
+- Fallbacks no estaban encadenados
+
+**Solucion:**
+- Telefono: `audit_result.schema.properties → audit_result.validation.phone_web → audit_result.gbp.phone`
+- Geo: `audit_result.gbp.lat/lng` (validado rango Colombia)
+- Address: `audit_result.gbp.formatted_address`
+- Rating: `audit_result.schema.properties.rating → audit_result.gbp.rating`
+- Review count: `audit_result.gbp.reviews`
+- Country: hardcode "CO" como garantia minima
+
+**Backwards Compatibility:** Compatible — fallbacks solo activan cuando datos no existen
+
+**Tests:** 285 tests pass, E2E Certification (hotel_schema con datos reales)
 
 ---
 

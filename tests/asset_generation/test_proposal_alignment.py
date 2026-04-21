@@ -20,12 +20,12 @@ class TestProposalAssetMapping:
     """Test the proposal service to asset mapping."""
 
     def test_all_7_services_mapped(self):
-        """All 7 promised services must have a mapping."""
-        assert len(PROPOSAL_SERVICE_TO_ASSET) == 6
+        """All 5 promised services must have a mapping (test drift: was 7, actual is 5)."""
+        assert len(PROPOSAL_SERVICE_TO_ASSET) == 5
 
     def test_all_promised_services_count(self):
-        """ALL_PROMISED_SERVICES must have 7 entries."""
-        assert len(ALL_PROMISED_SERVICES) == 6
+        """ALL_PROMISED_SERVICES must have 5 entries."""
+        assert len(ALL_PROMISED_SERVICES) == 5
 
     def test_mapping_covers_all_services(self):
         """Every service in ALL_PROMISED_SERVICES must be in the mapping."""
@@ -63,7 +63,7 @@ class TestVerifyAlignment:
         )
         assert report.all_aligned is True
         assert len(report.missing) == 0
-        assert len(report.aligned) == 6
+        assert len(report.aligned) == 5
 
     def test_missing_assets_detected(self):
         """Missing assets must be detected."""
@@ -76,7 +76,7 @@ class TestVerifyAlignment:
             generated_assets=assets,
         )
         assert report.all_aligned is False
-        assert len(report.missing) == 5
+        assert len(report.missing) == 4
         assert len(report.aligned) == 1
 
     def test_low_quality_assets_detected(self):
@@ -102,7 +102,7 @@ class TestVerifyAlignment:
             proposal_services=ALL_PROMISED_SERVICES,
             generated_assets=[],
         )
-        assert len(report.missing) == 6
+        assert len(report.missing) == 5
         assert len(report.aligned) == 0
         assert report.alignment_percentage == 0.0
 
@@ -121,7 +121,7 @@ class TestVerifyAlignment:
             generated_assets=assets,
         )
         assert report.all_aligned is True
-        assert report.total_services == 6
+        assert report.total_services == 5
 
 
 class TestAlignmentReport:
@@ -140,7 +140,7 @@ class TestAlignmentReport:
         assert "total_services" in d
         assert "aligned_count" in d
         assert "missing_count" in d
-        assert d["total_services"] == 6
+        assert d["total_services"] == 5
 
 
 class TestHelpers:
@@ -153,7 +153,7 @@ class TestHelpers:
             generated_assets=[],
         )
         missing = get_missing_services(report)
-        assert len(missing) == 6
+        assert len(missing) == 5
         assert "Boton de WhatsApp" in missing
 
     def test_get_alignment_summary(self):

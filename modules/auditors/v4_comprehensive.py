@@ -228,6 +228,8 @@ class V4AuditResult:
                 "geo_score": self.gbp.geo_score,
                 "geo_score_breakdown": self.gbp.geo_score_breakdown,
                 "confidence": self.gbp.confidence,
+                "lat": self.gbp.lat,
+                "lng": self.gbp.lng,
                 "error_type": self.gbp.error_type,
                 "error_message": self.gbp.error_message,
             },

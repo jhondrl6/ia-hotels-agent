@@ -1,5 +1,40 @@
 # Changelog
 
+## [4.33.0] - 2026-04-21
+
+### Objetivo
+
+Fix hotel_schema vacio: causa raiz = datos GBP no llegaban a validated_data
+
+### Cambios
+
+- `_extract_validated_fields()`: fallbacks completos para telephone (cross_validation), geo (schema.geo), address (gbp.formatted_address), rating (gbp.rating), review_count (gbp.user_ratings_total)
+- GEO-BRIDGE: quality gate que rechaza reemplazos peores (LodgingBusiness -> Hotel sin datos)
+- conditional_generator: garantia de datos minimos + Data Rescue flag (penaliza a 0.3 si fallbacks fallan) + penalizacion de confidence por datos faltantes
+- MINIMUM-DATA-GUARANTEE: country siempre "CO"
+
+### Archivos Nuevos
+
+- `tests/asset_generation/test_datasource_gap.py`
+
+### Archivos Modificados
+
+- `modules/asset_generation/v4_asset_orchestrator.py`
+- `modules/asset_generation/geo_enriched_bridge.py`
+- `modules/asset_generation/conditional_generator.py`
+- `tests/asset_generation/test_geo_enriched_bridge.py`
+- `tests/asset_generation/test_conditional_generator.py`
+- `tests/asset_generation/test_audit_data_pipeline.py` (test drift fix)
+- `tests/asset_generation/test_proposal_alignment.py` (test drift fix)
+
+### Tests
+
+- 285 tests pass in tests/asset_generation/
+- E2E: hotel_schema con datos reales (telephone, address, geo, rating, review_count)
+- Coherence: 0.89, Publication: READY_FOR_PUBLICATION
+
+---
+
 ## [AMAZILIAHOTEL-REFACTOR] - 2026-04-20 — FASE-5: Fix faq_page JSON-LD + monthly_report Blanks
 
 ### Objetivo

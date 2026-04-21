@@ -1,10 +1,18 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.31.1"
-codename: "AMAZILIA-BUGFIX Release Complete"
-release_date: "2026-04-15"
+version: "4.33.0"
+codename: "AMH V3-Alt Datasource Gap Fix"
+release_date: "2026-04-21"
 plan_maestro_version: "v2.6.0"
 
+# v4.33.0 - AMH REFACTOR V3-ALT RELEASE (FASE-RELEASE-4.33.0)
+# - Fix hotel_schema vacio: datos GBP no llegaban a validated_data
+# - _extract_validated_fields(): fallbacks completos para telephone, geo, address, rating, review_count
+# - GEO-BRIDGE: quality gate que rechaza reemplazos de calidad inferior
+# - conditional_generator: garantia de datos minimos + Data Rescue flag
+# - hotel_schema con datos reales: telephone (+57 310 4019049), geo (4.8069, -75.8291), rating (4.5), review_count (202)
+# - E2E Certification: 285 tests pass, Coherence 0.89, Publication READY_FOR_PUBLICATION
+#
 # v4.18.0 - ANALYTICS E2E 100% CERTIFICATION (ANALYTICS-E2E-CERT-01)
 # - Deteccion fallback de low_organic_visibility cuando GA4 no disponible
 # - 12/12 checklist items PASADOS

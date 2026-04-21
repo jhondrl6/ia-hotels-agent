@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-21
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 137
+> **Total fases completadas:** 139
 
 ---
 
@@ -2984,6 +2984,29 @@ _Ninguno_
 ---
 
 
+## FASE-RELEASE-4.33.0 - 2026-04-21
+**Descripcion:** Release v4.33.0 - AMH REFACTOR V3-ALT. Fix hotel_schema vacio: datos GBP no llegaban a validated_data.
+
+### Archivos Nuevos
+- `tests/asset_generation/test_datasource_gap.py`
+
+### Archivos Modificados
+- `modules/asset_generation/v4_asset_orchestrator.py`
+- `modules/asset_generation/geo_enriched_bridge.py`
+- `modules/asset_generation/conditional_generator.py`
+- `tests/asset_generation/test_geo_enriched_bridge.py`
+- `tests/asset_generation/test_conditional_generator.py`
+- `tests/asset_generation/test_audit_data_pipeline.py`
+- `tests/asset_generation/test_proposal_alignment.py`
+
+### Validaciones
+- [x] 285 tests pass in tests/asset_generation/
+- [x] E2E: hotel_schema con datos reales (telephone, address, geo, rating, reviewCount)
+- [x] Coherence 0.89 >= 0.8 threshold
+- [x] Publication READY_FOR_PUBLICATION
+
+---
+
 ## FASE-INTERVENCION - 2026-04-15
 **Descripcion:** Fixes A1(review_data key), A2(whatsapp propagation), A3(hotel name fallback), B1(asset path check), C1(wa.me clean URL)
 
@@ -3565,6 +3588,30 @@ _Ninguno_
 ---
 
 
+## FASE-RELEASE-4.33.0 - 2026-04-21
+**Descripcion:** Release v4.33.0 - AMH REFACTOR V3-ALT. Fix hotel_schema vacio: datos GBP no llegaban a validated_data. 285 tests pass, E2E certifica hotel_schema con datos reales.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `modules/asset_generation/geo_enriched_bridge.py` | Geo Enriched Bridge |
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `tests/asset_generation/test_audit_data_pipeline.py` | Test Audit Data Pipeline |
+| `tests/asset_generation/test_proposal_alignment.py` | Test Proposal Alignment |
+
+### Validaciones
+- [x] Tests passing (285)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.89 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
@@ -3643,3 +3690,7 @@ _Ninguno_
 | FASE-6 (AMAZILIAHOTEL) | 2026-04-20 | 3 | ✅ Complete |
 | FASE-PATCH-1 (AMAZILIAHOTEL) | 2026-04-20 | N/A | ✅ Complete |
 | FASE-PATCH-3 (AMAZILIAHOTEL) | 2026-04-20 | N/A | ✅ Complete |
+| FASE-1-DATASOURCE-GAP (AMAZILIAHOTEL) | 2026-04-21 | N/A | ✅ Complete |
+| FASE-2-BRIDGE-QUALITY-GUARD (AMAZILIAHOTEL) | 2026-04-21 | N/A | ✅ Complete |
+| FASE-3-MINIMUM-DATA-GUARANTEE (AMAZILIAHOTEL) | 2026-04-21 | N/A | ✅ Complete |
+| FASE-RELEASE-4.33.0 (AMAZILIAHOTEL) | 2026-04-21 | N/A | ✅ Complete |

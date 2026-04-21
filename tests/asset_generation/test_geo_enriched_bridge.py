@@ -358,3 +358,106 @@ class TestGetEnrichmentSummary:
             assert summary["hotel_schema"]["has_real_data"] is True
             assert summary["llms_txt"]["exists"] is False
             assert summary["faq_page"]["exists"] is False
+
+
+class TestIsBetterSchema:
+    """Tests for _is_better_schema quality gate function."""
+
+    def test_bridge_rejects_hotel_replacing_lodgingbusiness(self):
+        """
+        Current=LodgingBusiness con datos, replacement=Hotel sin datos -> NO reemplaza.
+        """
+        from modules.asset_generation.geo_enriched_bridge import _is_better_schema
+
+        current = json.dumps({
+            "@type": "LodgingBusiness",
+            "name": "Test Hotel",
+            "telephone": "+57 310 123 4567",
+            "address": {"@type": "PostalAddress", "streetAddress": "Calle 10"}
+        })
+        replacement = json.dumps({
+            "@type": "Hotel",
+            "name": "Test Hotel"
+        })
+
+        result = _is_better_schema(replacement, current)
+        assert result is False
+
+    def test_bridge_accepts_better_schema(self):
+        """
+        Current=Hotel sin datos, replacement=LodgingBusiness con datos -> SI reemplaza.
+        """
+        from modules.asset_generation.geo_enriched_bridge import _is_better_schema
+
+        current = json.dumps({
+            "@type": "Hotel",
+            "name": "Test Hotel"
+        })
+        replacement = json.dumps({
+            "@type": "LodgingBusiness",
+            "name": "Test Hotel",
+            "telephone": "+57 310 123 4567",
+            "address": {"@type": "PostalAddress", "streetAddress": "Calle 10"},
+            "description": "A lovely hotel"
+        })
+
+        result = _is_better_schema(replacement, current)
+        assert result is True
+
+    def test_bridge_rejects_fewer_fields(self):
+        """
+        Current tiene 4 campos criticos, replacement tiene 2 -> NO reemplaza.
+        """
+        from modules.asset_generation.geo_enriched_bridge import _is_better_schema
+
+        current = json.dumps({
+            "@type": "LodgingBusiness",
+            "name": "Test Hotel",
+            "telephone": "+57 310 123 4567",
+            "address": {"@type": "PostalAddress", "streetAddress": "Calle 10"},
+            "description": "A lovely hotel",
+            "geo": {"@type": "GeoCoordinates", "latitude": 4.5, "longitude": -75.0}
+        })
+        replacement = json.dumps({
+            "@type": "LodgingBusiness",
+            "name": "Test Hotel",
+            "description": "A lovely hotel"
+        })
+
+        result = _is_better_schema(replacement, current)
+        assert result is False
+
+    def test_bridge_accepts_equal_fields(self):
+        """
+        Ambos tienen 4 campos -> SI reemplaza.
+        """
+        from modules.asset_generation.geo_enriched_bridge import _is_better_schema
+
+        current = json.dumps({
+            "@type": "Hotel",
+            "name": "Test Hotel",
+            "telephone": "+57 310 123 4567",
+            "description": "A lovely hotel"
+        })
+        replacement = json.dumps({
+            "@type": "LodgingBusiness",
+            "name": "Test Hotel",
+            "telephone": "+57 310 123 4567",
+            "description": "A lovely hotel",
+            "address": {"@type": "PostalAddress", "streetAddress": "Calle 10"}
+        })
+
+        result = _is_better_schema(replacement, current)
+        assert result is True
+
+    def test_bridge_handles_invalid_json(self):
+        """
+        JSON invalido -> retorna original sin crashear.
+        """
+        from modules.asset_generation.geo_enriched_bridge import _is_better_schema
+
+        result = _is_better_schema("not valid json {", '{"@type": "Hotel"}')
+        assert result is False
+
+        result2 = _is_better_schema('{"@type": "Hotel"}', "also invalid {")
+        assert result2 is False

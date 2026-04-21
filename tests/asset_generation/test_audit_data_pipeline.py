@@ -145,8 +145,9 @@ class TestAuditDataPipeline:
         
         # FIX-A3: hotel_data IS NOW PRESENT even when audit_result is None (but empty)
         # This is correct - we always create hotel_data now for the fallback chain to work
+        # MINIMUM-DATA-GUARANTEE: country is always "CO" even when audit_result is None
         assert "hotel_data" in validated_data
-        assert validated_data["hotel_data"] == {}
+        assert validated_data["hotel_data"] == {"country": "CO"}
 
     def test_extract_validated_fields_with_partial_schema(self):
         """

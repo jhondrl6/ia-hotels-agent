@@ -121,6 +121,15 @@ def try_enrich_from_geo_enriched(
             )
             return current_content, current_confidence
 
+        # Quality gate: solo reemplazar si es objetivamente mejor
+        if asset_type == "hotel_schema" and current_content:
+            if not _is_better_schema(enriched_content, current_content):
+                logger.info(
+                    f"[GEO-Bridge] Quality gate REJECTED enrichment for {asset_type}: "
+                    f"replacement is not better than current"
+                )
+                return current_content, current_confidence
+
         # Success: enrichment disponible
         logger.info(
             f"[GEO-Bridge] ✓ Enriching {asset_type}: "
@@ -140,6 +149,55 @@ def try_enrich_from_geo_enriched(
             f"[GEO-Bridge] Error reading {geo_file_path}: {e}"
         )
         return current_content, current_confidence
+
+
+def _is_better_schema(replacement_content: str, current_content: str) -> bool:
+    """
+    Verifica si el schema de reemplazo es objetivamente mejor que el actual.
+
+    Retorna True solo si el reemplazo tiene:
+    1. Al menos la misma cantidad de campos con datos reales
+    2. No pierde campos criticos (telephone, address, geo)
+    3. No cambia @type de LodgingBusiness a Hotel (LodgingBusiness es preferido)
+    """
+    try:
+        replacement = json.loads(replacement_content)
+        current = json.loads(current_content)
+    except (json.JSONDecodeError, TypeError):
+        return False
+
+    # Obtener el objeto principal del @graph
+    rep_obj = replacement.get("@graph", [replacement])[0] if isinstance(replacement.get("@graph"), list) else replacement
+    cur_obj = current.get("@graph", [current])[0] if isinstance(current.get("@graph"), list) else current
+
+    # Verificar: NO cambiar de LodgingBusiness a Hotel
+    cur_type = cur_obj.get("@type", "")
+    rep_type = rep_obj.get("@type", "")
+    if cur_type == "LodgingBusiness" and rep_type == "Hotel":
+        logger.info("[GEO-Bridge] Rejecting: LodgingBusiness -> Hotel is a degradation")
+        return False
+
+    # Contar campos con datos reales
+    critical_fields = ["telephone", "address", "geo", "aggregateRating", "description"]
+    cur_count = sum(1 for f in critical_fields if cur_obj.get(f) is not None and cur_obj.get(f) != "")
+    rep_count = sum(1 for f in critical_fields if rep_obj.get(f) is not None and rep_obj.get(f) != "")
+
+    if rep_count < cur_count:
+        # Log detallado de campos perdidos
+        lost_fields = []
+        for field in critical_fields:
+            if cur_obj.get(field) and not rep_obj.get(field):
+                lost_fields.append(field)
+        if lost_fields:
+            logger.warning(f"[GEO-Bridge] Would lose fields: {lost_fields}")
+        logger.info(f"[GEO-Bridge] Rejecting: {rep_count} fields vs {cur_count} fields current")
+        return False
+
+    logger.info(
+        f"[GEO-Bridge] Quality gate result: ACCEPTED "
+        f"(current: {cur_count} fields, replacement: {rep_count} fields)"
+    )
+    return True
 
 
 def _is_placeholder_content(content: str, asset_type: str) -> bool:
