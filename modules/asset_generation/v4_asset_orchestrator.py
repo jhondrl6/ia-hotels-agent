@@ -719,10 +719,31 @@ class V4AssetOrchestrator:
             validated_data["phone_gbp"] = getattr(audit_result.validation, 'phone_gbp', None)
             # FIX-A2: Propagate phone_web to whatsapp key for whatsapp_button handler
             validated_data["whatsapp"] = validated_data.get("phone_web", "")
+            # FASE-1-DATASOURCE-GAP FIX: Propagar phone_web a hotel_data si gbp.phone fue None
+            if not validated_data["hotel_data"].get("telephone"):
+                phone_web = validated_data.get("phone_web")
+                if phone_web:
+                    validated_data["hotel_data"]["telephone"] = phone_web
+                    validated_data["hotel_data"]["phone"] = phone_web
         if audit_result and audit_result.gbp:
             validated_data["gbp_rating"] = getattr(audit_result.gbp, 'rating', 0.0)
             validated_data["gbp_review_count"] = getattr(audit_result.gbp, 'reviews', 0)
-        
+
+        # MINIMUM-DATA-GUARANTEE: Ensure country exists
+        if not validated_data["hotel_data"].get("country"):
+            validated_data["hotel_data"]["country"] = "CO"
+        if not validated_data["hotel_data"].get("region") and audit_result:
+            url = getattr(audit_result, 'url', '')
+            validated_data["hotel_data"]["region"] = ""
+
+        # DIAGNOSTIC: Log what data is available for asset generation
+        logger.info(f"[V4AssetOrchestrator] validated_data['hotel_data'] completeness:")
+        hd = validated_data.get("hotel_data", {})
+        for key in ["name", "telephone", "phone", "address", "latitude", "longitude", "rating", "review_count", "url", "description"]:
+            val = hd.get(key)
+            has_it = val is not None and val != "" and val != 0
+            logger.info(f"  {key}: {'PRESENT' if has_it else 'MISSING'} ({repr(val)[:50]})")
+
         return validated_data
     
     def _generate_with_coherence_check(

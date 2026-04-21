@@ -417,3 +417,82 @@ class TestConditionalGeneratorHelperMethods:
         parsed = json.loads(content)
         assert parsed["@type"] == "FAQPage"
         assert len(parsed["mainEntity"]) == 1
+
+
+class TestMinimumDataGuarantee:
+    """Tests for FASE-3: MINIMUM-DATA-GUARANTEE."""
+
+    def test_hotel_schema_with_empty_data(self):
+        """Test hotel_data={} genera schema con name='Hotel', country='CO', no crashea."""
+        generator = ConditionalGenerator()
+        json_content = generator._generate_hotel_schema({})
+        parsed = json.loads(json_content)
+        assert parsed["@context"] == "https://schema.org"
+        assert parsed["@type"] == "LodgingBusiness"
+        assert parsed["name"] == "Hotel"
+        assert parsed["address"]["addressCountry"] == "CO"
+        # Sin coordenadas validas → geo no debe existir
+        assert "geo" not in parsed
+
+    def test_completeness_score_full(self):
+        """Test todos los campos presentes → score >= 0.9."""
+        generator = ConditionalGenerator()
+        full_data = {
+            "name": "Hotel Test",
+            "url": "https://hotel.com",
+            "telephone": "+573001234567",
+            "address": "Calle 123",
+            "latitude": 4.6,
+            "longitude": -74.1,
+            "rating": 4.5,
+            "review_count": 100,
+            "description": "Un gran hotel",
+            "amenities": ["wifi", "pool"]
+        }
+        score = generator._validate_hotel_data_completeness(full_data)
+        assert score >= 0.9
+
+    def test_completeness_score_empty(self):
+        """Test solo name y url → score refleja solo url (name='Hotel' es placeholder)."""
+        generator = ConditionalGenerator()
+        minimal_data = {"name": "Hotel", "url": "https://example.com"}
+        score = generator._validate_hotel_data_completeness(minimal_data)
+        # name="Hotel" es excluido (placeholder), url cuenta → 0.2/1.0 = 0.2
+        assert 0.15 <= score <= 0.25
+
+    def test_confidence_penalty_low_completeness(self, tmp_path):
+        """Test hotel_data con solo name → confidence <= 0.5."""
+        generator = ConditionalGenerator(output_dir=str(tmp_path))
+        validated_data = {"hotel_data": {"name": "Solo Name"}}
+        result = generator.generate(
+            asset_type="hotel_schema",
+            validated_data=validated_data,
+            hotel_name="Test Hotel",
+            hotel_id="hotel_123"
+        )
+        # Con solo name (completeness bajo), confidence debe estar penalizado
+        assert result["success"] is True
+        metadata = result.get("metadata", {})
+        confidence = metadata.get("confidence_score", 1.0)
+        assert confidence <= 0.5
+
+    def test_data_rescue_flag_blocks_publication(self, tmp_path):
+        """Test hotel_data con _data_rescue_needed=True → confidence=0.3."""
+        generator = ConditionalGenerator(output_dir=str(tmp_path))
+        validated_data = {
+            "hotel_data": {
+                "_data_rescue_needed": True,
+                "name": "Hotel",
+                "url": ""
+            }
+        }
+        result = generator.generate(
+            asset_type="hotel_schema",
+            validated_data=validated_data,
+            hotel_name="Test Hotel",
+            hotel_id="hotel_123"
+        )
+        assert result["success"] is True
+        metadata = result.get("metadata", {})
+        confidence = metadata.get("confidence_score", 1.0)
+        assert confidence == 0.3

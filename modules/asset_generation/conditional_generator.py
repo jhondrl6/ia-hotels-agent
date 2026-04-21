@@ -26,6 +26,13 @@ from .site_presence_checker import SitePresenceChecker, PresenceStatus
 class ConditionalGenerator:
     """Generates assets conditionally based on preflight check results."""
 
+    # MINIMUM-DATA-GUARANTEE: Campos criticos para un hotel_schema util
+    CRITICAL_FIELDS = {
+        "mandatory": ["name", "url"],      # Sin estos, el schema es basura
+        "important": ["telephone", "address", "latitude", "longitude"],  # Sin estos, es mediocre
+        "nice_to_have": ["rating", "review_count", "description", "amenities"]
+    }
+
     @property
     def GENERATION_STRATEGIES(self) -> dict:
         """
@@ -148,7 +155,19 @@ class ConditionalGenerator:
         filename = self._apply_naming_strategy(asset_type, preflight_report, hotel_id)
         
         confidence_score = self._calculate_confidence_score(preflight_report)
-        
+
+        # MINIMUM-DATA-GUARANTEE: Penalizar confidence si faltan datos criticos en hotel_schema
+        if asset_type == "hotel_schema":
+            hotel_data_for_check = validated_data.get("hotel_data", {})
+            if isinstance(hotel_data_for_check, dict):
+                completeness = self._validate_hotel_data_completeness(hotel_data_for_check)
+                if hotel_data_for_check.get("_data_rescue_needed"):
+                    confidence_score = 0.3
+                elif completeness < 0.3:
+                    confidence_score = min(confidence_score, 0.5)
+                elif completeness < 0.6:
+                    confidence_score = min(confidence_score, 0.7)
+
         metadata = AssetMetadata(
             asset_type=asset_type,
             hotel_id=hotel_id,
@@ -718,6 +737,38 @@ class ConditionalGenerator:
         except (ValueError, TypeError):
             return False
 
+    def _validate_hotel_data_completeness(self, hotel_data: Dict) -> float:
+        """Calcula un score de completitud basado en cuantos campos criticos estan presentes.
+
+        Returns:
+            float: 0.0-1.0 donde 1.0 = todos los campos presentes
+        """
+        score = 0.0
+        total_weight = 0.0
+
+        # Mandatory: 40% del score
+        for field in self.CRITICAL_FIELDS["mandatory"]:
+            total_weight += 0.2
+            val = hotel_data.get(field)
+            if val and val != "" and val != "Hotel":
+                score += 0.2
+
+        # Important: 40% del score
+        for field in self.CRITICAL_FIELDS["important"]:
+            total_weight += 0.1
+            val = hotel_data.get(field)
+            if val is not None and val != "" and val != 0:
+                score += 0.1
+
+        # Nice to have: 20% del score
+        for field in self.CRITICAL_FIELDS["nice_to_have"]:
+            total_weight += 0.05
+            val = hotel_data.get(field)
+            if val is not None and val != "" and (not isinstance(val, (list, dict)) or len(val) > 0):
+                score += 0.05
+
+        return score / total_weight if total_weight > 0 else 0.0
+
     def _generate_hotel_schema(self, hotel_data: Dict) -> str:
         """Generate JSON-LD schema for hotel.
         
@@ -727,6 +778,18 @@ class ConditionalGenerator:
         Returns:
             JSON string with schema markup
         """
+        # MINIMUM-DATA-GUARANTEE: Ensure basic fields exist even when all sources fail
+        hotel_data.setdefault("name", "Hotel")
+        hotel_data.setdefault("url", "")
+        hotel_data.setdefault("country", "CO")
+        if not hotel_data.get("address"):
+            hotel_data["address"] = ""
+            hotel_data.setdefault("country", "CO")
+
+        # DATA RESCUE: Si faltan TODOS los campos importantes, marcar para inyeccion manual
+        if not hotel_data.get("telephone") and not hotel_data.get("address"):
+            hotel_data["_data_rescue_needed"] = True
+
         # FASE-2 FIX: Read phone from both "phone" and "telephone" keys (GBP vs schema)
         raw_phone = hotel_data.get("phone") or hotel_data.get("telephone", "")
         formatted_phone = raw_phone

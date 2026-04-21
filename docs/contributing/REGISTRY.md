@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-20
+> **Ultima actualizacion:** 2026-04-21
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 133
+> **Total fases completadas:** 137
 
 ---
 
@@ -3479,6 +3479,86 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-0-HIPOTESIS - 2026-04-21
+**Descripcion:** Validacion de hipotesis de causa raiz V3 antes de ejecutar fixes. VEREDICTO: HIPOTESIS PARCIALMENTE CONFIRMADA. Causa raiz real es preflight confidence siempre 0.0 (dict vs DataPoint), no solo enricher pobre.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `evidence/amh-refactor-v3-hipotesis/VEREDICTO_FASE_0.md` | Veredicto Fase 0 |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1-DATASOURCE-GAP - 2026-04-21
+**Descripcion:** Diagnosticar y fixear gap de datos GBP en _extract_validated_fields(). Fix: phone_web fallback a hotel_data.telephone + logging diagnostico.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `tests/asset_generation/test_datasource_gap.py` | Test Datasource Gap |
+
+### Validaciones
+- [x] Tests passing (13)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2-BRIDGE-QUALITY-GUARD - 2026-04-21
+**Descripcion:** Quality gate en GEO-BRIDGE: solo reemplaza si el schema es objetivamente mejor. _is_better_schema() compara campos criticos y rechaza degrados de LodgingBusiness a Hotel.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/geo_enriched_bridge.py` | Geo Enriched Bridge |
+| `tests/asset_generation/test_geo_enriched_bridge.py` | Test Geo Enriched Bridge |
+
+### Validaciones
+- [x] Tests passing (5)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3-MINIMUM-DATA-GUARANTEE - 2026-04-21
+**Descripcion:** Garantizar datos minimos en hotel_schema: CRITICAL_FIELDS, completeness scoring, data rescue flag, confidence penalty por datos faltantes
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `tests/asset_generation/test_conditional_generator.py` | Test Conditional Generator |
+
+### Validaciones
+- [x] Tests passing (5)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
