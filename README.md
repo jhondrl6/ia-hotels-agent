@@ -28,7 +28,7 @@
 > *   **Datos Regionales Reales**: ADR y occupancy por región (eje_cafetero, antioquia) activados. Caribe protegido (no usa regional).
 > *   **Ganancia Neta vs Pérdida**: Escenario optimista negativo se presenta como "+$189,000 COP/mes (ganancia neta)" en vez de pérdida confusa.
 > *   **Evidence Tiers**: A (datos reales) → B (scraping) → C (estimación) con disclaimers honestos por tier.
-> *   **2,150 test functions** (2150 en 140 archivos), 0 regresiones.
+> *   **2,186 test functions**, 0 regresiones.
 > *   **NEVER_BLOCK Architecture**: El sistema nunca se bloquea, siempre entrega algo con benchmark regional + disclaimers honestos.
 > *   **Coherence Validator**: Score ≥ 0.8 requerido. Quality Gates de pre-publicación.
 
@@ -317,4 +317,4 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ## Testing
 
-**2,150+ test functions** across unit, integration and E2E suites | **390/390 regression tests** in financial_engine suite | **22 Voice Readiness Proxy tests** | **Motor Financiero Verificable — Opción C (11 fases A→K)**
+**2,186+ test functions** across unit, integration and E2E suites | **390/390 regression tests** in financial_engine suite | **22 Voice Readiness Proxy tests** | **Motor Financiero Verificable — Opción C (11 fases A→K)**
