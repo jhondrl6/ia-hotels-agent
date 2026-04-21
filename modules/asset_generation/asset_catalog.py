@@ -215,8 +215,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         required_confidence=0.4,
         fallback="generate_voice_guide",
         block_on_failure=False,
-        status=AssetStatus.IMPLEMENTED,
-        promised_by=[]  # FASE-5: ELIMINADO de pipeline automatico - sin brecha real
+        status=AssetStatus.DEPRECATED,  # FASE-5: ELIMINADO de pipeline - sin brecha real
+        promised_by=[]
     ),
     # === IAO ASSETS (GAP-IAO-01-02-C) ===
     "ssl_guide": AssetCatalogEntry(

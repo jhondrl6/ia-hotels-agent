@@ -711,7 +711,10 @@ class ConditionalGenerator:
         try:
             lat_f = float(lat) if lat else 0.0
             lng_f = float(lng) if lng else 0.0
-            return 0 <= lat_f <= 13 and -82 <= lng_f <= -66
+            # Rechazar coordenadas (0,0) explícitamente
+            if lat_f == 0.0 and lng_f == 0.0:
+                return False
+            return 0 < lat_f <= 13 and -82 <= lng_f <= -66
         except (ValueError, TypeError):
             return False
 

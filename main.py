@@ -2286,7 +2286,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         # Build hotel_data from available variables
         hotel_data = {}
         if region:
-            hotel_data["region"] = region
+            hotel_data["region"] = region.replace('_', ' ').title()
         # Extract city/state from audit_result if available
         if audit_result and hasattr(audit_result, 'hotel_name'):
             hotel_data["hotel_name"] = audit_result.hotel_name
@@ -2535,7 +2535,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 assessment["propuesta_text"] = f.read()
         except Exception:
             assessment["propuesta_text"] = ""
-    assessment["hotel_data"] = {"region": region} if region else {}
+    assessment["hotel_data"] = {"region": region.replace('_', ' ').title()} if region else {}
 
     # Inject generated_assets for gate 8 (asset_confidence) and gate 9 (proposal_alignment)
     if asset_result and asset_result.generated_assets:
@@ -2735,7 +2735,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         'v4_complete': True,
         'hotel_name': hotel_name,
         'url': args.url,
-        'region': region,
+        'region': region.replace('_', ' ').title() if region else region,
         'hotel_id': state.hotel_id if state else None,
         'phases': {
             'phase_1_hook': {

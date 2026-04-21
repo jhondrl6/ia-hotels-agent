@@ -1058,7 +1058,7 @@ class V4ComprehensiveAuditor:
             headers = {
                 'Content-Type': 'application/json',
                 'X-Goog-Api-Key': api_key,
-                'X-Goog-FieldMask': 'places.id,places.displayName,places.rating,places.userRatingCount,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.photos'
+                'X-Goog-FieldMask': 'places.id,places.displayName,places.rating,places.userRatingCount,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.photos,places.location'
             }
             
             query = f"{hotel_name}, {location}"
@@ -1091,6 +1091,11 @@ class V4ComprehensiveAuditor:
             # Fotos
             photos = len(place.get('photos', [])) if place.get('photos') else 0
             
+            # Extraer lat/lng de la respuesta API
+            location = place.get('location', {}) or {}
+            api_lat = location.get('latitude', 0.0) or 0.0
+            api_lng = location.get('longitude', 0.0) or 0.0
+            
             # Calcular geo_score
             geo_breakdown = self.places.calculate_geo_score(
                 rating=rating,
@@ -1112,8 +1117,8 @@ class V4ComprehensiveAuditor:
                 phone=phone,
                 address=address,
                 city="",
-                lat=0.0,
-                lng=0.0,
+                lat=api_lat,
+                lng=api_lng,
                 geo_score=geo_breakdown.total,
                 geo_score_formula={
                     'rating_score': geo_breakdown.rating_score,
