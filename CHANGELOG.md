@@ -63,6 +63,40 @@ FASE-5: Implementar decisiones de producto (WhatsApp ELIMINAR, Voice ELIMINAR pi
 
 ---
 
+## [AMAZILIAHOTEL-REFACTOR] - 2026-04-20 — FASE-PATCH-1 + FASE-PATCH-3: Places API Lat/Lng + Region Title Case
+
+### Objetivo
+
+PATCH-1: Corregir causa raíz de coordenadas (0,0) en hotel_schema — Places API FieldMask sin `places.location` + PlaceData hardcodeando lat/lng. PATCH-3: Corregir region lowercase en JSON outputs — `.title()` solo existía en proposal_generator, no en serialización de main.py.
+
+### Cambios
+
+**PATCH-1 — Places API FieldMask + Lat/Lng:**
+- **FieldMask**: X-Goog-FieldMask ahora incluye `places.location` (antes faltaba)
+- **PlaceData**: Extrae `latitude`/`longitude` del API response en `v4_comprehensive.py` (~línea 1094), usa `api_lat`/`api_lng` en vez de `0.0` hardcodeados
+- **_is_valid_colombia_coords**: Rechaza explícitamente coordenadas (0,0), cambia `0 <= lat_f` a `0 < lat_f`
+
+**PATCH-3 — Region Title Case en JSON:**
+- main.py ~2738: `'region': region` → `'region': region.replace("_", " ").title() if region else region`
+- main.py ~2538: `{"region": region}` → `{"region": region.replace("_", " ").title()}`
+- main.py ~2289: `hotel_data["region"] = region` → con `.replace("_", " ").title()`
+- `_detect_region_from_url` sigue retornando lowercase (requerido por `feature_flags.py:48`)
+
+### Archivos Modificados
+
+|| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | FieldMask + places.location + lat/lng extraction |
+| `modules/asset_generation/conditional_generator.py` | `_is_valid_colombia_coords` rechaza (0,0) |
+| `main.py` | 3 puntos de serialización con `.replace("_", " ").title()` |
+
+### Tests
+
+- Verificación: py_compile OK, grep confirma `places.location` y `lat_f == 0.0`
+- 0 regresiones
+
+---
+
 ## [AMAZILIAHOTEL-REFACTOR] - 2026-04-19/20 — FASE-3 + FASE-4: Bugs + Open Graph
 
 ### Objetivo

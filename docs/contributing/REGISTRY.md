@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-20
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 126
+> **Total fases completadas:** 132
 
 ---
 
@@ -3349,6 +3349,123 @@ _Ninguno_
 ---
 
 
+## FASE-6 - 2026-04-20
+**Descripcion:** Fix Voice/AEO deprecated — eliminado de template V6 y proposal_asset_alignment. WhatsApp NO se toca (IMPLEMENTED)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+| `modules/asset_generation/proposal_asset_alignment.py` | Proposal Asset Alignment |
+
+### Validaciones
+- [x] Tests passing (19)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-7 - 2026-04-20
+**Descripcion:** Fix capitalización región — .title() en proposal generator para eje_cafetero → Eje Cafetero
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (2)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-6 - 2026-04-20
+**Descripcion:** Fix Voice/AEO deprecated — eliminated from template V6 and proposal_asset_alignment. WhatsApp preserved as IMPLEMENTED
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+| `modules/asset_generation/proposal_asset_alignment.py` | Proposal Asset Alignment |
+
+### Validaciones
+- [x] Tests passing (2)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-7 - 2026-04-20
+**Descripcion:** Fix region capitalization — .title() sanitization for eje_cafetero → Eje Cafetero in proposal generator
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (2)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PATCH-1 (AMAZILIAHOTEL) - 2026-04-20
+**Descripcion:** Fix Places API FieldMask missing places.location + PlaceData hardcoding lat=0.0, lng=0.0. _is_valid_colombia_coords now rejects (0,0) coords.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PATCH-3 (AMAZILIAHOTEL) - 2026-04-20
+**Descripcion:** Fix Region lowercase in JSON serialization outputs (audit_report, v4_complete_report, hotel_data). Applies .title() at 3 output points in main.py while keeping internal region variable lowercase.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
@@ -3425,3 +3542,5 @@ _Ninguno_
 | FASE-4 (AMAZILIAHOTEL) | 2026-04-19 | 2 | ✅ Complete |
 | FASE-5 (AMAZILIAHOTEL) | 2026-04-20 | 2 | ✅ Complete |
 | FASE-6 (AMAZILIAHOTEL) | 2026-04-20 | 3 | ✅ Complete |
+| FASE-PATCH-1 (AMAZILIAHOTEL) | 2026-04-20 | N/A | ✅ Complete |
+| FASE-PATCH-3 (AMAZILIAHOTEL) | 2026-04-20 | N/A | ✅ Complete |

@@ -29,6 +29,36 @@
 
 ---
 
+### PATCH-1 (AMAZILIAHOTEL) - 2026-04-20 — Places API FieldMask + Lat/Lng Extraction
+
+**Módulos afectados:**
+- `modules/auditors/v4_comprehensive.py` — X-Goog-FieldMask ahora incluye `places.location`
+- `modules/asset_generation/conditional_generator.py` — `_is_valid_colombia_coords()` rechaza (0,0)
+
+**Problema/Solución:**
+- Places API FieldMask no incluía `places.location` → API devolvía coordenadas pero el código nunca las recibía
+- PlaceData se creaba con `lat=0.0, lng=0.0` hardcodeados → ahora usa `api_lat`/`api_lng` del response
+- `_is_valid_colombia_coords` aceptaba (0,0) como válido → ahora lo rechaza explícitamente
+
+**Backwards compatible:** Sí. Comportamiento interno sin cambios para casos válidos.
+
+---
+
+### PATCH-3 (AMAZILIAHOTEL) - 2026-04-20 — Region Title Case en JSON Outputs
+
+**Módulo afectado:**
+- `main.py` — 3 puntos de serialización en JSON
+
+**Problema/Solución:**
+- G13: outputs (`audit_report.json`, `v4_complete_report.json`) mostraban `region = "eje_cafetero"` (lowercase)
+- Fix de FASE-7 en `v4_proposal_generator.py` no alcanzaba los puntos de serialización de main.py
+- `_detect_region_from_url` sigue retornando lowercase (requerido por `feature_flags.py:48` matching exacto)
+- .title() aplicado SOLO en 3 puntos de output: dict de reporte (~2738), assessment (~2538), hotel_data (~2289)
+
+**Backwards compatible:** Sí. Valor interno de region sin cambios; solo cambia presentación en JSON.
+
+---
+
 ### AMAZILIAHOTEL-FASE-3 - 2026-04-19 (Corrección Bugs Generadores)
 
 **Resumen:** 4 bugs sistémicos corregidos en generadores independientes de BookingScraper.
