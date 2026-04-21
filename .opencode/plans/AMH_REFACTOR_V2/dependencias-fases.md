@@ -1,67 +1,60 @@
 # Dependencias de Fases — Amaziliahotel Refactor v2
-**Corregido post-forense: dependencias reales vs artificiales**
+**Corregido post-rediagnóstico: persistencias de timing/API/serialización**
 
 ## Diagrama de Dependencias
 
 ```
-FASE-1 ──────────────────────────┐
-  [Google Maps query v4_comprehensive] │
-                                  ▼
-FASE-2 ──────────────────────────►│
-  [hotel_schema datos reales]      │
-                                    │
-FASE-3 ✅ ────────────────────────►│
-  [Content Scrubber → main.py L2282-2348] │
-
-FASE-4 ✅───────────────────────►│
-  [ROI template 24X→dinámico]     │
-
-FASE-5 ✅───────────────────────►│
-  [faq_page JSON-LD + blanks]     │
-
-FASE-6 ✅───────────────────────►│
-  [Voice/AEO deprecated]          │
-
-FASE-7 ✅───────────────────────►│
-  [Region .title() sanitization]  │
-                                  ▼
-FASE-8 ✅◄─────────────────────────┘
-  [E2E validation + docs completed]
+FASE-1 a FASE-8 (Completadas ✅)
+                  │
+                  ▼
+┌─────────────────────────────────────────────────────┐
+│              REDIAGNOSTICO                           │
+│  ROOT_CAUSE_ANALYSIS.md: 3 causas raíz confirmadas  │
+└─────────────────────┬───────────────────────────────┘
+                      │
+          ┌───────────┼───────────┐
+          ▼           ▼           ▼
+    FASE-PATCH-1  FASE-PATCH-2  FASE-PATCH-3
+    [Places API   [Scrubber     [Region
+     FieldMask     timing fix    serialization
+     + lat/lng]    re-scrub]     fix]
+          │           │           │
+          └───────────┼───────────┘
+                      ▼
+              FASE-RELEASE ⏳
+         [E2E real validation
+          post-patches + release]
 ```
 
 ## Matriz de Conflictos de Archivos
 
-| Fase | Archivos Modificados (REAL) | Riesgo Conflicto |
-|------|----------------------------|------------------|
-| FASE-1 | `modules/auditors/v4_comprehensive.py` | Bajo |
-| FASE-2 | `modules/asset_generation/conditional_generator.py`, `modules/asset_generation/v4_asset_orchestrator.py` | Medio |
-| FASE-3 | `modules/postprocessors/content_scrubber.py`, `main.py` L2282-2348 | Medio |
-| FASE-4 | `modules/commercial_documents/templates/propuesta_v6_template.md`, `modules/commercial_documents/v4_proposal_generator.py` | Alto |
-| FASE-5 | `modules/asset_generation/conditional_generator.py`, template `monthly_report` | Medio |
-| FASE-6 | `modules/commercial_documents/templates/propuesta_v6_template.md`, `modules/asset_generation/proposal_asset_alignment.py` | Alto |
-| FASE-7 | `modules/commercial_documents/v4_proposal_generator.py` | Medio |
-| FASE-8 | Scripts de validación, REGISTRY.md, CHANGELOG.md | N/A (documentación) |
+| Fase | Archivos Modificados | Riesgo Conflicto |
+|------|---------------------|------------------|
+| FASE-PATCH-1 | `modules/auditors/v4_comprehensive.py`, `modules/asset_generation/conditional_generator.py` | Bajo |
+| FASE-PATCH-2 | `main.py` (~10 líneas, post-L2476) | Medio |
+| FASE-PATCH-3 | `main.py` (3 líneas, ~L2289/2538/2738) | Medio |
+| FASE-RELEASE | Scripts de validación, docs | N/A |
 
-## Conflictos Potenciales entre Fases
+**Conflicto PATCH-2 + PATCH-3**: Ambos tocan `main.py` pero en líneas distintas (PATCH-2 ~L2476, PATCH-3 ~L2289/2538/2738). Sin conflicto directo, pero ejecutar SECUENCIALMENTE (no paralelo) para evitar merge issues.
 
-| Par | Archivo compartido | Acción |
-|-----|-------------------|--------|
-| FASE-2 + FASE-5 | `conditional_generator.py` | Distintos métodos (_generate_hotel_schema vs _generate_faq_page). Sin conflicto. |
-| FASE-4 + FASE-6 + FASE-7 | `v4_proposal_generator.py` + template V6 | Mismo archivo, mismos modificadores. Secuenciar o merge cuidadoso. |
-
-## Dependencias Reales
+## Dependencias
 
 | Fase | Depende de | Por qué |
 |------|-----------|---------|
-| FASE-1 | - | Independiente |
-| FASE-2 | FASE-1 | hotel_schema necesita datos del Places API (geo_score, coords) |
-| FASE-3 | - | Scrubber es dead code, se activa independientemente |
-| FASE-4 | - | Template + cálculo dinámico, no depende de otros fixes |
-| FASE-5 | - | Handler de faq_page es autónomo |
-| FASE-6 | - | Template/alineación de Voice es independiente |
-| FASE-7 | - | Sanitización de region es independiente |
-| FASE-8 | FASE-1 a FASE-7 | Validación final requiere todos los fixes aplicados |
+| FASE-PATCH-1 | FASE-1 a FASE-8 | Fix de persistencia en API layer |
+| FASE-PATCH-2 | FASE-1 a FASE-8 | Fix de timing en main.py |
+| FASE-PATCH-3 | FASE-1 a FASE-8 | Fix de serialización en main.py |
+| FASE-RELEASE | PATCH-1 + PATCH-2 + PATCH-3 | Validación E2E requiere todos los fixes |
 
-**Paralelizables**: FASE-3, FASE-4, FASE-5, FASE-6, FASE-7 pueden ejecutarse en paralelo si se coordina el merge en `v4_proposal_generator.py` y template V6.
+**Paralelizables**: PATCH-1 es independiente de PATCH-2/3 (archivos distintos). PATCH-2 y PATCH-3 NO son paralelizables (ambos tocan main.py).
 
-**Ruta crítica**: FASE-1 → FASE-2 → FASE-8 (3 fases obligatoriamente secuenciales)
+**Secuencia recomendada**: PATCH-1 → PATCH-2 → PATCH-3 → FASE-RELEASE
+
+## Criterios de Avance
+
+| Fase | Criterio de éxito |
+|------|-------------------|
+| FASE-PATCH-1 | FieldMask incluye places.location, PlaceData usa coords del API, _is_valid rechaza (0,0) |
+| FASE-PATCH-2 | ✅ `grep 'Re-scrub proposal' main.py` = 1 match; `postscrubber` en scope post-L2476 |
+| FASE-PATCH-3 | 3 puntos de serialización usan .title(), interna sigue lowercase |
+| FASE-RELEASE | COP COP=0, coords!=0.0, region=Title Case, publication_ready=true |

@@ -1,76 +1,55 @@
 # Checklist de Implementación — Amaziliahotel Refactor v2
-**Corregido post-forense**
+**Rediagnóstico post-RELEASE rechazado 2026-04-20**
 
 ## Resumen
 
-| Fase | Descripción | Estado | Depende de | Archivo Real |
-|------|-------------|--------|------------|--------------|
-| FASE-1 | Fix Google Maps query en v4_comprehensive | ✅ Completada | - | `modules/auditors/v4_comprehensive.py` |
-| FASE-2 | Fix hotel_schema con datos reales | ✅ Completada | FASE-1 | `modules/asset_generation/conditional_generator.py` + `v4_asset_orchestrator.py` |
-| FASE-3 | Activar Content Scrubber | ✅ Completada | - | `modules/postprocessors/content_scrubber.py` + `main.py` L2282-2348 |
-| FASE-4 | Fix ROI — eliminar 24X hardcodeado template V6 | ✅ Completada | - | `templates/propuesta_v6_template.md` + `v4_proposal_generator.py` |
-| FASE-5 | Fix faq_page JSON-LD + monthly_report blanks | ✅ Completada | 2026-04-20 | `conditional_generator.py`, `monthly_report_generator.py` |
-| FASE-6 | Fix Voice/AEO deprecated en propuesta | ✅ Completada | 2026-04-20 | `propuesta_v6_template.md`, `proposal_asset_alignment.py` |
-| FASE-7 | Fix capitalización region → .title() | ✅ Completada | 2026-04-20 | `v4_proposal_generator.py` |
-| FASE-8 | Validación E2E + Documentación | ✅ Completada | 2026-04-20 | Varios |
+| Fase | Descripción | Estado | Archivo Real |
+|------|-------------|--------|--------------|
+| FASE-1 | Fix Google Maps query en v4_comprehensive | ✅ Completada | `modules/auditors/v4_comprehensive.py` |
+| FASE-2 | Fix hotel_schema con datos reales | ✅ Completada | `conditional_generator.py` + `v4_asset_orchestrator.py` |
+| FASE-3 | Activar Content Scrubber | ✅ Completada | `content_scrubber.py` + `main.py` |
+| FASE-4 | Fix ROI — eliminar 24X hardcodeado | ✅ Completada | `propuesta_v6_template.md` + `v4_proposal_generator.py` |
+| FASE-5 | Fix faq_page JSON-LD + monthly_report blanks | ✅ Completada | `conditional_generator.py`, `monthly_report_generator.py` |
+| FASE-6 | Fix Voice/AEO deprecated en propuesta | ✅ Completada | `propuesta_v6_template.md`, `proposal_asset_alignment.py` |
+| FASE-7 | Fix capitalización region → .title() | ✅ Completada | `v4_proposal_generator.py` |
+| FASE-8 | Validación E2E + Documentación | ✅ Completada (sin E2E real) | Varios |
+| FASE-RELEASE | Validación E2E REAL | ❌ RECHAZADO | `v4complete` |
+| FASE-PATCH-1 | Fix Places API FieldMask + lat/lng extraction | ⏳ Pendiente | `v4_comprehensive.py` + `conditional_generator.py` |
+| FASE-PATCH-2 | Fix Scrubber timing — re-scrub post-gen | ✅ Completada (2026-04-20) | `main.py` L2478-2493 |
+| FASE-PATCH-3 | Fix Region lowercase en serialization | ⏳ Pendiente | `main.py` |
+| FASE-RELEASE-2 | Validación E2E FINAL post-patches + release | ⏳ Pendiente | `v4complete` + docs |
 
 ## Estados
 
 - ⏳ Pendiente: No iniciada
 - 🔄 En progreso: Siendo ejecutada
 - ✅ Completada: Verificada y registrada
-- ❌ Bloqueada: Dependencia no cumplida
+- ❌ Bloqueada/Falló: No cumple criterios
 
-## Dependencias Reales (post-forense)
+## Por qué PATCH-1/2/3 (no re-escribir FASE-1 a FASE-7)
 
-```
-FASE-1 ─────► FASE-2 ──────────────────────────────┐
-                                                     │
-FASE-3 ──────────────────────────────────────────────┤
-FASE-4 ──────────────────────────────────────────────┤
-FASE-5 ──────────────────────────────────────────────┤  ──► FASE-8
-FASE-6 ──────────────────────────────────────────────┤
-FASE-7 ──────────────────────────────────────────────┘
-```
+Los fixes originales de FASE-1 a FASE-7 SÍ están en el código (verificados en pre-flight). El problema NO es que no se escribieron, sino que:
 
-**Ruta crítica**: FASE-1 → FASE-2 → FASE-8 (3 fases secuenciales)
-**Paralelizables**: FASE-3, FASE-4, FASE-5, FASE-6, FASE-7 (entre sí, coordinar merge)
+1. **FASE-1/2 escribieron en el módulo equivocado**: _build_search_queries funciona pero el FieldMask no pide `places.location`, así que el API nunca devuelve coords
+2. **FASE-3 importó el scrubber pero el timing es incorrecto**: el scrubber corre antes de que la propuesta exista
+3. **FASE-7 aplicó .title() solo en proposal_generator**: pero el audit_report se genera antes y en otro punto
 
-## Dependencias Detalladas
+Los PATCH corrigen la EJECUCIÓN de los fixes, no re-escriben los fixes.
 
-| Fase | Puede iniciar cuando | Bloqueada por |
-|------|---------------------|---------------|
-| FASE-1 | Siempre | - |
-| FASE-2 | FASE-1 completada | FASE-1 |
-| FASE-3 | Siempre | - |
-| FASE-4 | Siempre | - |
-| FASE-5 | Siempre | - |
-| FASE-6 | Siempre | - |
-| FASE-7 | Siempre | - |
-| FASE-8 | FASE-1 a FASE-7 completadas | Todas |
-
-## Criterios de Avance
+## Criterios de Avance por PATCH
 
 | Fase | Criterio de éxito |
 |------|-------------------|
-| FASE-1 | geo_score > 0, lat/lng != 0.0, query usa nombre parseado |
-| FASE-2 | hotel_schema con tel, addr, geo.lat con datos reales |
-| FASE-3 | ContentScrubber importado en orquestador, COP COP = 0 en ambos docs |
-| FASE-4 | Template V6 sin "24X", propuesta muestra ROI dinámico único |
-| FASE-5 | faq_page.json existe (JSON-LD), monthly_report sin blanks |
-| FASE-6 | Voice/AEO NO en propuesta, WhatsApp SÍ sigue activo |
-| FASE-7 | "eje_cafetero" = 0, "Eje Cafetero" con mayúsculas |
-| FASE-8 | Score >= 80, 4/4 validaciones, docs actualizadas |
+| FASE-PATCH-1 | `grep 'places.location' v4_comprehensive.py` = 1 match; `grep 'lat=0.0' v4_comprehensive.py` = 0 matches; `_is_valid` rechaza (0,0) |
+| FASE-PATCH-2 | `grep 'Re-scrub proposal' main.py` = 1 match; `scrubber` en scope |
+| FASE-PATCH-3 | 3 puntos de serialización con `.title()`; `feature_flags.py` NO modificado |
+| FASE-RELEASE-2 | COP COP=0, coords!=0.0, region=Title Case, publication_ready=true |
 
-## Registro de Ejecución
+## Secuencia de Ejecución
 
-| Fase | Fecha | Sesión | Registrado |
-|------|-------|--------|------------|
-| FASE-1 | 2026-04-20 | 134 tests | ✅ Completada |
-| FASE-2 | 2026-04-20 | 28 tests | ✅ Completada |
-| FASE-3 | 2026-04-20 | 47 tests | ✅ Completada |
-| FASE-4 | 2026-04-20 | 6 tests | ✅ Completada |
-| FASE-5 | 2026-04-20 | 9 tests | ✅ Completada |
-| FASE-6 | 2026-04-20 | 2 tests | ✅ Completada |
-| FASE-7 | 2026-04-20 | 0 (sin cambios código) | ✅ Completada |
-| FASE-8 | 2026-04-20 | 0 (docs) | ✅ Completada |
+```
+PATCH-1 (v4_comprehensive.py + conditional_generator.py)
+    └─→ PATCH-2 (main.py ~L2476)
+            └─→ PATCH-3 (main.py ~L2289/2538/2738)
+                    └─→ FASE-RELEASE-2 (v4complete + docs)
+```

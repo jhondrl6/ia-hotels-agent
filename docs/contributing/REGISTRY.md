@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-20
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 132
+> **Total fases completadas:** 133
 
 ---
 
@@ -3449,6 +3449,25 @@ _Ninguno_
 
 ## FASE-PATCH-3 (AMAZILIAHOTEL) - 2026-04-20
 **Descripcion:** Fix Region lowercase in JSON serialization outputs (audit_report, v4_complete_report, hotel_data). Applies .title() at 3 output points in main.py while keeping internal region variable lowercase.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PATCH-2 - 2026-04-20
+**Descripcion:** Fix Scrubber Timing — Re-scrub proposal post-generación (Persistencia G14). Bloque postscrubber agregado en main.py L2478-2493.
 
 ### Archivos Nuevos
 _Ninguno_

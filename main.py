@@ -2475,6 +2475,23 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             assets_generated=assets_for_quality,
         )
         
+        # FIX-PATCH-2: Re-scrub proposal now that it exists
+        # Creamos scrubber fresco — NO dependemos del del try block (L2307)
+        from modules.postprocessors.content_scrubber import ContentScrubber
+        from pathlib import Path
+        postscrubber = ContentScrubber()
+        if proposal_path and Path(proposal_path).exists():
+            try:
+                with open(proposal_path, 'r', encoding='utf-8') as f:
+                    prop_content = f.read()
+                prop_scrub = postscrubber.scrub(prop_content, hotel_data, "propuesta")
+                if prop_scrub.fix_count > 0:
+                    print(f"   [SCRUB] Proposal (post-gen): {prop_scrub.fix_count} fix(es) applied")
+                    with open(proposal_path, 'w', encoding='utf-8') as f:
+                        f.write(prop_scrub.scrubbed)
+            except Exception as e:
+                print(f"   [WARN] Post-gen scrub failed: {e}")
+        
         # Update proposal_doc with the actual path
         proposal_doc.path = str(proposal_path) if proposal_path else ""
         
