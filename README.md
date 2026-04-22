@@ -21,7 +21,7 @@
 ---
 
 > **🛡️ AGENT PLATFORM STATUS (v4.33.0 - 4 Pilares Alignment + Voice Readiness Proxy)**:
-> *   **4 Pilares Alignment (v4.28.0)**: Diagnóstico → Propuesta → Gap Analyzer → Benchmarks alineados a SEO + GEO + AEO. score_global como métrica principal.
+> *   **4 Pilares Alignment (v4.28.0)**: Diagnóstico → Propuesta → Gap Analyzer → Benchmarks alineados a SEO + GEO + AEO + IAO. score_global como métrica principal.
 > *   **Voice Readiness Proxy (v4.28.0)**: Score de readiness para asistentes de voz basado en PROXY (GBP 30%, Schema 25%, Snippets 25%, Factual 20%). No consulta APIs Siri/Alexa directamente.
 > *   **Motor Financiero Verificable (v4.27.0)**: 11 fases (A→K) en 2 ciclos. Cada COP cuantificado tiene origen trazable, peso proporcional, etiqueta honesta y base verificable.
 > *   **Camino Único**: Eliminado cálculo dual en main.py. Una sola fuente de verdad vía FinancialCalculatorV2 con validación source-aware.
