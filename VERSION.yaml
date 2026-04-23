@@ -1,10 +1,16 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.33.0"
-codename: "AMH V3-Alt Datasource Gap Fix"
-release_date: "2026-04-21"
+version: "4.34.0"
+codename: "FAQ + Open Graph en Propuesta Comercial"
+release_date: "2026-04-23"
 plan_maestro_version: "v2.6.0"
 
+# v4.34.0 - FASE-RELEASE-4.34.0 (2026-04-23)
+# - PROPOSAL_SERVICE_TO_ASSET: 5 → 7 entradas (FAQ + Open Graph)
+# - ASSET_NAMES en pain_solution_mapper.py completados: open_graph, og_tags_guide
+# - propuesta_v6_template.md: tabla principal hardcodeada 5 → 7 filas
+# - 13/13 tests proposal_alignment PASS
+#
 # v4.33.0 - AMH REFACTOR V3-ALT RELEASE (FASE-RELEASE-4.33.0)
 # - Fix hotel_schema vacio: datos GBP no llegaban a validated_data
 # - _extract_validated_fields(): fallbacks completos para telephone, geo, address, rating, review_count

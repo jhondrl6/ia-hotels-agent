@@ -48,6 +48,8 @@ Le proponemos un plan integral donde **nosotros implementamos todo** — usted n
 | **✅ Botón de WhatsApp** | Sus guests reservan con 1 clic desde su web |
 | **✅ Datos Estructurados** | Información que Google y la IA leen automáticamente |
 | **✅ Informe Mensual** | Métricas claras: cuántos lo encontraron, cuántos escribieron |
+| **✅ Página de FAQ** | Sus guests encuentran respuestas sin salir de su web |
+| **✅ Meta Tags Sociales (Open Graph)** | Sus fotos brillan cuando alguien comparte su link en redes |
 
 **No necesita hacer nada técnico. Nosotros implementamos todo.**
 

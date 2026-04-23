@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-21
+> **Ultima actualizacion:** 2026-04-23
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 139
+> **Total fases completadas:** 146
 
 ---
 
@@ -3607,6 +3607,142 @@ _Ninguno_
 - [x] Tests passing (285)
 - [x] Suite NEVER_BLOCK passing
 - [x] Coherence >= 0.8: 0.89 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-DIAG - 2026-04-23
+**Descripcion:** Diagnosticada causa raíz: 3 capas (detección ~20 pains dinámicos → promesa 5 servicios estáticos → presentación tabla hardcodeada). Confirmado: FAQ y Open Graph detectados como brechas pero ausentes en propuesta. ASSET_NAMES carece open_graph/og_tags_guide. Doble tabla documentada.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `Ningún archivo modificado (solo lectura)` | Ningún Archivo Modificado (Solo Lectura) |
+
+### Validaciones
+- [x] Tests passing (No aplica (solo lectura))
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-DIAG - 2026-04-23
+**Descripcion:** Causa raíz confirmada: doble tabla (hardcodeada + dinámica), PROPOSAL_SERVICE_TO_ASSET con 5 servicios, ASSET_NAMES sin open_graph/og_tags_guide. Corrección sintomática.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-FIX - 2026-04-23
+**Descripcion:** 7 servicios en PROPOSAL_SERVICE_TO_ASSET (5→7), ASSET_NAMES con open_graph+og_tags_guide, template con tabla de 7 filas, 13/13 tests pass, 3/4 validaciones.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-DIAG - 2026-04-23
+**Descripcion:** Diagnosticar causa raíz desalineamiento diagnóstico-propuesta
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `N/A (solo lectura)` | A (Solo Lectura) |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-FIX - 2026-04-23
+**Descripcion:** Corregir PROPOSAL_SERVICE_TO_ASSET, ASSET_NAMES y ambas tablas de propuesta
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/proposal_asset_alignment.py` | Proposal Asset Alignment |
+| `modules/commercial_documents/pain_solution_mapper.py` | Pain Solution Mapper |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (13)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-TEST - 2026-04-23
+**Descripcion:** Verificación E2E con Amaziliahotel (reubicada a FASE-RELEASE para costo API)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `N/A (verificación)` | A (Verificación) |
+
+### Validaciones
+- [x] Tests passing (N)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.34.0 - 2026-04-23
+**Descripcion:** Release 4.34.0: FAQ y Open Graph en propuesta comercial
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Version |
+| `CHANGELOG.md` | Changelog |
+| `GUIA_TECNICA.md` | Guia Tecnica |
+| `docs/contributing/REGISTRY.md` | Registry |
+| `AGENTS.md` | Agents |
+| `README.md` | Readme |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
 ---

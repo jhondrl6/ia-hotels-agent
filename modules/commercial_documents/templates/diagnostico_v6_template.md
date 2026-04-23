@@ -50,7 +50,7 @@ ${regional_context}
 ||| Indicador | Su Negocio | Promedio Regional | Estado |
 |||-----------|------------|------------------|--------|
 | **SEO Local** (Para que te ENCUENTREN) | ${seo_score}/100 | ${seo_regional_avg}/100 | ${seo_status} |
-| **Google Maps** (Para que te UBICQUEN) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
+| **GEO** (Para que te UBIQUEN) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
 | **AEO** (Para que te CITEN) | ${aeo_score}/100 | ${aeo_regional_avg}/100 | ${aeo_status} |
 | **IAO** (Para que te RECOMIENDEN) | ${iao_score}/100 | ${iao_regional_avg}/100 | ${iao_status} |
 

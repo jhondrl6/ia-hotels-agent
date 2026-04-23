@@ -296,7 +296,9 @@ class PainSolutionMapper:
         "direct_booking_campaign": "Campaña de Reserva Directa",
         "llms_txt": "Archivo llms.txt",
         "analytics_setup_guide": "Guia de Configuracion GA4",
-        "indirect_traffic_optimization": "Guia de Optimizacion de Trafico Indirecto"
+        "indirect_traffic_optimization": "Guia de Optimizacion de Trafico Indirecto",
+        "open_graph": "Meta Tags Sociales (Open Graph)",
+        "og_tags_guide": "Guía de Open Graph",
     }
     
     def __init__(self):

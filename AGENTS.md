@@ -1,8 +1,8 @@
-<!-- agents_version: 4.33.0 | last_update: 2026-04-21 -->
+<!-- agents_version: 4.34.0 | last_update: 2026-04-23 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.33.0 -- AMH V3-Alt Datasource Gap Fix COMPLETADO**
+> **v4.34.0 -- FAQ + Open Graph en Propuesta Comercial COMPLETADO**
 
 ---
 

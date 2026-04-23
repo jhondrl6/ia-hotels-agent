@@ -1,5 +1,29 @@
 # Changelog
 
+## [4.34.0] - 2026-04-23
+
+### Objetivo
+
+Corregir desalineamiento entre diagnóstico de brechas y propuesta comercial agregando FAQ y Open Graph como servicios.
+
+### Cambios Implementados
+
+- `modules/asset_generation/proposal_asset_alignment.py` - Agregadas 2 entradas a PROPOSAL_SERVICE_TO_ASSET (FAQ, Open Graph)
+- `modules/commercial_documents/pain_solution_mapper.py` - Completados ASSET_NAMES faltantes (`open_graph`, `og_tags_guide`)
+- `modules/commercial_documents/templates/propuesta_v6_template.md` - Actualizada tabla principal a 7 servicios
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/proposal_asset_alignment.py` | Agregado: FAQ y Open Graph |
+| `modules/commercial_documents/pain_solution_mapper.py` | ASSET_NAMES completados |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Tabla principal: 5 → 7 filas |
+
+### Tests
+
+- Tests de proposal_alignment verificados con 7 servicios (13/13 PASS)
+
 ## [4.33.0] - 2026-04-21
 
 ### Objetivo

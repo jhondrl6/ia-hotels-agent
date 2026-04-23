@@ -1,10 +1,31 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.33.0
-**Última actualización:** 2026-04-21
+**Versión:** v4.34.0
+**Última actualización:** 2026-04-23
 **Proyecto:** IA Hoteles Agent CLI
 
 ---
+
+### v4.34.0 - 2026-04-23 — FAQ y Open Graph en Propuesta Comercial
+
+**Resumen:** Corregir desalineamiento entre diagnóstico de brechas y propuesta comercial. FAQ y Open Graph ahora aparecen como servicios en la propuesta.
+
+**Módulos afectados:**
+1. `proposal_asset_alignment.py` — PROPOSAL_SERVICE_TO_ASSET: 5 → 7 entradas
+2. `pain_solution_mapper.py` — ASSET_NAMES completados con `open_graph` y `og_tags_guide`
+3. `propuesta_v6_template.md` — Tabla principal hardcodeada: 5 → 7 filas
+
+**Problema:**
+- La propuesta comercial listaba 5 servicios fijos en tabla principal hardcodeada
+- El diagnóstico detectaba 7 brechas reales (incluyendo FAQ y Open Graph)
+- Cliente pagaba por resolver problemas que la propuesta no mencionaba
+
+**Solución:**
+- Agregadas 2 entradas a PROPOSAL_SERVICE_TO_ASSET: "Página de FAQ" → "faq_page", "Meta Tags Sociales (Open Graph)" → "open_graph"
+- ASSET_NAMES completado: `open_graph` → "Meta Tags Sociales (Open Graph)", `og_tags_guide` → "Guía de Open Graph"
+- Tabla principal del template actualizada de 5 a 7 filas
+
+**Backwards Compatibility:** ✅ Compatible. Solo agrega servicios, no modifica lógica existente.
 
 ### v4.33.0 - 2026-04-21 — AMH REFACTOR V3-ALT Release
 

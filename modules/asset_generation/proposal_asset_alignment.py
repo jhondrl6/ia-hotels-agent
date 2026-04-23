@@ -23,9 +23,11 @@ PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
     "Boton de WhatsApp": "whatsapp_button",
     "Datos Estructurados": "hotel_schema",
     "Informe Mensual": "monthly_report",
+    "Pagina de FAQ": "faq_page",
+    "Meta Tags Sociales (Open Graph)": "open_graph",
 }
 
-# All 5 services that the proposal always promises
+# All 7 services that the proposal always promises (as of v4.34.0: +FAQ, +Open Graph)
 ALL_PROMISED_SERVICES: List[str] = list(PROPOSAL_SERVICE_TO_ASSET.keys())
 
 
