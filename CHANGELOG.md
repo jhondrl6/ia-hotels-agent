@@ -1,5 +1,29 @@
 # Changelog
 
+## [4.35.0] - 2026-04-23
+
+### Objetivo
+
+Propuesta comercial ahora se genera dinámicamente desde los pains detectados, en vez de un diccionario estático de 7 servicios.
+
+### Cambios Implementados
+
+- `modules/commercial_documents/service_catalog.py` - NUEVO: SERVICE_CATALOG con mapeo pain→servicio
+- `modules/commercial_documents/v4_proposal_generator.py` - Refactorizado _generate_asset_quality_table para usar pains detectados
+- `modules/commercial_documents/templates/propuesta_v6_template.md` - Tabla principal ahora dinámica con placeholder ${dynamic_services_table}
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | Propuesta dinámica desde pain detection |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Tabla principal dinámica |
+
+### Tests
+
+- Tests de proposal_alignment verificados (backwards compatible, 13/13 PASS)
+- Tests de proposal_dynamic verificados (14/14 PASS)
+
 ## [4.34.0] - 2026-04-23
 
 ### Objetivo

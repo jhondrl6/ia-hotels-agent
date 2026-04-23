@@ -182,6 +182,31 @@
 
 ## Notas de Cambios
 
+### v4.35.0 - 2026-04-23 — Propuesta Dinámica desde Pain Detection
+
+**Resumen:** La propuesta comercial ahora se genera dinámicamente desde los pains detectados, en vez de un diccionario estático de 7 servicios.
+
+**Problema:** `PROPOSAL_SERVICE_TO_ASSET` tenía 7 entradas fijas. La tabla principal del template estaba hardcodeada. Esto causaba desalineamiento: servicios ofrecidos que el hotel no necesitaba, y pains detectados sin servicio correspondiente.
+
+**Solución:**
+- Creado `SERVICE_CATALOG` en `modules/commercial_documents/service_catalog.py`: catálogo de servicios vendibles con mapeo `pain_id → servicio`
+- Refactorizado `_generate_asset_quality_table()` para iterar sobre `detected_pains` en vez de sobre `PROPOSAL_SERVICE_TO_ASSET`
+- Tabla principal del template ahora dinámica (placeholder `${dynamic_services_table}`)
+
+**Módulos afectados:**
+- `modules/commercial_documents/service_catalog.py` (NUEVO)
+- `modules/commercial_documents/v4_proposal_generator.py`
+- `modules/commercial_documents/templates/propuesta_v6_template.md`
+
+**Backwards Compatibility:** Compatible. `PROPOSAL_SERVICE_TO_ASSET` se mantiene para backwards compatibility de gates de publicación.
+
+**Tests:**
+- `test_proposal_dynamic.py`: 14/14 PASS
+- `test_proposal_alignment.py`: 13/13 PASS
+- `run_all_validations.py --quick`: 4/4 PASS
+
+---
+
 ### SPARK-FIX - 2026-04-18 (Reparación comando spark)
 
 **Resumen:** Comando `spark` reparado. Fallaba con `TypeError: 'NoneType' object is not callable` porque dependía de `modules.orchestrator.pipeline` (AnalysisPipeline/PipelineOptions) que nunca existió en el repositorio.

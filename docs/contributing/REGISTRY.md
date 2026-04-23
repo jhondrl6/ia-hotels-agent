@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-23
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 146
+> **Total fases completadas:** 150
 
 ---
 
@@ -3612,40 +3612,8 @@ _Ninguno_
 ---
 
 
-## FASE-CAUSAL-DIAG - 2026-04-23
-**Descripcion:** Diagnosticada causa raíz: 3 capas (detección ~20 pains dinámicos → promesa 5 servicios estáticos → presentación tabla hardcodeada). Confirmado: FAQ y Open Graph detectados como brechas pero ausentes en propuesta. ASSET_NAMES carece open_graph/og_tags_guide. Doble tabla documentada.
-
-### Archivos Nuevos
-_Ninguno_
-
-### Archivos Modificados
-| Archivo | Cambio |
-|---------|--------|
-| `Ningún archivo modificado (solo lectura)` | Ningún Archivo Modificado (Solo Lectura) |
-
-### Validaciones
-- [x] Tests passing (No aplica (solo lectura))
-- [x] Suite NEVER_BLOCK passing
-- [x] Capability contract verificado
-
----
 
 
-## FASE-CAUSAL-DIAG - 2026-04-23
-**Descripcion:** Causa raíz confirmada: doble tabla (hardcodeada + dinámica), PROPOSAL_SERVICE_TO_ASSET con 5 servicios, ASSET_NAMES sin open_graph/og_tags_guide. Corrección sintomática.
-
-### Archivos Nuevos
-_Ninguno_
-
-### Archivos Modificados
-_Ninguno_
-
-### Validaciones
-- [x] Tests passing
-- [x] Suite NEVER_BLOCK passing
-- [x] Capability contract verificado
-
----
 
 
 ## FASE-CAUSAL-FIX - 2026-04-23
@@ -3665,23 +3633,6 @@ _Ninguno_
 ---
 
 
-## FASE-CAUSAL-DIAG - 2026-04-23
-**Descripcion:** Diagnosticar causa raíz desalineamiento diagnóstico-propuesta
-
-### Archivos Nuevos
-_Ninguno_
-
-### Archivos Modificados
-| Archivo | Cambio |
-|---------|--------|
-| `N/A (solo lectura)` | A (Solo Lectura) |
-
-### Validaciones
-- [x] Tests passing (0)
-- [x] Suite NEVER_BLOCK passing
-- [x] Capability contract verificado
-
----
 
 
 ## FASE-CAUSAL-FIX - 2026-04-23
@@ -3726,6 +3677,150 @@ _Ninguno_
 
 ## FASE-RELEASE-4.34.0 - 2026-04-23
 **Descripcion:** Release 4.34.0: FAQ y Open Graph en propuesta comercial
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Version |
+| `CHANGELOG.md` | Changelog |
+| `GUIA_TECNICA.md` | Guia Tecnica |
+| `docs/contributing/REGISTRY.md` | Registry |
+| `AGENTS.md` | Agents |
+| `README.md` | Readme |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-DIAG - 2026-04-23
+**Descripcion:** Diagnosticar mapeo pain→servicio. 25 pains detectables, 7 servicios estaticos, 13 gaps. Duplicacion metodo _generate_asset_quality_table en v4_proposal_generator.py.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `NINGUNO (solo lectura)` | Ninguno (Solo Lectura) |
+
+### Validaciones
+- [x] Tests passing (NINGUNO (fase diagnostica))
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-REFACTOR - 2026-04-23
+**Descripcion:** SERVICE_CATALOG (7 entries) + refactorizacion _generate_asset_quality_table con pain detection dinamico + eliminacion de duplicacion + template dinamico con placeholder
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/service_catalog.py (nuevo)` | Service Catalog |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (test_proposal_alignment.py 13/13 PASS, run_all_validations.py 4/4 PASS)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.0 (FALLO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-VALIDATE - 2026-04-23
+**Descripcion:** Verificación completada: 14/14 test_proposal_dynamic.py PASS, 13/13 alignment PASS, 4/4 validations PASS. Propuesta dinámica verificada: solo servicios para pains detectados.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-DIAG - 2026-04-23
+**Descripcion:** Diagnosticar mapeo pain→servicio y documentar gap analysis
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `N/A (solo lectura)` | A (Solo Lectura) |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-REFACTOR - 2026-04-23
+**Descripcion:** Refactorizar generador: SERVICE_CATALOG + propuesta dinámica desde pains
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/commercial_documents/service_catalog.py` | NUEVO | Service Catalog |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (N)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CAUSAL-VALIDATE - 2026-04-23
+**Descripcion:** Verificación unitaria: propuesta dinámica refleja pains detectados (sin E2E v4complete)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/commercial_documents/test_proposal_dynamic.py` | NUEVO | Test Proposal Dynamic |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `N/A (verificación)` | A (Verificación) |
+
+### Validaciones
+- [x] Tests passing (N)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.35.0 - 2026-04-23
+**Descripcion:** Release 4.35.0: Propuesta dinámica desde pain detection
 
 ### Archivos Nuevos
 _Ninguno_

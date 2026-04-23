@@ -1,10 +1,17 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.34.0"
-codename: "FAQ + Open Graph en Propuesta Comercial"
+version: "4.35.0"
+codename: "Propuesta Dinamica desde Pain Detection"
 release_date: "2026-04-23"
 plan_maestro_version: "v2.6.0"
 
+# v4.35.0 - FASE-RELEASE-4.35.0 (2026-04-23)
+# - SERVICE_CATALOG: nuevo catalogo con mapeo pain_id → servicio
+# - _generate_asset_quality_table: refactorizado para iterar sobre detected_pains
+# - propuesta_v6_template.md: tabla principal dinamica con ${dynamic_services_table}
+# - Backwards compatible: PROPOSAL_SERVICE_TO_ASSET mantenido para gates
+# - 14/14 test_proposal_dynamic.py PASS, 13/13 alignment PASS, 4/4 validations PASS
+#
 # v4.34.0 - FASE-RELEASE-4.34.0 (2026-04-23)
 # - PROPOSAL_SERVICE_TO_ASSET: 5 → 7 entradas (FAQ + Open Graph)
 # - ASSET_NAMES en pain_solution_mapper.py completados: open_graph, og_tags_guide

@@ -1,8 +1,8 @@
-<!-- agents_version: 4.34.0 | last_update: 2026-04-23 -->
+<!-- agents_version: 4.35.0 | last_update: 2026-04-23 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.34.0 -- FAQ + Open Graph en Propuesta Comercial COMPLETADO**
+> **v4.35.0 -- Propuesta Dinamica desde Pain Detection COMPLETADO**
 
 ---
 

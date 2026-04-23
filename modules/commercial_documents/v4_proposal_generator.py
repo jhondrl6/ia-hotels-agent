@@ -21,6 +21,7 @@ from .data_structures import (
 )
 from modules.financial_engine.pricing_resolution_wrapper import PricingResolutionResult
 from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
+from modules.commercial_documents.service_catalog import SERVICE_CATALOG
 
 
 class V4ProposalGenerator:
@@ -585,8 +586,10 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         # ANALYTICS-02: Analytics section in proposal
         'analytics_section': self._inject_analytics(analytics_data),
 
-        # FASE-CONFIDENCE-DISCLOSURE: Tabla de calidad de assets
-        'asset_quality_table': self._generate_asset_quality_table(assets_generated),
+        # FASE-CAUSAL-REFACTOR: Extract pain_ids BEFORE data dict for dynamic tables
+        'pain_ids': getattr(diagnostic_summary, 'pain_ids', None) or [],
+        'dynamic_services_table': self._generate_dynamic_services_table(detected_pain_ids=getattr(diagnostic_summary, 'pain_ids', None) or []),
+        'asset_quality_table': self._generate_asset_quality_table(assets_generated, detected_pain_ids=getattr(diagnostic_summary, 'pain_ids', None) or []),
 
         # FIX-OPENROUTER-C: IAO cost transparency (stub - activates when API keys available)
         'openrouter_queries': '—',
@@ -651,16 +654,62 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
 ---
 """
  
-    def _generate_asset_quality_table(self, assets_generated: Optional[List[Dict[str, Any]]]) -> str:
+
+    def _generate_dynamic_services_table(
+        self,
+        detected_pain_ids: Optional[List[str]] = None,
+    ) -> str:
+        """Genera tabla principal de servicios basada en pains detectados.
+
+        Esta es la tabla "principal" de la propuesta — la que muestra qué servicios
+        se incluyen en el kit. Es DINÁMICA: solo incluye servicios cuyos pains
+        fueron detectados.
+
+        Args:
+            detected_pain_ids: Lista de pain IDs detectados (de PainSolutionMapper.detect_pains()).
+                Si está disponible, genera tabla DINÁMICA (solo servicios con pain detectado).
+                Si es None/empty, muestra mensaje indicando que se necesitan datos.
+
+        Returns:
+            String markdown con la tabla de servicios, incluyendo headers.
+        """
+        if detected_pain_ids:
+            # Dynamic: filter SERVICE_CATALOG by detected pains
+            services = [
+                entry for entry in SERVICE_CATALOG.values()
+                if entry.pain_id in detected_pain_ids
+            ]
+        else:
+            # No pains detected — show empty (awaiting data)
+            return ""
+
+        if not services:
+            return ""
+
+        # Build table with header and description
+        rows = ["| Servicio | Qué obtiene |", "|----------|-------------|"]
+        for entry in services:
+            rows.append(f"| **{entry.service_name}** | {entry.description} |")
+
+        return "\n".join(rows)
+
+    def _generate_asset_quality_table(
+        self,
+        assets_generated: Optional[List[Dict[str, Any]]],
+        detected_pain_ids: Optional[List[str]] = None,
+    ) -> str:
         """Genera tabla de calidad de assets para la propuesta.
-        
+
         Mapea cada servicio de la propuesta a su asset generado y muestra
         el nivel de preparacion basado en confidence_score.
-        
+
         Args:
             assets_generated: Lista de assets generados (cada uno con 'asset_type' y 'confidence_score').
                 Si es None, muestra 'Pendiente' para todos los servicios.
-        
+            detected_pain_ids: Lista de pain IDs detectados (de PainSolutionMapper.detect_pains).
+                Si está disponible, genera tabla DINÁMICA (solo servicios con pain detectado).
+                Si es None/empty, usa PROPOSAL_SERVICE_TO_ASSET (backwards compat).
+
         Returns:
             String markdown con la tabla de calidad.
         """
@@ -672,33 +721,51 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 confidence = asset.get("confidence_score", 0) if isinstance(asset, dict) else getattr(asset, "confidence_score", 0)
                 if asset_type:
                     asset_lookup[asset_type] = confidence
-        
+
+        # DYNAMIC mode: use SERVICE_CATALOG filtered by detected pains
+        if detected_pain_ids:
+            # Filter SERVICE_CATALOG to only entries whose pain_id is detected
+            services_to_show = [
+                entry for entry in SERVICE_CATALOG.values()
+                if entry.pain_id in detected_pain_ids
+            ]
+        else:
+            # STATIC/backwards-compat mode: iterate over PROPOSAL_SERVICE_TO_ASSET
+            # (same 7 entries as before)
+            services_to_show = None  # signals to use static iteration below
+
         # Table header
         rows = ["| Entregable | Nivel | Que significa |", "|------------|-------|---------------|"]
-        
-        for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
-            if asset_type in asset_lookup:
-                confidence = asset_lookup[asset_type]
-                if confidence >= 0.7:
-                    nivel = "✅ Completo"
-                    significado = "Listo para implementar"
-                elif confidence >= 0.4:
-                    nivel = "⚠️ Requiere datos"
-                    significado = "Necesitamos informacion adicional"
-                else:
-                    nivel = "🔧 En desarrollo"
-                    significado = "En proceso de mejora"
-            elif assets_generated is None:
-                nivel = "⏳ Pendiente"
-                significado = "Se genera al activar el servicio"
-            else:
-                nivel = "❌ No generado"
-                significado = "No se pudo generar - revisaremos"
-            
-            rows.append(f"| {service_name} | {nivel} | {significado} |")
-        
+
+        if services_to_show is not None:
+            # Dynamic: build from detected pains
+            for entry in services_to_show:
+                confidence = asset_lookup.get(entry.asset_type, None)
+                nivel, significado = self._confidence_to_nivel_significado(confidence, assets_generated)
+                rows.append(f"| {entry.service_name} | {nivel} | {significado} |")
+        else:
+            # Static/backwards-compat: iterate over PROPOSAL_SERVICE_TO_ASSET
+            for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
+                confidence = asset_lookup.get(asset_type, None)
+                nivel, significado = self._confidence_to_nivel_significado(confidence, assets_generated)
+                rows.append(f"| {service_name} | {nivel} | {significado} |")
+
         return "\n".join(rows)
-    
+
+    def _confidence_to_nivel_significado(self, confidence: Optional[float], assets_generated: Optional[List]) -> tuple:
+        """Convert confidence score to nivel + significado tuple."""
+        if confidence is not None:
+            if confidence >= 0.7:
+                return ("✅ Completo", "Listo para implementar")
+            elif confidence >= 0.4:
+                return ("⚠️ Requiere datos", "Necesitamos informacion adicional")
+            else:
+                return ("🔧 En desarrollo", "En proceso de mejora")
+        elif assets_generated is None:
+            return ("⏳ Pendiente", "Se genera al activar el servicio")
+        else:
+            return ("❌ No generado", "No se pudo generar - revisaremos")
+
     def _render_template(self, template_content: str, data: Dict[str, str]) -> str:
         """Render the template with data."""
         template = Template(template_content)
@@ -1081,51 +1148,4 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
 """
         return section
 
-    def _generate_asset_quality_table(self, assets_generated: Optional[List[Dict[str, Any]]]) -> str:
-        """Genera tabla de calidad de assets para la propuesta.
-        
-        Mapea cada servicio de la propuesta a su asset generado y muestra
-        el nivel de preparacion basado en confidence_score.
-        
-        Args:
-            assets_generated: Lista de assets generados (cada uno con 'asset_type' y 'confidence_score').
-                Si es None, muestra 'Pendiente' para todos los servicios.
-        
-        Returns:
-            String markdown con la tabla de calidad.
-        """
-        # Build lookup: asset_type -> confidence_score
-        asset_lookup = {}
-        if assets_generated:
-            for asset in assets_generated:
-                asset_type = asset.get("asset_type", "") if isinstance(asset, dict) else getattr(asset, "asset_type", "")
-                confidence = asset.get("confidence_score", 0) if isinstance(asset, dict) else getattr(asset, "confidence_score", 0)
-                if asset_type:
-                    asset_lookup[asset_type] = confidence
-        
-        # Table header
-        rows = ["| Entregable | Nivel | Que significa |", "|------------|-------|---------------|"]
-        
-        for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
-            if asset_type in asset_lookup:
-                confidence = asset_lookup[asset_type]
-                if confidence >= 0.7:
-                    nivel = "✅ Completo"
-                    significado = "Listo para implementar"
-                elif confidence >= 0.4:
-                    nivel = "⚠️ Requiere datos"
-                    significado = "Necesitamos informacion adicional"
-                else:
-                    nivel = "🔧 En desarrollo"
-                    significado = "En proceso de mejora"
-            elif assets_generated is None:
-                nivel = "⏳ Pendiente"
-                significado = "Se genera al activar el servicio"
-            else:
-                nivel = "❌ No generado"
-                significado = "No se pudo generar - revisaremos"
-            
-            rows.append(f"| {service_name} | {nivel} | {significado} |")
-        
-        return "\n".join(rows)
 

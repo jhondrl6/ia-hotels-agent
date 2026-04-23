@@ -41,15 +41,7 @@ Le proponemos un plan integral donde **nosotros implementamos todo** — usted n
 
 **Esto es lo que hacemos por usted:**
 
-| Servicio | Qué obtiene |
-|----------|-------------|
-| **✅ Google Maps Optimizado** (GEO) | Aparece primero cuando alguien busca "hotel cerca de..." en ${hotel_region} |
-| **✅ SEO Local** (SEO) | Para aparecer en las primeras posiciones de Google tradicional |
-| **✅ Botón de WhatsApp** | Sus guests reservan con 1 clic desde su web |
-| **✅ Datos Estructurados** | Información que Google y la IA leen automáticamente |
-| **✅ Informe Mensual** | Métricas claras: cuántos lo encontraron, cuántos escribieron |
-| **✅ Página de FAQ** | Sus guests encuentran respuestas sin salir de su web |
-| **✅ Meta Tags Sociales (Open Graph)** | Sus fotos brillan cuando alguien comparte su link en redes |
+${dynamic_services_table}
 
 **No necesita hacer nada técnico. Nosotros implementamos todo.**
 
