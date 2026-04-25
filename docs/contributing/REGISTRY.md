@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
 > **Ultima actualizacion:** 2026-04-25
-> **Version actual:** v4.30.0
-> **Total fases completadas:** 159
+> **Version actual:** v4.35.1
+> **Total fases completadas:** 161
 
 ---
 
@@ -4017,11 +4017,27 @@ _Ninguno_
 ---
 
 
+## FASE-TRAZABILIDAD-DOCS - 2026-04-25
+**Descripcion:** Correcciones documentales en bloque "Calidad Garantizada" — 9 Publication Gates (no 6), comando v4_coherence_validator inexistente removido, Coherence Score como rango variable, docstrings sincronizados con la realidad del codigo. CHANGELOG [4.35.1], GUIA_TECNICA, checklist actualizados. Tests: 0 (correccion puramente documental).
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `README.md` | Conteo gates: 6 → 9 + descripcion advisory |
+| `.agents/workflows/v4_complete.md` | Ghost command v4_coherence_validator removido |
+| `modules/quality_gates/publication_gates.py` | Docstring 5 → 9 gates |
+| `AGENTS.md` | Coherence Score como rango variable |
+
+### Validaciones
+- [x] run_all_validations.py --quick (4/4)
+- [x] doctor.py --status sin errores
+- [x] CHANGELOG.md [4.35.1] actualizado
+- [x] GUIA_TECNICA.md con nota tecnica
+
+---
+
 ## FASE-TRAZABILIDAD-RAIZ - 2026-04-25
 **Descripcion:** Unificacion detectores + cableado 9 gates + DEP-01(SEO CHECKLIST_SEO) + DEP-02(IAO=ia_readiness) + DEP-03(brechas delegan en detect_pains) + RES-01(ia_metrics_table V6) + RES-02(positive_findings) + RES-03(geo_flow ref) + BUG-01(crawler scale 0.5) + 52 tests passing
-
-### Archivos Nuevos
-_Ninguno_
 
 ### Archivos Modificados
 | Archivo | Cambio |

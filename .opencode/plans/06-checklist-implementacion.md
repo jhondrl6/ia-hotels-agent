@@ -2,7 +2,7 @@
 
 **Proyecto**: Corrección Trazabilidad "Calidad Garantizada" + Reconección Módulos→Diagnóstico
 **Inicio**: 2026-04-24
-**Actualizado**: 2026-04-25 (auditoría profundizada: 18 hallazgos)
+**Actualizado**: 2026-04-25 (RAIZ completada — 81a0391 + e7157e2)
 **Total fases**: 3
 **Contextos**: `.opencode/context/auditoria_calidad_garantizada_20260424.md` + auditoría profundizada sesión 2026-04-25
 **Decisiones**: `00-decisiones-deprecacion.md`
@@ -14,7 +14,7 @@
 | Fase | Estado | Sesión | Completada |
 |------|--------|--------|------------|
 | FASE-TRAZABILIDAD-DOCS | ✅ Completada | 2026-04-25 | ✅ 2026-04-25 |
-| FASE-TRAZABILIDAD-RAIZ | ⬜ Pendiente | Nueva sesión requerida | ❌ |
+| FASE-TRAZABILIDAD-RAIZ | ✅ Completada | 2026-04-25 | ✅ 2026-04-25 (commits 81a0391, e7157e2) |
 | FASE-TRAZABILIDAD-VALIDATE | ⬜ Pendiente | Nueva sesión requerida | ❌ |
 
 ---
@@ -39,85 +39,85 @@
 ## FASE-TRAZABILIDAD-RAIZ: Unificación + Cableado + Reconección + Deprecaciones
 
 ### T0: Unificación de detectores (DEP-03)
-- [ ] `_identify_brechas()` refactorizada para delegar en `detect_pains()`
-- [ ] Umbrales duplicados ELIMINADOS (L2027 geo<60, L2061 mobile<70, L2116 citability<30)
-- [ ] Umbrales ahora vienen de `detect_pains()`: geo<70, mobile<50, citability<50
-- [ ] Nuevos pain_ids en brechas: `no_org_schema`, `no_analytics_configured`, `ai_crawler_blocked`, `low_ia_readiness`
-- [ ] Traducción Pain→Brecha con narrativa comercial para cada nuevo pain_id
-- [ ] `detect_pains()` ahora detecta `no_og_tags` (bidireccional)
-- [ ] Todo pain_id de brechas existe en `PAIN_SOLUTION_MAP`
-- [ ] Todo pain_id de brechas tiene `ServiceEntry` en `SERVICE_CATALOG`
+- [x] `_identify_brechas()` refactorizada para delegar en `detect_pains()`
+- [x] Umbrales duplicados ELIMINADOS (L2027 geo<60, L2061 mobile<70, L2116 citability<30)
+- [x] Umbrales ahora vienen de `detect_pains()`: geo<70, mobile<50, citability<50
+- [x] Nuevos pain_ids en brechas: `no_org_schema`, `no_analytics_configured`, `ai_crawler_blocked`, `low_ia_readiness`
+- [x] Traducción Pain→Brecha con narrativa comercial para cada nuevo pain_id
+- [x] `detect_pains()` ahora detecta `no_og_tags` (bidireccional)
+- [x] Todo pain_id de brechas existe en `PAIN_SOLUTION_MAP`
+- [x] Todo pain_id de brechas tiene `ServiceEntry` en `SERVICE_CATALOG`
 
 ### T1-T2: Cableado Publication Gates
-- [ ] Leer métodos `_*_gate()` en publication_gates.py (9 gates)
-- [ ] Construir assessment dict en main.py con TODAS las keys requeridas
-- [ ] Insertar `PublicationGatesOrchestrator.run_all()` en main.py v4complete
-- [ ] Generar `gate_report.json` en output_dir
-- [ ] Mostrar resumen de gates en consola
+- [x] Leer métodos `_*_gate()` en publication_gates.py (9 gates)
+- [x] Construir assessment dict en main.py con TODAS las keys requeridas
+- [x] Insertar `PublicationGatesOrchestrator.run_all()` en main.py v4complete
+- [x] Generar `gate_report.json` en output_dir
+- [x] Mostrar resumen de gates en consola
 
 ### T1.1: Fix financial_validity gate (CRÍTICA #1 + BUG-02)
-- [ ] Modificar `_financial_validity_gate()` para pasar `sources` a NoDefaultsValidator
-- [ ] Agregar `financial_sources` al assessment dict en main.py
-- [ ] WARNING si mayoría (>50%) default/hardcode
-- [ ] BLOCKED si TODOS son default
-- [ ] 2 nuevos tests para financial source validation
+- [x] Modificar `_financial_validity_gate()` para pasar `sources` a NoDefaultsValidator
+- [x] Agregar `financial_sources` al assessment dict en main.py
+- [x] WARNING si mayoría (>50%) default/hardcode
+- [x] BLOCKED si TODOS son default
+- [x] 2 nuevos tests para financial source validation
 
 ### T3-T4: Trazabilidad en diagnóstico
-- [ ] Agregar `gate_results` param a `generate()`
-- [ ] Template: `${GATE_VALIDATION_SECTION}` con tabla de 9 gates
-- [ ] Template: trazabilidad brechas→servicios (pain_id → ServiceEntry → asset)
-- [ ] Pasar `gate_results` desde main.py
+- [x] Agregar `gate_results` param a `generate()`
+- [x] Template: `${GATE_VALIDATION_SECTION}` con tabla de 9 gates
+- [x] Template: trazabilidad brechas→servicios (pain_id → ServiceEntry → asset)
+- [x] Pasar `gate_results` desde main.py
 
 ### T4.1: Unificar SEO (DEP-01)
-- [ ] `_calculate_web_score()` ahora es wrapper de `calcular_score_seo()`
-- [ ] Algoritmo custom antiguo (L1375-1393) ELIMINADO
-- [ ] SEO mostrado al cliente = SEO usado en score_global (sin dualidad)
+- [x] `_calculate_web_score()` ahora es wrapper de `calcular_score_seo()`
+- [x] Algoritmo custom antiguo (L1375-1393) ELIMINADO
+- [x] SEO mostrado al cliente = SEO usado en score_global (sin dualidad)
 
 ### T4.2: Unificar IAO (DEP-02)
-- [ ] IAO usa `ia_readiness.overall_score` como fuente primaria
-- [ ] CHECKLIST_IAO es solo fallback (cuando ia_readiness no disponible)
-- [ ] `_calculate_iao_score_from_audit()` refactorizada
+- [x] IAO usa `ia_readiness.overall_score` como fuente primaria
+- [x] CHECKLIST_IAO es solo fallback (cuando ia_readiness no disponible)
+- [x] `_calculate_iao_score_from_audit()` refactorizada
 
 ### T7: Restaurar IA metrics en V6 (D11, D13, RES-01)
-- [ ] `${ia_metrics_table}` insertado en template V6
-- [ ] `_build_geo_problems_table()` renombrado/expandido
-- [ ] Incluye fila geo_flow_result "Salud Técnica GEO" (RES-03)
-- [ ] 14 crawlers bloqueados AHORA visibles para el cliente
+- [x] `${ia_metrics_table}` insertado en template V6
+- [x] `_build_geo_problems_table()` renombrado/expandido
+- [x] Incluye fila geo_flow_result "Salud Técnica GEO" (RES-03)
+- [x] 14 crawlers bloqueados AHORA visibles para el cliente
 
 ### T8: Fix bug escala crawler (MENOR #7 → BUG-01)
-- [ ] Línea 1927: `> 50` → `> 0.5`
-- [ ] 15pts IAO restaurados en fallback CHECKLIST_IAO
+- [x] Línea 1927: `> 50` → `> 0.5`
+- [x] 15pts IAO restaurados en fallback CHECKLIST_IAO
 
 ### T9: Hallazgos positivos (D15, RES-02)
-- [ ] `_build_positive_findings()` implementada
-- [ ] `${positive_findings}` en `_prepare_template_data()`
-- [ ] `${positive_findings}` insertado en template V6
-- [ ] Muestra: HTTPS, WhatsApp, GBP stats, redes sociales
+- [x] `_build_positive_findings()` implementada
+- [x] `${positive_findings}` en `_prepare_template_data()`
+- [x] `${positive_findings}` insertado en template V6
+- [x] Muestra: HTTPS, WhatsApp, GBP stats, redes sociales
 
 ### T10: geo_flow_result complementario (D12, RES-03)
-- [ ] Cubierto por T7 (fila en ia_metrics_table)
-- [ ] Nota en `${regional_transparency}` si geo_flow < 40
+- [x] Cubierto por T7 (fila en ia_metrics_table)
+- [x] Nota en `${regional_transparency}` si geo_flow < 40
 
 ### T5: Tests (16 total)
-- [ ] 1-12: Tests PublicationGatesOrchestrator (originales)
-- [ ] 13: `test_identify_brechas_uses_detect_pains`
-- [ ] 14: `test_crawler_scale_fix`
-- [ ] 15: `test_positive_findings_generated`
-- [ ] 16: `test_ia_metrics_table_in_output`
-- [ ] Todos los tests pasan
+- [x] 1-12: Tests PublicationGatesOrchestrator (originales)
+- [x] 13: `test_identify_brechas_uses_detect_pains`
+- [x] 14: `test_crawler_scale_fix`
+- [x] 15: `test_positive_findings_generated`
+- [x] 16: `test_ia_metrics_table_in_output`
+- [x] Todos los tests pasan
 
 ### T11: Limpieza código muerto (D14)
-- [ ] Variables no usadas por V6 etiquetadas como `# DEPRECATED`
-- [ ] `_calculate_web_score()` wrapper tiene docstring de deprecación
-- [ ] `_extraer_elementos_iao()` etiquetado como `# FALLBACK only`
+- [x] Variables no usadas por V6 etiquetadas como `# DEPRECATED`
+- [x] `_calculate_web_score()` wrapper tiene docstring de deprecación
+- [x] `_extraer_elementos_iao()` etiquetado como `# FALLBACK only`
 
 ### T6: Documentación
-- [ ] CHANGELOG.md actualizado (formato CONTRIBUTING.md)
-- [ ] DEP-01, DEP-02, DEP-03 documentados
-- [ ] BUG-01, BUG-02 documentados
-- [ ] RES-01, RES-02, RES-03 documentados
-- [ ] log_phase_completion.py ejecutado
-- [ ] Commit
+- [x] CHANGELOG.md actualizado (formato CONTRIBUTING.md)
+- [x] DEP-01, DEP-02, DEP-03 documentados
+- [x] BUG-01, BUG-02 documentados
+- [x] RES-01, RES-02, RES-03 documentados
+- [x] log_phase_completion.py ejecutado
+- [x] Commit (81a0391 + e7157e2)
 
 ---
 
