@@ -25,7 +25,7 @@
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
   "main.py": "FASE-PATCH-2",
   "cross_validator.py": "E2E-CERT-0331",
-  "v4_diagnostic_generator.py": "FASE-1",
+  "v4_diagnostic_generator.py": "FASE-TRAZABILIDAD-RAIZ",
   "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-1",
   "data_models/__init__.py": "FASE-IAO-06",
   "v4_proposal_generator.py": "FASE-G",
@@ -114,5 +114,7 @@
   "tests/commercial_documents/test_proposal_dynamic.py": "FASE-D",
   "modules/orchestration_v4/two_phase_flow.py": "FASE-VALIDATE-RC",
   "modules/asset_generation/whatsapp_conflict_guide.py": "FASE-VALIDATE-RC",
-  ".agents/workflows/v4_complete.md": "FASE-TRAZABILIDAD-DOCS"
+  ".agents/workflows/v4_complete.md": "FASE-TRAZABILIDAD-DOCS",
+  "diagnostico_v6_template.md": "FASE-TRAZABILIDAD-RAIZ",
+  "test_publication_gates.py": "FASE-TRAZABILIDAD-RAIZ"
 }
