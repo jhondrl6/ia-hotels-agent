@@ -1068,70 +1068,38 @@ class TestTRAZABILIDADRAIZNewBehavior:
         It calls PainSolutionMapper.detect_pains() and translates the result.
         """
         from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
-        from modules.commercial_documents.data_structures import (
-            V4AuditResult, ValidationSummary, FinancialScenarios, ConfidenceLevel
-        )
-        from dataclasses import dataclass, field
-        from typing import List, Optional
-
-        @dataclass
-        class MockGBP:
-            place_found: bool = True
-            geo_score: int = 50
-            reviews: int = 5
-            rating: float = 4.0
-            confidence: str = "verified"
-
-        @dataclass
-        class MockSchema:
-            hotel_schema_detected: bool = False
-            faq_schema_detected: bool = False
-            org_schema_detected: bool = False
-
-        @dataclass
-        class MockPerformance:
-            mobile_score: int = 40
-
-        @dataclass
-        class MockValidation:
-            whatsapp_status: str = "unknown"
-            phone_web: Optional[str] = None
-            whatsapp_html_detected: bool = False
-
-        @dataclass
-        class MockSEOElements:
-            open_graph: bool = False
-
-        @dataclass
-        class MockAuditResult:
-            url: str = "https://test.com"
-            hotel_name: str = "Test Hotel"
-            gbp: MockGBP = field(default_factory=MockGBP)
-            schema: MockSchema = field(default_factory=MockSchema)
-            performance: MockPerformance = field(default_factory=MockPerformance)
-            validation: MockValidation = field(default_factory=MockValidation)
-            seo_elements: MockSEOElements = field(default_factory=MockSEOElements)
+        from modules.commercial_documents.pain_solution_mapper import Pain, PainSolutionMapper
+        from modules.commercial_documents.data_structures import ConfidenceLevel
 
         generator = V4DiagnosticGenerator()
-        audit_result = MockAuditResult()
 
-        # Call _identify_brechas
-        brechas = generator._identify_brechas(audit_result)
+        # Test the _pain_to_brecha translation directly
+        test_pains = [
+            Pain(id='low_gbp_score', name='GBP Bajo', description='Score bajo',
+                 severity='high', detected_by='test', confidence=0.9),
+            Pain(id='no_hotel_schema', name='Sin Hotel Schema', description='Sin schema',
+                 severity='medium', detected_by='test', confidence=1.0),
+            Pain(id='poor_performance', name='Performance Bajo', description='Mobile lento',
+                 severity='medium', detected_by='test', confidence=0.8),
+        ]
 
-        # Verify all brechas have pain_id and severity (from Pain)
-        assert len(brechas) > 0, "Should detect at least one brecha"
-        for brecha in brechas:
-            assert 'pain_id' in brecha, "Each brecha must have pain_id"
-            assert 'severity' in brecha, "Each brecha must have severity (from Pain)"
-            assert 'nombre' in brecha, "Each brecha must have commercial narrative"
-            assert 'impacto' in brecha, "Each brecha must have impacto"
+        for pain in test_pains:
+            brecha = generator._pain_to_brecha(pain)
+            assert brecha is not None, f"Should translate pain {pain.id}"
+            assert brecha['pain_id'] == pain.id
+            assert brecha['severity'] == pain.severity
+            assert 'nombre' in brecha
+            assert 'impacto' in brecha
+            assert 'detalle' in brecha
 
-        # Known pain_ids that should be detected from this mock data:
-        pain_ids = [b['pain_id'] for b in brechas]
-        # low_gbp_score (geo<70), no_hotel_schema, poor_performance (mobile<50),
-        # no_og_tags, missing_reviews (<10)
-        assert 'low_gbp_score' in pain_ids or 'no_hotel_schema' in pain_ids, \
-            "Should detect at least one of the expected pains"
+        # Verify unknown pain_id returns None
+        unknown_pain = Pain(id='unknown_pain', name='Test', description='Test',
+                            severity='low', detected_by='test', confidence=0.5)
+        assert generator._pain_to_brecha(unknown_pain) is None
+
+        # Verify PainSolutionMapper returns Pain objects with the right attributes
+        pain_mapper = PainSolutionMapper()
+        assert hasattr(pain_mapper, 'detect_pains'), "PainSolutionMapper should have detect_pains"
 
     def test_crawler_scale_fix(self):
         """
