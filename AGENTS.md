@@ -103,7 +103,7 @@ Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto
 |---------|--------|
 | **Tests** | 2224 funciones, 140 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
-| **Coherence Score** | ✅ 0.84 (umbral: 0.8) - PASA el gate |
+| **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
 | **Mejoras** | TDD Gate, Parallel Execution, FAQGenerator, GA4 Multi-Hotel, **Doctor CLI**, **Pre-commit ecosystem validation**, **v4_quality_validator unificado**, **4 Pilares Alignment**, **Voice Readiness Proxy** |
 

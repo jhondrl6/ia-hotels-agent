@@ -1051,3 +1051,221 @@ class TestFASE5DeliveryReady:
         )
         assert os.path.exists(report_path), \
             f"Asset generation report not found: {report_path}"
+
+
+# =============================================================================
+# FASE-TRAZABILIDAD-RAIZ: New Tests (T5)
+# =============================================================================
+
+class TestTRAZABILIDADRAIZNewBehavior:
+    """Tests for new behavior introduced in FASE-TRAZABILIDAD-RAIZ."""
+
+    def test_identify_brechas_uses_detect_pains(self):
+        """
+        T5 Test 13: Verify _identify_brechas delegates to detect_pains().
+
+        DEP-03: _identify_brechas no longer has independent detection logic.
+        It calls PainSolutionMapper.detect_pains() and translates the result.
+        """
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        from modules.commercial_documents.data_structures import (
+            V4AuditResult, ValidationSummary, FinancialScenarios, ConfidenceLevel
+        )
+        from dataclasses import dataclass, field
+        from typing import List, Optional
+
+        @dataclass
+        class MockGBP:
+            place_found: bool = True
+            geo_score: int = 50
+            reviews: int = 5
+            rating: float = 4.0
+            confidence: str = "verified"
+
+        @dataclass
+        class MockSchema:
+            hotel_schema_detected: bool = False
+            faq_schema_detected: bool = False
+            org_schema_detected: bool = False
+
+        @dataclass
+        class MockPerformance:
+            mobile_score: int = 40
+
+        @dataclass
+        class MockValidation:
+            whatsapp_status: str = "unknown"
+            phone_web: Optional[str] = None
+            whatsapp_html_detected: bool = False
+
+        @dataclass
+        class MockSEOElements:
+            open_graph: bool = False
+
+        @dataclass
+        class MockAuditResult:
+            url: str = "https://test.com"
+            hotel_name: str = "Test Hotel"
+            gbp: MockGBP = field(default_factory=MockGBP)
+            schema: MockSchema = field(default_factory=MockSchema)
+            performance: MockPerformance = field(default_factory=MockPerformance)
+            validation: MockValidation = field(default_factory=MockValidation)
+            seo_elements: MockSEOElements = field(default_factory=MockSEOElements)
+
+        generator = V4DiagnosticGenerator()
+        audit_result = MockAuditResult()
+
+        # Call _identify_brechas
+        brechas = generator._identify_brechas(audit_result)
+
+        # Verify all brechas have pain_id and severity (from Pain)
+        assert len(brechas) > 0, "Should detect at least one brecha"
+        for brecha in brechas:
+            assert 'pain_id' in brecha, "Each brecha must have pain_id"
+            assert 'severity' in brecha, "Each brecha must have severity (from Pain)"
+            assert 'nombre' in brecha, "Each brecha must have commercial narrative"
+            assert 'impacto' in brecha, "Each brecha must have impacto"
+
+        # Known pain_ids that should be detected from this mock data:
+        pain_ids = [b['pain_id'] for b in brechas]
+        # low_gbp_score (geo<70), no_hotel_schema, poor_performance (mobile<50),
+        # no_og_tags, missing_reviews (<10)
+        assert 'low_gbp_score' in pain_ids or 'no_hotel_schema' in pain_ids, \
+            "Should detect at least one of the expected pains"
+
+    def test_crawler_scale_fix(self):
+        """
+        T5 Test 14: Verify crawler_access uses 0-1 scale, not 0-100.
+
+        BUG-01: ai_crawlers.overall_score is 0-1, not 0-100.
+        The comparison was > 50 instead of > 0.5.
+        """
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        from dataclasses import dataclass, field
+
+        @dataclass
+        class MockAICrawlers:
+            overall_score: float = 0.5  # Exactly at threshold
+
+        @dataclass
+        class MockAuditResult:
+            url: str = "https://test.com"
+            hotel_name: str = "Test"
+            ai_crawlers: MockAICrawlers = field(default_factory=MockAICrawlers)
+
+        generator = V4DiagnosticGenerator()
+        audit_result = MockAuditResult()
+
+        # Get IAO elements
+        elementos = generator._extraer_elementos_iao(audit_result)
+
+        # With score=0.5, it should NOT pass the threshold (> 0.5 means > 0.5)
+        # 0.5 > 0.5 is False, so crawler_access should be False
+        assert elementos['crawler_access'] is False, \
+            f"crawler_access with score=0.5 should be False (not > 0.5), got {elementos['crawler_access']}"
+
+        # Now test with score=0.51 (above threshold)
+        audit_result.ai_crawlers.overall_score = 0.51
+        elementos = generator._extraer_elementos_iao(audit_result)
+        assert elementos['crawler_access'] is True, \
+            f"crawler_access with score=0.51 should be True (> 0.5), got {elementos['crawler_access']}"
+
+    def test_positive_findings_generated(self):
+        """
+        T5 Test 15: Verify _build_positive_findings returns content when conditions met.
+
+        RES-02: Hotel with HTTPS, WhatsApp verified, GBP active, and social links
+        should produce a positive findings section.
+        """
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        from dataclasses import dataclass, field
+
+        @dataclass
+        class MockGBP:
+            place_found: bool = True
+            reviews: int = 25
+            rating: float = 4.5
+
+        @dataclass
+        class MockValidation:
+            whatsapp_status: str = "verified"
+            phone_web: str = "+573001234567"
+
+        @dataclass
+        class MockSEOElements:
+            social_links_found: List[str] = field(default_factory=lambda: [
+                "https://facebook.com/testhotel",
+                "https://instagram.com/testhotel"
+            ])
+
+        @dataclass
+        class MockAuditResult:
+            url: str = "https://test.com"  # HTTPS
+            hotel_name: str = "Test Hotel"
+            gbp: MockGBP = field(default_factory=MockGBP)
+            validation: MockValidation = field(default_factory=MockValidation)
+            seo_elements: MockSEOElements = field(default_factory=MockSEOElements)
+
+        generator = V4DiagnosticGenerator()
+        audit_result = MockAuditResult()
+
+        findings = generator._build_positive_findings(audit_result)
+
+        assert findings != "", "Should return positive findings when conditions are met"
+        assert "HTTPS activo" in findings, "Should mention HTTPS"
+        assert "WhatsApp verificado" in findings, "Should mention WhatsApp"
+        assert "Google Business Profile activo" in findings, "Should mention GBP"
+        assert "Redes sociales activas" in findings, "Should mention social media"
+
+    def test_ia_metrics_table_in_output(self):
+        """
+        T5 Test 16: Verify ia_metrics_table is populated in template data.
+
+        RES-01: geo_table renamed to ia_metrics_table in _prepare_template_data.
+        """
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        from modules.commercial_documents.data_structures import (
+            V4AuditResult, ValidationSummary, FinancialScenarios, ConfidenceLevel
+        )
+        from dataclasses import dataclass, field
+
+        @dataclass
+        class MockAICrawlers:
+            overall_score: float = 0.3
+            blocked_crawlers: list = field(default_factory=lambda: ["GPTBot", "Claude"])
+
+        @dataclass
+        class MockCitability:
+            overall_score: float = 45.0
+            blocks_analyzed: int = 3
+
+        @dataclass
+        class MockIAReadiness:
+            overall_score: float = 33.0
+            status: str = "critical"
+
+        @dataclass
+        class MockAuditResult:
+            url: str = "https://test.com"
+            hotel_name: str = "Test Hotel"
+            ai_crawlers: MockAICrawlers = field(default_factory=MockAICrawlers)
+            citability: MockCitability = field(default_factory=MockCitability)
+            ia_readiness: MockIAReadiness = field(default_factory=MockIAReadiness)
+
+        generator = V4DiagnosticGenerator()
+        audit_result = MockAuditResult()
+
+        # Build the IA metrics table
+        table = generator._build_geo_problems_table(audit_result)
+
+        assert table != "", "ia_metrics_table should not be empty when IA data exists"
+        assert "Accesibilidad IA" in table, "Should include AI crawler accessibility"
+        assert "Citabilidad" in table, "Should include citability"
+        assert "IA-Readiness" in table, "Should include IA readiness"
+        assert "0.30" in table or "0.3" in table, "Should show AI crawler score"
+
+
+# =============================================================================
+# Import for type hints used above
+# =============================================================================
+from typing import List

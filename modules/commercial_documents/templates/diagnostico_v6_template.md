@@ -56,6 +56,11 @@ ${regional_context}
 
 ${regional_transparency}
 
+### Métricas de Acceso para IA
+
+${ia_metrics_table}
+
+${positive_findings}
 ### Resumen de Visibilidad en IA
 
 ${analytics_summary_text}

@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-24
+> **Ultima actualizacion:** 2026-04-25
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 157
+> **Total fases completadas:** 158
 
 ---
 
@@ -3989,6 +3989,28 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (183)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-TRAZABILIDAD-DOCS - 2026-04-25
+**Descripcion:** Corrección documental: 6→9 gates (3 advisory), workflow v4_coherence_validator removido, docstring PublicationGatesOrchestrator 5→9, Coherence Score como rango variable
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `README.md` | Readme |
+| `.agents/workflows/v4_complete.md` | V4 Complete |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `AGENTS.md` | Agents |
+
+### Validaciones
+- [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

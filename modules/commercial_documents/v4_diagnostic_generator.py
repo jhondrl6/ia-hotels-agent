@@ -24,6 +24,7 @@ from .data_structures import (
     format_cop,
     extract_top_problems,
 )
+from .pain_solution_mapper import PainSolutionMapper
 
 from data_models.analytics_status import AnalyticsStatus
 
@@ -455,7 +456,8 @@ class V4DiagnosticGenerator:
             'manual_attention_table': self._build_manual_attention_table(audit_result),
             'top_critical_problems': self._build_top_critical_problems(audit_result),
             'quick_wins_list': self._build_quick_wins(audit_result),
-            'geo_table': self._build_geo_problems_table(audit_result),
+            'positive_findings': self._build_positive_findings(audit_result),
+            'ia_metrics_table': self._build_geo_problems_table(audit_result, output_dir),
             
             # Regional averages (3-tier fallback: competitors > regional config > default)
             'geo_regional': geo_regional,
@@ -1150,28 +1152,79 @@ class V4DiagnosticGenerator:
             wins.append("El hotel está bien optimizado. Enfocarse en estrategia de contenido.")
         
         return "\n".join(wins)
-    
-    def _build_geo_problems_table(self, audit_result: V4AuditResult) -> str:
-        """Construir tabla de problemas y métricas GEO.
-        
+
+    # ========================================================================
+    # T9: Positive Findings — RES-02
+    # ========================================================================
+
+    def _build_positive_findings(self, audit_result: V4AuditResult) -> str:
+        """Build list of positive findings from audit data (RES-02).
+
+        Returns markdown section with things that already work well,
+        shown to client for confidence building.
+        """
+        findings = []
+
+        # HTTPS
+        if audit_result.url and audit_result.url.startswith('https'):
+            findings.append("✅ **HTTPS activo** — Sitio seguro con certificado SSL")
+
+        # WhatsApp
+        if audit_result.validation:
+            ws = getattr(audit_result.validation, 'whatsapp_status', None)
+            if ws == 'verified':
+                phone = getattr(audit_result.validation, 'phone_web', '')
+                findings.append(f"✅ **WhatsApp verificado** — Canal directo funcional ({phone})")
+
+        # GBP presence
+        if audit_result.gbp and audit_result.gbp.place_found:
+            rating = audit_result.gbp.rating
+            reviews = audit_result.gbp.reviews
+            findings.append(f"✅ **Google Business Profile activo** — {reviews} reviews, {rating}/5 rating")
+
+        # Social media
+        if hasattr(audit_result, 'seo_elements') and audit_result.seo_elements:
+            social = getattr(audit_result.seo_elements, 'social_links_found', [])
+            if social:
+                platforms = []
+                for link in social[:3]:
+                    if 'facebook' in link: platforms.append('Facebook')
+                    elif 'instagram' in link: platforms.append('Instagram')
+                    elif 'youtube' in link: platforms.append('YouTube')
+                if platforms:
+                    findings.append(f"✅ **Redes sociales activas** — {', '.join(platforms)}")
+
+        if not findings:
+            return ""  # No section if nothing positive
+
+        return "### ✅ Lo que ya funciona\n\n" + "\n".join(findings) + "\n"
+
+    def _build_geo_problems_table(
+        self,
+        audit_result: V4AuditResult,
+        output_dir: Optional[str] = None
+    ) -> str:
+        """Construir tabla de métricas IA incluyendo salud técnica GEO.
+
         Args:
             audit_result: Resultado del audit con datos GEO
-            
+            output_dir: Directorio de salida para localizar geo_flow_result.json
+
         Returns:
-            Markdown con tabla de métricas GEO
+            Markdown con tabla de métricas IA
         """
         if not audit_result:
             return ""
-        
+
         has_ai_crawlers = hasattr(audit_result, 'ai_crawlers') and audit_result.ai_crawlers is not None
         has_citability = hasattr(audit_result, 'citability') and audit_result.citability is not None
         has_ia_readiness = hasattr(audit_result, 'ia_readiness') and audit_result.ia_readiness is not None
-        
+
         if not any([has_ai_crawlers, has_citability, has_ia_readiness]):
             return ""
-        
+
         rows = []
-        
+
         if has_ai_crawlers:
             ai = audit_result.ai_crawlers
             score = getattr(ai, 'overall_score', 0) or 0
@@ -1179,24 +1232,40 @@ class V4DiagnosticGenerator:
             blocked = getattr(ai, 'blocked_crawlers', []) or []
             blocked_count = len(blocked)
             rows.append(f"| Accesibilidad IA | {score:.2f}/1.00 | {blocked_count} bloqueados | {status_icon} |")
-        
+
         if has_citability:
             cit = audit_result.citability
             score = getattr(cit, 'overall_score', 0) or 0
             status_icon = "🟢" if score >= 50 else ("🟡" if score >= 30 else "🔴")
             blocks = getattr(cit, 'blocks_analyzed', 0) or 0
             rows.append(f"| Citabilidad | {score:.1f}/100 | {blocks} bloques | {status_icon} |")
-        
+
         if has_ia_readiness:
             ia = audit_result.ia_readiness
             score = getattr(ia, 'overall_score', 0) or 0
             status_icon = "🟢" if score >= 50 else ("🟡" if score >= 30 else "🔴")
             status_text = getattr(ia, 'status', 'Unknown') or 'Unknown'
             rows.append(f"| IA-Readiness | {score:.1f}/100 | {status_text} | {status_icon} |")
-        
+
+        # T10: Salud Técnica GEO (RES-03) — geo_flow_result
+        if output_dir:
+            hotel_id = audit_result.hotel_name.lower().replace(" ", "_").replace("-", "_")
+            geo_flow_path = Path(output_dir) / hotel_id / "v4_audit" / "geo_flow_result.json"
+            if geo_flow_path.exists():
+                try:
+                    import json as _json
+                    with open(geo_flow_path, 'r', encoding='utf-8') as f:
+                        geo_flow_data = _json.load(f)
+                    flow_score = geo_flow_data.get('geo_score', 0)
+                    flow_status = geo_flow_data.get('status', 'unknown')
+                    flow_icon = "🟢" if flow_score >= 60 else ("🟡" if flow_score >= 40 else "🔴")
+                    rows.append(f"| Salud Técnica GEO | {flow_score}/100 | {flow_status} | {flow_icon} |")
+                except Exception:
+                    pass  # Non-critical — skip if file is corrupted
+
         if not rows:
             return ""
-        
+
         table = """
 ## [NEW] Métricas de Optimización para IA
 
@@ -1371,26 +1440,14 @@ class V4DiagnosticGenerator:
         return str(score)
     
     def _calculate_web_score(self, audit_result: V4AuditResult) -> str:
-        """Calculate Web/SEO score based on performance and schema."""
-        score = 0
-        # Guard against None
-        if not audit_result:
-            return "0"
-        # Performance score (up to 40 points)
-        if audit_result.performance and audit_result.performance.mobile_score:
-            score += min(40, audit_result.performance.mobile_score * 0.4)
-        # Schema bonus (up to 30 points)
-        if audit_result.schema and audit_result.schema.hotel_schema_detected:
-            score += 20
-            if audit_result.schema.hotel_schema_valid:
-                score += 10
-        # FAQ schema (up to 20 points)
-        if audit_result.schema and audit_result.schema.faq_schema_detected:
-            score += 15
-        # Validation consistency (up to 10 points)
-        if audit_result.validation and audit_result.validation.whatsapp_status != ConfidenceLevel.CONFLICT.value:
-            score += 10
-        return str(min(100, int(score)))
+        """Calculate Web/SEO score using CHECKLIST_SEO (4-pilar framework).
+
+        Deprecated: old custom algorithm replaced by CHECKLIST_SEO for consistency
+        with GEO/AEO/IAO pilar calculations (DEP-01).
+        """
+        elementos = self._extraer_elementos_seo(audit_result)
+        score = calcular_score_seo(elementos)
+        return str(score)
     
     def _calculate_aeo_score(self, audit_result: V4AuditResult) -> str:
         """Calculate AEO (AI Engine Optimization) score - Para que te CITEN.
@@ -1423,11 +1480,19 @@ class V4DiagnosticGenerator:
 
     def _calculate_iao_score_from_audit(self, audit_result: V4AuditResult) -> str:
         """
-        Calculate IAO score from audit using 4-pilar extraction (FASE-A).
+        Calculate IAO score from audit.
 
-        Si hay datos reales de LLM mentions (FASE-C), pondera:
-        50% checklist + 50% resultado real de LLMs.
+        Source of truth: ia_readiness.overall_score (granular, multi-component).
+        CHECKLIST_IAO (via calcular_score_iao) is FALLBACK only when ia_readiness
+        is not available (DEP-02).
         """
+        # Primary: ia_readiness module
+        if hasattr(audit_result, 'ia_readiness') and audit_result.ia_readiness:
+            score = getattr(audit_result.ia_readiness, 'overall_score', None)
+            if score is not None:
+                return str(int(score))
+
+        # Fallback: CHECKLIST_IAO
         elementos_iao = self._extraer_elementos_iao(audit_result)
         base_score = calcular_score_iao(elementos_iao)
 
@@ -1894,7 +1959,11 @@ class V4DiagnosticGenerator:
         return elementos
 
     def _extraer_elementos_iao(self, audit_result: V4AuditResult) -> dict:
-        """Extrae elementos del pilar IAO (Para que te RECOMIENDEN)."""
+        """Extrae elementos del pilar IAO (Para que te RECOMIENDEN).
+
+        DEP-02: FALLBACK only. _calculate_iao_score_from_audit() now uses
+        ia_readiness.overall_score as primary source.
+        """
         elementos = {}
         if not audit_result:
             return {k: False for k in CHECKLIST_IAO}
@@ -1924,7 +1993,7 @@ class V4DiagnosticGenerator:
         elementos["crawler_access"] = (
             hasattr(audit_result, 'ai_crawlers') and audit_result.ai_crawlers
             and audit_result.ai_crawlers.overall_score is not None
-            and audit_result.ai_crawlers.overall_score > 50
+            and audit_result.ai_crawlers.overall_score > 0.5
         )
 
         # Brand signals — check SameAs and social links in schema
@@ -2001,146 +2070,152 @@ class V4DiagnosticGenerator:
     def _identify_brechas(self, audit_result: V4AuditResult) -> List[Dict[str, Any]]:
         """
         Identify N brechas (gaps) from audit results based on real evidence.
-        
+
         RETORNA:
             List[Dict] con campos: pain_id, nombre, impacto, detalle
             - pain_id: conecta con PainSolutionMapper
             - nombre: narrativa comercial para el cliente
             - impacto: peso para calculo de perdida (0.0-1.0)
             - detalle: explicacion tecnica
-        
-        NOTA: brechas[] alimenta pain_ids en DiagnosticSummary.
-              faltantes[] viene de _extraer_elementos_de_audit() por separado.
-              Retorna TODAS las brechas detectadas (0 a 10+), sin relleno artificial.
+
+        DEP-03: Este método DELAGA en detect_pains() de PainSolutionMapper.
+        Ya no duplica lógica de detección ni usa umbrales propios.
+        Los Pain[] retornados por detect_pains() se traducen al formato brecha.
         """
         # Cache: audit_result es inmutable durante generate(), resultado idéntico (FASE-H)
         if hasattr(self, '_cached_brechas') and self._cached_brechas is not None:
             return self._cached_brechas
 
         brechas = []
-        
+
         # Guard against None
         if not audit_result:
             return brechas
-        
-        # Brecha 1: Visibilidad GBP/GEO
-        if not audit_result.gbp or not audit_result.gbp.place_found or audit_result.gbp.geo_score < 60:
-            brechas.append({
-                'pain_id': 'low_gbp_score',
-                'nombre': 'Visibilidad Local (Google Maps)',
-                'impacto': 0.30,
-                'detalle': '73% de busquedas son "cerca de mi". Su GBP no aparece o esta sub-optimizado. Clientes van a competidores.'
-            })
-        
-        # Brecha 2: Sin Schema de Hotel
-        if not audit_result.schema or not audit_result.schema.hotel_schema_detected:
-            brechas.append({
-                'pain_id': 'no_hotel_schema',
-                'nombre': 'Sin Schema de Hotel (Invisible para IA)',
-                'impacto': 0.25,
-                'detalle': 'ChatGPT, Gemini y Perplexity no pueden "leer" su hotel. Perdida absoluta de reservas de IA.'
-            })
-        
-        # Brecha 3: WhatsApp No Configurado
-        # Distinguimos: WhatsApp visual (boton HTML) vs Schema telephone
-        if audit_result.validation:
-            phone_web = getattr(audit_result.validation, 'phone_web', None)
-            raw_whatsapp_html = getattr(audit_result.validation, 'whatsapp_html_detected', None)
-            whatsapp_html = raw_whatsapp_html if isinstance(raw_whatsapp_html, bool) else False
-            if not phone_web and not whatsapp_html:
-                # Ni Schema telephone ni boton HTML → brecha real
-                brechas.append({
-                    'pain_id': 'no_whatsapp_visible',
-                    'nombre': 'Canal Directo Cerrado (Sin WhatsApp)',
-                    'impacto': 0.20,
-                    'detalle': 'Viajeros quieren reservar instantaneamente. Sin boton WhatsApp, pierden el impulso de compra.'
-                })
-            # Si whatsapp_html=True pero phone_web=None → boton existe, NO es brecha
-        
-        # Brecha 4: Performance Web
-        if audit_result.performance and audit_result.performance.mobile_score and audit_result.performance.mobile_score < 70:
-            brechas.append({
-                'pain_id': 'poor_performance',
-                'nombre': 'Web Lenta (Abandono Movil)',
-                'impacto': 0.15,
-                'detalle': f"{audit_result.performance.mobile_score}/100 en velocidad movil. 53% abandona si tarda >3 segundos."
-            })
-        
-        # Brecha 5: Conflictos de Datos
-        if audit_result.validation and audit_result.validation.whatsapp_status == ConfidenceLevel.CONFLICT.value:
-            brechas.append({
-                'pain_id': 'whatsapp_conflict',
-                'nombre': 'Datos Inconsistentes (Confusion Cliente)',
-                'impacto': 0.10,
-                'detalle': 'WhatsApp diferente en web vs Google. Cliente confundido = reserva perdida.'
-            })
-        
-        # Brecha 6: Metadata por Defecto
-        if audit_result and audit_result.metadata and audit_result.metadata.has_issues:
-            brechas.append({
-                'pain_id': 'metadata_defaults',
-                'nombre': 'Metadatos por Defecto del CMS',
-                'impacto': 0.10,
-                'detalle': 'Titulo y descripcion usan valores por defecto.'
-            })
-        
-        # Brecha 7: Reviews Faltantes
-        if audit_result.gbp and audit_result.gbp.reviews < 10:
-            brechas.append({
-                'pain_id': 'missing_reviews',
-                'nombre': 'Falta de Reviews',
-                'impacto': 0.10,
-                'detalle': f"Solo {audit_result.gbp.reviews} reviews en Google."
-            })
-        
-        # Brecha 8: Sin FAQ Schema para Rich Snippets
-        if audit_result.schema and not audit_result.schema.faq_schema_detected:
-            brechas.append({
-                'pain_id': 'no_faq_schema',
-                'nombre': 'Sin FAQ para Rich Snippets',
-                'impacto': 0.12,
-                'detalle': 'Google no puede mostrar sus preguntas frecuentes en resultados. Competidores con FAQ capturan ese trafico.'
-            })
-        
-        # Brecha 9: Sin Open Graph / SEO social
-        if audit_result.seo_elements and not getattr(audit_result.seo_elements, 'open_graph', False):
-            brechas.append({
-                'pain_id': 'no_og_tags',
-                'nombre': 'Sin Meta Tags Sociales (Open Graph)',
-                'impacto': 0.08,
-                'detalle': 'Cuando alguien comparte su hotel en WhatsApp/Facebook, aparece sin imagen ni descripcion atractiva.'
-            })
-        
-        # Brecha 10: Contenido no citable por IA
-        citability_score = getattr(audit_result, 'citability', None)
-        if citability_score is not None:
-            score_val = getattr(citability_score, 'overall_score', None)
-            blocks = getattr(citability_score, 'blocks_analyzed', None)
 
-            if isinstance(score_val, (int, float)) and score_val < 30:
-                if blocks == 0 or blocks is None:
-                    # Caso: contenido ausente/no discoverable (score=0 por default, no evaluacion real)
-                    brechas.append({
-                        'pain_id': 'low_citability',
-                        'nombre': 'Contenido No Discoverable por IA',
-                        'impacto': 0.10,
-                        'detalle': 'ChatGPT y Perplexity no pueden recomendar su hotel porque el contenido no es discoverable para crawlers de IA.'
-                    })
-                else:
-                    # Caso: contenido existe pero de baja calidad (score real bajo)
-                    brechas.append({
-                        'pain_id': 'low_citability',
-                        'nombre': 'Contenido Poco Estructurado para IA',
-                        'impacto': 0.10,
-                        'detalle': 'ChatGPT y Perplexity no recomiendan su hotel porque el contenido es insuficiente o poco estructurado.'
-                    })
-        
-        # Priorizar por impacto (todas las detectadas, sin truncamiento ni relleno)
-        brechas.sort(key=lambda x: x.get('impacto', 0), reverse=True)
+        # DEP-03: Delegate pain detection to PainSolutionMapper
+        # Umbrales centralizados en un solo lugar (detect_pains)
+        try:
+            pain_mapper = PainSolutionMapper()
+            # Build minimal ValidationSummary for detect_pains
+            from .data_structures import ValidationSummary as VS
+            validation_summary = VS(
+                fields=[],
+                overall_confidence=ConfidenceLevel.UNKNOWN
+            )
+            pains = pain_mapper.detect_pains(
+                audit_result=audit_result,
+                validation_summary=validation_summary,
+                analytics_data=None,
+                whatsapp_html_detected=getattr(audit_result.validation, 'whatsapp_html_detected', False)
+                if hasattr(audit_result, 'validation') and audit_result.validation else False
+            )
+        except Exception:
+            # If PainSolutionMapper fails, fall back to empty brechas
+            # (audit has critical errors — don't fabricate gaps)
+            self._cached_brechas = brechas
+            return brechas
+
+        # Translate each Pain to breach format with commercial narrative
+        for pain in pains:
+            brecha = self._pain_to_brecha(pain)
+            if brecha:
+                brechas.append(brecha)
+
+        # Priorizar por severidad (critical > high > medium > low)
+        severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
+        brechas.sort(key=lambda x: severity_order.get(x.get('severity', ''), 4))
 
         # Store cache (FASE-H)
         self._cached_brechas = brechas
         return brechas
+
+    def _pain_to_brecha(self, pain) -> Optional[Dict[str, Any]]:
+        """Translate a Pain object to breach dict format with commercial narrative."""
+        # Commercial narratives per pain_id (mirrors old hardcoded brechas)
+        narratives = {
+            'no_whatsapp_visible': {
+                'nombre': 'Canal Directo Cerrado (Sin WhatsApp)',
+                'impacto': 0.20,
+                'detalle': 'Viajeros quieren reservar instantaneamente. Sin boton WhatsApp, pierden el impulso de compra.'
+            },
+            'whatsapp_conflict': {
+                'nombre': 'Datos Inconsistentes (Confusion Cliente)',
+                'impacto': 0.10,
+                'detalle': 'WhatsApp diferente en web vs Google. Cliente confundido = reserva perdida.'
+            },
+            'no_faq_schema': {
+                'nombre': 'Sin FAQ para Rich Snippets',
+                'impacto': 0.12,
+                'detalle': 'Google no puede mostrar sus preguntas frecuentes en resultados. Competidores con FAQ capturan ese trafico.'
+            },
+            'no_hotel_schema': {
+                'nombre': 'Sin Schema de Hotel (Invisible para IA)',
+                'impacto': 0.25,
+                'detalle': 'ChatGPT, Gemini y Perplexity no pueden "leer" su hotel. Perdida absoluta de reservas de IA.'
+            },
+            'low_gbp_score': {
+                'nombre': 'Visibilidad Local (Google Maps)',
+                'impacto': 0.30,
+                'detalle': '73% de busquedas son "cerca de mi". Su GBP no aparece o esta sub-optimizado. Clientes van a competidores.'
+            },
+            'poor_performance': {
+                'nombre': 'Web Lenta (Abandono Movil)',
+                'impacto': 0.15,
+                'detalle': f"Score movil deficiente. 53% abandona si tarda >3 segundos."
+            },
+            'metadata_defaults': {
+                'nombre': 'Metadatos por Defecto del CMS',
+                'impacto': 0.10,
+                'detalle': 'Titulo y descripcion usan valores por defecto.'
+            },
+            'missing_reviews': {
+                'nombre': 'Falta de Reviews',
+                'impacto': 0.10,
+                'detalle': 'Reviews insuficientes en Google.'
+            },
+            'no_og_tags': {
+                'nombre': 'Sin Meta Tags Sociales (Open Graph)',
+                'impacto': 0.08,
+                'detalle': 'Cuando alguien comparte su hotel en WhatsApp/Facebook, aparece sin imagen ni descripcion atractiva.'
+            },
+            'low_citability': {
+                'nombre': 'Contenido Poco Estructurado para IA',
+                'impacto': 0.10,
+                'detalle': 'ChatGPT y Perplexity no pueden recomendar su hotel porque el contenido es insuficiente o poco estructurado.'
+            },
+            'ai_crawler_blocked': {
+                'nombre': 'IA Bloqueada (Invisible para ChatGPT)',
+                'impacto': 0.15,
+                'detalle': 'Crawlers de IA bloqueados. Su hotel es invisible para ChatGPT y asistentes de IA.'
+            },
+            'low_ia_readiness': {
+                'nombre': 'Baja Preparación para IA',
+                'impacto': 0.15,
+                'detalle': 'El contenido no está optimizado para ser citado por asistentes de IA.'
+            },
+            'no_org_schema': {
+                'nombre': 'Sin Schema Organization (Entidad no verificable)',
+                'impacto': 0.08,
+                'detalle': 'No se detecta markup de schema.org/Organization. Entidad no verificable por IA.'
+            },
+            'no_analytics_configured': {
+                'nombre': 'Sin Analytics (Decisiones a ciegas)',
+                'impacto': 0.10,
+                'detalle': 'Google Analytics 4 no configurado. Decisiones de marketing sin datos reales.'
+            },
+        }
+
+        if pain.id not in narratives:
+            return None
+
+        narrative = narratives[pain.id]
+        return {
+            'pain_id': pain.id,
+            'severity': pain.severity,
+            'nombre': narrative['nombre'],
+            'impacto': narrative['impacto'],
+            'detalle': narrative['detalle']
+        }
 
 
     # ========================================================

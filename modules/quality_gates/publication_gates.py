@@ -1,15 +1,22 @@
 """
 Publication Gates - Pre-publication Quality Gates for Phase 5.
 
-This module implements the 5 critical gates that must pass before
-any commercial document or asset can be published to a client.
+This module implements 9 publication gates (6 blocking + 3 advisory)
+that must be evaluated before any commercial document or asset can
+be published to a client.
 
-Gates:
+Blocking gates (must pass to publish):
 1. hard_contradictions_gate: Blocks if HARD conflicts exist
 2. evidence_coverage_gate: Blocks if coverage < 95%
 3. financial_validity_gate: Blocks if default values detected
 4. coherence_gate: Blocks if coherence < 0.8
 5. critical_recall_gate: Blocks if critical recall < 90%
+6. ethics_gate: Blocks if ethics validation fails
+
+Advisory gates (pass with WARNING, do not block):
+7. content_quality_gate: Reports document quality issues
+8. asset_confidence_gate: Reports low-confidence assets
+9. proposal_asset_alignment_gate: Reports missing promised assets
 
 Usage:
     from modules.quality_gates.publication_gates import (
@@ -19,8 +26,10 @@ Usage:
     )
     
     results = run_publication_gates(assessment, config)
-    if all(r.passed for r in results):
+    if not any(r.status in (GateStatus.FAILED, GateStatus.BLOCKED) for r in results):
         print("Ready for publication!")
+    else:
+        print("Publication blocked by gate failures.")
 """
 
 from dataclasses import dataclass, field
@@ -112,17 +121,17 @@ class PublicationGateConfig:
 
 class PublicationGatesOrchestrator:
     """
-    Orchestrates the execution of all publication gates.
+    Orchestrates the execution of all 9 publication gates.
     
-    This class manages the execution of the 5 critical gates
-    and provides a unified interface for checking publication readiness.
+    This class manages 6 blocking gates and 3 advisory gates,
+    providing a unified interface for checking publication readiness.
     
     Example:
         orchestrator = PublicationGatesOrchestrator(config)
         results = orchestrator.run_all(assessment)
         
         if orchestrator.is_ready_for_publication(results):
-            print("All gates passed!")
+            print("All blocking gates passed!")
     """
     
     def __init__(self, config: Optional[PublicationGateConfig] = None):

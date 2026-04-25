@@ -303,7 +303,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. El
 - **Pre-commit hooks**: Validaciones automáticas en cada commit (version-sync, secrets, residual files)
 - **Suite de regresión**: Amaziliahotel + Hotel Vísperas como casos de referencia
 - **Coherence Score ≥ 0.8**: Validación cruzada documentos ↔ assets
-- **6 Publication Gates**: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics
+- **9 Publication Gates** (6 blocking + 3 advisory): hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics *(blocking)* + content_quality, asset_confidence, proposal_asset_alignment *(advisory/warning)*
 - **183 tests postprocessors + commercial_documents + delivery**: 0 regresiones post-intervención Amazilia Hotel
 
 ---

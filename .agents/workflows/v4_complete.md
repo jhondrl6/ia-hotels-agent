@@ -90,13 +90,7 @@ outputs_stage --url {{url}}
 
 *Validación*: Diagnóstico y propuesta generados.
 
-### 9. Validate Coherence
-// turbo
-v4_coherence_validator --url {{url}}
-
-*Validación*: Coherencia entre diagnosis, proposal y assets validada.
-
-### 10. Generate Assets Conditionally
+### 9. Generate Assets Conditionally
 // turbo
 v4_asset_conditional --url {{url}}
 
