@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Índice Completo de Documentación** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Meta-Skills)** | `.agents/workflows/` - PhasedProjectExecutor (TDD Gate), AuditGuardian (ejecución paralela), Capability Contracts |
+| **Habilidades del Agente (Meta-Skills)** | `.agents/workflows/` - PhasedProjectExecutor (TDD Gate), Capability Contracts, v4_regression_guardian (validación post-implementación) |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guía Técnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -20,17 +20,14 @@
 
 ---
 
-> **🛡️ AGENT PLATFORM STATUS (v4.33.0 - 4 Pilares Alignment + Voice Readiness Proxy)**:
-> *   **4 Pilares Alignment (v4.28.0)**: Diagnóstico → Propuesta → Gap Analyzer → Benchmarks alineados a SEO + GEO + AEO + IAO. score_global como métrica principal.
-> *   **Voice Readiness Proxy (v4.28.0)**: Score de readiness para asistentes de voz basado en PROXY (GBP 30%, Schema 25%, Snippets 25%, Factual 20%). No consulta APIs Siri/Alexa directamente.
-> *   **Motor Financiero Verificable (v4.27.0)**: 11 fases (A→K) en 2 ciclos. Cada COP cuantificado tiene origen trazable, peso proporcional, etiqueta honesta y base verificable.
-> *   **Camino Único**: Eliminado cálculo dual en main.py. Una sola fuente de verdad vía FinancialCalculatorV2 con validación source-aware.
-> *   **Datos Regionales Reales**: ADR y occupancy por región (eje_cafetero, antioquia) activados. Caribe protegido (no usa regional).
-> *   **Ganancia Neta vs Pérdida**: Escenario optimista negativo se presenta como "+$189,000 COP/mes (ganancia neta)" en vez de pérdida confusa.
+> **🛡️ AGENT PLATFORM STATUS (v4.35.0 - Propuesta Dinámica + Intervención Amazilia Hotel)**:
+> *   **Propuesta Dinámica desde Pain Detection (v4.35.0)**: Tabla de servicios generada dinámicamente según los pains detectados (no diccionario estático). 7 servicios base + AEO condicional cuando score_aeo < 20.
+> *   **Planes de Implementación Dinámicos (v4.35.0)**: _build_7/30/60/90_day_plan() reciben asset_plan y generan contenido por prioridad P1/P2/P3. Backward compatible si asset_plan=None.
+> *   **Motor Financiero Verificable (v4.27.0)**: Escenarios conservador/realista/optimista con recovery_factor (0.15/0.20/0.25). ROI realista <= 5.0X. pain_ratio aplicado a projected_gain.
 > *   **Evidence Tiers**: A (datos reales) → B (scraping) → C (estimación) con disclaimers honestos por tier.
-> *   **2,186 test functions**, 0 regresiones.
-> *   **NEVER_BLOCK Architecture**: El sistema nunca se bloquea, siempre entrega algo con benchmark regional + disclaimers honestos.
-> *   **Coherence Validator**: Score ≥ 0.8 requerido. Quality Gates de pre-publicación.
+> *   **2,224 test functions**, 0 regresiones.
+> *   **Intervención post-4.35.0 (Amazilia Hotel)**: Fix test drift, escenarios financieros ordenados, BUG-8 ortografía "huéspedes", template V6, planes dinámicos, sección competidores. v4complete E2E validado — GO.
+> *   **Coherence Validator**: Score ≥ 0.8 requerido. 6 gates de pre-publicación (contradictions, coverage, validity, coherence, recall, ethics).
 
 ---
 
@@ -67,7 +64,7 @@ Sistema que responde a la pregunta: "¿Por qué este hotel pierde reservas que v
 | AEO | Answer Engine Optimization | **Para que te CITEN** | Siri lee tu ficha: "Cierra a las 8:00 PM" |
 | IAO | Intelligent Agent Optimization | **Para que te RECOMIENDEN** | ChatGPT te recomienda vs competidores |
 
-Cada pilar sigue una progresión: sin SEO base no hay AEO, sin AEO no hay IAO. GEO complementa todos. El `score_global` (0-100) es el promedio ponderado de los 4 pilares como métrica principal de Visibilidad Digital.
+El `score_global` fue reemplazado por `coherence_score` (0-1, umbral ≥ 0.8) como métrica principal de alineación. Los 4 pilares (SEO, GEO, AEO, IAO) contribute individualmente a la puntuación general de visibilidad, pero la validación cruzada entre diagnóstico, propuesta y assets usa coherence_score.
 
 El diagnóstico siempre se entrega. La propuesta comercial solo se genera cuando los datos alcanzan score de coherencia ≥ 0.8. Los assets se etiquetan como VERIFIED o ESTIMATED según la fuente de datos disponible.
 
@@ -97,7 +94,7 @@ python main.py setup
 
 ## 📊 Flujo Comercial y Técnico 2026
 
-El sistema opera bajo el **Sistema de Confianza v4.5.x** con validación cruzada de datos y controles de coherencia automáticos entre diagnóstico, propuesta y assets.
+El sistema opera bajo el **Sistema v4.35.0** con validación cruzada de datos y controles de coherencia automáticos (score ≥ 0.8) entre diagnóstico, propuesta y assets.
 
 ```bash
 python main.py v4complete --url https://hotel.com --nombre "Hotel Nombre"
@@ -248,17 +245,18 @@ python scripts/doctor.py --json    # Output maquina-legible
 
 ## 💵 Escenarios Financieros
 
-Cada hotel recibe proyecciones personalizadas basadas en sus datos validados:
+Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. El ROI se calcula con `pain_ratio` (porcentaje de la pérdida que se recupera al implementar los cambios) y `recovery_factor` (factor de recuperación por escenario):
 
-| Escenario | Probabilidad | Base de cálculo |
-|-----------|--------------|-----------------|
-| **Conservador** | 70% | Peor caso plausible |
-| **Realista** | 20% | Meta esperada |
-| **Optimista** | 10% | Mejor caso (puede ser ganancia neta) |
+|| Escenario | Probabilidad | recovery_factor | Base de cálculo |
+|-----------|--------------|-----------------|-----------------|
+| **Conservador** | 70% | 0.15 | Peor caso plausible (recupera 15% de la pérdida) |
+| **Realista** | 20% | 0.20 | Meta esperada (recupera 20% de la pérdida) |
+| **Optimista** | 10% | 0.25 | Mejor caso (recupera 25% de la pérdida, puede ser ganancia neta) |
 
-El valor esperado ponderado determina el ROI proyectado y la propuesta comercial personalizada.
+**Fórmula**: `projected_gain = monthly_loss_cop × pain_ratio × recovery_factor`
+**ROI**: `roi = (projected_gain × 6) / (precio_mensual × 6)` — cap en 5.0X
 
-**Motor Financiero Verificable**: Cada COP tiene origen trazable (ADR regional, occupancy validada), peso proporcional, etiqueta honesta (VERIFIED/ESTIMATED) y base verificable (comisión OTA). Escenario optimista con valor negativo se presenta como "ganancia neta" en vez de pérdida.
+**Motor Financiero Verificable**: Cada COP tiene origen trazable (ADR regional, occupancy validada), peso proporcional, etiqueta honesta (VERIFIED/ESTIMATED) y base verificable (comisión OTA). El escenario optimista con valor negativo se presenta como "ganancia neta".
 
 ---
 
@@ -300,13 +298,13 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ## ✅ Calidad Garantizada
 
-- **390 tests** de regresión pasando al 100% (financial_engine suite)
+- **2,224 tests** de regresión pasando al 100% (suite completa)
 - **TDD Gate**: Todo cambio comienza con un test que falla
-- **Pre-commit hooks**: Validaciones automáticas en cada commit
-- **Suite de regresión**: Hotel Vísperas + Amaziliahotel como casos de referencia
+- **Pre-commit hooks**: Validaciones automáticas en cada commit (version-sync, secrets, residual files)
+- **Suite de regresión**: Amaziliahotel + Hotel Vísperas como casos de referencia
 - **Coherence Score ≥ 0.8**: Validación cruzada documentos ↔ assets
-- **5 tests FASE-K**: Validación de ganancia neta, display_label, hook_range
-- **22 tests Voice Readiness Proxy**: Score proxy basado en inputs (GBP, Schema, Snippets, Factual)
+- **6 Publication Gates**: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics
+- **183 tests postprocessors + commercial_documents + delivery**: 0 regresiones post-intervención Amazilia Hotel
 
 ---
 
@@ -317,4 +315,4 @@ El valor esperado ponderado determina el ROI proyectado y la propuesta comercial
 
 ## Testing
 
-**2,186+ test functions** across unit, integration and E2E suites | **390/390 regression tests** in financial_engine suite | **22 Voice Readiness Proxy tests** | **Motor Financiero Verificable — Opción C (11 fases A→K)**
+**2,224+ test functions** across unit, integration and E2E suites | **30/30 financial_engine tests** | **183 postprocessors + commercial + delivery tests** | **4 tests test_proposal_generator_dict (hotfix validation)** | **Motor Financiero Verificable con recovery_factor y pain_ratio**
