@@ -1,5 +1,31 @@
 # Changelog
 
+## [4.35.1] - 2026-04-25
+
+### Objetivo
+
+Correcciones documentales en el bloque "Calidad Garantizada" — discrepancias entre README, workflow y docstrings vs. la realidad del código (9 gates, no 6; comando v4_coherence_validator inexistente; Coherence Score variable).
+
+### Cambios Implementados
+
+- `README.md` L306: Corregido "6 Publication Gates" → "9 Publication Gates (6 blocking + 3 advisory)" con descripción de gates 7-9
+- `.agents/workflows/v4_complete.md` L95: Removida referencia a comando inexistente `v4_coherence_validator`; ahora usa `v4_asset_conditional`
+- `modules/quality_gates/publication_gates.py` L4-19: Docstring corregido de "5 critical gates" → "9 publication gates (6 blocking + 3 advisory)" con lista completa
+- `AGENTS.md` L106: Coherence Score ahora indica rango variable ("varía por ejecución") en lugar de valor fijo 0.84
+
+### Archivos Modificados
+
+||| Archivo | Cambio ||
+|---------|--------|
+| `README.md` | Conteo gates: 6 → 9 + descripción advisory |
+| `.agents/workflows/v4_complete.md` | Ghost command removido |
+| `modules/quality_gates/publication_gates.py` | Docstring 5 → 9 gates |
+| `AGENTS.md` | Coherence Score como rango variable |
+
+### Tests
+
+- 0 tests (correcciónpuramente documental)
+
 ## [4.35.0] - 2026-04-23
 
 ### Objetivo

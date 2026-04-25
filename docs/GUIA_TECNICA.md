@@ -458,3 +458,36 @@ conditional_generator.py
 | `modules/asset_generation/` | Generación condicional con gates | ✅ Activo |
 | `modules/auditors/` | APIs externas (Rich Results, Places, PageSpeed) | ✅ Activo |
 | `modules/asset_generation/geo_enriched_bridge.py` | GEO → Delivery bridge | ✅ Activo |
+
+---
+
+## Notas de Cambios v4.35.1 — Trazabilidad Publication Gates (2026-04-25)
+
+### Problema
+
+Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Calidad Garantizada":
+
+1. **README L306**: Decía "6 Publication Gates" — el código tiene 9 (6 blocking + 3 advisory)
+2. **Workflow v4_complete.md L95**: Referenciaba `v4_coherence_validator`, comando inexistente (fusionado en v4_quality_validator)
+3. **PublicationGatesOrchestrator docstring**: Decía "5 critical gates" — tiene 9 entradas
+4. **AGENTS.md**: Coherence Score fijo en 0.84 — la ejecución más reciente arrojó 0.89
+
+### Solución
+
+| Archivo | Cambio |
+|---------|--------|
+| `README.md` | "6" → "9 Publication Gates (6 blocking + 3 advisory)" + descripción gates 7-9 |
+| `.agents/workflows/v4_complete.md` | `v4_coherence_validator` → `v4_asset_conditional` (comando real) |
+| `modules/quality_gates/publication_gates.py` | Docstring "5 critical" → "9 publication gates" con lista completa |
+| `AGENTS.md` | Coherence Score: "varía por ejecución; umbral: 0.8" |
+
+### Backwards Compatibility
+
+✅ Sin impacto. Solo correcciones documentales. Ningún comportamiento de código cambiado.
+
+### Módulos Afectados
+
+- `modules/quality_gates/publication_gates.py` — solo docstring
+- `README.md` — solo bloque "Calidad Garantizada"
+- `.agents/workflows/v4_complete.md` — solo paso 9
+- `AGENTS.md` — solo tabla de estado
