@@ -7,7 +7,7 @@ diagnostic summary and asset plans.
 
 import os
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Union
 from datetime import datetime
 from string import Template
 
@@ -53,7 +53,15 @@ class V4ProposalGenerator:
     SETUP_FEE = 2500000  # $2.5M COP one-time
 
     def _get_main_value(self, scenario) -> int:
-        """Obtiene valor central de presentacion, con fallback a max."""
+        """Obtiene valor central de presentacion, con fallback a monthly_loss_cop.
+        
+        FASE-B fix: FinancialScenario solo tiene monthly_loss_cop (no monthly_loss_max).
+        Para Scenario (data_structures) usa monthly_loss_central o monthly_loss_max.
+        """
+        if hasattr(scenario, 'monthly_loss_cop'):
+            # FinancialScenario from scenario_calculator
+            return int(scenario.monthly_loss_cop)
+        # Fallback for Scenario dataclass (data_structures)
         return getattr(scenario, 'monthly_loss_central', None) or scenario.monthly_loss_max
 
     # === TABLA DE MONETIZACION (GAP-IAO-01-03) ===
@@ -191,6 +199,8 @@ class V4ProposalGenerator:
         # Store for use in template preparation
         self._current_price_monthly = price_monthly
         self._current_setup_fee = setup_fee
+        # FASE-B: Store pain_ratio from pricing_result for projections
+        self._current_pain_ratio = getattr(pricing_result, 'pain_ratio', 0.20) if pricing_result else 0.20
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
         
@@ -462,10 +472,15 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         # Main scenario for primary display
         main_scenario = financial_scenarios.get_main_scenario()
         
-        # Calculate ROI
+        # Calculate ROI with recovery_factor per scenario
+        # FASE-B: ROI = (gain * recovery_factor) / investment, capped at 5.0X
         monthly_investment = getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE)
-        projected_monthly_gain = self._get_main_value(main_scenario)
-        roi_6_months = self._calculate_roi(monthly_investment, projected_monthly_gain, 6)
+        # FASE-B: projected_gain uses pain_ratio, not 100% of loss
+        raw_monthly_loss = self._get_main_value(main_scenario)
+        pain_ratio = getattr(self, '_current_pain_ratio', 0.20)
+        projected_monthly_gain = int(raw_monthly_loss * pain_ratio)
+        
+        roi_6_months = self._calculate_roi(monthly_investment, projected_monthly_gain, 6, recovery_factor=0.20)
         break_even = self._calculate_break_even(monthly_investment, projected_monthly_gain)
         
         data = {
@@ -495,53 +510,54 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             'roi_6_months': roi_6_months,
             'break_even_months': str(break_even),
             
-        # All scenarios
-        'conservative_gain': format_cop(self._get_main_value(financial_scenarios.conservative)),
-        'conservative_roi': self._calculate_roi(monthly_investment, self._get_main_value(financial_scenarios.conservative), 6),
-        'realistic_gain': format_cop(self._get_main_value(financial_scenarios.realistic)),
-        'realistic_roi': self._calculate_roi(monthly_investment, self._get_main_value(financial_scenarios.realistic), 6),
-        'optimistic_gain': self._format_scenario_amount(self._get_main_value(financial_scenarios.optimistic)),
-        'optimistic_roi': self._calculate_roi(monthly_investment, self._get_main_value(financial_scenarios.optimistic), 6),
+        # All scenarios with recovery_factor per scenario
+        # FASE-B: ROI = (gain * recovery_factor) / investment
+        'conservative_gain': format_cop(int(self._get_main_value(financial_scenarios.conservative) * pain_ratio)),
+        'conservative_roi': self._calculate_roi(monthly_investment, int(self._get_main_value(financial_scenarios.conservative) * pain_ratio), 6, recovery_factor=0.15),
+        'realistic_gain': format_cop(projected_monthly_gain),
+        'realistic_roi': roi_6_months,
+        'optimistic_gain': self._format_scenario_amount(int(self._get_main_value(financial_scenarios.optimistic) * pain_ratio)),
+        'optimistic_roi': self._calculate_roi(monthly_investment, int(self._get_main_value(financial_scenarios.optimistic) * pain_ratio), 6, recovery_factor=0.25),
         
-        # Monthly projection variables for 6 months
+        # Monthly projection variables for 6 months - FASE-B: use pain_ratio adjusted gains
         'inv_m1': format_cop(monthly_investment),
         'inv_m2': format_cop(monthly_investment),
         'inv_m3': format_cop(monthly_investment),
         'inv_m4': format_cop(monthly_investment),
         'inv_m5': format_cop(monthly_investment),
         'inv_m6': format_cop(monthly_investment),
-        'rec_m1': format_cop(self._get_main_value(main_scenario)),
-        'rec_m2': format_cop(self._get_main_value(main_scenario)),
-        'rec_m3': format_cop(self._get_main_value(main_scenario)),
-        'rec_m4': format_cop(self._get_main_value(main_scenario)),
-        'rec_m5': format_cop(self._get_main_value(main_scenario)),
-        'rec_m6': format_cop(self._get_main_value(main_scenario)),
-        'net_m1': format_cop(self._get_main_value(main_scenario) - monthly_investment),
-        'net_m2': format_cop(self._get_main_value(main_scenario) - monthly_investment),
-        'net_m3': format_cop(self._get_main_value(main_scenario) - monthly_investment),
-        'net_m4': format_cop(self._get_main_value(main_scenario) - monthly_investment),
-        'net_m5': format_cop(self._get_main_value(main_scenario) - monthly_investment),
-        'net_m6': format_cop(self._get_main_value(main_scenario) - monthly_investment),
-        'acc_m1': format_cop(self._get_main_value(main_scenario) - monthly_investment),
-        'acc_m2': format_cop(2 * (self._get_main_value(main_scenario) - monthly_investment)),
-        'acc_m3': format_cop(3 * (self._get_main_value(main_scenario) - monthly_investment)),
-        'acc_m4': format_cop(4 * (self._get_main_value(main_scenario) - monthly_investment)),
-        'acc_m5': format_cop(5 * (self._get_main_value(main_scenario) - monthly_investment)),
-        'acc_m6': format_cop(6 * (self._get_main_value(main_scenario) - monthly_investment)),
+        'rec_m1': format_cop(projected_monthly_gain),
+        'rec_m2': format_cop(projected_monthly_gain),
+        'rec_m3': format_cop(projected_monthly_gain),
+        'rec_m4': format_cop(projected_monthly_gain),
+        'rec_m5': format_cop(projected_monthly_gain),
+        'rec_m6': format_cop(projected_monthly_gain),
+        'net_m1': format_cop(projected_monthly_gain - monthly_investment),
+        'net_m2': format_cop(projected_monthly_gain - monthly_investment),
+        'net_m3': format_cop(projected_monthly_gain - monthly_investment),
+        'net_m4': format_cop(projected_monthly_gain - monthly_investment),
+        'net_m5': format_cop(projected_monthly_gain - monthly_investment),
+        'net_m6': format_cop(projected_monthly_gain - monthly_investment),
+        'acc_m1': format_cop(projected_monthly_gain - monthly_investment),
+        'acc_m2': format_cop(2 * (projected_monthly_gain - monthly_investment)),
+        'acc_m3': format_cop(3 * (projected_monthly_gain - monthly_investment)),
+        'acc_m4': format_cop(4 * (projected_monthly_gain - monthly_investment)),
+        'acc_m5': format_cop(5 * (projected_monthly_gain - monthly_investment)),
+        'acc_m6': format_cop(6 * (projected_monthly_gain - monthly_investment)),
         
         # Additional variables for sales template
         'generated_date': generated_at.strftime("%Y-%m-%d"),
-        'main_scenario_amount': format_cop(self._get_main_value(main_scenario)),
+        'main_scenario_amount': format_cop(raw_monthly_loss),  # raw loss before pain_ratio
         'web_score': "85",  # Placeholder - ideally from audit
         'web_status': "VERIFIED" if diagnostic_summary.overall_confidence.value == "VERIFIED" else "ESTIMATED",
-        'roi_6m': self._calculate_roi(monthly_investment, self._get_main_value(main_scenario), 6).replace("%", "").rstrip("X").strip(),  # Just the number, no X suffix
+        'roi_6m': roi_6_months.replace("X", "").strip(),  # Just the number, no X suffix
         'total_investment_6m': format_cop(monthly_investment * 6),
-        'recovered_6m': format_cop(self._get_main_value(main_scenario) * 6),
-        'net_benefit_6m': format_cop((self._get_main_value(main_scenario) - monthly_investment) * 6),
+        'recovered_6m': format_cop(projected_monthly_gain * 6),  # FASE-B: pain_ratio adjusted
+        'net_benefit_6m': format_cop((projected_monthly_gain - monthly_investment) * 6),  # FASE-B
         'plan_7d': self._build_7_day_plan(asset_plan),
         'plan_30d': self._build_30_day_plan(asset_plan),
-        'plan_60d': self._build_60_day_plan(),
-        'plan_90d': self._build_90_day_plan(),
+        'plan_60d': self._build_60_day_plan(asset_plan),
+        'plan_90d': self._build_90_day_plan(asset_plan),
         'coherence_score': str(int(diagnostic_summary.coherence_score * 100)) if diagnostic_summary.coherence_score is not None else '70',
 
         # Backward compatibility: score_tecnico alias for score_global
@@ -556,20 +572,20 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         # V6 template variables (regional context and investment summary)
         'hotel_location': hotel_location,
         'hotel_region': hotel_region,
-        'monthly_loss': format_cop(self._get_main_value(main_scenario)),
+        'monthly_loss': format_cop(raw_monthly_loss),
         'monthly_investment': format_cop(monthly_investment),
         'total_investment': format_cop(monthly_investment * 6),
-        'total_recovered': format_cop(self._get_main_value(main_scenario) * 6),
-        'net_benefit': format_cop((self._get_main_value(main_scenario) - monthly_investment) * 6),
+        'total_recovered': format_cop(projected_monthly_gain * 6),  # FASE-B: pain_ratio adjusted
+        'net_benefit': format_cop((projected_monthly_gain - monthly_investment) * 6),  # FASE-B
 
         # Coherence checklist
         'coherence_checklist': self._build_coherence_checklist(diagnostic_summary),
         
-        # Plans
+        # Plans — FASE-D: all 4 plans now accept asset_plan for dynamic content
         'plan_7_days': self._build_7_day_plan(asset_plan),
         'plan_30_days': self._build_30_day_plan(asset_plan),
-        'plan_60_days': self._build_60_day_plan(),
-        'plan_90_days': self._build_90_day_plan(),
+        'plan_60_days': self._build_60_day_plan(asset_plan),
+        'plan_90_days': self._build_90_day_plan(asset_plan),
         
         # Guarantees
         'guarantees_section': self._build_guarantees_section(),
@@ -587,9 +603,16 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'analytics_section': self._inject_analytics(analytics_data),
 
         # FASE-CAUSAL-REFACTOR: Extract pain_ids BEFORE data dict for dynamic tables
+        # FASE-D: Also pass score_aeo for AEO conditional service
         'pain_ids': getattr(diagnostic_summary, 'pain_ids', None) or [],
-        'dynamic_services_table': self._generate_dynamic_services_table(detected_pain_ids=getattr(diagnostic_summary, 'pain_ids', None) or []),
+        'dynamic_services_table': self._generate_dynamic_services_table(
+            detected_pain_ids=getattr(diagnostic_summary, 'pain_ids', None) or [],
+            score_aeo=diagnostic_summary.score_aeo,
+        ),
         'asset_quality_table': self._generate_asset_quality_table(assets_generated, detected_pain_ids=getattr(diagnostic_summary, 'pain_ids', None) or []),
+
+        # FASE-D: Competitors section — only if competitors data available
+        'competitors_section': self._build_competitors_section(audit_result),
 
         # FIX-OPENROUTER-C: IAO cost transparency (stub - activates when API keys available)
         'openrouter_queries': '—',
@@ -658,17 +681,23 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
     def _generate_dynamic_services_table(
         self,
         detected_pain_ids: Optional[List[str]] = None,
+        score_aeo: Optional[int] = None,
     ) -> str:
         """Genera tabla principal de servicios basada en pains detectados.
 
         Esta es la tabla "principal" de la propuesta — la que muestra qué servicios
         se incluyen en el kit. Es DINÁMICA: solo incluye servicios cuyos pains
-        fueron detectados.
+        fueron detectados. Si no hay pains detectados, muestra los 7 servicios estándar
+        del kit base.
+
+        FASE-D: Si score_aeo < 20, agrega "Optimización para IA Generativa" como
+        servicio adicional (8vo servicio condicional).
 
         Args:
             detected_pain_ids: Lista de pain IDs detectados (de PainSolutionMapper.detect_pains()).
                 Si está disponible, genera tabla DINÁMICA (solo servicios con pain detectado).
-                Si es None/empty, muestra mensaje indicando que se necesitan datos.
+                Si es None/empty, muestra los 7 servicios estándar del kit base.
+            score_aeo: Score AEO 0-100. Si < 20, agrega servicio AEO adicional.
 
         Returns:
             String markdown con la tabla de servicios, incluyendo headers.
@@ -680,11 +709,19 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 if entry.pain_id in detected_pain_ids
             ]
         else:
-            # No pains detected — show empty (awaiting data)
-            return ""
+            # No pains detected — show all 7 standard services from SERVICE_CATALOG
+            services = list(SERVICE_CATALOG.values())
 
         if not services:
+            # Should not happen — SERVICE_CATALOG always has 7 entries
+            # But as safeguard, return empty instead of crashing
             return ""
+
+        # FASE-D: AEO conditional service — add if score_aeo < 20
+        if score_aeo is not None and score_aeo < 20:
+            aeo_entry = SERVICE_CATALOG.get("optimizacion_ia_generativa")
+            if aeo_entry:
+                services.append(aeo_entry)
 
         # Build table with header and description
         rows = ["| Servicio | Qué obtiene |", "|----------|-------------|"]
@@ -753,36 +790,50 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         return "\n".join(rows)
 
     def _confidence_to_nivel_significado(self, confidence: Optional[float], assets_generated: Optional[List]) -> tuple:
-        """Convert confidence score to nivel + significado tuple."""
+        """Convert confidence score to nivel + significado tuple.
+        
+        FASE-C: Lenguaje positivo para cliente final.
+        Internamente solo se usa para display en la propuesta.
+        """
         if confidence is not None:
             if confidence >= 0.7:
                 return ("✅ Completo", "Listo para implementar")
             elif confidence >= 0.4:
-                return ("⚠️ Requiere datos", "Necesitamos informacion adicional")
+                return ("⚠️ En preparacion", "Datos pendientes del cliente")
             else:
-                return ("🔧 En desarrollo", "En proceso de mejora")
+                return ("🔧 En optimizacion", "Mejora continua de calidad")
         elif assets_generated is None:
-            return ("⏳ Pendiente", "Se genera al activar el servicio")
+            return ("⏳ Incluido en su kit", "Preparacion posterior a la firma")
         else:
-            return ("❌ No generado", "No se pudo generar - revisaremos")
+            return ("⏳ Incluido en su kit", "Preparacion posterior a la firma")
 
     def _render_template(self, template_content: str, data: Dict[str, str]) -> str:
         """Render the template with data."""
         template = Template(template_content)
         return template.safe_substitute(data)
     
-    def _calculate_roi(self, investment: int, gain: int, months: int) -> str:
+    def _calculate_roi(self, investment: int, gain: int, months: int, recovery_factor: float = 0.20) -> str:
         """Calculate ROI as ratio (e.g., '3.9X' instead of '292%').
         
-        Returns ratio of total_gain / total_investment.
+        FASE-B: Aplica recovery_factor para hacer ROI creible.
+        Formula: roi = (gain * recovery_factor * months) / (investment * months)
+               = (gain * recovery_factor) / investment
+        
+        Recovery factors: conservative=0.15, realistic=0.20, optimistic=0.25
+        
+        Returns ratio of total_gain / total_investment, capped at 5.0X max.
         """
         total_investment = investment * months
-        total_gain = gain * months
+        # FASE-B: apply recovery_factor so ROI is credible (not 20X)
+        total_gain = gain * recovery_factor * months
         
         if total_investment == 0:
             return "N/A"
         
         roi_ratio = total_gain / total_investment
+        # Cap at 5.0X maximum for credibility
+        if roi_ratio > 5.0:
+            roi_ratio = 5.0
         return f"{roi_ratio:.1f}X"
     
     def _calculate_break_even(self, investment: int, gain: int) -> int:
@@ -1058,36 +1109,161 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         
         return "\n".join(rows)
     
-    def _build_7_day_plan(self, asset_plan: List[AssetSpec]) -> str:
-        """Build detailed 7-day activation plan."""
-        return """- [ ] **Día 1**: Firma de propuesta y pago de activación
+    def _build_7_day_plan(self, asset_plan: Optional[List[AssetSpec]]) -> str:
+        """Build detailed 7-day activation plan.
+        
+        FASE-D: Genera contenido dinámico basado en assets P1 del asset_plan.
+        Solo quick wins que NO requieren datos externos del cliente.
+        Si asset_plan es None, usa contenido genérico (backward compat).
+        
+        Args:
+            asset_plan: Lista de AssetSpec con priority. P1 assets son activos en 7 días.
+        """
+        if not asset_plan:
+            return """- [ ] **Día 1**: Firma de propuesta y pago de activación
 - [ ] **Día 2**: Kick-off call con el equipo del hotel (30 min)
-- [ ] **Día 3**: Solicitud de accesos (analytics, GBP, web)
-- [ ] **Día 4**: Entrega de assets P1 críticos (WhatsApp, Schema básico)
+- [ ] **Día 3**: Solicitud de accesos (web, GBP actual)
+- [ ] **Día 4**: Entrega de activos sin dependencia de datos
+- [ ] **Día 5**: Validación técnica inicial
+- [ ] **Día 6**: Ajustes según feedback
+- [ ] **Día 7**: Confirmación de activación completa
+
+*Nota: Google Maps optimizado, Open Graph con fotos y SEO avanzado requieren datos suyos (fotos, accesos). Se entregan en la fase de activación.*"""
+
+        p1_assets = [a for a in asset_plan if a.priority == 1]
+        
+        if not p1_assets:
+            return """- [ ] **Día 1**: Firma de propuesta y pago de activación
+- [ ] **Día 2**: Kick-off call con el equipo del hotel (30 min)
+- [ ] **Día 3**: Solicitud de accesos (web, GBP actual)
+- [ ] **Día 4**: Configuración inicial sin dependencia de datos externos
 - [ ] **Día 5**: Validación técnica inicial
 - [ ] **Día 6**: Ajustes según feedback
 - [ ] **Día 7**: Confirmación de activación completa"""
-    
-    def _build_30_day_plan(self, asset_plan: List[AssetSpec]) -> str:
-        """Build detailed 30-day quick wins plan."""
-        return """- [ ] **Semana 2**: Implementación FAQ Schema + optimización GBP
+        
+        asset_names = [a.asset_type.replace("_", " ").title() for a in p1_assets[:4]]
+        asset_list = "\n- [ ] ".join(asset_names) if asset_names else ""
+        
+        return f"""- [ ] **Día 1**: Firma de propuesta y pago de activación
+- [ ] **Día 2**: Kick-off call con el equipo del hotel (30 min)
+- [ ] **Día 3**: Solicitud de accesos (web, GBP actual)
+- [ ] **Día 4**: Implementación de activos P1 (sin datos externos):
+- [ ] {asset_list}
+- [ ] **Día 5**: Validación técnica inicial
+- [ ] **Día 6**: Ajustes según feedback
+- [ ] **Día 7**: Confirmación de activación completa
+
+*Nota: Open Graph con fotos y SEO avanzado requieren datos suyos (fotos, accesos). Se entregan en la fase de activación.*"""
+
+    def _build_30_day_plan(self, asset_plan: Optional[List[AssetSpec]]) -> str:
+        """Build detailed 30-day quick wins plan.
+        
+        FASE-D: Genera contenido dinámico basado en assets P1 y P2.
+        Assets que requieren datos del cliente (fotos, accesos a Maps).
+        Si asset_plan es None, usa contenido genérico (backward compat).
+        
+        Args:
+            asset_plan: Lista de AssetSpec con priority. P1+P2 assets son activos en 30 días.
+        """
+        if not asset_plan:
+            return """- [ ] **Semana 2**: Implementación Google Maps optimizado (pendiente de recibir accesos)
+- [ ] **Semana 2**: Open Graph con fotos reales (pendiente de recibir fotos del cliente)
+- [ ] **Semana 3**: SEO Local - optimización basada en análisis técnico
 - [ ] **Semana 3**: Configuración tracking avanzado (UTMs, conversiones)
-- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas
-- [ ] **Día 30**: Reporte de avance con métricas iniciales"""
-    
-    def _build_60_day_plan(self) -> str:
-        """Build detailed 60-day consolidation plan."""
-        return """- [ ] **Días 31-45**: Optimización de assets entregados (A/B testing)
-- [ ] **Días 46-50**: Implementación de assets P2 y P3
-- [ ] **Días 51-55**: Primera medición de impacto en consultas directas
+- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales
+- [ ] **Día 30**: Reporte de avance con métricas de visibilidad"""
+
+        p1_assets = [a for a in asset_plan if a.priority == 1]
+        p2_assets = [a for a in asset_plan if a.priority == 2]
+        
+        items = []
+        
+        # P1 assets needing client data
+        if p1_assets:
+            asset_names = [a.asset_type.replace("_", " ").title() for a in p1_assets[:3]]
+            items.append(f"- [ ] **Semana 2**: Implementación P1: {", ".join(asset_names)}")
+        
+        # P2 assets needing client data
+        if p2_assets:
+            asset_names = [a.asset_type.replace("_", " ").title() for a in p2_assets[:3]]
+            items.append(f"- [ ] **Semana 3**: Implementación P2: {", ".join(asset_names)}")
+        
+        items.extend([
+            "- [ ] **Semana 3**: SEO Local - optimización basada en análisis técnico",
+            "- [ ] **Semana 3**: Configuración tracking avanzado (UTMs, conversiones)",
+            "- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales",
+            "- [ ] **Día 30**: Reporte de avance con métricas de visibilidad"
+        ])
+        
+        return "\n".join(items)
+
+    def _build_60_day_plan(self, asset_plan: Optional[List[AssetSpec]]) -> str:
+        """Build detailed 60-day consolidation plan.
+        
+        FASE-D: Genera contenido dinámico basado en assets P3.
+        Si asset_plan es None, usa contenido genérico (backward compat).
+        
+        Args:
+            asset_plan: Lista de AssetSpec con priority. P3 assets son activos en 60 días.
+        """
+        base_plan = """- [ ] **Días 31-45**: Optimización de assets entregados (A/B testing de títulos, descripciones)
+- [ ] **Días 46-50**: Implementación de assets P2 y P3 restantes
+- [ ] **Días 51-55**: Primera medición de impacto en consultas directas (datos reales de Google Search Console)
 - [ ] **Días 56-60**: Ajustes basados en datos reales + reporte día 60"""
-    
-    def _build_90_day_plan(self) -> str:
-        """Build detailed 90-day optimization plan."""
-        return """- [ ] **Días 61-75**: Evaluación de ROI a 3 meses
-- [ ] **Días 76-80**: Optimización de conversiones basada en datos
+
+        if not asset_plan:
+            return base_plan
+
+        p3_assets = [a for a in asset_plan if a.priority == 3]
+
+        if not p3_assets:
+            return base_plan
+
+        # Encontrar assets P3 que también necesitan datos del cliente
+        pending_p3 = [a for a in p3_assets if a.requires_manual_action]
+        if pending_p3:
+            asset_names = [a.asset_type.replace("_", " ").title() for a in pending_p3[:3]]
+            p3_line = f"- [ ] **Días 46-50**: Implementación P3 (pendiente datos del cliente): {', '.join(asset_names)}"
+        else:
+            asset_names = [a.asset_type.replace("_", " ").title() for a in p3_assets[:3]]
+            p3_line = f"- [ ] **Días 46-50**: Implementación P3: {', '.join(asset_names)}"
+
+        return f"""- [ ] **Días 31-45**: Optimización de assets entregados (A/B testing de títulos, descripciones)
+{p3_line}
+- [ ] **Días 51-55**: Primera medición de impacto en consultas directas (datos reales de Google Search Console)
+- [ ] **Días 56-60**: Ajustes basados en datos reales + reporte día 60"""
+
+    def _build_90_day_plan(self, asset_plan: Optional[List[AssetSpec]]) -> str:
+        """Build detailed 90-day optimization plan.
+        
+        FASE-D: Genera contenido dinámico basado en asset_plan.
+        Incluye evaluación de ROI, optimización, planificación fase 2 y reporte.
+        Si asset_plan es None, usa contenido genérico (backward compat).
+        
+        Args:
+            asset_plan: Lista de AssetSpec para planificar fase 2.
+        """
+        base_plan = """- [ ] **Días 61-75**: Evaluación de ROI a 3 meses con métricas reales
+- [ ] **Días 76-80**: Optimización de conversiones basada en datos de GA4
 - [ ] **Días 81-85**: Planificación de assets adicionales (fase 2)
-- [ ] **Días 86-90**: Revisión de estrategia a largo plazo + reporte final"""
+- [ ] **Días 86-90**: Revisión de estrategia a largo plazo + reporte final de resultados"""
+
+        if not asset_plan:
+            return base_plan
+
+        # Assets que no se implementaron aún (P3 o MANUAL_ONLY)
+        remaining = [a for a in asset_plan if a.priority >= 3 or a.requires_manual_action]
+        
+        if remaining:
+            asset_names = [a.asset_type.replace("_", " ").title() for a in remaining[:4]]
+            phase2_line = f"- [ ] **Días 81-85**: Planificación fase 2 basada en gaps: {', '.join(asset_names)}"
+        else:
+            phase2_line = "- [ ] **Días 81-85**: Planificación de assets adicionales (fase 2)"
+
+        return f"""- [ ] **Días 61-75**: Evaluación de ROI a 3 meses con métricas reales
+- [ ] **Días 76-80**: Optimización de conversiones basada en datos de GA4
+{phase2_line}
+- [ ] **Días 86-90**: Revisión de estrategia a largo plazo + reporte final de resultados"""
 
     def _build_geo_section(self, audit_result: Optional[Any]) -> str:
         """Construir sección de métricas GEO para propuesta.
@@ -1147,5 +1323,72 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
 
 """
         return section
+
+    def _build_competitors_section(self, audit_result: Optional[Any]) -> str:
+        """Build competitors section for the proposal.
+
+        FASE-D: Shows nearby competitors identified during audit with name,
+        distance (if available), rating, and main gap vs our hotel.
+
+        Args:
+            audit_result: V4AuditResult with competitors list from
+                CompetitorAnalyzer.get_nearby_competitors().
+
+        Returns:
+            Markdown section with competitors table, or empty string if no data.
+        """
+        if not audit_result:
+            return ""
+
+        competitors = getattr(audit_result, 'competitors', None)
+        if not competitors:
+            return ""
+
+        # Filter to top 5 competitors with useful data
+        valid_competitors = [
+            c for c in competitors
+            if isinstance(c, dict) and c.get('name')
+        ][:5]
+
+        if not valid_competitors:
+            return ""
+
+        # Build table rows
+        rows = []
+        for c in valid_competitors:
+            name = c.get('name', 'Competidor sin nombre')
+            rating = c.get('rating', None)
+            rating_str = f"{rating} ⭐" if rating else "Sin rating"
+            distance = c.get('distance_km', None)
+            dist_str = f"{distance:.1f} km" if distance else "Dist. descon. "
+            geo_score = c.get('geo_score', None)
+            geo_str = f"GEO {geo_score}/100" if geo_score else "GEO sin datos"
+            # Main gap: describe what this competitor does better
+            fotos = c.get('fotos', 0)
+            reviews = c.get('reviews', 0)
+            gap_parts = []
+            if fotos > 0:
+                gap_parts.append(f"{fotos} fotos")
+            if reviews > 0:
+                gap_parts.append(f"{reviews} reviews")
+            gap_str = " | ".join(gap_parts) if gap_parts else "—"
+
+            rows.append(f"| {name} | {rating_str} | {dist_str} | {geo_str} | {gap_str} |")
+
+        table_content = "\n".join(rows)
+
+        return f"""
+## 🏨 Competidores Cercanos Identificados
+
+Analizamos {len(valid_competitors)} hoteles similares en su área. Esto es lo que encontramos:
+
+|| Competidor | Rating | Distancia | GEO Score | Info adicional ||
+||------------|--------|-----------|-----------|-----------------|
+{table_content}
+
+**Lo que esto significa para usted:** Estos son hoteles como el suyo. Si ellos aparecen antes
+en Google Maps o en las respuestas de ChatGPT, los viajeros los eligen a ellos. Nuestra estrategia
+busca que usted aparezca al mismo nivel o por delante de ellos.
+"""
 
 

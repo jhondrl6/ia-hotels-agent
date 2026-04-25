@@ -46,7 +46,7 @@ SERVICE_CATALOG: Dict[str, ServiceEntry] = {
         service_name="Botón de WhatsApp",
         asset_type="whatsapp_button",
         pain_id="no_whatsapp_visible",
-        description="Sus guests reservan con 1 clic desde su web",
+        description="Sus huéspedes reservan con 1 clic desde su web",
     ),
     # Schema / IA
     "datos_estructurados": ServiceEntry(
@@ -60,7 +60,7 @@ SERVICE_CATALOG: Dict[str, ServiceEntry] = {
         service_name="Página de FAQ",
         asset_type="faq_page",
         pain_id="no_faq_schema",
-        description="Sus guests encuentran respuestas sin salir de su web",
+        description="Sus huéspedes encuentran respuestas sin salir de su web",
     ),
     # Open Graph / Social
     "meta_tags_sociales": ServiceEntry(
@@ -69,12 +69,12 @@ SERVICE_CATALOG: Dict[str, ServiceEntry] = {
         pain_id="no_og_tags",
         description="Sus fotos brillan cuando alguien comparte su link en redes",
     ),
-    # Barra de reservas móvil
-    "barra_reserva_movil": ServiceEntry(
-        service_name="Barra de Reserva Móvil",
-        asset_type="barra_reserva_movil",
-        pain_id="no_motor_reservas",
-        description="Motor de reservas optimizado para dispositivos móviles",
+    # Informe Mensual
+    "informe_mensual": ServiceEntry(
+        service_name="Informe Mensual",
+        asset_type="monthly_report",
+        pain_id="no_monthly_report",
+        description="Reporte mensual con metricas de rendimiento y oportunidades",
     ),
 }
 
@@ -112,6 +112,16 @@ def get_service_names_for_pains(detected_pain_ids: List[str]) -> List[str]:
     """
     services = get_services_for_pains(detected_pain_ids)
     return [s.service_name for s in services]
+
+
+# FASE-D: AEO conditional service — included when score_aeo < 20
+# Triggered by DiagnosticSummary.score_aeo field (0-100, from 4-pillars scoring)
+SERVICE_CATALOG["optimizacion_ia_generativa"] = ServiceEntry(
+    service_name="Optimización para IA Generativa",
+    asset_type="llms_txt",
+    pain_id="low_ia_readiness",
+    description="Aparece cuando clientes preguntan a ChatGPT/Gemini 'dónde hospedarme en [región]'",
+)
 
 
 # Backwards-compatible lookup: service_name → asset_type

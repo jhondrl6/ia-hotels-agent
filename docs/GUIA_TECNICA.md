@@ -6,6 +6,19 @@
 
 ---
 
+### v4.35.0 - 2026-04-23 — INTERVENCIÓN AMABILIA: FASE-A (parcial)
+
+**Resumen:** Corrección de test drift y alineación de catálogos de servicios. Primera fase de intervención Amazilia Hotel.
+
+**FASE-A — Alineación Test Drift + Catálogos (2026-04-23):**
+- `test_proposal_confidence_disclosure.py` — Fix drift: 6 → 7 servicios, eliminado "Visibilidad en ChatGPT" (ya no existe), agregado "Página de FAQ" y "Meta Tags Sociales (Open Graph)"
+- `service_catalog.py` — Reemplazado "Barra de Reserva Móvil" por "Informe Mensual" (alineado con PROPOSAL_SERVICE_TO_ASSET)
+- `proposal_asset_alignment.py` — Corregido tilde "Boton" → "Botón", "Pagina" → "Página"
+- `pain_solution_mapper.py` — Agregado `no_monthly_report` a PAIN_SOLUTION_MAP y `monthly_report` a ASSET_NAMES
+- `test_proposal_dynamic.py` — Actualizado test que usaba pain_id `no_motor_reservas` (ya fuera del catálogo)
+
+**Criterio de éxito:** 19/19 PASS en commercial_documents, 4/4 validations.
+
 ### v4.34.0 - 2026-04-23 — FAQ y Open Graph en Propuesta Comercial
 
 **Resumen:** Corregir desalineamiento entre diagnóstico de brechas y propuesta comercial. FAQ y Open Graph ahora aparecen como servicios en la propuesta.

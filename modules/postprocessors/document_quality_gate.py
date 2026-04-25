@@ -40,8 +40,8 @@ PT_TO_ES = {
     "proxima": "proxima",
     "proximo": "proximo",
     "atendimento": "atencion",
-    "hospede": "huesped",
-    "hóspede": "huesped",
+    "hospede": "huésped",
+    "hóspede": "huésped",
     "disponibilidade": "disponibilidad",
     "servicos": "servicios",
     "serviços": "servicios",
@@ -51,8 +51,8 @@ PT_TO_ES = {
 
 # English to Spanish replacements (hotel context)
 EN_TO_ES = {
-    "guests": "huespedes",
-    "guest": "huesped",
+    "guests": "huéspedes",
+    "guest": "huésped",
     "booking": "reserva",
     "checkin": "check-in",
     "checkout": "check-out",

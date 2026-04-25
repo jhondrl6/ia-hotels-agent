@@ -4,25 +4,27 @@
 
 ### Objetivo
 
-Propuesta comercial ahora se genera dinámicamente desde los pains detectados, en vez de un diccionario estático de 7 servicios.
+Propuesta comercial ahora se genera dinámicamente desde los pains detectados (FASE-C), con AEO condicional, planes dinámicos basados en asset_plan (FASE-D) y sección de competidores (FASE-D).
 
 ### Cambios Implementados
 
-- `modules/commercial_documents/service_catalog.py` - NUEVO: SERVICE_CATALOG con mapeo pain→servicio
-- `modules/commercial_documents/v4_proposal_generator.py` - Refactorizado _generate_asset_quality_table para usar pains detectados
-- `modules/commercial_documents/templates/propuesta_v6_template.md` - Tabla principal ahora dinámica con placeholder ${dynamic_services_table}
+- `modules/commercial_documents/service_catalog.py` - SERVICE_CATALOG con 8 entradas (7 estándar + AEO condicional). AEO se agrega cuando score_aeo < 20.
+- `modules/commercial_documents/v4_proposal_generator.py` - FASE-D: `_build_7/30/60/90_day_plan()` ahora reciben `asset_plan` y generan contenido dinámico por prioridad P1/P2/P3. `_build_competitors_section()` extrae competidores de audit_result.
+- `modules/commercial_documents/templates/propuesta_v6_template.md` - Placeholder `${competitors_section}` insertado post-sección "Esto es lo que hacemos por usted".
 
 ### Archivos Modificados
 
-| Archivo | Cambio |
+|| Archivo | Cambio ||
 |---------|--------|
-| `modules/commercial_documents/v4_proposal_generator.py` | Propuesta dinámica desde pain detection |
-| `modules/commercial_documents/templates/propuesta_v6_template.md` | Tabla principal dinámica |
+| `modules/commercial_documents/v4_proposal_generator.py` | Planes dinámicos 7/30/60/90 + sección competidores + AEO condicional |
+| `modules/commercial_documents/service_catalog.py` | Entrada AEO condicional (optimizacion_ia_generativa) |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Placeholder ${competitors_section} |
 
 ### Tests
 
 - Tests de proposal_alignment verificados (backwards compatible, 13/13 PASS)
 - Tests de proposal_dynamic verificados (14/14 PASS)
+- Tests commercial_documents + delivery: 132/132 PASS
 
 ## [4.34.0] - 2026-04-23
 

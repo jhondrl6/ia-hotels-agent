@@ -252,6 +252,15 @@ class PainSolutionMapper:
             "name": "Imágenes sin Texto Alternativo",
             "description": "Las imágenes no tienen atributo alt descriptivo"
         },
+        "no_monthly_report": {
+            "assets": ["monthly_report"],
+            "confidence_required": 0.0,
+            "priority": 2,
+            "validation_fields": ["monthly_report_requested"],
+            "estimated_impact": "low",
+            "name": "Sin Informe Mensual",
+            "description": "No se genera reporte mensual de metricas para el cliente"
+        },
         "no_blog_content": {
             "assets": ["blog_strategy_guide"],
             "confidence_required": 0.0,
@@ -299,6 +308,7 @@ class PainSolutionMapper:
         "indirect_traffic_optimization": "Guia de Optimizacion de Trafico Indirecto",
         "open_graph": "Meta Tags Sociales (Open Graph)",
         "og_tags_guide": "Guía de Open Graph",
+        "monthly_report": "Informe Mensual",
     }
     
     def __init__(self):

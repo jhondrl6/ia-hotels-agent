@@ -20,10 +20,10 @@ from typing import Dict, List, Any, Optional
 PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
     "Google Maps Optimizado": "geo_playbook",
     "SEO Local": "optimization_guide",
-    "Boton de WhatsApp": "whatsapp_button",
+    "Botón de WhatsApp": "whatsapp_button",
     "Datos Estructurados": "hotel_schema",
     "Informe Mensual": "monthly_report",
-    "Pagina de FAQ": "faq_page",
+    "Página de FAQ": "faq_page",
     "Meta Tags Sociales (Open Graph)": "open_graph",
 }
 

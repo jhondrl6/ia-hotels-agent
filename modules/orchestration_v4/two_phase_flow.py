@@ -557,7 +557,7 @@ class TwoPhaseOrchestrator:
                         "message": "Ingrese un numero valido de Colombia (10 digitos)"
                     },
                     "help_text": (
-                        "Numero de WhatsApp para contacto directo con huespedes "
+                        "Número de WhatsApp para contacto directo con huéspedes "
                         "(se validara contra su web y Google Business)"
                     )
                 }

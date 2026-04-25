@@ -70,7 +70,7 @@ class WhatsAppConflictGuideGenerator:
         sections.append("")
         sections.append("Cuando un visitante busca su hotel y encuentra numeros diferentes en su")
         sections.append("web vs Google, se genera confusion. Esto resulta en:")
-        sections.append("- Perdida de confianza del potencial huesped")
+        sections.append("- Pérdida de confianza del potencial huésped")
         sections.append("- Reservas perdidas por frustracion")
         sections.append("- Mensajes a numeros incorrectos o inactivos")
         sections.append("")

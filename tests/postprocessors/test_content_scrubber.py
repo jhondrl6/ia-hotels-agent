@@ -118,7 +118,7 @@ class TestFixMixedLanguage:
         doc = "Los guests son internacionales."
         result = scrubber.scrub(doc, {}, "diagnostico")
         assert "guests" not in result.scrubbed.lower()
-        assert "huespedes" in result.scrubbed
+        assert "huéspedes" in result.scrubbed
 
     def test_logs_fix_for_language(self, scrubber):
         result = scrubber.scrub("guests", {}, "diagnostico")

@@ -90,7 +90,7 @@ Asegura presencia en:
 3. **TikTok** (emergente para hoteles):
    - Videos cortos de experiencias
    - Behind-the-scenes del equipo
-   - Testimonios de huespedes
+   - Testimonios de huéspedes
 
 ## Estrategia 6: Asistentes de Voz
 

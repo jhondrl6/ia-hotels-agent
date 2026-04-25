@@ -99,7 +99,7 @@ class TestProposalDynamicFiltering:
 
     def test_dynamic_services_table_filters_by_detected_pains(self):
         """_generate_dynamic_services_table should only show services for detected pains."""
-        detected_pain_ids = ["no_og_tags", "no_motor_reservas"]
+        detected_pain_ids = ["no_og_tags", "no_monthly_report"]
 
         result = self.gen._generate_dynamic_services_table(detected_pain_ids=detected_pain_ids)
 
@@ -110,7 +110,7 @@ class TestProposalDynamicFiltering:
 
         # Verify the 2 services that SHOULD appear
         assert "Meta Tags Sociales (Open Graph)" in result
-        assert "Barra de Reserva Móvil" in result
+        assert "Informe Mensual" in result
 
         # Verify 5 services that should NOT appear
         should_not_appear = [
@@ -123,13 +123,22 @@ class TestProposalDynamicFiltering:
         for svc in should_not_appear:
             assert svc not in result, f"Service '{svc}' should NOT appear but did"
 
-    def test_dynamic_services_table_no_pains_returns_empty(self):
-        """With no detected pains, dynamic table returns empty string (awaiting diagnostic)."""
+    def test_dynamic_services_table_no_pains_returns_all_7_services(self):
+        """FASE-C: With no detected pains, returns all 7 standard services (not empty string)."""
         result = self.gen._generate_dynamic_services_table(detected_pain_ids=[])
 
-        # When no pains detected, function returns empty string
-        # (signals "awaiting diagnostic data" downstream)
-        assert result == "", f"Expected empty string when no pains, got: {result!r}"
+        # FASE-C: When no pains detected, function returns ALL 7 services from SERVICE_CATALOG
+        # NOT empty string (this was the old buggy behavior)
+        assert result != "", "Expected 7 services when no pains detected, got empty string"
+        
+        # Verify all 7 services are present
+        assert "Google Maps Optimizado" in result
+        assert "SEO Local" in result
+        assert "Botón de WhatsApp" in result
+        assert "Datos Estructurados" in result
+        assert "Página de FAQ" in result
+        assert "Meta Tags Sociales (Open Graph)" in result
+        assert "Informe Mensual" in result
 
     def test_single_pain_detected_shows_single_service(self):
         """With exactly 1 pain detected, only 1 service should appear."""
@@ -147,22 +156,32 @@ class TestProposalDynamicFiltering:
         assert "Botón de WhatsApp" in result
 
     def test_all_7_pains_detected_shows_all_7_services(self):
-        """If all 7 pains are detected, all 7 services should appear."""
-        all_pain_ids = list(set(entry.pain_id for entry in SERVICE_CATALOG.values()))
+        """If all 7 base pains are detected (excl. AEO conditional), all 7 base services appear.
+
+        FASE-D: AEO service is CONDITIONAL on score_aeo < 20, not pain-based.
+        So when all base pains are detected, exactly 7 services appear (not 8).
+        """
+        all_base_pain_ids = [
+            entry.pain_id
+            for entry in SERVICE_CATALOG.values()
+            if entry.pain_id != "low_ia_readiness"  # Exclude AEO conditional
+        ]
 
         result = self.gen._generate_asset_quality_table(
             assets_generated=[],
-            detected_pain_ids=all_pain_ids,
+            detected_pain_ids=all_base_pain_ids,
         )
 
         lines = result.strip().split("\n")
         service_rows = [l for l in lines if l.startswith("| ") and "Entregable" not in l]
 
-        assert len(service_rows) == 7, f"Expected 7 services, got {len(service_rows)}"
+        # 7 base services only (AEO is conditional, not triggered by pain)
+        assert len(service_rows) == 7, f"Expected 7 base services, got {len(service_rows)}"
 
-        # Verify all 7 service names appear
+        # Verify all 7 base service names appear
         for entry in SERVICE_CATALOG.values():
-            assert entry.service_name in result, f"Service '{entry.service_name}' should appear but didn't"
+            if entry.pain_id != "low_ia_readiness":
+                assert entry.service_name in result, f"Service '{entry.service_name}' should appear but didn't"
 
 
 class TestServiceCatalogConsistency:
@@ -182,9 +201,23 @@ class TestServiceCatalogConsistency:
             assert entry.asset_type, f"Entry '{key}' has empty asset_type"
             assert isinstance(entry.asset_type, str), f"Entry '{key}' asset_type is not string"
 
-    def test_service_catalog_has_7_entries(self):
-        """SERVICE_CATALOG should have exactly 7 entries (one per vendible service)."""
-        assert len(SERVICE_CATALOG) == 7, f"Expected 7 entries, got {len(SERVICE_CATALOG)}"
+    def test_service_catalog_has_8_entries(self):
+        """SERVICE_CATALOG should have 8 entries: 7 base + 1 AEO conditional (FASE-D).
+
+        The 8th entry is 'optimizacion_ia_generativa' (AEO service) which is
+        conditionally added when score_aeo < 20. It does NOT appear in the table
+        unless score_aeo condition is met.
+        """
+        assert len(SERVICE_CATALOG) == 8, f"Expected 8 entries (7 base + AEO), got {len(SERVICE_CATALOG)}"
+
+    def test_aeo_service_is_conditional_entry(self):
+        """FASE-D: AEO entry exists but is triggered by score, not by pain detection."""
+        from modules.commercial_documents.service_catalog import SERVICE_CATALOG
+
+        aeo_entry = SERVICE_CATALOG.get("optimizacion_ia_generativa")
+        assert aeo_entry is not None, "AEO service entry should exist in SERVICE_CATALOG"
+        assert aeo_entry.pain_id == "low_ia_readiness"
+        assert aeo_entry.asset_type == "llms_txt"
 
     def test_pain_ids_are_unique_in_catalog(self):
         """Each pain_id should map to exactly one service (no duplicates)."""
@@ -203,11 +236,11 @@ class TestBackwardsCompatibility:
         assert PROPOSAL_SERVICE_TO_ASSET, "PROPOSAL_SERVICE_TO_ASSET must exist for backwards compat"
         assert len(PROPOSAL_SERVICE_TO_ASSET) == 7, f"Expected 7 entries, got {len(PROPOSAL_SERVICE_TO_ASSET)}"
 
-    def test_service_to_asset_lookup_exists(self):
-        """SERVICE_TO_ASSET_LOOKUP should exist and have 7 entries."""
+    def test_service_to_asset_lookup_has_8_entries(self):
+        """SERVICE_TO_ASSET_LOOKUP should have 8 entries (7 base + AEO conditional, FASE-D)."""
         from modules.commercial_documents.service_catalog import SERVICE_TO_ASSET_LOOKUP
         assert SERVICE_TO_ASSET_LOOKUP, "SERVICE_TO_ASSET_LOOKUP must exist"
-        assert len(SERVICE_TO_ASSET_LOOKUP) == 7, f"Expected 7 entries, got {len(SERVICE_TO_ASSET_LOOKUP)}"
+        assert len(SERVICE_TO_ASSET_LOOKUP) == 8, f"Expected 8 entries (7 base + AEO), got {len(SERVICE_TO_ASSET_LOOKUP)}"
 
     def test_all_service_catalog_services_have_lookup_entry(self):
         """Every SERVICE_CATALOG service should have an entry in SERVICE_TO_ASSET_LOOKUP."""

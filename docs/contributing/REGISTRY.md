@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-23
+> **Ultima actualizacion:** 2026-04-24
 > **Version actual:** v4.30.0
-> **Total fases completadas:** 150
+> **Total fases completadas:** 157
 
 ---
 
@@ -3837,6 +3837,158 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-A - 2026-04-23
+**Descripcion:** Fix test drift proposal_confidence_disclosure + alineacion SERVICE_CATALOG con PROPOSAL_SERVICE_TO_ASSET
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/service_catalog.py` | Service Catalog |
+| `modules/asset_generation/proposal_asset_alignment.py` | Proposal Asset Alignment |
+| `modules/commercial_documents/pain_solution_mapper.py` | Pain Solution Mapper |
+| `tests/commercial_documents/test_proposal_confidence_disclosure.py` | Test Proposal Confidence Disclosure |
+| `tests/commercial_documents/test_proposal_dynamic.py` | Test Proposal Dynamic |
+
+### Validaciones
+- [x] Tests passing (19)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-B - 2026-04-23
+**Descripcion:** Correccion financiera: escenarios ordenados, recovery_factor en ROI (0.15/0.20/0.25), pain_ratio aplicado a projected_gain, disclaimer Tier C en EvidenceTier
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-C - 2026-04-23
+**Descripcion:** Template V6 + fallback servicios dinamicos + lenguaje entregables + timeline realista
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | NUEVO | Propuesta V6 Template |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-D - 2026-04-23
+**Descripcion:** AEO entregable condicional + planes dinamicos 7/30/60/90 + seccion competidores
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/service_catalog.py` | Service Catalog |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+| `tests/commercial_documents/test_proposal_dynamic.py` | Test Proposal Dynamic |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-VALIDATE - 2026-04-24
+**Descripcion:** Prueba v4complete Amazilia Hotel - PARCIAL-FALLA. Diagnostico y financial_scenarios generados. Propuesta comercial crasheo con TypeError: _build_60_day_plan() missing asset_plan. NO-GO - requiere hotfix.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/fase-VALIDATE/validacion_checklist.md` | NUEVO | Validacion Checklist |
+| `evidence/fase-VALIDATE/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260424_120549.md` | NUEVO | 01 Diagnostico Y Oportunidad 20260424 120549 |
+| `evidence/fase-VALIDATE/financial_scenarios.json` | NUEVO | Financial Scenarios |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-VALIDATE-RC - 2026-04-24
+**Descripcion:** Hotfix TypeError _build_60_day_plan + test regresion + re-ejecucion v4complete Amazilia Hotel
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/commercial_documents/test_proposal_generator_dict.py` | NUEVO | Test Proposal Generator Dict |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (1)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-VALIDATE-RC - 2026-04-24
+**Descripcion:** Hotfix ortografico BUG-8: guests/huespedes -> huespedes con tilde en scrubber, template V6, service_catalog, document_quality_gate, y 3 archivos adicionales
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/postprocessors/content_scrubber.py` | Content Scrubber |
+| `modules/postprocessors/document_quality_gate.py` | Document Quality Gate |
+| `modules/commercial_documents/service_catalog.py` | Service Catalog |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+| `modules/asset_generation/templates/indirect_traffic_optimization_template.md` | Indirect Traffic Optimization Template |
+| `modules/orchestration_v4/two_phase_flow.py` | Two Phase Flow |
+| `modules/asset_generation/whatsapp_conflict_guide.py` | Whatsapp Conflict Guide |
+
+### Validaciones
+- [x] Tests passing (183)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
