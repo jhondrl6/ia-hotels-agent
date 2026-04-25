@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-25
 > **Version actual:** v4.35.1
-> **Total fases completadas:** 161
+> **Total fases completadas:** 162
 
 ---
 
@@ -4048,6 +4048,45 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (52)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-TRAZABILIDAD-VALIDATE - 2026-04-25
+**Descripcion:** Validacion unica v4complete Amazilia Hotel: 9 gates + trazabilidad + IA metrics visibles + positive findings + IAO unificado. Bug fix: output_dir en _prepare_template_data. 13/18 criterios pasan. BUG-02 (financial gate false positive) documentado.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `output/v4_complete/VALIDATION_RESULTS.md` | NUEVO | Validation Results |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.89 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-TRAZABILIDAD-PATCH - 2026-04-25
+**Descripcion:** 5 fixes de issues post-validate: T1=BUG-02 financial_validity WARNING con default_sources, T2=secciones Trazabilidad+Validacion Calidad en diagnostico, T3=seo_score persiste en JSON, T4=geo_flow_result timing correcto
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

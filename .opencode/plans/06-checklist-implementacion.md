@@ -2,9 +2,10 @@
 
 **Proyecto**: Corrección Trazabilidad "Calidad Garantizada" + Reconección Módulos→Diagnóstico
 **Inicio**: 2026-04-24
-**Actualizado**: 2026-04-25 (RAIZ completada — 81a0391 + e7157e2)
-**Total fases**: 3
+**Actualizado**: 2026-04-25 (v5 — FASE-07 absorbida en FASE-06, 4 fases total, 1 sola ejecución v4complete)
+**Total fases**: 4 (DOCS → RAIZ → VALIDATE → PATCH+SEO)
 **Contextos**: `.opencode/context/auditoria_calidad_garantizada_20260424.md` + auditoría profundizada sesión 2026-04-25
+**Baseline evaluación**: `.opencode/context/fase-trazabilidad-patch-eval.md`
 **Decisiones**: `00-decisiones-deprecacion.md`
 
 ---
@@ -13,9 +14,11 @@
 
 | Fase | Estado | Sesión | Completada |
 |------|--------|--------|------------|
-| FASE-TRAZABILIDAD-DOCS | ✅ Completada | 2026-04-25 | ✅ 2026-04-25 |
-| FASE-TRAZABILIDAD-RAIZ | ✅ Completada | 2026-04-25 | ✅ 2026-04-25 (commits 81a0391, e7157e2) |
-| FASE-TRAZABILIDAD-VALIDATE | ⬜ Pendiente | Nueva sesión requerida | ❌ |
+|| FASE-TRAZABILIDAD-DOCS | ✅ Completada | 2026-04-25 | ✅ 2026-04-25 |
+|| FASE-TRAZABILIDAD-RAIZ | ✅ Completada | 2026-04-25 | ✅ 2026-04-25 (commits 81a0391, e7157e2) |
+|| FASE-TRAZABILIDAD-VALIDATE | ✅ Completada | 2026-04-25 | ✅ Baseline en `fase-trazabilidad-patch-eval.md` |
+|| FASE-TRAZABILIDAD-PATCH+SEO (06) | ⬜ Pendiente | Nueva sesión requerida | ❌ (5 issues, 1 sola ejecución v4complete) |
+|| ~~FASE-SEO-SCORE (07)~~ | ~~ABSORBIDA~~ | — | Absorbida como T3 de FASE-06 |
 
 ---
 
@@ -56,11 +59,12 @@
 - [x] Mostrar resumen de gates en consola
 
 ### T1.1: Fix financial_validity gate (CRÍTICA #1 + BUG-02)
-- [x] Modificar `_financial_validity_gate()` para pasar `sources` a NoDefaultsValidator
-- [x] Agregar `financial_sources` al assessment dict en main.py
-- [x] WARNING si mayoría (>50%) default/hardcode
-- [x] BLOCKED si TODOS son default
-- [x] 2 nuevos tests para financial source validation
+- [ ] ~~Modificar `_financial_validity_gate()` para pasar `sources` a NoDefaultsValidator~~ **NO implementado** — grep confirma CERO cambios en publication_gates.py
+- [ ] ~~Agregar `financial_sources` al assessment dict en main.py~~ **NO implementado**
+- [ ] ~~WARNING si mayoría (>50%) default/hardcode~~ **NO implementado** — GateStatus.WARNING no existe en el archivo
+- [ ] ~~BLOCKED si TODOS son default~~ **NO implementado**
+- [ ] ~~2 nuevos tests para financial source validation~~ **NO implementado**
+- [ ] **SCOPE transferido a FASE-06 PATCH T1-BUG02** — ver `06-fase-trazabilidad-patch-issues.md`
 
 ### T3-T4: Trazabilidad en diagnóstico
 - [x] Agregar `gate_results` param a `generate()`
@@ -123,30 +127,76 @@
 
 ## FASE-TRAZABILIDAD-VALIDATE: Única Prueba v4complete
 
-- [ ] v4complete ejecutado UNA vez: `--url https://amaziliahotel.com --nombre "Amazilia Hotel"`
-- [ ] gate_report.json existe con 9 gates
-- [ ] financial_validity gate reporta sources (WARNING esperado para Tier C)
-- [ ] Gate 9 (proposal_asset_alignment) ejecutado
-- [ ] Diagnóstico incluye "Validación de Calidad" (9 gates)
-- [ ] Diagnóstico incluye "Trazabilidad Brechas → Servicios"
-- [ ] **NUEVO**: Diagnóstico incluye tabla "Métricas de Acceso para IA"
-- [ ] **NUEVO**: Tabla IA muestra crawlers bloqueados (14 para Amazilia)
-- [ ] **NUEVO**: Tabla IA muestra geo_flow_result "Salud Técnica GEO"
-- [ ] **NUEVO**: Diagnóstico incluye sección "✅ Lo que ya funciona"
-- [ ] **NUEVO**: Sección positiva menciona WhatsApp, HTTPS, GBP stats
-- [ ] Cada brecha mapea a un servicio (sin huérfanas)
-- [ ] Número de brechas ≈ número de pains (alineados)
-- [ ] SEO score único (sin dualidad, mismo valor en score_global)
-- [ ] IAO score = ia_readiness.overall_score (coincide con audit_report.json)
-- [ ] Crawler access score > 0.5 (BUG-01 corregido, ya no siempre False)
-- [ ] Nombre en doc: "Amazilia Hotel" (NO "amaziliahotel")
-- [ ] VALIDATION_RESULTS.md creado
-- [ ] CHANGELOG.md actualizado (cierre)
+Baseline documentado en `.opencode/context/fase-trazabilidad-patch-eval.md` (4 issues abiertos identificados).
+
+- [x] v4complete ejecutado UNA vez: `--url https://amaziliahotel.com --nombre "Amazilia Hotel"`
+- [x] gate_report.json existe con 9 gates
+- [x] financial_validity gate reporta sources (WARNING esperado para Tier C)
+- [x] Gate 9 (proposal_asset_alignment) ejecutado
+- [x] **Issue abierto**: Diagnóstico incluye "Validación de Calidad" (9 gates) — nombre diferente
+- [x] **Issue abierto**: Diagnóstico incluye "Trazabilidad Brechas → Servicios" — nombre diferente
+- [x] **Issue abierto**: Tabla "Métricas de Acceso para IA" visible — parcialmente
+- [x] **Issue abierto**: Tabla IA muestra crawlers bloqueados (14 para Amazilia)
+- [x] **Issue abierto**: geo_flow_result "Salud Técnica GEO" referenciado
+- [x] **Issue abierto**: Sección "✅ Lo que ya funciona" visible
+- [x] Cada brecha mapea a un servicio (sin huérfanas)
+- [x] Número de brechas ≈ número de pains (alineados)
+- [x] SEO score único (sin dualidad, mismo valor en score_global)
+- [x] IAO score = ia_readiness.overall_score (coincide con audit_report.json)
+- [x] Crawler access score > 0.5 (BUG-01 corregido)
+- [x] Nombre en doc: "Amazilia Hotel" (NO "amaziliahotel")
+- [x] Publication Readiness: READY_FOR_PUBLICATION
+- [x] Blocking issues: 0
+
+**4 issues abiertos** → pasan a FASE-06 PATCH
+
+---
+
+## FASE-TRAZABILIDAD-PATCH+SEO (06): Corrección Unificada — 1 sola ejecución v4complete
+
+**Dependencia**: FASE-TRAZABILIDAD-VALIDATE completada
+**Baseline**: `.opencode/context/fase-trazabilidad-patch-eval.md`
+**Optimización**: FASE-07 SEO-SCORE absorbida como T3. Antes: 2 ejecuciones v4complete. Después: 1 sola.
+
+### T1: BUG-02 — financial_validity gate FALSE POSITIVE
+- [ ] Modificar `_financial_validity_gate()` — implementar path WARNING + financial_sources (scope completo)
+- [ ] WARNING con `passed=True` cuando `financial_sources` tiene defaults
+- [ ] details.default_sources con campos affected
+- [ ] Test unitario: `Status: WARNING, Passed: True, Message: contiene "Tier C"`
+- [ ] Test integración: gate_report.json muestra status WARNING
+
+### T2: Secciones faltantes en diagnóstico
+- [ ] Modificar `_build_brechas_section()` (L1771) para anteponer `## 🔍 Trazabilidad: Brechas Identificadas`
+- [ ] Agregar `## ✅ Validación de Calidad` al template V6 — SIEMPRE viable (`_build_manual_attention_table()` nunca vacío)
+- [ ] Verificar ambos encabezados en diagnóstico generado
+
+### T3: seo_score ausente del JSON (D2 — absorbido de FASE-07)
+- [ ] Localizar dict `report` en main.py (~L2792)
+- [ ] Agregar `'seo_score': int(template_data.get('seo_score', 0))` al report JSON
+- [ ] Test unitario: `_calculate_web_score()` retorna string numérico, `int()` para JSON
+- [ ] Integration: `grep -i "seo_score" output/v4_complete/v4_complete_report.json` → no vacío
+
+### T4: geo_flow_result — Timing
+- [ ] Ya genera datos reales (confirmado en baseline)
+- [ ] Verificar timing post-assets (se genera después del diagnóstico)
+- [ ] Aceptable que "Salud Técnica GEO" solo aparezca tras segunda ejecución
+
+### T5: D1 — check_publication_readiness ignora WARNING
+- [ ] **DIFERIDO**: Decisión de negocio requerida
+- [ ] Opciones: WARNING → REQUIRES_REVIEW o mantener READY_FOR_PUBLICATION
+- [ ] Sesión dedicada para esta decisión
+
+### Verificación FASE-06 (ÚNICA ejecución v4complete)
+- [ ] `./venv/Scripts/python.exe -c "from modules.quality_gates.publication_gates import..."` (unit test T1)
+- [ ] `grep "Trazabilidad" output/v4_complete/01_DIAGNOSTICO_*.md`
+- [ ] `grep "Validación de Calidad" output/v4_complete/01_DIAGNOSTICO_*.md`
+- [ ] `grep -i "seo_score" output/v4_complete/v4_complete_report.json`
+- [ ] `ls output/v4_complete/amazilia_hotel/v4_audit/geo_flow_result.json`
+- [ ] `./venv/Scripts/python.exe main.py v4complete --url https://amaziliahotel.com/ --nombre "Amazilia Hotel"` (1 sola)
+- [ ] `run_all_validations.py --quick` pasa
+- [ ] `doctor.py --status` sin errores
 - [ ] log_phase_completion.py ejecutado
-- [ ] sync_versions.py ejecutado
-- [ ] run_all_validations.py --quick pasa
-- [ ] doctor.py --status sin errores
-- [ ] Commit final
+- [ ] Commit
 
 ---
 
@@ -172,9 +222,13 @@
 | D16 | Contexto regional hardcoded | NUEVA BAJA | — | Aceptado (narrativa) |
 | D17 | Competidores stub | NUEVA BAJA | ⬜ Diferida | Post-VALIDATE |
 | D18 | Financial sources matiz | NUEVA BAJA | — | Documentado |
+| T1 | financial_validity FALSE POSITIVE | ALTA | ⬜ PATCH+SEO-06 | PATCH T1 (scope ampliado: implementación completa) |
+| T2 | Secciones diagnóstico faltantes | MEDIA | ⬜ PATCH+SEO-06 | PATCH T2 |
+| T3 | seo_score ausente del JSON (D2) | MEDIA | ⬜ PATCH+SEO-06 | PATCH T3 (absorbido de FASE-07) |
+| D1 | WARNING ignora readiness | MEDIA | ⬜ DIFERIDO | Sesión dedicada |
 
 **COBERTURA**: 4/4 CRÍTICAs originales + 1 NUEVA CRÍTICA + 2 NUEVAS ALTAS cubiertas.
-15/18 hallazgos cubiertos en el plan. 3 diferidos (no bloquean).
+19/21 hallazgos cubiertos en el plan. 3 diferidos (no bloquean).
 
 ---
 
@@ -184,6 +238,8 @@
 FASE-TRAZABILIDAD-DOCS ──┐
                           ├──→ FASE-TRAZABILIDAD-VALIDATE
 FASE-TRAZABILIDAD-RAIZ ──┘  (requiere AMBAS completadas)
+                                    │
+                                    └──→ FASE-06 PATCH+SEO (5 issues, 1 v4complete)
 ```
 
 ---

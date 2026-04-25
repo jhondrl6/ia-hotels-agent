@@ -2851,6 +2851,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             },
             'expected_monthly': expected_monthly,
         },
+        # SEO score persists to JSON (T3: seo_score ausente del JSON fix)
+        'seo_score': int(diagnostic_gen._calculate_web_score(audit_result)) if audit_result else 0,
         'pricing': {
             'monthly_price_cop': pricing_result.monthly_price_cop if pricing_result else None,
             'tier': pricing_result.tier if pricing_result else None,

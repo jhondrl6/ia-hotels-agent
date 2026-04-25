@@ -1,9 +1,9 @@
 # Planes de Implementación - Trazabilidad "Calidad Garantizada" + Reconección Módulos→Diagnóstico
 
 **Creado**: 2026-04-24
-**Actualizado**: 2026-04-25 (v3 — auditoría profundizada: 10→18 hallazgos)
+**Actualizado**: 2026-04-25 (v5 — FASE-07 absorbida en FASE-06, 4 fases total)
 **Workflow**: `phased_project_executor.md` v2.4.0
-**Total fases**: 3
+**Total fases**: 4
 
 ---
 
@@ -17,14 +17,17 @@
 | `05-prompt-inicio-sesion-fase-trazabilidad-docs.md` | Prompt para FASE 1: Correcciones documentales |
 | `05-prompt-inicio-sesion-fase-trazabilidad-raiz.md` | **AMPLIADO** — Prompt para FASE 2: Unificación + Cableado + Reconección Template + Deprecaciones |
 | `05-prompt-inicio-sesion-fase-trazabilidad-validate.md` | **AMPLIADO** — Prompt para FASE 3: Validación con v4complete (incluye nuevos criterios) |
-| `06-checklist-implementacion.md` | **AMPLIADO** — Checklist maestro (18 hallazgos, 16 tests) |
+| `06-checklist-implementacion.md` | **AMPLIADO** — Checklist maestro (18+ hallazgos, 16 tests, 5 fases) |
+| `06-fase-trazabilidad-patch-issues.md` | **AMPLIADO** — Plan FASE 4: Corrección unificada PATCH+SEO (5 issues, 1 sola ejecución v4complete) |
+| `07-fase-seo-score.md` | **ABSORBIDO** — D2 seo_score fusionado como T3 de FASE-06 |
+| `fase-trazabilidad-patch-eval.md` | **NUEVO** — Baseline + criterios de evaluación post-validate |
 | `09-documentacion-post-proyecto.md` | Plan de documentación post-proyecto |
 
 ---
 
 ## Origen
 
-Auditoría original en `.opencode/context/auditoria_calidad_garantizada_20260424.md` que detectó 10 desconexiones. **Auditoría profundizada** el 2026-04-25 identificó 8 hallazgos adicionales al comparar el diagnóstico generado contra lo que los módulos realmente producen:
+Auditoría original en `.opencode/context/auditoria_calidad_garantizada_20260424.md` que detectó 10 desconexiones. **Auditoría profundizada** el 2026-04-25 identificó 8 hallazgos adicionales al comparar el diagnóstico generado vs lo que los módulos realmente producen:
 
 ### Hallazgos Originales (contexto)
 1. PublicationGatesOrchestrator nunca se ejecuta en producción
@@ -44,11 +47,18 @@ Auditoría original en `.opencode/context/auditoria_calidad_garantizada_20260424
 17. Competidores son stub/placeholder
 18. Matiz en clasificación financial sources
 
+### Issues Post-Validate + SEO (FASE-06 PATCH+SEO unificado)
+- T1-BUG02: financial_validity FALSE POSITIVE → WARNING con source check
+- T2-Secciones: Encabezados faltantes en diagnóstico → "## 🔍 Trazabilidad de Brechas" + "## ✅ Validación de Calidad"
+- T3-seo_score: D2 ausente del JSON → absorbido de FASE-07, agregar a report dict
+- T4-geo_flow: Timing geo_flow_result.json (ya genera datos, verificar timing)
+- D1-WARNING: check_publication_readiness ignora WARNING → DIFERIDO a sesión dedicada
+
 ---
 
 ## Resumen Ejecutivo
 
-3 fases secuenciales. Optimización de costos: validación con 1 sola ejecución v4complete al final.
+4 fases secuenciales. Optimización de costos: validación con 1 sola ejecución v4complete al final (PATCH+SEO unificado).
 
 **Principio rector**: Los módulos producen datos valiosos que NO pueden ser ignorados. Es capacidad instalada desaprovechada. Se depreca lo redundante, se reconecta lo desconectado.
 
@@ -61,6 +71,12 @@ FASE 1 (DOCS) ──→ FASE 2 (RAIZ) ──→ FASE 3 (VALIDATE)
      │                  │  RES-01/02/03      │
      │                  │  BUG-01/02         │
      │                  │  16 tests          │
+     │                  │                    │
+     │                  └──→ FASE 4 (PATCH+SEO) ← 1 sola ejecución v4complete
+                             │
+                             │ 5 issues unificados
+                             │ T1/T2/T3/T4/D1
+                             │ (FASE-07 absorbida)
 ```
 
 ---
@@ -82,5 +98,7 @@ Ver `00-decisiones-deprecacion.md` para detalle completo.
 - **1 fase por sesión** (sin excepciones)
 - Cada fase usa su propio prompt de inicio de sesión
 - Post-ejecución: `log_phase_completion.py` obligatorio
-- Validación final: 1 solo `v4complete` para optimizar costos API
+- Validación final: 1 solo `v4complete` en FASE-06 PATCH+SEO para optimizar costos API
 - Cualquier hallazgo nuevo durante implementación → actualizar `00-decisiones-deprecacion.md`
+- Issues post-validate → FASE-06 PATCH+SEO unificado (1 sesión, 1 v4complete)
+- Decisiones de negocio (D1) → sesión dedicada, no mezcladas con implementaciones

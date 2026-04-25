@@ -1,8 +1,8 @@
-<!-- agents_version: 4.35.0 | last_update: 2026-04-24 -->
+<!-- agents_version: 4.35.1 | last_update: 2026-04-25 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.35.0 -- Propuesta Dinamica desde Pain Detection COMPLETADO**
+> **v4.35.1 -- Trazabilidad Publication Gates COMPLETADO**
 
 ---
 

@@ -79,6 +79,10 @@ Desglose:
 
 ### Oportunidad de Mejora
 
+## ✅ Validación de Calidad
+
+${manual_attention_table}
+
 Brechas detectadas que afectan su presencia digital y reservas directas:
 
 ${brechas_section}

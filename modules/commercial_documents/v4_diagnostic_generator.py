@@ -319,6 +319,7 @@ class V4DiagnosticGenerator:
             financial_scenarios=financial_scenarios,
             hotel_name=hotel_name,
             hotel_url=hotel_url,
+            output_dir=output_dir,
             coherence_score=coherence_score,
             region=region,
             analytics_data=analytics_data,
@@ -360,6 +361,7 @@ class V4DiagnosticGenerator:
         financial_scenarios: FinancialScenarios,
         hotel_name: str,
         hotel_url: str,
+        output_dir: Optional[str] = None,
         coherence_score: Optional[float] = None,
         region: Optional[str] = None,
         analytics_data: Optional[Dict[str, Any]] = None,
@@ -1772,7 +1774,7 @@ class V4DiagnosticGenerator:
         if not brechas:
             return "No se detectaron brechas criticas. Su presencia digital esta en buen estado."
 
-        sections = []
+        sections = ["## 🔍 Trazabilidad: Brechas Identificadas"]
         for i, b in enumerate(brechas, 1):
             costo = self._get_brecha_costo(audit_result, financial_scenarios, i - 1)
             impacto_pct = int(b.get('impacto', 0))  # ya normalizado a 0-100

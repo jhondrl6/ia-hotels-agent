@@ -353,6 +353,27 @@ class PublicationGatesOrchestrator:
         passed = validation_result.can_calculate
         
         if passed:
+            # Check de fuentes: si hay defaults, es WARNING aunque can_calculate=True
+            # (BUG-02 fix: NoDefaultsValidator no detecta que las fuentes son default)
+            financial_sources = assessment.get("financial_sources", {})
+            DEFAULT_SOURCES = {"default", "legacy_hardcode", "legacy_fixed"}
+            default_source_fields = {
+                f: financial_sources.get(f)
+                for f in ("adr_cop", "occupancy_rate", "direct_channel_percentage")
+                if financial_sources.get(f) in DEFAULT_SOURCES
+            }
+            if default_source_fields:
+                return PublicationGateResult(
+                    gate_name=gate_name,
+                    passed=True,  # No bloquea, solo advierte
+                    status=GateStatus.WARNING,
+                    message="Financial data uses default/legacy values — Tier C evidence",
+                    value=True,
+                    suggestion="Run onboarding with real data to improve evidence tier",
+                    details={
+                        "default_sources": default_source_fields
+                    }
+                )
             return PublicationGateResult(
                 gate_name=gate_name,
                 passed=True,
