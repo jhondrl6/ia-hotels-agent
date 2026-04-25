@@ -3,6 +3,7 @@
 import argparse
 import sys
 import json
+from datetime import datetime
 from pathlib import Path
 from dataclasses import asdict
 from typing import Any, Dict, List, Sequence
@@ -1701,6 +1702,15 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             )
             
             print(f"[HARNESS] Financial calculation completed via handlers")
+            
+            # Initialize data_sources for assessment dict (T1.1)
+            # The harness returns adr_result as part of result_data
+            adr_source = result_data.get("adr_source", "handler")
+            financial_sources = {
+                "adr_cop": adr_source,
+                "occupancy_rate": "regional" if feature_flags.should_use_regional_for(region) else ("onboarding" if onboarding_data is not None else "default"),
+                "direct_channel_percentage": "onboarding" if onboarding_data is not None else "default",
+            }
         else:
             print(f"[HARNESS] Financial calculation failed: {financial_result.error}")
             print(f"[HARNESS] Falling back to direct calculation...")
@@ -1751,14 +1761,15 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             "direct_channel_percentage": direct_channel_pct,
         }
 
-        # Construir dict de fuentes para validacion source-aware (FASE-J)
-        data_sources = {
+        # Construir dict de fuentes para validacion source-aware (T1.1)
+        # Keys alineadas con CRITICAL_FIELDS de NoDefaultsValidator: occupancy_rate, direct_channel_percentage
+        financial_sources = {
             "adr_cop": adr_source,
-            "occupancy": "regional" if feature_flags.should_use_regional_for(region) else ("onboarding" if onboarding_data is not None else "default"),
-            "direct_channel": "onboarding" if onboarding_data is not None else "default",
+            "occupancy_rate": "regional" if feature_flags.should_use_regional_for(region) else ("onboarding" if onboarding_data is not None else "default"),
+            "direct_channel_percentage": "onboarding" if onboarding_data is not None else "default",
         }
 
-        calc_result = calc_v2.calculate(financial_input, data_sources=data_sources)
+        calc_result = calc_v2.calculate(financial_input, data_sources=financial_sources)
         
         if calc_result.blocked:
             print(f"   ⚠️  FinancialCalculatorV2 blocked: {calc_result.status.value}")
@@ -2527,6 +2538,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             "occupancy_rate": occupancy_rate,
             "direct_channel_percentage": direct_channel_pct,
         },
+        "financial_sources": financial_sources,  # T1.1: pass sources to financial_validity_gate
         "coherence_score": asset_result.coherence_report.overall_score if asset_result else 0.0,
         "critical_issues": audit_result.critical_issues if audit_result else [],
         "critical_issues_detected": audit_result.critical_issues if audit_result else [],
@@ -2584,6 +2596,34 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             print(f"      - {issue['gate']}: {issue['message']}")
     else:
         print(f"   ✅ Listo para publicación")
+    
+    # T2: Generate gate_report.json for independent audit and downstream systems
+    gate_report = {
+        "generated_at": datetime.now().isoformat(),
+        "hotel_url": args.url,
+        "gate_results": [
+            {
+                "gate_name": r.gate_name,
+                "passed": r.passed,
+                "status": r.status.value if hasattr(r.status, 'value') else str(r.status),
+                "message": r.message,
+                "value": r.value,
+                "suggestion": r.suggestion,
+                "details": r.details,
+            }
+            for r in gate_results
+        ],
+        "readiness": {
+            "status": readiness_report["status"],
+            "ready": readiness_report["ready"],
+            "blocking_issues": readiness_report["blocking_issues"],
+        },
+        "financial_sources": assessment.get("financial_sources", {}),
+    }
+    gate_report_path = output_dir / "gate_report.json"
+    with open(gate_report_path, "w", encoding="utf-8") as f:
+        json.dump(gate_report, f, indent=2, ensure_ascii=False)
+    print(f"   📄 Gate report: {gate_report_path}")
     
     # FASE 4.6: Consistency Checker - Validación cruzada obligatoria
     print("\n📍 FASE 4.6: Consistency Checker (Validación Cruzada)")
@@ -2739,7 +2779,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'assets_generated': [a.asset_type for a in asset_result.generated_assets] if asset_result else [],
             'asset_result_path': str(output_dir / 'v4_audit' / 'asset_generation_report.json') if asset_result else None,
             'delivery_zip_path': delivery_zip_path,
-            'health_dashboard_path': health_dashboard_path
+            'health_dashboard_path': health_dashboard_path,
+            'gate_report_path': str(gate_report_path),
         },
         'timestamp': datetime.now().isoformat()
     })
