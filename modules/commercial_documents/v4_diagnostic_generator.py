@@ -460,6 +460,8 @@ class V4DiagnosticGenerator:
             'quick_wins_list': self._build_quick_wins(audit_result),
             'positive_findings': self._build_positive_findings(audit_result),
             'ia_metrics_table': self._build_geo_problems_table(audit_result, output_dir),
+            # FASE-TRAZABILIDAD-REFINEMENT: asset_confidence transparency note
+            'asset_confidence_note': self._build_asset_confidence_note(output_dir, audit_result),
             
             # Regional averages (3-tier fallback: competitors > regional config > default)
             'geo_regional': geo_regional,
@@ -762,6 +764,13 @@ class V4DiagnosticGenerator:
             "Conecte GA4 para mayor precisión."
         )
 
+        # FASE-TRAZABILIDAD-REFINEMENT: Tier C visibility in header
+        financial_tier_suffix = " *(estimado — Tier C)*" if tier == "C" else ""
+        financial_tier_banner = (
+            "> ⚠️ **Nivel de evidencia: Tier C** — Estas cifras se basan en benchmark regional\n"
+            "> + datos limitados de la web. Para precisión, ejecute onboarding con datos reales.\n"
+        ) if tier == "C" else ""
+
         return {
             'ota_commission_formatted': ota_commission,
             'ota_commission_basis': (
@@ -781,6 +790,9 @@ class V4DiagnosticGenerator:
             'financial_title_label': financial_title_label,
             'estimate_asterisk': estimate_asterisk,
             'estimate_footnote': estimate_footnote,
+            # FASE-TRAZABILIDAD-REFINEMENT: Tier C header visibility
+            'financial_tier_suffix': financial_tier_suffix,
+            'financial_tier_banner': financial_tier_banner,
             # Backward compatibility
             'loss_6_months': format_cop(base_value * 6),
         }
@@ -1258,8 +1270,9 @@ class V4DiagnosticGenerator:
                     import json as _json
                     with open(geo_flow_path, 'r', encoding='utf-8') as f:
                         geo_flow_data = _json.load(f)
-                    flow_score = geo_flow_data.get('geo_score', 0)
-                    flow_status = geo_flow_data.get('status', 'unknown')
+                    geo_assessment = geo_flow_data.get('geo_assessment', {})
+                    flow_score = geo_assessment.get('total_score', 0)
+                    flow_status = geo_assessment.get('band', 'unknown')
                     flow_icon = "🟢" if flow_score >= 60 else ("🟡" if flow_score >= 40 else "🔴")
                     rows.append(f"| Salud Técnica GEO | {flow_score}/100 | {flow_status} | {flow_icon} |")
                 except Exception:
@@ -1860,7 +1873,33 @@ class V4DiagnosticGenerator:
             cleaned = re.sub(r'^\d+\.\s*', '', win)
             content_lines.append(f"{i}. {cleaned}")
         return '\n'.join(content_lines)
-    
+
+    def _build_asset_confidence_note(self, output_dir: str, audit_result: 'V4AuditResult') -> str:
+        """Build transparency note for assets with low confidence score (D4)."""
+        if not output_dir:
+            return ""
+        try:
+            hotel_slug = audit_result.hotel_name.lower().replace(" ", "_").replace("-", "_")
+            asset_report_path = Path(output_dir) / hotel_slug / "v4_audit" / "asset_generation_report.json"
+            if not asset_report_path.exists():
+                return ""
+            import json as _json
+            with open(asset_report_path, 'r', encoding='utf-8') as f:
+                asset_report = _json.load(f)
+            low_assets = [
+                a for a in asset_report.get('generated_assets', [])
+                if a.get('confidence_score', 1.0) < 0.7
+            ]
+            if not low_assets:
+                return ""
+            return (
+                f"> ⚠️ **{len(low_assets)} assets generados con confianza baja (< 0.7)** — "
+                f"Incluidos con disclaimer en el paquete de entrega. "
+                f"Ejecute onboarding con datos reales para mejorar la precisión.\n"
+            )
+        except Exception:
+            return ""
+
     # ----------------------------------------------------------------
     # 4-PILAR EXTRACTION (FASE-A)
     # ----------------------------------------------------------------

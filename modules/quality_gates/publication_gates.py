@@ -1010,6 +1010,13 @@ def check_publication_readiness(assessment: Dict[str, Any]) -> Dict[str, Any]:
         "passed": passed_count,
         "failed": len(results) - passed_count,
         "blocked": sum(1 for r in results if r.status == GateStatus.BLOCKED),
+        "warnings": [
+            {
+                "gate": r.gate_name,
+                "message": r.message
+            }
+            for r in results if r.status == GateStatus.WARNING
+        ],
         "timestamp": datetime.now().isoformat()
     }
     

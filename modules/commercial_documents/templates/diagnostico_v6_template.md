@@ -67,9 +67,10 @@ ${analytics_summary_text}
 
 ## 💰 Impacto Financiero
 
+${financial_tier_banner}
 ### ${financial_title_label}
 
-**${ota_commission_formatted} COP/mes${estimate_asterisk}**
+**${ota_commission_formatted} COP/mes${estimate_asterisk}${financial_tier_suffix}**
 
 Desglose:
 - ${ota_commission_basis}
@@ -80,6 +81,8 @@ Desglose:
 ### Oportunidad de Mejora
 
 ## ✅ Validación de Calidad
+
+${asset_confidence_note}
 
 ${manual_attention_table}
 

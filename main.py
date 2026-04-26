@@ -2617,6 +2617,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             "status": readiness_report["status"],
             "ready": readiness_report["ready"],
             "blocking_issues": readiness_report["blocking_issues"],
+            "warnings": readiness_report.get("summary", {}).get("warnings", []),
         },
         "financial_sources": assessment.get("financial_sources", {}),
     }
