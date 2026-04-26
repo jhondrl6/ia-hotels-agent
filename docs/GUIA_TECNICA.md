@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.34.0
-**Última actualización:** 2026-04-23
+**Versión:** v4.35.1
+**Última actualización:** 2026-04-25
 **Proyecto:** IA Hoteles Agent CLI
 
 ---
@@ -491,3 +491,24 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 - `README.md` — solo bloque "Calidad Garantizada"
 - `.agents/workflows/v4_complete.md` — solo paso 9
 - `AGENTS.md` — solo tabla de estado
+
+### FASE-TRAZABILIDAD-REFINEMENT — Correccion de Hallazgos D1-D4 (2026-04-25)
+
+**Problema:** 4 hallazgos pendientes identificados post-TRAZABILIDAD-DOCS+PATCH + situacion GEO Score dual (dos fuentes generaban "GEO Score" con propositos distintos).
+
+**Cambios por hallazgo:**
+
+| Hallazgo | Solucion | Archivo |
+|----------|----------|---------|
+| D1: WARNING no afecta readiness | `summary.warnings` agregado a `check_publication_readiness()`. Warnings visibles en `gate_report.json` sin bloquear publicacion (Opcion C). | `publication_gates.py` L1013-1019 |
+| D2: Tier C invisible en encabezado | `financial_tier_suffix` ("estimado -- Tier C") + `financial_tier_banner` (banner amarillo) cuando `tier == "C"`. | `v4_diagnostic_generator.py` L767-795, `diagnostico_v6_template.md` L70-73 |
+| D3: Salud Tecnica GEO = 0/100 (bug lectura) | Key fix: `geo_flow_data.get('geo_score')` → `geo_assessment.get('total_score')`. Lee `geo_assessment.total_score: 23` en vez de key inexistente. | `v4_diagnostic_generator.py` L1273-1275 |
+| D4: coherence=0.89 con assets baja confianza | `_build_asset_confidence_note()` cuenta assets con `confidence_score < 0.7`, genera nota en seccion Validacion de Calidad. | `v4_diagnostic_generator.py` L1877-1899, `diagnostico_v6_template.md` L85 |
+
+**Decision arquitectonica GEO Score:**
+
+- `_calculate_geo_score()` (GBP / Google Places API) = fuente **autoritativa** de GEO Score (externa, verificable, objetiva).
+- `geo_flow` / GEOAssessment = mide **AI crawler readiness** (robots.txt, llms.txt, schema.org, meta tags). NO es duplicado del GBP geo_score. NO se depreca.
+- `main.py` L2620: serializa `readiness_report.summary.warnings` al `gate_report.json`.
+
+**Backwards Compatibility:** Sin cambios en API publica. Solo se agregaron variables nuevas al template_data y un key nuevo en el summary dict.

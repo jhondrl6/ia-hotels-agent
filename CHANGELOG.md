@@ -38,16 +38,23 @@ Correcciones documentales en el bloque "Calidad Garantizada" + 5 fixes de códig
 - Tests de proposal_alignment: 13/13 PASS
 - run_all_validations.py --quick: 4/4
 
-### Items Pendientes Post-Ejecución
+#### FASE-TRAZABILIDAD-REFINEMENT (2026-04-25)
 
-| # | Descripcion | Tipo |
-|---|-------------|------|
-| D1 | WARNING en publication readiness — si debe marcar REQUIRES_REVIEW | Decision negocio |
-| D2 | Tier C visible en cuerpo del documento — disclaimer en encabezado | Decision contenido |
-| D3 | geo_score=0/100 — investigacion timing/bug/dato real | Investigacion |
-| D4 | Gap coherence vs asset_confidence — nota en diagnostico | Decision display |
+Resolucion de los 4 items pendientes (D1-D4) + decision arquitectonica GEO Score dual.
 
-Ver `.opencode/context/fase-trazabilidad-context.md`
+- D1 (RESUELTO): `modules/quality_gates/publication_gates.py` — `summary.warnings` agregado al dict de `check_publication_readiness()`. Warnings ahora visibles en `gate_report.json`. Decision: WARNING no bloquea publicacion (Opcion C).
+- D2 (RESUELTO): `modules/commercial_documents/v4_diagnostic_generator.py` — `financial_tier_suffix` + `financial_tier_banner` cuando `tier == "C"`. `diagnostico_v6_template.md` — banner y sufijo insertados en seccion financiera.
+- D3 (RESUELTO): `modules/commercial_documents/v4_diagnostic_generator.py` L1273-1275 — key fix: `geo_flow_data.get('geo_score')` reemplazado por `geo_assessment.get('total_score')`. Salud Tecnica GEO ahora lee `geo_assessment.total_score: 23` en vez de `geo_score: 0` (key inexistente).
+- D4 (RESUELTO): `modules/commercial_documents/v4_diagnostic_generator.py` — `_build_asset_confidence_note()` cuenta assets con `confidence_score < 0.7` y genera nota de transparencia. Template inyecta `${asset_confidence_note}` en seccion Validacion de Calidad.
+- GEO (DECISION): GBP (`_calculate_geo_score()`) es fuente autoritativa de GEO Score (externa, verificable). `geo_flow` / GEOAssessment NO se depreca — mide AI crawler readiness (proposito distinto).
+- `main.py` L2620: serializa `readiness_report.summary.warnings` al `gate_report.json`.
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/publication_gates.py` | `summary.warnings` list con gates WARNING |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | D3: geo_assessment.total_score key fix. D2: financial_tier_suffix + financial_tier_banner. D4: _build_asset_confidence_note() |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | `${financial_tier_banner}`, `${financial_tier_suffix}`, `${asset_confidence_note}` |
+| `main.py` | Warnings serialization en gate_report.json |
 
 ## [4.35.0] - 2026-04-23
 

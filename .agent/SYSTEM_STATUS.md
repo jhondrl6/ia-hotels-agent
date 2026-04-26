@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-04-26 00:16:33 UTC
+> Auto-generado: 2026-04-26 03:28:08 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -38,12 +38,12 @@
 
 | Metrica | Valor |
 |---------|-------|
-| Shadow logs | 1087 archivos JSON |
-| Sesiones activas | 124 |
+| Shadow logs | 1095 archivos JSON |
+| Sesiones activas | 128 |
 | Sesiones archivadas | 6 |
-| Ultimo shadow log | 20260425_230724_f7e27c36.json |
+| Ultimo shadow log | 20260426_032439_7426be8d.json |
 | Ultima sesion activa | 2026-04-25_fd80fcb4.json |
-| Ultimo contexto actualizado | 2026-04-25T23:06:25.560064+00:00 |
+| Ultimo contexto actualizado | 2026-04-26T03:23:51.449112+00:00 |
 | Ultima URL procesada | https://amaziliahotel.com/ |
 
 ## Validaciones
