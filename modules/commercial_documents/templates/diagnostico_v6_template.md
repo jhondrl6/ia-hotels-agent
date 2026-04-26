@@ -10,6 +10,8 @@ financial_source: "${financial_source_ref}"
 financial_value_central: ${financial_value_central}
 financial_value_range: [${financial_value_min}, ${financial_value_max}]
 financial_method: "${financial_method}"
+financial_opportunity_cost: ${opportunity_cost_formatted}
+financial_ota_commission_real: ${ota_commission_real_formatted}
 ---
 
 # 🚨 DIAGNÓSTICO DIGITAL
@@ -75,6 +77,7 @@ ${financial_tier_banner}
 Desglose:
 - ${ota_commission_basis}
 - Fuente del dato: ${ota_commission_source}
+- Comisión OTA real (verificable): ${ota_commission_real_formatted} COP/mes
 
 ---
 

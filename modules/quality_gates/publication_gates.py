@@ -760,6 +760,9 @@ class PublicationGatesOrchestrator:
         has a corresponding generated asset. Missing assets mean the client
         is paying for something they don't receive.
 
+        FASE-D: Before marking as "missing", verifies via SitePresenceChecker if the asset
+        already exists in the production site. If EXISTS, marks as "present_in_production".
+
         Status: WARNING (not blocking) if assets are missing.
         Threshold: All 7 promised services should have assets.
 
@@ -779,31 +782,71 @@ class PublicationGatesOrchestrator:
         generated_assets = assessment.get("generated_assets", [])
         proposal_services = assessment.get("proposal_services", ALL_PROMISED_SERVICES)
 
+        # FASE-D: Check site presence for assets not in generated_assets
+        site_presence_report = assessment.get("site_presence_report")  # Allow pre-built report in assessment
+        hotel_url = assessment.get("hotel_url") or assessment.get("url")
+        if hotel_url and not site_presence_report:
+            try:
+                from modules.asset_generation.site_presence_checker import SitePresenceChecker
+                checker = SitePresenceChecker()
+                # Only check assets that are NOT in generated_assets (the missing ones)
+                missing_asset_types = [
+                    PROPOSAL_SERVICE_TO_ASSET.get(svc) 
+                    for svc in proposal_services 
+                    if svc in PROPOSAL_SERVICE_TO_ASSET
+                ]
+                # Filter to only assets we need to check (those not generated)
+                generated_types = {a.get("asset_type") for a in generated_assets}
+                assets_to_check = [at for at in missing_asset_types if at and at not in generated_types]
+                if assets_to_check:
+                    site_presence_report = checker.check_site(hotel_url, asset_types=assets_to_check)
+            except Exception:
+                # SitePresenceChecker errors should not break the gate
+                site_presence_report = None
+
         report = verify_proposal_asset_alignment(
             proposal_services=proposal_services,
             generated_assets=generated_assets,
+            site_presence_report=site_presence_report,
+            hotel_url=hotel_url,
         )
 
         if report.all_aligned:
+            # FASE-D: Count present_in_production as effectively aligned
+            present_count = len(report.present_in_production)
+            total_checked = report.total_services + present_count
+            aligned_plus_present = len(report.aligned) + present_count
+            pct = aligned_plus_present / total_checked if total_checked > 0 else 0.0
             return PublicationGateResult(
                 gate_name=gate_name,
                 passed=True,
                 status=GateStatus.PASSED,
-                message=f"All {report.total_services} promised services have corresponding assets (7/7)",
-                value=report.alignment_percentage,
+                message=f"All {total_checked} promised services have assets ({aligned_plus_present}/{total_checked} aligned, {present_count} already in production)",
+                value=pct,
                 suggestion="",
                 details=report.to_dict(),
             )
 
         missing_names = [s.service_name for s in report.missing]
+        present_in_prod_names = [s.service_name for s in report.present_in_production]
+        
+        # FASE-D: Build better message showing what's missing vs already exists
+        message_parts = []
+        if missing_names:
+            message_parts.append(f"{len(missing_names)} missing: {', '.join(missing_names)}")
+        if present_in_prod_names:
+            message_parts.append(f"{len(present_in_prod_names)} already in production: {', '.join(present_in_prod_names)}")
+        if report.redundant:
+            redundant_names = [s.service_name for s in report.redundant]
+            message_parts.append(f"{len(redundant_names)} redundant: {', '.join(redundant_names)}")
+        
+        message = "; ".join(message_parts) if message_parts else f"{len(missing_names)} promised service(s) missing assets"
+        
         return PublicationGateResult(
             gate_name=gate_name,
             passed=True,  # WARNING, not blocking — warns but doesn't block publication
             status=GateStatus.WARNING,
-            message=(
-                f"{len(report.missing)} promised service(s) missing assets: "
-                f"{', '.join(missing_names)}"
-            ),
+            message=message,
             value=report.alignment_percentage,
             suggestion=(
                 "Review asset generation pipeline to ensure all promised services "

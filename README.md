@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt, geo_playbook) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.35.1 | **Última actualización:** 25 Abril 2026
+**Version:** 4.36.0 | **Última actualización:** 26 Abril 2026
 
 ---
 
@@ -20,7 +20,7 @@
 
 ---
 
-> **🛡️ AGENT PLATFORM STATUS (v4.35.0 - Propuesta Dinámica + Intervención Amazilia Hotel)**:
+> **🛡️ AGENT PLATFORM STATUS (v4.35.1 - Propuesta Dinámica + Intervención Amazilia Hotel)**:
 > *   **Propuesta Dinámica desde Pain Detection (v4.35.0)**: Tabla de servicios generada dinámicamente según los pains detectados (no diccionario estático). 7 servicios base + AEO condicional cuando score_aeo < 20.
 > *   **Planes de Implementación Dinámicos (v4.35.0)**: _build_7/30/60/90_day_plan() reciben asset_plan y generan contenido por prioridad P1/P2/P3. Backward compatible si asset_plan=None.
 > *   **Motor Financiero Verificable (v4.27.0)**: Escenarios conservador/realista/optimista con recovery_factor (0.15/0.20/0.25). ROI realista <= 5.0X. pain_ratio aplicado a projected_gain.

@@ -8,12 +8,16 @@ Tests:
 - test_scenario_table_rows_format: Scenario table has 3 rows with correct format
 - test_backward_compat_loss_6_months: loss_6_months recalculated with central value
 - test_disclaimer_present: Disclaimer is non-empty
+- test_financial_title_label_no_ota: Label dice "Pérdida Mensual", no "Comisión OTA"
+- test_ota_commission_real_from_breakdown: ota_commission_real_formatted viene del breakdown
+- test_opportunity_cost_field_present: opportunity_cost_formatted presente y coincide
 """
 import pytest
 from unittest.mock import MagicMock
 from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
 from modules.commercial_documents.data_structures import (
     FinancialScenarios,
+    FinancialBreakdown,
     Scenario,
     format_cop,
 )
@@ -172,3 +176,60 @@ class TestFinancialPlaceholders:
         result = gen._build_financial_placeholders(scenarios)
 
         assert result['financial_method'] == 'proportional_normalized'
+
+    def test_financial_title_label_no_ota(self):
+        """Label NO dice 'Comisión OTA' — ahora dice 'Pérdida Mensual Estimada'."""
+        gen = V4DiagnosticGenerator()
+        scenarios = make_scenarios()
+
+        # FASE-B: labels son honestos, NO dicen "Comisión OTA"
+        result = gen._build_financial_placeholders(scenarios, source_reliability="verified")
+        assert 'Pérdida Mensual' in result['financial_title_label']
+        assert 'Comisión OTA' not in result['financial_title_label']
+
+        result_unverified = gen._build_financial_placeholders(scenarios, source_reliability="unverified")
+        assert 'Pérdida Mensual' in result_unverified['financial_title_label']
+        assert 'Comisión OTA' not in result_unverified['financial_title_label']
+
+    def test_ota_commission_real_from_breakdown(self):
+        """ota_commission_real_formatted viene del breakdown, no del scenario loss."""
+        gen = V4DiagnosticGenerator()
+        scenarios = make_scenarios(central_real=2_610_000)
+
+        # Breakdown con comision OTA real de $5,400,000
+        breakdown = FinancialBreakdown(
+            monthly_ota_commission_cop=5_400_000,
+            ota_commission_basis="120 noches OTA × $300K ADR × 15%",
+            ota_commission_source="onboarding",
+            shift_savings_cop=540_000,
+            shift_percentage=0.10,
+            shift_source="benchmark",
+            ia_revenue_cop=2_250_000,
+            ia_boost_percentage=0.05,
+            ia_source="estimado",
+            evidence_tier="C",
+            disclaimer="Test",
+        )
+
+        result = gen._build_financial_placeholders(
+            scenarios, financial_breakdown=breakdown
+        )
+
+        # El valor principal (ota_commission_formatted) es el costo de oportunidad
+        assert '2.610.000' in result['ota_commission_formatted']
+        # El campo nuevo tiene la OTA real del breakdown
+        assert result['ota_commission_real_formatted'] is not None
+        assert '5.400.000' in result['ota_commission_real_formatted']
+
+    def test_opportunity_cost_field_present(self):
+        """opportunity_cost_formatted es el valor principal del escenario."""
+        gen = V4DiagnosticGenerator()
+        scenarios = make_scenarios(central_real=2_610_000)
+
+        result = gen._build_financial_placeholders(scenarios)
+
+        # Campo nuevo
+        assert 'opportunity_cost_formatted' in result
+        assert '2.610.000' in result['opportunity_cost_formatted']
+        # Debe coincidir con ota_commission_formatted (backward compat)
+        assert result['opportunity_cost_formatted'] == result['ota_commission_formatted']

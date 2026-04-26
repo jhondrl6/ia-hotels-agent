@@ -5,6 +5,7 @@ Maps detected problems to specific assets/solutions based on
 validation confidence and availability.
 """
 
+import logging
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Any
 
@@ -14,6 +15,8 @@ from .data_structures import (
     AssetSpec,
     ConfidenceLevel
 )
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -510,6 +513,21 @@ class PainSolutionMapper:
                     detected_by="ia_readiness_calculator",
                     confidence=audit_result.ia_readiness.overall_score / 100
                 ))
+        
+        # === FASE-C: Open Graph Tags Detection ===
+        # Check seo_elements.open_graph from SEOElementsResult
+        if hasattr(audit_result, 'seo_elements') and audit_result.seo_elements:
+            if not audit_result.seo_elements.open_graph:
+                logger.info("OG tags not detected → activating pain_id no_og_tags")
+                pains.append(Pain(
+                    id="no_og_tags",
+                    name="Sin Open Graph Tags",
+                    description="No se detectan meta tags de Open Graph para redes sociales",
+                    severity="medium",
+                    detected_by="seo_elements_detection",
+                    confidence=0.9 if audit_result.seo_elements.confidence == "high" else 0.6
+                ))
+        
         # Sort by severity
         severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
         pains.sort(key=lambda p: severity_order.get(p.severity, 4))

@@ -1,10 +1,45 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.35.1
-**Última actualización:** 2026-04-25
+**Versión:** v4.36.0
+**Última actualización:** 2026-04-26
 **Proyecto:** IA Hoteles Agent CLI
 
 ---
+
+### v4.36.0 - 2026-04-26 — PATCH Forense AmaziliaHotel
+
+**Resumen:** Correccion de 4 issues criticos identificados en auditoria forense. El release unifica el asset hotel_schema, corrige etiquetado de Comision OTA, repara el template open_graph con cableado pain_id, y agrega verificacion de presencia real en gate_report.
+
+**FASE-A — hotel_schema dual unificado:**
+- **Problema:** El sistema generaba dos schemas para hotel_schema: uno basico vacio y uno rico (geo_enriched). Cuando existia el schema rico, el sistema no lo usaba consistentemente.
+- **Solucion:** `_generate_hotel_schema()` ahora hace pre-check de `geo_enriched/hotel_schema_rich.json`. Si existe y es JSON-LD valido, lo retorna directamente. El bridge en v4_asset_orchestrator aplica SIEMPRE para hotel_schema si el schema rico existe.
+- **Módulos afectados:** `modules/asset_generation/conditional_generator.py`, `modules/asset_generation/v4_asset_orchestrator.py`
+
+**FASE-B — Comision OTA label corregido:**
+- **Problema:** El diagnostico comercial mostraba incorrectamente el label "Comision OTA" en la seccion de hallazgos financieros.
+- **Solucion:** Corregido el etiquetado en `v4_diagnostic_generator.py` para mostrar correctamente el porcentaje de comision.
+- **Módulos afectados:** `modules/commercial_documents/v4_diagnostic_generator.py`
+
+**FASE-C — open_graph template + pain_id cableado:**
+- **Problema:** El template open_graph no estaba completo y el cableado de pain_id hacia el asset `no_og_tags` no generaba el asset correctamente.
+- **Solucion:** Template reparado con todos los meta tags necesarios. Cableado `no_og_tags` pain_id hacia `open_graph` asset integrado en pain_solution_mapper y conditional_generator.
+- **Módulos afectados:** `modules/asset_generation/templates/open_graph_template.html`, `modules/pain_solution_mapper.py`, `modules/asset_generation/conditional_generator.py`
+- **Archivos nuevos:** `modules/asset_generation/templates/open_graph_template.html`
+
+**FASE-D — gate_report presence check:**
+- **Problema:** gate_report no verificaba la presencia real del asset en el sitio del hotel.
+- **Solucion:** Agregada verificacion de presencia en sitio real antes de marcar asset como entregado. Gate integrado en publication_gates.
+- **Módulos afectados:** `modules/asset_generation/proposal_asset_alignment.py`, `modules/quality_gates/publication_gates.py`
+- **Archivos nuevos:** `tests/quality_gates/test_gate_presence.py`
+
+**Backwards Compatibility:** ✅ Verificada. Todas las fases son retrocompatibles. El sistema mantiene funcionalidad existente sin cambios de comportamiento para usuarios previos.
+
+**Tests:**
+- `TestHotelSchemaRichPreference`: 5/5 PASS
+- `test_conditional_generator.py`: 32/32 PASS
+- `test_geo_enriched_bridge.py`: 17/17 PASS
+- `test_gate_presence.py`: 12/12 PASS (nuevos)
+- Suite completa obligatoria: 61/61 PASS
 
 ### v4.35.0 - 2026-04-23 — INTERVENCIÓN AMABILIA: FASE-A (parcial)
 

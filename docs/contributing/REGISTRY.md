@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-25
-> **Version actual:** v4.35.1
-> **Total fases completadas:** 165
+> **Ultima actualizacion:** 2026-04-26
+> **Version actual:** v4.36.0
+> **Total fases completadas:** 174
 
 ---
 
@@ -4159,6 +4159,106 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-A - 2026-04-26
+**Descripcion:** Unificar hotel_schema dual: schema rico como default cuando existe
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-A - 2026-04-26
+**Descripcion:** Unificar hotel_schema dual: schema enriquecido como asset oficial
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+
+### Validaciones
+- [x] Tests passing (5)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-B - 2026-04-26
+**Descripcion:** Corregir etiquetado Comision OTA en diagnostico comercial
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-C - 2026-04-26
+**Descripcion:** Reparar asset open_graph: template + cableado pain_id no_og_tags
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/asset_generation/templates/open_graph_template.html` | NUEVO | Open Graph Template |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/pain_solution_mapper.py` | Pain Solution Mapper |
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+
+### Validaciones
+- [x] Tests passing (7)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-D - 2026-04-26
+**Descripcion:** gate_report con verificacion de presencia en sitio real
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/quality_gates/test_gate_presence.py` | NUEVO | Test Gate Presence |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/proposal_asset_alignment.py` | Proposal Asset Alignment |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+
+### Validaciones
+- [x] Tests passing (12)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

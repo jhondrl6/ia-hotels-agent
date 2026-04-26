@@ -1,11 +1,16 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.35.1"
-codename: "Trazabilidad Publication Gates"
-release_date: "2026-04-25"
+version: "4.36.0"
+codename: "PATCH Forense AmaziliaHotel"
+release_date: "2026-04-26"
 plan_maestro_version: "v2.6.0"
 
-# v4.35.0 - FASE-RELEASE-4.35.0 (2026-04-23)
+# v4.36.0 - PATCH Forense AmaziliaHotel (2026-04-26)
+# FASE-A: hotel_schema dual unificado - schema enriquecido como asset oficial
+# FASE-B: Comision OTA label corregido en diagnostico comercial
+# FASE-C: open_graph template + pain_id cableado no_og_tags
+# FASE-D: gate_report presence check en sitio real
+# Backwards compatible: todas las fases verificadas
 # - SERVICE_CATALOG: nuevo catalogo con mapeo pain_id → servicio
 # - _generate_asset_quality_table: refactorizado para iterar sobre detected_pains
 # - propuesta_v6_template.md: tabla principal dinamica con ${dynamic_services_table}

@@ -25,15 +25,18 @@ class TestProposalAssetAlignmentGate:
 
     def test_gate_passes_when_all_assets_present(self, orchestrator):
         """Gate passes when all 7 promised services have assets."""
+        # Note: Only assets that exist in PROPOSAL_SERVICE_TO_ASSET mapping count
+        # The 7 services are: geo_playbook, optimization_guide, whatsapp_button,
+        # hotel_schema, monthly_report, faq_page, open_graph
         assessment = {
             "generated_assets": [
                 {"asset_type": "geo_playbook", "confidence_score": 0.8},
-                {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
-                {"asset_type": "voice_assistant_guide", "confidence_score": 0.8},
                 {"asset_type": "optimization_guide", "confidence_score": 0.8},
                 {"asset_type": "whatsapp_button", "confidence_score": 0.8},
                 {"asset_type": "hotel_schema", "confidence_score": 0.8},
                 {"asset_type": "monthly_report", "confidence_score": 0.8},
+                {"asset_type": "faq_page", "confidence_score": 0.8},
+                {"asset_type": "open_graph", "confidence_score": 0.8},
             ]
         }
         result = orchestrator._proposal_asset_alignment_gate(assessment)

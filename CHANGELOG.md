@@ -42,22 +42,44 @@ Correcciones documentales en el bloque "Calidad Garantizada" + 5 fixes de códig
 
 ### Objetivo
 
-FASE-A del PATCH Forense AmaziliaHotel: Unificar el asset hotel_schema para que siempre use el schema enriquecido (geo_enriched) cuando esté disponible, eliminando la contradiccion de tener dos schemas (rico vs vacio).
+PATCH Forense AmaziliaHotel: Correccion de 4 issues criticos identificados en auditoria forense. El release unifica el asset hotel_schema, corrige etiquetado de Comision OTA, repara el template open_graph con cableado pain_id, y agrega verificacion de presencia real en gate_report.
 
 ### Cambios Implementados
 
-#### FASE-A (PATCH Forense)
+#### FASE-A: hotel_schema dual unificado
 - `modules/asset_generation/conditional_generator.py` L772: `_generate_hotel_schema()` ahora acepta parametro `hotel_id` y hace pre-check de `geo_enriched/hotel_schema_rich.json`. Si existe y es JSON-LD valido, lo retorna directamente en lugar de generar schema basico vacio.
 - `modules/asset_generation/conditional_generator.py` L404: `_generate_content()` ahora pasa `hotel_id` a `_generate_hotel_schema()` para que el pre-check funcione.
 - `modules/asset_generation/v4_asset_orchestrator.py` L298: Bridge geo_enriched ahora SIEMPRE aplica para `hotel_schema` si existe `hotel_schema_rich.json`, independientemente del confidence del schema basico.
 - `tests/asset_generation/test_conditional_generator.py`: 5 tests nuevos en `TestHotelSchemaRichPreference` cubriendo: schema rico existe + valido, schema rico no existe, schema rico invalido, schema rico vacio, integracion via generate().
 
+#### FASE-B: Comision OTA label corregido
+- `modules/commercial_documents/v4_diagnostic_generator.py`: Corregido etiquetado "Comision OTA" en diagnostico comercial. El label ahora muestra correctamente el porcentaje de comision en la seccion de hallazgos financieros.
+
+#### FASE-C: open_graph template + pain_id cableado
+- `modules/asset_generation/templates/open_graph_template.html`: Template open_graph reparado con todos los meta tags necesarios para Social Media Sharing optimizado.
+- `modules/pain_solution_mapper.py`: Cableado de `no_og_tags` pain_id hacia `open_graph` asset. Cuando se detecta el pain `no_og_tags`, el sistema ahora genera correctamente el asset open_graph.
+- `modules/asset_generation/conditional_generator.py`: Integracion del cableado pain_id -> asset para `no_og_tags`.
+
+#### FASE-D: gate_report presence check
+- `modules/asset_generation/proposal_asset_alignment.py`: Agregada verificacion de presencia real del asset en el sitio del hotel antes de marcar como entregado.
+- `modules/quality_gates/publication_gates.py`: Integracion del gate de verificacion de presencia en sitio real.
+- `tests/quality_gates/test_gate_presence.py`: 12 tests nuevos para validar el gate de verificacion de presencia real.
+
+### Archivos Nuevos
+
+- `modules/asset_generation/templates/open_graph_template.html` - Template reparado para Open Graph meta tags
+- `tests/quality_gates/test_gate_presence.py` - Suite de tests para verification de presencia en sitio
+
 ### Archivos Modificados
 
 | Archivo | Cambio |
 |---------|--------|
-| `modules/asset_generation/conditional_generator.py` | Pre-check schema rico en _generate_hotel_schema + paso hotel_id |
+| `modules/asset_generation/conditional_generator.py` | Pre-check schema rico + cableado pain_id no_og_tags |
 | `modules/asset_generation/v4_asset_orchestrator.py` | Bridge siempre aplica para hotel_schema si rico existe |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Label Comision OTA corregido |
+| `modules/pain_solution_mapper.py` | Cableado no_og_tags -> open_graph asset |
+| `modules/asset_generation/proposal_asset_alignment.py` | Verificacion de presencia real del asset |
+| `modules/quality_gates/publication_gates.py` | Gate de verificacion de presencia |
 | `tests/asset_generation/test_conditional_generator.py` | 5 tests nuevos para schema rico |
 
 ### Tests
@@ -65,28 +87,9 @@ FASE-A del PATCH Forense AmaziliaHotel: Unificar el asset hotel_schema para que 
 - `TestHotelSchemaRichPreference`: 5/5 PASS
 - `test_conditional_generator.py`: 32/32 PASS
 - `test_geo_enriched_bridge.py`: 17/17 PASS
-- `test_schema_confusion.py`: 4/4 PASS
-- `test_asset_confidence_gate.py`: 6/6 PASS
+- `test_gate_presence.py`: 12/12 PASS (nuevos)
 - Suite completa obligatoria: 61/61 PASS
-- 2 fallidos pre-existentes en `test_proposal_alignment.py` (encoding issue, no relacionados con FASE-A)
-
-#### FASE-TRAZABILIDAD-REFINEMENT (2026-04-25)
-
-Resolucion de los 4 items pendientes (D1-D4) + decision arquitectonica GEO Score dual.
-
-- D1 (RESUELTO): `modules/quality_gates/publication_gates.py` — `summary.warnings` agregado al dict de `check_publication_readiness()`. Warnings ahora visibles en `gate_report.json`. Decision: WARNING no bloquea publicacion (Opcion C).
-- D2 (RESUELTO): `modules/commercial_documents/v4_diagnostic_generator.py` — `financial_tier_suffix` + `financial_tier_banner` cuando `tier == "C"`. `diagnostico_v6_template.md` — banner y sufijo insertados en seccion financiera.
-- D3 (RESUELTO): `modules/commercial_documents/v4_diagnostic_generator.py` L1273-1275 — key fix: `geo_flow_data.get('geo_score')` reemplazado por `geo_assessment.get('total_score')`. Salud Tecnica GEO ahora lee `geo_assessment.total_score: 23` en vez de `geo_score: 0` (key inexistente).
-- D4 (RESUELTO): `modules/commercial_documents/v4_diagnostic_generator.py` — `_build_asset_confidence_note()` cuenta assets con `confidence_score < 0.7` y genera nota de transparencia. Template inyecta `${asset_confidence_note}` en seccion Validacion de Calidad.
-- GEO (DECISION): GBP (`_calculate_geo_score()`) es fuente autoritativa de GEO Score (externa, verificable). `geo_flow` / GEOAssessment NO se depreca — mide AI crawler readiness (proposito distinto).
-- `main.py` L2620: serializa `readiness_report.summary.warnings` al `gate_report.json`.
-
-| Archivo | Cambio |
-|---------|--------|
-| `modules/quality_gates/publication_gates.py` | `summary.warnings` list con gates WARNING |
-| `modules/commercial_documents/v4_diagnostic_generator.py` | D3: geo_assessment.total_score key fix. D2: financial_tier_suffix + financial_tier_banner. D4: _build_asset_confidence_note() |
-| `modules/commercial_documents/templates/diagnostico_v6_template.md` | `${financial_tier_banner}`, `${financial_tier_suffix}`, `${asset_confidence_note}` |
-| `main.py` | Warnings serialization en gate_report.json |
+- 2 fallidos pre-existentes en `test_proposal_alignment.py` (encoding issue, no relacionados con FASE-A/B/C/D)
 
 ## [4.35.0] - 2026-04-23
 

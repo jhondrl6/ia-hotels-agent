@@ -18,6 +18,7 @@ from .data_structures import (
     V4AuditResult,
     ValidationSummary,
     FinancialScenarios,
+    FinancialBreakdown,
     ConfidenceLevel,
     confidence_to_icon,
     confidence_to_label,
@@ -593,6 +594,7 @@ class V4DiagnosticGenerator:
             _source_reliability = analytics_data.get("source_reliability", "verified")
         financial_ph = self._build_financial_placeholders(
             financial_scenarios, analytics_data, source_reliability=_source_reliability,
+            financial_breakdown=financial_breakdown,  # FASE-B: para ota_commission_real_formatted
         )
         data.update(financial_ph)
         
@@ -711,24 +713,30 @@ class V4DiagnosticGenerator:
         Returns:
             Label para el titulo de la seccion financiera.
         """
+        # FASE-B: Labels ahora reflejan correctamente el costo de oportunidad,
+        # NO la comision OTA pura (que viene del breakdown y es ~$5.4M).
+        # El valor mostrado en esta seccion es monthly_loss_central del escenario.
         labels = {
-            "verified": "Comisión OTA Actual (verificable)",
-            "unverified": "Comisión OTA Estimada (benchmarks regionales)",
+            "verified": "Pérdida Mensual Estimada (verificable)",
+            "unverified": "Pérdida Mensual Estimada (benchmarks regionales)",
         }
-        return labels.get(source_reliability, "Comisión OTA Estimada")
+        return labels.get(source_reliability, "Pérdida Mensual Estimada")
 
     def _build_financial_placeholders(
         self,
         scenarios: FinancialScenarios,
         analytics_data: Optional[Dict[str, Any]] = None,
         source_reliability: str = "verified",
+        financial_breakdown: Optional['FinancialBreakdown'] = None,
     ) -> Dict[str, Any]:
         """
         Construye los placeholders financieros para el template V6.
 
-        Presenta "Comisión OTA verificable" como dato principal + escenarios
+        Presenta el costo de oportunidad mensual como dato principal + escenarios
         de recuperación con evidence tier.
         FASE-J: label condicional segun source_reliability.
+        FASE-B: Separa claramente el costo de oportunidad (monthly_loss del escenario)
+                de la comision OTA real (del breakdown financiero).
         """
         main = scenarios.get_main_scenario()
         base_value = getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max
@@ -748,9 +756,17 @@ class V4DiagnosticGenerator:
                 "Los valores son estimaciones. Para mayor precisión, configure GA4 y Search Console."
             )
 
-        # OTA commission: derive from the scenario value
-        # The monthly_loss_max represents the opportunity cost (commissions going to OTAs)
-        ota_commission = format_cop(base_value)
+        # FASE-B: Distinguir claramente dos conceptos:
+        # - Costo de oportunidad mensual (monthly_loss del escenario realista)
+        # - Comision OTA real (del breakdown financiero, si esta disponible)
+        opportunity_cost_formatted = format_cop(base_value)
+        ota_commission_real_formatted = (
+            format_cop(financial_breakdown.monthly_ota_commission_cop)
+            if financial_breakdown else None
+        )
+        # Backward compatibility: ota_commission_formatted contiene el costo de oportunidad
+        # (el valor que se muestra en la seccion principal)
+        ota_commission = opportunity_cost_formatted
 
         # Build scenario table
         scenario_table = self._build_scenario_table_rows(scenarios)
@@ -772,12 +788,17 @@ class V4DiagnosticGenerator:
         ) if tier == "C" else ""
 
         return {
+            # FASE-B: Campos principales — costo de oportunidad (escenario)
+            'opportunity_cost_formatted': opportunity_cost_formatted,
+            # Backward compatibility: sigue siendo el costo de oportunidad (se muestra en la seccion)
             'ota_commission_formatted': ota_commission,
             'ota_commission_basis': (
                 f"Estimación basada en escenario {main.description.lower()}"
                 if main.description else "Estimación basada en datos del hotel"
             ),
             'ota_commission_source': 'onboarding' if ga4_enabled else 'benchmark',
+            # FASE-B: Campo nuevo — comision OTA real (del breakdown financiero)
+            'ota_commission_real_formatted': ota_commission_real_formatted,
             'scenario_table_rows': scenario_table,
             'evidence_tier': tier,
             'financial_disclaimer': disclaimer,

@@ -46,7 +46,7 @@ Las 4 fases de implementacion son funcionalmente independientes pero comparten a
 | Fase | Estado | Fecha | Notas |
 |------|--------|-------|-------|
 | FASE-A | Completada | 2026-04-26 | hotel_schema dual (schema rico como default) |
-| FASE-B | Pendiente | - | Comision OTA label |
-| FASE-C | Pendiente | - | open_graph template + pain_id |
-| FASE-D | Pendiente | - | gate_report presence check |
-| FASE-RELEASE-4.36.0 | Pendiente | - | Cierre + documentacion |
+|| FASE-B | Completada | 2026-04-26 | Comision OTA label → Perdida Mensual Estimada + ota_commission_real_formatted |
+|| FASE-C | Completada | 2026-04-26 | open_graph template + pain_id no_og_tags |
+|| FASE-D | Completada | 2026-04-26 | gate_report presence check con SitePresenceChecker |
+| FASE-RELEASE-4.36.0 | Completada | 2026-04-26 | Cierre + documentacion - version bump 4.36.0 |

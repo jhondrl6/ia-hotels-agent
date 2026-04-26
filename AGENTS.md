@@ -1,8 +1,8 @@
-<!-- agents_version: 4.35.1 | last_update: 2026-04-25 -->
+<!-- agents_version: 4.36.0 | last_update: 2026-04-26 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.35.1 -- Trazabilidad Publication Gates COMPLETADO**
+> **v4.36.0 -- PATCH Forense AmaziliaHotel COMPLETADO**
 
 ---
 
