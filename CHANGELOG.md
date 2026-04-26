@@ -4,27 +4,50 @@
 
 ### Objetivo
 
-Correcciones documentales en el bloque "Calidad Garantizada" — discrepancias entre README, workflow y docstrings vs. la realidad del código (9 gates, no 6; comando v4_coherence_validator inexistente; Coherence Score variable).
+Correcciones documentales en el bloque "Calidad Garantizada" + 5 fixes de código post-validación v4complete. El sistema deja de ocultar defaults/legacy y ahora transparenta Tier C en gates y diagnóstico.
 
 ### Cambios Implementados
 
-- `README.md` L306: Corregido "6 Publication Gates" → "9 Publication Gates (6 blocking + 3 advisory)" con descripción de gates 7-9
-- `.agents/workflows/v4_complete.md` L95: Removida referencia a comando inexistente `v4_coherence_validator`; ahora usa `v4_asset_conditional`
-- `modules/quality_gates/publication_gates.py` L4-19: Docstring corregido de "5 critical gates" → "9 publication gates (6 blocking + 3 advisory)" con lista completa
-- `AGENTS.md` L106: Coherence Score ahora indica rango variable ("varía por ejecución") en lugar de valor fijo 0.84
+#### FASE-TRAZABILIDAD-DOCS
+- `README.md` L306: Corregido "6 Publication Gates" → "9 Publication Gates (6 blocking + 3 advisory)"
+- `.agents/workflows/v4_complete.md` L95: Removida referencia a comando inexistente `v4_coherence_validator`
+- `modules/quality_gates/publication_gates.py` L4-19: Docstring corregido de "5 critical gates" → "9 publication gates"
+- `AGENTS.md` L106: Coherence Score ahora indica rango variable
+
+#### FASE-TRAZABILIDAD-PATCH
+- `modules/quality_gates/publication_gates.py`: BUG-02 fix — `_financial_validity_gate` ahora retorna `WARNING` (passed=True) cuando `financial_sources` contiene `default`/`legacy_hardcode`/`legacy_fixed`. Incluye `default_sources` en details para transparencia.
+- `modules/commercial_documents/v4_diagnostic_generator.py`: Agregado header `## 🔍 Trazabilidad: Brechas Identificadas` en `_build_brechas_section()` (L1777).
+- `modules/commercial_documents/templates/diagnostico_v6_template.md`: Agregada sección `## ✅ Validación de Calidad` con `${manual_attention_table}`.
+- `main.py`: `seo_score` persiste en `v4_complete_report.json` como entero.
+- 1 ejecución v4complete (Amazilia Hotel) verifica los 5 fixes simultáneamente.
 
 ### Archivos Modificados
 
-||| Archivo | Cambio ||
+| Archivo | Cambio |
 |---------|--------|
 | `README.md` | Conteo gates: 6 → 9 + descripción advisory |
 | `.agents/workflows/v4_complete.md` | Ghost command removido |
-| `modules/quality_gates/publication_gates.py` | Docstring 5 → 9 gates |
+| `modules/quality_gates/publication_gates.py` | Docstring 5 → 9 gates + WARNING en financial_validity |
 | `AGENTS.md` | Coherence Score como rango variable |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Header Trazabilidad en brechas |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Sección Validación de Calidad |
+| `main.py` | seo_score persiste en JSON |
 
 ### Tests
 
-- 0 tests (correcciónpuramente documental)
+- Tests de proposal_alignment: 13/13 PASS
+- run_all_validations.py --quick: 4/4
+
+### Items Pendientes Post-Ejecución
+
+| # | Descripcion | Tipo |
+|---|-------------|------|
+| D1 | WARNING en publication readiness — si debe marcar REQUIRES_REVIEW | Decision negocio |
+| D2 | Tier C visible en cuerpo del documento — disclaimer en encabezado | Decision contenido |
+| D3 | geo_score=0/100 — investigacion timing/bug/dato real | Investigacion |
+| D4 | Gap coherence vs asset_confidence — nota en diagnostico | Decision display |
+
+Ver `.opencode/context/fase-trazabilidad-context.md`
 
 ## [4.35.0] - 2026-04-23
 
