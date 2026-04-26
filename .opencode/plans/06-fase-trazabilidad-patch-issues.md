@@ -370,13 +370,22 @@ ls output/v4_complete/amazilia_hotel/v4_audit/geo_flow_result.json
 
 ## Criterios de Completitud
 
-- [ ] T1: financial_validity gate reporta WARNING (passed=True) para Tier C
-- [ ] T1: gate_report.json tiene details.default_sources con campos affected
-- [ ] T2: Diagnóstico tiene encabezado "## 🔍 Trazabilidad: Brechas Identificadas"
-- [ ] T2: Diagnóstico tiene sección "## ✅ Validación de Calidad"
-- [ ] T3: v4_complete_report.json incluye `seo_score` numérico
-- [ ] T4: geo_flow_result disponible en timing correcto (verificar post-assets)
-- [ ] 1 sola ejecución v4complete verifica los 5 issues
-- [ ] run_all_validations.py --quick pasa
-- [ ] log_phase_completion.py ejecutado
-- [ ] Commit
+- [x] T1: financial_validity gate reporta WARNING (passed=True) para Tier C
+- [x] T1: gate_report.json tiene details.default_sources con campos affected
+- [x] T2: Diagnóstico tiene encabezado "## 🔍 Trazabilidad: Brechas Identificadas"
+- [x] T2: Diagnóstico tiene sección "## ✅ Validación de Calidad"
+- [x] T3: v4_complete_report.json incluye `seo_score` numérico
+- [x] T4: geo_flow_result disponible en timing correcto (verificar post-assets)
+- [x] 1 sola ejecución v4complete verifica los 5 issues
+- [x] run_all_validations.py --quick pasa
+- [x] log_phase_completion.py ejecutado
+- [x] Commit
+
+---
+
+## Items Pendientes Post-Ejecución
+
+- [ ] D1: WARNING en publication readiness — decisión negocio (ver `fase-trazabilidad-context.md`)
+- [ ] D2: Tier C visible en cuerpo del documento — decisión contenido (ver `fase-trazabilidad-context.md`)
+- [ ] D3: geo_score = 0/100 — investigación timing/bug/dato real (ver `fase-trazabilidad-context.md`)
+- [ ] D4: Gap coherence vs asset_confidence — decisión display (ver `fase-trazabilidad-context.md`)

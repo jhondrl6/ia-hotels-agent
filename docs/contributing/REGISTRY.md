@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-25
 > **Version actual:** v4.35.1
-> **Total fases completadas:** 162
+> **Total fases completadas:** 164
 
 ---
 
@@ -4077,7 +4077,40 @@ _Ninguno_
 
 
 ## FASE-TRAZABILIDAD-PATCH - 2026-04-25
-**Descripcion:** 5 fixes de issues post-validate: T1=BUG-02 financial_validity WARNING con default_sources, T2=secciones Trazabilidad+Validacion Calidad en diagnostico, T3=seo_score persiste en JSON, T4=geo_flow_result timing correcto
+**Descripcion:** 5 fixes de issues post-validate: T1=BUG-02 financial_validity WARNING con default_sources, T2=secciones Trazabilidad+Validacion Calidad en diagnostico, T3=seo_score persiste en JSON, T4=geo_flow_result timing correcto. Todos verificados en 1 ejecucion v4complete Amazilia Hotel. 4 items pendientes documentados (D1-D4).
+
+### Archivos Nuevos
+| Archivo | Descripcion |
+|---------|-------------|
+| `.opencode/context/fase-trazabilidad-context.md` | Contexto consolidado 4 items pendientes (D1-D4) |
+
+### Archivos Modificados
+| Archivo | Descripcion |
+|---------|-------------|
+| `modules/quality_gates/publication_gates.py` | Fix BUG-02: WARNING cuando financial_sources tiene default/legacy |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Header "## 🔍 Trazabilidad" en _build_brechas_section() |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Seccion "## ✅ Validación de Calidad" + ${manual_attention_table} |
+| `main.py` | seo_score persiste en v4_complete_report.json |
+| `.opencode/plans/06-fase-trazabilidad-patch-issues.md` | Criterios de completitud marcados + items pendientes |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+- [x] run_all_validations.py --quick: 4/4
+- [x] Commit: 16fa26b
+
+### Items Pendientes (proxima sesion)
+- [ ] D1: WARNING en publication readiness — decision negocio
+- [ ] D2: Tier C visible en cuerpo documento — decision contenido
+- [ ] D3: geo_score=0/100 — investigacion timing/bug/dato real
+- [ ] D4: Gap coherence vs asset_confidence — decision display
+
+---
+
+
+## FASE-TRAZABILIDAD-VALIDATE - 2026-04-25
+**Descripcion:** Validacion unica v4complete Amazilia Hotel: 9 gates + trazabilidad + IA metrics visibles + positive findings + SEO/IAO unificados + crawler fix verificado + 18 criterios. Commit: a0064e9. v4.35.0
 
 ### Archivos Nuevos
 _Ninguno_
@@ -4086,7 +4119,24 @@ _Ninguno_
 _Ninguno_
 
 ### Validaciones
-- [x] Tests passing
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-TRAZABILIDAD-PATCH+SEO - 2026-04-25
+**Descripcion:** 5 fixes post-validate: BUG-02(financial_warning), T2A(header trazabilidad), T2B(seccion validacion calidad), T3(seo_score en JSON), T4(geo_flow timing). Commit: 16fa26b. 1 v4complete execution. v4.35.1
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

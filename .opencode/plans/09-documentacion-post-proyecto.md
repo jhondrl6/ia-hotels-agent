@@ -79,13 +79,13 @@ Una vez completadas las 4 fases, ejecutar en orden:
 
 | Verificación | Estado |
 |-------------|--------|
-| REGISTRY.md actualizado (4 fases) | ⬜ |
-| sync_versions.py ejecutado | ⬜ |
-| CHANGELOG.md formato correcto (4 fases) | ⬜ |
-| GUIA_TECNICA.md con nota técnica | ⬜ |
-| run_all_validations.py --quick (4/4) | ⬜ |
-| doctor.py --status sin errores | ⬜ |
+| REGISTRY.md actualizado (4 fases) | ✅ (docs/contributing/ — 4/4 fases TRAZABILIDAD)
+| sync_versions.py ejecutado | ✅ (4.35.1 — All files in sync) |
+| CHANGELOG.md formato correcto (4 fases) | ✅ ([4.35.1] con FASE-TRAZABILIDAD-DOCS + PATCH, 4 items pendientes) |
+| GUIA_TECNICA.md con nota técnica | ✅ (L464: Notas de Cambios v4.35.1 — Trazabilidad Publication Gates) |
+| run_all_validations.py --quick (4/4) | ✅ (4/4 validations passed) |
+| doctor.py --status sin errores | ✅ (SYSTEM_STATUS.md regenerado) |
 | DOMAIN_PRIMER.md actualizado | ✅ (sin cambios necesarios) |
 | AGENTS.md actualizado | ✅ |
-| seo_score presente en v4_complete_report.json | ⬜ (T3 PATCH+SEO-06) |
-| Encabezados de sección en diagnóstico | ⬜ (T2 PATCH+SEO-06) |
+| seo_score presente en v4_complete_report.json | ✅ (seo_score=25, entero) |
+| Encabezados de sección en diagnóstico | ✅ (Trazabilidad: Brechas + Validación de Calidad) |
