@@ -296,8 +296,22 @@ class V4AssetOrchestrator:
             )
             if isinstance(result, GeneratedAsset):
                 # FASE-GEO-BRIDGE: Attempt to enrich from geo_enriched/
-                if result.confidence_score < 0.7 and result.path:
-                    geo_enriched_dir = output_dir / "geo_enriched"
+                # FASE-A: Para hotel_schema, SIEMPRE aplicar bridge si existe schema rico
+                # (incluso si confidence >= 0.7, porque conditional_generator puede haber
+                # encontrado y usado el schema rico, o el basic tiene confidence alta
+                # pero no tiene los 16+ campos del rico)
+                geo_enriched_dir = output_dir / "geo_enriched"
+                rich_schema_exists = (
+                    result.asset_type == "hotel_schema" and
+                    (geo_enriched_dir / "hotel_schema_rich.json").exists()
+                )
+                should_bridge = (
+                    result.path and (
+                        rich_schema_exists or
+                        result.confidence_score < 0.7
+                    )
+                )
+                if should_bridge:
                     # Read current content from disk
                     current_content = ""
                     if Path(result.path).exists():

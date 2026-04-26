@@ -496,3 +496,153 @@ class TestMinimumDataGuarantee:
         metadata = result.get("metadata", {})
         confidence = metadata.get("confidence_score", 1.0)
         assert confidence == 0.3
+
+
+class TestHotelSchemaRichPreference:
+    """Tests for FASE-A: Schema rico preference over basic schema.
+
+    Verifies that:
+    1. Schema rico exists + valid JSON-LD -> used directly
+    2. Schema rico does not exist -> basic schema generated
+    3. Schema rico exists but empty/invalid -> basic schema generated (fallback)
+    """
+
+    def test_schema_rico_exists_uses_rich_directly(self, tmp_path):
+        """Schema rico existe + JSON-LD valido -> se retorna como asset oficial."""
+        hotel_id = "test_hotel_001"
+        generator = ConditionalGenerator(output_dir=str(tmp_path))
+
+        # Crear geo_enriched/hotel_schema_rich.json
+        geo_dir = tmp_path / hotel_id / "geo_enriched"
+        geo_dir.mkdir(parents=True)
+        rich_schema = {
+            "@context": "https://schema.org",
+            "@type": "Hotel",
+            "name": "Amazilia Hotel Test",
+            "description": "Hotel boutique en Salento",
+            "url": "https://amaziliahotel.com",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Calle 10 #5-50",
+                "addressLocality": "Salento",
+                "addressRegion": "Quindio",
+                "postalCode": "631920",
+                "addressCountry": "CO"
+            },
+            "starRating": {"@type": "Rating", "ratingValue": "4"},
+            "amenityFeature": [
+                {"@type": "LocationFeatureSpecification", "name": "Piscina"},
+                {"@type": "LocationFeatureSpecification", "name": "WiFi"},
+            ],
+            "priceRange": "$$",
+            "telephone": "+576000000000",
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "4.6372",
+                "longitude": "-75.5697"
+            }
+        }
+        (geo_dir / "hotel_schema_rich.json").write_text(
+            json.dumps(rich_schema, indent=2), encoding="utf-8"
+        )
+
+        # Generar schema
+        result = generator._generate_hotel_schema(
+            {"name": "Test Hotel", "url": "https://test.com"},
+            hotel_id=hotel_id
+        )
+
+        # Debe retornar el schema rico, no el basico
+        parsed = json.loads(result)
+        assert parsed["@type"] == "Hotel"
+        assert parsed["name"] == "Amazilia Hotel Test"
+        assert "starRating" in parsed  # Campo solo en schema rico
+        assert "amenityFeature" in parsed
+
+    def test_schema_rico_not_exists_generates_basic(self, tmp_path):
+        """Schema rico no existe -> generacion basica normal (backward compatible)."""
+        hotel_id = "test_hotel_002"
+        generator = ConditionalGenerator(output_dir=str(tmp_path))
+
+        # No crear geo_enriched/
+
+        result = generator._generate_hotel_schema(
+            {"name": "Basic Hotel", "url": "https://basic.com"},
+            hotel_id=hotel_id
+        )
+
+        parsed = json.loads(result)
+        assert parsed["@type"] == "LodgingBusiness"
+        assert parsed["name"] == "Basic Hotel"
+
+    def test_schema_rico_exists_but_invalid_falls_back_to_basic(self, tmp_path):
+        """Schema rico existe pero invalido (no es JSON-LD) -> genera basico."""
+        hotel_id = "test_hotel_003"
+        generator = ConditionalGenerator(output_dir=str(tmp_path))
+
+        # Crear geo_enriched/hotel_schema_rich.json invalido
+        geo_dir = tmp_path / hotel_id / "geo_enriched"
+        geo_dir.mkdir(parents=True)
+        (geo_dir / "hotel_schema_rich.json").write_text(
+            "No es JSON valido", encoding="utf-8"
+        )
+
+        result = generator._generate_hotel_schema(
+            {"name": "Fallback Hotel", "url": "https://fallback.com"},
+            hotel_id=hotel_id
+        )
+
+        parsed = json.loads(result)
+        assert parsed["@type"] == "LodgingBusiness"
+        assert parsed["name"] == "Fallback Hotel"
+
+    def test_schema_rico_empty_file_falls_back_to_basic(self, tmp_path):
+        """Schema rico existe pero vacio -> genera basico."""
+        hotel_id = "test_hotel_004"
+        generator = ConditionalGenerator(output_dir=str(tmp_path))
+
+        geo_dir = tmp_path / hotel_id / "geo_enriched"
+        geo_dir.mkdir(parents=True)
+        (geo_dir / "hotel_schema_rich.json").write_text("", encoding="utf-8")
+
+        result = generator._generate_hotel_schema(
+            {"name": "Empty Rico Hotel", "url": "https://empty.com"},
+            hotel_id=hotel_id
+        )
+
+        parsed = json.loads(result)
+        assert parsed["@type"] == "LodgingBusiness"
+
+    def test_generate_content_passes_hotel_id_to_hotel_schema(self, tmp_path):
+        """Verifica que _generate_content pasa hotel_id para que _generate_hotel_schema use rico."""
+        hotel_id = "test_hotel_005"
+        generator = ConditionalGenerator(output_dir=str(tmp_path))
+
+        # Crear schema rico
+        geo_dir = tmp_path / hotel_id / "geo_enriched"
+        geo_dir.mkdir(parents=True)
+        rich_schema = {
+            "@context": "https://schema.org",
+            "@type": "Hotel",
+            "name": "Viajero Hotel",
+        }
+        (geo_dir / "hotel_schema_rich.json").write_text(
+            json.dumps(rich_schema, indent=2), encoding="utf-8"
+        )
+
+        # Usar generate() completo que llama a _generate_content
+        validated_data = {"hotel_data": {"name": "Should Not Appear", "url": "https://unused.com"}}
+        result = generator.generate(
+            asset_type="hotel_schema",
+            validated_data=validated_data,
+            hotel_name="Viajero Hotel",
+            hotel_id=hotel_id
+        )
+
+        assert result["success"] is True
+        # El contenido se guarda en file_path, leerlo
+        with open(result["file_path"], 'r', encoding='utf-8') as f:
+            content = f.read()
+        parsed = json.loads(content)
+        assert parsed["@type"] == "Hotel"
+        assert parsed["name"] == "Viajero Hotel"

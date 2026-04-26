@@ -38,6 +38,38 @@ Correcciones documentales en el bloque "Calidad Garantizada" + 5 fixes de códig
 - Tests de proposal_alignment: 13/13 PASS
 - run_all_validations.py --quick: 4/4
 
+## [4.36.0] - 2026-04-26
+
+### Objetivo
+
+FASE-A del PATCH Forense AmaziliaHotel: Unificar el asset hotel_schema para que siempre use el schema enriquecido (geo_enriched) cuando esté disponible, eliminando la contradiccion de tener dos schemas (rico vs vacio).
+
+### Cambios Implementados
+
+#### FASE-A (PATCH Forense)
+- `modules/asset_generation/conditional_generator.py` L772: `_generate_hotel_schema()` ahora acepta parametro `hotel_id` y hace pre-check de `geo_enriched/hotel_schema_rich.json`. Si existe y es JSON-LD valido, lo retorna directamente en lugar de generar schema basico vacio.
+- `modules/asset_generation/conditional_generator.py` L404: `_generate_content()` ahora pasa `hotel_id` a `_generate_hotel_schema()` para que el pre-check funcione.
+- `modules/asset_generation/v4_asset_orchestrator.py` L298: Bridge geo_enriched ahora SIEMPRE aplica para `hotel_schema` si existe `hotel_schema_rich.json`, independientemente del confidence del schema basico.
+- `tests/asset_generation/test_conditional_generator.py`: 5 tests nuevos en `TestHotelSchemaRichPreference` cubriendo: schema rico existe + valido, schema rico no existe, schema rico invalido, schema rico vacio, integracion via generate().
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | Pre-check schema rico en _generate_hotel_schema + paso hotel_id |
+| `modules/asset_generation/v4_asset_orchestrator.py` | Bridge siempre aplica para hotel_schema si rico existe |
+| `tests/asset_generation/test_conditional_generator.py` | 5 tests nuevos para schema rico |
+
+### Tests
+
+- `TestHotelSchemaRichPreference`: 5/5 PASS
+- `test_conditional_generator.py`: 32/32 PASS
+- `test_geo_enriched_bridge.py`: 17/17 PASS
+- `test_schema_confusion.py`: 4/4 PASS
+- `test_asset_confidence_gate.py`: 6/6 PASS
+- Suite completa obligatoria: 61/61 PASS
+- 2 fallidos pre-existentes en `test_proposal_alignment.py` (encoding issue, no relacionados con FASE-A)
+
 #### FASE-TRAZABILIDAD-REFINEMENT (2026-04-25)
 
 Resolucion de los 4 items pendientes (D1-D4) + decision arquitectonica GEO Score dual.

@@ -12,6 +12,7 @@ from typing import Dict, List, Optional, Any
 from pathlib import Path
 from datetime import datetime
 import json
+import logging
 import csv
 import io
 import hashlib
@@ -21,6 +22,8 @@ from .asset_metadata import AssetMetadata, AssetMetadataEnforcer, AssetStatus
 from .asset_catalog import ASSET_CATALOG
 from .data_assessment import DataAssessment, DataClassification
 from .site_presence_checker import SitePresenceChecker, PresenceStatus
+
+logger = logging.getLogger(__name__)
 
 
 class ConditionalGenerator:
@@ -404,7 +407,7 @@ class ConditionalGenerator:
         elif asset_type == "hotel_schema":
             hotel_data = validated_data.get("hotel_data", {})
             data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
-            content = self._generate_hotel_schema(data if isinstance(data, dict) else {})
+            content = self._generate_hotel_schema(data if isinstance(data, dict) else {}, hotel_id=hotel_id)
         
         elif asset_type == "financial_projection":
             scenarios_data = validated_data.get("hotel_financial_data", {})
@@ -769,15 +772,40 @@ class ConditionalGenerator:
 
         return score / total_weight if total_weight > 0 else 0.0
 
-    def _generate_hotel_schema(self, hotel_data: Dict) -> str:
+    def _generate_hotel_schema(self, hotel_data: Dict, hotel_id: str = "") -> str:
         """Generate JSON-LD schema for hotel.
+        
+        FASE-A: Si existe hotel_schema_rich.json en geo_enriched/, lo usa directamente
+        en lugar de generar un schema basico vacio.
         
         Args:
             hotel_data: Dictionary with hotel information
+            hotel_id: Unique hotel identifier (used for geo_enriched fallback)
             
         Returns:
             JSON string with schema markup
         """
+        # FASE-A: Pre-check - usar schema rico si existe
+        if hotel_id:
+            rich_schema_path = self.output_dir / hotel_id / "geo_enriched" / "hotel_schema_rich.json"
+            if rich_schema_path.exists():
+                try:
+                    with open(rich_schema_path, 'r', encoding='utf-8') as f:
+                        rich_content = f.read().strip()
+                    # Validar que es JSON-LD valido con @type
+                    if rich_content.startswith('{') and '"@type"' in rich_content:
+                        logger.info(
+                            f"[ConditionalGenerator] Using enriched hotel_schema "
+                            f"from {rich_schema_path.name}"
+                        )
+                        return rich_content
+                except Exception as e:
+                    logger.warning(
+                        f"[ConditionalGenerator] Failed to read rich schema "
+                        f"from {rich_schema_path}: {e}"
+                    )
+                # Si llega aqui, hubo error o contenido invalido: generar basico
+
         # MINIMUM-DATA-GUARANTEE: Ensure basic fields exist even when all sources fail
         hotel_data.setdefault("name", "Hotel")
         hotel_data.setdefault("url", "")
