@@ -1,7 +1,7 @@
 # Contribuir con la Documentacion Oficial
 
 > Este archivo responde a **una sola pregunta**: como se actualiza la documentacion oficial del repositorio con suficiencia y claridad.
-> **Version actual:** v4.35.1 | Consulta REGISTRY.md para el historial de fases completadas.
+> **Version actual:** v4.36.0 | Consulta REGISTRY.md para el historial de fases completadas.
 
 ---
 
@@ -140,7 +140,8 @@ git diff --stat
 | .agents/workflows/README.md | MANUAL | Se VERIFICA (paso 5) |
 | .agent/SYSTEM_STATUS.md | AUTO via --doctor --status | Se REGENERA (paso 6) |
 | ROADMAP.md | MANUAL | NO (solo si el usuario dice especificamente que actualizar Roadmap) |
-| .agent/knowledge/DOMAIN_PRIMER.md | SEMI-AUTO via --doctor --regenerate-domain-primer | Se VERIFICA (paso 5b) |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | SEMI-AUTO via --doctor --regenerate-domain-primer | Se VERIFICA (paso 5b) |
+| `INDICE_DOCUMENTACION.md` | MANUAL post-release | NO (automatico solo header via sync — contenido fases es manual) |
 
 ### Paso 5b: Verificar DOMAIN_PRIMER.md
 
@@ -251,13 +252,14 @@ El comando `python main.py --doctor` incluye un check de "Symlink integrity" que
 
 ### Actualizacion manual (requiere agente)
 
-| Archivo | Cuando |
+|| Archivo | Cuando |
 |---------|--------|
 | `CHANGELOG.md` | Nueva release |
 | `docs/GUIA_TECNICA.md` | Cambios de arquitectura, stack o flujos |
 | `ROADMAP.md` | Cambios en estrategia de monetizacion |
 | `.agents/workflows/README.md` | Agregar/eliminar skills |
 | `.agent/knowledge/DOMAIN_PRIMER.md` | Agregar/eliminar modulos, cambiar clases o flujo |
+| `INDICE_DOCUMENTACION.md` | Nueva version (version header + fases recientes) |
 
 ---
 
@@ -286,3 +288,4 @@ El comando `python main.py --doctor` incluye un check de "Symlink integrity" que
 | [validation.md](contributing/validation.md) | Pre-commit, regresion, coherencia, troubleshooting |
 | [capabilities.md](contributing/capabilities.md) | Capability contracts, Evidence Ledger, SitePresenceChecker |
 | [REGISTRY.md](contributing/REGISTRY.md) | Registro auto-generado de fases completadas |
+| [INDICE_DOCUMENTACION.md](../INDICE_DOCUMENTACION.md) | Indice general del repositorio (version + fases recientes) |
