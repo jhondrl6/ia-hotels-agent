@@ -1,6 +1,6 @@
-# Indice de Documentacion - IA Hoteles Agent v4.8.0
+# Indice de Documentacion - IA Hoteles Agent v4.36.0
 
-**Ultima actualizacion:** 23 Marzo 2026
+**Ultima actualizacion:** 28 Abril 2026
 
 Guia rapida para encontrar la informacion que necesitas tras la actualizacion Financial Centralization & ChatGPT Alternatives.
 
@@ -212,34 +212,25 @@ Guia rapida para encontrar la informacion que necesitas tras la actualizacion Fi
 
 ### Historial de Cambios
 
-| Documento | Contenido |
+|| Documento | Contenido |
 |-----------|-----------|
-| [CHANGELOG.md](CHANGELOG.md) | Ultimas 5 versiones (v3.6.0 - v3.1.0) |
+| [CHANGELOG.md](CHANGELOG.md) | Ultimas versiones (v4.36.0 - v3.6.0) |
 | [CHANGELOG_ARCHIVE.md](docs/archive/CHANGELOG_ARCHIVE.md) | Versiones historicas (v3.0.0 y anteriores) |
 
+### Registro de Fases Completadas (REGISTRY)
+
+|| Fase | Version | Descripcion |
+|------|--------|---------|
+|| FASE-1-AMAZILIA-CORRECCION | v4.36.0 | VALIDATE-v2 fixes: M3, H1, N1, M4, T4, slug bug |
+|| FASE-GEO-BRIDGE | v4.29.0 | Bridge geo_enriched → delivery de assets |
+|| FASE-E (Voice Readiness) | v4.28.0 | Voice Readiness Proxy score |
+|| FASE-D (4 Pilares) | v4.28.0 | Alineacion SEO+GEO+AEO+IAO |
+|| FASE-F-BROTLI | v4.27.0 | Fix Brotli Encoding + HTML Integrity Guardian |
+|| FASE-HARNESS-REFACTOR | v4.20.0 | Agent Harness v3.2.0 refactor arquitectonico |
+|| Ver todas | [REGISTRY.md](docs/contributing/REGISTRY.md) | 174+ fases documentadas |
+
 ---
 
-**Version:** 4.8.0
-**Ultima actualizacion:** 23 Marzo 2026
-**IA Hoteles Agent v4.8.0**
-
----
-
-## Nuevos Módulos v4.5.1 (GEO Integration Fixed)
-
-| Modulo | Funcion |
-|--------|---------|
-| modules/commercial_documents/pain_solution_mapper.py | Detección de problemas GEO (ai_crawler_blocked, low_citability, low_ia_readiness) |
-| modules/commercial_documents/v4_diagnostic_generator.py | Sección de métricas GEO en diagnóstico |
-| modules/commercial_documents/v4_proposal_generator.py | Assets GEO en propuesta comercial |
-| modules/asset_generation/conditional_generator.py | Gate de contenido vacío y placeholders |
-| tests/asset_generation/test_content_gates.py | 19 tests para validación de contenido |
-
-### Módulos v4.5.0 (GEO Integration) - Anteriores
-
-| Modulo | Funcion |
-|--------|---------|
-| modules/auditors/ai_crawler_auditor.py | Auditoría de robots.txt para IA crawlers |
-| modules/asset_generation/llmstxt_generator.py | Generación de llms.txt estándar |
-| modules/auditors/citability_scorer.py | Score de citabilidad de contenido |
-| modules/auditors/ia_readiness_calculator.py | Score compuesto IA-readiness |
+**Version:** 4.36.0
+**Ultima actualizacion:** 28 Abril 2026
+**IA Hoteles Agent v4.36.0**
