@@ -1,77 +1,50 @@
-# Plan de Intervencion Forense - AmaziliaHotel
+# Plan Maestro — Trazabilidad Amazilia Hotel
 
-**Version**: 4.36.0
-**Fecha**: 2026-04-26
-**Fuente**: Veredicto.md (Hallazgos 2b, 3, 5 + gate_report presence)
+> Version: v2.0 | Actualizado: 2026-04-27
 
-## Resumen
+## Indice de Archivos
 
-Intervencion de 4 hallazgos confirmados del audit forense de AmaziliaHotel:
+| Archivo | Descripcion |
+|---------|-------------|
+| `README.md` | Este archivo — indice y resumen |
+| `dependencias-fases.md` | Diagrama de dependencias y estado de fases |
+| `06-checklist-implementacion.md` | Checklist detallado por fase |
+| `05-prompt-inicio-sesion-fase-TRAZABILIDAD-VALIDATE-v2.md` | Prompt de la fase actual |
+| `09-documentacion-post-proyecto.md` | Documentacion post-proyecto |
 
-1. **hotel_schema dual** (ALTO): Asset oficial vacio vs schema rico en geo_enriched. Bridge existe pero no siempre aplica. → **FASE-A**
+## Contexto
 
-2. **Comision OTA mal etiquetada** (MEDIO): $2,610,000 (monthly_loss) presentado como "Comision OTA" cuando la real es $5,400,000. → **FASE-B**
+El proyecto "Trazabilidad Calidad Garantizada" identifico **18 hallazgos** y **5 bugs** en el pipeline v4complete de iah-cli, testeado contra Amazilia Hotel (amaziliahotel.com).
 
-3. **open_graph asset roto** (MEDIO): Template no existe, pain_id `no_og_tags` no se dispara. El sistema NUNCA genera OG tags para hoteles que las necesitan. → **FASE-C**
-
-4. **gate_report falsos missing** (MEDIO): Reporta whatsapp_button como "missing" cuando YA existe en sitio. Alignment artificialmente bajo. → **FASE-D**
-
-## Hallazgos descartados
-
-- **whatsapp_button**: Hotel ya lo tiene en sitio. Pipeline lo detecta y SKIPEA correctamente.
-- **research.json confidence**: MEDIO, deferir. Problema de calibracion interna.
-- **llms.txt duplicado**: BAJO, deferir. Ineficiencia sin impacto al cliente.
-
-## Estructura del Plan
+### Cadena de Fases
 
 ```
-.opencode/plans/
-├── README.md                                    (este archivo)
-├── dependencias-fases.md                        (diagrama + conflictos)
-├── 05-prompt-inicio-sesion-fase-A.md            (hotel_schema dual)
-├── 05-prompt-inicio-sesion-fase-B.md            (Comision OTA label)
-├── 05-prompt-inicio-sesion-fase-C.md            (open_graph asset)
-├── 05-prompt-inicio-sesion-fase-D.md            (gate_report presence)
-├── 05-prompt-inicio-sesion-fase-RELEASE.md      (cierre + docs)
-├── 06-checklist-implementacion.md               (seguimiento)
-└── 09-documentacion-post-proyecto.md            (cascada documental)
+DOCS → RAIZ → VALIDATE → PATCH+SEO → REFINEMENT → PATCH Forense → VALIDATE-v2
+                                                                    (actual)
 ```
 
-## Fases
+### Estado Actual
 
-| Fase | Descripcion | Archivos Principales | Estado |
-|------|-------------|---------------------|--------|
-| FASE-A | Unificar hotel_schema | conditional_generator.py, v4_asset_orchestrator.py | Pendiente |
-| FASE-B | Corregir label financiero | v4_diagnostic_generator.py, template | Pendiente |
-| FASE-C | Reparar open_graph | template (NUEVO), pain_solution_mapper.py | Pendiente |
-| FASE-D | gate_report presence | gate_report generator, SitePresenceChecker | Pendiente |
-| FASE-RELEASE-4.36.0 | Cierre + documentacion | VERSION.yaml, CHANGELOG, GUIA_TECNICA | Pendiente |
+- **Version**: v4.36.0 (PATCH Forense AmaziliaHotel)
+- **Fases completadas**: 6/7
+- **Fase actual**: FASE-TRAZABILIDAD-VALIDATE-v2
+- **Hallazgos corregidos**: 15/18 (3 diferidos)
+- **Bugs corregidos**: 5/5
+- **Issues post-VALIDATE**: 4/4 (T1-T4)
 
-## Dependencias
+### Hallazgos Diferidos (3)
 
-```
-FASE-A ──┐
-FASE-B ──┤
-FASE-C ──┼──→ FASE-RELEASE-4.36.0
-FASE-D ──┘
-```
+1. **C10**: Benchmarks sin trace de fuente
+2. **D16**: Contexto regional hardcoded
+3. **D17**: Competidores stub
 
-Conflicto bajo: FASE-A y FASE-C tocan conditional_generator.py (ramas distintas).
-Recomendacion: orden secuencial A → B → C → D → RELEASE.
+### Decision Diferida
 
-## Reglas de Ejecucion
+- **D1**: WARNING gates deberian cambiar readiness a REQUIRES_REVIEW?
 
-1. **1 fase por sesion** (regla mandatoria del phased_project_executor)
-2. **Maximo 60 iteraciones** del agente por fase
-3. **FASE-RELEASE** requiere las 4 fases de implementacion completadas
-4. **Post-ejecucion obligatoria** al cierre de cada fase
+## Reglas
 
-## Progreso
-
-```
-[ ] FASE-A: hotel_schema dual
-[ ] FASE-B: Comision OTA label
-[ ] FASE-C: open_graph asset
-[ ] FASE-D: gate_report presence
-[ ] FASE-RELEASE-4.36.0: Cierre + docs
-```
+1. Una fase por sesion
+2. Maximo 60 iteraciones por fase
+3. TIER 1 documentacion inmediata post-fase
+4. TIER 2 documentacion deferida a FASE-RELEASE

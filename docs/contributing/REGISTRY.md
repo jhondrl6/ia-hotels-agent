@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-26
+> **Ultima actualizacion:** 2026-04-27
 > **Version actual:** v4.36.0
-> **Total fases completadas:** 174
+> **Total fases completadas:** 171
 
 ---
 
@@ -4260,6 +4260,32 @@ _Ninguno_
 ### Validaciones
 - [x] Tests passing (12)
 - [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-TRAZABILIDAD-VALIDATE-V2 - 2026-04-27
+**Descripcion:** Verificacion post-PATCH Forense v4.36.0: 14/15 hallazgos SUPERADOS, 1 PARCIAL (T4 timing). Ejecucion v4complete Amazilia Hotel.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `.opencode/context/fase-trazabilidad-context.md` | NUEVO | Fase-Trazabilidad-Context |
+| `.opencode/plans/05-prompt-inicio-sesion-fase-TRAZABILIDAD-VALIDATE-v2.md` | NUEVO | 05-Prompt-Inicio-Sesion-Fase-Trazabilidad-Validate-V2 |
+| `.opencode/plans/dependencias-fases.md` | NUEVO | Dependencias-Fases |
+| `.opencode/plans/06-checklist-implementacion.md` | NUEVO | 06-Checklist-Implementacion |
+| `.opencode/plans/09-documentacion-post-proyecto.md` | NUEVO | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/README.md` | NUEVO | Readme |
+| `.opencode/plans/VALIDATION_RESULTS.md` | NUEVO | Validation Results |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.89 (PASO)
 - [x] Capability contract verificado
 
 ---

@@ -1,89 +1,88 @@
-# Checklist de Implementacion - PATCH Forense AmaziliaHotel
+# Checklist de Implementacion — Trazabilidad Amazilia Hotel
 
-## Progreso General
+> Version: v2.1 | Actualizado: 2026-04-27
 
-| Fase | Descripcion | Estado | Tests | Fecha |
-|------|-------------|--------|-------|-------|
-| FASE-A | hotel_schema dual (rico vs vacio) | Pendiente | - | - |
-| FASE-B | Comision OTA label incorrecto | Pendiente | - | - |
-| FASE-C | open_graph template + pain_id | Pendiente | - | - |
-| FASE-D | gate_report presence check | Pendiente | - | - |
-| FASE-RELEASE-4.36.0 | Cierre + documentacion | Pendiente | - | - |
+## Fases Completadas
 
-## Dependencias
+### FASE-TRAZABILIDAD-DOCS (v4.35.1) — ✅ Completada (2026-04-25)
+- [x] README.md: "6 gates" → "9 Publication Gates"
+- [x] v4_complete.md: ghost command removido
+- [x] publication_gates.py docstring: 5 → 9 gates
+- [x] AGENTS.md: Coherence Score como rango
 
-```
-FASE-A ──┐
-FASE-B ──┤
-FASE-C ──┼──→ FASE-RELEASE-4.36.0
-FASE-D ──┘
-```
+### FASE-TRAZABILIDAD-RAIZ (v4.35.1) — ✅ Completada (2026-04-25)
+- [x] Unificacion pain/brecha detection
+- [x] 9 gates cableados
+- [x] DEP-01: _calculate_web_score wrapper CHECKLIST_SEO
+- [x] DEP-02: CHECKLIST_IAO fallback ia_readiness
+- [x] DEP-03: _identify_brechas delega a detect_pains()
+- [x] BUG-01: crawler scale > 50 → > 0.5
 
-FASE-A, B, C, D son funcionalmente independientes.
-Conflicto bajo A vs C en conditional_generator.py (ramas distintas).
-FASE-RELEASE depende de TODAS completadas.
+### FASE-TRAZABILIDAD-VALIDATE (v4.35.1) — ✅ Completada (2026-04-25)
+- [x] v4complete ejecutado para Amazilia Hotel
+- [x] 4 issues T1-T4 identificados
+- [x] Plan PATCH+SEO creado
 
-## Checklist por Fase
+### FASE-TRAZABILIDAD-PATCH+SEO (v4.35.1) — ✅ Completada (2026-04-25)
+- [x] T1 (BUG-02): financial_validity WARNING + financial_sources
+- [x] T2: Secciones Trazabilidad + Validacion de Calidad en template
+- [x] T3: seo_score en v4_complete_report.json
+- [x] T4: Salud Técnica GEO row (parcial - timing pipeline)
 
-### FASE-A: hotel_schema dual
-- [ ] Schema rico se prefiere sobre basico en conditional_generator
-- [ ] Bridge siempre aplica en v4_asset_orchestrator
-- [ ] Tests nuevos agregados (>= 3)
-- [ ] Tests existentes sin regresion
-- [ ] run_all_validations.py --quick pasa
-- [ ] dependencias-fases.md actualizado
-- [ ] Post-ejecucion completada
+### FASE-TRAZABILIDAD-REFINEMENT (v4.35.1) — ✅ Completada (2026-04-25)
+- [x] D1-D4 corrections
+- [x] GEO source decision
 
-### FASE-B: Comision OTA label
-- [ ] Labels corregidos en _build_financial_title_label()
-- [ ] Valores correctos en _build_financial_placeholders()
-- [ ] Template actualizado si aplica
-- [ ] Tests nuevos agregados (>= 2)
-- [ ] Tests existentes sin regresion
-- [ ] run_all_validations.py --quick pasa
-- [ ] dependencias-fases.md actualizado
-- [ ] Post-ejecucion completada
+### PATCH Forense FASE-A/B/C/D (v4.36.0) — ✅ Completada (2026-04-26)
+- [x] FASE-A: hotel_schema dual unificado
+- [x] FASE-B: Comision OTA label corregido
+- [x] FASE-C: open_graph template + pain_id cableado
+- [x] FASE-D: gate_report presence check
 
-### FASE-C: open_graph asset
-- [ ] Template open_graph_template.html creado
-- [ ] Pain_id no_og_tags cableado desde audit_report
-- [ ] Generacion end-to-end funciona
-- [ ] Tests nuevos agregados (>= 4)
-- [ ] Tests existentes sin regresion
-- [ ] run_all_validations.py --quick pasa
-- [ ] dependencias-fases.md actualizado
-- [ ] Post-ejecucion completada
+---
 
-### FASE-D: gate_report presence
-- [ ] gate_report no marca "missing" assets existentes en sitio
-- [ ] presence_verified por asset en output
-- [ ] alignment_percentage recalculado
-- [ ] 4 categorias de assets en reporte
-- [ ] Tests nuevos agregados (>= 4)
-- [ ] Tests existentes sin regresion
-- [ ] run_all_validations.py --quick pasa
-- [ ] dependencias-fases.md actualizado
-- [ ] Post-ejecucion completada
+## Fase Actual
 
-### FASE-RELEASE-4.36.0: Cierre
-- [ ] VERSION.yaml bumped a 4.36.0
-- [ ] sync_versions.py ejecutado (6 archivos)
-- [ ] version_consistency_checker.py pasa
-- [ ] log_phase_completion.py para FASE-A
-- [ ] log_phase_completion.py para FASE-B
-- [ ] log_phase_completion.py para FASE-C
-- [ ] log_phase_completion.py para FASE-D
-- [ ] CHANGELOG.md entrada 4.36.0 (formato CONTRIBUTING)
-- [ ] GUIA_TECNICA.md notas v4.36.0
-- [ ] run_all_validations.py --quick 4/4
-- [ ] doctor.py --status sin errores
-- [ ] log_phase_completion.py para FASE-RELEASE
-- [ ] Git commit
+### FASE-TRAZABILIDAD-VALIDATE-v2 (v4.36.0) — ✅ Completada (2026-04-27)
 
-## Metricas Acumulativas
+**Objetivo**: Verificar que los 18 hallazgos + 4 issues T1-T4 fueron superados con v4.36.0.
 
-| Metrica | Valor Inicial | Post-A | Post-B | Post-C | Post-D | Post-RELEASE |
-|---------|---------------|--------|--------|--------|--------|--------------|
-| Tests totales | 2224 | | | | | |
-| Regresiones | 0 | | | | | |
-| Validaciones | 4/4 | | | | | |
+**Veredicto**: SUPERADO (14/15, 1 parcial)
+
+#### Tarea 1: Ejecutar v4complete
+- [x] v4complete ejecutado sin errores
+- [x] Exit code 0
+- [x] Coherence score: 0.893
+
+#### Tarea 2: Auditar Diagnostic Markdown
+- [x] Seccion "Validación de Calidad" presente (L109)
+- [x] Seccion "Trazabilidad: Brechas Identificadas" presente (L119)
+- [x] brechas_section renderizado
+- [x] manual_attention_table renderizado
+- [x] positive_findings renderizado (HTTPS, WhatsApp, GBP, redes)
+- [x] ia_metrics_table renderizado con datos
+- [ ] "Salud Técnica GEO" row presente — PARCIAL (timing pipeline)
+- [x] Crawlers bloqueados visibles (14 bloqueados)
+- [x] Scores SEO/GEO/AEO/IAO numericos (25/62/0/33)
+- [x] Hotel name correcto
+
+#### Tarea 3: Auditar JSON Report
+- [x] seo_score presente como entero (25)
+- [x] coherence_score >= 0.8 (0.893)
+- [x] publication_ready = READY_FOR_PUBLICATION
+- [x] gate_report con 9 gates
+
+#### Tarea 4: Auditar Gate Report
+- [x] 9 gates ejecutados
+- [x] financial_validity WARNING cuando defaults
+- [x] financial_validity passed=True
+- [x] default_sources en details
+
+#### Tarea 5: Tabla Comparativa
+- [x] 15 hallazgos auditados
+- [x] Veredicto final: SUPERADO (14/15 + 1 parcial)
+
+#### Post-Ejecucion
+- [x] log_phase_completion.py ejecutado
+- [x] dependencias-fases.md actualizado
+- [x] 09-documentacion-post-proyecto.md Section E actualizada

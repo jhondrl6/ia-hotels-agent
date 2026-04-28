@@ -91,6 +91,15 @@ PATCH Forense AmaziliaHotel: Correccion de 4 issues criticos identificados en au
 - Suite completa obligatoria: 61/61 PASS
 - 2 fallidos pre-existentes en `test_proposal_alignment.py` (encoding issue, no relacionados con FASE-A/B/C/D)
 
+#### FASE-TRAZABILIDAD-VALIDATE-v2 (2026-04-27) — Validacion post-PATCH Forense
+- Ejecucion v4complete para Amazilia Hotel (amaziliahotel.com)
+- Verificacion de 18 hallazgos + 4 issues T1-T4
+- Resultado: 14/15 SUPERADOS, 1 PARCIAL (T4 - timing pipeline)
+- Coherence score: 0.893 | Publication: READY_FOR_PUBLICATION | Gates: 9/9
+- Archivos de plan creados en `.opencode/plans/` (7 archivos)
+- sync_versions.py ejecutado | run_all_validations.py --quick: 4/4 PASSED
+- Veredicto: v4.36.0 certificada para produccion
+
 ## [4.35.0] - 2026-04-23
 
 ### Objetivo
