@@ -2227,57 +2227,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         generate_proposal = True
 
 
-    # Regenerar diagnóstico con coherence_score correcto del gate
-    print("\n📍 Regenerando diagnóstico con coherence_score validado...")
-    diagnostic_gen = V4DiagnosticGenerator()
-    diagnostic_path = diagnostic_gen.generate(
-        audit_result=audit_result,
-        validation_summary=validation_summary,
-        financial_scenarios=financial_scenarios_obj,
-        hotel_name=hotel_name,
-        hotel_url=args.url,
-        output_dir=str(output_dir),
-        coherence_score=pre_coherence_score,
-        region=region,  # FASE-DRECONEXION-V6: Pasar region para templates V6
-        analytics_data=analytics_data,  # INTEGRACION-ANALYTICS-E2E: activa transparencia analytics
-        financial_breakdown=financial_breakdown,  # FASE-G: breakdown con evidence tiers
-    )
-    print(f"[OK] Diagnóstico regenerado con coherence_score: {pre_coherence_score:.2f}")
-
-    # Crear diagnostic_summary para proposal
-    from modules.commercial_documents.data_structures import (
-        DiagnosticSummary, 
-        adapt_validation_confidence,
-        calculate_quick_wins,
-        extract_top_problems
-    )
-
-    # Calcular problemas dinámicamente desde audit_result
-    critical_problems_count = len(audit_result.critical_issues) if audit_result else 0
-    quick_wins_count = calculate_quick_wins(audit_result, validation_summary)
-    top_problems = extract_top_problems(audit_result, limit=5)
-
-    # FASE-G: Extraer brechas reales con impacto desde _identify_brechas
-    brechas_reales = diagnostic_gen._identify_brechas(audit_result) if audit_result else []
-
-    diagnostic_summary = DiagnosticSummary(
-        hotel_name=hotel_name,
-        critical_problems_count=critical_problems_count,
-        quick_wins_count=quick_wins_count,
-        overall_confidence=adapt_validation_confidence(validation_summary.overall_confidence),
-        top_problems=top_problems,
-        validated_data_summary={
-            'whatsapp': whatsapp_validation.to_dict() if whatsapp_validation else {},
-            'rooms': rooms,
-            'adr': adr_cop,
-            'occupancy_rate': occupancy_rate,
-            'direct_channel_percentage': direct_channel_pct,
-        },
-        coherence_score=pre_coherence_score,  # Usar el score calculado por CoherenceValidator
-        brechas_reales=brechas_reales,  # FASE-G: impactos reales para proposal
-        voice_readiness_score=getattr(diagnostic_gen, '_last_voice_score', None),
-        voice_readiness_level=getattr(diagnostic_gen, '_last_voice_level', None),
-    )
+    # T4 FIX: El bloque de regeneración del diagnóstico se movió a DESPUÉS de FASE 4
+    # (ver después de L2430). El diagnóstico se regenera post-FASE4 cuando
+    # geo_flow_result.json ya existe en output_dir
 
     # FIX-D7: Proposal generation moved to AFTER assets (see L2361+)
     # This allows assets_for_quality to use asset_result.generated_assets
@@ -2441,7 +2393,56 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     except Exception as e:
         print(f"⚠️  Generación de assets falló: {e}")
         asset_result = None
-    
+
+    # T4 FIX: Regenerar diagnóstico DESPUÉS de FASE 4 (geo_flow_result.json disponible)
+    # Esto asegura que geo_flow_result.json exista ANTES de diagnostic_gen.generate()
+    # La primera regeneración (antes de FASE 4) se eliminó; solo queda esta segunda
+    print("\n📍 [T4FIX] Regenerando diagnóstico POST-FASE4 (geo_flow ahora disponible)...")
+    diagnostic_gen = V4DiagnosticGenerator()
+    diagnostic_path = diagnostic_gen.generate(
+        audit_result=audit_result,
+        validation_summary=validation_summary,
+        financial_scenarios=financial_scenarios_obj,
+        hotel_name=hotel_name,
+        hotel_url=args.url,
+        output_dir=str(output_dir),
+        coherence_score=pre_coherence_score,
+        region=region,  # FASE-DRECONEXION-V6: Pasar region para templates V6
+        analytics_data=analytics_data,  # INTEGRACION-ANALYTICS-E2E: activa transparencia analytics
+        financial_breakdown=financial_breakdown,  # FASE-G: breakdown con evidence tiers
+    )
+    print(f"[OK] Diagnóstico regenerado con coherence_score: {pre_coherence_score:.2f}")
+
+    # Rebuild diagnostic_summary con el diagnostic_gen actualizado (contiene geo_metrics)
+    from modules.commercial_documents.data_structures import (
+        DiagnosticSummary,
+        adapt_validation_confidence,
+        calculate_quick_wins,
+        extract_top_problems
+    )
+    critical_problems_count = len(audit_result.critical_issues) if audit_result else 0
+    quick_wins_count = calculate_quick_wins(audit_result, validation_summary)
+    top_problems = extract_top_problems(audit_result, limit=5)
+    brechas_reales = diagnostic_gen._identify_brechas(audit_result) if audit_result else []
+    diagnostic_summary = DiagnosticSummary(
+        hotel_name=hotel_name,
+        critical_problems_count=critical_problems_count,
+        quick_wins_count=quick_wins_count,
+        overall_confidence=adapt_validation_confidence(validation_summary.overall_confidence),
+        top_problems=top_problems,
+        validated_data_summary={
+            'whatsapp': whatsapp_validation.to_dict() if whatsapp_validation else {},
+            'rooms': rooms,
+            'adr': adr_cop,
+            'occupancy_rate': occupancy_rate,
+            'direct_channel_percentage': direct_channel_pct,
+        },
+        coherence_score=pre_coherence_score,  # Usar el score calculado por CoherenceValidator
+        brechas_reales=brechas_reales,  # FASE-G: impactos reales para proposal
+        voice_readiness_score=getattr(diagnostic_gen, '_last_voice_score', None),
+        voice_readiness_level=getattr(diagnostic_gen, '_last_voice_level', None),
+    )
+
     # FIX-D7: Proposal generation now AFTER assets so we can use asset_result.generated_assets
     # (which includes promised_by=always assets like voice_assistant_guide, whatsapp_button, monthly_report)
     if generate_proposal:

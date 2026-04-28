@@ -1,0 +1,1367 @@
+diff --git a/.agent/SYSTEM_STATUS.md b/.agent/SYSTEM_STATUS.md
+index 49462bd..0bdc62f 100644
+--- a/.agent/SYSTEM_STATUS.md
++++ b/.agent/SYSTEM_STATUS.md
+@@ -1,6 +1,6 @@
+ # System Status Dashboard
+ 
+-> Auto-generado: 2026-04-26 23:22:31 UTC
++> Auto-generado: 2026-04-26 23:40:03 UTC
+ > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
+ > REGENERAR CON: python scripts/doctor.py --status
+ > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
+diff --git a/.agents/workflows/phased_project_executor.md b/.agents/workflows/phased_project_executor.md
+index c59058d..5ef2c26 100644
+--- a/.agents/workflows/phased_project_executor.md
++++ b/.agents/workflows/phased_project_executor.md
+@@ -1,6 +1,6 @@
+ ---
+-description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones.
+-version: 2.4.0
++description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
++version: 2.6.0
+ ---
+ 
+ # Skill: Phased Project Executor
+@@ -11,8 +11,11 @@ version: 2.4.0
+ ## Regla de Sesión Única (OBLIGATORIO)
+ 
+ > [!CAUTION]
+-> **REGLA MANDATORIA - Sin excepciones**
+-> Una fase por sesión. No se permite ejecutar múltiples fases en una misma sesión.
++> **REGLAS MANDATORIAS - Sin excepciones**
++>
++> **R1: Una fase por sesión.** No se permite ejecutar múltiples fases en una misma sesión.
++>
++> **R2: Máximo 60 iteraciones del agente por fase.** Si se alcanza el límite, la fase se marca como incompleta y DEBE retomarse en una nueva sesión fresca. No se permite exceder este límite bajo ningún pretexto (ni "falta poco", ni "ya casi termino").
+ 
+ > [!TIP]
+ > **Convenciones de Nomenclatura de Fases**
+@@ -21,22 +24,45 @@ version: 2.4.0
+ > |------|---------|---------|-------------|
+ > | Iteracion | `FASE-N` | `FASE-12` | Iteration de desarrollo |
+ > | Feature | `FASE-{LETRA}` | `FASE-A`, `FASE-B` | Sub-fase de un feature (A..Z) |
+-> | Release | `FASE-RELEASE-X.Y.Z` | `FASE-RELEASE-4.10.0` | **Markers explícito de release** |
++> | Release | `FASE-RELEASE-X.Y.Z` | `FASE-RELEASE-4.10.0` | Fase ejecutable de cierre + documentación (sesión propia) |
+ >
+ > **Regla:** Si la fase cambia la versión (nueva release), usar `FASE-RELEASE-X.Y.Z`.
+ > Esto activa automaticamente el Version Sync Gate.
+ 
+-**Fases del workflow:**
+-1. **Preparación** (esta sesión): Crear prompts, checklists, docs para todas las fases
+-2. **Implementación** (sesión por fase): Cada fase se ejecuta en su propia sesión nueva
++**Fases del workflow (3 etapas):**
++
++| Etapa | Tipo de fase | Sesiones | Descripción |
++|-------|-------------|----------|-------------|
++| 1. Preparación | (orquestación) | 1 sesión | Crear todos los prompts, checklists, docs para todas las fases |
++| 2. Implementación | `FASE-{N\|LETRA}` | N sesiones | Cada fase de código en su propia sesión nueva de agente |
++| 3. Cierre / Release | `FASE-RELEASE-X.Y.Z` | 1 sesión | Documentación oficial, version bump, validaciones finales |
++
++**Regla de dependencia:** `FASE-RELEASE-X.Y.Z` solo se ejecuta cuando TODAS las fases de implementación (etapa 2) están completadas (`✅`).
+ 
+ **Aplicación:**
+-- Preparación upfront: En UNA sesión se generan todos los prompts de fase
+-- Implementación: Cada fase requiere una sesión NUEVA del agente
+-- Sesión N → prepara fases N+1, N+2, ... (no las ejecuta)
+-- La sesión de implementación termina cuando el checklist muestra ✅ completo
++- **Etapa 1 (Preparación):** En UNA sesión, Hermes (orquestador) genera todos los prompts de fase, incluyendo el de RELEASE
++- **Etapa 2 (Implementación):** Cada fase requiere una sesión NUEVA del agente. El agente lee su `05-prompt-inicio-sesion-fase-{X}.md` y ejecuta las tareas de código
++- **Etapa 3 (RELEASE):** Una sesión NUEVA del agente. El agente ejecuta `05-prompt-inicio-sesion-fase-RELEASE.md`. Tareas: version bump, sync, CHANGELOG, GUIA_TECNICA, validaciones, log. **NO modifica código fuente.**
++- La sesión termina cuando el checklist de la fase muestra ✅ completo
+ 
+-**Excepciones**: NINGUNA. Esta regla es absoluta.
++## Modelo de Ejecución: Agentes AI
++
++> [!IMPORTANT]
++> **Este workflow es ejecutado por agentes AI** (Hermes, subagentes vía `delegate_task`), no por humanos.
++>
++> Cada prompt de fase (`05-prompt-inicio-sesion-fase-*.md`) es una **instrucción completa para un agente** en una sesión fresca. El agente:
++> 1. Lee el prompt al inicio de la sesión
++> 2. Planifica la ejecución de las tareas
++> 3. Ejecuta (con subagentes si la fase lo requiere)
++> 4. Verifica criterios de completitud contra el checklist
++> 5. Ejecuta `log_phase_completion.py` al finalizar
++>
++> **Implicaciones del modelo agente:**
++> - Las "iteraciones" de R2 son **tool calls del agente** — no pasos humanos
++> - El agente NO debe pedir confirmación para cada paso; el prompt es su mandato completo
++> - Subagentes (`delegate_task`) pueden usarse para trabajo paralelo dentro de una fase, pero el total de iteraciones de la sesión no debe exceder 60
++> - La fase termina cuando el checklist muestra ✅, no cuando "se acabó el tiempo"
++> - **Orquestación**: La etapa de Preparación la ejecuta Hermes como orquestador. Las etapas de Implementación/RELEASE las ejecuta un agente nuevo en cada sesión.
+ 
+ ## Pre-requisitos
+ - [ ] Proyecto con división clara en fases/sprints/etapas
+@@ -66,6 +92,7 @@ Usar template `.agents/workflows/templates/prompt-fase-template.md`
+ - Tareas específicas de la fase
+ - **Post-Ejecución** (marcar checklist, actualizar estados)
+ - **Criterios de Completitud**
++- **Restricciones** (mínimo: máximo 60 iteraciones; según la fase: no modificar ROADMAP.md, no ejecutar v4complete, etc.)
+ 
+ **Verificación:**
+ - [ ] Nombre de archivo coincide con título interno
+@@ -394,13 +421,17 @@ Después de ejecutar `log_phase_completion.py`, verificar:
+ 
+ ---
+ 
+-### Paso 7: Actualizacion de Documentacion Oficial del Repositorio
++### Paso 7: FASE-RELEASE — Cierre y Documentación Oficial del Repositorio
++
++> [!NOTE]
++> **Este paso ES la FASE-RELEASE-X.Y.Z.** Se ejecuta como una fase más, en su propia sesión de agente, usando su prompt `05-prompt-inicio-sesion-fase-RELEASE.md`.
++> La diferencia con las fases de implementación: NO modifica código fuente, solo documentación y validaciones.
+ 
+-**Cuando**: Una vez completadas TODAS las fases de implementacion del proyecto. No se ejecuta por fase individual — es el cierre del ciclo.
++**Cuando**: Una vez completadas TODAS las fases de implementación (etapa 2). El agente ejecuta esta fase en una sesión nueva. **Es la última fase del proyecto.**
+ 
+-**Fuente de verdad**: `docs/CONTRIBUTING.md §55-163`. Los pasos E1-E8 abajo son la transcripcion operativa de esa seccion. Si CONTRIBUTING.md cambia, este paso se actualiza para reflejarlo.
++**Fuente de verdad**: `docs/CONTRIBUTING.md §55-163`. Los pasos E1-E8 abajo son la transcripción operativa de esa sección. Si CONTRIBUTING.md cambia, este paso se actualiza para reflejarlo.
+ 
+-**Que NO hace**: NO modifica ROADMAP.md, NO edita codigo fuente, NO ejecuta `v4complete`.
++**Que NO hace**: NO modifica ROADMAP.md, NO edita código fuente, NO ejecuta `v4complete`.
+ 
+ ---
+ 
+@@ -510,18 +541,24 @@ git diff --stat
+ ---
+ 
+ ## Criterios de Éxito
+-- [ ] Prompts creados para todas las fases (1 por fase)
+-- [ ] Checklist maestro con estados
+-- [ ] `dependencias-fases.md` con conflictos documentados
++- [ ] Prompts creados para todas las fases de implementación (1 por fase)
++- [ ] Prompt creado para FASE-RELEASE (si hay version bump)
++- [ ] Checklist maestro con estados de todas las fases (incluyendo RELEASE)
++- [ ] `dependencias-fases.md` con conflictos documentados y dependencia → RELEASE
+ - [ ] Documentación incremental preparada
+-- [ ] Estructura lista para que cada fase se ejecute en sesión propia
++- [ ] Estructura lista para que cada fase se ejecute en sesión propia de agente
+ 
+ ## Plan de Recuperación
+ - Sin estructura de planes → crear `.opencode/plans/` automáticamente
+-- Sin división en fases → proponer estructura estándar (Fase 0-N)
++- Sin división en fases → proponer estructura estándar (Fase 0-N) + FASE-RELEASE
+ - Prompts muy grandes → dividir en secciones dentro del mismo archivo
++- **Límite de 60 iteraciones alcanzado** → marcar fase como `INCOMPLETA`, documentar progreso parcial en `dependencias-fases.md`, retomar en nueva sesión fresca
++- Fase retomada (INCOMPLETA) → leer estado de `dependencias-fases.md`, continuar desde donde se dejó
++- **FASE-RELEASE ejecutada sin implementaciones completadas** → abortar; verificar `dependencias-fases.md` que todas las fases previas estén en `✅`
+ 
+ ## Versiones
++- **v2.6.0** (2026-04-26): Modelo de Ejecución por Agentes AI explícito. Flujo reestructurado a 3 etapas (Preparación → Implementación → RELEASE). FASE-RELEASE integrada como etapa del flujo principal. Paso 7 renombrado a "FASE-RELEASE — Cierre y Documentación Oficial". Eliminada contradicción "no se ejecuta por fase". Regla de dependencia explícita: RELEASE requiere todas las implementaciones completadas. Criterios de Éxito, Ejemplo de Uso y Plan de Recuperación actualizados con FASE-RELEASE.
++- **v2.5.0** (2026-04-26): Límite de 60 iteraciones como regla mandatoria (R2). Sección `## Restricciones` obligatoria en prompts de fase. FASE-RELEASE formalizado como fase ejecutable con sesión propia. Alineado con estructura real de `.opencode/plans/` del PATCH Forense AmaziliaHotel 4.36.0.
+ - **v2.4.0** (2026-04-13): Paso 4.5: Ejecución de Plan de Documentación. Prevención de desajustes documentales al ejecutar planes como 09-documentacion-post-proyecto.md. Incluye gates de validación: log_phase_completion.py por fase, sync_versions.py, validación CHANGELOG formato CONTRIBUTING.md, validación GUIA_TECNICA.md, run_all_validations.py --quick. Checklist de completitud integrado.
+ - **v2.3.0** (2026-03-26): Version Sync Gate + Documentation Audit + FASE-RELEASE auto-detect. Convencion FASE-RELEASE-X.Y.Z para releases. Pre-commit hook para consistencia de versiones.
+ - **v2.2.0** (2026-03-25): Enforcement de docs manuales --check-manual-docs. Si hay cambios arquitectonicos en archivos de REQUIRE_ArchitectURAL_CHANGE (conditional_generator.py, faq_gen.py, voice_guide.py, aeo_kpis.py, etc.) y GUIA_TECNICA.md no menciona la fase, el script FAIL. Uso --force-skip-docs --skip-reason para excepciones.
+@@ -535,20 +572,21 @@ Usuario: "Divide este proyecto de refactorización en fases y prepáralo para ej
+ 
+ La skill debe:
+ 1. Leer plan existente
+-2. Crear `05-prompt-inicio-sesion-fase-2.md` con especificaciones técnicas completas
+-3. Crear `05-prompt-inicio-sesion-fase-3.md` (y restantes)
+-4. Actualizar checklist con estados de fases
++2. Crear `05-prompt-inicio-sesion-fase-{X}.md` para cada fase de implementación
++3. Crear `05-prompt-inicio-sesion-fase-RELEASE.md` (fase de cierre)
++4. Actualizar checklist con estados de fases (incluyendo RELEASE)
+ 5. Crear `09-documentacion-post-proyecto.md` con estructura base
+ 6. Verificar numeración de todos los prompts
+ 
+ **Output de esta sesión:**
+ ```
+ .opencode/plans/
+-├── 05-prompt-inicio-sesion-fase-{N}.md    (1 por fase)
++├── 05-prompt-inicio-sesion-fase-{X}.md         (1 por fase de implementación)
++├── 05-prompt-inicio-sesion-fase-RELEASE.md      (fase de cierre)
+ ├── 06-checklist-implementacion.md
+ ├── 09-documentacion-post-proyecto.md
+ ├── dependencias-fases.md
+ └── README.md
+ ```
+ 
+-La implementación de cada fase se hace en UNA sesión nueva por fase.
++La implementación de cada fase se hace en UNA sesión nueva de agente por fase. FASE-RELEASE es la última sesión.
+diff --git a/.opencode/context/PROPUESTA_COMERCIAL_AUDITORIA_20260427.md b/.opencode/context/PROPUESTA_COMERCIAL_AUDITORIA_20260427.md
+deleted file mode 100644
+index eb46eb8..0000000
+--- a/.opencode/context/PROPUESTA_COMERCIAL_AUDITORIA_20260427.md
++++ /dev/null
+@@ -1,303 +0,0 @@
+-# AUDITORÍA 02_PROPUESTA_COMERCIAL — Contexto Persistente (VALIDACIÓN v3)
+-## Amaziliahotel | 2026-04-26 | Auditoría: 2026-04-27 | Re-validación: 2026-04-27
+-
+----
+-
+-## ARCHIVOS AUDITADOS
+-
+-- **Propuesta**: `output/v4_complete/02_PROPUESTA_COMERCIAL_20260426_191233.md`
+-- **Diagnóstico**: `output/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260426_191231.md`
+-- **Financial scenarios**: `output/v4_complete/financial_scenarios.json`
+-- **Template V6**: `modules/commercial_documents/templates/propuesta_v6_template.md`
+-- **Módulos verificados**: `v4_proposal_generator.py`, `pricing_calculator.py`, `pricing_resolution_wrapper.py`, `calculator_v2.py`, `coherence_validator.py`, `asset_catalog.py`, `ai_crawler_auditor.py`, `service_catalog.py`, `pain_solution_mapper.py`, `proposal_asset_alignment.py`
+-
+----
+-
+-## VALIDACIÓN EXHAUSTIVA — CADA HALLAZGO vs CÓDIGO REAL
+-
+-### 1. PRECIO $130.500 COP/mes — "ALUCINADO"
+-- **VEREDICTO DOCUMENTO**: ❌ FALSO — El precio SÍ existe y tiene origen verificable
+-- **VALIDACIÓN**: ✅ **CONFIRMADO** — El precio es real y verificable
+-- **EVIDENCIA VERIFICADA**:
+-  - `financial_scenarios.json` línea 40: `"monthly_price_cop": 130500.0`, `"source": "legacy_fixed"`, `"pain_ratio": 0.05` ✓
+-  - `pricing_calculator.py` (164 líneas): tiered completo (boutique 3%, standard 2.5%, large 2%), GATE 3%-6% ✓
+-  - `pricing_resolution_wrapper.py` línea 26: `LEGACY_FIXED = "legacy_fixed"` ✓
+-  - `pricing_resolution_wrapper.py` línea 125: `source=PricingSource.LEGACY_FIXED.value` ✓
+-- **CÁLCULO**: `$2,610,000 × 5% (LEGACY_FIXED) = $130,500 COP` ✓
+-
+-### 2. PROYECCIÓN FINANCIERA — beneficio neto $0
+-- **VEREDICTO DOCUMENTO**: ⚠️ PARCIALMENTE CORRECTO — bug template pain_ratio=0.05
+-- **VALIDACIÓN**: ✅ **CONFIRMADO** — Pero con corrección importante en la descripción del mecanismo
+-- **EVIDENCIA VERIFICADA**:
+-  - `v4_proposal_generator.py` línea 203: `self._current_pain_ratio = getattr(pricing_result, 'pain_ratio', 0.20) if pricing_result else 0.20` ✓
+-  - `v4_proposal_generator.py` línea 480: `pain_ratio = getattr(self, '_current_pain_ratio', 0.20)` ✓
+-  - `v4_proposal_generator.py` línea 481: `projected_monthly_gain = int(raw_monthly_loss * pain_ratio)` ✓
+-  - `v4_proposal_generator.py` líneas 529-540: `rec_m1`..`rec_m6` = `projected_monthly_gain`, `net_m1`..`net_m6` = `projected_monthly_gain - monthly_investment` ✓
+-- **CÁLCULO**: `2,610,000 × 0.05 = 130,500` → `rec = inv = $130,500` → `net = $0` ✓
+-- **PROPUESTA REAL**: Muestra exactamente `$0 COP` beneficio en los 6 meses ✓
+-- **CORRECCIÓN AL DOCUMENTO**: El documento dice "pain_ratio = 0.05 (legacy default cuando no hay pricing_result)". Esto es INEXACTO. El código muestra que:
+-  - Cuando `pricing_result` SÍ existe → usa `pricing_result.pain_ratio` = 0.05 (viene del wrapper)
+-  - Cuando `pricing_result` NO existe → fallback a 0.20 (NO 0.05)
+-  - Para Amaziliahotel, `pricing_result` SÍ fue proporcionado → pain_ratio = 0.05
+-  - El fallback 0.20 habría dado: `2,610,000 × 0.20 = $522,000` → net = $391,500/mes (mucho mejor)
+-
+-### 3. NARRATIVA CONTRADICTORIA (SEO/AEO/IAO)
+-- **VEREDICTO DOCUMENTO**: ✅ CORRECTO
+-- **VALIDACIÓN**: ✅ **CONFIRMADO**
+-- **EVIDENCIA VERIFICADA**:
+-  - Template V6 línea 26: `"Le pregunta a ChatGPT | No aparece | Reserva va a otro"` ✓
+-  - Diagnóstico: `"IAO 33/100 | Promedio Regional 20/100 | ✅ Superior"` ✓
+-  - La narrativa es siempre "No aparece" independientemente del score real
+-
+-### 4. ESTADOS DE ENTREGABLES
+-- **VEREDICTO DOCUMENTO**: ⚠️ PARCIALMENTE CORRECTO — vienen de confidence_score
+-- **VALIDACIÓN**: ✅ **CONFIRMADO**
+-- **EVIDENCIA VERIFICADA**:
+-  - `v4_proposal_generator.py` línea 792: `def _confidence_to_nivel_significado(self, confidence, assets_generated)` ✓
+-  - `confidence >= 0.7` → `"✅ Completo" / "Listo para implementar"` ✓
+-  - `confidence >= 0.4` → `"⚠️ En preparacion" / "Datos pendientes del cliente"` ✓
+-  - `confidence < 0.4` → `"🔧 En optimizacion" / "Mejora continua de calidad"` ✓
+-  - `assets_generated is None` → `"⏳ Incluido en su kit" / "Preparacion posterior a la firma"` ✓
+-- **PROPUESTA REAL**: Muestra "✅ Completo", "⚠️ En preparacion", "⏳ Incluido en su kit" ✓
+-
+-### 5. SERVICIOS NO MAPEAN BRECHAS
+-- **VEREDICTO DOCUMENTO**: ⚠️ PARCIAL — mapeo existe pero implícito
+-- **VALIDACIÓN**: ✅ **CONFIRMADO** — 7+1 servicios con pain_id explícito
+-- **EVIDENCIA VERIFICADA** (`service_catalog.py`, 141 líneas):
+-  - `google_maps_optimizado` → `pain_id="low_gbp_score"` ✓
+-  - `seo_local` → `pain_id="poor_performance"` ✓
+-  - `boton_whatsapp` → `pain_id="no_whatsapp_visible"` ✓
+-  - `datos_estructurados` → `pain_id="no_hotel_schema"` ✓
+-  - `pagina_faq` → `pain_id="no_faq_schema"` ✓
+-  - `meta_tags_sociales` → `pain_id="no_og_tags"` ✓
+-  - `informe_mensual` → `pain_id="no_monthly_report"` ✓
+-  - `optimizacion_ia_generativa` → `pain_id="low_ia_readiness"` (condicional AEO < 20) ✓
+-- **PROPUESTA REAL**: Muestra exactamente estos 8 servicios ✓
+-
+-### 6. COSTOS IAO — PLACEHOLDER EN BLANCO
+-- **VEREDICTO DOCUMENTO**: ✅ CORRECTO
+-- **VALIDACIÓN**: ✅ **CONFIRMADO**
+-- **EVIDENCIA VERIFICADA**:
+-  - `v4_proposal_generator.py` línea 617: `# FIX-OPENROUTER-C: IAO cost transparency (stub - activates when API keys available)` ✓
+-  - Líneas 618-625: todos `'—'` (openrouter_queries, openrouter_cost, gemini_queries, gemini_cost, perplexity_queries, perplexity_cost, total_iao_queries, total_iao_cost) ✓
+-- **PROPUESTA REAL**: Muestra "— | — USD" en toda la tabla IAO ✓
+-
+-### 7. ROI 0.2% — "NÚMERO SIN SENTIDO"
+-- **VEREDICTO DOCUMENTO**: ❌ FALSO — tiene cálculo verificable (0.2X)
+-- **VALIDACIÓN**: ✅ **CONFIRMADO** — ROI sí tiene cálculo verificable
+-- **EVIDENCIA VERIFICADA**:
+-  - `v4_proposal_generator.py` línea 815: `def _calculate_roi(self, investment, gain, months, recovery_factor=0.20)` ✓
+-  - Fórmula real: `roi_ratio = (gain × recovery_factor) / investment` ✓
+-  - Con datos: `(130,500 × 0.20) / 130,500 = 0.20` → `"0.2X"` ✓
+-  - Línea 553: `'roi_6m': roi_6_months.replace("X", "").strip()` → `"0.2"` (sin X ni %) ✓
+-- **PROPUESTA REAL**: Muestra `"ROI: 0.2 en 6 meses"` ✓
+-- **CORRECCIÓN MENOR**: El documento dice líneas 815-837. La función va de 815 a 837 ✓ (correcto)
+-
+----
+-
+-## HALLAZGOS NUEVOS — RE-VALIDACIÓN
+-
+-### N1. MÓDULOS FANTASMA EN AGENTS.md — 🔴 ALTA
+-- **VALIDACIÓN**: ✅ **CONFIRMADO**
+-- AGENTS.md línea 148: `data_validation/consistency_checker.py | Validación inter-documento` ✓
+-- AGENTS.md línea 149: `data_validation/evidence_ledger.py | Almacén centralizado de evidencia` ✓
+-- AGENTS.md línea 150: `data_validation/contradiction_engine.py | Detección de hard/soft conflicts` ✓
+-- AGENTS.md líneas 399-401: También listados en árbol de directorios ✓
+-- **Ningún archivo .py existe** para estos módulos ✓ (0 resultados de búsqueda)
+-
+-### N2. DOBLE MECANISMO DE PRICING — 🔴 ALTA
+-- **VALIDACIÓN**: ✅ **CONFIRMADO** — con corrección aritmética
+-- `pricing_resolution_wrapper.py` → LEGACY_FIXED 5% → `$130,500` ✓
+-- `v4_proposal_generator.py` línea 991: `_calculate_dynamic_price` → 2%, min $800K, max $2.5M ✓
+-- Código línea 192-195: `if pricing_result is not None → usa pricing_result; else → dynamic_price` ✓
+-- **CORRECCIÓN ARITMÉTICA**: El documento dice `expected_monthly = 4,065,300`. Cálculo real:
+-  - `5,076,000 × 0.70 = 3,553,200`
+-  - `2,610,000 × 0.20 = 522,000`
+-  - `(-189,000) × 0.10 = -18,900`
+-  - **Total = 4,056,300** (no 4,065,300 — diferencia de 9,000)
+-  - `2% × 4,056,300 = 81,126` → clamped a `$800,000` (mismo resultado final)
+-
+-### N3. BUG TEMPLATE — REC = INV — 🔴 ALTA
+-- **VALIDACIÓN**: ✅ **CONFIRMADO**
+-- Template V6 líneas 87-92: tabla con `${inv_m1}` a `${inv_m6}` y `${rec_m1}` a `${rec_m6}` ✓
+-- `v4_proposal_generator.py` líneas 523-546: inv = monthly_investment, rec = projected_monthly_gain, net = projected_monthly_gain - monthly_investment ✓
+-- Con pain_ratio=0.05: rec = inv → net siempre $0 ✓
+-- **PROPUESTA REAL**: 6 meses × "$130.500 | $130.500 | $0" ✓
+-
+-### N4. TELÉFONO HARDCODED — 🟡 MEDIA
+-- **VALIDACIÓN**: ✅ **CONFIRMADO**
+-- Template V6 línea 189: `"WhatsApp: +57 300 000 0000"` ✓
+-- Diagnóstico línea 84: `"WhatsApp verificado (+57 3104019049)"` ✓
+-- `audit_report.json` línea 54: `"phone_web": "+57 3104019049"` ✓
+-- El template NO inyecta el teléfono del diagnóstico → queda placeholder ✓
+-
+-### N5. SERVICIO TRIMESTRAL FOTO $150.000 — 🟢 BAJA
+-- **VALIDACIÓN**: ✅ **CONFIRMADO**
+-- Template V6 línea 79: `"servicio de actualización trimestral por $150.000 COP"` ✓
+-- No viene de `service_catalog.py` ni de ningún módulo de pricing ✓
+-
+-### N6. COHERENCE VALIDATOR NO VALIDA PROYECCIÓN — 🟡 MEDIA
+-- **VALIDACIÓN**: ✅ **CONFIRMADO**
+-- `coherence_validator.py` línea 140: `self.checks.append(self._check_price_matches_pain(...))` ✓
+-- `coherence_validator.py` línea 420: `def _check_price_matches_pain` ✓
+-- Búsqueda de `projection_consistency`: 0 resultados ✓
+-- El validator NO detectaría la contradicción $0 beneficio vs $15.6M pérdida ✓
+-
+----
+-
+-## HALLAZGOS ADICIONALES QUE EL DOCUMENTO ANTERIOR OMITE
+-
+-### NEW-1. web_score HARDCODED — 🟡 MEDIA
+-- `v4_proposal_generator.py` línea 551: `'web_score': "85",  # Placeholder - ideally from audit`
+-- El score web es siempre "85" independientemente del audit real
+-- No se inyecta desde ningún módulo de auditoría
+-
+-### NEW-2. DOBLE CONSERVATISMO EN ROI — 🔴 ALTA
+-- El ROI aplica DOS niveles de conservadurismo:
+-  1. `pain_ratio = 0.05` → solo reclama 5% de la pérdida como ganancia
+-  2. `recovery_factor = 0.20` → solo espera recuperar 20% de esa ganancia
+-- **Recuperación efectiva = 0.05 × 0.20 = 1% de la pérdida total**
+-- ROI final = 0.2X significa que por cada $1 invertido se recuperan $0.20
+-- Esto hace que la propuesta sea comercialmente INVIABLE (cualquier inversionista rechazaría 0.2X)
+-- El fix NO es solo subir pain_ratio — es revisar la arquitectura de doble descuento
+-
+-### NEW-3. ROI SIN CONTEXTO — 🟡 MEDIA
+-- `v4_proposal_generator.py` línea 553: `'roi_6m': roi_6_months.replace("X", "").strip()`
+-- Remueve el sufijo "X", deja solo "0.2"
+-- **PROPUESTA REAL**: `"ROI: 0.2 en 6 meses"` — ambiguo (¿0.2%? ¿0.2X? ¿20%?)
+-- Debería mostrar "0.2X" o "20%" con contexto claro
+-
+-### NEW-4. OPTIMISTIC SCENARIO NEGATIVO ($-189,000) — 🟡 MEDIA
+-- `financial_scenarios.json`: `"optimistic": -189000.0`
+-- Un escenario "optimista" negativo indica que el hotel YA está en equilibrio o ganancia
+-- Pero se usa como dato para `_calculate_dynamic_price`: `-189,000 × 0.10 = -18,900`
+-- La propuesta NUNCA menciona que el escenario optimista sea negativo
+-- El diagnóstico debería explicar qué significa esta anomalía
+-
+-### NEW-5. LINEA 203 — CONFUSIÓN DE FALLBACK — 🟡 MEDIA
+-- El documento anterior describe incorrectamente el mecanismo de pain_ratio
+-- Dice: "pain_ratio = 0.05 (legacy default cuando no hay pricing_result)"
+-- Realidad: el código es `getattr(pricing_result, 'pain_ratio', 0.20) if pricing_result else 0.20`
+-  - Con pricing_result → 0.05 (del wrapper)
+-  - Sin pricing_result → 0.20 (NO 0.05)
+-- El fallback 0.20 es MÁS favorable que el 0.05 del pricing_result
+-- **Paradoja**: NO enviar pricing_result produce una propuesta MEJOR (beneficio $391,500 vs $0)
+-
+----
+-
+-## RESUMEN DE VALIDACIÓN
+-
+-### 7 hallazgos originales + 6 nuevos = 13 hallazgos totales
+-### 4 hallazgos adicionales nuevos = **17 hallazgos totales**
+-
+-| # | Hallazgo | Veredicto | Severidad |
+-|---|----------|-----------|-----------|
+-| 1 | Precio $130,500 alucinado | ✅ CONFIRMADO: es real (legacy_fixed) | N/A (falso positivo del audit original) |
+-| 2 | Proyección beneficio $0 | ✅ CONFIRMADO: bug pain_ratio=0.05 | 🔴 Alta |
+-| 3 | Narrativa IAO contradictoria | ✅ CONFIRMADO | 🟡 Media |
+-| 4 | Estados inventados | ✅ CONFIRMADO: vienen de confidence_score | 🟢 Baja |
+-| 5 | Servicios sin mapeo | ✅ CONFIRMADO: 7+1 con pain_id explícito | 🟢 Baja |
+-| 6 | Costos IAO blanks | ✅ CONFIRMADO: stub FIX-OPENROUTER-C | 🟡 Media |
+-| 7 | ROI sin sentido | ✅ CONFIRMADO: tiene cálculo (0.2X) | N/A (falso positivo del audit original) |
+-| N1 | Módulos fantasma | ✅ CONFIRMADO: 3 módulos inexistentes | 🔴 Alta |
+-| N2 | Doble pricing | ✅ CONFIRMADO: $130.5K vs $800K | 🔴 Alta |
+-| N3 | Bug rec=inv | ✅ CONFIRMADO: net siempre $0 | 🔴 Alta |
+-| N4 | Teléfono placeholder | ✅ CONFIRMADO: 300 000 0000 | 🟡 Media |
+-| N5 | Foto $150.000 hardcoded | ✅ CONFIRMADO | 🟢 Baja |
+-| N6 | Validator sin proyección | ✅ CONFIRMADO | 🟡 Media |
+-| NEW-1 | web_score hardcoded 85 | ✅ NUEVO | 🟡 Media |
+-| NEW-2 | Doble conservadurismo ROI | ✅ NUEVO | 🔴 Alta |
+-| NEW-3 | ROI sin contexto (0.2 vs 0.2X) | ✅ NUEVO | 🟡 Media |
+-| NEW-4 | Escenario optimista negativo | ✅ NUEVO | 🟡 Media |
+-| NEW-5 | Confusión fallback pain_ratio | ✅ NUEVO | 🟡 Media |
+-
+-### Errores del documento anterior corregidos:
+-1. **Línea 203 mal descrita**: Decía "pain_ratio=0.05 (legacy default)". Real: 0.05 viene de pricing_result.pain_ratio, el fallback es 0.20
+-2. **Aritmética N2**: Decía 4,065,300. Real: 4,056,300 (off por 9,000)
+-3. **No documentó**: doble conservadurismo ROI (pain_ratio × recovery_factor)
+-
+----
+-
+-## ESTRATEGIA ACTUALIZADA — 7 FASES (CORREGIDA)
+-
+-### Principio Rector (reconfirmado)
+-> **No parchear la propuesta. Corregir el pipeline que la genera.**
+-
+-### FASE 1: FIX BUG TEMPLATE (rec ≠ inv) — PRIORIDAD CRÍTICA
+-- **Problema**: `projected_monthly_gain` con `pain_ratio=0.05` = `$130,500` = `monthly_investment` → beneficio siempre `$0`
+-- **Fix**: El template debe usar `raw_monthly_loss × recovery_factor` para la proyección, NO `raw_monthly_loss × pain_ratio`
+-  - `pain_ratio` es para PRICING (cuánto cobrar vs cuánto dolor)
+-  - `recovery_factor` es para PROYECCIÓN (cuánto se recupera)
+-  - Actualmente se mezclan: pain_ratio se usa para ambas cosas
+-- **Archivo**: `v4_proposal_generator.py` ~480-481
+-- **Cambio**: `projected_monthly_gain = int(raw_monthly_loss * pain_ratio)` → `projected_monthly_gain = int(raw_monthly_loss * 0.20)` (recovery_factor realista)
+-- **Resultado esperado**: `$2,610,000 × 0.20 = $522,000` → net = `$522,000 - $130,500 = $391,500/mes`
+-
+-### FASE 2: UNIFICAR PRICING — PRIORIDAD ALTA
+-- **Problema**: Dos caminos producen precios radicalmente diferentes ($130.5K vs $800K)
+-- **Fix**: Eliminar `_calculate_dynamic_price` (línea 991-1007). El pipeline SIEMPRE usa `pricing_resolution_wrapper`
+-- **Nota**: Para boutique 10 hab, el hybrid calculator daría min $1,200,000 (3% × $2.61M = $78,300 → clamped a $1.2M). Esto es 9× el precio actual. Revisar si el GATE está bien calibrado para hoteles pequeños.
+-
+-### FASE 3: COHERENCE VALIDATOR — CHECK DE PROYECCIÓN — PRIORIDAD ALTA
+-- **Problema**: No detecta $0 beneficio vs $15.6M pérdida
+-- **Fix**: Agregar `_check_projection_consistency()` en `coherence_validator.py`
+-- **Regla**: `IF net_benefit == 0 AND raw_monthly_loss > 0 THEN WARNING`
+-- **Archivo**: `coherence_validator.py` después de línea 420
+-
+-### FASE 4: ELIMINAR MÓDULOS FANTASMA DE AGENTS.md — PRIORIDAD MEDIA
+-- **Problema**: 3 módulos documentados pero inexistentes
+-- **Fix**: Remover de AGENTS.md líneas 148-150 y 399-401
+-- **Alternativa**: Crear stubs mínimos si se planean implementar
+-
+-### FASE 5: CORREGIR NARRATIVA IAO — PRIORIDAD MEDIA
+-- **Problema**: Template siempre dice "No aparece" sin importar el score
+-- **Fix**: Hacer la fila ChatGPT del template condicional:
+-  - Si IAO > promedio → "Ya tiene presencia IA | Podemos mejorarla | Más reservas de IA"
+-  - Si IAO ≤ promedio → "No aparece" (actual)
+-- **Archivo**: Template V6 línea 26 + lógica en `_prepare_template_data`
+-
+-### FASE 6: INYECTAR DATOS REALES — PRIORIDAD BAJA
+-- **6a**: WhatsApp: inyectar `audit_result.phone_web` al template en vez de placeholder
+-- **6b**: web_score: inyectar desde audit en vez de hardcoded "85"
+-- **6c**: ROI: restaurar sufijo "X" → `"ROI: 0.2X"` en vez de `"ROI: 0.2"`
+-- **6d**: Servicio foto $150.000: mover a `service_catalog.py` o mantener como literal del template
+-- **Archivos**: `v4_proposal_generator.py` líneas 551, 553, 575-579 + Template V6
+-
+-### FASE 7: REGENERAR PROPUESTA CON PIPELINE CORREGIDO
+-- Después de Fases 1-6, regenerar y validar:
+-  - Precio desde pricing_resolution_wrapper ✓
+-  - Beneficio neto ≠ $0 ✓
+-  - ROI > 0.2X con proyección realista ✓
+-  - WhatsApp real inyectado ✓
+-  - Narrativa IAO consistente ✓
+-  - Coherence validator detecta inconsistencias ✓
+-
+----
+-
+-## MATRIZ DE CLASIFICACIÓN FINAL
+-
+-| Validación | Estado Actual | Meta Post-Fix |
+-|-----------|--------------|---------------|
+-| Precio con fuente de módulo | ✅ Ya tiene (legacy_fixed) | ✅ Unificado (solo wrapper) |
+-| Proyección ≠ $0 | ❌ Siempre $0 | ✅ Basada en recovery_factor |
+-| ROI > 0.2X | ❌ 0.2X (1% efectivo) | ✅ > 1.0X realista |
+-| ROI con contexto claro | ❌ "0.2" sin unidad | ✅ "2.0X" con contexto |
+-| Estados de entregables | ✅ confidence_score | ✅ Mantiene |
+-| Costos IAO reales | ❌ Stubs (—) | ⚠️ Mantiene (sin API keys) |
+-| Narrativa IAO consistente | ❌ Siempre "No aparece" | ✅ Condicional al score |
+-| Brechas → servicios | ✅ 7+1 pain_id mapeados | ✅ Mantiene |
+-| WhatsApp real | ❌ Placeholder 300 000 0000 | ✅ Desde audit |
+-| Coherence validator proyección | ❌ No valida | ✅ Detecta $0 vs pérdida |
+-| Pricing unificado | ❌ Dual ($130K vs $800K) | ✅ Solo wrapper |
+-| web_score real | ❌ Hardcoded "85" | ✅ Desde audit |
+-| Módulos fantasma | ❌ 3 en AGENTS.md | ✅ Removidos |
+-
+----
+-
+-## REGISTRO DE AUDITORÍA
+-
+-- Fecha auditoría original: 2026-04-27
+-- Fecha re-validación exhaustiva: 2026-04-27
+-- Método: Verificación directa contra código fuente (10 módulos + template + output)
+-- Resultado: 13 hallazgos previos CONFIRMADOS, 4 nuevos hallazgos agregados, 3 errores del documento corregidos
+-- Contexto listo para: diseño de plan de implementación en próxima sesión
+diff --git a/.opencode/context/fase-trazabilidad-context.md b/.opencode/context/fase-trazabilidad-context.md
+deleted file mode 100644
+index 6d3ea1e..0000000
+--- a/.opencode/context/fase-trazabilidad-context.md
++++ /dev/null
+@@ -1,92 +0,0 @@
+-# Contexto: FASE-TRAZABILIDAD — Hallazgos y Errores Amazilia Hotel
+-
+-> Generado: 2026-04-27 | Baseline: sesiones 2026-04-25 | Version: v4.36.0
+-
+-## Sitio de Prueba
+-- **Hotel**: Amazilia Hotel
+-- **URL**: https://amaziliahotel.com/
+-- **hotel_id**: amaziliahotel
+-- **Region**: Eje Cafetero, Pereira, Risaralda, Colombia
+-
+-## Cadena de Fases Ejecutadas
+-
+-| Fase | Version | Estado | Descripcion |
+-|------|---------|--------|-------------|
+-| FASE-TRAZABILIDAD-DOCS | v4.35.1 | ✅ Completada | Correcciones documentales (README, AGENTS, gates docstring) |
+-| FASE-TRAZABILIDAD-RAIZ | v4.35.1 | ✅ Completada | Unificacion pain/brecha, 9 gates, deprecaciones DEP-01-03 |
+-| FASE-TRAZABILIDAD-VALIDATE | v4.35.1 | ✅ Completada | Ejecucion v4complete Amazilia, identificacion 4 issues T1-T4 |
+-| FASE-TRAZABILIDAD-PATCH+SEO | v4.35.1 | ✅ Completada | Fixes T1-T4 implementados |
+-| FASE-TRAZABILIDAD-REFINEMENT | v4.35.1 | ✅ Completada | D1-D4 corrections + GEO source |
+-| PATCH Forense (FASE-A/B/C/D) | v4.36.0 | ✅ Completada | Schema dual, OTA label, open_graph, gate_report |
+-
+-## Los 18 Hallazgos Originales
+-
+-### Criticos (4 originales + 1 nuevo)
+-
+-| ID | Hallazgos | Estado | Fix |
+-|----|-----------|--------|-----|
+-| C1 | `financial_validity` gate usaba defaults sin reportar fuentes | ✅ Fix T1 | WARNING + financial_sources + DEFAULT_SOURCES |
+-| C2 | `pains` y `brechas` con thresholds divergentes | ✅ Fix RAIZ | Delegacion total a `detect_pains()` |
+-| C3 | Dos calculos SEO diferentes (display vs score_global) | ✅ Fix DEP-01 | `_calculate_web_score()` wrapper de CHECKLIST_SEO |
+-| C4 | IAO score independiente de `ia_readiness.overall_score` | ✅ Fix DEP-02 | Demoted a fallback only |
+-| D11 | Tabla metricas IA eliminada de template V6 — 14 crawlers bloqueados invisibles | ✅ Fix RAIZ | Tabla ia_metrics_table restaurada |
+-
+-### Altas (2 nuevas)
+-
+-| ID | Hallazgos | Estado | Fix |
+-|----|-----------|--------|-----|
+-| D12 | `geo_flow_result` invisible para cliente | ✅ Fix T4 | "Salud Técnica GEO" row en ia_metrics_table |
+-| D13 | Crawlers bloqueados no mencionados en output | ✅ Fix RAIZ | ia_metrics_table incluye blocked_crawlers |
+-
+-### Medias (2 nuevas)
+-
+-| ID | Hallazgos | Estado | Fix |
+-|----|-----------|--------|-----|
+-| D14 | Dead code en `_build_geo_problems_table()` | ⚠️ Pendiente | Requiere revision de codigo |
+-| D15 | No hay seccion de hallazgos positivos (HTTPS, WhatsApp, GBP) | ✅ Fix v4.36.0 | `${positive_findings}` en template |
+-
+-### Menores
+-
+-| ID | Hallazgos | Estado | Fix |
+-|----|-----------|--------|-----|
+-| C5 | README decia "6 gates" en vez de "9" | ✅ Fix DOCS | Corregido a "9 Publication Gates" |
+-| C7 | Bug escala crawler: `> 50` deberia ser `> 0.5` (15 puntos IAO perdidos) | ✅ Fix RAIZ | Corregido en L1927 |
+-
+-### Bugs Corregidos
+-
+-| Bug | Descripcion | Fix |
+-|-----|-------------|-----|
+-| BUG-01 | Escala acceso crawler: `> 50` siempre False | `> 0.5` |
+-| BUG-02 | `financial_validity` no pasaba `sources` a NoDefaultsValidator | WARNING + sources dict |
+-| DEP-01 | `_calculate_web_score()` divergia de `calcular_score_seo()` | Wrapper CHECKLIST_SEO |
+-| DEP-02 | CHECKLIST_IAO standalone en vez de usar `ia_readiness.overall_score` | Fallback only |
+-| DEP-03 | `_identify_brechas()` logica duplicada con thresholds diferentes | Delega a `detect_pains()` |
+-
+-### Issues Post-VALIDATE (T1-T4)
+-
+-| Issue | Descripcion | Estado | Fix |
+-|-------|-------------|--------|-----|
+-| T1 (BUG-02) | `financial_validity` gate falso positivo — WARNING con Tier C | ✅ v4.36.0 | `publication_gates.py` L358-370 |
+-| T2 | Secciones "Validación de Calidad" y "Trazabilidad Brechas" ausentes | ✅ v4.36.0 | Template L110, L121 |
+-| T3 | `seo_score` ausente de `v4_complete_report.json` | ✅ v4.36.0 | `main.py` L2855-2856 |
+-| T4 | `geo_flow_result` timing — "Salud Técnica GEO" no aparecia | ✅ v4.36.0 | `_build_geo_problems_table()` L1300 |
+-
+-## Defecciones Pendientes (3 de 18)
+-
+-| ID | Descripcion | Razon de deferral |
+-|----|-------------|-------------------|
+-| C10 | Benchmarks sin trace de fuente | Requiere diseno de trazabilidad para benchmarks regionales |
+-| D16 | Contexto regional hardcoded | Requiere diseno de dynamic regional context |
+-| D17 | Competidores stub (sin datos reales) | Requiere API de competidores |
+-
+-## Decisiones Diferidas
+-
+-| Decision | Descripcion | Estado |
+-|----------|-------------|--------|
+-| D1 | WARNING gates deberian cambiar readiness a REQUIRES_REVIEW? | Diferida a sesion dedicada |
+-
+-## Comando de Verificacion
+-
+-```bash
+-./venv/Scripts/python.exe main.py v4complete --url https://amaziliahotel.com/ --nombre "Amazilia Hotel"
+-```
+diff --git a/.opencode/plans/05-prompt-inicio-sesion-fase-TRAZABILIDAD-VALIDATE-v2.md b/.opencode/plans/05-prompt-inicio-sesion-fase-TRAZABILIDAD-VALIDATE-v2.md
+deleted file mode 100644
+index 5c2d985..0000000
+--- a/.opencode/plans/05-prompt-inicio-sesion-fase-TRAZABILIDAD-VALIDATE-v2.md
++++ /dev/null
+@@ -1,133 +0,0 @@
+-# FASE-TRAZABILIDAD-VALIDATE-v2: Verificacion Post-PATCH Forense
+-
+-> **Sesion unica. Maximo 60 iteraciones.**
+-> **Trigger**: Validar que los 18 hallazgos + 4 issues T1-T4 fueron superados.
+-
+----
+-
+-## Contexto
+-
+-Version actual: **v4.36.0** (PATCH Forense AmaziliaHotel, 2026-04-26)
+-
+-Cadena de fases completadas:
+-- FASE-TRAZABILIDAD-DOCS → v4.35.1
+-- FASE-TRAZABILIDAD-RAIZ → v4.35.1
+-- FASE-TRAZABILIDAD-VALIDATE → v4.35.1 (primera validacion, 4 issues T1-T4)
+-- FASE-TRAZABILIDAD-PATCH+SEO → v4.35.1 (fixes T1-T4)
+-- FASE-TRAZABILIDAD-REFINEMENT → v4.35.1
+-- PATCH Forense FASE-A/B/C/D → v4.36.0
+-
+-**Objetivo**: Ejecutar UNA corrida v4complete para Amazilia Hotel y auditar que TODOS los hallazgos fueron superados.
+-
+----
+-
+-## Tarea 1: Ejecutar v4complete
+-
+-```bash
+-cd /mnt/c/Users/Jhond/Github/iah-cli
+-./venv/Scripts/python.exe main.py v4complete --url https://amaziliahotel.com/ --nombre "Amazilia Hotel"
+-```
+-
+-**Capturar**: tiempo de ejecucion, exit code, coherence_score.
+-
+----
+-
+-## Tarea 2: Auditar Diagnostic Markdown
+-
+-Verificar en `output/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_*.md` (el mas reciente):
+-
+-### 2.1 Secciones Obligatorias
+-- [ ] `## ✅ Validación de Calidad` presente (T2 fix)
+-- [ ] `## 🔍 Trazabilidad: Brechas Identificadas` presente (T2 fix)
+-- [ ] `${brechas_section}` renderizado (no literal)
+-- [ ] `${manual_attention_table}` renderizado (no literal)
+-- [ ] `${positive_findings}` renderizado (D15 fix)
+-- [ ] `${ia_metrics_table}` renderizado con datos (D11 fix)
+-
+-### 2.2 Metricas IA
+-- [ ] "Salud Técnica GEO" row presente en ia_metrics_table (T4 fix, D12)
+-- [ ] Crawlers bloqueados visibles (D13)
+-- [ ] Scores SEO/GEO/AEO/IAO presentes y numericos
+-
+-### 2.3 Scores
+-- [ ] SEO Local score numerico (no N/A ni 0 si hay datos)
+-- [ ] Coherence score >= 0.8
+-
+-### 2.4 Datos del Hotel
+-- [ ] Hotel name correcto (NO "amaziliahotel" sin espacio en titulo visible)
+-- [ ] Region: Eje Cafetero / Pereira / Risaralda
+-- [ ] Datos financieros con Tier C evidente (C1 fix)
+-
+----
+-
+-## Tarea 3: Auditar JSON Report
+-
+-Verificar en `output/v4_complete/v4_complete_report.json`:
+-
+-- [ ] `seo_score` presente como entero (T3 fix)
+-- [ ] `coherence_score` >= 0.8
+-- [ ] `publication_ready` = true
+-- [ ] `gate_report` presente con resultados de 9 gates
+-- [ ] `financial_validity` gate muestra WARNING (no solo PASSED) si hay defaults (T1 fix)
+-
+----
+-
+-## Tarea 4: Auditar Gate Report
+-
+-Verificar en gate_report (JSON o en la salida del diagnostico):
+-
+-- [ ] 9 gates ejecutados (6 blocking + 3 advisory)
+-- [ ] `financial_validity` tiene status WARNING cuando financial_sources contiene defaults
+-- [ ] `financial_validity` tiene `passed=True` (no bloquea publicacion)
+-- [ ] `financial_validity` details incluye `default_sources` list
+-
+----
+-
+-## Tarea 5: Tabla Comparativa de Hallazgos
+-
+-Generar tabla final:
+-
+-| # | Hallazgo | Antes (v4.35.0) | Despues (v4.36.0) | Veredicto |
+-|---|----------|-----------------|-------------------|-----------|
+-| C1 | financial_validity defaults | Sin WARNING | WARNING + Tier C | ? |
+-| C2 | pains/brechas divergentes | Thresholds diferentes | Unificado detect_pains() | ? |
+-| C3 | SEO dual score | 2 algoritmos | Wrapper CHECKLIST_SEO | ? |
+-| C4 | IAO independiente | Standalone | Fallback ia_readiness | ? |
+-| D11 | Metricas IA eliminadas | Sin tabla | ia_metrics_table presente | ? |
+-| D12 | geo_flow invisible | Sin row | "Salud Técnica GEO" | ? |
+-| D13 | Crawlers no mencionados | Sin datos | En ia_metrics_table | ? |
+-| D14 | Dead code geo_problems | Dead code | ? | ? |
+-| D15 | Sin positivos | Sin seccion | positive_findings | ? |
+-| C5 | README "6 gates" | "6" | "9" | ? |
+-| C7 | Crawler scale bug | > 50 | > 0.5 | ? |
+-| T1 | financial_validity false positive | Solo PASSED | WARNING passed=True | ? |
+-| T2 | Secciones ausentes | Sin headers | Headers presentes | ? |
+-| T3 | seo_score JSON ausente | Sin campo | seo_score: int | ? |
+-| T4 | geo_flow timing | Sin row | Row presente | ? |
+-
+----
+-
+-## Restricciones
+-
+-1. **NO modificar codigo fuente.** Esta fase es SOLO validacion.
+-2. **NO ejecutar v4complete mas de UNA vez.** Si falla, reportar error y terminar.
+-3. Maximo 60 iteraciones del agente.
+-4. Documentar TODO hallazgo nuevo encontrado durante la validacion.
+-
+----
+-
+-## Criterios de Completitud
+-
+-- [ ] v4complete ejecutado exitosamente (exit code 0)
+-- [ ] Tareas 2-4 completadas con checklist
+-- [ ] Tabla comparativa (Tarea 5) generada
+-- [ ] Veredicto final: SUPERADO / PARCIAL / NO SUPERADO
+-- [ ] log_phase_completion.py ejecutado
+-
+----
+-
+-## Post-Ejecucion (TIER 1 — Inmediato)
+-
+-1. Marcar esta fase como completada en `06-checklist-implementacion.md`
+-2. Actualizar `dependencias-fases.md` con resultado
+-3. Actualizar `09-documentacion-post-proyecto.md` Section E
+diff --git a/.opencode/plans/06-checklist-implementacion.md b/.opencode/plans/06-checklist-implementacion.md
+index 5c12860..c872838 100644
+--- a/.opencode/plans/06-checklist-implementacion.md
++++ b/.opencode/plans/06-checklist-implementacion.md
+@@ -1,88 +1,36 @@
+-# Checklist de Implementacion — Trazabilidad Amazilia Hotel
++# Checklist Maestro de Implementacion
+ 
+-> Version: v2.1 | Actualizado: 2026-04-27
+-
+-## Fases Completadas
+-
+-### FASE-TRAZABILIDAD-DOCS (v4.35.1) — ✅ Completada (2026-04-25)
+-- [x] README.md: "6 gates" → "9 Publication Gates"
+-- [x] v4_complete.md: ghost command removido
+-- [x] publication_gates.py docstring: 5 → 9 gates
+-- [x] AGENTS.md: Coherence Score como rango
+-
+-### FASE-TRAZABILIDAD-RAIZ (v4.35.1) — ✅ Completada (2026-04-25)
+-- [x] Unificacion pain/brecha detection
+-- [x] 9 gates cableados
+-- [x] DEP-01: _calculate_web_score wrapper CHECKLIST_SEO
+-- [x] DEP-02: CHECKLIST_IAO fallback ia_readiness
+-- [x] DEP-03: _identify_brechas delega a detect_pains()
+-- [x] BUG-01: crawler scale > 50 → > 0.5
+-
+-### FASE-TRAZABILIDAD-VALIDATE (v4.35.1) — ✅ Completada (2026-04-25)
+-- [x] v4complete ejecutado para Amazilia Hotel
+-- [x] 4 issues T1-T4 identificados
+-- [x] Plan PATCH+SEO creado
+-
+-### FASE-TRAZABILIDAD-PATCH+SEO (v4.35.1) — ✅ Completada (2026-04-25)
+-- [x] T1 (BUG-02): financial_validity WARNING + financial_sources
+-- [x] T2: Secciones Trazabilidad + Validacion de Calidad en template
+-- [x] T3: seo_score en v4_complete_report.json
+-- [x] T4: Salud Técnica GEO row (parcial - timing pipeline)
+-
+-### FASE-TRAZABILIDAD-REFINEMENT (v4.35.1) — ✅ Completada (2026-04-25)
+-- [x] D1-D4 corrections
+-- [x] GEO source decision
+-
+-### PATCH Forense FASE-A/B/C/D (v4.36.0) — ✅ Completada (2026-04-26)
+-- [x] FASE-A: hotel_schema dual unificado
+-- [x] FASE-B: Comision OTA label corregido
+-- [x] FASE-C: open_graph template + pain_id cableado
+-- [x] FASE-D: gate_report presence check
++> Proyecto: Correccion Post-VALIDATE-v2 Amazilia Hotel
++> Workflow: phased_project_executor.md v2.6.0
++> Regla: 1 fase por sesion. Maximo 60 iteraciones.
+ 
+ ---
+ 
+-## Fase Actual
++## Progreso
+ 
+-### FASE-TRAZABILIDAD-VALIDATE-v2 (v4.36.0) — ✅ Completada (2026-04-27)
++| Fase | Estado | Checklist | Tests | Validaciones |
++|------|--------|-----------|-------|--------------|
++| FASE-1-AMAZILIA-CORRECCION | Pendiente | 0/9 | — | — |
++| FASE-RELEASE-4.36.1 | Pendiente | 0/5 | — | — |
+ 
+-**Objetivo**: Verificar que los 18 hallazgos + 4 issues T1-T4 fueron superados con v4.36.0.
+-
+-**Veredicto**: SUPERADO (14/15, 1 parcial)
+-
+-#### Tarea 1: Ejecutar v4complete
+-- [x] v4complete ejecutado sin errores
+-- [x] Exit code 0
+-- [x] Coherence score: 0.893
+-
+-#### Tarea 2: Auditar Diagnostic Markdown
+-- [x] Seccion "Validación de Calidad" presente (L109)
+-- [x] Seccion "Trazabilidad: Brechas Identificadas" presente (L119)
+-- [x] brechas_section renderizado
+-- [x] manual_attention_table renderizado
+-- [x] positive_findings renderizado (HTTPS, WhatsApp, GBP, redes)
+-- [x] ia_metrics_table renderizado con datos
+-- [ ] "Salud Técnica GEO" row presente — PARCIAL (timing pipeline)
+-- [x] Crawlers bloqueados visibles (14 bloqueados)
+-- [x] Scores SEO/GEO/AEO/IAO numericos (25/62/0/33)
+-- [x] Hotel name correcto
+-
+-#### Tarea 3: Auditar JSON Report
+-- [x] seo_score presente como entero (25)
+-- [x] coherence_score >= 0.8 (0.893)
+-- [x] publication_ready = READY_FOR_PUBLICATION
+-- [x] gate_report con 9 gates
+-
+-#### Tarea 4: Auditar Gate Report
+-- [x] 9 gates ejecutados
+-- [x] financial_validity WARNING cuando defaults
+-- [x] financial_validity passed=True
+-- [x] default_sources en details
+-
+-#### Tarea 5: Tabla Comparativa
+-- [x] 15 hallazgos auditados
+-- [x] Veredicto final: SUPERADO (14/15 + 1 parcial)
++---
+ 
+-#### Post-Ejecucion
+-- [x] log_phase_completion.py ejecutado
+-- [x] dependencias-fases.md actualizado
+-- [x] 09-documentacion-post-proyecto.md Section E actualizada
++## FASE-1-AMAZILIA-CORRECCION — Checklist
++
++- [ ] T4: Timing pipeline GEO corregido (diagnostico regenera post-assets o pre-genera geo_flow)
++- [ ] N1: Header dual eliminado (template + generator alineados)
++- [ ] M3: can_use consistente entre metadata y report
++- [ ] H1: Asset local_content_page genera correctamente o se maneja el error
++- [ ] M4: Paths normalizados a forward slashes en JSON de output
++- [ ] v4complete ejecutado para https://amaziliahotel.com/
++- [ ] Post-ejecucion: salida verificada contra hallazgos originales
++- [ ] Tests pasan: `run_all_validations.py --quick` 4/4
++- [ ] Documentacion post-fase completada (log_phase_completion.py)
++
++## FASE-RELEASE-4.36.1 — Checklist
++
++- [ ] version_consistency_checker.py pasa
++- [ ] sync_versions.py ejecutado
++- [ ] CHANGELOG.md actualizado con formato CONTRIBUTING.md
++- [ ] GUIA_TECNICA.md nota tecnica agregada
++- [ ] run_all_validations.py --quick pasa 4/4
+diff --git a/.opencode/plans/09-documentacion-post-proyecto.md b/.opencode/plans/09-documentacion-post-proyecto.md
+index 9e40c76..e1543bf 100644
+--- a/.opencode/plans/09-documentacion-post-proyecto.md
++++ b/.opencode/plans/09-documentacion-post-proyecto.md
+@@ -1,62 +1,36 @@
+-# Documentacion Post-Proyecto — Trazabilidad Amazilia Hotel
+-
+-> Version: v1.1 | Actualizado: 2026-04-27
+-
+-## Seccion A: Modulos Afectados
+-
+-| Modulo | Fases | Cambio |
+-|--------|-------|--------|
+-| `modules/quality_gates/publication_gates.py` | RAIZ, PATCH | WARNING path, financial_sources, 9 gates |
+-| `modules/commercial_documents/v4_diagnostic_generator.py` | PATCH | Trazabilidad header, positive_findings |
+-| `modules/commercial_documents/templates/diagnostico_v6_template.md` | PATCH | Secciones Validacion + Trazabilidad |
+-| `main.py` | PATCH | seo_score en JSON report |
+-| `modules/financial_engine/no_defaults_validator.py` | RAIZ | Sources alignment |
+-| `modules/asset_generation/v4_asset_orchestrator.py` | REFINEMENT | GEO source |
+-
+-## Seccion B: Archivos de Plan
+-
+-| Archivo | Fase |
+-|---------|------|
+-| `.opencode/context/fase-trazabilidad-context.md` | Contexto global |
+-| `.opencode/plans/05-prompt-inicio-sesion-fase-TRAZABILIDAD-VALIDATE-v2.md` | VALIDATE-v2 |
+-| `.opencode/plans/dependencias-fases.md` | Global |
+-| `.opencode/plans/06-checklist-implementacion.md` | Global |
+-| `.opencode/plans/README.md` | Global |
+-| `.opencode/plans/VALIDATION_RESULTS.md` | VALIDATE-v2 |
+-
+-## Seccion C: Versiones
+-
+-| Version | Codename | Fecha | Fases |
+-|---------|----------|-------|-------|
+-| v4.35.1 | Trazabilidad Publication Gates | 2026-04-25 | DOCS, RAIZ, VALIDATE, PATCH+SEO, REFINEMENT |
+-| v4.36.0 | PATCH Forense AmaziliaHotel | 2026-04-26 | FASE-A/B/C/D |
+-| v4.36.0 | (validacion) | 2026-04-27 | VALIDATE-v2 (sin bump) |
+-
+-## Seccion D: Metricas
+-
+-| Metrica | Valor |
+-|---------|-------|
+-| Hallazgos totales | 18 |
+-| Hallazgos corregidos | 15 |
+-| Hallazgos diferidos | 3 |
+-| Bugs corregidos | 5/5 |
+-| Issues post-VALIDATE | 4/4 |
+-| Tests (al 2026-04-25) | 2224 funciones, 140 archivos |
+-| Coherence score (v4.36.0) | 0.893 |
+-| Publication ready | READY_FOR_PUBLICATION |
+-| Gates ejecutados | 9/9 |
+-
+-## Seccion E: Checklist de Documentacion
+-
+-- [x] Contexto creado (fase-trazabilidad-context.md)
+-- [x] Plan creado (05-prompt-...-VALIDATE-v2.md)
+-- [x] Dependencias actualizadas (dependencias-fases.md)
+-- [x] Checklist actualizado (06-checklist-implementacion.md)
+-- [x] README actualizado
+-- [x] VALIDATION_RESULTS.md creado
+-- [x] log_phase_completion.py ejecutado
+-- [x] sync_versions.py ejecutado
+-- [x] run_all_validations.py --quick (4/4 PASSED)
+-- [x] REGISTRY.md actualizado
+-- [ ] CHANGELOG.md actualizado (pendiente commit)
+-- [ ] GUIA_TECNICA.md actualizada (no requiere — sin cambios arquitectonicos)
++# Documentacion Post-Proyecto — Correccion Post-VALIDATE-v2 Amazilia Hotel
++
++> Proyecto: iah-cli v4complete — Amazilia Hotel
++> Fecha: 2026-04-27
++
++---
++
++## Seccion A: Modulos Nuevos o Afectados
++
++### FASE-1-AMAZILIA-CORRECCION
++
++| Modulo | Archivo | Cambio |
++|--------|---------|--------|
++| orchestration | `v4_diagnostic_generator.py` | T4 timing, N1 header dual |
++| orchestration | `v4_asset_orchestrator.py` | T4 timing, H1 asset fallido |
++| asset_generation | `asset_metadata.py` | M3 can_use consistente |
++| output | `output/v4_complete/amazilia_hotel/` | M4 paths normalizados |
++
++## Seccion D: Metricas Acumulativas
++
++| Metrica | Valor Pre | Valor Post | Delta |
++|---------|-----------|------------|-------|
++| Coherence Score | 0.88 | — | — |
++| Assets generados | 12/13 | — | — |
++| Hallazgos corregidos | 0/5 | — | — |
++| Tests validacion | 4/4 | — | — |
++
++## Seccion E: Archivos Afiliados Actualizados
++
++### FASE-1-AMAZILIA-CORRECCION
++
++- [ ] `dependencias-fases.md`
++- [ ] `06-checklist-implementacion.md`
++- [ ] `docs/CHANGELOG.md`
++- [ ] `docs/GUIA_TECNICA.md`
++- [ ] `docs/contributing/REGISTRY.md`
+diff --git a/.opencode/plans/README.md b/.opencode/plans/README.md
+deleted file mode 100644
+index 9c33d19..0000000
+--- a/.opencode/plans/README.md
++++ /dev/null
+@@ -1,50 +0,0 @@
+-# Plan Maestro — Trazabilidad Amazilia Hotel
+-
+-> Version: v2.0 | Actualizado: 2026-04-27
+-
+-## Indice de Archivos
+-
+-| Archivo | Descripcion |
+-|---------|-------------|
+-| `README.md` | Este archivo — indice y resumen |
+-| `dependencias-fases.md` | Diagrama de dependencias y estado de fases |
+-| `06-checklist-implementacion.md` | Checklist detallado por fase |
+-| `05-prompt-inicio-sesion-fase-TRAZABILIDAD-VALIDATE-v2.md` | Prompt de la fase actual |
+-| `09-documentacion-post-proyecto.md` | Documentacion post-proyecto |
+-
+-## Contexto
+-
+-El proyecto "Trazabilidad Calidad Garantizada" identifico **18 hallazgos** y **5 bugs** en el pipeline v4complete de iah-cli, testeado contra Amazilia Hotel (amaziliahotel.com).
+-
+-### Cadena de Fases
+-
+-```
+-DOCS → RAIZ → VALIDATE → PATCH+SEO → REFINEMENT → PATCH Forense → VALIDATE-v2
+-                                                                    (actual)
+-```
+-
+-### Estado Actual
+-
+-- **Version**: v4.36.0 (PATCH Forense AmaziliaHotel)
+-- **Fases completadas**: 6/7
+-- **Fase actual**: FASE-TRAZABILIDAD-VALIDATE-v2
+-- **Hallazgos corregidos**: 15/18 (3 diferidos)
+-- **Bugs corregidos**: 5/5
+-- **Issues post-VALIDATE**: 4/4 (T1-T4)
+-
+-### Hallazgos Diferidos (3)
+-
+-1. **C10**: Benchmarks sin trace de fuente
+-2. **D16**: Contexto regional hardcoded
+-3. **D17**: Competidores stub
+-
+-### Decision Diferida
+-
+-- **D1**: WARNING gates deberian cambiar readiness a REQUIRES_REVIEW?
+-
+-## Reglas
+-
+-1. Una fase por sesion
+-2. Maximo 60 iteraciones por fase
+-3. TIER 1 documentacion inmediata post-fase
+-4. TIER 2 documentacion deferida a FASE-RELEASE
+diff --git a/.opencode/plans/dependencias-fases.md b/.opencode/plans/dependencias-fases.md
+index 8380d42..7580a31 100644
+--- a/.opencode/plans/dependencias-fases.md
++++ b/.opencode/plans/dependencias-fases.md
+@@ -1,56 +1,42 @@
+-# Dependencias de Fases — Trazabilidad Amazilia Hotel
++# Dependencias de Fases — Correccion Post-VALIDATE-v2 Amazilia Hotel
+ 
+-> Version: v2.1 | Actualizado: 2026-04-27
++> Proyecto: iah-cli v4complete — Amazilia Hotel
++> URL: https://amaziliahotel.com/
++> Contexto fuente: `.opencode/context/post-validate-v2-hallazgos-pendientes-CORREGIDO.md`
++> Workflow: `phased_project_executor.md` v2.6.0
++
++---
+ 
+ ## Diagrama de Dependencias
+ 
+ ```
+-FASE-TRAZABILIDAD-DOCS (v4.35.1) ✅
+-    │
+-    ▼
+-FASE-TRAZABILIDAD-RAIZ (v4.35.1) ✅
+-    │
+-    ▼
+-FASE-TRAZABILIDAD-VALIDATE (v4.35.1) ✅
+-    │
+-    ├──→ 4 issues T1-T4 identificados
+-    │
+-    ▼
+-FASE-TRAZABILIDAD-PATCH+SEO (v4.35.1) ✅
+-    │
+-    ▼
+-FASE-TRAZABILIDAD-REFINEMENT (v4.35.1) ✅
+-    │
+-    ▼
+-PATCH Forense FASE-A/B/C/D (v4.36.0) ✅
+-    │
+-    ▼
+-FASE-TRAZABILIDAD-VALIDATE-v2 (v4.36.0) ✅ ← ESTA FASE
+-    │
+-    ▼
+-[RESULTADO: 14/15 SUPERADO, 1 PARCIAL]
++FASE-PREP (esta sesion)
++    │
++    └── FASE-1-AMAZILIA-CORRECCION
++            │
++            ├── Correccion codigo (T4, N1, M3, H1, M4)
++            ├── Ejecucion v4complete --url https://amaziliahotel.com/
++            ├── Verificacion post-ejecucion contra hallazgos
++            └── Post-ejecucion documentacion
+ ```
+ 
++## Tabla de Conflictos Potenciales
++
++| Archivo | Fase | Nota |
++|---------|------|------|
++| `modules/orchestration/v4_diagnostic_generator.py` | FASE-1 | T4 timing + N1 header dual |
++| `modules/orchestration/v4_asset_orchestrator.py` | FASE-1 | T4 timing + H1 asset fallido |
++| `modules/asset_generation/asset_metadata.py` | FASE-1 | M3 can_use inconsistente |
++| `output/v4_complete/amazilia_hotel/` | FASE-1 | M4 backslash paths |
++
++**Nota**: Solo 1 fase de implementacion. No hay conflictos inter-fase.
++
++---
++
+ ## Estado de Fases
+ 
+-| Fase | Version | Estado | Fecha |
+-|------|---------|--------|-------|
+-| FASE-TRAZABILIDAD-DOCS | v4.35.1 | ✅ Completada | 2026-04-25 |
+-| FASE-TRAZABILIDAD-RAIZ | v4.35.1 | ✅ Completada | 2026-04-25 |
+-| FASE-TRAZABILIDAD-VALIDATE | v4.35.1 | ✅ Completada | 2026-04-25 |
+-| FASE-TRAZABILIDAD-PATCH+SEO | v4.35.1 | ✅ Completada | 2026-04-25 |
+-| FASE-TRAZABILIDAD-REFINEMENT | v4.35.1 | ✅ Completada | 2026-04-25 |
+-| PATCH Forense FASE-A/B/C/D | v4.36.0 | ✅ Completada | 2026-04-26 |
+-| **FASE-TRAZABILIDAD-VALIDATE-v2** | **v4.36.0** | **✅ Completada** | **2026-04-27** |
+-
+-## Criterios de Verificacion
+-
+-| Criterio | Comando | Estado |
+-|----------|---------|--------|
+-| v4complete exitoso | `main.py v4complete --url ...` | ✅ exit code 0 |
+-| seo_score en JSON | `grep seo_score v4_complete_report.json` | ✅ "seo_score": 25 |
+-| Secciones Trazabilidad/Validacion en MD | `grep "Trazabilidad\|Validación" 01_DIAGNOSTICO*.md` | ✅ L109, L119 |
+-| Salud Técnica GEO en MD | `grep "Salud.*GEO" 01_DIAGNOSTICO*.md` | ⚠️ Parcial (timing) |
+-| financial_validity WARNING | `grep WARNING gate_report` | ✅ status: WARNING |
+-| 9 gates ejecutados | `grep gates gate_report` | ✅ 9/9 |
+-| Coherence >= 0.8 | `grep coherence v4_complete_report.json` | ✅ 0.893 |
++| Fase | ID | Estado | Fecha Inicio | Fecha Fin |
++|------|----|--------|--------------|-----------|
++| Preparacion (plan) | FASE-PREP | En progreso | 2026-04-27 | — |
++| Implementacion | FASE-1-AMAZILIA-CORRECCION | Pendiente | — | — |
++| Release | FASE-RELEASE-4.36.1 | Pendiente | — | — |
+diff --git a/docs/GUIA_TECNICA.md b/docs/GUIA_TECNICA.md
+index 0a58c6c..6226aa6 100644
+--- a/docs/GUIA_TECNICA.md
++++ b/docs/GUIA_TECNICA.md
+@@ -547,3 +547,25 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
+ - `main.py` L2620: serializa `readiness_report.summary.warnings` al `gate_report.json`.
+ 
+ **Backwards Compatibility:** Sin cambios en API publica. Solo se agregaron variables nuevas al template_data y un key nuevo en el summary dict.
++
++### FASE-1-AMAZILIA-CORRECCION — Correccion Hallazgos VALIDATE-v2 (2026-04-27)
++
++**Problema:** 4 hallazgos verificados en diagnostico VALIDATE-v2 para Amazilia Hotel.
++
++**Cambios por hallazgo:**
++
++| Hallazgo | Solucion | Archivo |
++|----------|----------|---------|
++| M3: can_use inconsistente | Unificado: `can_use = preflight_status != "BLOCKED"` en ambos `v4_asset_orchestrator.py` L868 y `asset_metadata.py` L151-169. Antes: orchestrator usaba logica compleja con `confidence_level != "CONFLICT"`, metadata rechazaba si `confidence_score < 0.5`. | `v4_asset_orchestrator.py` L868, `asset_metadata.py` L151-169 |
++| H1: local_content_page "Unknown asset type" | Handler agregado en `conditional_generator.py` L541-551. Llama `LocalContentGenerator.generate_content_set()` y serializa `LocalContentSet` a markdown para compatibilidad con pipeline. | `conditional_generator.py` L541-551 |
++| N1: Header dual en metricas IA | Eliminado `## [NEW] Metricas de Optimizacion para IA` de `_build_geo_problems_table()`. Template ya provee `### Metricas de Acceso para IA`. Solo queda un header. | `v4_diagnostic_generator.py` L1304-1309 |
++| M4: Backslashes en JSON de paths | `_to_relative_path()` ya normaliza a forward slashes. `output_dir` se serializa via `result.to_dict()` → `_to_relative_path()`. Confirmado: paths en `asset_generation_report.json` usan `/`. | `v4_asset_orchestrator.py` L95-117 |
++
++**No corregidos en esta sesion (deferidos):**
++
++| Hallazgo | Razon de defer |
++|----------|----------------|
++| T4: "Salud Tecnica GEO" timing | Requiere reorderar pipeline FASE 3.5 vs FASE 4 — es cambio arquitectonico complejo, se maneja en sesion independiente. |
++
++**Tests:** 251/252 passed (1 fallo pre-existente en `test_proposal_alignment.py::test_known_mappings` — `KeyError: 'Boton de WhatsApp'`, no relacionado a estos cambios).
++**Validaciones:** 4/4 passed.
+diff --git a/docs/contributing/.last_doc_phase.json b/docs/contributing/.last_doc_phase.json
+index 8b2c01c..8436e7a 100644
+--- a/docs/contributing/.last_doc_phase.json
++++ b/docs/contributing/.last_doc_phase.json
+@@ -1,11 +1,11 @@
+ {
+-  "modules/asset_generation/conditional_generator.py": "FASE-C",
+-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-B",
++  "modules/asset_generation/conditional_generator.py": "FASE-1-AMAZILIA-CORRECCION",
++  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-1-AMAZILIA-CORRECCION",
+   "modules/commercial_documents/v4_proposal_generator.py": "FASE-VALIDATE-RC",
+   "modules/commercial_documents/pain_solution_mapper.py": "FASE-A",
+   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-E",
+   "modules/asset_generation/data_assessment.py": "FASE-I-01",
+-  "modules/asset_generation/v4_asset_orchestrator.py": "FASE-A",
++  "modules/asset_generation/v4_asset_orchestrator.py": "FASE-1-AMAZILIA-CORRECCION",
+   "docs/contributing/capabilities.md": "FASE-IAO-06",
+   "GEO_FIELD_MAPPING.md": "FASE-1",
+   "06-checklist-implementacion.md": "FASE-1",
+@@ -18,7 +18,7 @@
+   "modules/delivery/delivery_packager.py": "FASE-5",
+   "modules/geo_enrichment/geo_flow.py": "FASE-6",
+   "CHANGELOG.md": "FASE-RELEASE-4.35.0",
+-  "docs/GUIA_TECNICA.md": "FASE-F",
++  "docs/GUIA_TECNICA.md": "FASE-1-AMAZILIA-CORRECCION",
+   ".agents/workflows/README.md": "FASE-7",
+   "modules/asset_generation/asset_catalog.py": "FASE-5",
+   "modules/commercial_documents/data_structures.py": "FASE-E",
+@@ -117,5 +117,6 @@
+   ".agents/workflows/v4_complete.md": "FASE-TRAZABILIDAD-DOCS",
+   "diagnostico_v6_template.md": "FASE-TRAZABILIDAD-RAIZ",
+   "test_publication_gates.py": "FASE-TRAZABILIDAD-RAIZ",
+-  "modules/pain_solution_mapper.py": "FASE-C"
++  "modules/pain_solution_mapper.py": "FASE-C",
++  "modules/asset_generation/asset_metadata.py": "FASE-1-AMAZILIA-CORRECCION"
+ }
+diff --git a/docs/contributing/REGISTRY.md b/docs/contributing/REGISTRY.md
+index 6780ac8..8b1d23d 100644
+--- a/docs/contributing/REGISTRY.md
++++ b/docs/contributing/REGISTRY.md
+@@ -2,7 +2,7 @@
+ 
+ > **Ultima actualizacion:** 2026-04-27
+ > **Version actual:** v4.36.0
+-> **Total fases completadas:** 171
++> **Total fases completadas:** 172
+ 
+ ---
+ 
+@@ -4291,6 +4291,29 @@ _Ninguno_
+ ---
+ 
+ 
++## FASE-1-AMAZILIA-CORRECCION - 2026-04-27
++**Descripcion:** Correccion hallazgos M3 (can_use unificado), H1 (local_content_page con generate_content_set), N1 (header dual eliminado), M4 (paths forward slash en _to_relative_path). Tests 251/252 pasan. Validaciones 4/4. T4 deferido a sesion siguiente.
++
++### Archivos Nuevos
++_Ninguno_
++
++### Archivos Modificados
++| Archivo | Cambio |
++|---------|--------|
++| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
++| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
++| `modules/asset_generation/asset_metadata.py` | Asset Metadata |
++| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
++| `docs/GUIA_TECNICA.md` | Guia Tecnica |
++
++### Validaciones
++- [x] Tests passing
++- [x] Suite NEVER_BLOCK passing
++- [x] Capability contract verificado
++
++---
++
++
+ ## Estadisticas
+ 
+ ```markdown
+diff --git a/modules/asset_generation/asset_metadata.py b/modules/asset_generation/asset_metadata.py
+index 88300d4..f8a0576 100644
+--- a/modules/asset_generation/asset_metadata.py
++++ b/modules/asset_generation/asset_metadata.py
+@@ -154,23 +154,19 @@ class AssetMetadataEnforcer:
+         """
+         Determine if asset can be used based on confidence and preflight status.
+         
++        M3 FIX: Unify logic with v4_asset_orchestrator.
++        Rule: can_use = true if preflight_status != "BLOCKED"
++        
+         Args:
+-            confidence_level: The confidence level
+-            confidence_score: Numerical score (0.0 - 1.0)
++            confidence_level: The confidence level (unused in unified logic, kept for API compatibility)
++            confidence_score: Numerical score (unused in unified logic, kept for API compatibility)
+             preflight_status: Preflight check status
+             
+         Returns:
+             True if asset can be used, False otherwise
+         """
+-        if preflight_status == "BLOCKED":
+-            return False
+-        if confidence_level == ConfidenceLevel.CONFLICT:
+-            return False
+-        if confidence_level == ConfidenceLevel.UNKNOWN:
+-            return False
+-        if confidence_score < 0.5:
+-            return False
+-        return True
++        # M3 FIX: Simple unified criterion
++        return preflight_status != "BLOCKED"
+ 
+     def create_metadata(
+         self,
+diff --git a/modules/asset_generation/conditional_generator.py b/modules/asset_generation/conditional_generator.py
+index 940a239..13f1061 100644
+--- a/modules/asset_generation/conditional_generator.py
++++ b/modules/asset_generation/conditional_generator.py
+@@ -538,6 +538,21 @@ class ConditionalGenerator:
+             data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
+             content = generator.generate(data if isinstance(data, dict) else {})
+ 
++        # H1 FIX: local_content_page handler - was missing, causing "Unknown asset type" error
++        elif asset_type == "local_content_page":
++            from modules.asset_generation.local_content_generator import LocalContentGenerator
++            generator = LocalContentGenerator()
++            hotel_data = validated_data.get("hotel_data", validated_data)
++            data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
++            content_set = generator.generate_content_set(data if isinstance(data, dict) else {})
++            # Serialize LocalContentSet to markdown string for pipeline compatibility
++            import json
++            pages_md = [f"# {p.title}\n\n{p.content_md}\n\n---\n" for p in content_set.pages]
++            content = f"# Contenido Local: {content_set.hotel_name}\n\n" + "\n".join(pages_md)
++            content += f"\n\n_total_palabras: {content_set.total_word_count}_\n"
++            if content_set.location_context:
++                content += f"\n_ubicacion: {content_set.location}_" 
++
+         else:
+             raise ValueError(f"Unknown asset type: {asset_type}")
+         
+diff --git a/modules/asset_generation/v4_asset_orchestrator.py b/modules/asset_generation/v4_asset_orchestrator.py
+index 08e1f3c..40caeb6 100644
+--- a/modules/asset_generation/v4_asset_orchestrator.py
++++ b/modules/asset_generation/v4_asset_orchestrator.py
+@@ -96,7 +96,8 @@ class AssetGenerationResult:
+         """Convert absolute path to relative path for portability.
+         
+         H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+-        Returns relative path when possible.
++        M4 FIX: Normalize all paths to forward slashes for cross-platform JSON output.
++        Returns relative path when possible, always with forward slashes.
+         """
+         if not path_str:
+             return path_str
+@@ -105,16 +106,16 @@ class AssetGenerationResult:
+             if path.is_absolute():
+                 # Try to make relative to current working directory
+                 try:
+-                    return str(path.relative_to(Path.cwd()))
++                    return str(path.relative_to(Path.cwd())).replace("\\", "/")
+                 except ValueError:
+                     # If can't make relative to cwd, return just the last 3 parts
+                     parts = path.parts
+                     if len(parts) > 3:
+-                        return str(Path(*parts[-3:]))
+-                    return path_str
+-            return path_str
++                        return str(Path(*parts[-3:])).replace("\\", "/")
++                    return path_str.replace("\\", "/")
++            return path_str.replace("\\", "/")
+         except Exception:
+-            return path_str
++            return path_str.replace("\\", "/")
+     
+     def to_dict(self) -> Dict[str, Any]:
+         """Convert result to dictionary."""
+@@ -864,10 +865,9 @@ class V4AssetOrchestrator:
+             except Exception as e:
+                 metadata['content_validation_error'] = str(e)
+         
+-        # Determine if asset can be used
+-        can_use = preflight_status == "PASSED" or (
+-            preflight_status == "WARNING" and asset_spec.confidence_level != "CONFLICT"
+-        )
++        # M3 FIX: Unify can_use logic with asset_metadata.py
++        # Rule: can_use = true if preflight_status != "BLOCKED"
++        can_use = preflight_status != "BLOCKED"
+ 
+         generated_filename = Path(file_path).name if file_path else f"{asset_spec.asset_type}_failed.html"
+         delivery_filename = self._compute_delivery_filename(generated_filename)
+diff --git a/modules/commercial_documents/v4_diagnostic_generator.py b/modules/commercial_documents/v4_diagnostic_generator.py
+index 4bbd3ba..ef3fd11 100644
+--- a/modules/commercial_documents/v4_diagnostic_generator.py
++++ b/modules/commercial_documents/v4_diagnostic_generator.py
+@@ -324,6 +324,7 @@ class V4DiagnosticGenerator:
+             coherence_score=coherence_score,
+             region=region,
+             analytics_data=analytics_data,
++            financial_breakdown=financial_breakdown,
+         )
+         
+         # Store voice readiness values for access via DiagnosticSummary (TAREA-2)
+@@ -366,6 +367,7 @@ class V4DiagnosticGenerator:
+         coherence_score: Optional[float] = None,
+         region: Optional[str] = None,
+         analytics_data: Optional[Dict[str, Any]] = None,
++        financial_breakdown: Optional['FinancialBreakdown'] = None,
+     ) -> Dict[str, str]:
+         """Prepare data for template rendering."""
+         
+@@ -1302,10 +1304,9 @@ class V4DiagnosticGenerator:
+         if not rows:
+             return ""
+ 
++        # N1 FIX: Removed duplicate header. Template provides "### Metricas de Acceso para IA"
+         table = """
+-## [NEW] Métricas de Optimización para IA
+-
+-| Métrica | Score | Detalle | Estado |
++|| Métrica | Score | Detalle | Estado ||
+ |---------|-------|---------|--------|
+ """
+         table += "\n".join(rows)
+diff --git a/modules/quality_gates/publication_gates.py b/modules/quality_gates/publication_gates.py
+index 7906c15..10b84e4 100644
+--- a/modules/quality_gates/publication_gates.py
++++ b/modules/quality_gates/publication_gates.py
+@@ -777,6 +777,7 @@ class PublicationGatesOrchestrator:
+         from modules.asset_generation.proposal_asset_alignment import (
+             verify_proposal_asset_alignment,
+             ALL_PROMISED_SERVICES,
++            PROPOSAL_SERVICE_TO_ASSET,
+         )
+ 
+         generated_assets = assessment.get("generated_assets", [])

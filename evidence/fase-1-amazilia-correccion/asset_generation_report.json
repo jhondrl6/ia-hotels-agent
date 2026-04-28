@@ -1,0 +1,239 @@
+{
+  "hotel_id": "amaziliahotel",
+  "hotel_name": "Amaziliahotel",
+  "timestamp": "2026-04-28T10:15:50.939872",
+  "output_dir": "output/v4_complete/amaziliahotel",
+  "summary": {
+    "total_assets": 13,
+    "generated": 13,
+    "failed": 0,
+    "skipped": 0,
+    "can_use": 13,
+    "estimated": 10,
+    "delivery_ready_percentage": 23.08,
+    "site_verification_applied": false
+  },
+  "generated_assets": [
+    {
+      "asset_type": "hotel_schema",
+      "filename": "ESTIMATED_hotel_schema_20260428_101550.json",
+      "delivery_filename": "hotel_schema_20260428_101550.json",
+      "path": "output/v4_complete/amaziliahotel/hotel_schema/ESTIMATED_hotel_schema_20260428_101550.json",
+      "metadata_path": "output/v4_complete/amaziliahotel/hotel_schema/ESTIMATED_hotel_schema_20260428_101550_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 0.85,
+      "pain_ids_resolved": [
+        "no_hotel_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "optimization_guide",
+      "filename": "ESTIMATED_guia_optimizacion_20260428_101550.md",
+      "delivery_filename": "guia_optimizacion_20260428_101550.md",
+      "path": "output/v4_complete/amaziliahotel/optimization_guide/ESTIMATED_guia_optimizacion_20260428_101550.md",
+      "metadata_path": "output/v4_complete/amaziliahotel/optimization_guide/ESTIMATED_guia_optimizacion_20260428_101550_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "metadata_defaults"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "llms_txt",
+      "filename": "ESTIMATED_llms_20260428_101550.txt",
+      "delivery_filename": "llms_20260428_101550.txt",
+      "path": "output/v4_complete/amaziliahotel/llms_txt/ESTIMATED_llms_20260428_101550.txt",
+      "metadata_path": "output/v4_complete/amaziliahotel/llms_txt/ESTIMATED_llms_20260428_101550_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 0.85,
+      "pain_ids_resolved": [
+        "low_ia_readiness"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "local_content_page",
+      "filename": "ESTIMATED_contenido_local__20260428_101550.md",
+      "delivery_filename": "contenido_local__20260428_101550.md",
+      "path": "output/v4_complete/amaziliahotel/local_content_page/ESTIMATED_contenido_local__20260428_101550.md",
+      "metadata_path": "output/v4_complete/amaziliahotel/local_content_page/ESTIMATED_contenido_local__20260428_101550_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "low_ia_readiness"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "faq_page",
+      "filename": "ESTIMATED_faqs_20260428_101550.json",
+      "delivery_filename": "faqs_20260428_101550.json",
+      "path": "output/v4_complete/amaziliahotel/faq_page/ESTIMATED_faqs_20260428_101550.json",
+      "metadata_path": "output/v4_complete/amaziliahotel/faq_page/ESTIMATED_faqs_20260428_101550_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 0.85,
+      "pain_ids_resolved": [
+        "no_faq_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "geo_playbook",
+      "filename": "ESTIMATED_geo_playbook_20260428_101550.md",
+      "delivery_filename": "geo_playbook_20260428_101550.md",
+      "path": "output/v4_complete/amaziliahotel/geo_playbook/ESTIMATED_geo_playbook_20260428_101550.md",
+      "metadata_path": "output/v4_complete/amaziliahotel/geo_playbook/ESTIMATED_geo_playbook_20260428_101550_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "low_gbp_score"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "review_plan",
+      "filename": "ESTIMATED_plan_reviews_20260428_101550.md",
+      "delivery_filename": "plan_reviews_20260428_101550.md",
+      "path": "output/v4_complete/amaziliahotel/review_plan/ESTIMATED_plan_reviews_20260428_101550.md",
+      "metadata_path": "output/v4_complete/amaziliahotel/review_plan/ESTIMATED_plan_reviews_20260428_101550_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "low_gbp_score"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "analytics_setup_guide",
+      "filename": "ESTIMATED_guia_configuracion_ga4_20260428_101550.md",
+      "delivery_filename": "guia_configuracion_ga4_20260428_101550.md",
+      "path": "output/v4_complete/amaziliahotel/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260428_101550.md",
+      "metadata_path": "output/v4_complete/amaziliahotel/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260428_101550_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_analytics_configured"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "indirect_traffic_optimization",
+      "filename": "ESTIMATED_optimizacion_trafico_indirecto_20260428_101550.md",
+      "delivery_filename": "optimizacion_trafico_indirecto_20260428_101550.md",
+      "path": "output/v4_complete/amaziliahotel/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260428_101550.md",
+      "metadata_path": "output/v4_complete/amaziliahotel/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260428_101550_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "low_organic_visibility"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "og_tags_guide",
+      "filename": "ESTIMATED_guia_og_tags_20260428_101550.md",
+      "delivery_filename": "guia_og_tags_20260428_101550.md",
+      "path": "output/v4_complete/amaziliahotel/og_tags_guide/ESTIMATED_guia_og_tags_20260428_101550.md",
+      "metadata_path": "output/v4_complete/amaziliahotel/og_tags_guide/ESTIMATED_guia_og_tags_20260428_101550_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_og_tags"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "open_graph",
+      "filename": "ESTIMATED_open_graph_meta_20260428_101550.html",
+      "delivery_filename": "open_graph_meta_20260428_101550.html",
+      "path": "output/v4_complete/amaziliahotel/open_graph/ESTIMATED_open_graph_meta_20260428_101550.html",
+      "metadata_path": "output/v4_complete/amaziliahotel/open_graph/ESTIMATED_open_graph_meta_20260428_101550_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_og_tags"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "org_schema",
+      "filename": "ESTIMATED_org_schema_20260428_101550.json",
+      "delivery_filename": "org_schema_20260428_101550.json",
+      "path": "output/v4_complete/amaziliahotel/org_schema/ESTIMATED_org_schema_20260428_101550.json",
+      "metadata_path": "output/v4_complete/amaziliahotel/org_schema/ESTIMATED_org_schema_20260428_101550_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_org_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "monthly_report",
+      "filename": "ESTIMATED_informe_mensual_20260428_101550.md",
+      "delivery_filename": "informe_mensual_20260428_101550.md",
+      "path": "output/v4_complete/amaziliahotel/monthly_report/ESTIMATED_informe_mensual_20260428_101550.md",
+      "metadata_path": "output/v4_complete/amaziliahotel/monthly_report/ESTIMATED_informe_mensual_20260428_101550_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [],
+      "can_use": true
+    }
+  ],
+  "failed_assets": [],
+  "skipped_assets": [],
+  "coherence_report": {
+    "is_coherent": true,
+    "overall_score": 0.88,
+    "checks": [
+      {
+        "name": "problems_have_solutions",
+        "passed": true,
+        "score": 0.9,
+        "message": "90% de problemas tienen solución automática",
+        "severity": "info"
+      },
+      {
+        "name": "assets_are_justified",
+        "passed": true,
+        "score": 0.92,
+        "message": "92% de assets justificados",
+        "severity": "info"
+      },
+      {
+        "name": "financial_data_validated",
+        "passed": true,
+        "score": 0.7,
+        "message": "Datos financieros validados (confidence promedio: 0.70)",
+        "severity": "info"
+      },
+      {
+        "name": "whatsapp_verified",
+        "passed": true,
+        "score": 1.0,
+        "message": "No hay asset de WhatsApp button",
+        "severity": "info"
+      },
+      {
+        "name": "price_matches_pain",
+        "passed": true,
+        "score": 0.8,
+        "message": "Precio en límite superior (5.0x) - rango ideal 3.0x-6.0x",
+        "severity": "warning"
+      },
+      {
+        "name": "promised_assets_exist",
+        "passed": true,
+        "score": 1.0,
+        "message": "Todos los assets prometidos están implementados",
+        "severity": "info"
+      }
+    ],
+    "errors": [],
+    "warnings": [],
+    "timestamp": "2026-04-28T10:15:48.736221",
+    "version": "4.2.0"
+  }
+}

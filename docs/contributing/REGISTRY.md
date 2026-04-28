@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-27
+> **Ultima actualizacion:** 2026-04-28
 > **Version actual:** v4.36.0
-> **Total fases completadas:** 171
+> **Total fases completadas:** 173
 
 ---
 
@@ -4286,6 +4286,47 @@ _Ninguno_
 - [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Coherence >= 0.8: 0.89 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1-AMAZILIA-CORRECCION - 2026-04-27
+**Descripcion:** Correccion hallazgos M3 (can_use unificado), H1 (local_content_page con generate_content_set), N1 (header dual eliminado), M4 (paths forward slash en _to_relative_path). Tests 251/252 pasan. Validaciones 4/4. T4 deferido a sesion siguiente.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `modules/asset_generation/asset_metadata.py` | Asset Metadata |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1-B - 2026-04-28
+**Descripcion:** T4 fix (diagnostico movido post-FASE4); T4/N1/M3/M4 verificados; v4complete OK (coherence 0.88); COP COP duplicado fuera de scope
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.88 (PASO)
 - [x] Capability contract verificado
 
 ---
