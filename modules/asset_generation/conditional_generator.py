@@ -538,6 +538,21 @@ class ConditionalGenerator:
             data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
             content = generator.generate(data if isinstance(data, dict) else {})
 
+        # H1 FIX: local_content_page handler - was missing, causing "Unknown asset type" error
+        elif asset_type == "local_content_page":
+            from modules.asset_generation.local_content_generator import LocalContentGenerator
+            generator = LocalContentGenerator()
+            hotel_data = validated_data.get("hotel_data", validated_data)
+            data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
+            content_set = generator.generate_content_set(data if isinstance(data, dict) else {})
+            # Serialize LocalContentSet to markdown string for pipeline compatibility
+            import json
+            pages_md = [f"# {p.title}\n\n{p.content_md}\n\n---\n" for p in content_set.pages]
+            content = f"# Contenido Local: {content_set.hotel_name}\n\n" + "\n".join(pages_md)
+            content += f"\n\n_total_palabras: {content_set.total_word_count}_\n"
+            if content_set.location_context:
+                content += f"\n_ubicacion: {content_set.location}_" 
+
         else:
             raise ValueError(f"Unknown asset type: {asset_type}")
         
@@ -603,7 +618,7 @@ class ConditionalGenerator:
             prefix = "FAILED_"
             suffix = ""
         
-        filename = template.format(prefix=prefix, suffix=suffix)
+        filename = template.format(prefix=prefix, suffix=suffix, slug="")
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         name_parts = filename.rsplit(".", 1)

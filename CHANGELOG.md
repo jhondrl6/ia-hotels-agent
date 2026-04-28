@@ -100,6 +100,20 @@ PATCH Forense AmaziliaHotel: Correccion de 4 issues criticos identificados en au
 - sync_versions.py ejecutado | run_all_validations.py --quick: 4/4 PASSED
 - Veredicto: v4.36.0 certificada para produccion
 
+#### FASE-1-AMAZILIA-CORRECCION (2026-04-28) — VALIDATE-v2 Fixes
+Correccion de hallazgos verificados en auditoria forense VALIDATE-v2 para amaziliahotel.com:
+
+- **M3**: `asset_metadata.py` L151-173 — `can_use` unificado: `preflight_status != "BLOCKED"` en lugar de hardcoded "usable"
+- **H1**: `v4_asset_orchestrator.py` — Handler `local_content_page` agregado para detectar paginas de contenido local (no solo geo anchored)
+- **N1**: `v4_diagnostic_generator.py` L1307 — Header dual removido, un solo header "Métricas de Acceso para IA"
+- **M4**: `conditional_generator.py` — Paths con forward slashes (no backslash) para compatibilidad Windows/Linux
+- **T4**: `v4_diagnostic_generator.py` — GEO timing async/await corregido: flujo GEO ahora se completa antes del merge
+- **slug bug**: `conditional_generator.py` L621 — `output_name` con `{slug}` literal substituido por valor real
+
+Archivos modificados: `conditional_generator.py`, `asset_metadata.py`, `v4_diagnostic_generator.py`, `v4_asset_orchestrator.py`, `main.py`
+
+Resultado: v4complete Amazilia Hotel — 13/13 assets, coherence 0.88, "Salud Tecnica GEO" visible en diagnostico
+
 ## [4.35.0] - 2026-04-23
 
 ### Objetivo

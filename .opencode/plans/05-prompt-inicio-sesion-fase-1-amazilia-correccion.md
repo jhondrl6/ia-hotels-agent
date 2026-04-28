@@ -14,7 +14,7 @@
 |----------|--------|----------|--------|
 | FASE-1-A | Sesion 1 | Investigar + Fixes (M3, H1, N1, M4, slug bug) | ✅ Completada |
 | FASE-1-B | Sesion 2 | T4 fix arquitectural + v4complete + verificacion | ✅ Completada (2026-04-28) |
-| FASE-1-C | Sesion 3 | Docs cascade (log + sync + 06/09 + validaciones) | ⏳ Pendiente |
+| FASE-1-C | Sesion 3 | Docs cascade (log + sync + 06/09 + validaciones) | ✅ Completada (2026-04-28) |"
 
 **FASE-RELEASE solo se ejecuta cuando FASE-1-A, FASE-1-B y FASE-1-C esten ✅.**
 
@@ -33,7 +33,7 @@ Este proyecto corrige hallazgos verificados contra codigo real y outputs JSON de
 | FASE-PREP (plan maestro) | ✅ Completada | 2026-04-27 |
 | FASE-1-A (fixes) | ✅ Completada | 2026-04-28 |
 | FASE-1-B (T4 + v4complete) | ✅ Completada | 2026-04-28 |
-| FASE-1-C (docs cascade) | ⏳ Pendiente | — |
+| FASE-1-C (docs cascade) | ✅ Completada | 2026-04-28 |"
 
 ### Base Tecnica Disponible
 

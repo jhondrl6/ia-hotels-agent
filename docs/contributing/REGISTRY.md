@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-28
 > **Version actual:** v4.36.0
-> **Total fases completadas:** 173
+> **Total fases completadas:** 174
 
 ---
 
@@ -4327,6 +4327,29 @@ _Ninguno_
 - [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Coherence >= 0.8: 0.88 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1-AMAZILIA-CORRECCION - 2026-04-28
+**Descripcion:** Correccion hallazgos VALIDATE-v2 + T4 fix + v4complete Amazilia Hotel
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `modules/asset_generation/asset_metadata.py` | Asset Metadata |
+| `modules/orchestration/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/orchestration/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
 ---

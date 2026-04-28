@@ -154,23 +154,19 @@ class AssetMetadataEnforcer:
         """
         Determine if asset can be used based on confidence and preflight status.
         
+        M3 FIX: Unify logic with v4_asset_orchestrator.
+        Rule: can_use = true if preflight_status != "BLOCKED"
+        
         Args:
-            confidence_level: The confidence level
-            confidence_score: Numerical score (0.0 - 1.0)
+            confidence_level: The confidence level (unused in unified logic, kept for API compatibility)
+            confidence_score: Numerical score (unused in unified logic, kept for API compatibility)
             preflight_status: Preflight check status
             
         Returns:
             True if asset can be used, False otherwise
         """
-        if preflight_status == "BLOCKED":
-            return False
-        if confidence_level == ConfidenceLevel.CONFLICT:
-            return False
-        if confidence_level == ConfidenceLevel.UNKNOWN:
-            return False
-        if confidence_score < 0.5:
-            return False
-        return True
+        # M3 FIX: Simple unified criterion
+        return preflight_status != "BLOCKED"
 
     def create_metadata(
         self,

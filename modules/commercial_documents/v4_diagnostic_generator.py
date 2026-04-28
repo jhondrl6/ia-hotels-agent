@@ -324,6 +324,7 @@ class V4DiagnosticGenerator:
             coherence_score=coherence_score,
             region=region,
             analytics_data=analytics_data,
+            financial_breakdown=financial_breakdown,
         )
         
         # Store voice readiness values for access via DiagnosticSummary (TAREA-2)
@@ -366,6 +367,7 @@ class V4DiagnosticGenerator:
         coherence_score: Optional[float] = None,
         region: Optional[str] = None,
         analytics_data: Optional[Dict[str, Any]] = None,
+        financial_breakdown: Optional['FinancialBreakdown'] = None,
     ) -> Dict[str, str]:
         """Prepare data for template rendering."""
         
@@ -1302,10 +1304,9 @@ class V4DiagnosticGenerator:
         if not rows:
             return ""
 
+        # N1 FIX: Removed duplicate header. Template provides "### Metricas de Acceso para IA"
         table = """
-## [NEW] Métricas de Optimización para IA
-
-| Métrica | Score | Detalle | Estado |
+|| Métrica | Score | Detalle | Estado ||
 |---------|-------|---------|--------|
 """
         table += "\n".join(rows)

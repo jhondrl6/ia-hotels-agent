@@ -96,7 +96,8 @@ class AssetGenerationResult:
         """Convert absolute path to relative path for portability.
         
         H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
-        Returns relative path when possible.
+        M4 FIX: Normalize all paths to forward slashes for cross-platform JSON output.
+        Returns relative path when possible, always with forward slashes.
         """
         if not path_str:
             return path_str
@@ -105,16 +106,16 @@ class AssetGenerationResult:
             if path.is_absolute():
                 # Try to make relative to current working directory
                 try:
-                    return str(path.relative_to(Path.cwd()))
+                    return str(path.relative_to(Path.cwd())).replace("\\", "/")
                 except ValueError:
                     # If can't make relative to cwd, return just the last 3 parts
                     parts = path.parts
                     if len(parts) > 3:
-                        return str(Path(*parts[-3:]))
-                    return path_str
-            return path_str
+                        return str(Path(*parts[-3:])).replace("\\", "/")
+                    return path_str.replace("\\", "/")
+            return path_str.replace("\\", "/")
         except Exception:
-            return path_str
+            return path_str.replace("\\", "/")
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert result to dictionary."""
@@ -864,10 +865,9 @@ class V4AssetOrchestrator:
             except Exception as e:
                 metadata['content_validation_error'] = str(e)
         
-        # Determine if asset can be used
-        can_use = preflight_status == "PASSED" or (
-            preflight_status == "WARNING" and asset_spec.confidence_level != "CONFLICT"
-        )
+        # M3 FIX: Unify can_use logic with asset_metadata.py
+        # Rule: can_use = true if preflight_status != "BLOCKED"
+        can_use = preflight_status != "BLOCKED"
 
         generated_filename = Path(file_path).name if file_path else f"{asset_spec.asset_type}_failed.html"
         delivery_filename = self._compute_delivery_filename(generated_filename)
