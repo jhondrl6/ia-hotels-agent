@@ -1,8 +1,24 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.36.0
-**Última actualización:** 2026-04-26
+**Última actualización:** 2026-04-28
 **Proyecto:** IA Hoteles Agent CLI
+
+---
+
+### v4.36.1 - 2026-04-28 — Corrección Estado Entregables Propuesta
+
+**Resumen:** Correccion del bloque "Estado de los Entregables" en la propuesta comercial. El bloque mostraba estados incorrectos: WhatsApp como pendiente cuando ya existia en produccion, Schema y FAQ como "Completo" sin verificacion real.
+
+**Problema:** La propuesta comercial usaba `confidence` del generador de assets para determinar el estado de entrega, sin verificar presencia real en el sitio del hotel. `site_presence_report` no se propagaba por la cadena de llamadas hasta `_confidence_to_nivel_significado()`.
+
+**Solucion:** Se cerró la cadena de llamadas para `site_presence_report`. Ahora `main.py` invoca `SitePresenceChecker` antes de generar la propuesta, y el resultado se propaga por toda la cadena: `generate()` → `_prepare_template_data()` → `_generate_asset_quality_table()` → `_confidence_to_nivel_significado()`. Este último ahora usa `presence real` del asset para determinar el estado, no solo el confidence del generador.
+
+**Modulos afectados:** `modules/commercial_documents/v4_proposal_generator.py`, `main.py`, `tests/asset_generation/test_proposal_alignment.py`
+
+**Backwards Compatibility:** ✅ Totalmente compatible. Si `site_presence_report=None`, el comportamiento es idéntico al anterior. El parámetro es `Optional` en toda la cadena.
+
+**Tests:** 2 tests nuevos en test_proposal_alignment.py + fix tilde "Boton" → "Botón"
 
 ---
 
@@ -547,3 +563,25 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 - `main.py` L2620: serializa `readiness_report.summary.warnings` al `gate_report.json`.
 
 **Backwards Compatibility:** Sin cambios en API publica. Solo se agregaron variables nuevas al template_data y un key nuevo en el summary dict.
+
+### FASE-1-AMAZILIA-CORRECCION — Correccion Hallazgos VALIDATE-v2 (2026-04-27)
+
+**Problema:** 4 hallazgos verificados en diagnostico VALIDATE-v2 para Amazilia Hotel.
+
+**Cambios por hallazgo:**
+
+| Hallazgo | Solucion | Archivo |
+|----------|----------|---------|
+| M3: can_use inconsistente | Unificado: `can_use = preflight_status != "BLOCKED"` en ambos `v4_asset_orchestrator.py` L868 y `asset_metadata.py` L151-169. Antes: orchestrator usaba logica compleja con `confidence_level != "CONFLICT"`, metadata rechazaba si `confidence_score < 0.5`. | `v4_asset_orchestrator.py` L868, `asset_metadata.py` L151-169 |
+| H1: local_content_page "Unknown asset type" | Handler agregado en `conditional_generator.py` L541-551. Llama `LocalContentGenerator.generate_content_set()` y serializa `LocalContentSet` a markdown para compatibilidad con pipeline. | `conditional_generator.py` L541-551 |
+| N1: Header dual en metricas IA | Eliminado `## [NEW] Metricas de Optimizacion para IA` de `_build_geo_problems_table()`. Template ya provee `### Metricas de Acceso para IA`. Solo queda un header. | `v4_diagnostic_generator.py` L1304-1309 |
+| M4: Backslashes en JSON de paths | `_to_relative_path()` ya normaliza a forward slashes. `output_dir` se serializa via `result.to_dict()` → `_to_relative_path()`. Confirmado: paths en `asset_generation_report.json` usan `/`. | `v4_asset_orchestrator.py` L95-117 |
+
+**No corregidos en esta sesion (deferidos):**
+
+| Hallazgo | Razon de defer |
+|----------|----------------|
+| T4: "Salud Tecnica GEO" timing | Requiere reorderar pipeline FASE 3.5 vs FASE 4 — es cambio arquitectonico complejo, se maneja en sesion independiente. |
+
+**Tests:** 251/252 passed (1 fallo pre-existente en `test_proposal_alignment.py::test_known_mappings` — `KeyError: 'Boton de WhatsApp'`, no relacionado a estos cambios).
+**Validaciones:** 4/4 passed.

@@ -1,62 +1,71 @@
-# Documentacion Post-Proyecto — Trazabilidad Amazilia Hotel
+# Documentacion Post-Proyecto
 
-> Version: v1.1 | Actualizado: 2026-04-27
+**Proyecto**: FASE-1-AMAZILIA-CORRECCION-ESTADO-ENTREGABLES
+**Version**: 4.36.0 → 4.36.1
 
-## Seccion A: Modulos Afectados
+---
 
-| Modulo | Fases | Cambio |
-|--------|-------|--------|
-| `modules/quality_gates/publication_gates.py` | RAIZ, PATCH | WARNING path, financial_sources, 9 gates |
-| `modules/commercial_documents/v4_diagnostic_generator.py` | PATCH | Trazabilidad header, positive_findings |
-| `modules/commercial_documents/templates/diagnostico_v6_template.md` | PATCH | Secciones Validacion + Trazabilidad |
-| `main.py` | PATCH | seo_score en JSON report |
-| `modules/financial_engine/no_defaults_validator.py` | RAIZ | Sources alignment |
-| `modules/asset_generation/v4_asset_orchestrator.py` | REFINEMENT | GEO source |
+## Seccion A: Modulos Nuevos
 
-## Seccion B: Archivos de Plan
+> Ninguno. Este proyecto solo modifica modulos existentes.
 
-| Archivo | Fase |
-|---------|------|
-| `.opencode/context/fase-trazabilidad-context.md` | Contexto global |
-| `.opencode/plans/05-prompt-inicio-sesion-fase-TRAZABILIDAD-VALIDATE-v2.md` | VALIDATE-v2 |
-| `.opencode/plans/dependencias-fases.md` | Global |
-| `.opencode/plans/06-checklist-implementacion.md` | Global |
-| `.opencode/plans/README.md` | Global |
-| `.opencode/plans/VALIDATION_RESULTS.md` | VALIDATE-v2 |
+---
 
-## Seccion C: Versiones
+## Seccion B: Modulos Modificados
 
-| Version | Codename | Fecha | Fases |
-|---------|----------|-------|-------|
-| v4.35.1 | Trazabilidad Publication Gates | 2026-04-25 | DOCS, RAIZ, VALIDATE, PATCH+SEO, REFINEMENT |
-| v4.36.0 | PATCH Forense AmaziliaHotel | 2026-04-26 | FASE-A/B/C/D |
-| v4.36.0 | (validacion) | 2026-04-27 | VALIDATE-v2 (sin bump) |
+| Modulo | Archivo | Cambio |
+|--------|---------|--------|
+| commercial_documents | v4_proposal_generator.py | Cierre de call chain site_presence_report (generate → _prepare_template_data → _generate_asset_quality_table → _confidence_to_nivel_significado) |
+| main | main.py | Invocacion SitePresenceChecker antes de generar propuesta + pasar site_presence_report |
+| tests | test_proposal_alignment.py | Fix tilde "Boton" → "Botón" + 2 tests nuevos de presencia verificada |
+| postprocessors | document_quality_gate.py | Fix regex L245: lookbehind negativo `(?<!\d)` para evitar falso positivo "70% de confianza" |
 
-## Seccion D: Metricas
+---
 
-| Metrica | Valor |
-|---------|-------|
-| Hallazgos totales | 18 |
-| Hallazgos corregidos | 15 |
-| Hallazgos diferidos | 3 |
-| Bugs corregidos | 5/5 |
-| Issues post-VALIDATE | 4/4 |
-| Tests (al 2026-04-25) | 2224 funciones, 140 archivos |
-| Coherence score (v4.36.0) | 0.893 |
-| Publication ready | READY_FOR_PUBLICATION |
-| Gates ejecutados | 9/9 |
+## Seccion C: Tests
 
-## Seccion E: Checklist de Documentacion
+| Test | Archivo | Estado |
+|------|---------|--------|
+| test tilde WhatsApp | test_proposal_alignment.py | ✅ Agregado (FASE-1A) |
+| test presence_verified=True | test_proposal_alignment.py | ✅ Agregado (FASE-1A) |
+| test confidence sin presencia | test_proposal_alignment.py | ✅ Agregado (FASE-1A) |
 
-- [x] Contexto creado (fase-trazabilidad-context.md)
-- [x] Plan creado (05-prompt-...-VALIDATE-v2.md)
-- [x] Dependencias actualizadas (dependencias-fases.md)
-- [x] Checklist actualizado (06-checklist-implementacion.md)
-- [x] README actualizado
-- [x] VALIDATION_RESULTS.md creado
-- [x] log_phase_completion.py ejecutado
-- [x] sync_versions.py ejecutado
-- [x] run_all_validations.py --quick (4/4 PASSED)
-- [x] REGISTRY.md actualizado
-- [ ] CHANGELOG.md actualizado (pendiente commit)
-- [ ] GUIA_TECNICA.md actualizada (no requiere — sin cambios arquitectonicos)
+---
+
+## Seccion D: Metricas Acumulativas
+
+| Metrica | Antes | Despues |
+|---------|-------|---------|
+| Tests totales | 2248 | 2250+ |
+| Regresiones | 0 | 0 |
+| coherence Amaziliahotel | 0.893 | 0.893 |
+| WhatsApp en propuesta | "Incluido en su kit" (incorrecto) | "Verificado en sitio" ✅ |
+| Schema en propuesta | "Completo" (incorrecto) | "Listo para implementar" ✅ |
+| FAQ en propuesta | "Completo" (incorrecto) | "Listo para implementar" ✅ |
+| content_quality gate | ❌ FALSO POSITIVO (regex) | ✅ PASSED |
+
+---
+
+## Seccion E: Archivos Afiliados
+
+| Archivo | Actualizado | Fase |
+|---------|------------|------|
+| docs/CHANGELOG.md | ✅ (entrada [4.36.1]) | FASE-1C |
+| docs/GUIA_TECNICA.md | ✅ (nota v4.36.1) | FASE-1C |
+| docs/contributing/REGISTRY.md | ✅ | FASE-1B-PATCH (via log_phase_completion.py) |
+| VERSION.yaml | ✅ | sincronizado (v4.36.0) |
+| AGENTS.md | ✅ | sincronizado (v4.36.0) |
+| README.md | ✅ | sincronizado (v4.36.0) |
+| .opencode/plans/README.md | ✅ | FASE-1B-PATCH |
+| .opencode/plans/dependencias-fases.md | ✅ | FASE-1B-PATCH |
+
+---
+
+## Historial de Actualizaciones
+
+| Fecha | Seccion | Fase | Responsable |
+|-------|---------|------|-------------|
+| 2026-04-28 | Creacion | Preparacion | Hermes (orquestador) |
+| 2026-04-28 | Seccion B, D, E | FASE-1A | Hermes |
+| 2026-04-28 | Seccion B (regex fix), D (content_quality), E (REGISTRY) | FASE-1B-PATCH | Hermes |
+| 2026-04-28 | Seccion E: CHANGELOG + GUIA_TECNICA | FASE-1C | Hermes |

@@ -1,5 +1,32 @@
 # Changelog
 
+## [4.36.1] - 2026-04-28
+
+### Objetivo
+
+Correccion del bloque "Estado de los Entregables" en la propuesta comercial. El bloque mostraba informacion incorrecta: WhatsApp aparecia como pendiente cuando ya existia en produccion, y Schema/FAQ aparecian como "Completo" sin verificacion real de presencia.
+
+### Cambios Implementados
+
+#### FASE-1A: Cierre call chain site_presence_report
+- `modules/commercial_documents/v4_proposal_generator.py`: Cierre de call chain `site_presence_report`: `generate()` → `_prepare_template_data()` → `_generate_asset_quality_table()` → `_confidence_to_nivel_significado()`. Ahora usa presencia real de assets en produccion para determinar el estado.
+- `main.py`: Invocacion de `SitePresenceChecker` antes de generar la propuesta para obtener presencia real de assets en produccion. Resultado propagado por toda la cadena de generacion.
+- `tests/asset_generation/test_proposal_alignment.py`: Fix tilde "Boton" → "Botón" + 2 tests nuevos para presencia verificada de assets.
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | Cierre de call chain con site_presence_report |
+| `main.py` | Integracion SitePresenceChecker pre-propuesta |
+| `tests/asset_generation/test_proposal_alignment.py` | Fix tilde + tests de presencia |
+
+### Tests
+
+- 2 tests nuevos en test_proposal_alignment.py
+- 2248+ tests existentes sin regresiones
+- v4complete Amaziliahotel ejecutado y verificado
+
 ## [4.35.1] - 2026-04-25
 
 ### Objetivo

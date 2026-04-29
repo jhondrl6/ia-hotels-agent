@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-04-28
 > **Version actual:** v4.36.0
-> **Total fases completadas:** 174
+> **Total fases completadas:** 179
 
 ---
 
@@ -4346,6 +4346,98 @@ _Ninguno_
 | `modules/orchestration/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
 | `modules/orchestration/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
 | `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1B - 2026-04-28
+**Descripcion:** v4complete para Amaziliahotel completado. Gate content_quality falló por COP COP en diagnóstico (5/7 fixes aplicados). Estados de entregables en propuesta CORRECTOS.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1B - 2026-04-28
+**Descripcion:** Completada: COP COP fix (template L125) + confidence_score default Scenario + urgencia_content guard for 0%. Gate NOT_READY por bug estructural ContentScrubber pre-T4FIX (diagnostico STALE validado). Fix raiz: reubicar ContentScrubber post-T4FIX en main.py.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1B-PATCH - 2026-04-28
+**Descripcion:** Fix regex content_quality gate: lookbehind negativo en document_quality_gate.py L245 (0% falsa deteccion en 70% de confianza). v4complete re-ejecutado: content_quality PASSED, publication_ready=true.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/postprocessors/document_quality_gate.py` | Document Quality Gate |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.893 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1A - 2026-04-28
+**Descripcion:** Cerrar call chain site_presence_report + integrar SitePresenceChecker en main.py + fix tilde test
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `main.py` | Main |
+| `tests/asset_generation/test_proposal_alignment.py` | Test Proposal Alignment |
+
+### Validaciones
+- [x] Tests passing (2)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1B - 2026-04-28
+**Descripcion:** v4complete Amaziliahotel ejecutado + propuesta verificada con estados correctos de entregables
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
 
 ### Validaciones
 - [x] Tests passing
