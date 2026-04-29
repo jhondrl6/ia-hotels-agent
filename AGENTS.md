@@ -1,8 +1,8 @@
-<!-- agents_version: 4.36.0 | last_update: 2026-04-28 -->
+<!-- agents_version: 4.37.0 | last_update: 2026-04-29 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.36.0 -- PATCH Forense AmaziliaHotel COMPLETADO**
+> **v4.37.0 -- PATCH Forense AmaziliaHotel v2 COMPLETADO**
 
 ---
 
@@ -101,7 +101,7 @@ Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 2224 funciones, 140 archivos, 0 regresion |
+| **Tests** | 2251 funciones, 185 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -176,7 +176,7 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `observability/` | Métricas y calibración | Todos |
 | `observability/dashboard.py` | Dashboard de calidad | Todos |
 | `observability/calibration.py` | Calibración de umbrales de confianza | Todos |
-| `modules/quality_gates/` | Gates: técnico, comercial, financiero, coherencia, publicación | v4complete |
+| `modules/quality_gates/` | 9 publication gates (6 blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics; 3 advisory: content_quality, asset_confidence, proposal_asset_alignment) | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
@@ -343,7 +343,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (1782 funciones, 140 archivos)
+# Todas las pruebas (2251 funciones, 185 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (52 tests)
@@ -358,7 +358,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (1782 funciones totales)
+### Cobertura por Modulo (2251 funciones totales)
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
@@ -435,7 +435,7 @@ iah-cli/
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
 │   └── validation/             # Validaciones adicionales
-├── tests/                      # Suite de pruebas (1782 funciones)
+├── tests/                      # Suite de pruebas (2251 funciones, 185 archivos)
 │   ├── regression/             # Regresion permanente (52 tests)
 │   ├── data_validation/
 │   ├── financial_engine/

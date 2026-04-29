@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.36.0
-**Última actualización:** 2026-04-28
+**Versión:** v4.37.0
+**Última actualización:** 2026-04-29
 **Proyecto:** IA Hoteles Agent CLI
 
 ---
@@ -585,3 +585,21 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 
 **Tests:** 251/252 passed (1 fallo pre-existente en `test_proposal_alignment.py::test_known_mappings` — `KeyError: 'Boton de WhatsApp'`, no relacionado a estos cambios).
 **Validaciones:** 4/4 passed.
+
+## Notas de Cambios v4.37.0
+
+**Módulos afectados**: `v4_proposal_generator`, `v4_diagnostic_generator`, `two_phase_flow`, `scenario_calculator`, `version_consistency_checker`
+
+**Problema**: Auditoría forense (ContextMv2.md) reveló 2 bugs de credibilidad comercial y 6 hardcodes/stubs que producían datos falsos en la propuesta. version_consistency_checker.py crasheaba en Windows cp1252. VERSION.yaml desincronizado de CHANGELOG.
+
+**Solución**:
+- BUG-1/2: Corrección de formato ROI y explicación de pain_ratio en proyección financiera
+- H-1→H-6: Eliminación de placeholders y stubs silenciosos; datos ahora provienen de fuentes reales o se marcan explícitamente como no disponibles
+- Unicode fix: sys.stdout.reconfigure(encoding="utf-8") siguiendo patrón de log_phase_completion.py
+- derive_version_from_changelog.py: Nuevo script para derivar VERSION.yaml desde CHANGELOG
+
+**Backwards compatibility**: Total. Los fixes son incrementales. Templates existentes siguen funcionando. Los stubs que antes retornaban False ahora retornan estado real o marcador textual.
+
+**Deuda técnica documentada**: 19 hardcodes (H-9→H-27) en pricing, escenarios y fallbacks catalogados en docs/technical_debt/ para proyecto futuro de extracción de configuración.
+
+**Tests**: ~2363 tests sin regresiones. v4complete verificado con coherence >= 0.80.

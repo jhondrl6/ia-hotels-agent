@@ -550,7 +550,7 @@ class TwoPhaseOrchestrator:
                     "name": "whatsapp_number",
                     "type": "tel",
                     "label": "Numero de WhatsApp",
-                    "placeholder": "+57 300 123 4567",
+                    "placeholder": "[No configurado]",  # FASE-PATCH-B: placeholder real en fase de contacto
                     "required": False,
                     "validation": {
                         "pattern": "^(\\+?57)?[\\s\\-]?[0-9]{10}$",

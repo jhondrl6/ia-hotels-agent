@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-28
-> **Version actual:** v4.36.0
-> **Total fases completadas:** 179
+> **Ultima actualizacion:** 2026-04-29
+> **Version actual:** v4.37.0
+> **Total fases completadas:** 185
 
 ---
 
@@ -4432,6 +4432,124 @@ _Ninguno_
 
 ## FASE-1B - 2026-04-28
 **Descripcion:** v4complete Amaziliahotel ejecutado + propuesta verificada con estados correctos de entregables
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PATCH-A - 2026-04-29
+**Descripcion:** Fix BUG-1 (ROI X), BUG-2 (pain_ratio explicacion), H-3/H-4/H-5 (stubs diagnosticos), unicode crash en version_consistency_checker
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `scripts/version_consistency_checker.py` | Version Consistency Checker |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PATCH-B - 2026-04-29
+**Descripcion:** Fix H-1 (web_score placeholder), H-2 (telefono placeholder), H-6 (Evidence Tier hardcodeado)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/orchestration_v4/two_phase_flow.py` | Two Phase Flow |
+| `modules/financial_engine/scenario_calculator.py` | Scenario Calculator |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PATCH-A - 2026-04-29
+**Descripcion:** Fix BUG-1 (ROI X), BUG-2 (pain_ratio), H-3/H-4/H-5 (stubs), unicode crash
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `scripts/version_consistency_checker.py` | Version Consistency Checker |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PATCH-B - 2026-04-29
+**Descripcion:** Fix H-1 (web_score placeholder), H-2 (phone placeholder), H-6 (Evidence Tier)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/orchestration_v4/two_phase_flow.py` | Two Phase Flow |
+| `modules/financial_engine/scenario_calculator.py` | Scenario Calculator |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PATCH-C - 2026-04-29
+**Descripcion:** v4complete verification - todos los fixes reflejados en output
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PATCH-D - 2026-04-29
+**Descripcion:** Documentation + Version Sync + Technical Debt: derive_version_from_changelog.py creado, AGENTS.md H-7/H-8 corregidos, hardcodes_audit H-9→H-27 catalogado, REGISTRY PATCH-A/B/C actualizado
 
 ### Archivos Nuevos
 _Ninguno_

@@ -1,7 +1,7 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-1-AMAZILIA-CORRECCION",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-1-AMAZILIA-CORRECCION",
-  "modules/commercial_documents/v4_proposal_generator.py": "FASE-1A",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-PATCH-A",
+  "modules/commercial_documents/v4_proposal_generator.py": "FASE-PATCH-B",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-A",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-E",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
@@ -56,7 +56,7 @@
   "tests/commercial_documents/test_pain_solution_mapper.py": "FASE-D",
   "modules/commercial_documents/coherence_validator.py": "FASE-E",
   "modules/scrapers/web_scraper.py": "FASE-E",
-  "modules/financial_engine/scenario_calculator.py": "FASE-K",
+  "modules/financial_engine/scenario_calculator.py": "FASE-PATCH-B",
   "tests/financial_engine/test_scenario_calculator.py": "FASE-B",
   "modules/financial_engine/adr_resolution_wrapper.py": "FASE-I",
   "modules/validation/coherence_validator.py": "FASE-E",
@@ -112,7 +112,7 @@
   "modules/commercial_documents/service_catalog.py": "FASE-VALIDATE-RC",
   "tests/commercial_documents/test_proposal_confidence_disclosure.py": "FASE-A",
   "tests/commercial_documents/test_proposal_dynamic.py": "FASE-D",
-  "modules/orchestration_v4/two_phase_flow.py": "FASE-VALIDATE-RC",
+  "modules/orchestration_v4/two_phase_flow.py": "FASE-PATCH-B",
   "modules/asset_generation/whatsapp_conflict_guide.py": "FASE-VALIDATE-RC",
   ".agents/workflows/v4_complete.md": "FASE-TRAZABILIDAD-DOCS",
   "diagnostico_v6_template.md": "FASE-TRAZABILIDAD-RAIZ",
@@ -120,5 +120,6 @@
   "modules/pain_solution_mapper.py": "FASE-C",
   "modules/asset_generation/asset_metadata.py": "FASE-1-AMAZILIA-CORRECCION",
   "modules/orchestration/v4_diagnostic_generator.py": "FASE-1-AMAZILIA-CORRECCION",
-  "modules/orchestration/v4_asset_orchestrator.py": "FASE-1-AMAZILIA-CORRECCION"
+  "modules/orchestration/v4_asset_orchestrator.py": "FASE-1-AMAZILIA-CORRECCION",
+  "scripts/version_consistency_checker.py": "FASE-PATCH-A"
 }

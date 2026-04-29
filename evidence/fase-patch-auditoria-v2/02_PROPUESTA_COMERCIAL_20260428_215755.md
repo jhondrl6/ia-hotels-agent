@@ -1,16 +1,16 @@
 ---
-generated_at: 2026-04-24 14:37:36
+generated_at: 2026-04-28 21:57:55
 version: 4.0.0
 hotel_id: amaziliahotel
 document_type: PROPUESTA_V6
 generator: IA_Hoteles_v4
-valid_until: 2026-05-09
+valid_until: 2026-05-13
 ---
 
 # PROPUESTA COMERCIAL
 ## Amaziliahotel - mts a la derecha, Via Pereira a #Entrada 8 Cafelia, 600, CERRITOS, Pereira, Risaralda, Colombia
 
-**Fecha**: 2026-04-24 14:37:36  
+**Fecha**: 2026-04-28 21:57:55  
 **Válido por 15 días** (cupo limitado)
 
 ---
@@ -31,7 +31,7 @@ Cada mes, viajeros buscan hoteles en Eje Cafetero. Pero no lo encuentran.
 
 ---
 
-## 😌 LA SOLUCIÓN: Nosotros hacemos todo. Usted solo atiende huespedes.
+## 😌 LA SOLUCIÓN: Nosotros hacemos todo. Usted solo atiende huéspedes.
 
 Le proponemos un plan integral donde **nosotros implementamos todo** — usted no necesita saber de tecnología, SEO ni Google.
 
@@ -45,9 +45,9 @@ Le proponemos un plan integral donde **nosotros implementamos todo** — usted n
 |----------|-------------|
 | **Google Maps Optimizado** | Aparece primero cuando alguien busca 'hotel cerca de...' |
 | **SEO Local** | Para aparecer en las primeras posiciones de Google tradicional |
-| **Botón de WhatsApp** | Sus huespedes reservan con 1 clic desde su web |
+| **Botón de WhatsApp** | Sus huéspedes reservan con 1 clic desde su web |
 | **Datos Estructurados** | Información que Google y la IA leen automáticamente |
-| **Página de FAQ** | Sus huespedes encuentran respuestas sin salir de su web |
+| **Página de FAQ** | Sus huéspedes encuentran respuestas sin salir de su web |
 | **Meta Tags Sociales (Open Graph)** | Sus fotos brillan cuando alguien comparte su link en redes |
 | **Informe Mensual** | Reporte mensual con metricas de rendimiento y oportunidades |
 | **Optimización para IA Generativa** | Aparece cuando clientes preguntan a ChatGPT/Gemini 'dónde hospedarme en [región]' |
@@ -66,11 +66,11 @@ Cada entregable incluye un nivel de preparación:
 |------------|-------|---------------|
 | Google Maps Optimizado | ⚠️ En preparacion | Datos pendientes del cliente |
 | SEO Local | ⚠️ En preparacion | Datos pendientes del cliente |
-| Botón de WhatsApp | ⏳ Incluido en su kit | Preparacion posterior a la firma |
-| Datos Estructurados | ⚠️ En preparacion | Datos pendientes del cliente |
+| Botón de WhatsApp | ✅ Verificado en sitio | Ya existe en su web - nosotros lo entregamos |
+| Datos Estructurados | ⚠️ Listo para implementar | Requiere confirmacion post-firma |
 | Informe Mensual | ⚠️ En preparacion | Datos pendientes del cliente |
-| Página de FAQ | ✅ Completo | Listo para implementar |
-| Meta Tags Sociales (Open Graph) | ⏳ Incluido en su kit | Preparacion posterior a la firma |
+| Página de FAQ | ⚠️ Listo para implementar | Requiere confirmacion post-firma |
+| Meta Tags Sociales (Open Graph) | ⚠️ En preparacion | Datos pendientes del cliente |
 
 ---
 

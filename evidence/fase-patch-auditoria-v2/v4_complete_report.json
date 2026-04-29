@@ -1,0 +1,352 @@
+{
+  "v4_complete": true,
+  "hotel_name": "Amaziliahotel",
+  "url": "https://amaziliahotel.com/",
+  "region": "Eje Cafetero",
+  "hotel_id": "hotel_amaziliahotel.com_",
+  "phases": {
+    "phase_1_hook": {
+      "completed": true,
+      "progress": 0
+    },
+    "phase_2_validation": {
+      "whatsapp_status": "VERIFIED",
+      "whatsapp_confidence": "verified"
+    },
+    "phase_3_scenarios": {
+      "conservative": 5076000.0,
+      "realistic": 2610000.0,
+      "optimistic": -189000.0,
+      "expected": 2610000.0
+    },
+    "phase_4_publication_gates": {
+      "ready": true,
+      "status": "READY_FOR_PUBLICATION",
+      "gate_results": [
+        {
+          "gate_name": "hard_contradictions",
+          "passed": true,
+          "status": "PASSED",
+          "message": "No hard contradictions detected (count: 0)",
+          "value": 0,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "evidence_coverage",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Evidence coverage at 95.0% (threshold: 95%)",
+          "value": 0.95,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "financial_validity",
+          "passed": true,
+          "status": "WARNING",
+          "message": "Financial data uses default/legacy values — Tier C evidence",
+          "value": true,
+          "suggestion": "Run onboarding with real data to improve evidence tier",
+          "details": {
+            "default_sources": {
+              "adr_cop": "legacy_hardcode",
+              "occupancy_rate": "default",
+              "direct_channel_percentage": "default"
+            }
+          }
+        },
+        {
+          "gate_name": "coherence",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Coherence score 0.88 meets threshold 0.8",
+          "value": 0.883076923076923,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "critical_recall",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Critical recall at 100.0% (threshold: 90%)",
+          "value": 1.0,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "ethics",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Ethics validation passed",
+          "value": null,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "content_quality",
+          "passed": true,
+          "status": "PASSED",
+          "message": "Document quality checks passed: no issues detected",
+          "value": 1.0,
+          "suggestion": "",
+          "details": {}
+        },
+        {
+          "gate_name": "asset_confidence",
+          "passed": true,
+          "status": "WARNING",
+          "message": "10 asset(s) below confidence threshold (0.7)",
+          "value": 0.5807692307692307,
+          "suggestion": "Run enrichment phase to improve asset quality",
+          "details": {
+            "total_assets": 13,
+            "above_threshold": 3,
+            "below_threshold": 10,
+            "low_confidence_assets": [
+              {
+                "type": "optimization_guide",
+                "score": 0.5
+              },
+              {
+                "type": "local_content_page",
+                "score": 0.5
+              },
+              {
+                "type": "geo_playbook",
+                "score": 0.5
+              },
+              {
+                "type": "review_plan",
+                "score": 0.5
+              },
+              {
+                "type": "analytics_setup_guide",
+                "score": 0.5
+              },
+              {
+                "type": "indirect_traffic_optimization",
+                "score": 0.5
+              },
+              {
+                "type": "og_tags_guide",
+                "score": 0.5
+              },
+              {
+                "type": "open_graph",
+                "score": 0.5
+              },
+              {
+                "type": "org_schema",
+                "score": 0.5
+              },
+              {
+                "type": "monthly_report",
+                "score": 0.5
+              }
+            ]
+          }
+        },
+        {
+          "gate_name": "proposal_asset_alignment",
+          "passed": true,
+          "status": "PASSED",
+          "message": "All 7 promised services have assets (3/7 aligned, 1 already in production)",
+          "value": 0.42857142857142855,
+          "suggestion": "",
+          "details": {
+            "total_services": 6,
+            "aligned_count": 2,
+            "missing_count": 0,
+            "low_quality_count": 4,
+            "alignment_percentage": 0.3333333333333333,
+            "all_aligned": true,
+            "aligned": [
+              {
+                "service": "Datos Estructurados",
+                "asset": "hotel_schema",
+                "confidence": 0.85
+              },
+              {
+                "service": "Página de FAQ",
+                "asset": "faq_page",
+                "confidence": 0.85
+              }
+            ],
+            "missing": [],
+            "low_quality": [
+              {
+                "service": "Google Maps Optimizado",
+                "asset": "geo_playbook",
+                "confidence": 0.5,
+                "message": "Asset 'geo_playbook' has low confidence (0.50 < 0.7)"
+              },
+              {
+                "service": "SEO Local",
+                "asset": "optimization_guide",
+                "confidence": 0.5,
+                "message": "Asset 'optimization_guide' has low confidence (0.50 < 0.7)"
+              },
+              {
+                "service": "Informe Mensual",
+                "asset": "monthly_report",
+                "confidence": 0.5,
+                "message": "Asset 'monthly_report' has low confidence (0.50 < 0.7)"
+              },
+              {
+                "service": "Meta Tags Sociales (Open Graph)",
+                "asset": "open_graph",
+                "confidence": 0.5,
+                "message": "Asset 'open_graph' has low confidence (0.50 < 0.7)"
+              }
+            ],
+            "present_in_production": [
+              {
+                "service": "Botón de WhatsApp",
+                "asset": "whatsapp_button",
+                "presence_verified": true,
+                "presence_status": "exists"
+              }
+            ],
+            "redundant": []
+          }
+        }
+      ],
+      "blocking_issues": []
+    },
+    "phase_5_consistency_check": {
+      "is_consistent": true,
+      "hard_conflicts": 0,
+      "soft_conflicts": 0,
+      "confidence_score": 0.8,
+      "inconsistencies": []
+    }
+  },
+  "modules_used": [
+    "orchestration_v4.OnboardingController",
+    "data_validation.CrossValidator",
+    "data_validation.MetadataValidator",
+    "financial_engine.ScenarioCalculator",
+    "auditors.V4ComprehensiveAuditor",
+    "quality_gates.publication_gates"
+  ],
+  "coherence_score": 0.8933333333333333,
+  "assets_generated": [
+    {
+      "asset_type": "hotel_schema",
+      "filename": "ESTIMATED_hotel_schema_20260429_133908.json",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\hotel_schema\\ESTIMATED_hotel_schema_20260429_133908.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 0.85
+    },
+    {
+      "asset_type": "optimization_guide",
+      "filename": "ESTIMATED_guia_optimizacion_20260429_133908.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\optimization_guide\\ESTIMATED_guia_optimizacion_20260429_133908.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "llms_txt",
+      "filename": "ESTIMATED_llms_20260429_133908.txt",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\llms_txt\\ESTIMATED_llms_20260429_133908.txt",
+      "preflight_status": "PASSED",
+      "confidence_score": 0.85
+    },
+    {
+      "asset_type": "local_content_page",
+      "filename": "ESTIMATED_contenido_local__20260429_133909.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\local_content_page\\ESTIMATED_contenido_local__20260429_133909.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "faq_page",
+      "filename": "ESTIMATED_faqs_20260429_133909.json",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\faq_page\\ESTIMATED_faqs_20260429_133909.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 0.85
+    },
+    {
+      "asset_type": "geo_playbook",
+      "filename": "ESTIMATED_geo_playbook_20260429_133909.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\geo_playbook\\ESTIMATED_geo_playbook_20260429_133909.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "review_plan",
+      "filename": "ESTIMATED_plan_reviews_20260429_133909.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\review_plan\\ESTIMATED_plan_reviews_20260429_133909.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "analytics_setup_guide",
+      "filename": "ESTIMATED_guia_configuracion_ga4_20260429_133909.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\analytics_setup_guide\\ESTIMATED_guia_configuracion_ga4_20260429_133909.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "indirect_traffic_optimization",
+      "filename": "ESTIMATED_optimizacion_trafico_indirecto_20260429_133909.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\indirect_traffic_optimization\\ESTIMATED_optimizacion_trafico_indirecto_20260429_133909.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "og_tags_guide",
+      "filename": "ESTIMATED_guia_og_tags_20260429_133909.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\og_tags_guide\\ESTIMATED_guia_og_tags_20260429_133909.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "open_graph",
+      "filename": "ESTIMATED_open_graph_meta_20260429_133909.html",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\open_graph\\ESTIMATED_open_graph_meta_20260429_133909.html",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "org_schema",
+      "filename": "ESTIMATED_org_schema_20260429_133909.json",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\org_schema\\ESTIMATED_org_schema_20260429_133909.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    },
+    {
+      "asset_type": "monthly_report",
+      "filename": "ESTIMATED_informe_mensual_20260429_133909.md",
+      "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\amaziliahotel\\monthly_report\\ESTIMATED_informe_mensual_20260429_133909.md",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5
+    }
+  ],
+  "financial_data": {
+    "scenarios": {
+      "conservative": 5076000.0,
+      "realistic": 2610000.0,
+      "optimistic": -189000.0
+    },
+    "expected_monthly": 2610000.0
+  },
+  "seo_score": 25,
+  "pricing": {
+    "monthly_price_cop": 130500.0,
+    "tier": "boutique"
+  },
+  "analytics": {
+    "ga4_available": false,
+    "ga4_status": "⚠️ No configurado (use --ga4-property-id para conectar)",
+    "ga4_error": null,
+    "profound_available": false,
+    "profound_status": "⚠️ No disponible en esta version (API pendiente)",
+    "semrush_available": false,
+    "semrush_status": "⚠️ No disponible en esta version (API pendiente)",
+    "missing_credentials": [],
+    "is_complete": false,
+    "timestamp": "2026-04-29T13:39:06.726527"
+  }
+}

@@ -1,16 +1,16 @@
 ---
-generated_at: 2026-04-24 19:08:28
+generated_at: 2026-04-29 13:39:12
 version: 4.0.0
 hotel_id: amaziliahotel
 document_type: PROPUESTA_V6
 generator: IA_Hoteles_v4
-valid_until: 2026-05-09
+valid_until: 2026-05-14
 ---
 
 # PROPUESTA COMERCIAL
 ## Amaziliahotel - mts a la derecha, Via Pereira a #Entrada 8 Cafelia, 600, CERRITOS, Pereira, Risaralda, Colombia
 
-**Fecha**: 2026-04-24 19:08:28  
+**Fecha**: 2026-04-29 13:39:12  
 **Válido por 15 días** (cupo limitado)
 
 ---
@@ -66,11 +66,11 @@ Cada entregable incluye un nivel de preparación:
 |------------|-------|---------------|
 | Google Maps Optimizado | ⚠️ En preparacion | Datos pendientes del cliente |
 | SEO Local | ⚠️ En preparacion | Datos pendientes del cliente |
-| Botón de WhatsApp | ⏳ Incluido en su kit | Preparacion posterior a la firma |
-| Datos Estructurados | ⚠️ En preparacion | Datos pendientes del cliente |
+| Botón de WhatsApp | ✅ Verificado en sitio | Ya existe en su web - nosotros lo entregamos |
+| Datos Estructurados | ⚠️ Listo para implementar | Requiere confirmacion post-firma |
 | Informe Mensual | ⚠️ En preparacion | Datos pendientes del cliente |
-| Página de FAQ | ✅ Completo | Listo para implementar |
-| Meta Tags Sociales (Open Graph) | ⏳ Incluido en su kit | Preparacion posterior a la firma |
+| Página de FAQ | ⚠️ Listo para implementar | Requiere confirmacion post-firma |
+| Meta Tags Sociales (Open Graph) | ⚠️ En preparacion | Datos pendientes del cliente |
 
 ---
 
@@ -112,7 +112,7 @@ Para que su negocio brille en Google Maps, necesitamos fotos de calidad. Esto es
 - Invierte: $783.000 COP
 - Recupera: $783.000 COP
 - **Beneficio neto: $0 COP**
-- **ROI: 0.2** en 6 meses
+- **ROI: 0.2X** en 6 meses
 
 ---
 

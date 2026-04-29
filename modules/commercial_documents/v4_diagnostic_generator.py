@@ -1960,8 +1960,8 @@ class V4DiagnosticGenerator:
             elementos["imagenes_alt"] = audit_result.seo_elements.imagenes_alt
         else:
             elementos["imagenes_alt"] = False
-        # Blog activo (sin detector aun)
-        elementos["blog_activo"] = False
+        # Blog activo — PATCH-A: marcador explícito (detección real requiere HTML scrapeo)
+        elementos["blog_activo"] = "no_evaluado"
         # Schema reviews (proxy: gbp.rating existe)
         elementos["schema_reviews"] = bool(audit_result.gbp.rating) if audit_result.gbp else False
 
@@ -2026,8 +2026,8 @@ class V4DiagnosticGenerator:
             and bool(getattr(audit_result.gbp, 'hours', None) if audit_result.gbp else False)
         )
 
-        # Speakable schema (nuevo, default False - sin detector aun)
-        elementos["speakable_schema"] = False
+        # Speakable schema — PATCH-A: marcador explícito (detección real requiere parseo JSON-LD del HTML)
+        elementos["speakable_schema"] = "no_evaluado"
 
         return elementos
 
@@ -2079,8 +2079,8 @@ class V4DiagnosticGenerator:
             )
         )
 
-        # GA4 indirect — check if GA4 data exists with indirect traffic
-        elementos["ga4_indirect"] = False  # Requires real GA4 connection
+        # GA4 indirect — PATCH-A: marcador explícito (detección real requiere acceso a GA4 API)
+        elementos["ga4_indirect"] = "no_evaluado"
 
         # Schema advanced — Entity schema + SameAs
         elementos["schema_advanced"] = (

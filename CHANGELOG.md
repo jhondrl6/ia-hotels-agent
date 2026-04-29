@@ -1,5 +1,53 @@
 # Changelog
 
+## [4.37.0] - 2026-04-29
+
+### Objetivo
+
+Corrección de hallazgos críticos de auditoría forense AmaziliaHotel: bugs de credibilidad comercial (ROI, pain_ratio), stubs diagnósticos (blog/speakable/ga4), placeholders hardcodeados (web_score, teléfono, Evidence Tier), crash Unicode en version_consistency_checker.py, y version drift 4.36.0→4.36.1. 19 hardcodes de pricing catalogados como deuda técnica.
+
+### Cambios Implementados
+
+#### FASE-PATCH-A: Critical Bugs + Diagnostic Stubs + Unicode Fix
+- `modules/commercial_documents/v4_proposal_generator.py`: Eliminado `.replace("X","")` en L556 que mutilaba el formato ROI. Agregada explicación de pain_ratio en sección de proyección.
+- `modules/commercial_documents/v4_diagnostic_generator.py`: Reemplazados stubs `blog_activo=False`, `speakable_schema=False`, `ga4_indirect=False` por detección real o marcado explícito "No evaluado".
+- `scripts/version_consistency_checker.py`: Agregado `sys.stdout.reconfigure(encoding="utf-8")` para evitar UnicodeEncodeError en Windows cp1252.
+
+#### FASE-PATCH-B: Hardcoded Placeholders + Evidence Integrity
+- `modules/commercial_documents/v4_proposal_generator.py`: web_score ahora usa audit_result real o muestra "No disponible" (antes: "85" hardcodeado).
+- `modules/orchestration_v4/two_phase_flow.py`: Teléfono placeholder "+57 300 123 4567" reemplazado por valor real o marcador honesto.
+- `modules/financial_engine/scenario_calculator.py`: Evidence Tier ahora condicionado a presencia real de GA4 (antes: siempre "C").
+
+#### FASE-PATCH-D: Infraestructura + Documentación
+- `scripts/derive_version_from_changelog.py`: Creado. Deriva VERSION.yaml desde CHANGELOG.md.
+- `AGENTS.md`: Test count unificado. Gates documentados: 9 (6 blocking + 3 advisory).
+- `docs/technical_debt/hardcodes_audit_2026-04-29.md`: 19 hardcodes H-9→H-27 catalogados con severidad y recomendación.
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `scripts/derive_version_from_changelog.py` | Deriva VERSION.yaml desde CHANGELOG.md |
+| `docs/technical_debt/hardcodes_audit_2026-04-29.md` | Catálogo de 19 hardcodes como deuda técnica |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | BUG-1 (ROI X) + BUG-2 (pain_ratio) + H-1 (web_score) |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | H-3/H-4/H-5 (stubs blog/speakable/ga4) |
+| `modules/orchestration_v4/two_phase_flow.py` | H-2 (teléfono placeholder) |
+| `modules/financial_engine/scenario_calculator.py` | H-6 (Evidence Tier) |
+| `scripts/version_consistency_checker.py` | Unicode fix (cp1252) |
+| `AGENTS.md` | H-7 (test count) + H-8 (gates count) |
+| `VERSION.yaml` | 4.36.0 → 4.37.0 |
+| `.opencode/plans/` | Planes PATCH-A/B/C/D + checklist + dependencias |
+
+### Tests
+
+- Sin regresiones. Tests existentes (~2363) pasan.
+- v4complete verificado: coherence >= 0.80, gates ready=true.
+
 ## [4.36.1] - 2026-04-28
 
 ### Objetivo

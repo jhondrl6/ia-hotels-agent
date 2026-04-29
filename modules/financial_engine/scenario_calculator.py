@@ -435,12 +435,30 @@ class ScenarioCalculator:
         )
 
     def _determine_evidence_tier(self, hotel_data: HotelFinancialData) -> EvidenceTier:
-        """Determina tier basado en disponibilidad de datos."""
-        # Si tiene GA4+GSC → A
-        # Si tiene benchmarks regionales → B
-        # Si solo tiene scraping → C
-        # Lógica: por ahora siempre C hasta que GA4 se integre
-        return EvidenceTier.C
+        """Determina tier basado en disponibilidad de datos.
+        
+        FASE-PATCH-B: Ya no hardcodea C. Usa las fuentes de datos conocidas.
+        """
+        # Fuentes de calidad alta → tier A
+        # (adr_source/occupancy_source/channel_source indican calidad del dato)
+        sources = self._trace_data_sources(hotel_data)
+        adr_src = sources.get('adr', '')
+        occ_src = sources.get('occupancy', '')
+        ch_src = sources.get('direct_channel', '')
+
+        # Si al menos un dato es verificable (onboarding/verified) → A
+        verified_sources = [s for s in [adr_src, occ_src, ch_src]
+                          if s in ('onboarding', 'verified', 'industry_standard_15pct')]
+        # Fuentes de baja calidad → C
+        low_quality = [s for s in [adr_src, occ_src, ch_src]
+                      if s in ('scraping', 'default', 'unknown', 'legacy_hardcode')]
+
+        if len(verified_sources) >= 2 and len(low_quality) == 0:
+            return EvidenceTier.A
+        elif len(low_quality) >= 2:
+            return EvidenceTier.C
+        else:
+            return EvidenceTier.B
 
     def _get_shift_percentage(self, hotel_data: HotelFinancialData) -> float:
         """Porcentaje de migración OTA→directo. Documentar fuente."""

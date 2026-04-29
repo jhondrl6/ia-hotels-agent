@@ -25,6 +25,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import Tuple, Optional
 
+# Fix encoding for Windows (cp1252 doesn't support Unicode symbols like ✅, ⚠️)
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        # Fallback: wrap stdout to handle encoding errors
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+
 ROOT_DIR = Path(__file__).parent.parent
 CHANGELOG_FILE = ROOT_DIR / "CHANGELOG.md"
 VERSION_FILE = ROOT_DIR / "VERSION.yaml"

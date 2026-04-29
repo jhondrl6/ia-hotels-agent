@@ -1,8 +1,8 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.36.0"
-codename: "PATCH Forense AmaziliaHotel"
-release_date: "2026-04-26"
+version: "4.37.0"
+codename: "PATCH Forense AmaziliaHotel v2"
+release_date: "2026-04-29"
 plan_maestro_version: "v2.6.0"
 
 # v4.36.0 - PATCH Forense AmaziliaHotel (2026-04-26)
