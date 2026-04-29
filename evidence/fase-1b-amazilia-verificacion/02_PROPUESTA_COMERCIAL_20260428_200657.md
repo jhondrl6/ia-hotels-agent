@@ -1,23 +1,23 @@
 ---
-generated_at: ${generated_at}
-version: ${version}
-hotel_id: ${hotel_id}
+generated_at: 2026-04-28 20:06:57
+version: 4.0.0
+hotel_id: amaziliahotel
 document_type: PROPUESTA_V6
 generator: IA_Hoteles_v4
-valid_until: ${valid_until}
+valid_until: 2026-05-13
 ---
 
 # PROPUESTA COMERCIAL
-## ${hotel_name} - ${hotel_location}
+## Amaziliahotel - mts a la derecha, Via Pereira a #Entrada 8 Cafelia, 600, CERRITOS, Pereira, Risaralda, Colombia
 
-**Fecha**: ${generated_at}  
+**Fecha**: 2026-04-28 20:06:57  
 **Válido por 15 días** (cupo limitado)
 
 ---
 
 ## 😟 EL PROBLEMA: ¿Por qué pierde reservas sin saberlo?
 
-Cada mes, viajeros buscan hoteles en ${hotel_region}. Pero no lo encuentran.
+Cada mes, viajeros buscan hoteles en Eje Cafetero. Pero no lo encuentran.
 
 **Esto es lo que está perdiendo:**
 
@@ -27,7 +27,7 @@ Cada mes, viajeros buscan hoteles en ${hotel_region}. Pero no lo encuentran.
 | Busca en Google Maps | Aparece último | No lo ven |
 | Entra a su web | No hay botón de WhatsApp | No reserva directo |
 
-**Su pérdida mensual estimada: ${monthly_loss} COP**
+**Su pérdida mensual estimada: $2.610.000 COP**
 
 ---
 
@@ -37,15 +37,24 @@ Le proponemos un plan integral donde **nosotros implementamos todo** — usted n
 
 ### Paquete: Kit Hospitalidad Digital
 
-**Inversión: ${monthly_investment}/mes** (contrato mes a mes)
+**Inversión: $130.500 COP/mes** (contrato mes a mes)
 
 **Esto es lo que hacemos por usted:**
 
-${dynamic_services_table}
+| Servicio | Qué obtiene |
+|----------|-------------|
+| **Google Maps Optimizado** | Aparece primero cuando alguien busca 'hotel cerca de...' |
+| **SEO Local** | Para aparecer en las primeras posiciones de Google tradicional |
+| **Botón de WhatsApp** | Sus huéspedes reservan con 1 clic desde su web |
+| **Datos Estructurados** | Información que Google y la IA leen automáticamente |
+| **Página de FAQ** | Sus huéspedes encuentran respuestas sin salir de su web |
+| **Meta Tags Sociales (Open Graph)** | Sus fotos brillan cuando alguien comparte su link en redes |
+| **Informe Mensual** | Reporte mensual con metricas de rendimiento y oportunidades |
+| **Optimización para IA Generativa** | Aparece cuando clientes preguntan a ChatGPT/Gemini 'dónde hospedarme en [región]' |
 
 **No necesita hacer nada técnico. Nosotros implementamos todo.**
 
-${competitors_section}
+
 
 ---
 
@@ -53,7 +62,15 @@ ${competitors_section}
 
 Cada entregable incluye un nivel de preparación:
 
-${asset_quality_table}
+| Entregable | Nivel | Que significa |
+|------------|-------|---------------|
+| Google Maps Optimizado | ⚠️ En preparacion | Datos pendientes del cliente |
+| SEO Local | ⚠️ En preparacion | Datos pendientes del cliente |
+| Botón de WhatsApp | ✅ Verificado en sitio | Ya existe en su web - nosotros lo entregamos |
+| Datos Estructurados | ⚠️ Listo para implementar | Requiere confirmacion post-firma |
+| Informe Mensual | ⚠️ En preparacion | Datos pendientes del cliente |
+| Página de FAQ | ⚠️ Listo para implementar | Requiere confirmacion post-firma |
+| Meta Tags Sociales (Open Graph) | ⚠️ En preparacion | Datos pendientes del cliente |
 
 ---
 
@@ -84,22 +101,22 @@ Para que su negocio brille en Google Maps, necesitamos fotos de calidad. Esto es
 
 | Mes | Invierte | Recuperación Estimada | Beneficio |
 |-----|----------|----------------------|-----------|
-| 1 | ${inv_m1} | ${rec_m1} | ${net_m1} |
-| 2 | ${inv_m2} | ${rec_m2} | ${net_m2} |
-| 3 | ${inv_m3} | ${rec_m3} | ${net_m3} |
-| 4 | ${inv_m4} | ${rec_m4} | ${net_m4} |
-| 5 | ${inv_m5} | ${rec_m5} | ${net_m5} |
-| 6 | ${inv_m6} | ${rec_m6} | ${net_m6} |
+| 1 | $130.500 COP | $130.500 COP | $0 COP |
+| 2 | $130.500 COP | $130.500 COP | $0 COP |
+| 3 | $130.500 COP | $130.500 COP | $0 COP |
+| 4 | $130.500 COP | $130.500 COP | $0 COP |
+| 5 | $130.500 COP | $130.500 COP | $0 COP |
+| 6 | $130.500 COP | $130.500 COP | $0 COP |
 
 **Total 6 meses:**
-- Invierte: ${total_investment} COP
-- Recupera: ${total_recovered} COP
-- **Beneficio neto: ${net_benefit} COP**
-- **ROI: ${roi_6m}** en 6 meses
+- Invierte: $783.000 COP
+- Recupera: $783.000 COP
+- **Beneficio neto: $0 COP**
+- **ROI: 0.2** en 6 meses
 
 ---
 
-## 🗓️ Así funciona (sin complicated):
+## 🗓️ Así funciona (sin complicado):
 
 ### Día 1: Inicio
 - Reunión de 30 minutos
@@ -124,7 +141,16 @@ Para que su negocio brille en Google Maps, necesitamos fotos de calidad. Esto es
 
 ## 📊 METRICAS DE VISIBILIDAD
 
-${analytics_section}
+---
+
+## 📈 DATOS DE TRAFICO (Google Analytics)
+
+**Estado:** ⚠️ No configurado (use --ga4-property-id para conectar)
+
+Cuando configuremos Google Analytics, podremos medir con precision el impacto de cada cambio y optimizar basados en datos reales de su sitio web.
+
+---
+
 
 ## 🌐 Transparencia de IAO (Inteligencia Artificial Outside)
 
@@ -132,10 +158,10 @@ El análisis de IAO utiliza APIs de terceros (OpenRouter, Google AI, Perplexity)
 
 | Proveedor | Queries | Costo Aprox. |
 |-----------|---------|---------------|
-| OpenRouter | ${openrouter_queries} | ${openrouter_cost} USD |
-| Gemini | ${gemini_queries} | ${gemini_cost} USD |
-| Perplexity | ${perplexity_queries} | ${perplexity_cost} USD |
-| **Total** | **${total_iao_queries}** | **${total_iao_cost} USD** |
+| OpenRouter | — | — USD |
+| Gemini | — | — USD |
+| Perplexity | — | — USD |
+| **Total** | **—** | **— USD** |
 
 *Este costo es Absorbido por IAH-CLI y no se carga al cliente.*
 
@@ -152,7 +178,7 @@ Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.
 
 ---
 
-## 🚀 SIGUIENTE PASSO: Empezar es simple
+## 🚀 SIGUIENTE paso: Empezar es simple
 
 1. **Aceptar esta propuesta** (firma o mensaje por WhatsApp)
 2. **Nos reunimos 30 minutos** (kickoff)

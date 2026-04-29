@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-04-26 23:22:31 UTC
+> Auto-generado: 2026-04-29 03:14:57 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -22,7 +22,7 @@
 | maintenance_autopilot.md | Protocolo de auto-mantenimiento para la arquitectura de skills. |
 | meta_skill_creator.md | Fábrica agéntica para la creación de nuevas Meta-Skills. |
 | monitor_bg.md | Monitoreo y control de tareas ejecutadas en segundo plano. |
-| phased_project_executor.md | Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. |
+| phased_project_executor.md | Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI. |
 | seo_technical.md | Auditoría técnica y aceleración de credibilidad web para hoteles. |
 | truth_protocol.md | Validar y certificar la veracidad de los datos financieros de un hotel antes de emitir un diagnóstico. |
 | v4_asset_conditional.md | Generate assets conditionally based on preflight checks and confidence gates. |
@@ -38,12 +38,12 @@
 
 | Metrica | Valor |
 |---------|-------|
-| Shadow logs | 1095 archivos JSON |
-| Sesiones activas | 128 |
+| Shadow logs | 1123 archivos JSON |
+| Sesiones activas | 121 |
 | Sesiones archivadas | 6 |
-| Ultimo shadow log | 20260426_032439_7426be8d.json |
-| Ultima sesion activa | 2026-04-25_fd80fcb4.json |
-| Ultimo contexto actualizado | 2026-04-26T03:23:51.449112+00:00 |
+| Ultimo shadow log | 20260429_025749_e485b3c3.json |
+| Ultima sesion activa | 2026-04-28_e0b017f3.json |
+| Ultimo contexto actualizado | 2026-04-29T02:56:53.813383+00:00 |
 | Ultima URL procesada | https://amaziliahotel.com/ |
 
 ## Validaciones

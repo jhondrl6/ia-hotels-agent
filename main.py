@@ -2052,21 +2052,24 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             monthly_loss_central=conservative_value,  # FASE-G: valor central
             probability=0.70,
             description="Peor caso plausible",
-            monthly_opportunity_cop=0),
+            monthly_opportunity_cop=0,
+            confidence_score=0.85),  # FASE-H: Tier C confidence
         realistic=Scenario(
             monthly_loss_min=int(realistic_value * 0.8),
             monthly_loss_max=int(realistic_value * 1.2),
             monthly_loss_central=realistic_value,  # FASE-G: valor central
             probability=0.20,
             description="Meta esperada",
-            monthly_opportunity_cop=0),
+            monthly_opportunity_cop=0,
+            confidence_score=0.70),  # FASE-H: Tier C confidence
         optimistic=Scenario(
             monthly_loss_min=int(optimistic_value * 0.8) if optimistic_value > 0 else int(optimistic_value * 1.2),
             monthly_loss_max=optimistic_value,
             monthly_loss_central=optimistic_value,  # FASE-G: valor central
             probability=0.10,
             description="Mejor caso" if optimistic_value > 0 else "Caso de equilibrio (ahorro en comisiones)",
-            monthly_opportunity_cop=optimistic_opportunity)
+            monthly_opportunity_cop=optimistic_opportunity,
+            confidence_score=0.50)  # FASE-H: Tier C confidence
     )
     
     print(f"[OK] Escenarios financieros validados:")
@@ -2413,6 +2416,48 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     )
     print(f"[OK] Diagnóstico regenerado con coherence_score: {pre_coherence_score:.2f}")
 
+    # FASE-1B-PATCH: ContentScrubber post-T4FIX — limpiar diagnóstico regenerado
+    # ANTES de FASE 4.5 (publication gates)
+    # El diagnóstico original (FASE 3.6) se scrubbeó ANTES de T4FIX.
+    # T4FIX regenera el diagnóstico SIN pasar por scrubber — esta segunda
+    # pasada asegura que el diagnóstico final no tenga "COP COP" ni "0%".
+    try:
+        from modules.postprocessors.content_scrubber import ContentScrubber
+        from pathlib import Path
+
+        post_hotel_data = {}
+        if region:
+            post_hotel_data["region"] = region.replace('_', ' ').title()
+        if audit_result and hasattr(audit_result, 'hotel_name'):
+            post_hotel_data["hotel_name"] = audit_result.hotel_name
+        if audit_result and hasattr(audit_result, 'gbp') and audit_result.gbp and hasattr(audit_result.gbp, 'address'):
+            addr = audit_result.gbp.address or ""
+            parts = [p.strip() for p in addr.split(',')]
+            for part in parts:
+                if any(skip in part.lower() for skip in ['vía', 'vereda', 'km', 'departamento', 'colombia', 'risaralda']):
+                    continue
+                if part and len(part) > 2 and not part.isupper():
+                    post_hotel_data["city"] = part
+                    break
+
+        postscrubber = ContentScrubber()
+        if diagnostic_path and Path(diagnostic_path).exists():
+            with open(diagnostic_path, 'r', encoding='utf-8') as f:
+                diag_content = f.read()
+            diag_scrub = postscrubber.scrub(diag_content, post_hotel_data, "diagnostico")
+            if diag_scrub.fix_count > 0:
+                print(f"   [SCRUB] Diagnostic (post-T4FIX): {diag_scrub.fix_count} fix(es) applied")
+                for fix in diag_scrub.fixes_applied:
+                    print(f"      - {fix}")
+                with open(diagnostic_path, 'w', encoding='utf-8') as f:
+                    f.write(diag_scrub.scrubbed)
+            else:
+                print(f"   [OK] Diagnostic (post-T4FIX): clean")
+        else:
+            print(f"   [SKIP] Diagnostic not available for post-T4FIX scrub")
+    except Exception as e:
+        print(f"   [WARN] Post-T4FIX scrub failed: {e}")
+
     # Rebuild diagnostic_summary con el diagnostic_gen actualizado (contiene geo_metrics)
     from modules.commercial_documents.data_structures import (
         DiagnosticSummary,
@@ -2472,6 +2517,25 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 for spec in asset_plan
             ]
         
+        # FASE-D root-fix: Invoke SitePresenceChecker to verify which assets
+        # already exist in production BEFORE generating the proposal.
+        # This fixes the "Estado de los Entregables" block showing wrong status
+        # (e.g. WhatsApp showing "Incluido en su kit" when it already exists).
+        # FIX: Check ALL PROPOSAL_SERVICE_TO_ASSET types, not just generated ones.
+        # WhatsApp is SKIPPED by the conditional generator (already exists in production)
+        # but we still need to verify its presence so the proposal shows "Verificado en sitio".
+        from modules.asset_generation.site_presence_checker import SitePresenceChecker
+        from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
+
+        site_presence_report = None
+        if asset_result and asset_result.generated_assets is not None:
+            # Check ALL asset types from PROPOSAL_SERVICE_TO_ASSET, not just generated ones.
+            # Skipped assets (should_generate=False) still need presence verification
+            # so the proposal correctly shows "Verificado en sitio" for existing assets.
+            asset_types_to_check = list(PROPOSAL_SERVICE_TO_ASSET.values())
+            checker = SitePresenceChecker()
+            site_presence_report = checker.check_site(args.url, asset_types=asset_types_to_check)
+
         proposal_gen = V4ProposalGenerator()
         proposal_path = proposal_gen.generate(
             diagnostic_summary=diagnostic_summary,
@@ -2485,6 +2549,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             analytics_data=analytics_data,
             financial_breakdown=financial_breakdown,
             assets_generated=assets_for_quality,
+            site_presence_report=site_presence_report,
         )
         
         # FIX-PATCH-2: Re-scrub proposal now that it exists

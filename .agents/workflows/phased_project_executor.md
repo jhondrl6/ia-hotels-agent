@@ -1,6 +1,6 @@
 ---
-description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones.
-version: 2.4.0
+description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
+version: 2.9.0
 ---
 
 # Skill: Phased Project Executor
@@ -11,8 +11,73 @@ version: 2.4.0
 ## Regla de Sesión Única (OBLIGATORIO)
 
 > [!CAUTION]
-> **REGLA MANDATORIA - Sin excepciones**
-> Una fase por sesión. No se permite ejecutar múltiples fases en una misma sesión.
+> **REGLAS MANDATORIAS - Sin excepciones**
+>
+> **R1: Una fase por sesión.** No se permite ejecutar múltiples fases en una misma sesión.
+>
+> **R2: Máximo 60 iteraciones del agente por fase.** Si se alcanza el límite, la fase se marca como incompleta y DEBE retomarse en una nueva sesión fresca. No se permite exceder este límite bajo ningún pretexto (ni "falta poco", ni "ya casi termino").
+
+## Regla de Scope de Fase (OBLIGATORIO — Al Crear el Plan)
+
+> [!CAUTION]
+> **R3: Una fase no puede contener mas de UN comando de larga duracion (v4complete, v4audit, scraping, etc.) NI mas de 4 tareas de investigacion/fix counting.**
+>
+> Si una fase requiere investigar+implementar+ejecutar+verificar+documentar, se DIVIDE en sub-fases: `FASE-X-A`, `FASE-X-B`, etc.
+
+#### Como evaluar si una fase es demasiado grande
+
+Al crear un prompt de fase, el orquestador debe responder:
+
+```
+TAREAS DE LA FASE:
+  [ ] Investigacion de codigo existente
+  [ ] Implementar fix / desarrollo nuevo
+  [ ] Ejecutar comando de larga duracion (v4complete, v4audit, etc.)
+  [ ] Verificar output del comando contra criterios
+  [ ] Documentacion (log_phase + docs cascade)
+
+CONTADOR:
+  - Cada [ ] = 1 tarea
+  - v4complete = 1 tarea + 1 comando largo
+  - Total permitido por fase: maximo 4 tareas + 0 comandos largos
+           O: maximo 3 tareas + 1 comando largo
+```
+
+#### Ejemplos de Division
+
+| FASE太大了 (una sesion) | FASE bien scopes |
+|------------------------|------------------|
+| Investigar 5 hallazgos + Fix 5 hallazgos + v4complete + Verificar + Docs | FASE-X-A: Investigar + Fix |
+| Fix 5 hallazgos + v4complete + Verificar 5 fixes + Docs | FASE-X-B: v4complete + Verificar |
+| Implementar modulo + Testear + Integrar + v4audit + Docs | FASE-X-A: Implementar + Testear |
+| | FASE-X-B: Integrar + v4audit |
+| | FASE-X-C: Docs cascade |
+
+#### Regla de Decision para el Orquestador
+
+```
+SI la fase tiene:
+  - Mas de 4 tareas de investigacion/fix
+  - O 1+ comando(s) de larga duracion (v4complete, etc.)
+  - O combinacion de ambos que sume > 4 items de la lista
+
+ENTONCES:
+  → Dividir en FASE-X-A (investigacion/fix),
+             FASE-X-B (ejecucion/verificacion),
+             FASE-X-C (docs) segun corresponda
+  → Cada sub-fase recibe su propio 05-prompt-inicio-sesion-fase-X-Y.md
+  → Las sub-fases se ejecutan en sesiones separadas
+```
+
+#### Senales de Alerta al Planificar
+
+- "Esta fase toma 2-3 horas" → probablemente necesita division
+- "5 hallazgos para corregir" → dividir: A=investigacion, B=fixes, C=verificacion
+- "Ejecutar v4complete y verificar los 5 hallazgos" → v4complete solo en su propia sub-fase
+- "Docs cascade al final" → docs son su propia sub-fase
+
+> [!WARNING]
+> **El orquestador que crea fases demasiado grandes es responsable del agotamiento de las sesiones siguientes.** La regla R2 (60 iteraciones max) protege contra ejecucion excesiva, pero la prevencion empieza en el diseño del plan.
 
 > [!TIP]
 > **Convenciones de Nomenclatura de Fases**
@@ -21,22 +86,180 @@ version: 2.4.0
 > |------|---------|---------|-------------|
 > | Iteracion | `FASE-N` | `FASE-12` | Iteration de desarrollo |
 > | Feature | `FASE-{LETRA}` | `FASE-A`, `FASE-B` | Sub-fase de un feature (A..Z) |
-> | Release | `FASE-RELEASE-X.Y.Z` | `FASE-RELEASE-4.10.0` | **Markers explícito de release** |
+> | Release | `FASE-RELEASE-X.Y.Z` | `FASE-RELEASE-4.10.0` | Fase ejecutable de cierre + documentación (sesión propia) |
 >
 > **Regla:** Si la fase cambia la versión (nueva release), usar `FASE-RELEASE-X.Y.Z`.
 > Esto activa automaticamente el Version Sync Gate.
 
-**Fases del workflow:**
-1. **Preparación** (esta sesión): Crear prompts, checklists, docs para todas las fases
-2. **Implementación** (sesión por fase): Cada fase se ejecuta en su propia sesión nueva
+**Fases del workflow (3 etapas):**
+
+| Etapa | Tipo de fase | Sesiones | Descripción |
+|-------|-------------|----------|-------------|
+| 1. Preparación | (orquestación) | 1 sesión | Crear todos los prompts, checklists, docs para todas las fases |
+| 2. Implementación | `FASE-{N\|LETRA}` | N sesiones | Cada fase de código en su propia sesión nueva de agente |
+| 3. Cierre / Release | `FASE-RELEASE-X.Y.Z` | 1 sesión | Documentación oficial, version bump, validaciones finales |
+
+**Regla de dependencia:** `FASE-RELEASE-X.Y.Z` solo se ejecuta cuando TODAS las fases de implementación (etapa 2) están completadas (`✅`).
 
 **Aplicación:**
-- Preparación upfront: En UNA sesión se generan todos los prompts de fase
-- Implementación: Cada fase requiere una sesión NUEVA del agente
-- Sesión N → prepara fases N+1, N+2, ... (no las ejecuta)
-- La sesión de implementación termina cuando el checklist muestra ✅ completo
+- **Etapa 1 (Preparación):** En UNA sesión, Hermes (orquestador) genera todos los prompts de fase, incluyendo el de RELEASE
+- **Etapa 2 (Implementación):** Cada fase requiere una sesión NUEVA del agente. El agente lee su `05-prompt-inicio-sesion-fase-{X}.md` y ejecuta las tareas de código
+- **Etapa 3 (RELEASE):** Una sesión NUEVA del agente. El agente ejecuta `05-prompt-inicio-sesion-fase-RELEASE.md`. Tareas: version bump, sync, CHANGELOG, GUIA_TECNICA, validaciones, log. **NO modifica código fuente.**
+- La sesión termina cuando el checklist de la fase muestra ✅ completo
 
-**Excepciones**: NINGUNA. Esta regla es absoluta.
+## Modelo de Ejecución: Agentes AI
+
+> [!IMPORTANT]
+> **Este workflow es ejecutado por agentes AI** (Hermes, subagentes vía `delegate_task`), no por humanos.
+>
+> Cada prompt de fase (`05-prompt-inicio-sesion-fase-*.md`) es una **instrucción completa para un agente** en una sesión fresca. El agente:
+> 1. Lee el prompt al inicio de la sesión
+> 2. Planifica la ejecución de las tareas
+> 3. Ejecuta (con subagentes si la fase lo requiere)
+> 4. Verifica criterios de completitud contra el checklist
+> 5. Ejecuta `log_phase_completion.py` al finalizar
+>
+> **Implicaciones del modelo agente:**
+> - Las "iteraciones" de R2 son **tool calls del agente** — no pasos humanos
+> - El agente NO debe pedir confirmación para cada paso; el prompt es su mandato completo
+> - Subagentes (`delegate_task`) pueden usarse para trabajo paralelo dentro de una fase, pero el total de iteraciones de la sesión no debe exceder 60
+> - La fase termina cuando el checklist muestra ✅, no cuando "se acabó el tiempo"
+> - **Orquestación**: La etapa de Preparación la ejecuta Hermes como orquestador. Las etapas de Implementación/RELEASE las ejecuta un agente nuevo en cada sesión.
+
+### Regla de Iteraciones para Comandos de Larga Duración
+
+> [!CAUTION]
+> **GUIA CRITICA: 60 iteraciones vs. comandos que duran minutos**
+>
+> `v4complete` es un comando que tarda 5-10 minutos en ejecutarse (scraping + APIs + generación de documentos + assets). Aunque `terminal(..., timeout=600)` cuenta como **1 tool call**, el comando consume tiempo real de pared, no tiempo de iteraciones del agente.
+>
+> **El agente debe planificar su presupuesto de iteraciones ANTES de invocar comandos largos.**
+
+#### Calculo del Presupuesto de Iteraciones
+
+```
+Presupuesto total: 60 iteraciones
+
+Gastos fijos por fase:
+  - Leer plan y verificar estado previo: ~3 iteraciones
+  - Investigar codigo/archivos: ~5-15 iteraciones
+  - Ejecutar log_phase_completion.py + docs cascade: ~10 iteraciones
+  - Actualizar plan al finalizar: ~5 iteraciones
+  - run_all_validations.py: ~3 iteraciones
+  Total fijo: ~26-36 iteraciones
+
+Margen para trabajo especifico de la fase: 24-34 iteraciones
+```
+
+#### Regla de Desicion: ejecutar v4complete directamente o via subagente?
+
+```
+SI (investigacion + verificacion + docs) < 30 iteraciones restantes:
+    → Ejecutar v4complete DIRECTAMENTE con terminal(timeout=600)
+    → Usar notify_on_complete=True para no bloquear
+    → Des pues verificar output y hacer docs cascade
+
+SI no:
+    → Spawn subagent via delegate_task(timeout=900, notify_on_complete=True)
+    → El subagent ejecuta v4complete completo
+    → El agente parent usa sus iteraciones solo en verificacion + docs
+```
+
+#### Protocolo de Subagente para v4complete
+
+Cuando se usa `delegate_task` para ejecutar `v4complete`:
+
+```
+1. En el context del subagente, incluir:
+   - URL del hotel
+   - Comando exacto: ./venv/Scripts/python.exe main.py v4complete --url {url}
+   - Expected output: diagnostico, propuesta, assets, coherence >= 0.80
+
+2. En el parent agent, usar:
+   delegate_task(
+     goal="Ejecutar v4complete para {hotel}...",
+     context="...",
+     timeout=900,  # 15 minutos — v4complete necesita 5-10 min
+     notify_on_complete=True,
+     toolsets=["terminal"]
+   )
+
+3. Cuando el subagente completa:
+   → Parent agent verifica que los archivos existen
+   → Agent generation_report y coherence_validation
+   → Continua con docs cascade si tudo OK
+```
+
+> [!WARNING]
+> **NUNCA ejecutar `v4complete` sin `notify_on_complete=True` o sin subagente.**
+> Si el agente parent se agota antes de que `v4complete` termine, el output
+> se genera pero la verificacion/docs no se ejecutan — la fase queda incompleta.
+
+#### Protocolo de Evidencia Proactiva (OBLIGATORIO)
+
+> [!CAUTION]
+> **Inmediatamente despues de que `v4complete` genera output**, antes de
+> cualquier verificacion o investigacion adicional:
+>
+> 1. Copiar los archivos criticos a `evidence/{fase-id}/`:
+>    ```bash
+>    mkdir -p evidence/{fase-id}
+>    cp output/v4_complete/01_DIAGNOSTICO_*.md evidence/{fase-id}/
+>    cp output/v4_complete/02_PROPUESTA_*.md evidence/{fase-id}/
+>    cp output/v4_complete/{hotel_id}/v4_audit/*.json evidence/{fase-id}/
+>    ```
+> 2. **Esto es OBLIGATORIO sin importar cuanto tiempo quede en el presupuesto de iteraciones.**
+>    Si el agente se agota despues, la evidencia ya esta a salvo para la siguiente sesion.
+> 3. Solo despues de guardar evidencia, continuar con verificacion/docs cascade.
+
+### Cierre Obligatorio de Sesion (SIEMPRE — aunque la fase no haya completado)
+
+> [!IMPORTANT]
+> **Al terminar la sesion (completada o no), SIEMPRE ejecutar en orden:**
+>
+> 1. **Guardar evidencia** (si hay output de v4complete):
+>    ```bash
+>    mkdir -p evidence/{fase-id}
+>    cp output/v4_complete/01_DIAGNOSTICO_*.md evidence/{fase-id}/
+>    cp output/v4_complete/02_PROPUESTA_*.md evidence/{fase-id}/
+>    cp output/v4_complete/{hotel_id}/v4_audit/*.json evidence/{fase-id}/
+>    ```
+> 2. **Actualizar el plan de fase** con estado real:
+>    - Si completo: marcar todos los items del checklist como ✅
+>    - Si incompleto: marcar como `⏳ INCOMPLETA` con checkpoint y que falta
+> 3. **Solo entonces** cerrar la sesion.
+
+**Esta regla no tiene excepciones.** Aunque la sesion termine en iteracion 1 y no haya hecho nada, el plan debe reflejar ese estado.
+
+### Recuperacion de Agotamiento (60 iteraciones o timeout de subagente)
+
+Cuando la fase no completa por agotamiento:
+
+```
+1. Actualizar el plan de fase (.opencode/plans/05-prompt-inicio-sesion-fase-X.md):
+   - Estado: "⏳ INCOMPLETA — agotamiento en iteracion Y"
+   - Ultimo checkpoint: describir que se habia completado
+   - Que falta: enumerar tareas pendientes
+   - Timestamp de la sesion
+
+2. Guardar evidencia en evidence/{fase-id}/:
+   - Copiar cualquier output generado hasta el momento
+   - Copiar diagnosticos/propuestas/JSONs aunque esten incompletos
+
+3. Nueva sesion:
+   - Leer estado desde el plan actualizado
+   - Continuar desde el checkpoint
+   - NO re-ejecutar lo que ya se ejecuto correctamente
+```
+
+#### Sintomas de Agotamiento de Subagente
+
+| Sintoma | Causa | Accion |
+|---------|-------|--------|
+| Subagente retorna sin output | Timeout 600s insu clergal | Re-spawn con delegate_task y timeout=900 |
+| v4complete nunca termina de generations | API rate limits / network | Verificar logs, retry con backoff |
+| Agent parent agota 60 iteraciones antes de v4complete | Presupuesto mal calculado | Dividir: subagente para v4complete |
+| Docs cascade no se ejecuta post-v4complete | Agent se agoto al final | Guardar evidencia ANTES, docs en sesion separada |
 
 ## Pre-requisitos
 - [ ] Proyecto con división clara en fases/sprints/etapas
@@ -66,6 +289,7 @@ Usar template `.agents/workflows/templates/prompt-fase-template.md`
 - Tareas específicas de la fase
 - **Post-Ejecución** (marcar checklist, actualizar estados)
 - **Criterios de Completitud**
+- **Restricciones** (mínimo: máximo 60 iteraciones; según la fase: no modificar ROADMAP.md, no ejecutar v4complete, etc.)
 
 **Verificación:**
 - [ ] Nombre de archivo coincide con título interno
@@ -394,13 +618,17 @@ Después de ejecutar `log_phase_completion.py`, verificar:
 
 ---
 
-### Paso 7: Actualizacion de Documentacion Oficial del Repositorio
+### Paso 7: FASE-RELEASE — Cierre y Documentación Oficial del Repositorio
 
-**Cuando**: Una vez completadas TODAS las fases de implementacion del proyecto. No se ejecuta por fase individual — es el cierre del ciclo.
+> [!NOTE]
+> **Este paso ES la FASE-RELEASE-X.Y.Z.** Se ejecuta como una fase más, en su propia sesión de agente, usando su prompt `05-prompt-inicio-sesion-fase-RELEASE.md`.
+> La diferencia con las fases de implementación: NO modifica código fuente, solo documentación y validaciones.
 
-**Fuente de verdad**: `docs/CONTRIBUTING.md §55-163`. Los pasos E1-E8 abajo son la transcripcion operativa de esa seccion. Si CONTRIBUTING.md cambia, este paso se actualiza para reflejarlo.
+**Cuando**: Una vez completadas TODAS las fases de implementación (etapa 2). El agente ejecuta esta fase en una sesión nueva. **Es la última fase del proyecto.**
 
-**Que NO hace**: NO modifica ROADMAP.md, NO edita codigo fuente, NO ejecuta `v4complete`.
+**Fuente de verdad**: `docs/CONTRIBUTING.md §55-163`. Los pasos E1-E8 abajo son la transcripción operativa de esa sección. Si CONTRIBUTING.md cambia, este paso se actualiza para reflejarlo.
+
+**Que NO hace**: NO modifica ROADMAP.md, NO edita código fuente, NO ejecuta `v4complete`.
 
 ---
 
@@ -510,18 +738,26 @@ git diff --stat
 ---
 
 ## Criterios de Éxito
-- [ ] Prompts creados para todas las fases (1 por fase)
-- [ ] Checklist maestro con estados
-- [ ] `dependencias-fases.md` con conflictos documentados
+- [ ] Prompts creados para todas las fases de implementación (1 por fase)
+- [ ] Prompt creado para FASE-RELEASE (si hay version bump)
+- [ ] Checklist maestro con estados de todas las fases (incluyendo RELEASE)
+- [ ] `dependencias-fases.md` con conflictos documentados y dependencia → RELEASE
 - [ ] Documentación incremental preparada
-- [ ] Estructura lista para que cada fase se ejecute en sesión propia
+- [ ] Estructura lista para que cada fase se ejecute en sesión propia de agente
 
 ## Plan de Recuperación
 - Sin estructura de planes → crear `.opencode/plans/` automáticamente
-- Sin división en fases → proponer estructura estándar (Fase 0-N)
+- Sin división en fases → proponer estructura estándar (Fase 0-N) + FASE-RELEASE
 - Prompts muy grandes → dividir en secciones dentro del mismo archivo
+- **Límite de 60 iteraciones alcanzado** → marcar fase como `INCOMPLETA`, documentar progreso parcial en `dependencias-fases.md`, retomar en nueva sesión fresca
+- Fase retomada (INCOMPLETA) → leer estado de `dependencias-fases.md`, continuar desde donde se dejó
+- **FASE-RELEASE ejecutada sin implementaciones completadas** → abortar; verificar `dependencias-fases.md` que todas las fases previas estén en `✅`
 
 ## Versiones
+- **v2.9.0** (2026-04-28): Nueva R3: Regla de Scope de Fase. Limite: maximo 4 tareas + 0 comandos largos, o 3 tareas + 1 comando largo por sesion. Incluye tabla de evaluacion, ejemplos de division (FASE-X-A/B/C), senales de alerta ("2-3 horas" = dividir), y advertencia de que el orquestador es responsable de fases mal scoped.
+- **v2.8.0** (2026-04-28): Protocolo de Evidencia Proactiva (obligatorio inmediatamente despues de output v4complete, antes de cualquier verificacion). Nueva seccion "Cierre Obligatorio de Sesion" — siempre guardar evidencia + actualizar plan antes de cerrar, sin excepciones.
+- **v2.6.0** (2026-04-26): Modelo de Ejecución por Agentes AI explícito. Flujo reestructurado a 3 etapas (Preparación → Implementación → RELEASE). FASE-RELEASE integrada como etapa del flujo principal. Paso 7 renombrado a "FASE-RELEASE — Cierre y Documentación Oficial". Eliminada contradicción "no se ejecuta por fase". Regla de dependencia explícita: RELEASE requiere todas las implementaciones completadas.
+- **v2.5.0** (2026-04-26): Límite de 60 iteraciones como regla mandatoria (R2). Sección `## Restricciones` obligatoria en prompts de fase. FASE-RELEASE formalizado como fase ejecutable con sesión propia. Alineado con estructura real de `.opencode/plans/` del PATCH Forense AmaziliaHotel 4.36.0.
 - **v2.4.0** (2026-04-13): Paso 4.5: Ejecución de Plan de Documentación. Prevención de desajustes documentales al ejecutar planes como 09-documentacion-post-proyecto.md. Incluye gates de validación: log_phase_completion.py por fase, sync_versions.py, validación CHANGELOG formato CONTRIBUTING.md, validación GUIA_TECNICA.md, run_all_validations.py --quick. Checklist de completitud integrado.
 - **v2.3.0** (2026-03-26): Version Sync Gate + Documentation Audit + FASE-RELEASE auto-detect. Convencion FASE-RELEASE-X.Y.Z para releases. Pre-commit hook para consistencia de versiones.
 - **v2.2.0** (2026-03-25): Enforcement de docs manuales --check-manual-docs. Si hay cambios arquitectonicos en archivos de REQUIRE_ArchitectURAL_CHANGE (conditional_generator.py, faq_gen.py, voice_guide.py, aeo_kpis.py, etc.) y GUIA_TECNICA.md no menciona la fase, el script FAIL. Uso --force-skip-docs --skip-reason para excepciones.
@@ -535,20 +771,21 @@ Usuario: "Divide este proyecto de refactorización en fases y prepáralo para ej
 
 La skill debe:
 1. Leer plan existente
-2. Crear `05-prompt-inicio-sesion-fase-2.md` con especificaciones técnicas completas
-3. Crear `05-prompt-inicio-sesion-fase-3.md` (y restantes)
-4. Actualizar checklist con estados de fases
+2. Crear `05-prompt-inicio-sesion-fase-{X}.md` para cada fase de implementación
+3. Crear `05-prompt-inicio-sesion-fase-RELEASE.md` (fase de cierre)
+4. Actualizar checklist con estados de fases (incluyendo RELEASE)
 5. Crear `09-documentacion-post-proyecto.md` con estructura base
 6. Verificar numeración de todos los prompts
 
 **Output de esta sesión:**
 ```
 .opencode/plans/
-├── 05-prompt-inicio-sesion-fase-{N}.md    (1 por fase)
+├── 05-prompt-inicio-sesion-fase-{X}.md         (1 por fase de implementación)
+├── 05-prompt-inicio-sesion-fase-RELEASE.md      (fase de cierre)
 ├── 06-checklist-implementacion.md
 ├── 09-documentacion-post-proyecto.md
 ├── dependencias-fases.md
 └── README.md
 ```
 
-La implementación de cada fase se hace en UNA sesión nueva por fase.
+La implementación de cada fase se hace en UNA sesión nueva de agente por fase. FASE-RELEASE es la última sesión.

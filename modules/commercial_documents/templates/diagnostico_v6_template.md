@@ -72,12 +72,12 @@ ${analytics_summary_text}
 ${financial_tier_banner}
 ### ${financial_title_label}
 
-**${ota_commission_formatted} COP/mes${estimate_asterisk}${financial_tier_suffix}**
+**${ota_commission_formatted}/mes${estimate_asterisk}${financial_tier_suffix}**
 
 Desglose:
 - ${ota_commission_basis}
 - Fuente del dato: ${ota_commission_source}
-- Comisión OTA real (verificable): ${ota_commission_real_formatted} COP/mes
+- Comisión OTA real (verificable): ${ota_commission_real_formatted}/mes
 
 ---
 
@@ -99,7 +99,7 @@ ${brechas_section}
 
 ${scenario_table_rows}
 
-**Proyección 6 meses:** ${loss_6_months} COP
+**Proyección 6 meses:** ${loss_6_months}
 
 > ⚠️ ${financial_disclaimer}
 >
@@ -122,7 +122,7 @@ ${urgencia_contenido}
 
 - Competencia consolida posiciones en Google Maps y en las listas de IA
 - El costo de recuperar liderazgo será 2-3x mayor
-- **Pérdida acumulada:** ${loss_6_months} COP
+- **Pérdida acumulada:** ${loss_6_months}
 
 ---
 

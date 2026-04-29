@@ -702,7 +702,7 @@ class V4DiagnosticGenerator:
             central = getattr(scenario, 'monthly_loss_central', None) or scenario.monthly_loss_max
             prob_pct = int(scenario.probability * 100)
             rows.append(
-                f"| {name} | {format_cop(central)} COP/mes | {prob_pct}% |"
+                f"| {name} | {format_cop(central)}/mes | {prob_pct}% |"
             )
         return "\n".join(rows)
     
@@ -1868,10 +1868,20 @@ class V4DiagnosticGenerator:
         loss_monthly = main.format_loss_cop()
         confidence = int(main.confidence_score * 100)
         
+        # Use evidence tier language instead of raw confidence % to avoid "0% de confianza"
+        if confidence == 0:
+            confidence_text = "basada en datos limitados de su web"
+        elif confidence < 30:
+            confidence_text = f"con baja confianza ({confidence}% — datos limitados)"
+        elif confidence < 60:
+            confidence_text = f"con {confidence}% de confianza"
+        else:
+            confidence_text = f"con {confidence}% de confianza"
+        
         return (
             f"{hotel_name} está perdiendo aproximadamente {loss_monthly} mensuales "
             f"debido a brechas en su presencia digital. "
-            f"Con {confidence}% de confianza en el análisis, cada mes sin actuar representa "
+            f"Esta estimación está {confidence_text}, cada mes sin actuar representa "
             f"una oportunidad de recuperación de ingresos no aprovechada. "
             f"El mercado hotelero en Colombia es cada vez más competitivo en el entorno digital, "
             f"y los hoteles que no optimizan su presencia en buscadores, GBP y asistentes de IA "

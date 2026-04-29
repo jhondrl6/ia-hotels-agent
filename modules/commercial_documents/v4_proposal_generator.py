@@ -166,6 +166,7 @@ class V4ProposalGenerator:
         analytics_data: Optional[Dict[str, Any]] = None,
         financial_breakdown: Optional[Any] = None,
         assets_generated: Optional[List[Dict[str, Any]]] = None,
+        site_presence_report: Optional[Any] = None,  # FASE-D: SitePresenceReport for production presence verification
     ) -> str:
         """
         Generate the proposal document.
@@ -217,6 +218,7 @@ class V4ProposalGenerator:
             region=region,
             analytics_data=analytics_data,
             assets_generated=assets_generated,
+            site_presence_report=site_presence_report,
         )
         
         # Render template
@@ -455,6 +457,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         region: Optional[str] = None,
         analytics_data: Optional[Dict[str, Any]] = None,
         assets_generated: Optional[List[Dict[str, Any]]] = None,
+        site_presence_report: Optional[Any] = None,  # FASE-D: SitePresenceReport for production presence
     ) -> Dict[str, str]:
         """Prepare data for template rendering."""
         
@@ -609,7 +612,12 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             detected_pain_ids=getattr(diagnostic_summary, 'pain_ids', None) or [],
             score_aeo=diagnostic_summary.score_aeo,
         ),
-        'asset_quality_table': self._generate_asset_quality_table(assets_generated, detected_pain_ids=getattr(diagnostic_summary, 'pain_ids', None) or []),
+        'asset_quality_table': self._generate_asset_quality_table(
+            assets_generated,
+            detected_pain_ids=getattr(diagnostic_summary, 'pain_ids', None) or [],
+            site_presence_report=site_presence_report,
+            audit_result=audit_result,
+        ),
 
         # FASE-D: Competitors section — only if competitors data available
         'competitors_section': self._build_competitors_section(audit_result),
@@ -734,22 +742,52 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         self,
         assets_generated: Optional[List[Dict[str, Any]]],
         detected_pain_ids: Optional[List[str]] = None,
+        site_presence_report: Optional[Any] = None,
+        audit_result: Optional[Any] = None,  # FASE-D: audit for schema_valid / faq_schema_valid
     ) -> str:
         """Genera tabla de calidad de assets para la propuesta.
 
         Mapea cada servicio de la propuesta a su asset generado y muestra
         el nivel de preparacion basado en confidence_score.
 
+        FASE-D root-fix: site_presence_report permite mostrar "Verificado en sitio"
+        cuando SitePresenceChecker confirmo que el asset ya existe en produccion.
+        FIX: audit_result.schema_valid / faq_schema_valid para no mostrar
+        "Completo" para Datos Estructurados y FAQ cuando no estan validados.
+
         Args:
             assets_generated: Lista de assets generados (cada uno con 'asset_type' y 'confidence_score').
                 Si es None, muestra 'Pendiente' para todos los servicios.
             detected_pain_ids: Lista de pain IDs detectados (de PainSolutionMapper.detect_pains).
-                Si está disponible, genera tabla DINÁMICA (solo servicios con pain detectado).
+                Si esta disponible, genera tabla DINAMICA (solo servicios con pain detectado).
                 Si es None/empty, usa PROPOSAL_SERVICE_TO_ASSET (backwards compat).
+            site_presence_report: SitePresenceReport de SitePresenceChecker.
+                Si esta presente, se extrae present_in_production y presence_verified
+                para cada asset_type y se pasan a _confidence_to_nivel_significado.
+            audit_result: AuditResult con schema_valid y faq_schema_valid.
+                Si esta presente, se usa para downgradear "Completo" a "Listo para implementar"
+                cuando el schema no esta validado en produccion.
 
         Returns:
             String markdown con la tabla de calidad.
         """
+        # FASE-D: Build presence_lookup from site_presence_report
+        # presence_lookup[asset_type] = {'present_in_production': bool, 'presence_verified': bool}
+        presence_lookup = {}
+        if site_presence_report and hasattr(site_presence_report, 'results'):
+            for asset_type, result in site_presence_report.results.items():
+                presence_lookup[asset_type] = {
+                    'present_in_production': result.status.value == "exists",
+                    'presence_verified': True,
+                }
+
+        # FASE-D: Extract schema validation flags from audit_result
+        schema_valid = False
+        faq_schema_valid = False
+        if audit_result and hasattr(audit_result, 'schema'):
+            schema_valid = getattr(audit_result.schema, 'hotel_schema_valid', False)
+            faq_schema_valid = getattr(audit_result.schema, 'faq_schema_valid', False)
+
         # Build lookup: asset_type -> confidence_score
         asset_lookup = {}
         if assets_generated:
@@ -778,26 +816,82 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             # Dynamic: build from detected pains
             for entry in services_to_show:
                 confidence = asset_lookup.get(entry.asset_type, None)
-                nivel, significado = self._confidence_to_nivel_significado(confidence, assets_generated)
+                presence = presence_lookup.get(entry.asset_type, {})
+                # FASE-D FIX: Pass schema validation flags for hotel_schema and faq_page
+                is_schema = entry.asset_type == 'hotel_schema'
+                is_faq = entry.asset_type == 'faq_page'
+                nivel, significado = self._confidence_to_nivel_significado(
+                    confidence,
+                    assets_generated,
+                    present_in_production=presence.get('present_in_production', False),
+                    presence_verified=presence.get('presence_verified', False),
+                    schema_valid_override=schema_valid if is_schema else None,
+                    faq_schema_valid_override=faq_schema_valid if is_faq else None,
+                )
                 rows.append(f"| {entry.service_name} | {nivel} | {significado} |")
         else:
             # Static/backwards-compat: iterate over PROPOSAL_SERVICE_TO_ASSET
             for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
                 confidence = asset_lookup.get(asset_type, None)
-                nivel, significado = self._confidence_to_nivel_significado(confidence, assets_generated)
+                presence = presence_lookup.get(asset_type, {})
+                # FASE-D FIX: Pass schema validation flags for hotel_schema and faq_page
+                is_schema = asset_type == 'hotel_schema'
+                is_faq = asset_type == 'faq_page'
+                nivel, significado = self._confidence_to_nivel_significado(
+                    confidence,
+                    assets_generated,
+                    present_in_production=presence.get('present_in_production', False),
+                    presence_verified=presence.get('presence_verified', False),
+                    schema_valid_override=schema_valid if is_schema else None,
+                    faq_schema_valid_override=faq_schema_valid if is_faq else None,
+                )
                 rows.append(f"| {service_name} | {nivel} | {significado} |")
 
         return "\n".join(rows)
 
-    def _confidence_to_nivel_significado(self, confidence: Optional[float], assets_generated: Optional[List]) -> tuple:
+    def _confidence_to_nivel_significado(
+        self,
+        confidence: Optional[float],
+        assets_generated: Optional[List],
+        present_in_production: bool = False,
+        presence_verified: bool = False,
+        schema_valid_override: Optional[bool] = None,
+        faq_schema_valid_override: Optional[bool] = None,
+    ) -> tuple:
         """Convert confidence score to nivel + significado tuple.
-        
+
         FASE-C: Lenguaje positivo para cliente final.
-        Internamente solo se usa para display en la propuesta.
+        FASE-D root-fix: distingue entre asset generado vs verificado en producción.
+        Un asset con alta confianza NO significa que esté implementado en el sitio real.
+        FIX: schema_valid_override / faq_schema_valid_override para no mostrar
+        "Completo" cuando el schema no esta validado en el sitio real.
+
+        Args:
+            confidence: Confidence score of the generated asset (0.0-1.0)
+            assets_generated: List of assets (for backward compat, not used for decision)
+            present_in_production: True if SitePresenceChecker verified the asset exists on the site
+            presence_verified: True if presence verification was performed
+            schema_valid_override: If not None, overrides "Completo" for hotel_schema.
+                Use False to downgrade to "Listo para implementar".
+            faq_schema_valid_override: If not None, overrides "Completo" for faq_page.
+                Use False to downgrade to "Listo para implementar".
         """
+        # FASE-D: Si se verificó presencia y el asset YA existe en producción,
+        # es el estado más honesto que podemos mostrar
+        if presence_verified and present_in_production:
+            return ("✅ Verificado en sitio", "Ya existe en su web - nosotros lo entregamos")
+
         if confidence is not None:
-            if confidence >= 0.7:
+            if confidence >= 0.85:
+                # Alta confianza: asset bien generado Y auditado
+                # FIX: No mostrar "Completo" si schema_valid=false en el sitio real
+                # "Completo" solo si el schema esta implementado Y validado
+                if schema_valid_override is False or faq_schema_valid_override is False:
+                    return ("⚠️ Listo para implementar", "Requiere confirmacion post-firma")
                 return ("✅ Completo", "Listo para implementar")
+            elif confidence >= 0.7:
+                # Threshold mínimo: asset generado con calidad aceptable
+                return ("⚠️ Listo para implementar", "Requiere confirmacion post-firma")
             elif confidence >= 0.4:
                 return ("⚠️ En preparacion", "Datos pendientes del cliente")
             else:

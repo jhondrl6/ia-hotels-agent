@@ -777,6 +777,7 @@ class PublicationGatesOrchestrator:
         from modules.asset_generation.proposal_asset_alignment import (
             verify_proposal_asset_alignment,
             ALL_PROMISED_SERVICES,
+            PROPOSAL_SERVICE_TO_ASSET,
         )
 
         generated_assets = assessment.get("generated_assets", [])

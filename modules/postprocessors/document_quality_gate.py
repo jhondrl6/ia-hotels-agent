@@ -242,7 +242,7 @@ class DocumentQualityGate:
         if doc_type not in ("diagnostico", "propuesta"):
             return []
         issues: List[DocumentQualityIssue] = []
-        pattern = re.compile(r'0\s*%\s*(?:de\s+)?confianza', re.IGNORECASE)
+        pattern = re.compile(r'(?<!\d)0\s*%\s*(?:de\s+)?confianza', re.IGNORECASE)
         for i, line in enumerate(content.split('\n'), 1):
             match = pattern.search(line)
             if match:
