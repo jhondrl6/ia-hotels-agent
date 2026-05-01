@@ -1,5 +1,58 @@
 # Changelog
 
+## [4.38.0] - FEATURE-CONFIG-EXTRACTION (2026-05-01)
+
+### Objetivo
+Corrección del bug sync_versions + migración de 31 hardcodes a archivos YAML con schema validado.
+Resolución de 7 causas raíz identificadas en auditoría forense v2 del TECHNICAL_DEBT_2026-04-29.
+
+### Cambios Implementados
+- CR-1/CR-2/CR-3: Corrección bug sync_versions (doble escape YAML + validación post-reemplazo + consistencia "v")
+- CR-3: Fallbacks migrados a config/fallbacks.yaml con flag "estimated" visible
+- CR-4: Parámetros financieros migrados a config/pricing.yaml, config/scenarios.yaml, config/financial_defaults.yaml
+- CR-5: Duplicación de garantías eliminada — unificado en template + commercial.yaml
+- CR-6: Reconexión config/código — settings.yaml depurado de duplicados, 4 módulos huérfanos deprecados
+- CR-7: Narrativas de impacto + umbrales migrados a config/regional_benchmarks.yaml
+- 31 hardcodes extraídos a 6 archivos YAML con schema validado
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| config/pricing.yaml | TIER_CONFIG, GATE ratios, floor_price unificado |
+| config/scenarios.yaml | Recovery factors, scenario weights, degradation, OTA shifts, ia_boost |
+| config/financial_defaults.yaml | DEFAULTS financieros (12 valores) |
+| config/fallbacks.yaml | Fallbacks de scores con flags estimated |
+| config/commercial.yaml | ROI cap, break_even, descuentos, garantías, planes |
+| config/regional_benchmarks.yaml | Pain narratives (14) + umbrales de scoring multi-región |
+| modules/common/yaml_loader.py | Loader genérico con caching y fallback |
+| modules/common/fallback_loader.py | Fallback loader con schema validation |
+| tests/config/test_config_*.py | 8 archivos de tests de migración y regresión |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| scripts/sync_config.yaml | CR-1: Corrección doble escape en 2 patterns + consistencia "v" |
+| scripts/sync_versions.py | CR-2: Validación post-reemplazo |
+| modules/financial_engine/pricing_calculator.py | CR-4: TIER_CONFIG + GATE ratios → YAML |
+| modules/financial_engine/scenario_calculator.py | CR-4: OTA shifts + ia_boost → YAML |
+| modules/financial_engine/loss_projector.py | CR-4: degradation_rate → YAML |
+| modules/utils/financial_factors.py | CR-4: DEFAULTS + SUPERPOSITION_FACTOR → YAML |
+| modules/commercial_documents/v4_proposal_generator.py | CR-3/4/5: fallbacks + recovery_factors + weights + garantías → YAML |
+| modules/commercial_documents/v4_diagnostic_generator.py | CR-3/7: voice_readiness + pain narratives + umbrales → YAML |
+| modules/commercial_documents/templates/propuesta_v6_template.md | CR-5: Garantías unificadas, variables comerciales |
+| config/settings.yaml | CR-6: Depurado de duplicados, marcado como legacy |
+| modules/analytics/profound_client.py | DeprecationWarning + docstring |
+| modules/analytics/semrush_client.py | DeprecationWarning + docstring |
+| modules/analytics/data_aggregator.py | DeprecationWarning + docstring |
+| modules/analytics/aeo_metrics_gen.py | DeprecationWarning + docstring |
+| data_models/analytics_status.py | Fix is_any_missing() solo GA4 + GSC |
+| scripts/doctor.py | Verificación integridad config files |
+
+### Tests
+- 60 tests en tests/config/ (migración, fallback, schema, integración)
+- 0 regresiones en tests existentes
+- Backwards compatible: sin YAML usa defaults documentados
+
 ## [4.37.0] - 2026-04-29
 
 ### Objetivo
@@ -47,6 +100,25 @@ Corrección de hallazgos críticos de auditoría forense AmaziliaHotel: bugs de 
 
 - Sin regresiones. Tests existentes (~2363) pasan.
 - v4complete verificado: coherence >= 0.80, gates ready=true.
+
+#### FASE-CONFIG-8: Suite de Tests de Regresión + Blindaje Config
+- 8 archivos de test creados: `test_config_pricing.py`, `test_config_scenarios.py`, `test_config_fallbacks.py`, `test_config_commercial.py`, `test_config_benchmarks.py`, `test_config_fallback.py`, `test_config_schema.py`, `test_config_integration.py`
+- `scripts/doctor.py`: Agregada sección "Config Files" en `--status` (lista YAML en `config/`, valida version+description). Fix encoding `utf-8` en 2 sitios de `open()`.
+- `config/settings.yaml`: Fix YAML inválido — `elite:` sin indentación (indent 0 → 2).
+- `config/certificates.yaml`, `config/provider_registry.yaml`: Actualizados con campos version+description para doctor.py.
+- 60 tests passing, 0 regresiones.
+- `doctor.py --status` reporta 9/9 config files healthy.
+- Cobertura >= 80% de los 31 hardcodes con test de migración.
+
+#### FASE-CONFIG-3B: Extracción de Escenarios Financieros a YAML
+- Creados `config/scenarios.yaml` y `config/financial_defaults.yaml` con schema validado
+- Creado `modules/common/yaml_loader.py` — loader genérico YAML con cache mtime
+- `modules/financial_engine/scenario_calculator.py`: H-21 (ota_shift 0.05/0.10/0.20), H-22 (ia_boost 0.05) → YAML
+- `modules/financial_engine/loss_projector.py`: H-20 (degradation_rate 0.02) → YAML
+- `modules/utils/financial_factors.py`: N-11 (SUPERPOSITION_FACTOR 0.7), N-11b (DEFAULTS 12 valores) → YAML
+- `modules/commercial_documents/v4_proposal_generator.py`: H-14 (recovery_factors 0.15/0.20/0.25), H-17 (weights 0.70/0.20/0.10), N-01 (pain_ratio 0.20) → YAML
+- `tests/test_config_extraction_3b.py`: 18 tests (YAML presente/ausente/corrupto, valores custom, fallbacks)
+- 9 hardcodes extraídos (H-14, H-17, H-20, H-21, H-22, N-01, N-11, N-11b)
 
 ## [4.36.1] - 2026-04-28
 

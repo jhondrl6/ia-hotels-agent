@@ -1,0 +1,139 @@
+# Configuración de Certificados v2.2
+# Plan Maestro Definitivo - Certificados de Excelencia
+
+certificados:
+  
+  reserva_directa:
+    nombre: "Reserva Directa Certificada"
+    descripcion: "Trust-seal que se activa cuando el hotel alcanza ≥60% de reservas directas o reduce OTA ≥10 p.p. durante 60 días"
+    
+    umbral_activacion:
+      tipo: OR
+      condiciones:
+        - reservas_directas_porcentaje: 0.60
+        - ota_reduccion_puntos: 10
+      dias_validacion: 60
+    
+    vigencia_meses: 12
+    auto_renovacion: true
+    
+    entregables:
+      digital:
+        formato: "SVG"
+        archivo: "reserva_directa.svg"
+        dimensiones: "150x60 px"
+        incluye_qr: true
+        qr_destino: "web_directa_con_pse"
+      
+      fisico_opcional:
+        calcomania_puerta:
+          precio_cop: 80000
+          dimensiones: "20x10 cm"
+          incluye_qr: true
+        
+        stand_mostrador:
+          precio_cop: 120000
+          material: "acrílico"
+          color: "verde #10B981"
+    
+    codigo_html:
+      tipo: "schema.org/Award"
+      obligatorio_en:
+        - homepage
+        - google_business_profile
+      opcional_en:
+        - social_media
+        - email_signature
+    
+    reglas_uso:
+      - "Vigencia 12 meses → renovación automática si se mantiene KPI"
+      - "Uso obligatorio en homepage y GBP"
+      - "Uso prohibido si cae por debajo del umbral (se apaga vía link)"
+      - "No transferible a otras marcas o sucursales"
+    
+    validacion:
+      frecuencia: "mensual"
+      método: "dashboard_automatizado"
+      desactivacion_automatica: true
+    
+    margen_comercial: 0.85
+  
+  web_optimizada:
+    nombre: "Web Optimizada para IA"
+    descripcion: "Trust-seal que se activa cuando el Score de Credibilidad Web ≥80/100 durante 60 días"
+    
+    umbral_activacion:
+      score_credibilidad_web: 80
+      dias_validacion: 60
+    
+    vigencia_meses: 12
+    auto_renovacion: true
+    
+    componentes_score:
+      titulo_optimizado: 15
+      https_activo: 10
+      cta_visible: 12
+      velocidad_web: 15
+      mobile_responsive: 12
+      schema_org: 10
+      contenido_fresco: 8
+      seguridad: 8
+    
+    entregables:
+      digital_solo:
+        formato: "SVG + PNG"
+        archivo: "web_optimizada.svg"
+        dimensiones: "150x60 px"
+        incluye_qr: false
+    
+    codigo_html:
+      tipo: "schema.org/Award"
+      obligatorio_en:
+        - homepage_footer
+        - google_business_profile
+      opcional_en:
+        - menu_header
+    
+    reglas_uso:
+      - "Vigencia 12 meses → renovación automática si se mantiene KPI"
+      - "Se desactiva automáticamente si cae score"
+      - "No transferible"
+    
+    validacion:
+      frecuencia: "semanal"
+      método: "script_monitoreo_automatizado"
+      desactivacion_automatica: true
+    
+    margen_comercial: 1.0  # Digital puro, sin costos
+
+# Monitoreo y alertas
+monitoreo:
+  dashboard:
+    metricas_activas:
+      - reservas_directas_porcentaje
+      - ota_dependencia
+      - score_credibilidad_web
+      - dias_desde_umbral
+    
+    alertas:
+      reserva_directa_en_riesgo: "Cuando cae a 58% reservas directas"
+      web_optimizada_en_riesgo: "Cuando cae a 78 score"
+      certificado_expirando: "15 días antes de vencer"
+    
+    notificaciones:
+      canal: ["email", "whatsapp"]
+      frecuencia: "semanal"
+
+# Reportes
+reportes:
+  mensuales:
+    incluye:
+      - "Certificados activos"
+      - "Métricas de umbral"
+      - "Impacto en conversion"
+      - "Renovaciones próximas"
+  
+  screenshot_automatico:
+    de: "ChatGPT"
+    frecuencia: "semanal"
+    incluye: "Posición en recomendaciones IA"

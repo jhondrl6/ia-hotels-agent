@@ -79,8 +79,8 @@ rules:
     file: "docs/CONTRIBUTING.md"
     description: "Version in CONTRIBUTING.md header blockquote"
     replacements:
-      - pattern: '>\s*\*\*Version Actual:\*\*\s*v?[\d]+\.[\d]+\.[\d]+\s*\([^)]*\)'
-        template: '> **Version Actual:** v{version} ({codename})'
+      - pattern: '>\s*\*\*Version actual:\*\*\s*v?[\d]+\.[\d]+\.[\d]+\s*\|[^\n]+'
+        template: '> **Version actual:** v{version} | Consulta REGISTRY.md para el historial de fases completadas.'
       - pattern: '>\s*\*\*Ultima fase completada:\*\*\s*[^\n]+'
         template: '> **Ultima fase completada:** (ver REGISTRY.md)'
 
@@ -98,10 +98,10 @@ rules:
     file: "docs/GUIA_TECNICA.md"
     description: "Version and date in GUIA_TECNICA.md header"
     replacements:
-      - pattern: '\\*\\*Última actualización:\\*\\*\\s*\\d+\\s+\\w+\\s+\\d{4}'
-        template: '**Última actualización:** {date_text}'
-      - pattern: '\\*\\*Versión:\\*\\*\\s*[\\d]+\\.[\\d]+\\.[\\d]+[^\(\n]*'
-        template: '**Versión:** {version} ({codename})'
+      - pattern: '\*\*Última actualización:\*\*\s*\d{4}-\d{2}-\d{2}'
+        template: '**Última actualización:** {date}'
+      - pattern: '\*\*Versión:\*\*\s*v?[\d]+\.[\d]+\.[\d]+.*$'
+        template: '**Versión:** v{version} ({codename})'
 
   # ============================================================
   # REGISTRY.md

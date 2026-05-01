@@ -1,10 +1,14 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.37.0"
-codename: "PATCH Forense AmaziliaHotel v2"
-release_date: "2026-04-29"
+version: "4.38.0"
+codename: "Config Extraction — Hardcodes to YAML"
+release_date: "2026-05-01"
 plan_maestro_version: "v2.6.0"
 
+# v4.38.0 - FEATURE-CONFIG-EXTRACTION (2026-05-01)
+# Corrección bug sync_versions + migración de 31 hardcodes a 6 archivos YAML
+# 7 causas raíz corregidas, 60+ tests de config, backwards compatible
+#
 # v4.36.0 - PATCH Forense AmaziliaHotel (2026-04-26)
 # FASE-A: hotel_schema dual unificado - schema enriquecido como asset oficial
 # FASE-B: Comision OTA label corregido en diagnostico comercial

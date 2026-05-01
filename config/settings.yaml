@@ -1,5 +1,14 @@
 # IA Hoteles Agent - Configuracion Principal
 
+# ⚠️ LEGACY — Este archivo está deprecado para parámetros de generación.
+# Los parámetros activos están en:
+#   config/pricing.yaml, config/scenarios.yaml, config/financial_defaults.yaml,
+#   config/fallbacks.yaml, config/commercial.yaml, config/regional_benchmarks.yaml
+# Se mantiene por backwards compatibility con módulos no migrados.
+
+version: "1.0.0"
+description: "Configuración principal del agente (APIs, paths, niveles de logging) — LEGACY"
+
 apis:
   anthropic:
     model: "claude-sonnet-4-20250514"
@@ -128,6 +137,8 @@ kpis:
 
 # Paquetes de Implementación - Plan Maestro v2.3
 # "Estrategia EVIDENCIA-CONFIANZA-ESCALA"
+# ⚠️ DEPRECADO: Los precios activos están en config/pricing.yaml y config/commercial.yaml.
+# Se mantiene por backwards compatibility con módulos no migrados.
 packages:
   starter_geo:
     nombre: "Activación GEO"
@@ -165,7 +176,7 @@ packages:
       - "Garantía: ROI 3X en 6 meses"
     tiempo_implementacion_dias: 5
   
-elite:
+  elite:
     nombre: "Suite Autónoma de Recepción IA"
     precio_cop: 7500000
     incluye:

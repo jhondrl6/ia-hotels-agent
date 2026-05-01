@@ -252,12 +252,12 @@ class TestActiveMode:
         )
         wrapper = PricingResolutionWrapper(feature_flags=flags)
 
-        # Boutique: 3% of expected loss, min 1.2M, max 2.5M
+        # Boutique: 3.5% of expected loss, min 1.2M, max 2.5M
         expected_loss = 50_000_000
         result = wrapper.resolve(rooms=20, expected_loss_cop=expected_loss)
 
-        # 3% of 50M = 1.5M, within bounds
-        assert result.monthly_price_cop == 1_500_000
+        # 3.5% of 50M = 1.75M, within bounds
+        assert result.monthly_price_cop == 1_750_000
         assert result.source == "hybrid_v410"
         assert result.tier == "boutique"
         assert result.used_new_calculation is True
@@ -272,14 +272,14 @@ class TestActiveMode:
         wrapper = PricingResolutionWrapper(feature_flags=flags)
 
         # Boutique with very high loss (would exceed max)
-        expected_loss = 100_000_000  # 3% = 3M, but max is 2.5M
+        expected_loss = 100_000_000  # 3.5% = 3.5M, but max is 2.5M
         result = wrapper.resolve(rooms=20, expected_loss_cop=expected_loss)
 
         assert result.monthly_price_cop == 2_500_000  # capped at max
         assert result.pain_ratio == round(2_500_000 / 100_000_000, 4)
 
         # Boutique with very low loss (would be below min)
-        expected_loss = 10_000_000  # 3% = 300K, but min is 1.2M
+        expected_loss = 10_000_000  # 3.5% = 350K, but min is 1.2M
         result = wrapper.resolve(rooms=20, expected_loss_cop=expected_loss)
 
         assert result.monthly_price_cop == 1_200_000  # floored at min
@@ -294,10 +294,10 @@ class TestActiveMode:
 
         expected_loss = 80_000_000
 
-        # Boutique (3%): 2.4M
+        # Boutique (3.5%): 2.8M, capped at 2.5M max
         result = wrapper.resolve(rooms=20, expected_loss_cop=expected_loss)
         assert result.tier == "boutique"
-        assert result.monthly_price_cop == 2_400_000  # 3% of 80M
+        assert result.monthly_price_cop == 2_500_000  # 3.5% of 80M = 2.8M, capped
 
         # Standard (2.5%): 2.0M
         result = wrapper.resolve(rooms=40, expected_loss_cop=expected_loss)
@@ -448,7 +448,7 @@ class TestCanaryMode:
         result = wrapper.resolve(rooms=20, expected_loss_cop=expected_loss)
 
         # would_use_new is True, so should use new result
-        assert result.monthly_price_cop == 1_500_000  # 3% of 50M (hybrid)
+        assert result.monthly_price_cop == 1_750_000  # 3.5% of 50M (hybrid)
         assert result.source == "hybrid_v410"
         assert result.used_new_calculation is True
 
@@ -569,7 +569,7 @@ class TestCalculatePriceWithShadowFunction:
         )
 
         assert isinstance(result, PricingResolutionResult)
-        assert result.monthly_price_cop == 1_500_000  # 3% of 50M
+        assert result.monthly_price_cop == 1_750_000  # 3.5% of 50M
 
     def test_function_passes_all_parameters(self, mock_shadow_logger):
         """Test function passes all parameters to wrapper."""
@@ -725,15 +725,15 @@ class TestIntegration:
                 shadow_logger=real_logger,
             )
 
-            # Boutique hotel: legacy 5% vs hybrid 3%
+            # Boutique hotel: legacy 5% vs hybrid 3.5%
             expected_loss = 50_000_000
             result = wrapper.resolve(
                 rooms=20,
                 expected_loss_cop=expected_loss,
             )
 
-            # Legacy: 2.5M, Hybrid: 1.5M
-            # Delta: -1M (-40%)
+            # Legacy: 2.5M, Hybrid: 1.75M
+            # Delta: -750K (-30%)
             assert result.shadow_comparison is not None
             assert result.shadow_comparison.pricing_delta is not None
             assert result.shadow_comparison.pricing_delta_pct is not None
@@ -744,6 +744,6 @@ class TestIntegration:
                 log_data = json.load(f)
                 # Legacy: 2.5M, New: 1.5M
                 assert log_data["legacy_pricing"]["monthly_price_cop"] == 2_500_000
-                assert log_data["new_pricing"]["monthly_price_cop"] == 1_500_000
-                assert log_data["pricing_delta"] == -1_000_000
-                assert log_data["pricing_delta_pct"] == -40.0
+                assert log_data["new_pricing"]["monthly_price_cop"] == 1_750_000
+                assert log_data["pricing_delta"] == -750_000
+                assert log_data["pricing_delta_pct"] == -30.0

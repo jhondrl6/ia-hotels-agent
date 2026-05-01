@@ -1,0 +1,29 @@
+# config/scenarios.yaml — FEATURE-CONFIG-EXTRACTION (FASE-CONFIG-3B)
+# Configuración de escenarios financieros: recuperación, degradación,
+# OTA shifts, IA boost, pain ratio. Cargado en runtime con cache por mtime.
+#
+# Extrae hardcodes: H-14a/b/c, H-17, H-20, H-21, H-22, N-01
+
+version: "1.0.0"
+description: "Configuración de escenarios financieros (recuperación, degradación, OTA shifts, IA boost)"
+
+recovery_factors:
+  conservative: 0.15
+  realistic: 0.20
+  optimistic: 0.25
+
+scenario_weights:
+  conservative: 0.70
+  realistic: 0.20
+  optimistic: 0.10
+
+degradation_rate: 0.02
+
+ota_shift:
+  minimal: 0.05
+  moderate: 0.10
+  optimistic: 0.20
+
+ia_boost: 0.05
+
+pain_ratio_default: 0.20

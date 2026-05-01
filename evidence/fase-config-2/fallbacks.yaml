@@ -1,0 +1,35 @@
+# config/fallbacks.yaml — FEATURE-CONFIG-EXTRACTION (FASE-CONFIG-2)
+# Valores de fallback cuando datos reales no estan disponibles.
+# Cargado por modules/common/fallback_loader.py con validacion de schema.
+#
+# REGLA: Si un valor se usa como fallback, el template debe mostrar un
+# disclaimer "estimated" via la flag is_estimated=True.
+
+version: "1.0.0"
+description: "Valores de fallback cuando datos reales no estan disponibles"
+
+scores:
+  benchmark_score:
+    value: 58
+    type: int
+    description: "Score regional de referencia cuando no hay benchmarks reales"
+  score_tecnico:
+    value: 50
+    type: int
+    description: "Score tecnico cuando el modulo de auditoria falla"
+  coherence_score:
+    value: 70
+    type: int
+    description: "Score de coherencia cuando no se puede calcular"
+  voice_readiness:
+    value: 0
+    type: int
+    description: "Voice readiness cuando el proxy falla"
+  voice_status:
+    value: "unknown"
+    type: str
+    description: "Estado de voice readiness sin datos reales"
+
+flags:
+  show_estimated_badge: true
+  estimated_text: "Valor estimado — no se pudo verificar con fuentes externas"

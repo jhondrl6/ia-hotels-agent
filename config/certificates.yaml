@@ -1,6 +1,9 @@
 # Configuración de Certificados v2.2
 # Plan Maestro Definitivo - Certificados de Excelencia
 
+version: "2.2"
+description: "Configuración de certificados de excelencia y trust-seals"
+
 certificados:
   
   reserva_directa:

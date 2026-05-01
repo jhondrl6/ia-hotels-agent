@@ -1,8 +1,8 @@
-<!-- agents_version: 4.37.0 | last_update: 2026-04-29 -->
+<!-- agents_version: 4.38.0 | last_update: 2026-04-30 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.37.0 -- PATCH Forense AmaziliaHotel v2 COMPLETADO**
+> **v4.38.0 -- Config Extraction — Hardcodes to YAML COMPLETADO**
 
 ---
 

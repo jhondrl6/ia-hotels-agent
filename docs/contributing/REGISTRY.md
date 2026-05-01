@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-29
+> **Ultima actualizacion:** 2026-04-30
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 185
+> **Total fases completadas:** 195
 
 ---
 
@@ -4559,6 +4559,249 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CONFIG-1 - 2026-04-30
+**Descripcion:** Corrección bug sync_versions: doble escape YAML + validación post-reemplazo + consistencia v
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/sync_config.yaml` | Sync Config |
+| `scripts/sync_versions.py` | Sync Versions |
+
+### Validaciones
+- [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CONFIG-2 - 2026-04-30
+**Descripcion:** Extraccion de fallbacks a config/fallbacks.yaml: benchmark_score, score_tecnico, coherence_score, voice_readiness + flag estimated + fallback_loader.py
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `config/fallbacks.yaml` | NUEVO | Fallbacks |
+| `modules/common/__init__.py` | NUEVO |   Init   |
+| `modules/common/fallback_loader.py` | NUEVO | Fallback Loader |
+| `tests/common/test_fallback_loader.py` | NUEVO | Test Fallback Loader |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (16)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CONFIG-3A - 2026-04-30
+**Descripcion:** Extracción de pricing a config/pricing.yaml: TIER_CONFIG, GATE ratios, floor_price unificado (1.2M). Resuelta inconsistencia H-18b.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `config/pricing.yaml` | NUEVO | Pricing |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/pricing_calculator.py` | Pricing Calculator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (5)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CONFIG-3B - 2026-04-30
+**Descripcion:** Extracción de escenarios financieros: recovery_factors, scenario_weights, degradation_rate, OTA shifts, ia_boost, pain_ratio_default, superposition_factor, defaults financieros
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `config/scenarios.yaml` | NUEVO | Scenarios |
+| `config/financial_defaults.yaml` | NUEVO | Financial Defaults |
+| `modules/common/yaml_loader.py` | NUEVO | Yaml Loader |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/scenario_calculator.py` | Scenario Calculator |
+| `modules/financial_engine/loss_projector.py` | Loss Projector |
+| `modules/utils/financial_factors.py` | Financial Factors |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (18)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CONFIG-4 - 2026-04-30
+**Descripcion:** Parametrización de template comercial: garantías unificadas, ROI cap, break_even, descuentos, cuotas, plan stubs. Eliminada duplicación CR-5.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `config/commercial.yaml` | NUEVO | Commercial |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CONFIG-5 - 2026-04-30
+**Descripcion:** Extracción de umbrales y narrativas: 14 pain narrative impacts + 7 umbrales de scoring a regional_benchmarks.yaml con soporte multi-región
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `config/regional_benchmarks.yaml` | NUEVO | Regional Benchmarks |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/common/yaml_loader.py` | Yaml Loader |
+
+### Validaciones
+- [x] Tests passing (19)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CONFIG-6 - 2026-04-30
+**Descripcion:** Config Reconnect: deprecados 4 modulos huerfanos (ProfoundClient, SemrushClient, AnalyticsAggregator, aeo_metrics_gen), corregido bug en AnalyticsStatus.is_complete/is_any_missing, settings.yaml reconectado con punteros a archivos activos
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `config/settings.yaml` | Settings |
+| `modules/analytics/__init__.py` |   Init   |
+| `modules/analytics/profound_client.py` | Profound Client |
+| `modules/analytics/semrush_client.py` | Semrush Client |
+| `modules/analytics/data_aggregator.py` | Data Aggregator |
+| `modules/delivery/generators/aeo_metrics_gen.py` | Aeo Metrics Gen |
+| `data_models/analytics_status.py` | Analytics Status |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (tests/test_config_extraction_6.py: 15/15)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CONFIG-7 - 2026-04-30
+**Descripcion:** Validación E2E: v4complete Amazilia Hotel + análisis de resolución de 31 hardcodes y 7 causas raíz. Verificación de flags estimated, consistency YAML vs output. Coherence 0.89. Publication READY (9/9 gates).
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/fase-config-7/ANALISIS_HALLAZGOS.md` | NUEVO | Analisis Hallazgos |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.8933 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CONFIG-8 - 2026-04-30
+**Descripcion:** Suite de tests de regresión: 60 tests passing. Migración YAML verificada. doctor.py actualizado con sección Config Files.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/config/test_config_pricing.py` | NUEVO | Test Config Pricing |
+| `tests/config/test_config_scenarios.py` | NUEVO | Test Config Scenarios |
+| `tests/config/test_config_fallbacks.py` | NUEVO | Test Config Fallbacks |
+| `tests/config/test_config_commercial.py` | NUEVO | Test Config Commercial |
+| `tests/config/test_config_benchmarks.py` | NUEVO | Test Config Benchmarks |
+| `tests/config/test_config_fallback.py` | NUEVO | Test Config Fallback |
+| `tests/config/test_config_schema.py` | NUEVO | Test Config Schema |
+| `tests/config/test_config_integration.py` | NUEVO | Test Config Integration |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/doctor.py` | Doctor |
+| `config/certificates.yaml` | Certificates |
+| `config/provider_registry.yaml` | Provider Registry |
+| `config/settings.yaml` | Settings |
+
+### Validaciones
+- [x] Tests passing (60)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.38.0 - 2026-04-30
+**Descripcion:** Release 4.38.0: FEATURE-CONFIG-EXTRACTION. 31 hardcodes → 6 YAML + sync fix + 60 tests config. 7 causas raíz corregidas. Backwards compatible.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Version |
+| `CHANGELOG.md` | Changelog |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
+| `AGENTS.md` | Agents |
+| `README.md` | Readme |
+| `.cursorrules` | .Cursorrules |
+| `docs/CONTRIBUTING.md` | Contributing |
+| `docs/contributing/REGISTRY.md` | Registry |
+| `.agent/SYSTEM_STATUS.md` | System Status |
+
+### Validaciones
+- [x] Tests passing (60)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

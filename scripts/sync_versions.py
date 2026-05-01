@@ -88,8 +88,9 @@ class SyncEngine:
         return result
     
     def _apply_replacements(self, content: str, replacements: List[dict]) -> tuple:
-        """Apply all replacements to content. Returns (new_content, changed)."""
+        """Apply all replacements to content. Returns (new_content, changed, matched_replacements)."""
         original = content
+        matched = []  # Track which replacements found a match
         for repl in replacements:
             pattern = repl.get("pattern")
             template = repl.get("template", "")
@@ -101,9 +102,13 @@ class SyncEngine:
                 flags = re.MULTILINE
             
             interpolated = self._interpolate(template)
-            content = re.sub(pattern, interpolated, content, flags=flags)
+            
+            # Only substitute if pattern actually matches
+            if re.search(pattern, content, flags=flags):
+                matched.append(repl)
+                content = re.sub(pattern, interpolated, content, flags=flags)
         
-        return content, content != original
+        return content, content != original, matched
     
     def sync_rule(self, rule_id: str, check_only: bool = False) -> bool:
         """Sync a specific rule by ID."""
@@ -126,8 +131,17 @@ class SyncEngine:
         content = filepath.read_text(encoding="utf-8")
         original = content
         
-        content, changed = self._apply_replacements(content, rule.get("replacements", []))
-        
+        content, changed, matched = self._apply_replacements(content, rule.get("replacements", []))
+
+        # Verify post-replacement: only check replacements that actually matched
+        for repl in matched:
+            template = repl.get("template", "")
+            interpolated = self._interpolate(template)
+            if interpolated not in content:
+                self.results[rule_id] = "PATTERN_MISMATCH"
+                print(f"WARN: {rule['file']} ({rule_id}) - pattern matched but value not found")
+                return False
+
         if not changed:
             self.results[rule_id] = "SYNC"
             print(f"OK: {rule['file']} ({rule_id}) - in sync")

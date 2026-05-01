@@ -1,0 +1,34 @@
+version: "1.0.0"
+description: "Términos comerciales para propuestas"
+
+roi:
+  cap: 5.0
+  description: "ROI máximo mostrado al cliente (múltiplo X)"
+
+break_even:
+  default_months: 6
+  description: "Meses estimados para punto de equilibrio"
+
+payment_options:
+  single_payment_discount: 0.90   # 10% descuento
+  quarterly_discount: 0.95         # 5% descuento
+  installments: 3                  # cuotas sin interés
+  installment_label: "3 cuotas sin interés"
+
+discounts:
+  quarterly: 10    # porcentaje
+  semiannual: 18   # porcentaje
+
+guarantees:
+  satisfaction_days: 90
+  satisfaction_text: "Garantía de satisfacción de 90 días"
+  improvement_percent: 10
+  improvement_text: "Compromiso de mejora del 10% en métricas clave"
+  delivery_days: 15
+  delivery_text: "Primeros resultados visibles en 15 días"
+
+plans:
+  plan_7d: "Revisar y optimizar Google Business Profile"
+  plan_30d: "Implementar quick wins identificados y comenzar plan de contenido"
+  plan_60d: "Desarrollar presencia en asistentes de IA y monitorear resultados"
+  plan_90d: "Consolidar estrategia de IA y evaluar retorno de inversión"

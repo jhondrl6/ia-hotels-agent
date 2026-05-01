@@ -105,8 +105,36 @@ def run_full() -> bool:
     else:
         print_check("FAIL", "VERSION.yaml", "not found")
 
-    # 4. Quick file counts
-    print_header("4. Ecosystem Stats", "-")
+    # 4. Config Files Integrity (FASE-CONFIG-8)
+    print_header("4. Config Files Integrity", "-")
+    import yaml
+    config_dir = PROJECT_ROOT / "config"
+    config_files_ok = 0
+    config_files_total = 0
+    if config_dir.exists():
+        for yaml_file in sorted(config_dir.glob("*.yaml")):
+            config_files_total += 1
+            try:
+                with open(yaml_file, encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+                # Check required fields
+                has_version = 'version' in data
+                has_desc = 'description' in data
+                if has_version and has_desc:
+                    print_check("PASS", f"config/{yaml_file.name}", f"v{data.get('version','?')} - {data.get('description','')[:50]}")
+                    config_files_ok += 1
+                else:
+                    missing = []
+                    if not has_version: missing.append('version')
+                    if not has_desc: missing.append('description')
+                    print_check("FAIL", f"config/{yaml_file.name}", f"missing: {', '.join(missing)}")
+            except Exception as e:
+                print_check("FAIL", f"config/{yaml_file.name}", f"ERROR: {str(e)[:50]}")
+    else:
+        print_check("FAIL", "config/ directory", "not found")
+
+    # 5. Quick file counts
+    print_header("5. Ecosystem Stats", "-")
 
     # Skill count
     workflows = PROJECT_ROOT / ".agents" / "workflows"
@@ -127,7 +155,7 @@ def run_full() -> bool:
         sess_count = len(list(session_dir.glob("*.json")))
         print_check("PASS", f"Active sessions", f"{sess_count} files")
 
-    # 5. Summary
+    # 6. Summary
     print_header("SUMMARY")
     all_passed = agent_passed and ctx_passed
 
@@ -200,6 +228,27 @@ def run_status() -> bool:
     if archive_dir.exists():
         archive_count = len(list(archive_dir.glob("*.json")))
 
+    # Config files count (FASE-CONFIG-8)
+    config_count = 0
+    config_healthy = 0
+    config_dir_path = PROJECT_ROOT / "config"
+    config_table_rows = ""
+    if config_dir_path.exists():
+        import yaml
+        for yaml_file in sorted(config_dir_path.glob("*.yaml")):
+            config_count += 1
+            try:
+                with open(yaml_file, encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+                if 'version' in data and 'description' in data:
+                    config_healthy += 1
+                    status = "OK"
+                else:
+                    status = "MISSING FIELDS"
+            except Exception as e:
+                status = "ERROR"
+            config_table_rows += f"| `{yaml_file.name}` | {status} |\n"
+
     # Current state
     cs_file = AGENT_ROOT / "memory" / "current_state.json"
     last_url = "N/A"
@@ -261,6 +310,13 @@ def run_status() -> bool:
 | Ultima sesion activa | {last_session} |
 | Ultimo contexto actualizado | {last_updated} |
 | Ultima URL procesada | {last_url} |
+
+## Config Files ({config_healthy}/{config_count} healthy)
+
+| Archivo | Estado |
+|---------|--------|
+{config_table_rows}
+**Total:** {config_healthy}/{config_count} archivos con version+description
 
 ## Validaciones
 

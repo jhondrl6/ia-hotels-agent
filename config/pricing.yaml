@@ -1,0 +1,30 @@
+# config/pricing.yaml
+version: "1.0.0"
+description: "Configuración de pricing y tiers para cálculo de paquetes"
+
+tiers:
+  boutique:
+    percentage: 0.035
+    min_price: 1200000
+    max_price: 2500000
+    description: "Hoteles boutique y pequeños"
+  standard:
+    percentage: 0.025
+    min_price: 1800000
+    max_price: 3800000
+    description: "Hoteles estándar y medianos"
+  large:
+    percentage: 0.02
+    min_price: 3500000
+    max_price: 7500000
+    description: "Hoteles grandes"
+
+gates:
+  min_ratio: 0.03
+  max_ratio: 0.06
+  ideal_ratio: 0.045
+
+packages:
+  monthly_default: 1200000
+  setup_fee_default: 2500000
+  floor_price: 1200000

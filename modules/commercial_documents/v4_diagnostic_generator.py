@@ -28,6 +28,8 @@ from .data_structures import (
 from .pain_solution_mapper import PainSolutionMapper
 
 from data_models.analytics_status import AnalyticsStatus
+from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
+from modules.common.yaml_loader import load_yaml_config, YAMLLoadError
 
 
 def _get_opportunity_scorer():
@@ -46,6 +48,55 @@ def _get_voice_readiness_proxy():
         return VoiceReadinessProxy()
     except Exception:
         return None
+
+
+# ============================================================
+# BENCHMARKS CACHE — Módulo-level para compartir entre instancias
+# FASE-CONFIG-5: Centralización de thresholds
+# ============================================================
+_benchmarks_cache: Optional[Dict[str, Any]] = None
+_benchmarks_region: Optional[str] = None
+
+
+def _load_benchmarks(region: str = "eje_cafetero") -> Dict[str, Any]:
+    """
+    Carga benchmarks desde regional_benchmarks.yaml con fallback a default_region.
+    
+    Args:
+        region: Código de región (default: eje_cafetero)
+    
+    Returns:
+        Dict con la sección 'regions.{region}' del YAML
+    """
+    global _benchmarks_cache, _benchmarks_region
+    
+    if _benchmarks_cache is not None and _benchmarks_region == region:
+        return _benchmarks_cache
+    
+    config = load_yaml_config('regional_benchmarks')
+    default_region = config.get('default_region', 'eje_cafetero')
+    regions = config.get('regions', {})
+    
+    # Fallback: si la región no existe, usar default_region
+    target_region = region if region in regions else default_region
+    
+    if target_region not in regions:
+        raise YAMLLoadError(
+            f"Region '{target_region}' not found in regional_benchmarks.yaml. "
+            f"Available: {list(regions.keys())}"
+        )
+    
+    _benchmarks_cache = regions[target_region]
+    _benchmarks_region = region
+    
+    return _benchmarks_cache
+
+
+def clear_benchmarks_cache() -> None:
+    """Limpia el cache de benchmarks. Útil para testing."""
+    global _benchmarks_cache, _benchmarks_region
+    _benchmarks_cache = None
+    _benchmarks_region = None
 
 # Analytics imports (lazy-loaded to avoid hard dependency on google-analytics-data)
 # Used by _get_analytics_summary() and _get_analytics_fallback()
@@ -269,8 +320,26 @@ class V4DiagnosticGenerator:
         # Transparencia de datos analytics (default: True)
         # Si True, agrega seccion "Fuentes de Datos Usadas en Este Diagnostico"
         # cuando alguna fuente (GA4/Profound/Semrush) no esta disponible.
-        self.show_analytics_transparency = True 
-    
+        self.show_analytics_transparency = True
+
+    def _load_commercial_config(self) -> dict:
+        """Load config/commercial.yaml with caching. Falls back to hardcoded defaults.
+
+        FASE-CONFIG-4: Replaces H-26 plan stubs.
+        """
+        try:
+            return load_yaml_config('commercial')
+        except YAMLLoadError as e:
+            logging.getLogger(__name__).warning(f"commercial.yaml unavailable: {e}")
+            return {
+                'plans': {
+                    'plan_7d': "Revisar y optimizar Google Business Profile",
+                    'plan_30d': "Implementar quick wins identificados y comenzar plan de contenido",
+                    'plan_60d': "Desarrollar presencia en asistentes de IA y monitorear resultados",
+                    'plan_90d': "Consolidar estrategia de IA y evaluar retorno de inversión",
+                }
+            }
+
     def generate(
         self,
         audit_result: V4AuditResult,
@@ -309,6 +378,9 @@ class V4DiagnosticGenerator:
 
         # Reset brechas cache per generate() call (FASE-H)
         self._cached_brechas = None
+        
+        # Store region for use in _identify_brechas -> _pain_to_brecha (FASE-CONFIG-5)
+        self._region = region if region else "eje_cafetero"
 
         # Load template
         template_content = self._load_template()
@@ -409,12 +481,12 @@ class V4DiagnosticGenerator:
         base_value = getattr(main_scenario, 'monthly_loss_central', None) or main_scenario.monthly_loss_max
         loss_6_months_value = base_value * 6
         
-        # Plan variables - for now, we set them based on quick wins or default values
-        # In a real implementation, these would be derived from audit results and strategy
-        plan_7d = "Revisar y optimizar Google Business Profile"
-        plan_30d = "Implementar quick wins identificados y comenzar plan de contenido"
-        plan_60d = "Desarrollar presencia en asistentes de IA y monitorear resultados"
-        plan_90d = "Consolidar estrategia de IA y evaluar retorno de inversión"
+        # Plan variables - FASE-CONFIG-4: from commercial.yaml (H-26)
+        plans = self._load_commercial_config().get('plans', {})
+        plan_7d = plans.get('plan_7d', "Revisar y optimizar Google Business Profile")
+        plan_30d = plans.get('plan_30d', "Implementar quick wins identificados y comenzar plan de contenido")
+        plan_60d = plans.get('plan_60d', "Desarrollar presencia en asistentes de IA y monitorear resultados")
+        plan_90d = plans.get('plan_90d', "Consolidar estrategia de IA y evaluar retorno de inversión")
         
         # Regional averages (3-tier fallback: competitors > regional config > default)
         # Computed here so both template sections can reference them
@@ -610,11 +682,23 @@ class V4DiagnosticGenerator:
                 data['voice_readiness_level'] = voice_result.level
             except Exception:
                 # Voice readiness is non-blocking - continue if it fails
+                # FASE-CONFIG-2: Load fallback from YAML instead of hardcoded '0'/'unknown'
+                try:
+                    data['voice_readiness_score'] = str(get_fallback_value('voice_readiness'))
+                    data['voice_readiness_level'] = get_fallback_value('voice_status')
+                except (FallbackLoadError, KeyError):
+                    data['voice_readiness_score'] = '0'
+                    data['voice_readiness_level'] = 'unknown'
+                data['voice_estimated'] = True
+        else:
+            # FASE-CONFIG-2: Load fallback from YAML
+            try:
+                data['voice_readiness_score'] = str(get_fallback_value('voice_readiness'))
+                data['voice_readiness_level'] = get_fallback_value('voice_status')
+            except (FallbackLoadError, KeyError):
                 data['voice_readiness_score'] = '0'
                 data['voice_readiness_level'] = 'unknown'
-        else:
-            data['voice_readiness_score'] = '0'
-            data['voice_readiness_level'] = 'unknown'
+            data['voice_estimated'] = True
         
         return data
     
@@ -1564,7 +1648,8 @@ class V4DiagnosticGenerator:
         QUE no hay datos en vez de mostrar ceros silenciosos.
 
         RETORNA:
-            AnalyticsStatus con ga4/profound/semrush availability + errores.
+            AnalyticsStatus con ga4/gsc availability + errores.
+            NOTA: Profound/Semrush están deprecados — no se verifican.
         """
         status = AnalyticsStatus()
 
@@ -2190,7 +2275,7 @@ class V4DiagnosticGenerator:
 
         # Translate each Pain to breach format with commercial narrative
         for pain in pains:
-            brecha = self._pain_to_brecha(pain)
+            brecha = self._pain_to_brecha(pain, region=self._region)
             if brecha:
                 brechas.append(brecha)
 
@@ -2202,78 +2287,90 @@ class V4DiagnosticGenerator:
         self._cached_brechas = brechas
         return brechas
 
-    def _pain_to_brecha(self, pain) -> Optional[Dict[str, Any]]:
-        """Translate a Pain object to breach dict format with commercial narrative."""
-        # Commercial narratives per pain_id (mirrors old hardcoded brechas)
+    def _pain_to_brecha(self, pain, region: str = "eje_cafetero") -> Optional[Dict[str, Any]]:
+        """Translate a Pain object to breach dict format with commercial narrative.
+        
+        FASE-CONFIG-5: Ahora usa regional_benchmarks.yaml en lugar de hardcodes.
+        """
+        # Cargar benchmarks desde YAML
+        try:
+            benchmarks = _load_benchmarks(region)
+            pain_narratives = benchmarks.get('pain_narratives', {})
+        except Exception:
+            # Fallback: si YAML no está disponible, usar valores hardcodeados
+            # (backwards compat durante transición)
+            pain_narratives = {}
+
+        # Commercial narratives per pain_id
         narratives = {
             'no_whatsapp_visible': {
                 'nombre': 'Canal Directo Cerrado (Sin WhatsApp)',
-                'impacto': 0.20,
+                'impacto': pain_narratives.get('no_whatsapp_visible', 0.20),
                 'detalle': 'Viajeros quieren reservar instantaneamente. Sin boton WhatsApp, pierden el impulso de compra.'
             },
             'whatsapp_conflict': {
                 'nombre': 'Datos Inconsistentes (Confusion Cliente)',
-                'impacto': 0.10,
+                'impacto': pain_narratives.get('whatsapp_conflict', 0.10),
                 'detalle': 'WhatsApp diferente en web vs Google. Cliente confundido = reserva perdida.'
             },
             'no_faq_schema': {
                 'nombre': 'Sin FAQ para Rich Snippets',
-                'impacto': 0.12,
+                'impacto': pain_narratives.get('no_faq_schema', 0.12),
                 'detalle': 'Google no puede mostrar sus preguntas frecuentes en resultados. Competidores con FAQ capturan ese trafico.'
             },
             'no_hotel_schema': {
                 'nombre': 'Sin Schema de Hotel (Invisible para IA)',
-                'impacto': 0.25,
+                'impacto': pain_narratives.get('no_hotel_schema', 0.25),
                 'detalle': 'ChatGPT, Gemini y Perplexity no pueden "leer" su hotel. Perdida absoluta de reservas de IA.'
             },
             'low_gbp_score': {
                 'nombre': 'Visibilidad Local (Google Maps)',
-                'impacto': 0.30,
+                'impacto': pain_narratives.get('low_gbp_score', 0.30),
                 'detalle': '73% de busquedas son "cerca de mi". Su GBP no aparece o esta sub-optimizado. Clientes van a competidores.'
             },
             'poor_performance': {
                 'nombre': 'Web Lenta (Abandono Movil)',
-                'impacto': 0.15,
+                'impacto': pain_narratives.get('poor_performance', 0.15),
                 'detalle': f"Score movil deficiente. 53% abandona si tarda >3 segundos."
             },
             'metadata_defaults': {
                 'nombre': 'Metadatos por Defecto del CMS',
-                'impacto': 0.10,
+                'impacto': pain_narratives.get('metadata_defaults', 0.10),
                 'detalle': 'Titulo y descripcion usan valores por defecto.'
             },
             'missing_reviews': {
                 'nombre': 'Falta de Reviews',
-                'impacto': 0.10,
+                'impacto': pain_narratives.get('missing_reviews', 0.10),
                 'detalle': 'Reviews insuficientes en Google.'
             },
             'no_og_tags': {
                 'nombre': 'Sin Meta Tags Sociales (Open Graph)',
-                'impacto': 0.08,
+                'impacto': pain_narratives.get('no_og_tags', 0.08),
                 'detalle': 'Cuando alguien comparte su hotel en WhatsApp/Facebook, aparece sin imagen ni descripcion atractiva.'
             },
             'low_citability': {
                 'nombre': 'Contenido Poco Estructurado para IA',
-                'impacto': 0.10,
+                'impacto': pain_narratives.get('low_citability', 0.10),
                 'detalle': 'ChatGPT y Perplexity no pueden recomendar su hotel porque el contenido es insuficiente o poco estructurado.'
             },
             'ai_crawler_blocked': {
                 'nombre': 'IA Bloqueada (Invisible para ChatGPT)',
-                'impacto': 0.15,
+                'impacto': pain_narratives.get('ai_crawler_blocked', 0.15),
                 'detalle': 'Crawlers de IA bloqueados. Su hotel es invisible para ChatGPT y asistentes de IA.'
             },
             'low_ia_readiness': {
                 'nombre': 'Baja Preparación para IA',
-                'impacto': 0.15,
+                'impacto': pain_narratives.get('low_ia_readiness', 0.15),
                 'detalle': 'El contenido no está optimizado para ser citado por asistentes de IA.'
             },
             'no_org_schema': {
                 'nombre': 'Sin Schema Organization (Entidad no verificable)',
-                'impacto': 0.08,
+                'impacto': pain_narratives.get('no_org_schema', 0.08),
                 'detalle': 'No se detecta markup de schema.org/Organization. Entidad no verificable por IA.'
             },
             'no_analytics_configured': {
                 'nombre': 'Sin Analytics (Decisiones a ciegas)',
-                'impacto': 0.10,
+                'impacto': pain_narratives.get('no_analytics_configured', 0.10),
                 'detalle': 'Google Analytics 4 no configurado. Decisiones de marketing sin datos reales.'
             },
         }

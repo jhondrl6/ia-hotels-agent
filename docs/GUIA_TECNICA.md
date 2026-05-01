@@ -1,8 +1,82 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.37.0
-**Última actualización:** 2026-04-29
+**Versión:** v4.38.0 (Config Extraction — Hardcodes to YAML)
+**Última actualización:** 2026-04-30
 **Proyecto:** IA Hoteles Agent CLI
+
+---
+
+### v4.38.0 - 2026-05-01 — FEATURE-CONFIG-EXTRACTION (Fases CONFIG-1 a CONFIG-8)
+
+**Resumen general:** Migración de 31 hardcodes a 6 archivos YAML con schema validado. Corrección de 7 causas raíz del TECHNICAL_DEBT_2026-04-29. Backwards compatible: sin YAML usa defaults documentados.
+
+**Módulos afectados:** `pricing_calculator.py`, `scenario_calculator.py`, `loss_projector.py`, `financial_factors.py`, `v4_proposal_generator.py`, `v4_diagnostic_generator.py`, `sync_versions.py`, `sync_config.yaml`, `propuesta_v6_template.md`
+
+**Problema:** 31 valores hardcodeados en 8 archivos Python + bug sync_versions (doble escape YAML L101-103) causaban datos falsos (fallbacks silenciosos), versiones stale (GUIA_TECNICA nunca se actualizaba), y parámetros financieros inconfigurables sin tocar código.
+
+**Solución:** Extracción a 6 archivos YAML (`pricing.yaml`, `scenarios.yaml`, `financial_defaults.yaml`, `fallbacks.yaml`, `commercial.yaml`, `regional_benchmarks.yaml`) + loader genérico `yaml_loader.py` con caching y fallback. Cada módulo lee de YAML si existe, si no usa defaults documentados.
+
+**Backwards compatibility:** Sin YAML, el sistema funciona idénticamente con defaults hardcodeados documentados. Con YAML, todos los valores son configurables sin tocar código.
+
+**Tests:** 60 tests en `tests/config/` (migración, fallback, schema, integración).
+
+### v4.38.0 - 2026-04-30 — FASE-CONFIG-6: Config Reconnect + Deprecación Módulos Huérfanos
+
+**Resumen:** Reconectar `settings.yaml` con punteros a archivos de configuración activos y deprecar 4 módulos huérfanos que no tenían callers en el pipeline v4complete. También se corrigió un bug en `AnalyticsStatus.is_complete()` / `is_any_missing()`.
+
+**CR-H-01: settings.yaml desconectado:**
+- **Problema:** `settings.yaml` contenía `apis:` con `google_analytics:`, `google_search_console:`, `profound:`, `semrush:` pero NINGUN módulo del pipeline leía de él.
+- **Solución:** Agregado header deprecación en `settings.yaml` apuntando a archivos activos: `config/pricing.yaml`, `config/scenarios.yaml`, `config/regional_benchmarks.yaml`, `config/pain_narratives.yaml`.
+- **Módulos afectados:** `config/settings.yaml`
+
+**Módulos huérfanos deprecados (CR-H-02 a CR-H-05):**
+- `modules/analytics/profound_client.py` — Stub sin callers en pipeline
+- `modules/analytics/semrush_client.py` — Stub sin callers en pipeline
+- `modules/analytics/data_aggregator.py` — Sin uso; funciones cubiertas por `GoogleAnalyticsClient` y `GoogleSearchConsoleClient`
+- `modules/delivery/generators/aeo_metrics_gen.py` — Sin callers en pipeline; generación AEO vía `PainSolutionMapper` y `OpportunityScorer`
+
+**Todos emiten `DeprecationWarning`** en import con mensaje pointing a v5.0.0 removal.
+
+**CR-H-06: Bug en `AnalyticsStatus.is_complete()` / `is_any_missing()`:**
+- **Problema:** `is_complete()` requería `ga4 AND profound AND semrush AND gsc` — siempre retornaba `False` porque profound/semrush siempre `False` (stubs). `is_any_missing()` tenía el mismo problema.
+- **Solución:** Ambos métodos ahora solo verifican fuentes ACTIVAS: `GA4` y `GSC`. Los campos `profound_*` y `semrush_*` se mantienen por backwards compatibility pero se ignoran en la lógica.
+- **Módulos afectados:** `data_models/analytics_status.py`, `modules/commercial_documents/v4_diagnostic_generator.py`
+
+### FASE-CONFIG-8: Suite de Tests de Regresión + Blindaje Config
+
+**Resumen:** Blindaje post-migración YAML con 60 tests de regresión que verifican que los valores se leen de config files, no de hardcodes. Además se corrigieron bugs en `doctor.py` (encoding UTF-8) y `settings.yaml` (YAML inválido).
+
+**Bug fix — doctor.py encoding (2 sitios, líneas 118 y 241):**
+- **Problema:** `open(yaml_file)` sin `encoding='utf-8'` causaba fallo en Windows al leer YAML con caracteres Unicode (ñ, á, é, etc.). Afectaba tanto `run_status()` como la función de validación general.
+- **Solución:** Agregado `encoding='utf-8'` en ambos `open()`.
+- **Módulos afectados:** `scripts/doctor.py`
+
+**Bug fix — settings.yaml YAML inválido:**
+- **Problema:** `elite:` en línea 179 estaba sin indentación (indent 0) cuando debía estar a indent 2 (hermano de `starter_geo:`, `piloto_30d:`, `pro_aeo:`, `elite_plus:`). Esto hacía que `yaml.safe_load()` fallara con `ParserError`.
+- **Solución:** Agregados 2 espacios de indentación para alinear con siblings.
+- **Módulos afectados:** `config/settings.yaml`
+
+**Tests de regresión creados (8 archivos, 60 tests):**
+- `tests/config/test_config_pricing.py` — Valores pricing leídos de YAML, no hardcodeados
+- `tests/config/test_config_scenarios.py` — Factores de escenario (recovery, ota_shift) desde YAML
+- `tests/config/test_config_fallbacks.py` — Valores de fallback desde YAML
+- `tests/config/test_config_commercial.py` — ROI cap, garantías desde YAML
+- `tests/config/test_config_benchmarks.py` — Benchmarks regionales y pain_narratives desde YAML
+- `tests/config/test_config_fallback.py` — YAML ausente → defaults documentados (no crash)
+- `tests/config/test_config_schema.py` — YAML inválido/fuera de rango → error descriptivo
+- `tests/config/test_config_integration.py` — Cambio YAML reflejado en módulo
+
+**doctor.py --status:**
+- Nueva sección "Config Files" en SYSTEM_STATUS.md
+- Lista 9 YAML en `config/`, valida `version` + `description` en cada uno
+- Resultado: 9/9 healthy
+
+**Limpieza de exports:**
+- `modules/analytics/__init__.py` ahora solo exporta: `GoogleAnalyticsClient`, `GoogleSearchConsoleClient`, `GSCQueryData`, `GSCPageData`, `GSCReport`
+
+**Backwards Compatibility:** ✅ Total. Módulos deprecados siguen importables; campos deprecated de `AnalyticsStatus` se mantienen.
+
+**Tests:** 15 tests nuevos en `tests/test_config_extraction_6.py`
 
 ---
 
