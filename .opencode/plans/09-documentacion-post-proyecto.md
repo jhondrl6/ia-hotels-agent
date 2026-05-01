@@ -98,8 +98,8 @@ Este plan se completa INCREMENTALMENTE después de cada fase:
 | Templates modificados | 1 |
 | Scripts modificados | 2 |
 | Tests nuevos | 69+ |
-| Coherence (Amazilia) | [COMPLETAR post-CONFIG-7] |
-| Publication status | [COMPLETAR post-CONFIG-7] |
+|| Coherence (Amazilia) | 0.88 (is_coherent: true) ||
+|| Publication status | READY_FOR_PUBLICATION (7/9 gates PASSED, 2 WARNING) ||
 | Regresiones | 0 |
 
 ---
@@ -125,12 +125,12 @@ Este plan se completa INCREMENTALMENTE después de cada fase:
 
 Después de ejecutar TODAS las fases y FASE-RELEASE, verificar:
 
-- [ ] Fases registradas en REGISTRY.md (10 entradas: CONFIG-1 a RELEASE)
-- [ ] Versiones sincronizadas (sync_versions.py corregido)
-- [ ] CHANGELOG formato correcto (secciones requeridas)
-- [ ] GUIA_TECNICA actualizada (nota técnica por fase)
-- [ ] Validaciones pasan (run_all_validations.py --quick: 4/4)
-- [ ] Doctor sin errores (doctor.py --status)
-- [ ] Evidencia guardada en evidence/fase-config-{1..8}/
-- [ ] ANALISIS_HALLAZGOS.md con veredicto final
-- [ ] git commit realizado
+- [x] Fases registradas en REGISTRY.md (10 entradas: CONFIG-1 a RELEASE)
+- [x] Versiones sincronizadas (sync_versions.py corregido)
+- [x] CHANGELOG formato correcto (secciones requeridas)
+- [x] GUIA_TECNICA actualizada (nota técnica por fase)
+- [x] Validaciones pasan (run_all_validations.py --quick: 4/4)
+- [x] Doctor sin errores (doctor.py --status)
+- [x] Evidencia guardada en evidence/fase-config-{1..8}/
+- [x] ANALISIS_HALLAZGOS.md con veredicto final
+- [x] git commit realizado
