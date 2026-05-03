@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt, geo_playbook) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.38.0 | **Codename:** Config Extraction — Hardcodes to YAML | **Ultima actualización:** 1 Mayo 2026
+**Version:** 4.39.0 | **Codename:** Scoring Transparency | **Ultima actualización:** 2 Mayo 2026
 
 ---
 
@@ -21,16 +21,17 @@
 
 ---
 
-## Estado del Proyecto (v4.38.0)
+## Estado del Proyecto (v4.39.0)
 
 - **2,502 test functions** — 0 regresiones
 - **160 modulos Python** (64,235 lineas) + **182 archivos de test** (49,158 lineas)
-- **9 config YAML** con schema validado (6 nuevos en v4.38.0)
+- **9 config YAML** con schema validado (6 nuevos en v4.38.0 + 1 en v4.39.0)
 - **17 agent skills** en `.agents/workflows/`
 - **23 scripts** de automatizacion
 - **9 publication gates** (6 blocking + 3 advisory)
 - **Coherence Score >= 0.8** requerido para publicacion
 - **28 assets IMPLEMENTED** en catalogo
+- **Scoring Transparency** — breakdown visible por pilar, seccion "Este score NO mide" en diagnosticos, documento `docs/scoring_methodology.md` linkado
 
 ---
 
@@ -193,7 +194,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 
 ---
 
-## Configuracion YAML (v4.38.0)
+## Configuracion YAML (v4.38.0 + v4.39.0)
 
 31 hardcoded values migrados a 6 archivos YAML con schema validado. Todos los parametros son configurables sin tocar codigo.
 
@@ -250,7 +251,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 |----------|----------|
 | Fallo Gate de Coherencia | Verifica que los datos tengan confianza suficiente (>=0.8) y no haya conflictos entre fuentes |
 | No LLM API key configured | Ejecuta `python main.py setup` para configurar de forma segura |
-| sync_versions.py stale | v4.38.0 corrigio bug doble escape YAML — ejecuta `python scripts/sync_versions.py` |
+| sync_versions.py desincronizado | Ejecuta `python scripts/sync_versions.py` para resincronizar headers de version |
 
 ---
 
