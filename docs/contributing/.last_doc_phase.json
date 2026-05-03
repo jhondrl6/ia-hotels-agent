@@ -1,6 +1,6 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-1-AMAZILIA-CORRECCION",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-CONFIG-6",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-SCORING-3",
   "modules/commercial_documents/v4_proposal_generator.py": "FASE-CONFIG-5",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-A",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-E",
@@ -26,7 +26,7 @@
   "main.py": "FASE-1A",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "FASE-TRAZABILIDAD-RAIZ",
-  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-TRAZABILIDAD-REFINEMENT",
+  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-SCORING-3",
   "data_models/__init__.py": "FASE-IAO-06",
   "v4_proposal_generator.py": "FASE-G",
   "propuesta_v6_template.md": "ANALYTICS-02",
@@ -135,5 +135,6 @@
   "config/certificates.yaml": "FASE-CONFIG-8",
   ".cursorrules": "FASE-RELEASE-4.38.0",
   "docs/CONTRIBUTING.md": "FASE-RELEASE-4.38.0",
-  ".agent/SYSTEM_STATUS.md": "FASE-RELEASE-4.38.0"
+  ".agent/SYSTEM_STATUS.md": "FASE-RELEASE-4.38.0",
+  "docs/scoring_methodology.md": "FASE-SCORING-3"
 }

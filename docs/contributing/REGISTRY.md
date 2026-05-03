@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-04-30
+> **Ultima actualizacion:** 2026-05-02
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 195
+> **Total fases completadas:** 198
 
 ---
 
@@ -4803,6 +4803,68 @@ _Ninguno_
 ### Validaciones
 - [x] Tests passing (60)
 - [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SCORING-1 - 2026-05-02
+**Descripcion:** Agregar _build_scoring_breakdown() y _build_excluded_factors_section() en v4_diagnostic_generator.py. Scoring transparency vars en _prepare_template_data().
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SCORING-2 - 2026-05-02
+**Descripcion:** Actualizar diagnostico_v6_template.md con geo_score_breakdown, excluded_factors_section y scoring_methodology_url. Crear docs/scoring_methodology.md con breakdown completo de 4 pilares.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `docs/scoring_methodology.md` | NUEVO | Scoring Methodology |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SCORING-3 - 2026-05-02
+**Descripcion:** Verificación scoring breakdown + nota divergencia + sección factores excluidos + link scoring_methodology.md en v4complete
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `docs/scoring_methodology.md` | Scoring Methodology |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.85 (PASO)
 - [x] Capability contract verificado
 
 ---

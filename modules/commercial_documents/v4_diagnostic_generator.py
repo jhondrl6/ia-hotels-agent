@@ -223,6 +223,78 @@ def calcular_score_global(seo: int, geo: int, aeo: int, iao: int) -> int:
     return int((seo * 0.25) + (geo * 0.25) + (aeo * 0.25) + (iao * 0.25))
 
 
+def _build_scoring_breakdown(pilar: str, elementos: dict) -> str:
+    """Retorna string con breakdown del score usando CHECKLIST_* del pilar.
+
+    El score se calcula INTERNAMENTE desde el checklist (calcular_score_*())
+    para garantizar que el breakdown sea matemáticamente consistente:
+    cada item True contribuye su peso exacto al score mostrado.
+
+    **IMPORTANTE — Divergencia GEO**: El score mostrado en la tabla principal
+    (${geo_score}) viene de _calculate_geo_score() → GBP raw geo_score.
+    El score en este breakdown viene de calcular_score_geo() → CHECKLIST_GEO.
+    Pueden diferir porque son metodologías distintas. Ver FASE-SCORING-2
+    para la nota explicativa en el template.
+
+    Args:
+        pilar: 'seo', 'geo', 'aeo', 'iao'
+        elementos: dict con elementos del checklist (k: str, v: bool)
+
+    Returns:
+        String formateado con breakdown y score auto-calculado.
+    """
+    checklist_map = {
+        'seo': CHECKLIST_SEO,
+        'geo': CHECKLIST_GEO,
+        'aeo': CHECKLIST_AEO,
+        'iao': CHECKLIST_IAO,
+    }
+    score_fns = {
+        'seo': calcular_score_seo,
+        'geo': calcular_score_geo,
+        'aeo': calcular_score_aeo,
+        'iao': calcular_score_iao,
+    }
+    labels_map = {
+        'seo': 'SEO Local',
+        'geo': 'GEO',
+        'aeo': 'AEO',
+        'iao': 'IAO',
+    }
+
+    checklist = checklist_map.get(pilar, {})
+    label = labels_map.get(pilar, pilar.upper())
+    score_fn = score_fns.get(pilar)
+
+    # Calcular score desde el checklist (fuente única de verdad para el breakdown)
+    computed_score = score_fn(elementos) if score_fn else 0
+
+    if not checklist:
+        return f"**{label} {computed_score}/100**"
+
+    # Construir breakdown solo con elementos que contribuyeron
+    parts = []
+    for k, peso in checklist.items():
+        if elementos.get(k) is True:
+            parts.append(f"{k}({peso}%)")
+
+    if parts:
+        return f"**{label} {computed_score}/100** = {' + '.join(parts)}"
+    else:
+        return f"**{label} {computed_score}/100**"
+
+
+def _build_excluded_factors_section() -> str:
+    """Retorna sección 'Este score NO mide' con factores excluidos por pilar."""
+    return """> **Este score NO mide:**
+- **SEO Local:** contenido editorial, perfil de backlinks, domain authority externo
+- **GEO:** tasa de respuesta a reseñas, tiempo de respuesta, calidad de las respuestas, engagement rate, antigüedad de reseñas nuevas
+- **AEO:** volumen de tráfico, conversiones
+- **IAO:** tráfico directo, revenue, NPS
+
+> **Para el score GEO específicamente:** un hotel con 203 reseñas y respuesta <24h puede bajar su score por fotos faltantes o inconsistencia NAP — no por la calidad de su engagement con reseñas."""
+
+
 def calcular_cumplimiento(elementos: dict) -> int:
     """Calcula score de cumplimiento del CHECKLIST_IAO (0-100).
     Deprecated: ver _extraer_elementos_de_audit() para la extraccion de elementos.
@@ -619,7 +691,12 @@ class V4DiagnosticGenerator:
             'regional_transparency': self._build_regional_transparency(
                 geo_regional, competitive_regional, seo_regional, aeo_regional
             ),
-            
+
+            # Scoring transparency (FASE-SCORING-1)
+            'geo_score_breakdown': _build_scoring_breakdown('geo', self._extraer_elementos_geo(audit_result)),
+            'excluded_factors_section': _build_excluded_factors_section(),
+            'scoring_methodology_url': './scoring_methodology.md',
+
             # Brecha impactos y resúmenes
             'brecha_1_impacto': self._get_brecha_impacto(audit_result, 0),
             'brecha_2_impacto': self._get_brecha_impacto(audit_result, 1),

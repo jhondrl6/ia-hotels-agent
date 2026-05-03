@@ -1,9 +1,13 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.38.0"
-codename: "Config Extraction — Hardcodes to YAML"
-release_date: "2026-05-01"
+version: "4.39.0"
+codename: "Scoring Transparency"
+release_date: "2026-05-02"
 plan_maestro_version: "v2.6.0"
+
+# v4.39.0 - Scoring Transparency (2026-05-02)
+# Transparencia en scoring GEO/AEO/SEO/IAO: breakdown visible, sección "Este score NO mide"
+# scoring_methodology.md linkado desde frontmatter, backwards compatible
 
 # v4.38.0 - FEATURE-CONFIG-EXTRACTION (2026-05-01)
 # Corrección bug sync_versions + migración de 31 hardcodes a 6 archivos YAML

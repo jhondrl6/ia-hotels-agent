@@ -1,5 +1,28 @@
 # Changelog
 
+## [4.39.0] - Scoring Transparency (2026-05-02)
+
+### Objetivo
+Agregar transparencia al scoring GEO/AEO/SEO/IAO: breakdown visible, sección "Este score NO mide", y documento scoring_methodology.md linkado.
+
+### Cambios Implementados
+- `modules/commercial_documents/v4_diagnostic_generator.py` - Agregadas funciones `_build_scoring_breakdown()` y `_build_excluded_factors_section()`
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` - Actualizado frontmatter y template con nuevas variables de transparencia
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `docs/scoring_methodology.md` | Metodología completa de scoring con breakdown por pilar y factores excluidos |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | +2 funciones de transparencia, +3 template vars |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Frontmatter + breakdown + sección metodología |
+
+### Tests
+- Tests existentes en `tests/commercial_documents/` pasan sin regresiones
+
 ## [4.38.0] - FEATURE-CONFIG-EXTRACTION (2026-05-01)
 
 ### Objetivo

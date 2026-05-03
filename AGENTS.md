@@ -1,8 +1,8 @@
-<!-- agents_version: 4.38.0 | last_update: 2026-04-30 -->
+<!-- agents_version: 4.39.0 | last_update: 2026-05-02 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.38.0 -- Config Extraction — Hardcodes to YAML COMPLETADO**
+> **v4.39.0 -- Scoring Transparency COMPLETADO**
 
 ---
 

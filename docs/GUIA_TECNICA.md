@@ -1,10 +1,28 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.38.0 (Config Extraction — Hardcodes to YAML)
-**Última actualización:** 2026-04-30
+**Versión:** v4.39.0 (Scoring Transparency)
+**Última actualización:** 2026-05-02
 **Proyecto:** IA Hoteles Agent CLI
 
 ---
+
+### v4.39.0 - 2026-05-02 — Scoring Transparency (Fases SCORING-1, SCORING-2, SCORING-3)
+
+**Resumen general:** Agregar transparencia al scoring GEO/AEO/SEO/IAO: breakdown visible por pilar, sección "Este score NO mide" por pilar, y documento `scoring_methodology.md` linkado desde frontmatter.
+
+**Módulos afectados:** `modules/commercial_documents/v4_diagnostic_generator.py`, `modules/commercial_documents/templates/diagnostico_v6_template.md`
+
+**Problema:** El scoring GEO/AEO/SEO/IAO no era transparente sobre qué factores mide y cuáles excluye. Un hotel con 203 reviews y respuesta <24h podía bajar su score por fotos faltantes — el owner no entendía por qué.
+
+**Solución:**
+- Agregada función `_build_scoring_breakdown()` que muestra breakdown por pilar: "GEO 62/100 = Fotos(15%) + NAP(15%) + ..."
+- Agregada función `_build_excluded_factors_section()` que lista factores NO medidos por pilar
+- Template actualizado para mostrar breakdown debajo de tabla de scores y sección "Este score NO mide"
+- Nuevo documento `docs/scoring_methodology.md` con metodología completa linkado desde frontmatter
+
+**Backwards compatibility:** ✅ Compatible hacia atrás. No cambia la lógica de cálculo de scores. Solo agrega transparencia al output.
+
+**Tests:** Tests existentes en `tests/commercial_documents/` sin regresiones.
 
 ### v4.38.0 - 2026-05-01 — FEATURE-CONFIG-EXTRACTION (Fases CONFIG-1 a CONFIG-8)
 

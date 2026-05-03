@@ -12,6 +12,7 @@ financial_value_range: [${financial_value_min}, ${financial_value_max}]
 financial_method: "${financial_method}"
 financial_opportunity_cost: ${opportunity_cost_formatted}
 financial_ota_commission_real: ${ota_commission_real_formatted}
+scoring_methodology_url: ./scoring_methodology.md
 ---
 
 # 🚨 DIAGNÓSTICO DIGITAL
@@ -49,12 +50,18 @@ ${regional_context}
 
 ### Score de Visibilidad Digital
 
-||| Indicador | Su Negocio | Promedio Regional | Estado |
-|||-----------|------------|------------------|--------|
+| Indicador | Su Negocio | Promedio Regional | Estado |
+|-----------|------------|------------------|--------|
 | **SEO Local** (Para que te ENCUENTREN) | ${seo_score}/100 | ${seo_regional_avg}/100 | ${seo_status} |
 | **GEO** (Para que te UBIQUEN) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
 | **AEO** (Para que te CITEN) | ${aeo_score}/100 | ${aeo_regional_avg}/100 | ${aeo_status} |
 | **IAO** (Para que te RECOMIENDEN) | ${iao_score}/100 | ${iao_regional_avg}/100 | ${iao_status} |
+
+${geo_score_breakdown}
+
+> ⚠️ **Nota sobre el score GEO**: El desglose arriba usa la metodología del checklist GEO (calcular_score_geo), que pondera 6 factores técnicos. El score en la tabla principal (${geo_score}) puede diferir porque viene directamente del geo_score de Google Business Profile, que usa su propio algoritmo. Ambos son válidos — miden aspectos complementarios de tu presencia en Google Maps.
+
+${excluded_factors_section}
 
 ${regional_transparency}
 
@@ -156,3 +163,20 @@ Incluye:
 ${analytics_footnote}
 
 ${analytics_transparency_section}
+
+---
+
+## 📐 Metodología de Scoring
+
+El score de Visibilidad Digital se calcula sobre 4 pilares independientes (0-100 c/u):
+
+| Pilar | Qué mide | Qué NO mide |
+|-------|---------|-------------|
+| **SEO Local** | SSL, Schema Hotel, Velocidad, Alt text, Blog | Contenido editorial, backlinks |
+| **GEO** | Presencia en Google Maps, fotos, NAP, horario | Tasa de respuesta a reseñas, tiempo de respuesta, calidad de respuestas |
+| **AEO** | FAQ Schema, OG Tags, Schema Hotel detallado, Contenido factual | Volumen de tráfico, conversiones |
+| **IAO** | Citabilidad, acceso de crawlers IA, llms.txt, señales de marca | Tráfico directo, Revenue, NPS |
+
+> ⚠️ **Divergencia GEO**: El score GEO mostrado en la tabla principal proviene directamente del `geo_score` de Google Business Profile (algoritmo de Google). El desglose mostrado arriba usa la metodología del checklist GEO de iah-cli (6 factores con pesos fijos). Ambos scores pueden diferir — son mediciones complementarias, no redundantes. El checklist GEO evalúa factores técnicos que tú controlas; el GBP score refleja la evaluación de Google.
+
+**Referencias:** [Metodología completa de scoring](./scoring_methodology.md)
