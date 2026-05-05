@@ -134,9 +134,9 @@ class TestFeatureFlags:
                 assert flags.shadow_logging_enabled is False, f"Failed for {value}"
     
     def test_validated_regions_default(self):
-        """Test that default validated regions are eje_cafetero and antioquia."""
+        """Test that default validated regions include eje_cafetero, antioquia, and caribe."""
         flags = FinancialFeatureFlags()
-        assert flags.validated_regions == ("eje_cafetero", "antioquia")
+        assert flags.validated_regions == ("eje_cafetero", "antioquia", "caribe")
     
     def test_should_use_regional_for(self):
         """Test region-specific regional ADR usage."""

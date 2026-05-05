@@ -37,6 +37,10 @@ class ADRResolutionResult:
     used_new_calculation: bool
     shadow_comparison: Optional[ShadowComparison] = None
     metadata: Optional[Dict[str, Any]] = None
+    # NUEVOS: metadata epistémica (FIN-2B)
+    epistemic_status: str = "defaulted"
+    can_show_exact: bool = False
+    occupancy_rate: Optional[float] = None
 
 
 class ADRResolutionWrapper:
@@ -136,6 +140,8 @@ class ADRResolutionWrapper:
             source=ADRSource.WEB_SCRAPING.value,
             confidence="medium",
             used_new_calculation=True,
+            epistemic_status="observed",
+            can_show_exact=True,
             metadata={
                 'fallback_chain': 'web_scraping',
                 'note': 'Precio extraído de la página web del hotel'
@@ -159,8 +165,40 @@ class ADRResolutionWrapper:
         user_provided_adr: Optional[float] = None,
         web_scraping_adr: Optional[float] = None,
     ) -> ADRResolutionResult:
-        """New resolution with web scraping fallback."""
-        if not user_provided_adr and web_scraping_adr and web_scraping_adr > 0:
+        """New resolution with web scraping fallback.
+
+        user_provided_adr siempre gana (epistemic_status='measured').
+        confidence se calcula comparando contra benchmark regional.
+        """
+        if user_provided_adr is not None:
+            # User measured value takes precedence
+            # Calculate confidence by comparing against regional benchmark
+            resolver = self._get_resolver()
+            regional_for_confidence = resolver.resolve(region, rooms, None)
+            if regional_for_confidence.adr_cop > 0:
+                deviation = abs(user_provided_adr - regional_for_confidence.adr_cop) / regional_for_confidence.adr_cop * 100
+            else:
+                deviation = None
+            if deviation is not None and deviation < 20:
+                confidence = "VERIFIED"
+            elif deviation is not None and deviation < 40:
+                confidence = "ESTIMATED"
+            else:
+                confidence = "CONFLICT"
+
+            return ADRResolutionResult(
+                adr_cop=user_provided_adr,
+                source=ADRSource.USER_PROVIDED.value,
+                confidence=confidence,
+                used_new_calculation=True,
+                epistemic_status="measured",
+                can_show_exact=True,
+                metadata={
+                    "user_provided_adr": user_provided_adr,
+                    "fallback_chain": "new_resolution_with_user_provided",
+                },
+            )
+        if web_scraping_adr and web_scraping_adr > 0:
             return self._web_scraping_result(web_scraping_adr)
         return self._new_resolution(region, rooms, user_provided_adr)
 
@@ -173,8 +211,25 @@ class ADRResolutionWrapper:
         hotel_id: Optional[str] = None,
         hotel_name: Optional[str] = None,
     ) -> ADRResolutionResult:
-        """Shadow resolution with web scraping fallback."""
-        if not user_provided_adr and web_scraping_adr and web_scraping_adr > 0:
+        """Shadow resolution with web scraping fallback.
+
+        user_provided_adr siempre gana (epistemic_status='measured').
+        """
+        if user_provided_adr is not None:
+            # User measured value takes precedence
+            return ADRResolutionResult(
+                adr_cop=user_provided_adr,
+                source=ADRSource.USER_PROVIDED.value,
+                confidence="ESTIMATED",
+                used_new_calculation=True,
+                epistemic_status="measured",
+                can_show_exact=True,
+                metadata={
+                    "user_provided_adr": user_provided_adr,
+                    "fallback_chain": "shadow_resolution_with_user_provided",
+                },
+            )
+        if web_scraping_adr and web_scraping_adr > 0:
             return self._web_scraping_result(web_scraping_adr)
         return self._shadow_resolution(
             region, rooms, user_provided_adr, hotel_id, hotel_name
@@ -185,6 +240,7 @@ class ADRResolutionWrapper:
     ) -> ADRResolutionResult:
         """Use legacy hardcoded ADR resolution."""
         adr = user_provided_adr if user_provided_adr is not None else self.LEGACY_DEFAULT_ADR
+        is_measured = user_provided_adr is not None
 
         return ADRResolutionResult(
             adr_cop=adr,
@@ -193,6 +249,8 @@ class ADRResolutionWrapper:
             else ADRSource.LEGACY_HARDCODE.value,
             confidence="ESTIMATED",
             used_new_calculation=False,
+            epistemic_status="measured" if is_measured else "defaulted",
+            can_show_exact=is_measured,
             metadata={
                 "user_provided_adr": user_provided_adr,
                 "fallback_to_legacy": True,
@@ -214,6 +272,9 @@ class ADRResolutionWrapper:
             source=ADRSource.REGIONAL_V410.value,
             confidence=regional_result.confidence,
             used_new_calculation=True,
+            epistemic_status=regional_result.epistemic_status,
+            can_show_exact=regional_result.can_show_exact,
+            occupancy_rate=regional_result.occupancy_rate,
             metadata={
                 "region": regional_result.region,
                 "segment": regional_result.segment,

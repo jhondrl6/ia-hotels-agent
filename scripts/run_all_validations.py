@@ -111,7 +111,8 @@ class ValidationRunner:
         
         json_path = ROOT_DIR / "data" / "benchmarks" / "plan_maestro_data.json"
         md_path = ROOT_DIR / "data" / "benchmarks" / "Plan_maestro_v2_5.md"
-        
+        md_archive = ROOT_DIR / "archives" / "Plan_maestro_v2_5.md"
+
         if not json_path.exists():
             self.results.append(ValidationResult(
                 name="Plan Maestro Sync",
@@ -119,12 +120,13 @@ class ValidationRunner:
                 message="plan_maestro_data.json not found"
             ))
             return
-        
-        if not md_path.exists():
+
+        # Plan_maestro_v2_5.md is historical/archived — ok if in archives
+        if not md_path.exists() and not md_archive.exists():
             self.results.append(ValidationResult(
                 name="Plan Maestro Sync",
                 passed=False,
-                message="Plan_maestro_v2_5.md not found"
+                message="Plan_maestro_v2_5.md not found (benchmarks/ or archives/)"
             ))
             return
         

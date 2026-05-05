@@ -15,6 +15,10 @@ logger = logging.getLogger(__name__)
 from enum import Enum
 
 from modules.commercial_documents.data_structures import FinancialBreakdown, EvidenceTier
+from modules.financial_engine.financial_evidence import (
+    FinancialEvidence,
+    build_financial_evidence,
+)
 
 
 class ScenarioType(Enum):
@@ -47,6 +51,7 @@ class FinancialScenario:
     confidence_score: float  # 0.0 - 1.0
     assumptions: List[str] = field(default_factory=list)
     disclaimer: Optional[str] = None
+    financial_evidence: Optional[FinancialEvidence] = None
 
     @property
     def monthly_impact_cop(self) -> float:
@@ -164,10 +169,30 @@ class ScenarioCalculator:
         Returns:
             Dictionary mapping scenario types to their calculated scenarios
         """
+        # Build epistemic evidence from hotel data sources
+        evidence = build_financial_evidence(
+            adr_cop=hotel_data.adr_cop,
+            adr_source=hotel_data.adr_source,
+            occupancy_rate=hotel_data.occupancy_rate,
+            occupancy_source=hotel_data.occupancy_source,
+            direct_channel_pct=hotel_data.direct_channel_percentage,
+            channel_source=hotel_data.channel_source,
+            ota_commission_rate=hotel_data.ota_commission_rate,
+        )
+
+        conservative = self._calculate_conservative_scenario(hotel_data)
+        conservative.financial_evidence = evidence
+
+        realistic = self._calculate_realistic_scenario(hotel_data)
+        realistic.financial_evidence = evidence
+
+        optimistic = self._calculate_optimistic_scenario(hotel_data)
+        optimistic.financial_evidence = evidence
+
         return {
-            ScenarioType.CONSERVATIVE: self._calculate_conservative_scenario(hotel_data),
-            ScenarioType.REALISTIC: self._calculate_realistic_scenario(hotel_data),
-            ScenarioType.OPTIMISTIC: self._calculate_optimistic_scenario(hotel_data),
+            ScenarioType.CONSERVATIVE: conservative,
+            ScenarioType.REALISTIC: realistic,
+            ScenarioType.OPTIMISTIC: optimistic,
         }
 
     def _calculate_conservative_scenario(

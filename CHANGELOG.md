@@ -1,5 +1,52 @@
 # Changelog
 
+## [4.40.0] - Financial Evidence Engine (2026-05-04)
+
+### Objetivo
+Eliminar falsa precisión financiera ($2.610.000 COP/mes desde defaults) implementando
+Financial Evidence Engine + Regional Benchmark Fallback + Evidence-Based Channel Prioritization.
+Validado E2E sobre Hotel Castilla Real (hotelcastillareal.com) en 1 sola ejecución v4complete.
+
+### Cambios Implementados
+- Modelo de metadata epistémica (FinancialEvidence, EpistemicStatus, PrecisionTier)
+- NoDefaultsValidator ampliado con clasificación de fuentes granular (SOURCE_EPISTEMIC_MAP)
+- Fuente estructurada regional_adr_2026.json con benchmarks 2026 (3 regiones + default)
+- ADRResolutionWrapper con propagación de epistemic_status y can_show_exact
+- Caribe agregado a validated_regions en feature_flags.py
+- Rendering condicional: rangos + advertencias + CTA para Tier B/C
+- Channel Evidence Resolver (inferencia sin hardcodear WhatsApp)
+- OpportunityScorer con channel_context opcional y multiplicadores trazables
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| modules/financial_engine/financial_evidence.py | Dataclasses epistémicas |
+| modules/financial_engine/precision_validator.py | Validador de precisión financiera |
+| modules/financial_engine/channel_evidence_resolver.py | Inferencia de canal por evidencia |
+| data/benchmarks/regional_adr_2026.json | Benchmarks 2026 estructurados |
+| tests/financial_engine/test_financial_evidence.py | 8 tests |
+| tests/financial_engine/test_no_defaults_precision.py | 8 tests |
+| tests/financial_engine/test_regional_adr_2026.py | 8 tests |
+| tests/financial_engine/test_fallback_chain_honesto.py | 8 tests |
+| tests/commercial_documents/test_precision_rendering.py | 6 tests |
+| tests/financial_engine/test_channel_evidence_resolver.py | 8 tests |
+| tests/financial_engine/test_opportunity_scorer_channels.py | 8 tests |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| modules/financial_engine/scenario_calculator.py | FinancialEvidence en FinancialScenario |
+| modules/financial_engine/no_defaults_validator.py | SOURCE_EPISTEMIC_MAP + precision tier |
+| modules/financial_engine/regional_adr_resolver.py | Metadata epistémica en resultados |
+| modules/financial_engine/feature_flags.py | Caribe en validated_regions |
+| modules/financial_engine/adr_resolution_wrapper.py | epistemic_status + can_show_exact |
+| modules/financial_engine/opportunity_scorer.py | channel_context + multiplicadores |
+| modules/commercial_documents/v4_diagnostic_generator.py | Render rangos + channel_context |
+
+### Tests
+- 54 tests nuevos, 0 regresiones
+- Validación E2E: Hotel Castilla Real (hotelcastillareal.com)
+
 ## [4.39.0] - Scoring Transparency (2026-05-02)
 
 ### Objetivo

@@ -1,10 +1,78 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.39.0 (Scoring Transparency)
-**Última actualización:** 2026-05-02
+**Versión:** v4.40.0 (Scoring Transparency)
+**Última actualización:** 2026-05-04
 **Proyecto:** IA Hoteles Agent CLI
 
 ---
+
+### v4.40.0 - 2026-05-04 — Financial Evidence Engine (Fases FIN-1A, FIN-1B, FIN-2A, FIN-2B, FIN-3, CHAN-1, CHAN-2, FIN-4)
+
+**Resumen general:** Eliminar falsa precisión financiera ($2.610.000 COP/mes desde defaults) implementando
+Financial Evidence Engine + Regional Benchmark Fallback + Evidence-Based Channel Prioritization.
+
+**Módulos afectados:**
+- `modules/financial_engine/financial_evidence.py` (NUEVO) — Dataclasses epistémicas
+- `modules/financial_engine/precision_validator.py` (NUEVO) — Validador de precisión financiera
+- `modules/financial_engine/channel_evidence_resolver.py` (NUEVO) — Inferencia de canal por evidencia
+- `data/benchmarks/regional_adr_2026.json` (NUEVO) — Benchmarks 2026 estructurados
+- `modules/financial_engine/scenario_calculator.py` — FinancialEvidence en FinancialScenario
+- `modules/financial_engine/no_defaults_validator.py` — SOURCE_EPISTEMIC_MAP + precision tier
+- `modules/financial_engine/regional_adr_resolver.py` — Metadata epistémica en resultados
+- `modules/financial_engine/feature_flags.py` — Caribe en validated_regions
+- `modules/financial_engine/adr_resolution_wrapper.py` — epistemic_status + can_show_exact
+- `modules/financial_engine/opportunity_scorer.py` — channel_context + multiplicadores
+- `modules/commercial_documents/v4_diagnostic_generator.py` — Render rangos + channel_context
+
+**Problema:** Sistema no distinguía fuentes de datos — usaba defaults hardcodeados ($2.610.000 COP/mes) sin indicar nivel de certeza. No había forma de saber si un valor venía de scraping real, benchmark regional, o un fallback silencioso.
+
+**Solución:**
+
+#### FIN-1A: Epistemic Metadata Model
+- Módulos: `financial_evidence.py` (NUEVO), `scenario_calculator.py`
+- Problema: Sistema no distinguía fuentes de datos
+- Solución: `FinancialEvidence` dataclass con `EpistemicStatus`, `PrecisionTier`
+- Backwards compatible: Sí (`FinancialScenario.financial_evidence` opcional)
+- Tests: 8
+
+#### FIN-1B: NoDefaultsValidator Ampliado
+- Módulos: `precision_validator.py` (NUEVO), `no_defaults_validator.py`
+- Solución: `SOURCE_EPISTEMIC_MAP` granular + `PrecisionValidator`
+- Backwards compatible: Sí (`SUSPECT_SOURCES` se mantiene)
+- Tests: 8
+
+#### FIN-2A: Regional Benchmark 2026
+- Módulos: `regional_adr_2026.json` (NUEVO), `regional_adr_resolver.py`
+- Solución: Datos 2026 del Benchmarking.md a JSON operativo con metadata
+- Tests: 8
+
+#### FIN-2B: Feature Flags + Fallback Chain
+- Módulos: `feature_flags.py`, `adr_resolution_wrapper.py`
+- Solución: Caribe validado, `epistemic_status` en toda la cadena ADR
+- Tests: 8
+
+#### FIN-3: Rendering Condicional
+- Módulos: `v4_diagnostic_generator.py`, templates
+- Solución: Rangos + advertencias + CTA según precision tier
+- Tests: 6
+
+#### CHAN-1: Channel Evidence Resolver
+- Módulos: `channel_evidence_resolver.py` (NUEVO)
+- Solución: Inferencia de canal sin hardcodear WhatsApp
+- Tests: 8
+
+#### CHAN-2: OpportunityScorer + Channel Weights
+- Módulos: `opportunity_scorer.py`, `v4_diagnostic_generator.py`
+- Solución: `channel_context` opcional con multiplicadores trazables
+- Tests: 8
+
+#### FIN-4: E2E Combinado
+- Hotel: Castilla Real (hotelcastillareal.com)
+- Resultado: Coherence >= 0.8, 1 sola ejecución v4complete
+
+**Backwards compatibility:** ✅ Compatible. `FinancialEvidence` opcional, `precision_tier` y `can_show_exact` con defaults seguros.
+
+**Tests:** 54 tests nuevos, 0 regresiones.
 
 ### v4.39.0 - 2026-05-02 — Scoring Transparency (Fases SCORING-1, SCORING-2, SCORING-3)
 

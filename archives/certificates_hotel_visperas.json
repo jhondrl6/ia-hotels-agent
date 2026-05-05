@@ -1,0 +1,25 @@
+{
+  "hotel_id": "hotel_visperas",
+  "fecha_generacion": "2026-01-06T21:11:37.218552",
+  "certificados": {
+    "reserva_directa": {
+      "certificado": "reserva_directa",
+      "hotel_id": "generico",
+      "badge_svg_path": "templates\\certificates\\reserva_directa_generico.svg",
+      "html_schema": "<div itemscope itemtype=\"https://schema.org/Award\">\n            <img src=\"https://cdn.iahoteles.co/badges/reserva_directa_generico.svg\" \n                 alt=\"Reserva Directa Certificada\" \n                 width=\"150\" \n                 height=\"60\"\n                 loading=\"lazy\">\n            <meta itemprop=\"name\" content=\"Reserva Directa Certificada - IA Hoteles\">\n            <meta itemprop=\"image\" content=\"https://cdn.iahoteles.co/badges/reserva_directa_generico.svg\">\n            <meta itemprop=\"awardDate\" content=\"2026-01-06\">\n            <meta itemprop=\"expires\" content=\"2027-01-06\">\n            <meta itemprop=\"issuer\" content=\"IA Hoteles Agent\">\n        </div>",
+      "qr_code": "https://iahoteles.co/certificado/reserva-directa/generico",
+      "vigencia_hasta": "2027-01-06",
+      "estado": "activo",
+      "tipo_entrega": "digital + opcional kit físico"
+    },
+    "web_optimizada": {
+      "certificado": "web_optimizada",
+      "hotel_id": "generico",
+      "badge_svg_path": "templates\\certificates\\web_optimizada_generico.svg",
+      "html_schema": "<div itemscope itemtype=\"https://schema.org/Award\">\n            <img src=\"https://cdn.iahoteles.co/badges/web_optimizada_generico.svg\" \n                 alt=\"Web Optimizada para IA\" \n                 width=\"150\" \n                 height=\"60\"\n                 loading=\"lazy\">\n            <meta itemprop=\"name\" content=\"Sitio Optimizado para IA - IA Hoteles\">\n            <meta itemprop=\"image\" content=\"https://cdn.iahoteles.co/badges/web_optimizada_generico.svg\">\n            <meta itemprop=\"awardDate\" content=\"2026-01-06\">\n            <meta itemprop=\"expires\" content=\"2027-01-06\">\n            <meta itemprop=\"issuer\" content=\"IA Hoteles Agent\">\n        </div>",
+      "vigencia_hasta": "2027-01-06",
+      "estado": "activo",
+      "tipo_entrega": "digital"
+    }
+  }
+}

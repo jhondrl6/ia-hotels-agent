@@ -1,0 +1,32 @@
+{
+  "detail123": {
+    "place_id": "detail123",
+    "name": "Detail Hotel",
+    "rating": 4.0,
+    "reviews": 50,
+    "photos": 0,
+    "has_hours": false,
+    "has_website": false,
+    "website_url": null,
+    "phone": null,
+    "address": "",
+    "city": "",
+    "lat": 1.0,
+    "lng": 1.0,
+    "geo_score": 27,
+    "geo_score_formula": {
+      "rating_score": 24.0,
+      "reviews_score": 1.0,
+      "photos_score": 0.0,
+      "hours_score": 0.0,
+      "website_score": 0.0,
+      "total": 27
+    },
+    "data_source": "places_api",
+    "fetched_at": "2026-03-25T19:14:02.669215",
+    "place_found": true,
+    "error_type": null,
+    "error_message": null,
+    "search_query": null
+  }
+}

@@ -8,6 +8,8 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union, Set
 from enum import Enum
 
+from modules.financial_engine.financial_evidence import EpistemicStatus
+
 
 class DefaultValueType(Enum):
     """Tipos de valores por defecto detectados."""
@@ -49,18 +51,57 @@ class ValidationWarning:
 
 
 # Fuentes que no son verificacion real de datos
+# LEGACY — usar SOURCE_EPISTEMIC_MAP
 SUSPECT_SOURCES: Set[str] = {
     "legacy_hardcode", "default", "unknown", "hardcoded", "estimated",
 }
 
 
+# Reemplaza clasificacion binaria de SUSPECT_SOURCES con mapeo granular
+SOURCE_EPISTEMIC_MAP: Dict[str, EpistemicStatus] = {
+    "user_provided": EpistemicStatus.MEASURED,
+    "web_scraping": EpistemicStatus.OBSERVED,
+    "regional_v410": EpistemicStatus.REGIONAL_BENCHMARK,
+    "legacy_hardcode": EpistemicStatus.DEFAULTED,
+    "default": EpistemicStatus.DEFAULTED,
+    "unknown": EpistemicStatus.DEFAULTED,
+    "hardcoded": EpistemicStatus.DEFAULTED,
+    "estimated": EpistemicStatus.DEFAULTED,
+    "simulated": EpistemicStatus.SIMULATED,
+}
+
+
+def classify_source(source: str) -> EpistemicStatus:
+    """Clasifica un source string en su estado epistemico."""
+    return SOURCE_EPISTEMIC_MAP.get(source.lower(), EpistemicStatus.DEFAULTED)
+
+
+def determine_precision_tier(
+    adr_status: EpistemicStatus,
+    occupancy_status: EpistemicStatus,
+    channel_status: EpistemicStatus,
+) -> str:
+    """Determina el tier de precision por peor fuente."""
+    statuses = {adr_status, occupancy_status, channel_status}
+    if EpistemicStatus.DEFAULTED in statuses or EpistemicStatus.SIMULATED in statuses:
+        return "C"
+    if EpistemicStatus.REGIONAL_BENCHMARK in statuses:
+        return "B"
+    if EpistemicStatus.CONFLICT in statuses:
+        return "C"
+    return "A"
+
+
 @dataclass
 class NoDefaultsValidationResult:
-    """Resultado de validación No Defaults."""
+    """Resultado de validacion No Defaults."""
     can_calculate: bool
     blocks: List[ValidationBlock] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
     source_warnings: List[ValidationWarning] = field(default_factory=list)
+    precision_tier: str = "C"  # Default conservador
+    field_epistemic: Dict[str, EpistemicStatus] = field(default_factory=dict)
+    can_show_exact_money: bool = False
     
     @property
     def has_blocks(self) -> bool:
@@ -192,11 +233,33 @@ class NoDefaultsValidator:
 
         can_calculate = len(self.blocks) == 0
 
+        # Clasificar fuentes epistemicamente si se proveyeron sources
+        field_epistemic: Dict[str, EpistemicStatus] = {}
+        if sources:
+            field_epistemic = {
+                field_name: classify_source(sources[field_name])
+                for field_name in self.CRITICAL_FIELDS
+                if field_name in sources
+            }
+
+        # Determinar precision_tier y can_show_exact_money
+        adr_status = field_epistemic.get("adr_cop", EpistemicStatus.DEFAULTED)
+        occ_status = field_epistemic.get("occupancy_rate", EpistemicStatus.DEFAULTED)
+        ch_status = field_epistemic.get("direct_channel_percentage", EpistemicStatus.DEFAULTED)
+        precision_tier = determine_precision_tier(adr_status, occ_status, ch_status)
+        can_show_exact = all(
+            s in {EpistemicStatus.MEASURED, EpistemicStatus.OBSERVED}
+            for s in [adr_status, occ_status, ch_status]
+        )
+
         return NoDefaultsValidationResult(
             can_calculate=can_calculate,
             blocks=self.blocks,
             warnings=general_warnings,
             source_warnings=source_warnings,
+            precision_tier=precision_tier,
+            field_epistemic=field_epistemic,
+            can_show_exact_money=can_show_exact,
         )
     
     def _check_field(self, field_name: str, value: Any) -> Optional[ValidationBlock]:

@@ -1,0 +1,28 @@
+{
+  "hotel_id": "hotelvisperas",
+  "timeline": [
+    {
+      "date": "2026-02-25",
+      "timestamp": "2026-02-25T11:26:30.065849",
+      "gbp_score": 75,
+      "web_score": 40,
+      "ia_mentions": 0,
+      "perdida_mensual": 39000000,
+      "paquete": "Elite PLUS"
+    },
+    {
+      "date": "2026-02-25",
+      "timestamp": "2026-02-25T13:10:29.120150",
+      "gbp_score": 0,
+      "web_score": 40,
+      "ia_mentions": 0,
+      "perdida_mensual": 7500000,
+      "paquete": "Pro AEO Plus"
+    }
+  ],
+  "delta": {
+    "gbp_change": -75,
+    "web_change": 0,
+    "last_check": "2026-02-25"
+  }
+}

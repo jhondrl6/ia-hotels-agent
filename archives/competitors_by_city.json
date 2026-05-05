@@ -1,0 +1,115 @@
+{
+  "pereira": {
+    "top_competitor": {
+      "name": "Termales San Vicente",
+      "distance": "a 3.5 km del centro",
+      "segment": "3-4 estrellas, turismo termal",
+      "advantage": "45% más reservas directas",
+      "source": "Análisis GBP Noviembre 2025"
+    }
+  },
+  "santa-rosa": {
+    "top_competitor": {
+      "name": "Hotel Termales Santa Rosa",
+      "distance": "en el centro del pueblo",
+      "segment": "3 estrellas, termal",
+      "advantage": "40% más consultas",
+      "source": "Análisis GBP Noviembre 2025"
+    },
+    "competitors": [
+      "Cabañas La Herradura",
+      "Hotel Rural San Remo",
+      "Kolibrí Coliving",
+      "Hotel Termales Santa Rosa de Cabal",
+      "Casa de Rio La Calamuchita"
+    ]
+  },
+  "santa-rosa-de-cabal": {
+    "top_competitor": {
+      "name": "Hotel Termales Santa Rosa",
+      "distance": "en el centro del pueblo",
+      "segment": "3 estrellas, termal",
+      "advantage": "40% más consultas",
+      "source": "Análisis GBP Noviembre 2025"
+    },
+    "competitors": [
+      "Cabañas La Herradura",
+      "Hotel Rural San Remo",
+      "Kolibrí Coliving",
+      "Hotel Termales Santa Rosa de Cabal",
+      "Casa de Rio La Calamuchita"
+    ]
+  },
+  "armenia": {
+    "top_competitor": {
+      "name": "Hotel Campestre Los Lagos",
+      "distance": "a 5 km del centro",
+      "segment": "4 estrellas, eventos",
+      "advantage": "38% más reservas",
+      "source": "Estimado"
+    }
+  },
+  "salento": {
+    "top_competitor": {
+      "name": "Coffee Tree Boutique Hotel",
+      "distance": "en la plaza principal",
+      "segment": "boutique, internacional",
+      "advantage": "50% más consultas (turistas extranjeros)",
+      "source": "Estimado"
+    }
+  },
+  "manizales": {
+    "top_competitor": {
+      "name": "Hotel Termales El Otoño",
+      "distance": "zona hotelera norte",
+      "segment": "3-4 estrellas, turismo",
+      "advantage": "42% más reservas",
+      "source": "Estimado"
+    }
+  },
+  "cartagena": {
+    "top_competitor": {
+      "name": "Hotel Casa San Agustín",
+      "distance": "en el centro histórico",
+      "segment": "5 estrellas, boutique",
+      "advantage": "55% más reservas directas",
+      "source": "Estimado"
+    }
+  },
+  "santa-marta": {
+    "top_competitor": {
+      "name": "Hotel Boutique Don Pepe",
+      "distance": "en el centro histórico",
+      "segment": "4 estrellas, boutique",
+      "advantage": "40% más consultas",
+      "source": "Estimado"
+    }
+  },
+  "medellin": {
+    "top_competitor": {
+      "name": "Hotel Dann Carlton",
+      "distance": "en El Poblado",
+      "segment": "5 estrellas, negocios",
+      "advantage": "48% más reservas directas",
+      "source": "Estimado"
+    }
+  },
+  "bogota": {
+    "top_competitor": {
+      "name": "Hotel JW Marriott",
+      "distance": "zona norte",
+      "segment": "5 estrellas, negocios",
+      "advantage": "50% más reservas directas",
+      "source": "Estimado"
+    }
+  },
+  "cali": {
+    "top_competitor": {
+      "name": "Hotel Intercontinental",
+      "distance": "zona hotelera",
+      "segment": "5 estrellas, negocios",
+      "advantage": "45% más reservas",
+      "source": "Estimado"
+    }
+  }
+}

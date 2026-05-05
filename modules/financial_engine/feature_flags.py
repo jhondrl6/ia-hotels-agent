@@ -45,7 +45,7 @@ class FinancialFeatureFlags:
     shadow_log_path: str = ".agent/shadow_logs"
     
     # Regional ADR whitelist (validated regions)
-    validated_regions: tuple = ("eje_cafetero", "antioquia")
+    validated_regions: tuple = ("eje_cafetero", "antioquia", "caribe")
     
     @classmethod
     def from_env(cls) -> "FinancialFeatureFlags":
@@ -76,7 +76,7 @@ class FinancialFeatureFlags:
                 "FINANCIAL_SHADOW_LOG_PATH", ".agent/shadow_logs"
             ),
             validated_regions=tuple(
-                os.getenv("FINANCIAL_REGIONAL_VALIDATED_REGIONS", "eje_cafetero,antioquia").split(",")
+                os.getenv("FINANCIAL_REGIONAL_VALIDATED_REGIONS", "eje_cafetero,antioquia,caribe").split(",")
             ),
         )
     
@@ -125,7 +125,7 @@ class FinancialFeatureFlags:
             return False
         if self.regional_adr_mode == RolloutMode.FORCE_LEGACY:
             return False
-        return region in self.validated_regions
+        return region.lower().replace(' ', '_') in [r.lower() for r in self.validated_regions]
     
     def should_use_hybrid_pricing(self) -> bool:
         """Check if hybrid pricing should be used."""

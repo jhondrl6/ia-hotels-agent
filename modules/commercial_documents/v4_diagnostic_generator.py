@@ -30,6 +30,7 @@ from .pain_solution_mapper import PainSolutionMapper
 from data_models.analytics_status import AnalyticsStatus
 from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
 from modules.common.yaml_loader import load_yaml_config, YAMLLoadError
+from modules.financial_engine.precision_validator import PrecisionValidator  # FIN-3
 
 
 def _get_opportunity_scorer():
@@ -746,8 +747,18 @@ class V4DiagnosticGenerator:
         financial_ph = self._build_financial_placeholders(
             financial_scenarios, analytics_data, source_reliability=_source_reliability,
             financial_breakdown=financial_breakdown,  # FASE-B: para ota_commission_real_formatted
+            validation_summary=validation_summary,  # FIN-3: for PrecisionValidator
         )
         data.update(financial_ph)
+        
+        # FIN-3: Prepare precision-based template vars (ranges, warnings, CTA for Tier B/C)
+        precision_vars = self._prepare_financial_template_vars(
+            financial_scenarios, validation_summary, analytics_data,
+            ota_commission_basis=financial_ph.get('ota_commission_basis', ''),
+            ota_commission_source=financial_ph.get('ota_commission_source', ''),
+            ota_commission_real_formatted=financial_ph.get('ota_commission_real_formatted'),
+        )
+        data.update(precision_vars)
         
         # --- Voice Readiness (TAREA-2) ---
         voice_proxy = _get_voice_readiness_proxy()
@@ -891,6 +902,7 @@ class V4DiagnosticGenerator:
         analytics_data: Optional[Dict[str, Any]] = None,
         source_reliability: str = "verified",
         financial_breakdown: Optional['FinancialBreakdown'] = None,
+        validation_summary: Optional[ValidationSummary] = None,  # FIN-3: for PrecisionValidator
     ) -> Dict[str, Any]:
         """
         Construye los placeholders financieros para el template V6.
@@ -980,6 +992,173 @@ class V4DiagnosticGenerator:
             # Backward compatibility
             'loss_6_months': format_cop(base_value * 6),
         }
+
+    # FIN-3: Precision-based financial template variables
+    def _prepare_financial_template_vars(
+        self,
+        scenarios: FinancialScenarios,
+        validation_summary: Optional[ValidationSummary],
+        analytics_data: Optional[Dict[str, Any]] = None,
+        ota_commission_basis: str = "",
+        ota_commission_source: str = "",
+        ota_commission_real_formatted: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Prepara variables de template basadas en precision validation.
+
+        Usa PrecisionValidator para determinar si se puede mostrar cifra exacta
+        o solo rango. Inyecta monthly_loss_display, precision_warning, y CTA.
+
+        Args:
+            scenarios: FinancialScenarios con perdidas mensuales
+            validation_summary: ValidationSummary con campos validados
+            analytics_data: Datos de analytics (opcional)
+            ota_commission_basis: Basis text for the opportunity cost
+            ota_commission_source: Source label ('onboarding' or 'benchmark')
+            ota_commission_real_formatted: Formatted real OTA commission
+
+        Returns:
+            Dict con: monthly_loss_display, precision_tier, can_show_exact_money,
+                      precision_warning, show_onboarding_cta, adr_source_label,
+                      financial_breakdown_section
+        """
+        main = scenarios.get_main_scenario()
+        base_value = getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max
+        min_value = main.monthly_loss_min
+        max_value = main.monthly_loss_max
+
+        # Default values (Tier C / no validation data)
+        precision_tier = "C"
+        can_show_exact = False
+        precision_warning = ""
+        show_onboarding_cta = ""
+        adr_source_label = "benchmark regional"
+
+        # Try to extract field data from validation_summary
+        if validation_summary is not None and validation_summary.fields:
+            # Extract field values and sources
+            field_map = {f.field_name: f for f in validation_summary.fields}
+
+            # Get ADR
+            adr_cop = None
+            adr_source = "default"
+            if 'adr_cop' in field_map:
+                adr_cop = field_map['adr_cop'].value
+                sources = field_map['adr_cop'].sources
+                adr_source = sources[0] if sources else "default"
+
+            # Get occupancy rate
+            occupancy_rate = None
+            occupancy_source = "default"
+            if 'occupancy_rate' in field_map:
+                occupancy_rate = field_map['occupancy_rate'].value
+                sources = field_map['occupancy_rate'].sources
+                occupancy_source = sources[0] if sources else "default"
+
+            # Get direct channel percentage
+            direct_channel_pct = None
+            channel_source = "default"
+            if 'direct_channel_percentage' in field_map:
+                direct_channel_pct = field_map['direct_channel_percentage'].value
+                sources = field_map['direct_channel_percentage'].sources
+                channel_source = sources[0] if sources else "default"
+
+            # Validate with PrecisionValidator if we have actual values
+            if adr_cop is not None and occupancy_rate is not None and direct_channel_pct is not None:
+                try:
+                    result = PrecisionValidator.validate(
+                        adr_cop=float(adr_cop),
+                        adr_source=adr_source,
+                        occupancy_rate=float(occupancy_rate),
+                        occupancy_source=occupancy_source,
+                        direct_channel_pct=float(direct_channel_pct),
+                        channel_source=channel_source,
+                    )
+                    precision_tier = result.precision_tier
+                    can_show_exact = result.can_show_exact_money
+                except Exception:
+                    # If validation fails, keep defaults (Tier C, no exact)
+                    pass
+
+            # Set adr_source_label based on source
+            if adr_source in ("user_provided", "web_scraping"):
+                adr_source_label = "datos del hotel"
+            elif adr_source == "regional_v410":
+                adr_source_label = "benchmark regional"
+            else:
+                adr_source_label = "estimado"
+
+        # Determine monthly_loss_display based on can_show_exact
+        if can_show_exact:
+            monthly_loss_display = format_cop(base_value)
+        else:
+            # Range format for Tier B/C
+            monthly_loss_display = f"~{format_cop(min_value)}–{format_cop(max_value)} COP/mes"
+
+        # Build precision warning for Tier B/C
+        if not can_show_exact:
+            precision_warning = self._build_precision_warning(precision_tier, adr_source_label)
+            show_onboarding_cta = (
+                "\n> **¿Quiere saber su cifra exacta?** "
+                "Complete el [onboarding con sus datos reales] "
+                "para ver el cálculo preciso de su pérdida mensual.\n"
+            )
+        else:
+            precision_warning = ""
+            show_onboarding_cta = ""
+
+        # Build financial breakdown section (only when can_show_exact)
+        if can_show_exact and ota_commission_basis:
+            breakdown_lines = [
+                "Desglose:",
+                f"- {ota_commission_basis}",
+                f"- Fuente del dato: {ota_commission_source}",
+            ]
+            if ota_commission_real_formatted:
+                breakdown_lines.append(f"- Comisión OTA real (verificable): {ota_commission_real_formatted}/mes")
+            financial_breakdown_section = "\n".join(breakdown_lines)
+        else:
+            financial_breakdown_section = ""
+
+        return {
+            'monthly_loss_display': monthly_loss_display,
+            'precision_tier': precision_tier,
+            'can_show_exact_money': can_show_exact,
+            'precision_warning': precision_warning,
+            'show_onboarding_cta': show_onboarding_cta,
+            'adr_source_label': adr_source_label,
+            'financial_breakdown_section': financial_breakdown_section,
+        }
+
+    def _build_precision_warning(self, precision_tier: str, adr_source_label: str) -> str:
+        """
+        Construye el bloque de advertencia de precision para Tier B/C.
+
+        Args:
+            precision_tier: Tier de precision ('B' o 'C')
+            adr_source_label: Label para la fuente ADR ('benchmark regional' o 'datos del hotel')
+
+        Returns:
+            String con el bloque de advertencia formateado en markdown
+        """
+        if precision_tier == "B":
+            # Tier B: mostly regional benchmark
+            warning_lines = [
+                "> ⚠️ **Precisión limitada — Tier B**",
+                f"> - ADR basado en {adr_source_label}",
+                "> - Occupancy y canal directo de señales web",
+                "> - Para mayor precisión, complete el onboarding",
+            ]
+        else:
+            # Tier C: limited data
+            warning_lines = [
+                "> ⚠️ **Precisión limitada — Tier C**",
+                "> - Datos insuficientes para cálculo preciso",
+                f"> - ADR basado en {adr_source_label}",
+                "> - Los valores mostrados son estimaciones",
+                "> - Complete el onboarding para cifra exacta",
+            ]
+        return "\n".join(warning_lines)
     
     def _render_template(self, template_content: str, data: Dict[str, str]) -> str:
         """Render the template with data."""
@@ -2559,6 +2738,62 @@ class V4DiagnosticGenerator:
     # FASE-C: Oportunidad Ponderada (Opportunity Scores)
     # ========================================================
 
+    def _resolve_channel_context(
+        self,
+        audit_result,
+        pain_ids: List[str],
+    ) -> Optional[Dict[str, Any]]:
+        """Resuelve contexto de canal para OpportunityScorer (CHAN-2).
+
+        Usa ChannelEvidenceResolver para inferir canal dominante desde
+        evidencia disponible en audit_result.
+        """
+        try:
+            from modules.financial_engine.channel_evidence_resolver import (
+                ChannelEvidenceResolver,
+            )
+        except ImportError:
+            return None
+
+        try:
+            resolver = ChannelEvidenceResolver()
+
+            # Construir gbp_data desde audit_result.gbp
+            gbp_data: Dict[str, Any] = {}
+            gbp = getattr(audit_result, 'gbp', None)
+            if gbp:
+                gbp_data = {
+                    'review_count': getattr(gbp, 'reviews', 0) or 0,
+                    'score': getattr(gbp, 'rating', 0.0) or 0.0,
+                }
+
+            # Construir web_evidence desde audit_result.validation
+            web_evidence: Dict[str, Any] = {}
+            validation = getattr(audit_result, 'validation', None)
+            if validation:
+                web_evidence['whatsapp_visible'] = getattr(
+                    validation, 'whatsapp_html_detected', False
+                ) or getattr(validation, 'whatsapp_status', '') != ''
+
+            channel_evidence = resolver.resolve(
+                onboarding_data=None,  # No disponible en este contexto
+                web_evidence=web_evidence if web_evidence else None,
+                gbp_data=gbp_data if gbp_data else None,
+                diagnostic_pains=pain_ids if pain_ids else None,
+            )
+
+            return {
+                'dominant_channel': channel_evidence.dominant_channel.value
+                if hasattr(channel_evidence.dominant_channel, 'value')
+                else str(channel_evidence.dominant_channel),
+                'confidence': channel_evidence.confidence.value
+                if hasattr(channel_evidence.confidence, 'value')
+                else str(channel_evidence.confidence),
+                'channel_weights': channel_evidence.channel_weights,
+            }
+        except Exception:
+            return None
+
     def _compute_opportunity_scores(
         self,
         audit_result,
@@ -2587,8 +2822,10 @@ class V4DiagnosticGenerator:
                 'low_citability': 'low_citability',
             }
             brechas_for_scorer = []
+            pain_ids = []
             for b in brechas_list:
                 pain_id = b.get('pain_id', '')
+                pain_ids.append(pain_id)
                 scorer_type = pain_to_type.get(pain_id, 'cms_defaults')
                 brechas_for_scorer.append({
                     'id': pain_id,
@@ -2604,11 +2841,15 @@ class V4DiagnosticGenerator:
                 except Exception:
                     pass
 
+            # Resolver channel evidence (CHAN-2)
+            channel_context = self._resolve_channel_context(audit_result, pain_ids)
+
             from dataclasses import dataclass as _dc
             scores = scorer.score_brechas(
                 brechas_for_scorer,
                 assessment=None,
                 total_monthly_loss=total_loss,
+                channel_context=channel_context,
             )
 
             return [{
@@ -2621,6 +2862,9 @@ class V4DiagnosticGenerator:
                 'estimated_monthly_cop': s.estimated_monthly_cop,
                 'justification': s.justification,
                 'rank': s.rank,
+                'base_total_score': s.base_total_score,
+                'channel_multiplier': s.channel_multiplier,
+                'channel_reason': s.channel_reason,
             } for s in scores]
         except Exception:
             return None
@@ -2662,6 +2906,13 @@ class V4DiagnosticGenerator:
                     result[f'brecha_{n}_impacto'] = f"{int(s['impact_score'] / 30 * 100)}%"
                 result[f'brecha_{n}_justification'] = s['justification']
                 result[f'brecha_{n}_rank'] = f"#{s['rank']}"
+                # channel_reason para trazabilidad del ajuste de canal (CHAN-2)
+                result[f'brecha_{n}_channel_reason'] = s.get('channel_reason', '')
+                result[f'brecha_{n}_channel_multiplier'] = (
+                    f"{s.get('channel_multiplier', 1.0):.2f}x"
+                    if s.get('channel_multiplier', 1.0) != 1.0
+                    else ''
+                )
                 # NOTE: costo, nombre, detalle are set by _get_brecha_*() using real
                 # impactos from _identify_brechas(). We do NOT set them here to avoid
                 # the dual-source conflict (FASE-G). Score vars only.

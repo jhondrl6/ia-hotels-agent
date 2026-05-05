@@ -1,0 +1,1412 @@
+{
+  "hotel vísperas::salento, quindío": {
+    "timestamp": "2025-12-16T02:10:49.565148",
+    "profile": {
+      "existe": true,
+      "score": 85,
+      "issues": [
+        "Perfil inactivo: 0 posts en últimos 60 días (confianza: 80%)",
+        "Pocas fotos (9), meta: 15+"
+      ],
+      "reviews": 28,
+      "rating": 5.0,
+      "fotos": 9,
+      "horarios": true,
+      "descripcion": false,
+      "website": true,
+      "telefono": true,
+      "whatsapp_visible": false,
+      "posts": 0,
+      "tiene_qa": false,
+      "ultima_actividad_dias": null,
+      "fugas_detectadas": [
+        {
+          "tipo": "FOTOS_INSUFICIENTES",
+          "severidad": "ALTA",
+          "detalle": "Solo 9 fotos activas → Google te considera menos relevante que hoteles con 15+ fotos.",
+          "impacto_estimado_COP_mes": 735000,
+          "motivo": "Google Maps prioriza perfiles visuales ricos. Pareces abandonado.",
+          "urgencia": "ALTA - Booking muestra 40+ fotos de tu propio hotel"
+        },
+        {
+          "tipo": "SIN_WHATSAPP_VISIBLE",
+          "severidad": "ALTA",
+          "detalle": "Sin botón de WhatsApp → pierdes 30% de consultas inmediatas.",
+          "impacto_estimado_COP_mes": 630000,
+          "motivo": "68% de reservas directas en Colombia inician en WhatsApp.",
+          "urgencia": "ALTA - Configurable en 10 minutos"
+        },
+        {
+          "tipo": "PERFIL_ABANDONADO",
+          "severidad": "MEDIA",
+          "detalle": "Cero posts últimos 60 días → Google degrada tu ranking por inactividad.",
+          "impacto_estimado_COP_mes": 525000,
+          "motivo": "Google interpreta falta de actividad como cierre temporal.",
+          "urgencia": "MEDIA - 1 post semanal recupera posición en 21 días"
+        },
+        {
+          "tipo": "SIN_FAQ_CONVERSACIONAL",
+          "severidad": "MEDIA",
+          "detalle": "Sin Q&A → No apareces en búsquedas conversacionales (“¿acepta mascotas?”).",
+          "impacto_estimado_COP_mes": 420000,
+          "motivo": "40% de búsquedas turísticas son preguntas directas.",
+          "urgencia": "MEDIA - Alimenta Gemini/ChatGPT con tus datos propios"
+        },
+        {
+          "tipo": "MOTOR_RESERVAS_OCULTO",
+          "severidad": "ALTA",
+          "detalle": "Motor de reservas (lobbypms) existe pero requiere 3-4 clics. OTAs convierten en 1 clic.",
+          "impacto_estimado_COP_mes": 576000,
+          "motivo": "Fricción de navegación: huéspedes abandonan antes de completar reserva directa.",
+          "urgencia": "ALTA - Solución en 24h: agregar botón \"Reservar Ahora\" con precio visible",
+          "recomendacion": "Agregar enlace directo al motor con aria-label \"Reservar\" y precio en tiempo real en GBP."
+        }
+      ],
+      "perdida_total_mes_COP": 2886000,
+      "perdida_anual_COP": 34632000,
+      "prioridad_accion": "CRÍTICA - ACTUAR EN 72 HORAS",
+      "meta": {
+        "hotel_name": "Hotel Vísperas",
+        "location": "Salento, Quindío",
+        "search_query": "Hotel Vísperas Santa Rosa de Cabal, Risaralda",
+        "search_url": "https://www.google.com/maps/search/Hotel+Vísperas+Santa+Rosa+de+Cabal,+Risaralda",
+        "search_location_used": "Santa Rosa de Cabal, Risaralda",
+        "location_requested": "Salento, Quindío",
+        "search_attempt": 1,
+        "location_attempts": 2,
+        "resolved_location": "Santa Rosa de Cabal, Risaralda",
+        "location_source": "geo_validation",
+        "scrape_debug": {
+          "html_sample_start": "<html itemscope=\"\" itemtype=\"http://schema.org/Place\" lang=\"es-CO\"><head>  <link href=\"/search?tbm=map&amp;authuser=0&amp;hl=es&amp;gl=co&amp;q=Hotel+V%C3%ADsperas+Santa+Rosa+de+Cabal%2C+Risaralda&amp;pb=%211sHotel+V%C3%ADsperas+Santa+Rosa+de+Cabal%2C+Risaralda%217i20%2110b1%2112m48%211m5%2118b1%2130b1%2131m1%211b1%2134e1%212m4%215m1%216e2%2120e3%2139b1%216m21%2149b1%2163m0%2166b1%2174i150000%2185b1%2191b1%21114b1%21149b1%21206b1%21212b1%21213b1%21223b1%21227b1%21232b1%21233b1%21244b1%21246b1%21250b1%21253b1%21258b1%21263b1%2110b1%2112b1%2113b1%2114b1%2116b1%2117m1%213e1%2120m3%215e2%216b1%2114b1%2146m1%211b0%2196b1%2199b1%2119m4%212m3%211i360%212i120%214i8%2120m53%212m2%211i203%212i100%213m2%212i4%215b1%216m6%211m2%211i86%212i86%211m2%211i408%212i240%217m29%211m3%211e1%212b0%213e3%211m3%211e2%212b1%213e2%211m3%211e2%212b0%213e3%211m3%211e8%212b0%213e3%211m3%211e10%212b0%213e3%211m3%211e10%212b1%213e2%211m3%211e10%212b0%213e4%212b1%219b0%2115m8%211m7%211m2%211m1%211e2%212m2%211i195%212i195%213i20%2122m5%211sVb9AafyrIZuywt0Ps_boqQs%217e81%2114m1%213sVb9AafyrIZuywt0Ps_boqQs%2115i9937%2124m107%211m28%2113m9%212b1%213b1%214b1%216i1%218b1%219b1%2114b1%2120b1%2125b1%2118m17%213b1%214b1%215b1%216b1%2113b1%2114b1%2117b1%2121b1%2122b1%2127m1%211b0%2128b0%2132b1%2133m1%211b1%2134b1%2136e2%2110m1%218e3%2111m1%213e1%2114m1%213b0%2117b1%2120m2%211e3%211e6%2124b1%2125b1%2126b1%2127b1%2129b1%2130m1%212b1%2136b1%2137b1%2139m3%212m2%212i1%213i1%2143b1%2152b1%2154m1%211b1%2155b1%2156m1%211b1%2161m2%211m1%211e1%2165m5%213m4%211m3%211m2%211i224%212i298%2172m22%211m8%212b1%215b1%217b1%2112m4%211b1%212b1%214m1%211e1%214b1%218m10%211m6%214m1%211e1%214m1%211e3%214m1%211e4%213sother_user_google_review_posts__and__hotel_and_vr_partner_review_posts%216m1%211e1%219b1%2189b1%2198m3%211b1%212b1%213b1%21103b1%21113b1%21114m3%211b1%212m1%211b1%21117b1%21122m1%211b1%21126b1%21127b1%2126m4%212m3%211i80%212i92%214i8%2130m28%211m6%211m2%211i0%212i0%212m2%211i530%212i768%211m6%211m2%211i974%212i0%212m2",
+          "html_sample_end": "WAJnwQisbXI7ETGWA?wli=m.fhRnRZ3F7aw.loadSv.O%3A%3Bm.1jH5VeZBf40.mapcore.O%3A%3B&amp;cb=M\" as=\"script\" rel=\"preload\" type=\"application/javascript\" nonce=\"\">  <link href=\"/maps/preview/opensearch.xml?hl=es\" title=\"Google Maps\" rel=\"search\" type=\"application/opensearchdescription+xml\"> <title>HOTEL VISPERAS - Google Maps</title> <meta content=\"Busca negocios locales, consulta mapas y consigue información sobre rutas en Google Maps.\" name=\"Description\">  <meta content=\"Google Maps\" itemprop=\"name\"> <meta content=\"Google Maps\" property=\"og:title\">  <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.81970135%2C-75.6974306&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;client=google-maps-frontend&amp;signature=ZKheWvtkLvBL9mBFGYIajQVp59g\" itemprop=\"image\"> <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.81970135%2C-75.6974306&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;client=google-maps-frontend&amp;signature=ZKheWvtkLvBL9mBFGYIajQVp59g\" property=\"og:image\"> <meta content=\"900\" property=\"og:image:width\"> <meta content=\"900\" property=\"og:image:height\">  <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" itemprop=\"description\"> <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" property=\"og:description\">  <meta content=\"Google Maps\" property=\"og:site_name\"> <meta content=\"summary\" name=\"twitter:card\">  <meta content=\"Anm+hhtuh7NJguqSnXHEAIqqMaV+GXCks8WYXHJKF7l6AeYMj+wO+fi9OdDqFnJTg9t0492DykVxx4jpvFbxnA8AAABseyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IlByaXZhY3lTYW5kYm94QWRzQVBJcyIsImV4cGlyeSI6MTY5NTE2Nzk5OSwiaXNTdWJkb21haW4iOnRydWV9\" http-equiv=\"origin-trial\"> <meta content=\"initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\" name=\"viewport\"> <meta content=\"notranslate\" name=\"google\"> <meta content=\"origin\" name=\"referrer\"> <meta content=\"ByHT0GXztW_RcGxS0o86DBf1WtNu02FfqlcT8njnS",
+          "rating_source": "aria-label",
+          "reviews_source": "aria-label",
+          "photos_method": "modal_scroll",
+          "photos_confidence": 85,
+          "photos_evidence": {
+            "method": "modal_scroll",
+            "warnings": [
+              "Modal no visible tras click en button[aria-label*='Foto']"
+            ],
+            "scroll_iterations": 4,
+            "unique_image_sources": 9,
+            "confidence_note": "Alto"
+          },
+          "photos_warnings": [],
+          "posts_method": "no_updates_button",
+          "posts_confidence": 80,
+          "posts_evidence": {
+            "reason": "Botón de actualizaciones no encontrado"
+          },
+          "posts_warnings": [
+            "Botón de actualizaciones no encontrado: button[aria-label*='Actualizaciones']",
+            "Botón de actualizaciones no encontrado: button[aria-label*='Updates']",
+            "Botón de actualizaciones no encontrado: a[href*='updates']",
+            "Botón de actualizaciones no encontrado: [data-item-id='updates']",
+            "No se detectó sección de actualizaciones (posible perfil sin posts)"
+          ]
+        },
+        "geo_validation": {
+          "enabled": true,
+          "performed": true,
+          "is_valid": true,
+          "distance_km": 24.14,
+          "threshold_km": 30.0,
+          "confidence": 0.08,
+          "expected_location": {
+            "lat": 4.637365,
+            "lng": -75.5703107,
+            "address": "Salento, Quindío, Colombia",
+            "city": "Salento"
+          },
+          "actual_location": {
+            "lat": 4.855294499999999,
+            "lng": -75.5834102,
+            "address": "Km. 4 vía Termales, vereda La Leona, Santa Rosa de Cabal, San RAMON, Santa Rosa de Cabal, Risaralda, Colombia",
+            "city": "Santa Rosa de Cabal",
+            "state": "Risaralda",
+            "country": "Colombia",
+            "place_id": "ChIJpS416kyCOI4Rqk6mdT3LIiU"
+          },
+          "resolved_location": "Santa Rosa de Cabal, Risaralda",
+          "api_calls_used": 3,
+          "error_message": null,
+          "location_override_applied": true
+        },
+        "data_confidence": {
+          "rating": true,
+          "reviews": true,
+          "photos": true,
+          "posts": true,
+          "horarios": 0.65,
+          "website": true,
+          "telefono": true,
+          "whatsapp": false,
+          "qa": false
+        },
+        "horarios_detection": {
+          "method": "css_selector",
+          "confidence": 0.65,
+          "keywords": [
+            "entrada",
+            "salida",
+            "entrada/salida"
+          ],
+          "time_formats": [],
+          "sample": "Entrada/Salida"
+        },
+        "driver_available": true,
+        "driver_error": null,
+        "timestamp_utc": "2025-12-16T02:10:49.564975"
+      },
+      "posts_last_60_days": 0,
+      "last_post_date": null,
+      "gbp_activity_score": 0,
+      "motor_gbp": {
+        "existe": true,
+        "prominente": false,
+        "proveedor": "lobbypms"
+      },
+      "motor_reservas_gbp": true,
+      "motor_reservas_proveedor": "lobbypms",
+      "motor_reservas_prominente": false
+    }
+  },
+  "hotel vísperas::santa rosa de cabal, risaralda": {
+    "timestamp": "2025-12-16T02:10:49.566392",
+    "profile": {
+      "existe": true,
+      "score": 85,
+      "issues": [
+        "Perfil inactivo: 0 posts en últimos 60 días (confianza: 80%)",
+        "Pocas fotos (9), meta: 15+"
+      ],
+      "reviews": 28,
+      "rating": 5.0,
+      "fotos": 9,
+      "horarios": true,
+      "descripcion": false,
+      "website": true,
+      "telefono": true,
+      "whatsapp_visible": false,
+      "posts": 0,
+      "tiene_qa": false,
+      "ultima_actividad_dias": null,
+      "fugas_detectadas": [
+        {
+          "tipo": "FOTOS_INSUFICIENTES",
+          "severidad": "ALTA",
+          "detalle": "Solo 9 fotos activas → Google te considera menos relevante que hoteles con 15+ fotos.",
+          "impacto_estimado_COP_mes": 735000,
+          "motivo": "Google Maps prioriza perfiles visuales ricos. Pareces abandonado.",
+          "urgencia": "ALTA - Booking muestra 40+ fotos de tu propio hotel"
+        },
+        {
+          "tipo": "SIN_WHATSAPP_VISIBLE",
+          "severidad": "ALTA",
+          "detalle": "Sin botón de WhatsApp → pierdes 30% de consultas inmediatas.",
+          "impacto_estimado_COP_mes": 630000,
+          "motivo": "68% de reservas directas en Colombia inician en WhatsApp.",
+          "urgencia": "ALTA - Configurable en 10 minutos"
+        },
+        {
+          "tipo": "PERFIL_ABANDONADO",
+          "severidad": "MEDIA",
+          "detalle": "Cero posts últimos 60 días → Google degrada tu ranking por inactividad.",
+          "impacto_estimado_COP_mes": 525000,
+          "motivo": "Google interpreta falta de actividad como cierre temporal.",
+          "urgencia": "MEDIA - 1 post semanal recupera posición en 21 días"
+        },
+        {
+          "tipo": "SIN_FAQ_CONVERSACIONAL",
+          "severidad": "MEDIA",
+          "detalle": "Sin Q&A → No apareces en búsquedas conversacionales (“¿acepta mascotas?”).",
+          "impacto_estimado_COP_mes": 420000,
+          "motivo": "40% de búsquedas turísticas son preguntas directas.",
+          "urgencia": "MEDIA - Alimenta Gemini/ChatGPT con tus datos propios"
+        },
+        {
+          "tipo": "MOTOR_RESERVAS_OCULTO",
+          "severidad": "ALTA",
+          "detalle": "Motor de reservas (lobbypms) existe pero requiere 3-4 clics. OTAs convierten en 1 clic.",
+          "impacto_estimado_COP_mes": 576000,
+          "motivo": "Fricción de navegación: huéspedes abandonan antes de completar reserva directa.",
+          "urgencia": "ALTA - Solución en 24h: agregar botón \"Reservar Ahora\" con precio visible",
+          "recomendacion": "Agregar enlace directo al motor con aria-label \"Reservar\" y precio en tiempo real en GBP."
+        }
+      ],
+      "perdida_total_mes_COP": 2886000,
+      "perdida_anual_COP": 34632000,
+      "prioridad_accion": "CRÍTICA - ACTUAR EN 72 HORAS",
+      "meta": {
+        "hotel_name": "Hotel Vísperas",
+        "location": "Salento, Quindío",
+        "search_query": "Hotel Vísperas Santa Rosa de Cabal, Risaralda",
+        "search_url": "https://www.google.com/maps/search/Hotel+Vísperas+Santa+Rosa+de+Cabal,+Risaralda",
+        "search_location_used": "Santa Rosa de Cabal, Risaralda",
+        "location_requested": "Salento, Quindío",
+        "search_attempt": 1,
+        "location_attempts": 2,
+        "resolved_location": "Santa Rosa de Cabal, Risaralda",
+        "location_source": "geo_validation",
+        "scrape_debug": {
+          "html_sample_start": "<html itemscope=\"\" itemtype=\"http://schema.org/Place\" lang=\"es-CO\"><head>  <link href=\"/search?tbm=map&amp;authuser=0&amp;hl=es&amp;gl=co&amp;q=Hotel+V%C3%ADsperas+Santa+Rosa+de+Cabal%2C+Risaralda&amp;pb=%211sHotel+V%C3%ADsperas+Santa+Rosa+de+Cabal%2C+Risaralda%217i20%2110b1%2112m48%211m5%2118b1%2130b1%2131m1%211b1%2134e1%212m4%215m1%216e2%2120e3%2139b1%216m21%2149b1%2163m0%2166b1%2174i150000%2185b1%2191b1%21114b1%21149b1%21206b1%21212b1%21213b1%21223b1%21227b1%21232b1%21233b1%21244b1%21246b1%21250b1%21253b1%21258b1%21263b1%2110b1%2112b1%2113b1%2114b1%2116b1%2117m1%213e1%2120m3%215e2%216b1%2114b1%2146m1%211b0%2196b1%2199b1%2119m4%212m3%211i360%212i120%214i8%2120m53%212m2%211i203%212i100%213m2%212i4%215b1%216m6%211m2%211i86%212i86%211m2%211i408%212i240%217m29%211m3%211e1%212b0%213e3%211m3%211e2%212b1%213e2%211m3%211e2%212b0%213e3%211m3%211e8%212b0%213e3%211m3%211e10%212b0%213e3%211m3%211e10%212b1%213e2%211m3%211e10%212b0%213e4%212b1%219b0%2115m8%211m7%211m2%211m1%211e2%212m2%211i195%212i195%213i20%2122m5%211sVb9AafyrIZuywt0Ps_boqQs%217e81%2114m1%213sVb9AafyrIZuywt0Ps_boqQs%2115i9937%2124m107%211m28%2113m9%212b1%213b1%214b1%216i1%218b1%219b1%2114b1%2120b1%2125b1%2118m17%213b1%214b1%215b1%216b1%2113b1%2114b1%2117b1%2121b1%2122b1%2127m1%211b0%2128b0%2132b1%2133m1%211b1%2134b1%2136e2%2110m1%218e3%2111m1%213e1%2114m1%213b0%2117b1%2120m2%211e3%211e6%2124b1%2125b1%2126b1%2127b1%2129b1%2130m1%212b1%2136b1%2137b1%2139m3%212m2%212i1%213i1%2143b1%2152b1%2154m1%211b1%2155b1%2156m1%211b1%2161m2%211m1%211e1%2165m5%213m4%211m3%211m2%211i224%212i298%2172m22%211m8%212b1%215b1%217b1%2112m4%211b1%212b1%214m1%211e1%214b1%218m10%211m6%214m1%211e1%214m1%211e3%214m1%211e4%213sother_user_google_review_posts__and__hotel_and_vr_partner_review_posts%216m1%211e1%219b1%2189b1%2198m3%211b1%212b1%213b1%21103b1%21113b1%21114m3%211b1%212m1%211b1%21117b1%21122m1%211b1%21126b1%21127b1%2126m4%212m3%211i80%212i92%214i8%2130m28%211m6%211m2%211i0%212i0%212m2%211i530%212i768%211m6%211m2%211i974%212i0%212m2",
+          "html_sample_end": "WAJnwQisbXI7ETGWA?wli=m.fhRnRZ3F7aw.loadSv.O%3A%3Bm.1jH5VeZBf40.mapcore.O%3A%3B&amp;cb=M\" as=\"script\" rel=\"preload\" type=\"application/javascript\" nonce=\"\">  <link href=\"/maps/preview/opensearch.xml?hl=es\" title=\"Google Maps\" rel=\"search\" type=\"application/opensearchdescription+xml\"> <title>HOTEL VISPERAS - Google Maps</title> <meta content=\"Busca negocios locales, consulta mapas y consigue información sobre rutas en Google Maps.\" name=\"Description\">  <meta content=\"Google Maps\" itemprop=\"name\"> <meta content=\"Google Maps\" property=\"og:title\">  <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.81970135%2C-75.6974306&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;client=google-maps-frontend&amp;signature=ZKheWvtkLvBL9mBFGYIajQVp59g\" itemprop=\"image\"> <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.81970135%2C-75.6974306&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;client=google-maps-frontend&amp;signature=ZKheWvtkLvBL9mBFGYIajQVp59g\" property=\"og:image\"> <meta content=\"900\" property=\"og:image:width\"> <meta content=\"900\" property=\"og:image:height\">  <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" itemprop=\"description\"> <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" property=\"og:description\">  <meta content=\"Google Maps\" property=\"og:site_name\"> <meta content=\"summary\" name=\"twitter:card\">  <meta content=\"Anm+hhtuh7NJguqSnXHEAIqqMaV+GXCks8WYXHJKF7l6AeYMj+wO+fi9OdDqFnJTg9t0492DykVxx4jpvFbxnA8AAABseyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IlByaXZhY3lTYW5kYm94QWRzQVBJcyIsImV4cGlyeSI6MTY5NTE2Nzk5OSwiaXNTdWJkb21haW4iOnRydWV9\" http-equiv=\"origin-trial\"> <meta content=\"initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\" name=\"viewport\"> <meta content=\"notranslate\" name=\"google\"> <meta content=\"origin\" name=\"referrer\"> <meta content=\"ByHT0GXztW_RcGxS0o86DBf1WtNu02FfqlcT8njnS",
+          "rating_source": "aria-label",
+          "reviews_source": "aria-label",
+          "photos_method": "modal_scroll",
+          "photos_confidence": 85,
+          "photos_evidence": {
+            "method": "modal_scroll",
+            "warnings": [
+              "Modal no visible tras click en button[aria-label*='Foto']"
+            ],
+            "scroll_iterations": 4,
+            "unique_image_sources": 9,
+            "confidence_note": "Alto"
+          },
+          "photos_warnings": [],
+          "posts_method": "no_updates_button",
+          "posts_confidence": 80,
+          "posts_evidence": {
+            "reason": "Botón de actualizaciones no encontrado"
+          },
+          "posts_warnings": [
+            "Botón de actualizaciones no encontrado: button[aria-label*='Actualizaciones']",
+            "Botón de actualizaciones no encontrado: button[aria-label*='Updates']",
+            "Botón de actualizaciones no encontrado: a[href*='updates']",
+            "Botón de actualizaciones no encontrado: [data-item-id='updates']",
+            "No se detectó sección de actualizaciones (posible perfil sin posts)"
+          ]
+        },
+        "geo_validation": {
+          "enabled": true,
+          "performed": true,
+          "is_valid": true,
+          "distance_km": 24.14,
+          "threshold_km": 30.0,
+          "confidence": 0.08,
+          "expected_location": {
+            "lat": 4.637365,
+            "lng": -75.5703107,
+            "address": "Salento, Quindío, Colombia",
+            "city": "Salento"
+          },
+          "actual_location": {
+            "lat": 4.855294499999999,
+            "lng": -75.5834102,
+            "address": "Km. 4 vía Termales, vereda La Leona, Santa Rosa de Cabal, San RAMON, Santa Rosa de Cabal, Risaralda, Colombia",
+            "city": "Santa Rosa de Cabal",
+            "state": "Risaralda",
+            "country": "Colombia",
+            "place_id": "ChIJpS416kyCOI4Rqk6mdT3LIiU"
+          },
+          "resolved_location": "Santa Rosa de Cabal, Risaralda",
+          "api_calls_used": 3,
+          "error_message": null,
+          "location_override_applied": true
+        },
+        "data_confidence": {
+          "rating": true,
+          "reviews": true,
+          "photos": true,
+          "posts": true,
+          "horarios": 0.65,
+          "website": true,
+          "telefono": true,
+          "whatsapp": false,
+          "qa": false
+        },
+        "horarios_detection": {
+          "method": "css_selector",
+          "confidence": 0.65,
+          "keywords": [
+            "entrada",
+            "salida",
+            "entrada/salida"
+          ],
+          "time_formats": [],
+          "sample": "Entrada/Salida"
+        },
+        "driver_available": true,
+        "driver_error": null,
+        "timestamp_utc": "2025-12-16T02:10:49.564975"
+      },
+      "posts_last_60_days": 0,
+      "last_post_date": null,
+      "gbp_activity_score": 0,
+      "motor_gbp": {
+        "existe": true,
+        "prominente": false,
+        "proveedor": "lobbypms"
+      },
+      "motor_reservas_gbp": true,
+      "motor_reservas_proveedor": "lobbypms",
+      "motor_reservas_prominente": false
+    }
+  },
+  "hotel visperas::salento, quindio": {
+    "timestamp": "2025-10-29T22:26:23.589195",
+    "profile": {
+      "existe": true,
+      "score": 75,
+      "issues": [
+        "Pocas fotos (9), meta: 15+"
+      ],
+      "reviews": 28,
+      "rating": 5.0,
+      "fotos": 9,
+      "horarios": false,
+      "descripcion": false,
+      "website": true,
+      "telefono": true,
+      "whatsapp_visible": false,
+      "posts": 0,
+      "tiene_qa": true,
+      "ultima_actividad_dias": null,
+      "fugas_detectadas": [
+        {
+          "tipo": "FOTOS_INSUFICIENTES",
+          "severidad": "ALTA",
+          "detalle": "Solo 9 fotos activas → Google te considera menos relevante que hoteles con 15+ fotos.",
+          "impacto_estimado_COP_mes": 735000,
+          "motivo": "Google Maps prioriza perfiles visuales ricos. Pareces abandonado.",
+          "urgencia": "ALTA - Booking muestra 40+ fotos de tu propio hotel"
+        },
+        {
+          "tipo": "SIN_WHATSAPP_VISIBLE",
+          "severidad": "ALTA",
+          "detalle": "Sin botón de WhatsApp → pierdes 30% de consultas inmediatas.",
+          "impacto_estimado_COP_mes": 630000,
+          "motivo": "68% de reservas directas en Colombia inician en WhatsApp.",
+          "urgencia": "ALTA - Configurable en 10 minutos"
+        },
+        {
+          "tipo": "PERFIL_ABANDONADO",
+          "severidad": "MEDIA",
+          "detalle": "Cero posts últimos 60 días → Google degrada tu ranking por inactividad.",
+          "impacto_estimado_COP_mes": 525000,
+          "motivo": "Google interpreta falta de actividad como cierre temporal.",
+          "urgencia": "MEDIA - 1 post semanal recupera posición en 21 días"
+        },
+        {
+          "tipo": "SIN_HORARIOS",
+          "severidad": "MEDIA",
+          "detalle": "Horarios vacíos → Google muestra “Horario desconocido”.",
+          "impacto_estimado_COP_mes": 315000,
+          "motivo": "Sin check-in visible pareces informal.",
+          "urgencia": "BAJA - 5 minutos de configuración"
+        }
+      ],
+      "perdida_total_mes_COP": 2205000,
+      "perdida_anual_COP": 26460000,
+      "prioridad_accion": "CRÍTICA - ACTUAR EN 72 HORAS",
+      "meta": {
+        "hotel_name": "Hotel Visperas",
+        "location": "Salento, Quindio",
+        "search_query": "Hotel Visperas Santa Rosa de Cabal, Risaralda",
+        "search_url": "https://www.google.com/maps/search/Hotel+Visperas+Santa+Rosa+de+Cabal,+Risaralda",
+        "search_location_used": "Santa Rosa de Cabal, Risaralda",
+        "location_requested": "Salento, Quindio",
+        "search_attempt": 1,
+        "location_attempts": 2,
+        "resolved_location": "Santa Rosa de Cabal, Risaralda",
+        "location_source": "geo_validation",
+        "scrape_debug": {
+          "html_sample_start": "<html itemscope=\"\" itemtype=\"http://schema.org/Place\" lang=\"es-CO\"><head>  <link href=\"https://fonts.gstatic.com/\" crossorigin=\"\" rel=\"preconnect\"> <link href=\"https://maps.gstatic.com/\" crossorigin=\"\" rel=\"preconnect\"> <link href=\"https://www.gstatic.com/\" crossorigin=\"\" rel=\"preconnect\"> <link href=\"https://fonts.gstatic.com/\" rel=\"dns-prefetch\"> <link href=\"https://maps.gstatic.com/\" rel=\"dns-prefetch\"> <link href=\"https://www.gstatic.com/\" rel=\"dns-prefetch\">   <link href=\"/maps/_/js/k=maps.m.es.vFrrVIeuT8c.es5.O/m=sc2,per,mo,lp,ep,ti,stx,ds,dwi,enr,pwd,dw,plm,log,b/am=5AAAEgEJ/rt=j/d=1/rs=ACT90oE5I-8aYVPCV2C1ew9Ppk-LmUdDtw?wli=m.biP8Qw5r7GY.loadSv.O%3A%3Bm.tL3-fPeLRgg.mapcore.O%3A%3B&amp;cb=M\" as=\"script\" rel=\"preload\" type=\"application/javascript\" nonce=\"\">  <link href=\"/maps/preview/opensearch.xml?hl=es\" title=\"Google Maps\" rel=\"search\" type=\"application/opensearchdescription+xml\"> <title>HOTEL VISPERAS - Google Maps</title> <meta content=\"Busca negocios locales, consulta mapas y consigue información sobre rutas en Google Maps.\" name=\"Description\">  <meta content=\"Google Maps\" itemprop=\"name\"> <meta content=\"Google Maps\" property=\"og:title\">  <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.8552945%2C-75.5834102&amp;zoom=17&amp;size=900x900&amp;language=en&amp;sensor=false&amp;client=google-maps-frontend&amp;signature=t3cYayuwIq5llcdc30OD79TsX64\" itemprop=\"image\"> <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.8552945%2C-75.5834102&amp;zoom=17&amp;size=900x900&amp;language=en&amp;sensor=false&amp;client=google-maps-frontend&amp;signature=t3cYayuwIq5llcdc30OD79TsX64\" property=\"og:image\"> <meta content=\"900\" property=\"og:image:width\"> <meta content=\"900\" property=\"og:image:height\">  <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" itemprop=\"description\"> <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" property=\"og:description\">  <meta con",
+          "html_sample_end": "03des\\u0026gl\\u003dco\",\"/s?tbm\\u003dmap\\u0026gs_ri\\u003dmaps\\u0026suggest\\u003dp\\u0026authuser\\u003d0\\u0026hl\\u003des\\u0026gl\\u003dco\",\"/maps/preview/directions?authuser\\u003d0\\u0026hl\\u003des\\u0026gl\\u003dco\",null,null,\"/maps/rpc/vp?authuser\\u003d0\\u0026hl\\u003des\\u0026gl\\u003dco\",[[\"/maps/vt\"],755,[\"/maps/vt/stream\"],null,0,null,1001,\"/maps/vt\",null,null,\"CscYYoEBCAISVhI0CAISB3RyYWZmaWMYv4Q9Ig4KCWluY2lkZW50cxIBMSITCg5pbmNpZGVudHNfdGV4dBIBMRocEgJlcxoCY29iEghEEg4KA3NldBIHUm9hZG1hcCABIhcAAQIDBAUGBwgJCgsMDQ4PEBESExQVFjC0ATh4Sgd0cmFmZmljYloIAxIuEgwIAhIEYmlrZRi/hD0aHBICZXMaAmNvYhIIRBIOCgNzZXQSB1JvYWRtYXAgASIXAAECAwQFBgcICQoLDA0ODxAREhMUFRYwgJqeATiAowVKBGJpa2ViZwgIEjgSDwgCEgd0cmFuc2l0GL+EPRojEgJlcxoCY29iGQhEEhUKA3NldBIOVHJhbnNpdEZvY3VzZWQgASIXAAECAwQFBgcICQoLDA0ODxAREhMUFRYwgJqeATiAowVKB3RyYW5zaXRieAgJElkSDggCEgZpbmRvb3IYv4Q9GhwSAmVzGgJjb2ISCEQSDgoDc2V0EgdSb2FkbWFwIAEyHggMEAI4AeABBoACAbgCAcgCAdgCAegCAZADAeADAaIBBhgBMAF4ASIIDxAREhMUFRYwgJqeATiAowVKBmluZG9vcmKSAQg6EmkSDQgAGL+EPSIFCgNvZGwaHBICZXMaAmNvYhIIRBIOCgNzZXQSB1JvYWRtYXAgASoFLQAAgD8yKAgMEAIwADgB0gECGAHgAQaAAgG4AgHIAgHYAgHoAgGQAwGwAwHgAwGiAQYYATABeAEYASIIDxAREhMUFRYwgJqeATiAowVKDmluZG9vcl9kZWZhdWx0Yo0BCD0SYxIYCAISA3BzbSIHCgJzcBIBMYrI790PAhABGhwSAmVzGgJjb2ISCEQSDgoDc2V0EgdSb2FkbWFwIAEyHggMEAI4AeABBoACAbgCAcgCAdgCAegCAZADAeADAaIBBhgBMAF4ASIXAAECAwQFBgcICQoLDA0ODxAREhMUFRYwgJqeATiIDkoDcHNtYoABCBYSUBocEgJlcxoCY29iEghEEg4KA3NldBIHUm9hZG1hcCABMiUIDBACMAA4AVgA4AEGgAIBuAIBwAIByAIB2AIB6AIBkAMB4AMBogEGGAEwAXgBIhcAAQIDBAUGBwgJCgsMDQ4PEBESExQVFjDoAjisAkoLbWFqb3JfZXZlbnRiuAEIHRKcARJOCAISCGxvcmUtcmVjGL+EPfKh6sQJLgjOxVMI0cVTCLrdqAII9oXnFQi/xMYiCNmT+CwIvfT4LAi0lvksKAYoCSgMKA/yzp21DAQYAzACGggSAmVzGgJjbyABMj4IDBACMAA4AeABBoACAbgCAcACAcgCAdgCAegCAZADAcgDAeADAfADBvADCfADDPADD/gDCPgDC/gDDvgDFSIEBgkMDzCAowU4iA5KCGxvcmUtcmVjYn0IHhJkEigIAhIJbG9yZS1wMTNuGL+EPYrVl6YJBRCl/rcWisfW0AsAkpf01gsAGggSAmVzGgJjbyABMiwIDBACMAA4AeABBoACAbgCAcACAcgCAdgCAegCAZADAcgDAeADAfADCvgDFSIBCjCAowU42ARKCWxvcmUtcDEzbmLDAQgfEogBEhoIAhISY2F0ZWdvcmljYWwtc2VhcmNoGL+EPRo4",
+          "rating_source": "aria-label",
+          "reviews_source": "aria-label",
+          "photos_method": "modal_scroll",
+          "photos_confidence": 85,
+          "photos_evidence": {
+            "method": "modal_scroll",
+            "warnings": [
+              "Modal no visible tras click en button[aria-label*='Foto']"
+            ],
+            "scroll_iterations": 4,
+            "unique_image_sources": 9,
+            "confidence_note": "Alto"
+          },
+          "photos_warnings": []
+        },
+        "geo_validation": {
+          "enabled": true,
+          "performed": true,
+          "is_valid": true,
+          "distance_km": 24.14,
+          "threshold_km": 30.0,
+          "confidence": 0.08,
+          "expected_location": {
+            "lat": 4.637365,
+            "lng": -75.5703107,
+            "address": "Salento, Quindío, Colombia",
+            "city": "Salento"
+          },
+          "actual_location": {
+            "lat": 4.855294499999999,
+            "lng": -75.5834102,
+            "address": "Km. 4 vía Termales, vereda La Leona, Santa Rosa de Cabal, San RAMON, Santa Rosa de Cabal, Risaralda, Colombia",
+            "city": "Santa Rosa de Cabal",
+            "state": "Risaralda",
+            "country": "Colombia",
+            "place_id": "ChIJpS416kyCOI4Rqk6mdT3LIiU"
+          },
+          "resolved_location": "Santa Rosa de Cabal, Risaralda",
+          "api_calls_used": 3,
+          "error_message": null,
+          "location_override_applied": true
+        },
+        "data_confidence": {
+          "rating": true,
+          "reviews": true,
+          "photos": true,
+          "horarios": false,
+          "website": true,
+          "telefono": true,
+          "whatsapp": false,
+          "posts": false,
+          "qa": true
+        },
+        "driver_available": true,
+        "driver_error": null,
+        "timestamp_utc": "2025-10-29T22:26:23.589062"
+      }
+    }
+  },
+  "hotel visperas::santa rosa de cabal, risaralda": {
+    "timestamp": "2026-02-26T03:02:54.488802",
+    "profile": {
+      "existe": true,
+      "score": 70,
+      "issues": [
+        "Perfil inactivo: 0 posts en ultimos 60 dias (confianza: 80%)",
+        "Pocas fotos (10), meta: 15+"
+      ],
+      "reviews": 30,
+      "rating": 5.0,
+      "fotos": 10,
+      "horarios": true,
+      "descripcion": false,
+      "website": false,
+      "telefono": false,
+      "whatsapp_visible": false,
+      "posts": 0,
+      "tiene_qa": false,
+      "ultima_actividad_dias": null,
+      "fugas_detectadas": [
+        {
+          "tipo": "PERFIL_NO_RECLAMADO",
+          "severidad": "CRÍTICA",
+          "detalle": "Invisible total en búsquedas locales",
+          "impacto_estimado_COP_mes": 2100000,
+          "motivo": "El 65% de turistas busca \"hoteles cerca de mí\"; sin perfil no existes.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "FOTOS_INSUFICIENTES",
+          "severidad": "CRÍTICA",
+          "detalle": "Google penaliza relevancia local vs competencia",
+          "impacto_estimado_COP_mes": 10500000,
+          "motivo": "Google Maps prioriza perfiles visuales ricos. Pareces abandonado.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "SIN_WHATSAPP_VISIBLE",
+          "severidad": "CRÍTICA",
+          "detalle": "30% de consultas inmediatas nunca llegan",
+          "impacto_estimado_COP_mes": 9000000,
+          "motivo": "68% de reservas directas en Colombia inician en WhatsApp.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "SIN_HORARIOS",
+          "severidad": "CRÍTICA",
+          "detalle": "Señal de negocio informal o cerrado",
+          "impacto_estimado_COP_mes": 4500000,
+          "motivo": "Sin check-in visible pareces informal.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "SIN_WEBSITE_DIRECTO",
+          "severidad": "CRÍTICA",
+          "detalle": "Fuerza dependencia 100% de OTAs",
+          "impacto_estimado_COP_mes": 7500000,
+          "motivo": "Cada reserva paga 18-25% de comisión.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "PERFIL_ABANDONADO",
+          "severidad": "CRÍTICA",
+          "detalle": "Google interpreta como negocio inactivo",
+          "impacto_estimado_COP_mes": 9000000,
+          "motivo": "Google interpreta falta de actividad como cierre temporal.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "PERFIL_ABANDONADO",
+          "severidad": "CRÍTICA",
+          "detalle": "Google aplica degradación algorítmica",
+          "impacto_estimado_COP_mes": 7500000,
+          "motivo": "Google interpreta falta de actividad como cierre temporal.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "SIN_FAQ_CONVERSACIONAL",
+          "severidad": "CRÍTICA",
+          "detalle": "No responde al modelo conversacional de Google",
+          "impacto_estimado_COP_mes": 6000000,
+          "motivo": "40% de búsquedas turísticas son preguntas directas.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        }
+      ],
+      "perdida_total_mes_COP": 56100000,
+      "perdida_anual_COP": 673200000,
+      "prioridad_accion": "CRÍTICA - ACTUAR EN 72 HORAS",
+      "meta": {
+        "hotel_name": "Hotel Visperas",
+        "location": "Santa Rosa de Cabal, Risaralda",
+        "search_query": "Hotel Visperas Santa Rosa de Cabal, Risaralda",
+        "search_url": "https://www.google.com/maps/search/Hotel+Visperas+Santa+Rosa+de+Cabal,+Risaralda",
+        "search_location_used": "Santa Rosa de Cabal, Risaralda",
+        "location_requested": "Santa Rosa de Cabal, Risaralda",
+        "search_attempt": 1,
+        "location_attempts": 1,
+        "resolved_location": "Santa Rosa de Cabal, Risaralda",
+        "location_source": "geo_validation",
+        "scrape_debug": {
+          "html_sample_start": "<html itemscope=\"\" itemtype=\"http://schema.org/Place\" lang=\"es-CO\"><head>  <link href=\"/search?tbm=map&amp;authuser=0&amp;hl=es&amp;gl=co&amp;q=Hotel+Visperas+Santa+Rosa+de+Cabal%2C+Risaralda&amp;pb=%211sHotel+Visperas+Santa+Rosa+de+Cabal%2C+Risaralda%217i20%2110b1%2112m49%211m5%2118b1%2130b1%2131m1%211b1%2134e1%212m4%215m1%216e2%2120e3%2139b1%216m22%2149b1%2163m0%2166b1%2174i150000%2185b1%2191b1%21114b1%21149b1%21206b1%21209b1%21212b1%21223b1%21232b1%21234b1%21235b1%21244b1%21246b1%21250b1%21253b1%21258b1%21260b1%21266b1%2110b1%2112b1%2113b1%2114b1%2116b1%2117m1%213e1%2120m3%215e2%216b1%2114b1%2146m1%211b0%2196b1%2199b1%2119m4%212m3%211i360%212i120%214i8%2120m53%212m2%211i203%212i100%213m2%212i4%215b1%216m6%211m2%211i86%212i86%211m2%211i408%212i240%217m29%211m3%211e1%212b0%213e3%211m3%211e2%212b1%213e2%211m3%211e2%212b0%213e3%211m3%211e8%212b0%213e3%211m3%211e10%212b0%213e3%211m3%211e10%212b1%213e2%211m3%211e10%212b0%213e4%212b1%219b0%2115m8%211m7%211m2%211m1%211e2%212m2%211i195%212i195%213i20%2122m5%211sWrefafnQJOiywt0P9qapmA0%217e81%2114m1%213sWrefafnQJOiywt0P9qapmA0%2115i9937%2124m107%211m28%2113m9%212b1%213b1%214b1%216i1%218b1%219b1%2114b1%2120b1%2125b1%2118m17%213b1%214b1%215b1%216b1%2113b1%2114b1%2117b1%2121b1%2122b1%2127m1%211b0%2128b0%2132b1%2133m1%211b1%2134b1%2136e2%2110m1%218e3%2111m1%213e1%2114m1%213b0%2117b1%2120m2%211e3%211e6%2124b1%2125b1%2126b1%2127b1%2129b1%2130m1%212b1%2136b1%2137b1%2139m3%212m2%212i1%213i1%2143b1%2152b1%2154m1%211b1%2155b1%2156m1%211b1%2161m2%211m1%211e1%2165m5%213m4%211m3%211m2%211i224%212i298%2172m22%211m8%212b1%215b1%217b1%2112m4%211b1%212b1%214m1%211e1%214b1%218m10%211m6%214m1%211e1%214m1%211e3%214m1%211e4%213sother_user_google_review_posts__and__hotel_and_vr_partner_review_posts%216m1%211e1%219b1%2189b1%2198m3%211b1%212b1%213b1%21103b1%21113b1%21114m3%211b1%212m1%211b1%21117b1%21122m1%211b1%21126b1%21127b1%2126m4%212m3%211i80%212i92%214i8%2130m28%211m6%211m2%211i0%212i0%212m2%211i530%212i768%211m6%211m2%211i974%212i0%212m2%2",
+          "html_sample_end": "/am=5AAAICKABA/rt=j/d=1/rs=ACT90oEewVCnIYj3dG3SBqLBwhJDJMU87g?wli=m.QIf2Bgaa-Ms.loadSv.O%3A%3Bm.yuU9IwrC9LQ.mapcore.O%3A%3B\" as=\"script\" rel=\"preload\" type=\"application/javascript\" nonce=\"\">  <link href=\"/maps/preview/opensearch.xml?hl=es\" title=\"Google Maps\" rel=\"search\" type=\"application/opensearchdescription+xml\"> <title>HOTEL VISPERAS - Google Maps</title> <meta content=\"Busca negocios locales, consulta mapas y consigue información sobre rutas en Google Maps.\" name=\"Description\">  <meta content=\"Google Maps\" itemprop=\"name\"> <meta content=\"Google Maps\" property=\"og:title\">  <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.81970135%2C-75.6974306&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;key=AIzaSyBoYjeRtfVI0Jd8Q_9mnflo9i4sOYpShB0&amp;signature=rRuHInXR1kgTRnbmb-htk5rH4ak\" itemprop=\"image\"> <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.81970135%2C-75.6974306&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;key=AIzaSyBoYjeRtfVI0Jd8Q_9mnflo9i4sOYpShB0&amp;signature=rRuHInXR1kgTRnbmb-htk5rH4ak\" property=\"og:image\"> <meta content=\"900\" property=\"og:image:width\"> <meta content=\"900\" property=\"og:image:height\">  <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" itemprop=\"description\"> <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" property=\"og:description\">  <meta content=\"Google Maps\" property=\"og:site_name\"> <meta content=\"summary\" name=\"twitter:card\">  <meta content=\"Anm+hhtuh7NJguqSnXHEAIqqMaV+GXCks8WYXHJKF7l6AeYMj+wO+fi9OdDqFnJTg9t0492DykVxx4jpvFbxnA8AAABseyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IlByaXZhY3lTYW5kYm94QWRzQVBJcyIsImV4cGlyeSI6MTY5NTE2Nzk5OSwiaXNTdWJkb21haW4iOnRydWV9\" http-equiv=\"origin-trial\"> <meta content=\"initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\" name=\"viewport\"> <meta content=\"notranslate\" name=\"google\"> <meta content=\"origin\" name=\"",
+          "rating_source": "aria-label",
+          "reviews_source": "aria-label",
+          "photos_method": "modal_scroll",
+          "photos_confidence": 85,
+          "photos_evidence": {
+            "method": "modal_scroll",
+            "warnings": [
+              "Modal no visible tras click en button[aria-label*='Foto']"
+            ],
+            "scroll_iterations": 4,
+            "unique_image_sources": 7,
+            "confidence_note": "Alto"
+          },
+          "photos_warnings": [],
+          "posts_method": "no_updates_button",
+          "posts_confidence": 80,
+          "posts_evidence": {
+            "reason": "Boton de actualizaciones no encontrado"
+          },
+          "posts_warnings": [
+            "Boton de actualizaciones no encontrado: button[aria-label*='Actualizaciones']",
+            "Boton de actualizaciones no encontrado: button[aria-label*='Updates']",
+            "Boton de actualizaciones no encontrado: a[href*='updates']",
+            "Boton de actualizaciones no encontrado: [data-item-id='updates']",
+            "No se detecto seccion de actualizaciones (posible perfil sin posts)"
+          ],
+          "photos_source": "google_places_api"
+        },
+        "geo_validation": {
+          "enabled": true,
+          "performed": true,
+          "is_valid": true,
+          "distance_km": 4.62,
+          "threshold_km": 30.0,
+          "confidence": 0.34,
+          "expected_location": {
+            "lat": 4.870121,
+            "lng": -75.62239,
+            "address": "Santa Rosa de Cabal, Risaralda, Colombia",
+            "city": "Santa Rosa de Cabal"
+          },
+          "actual_location": {
+            "lat": 4.855294499999999,
+            "lng": -75.5834102,
+            "address": "Km. 4 vía Termales, vereda La Leona, Santa Rosa de Cabal, San RAMON, Santa Rosa de Cabal, Risaralda, Colombia",
+            "city": "Santa Rosa de Cabal",
+            "state": "Risaralda",
+            "country": "Colombia",
+            "place_id": "ChIJpS416kyCOI4Rqk6mdT3LIiU"
+          },
+          "resolved_location": "Santa Rosa de Cabal, Risaralda",
+          "api_calls_used": 4,
+          "error_message": null,
+          "location_override_applied": true
+        },
+        "data_confidence": {
+          "rating": true,
+          "reviews": true,
+          "photos": true,
+          "posts": true,
+          "horarios": 0.85,
+          "website": false,
+          "telefono": false,
+          "whatsapp": false,
+          "qa": false
+        },
+        "horarios_detection": {
+          "method": "text_analysis",
+          "confidence": 0.85,
+          "keywords": [],
+          "time_formats": [
+            "028",
+            "012"
+          ],
+          "sample": null
+        },
+        "driver_available": true,
+        "driver_error": null,
+        "timestamp_utc": "2026-02-26T03:02:54.488599"
+      },
+      "posts_last_60_days": 0,
+      "last_post_date": null,
+      "gbp_activity_score": 16,
+      "motor_gbp": {
+        "existe": false,
+        "prominente": false,
+        "proveedor": null
+      },
+      "motor_reservas_gbp": false,
+      "motor_reservas_proveedor": null,
+      "motor_reservas_prominente": false,
+      "_impact_data_sources": {
+        "data_points": [
+          {
+            "field": "reservas_mes",
+            "value": 200,
+            "source": "plan_maestro_json",
+            "source_detail": "Indice AILA Colombia (estimado)",
+            "estimated": true,
+            "confidence": 0.765
+          },
+          {
+            "field": "valor_reserva",
+            "value": 300000,
+            "source": "plan_maestro_json",
+            "source_detail": "Indice AILA Colombia (estimado)",
+            "estimated": true,
+            "confidence": 0.765
+          },
+          {
+            "field": "canal_directo",
+            "value": 0.5,
+            "source": "plan_maestro_json",
+            "source_detail": "Default regional average (50%)",
+            "estimated": true,
+            "confidence": 0.765
+          },
+          {
+            "field": "ingreso_mensual_base",
+            "value": 60000000,
+            "source": "calculated",
+            "source_detail": "reservas_mes * valor_reserva",
+            "estimated": false,
+            "confidence": 0.9
+          },
+          {
+            "field": "revpar_regional",
+            "value": 250000,
+            "source": "plan_maestro_json",
+            "source_detail": "default benchmark",
+            "estimated": true,
+            "confidence": 0.765
+          }
+        ],
+        "sources_summary": {
+          "plan_maestro_json": 4,
+          "calculated": 1
+        },
+        "has_hotel_input": false
+      },
+      "_impact_base_metrics": {
+        "reservas_mes": 200,
+        "valor_reserva": 300000,
+        "canal_directo": 0.5,
+        "base_revenue_mes": 60000000,
+        "region": "default"
+      }
+    }
+  },
+  "hotelvisperas::santa rosa de cabal, risaralda": {
+    "timestamp": "2026-02-25T16:25:01.442779",
+    "profile": {
+      "existe": true,
+      "score": 75,
+      "issues": [
+        "Contador de fotos poco confiable (confianza: 0%) - Verificar manualmente en Google Maps",
+        "Pocas fotos (10), meta: 15+"
+      ],
+      "reviews": 30,
+      "rating": 5.0,
+      "fotos": 10,
+      "horarios": false,
+      "descripcion": false,
+      "website": true,
+      "telefono": true,
+      "whatsapp_visible": false,
+      "posts": 0,
+      "tiene_qa": false,
+      "ultima_actividad_dias": null,
+      "fugas_detectadas": [
+        {
+          "tipo": "PERFIL_NO_RECLAMADO",
+          "severidad": "CRÍTICA",
+          "detalle": "Invisible total en búsquedas locales",
+          "impacto_estimado_COP_mes": 2100000,
+          "motivo": "El 65% de turistas busca \"hoteles cerca de mí\"; sin perfil no existes.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "FOTOS_INSUFICIENTES",
+          "severidad": "CRÍTICA",
+          "detalle": "Google penaliza relevancia local vs competencia",
+          "impacto_estimado_COP_mes": 10500000,
+          "motivo": "Google Maps prioriza perfiles visuales ricos. Pareces abandonado.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "SIN_WHATSAPP_VISIBLE",
+          "severidad": "CRÍTICA",
+          "detalle": "30% de consultas inmediatas nunca llegan",
+          "impacto_estimado_COP_mes": 9000000,
+          "motivo": "68% de reservas directas en Colombia inician en WhatsApp.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "SIN_HORARIOS",
+          "severidad": "CRÍTICA",
+          "detalle": "Señal de negocio informal o cerrado",
+          "impacto_estimado_COP_mes": 4500000,
+          "motivo": "Sin check-in visible pareces informal.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "PERFIL_ABANDONADO",
+          "severidad": "CRÍTICA",
+          "detalle": "Google interpreta como negocio inactivo",
+          "impacto_estimado_COP_mes": 9000000,
+          "motivo": "Google interpreta falta de actividad como cierre temporal.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "PERFIL_ABANDONADO",
+          "severidad": "CRÍTICA",
+          "detalle": "Google aplica degradación algorítmica",
+          "impacto_estimado_COP_mes": 7500000,
+          "motivo": "Google interpreta falta de actividad como cierre temporal.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        },
+        {
+          "tipo": "SIN_FAQ_CONVERSACIONAL",
+          "severidad": "CRÍTICA",
+          "detalle": "No responde al modelo conversacional de Google",
+          "impacto_estimado_COP_mes": 6000000,
+          "motivo": "40% de búsquedas turísticas son preguntas directas.",
+          "urgencia": "CRÍTICA - Atiende este tema hoy"
+        }
+      ],
+      "perdida_total_mes_COP": 48600000,
+      "perdida_anual_COP": 583200000,
+      "prioridad_accion": "CRÍTICA - ACTUAR EN 72 HORAS",
+      "meta": {
+        "hotel_name": "Hotelvisperas",
+        "location": "Santa Rosa de Cabal, Risaralda",
+        "search_query": "Hotelvisperas Santa Rosa de Cabal, Risaralda",
+        "search_url": "https://www.google.com/maps/search/Hotelvisperas+Santa+Rosa+de+Cabal,+Risaralda",
+        "search_location_used": "Santa Rosa de Cabal, Risaralda",
+        "location_requested": "Santa Rosa de Cabal, Risaralda",
+        "search_attempt": 1,
+        "location_attempts": 1,
+        "resolved_location": "Santa Rosa de Cabal, Risaralda",
+        "location_source": "geo_validation",
+        "scrape_debug": {
+          "html_sample_start": "<html itemscope=\"\" itemtype=\"http://schema.org/Place\" lang=\"es-CO\"><head>  <link href=\"/search?tbm=map&amp;authuser=0&amp;hl=es&amp;gl=co&amp;q=Hotelvisperas+Santa+Rosa+de+Cabal%2C+Risaralda&amp;pb=%211sHotelvisperas+Santa+Rosa+de+Cabal%2C+Risaralda%217i20%2110b1%2112m48%211m5%2118b1%2130b1%2131m1%211b1%2134e1%212m4%215m1%216e2%2120e3%2139b1%216m21%2149b1%2163m0%2166b1%2174i150000%2185b1%2191b1%21114b1%21149b1%21206b1%21209b1%21212b1%21223b1%21232b1%21234b1%21244b1%21246b1%21250b1%21253b1%21258b1%21260b1%21266b1%2110b1%2112b1%2113b1%2114b1%2116b1%2117m1%213e1%2120m3%215e2%216b1%2114b1%2146m1%211b0%2196b1%2199b1%2119m4%212m3%211i360%212i120%214i8%2120m53%212m2%211i203%212i100%213m2%212i4%215b1%216m6%211m2%211i86%212i86%211m2%211i408%212i240%217m29%211m3%211e1%212b0%213e3%211m3%211e2%212b1%213e2%211m3%211e2%212b0%213e3%211m3%211e8%212b0%213e3%211m3%211e10%212b0%213e3%211m3%211e10%212b1%213e2%211m3%211e10%212b0%213e4%212b1%219b0%2115m8%211m7%211m2%211m1%211e2%212m2%211i195%212i195%213i20%2122m5%211sUiGfaeimBtKcwbkPioDxwQI%217e81%2114m1%213sUiGfaeimBtKcwbkPioDxwQI%2115i9937%2124m107%211m28%2113m9%212b1%213b1%214b1%216i1%218b1%219b1%2114b1%2120b1%2125b1%2118m17%213b1%214b1%215b1%216b1%2113b1%2114b1%2117b1%2121b1%2122b1%2127m1%211b0%2128b0%2132b1%2133m1%211b1%2134b1%2136e2%2110m1%218e3%2111m1%213e1%2114m1%213b0%2117b1%2120m2%211e3%211e6%2124b1%2125b1%2126b1%2127b1%2129b1%2130m1%212b1%2136b1%2137b1%2139m3%212m2%212i1%213i1%2143b1%2152b1%2154m1%211b1%2155b1%2156m1%211b1%2161m2%211m1%211e1%2165m5%213m4%211m3%211m2%211i224%212i298%2172m22%211m8%212b1%215b1%217b1%2112m4%211b1%212b1%214m1%211e1%214b1%218m10%211m6%214m1%211e1%214m1%211e3%214m1%211e4%213sother_user_google_review_posts__and__hotel_and_vr_partner_review_posts%216m1%211e1%219b1%2189b1%2198m3%211b1%212b1%213b1%21103b1%21113b1%21114m3%211b1%212m1%211b1%21117b1%21122m1%211b1%21126b1%21127b1%2126m4%212m3%211i80%212i92%214i8%2130m28%211m6%211m2%211i0%212i0%212m2%211i530%212i768%211m6%211m2%211i974%212i0%212m2%211i1024%21",
+          "html_sample_end": "KABA/rt=j/d=1/rs=ACT90oHbqPUYxxEuZi36ErgO8WI9nEgUnw?wli=m.kwyrkClcWfs.loadSv.O%3A%3Bm.tmn3Y3dYlPw.mapcore.O%3A%3B\" as=\"script\" rel=\"preload\" type=\"application/javascript\" nonce=\"\">  <link href=\"/maps/preview/opensearch.xml?hl=es\" title=\"Google Maps\" rel=\"search\" type=\"application/opensearchdescription+xml\"> <title>HOTEL VISPERAS - Google Maps</title> <meta content=\"Busca negocios locales, consulta mapas y consigue información sobre rutas en Google Maps.\" name=\"Description\">  <meta content=\"Google Maps\" itemprop=\"name\"> <meta content=\"Google Maps\" property=\"og:title\">  <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.81970135%2C-75.6974306&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;key=AIzaSyBoYjeRtfVI0Jd8Q_9mnflo9i4sOYpShB0&amp;signature=rRuHInXR1kgTRnbmb-htk5rH4ak\" itemprop=\"image\"> <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.81970135%2C-75.6974306&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;key=AIzaSyBoYjeRtfVI0Jd8Q_9mnflo9i4sOYpShB0&amp;signature=rRuHInXR1kgTRnbmb-htk5rH4ak\" property=\"og:image\"> <meta content=\"900\" property=\"og:image:width\"> <meta content=\"900\" property=\"og:image:height\">  <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" itemprop=\"description\"> <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" property=\"og:description\">  <meta content=\"Google Maps\" property=\"og:site_name\"> <meta content=\"summary\" name=\"twitter:card\">  <meta content=\"Anm+hhtuh7NJguqSnXHEAIqqMaV+GXCks8WYXHJKF7l6AeYMj+wO+fi9OdDqFnJTg9t0492DykVxx4jpvFbxnA8AAABseyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IlByaXZhY3lTYW5kYm94QWRzQVBJcyIsImV4cGlyeSI6MTY5NTE2Nzk5OSwiaXNTdWJkb21haW4iOnRydWV9\" http-equiv=\"origin-trial\"> <meta content=\"initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\" name=\"viewport\"> <meta content=\"notranslate\" name=\"google\"> <meta content=\"origin\" name=\"referrer\">",
+          "rating_source": "aria-label",
+          "reviews_source": "aria-label",
+          "photos_method": "none",
+          "photos_confidence": 0,
+          "photos_evidence": {
+            "attempts": [],
+            "debug_artifacts": {
+              "screenshot": "logs\\gbp_debug\\photo_extraction_failed_20260225_112332.png",
+              "html_dump": "logs\\gbp_debug\\photo_extraction_failed_20260225_112332.html"
+            },
+            "page_title": "HOTEL VISPERAS - Google Maps",
+            "current_url": "https://www.google.com/maps/place/HOTEL+VISPERAS/@4.8552945,-75.5834102,17z/data=!4m9!3m8!1s0x8e38824cea352ea5:0x2522cb3d75a64eaa!5m2!4m1!1i2!8m2!3d4.8552945!4d-75.5834102!16s%2Fg%2F1thhlkjb?entry=ttu&g_ep=EgoyMDI2MDIyMi4wIKXMDSoASAFQAw%3D%3D"
+          },
+          "photos_warnings": [
+            "Todas las capas de extraccion fallaron (incluyendo cache)"
+          ],
+          "photos_modal": "trigger_not_found",
+          "photos_source": "google_places_api"
+        },
+        "geo_validation": {
+          "enabled": true,
+          "performed": true,
+          "is_valid": true,
+          "distance_km": 4.62,
+          "threshold_km": 30.0,
+          "confidence": 0.34,
+          "expected_location": {
+            "lat": 4.870121,
+            "lng": -75.62239,
+            "address": "Santa Rosa de Cabal, Risaralda, Colombia",
+            "city": "Santa Rosa de Cabal"
+          },
+          "actual_location": {
+            "lat": 4.855294499999999,
+            "lng": -75.5834102,
+            "address": "Km. 4 vía Termales, vereda La Leona, Santa Rosa de Cabal, San RAMON, Santa Rosa de Cabal, Risaralda, Colombia",
+            "city": "Santa Rosa de Cabal",
+            "state": "Risaralda",
+            "country": "Colombia",
+            "place_id": "ChIJpS416kyCOI4Rqk6mdT3LIiU"
+          },
+          "resolved_location": "Santa Rosa de Cabal, Risaralda",
+          "api_calls_used": 4,
+          "error_message": null,
+          "location_override_applied": true
+        },
+        "data_confidence": {
+          "rating": true,
+          "reviews": true,
+          "photos": true,
+          "horarios": 0.0,
+          "website": true,
+          "telefono": true,
+          "whatsapp": false,
+          "posts": false,
+          "qa": false
+        },
+        "horarios_detection": {
+          "method": "not_found",
+          "confidence": 0.0,
+          "keywords": [],
+          "time_formats": [],
+          "sample": "Opciones de búsqueda disponibles en esta zona"
+        },
+        "driver_available": true,
+        "driver_error": null,
+        "timestamp_utc": "2026-02-25T16:25:01.442602"
+      },
+      "gbp_activity_score": 16,
+      "motor_gbp": {
+        "existe": true,
+        "prominente": false,
+        "proveedor": "lobbypms"
+      },
+      "motor_reservas_gbp": true,
+      "motor_reservas_proveedor": "lobbypms",
+      "motor_reservas_prominente": false,
+      "_impact_data_sources": {
+        "data_points": [
+          {
+            "field": "reservas_mes",
+            "value": 200,
+            "source": "plan_maestro_json",
+            "source_detail": "Indice AILA Colombia (estimado)",
+            "estimated": true,
+            "confidence": 0.765
+          },
+          {
+            "field": "valor_reserva",
+            "value": 300000,
+            "source": "plan_maestro_json",
+            "source_detail": "Indice AILA Colombia (estimado)",
+            "estimated": true,
+            "confidence": 0.765
+          },
+          {
+            "field": "canal_directo",
+            "value": 0.5,
+            "source": "plan_maestro_json",
+            "source_detail": "Default regional average (50%)",
+            "estimated": true,
+            "confidence": 0.765
+          },
+          {
+            "field": "ingreso_mensual_base",
+            "value": 60000000,
+            "source": "calculated",
+            "source_detail": "reservas_mes * valor_reserva",
+            "estimated": false,
+            "confidence": 0.9
+          },
+          {
+            "field": "revpar_regional",
+            "value": 250000,
+            "source": "plan_maestro_json",
+            "source_detail": "default benchmark",
+            "estimated": true,
+            "confidence": 0.765
+          }
+        ],
+        "sources_summary": {
+          "plan_maestro_json": 4,
+          "calculated": 1
+        },
+        "has_hotel_input": false
+      },
+      "_impact_base_metrics": {
+        "reservas_mes": 200,
+        "valor_reserva": 300000,
+        "canal_directo": 0.5,
+        "base_revenue_mes": 60000000,
+        "region": "default"
+      }
+    }
+  },
+  "hoteltest::ubicacion no detectada": {
+    "timestamp": "2026-02-20T23:01:32.934086",
+    "profile": {
+      "existe": true,
+      "score": 55,
+      "issues": [
+        "Contador de fotos poco confiable (confianza: 0%) - Verificar manualmente en Google Maps",
+        "Perfil inactivo: 0 posts en últimos 60 días (confianza: 80%)",
+        "Pocas fotos (10), meta: 15+",
+        "Rating bajo (3.8), meta: 4.0+"
+      ],
+      "reviews": 256,
+      "rating": 3.8,
+      "fotos": 10,
+      "horarios": false,
+      "descripcion": false,
+      "website": false,
+      "telefono": false,
+      "whatsapp_visible": false,
+      "posts": 0,
+      "tiene_qa": false,
+      "ultima_actividad_dias": null,
+      "fugas_detectadas": [
+        {
+          "tipo": "FOTOS_INSUFICIENTES",
+          "severidad": "ALTA",
+          "detalle": "Solo 10 fotos activas → Google te considera menos relevante que hoteles con 15+ fotos.",
+          "impacto_estimado_COP_mes": 735000,
+          "motivo": "Google Maps prioriza perfiles visuales ricos. Pareces abandonado.",
+          "urgencia": "ALTA - Booking muestra 40+ fotos de tu propio hotel"
+        },
+        {
+          "tipo": "RATING_DESCALIFICANTE",
+          "severidad": "CRÍTICA",
+          "detalle": "Rating 3.8/5.0 → Fuera del top 3 de Google Maps.",
+          "impacto_estimado_COP_mes": 945000,
+          "motivo": "El 92% de usuarios solo considera hoteles 4.0+. Entregas clientes gratis a competidores.",
+          "urgencia": "CRÍTICA - Atiende reseñas negativas hoy"
+        },
+        {
+          "tipo": "SIN_WHATSAPP_VISIBLE",
+          "severidad": "ALTA",
+          "detalle": "Sin botón de WhatsApp → pierdes 30% de consultas inmediatas.",
+          "impacto_estimado_COP_mes": 630000,
+          "motivo": "68% de reservas directas en Colombia inician en WhatsApp.",
+          "urgencia": "ALTA - Configurable en 10 minutos"
+        },
+        {
+          "tipo": "PERFIL_ABANDONADO",
+          "severidad": "MEDIA",
+          "detalle": "Cero posts últimos 60 días → Google degrada tu ranking por inactividad.",
+          "impacto_estimado_COP_mes": 525000,
+          "motivo": "Google interpreta falta de actividad como cierre temporal.",
+          "urgencia": "MEDIA - 1 post semanal recupera posición en 21 días"
+        },
+        {
+          "tipo": "SIN_FAQ_CONVERSACIONAL",
+          "severidad": "MEDIA",
+          "detalle": "Sin Q&A → No apareces en búsquedas conversacionales (“¿acepta mascotas?”).",
+          "impacto_estimado_COP_mes": 420000,
+          "motivo": "40% de búsquedas turísticas son preguntas directas.",
+          "urgencia": "MEDIA - Alimenta Gemini/ChatGPT con tus datos propios"
+        },
+        {
+          "tipo": "SIN_HORARIOS",
+          "severidad": "MEDIA",
+          "detalle": "Horarios vacíos → Google muestra “Horario desconocido”.",
+          "impacto_estimado_COP_mes": 315000,
+          "motivo": "Sin check-in visible pareces informal.",
+          "urgencia": "BAJA - 5 minutos de configuración"
+        },
+        {
+          "tipo": "SIN_WEBSITE_DIRECTO",
+          "severidad": "ALTA",
+          "detalle": "Sin web propia → dependencia total de Booking/Expedia.",
+          "impacto_estimado_COP_mes": 525000,
+          "motivo": "Cada reserva paga 18-25% de comisión.",
+          "urgencia": "ALTA - Recupera margen operativo"
+        },
+        {
+          "tipo": "SIN_TELEFONO_VISIBLE",
+          "severidad": "BAJA",
+          "detalle": "Sin teléfono visible → pierdes segmento 50+ que prefiere llamar.",
+          "impacto_estimado_COP_mes": 210000,
+          "motivo": "Ese público termina llamando al hotel vecino.",
+          "urgencia": "BAJA - Añádelo en 2 minutos"
+        }
+      ],
+      "perdida_total_mes_COP": 4305000,
+      "perdida_anual_COP": 51660000,
+      "prioridad_accion": "CRÍTICA - ACTUAR EN 72 HORAS",
+      "meta": {
+        "hotel_name": "Hoteltest",
+        "location": "Ubicacion no detectada",
+        "search_query": "Hoteltest Ubicacion no detectada, Colombia",
+        "search_url": "https://www.google.com/maps/search/Hoteltest+Ubicacion+no+detectada,+Colombia",
+        "search_location_used": "Ubicacion no detectada, Colombia",
+        "location_requested": "Ubicacion no detectada",
+        "search_attempt": 1,
+        "location_attempts": 2,
+        "resolved_location": "Ubicacion no detectada, Colombia",
+        "location_source": "geo_validation",
+        "scrape_debug": {
+          "html_sample_start": "<html itemscope=\"\" itemtype=\"http://schema.org/Place\" lang=\"es-CO\"><head>  <link href=\"/search?tbm=map&amp;authuser=0&amp;hl=es&amp;gl=co&amp;q=Hoteltest+Ubicacion+no+detectada%2C+Colombia&amp;pb=%211sHoteltest+Ubicacion+no+detectada%2C+Colombia%217i20%2110b1%2112m48%211m5%2118b1%2130b1%2131m1%211b1%2134e1%212m4%215m1%216e2%2120e3%2139b1%216m21%2149b1%2163m0%2166b1%2174i150000%2185b1%2191b1%21114b1%21149b1%21206b1%21209b1%21212b1%21223b1%21232b1%21234b1%21244b1%21246b1%21250b1%21253b1%21258b1%21260b1%21266b1%2110b1%2112b1%2113b1%2114b1%2116b1%2117m1%213e1%2120m3%215e2%216b1%2114b1%2146m1%211b0%2196b1%2199b1%2119m4%212m3%211i360%212i120%214i8%2120m53%212m2%211i203%212i100%213m2%212i4%215b1%216m6%211m2%211i86%212i86%211m2%211i408%212i240%217m29%211m3%211e1%212b0%213e3%211m3%211e2%212b1%213e2%211m3%211e2%212b0%213e3%211m3%211e8%212b0%213e3%211m3%211e10%212b0%213e3%211m3%211e10%212b1%213e2%211m3%211e10%212b0%213e4%212b1%219b0%2115m8%211m7%211m2%211m1%211e2%212m2%211i195%212i195%213i20%2122m5%211smeaYaZHsMfiIwbkP59Wz2QY%217e81%2114m1%213smeaYaZHsMfiIwbkP59Wz2QY%2115i9937%2124m107%211m28%2113m9%212b1%213b1%214b1%216i1%218b1%219b1%2114b1%2120b1%2125b1%2118m17%213b1%214b1%215b1%216b1%2113b1%2114b1%2117b1%2121b1%2122b1%2127m1%211b0%2128b0%2132b1%2133m1%211b1%2134b1%2136e2%2110m1%218e3%2111m1%213e1%2114m1%213b0%2117b1%2120m2%211e3%211e6%2124b1%2125b1%2126b1%2127b1%2129b1%2130m1%212b1%2136b1%2137b1%2139m3%212m2%212i1%213i1%2143b1%2152b1%2154m1%211b1%2155b1%2156m1%211b1%2161m2%211m1%211e1%2165m5%213m4%211m3%211m2%211i224%212i298%2172m22%211m8%212b1%215b1%217b1%2112m4%211b1%212b1%214m1%211e1%214b1%218m10%211m6%214m1%211e1%214m1%211e3%214m1%211e4%213sother_user_google_review_posts__and__hotel_and_vr_partner_review_posts%216m1%211e1%219b1%2189b1%2198m3%211b1%212b1%213b1%21103b1%21113b1%21114m3%211b1%212m1%211b1%21117b1%21122m1%211b1%21126b1%21127b1%2126m4%212m3%211i80%212i92%214i8%2130m28%211m6%211m2%211i0%212i0%212m2%211i530%212i768%211m6%211m2%211i974%212i0%212m2%211i1024%212i76",
+          "html_sample_end": "/rt=j/d=1/rs=ACT90oF81rjslXl1IQzh4w1Q6CT9tRnejw?wli=m.x_t7sNOghi8.loadSv.O%3A%3Bm.yCA_V7jhrjk.mapcore.O%3A%3B\" as=\"script\" rel=\"preload\" type=\"application/javascript\" nonce=\"\">  <link href=\"/maps/preview/opensearch.xml?hl=es\" title=\"Google Maps\" rel=\"search\" type=\"application/opensearchdescription+xml\"> <title>Hoteles Ubicacion no detectada, Colombia - Google Maps</title> <meta content=\"Busca negocios locales, consulta mapas y consigue información sobre rutas en Google Maps.\" name=\"Description\">  <meta content=\"Google Maps\" itemprop=\"name\"> <meta content=\"Google Maps\" property=\"og:title\">  <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.8201728%2C-75.6973568&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;key=AIzaSyBoYjeRtfVI0Jd8Q_9mnflo9i4sOYpShB0&amp;signature=MgygqVJc55SmrYBKLVCGyHr936U\" itemprop=\"image\"> <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.8201728%2C-75.6973568&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;key=AIzaSyBoYjeRtfVI0Jd8Q_9mnflo9i4sOYpShB0&amp;signature=MgygqVJc55SmrYBKLVCGyHr936U\" property=\"og:image\"> <meta content=\"900\" property=\"og:image:width\"> <meta content=\"900\" property=\"og:image:height\">  <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" itemprop=\"description\"> <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" property=\"og:description\">  <meta content=\"Google Maps\" property=\"og:site_name\"> <meta content=\"summary\" name=\"twitter:card\">  <meta content=\"Anm+hhtuh7NJguqSnXHEAIqqMaV+GXCks8WYXHJKF7l6AeYMj+wO+fi9OdDqFnJTg9t0492DykVxx4jpvFbxnA8AAABseyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IlByaXZhY3lTYW5kYm94QWRzQVBJcyIsImV4cGlyeSI6MTY5NTE2Nzk5OSwiaXNTdWJkb21haW4iOnRydWV9\" http-equiv=\"origin-trial\"> <meta content=\"initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\" name=\"viewport\"> <meta content=\"notranslate\" name=\"google\"> <meta content=\"orig",
+          "rating_source": "aria-label",
+          "reviews_source": "aria-label",
+          "photos_method": "none",
+          "photos_confidence": 0,
+          "photos_evidence": {
+            "attempts": [],
+            "debug_artifacts": {
+              "screenshot": "logs\\gbp_debug\\photo_extraction_failed_20260220_175931.png",
+              "html_dump": "logs\\gbp_debug\\photo_extraction_failed_20260220_175931.html"
+            },
+            "page_title": "Hoteles Ubicacion no detectada, Colombia - Google Maps",
+            "current_url": "https://www.google.com/maps/search/Hoteltest+Ubicacion+no+detectada,+Colombia/@4.8201728,-75.6973568,14z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI2MDIxOC4wIKXMDSoASAFQAw%3D%3D"
+          },
+          "photos_warnings": [
+            "Todas las capas de extracción fallaron (incluyendo caché)"
+          ],
+          "posts_method": "no_updates_button",
+          "posts_confidence": 80,
+          "posts_evidence": {
+            "reason": "Botón de actualizaciones no encontrado"
+          },
+          "posts_warnings": [
+            "Botón de actualizaciones no encontrado: button[aria-label*='Actualizaciones']",
+            "Botón de actualizaciones no encontrado: button[aria-label*='Updates']",
+            "Botón de actualizaciones no encontrado: a[href*='updates']",
+            "Botón de actualizaciones no encontrado: [data-item-id='updates']",
+            "No se detectó sección de actualizaciones (posible perfil sin posts)"
+          ],
+          "photos_modal": "trigger_not_found",
+          "photos_source": "google_places_api"
+        },
+        "geo_validation": {
+          "enabled": true,
+          "performed": true,
+          "is_valid": true,
+          "distance_km": 0.0,
+          "threshold_km": 30.0,
+          "confidence": 0.4,
+          "expected_location": {
+            "lat": 4.570868,
+            "lng": -74.297333,
+            "address": "Colombia",
+            "city": "Ubicacion no detectada"
+          },
+          "actual_location": {
+            "lat": 4.570868,
+            "lng": -74.297333,
+            "address": "Colombia",
+            "city": "Ubicacion no detectada",
+            "state": "",
+            "country": "Colombia",
+            "place_id": "ChIJo5QVrjqkFY4RQKPy7wSaDZo"
+          },
+          "resolved_location": "Ubicacion no detectada, Colombia",
+          "api_calls_used": 4,
+          "error_message": null,
+          "location_override_applied": true
+        },
+        "data_confidence": {
+          "rating": true,
+          "reviews": true,
+          "photos": true,
+          "posts": true,
+          "horarios": 0.0,
+          "website": false,
+          "telefono": false,
+          "whatsapp": false,
+          "qa": false
+        },
+        "horarios_detection": {
+          "method": "not_found",
+          "confidence": 0.0,
+          "keywords": [],
+          "time_formats": [],
+          "sample": "Filtros disponibles para esta búsqueda"
+        },
+        "driver_available": true,
+        "driver_error": null,
+        "timestamp_utc": "2026-02-20T23:01:32.933817"
+      },
+      "posts_last_60_days": 0,
+      "last_post_date": null,
+      "gbp_activity_score": 16,
+      "motor_gbp": {
+        "existe": false,
+        "prominente": false,
+        "proveedor": null
+      },
+      "motor_reservas_gbp": false,
+      "motor_reservas_proveedor": null,
+      "motor_reservas_prominente": false
+    }
+  },
+  "hoteltest::ubicacion no detectada, colombia": {
+    "timestamp": "2026-02-20T23:01:32.935454",
+    "profile": {
+      "existe": true,
+      "score": 55,
+      "issues": [
+        "Contador de fotos poco confiable (confianza: 0%) - Verificar manualmente en Google Maps",
+        "Perfil inactivo: 0 posts en últimos 60 días (confianza: 80%)",
+        "Pocas fotos (10), meta: 15+",
+        "Rating bajo (3.8), meta: 4.0+"
+      ],
+      "reviews": 256,
+      "rating": 3.8,
+      "fotos": 10,
+      "horarios": false,
+      "descripcion": false,
+      "website": false,
+      "telefono": false,
+      "whatsapp_visible": false,
+      "posts": 0,
+      "tiene_qa": false,
+      "ultima_actividad_dias": null,
+      "fugas_detectadas": [
+        {
+          "tipo": "FOTOS_INSUFICIENTES",
+          "severidad": "ALTA",
+          "detalle": "Solo 10 fotos activas → Google te considera menos relevante que hoteles con 15+ fotos.",
+          "impacto_estimado_COP_mes": 735000,
+          "motivo": "Google Maps prioriza perfiles visuales ricos. Pareces abandonado.",
+          "urgencia": "ALTA - Booking muestra 40+ fotos de tu propio hotel"
+        },
+        {
+          "tipo": "RATING_DESCALIFICANTE",
+          "severidad": "CRÍTICA",
+          "detalle": "Rating 3.8/5.0 → Fuera del top 3 de Google Maps.",
+          "impacto_estimado_COP_mes": 945000,
+          "motivo": "El 92% de usuarios solo considera hoteles 4.0+. Entregas clientes gratis a competidores.",
+          "urgencia": "CRÍTICA - Atiende reseñas negativas hoy"
+        },
+        {
+          "tipo": "SIN_WHATSAPP_VISIBLE",
+          "severidad": "ALTA",
+          "detalle": "Sin botón de WhatsApp → pierdes 30% de consultas inmediatas.",
+          "impacto_estimado_COP_mes": 630000,
+          "motivo": "68% de reservas directas en Colombia inician en WhatsApp.",
+          "urgencia": "ALTA - Configurable en 10 minutos"
+        },
+        {
+          "tipo": "PERFIL_ABANDONADO",
+          "severidad": "MEDIA",
+          "detalle": "Cero posts últimos 60 días → Google degrada tu ranking por inactividad.",
+          "impacto_estimado_COP_mes": 525000,
+          "motivo": "Google interpreta falta de actividad como cierre temporal.",
+          "urgencia": "MEDIA - 1 post semanal recupera posición en 21 días"
+        },
+        {
+          "tipo": "SIN_FAQ_CONVERSACIONAL",
+          "severidad": "MEDIA",
+          "detalle": "Sin Q&A → No apareces en búsquedas conversacionales (“¿acepta mascotas?”).",
+          "impacto_estimado_COP_mes": 420000,
+          "motivo": "40% de búsquedas turísticas son preguntas directas.",
+          "urgencia": "MEDIA - Alimenta Gemini/ChatGPT con tus datos propios"
+        },
+        {
+          "tipo": "SIN_HORARIOS",
+          "severidad": "MEDIA",
+          "detalle": "Horarios vacíos → Google muestra “Horario desconocido”.",
+          "impacto_estimado_COP_mes": 315000,
+          "motivo": "Sin check-in visible pareces informal.",
+          "urgencia": "BAJA - 5 minutos de configuración"
+        },
+        {
+          "tipo": "SIN_WEBSITE_DIRECTO",
+          "severidad": "ALTA",
+          "detalle": "Sin web propia → dependencia total de Booking/Expedia.",
+          "impacto_estimado_COP_mes": 525000,
+          "motivo": "Cada reserva paga 18-25% de comisión.",
+          "urgencia": "ALTA - Recupera margen operativo"
+        },
+        {
+          "tipo": "SIN_TELEFONO_VISIBLE",
+          "severidad": "BAJA",
+          "detalle": "Sin teléfono visible → pierdes segmento 50+ que prefiere llamar.",
+          "impacto_estimado_COP_mes": 210000,
+          "motivo": "Ese público termina llamando al hotel vecino.",
+          "urgencia": "BAJA - Añádelo en 2 minutos"
+        }
+      ],
+      "perdida_total_mes_COP": 4305000,
+      "perdida_anual_COP": 51660000,
+      "prioridad_accion": "CRÍTICA - ACTUAR EN 72 HORAS",
+      "meta": {
+        "hotel_name": "Hoteltest",
+        "location": "Ubicacion no detectada",
+        "search_query": "Hoteltest Ubicacion no detectada, Colombia",
+        "search_url": "https://www.google.com/maps/search/Hoteltest+Ubicacion+no+detectada,+Colombia",
+        "search_location_used": "Ubicacion no detectada, Colombia",
+        "location_requested": "Ubicacion no detectada",
+        "search_attempt": 1,
+        "location_attempts": 2,
+        "resolved_location": "Ubicacion no detectada, Colombia",
+        "location_source": "geo_validation",
+        "scrape_debug": {
+          "html_sample_start": "<html itemscope=\"\" itemtype=\"http://schema.org/Place\" lang=\"es-CO\"><head>  <link href=\"/search?tbm=map&amp;authuser=0&amp;hl=es&amp;gl=co&amp;q=Hoteltest+Ubicacion+no+detectada%2C+Colombia&amp;pb=%211sHoteltest+Ubicacion+no+detectada%2C+Colombia%217i20%2110b1%2112m48%211m5%2118b1%2130b1%2131m1%211b1%2134e1%212m4%215m1%216e2%2120e3%2139b1%216m21%2149b1%2163m0%2166b1%2174i150000%2185b1%2191b1%21114b1%21149b1%21206b1%21209b1%21212b1%21223b1%21232b1%21234b1%21244b1%21246b1%21250b1%21253b1%21258b1%21260b1%21266b1%2110b1%2112b1%2113b1%2114b1%2116b1%2117m1%213e1%2120m3%215e2%216b1%2114b1%2146m1%211b0%2196b1%2199b1%2119m4%212m3%211i360%212i120%214i8%2120m53%212m2%211i203%212i100%213m2%212i4%215b1%216m6%211m2%211i86%212i86%211m2%211i408%212i240%217m29%211m3%211e1%212b0%213e3%211m3%211e2%212b1%213e2%211m3%211e2%212b0%213e3%211m3%211e8%212b0%213e3%211m3%211e10%212b0%213e3%211m3%211e10%212b1%213e2%211m3%211e10%212b0%213e4%212b1%219b0%2115m8%211m7%211m2%211m1%211e2%212m2%211i195%212i195%213i20%2122m5%211smeaYaZHsMfiIwbkP59Wz2QY%217e81%2114m1%213smeaYaZHsMfiIwbkP59Wz2QY%2115i9937%2124m107%211m28%2113m9%212b1%213b1%214b1%216i1%218b1%219b1%2114b1%2120b1%2125b1%2118m17%213b1%214b1%215b1%216b1%2113b1%2114b1%2117b1%2121b1%2122b1%2127m1%211b0%2128b0%2132b1%2133m1%211b1%2134b1%2136e2%2110m1%218e3%2111m1%213e1%2114m1%213b0%2117b1%2120m2%211e3%211e6%2124b1%2125b1%2126b1%2127b1%2129b1%2130m1%212b1%2136b1%2137b1%2139m3%212m2%212i1%213i1%2143b1%2152b1%2154m1%211b1%2155b1%2156m1%211b1%2161m2%211m1%211e1%2165m5%213m4%211m3%211m2%211i224%212i298%2172m22%211m8%212b1%215b1%217b1%2112m4%211b1%212b1%214m1%211e1%214b1%218m10%211m6%214m1%211e1%214m1%211e3%214m1%211e4%213sother_user_google_review_posts__and__hotel_and_vr_partner_review_posts%216m1%211e1%219b1%2189b1%2198m3%211b1%212b1%213b1%21103b1%21113b1%21114m3%211b1%212m1%211b1%21117b1%21122m1%211b1%21126b1%21127b1%2126m4%212m3%211i80%212i92%214i8%2130m28%211m6%211m2%211i0%212i0%212m2%211i530%212i768%211m6%211m2%211i974%212i0%212m2%211i1024%212i76",
+          "html_sample_end": "/rt=j/d=1/rs=ACT90oF81rjslXl1IQzh4w1Q6CT9tRnejw?wli=m.x_t7sNOghi8.loadSv.O%3A%3Bm.yCA_V7jhrjk.mapcore.O%3A%3B\" as=\"script\" rel=\"preload\" type=\"application/javascript\" nonce=\"\">  <link href=\"/maps/preview/opensearch.xml?hl=es\" title=\"Google Maps\" rel=\"search\" type=\"application/opensearchdescription+xml\"> <title>Hoteles Ubicacion no detectada, Colombia - Google Maps</title> <meta content=\"Busca negocios locales, consulta mapas y consigue información sobre rutas en Google Maps.\" name=\"Description\">  <meta content=\"Google Maps\" itemprop=\"name\"> <meta content=\"Google Maps\" property=\"og:title\">  <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.8201728%2C-75.6973568&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;key=AIzaSyBoYjeRtfVI0Jd8Q_9mnflo9i4sOYpShB0&amp;signature=MgygqVJc55SmrYBKLVCGyHr936U\" itemprop=\"image\"> <meta content=\"https://maps.google.com/maps/api/staticmap?center=4.8201728%2C-75.6973568&amp;zoom=14&amp;size=900x900&amp;language=en&amp;sensor=false&amp;key=AIzaSyBoYjeRtfVI0Jd8Q_9mnflo9i4sOYpShB0&amp;signature=MgygqVJc55SmrYBKLVCGyHr936U\" property=\"og:image\"> <meta content=\"900\" property=\"og:image:width\"> <meta content=\"900\" property=\"og:image:height\">  <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" itemprop=\"description\"> <meta content=\"Find local businesses, view maps and get driving directions in Google Maps.\" property=\"og:description\">  <meta content=\"Google Maps\" property=\"og:site_name\"> <meta content=\"summary\" name=\"twitter:card\">  <meta content=\"Anm+hhtuh7NJguqSnXHEAIqqMaV+GXCks8WYXHJKF7l6AeYMj+wO+fi9OdDqFnJTg9t0492DykVxx4jpvFbxnA8AAABseyJvcmlnaW4iOiJodHRwczovL2dvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IlByaXZhY3lTYW5kYm94QWRzQVBJcyIsImV4cGlyeSI6MTY5NTE2Nzk5OSwiaXNTdWJkb21haW4iOnRydWV9\" http-equiv=\"origin-trial\"> <meta content=\"initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no\" name=\"viewport\"> <meta content=\"notranslate\" name=\"google\"> <meta content=\"orig",
+          "rating_source": "aria-label",
+          "reviews_source": "aria-label",
+          "photos_method": "none",
+          "photos_confidence": 0,
+          "photos_evidence": {
+            "attempts": [],
+            "debug_artifacts": {
+              "screenshot": "logs\\gbp_debug\\photo_extraction_failed_20260220_175931.png",
+              "html_dump": "logs\\gbp_debug\\photo_extraction_failed_20260220_175931.html"
+            },
+            "page_title": "Hoteles Ubicacion no detectada, Colombia - Google Maps",
+            "current_url": "https://www.google.com/maps/search/Hoteltest+Ubicacion+no+detectada,+Colombia/@4.8201728,-75.6973568,14z/data=!3m1!4b1?entry=ttu&g_ep=EgoyMDI2MDIxOC4wIKXMDSoASAFQAw%3D%3D"
+          },
+          "photos_warnings": [
+            "Todas las capas de extracción fallaron (incluyendo caché)"
+          ],
+          "posts_method": "no_updates_button",
+          "posts_confidence": 80,
+          "posts_evidence": {
+            "reason": "Botón de actualizaciones no encontrado"
+          },
+          "posts_warnings": [
+            "Botón de actualizaciones no encontrado: button[aria-label*='Actualizaciones']",
+            "Botón de actualizaciones no encontrado: button[aria-label*='Updates']",
+            "Botón de actualizaciones no encontrado: a[href*='updates']",
+            "Botón de actualizaciones no encontrado: [data-item-id='updates']",
+            "No se detectó sección de actualizaciones (posible perfil sin posts)"
+          ],
+          "photos_modal": "trigger_not_found",
+          "photos_source": "google_places_api"
+        },
+        "geo_validation": {
+          "enabled": true,
+          "performed": true,
+          "is_valid": true,
+          "distance_km": 0.0,
+          "threshold_km": 30.0,
+          "confidence": 0.4,
+          "expected_location": {
+            "lat": 4.570868,
+            "lng": -74.297333,
+            "address": "Colombia",
+            "city": "Ubicacion no detectada"
+          },
+          "actual_location": {
+            "lat": 4.570868,
+            "lng": -74.297333,
+            "address": "Colombia",
+            "city": "Ubicacion no detectada",
+            "state": "",
+            "country": "Colombia",
+            "place_id": "ChIJo5QVrjqkFY4RQKPy7wSaDZo"
+          },
+          "resolved_location": "Ubicacion no detectada, Colombia",
+          "api_calls_used": 4,
+          "error_message": null,
+          "location_override_applied": true
+        },
+        "data_confidence": {
+          "rating": true,
+          "reviews": true,
+          "photos": true,
+          "posts": true,
+          "horarios": 0.0,
+          "website": false,
+          "telefono": false,
+          "whatsapp": false,
+          "qa": false
+        },
+        "horarios_detection": {
+          "method": "not_found",
+          "confidence": 0.0,
+          "keywords": [],
+          "time_formats": [],
+          "sample": "Filtros disponibles para esta búsqueda"
+        },
+        "driver_available": true,
+        "driver_error": null,
+        "timestamp_utc": "2026-02-20T23:01:32.933817"
+      },
+      "posts_last_60_days": 0,
+      "last_post_date": null,
+      "gbp_activity_score": 16,
+      "motor_gbp": {
+        "existe": false,
+        "prominente": false,
+        "proveedor": null
+      },
+      "motor_reservas_gbp": false,
+      "motor_reservas_proveedor": null,
+      "motor_reservas_prominente": false
+    }
+  },
+  "hotel vísperas::manizales": {
+    "timestamp": "2026-03-18T22:06:19.995694",
+    "profile": {
+      "existe": false,
+      "score": 0,
+      "issues": [
+        "Error en intento de scraping 2: 'Mock' object is not subscriptable"
+      ],
+      "reviews": 0,
+      "rating": 0.0,
+      "fotos": 0,
+      "horarios": false,
+      "descripcion": false,
+      "website": false,
+      "telefono": false,
+      "whatsapp_visible": false,
+      "posts": 0,
+      "tiene_qa": false,
+      "ultima_actividad_dias": null,
+      "fugas_detectadas": [],
+      "perdida_total_mes_COP": 0,
+      "perdida_anual_COP": 0,
+      "prioridad_accion": null,
+      "meta": {
+        "geo_validation": {
+          "enabled": true,
+          "performed": true,
+          "is_valid": false,
+          "distance_km": 165.23,
+          "threshold_km": 30.0,
+          "confidence": 0.48,
+          "expected_location": {
+            "lat": 5.0641,
+            "lng": -75.5196,
+            "address": "Manizales, Caldas, Colombia",
+            "city": "Manizales"
+          },
+          "actual_location": {
+            "lat": 4.711,
+            "lng": -74.0721,
+            "address": "Hotel Vísperas, Bogotá, Cundinamarca, Colombia",
+            "city": "Bogotá",
+            "state": "Cundinamarca",
+            "country": "Colombia",
+            "place_id": ""
+          },
+          "resolved_location": "Bogotá, Cundinamarca",
+          "api_calls_used": 3,
+          "error_message": "",
+          "location_override_applied": true
+        },
+        "driver_available": true,
+        "driver_error": null,
+        "timestamp_utc": "2026-03-18T22:06:19.995640"
+      }
+    }
+  }
+}

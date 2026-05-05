@@ -79,12 +79,11 @@ ${analytics_summary_text}
 ${financial_tier_banner}
 ### ${financial_title_label}
 
-**${ota_commission_formatted}/mes${estimate_asterisk}${financial_tier_suffix}**
+**${monthly_loss_display}**${estimate_asterisk}${financial_tier_suffix}
 
-Desglose:
-- ${ota_commission_basis}
-- Fuente del dato: ${ota_commission_source}
-- Comisión OTA real (verificable): ${ota_commission_real_formatted}/mes
+${precision_warning}
+${show_onboarding_cta}
+${financial_breakdown_section}
 
 ---
 

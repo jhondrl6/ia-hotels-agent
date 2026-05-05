@@ -1,0 +1,8 @@
+{
+  "_metadata": {
+    "description": "Cache de auditorías GBP para competidores",
+    "ttl_days": 14,
+    "version": "1.0",
+    "created": "2025-11-30"
+  }
+}

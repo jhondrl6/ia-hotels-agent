@@ -274,7 +274,10 @@ class TestActiveMode:
         assert result.adr_cop == 380000.0
 
     def test_active_mode_with_user_provided_adr(self, temp_plan_maestro_file):
-        """Test ACTIVE mode with user provided ADR for confidence."""
+        """Test ACTIVE mode with user provided ADR: user value wins (FIN-2B fallback chain).
+
+        Per FIN-2B plan: user_provided_adr siempre gana con epistemic_status='measured'.
+        """
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.ACTIVE,
@@ -287,8 +290,11 @@ class TestActiveMode:
 
         result = wrapper.resolve("coffee_axis", 20, user_provided_adr=255000.0)
 
-        assert result.adr_cop == 250000.0
-        assert result.confidence == "VERIFIED"
+        # FIN-2B: user_provided_adr wins over regional benchmark
+        assert result.adr_cop == 255000.0
+        assert result.epistemic_status == "measured"
+        assert result.can_show_exact is True
+        assert result.source == "user_provided"
         assert result.metadata["user_provided_adr"] == 255000.0
 
     def test_active_mode_metadata(self, temp_plan_maestro_file):
@@ -572,7 +578,10 @@ class TestResolveADRWithShadowFunction:
         assert result.adr_cop == 250000.0
 
     def test_function_passes_all_parameters(self, temp_plan_maestro_file, mock_shadow_logger):
-        """Test function passes all parameters to wrapper."""
+        """Test function passes all parameters to wrapper.
+
+        FIN-2B: user_provided_adr wins in SHADOW mode too - no shadow comparison needed.
+        """
         flags = FinancialFeatureFlags(
             regional_adr_enabled=True,
             regional_adr_mode=RolloutMode.SHADOW,
@@ -590,8 +599,12 @@ class TestResolveADRWithShadowFunction:
             shadow_logger=mock_shadow_logger,
         )
 
-        assert result.adr_cop == 260000.0  # user_provided in legacy mode
-        assert mock_shadow_logger.log_comparison.called
+        # FIN-2B: user_provided_adr wins - epistemic_status='measured'
+        assert result.adr_cop == 260000.0
+        assert result.epistemic_status == "measured"
+        assert result.can_show_exact is True
+        # No shadow comparison when user_provided_adr wins
+        assert not mock_shadow_logger.log_comparison.called
 
     def test_function_default_flags(self, temp_plan_maestro_file):
         """Test function works with default flags (LEGACY mode)."""

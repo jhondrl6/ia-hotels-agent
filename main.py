@@ -1470,9 +1470,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     register_financial_handlers(harness)
     
     # Check feature flags for harness delegation mode
-    feature_flags = FinancialFeatureFlags()
-    use_harness_for_financials = feature_flags.financial_v410_enabled and \
-        feature_flags.financial_v410_mode in [RolloutMode.CANARY, RolloutMode.ACTIVE]
+    # IMPORTANT: Use from_env() to read from .env, not direct constructor (which uses defaults)
+    feature_flags = FinancialFeatureFlags.from_env()
+    use_harness_for_financials = feature_flags.should_use_harness_delegation()
     
     # Create output directory
     output_dir = Path(args.output).resolve() / "v4_complete"
@@ -1643,11 +1643,11 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     adr_source = "unknown"  # Default, will be updated in fallback
     
     if use_harness_for_financials:
-        print(f"[HARNESS] Usando financial handlers v4.1.0 (modo: {feature_flags.financial_v410_mode.value})")
+        print(f"[HARNESS] Usando financial handlers v4.1.0 (regional_adr: {feature_flags.regional_adr_mode.value}, pricing: {feature_flags.pricing_hybrid_mode.value})")
         
         # Create task for v4 financial calculation
         financial_task = AgentTask(
-            task_type="v4_financial_calculation",
+            name="v4_financial_calculation",
             payload={
                 "rooms": rooms,
                 "region": region,
@@ -1669,25 +1669,28 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             pricing_result_data = result_data["pricing"]
             
             # Convert scenarios back to ScenarioType format for compatibility
-            from modules.financial_engine.scenario_calculator import ScenarioResult
+            from modules.financial_engine.scenario_calculator import FinancialScenario
             scenario_objects = {
-                ScenarioType.CONSERVATIVE: ScenarioResult(
+                ScenarioType.CONSERVATIVE: FinancialScenario(
                     scenario_type=ScenarioType.CONSERVATIVE,
                     monthly_loss_cop=scenarios["conservative"]["monthly_loss_cop"],
-                    annual_loss_cop=scenarios["conservative"]["annual_loss_cop"],
-                    probability=scenarios["conservative"]["probability"]
+                    probability=scenarios["conservative"]["probability"],
+                    calculation_basis="Harness fallback: conservative scenario from v4_financial_calculation handler",
+                    confidence_score=0.85,
                 ),
-                ScenarioType.REALISTIC: ScenarioResult(
+                ScenarioType.REALISTIC: FinancialScenario(
                     scenario_type=ScenarioType.REALISTIC,
                     monthly_loss_cop=scenarios["realistic"]["monthly_loss_cop"],
-                    annual_loss_cop=scenarios["realistic"]["annual_loss_cop"],
-                    probability=scenarios["realistic"]["probability"]
+                    probability=scenarios["realistic"]["probability"],
+                    calculation_basis="Harness fallback: realistic scenario from v4_financial_calculation handler",
+                    confidence_score=0.70,
                 ),
-                ScenarioType.OPTIMISTIC: ScenarioResult(
+                ScenarioType.OPTIMISTIC: FinancialScenario(
                     scenario_type=ScenarioType.OPTIMISTIC,
                     monthly_loss_cop=scenarios["optimistic"]["monthly_loss_cop"],
-                    annual_loss_cop=scenarios["optimistic"]["annual_loss_cop"],
-                    probability=scenarios["optimistic"]["probability"]
+                    probability=scenarios["optimistic"]["probability"],
+                    calculation_basis="Harness fallback: optimistic scenario from v4_financial_calculation handler",
+                    confidence_score=0.50,
                 )
             }
             scenarios = scenario_objects
@@ -1732,6 +1735,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             print(f"   ⚠️  Web scraping para ADR no disponible: {e}")
 
         # Resolve ADR using v4.1.0 wrapper (backward compatible via feature flags)
+        # Pass feature_flags explicitly to avoid get_flags() cache timing issues
         adr_result = resolve_adr_with_shadow(
             region=region,
             rooms=rooms,
@@ -1739,6 +1743,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             hotel_id=args.url,
             hotel_name=hotel_name,
             web_scraping_adr=adr_from_scraping,
+            feature_flags=feature_flags,
         )
         adr_cop = adr_result.adr_cop
         adr_source = adr_result.source
@@ -1871,6 +1876,25 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'data_sources': financial_breakdown.hotel_data_sources,
         }
 
+    # GAP-4: precision_tier y can_show_exact_money para financial_scenarios.json
+    _precision_tier = "C"
+    _can_show_exact = False
+    try:
+        from modules.financial_engine.precision_validator import PrecisionValidator
+        _occ_source = "regional" if feature_flags.should_use_regional_for(region) else ("onboarding" if onboarding_data is not None else "default")
+        _pv_result = PrecisionValidator.validate(
+            adr_cop=float(adr_cop),
+            adr_source=adr_source,
+            occupancy_rate=float(occupancy_rate),
+            occupancy_source=_occ_source,
+            direct_channel_pct=float(direct_channel_pct),
+            channel_source="onboarding" if onboarding_data is not None else "default",
+        )
+        _precision_tier = _pv_result.precision_tier
+        _can_show_exact = _pv_result.can_show_exact_money
+    except Exception:
+        pass
+
     # Save scenarios
     scenarios_path = output_dir / "financial_scenarios.json"
     with open(scenarios_path, 'w', encoding='utf-8') as f:
@@ -1892,7 +1916,10 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 'pain_ratio': pricing_result.pain_ratio,
                 'is_compliant': pricing_result.is_compliant,
                 'source': pricing_result.source
-            }
+            },
+            # GAP-4: precision metadata
+            'precision_tier': _precision_tier,
+            'can_show_exact_money': _can_show_exact,
         }, f, indent=2, ensure_ascii=False)
     print(f"💾 Guardado: {scenarios_path}")
 
@@ -2940,7 +2967,21 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             }
             if analytics_data and analytics_data.get('analytics_status')
             else {'available': False, 'status': 'analytics_data no disponible'}
-        )
+        ),
+        # GAP-2/3: opportunity_scores y channel_context en v4_complete_report.json
+        'opportunity_scores': (
+            diagnostic_gen._compute_opportunity_scores(audit_result, financial_scenarios_obj)
+            if audit_result and financial_scenarios_obj else None
+        ),
+        'channel_context': (
+            (lambda: (
+                diagnostic_gen._resolve_channel_context(
+                    audit_result,
+                    [b.get('pain_id', '') for b in diagnostic_gen._identify_brechas(audit_result)]
+                ) if audit_result else None
+            ))()
+            if audit_result else None
+        ),
     }
     
     report_path = output_dir / "v4_complete_report.json"

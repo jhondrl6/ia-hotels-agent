@@ -1,0 +1,30 @@
+{
+  "https-hotelvisperas-com": {
+    "ubicacion": "Santa Rosa de Cabal, Risaralda",
+    "source": "gbp_validation",
+    "timestamp": "2026-02-26T03:04:22.552365+00:00",
+    "url": "https://hotelvisperas.com",
+    "nombre": "Hotel Visperas"
+  },
+  "hotel-test-plus": {
+    "ubicacion": "Eje Cafetero",
+    "source": "scraper_low_confidence",
+    "timestamp": "2026-04-20T17:19:26.878574+00:00",
+    "url": null,
+    "nombre": "Hotel Test Plus"
+  },
+  "hotel-test-elite": {
+    "ubicacion": "Caribe",
+    "source": "scraper_low_confidence",
+    "timestamp": "2026-04-20T17:20:04.298334+00:00",
+    "url": null,
+    "nombre": "Hotel Test Elite"
+  },
+  "hotel-starter": {
+    "ubicacion": "Antioquia",
+    "source": "scraper_low_confidence",
+    "timestamp": "2026-04-20T17:20:41.376560+00:00",
+    "url": null,
+    "nombre": "Hotel Starter"
+  }
+}

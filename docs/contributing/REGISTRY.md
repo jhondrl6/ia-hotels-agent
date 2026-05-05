@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-02
+> **Ultima actualizacion:** 2026-05-04
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 198
+> **Total fases completadas:** 199
 
 ---
 
@@ -4865,6 +4865,178 @@ _Ninguno_
 - [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Coherence >= 0.8: 0.85 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FIN-1A - 2026-05-04
+**Descripcion:** Financial Evidence dataclass + epistemic metadata propagation
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/financial_engine/financial_evidence.py` | NUEVO | Financial Evidence |
+| `tests/financial_engine/test_financial_evidence.py` | NUEVO | Test Financial Evidence |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/scenario_calculator.py` | Scenario Calculator |
+| `modules/financial_engine/calculator_v2.py` | Calculator V2 |
+
+### Validaciones
+- [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FIN-1B - 2026-05-04
+**Descripcion:** NoDefaultsValidator ampliado + precision tier
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/financial_engine/precision_validator.py` | NUEVO | Precision Validator |
+| `tests/financial_engine/test_no_defaults_precision.py` | NUEVO | Test No Defaults Precision |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/no_defaults_validator.py` | No Defaults Validator |
+
+### Validaciones
+- [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FIN-2A - 2026-05-04
+**Descripcion:** Regional benchmark 2026 structured data
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `data/benchmarks/regional_adr_2026.json` | NUEVO | Regional Adr 2026 |
+| `tests/financial_engine/test_regional_adr_2026.py` | NUEVO | Test Regional Adr 2026 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/regional_adr_resolver.py` | Regional Adr Resolver |
+
+### Validaciones
+- [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FIN-2B - 2026-05-04
+**Descripcion:** Feature flags Caribe + ADR fallback chain honesto
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/financial_engine/test_fallback_chain_honesto.py` | NUEVO | Test Fallback Chain Honesto |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/feature_flags.py` | Feature Flags |
+| `modules/financial_engine/adr_resolution_wrapper.py` | Adr Resolution Wrapper |
+
+### Validaciones
+- [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FIN-3 - 2026-05-04
+**Descripcion:** Rendering financiero — rangos, advertencias y CTA
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/commercial_documents/test_precision_rendering.py` | NUEVO | Test Precision Rendering |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/templates/` | Templates |
+
+### Validaciones
+- [x] Tests passing (6)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## CHAN-1 - 2026-05-04
+**Descripcion:** Channel Evidence Resolver
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/financial_engine/channel_evidence_resolver.py` | NUEVO | Channel Evidence Resolver |
+| `tests/financial_engine/test_channel_evidence_resolver.py` | NUEVO | Test Channel Evidence Resolver |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## CHAN-2 - 2026-05-04
+**Descripcion:** OpportunityScorer con channel_context
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/financial_engine/test_opportunity_scorer_channels.py` | NUEVO | Test Opportunity Scorer Channels |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/opportunity_scorer.py` | Opportunity Scorer |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FIN-4 - 2026-05-04
+**Descripcion:** E2E combinado financiero + comercial — Hotel Castilla Real
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/FIN-4/` | NUEVO | Fin-4 |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
 ---

@@ -136,15 +136,17 @@ class FinancialCalculationResult:
         }
 
         if self.scenarios:
-            result["scenarios"] = {
-                k.value: {
+            result["scenarios"] = {}
+            for k, v in self.scenarios.items():
+                scenario_dict = {
                     "monthly_loss_cop": v.monthly_loss_cop,
                     "probability": v.probability,
                     "confidence_score": v.confidence_score,
                     "calculation_basis": v.calculation_basis,
                 }
-                for k, v in self.scenarios.items()
-            }
+                if v.financial_evidence is not None:
+                    scenario_dict["financial_evidence"] = v.financial_evidence.to_dict()
+                result["scenarios"][k.value] = scenario_dict
 
         if self.validation_result:
             result["validation"] = {

@@ -1,0 +1,12 @@
+{
+  "hotel_id": "unknown",
+  "timestamp": "2026-02-23T22:18:44.120197",
+  "region": "eje_cafetero",
+  "metrics": {
+    "gbp_score": 75,
+    "web_score": 56,
+    "revpar": 400000,
+    "loss": 0
+  },
+  "is_verified": true
+}

@@ -1,6 +1,6 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.39.0"
+version: "4.40.0"
 codename: "Scoring Transparency"
 release_date: "2026-05-02"
 plan_maestro_version: "v2.6.0"

@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
-version: 2.9.0
+version: 2.10.0
 ---
 
 # Skill: Phased Project Executor
@@ -115,7 +115,11 @@ ENTONCES:
 > Cada prompt de fase (`05-prompt-inicio-sesion-fase-*.md`) es una **instrucción completa para un agente** en una sesión fresca. El agente:
 > 1. Lee el prompt al inicio de la sesión
 > 2. Planifica la ejecución de las tareas
-> 3. Ejecuta (con subagentes si la fase lo requiere)
+> 3. Ejecuta — el modo de ejecución lo determinan las reglas de decisión más abajo:
+>    - Código/tests puro → agente principal DIRECTO (§Regla código+tests)
+>    - Comandos externos (v4complete, scraping) → §Regla v4complete
+>    - Trabajo paralelo (2+ tracks) → subagentes vía `delegate_task`
+>    - **NO usar subagente fuera de estos casos.**
 > 4. Verifica criterios de completitud contra el checklist
 > 5. Ejecuta `log_phase_completion.py` al finalizar
 >
@@ -163,6 +167,27 @@ SI no:
     → Spawn subagent via delegate_task(timeout=900, notify_on_complete=True)
     → El subagent ejecuta v4complete completo
     → El agente parent usa sus iteraciones solo en verificacion + docs
+```
+
+#### Regla de Decisión: ejecutar código+tests directamente o vía subagente?
+
+> [!IMPORTANT]
+> **Para fases de implementación pura (investigación/fix/código/tests), la ejecución directa del agente principal es más eficiente que delegar a subagente.** El overhead de spawn (contexto, toolsets limitados, timeout) degrada fases que no tienen comandos de larga duración. Esta regla surgió del aprendizaje de FIN-3 (sesión 20260504_123434_49e7de): subagente agotado a 600s/37 tool calls para tareas que el agente principal habría completado en menos iteraciones sin overhead.
+
+```
+SI la fase tiene SOLO tareas de investigacion/fix/implementacion de codigo:
+    → Ejecutar DIRECTAMENTE con el agente principal
+    → Herramientas principales: terminal, file, execute_code
+    → Budget: ~30-40 iteraciones para trabajo + ~20 para verificacion/docs
+    → Este budget reemplaza el calculo generico de "Calculo del Presupuesto"
+      (seccion anterior) — la ejecucion directa elimina el overhead de spawn
+
+SI la fase tiene 1+ comandos externos (v4complete, scraping, apis):
+    → Regla de v4complete aplica (seccion anterior ↑)
+
+SI la fase tiene trabajo paralelo independiente (2+ tracks separadas):
+    → Subagente(s) para trabajo paralelo
+    → Agente principal para coordinacion + docs
 ```
 
 #### Protocolo de Subagente para v4complete

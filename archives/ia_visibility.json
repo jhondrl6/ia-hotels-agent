@@ -1,0 +1,1067 @@
+{
+  "hotel vísperas::salento, quindío": {
+    "hotel": {
+      "nombre": "Hotel Vísperas",
+      "ubicacion": "Salento, Quindío",
+      "servicios": [
+        "restaurante",
+        "parqueadero",
+        "spa"
+      ],
+      "confidence": "media"
+    },
+    "history": [
+      {
+        "timestamp": "2025-10-26T23:44:05.703509",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-27T01:17:06.631489",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-27T02:56:23.152041",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-27T02:59:31.158773",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-27T03:06:27.325424",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-27T03:08:24.984949",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-27T03:19:59.685761",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-28T03:05:06.547793",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-28T17:29:30.317778",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-28T21:33:10.630697",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-29T00:34:52.531438",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-31T03:04:54.420043",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-31T03:15:22.150472",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      },
+      {
+        "timestamp": "2025-10-31T03:22:41.073350",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Salento",
+          "donde hospedarse en Salento",
+          "mejores hoteles Salento",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Salento"
+        ]
+      }
+    ]
+  },
+  "hotel vísperas::santa rosa de cabal, risaralda": {
+    "hotel": {
+      "nombre": "Hotel Vísperas",
+      "ubicacion": "Santa Rosa de Cabal, Risaralda",
+      "servicios": [
+        "restaurante",
+        "parqueadero",
+        "spa"
+      ],
+      "confidence": "media"
+    },
+    "history": [
+      {
+        "timestamp": "2025-12-11T03:19:19.662249",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-11T03:22:50.555821",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-11T03:26:15.388996",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-11T15:32:16.623365",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-11T15:59:02.198237",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-12T02:37:18.104734",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-12T02:51:21.868358",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-12T17:29:50.607455",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-12T17:56:00.617016",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-12T19:21:41.877181",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-12T19:28:36.164143",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-12T19:32:10.880365",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-12T19:35:48.455765",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-12T19:45:37.014904",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-12T20:18:47.834886",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-12T21:30:15.633297",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-14T01:46:30.446025",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-14T22:57:51.911846",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-16T01:52:05.094659",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2025-12-16T02:11:17.479367",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Vísperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      }
+    ]
+  },
+  "example domain::ubicacion no detectada, colombia": {
+    "hotel": {
+      "nombre": "Example Domain",
+      "ubicacion": "Ubicacion no detectada, Colombia",
+      "servicios": [],
+      "confidence": "baja"
+    },
+    "history": [
+      {
+        "timestamp": "2025-11-12T01:41:26.898817",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Ubicacion no detectada",
+          "donde hospedarse en Ubicacion no detectada",
+          "mejores hoteles Ubicacion no detectada",
+          "Example Domain opiniones"
+        ]
+      }
+    ]
+  },
+  "hotelvisperas::santa rosa de cabal, risaralda": {
+    "hotel": {
+      "nombre": "Hotelvisperas",
+      "ubicacion": "Santa Rosa de Cabal, Risaralda",
+      "servicios": [
+        "wifi",
+        "desayuno"
+      ],
+      "confidence": "baja"
+    },
+    "history": [
+      {
+        "timestamp": "2025-11-22T02:43:56.516334",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ]
+      },
+      {
+        "timestamp": "2025-11-22T03:03:20.630630",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ]
+      },
+      {
+        "timestamp": "2025-11-22T23:47:39.472440",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 1,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ]
+      },
+      {
+        "timestamp": "2025-11-23T01:05:45.407421",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ]
+      },
+      {
+        "timestamp": "2025-11-23T01:37:12.607426",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ]
+      },
+      {
+        "timestamp": "2025-11-25T14:56:12.776819",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ]
+      },
+      {
+        "timestamp": "2025-11-25T15:01:27.338495",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ]
+      },
+      {
+        "timestamp": "2025-11-27T16:53:20.053596",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ]
+      },
+      {
+        "timestamp": "2025-11-27T16:57:26.741837",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ]
+      },
+      {
+        "timestamp": "2026-02-25T16:26:07.905833",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": null,
+        "bing_proxy_probabilidad": 0.1,
+        "bing_proxy_ranking": null,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ],
+        "metodos_usados": [
+          "chatgpt",
+          "bing_proxy",
+          "llm_simulation"
+        ]
+      },
+      {
+        "timestamp": "2026-02-25T18:10:05.957857",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": null,
+        "bing_proxy_probabilidad": 0.1,
+        "bing_proxy_ranking": null,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ],
+        "metodos_usados": [
+          "chatgpt",
+          "bing_proxy",
+          "llm_simulation"
+        ]
+      },
+      {
+        "timestamp": "2026-02-26T00:39:57.654064",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": null,
+        "bing_proxy_probabilidad": 0.1,
+        "bing_proxy_ranking": null,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ],
+        "metodos_usados": [
+          "chatgpt",
+          "bing_proxy",
+          "llm_simulation"
+        ]
+      },
+      {
+        "timestamp": "2026-02-26T01:53:14.076832",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": null,
+        "bing_proxy_probabilidad": 0.1,
+        "bing_proxy_ranking": null,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ],
+        "metodos_usados": [
+          "chatgpt",
+          "bing_proxy",
+          "llm_simulation"
+        ]
+      },
+      {
+        "timestamp": "2026-02-26T01:53:54.579436",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": null,
+        "bing_proxy_probabilidad": 0.1,
+        "bing_proxy_ranking": null,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotelvisperas opiniones"
+        ],
+        "metodos_usados": [
+          "chatgpt",
+          "bing_proxy",
+          "llm_simulation"
+        ]
+      }
+    ]
+  },
+  "hotel visperas::santa rosa de cabal, risaralda": {
+    "hotel": {
+      "nombre": "Hotel Visperas",
+      "ubicacion": "Santa Rosa de Cabal, Risaralda",
+      "servicios": [
+        "restaurante",
+        "parqueadero",
+        "spa"
+      ],
+      "confidence": "alta"
+    },
+    "history": [
+      {
+        "timestamp": "2026-02-18T02:37:33.081676",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-18T02:50:20.889902",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-18T03:03:44.138106",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-18T03:16:00.504328",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-18T03:34:31.951917",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-18T03:47:36.474950",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-19T02:23:20.448486",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-21T00:29:18.941704",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-22T01:01:15.372305",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-22T01:54:57.159903",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-22T16:03:22.628460",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-22T21:39:20.626377",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-24T02:26:39.145913",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-24T02:35:16.806241",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-24T03:10:00.142905",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-24T03:12:11.491297",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-24T03:18:15.532366",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-24T21:59:39.329532",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": 0,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ]
+      },
+      {
+        "timestamp": "2026-02-26T02:21:41.982170",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": null,
+        "bing_proxy_probabilidad": 0.1,
+        "bing_proxy_ranking": null,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ],
+        "metodos_usados": [
+          "chatgpt",
+          "bing_proxy",
+          "llm_simulation"
+        ]
+      },
+      {
+        "timestamp": "2026-02-26T03:03:21.678455",
+        "perplexity_menciones": 0,
+        "chatgpt_menciones": 0,
+        "gemini_menciones": null,
+        "bing_proxy_probabilidad": 0.1,
+        "bing_proxy_ranking": null,
+        "llm_simulado": false,
+        "queries": [
+          "hoteles en Santa Rosa de Cabal",
+          "donde hospedarse en Santa Rosa de Cabal",
+          "mejores hoteles Santa Rosa de Cabal",
+          "Hotel Visperas opiniones",
+          "hoteles con restaurante en Santa Rosa de Cabal"
+        ],
+        "metodos_usados": [
+          "chatgpt",
+          "bing_proxy",
+          "llm_simulation"
+        ]
+      }
+    ]
+  }
+}

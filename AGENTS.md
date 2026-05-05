@@ -1,8 +1,8 @@
-<!-- agents_version: 4.39.0 | last_update: 2026-05-02 -->
+<!-- agents_version: 4.40.0 | last_update: 2026-05-04 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.39.0 -- Scoring Transparency COMPLETADO**
+> **v4.40.0 -- Scoring Transparency COMPLETADO**
 
 ---
 

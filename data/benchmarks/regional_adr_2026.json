@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "description": "Benchmarks regionales 2026 para motor financiero — estimaciones, NO datos exactos de hotel",
+  "last_updated": "2026-05-04",
+  "source_document": "data/benchmarks/Benchmarking.md",
+  "source_role": "regional_benchmark_not_hotel_specific",
+  "valid_for_exact_projection": false,
+  "epistemic_status": "regional_benchmark",
+  "default_region": "eje_cafetero",
+  "regions": {
+    "eje_cafetero": {
+      "boutique_10_25": {
+        "adr_cop": 420000,
+        "occupancy_rate": 0.512,
+        "rooms_range": [10, 25]
+      },
+      "standard_26_60": {
+        "adr_cop": 350000,
+        "occupancy_rate": 0.512,
+        "rooms_range": [26, 60]
+      }
+    },
+    "caribe": {
+      "boutique_10_25": {
+        "adr_cop": 950000,
+        "occupancy_rate": 0.685,
+        "rooms_range": [10, 25]
+      },
+      "standard_26_60": {
+        "adr_cop": 750000,
+        "occupancy_rate": 0.685,
+        "rooms_range": [26, 60]
+      }
+    },
+    "antioquia": {
+      "boutique_10_25": {
+        "adr_cop": 620000,
+        "occupancy_rate": 0.642,
+        "rooms_range": [10, 25]
+      },
+      "standard_26_60": {
+        "adr_cop": 480000,
+        "occupancy_rate": 0.642,
+        "rooms_range": [26, 60]
+      }
+    },
+    "default": {
+      "any": {
+        "adr_cop": 300000,
+        "occupancy_rate": 0.50,
+        "note": "LEGACY — usado solo si no hay match regional. Marcar epistemic_status=defaulted."
+      }
+    }
+  }
+}

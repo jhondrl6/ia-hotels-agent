@@ -31,6 +31,15 @@ class OpportunityScore:
     estimated_monthly_cop: float
     justification: str          # Explicacion legible para el hotelero
     rank: int = 0               # 1 = prioridad mas alta
+    # NUEVOS campos para metadata de canal
+    base_total_score: float = 0.0
+    channel_multiplier: float = 1.0
+    channel_reason: str = ""
+
+    @property
+    def adjusted_total_score(self) -> float:
+        """Score ajustado por canal. Si channel_multiplier=1.0, = total_score."""
+        return self.base_total_score * self.channel_multiplier
 
 
 class OpportunityScorer:
@@ -175,6 +184,27 @@ class OpportunityScorer:
         "poor_heading_structure": 10, # Relevancia SEO menor
     }
 
+    # Mapa de brecha_id -> categoria de canal para multiplicador
+    BRECHA_CHANNEL_MAP: Dict[str, str] = {
+        "whatsapp_conflict": "whatsapp",
+        "no_whatsapp_visible": "whatsapp",
+        "gbp_incomplete": "gbp_local",
+        "low_gbp_score": "gbp_local",
+        "no_hotel_schema": "iao_schema",
+        "faq_schema_missing": "iao_schema",
+        "no_og_tags": "iao_schema",
+        "low_citability": "iao_schema",
+        "poor_performance": "performance_mobile",
+        "no_meta_descriptions": "seo_content",
+        "poor_heading_structure": "seo_content",
+        "no_llms_txt": "iao_schema",
+        "ia_crawler_blocked": "iao_schema",
+        "weak_brand_signals": "iao_schema",
+        "data_inconsistent": "direct_conversion",
+        "cms_defaults": "seo_content",
+        "missing_reviews": "direct_conversion",
+    }
+
     # Justificaciones template
     _JUSTIFICATION_TEMPLATES: Dict[str, str] = {
         "faq_schema_missing": (
@@ -250,6 +280,7 @@ class OpportunityScorer:
         assessment: Any = None,
         competitor_data: Optional[Dict[str, Any]] = None,
         total_monthly_loss: Optional[float] = None,
+        channel_context: Optional[Dict[str, Any]] = None,
     ) -> List[OpportunityScore]:
         """Score and rank all brechas.
 
@@ -260,10 +291,21 @@ class OpportunityScorer:
                 Ej: {"competitors_with_faq": 3, "total_competitors": 5}
             total_monthly_loss: Perdida mensual total estimada del financiero.
                 Se usa para distribuir el COP proporcionalmente al score.
+            channel_context: Contexto de canal opcional con:
+                - dominant_channel: str (ej: "whatsapp", "gbp_local")
+                - confidence: EvidenceConfidence enum value
+                - channel_weights: Dict[str, float] con pesos por categoria
 
         Returns:
             Lista de OpportunityScore ordenada por total_score descendente.
         """
+        # Extraer channel_weights y dominant_channel si hay contexto
+        channel_weights: Dict[str, float] = {}
+        dominant_channel: str = "unknown"
+        if channel_context is not None:
+            channel_weights = channel_context.get("channel_weights", {})
+            dominant_channel = channel_context.get("dominant_channel", "unknown")
+
         scores: List[OpportunityScore] = []
 
         for brecha in brechas:
@@ -288,6 +330,20 @@ class OpportunityScorer:
                 brecha_type, severity, effort, impact, competitor_data
             )
 
+            # Aplicar multiplicador de canal si hay contexto
+            if channel_context is not None and channel_weights:
+                channel_category = self.BRECHA_CHANNEL_MAP.get(
+                    brecha_id, "direct_conversion"
+                )
+                multiplier = channel_weights.get(channel_category, 1.0)
+                channel_reason_str = (
+                    f"Canal inferido: {dominant_channel}, "
+                    f"multiplicador {channel_category}: {multiplier}"
+                )
+            else:
+                multiplier = 1.0
+                channel_reason_str = ""
+
             scores.append(
                 OpportunityScore(
                     brecha_id=brecha_id,
@@ -298,6 +354,9 @@ class OpportunityScorer:
                     total_score=total,
                     estimated_monthly_cop=monthly_cop,
                     justification=justification,
+                    base_total_score=total,
+                    channel_multiplier=multiplier,
+                    channel_reason=channel_reason_str,
                 )
             )
 
@@ -308,7 +367,11 @@ class OpportunityScorer:
 
         return scores
 
-    def score_from_assessment(self, assessment: Any) -> List[OpportunityScore]:
+    def score_from_assessment(
+        self,
+        assessment: Any,
+        channel_context: Optional[Dict[str, Any]] = None,
+    ) -> List[OpportunityScore]:
         """Deriva brechas desde un CanonicalAssessment y las scorea.
 
         Metodo conveniente que extrae brechas directamente del assessment
@@ -316,6 +379,7 @@ class OpportunityScorer:
 
         Args:
             assessment: CanonicalAssessment con claims y analisis.
+            channel_context: Contexto de canal opcional.
 
         Returns:
             Lista de OpportunityScore.
@@ -323,7 +387,9 @@ class OpportunityScorer:
         brechas = self._extract_brechas_from_assessment(assessment)
         if not brechas:
             return []
-        return self.score_brechas(brechas, assessment=assessment)
+        return self.score_brechas(
+            brechas, assessment=assessment, channel_context=channel_context
+        )
 
     def _extract_brechas_from_assessment(self, assessment: Any) -> List[Dict[str, Any]]:
         """Extrae brechas candidatas desde un CanonicalAssessment."""
