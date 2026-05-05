@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.40.0 (Financial Evidence Engine)
-**Última actualización:** 2026-05-04
+**Última actualización:** 2026-05-05
 **Proyecto:** IA Hoteles Agent CLI
 
 ---

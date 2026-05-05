@@ -47,6 +47,11 @@ Validado E2E sobre Hotel Castilla Real (hotelcastillareal.com) en 1 sola ejecuci
 - 54 tests nuevos, 0 regresiones
 - Validación E2E: Hotel Castilla Real (hotelcastillareal.com)
 
+### Patches Post-Release (v4.40.0)
+- `regional_adr_resolver.py`: Normalización de región en `_resolve_from_regional_benchmarks` (L149) — `"Eje Cafetero"` ahora matchea `eje_cafetero` en JSON
+- `main.py`: `PricingResolutionResult` con campos `expected_loss_cop` y `used_new_calculation` (L1699-1705)
+- Validación E2E: ADR regional $420K activo, precision_tier C, channel_context gbp
+
 ## [4.39.0] - Scoring Transparency (2026-05-02)
 
 ### Objetivo

@@ -145,8 +145,10 @@ class RegionalADRResolver:
         if not self._regional_benchmarks:
             return None, None, None, None
 
-        # Apply legacy region alias if present
-        resolved_region = self.REGION_ALIASES.get(region, region)
+        # Apply legacy region alias if present, then normalize for JSON key lookup
+        # Handle both legacy aliases ("coffee_axis") and raw DOM strings ("Eje Cafetero")
+        aliased = self.REGION_ALIASES.get(region, region)
+        resolved_region = aliased.lower().replace(' ', '_')
         regions = self._regional_benchmarks.get("regions", {})
         region_data = regions.get(resolved_region)
 

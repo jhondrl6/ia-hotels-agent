@@ -79,17 +79,8 @@ rules:
     file: "docs/CONTRIBUTING.md"
     description: "Version in CONTRIBUTING.md header blockquote"
     replacements:
-      - pattern: '>\s*\*\*Version actual:\*\*\s*v?[\d]+\.[\d]+\.[\d]+\s*\|[^\n]+'
-        template: '> **Version actual:** v{version} | Consulta REGISTRY.md para el historial de fases completadas.'
-      - pattern: '>\s*\*\*Ultima fase completada:\*\*\s*[^\n]+'
-        template: '> **Ultima fase completada:** (ver REGISTRY.md)'
-
-  - id: "contributing_version_footer"
-    file: "docs/CONTRIBUTING.md"
-    description: "Version in CONTRIBUTING.md footer sync section"
-    replacements:
-      - pattern: '^\*\*Version actual:\*\*\s*v?[\d]+\.[\d]+\.[\d]+'
-        template: '**Version actual:** v{version}'
+      - pattern: '>\s*\*\*Version:?\s*(actual)?:?\*\*\s*v?[\d]+\.[\d]+\.[\d]+\s*\|[^\n]+'
+        template: '> **Version:** v{version} | Consulta REGISTRY.md para el historial de fases completadas.'
 
   # ============================================================
   # GUIA_TECNICA.md

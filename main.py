@@ -1701,7 +1701,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 tier=pricing_result_data["tier"],
                 pain_ratio=pricing_result_data["pain_ratio"],
                 is_compliant=pricing_result_data["is_compliant"],
-                source=pricing_result_data["source"]
+                expected_loss_cop=pricing_result_data["expected_loss_cop"],
+                source=pricing_result_data["source"],
+                used_new_calculation=pricing_result_data["used_new_calculation"],
             )
             
             print(f"[HARNESS] Financial calculation completed via handlers")

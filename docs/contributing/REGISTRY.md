@@ -1,6 +1,6 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-04
+> **Ultima actualizacion:** 2026-05-05
 > **Version actual:** v4.37.0
 > **Total fases completadas:** 199
 
@@ -5030,6 +5030,25 @@ _Ninguno_
 | Archivo | Tipo | Descripcion |
 |---------|------|-------------|
 | `evidence/FIN-4/` | NUEVO | Fin-4 |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FIN-4B - 2026-05-05
+**Descripcion:** Activacion flags ADR regional + fix normalizacion region en RegionalADRResolver + fix PricingResolutionResult missing fields en main.py
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/FIN-4B/plan_validation_e2e.md` | NUEVO | Plan Validation E2E |
 
 ### Archivos Modificados
 _Ninguno_
