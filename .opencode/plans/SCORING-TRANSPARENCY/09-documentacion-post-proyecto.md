@@ -64,12 +64,12 @@ Validación vía:
 
 ### Post-Fase SCORING-C (RELEASE)
 
-- [ ] `log_phase_completion.py` ejecutado para las 3 fases
-- [ ] `sync_versions.py` ejecutado
-- [ ] `version_consistency_checker.py` pasa
-- [ ] `run_all_validations.py --quick` pasa 4/4
-- [ ] `doctor.py --status` sin errores
-- [ ] CHANGELOG.md entrada [4.40.1] con formato correcto
-- [ ] GUIA_TECNICA.md con nota técnica
-- [ ] `dependencias-fases.md`: SCORING-C marcada como ✅
-- [ ] `git add -A && git commit`
+- [x] `log_phase_completion.py` ejecutado para las 3 fases
+- [x] `sync_versions.py` ejecutado
+- [x] `version_consistency_checker.py` pasa
+- [x] `run_all_validations.py --quick` pasa 4/4
+- [x] `doctor.py --status` sin errores
+- [x] CHANGELOG.md entrada [4.40.1] con formato correcto
+- [x] GUIA_TECNICA.md con nota técnica
+- [x] `dependencias-fases.md`: SCORING-C marcada como ✅
+- [x] `git add -A && git commit`
