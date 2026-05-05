@@ -273,18 +273,20 @@ def _build_scoring_breakdown(pilar: str, elementos: dict) -> str:
     if not checklist:
         return f"**{label} {computed_score}/100**"
 
-    # Construir breakdown con todos los elementos (TRUE y FALSE) con marcador visual
+    # Construir breakdown SOLO con elementos TRUE (activos) para mantener
+    # coherencia matemática: la suma de pesos mostrados == score siempre.
+    # NO mostrar elementos FALSE — si score=0, no hay "100% en juego",
+    # hay 0% de peso real repartido entre factores activos.
+    # Los pesos originales (CHECKLIST_*) definen el MAXIMO potencial del pilar.
     parts = []
     for k, peso in checklist.items():
         if elementos.get(k) is True:
             parts.append(f"✅ {k}({peso}%)")
-        else:
-            parts.append(f"~~{k}({peso}%)~~")
 
     if parts:
         return f"**{label} {computed_score}/100** = {' + '.join(parts)}"
     else:
-        return f"**{label} {computed_score}/100**"
+        return f"**{label} {computed_score}/100** = (ningún factor activo)"
 
 
 def _build_excluded_factors_section() -> str:
@@ -1864,23 +1866,22 @@ class V4DiagnosticGenerator:
         """
         Calculate IAO score from audit.
 
-        Source of truth: ia_readiness.overall_score (granular, multi-component).
-        CHECKLIST_IAO (via calcular_score_iao) is FALLBACK only when ia_readiness
-        is not available (DEP-02).
-        """
-        # Primary: ia_readiness module
-        if hasattr(audit_result, 'ia_readiness') and audit_result.ia_readiness:
-            score = getattr(audit_result.ia_readiness, 'overall_score', None)
-            if score is not None:
-                return str(int(score))
+        Source of truth: calcular_score_iao() — misma lógica que _build_scoring_breakdown
+        para garantizar que el score en la tabla y el breakdown sean siempre idénticos.
 
-        # Fallback: CHECKLIST_IAO
+        NOTA: ia_readiness.overall_score fue removido como source primario porque
+        usaba lógica diferente a calcular_score_iao(), causando discrepancia entre
+        el score en la tabla (34) y el breakdown (35). Ahora ambos usan la misma
+        función para máxima coherencia.
+        """
         elementos_iao = self._extraer_elementos_iao(audit_result)
         base_score = calcular_score_iao(elementos_iao)
 
-        # FASE-C: Si hay datos reales de LLM mentions, ajustar score
+        # FASE-C: Si hay datos reales de LLM mentions (mencion_score > 0), ajustar score
+        # Solo ajustar si hay menciones reales. Con mention_score=0, el ajuste 50/50
+        # reduce el score artificialmente sin justificación.
         llm_report = getattr(audit_result, 'llm_report', None)
-        if llm_report and llm_report.source != "stub":
+        if llm_report and llm_report.source != "stub" and llm_report.mention_score > 0:
             real_score = llm_report.mention_score
             base_score = int(base_score * 0.5 + real_score * 0.5)
 

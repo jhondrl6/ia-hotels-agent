@@ -62,7 +62,7 @@ ${seo_score_breakdown}
 ${aeo_score_breakdown}
 ${iao_score_breakdown}
 
-> ⚠️ **Nota sobre el score GEO**: El desglose arriba usa la metodología del checklist GEO (calcular_score_geo), que pondera 6 factores técnicos. El score en la tabla principal (${geo_score}) puede diferir porque viene directamente del geo_score de Google Business Profile, que usa su propio algoritmo. Ambos son válidos — miden aspectos complementarios de tu presencia en Google Maps.
+> ⚠️ **Nota sobre divergencia de scores**: El score GEO en la tabla principal viene directamente del `geo_score` de Google Business Profile (algoritmo propio de Google). El desglose GEO usa el checklist interno de iah-cli. Pueden diferir — ambos miden aspectos complementarios de tu presencia en Maps. Los scores SEO, AEO e IAO usan la misma metodología en tabla y desglose — siempre idénticos.
 
 ${excluded_factors_section}
 
