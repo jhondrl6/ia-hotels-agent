@@ -19,7 +19,7 @@ Transparentar el sistema de scoring de los 4 pilares (SEO, GEO, AEO, IAO) en el 
 ### Tests
 - Validación vía v4complete con Hotel Castilla Real (hotelcastillareal.com)
 - `run_all_validations.py --quick` pasa 4/4
-- 0 regresiones, 2251 tests totales
+- 0 regresiones, 2491 tests totales
 
 ## [4.40.0] - Financial Evidence Engine (2026-05-04)
 

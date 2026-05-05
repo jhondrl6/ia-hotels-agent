@@ -39,7 +39,7 @@ Validación vía:
 
 | Métrica | Antes | Después |
 |---------|-------|---------|
-| Tests totales | 2251 | 2251 |
+| Tests totales | 2491 | 2491 |
 | Archivos .py | 185 | 185 |
 | Regresiones | 0 | 0 |
 | Versión | 4.40.0 | 4.40.1 |

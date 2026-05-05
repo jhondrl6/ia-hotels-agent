@@ -101,7 +101,7 @@ Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 2251 funciones, 185 archivos, 0 regresion |
+| **Tests** | 2491 funciones, 192 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -343,7 +343,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (2251 funciones, 185 archivos)
+# Todas las pruebas (2491 funciones, 192 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (52 tests)
@@ -358,7 +358,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (2251 funciones totales)
+### Cobertura por Modulo (2491 funciones totales)
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
@@ -435,7 +435,7 @@ iah-cli/
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
 │   └── validation/             # Validaciones adicionales
-├── tests/                      # Suite de pruebas (2251 funciones, 185 archivos)
+├── tests/                      # Suite de pruebas (2491 funciones, 192 archivos)
 │   ├── regression/             # Regresion permanente (52 tests)
 │   ├── data_validation/
 │   ├── financial_engine/

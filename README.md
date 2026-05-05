@@ -21,10 +21,10 @@
 
 ---
 
-## Estado del Proyecto (v4.40.0)
+## Estado del Proyecto (v4.40.1)
 
 - **2,491 test functions** — 0 regresiones
-- **~190 modulos Python** (~65K lineas) + **22 scripts** (~5K lineas) + **190 archivos de test** (~53K lineas)
+ - **~190 modulos Python** (~65K lineas) + **23 scripts** (~5K lineas) + **192 archivos de test** (~53K lineas)
 - **9 config YAML** con schema validado
 - **16 agent skills** en `.agents/workflows/`
 - **9 publication gates** (6 blocking + 3 advisory)
@@ -193,7 +193,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 
 ---
 
-## Configuracion YAML (v4.38.0 + v4.39.0 + v4.40.0)
+## Configuracion YAML (v4.38.0 + v4.39.0 + v4.40.0 + v4.40.1)
 
 31 hardcoded values migrados a 6 archivos YAML con schema validado. Todos los parametros son configurables sin tocar codigo.
 
@@ -289,7 +289,7 @@ iah-cli/
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
     run_all_validations.py    #   Suite de validaciones
-  .agents/workflows/          # 17 agent skills
+  .agents/workflows/          # 16 agent skills
   .opencode/plans/            # Planes de fases (phased execution)
   evidence/                   # Evidencia de fases ejecutadas
 ```
