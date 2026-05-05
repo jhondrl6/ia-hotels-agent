@@ -1,8 +1,39 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.40.0 (Financial Evidence Engine)
+**Versión:** v4.40.1 (Scoring Transparency)
 **Última actualización:** 2026-05-05
 **Proyecto:** IA Hoteles Agent CLI
+
+---
+
+### v4.40.1 - 2026-05-05 — Scoring Transparency (Fases SCORING-A, SCORING-B, SCORING-C)
+
+**Resumen general:** Transparentar el sistema de scoring de los 4 pilares (SEO, GEO, AEO, IAO) en el diagnóstico generado por v4complete, mostrando todos los factores del checklist con marcadores visuales.
+
+**Módulos afectados:**
+- `modules/commercial_documents/v4_diagnostic_generator.py` — `_build_scoring_breakdown()` modificado
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` — 3 nuevos placeholders
+
+**Problema:**
+`_build_scoring_breakdown()` filtraba factores con valor `False`, ocultando información al cliente sobre qué indicadores faltaban. Además, solo GEO tenía breakdown en el diagnóstico; SEO, AEO e IAO tenían checklists, calculadores y extractores implementados pero sin representación en el output.
+
+**Solución:**
+
+#### SCORING-A: Fix de Filtrado en _build_scoring_breakdown()
+- Módulos: `v4_diagnostic_generator.py`
+- Problema: Solo mostraba factores TRUE, ocultando gaps al cliente
+- Solución: Iteración completa con marcadores visuales (✅ para TRUE, ~~tachado~~ para FALSE)
+- Backwards compatible: Sí (solo cambia presentación, no scores)
+
+#### SCORING-B: Extensión a los 4 Pilares
+- Módulos: `v4_diagnostic_generator.py`, `diagnostico_v6_template.md`
+- Problema: Solo GEO tenía breakdown; SEO/AEO/IAO no tenían representación
+- Solución: 3 nuevas asignaciones (`seo_score_breakdown`, `aeo_score_breakdown`, `iao_score_breakdown`) + 3 placeholders en template
+- Backwards compatible: Sí (templates sin los placeholders funcionan igual)
+
+**Tests:**
+- Validación funcional vía v4complete con Hotel Castilla Real
+- `run_all_validations.py --quick` pasa 4/4
 
 ---
 

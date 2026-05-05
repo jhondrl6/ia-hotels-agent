@@ -1,233 +1,234 @@
-# CONTEXTO: Scoring Transparency — GEO/AEO Scoring Methodology
+# CONTEXTO: Scoring Transparency — 4 Pilares (GEO + SEO + AEO + IAO)
 
-**Creado:** 2026-05-02  
-**Session anterior:** v4.38.0 — Feature Config Extraction  
-**Problema referenciado:** `output/v4_complete/Analisis.md` — Área de oportunidad #4
-
----
-
-## PROBLEMA A RESOLVER
-
-El scoring GEO/AEO/SEO/IAO en iah-cli no es transparente sobre qué factores mide y cuáles excluye.
-
-### Sintoma concrete (del ejercicio hotelero real)
-
-- Hotel con 203 reviews, 4.5★, respuesta en <24h → GEO = 62/100
-- El owner pregunta: "¿El score considera la calidad de respuestas a reseñas?"
-- **Respuesta real:** No. Pero el diagnóstico no lo aclara.
-- El score baja por fotos y NAP consistency, no por engagement con reviews.
-- No existe un `scoring_methodology.md` linked desde el output.
-
-### Problema sistematico
-
-> El scoring usa metricas tecnicas (fotos, NAP, schema) pero no hay seccion de "que no mide". No existe un scoring_methodology.md linked desde el output que explique que pesa 20% vs que no esta en el radar.
+**Creado:** 2026-05-02
+**Actualizado:** 2026-05-05 (post-validación contra código vivo)
+**Sesión de validación:** 2026-05-05 — validación completa del contexto + hallazgo de extensión a 4 pilares
+**Problema referenciado:** `output/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260505_112219.md` línea 60
+**Bug concreto:** `_build_scoring_breakdown()` filtra `is True` y oculta factores FALSE (afecta los 4 pilares, pero solo GEO lo usa actualmente)
 
 ---
 
-## ESTADO ACTUAL DEL CODIGO
+## VEREDICTO EJECUTIVO
 
-### Donde esta el scoring (fuente de verdad)
+**El contexto original era correcto en su diagnóstico del bug GEO, pero incompleto en alcance.**
+
+1. **Bug confirmado:** `_build_scoring_breakdown()` en `v4_diagnostic_generator.py` solo muestra factores con valor `True`, ocultando los `False`. Para `hotelcastillareal` esto significa que `nap_consistente(15%)` y `horario_gbp(15%)` no aparecen en el output.
+
+2. **Nuevo hallazgo:** `_build_scoring_breakdown()` ya es genérica (soporta `seo`, `geo`, `aeo`, `iao`), pero el generator **solo la invoca para GEO**. Los otros 3 pilares tienen extractores, calculadores y checklists implementados, pero **cero transparencia en el diagnóstico generado**. Esto contradice lo que promete `docs/scoring_methodology.md` ("breakdown de 4 pilares").
+
+3. **Recomendación:** Dividir en dos tareas ordenadas — (A) corregir el filtrado del bug para que muestre TODOS los factores con marcador visual, y (B) extender el breakdown a los 4 pilares (SEO, AEO, IAO) agregando las variables al template y al generator. El costo de B es ~10 líneas de código porque la infraestructura ya existe.
+
+---
+
+## VALIDACION DE CLAIMS DEL CONTEXTO ORIGINAL
+
+| Claim original | Estado | Evidencia viva |
+|---------------|--------|----------------|
+| `_build_scoring_breakdown()` filtra `is True` | ✅ CORRECTO | `v4_diagnostic_generator.py:276-283` |
+| CHECKLIST_GEO = 6 items, 100pts | ✅ CORRECTO | `v4_diagnostic_generator.py:162-170` |
+| `_extraer_elementos_geo()` existe | ✅ CORRECTO | `v4_diagnostic_generator.py:2311-2343` |
+| Template tiene `${geo_score_breakdown}` | ✅ CORRECTO | `diagnostico_v6_template.md:60` |
+| `_build_excluded_factors_section()` existe | ✅ CORRECTO | `v4_diagnostic_generator.py:288-296` |
+| `scoring_methodology_url` en frontmatter | ✅ CORRECTO | `v4_diagnostic_generator.py:699` |
+| `docs/scoring_methodology.md` existe | ✅ CORRECTO | 145 líneas, 4 pilares documentados |
+| Output real muestra 4/6 factores GEO | ✅ CONFIRMADO | `evidence/FIN-4/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260504_144810.md` muestra `**GEO 70/100** = redes_activas(10%) + geo_score_gbp(30%) + fotos_gbp(15%) + schema_reviews_geo(15%)` |
+| Números de línea citados | ⚠️ APROXIMADOS | Desviación <5 líneas, usables |
+
+---
+
+## NUEVO HALLAZGO: INFRAESTRUCTURA DE 4 PILARES, PERO SOLO GEO USA BREAKDOWN
+
+### Checklists implementados (v4_diagnostic_generator.py:151-191)
+
+```python
+CHECKLIST_SEO:  7 items = 100pts  (ssl, schema_hotel, LCP_ok, CLS_ok, imagenes_alt, blog_activo, schema_reviews)
+CHECKLIST_GEO:  6 items = 100pts  (nap_consistente, redes_activas, geo_score_gbp, fotos_gbp, horario_gbp, schema_reviews_geo)
+CHECKLIST_AEO:  6 items = 100pts  (schema_faq, open_graph, schema_hotel_aeo, contenido_factual, speakable_schema, imagenes_alt_aeo)
+CHECKLIST_IAO:  7 items = 100pts  (citability_score, contenido_extenso, llms_txt_exists, crawler_access, brand_signals, ga4_indirect, schema_advanced)
+```
+
+### Calculadores implementados (v4_diagnostic_generator.py:194-224)
+
+- `calcular_score_seo(elementos)` → línea 194
+- `calcular_score_geo(elementos)` → línea 201
+- `calcular_score_aeo(elementos)` → línea 208
+- `calcular_score_iao(elementos)` → línea 215
+
+### Extractores implementados (v4_diagnostic_generator.py:2280-2432)
+
+- `_extraer_elementos_seo(audit_result)` → línea 2280
+- `_extraer_elementos_geo(audit_result)` → línea 2311
+- `_extraer_elementos_aeo(audit_result)` → línea 2345
+- `_extraer_elementos_iao(audit_result)` → línea 2375
+
+### PERO: Solo GEO tiene breakdown en el template data (v4_diagnostic_generator.py:697)
+
+```python
+'geo_score_breakdown': _build_scoring_breakdown('geo', self._extraer_elementos_geo(audit_result)),
+```
+
+**No existen:** `seo_score_breakdown`, `aeo_score_breakdown`, `iao_score_breakdown` en el diccionario de template data.
+
+**No existen:** placeholders `${seo_score_breakdown}`, `${aeo_score_breakdown}`, `${iao_score_breakdown}` en `diagnostico_v6_template.md`.
+
+### Impacto del doble problema
+
+1. **Para GEO:** El usuario ve score 70/100 pero no sabe que faltan 30pts (`nap_consistente + horario_gbp`). Esto genera la pregunta: "¿debería incluir el resto de los indicadores?"
+2. **Para SEO/AEO/IAO:** El usuario ve los scores en la tabla principal pero **nunca ve qué factores contribuyen o faltan**. Transparencia cero.
+3. **Para `scoring_methodology.md`:** El documento promete "breakdown de 4 pilares" pero el diagnóstico solo entrega 1. Desalineación documentación ↔ output.
+
+---
+
+## CAUSA RAÍZ DEL BUG DE FILTRADO
 
 **Archivo:** `/mnt/c/Users/Jhond/Github/iah-cli/modules/commercial_documents/v4_diagnostic_generator.py`
 
-**Checklists definidos (lineas 149-191):**
+**Función `_build_scoring_breakdown()` líneas 276-283:**
 
 ```python
-CHECKLIST_SEO = {
-    "ssl":              15,
-    "schema_hotel":      20,
-    "LCP_ok":           20,
-    "CLS_ok":           10,
-    "imagenes_alt":     15,
-    "blog_activo":      10,
-    "schema_reviews":   10,
-}  # Total: 100pts
-
-CHECKLIST_GEO = {
-    "nap_consistente":      15,
-    "redes_activas":        10,
-    "geo_score_gbp":        30,
-    "fotos_gbp":            15,
-    "horario_gbp":          15,
-    "schema_reviews_geo":   15,
-}  # Total: 100pts
-
-CHECKLIST_AEO = {
-    "schema_faq":           25,
-    "open_graph":           15,
-    "schema_hotel_aeo":     15,
-    "contenido_factual":    20,
-    "speakable_schema":      10,
-    "imagenes_alt_aeo":     15,
-}  # Total: 100pts
-
-CHECKLIST_IAO = {
-    "citability_score":     20,
-    "contenido_extenso":    15,
-    "llms_txt_exists":      15,
-    "crawler_access":       15,
-    "brand_signals":        10,
-    "ga4_indirect":         10,
-    "schema_advanced":      15,
-}  # Total: 100pts
+# Construir breakdown solo con elementos que contribuyeron
+parts = []
+for k, peso in checklist.items():
+    if elementos.get(k) is True:   # ← BUG: SOLO incluye TRUE
+        parts.append(f"{k}({peso}%)")
 ```
 
-**Funciones de calculo (lineas 193-224):**
-- `calcular_score_seo()` — linea 193
-- `calcular_score_geo()` — linea 200
-- `calcular_score_aeo()` — linea 207
-- `calcular_score_iao()` — linea 214
-- `calcular_score_global()` — linea 221 (promedio ponderado 4 pilares, peso igual 25% c/u)
-
-### Donde se renderiza (template)
-
-**Archivo:** `/mnt/c/Users/Jhond/Github/iah-cli/modules/commercial_documents/templates/diagnostico_v6_template.md`
-
-**Tabla actual (lineas 52-57):**
-```
-|| **SEO Local** (Para que te ENCUENTREN) | ${seo_score}/100 | ${seo_regional_avg}/100 | ${seo_status} |
-|| **GEO** (Para que te UBIQUEN) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
-|| **AEO** (Para que te CITEN) | ${aeo_score}/100 | ${aeo_regional_avg}/100 | ${aeo_status} |
-|| **IAO** (Para que te RECOMIENDEN) | ${iao_score}/100 | ${iao_regional_avg}/100 | ${iao_status} |
-```
-
-**Frontmatter actual (lineas 1-15):** No incluye link a scoring_methodology.
-
-### Factores actualmente EXCLUIDOS del scoring GEO (no medidos)
-
-1. `review_response_rate` — porcentaje de reseñas respondidas
-2. `response_time` — tiempo de respuesta a reseñas
-3. `response_quality` — calidad/redaccion de las respuestas
-4. `engagement_rate` — interaccion con reseñas
-5. `review_recency` — antiguedad de reseñas nuevas
-6. `review_velocity` — velocidad de llegada de reseñas
-
-### Factores EXCLUIDOS del scoring SEO
-
-1. Contenido editorial (blog depth)
-2. Perfil de backlinks
-3. Domain authority externo
-
-### Factores EXCLUIDOS del scoring AEO
-
-1. Volumen de trafico
-2. Conversiones
-
-### Factores EXCLUIDOS del scoring IAO
-
-1. Trafico directo
-2. Revenue
-3. NPS
+La función es intencionalmente genérica (`pilar` como parámetro), pero el filtrado por `is True` hace que los factores `False` desaparezcan completamente del output. Para transparencia al cliente, todos los factores deben ser visibles.
 
 ---
 
-## MOCK DE LA SALIDA ESPERADA
+## SOLUCION RECOMENDADA (Dos tareas ordenadas)
 
-### Tabla de scores con breakdown
+### Tarea A — Fix del filtrado (Bug, prioridad)
 
+**Objetivo:** Modificar `_build_scoring_breakdown()` para que muestre TODOS los factores del checklist con marcador visual para los ausentes.
+
+**Output deseado para GEO 70/100 (hotelcastillareal):**
 ```
-## 📊 ANALISIS ACTUAL: SU POSICION FRENTE A LA COMPETENCIA
-
-### Score de Visibilidad Digital
-
-|||| Indicador | Su Negocio | Promedio Regional | Estado |
-||||-----------|------------|------------------|--------|
-|| **SEO Local** (Para que te ENCUENTREN) | 58/100 | 55/100 | ✅ |
-|| **GEO** (Para que te UBIQUEN) | 62/100 | 58/100 | ⚠️ |
-|| **AEO** (Para que te CITEN) | 47/100 | 52/100 | 🔴 |
-|| **IAO** (Para que te RECOMIENDEN) | 41/100 | 48/100 | 🔴 |
-
-> **Desglose GEO 62/100** = Fotos(15%) + NAP Consistencia(15%) + Score GBP(30%) + Horario(15%) + Schema Reviews(15%) + Redes Activas(10%)
-
-> **Este score NO mide:** tasa de respuesta a reseñas, tiempo de respuesta, calidad de las respuestas, engagement rate, ni antiguedad de reseñas nuevas.
+**GEO 70/100** = ✅ redes_activas(10%) + ✅ geo_score_gbp(30%) + ✅ fotos_gbp(15%) + ✅ schema_reviews_geo(15%) + ~~nap_consistente(15%)~~ + ~~horario_gbp(15%)~~
 ```
 
-### Nueva seccion al final del documento (antes del footer)
+**Cambio mínimo en `_build_scoring_breakdown()`:**
+- Iterar TODO el checklist (no solo los True)
+- Para cada factor: si `True` → `✅ nombre(peso%)`, si `False` → `~~nombre(peso%)~~`
+- Mantener score calculado por `calcular_score_*()`
 
-```
----
+**Archivo a modificar:**
+- `modules/commercial_documents/v4_diagnostic_generator.py` — `_build_scoring_breakdown()` líneas 276-285
 
-## 📐 Metodologia de Scoring
+### Tarea B — Extensión a 4 pilares (Feature parity)
 
-El score de Visibilidad Digital se calcula sobre 4 pilares independientes (0-100 c/u):
+**Objetivo:** Agregar breakdowns de SEO, AEO, IAO al diagnóstico generado.
 
-| Pilar | Que mide | Que NO mide |
-|-------|---------|-------------|
-| **SEO Local** | SSL, Schema Hotel, Velocidad, Alt text, Blog | Contenido editorial, backlinks |
-| **GEO** | Presencia en Google Maps, fotos, NAP, horario | Tasa de respuesta a reseñas, tiempo de respuesta, calidad de respuestas |
-| **AEO** | FAQ Schema, OG Tags, Schema Hotel detallado, Contenido factual | Volumen de trafico, conversiones |
-| **IAO** | Citabilidad, acceso de crawlers IA, llms.txt, senales de marca | Trafico directo, Revenue, NPS |
+**Cambios necesarios:**
+1. `v4_diagnostic_generator.py` línea ~697: agregar 3 asignaciones:
+   ```python
+   'seo_score_breakdown': _build_scoring_breakdown('seo', self._extraer_elementos_seo(audit_result)),
+   'aeo_score_breakdown': _build_scoring_breakdown('aeo', self._extraer_elementos_aeo(audit_result)),
+   'iao_score_breakdown': _build_scoring_breakdown('iao', self._extraer_elementos_iao(audit_result)),
+   ```
+2. `diagnostico_v6_template.md`: agregar 3 placeholders después de `${geo_score_breakdown}` (línea 60) o en una sección de desglose unificada.
+3. Considerar si los 4 breakdowns deben ir uno tras otro o en una tabla compacta.
 
-> **Para el score GEO especificamente:** un hotel con 203 reseñas y respuesta <24h puede bajar su score por fotos faltantes o inconsistencia NAP — no por la calidad de su engagement con reseñas.
+**Archivos a modificar:**
+- `modules/commercial_documents/v4_diagnostic_generator.py` — template data dict (~3 líneas)
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` — placeholders (~3 líneas)
 
-**Referencias:** [Metodologia completa de scoring](./scoring_methodology.md)
-```
-
-### Frontmatter sugerido
-
-```yaml
----
-scoring_methodology_url: ./scoring_methodology.md
-scoring_pillars:
-  seo: {total: 100, pillars: [...]}
-  geo: {total: 100, pillars: [...], excluded: [...]}
-  aeo: {total: 100, pillars: [...], excluded: [...]}
-  iao: {total: 100, pillars: [...], excluded: [...]}
----
-```
+**Nota:** `scoring_methodology.md` NO requiere cambios. Ya documenta los 4 pilares correctamente.
 
 ---
 
-## ARCHIVOS A MODIFICAR
+## MACRO-FASES SUGERIDAS (para planificación en nueva sesión)
 
-1. `/mnt/c/Users/Jhond/Github/iah-cli/modules/commercial_documents/v4_diagnostic_generator.py`
-   - Agregar funcion `_build_scoring_breakdown(geo_score, elementos)` que retorne string con breakdown
-   - Agregar funcion `_build_excluded_factors_section()` que retorne string con factores excluidos
-   - Agregar template vars en `_prepare_template_data()`
+Estas son sugerencias para la sesión de planificación. NO son fases ejecutadas todavía.
 
-2. `/mnt/c/Users/Jhond/Github/iah-cli/modules/commercial_documents/templates/diagnostico_v6_template.md`
-   - Agregar `${geo_score_breakdown}` debajo de tabla de scores
-   - Agregar `${excluded_factors_section}` antes del footer
-   - Agregar `${scoring_methodology_url}` en frontmatter
+```
+FASE-SCORING-A: Fix del filtrado en _build_scoring_breakdown()
+  └─ Corregir para mostrar TODOS los factores con marcador visual
+  └─ Test con hotelcastillareal (v4complete rápido)
+  └─ Validar: run_all_validations.py --quick
 
-3. `/mnt/c/Users/Jhond/Github/iah-cli/docs/scoring_methodology.md` **(NUEVO)**
-   - Documento estatico con breakdown completo de cada pilar
-   - Tabla de factores incluidos/excluidos por pilar
-   - Ligado desde frontmatter del output
+FASE-SCORING-B: Extensión de breakdown a 4 pilares
+  └─ Agregar seo/aeo/iao_score_breakdown al generator
+  └─ Agregar placeholders al template v6
+  └─ Test con hotelcastillareal (v4complete rápido)
+  └─ Validar: run_all_validations.py --quick
+
+FASE-SCORING-C: Documentación y sincronización
+  └─ Actualizar CHANGELOG.md (si aplica versión)
+  └─ Verificar scoring_methodology.md sigue alineado
+  └─ REGISTRY.md vía log_phase_completion.py
+  └─ run_all_validations.py --quick
+```
+
+**R3 Scope evaluation estimado:**
+- FASE-SCORING-A: 2-3 tareas + 1 comando largo (v4complete) → Ajusta a sub-fases si excede
+- FASE-SCORING-B: 2-3 tareas + 1 comando largo (v4complete)
+- FASE-SCORING-C: 2-3 tareas + 0 comandos largos (docs cascade)
+
+**Dependencias:** A → B → C. No hay conflictos de archivos entre A y B (líneas distintas del mismo archivo, no se solapan).
 
 ---
 
 ## CRITERIOS DE ÉXITO
 
-1. Output del diagnostico muestra breakdown visible: "GEO 62/100 = Fotos(15%) + NAP(15%) + ..."
-2. Seccion "Este score NO mide" visible debajo de la tabla de scores
-3. Nueva seccion "Metodologia de Scoring" al final del documento
-4. Link a `scoring_methodology.md` en frontmatter del output
-5. Pregunta del owner ("¿El score considera la calidad de respuestas a reseñas?") respondida implicitamente por el documento sin necesidad de explicarla
+1. Output del diagnóstico muestra TODOS los factores del checklist GEO (6/6), no solo los TRUE
+2. Factores ausentes marcados visualmente (~~tachado~~ o ❌)
+3. Score sigue siendo 70/100 pero con breakdown visible: 4✅ + 2❌
+4. Los 4 pilares (SEO, GEO, AEO, IAO) tienen breakdown visible en el diagnóstico generado
+5. `python scripts/run_all_validations.py --quick` pasa
+6. `scoring_methodology.md` y el output del diagnóstico están alineados (ambos prometen 4 pilares, ambos entregan 4 pilares)
 
 ---
 
-## WORKFLOW A SEGUIR
+## NON-GOALS Y RIESGOS
 
-Seguir `.agents/workflows/phased_project_executor.md`:
-1 fase / sesion. Al terminar:
-1. `python scripts/log_phase_completion.py --fase FASE-X --desc "..."`
-2. `python scripts/sync_versions.py --check`
-3. Verificar CHANGELOG.md y GUIA_TECNICA.md
-4. `python scripts/run_all_validations.py --quick`
+**Non-goals:**
+- No modificar los checklists ni los pesos (ya están validados)
+- No modificar `calcular_score_*()` ni `_extraer_elementos_*()` (funcionan correctamente)
+- No modificar `scoring_methodology.md` (ya está completo)
+- No cambiar la metodología de cálculo del score (solo la presentación del breakdown)
+
+**Riesgos:**
+- **Divergencia dual-score GEO:** El score en la tabla principal (`${geo_score}`) viene de `_calculate_geo_score()` → GBP raw. El breakdown usa `calcular_score_geo()` → CHECKLIST_GEO. Esta divergencia YA está documentada en el template (línea 62) y en `scoring_methodology.md` (línea 72). No es un riesgo nuevo, pero el fix del breakdown hará que la divergencia sea más visible. Verificar que la nota explicativa sigue presente.
+- **Ruido visual:** Mostrar 4 breakdowns completos puede hacer el diagnóstico muy largo. Considerar formato compacto (tabla o lista) en lugar de línea de texto corrido.
 
 ---
 
 ## COMANDOS DE REFERENCIA
 
 ```bash
-# Test rapido del pipeline
+# Test rápido del pipeline (para validar fix)
 cd /mnt/c/Users/Jhond/Github/iah-cli
-python main.py v4complete --url https://amaziliahotel.com --region eje_cafetero --output output/test-scoring
+venv/Scripts/python.exe main.py v4complete --url https://hotelcastillareal.com --region eje_cafetero --output output/test-scoring-fix
 
-# Generar diagnostico solo (sin assets)
-python main.py stage --stage diagnostic --url https://amaziliahotel.com
+# Validaciones
+venv/Scripts/python.exe scripts/run_all_validations.py --quick
 
-# Ver validaciones
-python scripts/run_all_validations.py --quick
+# Ver output generado
+cat output/test-scoring-fix/01_DIAGNOSTICO_Y_OPORTUNIDAD_*.md | grep -A3 "GEO\|SEO\|AEO\|IAO"
+```
+
+---
+
+## PROMPT PARA LA SIGUIENTE SESIÓN
+
+Copiar y pegar en una nueva sesión para diseñar el plan de fases:
+
+```
+Carga el contexto de scoring transparency en /mnt/c/Users/Jhond/Github/iah-cli/.opencode/context/scoring-transparency-context.md
+
+Basado en ese contexto validado, diseña un plan de fases siguiendo .agents/workflows/phased_project_executor.md con:
+1. FASE-SCORING-A: Fix del filtrado en _build_scoring_breakdown() para mostrar todos los factores (TRUE y FALSE) con marcador visual
+2. FASE-SCORING-B: Extensión del breakdown a los 4 pilares (SEO, GEO, AEO, IAO)
+3. FASE-SCORING-C: Documentación cascade (CHANGELOG, REGISTRY, validaciones)
+
+Requisitos del plan:
+- R3 scope evaluation para cada fase (max 4 tareas + 0 comandos largos, o 3 tareas + 1 comando largo)
+- Dependencia diagram (ASCII)
+- Iteration budget estimate por fase
+- Archivos involucrados con tipo de cambio
+- Post-ejecución: log_phase_completion.py command exacto por fase
+
+Guarda el plan en .opencode/plans/SCORING-TRANSPARENCY/ siguiendo la estructura de references/phased_plan_structure_example.md.
 ```

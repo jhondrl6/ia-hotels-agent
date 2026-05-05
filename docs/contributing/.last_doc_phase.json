@@ -1,6 +1,6 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-1-AMAZILIA-CORRECCION",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "CHAN-2",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-SCORING-B",
   "modules/commercial_documents/v4_proposal_generator.py": "FASE-CONFIG-5",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-A",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-E",
@@ -18,7 +18,7 @@
   "modules/delivery/delivery_packager.py": "FASE-5",
   "modules/geo_enrichment/geo_flow.py": "FASE-6",
   "CHANGELOG.md": "FASE-RELEASE-4.38.0",
-  "docs/GUIA_TECNICA.md": "FASE-RELEASE-4.38.0",
+  "docs/GUIA_TECNICA.md": "FASE-SCORING-C",
   ".agents/workflows/README.md": "FASE-7",
   "modules/asset_generation/asset_catalog.py": "FASE-5",
   "modules/commercial_documents/data_structures.py": "FASE-E",
@@ -26,7 +26,7 @@
   "main.py": "FASE-1A",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "FASE-TRAZABILIDAD-RAIZ",
-  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-SCORING-3",
+  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-SCORING-B",
   "data_models/__init__.py": "FASE-IAO-06",
   "v4_proposal_generator.py": "FASE-G",
   "propuesta_v6_template.md": "ANALYTICS-02",
@@ -137,5 +137,6 @@
   "docs/CONTRIBUTING.md": "FASE-RELEASE-4.38.0",
   ".agent/SYSTEM_STATUS.md": "FASE-RELEASE-4.38.0",
   "docs/scoring_methodology.md": "FASE-SCORING-3",
-  "modules/commercial_documents/templates/": "FIN-3"
+  "modules/commercial_documents/templates/": "FIN-3",
+  "docs/CHANGELOG.md": "FASE-SCORING-C"
 }

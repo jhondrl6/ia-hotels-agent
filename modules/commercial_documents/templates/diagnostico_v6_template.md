@@ -58,6 +58,9 @@ ${regional_context}
 | **IAO** (Para que te RECOMIENDEN) | ${iao_score}/100 | ${iao_regional_avg}/100 | ${iao_status} |
 
 ${geo_score_breakdown}
+${seo_score_breakdown}
+${aeo_score_breakdown}
+${iao_score_breakdown}
 
 > ⚠️ **Nota sobre el score GEO**: El desglose arriba usa la metodología del checklist GEO (calcular_score_geo), que pondera 6 factores técnicos. El score en la tabla principal (${geo_score}) puede diferir porque viene directamente del geo_score de Google Business Profile, que usa su propio algoritmo. Ambos son válidos — miden aspectos complementarios de tu presencia en Google Maps.
 

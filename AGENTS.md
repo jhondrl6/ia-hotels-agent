@@ -1,8 +1,8 @@
-<!-- agents_version: 4.40.0 | last_update: 2026-05-05 -->
+<!-- agents_version: 4.40.1 | last_update: 2026-05-05 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.40.0 -- Financial Evidence Engine COMPLETADO**
+> **v4.40.1 -- Scoring Transparency COMPLETADO**
 
 ---
 

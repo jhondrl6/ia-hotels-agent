@@ -1,5 +1,26 @@
 # Changelog
 
+## [4.40.1] - Scoring Transparency — 2026-05-05
+
+### Objetivo
+Transparentar el sistema de scoring de los 4 pilares (SEO, GEO, AEO, IAO) en el diagnóstico generado por v4complete, mostrando todos los factores del checklist con marcadores visuales.
+
+### Cambios Implementados
+- `modules/commercial_documents/v4_diagnostic_generator.py` — `_build_scoring_breakdown()` ahora muestra TODOS los factores (TRUE con ✅, FALSE con ~~tachado~~) en lugar de filtrar solo los TRUE
+- `modules/commercial_documents/v4_diagnostic_generator.py` — Agregadas 3 asignaciones de template data (`seo_score_breakdown`, `aeo_score_breakdown`, `iao_score_breakdown`) para extender el breakdown a los 4 pilares
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` — Agregados 3 placeholders (`${seo_score_breakdown}`, `${aeo_score_breakdown}`, `${iao_score_breakdown}`) para renderizar los breakdowns en el diagnóstico
+
+### Archivos Modificados
+|| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Fix L276-285: iteración completa con marcadores; extensión L697-700: 3 nuevas asignaciones |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | 3 nuevos placeholders de breakdown |
+
+### Tests
+- Validación vía v4complete con Hotel Castilla Real (hotelcastillareal.com)
+- `run_all_validations.py --quick` pasa 4/4
+- 0 regresiones, 2251 tests totales
+
 ## [4.40.0] - Financial Evidence Engine (2026-05-04)
 
 ### Objetivo

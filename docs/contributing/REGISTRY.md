@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-05
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 199
+> **Total fases completadas:** 203
 
 ---
 
@@ -5055,6 +5055,104 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SCORING-A - 2026-05-05
+**Descripcion:** Fix de filtrado en _build_scoring_breakdown() para mostrar todos los factores con marcador visual
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SCORING-B - 2026-05-05
+**Descripcion:** Extension del scoring breakdown a los 4 pilares (SEO, GEO, AEO, IAO)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SCORING-A - 2026-05-05
+**Descripcion:** Fix de filtrado en _build_scoring_breakdown() para mostrar todos los factores con marcador visual
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SCORING-B - 2026-05-05
+**Descripcion:** Extension del scoring breakdown a los 4 pilares (SEO, GEO, AEO, IAO)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SCORING-C - 2026-05-05
+**Descripcion:** Documentacion cascade: CHANGELOG v4.40.1, GUIA_TECNICA, REGISTRY, validaciones
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `docs/CHANGELOG.md` | Changelog |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
+
+### Validaciones
+- [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

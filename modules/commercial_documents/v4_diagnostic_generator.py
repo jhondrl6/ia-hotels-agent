@@ -273,11 +273,13 @@ def _build_scoring_breakdown(pilar: str, elementos: dict) -> str:
     if not checklist:
         return f"**{label} {computed_score}/100**"
 
-    # Construir breakdown solo con elementos que contribuyeron
+    # Construir breakdown con todos los elementos (TRUE y FALSE) con marcador visual
     parts = []
     for k, peso in checklist.items():
         if elementos.get(k) is True:
-            parts.append(f"{k}({peso}%)")
+            parts.append(f"✅ {k}({peso}%)")
+        else:
+            parts.append(f"~~{k}({peso}%)~~")
 
     if parts:
         return f"**{label} {computed_score}/100** = {' + '.join(parts)}"
@@ -695,6 +697,9 @@ class V4DiagnosticGenerator:
 
             # Scoring transparency (FASE-SCORING-1)
             'geo_score_breakdown': _build_scoring_breakdown('geo', self._extraer_elementos_geo(audit_result)),
+            'seo_score_breakdown': _build_scoring_breakdown('seo', self._extraer_elementos_seo(audit_result)),
+            'aeo_score_breakdown': _build_scoring_breakdown('aeo', self._extraer_elementos_aeo(audit_result)),
+            'iao_score_breakdown': _build_scoring_breakdown('iao', self._extraer_elementos_iao(audit_result)),
             'excluded_factors_section': _build_excluded_factors_section(),
             'scoring_methodology_url': './scoring_methodology.md',
 
