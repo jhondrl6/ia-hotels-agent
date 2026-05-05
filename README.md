@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt, geo_playbook) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.40.0 | **Codename:** Financial Evidence Engine | **Última actualización:** 5 Mayo 2026
+**Version:** 4.40.0 | **Codename:** Financial Evidence Engine | **Ultima actualizacion:** 5 Mayo 2026
 
 ---
 
@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 17 skills including PhasedProjectExecutor, v4_regression_guardian |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 16 skills including PhasedProjectExecutor, v4_regression_guardian |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -23,15 +23,14 @@
 
 ## Estado del Proyecto (v4.40.0)
 
-- **2,251 test functions** — 0 regresiones
-- **160 modulos Python** (64,235 lineas) + **185 archivos de test** (49,158 lineas)
+- **2,491 test functions** — 0 regresiones
+- **~190 modulos Python** (~65K lineas) + **22 scripts** (~5K lineas) + **190 archivos de test** (~53K lineas)
 - **9 config YAML** con schema validado
-- **17 agent skills** en `.agents/workflows/`
-- **23 scripts** de automatizacion
+- **16 agent skills** en `.agents/workflows/`
 - **9 publication gates** (6 blocking + 3 advisory)
 - **Coherence Score >= 0.8** requerido para publicacion
-- **28 assets IMPLEMENTED** en catalogo
-- **Financial Evidence Engine** — metadata epistémica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
+- **23 assets IMPLEMENTED** (+ 1 DEPRECATED + 1 MANUAL_ONLY) en catalogo
+- **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
 
@@ -233,7 +232,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **2,502 test functions** — suite completa, 0 regresiones
+- **2,491 test functions** — suite completa, 0 regresiones
 - **60 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Suite de regresion** — Amaziliahotel + Hotel Visperas como casos de referencia
@@ -241,7 +240,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 - **9 Publication Gates** (6 blocking + 3 advisory):
   - Blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics
   - Advisory: content_quality, asset_confidence, proposal_asset_alignment
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.9.0 (1 fase/sesion, max 60 iteraciones)
+- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.10.0 (1 fase/sesion, max 60 iteraciones)
 
 ---
 
@@ -271,7 +270,7 @@ iah-cli/
     settings.yaml             #   Legacy (puntero a nuevos YAML)
     certificates.yaml         #   Certificados de excelencia
     provider_registry.yaml    #   Catalogo de proveedores
-  modules/                    # 160 modulos Python (64K lineas)
+  modules/                    # ~190 modulos Python (~65K lineas)
     asset_generation/         #   Generacion condicional de assets
     commercial_documents/     #   Diagnostico + Propuesta v4
     financial_engine/         #   Pricing, scenarios, loss projector
@@ -281,7 +280,7 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
-  tests/                      # 182 archivos de test (49K lineas)
+  tests/                      # 190 archivos de test (~53K lineas)
     config/                   #   60 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
