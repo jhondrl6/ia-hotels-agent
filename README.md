@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt, geo_playbook) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.39.0 | **Codename:** Scoring Transparency | **Ultima actualización:** 2 Mayo 2026
+**Version:** 4.40.0 | **Codename:** Financial Evidence Engine | **Última actualización:** 4 Mayo 2026
 
 ---
 
@@ -21,17 +21,17 @@
 
 ---
 
-## Estado del Proyecto (v4.39.0)
+## Estado del Proyecto (v4.40.0)
 
-- **2,502 test functions** — 0 regresiones
-- **160 modulos Python** (64,235 lineas) + **182 archivos de test** (49,158 lineas)
-- **9 config YAML** con schema validado (6 nuevos en v4.38.0 + 1 en v4.39.0)
+- **2,251 test functions** — 0 regresiones
+- **160 modulos Python** (64,235 lineas) + **185 archivos de test** (49,158 lineas)
+- **9 config YAML** con schema validado
 - **17 agent skills** en `.agents/workflows/`
 - **23 scripts** de automatizacion
 - **9 publication gates** (6 blocking + 3 advisory)
 - **Coherence Score >= 0.8** requerido para publicacion
 - **28 assets IMPLEMENTED** en catalogo
-- **Scoring Transparency** — breakdown visible por pilar, seccion "Este score NO mide" en diagnosticos, documento `docs/scoring_methodology.md` linkado
+- **Financial Evidence Engine** — metadata epistémica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
 
@@ -194,7 +194,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 
 ---
 
-## Configuracion YAML (v4.38.0 + v4.39.0)
+## Configuracion YAML (v4.38.0 + v4.39.0 + v4.40.0)
 
 31 hardcoded values migrados a 6 archivos YAML con schema validado. Todos los parametros son configurables sin tocar codigo.
 

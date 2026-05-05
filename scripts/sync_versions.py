@@ -142,8 +142,14 @@ class SyncEngine:
                 print(f"WARN: {rule['file']} ({rule_id}) - pattern matched but value not found")
                 return False
 
+        if not matched:
+            # No patterns matched at all — file likely needs manual update
+            self.results[rule_id] = "NO_MATCH"
+            print(f"WARN: {rule['file']} ({rule_id}) - no patterns matched (file may need manual update)")
+            return False
+
         if not changed:
-            self.results[rule_id] = "SYNC"
+            self.results[rule_id] = "IN_SYNC"
             print(f"OK: {rule['file']} ({rule_id}) - in sync")
             return True
         

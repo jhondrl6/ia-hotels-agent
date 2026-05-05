@@ -1,6 +1,6 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.40.0 (Scoring Transparency)
+**Versión:** v4.40.0 (Financial Evidence Engine)
 **Última actualización:** 2026-05-04
 **Proyecto:** IA Hoteles Agent CLI
 

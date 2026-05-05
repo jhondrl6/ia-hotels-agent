@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.40.0 -- Scoring Transparency COMPLETADO**
+> **v4.40.0 -- Financial Evidence Engine COMPLETADO**
 
 ---
 

@@ -35,8 +35,8 @@ rules:
     file: "README.md"
     description: "Version and date in README header"
     replacements:
-      - pattern: '\*\*Version:\*\*\s*[\d.]+\s*\|\s*\*\*Última actualización:\*\*\s*\d+\s+\w+\s+\d{4}'
-        template: '**Version:** {version} | **Última actualización:** {date_text}'
+      - pattern: '\*\*Version:\*\*[^\n]+\*\*(Ú|U)ltima actualizaci(?:ó|O)n:[^\n]+'
+        template: '**Version:** {version} | **Codename:** {codename} | **Última actualización:** {date_text}'
 
   # ============================================================
   # AGENTS.md
@@ -88,8 +88,8 @@ rules:
     file: "docs/CONTRIBUTING.md"
     description: "Version in CONTRIBUTING.md footer sync section"
     replacements:
-      - pattern: '^\*\*Version:\*\*\s*v?[\d]+\.[\d]+\.[\d]+'
-        template: '**Version:** v{version}'
+      - pattern: '^\*\*Version actual:\*\*\s*v?[\d]+\.[\d]+\.[\d]+'
+        template: '**Version actual:** v{version}'
 
   # ============================================================
   # GUIA_TECNICA.md
