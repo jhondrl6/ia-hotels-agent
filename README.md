@@ -21,7 +21,7 @@
 
 ---
 
-## Estado del Proyecto (v4.40.1)
+## Estado del Proyecto (v4.40.2)
 
 - **2,491 test functions** — 0 regresiones
  - **~190 modulos Python** (~65K lineas) + **23 scripts** (~5K lineas) + **192 archivos de test** (~53K lineas)
@@ -193,7 +193,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 
 ---
 
-## Configuracion YAML (v4.38.0 + v4.39.0 + v4.40.0 + v4.40.1)
+## Configuracion YAML (v4.38.0 + v4.39.0 + v4.40.0 + v4.40.1 + v4.40.2)
 
 31 hardcoded values migrados a 6 archivos YAML con schema validado. Todos los parametros son configurables sin tocar codigo.
 
