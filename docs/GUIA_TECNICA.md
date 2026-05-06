@@ -1,8 +1,25 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.40.1 (Scoring Transparency)
+**Versión:** v4.40.2 (PATCH: Refactor CTA Onboarding)
 **Última actualización:** 2026-05-05
 **Proyecto:** IA Hoteles Agent CLI
+
+---
+
+### v4.40.2 - 2026-05-05 — PATCH: Refactor CTA Onboarding (Fase REFACTOR-CTA-C)
+
+**Resumen general:** Refactorizar el CTA de onboarding en diagnóstico Tier C para listar explícitamente los 4 datos requeridos (habitaciones, reservas mensuales, valor promedio de reserva COP, porcentaje canal directo).
+
+**Módulos afectados:**
+- `modules/commercial_documents/v4_diagnostic_generator.py` — String `show_onboarding_cta` refactorizado
+
+**Problema:**
+El CTA de onboarding en diagnóstico Tier C decía "complete el onboarding con sus datos reales" sin especificar cuáles datos. El usuario no sabía qué información necesitaba proporcionar.
+
+**Solución:**
+Se refactorizó el string `show_onboarding_cta` para listar explícitamente los 4 datos requeridos: número de habitaciones, reservas mensuales promedio, valor promedio de reserva (COP) y porcentaje de canal directo.
+
+**Backwards Compatibility:** Sí. Solo cambio de string, sin modificación de APIs ni estructuras de datos.
 
 ---
 

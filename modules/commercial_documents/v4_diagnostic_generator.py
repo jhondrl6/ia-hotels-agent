@@ -1107,8 +1107,10 @@ class V4DiagnosticGenerator:
             precision_warning = self._build_precision_warning(precision_tier, adr_source_label)
             show_onboarding_cta = (
                 "\n> **¿Quiere saber su cifra exacta?** "
-                "Complete el [onboarding con sus datos reales] "
-                "para ver el cálculo preciso de su pérdida mensual.\n"
+                "Complete el onboarding con sus datos reales: "
+                "número de habitaciones, reservas mensuales promedio, "
+                "valor promedio de reserva (COP) y porcentaje de canal directo. "
+                "Así podrá ver el cálculo preciso de su pérdida mensual.\n"
             )
         else:
             precision_warning = ""

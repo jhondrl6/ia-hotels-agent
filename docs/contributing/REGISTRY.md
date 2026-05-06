@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-05
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 203
+> **Total fases completadas:** 205
 
 ---
 
@@ -5153,6 +5153,46 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-REFACTOR-CTA-A - 2026-05-05
+**Descripcion:** Refactor CTA onboarding: lista explicita los 4 datos requeridos (habitaciones, reservas mensuales, valor reserva COP, canal directo)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `tests/commercial_documents/test_precision_rendering.py` | Test Precision Rendering |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-REFACTOR-CTA-ONBOARDING - 2026-05-05
+**Descripcion:** Refactoriza CTA de onboarding en Tier C para listar explicitamente los 4 datos requeridos. Verificado con v4complete en Hotel Castilla Real.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `tests/commercial_documents/test_precision_rendering.py` | Test Precision Rendering |
+
+### Validaciones
+- [x] Tests passing (1)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

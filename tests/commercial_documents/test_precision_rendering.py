@@ -202,7 +202,7 @@ class TestPrecisionRendering:
         assert 'Tier C' in result['precision_warning']
 
     def test_tier_c_shows_onboarding_cta(self):
-        """Tier C: CTA de onboarding presente."""
+        """Tier C: CTA de onboarding presente y específico."""
         gen = V4DiagnosticGenerator()
         scenarios = make_scenarios()
         validation_summary = make_validation_summary_tier_c()
@@ -211,10 +211,15 @@ class TestPrecisionRendering:
             scenarios, validation_summary, analytics_data=None,
         )
 
-        # CTA should be present for Tier C
-        assert result['show_onboarding_cta'] != ''
-        assert 'onboarding' in result['show_onboarding_cta'].lower()
-        assert '¿Quiere saber su cifra exacta' in result['show_onboarding_cta']
+        cta = result['show_onboarding_cta']
+        assert cta != ''
+        assert 'onboarding' in cta.lower()
+        assert 'Quiere saber su cifra exacta' in cta
+        # Verificar que los 4 datos requeridos están mencionados
+        assert 'habitaciones' in cta.lower()
+        assert 'reservas' in cta.lower()
+        assert 'reserva' in cta.lower()
+        assert 'canal directo' in cta.lower()
 
     def test_tier_b_shows_warning(self):
         """Tier B: Bloque de advertencia presente con contenido diferenciado."""

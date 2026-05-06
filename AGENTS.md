@@ -1,8 +1,8 @@
-<!-- agents_version: 4.40.1 | last_update: 2026-05-05 -->
+<!-- agents_version: 4.40.2 | last_update: 2026-05-05 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.40.1 -- Scoring Transparency COMPLETADO**
+> **v4.40.2 -- PATCH: Refactor CTA Onboarding COMPLETADO**
 
 ---
 

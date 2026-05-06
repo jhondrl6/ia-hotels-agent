@@ -1,5 +1,26 @@
 # Changelog
 
+## [4.40.2] - PATCH: Refactor CTA Onboarding — 2026-05-05
+
+### Objetivo
+Refactorizar el CTA de onboarding en diagnóstico Tier C para listar explícitamente los 4 datos requeridos (habitaciones, reservas mensuales, valor promedio de reserva COP, porcentaje canal directo).
+
+### Cambios Implementados
+- `modules/commercial_documents/v4_diagnostic_generator.py` — String `show_onboarding_cta` ahora lista explícitamente los 4 datos requeridos
+
+### Archivos Modificados
+|| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Refactor string CTA: 4 datos explícitos |
+| `tests/commercial_documents/test_precision_rendering.py` | 1 test nuevo |
+
+### Tests
+- Validación vía v4complete con Hotel Castilla Real (hotelcastillareal.com)
+- 0 regresiones
+
+### Backwards Compatibility
+- Sí. Solo cambio de string, sin modificación de APIs ni estructuras de datos.
+
 ## [4.40.1] - Scoring Transparency — 2026-05-05
 
 ### Objetivo
