@@ -66,7 +66,7 @@ class ConditionalGenerator:
         # Asset sets per generation path (FASE 6: Orchestration V2)
         self._fast_assets = ["whatsapp_button", "faq_page", "hotel_schema"]
         self._standard_assets = ["whatsapp_button", "faq_page", "hotel_schema", 
-                                 "geo_playbook", "review_plan", "org_schema"]
+                                 "review_plan", "org_schema"]
         self._full_assets = None  # Will use all IMPLEMENTED assets
 
     def generate(
@@ -418,15 +418,6 @@ class ConditionalGenerator:
                 scenarios if isinstance(scenarios, dict) else {},
                 hotel_dict if isinstance(hotel_dict, dict) else {}
             )
-
-        elif asset_type == "geo_playbook":
-            from .geo_playbook_generator import GeoPlaybookGenerator
-            generator = GeoPlaybookGenerator()
-            hotel_data = validated_data.get("hotel_data", {})
-            data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
-            gbp_data = validated_data.get("gbp_data", {})
-            gbp_dict = getattr(gbp_data, 'value', gbp_data) if not isinstance(gbp_data, dict) else gbp_data
-            content = generator.generate(data if isinstance(data, dict) else {}, gbp_dict)
 
         elif asset_type == "review_plan":
             review_data = validated_data.get("gbp_reviews", {})
@@ -1032,15 +1023,6 @@ Las proyecciones se calculan utilizando:
 """
         
         return md
-
-    def _generate_geo_playbook(self, gbp_data: Dict, hotel_name: str) -> str:
-        """Generate geo playbook markdown (legacy wrapper)."""
-        from .geo_playbook_generator import GeoPlaybookGenerator
-        generator = GeoPlaybookGenerator()
-        # Create minimal hotel_data from hotel_name for legacy compatibility
-        hotel_data = {"name": hotel_name}
-        return generator.generate(hotel_data, gbp_data)
-
 
     def _generate_review_plan(self, review_data: Dict, hotel_name: str) -> str:
         """Generate review plan markdown."""

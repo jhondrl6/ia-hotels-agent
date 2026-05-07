@@ -1,8 +1,8 @@
 # IA Hoteles Agent CLI
 
-**Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt, geo_playbook) para recuperar ingresos que hoy van a OTAs y competidores.**
+**Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.40.2 | **Codename:** PATCH: Refactor CTA Onboarding | **Ultima actualizacion:** 5 Mayo 2026
+**Version:** 4.41.0 | **Codename:** PROPOSAL-COMERCIAL-FIX | **Ultima actualizacion:** 6 Mayo 2026
 
 ---
 
@@ -21,15 +21,15 @@
 
 ---
 
-## Estado del Proyecto (v4.40.2)
+## Estado del Proyecto (v4.41.0)
 
 - **2,491 test functions** — 0 regresiones
- - **~190 modulos Python** (~65K lineas) + **23 scripts** (~5K lineas) + **192 archivos de test** (~53K lineas)
+ - **~188 modulos Python** (~65K lineas) + **21 scripts** (~5K lineas) + **193 archivos de test** (~53K lineas)
 - **9 config YAML** con schema validado
 - **16 agent skills** en `.agents/workflows/`
 - **9 publication gates** (6 blocking + 3 advisory)
 - **Coherence Score >= 0.8** requerido para publicacion
-- **23 assets IMPLEMENTED** (+ 1 DEPRECATED + 1 MANUAL_ONLY) en catalogo
+- **22 assets IMPLEMENTED** (+ 2 DEPRECATED + 1 MANUAL_ONLY) en catalogo
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
@@ -280,11 +280,11 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
-  tests/                      # 190 archivos de test (~53K lineas)
+  tests/                      # 193 archivos de test (~53K lineas)
     config/                   #   60 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
-  scripts/                    # 23 scripts de automatizacion
+  scripts/                    # 21 scripts de automatizacion
     sync_versions.py          #   Sincronizacion versiones
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md

@@ -3,6 +3,7 @@ generated_at: ${generated_at}
 version: ${version}
 hotel_id: ${hotel_id}
 coherence_score: ${coherence_score}
+gate_status: ${gate_status}
 document_type: DIAGNOSTICO_V6
 generator: IA_Hoteles_v4
 financial_evidence_tier: "${evidence_tier}"

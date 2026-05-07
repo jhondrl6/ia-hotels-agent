@@ -27,13 +27,6 @@ class ServiceEntry:
 # The pain_id links it to PainSolutionMapper.PAIN_SOLUTION_MAP.
 
 SERVICE_CATALOG: Dict[str, ServiceEntry] = {
-    # GEO / Maps
-    "google_maps_optimizado": ServiceEntry(
-        service_name="Google Maps Optimizado",
-        asset_type="geo_playbook",
-        pain_id="low_gbp_score",
-        description="Aparece primero cuando alguien busca 'hotel cerca de...'",
-    ),
     # SEO
     "seo_local": ServiceEntry(
         service_name="SEO Local",

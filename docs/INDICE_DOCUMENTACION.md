@@ -240,7 +240,7 @@
 | `scripts/audit_check.py` | Check de auditoría |
 | `scripts/gen_report.py` | Genera reportes |
 | `scripts/log_phase_completion.py` | Log de completitud de fase |
-| `scripts/config_checker.py` | Verificador de configuración |
+| `scripts/config_checker.py` | [DEPRECATED] Usar `python -m modules.utils.config_checker` |
 | `scripts/version_consistency_checker.py` | Verifica consistencia de versiones |
 
 ---

@@ -18,7 +18,6 @@ from typing import Dict, List, Any, Optional
 # Each value is the asset_type that should be generated for that service.
 
 PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
-    "Google Maps Optimizado": "geo_playbook",
     "SEO Local": "optimization_guide",
     "Botón de WhatsApp": "whatsapp_button",
     "Datos Estructurados": "hotel_schema",
@@ -27,7 +26,8 @@ PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
     "Meta Tags Sociales (Open Graph)": "open_graph",
 }
 
-# All 7 services that the proposal always promises (as of v4.34.0: +FAQ, +Open Graph)
+# All 6 services that the proposal always promises (as of v4.40.2: removed Google Maps Optimizado
+# because geo_playbook was redundant with geo_fix_kit.md and other GEO assets. See FASE-PROP-D.)
 ALL_PROMISED_SERVICES: List[str] = list(PROPOSAL_SERVICE_TO_ASSET.keys())
 
 

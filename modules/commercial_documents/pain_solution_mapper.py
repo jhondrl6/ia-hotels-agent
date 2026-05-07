@@ -81,7 +81,7 @@ class PainSolutionMapper:
             "description": "No se detecta markup de schema.org/FAQPage"
         },
         "low_gbp_score": {
-            "assets": ["geo_playbook", "review_plan"],
+            "assets": ["review_plan"],
             "confidence_required": 0.6,
             "priority": 1,
             "validation_fields": ["gbp_rating", "gbp_reviews"],
@@ -297,7 +297,6 @@ class PainSolutionMapper:
     ASSET_NAMES = {
         "whatsapp_button": "Botón WhatsApp",
         "faq_page": "Página de FAQ",
-        "geo_playbook": "Playbook de Geolocalización",
         "review_plan": "Plan de Gestión de Reviews",
         "barra_reserva_movil": "Barra de Reserva Móvil",
         "hotel_schema": "Schema Hotel Mejorado",

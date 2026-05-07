@@ -325,6 +325,7 @@ class V4ProposalGenerator:
             analytics_data=analytics_data,
             assets_generated=assets_generated,
             site_presence_report=site_presence_report,
+            financial_breakdown=financial_breakdown,
         )
         
         # Render template
@@ -564,6 +565,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         analytics_data: Optional[Dict[str, Any]] = None,
         assets_generated: Optional[List[Dict[str, Any]]] = None,
         site_presence_report: Optional[Any] = None,  # FASE-D: SitePresenceReport for production presence
+        financial_breakdown: Optional[Any] = None,  # FASE-PROP-F: For precision_tier extraction
     ) -> Dict[str, str]:
         """Prepare data for template rendering."""
         
@@ -620,10 +622,16 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             'projected_gain': format_cop(projected_monthly_gain),
             'roi_6_months': roi_6_months,
             'break_even_months': str(break_even),
+            # DEUDA_TECNICA: FASE-PROP-C - Opcion A (unificar pain_ratio y recovery_factor en un
+            # solo factor effective_recovery) queda pendiente. Actualmente se aplican dos descuentos:
+            #   1. pain_ratio -> projected_monthly_gain (tabla mensual)
+            #   2. recovery_factor -> ROI (formula _calculate_roi)
+            # Esto genera aparente inconsistencia: tabla muestra X/mes pero ROI muestra 0.3X.
             'pain_ratio_note': (
-                f"Recovery factor: {pain_ratio:.0%} of monthly loss retained as IAO investment. "
-                f"Net monthly result reflects the conservative FASE-B model where the full "
-                f"recovery materializes progressively as IAO infrastructure matures (months 1-6)."
+                f"**Nota de proyección**: De su pérdida mensual estimada, el {pain_ratio:.0%} "
+                f"representa la porción que consideramos recuperable con IAO. "
+                f"De ese monto, proyectamos recuperar el {recovery_factors['realistic']:.0%} en los "
+                f"próximos 6 meses. El ROI refleja esta proyección conservadora."
             ),
             
         # All scenarios with recovery_factor per scenario
@@ -676,6 +684,10 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'plan_90d': self._build_90_day_plan(asset_plan),
         'coherence_score': str(int(diagnostic_summary.coherence_score * 100)) if diagnostic_summary.coherence_score is not None else str(self._load_fallback('coherence_score', 70)[0]),
 
+        # FASE-PROP-F: Extract precision_tier from financial_breakdown for Tier C warning banner
+        # Falls back to 'C' (most conservative) if not available
+        'financial_evidence_tier': getattr(financial_breakdown, 'evidence_tier', 'C') if financial_breakdown else 'C',
+
         # Backward compatibility: score_tecnico alias for score_global
         'score_tecnico': diagnostic_summary.score_global if diagnostic_summary.score_global is not None else (
             diagnostic_summary.score_tecnico if diagnostic_summary.score_tecnico is not None else self._load_fallback('score_tecnico', 50)[0]
@@ -698,8 +710,9 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'coherence_checklist': self._build_coherence_checklist(diagnostic_summary),
         
         # Plans — FASE-D: all 4 plans now accept asset_plan for dynamic content
-        'plan_7_days': self._build_7_day_plan(asset_plan),
-        'plan_30_days': self._build_30_day_plan(asset_plan),
+        # FASE-PROP-E: pass diagnostic_summary for score-based prioritization
+        'plan_7_days': self._build_7_day_plan(asset_plan, diagnostic_summary),
+        'plan_30_days': self._build_30_day_plan(asset_plan, diagnostic_summary),
         'plan_60_days': self._build_60_day_plan(asset_plan),
         'plan_90_days': self._build_90_day_plan(asset_plan),
 
@@ -738,6 +751,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             detected_pain_ids=getattr(diagnostic_summary, 'pain_ids', None) or [],
             site_presence_report=site_presence_report,
             audit_result=audit_result,
+            score_aeo=diagnostic_summary.score_aeo,
         ),
 
         # FASE-D: Competitors section — only if competitors data available
@@ -879,6 +893,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         detected_pain_ids: Optional[List[str]] = None,
         site_presence_report: Optional[Any] = None,
         audit_result: Optional[Any] = None,  # FASE-D: audit for schema_valid / faq_schema_valid
+        score_aeo: Optional[int] = None,  # FASE-PROP-E: AEO score for conditional row
     ) -> str:
         """Genera tabla de calidad de assets para la propuesta.
 
@@ -889,6 +904,8 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         cuando SitePresenceChecker confirmo que el asset ya existe en produccion.
         FIX: audit_result.schema_valid / faq_schema_valid para no mostrar
         "Completo" para Datos Estructurados y FAQ cuando no estan validados.
+
+        FASE-PROP-E: Si score_aeo < 30, agrega fila AEO que conecta con assets existentes.
 
         Args:
             assets_generated: Lista de assets generados (cada uno con 'asset_type' y 'confidence_score').
@@ -902,6 +919,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             audit_result: AuditResult con schema_valid y faq_schema_valid.
                 Si esta presente, se usa para downgradear "Completo" a "Listo para implementar"
                 cuando el schema no esta validado en produccion.
+            score_aeo: Score AEO 0-100. Si < 30, agrega fila AEO en tabla.
 
         Returns:
             String markdown con la tabla de calidad.
@@ -922,6 +940,13 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         if audit_result and hasattr(audit_result, 'schema'):
             schema_valid = getattr(audit_result.schema, 'hotel_schema_valid', False)
             faq_schema_valid = getattr(audit_result.schema, 'faq_schema_valid', False)
+
+        # FASE-PROP-B: Extract WhatsApp conflict status from audit_result
+        whatsapp_conflict = False
+        if audit_result and hasattr(audit_result, 'validation') and audit_result.validation:
+            whatsapp_status = getattr(audit_result.validation, 'whatsapp_status', '')
+            if whatsapp_status and whatsapp_status.lower() == ConfidenceLevel.CONFLICT.value:
+                whatsapp_conflict = True
 
         # Build lookup: asset_type -> confidence_score
         asset_lookup = {}
@@ -962,6 +987,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                     presence_verified=presence.get('presence_verified', False),
                     schema_valid_override=schema_valid if is_schema else None,
                     faq_schema_valid_override=faq_schema_valid if is_faq else None,
+                    whatsapp_conflict_override=whatsapp_conflict if entry.asset_type == 'whatsapp_button' else False,
                 )
                 rows.append(f"| {entry.service_name} | {nivel} | {significado} |")
         else:
@@ -979,8 +1005,13 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                     presence_verified=presence.get('presence_verified', False),
                     schema_valid_override=schema_valid if is_schema else None,
                     faq_schema_valid_override=faq_schema_valid if is_faq else None,
+                    whatsapp_conflict_override=whatsapp_conflict if asset_type == 'whatsapp_button' else False,
                 )
                 rows.append(f"| {service_name} | {nivel} | {significado} |")
+
+        # FASE-PROP-E: AEO row — connects to existing assets when score is low
+        if score_aeo is not None and score_aeo < 30:
+            rows.append("| AEO (Answer Engine Optimization) | ✅ Basado en assets existentes | AEO se construye sobre Schema FAQ + Open Graph — ambos incluidos en su kit |")
 
         return "\n".join(rows)
 
@@ -992,6 +1023,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         presence_verified: bool = False,
         schema_valid_override: Optional[bool] = None,
         faq_schema_valid_override: Optional[bool] = None,
+        whatsapp_conflict_override: bool = False,
     ) -> tuple:
         """Convert confidence score to nivel + significado tuple.
 
@@ -1010,7 +1042,13 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 Use False to downgrade to "Listo para implementar".
             faq_schema_valid_override: If not None, overrides "Completo" for faq_page.
                 Use False to downgrade to "Listo para implementar".
+            whatsapp_conflict_override: If True, overrides presence_verified for whatsapp_button
+                to show conflict warning instead of "Verificado en sitio".
         """
+        # FASE-PROP-B: Si hay conflicto de WhatsApp, mostrar advertencia antes de cualquier otro estado
+        if whatsapp_conflict_override:
+            return ("⚠️ Conflicto detectado", "Requiere resolucion manual - numeros no coinciden")
+
         # FASE-D: Si se verificó presencia y el asset YA existe en producción,
         # es el estado más honesto que podemos mostrar
         if presence_verified and present_in_production:
@@ -1338,30 +1376,46 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         
         return "\n".join(rows)
     
-    def _build_7_day_plan(self, asset_plan: Optional[List[AssetSpec]]) -> str:
+    def _build_7_day_plan(
+        self,
+        asset_plan: Optional[List[AssetSpec]],
+        diagnostic_summary: Optional[DiagnosticSummary] = None,
+    ) -> str:
         """Build detailed 7-day activation plan.
-        
+
         FASE-D: Genera contenido dinámico basado en assets P1 del asset_plan.
+        FASE-PROP-E: Prioriza pilares con score < 30 en quick wins.
         Solo quick wins que NO requieren datos externos del cliente.
         Si asset_plan es None, usa contenido genérico (backward compat).
-        
+
         Args:
             asset_plan: Lista de AssetSpec con priority. P1 assets son activos en 7 días.
+            diagnostic_summary: Summary con scores de 4 pilares para priorización.
         """
+        # FASE-PROP-E: Quick wins basados en scores bajos
+        score_actions = []
+        if diagnostic_summary:
+            if diagnostic_summary.score_seo is not None and diagnostic_summary.score_seo < 30:
+                score_actions.append("Auditar y optimizar perfil Google Business (SEO Local crítico)")
+            if diagnostic_summary.score_aeo is not None and diagnostic_summary.score_aeo < 30:
+                score_actions.append("Implementar Schema FAQ para respuestas directas en búsqueda (AEO)")
+
         if not asset_plan:
-            return """- [ ] **Día 1**: Firma de propuesta y pago de activación
+            base = """- [ ] **Día 1**: Firma de propuesta y pago de activación
 - [ ] **Día 2**: Kick-off call con el equipo del hotel (30 min)
 - [ ] **Día 3**: Solicitud de accesos (web, GBP actual)
 - [ ] **Día 4**: Entrega de activos sin dependencia de datos
 - [ ] **Día 5**: Validación técnica inicial
 - [ ] **Día 6**: Ajustes según feedback
-- [ ] **Día 7**: Confirmación de activación completa
-
-*Nota: Google Maps optimizado, Open Graph con fotos y SEO avanzado requieren datos suyos (fotos, accesos). Se entregan en la fase de activación.*"""
+- [ ] **Día 7**: Confirmación de activación completa"""
+            if score_actions:
+                base += "\n\n**Quick Wins Prioritarios (score < 30):**\n" + "\n".join(f"- [ ] {a}" for a in score_actions)
+            base += "\n\n*Nota: Open Graph con fotos y SEO avanzado requieren datos suyos (fotos, accesos). Se entregan en la fase de activación.*"
+            return base
 
         p1_assets = [a for a in asset_plan if a.priority == 1]
-        
-        if not p1_assets:
+
+        if not p1_assets and not score_actions:
             return """- [ ] **Día 1**: Firma de propuesta y pago de activación
 - [ ] **Día 2**: Kick-off call con el equipo del hotel (30 min)
 - [ ] **Día 3**: Solicitud de accesos (web, GBP actual)
@@ -1369,61 +1423,99 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
 - [ ] **Día 5**: Validación técnica inicial
 - [ ] **Día 6**: Ajustes según feedback
 - [ ] **Día 7**: Confirmación de activación completa"""
-        
-        asset_names = [a.asset_type.replace("_", " ").title() for a in p1_assets[:4]]
-        asset_list = "\n- [ ] ".join(asset_names) if asset_names else ""
-        
-        return f"""- [ ] **Día 1**: Firma de propuesta y pago de activación
-- [ ] **Día 2**: Kick-off call con el equipo del hotel (30 min)
-- [ ] **Día 3**: Solicitud de accesos (web, GBP actual)
-- [ ] **Día 4**: Implementación de activos P1 (sin datos externos):
-- [ ] {asset_list}
-- [ ] **Día 5**: Validación técnica inicial
-- [ ] **Día 6**: Ajustes según feedback
-- [ ] **Día 7**: Confirmación de activación completa
 
-*Nota: Open Graph con fotos y SEO avanzado requieren datos suyos (fotos, accesos). Se entregan en la fase de activación.*"""
+        lines = [
+            "- [ ] **Día 1**: Firma de propuesta y pago de activación",
+            "- [ ] **Día 2**: Kick-off call con el equipo del hotel (30 min)",
+            "- [ ] **Día 3**: Solicitud de accesos (web, GBP actual)",
+        ]
 
-    def _build_30_day_plan(self, asset_plan: Optional[List[AssetSpec]]) -> str:
+        if p1_assets:
+            asset_names = [a.asset_type.replace("_", " ").title() for a in p1_assets[:4]]
+            lines.append("- [ ] **Día 4**: Implementación de activos P1 (sin datos externos):")
+            lines.extend(f"- [ ] {name}" for name in asset_names)
+        elif score_actions:
+            lines.append("- [ ] **Día 4**: Implementación de quick wins prioritarios:")
+
+        if score_actions:
+            lines.extend(f"- [ ] {action}" for action in score_actions)
+
+        lines.extend([
+            "- [ ] **Día 5**: Validación técnica inicial",
+            "- [ ] **Día 6**: Ajustes según feedback",
+            "- [ ] **Día 7**: Confirmación de activación completa",
+        ])
+
+        result = "\n".join(lines)
+        result += "\n\n*Nota: Open Graph con fotos y SEO avanzado requieren datos suyos (fotos, accesos). Se entregan en la fase de activación.*"
+        return result
+
+    def _build_30_day_plan(
+        self,
+        asset_plan: Optional[List[AssetSpec]],
+        diagnostic_summary: Optional[DiagnosticSummary] = None,
+    ) -> str:
         """Build detailed 30-day quick wins plan.
-        
+
         FASE-D: Genera contenido dinámico basado en assets P1 y P2.
+        FASE-PROP-E: Prioriza pilares con score < 30 en plan de 30 días.
         Assets que requieren datos del cliente (fotos, accesos a Maps).
         Si asset_plan es None, usa contenido genérico (backward compat).
-        
+
         Args:
             asset_plan: Lista de AssetSpec con priority. P1+P2 assets son activos en 30 días.
+            diagnostic_summary: Summary con scores de 4 pilares para priorización.
         """
+        # FASE-PROP-E: Acciones específicas para scores bajos en 30 días
+        score_actions = []
+        if diagnostic_summary:
+            if diagnostic_summary.score_seo is not None and diagnostic_summary.score_seo < 30:
+                score_actions.append("SEO Local - optimizar GBP, NAP consistente, keywords locales")
+            if diagnostic_summary.score_aeo is not None and diagnostic_summary.score_aeo < 30:
+                score_actions.append("AEO - activar Schema FAQ + Open Graph (ya incluidos en su kit)")
+            if diagnostic_summary.score_iao is not None and diagnostic_summary.score_iao < 30:
+                score_actions.append("IAO - optimizar visibilidad en ChatGPT, Gemini, Perplexity")
+
         if not asset_plan:
-            return """- [ ] **Semana 2**: Implementación Google Maps optimizado (pendiente de recibir accesos)
-- [ ] **Semana 2**: Open Graph con fotos reales (pendiente de recibir fotos del cliente)
-- [ ] **Semana 3**: SEO Local - optimización basada en análisis técnico
-- [ ] **Semana 3**: Configuración tracking avanzado (UTMs, conversiones)
-- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales
-- [ ] **Día 30**: Reporte de avance con métricas de visibilidad"""
+            lines = [
+                "- [ ] **Semana 2**: Implementación Open Graph con fotos reales (pendiente de recibir fotos del cliente)",
+                "- [ ] **Semana 2**: Configuración tracking avanzado (UTMs, conversiones)",
+                "- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales",
+                "- [ ] **Día 30**: Reporte de avance con métricas de visibilidad",
+            ]
+            if score_actions:
+                lines.insert(1, "- [ ] **Semana 3**: " + "; ".join(score_actions))
+            else:
+                lines.insert(1, "- [ ] **Semana 3**: SEO Local - optimización basada en análisis técnico")
+            return "\n".join(lines)
 
         p1_assets = [a for a in asset_plan if a.priority == 1]
         p2_assets = [a for a in asset_plan if a.priority == 2]
-        
+
         items = []
-        
+
         # P1 assets needing client data
         if p1_assets:
             asset_names = [a.asset_type.replace("_", " ").title() for a in p1_assets[:3]]
-            items.append(f"- [ ] **Semana 2**: Implementación P1: {", ".join(asset_names)}")
-        
+            items.append(f"- [ ] **Semana 2**: Implementación P1: {', '.join(asset_names)}")
+
         # P2 assets needing client data
         if p2_assets:
             asset_names = [a.asset_type.replace("_", " ").title() for a in p2_assets[:3]]
-            items.append(f"- [ ] **Semana 3**: Implementación P2: {", ".join(asset_names)}")
-        
+            items.append(f"- [ ] **Semana 3**: Implementación P2: {', '.join(asset_names)}")
+
+        # FASE-PROP-E: Insert score-based actions
+        if score_actions:
+            items.append("- [ ] **Semana 3**: " + "; ".join(score_actions))
+        elif not p2_assets:
+            items.append("- [ ] **Semana 3**: SEO Local - optimización basada en análisis técnico")
+
         items.extend([
-            "- [ ] **Semana 3**: SEO Local - optimización basada en análisis técnico",
             "- [ ] **Semana 3**: Configuración tracking avanzado (UTMs, conversiones)",
             "- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales",
             "- [ ] **Día 30**: Reporte de avance con métricas de visibilidad"
         ])
-        
+
         return "\n".join(items)
 
     def _build_60_day_plan(self, asset_plan: Optional[List[AssetSpec]]) -> str:

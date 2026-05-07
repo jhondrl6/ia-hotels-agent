@@ -1,5 +1,58 @@
 # Changelog
 
+## [4.41.0] - PROPOSAL-COMERCIAL-FIX — 2026-05-06
+
+### Objetivo
+Correcciones comerciales para el flujo de propuesta v4: unificar coherence score, transparentar conflictos WhatsApp, clarificar proyecciones financieras, deprecar geo_playbook redundante, plans SEO/AEO por score, warning Tier C, y rutas persistentes de evidencia.
+
+### Cambios Implementados
+
+- **FASE-PROP-A — Coherence Score Unificado**: Pipeline reordenado para ejecutar CoherenceValidator ANTES de `diagnostic_gen.generate()`. Diagnóstico usa valor real (no inventado). Template muestra `gate_status` (PASSED/FAILED/PENDIENTE). Fallback `_calculate_coherence_score()` deprecado.
+
+- **FASE-PROP-B — WhatsApp Conflict Status**: Detección de conflicto WhatsApp en `_confidence_to_nivel_significado()`. Tabla de calidad muestra conflicto cuando `whatsapp_status='conflict'`.
+
+- **FASE-PROP-C — Proyecciones Financieras Transparentes**: `pain_ratio_note` reescrito para explicar `pain_ratio` y `recovery_factor`. Placeholder `${pain_ratio_note}` agregado a `propuesta_v6_template.md`.
+
+- **FASE-PROP-D — Google Maps geo_playbook DEPRECATED**: `geo_playbook` eliminado de `asset_catalog.py` (DEPRECATED), `pain_solution_mapper.py`, `conditional_generator.py`, `asset_diagnostic_linker.py`, `site_presence_checker.py`. Funcionalidad cubierta por delivery GEO existente.
+
+- **FASE-PROP-E — SEO/AEO Plan Específico por Score**: Plan 7 y 30 días incluyen acciones específicas cuando score SEO < 30 o score AEO < 30. Tabla de calidad incluye AEO cuando `score_aeo < 30`.
+
+- **FASE-PROP-F — Tier C Warning en Propuesta**: Banner condicional ⚠️ para evidencia Tier C en `propuesta_v6_template.md`. `financial_evidence_tier` extraído de `financial_breakdown.evidence_tier` (fallback: "C").
+
+- **FASE-PROP-G — Rutas Persistentes de Evidencia**: JSONs de auditoría (`gate_report.json`, `audit_report.json`, `financial_scenarios.json`) ahora se escriben en `hotel_id/v4_audit/` con timestamp `%Y%m%d_%H%M%S` mediante `_make_evidence_path()`. Subdirectorios creados automáticamente.
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Pipeline timing: CoherenceValidator antes del diagnóstico; `_make_evidence_path()` para JSONs con hotel_id + timestamp |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Coherence score unificado, `gate_status` en template data, `_calculate_coherence_score()` deprecado |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | `${gate_status}` en YAML header |
+| `modules/commercial_documents/v4_proposal_generator.py` | WhatsApp conflict, pain_ratio_note, SEO/AEO plans por score, Tier C warning |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | `${pain_ratio_note}`, bloque condicional Tier C con banner ⚠️ |
+| `modules/asset_generation/asset_catalog.py` | `geo_playbook` DEPRECATED (promised_by=[]) |
+| `modules/asset_generation/pain_solution_mapper.py` | `geo_playbook` eliminado (low_gbp_score solo → review_plan) |
+| `modules/asset_generation/conditional_generator.py` | `geo_playbook` eliminado del flujo de assets |
+| `modules/asset_generation/asset_diagnostic_linker.py` | `geo_playbook` eliminado de justifications, impact_map, metadata |
+| `modules/asset_generation/site_presence_checker.py` | Entrada `geo_playbook` eliminada |
+| `docs/GUIA_TECNICA.md` | Nota técnica FASE-PROP-D (geo_playbook deprecation) |
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/commercial_documents/test_diagnostic_generator.py` | 7 tests FASE-PROP-A (coherence unificado, gate_status) |
+| `tests/commercial_documents/test_proposal_generator.py` | Tests FASE-PROP-B/C/D/E/F (WhatsApp, pain_ratio, geo_playbook, SEO/AEO, Tier C) |
+| `tests/test_evidence_paths.py` | 8 tests FASE-PROP-G (rutas con hotel_id, timestamp, directorios) |
+
+### Tests
+- Tests nuevos: 7 + múltiples + 8 = ~25 tests nuevos
+- Validaciones: `run_all_validations.py --quick` pasa 4/4
+- 0 regresiones
+
+### Backwards Compatibility
+- Sí. geo_playbook deprecation es transparente (asset redundante ya no se prometía en producción). Coherence unificado y Tier C warning son adiciones. Pain ratio note no cambia cálculos existentes.
+
 ## [4.40.2] - PATCH: Refactor CTA Onboarding — 2026-05-05
 
 ### Objetivo

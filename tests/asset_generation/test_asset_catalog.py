@@ -152,5 +152,42 @@ class TestFASE5NoAlwaysBug:
                 f"Asset '{asset_type}' has 'always_aeo' in promised_by: {entry.promised_by}"
 
 
+# =============================================================================
+# FASE-PROP-D Tests: Google Maps / geo_playbook deprecation
+# =============================================================================
+
+class TestFASEPROPDGeoPlaybookDecision:
+    """Test suite for FASE-PROP-D: geo_playbook deprecated as redundant with delivery GEO."""
+    
+    def test_geo_playbook_is_deprecated(self):
+        """geo_playbook must be DEPRECATED in asset catalog."""
+        entry = ASSET_CATALOG["geo_playbook"]
+        assert entry.status == AssetStatus.DEPRECATED, \
+            f"geo_playbook status should be DEPRECATED, got {entry.status}"
+    
+    def test_geo_playbook_not_implemented(self):
+        """is_asset_implemented must return False for geo_playbook."""
+        assert is_asset_implemented("geo_playbook") is False, \
+            "geo_playbook should not be considered implemented"
+    
+    def test_geo_playbook_not_in_implemented_list(self):
+        """geo_playbook must not appear in get_implemented_assets()."""
+        implemented = get_implemented_assets()
+        assert "geo_playbook" not in implemented, \
+            f"geo_playbook found in implemented assets: {implemented}"
+    
+    def test_geo_playbook_has_no_promises(self):
+        """geo_playbook promised_by must be empty."""
+        entry = ASSET_CATALOG["geo_playbook"]
+        assert entry.promised_by == [], \
+            f"geo_playbook promised_by should be [], got: {entry.promised_by}"
+    
+    def test_geo_playbook_no_generation_strategy(self):
+        """get_generation_strategy must return None for deprecated geo_playbook."""
+        strategy = get_generation_strategy("geo_playbook")
+        assert strategy is None, \
+            f"geo_playbook generation strategy should be None, got: {strategy}"
+
+
 if __name__ == "__main__":
     test_open_graph_in_catalog()

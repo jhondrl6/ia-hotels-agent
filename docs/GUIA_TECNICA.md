@@ -1,8 +1,38 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.40.2 (PATCH: Refactor CTA Onboarding)
-**Última actualización:** 2026-05-05
+**Versión:** v4.41.0 (PROPOSAL-COMERCIAL-FIX)
+**Última actualización:** 2026-05-06
 **Proyecto:** IA Hoteles Agent CLI
+
+---
+
+### FASE-PROP-D - 2026-05-06 — Google Maps Asset: Eliminación de Promesa Falsa
+
+**Resumen general:** `geo_playbook` marcado como DEPRECATED en asset_catalog y eliminado de todos los mapeos activos. El servicio "Google Maps Optimizado" ya había sido removido de `PROPOSAL_SERVICE_TO_ASSET` en v4.40.2; esta fase completa la limpieza de referencias residuales.
+
+**Módulos afectados:**
+- `modules/asset_generation/asset_catalog.py` — `geo_playbook` status cambiado de `IMPLEMENTED` a `DEPRECATED`, `promised_by=[]`
+- `modules/commercial_documents/pain_solution_mapper.py` — `low_gbp_score` ya no mapea a `geo_playbook` (solo `review_plan`)
+- `modules/asset_generation/conditional_generator.py` — Eliminado `geo_playbook` de `_standard_assets` y del handler `elif`
+- `modules/asset_generation/asset_diagnostic_linker.py` — Eliminadas justificación, impact map y metadata de `geo_playbook`
+- `modules/asset_generation/site_presence_checker.py` — Eliminada entrada `geo_playbook` del diccionario de assets
+
+**Problema:**
+El gate de proposal_asset_alignment reportaba `geo_playbook` como missing porque `PROPOSAL_SERVICE_TO_ASSET` mapeaba "Google Maps Optimizado" → `geo_playbook`, pero el asset nunca se generaba en el pipeline estándar. El delivery GEO (`GeoContentGenerator`) ya genera `geo_playbook.md` con contenido equivalente, haciendo el asset del catálogo redundante.
+
+**Solución:**
+1. Verificar que `PROPOSAL_SERVICE_TO_ASSET` ya no contiene "Google Maps Optimizado" ✓
+2. Marcar `geo_playbook` como `DEPRECATED` en `ASSET_CATALOG` ✓
+3. Eliminar `geo_playbook` de `PAIN_SOLUTION_MAP["low_gbp_score"]` ✓
+4. Limpiar `conditional_generator.py`, `asset_diagnostic_linker.py`, `site_presence_checker.py` ✓
+5. Tests: 10 nuevos (5 en asset_catalog + 5 en proposal_generator) ✓
+
+**Backwards compatibility:** ✅ Total. El delivery pipeline (`GeoContentGenerator`) sigue generando `geo_playbook.md` independientemente. Solo se elimina la generación duplicada del asset pipeline estándar.
+
+**Tests:**
+- `test_asset_catalog.py`: 21/21 PASS (incluyendo 5 nuevos de FASE-PROP-D)
+- `test_proposal_generator.py`: 15/15 PASS (incluyendo 5 nuevos de FASE-PROP-D)
+- `run_all_validations.py --quick`: 4/4 PASS
 
 ---
 
@@ -811,3 +841,29 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 **Deuda técnica documentada**: 19 hardcodes (H-9→H-27) en pricing, escenarios y fallbacks catalogados en docs/technical_debt/ para proyecto futuro de extracción de configuración.
 
 **Tests**: ~2363 tests sin regresiones. v4complete verificado con coherence >= 0.80.
+
+## Notas de Cambios v4.41.0 — PROPOSAL-COMERCIAL-FIX (2026-05-06)
+
+**Módulos afectados**: `v4_diagnostic_generator`, `v4_proposal_generator`, `main.py`, `asset_catalog`, `pain_solution_mapper`, `conditional_generator`, `asset_diagnostic_linker`, `site_presence_checker`
+
+**Problema**: 7 defectos comerciales en el flujo de propuesta v4: coherence score invented by fallback, WhatsApp conflicts no visible, pain_ratio sin explicación, geo_playbook redundante, planes SEO/AEO genéricos, Tier C sin advertencia, y evidencia JSON sin ruta persistente.
+
+**Solución**:
+
+- **FASE-PROP-A** — Coherence Score Unificado: Pipeline reordenado (CoherenceValidator antes de `diagnostic_gen.generate()`). Diagnóstico usa valor real. Template muestra `gate_status`. Fallback `_calculate_coherence_score()` deprecado.
+
+- **FASE-PROP-B** — WhatsApp Conflict Status: `_confidence_to_nivel_significado()` detecta conflictos WhatsApp. Tabla de calidad los muestra cuando `whatsapp_status='conflict'`.
+
+- **FASE-PROP-C** — Proyecciones Financieras Transparentes: `pain_ratio_note` reescrito para explicar `pain_ratio` y `recovery_factor`. Placeholder `${pain_ratio_note}` en template.
+
+- **FASE-PROP-D** — geo_playbook DEPRECATED: `geo_playbook` eliminado de `asset_catalog.py` (status DEPRECATED), `pain_solution_mapper.py` (low_gbp_score solo → review_plan), `conditional_generator.py`, `asset_diagnostic_linker.py`, `site_presence_checker.py`. Funcionalidad cubierta por delivery GEO existente.
+
+- **FASE-PROP-E** — SEO/AEO Plans por Score: `_build_7_day_plan()` y `_build_30_day_plan()` incluyen acciones específicas cuando score SEO < 30 o score AEO < 30. Tabla de calidad incluye AEO cuando `score_aeo < 30`.
+
+- **FASE-PROP-F** — Tier C Warning: `_prepare_template_data()` extrae `financial_evidence_tier` desde `financial_breakdown.evidence_tier` (fallback: "C"). Template muestra banner ⚠️ condicional para Tier C.
+
+- **FASE-PROP-G** — Rutas Persistentes: `_make_evidence_path(hotel_id, basename)` crea `output/v4_complete/{hotel_id}/v4_audit/{basename}_{timestamp}.json`. JSONs de audit report, gate report y financial scenarios ahora incluyen `hotel_id` en ruta. Subdirectorios creados con `os.makedirs(..., exist_ok=True)`.
+
+**Backwards compatibility**: Sí. geo_playbook deprecation es transparente (no se prometía en producción). Coherence unificado, Tier C warning y pain_ratio_note son adiciones o cambios de presentación. Rutas persistentes no afectan lectura legacy (solo writes nuevos).
+
+**Tests**: ~25 tests nuevos. `run_all_validations.py --quick` pasa 4/4. 0 regresiones.

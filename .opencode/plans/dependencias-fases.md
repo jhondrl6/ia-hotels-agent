@@ -1,55 +1,41 @@
-# Dependencias de Fases — REFACTOR-ONBOARDING-CTA
+# Dependencias de Fases
 
-## Diagrama ASCII
+> Plan: PROPOSAL-COMERCIAL-FIX v1.0.0
 
 ```
-┌────────────────────────────────────────────────────┐
-│  FASE-REFACTOR-CTA-A                        │
-│  (fix generator + tests)                    │
-└────────────────────────────────────────────────────┘
-                    │
-                    ▼
-┌────────────────────────────────────────────────────┐
-│  FASE-REFACTOR-CTA-B                        │
-│  (v4complete Hotel Castilla Real + verificar)│
-└────────────────────────────────────────────────────┘
-                    │
-                    ▼
-┌────────────────────────────────────────────────────┐
-│  FASE-REFACTOR-CTA-C                        │
-│  (docs cascade: REGISTRY, CHANGELOG, GUIA)   │
-└────────────────────────────────────────────────────┘
+FASE-PROP-A  -->  FASE-PROP-B  -->  FASE-PROP-C  -->  FASE-PROP-D  -->  FASE-PROP-E  -->  FASE-PROP-F  -->  FASE-PROP-G
+     |                  |                |                |                |                |                |
+   [DONE]            [DONE]          [DONE]           [DONE]           [DONE]          [DONE]           [DONE]
+
+FASE-PROP-G  -->  FASE-RELEASE-4.41.0
+     |                  |
+   [DONE]            [DONE]
 ```
 
-## Tabla de Conflictos Potenciales
+## Conflictos de Archivos
 
-| Fase | Archivos Modificados | Conflictos |
-|------|---------------------|------------|
-| FASE-A | `modules/commercial_documents/v4_diagnostic_generator.py` | Ninguno — solo cambio de string |
-| FASE-A | `tests/commercial_documents/test_precision_rendering.py` | Ninguno — solo actualizacion de assertions |
-| FASE-B | Output en `output/v4_complete/` + `evidence/FASE-REFACTOR-CTA-B/` | Ninguno — solo lectura/escritura de evidencia |
-| FASE-C | Documentacion (`CHANGELOG.md`, `GUIA_TECNICA.md`, `REGISTRY.md`) | Ninguno — solo escritura de docs |
+|||| Archivo | FASE-PROP-A | FASE-PROP-B | FASE-PROP-C | FASE-PROP-D | FASE-PROP-E | FASE-PROP-F | FASE-PROP-G | Conflicto |
+||---------|-------------|-------------|-------------|-------------|-------------|-------------|-------------|-----------|
+||| main.py | Modificación (pipeline timing) | — | — | — | — | — | — | No |
+||| v4_diagnostic_generator.py | Modificación | — | — | — | — | — | — | No |
+||| diagnostico_v6_template.md | Modificación | — | — | — | — | — | — | No |
+||| v4_proposal_generator.py | — | Modificación | Modificación | — | — | Modificación | — | No (tareas diferentes) |
+||| propuesta_v6_template.md | — | — | Modificación | — | — | Modificación | — | No |
+||| pain_solution_mapper.py | — | — | — | Modificación | — | — | — | No |
+||| asset_catalog.py | — | — | — | Modificación | — | — | — | No |
+||| conditional_generator.py | — | — | — | Modificación | — | — | — | No |
+||| asset_diagnostic_linker.py | — | — | — | Modificación | — | — | — | No |
+||| site_presence_checker.py | — | — | — | Modificación | — | — | — | No |
 
-## Evaluacion R3 por Fase
+## Estado
 
-| Fase | Tareas | Comandos Largos | Dentro de R3? |
-|------|--------|-----------------|---------------|
-| FASE-A | 4 | 0 | ✅ Si (4 tareas + 0 comandos) |
-| FASE-B | 3 | 1 (v4complete) | ✅ Si (3 tareas + 1 comando largo) |
-| FASE-C | 4 | 0 | ✅ Si (4 tareas + 0 comandos) |
-
-## Presupuesto de Iteraciones
-
-| Fase | Fijas | Especificas | Total Est. |
-|------|-------|-------------|------------|
-| FASE-A | ~26 | ~10 | ~36 |
-| FASE-B | ~26 | ~8 | ~34 |
-| FASE-C | ~26 | ~10 | ~36 |
-
-## Orden de Ejecucion Recomendado
-
-1. FASE-REFACTOR-CTA-A → fix codigo + tests
-2. FASE-REFACTOR-CTA-B → v4complete Hotel Castilla Real + verificacion
-3. FASE-REFACTOR-CTA-C → docs cascade
-
-No requiere FASE-RELEASE separada: cambio PATCH-level (bugfix de texto, sin cambios arquitectonicos).
+|||| Fase | Estado | Notas |
+|||------|--------|-------|
+|||| FASE-PROP-A | ✅ Completada | Unificación de Coherence Score — pipeline timing + fallback eliminado |
+|||| FASE-PROP-B | ✅ Completada | WhatsApp Conflict Status en Propuesta |
+|||| FASE-PROP-C | ✅ Completada | Proyecciones financieras transparentes — pain_ratio_note explica ambos descuentos |
+|||| FASE-PROP-D | ✅ Completada | Google Maps asset: eliminar promesa falsa — geo_playbook deprecated, redundante con delivery GEO |
+|||| FASE-PROP-E | ✅ Completada | SEO/AEO plan específico por score — priorización dinámica en planes 7/30 días |
+||||| FASE-PROP-F | ✅ Completada | Tier C — Advertencia en Propuesta |
+||||| FASE-PROP-G | ✅ Completada | Sobrescritura de evidencia: JSONs persisten por hotel+timestamp |
+| FASE-RELEASE-4.41.0 | ✅ Completada | Documentación y version bump — CHANGELOG, GUIA_TECNICA, REGISTRY, VERSION sync |

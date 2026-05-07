@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-05
+> **Ultima actualizacion:** 2026-05-06
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 205
+> **Total fases completadas:** 220
 
 ---
 
@@ -5197,6 +5197,150 @@ _Ninguno_
 - [x] Capability contract verificado
 
 ---
+
+
+## FASE-PROP-A - 2026-05-06
+**Descripcion:** Unificacion de Coherence Score: pipeline timing + fallback eliminado
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+
+### Validaciones
+- [x] Tests passing (7)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PROP-B - 2026-05-06
+**Descripcion:** WhatsApp conflict status: detectar conflicto antes de presence_verified
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PROP-C - 2026-05-06
+**Descripcion:** Proyecciones financieras transparentes: pain_ratio_note explica ambos descuentos (pain_ratio y recovery_factor). Template actualizado para renderizar nota.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (2)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+
+## FASE-PROP-D - 2026-05-06
+**Descripcion:** Google Maps asset: eliminar promesa falsa — geo_playbook deprecated, redundante con delivery GEO
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/asset_catalog.py` | Asset Catalog |
+| `modules/commercial_documents/pain_solution_mapper.py` | Pain Solution Mapper |
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `modules/asset_generation/asset_diagnostic_linker.py` | Asset Diagnostic Linker |
+| `modules/asset_generation/site_presence_checker.py` | Site Presence Checker |
+
+### Validaciones
+- [x] Tests passing (10)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PROP-E - 2026-05-06
+**Descripcion:** SEO/AEO plan especifico: priorizar pilares con score<30, conectar AEO con assets existentes
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PROP-F - 2026-05-06
+**Descripcion:** Tier C advertencia: mostrar banner en propuesta cuando precision_tier=C
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (4)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PROP-G - 2026-05-06
+**Descripcion:** Sobrescritura de evidencia: JSONs persisten por hotel+timestamp
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
 
 
 ## Estadisticas

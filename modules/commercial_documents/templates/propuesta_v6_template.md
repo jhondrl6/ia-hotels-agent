@@ -55,6 +55,8 @@ Cada entregable incluye un nivel de preparación:
 
 ${asset_quality_table}
 
+**Nota sobre AEO**: AEO (Answer Engine Optimization) se construye sobre Schema FAQ + Open Graph — ambos incluidos en su kit. No requiere assets adicionales.
+
 ---
 
 ## 📸 Fotos: Lo único que necesitamos de usted
@@ -80,6 +82,11 @@ Para que su negocio brille en Google Maps, necesitamos fotos de calidad. Esto es
 
 ---
 
+{{if financial_evidence_tier == "C"}}
+> **⚠️ Advertencia:** Nivel de evidencia: Tier C. Estas proyecciones usan benchmarks regionales. Para precisión exacta, ejecute el onboarding con datos reales.
+
+{{endif}}
+
 ## 💰 PROYECCIÓN: Cuánto recupera vs. cuánto invierte
 
 | Mes | Invierte | Recuperación Estimada | Beneficio |
@@ -96,6 +103,12 @@ Para que su negocio brille en Google Maps, necesitamos fotos de calidad. Esto es
 - Recupera: ${total_recovered} COP
 - **Beneficio neto: ${net_benefit} COP**
 - **ROI: ${roi_6m}** en 6 meses
+
+${pain_ratio_note}
+
+{{if financial_evidence_tier == "A" or financial_evidence_tier == "B"}}
+*Proyecciones basadas en datos verificados de su hotel.*
+{{endif}}
 
 ---
 

@@ -398,6 +398,11 @@ class V4DiagnosticGenerator:
         # Si True, agrega seccion "Fuentes de Datos Usadas en Este Diagnostico"
         # cuando alguna fuente (GA4/Profound/Semrush) no esta disponible.
         self.show_analytics_transparency = True
+        # FASE-PROP-A: Initialize instance attributes used across methods
+        self._region = None
+        self._cached_brechas = None
+        self._last_voice_score = None
+        self._last_voice_level = None
 
     def _load_commercial_config(self) -> dict:
         """Load config/commercial.yaml with caching. Falls back to hardcoded defaults.
@@ -429,10 +434,11 @@ class V4DiagnosticGenerator:
         region: Optional[str] = None,
         analytics_data: Optional[Dict[str, Any]] = None,
         financial_breakdown: Optional['FinancialBreakdown'] = None,
+        gate_status: Optional[str] = None,
     ) -> str:
         """
         Generate the diagnostic document.
-        
+
         Args:
             audit_result: Complete v4.0 audit results
             validation_summary: Summary of data validation
@@ -446,7 +452,8 @@ class V4DiagnosticGenerator:
             analytics_data: Optional dict with analytics configuration. Can contain:
                 - use_ga4: bool (true para usar GA4 real, False para usar estimados)
                 - hotel_data: dict adicional para IATester integration
-                
+            gate_status: Optional gate status from coherence gate (PASSED/FAILED/PENDIENTE).
+
         Returns:
             Path to the generated document
         """
@@ -474,6 +481,7 @@ class V4DiagnosticGenerator:
             region=region,
             analytics_data=analytics_data,
             financial_breakdown=financial_breakdown,
+            gate_status=gate_status,
         )
         
         # Store voice readiness values for access via DiagnosticSummary (TAREA-2)
@@ -517,17 +525,22 @@ class V4DiagnosticGenerator:
         region: Optional[str] = None,
         analytics_data: Optional[Dict[str, Any]] = None,
         financial_breakdown: Optional['FinancialBreakdown'] = None,
+        gate_status: Optional[str] = None,
     ) -> Dict[str, str]:
         """Prepare data for template rendering."""
         
         # Basic metadata
         hotel_id = hotel_name.lower().replace(" ", "_").replace("-", "_")
-        # Use provided coherence_score from coherence gate, or calculate internally
-        # H10 FIX: Primary path uses CoherenceValidator (coherence_gate.py).
-        # Fallback to self._calculate_coherence_score only when gate didn't pass score.
-        if coherence_score is None:
-            coherence_score = self._calculate_coherence_score(validation_summary)
-        
+        # FASE-PROP-A: Coherence score unified — use external value only.
+        # Never auto-fallback to _calculate_coherence_score (deprecated).
+        if coherence_score is None or coherence_score == 0:
+            coherence_score_display = "PENDIENTE"
+        else:
+            coherence_score_display = str(coherence_score)
+
+        # FASE-PROP-A: Gate status from coherence gate
+        gate_status_display = gate_status if gate_status else "PENDIENTE"
+
         # Region-based variables for V6 templates
         _raw = region or "Colombia"
         if _raw.lower() in ("nacional", "general", "default", "unknown"):
@@ -579,7 +592,8 @@ class V4DiagnosticGenerator:
             'generated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'version': '4.0.0',
             'hotel_id': hotel_id,
-            'coherence_score': str(coherence_score),
+            'coherence_score': coherence_score_display,
+            'gate_status': gate_status_display,
             'hotel_name': hotel_name,
             'hotel_url': hotel_url,
             
@@ -1176,16 +1190,14 @@ class V4DiagnosticGenerator:
         return template.safe_substitute(data)
     
     def _calculate_coherence_score(self, validation_summary: ValidationSummary) -> int:
-        """Calculate overall coherence score from validation summary.
-        
-        H10 FIX: This is a FALLBACK calculator. The canonical source of truth
-        is CoherenceValidator in modules/quality_gates/coherence_gate.py.
-        This method only runs when no pre-calculated coherence_score is passed
-        from the coherence gate (see _prepare_template_data line 371).
-        
-        For E2E flow: coherence_gate.py → CoherenceValidator → passes score
-        to _prepare_template_data(coherence_score=...) → this method NOT called.
-        For standalone use: this method provides reasonable fallback scoring.
+        """DEPRECATED: Fallback coherence score calculator.
+
+        FASE-PROP-A: This method is DEPRECATED and must NOT be called automatically.
+        The canonical source of truth is CoherenceValidator in
+        modules/quality_gates/coherence_gate.py.
+
+        This method is kept for backward compatibility with standalone/testing code
+        that calls it explicitly. Any new code MUST use CoherenceValidator.
         """
         if not validation_summary.fields:
             return 0

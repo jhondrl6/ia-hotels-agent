@@ -103,8 +103,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         required_confidence=0.5,
         fallback="generate_basic_geo_guide",
         block_on_failure=False,
-        status=AssetStatus.IMPLEMENTED,
-        promised_by=["low_gbp_score"]
+        status=AssetStatus.DEPRECATED,  # FASE-PROP-D: Eliminado — redundante con delivery GEO
+        promised_by=[]
     ),
     "review_plan": AssetCatalogEntry(
         asset_type="review_plan",

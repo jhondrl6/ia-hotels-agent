@@ -176,11 +176,6 @@ class SitePresenceChecker:
             "check_methods": ["direct_fetch"],
             "fallback_text": ["llms.txt"]
         },
-        "geo_playbook": {
-            "schema_type": None,  # Es contenido, no schema
-            "check_methods": ["schema"],  # Solo verificar GBP
-            "fallback_text": ["google", "maps", "reseñas"]
-        },
         "review_plan": {
             "schema_type": None,
             "check_methods": ["schema"],
@@ -511,7 +506,8 @@ class SitePresenceChecker:
             "org_schema": "org_schema*.json",
             "whatsapp_button": "boton_whatsapp*.html",
             "llms_txt": "llms*.txt",
-            "geo_playbook": "geo_playbook*.md",
+            # FASE-PROP-D: geo_playbook DEPRECATED — redundante con delivery GEO
+            # "geo_playbook": "geo_playbook*.md",  # noqa: E800
             "review_plan": "plan_reviews*.md",
             "review_widget": "widget_reviews*.html",
         }

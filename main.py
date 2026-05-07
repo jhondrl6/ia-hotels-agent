@@ -1495,6 +1495,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     region = _detect_region_from_url(args.url)
     hotel_name = args.nombre or _extract_hotel_name_from_url(args.url)
     
+    # Derive hotel_id early for consistent evidence paths (used by assets and JSON reports)
+    hotel_id = hotel_name.lower().replace(" ", "_").replace("-", "_").replace(".", "")
+    
     print(f"🎯 Hotel: {hotel_name}")
     print(f"🌍 Región detectada: {region}")
     
@@ -1552,8 +1555,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             print(f"   - GBP Score: {audit_result.gbp.geo_score}/100")
             print(f"   - WhatsApp: {audit_result.validation.whatsapp_status}")
 
-            # Save audit report
-            audit_path = output_dir / "audit_report.json"
+            # Save audit report with hotel_id and timestamp to prevent overwrite
+            audit_path = _make_evidence_path(output_dir, hotel_id, "audit_report")
             auditor.save_report(audit_result, audit_path)
             print(f"   💾 Guardado: {audit_path}")
 
@@ -1897,8 +1900,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     except Exception:
         pass
 
-    # Save scenarios
-    scenarios_path = output_dir / "financial_scenarios.json"
+    # Save scenarios with hotel_id and timestamp to prevent overwrite
+    scenarios_path = _make_evidence_path(output_dir, hotel_id, "financial_scenarios")
     with open(scenarios_path, 'w', encoding='utf-8') as f:
         json.dump({
             'hotel': hotel_name,
@@ -2237,7 +2240,10 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     
     threshold = config.get_threshold('overall_coherence')
     is_blocking = config.is_blocking('overall_coherence')
-    
+
+    # FASE-PROP-A: Compute gate status for diagnostic template
+    pre_gate_status = "PASSED" if pre_coherence_score >= threshold else "FAILED"
+
     print(f"🔒 Gate de Coherencia:")
     print(f"   Score calculado: {pre_coherence_score:.2f} (umbral: {threshold})")
     print(f"   Checks: {len([c for c in pre_coherence_report.checks if c.passed])}/{len(pre_coherence_report.checks)} pasados")
@@ -2439,11 +2445,12 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         hotel_url=args.url,
         output_dir=str(output_dir),
         coherence_score=pre_coherence_score,
+        gate_status=pre_gate_status,
         region=region,  # FASE-DRECONEXION-V6: Pasar region para templates V6
         analytics_data=analytics_data,  # INTEGRACION-ANALYTICS-E2E: activa transparencia analytics
         financial_breakdown=financial_breakdown,  # FASE-G: breakdown con evidence tiers
     )
-    print(f"[OK] Diagnóstico regenerado con coherence_score: {pre_coherence_score:.2f}")
+    print(f"[OK] Diagnóstico regenerado con coherence_score: {pre_coherence_score:.2f} (gate: {pre_gate_status})")
 
     # FASE-1B-PATCH: ContentScrubber post-T4FIX — limpiar diagnóstico regenerado
     # ANTES de FASE 4.5 (publication gates)
@@ -2716,7 +2723,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         },
         "financial_sources": assessment.get("financial_sources", {}),
     }
-    gate_report_path = output_dir / "gate_report.json"
+    gate_report_path = _make_evidence_path(output_dir, hotel_id, "gate_report")
     with open(gate_report_path, "w", encoding="utf-8") as f:
         json.dump(gate_report, f, indent=2, ensure_ascii=False)
     print(f"   📄 Gate report: {gate_report_path}")
@@ -2772,8 +2779,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     try:
         from modules.delivery.delivery_packager import DeliveryPackager
 
-        # Get hotel_id from hotel_name
-        hotel_id = hotel_name.lower().replace(" ", "_").replace("-", "_").replace(".", "")
+        # hotel_id already derived earlier in the function
+        # (see definition near hotel_name assignment)
 
         packager = DeliveryPackager(
             base_output_dir=str(output_dir),
@@ -3080,8 +3087,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     print(f"   - 01_DIAGNOSTICO_Y_OPORTUNIDAD.md")
     print(f"   - 02_PROPUESTA_COMERCIAL.md")
     print(f"   - v4_complete_report.json")
-    print(f"   - audit_report.json")
-    print(f"   - financial_scenarios.json")
+    print(f"   - {hotel_id}/v4_audit/audit_report_*.json")
+    print(f"   - {hotel_id}/v4_audit/financial_scenarios_*.json")
+    print(f"   - {hotel_id}/v4_audit/gate_report_*.json")
     if asset_result:
         print(f"   - delivery_assets/")
         print(f"     ├── whatsapp_button/")
@@ -3192,6 +3200,25 @@ def _extract_hotel_name_from_url(url: str) -> str:
     from urllib.parse import urlparse
     domain = urlparse(url).netloc.replace('www.', '').split('.')[0]
     return domain.replace('-', ' ').replace('_', ' ').title()
+
+
+def _make_evidence_path(output_dir: Path, hotel_id: str, basename: str, timestamp: str | None = None) -> Path:
+    """Construye una ruta de evidencia con timestamp dentro del subdirectorio v4_audit del hotel.
+    
+    Args:
+        output_dir: Directorio base de salida (ej. output/v4_complete)
+        hotel_id: ID normalizado del hotel
+        basename: Nombre base del archivo sin extensión ni timestamp (ej. "gate_report")
+        timestamp: Timestamp opcional en formato %Y%m%d_%H%M%S; si es None se usa datetime.now()
+        
+    Returns:
+        Path completo del archivo JSON de evidencia
+    """
+    evidence_dir = output_dir / hotel_id / "v4_audit"
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    if timestamp is None:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return evidence_dir / f"{basename}_{timestamp}.json"
 
 
 def _extract_rooms_from_audit(audit_result) -> int:

@@ -257,11 +257,6 @@ class AssetDiagnosticLinker:
                 "proporcionando una base objetiva para la toma de decisiones y demostrando "
                 "el ROI esperado de la implementación."
             ),
-            "geo_playbook": (
-                "El Playbook de Geolocalización optimiza la presencia en Google Business "
-                "Profile, mejorando la visibilidad local y atrayendo más tráfico cualificado "
-                "desde búsquedas con intención de reserva."
-            ),
             "review_plan": (
                 "El Plan de Gestión de Reviews establece un sistema para aumentar y gestionar "
                 "las reseñas, mejorando la reputación online y aumentando la confianza de "
@@ -318,7 +313,6 @@ class AssetDiagnosticLinker:
         impact_map = {
             "whatsapp_button": "high",
             "hotel_schema": "high",
-            "geo_playbook": "high",
             "barra_reserva_movil": "high",
             "direct_booking_campaign": "high",
             "faq_page": "medium",
@@ -422,12 +416,6 @@ class AssetDiagnosticLinker:
                 "priority": "P1",
                 "timing": "1 hora",
                 "why_this_asset": "Muestra información enriquecida en Google (precios, disponibilidad, reseñas)"
-            },
-            "geo_playbook": {
-                "problem_solved": "Baja puntuación en Google Business Profile",
-                "priority": "P1",
-                "timing": "Día 2",
-                "why_this_asset": "Optimiza perfil de Google Maps para atraer búsquedas locales con intención de reserva"
             },
             "review_plan": {
                 "problem_solved": "Gestión ineficiente de reseñas online",

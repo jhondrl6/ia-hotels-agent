@@ -162,5 +162,5 @@ Consulta esta tabla para determinar el procedimiento correcto:
 | `validate.py --plan` | Despues de modificar Plan Maestro |
 | `validate.py --security` | Antes de push (verificar secrets) |
 | `validate_structure.py` | Validar estructura del proyecto |
-| `config_checker.py` | Verificar configuracion |
+| `config_checker.py` | [DEPRECATED] Usar `python -m modules.utils.config_checker` |
 | `.agents/workflows/v4_regression_guardian.py --quick` | Despues de cambios en modulos v4 |

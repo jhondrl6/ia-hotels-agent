@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-05-05 20:51:51 UTC
+> Auto-generado: 2026-05-06 23:27:54 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -9,7 +9,7 @@
 
 | Componente | Version | Fuente |
 |------------|---------|--------|
-| Proyecto | 4.40.1 | VERSION.yaml |
+| Proyecto | 4.41.0 | VERSION.yaml |
 | Ecosystem Convention | 1.0.0 | .agent/CONVENTION.md |
 
 ## Skills Activas (16)
@@ -39,12 +39,12 @@
 | Metrica | Valor |
 |---------|-------|
 | Shadow logs | 1150 archivos JSON |
-| Sesiones activas | 46 |
+| Sesiones activas | 56 |
 | Sesiones archivadas | 6 |
 | Ultimo shadow log | 20260505_014949_9ff0c9b7.json |
-| Ultima sesion activa | 2026-05-05_e6677fb3.json |
-| Ultimo contexto actualizado | 2026-05-05T20:44:29.582673+00:00 |
-| Ultima URL procesada | https://www.hotelcastillareal.com/ |
+| Ultima sesion activa | 2026-05-06_fa195fce.json |
+| Ultimo contexto actualizado | 2026-05-06T14:30:47.588949+00:00 |
+| Ultima URL procesada | http://www.termales.com.co/ |
 
 ## Config Files (9/9 healthy)
 
