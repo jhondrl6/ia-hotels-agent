@@ -1,0 +1,1230 @@
+warning: in the working copy of '.agent/SYSTEM_STATUS.md', CRLF will be replaced by LF the next time Git touches it
+diff --git a/.agent/SYSTEM_STATUS.md b/.agent/SYSTEM_STATUS.md
+index 56ae957..f598eb1 100644
+--- a/.agent/SYSTEM_STATUS.md
++++ b/.agent/SYSTEM_STATUS.md
+@@ -1,6 +1,6 @@
+ # System Status Dashboard
+ 
+-> Auto-generado: 2026-05-07 15:57:29 UTC
++> Auto-generado: 2026-05-07 20:43:03 UTC
+ > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
+ > REGENERAR CON: python scripts/doctor.py --status
+ > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
+@@ -9,7 +9,7 @@
+ 
+ | Componente | Version | Fuente |
+ |------------|---------|--------|
+-| Proyecto | 4.41.0 | VERSION.yaml |
++| Proyecto | 4.41.1 | VERSION.yaml |
+ | Ecosystem Convention | 1.0.0 | .agent/CONVENTION.md |
+ 
+ ## Skills Activas (16)
+@@ -39,11 +39,11 @@
+ | Metrica | Valor |
+ |---------|-------|
+ | Shadow logs | 1150 archivos JSON |
+-| Sesiones activas | 60 |
++| Sesiones activas | 64 |
+ | Sesiones archivadas | 6 |
+ | Ultimo shadow log | 20260505_014949_9ff0c9b7.json |
+-| Ultima sesion activa | 2026-05-07_470e0f23.json |
+-| Ultimo contexto actualizado | 2026-05-07T14:32:04.246010+00:00 |
++| Ultima sesion activa | 2026-05-07_e2944c8f.json |
++| Ultimo contexto actualizado | 2026-05-07T18:04:55.116109+00:00 |
+ | Ultima URL procesada | http://www.termales.com.co/ |
+ 
+ ## Config Files (9/9 healthy)
+diff --git a/.opencode/context/04_TERMINALES_VALIDATION_20260506.md b/.opencode/context/04_TERMINALES_VALIDATION_20260506.md
+deleted file mode 100644
+index 42e4335..0000000
+--- a/.opencode/context/04_TERMINALES_VALIDATION_20260506.md
++++ /dev/null
+@@ -1,523 +0,0 @@
+----
+-generated_at: 2026-05-06 20:15
+-updated_at: 2026-05-06 21:30
+-version: 2.0.0
+-document_type: CONTEXT_VALIDATION_RESULTS
+-hotel_id: termales
+-validation_type: post-execution validation of v4complete delivery
+-related_docs:
+-  - output/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260506_192653.md
+-  - output/v4_complete/02_PROPUESTA_COMERCIAL_20260506_192701.md
+-  - output/v4_complete/termales/v4_audit/coherence_validation.json
+-  - output/v4_complete/termales/v4_audit/gate_report_20260506_192708.json
+-  - output/v4_complete/termales/v4_audit/asset_generation_report.json
+-  - output/v4_complete/termales/v4_audit/geo_flow_result.json
+-plan_origin: PROPOSAL-COMERCIAL-FIX v1.0.0 (PROP-A through PROP-G + RELEASE-4.41.0)
+----
+-
+-# VALIDACION POST-EJECUCION: Termales (2026-05-06)
+-
+-## RESUMEN EJECUTIVO
+-
+-La ejecucion v4complete para Termales genero documentos pero tiene **4 gaps criticos** + **2 hallazgos nuevos** que requieren correccion:
+-
+-1. **PROP-A FALLO**: Coherence score diverge 80.67% vs 78% — causa raiz es **timing del pipeline** (dos pasadas del CoherenceValidator), NO un bug de formateo
+-2. **Delivery Readiness 0%**: 6/6 assets son ESTIMATED con confianza 0.5
+-3. **3 Missing Assets**: SEO Local, WhatsApp, Open Graph prometidos pero no generados (NOTA: SI existen en asset_catalog.py como IMPLEMENTED)
+-4. **No Deployment**: `site_verification_applied: false`
+-5. **NUEVO: price_matches_pain = 0.0**: Precio 32.1x del dolor — principal contribuidor al fallo de coherencia
+-6. **NUEVO: Assets existen en catalog pero no se generaron**: Los 3 assets "missing" estan definidos como IMPLEMENTED en asset_catalog.py; la generacion condicional los salto
+-
+----
+-
+-## DATOS DE LA EJECUCION
+-
+-| Campo | Valor |
+-|-------|-------|
+-| hotel_id | termales |
+-| URL | http://www.termales.com.co/ |
+-| Timestamp diagnostico | 20260506_192653 |
+-| Timestamp propuesta | 20260506_192701 |
+-| Version | 4.0.0 |
+-| Plan origen | PROPOSAL-COMERCIAL-FIX v1.0.0 |
+-| Fases origen | PROP-A → B → C → D → E → F → G → RELEASE-4.41.0 |
+-| Estado fases (plan) | TODAS ✅ Completada |
+-
+----
+-
+-## GAP 1 — PROP-A: DISCREPANCIA CRITICA DE COHERENCE SCORE
+-
+-### Estado Claimed
+-En `dependencias-fases.md`: **FASE-PROP-A: ✅ Completada**
+-
+-### Estado Real
+-
+-**El diagnostico muestra un coherence_score DIFERENTE al del CoherenceValidator:**
+-
+-| Fuente | Score | Valor |
+-|--------|-------|-------|
+-| Diagnostico YAML (linea 5) | `coherence_score: 0.8066666666666666` | 80.67% → PASSED |
+-| `coherence_validation.json` (overall_score) | `0.78` | 78.00% |
+-| `gate_report` coherence gate | `value: 0.7844444...` | FAILED |
+-
+-**Diferencia: 2.67 puntos** entre lo que muestra el diagnostico y lo que el gate usa.
+-
+-### Evidencia
+-
+-**Diagnostico YAML header (lineas 1-16):**
+-```yaml
+-coherence_score: 0.8066666666666666
+-gate_status: PASSED
+-```
+-
+-**coherence_validation.json (lineas 2-3):**
+-```json
+-"is_coherent": false,
+-"overall_score": 0.78,
+-```
+-
+-**gate_report coherence gate (lineas 37-48):**
+-```json
+-{
+-  "gate_name": "coherence",
+-  "passed": false,
+-  "status": "FAILED",
+-  "message": "Coherence score 0.78 below threshold 0.8",
+-  "value": 0.7844444444444444
+-}
+-```
+-
+-### Analisis de Causa Raiz (ACTUALIZADO v2.0)
+-
+-**CORRECCION al analisis original**: El problema NO es un bug de formateo en `v4_diagnostic_generator.py`. Es un **problema de timing en el pipeline** — el CoherenceValidator se ejecuta DOS VECES con datos diferentes.
+-
+-#### Trazado del pipeline en main.py
+-
+-```
+-L2235: pre_coherence_score = pre_coherence_report.overall_score
+-       ↑ CoherenceValidator #1 (PRE-assets)
+-       ↑ Datos parciales: sin asset generation report
+-       ↑ Score = 0.8067
+-
+-L2440-2452: diagnostic_gen.generate(coherence_score=pre_coherence_score)
+-            ↑ YAML header recibe 0.8067 (PRE-assets)
+-
+-L2380-2425: asset orchestrator ejecuta
+-            ↑ CoherenceValidator #2 (POST-assets)
+-            ↑ Datos completos: incluye 3 missing assets
+-            ↑ Score = 0.7844
+-
+-L2644: assessment["coherence_score"] = asset_result.coherence_report.overall_score
+-       ↑ Publication gates reciben 0.7844 (POST-assets)
+-```
+-
+-#### Calculo weighted verificado (POST-assets)
+-
+-```
+-CHECK_WEIGHTS:
+-  problems_have_solutions:  1.0 × 1.5 = 1.50
+-  assets_are_justified:     0.83 × 1.0 = 0.83
+-  financial_data_validated: 0.7 × 1.5 = 1.05
+-  whatsapp_verified:        1.0 × 0.5 = 0.50
+-  price_matches_pain:       0.0 × 1.0 = 0.00  ← score cero
+-  promised_assets_exist:    1.0 × 2.0 = 2.00
+-  ─────────────────────────────────────
+-  Weighted total: 5.88 / 7.5 = 0.7844  ✓ match con gate_report
+-```
+-
+-El score 0.8067 del YAML NO corresponde a estos 6 checks con estos pesos. Los checks tenian scores diferentes en la pasada PRE-assets (antes de que los 3 missing assets penalizaran `assets_are_justified` y `promised_assets_exist`).
+-
+-#### Conclusion
+-
+-El YAML header del diagnostico muestra el score PRE-assets (0.8067). El gate_report usa el score POST-assets (0.7844). Ambos son "correctos" en su momento del pipeline, pero el usuario ve una contradiccion: YAML dice PASSED, gate dice FAILED.
+-
+-### Impacto
+-- Diagnostico falsea el gate_status (muestra PASSED cuando gate dice FAILED)
+-- El cliente ve 80.67% pero el gate real valido con 78%
+-- PROP-A prometio unificacion pero la divergencia persiste por causa diferente a la identificada
+-
+----
+-
+-## GAP 2 — DELIVERY READINESS: 0%
+-
+-### Estado Real
+-
+-```json
+-{
+-  "delivery_ready_percentage": 0.0,
+-  "total_assets": 6,
+-  "generated": 6,
+-  "estimated": 6,
+-  "can_use": 6,
+-  "above_threshold": 0,
+-  "below_threshold": 6,
+-  "site_verification_applied": false
+-}
+-```
+-
+-### Assets Generados (TODOS ESTIMATED)
+-
+-| Asset | Archivo | Confianza |
+-|-------|---------|-----------|
+-| hotel_schema | `ESTIMATED_hotel_schema_20260506_192653.json` | 0.5 |
+-| faq_page | `ESTIMATED_faqs_20260506_192653.json` | 0.5 |
+-| analytics_setup_guide | `ESTIMATED_guia_configuracion_ga4_20260506_192653.md` | 0.5 |
+-| indirect_traffic_optimization | `ESTIMATED_optimizacion_trafico_indirecto_20260506_192653.md` | 0.5 |
+-| llms_txt | `ESTIMATED_llms_20260506_192653.txt` | 0.5 |
+-| monthly_report | `ESTIMATED_informe_mensual_20260506_192653.md` | 0.5 |
+-
+-### Causa
+-Pipeline sin onboarding — usa solo web scraping + benchmark regional (Tier C). Sin datos reales del hotel no hay forma de generar assets confianza >= 0.7.
+-
+-### Impacto
+-- Propuesta promete implementaciones pero archivos son de baja calidad
+-- Todos tienen prefijo ESTIMATED y disclaimer
+-- 0% de readiness significa que ningun asset paso el threshold de calidad
+-
+----
+-
+-## GAP 3 — PROPOSAL ASSET ALIGNMENT: 3 MISSING
+-
+-### Estado Real
+-
+-```json
+-{
+-  "gate_name": "proposal_asset_alignment",
+-  "passed": false,
+-  "status": "WARNING",
+-  "alignment_percentage": 0.0,
+-  "missing_count": 3,
+-  "missing": [
+-    {
+-      "service": "SEO Local",
+-      "asset": "optimization_guide",
+-      "message": "Service 'SEO Local' promises asset 'optimization_guide' but it was not generated"
+-    },
+-    {
+-      "service": "Boton de WhatsApp",
+-      "asset": "whatsapp_button",
+-      "message": "Service 'Boton de WhatsApp' promises asset 'whatsapp_button' but it was not generated and does not exist in production",
+-      "presence_verified": true,
+-      "presence_status": "not_exists"
+-    },
+-    {
+-      "service": "Meta Tags Sociales (Open Graph)",
+-      "asset": "open_graph",
+-      "message": "Service 'Meta Tags Sociales (Open Graph)' promises asset 'open_graph' but it was not generated"
+-    }
+-  ]
+-}
+-```
+-
+-### Analisis
+-
+-| Servicio Prometido | Asset Esperado | Estado |
+-|--------------------|---------------|--------|
+-| SEO Local | `optimization_guide` | MISSING |
+-| Boton de WhatsApp | `whatsapp_button` | MISSING |
+-| Meta Tags Sociales (Open Graph) | `open_graph` | MISSING |
+-
+-**La propuesta dice "Nosotros implementamos todo" pero 3 de 6 servicios no tienen asset generado.**
+-
+-### Causa (CORREGIDA v2.0)
+-
+-**CORRECCION**: El contexto original decia "No existe en el catalogo de assets" para optimization_guide. Esto es **INCORRECTO**.
+-
+-Los 3 assets SI existen en `asset_catalog.py` como IMPLEMENTED:
+-
+-| Asset | Catalog Line | Status | Required Confidence | Promised By |
+-|-------|-------------|--------|-------------------|-------------|
+-| `optimization_guide` | L176 | IMPLEMENTED | 0.5 | metadata_defaults, poor_performance, low_citability, low_content_length |
+-| `whatsapp_button` | L54 | IMPLEMENTED | 0.7 | no_whatsapp_visible, whatsapp_conflict |
+-| `open_graph` | L325 | IMPLEMENTED | 0.5 | no_og_tags |
+-
+-Los assets no se generaron porque la **generacion condicional** los salto: los pain_ids que los activan probablemente no fueron detectados en el diagnostico de Termales, o la logica de filtrado los descarto para Tier C.
+-
+-El mapeo `PROPOSAL_SERVICE_TO_ASSET` en `proposal_asset_alignment.py` L20-27 confirma la correspondencia:
+-```python
+-"SEO Local"                      -> "optimization_guide"
+-"Botón de WhatsApp"              -> "whatsapp_button"
+-"Meta Tags Sociales (Open Graph)"-> "open_graph"
+-```
+-
+-### Impacto
+-- Inconsistencia entre promesa comercial y realidad del pipeline
+-- Gate de alignment reporta WARNING (alignment_percentage: 0.0)
+-- 6 servicios mapeados, 0 alineados, 3 missing, 3 low_quality (conf 0.5 < 0.7)
+-
+----
+-
+-## GAP 4 — SITE VERIFICATION: NO DEPLOYMENT
+-
+-### Estado Real
+-
+-```json
+-{
+-  "site_verification_applied": false
+-}
+-```
+-
+-### Impacto
+-- Assets solo existen en `output/v4_complete/termales/`
+-- Sitio de produccion NO fue modificado
+-- Cliente no recibe mejoras en su sitio web
+-
+----
+-
+-## HALLAZGO 5 — price_matches_pain SCORE CERO
+-
+-### Estado
+-
+-El check `price_matches_pain` del CoherenceValidator tiene **score=0.0** y **passed=false**.
+-
+-```json
+-{
+-  "name": "price_matches_pain",
+-  "passed": false,
+-  "score": 0.0,
+-  "message": "Precio muy alto (32.1x del dolor) - máximo recomendado 6.0x",
+-  "severity": "warning"
+-}
+-```
+-
+-### Impacto en Coherence Score
+-
+-Este check tiene peso 1.0 en el weighted score. Con score=0.0, contribuye 0.0 al numerador y 1.0 al denominador.
+-
+-**Si price_matches_pain tuviera score >= 0.4**, el weighted total superaria 0.8:
+-- Con score 0.4: (1.50 + 0.83 + 1.05 + 0.50 + 0.40 + 2.00) / 7.5 = 6.28 / 7.5 = 0.837 → PASSED
+-
+-Es decir, este UNICO check es el principal contribuidor al fallo de coherencia.
+-
+-### Analisis
+-
+-El ratio 32.1x indica que el precio propuesto es 32.1 veces mayor que el dolor financiero calculado. Para Tier C (benchmarks regionales), el dolor puede estar subestimado o el precio puede estar inflado.
+-
+-### Causa probable
+-- El precio en la propuesta es fijo ($1,200,000 COP/mes × 6 = $7,200,000 COP)
+-- El dolor financiero para Termales (Tier C, benchmark regional) es bajo
+-- Ratio = precio / dolor = 32.1x — muy por encima del threshold de 6.0x
+-
+----
+-
+-## HALLAZGO 6 — PROPOSAL_SERVICE_TO_ASSET vs SERVICE_CATALOG MISMATCH
+-
+-### Estado
+-
+-El gate `proposal_asset_alignment` itera sobre `PROPOSAL_SERVICE_TO_ASSET` (6 entradas estaticas). El generador de propuestas filtra `SERVICE_CATALOG` por pain_ids detectados, produciendo un conjunto diferente de servicios.
+-
+-### Impacto
+-- El gate valida un conjunto estatico de 6 servicios
+-- La propuesta puede generar 7-8 servicios dinamicos
+-- `alignment_percentage: 0.0` describe el alineamiento del conjunto estatico, no del contenido real de la propuesta
+-
+----
+-
+-## VALIDACION DE FASES (Estado Real vs Plan)
+-
+-| Fase | Claimed Status | Validacion Real | Evidencia |
+-|------|---------------|-----------------|-----------|
+-| **PROP-A** | ✅ Completada | ❌ **FALLO** | Coherence diverge: YAML 80.67% vs gate 78.44%. Causa: timing pipeline (2 pasadas CoherenceValidator) |
+-| **PROP-B** | ✅ Completada | ✅ PASS | `whatsapp_verified: true` en coherence_validation.json (linea 28-31) |
+-| **PROP-C** | ✅ Completada | ⚠️ PARCIAL | Linea 122 de propuesta menciona "41% recuperable" + "20% en 6 meses" (conceptos de pain_ratio/recovery_factor) pero NO usa los terminos tecnicos exactos |
+-| **PROP-D** | ✅ Completada | ✅ PASS | Gate ya no reporta geo_playbook missing |
+-| **PROP-E** | ✅ Completada | ⚠️ N/A | Scores del hotel no disparan logica <30 para Action Required |
+-| **PROP-F** | ✅ Completada | ✅ PASS | Banner Tier C visible en propuesta (lineas 100-103): `{{if financial_evidence_tier == "C"}} ⚠️ Advertencia...` |
+-| **PROP-G** | ✅ Completada | ✅ PASS | JSONs con timestamp en `termales/v4_audit/` (gate_report_20260506_192708.json) |
+-| **RELEASE** | ✅ Completada | ⚠️ N/A | Solo documentacion |
+-
+----
+-
+-## DATOS FINANCIEROS (Tier C)
+-
+-```yaml
+-financial_evidence_tier: "C"
+-financial_value_central: 3741696
+-financial_value_range: [2993356, 4490035]
+-financial_method: "proportional_normalized"
+-financial_opportunity_cost: "$3.741.696 COP"
+-financial_ota_commission_real: "$7.741.440 COP"
+-```
+-
+-**Fuente**: `financial_scenarios.json#realistic` (benchmark regional, NO datos reales del hotel)
+-
+-**Verificacion**: YAML header L11-14 confirma estos valores.
+-
+----
+-
+-## GATE SUMMARY
+-
+-```json
+-{
+-  "ready": false,
+-  "status": "NOT_READY",
+-  "blocking_issues": [
+-    {
+-      "gate": "coherence",
+-      "message": "Coherence score 0.78 below threshold 0.8",
+-      "value": 0.7844444444444444
+-    }
+-  ],
+-  "warnings": [
+-    {"gate": "financial_validity", "message": "Tier C evidence"},
+-    {"gate": "asset_confidence", "message": "6 assets below 0.7"},
+-    {"gate": "proposal_asset_alignment", "message": "3 missing assets"}
+-  ]
+-}
+-```
+-
+----
+-
+-## SOLUCIONES PRELIMINARES
+-
+-### SOL-1: Unificar coherence score (corrige GAP 1)
+-
+-**Problema**: Dos pasadas del CoherenceValidator producen scores diferentes. El YAML header muestra el PRE-assets (0.8067), los gates usan el POST-assets (0.7844).
+-
+-**Opciones**:
+-- **A) Usar score POST-assets en el diagnostico**: En main.py L2447, reemplazar `pre_coherence_score` por `asset_result.coherence_report.overall_score if asset_result else pre_coherence_score`. Cambio de 1 linea.
+-- **B) Ejecutar una pasada unica del CoherenceValidator DESPUES de assets**: Eliminar la pasada pre-assets y usar solo la post-assets para todo. Requiere restructurar el flujo.
+-- **C) Disclaimer en YAML**: Agregar campo `coherence_score_source: pre_asset_validation` cuando el score es pre-assets. Conservador, no resuelve la divergencia.
+-
+-**Recomendacion**: Opcion A. Directa, 1 linea, elimina la divergencia de raiz.
+-
+-**Verificacion post-fix**: Ejecutar v4complete con Hotelcastillareal, comparar YAML header coherence_score vs gate_report coherence value. Deben coincidir.
+-
+-### SOL-2: Decision sobre assets faltantes (corrige GAP 3)
+-
+-**Problema**: 3 servicios prometidos en la propuesta no tienen asset generado. Los assets existen en el catalogo como IMPLEMENTED pero la generacion condicional los salto.
+-
+-**Opciones**:
+-- **A) Investigar por que los pain_ids no se activaron**: Revisar si `no_whatsapp_visible`, `no_og_tags`, y los pain_ids de `optimization_guide` estan en el diagnostico de Termales. Si no estan, el filtro condicional funciona correctamente y la propuesta no deberia prometerlos.
+-- **B) Generar los assets manualmente**: Forzar la generacion de optimization_guide, whatsapp_button, open_graph sin depender de pain_ids. Calidad puede ser baja.
+-- **C) Alinear propuesta con realidad**: Si los pain_ids no se activan, la propuesta no deberia listar esos servicios. Modificar la logica de generacion de la tabla de servicios.
+-
+-**Recomendacion**: Opcion A primero (diagnosticar), luego Opcion C (alinear).
+-
+-### SOL-3: Address delivery readiness 0% (corrige GAP 2)
+-
+-**Problema**: Sin onboarding, todos los assets son ESTIMATED con confidence 0.5. Estructural, no hay fix rapido.
+-
+-**Opciones**:
+-- **A) Mejorar disclaimers**: El banner Tier C ya existe (linea 100-103), pero la propuesta igual promete "implementaciones". Agregar nota explicita: "Los assets son estimaciones basadas en benchmarks regionales".
+-- **B) Reducir servicios prometidos para Tier C**: Solo prometer lo que se puede entregar con confianza >= 0.7. Si Tier C no puede alcanzar 0.7, reducir el scope de la propuesta.
+-- **C) Pre-flight gate**: Bloquear generacion de propuesta si delivery_readiness < 30% y evidence_tier == C. Generar solo diagnostico.
+-
+-**Recomendacion**: Opcion A a corto plazo, Opcion B a mediano plazo.
+-
+-### SOL-4: Corregir price_matches_pain (corrige Hallazgo 5)
+-
+-**Problema**: Precio 32.1x del dolor. Score 0.0 es el principal contribuidor al fallo de coherencia.
+-
+-**Opciones**:
+-- **A) Revisar calculo del dolor financiero**: Para Tier C, el dolor puede estar subestimado. Verificar si `financial_value_central` (3,741,696) es el dolor mensual o anual, y como se calcula el ratio.
+-- **B) Revisar precio propuesto**: $1,200,000/mes × 6 = $7,200,000 total. Verificar si este precio es configurable o fijo.
+-- **C) Ajustar threshold**: El threshold de 6.0x puede ser muy estricto para Tier C. Considerar un threshold dinamico por tier.
+-
+-**Recomendacion**: Opcion A. El ratio 32.1x sugiere un problema de calculo, no de configuracion.
+-
+-### SOL-5: Alinear gate con generador (corrige Hallazgo 6)
+-
+-**Problema**: El gate usa `PROPOSAL_SERVICE_TO_ASSET` (6 entradas estaticas). El generador filtra `SERVICE_CATALOG` dinamicamente.
+-
+-**Opciones**:
+-- **A) Gate dinamico**: Modificar `proposal_asset_alignment_gate` para recibir la lista de servicios del generador en lugar de usar la lista estatica.
+-- **B) Generador estatico**: Modificar el generador para siempre incluir los 6 servicios del mapeo estatico.
+-- **C) Documentar la diferencia**: El gate valida el "contrato" estatico, el generador produce contenido dinamico. Son propositos diferentes.
+-
+-**Recomendacion**: Opcion A a mediano plazo. A corto, Opcion C (documentar).
+-
+----
+-
+-## ARCHIVOS CLAVE PARA REVISION
+-
+-### Codigo relevante
+-- `main.py` (L2235: pre_coherence_score; L2440-2452: diagnostic regeneration; L2644: gate assessment)
+-- `modules/commercial_documents/v4_diagnostic_generator.py` (L534-539: coherence_score formateo; L595: template data)
+-- `modules/commercial_documents/coherence_validator.py` (L88-95: CHECK_WEIGHTS; L143-149: weighted score)
+-- `modules/quality_gates/coherence_gate.py` (threshold=0.80)
+-- `modules/asset_generation/asset_catalog.py` (L54: whatsapp_button; L176: optimization_guide; L325: open_graph)
+-- `modules/asset_generation/proposal_asset_alignment.py` (L20-27: PROPOSAL_SERVICE_TO_ASSET)
+-
+-### Outputs de evidencia
+-- `output/v4_complete/termales/v4_audit/coherence_validation.json`
+-- `output/v4_complete/termales/v4_audit/gate_report_20260506_192708.json`
+-- `output/v4_complete/termales/v4_audit/asset_generation_report.json`
+-- `output/v4_complete/termales/v4_audit/geo_flow_result.json`
+-
+-### Plan original
+-- `.opencode/plans/05-prompt-inicio-sesion-fase-PROP-A.md`
+-- `.opencode/plans/05-prompt-inicio-sesion-fase-PROP-B.md`
+-- `.opencode/plans/05-prompt-inicio-sesion-fase-PROP-C.md`
+-- `.opencode/plans/05-prompt-inicio-sesion-fase-PROP-D.md`
+-- `.opencode/plans/05-prompt-inicio-sesion-fase-PROP-E.md`
+-- `.opencode/plans/05-prompt-inicio-sesion-fase-PROP-F.md`
+-- `.opencode/plans/05-prompt-inicio-sesion-fase-PROP-G.md`
+-- `.opencode/plans/dependencias-fases.md`
+-
+----
+-
+-## PROXIMA SESION: DISENO DE PLAN PROP-PATCH
+-
+-### Objetivos del nuevo plan
+-
+-1. **CORREGIR PROP-A (SOL-1)**: Unificar coherence score usando score POST-assets en el YAML header. Cambio de 1 linea en main.py L2447.
+-
+-2. **DIAGNOSTICAR Missing Assets (SOL-2)**: Investigar por que los pain_ids de optimization_guide, whatsapp_button y open_graph no se activaron para Termales. Determinar si es un bug o si la propuesta no deberia prometerlos.
+-
+-3. **ADDRESS Delivery Readiness (SOL-3)**: Mejorar disclaimers para Tier C. Considerar reducir servicios prometidos cuando evidence tier es C.
+-
+-4. **CORREGIR price_matches_pain (SOL-4)**: Investigar el calculo del ratio 32.1x. Si el precio es correcto, ajustar el threshold o la logica del check.
+-
+-5. **DOCUMENTAR gate vs generator mismatch (SOL-5)**: Aclarar que el gate valida un contrato estatico mientras el generador produce contenido dinamico.
+-
+-### Verificacion recomendada
+-
+-Para verificar que SOL-1 funciona, ejecutar v4complete con **Hotelcastillareal** y verificar:
+-- coherence_score del YAML = gate_report coherence value (deben coincidir)
+-- gate_status en YAML = gate_report status
+-
+-### R3 Scope Evaluation
+-
+-```
+-CONTADOR PROP-PATCH:
+-  - SOL-1: 1 tarea (cambio 1 linea + verificacion) ← se puede agrupar
+-  - SOL-2: 1 tarea (investigacion) + 1 decision usuario
+-  - SOL-3: 1 tarea (mejora disclaimers)
+-  - SOL-4: 1 tarea (investigacion ratio)
+-  - SOL-5: 0 tareas (solo documentar, incluir en docs cascade)
+-  ─────
+-  Total: 4 tareas + 0 comandos largos ← cabe en 1 fase
+-```
+-
+-**Pero SOL-2 requiere decision del usuario** (generar assets vs eliminar servicios vs alinear propuesta). Esto puede requerir una fase separada.
+-
+-**Fases sugeridas**:
+-- **FASE-PATCH-A**: SOL-1 + SOL-4 (fixes de codigo, sin decision externa)
+-- **FASE-PATCH-B**: SOL-2 (investigacion + decision) + SOL-3 (disclaimers)
+-- **FASE-PATCH-C**: Verificacion (v4complete Hotelcastillareal) + docs cascade
+-
+-### Notas de contexto previo
+-
+-Este contexto es secuencial al audit original en:
+-`.opencode/context/03_PROPUESTA_COMERCIAL_AUDIT_20260506.md`
+-
+-Aquel audit identifico los 7 problemas originales que las fases PROP-A through PROP-G intentaron resolver. Esta validacion post-ejecucion confirma que algunas fases (B, C, D, E, F, G) se implementaron correctamente pero PROP-A tiene brecha persistente por causa diferente a la identificada originalmente.
+-
+----
+-
+-## NOTA DE ACTUALIZACION v2.0
+-
+-Esta version fue actualizada con verificacion contra codigo vivo:
+-
+-1. **GAP-1**: Causa raiz corregida — es timing del pipeline, no bug de formateo
+-2. **GAP-3**: Corregido — los 3 assets SI existen en asset_catalog.py como IMPLEMENTED
+-3. **PROP-C**: Corregido a PARCIAL — la linea 122 menciona los conceptos pero no los terminos tecnicos
+-4. **Hallazgo 5**: Nuevo — price_matches_pain = 0.0 es el principal contribuidor al fallo
+-5. **Hallazgo 6**: Nuevo — PROPOSAL_SERVICE_TO_ASSET mismatch con generador dinamico
+-6. **Soluciones preliminares**: 5 soluciones (SOL-1 a SOL-5) con opciones y recomendaciones
+-7. **R3 Scope**: Evaluacion de fases para plan PROP-PATCH
+-
+----
+-
+-*Contexto actualizado post-verificacion contra codigo vivo — 2026-05-06 21:30*
+diff --git a/.opencode/context/05_SOL-2_ASSET_ALIGNMENT_DISCREPANCY_20260507.md b/.opencode/context/05_SOL-2_ASSET_ALIGNMENT_DISCREPANCY_20260507.md
+index 6fc71b0..7a2bb90 100644
+--- a/.opencode/context/05_SOL-2_ASSET_ALIGNMENT_DISCREPANCY_20260507.md
++++ b/.opencode/context/05_SOL-2_ASSET_ALIGNMENT_DISCREPANCY_20260507.md
+@@ -1,9 +1,9 @@
+ ---
+ generated_at: 2026-05-07 10:40
+-updated_at: 2026-05-07 12:30
+-version: 1.1.0
++updated_at: 2026-05-07 15:46
++version: 3.0.0
+ document_type: CONTEXT_KNOWN_ISSUE
+-related_plan: PROP-PATCH (FASE-PATCH-C)
++related_plan: PROP-PATCH (FASE-PATCH-C) + SOL-2 (FASE-SOL2-D)
+ validation_type: E2E verification of v4complete for Termales Santa Rosa de Cabal
+ evidence_files:
+   - evidence/FASE-PATCH-C/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260507_093302.md
+@@ -12,7 +12,7 @@ evidence_files:
+   - evidence/FASE-PATCH-C/coherence_validation.json
+   - evidence/FASE-PATCH-C/asset_generation_report.json
+ trigger: FASE-PATCH-C E2E verification (v4complete Termales, 2026-05-07)
+-update_note: "v1.1 — 2026-05-07 12:30 — Agregado GAP-4 (deployment) y validacion harness sin errores"
++update_note: "v3.0 — 2026-05-07 15:46 — SOL2-D: GAP-G resuelta (falso positivo), GAP-D documentada, line range corregido a 755-865"
+ ---
+ 
+ # CONTEXTO: Discrepancia SOL-2 — Proposal Asset Alignment
+@@ -53,7 +53,7 @@ missing_types = [
+ 
+ ### Componente 2: proposal_asset_alignment_gate (missing_count=3, WARNING)
+ 
+-**Archivo**: `modules/quality_gates/publication_gates.py` (lineas 755-850)
++**Archivo**: `modules/quality_gates/publication_gates.py` (lineas 755-865)
+ 
+ **Logica**: `verify_proposal_asset_alignment()` compara `PROPOSAL_SERVICE_TO_ASSET` (contrato estático de 6 servicios) contra los assets generados y la verificacion de presencia en el sitio.
+ 
+@@ -337,5 +337,181 @@ ASSETS/v4_audit/
+ 
+ ---
+ 
++---
++
++## Validacion contra Codigo Vivo (2026-05-07 12:47)
++
++**Metodo**: Lectura directa de archivos fuente + busqueda en codebase completo.
++**Skills aplicados**: `iah-cli-cross-document-audit`, `iah-cli-phase-implementation-verification`.
++
++### Claims Verificados: 12
++
++| # | Claim | Veredicto | Evidencia |
++|---|-------|-----------|-----------|
++| 1 | `coherence_validator._check_promised_assets_exist()` lineas 494-526 | ✅ CONFIRMADO | Lineas exactas, logica matchea |
++| 2 | Usa `promised_types = {a.asset_type for a in assets}` + `is_asset_implemented(t)` | ✅ CONFIRMADO | Lineas 502-506 exactas |
++| 3 | Retorna score=1.0 si no missing_types | ✅ CONFIRMADO | Lineas 508-515, coherence_validation.json linea 43 |
++| 4 | `proposal_asset_alignment_gate` lineas 755-865 | ✅ CONFIRMADO | Corregido de 755-850 a 755-865 (SOL2-D) |
++| 5 | `PROPOSAL_SERVICE_TO_ASSET` 6 entradas estaticas | ✅ CONFIRMADO | proposal_asset_alignment.py lineas 20-27 |
++| 6 | `verify_proposal_asset_alignment()` existe | ✅ CONFIRMADO | Linea 129-253 |
++| 7 | `_generate_dynamic_services_table()` filtra por assets_generated | ✅ CONFIRMADO | Lineas 839-908 exactas |
++| 8 | ASSET_CATALOG marca 3 assets IMPLEMENTED sin generar para Termales | ✅ CONFIRMADO | optimization_guide(L184), whatsapp_button(L62), open_graph(L333) |
++| 9 | Root cause: dos validadores con baselines distintas | ✅ CONFIRMADO | coherence=capability, gate=delivery |
++| 10 | Gate status WARNING (no bloqueante) | ✅ CONFIRMADO | Linea 855: `passed=True  # WARNING, not blocking` |
++| 11 | whatsapp_button: "always" eliminado en FASE-5 | ✅ CONFIRMADO | Linea 63: `FASE-5: "always" ELIMINADO - bug sistemico` |
++| 12 | SitePresenceChecker usado por el gate para WhatsApp | ❌ FALSO | Ver GAP-A abajo |
++
++**Resultado**: 10/12 confirmados, 1 parcial, 1 falso.
++
++---
++
++### Nuevos Gaps Encontrados (ampliacion del alcance)
++
++#### GAP-A [ALTA]: SitePresenceChecker NO EXISTE en el codebase
++
++**Hallazgo**: El documento asume que `SitePresenceChecker` opera y reporta `presence_verified: true, presence_status: "not_exists"` para WhatsApp. En realidad:
++
++- `publication_gates.py` linea 798 intenta: `from modules.asset_generation.site_presence_checker import SitePresenceChecker`
++- **Ese modulo NO EXISTE** (0 archivos encontrados en todo el codebase)
++- El `try/except` en lineas 811-813 captura el ImportError silenciosamente: `site_presence_report = None`
++- El gate_report JSON muestra `present_in_production: []` (vacio) a pesar de que WhatsApp tiene `presence_verified: true`
++
++**Impacto**: El feature "check site presence for missing assets" esta **completamente deshabilitado**. El gate funciona sin el (degrada gracefully), pero pierde la capacidad de detectar assets que YA existen en el sitio del cliente. La evidencia de `presence_verified: true` para WhatsApp probablemente vino de una version anterior donde el modulo existia, o fue hardcodeada en la generacion del reporte.
++
++**Solucion**: Crear `modules/asset_generation/site_presence_checker.py` con la clase `SitePresenceChecker` y metodo `check_site(url, asset_types)`. La infraestructura en el gate ya esta lista (lineas 793-813). Alternativamente, eliminar la referencia y simplificar el gate.
++
++---
++
++#### GAP-B [ALTA]: `deployment_assistant.md` NO EXISTE
++
++**Hallazgo**: AGENTS.md (linea 52) e INDICE_DOCUMENTACION.md (linea 210) referencian `.agents/workflows/deployment_assistant.md`. El archivo **NO EXISTE** en `.agents/workflows/` (0 matches).
++
++**Impacto directo en este documento**: La opcion D1 del documento dice:
++
++> "Skill deployment_assistant.md existente — evaluar reutilizacion | Bajo esfuerzo"
++
++Esto es **IMPOSIBLE**. El workflow de deployment nunca fue creado o fue eliminado sin actualizar las referencias. La opcion D1 debe descartarse o reemplazarse.
++
++**Solucion**: Eliminar la referencia fantasma de AGENTS.md e INDICE_DOCUMENTACION.md, o crear el workflow si se decide que es necesario.
++
++---
++
++#### GAP-C [MEDIA]: 7mo servicio excluido del gate
++
++**Hallazgo**: `SERVICE_CATALOG` tiene 7 entradas (6 base + 1 condicional AEO):
++
++```python
++# service_catalog.py - entrada condicional
++"Optimización para IA Generativa" -> asset_type="llms_txt"
++# Se agrega cuando score_aeo < 20
++```
++
++`PROPOSAL_SERVICE_TO_ASSET` (usado por el gate via `ALL_PROMISED_SERVICES`) solo tiene 6. El 7mo servicio (AEO/llms_txt) **escapa a la verificacion del gate**.
++
++**Impacto**: Si un hotel califica para AEO y llms_txt NO se genera, el gate no lo detecta. El documento dice "4 servicios filtrados" para Termales pero no explica que el 4to (AEO condicional) no esta cubierto por el gate.
++
++**Solucion**: Agregar `"Optimización para IA Generativa": "llms_txt"` a `PROPOSAL_SERVICE_TO_ASSET`, o hacer que el gate consulte `SERVICE_CATALOG` directamente en vez del dict estatico.
++
++---
++
++#### GAP-D [MEDIA → DOCUMENTADA]: Coherence score inconsistente entre fuentes
++
++**Hallazgo**:
++
++| Fuente | Score | Contexto |
++|--------|-------|----------|
++| `coherence_validation.json` | 0.89 | overall_score (promedio ponderado de 6 checks) |
++| `gate_report.json` | 0.891 | coherence gate value (mismo dato, menos redondeo) |
++| AGENTS.md | 0.84 | Diferente run |
++
++**Verificacion SOL2-D (2026-05-07)**: Ambas fuentes usan el **mismo cálculo**. `publication_gates.py` extrae el score del assessment dict (que viene de `CoherenceValidator.validate()`). La diferencia 0.89 vs 0.891 es solo redondeo:
++- `coherence_validation.json`: `round(overall_score, 4)` → 0.89
++- `gate_report.json`: extrae el float raw → 0.891111...
++
++**Resolución**: La fuente única de verdad es `CoherenceValidator.validate()`. AGENTS.md ya usa notación de rango (`≥0.8`). Documentado en docstrings de `publication_gates.py` (SOL2-D).
++
++---
++
++#### GAP-E [BAJA]: Line range del gate subestimado
++
++**Hallazgo**: Documento dice "lineas 755-850". El metodo termina en linea 865 (el `return PublicationGateResult` del caso WARNING). Diferencia: ~15 lineas.
++
++---
++
++#### GAP-F [MEDIA]: `promised_by=["always"]` en monthly_report no documentado
++
++**Hallazgo**: El documento documenta que whatsapp_button tuvo `"always"` eliminado en FASE-5 (linea 63), pero **NO menciona** que `monthly_report` **TIENE** `"always"` en `promised_by` (linea 322):
++
++```python
++promised_by=["always"]  # SIEMPRE generar - la propuesta SIEMPRE lo promete
++```
++
++**Impacto**: monthly_report se genera SIEMPRE, incluso si el hotel no tiene brechas relacionadas. Esto es intencional pero crea una cadena de causalidad no documentada:
++
++1. `promised_by=["always"]` → se genera siempre
++2. Se genera con confidence baja (0.5) porque no hay datos especificos
++3. El gate `asset_confidence` lo reporta como low_quality (0.5 < 0.7)
++4. El documento lo menciona como `low_quality_count: 1` pero no conecta esto con el patron `"always"`
++
++---
++
++#### GAP-G [ALTA → RESUELTA]: `delivery_ready_percentage` y `site_verification_applied` — campos VALIDADOS
++
++**Hallazgo original**: El documento citaba estos campos como "no existen en codigo".
++
++**Verificacion SOL2-D (2026-05-07)**: Ambos campos **SÍ existen** y son calculados dinámicamente en `modules/asset_generation/v4_asset_orchestrator.py` (lineas 144-145):
++
++```python
++"delivery_ready_percentage": round(delivery_ready_pct, 2),
++"site_verification_applied": len(self.skipped_assets) > 0  # FASE-CAUSAL-01
++```
++
++- `delivery_ready_pct` se calcula como `(can_use_count / total_assets) * 100`
++- `site_verification_applied` es `True` si hay assets skipeados
++
++**Veredicto**: NO son campos fantasma. El GAP-G original fue un falso positivo causado por busqueda incompleta del codebase. Los campos son validos y dinamicos.
++
++---
++
++### Resumen de Verificacion
++
++```
++Claims del documento:      12
++Confirmados:               11  (92%)
++Precision parcial:           0  (corregido en SOL2-D)
++Falsos/omitidos:             1  (SitePresenceChecker)
++
++Gaps nuevos encontrados:     7  (A a G)
++Severidad ALTA:              2  (SitePresenceChecker, deployment_assistant)
++Severidad MEDIA:             3  (7mo servicio, coherence score, "always")
++Severidad BAJA:              1  (line range - corregido en SOL2-D)
++Severidad RESUELTA:          1  (GAP-G: campos fantasma eran falsos positivos)
++```
++
++### Impacto en Opciones de Solucion del Documento
++
++| Opcion | Estado post-validacion | Observacion |
++|--------|----------------------|-------------|
++| **A** (generar 3 assets) | FACTIBLE | Los 3 estan IMPLEMENTED en catalogo. Verificar si `detect_pains()` detecta sus pain_ids. Si no, problema es de thresholds, no capability. |
++| **B** (reducir catalogo) | FACTIBLE | Bajo esfuerzo, alto impacto comercial negativo. Evaluar con equipo. |
++| **C** (unificar validacion) | FACTIBLE | Ambos validadores responden preguntas distintas (capability vs delivery). Hacer que coherence_validator tambien verifique delivery. |
++| **D** (deployment) | **D1 IMPOSIBLE** | `deployment_assistant.md` NO EXISTE. D3 (package con instrucciones) es quick win. D2/D4 requieren desarrollo nuevo. |
++| **E** (NUEVA: restaurar SitePresenceChecker) | FACTIBLE | Critico. El modulo fue eliminado/referenciado sin existir. Infraestructura del gate lista. |
++| **F** (NUEVA: limpiar refs muertas) | FACTIBLE | Bajo esfuerzo. Eliminar refs a deployment_assistant, limpiar/crear site_presence_checker. |
++
++### Recomendacion Actualizada
++
++**Prioridad 1 (bloqueante)**: GAP-A + GAP-B — Componentes que el sistema asume funcionales NO EXISTEN. Antes de cualquier plan de mejora, decidir: crear los modulos faltantes O eliminar las referencias.
++
++**Prioridad 2 (discrepancia)**: Opcion C — Unificar la validacion de coherence_validator y gate para que ambos verifiquen capability + delivery.
++
++**Prioridad 3 (comercial)**: Opcion A o B — Decision de producto: generar los 3 assets faltantes o reducir el catalogo.
++
++**Prioridad 4 (cierre del loop)**: Opcion D3 — Deployment guide como companion del ZIP (bajo esfuerzo, alto valor percibido).
++
++---
++
+ *Contexto generado automaticamente por Hermes Agent durante FASE-PATCH-C*
+ *Para disenar nuevo plan: cargar este archivo y crear .opencode/plans/NEW-PLAN/ basandose en las opciones de solucion*
++
++*Validacion contra codigo vivo: 2026-05-07 12:47 — 11/12 claims confirmados, 7 gaps (2 ALTA, 3 MEDIA, 1 BAJA, 1 RESUELTA). Actualizado por SOL2-D: GAP-G resuelta (falso positivo), line range corregido.*
+diff --git a/modules/asset_generation/asset_catalog.py b/modules/asset_generation/asset_catalog.py
+index 83e4979..6038852 100644
+--- a/modules/asset_generation/asset_catalog.py
++++ b/modules/asset_generation/asset_catalog.py
+@@ -320,6 +320,16 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
+         block_on_failure=False,
+         status=AssetStatus.IMPLEMENTED,
+         promised_by=["always"]  # SIEMPRE generar - la propuesta SIEMPRE lo promete
++        # FASE-SOL2-B DOCUMENTATION: promised_by=["always"] causalidad:
++        # 1. "always" → el asset se genera SIEMPRE, sin importar pain_ids detectados
++        # 2. Esto causa que monthly_report aparezca como generated con confidence 0.5
++        #    cuando no hay datos suficientes para un reporte completo
++        # 3. Con confidence 0.5, cae en low_quality_count del gate de asset_confidence
++        # 4. IMPACTO: Si se quitara "always", monthly_report solo se generaría cuando
++        #    el pain "no_monthly_report" esté detectado, reduciendo entregables pero
++        #    eliminando el warning de low_quality_count para este asset.
++        # 5. DECISIÓN: Mantener "always" porque el informe mensual es un diferenciador
++        #    comercial que siempre se promete en la propuesta.
+     ),
+     # FASE-4: Open Graph Meta Tags - closes gap B4 ($379K/month exposed)
+     "open_graph": AssetCatalogEntry(
+diff --git a/modules/asset_generation/proposal_asset_alignment.py b/modules/asset_generation/proposal_asset_alignment.py
+index 6416bf3..02f43f7 100644
+--- a/modules/asset_generation/proposal_asset_alignment.py
++++ b/modules/asset_generation/proposal_asset_alignment.py
+@@ -24,10 +24,17 @@ PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
+     "Informe Mensual": "monthly_report",
+     "Página de FAQ": "faq_page",
+     "Meta Tags Sociales (Open Graph)": "open_graph",
++    "Optimización para IA Generativa": "llms_txt",
+ }
+ 
+-# All 6 services that the proposal always promises (as of v4.40.2: removed Google Maps Optimizado
+-# because geo_playbook was redundant with geo_fix_kit.md and other GEO assets. See FASE-PROP-D.)
++# All 7 services that the proposal promises (as of v4.41.1 / FASE-SOL2-B):
++# - 6 base services (SEO, WhatsApp, Schema, Monthly Report, FAQ, Open Graph)
++# - 1 conditional AEO service (Optimización para IA Generativa → llms_txt)
++# NOTE: Google Maps Optimizado was removed in FASE-PROP-D because geo_playbook
++# was redundant with geo_fix_kit.md and other GEO assets.
++# SOURCE OF TRUTH: This dict is consumed by proposal_asset_alignment_gate (Gate 9)
++# and cross-referenced by coherence_validator._check_promised_assets_exist().
++# See FASE-SOL2-B for unification rationale.
+ ALL_PROMISED_SERVICES: List[str] = list(PROPOSAL_SERVICE_TO_ASSET.keys())
+ 
+ 
+diff --git a/modules/commercial_documents/coherence_validator.py b/modules/commercial_documents/coherence_validator.py
+index b7f90f6..48ef149 100644
+--- a/modules/commercial_documents/coherence_validator.py
++++ b/modules/commercial_documents/coherence_validator.py
+@@ -496,32 +496,60 @@ class CoherenceValidator:
+         assets: List[AssetSpec],
+         diagnostic: DiagnosticDocument
+     ) -> CoherenceCheck:
+-        """Valida que todos los assets prometidos existen en el generador."""
++        """Valida que todos los assets prometidos existen en el generador.
++
++        SOURCE OF TRUTH: Uses ASSET_CATALOG.is_asset_implemented() to verify
++        that each asset type referenced in the diagnostic is implemented.
++
++        FASE-SOL2-B (Option C1): Also cross-references PROPOSAL_SERVICE_TO_ASSET
++        to ensure all 7 promised services have implemented assets. This unifies
++        the baseline with proposal_asset_alignment_gate (Gate 9).
++
++        Both validators now agree on "what was promised":
++        - coherence_validator: checks asset types from diagnostic + PROPOSAL_SERVICE_TO_ASSET
++        - proposal_asset_alignment_gate: checks services from PROPOSAL_SERVICE_TO_ASSET
++        """
+         from ..asset_generation.asset_catalog import is_asset_implemented
+-        
++        from ..asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
++
+         promised_types = {a.asset_type for a in assets}
+         missing_types = [
+-            t for t in promised_types 
++            t for t in promised_types
+             if not is_asset_implemented(t)
+         ]
+-        
+-        if not missing_types:
++
++        # FASE-SOL2-B: Cross-check all PROPOSAL_SERVICE_TO_ASSET entries
++        # Ensure every promised service maps to an implemented asset
++        missing_service_assets = []
++        for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
++            if not is_asset_implemented(asset_type):
++                missing_service_assets.append(f"{service_name}→{asset_type}")
++
++        all_missing = missing_types + missing_service_assets
++        if not all_missing:
+             return CoherenceCheck(
+                 name="promised_assets_exist",
+                 passed=True,
+                 score=1.0,
+-                message="Todos los assets prometidos están implementados",
++                message=f"Todos los assets prometidos están implementados ({len(PROPOSAL_SERVICE_TO_ASSET)} servicios verificados via PROPOSAL_SERVICE_TO_ASSET)",
+                 severity="info"
+             )
+-        
++
+         # Calcular score basado en % de assets disponibles
+-        score = (len(promised_types) - len(missing_types)) / len(promised_types) if promised_types else 1.0
+-        
++        total_checked = len(promised_types | set(PROPOSAL_SERVICE_TO_ASSET.values()))
++        score = (total_checked - len(set(all_missing))) / total_checked if total_checked else 1.0
++
++        msg_parts = []
++        if missing_types:
++            msg_parts.append(f"Assets no implementados: {', '.join(missing_types)}")
++        if missing_service_assets:
++            msg_parts.append(f"Servicios sin asset implementado: {', '.join(missing_service_assets)}")
++
+         return CoherenceCheck(
+             name="promised_assets_exist",
+             passed=False,
+             score=score,
+-            message=f"Assets prometidos no implementados: {', '.join(missing_types)}",
++            message="; ".join(msg_parts),
+             severity="error"  # BLOCKING: no prometer lo que no se puede entregar
+         )
+     
+diff --git a/modules/quality_gates/publication_gates.py b/modules/quality_gates/publication_gates.py
+index 9161931..9f95ba2 100644
+--- a/modules/quality_gates/publication_gates.py
++++ b/modules/quality_gates/publication_gates.py
+@@ -416,6 +416,11 @@ class PublicationGatesOrchestrator:
+         Blocks if coherence score is below threshold.
+         Coherence measures alignment between diagnostic, proposal, and assets.
+         
++        SOURCE OF TRUTH: This gate extracts the score from the assessment dict,
++        which was calculated by CoherenceValidator.validate() (weighted average of
++        6 checks). The gate does NOT recalculate — it consumes the single source
++        of truth from coherence_validation.json / coherence_report.overall_score.
++        
+         Threshold: >= 0.8
+         Interpretation:
+         - >= 0.8: "Certified" - ready for publication
+@@ -938,7 +943,20 @@ class PublicationGatesOrchestrator:
+         return {}
+     
+     def _extract_coherence_score(self, assessment: Dict[str, Any]) -> Optional[float]:
+-        """Extract coherence score from assessment."""
++        """Extract coherence score from assessment.
++        
++        SINGLE SOURCE OF TRUTH: The score originates from CoherenceValidator.validate()
++        which calculates a weighted average of 6 checks (problems_have_solutions,
++        assets_are_justified, financial_data_validated, whatsapp_verified,
++        price_matches_pain, promised_assets_exist). This method simply extracts
++        that pre-calculated value from whichever key it was stored under.
++        
++        Lookup priority:
++        1. assessment["coherence_score"] (direct)
++        2. assessment["metrics"]["coherence_score"]
++        3. assessment["coherence_report"]["overall_score"]
++        4. assessment["quality_metrics"]["coherence_score"]
++        """
+         # Try direct coherence_score in assessment root
+         if "coherence_score" in assessment:
+             return float(assessment["coherence_score"])
+diff --git a/tests/asset_generation/test_proposal_alignment.py b/tests/asset_generation/test_proposal_alignment.py
+index 82f5649..2df3e5e 100644
+--- a/tests/asset_generation/test_proposal_alignment.py
++++ b/tests/asset_generation/test_proposal_alignment.py
+@@ -2,6 +2,9 @@
+ 
+ Validates the mapping and verification logic between proposal services
+ and generated assets.
++
++FASE-SOL2-B: Updated to reflect 7 services (6 base + 1 conditional AEO).
++Google Maps Optimizado was removed in FASE-PROP-D.
+ """
+ 
+ import pytest
+@@ -20,11 +23,11 @@ class TestProposalAssetMapping:
+     """Test the proposal service to asset mapping."""
+ 
+     def test_all_7_services_mapped(self):
+-        """All 7 promised services must have a mapping (v4.34.0: +FAQ, +Open Graph)."""
++        """All 7 promised services must have a mapping (FASE-SOL2-B: +llms_txt)."""
+         assert len(PROPOSAL_SERVICE_TO_ASSET) == 7
+ 
+     def test_all_promised_services_count(self):
+-        """ALL_PROMISED_SERVICES must have 7 entries (v4.34.0)."""
++        """ALL_PROMISED_SERVICES must have 7 entries (FASE-SOL2-B)."""
+         assert len(ALL_PROMISED_SERVICES) == 7
+ 
+     def test_mapping_covers_all_services(self):
+@@ -38,26 +41,34 @@ class TestProposalAssetMapping:
+         assert len(asset_types) == len(set(asset_types))
+ 
+     def test_known_mappings(self):
+-        """Test specific known mappings."""
+-        assert PROPOSAL_SERVICE_TO_ASSET["Google Maps Optimizado"] == "geo_playbook"
++        """Test specific known mappings (FASE-SOL2-B: llms_txt replaces geo_playbook)."""
++        assert PROPOSAL_SERVICE_TO_ASSET["Optimización para IA Generativa"] == "llms_txt"
+         assert PROPOSAL_SERVICE_TO_ASSET["Botón de WhatsApp"] == "whatsapp_button"
+         assert PROPOSAL_SERVICE_TO_ASSET["Informe Mensual"] == "monthly_report"
+ 
++    def test_llms_txt_in_mapping(self):
++        """GAP-C closure: llms_txt must be in PROPOSAL_SERVICE_TO_ASSET."""
++        assert "Optimización para IA Generativa" in PROPOSAL_SERVICE_TO_ASSET
++        assert PROPOSAL_SERVICE_TO_ASSET["Optimización para IA Generativa"] == "llms_txt"
++
++    def test_no_google_maps_in_mapping(self):
++        """Google Maps Optimizado was removed in FASE-PROP-D."""
++        assert "Google Maps Optimizado" not in PROPOSAL_SERVICE_TO_ASSET
++
+ 
+ class TestVerifyAlignment:
+     """Test the alignment verification logic."""
+ 
+     def test_all_aligned_when_all_assets_present(self):
+-        """All services aligned when all 7 assets are present (v4.34.0)."""
++        """All services aligned when all 7 assets are present (FASE-SOL2-B)."""
+         assets = [
+-            {"asset_type": "geo_playbook", "confidence_score": 0.8},
+-            {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
+             {"asset_type": "optimization_guide", "confidence_score": 0.8},
+             {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+             {"asset_type": "hotel_schema", "confidence_score": 0.8},
+             {"asset_type": "monthly_report", "confidence_score": 0.8},
+             {"asset_type": "faq_page", "confidence_score": 0.8},
+             {"asset_type": "open_graph", "confidence_score": 0.8},
++            {"asset_type": "llms_txt", "confidence_score": 0.8},
+         ]
+         report = verify_proposal_asset_alignment(
+             proposal_services=ALL_PROMISED_SERVICES,
+@@ -68,10 +79,9 @@ class TestVerifyAlignment:
+         assert len(report.aligned) == 7
+ 
+     def test_missing_assets_detected(self):
+-        """Missing assets must be detected (6 of 7 missing when only geo_playbook provided)."""
++        """Missing assets must be detected (6 of 7 missing when only optimization_guide provided)."""
+         assets = [
+-            {"asset_type": "geo_playbook", "confidence_score": 0.8},
+-            # Missing: SEO Local, Boton de WhatsApp, Datos Estructurados, Informe Mensual, Pagina de FAQ, Meta Tags Sociales (6 of 7)
++            {"asset_type": "optimization_guide", "confidence_score": 0.8},
+         ]
+         report = verify_proposal_asset_alignment(
+             proposal_services=ALL_PROMISED_SERVICES,
+@@ -82,26 +92,25 @@ class TestVerifyAlignment:
+         assert len(report.aligned) == 1
+ 
+     def test_low_quality_assets_detected(self):
+-        """Low confidence assets must be flagged (v4.34.0 with 7 services)."""
++        """Low confidence assets must be flagged (FASE-SOL2-B with 7 services)."""
+         assets = [
+-            {"asset_type": "geo_playbook", "confidence_score": 0.3},  # low
+-            {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
+             {"asset_type": "optimization_guide", "confidence_score": 0.8},
+             {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+             {"asset_type": "hotel_schema", "confidence_score": 0.8},
+             {"asset_type": "monthly_report", "confidence_score": 0.8},
+             {"asset_type": "faq_page", "confidence_score": 0.8},
+             {"asset_type": "open_graph", "confidence_score": 0.8},
++            {"asset_type": "llms_txt", "confidence_score": 0.3},  # low
+         ]
+         report = verify_proposal_asset_alignment(
+             proposal_services=ALL_PROMISED_SERVICES,
+             generated_assets=assets,
+         )
+         assert len(report.low_quality) == 1
+-        assert report.low_quality[0].service_name == "Google Maps Optimizado"
++        assert report.low_quality[0].service_name == "Optimización para IA Generativa"
+ 
+     def test_empty_assets_all_missing(self):
+-        """With no assets, all 7 services should be missing (v4.34.0)."""
++        """With no assets, all 7 services should be missing (FASE-SOL2-B)."""
+         report = verify_proposal_asset_alignment(
+             proposal_services=ALL_PROMISED_SERVICES,
+             generated_assets=[],
+@@ -111,16 +120,15 @@ class TestVerifyAlignment:
+         assert report.alignment_percentage == 0.0
+ 
+     def test_default_services_when_empty_list(self):
+-        """Empty proposal_services should default to ALL_PROMISED_SERVICES (7 services, v4.34.0)."""
++        """Empty proposal_services should default to ALL_PROMISED_SERVICES (7 services, FASE-SOL2-B)."""
+         assets = [
+-            {"asset_type": "geo_playbook", "confidence_score": 0.8},
+-            {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
+             {"asset_type": "optimization_guide", "confidence_score": 0.8},
+             {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+             {"asset_type": "hotel_schema", "confidence_score": 0.8},
+             {"asset_type": "monthly_report", "confidence_score": 0.8},
+             {"asset_type": "faq_page", "confidence_score": 0.8},
+             {"asset_type": "open_graph", "confidence_score": 0.8},
++            {"asset_type": "llms_txt", "confidence_score": 0.8},
+         ]
+         report = verify_proposal_asset_alignment(
+             proposal_services=[],
+@@ -134,9 +142,9 @@ class TestAlignmentReport:
+     """Test AlignmentReport dataclass."""
+ 
+     def test_report_to_dict(self):
+-        """Report should serialize to dict correctly (v4.34.0 with 7 services)."""
++        """Report should serialize to dict correctly (FASE-SOL2-B with 7 services)."""
+         assets = [
+-            {"asset_type": "geo_playbook", "confidence_score": 0.8},
++            {"asset_type": "optimization_guide", "confidence_score": 0.8},
+         ]
+         report = verify_proposal_asset_alignment(
+             proposal_services=ALL_PROMISED_SERVICES,
+@@ -161,6 +169,7 @@ class TestHelpers:
+         missing = get_missing_services(report)
+         assert len(missing) == 7
+         assert "Botón de WhatsApp" in missing
++        assert "Optimización para IA Generativa" in missing
+ 
+     def test_get_alignment_summary(self):
+         """get_alignment_summary should return readable string."""
+@@ -195,20 +204,12 @@ class TestConfidenceToNivelSignificado:
+         from modules.commercial_documents.v4_proposal_generator import V4ProposalGenerator
+ 
+         gen = V4ProposalGenerator()
+-        # With presence_verified=False, even 0.95 confidence should NOT claim "Verificado en sitio"
+         nivel, significado = gen._confidence_to_nivel_significado(
+             confidence=0.95,
+             assets_generated=[],
+             present_in_production=False,
+             presence_verified=False,
+         )
+-        # The "Completo" path requires presence_verified + present_in_production
+-        # Without verification, 0.95 still falls into "Alta confianza" but the
+-        # presence_verified guard above short-circuits first when False.
+-        # So: presence_verified=False + present_in_production=False -> falls to confidence branch
+-        # which returns "✅ Completo" for >= 0.85. This is the expected backward-compat behavior.
+-        # The FASE-D fix ensures that if presence IS verified but NOT in production,
+-        # we still show "Listo para implementar" not "Verificado en sitio".
+         assert nivel == "✅ Completo"
+         assert significado == "Listo para implementar"
+ 
+@@ -223,7 +224,5 @@ class TestConfidenceToNivelSignificado:
+             present_in_production=False,
+             presence_verified=True,
+         )
+-        # Should NOT return "Verificado en sitio" since it's not actually in production
+         assert nivel != "✅ Verificado en sitio"
+-        # Falls through to confidence >= 0.85 -> "✅ Completo"
+         assert nivel == "✅ Completo"
+diff --git a/tests/quality_gates/test_proposal_alignment_gate.py b/tests/quality_gates/test_proposal_alignment_gate.py
+index 7dfba9b..b537a54 100644
+--- a/tests/quality_gates/test_proposal_alignment_gate.py
++++ b/tests/quality_gates/test_proposal_alignment_gate.py
+@@ -1,6 +1,8 @@
+ """Tests for proposal_asset_alignment_gate in publication_gates.
+ 
+ Validates Gate 9: Proposal-Asset Alignment Check.
++
++FASE-SOL2-B: Updated to reflect 7 services including llms_txt.
+ """
+ 
+ import pytest
+@@ -24,19 +26,18 @@ class TestProposalAssetAlignmentGate:
+         assert "proposal_asset_alignment" in orchestrator.gates
+ 
+     def test_gate_passes_when_all_assets_present(self, orchestrator):
+-        """Gate passes when all 7 promised services have assets."""
+-        # Note: Only assets that exist in PROPOSAL_SERVICE_TO_ASSET mapping count
+-        # The 7 services are: geo_playbook, optimization_guide, whatsapp_button,
+-        # hotel_schema, monthly_report, faq_page, open_graph
++        """Gate passes when all 7 promised services have assets (FASE-SOL2-B)."""
++        # The 7 services are: optimization_guide, whatsapp_button, hotel_schema,
++        # monthly_report, faq_page, open_graph, llms_txt
+         assessment = {
+             "generated_assets": [
+-                {"asset_type": "geo_playbook", "confidence_score": 0.8},
+                 {"asset_type": "optimization_guide", "confidence_score": 0.8},
+                 {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+                 {"asset_type": "hotel_schema", "confidence_score": 0.8},
+                 {"asset_type": "monthly_report", "confidence_score": 0.8},
+                 {"asset_type": "faq_page", "confidence_score": 0.8},
+                 {"asset_type": "open_graph", "confidence_score": 0.8},
++                {"asset_type": "llms_txt", "confidence_score": 0.8},
+             ]
+         }
+         result = orchestrator._proposal_asset_alignment_gate(assessment)
+@@ -48,7 +49,7 @@ class TestProposalAssetAlignmentGate:
+         """Gate returns WARNING when assets are missing (not blocking)."""
+         assessment = {
+             "generated_assets": [
+-                {"asset_type": "geo_playbook", "confidence_score": 0.8},
++                {"asset_type": "optimization_guide", "confidence_score": 0.8},
+             ]
+         }
+         result = orchestrator._proposal_asset_alignment_gate(assessment)
+@@ -56,6 +57,24 @@ class TestProposalAssetAlignmentGate:
+         assert result.status == GateStatus.WARNING
+         assert "missing" in result.message.lower() or "Missing" in result.message
+ 
++    def test_gate_detects_llms_txt_missing(self, orchestrator):
++        """FASE-SOL2-B: Gate detects when llms_txt is missing (GAP-C closure)."""
++        assessment = {
++            "generated_assets": [
++                {"asset_type": "optimization_guide", "confidence_score": 0.8},
++                {"asset_type": "whatsapp_button", "confidence_score": 0.8},
++                {"asset_type": "hotel_schema", "confidence_score": 0.8},
++                {"asset_type": "monthly_report", "confidence_score": 0.8},
++                {"asset_type": "faq_page", "confidence_score": 0.8},
++                {"asset_type": "open_graph", "confidence_score": 0.8},
++                # llms_txt MISSING
++            ]
++        }
++        result = orchestrator._proposal_asset_alignment_gate(assessment)
++        assert result.passed is True  # WARNING, not blocking
++        assert result.status == GateStatus.WARNING
++        assert "Optimización para IA Generativa" in result.message
++
+     def test_gate_with_empty_assets(self, orchestrator):
+         """Gate handles empty asset list."""
+         assessment = {"generated_assets": []}
+@@ -71,16 +90,16 @@ class TestProposalAssetAlignmentGate:
+         assert result.status == GateStatus.WARNING
+ 
+     def test_gate_result_has_details(self, orchestrator):
+-        """Gate result must include alignment report details."""
++        """Gate result must include alignment report details (FASE-SOL2-B: 7 services)."""
+         assessment = {
+             "generated_assets": [
+-                {"asset_type": "geo_playbook", "confidence_score": 0.8},
+-                {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
+-                {"asset_type": "voice_assistant_guide", "confidence_score": 0.8},
+                 {"asset_type": "optimization_guide", "confidence_score": 0.8},
+                 {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+                 {"asset_type": "hotel_schema", "confidence_score": 0.8},
+                 {"asset_type": "monthly_report", "confidence_score": 0.8},
++                {"asset_type": "faq_page", "confidence_score": 0.8},
++                {"asset_type": "open_graph", "confidence_score": 0.8},
++                {"asset_type": "llms_txt", "confidence_score": 0.8},
+             ]
+         }
+         result = orchestrator._proposal_asset_alignment_gate(assessment)
+@@ -96,13 +115,13 @@ class TestProposalAssetAlignmentGate:
+             "critical_recall": 0.95,
+             "financial_data": {"occupancy_rate": 75.0, "direct_channel_percentage": 30.0, "adr_cop": 250000},
+             "generated_assets": [
+-                {"asset_type": "geo_playbook", "confidence_score": 0.8},
+-                {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
+-                {"asset_type": "voice_assistant_guide", "confidence_score": 0.8},
+                 {"asset_type": "optimization_guide", "confidence_score": 0.8},
+                 {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+                 {"asset_type": "hotel_schema", "confidence_score": 0.8},
+                 {"asset_type": "monthly_report", "confidence_score": 0.8},
++                {"asset_type": "faq_page", "confidence_score": 0.8},
++                {"asset_type": "open_graph", "confidence_score": 0.8},
++                {"asset_type": "llms_txt", "confidence_score": 0.8},
+             ],
+         }
+         results = orchestrator.run_all(assessment)

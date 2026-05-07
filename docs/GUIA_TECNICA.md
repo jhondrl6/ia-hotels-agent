@@ -1,8 +1,24 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.41.1 (CORRECCION-POST-VALIDACION-TERMALES)
+**Versión:** v4.42.0 (SOL-2-ASSET-ALIGNMENT-REFACTOR)
 **Última actualización:** 2026-05-07
 **Proyecto:** IA Hoteles Agent CLI
+
+---
+
+### v4.42.0 - 2026-05-07 — SOL-2 Asset Alignment Refactor (FASE-SOL2-A/B/C/D)
+
+**Módulos afectados**: quality_gates, asset_generation, commercial_documents
+
+**Problema**: Dos validadores (coherence_validator y proposal_asset_alignment_gate) reportaban resultados inconsistentes para el mismo hotel. Existían refs fantasma a módulos inexistentes (deployment_assistant en docs). El 7mo servicio (AEO/llms_txt) no estaba cubierto por el gate.
+
+**Solución**:
+- FASE-SOL2-A: Eliminar ghost refs en AGENTS.md e INDICE_DOCUMENTACION.md. Verificar SitePresenceChecker opera correctamente.
+- FASE-SOL2-B: Agregar llms_txt a PROPOSAL_SERVICE_TO_ASSET (7 servicios). Unificar baseline de coherencia. Documentar promised_by=["always"] con causalidad completa.
+- FASE-SOL2-C: Verificación E2E con v4complete para Termales Santa Rosa de Cabal (coherence 0.89, 6/9 PASSED).
+- FASE-SOL2-D: Auditoría de campos fantasma (GAP-G: falso positivo — campos calculados dinámicamente en v4_asset_orchestrator.py). Coherence score documentado como fuente única de verdad.
+
+**Backwards compatibility**: Sí — cambios internos de reporting, API pública sin cambios. Coherence score puede variar levemente por unificación de baseline.
 
 ---
 

@@ -1,0 +1,63 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 31 items
+
+tests/asset_generation/test_proposal_alignment.py::TestProposalAssetMapping::test_all_7_services_mapped PASSED [  3%]
+tests/asset_generation/test_proposal_alignment.py::TestProposalAssetMapping::test_all_promised_services_count PASSED [  6%]
+tests/asset_generation/test_proposal_alignment.py::TestProposalAssetMapping::test_mapping_covers_all_services PASSED [  9%]
+tests/asset_generation/test_proposal_alignment.py::TestProposalAssetMapping::test_each_service_maps_to_unique_asset PASSED [ 12%]
+tests/asset_generation/test_proposal_alignment.py::TestProposalAssetMapping::test_known_mappings PASSED [ 16%]
+tests/asset_generation/test_proposal_alignment.py::TestProposalAssetMapping::test_llms_txt_in_mapping PASSED [ 19%]
+tests/asset_generation/test_proposal_alignment.py::TestProposalAssetMapping::test_no_google_maps_in_mapping PASSED [ 22%]
+tests/asset_generation/test_proposal_alignment.py::TestVerifyAlignment::test_all_aligned_when_all_assets_present PASSED [ 25%]
+tests/asset_generation/test_proposal_alignment.py::TestVerifyAlignment::test_missing_assets_detected PASSED [ 29%]
+tests/asset_generation/test_proposal_alignment.py::TestVerifyAlignment::test_low_quality_assets_detected PASSED [ 32%]
+tests/asset_generation/test_proposal_alignment.py::TestVerifyAlignment::test_empty_assets_all_missing PASSED [ 35%]
+tests/asset_generation/test_proposal_alignment.py::TestVerifyAlignment::test_default_services_when_empty_list PASSED [ 38%]
+tests/asset_generation/test_proposal_alignment.py::TestAlignmentReport::test_report_to_dict PASSED [ 41%]
+tests/asset_generation/test_proposal_alignment.py::TestHelpers::test_get_missing_services PASSED [ 45%]
+tests/asset_generation/test_proposal_alignment.py::TestHelpers::test_get_alignment_summary PASSED [ 48%]
+tests/asset_generation/test_proposal_alignment.py::TestConfidenceToNivelSignificado::test_verified_present_in_production_returns_verificado_en_sitio PASSED [ 51%]
+tests/asset_generation/test_proposal_alignment.py::TestConfidenceToNivelSignificado::test_high_confidence_without_presence_not_falsely_complete PASSED [ 54%]
+tests/asset_generation/test_proposal_alignment.py::TestConfidenceToNivelSignificado::test_verified_but_not_in_production PASSED [ 58%]
+tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_exists_in_orchestrator PASSED [ 61%]
+tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_passes_when_all_assets_present PASSED [ 64%]
+tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_warns_when_assets_missing PASSED [ 67%]
+tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_detects_llms_txt_missing PASSED [ 70%]
+tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_with_empty_assets PASSED [ 74%]
+tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_with_no_assets_key PASSED [ 77%]
+tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_result_has_details PASSED [ 80%]
+tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_full_run_all_includes_alignment_gate PASSED [ 83%]
+tests/test_commercial_documents_phase2.py::TestCoherenceValidator::test_validate_all_checks_pass PASSED [ 87%]
+tests/test_commercial_documents_phase2.py::TestCoherenceValidator::test_promised_assets_exist_pass PASSED [ 90%]
+tests/test_commercial_documents_phase2.py::TestCoherenceValidator::test_promised_assets_exist_fail PASSED [ 93%]
+tests/test_commercial_documents_phase2.py::TestIntegration::test_end_to_end_workflow PASSED [ 96%]
+tests/test_commercial_documents_phase2.py::TestIntegration::test_promised_assets_exist_fail PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 31 passed, 8 warnings in 0.51s ========================

@@ -320,6 +320,16 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
         promised_by=["always"]  # SIEMPRE generar - la propuesta SIEMPRE lo promete
+        # FASE-SOL2-B DOCUMENTATION: promised_by=["always"] causalidad:
+        # 1. "always" → el asset se genera SIEMPRE, sin importar pain_ids detectados
+        # 2. Esto causa que monthly_report aparezca como generated con confidence 0.5
+        #    cuando no hay datos suficientes para un reporte completo
+        # 3. Con confidence 0.5, cae en low_quality_count del gate de asset_confidence
+        # 4. IMPACTO: Si se quitara "always", monthly_report solo se generaría cuando
+        #    el pain "no_monthly_report" esté detectado, reduciendo entregables pero
+        #    eliminando el warning de low_quality_count para este asset.
+        # 5. DECISIÓN: Mantener "always" porque el informe mensual es un diferenciador
+        #    comercial que siempre se promete en la propuesta.
     ),
     # FASE-4: Open Graph Meta Tags - closes gap B4 ($379K/month exposed)
     "open_graph": AssetCatalogEntry(

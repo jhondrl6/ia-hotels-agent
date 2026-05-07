@@ -1,9 +1,9 @@
 ---
 generated_at: 2026-05-07 10:40
-updated_at: 2026-05-07 12:30
-version: 1.1.0
+updated_at: 2026-05-07 15:46
+version: 3.0.0
 document_type: CONTEXT_KNOWN_ISSUE
-related_plan: PROP-PATCH (FASE-PATCH-C)
+related_plan: PROP-PATCH (FASE-PATCH-C) + SOL-2 (FASE-SOL2-D)
 validation_type: E2E verification of v4complete for Termales Santa Rosa de Cabal
 evidence_files:
   - evidence/FASE-PATCH-C/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260507_093302.md
@@ -12,7 +12,7 @@ evidence_files:
   - evidence/FASE-PATCH-C/coherence_validation.json
   - evidence/FASE-PATCH-C/asset_generation_report.json
 trigger: FASE-PATCH-C E2E verification (v4complete Termales, 2026-05-07)
-update_note: "v1.1 — 2026-05-07 12:30 — Agregado GAP-4 (deployment) y validacion harness sin errores"
+update_note: "v3.0 — 2026-05-07 15:46 — SOL2-D: GAP-G resuelta (falso positivo), GAP-D documentada, line range corregido a 755-865"
 ---
 
 # CONTEXTO: Discrepancia SOL-2 — Proposal Asset Alignment
@@ -53,7 +53,7 @@ missing_types = [
 
 ### Componente 2: proposal_asset_alignment_gate (missing_count=3, WARNING)
 
-**Archivo**: `modules/quality_gates/publication_gates.py` (lineas 755-850)
+**Archivo**: `modules/quality_gates/publication_gates.py` (lineas 755-865)
 
 **Logica**: `verify_proposal_asset_alignment()` compara `PROPOSAL_SERVICE_TO_ASSET` (contrato estático de 6 servicios) contra los assets generados y la verificacion de presencia en el sitio.
 
@@ -337,5 +337,181 @@ ASSETS/v4_audit/
 
 ---
 
+---
+
+## Validacion contra Codigo Vivo (2026-05-07 12:47)
+
+**Metodo**: Lectura directa de archivos fuente + busqueda en codebase completo.
+**Skills aplicados**: `iah-cli-cross-document-audit`, `iah-cli-phase-implementation-verification`.
+
+### Claims Verificados: 12
+
+| # | Claim | Veredicto | Evidencia |
+|---|-------|-----------|-----------|
+| 1 | `coherence_validator._check_promised_assets_exist()` lineas 494-526 | ✅ CONFIRMADO | Lineas exactas, logica matchea |
+| 2 | Usa `promised_types = {a.asset_type for a in assets}` + `is_asset_implemented(t)` | ✅ CONFIRMADO | Lineas 502-506 exactas |
+| 3 | Retorna score=1.0 si no missing_types | ✅ CONFIRMADO | Lineas 508-515, coherence_validation.json linea 43 |
+| 4 | `proposal_asset_alignment_gate` lineas 755-865 | ✅ CONFIRMADO | Corregido de 755-850 a 755-865 (SOL2-D) |
+| 5 | `PROPOSAL_SERVICE_TO_ASSET` 6 entradas estaticas | ✅ CONFIRMADO | proposal_asset_alignment.py lineas 20-27 |
+| 6 | `verify_proposal_asset_alignment()` existe | ✅ CONFIRMADO | Linea 129-253 |
+| 7 | `_generate_dynamic_services_table()` filtra por assets_generated | ✅ CONFIRMADO | Lineas 839-908 exactas |
+| 8 | ASSET_CATALOG marca 3 assets IMPLEMENTED sin generar para Termales | ✅ CONFIRMADO | optimization_guide(L184), whatsapp_button(L62), open_graph(L333) |
+| 9 | Root cause: dos validadores con baselines distintas | ✅ CONFIRMADO | coherence=capability, gate=delivery |
+| 10 | Gate status WARNING (no bloqueante) | ✅ CONFIRMADO | Linea 855: `passed=True  # WARNING, not blocking` |
+| 11 | whatsapp_button: "always" eliminado en FASE-5 | ✅ CONFIRMADO | Linea 63: `FASE-5: "always" ELIMINADO - bug sistemico` |
+| 12 | SitePresenceChecker usado por el gate para WhatsApp | ❌ FALSO | Ver GAP-A abajo |
+
+**Resultado**: 10/12 confirmados, 1 parcial, 1 falso.
+
+---
+
+### Nuevos Gaps Encontrados (ampliacion del alcance)
+
+#### GAP-A [ALTA]: SitePresenceChecker NO EXISTE en el codebase
+
+**Hallazgo**: El documento asume que `SitePresenceChecker` opera y reporta `presence_verified: true, presence_status: "not_exists"` para WhatsApp. En realidad:
+
+- `publication_gates.py` linea 798 intenta: `from modules.asset_generation.site_presence_checker import SitePresenceChecker`
+- **Ese modulo NO EXISTE** (0 archivos encontrados en todo el codebase)
+- El `try/except` en lineas 811-813 captura el ImportError silenciosamente: `site_presence_report = None`
+- El gate_report JSON muestra `present_in_production: []` (vacio) a pesar de que WhatsApp tiene `presence_verified: true`
+
+**Impacto**: El feature "check site presence for missing assets" esta **completamente deshabilitado**. El gate funciona sin el (degrada gracefully), pero pierde la capacidad de detectar assets que YA existen en el sitio del cliente. La evidencia de `presence_verified: true` para WhatsApp probablemente vino de una version anterior donde el modulo existia, o fue hardcodeada en la generacion del reporte.
+
+**Solucion**: Crear `modules/asset_generation/site_presence_checker.py` con la clase `SitePresenceChecker` y metodo `check_site(url, asset_types)`. La infraestructura en el gate ya esta lista (lineas 793-813). Alternativamente, eliminar la referencia y simplificar el gate.
+
+---
+
+#### GAP-B [ALTA]: `deployment_assistant.md` NO EXISTE
+
+**Hallazgo**: AGENTS.md (linea 52) e INDICE_DOCUMENTACION.md (linea 210) referencian `.agents/workflows/deployment_assistant.md`. El archivo **NO EXISTE** en `.agents/workflows/` (0 matches).
+
+**Impacto directo en este documento**: La opcion D1 del documento dice:
+
+> "Skill deployment_assistant.md existente — evaluar reutilizacion | Bajo esfuerzo"
+
+Esto es **IMPOSIBLE**. El workflow de deployment nunca fue creado o fue eliminado sin actualizar las referencias. La opcion D1 debe descartarse o reemplazarse.
+
+**Solucion**: Eliminar la referencia fantasma de AGENTS.md e INDICE_DOCUMENTACION.md, o crear el workflow si se decide que es necesario.
+
+---
+
+#### GAP-C [MEDIA]: 7mo servicio excluido del gate
+
+**Hallazgo**: `SERVICE_CATALOG` tiene 7 entradas (6 base + 1 condicional AEO):
+
+```python
+# service_catalog.py - entrada condicional
+"Optimización para IA Generativa" -> asset_type="llms_txt"
+# Se agrega cuando score_aeo < 20
+```
+
+`PROPOSAL_SERVICE_TO_ASSET` (usado por el gate via `ALL_PROMISED_SERVICES`) solo tiene 6. El 7mo servicio (AEO/llms_txt) **escapa a la verificacion del gate**.
+
+**Impacto**: Si un hotel califica para AEO y llms_txt NO se genera, el gate no lo detecta. El documento dice "4 servicios filtrados" para Termales pero no explica que el 4to (AEO condicional) no esta cubierto por el gate.
+
+**Solucion**: Agregar `"Optimización para IA Generativa": "llms_txt"` a `PROPOSAL_SERVICE_TO_ASSET`, o hacer que el gate consulte `SERVICE_CATALOG` directamente en vez del dict estatico.
+
+---
+
+#### GAP-D [MEDIA → DOCUMENTADA]: Coherence score inconsistente entre fuentes
+
+**Hallazgo**:
+
+| Fuente | Score | Contexto |
+|--------|-------|----------|
+| `coherence_validation.json` | 0.89 | overall_score (promedio ponderado de 6 checks) |
+| `gate_report.json` | 0.891 | coherence gate value (mismo dato, menos redondeo) |
+| AGENTS.md | 0.84 | Diferente run |
+
+**Verificacion SOL2-D (2026-05-07)**: Ambas fuentes usan el **mismo cálculo**. `publication_gates.py` extrae el score del assessment dict (que viene de `CoherenceValidator.validate()`). La diferencia 0.89 vs 0.891 es solo redondeo:
+- `coherence_validation.json`: `round(overall_score, 4)` → 0.89
+- `gate_report.json`: extrae el float raw → 0.891111...
+
+**Resolución**: La fuente única de verdad es `CoherenceValidator.validate()`. AGENTS.md ya usa notación de rango (`≥0.8`). Documentado en docstrings de `publication_gates.py` (SOL2-D).
+
+---
+
+#### GAP-E [BAJA]: Line range del gate subestimado
+
+**Hallazgo**: Documento dice "lineas 755-850". El metodo termina en linea 865 (el `return PublicationGateResult` del caso WARNING). Diferencia: ~15 lineas.
+
+---
+
+#### GAP-F [MEDIA]: `promised_by=["always"]` en monthly_report no documentado
+
+**Hallazgo**: El documento documenta que whatsapp_button tuvo `"always"` eliminado en FASE-5 (linea 63), pero **NO menciona** que `monthly_report` **TIENE** `"always"` en `promised_by` (linea 322):
+
+```python
+promised_by=["always"]  # SIEMPRE generar - la propuesta SIEMPRE lo promete
+```
+
+**Impacto**: monthly_report se genera SIEMPRE, incluso si el hotel no tiene brechas relacionadas. Esto es intencional pero crea una cadena de causalidad no documentada:
+
+1. `promised_by=["always"]` → se genera siempre
+2. Se genera con confidence baja (0.5) porque no hay datos especificos
+3. El gate `asset_confidence` lo reporta como low_quality (0.5 < 0.7)
+4. El documento lo menciona como `low_quality_count: 1` pero no conecta esto con el patron `"always"`
+
+---
+
+#### GAP-G [ALTA → RESUELTA]: `delivery_ready_percentage` y `site_verification_applied` — campos VALIDADOS
+
+**Hallazgo original**: El documento citaba estos campos como "no existen en codigo".
+
+**Verificacion SOL2-D (2026-05-07)**: Ambos campos **SÍ existen** y son calculados dinámicamente en `modules/asset_generation/v4_asset_orchestrator.py` (lineas 144-145):
+
+```python
+"delivery_ready_percentage": round(delivery_ready_pct, 2),
+"site_verification_applied": len(self.skipped_assets) > 0  # FASE-CAUSAL-01
+```
+
+- `delivery_ready_pct` se calcula como `(can_use_count / total_assets) * 100`
+- `site_verification_applied` es `True` si hay assets skipeados
+
+**Veredicto**: NO son campos fantasma. El GAP-G original fue un falso positivo causado por busqueda incompleta del codebase. Los campos son validos y dinamicos.
+
+---
+
+### Resumen de Verificacion
+
+```
+Claims del documento:      12
+Confirmados:               11  (92%)
+Precision parcial:           0  (corregido en SOL2-D)
+Falsos/omitidos:             1  (SitePresenceChecker)
+
+Gaps nuevos encontrados:     7  (A a G)
+Severidad ALTA:              2  (SitePresenceChecker, deployment_assistant)
+Severidad MEDIA:             3  (7mo servicio, coherence score, "always")
+Severidad BAJA:              1  (line range - corregido en SOL2-D)
+Severidad RESUELTA:          1  (GAP-G: campos fantasma eran falsos positivos)
+```
+
+### Impacto en Opciones de Solucion del Documento
+
+| Opcion | Estado post-validacion | Observacion |
+|--------|----------------------|-------------|
+| **A** (generar 3 assets) | FACTIBLE | Los 3 estan IMPLEMENTED en catalogo. Verificar si `detect_pains()` detecta sus pain_ids. Si no, problema es de thresholds, no capability. |
+| **B** (reducir catalogo) | FACTIBLE | Bajo esfuerzo, alto impacto comercial negativo. Evaluar con equipo. |
+| **C** (unificar validacion) | FACTIBLE | Ambos validadores responden preguntas distintas (capability vs delivery). Hacer que coherence_validator tambien verifique delivery. |
+| **D** (deployment) | **D1 IMPOSIBLE** | `deployment_assistant.md` NO EXISTE. D3 (package con instrucciones) es quick win. D2/D4 requieren desarrollo nuevo. |
+| **E** (NUEVA: restaurar SitePresenceChecker) | FACTIBLE | Critico. El modulo fue eliminado/referenciado sin existir. Infraestructura del gate lista. |
+| **F** (NUEVA: limpiar refs muertas) | FACTIBLE | Bajo esfuerzo. Eliminar refs a deployment_assistant, limpiar/crear site_presence_checker. |
+
+### Recomendacion Actualizada
+
+**Prioridad 1 (bloqueante)**: GAP-A + GAP-B — Componentes que el sistema asume funcionales NO EXISTEN. Antes de cualquier plan de mejora, decidir: crear los modulos faltantes O eliminar las referencias.
+
+**Prioridad 2 (discrepancia)**: Opcion C — Unificar la validacion de coherence_validator y gate para que ambos verifiquen capability + delivery.
+
+**Prioridad 3 (comercial)**: Opcion A o B — Decision de producto: generar los 3 assets faltantes o reducir el catalogo.
+
+**Prioridad 4 (cierre del loop)**: Opcion D3 — Deployment guide como companion del ZIP (bajo esfuerzo, alto valor percibido).
+
+---
+
 *Contexto generado automaticamente por Hermes Agent durante FASE-PATCH-C*
 *Para disenar nuevo plan: cargar este archivo y crear .opencode/plans/NEW-PLAN/ basandose en las opciones de solucion*
+
+*Validacion contra codigo vivo: 2026-05-07 12:47 — 11/12 claims confirmados, 7 gaps (2 ALTA, 3 MEDIA, 1 BAJA, 1 RESUELTA). Actualizado por SOL2-D: GAP-G resuelta (falso positivo), line range corregido.*

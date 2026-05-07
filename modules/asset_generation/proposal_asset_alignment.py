@@ -24,10 +24,17 @@ PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
     "Informe Mensual": "monthly_report",
     "Página de FAQ": "faq_page",
     "Meta Tags Sociales (Open Graph)": "open_graph",
+    "Optimización para IA Generativa": "llms_txt",
 }
 
-# All 6 services that the proposal always promises (as of v4.40.2: removed Google Maps Optimizado
-# because geo_playbook was redundant with geo_fix_kit.md and other GEO assets. See FASE-PROP-D.)
+# All 7 services that the proposal promises (as of v4.41.1 / FASE-SOL2-B):
+# - 6 base services (SEO, WhatsApp, Schema, Monthly Report, FAQ, Open Graph)
+# - 1 conditional AEO service (Optimización para IA Generativa → llms_txt)
+# NOTE: Google Maps Optimizado was removed in FASE-PROP-D because geo_playbook
+# was redundant with geo_fix_kit.md and other GEO assets.
+# SOURCE OF TRUTH: This dict is consumed by proposal_asset_alignment_gate (Gate 9)
+# and cross-referenced by coherence_validator._check_promised_assets_exist().
+# See FASE-SOL2-B for unification rationale.
 ALL_PROMISED_SERVICES: List[str] = list(PROPOSAL_SERVICE_TO_ASSET.keys())
 
 

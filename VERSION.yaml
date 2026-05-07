@@ -1,11 +1,18 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.41.1"
-codename: "CORRECCION-POST-VALIDACION-TERMALES"
+version: "4.42.0"
+codename: "SOL-2-ASSET-ALIGNMENT-REFACTOR"
 release_date: "2026-05-07"
 plan_maestro_version: "v2.6.0"
 
-# v4.39.0 - Scoring Transparency (2026-05-02)
+# v4.42.0 - SOL-2 Asset Alignment Refactor (2026-05-07)
+# FASE-SOL2-A: Ghost refs eliminadas, SitePresenceChecker verificado
+# FASE-SOL2-B: 7 servicios en alignment, coherencia unificada, llms_txt
+# FASE-SOL2-C: v4complete E2E Termales (coherence 0.89, 6/9 PASSED)
+# FASE-SOL2-D: Phantom fields auditados, coherence score fuente unica
+# Backwards compatible: cambios internos de reporting, API publica sin cambios
+#
+# v4.41.1 - CORRECCION-POST-VALIDACION-TERMALES (2026-05-07)
 # Transparencia en scoring GEO/AEO/SEO/IAO: breakdown visible, sección "Este score NO mide"
 # scoring_methodology.md linkado desde frontmatter, backwards compatible
 

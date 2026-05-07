@@ -1,6 +1,8 @@
 """Tests for proposal_asset_alignment_gate in publication_gates.
 
 Validates Gate 9: Proposal-Asset Alignment Check.
+
+FASE-SOL2-B: Updated to reflect 7 services including llms_txt.
 """
 
 import pytest
@@ -24,19 +26,18 @@ class TestProposalAssetAlignmentGate:
         assert "proposal_asset_alignment" in orchestrator.gates
 
     def test_gate_passes_when_all_assets_present(self, orchestrator):
-        """Gate passes when all 7 promised services have assets."""
-        # Note: Only assets that exist in PROPOSAL_SERVICE_TO_ASSET mapping count
-        # The 7 services are: geo_playbook, optimization_guide, whatsapp_button,
-        # hotel_schema, monthly_report, faq_page, open_graph
+        """Gate passes when all 7 promised services have assets (FASE-SOL2-B)."""
+        # The 7 services are: optimization_guide, whatsapp_button, hotel_schema,
+        # monthly_report, faq_page, open_graph, llms_txt
         assessment = {
             "generated_assets": [
-                {"asset_type": "geo_playbook", "confidence_score": 0.8},
                 {"asset_type": "optimization_guide", "confidence_score": 0.8},
                 {"asset_type": "whatsapp_button", "confidence_score": 0.8},
                 {"asset_type": "hotel_schema", "confidence_score": 0.8},
                 {"asset_type": "monthly_report", "confidence_score": 0.8},
                 {"asset_type": "faq_page", "confidence_score": 0.8},
                 {"asset_type": "open_graph", "confidence_score": 0.8},
+                {"asset_type": "llms_txt", "confidence_score": 0.8},
             ]
         }
         result = orchestrator._proposal_asset_alignment_gate(assessment)
@@ -48,13 +49,31 @@ class TestProposalAssetAlignmentGate:
         """Gate returns WARNING when assets are missing (not blocking)."""
         assessment = {
             "generated_assets": [
-                {"asset_type": "geo_playbook", "confidence_score": 0.8},
+                {"asset_type": "optimization_guide", "confidence_score": 0.8},
             ]
         }
         result = orchestrator._proposal_asset_alignment_gate(assessment)
         assert result.passed is True  # WARNING, not blocking
         assert result.status == GateStatus.WARNING
         assert "missing" in result.message.lower() or "Missing" in result.message
+
+    def test_gate_detects_llms_txt_missing(self, orchestrator):
+        """FASE-SOL2-B: Gate detects when llms_txt is missing (GAP-C closure)."""
+        assessment = {
+            "generated_assets": [
+                {"asset_type": "optimization_guide", "confidence_score": 0.8},
+                {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+                {"asset_type": "hotel_schema", "confidence_score": 0.8},
+                {"asset_type": "monthly_report", "confidence_score": 0.8},
+                {"asset_type": "faq_page", "confidence_score": 0.8},
+                {"asset_type": "open_graph", "confidence_score": 0.8},
+                # llms_txt MISSING
+            ]
+        }
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+        assert result.passed is True  # WARNING, not blocking
+        assert result.status == GateStatus.WARNING
+        assert "Optimización para IA Generativa" in result.message
 
     def test_gate_with_empty_assets(self, orchestrator):
         """Gate handles empty asset list."""
@@ -71,16 +90,16 @@ class TestProposalAssetAlignmentGate:
         assert result.status == GateStatus.WARNING
 
     def test_gate_result_has_details(self, orchestrator):
-        """Gate result must include alignment report details."""
+        """Gate result must include alignment report details (FASE-SOL2-B: 7 services)."""
         assessment = {
             "generated_assets": [
-                {"asset_type": "geo_playbook", "confidence_score": 0.8},
-                {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
-                {"asset_type": "voice_assistant_guide", "confidence_score": 0.8},
                 {"asset_type": "optimization_guide", "confidence_score": 0.8},
                 {"asset_type": "whatsapp_button", "confidence_score": 0.8},
                 {"asset_type": "hotel_schema", "confidence_score": 0.8},
                 {"asset_type": "monthly_report", "confidence_score": 0.8},
+                {"asset_type": "faq_page", "confidence_score": 0.8},
+                {"asset_type": "open_graph", "confidence_score": 0.8},
+                {"asset_type": "llms_txt", "confidence_score": 0.8},
             ]
         }
         result = orchestrator._proposal_asset_alignment_gate(assessment)
@@ -96,13 +115,13 @@ class TestProposalAssetAlignmentGate:
             "critical_recall": 0.95,
             "financial_data": {"occupancy_rate": 75.0, "direct_channel_percentage": 30.0, "adr_cop": 250000},
             "generated_assets": [
-                {"asset_type": "geo_playbook", "confidence_score": 0.8},
-                {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
-                {"asset_type": "voice_assistant_guide", "confidence_score": 0.8},
                 {"asset_type": "optimization_guide", "confidence_score": 0.8},
                 {"asset_type": "whatsapp_button", "confidence_score": 0.8},
                 {"asset_type": "hotel_schema", "confidence_score": 0.8},
                 {"asset_type": "monthly_report", "confidence_score": 0.8},
+                {"asset_type": "faq_page", "confidence_score": 0.8},
+                {"asset_type": "open_graph", "confidence_score": 0.8},
+                {"asset_type": "llms_txt", "confidence_score": 0.8},
             ],
         }
         results = orchestrator.run_all(assessment)

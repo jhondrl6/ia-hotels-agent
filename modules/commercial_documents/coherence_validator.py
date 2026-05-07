@@ -496,32 +496,60 @@ class CoherenceValidator:
         assets: List[AssetSpec],
         diagnostic: DiagnosticDocument
     ) -> CoherenceCheck:
-        """Valida que todos los assets prometidos existen en el generador."""
+        """Valida que todos los assets prometidos existen en el generador.
+
+        SOURCE OF TRUTH: Uses ASSET_CATALOG.is_asset_implemented() to verify
+        that each asset type referenced in the diagnostic is implemented.
+
+        FASE-SOL2-B (Option C1): Also cross-references PROPOSAL_SERVICE_TO_ASSET
+        to ensure all 7 promised services have implemented assets. This unifies
+        the baseline with proposal_asset_alignment_gate (Gate 9).
+
+        Both validators now agree on "what was promised":
+        - coherence_validator: checks asset types from diagnostic + PROPOSAL_SERVICE_TO_ASSET
+        - proposal_asset_alignment_gate: checks services from PROPOSAL_SERVICE_TO_ASSET
+        """
         from ..asset_generation.asset_catalog import is_asset_implemented
-        
+        from ..asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
+
         promised_types = {a.asset_type for a in assets}
         missing_types = [
-            t for t in promised_types 
+            t for t in promised_types
             if not is_asset_implemented(t)
         ]
-        
-        if not missing_types:
+
+        # FASE-SOL2-B: Cross-check all PROPOSAL_SERVICE_TO_ASSET entries
+        # Ensure every promised service maps to an implemented asset
+        missing_service_assets = []
+        for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
+            if not is_asset_implemented(asset_type):
+                missing_service_assets.append(f"{service_name}→{asset_type}")
+
+        all_missing = missing_types + missing_service_assets
+        if not all_missing:
             return CoherenceCheck(
                 name="promised_assets_exist",
                 passed=True,
                 score=1.0,
-                message="Todos los assets prometidos están implementados",
+                message=f"Todos los assets prometidos están implementados ({len(PROPOSAL_SERVICE_TO_ASSET)} servicios verificados via PROPOSAL_SERVICE_TO_ASSET)",
                 severity="info"
             )
-        
+
         # Calcular score basado en % de assets disponibles
-        score = (len(promised_types) - len(missing_types)) / len(promised_types) if promised_types else 1.0
-        
+        total_checked = len(promised_types | set(PROPOSAL_SERVICE_TO_ASSET.values()))
+        score = (total_checked - len(set(all_missing))) / total_checked if total_checked else 1.0
+
+        msg_parts = []
+        if missing_types:
+            msg_parts.append(f"Assets no implementados: {', '.join(missing_types)}")
+        if missing_service_assets:
+            msg_parts.append(f"Servicios sin asset implementado: {', '.join(missing_service_assets)}")
+
         return CoherenceCheck(
             name="promised_assets_exist",
             passed=False,
             score=score,
-            message=f"Assets prometidos no implementados: {', '.join(missing_types)}",
+            message="; ".join(msg_parts),
             severity="error"  # BLOCKING: no prometer lo que no se puede entregar
         )
     

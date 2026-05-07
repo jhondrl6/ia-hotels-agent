@@ -416,6 +416,11 @@ class PublicationGatesOrchestrator:
         Blocks if coherence score is below threshold.
         Coherence measures alignment between diagnostic, proposal, and assets.
         
+        SOURCE OF TRUTH: This gate extracts the score from the assessment dict,
+        which was calculated by CoherenceValidator.validate() (weighted average of
+        6 checks). The gate does NOT recalculate — it consumes the single source
+        of truth from coherence_validation.json / coherence_report.overall_score.
+        
         Threshold: >= 0.8
         Interpretation:
         - >= 0.8: "Certified" - ready for publication
@@ -938,7 +943,20 @@ class PublicationGatesOrchestrator:
         return {}
     
     def _extract_coherence_score(self, assessment: Dict[str, Any]) -> Optional[float]:
-        """Extract coherence score from assessment."""
+        """Extract coherence score from assessment.
+        
+        SINGLE SOURCE OF TRUTH: The score originates from CoherenceValidator.validate()
+        which calculates a weighted average of 6 checks (problems_have_solutions,
+        assets_are_justified, financial_data_validated, whatsapp_verified,
+        price_matches_pain, promised_assets_exist). This method simply extracts
+        that pre-calculated value from whichever key it was stored under.
+        
+        Lookup priority:
+        1. assessment["coherence_score"] (direct)
+        2. assessment["metrics"]["coherence_score"]
+        3. assessment["coherence_report"]["overall_score"]
+        4. assessment["quality_metrics"]["coherence_score"]
+        """
         # Try direct coherence_score in assessment root
         if "coherence_score" in assessment:
             return float(assessment["coherence_score"])

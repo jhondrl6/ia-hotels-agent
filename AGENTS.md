@@ -1,8 +1,8 @@
-<!-- agents_version: 4.41.1 | last_update: 2026-05-07 -->
+<!-- agents_version: 4.42.0 | last_update: 2026-05-07 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.41.1 -- CORRECCION-POST-VALIDACION-TERMALES COMPLETADO**
+> **v4.42.0 -- SOL-2-ASSET-ALIGNMENT-REFACTOR COMPLETADO**
 
 ---
 
