@@ -1,6 +1,7 @@
 ---
 generated_at: 2026-05-07 10:40
-version: 1.0.0
+updated_at: 2026-05-07 12:30
+version: 1.1.0
 document_type: CONTEXT_KNOWN_ISSUE
 related_plan: PROP-PATCH (FASE-PATCH-C)
 validation_type: E2E verification of v4complete for Termales Santa Rosa de Cabal
@@ -11,6 +12,7 @@ evidence_files:
   - evidence/FASE-PATCH-C/coherence_validation.json
   - evidence/FASE-PATCH-C/asset_generation_report.json
 trigger: FASE-PATCH-C E2E verification (v4complete Termales, 2026-05-07)
+update_note: "v1.1 — 2026-05-07 12:30 — Agregado GAP-4 (deployment) y validacion harness sin errores"
 ---
 
 # CONTEXTO: Discrepancia SOL-2 — Proposal Asset Alignment
@@ -126,19 +128,20 @@ El gate responde: "¿Lo que prometemos realmente existe?" (respuesta: no, 3 asse
 
 ## Gap Analysis
 
-| Gap | Descripcion | Impacto | Prioridad |
+|| Gap | Descripcion | Impacto | Prioridad |
 |-----|-------------|---------|-----------|
 | **G1** | Los 3 assets faltantes (optimization_guide, whatsapp_button, open_graph) no se generaron para Termales | El kit de servicios esta incompleto vs el contrato de 6 servicios | Media |
 | **G2** | ASSET_CATALOG los marca como IMPLEMENTED pero no se generaron | Contradiccion en catalogo vs realidad | Alta |
-| **G3** | coherence_validator y gate muestran resultados不一致 (inconsistentes) para el mismo check | Confusion para operadores/auditores | Media |
+| **G3** | coherence_validator y gate muestran resultados inconsistentes para el mismo check | Confusion para operadores/auditores | Media |
 | **G4** | No hay ticket/plan para resolver la brecha de los 3 assets faltantes | El issue queda abierto sin seguimiento | Alta |
+| **G5** | Site verification/deployment no realizado — archivos solo en output/ | Pipeline no modifica sitio real del cliente | **Alta** |
 
 ---
 
 ## Opciones de Solucion
 
 ### Opcion A: Generar los 3 assets faltantes
-**Descripción**: Implementar la generacion de optimization_guide (SEO Local), whatsapp_button, y open_graph para que el catalogo de 6 servicios sea completo.
+**Descripcion**: Implementar la generacion de optimization_guide (SEO Local), whatsapp_button, y open_graph para que el catalogo de 6 servicios sea completo.
 
 **Pros**:
 - Cierra la brecha completamente
@@ -153,7 +156,7 @@ El gate responde: "¿Lo que prometemos realmente existe?" (respuesta: no, 3 asse
 ---
 
 ### Opcion B: Reducir el catálogo de servicios prometidos a 3-4
-**Descripción**: Actualizar `PROPOSAL_SERVICE_TO_ASSET` y `SERVICE_CATALOG` para que solo incluyan los servicios cuyos assets se generan actualmente (hotel_schema, faq_page, monthly_report + conditional AEO).
+**Descripcion**: Actualizar `PROPOSAL_SERVICE_TO_ASSET` y `SERVICE_CATALOG` para que solo incluyan los servicios cuyos assets se generan actualmente (hotel_schema, faq_page, monthly_report + conditional AEO).
 
 **Pros**:
 - Elimina la discrepancia contrato-realidad
@@ -168,7 +171,7 @@ El gate responde: "¿Lo que prometemos realmente existe?" (respuesta: no, 3 asse
 ---
 
 ### Opcion C: Unificar la validacion (discrepancia de reporting)
-**Descripción**: Hacer que coherence_validator y proposal_asset_alignment_gate usen la misma lógica de verificacion, o eliminar la verificacion duplicada.
+**Descripcion**: Hacer que coherence_validator y proposal_asset_alignment_gate usen la misma lógica de verificacion, o eliminar la verificacion duplicada.
 
 **Pros**:
 - Consistencia en reportes
@@ -180,15 +183,121 @@ El gate responde: "¿Lo que prometemos realmente existe?" (respuesta: no, 3 asse
 
 ---
 
-## Recomendacion
+### Opcion D: Pipeline de Deployment (GAP-5)
+**Descripcion**: Implementar flujo de deployment que suba los archivos generados al sitio real del cliente, cerrando el loop diagnostico → propuesta → implementacion.
 
-**Fase 1 (Quick Win)**: Documentar como Known Issue en ROADMAP.md y crear ticket de backlog con las opciones A/B/C.
+**Pros**:
+- Cierra el loop completo del servicio
+- Diferenciador comercial significativo
 
-**Fase 2 (Si Opcion B)**: Reducir el catalogo de servicios para eliminar la brecha. Validar con equipo comercial el impacto.
+**Cons**:
+- Requiere integracion con múltiples hosting providers (WordPress, cPanel, Plesk, Managed WP)
+- Alto esfuerzo de desarrollo
 
-**Fase 3 (Si Opcion A)**: Investigar viabilidad técnica de generar los 3 assets faltantes. Crear fase de implementacion si es viable.
+**Verificar**: ¿Existe skill de deployment_assistant? ¿Es reutilizable?
 
-**Fase 4 (Si Opcion C)**: Unificar logicas de validacion para eliminar confusion.
+---
+
+## GAP-5 — Site Verification / Deployment (Prioridad Alta)
+
+### Estado Actual
+
+El pipeline v4complete genera archivos en `output/v4_complete/` y empaqueta un ZIP en `deliveries/`, pero **no modifica el sitio real del cliente**:
+
+```json
+{
+  "site_verification_applied": false,
+  "delivery_ready_percentage": 67.0
+}
+```
+
+### Evidencia (v4complete Termales, 2026-05-07)
+
+- **Delivery ZIP**: `output/v4_complete/deliveries/termales_20260507.zip`
+- **Contenido verificado**: diagnostico, propuesta, 6 assets, research data, v4_audit
+- **Assets faltantes en ZIP**: `whatsapp_button/`, `open_graph/`, `optimization_guide/` — no existen en el paquete
+- **Sitio real**: NO fue modificado (no hay script de deployment)
+
+### Causa Raiz
+
+El pipeline actual es un **generador de entregables**, no un sistema de deployment. El flujo ends en:
+1. Generar documentos + assets
+2. Empaquetar en ZIP
+3. Entregar al cliente
+
+No existe paso 4: **Implementar en el sitio del cliente**.
+
+### Impacto Comercial
+
+- El cliente recibe archivos pero no ve mejoras en su sitio web
+- El "gancho comercial" (Tier C CTA pidiendo datos reales) no se traduce en implementacion
+- Competidores que ofrecen deployment automatico tienen ventaja
+
+### Opciones de Solucion
+
+| Opcion | Descripcion | Esfuerzo |
+|--------|-------------|----------|
+| **D1** | Skill `deployment_assistant.md` existente — evaluar reutilizacion | Bajo |
+| **D2** | WP REST API connector — subir archivos via API | Medio |
+| **D3** | Delivery package con instrucciones paso-a-paso para implementacion manual | Bajo |
+| **D4** | Integracion con cPanel/Plesk file manager via SSH | Alto |
+
+### Recomendacion D
+
+**D1+D3**: Evaluar si `deployment_assistant.md` es reutilizable para este caso. Si no, crear un "Deployment Guide" generico que accompanies el ZIP como solucion de bajo esfuerzo.
+
+---
+
+## Validacion del Harness (2026-05-07 12:27)
+
+Ejecutado: `./venv/Scripts/python.exe main.py v4complete --url http://www.termales.com.co/`
+
+### Resultados sin Errores
+
+|| Componente | Resultado |
+|-----------|-----------|
+| `coherence_validation.json` | ✅ `is_coherent: true`, `score: 0.89`, errors: `[]` |
+| `gate_report` | ✅ 6/8 PASSED, 2 WARNING (financial Tier C, asset_confidence) |
+| `price_matches_pain` | ✅ `score: 0.8`, `passed: true` (era 0.0 pre-PATCH) |
+| Pipeline exit | ✅ Exit 0, "Flujo v4.0 completado exitosamente" |
+| Shadow logs | ✅ 0 errores capturados |
+| Doctor --status | ✅ PASS |
+
+### Verificacion de Assets en Delivery
+
+```
+ASSETS/analytics_setup_guide/
+ASSETS/faq_page/
+ASSETS/geo_enriched/
+ASSETS/hotel_schema/
+ASSETS/indirect_traffic_optimization/
+ASSETS/llms_txt/
+ASSETS/monthly_report/
+ASSETS/v4_audit/
+```
+
+**3 assets NO generados** (confirmado en delivery y en gate_report):
+- `whatsapp_button/`
+- `open_graph/`
+- `optimization_guide/`
+
+### Conclusion
+
+**El harness opera correctamente post-PATCH.** Los gaps restantes (G1-G5) son decisiones de producto, no bugs del sistema.
+
+---
+
+## Recomendacion General
+
+**Prioridad Alta**: GAP-5 (Deployment) — el unico gap que impide cerrar el loop comercial.
+
+**Fase 1 (Quick Win)**: Documentar GAP-5 en ROADMAP.md y crear ticket con opciones D1-D4.
+
+**Fase 2 (Si D1)**: Evaluar `deployment_assistant.md` para复用 en contexto hotelero.
+
+**Fase 3 (Si D2/D4)**: Crear nuevo plan `DEPLOYMENT-FLOW` con FASE-A (conector) + FASE-B (integracion) + FASE-C (testing).
+
+**Gap G1-G4 (Discrepancia assets)**: Depende de decision comercial — reducir catalogo de servicios o invertir en generar los 3 faltantes.
 
 ---
 
