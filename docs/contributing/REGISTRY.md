@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-06
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 220
+> **Total fases completadas:** 213
 
 ---
 
@@ -5341,6 +5341,27 @@ _Ninguno_
 
 ---
 
+
+
+## PATCH-A - 2026-05-06
+**Descripcion:** Fixes de coherencia y precio: SOL-1 (unificar coherence score) + SOL-4 (ajustar price_matches_pain)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `modules/commercial_documents/coherence_config.py` | Coherence Config |
+| `modules/commercial_documents/coherence_validator.py` | Coherence Validator |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
 
 
 ## Estadisticas

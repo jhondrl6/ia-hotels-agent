@@ -2444,7 +2444,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         hotel_name=hotel_name,
         hotel_url=args.url,
         output_dir=str(output_dir),
-        coherence_score=pre_coherence_score,
+        coherence_score=(asset_result.coherence_report.overall_score
+                        if asset_result and asset_result.coherence_report
+                        else pre_coherence_score),
         gate_status=pre_gate_status,
         region=region,  # FASE-DRECONEXION-V6: Pasar region para templates V6
         analytics_data=analytics_data,  # INTEGRACION-ANALYTICS-E2E: activa transparencia analytics

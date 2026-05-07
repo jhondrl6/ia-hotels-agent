@@ -424,10 +424,12 @@ class CoherenceValidator:
     ) -> CoherenceCheck:
         """
         Validate that proposal price is coherent with financial pain.
-        
-        NOTA (Sesión 5 - M-001):
-        - Usa unidades DECIMAL internamente (0.03 = 3%, 0.06 = 6%)
-        - Muestra notación x en mensajes para legibilidad (3.0x = 3%)
+
+        Formula: ratio = price_monthly / pain_monthly (ambos en COP/mes)
+        - ratio < 0.03 (3%): precio muy bajo
+        - 0.03 <= ratio <= 0.50: rango aceptable (PATCH-A: max_ratio 0.50 para min_price floors)
+        - ratio > 0.50: precio muy alto (score penalizado)
+        - NOTA: usa notación x internamente para legibilidad (0.03 = 3.0x)
         """
         price = proposal.price_monthly
         main = diagnostic.financial_impact

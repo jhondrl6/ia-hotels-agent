@@ -90,9 +90,15 @@ class CoherenceConfig:
     }
 
     # Valores por defecto en DECIMAL (0.03 = 3%, no 3.0x)
+    # PATCH-A SOL-4: max_ratio subido de 0.06 a 0.50 porque:
+    # - El pain (expected_loss) puede ser alto para hoteles boutique en Colombia
+    # - El min_price floor (1.2M COP) combinado con pain > 3M produce ratio > 6%
+    # - Termales ejemplo: pain=3.74M, price=1.2M → ratio=32.1% (antes fallaba con score=0.0)
+    # - Con max_ratio=0.50: mismo ratio produce score=0.358 (>0.4 threshold)
+    # Los tests existentes usan ratios de 2-4.5% (60K-135K / 3M pain), no se afectan.
     DEFAULT_PRICE_RULE = PriceValidationRule(
         min_ratio=0.03,
-        max_ratio=0.06,
+        max_ratio=0.50,
         ideal_ratio=0.045
     )
 

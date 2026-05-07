@@ -82,7 +82,8 @@ class TestCoherenceConfig:
         
         # Debe ser decimal (0.03), no x (3.0)
         assert rule.min_ratio == 0.03
-        assert rule.max_ratio == 0.06
+        # PATCH-A: max_ratio = 0.50 (antes 0.06) para min_price floors boutique
+        assert rule.max_ratio == 0.50
         assert rule.ideal_ratio == 0.045
     
     def test_validate_price_ratio_uses_x_in_message(self):
@@ -183,12 +184,12 @@ class TestPriceMatchesPainCheck:
         assert "3.0x" in check.message  # Mínimo recomendado
     
     def test_price_too_high_fails(self):
-        """Precio muy alto (> 6% = 0.06) falla."""
+        """Precio muy alto (> 50% = 0.50) falla."""
         validator = CoherenceValidator()
         
-        # Pain = 3M, Price = 240K → ratio = 0.08 = 8.0x
+        # Pain = 3M, Price = 1.8M → ratio = 0.60 = 60.0x > max 50.0x → falla
         diagnostic, proposal = self.create_test_documents(
-            price=240000,
+            price=1800000,
             pain=3000000
         )
         
@@ -196,8 +197,8 @@ class TestPriceMatchesPainCheck:
         
         assert check.passed is False
         assert "muy alto" in check.message
-        assert "8.0x" in check.message
-        assert "6.0x" in check.message  # Máximo recomendado
+        assert "60.0x" in check.message
+        assert "50.0x" in check.message  # Máximo recomendado PATCH-A
     
     def test_no_pain_returns_passed(self):
         """Si no hay dolor financiero, pasa automáticamente."""
