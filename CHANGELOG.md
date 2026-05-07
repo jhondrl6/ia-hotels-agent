@@ -6,22 +6,19 @@
 Resolver discrepancias entre coherence_validator y proposal_asset_alignment_gate, limpiar refs fantasma, unificar reporting, y verificar E2E con v4complete Termales.
 
 ### Cambios Implementados
-- **FASE-SOL2-A — Ghost Ref & SitePresence Cleanup**: Eliminar refs fantasma a `deployment_assistant` en AGENTS.md e INDICE_DOCUMENTACION.md. Verificar que `site_presence_checker.py` existe y opera (10/10 tests). Import limpio en `publication_gates.py`.
+- **FASE-SOL2-A — Ghost Ref & SitePresence Cleanup**: Verificado que `site_presence_checker.py` (601 lineas, 10/10 tests) y `deployment_assistant.md` (43 lineas) existen y son funcionales. Ambos GAPs resultaron falsos positivos — no se requirio codigo nuevo ni eliminacion de referencias. Import de SitePresenceChecker en `publication_gates.py` confirmado funcional.
 - **FASE-SOL2-B — Asset Alignment & Gate Unification**: Agregar 7mo servicio (AEO/llms_txt) a `PROPOSAL_SERVICE_TO_ASSET`. Unificar baseline de coherencia (C1). Documentar `promised_by=["always"]` con causalidad completa (5 puntos en asset_catalog.py). 31/31 tests pasan.
 - **FASE-SOL2-C — v4complete E2E Verification Termales**: Ejecución E2E para Termales Santa Rosa de Cabal. Coherence 0.89, 6/9 PASSED, llms_txt verificado. Análisis comparativo pre/post creado.
 - **FASE-SOL2-D — Phantom Fields & Coherence Consistency**: Campos fantasma auditados (GAP-G: falso positivo — campos calculados dinámicamente). Coherence score documentado como fuente única de verdad. Line ranges corregidos en docs.
 
 ### Archivos Nuevos
-| Archivo | Descripcion |
-|---------|-------------|
-| (ninguno — SitePresenceChecker ya existía) | — |
+Ninguno. SitePresenceChecker (601 lineas) y deployment_assistant.md (43 lineas) ya existian — los GAPs A y B resultaron falsos positivos en la auditoria inicial.
 
 ### Archivos Modificados
 | Archivo | Cambio |
 |---------|--------|
-| `AGENTS.md` | Ghost ref deployment_assistant eliminada |
-| `INDICE_DOCUMENTACION.md` | Ghost refs eliminadas |
-| `modules/quality_gates/publication_gates.py` | SitePresence import limpio, gate unificado |
+| `modules/quality_gates/publication_gates.py` | Docstrings source-of-truth coherence + SitePresence import funcional |
+| `modules/asset_generation/asset_catalog.py` | promised_by=["always"] documentado (5 puntos) |
 | `modules/asset_generation/proposal_asset_alignment.py` | 7 servicios mapeados (incluye llms_txt) |
 | `modules/commercial_documents/coherence_validator.py` | Baseline consistente con gate |
 

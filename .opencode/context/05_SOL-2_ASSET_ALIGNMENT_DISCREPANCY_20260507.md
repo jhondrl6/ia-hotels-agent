@@ -305,7 +305,7 @@ ASSETS/v4_audit/
 
 ### Codigo
 - `modules/commercial_documents/coherence_validator.py` — `_check_promised_assets_exist()` (lineas 494-526)
-- `modules/quality_gates/publication_gates.py` — `_proposal_asset_alignment_gate()` (lineas 755-850)
+- `modules/quality_gates/publication_gates.py` — `_proposal_asset_alignment_gate()` (lineas 755-865)
 - `modules/asset_generation/proposal_asset_alignment.py` — `verify_proposal_asset_alignment()`, `PROPOSAL_SERVICE_TO_ASSET` (lineas 20-27)
 - `modules/commercial_documents/v4_proposal_generator.py` — `_generate_dynamic_services_table()` (lineas 839-908)
 - `modules/asset_generation/asset_catalog.py` — `is_asset_implemented()`, `ASSET_CATALOG`
