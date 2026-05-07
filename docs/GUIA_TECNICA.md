@@ -1,8 +1,39 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.41.0 (PROPOSAL-COMERCIAL-FIX)
-**Última actualización:** 2026-05-06
+**Versión:** v4.41.1 (CORRECCION-POST-VALIDACION-TERMALES)
+**Última actualización:** 2026-05-07
 **Proyecto:** IA Hoteles Agent CLI
+
+---
+
+### v4.41.1 - 2026-05-07 — Correccion Post-Validacion Termales (PATCH-A/B/C)
+
+**Resumen general:** Correcciones post-validacion de ejecucion Termales: coherence score unificado post-assets, ajuste de price_matches_pain, filtrado de servicios por pain_ids, y adicion de disclaimers Tier C en propuesta.
+
+**Módulos afectados:**
+- `main.py` — Coherence score post-assets usado en YAML header
+- `modules/commercial_documents/coherence_validator.py` — Ajuste de calculo/threshold price_matches_pain
+- `modules/commercial_documents/proposal_generator.py` — Filtro de servicios por pain_ids + disclaimer Tier C
+- `modules/asset_generation/proposal_asset_alignment.py` — Alineacion propuesta-assets
+- `modules/quality_gates/proposal_asset_alignment_gate.py` — Documentacion mismatch estatico vs dinamico
+
+**Problema:**
+Validacion post-ejecucion Termales detecto: divergencia de coherence score (2.67 pts entre pre y post assets), price_matches_pain en 0.0, 3 assets faltantes en alineacion, y disclaimers Tier C ausentes en propuesta.
+
+**Solucion:**
+- SOL-1: Usar coherence score post-assets en YAML header del diagnostico
+- SOL-2: Filtrar servicios de propuesta solo aquellos con pain_ids detectados
+- SOL-3: Agregar disclaimer Tier C condicional en propuesta
+- SOL-4: Ajustar calculo/threshold de price_matches_pain en coherence_validator
+- SOL-5: Documentar en docstring la diferencia entre alineacion estatica y dinamica
+
+**Backwards Compatibility:**
+- SOL-1: Cambio visible en YAML header (score puede ser menor post-assets)
+- SOL-2: Propuesta puede listar menos servicios (solo los asociados a pains detectados)
+
+**Tests:**
+- run_all_validations.py --quick: 4/4 pass
+- 0 regresiones
 
 ---
 

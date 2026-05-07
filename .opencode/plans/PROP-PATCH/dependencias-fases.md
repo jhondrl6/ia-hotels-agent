@@ -27,9 +27,9 @@ FASE-PATCH-A          FASE-PATCH-B
 | Fase | Estado | Depende de | Bloquea a | Archivos Modificados |
 |------|--------|------------|-----------|---------------------|
 | **PATCH-A** | ✅ Completada | Ninguna | PATCH-C | `main.py`, `modules/commercial_documents/coherence_config.py`, `modules/commercial_documents/coherence_validator.py`, `tests/test_price_pain_ratio_alignment.py` |
-| **PATCH-B** | ⏳ Pendiente | Ninguna | PATCH-C | `modules/asset_generation/proposal_asset_alignment.py`, `modules/commercial_documents/proposal_generator.py`, `modules/quality_gates/proposal_asset_alignment_gate.py` |
-| **PATCH-C** | ⏳ Pendiente | PATCH-A, PATCH-B | PATCH-RELEASE | Ninguno (solo verificacion) |
-| **PATCH-RELEASE** | ⏳ Pendiente | PATCH-C | Ninguna | `CHANGELOG.md`, `docs/GUIA_TECNICA.md`, `docs/contributing/REGISTRY.md`, `VERSION.yaml` |
+| **PATCH-B** | ✅ Completada | Ninguna | PATCH-C | `modules/commercial_documents/v4_proposal_generator.py`, `main.py`, `modules/commercial_documents/templates/propuesta_v6_template.md`, `modules/quality_gates/publication_gates.py` |
+| **PATCH-C** | ✅ Completada | PATCH-A, PATCH-B | PATCH-RELEASE | Ninguno (solo verificacion) |
+| **PATCH-RELEASE** | ✅ Completada | PATCH-C | Ninguna | `CHANGELOG.md`, `docs/GUIA_TECNICA.md`, `docs/contributing/REGISTRY.md`, `VERSION.yaml` |
 
 ## Notas de Ejecucion
 

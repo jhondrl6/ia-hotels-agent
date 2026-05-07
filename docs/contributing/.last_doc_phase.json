@@ -1,7 +1,7 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-PROP-D",
   "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-PROP-A",
-  "modules/commercial_documents/v4_proposal_generator.py": "FASE-PROP-F",
+  "modules/commercial_documents/v4_proposal_generator.py": "PATCH-B",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-PROP-D",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
@@ -23,7 +23,7 @@
   "modules/asset_generation/asset_catalog.py": "FASE-PROP-D",
   "modules/commercial_documents/data_structures.py": "FASE-E",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
-  "main.py": "FASE-PROP-G",
+  "main.py": "PATCH-B",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "FASE-TRAZABILIDAD-RAIZ",
   "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-PROP-A",
@@ -37,7 +37,7 @@
   "modules/asset_generation/templates/indirect_traffic_optimization_template.md": "FASE-VALIDATE-RC",
   "modules/generators/report_builder.py": "FASE-D",
   "modules/analyzers/gap_analyzer.py": "FASE-D",
-  "modules/quality_gates/publication_gates.py": "FASE-D",
+  "modules/quality_gates/publication_gates.py": "PATCH-B",
   "modules/asset_generation/asset_content_validator.py": "FASE-B",
   "data_models/canonical_assessment.py": "FASE-C",
   "modules/financial_engine/calculator_v2.py": "FIN-1A",
@@ -54,7 +54,7 @@
   "modules/utils/benchmarks.py": "FASE-D",
   "modules/financial_engine/opportunity_scorer.py": "CHAN-2",
   "tests/commercial_documents/test_pain_solution_mapper.py": "FASE-D",
-  "modules/commercial_documents/coherence_validator.py": "FASE-E",
+  "modules/commercial_documents/coherence_validator.py": "PATCH-A",
   "modules/scrapers/web_scraper.py": "FASE-E",
   "modules/financial_engine/scenario_calculator.py": "FIN-1A",
   "tests/financial_engine/test_scenario_calculator.py": "FASE-B",
@@ -76,7 +76,7 @@
   "templates/diagnostico_v6_template.md": "FASE-1",
   "modules/asset_generation/geo_enriched_bridge.py (NUEVO)": "FASE-GEO-BRIDGE",
   "modules/asset_generation/v4_asset_orchestrator.py (modificado)": "FASE-GEO-BRIDGE",
-  "modules/commercial_documents/templates/propuesta_v6_template.md": "FASE-PROP-F",
+  "modules/commercial_documents/templates/propuesta_v6_template.md": "PATCH-B",
   "modules/postprocessors/document_quality_gate.py": "FASE-1B-PATCH",
   "tests/postprocessors/test_document_quality_gate.py": "FASE-CONTENT-SCRUBBER",
   "8 archivos via sync_versions.py": "FASE-RELEASE",
@@ -140,5 +140,6 @@
   "modules/commercial_documents/templates/": "FIN-3",
   "docs/CHANGELOG.md": "FASE-SCORING-C",
   "tests/commercial_documents/test_precision_rendering.py": "FASE-REFACTOR-CTA-ONBOARDING",
-  "modules/asset_generation/site_presence_checker.py": "FASE-PROP-D"
+  "modules/asset_generation/site_presence_checker.py": "FASE-PROP-D",
+  "modules/commercial_documents/coherence_config.py": "PATCH-A"
 }

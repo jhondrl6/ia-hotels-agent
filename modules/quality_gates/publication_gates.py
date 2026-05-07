@@ -763,6 +763,13 @@ class PublicationGatesOrchestrator:
         FASE-D: Before marking as "missing", verifies via SitePresenceChecker if the asset
         already exists in the production site. If EXISTS, marks as "present_in_production".
 
+        FASE-PATCH-B: Este gate valida un contrato estático (PROPOSAL_SERVICE_TO_ASSET).
+        El generador de propuestas (_generate_dynamic_services_table) filtra dinámicamente
+        servicios según pain_ids detectados y assets realmente generados. Por tanto, un
+        alignment_percentage < 100% puede ser esperado cuando el generador excluye
+        servicios cuyos pain_ids no están presentes o cuyos assets no se generaron.
+        Ver FASE-PATCH-B para contexto completo.
+
         Status: WARNING (not blocking) if assets are missing.
         Threshold: All 7 promised services should have assets.
 

@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-05-06 23:27:54 UTC
+> Auto-generado: 2026-05-07 15:57:29 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -39,11 +39,11 @@
 | Metrica | Valor |
 |---------|-------|
 | Shadow logs | 1150 archivos JSON |
-| Sesiones activas | 56 |
+| Sesiones activas | 60 |
 | Sesiones archivadas | 6 |
 | Ultimo shadow log | 20260505_014949_9ff0c9b7.json |
-| Ultima sesion activa | 2026-05-06_fa195fce.json |
-| Ultimo contexto actualizado | 2026-05-06T14:30:47.588949+00:00 |
+| Ultima sesion activa | 2026-05-07_470e0f23.json |
+| Ultimo contexto actualizado | 2026-05-07T14:32:04.246010+00:00 |
 | Ultima URL procesada | http://www.termales.com.co/ |
 
 ## Config Files (9/9 healthy)

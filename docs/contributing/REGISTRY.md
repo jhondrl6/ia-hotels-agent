@@ -1,6 +1,6 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-06
+> **Ultima actualizacion:** 2026-05-07
 > **Version actual:** v4.37.0
 > **Total fases completadas:** 213
 
@@ -5355,6 +5355,62 @@ _Ninguno_
 | `main.py` | Main |
 | `modules/commercial_documents/coherence_config.py` | Coherence Config |
 | `modules/commercial_documents/coherence_validator.py` | Coherence Validator |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## PATCH-B - 2026-05-07
+**Descripcion:** Alineacion de assets y disclaimers: SOL-2 (filtrar servicios por pain_ids y assets generados) + SOL-3 (disclaimers Tier C ampliados) + SOL-5 (documentar gate vs generator mismatch)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `main.py` | Main |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## PATCH-C - 2026-05-07
+**Descripcion:** Verificacion E2E con v4complete para Termales Santa Rosa de Cabal. SOL-1 CORREGIDO (coherence unificado 0.89). SOL-3 CORREGIDO (Tier C disclaimer presente). SOL-4 CORREGIDO (price_matches_pain 0.8). SOL-2: discrepancy conocida entre coherence_validator y gate - coherencia Validator OK pero gate muestra 3 missing (SEO Local, WhatsApp button, Open Graph) - divergencia DOCUMENTADA como esperada por PATCH-B.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## PATCH-RELEASE - 2026-05-07
+**Descripcion:** Documentacion oficial: REGISTRY, CHANGELOG, GUIA_TECNICA, sync versions, validaciones finales
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
 
 ### Validaciones
 - [x] Tests passing

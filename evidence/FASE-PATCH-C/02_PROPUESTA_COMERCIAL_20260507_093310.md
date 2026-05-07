@@ -1,23 +1,23 @@
 ---
-generated_at: ${generated_at}
-version: ${version}
-hotel_id: ${hotel_id}
+generated_at: 2026-05-07 09:33:10
+version: 4.0.0
+hotel_id: termales
 document_type: PROPUESTA_V6
 generator: IA_Hoteles_v4
-valid_until: ${valid_until}
+valid_until: 2026-05-22
 ---
 
 # PROPUESTA COMERCIAL
-## ${hotel_name} - ${hotel_location}
+## Termales - Km 10 Vereda San Ramón, Pereira, Santa Rosa de Cabal, Risaralda, Colombia
 
-**Fecha**: ${generated_at}  
+**Fecha**: 2026-05-07 09:33:10  
 **Válido por 15 días** (cupo limitado)
 
 ---
 
 ## 😟 EL PROBLEMA: ¿Por qué pierde reservas sin saberlo?
 
-Cada mes, viajeros buscan hoteles en ${hotel_region}. Pero no lo encuentran.
+Cada mes, viajeros buscan hoteles en Eje Cafetero. Pero no lo encuentran.
 
 **Esto es lo que está perdiendo:**
 
@@ -27,7 +27,7 @@ Cada mes, viajeros buscan hoteles en ${hotel_region}. Pero no lo encuentran.
 | Busca en Google Maps | Aparece último | No lo ven |
 | Entra a su web | No hay botón de WhatsApp | No reserva directo |
 
-**Su pérdida mensual estimada: ${monthly_loss} COP**
+**Su pérdida mensual estimada: $3.741.696 COP**
 
 ---
 
@@ -37,15 +37,20 @@ Le proponemos un plan integral donde **nosotros implementamos todo** — usted n
 
 ### Paquete: Kit Hospitalidad Digital
 
-**Inversión: ${monthly_investment}/mes** (contrato mes a mes)
+**Inversión: $1.200.000 COP/mes** (contrato mes a mes)
 
 **Esto es lo que hacemos por usted:**
 
-${dynamic_services_table}
+| Servicio | Qué obtiene |
+|----------|-------------|
+| **Datos Estructurados** | Información que Google y la IA leen automáticamente |
+| **Página de FAQ** | Sus huéspedes encuentran respuestas sin salir de su web |
+| **Informe Mensual** | Reporte mensual con metricas de rendimiento y oportunidades |
+| **Optimización para IA Generativa** | Aparece cuando clientes preguntan a ChatGPT/Gemini 'dónde hospedarme en [región]' |
 
 **No necesita hacer nada técnico. Nosotros implementamos todo.**
 
-${competitors_section}
+
 
 ---
 
@@ -53,7 +58,10 @@ ${competitors_section}
 
 Cada entregable incluye un nivel de preparación:
 
-${asset_quality_table}
+| Entregable | Nivel | Que significa |
+|------------|-------|---------------|
+| Datos Estructurados | ⚠️ Listo para implementar | Requiere confirmacion post-firma |
+| Página de FAQ | ⚠️ Listo para implementar | Requiere confirmacion post-firma |
 
 **Nota sobre AEO**: AEO (Answer Engine Optimization) se construye sobre Schema FAQ + Open Graph — ambos incluidos en su kit. No requiere assets adicionales.
 
@@ -93,20 +101,20 @@ Para que su negocio brille en Google Maps, necesitamos fotos de calidad. Esto es
 
 | Mes | Invierte | Recuperación Estimada | Beneficio |
 |-----|----------|----------------------|-----------|
-| 1 | ${inv_m1} | ${rec_m1} | ${net_m1} |
-| 2 | ${inv_m2} | ${rec_m2} | ${net_m2} |
-| 3 | ${inv_m3} | ${rec_m3} | ${net_m3} |
-| 4 | ${inv_m4} | ${rec_m4} | ${net_m4} |
-| 5 | ${inv_m5} | ${rec_m5} | ${net_m5} |
-| 6 | ${inv_m6} | ${rec_m6} | ${net_m6} |
+| 1 | $1.200.000 COP | $1.527.360 COP | $327.360 COP |
+| 2 | $1.200.000 COP | $1.527.360 COP | $327.360 COP |
+| 3 | $1.200.000 COP | $1.527.360 COP | $327.360 COP |
+| 4 | $1.200.000 COP | $1.527.360 COP | $327.360 COP |
+| 5 | $1.200.000 COP | $1.527.360 COP | $327.360 COP |
+| 6 | $1.200.000 COP | $1.527.360 COP | $327.360 COP |
 
 **Total 6 meses:**
-- Invierte: ${total_investment} COP
-- Recupera: ${total_recovered} COP
-- **Beneficio neto: ${net_benefit} COP**
-- **ROI: ${roi_6m}** en 6 meses
+- Invierte: $7.200.000 COP
+- Recupera: $9.164.160 COP
+- **Beneficio neto: $1.964.160 COP**
+- **ROI: 0.3X** en 6 meses
 
-${pain_ratio_note}
+**Nota de proyección**: De su pérdida mensual estimada, el 41% representa la porción que consideramos recuperable con IAO. De ese monto, proyectamos recuperar el 20% en los próximos 6 meses. El ROI refleja esta proyección conservadora.
 
 {{if financial_evidence_tier == "A" or financial_evidence_tier == "B"}}
 *Proyecciones basadas en datos verificados de su hotel.*
@@ -117,22 +125,50 @@ ${pain_ratio_note}
 ## 🗓️ Plan de Trabajo: 7/30/60/90 Días
 
 ### Primeros 7 Días (Activación)
-${plan_7_days}
+- [ ] **Día 1**: Firma de propuesta y pago de activación
+- [ ] **Día 2**: Kick-off call con el equipo del hotel (30 min)
+- [ ] **Día 3**: Solicitud de accesos (web, GBP actual)
+- [ ] **Día 4**: Implementación de activos P1 (sin datos externos):
+- [ ] Hotel Schema
+- [ ] **Día 5**: Validación técnica inicial
+- [ ] **Día 6**: Ajustes según feedback
+- [ ] **Día 7**: Confirmación de activación completa
+
+*Nota: Open Graph con fotos y SEO avanzado requieren datos suyos (fotos, accesos). Se entregan en la fase de activación.*
 
 ### Primeros 30 Días (Quick Wins)
-${plan_30_days}
+- [ ] **Semana 2**: Implementación P1: Hotel Schema
+- [ ] **Semana 3**: Implementación P2: Faq Page, Llms Txt, Analytics Setup Guide
+- [ ] **Semana 3**: Configuración tracking avanzado (UTMs, conversiones)
+- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales
+- [ ] **Día 30**: Reporte de avance con métricas de visibilidad
 
 ### Días 31-60 (Consolidación)
-${plan_60_days}
+- [ ] **Días 31-45**: Optimización de assets entregados (A/B testing de títulos, descripciones)
+- [ ] **Días 46-50**: Implementación de assets P2 y P3 restantes
+- [ ] **Días 51-55**: Primera medición de impacto en consultas directas (datos reales de Google Search Console)
+- [ ] **Días 56-60**: Ajustes basados en datos reales + reporte día 60
 
 ### Días 61-90 (Optimización)
-${plan_90_days}
+- [ ] **Días 61-75**: Evaluación de ROI a 3 meses con métricas reales
+- [ ] **Días 76-80**: Optimización de conversiones basada en datos de GA4
+- [ ] **Días 81-85**: Planificación de assets adicionales (fase 2)
+- [ ] **Días 86-90**: Revisión de estrategia a largo plazo + reporte final de resultados
 
 ---
 
 ## 📊 METRICAS DE VISIBILIDAD
 
-${analytics_section}
+---
+
+## 📈 DATOS DE TRAFICO (Google Analytics)
+
+**Estado:** ⚠️ No configurado (use --ga4-property-id para conectar)
+
+Cuando configuremos Google Analytics, podremos medir con precision el impacto de cada cambio y optimizar basados en datos reales de su sitio web.
+
+---
+
 
 ## 🌐 Transparencia de IAO (Inteligencia Artificial Outside)
 
@@ -140,27 +176,27 @@ El análisis de IAO utiliza APIs de terceros (OpenRouter, Google AI, Perplexity)
 
 | Proveedor | Queries | Costo Aprox. |
 |-----------|---------|---------------|
-| OpenRouter | ${openrouter_queries} | ${openrouter_cost} USD |
-| Gemini | ${gemini_queries} | ${gemini_cost} USD |
-| Perplexity | ${perplexity_queries} | ${perplexity_cost} USD |
-| **Total** | **${total_iao_queries}** | **${total_iao_cost} USD** |
+| OpenRouter | — | — USD |
+| Gemini | — | — USD |
+| Perplexity | — | — USD |
+| **Total** | **—** | **— USD** |
 
 *Este costo es Absorbido por IAH-CLI y no se carga al cliente.*
 
 ## 🛡️ GARANTÍAS: Protección total para usted
 
 ### 1. Resultados garantizados
-Si en ${guarantee_satisfaction_days} días no ve un aumento del ${guarantee_improvement_percent}% en consultas directas, **le extendemos el servicio 1 mes gratis**. Sin excusas.
+Si en 90 días no ve un aumento del 10% en consultas directas, **le extendemos el servicio 1 mes gratis**. Sin excusas.
 
 ### 2. Sin compromiso
-Contrato mes a mes. Si en cualquier momento no quiere continuar, nos avisa con ${guarantee_delivery_days} días. Sin penalizaciones.
+Contrato mes a mes. Si en cualquier momento no quiere continuar, nos avisa con 15 días. Sin penalizaciones.
 
 ### 3. Transparencia total
 Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.
 
 ---
 
-## 🚀 SIGUIENTE PASSO: Empezar es simple
+## 🚀 SIGUIENTE paso: Empezar es simple
 
 1. **Aceptar esta propuesta** (firma o mensaje por WhatsApp)
 2. **Nos reunimos 30 minutos** (kickoff)
@@ -173,11 +209,11 @@ Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.
 ## 💳 Formas de Pago
 
 - Transferencia / PSE
-- Tarjeta crédito (${installment_label})
+- Tarjeta crédito (3 cuotas sin interés)
 
 **Descuentos por pago anticipado:**
-- Trimestral: ${quarterly_discount}%
-- Semestral: ${semiannual_discount}%
+- Trimestral: 10%
+- Semestral: 18%
 
 ---
 

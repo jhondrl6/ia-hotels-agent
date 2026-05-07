@@ -2507,12 +2507,14 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     quick_wins_count = calculate_quick_wins(audit_result, validation_summary)
     top_problems = extract_top_problems(audit_result, limit=5)
     brechas_reales = diagnostic_gen._identify_brechas(audit_result) if audit_result else []
+    pain_ids = [b.get('pain_id', '') for b in brechas_reales if b.get('pain_id')]  # FASE-PATCH-B
     diagnostic_summary = DiagnosticSummary(
         hotel_name=hotel_name,
         critical_problems_count=critical_problems_count,
         quick_wins_count=quick_wins_count,
         overall_confidence=adapt_validation_confidence(validation_summary.overall_confidence),
         top_problems=top_problems,
+        pain_ids=pain_ids,  # FASE-PATCH-B: para filtrado dinámico de servicios
         validated_data_summary={
             'whatsapp': whatsapp_validation.to_dict() if whatsapp_validation else {},
             'rooms': rooms,

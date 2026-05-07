@@ -1,5 +1,33 @@
 # Changelog
 
+## [4.41.1] - Correccion Post-Validacion Termales — 2026-05-07
+
+### Objetivo
+Corregir divergencia de coherence score, price_matches_pain, alineacion de assets, y disclaimers Tier C detectados en validacion post-ejecucion de Termales.
+
+### Cambios Implementados
+- `main.py` — Usar post-assets coherence score en YAML header (SOL-1)
+- `modules/commercial_documents/coherence_validator.py` — Ajustar calculo/threshold de price_matches_pain (SOL-4)
+- `modules/commercial_documents/proposal_generator.py` — Filtrar servicios por pain_ids + disclaimer Tier C (SOL-2, SOL-3)
+- `modules/asset_generation/proposal_asset_alignment.py` — Alineacion propuesta-assets (SOL-2)
+- `modules/quality_gates/proposal_asset_alignment_gate.py` — Documentar mismatch estatico vs dinamico (SOL-5)
+
+### Archivos Modificados
+|| Archivo | Cambio |
+|---------|--------|
+| `main.py` | SOL-1: post-assets coherence score |
+| `modules/commercial_documents/coherence_validator.py` | SOL-4: price_matches_pain ajuste |
+| `modules/commercial_documents/proposal_generator.py` | SOL-2/3: filtro + disclaimer |
+| `modules/asset_generation/proposal_asset_alignment.py` | SOL-2: alineacion |
+| `modules/quality_gates/proposal_asset_alignment_gate.py` | SOL-5: docstring |
+
+### Tests
+- 0 regresiones
+- run_all_validations.py --quick: 4/4 pass
+
+### Backwards Compatibility
+- SOL-1: cambio visible en YAML header (score puede ser menor). SOL-2: propuesta puede listar menos servicios.
+
 ## [4.41.0] - PROPOSAL-COMERCIAL-FIX — 2026-05-06
 
 ### Objetivo

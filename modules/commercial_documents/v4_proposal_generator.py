@@ -745,6 +745,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'dynamic_services_table': self._generate_dynamic_services_table(
             detected_pain_ids=getattr(diagnostic_summary, 'pain_ids', None) or [],
             score_aeo=diagnostic_summary.score_aeo,
+            assets_generated=assets_generated,
         ),
         'asset_quality_table': self._generate_asset_quality_table(
             assets_generated,
@@ -839,27 +840,46 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         self,
         detected_pain_ids: Optional[List[str]] = None,
         score_aeo: Optional[int] = None,
+        assets_generated: Optional[List[Dict[str, Any]]] = None,
     ) -> str:
-        """Genera tabla principal de servicios basada en pains detectados.
+        """Genera tabla principal de servicios basada en pains detectados y assets generados.
 
         Esta es la tabla "principal" de la propuesta — la que muestra qué servicios
-        se incluyen en el kit. Es DINÁMICA: solo incluye servicios cuyos pains
-        fueron detectados. Si no hay pains detectados, muestra los 7 servicios estándar
-        del kit base.
+        se incluyen en el kit. Es DINÁMICA: filtra servicios según:
+        1. Si hay assets_generated: solo incluye servicios cuyos assets fueron generados.
+        2. Si no hay assets_generated: filtra por detected_pain_ids (backwards compat).
+        3. Si no hay ni uno ni otro: muestra los 7 servicios estándar del kit base.
 
         FASE-D: Si score_aeo < 20, agrega "Optimización para IA Generativa" como
         servicio adicional (8vo servicio condicional).
 
+        FASE-PATCH-B: assets_generated permite filtrado preciso (solo servicios
+        con assets reales), resolviendo mismatch entre propuesta y generación condicional.
+        Los servicios se filtran dinámicamente por assets realmente generados.
+        El gate estático (proposal_asset_alignment_gate) valida el contrato completo
+        (PROPOSAL_SERVICE_TO_ASSET); ambos pueden divergir legítimamente.
+        Ver FASE-PATCH-B para contexto.
+
         Args:
             detected_pain_ids: Lista de pain IDs detectados (de PainSolutionMapper.detect_pains()).
-                Si está disponible, genera tabla DINÁMICA (solo servicios con pain detectado).
-                Si es None/empty, muestra los 7 servicios estándar del kit base.
+                Usado como fallback si assets_generated no está disponible.
             score_aeo: Score AEO 0-100. Si < 20, agrega servicio AEO adicional.
+            assets_generated: Lista de assets generados (cada uno con 'asset_type').
+                Si está disponible, es la fuente primaria para filtrar servicios.
 
         Returns:
             String markdown con la tabla de servicios, incluyendo headers.
         """
-        if detected_pain_ids:
+        # FASE-PATCH-B: Fuente primaria = assets generados
+        if assets_generated:
+            generated_asset_types = {
+                a.get("asset_type", "") for a in assets_generated if a.get("asset_type")
+            }
+            services = [
+                entry for entry in SERVICE_CATALOG.values()
+                if entry.asset_type in generated_asset_types
+            ]
+        elif detected_pain_ids:
             # Dynamic: filter SERVICE_CATALOG by detected pains
             services = [
                 entry for entry in SERVICE_CATALOG.values()

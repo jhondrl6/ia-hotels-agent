@@ -1,8 +1,8 @@
-<!-- agents_version: 4.41.0 | last_update: 2026-05-06 -->
+<!-- agents_version: 4.41.1 | last_update: 2026-05-07 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.41.0 -- PROPOSAL-COMERCIAL-FIX COMPLETADO**
+> **v4.41.1 -- CORRECCION-POST-VALIDACION-TERMALES COMPLETADO**
 
 ---
 
