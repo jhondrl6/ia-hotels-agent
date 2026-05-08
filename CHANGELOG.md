@@ -1,34 +1,5 @@
 # Changelog
 
-## [4.42.1] - 2026-05-07
-
-### Objetivo
-Correcciones post-validacion del contexto unificado 07_SOL-2_UNIFIED_VALIDATED_20260507.md.
-
-### Cambios Implementados
-- Deduplicacion de mensaje en coherence_validator._check_promised_assets_exist()
-- Docstring explicativo para site_verification_applied (flag cosmetico)
-- Logging de excepciones en publication_gates catch-all
-- Notas POST-EJECUCION en prompts historicos SOL2-A y SOL2-B
-- Investigacion de skipped_assets + v4complete baseline
-
-### Archivos Nuevos
-| Archivo | Descripcion |
-|---------|-------------|
-| evidence/SOL2-PATCH-C/analisis_ejecucion.md | Analisis de ejecucion v4complete baseline |
-
-### Archivos Modificados
-| Archivo | Cambio |
-|---------|--------|
-| modules/commercial_documents/coherence_validator.py | Deduplicar mensaje missing assets |
-| modules/asset_generation/v4_asset_orchestrator.py | Docstring site_verification_applied |
-| modules/quality_gates/publication_gates.py | Logging excepciones SitePresenceChecker |
-| .opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-A.md | Nota POST-EJECUCION |
-| .opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-B.md | Nota POST-EJECUCION |
-
-### Tests
-- 0 tests nuevos, 0 regresiones
-
 ## [4.42.0] - SOL-2 Asset Alignment Refactor — 2026-05-07
 
 ### Objetivo
@@ -57,8 +28,19 @@ Ninguno. SitePresenceChecker (601 lineas) y deployment_assistant.md (43 lineas) 
 - run_all_validations.py --quick: 4/4
 
 ### Backwards Compatibility
-- Cambios internos de reporting, API pública sin cambios.
-- Coherence score puede variar levemente (unificación de baseline).
+- Cambios internos de reporting, API publica sin cambios.
+- Coherence score puede variar levemente (unificacion de baseline).
+
+### INTEGRACION DOCUMENTAL — FASE-B-A (2026-05-08)
+
+**Objetivo**: Implementar contrato documental entre CONTRIBUTING.md y phased_project_executor.md, eliminar referencias fragiles §NN-MM, y unificar formatos CHANGELOG entre los 4 documentos clave.
+
+**Cambios**:
+- `docs/CONTRIBUTING.md`: Agregada seccion "Contrato con phased_project_executor.md" con 11 secciones nominativas y reglas contractuales. Paso 5b actualizado de "Verificar" a "Regenerar DOMAIN_PRIMER" con trigger por fase.
+- `.agents/workflows/phased_project_executor.md`: 12 referencias §NN-MM reemplazadas por §Section-Name. E7 cambiado de "Verificar" a "Regenerar DOMAIN_PRIMER" al cerrar cada fase. E3 template CHANGELOG alineado con formato real (`[X.Y.Z] - Titulo — YYYY-MM-DD`). Step 4 define estructura concreta de 09-documentacion-post-proyecto.md. Agregada seccion "Estandares Compartidos" con tabla de 6 estandares.
+- `docs/contributing/documentation_rules.md`: §Formato-CHANGELOG corregido — ahora incluye titulo descriptivo en el heading (alineado con CHANGELOG.md real).
+
+**Fases previas completadas**: FASE-PRE (saneamiento), FASE-A-A (diseno de contrato), FASE-A-B (diseno de flujos).
 
 ## [4.41.1] - Correccion Post-Validacion Termales — 2026-05-07
 

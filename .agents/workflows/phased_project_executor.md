@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
-version: 2.10.0
+version: v2.10.0
 ---
 
 # Skill: Phased Project Executor
@@ -45,7 +45,7 @@ CONTADOR:
 
 #### Ejemplos de Division
 
-| FASE太大了 (una sesion) | FASE bien scopes |
+| FASE demasiado grande | FASE bien acotada |
 |------------------------|------------------|
 | Investigar 5 hallazgos + Fix 5 hallazgos + v4complete + Verificar + Docs | FASE-X-A: Investigar + Fix |
 | Fix 5 hallazgos + v4complete + Verificar 5 fixes + Docs | FASE-X-B: v4complete + Verificar |
@@ -69,7 +69,7 @@ ENTONCES:
   → Las sub-fases se ejecutan en sesiones separadas
 ```
 
-#### Senales de Alerta al Planificar
+#### Señales de Alerta al Planificar
 
 - "Esta fase toma 2-3 horas" → probablemente necesita division
 - "5 hallazgos para corregir" → dividir: A=investigacion, B=fixes, C=verificacion
@@ -121,7 +121,7 @@ ENTONCES:
 >    - Trabajo paralelo (2+ tracks) → subagentes vía `delegate_task`
 >    - **NO usar subagente fuera de estos casos.**
 > 4. Verifica criterios de completitud contra el checklist
-> 5. Ejecuta `log_phase_completion.py` al finalizar
+> 5. Ejecuta `log_phase_completion.py` al finalizar, luego actualiza `09-documentacion-post-proyecto.md` con los datos de la fase
 >
 > **Implicaciones del modelo agente:**
 > - Las "iteraciones" de R2 son **tool calls del agente** — no pasos humanos
@@ -161,7 +161,7 @@ Margen para trabajo especifico de la fase: 24-34 iteraciones
 SI (investigacion + verificacion + docs) < 30 iteraciones restantes:
     → Ejecutar v4complete DIRECTAMENTE con terminal(timeout=600)
     → Usar notify_on_complete=True para no bloquear
-    → Des pues verificar output y hacer docs cascade
+    → Después de verificar output y hacer docs cascade
 
 SI no:
     → Spawn subagent via delegate_task(timeout=900, notify_on_complete=True)
@@ -212,7 +212,7 @@ Cuando se usa `delegate_task` para ejecutar `v4complete`:
 3. Cuando el subagente completa:
    → Parent agent verifica que los archivos existen
    → Agent generation_report y coherence_validation
-   → Continua con docs cascade si tudo OK
+   → Continua con docs cascade si todo OK
 ```
 
 > [!WARNING]
@@ -242,13 +242,7 @@ Cuando se usa `delegate_task` para ejecutar `v4complete`:
 > [!IMPORTANT]
 > **Al terminar la sesion (completada o no), SIEMPRE ejecutar en orden:**
 >
-> 1. **Guardar evidencia** (si hay output de v4complete):
->    ```bash
->    mkdir -p evidence/{fase-id}
->    cp output/v4_complete/01_DIAGNOSTICO_*.md evidence/{fase-id}/
->    cp output/v4_complete/02_PROPUESTA_*.md evidence/{fase-id}/
->    cp output/v4_complete/{hotel_id}/v4_audit/*.json evidence/{fase-id}/
->    ```
+> 1. **Guardar evidencia** (si hay output de v4complete): ejecutar el bloque bash del **Protocolo de Evidencia Proactiva** (seccion anterior §Protocolo-Evidencia-Proactiva)
 > 2. **Actualizar el plan de fase** con estado real:
 >    - Si completo: marcar todos los items del checklist como ✅
 >    - Si incompleto: marcar como `⏳ INCOMPLETA` con checkpoint y que falta
@@ -277,12 +271,12 @@ Cuando la fase no completa por agotamiento:
    - NO re-ejecutar lo que ya se ejecuto correctamente
 ```
 
-#### Sintomas de Agotamiento de Subagente
+#### Síntomas de Agotamiento de Subagente
 
 | Sintoma | Causa | Accion |
 |---------|-------|--------|
-| Subagente retorna sin output | Timeout 600s insu clergal | Re-spawn con delegate_task y timeout=900 |
-| v4complete nunca termina de generations | API rate limits / network | Verificar logs, retry con backoff |
+| Subagente retorna sin output | Timeout 600s insuficiente | Re-spawn con delegate_task y timeout=900 |
+| v4complete nunca termina de generar | API rate limits / network | Verificar logs, retry con backoff |
 | Agent parent agota 60 iteraciones antes de v4complete | Presupuesto mal calculado | Dividir: subagente para v4complete |
 | Docs cascade no se ejecuta post-v4complete | Agent se agoto al final | Guardar evidencia ANTES, docs en sesion separada |
 
@@ -309,9 +303,10 @@ Para cada fase, crear `.opencode/plans/05-prompt-inicio-sesion-fase-{N}.md`
 
 Usar template `.agents/workflows/templates/prompt-fase-template.md`
 
-**Obligatorio en cada prompt:**
+**Obligatorio en cada prompt (segun CONTRIBUTING §Flujo-Post-Fase):**
 - Contexto de fases anteriores
 - Tareas específicas de la fase
+- Seccion de documentacion post-fase (editar CHANGELOG, GUIA_TECNICA, y acumular en 09-documentacion-post-proyecto.md)
 - **Post-Ejecución** (marcar checklist, actualizar estados)
 - **Criterios de Completitud**
 - **Restricciones** (mínimo: máximo 60 iteraciones; según la fase: no modificar ROADMAP.md, no ejecutar v4complete, etc.)
@@ -329,12 +324,34 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
 ### 4. Documentación Incremental
 **Estrategia**: Documentar durante todo el proyecto, no solo al final.
 
-**Al inicio del proyecto**: Crear `.opencode/plans/09-documentacion-post-proyecto.md` con estructura vacía
+**Al inicio del proyecto**: Crear `.opencode/plans/09-documentacion-post-proyecto.md` con estructura vacía.
 
-**Después de cada fase completada:**
+**Después de cada fase completada**, editar directamente CHANGELOG.md y GUIA_TECNICA.md con los cambios de esa fase (segun template §6). La acumulacion en 09-documentacion-post-proyecto.md es un backup de datos para FASE-RELEASE:
+
 - Sección A: Módulos nuevos
+- Sección B: Funcionalidades nuevas
 - Sección D: Métricas acumulativas
 - Sección E: Archivos afiliados actualizados
+
+**Estructura concreta de 09-documentacion-post-proyecto.md:**
+
+```markdown
+# Documentación Post-Proyecto
+
+## Sección A: Módulos Nuevos
+| Módulo | Archivos | Descripción | Fase |
+
+## Sección B: Funcionalidades Nuevas
+| Feature | Módulo | Descripción | Fase |
+
+## Sección D: Métricas Acumulativas
+| Métrica | Valor | Fase |
+
+## Sección E: Archivos Afiliados Actualizados
+| Archivo | Cambio | Fase |
+```
+
+Cada fase completa su columna "Fase". FASE-RELEASE usa los datos acumulados para generar CHANGELOG y GUIA_TECNICA oficiales.
 
 ---
 
@@ -393,13 +410,13 @@ Para cada fase mencionada en el plan, ejecutar:
 
 #### Paso 4.5.3: Validar CHANGELOG.md
 
-Verificar que la entrada de CHANGELOG tenga el formato requerido por `docs/CONTRIBUTING.md §78-85`:
+Verificar que la entrada de CHANGELOG tenga el formato requerido por `docs/CONTRIBUTING.md §Verificar-CHANGELOG`:
 
 ```markdown
-## [X.Y.Z] - Fecha
+## [X.Y.Z] - Titulo descriptivo — YYYY-MM-DD
 
 ### Objetivo
-{Descripción breve del cambio}
+{Descripcion breve del cambio}
 
 ### Cambios Implementados
 - Descripción de cambios realizados
@@ -445,7 +462,10 @@ Verificar que `docs/GUIA_TECNICA.md` tenga nota técnica para cada fase:
 # Verificar estado del sistema
 ./venv/Scripts/python.exe scripts/doctor.py --status
 
-# Verificar DOMAIN_PRIMER (si hubo cambios arquitectónicos)
+# Regenerar DOMAIN_PRIMER (al cerrar cada fase de implementacion)
+./venv/Scripts/python.exe scripts/doctor.py --regenerate-domain-primer
+
+# Verificar DOMAIN_PRIMER (context check, solo en FASE-RELEASE)
 ./venv/Scripts/python.exe scripts/doctor.py --context
 ```
 
@@ -546,12 +566,12 @@ FASE completada (checklist muestra ✅)
 
 ```bash
 # Minimo (registra en REGISTRY nomas)
-python scripts/log_phase_completion.py --fase FASE-12 --desc "Descripcion"
+./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-12 --desc "Descripcion"
 ```
 
 ```bash
 # Recomendado (con verificacion de docs manuales)
-python scripts/log_phase_completion.py \
+./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-12 \
     --desc "Google Travel Scraper integration" \
     --archivos-nuevos "modules/scrapers/google_travel.py,tests/scrapers/test_google_travel.py" \
@@ -567,21 +587,21 @@ python scripts/log_phase_completion.py \
 # Convencion: FASE-RELEASE-4.10.0 = release marker
 # El script detecta automaticamente que es un release
 
-python scripts/log_phase_completion.py \
+./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-RELEASE-4.10.0 \
     --desc "Release 4.10.0" \
     --archivos-mod "modules/foo.py" \
     --check-manual-docs
 
 # Verificar consistency antes de commit:
-python scripts/version_consistency_checker.py
+./venv/Scripts/python.exe scripts/version_consistency_checker.py
 ```
 
 **Caso 3: Forzar skip (excepciones)**
 
 ```bash
 # Solo si hay razon valida: no-aplica, en-release-posterior, etc.
-python scripts/log_phase_completion.py \
+./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-X --desc "..." \
     --check-manual-docs --force-skip-docs --skip-reason "no-aplica"
 ```
@@ -643,6 +663,21 @@ Después de ejecutar `log_phase_completion.py`, verificar:
 
 ---
 
+## Estandares Compartidos (CONTRIBUTING §Contrato-con-Executor)
+
+Los siguientes estandares aplican a TODOS los documentos del workflow. La fuente canonica es `docs/CONTRIBUTING.md`.
+
+| Estandar | Valor | Referencia |
+|----------|-------|------------|
+| **Python path (WSL)** | `./venv/Scripts/python.exe` | CONTRIBUTING §Reglas-Contractuales |
+| **CHANGELOG heading** | `## [X.Y.Z] - Titulo — YYYY-MM-DD` | CONTRIBUTING §Formato-CHANGELOG |
+| **Version header** | `version: vX.Y.Z` (con prefijo `v`) | CONTRIBUTING §Reglas-Contractuales |
+| **DOMAIN_PRIMER** | Regenerar al cerrar cada fase (`--regenerate-domain-primer`) | CONTRIBUTING §Paso-5b-DOMAIN-PRIMER |
+| **Template** | Fuente de verdad para docs post-fase | Template §6 |
+| **Referencias** | Siempre §Section-Name, nunca §NN-MM | CONTRIBUTING §Secciones-Nominativas |
+
+---
+
 ### Paso 7: FASE-RELEASE — Cierre y Documentación Oficial del Repositorio
 
 > [!NOTE]
@@ -651,13 +686,13 @@ Después de ejecutar `log_phase_completion.py`, verificar:
 
 **Cuando**: Una vez completadas TODAS las fases de implementación (etapa 2). El agente ejecuta esta fase en una sesión nueva. **Es la última fase del proyecto.**
 
-**Fuente de verdad**: `docs/CONTRIBUTING.md §55-163`. Los pasos E1-E8 abajo son la transcripción operativa de esa sección. Si CONTRIBUTING.md cambia, este paso se actualiza para reflejarlo.
+**Fuente de verdad**: `docs/CONTRIBUTING.md §Trigger-Documentacion-Oficial`. Los pasos E1-E8 abajo son la transcripción operativa de esa sección. Si CONTRIBUTING.md cambia, este paso se actualiza para reflejarlo.
 
 **Que NO hace**: NO modifica ROADMAP.md, NO edita código fuente, NO ejecuta `v4complete`.
 
 ---
 
-#### E1. Diagnostico Inicial (CONTRIBUTING §60-67)
+#### E1. Diagnostico Inicial (CONTRIBUTING §Paso-1-Diagnostico)
 
 ```bash
 ./venv/Scripts/python.exe scripts/version_consistency_checker.py
@@ -667,7 +702,7 @@ Después de ejecutar `log_phase_completion.py`, verificar:
 - [ ] version_consistency_checker.py pasa sin discrepancias
 - [ ] doctor no reporta errores criticos
 
-#### E2. Sincronizacion Automatica (CONTRIBUTING §70-76)
+#### E2. Sincronizacion Automatica (CONTRIBUTING §Paso-2-Sync-Automatico)
 
 ```bash
 ./venv/Scripts/python.exe scripts/sync_versions.py
@@ -677,12 +712,12 @@ Sincroniza VERSION.yaml → 6 archivos: AGENTS.md, README.md, .cursorrules, CONT
 
 - [ ] sync_versions.py ejecutado sin errores
 
-#### E3. CHANGELOG.md (CONTRIBUTING §78-85, MANUAL)
+#### E3. CHANGELOG.md (CONTRIBUTING §Verificar-CHANGELOG, MANUAL)
 
-Formato segun `docs/contributing/documentation_rules.md §36-58`:
+Formato segun `docs/contributing/documentation_rules.md §Formato-CHANGELOG`:
 
 ```markdown
-## [X.Y.Z] - Titulo (Fecha)
+## [X.Y.Z] - Titulo descriptivo — YYYY-MM-DD
 
 ### Objetivo
 {Descripcion breve}
@@ -708,7 +743,7 @@ Formato segun `docs/contributing/documentation_rules.md §36-58`:
 - [ ] No hay entradas duplicadas
 - [ ] CHANGELOG describe archivos nuevos y modificados de cada fase
 
-#### E4. GUIA_TECNICA.md (CONTRIBUTING §86-93, MANUAL)
+#### E4. GUIA_TECNICA.md (CONTRIBUTING §Paso-4-Verificar-GUIA, MANUAL)
 
 Agregar seccion "Notas de Cambios vX.Y.Z" con:
 
@@ -722,7 +757,7 @@ Agregar seccion "Notas de Cambios vX.Y.Z" con:
 - [ ] GUIA_TECNICA.md tiene nota tecnica para las fases del proyecto
 - [ ] Nota incluye modulos afectados, problema/solucion, backwards compatibility
 
-#### E5. Skills/Workflows (CONTRIBUTING §94-106, MANUAL)
+#### E5. Skills/Workflows (CONTRIBUTING §Paso-5-Skills-Workflows, MANUAL)
 
 ```bash
 ls -la .agents/workflows/*.md
@@ -731,7 +766,7 @@ ls -la .agents/workflows/*.md
 - [ ] Todos los .md en .agents/workflows/ listados en .agents/workflows/README.md
 - [ ] No hay skills huerfanos
 
-#### E6. Regenerar SYSTEM_STATUS.md (CONTRIBUTING §107-111)
+#### E6. Regenerar SYSTEM_STATUS.md (CONTRIBUTING §Paso-6-SYSTEM-STATUS)
 
 ```bash
 ./venv/Scripts/python.exe scripts/doctor.py --status
@@ -739,16 +774,25 @@ ls -la .agents/workflows/*.md
 
 - [ ] SYSTEM_STATUS.md regenerado con version actual
 
-#### E7. Verificar DOMAIN_PRIMER.md (CONTRIBUTING §145-157)
+#### E7. Regenerar DOMAIN_PRIMER.md (CONTRIBUTING §Paso-5b-DOMAIN-PRIMER)
+
+Al cerrar cada fase de implementacion, regenerar el Domain Primer:
+
+```bash
+./venv/Scripts/python.exe scripts/doctor.py --regenerate-domain-primer
+```
+
+Solo en FASE-RELEASE (cierre final del proyecto):
 
 ```bash
 ./venv/Scripts/python.exe scripts/doctor.py --context
 ```
 
-- [ ] Todo modulo en `modules/` documentado en DOMAIN_PRIMER.md
-- [ ] Todo archivo referenciado en DOMAIN_PRIMER.md existe en disco
+- [ ] DOMAIN_PRIMER.md regenerado con modulos actuales
+- [ ] Todo modulo en `modules/` documentado
+- [ ] Archivo regenerable automaticamente (no editar manualmente)
 
-#### E8. Symlink + Validacion Final (CONTRIBUTING §113-128)
+#### E8. Symlink + Validacion Final (CONTRIBUTING §Paso-7-8-Symlink-Validacion)
 
 ```bash
 ls -la .agent/workflows    # Debe mostrar → .agents/workflows

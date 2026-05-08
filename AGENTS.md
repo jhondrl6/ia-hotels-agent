@@ -1,4 +1,4 @@
-<!-- agents_version: 4.42.0 | last_update: 2026-05-07 -->
+<!-- agents_version: v4.42.0 | last_update: 2026-05-08 -->
 
 # IA Hoteles Agent (iah-cli)
 
@@ -72,6 +72,11 @@ Para actualizar cualquier documento del repositorio (CHANGELOG, VERSION, docs):
 
 ### Flujo Documental Obligatorio (Resumen)
 
+> [!IMPORTANT]
+> **DOMAIN_PRIMER se regenera en FASE-RELEASE** (no manualmente). Ver `.opencode/plans/INTEGRACION-DOCUMENTAL-PLAN.md` para el plan de integración documental completo.
+>
+> Los vínculos abaixo son **verificables por script** (ver FASE-C del plan de integración).
+
 Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto.md`):
 
 ```
@@ -93,6 +98,20 @@ Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto
 **Regla**: NO ejecutar planes de documentación directamente. SIEMPRE seguir el flujo anterior.
 
 **Detalle completo**: `.agents/workflows/phased_project_executor.md` §4.5
+
+### Tabla de Cross-References Documentales
+
+|| Documento | Seccion en AGENTS.md | Seccion en CONTRIBUTING | Seccion en Executor |
+|-----------|----------------------|-------------------------|---------------------|
+| `AGENTS.md` | (este archivo) | `§Vinculo-con-Executor` | — |
+| `CONTRIBUTING.md` | `§Vinculo-con-la-Documentacion` | — | `§Paso-2` |
+| `phased_project_executor.md` | `§Flujo-Documental-Obligatorio` | `§Flujo-Post-Fase` | — |
+| `DOMAIN_PRIMER.md` | (auto-regenerado) | `§Paso-5b` | `§E7` |
+| `prompt-fase-template.md` | — | — | `§Step-4` |
+| `validate_document_integration.py` | (script de validacion) | `validation.md §13` | — |
+
+**Gate de No-Regresion Documental**: Ejecutar `python scripts/validate_document_integration.py`
+antes de cada commit para prevenir desincronizacion entre los 4 documentos clave.
 
 **Regenerable (1 comando):**
 - `.agent/SYSTEM_STATUS.md` → `python main.py --doctor --status`

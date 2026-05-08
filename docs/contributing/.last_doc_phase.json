@@ -41,7 +41,7 @@
   "modules/asset_generation/asset_content_validator.py": "FASE-B",
   "data_models/canonical_assessment.py": "FASE-C",
   "modules/financial_engine/calculator_v2.py": "FIN-1A",
-  "AGENTS.md": "FASE-SOL2-A",
+  "AGENTS.md": "FASE-C",
   "VERSION.yaml": "FASE-RELEASE-4.38.0",
   "config/provider_registry.yaml": "FASE-CONFIG-8",
   "data_models/analytics_status.py": "FASE-CONFIG-6",
@@ -134,7 +134,7 @@
   "scripts/doctor.py": "FASE-CONFIG-8",
   "config/certificates.yaml": "FASE-CONFIG-8",
   ".cursorrules": "FASE-RELEASE-4.38.0",
-  "docs/CONTRIBUTING.md": "FASE-RELEASE-4.38.0",
+  "docs/CONTRIBUTING.md": "FASE-B-A",
   ".agent/SYSTEM_STATUS.md": "FASE-RELEASE-4.38.0",
   "docs/scoring_methodology.md": "FASE-SCORING-3",
   "modules/commercial_documents/templates/": "FIN-3",
@@ -144,5 +144,11 @@
   "modules/commercial_documents/coherence_config.py": "PATCH-A",
   "INDICE_DOCUMENTACION.md": "FASE-SOL2-A",
   ".opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-A.md": "SOL2-PATCH-B",
-  ".opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-B.md": "SOL2-PATCH-B"
+  ".opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-B.md": "SOL2-PATCH-B",
+  ".opencode/plans/INTEGRACION-DOCUMENTAL-PLAN.md": "FASE-A-A",
+  ".agents/workflows/phased_project_executor.md": "FASE-C",
+  "docs/contributing/documentation_rules.md": "FASE-B-A",
+  "scripts/validate_document_integration.py": "FASE-C",
+  "scripts/run_all_validations.py": "FASE-C",
+  "docs/contributing/validation.md": "FASE-C"
 }

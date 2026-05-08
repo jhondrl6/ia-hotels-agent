@@ -143,10 +143,17 @@ git diff --stat
 | `.agent/knowledge/DOMAIN_PRIMER.md` | SEMI-AUTO via --doctor --regenerate-domain-primer | Se VERIFICA (paso 5b) |
 | `INDICE_DOCUMENTACION.md` | MANUAL post-release | NO (automatico solo header via sync — contenido fases es manual) |
 
-### Paso 5b: Verificar DOMAIN_PRIMER.md
+### Paso 5b: Regenerar DOMAIN_PRIMER.md
+
+Al cerrar cada fase de implementacion regenerar el Domain Primer:
 
 ```bash
-# Verificar que el Domain Primer este alineado con modulos reales python
+python scripts/doctor.py --regenerate-domain-primer
+```
+
+Solo en FASE-RELEASE (cierre final del proyecto), verificacion completa:
+
+```bash
 python scripts/doctor.py --context
 ```
 
@@ -154,7 +161,9 @@ python scripts/doctor.py --context
 |-------|-----------------|
 | Todo modulo en `modules/` esta documentado en DOMAIN_PRIMER.md | Ejecutar `python scripts/doctor.py --regenerate-domain-primer` |
 | Todo archivo referenciado en DOMAIN_PRIMER.md existe en disco | Corregir referencia o eliminar seccion obsoleta |
-| Version y codename coinciden con VERSION.yaml | Reemplazar header del DOMAIN_PRIMER |
+| Version y codename coinciden con VERSION.yaml | Reemplazar header via `python scripts/doctor.py --regenerate-domain-primer` |
+
+NOTA: DOMAIN_PRIMER es regenerable automaticamente. NO editar manualmente.
 
 ### Lo que este flujo NO hace
 
@@ -276,6 +285,39 @@ El comando `python main.py --doctor` incluye un check de "Symlink integrity" que
 
 - `.agent/SYSTEM_STATUS.md` → `python main.py --doctor --status`
 - `.agent/knowledge/DOMAIN_PRIMER.md` → `python main.py --doctor --regenerate-domain-primer`
+
+
+---
+
+## Contrato con phased_project_executor.md
+
+Este contrato formaliza la relacion entre los dos documentos. Las referencias desde el executor a CONTRIBUTING usan nombres de seccion (§Nombre-Seccion), no numeros de linea.
+
+### Secciones Nominativas del Executor
+
+| Nombre de Seccion | Ubicacion en CONTRIBUTING |
+|-------------------|--------------------------|
+| §Verificar-CHANGELOG | Paso 3: Verificar CHANGELOG.md |
+| §Trigger-Documentacion-Oficial | Flujo completo: Trigger del Usuario |
+| §Paso-1-Diagnostico | Paso 1: Diagnostico inicial |
+| §Paso-2-Sync-Automatico | Paso 2: Sincronizacion automatica |
+| §Paso-4-Verificar-GUIA | Paso 4: Verificar GUIA_TECNICA.md |
+| §Paso-5-Skills-Workflows | Paso 5: Verificar skills/workflows |
+| §Paso-6-SYSTEM-STATUS | Paso 6: Regenerar SYSTEM_STATUS.md |
+| §Paso-5b-DOMAIN-PRIMER | Paso 5b: Regenerar DOMAIN_PRIMER.md |
+| §Paso-7-8-Symlink-Validacion | Pasos 7+8: Symlink + Validacion final |
+| §Formato-CHANGELOG | documentation_rules.md §Formato-CHANGELOG |
+| §Protocolo-Evidencia-Proactiva | Seccion interna del executor |
+
+### Reglas Contractuales del Executor
+
+El executor DEBE cumplir las siguientes reglas de CONTRIBUTING:
+
+1. **CHANGELOG format**: Usar el formato definido en `§Formato-CHANGELOG` — `## [X.Y.Z] - Titulo — YYYY-MM-DD` + `### Objetivo`
+2. **Python path**: `./venv/Scripts/python.exe` en WSL
+3. **Version header**: Prefijo `v` en todos los headers (`version: vX.Y.Z`)
+4. **DOMAIN_PRIMER**: Regenerar al cerrar cada fase de implementacion, no solo verificar
+5. **Template**: El template de fases es la fuente de verdad para documentacion post-fase (CHANGELOG + GUIA_TECNICA por fase)
 
 ---
 

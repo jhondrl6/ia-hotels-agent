@@ -1,9 +1,13 @@
 ---
 description: Template para prompts de inicio de fase en proyectos phased_project_executor
-version: 1.3.0
+version: v1.3.0
 ---
 
 # Template: Prompt de Inicio de Fase
+
+> [!NOTE]
+> **Ver**: `.agents/workflows/phased_project_executor.md §Step-4` para estructura de documentacion post-fase.
+> **Ver**: `.agents/workflows/phased_project_executor.md §Step-6` para flujo completo de documentacion post-fase.
 
 Este template define la estructura obligatoria para los archivos de prompt de fase (`sesion-N-*.md`, `05-prompt-inicio-sesion-fase-N.md`, etc.).
 
@@ -102,10 +106,12 @@ Al finalizar esta fase, actualizar INMEDIATAMENTE (antes de cerrar la sesión):
    - Marcar fase como completada
    - Actualizar métricas (tests, validaciones)
 
-3. **`09-documentacion-post-proyecto.md`**
-   - **Sección A**: Agregar módulos nuevos de esta fase
-   - **Sección D**: Actualizar métricas acumulativas
-   - **Sección E**: Marcar archivos afiliados actualizados
+3. **`09-documentacion-post-proyecto.md`** (ACUMULATIVO - usado por FASE-RELEASE)
+   - **Seccion A**: Agregar modulos nuevos de esta fase
+   - **Seccion B**: Agregar funcionalidades nuevas
+   - **Seccion D**: Actualizar metricas acumulativas
+   - **Seccion E**: Marcar archivos afiliados actualizados
+   - **Importante**: Este archivo es la fuente de datos para FASE-RELEASE al generar CHANGELOG y GUIA_TECNICA
 
 4. **`evidence/fase-{N}/`** (si aplica)
    - Crear directorio si hay evidencia que preservar

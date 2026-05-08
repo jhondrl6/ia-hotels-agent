@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.42.0 (SOL-2-ASSET-ALIGNMENT-REFACTOR)
-**Última actualización:** 2026-05-07
+**Última actualización:** 2026-05-08
 **Proyecto:** IA Hoteles Agent CLI
 
 ---

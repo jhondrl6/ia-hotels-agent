@@ -55,6 +55,7 @@ class ValidationRunner:
         self._check_plan_maestro_sync()
         self._check_version_sync()
         self._check_no_secrets()
+        self._check_document_integration()
         
         if not self.quick:
             self._check_dependencies()
@@ -229,9 +230,40 @@ class ValidationRunner:
                 message="No hardcoded secrets found"
             ))
     
+    def _check_document_integration(self) -> None:
+        """Check cross-document integration consistency."""
+        print("[5/8] Checking document integration...")
+        
+        script_path = ROOT_DIR / "scripts" / "validate_document_integration.py"
+        if not script_path.exists():
+            self.results.append(ValidationResult(
+                name="Document Integration",
+                passed=False,
+                message="validate_document_integration.py not found"
+            ))
+            return
+        
+        exit_code, output = self._run_command([sys.executable, str(script_path)])
+        
+        if exit_code == 0:
+            self.results.append(ValidationResult(
+                name="Document Integration",
+                passed=True,
+                message="All cross-document checks passed"
+            ))
+        else:
+            lines = output.split('\n')
+            issues = [l for l in lines if '[FAIL]' in l or '[!]' in l][:5]
+            self.results.append(ValidationResult(
+                name="Document Integration",
+                passed=False,
+                message="Cross-document validation failed",
+                details=issues
+            ))
+    
     def _check_dependencies(self) -> None:
         """Check if all dependencies are installed."""
-        print("[5/7] Checking dependencies...")
+        print("[6/8] Checking dependencies...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pip", "check"
@@ -253,7 +285,7 @@ class ValidationRunner:
     
     def _check_imports(self) -> None:
         """Check if core modules can be imported."""
-        print("[6/7] Checking core module imports...")
+        print("[7/8] Checking core module imports...")
         
         core_modules = [
             "src.config",
@@ -289,7 +321,7 @@ class ValidationRunner:
     
     def _check_tests_pass(self) -> None:
         """Run tests and check if they pass."""
-        print("[7/7] Running tests...")
+        print("[8/8] Running tests...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pytest", "-q", "--tb=no"

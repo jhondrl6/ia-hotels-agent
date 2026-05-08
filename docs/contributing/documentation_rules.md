@@ -34,8 +34,10 @@ Cuando agregues un nuevo modulo Python o realices una migracion tecnica:
 
 ### Formato de Entrada en CHANGELOG
 
+> **Nota**: El heading NO lleva prefijo `v`. Lleva version entre corchetes, titulo descriptivo, y fecha con formato ISO.
+
 ```markdown
-## v{VERSION} - {Titulo} (Fecha)
+## [X.Y.Z] - Titulo descriptivo — YYYY-MM-DD
 
 ### Objetivo
 {Descripcion breve del cambio}

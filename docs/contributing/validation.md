@@ -271,13 +271,56 @@ python .agents/workflows/v4_regression_guardian.py --retry-failed
 
 ---
 
+## 13. Validacion de Integracion Documental
+
+El gate de no-regresion documental asegura que los 4 documentos clave del ecosistema
+(CONTRIBUTING.md, phased_project_executor.md, AGENTS.md, DOMAIN_PRIMER.md) no se
+desincronicen despues de cambios.
+
+### 13.1 Script validate_document_integration.py
+
+Ejecuta validaciones cruzadas:
+
+| Check | Verifica |
+|-------|----------|
+| Cross-references | §Section-Name en executor existen en CONTRIBUTING (y viceversa) |
+| CHANGELOG format | documentation_rules.md §36-58 coincide con CHANGELOG.md real |
+| Version headers | Todos usan prefijo `v` (version: vX.Y.Z) |
+| DOMAIN_PRIMER | Version coincide con VERSION.yaml |
+| Python path | Consistencia en todos los .md de workflows |
+| Line endings | Sin CRLF (solo LF) |
+
+### 13.2 Ejecutar el Gate
+
+```bash
+# Directo
+python scripts/validate_document_integration.py
+
+# Integrado en run_all_validations.py (5/8 en modo quick)
+python scripts/run_all_validations.py --quick
+```
+
+### 13.3 Integracion en Pre-commit
+
+El gate se ejecuta automaticamente en el hook `agent-ecosystem` de pre-commit
+via `run_all_validations.py --quick`.
+
+### 13.4 Flujo de Correccion
+
+1. Si el gate falla, el mensaje indica cual check especfico fallo
+2. Revisar el archivo那份 documento mencionado en el error
+3. Aplicar el fix correspondiente
+4. Re-ejecutar el script para verificar
+
+---
+
 ## 15. Taxonomia de Confianza
 
-| Nivel | Confidence | Criterio | Uso en Assets |
+|| Nivel | Confidence | Criterio | Uso en Assets |
 |-------|------------|----------|---------------|
-| 🟢 VERIFIED | >= 0.9 | 2+ fuentes coinciden | Directo |
-| 🟡 ESTIMATED | 0.5-0.9 | 1 fuente o benchmark | Con disclaimer |
-| 🔴 CONFLICT | < 0.5 | Fuentes contradicen | Bloqueado |
+|| 🟢 VERIFIED | >= 0.9 | 2+ fuentes coinciden | Directo |
+|| 🟡 ESTIMATED | 0.5-0.9 | 1 fuente o benchmark | Con disclaimer |
+|| 🔴 CONFLICT | < 0.5 | Fuentes contradicen | Bloqueado |
 
 ### 15.1 Gates de Assets
 
