@@ -525,7 +525,16 @@ class CoherenceValidator:
             if not is_asset_implemented(asset_type):
                 missing_service_assets.append(f"{service_name}→{asset_type}")
 
-        all_missing = missing_types + missing_service_assets
+        # SOL-1: Deduplicate — if an asset_type appears in both lists,
+        # prefer the service→asset format (more informative). Extract asset_type
+        # from "service→asset" entries to avoid false duplicates.
+        service_asset_types = set()
+        for entry in missing_service_assets:
+            if "→" in entry:
+                service_asset_types.add(entry.split("→")[1])
+        # Only include from missing_types if not also in missing_service_assets
+        deduped_missing_types = [t for t in missing_types if t not in service_asset_types]
+        all_missing = deduped_missing_types + missing_service_assets
         if not all_missing:
             return CoherenceCheck(
                 name="promised_assets_exist",

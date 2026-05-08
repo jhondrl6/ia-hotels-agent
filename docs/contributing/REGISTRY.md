@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-07
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 216
+> **Total fases completadas:** 217
 
 ---
 
@@ -5490,6 +5490,83 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## SOL2-PATCH-C - 2026-05-07
+**Descripcion:** Investigacion skipped_assets + verificacion baseline v4complete. Trazado 5-capas: SkippedAsset nunca instanciado. Veredicto OPCION B (documentar infraestructura preparada).
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## SOL2-PATCH-A - 2026-05-07
+**Descripcion:** Micro-fixes de codigo: deduplicar mensaje coherence_validator, docstring skipped_assets, logging publication_gates
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/coherence_validator.py` | Coherence Validator |
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## SOL2-PATCH-B - 2026-05-07
+**Descripcion:** Parcheo prompts historicos SOL2-A y SOL2-B con notas POST-EJECUCION
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `.opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-A.md` | 05-Prompt-Inicio-Sesion-Fase-Sol2-A |
+| `.opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-B.md` | 05-Prompt-Inicio-Sesion-Fase-Sol2-B |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## SOL2-PATCH-C - 2026-05-07
+**Descripcion:** Investigacion skipped_assets + v4complete baseline Termales Santa Rosa de Cabal
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/SOL2-PATCH-C/analisis_ejecucion.md` | NUEVO | Analisis Ejecucion |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

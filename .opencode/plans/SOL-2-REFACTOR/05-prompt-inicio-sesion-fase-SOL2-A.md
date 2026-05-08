@@ -4,6 +4,14 @@ version: 1.0.0
 skill: phased_project_executor
 ---
 
+> [!IMPORTANT]
+> **NOTA POST-EJECUCION (2026-05-07)**
+> Esta fase fue completada exitosamente. Los siguientes componentes YA EXISTEN:
+> - `SitePresenceChecker` en `modules/asset_generation/site_presence_checker.py` (601 lineas)
+> - `deployment_assistant.md` en `.agents/workflows/deployment_assistant.md` (43 lineas)
+> Si estas leyendo este prompt en una sesion futura, NO re-crear estos componentes.
+> Saltar directamente a la seccion de verificacion o al siguiente paso del plan.
+
 # FASE-SOL2-A: Ghost Ref & SitePresence Cleanup
 
 **ID**: FASE-SOL2-A  

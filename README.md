@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.42.0 | **Codename:** SOL-2-ASSET-ALIGNMENT-REFACTOR | **Ultima actualizacion:** 7 Mayo 2026
+**Version:** 4.42.0 | **Codename:** SOL-2-PATCH | **Ultima actualizacion:** 7 Mayo 2026
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-## Estado del Proyecto (v4.41.0)
+## Estado del Proyecto (v4.42.0)
 
 - **2,491 test functions** — 0 regresiones
  - **~188 modulos Python** (~65K lineas) + **21 scripts** (~5K lineas) + **193 archivos de test** (~53K lineas)

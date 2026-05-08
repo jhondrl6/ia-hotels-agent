@@ -4,6 +4,14 @@ version: 1.0.0
 skill: phased_project_executor
 ---
 
+> [!IMPORTANT]
+> **NOTA POST-EJECUCION (2026-05-07)**
+> Esta fase fue completada exitosamente. `PROPOSAL_SERVICE_TO_ASSET` ya tiene 7 entradas
+> incluyendo `"Optimizacion para IA Generativa": "llms_txt"`. La unificacion de baseline
+> entre coherence_validator y proposal_asset_alignment_gate ya fue implementada.
+> Si estas leyendo este prompt en una sesion futura, NO re-ejecutar la unificacion.
+> Verificar directamente que PROPOSAL_SERVICE_TO_ASSET tenga 7 entradas y continuar.
+
 # FASE-SOL2-B: Asset Alignment & Gate Unification
 
 **ID**: FASE-SOL2-B  

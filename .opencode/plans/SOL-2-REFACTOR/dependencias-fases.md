@@ -46,3 +46,4 @@ Etapa 3: Cierre
 || FASE-SOL2-C | ✅ COMPLETADA (2026-05-07 16:00) | v4complete ejecutado para Termales, análisis completado, coherence 0.89, 6/9 PASSED, llms_txt verificado |
 | FASE-SOL2-D | ✅ COMPLETADA | Campos fantasma auditados (GAP-G: falso positivo), coherence score documentado como unica fuente, line ranges corregidos |
 || FASE-SOL2-RELEASE | ✅ COMPLETADA (2026-05-07) | Documentación cascade: 4 fases registradas, VERSION sync 4.42.0, CHANGELOG actualizado, GUIA_TECNICA actualizada |
+| SOL2-PATCH-B | ✅ COMPLETADA (2026-05-07 18:50) | Notas POST-EJECUCION insertadas en SOL2-A y SOL2-B para evitar trampas temporales en re-ejecuciones |

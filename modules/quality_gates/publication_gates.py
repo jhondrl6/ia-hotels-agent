@@ -813,8 +813,11 @@ class PublicationGatesOrchestrator:
                 assets_to_check = [at for at in missing_asset_types if at and at not in generated_types]
                 if assets_to_check:
                     site_presence_report = checker.check_site(hotel_url, asset_types=assets_to_check)
-            except Exception:
-                # SitePresenceChecker errors should not break the gate
+            except Exception as e:
+                # SOL-5: Log SitePresenceChecker errors for observability without breaking the gate
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.warning(f"SitePresenceChecker error: {e}")
                 site_presence_report = None
 
         report = verify_proposal_asset_alignment(

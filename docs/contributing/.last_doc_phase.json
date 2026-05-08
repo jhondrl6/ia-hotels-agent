@@ -5,7 +5,7 @@
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-PROP-D",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
-  "modules/asset_generation/v4_asset_orchestrator.py": "FASE-1-AMAZILIA-CORRECCION",
+  "modules/asset_generation/v4_asset_orchestrator.py": "SOL2-PATCH-A",
   "docs/contributing/capabilities.md": "FASE-IAO-06",
   "GEO_FIELD_MAPPING.md": "FASE-1",
   "06-checklist-implementacion.md": "FASE-1",
@@ -37,7 +37,7 @@
   "modules/asset_generation/templates/indirect_traffic_optimization_template.md": "FASE-VALIDATE-RC",
   "modules/generators/report_builder.py": "FASE-D",
   "modules/analyzers/gap_analyzer.py": "FASE-D",
-  "modules/quality_gates/publication_gates.py": "FASE-SOL2-B",
+  "modules/quality_gates/publication_gates.py": "SOL2-PATCH-A",
   "modules/asset_generation/asset_content_validator.py": "FASE-B",
   "data_models/canonical_assessment.py": "FASE-C",
   "modules/financial_engine/calculator_v2.py": "FIN-1A",
@@ -54,7 +54,7 @@
   "modules/utils/benchmarks.py": "FASE-D",
   "modules/financial_engine/opportunity_scorer.py": "CHAN-2",
   "tests/commercial_documents/test_pain_solution_mapper.py": "FASE-D",
-  "modules/commercial_documents/coherence_validator.py": "FASE-SOL2-B",
+  "modules/commercial_documents/coherence_validator.py": "SOL2-PATCH-A",
   "modules/scrapers/web_scraper.py": "FASE-E",
   "modules/financial_engine/scenario_calculator.py": "FIN-1A",
   "tests/financial_engine/test_scenario_calculator.py": "FASE-B",
@@ -142,5 +142,7 @@
   "tests/commercial_documents/test_precision_rendering.py": "FASE-REFACTOR-CTA-ONBOARDING",
   "modules/asset_generation/site_presence_checker.py": "FASE-PROP-D",
   "modules/commercial_documents/coherence_config.py": "PATCH-A",
-  "INDICE_DOCUMENTACION.md": "FASE-SOL2-A"
+  "INDICE_DOCUMENTACION.md": "FASE-SOL2-A",
+  ".opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-A.md": "SOL2-PATCH-B",
+  ".opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-B.md": "SOL2-PATCH-B"
 }

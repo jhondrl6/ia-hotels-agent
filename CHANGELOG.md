@@ -1,5 +1,34 @@
 # Changelog
 
+## [4.42.1] - 2026-05-07
+
+### Objetivo
+Correcciones post-validacion del contexto unificado 07_SOL-2_UNIFIED_VALIDATED_20260507.md.
+
+### Cambios Implementados
+- Deduplicacion de mensaje en coherence_validator._check_promised_assets_exist()
+- Docstring explicativo para site_verification_applied (flag cosmetico)
+- Logging de excepciones en publication_gates catch-all
+- Notas POST-EJECUCION en prompts historicos SOL2-A y SOL2-B
+- Investigacion de skipped_assets + v4complete baseline
+
+### Archivos Nuevos
+| Archivo | Descripcion |
+|---------|-------------|
+| evidence/SOL2-PATCH-C/analisis_ejecucion.md | Analisis de ejecucion v4complete baseline |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| modules/commercial_documents/coherence_validator.py | Deduplicar mensaje missing assets |
+| modules/asset_generation/v4_asset_orchestrator.py | Docstring site_verification_applied |
+| modules/quality_gates/publication_gates.py | Logging excepciones SitePresenceChecker |
+| .opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-A.md | Nota POST-EJECUCION |
+| .opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-B.md | Nota POST-EJECUCION |
+
+### Tests
+- 0 tests nuevos, 0 regresiones
+
 ## [4.42.0] - SOL-2 Asset Alignment Refactor — 2026-05-07
 
 ### Objetivo

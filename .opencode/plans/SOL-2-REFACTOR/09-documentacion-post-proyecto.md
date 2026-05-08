@@ -44,12 +44,14 @@ version: 1.0.0
 | Tests nuevos/actualizados | 26 tests (18 alignment + 8 gate) |
 | Regresiones | 0 |
 | Discrepancia resuelta | coherence_validator y gate ahora reportan 7/7 servicios consistentes |
-| v4complete E2E | 2 ejecuciones (Termales: pre-fix 13:06 + post-fix 15:59) |
+| v4complete E2E | 3 ejecuciones (Termales: pre-fix 13:06 + post-fix 15:59 + PATCH-C baseline 18:12) |
 | Coherence score post-fix | 0.89 (estable, ≥ 0.8 threshold) |
 | Gate report post-fix | 6 PASSED / 3 WARNING / 0 FAILED (READY_FOR_PUBLICATION) |
 | llms_txt post-fix | ✅ Generado (confidence 0.85, PASSED) |
 | Servicios propuesta post-fix | 7 (alineados: 3/7 = 42.9%, +9.6% vs pre-fix) |
 | Ghost refs eliminadas | 0 (ambas eran refs válidas, no fantasmas) |
+| **SOL2-PATCH-C: skipped_assets** | **Investigacion completada** — `SkippedAsset(` 0 instancias en todo el repo. Veredicto: infraestructura preparada, gap orchestrator↔gate. OPCION B (documentar). |
+| **SOL2-PATCH-C: baseline verificado** | **Evidencia completa** — 5 runs v4complete, coherence 0.89, site_verification_applied=false confirmado. |
 
 ## Sección E: Archivos Afiliados Actualizados
 
@@ -63,6 +65,8 @@ version: 1.0.0
 | `INDICE_DOCUMENTACION.md` | ✅ Verificada 2026-05-07 | FASE-SOL2-A |
 | `.opencode/context/05_SOL-2_*.md` | ✅ v3.0.0 (SOL2-D) | Preparación + SOL2-D |
 | `evidence/FASE-SOL2-C/analisis_ejecucion.md` | ✅ 2026-05-07 16:00 | FASE-SOL2-C (post-fix) |
+| `.opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-A.md` | ✅ PATCH-B (2026-05-07) | Nota POST-EJECUCION insertada |
+| `.opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-B.md` | ✅ PATCH-B (2026-05-07) | Nota POST-EJECUCION insertada |
 
 ## Sección F: Evidencia
 

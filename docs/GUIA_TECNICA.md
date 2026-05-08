@@ -6,6 +6,23 @@
 
 ---
 
+### v4.42.1 - 2026-05-07 — SOL-2-PATCH (PATCH-A/B/C/RELEASE)
+
+**Módulos afectados**: coherence_validator, v4_asset_orchestrator, publication_gates
+
+**Problema**: Falsos positivos en contexto 07 (mensaje duplicado de assets faltantes), dead code detectado en SitePresenceChecker, y trampas temporales en prompts históricos (notas POST-EJECUCION faltantes).
+
+**Solución**:
+- PATCH-A: Micro-fixes — deduplicar mensaje coherence_validator, docstring site_verification_applied, logging publication_gates
+- PATCH-B: Parcheo de prompts históricos SOL2-A y SOL2-B con notas POST-EJECUCION
+- PATCH-C: Investigación skipped_assets + v4complete baseline Termales Santa Rosa de Cabal
+
+**Backwards compatibility**: 100% — sin cambios de API, solo micro-fixes y documentación.
+
+**Tests**: 0 tests nuevos, 0 regresiones.
+
+---
+
 ### v4.42.0 - 2026-05-07 — SOL-2 Asset Alignment Refactor (FASE-SOL2-A/B/C/D)
 
 **Módulos afectados**: quality_gates, asset_generation, commercial_documents

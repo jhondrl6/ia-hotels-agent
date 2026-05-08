@@ -142,6 +142,9 @@ class AssetGenerationResult:
                 "can_use": sum(1 for a in self.generated_assets if a.can_use),
                 "estimated": estimated_count,
                 "delivery_ready_percentage": round(delivery_ready_pct, 2),
+                # SOL-3 NOTE: site_verification_applied reflects skips at orchestrator level,
+                # not checks at gate level. The gate sees the skip list but cannot re-verify
+                # site presence. This is a known timing gap — see SOL-2-D3.
                 "site_verification_applied": len(self.skipped_assets) > 0  # FASE-CAUSAL-01
             },
             "generated_assets": [

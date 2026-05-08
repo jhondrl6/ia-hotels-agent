@@ -25,6 +25,7 @@ version: 1.0.0
 || 3 | FASE-SOL2-C | v4complete E2E Verification (Termales) | ✅ COMPLETADA | ~5 | 2026-05-07 |
 | 4 | FASE-SOL2-D | Phantom Fields & Coherence Consistency | ✅ COMPLETADA | ~15 | 2026-05-07 |
 || 5 | FASE-SOL2-RELEASE | Documentación Cascade & Version Sync | ✅ COMPLETADA | ~10 | 2026-05-07 |
+|| 6 | SOL2-PATCH-B | Parcheo de prompts históricos (POST-EJECUCION) | ✅ COMPLETADA | ~8 | 2026-05-07 |
 
 ## Criterios de Aceptación del Proyecto
 
