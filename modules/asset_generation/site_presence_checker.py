@@ -362,7 +362,7 @@ class SitePresenceChecker:
         # Normalizar
         target_types = [schema_type]
         if schema_type == "Hotel":
-            target_types.extend(["LodgingBusiness", "LocalBusiness"])
+            target_types.extend(["LodgingBusiness", "LocalBusiness", "Organization"])
         elif schema_type == "Organization":
             target_types.append("Organization")
         
@@ -415,24 +415,55 @@ class SitePresenceChecker:
         site_url: str, 
         search_texts: List[str]
     ) -> Dict[str, Any]:
-        """Verifica presencia de elemento/botón en HTML."""
+        """Verifica presencia de elemento/botón en HTML (texto + atributos href + clases CSS).
+        
+        PATCH-5: Ampliado para buscar en href attributes y CSS classes.
+        Returns also whatsapp_href_number extracted from wa.me links.
+        """
         try:
             import requests
             from bs4 import BeautifulSoup
+            import re
             
             headers = {"User-Agent": "Mozilla/5.0"}
             response = requests.get(site_url, headers=headers, timeout=self.timeout)
             soup = BeautifulSoup(response.text, 'html.parser')
             
             found_texts = []
+            whatsapp_href_number = None
+            
+            # 1. Buscar en texto visible (existente)
             for text in search_texts:
                 if text.lower() in soup.text.lower():
                     found_texts.append(text)
             
-            return {
+            # 2. PATCH-5: Buscar en atributos href de enlaces
+            for link in soup.find_all('a', href=True):
+                href = link.get('href', '')
+                if any(pattern in href.lower() for pattern in ['wa.me', 'api.whatsapp.com', 'whatsapp']):
+                    found_texts.append(f"whatsapp_link:{href}")
+                    # Extract phone number from wa.me link
+                    if 'wa.me/' in href.lower():
+                        match = re.search(r'wa\.me/(\d+)', href, re.IGNORECASE)
+                        if match:
+                            whatsapp_href_number = match.group(1)
+                    break
+            
+            # 3. PATCH-5: Buscar en clases CSS
+            for element in soup.find_all(class_=True):
+                classes = ' '.join(element.get('class', []))
+                if any(pattern in classes.lower() for pattern in ['whatsapp', 'joinchat']):
+                    found_texts.append(f"css_class:{classes}")
+                    break
+            
+            result = {
                 "found": len(found_texts) > 0,
                 "matched_texts": found_texts
             }
+            if whatsapp_href_number:
+                result["whatsapp_href_number"] = whatsapp_href_number
+            
+            return result
         except Exception:
             return {"found": False}
     

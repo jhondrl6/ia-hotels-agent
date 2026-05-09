@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-08
+> **Ultima actualizacion:** 2026-05-09
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 232
+> **Total fases completadas:** 234
 
 ---
 
@@ -5880,6 +5880,51 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2-PATCH-A - 2026-05-09
+**Descripcion:** PATCH-1 (template conditionals OR) + PATCH-2 (coherence generated_assets wiring) + PATCH-4 (scrubber regex expand)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/coherence_validator.py` | Coherence Validator |
+| `modules/postprocessors/content_scrubber.py` | Content Scrubber |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2-PATCH-B - 2026-05-09
+**Descripcion:** PATCH-3 (monthly report asset_report_path) + PATCH-5 (SitePresenceChecker HTML real) + PATCH-6 (GBP phone enrichment)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/site_presence_checker.py` | Site Presence Checker |
+| `modules/asset_generation/monthly_report_generator.py` | Monthly Report Generator |
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (24)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

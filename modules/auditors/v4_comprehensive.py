@@ -105,6 +105,7 @@ class CrossValidationResult:
     conflicts: List[Dict] = field(default_factory=list)
     validated_fields: Dict[str, Any] = field(default_factory=dict)
     whatsapp_html_detected: bool = False  # True si scraper detecto boton WhatsApp en HTML
+    whatsapp_href_number: Optional[str] = None  # Numero extraido del href wa.me (puede diferir del phone_web)
 
     # NUEVOS CAMPOS (GAP-IAO-01-02-B):
     address_status: str = "unknown"
@@ -1358,6 +1359,24 @@ class V4ComprehensiveAuditor:
                 return True
         return False
 
+    def _extract_wa_me_number(self, html: str) -> Optional[str]:
+        """Extract phone number from wa.me href links in HTML.
+        
+        Detects patterns like:
+        - https://wa.me/573012674459
+        - http://wa.me/573183589009
+        
+        Returns:
+            Phone number string (digits only) or None if not found.
+        """
+        if not html:
+            return None
+        import re
+        match = re.search(r'wa\.me/(\d+)', html, re.IGNORECASE)
+        if match:
+            return match.group(1)
+        return None
+
     def _extract_phone_from_html(self, html: str) -> Optional[str]:
         """Extract phone number from <a href='tel:...'> links in HTML.
         
@@ -1400,6 +1419,9 @@ class V4ComprehensiveAuditor:
         if not web_phone and page_html:
             web_phone = self._extract_phone_from_html(page_html)
         gbp_phone = gbp.phone
+        
+        # PATCH-6: Extract wa.me href number for conflict detection
+        wa_me_number = self._extract_wa_me_number(page_html) if page_html else None
         
         whatsapp_dp = self.cross_validator.validate_whatsapp(
             web_value=web_phone,
@@ -1457,6 +1479,7 @@ class V4ComprehensiveAuditor:
             address_web=web_address,
             address_gbp=gbp_address,
             whatsapp_html_detected=whatsapp_html_detected,
+            whatsapp_href_number=wa_me_number,
         )
     
     def _calculate_overall_confidence(

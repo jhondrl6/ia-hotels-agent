@@ -390,12 +390,14 @@ class ConditionalGenerator:
             phone_gbp = validated_data.get("phone_gbp", "")
             gbp_rating = validated_data.get("gbp_rating", None)
             gbp_review_count = validated_data.get("gbp_review_count", None)
+            wa_href_number = validated_data.get("whatsapp_href_number", None)
             content = generator.generate(
                 hotel_name=hotel_name,
                 phone_web=phone_web,
                 phone_gbp=phone_gbp,
                 gbp_rating=gbp_rating,
                 gbp_review_count=gbp_review_count,
+                phone_wa_href=wa_href_number,
             )
         
         elif asset_type == "faq_page":

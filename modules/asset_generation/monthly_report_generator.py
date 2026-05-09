@@ -251,7 +251,12 @@ class MonthlyReportGenerator:
             Markdown string con la tabla de assets.
         """
         if asset_report_path is None and output_dir:
-            asset_report_path = os.path.join(output_dir, 'asset_generation_report.json')
+            # PATCH-3: Buscar en v4_audit/ subdirectorio (ruta real del orchestrator)
+            v4_audit_path = os.path.join(output_dir, 'v4_audit', 'asset_generation_report.json')
+            if os.path.exists(v4_audit_path):
+                asset_report_path = v4_audit_path
+            else:
+                asset_report_path = os.path.join(output_dir, 'asset_generation_report.json')
 
         assets_data = {}
         if asset_report_path and os.path.exists(asset_report_path):

@@ -25,6 +25,7 @@ class WhatsAppConflictGuideGenerator:
         gbp_rating: Optional[float] = None,
         gbp_review_count: Optional[int] = None,
         schema_telephone: Optional[str] = None,
+        phone_wa_href: Optional[str] = None,
     ) -> str:
         """Generate a Markdown resolution guide for WhatsApp conflicts.
 
@@ -35,6 +36,9 @@ class WhatsAppConflictGuideGenerator:
             gbp_rating: GBP rating (used to recommend the stronger source).
             gbp_review_count: Number of GBP reviews.
             schema_telephone: Phone from schema.org markup.
+            phone_wa_href: Phone number extracted from wa.me href in HTML.
+                May differ from phone_web if the wa.me link points to a
+                different number than the schema telephone.
 
         Returns:
             Markdown string with the resolution guide.
@@ -63,7 +67,31 @@ class WhatsAppConflictGuideGenerator:
         
         sections.append(f"| Sitio web (schema) | {phone_web or 'No detectado'} | {web_ref} |")
         sections.append(f"| Google Business Profile | {phone_gbp or 'No detectado'} | {gbp_ref} |")
+        
+        # PATCH-6: Show wa.me href number if different from schema phone
+        if phone_wa_href and phone_wa_href != phone_web:
+            wa_ref = "Numero extraido del enlace wa.me en el HTML del sitio"
+            sections.append(f"| Boton WhatsApp (wa.me) | +{phone_wa_href} | {wa_ref} |")
+        
         sections.append("")
+        
+        # Detect wa.me href conflict
+        wa_me_conflict = False
+        if phone_wa_href and phone_gbp:
+            # Normalize both for comparison (strip spaces, dashes, leading +)
+            norm_href = phone_wa_href.replace(" ", "").replace("-", "").lstrip("+")
+            norm_gbp = phone_gbp.replace(" ", "").replace("-", "").lstrip("+")
+            if norm_href != norm_gbp:
+                wa_me_conflict = True
+                sections.append("### Conflicto: Boton WhatsApp apunta a numero diferente")
+                sections.append("")
+                sections.append(f"El boton de WhatsApp en su sitio web contiene el enlace `wa.me/{phone_wa_href}`,")
+                sections.append(f"pero el numero registrado en Google Business Profile es `{phone_gbp}`.")
+                sections.append("")
+                sections.append("Esto significa que cuando un visitante hace clic en el boton de WhatsApp,")
+                sections.append("se comunicara con un numero **diferente** al que aparece en Google.")
+                sections.append("Esto genera confusion y puede resultar en mensajes perdidos.")
+                sections.append("")
         
         # Problem description
         sections.append("### El Problema")

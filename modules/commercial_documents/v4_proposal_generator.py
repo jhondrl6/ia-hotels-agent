@@ -580,6 +580,13 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
                         getattr(getattr(audit_result, 'gbp', None), 'address', None) or \
                         hotel_region
         
+        # PATCH-6: Extract hotel phone from GBP data (audit_result.gbp.phone)
+        hotel_phone = ""
+        if audit_result:
+            gbp = getattr(audit_result, 'gbp', None)
+            if gbp:
+                hotel_phone = getattr(gbp, 'phone', '') or ""
+        
         # Main scenario for primary display
         main_scenario = financial_scenarios.get_main_scenario()
         
@@ -700,6 +707,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         # V6 template variables (regional context and investment summary)
         'hotel_location': hotel_location,
         'hotel_region': hotel_region,
+        'hotel_phone': hotel_phone,  # PATCH-6: GBP phone for contact section
         'monthly_loss': format_cop(raw_monthly_loss),
         'monthly_investment': format_cop(monthly_investment),
         'total_investment': format_cop(monthly_investment * 6),
@@ -1102,22 +1110,42 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
 
     def _preprocess_conditionals(self, template_content: str, data: Dict[str, Any]) -> str:
         """Elimina bloques {{if cond}}...{{endif}} cuando cond es False.
-        
+
         FASE-1-A: Procesa conditionals {{if var == "value"}}...{{endif}}
         antes de safe_substitute para evitar que viajen crudos al cliente.
+
+        FASE-2-PATCH-A: Expande expresiones compuestas con OR antes del pattern
+        simple. Maneja {{if a == "X" or a == "Y"}}...{{endif}}.
         """
         import re
-        
-        # Pattern: {{if var == "value"}}...{{endif}}
+
+        # PASO 1 (FASE-2-PATCH-A): Expandir expresiones compuestas con OR
+        # {{if a == "X" or a == "Y"}}...{{endif}}
+        # → {{if a == "X"}}...{{endif}}{{if a == "Y"}}...{{endif}}
+        or_pattern = r'\{\{if\s+(\w+)\s*==\s*"([^"]+)"\s+or\s+\w+\s*==\s*"([^"]+)"\}\}(.*?)\{\{endif\}\}'
+
+        def expand_or(match):
+            var = match.group(1)
+            val1 = match.group(2)
+            val2 = match.group(3)
+            block = match.group(4)
+            return (
+                f'{{{{if {var} == "{val1}"}}}}{block}{{{{endif}}}}'
+                f'{{{{if {var} == "{val2}"}}}}{block}{{{{endif}}}}'
+            )
+
+        template_content = re.sub(or_pattern, expand_or, template_content, flags=re.DOTALL)
+
+        # PASO 2: Procesar conditionals simples (código existente FASE-1-A)
         pattern = r'\{\{if\s+(\w+)\s*==\s*"([^"]+)"\}\}(.*?)\{\{endif\}\}'
-        
+
         def replace_match(match):
             var_name = match.group(1)
             expected = match.group(2)
             block = match.group(3)
             actual = str(data.get(var_name, ''))
             return block if actual == expected else ''
-        
+
         return re.sub(pattern, replace_match, template_content, flags=re.DOTALL)
     
     def _render_template(self, template_content: str, data: Dict[str, str]) -> str:

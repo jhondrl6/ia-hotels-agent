@@ -194,7 +194,7 @@ Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.
 **IA Hoteles Agent**  
 *Especialistas en visibilidad digital para hoteles boutique y negocios locales*
 
-WhatsApp: +57 300 000 0000  
+WhatsApp: ${hotel_phone}  
 Email: contacto@iahoteles.co
 
 ---

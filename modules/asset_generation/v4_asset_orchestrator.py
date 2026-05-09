@@ -264,6 +264,9 @@ class V4AssetOrchestrator:
         # 5. Extraer datos validados (FASE 12: ahora incluye hotel_data del audit)
         validated_data = self._extract_validated_fields(validation_summary, audit_result)
 
+        # PATCH-3: Inyectar output_dir para que MonthlyReportGenerator encuentre asset_generation_report.json
+        validated_data["hotel_data"]["output_dir"] = str(output_dir)
+
         # ═══════════════════════════════════════════════════════════════════
         # FASE-I-01: ENRICHMENT CON AUTONOMOUS RESEARCHER
         # Si los datos son LOW, ejecutar investigación para enriquecer
@@ -735,6 +738,7 @@ class V4AssetOrchestrator:
         if audit_result and audit_result.validation:
             validated_data["phone_web"] = getattr(audit_result.validation, 'phone_web', None)
             validated_data["phone_gbp"] = getattr(audit_result.validation, 'phone_gbp', None)
+            validated_data["whatsapp_href_number"] = getattr(audit_result.validation, 'whatsapp_href_number', None)
             # FIX-A2: Propagate phone_web to whatsapp key for whatsapp_button handler
             validated_data["whatsapp"] = validated_data.get("phone_web", "")
             # FASE-1-DATASOURCE-GAP FIX: Propagar phone_web a hotel_data si gbp.phone fue None
