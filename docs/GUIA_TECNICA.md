@@ -1,8 +1,30 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.42.0 (SOL-2-ASSET-ALIGNMENT-REFACTOR)
+**Versión:** v4.43.0 (TERMALES-REFACTOR)
 **Última actualización:** 2026-05-08
 **Proyecto:** IA Hoteles Agent CLI
+
+---
+
+### v4.43.0 - 2026-05-08 — Termales Refactor (FASE-1-A, FASE-1-B, FASE-2-A, FASE-3)
+
+**Módulos afectados**: commercial_documents, postprocessors, asset_generation, quality_gates
+
+**Problema**:
+- FASE-1-A: Template engine string.Template no procesaba {{if}}...{{endif}}; coherence usaba catálogo estático (no generados)
+- FASE-1-B: Content scrubber no detectaba [PENDING_*]; monthly_report era estático con rows hardcoded
+- FASE-2-A: SitePresenceChecker fallaba silenciosamente (except Exception ocultaba errores); generadores usaban contenido genérico
+- FASE-3: Gates no bloqueantes permitían publicar documentos defectuosos (alignment < 50% solo WARNING)
+
+**Solución**:
+- **FASE-1-A**: Pre-procesador regex para {{if}}...{{endif}} antes de safe_substitute. Coherence validator usa generated_assets como fuente de verdad con fallback al catálogo.
+- **FASE-1-B**: Rule 6 en content_scrubber detecta [PENDING_*] y bloquea publicación (block_publication=True). Monthly report genera tabla dinámica desde asset_generation_report.json.
+- **FASE-2-A**: SitePresenceChecker hardening (except loguea error + retorna status=unknown). IndirectTraffic lee audit_report.json. FAQ scraping ligero del sitio.
+- **FASE-3**: Alignment < 50% → BLOCKED (antes WARNING). Nuevo gate tier_c_onboarding_required para propuestas Tier C.
+
+**Backwards compatibility**: 100%. generated_assets=None cae a fallback catálogo. audit_report_path/site_url son opcionales. Rule 6 es breaking change para [PENDING*] que antes pasaba limpio.
+
+**Tests**: 64 tests nuevos (11+5+24+24). run_all_validations.py --quick: 4/4 pass. 0 regresiones.
 
 ---
 
@@ -931,3 +953,24 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 **Backwards compatibility**: Sí. geo_playbook deprecation es transparente (no se prometía en producción). Coherence unificado, Tier C warning y pain_ratio_note son adiciones o cambios de presentación. Rutas persistentes no afectan lectura legacy (solo writes nuevos).
 
 **Tests**: ~25 tests nuevos. `run_all_validations.py --quick` pasa 4/4. 0 regresiones.
+
+---
+
+### v4.42.1 - 2026-05-08 — FASE-2-A: Detection & Enrichment Hardening
+
+**Módulos afectados**: `publication_gates`, `proposal_asset_alignment`, `indirect_traffic_optimization_gen`, `faq_gen`
+
+**Problema**:
+- FIX-5: `except Exception` en `_proposal_asset_alignment_gate()` tragaba errores de `SitePresenceChecker` silenciosamente, seteando `site_presence_report = None`. Esto causaba que assets no verificables se marcaran como "missing" en vez de "indeterminate".
+- FIX-6: `IndirectTrafficOptimizationGenerator.generate()` generaba recomendaciones genéricas sin consultar datos reales del hotel (GBP reviews, schemas, performance).
+- FIX-7: `FAQGenerator.generate_list()` usaba solo `hotel_data.get('servicios')` sin verificar el sitio real del hotel para detectar servicios específicos (termas, spa, cascadas).
+
+**Solución**:
+- **FIX-5 — SitePresenceChecker Hardening**: `publication_gates.py`: el `except` ahora loguea `logger.error()` con traceback completo y retorna `{'presence_status': 'unknown', 'error': str(e), 'assets_checked': {...}}` en vez de `None`. `proposal_asset_alignment.py`: nuevo campo `indeterminate` en `AlignmentReport`. `verify_proposal_asset_alignment()` detecta dict con `presence_status='unknown'` y marca assets como `indeterminate` en vez de `missing`. El gate incluye conteo de `indeterminate` en el mensaje sin bloquear la publicación.
+- **FIX-6 — Audit-Aware Traffic**: `indirect_traffic_optimization_gen.py`: nuevo parámetro `audit_report_path` en `generate()`. Lee `audit_report.json` y genera sección "Diagnóstico Data-Driven" con datos reales de GBP (reseñas, rating), schemas detectados, performance (PageSpeed). Incluye "Acciones Prioritarias" con severidad [Crítico]/[Alta]/[Media] basadas en los datos.
+- **FIX-7 — Site-Aware FAQ**: `faq_gen.py`: nuevo método `_extract_services_from_site(url)` que hace scraping ligero (requests + BeautifulSoup) para detectar 20 keywords de servicios (termas, spa, cascadas, masaje, senderismo, etc.). `generate()` y `generate_list()` aceptan `site_url` opcional. Los servicios detectados se combinan con `hotel_data.servicios` (sin duplicar) y se incluyen en el prompt del LLM.
+
+**Backwards compatibility**: 100%. `audit_report_path` y `site_url` son parámetros opcionales con default `None`. `AlignmentReport.indeterminate` es campo nuevo; `to_dict()` lo incluye solo si no está vacío. Código existente que no pase estos parámetros funciona exactamente igual.
+
+**Tests**: 24 tests nuevos (7 hardening + 8 traffic + 9 FAQ). `run_all_validations.py --quick` pasa 5/5. 0 regresiones.
+

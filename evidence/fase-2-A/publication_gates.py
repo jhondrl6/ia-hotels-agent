@@ -152,7 +152,6 @@ class PublicationGatesOrchestrator:
             "content_quality": self._content_quality_gate,
             "asset_confidence": self._asset_confidence_gate,
             "proposal_asset_alignment": self._proposal_asset_alignment_gate,
-            "tier_c_onboarding_required": self._tier_c_onboarding_gate,
         }
         self.ethics_gate = EthicsGate()
         self.content_quality_gate = DocumentQualityGate()
@@ -869,86 +868,18 @@ class PublicationGatesOrchestrator:
         
         message = "; ".join(message_parts) if message_parts else f"{len(missing_names)} promised service(s) missing assets"
         
-        # FASE-3 FIX-9: Policy change — BLOCK if alignment < 50%, WARN if >= 50%
-        # This is a business policy decision: below 50% alignment means most promised
-        # services are missing, which is not acceptable for publication.
-        alignment = report.alignment_percentage
-        missing_count = len(missing_names)
-
-        if alignment < 0.5:
-            # BLOCKED: Less than half of promised services have assets
-            return PublicationGateResult(
-                gate_name=gate_name,
-                passed=False,
-                status=GateStatus.BLOCKED,
-                message=message,
-                value=alignment,
-                suggestion=(
-                    f"Alignment {alignment:.0%} ({missing_count} services missing) is below "
-                    f"50% threshold. Review asset generation pipeline to ensure all promised "
-                    f"services produce deliverables before publication."
-                ),
-                details=report.to_dict(),
-            )
-        else:
-            # WARNING: At least 50% aligned but still some missing
-            return PublicationGateResult(
-                gate_name=gate_name,
-                passed=True,
-                status=GateStatus.WARNING,
-                message=message,
-                value=alignment,
-                suggestion=(
-                    f"Alignment {alignment:.0%}: {missing_count} services still missing. "
-                    f"Review asset generation pipeline to ensure all promised services "
-                    f"produce deliverables."
-                ),
-                details=report.to_dict(),
-            )
-
-    # ============================================================================
-    # FASE-3 FIX-10: Tier C Onboarding Gate
-    # ============================================================================
-    def _tier_c_onboarding_gate(self, assessment: Dict[str, Any]) -> PublicationGateResult:
-        """
-        Gate: Tier C Onboarding Required.
-
-        FASE-3 FIX-10: Clients Tier C receive proposals with preliminary/estimated
-        data (no real financial evidence). Such proposals are NOT publishable without
-        onboarding to collect real data.
-
-        This is a POLICY gate — Tier C proposals without onboarding are literally
-        unpublishable because all numbers are placeholders.
-
-        Args:
-            assessment: Assessment dictionary with financial_evidence_tier
-
-        Returns:
-            PublicationGateResult with status BLOCKED for Tier C, PASSED otherwise
-        """
-        gate_name = "tier_c_onboarding_required"
-
-        tier = assessment.get("financial_evidence_tier", "C")  # Default to C (most restrictive)
-
-        if tier == "C":
-            return PublicationGateResult(
-                gate_name=gate_name,
-                passed=False,
-                status=GateStatus.BLOCKED,
-                message="Tier C: Propuesta preliminar. Requiere datos reales para activación.",
-                value=None,
-                suggestion="Onboarding required: Collect real financial data (occupancy, ADR, channel mix) before publication.",
-                details={"tier": tier, "required_action": "onboarding"},
-            )
-
         return PublicationGateResult(
             gate_name=gate_name,
-            passed=True,
-            status=GateStatus.PASSED,
-            message=f"Tier {tier}: Datos suficientes para propuesta activa.",
-            value=None,
-            suggestion="",
-            details={"tier": tier},
+            passed=True,  # WARNING, not blocking — warns but doesn't block publication
+            status=GateStatus.WARNING,
+            message=message,
+            value=report.alignment_percentage,
+            suggestion=(
+                "Review asset generation pipeline to ensure all promised services "
+                "produce deliverables. The following services lack assets: "
+                f"{', '.join(missing_names)}"
+            ),
+            details=report.to_dict(),
         )
 
     def _extract_conflicts(self, assessment: Dict[str, Any]) -> List[Dict]:

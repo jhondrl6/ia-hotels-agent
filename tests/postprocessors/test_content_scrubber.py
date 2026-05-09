@@ -136,6 +136,44 @@ class TestFixGenericAIPhrases:
 
 
 # ==============================================================================
+# FIX 6: [PENDING_*] markers detection and publication blocking
+# ==============================================================================
+class TestFixPendingMarkers:
+    def test_detects_pending_onboarding(self, scrubber):
+        """texto con [PENDING_ONBOARDING] → block_publication=True"""
+        doc = "El proceso requiere [PENDING_ONBOARDING] verificacion."
+        result = scrubber.scrub(doc, {}, "diagnostico")
+        assert result.block_publication is True
+        assert any("PENDING_ONBOARDING" in f for f in result.fixes_applied)
+
+    def test_detects_pending_usp(self, scrubber):
+        """texto con [PENDING_USP] → block_publication=True"""
+        doc = " USP pendiente: [PENDING_USP] "
+        result = scrubber.scrub(doc, {}, "propuesta")
+        assert result.block_publication is True
+
+    def test_no_marker_clean_content(self, scrubber):
+        """texto sin marcadores → block_publication=False"""
+        doc = "Contenido limpio sin marcadores pending."
+        result = scrubber.scrub(doc, {}, "diagnostico")
+        assert result.block_publication is False
+        assert result.fix_count == 0
+
+    def test_pending_without_brackets_not_detected(self, scrubber):
+        """texto con PENDING sin corchetes → no debe detectar"""
+        doc = "There is a pending task PENDING_VERIFY to complete."
+        result = scrubber.scrub(doc, {}, "diagnostico")
+        assert result.block_publication is False
+
+    def test_multiple_pending_markers_detected(self, scrubber):
+        """Multiple [PENDING_*] markers are all reported."""
+        doc = " markers: [PENDING_A] y [PENDING_B] y [PENDING_USP]"
+        result = scrubber.scrub(doc, {}, "diagnostico")
+        assert result.block_publication is True
+        assert result.fix_count >= 1
+
+
+# ==============================================================================
 # IDEMPOTENCY
 # ==============================================================================
 class TestIdempotency:

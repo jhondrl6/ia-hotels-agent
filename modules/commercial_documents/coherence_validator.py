@@ -494,12 +494,16 @@ class CoherenceValidator:
     def _check_promised_assets_exist(
         self,
         assets: List[AssetSpec],
-        diagnostic: DiagnosticDocument
+        diagnostic: DiagnosticDocument,
+        generated_assets: Optional[Dict[str, Any]] = None
     ) -> CoherenceCheck:
         """Valida que todos los assets prometidos existen en el generador.
 
-        SOURCE OF TRUTH: Uses ASSET_CATALOG.is_asset_implemented() to verify
-        that each asset type referenced in the diagnostic is implemented.
+        SOURCE OF TRUTH (FASE-1-A): 
+        - Si generated_assets viene del pipeline: verificar contra assets realmente generados
+          (asset_generation_report.json: generated_assets[asset_type]['can_use'])
+        - Si generated_assets=None: fallback al catalogo estatico is_asset_implemented()
+          (comportamiento legacy preservado para backward compatibility)
 
         FASE-SOL2-B (Option C1): Also cross-references PROPOSAL_SERVICE_TO_ASSET
         to ensure all 7 promised services have implemented assets. This unifies
@@ -522,8 +526,15 @@ class CoherenceValidator:
         # Ensure every promised service maps to an implemented asset
         missing_service_assets = []
         for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
-            if not is_asset_implemented(asset_type):
-                missing_service_assets.append(f"{service_name}→{asset_type}")
+            # FASE-1-A: Si generated_assets disponible, usar la fuente de verdad del pipeline
+            if generated_assets:
+                asset_info = generated_assets.get(asset_type, {})
+                if not asset_info.get('can_use', False):
+                    missing_service_assets.append(f"{service_name}→{asset_type}")
+            else:
+                # Legacy fallback: catalogo estatico
+                if not is_asset_implemented(asset_type):
+                    missing_service_assets.append(f"{service_name}→{asset_type}")
 
         # SOL-1: Deduplicate — if an asset_type appears in both lists,
         # prefer the service→asset format (more informative). Extract asset_type

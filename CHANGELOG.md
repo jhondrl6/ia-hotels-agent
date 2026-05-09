@@ -1,5 +1,53 @@
 # Changelog
 
+## [4.43.0] - Refactorizacion Termales Santa Rosa de Cabal — 2026-05-08
+
+### Objetivo
+Corregir bugs criticos en pipeline v4complete detectados en analisis de Termales Santa Rosa de Cabal.
+
+### Cambios Implementados
+- FIX-1: Template engine procesa condicionales {{if}}...{{endif}}
+- FIX-2: Coherence validator usa generated_assets como fuente de verdad
+- FIX-3: Monthly report genera tabla dinamica desde asset_generation_report.json
+- FIX-4: Content Scrubber Rule 6 detecta [PENDING_*] y bloquea publicacion
+- FIX-5: SitePresenceChecker hardening con logging detallado y status unknown
+- FIX-6: indirect_traffic generator lee audit_context para recomendaciones
+- FIX-7: FAQ generator extrae servicios reales del sitio via scraping
+- FIX-9: Gate proposal_asset_alignment cambia a BLOCKED cuando alignment < 50%
+- FIX-10: Nuevo gate tier_c_onboarding_required para propuestas Tier C
+
+### Archivos Nuevos
+| Archivo | Descripcion |
+|---------|-------------|
+| tests/commercial_documents/test_template_conditionals.py | Tests para pre-procesador condicional |
+| tests/commercial_documents/test_coherence_generated_assets.py | Tests para coherence con generated_assets |
+| tests/postprocessors/test_pending_markers.py | Tests para scrubber [PENDING*] |
+| tests/asset_generation/test_monthly_report_dynamic.py | Tests para monthly report dinamico |
+| tests/asset_generation/test_site_presence_hardening.py | Tests para SitePresenceChecker hardening |
+| tests/asset_generation/test_indirect_traffic_context.py | Tests para indirect_traffic con audit |
+| tests/asset_generation/test_faq_site_extraction.py | Tests para FAQ con scraping |
+| tests/quality_gates/test_tier_c_onboarding_gate.py | Tests para gate Tier C |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| modules/commercial_documents/v4_proposal_generator.py | FIX-1: _preprocess_conditionals |
+| modules/commercial_documents/coherence_validator.py | FIX-2: _check_promised_assets_exist usa generated_assets |
+| modules/postprocessors/content_scrubber.py | FIX-4: Rule 6 _fix_pending_markers |
+| modules/asset_generation/monthly_report_generator.py | FIX-3: _generate_assets_table dinamica |
+| modules/quality_gates/publication_gates.py | FIX-5: hardening except + FIX-9: alignment BLOCKED + FIX-10: Tier C gate |
+| modules/asset_generation/site_presence_checker.py | FIX-5: investigacion y correccion de fallos |
+| modules/asset_generation/indirect_traffic_generator.py | FIX-6: lectura audit_report.json |
+| modules/asset_generation/faq_generator.py | FIX-7: scraping previo del sitio |
+
+### Tests
+- 64 tests nuevos (11+5+24+24), 0 regresiones
+- run_all_validations.py --quick: 4/4 pass
+
+### Backwards Compatibility
+- Todos los generadores mantienen fallback generico cuando scraping/audit no disponible
+- Content scrubber Rule 6 es bloqueante (breaking change para [PENDING*] que antes pasaba limpio)
+
 ## [4.42.0] - SOL-2 Asset Alignment Refactor — 2026-05-07
 
 ### Objetivo

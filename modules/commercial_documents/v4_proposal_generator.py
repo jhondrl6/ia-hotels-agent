@@ -1100,9 +1100,33 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         else:
             return ("⏳ Incluido en su kit", "Preparacion posterior a la firma")
 
+    def _preprocess_conditionals(self, template_content: str, data: Dict[str, Any]) -> str:
+        """Elimina bloques {{if cond}}...{{endif}} cuando cond es False.
+        
+        FASE-1-A: Procesa conditionals {{if var == "value"}}...{{endif}}
+        antes de safe_substitute para evitar que viajen crudos al cliente.
+        """
+        import re
+        
+        # Pattern: {{if var == "value"}}...{{endif}}
+        pattern = r'\{\{if\s+(\w+)\s*==\s*"([^"]+)"\}\}(.*?)\{\{endif\}\}'
+        
+        def replace_match(match):
+            var_name = match.group(1)
+            expected = match.group(2)
+            block = match.group(3)
+            actual = str(data.get(var_name, ''))
+            return block if actual == expected else ''
+        
+        return re.sub(pattern, replace_match, template_content, flags=re.DOTALL)
+    
     def _render_template(self, template_content: str, data: Dict[str, str]) -> str:
-        """Render the template with data."""
-        template = Template(template_content)
+        """Render the template with data.
+        
+        FASE-1-A: Pre-procesa conditionals {{if}} antes de safe_substitute.
+        """
+        preprocessed = self._preprocess_conditionals(template_content, data)
+        template = Template(preprocessed)
         return template.safe_substitute(data)
     
     def _calculate_roi(self, investment: int, gain: int, months: int, recovery_factor: float = 0.20) -> str:

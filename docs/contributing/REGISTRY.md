@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-08
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 219
+> **Total fases completadas:** 232
 
 ---
 
@@ -5629,6 +5629,254 @@ _Ninguno_
 | `docs/contributing/validation.md` | Validation |
 | `AGENTS.md` | Agents |
 | `.agents/workflows/phased_project_executor.md` | Phased Project Executor |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PRE - 2026-05-08
+**Descripcion:** Saneamiento: validaciones base, line endings CRLF→LF, estructura evidence/
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1-A - 2026-05-08
+**Descripcion:** FIX-1 template engine conditionals + FIX-2 coherence validator generated_assets
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/commercial_documents/test_template_conditionals.py` | NUEVO | Test Template Conditionals |
+| `tests/commercial_documents/test_coherence_generated_assets.py` | NUEVO | Test Coherence Generated Assets |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/coherence_validator.py` | Coherence Validator |
+
+### Validaciones
+- [x] Tests passing (N)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1-B - 2026-05-08
+**Descripcion:** FIX-4 Content Scrubber Rule 6 [PENDING*] + FIX-3 monthly_report data-driven
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/postprocessors/test_content_scrubber.py` | NUEVO | Test Content Scrubber |
+| `tests/asset_generation/test_monthly_report.py` | NUEVO | Test Monthly Report |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/postprocessors/content_scrubber.py` | Content Scrubber |
+| `modules/asset_generation/monthly_report_generator.py` | Monthly Report Generator |
+
+### Validaciones
+- [x] Tests passing (N)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2-A - 2026-05-08
+**Descripcion:** FIX-5 SitePresenceChecker hardening + FIX-6 indirect_traffic audit_context + FIX-7 FAQ site scraping
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/asset_generation/test_site_presence_hardening.py` | NUEVO | Test Site Presence Hardening |
+| `tests/asset_generation/test_indirect_traffic_context.py` | NUEVO | Test Indirect Traffic Context |
+| `tests/asset_generation/test_faq_site_extraction.py` | NUEVO | Test Faq Site Extraction |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `modules/asset_generation/proposal_asset_alignment.py` | Proposal Asset Alignment |
+| `modules/delivery/generators/indirect_traffic_optimization_gen.py` | Indirect Traffic Optimization Gen |
+| `modules/delivery/generators/faq_gen.py` | Faq Gen |
+
+### Validaciones
+- [x] Tests passing (24)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2-B - 2026-05-08
+**Descripcion:** Verificacion E2E v4complete Termales: IMPLEMENTACION PARCIAL (2/7 metricas)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/fase-2-B/` | NUEVO | Fase-2-B |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3 - 2026-05-08
+**Descripcion:** FIX-9 proposal_asset_alignment WARNING→BLOCKED + FIX-10 Tier C onboarding gate
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/quality_gates/test_tier_c_onboarding_gate.py` | NUEVO | Test Tier C Onboarding Gate |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+
+### Validaciones
+- [x] Tests passing (N)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PRE - 2026-05-08
+**Descripcion:** Saneamiento: 5/5 validaciones, 24 archivos CRLF→LF, evidence/ creada
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1-A - 2026-05-08
+**Descripcion:** FIX-1 template conditionals + FIX-2 generated_assets. 11 tests nuevos. 5/5 validaciones
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1-B - 2026-05-08
+**Descripcion:** FIX-4 Rule 6 [PENDING*] + FIX-3 monthly_report data-driven. 24 tests passed. 5/5 validaciones
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2-A - 2026-05-08
+**Descripcion:** FIX-5 SitePresence hardening (indeterminate status) + FIX-6 audit_context traffic + FIX-7 FAQ site scraping. 24 tests nuevos. 5/5 validaciones
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2-B - 2026-05-08
+**Descripcion:** Verificacion E2E v4complete Termales: IMPLEMENTACION PARCIAL — 2/7 metricas. Issues: {{if}} en propuesta, [PENDING_ONBOARDING] en llms_txt, placeholder +57 300 000 0000, whatsapp/schema no detectados por gates
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3 - 2026-05-08
+**Descripcion:** FIX-9 alignment policy → BLOCKED + FIX-10 Tier C onboarding gate. 15 tests (6 nuevos + 9 actualizados). 5/5 validaciones
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.43.0 - 2026-05-08
+**Descripcion:** Release: version bump 4.43.0, CHANGELOG, GUIA_TECNICA, validaciones finales
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
 
 ### Validaciones
 - [x] Tests passing

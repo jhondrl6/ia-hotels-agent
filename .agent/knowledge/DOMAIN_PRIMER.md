@@ -1,13 +1,10 @@
 # Domain Primer - IA Hoteles Agent CLI
 
-> **ESTE ARCHIVO ES REGENERABLE**: ejecutar `python scripts/doctor.py --regenerate-domain-primer`
-> NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente al cerrar FASE-RELEASE
->
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.42.0 | **Codename**: SOL-2-ASSET-ALIGNMENT-REFACTOR
-|> **Release date**: 2026-05-07 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.43.0 | **Codename**: TERMALES-REFACTOR
+> **Release date**: 2026-05-08 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -84,5 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-05-08 | v4.42.0 SOL-2-ASSET-ALIGNMENT-REFACTOR*
-*Regenerar con: `python scripts/doctor.py --regenerate-domain-primer` (solo en FASE-RELEASE)*
+*Auto-generado: 2026-05-09 | v4.43.0 TERMALES-REFACTOR*
+*Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
+*NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

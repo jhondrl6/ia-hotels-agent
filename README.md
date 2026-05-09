@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.42.0 | **Codename:** SOL-2-ASSET-ALIGNMENT-REFACTOR | **Ultima actualizacion:** 8 Mayo 2026
+**Version:** 4.43.0 | **Codename:** TERMALES-REFACTOR | **Ultima actualizacion:** 8 Mayo 2026
 
 ---
 

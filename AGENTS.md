@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.42.0 -- SOL-2-ASSET-ALIGNMENT-REFACTOR COMPLETADO**
+> **v4.43.0 -- TERMALES-REFACTOR COMPLETADO**
 
 ---
 
