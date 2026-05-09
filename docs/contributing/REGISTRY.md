@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-09
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 235
+> **Total fases completadas:** 238
 
 ---
 
@@ -5933,6 +5933,66 @@ _Ninguno_
 
 ## FASE-2-PATCH-C - 2026-05-09
 **Descripcion:** v4complete Termales + verificacion 7 metricas post-patch. Score: 6/7 (PARCIAL). Falla: M6 hotel_schema_detected=false.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-12C - 2026-05-09
+**Descripcion:** Separación comercial Schema Hotel / Schema Organization. Reemplaza "Datos Estructurados" por dos servicios independientes para transparencia en propuesta comercial.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+|| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/proposal_asset_alignment.py` | Split "Datos Estructurados" → "Schema Hotel" + "Schema Organization" |
+| `modules/commercial_documents/service_catalog.py` | Nuevas entradas schema_hotel + schema_organization |
+| `modules/commercial_documents/v4_proposal_generator.py` | Actualiza comentario de referencia |
+
+### Validaciones
+- [x] Tests passing (50/50 sin regresiones)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-12B - 2026-05-09
+**Descripcion:** Coherence gate: detección de divergencia audit↔presence en proposal_asset_alignment. Agrega check de coherencia que detecta cuando SitePresenceChecker reporta EXISTS pero audit dice hotel_schema_detected=false, marcándolo como divergent missing.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/proposal_asset_alignment.py` | Proposal Asset Alignment |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `main.py` | Main |
+| `tests/asset_generation/test_proposal_alignment.py` | Test Proposal Alignment |
+
+### Validaciones
+- [x] Tests passing (4)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-12C - 2026-05-09
+**Descripcion:** Separación Schema Hotel/Organization en propuesta
 
 ### Archivos Nuevos
 _Ninguno_
