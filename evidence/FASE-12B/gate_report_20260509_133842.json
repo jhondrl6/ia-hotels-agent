@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-06T19:27:08.171872",
-  "hotel_url": "http://www.termales.com.co/",
+  "generated_at": "2026-05-09T13:38:42.627454",
+  "hotel_url": "https://termales.com.co",
   "gate_results": [
     {
       "gate_name": "hard_contradictions",
@@ -35,16 +35,12 @@
     },
     {
       "gate_name": "coherence",
-      "passed": false,
-      "status": "FAILED",
-      "message": "Coherence score 0.78 below threshold 0.8",
-      "value": 0.7844444444444444,
-      "suggestion": "Review alignment between diagnostic problems and proposed assets. Ensure every problem has a corresponding solution and all assets are justified. Current gap: 0.02 points.",
-      "details": {
-        "coherence_score": 0.7844444444444444,
-        "threshold": 0.8,
-        "gap": 0.015555555555555656
-      }
+      "passed": true,
+      "status": "PASSED",
+      "message": "Coherence score 0.89 meets threshold 0.8",
+      "value": 0.8911111111111112,
+      "suggestion": "",
+      "details": {}
     },
     {
       "gate_name": "critical_recall",
@@ -77,36 +73,20 @@
       "gate_name": "asset_confidence",
       "passed": true,
       "status": "WARNING",
-      "message": "6 asset(s) below confidence threshold (0.7)",
-      "value": 0.5,
+      "message": "2 asset(s) below confidence threshold (0.7)",
+      "value": 0.71,
       "suggestion": "Run enrichment phase to improve asset quality",
       "details": {
-        "total_assets": 6,
-        "above_threshold": 0,
-        "below_threshold": 6,
+        "total_assets": 5,
+        "above_threshold": 3,
+        "below_threshold": 2,
         "low_confidence_assets": [
-          {
-            "type": "hotel_schema",
-            "score": 0.5
-          },
-          {
-            "type": "faq_page",
-            "score": 0.5
-          },
           {
             "type": "analytics_setup_guide",
             "score": 0.5
           },
           {
             "type": "indirect_traffic_optimization",
-            "score": 0.5
-          },
-          {
-            "type": "llms_txt",
-            "score": 0.5
-          },
-          {
-            "type": "monthly_report",
             "score": 0.5
           }
         ]
@@ -116,17 +96,33 @@
       "gate_name": "proposal_asset_alignment",
       "passed": true,
       "status": "WARNING",
-      "message": "3 missing: SEO Local, Botón de WhatsApp, Meta Tags Sociales (Open Graph)",
-      "value": 0.0,
-      "suggestion": "Review asset generation pipeline to ensure all promised services produce deliverables. The following services lack assets: SEO Local, Botón de WhatsApp, Meta Tags Sociales (Open Graph)",
+      "message": "3 missing: SEO Local, Informe Mensual, Meta Tags Sociales (Open Graph); 1 already in production: Botón de WhatsApp",
+      "value": 0.5,
+      "suggestion": "Alignment 50%: 3 services still missing. Review asset generation pipeline to ensure all promised services produce deliverables.",
       "details": {
         "total_services": 6,
-        "aligned_count": 0,
+        "aligned_count": 3,
         "missing_count": 3,
-        "low_quality_count": 3,
-        "alignment_percentage": 0.0,
+        "low_quality_count": 0,
+        "alignment_percentage": 0.5,
         "all_aligned": false,
-        "aligned": [],
+        "aligned": [
+          {
+            "service": "Datos Estructurados",
+            "asset": "hotel_schema",
+            "confidence": 0.85
+          },
+          {
+            "service": "Página de FAQ",
+            "asset": "faq_page",
+            "confidence": 0.85
+          },
+          {
+            "service": "Optimización para IA Generativa",
+            "asset": "llms_txt",
+            "confidence": 0.85
+          }
+        ],
         "missing": [
           {
             "service": "SEO Local",
@@ -134,11 +130,9 @@
             "message": "Service 'SEO Local' promises asset 'optimization_guide' but it was not generated"
           },
           {
-            "service": "Botón de WhatsApp",
-            "asset": "whatsapp_button",
-            "message": "Service 'Botón de WhatsApp' promises asset 'whatsapp_button' but it was not generated and does not exist in production",
-            "presence_verified": true,
-            "presence_status": "not_exists"
+            "service": "Informe Mensual",
+            "asset": "monthly_report",
+            "message": "Service 'Informe Mensual' promises asset 'monthly_report' but it was not generated"
           },
           {
             "service": "Meta Tags Sociales (Open Graph)",
@@ -146,28 +140,29 @@
             "message": "Service 'Meta Tags Sociales (Open Graph)' promises asset 'open_graph' but it was not generated"
           }
         ],
-        "low_quality": [
+        "low_quality": [],
+        "indeterminate": [],
+        "present_in_production": [
           {
-            "service": "Datos Estructurados",
-            "asset": "hotel_schema",
-            "confidence": 0.5,
-            "message": "Asset 'hotel_schema' has low confidence (0.50 < 0.7)"
-          },
-          {
-            "service": "Informe Mensual",
-            "asset": "monthly_report",
-            "confidence": 0.5,
-            "message": "Asset 'monthly_report' has low confidence (0.50 < 0.7)"
-          },
-          {
-            "service": "Página de FAQ",
-            "asset": "faq_page",
-            "confidence": 0.5,
-            "message": "Asset 'faq_page' has low confidence (0.50 < 0.7)"
+            "service": "Botón de WhatsApp",
+            "asset": "whatsapp_button",
+            "presence_verified": true,
+            "presence_status": "exists"
           }
         ],
-        "present_in_production": [],
         "redundant": []
+      }
+    },
+    {
+      "gate_name": "tier_c_onboarding_required",
+      "passed": false,
+      "status": "BLOCKED",
+      "message": "Tier C: Propuesta preliminar. Requiere datos reales para activación.",
+      "value": null,
+      "suggestion": "Onboarding required: Collect real financial data (occupancy, ADR, channel mix) before publication.",
+      "details": {
+        "tier": "C",
+        "required_action": "onboarding"
       }
     }
   ],
@@ -176,10 +171,10 @@
     "ready": false,
     "blocking_issues": [
       {
-        "gate": "coherence",
-        "message": "Coherence score 0.78 below threshold 0.8",
-        "suggestion": "Review alignment between diagnostic problems and proposed assets. Ensure every problem has a corresponding solution and all assets are justified. Current gap: 0.02 points.",
-        "value": 0.7844444444444444
+        "gate": "tier_c_onboarding_required",
+        "message": "Tier C: Propuesta preliminar. Requiere datos reales para activación.",
+        "suggestion": "Onboarding required: Collect real financial data (occupancy, ADR, channel mix) before publication.",
+        "value": null
       }
     ],
     "warnings": [
@@ -189,11 +184,11 @@
       },
       {
         "gate": "asset_confidence",
-        "message": "6 asset(s) below confidence threshold (0.7)"
+        "message": "2 asset(s) below confidence threshold (0.7)"
       },
       {
         "gate": "proposal_asset_alignment",
-        "message": "3 missing: SEO Local, Botón de WhatsApp, Meta Tags Sociales (Open Graph)"
+        "message": "3 missing: SEO Local, Informe Mensual, Meta Tags Sociales (Open Graph); 1 already in production: Botón de WhatsApp"
       }
     ]
   },
