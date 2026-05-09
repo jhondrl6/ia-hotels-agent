@@ -21,15 +21,15 @@
 
 ---
 
-## Estado del Proyecto (v4.42.0)
+## Estado del Proyecto (v4.43.0)
 
-- **2,491 test functions** — 0 regresiones
- - **~188 modulos Python** (~65K lineas) + **21 scripts** (~5K lineas) + **193 archivos de test** (~53K lineas)
+- **2,702 test functions** — 0 regresiones
+ - **~188 modulos Python** (~67K lineas) + **22 scripts** (~5K lineas) + **199 archivos de test** (~54K lineas)
 - **9 config YAML** con schema validado
 - **16 agent skills** en `.agents/workflows/`
 - **9 publication gates** (6 blocking + 3 advisory)
 - **Coherence Score >= 0.8** requerido para publicacion
-- **22 assets IMPLEMENTED** (+ 2 DEPRECATED + 1 MANUAL_ONLY) en catalogo
+- **27 assets IMPLEMENTED** (+ 4 DEPRECATED + 3 MANUAL_ONLY) en catalogo
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
@@ -193,7 +193,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 
 ---
 
-## Configuracion YAML (v4.38.0 + v4.39.0 + v4.40.0 + v4.40.1 + v4.40.2)
+## Configuracion YAML (v4.38.0 a v4.43.0)
 
 31 hardcoded values migrados a 6 archivos YAML con schema validado. Todos los parametros son configurables sin tocar codigo.
 
@@ -232,7 +232,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **2,491 test functions** — suite completa, 0 regresiones
+- **2,702 test functions** — suite completa, 0 regresiones
 - **60 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Suite de regresion** — Amaziliahotel + Hotel Visperas como casos de referencia
@@ -280,11 +280,11 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
-  tests/                      # 193 archivos de test (~53K lineas)
+  tests/                      # 199 archivos de test (~54K lineas)
     config/                   #   60 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
-  scripts/                    # 21 scripts de automatizacion
+  scripts/                    # 22 scripts de automatizacion
     sync_versions.py          #   Sincronizacion versiones
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
