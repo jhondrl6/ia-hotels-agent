@@ -931,7 +931,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         FASE-D root-fix: site_presence_report permite mostrar "Verificado en sitio"
         cuando SitePresenceChecker confirmo que el asset ya existe en produccion.
         FIX: audit_result.schema_valid / faq_schema_valid para no mostrar
-        "Completo" para Datos Estructurados y FAQ cuando no estan validados.
+        "Completo" para Schema Hotel / Schema Organization y FAQ cuando no estan validados.
 
         FASE-PROP-E: Si score_aeo < 30, agrega fila AEO que conecta con assets existentes.
 

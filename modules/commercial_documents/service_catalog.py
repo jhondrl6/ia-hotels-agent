@@ -41,12 +41,19 @@ SERVICE_CATALOG: Dict[str, ServiceEntry] = {
         pain_id="no_whatsapp_visible",
         description="Sus huéspedes reservan con 1 clic desde su web",
     ),
-    # Schema / IA
-    "datos_estructurados": ServiceEntry(
-        service_name="Datos Estructurados",
+    # Schema Hotel
+    "schema_hotel": ServiceEntry(
+        service_name="Schema Hotel",
         asset_type="hotel_schema",
         pain_id="no_hotel_schema",
-        description="Información que Google y la IA leen automáticamente",
+        description="Datos estructurados para Google y IA sobre tu hotel",
+    ),
+    # Schema Organization
+    "schema_organization": ServiceEntry(
+        service_name="Schema Organization",
+        asset_type="org_schema",
+        pain_id="no_org_schema",
+        description="Datos estructurados sobre la organización del hotel",
     ),
     # FAQ
     "pagina_faq": ServiceEntry(

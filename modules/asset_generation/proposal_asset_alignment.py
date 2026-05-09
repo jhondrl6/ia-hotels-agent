@@ -20,18 +20,21 @@ from typing import Dict, List, Any, Optional
 PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
     "SEO Local": "optimization_guide",
     "Botón de WhatsApp": "whatsapp_button",
-    "Datos Estructurados": "hotel_schema",
+    "Schema Hotel": "hotel_schema",
+    "Schema Organization": "org_schema",
     "Informe Mensual": "monthly_report",
     "Página de FAQ": "faq_page",
     "Meta Tags Sociales (Open Graph)": "open_graph",
     "Optimización para IA Generativa": "llms_txt",
 }
 
-# All 7 services that the proposal promises (as of v4.41.1 / FASE-SOL2-B):
-# - 6 base services (SEO, WhatsApp, Schema, Monthly Report, FAQ, Open Graph)
+# All 8 services that the proposal promises (as of FASE-12C):
+# - 7 base services (SEO, WhatsApp, Schema Hotel, Schema Organization, Monthly Report, FAQ, Open Graph)
 # - 1 conditional AEO service (Optimización para IA Generativa → llms_txt)
 # NOTE: Google Maps Optimizado was removed in FASE-PROP-D because geo_playbook
 # was redundant with geo_fix_kit.md and other GEO assets.
+# NOTE: "Datos Estructurados" was split into "Schema Hotel" + "Schema Organization" in FASE-12C
+# for commercial transparency.
 # SOURCE OF TRUTH: This dict is consumed by proposal_asset_alignment_gate (Gate 9)
 # and cross-referenced by coherence_validator._check_promised_assets_exist().
 # See FASE-SOL2-B for unification rationale.
@@ -149,12 +152,18 @@ def verify_proposal_asset_alignment(
     asset_catalog: Optional[Dict[str, Any]] = None,
     confidence_threshold: float = 0.7,
     site_presence_report: Optional[Any] = None,  # FASE-D: SitePresenceReport from SitePresenceChecker
-    hotel_url: Optional[str] = None  # FASE-D: Required if site_presence_report provided
+    hotel_url: Optional[str] = None,  # FASE-D: Required if site_presence_report provided
+    audit_schema: Optional[Dict[str, Any]] = None  # FASE-12B: Audit schema data for coherence check
 ) -> AlignmentReport:
     """Verify that each promised service has a corresponding generated asset.
 
     FASE-D: Before marking as "missing", verifies via SitePresenceChecker if the asset
     already exists in the production site. If EXISTS, marks as "present_in_production".
+
+    FASE-12B: Cross-references audit schema data with presence results to detect
+    divergences (e.g., SitePresenceChecker reports EXISTS but audit says
+    hotel_schema_detected=false). These are marked as "missing" with
+    presence_status="divergent".
 
     Args:
         proposal_services: List of service names marked with checkmark in proposal.
@@ -164,6 +173,8 @@ def verify_proposal_asset_alignment(
         confidence_threshold: Minimum confidence for "aligned" vs "low_quality".
         site_presence_report: Optional SitePresenceReport from SitePresenceChecker.check_site()
         hotel_url: URL of the hotel site (required if site_presence_report provided)
+        audit_schema: Optional dict with schema audit data (e.g., {"hotel_schema_detected": bool}).
+                      Used for FASE-12B coherence/divergence detection.
 
     Returns:
         AlignmentReport with aligned, missing, present_in_production, redundant, and low_quality lists.
@@ -215,6 +226,30 @@ def verify_proposal_asset_alignment(
             presence_result = presence_lookup.get(expected_asset_type)
             if presence_result and hasattr(presence_result, 'status'):
                 presence_status = presence_result.status
+
+                # FASE-12B: Coherence check — detect divergence between audit and presence
+                # When audit says hotel_schema_detected=false but presence says EXISTS,
+                # this is a false positive (e.g., org schema misidentified as hotel schema).
+                # Mark as divergent missing instead of present_in_production.
+                if (expected_asset_type == "hotel_schema"
+                        and presence_status.value == "exists"
+                        and audit_schema is not None
+                        and not audit_schema.get("hotel_schema_detected", True)):
+                    report.missing.append(ServiceAlignment(
+                        service_name=service_name,
+                        asset_type=expected_asset_type,
+                        is_aligned=False,
+                        status="missing",
+                        message=(
+                            f"DIVERGENCIA: SitePresenceChecker reporta EXISTS para "
+                            f"'{expected_asset_type}' pero audit dice hotel_schema_detected=false. "
+                            f"Posible falso positivo por detección de Organization schema."
+                        ),
+                        presence_verified=True,
+                        presence_status="divergent"
+                    ))
+                    continue
+
                 if presence_status.value == "exists":  # PresenceStatus.EXISTS
                     # Asset already exists in production — mark as present_in_production, not missing
                     report.present_in_production.append(ServiceAlignment(
