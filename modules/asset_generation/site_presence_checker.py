@@ -362,7 +362,7 @@ class SitePresenceChecker:
         # Normalizar
         target_types = [schema_type]
         if schema_type == "Hotel":
-            target_types.extend(["LodgingBusiness", "LocalBusiness", "Organization"])
+            target_types.extend(["LodgingBusiness"])
         elif schema_type == "Organization":
             target_types.append("Organization")
         
