@@ -830,6 +830,7 @@ class PublicationGatesOrchestrator:
             generated_assets=generated_assets,
             site_presence_report=site_presence_report,
             hotel_url=hotel_url,
+            audit_schema=assessment.get("audit_schema"),  # FASE-12B: coherence/divergence detection
         )
 
         if report.all_aligned:

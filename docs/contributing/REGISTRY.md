@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-09
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 238
+> **Total fases completadas:** 241
 
 ---
 
@@ -6002,6 +6002,69 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-12A - 2026-05-09
+**Descripcion:** Fix expansion Hotel→LodgingBusiness en SitePresenceChecker (eliminada Organization y LocalBusiness)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/test_site_presence_checker.py` | NUEVO | Test Site Presence Checker |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/site_presence_checker.py` | Site Presence Checker |
+
+### Validaciones
+- [x] Tests passing (5)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-12B - 2026-05-09
+**Descripcion:** Agregar coherence check audit↔presence en proposal_asset_alignment.py
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/asset_generation/test_proposal_alignment.py` | NUEVO | Test Proposal Alignment |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/proposal_asset_alignment.py` | Proposal Asset Alignment |
+
+### Validaciones
+- [x] Tests passing (4)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-12C - 2026-05-09
+**Descripcion:** Separar Schema Hotel / Schema Organization en propuesta comercial
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/service_catalog.py` | Service Catalog |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/asset_generation/proposal_asset_alignment.py` | Proposal Asset Alignment |
+
+### Validaciones
+- [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

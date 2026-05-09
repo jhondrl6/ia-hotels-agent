@@ -17,6 +17,12 @@ from modules.asset_generation.proposal_asset_alignment import (
     get_missing_services,
     get_alignment_summary,
 )
+from modules.asset_generation.site_presence_checker import (
+    SitePresenceReport,
+    PresenceCheckResult,
+    PresenceStatus,
+)
+from datetime import datetime
 
 
 class TestProposalAssetMapping:
@@ -226,3 +232,123 @@ class TestConfidenceToNivelSignificado:
         )
         assert nivel != "✅ Verificado en sitio"
         assert nivel == "✅ Completo"
+
+
+class TestDivergenceDetection:
+    """FASE-12B: Tests for audit↔presence divergence detection."""
+
+    def _make_presence_report(self, asset_type: str, status: PresenceStatus) -> SitePresenceReport:
+        """Helper: create a SitePresenceReport with one result."""
+        return SitePresenceReport(
+            site_url="https://example.com",
+            checked_at=datetime.now(),
+            results={
+                asset_type: PresenceCheckResult(
+                    asset_type=asset_type,
+                    status=status,
+                    verified_at=datetime.now(),
+                    site_url="https://example.com",
+                )
+            },
+        )
+
+    def test_divergence_hotel_schema_audit_false_presence_exists(self):
+        """FASE-12B: audit says hotel_schema_detected=false, presence says EXISTS → divergent missing."""
+        audit_schema = {
+            "hotel_schema_detected": False,
+            "hotel_schema_valid": False,
+            "hotel_confidence": "unknown",
+            "faq_schema_detected": False,
+            "faq_schema_valid": False,
+            "faq_confidence": "unknown",
+        }
+        site_report = self._make_presence_report("hotel_schema", PresenceStatus.EXISTS)
+
+        report = verify_proposal_asset_alignment(
+            proposal_services=ALL_PROMISED_SERVICES,
+            generated_assets=[],  # No hotel_schema generated
+            site_presence_report=site_report,
+            hotel_url="https://example.com",
+            audit_schema=audit_schema,
+        )
+
+        # Should be in missing (not present_in_production)
+        assert len(report.missing) == 7, f"Expected 7 missing, got {len(report.missing)}"
+        assert len(report.present_in_production) == 0
+        assert report.all_aligned is False
+
+        # Find the hotel_schema entry
+        hotel_entry = next(
+            (s for s in report.missing if s.asset_type == "hotel_schema"), None
+        )
+        assert hotel_entry is not None, "hotel_schema should be in missing"
+        assert hotel_entry.presence_verified is True
+        assert hotel_entry.presence_status == "divergent"
+        assert "DIVERGENCIA" in hotel_entry.message
+        assert "hotel_schema_detected=false" in hotel_entry.message
+
+    def test_no_divergence_hotel_schema_audit_true_presence_exists(self):
+        """FASE-12B: audit says hotel_schema_detected=true, presence says EXISTS → present_in_production (normal)."""
+        audit_schema = {
+            "hotel_schema_detected": True,
+            "hotel_schema_valid": True,
+            "hotel_confidence": "verified",
+            "faq_schema_detected": False,
+            "faq_schema_valid": False,
+            "faq_confidence": "unknown",
+        }
+        site_report = self._make_presence_report("hotel_schema", PresenceStatus.EXISTS)
+
+        report = verify_proposal_asset_alignment(
+            proposal_services=ALL_PROMISED_SERVICES,
+            generated_assets=[],  # No hotel_schema generated
+            site_presence_report=site_report,
+            hotel_url="https://example.com",
+            audit_schema=audit_schema,
+        )
+
+        # hotel_schema should be in present_in_production (not missing)
+        assert len(report.present_in_production) == 1
+        hotel_entry = report.present_in_production[0]
+        assert hotel_entry.asset_type == "hotel_schema"
+        assert hotel_entry.presence_status == "exists"
+        assert hotel_entry.status == "present_in_production"
+        # Other 6 services still missing
+        assert len(report.missing) == 6
+
+    def test_no_audit_schema_backward_compat(self):
+        """FASE-12B: Without audit_schema, presence EXISTS → present_in_production (backward compatible)."""
+        site_report = self._make_presence_report("hotel_schema", PresenceStatus.EXISTS)
+
+        report = verify_proposal_asset_alignment(
+            proposal_services=ALL_PROMISED_SERVICES,
+            generated_assets=[],
+            site_presence_report=site_report,
+            hotel_url="https://example.com",
+            # No audit_schema provided
+        )
+
+        # hotel_schema should be in present_in_production
+        assert len(report.present_in_production) == 1
+        assert report.present_in_production[0].asset_type == "hotel_schema"
+
+    def test_divergence_appears_in_to_dict(self):
+        """FASE-12B: Divergent entry should appear in to_dict() with presence_status='divergent'."""
+        audit_schema = {"hotel_schema_detected": False}
+        site_report = self._make_presence_report("hotel_schema", PresenceStatus.EXISTS)
+
+        report = verify_proposal_asset_alignment(
+            proposal_services=ALL_PROMISED_SERVICES,
+            generated_assets=[],
+            site_presence_report=site_report,
+            hotel_url="https://example.com",
+            audit_schema=audit_schema,
+        )
+        d = report.to_dict()
+
+        # Find hotel_schema in missing
+        missing_items = d.get("missing", [])
+        hotel_items = [m for m in missing_items if m.get("asset") == "hotel_schema"]
+        assert len(hotel_items) == 1
+        assert hotel_items[0]["presence_verified"] is True
+        assert hotel_items[0]["presence_status"] == "divergent"

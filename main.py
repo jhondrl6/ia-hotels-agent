@@ -2649,6 +2649,14 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         "coherence_score": asset_result.coherence_report.overall_score if asset_result else 0.0,
         "critical_issues": audit_result.critical_issues if audit_result else [],
         "critical_issues_detected": audit_result.critical_issues if audit_result else [],
+        "audit_schema": {
+            "hotel_schema_detected": audit_result.schema.hotel_schema_detected,
+            "hotel_schema_valid": audit_result.schema.hotel_schema_valid,
+            "hotel_confidence": audit_result.schema.hotel_confidence,
+            "faq_schema_detected": audit_result.schema.faq_schema_detected,
+            "faq_schema_valid": audit_result.schema.faq_schema_valid,
+            "faq_confidence": audit_result.schema.faq_confidence,
+        } if audit_result else {},
         "evidence_coverage": 0.95,  # Default assumption
         "metrics": {
             "coherence_score": asset_result.coherence_report.overall_score if asset_result else 0.0,

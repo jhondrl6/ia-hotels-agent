@@ -1,33 +1,29 @@
 # Changelog
 
-## [4.43.1] - PATCH-E2E Termales Santa Rosa de Cabal — 2026-05-09
+## [4.43.0] - TERMALES-REFACTOR COMPLETADO — 2026-05-09
 
 ### Objetivo
-Verificacion E2E post-patches (FASE-2-PATCH-A + FASE-2-PATCH-B) para Termales Santa Rosa de Cabal. Score: 6/7 metricas.
+Cierre de release: FASE-12A + FASE-12B + FASE-12C completadas. Fix causa raíz schema + coherence check.
 
 ### Cambios Implementados
-- v4complete ejecuta pipeline completo para http://www.termales.com.co/
-- Evidencia: Coherence 0.91 >= 0.80 (PASS)
-- Gate alignment: 40% (3 servicios sin assets generados — SEO Local, Informe Mensual, Open Graph)
-- Gate readiness: NOT_READY (Tier C sin onboarding real)
+- FASE-12A: SitePresenceChecker — eliminada expansión Hotel→{LocalBusiness, Organization}, solo LodgingBusiness
+- FASE-12B: proposal_asset_alignment — coherence check audit↔presence, marca divergent cuando discrepan
+- FASE-12C: Separación Schema Hotel / Schema Organization en propuesta comercial
 
 ### Archivos Nuevos
-(ninguno — fase de verificacion)
+- tests/test_site_presence_checker.py (5 casos)
+- tests/asset_generation/test_proposal_alignment.py (+4 tests divergencia)
 
 ### Archivos Modificados
-(ninguno — fase de verificacion)
+- modules/asset_generation/site_presence_checker.py (L365 fix)
+- modules/asset_generation/proposal_asset_alignment.py (coherence check)
+- modules/commercial_documents/service_catalog.py (separación servicios)
+- modules/commercial_documents/v4_proposal_generator.py (comentario actualizado)
 
 ### Tests
-- Verificacion E2E: 6/7 metricas passam
-- M1 (sin {{if}}): PASS
-- M3 (monthly_report dinamico): PASS
-- M4 (sin [PENDING_*]): PASS
-- M5 (WhatsApp detectado): PASS
-- M6 (hotel_schema_detected): FAIL (org_schema presente, hotel_schema ausente)
-- M7 (sin placeholder telefonico): PASS
-
-### Backwards Compatibility
-- Sin cambios de codigo — fase de verificacion
+- site_presence_checker: 5/5 passed
+- proposal_alignment: 22/22 passed (regresión 18 + 4 nuevos)
+- Validación: run_all_validations 5/5
 
 ---
 
