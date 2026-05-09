@@ -2230,7 +2230,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         temp_proposal,
         asset_plan,
         validation_summary,
-        whatsapp_html_detected=getattr(audit_result.validation, 'whatsapp_html_detected', False) if audit_result else False
+        whatsapp_html_detected=getattr(audit_result.validation, 'whatsapp_html_detected', False) if audit_result else False,
+        generated_assets=None  # FASE-2-PATCH-A: asset_result no disponible aqui (generacion posterior L2413)
     )
     pre_coherence_score = pre_coherence_report.overall_score
     

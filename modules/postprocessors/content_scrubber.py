@@ -281,7 +281,8 @@ class ContentScrubber:
         Returns:
             Dict with 'fixed_text', 'issues_found', 'block_publication', 'severity'.
         """
-        pattern = r'\[PENDING_[A-Z_]+\]'
+        # FASE-2-PATCH-A: Pattern expandido para capturar metadata: [PENDING_X: y/z]
+        pattern = r'\[PENDING_[A-Z_]+[^\]]*\]'
         matches = re.findall(pattern, content)
 
         if matches:

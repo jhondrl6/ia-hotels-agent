@@ -116,7 +116,8 @@ class CoherenceValidator:
         proposal: ProposalDocument,
         assets: List[AssetSpec],
         validation_summary: ValidationSummary,
-        whatsapp_html_detected: bool = False
+        whatsapp_html_detected: bool = False,
+        generated_assets: Optional[Dict[str, Any]] = None  # FASE-2-PATCH-A
     ) -> CoherenceReport:
         """
         Execute all coherence validations.
@@ -138,7 +139,7 @@ class CoherenceValidator:
         self.checks.append(self._check_financial_data_validated(proposal, validation_summary))
         self.checks.append(self._check_whatsapp_verified(assets, validation_summary, whatsapp_html_detected))
         self.checks.append(self._check_price_matches_pain(proposal, diagnostic))
-        self.checks.append(self._check_promised_assets_exist(assets, diagnostic))
+        self.checks.append(self._check_promised_assets_exist(assets, diagnostic, generated_assets))
         
         # Calculate weighted overall score
         total_weight = sum(self.CHECK_WEIGHTS.get(c.name, 1.0) for c in self.checks)

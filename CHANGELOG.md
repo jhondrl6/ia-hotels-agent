@@ -1,5 +1,36 @@
 # Changelog
 
+## [4.43.1] - PATCH-E2E Termales Santa Rosa de Cabal — 2026-05-09
+
+### Objetivo
+Verificacion E2E post-patches (FASE-2-PATCH-A + FASE-2-PATCH-B) para Termales Santa Rosa de Cabal. Score: 6/7 metricas.
+
+### Cambios Implementados
+- v4complete ejecuta pipeline completo para http://www.termales.com.co/
+- Evidencia: Coherence 0.91 >= 0.80 (PASS)
+- Gate alignment: 40% (3 servicios sin assets generados — SEO Local, Informe Mensual, Open Graph)
+- Gate readiness: NOT_READY (Tier C sin onboarding real)
+
+### Archivos Nuevos
+(ninguno — fase de verificacion)
+
+### Archivos Modificados
+(ninguno — fase de verificacion)
+
+### Tests
+- Verificacion E2E: 6/7 metricas passam
+- M1 (sin {{if}}): PASS
+- M3 (monthly_report dinamico): PASS
+- M4 (sin [PENDING_*]): PASS
+- M5 (WhatsApp detectado): PASS
+- M6 (hotel_schema_detected): FAIL (org_schema presente, hotel_schema ausente)
+- M7 (sin placeholder telefonico): PASS
+
+### Backwards Compatibility
+- Sin cambios de codigo — fase de verificacion
+
+---
+
 ## [4.43.0] - Refactorizacion Termales Santa Rosa de Cabal — 2026-05-08
 
 ### Objetivo

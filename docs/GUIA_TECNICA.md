@@ -1,7 +1,35 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.43.0 (TERMALES-REFACTOR)
-**Última actualización:** 2026-05-08
+**Última actualización:** 2026-05-09
+
+---
+
+### v4.43.1 - 2026-05-09 — PATCH-E2E Termales Santa Rosa de Cabal (FASE-2-PATCH-C)
+
+**Módulos afectados**: Ninguno (fase de verificacion E2E)
+
+**Problema**:
+- Necesidad de verificar que los 6 patches aplicados en FASE-2-PATCH-A y FASE-2-PATCH-B restauran las 7 metricas de exito para Termales Santa Rosa de Cabal
+
+**Solución**:
+- **FASE-2-PATCH-C**: Ejecucion v4complete + verificacion de 7 metricas
+  - M1 (sin {{if}}): PASS — 0 templates con condicionales sin procesar
+  - M3 (monthly_report dinamico): PASS — tabla genera desde asset_generation_report.json
+  - M4 (sin [PENDING_*]): PASS — scrubber Rule 6 detecta todos los marcadores
+  - M5 (WhatsApp detectado): PASS — whatsapp_button presente en sitio (href + clases CSS)
+  - M6 (hotel_schema_detected): FAIL — sitio solo tiene Organization schema, no Hotel schema
+  - M7 (sin placeholder telefonico): PASS — telefono real de GBP usado en propuesta
+
+**Hallazgo residual**: Hotel schema no detectado en termales.com.co. El sitio solo implementa Organization schema (5 schemas total). Gate proposal_asset_alignment: 40% (3 servicios sin assets generados: SEO Local, Informe Mensual, Open Graph).
+
+**Backwards compatibility**: 100% — sin cambios de codigo en esta fase.
+
+**Tests**: Verificacion E2E via v4complete. No tests nuevos. run_all_validations.py --quick: 5/5 pass.
+
+---
+
+### v4.43.0 - 2026-05-08 — Termales Refactor (FASE-1-A, FASE-1-B, FASE-2-A, FASE-3)
 **Proyecto:** IA Hoteles Agent CLI
 
 ---
