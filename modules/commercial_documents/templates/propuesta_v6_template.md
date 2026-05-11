@@ -55,7 +55,17 @@ Cada entregable incluye un nivel de preparación:
 
 ${asset_quality_table}
 
+${monthly_report_disclaimer}
+
 **Nota sobre AEO**: AEO (Answer Engine Optimization) se construye sobre Schema FAQ + Open Graph — ambos incluidos en su kit. No requiere assets adicionales.
+
+---
+
+### 🔧 Assets Técnicos Adicionales
+
+Estos assets técnicos complementan su kit de hospitalidad digital:
+
+${technical_assets_table}
 
 ---
 

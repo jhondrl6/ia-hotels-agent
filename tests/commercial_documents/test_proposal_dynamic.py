@@ -12,6 +12,7 @@ import pytest
 from unittest.mock import MagicMock, patch
 from modules.commercial_documents.v4_proposal_generator import V4ProposalGenerator
 from modules.commercial_documents.service_catalog import SERVICE_CATALOG
+from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
 
 
 class TestProposalDynamicFiltering:
@@ -23,8 +24,8 @@ class TestProposalDynamicFiltering:
 
     def test_asset_quality_table_filters_by_detected_pains_only(self):
         """Table should only show services whose pain_id was detected."""
-        # Detect only 2 pains: low_gbp_score and no_whatsapp_visible
-        detected_pain_ids = ["low_gbp_score", "no_whatsapp_visible"]
+        # Detect only 2 pains: poor_performance and no_whatsapp_visible
+        detected_pain_ids = ["poor_performance", "no_whatsapp_visible"]
 
         # Call with empty assets_generated (all would be "Pendiente" if shown)
         result = self.gen._generate_asset_quality_table(
@@ -49,7 +50,7 @@ class TestProposalDynamicFiltering:
         assert len(service_names) == 2, f"Expected 2 services, got {len(service_names)}: {service_names}"
 
         # Verify the exact services that SHOULD appear
-        assert "Google Maps Optimizado" in service_names
+        assert "SEO Local" in service_names
         assert "Botón de WhatsApp" in service_names
 
         # Verify services that should NOT appear
@@ -61,11 +62,11 @@ class TestProposalDynamicFiltering:
 
         # Explicitly verify 5 services that should NOT appear
         should_not_appear = [
-            "SEO Local",                  # pain: poor_performance
-            "Datos Estructurados",       # pain: no_hotel_schema
+            "Schema Hotel",              # pain: no_hotel_schema
+            "Schema Organization",       # pain: no_org_schema
             "Página de FAQ",             # pain: no_faq_schema
             "Meta Tags Sociales (Open Graph)",  # pain: no_og_tags
-            "Barra de Reserva Móvil",    # pain: no_motor_reservas
+            "Informe Mensual",           # pain: no_monthly_report
         ]
         for svc in should_not_appear:
             assert svc not in service_names, f"Service '{svc}' should NOT appear but did"
@@ -81,8 +82,8 @@ class TestProposalDynamicFiltering:
         lines = result.strip().split("\n")
         service_rows = [l for l in lines if l.startswith("| ") and "Entregable" not in l]
 
-        # Should have 7 services (static mode)
-        assert len(service_rows) == 7, f"Backwards compat should show 7 services, got {len(service_rows)}"
+        # Should have 8 services (static mode)
+        assert len(service_rows) == 8, f"Backwards compat should show 8 services, got {len(service_rows)}"
 
     def test_asset_quality_table_none_pains_shows_all_static(self):
         """With detected_pain_ids=None, should fall back to static (backwards compat)."""
@@ -94,51 +95,38 @@ class TestProposalDynamicFiltering:
         lines = result.strip().split("\n")
         service_rows = [l for l in lines if l.startswith("| ") and "Entregable" not in l]
 
-        # Should have 7 services
-        assert len(service_rows) == 7, f"None pains should show 7 services, got {len(service_rows)}"
+        # Should have 8 services
+        assert len(service_rows) == 8, f"None pains should show 8 services, got {len(service_rows)}"
 
-    def test_dynamic_services_table_filters_by_detected_pains(self):
-        """_generate_dynamic_services_table should only show services for detected pains."""
+    def test_dynamic_services_table_shows_all_services_with_status(self):
+        """FASE-2: _generate_dynamic_services_table should show ALL 8 services with status icons."""
         detected_pain_ids = ["no_og_tags", "no_monthly_report"]
 
         result = self.gen._generate_dynamic_services_table(detected_pain_ids=detected_pain_ids)
 
+        # Should have header + separator + 8 services = 10 lines
         lines = result.strip().split("\n")
+        assert len(lines) == 10, f"Expected 10 lines (header+sep+8 services), got {len(lines)}: {lines}"
 
-        # Should have header + separator + 2 data rows = 4 lines
-        assert len(lines) == 4, f"Expected 4 lines, got {len(lines)}: {lines}"
+        # Verify all 8 services from PROPOSAL_SERVICE_TO_ASSET appear
+        for service_name in PROPOSAL_SERVICE_TO_ASSET.keys():
+            assert service_name in result, f"Service '{service_name}' should appear but didn't"
 
-        # Verify the 2 services that SHOULD appear
-        assert "Meta Tags Sociales (Open Graph)" in result
-        assert "Informe Mensual" in result
+        # Verify status column exists
+        assert "Estado" in lines[0]
 
-        # Verify 5 services that should NOT appear
-        should_not_appear = [
-            "Google Maps Optimizado",
-            "SEO Local",
-            "Botón de WhatsApp",
-            "Datos Estructurados",
-            "Página de FAQ",
-        ]
-        for svc in should_not_appear:
-            assert svc not in result, f"Service '{svc}' should NOT appear but did"
-
-    def test_dynamic_services_table_no_pains_returns_all_7_services(self):
-        """FASE-C: With no detected pains, returns all 7 standard services (not empty string)."""
+    def test_dynamic_services_table_no_pains_returns_all_7_services_with_status(self):
+        """FASE-2: With no detected pains, returns all 7 standard services with status column."""
         result = self.gen._generate_dynamic_services_table(detected_pain_ids=[])
 
-        # FASE-C: When no pains detected, function returns ALL 7 services from SERVICE_CATALOG
-        # NOT empty string (this was the old buggy behavior)
         assert result != "", "Expected 7 services when no pains detected, got empty string"
-        
-        # Verify all 7 services are present
-        assert "Google Maps Optimizado" in result
-        assert "SEO Local" in result
-        assert "Botón de WhatsApp" in result
-        assert "Datos Estructurados" in result
-        assert "Página de FAQ" in result
-        assert "Meta Tags Sociales (Open Graph)" in result
-        assert "Informe Mensual" in result
+
+        # Verify all 7 base services are present
+        for service_name in PROPOSAL_SERVICE_TO_ASSET.keys():
+            assert service_name in result, f"Service '{service_name}' should appear but didn't"
+
+        # Verify status icons are present
+        assert "✅" in result or "⏳" in result or "ℹ️" in result or "⚠️" in result
 
     def test_single_pain_detected_shows_single_service(self):
         """With exactly 1 pain detected, only 1 service should appear."""
@@ -234,7 +222,7 @@ class TestBackwardsCompatibility:
         """PROPOSAL_SERVICE_TO_ASSET must still exist for gate compatibility."""
         from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
         assert PROPOSAL_SERVICE_TO_ASSET, "PROPOSAL_SERVICE_TO_ASSET must exist for backwards compat"
-        assert len(PROPOSAL_SERVICE_TO_ASSET) == 7, f"Expected 7 entries, got {len(PROPOSAL_SERVICE_TO_ASSET)}"
+        assert len(PROPOSAL_SERVICE_TO_ASSET) == 8, f"Expected 8 entries, got {len(PROPOSAL_SERVICE_TO_ASSET)}"
 
     def test_service_to_asset_lookup_has_8_entries(self):
         """SERVICE_TO_ASSET_LOOKUP should have 8 entries (7 base + AEO conditional, FASE-D)."""
@@ -248,3 +236,86 @@ class TestBackwardsCompatibility:
         for key, entry in SERVICE_CATALOG.items():
             assert entry.service_name in SERVICE_TO_ASSET_LOOKUP, \
                 f"Service '{entry.service_name}' from SERVICE_CATALOG has no lookup in SERVICE_TO_ASSET_LOOKUP"
+
+
+class TestDynamicServicesTableStates:
+    """FASE-2: Verify _generate_dynamic_services_table shows correct states."""
+
+    def setup_method(self):
+        self.gen = V4ProposalGenerator()
+
+    def test_shows_aligned_for_high_confidence(self):
+        """Service with confidence >= 0.85 shows ✅ Alineado."""
+        assets = [
+            {"asset_type": "optimization_guide", "confidence_score": 0.9},
+        ]
+        result = self.gen._generate_dynamic_services_table(assets_generated=assets)
+        assert "✅ Alineado" in result
+        assert "SEO Local" in result
+
+    def test_shows_pending_when_no_asset(self):
+        """Service without generated asset shows ⏳ Pendiente."""
+        result = self.gen._generate_dynamic_services_table(assets_generated=[])
+        assert "⏳ Pendiente" in result
+
+    def test_shows_present_in_production(self):
+        """Service verified in production shows ℹ️ Presente en sitio."""
+        # Mock site presence report
+        mock_result = MagicMock()
+        mock_result.status.value = "exists"
+        mock_report = MagicMock()
+        mock_report.results = {"optimization_guide": mock_result}
+
+        result = self.gen._generate_dynamic_services_table(
+            assets_generated=[],
+            site_presence_report=mock_report,
+        )
+        assert "ℹ️ Presente en sitio" in result
+        assert "SEO Local" in result
+
+    def test_shows_preparation_for_low_confidence(self):
+        """Service with confidence < 0.85 shows ⚠️ En preparación."""
+        assets = [
+            {"asset_type": "optimization_guide", "confidence_score": 0.7},
+        ]
+        result = self.gen._generate_dynamic_services_table(assets_generated=assets)
+        assert "⚠️ En preparación" in result
+
+    def test_aeo_conditional_appears_when_score_low(self):
+        """AEO service appears when score_aeo < 20."""
+        result = self.gen._generate_dynamic_services_table(score_aeo=15)
+        assert "Optimización para IA Generativa" in result
+
+    def test_aeo_conditional_absent_when_score_high(self):
+        """FASE-2: AEO service now ALWAYS appears (part of PROPOSAL_SERVICE_TO_ASSET)."""
+        result = self.gen._generate_dynamic_services_table(score_aeo=25)
+        # AEO is always present in the table now; score_aeo only affects its status
+        assert "Optimización para IA Generativa" in result
+        # When score_aeo >= 20 and no asset generated, it shows as pending
+        assert "⏳ Pendiente" in result
+
+
+class TestTechnicalAssetsTable:
+    """FASE-2: Verify _generate_technical_assets_table."""
+
+    def setup_method(self):
+        self.gen = V4ProposalGenerator()
+
+    def test_technical_assets_table_shows_both_assets(self):
+        """Technical assets table shows analytics_setup_guide and indirect_traffic_optimization."""
+        result = self.gen._generate_technical_assets_table()
+        assert "Guía de Configuración Analytics" in result
+        assert "Optimización de Tráfico Indirecto" in result
+
+    def test_technical_assets_table_shows_generated_status(self):
+        """Generated technical asset shows ✅ Generado."""
+        assets = [
+            {"asset_type": "analytics_setup_guide", "confidence_score": 0.9},
+        ]
+        result = self.gen._generate_technical_assets_table(assets_generated=assets)
+        assert "✅ Generado" in result
+
+    def test_technical_assets_table_shows_not_generated(self):
+        """Missing technical asset shows ⏳ No generado."""
+        result = self.gen._generate_technical_assets_table(assets_generated=[])
+        assert "⏳ No generado" in result

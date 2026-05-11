@@ -1,0 +1,151 @@
+{
+  "hotel_id": "termales",
+  "hotel_name": "Termales",
+  "timestamp": "2026-05-11T13:40:18.105193",
+  "output_dir": "output/v4_complete/termales",
+  "summary": {
+    "total_assets": 6,
+    "generated": 6,
+    "failed": 0,
+    "skipped": 0,
+    "can_use": 6,
+    "estimated": 3,
+    "delivery_ready_percentage": 50.0,
+    "site_verification_applied": false
+  },
+  "generated_assets": [
+    {
+      "asset_type": "hotel_schema",
+      "filename": "ESTIMATED_hotel_schema_20260511_134018.json",
+      "delivery_filename": "hotel_schema_20260511_134018.json",
+      "path": "output/v4_complete/termales/hotel_schema/ESTIMATED_hotel_schema_20260511_134018.json",
+      "metadata_path": "output/v4_complete/termales/hotel_schema/ESTIMATED_hotel_schema_20260511_134018_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 0.85,
+      "pain_ids_resolved": [
+        "no_hotel_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "faq_page",
+      "filename": "ESTIMATED_faqs_20260511_134018.json",
+      "delivery_filename": "faqs_20260511_134018.json",
+      "path": "output/v4_complete/termales/faq_page/ESTIMATED_faqs_20260511_134018.json",
+      "metadata_path": "output/v4_complete/termales/faq_page/ESTIMATED_faqs_20260511_134018_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 0.85,
+      "pain_ids_resolved": [
+        "no_faq_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "analytics_setup_guide",
+      "filename": "ESTIMATED_guia_configuracion_ga4_20260511_134018.md",
+      "delivery_filename": "guia_configuracion_ga4_20260511_134018.md",
+      "path": "output/v4_complete/termales/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260511_134018.md",
+      "metadata_path": "output/v4_complete/termales/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260511_134018_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_analytics_configured"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "indirect_traffic_optimization",
+      "filename": "ESTIMATED_optimizacion_trafico_indirecto_20260511_134018.md",
+      "delivery_filename": "optimizacion_trafico_indirecto_20260511_134018.md",
+      "path": "output/v4_complete/termales/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260511_134018.md",
+      "metadata_path": "output/v4_complete/termales/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260511_134018_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "low_organic_visibility"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "llms_txt",
+      "filename": "ESTIMATED_llms_20260511_134018.txt",
+      "delivery_filename": "llms_20260511_134018.txt",
+      "path": "output/v4_complete/termales/llms_txt/ESTIMATED_llms_20260511_134018.txt",
+      "metadata_path": "output/v4_complete/termales/llms_txt/ESTIMATED_llms_20260511_134018_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 0.85,
+      "pain_ids_resolved": [
+        "ai_crawler_blocked"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "monthly_report",
+      "filename": "ESTIMATED_informe_mensual_20260511_134018.md",
+      "delivery_filename": "informe_mensual_20260511_134018.md",
+      "path": "output/v4_complete/termales/monthly_report/ESTIMATED_informe_mensual_20260511_134018.md",
+      "metadata_path": "output/v4_complete/termales/monthly_report/ESTIMATED_informe_mensual_20260511_134018_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [],
+      "can_use": true
+    }
+  ],
+  "failed_assets": [],
+  "skipped_assets": [],
+  "coherence_report": {
+    "is_coherent": true,
+    "overall_score": 0.89,
+    "checks": [
+      {
+        "name": "problems_have_solutions",
+        "passed": true,
+        "score": 1.0,
+        "message": "100% de problemas tienen solución automática",
+        "severity": "info"
+      },
+      {
+        "name": "assets_are_justified",
+        "passed": true,
+        "score": 0.83,
+        "message": "83% de assets justificados (5/6)",
+        "severity": "warning"
+      },
+      {
+        "name": "financial_data_validated",
+        "passed": true,
+        "score": 0.7,
+        "message": "Datos financieros validados (confidence promedio: 0.70)",
+        "severity": "info"
+      },
+      {
+        "name": "whatsapp_verified",
+        "passed": true,
+        "score": 1.0,
+        "message": "No hay asset de WhatsApp button",
+        "severity": "info"
+      },
+      {
+        "name": "price_matches_pain",
+        "passed": true,
+        "score": 0.8,
+        "message": "Precio en límite superior (32.1x) - rango ideal 3.0x-50.0x",
+        "severity": "warning"
+      },
+      {
+        "name": "promised_assets_exist",
+        "passed": true,
+        "score": 1.0,
+        "message": "Todos los assets prometidos están implementados (8 servicios verificados via PROPOSAL_SERVICE_TO_ASSET)",
+        "severity": "info"
+      }
+    ],
+    "errors": [],
+    "warnings": [],
+    "timestamp": "2026-05-11T13:40:13.448051",
+    "version": "4.2.0"
+  },
+  "coherence_score_pre": 0.89,
+  "coherence_score_post": 0.89,
+  "coherence_score_final": 0.89
+}

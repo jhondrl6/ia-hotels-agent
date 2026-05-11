@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.43.0 | **Codename**: TERMALES-REFACTOR
-> **Release date**: 2026-05-08 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.44.0 | **Codename**: TERMALES-COHERENCE-FIX
+> **Release date**: 2026-05-11 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-05-09 | v4.43.0 TERMALES-REFACTOR*
+*Auto-generado: 2026-05-11 | v4.44.0 TERMALES-COHERENCE-FIX*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

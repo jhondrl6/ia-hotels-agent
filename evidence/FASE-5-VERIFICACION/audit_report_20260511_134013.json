@@ -1,0 +1,225 @@
+{
+  "url": "http://www.termales.com.co",
+  "hotel_name": "Termales",
+  "timestamp": "2026-05-11T13:40:13.394148",
+  "schema": {
+    "hotel_schema_detected": false,
+    "hotel_schema_valid": false,
+    "hotel_confidence": "unknown",
+    "faq_schema_detected": false,
+    "faq_schema_valid": false,
+    "faq_confidence": "unknown",
+    "org_schema_detected": true,
+    "total_schemas": 5,
+    "errors": [],
+    "warnings": [],
+    "properties": {}
+  },
+  "gbp": {
+    "place_found": true,
+    "place_id": "ChIJbeQUya6DOI4R8BX3XZDcXBA",
+    "name": "Hotel Termales Santa Rosa de Cabal",
+    "rating": 4.6,
+    "reviews": 22311,
+    "photos": 10,
+    "phone": "(606) 3653421",
+    "website": "http://www.termales.com.co/",
+    "address": "Km 10 Vereda San Ramón, Pereira, Santa Rosa de Cabal, Risaralda, Colombia",
+    "geo_score": 80,
+    "geo_score_breakdown": {
+      "rating_score": 27.6,
+      "reviews_score": 20.0,
+      "photos_score": 5.0,
+      "hours_score": 10.0,
+      "website_score": 10.0
+    },
+    "confidence": "verified",
+    "lat": 4.8376505,
+    "lng": -75.54893740000001,
+    "error_type": null,
+    "error_message": null
+  },
+  "performance": {
+    "has_field_data": false,
+    "mobile_score": null,
+    "desktop_score": null,
+    "lcp": null,
+    "fid": null,
+    "cls": null,
+    "status": "ERROR",
+    "message": "Invalid URL or request: API key not valid. Please pass a valid API key."
+  },
+  "validation": {
+    "whatsapp_status": "estimated",
+    "phone_web": null,
+    "phone_gbp": "(606) 3653421",
+    "adr_status": "unknown",
+    "conflicts": []
+  },
+  "overall": {
+    "confidence": "estimated",
+    "critical_issues": [
+      "No Hotel schema detected - critical for SEO"
+    ],
+    "recommendations": [
+      "Implement Hotel schema markup for better search visibility",
+      "Add FAQPage schema to capture rich snippets",
+      "Add more photos to GBP (current: 10, target: 40+)",
+      "No Core Web Vitals data - site may be new or low traffic"
+    ]
+  },
+  "competitors": [
+    {
+      "nombre": "",
+      "rating": 0.0,
+      "reviews": 0,
+      "distancia_km": 0.0,
+      "fotos": 0,
+      "geo_score": 0,
+      "geo_score_formula": {},
+      "place_id": "error",
+      "score_source": "places_api_real",
+      "has_hours": false,
+      "has_website": false,
+      "data_source": "error"
+    }
+  ],
+  "execution_trace": {
+    "executed": [
+      "schema_validation",
+      "metadata_validation",
+      "gbp_api",
+      "competitor_analysis",
+      "ai_crawler_audit",
+      "citability_audit",
+      "seo_elements_detection",
+      "pagespeed_api",
+      "cross_validation",
+      "aeo_snippet_tracker",
+      "llm_mention_checker"
+    ],
+    "skipped": [
+      "pagespeed_api"
+    ]
+  },
+  "metadata": {
+    "cms_detected": "wordpress",
+    "has_default_title": false,
+    "title": "",
+    "has_default_description": false,
+    "description": "",
+    "has_issues": false,
+    "issues": [],
+    "confidence": "estimated"
+  },
+  "ai_crawlers": {
+    "robots_exists": false,
+    "overall_score": 0.5,
+    "allowed_crawlers": [
+      "GPTBot",
+      "ChatGPT-User",
+      "ClaudeBot",
+      "Claude-User",
+      "PerplexityBot",
+      "Google-Extended",
+      "Bytespider",
+      "FacebookBot",
+      "Applebot",
+      "DuckDuckBot",
+      "Baiduspider",
+      "YandexBot",
+      "Bingbot",
+      "Googlebot"
+    ],
+    "blocked_crawlers": [],
+    "recommendations": [
+      "Crear robots.txt para controlar acceso de GPTBot",
+      "Crear robots.txt para controlar acceso de ChatGPT-User",
+      "Crear robots.txt para controlar acceso de ClaudeBot",
+      "Crear robots.txt para controlar acceso de Claude-User",
+      "Crear robots.txt para controlar acceso de PerplexityBot",
+      "Crear robots.txt para controlar acceso de Google-Extended",
+      "Crear robots.txt para controlar acceso de Bytespider",
+      "Crear robots.txt para controlar acceso de FacebookBot",
+      "Crear robots.txt para controlar acceso de Applebot",
+      "Crear robots.txt para controlar acceso de DuckDuckBot",
+      "Crear robots.txt para controlar acceso de Baiduspider",
+      "Crear robots.txt para controlar acceso de YandexBot",
+      "Crear robots.txt para controlar acceso de Bingbot",
+      "Crear robots.txt para controlar acceso de Googlebot"
+    ]
+  },
+  "citability": {
+    "overall_score": 53.39,
+    "blocks_analyzed": 29,
+    "high_citability_blocks": 1,
+    "recommendations": [
+      "Found 29 blocks under 100 words. Expand content to improve citability (aim for 134-167 words per block)."
+    ],
+    "confidence": "ADVISORY"
+  },
+  "ia_readiness": {
+    "overall_score": 68.08855555555556,
+    "components": {
+      "schema_quality": 100.0,
+      "crawler_access": 50.0,
+      "citability": 53.39,
+      "llms_txt": 100,
+      "brand_signals": 50.0
+    },
+    "status": "Needs Work",
+    "actionable_items": [
+      "Review robots.txt to ensure AI crawler access is permitted",
+      "Add clear author attribution and citeable content sections",
+      "Strengthen brand signals: consistent NAP, social profiles, and entity markup",
+      "Configure Google Analytics 4 to measure indirect traffic from AI referrals"
+    ]
+  },
+  "seo_elements": {
+    "open_graph": true,
+    "imagenes_alt": false,
+    "redes_activas": true,
+    "confidence": "high",
+    "notes": "Detected 10 OG tags, 8 imgs without alt",
+    "open_graph_tags": {
+      "og:locale": "es_ES",
+      "og:type": "website",
+      "og:title": "Termales Santa Rosa de Cabal: Naturaleza y Bienestar",
+      "og:description": "Vive una experiencia única en nuestras cascadas de 95 metros y piscinas de agua termal natural. Reserva tu pasadía o hotel en el corazón del Eje Cafetero.",
+      "og:url": "https://termales.com.co/",
+      "og:site_name": "Termales Santa Rosa de Cabal",
+      "og:image": "https://termales.com.co/wp-content/uploads/2026/02/7-ALERTAS-TEMPRANAS-MOVIL.jpg",
+      "og:image:width": "698",
+      "og:image:height": "974",
+      "og:image:type": "image/jpeg"
+    },
+    "images_without_alt": 8,
+    "social_links_found": [
+      "https://www.facebook.com/termalessantarosa",
+      "https://www.instagram.com/termalessantarosa",
+      "https://www.tiktok.com/@termalessantarosadecabal"
+    ]
+  },
+  "aeo_snippets": {
+    "queries_tested": 5,
+    "snippets_captured": 0,
+    "snippets_competitor": 0,
+    "paa_presence": 0,
+    "snippet_score": 0,
+    "source": "stub",
+    "timestamp": "2026-05-11T13:39:28.810625"
+  },
+  "llm_report": {
+    "hotel_name": "Termales",
+    "queries_tested": 5,
+    "total_mentions": 5,
+    "mention_rate": 1.0,
+    "mention_score": 70,
+    "avg_ranking": null,
+    "share_of_voice": 0.29,
+    "providers_used": [
+      "openrouter"
+    ],
+    "source": "llm_check"
+  }
+}

@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-09
+> **Ultima actualizacion:** 2026-05-11
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 241
+> **Total fases completadas:** 250
 
 ---
 
@@ -6065,6 +6065,194 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-05-11
+**Descripcion:** Propuesta completa + Gate robusto (H1, H5, H8)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/commercial_documents/test_proposal_dynamic.py` | NUEVO | Test Proposal Dynamic |
+| `tests/quality_gates/test_proposal_alignment_gate.py` | NUEVO | Test Proposal Alignment Gate |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/service_catalog.py` | Service Catalog |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (34)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3 - 2026-05-11
+**Descripcion:** Monthly Report Fail-Safe (H7 - ALTO): retry con backoff para monthly_report, disclaimer en propuesta cuando falla, fix bug runtime list.items
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/asset_generation/test_monthly_report_h7_fix.py` | NUEVO | Test Monthly Report H7 Fix |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `modules/asset_generation/monthly_report_generator.py` | Monthly Report Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (6)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-4 - 2026-05-11
+**Descripcion:** Correccion Financiera (H3, H4): normalizacion de suma de brechas y separacion pain_ratio vs recovery_factor
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/commercial_documents/test_proposal_fase4_h3_h4.py` | NUEVO | Test Proposal Fase4 H3 H4 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (7)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1 - 2026-05-11
+**Descripcion:** Coherence post-generación: _validate_post_generation() en v4_asset_orchestrator.py + main.py consume post_coherence_score
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `main.py` | Main |
+| `modules/commercial_documents/coherence_validator.py` | Coherence Validator |
+
+### Validaciones
+- [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-05-11
+**Descripcion:** Propuesta completa + Gate robusto: 8 servicios, assets técnicos, threshold 0.8
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/service_catalog.py` | Service Catalog |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+
+### Validaciones
+- [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3 - 2026-05-11
+**Descripcion:** Monthly report fail-safe: try/except+retry, disclaimer, bug fix
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `modules/asset_generation/monthly_report_generator.py` | Monthly Report Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-4 - 2026-05-11
+**Descripcion:** Corrección financiera: normalización brechas + separación pain_ratio/recovery
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-5 - 2026-05-11
+**Descripcion:** Verificación E2E: v4complete Termales + análisis de ejecución
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/FASE-5-VERIFICACION/analisis_ejecucion.md` | NUEVO | Analisis Ejecucion |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.44.0 - 2026-05-11
+**Descripcion:** Release 4.44.0 TERMALES-COHERENCE-FIX: Version bump, CHANGELOG, GUIA_TECNICA, sync, validaciones
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

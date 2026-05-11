@@ -22,7 +22,7 @@ from .data_structures import (
 from modules.financial_engine.pricing_resolution_wrapper import PricingResolutionResult
 from modules.financial_engine.pricing_calculator import get_floor_price
 from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
-from modules.commercial_documents.service_catalog import SERVICE_CATALOG
+from modules.commercial_documents.service_catalog import SERVICE_CATALOG, TECHNICAL_ASSET_CATALOG
 from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
 from modules.common.yaml_loader import load_yaml_config, YAMLLoadError
 import logging
@@ -602,6 +602,29 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         
         roi_6_months = self._calculate_roi(monthly_investment, projected_monthly_gain, 6, recovery_factor=recovery_factors['realistic'])
         break_even = self._calculate_break_even(monthly_investment, projected_monthly_gain)
+
+        # HR-1 FIX: effective_monthly_gain applies recovery_factor so the ROI
+        # projection table matches the pain_ratio_note. Both are consistent now.
+        # projected_monthly_gain = raw_loss * pain_ratio (gross, ~41% = $1,527,360)
+        # effective_monthly_gain = raw_loss * pain_ratio * recovery (net, ~41%*20% = $305,472)
+        recovery_realistic = recovery_factors['realistic']
+        effective_monthly_gain = int(raw_monthly_loss * pain_ratio * recovery_realistic)
+        
+        # H7 FIX: Detectar si monthly_report está en estado BLOCKED
+        # El caller (conditional_generator) marca status="blocked" cuando fallan los reintentos
+        monthly_report_disclaimer = ""
+        if assets_generated:
+            for asset in assets_generated:
+                asset_type = asset.get("asset_type", "") if isinstance(asset, dict) else getattr(asset, "asset_type", "")
+                if asset_type == "monthly_report":
+                    status = asset.get("status", "") if isinstance(asset, dict) else getattr(asset, "status", "")
+                    if status == "blocked":
+                        monthly_report_disclaimer = (
+                            "**Nota sobre Informe Mensual**: El informe mensual no pudo "
+                            "generarse automáticamente en esta ejecución (datos incompletos). "
+                            "Se entregue manual dentro de las 24 horas siguientes."
+                        )
+                        break
         
         data = {
             # Metadata
@@ -629,16 +652,21 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             'projected_gain': format_cop(projected_monthly_gain),
             'roi_6_months': roi_6_months,
             'break_even_months': str(break_even),
-            # DEUDA_TECNICA: FASE-PROP-C - Opcion A (unificar pain_ratio y recovery_factor en un
-            # solo factor effective_recovery) queda pendiente. Actualmente se aplican dos descuentos:
-            #   1. pain_ratio -> projected_monthly_gain (tabla mensual)
-            #   2. recovery_factor -> ROI (formula _calculate_roi)
-            # Esto genera aparente inconsistencia: tabla muestra X/mes pero ROI muestra 0.3X.
+# H4 FIX: Separate pain_ratio vs recovery_factor clearly.
+            # - pain_ratio: portion of pain that is addressable by IAO (e.g., 41%)
+            # - recovery_factor: realistic effectiveness of recovery (e.g., 20%)
+            # - projected_real_gain: financial_value_central * pain_ratio * recovery_factor
+            'pain_ratio_pct': f"{pain_ratio:.0%}",
+            'recovery_factor_pct': f"{recovery_factors['realistic']:.0%}",
+            'projected_real_gain': format_cop(int(raw_monthly_loss * pain_ratio * recovery_factors['realistic'])),
             'pain_ratio_note': (
                 f"**Nota de proyección**: De su pérdida mensual estimada, el {pain_ratio:.0%} "
-                f"representa la porción que consideramos recuperable con IAO. "
-                f"De ese monto, proyectamos recuperar el {recovery_factors['realistic']:.0%} en los "
-                f"próximos 6 meses. El ROI refleja esta proyección conservadora."
+                f"representa la porción del dolor financieramente abordable con IAO. "
+                f"Aplicando una efectividad esperada de recuperación del {recovery_factors['realistic']:.0%}, "
+                f"la proyección conservadora es de aproximadamente "
+                f"${int(raw_monthly_loss * pain_ratio * recovery_factors['realistic']):,}/mes"
+                f" (vs. la cifra bruta de ${int(raw_monthly_loss * pain_ratio):,} que se mostraría "
+                f"sin ajustar por efectividad)."
             ),
             
         # All scenarios with recovery_factor per scenario
@@ -650,31 +678,33 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'optimistic_gain': self._format_scenario_amount(int(self._get_main_value(financial_scenarios.optimistic) * pain_ratio)),
         'optimistic_roi': self._calculate_roi(monthly_investment, int(self._get_main_value(financial_scenarios.optimistic) * pain_ratio), 6, recovery_factor=recovery_factors['optimistic']),
         
-        # Monthly projection variables for 6 months - FASE-B: use pain_ratio adjusted gains
+        # Monthly projection variables for 6 months — HR-1 FIX: use effective
+        # gain (pain_ratio × recovery_factor) so ROI table is consistent with
+        # the pain_ratio_note instead of showing the inflated gross amount.
         'inv_m1': format_cop(monthly_investment),
         'inv_m2': format_cop(monthly_investment),
         'inv_m3': format_cop(monthly_investment),
         'inv_m4': format_cop(monthly_investment),
         'inv_m5': format_cop(monthly_investment),
         'inv_m6': format_cop(monthly_investment),
-        'rec_m1': format_cop(projected_monthly_gain),
-        'rec_m2': format_cop(projected_monthly_gain),
-        'rec_m3': format_cop(projected_monthly_gain),
-        'rec_m4': format_cop(projected_monthly_gain),
-        'rec_m5': format_cop(projected_monthly_gain),
-        'rec_m6': format_cop(projected_monthly_gain),
-        'net_m1': format_cop(projected_monthly_gain - monthly_investment),
-        'net_m2': format_cop(projected_monthly_gain - monthly_investment),
-        'net_m3': format_cop(projected_monthly_gain - monthly_investment),
-        'net_m4': format_cop(projected_monthly_gain - monthly_investment),
-        'net_m5': format_cop(projected_monthly_gain - monthly_investment),
-        'net_m6': format_cop(projected_monthly_gain - monthly_investment),
-        'acc_m1': format_cop(projected_monthly_gain - monthly_investment),
-        'acc_m2': format_cop(2 * (projected_monthly_gain - monthly_investment)),
-        'acc_m3': format_cop(3 * (projected_monthly_gain - monthly_investment)),
-        'acc_m4': format_cop(4 * (projected_monthly_gain - monthly_investment)),
-        'acc_m5': format_cop(5 * (projected_monthly_gain - monthly_investment)),
-        'acc_m6': format_cop(6 * (projected_monthly_gain - monthly_investment)),
+        'rec_m1': format_cop(effective_monthly_gain),
+        'rec_m2': format_cop(effective_monthly_gain),
+        'rec_m3': format_cop(effective_monthly_gain),
+        'rec_m4': format_cop(effective_monthly_gain),
+        'rec_m5': format_cop(effective_monthly_gain),
+        'rec_m6': format_cop(effective_monthly_gain),
+        'net_m1': format_cop(effective_monthly_gain - monthly_investment),
+        'net_m2': format_cop(effective_monthly_gain - monthly_investment),
+        'net_m3': format_cop(effective_monthly_gain - monthly_investment),
+        'net_m4': format_cop(effective_monthly_gain - monthly_investment),
+        'net_m5': format_cop(effective_monthly_gain - monthly_investment),
+        'net_m6': format_cop(effective_monthly_gain - monthly_investment),
+        'acc_m1': format_cop(effective_monthly_gain - monthly_investment),
+        'acc_m2': format_cop(2 * (effective_monthly_gain - monthly_investment)),
+        'acc_m3': format_cop(3 * (effective_monthly_gain - monthly_investment)),
+        'acc_m4': format_cop(4 * (effective_monthly_gain - monthly_investment)),
+        'acc_m5': format_cop(5 * (effective_monthly_gain - monthly_investment)),
+        'acc_m6': format_cop(6 * (effective_monthly_gain - monthly_investment)),
         
         # Additional variables for sales template
         'generated_date': generated_at.strftime("%Y-%m-%d"),
@@ -711,8 +741,8 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'monthly_loss': format_cop(raw_monthly_loss),
         'monthly_investment': format_cop(monthly_investment),
         'total_investment': format_cop(monthly_investment * 6),
-        'total_recovered': format_cop(projected_monthly_gain * 6),  # FASE-B: pain_ratio adjusted
-        'net_benefit': format_cop((projected_monthly_gain - monthly_investment) * 6),  # FASE-B
+        'total_recovered': format_cop(effective_monthly_gain * 6),  # HR-1 FIX: effective gain
+        'net_benefit': format_cop((effective_monthly_gain - monthly_investment) * 6),  # HR-1 FIX
 
         # Coherence checklist
         'coherence_checklist': self._build_coherence_checklist(diagnostic_summary),
@@ -754,6 +784,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             detected_pain_ids=getattr(diagnostic_summary, 'pain_ids', None) or [],
             score_aeo=diagnostic_summary.score_aeo,
             assets_generated=assets_generated,
+            site_presence_report=site_presence_report,
         ),
         'asset_quality_table': self._generate_asset_quality_table(
             assets_generated,
@@ -762,9 +793,16 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             audit_result=audit_result,
             score_aeo=diagnostic_summary.score_aeo,
         ),
+        'technical_assets_table': self._generate_technical_assets_table(
+            assets_generated=assets_generated,
+            site_presence_report=site_presence_report,
+        ),
 
         # FASE-D: Competitors section — only if competitors data available
         'competitors_section': self._build_competitors_section(audit_result),
+
+        # H7 FIX: Disclaimer si monthly_report falló
+        'monthly_report_disclaimer': monthly_report_disclaimer,
 
         # FIX-OPENROUTER-C: IAO cost transparency (stub - activates when API keys available)
         'openrouter_queries': '—',
@@ -849,69 +887,145 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         detected_pain_ids: Optional[List[str]] = None,
         score_aeo: Optional[int] = None,
         assets_generated: Optional[List[Dict[str, Any]]] = None,
+        site_presence_report: Optional[Any] = None,
     ) -> str:
-        """Genera tabla principal de servicios basada en pains detectados y assets generados.
+        """Genera tabla principal de servicios mostrando TODOS los servicios prometidos.
 
-        Esta es la tabla "principal" de la propuesta — la que muestra qué servicios
-        se incluyen en el kit. Es DINÁMICA: filtra servicios según:
-        1. Si hay assets_generated: solo incluye servicios cuyos assets fueron generados.
-        2. Si no hay assets_generated: filtra por detected_pain_ids (backwards compat).
-        3. Si no hay ni uno ni otro: muestra los 7 servicios estándar del kit base.
-
-        FASE-D: Si score_aeo < 20, agrega "Optimización para IA Generativa" como
-        servicio adicional (8vo servicio condicional).
-
-        FASE-PATCH-B: assets_generated permite filtrado preciso (solo servicios
-        con assets reales), resolviendo mismatch entre propuesta y generación condicional.
-        Los servicios se filtran dinámicamente por assets realmente generados.
-        El gate estático (proposal_asset_alignment_gate) valida el contrato completo
-        (PROPOSAL_SERVICE_TO_ASSET); ambos pueden divergir legítimamente.
-        Ver FASE-PATCH-B para contexto.
+        FASE-2: Ahora muestra los 8 servicios definidos en PROPOSAL_SERVICE_TO_ASSET
+        con sus estados reales (aligned, missing, present_in_production), en vez de
+        filtrar dinámicamente por assets generados o pains detectados.
 
         Args:
-            detected_pain_ids: Lista de pain IDs detectados (de PainSolutionMapper.detect_pains()).
-                Usado como fallback si assets_generated no está disponible.
+            detected_pain_ids: LEGACY — ya no se usa para filtrar (backwards compat).
             score_aeo: Score AEO 0-100. Si < 20, agrega servicio AEO adicional.
-            assets_generated: Lista de assets generados (cada uno con 'asset_type').
-                Si está disponible, es la fuente primaria para filtrar servicios.
+            assets_generated: Lista de assets generados (cada uno con 'asset_type',
+                'confidence_score'). Usado para determinar estado de cada servicio.
+            site_presence_report: SitePresenceReport para determinar present_in_production.
 
         Returns:
-            String markdown con la tabla de servicios, incluyendo headers.
+            String markdown con la tabla de servicios (8 filas + header).
         """
-        # FASE-PATCH-B: Fuente primaria = assets generados
+        # FASE-2: Build lookups for state determination
+        asset_lookup = {}
         if assets_generated:
-            generated_asset_types = {
-                a.get("asset_type", "") for a in assets_generated if a.get("asset_type")
-            }
-            services = [
-                entry for entry in SERVICE_CATALOG.values()
-                if entry.asset_type in generated_asset_types
-            ]
-        elif detected_pain_ids:
-            # Dynamic: filter SERVICE_CATALOG by detected pains
-            services = [
-                entry for entry in SERVICE_CATALOG.values()
-                if entry.pain_id in detected_pain_ids
-            ]
-        else:
-            # No pains detected — show all 7 standard services from SERVICE_CATALOG
-            services = list(SERVICE_CATALOG.values())
+            for asset in assets_generated:
+                asset_type = asset.get("asset_type", "") if isinstance(asset, dict) else getattr(asset, "asset_type", "")
+                confidence = asset.get("confidence_score", 0) if isinstance(asset, dict) else getattr(asset, "confidence_score", 0)
+                if asset_type:
+                    asset_lookup[asset_type] = confidence
 
-        if not services:
-            # Should not happen — SERVICE_CATALOG always has 7 entries
-            # But as safeguard, return empty instead of crashing
-            return ""
+        presence_lookup = {}
+        if site_presence_report and hasattr(site_presence_report, 'results'):
+            for asset_type, result in site_presence_report.results.items():
+                presence_lookup[asset_type] = {
+                    'present_in_production': result.status.value == "exists",
+                    'presence_verified': True,
+                }
+
+        # FASE-2: Iterate over ALL promised services (PROPOSAL_SERVICE_TO_ASSET)
+        # plus AEO conditional — always show 8 services with status
+        rows = ["| Servicio | Estado | Qué obtiene |", "|----------|--------|-------------|"]
+
+        for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
+            confidence = asset_lookup.get(asset_type)
+            presence = presence_lookup.get(asset_type, {})
+
+            # Determine state with icons
+            if presence.get('presence_verified') and presence.get('present_in_production'):
+                estado = "ℹ️ Presente en sitio"
+            elif confidence is not None and confidence >= 0.85:
+                estado = "✅ Alineado"
+            elif confidence is not None and confidence < 0.85:
+                estado = "⚠️ En preparación"
+            else:
+                estado = "⏳ Pendiente"
+
+            # Get description from SERVICE_CATALOG or fallback
+            desc = ""
+            for entry in SERVICE_CATALOG.values():
+                if entry.service_name == service_name:
+                    desc = entry.description
+                    break
+            if not desc:
+                desc = "Servicio incluido en su kit"
+
+            rows.append(f"| **{service_name}** | {estado} | {desc} |")
 
         # FASE-D: AEO conditional service — add if score_aeo < 20
         if score_aeo is not None and score_aeo < 20:
             aeo_entry = SERVICE_CATALOG.get("optimizacion_ia_generativa")
             if aeo_entry:
-                services.append(aeo_entry)
+                aeo_asset_type = aeo_entry.asset_type
+                confidence = asset_lookup.get(aeo_asset_type)
+                presence = presence_lookup.get(aeo_asset_type, {})
 
-        # Build table with header and description
-        rows = ["| Servicio | Qué obtiene |", "|----------|-------------|"]
-        for entry in services:
-            rows.append(f"| **{entry.service_name}** | {entry.description} |")
+                if presence.get('presence_verified') and presence.get('present_in_production'):
+                    estado = "ℹ️ Presente en sitio"
+                elif confidence is not None and confidence >= 0.85:
+                    estado = "✅ Alineado"
+                elif confidence is not None and confidence < 0.85:
+                    estado = "⚠️ En preparación"
+                else:
+                    estado = "⏳ Pendiente"
+
+                rows.append(f"| **{aeo_entry.service_name}** | {estado} | {aeo_entry.description} |")
+
+        return "\n".join(rows)
+
+    def _generate_technical_assets_table(
+        self,
+        assets_generated: Optional[List[Dict[str, Any]]] = None,
+        site_presence_report: Optional[Any] = None,
+    ) -> str:
+        """Genera tabla de assets técnicos adicionales para la propuesta.
+
+        FASE-2: Muestra assets técnicos (analytics_setup_guide,
+        indirect_traffic_optimization) con su estado real.
+
+        Args:
+            assets_generated: Lista de assets generados para determinar estado.
+            site_presence_report: SitePresenceReport para present_in_production.
+
+        Returns:
+            String markdown con la tabla de assets técnicos, o string vacío
+            si no hay assets técnicos en el catálogo.
+        """
+        if not TECHNICAL_ASSET_CATALOG:
+            return ""
+
+        # Build lookups
+        asset_lookup = {}
+        if assets_generated:
+            for asset in assets_generated:
+                asset_type = asset.get("asset_type", "") if isinstance(asset, dict) else getattr(asset, "asset_type", "")
+                confidence = asset.get("confidence_score", 0) if isinstance(asset, dict) else getattr(asset, "confidence_score", 0)
+                if asset_type:
+                    asset_lookup[asset_type] = confidence
+
+        presence_lookup = {}
+        if site_presence_report and hasattr(site_presence_report, 'results'):
+            for asset_type, result in site_presence_report.results.items():
+                presence_lookup[asset_type] = {
+                    'present_in_production': result.status.value == "exists",
+                    'presence_verified': True,
+                }
+
+        rows = ["| Asset Técnico | Estado | Descripción |", "|---------------|--------|-------------|"]
+
+        for entry in TECHNICAL_ASSET_CATALOG.values():
+            confidence = asset_lookup.get(entry.asset_type)
+            presence = presence_lookup.get(entry.asset_type, {})
+
+            if presence.get('presence_verified') and presence.get('present_in_production'):
+                estado = "ℹ️ Presente en sitio"
+            elif confidence is not None and confidence >= 0.85:
+                estado = "✅ Generado"
+            elif confidence is not None and confidence < 0.85:
+                estado = "⚠️ En preparación"
+            else:
+                estado = "⏳ No generado"
+
+            rows.append(f"| **{entry.asset_name}** | {estado} | {entry.description} |")
 
         return "\n".join(rows)
 
@@ -1374,6 +1488,12 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
     def _build_brecha_data(self, diagnostic_summary, main_scenario) -> Dict[str, str]:
         """Build brecha_1..4 nombre/costo dynamically using real impact weights.
 
+        FASE-4 (H3): Normalizes sum to financial_value_central exactly.
+        Previously: each brecha computed independently via int() causing
+        rounding errors that accumulated (e.g., $3,742,069 != $3,741,696).
+        Now: compute raw values, sum them, then adjust the LAST brecha
+        to absorb the difference and make total match exact central value.
+
         FASE-G: Usa brechas_reales (con impacto real de _identify_brechas) cuando
         está disponible. Fallback a top_problems con distribución equitativa.
         Slots without real problems get $0.
@@ -1383,23 +1503,59 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         brechas_reales = getattr(diagnostic_summary, 'brechas_reales', None) or []
         brecha_data: Dict[str, str] = {}
 
+        # H3 FIX: collect raw values first, then normalize to exact central
+        raw_values: List[int] = []
+        raw_names: List[str] = []
+
         for i in range(max_brechas):
-            slot = i + 1
             if i < len(brechas_reales):
                 # Fuente primaria: impacto real de _identify_brechas
                 brecha = brechas_reales[i]
                 impacto = brecha.get('impacto', 1.0 / max(len(brechas_reales), 1))
-                costo = int(self._get_main_value(main_scenario) * impacto)
-                brecha_data[f'brecha_{slot}_nombre'] = brecha.get('nombre', '')
-                brecha_data[f'brecha_{slot}_costo'] = format_cop(costo)
+                costo_raw = self._get_main_value(main_scenario) * impacto
+                raw_values.append(costo_raw)
+                raw_names.append(brecha.get('nombre', ''))
             elif i < len(top_problems):
                 # Fallback: top_problems sin impacto real (distribución equitativa)
-                distribucion = int(self._get_main_value(main_scenario) / max(len(top_problems), 1))
-                brecha_data[f'brecha_{slot}_nombre'] = top_problems[i]
-                brecha_data[f'brecha_{slot}_costo'] = format_cop(distribucion)
+                distribucion_raw = self._get_main_value(main_scenario) / max(len(top_problems), 1)
+                raw_values.append(distribucion_raw)
+                raw_names.append(top_problems[i])
             else:
-                brecha_data[f'brecha_{slot}_nombre'] = ""
+                raw_values.append(0.0)
+                raw_names.append("")
+
+        # H3 FIX: normalize so sum equals exact central value
+        financial_central = float(self._get_main_value(main_scenario))
+        raw_sum = sum(raw_values)
+        diff = round(raw_sum - financial_central)
+
+        # Only normalize if there is at least one real brecha/problem
+        # If all slots are empty (no data), keep them at $0
+        has_real_data = any(raw_names)
+
+        # Assign final integer values, absorbing diff into last brecha
+        final_values: List[int] = []
+        for i in range(max_brechas):
+            raw = raw_values[i]
+            if not has_real_data:
+                final_values.append(0)
+            elif i == max_brechas - 1:
+                # Last brecha absorbs rounding difference
+                final_values.append(int(round(raw - diff)))
+            else:
+                final_values.append(int(round(raw)))
+
+        # Build brecha_data dict
+        for i in range(max_brechas):
+            slot = i + 1
+            brecha_data[f'brecha_{slot}_nombre'] = raw_names[i] if raw_names[i] else ""
+            # H3 FIX: costo always uses final_values (even if name is empty)
+            # This allows the last slot to absorb rounding diff even when it has no name
+            if final_values[i] > 0:
+                brecha_data[f'brecha_{slot}_costo'] = format_cop(final_values[i])
+            else:
                 brecha_data[f'brecha_{slot}_costo'] = "$0"
+
         return brecha_data
 
     def _build_coherence_checklist(self, diagnostic_summary: DiagnosticSummary) -> str:

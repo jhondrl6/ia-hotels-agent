@@ -1,10 +1,17 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.43.0"
-codename: "TERMALES-REFACTOR"
-release_date: "2026-05-08"
+version: "4.44.0"
+codename: "TERMALES-COHERENCE-FIX"
+release_date: "2026-05-11"
 plan_maestro_version: "v2.6.0"
 
+# v4.44.0 - TERMALES-COHERENCE-FIX (2026-05-11)
+# FASE-1: Coherence post-generación: _validate_post_generation() en v4_asset_orchestrator + main.py
+# FASE-2: Propuesta completa + Gate robusto: 8 servicios con estados, assets técnicos, threshold 0.8
+# FASE-3: Monthly report fail-safe: try/except+retry, disclaimer en propuesta, bug fix runtime
+# FASE-4: Corrección financiera: normalización brechas al valor central, separación pain_ratio/recovery
+# FASE-5: Verificación E2E: v4complete Termales Santa Rosa de Cabal + análisis de ejecución
+# Backwards compatible: cambios internos de coherencia y generación de assets, API pública sin cambios
 # v4.42.0 - SOL-2 Asset Alignment Refactor (2026-05-07)
 # FASE-SOL2-A: Ghost refs eliminadas, SitePresenceChecker verificado
 # FASE-SOL2-B: 7 servicios en alignment, coherencia unificada, llms_txt

@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.43.0 | **Codename:** TERMALES-REFACTOR | **Ultima actualizacion:** 9 Mayo 2026
+**Version:** 4.44.0 | **Codename:** TERMALES-COHERENCE-FIX | **Ultima actualizacion:** 11 Mayo 2026
 
 ---
 

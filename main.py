@@ -2523,7 +2523,11 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'occupancy_rate': occupancy_rate,
             'direct_channel_percentage': direct_channel_pct,
         },
-        coherence_score=pre_coherence_score,  # Usar el score calculado por CoherenceValidator
+        coherence_score=(
+            asset_result.post_coherence_score  # H6 FIX: use post-gen score if available
+            if asset_result and asset_result.post_coherence_score is not None
+            else pre_coherence_score
+        ),  # Usar post-gen score (más preciso) o fallback a pre-gen
         brechas_reales=brechas_reales,  # FASE-G: impactos reales para proposal
         voice_readiness_score=getattr(diagnostic_gen, '_last_voice_score', None),
         voice_readiness_level=getattr(diagnostic_gen, '_last_voice_level', None),
@@ -2948,7 +2952,12 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'auditors.V4ComprehensiveAuditor',
             'quality_gates.publication_gates'
         ],
-        'coherence_score': pre_coherence_score,
+        'coherence_score': pre_coherence_score,  # H6 FIX: pre-gen score (screening)
+        'coherence_score_post': (
+            asset_result.post_coherence_score  # H6 FIX: post-gen score (real)
+            if asset_result and asset_result.post_coherence_score is not None
+            else None
+        ),
         'assets_generated': [
             {
                 'asset_type': a.asset_type,

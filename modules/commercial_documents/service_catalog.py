@@ -132,9 +132,39 @@ SERVICE_TO_ASSET_LOOKUP: Dict[str, str] = {
 }
 
 
+# =============================================================================
+# TECHNICAL_ASSET_CATALOG — Assets técnicos adicionales (FASE-2)
+# =============================================================================
+# Estos assets no son servicios comerciales "vendibles" por sí solos,
+# pero complementan el kit y se muestran en una sección dedicada de la propuesta.
+
+@dataclass
+class TechnicalAssetEntry:
+    """A technical asset that supports the commercial package."""
+    asset_name: str       # Name displayed in proposal
+    asset_type: str       # Asset type identifier
+    description: str      # Short description for the proposal
+
+
+TECHNICAL_ASSET_CATALOG: Dict[str, TechnicalAssetEntry] = {
+    "analytics_setup_guide": TechnicalAssetEntry(
+        asset_name="Guía de Configuración Analytics",
+        asset_type="analytics_setup_guide",
+        description="Instrucciones paso a paso para conectar Google Analytics 4 y Google Search Console",
+    ),
+    "indirect_traffic_optimization": TechnicalAssetEntry(
+        asset_name="Optimización de Tráfico Indirecto",
+        asset_type="indirect_traffic_optimization",
+        description="Estrategia para captar reservas desde canales indirectos (OTAs, blogs, redes)",
+    ),
+}
+
+
 __all__ = [
     "ServiceEntry",
+    "TechnicalAssetEntry",
     "SERVICE_CATALOG",
+    "TECHNICAL_ASSET_CATALOG",
     "get_services_for_pains",
     "get_service_names_for_pains",
     "SERVICE_TO_ASSET_LOOKUP",

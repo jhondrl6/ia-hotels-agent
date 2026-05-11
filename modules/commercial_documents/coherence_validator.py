@@ -518,22 +518,38 @@ class CoherenceValidator:
         from ..asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
 
         promised_types = {a.asset_type for a in assets}
-        missing_types = [
-            t for t in promised_types
-            if not is_asset_implemented(t)
-        ]
+        missing_types = []
+        
+        # H6 FIX: Use generated_assets as source of truth when available
+        # For pre-gen, generated_assets=None -> use static catalog (legacy)
+        # For post-gen, generated_assets dict -> trust it over static catalog.
+        # IMPORTANT: empty dict {} means "no assets generated" (truthy, so use it)
+        # but an asset missing from the dict means it was never scheduled, not failed.
+        # We check: asset_type exists in dict AND can_use=True to consider it present.
+        if generated_assets is not None:
+            # Post-generation: each promised asset type must be in generated_assets with can_use=True
+            for asset_type in promised_types:
+                gen_info = generated_assets.get(asset_type, {})
+                # can_use must be explicitly True (not just dict existing)
+                if not gen_info.get('can_use', False):
+                    missing_types.append(asset_type)
+        else:
+            # Pre-generation fallback: use static catalog
+            missing_types = [
+                t for t in promised_types
+                if not is_asset_implemented(t)
+            ]
 
         # FASE-SOL2-B: Cross-check all PROPOSAL_SERVICE_TO_ASSET entries
-        # Ensure every promised service maps to an implemented asset
+        # Ensure every promised service maps to an implemented asset.
+        # H6 FIX: When generated_assets is provided (post-gen), we already know
+        # which asset types were actually generated. The PROPOSAL_SERVICE_TO_ASSET
+        # cross-check is only meaningful when generated_assets=None (pre-gen).
+        # With real generated_assets, we trust the orchestrator's actual output.
         missing_service_assets = []
-        for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
-            # FASE-1-A: Si generated_assets disponible, usar la fuente de verdad del pipeline
-            if generated_assets:
-                asset_info = generated_assets.get(asset_type, {})
-                if not asset_info.get('can_use', False):
-                    missing_service_assets.append(f"{service_name}→{asset_type}")
-            else:
-                # Legacy fallback: catalogo estatico
+        if not generated_assets:
+            # Legacy pre-generation check: use static catalog for PROPOSAL_SERVICE_TO_ASSET
+            for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
                 if not is_asset_implemented(asset_type):
                     missing_service_assets.append(f"{service_name}→{asset_type}")
 

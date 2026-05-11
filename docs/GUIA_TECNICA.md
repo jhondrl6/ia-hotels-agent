@@ -1,7 +1,31 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.43.0 (TERMALES-REFACTOR)
-**Última actualización:** 2026-05-09
+**Versión:** v4.44.0 (TERMALES-COHERENCE-FIX)
+**Última actualización:** 2026-05-11
+
+---
+
+### v4.44.0 - 2026-05-11 — TERMALES-COHERENCE-FIX (FASE-1 a FASE-5)
+
+**Módulos afectados**: asset_generation, commercial_documents, quality_gates, main.py
+
+**Problema**:
+- FASE-1: Coherence post-generación no validaba assets generados contra catálogo prometido
+- FASE-2: Propuesta incompleta: menos de 8 servicios, gate umbral inconsistente
+- FASE-3: Monthly report fallaba con 'list' object has no attribute 'items', sin disclaimer de fallback
+- FASE-4: Brechas financieras normalizaban mal, pain_ratio y recovery_factor confundidos
+- FASE-5: Necesidad de verificación E2E completa del pipeline v4complete
+
+**Solución**:
+- FASE-1: Coherence post-generación: _validate_post_generation() en orchestrator consume post_coherence_score
+- FASE-2: Propuesta completa con 8 servicios, assets técnicos visibles, umbral gate 0.8 robusto
+- FASE-3: Monthly report fail-safe con try/except+retry, disclaimer de fallback, bug fix runtime
+- FASE-4: Normalización de brechas al valor central, separación explícita pain_ratio vs recovery_factor
+- FASE-5: Verificación E2E con v4complete para Termales Santa Rosa de Cabal
+
+**Backwards compatibility**: 100% — cambios internos de coherencia y generación, API pública sin cambios.
+
+**Tests**: 12 tests nuevos (3 por fase), 0 regresiones. run_all_validations.py --quick: 4/4 pass.
 
 ---
 

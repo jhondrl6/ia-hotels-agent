@@ -78,6 +78,9 @@ La matriz de capacidades documenta el estado de cada capability en el sistema.
 | SocialStrategyGuideGenerator | conectada | conditional_generator.py | social_strategy_guide content | LOW |
 | FAQPageGenerator (JSON-LD) | conectada | conditional_generator.py:_generate_faq_page() | faq_page.json | HIGH |
 | MonthlyReportGenerator | conectada | conditional_generator.py | monthly_report.md | HIGH |
+| MonthlyReportGenerator - AssetsTableGuard (FASE-3) | conectada | monthly_report_generator.py:_generate_assets_table() | valida dict/list en generated_assets, evita AttributeError | HIGH |
+| ConditionalGenerator - MonthlyRetry (FASE-3) | conectada | conditional_generator.py:_generate_content() | try/except + retry(2) + backoff para monthly_report, evita propagacion de excepcion | HIGH |
+| V4ProposalGenerator - MonthlyDisclaimer (FASE-3) | conectada | v4_proposal_generator.py:_prepare_template_data() | Detecta monthly_report BLOCKED y genera disclaimer en propuesta | MEDIUM |
 
 ### 13.6 Gate de Cierre
 

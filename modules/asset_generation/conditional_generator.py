@@ -478,11 +478,31 @@ class ConditionalGenerator:
             content = self._generate_voice_assistant_guide(hotel_dict if isinstance(hotel_dict, dict) else {})
 
         elif asset_type == "monthly_report":
-            from .monthly_report_generator import MonthlyReportGenerator
-            generator = MonthlyReportGenerator()
-            hotel_data = validated_data.get("hotel_data", validated_data)
-            hotel_dict = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
-            content = generator.generate(hotel_dict if isinstance(hotel_dict, dict) else {})
+            # H7 FIX: try/except + retry con backoff para monthly_report
+            # El generador puede fallar con AttributeError si recibe datos inesperados
+            import time
+            max_retries = 2
+            last_error = None
+            content = None
+            for attempt in range(max_retries + 1):
+                try:
+                    from .monthly_report_generator import MonthlyReportGenerator
+                    generator = MonthlyReportGenerator()
+                    hotel_data = validated_data.get("hotel_data", validated_data)
+                    hotel_dict = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
+                    content = generator.generate(hotel_dict if isinstance(hotel_dict, dict) else {})
+                    break  # Éxito
+                except (AttributeError, TypeError, RuntimeError) as e:
+                    last_error = e
+                    if attempt < max_retries:
+                        time.sleep(0.5 * (attempt + 1))  # Backoff: 0.5s, 1.0s
+                    continue
+            if content is None:
+                # Falló después de todos los reintentos → marcar BLOCKED
+                # El caller recibirá status="blocked" desde el try/except wrapper más abajo
+                raise RuntimeError(
+                    f"monthly_report failed after {max_retries + 1} attempts: {last_error}"
+                )
 
         elif asset_type == "ssl_guide":
             from modules.delivery.generators.ssl_guide_gen import SSLGuideGenerator

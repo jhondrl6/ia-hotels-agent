@@ -263,11 +263,18 @@ class MonthlyReportGenerator:
             try:
                 with open(asset_report_path, 'r', encoding='utf-8') as f:
                     report = json.load(f)
-                    assets_data = report.get('generated_assets', {})
+                    raw = report.get('generated_assets', {})
+                    # H7 FIX: guardar si es dict, si no, convertir de lista o {}
+                    if isinstance(raw, dict):
+                        assets_data = raw
+                    elif isinstance(raw, list):
+                        # Si viene como lista (formato legacy), convertir a dict
+                        assets_data = {item.get('asset_type') if isinstance(item, dict) else str(item): item
+                                       for item in raw if item}
             except (json.JSONDecodeError, IOError):
                 pass
 
-        if not assets_data:
+        if not assets_data or not isinstance(assets_data, dict):
             return "| No se generaron assets en esta ejecucion |\n"
 
         if generated_at is None:

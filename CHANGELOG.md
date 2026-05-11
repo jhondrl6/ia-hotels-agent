@@ -1,5 +1,43 @@
 # Changelog
 
+## [4.44.0] - TERMALES-COHERENCE-FIX — 2026-05-11
+
+### Objetivo
+Cierre del ciclo de refactorización de coherencia Termales. 5 fases de implementación completadas coherencia post-generación, propuesta completa, monthly report fail-safe corrección financiera y verificación E2E.
+
+### Cambios Implementados
+- FASE-1: Coherence post-generación: validación _validate_post_generation() en v4_asset_orchestrator.py + main.py consume post_coherence_score
+- FASE-2: Propuesta completa + Gate robusto: 8 servicios con estados, assets técnicos visibles, threshold gate 0.8
+- FASE-3: Monthly report fail-safe: try/except+retry, disclaimer en propuesta, fix bug runtime 'list' object has no attribute 'items'
+- FASE-4: Corrección financiera: normalización brechas al valor central, separación pain_ratio vs recovery_factor
+- FASE-5: Verificación E2E: v4complete Termales Santa Rosa de Cabal + análisis de ejecución
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| evidence/FASE-5-VERIFICACION/analisis_ejecucion.md | Análisis de ejecución E2E Termales |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| modules/asset_generation/v4_asset_orchestrator.py | _validate_post_generation() coherence check |
+| main.py | Consumir post_coherence_score del orchestrator |
+| modules/commercial_documents/coherence_validator.py | Validación de coherencia post-generación |
+| modules/commercial_documents/v4_proposal_generator.py | 8 servicios, assets técnicos, financial normalization |
+| modules/commercial_documents/service_catalog.py | Catálogo 8 servicios con estados |
+| modules/quality_gates/publication_gates.py | Threshold 0.8 robusto |
+| modules/asset_generation/conditional_generator.py | Monthly report fail-safe |
+| modules/asset_generation/monthly_report_generator.py | Try/except+retry, disclaimer |
+
+### Tests
+- FASE-1: 3 tests nuevos
+- FASE-2: 3 tests nuevos
+- FASE-3: 3 tests nuevos
+- FASE-4: 3 tests nuevos
+- Total: 12 tests nuevos, 0 regresiones
+
+---
+
 ## [4.43.0] - TERMALES-REFACTOR COMPLETADO — 2026-05-09
 
 ### Objetivo

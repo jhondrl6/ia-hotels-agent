@@ -87,6 +87,7 @@ class AssetGenerationResult:
     generated_assets: List[GeneratedAsset]
     failed_assets: List[FailedAsset]
     coherence_report: CoherenceReport  # No default - va antes
+    post_coherence_score: Optional[float] = None  # H6 FIX: score after real asset generation
     skipped_assets: List[SkippedAsset] = field(default_factory=list)  # FASE-CAUSAL-01
     output_dir: str = ""
     timestamp: str = ""
@@ -182,7 +183,15 @@ class AssetGenerationResult:
                 }
                 for a in self.skipped_assets
             ],
-            "coherence_report": self.coherence_report.to_dict()
+            "coherence_report": self.coherence_report.to_dict(),
+            # H6 FIX: both scores for transparency
+            "coherence_score_pre": round(self.coherence_report.overall_score, 2),
+            "coherence_score_post": round(self.post_coherence_score, 2) if self.post_coherence_score is not None else None,
+            "coherence_score_final": (
+                round(self.post_coherence_score, 2)
+                if self.post_coherence_score is not None
+                else round(self.coherence_report.overall_score, 2)
+            )
         }
 
 
@@ -369,6 +378,37 @@ class V4AssetOrchestrator:
             else:
                 failed.append(result)
         
+        # ═══════════════════════════════════════════════════════════════════
+        # H6 FIX: Post-generation coherence validation
+        # Run coherence check AGAIN with real generated assets to detect
+        # missing/skipped assets that the pre-generation check couldn't see.
+        # This score replaces the pre-generation score in the final report.
+        # ═══════════════════════════════════════════════════════════════════
+        post_coherence_score = None
+        post_coherence_report = None
+        try:
+            # Build generated_assets dict for coherence validator
+            generated_assets_dict = {}
+            for asset in generated:
+                generated_assets_dict[asset.asset_type] = {
+                    'can_use': asset.can_use,
+                    'confidence_score': asset.confidence_score,
+                    'filename': asset.filename
+                }
+            
+            # Re-run coherence validation with real assets
+            post_coherence_report = self.coherence_validator.validate(
+                diagnostic_doc, proposal_doc, asset_specs, validation_summary,
+                generated_assets=generated_assets_dict
+            )
+            post_coherence_score = post_coherence_report.overall_score
+            logger.info(
+                f"[V4AssetOrchestrator] Post-gen coherence: {post_coherence_score:.2f} "
+                f"(pre-gen was {coherence.overall_score:.2f})"
+            )
+        except Exception as e:
+            logger.warning(f"[V4AssetOrchestrator] Post-gen coherence check failed: {e}")
+        
         # 7. Vincular con diagnóstico y enriquecer metadata
         links = self.diagnostic_linker.create_links(generated, diagnostic_doc)
         
@@ -397,9 +437,14 @@ class V4AssetOrchestrator:
                     asset.path, metadata
                 )
         
-        # 8. Guardar reporte de coherencia
+        # 8. Guardar reporte de coherencia (ambos scores)
         coherence_path = output_dir / "v4_audit" / "coherence_validation.json"
         coherence.save(str(coherence_path.parent))
+        
+        # H6 FIX: Also save post-coherence report if available
+        if post_coherence_report:
+            post_coherence_path = output_dir / "v4_audit" / "coherence_validation_post_gen.json"
+            post_coherence_report.save(str(post_coherence_path.parent))
         
         # 9. Crear y retornar resultado
         result = AssetGenerationResult(
@@ -409,6 +454,7 @@ class V4AssetOrchestrator:
             failed_assets=failed,
             skipped_assets=skipped,  # FASE-CAUSAL-01
             coherence_report=coherence,
+            post_coherence_score=post_coherence_score,  # H6 FIX: post-gen score
             output_dir=str(output_dir),
             timestamp=datetime.now().isoformat()
         )

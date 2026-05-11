@@ -1,8 +1,8 @@
-<!-- agents_version: v4.42.0 | last_update: 2026-05-09 -->
+<!-- agents_version: v4.42.0 | last_update: 2026-05-11 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.43.0 -- TERMALES-REFACTOR COMPLETADO**
+> **v4.44.0 -- TERMALES-COHERENCE-FIX COMPLETADO**
 
 ---
 

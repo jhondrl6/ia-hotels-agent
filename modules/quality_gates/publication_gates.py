@@ -870,14 +870,19 @@ class PublicationGatesOrchestrator:
         
         message = "; ".join(message_parts) if message_parts else f"{len(missing_names)} promised service(s) missing assets"
         
-        # FASE-3 FIX-9: Policy change — BLOCK if alignment < 50%, WARN if >= 50%
-        # This is a business policy decision: below 50% alignment means most promised
-        # services are missing, which is not acceptable for publication.
-        alignment = report.alignment_percentage
+        # FASE-2: Effective alignment includes present_in_production as "satisfied"
+        # A service present in production counts towards the alignment target.
+        total_services_with_presence = report.total_services + len(report.present_in_production)
+        aligned_plus_present = len(report.aligned) + len(report.present_in_production)
+        effective_alignment = (
+            aligned_plus_present / total_services_with_presence
+            if total_services_with_presence > 0 else 0.0
+        )
+        alignment = effective_alignment
         missing_count = len(missing_names)
 
-        if alignment < 0.5:
-            # BLOCKED: Less than half of promised services have assets
+        if alignment < 0.8:
+            # BLOCKED: Less than 80% of promised services have assets or are present in production
             return PublicationGateResult(
                 gate_name=gate_name,
                 passed=False,
@@ -886,13 +891,13 @@ class PublicationGatesOrchestrator:
                 value=alignment,
                 suggestion=(
                     f"Alignment {alignment:.0%} ({missing_count} services missing) is below "
-                    f"50% threshold. Review asset generation pipeline to ensure all promised "
+                    f"80% threshold. Review asset generation pipeline to ensure all promised "
                     f"services produce deliverables before publication."
                 ),
                 details=report.to_dict(),
             )
         else:
-            # WARNING: At least 50% aligned but still some missing
+            # WARNING: At least 80% aligned but still some missing
             return PublicationGateResult(
                 gate_name=gate_name,
                 passed=True,
