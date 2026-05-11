@@ -21,15 +21,15 @@
 
 ---
 
-## Estado del Proyecto (v4.43.0)
+## Estado del Proyecto (v4.44.0)
 
-- **2,702 test functions** — 0 regresiones
- - **~188 modulos Python** (~67K lineas) + **22 scripts** (~5K lineas) + **199 archivos de test** (~54K lineas)
+- **2,723 test functions** — 0 regresiones
+ - **188 modulos Python** (~62K lineas) + **22 scripts** (~5K lineas) + **202 archivos de test** (~51K lineas)
 - **9 config YAML** con schema validado
 - **16 agent skills** en `.agents/workflows/`
 - **9 publication gates** (6 blocking + 3 advisory)
 - **Coherence Score >= 0.8** requerido para publicacion
-- **27 assets IMPLEMENTED** (+ 4 DEPRECATED + 3 MANUAL_ONLY) en catalogo
+- **22 assets IMPLEMENTED** (+ 2 DEPRECATED + 1 MANUAL_ONLY) en catalogo
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
@@ -193,7 +193,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 
 ---
 
-## Configuracion YAML (v4.38.0 a v4.43.0)
+## Configuracion YAML (v4.38.0 a v4.44.0)
 
 31 hardcoded values migrados a 6 archivos YAML con schema validado. Todos los parametros son configurables sin tocar codigo.
 
@@ -232,7 +232,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **2,702 test functions** — suite completa, 0 regresiones
+- **2,723 test functions** — suite completa, 0 regresiones
 - **60 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Suite de regresion** — Amaziliahotel + Hotel Visperas como casos de referencia
@@ -240,7 +240,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 - **9 Publication Gates** (6 blocking + 3 advisory):
   - Blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics
   - Advisory: content_quality, asset_confidence, proposal_asset_alignment
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.10.0 (1 fase/sesion, max 60 iteraciones)
+- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.11.0 (1 fase/sesion, max 60 iteraciones)
 
 ---
 
