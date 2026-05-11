@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
-version: v2.10.0
+version: v2.11.0
 ---
 
 # Skill: Phased Project Executor
@@ -315,6 +315,48 @@ Usar template `.agents/workflows/templates/prompt-fase-template.md`
 - [ ] Nombre de archivo coincide con título interno
 - [ ] Referencias a fases previas con números correctos
 - [ ] Tests base acumulativos correctos
+
+### 2.5. Verificación Pre-Creación de Prompts (OBLIGATORIO — Anti-Deuda Acumulativa)
+
+> [!CAUTION]
+> **REGLA CRÍTICA**: Antes de crear/codificar los prompts de fase, el orquestador DEBE verificar que cada fase incluye `log_phase_completion.py` al final de su ejecución. NO delegar esto a FASE-RELEASE.
+
+**Checklist de verificación obligatoria:**
+
+```
+□ FASE-1 a FASE-N (impl): Cada prompt termina con:
+    ./venv/Scripts/python.exe scripts/log_phase_completion.py \
+        --fase FASE-X --desc "..." \
+        --archivos-mod "..." --tests "N" --check-manual-docs
+
+□ FASE-RELEASE: NO registra fases anteriores. Solo sincroniza y valida.
+
+□ Si el plan muestra T1 de FASE-RELEASE = "registrar FASE-1 a FASE-5" → ERROR.
+  Las fases 1-5 DEBEN registrarse a sí mismas al completar.
+
+□ Si no existe prompt-fase-template.md → crear uno antes de planificar fases.
+```
+
+**Error típico que este paso previene:**
+
+```
+Planificador diseña:
+  FASE-1: T1=investigar, T2=fix, T3=tests
+  FASE-2: T1=investigar, T2=fix, T3=tests
+  FASE-RELEASE: T1=registrar FASE-1, T2=registrar FASE-2, ..., T5=registrar FASE-5, T6=version bump
+
+Resultado: Deuda de 5 registros acumulada en RELEASE.
+          Si RELEASE falla, las fases quedan "completadas" sin registro.
+```
+
+**Acción correctiva si se detecta el error:**
+
+```
+Si el plan tiene "T1 de FASE-RELEASE = registrar FASE-1 a FASE-5":
+  → Reestructurar: Cada fase de implementación ejecuta log_phase_completion.py al terminar.
+  → FASE-RELEASE solo hace: sync_versions, CHANGELOG, GUIA_TECNICA, validaciones.
+  → Regenerar los prompts de fase con la sección post-ejecución incluida.
+```
 
 ### 3. Actualizar Checklist Maestro
 Actualizar `.opencode/plans/06-checklist-implementacion.md`:
@@ -823,7 +865,7 @@ git diff --stat
 - **FASE-RELEASE ejecutada sin implementaciones completadas** → abortar; verificar `dependencias-fases.md` que todas las fases previas estén en `✅`
 
 ## Versiones
-- **v2.9.0** (2026-04-28): Nueva R3: Regla de Scope de Fase. Limite: maximo 4 tareas + 0 comandos largos, o 3 tareas + 1 comando largo por sesion. Incluye tabla de evaluacion, ejemplos de division (FASE-X-A/B/C), senales de alerta ("2-3 horas" = dividir), y advertencia de que el orquestador es responsable de fases mal scoped.
+- **v2.11.0** (2026-05-11): Nueva sección §2.5 "Verificación Pre-Creación de Prompts". Regla anti-deuda acumulativa: cada fase de implementación ejecuta `log_phase_completion.py` al terminar — NO delegar a FASE-RELEASE. Checklist obligatorio para detectar planes mal diseñados antes de crear prompts. Si T1 de RELEASE = "registrar FASE-1 a FASE-5" → error. Agregada acción correctiva.
 - **v2.8.0** (2026-04-28): Protocolo de Evidencia Proactiva (obligatorio inmediatamente despues de output v4complete, antes de cualquier verificacion). Nueva seccion "Cierre Obligatorio de Sesion" — siempre guardar evidencia + actualizar plan antes de cerrar, sin excepciones.
 - **v2.6.0** (2026-04-26): Modelo de Ejecución por Agentes AI explícito. Flujo reestructurado a 3 etapas (Preparación → Implementación → RELEASE). FASE-RELEASE integrada como etapa del flujo principal. Paso 7 renombrado a "FASE-RELEASE — Cierre y Documentación Oficial". Eliminada contradicción "no se ejecuta por fase". Regla de dependencia explícita: RELEASE requiere todas las implementaciones completadas.
 - **v2.5.0** (2026-04-26): Límite de 60 iteraciones como regla mandatoria (R2). Sección `## Restricciones` obligatoria en prompts de fase. FASE-RELEASE formalizado como fase ejecutable con sesión propia. Alineado con estructura real de `.opencode/plans/` del PATCH Forense AmaziliaHotel 4.36.0.
