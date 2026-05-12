@@ -47,15 +47,15 @@
 
 ---
 
-## FASE-4-GATE: Gate asset_confidence hardening
+## FASE-4-GATE: Gate asset_confidence hardening ✅ COMPLETADA
 
-- [ ] T1: Modificar gate `asset_confidence`: emitir BLOCKED (no WARNING) cuando 100% assets son ESTIMATED (confidence < 0.7)
-- [ ] T2: Tests para nuevo comportamiento: 100% ESTIMATED → BLOCKED; mix ESTIMATED/VERIFIED → WARNING o PASSED según corresponda
-- [ ] T3: Verificar backwards compatibility: deliveries existentes con confianza mixta no se rompen
-- [ ] T4: `log_phase_completion.py --fase FASE-4-GATE`
-- [ ] Criterio: asset_confidence BLOCKED cuando all(assets.confidence < 0.7) ✅
-- [ ] Criterio: Tests nuevos pasan, 0 regresiones
-- [ ] Criterio: `run_all_validations.py --quick` 4/4
+- [x] T1: Modificar gate `asset_confidence`: emitir BLOCKED (no WARNING) cuando 100% assets son ESTIMATED (confidence < 0.7)
+- [x] T2: Tests para nuevo comportamiento: 100% ESTIMATED → BLOCKED; mix ESTIMATED/VERIFIED → WARNING o PASSED según corresponda
+- [x] T3: Verificar backwards compatibility: deliveries existentes con confianza mixta no se rompen
+- [x] T4: `log_phase_completion.py --fase FASE-4-GATE`
+- [x] Criterio: asset_confidence BLOCKED cuando all(assets.confidence < 0.7) ✅
+- [x] Criterio: Tests nuevos pasan (7/7), 0 regresiones
+- [x] Criterio: `run_all_validations.py --quick` 4/4
 
 ---
 

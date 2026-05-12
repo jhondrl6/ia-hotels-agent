@@ -27,8 +27,8 @@
 |---------|-------|------|
 | Tests nuevos | 7 (test_coherence_gate.py) | FASE-1-COH |
 | Tests nuevos | — | FASE-2-DEFAULT |
-| Tests nuevos | — | FASE-3-CONTENT |
-| Tests nuevos | — | FASE-4-GATE |
+| Tests nuevos | 8 tests (FASE-3-CONTENT) | FASE-3-CONTENT |
+| Tests nuevos | 3 tests (FASE-4-GATE) | FASE-4-GATE |
 | Coherence score pre-fix | 0.81 / 0.83 / 0.85 / 0.81 (5 fuentes) | Baseline |
 | Coherence score post-fix | — | FASE-5-VERIFY |
 | Assets con confidence < 0.7 pre-fix | 7/7 (100%) | Baseline |
@@ -45,3 +45,5 @@
 | `modules/quality_gates/coherence_gate.py` | Refactor: execute() integra _validator.validate() via execute_from_validator(); CoherenceGateResult gana checks/validator_errors/validator_warnings; nuevo método _validator_errors_to_gaps() | FASE-1-COH |
 | `main.py` | Unificar fuente coherence_score: assessment dict incluye coherence_checks/errors/warnings; v4_complete_report usa single coherence_score | FASE-1-COH |
 | `tests/quality_gates/test_coherence_gate.py` | 7 tests de integración gate↔validator (TestCoherenceGateValidatorIntegration) | FASE-1-COH |
+| `modules/quality_gates/publication_gates.py` | Hardening gate asset_confidence: BLOCKED cuando 100% assets ESTIMATED (confidence < 0.7), WARNING para mix, PASSED para todos >= 0.7 | FASE-4-GATE |
+| `tests/quality_gates/test_publication_gates.py` | 3 tests nuevos: all_estimated_blocked, mixed_estimated_warning, all_verified_passed; tests existentes actualizados | FASE-4-GATE |

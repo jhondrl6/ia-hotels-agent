@@ -969,14 +969,72 @@ class TestFASE5AssetConfidenceGate:
         assert result.status == GateStatus.WARNING
         assert "2 asset(s) below confidence threshold" in result.message
 
+    def test_all_estimated_blocked(self, orchestrator):
+        """
+        Test that asset confidence gate BLOCKED when 100% assets are ESTIMATED (confidence < 0.7).
+        FASE-4-GATE: New behavior — all estimated should block, not just warn.
+        """
+        assessment = {
+            "generated_assets": [
+                {"asset_type": "hotel_schema", "confidence_score": 0.5},
+                {"asset_type": "faq_page", "confidence_score": 0.5},
+                {"asset_type": "whatsapp_button", "confidence_score": 0.5},
+            ]
+        }
+
+        result = orchestrator._asset_confidence_gate(assessment)
+
+        assert result.passed is False
+        assert result.status == GateStatus.BLOCKED
+        assert "100% de assets son ESTIMATED" in result.message
+        assert result.details.get("all_estimated") is True
+
+    def test_mixed_estimated_warning(self, orchestrator):
+        """
+        Test that asset confidence gate warns (not blocks) for mixed confidence assets.
+        100% estimated is BLOCKED; mixed is WARNING.
+        """
+        assessment = {
+            "generated_assets": [
+                {"asset_type": "hotel_schema", "confidence_score": 0.85},
+                {"asset_type": "voice_assistant_guide", "confidence_score": 0.5},
+                {"asset_type": "whatsapp_button", "confidence_score": 0.5},
+            ]
+        }
+
+        result = orchestrator._asset_confidence_gate(assessment)
+
+        assert result.passed is True
+        assert result.status == GateStatus.WARNING
+        assert "2 asset(s) below confidence threshold" in result.message
+
+    def test_all_verified_passed(self, orchestrator):
+        """
+        Test that asset confidence gate passes when all assets have high confidence.
+        """
+        assessment = {
+            "generated_assets": [
+                {"asset_type": "hotel_schema", "confidence_score": 0.85},
+                {"asset_type": "faq_page", "confidence_score": 0.90},
+                {"asset_type": "llms_txt", "confidence_score": 0.80},
+            ]
+        }
+
+        result = orchestrator._asset_confidence_gate(assessment)
+
+        assert result.passed is True
+        assert result.status == GateStatus.PASSED
+        assert result.value == 1.0
+        assert "All 3 assets meet confidence threshold" in result.message
+
     def test_asset_confidence_gate_empty_assets(self, orchestrator):
         """
-        Test that asset confidence gate passes with no assets.
+        Test that asset confidence gate passes with no assets (neutral).
         """
         assessment = {"generated_assets": []}
-        
+
         result = orchestrator._asset_confidence_gate(assessment)
-        
+
         assert result.passed is True
         assert result.status == GateStatus.PASSED
         assert "No generated assets to evaluate" in result.message

@@ -738,9 +738,31 @@ class PublicationGatesOrchestrator:
             a.get("confidence_score", 0) for a in generated_assets
         ) / len(generated_assets)
 
+        all_estimated = len(low_confidence_assets) == len(generated_assets)
+
+        if all_estimated:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=False,
+                status=GateStatus.BLOCKED,
+                message="100% de assets son ESTIMATED (confidence < 0.7). Delivery bloqueado hasta onboarding o datos reales.",
+                value=avg_confidence,
+                suggestion="Complete onboarding with real data or run enrichment phase",
+                details={
+                    "total_assets": len(generated_assets),
+                    "above_threshold": 0,
+                    "below_threshold": len(low_confidence_assets),
+                    "all_estimated": True,
+                    "low_confidence_assets": [
+                        {"type": a["asset_type"], "score": a["confidence_score"]}
+                        for a in low_confidence_assets
+                    ]
+                }
+            )
+
         return PublicationGateResult(
             gate_name=gate_name,
-            passed=True,  # Conservative: warns but does not block
+            passed=True,  # Mixed: warns but does not block
             status=GateStatus.WARNING,
             message=f"{len(low_confidence_assets)} asset(s) below confidence threshold ({threshold})",
             value=avg_confidence,
