@@ -199,3 +199,191 @@ class TestBuildFinancialEvidence:
         assert "can_show_exact_money" in d
         assert d["financial_precision_tier"] == "A"
         assert d["can_show_exact_money"] is True
+
+# ============================================================================
+# FASE-3-CONTENT: Test evidence_tier consistency between JSON and YAML paths
+# ============================================================================
+
+def test_evidence_tier_consistent_from_breakdown():
+    """El evidence_tier del FinancialBreakdown se propaga correctamente.
+    
+    Verifica que _determine_evidence_tier produce un tier consistente basado
+    en las fuentes de datos reales, y que el tier es propagable.
+    """
+    from modules.financial_engine.scenario_calculator import (
+        ScenarioCalculator,
+        HotelFinancialData,
+    )
+
+    # Caso 1: Todas las fuentes son low_quality -> Tier C
+    hotel_low = HotelFinancialData(
+        adr_cop=300000.0,
+        rooms=10,
+        occupancy_rate=0.45,
+        ota_commission_rate=0.15,
+        adr_source="legacy_hardcode",
+        occupancy_source="default",
+        channel_source="unknown",
+    )
+    calc = ScenarioCalculator()
+    breakdown = calc.calculate_breakdown(hotel_low)
+    tier = breakdown.evidence_tier
+    assert tier == "C", f"Expected Tier C for low quality sources, got {tier}"
+
+    # Caso 2: Fuentes verificadas -> Tier A
+    hotel_verified = HotelFinancialData(
+        adr_cop=350000.0,
+        rooms=12,
+        occupancy_rate=0.55,
+        ota_commission_rate=0.15,
+        adr_source="onboarding",
+        occupancy_source="verified",
+        channel_source="verified",
+    )
+    breakdown = calc.calculate_breakdown(hotel_verified)
+    tier = breakdown.evidence_tier
+    assert tier == "A", f"Expected Tier A for verified sources, got {tier}"
+
+    # Caso 3: Fuentes mixtas (1 verified, 2 low) -> Tier C (>=2 low_quality)
+    hotel_mixed = HotelFinancialData(
+        adr_cop=320000.0,
+        rooms=10,
+        occupancy_rate=0.50,
+        ota_commission_rate=0.15,
+        adr_source="onboarding",
+        occupancy_source="default",
+        channel_source="unknown",
+    )
+    breakdown = calc.calculate_breakdown(hotel_mixed)
+    tier = breakdown.evidence_tier
+    # Con 1 verified + 2 low_quality → Tier C (>=2 low)
+    assert tier == "C", f"Expected Tier C for mixed sources (1 verified + 2 low), got {tier}"
+
+    # Caso 4: Fuentes mixtas balanceadas (1 verified, 1 low, 1 other) -> Tier B
+    hotel_mixed2 = HotelFinancialData(
+        adr_cop=320000.0,
+        rooms=10,
+        occupancy_rate=0.50,
+        ota_commission_rate=0.15,
+        adr_source="onboarding",
+        occupancy_source="default",
+        channel_source="industry_standard_15pct",
+    )
+    breakdown = calc.calculate_breakdown(hotel_mixed2)
+    tier = breakdown.evidence_tier
+    assert tier == "B", f"Expected Tier B for balanced mixed sources, got {tier}"
+
+
+def test_diagnostic_generator_uses_breakdown_tier():
+    """El diagnostic generator usa el tier del FinancialBreakdown cuando esta disponible."""
+    from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+    from modules.commercial_documents.data_structures import (
+        FinancialScenarios,
+        FinancialBreakdown,
+        Scenario,
+    )
+
+    gen = V4DiagnosticGenerator()
+
+    # Crear un breakdown con tier especifico
+    breakdown = FinancialBreakdown(
+        monthly_ota_commission_cop=500000.0,
+        ota_commission_basis="test",
+        ota_commission_source="test",
+        shift_savings_cop=50000.0,
+        shift_percentage=0.10,
+        shift_source="test",
+        ia_revenue_cop=25000.0,
+        ia_boost_percentage=0.05,
+        ia_source="test",
+        evidence_tier="A",
+        disclaimer="Test disclaimer",
+        hotel_data_sources={},
+    )
+
+    # Crear scenarios minimos (Scenario requiere probability)
+    scenarios = FinancialScenarios(
+        conservative=Scenario(
+            description="Conservative scenario",
+            monthly_loss_min=300000,
+            monthly_loss_max=400000,
+            probability=0.70,
+        ),
+        realistic=Scenario(
+            description="Realistic scenario",
+            monthly_loss_min=400000,
+            monthly_loss_central=500000,
+            monthly_loss_max=600000,
+            probability=0.20,
+        ),
+        optimistic=Scenario(
+            description="Optimistic scenario",
+            monthly_loss_min=600000,
+            monthly_loss_max=700000,
+            probability=0.10,
+        ),
+    )
+
+    # Llamar a _build_financial_placeholders con el breakdown
+    placeholders = gen._build_financial_placeholders(
+        scenarios,
+        analytics_data=None,
+        source_reliability="unverified",
+        financial_breakdown=breakdown,
+    )
+
+    assert placeholders["evidence_tier"] == "A", \
+        f"Expected tier 'A' from breakdown, got '{placeholders['evidence_tier']}'"
+
+
+def test_diagnostic_generator_fallback_tier_no_breakdown():
+    """Sin breakdown, el diagnostic generator usa GA4 para determinar tier (fallback)."""
+    from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+    from modules.commercial_documents.data_structures import (
+        FinancialScenarios,
+        Scenario,
+    )
+
+    gen = V4DiagnosticGenerator()
+
+    scenarios = FinancialScenarios(
+        conservative=Scenario(
+            description="Conservative scenario",
+            monthly_loss_min=300000,
+            monthly_loss_max=400000,
+            probability=0.70,
+        ),
+        realistic=Scenario(
+            description="Realistic scenario",
+            monthly_loss_min=400000,
+            monthly_loss_central=500000,
+            monthly_loss_max=600000,
+            probability=0.20,
+        ),
+        optimistic=Scenario(
+            description="Optimistic scenario",
+            monthly_loss_min=600000,
+            monthly_loss_max=700000,
+            probability=0.10,
+        ),
+    )
+
+    # Sin breakdown, sin GA4 -> tier C
+    placeholders = gen._build_financial_placeholders(
+        scenarios,
+        analytics_data=None,
+        source_reliability="unverified",
+        financial_breakdown=None,
+    )
+    assert placeholders["evidence_tier"] == "C", \
+        f"Expected fallback tier 'C' without GA4, got '{placeholders['evidence_tier']}'"
+
+    # Sin breakdown, con GA4 -> tier A
+    placeholders = gen._build_financial_placeholders(
+        scenarios,
+        analytics_data={"use_ga4": True},
+        source_reliability="verified",
+        financial_breakdown=None,
+    )
+    assert placeholders["evidence_tier"] == "A", \
+        f"Expected fallback tier 'A' with GA4, got '{placeholders['evidence_tier']}'"

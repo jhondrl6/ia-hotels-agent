@@ -1,6 +1,6 @@
 {
-  "modules/asset_generation/conditional_generator.py": "FASE-3",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-PROP-A",
+  "modules/asset_generation/conditional_generator.py": "FASE-2-DEFAULT",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-3-CONTENT",
   "modules/commercial_documents/v4_proposal_generator.py": "FASE-4",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-PROP-D",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
@@ -94,14 +94,14 @@
   ".opencode/plans/AMAZILIAHOTEL_REFACTOR/09-documentacion-post-proyecto.md": "FASE-DOC-09",
   "modules/postprocessors/content_scrubber.py": "FASE-2-PATCH-A",
   "modules/asset_generation/faq_generator.py": "FASE-5",
-  "modules/asset_generation/proposal_asset_alignment.py": "FASE-12C",
+  "modules/asset_generation/proposal_asset_alignment.py": "FASE-3-CONTENT",
   "evidence/amh-refactor-v3-hipotesis/VEREDICTO_FASE_0.md": "FASE-0-HIPOTESIS",
   "tests/asset_generation/test_datasource_gap.py": "FASE-1-DATASOURCE-GAP",
   "modules/asset_generation/geo_enriched_bridge.py": "FASE-RELEASE-4.33.0",
   "tests/asset_generation/test_geo_enriched_bridge.py": "FASE-2-BRIDGE-QUALITY-GUARD",
   "tests/asset_generation/test_conditional_generator.py": "FASE-3-MINIMUM-DATA-GUARANTEE",
   "tests/asset_generation/test_audit_data_pipeline.py": "FASE-RELEASE-4.33.0",
-  "tests/asset_generation/test_proposal_alignment.py": "FASE-12B",
+  "tests/asset_generation/test_proposal_alignment.py": "FASE-3-CONTENT",
   "Ningún archivo modificado (solo lectura)": "FASE-CAUSAL-DIAG",
   "N/A (solo lectura)": "FASE-CAUSAL-DIAG",
   "N/A (verificación)": "FASE-CAUSAL-VALIDATE",
@@ -151,5 +151,9 @@
   "scripts/validate_document_integration.py": "FASE-C",
   "scripts/run_all_validations.py": "FASE-C",
   "docs/contributing/validation.md": "FASE-C",
-  "modules/delivery/generators/indirect_traffic_optimization_gen.py": "FASE-2-A"
+  "modules/delivery/generators/indirect_traffic_optimization_gen.py": "FASE-2-A",
+  "modules/asset_generation/open_graph_generator.py": "FASE-2-DEFAULT",
+  "modules/asset_generation/local_content_generator.py": "FASE-3-CONTENT",
+  "tests/asset_generation/test_local_content_generator.py": "FASE-3-CONTENT",
+  "tests/financial_engine/test_financial_evidence.py": "FASE-3-CONTENT"
 }

@@ -33,17 +33,17 @@
 
 ---
 
-## FASE-3-CONTENT: Fix local_content + evidence_tier + all_aligned
+## FASE-3-CONTENT: Fix local_content + evidence_tier + all_aligned ✅ COMPLETADA
 
-- [ ] T1: Modificar `local_content_generator.py`: validar `hotel_data.get("city")` pre-LLM, fallback a "Colombia"
-- [ ] T2: Unificar `evidence_tier`: computar UNA vez basado en `financial_sources`, propagar a JSON y YAML
-- [ ] T3: Renombrar `all_aligned` → `all_covered` en `proposal_asset_alignment.py` con alias deprecado
-- [ ] T4: Tests para los 3 cambios (local_content location, evidence_tier consistency, all_covered property)
-- [ ] T5: `log_phase_completion.py --fase FASE-3-CONTENT`
-- [ ] Criterio: G5 (local_content sin "Hotel en  -") ✅
-- [ ] Criterio: G8 (financial_scenarios.evidence_tier == diagnostic.financial_evidence_tier) ✅
-- [ ] Criterio: Tests nuevos pasan, 0 regresiones
-- [ ] Criterio: `run_all_validations.py --quick` 4/4
+- [x] T1: Modificar `local_content_generator.py`: validar `hotel_data.get("city")` pre-LLM, fallback a "Colombia"
+- [x] T2: Unificar `evidence_tier`: computar UNA vez basado en `financial_sources`, propagar a JSON y YAML
+- [x] T3: Renombrar `all_aligned` → `all_covered` en `proposal_asset_alignment.py` con alias deprecado
+- [x] T4: Tests para los 3 cambios (local_content location, evidence_tier consistency, all_covered property)
+- [x] T5: `log_phase_completion.py --fase FASE-3-CONTENT`
+- [x] Criterio: G5 (local_content sin "Hotel en  -") ✅
+- [x] Criterio: G8 (financial_scenarios.evidence_tier == diagnostic.financial_evidence_tier) ✅
+- [x] Criterio: Tests nuevos pasan (8/8), 0 regresiones
+- [x] Criterio: `run_all_validations.py --quick` 4/4
 
 ---
 

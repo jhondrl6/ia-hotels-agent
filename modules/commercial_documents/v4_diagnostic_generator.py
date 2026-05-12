@@ -938,19 +938,26 @@ class V4DiagnosticGenerator:
         base_value = getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max
 
         # Determine evidence tier based on available data sources
+        # FASE-3-CONTENT: Usar el tier y disclaimer del FinancialBreakdown (computado por
+        # scenario_calculator._determine_evidence_tier) como fuente unificada.
+        # Si no hay breakdown, fallback al comportamiento anterior (GA4→A, else→C).
         ga4_enabled = analytics_data is not None and analytics_data.get("use_ga4", False)
-        if ga4_enabled:
-            tier = "A"
-            disclaimer = (
-                "Este diagnóstico usa datos reales de Google Analytics 4 y Search Console. "
-                "Los escenarios representan el potencial de mejora basado en su tráfico actual."
-            )
+        if financial_breakdown and hasattr(financial_breakdown, 'evidence_tier'):
+            tier = financial_breakdown.evidence_tier
+            disclaimer = getattr(financial_breakdown, 'disclaimer', '')
         else:
-            tier = "C"
-            disclaimer = (
-                "Este diagnóstico se basa en datos limitados de su web y benchmarks regionales. "
-                "Los valores son estimaciones. Para mayor precisión, configure GA4 y Search Console."
-            )
+            if ga4_enabled:
+                tier = "A"
+                disclaimer = (
+                    "Este diagnóstico usa datos reales de Google Analytics 4 y Search Console. "
+                    "Los escenarios representan el potencial de mejora basado en su tráfico actual."
+                )
+            else:
+                tier = "C"
+                disclaimer = (
+                    "Este diagnóstico se basa en datos limitados de su web y benchmarks regionales. "
+                    "Los valores son estimaciones. Para mayor precisión, configure GA4 y Search Console."
+                )
 
         # FASE-B: Distinguir claramente dos conceptos:
         # - Costo de oportunidad mensual (monthly_loss del escenario realista)

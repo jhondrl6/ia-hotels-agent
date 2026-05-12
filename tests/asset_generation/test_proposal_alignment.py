@@ -352,3 +352,34 @@ class TestDivergenceDetection:
         assert len(hotel_items) == 1
         assert hotel_items[0]["presence_verified"] is True
         assert hotel_items[0]["presence_status"] == "divergent"
+
+# ============================================================================
+# FASE-3-CONTENT: Test for all_covered property + all_aligned deprecated alias
+# ============================================================================
+
+def test_all_covered_property_exists():
+    """all_covered property existe y retorna igual que all_aligned (deprecated)."""
+    report = AlignmentReport()
+    # Con missing vacio, ambos deben ser True
+    assert report.all_covered is True
+    assert report.all_aligned is True
+
+    # Agregar un missing -> ambos deben ser False
+    report.missing.append(ServiceAlignment(
+        service_name="Test Service",
+        asset_type="test_asset",
+        is_aligned=False,
+        status="missing",
+        message="Test missing",
+    ))
+    assert report.all_covered is False
+    assert report.all_aligned is False, "all_aligned alias must match all_covered"
+
+
+def test_all_covered_in_to_dict():
+    """to_dict() incluye 'all_covered' y mantiene 'all_aligned' para backward compat."""
+    report = AlignmentReport()
+    d = report.to_dict()
+    assert "all_covered" in d, f"all_covered missing from dict keys: {list(d.keys())}"
+    assert "all_aligned" in d, f"all_aligned missing (backward compat): {list(d.keys())}"
+    assert d["all_covered"] == d["all_aligned"], "all_covered and all_aligned must match"

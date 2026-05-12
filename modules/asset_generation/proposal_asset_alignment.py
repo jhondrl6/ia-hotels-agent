@@ -73,9 +73,14 @@ class AlignmentReport:
         return len(self.aligned) + len(self.missing) + len(self.low_quality)
 
     @property
-    def all_aligned(self) -> bool:
-        """True if all services have aligned assets (no missing after presence check)."""
+    def all_covered(self) -> bool:
+        """True si todos los servicios estan cubiertos (generado o en produccion)."""
         return len(self.missing) == 0
+
+    @property
+    def all_aligned(self) -> bool:
+        """DEPRECATED: Use all_covered instead."""
+        return self.all_covered
 
     @property
     def alignment_percentage(self) -> float:
@@ -109,7 +114,8 @@ class AlignmentReport:
             "low_quality_count": len(self.low_quality),
             # FASE-D: backward compatible - new fields only added if present
             "alignment_percentage": self.alignment_percentage,
-            "all_aligned": self.all_aligned,
+            "all_covered": self.all_covered,
+            "all_aligned": self.all_covered,  # DEPRECATED: backward compat
             "aligned": [_aligned_dict(s) for s in self.aligned],
             "missing": [_service_dict(s) for s in self.missing],
             "low_quality": [
@@ -381,7 +387,7 @@ def get_alignment_summary(report: AlignmentReport) -> str:
             lines.append(f"  ❓ {s.service_name} → {s.asset_type}")
 
     lines.append("")
-    lines.append(f"Status: {'READY' if report.all_aligned else 'NOT READY'}")
+    lines.append(f"Status: {'READY' if report.all_covered else 'NOT READY'}")
 
     return "\n".join(lines)
 

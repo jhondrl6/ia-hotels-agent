@@ -144,6 +144,19 @@ class LocalContentGenerator:
         self._current_year = datetime.now().year
         self._templates_dir = templates_dir or _TEMPLATES_DIR
 
+    @staticmethod
+    def _resolve_location(hotel_data: Dict[str, Any], fallback: str = "Colombia") -> str:
+        """Resuelve location del hotel con cadena de fallbacks.
+
+        Evita que el LLM/templates generen contenido con location vacía
+        (ej: \"Hotel en  - Lo que debes saber\").
+
+        Orden de prioridad: city > state > region > fallback.
+        """
+        location = (hotel_data.get("city") or hotel_data.get("state")
+                    or hotel_data.get("region") or "").strip()
+        return location if location else fallback
+
     def load_template(self, name: str) -> str:
         """Carga un template markdown desde templates/local_content/."""
         path = self._templates_dir / name
@@ -164,7 +177,7 @@ class LocalContentGenerator:
             pages.append(page)
         return LocalContentSet(
             hotel_name=hotel_data.get("name", ""),
-            location=hotel_data.get("city", ""),
+            location=self._resolve_location(hotel_data),
             pages=pages,
             total_word_count=sum(p.word_count for p in pages),
             location_context=(location_context or {}).get("region"),
@@ -174,7 +187,7 @@ class LocalContentGenerator:
         self, hotel_data: Dict[str, Any], hotel_type: str,
         location_context: Optional[Dict[str, Any]],
     ) -> List[str]:
-        location = hotel_data.get("city", "")
+        location = self._resolve_location(hotel_data)
         region = (location_context or {}).get("region", hotel_data.get("state", ""))
         nearby_city = (location_context or {}).get("nearby_city", "Pereira")
         templates_to_use = self._resolve_templates(hotel_type, hotel_data)
@@ -225,7 +238,7 @@ class LocalContentGenerator:
         )
 
     def _build_title(self, keyword: str, hotel_data: Dict[str, Any]) -> str:
-        location = hotel_data.get("city", "")
+        location = self._resolve_location(hotel_data)
         year = self._current_year
         if "precios" in keyword.lower():
             title = f"{keyword.title()} - Guia actualizada {year}"
@@ -264,7 +277,7 @@ class LocalContentGenerator:
     ) -> str:
         """Genera contenido completo de 800-1200 palabras con 6+ secciones."""
         hotel_name = hotel_data.get("name", "El hotel")
-        city = hotel_data.get("city", "la zona")
+        city = self._resolve_location(hotel_data, fallback="la zona")
         state = hotel_data.get("state", "Colombia")
         region = location_context.get("region", state)
         phone = hotel_data.get("phone", "")
@@ -521,7 +534,7 @@ class LocalContentGenerator:
         return len(text.split())
 
     def _build_meta_description(self, keyword: str, hotel_data: Dict[str, Any]) -> str:
-        city = hotel_data.get("city", "")
+        city = self._resolve_location(hotel_data)
         hotel_name = hotel_data.get("name", "")
         year = self._current_year
         meta = (
@@ -553,7 +566,7 @@ class LocalContentGenerator:
     ) -> dict:
         hotel_name = hotel_data.get("name", "")
         website = hotel_data.get("website", "")
-        city = hotel_data.get("city", "")
+        city = self._resolve_location(hotel_data)
         schema = {
             "@context": "https://schema.org",
             "@type": "Article",
