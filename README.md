@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 16 skills including PhasedProjectExecutor, v4_regression_guardian |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 17 skills including PhasedProjectExecutor, v4_regression_guardian |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -21,12 +21,12 @@
 
 ---
 
-## Estado del Proyecto (v4.44.0)
+## Estado del Proyecto (v4.45.0)
 
-- **2,723 test functions** — 0 regresiones
- - **188 modulos Python** (~62K lineas) + **22 scripts** (~5K lineas) + **202 archivos de test** (~51K lineas)
+- **2,362 test functions** — suite completa, 0 regresiones
+ - **188 modulos Python** (~67K lineas) + **22 scripts** (~5K lineas) + **443 archivos de test** (~56K lineas)
 - **9 config YAML** con schema validado
-- **16 agent skills** en `.agents/workflows/`
+ - **17 agent skills** en `.agents/workflows/`
 - **9 publication gates** (6 blocking + 3 advisory)
 - **Coherence Score >= 0.8** requerido para publicacion
 - **22 assets IMPLEMENTED** (+ 2 DEPRECATED + 1 MANUAL_ONLY) en catalogo
@@ -232,7 +232,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **2,723 test functions** — suite completa, 0 regresiones
+- **2,362 test functions** — suite completa, 0 regresiones
 - **60 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Suite de regresion** — Amaziliahotel + Hotel Visperas como casos de referencia
@@ -240,7 +240,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 - **9 Publication Gates** (6 blocking + 3 advisory):
   - Blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics
   - Advisory: content_quality, asset_confidence, proposal_asset_alignment
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.11.0 (1 fase/sesion, max 60 iteraciones)
+- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.1.0 (1 fase/sesion, max 60 iteraciones)
 
 ---
 
@@ -289,7 +289,7 @@ iah-cli/
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
     run_all_validations.py    #   Suite de validaciones
-  .agents/workflows/          # 16 agent skills
+  .agents/workflows/          # 17 agent skills
   .opencode/plans/            # Planes de fases (phased execution)
   evidence/                   # Evidencia de fases ejecutadas
 ```
