@@ -1,7 +1,8 @@
 # Dependencias de Fases
 
-|| Fase | Estado | Fecha | Dependencias | Detalles |
+| Fase | Estado | Fecha | Dependencias | Detalles |
 |------|--------|-------|--------------|----------|
+| **FASE-1-COH** | ✅ Completada | 2026-05-11 | Ninguna | Unificar CoherenceValidator ↔ CoherenceGate: execute() integra validator, main.py unifica fuente de coherence_score, 7 tests nuevos de integración |
 | FASE-1A | ✅ Completada | 2026-04-28 | Ninguna | Fix Estado Entregables: site_presence_report call chain en v4_proposal_generator.py + SitePresenceChecker en main.py |
 | FASE-1B | ✅ Completada | 2026-04-28 | FASE-1A | v4complete x2 -- RESUELTO: (1) COP COP fix en template L125; (2) confidence_score default en Scenario constructors (0.85/0.70/0.50); (3) urgencia_content guard para 0% -> texto escalonado. Gate NOT_READY por bug estructural: ContentScrubber valida diagnostico STALE (pre-T4FIX). Fix pendiente: mover ContentScrubber post-T4FIX en main.py. Evidencia: evidence/fase-1b-amazilia-verificacion/ |
 | FASE-1C | ✅ Completada | 2026-04-28 | FASE-1B-PATCH | Documentacion cascade (CHANGELOG, GUIA_TECNICA) |
@@ -16,6 +17,7 @@
 
 ## Notas
 
+- FASE-1-COH pertenece al plan `05-prompt-inicio-sesion-fase-1-COH.md` (nuevo plan de unificación CoherenceValidator ↔ CoherenceGate).
 - FASE-1A/B/C pertenecen a plan anterior (AmaziliaHotel). No deben bloquear el nuevo plan.
 - FASE-1..5 y RELEASE pertenecen a plan `00-plan-refactor-coherencia-termales.md`.
 - Regla: FASE-RELEASE solo ejecuta cuando TODAS las fases 1-5 tienen ✅.

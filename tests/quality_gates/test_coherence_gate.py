@@ -325,3 +325,193 @@ class TestHotelVisperasScenario:
         assert result.can_certify is False
         assert result.can_publish is False
         assert result.status == CoherenceStatus.DRAFT_INTERNAL
+
+
+# =============================================================================
+# FASE-1-COH: Integration tests — CoherenceGate ↔ CoherenceValidator
+# =============================================================================
+
+class TestCoherenceGateValidatorIntegration:
+    """FASE-1-COH: Tests de integración gate ↔ validator."""
+
+    def _make_mock_validator_report(self, overall_score=0.81, is_coherent=False,
+                                     checks=None, errors=None, warnings=None):
+        """Helper: crea un mock de CoherenceReport."""
+        from unittest.mock import MagicMock
+        mock = MagicMock()
+        mock.overall_score = overall_score
+        mock.is_coherent = is_coherent
+        mock.checks = checks or []
+        mock.errors = errors or []
+        mock.warnings = warnings or []
+        return mock
+
+    def _make_mock_check(self, name, passed, score, message, severity):
+        """Helper: crea un mock de CoherenceCheck."""
+        from unittest.mock import MagicMock
+        mock = MagicMock()
+        mock.name = name
+        mock.passed = passed
+        mock.score = score
+        mock.message = message
+        mock.severity = severity
+        return mock
+
+    def test_execute_from_validator_calls_validator(self):
+        """FASE-1-COH: execute_from_validator() invoca _validator.validate()."""
+        from unittest.mock import patch
+        from modules.quality_gates.coherence_gate import CoherenceGate, CoherenceStatus
+
+        gate = CoherenceGate()
+        mock_report = self._make_mock_validator_report(
+            overall_score=0.81, is_coherent=False,
+            checks=[
+                self._make_mock_check("problems_have_solutions", True, 1.0, "OK", "info"),
+                self._make_mock_check("financial_data_validated", False, 0.5, "Low confidence", "error"),
+            ],
+            errors=["[financial_data_validated] Low confidence"],
+            warnings=["[price_matches_pain] Price in lower bound"],
+        )
+
+        with patch.object(gate._validator, 'validate', return_value=mock_report) as mock_validate:
+            result = gate.execute_from_validator(
+                diagnostic="mock_diag",
+                proposal="mock_prop",
+                assets=[],
+                validation_summary="mock_vs",
+            )
+
+        # Validator fue llamado
+        mock_validate.assert_called_once()
+        assert result.coherence_score == 0.81
+        assert result.passed is False  # is_coherent=False aunque score >= threshold
+        # _determine_status usa el score: 0.81 >= 0.8 → CERTIFIED
+        assert result.status == CoherenceStatus.CERTIFIED
+        assert result.checks is not None
+        assert len(result.checks) == 2
+        assert result.validator_errors == ["[financial_data_validated] Low confidence"]
+        assert result.validator_warnings == ["[price_matches_pain] Price in lower bound"]
+        # Gaps from validator errors
+        assert len(result.gaps) >= 1
+        assert any(g.category == "financial_data_validated" for g in result.gaps)
+
+    def test_execute_with_validator_params_bypasses_legacy_score(self):
+        """FASE-1-COH: execute() con datos del validator ignora coherence_score float."""
+        from unittest.mock import patch
+        from modules.quality_gates.coherence_gate import CoherenceGate
+
+        gate = CoherenceGate()
+        mock_report = self._make_mock_validator_report(
+            overall_score=0.65, is_coherent=False,
+            checks=[self._make_mock_check("test_check", False, 0.3, "Fail", "error")],
+            errors=["[test_check] Fail"],
+        )
+
+        with patch.object(gate._validator, 'validate', return_value=mock_report) as mock_validate:
+            # Pasar coherence_score=0.95 (pasaría) PERO con datos del validator (score=0.65)
+            result = gate.execute(
+                coherence_score=0.95,  # Este debería ser ignorado
+                diagnostic="mock_diag",
+                proposal="mock_prop",
+                assets=[],
+                validation_summary="mock_vs",
+            )
+
+        # Debe usar el validator, NO el float externo
+        mock_validate.assert_called_once()
+        assert result.coherence_score == 0.65  # Del validator, no 0.95
+        assert result.passed is False
+
+    def test_execute_legacy_float_still_works(self):
+        """FASE-1-COH: execute(0.85) sin datos de validator mantiene backward compat."""
+        from modules.quality_gates.coherence_gate import CoherenceGate, CoherenceStatus
+
+        gate = CoherenceGate()
+        result = gate.execute(coherence_score=0.85)
+
+        assert result.passed is True
+        assert result.coherence_score == 0.85
+        assert result.status == CoherenceStatus.CERTIFIED
+        assert result.checks is None  # Sin validator → sin checks
+        assert result.validator_errors is None
+
+    def test_execute_legacy_with_assessment_data(self):
+        """FASE-1-COH: execute() extrae coherence_score de assessment si no se pasa explícito."""
+        from modules.quality_gates.coherence_gate import CoherenceGate
+
+        gate = CoherenceGate()
+        result = gate.execute(assessment_data={"coherence_score": 0.45})
+
+        assert result.coherence_score == 0.45
+        assert result.passed is False
+        assert result.status.value == "draft_internal"
+
+    def test_result_to_dict_includes_validator_fields(self):
+        """FASE-1-COH: to_dict() incluye checks y validator_errors cuando existen."""
+        from modules.quality_gates.coherence_gate import (
+            CoherenceGateResult, CoherenceStatus, PublicationStatus,
+        )
+
+        result = CoherenceGateResult(
+            coherence_score=0.81,
+            threshold=0.8,
+            passed=False,
+            status=CoherenceStatus.REVIEW,
+            publication_status=PublicationStatus.REQUIRES_REVIEW,
+            checks=[{"name": "test", "passed": False, "score": 0.5, "message": "msg", "severity": "error"}],
+            validator_errors=["error 1"],
+            validator_warnings=["warning 1"],
+        )
+
+        data = result.to_dict()
+
+        assert "checks" in data
+        assert data["checks"] == [{"name": "test", "passed": False, "score": 0.5, "message": "msg", "severity": "error"}]
+        assert data["validator_errors"] == ["error 1"]
+        assert data["validator_warnings"] == ["warning 1"]
+
+    def test_result_to_dict_excludes_validator_fields_when_none(self):
+        """FASE-1-COH: to_dict() NO incluye checks/errors cuando son None (backward compat)."""
+        from modules.quality_gates.coherence_gate import (
+            CoherenceGateResult, CoherenceStatus, PublicationStatus,
+        )
+
+        result = CoherenceGateResult(
+            coherence_score=0.85,
+            threshold=0.8,
+            passed=True,
+            status=CoherenceStatus.CERTIFIED,
+            publication_status=PublicationStatus.READY_FOR_CLIENT,
+        )
+
+        data = result.to_dict()
+        assert "checks" not in data
+        assert "validator_errors" not in data
+        assert "validator_warnings" not in data
+
+    def test_gate_high_coherence_passes_with_validator(self):
+        """FASE-1-COH: validator con score ≥ 0.8 y is_coherent=True → gate pasa."""
+        from unittest.mock import patch
+        from modules.quality_gates.coherence_gate import CoherenceGate, CoherenceStatus
+
+        gate = CoherenceGate()
+        mock_report = self._make_mock_validator_report(
+            overall_score=0.88, is_coherent=True,
+            checks=[self._make_mock_check("problems_have_solutions", True, 1.0, "All good", "info")],
+        )
+
+        with patch.object(gate._validator, 'validate', return_value=mock_report):
+            result = gate.execute_from_validator(
+                diagnostic="mock_diag",
+                proposal="mock_prop",
+                assets=[],
+                validation_summary="mock_vs",
+            )
+
+        assert result.passed is True
+        assert result.status == CoherenceStatus.CERTIFIED
+        assert result.can_certify is True
+        # Sin errores del validator → no gaps del validator
+        validator_gap_categories = {g.category for g in result.gaps 
+                                     if g.category not in ("gbp", "financial", "evidence")}
+        assert len(validator_gap_categories) == 0  # Solo gaps legacy, no del validator

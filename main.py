@@ -2651,6 +2651,13 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         },
         "financial_sources": financial_sources,  # T1.1: pass sources to financial_validity_gate
         "coherence_score": asset_result.coherence_report.overall_score if asset_result else 0.0,
+        # FASE-1-COH: incluir datos completos del coherence_report para trazabilidad
+        "coherence_checks": [
+            {"name": c.name, "passed": c.passed, "score": round(c.score, 4), "message": c.message, "severity": c.severity}
+            for c in pre_coherence_report.checks
+        ] if pre_coherence_report else [],
+        "coherence_errors": pre_coherence_report.errors if pre_coherence_report else [],
+        "coherence_warnings": pre_coherence_report.warnings if pre_coherence_report else [],
         "critical_issues": audit_result.critical_issues if audit_result else [],
         "critical_issues_detected": audit_result.critical_issues if audit_result else [],
         "audit_schema": {
@@ -2952,11 +2959,12 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'auditors.V4ComprehensiveAuditor',
             'quality_gates.publication_gates'
         ],
-        'coherence_score': pre_coherence_score,  # H6 FIX: pre-gen score (screening)
-        'coherence_score_post': (
-            asset_result.post_coherence_score  # H6 FIX: post-gen score (real)
-            if asset_result and asset_result.post_coherence_score is not None
-            else None
+        'coherence_score': (
+            # FASE-1-COH: fuente única — score post-generación del asset orchestrator
+            # (CoherenceValidator integrado en V4AssetOrchestrator._validate_post_generation)
+            asset_result.coherence_report.overall_score
+            if asset_result and asset_result.coherence_report
+            else pre_coherence_score  # fallback: score pre-generación del validator en L2228
         ),
         'assets_generated': [
             {

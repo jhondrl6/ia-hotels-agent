@@ -5,6 +5,27 @@
 
 ---
 
+### v4.44.0 — FASE-1-COH: Unificar CoherenceValidator ↔ CoherenceGate — 2026-05-11
+
+**Módulos afectados**: quality_gates/coherence_gate.py, main.py
+
+**Problema**:
+- `CoherenceGate` tenía `_validator` instanciado (L158) pero `execute()` jamás lo llamaba — solo comparaba un float contra threshold
+- `v4_complete_report` mostraba 2 campos de coherence_score (pre + post) sin trazabilidad clara
+- El validator producía un `CoherenceReport` completo con 6 checks, errores y warnings que el gate ignoraba
+
+**Solución**:
+- `CoherenceGate.execute()` acepta ahora datos completos (diagnostic, proposal, assets, validation_summary) y delega a `execute_from_validator()` que llama a `_validator.validate()` como fuente única de verdad
+- `CoherenceGateResult` gana campos `checks`, `validator_errors`, `validator_warnings` con los datos del `CoherenceReport`
+- `main.py`: assessment dict enriquecido con `coherence_checks/errors/warnings`; `v4_complete_report` unificado a un solo `coherence_score`
+- Backward compatibility: `execute(0.85)` legacy sigue funcionando sin cambios
+
+**Backwards compatibility**: 100% — `execute(float)` legacy intacto, `CoherenceGateResult.to_dict()` excluye nuevos campos cuando son None.
+
+**Tests**: 7 tests nuevos de integración (TestCoherenceGateValidatorIntegration). 31/31 total, 0 regresiones.
+
+---
+
 ### v4.44.0 - 2026-05-11 — TERMALES-COHERENCE-FIX (FASE-1 a FASE-5)
 
 **Módulos afectados**: asset_generation, commercial_documents, quality_gates, main.py

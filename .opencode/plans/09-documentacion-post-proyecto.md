@@ -1,8 +1,7 @@
-# Documentación Post-Proyecto: Refactorización Coherencia Termales
+# Documentación Post-Proyecto — REFACTOR-COHERENCIA-CASTILLAREAL
 
-> Plan: `00-plan-refactor-coherencia-termales.md`  
-> Versión objetivo: 4.44.0  
-> Fecha inicio: 2026-05-09
+> **Propósito**: Backup acumulativo de datos para FASE-RELEASE. Cada fase completa su columna "Fase".
+> **NO editar manualmente** — este archivo se alimenta de los outputs de `log_phase_completion.py` por fase.
 
 ---
 
@@ -10,7 +9,7 @@
 
 | Módulo | Archivos | Descripción | Fase |
 |--------|----------|-------------|------|
-| *(ninguno — refactor, no nuevos módulos)* | — | — | — |
+| — | — | — | — |
 
 ---
 
@@ -18,15 +17,7 @@
 
 | Feature | Módulo | Descripción | Fase |
 |---------|--------|-------------|------|
-| Coherence post-generación | `v4_asset_orchestrator.py` | Re-valida coherencia con assets reales post-generación | FASE-1 |
-| Propuesta 8 servicios | `v4_proposal_generator.py` | Muestra todos los servicios de PROPOSAL_SERVICE_TO_ASSET con estados | FASE-2 |
-| Assets técnicos visibles | `v4_proposal_generator.py` + `service_catalog.py` | analytics_setup_guide e indirect_traffic_optimization en propuesta | FASE-2 |
-| Gate 9 threshold 0.8 | `publication_gates.py` | Bloquea publicación si alignment < 80% | FASE-2 |
-| Monthly report fail-safe | `conditional_generator.py` | Try/except + retry para monthly_report | FASE-3 |
-| Monthly report bug fix | `monthly_report_generator.py` | Corrige `'list' object has no attribute 'items'` | FASE-3 |
-| Disclaimer monthly report | `v4_proposal_generator.py` | Nota en propuesta cuando monthly_report falla | FASE-3 |
-| Normalización brechas | `v4_proposal_generator.py` | Suma de brechas = financial_value_central exacto | FASE-4 |
-| Separación pain/recovery | `v4_proposal_generator.py` + templates | Distingue pain_ratio vs recovery_factor | FASE-4 |
+| — | — | — | — |
 
 ---
 
@@ -34,14 +25,16 @@
 
 | Métrica | Valor | Fase |
 |---------|-------|------|
-| Hallazgos corregidos | 8/8 | FASE-1 a FASE-4 |
-| Tests nuevos | 19+ (3-7 por fase) | FASE-1 a FASE-4 |
-| Regresiones | 0 | Todas |
-| Coherence score post-gen | TBD | FASE-5 |
-| Servicios en propuesta | 8 (vs 3 anterior) | FASE-2 |
-| Gate 9 umbral | 0.8 (vs 0.5 anterior) | FASE-2 |
-| Diferencia brechas | 0 COP (vs 373 COP anterior) | FASE-4 |
-| v4complete ejecuciones | 1 | FASE-5 |
+| Tests nuevos | 7 (test_coherence_gate.py) | FASE-1-COH |
+| Tests nuevos | — | FASE-2-DEFAULT |
+| Tests nuevos | — | FASE-3-CONTENT |
+| Tests nuevos | — | FASE-4-GATE |
+| Coherence score pre-fix | 0.81 / 0.83 / 0.85 / 0.81 (5 fuentes) | Baseline |
+| Coherence score post-fix | — | FASE-5-VERIFY |
+| Assets con confidence < 0.7 pre-fix | 7/7 (100%) | Baseline |
+| Assets con confidence < 0.7 post-fix | — | FASE-5-VERIFY |
+| Defaults cross-hotel pre-fix | 3 ('Amazilia Hotel Campestre') | Baseline |
+| Defaults cross-hotel post-fix | 0 | FASE-2-DEFAULT |
 
 ---
 
@@ -49,16 +42,6 @@
 
 | Archivo | Cambio | Fase |
 |---------|--------|------|
-| `modules/asset_generation/v4_asset_orchestrator.py` | `_validate_post_generation()` + reporte dual scores | FASE-1 |
-| `main.py` | Consume coherence_score_post en DiagnosticSummary | FASE-1 |
-| `modules/commercial_documents/coherence_validator.py` | Posible ajuste en cómo se consume generated_assets | FASE-1 |
-| `modules/commercial_documents/v4_proposal_generator.py` | 8 servicios, assets técnicos, disclaimer monthly, brechas normalizadas, pain/recovery | FASE-2,3,4 |
-| `modules/commercial_documents/service_catalog.py` | Entradas analytics_setup_guide e indirect_traffic_optimization | FASE-2 |
-| `modules/quality_gates/publication_gates.py` | Umbral Gate 9: 0.5 → 0.8 | FASE-2 |
-| `modules/asset_generation/conditional_generator.py` | Try/except + retry monthly_report | FASE-3 |
-| `modules/asset_generation/monthly_report_generator.py` | Fix bug list→dict | FASE-3 |
-| `tests/commercial_documents/test_proposal_fase4_h3_h4.py` | 7 tests: H3 normalización + H4 separación pain/recovery | FASE-4 |
-| `VERSION.yaml` | 4.43.0 → 4.44.0 | FASE-RELEASE |
-| `GUIA_TECNICA.md` | Notas técnicas FASE-1 a FASE-5 | FASE-RELEASE |
-| `REGISTRY.md` | Registro de 5 fases | FASE-RELEASE |
-| `dependencias-fases.md` | Estado ✅ FASE-1 a FASE-RELEASE | FASE-RELEASE |
+| `modules/quality_gates/coherence_gate.py` | Refactor: execute() integra _validator.validate() via execute_from_validator(); CoherenceGateResult gana checks/validator_errors/validator_warnings; nuevo método _validator_errors_to_gaps() | FASE-1-COH |
+| `main.py` | Unificar fuente coherence_score: assessment dict incluye coherence_checks/errors/warnings; v4_complete_report usa single coherence_score | FASE-1-COH |
+| `tests/quality_gates/test_coherence_gate.py` | 7 tests de integración gate↔validator (TestCoherenceGateValidatorIntegration) | FASE-1-COH |

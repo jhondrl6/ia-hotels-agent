@@ -53,6 +53,10 @@ class CoherenceGateResult:
     suggestions: List[str] = field(default_factory=list)
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     metadata: Dict[str, Any] = field(default_factory=dict)
+    # FASE-1-COH: campos del validator integration
+    checks: Optional[List[Dict[str, Any]]] = None
+    validator_errors: Optional[List[str]] = None
+    validator_warnings: Optional[List[str]] = None
     
     @property
     def can_certify(self) -> bool:
@@ -71,7 +75,7 @@ class CoherenceGateResult:
     
     def to_dict(self) -> Dict[str, Any]:
         """Serializa resultado a diccionario."""
-        return {
+        result = {
             "coherence_score": round(self.coherence_score, 4),
             "threshold": self.threshold,
             "passed": self.passed,
@@ -92,6 +96,14 @@ class CoherenceGateResult:
             "suggestions": self.suggestions,
             "timestamp": self.timestamp.isoformat(),
         }
+        # FASE-1-COH: incluir datos del validator si disponibles
+        if self.checks is not None:
+            result["checks"] = self.checks
+        if self.validator_errors is not None:
+            result["validator_errors"] = self.validator_errors
+        if self.validator_warnings is not None:
+            result["validator_warnings"] = self.validator_warnings
+        return result
     
     def to_user_message(self) -> str:
         """Genera mensaje para el usuario."""
@@ -159,20 +171,52 @@ class CoherenceGate:
     
     def execute(
         self, 
-        coherence_score: float,
-        assessment_data: Optional[Dict[str, Any]] = None
+        coherence_score: Optional[float] = None,
+        assessment_data: Optional[Dict[str, Any]] = None,
+        # FASE-1-COH: params para integración con validator
+        diagnostic: Optional[Any] = None,
+        proposal: Optional[Any] = None,
+        assets: Optional[List[Any]] = None,
+        validation_summary: Optional[Any] = None,
+        generated_assets: Optional[Dict[str, Any]] = None,
+        whatsapp_html_detected: bool = False,
     ) -> CoherenceGateResult:
         """Ejecuta el gate de coherencia.
         
-        H10 FIX: Valida que coherence_score sea consistente con CoherenceValidator.
+        FASE-1-COH: Si se proporcionan diagnostic/proposal/assets/validation_summary,
+        usa CoherenceValidator internamente como fuente única de verdad.
+        Si solo se proporciona coherence_score, mantiene backward compatibility.
         
         Args:
-            coherence_score: Score de coherencia actual (0-1)
-            assessment_data: Datos adicionales del assessment
+            coherence_score: Score de coherencia actual (0-1) — backward compat
+            assessment_data: Datos adicionales del assessment — backward compat
+            diagnostic: DiagnosticDocument para validator (FASE-1-COH)
+            proposal: ProposalDocument para validator (FASE-1-COH)
+            assets: Lista de AssetSpec para validator (FASE-1-COH)
+            validation_summary: ValidationSummary para validator (FASE-1-COH)
+            generated_assets: Assets generados para validator (FASE-1-COH)
+            whatsapp_html_detected: Flag para validator (FASE-1-COH)
             
         Returns:
             CoherenceGateResult con resultado de validación
         """
+        # FASE-1-COH: Si hay datos completos, usar validator como fuente única
+        if diagnostic is not None and proposal is not None and assets is not None and validation_summary is not None:
+            return self.execute_from_validator(
+                diagnostic=diagnostic,
+                proposal=proposal,
+                assets=assets,
+                validation_summary=validation_summary,
+                generated_assets=generated_assets,
+                whatsapp_html_detected=whatsapp_html_detected,
+                assessment_data=assessment_data,
+            )
+        
+        # --- COMPORTAMIENTO LEGACY (backward compatible) ---
+        # Si no hay coherence_score explícito, intentar extraer de assessment_data
+        if coherence_score is None:
+            coherence_score = (assessment_data or {}).get("coherence_score", 0.0)
+        
         # 1. Validar que coherence_score está en rango válido
         if not isinstance(coherence_score, (int, float)):
             coherence_score = 0.0
@@ -201,6 +245,117 @@ class CoherenceGate:
             gaps=gaps,
             suggestions=suggestions,
         )
+    
+    def execute_from_validator(
+        self,
+        diagnostic: Any,
+        proposal: Any,
+        assets: List[Any],
+        validation_summary: Any,
+        generated_assets: Optional[Dict[str, Any]] = None,
+        whatsapp_html_detected: bool = False,
+        assessment_data: Optional[Dict[str, Any]] = None,
+    ) -> CoherenceGateResult:
+        """FASE-1-COH: Ejecuta el gate usando CoherenceValidator como fuente única.
+        
+        Llama a self._validator.validate() y produce un CoherenceGateResult
+        basado en el CoherenceReport completo, no solo en un float.
+        
+        Args:
+            diagnostic: DiagnosticDocument
+            proposal: ProposalDocument
+            assets: Lista de AssetSpec
+            validation_summary: ValidationSummary
+            generated_assets: Assets generados (opcional)
+            whatsapp_html_detected: Flag de WhatsApp detectado en HTML
+            assessment_data: Datos adicionales del assessment para gaps legacy
+            
+        Returns:
+            CoherenceGateResult con datos completos del validator
+        """
+        # 1. Ejecutar validator como fuente única de verdad
+        report = self._validator.validate(
+            diagnostic=diagnostic,
+            proposal=proposal,
+            assets=assets,
+            validation_summary=validation_summary,
+            whatsapp_html_detected=whatsapp_html_detected,
+            generated_assets=generated_assets,
+        )
+        
+        coherence_score = report.overall_score
+        
+        # 2. Determinar si pasa el umbral
+        passed = report.is_coherent
+        
+        # 3. Convertir errores/warnings del validator a gaps del gate
+        gaps = self._validator_errors_to_gaps(report)
+        
+        # 4. Generar sugerencias (del validator + gaps legacy)
+        suggestions = self._generate_suggestions(coherence_score, gaps)
+        # Agregar warnings del validator como sugerencias adicionales
+        for warning in report.warnings:
+            if warning not in suggestions:
+                suggestions.append(warning)
+        
+        # 5. Determinar estado de publicación
+        status, pub_status = self._determine_status(coherence_score)
+        
+        # 6. Convertir checks del validator a dicts serializables
+        checks_dicts = [
+            {
+                "name": c.name,
+                "passed": c.passed,
+                "score": round(c.score, 4),
+                "message": c.message,
+                "severity": c.severity,
+            }
+            for c in report.checks
+        ]
+        
+        # 7. Gaps adicionales del assessment_data legacy (si existen)
+        assessment_data = assessment_data or {}
+        legacy_gaps = self._identify_gaps(coherence_score, assessment_data)
+        # Solo agregar gaps legacy que no estén ya cubiertos por el validator
+        existing_categories = {g.category for g in gaps}
+        for legacy_gap in legacy_gaps:
+            if legacy_gap.category not in existing_categories:
+                gaps.append(legacy_gap)
+        
+        return CoherenceGateResult(
+            coherence_score=coherence_score,
+            threshold=self.threshold,
+            passed=passed,
+            status=status,
+            publication_status=pub_status,
+            gaps=gaps,
+            suggestions=suggestions,
+            checks=checks_dicts,
+            validator_errors=report.errors if report.errors else None,
+            validator_warnings=report.warnings if report.warnings else None,
+        )
+    
+    def _validator_errors_to_gaps(self, report: Any) -> List[CoherenceGap]:
+        """FASE-1-COH: Convierte errores/warnings del CoherenceReport a CoherenceGaps.
+        
+        Args:
+            report: CoherenceReport del validator
+            
+        Returns:
+            Lista de CoherenceGap
+        """
+        gaps = []
+        
+        for check in report.checks:
+            if not check.passed and check.severity in ("error", "warning"):
+                gaps.append(CoherenceGap(
+                    category=check.name,
+                    description=check.message,
+                    severity=check.severity,
+                    suggestion=f"Revisar check '{check.name}': {check.message}",
+                ))
+        
+        return gaps
     
     def check(
         self, 

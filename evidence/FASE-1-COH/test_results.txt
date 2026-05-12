@@ -1,0 +1,63 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 31 items
+
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_gate_initialization_default_threshold PASSED [  3%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_gate_initialization_custom_threshold PASSED [  6%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_high_coherence_passes PASSED [  9%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_exact_threshold_passes PASSED [ 12%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_slightly_below_threshold_fails PASSED [ 16%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_medium_coherence_requires_review PASSED [ 19%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_low_coherence_draft_internal PASSED [ 22%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_very_low_coherence_blocked PASSED [ 25%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_zero_coherence_blocked PASSED [ 29%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_result_includes_gaps PASSED [ 32%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_result_includes_suggestions PASSED [ 35%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_custom_threshold_0_9 PASSED [ 38%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGate::test_check_method_from_assessment PASSED [ 41%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateResult::test_result_properties_certified PASSED [ 45%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateResult::test_result_properties_review PASSED [ 48%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateResult::test_result_to_dict PASSED [ 51%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateResult::test_result_user_message_passed PASSED [ 54%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateResult::test_result_user_message_failed PASSED [ 58%]
+tests/quality_gates/test_coherence_gate.py::TestCheckCoherenceHelper::test_helper_high_coherence PASSED [ 61%]
+tests/quality_gates/test_coherence_gate.py::TestCheckCoherenceHelper::test_helper_low_coherence PASSED [ 64%]
+tests/quality_gates/test_coherence_gate.py::TestCheckCoherenceHelper::test_helper_custom_threshold PASSED [ 67%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGap::test_gap_creation PASSED [ 70%]
+tests/quality_gates/test_coherence_gate.py::TestHotelVisperasScenario::test_visperas_zero_coherence_blocked PASSED [ 74%]
+tests/quality_gates/test_coherence_gate.py::TestHotelVisperasScenario::test_visperas_should_not_be_certified PASSED [ 77%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateValidatorIntegration::test_execute_from_validator_calls_validator PASSED [ 80%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateValidatorIntegration::test_execute_with_validator_params_bypasses_legacy_score PASSED [ 83%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateValidatorIntegration::test_execute_legacy_float_still_works PASSED [ 87%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateValidatorIntegration::test_execute_legacy_with_assessment_data PASSED [ 90%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateValidatorIntegration::test_result_to_dict_includes_validator_fields PASSED [ 93%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateValidatorIntegration::test_result_to_dict_excludes_validator_fields_when_none PASSED [ 96%]
+tests/quality_gates/test_coherence_gate.py::TestCoherenceGateValidatorIntegration::test_gate_high_coherence_passes_with_validator PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 31 passed, 8 warnings in 0.55s ========================
