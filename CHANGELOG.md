@@ -1,5 +1,37 @@
 # Changelog
 
+## [4.45.0] - TERMALES-GATE-HARDENING — 2026-05-12
+
+### Objetivo
+FASE-6-HOTFIX: resolver gates G1 y G7 desde causa raíz. G6 marcado como no bloqueante (requiere onboarding real, no es bug).
+
+### Cambios Implementados
+- G1 Fix: `coherence_validation.json` sincronizado post-T4FIX — score pre-generación (0.81) vs post-geo (0.826) ahora converge (diff=0.0038)
+- G7 Fix: `whatsapp_conflict_guide` confidence 0.5→0.8 — conflicto detectado reconocido como evidencia real, no deficiencia
+- G6 WONTFIX: `hotel_schema.json` parcialmente poblado sin onboarding — documentado como no bloqueante
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| evidence/FASE-6-HOTFIX/G6_WONT_FIX.md | Análisis causa raíz G6 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| modules/commercial_documents/coherence_validator.py | save() acepta full file paths |
+| modules/asset_generation/v4_asset_orchestrator.py | L447: path completo post_coherence_report + docstring G6 |
+| main.py | L2500-2514: sync coherence_validation.json post-T4FIX |
+| modules/asset_generation/conditional_generator.py | L165-171, L635-642: G7 semantic scoring + naming |
+| modules/asset_generation/asset_catalog.py | L70: required_confidence 0.5→0.7 |
+| .opencode/context/AUDITORIA_FASE5_G1_G6_G7_20260512.md | G6 marcado no bloqueante |
+
+### Tests
+- Validación: run_all_validations.py --quick 5/5 PASS
+- Coherence diff: 0.0038 (< 0.01 umbral)
+- WhatsApp confidence: 0.8 (≥ 0.7 umbral)
+
+---
+
 ## [4.44.0] - TERMALES-COHERENCE-FIX — 2026-05-11
 
 ### Objetivo

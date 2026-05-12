@@ -444,7 +444,8 @@ class V4AssetOrchestrator:
         # H6 FIX: Also save post-coherence report if available
         if post_coherence_report:
             post_coherence_path = output_dir / "v4_audit" / "coherence_validation_post_gen.json"
-            post_coherence_report.save(str(post_coherence_path.parent))
+            # FASE-6-HOTFIX G1: pass full file path so save() writes to the correct filename
+            post_coherence_report.save(str(post_coherence_path))
         
         # 9. Crear y retornar resultado
         result = AssetGenerationResult(
@@ -693,6 +694,15 @@ class V4AssetOrchestrator:
         
         FASE 12: Ahora incluye hotel_data del audit_result.schema.properties
         para que los assets usen datos reales del hotel.
+        
+        G6 WON'T FIX (FASE-6-HOTFIX): Los siguientes campos del hotel_schema
+        requieren datos de onboarding real y no pueden poblarse solo con
+        web scraping + GBP + benchmark:
+          - amenities detallados (checkInTime, checkOutTime, roomTypes,
+            starRating verificado, ADR real, ocupación real)
+        El sistema funciona correctamente: genera el schema con los datos
+        disponibles. El gate FASE-4 bloquea correctamente cuando el 100%
+        de assets son ESTIMATED. La solución real es onboard al hotel.
         """
         validated_data = {}
         

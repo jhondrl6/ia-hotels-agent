@@ -2497,6 +2497,22 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     except Exception as e:
         print(f"   [WARN] Post-T4FIX scrub failed: {e}")
 
+    # FASE-6-HOTFIX G1: Sincronizar coherence_validation.json con score final post-geo
+    # El orchestrator guarda coherence_validation.json (score pre-gen: ~0.81) Y
+    # coherence_validation_post_gen.json (score post-gen: ~0.826). Tras T4FIX,
+    # el gate usa el score post-gen. Sobrescribimos el archivo oficial con
+    # el score final para que cualquier lectura posterior sea consistente.
+    try:
+        import shutil
+        cv_post_path = output_dir / "v4_audit" / "coherence_validation_post_gen.json"
+        cv_path = output_dir / "v4_audit" / "coherence_validation.json"
+        if cv_post_path.exists():
+            shutil.copy2(str(cv_post_path), str(cv_path))
+            post_score = json.load(open(cv_post_path)).get("overall_score", "?")
+            print(f"   [FASE-6 G1] coherence_validation.json sincronizado con post-gen score={post_score}")
+    except Exception as e:
+        print(f"   [WARN] G1 sync coherence_validation.json falló: {e}")
+
     # Rebuild diagnostic_summary con el diagnostic_gen actualizado (contiene geo_metrics)
     from modules.commercial_documents.data_structures import (
         DiagnosticSummary,

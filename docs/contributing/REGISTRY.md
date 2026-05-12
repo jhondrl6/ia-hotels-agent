@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-12
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 254
+> **Total fases completadas:** 257
 
 ---
 
@@ -6336,6 +6336,70 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-5-VERIFY - 2026-05-12
+**Descripcion:** v4complete Hotel Castilla Real post-refactor: verificacion G1-G10 y analisis de ejecucion
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/FASE-5-VERIFY/analisis_ejecucion.md` | NUEVO | Analisis Ejecucion |
+| `evidence/FASE-5-VERIFY/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260512_090856.md` | NUEVO | 01 Diagnostico Y Oportunidad 20260512 090856 |
+| `evidence/FASE-5-VERIFY/02_PROPUESTA_COMERCIAL_20260512_090905.md` | NUEVO | 02 Propuesta Comercial 20260512 090905 |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-6-HOTFIX - 2026-05-12
+**Descripcion:** Hotfix post-FASE-5-VERIFY: G1 sincronizacion coherence score, G7 WhatsApp confidence scoring (0.8), G6 WONTFIX documentado
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `modules/asset_generation/asset_catalog.py` | Asset Catalog |
+| `main.py` | Main |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
+| `evidence/FASE-6-HOTFIX/G6_WONT_FIX.md` | G6 Wont Fix |
+| `.opencode/plans/dependencias-fases.md` | Dependencias-Fases |
+| `.opencode/plans/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE - 2026-05-12
+**Descripcion:** FASE-6-HOTFIX completada: G1/G7 resueltos, G6 WONTFIX. Release 4.45.0 TERMALES-GATE-HARDENING.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

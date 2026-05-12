@@ -63,9 +63,22 @@ class CoherenceReport:
             "version": self.version
         }
     
-    def save(self, output_path: str) -> str:
-        """Save report to JSON file."""
-        path = Path(output_path) / "coherence_validation.json"
+    def save(self, output_path: str, filename: str = "coherence_validation.json") -> str:
+        """Save report to JSON file.
+        
+        Args:
+            output_path: Directory path or full file path. 
+                         If it ends with .json, uses it as the target file.
+                         Otherwise, treats it as a directory and creates {filename} inside.
+            filename: Default filename when output_path is a directory (default: coherence_validation.json)
+        """
+        path = Path(output_path)
+        if path.suffix == '.json':
+            # Full file path — use as-is
+            pass
+        else:
+            # Directory — create filename inside
+            path = path / filename
         path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(self.to_dict(), f, indent=2, ensure_ascii=False)

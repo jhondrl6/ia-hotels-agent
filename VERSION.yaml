@@ -1,10 +1,17 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.44.0"
-codename: "TERMALES-COHERENCE-FIX"
-release_date: "2026-05-11"
+version: "4.45.0"
+codename: "TERMALES-GATE-HARDENING"
+release_date: "2026-05-12"
 plan_maestro_version: "v2.6.0"
 
+# v4.45.0 - TERMALES-GATE-HARDENING (2026-05-12)
+# FASE-6-HOTFIX: G1 y G7 resueltos desde causa raíz
+# G1: coherence_validation.json sincronizado post-T4FIX (diff=0.0038)
+# G7: whatsapp_conflict_guide confidence 0.5→0.8 (evidencia real vs deficiencia)
+# G6: hotel_schema WONTFIX documentado (requiere onboarding real)
+# Backwards compatible: gates funcionan correctamente con datos reales
+#
 # v4.44.0 - TERMALES-COHERENCE-FIX (2026-05-11)
 # FASE-1: Coherence post-generación: _validate_post_generation() en v4_asset_orchestrator + main.py
 # FASE-2: Propuesta completa + Gate robusto: 8 servicios con estados, assets técnicos, threshold 0.8

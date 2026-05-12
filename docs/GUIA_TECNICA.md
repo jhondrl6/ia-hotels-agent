@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.44.0 (TERMALES-COHERENCE-FIX)
-**Última actualización:** 2026-05-11
+**Versión:** v4.45.0 (TERMALES-GATE-HARDENING)
+**Última actualización:** 2026-05-12
 
 ---
 
@@ -47,6 +47,29 @@
 **Backwards compatibility**: 100% — cambios internos de coherencia y generación, API pública sin cambios.
 
 **Tests**: 12 tests nuevos (3 por fase), 0 regresiones. run_all_validations.py --quick: 4/4 pass.
+
+---
+
+### v4.44.1 — FASE-6-HOTFIX: G1/G6/G7 hotfix — 2026-05-12
+
+**Módulos afectados**: main.py, asset_generation/conditional_generator.py, asset_generation/asset_catalog.py, asset_generation/v4_asset_orchestrator.py
+
+**Problema**:
+- G1: `coherence_validation.json` contenía score pre-generación (0.81) mientras el Publication Gate usaba score post-geo (0.826) — divergencia de 0.016
+- G7: `whatsapp_conflict_guide` con confidence=0.5 (ESTIMATED) por WARNING en preflight, pero el conflicto detectado es evidencia real, no deficiencia. Gate FASE-4 exige >= 0.7
+- G6: `hotel_schema.json` parcialmente poblado sin onboarding real — NO es bug, es limitación de datos
+
+**Solución**:
+- G1: **Causa raíz**: `CoherenceReport.save()` siempre escribía a `coherence_validation.json` ignorando el nombre de archivo. Fix en 3 partes:
+  1. `coherence_validator.py`: `save()` acepta full paths (detecta `.json` suffix)
+  2. `v4_asset_orchestrator.py` L447: pasa path completo al `save()` post-gen → crea `coherence_validation_post_gen.json` distinto
+  3. `main.py` post-T4FIX: copia `coherence_validation_post_gen.json` → `coherence_validation.json` para sincronizar el archivo oficial
+- G7: En `conditional_generator.py`, cuando `asset_type=="whatsapp_conflict_guide"` y preflight tiene WARNING, asignar confidence=0.8 y no usar prefijo `ESTIMATED_` (el conflicto detectado ES el asset). En `asset_catalog.py`, subir `required_confidence` de 0.5 a 0.7
+- G6: WON'T FIX — documentado en docstring de `_extract_validated_fields` y `evidence/FASE-6-HOTFIX/G6_WONT_FIX.md`. La solución real es onboarding del hotel
+
+**Backwards compatibility**: 100% — G1 usa copy (no recalcula), G7 solo afecta a whatsapp_conflict_guide, G6 solo documentación
+
+**Tests**: Validación de sintaxis Python: 4/4 archivos OK. run_all_validations.py --quick: 4/5 (1 falla por version sync pre-existente)
 
 ---
 

@@ -67,7 +67,7 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         template="whatsapp_conflict_guide_template.md",
         output_name="{prefix}guia_conflicto_whatsapp{suffix}.md",
         required_field="whatsapp_conflict",
-        required_confidence=0.5,
+        required_confidence=0.7,  # FASE-6-HOTFIX G7: antes 0.5, alineado con gate FASE-4 (>= 0.7)
         fallback=None,
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
