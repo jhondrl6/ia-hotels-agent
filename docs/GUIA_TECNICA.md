@@ -1047,3 +1047,24 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 
 **Tests**: 24 tests nuevos (7 hardening + 8 traffic + 9 FAQ). `run_all_validations.py --quick` pasa 5/5. 0 regresiones.
 
+---
+
+### v4.44.1 - 2026-05-11 — FASE-2-DEFAULT: Eliminar defaults hardcodeados cross-hotel
+
+**Módulos afectados**: `open_graph_generator.py`, `conditional_generator.py`
+
+**Problema**:
+- `open_graph_generator.py` tenía defaults hardcodeados de 'Amazilia Hotel Campestre' en hotel_name (L87), rating=4.5/review_count=202 (L94), website_url='https://amaziliahotel.com/' (L107) y dentro del HTML comentario (L231).
+- `conditional_generator.py` L523 usaba métodos privados `_generate_html()` y `_extract_og_data()` de OpenGraphGenerator, bypassing la lógica pública.
+
+**Solución**:
+- **hotel_name**: Validación explícita con `ValueError` si falta o vacío. fallback de 'hotel_name' → 'name' (sin default hardcodeado).
+- **rating/review_count**: Sin defaults; `None` si no presente → omitidos del markup.
+- **website_url**: Validación explícita con `ValueError` si falta.
+- **generate_content() público**: Nuevo método público en `OpenGraphGenerator` para uso por `conditional_generator` sin invocar métodos privados.
+- **HTML comment dinámico**: `<!-- Open Graph Meta Tags for {og_data.hotel_name} -->` en vez de hardcode 'Amazilia Hotel Campestre'.
+
+**Backwards compatibility**: Sí. Métodos públicos `generate()` y `generate_content()` operan igual. El único cambio breaking sería si código externo dependiera del fallback 'Amazilia Hotel Campestre' — ahora lanza `ValueError`.
+
+**Tests**: 11 tests nuevos (FASE-2-DEFAULT). `run_all_validations.py --quick` pasa 5/5. 0 regresiones en tests existentes (7 pre-existentes de `test_open_graph_generation.py`).
+

@@ -519,8 +519,8 @@ class ConditionalGenerator:
             generator = OpenGraphGenerator()
             hotel_data = validated_data.get("hotel_data", validated_data)
             hotel_dict = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
-            # Open Graph generator returns HTML content, not file path
-            content = generator._generate_html(generator._extract_og_data(hotel_dict if isinstance(hotel_dict, dict) else {}))
+            # Use public API generate_content() instead of private methods
+            content = generator.generate_content(hotel_dict if isinstance(hotel_dict, dict) else {})
 
         elif asset_type == "alt_text_guide":
             from modules.delivery.generators.alt_text_guide_gen import AltTextGuideGenerator

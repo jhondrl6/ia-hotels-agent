@@ -19,17 +19,17 @@
 
 ---
 
-## FASE-2-DEFAULT: Eliminar hardcoded defaults cross-hotel
+## FASE-2-DEFAULT: Eliminar hardcoded defaults cross-hotel ✅ COMPLETADA
 
-- [ ] T1: Modificar `open_graph_generator.py` L87: eliminar default 'Amazilia Hotel Campestre', validar explícitamente
-- [ ] T2: Modificar `open_graph_generator.py` L94, L107: eliminar defaults de rating/reviews y URL de otro hotel
-- [ ] T3: Modificar `conditional_generator.py` L523: usar `generator.generate()` en vez de métodos privados
-- [ ] T4: Auditoría grep + tests: `grep -c "Amazilia" output/*/open_graph/*.html` → 0; tests de validación de inputs
-- [ ] T5: `log_phase_completion.py --fase FASE-2-DEFAULT`
-- [ ] Criterio: G4 (open_graph sin "Amazilia") ✅
-- [ ] Criterio: G10 (0 defaults cross-hotel en generators) ✅
-- [ ] Criterio: Tests nuevos pasan, 0 regresiones
-- [ ] Criterio: `run_all_validations.py --quick` 4/4
+- [x] ~~T1: Modificar `open_graph_generator.py` L87: eliminar default 'Amazilia Hotel Campestre', validar explícitamente~~
+- [x] ~~T2: Modificar `open_graph_generator.py` L94, L107: eliminar defaults de rating/reviews y URL de otro hotel~~
+- [x] ~~T3: Modificar `conditional_generator.py` L523: usar `generator.generate()` en vez de métodos privados~~
+- [x] ~~T4: Auditoría grep + tests: `grep -c "Amazilia" output/*/open_graph/*.html` → 0; tests de validación de inputs~~
+- [x] ~~T5: `log_phase_completion.py --fase FASE-2-DEFAULT`~~ ✅ 2026-05-11
+- [x] Criterio: G4 (open_graph sin "Amazilia") ✅ — grep 0/0
+- [x] Criterio: G10 (0 defaults cross-hotel en generators) ✅ — 0 ocurrencias
+- [x] Criterio: Tests nuevos pasan, 0 regresiones ✅ — 11/11 passed, 7 pre-existentes OK
+- [x] Criterio: `run_all_validations.py --quick` 5/5 ✅
 
 ---
 

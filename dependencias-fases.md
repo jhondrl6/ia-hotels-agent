@@ -8,6 +8,7 @@
 | FASE-1C | ✅ Completada | 2026-04-28 | FASE-1B-PATCH | Documentacion cascade (CHANGELOG, GUIA_TECNICA) |
 | **FASE-1** | ✅ Completada | 2026-05-11 | Ninguna | Coherence post-generacion: _validate_post_generation() en v4_asset_orchestrator.py + main.py consume post_coherence_score |
 | **FASE-2** | ✅ Completada | 2026-05-11 | FASE-1 | Propuesta completa + Gate robusto: 8 servicios con estados, assets tecnicos visibles, threshold Gate 0.8 |
+| **FASE-2-DEFAULT** | ✅ Completada | 2026-05-11 | FASE-1-COH | Eliminar defaults hardcodeados cross-hotel en open_graph_generator.py + fix conditional_generator.py para usar API pública generate_content(). 11 tests nuevos. |
 | **FASE-3** | ✅ Completada | 2026-05-11 | FASE-2 | Monthly report fail-safe: try/except+retry, disclaimer en propuesta, fix bug runtime 'list' object has no attribute 'items' |
 | **FASE-4** | ✅ Completada | 2026-05-11 | FASE-3 | Correccion financiera: normalizacion brechas al valor central, separacion pain_ratio vs recovery_factor |
 | **FASE-5** | ✅ Completada | 2026-05-11 | FASE-4 | Verificacion E2E: v4complete para Termales Santa Rosa de Cabal + analisis de ejecucion |

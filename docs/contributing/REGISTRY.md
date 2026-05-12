@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-11
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 251
+> **Total fases completadas:** 252
 
 ---
 
@@ -6273,6 +6273,26 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (7)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2-DEFAULT - 2026-05-11
+**Descripcion:** Eliminar defaults hardcodeados cross-hotel en open_graph_generator.py y fix conditional_generator.py para usar API publica
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/open_graph_generator.py` | Open Graph Generator |
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+
+### Validaciones
+- [x] Tests passing (11)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
