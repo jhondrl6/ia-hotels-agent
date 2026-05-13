@@ -1,335 +1,513 @@
-# ROADMAP iah-cli — Estrategia Comercial (90 días)
+# ROADMAP iah-cli — Evolución Agent-First con Capa Humana Mínima
 
-> **Versión**: v2.0 (2026-04-18) — Reescritura basada en audit v2
-> **Estado proyecto**: v4.31.1 — Pipeline operativo
-> **Principio rector**: Un cliente pago vale más que 100 leads gratuitos.
-> **Horizonte**: 90 días operativos. Se reescribe trimestralmente.
-> **Corrección técnica**: `v4lite` no existe; se usa `spark` (stages geo+ia, <5 min).
-> **Estado**: 0 clientes. 0 validación de mercado.
-
----
-
-## FASE 0: Fundación técnica (COMPLETADO)
-
-**Estado**: v4.31.1 — Pipeline v4complete operativo.
-
-Lo que ya existe y funciona:
-- Pipeline v4complete: diagnóstico → propuesta → assets → coherencia
-- Comando `spark`: diagnóstico rápido <5 min (stages geo + ia). Genera: `spark_report.md`, `whatsapp_script.txt`, `quick_win_action.md`, `metrics_summary.json`
-- 17 workflows definidos (.agents/workflows/)
-- Agent harness con handlers, timeout, memory
-- 409 módulos Python, 2224 tests, 0 regresión
-- Coherence Score 0.84, Publication Ready: true
-
-**Nota sobre spark**: Marcado como deprecado pero funcional. Para el caso de uso de outreach pre-ejecutado es exactamente lo necesario (rápido, barato, ~$0.05 USD/prospecto en APIs). No se construye nada nuevo.
-
-**Conclusión**: El motor está listo. Falta el canal de distribución y la validación de mercado.
-
-## VALIDACIÓN EXTERNA: ARTÍCULOS DE X SOBRE CONSTRUCCIÓN DE AUTOMATIZACIONES DE IA (MAYO 2026)
-
-**Fecha de análisis**: 2026-05-03
-**Evaluación basada en**: Artículos de @heynavtoor y @eng_khairallah1 sobre brechas en el mercado de automatizaciones de IA.
-
-**Conclusión principal**: Las propuestas son altamente viables y directamente aplicables al repositorio actual de iah-cli (IA Hoteles Agent CLI v4.39.0).
-
-### Alineación Técnica con iah-cli existente:
-
-| Concepto del Artículo | Estado en iah-cli | Comentario |
-|----------------------|-------------------|------------|
-| Context File Design | ✅ Parcial implícito | Los agentes reciben parámetros (URL, nombre) - se puede formalizar como YAML/JSON reutilizable |
-| Skill File Architecture | ✅ **Excelente** | Los 17 agent skills en `.agents/workflows/` son exactamente esto (PhasedProjectExecutor, v4_regression_guardian, etc.) |
-| MCP Server Setup | ✅ **Parcial** | Los scrapers (Places API, Google Travel, SerpAPI) funcionan como MCP implícitos - necesitan exposición más genérica |
-| Scheduled Automation | ✅ **Posible** | El sistema de cron de OpenClaw + scripts lo permiten - necesita mejor integración en CLI |
-| Sub-Agent Architecture | ✅ **Core** | El Agent Harness orquesta múltiples skills especializados - arquitectura ya madura |
-
-### Oportunidad de Nicho Específico para Hotelería:
-
-**Ventaja competitiva**: iah-cli ya está especializado, evitando competencia genérica.
-
-**Dolores validados en hotelería que coinciden con tareas automatizables:**
-- Research: Análisis de competencia, precios, tendencias
-- Reporting: Reportes de visibilidad, métricas de GBP, rankings  
-- Content creation: Generación de schema, FAQs, descripciones
-- Customer responses: Gestión de reseñas, respuestas estándar
-- Document preparation: Playbooks GEO, auditorías técnicas
-
-**Modelo de negocio viable para nicho hotelero:**
-
-| Servicio | Precio | Incluye | ROI para Hotel |
-|----------|--------|---------|----------------|
-| Básico | $3,000-$5,000 | Auditoría completa + assets esenciales (schema, FAQ, llms.txt) + reporte | Recupera incluso 1-2 reservas directas/mes paga la inversión |
-| Intermedio | $5,000-$8,000 | Básico + monitoreo mensual + optimización de pilares | Mejora continua en visibilidad directa |
-| Avanzado | $8,000-$15,000 | Intermedio + integración PMS + reporte financiero | Plataforma completa de presencia digital |
-| Recurring | $500-$1,000/mes | Mantenimiento, optimización, reporte mensual | Mejora sostenible y adaptación a cambios |
-
-**Ejemplo de cálculo ROI:**
-- Hotel pierde 10 reservas/mes a OTAs ($100 comisión cada una) = $1,000/mes perdidos
-- Recuperar 30% = $300/mes recuperados
-- Anual: $3,600 recuperados
-- Inversión única de $4,000 = ROI del 90% en primer año (sin compuesto)
-
-### Adaptaciones Recomendadas (Mínimas):
-
-1. **Capa para constructores externos:** Simplificar creación de nuevos skills (templates, generators)
-2. **Desacoplar análisis hotelero:** Hacer skills más genéricos (ej: skill de "generación de schema" para cualquier negocio local)
-3. **Mejorar onboarding:** Tutorial interactivo para construir primer skill hotelero + ejemplos pre-cargados
-4. **Integración OpenClaw:** Posibilidad de publicar skills en el skill hub + sistema de versiones
-
-### Estrategia de Implementación Sugerida:
-
-**Short-term (0-3 meses):**
-- Crear 3-5 "skills template" para tareas hoteleras comunes
-- Documentar proceso de creación de nuevos skills
-- Ofrecer servicio de "construcción de automatización hotelera personalizada" ($4,000-$8,000)
-
-**Mid-term (3-6 meses):**
-- Lanzar programa de certificación para "Constructores de IA Hoteleros"
-- Crear plantillas de nicho (resorts, hoteles de ciudad, hostales)
-- Implementar sistema de habilidades compartidas comunitarias
-
-**Long-term (6+ meses):**
-- Convertir iah-cli en plataforma donde constructores venden sus skills hoteleros
-- Modelo de ingresos: comisión por venta + suscripción de plataforma
-- Expandir a verticales relacionadas (restaurantes, turismo, servicios locales)
-
-### Potencial de Mercado:
-
-Basado en la especialización y los artículos:
-- **TAM:** Millones de hoteles pequeños/medianos globalmente que pierden visibilidad
-- **SAM:** Hoteles que entienden valor de presencia digital pero carecen expertise técnico (~100,000+)
-- **SOM:** Enfoque inicial en mercados hispanohablantes + turismo establecido (10,000+ hoteles)
-
-Con solo capturar 0.1% del SOM a $5,000 promedio/proyecto = **$5 millones de ingresos potenciales**.
-
-### Veredicto Final:
-
-Las propuestas en los artículos son **no solo viables, sino altamente recomendadas** para iah-cli porque:
-1. ✅ Alineación técnica casi perfecta (arquitectura ya implementa conceptos clave)
-2. ✅ Ventaja de nicho (especialización hotelera evita competencia genérica)
-3. ✅ Modelo de negocio validado (precios alineados con valor entregable)
-4. ✅ Camino claro de evolución (diagnóstico → plataforma de automatizaciones especializadas)
-5. ✅ Timing óptimo (oferta limitada de builders, alta demanda según artículos)
-
-**Próximo paso sugerido:** Ejecutar piloto construyendo 3 skills template para tareas hoteleras comunes y ofrecerlos como servicio a 5 hoteles de prueba a $3,500 cada uno para validar modelo.
+> **Versión roadmap**: v3.0 (2026-05-12)
+> **Estado proyecto**: v4.45.0 — TERMALES-GATE-HARDENING
+> **Tesis estratégica**: iah-cli debe evolucionar como sistema operado principalmente por agentes, con una interfaz humana mínima, clara y suficiente.
+> **Principio rector**: agentes ejecutan, validan y mantienen; humanos deciden, aprueban costos/riesgos y aportan datos reales.
+> **Horizonte operativo**: 90 días. Se reevalúa semanalmente durante validación comercial y quincenalmente después.
 
 ---
 
-## FASE 0.5: Validación y primer contacto (2 semanas)
+## 1. Norte estratégico
 
-**Objetivo**: Antes de construir cualquier canal, validar que el dolor existe y que alguien paga por resolverlo.
+iah-cli no debe evolucionar como una aplicación tradicional human-first con automatizaciones añadidas.
+Debe evolucionar como una plataforma agent-first especializada en diagnóstico, propuesta y generación de assets para visibilidad digital hotelera.
 
-**Por qué aquí**: No se puede vender "visibilidad digital" a hoteleros sin saber si ellos reconocen ese problema, cómo lo verbalizan, y cuánto están dispuestos a pagar. Todo lo demás depende de esto.
+La interfaz humana existe, pero no debe crecer hasta convertirse en una carga de producto.
+Su función es estrictamente esencial:
 
-### Producto 1: Diagnóstico Express — $120.000 COP (~$30 USD)
+1. Configurar credenciales y permisos.
+2. Lanzar objetivos de negocio: diagnosticar, auditar, entregar, desplegar.
+3. Proveer datos que no pueden inferirse con confianza: ADR real, habitaciones, ocupación, canal directo, WhatsApp confirmado.
+4. Aprobar operaciones con costo, riesgo o impacto externo.
+5. Revisar entregables comerciales antes de enviarlos al cliente.
 
-**No es gratuito.** Gratis atrae curiosos, no compradores. El Express filtra intención real y cubre costo operativo. Solo quienes pagan el Express reciben propuesta de implementación.
+Todo lo demás debe ser responsabilidad de agentes:
 
-| ID | Entregable | Detalle | Estimación |
-|----|-----------|---------|------------|
-| V-01 | ICP definido | 4 condiciones verificables: 8-25 hab, propiedad familiar con sucesión (hijo/hija 25-40 años que "lleva lo digital" — es el comprador real), fuera de dependencia total Booking, ticket >$280k COP/noche. Lista de 30-40 hoteles de Cotelco Quindío/Risaralda + Airbnb Plus/Luxe + TripAdvisor top 50 regional | 1 día |
-| V-02 | 5 entrevistas de validación | 20 min cada una, sin vender. Solo escuchar. Output: 5 frases textuales del dolor del hotelero. **Guía**: el dolor que verbalizan NO es "baja visibilidad" sino frases como: "Booking me cobra 18% de comisión", "No tengo tiempo de actualizar nada", "Mi sobrino lleva eso" (= nadie lo lleva), "Ya pagué una agencia y no pasó nada", "En temporada baja no viene nadie". El servicio debe traducirse al lenguaje de SU dolor, no al revés. | 2-3 días |
-| V-03 | Pre-ejecución spark sobre prospectos | `python main.py spark --url "<maps-url>"` para cada hotel. Capturar hallazgo más fuerte de `metrics_summary.json` | 1-2 días |
-| V-04 | Landing minimalista | 1 página: quién soy + 1 caso + botón WhatsApp. Dominio + Vercel. Sin diagnóstico gratuito en el hero | 1 sesión |
-| V-05 | Script de outreach personalizado | 3 variantes por tipo de hallazgo (schema ausente, sin fotos, horario desactualizado). Cada mensaje lleva dato propio del hotel. **Template base**: `Hola [nombre], vi que [Hotel] en [ciudad]. Hice una revisión rápida y tu ficha de Google Maps tiene [hallazgo específico]. Eso te está costando [consecuencia tangible]. ¿Te paso el reporte completo? Son 3 páginas, cuesta $120k, y si ya tienes el problema identificado puedes arreglarlo tú mismo sin contratarme.` | 1 sesión |
+1. Interpretar contexto del repositorio.
+2. Elegir workflows.
+3. Ejecutar fases.
+4. Validar coherencia.
+5. Detectar regresiones.
+6. Mantener documentación operativa.
+7. Preservar memoria y trazabilidad.
+8. Producir evidencia verificable.
 
-**Comando spark para pre-ejecutar prospectos**:
+Frase guía:
+
+> El humano define intención y límites; el agente transforma esa intención en ejecución verificable.
+
+---
+
+## 2. Clasificación del repositorio
+
+### 2.1 Lo que iah-cli ya es
+
+iah-cli ya funciona como sistema híbrido:
+
+| Capa | Estado actual | Orientación futura |
+|------|---------------|-------------------|
+| CLI humana | Funcional: `setup`, `v4complete`, `v4audit`, `onboard`, `execute`, `deploy`, `--doctor` | Mantener mínima y estable |
+| Agent Harness | Existente: memoria, routing, handlers, timeout, skill execution | Convertir en núcleo operativo |
+| Workflows `.agents/workflows/` | 16 workflows core activos | Convertir en contrato principal de ejecución |
+| Documentación técnica | Abundante pero dispersa | Reorientar a navegación de agentes + resumen humano |
+| Outputs comerciales | Diagnóstico, propuesta, assets, delivery zip | Mantener como producto final para humanos/clientes |
+| Mantenimiento | Doctor, validations, registry, version sync | Hacerlo más automático y obligatorio para agentes |
+
+### 2.2 Conclusión de diseño
+
+El repo debe tratar a los humanos como operadores estratégicos y validadores, no como ejecutores paso a paso.
+
+Por tanto:
+
+- No priorizar una UI compleja.
+- No multiplicar documentación narrativa para humanos.
+- No hacer que humanos sigan procedimientos largos si un agente puede ejecutarlos.
+- Sí mantener comandos CLI simples, seguros y explicables.
+- Sí fortalecer AGENTS.md, workflows, gates, doctor, memoria, evidencia y validaciones.
+
+---
+
+## 3. Estado actual verificable
+
+Fuente de verdad de versión: `VERSION.yaml`.
+
+Estado leído el 2026-05-12:
+
+| Métrica | Estado |
+|---------|--------|
+| Versión | v4.45.0 |
+| Codename | TERMALES-GATE-HARDENING |
+| Release date | 2026-05-12 |
+| Archivos Python totales, incluyendo tests | 463 |
+| Test files `test_*.py` | 203 |
+| Scripts Python en `scripts/` | 22 |
+| YAML config en `config/` | 9 |
+| Workflows core en `.agents/workflows/` | 16 |
+| CLI principal | `main.py` |
+| Contexto global agente | `AGENTS.md` |
+| Harness | `agent_harness/` |
+
+Nota: los conteos de funciones de test pueden variar por método de medición. Para roadmap se usan conteos estructurales verificables por archivos.
+
+---
+
+## 4. Principios de evolución
+
+### P1. Agent-first, human-minimal
+
+Cada nueva capacidad debe responder primero:
+
+- ¿Puede ejecutarla un agente con contexto suficiente?
+- ¿Puede verificarse automáticamente?
+- ¿Puede dejar evidencia auditable?
+- ¿Puede reanudarse en otra sesión?
+
+Solo después se pregunta:
+
+- ¿Qué mínimo necesita ver o decidir un humano?
+
+### P2. Humanos no deben cargar contexto operativo
+
+El humano no debe tener que recordar:
+
+- qué workflow usar,
+- qué validación corre primero,
+- qué documentación actualizar,
+- qué gate bloquea,
+- qué archivo es fuente de verdad.
+
+Eso debe estar codificado en:
+
+- `AGENTS.md`,
+- `.agents/workflows/`,
+- `docs/CONTRIBUTING.md`,
+- scripts de validación,
+- doctor,
+- registry,
+- tests.
+
+### P3. Todo output importante debe tener evidencia
+
+Diagnósticos, propuestas, scores, gates y assets deben poder responder:
+
+- qué dato se usó,
+- de dónde vino,
+- con qué confianza,
+- qué módulo lo generó,
+- qué gate lo validó,
+- qué archivo lo prueba.
+
+### P4. Manual antes que automático, pero solo para validar mercado
+
+Para ventas y producto comercial, se mantiene el principio:
+
+> Manual antes que automático, específico antes que general.
+
+Pero para operación interna del repo, el objetivo es lo contrario:
+
+> Si un agente puede hacerlo con seguridad y evidencia, no debe hacerlo manualmente el humano.
+
+### P5. No construir interfaz humana pesada antes de tracción
+
+No crear dashboard, SaaS, GUI, multiusuario o panel administrativo hasta tener validación comercial suficiente.
+
+La interfaz humana mínima por ahora es:
+
 ```bash
-# spark ejecuta solo geo + ia stages (<5 min cada uno)
-python main.py spark --url "https://maps.google.com/..." --output ./outreach/prospect_01
-# Output: spark_report.md + whatsapp_script.txt + quick_win_action.md + metrics_summary.json
+python main.py setup
+python main.py v4complete --url https://hotel.com
+python main.py onboard --url https://hotel.com
+python main.py execute --url https://hotel.com --package starter_geo
+python main.py --doctor
 ```
-Costo: ~$0.05 USD/prospecto. 40 prospectos = ~$2 USD total.
-
-**Nota sobre "gratis"**: El diagnóstico gratuito solo existe como **contenido público** (Reels, comparativas regionales, posts). NUNCA como trato individual 1:1 con un hotel. Cada interacción directa es de pago desde el primer segundo. El 80% de "leads" de diagnósticos gratuitos en B2B nunca compra — cuesta tiempo del fundador, no dinero.
-
-**Tasas esperadas de outreach**: 15-20% de lectura, 5-8% de respuesta, 2-3% de conversación comercial. Con 40 mensajes: 1-2 conversaciones reales. Eso no es fracaso, es la realidad B2B hotelera regional. El gancho es el dato personalizado (hallazgo de spark), no el volumen.
-
-**Gate de validación**: Al final de FASE 0.5 se tienen 5 frases textuales del dolor del hotelero y una lista de 30-40 prospectos con hallazgo pre-ejecutado. Si no se consiguen las 5 entrevistas, se ajusta el ICP antes de continuar.
 
 ---
 
-## FASE 1: Landing + Outreach + Primer Express pago (4 semanas)
+## 5. Contrato de producto: quién ejecuta qué
 
-**Objetivo**: Primer contacto comercial real. Primer Diagnóstico Express vendido y entregado.
-
-| ID | Entregable | Detalle | Estimación |
-|----|-----------|---------|------------|
-| O-01 | 30-40 mensajes personalizados enviados | 1 por hotel, con hallazgo propio de spark. WhatsApp/email según disponibilidad | 3-5 días |
-| O-02 | Llamadas agendadas | 15 min con los que respondan. Objetivo: 2-4 conversaciones comerciales reales | Semana 2 |
-| O-03 | Primer Express vendido | $120k COP. Entrega manual: reporte v4complete personalizado con narrativa del hallazgo | Semana 3 |
-| O-04 | Debrief primer cliente | Qué preguntó, qué valoró, qué ignoró. `clients/01-debrief.md` | Semana 4 |
-| O-05 | Segunda ronda outreach | 20 mensajes ajustados con aprendizaje del debrief | Semana 4 |
-
-**Métricas de éxito**:
-- 1 Express vendido (umbral mínimo)
-- 3-5 Express vendidos (objetivo)
-- 2-4 conversaciones comerciales reales
-- 5 frases textuales del dolor documentadas
-
-**Gate de validación crítico (Semana 3)**: Si no hay 1 Express vendido, **no** se avanza con el mismo plan. Se revisa ICP, pitch, precio — se rediseña.
+| Actividad | Ejecutor primario | Humano interviene cuando... |
+|-----------|------------------|-----------------------------|
+| Diagnóstico `v4complete` | Agente / CLI | Debe aportar URL o revisar output |
+| Onboarding de datos reales | Humano asistido por CLI | Siempre: son datos de negocio |
+| Validación cruzada | Agente | Hay conflicto hard o dato dudoso |
+| Generación de propuesta | Agente | Antes de enviar a cliente |
+| Generación de assets | Agente | Si asset queda ESTIMATED o CONFLICT |
+| Deploy | Agente con aprobación | Hay impacto externo real |
+| Mantenimiento docs | Agente | Solo si cambia estrategia o criterio comercial |
+| Actualización roadmap | Humano + agente | Cambia dirección estratégica |
+| Fases de desarrollo | Agente | Humano define objetivo y límites |
+| Costos/API externas | Agente con permission mode | Costo/riesgo excede umbral |
 
 ---
 
-## FASE 1.5: Instagram como canal de captura activa (paralelo)
+## 6. Arquitectura objetivo
 
-**Objetivo**: Instagram no es contenido pasivo; es canal de captura de DMs con intención de compra.
+### 6.1 Capa agente
 
-| ID | Entregable | Detalle | Estimación |
-|----|-----------|---------|------------|
-| IG-01 | Reels educativos con datos reales | Comparativas regionales anónimas del spark. Ej: "El 70% de hoteles en Salento no tienen schema.org" | 1-2/semana |
-| IG-02 | DMs con intención de compra | Responder a comentarios con CTA: "Envíanos tu link y te decimos qué tan visible eres" | Continuo |
-| IG-03 | Contenido de caso propio | "Mira lo que hice con mi propio sitio" — datos reales de v4complete sobre iahoteles.com | 1 sesión |
+Debe ser la capa dominante.
 
-**Métricas**: Instagram DMs con intención de compra: 1 (umbral) / 5 (objetivo) al mes.
+Componentes:
 
----
+- `AGENTS.md`: contexto global operativo, no manual humano.
+- `.agents/workflows/`: workflows semánticos y ejecutables.
+- `agent_harness/`: memoria, routing, ejecución, observación, self-healing.
+- `.agent/knowledge/DOMAIN_PRIMER.md`: conocimiento regenerable del dominio/código.
+- `scripts/doctor.py`: healthcheck del ecosistema agente.
+- `scripts/run_all_validations.py`: gate de validación.
+- `docs/contributing/*`: contrato documental para agentes.
+- `tests/`: protección contra regresión.
 
-## FASE 2: 3-5 Express + 1 implementación + 1 palanca (6 semanas)
+Objetivo:
 
-**Objetivo**: Escalar de Express a implementación. Activar un canal indirecto.
+> Un agente nuevo en sesión fresca debe poder entender el estado del repo, elegir el workflow correcto, ejecutar una fase, verificarla y registrar evidencia sin depender de memoria humana.
 
-### Producto 2: Implementación SEO/AEO/GEO — $1.500.000–$3.500.000 COP (~$350–850 USD)
+### 6.2 Capa humana mínima
 
-Solo se ofrece a quienes ya pagaron el Express.
+Debe ser pequeña, estable y difícil de usar mal.
 
-| ID | Entregable | Detalle | Estimación |
-|----|-----------|---------|------------|
-| IM-01 | 3-5 Express entregados | Reportes v4complete personalizados. Cada uno genera aprendizaje | Semanas 1-4 |
-| IM-02 | Propuesta de implementación | Al hotel con mayor dolor de los Express. Precio según alcance | Semana 4-5 |
-| IM-03 | Primer cliente de implementación | Cerrar o aprender por qué no cerró | Semana 5-6 |
-| IM-04 | 1 palanca asimétrica activada | Contactar Cotelco Quindío/Risaralda, Fontur, agencias de turismo regional, o universidades (UTP, UniQuindío) | Semana 4 |
+Componentes:
 
-**Palancas disponibles**:
+- `README.md`: qué hace, cómo instalar, cómo ejecutar 3 comandos principales.
+- CLI `main.py`: comandos claros y flags seguros.
+- `setup`: credenciales.
+- `onboard`: datos reales.
+- outputs comerciales: diagnóstico, propuesta, assets, zip de entrega.
 
-| Palanca | Acción | Multiplicador |
-|---------|--------|---------------|
-| Cotelco Quindío/Risaralda | Charla gratuita "Visibilidad digital 2026" | 30-80 hoteleros en una sala |
-| Fontur / Cámara de Comercio Armenia | Pitch programa fortalecimiento digital | Presupuesto público |
-| Agencias de turismo regional | White-label: ellos venden tours, tú diagnósticos | Canal indirecto |
-| Universidades (UTP, UniQuindío) | Caso de estudio académico → PR orgánica | Credibilidad + backlinks |
+Objetivo:
 
-**Objetivo de 6 semanas**:
-- 3-5 Express vendidos (~$400k–$600k COP facturados)
-- 1 implementación firmada (~$1.5M–$3.5M COP)
-- 5 entrevistas de validación + 5 debriefs postventa
-- 1 palanca asimétrica activa
+> Un humano técnico debe poder operar el producto sin entender la arquitectura interna.
 
----
+### 6.3 Capa cliente final
 
-## FASE 3: Caso publicable + contenido AEO con datos reales
+El cliente hotelero no opera el repo.
+Recibe:
 
-**Objetivo**: Convertir los primeros clientes en contenido que genere tracción orgánica. Solo se ejecuta tras tener 1+ caso pago.
-
-| ID | Entregable | Detalle | Estimación |
-|----|-----------|---------|------------|
-| CA-01 | Caso de uso publicado | "Cómo llevamos [Hotel X] de score Y a Z en 30 días" — datos reales, screenshots | 1 sesión |
-| CA-02 | Contenido AEO para la web | Artículos que respondan preguntas reales de hoteleros (usando las frases textuales de las entrevistas) | 1-2 sesiones |
-| CA-03 | Comparativa regional | "El 70% de hoteles en el Eje Cafetero no tienen schema.org" — datos agregados anónimos | 1 sesión |
-| CA-04 | llms.txt | Archivo `/llms.txt` describiendo servicio, capacidades, cómo citarte | 30 min |
-
-**Dependencias**: Al menos 1 caso pago completado.
+- diagnóstico,
+- propuesta,
+- evidencia resumida,
+- assets técnicos,
+- plan de acción,
+- eventual reporte de seguimiento.
 
 ---
 
-## FASE 4: Monetización recurrente y escalado de canales
+## 7. Roadmap técnico agent-first, 90 días
 
-**Objetivo**: Convertir el modelo manual en repetible. Solo se ejecuta tras 3+ Express entregados y 1 implementación cerrada.
+### FASE A: Baseline de robustez agente (1-2 semanas)
 
-| ID | Entregable | Detalle | Disparador |
-|----|-----------|---------|------------|
-| MR-01 | Automatización WhatsApp con spark | El hotelero envía URL por WhatsApp, recibe spark en minutos | 10+ Express manuales entregados |
-| MR-02 | Reporte trimestral regional | Agregado anónimo "Salud Digital Hotelera del Eje Cafetero" | 15+ hoteles diagnosticados |
-| MR-03 | Kit de entrega profesional | PDF con diagnóstico + propuesta + plan de acción | Parcialmente existe |
-| MR-04 | Seguimiento automático periódico | "Tu hotel tenía score X hace 30 días, hoy tiene Y" | 5+ clientes activos |
+Objetivo: asegurar que el repo sea navegable y ejecutable por agentes sin ambigüedad.
 
----
+| ID | Entregable | Resultado esperado | Gate |
+|----|------------|-------------------|------|
+| A-01 | `AGENTS.md` auditado como contexto primario agente | Zona esencial clara, rutas correctas, sin ruido excesivo | Doctor + revisión manual rápida |
+| A-02 | `.agents/workflows/README.md` sincronizado con workflows reales | 16 workflows core listados, triggers claros | Script/doctor sin huérfanos |
+| A-03 | Matriz de responsabilidades humano/agente documentada | El repo sabe qué pide al humano y qué ejecuta el agente | ROADMAP + AGENTS alineados |
+| A-04 | Human-minimum CLI definida | README solo prioriza comandos esenciales | README no deriva en manual largo |
+| A-05 | Validación de contexto fresco | Un agente nuevo puede ejecutar diagnóstico de repo sin preguntar | Prompt de smoke test pasa |
 
-## ANEXO: Visión 12-24 meses (ex-FASES 5-7)
+No construir:
 
-Estas fases no se eliminan, pero requieren disparadores verificables antes de ejecutarse.
+- dashboard,
+- UI web,
+- wizard complejo,
+- integración multiusuario,
+- marketplace de skills.
 
-### FASE 5: Integración Operativa
-- Conector PMS básico (datos de ocupación, ADR)
-- Integración GA4 multi-hotel
-- **Disparador**: 10 clientes de implementación activos (no 5)
+### FASE B: Ejecución de fases más confiable por agentes (2-4 semanas)
 
-### FASE 6: Hotel Graph
-- Schema Definition, Graph Builder, Persistencia, Impact Analyzer
-- Community Detection (Leiden), NaturalQuery
-- **Disparador**: 20 hoteles activos (el ROI de un grafo con <20 nodos es negativo)
+Objetivo: reducir fallos de ejecución multi-sesión.
 
-### FASE 7: Escalamiento
-- Multi-idioma (inglés, portugués)
-- Cumplimiento turístico
-- Ecosistema de skills comunitarios
-- **Disparador**: 3 clientes que lo paguen explícitamente
+| ID | Entregable | Resultado esperado | Gate |
+|----|------------|-------------------|------|
+| B-01 | `phased_project_executor.md` endurecido | Reglas de fase, presupuesto y docs cascade sin ambigüedad | Plan de prueba con fase simulada |
+| B-02 | Prompts de fase estandarizados | Cada fase contiene objetivo, archivos, comandos, criterios y rollback | Template validado |
+| B-03 | Evidencia post-fase obligatoria | Cada fase deja logs, tests, diff y docs tocadas | `log_phase_completion.py` usado |
+| B-04 | Regla de no-doc-drift | Cambios de código que alteran comportamiento disparan docs/checks | Validación rápida pasa |
+| B-05 | Modo recuperación | Si una fase falla, el siguiente agente sabe dónde retomar | Contexto de failure reproducible |
 
----
+### FASE C: Operación comercial asistida por agentes (4-8 semanas)
 
-## OKRs — Primeros 90 días
+Objetivo: que la venta inicial use agentes para investigación, diagnóstico y preparación, pero mantenga al humano en cierre y relación comercial.
 
-> Métricas de **supervivencia**, no de tracción.
+| ID | Entregable | Resultado esperado | Gate |
+|----|------------|-------------------|------|
+| C-01 | Lista ICP de 30-40 hoteles | Prospects con criterios claros | Lista verificable |
+| C-02 | `spark` o flujo express ejecutado sobre prospects | Hallazgo específico por hotel | Costo controlado |
+| C-03 | Mensajes personalizados generados | Outreach con dato real, no genérico | Revisión humana antes de enviar |
+| C-04 | Primer Diagnóstico Express pago | Validación de willingness-to-pay | Pago recibido |
+| C-05 | Debrief estructurado | Frases reales del cliente + objeciones | Archivo de aprendizaje |
 
-| Métrica | Umbral | Objetivo | Frecuencia |
-|---------|--------|----------|------------|
-| Entrevistas de validación | 3 | 5 | Una vez, semana 1 |
-| Prospects en lista ICP-filtrada | 20 | 40 | Una vez, semana 1 |
-| Mensajes personalizados enviados | 20 | 40 | Semanal |
-| Conversaciones comerciales reales | 2 | 5 | Mensual |
-| Diagnósticos Express pagados | 1 | 5 | Mes 1-2 |
-| Clientes de implementación | 0 | 1 | Mes 2-3 |
-| Palancas asimétricas activadas | 0 | 1 | Trimestral |
-| Instagram DMs con intención de compra | 1 | 5 | Mensual |
+Regla:
 
-**Métricas eliminadas temporalmente** (se reintroducen en mes 4+):
-- Ranking Google para keywords
-- Menciones en ChatGPT/Perplexity
-- Leads orgánicos desde web
-- Velocidad Lighthouse
+> El agente prepara y documenta; el humano vende y decide.
 
----
+### FASE D: Cierre de loop diagnóstico → propuesta → assets (8-12 semanas)
 
-## Principios rectores
+Objetivo: convertir el pipeline en una unidad de entrega más confiable y menos dependiente de intervención manual.
 
-1. **Un cliente pago vale más que 100 leads gratuitos.** Toda métrica de "lead" sin intención de pago es vanidad.
-2. **Manual antes que automático, específico antes que general.** Nada se automatiza sin haberse hecho manualmente 10 veces.
-3. **Cobrar valida mejor que encuestar.** La willingness-to-pay es el único indicador no engañable.
-4. **El tiempo del fundador es el único recurso escaso.** Toda decisión se evalúa por costo de oportunidad sobre ese tiempo.
-5. **Cada fase genera valor comercial verificable antes de avanzar.**
+| ID | Entregable | Resultado esperado | Gate |
+|----|------------|-------------------|------|
+| D-01 | E2E v4complete por cliente pago | Diagnóstico + propuesta + assets + gates | Coherence >= 0.8 |
+| D-02 | Kit de entrega profesional | ZIP + README + evidencia resumida | Cliente puede entenderlo |
+| D-03 | Checklist pre-envío humano | Solo decisiones comerciales, no debugging técnico | 5-10 min máximo |
+| D-04 | Registro de caso | Antes/después, hallazgo, solución, resultado | Publicable con permiso |
+| D-05 | Seguimiento básico | Revisión 30 días si aplica | Output comparable |
 
 ---
 
-## Riesgos
+## 8. Roadmap comercial, subordinado a validación
+
+La robustez agente no reemplaza la validación comercial.
+El roadmap comercial se mantiene, pero con agentes como multiplicador operativo.
+
+### Producto 1: Diagnóstico Express
+
+Precio inicial sugerido: $120.000 COP.
+
+Propósito:
+
+- validar que el hotelero paga por entender su fuga digital,
+- filtrar curiosos,
+- generar datos reales de objeciones,
+- abrir puerta a implementación.
+
+Entregable mínimo:
+
+- 3-5 páginas,
+- hallazgo principal,
+- costo de oportunidad estimado,
+- evidencia visible,
+- una acción inmediata,
+- propuesta de siguiente paso.
+
+### Producto 2: Implementación SEO/AEO/GEO
+
+Precio inicial sugerido: $1.500.000–$3.500.000 COP.
+
+Solo se ofrece a quien ya pagó o mostró intención clara.
+
+Incluye, según confianza y datos:
+
+- schema,
+- FAQ,
+- llms.txt,
+- Open Graph,
+- optimización GBP/GEO,
+- guía de implementación,
+- medición posterior.
+
+### Producto 3: Seguimiento recurrente
+
+No se vende hasta tener repetición manual.
+
+Disparadores:
+
+- 5+ clientes activos,
+- 10+ diagnósticos entregados,
+- demanda explícita de monitoreo,
+- costo operativo controlado.
+
+---
+
+## 9. Gates de decisión
+
+| Gate | Pregunta | Si falla |
+|------|----------|----------|
+| G1: Agent readiness | ¿Un agente fresco puede entender y ejecutar sin preguntar? | Mejorar AGENTS/workflows antes de más features |
+| G2: Human minimalism | ¿El humano solo decide lo esencial? | Eliminar pasos humanos o moverlos a agente |
+| G3: Evidence | ¿Cada claim comercial tiene evidencia? | Bloquear entrega o marcar ESTIMATED |
+| G4: Commercial validation | ¿Alguien pagó? | No escalar automatización comercial |
+| G5: Cost control | ¿API/cómputo sigue barato? | Activar permission_mode / reducir llamadas |
+| G6: Coherence | ¿Diagnóstico, propuesta y assets coinciden? | Bloquear publicación |
+| G7: Documentation drift | ¿Docs críticas reflejan realidad actual? | Ejecutar docs cascade / doctor |
+
+---
+
+## 10. Qué NO hacer por ahora
+
+No construir:
+
+- SaaS multiusuario,
+- dashboard web completo,
+- marketplace de skills,
+- sistema comunitario de builders,
+- PMS integration,
+- multi-idioma,
+- automatización WhatsApp productizada,
+- reportes recurrentes automáticos,
+- verticales fuera de hotelería.
+
+Hasta que existan señales:
+
+- 3-5 Express pagos,
+- 1 implementación cerrada,
+- 5+ debriefs reales,
+- objeciones repetidas,
+- flujo de entrega manual repetido 10 veces.
+
+---
+
+## 11. Métricas 90 días
+
+### Métricas agent-first
+
+| Métrica | Umbral | Objetivo |
+|---------|--------|----------|
+| Workflows core sincronizados con README | 100% | 100% |
+| Ejecución de fase sin contexto humano adicional | 1 caso | 3 casos |
+| Validaciones rápidas post-cambio | Pasa | Pasa consistentemente |
+| Outputs con evidencia rastreable | 90% | 95%+ |
+| Docs críticas sin drift visible | AGENTS/README/CONTRIBUTING | + ROADMAP alineado |
+| Tiempo humano pre-envío | <= 15 min | <= 10 min |
+
+### Métricas comerciales
+
+| Métrica | Umbral | Objetivo |
+|---------|--------|----------|
+| Entrevistas de validación | 3 | 5 |
+| Prospects ICP-filtrados | 20 | 40 |
+| Mensajes personalizados enviados | 20 | 40 |
+| Conversaciones comerciales reales | 2 | 5 |
+| Diagnósticos Express pagos | 1 | 5 |
+| Clientes de implementación | 0 | 1 |
+| Debriefs documentados | 1 | 5 |
+
+---
+
+## 12. Riesgos y mitigación
 
 | Riesgo | Probabilidad | Impacto | Mitigación |
 |--------|--------------|---------|------------|
-| Hoteleros no reconocen valor de SEO/AEO/GEO | Alta | Alto | Entrevistas de validación FASE 0.5 |
-| Temporada baja (mayo-junio) reduce urgencia | Media | Medio | Pitch: "prepárate para temporada alta" |
-| Fundador se distrae perfeccionando pipeline vs vender | Alta | Alto | Gate semana 3: si no hay venta, se congelan commits no-venta |
-| Agencias locales copian el pitch | Baja-Media | Bajo | Ventaja es el pipeline, no el pitch |
-| Cliente #1 pide reembolso | Media | Alto | Express tiene entregable tangible; reembolso solo si no se entrega |
+| El repo acumula documentación humana que los agentes no usan | Alta | Alto | AGENTS/workflows como fuente operativa primaria |
+| El humano vuelve a ejecutar pasos manuales largos | Alta | Alto | Convertir procedimientos en workflows/gates |
+| Agentes ejecutan sin suficiente contexto | Media | Alto | Contexto global + prompts de fase completos |
+| Drift entre docs, código y outputs | Alta | Alto | Doctor, validation scripts, docs cascade |
+| Hoteleros no pagan por diagnóstico | Alta | Alto | Validación Express antes de automatizar más |
+| Costos API crecen con automatización | Media | Medio | `permission_mode`, presupuestos y modo fallback |
+| Se construye UI antes de tracción | Media | Alto | Gate explícito: no UI pesada hasta 10+ entregas manuales |
+| Outputs estimados se venden como verificados | Media | Alto | Taxonomía VERIFIED/ESTIMATED/CONFLICT obligatoria |
 
 ---
 
-## Costos operativos (primeros 90 días)
+## 13. Deuda técnica estratégica
 
-| Concepto | Costo |
-|----------|-------|
-| Dominio | ~$12 USD/año |
-| Hosting (Vercel/Netlify) | $0 |
-| spark sobre 40 prospectos | ~$2 USD (APIs geo + ia) |
-| WhatsApp API (usuario inicia → FEP 72h gratis) | $0 |
-| v4complete para Express entregados | ~$2-5 USD por diagnóstico |
-| **Total estimado 90 días** | **< $50 USD** |
+1. `spark` está marcado como deprecado, pero puede ser útil para outreach barato. Decisión: mantenerlo solo si se usa comercialmente 10+ veces.
+2. Consolidar el rol de `.agents/workflows/` como capa ejecutable, no solo documentación.
+3. Reducir duplicación entre README, AGENTS y docs. README debe ser humano-mínimo; AGENTS debe ser agente-operativo.
+4. Fortalecer recuperación de fases fallidas para agentes en sesiones frescas.
+5. Formalizar smoke test de agent-readiness: un agente nuevo debe poder entender estado, ejecutar validación y explicar siguiente acción.
+6. Mantener ROADMAP como documento estratégico manual. No incluirlo en cascadas automáticas salvo solicitud explícita.
 
 ---
 
-## Deuda técnica del ROADMAP
+## 14. Visión 12-24 meses
 
-- Ortogonalidad de métricas en pipeline legacy (gbp_auditor.py): aplicar cuando se active. Tracking: CHANGELOG v4.22.0.
-- `spark` está marcado como deprecado. Si cumple función comercial, mantener vivo. Re-evaluar tras 10+ usos manuales.
+Solo se activa si el modelo comercial valida.
+
+### Etapa 1: Agentic delivery engine
+
+iah-cli entrega diagnósticos y assets de forma confiable con mínima intervención humana.
+
+Disparador:
+
+- 5+ diagnósticos pagos,
+- 1+ implementación cerrada,
+- flujo E2E repetible.
+
+### Etapa 2: Monitoring recurrente
+
+Agentes revisan periódicamente hoteles activos y generan reportes comparables.
+
+Disparador:
+
+- 5+ clientes activos,
+- solicitud explícita de seguimiento,
+- costo controlado.
+
+### Etapa 3: Hotel graph / intelligence layer
+
+Grafo de hoteles, competidores, regiones, activos digitales y benchmarks.
+
+Disparador:
+
+- 20+ hoteles activos o diagnosticados con permiso de uso agregado.
+
+### Etapa 4: Ecosistema de skills hoteleros
+
+Solo después de validar repetición interna.
+
+Disparador:
+
+- 3+ builders o clientes piden extensibilidad,
+- skills internas estables,
+- documentación agente-first madura.
 
 ---
 
-> *Revisión: semanal las primeras 6 semanas, luego quincenal. Triggers: completar FASE 0.5 o cerrar primer Express, lo que ocurra primero.*
-> *Próxima revisión estratégica: 2026-06-19*
+## 15. Resumen ejecutivo
+
+La dirección correcta no es hacer iah-cli más cómodo para que humanos operen cada detalle.
+La dirección correcta es hacerlo más robusto para que agentes ejecuten con seguridad, evidencia y continuidad.
+
+El humano debe quedar en las decisiones de mayor valor:
+
+- qué cliente perseguir,
+- qué riesgo aceptar,
+- qué dato confirmar,
+- qué propuesta enviar,
+- qué aprendizaje comercial incorporar.
+
+El agente debe encargarse del resto:
+
+- investigación,
+- ejecución,
+- validación,
+- documentación,
+- coherencia,
+- trazabilidad,
+- mantenimiento.
+
+Principio final:
+
+> iah-cli debe ser una máquina de entrega agéntica para hoteles, no una herramienta manual con scripts.
