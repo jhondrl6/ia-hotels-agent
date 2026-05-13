@@ -1,9 +1,9 @@
 # ROADMAP iah-cli — Evolución Agent-First con Capa Humana Mínima
 
-> **Versión roadmap**: v3.0 (2026-05-12)
+> **Versión roadmap**: v3.2 (2026-05-12)
 > **Estado proyecto**: v4.45.0 — TERMALES-GATE-HARDENING
 > **Tesis estratégica**: iah-cli debe evolucionar como sistema operado principalmente por agentes, con una interfaz humana mínima, clara y suficiente.
-> **Principio rector**: agentes ejecutan, validan y mantienen; humanos deciden, aprueban costos/riesgos y aportan datos reales.
+> **Principio rector**: primero entrega confiable al cliente; después escala, automatización y crecimiento. Agentes ejecutan, validan y mantienen; humanos deciden, aprueban costos/riesgos y aportan datos reales.
 > **Horizonte operativo**: 90 días. Se reevalúa semanalmente durante validación comercial y quincenalmente después.
 
 ---
@@ -36,6 +36,12 @@ Todo lo demás debe ser responsabilidad de agentes:
 Frase guía:
 
 > El humano define intención y límites; el agente transforma esa intención en ejecución verificable.
+
+Prioridad estratégica:
+
+> No se construye el segundo piso si el primero no está construido. En iah-cli, el primer piso es la entrega confiable al cliente: diagnóstico completo, oportunidad coherente, propuesta consecuente y assets específicos que resuelven las brechas detectadas.
+
+Antes de escalar automatización comercial, outreach, monitoreo recurrente, UI, nuevos módulos o expansión del producto, el pipeline debe demostrar que puede entregar una solución autoconsistente para un hotel real.
 
 ---
 
@@ -162,6 +168,23 @@ python main.py execute --url https://hotel.com --package starter_geo
 python main.py --doctor
 ```
 
+### P6. Coherencia comercial como contrato de entrega — primer piso obligatorio
+
+La evolución agent-first no puede limitarse a ejecutar módulos. Debe garantizar que el producto final sea una solución confiable para el cliente.
+
+Este principio tiene prioridad sobre cualquier segundo piso del roadmap: nuevas automatizaciones, expansión comercial, monitoreo recurrente, UI o crecimiento de features dependen de que esta capa esté resuelta.
+
+Contrato mínimo:
+
+1. Si los módulos detectan N brechas, el diagnóstico y oportunidad deben cubrir N brechas o justificar explícitamente cuáles se agrupan, descartan o aplazan.
+2. Cada brecha priorizada debe mapearse a una recomendación comercial concreta.
+3. Cada recomendación vendida en la propuesta debe tener assets correspondientes, específicos para el hotel y trazables a la brecha que resuelven.
+4. Ningún asset genérico debe presentarse como solución terminada si no ataca una brecha real del hotel.
+5. Si faltan datos reales, el output debe declararlo como `ESTIMATED`, `PENDING_ONBOARDING` o `CONFLICT`, no ocultarlo detrás de narrativa comercial.
+6. La publicación o entrega debe bloquearse si diagnóstico, propuesta y assets se contradicen.
+
+Este contrato debe ser ejecutado por agentes y gates, no recordado manualmente por el humano en cada entrega.
+
 ---
 
 ## 5. Contrato de producto: quién ejecuta qué
@@ -230,13 +253,65 @@ Recibe:
 - plan de acción,
 - eventual reporte de seguimiento.
 
+### 6.4 Capa de aseguramiento de entrega confiable
+
+Esta capa debe cerrar el loop interno que hoy requiere invocación manual después de generar entregables en `output/v4_complete`.
+
+Problema actual:
+
+- Los módulos pueden detectar más brechas que las que aparecen en diagnóstico y oportunidad.
+- La propuesta comercial puede vender soluciones que no quedan materializadas en assets concretos.
+- Los assets pueden existir pero ser genéricos, estimados o desconectados del dolor específico del hotel.
+- El humano debe pedir manualmente al agente que audite coherencia, cobertura y calidad después de cada entrega.
+
+Arquitectura objetivo:
+
+| Contrato interno | Qué debe asegurar | Evidencia esperada |
+|------------------|-------------------|--------------------|
+| `pain_ledger` / brechas fuente de verdad | Toda brecha detectada queda normalizada con `pain_id`, severidad, fuente y confianza | JSON rastreable en `output/v4_complete/<hotel>/` |
+| Diagnóstico y oportunidad | Cobertura 1:1 o justificación explícita para cada brecha detectada | Tabla brecha → impacto → oportunidad → evidencia |
+| Propuesta comercial | Cada servicio vendido responde a una o más brechas priorizadas | Matriz brecha → servicio → promesa comercial |
+| Assets | Cada asset generado resuelve una brecha o servicio específico, no una plantilla genérica | Matriz servicio → asset → archivo → confidence |
+| Delivery gate | Bloquea entrega si hay brechas sin explicar, servicios sin asset o assets genéricos vendidos como específicos | `delivery_quality_report.json` + estado PASS/FAIL |
+
+Reglas obligatorias:
+
+1. **Coverage gate**: `brechas_en_diagnostico + brechas_justificadas == brechas_detectadas`.
+2. **Commercial alignment gate**: todo servicio de la propuesta debe mapear a brecha real, evidencia y asset.
+3. **Asset specificity gate**: cada asset debe mencionar el hotel, el problema que resuelve y el punto de implementación; si no, queda `GENERIC_DRAFT` y no se vende como solución final.
+4. **Evidence gate**: cada claim fuerte debe tener fuente: web, GBP, onboarding, benchmark o estimación declarada.
+5. **No silent drop**: ninguna brecha puede desaparecer entre módulos, diagnóstico, propuesta y assets sin explicación auditable.
+6. **Human review mínima**: el humano revisa excepciones y decisión comercial final, no reconstruye manualmente la coherencia.
+
+Resultado esperado:
+
+> `v4complete` no solo genera archivos; entrega un paquete autoconsistente donde diagnóstico, oportunidad, propuesta y assets cuentan la misma historia comercial y técnica.
+
 ---
 
 ## 7. Roadmap técnico agent-first, 90 días
 
+### FASE 0: Primer piso — entrega confiable al cliente (bloqueante)
+
+Objetivo: asegurar que `v4complete` entregue una solución confiable antes de construir capas superiores de automatización, comercialización o producto.
+
+Esta fase no es opcional ni posterior: es el prerrequisito para escalar. Si falla, se detienen FASE C, seguimiento recurrente, UI, automatizaciones adicionales y cualquier expansión de producto.
+
+| ID | Entregable | Resultado esperado | Gate |
+|----|------------|-------------------|------|
+| 0-01 | `pain_ledger` operativo | Todas las brechas detectadas tienen ID, fuente, severidad, confianza y estado | 100% trazables |
+| 0-02 | Coverage diagnóstico/oportunidad | Ninguna brecha desaparece sin explicación | No silent drop PASS |
+| 0-03 | Matriz propuesta → brecha → asset | Todo lo vendido responde a una brecha real y tiene asset específico | Delivery coherence PASS |
+| 0-04 | `delivery_quality_report.json` bloqueante | QA post-generación automático sobre `output/v4_complete` | PASS antes de ZIP/publicación |
+| 0-05 | Checklist humano reducido | El humano revisa excepciones y decisión comercial, no reconstruye coherencia | <= 10 min |
+
+Definición de terminado:
+
+> Un agente puede responder, con evidencia por archivo: qué brechas detectó, cuáles entraron al diagnóstico, qué oportunidad comercial justifican, qué se propone vender y qué assets específicos entregan esa solución.
+
 ### FASE A: Baseline de robustez agente (1-2 semanas)
 
-Objetivo: asegurar que el repo sea navegable y ejecutable por agentes sin ambigüedad.
+Objetivo: asegurar que el repo sea navegable y ejecutable por agentes sin ambigüedad, subordinado al contrato de entrega confiable de FASE 0.
 
 | ID | Entregable | Resultado esperado | Gate |
 |----|------------|-------------------|------|
@@ -268,6 +343,8 @@ Objetivo: reducir fallos de ejecución multi-sesión.
 
 ### FASE C: Operación comercial asistida por agentes (4-8 semanas)
 
+Dependencia: no se escala esta fase si FASE 0 no está en PASS. La venta asistida por agentes solo tiene sentido si la entrega base ya es confiable.
+
 Objetivo: que la venta inicial use agentes para investigación, diagnóstico y preparación, pero mantenga al humano en cierre y relación comercial.
 
 | ID | Entregable | Resultado esperado | Gate |
@@ -284,22 +361,32 @@ Regla:
 
 ### FASE D: Cierre de loop diagnóstico → propuesta → assets (8-12 semanas)
 
-Objetivo: convertir el pipeline en una unidad de entrega más confiable y menos dependiente de intervención manual.
+Dependencia: esta fase profundiza y productiza FASE 0. No debe tratarse como mejora tardía; FASE 0 entrega el mínimo confiable y FASE D lo convierte en estándar repetible.
+
+Objetivo: convertir el pipeline en una unidad de entrega confiable, menos dependiente de intervención manual y capaz de demostrar que lo diagnosticado, lo vendido y lo entregado están alineados.
 
 | ID | Entregable | Resultado esperado | Gate |
 |----|------------|-------------------|------|
 | D-01 | E2E v4complete por cliente pago | Diagnóstico + propuesta + assets + gates | Coherence >= 0.8 |
-| D-02 | Kit de entrega profesional | ZIP + README + evidencia resumida | Cliente puede entenderlo |
-| D-03 | Checklist pre-envío humano | Solo decisiones comerciales, no debugging técnico | 5-10 min máximo |
-| D-04 | Registro de caso | Antes/después, hallazgo, solución, resultado | Publicable con permiso |
-| D-05 | Seguimiento básico | Revisión 30 días si aplica | Output comparable |
+| D-02 | `pain_ledger` como fuente de verdad | Brechas normalizadas con ID, fuente, severidad, confianza y estado | 100% de brechas detectadas trazables |
+| D-03 | Matriz diagnóstico/oportunidad | Cada brecha aparece en el diagnóstico o queda explícitamente agrupada/justificada | No silent drop |
+| D-04 | Matriz propuesta → brecha → asset | Cada servicio vendido responde a brecha real y tiene asset específico | Proposal-asset alignment PASS |
+| D-05 | `delivery_quality_report.json` obligatorio | QA agent-first post-generación sobre `output/v4_complete` | PASS antes de ZIP/publicación |
+| D-06 | Kit de entrega profesional | ZIP + README + evidencia resumida + reporte de calidad | Cliente puede entenderlo |
+| D-07 | Checklist pre-envío humano | Solo excepciones, decisiones comerciales y tono final; no debugging técnico | 5-10 min máximo |
+| D-08 | Registro de caso | Antes/después, hallazgo, solución, resultado | Publicable con permiso |
+| D-09 | Seguimiento básico | Revisión 30 días si aplica | Output comparable |
+
+Criterio de éxito específico:
+
+> Para cada hotel, el agente debe poder explicar automáticamente: “detectamos estas brechas, priorizamos estas oportunidades, vendemos estas soluciones y entregamos estos assets para resolverlas”.
 
 ---
 
-## 8. Roadmap comercial, subordinado a validación
+## 8. Roadmap comercial, subordinado a validación y entrega confiable
 
-La robustez agente no reemplaza la validación comercial.
-El roadmap comercial se mantiene, pero con agentes como multiplicador operativo.
+La robustez agente no reemplaza la validación comercial, pero la validación comercial tampoco debe avanzar sobre entregas inconsistentes.
+El roadmap comercial se mantiene con agentes como multiplicador operativo, condicionado a FASE 0: primero entrega confiable, después escala comercial.
 
 ### Producto 1: Diagnóstico Express
 
@@ -354,13 +441,16 @@ Disparadores:
 
 | Gate | Pregunta | Si falla |
 |------|----------|----------|
+| G0: Primer piso / entrega confiable | ¿El pipeline entrega diagnóstico, oportunidad, propuesta y assets autoconsistentes para un hotel real? | Bloquear fases superiores: no escalar comercialización, UI, monitoreo ni nuevas features |
 | G1: Agent readiness | ¿Un agente fresco puede entender y ejecutar sin preguntar? | Mejorar AGENTS/workflows antes de más features |
 | G2: Human minimalism | ¿El humano solo decide lo esencial? | Eliminar pasos humanos o moverlos a agente |
 | G3: Evidence | ¿Cada claim comercial tiene evidencia? | Bloquear entrega o marcar ESTIMATED |
 | G4: Commercial validation | ¿Alguien pagó? | No escalar automatización comercial |
 | G5: Cost control | ¿API/cómputo sigue barato? | Activar permission_mode / reducir llamadas |
-| G6: Coherence | ¿Diagnóstico, propuesta y assets coinciden? | Bloquear publicación |
-| G7: Documentation drift | ¿Docs críticas reflejan realidad actual? | Ejecutar docs cascade / doctor |
+| G6: Delivery coherence | ¿Diagnóstico, oportunidad, propuesta y assets cuentan la misma historia? | Bloquear publicación |
+| G7: Brecha coverage | ¿Todas las brechas detectadas aparecen, se agrupan o se justifican explícitamente? | Reabrir diagnóstico antes de generar ZIP |
+| G8: Asset specificity | ¿Cada asset resuelve un problema real del hotel y no es plantilla genérica? | Marcar `GENERIC_DRAFT` o regenerar |
+| G9: Documentation drift | ¿Docs críticas reflejan realidad actual? | Ejecutar docs cascade / doctor |
 
 ---
 
@@ -380,11 +470,12 @@ No construir:
 
 Hasta que existan señales:
 
+- FASE 0 en PASS para entregas reales,
 - 3-5 Express pagos,
 - 1 implementación cerrada,
 - 5+ debriefs reales,
 - objeciones repetidas,
-- flujo de entrega manual repetido 10 veces.
+- flujo de entrega confiable repetido 10 veces.
 
 ---
 
@@ -398,6 +489,9 @@ Hasta que existan señales:
 | Ejecución de fase sin contexto humano adicional | 1 caso | 3 casos |
 | Validaciones rápidas post-cambio | Pasa | Pasa consistentemente |
 | Outputs con evidencia rastreable | 90% | 95%+ |
+| Brechas detectadas cubiertas o justificadas | 95% | 100% |
+| Servicios vendidos con asset específico | 90% | 100% |
+| Assets marcados correctamente (`VERIFIED`/`ESTIMATED`/`CONFLICT`/`GENERIC_DRAFT`) | 95% | 100% |
 | Docs críticas sin drift visible | AGENTS/README/CONTRIBUTING | + ROADMAP alineado |
 | Tiempo humano pre-envío | <= 15 min | <= 10 min |
 
@@ -427,6 +521,9 @@ Hasta que existan señales:
 | Costos API crecen con automatización | Media | Medio | `permission_mode`, presupuestos y modo fallback |
 | Se construye UI antes de tracción | Media | Alto | Gate explícito: no UI pesada hasta 10+ entregas manuales |
 | Outputs estimados se venden como verificados | Media | Alto | Taxonomía VERIFIED/ESTIMATED/CONFLICT obligatoria |
+| Brechas detectadas desaparecen del diagnóstico final | Media | Alto | Coverage gate y `pain_ledger` obligatorio |
+| Propuesta promete servicios que los assets no materializan | Media | Alto | Matriz propuesta → brecha → asset bloqueante |
+| Assets genéricos erosionan confianza del cliente | Media | Alto | Asset specificity gate + etiqueta `GENERIC_DRAFT` |
 
 ---
 
@@ -437,7 +534,9 @@ Hasta que existan señales:
 3. Reducir duplicación entre README, AGENTS y docs. README debe ser humano-mínimo; AGENTS debe ser agente-operativo.
 4. Fortalecer recuperación de fases fallidas para agentes en sesiones frescas.
 5. Formalizar smoke test de agent-readiness: un agente nuevo debe poder entender estado, ejecutar validación y explicar siguiente acción.
-6. Mantener ROADMAP como documento estratégico manual. No incluirlo en cascadas automáticas salvo solicitud explícita.
+6. Elevar el QA post-generación de `output/v4_complete` a contrato nativo del pipeline: coverage de brechas, alineación comercial y especificidad de assets.
+7. Consolidar `delivery_quality_report.json` como evidencia obligatoria antes de empaquetar o enviar entregables.
+8. Mantener ROADMAP como documento estratégico manual. No incluirlo en cascadas automáticas salvo solicitud explícita.
 
 ---
 
