@@ -1621,6 +1621,10 @@ Este paquete contiene 3 guías para integrar {nombre} con las principales plataf
     def _calculate_confidence_score(self, preflight_report: PreflightReport) -> float:
         """Calculate overall confidence score from preflight report.
         
+        FASE-0H-G8: Distingue RECOMMENDED+fallback (0.8) de WARNING genérico (0.5).
+        Un fallback controlado sobre un campo RECOMMENDED produce contenido útil,
+        no genérico — no debe penalizarse igual que un campo REQUIRED faltante.
+        
         Args:
             preflight_report: Preflight check results
             
@@ -1635,7 +1639,13 @@ Este paquete contiene 3 guías para integrar {nombre} con las principales plataf
             if check.status == PreflightStatus.PASSED:
                 total_score += 1.0
             elif check.status == PreflightStatus.WARNING:
-                total_score += 0.5
+                # FASE-0H-G8: RECOMMENDED con fallback documentado → 0.8
+                # REQUIRED o sin fallback → 0.5 (sin cambio)
+                if (getattr(check, 'priority', 'REQUIRED') == "RECOMMENDED"
+                        and check.fallback_action):
+                    total_score += 0.8
+                else:
+                    total_score += 0.5
             else:
                 total_score += 0.0
         

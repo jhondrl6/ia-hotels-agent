@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-12
+> **Ultima actualizacion:** 2026-05-13
 > **Version actual:** v4.37.0
-> **Total fases completadas:** 257
+> **Total fases completadas:** 265
 
 ---
 
@@ -6400,6 +6400,181 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-0A-BASELINE - 2026-05-13
+**Descripcion:** Auditoria baseline de output hotelcastillareal sin codigo
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `.opencode/context/FASE-0-BASELINE-DELIVERY-QUALITY.md` | NUEVO | Fase-0-Baseline-Delivery-Quality |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-0B-PAIN-LEDGER - 2026-05-13
+**Descripcion:** Crear PainLedger facade sobre PainSolutionMapper
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/asset_generation/pain_ledger.py` | NUEVO | Pain Ledger |
+| `tests/asset_generation/test_pain_ledger.py` | NUEVO | Test Pain Ledger |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+
+### Validaciones
+- [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-0C-COVERAGE - 2026-05-13
+**Descripcion:** Coverage gate: ninguna brecha desaparece sin explicacion
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/quality_gates/test_coverage_gate.py` | NUEVO | Test Coverage Gate |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+
+### Validaciones
+- [x] Tests passing (11)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-0D-PROPOSAL-ASSET - 2026-05-13
+**Descripcion:** Matriz propuesta-brecha-asset con trazabilidad
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/asset_generation/test_proposal_asset_matrix.py` | NUEVO | Test Proposal Asset Matrix |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/proposal_asset_alignment.py` | Proposal Asset Alignment |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (6)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-0E-DELIVERY-QUALITY - 2026-05-13
+**Descripcion:** Delivery quality report bloqueante pre-ZIP
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/quality_gates/delivery_quality_report.py` | NUEVO | Delivery Quality Report |
+| `tests/quality_gates/test_delivery_quality_report.py` | NUEVO | Test Delivery Quality Report |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `modules/quality_gates/__init__.py` |   Init   |
+
+### Validaciones
+- [x] Tests passing (10)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-0F-HUMAN-CHECKLIST - 2026-05-13
+**Descripcion:** Checklist humano reducido <= 10 items
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/quality_gates/human_checklist_generator.py` | NUEVO | Human Checklist Generator |
+| `tests/quality_gates/test_human_checklist_generator.py` | NUEVO | Test Human Checklist Generator |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (6)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-0G-E2E - 2026-05-13
+**Descripcion:** E2E controlado con artifacts FASE 0
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-0H-G8 - 2026-05-13
+**Descripcion:** Root-cause fix: data derivation layer + REQUIRED/RECOMMENDED preflight contract + dict-tolerant confidence scoring. Derives 5 fields from audit_report. 4 assets RECOMMENDED. Fixture: 9/12 assets >=0.65.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/asset_generation/data_derivation_layer.py` | NUEVO | Data Derivation Layer |
+| `tests/asset_generation/test_data_derivation_layer.py` | NUEVO | Test Data Derivation Layer |
+| `tests/fixtures/audit_report_hotelcastillareal.json` | NUEVO | Audit Report Hotelcastillareal |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `modules/asset_generation/asset_catalog.py` | Asset Catalog |
+| `modules/asset_generation/preflight_checks.py` | Preflight Checks |
+| `modules/asset_generation/conditional_generator.py` | Conditional Generator |
+| `tests/asset_generation/test_conditional_generator.py` | Test Conditional Generator |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
+| `.opencode/plans/FASE-0-DELIVERY-QUALITY/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+
+### Validaciones
+- [x] Tests passing (26)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

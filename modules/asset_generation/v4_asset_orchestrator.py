@@ -34,6 +34,7 @@ from .asset_content_validator import AssetContentValidator, ContentStatus
 from .site_presence_checker import SitePresenceChecker  # FASE-CAUSAL-01
 from .data_assessment import DataAssessment, DataClassification  # FASE-I-01
 from .geo_enriched_bridge import try_enrich_from_geo_enriched  # FASE-GEO-BRIDGE
+from .pain_ledger import PainLedger  # FASE-0B: PainLedger facade
 from ..geo_enrichment.geo_flow import GeoFlow  # FASE-6: GEO Flow
 from data_models.canonical_assessment import (  # FASE-6: Canonical Assessment
     CanonicalAssessment,
@@ -222,6 +223,7 @@ class V4AssetOrchestrator:
         self.site_checker = SitePresenceChecker()  # FASE-CAUSAL-01
         self.data_assessor = DataAssessment()  # FASE-I-01
         self.geo_flow = GeoFlow()  # FASE-6: GEO Flow
+        self.pain_ledger = PainLedger()  # FASE-0B: PainLedger facade
     
     def generate_assets(
         self,
@@ -232,7 +234,8 @@ class V4AssetOrchestrator:
         hotel_name: str,
         hotel_url: str,  # FASE-CAUSAL-01: Ahora se requiere URL
         site_url: Optional[str] = None,  # Alias para backward compatibility
-        analytics_data: Optional[Dict[str, Any]] = None  # ANALYTICS-FIX-01: analytics pains
+        analytics_data: Optional[Dict[str, Any]] = None,  # ANALYTICS-FIX-01: analytics pains
+        audit_report_raw: Optional[Dict[str, Any]] = None,  # FASE-0H-G8: raw audit dict for derivation
     ) -> AssetGenerationResult:
         """
         Flujo completo de generación de assets v4.0:
@@ -257,7 +260,13 @@ class V4AssetOrchestrator:
         
         # 2. Detectar problemas
         pains = self.pain_mapper.detect_pains(audit_result, validation_summary, analytics_data)
-        
+
+        # FASE-0B: Crear PainLedger y guardar como fuente de verdad de brechas
+        pain_ledger_path = output_dir / "v4_audit" / "pain_ledger.json"
+        pain_ledger_entries = self.pain_ledger.from_pains(pains, source_module="pain_solution_mapper")
+        self.pain_ledger.save(pain_ledger_entries, pain_ledger_path)
+        logger.info(f"[V4AssetOrchestrator] PainLedger saved: {len(pain_ledger_entries)} entries")
+
         # 3. Mapear a soluciones
         solutions = self.pain_mapper.map_to_solutions(pains)
         asset_specs = self._solutions_to_asset_specs(solutions, pains)
@@ -271,7 +280,10 @@ class V4AssetOrchestrator:
             raise CoherenceError(f"Coherencia insuficiente: {coherence.overall_score}")
         
         # 5. Extraer datos validados (FASE 12: ahora incluye hotel_data del audit)
-        validated_data = self._extract_validated_fields(validation_summary, audit_result)
+        # FASE-0H-G8: pasa audit_report_raw para derivación de campos faltantes
+        validated_data = self._extract_validated_fields(
+            validation_summary, audit_result, audit_report_raw
+        )
 
         # PATCH-3: Inyectar output_dir para que MonthlyReportGenerator encuentre asset_generation_report.json
         validated_data["hotel_data"]["output_dir"] = str(output_dir)
@@ -686,7 +698,8 @@ class V4AssetOrchestrator:
     def _extract_validated_fields(
         self,
         validation_summary: ValidationSummary,
-        audit_result: V4AuditResult = None  # FASE 12: audit_data_pipeline
+        audit_result: V4AuditResult = None,  # FASE 12: audit_data_pipeline
+        audit_report_raw: Optional[Dict[str, Any]] = None,  # FASE-0H-G8: raw dict for derivation
     ) -> Dict[str, Any]:
         """
         Extrae campos validados para pasar a ConditionalGenerator.
@@ -694,6 +707,9 @@ class V4AssetOrchestrator:
         
         FASE 12: Ahora incluye hotel_data del audit_result.schema.properties
         para que los assets usen datos reales del hotel.
+        
+        FASE-0H-G8: Si audit_report_raw está disponible, deriva campos
+        faltantes (og_tags_detected, org_data, metadata) del audit.
         
         G6 WON'T FIX (FASE-6-HOTFIX): Los siguientes campos del hotel_schema
         requieren datos de onboarding real y no pueden poblarse solo con
@@ -821,6 +837,23 @@ class V4AssetOrchestrator:
             val = hd.get(key)
             has_it = val is not None and val != "" and val != 0
             logger.info(f"  {key}: {'PRESENT' if has_it else 'MISSING'} ({repr(val)[:50]})")
+
+        # FASE-0H-G8: Derive missing fields from raw audit_report
+        if audit_report_raw:
+            try:
+                from .data_derivation_layer import DataDerivationLayer, merge_derived_into_validated
+                layer = DataDerivationLayer()
+                derived = layer.derive(audit_report_raw)
+                if derived:
+                    merge_derived_into_validated(validated_data, derived)
+                    logger.info(
+                        f"[V4AssetOrchestrator] FASE-0H-G8: Derived {len(derived)} fields "
+                        f"from audit_report: {list(derived.keys())}"
+                    )
+            except Exception as e:
+                logger.warning(
+                    f"[V4AssetOrchestrator] FASE-0H-G8: derivation skipped — {e}"
+                )
 
         return validated_data
     

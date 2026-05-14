@@ -1,7 +1,28 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.45.0 (TERMALES-GATE-HARDENING)
-**Última actualización:** 2026-05-12
+**Última actualización:** 2026-05-13
+
+---
+
+### v4.45.0 — FASE-0H-G8: Data Derivation + REQUIRED/RECOMMENDED Preflight Contract — 2026-05-13
+
+**Módulos afectados**: `asset_generation/data_derivation_layer.py` (NUEVO), `asset_generation/v4_asset_orchestrator.py`, `asset_generation/asset_catalog.py`, `asset_generation/preflight_checks.py`, `asset_generation/conditional_generator.py`
+
+**Problema**:
+- G8 FAIL: 8/12 assets con confidence=0.5 porque `required_field` no existía en `validated_data`
+- `_calculate_confidence_score()` penalizaba WARNING genérico (0.5) sin distinguir campos opcionales de esenciales
+- Campos como `og_tags_detected`, `org_data` existían en el `audit_report` pero no se derivaban a `validated_data`
+
+**Solución**:
+1. **DataDerivationLayer** (`data_derivation_layer.py`): Deriva 5 campos del `audit_report` existente — `og_tags_detected` (desde `seo_elements`), `org_data` (desde `schema` + `gbp`), `ga4_available` (desde `ai_crawlers`), `organic_traffic` (desde `performance`/`llm_report` proxies), `metadata` (desde `audit.metadata`)
+2. **Contrato REQUIRED/RECOMMENDED**: Nuevo campo `priority` en `AssetCatalogEntry` y `PreflightCheck`. 4 assets reclasificados a RECOMMENDED (`analytics_setup_guide`, `indirect_traffic_optimization`, `og_tags_guide`, `org_schema`)
+3. **Scoring semántico**: `_calculate_confidence_score()` asigna 0.8 a WARNING con `RECOMMENDED+fallback` (vs 0.5 para REQUIRED)
+4. **_evaluate_check() dict-tolerant**: Maneja tanto `DataPoint` objects como `dict` derivados; aplica heurística ESTIMATED (0.7) a dicts con datos reales sin metadatos explícitos
+
+**Backwards compatibility**: 100% — `priority` default es `REQUIRED`; derivación se activa solo si `audit_report_raw` se pasa (parámetro opcional); scoring preexistente sin cambios para REQUIRED.
+
+**Tests**: 26 tests nuevos (18 derivation + 8 scoring/fixture). Hotel Castilla Real fixture: 8/8 assets afectados ≥ 0.65 (vs 0/8 baseline). 0 regresiones en módulos modificados.
 
 ---
 

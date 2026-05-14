@@ -9,9 +9,9 @@ Created as part of FASE-ASSET-02: Catálogo Unificado.
 """
 
 from dataclasses import dataclass
+from dataclasses import dataclass
 from enum import Enum
-from typing import List, Dict, Any
-
+from typing import List, Dict, Any, Literal
 
 class AssetStatus(Enum):
     """Status of an asset in the catalog."""
@@ -36,6 +36,8 @@ class AssetCatalogEntry:
         block_on_failure: Whether to block generation if requirements not met
         status: Current status in the catalog
         promised_by: List of pain IDs that this asset promises to solve
+        priority: REQUIRED (field essential → BLOCKED if missing) or
+                  RECOMMENDED (field optional → WARNING with fallback, no confidence penalty)
     """
     asset_type: str
     template: str
@@ -46,6 +48,7 @@ class AssetCatalogEntry:
     block_on_failure: bool
     status: AssetStatus
     promised_by: List[str]
+    priority: Literal["REQUIRED", "RECOMMENDED"] = "REQUIRED"  # FASE-0H-G8
 
 
 # Asset Catalog - Single Source of Truth
@@ -137,7 +140,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_basic_org",
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["no_org_schema"]
+        promised_by=["no_org_schema"],
+        priority="RECOMMENDED",  # FASE-0H-G8: hotel may not have org schema
     ),
     "barra_reserva_movil": AssetCatalogEntry(
         asset_type="barra_reserva_movil",
@@ -239,7 +243,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_og_tags_guide",
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["no_og_tags"]
+        promised_by=["no_og_tags"],
+        priority="RECOMMENDED",  # FASE-0H-G8: OG tags may not exist; setup guide is still valid
     ),
     "alt_text_guide": AssetCatalogEntry(
         asset_type="alt_text_guide",
@@ -284,7 +289,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_analytics_guide",
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["no_analytics_configured", "no_ga4_enhanced"]
+        promised_by=["no_analytics_configured", "no_ga4_enhanced"],
+        priority="RECOMMENDED",  # FASE-0H-G8: hotel may not have GA4; fallback acceptable
     ),
     "indirect_traffic_optimization": AssetCatalogEntry(
         asset_type="indirect_traffic_optimization",
@@ -295,7 +301,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_traffic_optimization_guide",
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["low_organic_visibility"]
+        promised_by=["low_organic_visibility"],
+        priority="RECOMMENDED",  # FASE-0H-G8: organic traffic may not be available
     ),
     # FASE-E: Micro-Content Local Generator
     "local_content_page": AssetCatalogEntry(
@@ -394,7 +401,8 @@ def get_asset_requirements(asset_type: str) -> Dict[str, Any]:
         "required_field": entry.required_field,
         "required_confidence": entry.required_confidence,
         "fallback": entry.fallback,
-        "block_on_failure": entry.block_on_failure
+        "block_on_failure": entry.block_on_failure,
+        "priority": entry.priority,  # FASE-0H-G8
     }
 
 

@@ -28,6 +28,7 @@ class PreflightCheck:
     message: str
     can_generate: bool
     fallback_action: Optional[str] = None
+    priority: str = "REQUIRED"  # FASE-0H-G8: REQUIRED or RECOMMENDED
 
 
 @dataclass
@@ -70,7 +71,8 @@ class PreflightChecker:
                 "required_confidence": v.required_confidence,
                 "required_field": v.required_field,
                 "block_on_failure": v.block_on_failure,
-                "fallback": v.fallback
+                "fallback": v.fallback,
+                "priority": getattr(v, 'priority', 'REQUIRED'),  # FASE-0H-G8
             }
             for k, v in ASSET_CATALOG.items()
             if v.status in (AssetStatus.IMPLEMENTED, AssetStatus.MANUAL_ONLY)
@@ -165,6 +167,7 @@ class PreflightChecker:
         
         block_on_failure = requirements["block_on_failure"]
         fallback = requirements.get("fallback")
+        priority = requirements.get("priority", "REQUIRED")  # FASE-0H-G8
 
         checks = []
         warnings = []
@@ -180,7 +183,8 @@ class PreflightChecker:
                     status=PreflightStatus.BLOCKED,
                     message=f"Required field '{required_field}' not found in validated data",
                     can_generate=False,
-                    fallback_action=None
+                    fallback_action=None,
+                    priority=priority,
                 )
                 checks.append(check)
                 blocking_issues.append(f"Missing field: {required_field}")
@@ -194,7 +198,8 @@ class PreflightChecker:
                     status=PreflightStatus.WARNING,
                     message=f"Using fallback: Required field '{required_field}' not found",
                     can_generate=True,
-                    fallback_action=fallback
+                    fallback_action=fallback,
+                    priority=priority,
                 )
                 check.fallback_action = fallback
                 checks.append(check)
@@ -208,6 +213,7 @@ class PreflightChecker:
                 required_confidence
             )
             check.fallback_action = fallback if not block_on_failure and check.status != PreflightStatus.PASSED else None
+            check.priority = priority  # FASE-0H-G8
             checks.append(check)
 
             if check.status == PreflightStatus.BLOCKED:
@@ -244,9 +250,12 @@ class PreflightChecker:
     def _evaluate_check(self, field_name: str, data_point: DataPoint, required_confidence: float) -> PreflightCheck:
         """Evaluate a single data point against confidence requirements.
 
+        FASE-0H-G8: Handles both DataPoint objects (with .confidence attribute)
+        and plain dicts (with 'confidence' key) from DataDerivationLayer.
+
         Args:
             field_name: Name of the field being checked
-            data_point: The data point to evaluate
+            data_point: The data point to evaluate (DataPoint or dict)
             required_confidence: Minimum required confidence level (0.0 - 1.0)
 
         Returns:
@@ -254,8 +263,22 @@ class PreflightChecker:
         """
         from ..data_validation.confidence_taxonomy import ConfidenceLevel
         
-        # Convert ConfidenceLevel enum to numeric score
-        confidence_level = getattr(data_point, 'confidence', ConfidenceLevel.UNKNOWN)
+        # FASE-0H-G8: Extract confidence from DataPoint attribute OR dict key
+        if isinstance(data_point, dict):
+            confidence_level = data_point.get('confidence', ConfidenceLevel.UNKNOWN)
+            # FASE-0H-G8: Plain dict without explicit confidence (e.g., hotel_data)
+            # → heuristic: if dict has >2 non-empty values, treat as ESTIMATED (0.7)
+            # This prevents UNKNOWN (0.0) penalty for real but un-annotated data.
+            if confidence_level == ConfidenceLevel.UNKNOWN and len(data_point) > 2:
+                has_values = sum(
+                    1 for v in data_point.values()
+                    if v is not None and v != "" and v != 0 and v != []
+                )
+                if has_values > 2:
+                    confidence_level = ConfidenceLevel.ESTIMATED
+        else:
+            confidence_level = getattr(data_point, 'confidence', ConfidenceLevel.UNKNOWN)
+            
         if isinstance(confidence_level, ConfidenceLevel):
             confidence_map = {
                 ConfidenceLevel.VERIFIED: 1.0,
@@ -274,8 +297,12 @@ class PreflightChecker:
             if match_pct > actual_confidence:
                 actual_confidence = match_pct
         
-        value = getattr(data_point, 'value', None)
-        is_verified = getattr(data_point, 'is_verified', False)
+        # FASE-0H-G8: Extract value from DataPoint attribute OR dict key
+        if isinstance(data_point, dict):
+            value = data_point.get('value', None)
+        else:
+            value = getattr(data_point, 'value', None)
+        is_verified = getattr(data_point, 'is_verified', False) if not isinstance(data_point, dict) else data_point.get('is_verified', False)
 
         if actual_confidence >= required_confidence:
             return PreflightCheck(

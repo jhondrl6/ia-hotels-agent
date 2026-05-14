@@ -646,3 +646,271 @@ class TestHotelSchemaRichPreference:
         parsed = json.loads(content)
         assert parsed["@type"] == "Hotel"
         assert parsed["name"] == "Viajero Hotel"
+
+
+# ═══════════════════════════════════════════════════════════════════
+# FASE-0H-G8: Confidence Scoring Tests
+# ═══════════════════════════════════════════════════════════════════
+
+class TestConfidenceScoringFase0HG8:
+    """Tests for _calculate_confidence_score with REQUIRED/RECOMMENDED priority."""
+
+    def setup_method(self):
+        self.generator = ConditionalGenerator(output_dir="test_output")
+
+    def test_recommended_warning_scores_0_8(self):
+        """RECOMMENDED + WARNING + fallback → confidence 0.8."""
+        report = PreflightReport(
+            asset_type="og_tags_guide",
+            overall_status=PreflightStatus.WARNING,
+            checks=[
+                PreflightCheck(
+                    check_name="og_tags_detected_exists",
+                    field_name="og_tags_detected",
+                    required_confidence=0.4,
+                    status=PreflightStatus.WARNING,
+                    message="Using fallback: og_tags_detected not found",
+                    can_generate=True,
+                    fallback_action="generate_og_tags_guide",
+                    priority="RECOMMENDED",
+                )
+            ],
+            can_proceed=True,
+            warnings=["Missing field og_tags_detected, using fallback"],
+            blocking_issues=[],
+        )
+        score = self.generator._calculate_confidence_score(report)
+        assert score == 0.8, f"Expected 0.8, got {score}"
+
+    def test_recommended_warning_no_fallback_scores_0_5(self):
+        """RECOMMENDED + WARNING but NO fallback → still 0.5 (no bump)."""
+        report = PreflightReport(
+            asset_type="some_asset",
+            overall_status=PreflightStatus.WARNING,
+            checks=[
+                PreflightCheck(
+                    check_name="field_exists",
+                    field_name="some_field",
+                    required_confidence=0.5,
+                    status=PreflightStatus.WARNING,
+                    message="Missing field",
+                    can_generate=True,
+                    fallback_action=None,
+                    priority="RECOMMENDED",
+                )
+            ],
+            can_proceed=True,
+            warnings=["Missing field"],
+            blocking_issues=[],
+        )
+        score = self.generator._calculate_confidence_score(report)
+        assert score == 0.5, f"Expected 0.5, got {score}"
+
+    def test_required_warning_scores_0_5(self):
+        """REQUIRED + WARNING → 0.5 (no change from current behavior)."""
+        report = PreflightReport(
+            asset_type="hotel_schema",
+            overall_status=PreflightStatus.WARNING,
+            checks=[
+                PreflightCheck(
+                    check_name="hotel_data_confidence",
+                    field_name="hotel_data",
+                    required_confidence=0.6,
+                    status=PreflightStatus.WARNING,
+                    message="Confidence 0.40 below requirement (0.60) but acceptable",
+                    can_generate=True,
+                    fallback_action="generate_basic_schema",
+                    priority="REQUIRED",
+                )
+            ],
+            can_proceed=True,
+            warnings=["Suboptimal confidence in hotel_data"],
+            blocking_issues=[],
+        )
+        score = self.generator._calculate_confidence_score(report)
+        assert score == 0.5, f"Expected 0.5, got {score}"
+
+    def test_passed_check_scores_1_0(self):
+        """PASSED check → 1.0 (unchanged)."""
+        report = PreflightReport(
+            asset_type="faq_page",
+            overall_status=PreflightStatus.PASSED,
+            checks=[
+                PreflightCheck(
+                    check_name="faqs_confidence",
+                    field_name="faqs",
+                    required_confidence=0.5,
+                    status=PreflightStatus.PASSED,
+                    message="Confidence 0.85 meets requirement",
+                    can_generate=True,
+                    fallback_action=None,
+                    priority="REQUIRED",
+                )
+            ],
+            can_proceed=True,
+            warnings=[],
+            blocking_issues=[],
+        )
+        score = self.generator._calculate_confidence_score(report)
+        assert score == 1.0, f"Expected 1.0, got {score}"
+
+    def test_blocked_check_scores_0_0(self):
+        """BLOCKED check → 0.0 (unchanged)."""
+        report = PreflightReport(
+            asset_type="unknown",
+            overall_status=PreflightStatus.BLOCKED,
+            checks=[
+                PreflightCheck(
+                    check_name="field_confidence",
+                    field_name="field",
+                    required_confidence=0.5,
+                    status=PreflightStatus.BLOCKED,
+                    message="Confidence too low",
+                    can_generate=False,
+                    fallback_action=None,
+                    priority="REQUIRED",
+                )
+            ],
+            can_proceed=False,
+            warnings=[],
+            blocking_issues=["Blocked"],
+        )
+        score = self.generator._calculate_confidence_score(report)
+        assert score == 0.0, f"Expected 0.0, got {score}"
+
+    def test_mixed_checks_average_correctly(self):
+        """Mixed PASSED + RECOMMENDED_WARNING → correct average."""
+        report = PreflightReport(
+            asset_type="mixed_asset",
+            overall_status=PreflightStatus.WARNING,
+            checks=[
+                PreflightCheck(
+                    check_name="check1",
+                    field_name="field1",
+                    required_confidence=0.5,
+                    status=PreflightStatus.PASSED,
+                    message="OK",
+                    can_generate=True,
+                    priority="REQUIRED",
+                ),
+                PreflightCheck(
+                    check_name="check2",
+                    field_name="field2",
+                    required_confidence=0.4,
+                    status=PreflightStatus.WARNING,
+                    message="fallback used",
+                    can_generate=True,
+                    fallback_action="some_fallback",
+                    priority="RECOMMENDED",
+                ),
+            ],
+            can_proceed=True,
+            warnings=["fallback"],
+            blocking_issues=[],
+        )
+        score = self.generator._calculate_confidence_score(report)
+        # (1.0 + 0.8) / 2 = 0.9
+        assert score == 0.9, f"Expected 0.9, got {score}"
+
+    def test_no_checks_returns_zero(self):
+        """Empty checks → 0.0."""
+        report = PreflightReport(
+            asset_type="empty",
+            overall_status=PreflightStatus.BLOCKED,
+            checks=[],
+            can_proceed=False,
+            warnings=[],
+            blocking_issues=["Unknown asset"],
+        )
+        score = self.generator._calculate_confidence_score(report)
+        assert score == 0.0
+
+
+class TestHotelCastillaRealFixtureG8:
+    """Validates that Hotel Castilla Real fixture demonstrates G8 improvement."""
+
+    def test_fixture_assets_confidence_improvement(self):
+        """After derivation + priority changes, more assets should have confidence >= 0.65."""
+        import json
+        from pathlib import Path
+        from modules.asset_generation.data_derivation_layer import (
+            DataDerivationLayer,
+            merge_derived_into_validated,
+        )
+        from modules.asset_generation.preflight_checks import PreflightChecker
+
+        fixture_path = (
+            Path(__file__).parent.parent / "fixtures"
+            / "audit_report_hotelcastillareal.json"
+        )
+        if not fixture_path.exists():
+            pytest.skip(f"Fixture not found: {fixture_path}")
+
+        with open(fixture_path, "r", encoding="utf-8") as f:
+            audit_report = json.load(f)
+
+        # Simulate validated_data as orchestrator would build it
+        # (minimal hotel_data from GBP/schema)
+        validated_data = {
+            "hotel_data": {
+                "name": audit_report.get("hotel_name", "Hotel Castilla Real"),
+                "url": audit_report.get("url", ""),
+            }
+        }
+
+        # Add GBP data if available
+        gbp = audit_report.get("gbp", {})
+        if gbp:
+            if gbp.get("rating"):
+                validated_data["hotel_data"]["rating"] = gbp["rating"]
+            if gbp.get("reviews"):
+                validated_data["hotel_data"]["review_count"] = gbp["reviews"]
+            if gbp.get("address"):
+                validated_data["hotel_data"]["address"] = gbp["address"]
+            if gbp.get("phone"):
+                validated_data["hotel_data"]["telephone"] = gbp["phone"]
+            validated_data["hotel_data"]["latitude"] = gbp.get("lat", 0)
+            validated_data["hotel_data"]["longitude"] = gbp.get("lng", 0)
+
+        # Derive missing fields
+        layer = DataDerivationLayer()
+        derived = layer.derive(audit_report)
+        merge_derived_into_validated(validated_data, derived)
+
+        # Asset types to check (from the plan)
+        affected_assets = [
+            "optimization_guide",    # metadata → now derivable!
+            "local_content_page",    # hotel_data
+            "analytics_setup_guide", # ga4_available → RECOMMENDED
+            "indirect_traffic_optimization",  # organic_traffic → RECOMMENDED
+            "og_tags_guide",         # og_tags_detected → derivable + RECOMMENDED
+            "open_graph",            # hotel_data
+            "org_schema",            # org_data → derivable + RECOMMENDED
+            "monthly_report",        # hotel_data
+        ]
+
+        checker = PreflightChecker()
+        high_confidence_count = 0
+
+        for asset_type in affected_assets:
+            report = checker.check_asset(asset_type, validated_data)
+
+            # Calculate confidence using the generator's method
+            generator = ConditionalGenerator(output_dir="test_output")
+            score = generator._calculate_confidence_score(report)
+
+            # Log for debugging
+            print(f"  {asset_type}: confidence={score:.2f}, "
+                  f"status={report.overall_status.value}, "
+                  f"priority={getattr(report.checks[0], 'priority', 'N/A') if report.checks else 'no_checks'}")
+
+            if score >= 0.65:
+                high_confidence_count += 1
+
+        # VERIFICATION: At least 6 of 8 affected assets should now have confidence >= 0.65
+        # (up from 0/8 in the baseline)
+        print(f"\n  Assets with confidence >= 0.65: {high_confidence_count}/8")
+        assert high_confidence_count >= 6, (
+            f"Expected >=6 assets with confidence >=0.65, got {high_confidence_count}/8. "
+            f"G8 hardening insufficient."
+        )
