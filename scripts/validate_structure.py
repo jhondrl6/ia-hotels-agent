@@ -19,6 +19,11 @@ Date: 2025-11-22
 import sys
 from pathlib import Path
 
+# Fix de encoding para Windows: previene UnicodeEncodeError con tildes/emojis
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 
 def validate_structure():
     """

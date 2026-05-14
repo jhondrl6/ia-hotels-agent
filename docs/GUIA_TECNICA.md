@@ -1,7 +1,37 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.46.0 (DELIVERY-QUALITY-RELEASE)
-**Última actualización:** 2026-05-13
+**Versión:** v4.46.1 (ENCODING-SAFETY)
+**Última actualización:** 2026-05-14
+
+---
+
+### v4.46.1 — FIX-ENCODING-SISTEMICO: Prevención de Memory Leak por Encoding — 2026-05-14
+
+**Módulos afectados**: `scripts/verify_ga4.py`, `scripts/validate_structure.py`, `scripts/update_benchmarks.py`, `scripts/validate_document_integration.py`, `docs/CONTRIBUTING.md`, `docs/contributing/documentation_rules.md`
+
+**Problema**:
+- `python.exe` (Windows) consumió 42.5 GB de memoria virtual y congeló el sistema (2026-05-13 22:16)
+- Causa raíz: scripts con `print()` de caracteres Unicode (tildes, flechas, emojis) en stdout configurado en `cp1252` → `UnicodeEncodeError` → pipe rota → memory leak
+- Mecanismo de 3 capas: (1) Python imprime carácter fuera de cp1252, (2) excepción rompe pipe Hermes↔Python, (3) Hermes re-ejecuta sin limpiar proceso zombie → buffers huérfanos se acumulan
+- 5 re-ejecuciones en 3 minutos sin limpieza de procesos fallidos
+
+**Solución (3 fases + documentación)**:
+1. **FASE-A (Parche inmediato)**: `TextIOWrapper` con UTF-8 en stdout/stderr de `validate_document_integration.py` (script que disparó el incidente)
+2. **FASE-B (Parche sistémico)**: `reconfigure()` UTF-8 en 3 scripts que carecían de fix (`verify_ga4.py`, `validate_structure.py`, `update_benchmarks.py`). Verificación de 4 scripts que ya tenían protección.
+3. **FASE-C (Configuración Hermes)**: `tool_loop_guardrails.hard_stop_enabled: true` + `hard_stop_after.exact_failure: 3` — detiene re-ejecución automática tras 3 fallos del mismo comando
+4. **FASE-D (Documentación)**: Sección "Encoding en scripts Python" en CONTRIBUTING.md con patrón estándar `reconfigure()`. Regla de gate en documentation_rules.md.
+
+**Patrón estándar** (3 líneas al inicio del script, antes de cualquier `print()`):
+```python
+import sys
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+```
+
+**Backwards compatibility**: 100%. El fix no cambia comportamiento, solo previene crash en Windows. En Linux/macOS, `sys.stdout.encoding` ya es UTF-8 por defecto y `reconfigure()` es no-op.
+
+**Tests**: `run_all_validations.py --quick` 5/5 PASS sin regresiones. 3 scripts parcheados ejecutan sin `UnicodeEncodeError` en WSL.
 
 ---
 

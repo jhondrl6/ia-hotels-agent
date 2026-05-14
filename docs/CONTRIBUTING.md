@@ -1,7 +1,7 @@
 # Contribuir con la Documentacion Oficial
 
 > Este archivo responde a **una sola pregunta**: como se actualiza la documentacion oficial del repositorio con suficiencia y claridad.
-> **Version:** v4.46.0 | Consulta REGISTRY.md para el historial de fases completadas.
+> **Version:** v4.46.1 | Consulta REGISTRY.md para el historial de fases completadas.
 
 ---
 
@@ -286,6 +286,70 @@ El comando `python main.py --doctor` incluye un check de "Symlink integrity" que
 - `.agent/SYSTEM_STATUS.md` → `python main.py --doctor --status`
 - `.agent/knowledge/DOMAIN_PRIMER.md` → `python main.py --doctor --regenerate-domain-primer`
 
+
+---
+
+## Encoding en Scripts Python (Obligatorio para Scripts CLI)
+
+> **Motivación:** Incidente 2026-05-13: `UnicodeEncodeError` en `validate_document_integration.py` causó memory leak de 42.5 GB por caracteres Unicode en stdout configurado como `cp1252` (default Windows). La clase de bug `UnicodeEncodeError` puede congelar el sistema. Esta sección establece el estándar para eliminarla permanentemente.
+
+### Por qué UTF-8
+
+En Windows, `sys.stdout.encoding` por defecto es `cp1252`, que no soporta caracteres fuera del rango Latin-1 (emojis, flechas, símbolos matemáticos, tildes en ciertos contextos). Cuando un script Python invocado por un agente imprime un carácter Unicode no representable en cp1252, el script lanza `UnicodeEncodeError`, rompe la pipe de comunicación, y puede desencadenar reintentos que acumulan buffers huérfanos → memory leak.
+
+### Patrón Estándar: `reconfigure()` (Primario)
+
+Todo script CLI que use `print()` con caracteres fuera del rango ASCII (U+0080+) DEBE incluir este bloque al inicio del script, **antes de cualquier `print()`**:
+
+```python
+import sys
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+```
+
+**Reglas:**
+- `errors="replace"` — sustituye caracteres no representables por `�` (visible pero no rompe la pipe). NO usar `errors="backslashreplace"` (genera `\u2192` que confunde en output terminal).
+- El bloque va DESPUÉS de los imports y ANTES de cualquier `print()`, `sys.stdout.write()`, o `sys.stderr.write()`.
+- Aplica tanto a `sys.stdout` como a `sys.stderr`.
+
+### Fallback: `TextIOWrapper` (Python <3.7)
+
+Si el entorno no soporta `sys.stdout.reconfigure()` (Python <3.7), usar `io.TextIOWrapper`:
+
+```python
+import sys, io
+if not hasattr(sys.stdout, "reconfigure"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+```
+
+**Nota:** Ambos patrones son funcionalmente equivalentes. `reconfigure()` es más limpio y preferido para Python ≥3.7 (el mínimo del proyecto). No reescribir scripts que ya usan `TextIOWrapper` si funcionan correctamente.
+
+### Cómo Verificar en Windows
+
+```bash
+# Verificar que el fix está presente
+grep -n "reconfigure\|TextIOWrapper" scripts/nombre_script.py
+
+# Ejecutar el script y verificar que no hay UnicodeEncodeError
+python scripts/nombre_script.py 2>&1 | grep -i "UnicodeEncodeError"
+# Si no hay output = PASS
+```
+
+### Scripts sin Unicode en prints (Exentos)
+
+Scripts cuyos `print()` usan solo caracteres ASCII (U+0000-U+007F) están exentos de esta regla. Si un script futuro agrega caracteres Unicode a sus prints, DEBE agregar el fix de encoding simultáneamente.
+
+### Gate de Validación
+
+La regla está formalizada en `docs/contributing/documentation_rules.md` §10. El script `run_all_validations.py --quick` no incluye este check (por ahora), pero `git diff --check` detectará CRLF introducidos por ediciones en Windows.
+
+**Archivos parcheados en este plan (2026-05-14):**
+- `scripts/validate_document_integration.py` — FASE-A
+- `scripts/verify_ga4.py` — FASE-B
+- `scripts/validate_structure.py` — FASE-B
+- `scripts/update_benchmarks.py` — FASE-B
 
 ---
 

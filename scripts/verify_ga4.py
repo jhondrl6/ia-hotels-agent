@@ -1,6 +1,12 @@
 
 import os
 import sys
+
+# Fix de encoding para Windows: previene UnicodeEncodeError con tildes/emojis
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 from dotenv import load_dotenv
 
 # Añadir el directorio raíz al path para poder importar módulos

@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-13
-> **Version actual:** v4.37.0
-> **Total fases completadas:** 266
+> **Ultima actualizacion:** 2026-05-14
+> **Version actual:** v4.46.0
+> **Total fases completadas:** 271
 
 ---
 
@@ -6603,6 +6603,102 @@ _Ninguno_
 ---
 
 
+## B - 2026-05-14
+**Descripcion:** Parche encoding sistémico: 3 scripts (verify_ga4, validate_structure, update_benchmarks) + verificar 4 ya parcheados (main.py, derive_version_from_changelog, version_consistency_checker, log_phase_completion). Gates G-B1, G-B2, G-B3, G-VAL todos PASS. Sin UnicodeEncodeError.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/verify_ga4.py` | Verify Ga4 |
+| `scripts/validate_structure.py` | Validate Structure |
+| `scripts/update_benchmarks.py` | Update Benchmarks |
+
+### Validaciones
+- [x] Tests passing (run_all_validations.py --quick: 5/5 PASS)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-B - 2026-05-14
+**Descripcion:** Parche 3 scripts con reconfigure UTF-8 + verificacion 4 scripts ya protegidos
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/verify_ga4.py` | Verify Ga4 |
+| `scripts/validate_structure.py` | Validate Structure |
+| `scripts/update_benchmarks.py` | Update Benchmarks |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-C - 2026-05-14
+**Descripcion:** Configuracion anti-reintentos Hermes: tool_loop_guardrails.hard_stop_enabled + investigacion cleanup procesos + PR #1321
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-D - 2026-05-14
+**Descripcion:** Seccion Encoding en scripts Python en CONTRIBUTING.md + regla gate de encoding en documentation_rules.md
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `docs/CONTRIBUTING.md` | Contributing |
+| `docs/contributing/documentation_rules.md` | Documentation Rules |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE - 2026-05-14
+**Descripcion:** Docs cascade FIX-ENCODING-SISTEMICO: CHANGELOG v4.46.1, version bump, sync_versions, GUIA_TECNICA, DOMAIN_PRIMER, validaciones
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
@@ -6629,6 +6725,48 @@ _Ninguno_
 ---
 
 ```
+
+## FASE-0-RELEASE - 2026-05-14
+
+**Descripcion:** FASE 0: Primer Piso de Entrega Confiable. 8 fases (0A-0H) completadas. Pain ledger, coverage gate, proposal-asset matrix, delivery quality report bloqueante, human checklist, data derivation layer y G8 root-cause hardening.
+
+### Archivos Nuevos
+
+| Archivo | Descripcion |
+|---------|-------------|
+| `modules/asset_generation/pain_ledger.py` | Ledger normalizado de brechas |
+| `tests/asset_generation/test_pain_ledger.py` | Tests del ledger |
+| `modules/asset_generation/data_derivation_layer.py` | Derivacion de campos del audit |
+| `tests/asset_generation/test_data_derivation_layer.py` | Tests de derivacion |
+| `modules/quality_gates/delivery_quality_report.py` | QA bloqueante pre-ZIP |
+| `tests/quality_gates/test_delivery_quality_report.py` | Tests del reporte |
+| `modules/quality_gates/human_checklist_generator.py` | Checklist humano automatico |
+| `tests/quality_gates/test_human_checklist_generator.py` | Tests del checklist |
+| `tests/fixtures/audit_report_hotelcastillareal.json` | Fixture E2E real |
+| `.opencode/context/FASE-0-BASELINE-DELIVERY-QUALITY.md` | Baseline de auditoria FASE-0A |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Integrar delivery_quality_report + human_checklist en pipeline |
+| `modules/asset_generation/v4_asset_orchestrator.py` | Inyectar PainLedger + DataDerivationLayer |
+| `modules/asset_generation/conditional_generator.py` | Contrato REQUIRED/RECOMMENDED + scoring refactor |
+| `modules/asset_generation/asset_catalog.py` | Campo priority en AssetCatalogEntry |
+| `modules/asset_generation/preflight_checks.py` | Priority REQUIRED/RECOMMENDED + dict-tolerant _evaluate_check() |
+| `modules/quality_gates/publication_gates.py` | CoverageGate integrado en run_publication_gates() |
+| `modules/asset_generation/proposal_asset_alignment.py` | ProposalAssetMatrix dinamico |
+| `modules/commercial_documents/v4_proposal_generator.py` | Incluir proposal_asset_matrix.json |
+
+### Validaciones
+- [x] Tests passing (60+ nuevos, 0 regresiones)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.81 (PASO)
+- [x] Capability contract verificado
+- [x] G0: WARNING (delivery_quality_report generado)
+- [x] G6: PASS (coherence 0.81)
+- [x] G7: PASS (0 UNTRACKED pains)
+- [x] G8: PASS post-0H (9/12 assets >= 0.65)
 
 ---
 
@@ -6685,3 +6823,4 @@ _Ninguno_
 | FASE-2-BRIDGE-QUALITY-GUARD (AMAZILIAHOTEL) | 2026-04-21 | N/A | ✅ Complete |
 | FASE-3-MINIMUM-DATA-GUARANTEE (AMAZILIAHOTEL) | 2026-04-21 | N/A | ✅ Complete |
 | FASE-RELEASE-4.33.0 (AMAZILIAHOTEL) | 2026-04-21 | N/A | ✅ Complete |
+| FASE-0-RELEASE | 2026-05-14 | 60+ | ✅ Complete |

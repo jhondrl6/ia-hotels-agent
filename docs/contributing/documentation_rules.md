@@ -165,4 +165,61 @@ Consulta esta tabla para determinar el procedimiento correcto:
 | `validate.py --security` | Antes de push (verificar secrets) |
 | `validate_structure.py` | Validar estructura del proyecto |
 | `config_checker.py` | [DEPRECATED] Usar `python -m modules.utils.config_checker` |
-| `.agents/workflows/v4_regression_guardian.py --quick` | Despues de cambios en modulos v4 |
+|| `.agents/workflows/v4_regression_guardian.py --quick` | Despues de cambios en modulos v4 |
+
+
+---
+
+## 10. Gate de Encoding para Scripts CLI
+
+> **Agregado:** 2026-05-14 — Plan FIX-ENCODING-SISTEMICO. Previene la clase de bug `UnicodeEncodeError` que causó memory leak de 42.5 GB (incidente 2026-05-13).
+
+### Regla
+
+**Todo script CLI en `scripts/` o raíz (`main.py`) que use `print()` con caracteres fuera del rango ASCII (U+0080+) DEBE incluir fix de encoding (`reconfigure()` o `TextIOWrapper`) al inicio del script, antes de cualquier `print()`.**
+
+Scripts con `print()` ASCII-only están exentos.
+
+### Patrón obligatorio
+
+```python
+import sys
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+```
+
+### Verificación
+
+```bash
+# Listar scripts sin fix de encoding (deben devolver vacío si todos están protegidos)
+for f in scripts/*.py main.py; do
+    if grep -q "reconfigure\|TextIOWrapper" "$f" 2>/dev/null; then
+        :  # tiene fix
+    else
+        # verificar si tiene caracteres Unicode en prints
+        if grep -P "print\(.*[^\x00-\x7F]" "$f" 2>/dev/null; then
+            echo "SIN FIX + Unicode en prints: $f"
+        fi
+    fi
+done
+```
+
+### Relación con CONTRIBUTING.md
+
+La sección completa de estándares de encoding, incluyendo el contexto del incidente, la decisión de `errors='replace'` vs `backslashreplace`, y el fallback `TextIOWrapper`, está en `docs/CONTRIBUTING.md` §Encoding-en-Scripts-Python.
+
+### Estado actual (2026-05-14)
+
+| Archivo | Fix | Estado |
+|---------|-----|--------|
+| `main.py` | `reconfigure()` L32-35 | ✅ Protegido |
+| `scripts/derive_version_from_changelog.py` | `reconfigure()` + `TextIOWrapper` | ✅ Protegido |
+| `scripts/version_consistency_checker.py` | `reconfigure()` + `TextIOWrapper` | ✅ Protegido |
+| `scripts/log_phase_completion.py` | `reconfigure()` + `TextIOWrapper` | ✅ Protegido |
+| `scripts/validate_document_integration.py` | `TextIOWrapper` L461-462 | ✅ Protegido (FASE-A) |
+| `scripts/verify_ga4.py` | `reconfigure()` L6-8 | ✅ Protegido (FASE-B) |
+| `scripts/validate_structure.py` | `reconfigure()` L23-25 | ✅ Protegido (FASE-B) |
+| `scripts/update_benchmarks.py` | `reconfigure()` L36-38 | ✅ Protegido (FASE-B) |
+| 8 scripts ASCII-only | N/A | ✅ Exentos |
+| 6 scripts Unicode solo en comentarios | N/A | ⚠️ Baja prioridad |

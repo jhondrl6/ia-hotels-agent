@@ -1,5 +1,34 @@
 # Changelog
 
+## [4.46.1] - ENCODING-SAFETY — 2026-05-14
+
+### Objetivo
+Eliminar permanentemente la clase de bug `UnicodeEncodeError` en scripts Python invocados por Hermes en Windows. Prevenir memory leaks causados por pipes rotas y re-ejecución ciega de comandos fallidos. Incidente forense: 42.5 GB de memoria virtual consumida por 5 re-ejecuciones en 3 minutos.
+
+### Cambios Implementados
+- FASE-A: Parche inmediato en `validate_document_integration.py` — `TextIOWrapper` con UTF-8 en stdout/stderr
+- FASE-B: Parche `reconfigure()` en 3 scripts sin fix (`verify_ga4.py`, `validate_structure.py`, `update_benchmarks.py`). Verificación de 4 scripts ya protegidos (`main.py`, `derive_version_from_changelog.py`, `version_consistency_checker.py`, `log_phase_completion.py`)
+- FASE-C: Configuración `tool_loop_guardrails.hard_stop_enabled: true` en Hermes — detiene re-ejecución tras 3 fallos idénticos. Análisis de cleanup de procesos tras pipe rota (SIGTERM → SIGKILL)
+- FASE-D: Sección "Encoding en scripts Python" en CONTRIBUTING.md. Regla de gate en documentation_rules.md: todo script CLI con `print()` debe tener fix de encoding
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| scripts/validate_document_integration.py | TextIOWrapper UTF-8 en stdout/stderr (FASE-A) |
+| scripts/verify_ga4.py | `reconfigure()` UTF-8 (FASE-B) |
+| scripts/validate_structure.py | `reconfigure()` UTF-8 (FASE-B) |
+| scripts/update_benchmarks.py | `reconfigure()` UTF-8 (FASE-B) |
+| docs/CONTRIBUTING.md | Sección "Encoding en scripts Python" (FASE-D) |
+| docs/contributing/documentation_rules.md | Regla gate de encoding (FASE-D) |
+| ~/.hermes/config.yaml | tool_loop_guardrails hard_stop (FASE-C, fuera de repo) |
+
+### Tests
+- Validación: `run_all_validations.py --quick` 5/5 PASS sin regresiones
+- Verificación manual: 3 scripts parcheados ejecutan sin `UnicodeEncodeError` en WSL
+- Patrón estándar: `reconfigure()` como primario, `TextIOWrapper` como fallback (Python <3.7)
+
+---
+
 ## [4.46.0] - DELIVERY-QUALITY-RELEASE — 2026-05-13
 
 ### Objetivo

@@ -32,6 +32,11 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 
+# Fix de encoding para Windows: previene UnicodeEncodeError con caracteres Unicode
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 
 # ─── Rutas ───────────────────────────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent
