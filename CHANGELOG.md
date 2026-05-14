@@ -1,5 +1,56 @@
 # Changelog
 
+## [4.46.0] - DELIVERY-QUALITY-RELEASE — 2026-05-13
+
+### Objetivo
+Implementar primer piso de entrega confiable: pain ledger, coverage gate, proposal-asset matrix, delivery quality report bloqueante, checklist humano, data derivation layer y G8 root-cause hardening. 8 fases (0A-0H) completadas.
+
+### Cambios Implementados
+- FASE-0B: PainLedger facade sobre PainSolutionMapper — ledger normalizado con pain_id, source_module, severity, confidence, status, human_label, evidence_refs
+- FASE-0C: CoverageGate — verifica que toda brecha detectada aparece en diagnóstico y propuesta (no silent drop)
+- FASE-0D: ProposalAssetMatrix — vínculo trazable servicio→brecha→asset→evidencia
+- FASE-0E: DeliveryQualityReport — QA bloqueante pre-ZIP; FAIL aborta empaquetado
+- FASE-0F: HumanChecklistGenerator — checklist ≤10 items derivado automáticamente del delivery_quality_report
+- FASE-0H: DataDerivationLayer — deriva 5 campos del audit existente (og_tags, org_data, ga4_available, organic_traffic, metadata) sin APIs nuevas
+- FASE-0H: PreflightPriority — contrato REQUIRED/RECOMMENDED + scoring semántico (RECOMMENDED+fallback=0.8 vs REQUIRED=0.5)
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| modules/asset_generation/pain_ledger.py | Ledger normalizado de brechas |
+| tests/asset_generation/test_pain_ledger.py | Tests del ledger |
+| modules/asset_generation/data_derivation_layer.py | Derivación de campos del audit |
+| tests/asset_generation/test_data_derivation_layer.py | Tests de derivación |
+| modules/quality_gates/delivery_quality_report.py | QA bloqueante pre-ZIP |
+| tests/quality_gates/test_delivery_quality_report.py | Tests del reporte |
+| modules/quality_gates/human_checklist_generator.py | Checklist humano automático |
+| tests/quality_gates/test_human_checklist_generator.py | Tests del checklist |
+| tests/fixtures/audit_report_hotelcastillareal.json | Fixture E2E real |
+| .opencode/context/FASE-0-BASELINE-DELIVERY-QUALITY.md | Baseline de auditoría FASE-0A |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| main.py | Integrar delivery_quality_report + human_checklist en pipeline |
+| modules/asset_generation/v4_asset_orchestrator.py | Inyectar PainLedger + DataDerivationLayer |
+| modules/asset_generation/conditional_generator.py | Contrato REQUIRED/RECOMMENDED + scoring refactor |
+| modules/asset_generation/asset_catalog.py | Campo priority en AssetCatalogEntry |
+| modules/asset_generation/preflight_checks.py | Priority REQUIRED/RECOMMENDED + dict-tolerant _evaluate_check() |
+| modules/quality_gates/publication_gates.py | CoverageGate integrado en run_publication_gates() |
+| modules/asset_generation/proposal_asset_alignment.py | ProposalAssetMatrix dinámico |
+| modules/commercial_documents/v4_proposal_generator.py | Incluir proposal_asset_matrix.json |
+
+### Tests
+- FASE-0B: tests pain_ledger (TDD)
+- FASE-0C: 11 tests coverage_gate
+- FASE-0D: 6 tests proposal_asset_matrix
+- FASE-0E: 10 tests delivery_quality_report
+- FASE-0F: 6 tests human_checklist
+- FASE-0H: 26 tests (18 derivation + 8 scoring/fixture)
+- Total: 60+ tests nuevos, 0 regresiones en módulos modificados
+
+---
+
 ## [4.45.0] - TERMALES-GATE-HARDENING — 2026-05-12
 
 ### Objetivo

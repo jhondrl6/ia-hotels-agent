@@ -1,8 +1,8 @@
-<!-- agents_version: v4.42.0 | last_update: 2026-05-12 -->
+<!-- agents_version: v4.42.0 | last_update: 2026-05-13 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.45.0 -- TERMALES-GATE-HARDENING COMPLETADO**
+> **v4.46.0 -- DELIVERY-QUALITY-RELEASE COMPLETADO**
 
 ---
 

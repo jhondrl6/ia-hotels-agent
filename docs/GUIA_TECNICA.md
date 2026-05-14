@@ -1,7 +1,33 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.45.0 (TERMALES-GATE-HARDENING)
+**Versión:** v4.46.0 (DELIVERY-QUALITY-RELEASE)
 **Última actualización:** 2026-05-13
+
+---
+
+### v4.46.0 — FASE-0 RELEASE: Delivery Quality — Primer Piso de Entrega Confiable — 2026-05-13
+
+**Módulos afectados**: `asset_generation/pain_ledger.py` (NUEVO), `asset_generation/data_derivation_layer.py` (NUEVO), `quality_gates/delivery_quality_report.py` (NUEVO), `quality_gates/human_checklist_generator.py` (NUEVO), `asset_generation/v4_asset_orchestrator.py`, `asset_generation/conditional_generator.py`, `asset_generation/preflight_checks.py`, `asset_generation/proposal_asset_alignment.py`, `quality_gates/publication_gates.py`, `main.py`
+
+**Problema**:
+- El pipeline v4 generaba assets sin trazabilidad sistemática de brechas → entrega
+- No existía un gate de cobertura que garantizara que toda brecha detectada estaba representada en diagnóstico y propuesta
+- Los assets se generaban con confidence=0.5 cuando campos requeridos no existían en validated_data, sin distinguir entre campos esenciales y opcionales
+- No había QA bloqueante pre-ZIP: el empaquetado procedía incluso con assets de baja confianza
+
+**Solución (8 fases: 0A-0H)**:
+1. **FASE-0A (Baseline)**: Auditoría completa del pipeline existente. Matriz brecha→diagnóstico→oportunidad→propuesta→asset→estado→evidencia con 14 filas. GAPs H1-H6 verificados contra código.
+2. **FASE-0B (PainLedger)**: Facade sobre PainSolutionMapper que produce `pain_ledger.json` con pain_id, source_module, severity, confidence, status, human_label, evidence_refs
+3. **FASE-0C (CoverageGate)**: Nuevo gate en `publication_gates.py` que verifica `brechas_en_diagnostico + brechas_justificadas == brechas_detectadas`. Integrado en `run_publication_gates()`.
+4. **FASE-0D (ProposalAssetMatrix)**: Matriz dinámica servicio→brecha→asset con `ProposalAssetMatrix` dataclass. Output: `proposal_asset_matrix.json`.
+5. **FASE-0E (DeliveryQualityReport)**: QA bloqueante pre-ZIP. Reporte con status (PASS/FAIL/WARNING), coverage_gate, proposal_asset_gate, asset_specificity_gate, evidence_gate. ZIP abortado si status=FAIL.
+6. **FASE-0F (HumanChecklist)**: `HumanChecklistGenerator` deriva checklist ≤10 items del delivery_quality_report.
+7. **FASE-0G (E2E)**: Verificación controlada con hotel real (hotelcastillareal). G6=PASS(0.81), G7=PASS(0 UNTRACKED), G8=FAIL motivando 0H.
+8. **FASE-0H (G8 Root-Cause Hardening)**: DataDerivationLayer deriva 5 campos del audit sin APIs nuevas. Contrato REQUIRED/RECOMMENDED con scoring semántico: RECOMMENDED+fallback=0.8 (vs REQUIRED=0.5).
+
+**Backwards compatibility**: 100% — PainLedger y CoverageGate son additivos (no modifican comportamiento existente). `priority` default es `REQUIRED`. Derivación se activa solo si `audit_report_raw` se pasa (parámetro opcional). DeliveryQualityReport es no bloqueante por defecto (solo FAIL si se configura explícitamente).
+
+**Tests**: 60+ tests nuevos (pain_ledger × TDD, 11 coverage_gate, 6 proposal_asset_matrix, 10 delivery_quality_report, 6 human_checklist, 26 derivation+scoring). 0 regresiones en módulos modificados. Hotel Castilla Real fixture: 9/12 assets ≥0.65 (vs 0/8 baseline pre-0H).
 
 ---
 

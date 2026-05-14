@@ -3,15 +3,15 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.44.0 | **Codename**: TERMALES-COHERENCE-FIX
-> **Release date**: 2026-05-11 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.46.0 | **Codename**: DELIVERY-QUALITY-RELEASE
+> **Release date**: 2026-05-13 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
 
 ## Modulos del Repositorio (auto-generado)
 
-> 22 modulos detectados en `modules/` + 1 paquetes de nivel root. 180 archivos Python en total.
+> 22 modulos detectados en `modules/` + 1 paquetes de nivel root. 184 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
@@ -36,7 +36,7 @@
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
 | **commercial_documents/** | 7 | CoherenceRule, PriceValidationRule, CoherenceConfig; CoherenceCheck, CoherenceReport, CoherenceValidator; ValidatedField, Conflict, ValidationSummary, Scenario; Pain, Solution, PainSolutionMapper; Ser |
-| **asset_generation/** | 18 | AssetStatus, AssetCatalogEntry; ContentStatus, ContentIssue, ContentValidationResult, AssetContentValidator; AssetDiagnosticLink, AssetMetadata, AssetDiagnosticLinker; AssetStatus, AssetMetadata, Asse |
+| **asset_generation/** | 20 | AssetStatus, AssetCatalogEntry; ContentStatus, ContentIssue, ContentValidationResult, AssetContentValidator; AssetDiagnosticLink, AssetMetadata, AssetDiagnosticLinker; AssetStatus, AssetMetadata, Asse |
 | **delivery/** | 23 | AltTextGuideGenerator; AnalyticsSetupGuideGenerator; BlogStrategyGuideGenerator; BookingBarGenerator; CertificateGenerator; ContentGenerator; DeliveryContext; DeliveryPackager; DeployInstructionsGener |
 | **generators/** | 3 | OutreachGenerator; ReportDataBundle, ReportIntegrationAudit, ReportIntegrationAdapter, ReportBuilder; GeoStageResult, IAStageResult, SparkGenerator |
 | **geo_enrichment/** | 8 | AssetType, AssetResponsibility, AssetResponsibilityContract; GEODashboard; GEOBand, ScoreBreakdown, GEOAssessment, GEODiagnostic; GEOEnrichmentLayer; GeoFlowResult, GeoFlow; HotelSchemaEnricher; LLMsT |
@@ -52,7 +52,7 @@
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **quality_gates/** | 5 | CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; GateType, GateStatus, GateCheck, DomainGateResult; EthicsStatus, EthicsIssue, EthicsValidationResult, EthicsGate; GateStatus, Pub |
+| **quality_gates/** | 7 | CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; DeliveryQualityReport, DeliveryQualityReportGenerator; GateType, GateStatus, GateCheck, DomainGateResult; EthicsStatus, EthicsIss |
 
 ### UTILIDADES Y VALIDACION
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-05-11 | v4.44.0 TERMALES-COHERENCE-FIX*
+*Auto-generado: 2026-05-13 | v4.46.0 DELIVERY-QUALITY-RELEASE*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
