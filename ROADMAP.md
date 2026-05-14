@@ -1,6 +1,6 @@
 # ROADMAP iah-cli — Evolución Agent-First con Capa Humana Mínima
 
-> **Versión roadmap**: v3.2 (2026-05-12)
+> **Versión roadmap**: v3.3 (2026-05-13)
 > **Estado proyecto**: v4.45.0 — TERMALES-GATE-HARDENING
 > **Tesis estratégica**: iah-cli debe evolucionar como sistema operado principalmente por agentes, con una interfaz humana mínima, clara y suficiente.
 > **Principio rector**: primero entrega confiable al cliente; después escala, automatización y crecimiento. Agentes ejecutan, validan y mantienen; humanos deciden, aprueban costos/riesgos y aportan datos reales.
@@ -201,6 +201,10 @@ Este contrato debe ser ejecutado por agentes y gates, no recordado manualmente p
 | Actualización roadmap | Humano + agente | Cambia dirección estratégica |
 | Fases de desarrollo | Agente | Humano define objetivo y límites |
 | Costos/API externas | Agente con permission mode | Costo/riesgo excede umbral |
+
+Regla comercial de costos:
+
+> Cada Diagnóstico Express debe mantener presupuesto máximo de API/cómputo y margen mínimo esperado. Si el costo real por diagnóstico amenaza ese margen, se activa reducción de llamadas, fallback barato, `permission_mode` o revisión explícita de precio antes de escalar volumen.
 
 ---
 
@@ -424,6 +428,23 @@ Incluye, según confianza y datos:
 - guía de implementación,
 - medición posterior.
 
+### Producto 2.5: Reporte mensual liviano de visibilidad
+
+No se construye como SaaS ni dashboard. Se valida primero como entregable mensual agent-generated para clientes que ya completaron diagnóstico o implementación.
+
+Hipótesis:
+
+- score de visibilidad digital vs. benchmark regional,
+- nuevas brechas detectadas desde el último reporte,
+- top 3 acciones recomendadas,
+- evidencia resumida desde web, GBP, benchmarks y datos aportados por el cliente.
+
+Disparador:
+
+- 1-3 clientes piden seguimiento después de una entrega real,
+- costo por reporte mantiene margen mínimo,
+- el reporte puede generarse sin que el humano reconstruya manualmente la evidencia.
+
 ### Producto 3: Seguimiento recurrente
 
 No se vende hasta tener repetición manual.
@@ -446,7 +467,7 @@ Disparadores:
 | G2: Human minimalism | ¿El humano solo decide lo esencial? | Eliminar pasos humanos o moverlos a agente |
 | G3: Evidence | ¿Cada claim comercial tiene evidencia? | Bloquear entrega o marcar ESTIMATED |
 | G4: Commercial validation | ¿Alguien pagó? | No escalar automatización comercial |
-| G5: Cost control | ¿API/cómputo sigue barato? | Activar permission_mode / reducir llamadas |
+| G5: Cost control | ¿API/cómputo mantiene margen mínimo por diagnóstico? | Activar `permission_mode`, reducir llamadas, usar fallback barato o revisar precio antes de escalar |
 | G6: Delivery coherence | ¿Diagnóstico, oportunidad, propuesta y assets cuentan la misma historia? | Bloquear publicación |
 | G7: Brecha coverage | ¿Todas las brechas detectadas aparecen, se agrupan o se justifican explícitamente? | Reabrir diagnóstico antes de generar ZIP |
 | G8: Asset specificity | ¿Cada asset resuelve un problema real del hotel y no es plantilla genérica? | Marcar `GENERIC_DRAFT` o regenerar |
@@ -518,7 +539,7 @@ Hasta que existan señales:
 | Agentes ejecutan sin suficiente contexto | Media | Alto | Contexto global + prompts de fase completos |
 | Drift entre docs, código y outputs | Alta | Alto | Doctor, validation scripts, docs cascade |
 | Hoteleros no pagan por diagnóstico | Alta | Alto | Validación Express antes de automatizar más |
-| Costos API crecen con automatización | Media | Medio | `permission_mode`, presupuestos y modo fallback |
+| Costos API/modelo erosionan margen del Diagnóstico Express | Media | Alto | Presupuesto máximo por diagnóstico, margen mínimo, `permission_mode`, fallback barato y revisión de precio antes de escalar |
 | Se construye UI antes de tracción | Media | Alto | Gate explícito: no UI pesada hasta 10+ entregas manuales |
 | Outputs estimados se venden como verificados | Media | Alto | Taxonomía VERIFIED/ESTIMATED/CONFLICT obligatoria |
 | Brechas detectadas desaparecen del diagnóstico final | Media | Alto | Coverage gate y `pain_ledger` obligatorio |
@@ -537,6 +558,7 @@ Hasta que existan señales:
 6. Elevar el QA post-generación de `output/v4_complete` a contrato nativo del pipeline: coverage de brechas, alineación comercial y especificidad de assets.
 7. Consolidar `delivery_quality_report.json` como evidencia obligatoria antes de empaquetar o enviar entregables.
 8. Mantener ROADMAP como documento estratégico manual. No incluirlo en cascadas automáticas salvo solicitud explícita.
+9. Monitorear discoverability agent-to-agent/MCP como radar 12-18 meses. No priorizarlo antes de validación comercial y entrega confiable repetible.
 
 ---
 
@@ -566,7 +588,14 @@ Disparador:
 
 ### Etapa 3: Hotel graph / intelligence layer
 
-Grafo de hoteles, competidores, regiones, activos digitales y benchmarks.
+Grafo de hoteles, competidores, regiones, activos digitales, benchmarks y aprendizaje agregado desde `pain_ledger` / `evidence_ledger`.
+
+Objetivo:
+
+- detectar brechas recurrentes por región y tipo de hotel,
+- mejorar benchmarks y recomendaciones sin depender de intuición manual,
+- convertir diagnósticos repetidos en inteligencia comercial reutilizable,
+- preservar privacidad mediante agregación, anonimización y permiso explícito de uso.
 
 Disparador:
 

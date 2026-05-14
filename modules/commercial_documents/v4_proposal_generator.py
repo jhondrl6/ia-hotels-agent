@@ -273,6 +273,7 @@ class V4ProposalGenerator:
         financial_breakdown: Optional[Any] = None,
         assets_generated: Optional[List[Dict[str, Any]]] = None,
         site_presence_report: Optional[Any] = None,  # FASE-D: SitePresenceReport for production presence verification
+        pain_ledger: Optional[List[Any]] = None,  # FASE-0D: PainLedgerEntry list for proposal-asset matrix
     ) -> str:
         """
         Generate the proposal document.
@@ -338,7 +339,26 @@ class V4ProposalGenerator:
         
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(document_content)
-        
+
+        # FASE-0D: Build and save ProposalAssetMatrix for traceability
+        if pain_ledger is not None and assets_generated is not None:
+            try:
+                from modules.asset_generation.proposal_asset_alignment import (
+                    ProposalAssetMatrix,
+                    ALL_PROMISED_SERVICES,
+                )
+                matrix = ProposalAssetMatrix()
+                entries = matrix.build(
+                    ALL_PROMISED_SERVICES, pain_ledger, assets_generated
+                )
+                matrix_path = output_path / "v4_audit" / "proposal_asset_matrix.json"
+                matrix.save(entries, matrix_path)
+                logger.info(
+                    f"ProposalAssetMatrix saved: {len(entries)} entries → {matrix_path}"
+                )
+            except Exception as e:
+                logger.warning(f"ProposalAssetMatrix generation failed (non-blocking): {e}")
+
         return str(file_path)
     
     def _load_template(self) -> str:

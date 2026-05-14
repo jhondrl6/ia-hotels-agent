@@ -63,6 +63,24 @@ def valid_assessment() -> Dict[str, Any]:
         "validation_summary": {
             "hard_contradictions_count": 0,
         },
+        # FASE-0C: coverage gate data
+        "pain_ledger": [],
+        "diagnostic_pain_ids": [],
+        "proposal_pain_ids": [],
+        # FASE-3 FIX-10: tier C gating
+        "financial_evidence_tier": "B",
+        # proposal_asset_alignment: full generated assets list with confidence_score
+        "generated_assets": [
+            {"asset_type": "whatsapp_button", "confidence_score": 0.9},
+            {"asset_type": "faq_page", "confidence_score": 0.9},
+            {"asset_type": "hotel_schema", "confidence_score": 0.9},
+            {"asset_type": "org_schema", "confidence_score": 0.9},
+            {"asset_type": "review_plan", "confidence_score": 0.9},
+            {"asset_type": "optimization_guide", "confidence_score": 0.9},
+            {"asset_type": "monthly_report", "confidence_score": 0.9},
+            {"asset_type": "open_graph", "confidence_score": 0.9},
+            {"asset_type": "llms_txt", "confidence_score": 0.9},
+        ],
     }
 
 
@@ -570,7 +588,7 @@ class TestPublicationGatesOrchestrator:
         """
         results = orchestrator.run_all(valid_assessment)
         
-        assert len(results) == 9  # 9 gates (including confidence #8 + alignment #9)
+        assert len(results) == 11  # 11 gates (10 original + coverage gate)
         assert all(r.passed for r in results)
         assert orchestrator.is_ready_for_publication(results) is True
 
@@ -606,7 +624,7 @@ class TestPublicationGatesOrchestrator:
         """
         Test that get_blocking_gates returns only failed gates.
         """
-        # Mix of passing and failing
+        # Mix of passing and failing — with coverage data so coverage gate passes
         assessment = {
             "coherence_score": 0.85,  # Pass
             "evidence_coverage": 0.50,  # Fail
@@ -617,19 +635,32 @@ class TestPublicationGatesOrchestrator:
                 "direct_channel_percentage": 30.0,
                 "adr_cop": 450000.0,
             },
+            # FASE-0C: Provide coverage data so coverage gate does NOT block
+            "pain_ledger": [
+                {"pain_id": "no_whatsapp_visible", "status": "DETECTED"},
+                {"pain_id": "low_gbp_score", "status": "DETECTED"},
+            ],
+            "diagnostic_pain_ids": ["no_whatsapp_visible"],
+            "proposal_pain_ids": ["low_gbp_score"],
+            # FASE-3 FIX-10: Set tier to B so tier_c_onboarding does NOT block
+            "financial_evidence_tier": "B",
         }
-        
+
         results = orchestrator.run_all(assessment)
         blocking = orchestrator.get_blocking_gates(results)
-        
-        # Should have exactly 2 blocking gates
-        assert len(blocking) == 2
-        
+
+        # Should have 3 blocking gates: evidence_coverage, critical_recall, proposal_asset_alignment
+        # Note: coverage passes (pain_ledger provided + all pains covered/justified)
+        # Note: tier_c passes (tier=B, not C)
+        assert len(blocking) == 3
+
         blocking_names = {r.gate_name for r in blocking}
         assert "evidence_coverage" in blocking_names
         assert "critical_recall" in blocking_names
         assert "coherence" not in blocking_names
         assert "hard_contradictions" not in blocking_names
+        assert "coverage" not in blocking_names  # coverage passes with data
+        assert "tier_c_onboarding_required" not in blocking_names  # tier B passes
 
     def test_multiple_gates_block(self, orchestrator):
         """
@@ -654,7 +685,7 @@ class TestPublicationGatesOrchestrator:
         assert orchestrator.is_ready_for_publication(results) is False
         
         blocking = orchestrator.get_blocking_gates(results)
-        assert len(blocking) == 6  # 6 original gates block; #8 passes (no assets)
+        assert len(blocking) == 9  # hard_cont, evidence_cov, financial, coherence, recall, ethics, asset_align, tier_c, coverage
 
     def test_run_publication_gates_function(self, valid_assessment):
         """
@@ -662,7 +693,7 @@ class TestPublicationGatesOrchestrator:
         """
         results = run_publication_gates(valid_assessment)
         
-        assert len(results) == 9  # 9 gates
+        assert len(results) == 11  # 11 gates
         assert all(r.passed for r in results)
 
     def test_check_publication_readiness_function(self):
@@ -679,13 +710,31 @@ class TestPublicationGatesOrchestrator:
                 "direct_channel_percentage": 30.0,
                 "adr_cop": 450000.0,
             },
+            # FASE-0C: coverage gate data
+            "pain_ledger": [],
+            "diagnostic_pain_ids": [],
+            "proposal_pain_ids": [],
+            # FASE-3 FIX-10: tier C gating
+            "financial_evidence_tier": "B",
+            # proposal_asset_alignment: full generated assets
+            "generated_assets": [
+                {"asset_type": "whatsapp_button", "confidence_score": 0.9},
+                {"asset_type": "faq_page", "confidence_score": 0.9},
+                {"asset_type": "hotel_schema", "confidence_score": 0.9},
+                {"asset_type": "org_schema", "confidence_score": 0.9},
+                {"asset_type": "review_plan", "confidence_score": 0.9},
+                {"asset_type": "optimization_guide", "confidence_score": 0.9},
+                {"asset_type": "monthly_report", "confidence_score": 0.9},
+                {"asset_type": "open_graph", "confidence_score": 0.9},
+                {"asset_type": "llms_txt", "confidence_score": 0.9},
+            ],
         }
-        
+
         report = check_publication_readiness(assessment)
-        
+
         assert report["ready"] is True
         assert report["status"] == "READY_FOR_PUBLICATION"
-        assert report["summary"]["passed"] == 9  # All 9 gates pass
+        assert report["summary"]["passed"] == 11  # All 11 gates pass (10 original + coverage)
         assert report["summary"]["failed"] == 0
         assert len(report["blocking_issues"]) == 0
 
@@ -844,21 +893,39 @@ class TestEdgeCases:
         orchestrator = PublicationGatesOrchestrator(config)
         
         assessment = {
-            "coherence_score": 0.85,  # Below 0.9
-            "evidence_coverage": 0.96,  # Below 0.99
-            "critical_recall": 0.94,  # Below 0.95
-            "hard_contradictions": 0,
+            "coherence_score": 0.85,  # Below 0.9 → FAIL
+            "evidence_coverage": 0.96,  # Below 0.99 → FAIL
+            "critical_recall": 0.94,  # Below 0.95 → FAIL
+            "hard_contradictions": 0,  # Pass
             "financial_data": {
                 "occupancy_rate": 75.0,
                 "direct_channel_percentage": 30.0,
                 "adr_cop": 450000.0,
             },
+            # FASE-0C + FASE-3: coverage data + tier B so those gates don't block
+            "pain_ledger": [{"pain_id": "test", "status": "DETECTED"}],
+            "diagnostic_pain_ids": ["test"],
+            "proposal_pain_ids": [],
+            "financial_evidence_tier": "B",
+            # proposal_asset_alignment: full assets so it passes
+            "generated_assets": [
+                {"asset_type": "whatsapp_button", "confidence_score": 0.9},
+                {"asset_type": "faq_page", "confidence_score": 0.9},
+                {"asset_type": "hotel_schema", "confidence_score": 0.9},
+                {"asset_type": "org_schema", "confidence_score": 0.9},
+                {"asset_type": "review_plan", "confidence_score": 0.9},
+                {"asset_type": "optimization_guide", "confidence_score": 0.9},
+                {"asset_type": "monthly_report", "confidence_score": 0.9},
+                {"asset_type": "open_graph", "confidence_score": 0.9},
+                {"asset_type": "llms_txt", "confidence_score": 0.9},
+            ],
         }
-        
+
         results = orchestrator.run_all(assessment)
         blocking = orchestrator.get_blocking_gates(results)
-        
-        # Should have 3 blocking gates with stricter thresholds
+
+        # Should have 3 blocking gates: coherence, evidence_coverage, critical_recall
+        # (coverage, tier_c, proposal_asset all have proper data so they pass)
         assert len(blocking) == 3
 
     def test_partial_assessment_data(self, orchestrator):

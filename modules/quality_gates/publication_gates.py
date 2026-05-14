@@ -33,7 +33,7 @@ Usage:
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Any, Callable
+from typing import Dict, List, Optional, Any, Callable, Set
 from enum import Enum
 from datetime import datetime
 
@@ -63,7 +63,7 @@ class GateStatus(str, Enum):
 class PublicationGateResult:
     """
     Result of a single publication gate check.
-    
+
     Attributes:
         gate_name: Name of the gate that was checked
         passed: Whether the gate passed
@@ -80,7 +80,7 @@ class PublicationGateResult:
     value: Any = None
     suggestion: str = ""
     details: Dict[str, Any] = field(default_factory=dict)
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert result to dictionary for serialization."""
         return {
@@ -92,6 +92,18 @@ class PublicationGateResult:
             "suggestion": self.suggestion,
             "details": self.details
         }
+
+
+@dataclass
+class PainLedgerEntry:
+    """FASE-0C: Entry in the pain ledger tracking detected problems.
+
+    The coverage gate validates: brechas_en_diagnostico + brechas_justificadas
+    == brechas_detectadas — every detected pain must appear in diagnostic,
+    proposal, or have an acceptable justification status.
+    """
+    pain_id: str
+    status: str  # "DETECTED" | "JUSTIFIED_SKIP" | "BLOCKED" | "MAPPED_TO_SERVICE"
 
 
 @dataclass
@@ -153,6 +165,7 @@ class PublicationGatesOrchestrator:
             "asset_confidence": self._asset_confidence_gate,
             "proposal_asset_alignment": self._proposal_asset_alignment_gate,
             "tier_c_onboarding_required": self._tier_c_onboarding_gate,
+            "coverage": self._coverage_gate,
         }
         self.ethics_gate = EthicsGate()
         self.content_quality_gate = DocumentQualityGate()
@@ -977,6 +990,149 @@ class PublicationGatesOrchestrator:
             value=None,
             suggestion="",
             details={"tier": tier},
+        )
+
+    # ===========================================================================
+    # FASE-0C: Coverage Gate — No Silent Drop
+    # ============================================================================
+    # Acceptable justification statuses — pain_ids with these statuses do NOT
+    # need to appear in diagnostic or proposal.
+    _JUSTIFIED_STATUSES: Set[str] = {"JUSTIFIED_SKIP", "BLOCKED", "MAPPED_TO_SERVICE"}
+
+    def _coverage_gate(self, assessment: Dict[str, Any]) -> PublicationGateResult:
+        """
+        Gate: Coverage — No Silent Drop.
+
+        FASE-0C: Valida que ninguna brecha (pain_id) detectada desaparezca
+        sin explicacion. Cada pain en el ledger debe:
+          1. Appear in diagnostic_pain_ids, OR
+          2. Appear in proposal_pain_ids, OR
+          3. Have status in (JUSTIFIED_SKIP, BLOCKED, MAPPED_TO_SERVICE)
+
+        Regla: brechas_en_diagnostico + brechas_justificadas == brechas_detectadas
+
+        The gate reads pain_ledger, diagnostic_pain_ids, and proposal_pain_ids
+        from the assessment dict (extracted from diagnostic/proposal documents
+        during the v4 pipeline). If the assessment does not contain these fields,
+        the gate is BLOCKED because coverage cannot be validated without them.
+
+        Args:
+            assessment: Assessment dict with optional keys:
+                - pain_ledger: List[PainLedgerEntry]
+                - diagnostic_pain_ids: Set[str]
+                - proposal_pain_ids: Set[str]
+
+        Returns:
+            PublicationGateResult — PASSED if all pains covered/justified,
+                                   FAILED if uncovered, BLOCKED if data missing
+        """
+        gate_name = "coverage"
+
+        # Extract coverage data from assessment
+        # Distinguish between missing key (BLOCKED - pipeline incomplete)
+        # and present-but-empty list (PASS - nothing to validate)
+        if "pain_ledger" not in assessment:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=False,
+                status=GateStatus.BLOCKED,
+                message="pain_ledger not found in assessment (pipeline incomplete?)",
+                value=None,
+                suggestion="Ensure diagnostic/proposal generation populates pain_ledger",
+            )
+
+        pain_ledger_raw = assessment.get("pain_ledger")
+        if not isinstance(pain_ledger_raw, list):
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=False,
+                status=GateStatus.BLOCKED,
+                message="pain_ledger is not a list",
+                value=None,
+                suggestion="Ensure pain_ledger is a list of PainLedgerEntry dicts",
+            )
+
+        # Normalize to PainLedgerEntry
+        pain_ledger: List[PainLedgerEntry] = []
+        for entry in pain_ledger_raw:
+            if isinstance(entry, dict):
+                pain_ledger.append(PainLedgerEntry(
+                    pain_id=entry.get("pain_id", ""),
+                    status=entry.get("status", "DETECTED"),
+                ))
+            elif hasattr(entry, "pain_id"):
+                pain_ledger.append(entry)
+
+        diagnostic_pain_ids: Set[str] = set(assessment.get("diagnostic_pain_ids", []))
+        proposal_pain_ids: Set[str] = set(assessment.get("proposal_pain_ids", []))
+
+        # Empty ledger = nothing to check = PASS
+        if not pain_ledger:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,
+                status=GateStatus.PASSED,
+                message="Pain ledger vacio — todas las brechas accounted for",
+                value=1.0,
+                suggestion="",
+            )
+
+        uncovered: List[str] = []
+        justified_count = 0
+        covered = 0
+
+        for entry in pain_ledger:
+            in_diagnostic = entry.pain_id in diagnostic_pain_ids
+            in_proposal = entry.pain_id in proposal_pain_ids
+            is_justified = entry.status in self._JUSTIFIED_STATUSES
+
+            if is_justified:
+                justified_count += 1
+            elif in_diagnostic or in_proposal:
+                covered += 1
+            else:
+                uncovered.append(entry.pain_id)
+
+        total = len(pain_ledger)
+        coverage_ratio = (covered + justified_count) / total if total > 0 else 1.0
+
+        if uncovered:
+            uncovered_str = ", ".join(uncovered)
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=False,
+                status=GateStatus.FAILED,
+                message=f"Brecha(s) sin cobertura ni justificacion: {uncovered_str}",
+                value=coverage_ratio,
+                suggestion=(
+                    "Agregar las brechas faltantes al diagnostico, "
+                    "justificarlas como JUSTIFIED_SKIP/BLOCKED/MAPPED_TO_SERVICE, "
+                    "o incluirlas en la propuesta."
+                ),
+                details={
+                    "total_detected": total,
+                    "covered": covered,
+                    "justified": justified_count,
+                    "uncovered": uncovered,
+                },
+            )
+
+        return PublicationGateResult(
+            gate_name=gate_name,
+            passed=True,
+            status=GateStatus.PASSED,
+            message=(
+                f"Coverage completo: {covered} en diagnostico/propuesta, "
+                f"{justified_count} justificadas de {total} detectadas"
+            ),
+            value=coverage_ratio,
+            suggestion="",
+            details={
+                "total_detected": total,
+                "covered": covered,
+                "justified": justified_count,
+                "uncovered": [],
+            },
         )
 
     def _extract_conflicts(self, assessment: Dict[str, Any]) -> List[Dict]:

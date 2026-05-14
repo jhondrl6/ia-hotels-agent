@@ -14,6 +14,11 @@ from .publication_gates import (
     check_publication_readiness,
     generate_gate_failure_report
 )
+from .delivery_quality_report import (
+    DeliveryQualityReport,
+    DeliveryQualityReportGenerator,
+)
+from .human_checklist_generator import HumanChecklistGenerator
 
 __all__ = [
     "GateStatus",
@@ -22,5 +27,8 @@ __all__ = [
     "PublicationGatesOrchestrator",
     "run_publication_gates",
     "check_publication_readiness",
-    "generate_gate_failure_report"
+    "generate_gate_failure_report",
+    "DeliveryQualityReport",
+    "DeliveryQualityReportGenerator",
+    "HumanChecklistGenerator",
 ]

@@ -2810,42 +2810,96 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     
     # Add consistency to assessment for later use
     assessment['consistency_report'] = consistency_report.to_dict()
-    
-    # FASE 7: Delivery Packaging - Automated ZIP creation
-    print("\n📍 FASE 7: Delivery Packaging (Automated)")
+
+    # FASE-0E: Delivery Quality Report — bloqueante pre-ZIP
+    print("\n📍 FASE 0E: Delivery Quality Report (Pre-ZIP Gate)")
     print("-" * 70)
 
-    delivery_zip_path = None
+    from modules.quality_gates import DeliveryQualityReportGenerator
+
+    v4_audit_dir = output_dir / hotel_id / "v4_audit"
+    quality_generator = DeliveryQualityReportGenerator()
+
+    quality_report_path = v4_audit_dir / "delivery_quality_report.json"
+    delivery_quality_report = None
+
     try:
-        from modules.delivery.delivery_packager import DeliveryPackager
+        delivery_quality_report = quality_generator.generate(hotel_id, v4_audit_dir)
+        quality_generator.save(delivery_quality_report, quality_report_path)
 
-        # hotel_id already derived earlier in the function
-        # (see definition near hotel_name assignment)
+        print(f"   Status: {delivery_quality_report.status}")
+        print(f"   Blocking: {delivery_quality_report.blocking}")
+        print(f"   Gates: {delivery_quality_report.summary.get('passed', 0)}/"
+              f"{delivery_quality_report.summary.get('total_gates', 0)} passed")
+        
+        if delivery_quality_report.human_review_items:
+            print(f"   ⚠️  Human review items ({len(delivery_quality_report.human_review_items)}):")
+            for item in delivery_quality_report.human_review_items[:5]:
+                print(f"      - {item}")
 
-        packager = DeliveryPackager(
-            base_output_dir=str(output_dir),
-            deliveries_dir=str(output_dir / "deliveries")
-        )
+        # FASE-0F: Human Checklist — reduced human review checklist (<= 10 items)
+        from modules.quality_gates import HumanChecklistGenerator
 
-        # Find diagnostic and proposal paths
-        diag_path = str(diagnostic_path) if diagnostic_path else None
-        prop_path = str(proposal_path) if proposal_path else None
+        checklist_generator = HumanChecklistGenerator()
+        human_checklist_md = checklist_generator.generate(delivery_quality_report)
+        human_checklist_path = v4_audit_dir / "human_checklist.md"
+        checklist_generator.save(human_checklist_md, human_checklist_path)
+        print(f"   📋 Human checklist ({len([l for l in human_checklist_md.splitlines() if l.strip().startswith('- [ ]')])} items) → {human_checklist_path}")
 
-        # Find output directory where assets were generated
-        asset_output_dir = str(output_dir / hotel_id)
-
-        delivery_zip_path = packager.package(
-            hotel_id=hotel_id,
-            output_dir=asset_output_dir,
-            diagnostic_path=diag_path,
-            proposal_path=prop_path
-        )
-
-        print(f"   [OK] Delivery package created: {delivery_zip_path}")
-
+        if delivery_quality_report.status == "FAIL":
+            print(f"\n   ❌ DELIVERY BLOCKED: Quality gates failed.")
+            print(f"   Report saved to: {quality_report_path}")
+            # Do NOT abort the entire v4complete — let the caller decide.
+            # The report is saved and can be inspected.
+            # Setting delivery_zip_path = None will skip ZIP creation.
     except Exception as e:
-        print(f"   [WARN] Delivery packaging failed: {e}")
+        print(f"   [WARN] Delivery quality report generation failed: {e}")
+        import traceback
+        traceback.print_exc()
+
+    # FASE 7: Delivery Packaging - Automated ZIP creation
+    # SKIP ZIP if quality report is FAIL (blocking)
+    delivery_zip_path = None  # Pre-initialize for safety
+
+    if delivery_quality_report and delivery_quality_report.status == "FAIL":
+        print(f"\n   ⛔ ZIP ABORTED: Delivery quality report status is FAIL.")
+        print(f"   Review: {quality_report_path}")
         delivery_zip_path = None
+    else:
+        print("\n📍 FASE 7: Delivery Packaging (Automated)")
+        print("-" * 70)
+
+        delivery_zip_path = None
+        try:
+            from modules.delivery.delivery_packager import DeliveryPackager
+
+            # hotel_id already derived earlier in the function
+            # (see definition near hotel_name assignment)
+
+            packager = DeliveryPackager(
+                base_output_dir=str(output_dir),
+                deliveries_dir=str(output_dir / "deliveries")
+            )
+
+            # Find diagnostic and proposal paths
+            diag_path = str(diagnostic_path) if diagnostic_path else None
+            prop_path = str(proposal_path) if proposal_path else None
+
+            # Find output directory where assets were generated
+            asset_output_dir = str(output_dir / hotel_id)
+
+            delivery_zip_path = packager.package(
+                hotel_id=hotel_id,
+                output_dir=asset_output_dir,
+                diagnostic_path=diag_path,
+                proposal_path=prop_path
+            )
+
+            print(f"   [OK] Delivery package created: {delivery_zip_path}")
+
+        except Exception as e:
+            print(f"   [WARN] Delivery packaging failed: {e}")
+            delivery_zip_path = None
 
     # FASE 10: Health Dashboard - System Health Metrics
     print("\n📍 FASE 10: Health Dashboard (System Health Monitor)")

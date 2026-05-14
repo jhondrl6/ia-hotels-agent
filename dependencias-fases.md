@@ -14,6 +14,7 @@
 | **FASE-3** | ✅ Completada | 2026-05-11 | FASE-2 | Monthly report fail-safe: try/except+retry, disclaimer en propuesta, fix bug runtime 'list' object has no attribute 'items' |
 | **FASE-4** | ✅ Completada | 2026-05-11 | FASE-3 | Correccion financiera: normalizacion brechas al valor central, separacion pain_ratio vs recovery_factor |
 | **FASE-5** | ✅ Completada | 2026-05-11 | FASE-4 | Verificacion E2E: v4complete para Termales Santa Rosa de Cabal + analisis de ejecucion |
+| **FASE-5-VERIFY** | ✅ Completada | 2026-05-12 | FASE-4-GATE | v4complete Hotel Castilla Real post-refactor: 7/10 garantías PASS, G1 cv/gate diverge (+0.016), G7 WhatsApp confidence=0.5 (< 0.7). Gate coherence=0.826 >= 0.8. |
 | **FASE-RELEASE** | ✅ Completada | 2026-05-11 | FASE-1..5 | Documentacion oficial: version bump 4.44.0, CHANGELOG, GUIA_TECNICA, REGISTRY, sync_versions |
 
 ---

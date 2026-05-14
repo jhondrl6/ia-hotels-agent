@@ -1,0 +1,251 @@
+{
+  "generated_at": "2026-05-12T09:09:09.826608",
+  "hotel_url": "https://www.hotelcastillareal.com/",
+  "gate_results": [
+    {
+      "gate_name": "hard_contradictions",
+      "passed": true,
+      "status": "PASSED",
+      "message": "No hard contradictions detected (count: 0)",
+      "value": 0,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "evidence_coverage",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Evidence coverage at 95.0% (threshold: 95%)",
+      "value": 0.95,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "financial_validity",
+      "passed": true,
+      "status": "WARNING",
+      "message": "Financial data uses default/legacy values — Tier C evidence",
+      "value": true,
+      "suggestion": "Run onboarding with real data to improve evidence tier",
+      "details": {
+        "default_sources": {
+          "direct_channel_percentage": "default"
+        }
+      }
+    },
+    {
+      "gate_name": "coherence",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Coherence score 0.83 meets threshold 0.8",
+      "value": 0.8261538461538461,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "critical_recall",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Critical recall at 100.0% (threshold: 90%)",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "ethics",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Ethics validation passed",
+      "value": null,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "content_quality",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Document quality checks passed: no issues detected",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "asset_confidence",
+      "passed": false,
+      "status": "BLOCKED",
+      "message": "100% de assets son ESTIMATED (confidence < 0.7). Delivery bloqueado hasta onboarding o datos reales.",
+      "value": 0.5,
+      "suggestion": "Complete onboarding with real data or run enrichment phase",
+      "details": {
+        "total_assets": 12,
+        "above_threshold": 0,
+        "below_threshold": 12,
+        "all_estimated": true,
+        "low_confidence_assets": [
+          {
+            "type": "whatsapp_conflict_guide",
+            "score": 0.5
+          },
+          {
+            "type": "hotel_schema",
+            "score": 0.5
+          },
+          {
+            "type": "optimization_guide",
+            "score": 0.5
+          },
+          {
+            "type": "llms_txt",
+            "score": 0.5
+          },
+          {
+            "type": "local_content_page",
+            "score": 0.5
+          },
+          {
+            "type": "faq_page",
+            "score": 0.5
+          },
+          {
+            "type": "analytics_setup_guide",
+            "score": 0.5
+          },
+          {
+            "type": "indirect_traffic_optimization",
+            "score": 0.5
+          },
+          {
+            "type": "og_tags_guide",
+            "score": 0.5
+          },
+          {
+            "type": "open_graph",
+            "score": 0.5
+          },
+          {
+            "type": "org_schema",
+            "score": 0.5
+          },
+          {
+            "type": "monthly_report",
+            "score": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "gate_name": "proposal_asset_alignment",
+      "passed": true,
+      "status": "PASSED",
+      "message": "All 8 promised services have assets (1/8 aligned, 1 already in production)",
+      "value": 0.125,
+      "suggestion": "",
+      "details": {
+        "total_services": 7,
+        "aligned_count": 0,
+        "missing_count": 0,
+        "low_quality_count": 7,
+        "alignment_percentage": 0.0,
+        "all_covered": true,
+        "all_aligned": true,
+        "aligned": [],
+        "missing": [],
+        "low_quality": [
+          {
+            "service": "SEO Local",
+            "asset": "optimization_guide",
+            "confidence": 0.5,
+            "message": "Asset 'optimization_guide' has low confidence (0.50 < 0.7)"
+          },
+          {
+            "service": "Schema Hotel",
+            "asset": "hotel_schema",
+            "confidence": 0.5,
+            "message": "Asset 'hotel_schema' has low confidence (0.50 < 0.7)"
+          },
+          {
+            "service": "Schema Organization",
+            "asset": "org_schema",
+            "confidence": 0.5,
+            "message": "Asset 'org_schema' has low confidence (0.50 < 0.7)"
+          },
+          {
+            "service": "Informe Mensual",
+            "asset": "monthly_report",
+            "confidence": 0.5,
+            "message": "Asset 'monthly_report' has low confidence (0.50 < 0.7)"
+          },
+          {
+            "service": "Página de FAQ",
+            "asset": "faq_page",
+            "confidence": 0.5,
+            "message": "Asset 'faq_page' has low confidence (0.50 < 0.7)"
+          },
+          {
+            "service": "Meta Tags Sociales (Open Graph)",
+            "asset": "open_graph",
+            "confidence": 0.5,
+            "message": "Asset 'open_graph' has low confidence (0.50 < 0.7)"
+          },
+          {
+            "service": "Optimización para IA Generativa",
+            "asset": "llms_txt",
+            "confidence": 0.5,
+            "message": "Asset 'llms_txt' has low confidence (0.50 < 0.7)"
+          }
+        ],
+        "indeterminate": [],
+        "present_in_production": [
+          {
+            "service": "Botón de WhatsApp",
+            "asset": "whatsapp_button",
+            "presence_verified": true,
+            "presence_status": "exists"
+          }
+        ],
+        "redundant": []
+      }
+    },
+    {
+      "gate_name": "tier_c_onboarding_required",
+      "passed": false,
+      "status": "BLOCKED",
+      "message": "Tier C: Propuesta preliminar. Requiere datos reales para activación.",
+      "value": null,
+      "suggestion": "Onboarding required: Collect real financial data (occupancy, ADR, channel mix) before publication.",
+      "details": {
+        "tier": "C",
+        "required_action": "onboarding"
+      }
+    }
+  ],
+  "readiness": {
+    "status": "NOT_READY",
+    "ready": false,
+    "blocking_issues": [
+      {
+        "gate": "asset_confidence",
+        "message": "100% de assets son ESTIMATED (confidence < 0.7). Delivery bloqueado hasta onboarding o datos reales.",
+        "suggestion": "Complete onboarding with real data or run enrichment phase",
+        "value": 0.5
+      },
+      {
+        "gate": "tier_c_onboarding_required",
+        "message": "Tier C: Propuesta preliminar. Requiere datos reales para activación.",
+        "suggestion": "Onboarding required: Collect real financial data (occupancy, ADR, channel mix) before publication.",
+        "value": null
+      }
+    ],
+    "warnings": [
+      {
+        "gate": "financial_validity",
+        "message": "Financial data uses default/legacy values — Tier C evidence"
+      }
+    ]
+  },
+  "financial_sources": {
+    "adr_cop": "handler",
+    "occupancy_rate": "regional",
+    "direct_channel_percentage": "default"
+  }
+}

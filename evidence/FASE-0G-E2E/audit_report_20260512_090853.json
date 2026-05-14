@@ -1,0 +1,259 @@
+{
+  "url": "https://www.hotelcastillareal.com/",
+  "hotel_name": "Hotelcastillareal",
+  "timestamp": "2026-05-12T09:08:53.138342",
+  "schema": {
+    "hotel_schema_detected": false,
+    "hotel_schema_valid": false,
+    "hotel_confidence": "unknown",
+    "faq_schema_detected": false,
+    "faq_schema_valid": false,
+    "faq_confidence": "unknown",
+    "org_schema_detected": false,
+    "total_schemas": 0,
+    "errors": [],
+    "warnings": [],
+    "properties": {}
+  },
+  "gbp": {
+    "place_found": true,
+    "place_id": "ChIJ7Q81ZEeHOI4RsnemUaAfFHM",
+    "name": "Hotel Castilla Real",
+    "rating": 4.6,
+    "reviews": 531,
+    "photos": 10,
+    "phone": "310 4692201",
+    "website": "https://www.hotelcastillareal.com/",
+    "address": "Cl 15 #12b-15, Pereira, Risaralda, Colombia",
+    "geo_score": 70,
+    "geo_score_breakdown": {
+      "rating_score": 27.6,
+      "reviews_score": 10.62,
+      "photos_score": 5.0,
+      "hours_score": 10.0,
+      "website_score": 10.0
+    },
+    "confidence": "verified",
+    "lat": 4.8095346,
+    "lng": -75.69123259999999,
+    "error_type": null,
+    "error_message": null
+  },
+  "performance": {
+    "has_field_data": false,
+    "mobile_score": null,
+    "desktop_score": null,
+    "lcp": null,
+    "fid": null,
+    "cls": null,
+    "status": "ERROR",
+    "message": "Invalid URL or request: API key not valid. Please pass a valid API key."
+  },
+  "validation": {
+    "whatsapp_status": "conflict",
+    "phone_web": "6063332192",
+    "phone_gbp": "310 4692201",
+    "adr_status": "unknown",
+    "conflicts": [
+      {
+        "field_name": "whatsapp",
+        "value": "63332192",
+        "confidence": "conflict",
+        "can_use": false,
+        "match_percentage": 0.0,
+        "sources_count": 2,
+        "sources": [
+          {
+            "source_type": "web_scraping",
+            "value": "63332192",
+            "timestamp": "2026-05-12T09:08:51.429963",
+            "metadata": {
+              "original": "6063332192"
+            }
+          },
+          {
+            "source_type": "gbp_api",
+            "value": "3104692201",
+            "timestamp": "2026-05-12T09:08:51.430009",
+            "metadata": {
+              "original": "310 4692201"
+            }
+          }
+        ],
+        "discrepancies": [
+          "web_scraping (63332192) != gbp_api (3104692201)"
+        ],
+        "requires_manual_review": true,
+        "disclaimer": "Conflicto detectado en 'whatsapp'. Requiere revisión manual.",
+        "icon": "⚠"
+      }
+    ]
+  },
+  "overall": {
+    "confidence": "estimated",
+    "critical_issues": [
+      "No Hotel schema detected - critical for SEO",
+      "WhatsApp number conflict between sources",
+      "Metadata: Meta description está vacía"
+    ],
+    "recommendations": [
+      "Implement Hotel schema markup for better search visibility",
+      "Add FAQPage schema to capture rich snippets",
+      "Add more photos to GBP (current: 10, target: 40+)",
+      "No Core Web Vitals data - site may be new or low traffic"
+    ]
+  },
+  "competitors": [
+    {
+      "nombre": "",
+      "rating": 0.0,
+      "reviews": 0,
+      "distancia_km": 0.0,
+      "fotos": 0,
+      "geo_score": 0,
+      "geo_score_formula": {},
+      "place_id": "error",
+      "score_source": "places_api_real",
+      "has_hours": false,
+      "has_website": false,
+      "data_source": "error"
+    }
+  ],
+  "execution_trace": {
+    "executed": [
+      "schema_validation",
+      "metadata_validation",
+      "gbp_api",
+      "competitor_analysis",
+      "ai_crawler_audit",
+      "citability_audit",
+      "seo_elements_detection",
+      "pagespeed_api",
+      "cross_validation",
+      "aeo_snippet_tracker",
+      "llm_mention_checker"
+    ],
+    "skipped": [
+      "pagespeed_api"
+    ]
+  },
+  "metadata": {
+    "cms_detected": "wordpress",
+    "has_default_title": false,
+    "title": "",
+    "has_default_description": true,
+    "description": "<empty>",
+    "has_issues": true,
+    "issues": [
+      {
+        "type": "default_description",
+        "severity": "high",
+        "message": "Meta description está vacía"
+      }
+    ],
+    "confidence": "estimated"
+  },
+  "ai_crawlers": {
+    "robots_exists": false,
+    "overall_score": 0.5,
+    "allowed_crawlers": [
+      "GPTBot",
+      "ChatGPT-User",
+      "ClaudeBot",
+      "Claude-User",
+      "PerplexityBot",
+      "Google-Extended",
+      "Bytespider",
+      "FacebookBot",
+      "Applebot",
+      "DuckDuckBot",
+      "Baiduspider",
+      "YandexBot",
+      "Bingbot",
+      "Googlebot"
+    ],
+    "blocked_crawlers": [],
+    "recommendations": [
+      "Crear robots.txt para controlar acceso de GPTBot",
+      "Crear robots.txt para controlar acceso de ChatGPT-User",
+      "Crear robots.txt para controlar acceso de ClaudeBot",
+      "Crear robots.txt para controlar acceso de Claude-User",
+      "Crear robots.txt para controlar acceso de PerplexityBot",
+      "Crear robots.txt para controlar acceso de Google-Extended",
+      "Crear robots.txt para controlar acceso de Bytespider",
+      "Crear robots.txt para controlar acceso de FacebookBot",
+      "Crear robots.txt para controlar acceso de Applebot",
+      "Crear robots.txt para controlar acceso de DuckDuckBot",
+      "Crear robots.txt para controlar acceso de Baiduspider",
+      "Crear robots.txt para controlar acceso de YandexBot",
+      "Crear robots.txt para controlar acceso de Bingbot",
+      "Crear robots.txt para controlar acceso de Googlebot"
+    ]
+  },
+  "citability": {
+    "overall_score": 57.0,
+    "blocks_analyzed": 5,
+    "high_citability_blocks": 0,
+    "recommendations": [
+      "Found 5 blocks under 100 words. Expand content to improve citability (aim for 134-167 words per block)."
+    ],
+    "confidence": "ADVISORY"
+  },
+  "ia_readiness": {
+    "overall_score": 34.56666666666666,
+    "components": {
+      "schema_quality": 0.0,
+      "crawler_access": 50.0,
+      "citability": 57.0,
+      "llms_txt": 0,
+      "brand_signals": 50.0
+    },
+    "status": "Critical",
+    "actionable_items": [
+      "Improve structured data markup (JSON-LD) for better AI understanding",
+      "Review robots.txt to ensure AI crawler access is permitted",
+      "Add clear author attribution and citeable content sections",
+      "Create /llms.txt file with content inventory for AI crawlers",
+      "Strengthen brand signals: consistent NAP, social profiles, and entity markup",
+      "Configure Google Analytics 4 to measure indirect traffic from AI referrals"
+    ]
+  },
+  "seo_elements": {
+    "open_graph": false,
+    "imagenes_alt": false,
+    "redes_activas": true,
+    "confidence": "high",
+    "notes": "Detected 0 OG tags, 6 imgs without alt",
+    "open_graph_tags": {},
+    "images_without_alt": 6,
+    "social_links_found": [
+      "https://www.instagram.com/hotelcastillarealpereira/",
+      "https://www.facebook.com/hotelcastillarealpereira/",
+      "https://www.youtube.com/@gerenciageneralhotelcastil3490",
+      "https://www.linkedin.com/in/reservas-hotel-castilla-real-pereira-8b89582b9/",
+      "https://www.tiktok.com/@hotel_castilla_real"
+    ]
+  },
+  "aeo_snippets": {
+    "queries_tested": 5,
+    "snippets_captured": 0,
+    "snippets_competitor": 0,
+    "paa_presence": 0,
+    "snippet_score": 0,
+    "source": "stub",
+    "timestamp": "2026-05-12T09:08:03.006139"
+  },
+  "llm_report": {
+    "hotel_name": "Hotelcastillareal",
+    "queries_tested": 4,
+    "total_mentions": 0,
+    "mention_rate": 0.0,
+    "mention_score": 0,
+    "avg_ranking": null,
+    "share_of_voice": 0.0,
+    "providers_used": [
+      "openrouter"
+    ],
+    "source": "llm_check"
+  }
+}

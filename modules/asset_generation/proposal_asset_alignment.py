@@ -7,6 +7,8 @@ services they don't receive.
 Created as part of FASE-ASSETS-VALIDACION.
 """
 
+import json
+from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Dict, List, Any, Optional
 
@@ -392,11 +394,184 @@ def get_alignment_summary(report: AlignmentReport) -> str:
     return "\n".join(lines)
 
 
+# ==========================================================================
+# FASE-0D: ProposalAssetMatrix — Matriz Propuesta → Brecha → Asset
+# ==========================================================================
+
+
+@dataclass
+class ProposalAssetMatrixEntry:
+    """Entry in the proposal-asset matrix linking service → breach → asset.
+
+    Every service sold in a commercial proposal is cross-referenced against
+    the pain ledger (breach) and generated assets to produce a traceable link.
+
+    Statuses:
+        LINKED — service has a real breach AND a generated asset
+        MISSING_ASSET — service has a breach but no asset was generated
+        NO_BREACH — service sold without a corresponding pain in the ledger
+        GENERIC_DRAFT — fallback for services with partial match
+    """
+    service_name: str
+    pain_ids: List[str] = field(default_factory=list)
+    asset_type: str = ""
+    asset_path: Optional[str] = None
+    confidence: float = 0.0
+    status: str = "GENERIC_DRAFT"  # LINKED | MISSING_ASSET | NO_BREACH | GENERIC_DRAFT
+
+
+class ProposalAssetMatrix:
+    """Builds the matrix that links every proposal service to its breach and asset.
+
+    Rules:
+        - Every sold service must map to a real breach (pain_id in ledger).
+        - Every sold service must have a specific asset or be marked MISSING_ASSET.
+        - An existing asset must resolve the associated pain_id.
+
+    Usage:
+        matrix = ProposalAssetMatrix()
+        entries = matrix.build(proposal_services, pain_ledger, generated_assets)
+        matrix.save(entries, Path("v4_audit/proposal_asset_matrix.json"))
+    """
+
+    def __init__(self):
+        """Initialize with PainSolutionMapper for pain-to-asset mapping."""
+        from ..commercial_documents.pain_solution_mapper import PainSolutionMapper
+        self._pain_map = PainSolutionMapper.PAIN_SOLUTION_MAP
+
+    def _get_pain_ids_for_asset_type(self, asset_type: str) -> List[str]:
+        """Find all pain_ids that map to the given asset_type.
+
+        Reverse-looks up the PAIN_SOLUTION_MAP: for each pain_id,
+        checks if asset_type is in its assets list.
+
+        Args:
+            asset_type: e.g., 'whatsapp_button', 'hotel_schema'
+
+        Returns:
+            List of pain_id strings that map to this asset_type
+        """
+        matching: List[str] = []
+        for pain_id, mapping in self._pain_map.items():
+            if asset_type in mapping.get("assets", []):
+                matching.append(pain_id)
+        return matching
+
+    def build(
+        self,
+        proposal_services: List[str],
+        pain_ledger: List[Any],  # List[PainLedgerEntry]
+        generated_assets: List[Any],  # List[GeneratedAsset] or List[dict]
+    ) -> List[ProposalAssetMatrixEntry]:
+        """Build the proposal-asset-brecha matrix.
+
+        Args:
+            proposal_services: Service names as they appear in the proposal
+            pain_ledger: List of PainLedgerEntry from the pain ledger
+            generated_assets: List of GeneratedAsset or dicts with
+                'asset_type', 'confidence_score', 'path' keys
+
+        Returns:
+            List of ProposalAssetMatrixEntry, one per service
+        """
+        entries: List[ProposalAssetMatrixEntry] = []
+
+        # Build fast lookups
+        ledger_pain_ids: set = {e.pain_id for e in pain_ledger}
+
+        # Build asset_by_type lookup: handles both GeneratedAsset objects and dicts
+        asset_by_type: Dict[str, Any] = {}
+        for a in generated_assets:
+            if isinstance(a, dict):
+                asset_by_type[a.get("asset_type", "")] = a
+            else:
+                asset_by_type[getattr(a, "asset_type", "")] = a
+
+        for service_name in proposal_services:
+            expected_asset = PROPOSAL_SERVICE_TO_ASSET.get(service_name)
+            if not expected_asset:
+                # Unknown service — skip silently
+                continue
+
+            # Find all pain_ids that could map to this asset_type
+            candidate_pain_ids = self._get_pain_ids_for_asset_type(expected_asset)
+            # Filter to only those actually present in the ledger
+            matched_pain_ids = [pid for pid in candidate_pain_ids if pid in ledger_pain_ids]
+
+            # Find generated asset for this type
+            gen_asset = asset_by_type.get(expected_asset)
+
+            # Determine status based on breach + asset presence
+            if matched_pain_ids and gen_asset is not None:
+                status = "LINKED"
+                confidence = (
+                    gen_asset.get("confidence_score", 0.0) if isinstance(gen_asset, dict)
+                    else getattr(gen_asset, "confidence_score", 0.0)
+                )
+                asset_path = (
+                    gen_asset.get("path", None) if isinstance(gen_asset, dict)
+                    else getattr(gen_asset, "path", None)
+                )
+            elif matched_pain_ids and gen_asset is None:
+                status = "MISSING_ASSET"
+                confidence = max(
+                    (e.confidence for e in pain_ledger if e.pain_id in matched_pain_ids),
+                    default=0.0,
+                )
+                asset_path = None
+            elif not matched_pain_ids:
+                status = "NO_BREACH"
+                confidence = 0.0
+                asset_path = None
+            else:
+                status = "GENERIC_DRAFT"
+                confidence = 0.0
+                asset_path = None
+
+            entries.append(ProposalAssetMatrixEntry(
+                service_name=service_name,
+                pain_ids=matched_pain_ids,
+                asset_type=expected_asset,
+                asset_path=asset_path,
+                confidence=confidence,
+                status=status,
+            ))
+
+        return entries
+
+    def save(self, entries: List[ProposalAssetMatrixEntry], path: Path) -> None:
+        """Save the matrix to a JSON file.
+
+        Args:
+            entries: List of ProposalAssetMatrixEntry from build()
+            path: Output path for proposal_asset_matrix.json
+        """
+        path.parent.mkdir(parents=True, exist_ok=True)
+        data = {
+            "proposal_asset_matrix_version": "1.0",
+            "entries": [
+                {
+                    "service_name": e.service_name,
+                    "pain_ids": e.pain_ids,
+                    "asset_type": e.asset_type,
+                    "asset_path": e.asset_path,
+                    "confidence": e.confidence,
+                    "status": e.status,
+                }
+                for e in entries
+            ],
+        }
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False, sort_keys=True)
+
+
 __all__ = [
     'PROPOSAL_SERVICE_TO_ASSET',
     'ALL_PROMISED_SERVICES',
     'ServiceAlignment',
     'AlignmentReport',
+    'ProposalAssetMatrixEntry',
+    'ProposalAssetMatrix',
     'verify_proposal_asset_alignment',
     'get_missing_services',
     'get_alignment_summary',
