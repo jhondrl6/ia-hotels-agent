@@ -1,7 +1,7 @@
 # ROADMAP iah-cli — Evolución Agent-First con Capa Humana Mínima
 
-> **Versión roadmap**: v3.4 (2026-05-14)
-> **Estado proyecto**: v4.46.1 — ENCODING-SAFETY
+> **Versión roadmap**: v3.5 (2026-05-16)
+> **Estado proyecto**: v4.47.0 — ADVISORY-WARNINGS
 > **Tesis estratégica**: iah-cli debe evolucionar como sistema operado principalmente por agentes, con una interfaz humana mínima, clara y suficiente.
 > **Principio rector**: primero entrega confiable al cliente; después escala, automatización y crecimiento. Agentes ejecutan, validan y mantienen; humanos deciden, aprueban costos/riesgos y aportan datos reales.
 > **Horizonte operativo**: 90 días. Se reevalúa semanalmente durante validación comercial y quincenalmente después.
@@ -64,6 +64,12 @@ iah-cli ya funciona como sistema híbrido:
 
 El repo debe tratar a los humanos como operadores estratégicos y validadores, no como ejecutores paso a paso.
 
+Interpretación comercial deseada:
+
+> iah-cli puede evolucionar hacia un “Enrich Labs vertical para hoteles”, pero con una ventaja diferencial propia: trazabilidad, gates de calidad, evidencia y coherencia diagnóstico → propuesta → assets.
+
+Esto no significa copiar una plataforma horizontal de marketing ni prometer ejecución 24/7 de todos los canales. Significa empaquetar, cuando exista validación comercial suficiente, los workflows y gates actuales como un equipo agéntico especializado en visibilidad digital hotelera.
+
 Por tanto:
 
 - No priorizar una UI compleja.
@@ -71,6 +77,7 @@ Por tanto:
 - No hacer que humanos sigan procedimientos largos si un agente puede ejecutarlos.
 - Sí mantener comandos CLI simples, seguros y explicables.
 - Sí fortalecer AGENTS.md, workflows, gates, doctor, memoria, evidencia y validaciones.
+- Sí traducir capacidades internas en roles comerciales comprensibles cuando no comprometa la entrega confiable.
 
 ---
 
@@ -402,6 +409,19 @@ Criterio de éxito específico:
 La robustez agente no reemplaza la validación comercial, pero la validación comercial tampoco debe avanzar sobre entregas inconsistentes.
 El roadmap comercial se mantiene con agentes como multiplicador operativo, condicionado a FASE 0: primero entrega confiable, después escala comercial.
 
+### Empaque comercial agéntico — corto plazo
+
+Inspiración externa válida: Enrich Labs demuestra que el mercado entiende agentes de marketing como especialistas ejecutores, no como dashboards. Para iah-cli, la adaptación correcta es vertical hotelera y subordinada a G0.
+
+Acciones factibles sin romper el foco:
+
+1. Reposicionar iah-cli como equipo agéntico hotelero, no solo como CLI.
+2. Convertir workflows existentes en roles comprensibles: auditor de visibilidad, SEO/GEO hotelero, generador de assets técnicos y seguimiento/reporte.
+3. Preparar una capa de interacción natural — email, WhatsApp, Slack o formulario simple — solo después de 3-5 diagnósticos pagos y al menos 1 implementación cerrada.
+4. Mantener como diferencial explícito: trazabilidad, gates de calidad, evidencia y coherencia diagnóstico → propuesta → assets.
+
+No copiar todavía promesas horizontales de ejecución 24/7, publicación automática multicanal, dashboard/SaaS o personajes comerciales no anclados a workflows reales.
+
 ### Producto 1: Diagnóstico Express
 
 Precio inicial sugerido: $120.000 COP.
@@ -571,6 +591,7 @@ Hasta que existan señales:
 9. Monitorear discoverability agent-to-agent/MCP como radar 12-18 meses. No priorizarlo antes de validación comercial y entrega confiable repetible.
 10. Resolver G0 completo: los 3 assets en `ESTIMATED` por falta de `hotel_data` requieren onboarding real para alcanzar ≥0.8 confidence. Es la última milla del primer piso.
 11. Endurecer G8 para nuevos tipos de hotel: el DataDerivationLayer cubre 5 derivaciones del audit estándar; hoteles con estructuras atípicas pueden necesitar derivaciones adicionales.
+12. Preservar el análisis Enrich Labs vertical para hoteles como contexto estratégico, no como copia de producto horizontal. Fuente: `.opencode/context/roadmap-enrichlabs-vertical-hotels-strategy.md`.
 
 ---
 
