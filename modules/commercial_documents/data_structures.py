@@ -238,6 +238,8 @@ class V4AuditResult:
     overall_confidence: str
     critical_issues: List[str] = field(default_factory=list)
     recommendations: List[str] = field(default_factory=list)
+    # FASE-A: ia_readiness es advisory (no bloquea)
+    ia_readiness: Optional[Any] = field(default=None)
     metadata: Optional[Any] = None
 
 

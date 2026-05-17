@@ -34,6 +34,7 @@ class DeliveryQualityReport:
         proposal_asset_gate: Results from proposal-asset alignment gate
         asset_specificity_gate: Results from asset specificity/confidence gate
         evidence_gate: Results from evidence quality gate
+        advisory_warnings: List of non-blocking warnings (e.g., IA-Readiness Critical)
         human_review_items: Items requiring manual review before publication
         summary: Aggregate summary of all gate results
     """
@@ -43,8 +44,9 @@ class DeliveryQualityReport:
     proposal_asset_gate: dict
     asset_specificity_gate: dict
     evidence_gate: dict
-    human_review_items: List[str]
     summary: dict
+    advisory_warnings: List[dict] = field(default_factory=list)
+    human_review_items: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict:
         """Convert report to dictionary for JSON serialization."""
@@ -55,6 +57,7 @@ class DeliveryQualityReport:
             "proposal_asset_gate": self.proposal_asset_gate,
             "asset_specificity_gate": self.asset_specificity_gate,
             "evidence_gate": self.evidence_gate,
+            "advisory_warnings": self.advisory_warnings,
             "human_review_items": self.human_review_items,
             "summary": self.summary,
         }
@@ -181,6 +184,21 @@ class DeliveryQualityReportGenerator:
                 f"Evidence: Quality check failed — {evidence_details.get('reason', 'unknown')}"
             )
 
+        # ── Advisory Warnings ───────────────────────────────────────────────
+        # FASE-A: Non-blocking warnings (e.g., IA-Readiness Critical)
+        advisory_warnings: List[dict] = []
+        ia_readiness_data = self._load_json(v4_audit_path / "ia_readiness_report.json")
+        if ia_readiness_data:
+            ia_score = self._extract_ia_readiness_score(ia_readiness_data)
+            ia_status = ia_readiness_data.get("status", "")
+            if ia_status.lower() == "critical" or (ia_score is not None and ia_score < 50):
+                advisory_warnings.append({
+                    "code": "IA_READINESS_CRITICAL",
+                    "severity": "WARNING",
+                    "blocking": False,
+                    "message": "IA-Readiness Critical: objetivo de citación/recomendación por IA en riesgo sin acción correctiva"
+                })
+
         # ── Determine overall status ───────────────────────────────────────
         blocking_gates = [
             name for name, result in gate_results.items()
@@ -220,6 +238,7 @@ class DeliveryQualityReportGenerator:
             proposal_asset_gate=gate_results.get("proposal_asset", {"passed": True, "gate": "G9"}),
             asset_specificity_gate=gate_results["asset_specificity"],
             evidence_gate=gate_results["evidence"],
+            advisory_warnings=advisory_warnings,
             human_review_items=human_review_items,
             summary=summary,
         )
@@ -257,6 +276,18 @@ class DeliveryQualityReportGenerator:
         # Try nested
         if "coherence" in data and isinstance(data["coherence"], dict):
             return data["coherence"].get("overall_score")
+        return None
+
+    @staticmethod
+    def _extract_ia_readiness_score(data: dict) -> Optional[float]:
+        """Extract IA readiness score from ia_readiness_report.json."""
+        if not data:
+            return None
+        if "overall_score" in data:
+            return float(data["overall_score"])
+        if "components" in data and isinstance(data["components"], dict):
+            # Weighted average already computed as overall_score
+            return data["components"].get("overall_score")
         return None
 
     def _evaluate_coverage(self, data: dict) -> tuple:

@@ -1597,6 +1597,19 @@ class V4ComprehensiveAuditor:
         
         print(f"\nReport saved to: {output_path}")
 
+        # FASE-A: Also persist IA-Readiness separately so delivery_quality_report
+        # can read it back without needing the in-memory V4AuditResult object.
+        if result.ia_readiness:
+            ia_readiness_path = output_path.parent / "ia_readiness_report.json"
+            ia_data = {
+                "overall_score": result.ia_readiness.overall_score,
+                "components": result.ia_readiness.components,
+                "status": result.ia_readiness.status,
+                "actionable_items": result.ia_readiness.actionable_items,
+            }
+            with open(ia_readiness_path, 'w', encoding='utf-8') as f:
+                json.dump(ia_data, f, indent=2, ensure_ascii=False)
+
 
 # Singleton instance for reuse
 _auditor_instance: Optional[V4ComprehensiveAuditor] = None

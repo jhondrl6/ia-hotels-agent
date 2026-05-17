@@ -75,8 +75,9 @@ class TestDeliveryQualityReport:
             proposal_asset_gate={"passed": True, "alignment": 1.0},
             asset_specificity_gate={"passed": False, "avg_confidence": 0.3},
             evidence_gate={"passed": False, "evidence_coverage": 0.5},
-            human_review_items=["Review low confidence assets"],
             summary={"total_gates": 4, "passed": 1, "failed": 3},
+            advisory_warnings=[],
+            human_review_items=["Review low confidence assets"],
         )
         assert report.status == "FAIL"
         assert report.blocking is True
@@ -90,8 +91,9 @@ class TestDeliveryQualityReport:
             proposal_asset_gate={"passed": True, "alignment": 0.9},
             asset_specificity_gate={"passed": False, "avg_confidence": 0.6},
             evidence_gate={"passed": True, "evidence_coverage": 0.96},
-            human_review_items=["3 assets below confidence threshold"],
             summary={"total_gates": 4, "passed": 3, "failed": 1},
+            advisory_warnings=[],
+            human_review_items=["3 assets below confidence threshold"],
         )
         assert report.status == "WARNING"
         assert report.blocking is False
@@ -105,8 +107,9 @@ class TestDeliveryQualityReport:
             proposal_asset_gate={"passed": True, "alignment": 1.0},
             asset_specificity_gate={"passed": True, "avg_confidence": 0.92},
             evidence_gate={"passed": True, "evidence_coverage": 0.98},
-            human_review_items=[],
             summary={"total_gates": 4, "passed": 4, "failed": 0},
+            advisory_warnings=[],
+            human_review_items=[],
         )
         assert report.status == "PASS"
         assert report.blocking is False
@@ -225,3 +228,133 @@ class TestDeliveryQualityReportGenerator:
 
         assert report.status == "PASS"
         assert report.blocking is False
+
+
+# ── FASE-A: Advisory Warnings Tests ──────────────────────────────────────────
+
+def _write_ia_readiness_json(audit_dir, overall_score, status):
+    """Helper: write ia_readiness_report.json."""
+    import json
+    data = {
+        "overall_score": overall_score,
+        "status": status,
+        "components": {
+            "schema_quality": overall_score * 0.22,
+            "crawler_access": overall_score * 0.22,
+            "citability": overall_score * 0.23,
+            "llms_txt": 100 if overall_score >= 50 else 0,
+            "brand_signals": overall_score * 0.14,
+        },
+    }
+    (audit_dir / "ia_readiness_report.json").write_text(json.dumps(data))
+
+
+class TestAdvisoryWarnings:
+    """Tests for advisory_warnings in DeliveryQualityReport (FASE-A)."""
+
+    def test_advisory_warning_generated(self, temp_v4_audit_dir):
+        """IA-Readiness Critical generates advisory_warnings with IA_READINESS_CRITICAL."""
+        _write_coherence_json(temp_v4_audit_dir, overall_score=0.85)
+        _write_asset_generation_json(temp_v4_audit_dir, assets=[
+            {"asset_type": "hotel_schema", "confidence_score": 0.95, "can_use": True, "preflight_status": "PASSED"},
+        ])
+        _write_ia_readiness_json(temp_v4_audit_dir, overall_score=35.0, status="Critical")
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", temp_v4_audit_dir)
+
+        assert hasattr(report, "advisory_warnings")
+        assert isinstance(report.advisory_warnings, list)
+        assert len(report.advisory_warnings) == 1
+        assert report.advisory_warnings[0]["code"] == "IA_READINESS_CRITICAL"
+        assert report.advisory_warnings[0]["severity"] == "WARNING"
+        assert report.advisory_warnings[0]["blocking"] is False
+
+    def test_advisory_warning_non_blocking(self, temp_v4_audit_dir):
+        """advisory_warnings do NOT block ZIP — status remains PASS when only advisory warnings exist."""
+        _write_coherence_json(temp_v4_audit_dir, overall_score=0.85)
+        _write_asset_generation_json(temp_v4_audit_dir, assets=[
+            {"asset_type": "hotel_schema", "confidence_score": 0.95, "can_use": True, "preflight_status": "PASSED"},
+        ])
+        _write_ia_readiness_json(temp_v4_audit_dir, overall_score=35.0, status="Critical")
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", temp_v4_audit_dir)
+
+        assert report.status == "PASS"
+        assert report.blocking is False
+
+    def test_fail_still_blocks(self, temp_v4_audit_dir):
+        """FAIL by G6/G7/EVIDENCE still blocks even when advisory warnings exist."""
+        _write_coherence_json(temp_v4_audit_dir, overall_score=0.45)
+        _write_asset_generation_json(temp_v4_audit_dir, assets=[
+            {"asset_type": "hotel_schema", "confidence_score": 0.95, "can_use": True, "preflight_status": "PASSED"},
+        ])
+        _write_ia_readiness_json(temp_v4_audit_dir, overall_score=35.0, status="Critical")
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", temp_v4_audit_dir)
+
+        assert report.status == "FAIL"
+        assert report.blocking is True
+        assert len(report.advisory_warnings) == 1
+        assert report.advisory_warnings[0]["code"] == "IA_READINESS_CRITICAL"
+
+    def test_no_ia_readiness_no_warning(self, temp_v4_audit_dir):
+        """No ia_readiness_report.json → no advisory_warnings generated."""
+        _write_coherence_json(temp_v4_audit_dir, overall_score=0.85)
+        _write_asset_generation_json(temp_v4_audit_dir, assets=[
+            {"asset_type": "hotel_schema", "confidence_score": 0.95, "can_use": True, "preflight_status": "PASSED"},
+        ])
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", temp_v4_audit_dir)
+
+        assert report.status == "PASS"
+        assert report.blocking is False
+        assert len(report.advisory_warnings) == 0
+
+    def test_ia_ready_no_warning(self, temp_v4_audit_dir):
+        """IA-Readiness Ready → no advisory warning generated."""
+        _write_coherence_json(temp_v4_audit_dir, overall_score=0.85)
+        _write_asset_generation_json(temp_v4_audit_dir, assets=[
+            {"asset_type": "hotel_schema", "confidence_score": 0.95, "can_use": True, "preflight_status": "PASSED"},
+        ])
+        _write_ia_readiness_json(temp_v4_audit_dir, overall_score=78.0, status="Ready")
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", temp_v4_audit_dir)
+
+        assert report.status == "PASS"
+        assert len(report.advisory_warnings) == 0
+
+    def test_ia_needs_work_no_warning(self, temp_v4_audit_dir):
+        """IA-Readiness Needs Work → no advisory warning (only Critical triggers)."""
+        _write_coherence_json(temp_v4_audit_dir, overall_score=0.85)
+        _write_asset_generation_json(temp_v4_audit_dir, assets=[
+            {"asset_type": "hotel_schema", "confidence_score": 0.95, "can_use": True, "preflight_status": "PASSED"},
+        ])
+        _write_ia_readiness_json(temp_v4_audit_dir, overall_score=55.0, status="Needs Work")
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", temp_v4_audit_dir)
+
+        assert report.status == "PASS"
+        assert len(report.advisory_warnings) == 0
+
+    def test_to_dict_includes_advisory_warnings(self, temp_v4_audit_dir):
+        """to_dict() includes advisory_warnings in serialized output."""
+        _write_coherence_json(temp_v4_audit_dir, overall_score=0.85)
+        _write_asset_generation_json(temp_v4_audit_dir, assets=[
+            {"asset_type": "hotel_schema", "confidence_score": 0.95, "can_use": True, "preflight_status": "PASSED"},
+        ])
+        _write_ia_readiness_json(temp_v4_audit_dir, overall_score=35.0, status="Critical")
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", temp_v4_audit_dir)
+        report_dict = report.to_dict()
+
+        assert "advisory_warnings" in report_dict
+        assert isinstance(report_dict["advisory_warnings"], list)
+        assert len(report_dict["advisory_warnings"]) == 1
+        assert report_dict["advisory_warnings"][0]["code"] == "IA_READINESS_CRITICAL"

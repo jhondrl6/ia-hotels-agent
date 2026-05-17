@@ -257,3 +257,125 @@ class TestDeprecatedFallback:
         assert isinstance(score, int)
         # With 1 VERIFIED field, score should be 100
         assert score == 100
+
+
+# ── FASE-A: IA-Readiness Critical Advisory Alert Tests ──────────────────────────────────────────
+
+class TestIAReadinessAdvisoryAlert:
+    """Tests for IA-Readiness Critical warning in diagnostic (FASE-A)."""
+
+    def test_ia_critical_shows_alert(self):
+        """IA-Readiness Critical → alert blockquote appears in output."""
+        from modules.auditors.ia_readiness_calculator import IAReadinessReport
+        gen = V4DiagnosticGenerator()
+        audit = _make_minimal_audit()
+        validation = _make_minimal_validation_summary()
+        financial = _make_minimal_financial_scenarios()
+
+        # Inject IAReadinessReport with Critical status
+        ia_report = IAReadinessReport(
+            overall_score=35.0,
+            components={
+                "schema_quality": 30.0,
+                "crawler_access": 40.0,
+                "citability": 35.0,
+                "llms_txt": 0,
+                "brand_signals": 40.0,
+            },
+            status="Critical",
+            actionable_items=["Improve schema quality", "Fix crawler access"],
+        )
+        # Attach ia_readiness to the audit object
+        audit = dataclass_replace(audit, ia_readiness=ia_report)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = gen.generate(
+                audit_result=audit,
+                validation_summary=validation,
+                financial_scenarios=financial,
+                hotel_name="Hotel Test",
+                hotel_url="https://example.com",
+                output_dir=tmpdir,
+                coherence_score=0.85,
+            )
+            content = Path(path).read_text(encoding="utf-8")
+            assert "Alerta IA-Readiness Critical" in content
+            assert "objetivo comercial" in content.lower()
+
+    def test_ia_ready_no_alert(self):
+        """IA-Readiness Ready → NO alert blockquote."""
+        from modules.auditors.ia_readiness_calculator import IAReadinessReport
+
+        gen = V4DiagnosticGenerator()
+        audit = _make_minimal_audit()
+        validation = _make_minimal_validation_summary()
+        financial = _make_minimal_financial_scenarios()
+
+        ia_report = IAReadinessReport(
+            overall_score=78.0,
+            components={
+                "schema_quality": 80.0,
+                "crawler_access": 75.0,
+                "citability": 78.0,
+                "llms_txt": 100,
+                "brand_signals": 70.0,
+            },
+            status="Ready",
+            actionable_items=[],
+        )
+        audit = dataclass_replace(audit, ia_readiness=ia_report)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = gen.generate(
+                audit_result=audit,
+                validation_summary=validation,
+                financial_scenarios=financial,
+                hotel_name="Hotel Test",
+                hotel_url="https://example.com",
+                output_dir=tmpdir,
+                coherence_score=0.85,
+            )
+            content = Path(path).read_text(encoding="utf-8")
+            assert "Alerta IA-Readiness Critical" not in content
+
+    def test_ia_needs_work_no_alert(self):
+        """IA-Readiness Needs Work → NO alert blockquote (only Critical triggers)."""
+        from modules.auditors.ia_readiness_calculator import IAReadinessReport
+
+        gen = V4DiagnosticGenerator()
+        audit = _make_minimal_audit()
+        validation = _make_minimal_validation_summary()
+        financial = _make_minimal_financial_scenarios()
+
+        ia_report = IAReadinessReport(
+            overall_score=55.0,
+            components={
+                "schema_quality": 50.0,
+                "crawler_access": 55.0,
+                "citability": 60.0,
+                "llms_txt": 100,
+                "brand_signals": 50.0,
+            },
+            status="Needs Work",
+            actionable_items=["Improve schema quality"],
+        )
+        audit = dataclass_replace(audit, ia_readiness=ia_report)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = gen.generate(
+                audit_result=audit,
+                validation_summary=validation,
+                financial_scenarios=financial,
+                hotel_name="Hotel Test",
+                hotel_url="https://example.com",
+                output_dir=tmpdir,
+                coherence_score=0.85,
+            )
+            content = Path(path).read_text(encoding="utf-8")
+            assert "Alerta IA-Readiness Critical" not in content
+
+
+def dataclass_replace(obj, **kwargs):
+    """Create a copy of a dataclass with updated fields."""
+    from dataclasses import replace
+    return replace(obj, **kwargs)

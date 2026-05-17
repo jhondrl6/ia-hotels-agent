@@ -1652,6 +1652,15 @@ class V4DiagnosticGenerator:
             status_text = getattr(ia, 'status', 'Unknown') or 'Unknown'
             rows.append(f"| IA-Readiness | {score:.1f}/100 | {status_text} | {status_icon} |")
 
+            # FASE-A: Advisory warning cuando IA-Readiness es Critical
+            if status_text.lower() == "critical" or score < 50:
+                ia_critical_warning = (
+                    "\n> ⚠️ **Alerta IA-Readiness Critical**: este score no bloquea la entrega, "
+                    "pero indica que el objetivo comercial de ser citado/recomendado por IA "
+                    "está en riesgo hasta implementar las correcciones propuestas.\n"
+                )
+                rows.append(f"{ia_critical_warning}")
+
         # T10: Salud Técnica GEO (RES-03) — geo_flow_result
         if output_dir:
             hotel_id = audit_result.hotel_name.lower().replace(" ", "_").replace("-", "_")
