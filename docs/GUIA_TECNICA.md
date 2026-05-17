@@ -1,7 +1,22 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.46.1 (ENCODING-SAFETY)
-**Última actualización:** 2026-05-14
+**Versión:** v4.47.0 (ADVISORY-WARNINGS)
+**Última actualización:** 2026-05-16
+
+---
+
+### Notas de Cambios v4.47.0 — ADVISORY-WARNINGS
+
+**Módulos afectados**: `v4_diagnostic_generator.py`, `delivery_quality_report.py`
+
+**Problema**: IA-Readiness Critical (score < 50) aparecía como una fila más en la tabla de diagnóstico sin explicitar el riesgo comercial al hotelero. No quedaba registro persistente en los reportes de calidad.
+
+**Solución**:
+- Alerta blockquote en diagnóstico cuando IA-Readiness es Critical
+- Nuevo campo `advisory_warnings` en DeliveryQualityReport con entry `IA_READINESS_CRITICAL`
+- `blocking=False` — no aborta ZIP ni afecta overall_confidence
+
+**Backwards compatibility**: Total. Campo nuevo (`advisory_warnings`) con default `[]`. Template soporta nueva variable pero mantiene comportamiento existente.
 
 ---
 

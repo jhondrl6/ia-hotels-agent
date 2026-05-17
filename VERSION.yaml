@@ -1,10 +1,15 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.46.1"
-codename: "ENCODING-SAFETY"
-release_date: "2026-05-14"
+version: "4.47.0"
+codename: "ADVISORY-WARNINGS"
+release_date: "2026-05-17"
 plan_maestro_version: "v2.6.0"
 
+# v4.47.0 - ADVISORY-WARNINGS (2026-05-17)
+# FASE-A: Advisory warnings implementados (diagnóstico + delivery_quality_report) + 6 tests
+# FASE-B: v4complete Hotel Castilla Real ejecutado y verificado
+# Backwards compatible: campo nuevo (advisory_warnings) con default [], template soporta variable
+#
 # v4.46.1 - ENCODING-SAFETY (2026-05-14)
 # FASE-A: Parche inmediato validate_document_integration.py — TextIOWrapper UTF-8
 # FASE-B: Parche reconfigure() en verify_ga4.py, validate_structure.py, update_benchmarks.py

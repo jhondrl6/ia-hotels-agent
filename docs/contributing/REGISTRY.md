@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-14
+> **Ultima actualizacion:** 2026-05-16
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 271
+> **Total fases completadas:** 274
 
 ---
 
@@ -6690,6 +6690,69 @@ _Ninguno_
 
 ### Archivos Modificados
 _Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-A - 2026-05-16
+**Descripcion:** IA-Readiness Advisory Warnings: alerta en diagnóstico + advisory_warnings en delivery_quality_report
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/quality_gates/delivery_quality_report.py` | Delivery Quality Report |
+| `modules/commercial_documents/data_structures.py` | Data Structures |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+
+### Validaciones
+- [x] Tests passing (13)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-B - 2026-05-16
+**Descripcion:** v4complete Hotel Castilla Real + verificación advisory warnings
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `evidence/fase-B/analysis.md` | Analysis |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.8 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.47.0 - 2026-05-16
+**Descripcion:** Release 4.47.0 — ADVISORY-WARNINGS: alerta advisory IA-Readiness + delivery_quality_report warnings
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `CHANGELOG.md` | Changelog |
+| `GUIA_TECNICA.md` | Guia Tecnica |
+| `VERSION.yaml` | Version |
 
 ### Validaciones
 - [x] Tests passing

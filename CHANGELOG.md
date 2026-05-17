@@ -1,5 +1,29 @@
 # Changelog
 
+## [4.47.0] - ADVISORY-WARNINGS — 2026-05-17
+
+### Objetivo
+Implementar advisory warnings visibles y persistentes para IA-Readiness Critical sin bloquear entregas.
+
+### Cambios Implementados
+- `modules/commercial_documents/v4_diagnostic_generator.py` - Alerta blockquote cuando IA-Readiness < 50
+- `modules/quality_gates/delivery_quality_report.py` - Nuevo campo advisory_warnings con IA_READINESS_CRITICAL
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` - Variable para alerta advisory
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Agregada alerta advisory en tabla de métricas IA |
+| `modules/quality_gates/delivery_quality_report.py` | Campo advisory_warnings: List[dict] + serialización |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Soporte para variable ia_critical_warning |
+
+### Tests
+- 6 tests nuevos en test_v4_diagnostic_generator.py y test_delivery_quality_report.py
+- 0 regresiones
+- Verificado con v4complete para Hotel Castilla Real
+
+---
+
 ## [4.46.1] - ENCODING-SAFETY — 2026-05-14
 
 ### Objetivo

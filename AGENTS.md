@@ -1,8 +1,8 @@
-<!-- agents_version: v4.42.0 | last_update: 2026-05-14 -->
+<!-- agents_version: v4.42.0 | last_update: 2026-05-16 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.46.1 -- ENCODING-SAFETY COMPLETADO**
+> **v4.47.0 -- ADVISORY-WARNINGS COMPLETADO**
 
 ---
 
