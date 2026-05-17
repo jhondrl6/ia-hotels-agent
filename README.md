@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.47.0 | **Codename:** ADVISORY-WARNINGS | **Ultima actualizacion:** 16 Mayo 2026
+**Version:** 4.47.0 | **Codename:** ADVISORY-WARNINGS | **Ultima actualizacion:** 17 Mayo 2026
 
 ---
 
@@ -21,12 +21,12 @@
 
 ---
 
-## Estado del Proyecto (v4.45.0)
+## Estado del Proyecto (v4.47.0)
 
-- **2,362 test functions** — suite completa, 0 regresiones
- - **188 modulos Python** (~67K lineas) + **22 scripts** (~5K lineas) + **443 archivos de test** (~56K lineas)
+- **2,721 test functions** — suite completa, 0 regresiones
+- **192 modulos Python** (~69K lineas) + **22 scripts** (~6K lineas) + **225 archivos de test** (~58K lineas)
 - **9 config YAML** con schema validado
- - **17 agent skills** en `.agents/workflows/`
+- **17 agent skills** en `.agents/workflows/`
 - **9 publication gates** (6 blocking + 3 advisory)
 - **Coherence Score >= 0.8** requerido para publicacion
 - **22 assets IMPLEMENTED** (+ 2 DEPRECATED + 1 MANUAL_ONLY) en catalogo
@@ -232,15 +232,16 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **2,362 test functions** — suite completa, 0 regresiones
+- **2,721 test functions** — suite completa, 0 regresiones
 - **60 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Suite de regresion** — Amaziliahotel + Hotel Visperas como casos de referencia
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
 - **9 Publication Gates** (6 blocking + 3 advisory):
   - Blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics
-  - Advisory: content_quality, asset_confidence, proposal_asset_alignment
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.1.0 (1 fase/sesion, max 60 iteraciones)
+  - Advisory: content_quality, asset_confidence, proposal_asset_alignment, ia_readiness_critical
+- **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
+- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.12.1 (1 fase/sesion, max 60 iteraciones)
 
 ---
 
