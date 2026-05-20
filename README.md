@@ -27,7 +27,7 @@
 - **192 modulos Python** (~69K lineas) + **22 scripts** (~6K lineas) + **225 archivos de test** (~58K lineas)
 - **9 config YAML** con schema validado
 - **17 agent skills** en `.agents/workflows/`
-- **9 publication gates** (6 blocking + 3 advisory)
+- **11 publication gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding)
 - **Coherence Score >= 0.8** requerido para publicacion
 - **22 assets IMPLEMENTED** (+ 2 DEPRECATED + 1 MANUAL_ONLY) en catalogo
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
@@ -237,9 +237,9 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Suite de regresion** — Amaziliahotel + Hotel Visperas como casos de referencia
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
-- **9 Publication Gates** (6 blocking + 3 advisory):
+- **11 Publication Gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding):
   - Blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics
-  - Advisory: content_quality, asset_confidence, proposal_asset_alignment, ia_readiness_critical
+  - Advisory: content_quality, asset_confidence, proposal_asset_alignment
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
 - **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.12.1 (1 fase/sesion, max 60 iteraciones)
 

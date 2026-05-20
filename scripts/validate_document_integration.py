@@ -393,6 +393,85 @@ def validate_domain_primer_version() -> ValidationResult:
     )
 
 
+def validate_readme_counts() -> ValidationResult:
+    """
+    Compare README.md numerical claims against real code counts.
+    Executed in FASE-RELEASE as part of run_all_validations.py --quick.
+    Validates: test files, publication gates, pain_narratives.
+    """
+    issues = []
+    details = []
+    readme_path = PROJECT_ROOT / "README.md"
+    readme_content = read_file(readme_path)
+
+    # 1. Test files: "225 archivos de test"
+    real_test_files = len(list(PROJECT_ROOT.glob("tests/**/*.py")))
+    match = re.search(r'(\d+)\s+archivos\s+de\s+test', readme_content)
+    if match:
+        readme_val = int(match.group(1))
+        if real_test_files != readme_val:
+            issues.append(f"Test files: README={readme_val}, real={real_test_files}")
+        else:
+            details.append(f"Test files: {real_test_files} (OK)")
+    else:
+        details.append("Test files: no claim found in README")
+
+    # 2. Publication gates: "9 publication gates" / "11 publication gates"
+    try:
+        import sys
+        sys.path.insert(0, str(PROJECT_ROOT))
+        import importlib
+        mod = importlib.import_module("modules.quality_gates.publication_gates")
+        real_gates = len(mod.PublicationGates().gates)
+        match = re.search(r'(\d+)\s+publication\s+gates?', readme_content, re.IGNORECASE)
+        if match:
+            readme_gates = int(match.group(1))
+            if real_gates != readme_gates:
+                issues.append(f"Publication gates: README={readme_gates}, real={real_gates}")
+            else:
+                details.append(f"Publication gates: {real_gates} (OK)")
+        else:
+            details.append("Publication gates: no claim found in README")
+    except Exception as e:
+        details.append(f"Publication gates: could not import ({e})")
+
+    # 3. Pain narratives: "Pain narratives (14)" / "(15)"
+    try:
+        import yaml
+        benchmarks_path = PROJECT_ROOT / "config" / "regional_benchmarks.yaml"
+        with open(benchmarks_path, encoding="utf-8") as f:
+            all_benchmarks = yaml.safe_load(f)
+        # YAML structure: regions: { region_name: { pain_narratives: {...} } }
+        default_region = all_benchmarks.get("default_region", "eje_cafetero")
+        regions = all_benchmarks.get("regions", {})
+        region_data = regions.get(default_region, {})
+        real_pain = len(region_data.get("pain_narratives", {}))
+        if real_pain == 0:
+            # Try first region if default has no pain_narratives
+            for k, v in regions.items():
+                if isinstance(v, dict) and "pain_narratives" in v:
+                    real_pain = len(v["pain_narratives"])
+                    break
+        match = re.search(r'Pain narratives\s+\((\d+)\)', readme_content, re.IGNORECASE)
+        if match:
+            readme_pain = int(match.group(1))
+            if real_pain != readme_pain:
+                issues.append(f"Pain narratives: README={readme_pain}, real={real_pain}")
+            else:
+                details.append(f"Pain narratives: {real_pain} (OK)")
+        else:
+            details.append("Pain narratives: no claim found in README")
+    except Exception as e:
+        details.append(f"Pain narratives: could not parse ({e})")
+
+    return ValidationResult(
+        check="README.md numerical counts vs code",
+        passed=len(issues) == 0,
+        issues=issues,
+        details=details
+    )
+
+
 def validate_line_endings() -> ValidationResult:
     """Check for CRLF line endings in key files."""
     issues = []
@@ -424,6 +503,7 @@ def run_all(verbose: bool = False) -> bool:
         ("Python path consistency (WSL)", validate_python_path_consistency),
         ("AGENTS.md cross-reference table", validate_agents_cross_ref_table),
         ("DOMAIN_PRIMER vs VERSION.yaml", validate_domain_primer_version),
+        ("README.md numerical counts vs code", validate_readme_counts),
         ("Line endings (LF, no CRLF)", validate_line_endings),
     ]
 
