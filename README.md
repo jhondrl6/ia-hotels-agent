@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**Version:** 4.47.0 | **Codename:** ADVISORY-WARNINGS | **Ultima actualizacion:** 17 Mayo 2026
+**v4.47.0** — Actualizado 20 Mayo 2026 | +2,833 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -23,8 +23,8 @@
 
 ## Estado del Proyecto (v4.47.0)
 
-- **2,721 test functions** — suite completa, 0 regresiones
-- **192 modulos Python** (~69K lineas) + **22 scripts** (~6K lineas) + **225 archivos de test** (~58K lineas)
+- **2,833 test functions** — suite completa, 0 regresiones
+- **192 modulos Python** (~69K lineas) + **22 scripts** (~6K lineas) + **209 archivos de test** (~58K lineas)
 - **9 config YAML** con schema validado
 - **17 agent skills** en `.agents/workflows/`
 - **11 publication gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding)
@@ -232,7 +232,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **2,721 test functions** — suite completa, 0 regresiones
+- **2,833 test functions** — suite completa, 0 regresiones
 - **60 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Suite de regresion** — Amaziliahotel + Hotel Visperas como casos de referencia
@@ -281,7 +281,7 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
-  tests/                      # 199 archivos de test (~54K lineas)
+  tests/                      # 209 archivos de test (~54K lineas)
     config/                   #   60 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
