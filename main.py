@@ -2549,6 +2549,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         voice_readiness_level=getattr(diagnostic_gen, '_last_voice_level', None),
     )
 
+    # PIPELINE-FIX: Initialize pain_ledger for assessment scope (loaded inside generate_proposal)
+    pain_ledger_entries = []
+
     # FIX-D7: Proposal generation now AFTER assets so we can use asset_result.generated_assets
     # (which includes promised_by=always assets like voice_assistant_guide, whatsapp_button, monthly_report)
     if generate_proposal:
@@ -2578,6 +2581,12 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 for spec in asset_plan
             ]
         
+        # PIPELINE-FIX: Load pain_ledger for assessment injection and proposal generation
+        from modules.asset_generation.pain_ledger import PainLedger
+        pain_ledger_path = output_dir / "v4_audit" / "pain_ledger.json"
+        if pain_ledger_path.exists():
+            pain_ledger_entries = PainLedger().load(pain_ledger_path)
+
         # FASE-D root-fix: Invoke SitePresenceChecker to verify which assets
         # already exist in production BEFORE generating the proposal.
         # This fixes the "Estado de los Entregables" block showing wrong status
@@ -2611,6 +2620,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             financial_breakdown=financial_breakdown,
             assets_generated=assets_for_quality,
             site_presence_report=site_presence_report,
+            pain_ledger=pain_ledger_entries,  # PIPELINE-FIX: enable ProposalAssetMatrix.save()
         )
         
         # FIX-PATCH-2: Re-scrub proposal now that it exists
@@ -2684,6 +2694,22 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             "faq_schema_valid": audit_result.schema.faq_schema_valid,
             "faq_confidence": audit_result.schema.faq_confidence,
         } if audit_result else {},
+        # PIPELINE-FIX: Inject orphaned artifacts into assessment
+        "pain_ledger": [
+            e.to_dict() if hasattr(e, 'to_dict') else e
+            for e in pain_ledger_entries
+        ],
+        "diagnostic_pain_ids": list(
+            getattr(diagnostic_summary, 'pain_ids', []) or []
+        ) if diagnostic_summary else [],
+        "proposal_pain_ids": list(set(
+            pid for asset in (asset_plan or [])
+            for pid in (getattr(asset, 'pain_ids', None) or [])
+        )),
+        "financial_evidence_tier": (
+            getattr(financial_breakdown, 'evidence_tier', 'C')
+            if financial_breakdown else 'C'
+        ),
         "evidence_coverage": 0.95,  # Default assumption
         "metrics": {
             "coherence_score": asset_result.coherence_report.overall_score if asset_result else 0.0,
