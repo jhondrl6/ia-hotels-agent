@@ -122,11 +122,18 @@ class AssetGenerationResult:
     def to_dict(self) -> Dict[str, Any]:
         """Convert result to dictionary."""
         generated_count = len(self.generated_assets)
+        # Mantener estimated_count para backward compat del campo "estimated"
         estimated_count = sum(
             1 for a in self.generated_assets if a.preflight_status.upper() == "WARNING"
         )
+        # PIPELINE-FIX: delivery_ready usa confidence_score, no preflight_status
+        CONFIDENCE_THRESHOLD = 0.65
+        ready_count = sum(
+            1 for a in self.generated_assets
+            if a.confidence_score >= CONFIDENCE_THRESHOLD
+        )
         delivery_ready_pct = (
-            ((generated_count - estimated_count) / generated_count) * 100
+            (ready_count / generated_count) * 100
             if generated_count > 0
             else 0.0
         )

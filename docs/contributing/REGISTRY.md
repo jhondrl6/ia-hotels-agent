@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-16
+> **Ultima actualizacion:** 2026-05-23
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 274
+> **Total fases completadas:** 276
 
 ---
 
@@ -6756,6 +6756,46 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PF-1 - 2026-05-23
+**Descripcion:** Fix Assessment Dict: Inyectar 4 artefactos huérfanos (pain_ledger, diagnostic_pain_ids, proposal_pain_ids, financial_evidence_tier) al assessment dict y pasar pain_ledger a proposal_gen.generate()
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/test_pipeline_fix_assessment.py` | NUEVO | Test Pipeline Fix Assessment |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (13)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-PF-2 - 2026-05-23
+**Descripcion:** Fix delivery_ready_percentage: fórmula ahora usa confidence_score >= 0.65 en lugar de preflight_status WARNING
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+
+### Validaciones
+- [x] Tests passing (9)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
