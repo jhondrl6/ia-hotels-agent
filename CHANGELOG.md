@@ -1,5 +1,43 @@
 # Changelog
 
+## [4.48.0] - PIPELINE-FIX — Assessment Dict Bridge + delivery_ready Formula — 2026-05-23
+
+### Objetivo
+Corregir dos bugs críticos del pipeline de assessment → propuesta → assets: (1) artefactos huérfanos (pain_ledger, financial_evidence_tier, pain_ids) nunca llegaban al assessment dict, causando 2 gates BLOCKED falsos y proposal_asset_matrix.json sin generar; (2) métrica delivery_ready_percentage usaba fórmula equivocada (preflight_status WARNING en vez de confidence_score ≥0.65), distorsionando el indicador comercial.
+
+### Cambios Implementados
+- **FASE-PF-1**: Assessment dict bridge — inyectar 4 artefactos huérfanos (pain_ledger, diagnostic_pain_ids, proposal_pain_ids, financial_evidence_tier) en assessment dict de main.py; pasar pain_ledger a `v4_proposal_generator.generate()` para habilitar `ProposalAssetMatrix.save()`
+- **FASE-PF-2**: delivery_ready_percentage formula — cambiar fórmula de `preflight_status WARNING` → `confidence_score ≥ 0.65` (umbral inclusivo); resultado: 10/12 assets = 83.33%
+- **FASE-PF-3**: E2E Hotel Castilla Real — verificación end-to-end con v4complete; coherence 0.8261 ≥ 0.80, coverage PASS (0 untracked), tier_c_onboarding PASS (tier B real), evidence_coverage 95%
+- **FASE-PF-4**: Documentación oficial — ROADMAP actualizado con `tier_c_onboarding_required` gate + tabla mapping 4 gates conceptuales → 11 gates reales; CHANGELOG + GUIA_TECNICA + VERSION sync
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/test_pipeline_fix_assessment.py` | 13 tests unitarios para los 4 campos inyectados en assessment dict (PF-1) |
+| `tests/test_pipeline_fix_delivery_ready.py` | 9 tests unitarios para boundary conditions de la fórmula delivery_ready_pct (PF-2) |
+| `evidence/FASE-PF-3-E2E/` | 18 archivos JSON/MD de evidencia E2E del v4complete sobre Hotel Castilla Real (PF-3) |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | +3 bloques (PF-1): init `pain_ledger_entries` en scope externo, carga desde `pain_ledger.json`, 4 campos en assessment dict + parámetro `pain_ledger` en `proposal_gen.generate()` |
+| `modules/asset_generation/v4_asset_orchestrator.py` | Fórmula delivery_ready_pct cambia a `confidence_score ≥ 0.65` (PF-2) |
+| `ROADMAP.md` | Documentar `tier_c_onboarding_required` gate (ALTO-3) + tabla mapping 4 gates conceptuales → 11 gates reales (NUEVO-9) + sección PIPELINE-FIX con claims verificados (PF-4) |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | Regenerado (184 archivos, 355 clases, 23 módulos) (PF-1) |
+| `docs/contributing/REGISTRY.md` | Auto-actualizado por `log_phase_completion.py` (PF-1, PF-2, PF-3, PIPELINE-FIX) |
+
+### Tests
+- 22 tests nuevos (13 PF-1 + 9 PF-2), 0 regresiones
+- E2E verificado con v4complete sobre Hotel Castilla Real (PF-3)
+- Gates resueltos (bug del pipeline): 4/4 (coverage, tier_c_onboarding, delivery_ready, evidence_coverage)
+- Gates data-dependent (no bug): 5 (proposal_asset_matrix, G8 asset_confidence, G8 asset_specificity, financial_validity, asset_specificity)
+
+### Pendiente explícito post-release
+- **NUEVO-8** (FUERA DE SCOPE): AssessmentBuilder centralizado — el assessment dict en main.py es frágil y manual; refactor planeado para sesión futura dedicada.
+
+---
+
 ## [4.47.0] - ADVISORY-WARNINGS — 2026-05-17
 
 ### Objetivo

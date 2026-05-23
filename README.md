@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.47.0** — Actualizado 20 Mayo 2026 | +2,833 pruebas automatizadas | 0 errores conocidos
+**v4.48.0** — Actualizado 23 Mayo 2026 | +2,833 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -21,10 +21,10 @@
 
 ---
 
-## Estado del Proyecto (v4.47.0)
+## Estado del Proyecto (v4.48.0)
 
 - **2,833 test functions** — suite completa, 0 regresiones
-- **192 modulos Python** (~69K lineas) + **22 scripts** (~6K lineas) + **209 archivos de test** (~58K lineas)
+- **192 modulos Python** (~69K lineas) + **22 scripts** (~6K lineas) + **227 archivos de test** (~58K lineas)
 - **9 config YAML** con schema validado
 - **17 agent skills** en `.agents/workflows/`
 - **11 publication gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding)
@@ -281,7 +281,7 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
-  tests/                      # 209 archivos de test (~54K lineas)
+  tests/                      # 227 archivos de test (~54K lineas)
     config/                   #   60 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales

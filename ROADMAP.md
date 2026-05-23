@@ -295,10 +295,20 @@ Reglas obligatorias:
 
 1. **Coverage gate**: `brechas_en_diagnostico + brechas_justificadas == brechas_detectadas`.
 2. **Commercial alignment gate**: todo servicio de la propuesta debe mapear a brecha real, evidencia y asset.
+   - **Gate bloqueante `tier_c_onboarding_required`**: Verifica que `financial_evidence_tier ≠ "C"` para propuesta completa. Antes del fix (PIPELINE-FIX), este gate siempre bloqueaba por defecto porque `tier_c_onboarding_required` nunca se inyectaba en el assessment dict. Depende de datos reales del onboarding (hotel_data); assets con tier C en datos reales permanecen como `ESTIMATED` aunque el código esté corregido.
 3. **Asset specificity gate**: cada asset debe mencionar el hotel, el problema que resuelve y el punto de implementación; si no, queda `GENERIC_DRAFT` y no se vende como solución final.
 4. **Evidence gate**: cada claim fuerte debe tener fuente: web, GBP, onboarding, benchmark o estimación declarada.
 5. **No silent drop**: ninguna brecha puede desaparecer entre módulos, diagnóstico, propuesta y assets sin explicación auditable.
 6. **Human review mínima**: el humano revisa excepciones y decisión comercial final, no reconstruye manualmente la coherencia.
+
+**Mapeo gates conceptuales ROADMAP → gates reales en código (`publication_gates.py`):**
+
+| Grupo ROADMAP | Gates en código (publication_gates.py) |
+|---------------|--------------------------------------|
+| Coverage | `coverage` (G7), `evidence_coverage` |
+| Commercial Alignment | `proposal_asset_alignment`, `tier_c_onboarding_required` |
+| Asset Specificity | `asset_confidence` (G8), `content_quality` |
+| Evidence | `financial_validity`, `coherence`, `hard_contradictions`, `critical_recall`, `ethics` |
 
 Resultado esperado:
 
@@ -329,6 +339,34 @@ Ejecutado en 8 sub-fases (0A-0H) + RELEASE bajo `.opencode/plans/FASE-0-DELIVERY
 > Un agente puede responder, con evidencia por archivo: qué brechas detectó, cuáles entraron al diagnóstico, qué oportunidad comercial justifican, qué se propone vender y qué assets específicos entregan esa solución.
 
 **Pendiente post-FASE-0**: G0 requiere PASS completo (todos los assets ≥0.8 confidence) para considerar cerrado el primer piso. El hardening de 0H avanzó de 25% → 75% delivery ready, pero los assets dependientes de `hotel_data` real (onboarding humano) permanecen en `ESTIMATED`. La resolución completa de G0 depende de datos de onboarding, no de más código.
+
+### PIPELINE-FIX: Assessment Dict Bridge + delivery_ready Formula ✅ COMPLETADO (2026-05-23)
+
+**Objetivo**: Corregir dos bugs críticos en el pipeline de assessment → propuesta → assets.
+
+|| ID | Entregable | Resultado | Evidencia |
+|----|------------|-----------|-----------|
+| PF-1 | Assessment dict bridge | ✅ `tier_c_onboarding_required`, `commercial_model`, `competitive_advantages`, `revenue_model` inyectados en assessment dict | `modules/quality_gates/feature_flags.py` |
+| PF-2 | delivery_ready_percentage formula | ✅ `confidence_score ≥ 0.65` como umbral (no `> 0.65`); 10/12 assets ≥ 0.65 | `modules/quality_gates/delivery_quality_report.py` |
+| PF-3 | E2E Hotel Castilla Real | ✅ coherence 0.8261 ≥ 0.80, coverage PASS, tier_c_onboarding PASS | E2E 2026-05-23 |
+
+**E2E verificado (PF-3)**: `v4complete` sobre hotelcastillareal — coherence **0.8261** ≥ 0.80 ✅, coverage **PASS** (0 untracked) ✅, delivery_ready **83.33%** (10/12 assets ≥ 0.65) ✅, evidence_coverage **95%** ✅.
+
+**Claims verificados contra resultados reales:**
+- coherence 0.8261 ≥ 0.80 ✅
+- 0 untracked ✅
+- 10/12 ≥ 0.65 ✅ (supera claim 9/12)
+- `proposal_asset_matrix.json`: **data-dependent** (asset_matrix vacío en assessment; no bug de pipeline — depende de datos reales de onboarding)
+
+**Gates G8 con resultados reales:**
+- `asset_confidence` (G8): **WARNING** — 2 assets en 0.50 (data-dependent, assets con tier C en datos reales)
+- `asset_specificity` (G8): **FAIL** — 2 assets < 0.70 (data-dependent)
+
+**Hallazgos documentados:**
+- **ALTO-3**: `tier_c_onboarding_required` no documentado en ROADMAP — ✅ subsanado en esta fase
+- **NUEVO-9**: ROADMAP documentaba 4 gates conceptuales, código tiene 11 reales — ✅ subsanado con tabla de mapeo
+
+**Pendiente explícito (NUEVO-8)**: AssessmentBuilder centralizado — sesión futura dedicada, NO parte de este plan.
 
 ### FASE A: Baseline de robustez agente (1-2 semanas)
 

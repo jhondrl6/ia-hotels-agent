@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.47.0 | **Codename**: ADVISORY-WARNINGS
-> **Release date**: 2026-05-17 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.48.0 | **Codename**: PIPELINE-FIX
+> **Release date**: 2026-05-23 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-05-17 | v4.47.0 ADVISORY-WARNINGS*
+*Auto-generado: 2026-05-23 | v4.48.0 PIPELINE-FIX*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

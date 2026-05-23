@@ -1,7 +1,29 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.47.0 (ADVISORY-WARNINGS)
-**Última actualización:** 2026-05-16
+**Versión:** v4.48.0 (PIPELINE-FIX)
+**Última actualización:** 2026-05-23
+
+---
+
+### Notas de Cambios v4.48.0 — PIPELINE-FIX — 2026-05-23
+
+**Módulos afectados**: `main.py`, `modules/asset_generation/v4_asset_orchestrator.py`, `ROADMAP.md`
+
+**Problema (dos bugs críticos)**:
+1. Assessment dict bridge: `main.py:2652-2694` construye assessment manualmente sin cargar artefactos que YA existen en disco/memoria (`pain_ledger`, `diagnostic_pain_ids`, `proposal_pain_ids`, `financial_evidence_tier`, `tier_c_onboarding_required`). Esto causaba 2 gates BLOCKED falsos (`coverage`, `tier_c_onboarding_required`) y `proposal_asset_matrix.json` sin generar.
+2. Métrica `delivery_ready_percentage` distorsionaba el indicador comercial: usaba `preflight_status WARNING` en vez de `confidence_score ≥ 0.65`, resultando en 50% en vez de ~83%.
+
+**Solución**:
+- **PF-1**: `main.py` ahora carga `pain_ledger_entries` del scope externo, lee `pain_ledger.json` del directorio del hotel, e inyecta los 4 campos (`pain_ledger_entries`, `diagnostic_pain_ids`, `proposal_pain_ids`, `financial_evidence_tier`) al assessment dict. Pasa `pain_ledger` a `v4_proposal_generator.generate()` para habilitar `ProposalAssetMatrix.save()`.
+- **PF-2**: Fórmula `delivery_ready_pct` cambia de `preflight_status == "WARNING"` → `confidence_score >= 0.65` (umbral inclusivo). Resultado: 10/12 assets = 83.33%.
+- **PF-3**: E2E Hotel Castilla Real — coherence 0.8261 ≥ 0.80, coverage PASS (0 untracked), tier_c_onboarding PASS (tier B real), evidence_coverage 95%.
+- **PF-4**: Documentación — `tier_c_onboarding_required` gate documentado en ROADMAP, tabla mapping 4 gates conceptuales → 11 gates reales.
+
+**Gates resueltos (bug del pipeline)**: 4/4 (coverage, tier_c_onboarding, delivery_ready, evidence_coverage)
+
+**Gates data-dependent (no bug, requieren datos reales)**: 5 (proposal_asset_matrix, G8 asset_confidence, G8 asset_specificity, financial_validity, asset_specificity)
+
+**Backwards compatibility**: Total. Bugfix de pipeline — no cambia API pública ni comportamiento de generación de assets.
 
 ---
 

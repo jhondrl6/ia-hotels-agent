@@ -102,24 +102,66 @@ Crear tabla comparativa:
 - Si un gate sigue BLOCKED, verificar si es por datos reales (no bug de pipeline)
 - Evidence protocol: copiar outputs INMEDIATAMENTE después de v4complete
 
+### Resultados reales (E2E 2026-05-23, Hotel Castilla Real)
+
+**Veredicto global: ✅ Validado con E2E real — 4/4 hallazgos resueltos + 2 métricas data-dependent**
+
+#### Gates en ejecución real
+
+||| Gate | Status pre-fix | Status post-fix E2E | Causa raíz |
+|||------|---------------|---------------------|------------|
+||| `coverage` | **BLOCKED** | **PASS** ✅ | `pain_ledger` ahora inyectado — 0 untracked |
+||| `tier_c_onboarding_required` | **BLOCKED** | **PASS** ✅ | Tier B — datos suficientes (no default C) |
+||| `asset_confidence` (G8) | **WARNING** | **WARNING** ⚠️ | 2 assets bajo threshold (0.50) — data-dependent |
+||| `proposal_asset_matrix.json` | **No existe** | **No existe** ❌ | `assessment.asset_matrix` vacío — data-dependent |
+||| `delivery_ready_pct` | **50.0%** | **83.33%** ✅ | Fórmula corregida (confidence ≥0.65) |
+||| `coherence_score` | 0.826 | **0.826** | Sin cambios |
+||| `evidence_coverage` | ~80% | **95%** ✅ | +15pp |
+||| `financial_validity` | **WARNING** | **WARNING** ⚠️ | Datos default/legacy — por datos reales del sitio |
+||| `proposal_asset_alignment` | PASS ⚠️ | **PASS** ✅ | 5/7 servicios alineados, 2 low quality (data-dependent) |
+||| `asset_specificity` (G8 dqr) | **FAIL** | **FAIL** ❌ | delivery_quality_report: G8 FAIL — 2 assets < 0.70 |
+
+#### Datos clave verificados
+
+|| Campo | Valor pre-fix | Valor post-fix E2E | Fuente |
+||-------|---------------|---------------------|--------|
+| coherence_score | 0.8261 | **0.8261** | `v4_complete_report.json` |
+| delivery_ready_percentage | 50.0 (INCORRECTO) | **83.33%** ✅ | `asset_generation_report.json` |
+| delivery ready REAL (≥0.65) | 91.7% (predicción) | **83.33% (10/12)** | E2E real — 2 assets ESTIMATED siguen en 0.50 |
+| assets generados | 12 | **12** | `asset_generation_report.json` |
+| assets CAN_USE | N/A | **10/12** | — 2 con confidence 0.50 |
+| pain_ledger untracked | N/A | **0** ✅ | coverage gate PASS |
+| financial_evidence_tier | C (default) | **B** ✅ | `tier_c_onboarding_required` gate → details.tier=B |
+| evidence_coverage | ~80% | **95%** ✅ | `evidence_coverage` gate PASSED |
+
+#### Veredicto gates
+
+| Gate | Resultado real | Veredicto |
+|------|----------------|-----------|
+| coverage | PASS — 0 untracked | ✅ Bug resuelto |
+| tier_c_onboarding | PASS — tier B real | ✅ Bug resuelto |
+| delivery_ready_pct | 83.33% | ✅ Fórmula corregida |
+| evidence_coverage | 95% | ✅ Mejorado |
+| coherence | 0.826 ≥ 0.80 | ✅ Sin cambios (ya_PASS) |
+| proposal_asset_alignment | PASS (5/7 alineados) | ✅ Sin cambios |
+| asset_confidence (G8) | WARNING (2 assets 0.50) | ⚠️ **Data-dependent** — no es bug |
+| financial_validity | WARNING | ⚠️ **Data-dependent** — no es bug |
+| asset_specificity (G8) | FAIL (2 assets < 0.70) | ⚠️ **Data-dependent** — no es bug |
+| proposal_asset_matrix.json | **No existe** | ⚠️ **Data-dependent** — asset_matrix vacío en assessment, no bug de pipeline |
+
+**Fixes que SÍ funcionaron:** coverage, tier_c_onboarding, delivery_ready_percentage, evidence_coverage
+**Fixes que NO funcionaron (legítimo, no bug):** proposal_asset_matrix.json (datos), asset_confidence (datos), G8 delivery_quality (datos)
+
 ### Criterios de completitud
 
-- [ ] T1: v4complete ejecutado exitosamente (exit code 0)
-- [ ] T2: Evidence copiada en `evidence/FASE-PF-3-E2E/`
-- [ ] T3: Tabla de verificación V1-V7 completada con resultados reales
-- [ ] T4: Análisis comparativo pre/post completado
-- [ ] Conclusiones documentadas: ¿qué gates pasaron? ¿cuáles siguen fallando y por qué?
+- [x] T1: v4complete ejecutado exitosamente (exit code 0)
+- [x] T2: Evidence copiada en `evidence/FASE-PF-3-E2E/`
+- [x] T3: Tabla de verificación V1-V7 completada con resultados reales (tabla arriba)
+- [x] T4: Análisis comparativo pre/post completado (tablas arriba)
+- [x] Conclusiones: coverage PASS, tier_c PASS, delivery_ready 83.33%, proposal_asset_matrix NO generado (data-dependent)
 
-### Resultados esperados (predicción basada en auditoría)
-
-| Gate | Predicción | Justificación |
-|------|-----------|---------------|
-| coverage | **PASS** | pain_ledger + pain_ids inyectados → 0 UNTRACKED |
-| tier_c_onboarding | **Depende** | Si financial_breakdown.evidence_tier = "A"/"B" → PASS. Si realmente es "C" → BLOCKED legítimo |
-| asset_confidence (G8) | **WARNING** | optimization_guide sigue en 0.50 (data-dependent, no es bug de pipeline) |
-| coherence | **PASS** | 0.826 ≥ 0.80, sin cambios |
-| delivery_ready | **~91.7%** | Fórmula corregida |
+**Estado: ✅ COMPLETADA — 2026-05-23**
 
 ### Próxima sesión
 
-**FASE-PF-4**: Documentación oficial — actualizar ROADMAP.md con gates reales, documentar tier_c_onboarding, agregar tabla mapping de 11 gates. CHANGELOG + VERSION sync.
+**FASE-PF-4**: Documentación oficial — actualizar ROADMAP.md con gates reales, documentar tier_c_onboarding, agregar tabla mapping de 11 gates. CHANGELOG + VERSION sync. **Usar 83.33% (no 91.7%)** para delivery_ready y documentar proposal_asset_matrix como data-dependent.

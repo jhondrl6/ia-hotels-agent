@@ -1,80 +1,43 @@
-# Documentación Post-Proyecto — ADVISORY-WARNINGS
+# Documentación Post-Proyecto
 
-**Plan:** IA-Readiness Advisory Warnings
-**Versión objetivo:** 4.47.0
-**Creado:** 2026-05-16
-
-> Este archivo es la fuente de datos acumulativa para FASE-RELEASE al generar CHANGELOG y GUIA_TECNICA.
-> Cada fase de implementación agrega sus datos aquí al completar.
-
----
+> **Propósito**: Backup de datos acumulativos para FASE-RELEASE.
+> Cada fase completa su columna "Fase". FASE-RELEASE usa los datos acumulados para generar CHANGELOG y GUIA_TECNICA oficiales.
 
 ## Sección A: Módulos Nuevos
 
 | Módulo | Archivos | Descripción | Fase |
 |--------|----------|-------------|------|
-| — | — | No se crean módulos nuevos en este proyecto | — |
-
----
+| — | — | — | — |
 
 ## Sección B: Funcionalidades Nuevas
 
 | Feature | Módulo | Descripción | Fase |
 |---------|--------|-------------|------|
-| Alerta IA-Readiness Critical en diagnóstico | `v4_diagnostic_generator.py` | Blockquote advisory cuando IA-Readiness score < 50 en DIAGNOSTICO.md | FASE-A |
-| Advisory warnings en delivery quality report | `delivery_quality_report.py` | Nuevo campo `advisory_warnings: List[dict]` con entry `IA_READINESS_CRITICAL` | FASE-A |
-| Verificación e2e con caso real | — | v4complete para Hotel Castilla Real validando que los warnings aparecen correctamente | FASE-B |
-
----
-
-## Sección C: Correcciones de Bugs
-
-| Bug | Módulo | Descripción | Fase |
-|-----|--------|-------------|------|
-| — | — | No se corrigen bugs en este proyecto | — |
-
----
+| Assessment dict enrichment | main.py | Inyección de 4 artefactos huérfanos (pain_ledger, diagnostic_pain_ids, proposal_pain_ids, financial_evidence_tier) al assessment dict | PF-1 |
+| PainLedger → ProposalAssetMatrix | main.py + v4_proposal_generator.py | pain_ledger pasado a proposal_gen.generate() para habilitar ProposalAssetMatrix.save() | PF-1 |
+| delivery_ready_percentage fórmula | v4_asset_orchestrator.py | Métrica cambia de preflight_status WARNING → confidence_score ≥0.65 (10/12 = 83.33%) | PF-2 |
 
 ## Sección D: Métricas Acumulativas
 
 | Métrica | Valor | Fase |
 |---------|-------|------|
-| Tests nuevos | 6 | FASE-A |
-| Tests totales post-proyecto | ~2497 | FASE-A |
-| Regresiones | 0 | FASE-A |
-| Coherence score (Hotel Castilla Real) | — | FASE-B |
-| IA-Readiness score (Hotel Castilla Real) | — | FASE-B |
-
----
+| Tests PF-1 | 13 | PF-1 |
+| delivery_ready post-fix | 83.33% (10/12 assets ≥0.65) | PF-2 |
+| coherence_score verificado | 0.8261 | PF-3 |
+| coverage gate | PASS (0 untracked) | PF-3 |
+| tier_c_onboarding | PASS (tier B real) | PF-3 |
+| evidence_coverage | 95% | PF-3 |
+| Gates resueltos (bug) | 4/4 (coverage, tier_c, delivery_ready, evidence_coverage) | PF-3 |
+| Gates data-dependent | 5 (proposal_asset_matrix, G8 asset_confidence, G8 asset_specificity, financial_validity) | PF-3 |
 
 ## Sección E: Archivos Afiliados Actualizados
 
 | Archivo | Cambio | Fase |
 |---------|--------|------|
-| `modules/commercial_documents/v4_diagnostic_generator.py` | Agregada lógica de alerta advisory en `_build_geo_problems_table()` | FASE-A |
-| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Agregada variable `${ia_critical_warning}` (si aplica) | FASE-A |
-| `modules/quality_gates/delivery_quality_report.py` | Nuevo campo `advisory_warnings: List[dict]` + `to_dict()` | FASE-A |
-| `tests/commercial_documents/test_v4_diagnostic_generator.py` | Tests de alerta advisory (3 casos) | FASE-A |
-| `tests/quality_gates/test_delivery_quality_report.py` | Tests de advisory_warnings (3 casos) | FASE-A |
-| `CHANGELOG.md` | Entrada [4.47.0] | FASE-RELEASE |
-| `GUIA_TECNICA.md` | Nota técnica v4.47.0 | FASE-RELEASE |
-| `VERSION.yaml` | Bump a 4.47.0 | FASE-RELEASE |
-
----
-
-## Sección F: Decisiones de Diseño
-
-| Decisión | Justificación | Fase |
-|----------|---------------|------|
-| Advisory, no bloqueante | IA-Readiness mide riesgo comercial, no calidad estructural de datos | FASE-A |
-| No usar `critical_issues` | `critical_issues` tiene consumidores downstream que asumen fallas estructurales | FASE-A |
-| No afectar `overall_confidence` | `overall_confidence` mide confiabilidad de datos, no probabilidad de citación IA | FASE-A |
-| WARNING visible + persistente | Combinación de diagnóstico (visible al hotelero) + delivery_quality_report (machine-readable) | FASE-A |
-
----
-
-## Historial de Actualizaciones
-
-| Fecha | Fase | Actualización |
-|-------|------|---------------|
-| 2026-05-16 | — | Estructura base creada |
+| main.py | +3 bloques: init pain_ledger_entries en scope externo, carga desde pain_ledger.json, 4 campos en assessment dict, parámetro en generate() | PF-1 |
+| tests/test_pipeline_fix_assessment.py | NUEVO: 13 tests unitarios para los 4 campos inyectados | PF-1 |
+| modules/asset_generation/v4_asset_orchestrator.py | Fórmula delivery_ready_pct cambia a confidence_score ≥0.65 | PF-2 |
+| tests/test_pipeline_fix_delivery_ready.py | NUEVO: 9 tests unitarios para boundary conditions | PF-2 |
+| .agent/knowledge/DOMAIN_PRIMER.md | Regenerado (184 archivos, 355 clases, 23 módulos) | PF-1 |
+| docs/contributing/REGISTRY.md | Auto-actualizado por log_phase_completion.py | PF-1 |
+| evidence/FASE-PF-3-E2E/ | 18 archivos JSON/MD de evidencia E2E | PF-3 |
