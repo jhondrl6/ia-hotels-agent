@@ -18,7 +18,7 @@ regions:
     # =========================================================================
     pain_narratives:
       no_whatsapp_visible: 0.20
-      whatsapp_conflict: 0.10
+      whatsapp_conflict: 0.20
       no_hotel_schema: 0.25
       low_gbp_score: 0.30
       poor_performance: 0.15
@@ -81,7 +81,7 @@ regions:
   caribe:
     pain_narratives:
       no_whatsapp_visible: 0.20
-      whatsapp_conflict: 0.10
+      whatsapp_conflict: 0.20
       no_hotel_schema: 0.25
       low_gbp_score: 0.30
       poor_performance: 0.15
@@ -113,7 +113,7 @@ regions:
   bogota:
     pain_narratives:
       no_whatsapp_visible: 0.20
-      whatsapp_conflict: 0.10
+      whatsapp_conflict: 0.20
       no_hotel_schema: 0.25
       low_gbp_score: 0.30
       poor_performance: 0.15
@@ -145,7 +145,7 @@ regions:
   antioquia:
     pain_narratives:
       no_whatsapp_visible: 0.20
-      whatsapp_conflict: 0.10
+      whatsapp_conflict: 0.20
       no_hotel_schema: 0.25
       low_gbp_score: 0.30
       poor_performance: 0.15

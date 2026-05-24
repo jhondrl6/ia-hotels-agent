@@ -690,6 +690,7 @@ class V4DiagnosticGenerator:
             'hotel_region': hotel_region,
             'hotel_landmark': hotel_landmark,
             'regional_context': regional_context,
+            'whatsapp_conflict_business_note': self._build_whatsapp_conflict_note(audit_result),
             'monthly_loss': format_cop(base_value),
             'urgencia_contenido': self._build_urgencia_content(financial_scenarios, hotel_name),
             'quick_wins_content': self._build_quick_wins_content(audit_result),
@@ -2238,7 +2239,49 @@ class V4DiagnosticGenerator:
         
         region_display = region if region and region.lower() not in ("nacional", "colombia", "general", "") else "esta zona"
         return f"{region_display} en Colombia presenta oportunidades de crecimiento en presencia digital hotelera."
-    
+
+    def _build_whatsapp_conflict_note(self, audit_result: 'V4AuditResult') -> str:
+        """Build business impact note for WhatsApp number conflict (FASE-A-02b).
+
+        Only returns non-empty string when a real whatsapp conflict exists
+        (different numbers in web vs GBP). Uses phone_web and phone_gbp directly
+        from audit_result.validation (NOT from conflicts dict, which only carries
+        the generic 'value' and 'discrepancies' string).
+        """
+        # Check if validation data exists
+        validation = getattr(audit_result, 'validation', None)
+        if not validation:
+            return ""
+
+        # Check for whatsapp conflict in the conflicts list
+        has_whatsapp_conflict = False
+        if validation.conflicts and isinstance(validation.conflicts, list):
+            has_whatsapp_conflict = any(
+                c.get('field_name') == 'whatsapp'
+                for c in validation.conflicts
+                if isinstance(c, dict)
+            )
+
+        if not has_whatsapp_conflict:
+            return ""
+
+        # Get phone numbers directly from validation (not from conflicts dict)
+        phone_web = getattr(validation, 'phone_web', None)
+        phone_gbp = getattr(validation, 'phone_gbp', None)
+
+        # If either is None, no point showing conflict
+        if not phone_web or not phone_gbp:
+            return ""
+
+        # Build the alert note with both numbers
+        return (
+            f"> 🔴 **ALERTA — Conflicto de WhatsApp detectado:**\n"
+            f"> Su Google Business muestra **{phone_gbp}**, "
+            f"pero su sitio web indica **{phone_web}**. "
+            f"Cada cliente que intenta reservar por WhatsApp desde Google "
+            f"podría estar escribiendo al número equivocado."
+        )
+
     def _build_urgencia_content(self, financial_scenarios: FinancialScenarios, hotel_name: str) -> str:
         """Build urgency content explaining why the hotel should act now."""
         main = financial_scenarios.get_main_scenario()
@@ -2601,9 +2644,9 @@ class V4DiagnosticGenerator:
                 'detalle': 'Viajeros quieren reservar instantaneamente. Sin boton WhatsApp, pierden el impulso de compra.'
             },
             'whatsapp_conflict': {
-                'nombre': 'Datos Inconsistentes (Confusion Cliente)',
-                'impacto': pain_narratives.get('whatsapp_conflict', 0.10),
-                'detalle': 'WhatsApp diferente en web vs Google. Cliente confundido = reserva perdida.'
+                'nombre': 'Datos Inconsistentes (Confusión Cliente)',
+                'impacto': pain_narratives.get('whatsapp_conflict', 0.20),
+                'detalle': 'WhatsApp diferente en web vs Google. Cliente confundido = reserva perdida sin que usted lo sepa.',
             },
             'no_faq_schema': {
                 'nombre': 'Sin FAQ para Rich Snippets',

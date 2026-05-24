@@ -43,6 +43,8 @@ Cada mes, miles de turistas buscan dónde hospedarse en la región. Pero la form
 
 ${regional_context}
 
+${whatsapp_conflict_business_note}
+
 > **Pregunta clave**: Cuando alguien pregunte a ChatGPT "hotel boutique cerca de ${hotel_landmark}", ¿su hotel aparece?
 
 ---

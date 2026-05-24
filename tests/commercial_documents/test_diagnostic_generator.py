@@ -375,6 +375,209 @@ class TestIAReadinessAdvisoryAlert:
             assert "Alerta IA-Readiness Critical" not in content
 
 
+class TestWhatsappConflictNote:
+    """FASE-A-02b: Tests for _build_whatsapp_conflict_note."""
+
+    def test_whatsapp_conflict_note_generated(self):
+        """With whatsapp conflict in validation.conflicts → note not empty."""
+        gen = V4DiagnosticGenerator()
+
+        # Build audit with whatsapp conflict in validation.conflicts
+        audit = V4AuditResult(
+            url="https://hotel-test.com",
+            hotel_name="Hotel Test",
+            timestamp="2026-01-01T00:00:00",
+            schema=SchemaValidation(
+                hotel_schema_detected=True,
+                hotel_schema_valid=True,
+                hotel_confidence="verified",
+                faq_schema_detected=True,
+                faq_schema_valid=True,
+                faq_confidence="verified",
+                org_schema_detected=True,
+                total_schemas=3,
+            ),
+            gbp=GBPData(
+                place_found=True,
+                place_id="ChI123",
+                name="Hotel Test",
+                rating=4.5,
+                reviews=100,
+                photos=30,
+                phone="+573001234567",
+                website="https://hotel-test.com",
+                address="Calle 123, Armenia, Quindío",
+                geo_score=80,
+                geo_score_breakdown={},
+                confidence="verified",
+            ),
+            performance=PerformanceData(
+                has_field_data=True,
+                mobile_score=85,
+                desktop_score=90,
+                lcp=1.5,
+                fid=20,
+                cls=0.05,
+                status="ok",
+                message="Good performance",
+            ),
+            validation=CrossValidationResult(
+                whatsapp_status="conflict",
+                phone_web="+573001111111",
+                phone_gbp="+573002222222",
+                adr_status="verified",
+                adr_web=300000.0,
+                adr_benchmark=280000.0,
+                conflicts=[
+                    {"field_name": "whatsapp", "value": "conflict", "discrepancies": "phone_web vs phone_gbp"},
+                ],
+            ),
+            overall_confidence="verified",
+            critical_issues=[],
+            recommendations=[],
+        )
+
+        note = gen._build_whatsapp_conflict_note(audit)
+
+        # Should NOT be empty when conflict exists
+        assert note != ""
+        # Should contain the phone numbers
+        assert "+573001111111" in note
+        assert "+573002222222" in note
+        # Should contain the business impact phrasing
+        assert "ALERTA" in note
+        assert "número equivocado" in note.lower()
+
+    def test_whatsapp_conflict_note_empty_no_conflict(self):
+        """Without whatsapp conflict in validation.conflicts → note empty."""
+        gen = V4DiagnosticGenerator()
+
+        # Audit with no whatsapp conflict (different field conflict only)
+        audit = V4AuditResult(
+            url="https://hotel-test.com",
+            hotel_name="Hotel Test",
+            timestamp="2026-01-01T00:00:00",
+            schema=SchemaValidation(
+                hotel_schema_detected=True,
+                hotel_schema_valid=True,
+                hotel_confidence="verified",
+                faq_schema_detected=True,
+                faq_schema_valid=True,
+                faq_confidence="verified",
+                org_schema_detected=True,
+                total_schemas=3,
+            ),
+            gbp=GBPData(
+                place_found=True,
+                place_id="ChI123",
+                name="Hotel Test",
+                rating=4.5,
+                reviews=100,
+                photos=30,
+                phone="+573001234567",
+                website="https://hotel-test.com",
+                address="Calle 123, Armenia, Quindío",
+                geo_score=80,
+                geo_score_breakdown={},
+                confidence="verified",
+            ),
+            performance=PerformanceData(
+                has_field_data=True,
+                mobile_score=85,
+                desktop_score=90,
+                lcp=1.5,
+                fid=20,
+                cls=0.05,
+                status="ok",
+                message="Good performance",
+            ),
+            validation=CrossValidationResult(
+                whatsapp_status="conflict",
+                phone_web=None,  # Missing phone_web → note should be empty
+                phone_gbp="+573002222222",
+                adr_status="verified",
+                adr_web=300000.0,
+                adr_benchmark=280000.0,
+                conflicts=[
+                    {"field_name": "whatsapp", "value": "conflict", "discrepancies": "phone_web vs phone_gbp"},
+                ],
+            ),
+            overall_confidence="verified",
+            critical_issues=[],
+            recommendations=[],
+        )
+
+        note = gen._build_whatsapp_conflict_note(audit)
+
+        # Should be empty when no whatsapp conflict
+        assert note == ""
+
+    def test_whatsapp_conflict_note_empty_no_validation(self):
+        """Without whatsapp conflict → note empty (safe fallback)."""
+        gen = V4DiagnosticGenerator()
+
+        # Audit with whatsapp_status=conflict but NO whatsapp in conflicts list
+        audit = V4AuditResult(
+            url="https://hotel-test.com",
+            hotel_name="Hotel Test",
+            timestamp="2026-01-01T00:00:00",
+            schema=SchemaValidation(
+                hotel_schema_detected=True,
+                hotel_schema_valid=True,
+                hotel_confidence="verified",
+                faq_schema_detected=True,
+                faq_schema_valid=True,
+                faq_confidence="verified",
+                org_schema_detected=True,
+                total_schemas=3,
+            ),
+            gbp=GBPData(
+                place_found=True,
+                place_id="ChI123",
+                name="Hotel Test",
+                rating=4.5,
+                reviews=100,
+                photos=30,
+                phone="+573001234567",
+                website="https://hotel-test.com",
+                address="Calle 123, Armenia, Quindío",
+                geo_score=80,
+                geo_score_breakdown={},
+                confidence="verified",
+            ),
+            performance=PerformanceData(
+                has_field_data=True,
+                mobile_score=85,
+                desktop_score=90,
+                lcp=1.5,
+                fid=20,
+                cls=0.05,
+                status="ok",
+                message="Good performance",
+            ),
+            # whatsapp_status=conflict BUT no whatsapp conflict in conflicts list
+            validation=CrossValidationResult(
+                whatsapp_status="conflict",
+                phone_web="+573001111111",
+                phone_gbp="+573002222222",
+                adr_status="verified",
+                adr_web=300000.0,
+                adr_benchmark=280000.0,
+                conflicts=[
+                    {"field_name": "email", "value": "conflict", "discrepancies": "different email"},
+                ],
+            ),
+            overall_confidence="verified",
+            critical_issues=[],
+            recommendations=[],
+        )
+
+        note = gen._build_whatsapp_conflict_note(audit)
+
+        # Should be empty when no whatsapp conflict in the list
+        assert note == ""
+
+
 def dataclass_replace(obj, **kwargs):
     """Create a copy of a dataclass with updated fields."""
     from dataclasses import replace

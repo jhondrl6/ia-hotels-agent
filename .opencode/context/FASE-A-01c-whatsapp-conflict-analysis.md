@@ -19,7 +19,7 @@ El v4complete para Hotel Castilla Real generó dos warnings no bloqueantes en G8
 
 ### Datos del conflicto
 ```
-web_scraping (sitio web):  6063332192
+web_scraping (sitio web):  63332192
 gbp_api (Google Business): 3104692201
 ```
 
@@ -61,7 +61,7 @@ def _whatsapp_number_mismatch(self, claims: List[Claim]) -> List[Conflict]:
 
 - El pipeline **actuó correctamente**: detectó el conflicto real, generó el asset con WARNING
 - Coherence pasó (0.83) porque el sistema sabe que hay un conflicto y lo documenta
-- El delivery package se creó con estado **READY_FOR_PUBLICATION** ✅
+- El delivery package se creó con estado **WARNING non-blocking** ⚠️ — G8 (asset_confidence) falló con 2 assets bajo threshold 0.7, pero blocking=false permite entrega
 
 ---
 
@@ -86,14 +86,58 @@ El schema validation corre independientemente en `schema_validator_v2.py` que re
 
 ---
 
-## 3. Recommendation
+## 3. Visibilidad del Warning en el Diagnóstico
+
+### Cómo aparece actualmente
+
+El warning de WhatsApp conflict aparece en la sección **"Validación de Calidad"**, dentro de una tabla de 3 filas sin separador visual claro:
+
+```
+| Conflicto: whatsapp             | 🔴 Alta  | Revisión manual requerida |
+```
+
+### Problemas de legibilidad para un hotelero
+
+| Problema | Detalle |
+|---|---|
+| **Sección técnica** | "Validación de Calidad" suena a jerga interna — el hotelero lee "Diagnóstico" y "Oportunidad" |
+| **Contexto diluido** | "Revisión manual requerida" compite visualmente con "Fotos GBP" y "Core Web Vitals" — suena menos urgente |
+| **Sin impacto financiero** | Las 7 BRECHAS principales tienen `$X COP/mes`. WhatsApp conflict no tiene cifra — refuerza que no es "oportunidad" pero confunde |
+| **Sin conexión a cuerpo** | Las BRECHAS 1-7 no referencian este warning. Hotelero que va directo a brechas no lo ve |
+| **Indicador único** | Solo el emoji 🔴 señala gravedad — insuficiente para un tema que mata reservas |
+
+### Implicación comercial real (no documentada)
+
+GBP mostrando número diferente al sitio = **cliente llama/wasappea al número equivocado = reserva perdida sin que el hotel lo sepa**.
+
+Este impacto NO está cuantificado ni mencionado en el diagnóstico.
+
+### Decisión: NO incluir como BRECHA/OPORTUNIDAD
+
+Tratarlo como BRECHA implicaría afirmar que tenemos un ASSET para resolverlo. No lo tenemos. La solución requiere que el hotelero:
+1. Decida cuál número es el correcto
+2. Actualice manualmente su CMS y su GBP
+
+Eso es operativo, no técnico — fuera de nuestro alcance como deliverable de iah-cli.
+
+### Recomendación de visibilidad (opcional)
+
+Si se quisiera hacer la advertencia más notable para el hotelero, debería:
+- Aparecer como nota directa en la sección de contexto, no en "Validación de Calidad"
+- Incluir phrasing de impacto de negocio: "Su Google Business muestra un número diferente al de su sitio — cada cliente que intenta reservar por WhatsApp desde Google podría estar escribiendo al número equivocado"
+- Sin costo mensual asociado (no tenemos activo para cuantificarlo)
+
+---
+
+## 4. Recommendation
 
 **Sin fase adicional requerida.** El pipeline funcionó correctamente.
 
-### Para FASE-RELEASE-4.49.0
-Opcionalmente, documentar en GUIA_TECNICA.md:
-- El `whatsapp_conflict_guide` puede generar con confidence < 0.50 cuando hay conflicto real de números (múltiples fuentes con datos distintos)
-- El `hotel_schema` con confidence 0.00 indica ausencia total de markup Schema.org en el sitio
+### Para FASE-RELEASE futuras (nota técnica)
+Estos comportamientos no son intuitivos y merecen documentarse como nota en GUIA_TECNICA.md:
+- El `whatsapp_conflict_guide` genera con confidence < 0.50 cuando múltiples fuentes tienen números distintos — es comportamiento esperado, no bug de detección
+- El `hotel_schema` con confidence 0.00 indica ausencia total de Schema.org markup en el sitio — no es un false positive del validador
+- G8 (asset_confidence) con 2 assets bajo threshold 0.7 produce WARNING non-blocking, no BLOCK — el delivery sigue siendo válido
 
 ### Para fases futuras (opcional)
 Si se quisiera atacar el problema de raíz:
@@ -102,7 +146,7 @@ Si se quisiera atacar el problema de raíz:
 
 ---
 
-## 4. Archivos de evidencia
+## 5. Archivos de evidencia
 
 Todo guardado en `evidence/FASE-A-01c/`:
 - `audit_report_20260523_220753.json` — datos crudos del conflicto
@@ -111,8 +155,9 @@ Todo guardado en `evidence/FASE-A-01c/`:
 
 ---
 
-## 5. Tags para búsqueda
+## 6. Tags para búsqueda
 
 - `whatsapp_conflict` `number_mismatch` `contradiction_engine` `confidence_low`
 - `hotel_schema` `schema_validation` `zero_schemas`
 - `false_positive_analysis` `not_a_bug`
+- `warning_visibility` `diagnostic_readability` `hotelero_comprehension`
