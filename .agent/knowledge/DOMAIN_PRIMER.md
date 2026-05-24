@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.48.0 | **Codename**: PIPELINE-FIX
-> **Release date**: 2026-05-23 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.49.0 | **Codename**: AGENTSMD-DRIFT
+> **Release date**: 2026-05-26 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---

@@ -1,7 +1,24 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.48.0 (PIPELINE-FIX)
+**Versión:** v4.49.0 (AGENTSMD-DRIFT)
 **Última actualización:** 2026-05-23
+
+---
+
+### Notas de Cambios v4.49.0 — AGENTSMD-DRIFT — 2026-05-26
+
+**Módulos afectados:** AGENTS.md, scripts/validate_agents_md.py, docs/CONTRIBUTING.md
+
+**Problema:** AGENTS.md tenía drift factual en 4 secciones post-FASE-0 y PIPELINE-FIX. El header se sincronizaba vía version-sync pero el body no tenía mecanismo de auditoría. ROADMAP.md sí estaba actualizado.
+
+**Solución:**
+1. Corrección editorial one-shot de AGENTS.md (9 pasos) — sincronización completa con código vivo
+2. Script `validate_agents_md.py` con 6 checks automáticos (modules_exist, test_count, gate_count, fase0_modules, no_deprecated_active, scripts_exist)
+3. Integración en flujo post-fase de CONTRIBUTING.md (Paso 5.5 obligatorio)
+
+**Backwards compatibility:** Total. Cambios editoriales en documentación y nuevo script de validación. Sin cambios en API, pipeline, ni lógica de negocio.
+
+**Tests:** Sin cambios en suite de tests (2,743 tests, 0 regresiones).
 
 ---
 

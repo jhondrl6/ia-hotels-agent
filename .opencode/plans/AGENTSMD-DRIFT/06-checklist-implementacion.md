@@ -1,7 +1,7 @@
 # Checklist Maestro de Implementación — AGENTSMD-DRIFT
 
 **Última actualización:** 2026-05-26
-**Estado general:** ⏳ En ejecución (A-01b ✅, A-01c pendiente)
+**Estado general:** ⏳ En ejecución (A-01a ✅, A-01b ✅, A-01c ✅, RELEASE pendiente)
 
 ---
 
@@ -42,15 +42,23 @@
 ## FASE-A-01c: v4complete Hotel Castilla Real
 
 **Prompt:** `05-prompt-inicio-sesion-fase-A-01c.md`
-**Estado:** ⬜ Pendiente
+**Estado:** ✅ Completada 2026-05-23
 **Depende de:** FASE-A-01b ✅
 **⚠️ CONTIENE COMANDO LARGO (v4complete ~5-10 min)**
 
-| # | Tarea | Estado |
+|| # | Tarea | Estado |
 |---|-------|--------|
-| T1 | Ejecutar v4complete para https://www.hotelcastillareal.com/ | ⬜ |
-| T2 | Verificar output: coherence ≥0.80, coverage PASS, tier_c_onboarding PASS | ⬜ |
-| T3 | Guardar evidencia + log_phase_completion.py + análisis de ejecución | ⬜ |
+| T1 | Ejecutar v4complete para https://www.hotelcastillareal.com/ | ✅ |
+| T2 | Verificar output: coherence ≥0.80, coverage PASS, tier_c_onboarding PASS | ✅ |
+| T3 | Guardar evidencia + log_phase_completion.py + análisis de ejecución | ✅ |
+
+**Métricas obtenidas:**
+- Coherence: 0.83 (≥0.80 ✅)
+- Publication Gates: 9/11 PASS
+- Pain Ledger: 11 entries (≥7 ✅)
+- Assets: 12 generados
+- Human checklist: 5 items (≤10 ✅)
+- G8 WARNING: 2 assets below confidence threshold (no-bloqueante)
 
 ---
 

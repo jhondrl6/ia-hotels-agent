@@ -1,5 +1,33 @@
 # Changelog
 
+## [4.49.0] - AGENTSMD-DRIFT — AGENTS.md Audit + validate_agents_md Gate + E2E Castilla Real — 2026-05-26
+
+### Objetivo
+Cerrar el drift documental en AGENTS.md (4 secciones desactualizadas post-FASE-0 + PIPELINE-FIX) e implementar un gate automatizado de coherencia documental.
+
+### Cambios Implementados
+- **Solución 1:** AGENTS.md corregido en 9 pasos editoriales — conteo tests 2,491→2,743, gates 9→11, módulos FASE-0 documentados, evidence_ledger marcado DEPRECADO, árbol data_validation refleja estructura real
+- **Solución 2:** Creado `scripts/validate_agents_md.py` — 6 checks automáticos (modules_exist, test_count, gate_count, fase0_modules, no_deprecated_active, scripts_exist)
+- **Solución 4:** Integrado validate_agents_md.py en `docs/CONTRIBUTING.md` §Post-Fase como Paso 5.5 obligatorio
+- **E2E:** v4complete Hotel Castilla Real verificado (coherence: 0.83 ≥ 0.80, 11 pain_ledger entries, 12 assets)
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `scripts/validate_agents_md.py` | Validador de coherencia AGENTS.md contra código vivo (6 checks) |
+| `.opencode/plans/AGENTSMD-DRIFT/` | Plan completo de 4 fases + prompts + checklist |
+| `evidence/FASE-A-01c/` | Evidencia v4complete Hotel Castilla Real |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `AGENTS.md` | 9 pasos editoriales — sincronización completa con código vivo |
+| `docs/CONTRIBUTING.md` | Agregado Paso 5.5: validate_agents_md.py en flujo post-fase |
+| `VERSION.yaml` | 4.48.0 → 4.49.0 (AGENTSMD-DRIFT) |
+
+### Tests
+- 0 tests nuevos (cambios editoriales + script de validación)
+
 ## [4.48.0] - PIPELINE-FIX — Assessment Dict Bridge + delivery_ready Formula — 2026-05-23
 
 ### Objetivo

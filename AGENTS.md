@@ -1,8 +1,8 @@
-<!-- agents_version: v4.42.0 | last_update: 2026-05-23 -->
+<!-- agents_version: v4.49.0 | last_update: 2026-05-23 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.48.0 -- PIPELINE-FIX COMPLETADO**
+> **v4.49.0 -- AGENTSMD-DRIFT COMPLETADO**
 
 ---
 
@@ -165,14 +165,14 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `data_validation/` | Validación cruzada web+GBP+input | v4audit, v4complete |
 | `data_validation/metadata_validator.py` | Detección de CMS defaults | v4complete |
 | `data_validation/consistency_checker.py` | Validación inter-documento | v4complete |
-|| `data_validation/evidence_ledger.py` | [DEPRECADO] reemplazado por pain_ledger en `modules/quality_gates/` | v4complete, v4audit |
+|| `data_validation/evidence_ledger.py` | [DEPRECADO] reemplazado por pain_ledger en `modules/asset_generation/` | v4complete, v4audit |
 | `data_validation/contradiction_engine.py` | Detección de hard/soft conflicts | v4complete |
-| `data_validation/schema_validator_v2.py` | Coverage scoring | v4audit |
+| `modules/data_validation/schema_validator_v2.py` | Coverage scoring | v4audit |
 | `modules/financial_engine/` | Escenarios: conservador/realista/optimista | v4audit, v4complete |
 | `modules/financial_engine/calculator_v2.py` | FinancialCalculatorV2 con validación | v4complete |
 | `modules/financial_engine/no_defaults_validator.py` | Validación "No Defaults in Money" | v4complete |
 | `modules/financial_engine/harness_handlers.py` | Handlers para Agent Harness | v4complete |
-| `modules/quality_gates/pain_ledger.py` | Trazabilidad pain_id → fuente → severidad → asset | v4complete |
+| `modules/asset_generation/pain_ledger.py` | Trazabilidad pain_id → fuente → severidad → asset | v4complete |
 | `modules/quality_gates/delivery_quality_report.py` | QA post-generación bloqueante (408 líneas, 10 tests) | v4complete |
 | `modules/quality_gates/human_checklist_generator.py` | ≤10 items derivados automáticamente | v4complete |
 | `modules/asset_generation/data_derivation_layer.py` | 5 derivaciones semánticas del audit (350 líneas, 26 tests) | v4complete |
@@ -198,9 +198,6 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
-| `observability/` | Métricas y calibración | Todos |
-| `observability/dashboard.py` | Dashboard de calidad | Todos |
-| `observability/calibration.py` | Calibración de umbrales de confianza | Todos |
 | `modules/quality_gates/` | 11 publication gates (6 blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics; 3 advisory: content_quality, asset_confidence, proposal_asset_alignment; 2 quality: tier_c_onboarding_required, coverage) | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
