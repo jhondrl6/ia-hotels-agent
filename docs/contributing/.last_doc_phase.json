@@ -23,7 +23,7 @@
   "modules/asset_generation/asset_catalog.py": "FASE-0H-G8",
   "modules/commercial_documents/data_structures.py": "FASE-A",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
-  "main.py": "FASE-PF-1",
+  "main.py": "N8-B",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "FASE-TRAZABILIDAD-RAIZ",
   "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-A",
@@ -37,7 +37,7 @@
   "modules/asset_generation/templates/indirect_traffic_optimization_template.md": "FASE-VALIDATE-RC",
   "modules/generators/report_builder.py": "FASE-D",
   "modules/analyzers/gap_analyzer.py": "FASE-D",
-  "modules/quality_gates/publication_gates.py": "FASE-0C-COVERAGE",
+  "modules/quality_gates/publication_gates.py": "N8-C",
   "modules/asset_generation/asset_content_validator.py": "FASE-B",
   "data_models/canonical_assessment.py": "FASE-C",
   "modules/financial_engine/calculator_v2.py": "FIN-1A",
@@ -166,5 +166,7 @@
   "scripts/verify_ga4.py": "FASE-B",
   "scripts/validate_structure.py": "FASE-B",
   "modules/quality_gates/delivery_quality_report.py": "FASE-A",
-  "evidence/fase-B/analysis.md": "FASE-B"
+  "evidence/fase-B/analysis.md": "FASE-B",
+  "modules/assessment_builder.py": "N8-B",
+  "tests/test_assessment_builder.py": "N8-B"
 }

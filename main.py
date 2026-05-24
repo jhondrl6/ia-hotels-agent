@@ -2659,93 +2659,25 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         PublicationGateConfig
     )
     
-    # Build assessment dict from all available data
-    assessment = {
-        "url": args.url,
-        "hotel_name": hotel_name,
-        "validation_summary": {
-            "whatsapp_status": whatsapp_validation.confidence.name if whatsapp_validation else "UNKNOWN",
-            "overall_confidence": validation_summary.overall_confidence.value if validation_summary else "UNKNOWN",
-            "hard_contradictions_count": 0,
-            "conflicts": validation_summary.conflicts if validation_summary else [],
-        },
-        "financial_data": {
-            "rooms": rooms,
-            "adr_cop": adr_cop,
-            "occupancy_rate": occupancy_rate,
-            "direct_channel_percentage": direct_channel_pct,
-        },
-        "financial_sources": financial_sources,  # T1.1: pass sources to financial_validity_gate
-        "coherence_score": asset_result.coherence_report.overall_score if asset_result else 0.0,
-        # FASE-1-COH: incluir datos completos del coherence_report para trazabilidad
-        "coherence_checks": [
-            {"name": c.name, "passed": c.passed, "score": round(c.score, 4), "message": c.message, "severity": c.severity}
-            for c in pre_coherence_report.checks
-        ] if pre_coherence_report else [],
-        "coherence_errors": pre_coherence_report.errors if pre_coherence_report else [],
-        "coherence_warnings": pre_coherence_report.warnings if pre_coherence_report else [],
-        "critical_issues": audit_result.critical_issues if audit_result else [],
-        "critical_issues_detected": audit_result.critical_issues if audit_result else [],
-        "audit_schema": {
-            "hotel_schema_detected": audit_result.schema.hotel_schema_detected,
-            "hotel_schema_valid": audit_result.schema.hotel_schema_valid,
-            "hotel_confidence": audit_result.schema.hotel_confidence,
-            "faq_schema_detected": audit_result.schema.faq_schema_detected,
-            "faq_schema_valid": audit_result.schema.faq_schema_valid,
-            "faq_confidence": audit_result.schema.faq_confidence,
-        } if audit_result else {},
-        # PIPELINE-FIX: Inject orphaned artifacts into assessment
-        "pain_ledger": [
-            e.to_dict() if hasattr(e, 'to_dict') else e
-            for e in pain_ledger_entries
-        ],
-        "diagnostic_pain_ids": list(
-            getattr(diagnostic_summary, 'pain_ids', []) or []
-        ) if diagnostic_summary else [],
-        "proposal_pain_ids": list(set(
-            pid for asset in (asset_plan or [])
-            for pid in (getattr(asset, 'pain_ids', None) or [])
-        )),
-        "financial_evidence_tier": (
-            getattr(financial_breakdown, 'evidence_tier', 'C')
-            if financial_breakdown else 'C'
-        ),
-        "evidence_coverage": 0.95,  # Default assumption
-        "metrics": {
-            "coherence_score": asset_result.coherence_report.overall_score if asset_result else 0.0,
-        },
-        "quality_gate_issues": locals().get("quality_gate_issues", []),
-        "quality_gate_blockers": locals().get("quality_gate_blockers", []),
-        "quality_gate_warnings": locals().get("quality_gate_warnings", []),
-    }
-    
-    # Enrich assessment with document texts for content quality gate (FASE-B)
-    if diagnostic_path and Path(diagnostic_path).exists():
-        try:
-            with open(diagnostic_path, 'r', encoding='utf-8') as f:
-                assessment["diagnostico_text"] = f.read()
-        except Exception:
-            assessment["diagnostico_text"] = ""
-    if proposal_path and Path(proposal_path).exists():
-        try:
-            with open(proposal_path, 'r', encoding='utf-8') as f:
-                assessment["propuesta_text"] = f.read()
-        except Exception:
-            assessment["propuesta_text"] = ""
-    assessment["hotel_data"] = {"region": region.replace('_', ' ').title()} if region else {}
+    # Build assessment via AssessmentBuilder (NUEVO-8)
+    from modules.assessment_builder import AssessmentBuilder
 
-    # Inject generated_assets for gate 8 (asset_confidence) and gate 9 (proposal_alignment)
-    if asset_result and asset_result.generated_assets:
-        assessment["generated_assets"] = [
-            {
-                "asset_type": a.asset_type,
-                "filename": a.filename,
-                "confidence_score": a.confidence_score,
-                "preflight_status": a.preflight_status,
-                "path": a.path,
-            }
-            for a in asset_result.generated_assets
-        ]
+    builder = AssessmentBuilder()
+    builder.with_core(args.url, hotel_name)
+    builder.with_validation(validation_summary, whatsapp_validation)
+    builder.with_financial(
+        rooms, adr_cop, occupancy_rate, direct_channel_pct,
+        financial_sources, financial_breakdown
+    )
+    builder.with_coherence(pre_coherence_report, asset_result)
+    builder.with_pain_ledger(pain_ledger_entries, diagnostic_summary, asset_plan)
+    builder.with_audit(audit_result)
+    builder.with_documents(diagnostic_path, proposal_path)
+    builder.with_assets(asset_result)
+    builder.with_site_presence(site_presence_report)
+    builder.with_hotel_data(region)
+
+    assessment = builder.build()
 
     # Run publication gates
     gate_config = PublicationGateConfig()

@@ -346,8 +346,8 @@ Ejecutado en 8 sub-fases (0A-0H) + RELEASE bajo `.opencode/plans/FASE-0-DELIVERY
 
 || ID | Entregable | Resultado | Evidencia |
 |----|------------|-----------|-----------|
-| PF-1 | Assessment dict bridge | ✅ `tier_c_onboarding_required`, `commercial_model`, `competitive_advantages`, `revenue_model` inyectados en assessment dict | `modules/quality_gates/feature_flags.py` |
-| PF-2 | delivery_ready_percentage formula | ✅ `confidence_score ≥ 0.65` como umbral (no `> 0.65`); 10/12 assets ≥ 0.65 | `modules/quality_gates/delivery_quality_report.py` |
+| PF-1 | Assessment dict bridge | ✅ `tier_c_onboarding_required`, `commercial_model`, `competitive_advantages`, `revenue_model` inyectados en assessment dict | `main.py:2652-2720` (inyección) + `modules/quality_gates/publication_gates.py` L167 (gate) |
+| PF-2 | delivery_ready_percentage formula | ✅ `confidence_score ≥ 0.65` como umbral (no `> 0.65`); 10/12 assets ≥ 0.65 | `modules/asset_generation/v4_asset_orchestrator.py` L130-133 (fórmula) + `modules/quality_gates/delivery_quality_report.py` L90 (threshold 0.7 para coverage gate) |
 | PF-3 | E2E Hotel Castilla Real | ✅ coherence 0.8261 ≥ 0.80, coverage PASS, tier_c_onboarding PASS | E2E 2026-05-23 |
 
 **E2E verificado (PF-3)**: `v4complete` sobre hotelcastillareal — coherence **0.8261** ≥ 0.80 ✅, coverage **PASS** (0 untracked) ✅, delivery_ready **83.33%** (10/12 assets ≥ 0.65) ✅, evidence_coverage **95%** ✅.
