@@ -364,9 +364,8 @@ Ejecutado en 8 sub-fases (0A-0H) + RELEASE bajo `.opencode/plans/FASE-0-DELIVERY
 
 **Hallazgos documentados:**
 - **ALTO-3**: `tier_c_onboarding_required` no documentado en ROADMAP — ✅ subsanado en esta fase
-- **NUEVO-9**: ROADMAP documentaba 4 gates conceptuales, código tiene 11 reales — ✅ subsanado con tabla de mapeo
-
-**Pendiente explícito (NUEVO-8)**: AssessmentBuilder centralizado — sesión futura dedicada, NO parte de este plan.
+- **NUEVO-8**: AssessmentBuilder centralizado con `AssessmentPayload` dataclass — ✅ ENTREGADO en v4.50.0 (planes `.opencode/plans/NUEVO-8-ASSESSMENT-BUILDER/` + `modules/assessment_builder.py`)
+- **NUEVO-9**: ROADMAP documentaba 4 gates conceptuales, código tiene 11 reales — ✅ subsanado con tabla de mapeo en el plan
 
 ### FASE A: Baseline de robustez agente (1-2 semanas)
 
