@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-23
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 277
+> **Total fases completadas:** 278
 
 ---
 
@@ -6829,6 +6829,27 @@ _Ninguno_
 | Archivo | Cambio |
 |---------|--------|
 | `AGENTS.md` | Agents |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-A-01B - 2026-05-23
+**Descripcion:** validate_agents_md.py: 6 checks automatizados (modules, tests, gates, FASE-0, deprecated, scripts) + integracion en CONTRIBUTING.md Post-Fase
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `scripts/validate_agents_md.py` | NUEVO | Validate Agents Md |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `docs/CONTRIBUTING.md` | Contributing |
 
 ### Validaciones
 - [x] Tests passing (0)

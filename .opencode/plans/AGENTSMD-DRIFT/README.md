@@ -28,7 +28,7 @@ AGENTS.md corregido    →    validate_agents_md.py  →   CONTRIBUTING.md
 | Fase | Descripción | Tareas | Largo | Depende |
 |------|------------|--------|-------|---------|
 | **A-01a** | Corrección one-shot AGENTS.md (Solución 1) | 4 | 0 | — |
-| **A-01b** | validate_agents_md.py + integración (Solución 2+4) | 4 | 0 | A-01a |
+| **A-01b** | validate_agents_md.py + integración (Solución 2+4) | 4 | 0 | A-01a ✅ |
 | **A-01c** | v4complete Hotel Castilla Real | 3 | 1 | A-01b |
 | **RELEASE** | Cierre documental v4.49.0 | 4 | 0 | A-01a+b+c |
 

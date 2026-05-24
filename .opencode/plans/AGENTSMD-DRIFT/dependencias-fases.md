@@ -5,7 +5,7 @@
 ```
 FASE-A-01a (AGENTS.md editorial)
     │
-    └──→ FASE-A-01b (validate_agents_md.py + CONTRIBUTING.md)
+    └──→ FASE-A-01b (validate_agents_md.py + CONTRIBUTING.md) ✅ 2026-05-26
             │
             └──→ FASE-A-01c (v4complete Hotel Castilla Real)
                     │

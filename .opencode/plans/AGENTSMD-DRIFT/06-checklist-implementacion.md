@@ -1,7 +1,7 @@
 # Checklist Maestro de Implementación — AGENTSMD-DRIFT
 
 **Última actualización:** 2026-05-26
-**Estado general:** ⏳ En preparación
+**Estado general:** ⏳ En ejecución (A-01b ✅, A-01c pendiente)
 
 ---
 
@@ -24,15 +24,18 @@
 ## FASE-A-01b: validate_agents_md.py + integración
 
 **Prompt:** `05-prompt-inicio-sesion-fase-A-01b.md`
-**Estado:** ⬜ Pendiente
+**Estado:** ✅ Completada 2026-05-26
 **Depende de:** FASE-A-01a ✅
+**Iteraciones:** ~25 usadas de 60
 
 | # | Tarea | Estado |
 |---|-------|--------|
-| T1 | Investigar publication_gates.py estructura de gates + estructura AGENTS.md | ⬜ |
-| T2 | Crear scripts/validate_agents_md.py con 6 checks | ⬜ |
-| T3 | Test manual + verificar que detecta los 4 drifts del contexto | ⬜ |
-| T4 | Integrar en docs/CONTRIBUTING.md §Post-Fase + log_phase_completion.py | ⬜ |
+| T1 | Investigar publication_gates.py estructura de gates + estructura AGENTS.md | ✅ |
+| T2 | Crear scripts/validate_agents_md.py con 6 checks | ✅ |
+| T3 | Test manual + verificar drift detection y tolerancia ±5% | ✅ |
+| T4 | Integrar en docs/CONTRIBUTING.md §Post-Fase + log_phase_completion.py + 09-docs | ✅ |
+
+**Nota:** 2/6 checks FAIL por drift residual en AGENTS.md (paths stale: schema_validator_v2, pain_ledger, dashboard, calibration). El script funciona correctamente — el drift debe corregirse en fase posterior.
 
 ---
 

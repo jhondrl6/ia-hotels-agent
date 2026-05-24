@@ -51,6 +51,17 @@ FASE completada
         └── Verifica capability contracts en docs/contributing/capabilities.md
 ```
 
+### Paso 5.5: Validar AGENTS.md (OBLIGATORIO)
+
+Ejecutar el validador de coherencia de AGENTS.md:
+
+```bash
+python scripts/validate_agents_md.py
+```
+
+Si el script reporta FAIL, corregir AGENTS.md **antes** de continuar.
+Este paso previene el drift documental detectado en FASE-A-01.
+
 ---
 
 ## Trigger del Usuario: "Actualizar documentacion oficial del repositorio"

@@ -9,7 +9,7 @@
 
 | Módulo | Archivos | Descripción | Fase |
 |--------|----------|-------------|------|
-| | | | |
+| validate_agents_md | scripts/validate_agents_md.py | Script de 6 checks que audita AGENTS.md contra codigo vivo | FASE-A-01b |
 
 ## Sección B: Funcionalidades Nuevas
 
@@ -27,4 +27,4 @@
 
 | Archivo | Cambio | Fase |
 |---------|--------|------|
-| | | |
+| docs/CONTRIBUTING.md | Agregado Paso 5.5: validate_agents_md.py en flujo post-fase | FASE-A-01b |

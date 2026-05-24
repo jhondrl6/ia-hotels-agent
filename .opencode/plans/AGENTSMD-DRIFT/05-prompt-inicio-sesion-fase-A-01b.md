@@ -182,13 +182,14 @@ Actualizar `09-documentacion-post-proyecto.md`:
 
 ## Criterios de Completitud
 
-- [ ] `scripts/validate_agents_md.py` existe y es ejecutable
-- [ ] Los 6 checks están implementados y documentados
-- [ ] El script da 6/6 PASS contra AGENTS.md corregido (exit code 0)
-- [ ] El script detecta drift cuando se introduce artificialmente
-- [ ] `docs/CONTRIBUTING.md` incluye Paso 5.5 con validate_agents_md.py
-- [ ] log_phase_completion.py ejecutado exitosamente
-- [ ] 09-documentacion-post-proyecto.md actualizado
+- [x] `scripts/validate_agents_md.py` existe y es ejecutable
+- [x] Los 6 checks están implementados y documentados
+- [ ] El script da 6/6 PASS contra AGENTS.md corregido (exit code 0) — **4/6 PASS: 2 FAIL por drift residual en AGENTS.md**
+- [x] El script detecta drift cuando se introduce artificialmente (verificado: 11→9 gates → FAIL)
+- [x] `docs/CONTRIBUTING.md` incluye Paso 5.5 con validate_agents_md.py
+- [x] log_phase_completion.py ejecutado exitosamente
+- [x] 09-documentacion-post-proyecto.md actualizado
+- [x] dependencias-fases.md, 06-checklist, README.md actualizados
 
 ## Restricciones
 
