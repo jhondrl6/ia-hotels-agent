@@ -1,7 +1,30 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.49.0 (AGENTSMD-DRIFT)
-**Última actualización:** 2026-05-23
+**Versión:** v4.50.0 (ASSESSMENT-BUILDER)
+**Última actualización:** 2026-05-24
+
+---
+
+### Notas de Cambios v4.50.0 — AssessmentBuilder
+
+**Módulos afectados:**
+- `modules/assessment_builder.py` (NUEVO)
+- `modules/quality_gates/publication_gates.py`
+- `main.py`
+
+**Problema:** El diccionario `assessment` que alimenta los 11 publication gates se construía 
+manualmente en 3 etapas separadas (~87 líneas) sin tipado ni validación. Cada gate implementaba 
+4-6 fallbacks defensivos (~129 líneas de extractores) porque el dict no tenía schema. Campos 
+zombie (`quality_gate_*`, `coherence_checks`) se acumulaban sin consumidores.
+
+**Solución:** `AssessmentBuilder` centraliza la construcción en una clase con dataclass tipado 
+(`AssessmentPayload`, 28 campos). API fluida: `.with_core().with_validation()...build()`. 
+Los extractores se simplifican a acceso directo (ahorro ~100 líneas). Campos zombie eliminados.
+
+**Backwards compatibility:** El builder produce un `Dict[str, Any]` idéntico al contrato 
+existente de `run_publication_gates()`. No se rompe ninguna interfaz pública.
+
+**Tests:** 34 tests nuevos. v4complete E2E verificado sin regresiones.
 
 ---
 

@@ -1,6 +1,48 @@
 # Changelog
 
-## [4.49.0] - AGENTSMD-DRIFT — AGENTS.md Audit + validate_agents_md Gate + E2E Castilla Real — 2026-05-26
+## [4.50.0] - AssessmentBuilder: Assessment Dict Tipado — 2026-05-30
+
+### Objetivo
+Centralizar la construcción del assessment dict en una clase tipada (`AssessmentBuilder`) 
+con esquema validable, eliminar ~120 líneas de extractores multi-path redundantes, 
+y eliminar campos zombie/fantasma acumulados por fases anteriores.
+
+### Cambios Implementados
+- Creado `modules/assessment_builder.py` con `AssessmentPayload` dataclass (28 campos tipados) 
+  y `AssessmentBuilder` con API fluida (9 métodos `.with_*()` + `.build()`)
+- Migrado `main.py:2663-2754` (~87 líneas en 3 etapas) al builder (~15 líneas)
+- Simplificados 5 extractores multi-path en `publication_gates.py` (~129 → ~30 líneas)
+- Eliminados campos zombie: `quality_gate_issues/blockers/warnings` (locals().get(), 0 consumers)
+- Eliminados campos dead: `coherence_checks/errors/warnings` (0 consumidores), 
+  `critical_issues_detected` (duplicado tautológico de `critical_issues`), 
+  `metrics` dict (0 consumidores — solo duplicaba coherence_score),
+  `coherence_report` del assessment dict (0 consumidores post-simplificación),
+  `consistency_report` inyección en assessment dict (variable sí usada en summary JSON)
+- Simplificado `hotel_url or url` fallback en gate L836 (builder garantiza el campo)
+- Agregados al schema: `proposal_services`, `hotel_url`, `site_presence_report` 
+  (antes buscados por gates pero nunca inyectados — defaults salvaban)
+- Evitada duplicación de `SitePresenceChecker` (se ejecutaba 2 veces)
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/assessment_builder.py` | AssessmentPayload dataclass + AssessmentBuilder class |
+| `tests/test_assessment_builder.py` | 30 tests unitarios (dataclass + builder) |
+| `tests/quality_gates/test_extractors_simplified.py` | 5 tests de extractores simplificados |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | L2663-2754 reemplazado por AssessmentBuilder (~87 → ~15 líneas); L2838 consistency_report inyección eliminada |
+| `modules/quality_gates/publication_gates.py` | 5 extractores simplificados a acceso directo (~129 → ~30 líneas) |
+
+### Tests
+- 34 tests nuevos, 0 regresiones
+- v4complete E2E verificado: Hotel Castilla Real, coherence 0.83, 9/11 gates
+
+---
+
+## [4.49.0] - AGENTSMD-DRIFT
 
 ### Objetivo
 Cerrar el drift documental en AGENTS.md (4 secciones desactualizadas post-FASE-0 + PIPELINE-FIX) e implementar un gate automatizado de coherencia documental.

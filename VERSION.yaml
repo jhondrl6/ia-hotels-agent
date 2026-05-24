@@ -1,11 +1,17 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.49.0"
-codename: "AGENTSMD-DRIFT"
-release_date: "2026-05-26"
+version: "4.50.0"
+codename: "ASSESSMENT-BUILDER"
+release_date: "2026-05-30"
 plan_maestro_version: "v2.6.0"
 
-# v4.48.0 - PIPELINE-FIX (2026-05-23)
+# v4.50.0 - ASSESSMENT-BUILDER (2026-05-30)
+# NUEVO-8-ASSESSMENT-BUILDER: Assessment Dict Tipado
+# FASE-N8-A: AssessmentPayload dataclass + AssessmentBuilder class
+# FASE-N8-B: main.py migrado al builder (L2663-2754 → ~15 líneas)
+# FASE-N8-C: Extractores simplificados (~129→~30 líneas)
+# FASE-N8-D: v4complete E2E Hotel Castilla Real verificado
+# Backwards compatible: schema idéntico, sin cambios en API pública
 # FASE-PF-1: Assessment dict bridge — inyectar 4 artefactos huérfanos (pain_ledger, diagnostic_pain_ids, proposal_pain_ids, financial_evidence_tier)
 # FASE-PF-2: delivery_ready_percentage formula — confidence_score ≥ 0.65 (10/12 = 83.33%)
 # FASE-PF-3: E2E Hotel Castilla Real — coherence 0.8261, coverage PASS, tier_c_onboarding PASS
