@@ -21,10 +21,10 @@
 
 ---
 
-## Estado del Proyecto (v4.48.0)
+## Estado del Proyecto (v4.49.0)
 
-- **2,833 test functions** — suite completa, 0 regresiones
-- **192 modulos Python** (~69K lineas) + **22 scripts** (~6K lineas) + **227 archivos de test** (~58K lineas)
+- **2,743 test functions** — suite completa, 0 regresiones
+- **192 modulos Python** (~69K lineas) + **24 scripts** (~6.1K lineas) + **211 archivos de test** (~58K lineas)
 - **9 config YAML** con schema validado
 - **17 agent skills** en `.agents/workflows/`
 - **11 publication gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding)
@@ -232,8 +232,8 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **2,833 test functions** — suite completa, 0 regresiones
-- **60 config tests** — migracion YAML, fallback, schema, integracion
+- **2,743 test functions** — suite completa, 0 regresiones
+- **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Suite de regresion** — Amaziliahotel + Hotel Visperas como casos de referencia
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
@@ -281,11 +281,11 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
-  tests/                      # 227 archivos de test (~54K lineas)
-    config/                   #   60 tests de migracion YAML
+  tests/                      # 211 archivos de test (~58K lineas)
+    config/                   #   61 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
-  scripts/                    # 22 scripts de automatizacion
+  scripts/                    # 24 scripts de automatizacion
     sync_versions.py          #   Sincronizacion versiones
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
