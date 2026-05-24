@@ -1,5 +1,31 @@
 # Changelog
 
+## [4.51.0] - WHATSAPP-CONFLICT-VISIBILITY — 2026-05-24
+
+### Objetivo
+Hacer visible el warning de WhatsApp conflict con phrasing de impacto de negocio en la sección de contexto del diagnóstico, no solo en "Validación de Calidad".
+
+### Cambios Implementados
+
+- **FASE-A-02a** (2026-05-24): Investigación de visibilidad documentada. Mapear flujo actual de whatsapp_conflict en v4_diagnostic_generator.py y diagnostico_v6_template.md.
+- **FASE-A-02b** (2026-05-24): Implementación nota en contexto. Agregar `whatsapp_conflict_business_note` como nota 🔴 ALERTA en sección contexto del diagnóstico.
+- **FASE-A-02c** (2026-05-24): Ajuste narratives + impacto. Impacto ajustado 0.10→0.20, phrasing mejorado con impacto de negocio (reservas perdidas sin conocimiento del hotelero).
+- **FASE-RELEASE** (2026-05-24): v4complete Hotel Castilla Real — coherence 0.8261, WhatsApp conflict visible en sección contexto como ALERTA 🔴.
+
+### Archivos Modificados
+
+- `modules/commercial_documents/v4_diagnostic_generator.py` — Nota de contexto whatsapp_conflict
+- `templates/diagnostico_v6_template.md` — Phrasing de impacto de negocio
+
+### Verificación
+
+- v4complete Hotel Castilla Real: coherence 0.8261 ≥ 0.80 ✅
+- WhatsApp conflict visible como ALERTA 🔴 en sección contexto ✅
+- Sin costo mensual en la nota ✅
+- Evidencia: `evidence/FASE-RELEASE/`
+
+---
+
 ## [4.50.0] - AssessmentBuilder: Assessment Dict Tipado — 2026-05-30
 
 ### Objetivo

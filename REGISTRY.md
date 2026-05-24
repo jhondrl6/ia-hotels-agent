@@ -2,7 +2,8 @@
 
 | Phase | Date | Status | Details |
 |-------|------|--------|---------|
-| FASE-A/B/C/D/E | 2026-04-06 | COMPLETADO | Sesion unificada. Se implementaron las 5 fases (A: Canonical Metrics/Provider Registry/Permission Modes, B: Quality Gate/Scrubber, C: OpportunityScorer, D: GSC Integration, E: Micro-Content Generator). Commit: d68b3f7. Tests: 123 nuevos. v4.25.0 |
+| FASE-A-02c (WHATSAPP-CONFLICT-VISIBILITY) | 2026-05-24 | COMPLETADO | Phrasing mejorado + impacto 0.10→0.20. ChatGPT readiness como sección. Commit: ver plan. Tests: 0. |
+| FASE-RELEASE (WHATSAPP-CONFLICT-VISIBILITY) | 2026-05-24 | COMPLETADO | v4complete Hotel Castilla Real (0.8261). WhatsApp conflict visible en sección contexto (ALERTA 🔴). coherence 0.83 ≥ 0.80. Evidencia: evidence/FASE-RELEASE/. v4.48.1 |
 | FASE-TRAZABILIDAD-DOCS | 2026-04-25 | COMPLETADO | Correcciones documentales "Calidad Garantizada" (9 gates, ghost cmd, Coherence variable). Commit: 83be575. Tests: 0. v4.35.1 |
 | FASE-TRAZABILIDAD-RAIZ | 2026-04-25 | COMPLETADO | Unificacion detectores + cableado 9 gates + DEP-01-03 + RES-01-03 + BUG-01-02. Commits: 81a0391, e7157e2. 52 tests. v4.35.1 |
 | FASE-A-PERM-FIX | 2026-04-07 | COMPLETADO | Completado ~60% faltante de Tarea 3 (Permission Modes). permission_mode integrado en TwoPhaseOrchestrator, OnboardingController, y main.py (gate antes de auditor.audit()). --permission-mode ya tiene efecto real. 19 tests pasando. Ver CHANGELOG. |

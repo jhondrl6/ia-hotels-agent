@@ -44,7 +44,7 @@
 | `modules/commercial_documents/v4_diagnostic_generator.py` | Método nuevo `_build_whatsapp_conflict_note()`, ajuste impacto 0.10→0.20 | A-02b, A-02c |
 | `config/regional_benchmarks.yaml` | `whatsapp_conflict: 0.10 → 0.20` en las 4 regiones (L21, L84, L116, L148) | A-02c |
 | `modules/commercial_documents/templates/diagnostico_v6_template.md` | Variable `${whatsapp_conflict_business_note}` en sección contexto | A-02b |
-| `docs/GUIA_TECNICA.md` | Nota técnica de la refactorización | RELEASE |
+| `docs/GUIA_TECNICA.md` | NO EXISTE — no requiere actualización (archivo no presente en repo) | RELEASE |
 | `CHANGELOG.md` | Entrada de cambios | RELEASE |
 
 ---
@@ -78,7 +78,14 @@
 ### FASE-RELEASE — v4complete Hotel Castilla Real
 - Fecha: 2026-05-24
 - v4complete: Hotel Castilla Real (https://www.hotelcastillareal.com/)
-- Coherence esperado: >= 0.80
+- Coherence: 0.8261 ≥ 0.80 ✅
+- Coherence score real: 0.83 (reportado en delivery_quality_report.json)
+- WhatsApp conflict visible como 🔴 ALERTA en sección contexto (L46-47 diagnóstico)
+- G8 WARNING: whatsapp_conflict_guide confidence 0.0 vs threshold 0.50 (non-blocking, esperado)
+- Gate G1: proposal_asset_alignment FAIL — "Botón de WhatsApp" no generado (whatsapp_button asset no existe en catálogo para este hotel — decisión de producto previa)
+- Evidencia: `evidence/FASE-RELEASE/` (15 archivos)
+- Validation: `run_all_validations.py --quick` → 4/5 (Version Sync pre-existing, no regresiones)
+- Doctor: ALL CHECKS PASSED
 
 ---
 

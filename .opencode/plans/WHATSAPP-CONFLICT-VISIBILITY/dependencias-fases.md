@@ -11,9 +11,9 @@
 || Fase | Estado | Inicio | Fin | Notas |
 |------|-------|--------|------|-----|-------|
 | FASE-A-02a | ✅ Completada | 2026-05-24 | 2026-05-24 | Investigación de visibilidad |
-| FASE-A-02b | ⏳ Pendiente | - | - | Implementación nota en contexto |
+| FASE-A-02b | ✅ Completada | 2026-05-24 | 2026-05-24 | Implementación nota en contexto |
 | FASE-A-02c | ✅ Completada | 2026-05-24 | 2026-05-24 | Impacto 0.10→0.20, phrasing mejorado |
-| FASE-RELEASE | ⏳ Pendiente | - | - | v4complete Hotel Castilla Real |
+| FASE-RELEASE | ✅ Completada | 2026-05-24 | 2026-05-24 | v4complete Hotel Castilla Real (coherence 0.8261) |
 
 ---
 

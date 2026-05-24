@@ -1,0 +1,19 @@
+{
+  "overall_score": 34.56666666666666,
+  "components": {
+    "schema_quality": 0.0,
+    "crawler_access": 50.0,
+    "citability": 57.0,
+    "llms_txt": 0,
+    "brand_signals": 50.0
+  },
+  "status": "Critical",
+  "actionable_items": [
+    "Improve structured data markup (JSON-LD) for better AI understanding",
+    "Review robots.txt to ensure AI crawler access is permitted",
+    "Add clear author attribution and citeable content sections",
+    "Create /llms.txt file with content inventory for AI crawlers",
+    "Strengthen brand signals: consistent NAP, social profiles, and entity markup",
+    "Configure Google Analytics 4 to measure indirect traffic from AI referrals"
+  ]
+}
