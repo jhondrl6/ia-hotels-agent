@@ -119,7 +119,7 @@ No hay tests nuevos para esta fase.
 1. **`dependencias-fases.md`**: Marcar FASE-RELEASE como ✅ Completada
 2. **`09-documentacion-post-proyecto.md`**: Completar todas las secciones acumulativas
 3. **`REGISTRY.md`**: Registrar las 4 fases (A-02a, A-02b, A-02c, RELEASE)
-4. **`main.py --doctor`**: Regenerar SYSTEM_STATUS.md (NOTA: `--regenerate-domain-primer` no existe; DOMAIN_PRIMER se parchea manualmente si es necesario)
+4. **`scripts/doctor.py --regenerate-domain-primer`**: Regenerar DOMAIN_PRIMER.md con version y codename actuales (NO `main.py --doctor` — esa opcion no existe ahi; el flag correcto vive en `scripts/doctor.py`)
 5. **`git add -A && git commit`**: Commit de todos los cambios con mensaje descriptivo
 
 ---

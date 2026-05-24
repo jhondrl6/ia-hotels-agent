@@ -25,7 +25,7 @@ Este plan fue auditado contra código vivo. Se corrigieron 6 gaps:
 | G3 | ALTO | `pain_narratives` se carga de YAML, no del default Python | Modificar también `config/regional_benchmarks.yaml` (4 regiones) |
 | G4 | ALTO | Ruta de tests `tests/unit/...` no existe | Corregido a `tests/commercial_documents/test_diagnostic_generator.py` |
 | G5 | MEDIO | `{hotel_id}` literal en comando cp | Reemplazado por `hotelcastillareal` |
-| G6 | MEDIO | `--regenerate-domain-primer` no existe | Reemplazado por `--doctor` |
+| G6 | MEDIO | Nota de `--regenerate-domain-primer` incorrecta en fase RELEASE | Comando correcto: `scripts/doctor.py --regenerate-domain-primer` (flag existe en scripts/doctor.py, NO en main.py) |
 
 Los archivos de fase fueron parcheados para reflejar estas correcciones.
 
