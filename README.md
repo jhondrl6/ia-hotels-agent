@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.49.0** — Actualizado 26 Mayo 2026 | +2,743 pruebas automatizadas | 0 errores conocidos
+**v4.50.0** — ASSESSMENT-BUILDER | Actualizado 30 Mayo 2026 | +2,743 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 17 skills including PhasedProjectExecutor, v4_regression_guardian |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 16 skills including PhasedProjectExecutor, v4_regression_guardian |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -21,12 +21,12 @@
 
 ---
 
-## Estado del Proyecto (v4.49.0)
+## Estado del Proyecto (v4.50.0 — ASSESSMENT-BUILDER)
 
 - **2,743 test functions** — suite completa, 0 regresiones
-- **192 modulos Python** (~69K lineas) + **24 scripts** (~6.1K lineas) + **211 archivos de test** (~58K lineas)
+- **193 modulos Python** (~69K lineas) + **24 scripts** (~6.1K lineas) + **84 directorios de test**
 - **9 config YAML** con schema validado
-- **17 agent skills** en `.agents/workflows/`
+- **16 agent skills** en `.agents/workflows/`
 - **11 publication gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding)
 - **Coherence Score >= 0.8** requerido para publicacion
 - **22 assets IMPLEMENTED** (+ 2 DEPRECATED + 1 MANUAL_ONLY) en catalogo
@@ -235,13 +235,12 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 - **2,743 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
-- **Suite de regresion** — Amaziliahotel + Hotel Visperas como casos de referencia
+- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.12.1 (1 fase/sesion, max 60 iteraciones)
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
 - **11 Publication Gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding):
   - Blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics
   - Advisory: content_quality, asset_confidence, proposal_asset_alignment
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.12.1 (1 fase/sesion, max 60 iteraciones)
 
 ---
 
@@ -271,7 +270,7 @@ iah-cli/
     settings.yaml             #   Legacy (puntero a nuevos YAML)
     certificates.yaml         #   Certificados de excelencia
     provider_registry.yaml    #   Catalogo de proveedores
-  modules/                    # ~190 modulos Python (~65K lineas)
+  modules/                    # 193 modulos Python (~69K lineas)
     asset_generation/         #   Generacion condicional de assets
     commercial_documents/     #   Diagnostico + Propuesta v4
     financial_engine/         #   Pricing, scenarios, loss projector
@@ -281,7 +280,7 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
-  tests/                      # 211 archivos de test (~58K lineas)
+  tests/                      # ~58K lineas de test (84 directorios)
     config/                   #   61 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
@@ -290,7 +289,7 @@ iah-cli/
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
     run_all_validations.py    #   Suite de validaciones
-  .agents/workflows/          # 17 agent skills
+  .agents/workflows/          # 16 agent skills
   .opencode/plans/            # Planes de fases (phased execution)
   evidence/                   # Evidencia de fases ejecutadas
 ```
