@@ -6819,6 +6819,25 @@ _Ninguno_
 ---
 
 
+## FASE-A-01A - 2026-05-23
+**Descripcion:** Corrección one-shot AGENTS.md: 9 pasos editoriales — sync conteo tests (2491→2743), gates (9→11), FASE-0 modules, evidence_ledger deprecado, data_validation tree corregido
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `AGENTS.md` | Agents |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
@@ -6944,3 +6963,4 @@ _Ninguno_
 | FASE-3-MINIMUM-DATA-GUARANTEE (AMAZILIAHOTEL) | 2026-04-21 | N/A | ✅ Complete |
 | FASE-RELEASE-4.33.0 (AMAZILIAHOTEL) | 2026-04-21 | N/A | ✅ Complete |
 | FASE-0-RELEASE | 2026-05-14 | 60+ | ✅ Complete |
+| FASE-A-01a (AGENTSMD-DRIFT) | 2026-05-26 | 32 | ✅ Complete |

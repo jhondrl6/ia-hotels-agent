@@ -120,7 +120,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 2491 funciones, 192 archivos, 0 regresion |
+| **Tests** | 2743 funciones, 211 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -165,13 +165,19 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `data_validation/` | Validación cruzada web+GBP+input | v4audit, v4complete |
 | `data_validation/metadata_validator.py` | Detección de CMS defaults | v4complete |
 | `data_validation/consistency_checker.py` | Validación inter-documento | v4complete |
-| `data_validation/evidence_ledger.py` | Almacén centralizado de evidencia | v4complete, v4audit |
+|| `data_validation/evidence_ledger.py` | [DEPRECADO] reemplazado por pain_ledger en `modules/quality_gates/` | v4complete, v4audit |
 | `data_validation/contradiction_engine.py` | Detección de hard/soft conflicts | v4complete |
 | `data_validation/schema_validator_v2.py` | Coverage scoring | v4audit |
 | `modules/financial_engine/` | Escenarios: conservador/realista/optimista | v4audit, v4complete |
 | `modules/financial_engine/calculator_v2.py` | FinancialCalculatorV2 con validación | v4complete |
 | `modules/financial_engine/no_defaults_validator.py` | Validación "No Defaults in Money" | v4complete |
 | `modules/financial_engine/harness_handlers.py` | Handlers para Agent Harness | v4complete |
+| `modules/quality_gates/pain_ledger.py` | Trazabilidad pain_id → fuente → severidad → asset | v4complete |
+| `modules/quality_gates/delivery_quality_report.py` | QA post-generación bloqueante (408 líneas, 10 tests) | v4complete |
+| `modules/quality_gates/human_checklist_generator.py` | ≤10 items derivados automáticamente | v4complete |
+| `modules/asset_generation/data_derivation_layer.py` | 5 derivaciones semánticas del audit (350 líneas, 26 tests) | v4complete |
+| `modules/data_validation/confidence_taxonomy.py` | Taxonomía de niveles de confianza | v4complete, v4audit |
+| `modules/data_validation/cross_validator.py` | Validación cruzada multi-fuente | v4audit, v4complete |
 | `modules/financial_engine/opportunity_scorer.py` | Scoring ponderado 3 factores (severidad+esfuerzo+impacto) para priorizar brechas (FASE-C) | v4complete |
 | `modules/orchestration_v4/` | Flujo dos fases: Hook → Validación | v4complete |
 | `modules/asset_generation/` | Generación condicional con gates | v4complete |
@@ -195,7 +201,7 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `observability/` | Métricas y calibración | Todos |
 | `observability/dashboard.py` | Dashboard de calidad | Todos |
 | `observability/calibration.py` | Calibración de umbrales de confianza | Todos |
-| `modules/quality_gates/` | 9 publication gates (6 blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics; 3 advisory: content_quality, asset_confidence, proposal_asset_alignment) | v4complete |
+| `modules/quality_gates/` | 11 publication gates (6 blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics; 3 advisory: content_quality, asset_confidence, proposal_asset_alignment; 2 quality: tier_c_onboarding_required, coverage) | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
@@ -266,6 +272,15 @@ FASE 4.7: PROMISE vs IMPLEMENTATION
 ──────────────────────────────
 ├─ promised_assets_exist: valida que assets prometidos existen en генератор
 └─ severity: error (blocking)
+
+FASE 5: DELIVERY QUALITY (FASE-0)
+─────────────────────────────────
+├─ pain_ledger: trazabilidad pain_id → fuente → severidad → asset
+├─ coverage gate (G7): brechas_diagnóstico + brechas_justificadas == brechas_detectadas
+├─ tier_c_onboarding_required gate: assessment dict injection
+├─ delivery_quality_report: QA post-generación bloqueante (408 líneas, 10 tests)
+├─ human_checklist: ≤10 items derivados automáticamente
+└─ data_derivation_layer: 5 derivaciones semánticas del audit (350 líneas, 26 tests)
 ```
 
 ---
@@ -362,7 +377,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (2491 funciones, 192 archivos)
+# Todas las pruebas (2743 funciones, 211 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (52 tests)
@@ -377,7 +392,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (2491 funciones totales)
+### Cobertura por Modulo (2743 funciones totales)
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
@@ -415,11 +430,9 @@ iah-cli/
 │   ├── aeo_kpis.py
 │   └── analytics_status.py
 ├── data_validation/            # Validación cruzada
-│   ├── evidence_ledger.py
 │   ├── contradiction_engine.py
 │   ├── consistency_checker.py
-│   ├── metadata_validator.py
-│   └── schema_validator_v2.py
+│   └── metadata_validator.py
 ├── agent_harness/              # Core del agente
 │   ├── core.py
 │   ├── memory.py
@@ -443,6 +456,16 @@ iah-cli/
 │   ├── financial_engine/       # Escenarios + no_defaults_validator
 │   ├── geo_enrichment/         # Enriquecimiento geografico (GEO)
 │   ├── quality_gates/          # Gates de publicacion
+│   │   ├── pain_ledger.py
+│   │   ├── delivery_quality_report.py
+│   │   ├── human_checklist_generator.py
+│   │   └── publication_gates.py
+│   ├── data_validation/        # Validacion avanzada
+│   │   ├── confidence_taxonomy.py
+│   │   ├── cross_validator.py
+│   │   ├── metadata_validator.py
+│   │   ├── schema_validator_v2.py
+│   │   └── external_apis/
 │   ├── orchestration_v4/       # Flujo dos fases Hook → Validacion
 │   ├── scrapers/               # Scrapers externos (Booking, TripAdvisor)
 │   ├── delivery/               # Packaging y entrega
@@ -454,7 +477,7 @@ iah-cli/
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
 │   └── validation/             # Validaciones adicionales
-├── tests/                      # Suite de pruebas (2491 funciones, 192 archivos)
+├── tests/                      # Suite de pruebas (2743 funciones, 211 archivos)
 │   ├── regression/             # Regresion permanente (52 tests)
 │   ├── data_validation/
 │   ├── financial_engine/
