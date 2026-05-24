@@ -35,9 +35,9 @@ rules:
     file: "README.md"
     description: "Version and date in README header"
     replacements:
-      - pattern: '\*\*v[\d.]+\*\* — [^*|]+\| Actualizado'
+      - pattern: '\*\*v[\d.]+\*\* -- [^*|]+\| Actualizado'
         template: '**v{version}** -- {codename} | Actualizado'
-      - pattern: '## Estado del Proyecto \(v[\d.]+ — [^*]+\)'
+      - pattern: '## Estado del Proyecto \(v[\d.]+ -- [^*]+\)'
         template: '## Estado del Proyecto (v{version} -- {codename})'
 
   # ============================================================
