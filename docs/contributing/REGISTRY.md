@@ -6984,6 +6984,28 @@ _Ninguno_
 ---
 
 
+## N8-RELEASE - 2026-05-24
+**Descripcion:** Release v4.50.0 — AssessmentBuilder documentacion final
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `CHANGELOG.md` | Changelog |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
+| `VERSION.yaml` | Version |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | Domain Primer |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
