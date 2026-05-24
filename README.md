@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.50.0** — ASSESSMENT-BUILDER | Actualizado 30 Mayo 2026 | +2,743 pruebas automatizadas | 0 errores conocidos
+**v4.51.0** -- ASSESSMENT-BUILDER | Actualizado 30 Mayo 2026 | +2,743 pruebas automatizadas | 0 errores conocidos
 
 ---
 
