@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-23
+> **Ultima actualizacion:** 2026-05-24
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 280
+> **Total fases completadas:** 281
 
 ---
 
@@ -6897,6 +6897,68 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## N8-A - 2026-05-24
+**Descripcion:** AssessmentPayload dataclass + tests unitarios — NUEVO-8 AssessmentBuilder
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/assessment_builder.py` | NUEVO | Assessment Builder |
+| `tests/test_assessment_builder.py` | NUEVO | Test Assessment Builder |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (12)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## N8-B - 2026-05-24
+**Descripcion:** AssessmentBuilder class + migracion main.py + tests — NUEVO-8
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `modules/assessment_builder.py` | Assessment Builder |
+| `tests/test_assessment_builder.py` | Test Assessment Builder |
+
+### Validaciones
+- [x] Tests passing (17)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## N8-C - 2026-05-24
+**Descripcion:** Extractores simplificados + campos muertos eliminados — NUEVO-8
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/quality_gates/test_extractors_simplified.py` | NUEVO | Test Extractors Simplified |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+
+### Validaciones
+- [x] Tests passing (24)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

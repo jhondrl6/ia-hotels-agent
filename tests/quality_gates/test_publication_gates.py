@@ -273,9 +273,12 @@ class TestEvidenceCoverageGate:
         assert "below threshold" in result.message
         assert "Add evidence excerpts" in result.suggestion
 
-    def test_coverage_from_claims_calculation(self, orchestrator):
+    def test_coverage_from_claims_not_supported(self, orchestrator):
         """
-        Test that coverage is calculated from claims if not provided directly.
+        Test that coverage fallback from claims is NOT supported in simplified extractors.
+        The new _extract_evidence_coverage only reads evidence_coverage directly.
+        Claims-based calculation was eliminated in N8-C simplification.
+        Result: 0.0 when evidence_coverage field is absent.
         """
         assessment = {
             "claims": [
@@ -288,9 +291,20 @@ class TestEvidenceCoverageGate:
         
         result = orchestrator._evidence_coverage_gate(assessment)
         
-        # 2 out of 4 have evidence = 50%
-        assert result.value == 0.5
-        assert result.passed is False  # 50% < 95%
+        # Simplified extractor: no evidence_coverage field → 0.0
+        assert result.value == 0.0
+        assert result.passed is False  # 0.0 < 0.95
+
+    def test_evidence_coverage_direct(self, orchestrator):
+        """
+        Test direct evidence_coverage field access (canonical path from builder).
+        """
+        assessment = {"evidence_coverage": 0.97}
+        
+        result = orchestrator._evidence_coverage_gate(assessment)
+        
+        assert result.value == 0.97
+        assert result.passed is True
 
 
 # =============================================================================

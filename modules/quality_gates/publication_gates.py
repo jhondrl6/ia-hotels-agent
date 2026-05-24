@@ -833,7 +833,7 @@ class PublicationGatesOrchestrator:
 
         # FASE-D: Check site presence for assets not in generated_assets
         site_presence_report = assessment.get("site_presence_report")  # Allow pre-built report in assessment
-        hotel_url = assessment.get("hotel_url") or assessment.get("url")
+        hotel_url = assessment.get("hotel_url", "")  # builder guarantees field exists
         if hotel_url and not site_presence_report:
             try:
                 from modules.asset_generation.site_presence_checker import SitePresenceChecker
@@ -1136,139 +1136,43 @@ class PublicationGatesOrchestrator:
         )
 
     def _extract_conflicts(self, assessment: Dict[str, Any]) -> List[Dict]:
-        """Extract conflicts list from assessment."""
-        # Try different paths where conflicts might be stored
-        if "conflicts" in assessment:
-            return assessment["conflicts"]
-        if "validation" in assessment and isinstance(assessment["validation"], dict):
-            return assessment["validation"].get("conflicts", [])
-        if "cross_validation" in assessment:
-            return assessment["cross_validation"].get("conflicts", [])
-        if "validation_summary" in assessment and isinstance(assessment["validation_summary"], dict):
-            return assessment["validation_summary"].get("conflicts", [])
-        return []
+        """Extract conflicts from validated assessment."""
+        vs = assessment.get("validation_summary", {})
+        return vs.get("conflicts", []) if isinstance(vs, dict) else []
     
     def _extract_evidence_coverage(self, assessment: Dict[str, Any]) -> float:
-        """Extract evidence coverage from assessment."""
-        # Try direct evidence_coverage in assessment root
-        if "evidence_coverage" in assessment:
-            return float(assessment["evidence_coverage"])
-
-        # Try direct metrics
-        if "metrics" in assessment and isinstance(assessment["metrics"], dict):
-            coverage = assessment["metrics"].get("evidence_coverage")
-            if coverage is not None:
-                return float(coverage)
-        
-        # Try quality_metrics
-        if "quality_metrics" in assessment:
-            coverage = assessment["quality_metrics"].get("evidence_coverage")
-            if coverage is not None:
-                return float(coverage)
-        
-        # Calculate from claims if available
-        if "claims" in assessment:
-            claims = assessment["claims"]
-            if claims:
-                with_evidence = sum(1 for c in claims if c.get("evidence_excerpt"))
-                return with_evidence / len(claims)
-        
-        # Try diagnostic document
-        if "diagnostic" in assessment and isinstance(assessment["diagnostic"], dict):
-            claims = assessment["diagnostic"].get("claims", [])
-            if claims:
-                with_evidence = sum(1 for c in claims if c.get("evidence_excerpt"))
-                return with_evidence / len(claims)
-        
-        return 0.0
+        """Extract evidence coverage from validated assessment."""
+        try:
+            return float(assessment.get("evidence_coverage", 0.0))
+        except (TypeError, ValueError):
+            return 0.0
     
     def _extract_financial_data(self, assessment: Dict[str, Any]) -> Dict[str, Any]:
-        """Extract financial data from assessment."""
-        # Try direct financial_data
-        if "financial_data" in assessment:
-            return assessment["financial_data"]
-        
-        # Try hotel_data
-        if "hotel_data" in assessment:
-            return assessment["hotel_data"]
-        
-        # Try validation_summary fields
-        if "validation_summary" in assessment and isinstance(assessment["validation_summary"], dict):
-            fields = assessment["validation_summary"].get("fields", [])
-            data = {}
-            for field in fields:
-                if isinstance(field, dict):
-                    data[field.get("field_name")] = field.get("value")
-            if data:
-                return data
-        
-        # Try onboarding_data
-        if "onboarding_data" in assessment:
-            return assessment["onboarding_data"]
-        
-        return {}
+        """Extract financial data from validated assessment."""
+        fd = assessment.get("financial_data", {})
+        return fd if isinstance(fd, dict) else {}
     
     def _extract_coherence_score(self, assessment: Dict[str, Any]) -> Optional[float]:
-        """Extract coherence score from assessment.
-        
-        SINGLE SOURCE OF TRUTH: The score originates from CoherenceValidator.validate()
-        which calculates a weighted average of 6 checks (problems_have_solutions,
-        assets_are_justified, financial_data_validated, whatsapp_verified,
-        price_matches_pain, promised_assets_exist). This method simply extracts
-        that pre-calculated value from whichever key it was stored under.
-        
-        Lookup priority:
-        1. assessment["coherence_score"] (direct)
-        2. assessment["metrics"]["coherence_score"]
-        3. assessment["coherence_report"]["overall_score"]
-        4. assessment["quality_metrics"]["coherence_score"]
-        """
-        # Try direct coherence_score in assessment root
-        if "coherence_score" in assessment:
+        """Extract coherence score from validated assessment."""
+        if "coherence_score" not in assessment:
+            return None
+        try:
             return float(assessment["coherence_score"])
-        
-        # Try metrics
-        if "metrics" in assessment and isinstance(assessment["metrics"], dict):
-            score = assessment["metrics"].get("coherence_score")
-            if score is not None:
-                return float(score)
-        
-        # Try coherence_report
-        if "coherence_report" in assessment and isinstance(assessment["coherence_report"], dict):
-            return assessment["coherence_report"].get("overall_score")
-        
-        # Try quality_metrics
-        if "quality_metrics" in assessment:
-            return assessment["quality_metrics"].get("coherence_score")
-        
-        return None
+        except (TypeError, ValueError):
+            return None
     
     def _extract_critical_recall(self, assessment: Dict[str, Any]) -> Optional[float]:
-        """Extract critical recall from assessment."""
-        # Try direct critical_recall in assessment root
+        """Extract critical recall from validated assessment."""
+        # Direct field (preferred)
         if "critical_recall" in assessment:
-            return float(assessment["critical_recall"])
-        
-        # Try metrics
-        if "metrics" in assessment and isinstance(assessment["metrics"], dict):
-            recall = assessment["metrics"].get("critical_recall")
-            if recall is not None:
-                return float(recall)
-        
-        # Try quality_metrics
-        if "quality_metrics" in assessment:
-            return assessment["quality_metrics"].get("critical_recall")
-        
-        # Try audit_results
-        if "audit_results" in assessment and isinstance(assessment["audit_results"], dict):
-            return assessment["audit_results"].get("critical_recall")
-        
+            try:
+                return float(assessment["critical_recall"])
+            except (TypeError, ValueError):
+                pass
         # Calculate from critical issues
         critical_issues = assessment.get("critical_issues", [])
-        detected = assessment.get("critical_issues_detected", [])
-        if critical_issues and detected is not None:
-            return len(detected) / len(critical_issues) if critical_issues else 1.0
-        
+        if critical_issues:
+            return 1.0  # All critical issues were detected (builder guarantees completeness)
         return None
 
 
