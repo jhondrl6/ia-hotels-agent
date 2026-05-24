@@ -35,8 +35,10 @@ rules:
     file: "README.md"
     description: "Version and date in README header"
     replacements:
-      - pattern: '\*\*Version:\*\*[^\n]+\*\*(U|Ú)ltima actualizaci[oóO]n:[^\n]+'
-        template: '**Version:** {version} | **Codename:** {codename} | **Ultima actualizacion:** {date_text}'
+      - pattern: '\*\*v[\d.]+\*\* — [^*]+\*\* \| Actualizado'
+        template: '**v{version}** -- {codename} | Actualizado'
+      - pattern: '## Estado del Proyecto \(v[\d.]+ — [^*]+\)'
+        template: '## Estado del Proyecto (v{version} -- {codename})'
 
   # ============================================================
   # AGENTS.md

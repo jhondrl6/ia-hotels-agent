@@ -21,7 +21,7 @@
 
 ---
 
-## Estado del Proyecto (v4.50.0 — ASSESSMENT-BUILDER)
+## Estado del Proyecto (v4.51.0 -- ASSESSMENT-BUILDER)
 
 - **2,743 test functions** — suite completa, 0 regresiones
 - **193 modulos Python** (~69K lineas) + **24 scripts** (~6.1K lineas) + **84 directorios de test**
