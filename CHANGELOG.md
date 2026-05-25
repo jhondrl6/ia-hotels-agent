@@ -1,5 +1,37 @@
 # Changelog
 
+## [4.51.1] - COPYWRITING-REFACTOR — 2026-05-25
+
+### Objetivo
+Refactorizar templates y generadores de documentos comerciales para maximizar conversión en hoteles boutique colombianos. Basado en 12 hallazgos validados de Copywriting.jsonl.
+
+### Cambios Implementados
+- **Templates V6 reestructurados**: Vista Gerencia (dueño) primero, Anexo Técnico después
+- **Narrativa OTA**: Booking/Expedia/comisiones incorporados como dolor central
+- **WhatsApp como gancho #1**: Conflicto WhatsApp lidera el diagnóstico
+- **Scenario clamp**: Escenario optimista nunca negativo (validación + label condicional)
+- **Tier consistency**: Fuente única de evidence_tier desde FinancialBreakdown
+- **Commercial gates**: Nuevo módulo `modules/quality_gates/commercial_gate.py` con 8 gates (5 BLOCKING + 3 WARNING)
+- **IA Bloqueada → IA sin guía**: Corrección determinística cuando blocked_crawlers vacío
+
+### Archivos Nuevos
+|| Archivo | Descripción |
+|---------|-------------|
+| `modules/quality_gates/commercial_gate.py` | Commercial Gate Validator |
+
+### Archivos Modificados
+|| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Reordenado: dueño primero |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | OTA narrative, quick wins accionables |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Scenario clamp, tier consistency, breach sanitization |
+| `modules/commercial_documents/v4_proposal_generator.py` | Commercial gate integration |
+
+### Tests
+- `tests/quality/test_commercial_gate.py` — 3+ tests unitarios para gates
+
+---
+
 ## [4.51.0] - WHATSAPP-CONFLICT-VISIBILITY — 2026-05-24
 
 ### Objetivo

@@ -3,15 +3,15 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.51.0 | **Codename**: ASSESSMENT-BUILDER
-> **Release date**: 2026-05-24 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.51.1 | **Codename**: ASSESSMENT-BUILDER
+> **Release date**: 2026-05-25 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
 
 ## Modulos del Repositorio (auto-generado)
 
-> 22 modulos detectados en `modules/` + 1 paquetes de nivel root. 184 archivos Python en total.
+> 22 modulos detectados en `modules/` + 1 paquetes de nivel root. 185 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
@@ -52,7 +52,7 @@
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **quality_gates/** | 7 | CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; DeliveryQualityReport, DeliveryQualityReportGenerator; GateType, GateStatus, GateCheck, DomainGateResult; EthicsStatus, EthicsIss |
+| **quality_gates/** | 8 | CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; CommercialGateResult, CommercialGateReport, CommercialGateValidator; DeliveryQualityReport, DeliveryQualityReportGenerator; GateT |
 
 ### UTILIDADES Y VALIDACION
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-05-24 | v4.51.0 ASSESSMENT-BUILDER*
+*Auto-generado: 2026-05-25 | v4.51.1 ASSESSMENT-BUILDER*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

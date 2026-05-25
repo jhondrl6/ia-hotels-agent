@@ -1,7 +1,28 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.51.0 (ASSESSMENT-BUILDER)
-**Última actualización:** 2026-05-24
+**Versión:** v4.51.1 (ASSESSMENT-BUILDER)
+**Última actualización:** 2026-05-25
+
+---
+
+### Notas de Cambios v4.51.1 — COPYWRITING-REFACTOR
+
+**Fecha:** 2026-05-25
+
+**Descripción:** Templates V6 reestructurados con vista gerencia (dueño) en secciones 1-6 y anexo técnico en 7+. Scenario clamp en `_build_scenario_table_rows`. Tier consistency en `_build_financial_placeholders`.
+
+**Módulos afectados:**
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` — Reordenado: dueño primero
+- `modules/commercial_documents/templates/propuesta_v6_template.md` — OTA narrative, quick wins accionables
+- `modules/commercial_documents/v4_diagnostic_generator.py` — Scenario clamp, tier consistency, breach sanitization
+- `modules/commercial_documents/v4_proposal_generator.py` — Commercial gate integration
+- `modules/quality_gates/commercial_gate.py` (NUEVO) — 8 gates (5 BLOCKING + 3 WARNING)
+
+**Problema:** Los templates no estaban optimizados para conversión comercial en hoteles boutique colombianos. Pain principal (comisiones OTA, WhatsApp conflicts) no lideraba la narrativa.
+
+**Solución:** COPY-A restructura templates V6 (vista dueño → Anexo Técnico). COPY-B integra commercial_gate.py con 8 gates comerciales. COPY-C valida E2E con Hotel Castilla Real (coherence ≥ 0.80).
+
+**Backwards compatibility:** Cambios de copywriting, no cambia API pública.
 
 ---
 

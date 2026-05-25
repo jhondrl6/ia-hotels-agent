@@ -1,8 +1,8 @@
-<!-- agents_version: v4.49.0 | last_update: 2026-05-24 -->
+<!-- agents_version: v4.49.0 | last_update: 2026-05-25 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.51.0 -- ASSESSMENT-BUILDER COMPLETADO**
+> **v4.51.1 -- ASSESSMENT-BUILDER COMPLETADO**
 
 ---
 

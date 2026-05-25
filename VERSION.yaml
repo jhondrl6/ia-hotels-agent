@@ -1,10 +1,17 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.51.0"
+version: "4.51.1"
 codename: "ASSESSMENT-BUILDER"
-release_date: "2026-05-30"
+release_date: "2026-05-25"
 plan_maestro_version: "v2.6.0"
 
+# v4.51.1 - COPYWRITING-REFACTOR (2026-05-25)
+# COPY-A: Templates V6 reestructurados — vista gerencia primero, anexo técnico después
+# COPY-B: Commercial gates integrados — 8 gates (5 BLOCKING + 3 WARNING)
+# COPY-C: E2E v4complete Hotel Castilla Real validado contra Copywriting.jsonl
+#         Coherence ≥ 0.80, 7/7 gates bloqueantes, 3/3 advisory
+# Backwards compatible: cambios de copywriting, no lógica core
+#
 # v4.50.0 - ASSESSMENT-BUILDER (2026-05-30)
 # NUEVO-8-ASSESSMENT-BUILDER: Assessment Dict Tipado
 # FASE-N8-A: AssessmentPayload dataclass + AssessmentBuilder class
