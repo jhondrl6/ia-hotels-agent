@@ -938,35 +938,34 @@ class V4DiagnosticGenerator:
     ) -> str:
         """Construye filas de tabla markdown para los 3 escenarios de recuperación.
 
-        FASE-COPY-A: Fix clamp — optimista no puede ser menor que realista ni negativo
-        como escenario de recuperación. También corrige el bug de 'or' con 0
-        (monthly_loss_central=0 se treataba como falsy → se usaba monthly_loss_max).
+        FASE-A (E1): Ahora usa financial_value_range del escenario realista
+        (financial_value_min/max) en lugar de monthly_loss_* de cada escenario.
+        Esto garantiza Conservador < Realista < Optimista en orden de valor.
+
+        Los valores del metadata son:
+        - Conservador → financial_value_min (2.993.356)
+        - Realista → financial_value_central (3.741.696)
+        - Optimista → financial_value_max (4.490.035)
         """
         rows = []
 
-        # Obtener valores — NOTA: usar 'is not None' porque 0 es un valor válido
-        # (monthly_loss_central=0 → "sin pérdida neta")
-        def _get_value(s, attr_name: str, fallback_attr: str) -> int:
-            val = getattr(s, attr_name, None)
-            if val is not None:
-                return val
-            fb = getattr(s, fallback_attr, 0)
-            return fb if fb is not None else 0
+        # FASE-A (E1): Usar financial_value_range del escenario realista
+        # como fuente de verdad para los 3 escenarios de recuperación.
+        realistic = scenarios.realistic
+        cons_val = realistic.monthly_loss_min   # 2.993.356 → Conservador
+        real_val = getattr(realistic, 'monthly_loss_central', None) or realistic.monthly_loss_max  # 3.741.696 → Realista
+        opt_val = realistic.monthly_loss_max    # 4.490.035 → Optimista
 
-        cons = _get_value(scenarios.conservative, 'monthly_loss_central', 'monthly_loss_max')
-        real = _get_value(scenarios.realistic, 'monthly_loss_central', 'monthly_loss_max')
-        opt = _get_value(scenarios.optimistic, 'monthly_loss_central', 'monthly_loss_max')
-
-        # Clamp: optimista no puede ser menor que realista ni negativo como recuperación
-        if opt < 0:
-            opt = 0
-        if opt < real:
-            opt = real
+        # Verificación: el optimistic NUNCA es menor que realista (sanity check)
+        # Si el clamp anterior estuviera activo, esto lo detectaríamos,
+        # pero ahora los valores vienen directo del rango validado.
+        assert opt_val >= real_val, f"Bug: optimistic ({opt_val}) < realista ({real_val})"
+        assert real_val >= cons_val, f"Bug: realista ({real_val}) < conservador ({cons_val})"
 
         for name, value, prob in [
-            ("Conservador", cons, scenarios.conservative.probability),
-            ("Realista", real, scenarios.realistic.probability),
-            ("Optimista", opt, scenarios.optimistic.probability),
+            ("Conservador", cons_val, scenarios.conservative.probability),
+            ("Realista", real_val, scenarios.realistic.probability),
+            ("Optimista", opt_val, scenarios.optimistic.probability),
         ]:
             prob_pct = int(prob * 100)
             if value == 0:

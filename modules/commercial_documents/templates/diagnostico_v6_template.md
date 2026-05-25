@@ -27,6 +27,12 @@ scoring_methodology_url: ./scoring_methodology.md
 
 ## 1. 🚨 HOY HAY RESERVAS ESCAPÁNDOSE POR WHATSAPP, GOOGLE MAPS E IA
 
+|| Antes (2023) | Ahora (2026) |
+|---|---|
+| Entran a Google y revisan 5 webs | Le preguntan a ChatGPT |
+| Comparan en Booking | Esperan que la IA recomiende |
+| Llaman o escriben por WhatsApp | Prefieren el primero que la IA menciona |
+
 ${whatsapp_conflict_business_note}
 
 Cada día que pasa, viajeros potenciales buscan su hotel en Google Maps, le preguntan a ChatGPT o comparan en Booking.com — y algunos se van sin reservar porque no encuentran lo que buscan o el número de WhatsApp no responde.
