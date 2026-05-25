@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-25
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 283
+> **Total fases completadas:** 284
 
 ---
 
@@ -7052,6 +7052,23 @@ _Ninguno_
 
 ## FASE-COPY-A - 2026-05-25
 **Descripcion:** Template restructuring: owner-first view (diagnostico_v6), OTA narrative + honest finances (propuesta_v6), scenario clamp fix (_build_scenario_table_rows), tier consistency (evidence_tier passed to scenario table)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-COPY-B - 2026-05-25
+**Descripcion:** Commercial gates: scenario_order, roi_positive, ia_blocked_claim, whatsapp_lead, ota_narrative
 
 ### Archivos Nuevos
 _Ninguno_

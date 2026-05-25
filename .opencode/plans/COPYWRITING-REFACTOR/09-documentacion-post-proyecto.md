@@ -16,8 +16,8 @@ Cada fase DEBE ejecutar `log_phase_completion.py` al finalizar y marcar esta che
 
 ### FASE-COPY-B: Commercial Gates + Content Validation
 
-- [ ] Ejecutar: `./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-COPY-B --desc "Commercial gates: scenario_order, roi_positive, ia_blocked_claim, whatsapp_lead, ota_narrative" --check-manual-docs`
-- [ ] Verificar que REGISTRY.md tiene entrada FASE-COPY-B
+- [x] Ejecutar: `./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-COPY-B --desc "Commercial gates: scenario_order, roi_positive, ia_blocked_claim, whatsapp_lead, ota_narrative" --check-manual-docs`
+- [x] Verificar que REGISTRY.md tiene entrada FASE-COPY-B
 
 ### FASE-COPY-C: E2E v4complete Validation
 

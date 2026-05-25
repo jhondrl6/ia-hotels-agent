@@ -331,7 +331,67 @@ class V4ProposalGenerator:
         
         # Render template
         document_content = self._render_template(template_content, template_data)
-        
+
+        # FASE-COPY-B: Commercial gate validation on generated proposal
+        try:
+            from modules.quality_gates.commercial_gate import CommercialGateValidator
+
+            # Calculate net_benefit_6m from scenarios
+            net_benefit_6m = 0.0
+            roi = 0.0
+            if financial_scenarios is not None:
+                realistic = getattr(financial_scenarios, 'realistic', None)
+                if realistic is not None:
+                    monthly_gain = getattr(realistic, 'monthly_loss_central', None)
+                    if monthly_gain is None:
+                        monthly_gain = getattr(realistic, 'monthly_loss_max', 0)
+                    net_monthly = monthly_gain - price_monthly
+                    net_benefit_6m = net_monthly * 6
+                    total_investment = price_monthly * 6 + setup_fee
+                    total_recovery = monthly_gain * 6
+                    roi = total_recovery / total_investment if total_investment > 0 else 0.0
+
+            # Check for onboarding plan in pricing_result or document
+            has_onboarding = False
+            if pricing_result is not None:
+                has_onboarding = getattr(pricing_result, 'is_onboarding', False)
+            if not has_onboarding:
+                has_onboarding = 'onboarding' in document_content.lower()
+
+            validator = CommercialGateValidator()
+            commercial_report = validator.validate_proposal(
+                proposal_text=document_content,
+                net_benefit_6m=net_benefit_6m,
+                roi=roi,
+                has_onboarding_plan=has_onboarding,
+            )
+
+            if not commercial_report.blocking_passed:
+                alert_section = "\n---\n## ⚠️ Alertas Comerciales\n\n"
+                alert_section += (
+                    "Las siguientes alertas de copywriting fueron detectadas "
+                    "y deben revisarse antes de entregar al cliente:\n\n"
+                )
+                for result in commercial_report.blocking_failures:
+                    alert_section += (
+                        f"- **{result.name}** ({result.gate_id})\n"
+                        f"  {result.message}\n"
+                        f"  → {result.suggestion}\n\n"
+                    )
+                document_content += alert_section
+                logging.warning(
+                    "Proposal commercial gates BLOCKING failures: %s",
+                    [r.gate_id for r in commercial_report.blocking_failures],
+                )
+
+            if commercial_report.warnings:
+                logging.info(
+                    "Proposal commercial gates WARNING(s): %s",
+                    [r.gate_id for r in commercial_report.warnings],
+                )
+        except Exception as e:
+            logging.warning("Proposal commercial gate validation skipped: %s", e, exc_info=True)
+
         # Save document
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"02_PROPUESTA_COMERCIAL_{timestamp}.md"

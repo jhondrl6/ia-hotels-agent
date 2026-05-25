@@ -197,12 +197,12 @@ if not commercial_report.blocking_passed:
 
 ## Criterios de Completitud
 
-- [ ] `modules/quality_gates/commercial_gate.py` existe con ≥5 gates (3+ BLOCKING, 2+ WARNING)
-- [ ] Tests: al menos 3 tests unitarios para gates (escenario negativo, IA bloqueada, ROI negativo)
-- [ ] Corrección "IA Bloqueada" → "IA sin guía" implementada en `_pain_to_brecha()` (L2625) — fuente de datos
-- [ ] `CommercialGateValidator` integrado en ambos generators
-- [ ] Si un documento tiene gates BLOCKING fallidos, se agrega sección de alertas
-- [ ] `log_phase_completion.py` ejecutado al finalizar
+- [x] `modules/quality_gates/commercial_gate.py` existe con ≥5 gates (3+ BLOCKING, 2+ WARNING)
+- [x] Tests: al menos 3 tests unitarios para gates (escenario negativo, IA bloqueada, ROI negativo)
+- [x] Corrección "IA Bloqueada" → "IA sin guía" implementada en `_pain_to_brecha()` (L2625) — fuente de datos
+- [x] `CommercialGateValidator` integrado en ambos generators
+- [x] Si un documento tiene gates BLOCKING fallidos, se agrega sección de alertas
+- [x] `log_phase_completion.py` ejecutado al finalizar
 
 ## Restricciones
 

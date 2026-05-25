@@ -27,19 +27,19 @@
 
 | # | Tarea | Estado |
 |---|-------|--------|
-| T1 | Crear `modules/quality_gates/commercial_gate.py` con gates bloqueantes + advisory | [ ] |
-| T2 | Agregar regla "IA Bloqueada" → "IA sin guía" cuando `blocked_crawlers == []` | [ ] |
-| T3 | Integrar commercial gates en v4_diagnostic_generator y v4_proposal_generator | [ ] |
+| T1 | Crear `modules/quality_gates/commercial_gate.py` con gates bloqueantes + advisory | [x] |
+| T2 | Agregar regla "IA Bloqueada" → "IA sin guía" cuando `blocked_crawlers == []` | [x] |
+| T3 | Integrar commercial gates en v4_diagnostic_generator y v4_proposal_generator | [x] |
 
 **Criterios de completitud:**
-- [ ] `modules/quality_gates/commercial_gate.py` existe con al menos 5 gates (3 bloqueantes, 2 advisory)
-- [ ] Gate `scenario_order_valid`: bloquea si optimista < realista o realista < conservador
-- [ ] Gate `roi_positive_or_onboarding`: bloquea si ROI < 1.0X y no hay plan de onboarding alternativo
-- [ ] Gate `ia_blocked_claim_verified`: bloquea si "bloqueada" aparece y blocked_crawlers está vacío
-- [ ] Gate `whatsapp_lead`: advisory — advierte si WhatsApp no es el primer gancho
-- [ ] Gate `ota_narrative_present`: advisory — advierte si no hay menciones de Booking/Expedia en propuesta
-- [ ] "IA Bloqueada" → "IA sin guía" se corrige en `_pain_to_brecha()` (L2625) — fuente de datos, no regex
-- [ ] `commercial_gate.validate()` se llama desde ambos generators
+- [x] `modules/quality_gates/commercial_gate.py` existe con al menos 5 gates (3 bloqueantes, 2 advisory)
+- [x] Gate `scenario_order_valid`: bloquea si optimista < realista o realista < conservador
+- [x] Gate `roi_positive_or_onboarding`: bloquea si ROI < 1.0X y no hay plan de onboarding alternativo
+- [x] Gate `ia_blocked_claim_verified`: bloquea si "bloqueada" aparece y blocked_crawlers está vacío
+- [x] Gate `whatsapp_lead`: advisory — advierte si WhatsApp no es el primer gancho
+- [x] Gate `ota_narrative_present`: advisory — advierte si no hay menciones de Booking/Expedia en propuesta
+- [x] "IA Bloqueada" → "IA sin guía" se corrige en `_pain_to_brecha()` (L2625) — fuente de datos, no regex
+- [x] `commercial_gate.validate()` se llama desde ambos generators
 
 ---
 

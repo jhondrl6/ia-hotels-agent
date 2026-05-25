@@ -490,7 +490,53 @@ class V4DiagnosticGenerator:
         
         # Render template
         document_content = self._render_template(template_content, template_data)
-        
+
+        # FASE-COPY-B: Commercial gate validation on generated document
+        try:
+            from modules.quality_gates.commercial_gate import CommercialGateValidator
+
+            validator = CommercialGateValidator()
+            # Extract data safely from audit_result (may use either V4AuditResult shape)
+            ai_crawlers_data = None
+            if hasattr(audit_result, 'ai_crawlers') and audit_result.ai_crawlers is not None:
+                ai_crawlers_data = audit_result.ai_crawlers
+            place_found = getattr(getattr(audit_result, 'gbp', None), 'place_found', False)
+            gbp_rating = getattr(getattr(audit_result, 'gbp', None), 'rating', 0.0)
+
+            commercial_report = validator.validate_diagnostic(
+                diagnostic_text=document_content,
+                scenarios=financial_scenarios,
+                ai_crawlers_data=ai_crawlers_data,
+                place_found=place_found,
+                gbp_rating=gbp_rating,
+            )
+
+            if not commercial_report.blocking_passed:
+                alert_section = "\n---\n## ⚠️ Alertas Comerciales\n\n"
+                alert_section += (
+                    "Las siguientes alertas de copywriting fueron detectadas "
+                    "y deben revisarse antes de entregar al cliente:\n\n"
+                )
+                for result in commercial_report.blocking_failures:
+                    alert_section += (
+                        f"- **{result.name}** ({result.gate_id})\n"
+                        f"  {result.message}\n"
+                        f"  → {result.suggestion}\n\n"
+                    )
+                document_content += alert_section
+                logging.warning(
+                    "Commercial gates BLOCKING failures: %s",
+                    [r.gate_id for r in commercial_report.blocking_failures],
+                )
+
+            if commercial_report.warnings:
+                logging.info(
+                    "Commercial gates WARNING(s): %s",
+                    [r.gate_id for r in commercial_report.warnings],
+                )
+        except Exception as e:
+            logging.warning("Commercial gate validation skipped: %s", e, exc_info=True)
+
         # Save document
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"01_DIAGNOSTICO_Y_OPORTUNIDAD_{timestamp}.md"
@@ -2642,7 +2688,8 @@ class V4DiagnosticGenerator:
 
         # Translate each Pain to breach format with commercial narrative
         for pain in pains:
-            brecha = self._pain_to_brecha(pain, region=self._region)
+            brecha = self._pain_to_brecha(pain, region=self._region,
+                                           audit_result=audit_result)
             if brecha:
                 brechas.append(brecha)
 
@@ -2654,10 +2701,12 @@ class V4DiagnosticGenerator:
         self._cached_brechas = brechas
         return brechas
 
-    def _pain_to_brecha(self, pain, region: str = "eje_cafetero") -> Optional[Dict[str, Any]]:
+    def _pain_to_brecha(self, pain, region: str = "eje_cafetero",
+                        audit_result: Any = None) -> Optional[Dict[str, Any]]:
         """Translate a Pain object to breach dict format with commercial narrative.
         
         FASE-CONFIG-5: Ahora usa regional_benchmarks.yaml en lugar de hardcodes.
+        FASE-COPY-B: Recibe audit_result para validar 'IA Bloqueada' vs blocked_crawlers.
         """
         # Cargar benchmarks desde YAML
         try:
@@ -2746,6 +2795,26 @@ class V4DiagnosticGenerator:
             return None
 
         narrative = narratives[pain.id]
+
+        # FASE-COPY-B: "IA Bloqueada" solo si realmente hay crawlers bloqueados.
+        # Si blocked_crawlers == [], renombrar a "IA sin guía" para no mentir.
+        if pain.id == 'ai_crawler_blocked':
+            blocked = []
+            if audit_result is not None:
+                ai_crawlers = getattr(audit_result, 'ai_crawlers', None)
+                if ai_crawlers is not None:
+                    if isinstance(ai_crawlers, dict):
+                        blocked = ai_crawlers.get('blocked_crawlers', [])
+                    else:
+                        blocked = getattr(ai_crawlers, 'blocked_crawlers', []) or []
+            if not blocked:
+                narrative = dict(narrative)  # no mutar el original
+                narrative['nombre'] = 'IA sin guía (Sin mapa para asistentes de IA)'
+                narrative['detalle'] = (
+                    'No se detectó robots.txt ni llms.txt. '
+                    'Los asistentes de IA no tienen un mapa claro para leer y recomendar el hotel.'
+                )
+
         return {
             'pain_id': pain.id,
             'severity': pain.severity,
