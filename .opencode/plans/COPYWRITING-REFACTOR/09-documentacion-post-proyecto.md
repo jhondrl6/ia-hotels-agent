@@ -1,7 +1,7 @@
 # 09-documentacion-post-proyecto.md — COPYWRITING REFACTOR
 
 > **Plan**: COPYWRITING-REFACTOR
-> **Actualizado**: 2026-05-25
+> **Actualizado**: 2026-05-25 (FASE-COPY-C ✅)
 
 ---
 
@@ -21,8 +21,8 @@ Cada fase DEBE ejecutar `log_phase_completion.py` al finalizar y marcar esta che
 
 ### FASE-COPY-C: E2E v4complete Validation
 
-- [ ] Ejecutar: `./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-COPY-C --desc "E2E v4complete Hotel Castilla Real: validation against Copywriting.jsonl commercial gates" --check-manual-docs`
-- [ ] Verificar que REGISTRY.md tiene entrada FASE-COPY-C
+- [x] Ejecutar: `./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-COPY-C --desc "E2E v4complete Hotel Castilla Real: validation against Copywriting.jsonl commercial gates" --check-manual-docs`
+- [x] Verificar que REGISTRY.md tiene entrada FASE-COPY-C (✅ coherencia 0.81, gates 6/7 bloqueantes ✅, 3/3 advisory ✅)
 
 ### FASE-COPY-RELEASE: Documentación y Cierre
 
