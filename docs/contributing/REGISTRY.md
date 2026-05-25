@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-24
+> **Ultima actualizacion:** 2026-05-25
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 281
+> **Total fases completadas:** 283
 
 ---
 
@@ -7000,6 +7000,67 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CMD-A - 2026-05-24
+**Descripcion:** Correccion comandos invalidos main.py --doctor --<flag> en documentacion
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `AGENTS.md` | Agents |
+| `docs/CONTRIBUTING.md` | Contributing |
+| `docs/contributing/procedures.md` | Procedures |
+| `README.md` | Readme |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-CMD-B - 2026-05-24
+**Descripcion:** Verificacion y documentacion post-correccion comandos
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `AGENTS.md` | Agents |
+| `docs/CONTRIBUTING.md` | Contributing |
+| `docs/contributing/procedures.md` | Procedures |
+| `README.md` | Readme |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-COPY-A - 2026-05-25
+**Descripcion:** Template restructuring: owner-first view (diagnostico_v6), OTA narrative + honest finances (propuesta_v6), scenario clamp fix (_build_scenario_table_rows), tier consistency (evidence_tier passed to scenario table)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

@@ -15,19 +15,19 @@ valid_until: ${valid_until}
 
 ---
 
-## 😟 EL PROBLEMA: ¿Por qué pierde reservas sin saberlo?
+## 😟 EL PROBLEMA: ¿Cuánto le cuesta depender de Booking y Expedia?
 
-Cada mes, viajeros buscan hoteles en ${hotel_region}. Pero no lo encuentran.
+Cada mes, viajeros buscan hoteles en ${hotel_region} a través de Booking.com, Expedia y Google. Cuando reservan por ahí, el hotel paga comisiones del 15-25% por cada reserva.
 
-**Esto es lo que está perdiendo:**
+**Esto es lo que está pasando:**
 
-| Cuando el viajero... | Su hotel... | El resultado |
-|---------------------|-------------|--------------|
-| Le pregunta a ChatGPT | No aparece | Reserva va a otro |
-| Busca en Google Maps | Aparece último | No lo ven |
-| Entra a su web | No hay botón de WhatsApp | No reserva directo |
+|| El problema | El impacto |
+|-------------|------------|
+| El viajero busca en Booking/Expedia | Cada reserva cobra comisión |
+| Su hotel compite por el mismo cliente | Más caro para el hotel, menos ganancia |
+| El cliente no encuentra datos claros en Google Maps | Pierde la reserva antes de llegar |
 
-**Su pérdida mensual estimada: ${monthly_loss} COP**
+**Fuga mensual por comisiones OTA:** ${monthly_loss} COP (estimado)
 
 ---
 
@@ -118,8 +118,8 @@ Para que su negocio brille en Google Maps, necesitamos fotos de calidad. Esto es
 
 ${pain_ratio_note}
 
-{{if financial_evidence_tier == "A" or financial_evidence_tier == "B"}}
-*Proyecciones basadas en datos verificados de su hotel.*
+{{if financial_evidence_tier == "C"}}
+> **Nota importante**: Las cifras acima son estimaciones basadas en benchmarks regionales y datos limitados de su web. Para proyecciones precisas con datos reales de su hotel, complete el proceso de onboarding (15 minutos) y conecte Google Analytics.
 {{endif}}
 
 ---

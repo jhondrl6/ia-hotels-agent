@@ -885,19 +885,51 @@ class V4DiagnosticGenerator:
 """
         return section
     
-    def _build_scenario_table_rows(self, scenarios: FinancialScenarios) -> str:
-        """Construye filas de tabla markdown para los 3 escenarios de recuperación."""
+    def _build_scenario_table_rows(
+        self,
+        scenarios: FinancialScenarios,
+        evidence_tier: str = "A",
+    ) -> str:
+        """Construye filas de tabla markdown para los 3 escenarios de recuperación.
+
+        FASE-COPY-A: Fix clamp — optimista no puede ser menor que realista ni negativo
+        como escenario de recuperación. También corrige el bug de 'or' con 0
+        (monthly_loss_central=0 se treataba como falsy → se usaba monthly_loss_max).
+        """
         rows = []
-        for name, scenario in [
-            ("Conservador", scenarios.conservative),
-            ("Realista", scenarios.realistic),
-            ("Optimista", scenarios.optimistic),
+
+        # Obtener valores — NOTA: usar 'is not None' porque 0 es un valor válido
+        # (monthly_loss_central=0 → "sin pérdida neta")
+        def _get_value(s, attr_name: str, fallback_attr: str) -> int:
+            val = getattr(s, attr_name, None)
+            if val is not None:
+                return val
+            fb = getattr(s, fallback_attr, 0)
+            return fb if fb is not None else 0
+
+        cons = _get_value(scenarios.conservative, 'monthly_loss_central', 'monthly_loss_max')
+        real = _get_value(scenarios.realistic, 'monthly_loss_central', 'monthly_loss_max')
+        opt = _get_value(scenarios.optimistic, 'monthly_loss_central', 'monthly_loss_max')
+
+        # Clamp: optimista no puede ser menor que realista ni negativo como recuperación
+        if opt < 0:
+            opt = 0
+        if opt < real:
+            opt = real
+
+        for name, value, prob in [
+            ("Conservador", cons, scenarios.conservative.probability),
+            ("Realista", real, scenarios.realistic.probability),
+            ("Optimista", opt, scenarios.optimistic.probability),
         ]:
-            central = getattr(scenario, 'monthly_loss_central', None) or scenario.monthly_loss_max
-            prob_pct = int(scenario.probability * 100)
-            rows.append(
-                f"| {name} | {format_cop(central)}/mes | {prob_pct}% |"
-            )
+            prob_pct = int(prob * 100)
+            if value == 0:
+                label = "$0 COP/mes (Equilibrio — sin pérdida neta)"
+            else:
+                label = f"{format_cop(value)}/mes"
+                if evidence_tier == "C":
+                    label += " (estimado)"
+            rows.append(f"| {name} | {label} | {prob_pct}% |")
         return "\n".join(rows)
     
     def _build_financial_title_label(self, source_reliability: str) -> str:
@@ -973,7 +1005,7 @@ class V4DiagnosticGenerator:
         ota_commission = opportunity_cost_formatted
 
         # Build scenario table
-        scenario_table = self._build_scenario_table_rows(scenarios)
+        scenario_table = self._build_scenario_table_rows(scenarios, evidence_tier=tier)
 
         # FASE-J: conditional labels and asterisk
         is_verified = source_reliability == "verified"

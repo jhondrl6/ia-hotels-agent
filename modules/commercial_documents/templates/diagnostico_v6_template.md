@@ -25,35 +25,70 @@ scoring_methodology_url: ./scoring_methodology.md
 
 ---
 
-## 📍 CONTEXTO REGIONAL: EL EJE CAFETERO ESTÁ CAMBIANDO
-
-### Lo que está pasando en ${hotel_region}
-
-Cada mes, miles de turistas buscan dónde hospedarse en la región. Pero la forma de buscar cambió:
-
-| Antes (2023) | Ahora (2026) |
-|--------------|--------------|
-| Entran a Google y revisan 5 webs | Le preguntan a ChatGPT: "¿Hotel boutique en ${hotel_region}?" |
-| Comparan en Booking | Esperan que la IA recomiende |
-| Llaman o escriben por WhatsApp | Prefieren el primero que la IA menciona |
-
-**El resultado:** Si su hotel no aparece cuando un viajero pregunta a ChatGPT, nunca llega a su sitio web. Pierde la reserva antes de competir.
-
-### ¿Por qué esto importa en la región?
-
-${regional_context}
+## 1. 🚨 HOY HAY RESERVAS ESCAPÁNDOSE POR WHATSAPP, GOOGLE MAPS E IA
 
 ${whatsapp_conflict_business_note}
 
-> **Pregunta clave**: Cuando alguien pregunte a ChatGPT "hotel boutique cerca de ${hotel_landmark}", ¿su hotel aparece?
+Cada día que pasa, viajeros potenciales buscan su hotel en Google Maps, le preguntan a ChatGPT o comparan en Booking.com — y algunos se van sin reservar porque no encuentran lo que buscan o el número de WhatsApp no responde.
 
 ---
 
-## 📊 ANÁLISIS ACTUAL: SU POSICIÓN FRENTE A LA COMPETENCIA
+## 2. 📱 LO QUE VEMOS EN SU HOTEL
+
+${brechas_section}
+
+---
+
+## 3. 💰 LA FUGA FINANCIERA
+
+**${monthly_loss_display}**${estimate_asterisk}${financial_tier_suffix}
+
+${precision_warning}
+
+> **¿De dónde sale esta cifra?**
+> Cada mes, viajeros reservan en su zona a través de Booking, Expedia y otros intermediarios. Cada reserva cobra una comisión promedio del 15-25%.
+> Mientras más reservas pasan por intermediarios, menos quedan en la caja del hotel.
+> La cifra acima es nuestra mejor estimación de cuánto dinero se escapa cada mes por fugas en su visibilidad digital.
+
+${show_onboarding_cta}
+${financial_breakdown_section}
+
+---
+
+## 4. 🔍 LAS 3 FUGAS PRINCIPALES
+
+### Fuga 1 — Contacto perdido por WhatsApp incorrecto
+Cuando un huésped quiere reservar directo, busca el WhatsApp del hotel. Si el número en Google Maps es diferente al de su web, pierde la reserva.
+
+### Fuga 2 — Visibilidad insuficiente en Google Maps
+Cuando alguien busca "hotel boutique cerca de ${hotel_landmark}", su hotel aparece más abajo que la competencia. Pocos llegan a su web.
+
+### Fuga 3 — Las IA no recomiendan su hotel
+Cuando alguien le pregunta a ChatGPT o Google AI "hotel boutique en ${hotel_region}", si su web no tiene los datos correctos, no aparece en la respuesta.
+
+---
+
+## 5. ⚡ QUICK WINS ESTA SEMANA
+
+${quick_wins_content}
+
+---
+
+## 6. 🤖 QUÉ HACE IA HOTELES AGENT
+
+IA Hoteles Agent es el sistema que acaba de analizar su hotel. Detecta las 3 fugas digitales, calcula la fuga financiera aproximada y genera un plan de recuperación personalizado.
+
+**El resultado**: un documento llamado "Propuesta Comercial" con exactamente qué hacer, cuánto cuesta y cuánto puede recuperar.
+
+---
+
+## 📐 ANEXO TÉCNICO
+
+---
 
 ### Score de Visibilidad Digital
 
-| Indicador | Su Negocio | Promedio Regional | Estado |
+|| Indicador | Su Negocio | Promedio Regional | Estado |
 |-----------|------------|------------------|--------|
 | **SEO Local** (Para que te ENCUENTREN) | ${seo_score}/100 | ${seo_regional_avg}/100 | ${seo_status} |
 | **GEO** (Para que te UBIQUEN) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |
@@ -68,7 +103,6 @@ ${iao_score_breakdown}
 > ⚠️ **Nota sobre divergencia de scores**: El score GEO en la tabla principal viene directamente del `geo_score` de Google Business Profile (algoritmo propio de Google). El desglose GEO usa el checklist interno de iah-cli. Pueden diferir — ambos miden aspectos complementarios de tu presencia en Maps. Los scores SEO, AEO e IAO usan la misma metodología en tabla y desglose — siempre idénticos.
 
 ${excluded_factors_section}
-
 ${regional_transparency}
 
 ### Métricas de Acceso para IA
@@ -80,17 +114,6 @@ ${positive_findings}
 
 ${analytics_summary_text}
 
-## 💰 Impacto Financiero
-
-${financial_tier_banner}
-### ${financial_title_label}
-
-**${monthly_loss_display}**${estimate_asterisk}${financial_tier_suffix}
-
-${precision_warning}
-${show_onboarding_cta}
-${financial_breakdown_section}
-
 ---
 
 ### Oportunidad de Mejora
@@ -100,10 +123,6 @@ ${financial_breakdown_section}
 ${asset_confidence_note}
 
 ${manual_attention_table}
-
-Brechas detectadas que afectan su presencia digital y reservas directas:
-
-${brechas_section}
 
 ---
 
