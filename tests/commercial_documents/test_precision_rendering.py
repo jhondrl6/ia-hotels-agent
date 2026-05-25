@@ -196,10 +196,9 @@ class TestPrecisionRendering:
             scenarios, validation_summary, analytics_data=None,
         )
 
-        # Warning should be present for Tier C
+        # FASE-B: disclaimer converted to opportunity hook (formerly "⚠️ Precisión limitada — Tier C")
         assert result['precision_warning'] != ''
-        assert '⚠️' in result['precision_warning']
-        assert 'Tier C' in result['precision_warning']
+        assert 'OPORTUNIDAD DE AUDITORÍA' in result['precision_warning']
 
     def test_tier_c_shows_onboarding_cta(self):
         """Tier C: CTA de onboarding presente y específico."""
@@ -233,8 +232,7 @@ class TestPrecisionRendering:
 
         # Warning should be present for Tier B
         assert result['precision_warning'] != ''
-        assert '⚠️' in result['precision_warning']
-        assert 'Tier B' in result['precision_warning']
+        assert 'OPORTUNIDAD DE AUDITORÍA' in result['precision_warning']
 
     def test_regional_benchmark_source_label(self):
         """Label de fuente ADR indica 'benchmark regional' para fuentes regional_v410."""

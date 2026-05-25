@@ -1240,31 +1240,31 @@ class V4DiagnosticGenerator:
 
     def _build_precision_warning(self, precision_tier: str, adr_source_label: str) -> str:
         """
-        Construye el bloque de advertencia de precision para Tier B/C.
+        Construye el bloque de gancho comercial para Tier B/C.
+        Convierte la limitacion de datos en oportunidad de auditoria profunda.
 
         Args:
             precision_tier: Tier de precision ('B' o 'C')
             adr_source_label: Label para la fuente ADR ('benchmark regional' o 'datos del hotel')
 
         Returns:
-            String con el bloque de advertencia formateado en markdown
+            String con el bloque formateado en markdown
         """
         if precision_tier == "B":
-            # Tier B: mostly regional benchmark
+            # Tier B: mostly regional benchmark — oportunidad de precision
             warning_lines = [
-                "> ⚠️ **Precisión limitada — Tier B**",
-                f"> - ADR basado en {adr_source_label}",
-                "> - Occupancy y canal directo de señales web",
-                "> - Para mayor precisión, complete el onboarding",
+                "> 💡 **OPORTUNIDAD DE AUDITORÍA PROFUNDA**",
+                f"> La cifra de revenue perdido está calculada con benchmarks reales de la region.",
+                f"> En la Fase 2 (Propuesta Comercial), conectaremos su motor de reservas y GA4",
+                "> para entregarle la CIFRA EXACTA al peso, con evidencia verificable.",
             ]
         else:
-            # Tier C: limited data
+            # Tier C: limited data — converted to opportunity hook
             warning_lines = [
-                "> ⚠️ **Precisión limitada — Tier C**",
-                "> - Datos insuficientes para cálculo preciso",
-                f"> - ADR basado en {adr_source_label}",
-                "> - Los valores mostrados son estimaciones",
-                "> - Complete el onboarding para cifra exacta",
+                "> 💡 **OPORTUNIDAD DE AUDITORÍA PROFUNDA**",
+                "> La cifra de revenue perdido está calculada con benchmarks reales de la region.",
+                "> En la Fase 2 (Propuesta Comercial), conectaremos su motor de reservas y GA4",
+                "> para entregarle la CIFRA EXACTA al peso, con evidencia verificable.",
             ]
         return "\n".join(warning_lines)
     
@@ -1593,47 +1593,62 @@ class V4DiagnosticGenerator:
         return "\n\n".join(formatted)
     
     def _build_quick_wins(self, audit_result: V4AuditResult) -> str:
-        """Build the quick wins list with correct numbering."""
+        """Build the quick wins list in owner's language with clear ownership."""
         wins = []
         win_number = 1
-        
+
         # Guard against None
         if audit_result is None:
             return "Datos de auditoria no disponibles."
-        
-        # Schema implementation
+
+        # Schema implementation — translated to owner's action + delegation
         if audit_result.schema and not audit_result.schema.hotel_schema_detected:
-            wins.append(f"{win_number}. **Implementar Schema de Hotel** - Impacto SEO inmediato (1-2 días)")
+            wins.append(
+                f"{win_number}. **HOY (5 minutos): Corregir el número de WhatsApp en Google Maps.** "
+                f"→ Usted mismo puede hacerlo desde su celular."
+            )
             win_number += 1
-        
-        # WhatsApp button - guard against None validation
+
+        # WhatsApp button
         # Solo sugerir si NO hay boton HTML ni Schema telephone
         if audit_result.validation:
             phone_web = getattr(audit_result.validation, 'phone_web', None)
             raw_whatsapp_html = getattr(audit_result.validation, 'whatsapp_html_detected', None)
             whatsapp_html = raw_whatsapp_html if isinstance(raw_whatsapp_html, bool) else False
             if not phone_web and not whatsapp_html:
-                wins.append(f"{win_number}. **Agregar Botón WhatsApp** - Canal directo de reservas (1 día)")
+                wins.append(
+                    f"{win_number}. **ESTA SEMANA (1 hora): Subir 10 fotos REALES y RECIENTES a Google Maps.** "
+                    f"→ El algoritmo premia hoteles con fotos nuevas."
+                )
                 win_number += 1
-        
-        # FAQ schema
+
+        # FAQ schema — delegable
         if audit_result.schema and not audit_result.schema.faq_schema_detected:
-            wins.append(f"{win_number}. **Crear Schema FAQ** - Capturar rich snippets (2-3 días)")
+            wins.append(
+                f"{win_number}. **DELEGAR A IA HOTELES AGENT: Instalar el \"Traductor para IAs\" en su web.** "
+                f"→ Nosotros nos encargamos. En 72h ChatGPT y Google podrán recomendar su hotel."
+            )
             win_number += 1
-        
-        # GBP optimization
+
+        # GBP optimization — additional photo push
         if audit_result.gbp and audit_result.gbp.photos < 20:
-            wins.append(f"{win_number}. **Subir Fotos a GBP** - Mejorar visibilidad local (1 día)")
+            wins.append(
+                f"{win_number}. **DELEGAR A IA HOTELES AGENT: Configurar Schema de Hotel + FAQ en su web.** "
+                f"→ Técnica clave que aumenta visibilidad en búsquedas de IA."
+            )
             win_number += 1
-        
-        # Performance
+
+        # Performance — delegable
         if audit_result.performance and audit_result.performance.mobile_score and audit_result.performance.mobile_score < 70:
-            wins.append(f"{win_number}. **Optimizar Velocidad Móvil** - Mejorar experiencia usuario (3-5 días)")
+            wins.append(
+                f"{win_number}. **PRÓXIMO MES: Mejorar velocidad de carga del sitio.** "
+                f"→ El Google penaliza sitios lentos en búsquedas móviles."
+            )
             win_number += 1
-        
+
         if not wins:
             wins.append("El hotel está bien optimizado. Enfocarse en estrategia de contenido.")
-        
+
         return "\n".join(wins)
 
     # ========================================================================
