@@ -157,6 +157,8 @@ python main.py onboard --url https://hotel.com --run-audit
 python main.py --doctor              # Check completo
 python scripts/doctor.py             # Directo
 python scripts/doctor.py --status    # Regenerar SYSTEM_STATUS.md
+python scripts/doctor.py --regenerate-domain-primer  # Regenerar DOMAIN_PRIMER.md
+python scripts/doctor.py --agent     # Diagnostico ecosistema agentes
 python scripts/doctor.py --context   # Solo integridad de contexto
 python scripts/doctor.py --json      # Output maquina-legible
 ```

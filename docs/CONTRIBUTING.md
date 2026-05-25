@@ -119,7 +119,7 @@ Esto sincroniza VERSION.yaml → 6 archivos sin modificacion manual. Si hay disc
 ### Paso 6: Regenerar SYSTEM_STATUS.md
 
 ```bash
-python main.py --doctor --status
+python scripts/doctor.py --status
 ```
 
 ### Paso 7: Verificar .agent/ vs .agents/ (symlink critico)
@@ -149,9 +149,9 @@ git diff --stat
 | CHANGELOG.md | MANUAL | Se VERIFICA y se ACTUALIZA (paso 3) |
 | docs/contributing/REGISTRY.md | Auto-sync desde log_phase_completion.py | Se verifica (paso 2) |
 | .agents/workflows/README.md | MANUAL | Se VERIFICA (paso 5) |
-| .agent/SYSTEM_STATUS.md | AUTO via --doctor --status | Se REGENERA (paso 6) |
+| `.agent/SYSTEM_STATUS.md` | AUTO via scripts/doctor.py --status | Se REGENERA (paso 6) |
 | ROADMAP.md | MANUAL | NO (solo si el usuario dice especificamente que actualizar Roadmap) |
-| `.agent/knowledge/DOMAIN_PRIMER.md` | SEMI-AUTO via --doctor --regenerate-domain-primer | Se VERIFICA (paso 5b) |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | SEMI-AUTO via scripts/doctor.py --regenerate-domain-primer | Se VERIFICA (paso 5b) |
 | `INDICE_DOCUMENTACION.md` | MANUAL post-release | NO (automatico solo header via sync — contenido fases es manual) |
 
 ### Paso 5b: Regenerar DOMAIN_PRIMER.md
@@ -292,10 +292,10 @@ El comando `python main.py --doctor` incluye un check de "Symlink integrity" que
 
 ---
 
-## Regenerable
+## Regenerable (comandos directos)
 
-- `.agent/SYSTEM_STATUS.md` → `python main.py --doctor --status`
-- `.agent/knowledge/DOMAIN_PRIMER.md` → `python main.py --doctor --regenerate-domain-primer`
+- `.agent/SYSTEM_STATUS.md` → `python scripts/doctor.py --status`
+- `.agent/knowledge/DOMAIN_PRIMER.md` → `python scripts/doctor.py --regenerate-domain-primer`
 
 
 ---

@@ -44,7 +44,7 @@ Cuando modifiques `modules/financial_engine/` o agregues/elimines un modulo dent
    - Clases clave listadas
    - Pipeline actualizado si cambio flujo
 3. Si hubo cambios estructurales significativos:
-   `python main.py --doctor --regenerate-domain-primer`
+   `python scripts/doctor.py --regenerate-domain-primer`
 
 ---
 

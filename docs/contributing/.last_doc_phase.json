@@ -41,7 +41,7 @@
   "modules/asset_generation/asset_content_validator.py": "FASE-B",
   "data_models/canonical_assessment.py": "FASE-C",
   "modules/financial_engine/calculator_v2.py": "FIN-1A",
-  "AGENTS.md": "FASE-RELEASE-4.49.0",
+  "AGENTS.md": "FASE-CMD-B",
   "VERSION.yaml": "N8-RELEASE",
   "config/provider_registry.yaml": "FASE-CONFIG-8",
   "data_models/analytics_status.py": "FASE-CONFIG-6",
@@ -106,7 +106,7 @@
   "N/A (solo lectura)": "FASE-CAUSAL-DIAG",
   "N/A (verificación)": "FASE-CAUSAL-VALIDATE",
   "GUIA_TECNICA.md": "FASE-RELEASE-4.47.0",
-  "README.md": "FASE-RELEASE-4.49.0",
+  "README.md": "FASE-CMD-B",
   "NINGUNO (solo lectura)": "FASE-CAUSAL-DIAG",
   "modules/commercial_documents/service_catalog.py (nuevo)": "FASE-CAUSAL-REFACTOR",
   "modules/commercial_documents/service_catalog.py": "FASE-2",
@@ -134,7 +134,7 @@
   "scripts/doctor.py": "FASE-CONFIG-8",
   "config/certificates.yaml": "FASE-CONFIG-8",
   ".cursorrules": "FASE-RELEASE-4.38.0",
-  "docs/CONTRIBUTING.md": "FASE-RELEASE-4.49.0",
+  "docs/CONTRIBUTING.md": "FASE-CMD-B",
   ".agent/SYSTEM_STATUS.md": "FASE-RELEASE-4.38.0",
   "docs/scoring_methodology.md": "FASE-SCORING-3",
   "modules/commercial_documents/templates/": "FIN-3",
@@ -168,5 +168,6 @@
   "modules/quality_gates/delivery_quality_report.py": "FASE-A",
   "evidence/fase-B/analysis.md": "FASE-B",
   "modules/assessment_builder.py": "N8-B",
-  "tests/test_assessment_builder.py": "N8-B"
+  "tests/test_assessment_builder.py": "N8-B",
+  "docs/contributing/procedures.md": "FASE-CMD-B"
 }

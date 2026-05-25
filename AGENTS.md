@@ -113,8 +113,8 @@ Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto
 **Gate de No-Regresion Documental**: Ejecutar `python scripts/validate_document_integration.py`
 antes de cada commit para prevenir desincronizacion entre los 4 documentos clave.
 
-**Regenerable (1 comando):**
-- `.agent/SYSTEM_STATUS.md` → `python main.py --doctor --status`
+**Regenerable (comandos directos):**
+- `.agent/SYSTEM_STATUS.md` → `python scripts/doctor.py --status`
 
 ## Estado Actual
 
@@ -340,7 +340,7 @@ Se incluyen para orientar mejoras pero nunca bloquean publicación.
 | Coherence < 0.8 | Claims sin evidencia o contradicciones | `python scripts/doctor.py --context` para ver detalles |
 | Version mismatch en docs | Docs no sincronizadas con VERSION.yaml | Pre-commit `version-sync` hook o ejecutar `python scripts/version_consistency_checker.py` |
 | Error de API key ausente | .env no configurado o key invalida | `python main.py setup` o editar `.env` manualmente |
-| Test failures | Regresion o cambio breaking | `python main.py --doctor --agent` para diagnosticar |
+| Test failures | Regresion o cambio breaking | `python scripts/doctor.py --agent` para diagnosticar |
 | Skill no encuentra workflow | Ruta `.agents/workflows/` inexistente | Verificar symlink `.agent/workflows` -> `.agents/workflows` |
 | Agent Harness no responde | MCP client o skill router bloqueado | `python scripts/doctor.py --json` para diagnostico estructurado |
 
