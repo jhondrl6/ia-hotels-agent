@@ -1,7 +1,7 @@
 # 09-documentacion-post-proyecto.md — COPYWRITING REFACTOR
 
 > **Plan**: COPYWRITING-REFACTOR
-> **Actualizado**: 2026-05-25 (FASE-COPY-C ✅)
+> **Actualizado**: 2026-05-25 (FASE-COPY-RELEASE ✅ — v4.51.1 released, commit 7720e21)
 
 ---
 
@@ -26,14 +26,15 @@ Cada fase DEBE ejecutar `log_phase_completion.py` al finalizar y marcar esta che
 
 ### FASE-COPY-RELEASE: Documentación y Cierre
 
-- [ ] Ejecutar: `./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-COPY-RELEASE --desc "COPYWRITING-REFACTOR release: docs cascade, version bump, final validation" --check-manual-docs`
-- [ ] Ejecutar: `./venv/Scripts/python.exe scripts/sync_versions.py`
-- [ ] Verificar CHANGELOG.md actualizado
-- [ ] Verificar GUIA_TECNICA.md con nota técnica
-- [ ] Ejecutar: `./venv/Scripts/python.exe scripts/run_all_validations.py --quick` → 4/4
-- [ ] Ejecutar: `./venv/Scripts/python.exe scripts/validate_document_integration.py`
-- [ ] Ejecutar: `./venv/Scripts/python.exe scripts/doctor.py --status` → regenerar SYSTEM_STATUS.md
-- [ ] Ejecutar: `./venv/Scripts/python.exe scripts/doctor.py --regenerate-domain-primer`
+- [x] Ejecutar: `./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-COPY-RELEASE --desc "COPYWRITING-REFACTOR release: docs cascade, version bump, final validation" --check-manual-docs`
+- [x] Ejecutar: `./venv/Scripts/python.exe scripts/sync_versions.py`
+- [x] Verificar CHANGELOG.md actualizado
+- [x] Verificar GUIA_TECNICA.md con nota técnica
+- [x] Ejecutar: `./venv/Scripts/python.exe scripts/run_all_validations.py --quick` → 5/5 ✅
+- [x] Ejecutar: `./venv/Scripts/python.exe scripts/validate_document_integration.py` → PASS ✅
+- [x] Ejecutar: `./venv/Scripts/python.exe scripts/doctor.py --status` → regenerar SYSTEM_STATUS.md ✅
+- [x] Ejecutar: `./venv/Scripts/python.exe scripts/doctor.py --regenerate-domain-primer`
+- [x] Git commit: `release: v4.51.1 — COPYWRITING-REFACTOR` ✅ (commit 7720e21)
 
 ---
 
