@@ -85,6 +85,9 @@ WARNING_GATE_IDS = [
 TECH_JARGON_TERMS = [
     "Schema", "AEO", "IAO", "Open Graph", "NAP", "Rich Snippets",
     "schema.org", "JSON-LD", "markup estructurado",
+    # PROPUESTA-COMERCIAL FASE-D: términos adicionales
+    "OpenRouter", "Perplexity", "Gemini", "GA4_PROPERTY_ID",
+    "GSC_SITE_URL", "UTM", "iah-cli", "iahotels.co",
 ]
 
 

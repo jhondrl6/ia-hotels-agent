@@ -2726,6 +2726,54 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         json.dump(gate_report, f, indent=2, ensure_ascii=False)
     print(f"   📄 Gate report: {gate_report_path}")
     
+    # FASE-E (CROSS-6): Gate blocking — prevent document delivery when gates fail
+    # Controlled via GATE_BLOCKING_ENABLED env var (default: off, for CI/tests safety)
+    import os as _os_gate_block
+    _gate_blocking_enabled = _os_gate_block.getenv("GATE_BLOCKING_ENABLED", "").lower() in ("1", "true", "yes")
+    if _gate_blocking_enabled and readiness_report["status"] == "NOT_READY":
+        print("\n🚫 GATE BLOCKING ACTIVE — Publication gates NOT_READY")
+        print("   Eliminando documentos cliente y generando BLOCKED_BY_GATES.md")
+        
+        # Remove diagnostic file if it was generated
+        _diag_var = "diagnostic_path"
+        if _diag_var in locals() and locals()[_diag_var]:
+            _diag_path = Path(str(locals()[_diag_var]))
+            if _diag_path.exists():
+                _diag_path.unlink()
+                print(f"   ❌ Eliminado: {_diag_path}")
+        
+        # Remove proposal file if it was generated
+        _prop_var = "proposal_path"
+        if _prop_var in locals() and locals()[_prop_var]:
+            _prop_path = Path(str(locals()[_prop_var]))
+            if _prop_path.exists():
+                _prop_path.unlink()
+                print(f"   ❌ Eliminado: {_prop_path}")
+        
+        # Write BLOCKED_BY_GATES.md with failure diagnostics
+        _blocked_path = output_dir / "BLOCKED_BY_GATES.md"
+        with open(_blocked_path, "w", encoding="utf-8") as _bf:
+            _bf.write(f"# 🚫 Publicación Bloqueada por Gates de Calidad\n\n")
+            _bf.write(f"**Fecha**: {datetime.now().isoformat()}\n")
+            _bf.write(f"**Hotel**: {hotel_name}\n")
+            _bf.write(f"**URL**: {args.url}\n")
+            _bf.write(f"**Status**: {readiness_report['status']}\n\n")
+            _bf.write(f"## Gates Fallidos ({len(readiness_report['blocking_issues'])})\n\n")
+            for _issue in readiness_report["blocking_issues"]:
+                _bf.write(f"### {_issue['gate']}\n\n")
+                _bf.write(f"- **Mensaje**: {_issue['message']}\n")
+                if _issue.get("suggestion"):
+                    _bf.write(f"- **Sugerencia**: {_issue['suggestion']}\n")
+                if _issue.get("value") is not None:
+                    _bf.write(f"- **Valor**: {_issue['value']}\n")
+                _bf.write("\n")
+            _bf.write(f"\n---\n\n")
+            _bf.write(f"**Acción requerida**: Resuelva los issues listados arriba y vuelva a ejecutar:\n\n")
+            _bf.write(f"```bash\npython main.py v4complete --url {args.url}\n```\n\n")
+            _bf.write(f"El reporte `v4_complete_report.json` y `gate_report.json` se generaron\n")
+            _bf.write(f"para debugging — revise esos archivos para información detallada.\n")
+        print(f"   📄 BLOCKED_BY_GATES.md: {_blocked_path}")
+    
     # FASE 4.6: Consistency Checker - Validación cruzada obligatoria
     print("\n📍 FASE 4.6: Consistency Checker (Validación Cruzada)")
     print("-" * 70)

@@ -47,13 +47,13 @@
 
 | ID | Tarea | Estado | Evidencia |
 |----|-------|--------|-----------|
-| D1 | Unificar labels: 4 instancias de "⚠️ En preparación/preparacion" → un solo formato | ⏳ | — |
-| D2 | Agregar términos al gate CG-TECH-JARGON (OpenRouter, Perplexity, Gemini, GA4, GSC, UTM, iah-cli, iahotels.co) | ⏳ | — |
-| D3 | Mover tabla IAO (L149-158) a anexo técnico en template | ⏳ | — |
-| D4 | Eliminar fallback de string search en `has_onboarding` (L359) | ⏳ | — |
-| D5 | Vincular confidence score a cada servicio en tabla de propuesta | ⏳ | — |
+| D1 | Unificar labels: 4 instancias de "⚠️ En preparación/preparacion" → un solo formato | ✅ | `v4_proposal_generator.py` L1073, L1117, L1167, L1360: "En proceso de activación — Semana 2" |
+| D2 | Agregar términos al gate CG-TECH-JARGON (OpenRouter, Perplexity, Gemini, GA4, GSC, UTM, iah-cli, iahotels.co) | ✅ | `commercial_gate.py` L85-92: 8 términos nuevos agregados |
+| D3 | Mover tabla IAO (L149-158) a anexo técnico en template | ✅ | `propuesta_v6_template.md` L151-161: reemplazada por referencia "Ver Anexo Técnico"; L217-232: nueva sección "Anexo Técnico: Infraestructura IAO" |
+| D4 | Eliminar fallback de string search en `has_onboarding` (L359) | ✅ | `v4_proposal_generator.py` L361-366: eliminada línea `'onboarding' in document_content.lower()` |
+| D5 | Vincular confidence score a cada servicio en tabla de propuesta | ✅ | `v4_proposal_generator.py` L1051-1121: columna "Confianza" + CROSS-5 ⚠️ visible para scores < 0.65 |
 
-**Resultado FASE-D**: ⏳ PENDIENTE
+**Resultado FASE-D**: ✅ COMPLETADA (2026-05-26)
 
 ---
 
@@ -61,14 +61,14 @@
 
 | ID | Tarea | Estado | Evidencia |
 |----|-------|--------|-----------|
-| E1 | Unificar umbral AEO a 30 en ambas tablas (L1035 y L1235) | ⏳ | — |
-| E2 | Justificar "cupo limitado" con número ("2 cupos para julio") o eliminar | ⏳ | — |
-| E3 | Reformular garantía hacia tracking propio instalado en Día 7 | ⏳ | — |
-| E4 | Agregar sección placeholder de prueba social en template | ⏳ | — |
-| E5 | Corregir typo "PASSO" → "PASO" (L173 template propuesta) | ⏳ | — |
-| E6 | Hacer que gates NOT_READY bloqueen generación de documentos | ⏳ | — |
+| E1 | Unificar umbral AEO a 30 en ambas tablas (L1035 y L1235) | ✅ | `v4_proposal_generator.py` L1105: `< 20` → `< 30` en `_generate_dynamic_services_table()`; L1313 ya era `< 30` en `_generate_technical_assets_table()` |
+| E2 | Justificar "cupo limitado" con número ("2 cupos para julio") o eliminar | ✅ | `propuesta_v6_template.md` L14: "Válido por 15 días — 2 cupos disponibles para julio 2026" |
+| E3 | Reformular garantía hacia tracking propio instalado en Día 7 | ✅ | `propuesta_v6_template.md` L161: "Instalamos tracking propio en el Día 7 — sin necesidad de que tengas GA4" |
+| E4 | Agregar sección placeholder de prueba social en template | ✅ | `propuesta_v6_template.md` L169-173: sección "🏨 Hoteles que ya confiaron en nosotros" con placeholder de casos de éxito |
+| E5 | Corregir typo "PASSO" → "PASO" (L173 template propuesta) | ✅ | `propuesta_v6_template.md` L170 + `diagnostico_v6_template.md` L193: ambos corregidos; grep confirma 0 residuales en modules/ |
+| E6 | Hacer que gates NOT_READY bloqueen generación de documentos | ✅ | `main.py` L2728-2774: lógica de bloqueo con flag `GATE_BLOCKING_ENABLED`; si NOT_READY elimina docs y escribe `BLOCKED_BY_GATES.md`; `gate_report.json` y `v4_complete_report.json` se generan igual |
 
-**Resultado FASE-E**: ⏳ PENDIENTE
+**Resultado FASE-E**: ✅ COMPLETADA (2026-05-26)
 
 ---
 

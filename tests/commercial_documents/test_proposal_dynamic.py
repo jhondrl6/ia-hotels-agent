@@ -274,12 +274,12 @@ class TestDynamicServicesTableStates:
         assert "SEO Local" in result
 
     def test_shows_preparation_for_low_confidence(self):
-        """Service with confidence < 0.85 shows ⚠️ En preparación."""
+        """Service with confidence < 0.85 shows 'En proceso de activación — Semana 2'."""
         assets = [
             {"asset_type": "optimization_guide", "confidence_score": 0.7},
         ]
         result = self.gen._generate_dynamic_services_table(assets_generated=assets)
-        assert "⚠️ En preparación" in result
+        assert "En proceso de activación — Semana 2" in result
 
     def test_aeo_conditional_appears_when_score_low(self):
         """AEO service appears when score_aeo < 20."""

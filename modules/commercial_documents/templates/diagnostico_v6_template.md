@@ -190,7 +190,7 @@ ${brechas_resumen_section}
 
 ---
 
-## 📎 PRÓXIMO PASSO
+## 📎 PRÓXIMO PASO
 
 **La solución detallada está en:** `02_PROPUESTA_COMERCIAL.md`
 

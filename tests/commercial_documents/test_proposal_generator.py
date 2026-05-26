@@ -276,10 +276,13 @@ class TestFASEPROPDGoogleMapsElimination:
             f"geo_playbook still mapped in PROPOSAL_SERVICE_TO_ASSET: {PROPOSAL_SERVICE_TO_ASSET}"
 
     def test_all_promised_services_has_six_entries(self):
-        """After removing Google Maps, ALL_PROMISED_SERVICES has 6 entries."""
+        """After removing Google Maps, ALL_PROMISED_SERVICES has 8 entries.
+
+        FASE-C added Optimización para IA Generativa as conditional 8th entry.
+        FASE-D root-fix also confirmed the 8-row table layout with Confidence column."""
         from modules.asset_generation.proposal_asset_alignment import ALL_PROMISED_SERVICES
-        assert len(ALL_PROMISED_SERVICES) == 6, \
-            f"Expected 6 promised services, got {len(ALL_PROMISED_SERVICES)}: {ALL_PROMISED_SERVICES}"
+        assert len(ALL_PROMISED_SERVICES) == 8, \
+            f"Expected 8 promised services, got {len(ALL_PROMISED_SERVICES)}: {ALL_PROMISED_SERVICES}"
 
     def test_low_gbp_score_does_not_map_to_geo_playbook(self):
         """Pain low_gbp_score must NOT map to geo_playbook in pain_solution_mapper."""

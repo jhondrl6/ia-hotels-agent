@@ -358,12 +358,10 @@ class V4ProposalGenerator:
                     total_recovery = monthly_gain * 6
                     roi = total_recovery / total_investment if total_investment > 0 else 0.0
 
-            # Check for onboarding plan in pricing_result or document
+            # Check for onboarding plan in pricing_result
             has_onboarding = False
             if pricing_result is not None:
                 has_onboarding = getattr(pricing_result, 'is_onboarding', False)
-            if not has_onboarding:
-                has_onboarding = 'onboarding' in document_content.lower()
 
             validator = CommercialGateValidator()
             commercial_report = validator.validate_proposal(
@@ -1048,10 +1046,10 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
 
         # FASE-2: Iterate over ALL promised services (PROPOSAL_SERVICE_TO_ASSET)
         # plus AEO conditional — always show 8 services with status
-        # FASE-C CROSS-2: 4 columnas
+        # FASE-C CROSS-2: 4 columnas + FASE-D: columna Confianza (5 cols)
         rows = [
-            "| Servicio | Estado | Problema que resuelve | Qué obtiene |",
-            "|----------|--------|----------------------|-------------|",
+            "| Servicio | Estado | Confianza | Problema que resuelve | Qué obtiene |",
+            "|----------|--------|-----------|----------------------|-------------|",
         ]
 
         for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
@@ -1061,9 +1059,10 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             # FASE-C CROSS-4: WhatsApp conflict → override estado
             if asset_type == "whatsapp_button" and whatsapp_conflict:
                 estado = "⚠️ Requiere corrección"
-                brecha_col = "Brecha #5: WhatsApp no coincide | —"
+                confianza_col = "—"
+                brecha_col = "Brecha #5: WhatsApp no coincide"
                 desc = "Guía de corrección incluida"
-                rows.append(f"| **{service_name}** | {estado} | {brecha_col} | {desc} |")
+                rows.append(f"| **{service_name}** | {estado} | {confianza_col} | {brecha_col} | {desc} |")
                 continue
 
             # Determine state with icons
@@ -1072,9 +1071,17 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             elif confidence is not None and confidence >= 0.85:
                 estado = "✅ Alineado"
             elif confidence is not None and confidence < 0.85:
-                estado = "⚠️ En preparación"
+                estado = "En proceso de activación — Semana 2"
             else:
                 estado = "⏳ Pendiente"
+
+            # FASE-D: Confidence score column
+            if confidence is None:
+                confianza_col = "—"
+            elif confidence < 0.65:
+                confianza_col = f"⚠️ {confidence:.0%}"
+            else:
+                confianza_col = f"{confidence:.0%}"
 
             # FASE-C CROSS-2: Breach column
             brecha_info = BREACH_BY_ASSET.get(asset_type)
@@ -1092,10 +1099,10 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             if not desc:
                 desc = "Servicio incluido en su kit"
 
-            rows.append(f"| **{service_name}** | {estado} | {brecha_col} | {desc} |")
+            rows.append(f"| **{service_name}** | {estado} | {confianza_col} | {brecha_col} | {desc} |")
 
-        # FASE-D: AEO conditional service — add if score_aeo < 20
-        if score_aeo is not None and score_aeo < 20:
+        # FASE-E: AEO conditional service — unified threshold with technical assets table
+        if score_aeo is not None and score_aeo < 30:
             aeo_entry = SERVICE_CATALOG.get("optimizacion_ia_generativa")
             if aeo_entry:
                 aeo_asset_type = aeo_entry.asset_type
@@ -1107,11 +1114,19 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 elif confidence is not None and confidence >= 0.85:
                     estado = "✅ Alineado"
                 elif confidence is not None and confidence < 0.85:
-                    estado = "⚠️ En preparación"
+                    estado = "En proceso de activación — Semana 2"
                 else:
                     estado = "⏳ Pendiente"
 
-                rows.append(f"| **{aeo_entry.service_name}** | {estado} | — | {aeo_entry.description} |")
+                # FASE-D: Confidence score for AEO entry
+                if confidence is None:
+                    confianza_col = "—"
+                elif confidence < 0.65:
+                    confianza_col = f"⚠️ {confidence:.0%}"
+                else:
+                    confianza_col = f"{confidence:.0%}"
+
+                rows.append(f"| **{aeo_entry.service_name}** | {estado} | {confianza_col} | — | {aeo_entry.description} |")
 
         return "\n".join(rows)
 
@@ -1164,7 +1179,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             elif confidence is not None and confidence >= 0.85:
                 estado = "✅ Generado"
             elif confidence is not None and confidence < 0.85:
-                estado = "⚠️ En preparación"
+                estado = "En proceso de activación — Semana 2"
             else:
                 estado = "⏳ No generado"
 
@@ -1357,7 +1372,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 # Threshold mínimo: asset generado con calidad aceptable
                 return ("⚠️ Listo para implementar", "Requiere confirmacion post-firma")
             elif confidence >= low_threshold:
-                return ("⚠️ En preparacion", "Datos pendientes del cliente")
+                return ("En proceso de activación — Semana 2", "Datos pendientes del cliente")
             else:
                 return ("🔧 En optimizacion", "Mejora continua de calidad")
         elif assets_generated is None:

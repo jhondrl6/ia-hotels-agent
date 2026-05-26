@@ -11,7 +11,7 @@ valid_until: ${valid_until}
 ## ${hotel_name} - ${hotel_location}
 
 **Fecha**: ${generated_at}  
-**Válido por 15 días** (cupo limitado)
+**Válido por 15 días** — 2 cupos disponibles para julio 2026
 
 ---
 
@@ -152,19 +152,13 @@ ${analytics_section}
 
 El análisis de IAO utiliza APIs de terceros (OpenRouter, Google AI, Perplexity) para evaluar si tu hotel aparece en recomendaciones de ChatGPT, Google AI Overviews y otros sistemas de IA.
 
-| Proveedor | Queries | Costo Aprox. |
-|-----------|---------|---------------|
-| OpenRouter | ${openrouter_queries} | ${openrouter_cost} USD |
-| Gemini | ${gemini_queries} | ${gemini_cost} USD |
-| Perplexity | ${perplexity_queries} | ${perplexity_cost} USD |
-| **Total** | **${total_iao_queries}** | **${total_iao_cost} USD** |
-
-*Este costo es Absorbido por IAH-CLI y no se carga al cliente.*
+*Ver Anexo Técnico: Infraestructura IAO al final del documento.*
 
 ## 🛡️ GARANTÍAS: Protección total para usted
 
 ### 1. Resultados garantizados
 Si en ${guarantee_satisfaction_days} días no ve un aumento del ${guarantee_improvement_percent}% en consultas directas, **le extendemos el servicio 1 mes gratis**. Sin excusas.
+Instalamos tracking propio en el Día 7 — sin necesidad de que tengas GA4.
 
 ### 2. Sin compromiso
 Contrato mes a mes. Si en cualquier momento no quiere continuar, nos avisa con ${guarantee_delivery_days} días. Sin penalizaciones.
@@ -172,9 +166,13 @@ Contrato mes a mes. Si en cualquier momento no quiere continuar, nos avisa con $
 ### 3. Transparencia total
 Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.
 
+### 🏨 Hoteles que ya confiaron en nosotros
+
+> *[Espacio para casos de éxito — hoteles del Eje Cafetero con resultados medibles]*
+
 ---
 
-## 🚀 SIGUIENTE PASSO: Empezar es simple
+## 🚀 SIGUIENTE PASO: Empezar es simple
 
 1. **Aceptar esta propuesta** (firma o mensaje por WhatsApp)
 2. **Nos reunimos 30 minutos** (kickoff)
@@ -214,3 +212,18 @@ Email: contacto@iahoteles.co
 ---
 
 *Propuesta válida por 15 días. Cupo limitado para nuevos clientes por mes.*
+
+---
+
+## 📋 Anexo Técnico: Infraestructura IAO
+
+La siguiente tabla muestra los costos de APIs de terceros utilizadas en el análisis de IAO (Inteligencia Artificial Outside). Estos costos son absorbidos por IAH-CLI y no se cargan al cliente.
+
+|| Proveedor | Queries | Costo Aprox. |
+|-----------|---------|---------------|
+| OpenRouter | ${openrouter_queries} | ${openrouter_cost} USD |
+| Gemini | ${gemini_queries} | ${gemini_cost} USD |
+| Perplexity | ${perplexity_queries} | ${perplexity_cost} USD |
+| **Total** | **${total_iao_queries}** | **${total_iao_cost} USD** |
+
+*Este costo es Absorbido por IAH-CLI y no se carga al cliente.*

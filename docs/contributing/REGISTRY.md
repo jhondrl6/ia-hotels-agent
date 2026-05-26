@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-26
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 292
+> **Total fases completadas:** 294
 
 ---
 
@@ -7260,6 +7260,47 @@ _Ninguno_
 | `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
 | `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
 | `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-C - 2026-05-26
+**Descripcion:** CROSS-2: Mapping brecha-servicio en tabla propuesta (# columna) + CROSS-4: WhatsApp conflict override en _generate_dynamic_services_table
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-E - 2026-05-26
+**Descripcion:** A-2: umbral AEO 30 + V-4/5/6: cupo/garantia/prueba social + A-3: typo PASSO + CROSS-6: gate blocking
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `main.py` | Main |
 
 ### Validaciones
 - [x] Tests passing (0)

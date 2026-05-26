@@ -88,7 +88,7 @@ Sesión 7 → FASE-RELEASE (Documentación)
 | FASE-A | ✅ COMPLETADA | 2026-05-26 | `v4_proposal_generator.py` L796, L797 + CODE-2 gate sync |
 | FASE-B | ✅ COMPLETADA | 2026-05-26 | `v4_diagnostic_generator.py` L1080-1126 + `v4_proposal_generator.py` L894-900 + templates |
 | FASE-C | ✅ COMPLETADA | 2026-05-26 | `v4_proposal_generator.py` L986-1110: BREACH_BY_ASSET dict + columna "Problema que resuelve" + CROSS-4 whatsapp_conflict → "⚠️ Requiere corrección" |
-| FASE-D | ⏳ PENDIENTE | — | — |
-| FASE-E | ⏳ PENDIENTE | — | — |
+| FASE-D | ✅ COMPLETADA | 2026-05-26 | `v4_proposal_generator.py` L1073/1117/1167/1360: 4 labels → "En proceso de activación — Semana 2"; `commercial_gate.py` L85-92: 8 términos nuevos en TECH_JARGON_TERMS; `propuesta_v6_template.md` L151-161: tabla IAO movida a Anexo Técnico; `v4_proposal_generator.py` L361-366: fallback string eliminado de has_onboarding; `v4_proposal_generator.py` L1051-1121: columna Confianza en tabla servicios + CROSS-5 |
+| FASE-E | ✅ COMPLETADA | 2026-05-26 | `v4_proposal_generator.py` L1105: umbral AEO unificado 30; `propuesta_v6_template.md` L14/L160/L170: cupo/garantía/prueba social; `diagnostico_v6_template.md` L193: typo PASSO corregido; `main.py` L2728-2774: CROSS-6 gate blocking |
 | FASE-F | ⏳ PENDIENTE | — | — |
 | FASE-RELEASE | ⏳ PENDIENTE | — | — |
