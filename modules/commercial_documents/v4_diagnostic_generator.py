@@ -2303,7 +2303,7 @@ class V4DiagnosticGenerator:
             if len(b.get('detalle', '')) > 80:
                 detalle_corto += '...'
             recuperacion = self._get_brecha_recuperacion(audit_result, financial_scenarios, i - 1)
-            rows.append(f"| {detalle_corto} | +{recuperacion}/mes |")
+            rows.append(f"| {detalle_corto} | +{recuperacion}/mes (Fuga mensual estimada) |")
         return "\n".join(rows)
 
     def _build_regional_context(self, region: str) -> str:

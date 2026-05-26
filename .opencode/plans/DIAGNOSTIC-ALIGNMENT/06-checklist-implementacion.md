@@ -33,12 +33,12 @@
 
 | ID | Tarea | Estado | Evidencia |
 |----|-------|--------|-----------|
-| C1 | Localizar puntos de inserción | ⬜ | — |
-| C2 | Agregar texto puente 7 brechas → 3 fugas | ⬜ | `diagnostico_v6_template.md` |
-| C3 | Cambiar "+$" → "Fuga mensual estimada" | ⬜ | `v4_diagnostic_generator.py` |
-| C4 | Verificar | ⬜ | `run_all_validations.py --quick` 4/4 |
+| C1 | Localizar puntos de inserción | ✅ | `diagnostico_v6_template.md` L64-74, `v4_diagnostic_generator.py` L2294-2307 |
+| C2 | Agregar texto puente 7 brechas → 3 fugas | ✅ | `diagnostico_v6_template.md` L66-67 |
+| C3 | Cambiar "+$" → "Fuga mensual estimada" | ✅ | `v4_diagnostic_generator.py` L2306 |
+| C4 | Verificar | ✅ | `run_all_validations.py --quick` 5/5 ✅ |
 
-**Resultado FASE-C**: ⬜ PENDIENTE
+**Resultado FASE-C**: ✅ COMPLETADA 2026-05-25
 
 ---
 
@@ -84,8 +84,8 @@
 |------|--------|-------|
 | FASE-A | ✅ COMPLETADA | 2026-05-25 |
 | FASE-B | ✅ COMPLETADA | 2026-05-25 |
-| FASE-C | ⬜ PENDIENTE | — |
+| FASE-C | ✅ COMPLETADA | 2026-05-25 |
 | FASE-D | ⬜ PENDIENTE | — |
 | FASE-RELEASE | ⬜ PENDIENTE | — |
 
-**Progreso**: 2/5 fases completadas
+**Progreso**: 3/5 fases completadas

@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-25
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 287
+> **Total fases completadas:** 288
 
 ---
 
@@ -7131,6 +7131,26 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (12)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-C - 2026-05-25
+**Descripcion:** Fix F3 (puente 7 brechas → 3 fugas) + F4 (encabezado Fuga mensual estimada)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
