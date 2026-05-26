@@ -139,6 +139,18 @@ ${manual_attention_table}
 
 ${scenario_table_rows}
 
+### 💰 Lo que está en juego
+
+| | Fuga total estimada (6 meses) | Recuperación proyectada (6 meses) |
+|---|---|---|
+| **Monto** | ${fuga_total_6m} | ${recuperacion_proyectada_6m} |
+| **Explicación** | Fuga bruta detectada en las 3 fugas digitales | Con pain_ratio ${pain_pct}% × recovery ${recov_pct}% |
+
+> **¿Por qué la diferencia?** No toda la fuga digital es recuperable a corto plazo.
+> El **${pain_pct}%** de esta fuga es prioritaria y directamente remediable con nuestros servicios.
+> De ese porcentaje, proyectamos recuperar un **${recov_pct}%** en los primeros 6 meses.
+> Esto es conservador: a medida que los activos digitales maduran, el porcentaje de recuperación crece.
+
 **Proyección 6 meses:** ${loss_6_months}
 
 > ⚠️ ${financial_disclaimer}

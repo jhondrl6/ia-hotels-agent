@@ -1068,6 +1068,27 @@ class V4DiagnosticGenerator:
             "> + datos limitados de la web. Para precisión, ejecute onboarding con datos reales.\n"
         ) if tier == "C" else ""
 
+        # PROPUESTA-COMERCIAL FASE-B: Puente dual fuga bruta / recuperación efectiva
+        # Carga pain_ratio y recovery_factor desde scenarios.yaml (defaults conservadores)
+        # La propuesta usa el pain_ratio real del pricing; el diagnóstico usa defaults
+        # para comunicar el concepto con estimaciones conservadoras iniciales.
+        try:
+            scenario_config_diag = load_yaml_config('scenarios')
+            pain_ratio_diag = scenario_config_diag.get('pain_ratio_default', 0.20)
+            recovery_diag = scenario_config_diag.get('recovery_factors', {}).get('realistic', 0.20)
+        except Exception:
+            pain_ratio_diag = 0.20
+            recovery_diag = 0.20
+
+        raw_monthly_loss_diag = base_value  # fuga bruta mensual (monthly_loss_central)
+        effective_monthly_gain_diag = int(raw_monthly_loss_diag * pain_ratio_diag * recovery_diag)
+
+        # 4 placeholders para el puente dual
+        fuga_total_6m = format_cop(raw_monthly_loss_diag * 6)
+        recuperacion_proyectada_6m = format_cop(effective_monthly_gain_diag * 6)
+        pain_pct = int(pain_ratio_diag * 100)
+        recov_pct = int(recovery_diag * 100)
+
         return {
             # FASE-B: Campos principales — costo de oportunidad (escenario)
             'opportunity_cost_formatted': opportunity_cost_formatted,
@@ -1097,6 +1118,12 @@ class V4DiagnosticGenerator:
             'financial_tier_banner': financial_tier_banner,
             # Backward compatibility
             'loss_6_months': format_cop(base_value * 6),
+            # PROPUESTA-COMERCIAL FASE-B: Puente dual — defaults conservadores (20%/20%)
+            # La propuesta usa el pain_ratio real del pricing; el diagnóstico usa estos defaults.
+            'fuga_total_6m': fuga_total_6m,
+            'recuperacion_proyectada_6m': recuperacion_proyectada_6m,
+            'pain_pct': pain_pct,
+            'recov_pct': recov_pct,
         }
 
     # FIN-3: Precision-based financial template variables

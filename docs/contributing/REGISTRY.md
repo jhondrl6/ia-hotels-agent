@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-25
+> **Ultima actualizacion:** 2026-05-26
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 291
+> **Total fases completadas:** 292
 
 ---
 
@@ -7221,6 +7221,48 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (55/55)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-A - 2026-05-26
+**Descripcion:** CODE-1/3/4: Unificar recovered_6m, net_benefit_6m a effective_monthly_gain + CODE-2: sincronizar gate CG-ROI-NEGATIVE
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/quality_gates/commercial_gate.py` | Commercial Gate |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-B - 2026-05-26
+**Descripcion:** CROSS-1: Puente dual fuga bruta/recuperación efectiva en diagnóstico + propuesta (Opción C)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
