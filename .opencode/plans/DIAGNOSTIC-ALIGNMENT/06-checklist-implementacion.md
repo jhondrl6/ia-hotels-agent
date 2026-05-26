@@ -44,24 +44,24 @@
 
 ## FASE-D: v4complete + Verificación
 
-| ID | Tarea | Estado | Evidencia |
-|----|-------|--------|-----------|
-| D1 | Pre-vuelo: verificar fixes en su lugar | ⬜ | — |
-| D2 | Ejecutar v4complete Hotel Castilla Real | ⬜ | `output/v4_complete/` |
-| D3 | Verificar 6 criterios Prospección.md | ⬜ | `evidence/fase-D/` |
+|| ID | Tarea | Estado | Evidencia |
+||----|-------|--------|-----------|
+|| D1 | Pre-vuelo: verificar fixes en su lugar | ✅ | `v4_diagnostic_generator.py` (L934, L1241, L1595, L2306), `diagnostico_v6_template.md` (L30, L66, L177) |
+|| D2 | Ejecutar v4complete Hotel Castilla Real | ✅ | `output/v4_complete/01_DIAGNOSTICO_*.md` (2026-05-25 19:12) |
+|| D3 | Verificar 6 criterios Prospección.md | ✅ | `evidence/fase-D/` + `v4_complete_report.json` (coherence 0.826) |
 
 **Criterios de verificación**:
 
-| # | Criterio | Estado |
-|---|----------|--------|
-| E1 | Conservador ($2.99M) < Realista ($3.74M) < Optimista ($4.49M) | ⬜ |
-| E2 | Tabla "Antes vs Ahora" en Sección 1 | ⬜ |
-| F1 | Quick Wins: "HOY", "ESTA SEMANA", "DELEGAR" | ⬜ |
-| F2 | "OPORTUNIDAD DE AUDITORÍA PROFUNDA" en Sección 3 | ⬜ |
-| F3 | "De las 7 brechas..." en Sección 4 | ⬜ |
-| F4 | "Fuga mensual estimada" en tabla resumen | ⬜ |
+|| # | Criterio | Estado |
+||---|----------|--------|
+|| E1 | Conservador ($2.99M) < Realista ($3.74M) < Optimista ($4.49M) | ✅ |
+|| E2 | Tabla "Antes vs Ahora" en Sección 1 | ✅ |
+|| F1 | Quick Wins: "HOY", "ESTA SEMANA", "DELEGAR" | ✅ |
+|| F2 | "OPORTUNIDAD DE AUDITORÍA PROFUNDA" en Sección 3 | ✅ |
+|| F3 | "De las 7 brechas..." en Sección 4 | ✅ |
+|| F4 | "Fuga mensual estimada" en tabla resumen | ✅ |
 
-**Resultado FASE-D**: ⬜ PENDIENTE
+**Resultado FASE-D**: ✅ COMPLETADA 2026-05-25
 
 ---
 
@@ -85,7 +85,7 @@
 | FASE-A | ✅ COMPLETADA | 2026-05-25 |
 | FASE-B | ✅ COMPLETADA | 2026-05-25 |
 | FASE-C | ✅ COMPLETADA | 2026-05-25 |
-| FASE-D | ⬜ PENDIENTE | — |
+| FASE-D | ✅ COMPLETADA | 2026-05-25 |
 | FASE-RELEASE | ⬜ PENDIENTE | — |
 
-**Progreso**: 3/5 fases completadas
+**Progreso**: 4/5 fases completadas

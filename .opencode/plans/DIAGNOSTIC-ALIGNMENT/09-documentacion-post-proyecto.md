@@ -37,7 +37,7 @@
 ||---------|-------|------|
 || Tests base | 2743 funciones, 211 archivos | Pre-plan |
 || Coherence Score (pre-fix) | 0.826 (Hotel Castilla Real) | Pre-plan |
-|| Coherence Score (post-fix) | — | FASE-D |
+|| Coherence Score (post-fix) | 0.826 (Hotel Castilla Real) | FASE-D |
 || Criterios Prospección.md satisfechos | E1 ✅, E2 ✅ / 6 | FASE-A |
 || Tests FASE-A | 12/12 passed (test_fase_f_financial_placeholders.py) | FASE-A |
 | Tests calculator_v2 | 30/30 passed | FASE-A |
@@ -46,17 +46,23 @@
 | Validaciones rápidas | 5/5 ✅ | FASE-B |
 | Validaciones rápidas | 5/5 ✅ | FASE-C |
 
+| Criterios E1-E2, F1-F4 | 6/6 ✅ (Hotel Castilla Real, 2026-05-25) | FASE-D |
+| v4complete coherence | 0.826 ≥ 0.80 ✅ | FASE-D |
+| evidence/fase-D/ | Generado (24 archivos) | FASE-D |
+| log_phase_completion | Ejecutado ✅ | FASE-D |
+
 ---
 
 ## Sección E: Archivos Afiliados Actualizados
 
-|| Archivo | Cambio | Fase |
-||---------|--------|------|
-| `v4_diagnostic_generator.py` | `_build_scenario_table_rows`: usa financial_value_range, elimina clamp | FASE-A |
-| `diagnostico_v6_template.md` | Tabla "Antes vs Ahora" en Sección 1 | FASE-A |
-| `dependencias-fases.md` | Columna Estado añadida, FASE-A marcada ✅ | FASE-A |
-| `06-checklist-implementacion.md` | A1-A4 ✅ completados, progreso 1/5 | FASE-A |
-| `09-documentacion-post-proyecto.md` | Sección D: métricas FASE-A añadidas | FASE-A |
+||| Archivo | Cambio | Fase |
+|||---------|--------|------|
+||| `v4_diagnostic_generator.py` | `_build_scenario_table_rows`: usa financial_value_range, elimina clamp | FASE-A |
+||| `diagnostico_v6_template.md` | Tabla "Antes vs Ahora" en Sección 1 | FASE-A |
+||| `dependencias-fases.md` | Columna Estado añadida, FASE-A/B/C ✅, FASE-D ✅ | FASE-A/C |
+||| `06-checklist-implementacion.md` | Progreso 4/5 (FASE-D ✅) | FASE-D |
+||| `09-documentacion-post-proyecto.md` | Sección D: métricas FASE-D añadidas | FASE-D |
+||| `evidence/fase-D/` | Evidencia de v4complete preservada | FASE-D |
 | `VERSION.yaml` | 4.51.1 → 4.52.0 | FASE-RELEASE |
 | `CHANGELOG.md` | Entrada [4.52.0] | FASE-RELEASE |
 | `GUIA_TECNICA.md` | Notas técnicas por fase | FASE-RELEASE |

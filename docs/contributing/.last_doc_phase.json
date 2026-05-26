@@ -1,6 +1,6 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-0H-G8",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-B",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-C",
   "modules/commercial_documents/v4_proposal_generator.py": "FASE-0D-PROPOSAL-ASSET",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-PROP-D",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
@@ -26,7 +26,7 @@
   "main.py": "N8-B",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "FASE-TRAZABILIDAD-RAIZ",
-  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-A",
+  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-C",
   "data_models/__init__.py": "FASE-IAO-06",
   "v4_proposal_generator.py": "FASE-G",
   "propuesta_v6_template.md": "ANALYTICS-02",
@@ -169,5 +169,7 @@
   "evidence/fase-B/analysis.md": "FASE-B",
   "modules/assessment_builder.py": "N8-B",
   "tests/test_assessment_builder.py": "N8-B",
-  "docs/contributing/procedures.md": "FASE-CMD-B"
+  "docs/contributing/procedures.md": "FASE-CMD-B",
+  "output/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260525_191213.md": "FASE-D",
+  "output/v4_complete/02_PROPUESTA_COMERCIAL_20260525_191224.md": "FASE-D"
 }
