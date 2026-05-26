@@ -190,7 +190,7 @@ class V4ProposalGenerator:
         },
         "LCP_ok": {
             "impacto": "53% abandono si >3 segundos (mobile)",
-            "monetizacion": "Perdida de reservas moviles",
+            "monetizacion": "Pérdida de reservas moviles",
             "asset": None,  # Guia optimizacion LCP
         },
         "CLS_ok": {

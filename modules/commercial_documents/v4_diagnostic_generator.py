@@ -963,9 +963,9 @@ class V4DiagnosticGenerator:
         assert real_val >= cons_val, f"Bug: realista ({real_val}) < conservador ({cons_val})"
 
         for name, value, prob in [
-            ("Conservador", cons_val, scenarios.conservative.probability),
-            ("Realista", real_val, scenarios.realistic.probability),
-            ("Optimista", opt_val, scenarios.optimistic.probability),
+            ("Mínimo garantizable", cons_val, scenarios.conservative.probability),
+            ("Más probable", real_val, scenarios.realistic.probability),
+            ("Máximo alcanzable", opt_val, scenarios.optimistic.probability),
         ]:
             prob_pct = int(prob * 100)
             if value == 0:
@@ -1633,7 +1633,7 @@ class V4DiagnosticGenerator:
         # GBP optimization — additional photo push
         if audit_result.gbp and audit_result.gbp.photos < 20:
             wins.append(
-                f"{win_number}. **DELEGAR A IA HOTELES AGENT: Configurar Schema de Hotel + FAQ en su web.** "
+                f"{win_number}. **DELEGAR A IA HOTELES AGENT: Hacer que Google muestre sus preguntas frecuentes y datos del hotel en los resultados de búsqueda.** "
                 f"→ Técnica clave que aumenta visibilidad en búsquedas de IA."
             )
             win_number += 1
@@ -2751,7 +2751,7 @@ class V4DiagnosticGenerator:
             'no_hotel_schema': {
                 'nombre': 'Sin Schema de Hotel (Invisible para IA)',
                 'impacto': pain_narratives.get('no_hotel_schema', 0.25),
-                'detalle': 'ChatGPT, Gemini y Perplexity no pueden "leer" su hotel. Perdida absoluta de reservas de IA.'
+                'detalle': 'ChatGPT, Gemini y Perplexity no pueden "leer" su hotel. Pérdida absoluta de reservas de IA.'
             },
             'low_gbp_score': {
                 'nombre': 'Visibilidad Local (Google Maps)',

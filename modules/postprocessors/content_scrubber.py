@@ -50,7 +50,6 @@ PT_TO_ES = {
 EN_TO_ES = {
     "guests": "huéspedes",
     "guest": "huésped",
-    "booking": "reserva",
     "checkin": "check-in",
     "checkout": "check-out",
     "amenities": "servicios",
@@ -58,6 +57,8 @@ EN_TO_ES = {
     "reservations": "reservaciones",
     "availability": "disponibilidad",
     "staff": "personal",
+    # NOTE: "booking" intentionally excluded — Booking is a brand name, not a generic English word
+    # in Spanish hotel marketing contexts, "Booking" is the recognized platform name
 }
 
 # Confidence replacement text
