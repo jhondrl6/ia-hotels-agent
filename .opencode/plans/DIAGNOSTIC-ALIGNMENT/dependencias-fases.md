@@ -39,7 +39,7 @@
 | **FASE-B** | — (inicio) | `v4_diagnostic_generator.py` (L672, F1), `config/commercial.yaml` (F1), `_prepare_financial_template_vars` (F2) | Independiente de A | ✅ Completada 2026-05-25 |
 || **FASE-C** | — (inicio) | `diagnostico_v6_template.md` (L58-68, F3), `v4_diagnostic_generator.py` (_build_brechas_resumen_section, F4) | Independiente de A y B | ✅ Completada 2026-05-25 |
 | **FASE-D** | FASE-A ✅, FASE-B ✅, FASE-C ✅ | — (solo ejecuta v4complete) | Requiere las 3 fases previas completadas | ✅ Completada 2026-05-25 |
-| **FASE-RELEASE** | FASE-D ✅ | `VERSION.yaml`, `CHANGELOG.md`, `GUIA_TECNICA.md`, `REGISTRY.md` | Solo documentación | ⬜ PENDIENTE |
+| **FASE-RELEASE** | FASE-D ✅ | `VERSION.yaml`, `CHANGELOG.md`, `GUIA_TECNICA.md`, `REGISTRY.md` | Solo documentación | ✅ Completada 2026-05-25 |
 
 ## Conflictos entre Fases
 

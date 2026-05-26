@@ -63,11 +63,14 @@
 ||| `06-checklist-implementacion.md` | Progreso 4/5 (FASE-D ✅) | FASE-D |
 ||| `09-documentacion-post-proyecto.md` | Sección D: métricas FASE-D añadidas | FASE-D |
 ||| `evidence/fase-D/` | Evidencia de v4complete preservada | FASE-D |
-| `VERSION.yaml` | 4.51.1 → 4.52.0 | FASE-RELEASE |
-| `CHANGELOG.md` | Entrada [4.52.0] | FASE-RELEASE |
-| `GUIA_TECNICA.md` | Notas técnicas por fase | FASE-RELEASE |
-| `REGISTRY.md` | Registro de fases A, B, C, D, RELEASE | FASE-RELEASE |
-| `AGENTS.md` | Sync de versión | FASE-RELEASE |
-| `README.md` | Sync de versión | FASE-RELEASE |
-| `.cursorrules` | Sync de versión | FASE-RELEASE |
-| `CONTRIBUTING.md` | Sync de versión | FASE-RELEASE |
+| `VERSION.yaml` | 4.51.1 → 4.52.0 (DIAGNOSTIC-ALIGNMENT, 2026-05-25) | FASE-RELEASE | ✅ |
+| `CHANGELOG.md` | Entrada [4.52.0] con 6 fixes (E1/E2/F1/F2/F3/F4) | FASE-RELEASE | ✅ |
+| `GUIA_TECNICA.md` | Sin cambios arquitectónicos (log_phase_completion verificado) | FASE-RELEASE | ✅ |
+| `REGISTRY.md` | FASE-RELEASE registrada (log_phase_completion.py) | FASE-RELEASE | ✅ |
+| `AGENTS.md` | Sync de versión via sync_versions.py | FASE-RELEASE | ✅ |
+| `README.md` | Sync de versión via sync_versions.py | FASE-RELEASE | ✅ |
+| `.cursorrules` | Sync de versión via sync_versions.py | FASE-RELEASE | ✅ |
+| `CONTRIBUTING.md` | Sync de versión via sync_versions.py | FASE-RELEASE | ✅ |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | Regenerado via doctor.py --regenerate-domain-primer | FASE-RELEASE | ✅ |
+| `06-checklist-implementacion.md` | FASE-RELEASE ✅, 5/5 completadas | FASE-RELEASE | ✅ |
+| `dependencias-fases.md` | FASE-RELEASE ✅ Completada 2026-05-25 | FASE-RELEASE | ✅ |

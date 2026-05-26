@@ -1,9 +1,15 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.51.1"
-codename: "ASSESSMENT-BUILDER"
+version: "4.52.0"
+codename: "DIAGNOSTIC-ALIGNMENT"
 release_date: "2026-05-25"
 plan_maestro_version: "v2.6.0"
+
+# v4.52.0 - DIAGNOSTIC-ALIGNMENT (2026-05-25)
+# FASE-A: Fix E1 (tabla escenarios → financial_value_range) + E2 (tabla Antes/Ahora)
+# FASE-B: Fix F1 (Quick Wins lenguaje dueño) + F2 (Disclaimer → Oportunidad Auditoría)
+# FASE-C: Fix F3 (puente 7 brechas → 3 fugas) + F4 (encabezado Fuga mensual estimada)
+# FASE-D: v4complete Hotel Castilla Real verificado 6/6 criterios Prospección.md
 
 # v4.51.1 - COPYWRITING-REFACTOR (2026-05-25)
 # COPY-A: Templates V6 reestructurados — vista gerencia primero, anexo técnico después

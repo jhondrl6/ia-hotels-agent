@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.51.1 -- ASSESSMENT-BUILDER COMPLETADO**
+> **v4.52.0 -- DIAGNOSTIC-ALIGNMENT COMPLETADO**
 
 ---
 

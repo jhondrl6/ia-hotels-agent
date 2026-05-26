@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.51.1 | **Codename**: ASSESSMENT-BUILDER
-> **Release date**: 2026-05-25 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.52.0 | **Codename**: DIAGNOSTIC-ALIGNMENT
+> **Release date**: 2026-05-26 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-05-25 | v4.51.1 ASSESSMENT-BUILDER*
+*Auto-generado: 2026-05-26 | v4.52.0 DIAGNOSTIC-ALIGNMENT*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

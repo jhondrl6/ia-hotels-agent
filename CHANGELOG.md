@@ -1,5 +1,28 @@
 # Changelog
 
+## [4.52.0] - DIAGNOSTIC-ALIGNMENT — 2026-05-25
+
+### Objetivo
+Alinear el diagnóstico comercial generado por v4complete con criterios de prospección B2B hotelera.
+
+### Cambios Implementados
+- E1: Tabla de escenarios usa financial_value_range (Conservador < Realista < Optimista)
+- E2: Recuperada tabla "Antes (2023) vs Ahora (2026)" en Sección 1
+- F1: Quick Wins reformulados en lenguaje de dueño + delegación
+- F2: Disclaimer Tier C convertido en "Oportunidad de Auditoría Profunda"
+- F3: Texto puente "7 brechas → 3 fugas" en Sección 4
+- F4: Encabezado "Fuga mensual estimada" en tabla resumen
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | _build_scenario_table_rows, _build_quick_wins, _prepare_financial_template_vars, _build_brechas_resumen_section |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Tabla Antes/Ahora, texto puente |
+
+### Tests
+- 2743 funciones base sin regresiones
+- v4complete Hotel Castilla Real verificado 6/6 criterios Prospección.md
+
 ## [4.51.1] - COPYWRITING-REFACTOR — 2026-05-25
 
 ### Objetivo

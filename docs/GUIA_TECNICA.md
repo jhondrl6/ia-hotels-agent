@@ -1,6 +1,6 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.51.1 (ASSESSMENT-BUILDER)
+**Versión:** v4.52.0 (DIAGNOSTIC-ALIGNMENT)
 **Última actualización:** 2026-05-25
 
 ---
