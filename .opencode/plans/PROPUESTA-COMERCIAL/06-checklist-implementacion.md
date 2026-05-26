@@ -32,14 +32,14 @@
 
 ## FASE-C: CROSS-2 + CROSS-4 — Mapping brecha→servicio + WhatsApp
 
-| ID | Tarea | Estado | Evidencia |
-|----|-------|--------|-----------|
-| C1 | Agregar columna "Su problema (Brecha #N)" a tabla de servicios en propuesta | ⏳ | — |
-| C2 | Vincular cada servicio a su brecha del diagnóstico con costo asociado | ⏳ | — |
-| C3 | Corregir "Botón de WhatsApp \| Presente en sitio" → "⚠️ Requiere corrección" | ⏳ | — |
-| C4 | Verificar que la tabla de servicios no se rompe con las nuevas columnas | ⏳ | — |
+|| ID | Tarea | Estado | Evidencia |
+||----|-------|--------|-----------|
+|| C1 | Agregar columna "Su problema (Brecha #N)" a tabla de servicios en propuesta | ✅ | `v4_proposal_generator.py` L1043: header 4 columnas + BREACH_BY_ASSET dict (L1013-1022) |
+|| C2 | Vincular cada servicio a su brecha del diagnóstico con costo asociado | ✅ | `v4_proposal_generator.py` L1067-1072: `brecha_col = f"Brecha #N: Nombre ($X/mes)"` |
+|| C3 | Corregir "Botón de WhatsApp | Presente en sitio" → "⚠️ Requiere corrección" | ✅ | `v4_proposal_generator.py` L1053-1058: `whatsapp_conflict=True` → override + "Guía de corrección incluida"; `_prepare_template_data` L718-725: extracción `whatsapp_status == CONFLICT` |
+|| C4 | Verificar que la tabla de servicios no se rompe con las nuevas columnas | ✅ | `py_compile` OK; tabla 4 columnas con separadores `|----------|--------|----------------------|-------------|` |
 
-**Resultado FASE-C**: ⏳ PENDIENTE
+**Resultado FASE-C**: ✅ COMPLETADA (2026-05-26)
 
 ---
 

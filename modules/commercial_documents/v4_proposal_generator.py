@@ -712,7 +712,15 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
                             "Se entregue manual dentro de las 24 horas siguientes."
                         )
                         break
-        
+
+        # FASE-CROSS-4: Extract WhatsApp conflict status from audit_result
+        # (used by both dynamic_services_table and asset_quality_table)
+        whatsapp_conflict = False
+        if audit_result and hasattr(audit_result, 'validation') and audit_result.validation:
+            whatsapp_status = getattr(audit_result.validation, 'whatsapp_status', '')
+            if whatsapp_status and whatsapp_status.lower() == ConfidenceLevel.CONFLICT.value:
+                whatsapp_conflict = True
+
         data = {
             # Metadata
             'generated_at': generated_at.strftime("%Y-%m-%d %H:%M:%S"),
@@ -872,6 +880,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             score_aeo=diagnostic_summary.score_aeo,
             assets_generated=assets_generated,
             site_presence_report=site_presence_report,
+            whatsapp_conflict=whatsapp_conflict,  # FASE-C CROSS-4
         ),
         'asset_quality_table': self._generate_asset_quality_table(
             assets_generated,
@@ -983,6 +992,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         score_aeo: Optional[int] = None,
         assets_generated: Optional[List[Dict[str, Any]]] = None,
         site_presence_report: Optional[Any] = None,
+        whatsapp_conflict: bool = False,  # FASE-C CROSS-4: muestra conflicto
     ) -> str:
         """Genera tabla principal de servicios mostrando TODOS los servicios prometidos.
 
@@ -990,16 +1000,35 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         con sus estados reales (aligned, missing, present_in_production), en vez de
         filtrar dinámicamente por assets generados o pains detectados.
 
+        FASE-C CROSS-2: Columna adicional 'Problema que resuelve' conecta cada servicio
+        con la brecha del diagnóstico que resuelve.
+
         Args:
             detected_pain_ids: LEGACY — ya no se usa para filtrar (backwards compat).
             score_aeo: Score AEO 0-100. Si < 20, agrega servicio AEO adicional.
             assets_generated: Lista de assets generados (cada uno con 'asset_type',
                 'confidence_score'). Usado para determinar estado de cada servicio.
             site_presence_report: SitePresenceReport para determinar present_in_production.
+            whatsapp_conflict: Si True, el botón de WhatsApp muestra '⚠️ Requiere
+                corrección' en lugar de 'ℹ️ Presente en sitio'.
 
         Returns:
             String markdown con la tabla de servicios (8 filas + header).
         """
+        # FASE-C CROSS-2: Mapping asset_type → brecha que resuelve (auditada)
+        # Formato: (brecha_num, brecha_nombre, brecha_costo_mensual)
+        # whatsapp_button → None porque CROSS-4 lo maneja con whatsapp_conflict
+        BREACH_BY_ASSET = {
+            "optimization_guide":  ("#1", "Sin Schema Hotel",       "$1,005,768"),
+            "whatsapp_button":     None,   # CROSS-4: manejado con whatsapp_conflict
+            "hotel_schema":        ("#1", "Sin Schema Hotel",       "$1,005,768"),
+            "org_schema":          ("#7", "Sin Schema Org",         "$321,786"),
+            "monthly_report":      ("#4", "Sin FAQ",               "$482,679"),
+            "faq_page":            ("#4", "Sin FAQ",               "$482,679"),
+            "open_graph":          ("#6", "Sin OG Tags",           "$321,786"),
+            "llms_txt":            ("#3", "Baja prep. IA",         "$603,536"),
+            "local_content_page":  ("#3", "Baja prep. IA",         "$603,536"),
+        }
         # FASE-2: Build lookups for state determination
         asset_lookup = {}
         if assets_generated:
@@ -1019,11 +1048,23 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
 
         # FASE-2: Iterate over ALL promised services (PROPOSAL_SERVICE_TO_ASSET)
         # plus AEO conditional — always show 8 services with status
-        rows = ["| Servicio | Estado | Qué obtiene |", "|----------|--------|-------------|"]
+        # FASE-C CROSS-2: 4 columnas
+        rows = [
+            "| Servicio | Estado | Problema que resuelve | Qué obtiene |",
+            "|----------|--------|----------------------|-------------|",
+        ]
 
         for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
             confidence = asset_lookup.get(asset_type)
             presence = presence_lookup.get(asset_type, {})
+
+            # FASE-C CROSS-4: WhatsApp conflict → override estado
+            if asset_type == "whatsapp_button" and whatsapp_conflict:
+                estado = "⚠️ Requiere corrección"
+                brecha_col = "Brecha #5: WhatsApp no coincide | —"
+                desc = "Guía de corrección incluida"
+                rows.append(f"| **{service_name}** | {estado} | {brecha_col} | {desc} |")
+                continue
 
             # Determine state with icons
             if presence.get('presence_verified') and presence.get('present_in_production'):
@@ -1035,6 +1076,13 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             else:
                 estado = "⏳ Pendiente"
 
+            # FASE-C CROSS-2: Breach column
+            brecha_info = BREACH_BY_ASSET.get(asset_type)
+            if brecha_info:
+                brecha_col = f"{brecha_info[0]}: {brecha_info[1]} ({brecha_info[2]}/mes)"
+            else:
+                brecha_col = "—"
+
             # Get description from SERVICE_CATALOG or fallback
             desc = ""
             for entry in SERVICE_CATALOG.values():
@@ -1044,7 +1092,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             if not desc:
                 desc = "Servicio incluido en su kit"
 
-            rows.append(f"| **{service_name}** | {estado} | {desc} |")
+            rows.append(f"| **{service_name}** | {estado} | {brecha_col} | {desc} |")
 
         # FASE-D: AEO conditional service — add if score_aeo < 20
         if score_aeo is not None and score_aeo < 20:
@@ -1063,7 +1111,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 else:
                     estado = "⏳ Pendiente"
 
-                rows.append(f"| **{aeo_entry.service_name}** | {estado} | {aeo_entry.description} |")
+                rows.append(f"| **{aeo_entry.service_name}** | {estado} | — | {aeo_entry.description} |")
 
         return "\n".join(rows)
 

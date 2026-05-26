@@ -87,7 +87,7 @@ Sesión 7 → FASE-RELEASE (Documentación)
 |------|--------|-------|-----------|
 | FASE-A | ✅ COMPLETADA | 2026-05-26 | `v4_proposal_generator.py` L796, L797 + CODE-2 gate sync |
 | FASE-B | ✅ COMPLETADA | 2026-05-26 | `v4_diagnostic_generator.py` L1080-1126 + `v4_proposal_generator.py` L894-900 + templates |
-| FASE-C | ⏳ PENDIENTE | — | — |
+| FASE-C | ✅ COMPLETADA | 2026-05-26 | `v4_proposal_generator.py` L986-1110: BREACH_BY_ASSET dict + columna "Problema que resuelve" + CROSS-4 whatsapp_conflict → "⚠️ Requiere corrección" |
 | FASE-D | ⏳ PENDIENTE | — | — |
 | FASE-E | ⏳ PENDIENTE | — | — |
 | FASE-F | ⏳ PENDIENTE | — | — |
