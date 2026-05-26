@@ -1,5 +1,51 @@
 # Changelog
 
+## [4.53.0] — PROPUESTA-COMERCIAL (2026-05-26)
+
+### Objetivo
+Cierre del proyecto PROPUESTA-COMERCIAL: 14 hallazgos corregidos en 5 fases de implementación.
+
+### Arreglado
+- **BREAKING**: Unificadas todas las variables financieras del template de propuesta sobre `effective_monthly_gain` (CODE-1/3/4)
+- Gate CG-ROI-NEGATIVE sincronizado con tabla ROI (CODE-2)
+- Puente dual fuga bruta/recuperación efectiva en diagnóstico y propuesta (CROSS-1)
+- Mapping brecha→servicio con trazabilidad en tabla de propuesta (CROSS-2)
+- Indicador de WhatsApp refleja conflicto real detectado (CROSS-4)
+- Labels de estado unificados: "⚠️ En preparación" → "En proceso de activación — Semana 2" (V-2)
+- Gate CG-TECH-JARGON expandido con 8 nuevos términos (V-3)
+- Tabla de costos IAO movida a anexo técnico (V-3)
+- Eliminado fallback frágil de búsqueda de string en `has_onboarding` (A-1)
+- Confidence score visible en tabla de servicios de propuesta (CROSS-5)
+- Umbral AEO unificado a 30 en ambas tablas (A-2)
+- Cupo limitado justificado con número (V-4)
+- Garantía incluye mecanismo de tracking propio Día 7 (V-5)
+- Placeholder de prueba social agregado al template (V-6)
+- Typo "PASSO" → "PASO" corregido (A-3)
+- Gates NOT_READY ahora bloquean generación de documentos cliente (CROSS-6)
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | CODE-1/3/4, CROSS-1/2/4/5, V-2/3/4/5/6, A-1/2/3 |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | CROSS-1 |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Variables financieras, tabla dinámica, labels |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | CROSS-1 |
+| `modules/commercial_documents/commercial_gate.py` | CODE-2, V-3, A-1 |
+| `modules/commercial_documents/publication_gates.py` | CROSS-6 |
+
+### Fases
+| Fase | Hallazgo | Descripción |
+|------|----------|-------------|
+| FASE-A | CODE-1/3/4+CODE-2 | Unificación financiera + gate sync |
+| FASE-B | CROSS-1 | Puente dual fuga bruta/recuperación efectiva |
+| FASE-C | CROSS-2+4 | Mapping brecha→servicio + WhatsApp conflict |
+| FASE-D | V-2+V-3+A-1+CROSS-5 | Labels, jargon, onboarding, confidence |
+| FASE-E | A-2+V-4/5/6+A-3+CROSS-6 | AEO, paquete, typo, gate blocking |
+
+### Tests
+- log_phase_completion.py ejecutado para FASE-A a FASE-E
+- sync_versions.py ejecutado → v4.53.0
+
 ## [4.52.0] - DIAGNOSTIC-ALIGNMENT — 2026-05-25
 
 ### Objetivo

@@ -86,11 +86,11 @@
 
 ## FASE-RELEASE: Documentación
 
-| ID | Tarea | Estado | Evidencia |
-|----|-------|--------|-----------|
-| R1 | `log_phase_completion.py` para TODAS las fases A-F | ⏳ | — |
-| R2 | `sync_versions.py` — version bump a v4.53.0 | ⏳ | — |
-| R3 | Actualizar CHANGELOG.md con resumen PROPUESTA-COMERCIAL | ⏳ | — |
-| R4 | Actualizar GUIA_TECNICA.md si hubo cambios de API/pipeline | ⏳ | — |
+|| ID | Tarea | Estado | Evidencia |
+||----|-------|--------|-----------|
+|| R1 | `log_phase_completion.py` para TODAS las fases A-F | ✅ | FASE-A-E registradas; FASE-F sin log (es ejecución) |
+|| R2 | `sync_versions.py` — version bump a v4.53.0 | ✅ | VERSION.yaml → 4.53.0, AGENTS.md + README.md sincronizados |
+|| R3 | Actualizar CHANGELOG.md con resumen PROPUESTA-COMERCIAL | ✅ | Entrada [4.53.0] — PROPUESTA-COMERCIAL (2026-05-26) al inicio |
+|| R4 | Actualizar GUIA_TECNICA.md si hubo cambios de API/pipeline | ✅ | Nota v4.53.0 añadida con CROSS-6 como cambio de comportamiento |
 
-**Resultado FASE-RELEASE**: ⏳ PENDIENTE
+**Resultado FASE-RELEASE**: ✅ COMPLETADA (2026-05-26)

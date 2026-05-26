@@ -1,7 +1,47 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.52.0 (DIAGNOSTIC-ALIGNMENT)
-**Última actualización:** 2026-05-25
+**Versión:** v4.53.0 (PROPUESTA-COMERCIAL)
+**Última actualización:** 2026-05-26
+
+---
+
+### Notas de Cambios v4.53.0 — PROPUESTA-COMERCIAL
+
+**Fecha:** 2026-05-26
+
+**Descripción:** Cierre del proyecto PROPUESTA-COMERCIAL. 14 hallazgos corregidos en 5 fases de implementación.
+
+**Módulos afectados:**
+- `modules/commercial_documents/v4_proposal_generator.py` — CODE-1/3/4, CROSS-1/2/4/5, V-2/3/4/5/6, A-1/2/3
+- `modules/commercial_documents/v4_diagnostic_generator.py` — CROSS-1
+- `modules/commercial_documents/templates/propuesta_v6_template.md` — Variables financieras, tabla dinámica, labels
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` — CROSS-1
+- `modules/commercial_documents/commercial_gate.py` — CODE-2, V-3, A-1
+- `modules/commercial_documents/publication_gates.py` — CROSS-6
+
+**Problema:** Variables financieras inconsistentes entre template y generator, gates desincronizados, mapping brecha→servicio incompleto, indicadores de estado ambiguos, typos en copy.
+
+**Solución:**
+- CODE-1/3/4: Unificación de todas las variables financieras sobre `effective_monthly_gain`
+- CODE-2: Gate CG-ROI-NEGATIVE sincronizado con tabla ROI
+- CROSS-1: Puente dual fuga bruta/recuperación efectiva en diagnóstico y propuesta
+- CROSS-2: Mapping brecha→servicio con trazabilidad en tabla de propuesta
+- CROSS-4: Indicador de WhatsApp refleja conflicto real detectado
+- V-2: Labels de estado unificados: "⚠️ En preparación" → "En proceso de activación — Semana 2"
+- V-3: Gate CG-TECH-JARGON expandido con 8 nuevos términos; tabla de costos IAO movida a anexo técnico
+- A-1: Eliminado fallback frágil de búsqueda de string en `has_onboarding`
+- CROSS-5: Confidence score visible en tabla de servicios de propuesta
+- A-2: Umbral AEO unificado a 30 en ambas tablas
+- V-4: Cupo limitado justificado con número
+- V-5: Garantía incluye mecanismo de tracking propio Día 7
+- V-6: Placeholder de prueba social agregado al template
+- A-3: Typo "PASSO" → "PASO" corregido
+- CROSS-6: Gates NOT_READY ahora bloquean generación de documentos cliente (GATE_BLOCKING_ENABLED)
+
+**Cambio de comportamiento (CROSS-6):**
+Gates con status NOT_READY ahora bloquean la generación de documentos para el cliente. Anteriormente, los gates advisory (WARNING) permitían generar documentos igualmente. Con CROSS-6, si cualquier gate crítico retorna NOT_READY, los documentos cliente (`diagnostico_*.md`, `propuesta_*.md`) NO se escriben a disco. Assets técnicos y delivery package aún se generan. Para deshabilitar: `export GATE_BLOCKING_ENABLED=false`.
+
+**Backwards compatibility:** API pública sin cambios. CROSS-6 es configurably blocking via env var.
 
 ---
 

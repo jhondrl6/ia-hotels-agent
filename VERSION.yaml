@@ -1,9 +1,17 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.52.0"
-codename: "DIAGNOSTIC-ALIGNMENT"
-release_date: "2026-05-25"
+version: "4.53.0"
+codename: "PROPUESTA-COMERCIAL"
+release_date: "2026-05-26"
 plan_maestro_version: "v2.6.0"
+
+# v4.53.0 - PROPUESTA-COMERCIAL (2026-05-26)
+# FASE-A: CODE-1/3/4+CODE-2: Unificación financiera + gate sync
+# FASE-B: CROSS-1: Puente dual fuga bruta/recuperación efectiva
+# FASE-C: CROSS-2+4: Mapping brecha→servicio + WhatsApp conflict
+# FASE-D: V-2+V-3+A-1+CROSS-5: Labels, jargon, onboarding, confidence
+# FASE-E: A-2+V-4/5/6+A-3+CROSS-6: AEO, paquete, typo, gate blocking
+# Backwards compatible: cambios de documentos comerciales, no lógica core
 
 # v4.52.0 - DIAGNOSTIC-ALIGNMENT (2026-05-25)
 # FASE-A: Fix E1 (tabla escenarios → financial_value_range) + E2 (tabla Antes/Ahora)
