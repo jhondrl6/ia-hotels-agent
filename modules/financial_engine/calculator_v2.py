@@ -68,7 +68,7 @@ def _estimate_brecha_cop(
 
     Args:
         weight: Peso normalizado (0-1).
-        total_monthly_loss: Perdida mensual total del escenario realista.
+        total_monthly_loss: Pérdida mensual total del escenario realista.
 
     Returns:
         Monto en COP > 0 (nunca <= 0, pasa no_defaults_validator).
@@ -351,7 +351,7 @@ class FinancialCalculatorV2:
             lines.extend(
                 [
                     f"  {scenario_names.get(scenario_type, 'Desconocido')}:",
-                    f"    Perdida mensual: ${loss_formatted} COP",
+                    f"    Pérdida mensual: ${loss_formatted} COP",
                     f"    Confianza: {confidence_pct}%",
                     f"    Base: {scenario.calculation_basis}",
                     "",
@@ -365,7 +365,7 @@ class FinancialCalculatorV2:
                 "  • Datos validados del hotel (sin valores por defecto)",
                 "  • Escenarios con diferentes niveles de optimismo",
                 "  • Probabilidades asignadas segun realismo de cada escenario",
-                "  • Perdida mensual = Comisiones OTA - Ahorros potenciales",
+                "  • Pérdida mensual = Comisiones OTA - Ahorros potenciales",
                 "",
                 "=" * 60,
             ]

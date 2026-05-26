@@ -289,7 +289,7 @@ class OpportunityScorer:
             assessment: CanonicalAssessment opcional para contexto extra.
             competitor_data: Datos de competencia para ajustar severidad.
                 Ej: {"competitors_with_faq": 3, "total_competitors": 5}
-            total_monthly_loss: Perdida mensual total estimada del financiero.
+            total_monthly_loss: Pérdida mensual total estimada del financiero.
                 Se usa para distribuir el COP proporcionalmente al score.
             channel_context: Contexto de canal opcional con:
                 - dominant_channel: str (ej: "whatsapp", "gbp_local")

@@ -374,10 +374,10 @@ class LossProjector:
         
         if percentage_diff > 20:
             status = "CRITICO"
-            recommendation = "Perdidas significativamente por encima del benchmark. Intervencion urgente recomendada."
+            recommendation = "Pérdidas significativamente por encima del benchmark. Intervencion urgente recomendada."
         elif percentage_diff > 5:
             status = "ELEVADO"
-            recommendation = "Perdidas sobre el promedio regional. Mejoras operativas necesarias."
+            recommendation = "Pérdidas sobre el promedio regional. Mejoras operativas necesarias."
         elif percentage_diff > -5:
             status = "ALINEADO"
             recommendation = "En linea con el benchmark regional. Mantener y optimizar."

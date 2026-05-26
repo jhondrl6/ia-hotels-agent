@@ -28,9 +28,10 @@ PORTUGUESE_WORDS = [
 
 # Common English words in hotel context that should be Spanish
 ENGLISH_HOTEL_WORDS = [
-    "guests", "booking", "checkin", "checkout", "amenities",
+    "guests", "checkin", "checkout", "amenities",
     "hospitality", "reservations", "availability", "staff",
 ]
+# NOTE: "booking" intentionally excluded — Booking is a brand name, not a generic English word
 
 # Portuguese to Spanish replacements
 PT_TO_ES = {
@@ -53,7 +54,7 @@ PT_TO_ES = {
 EN_TO_ES = {
     "guests": "huéspedes",
     "guest": "huésped",
-    "booking": "reserva",
+    # "booking" removed — Booking is a brand name, not a generic English word
     "checkin": "check-in",
     "checkout": "check-out",
     "amenities": "servicios",

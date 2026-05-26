@@ -70,7 +70,7 @@ class FinancialScenario:
             formatted = f"{abs(self.monthly_loss_cop):,.0f}".replace(",", ".")
             return f"Ganancia neta: ${formatted} COP/mes"
         formatted = f"{self.monthly_loss_cop:,.0f}".replace(",", ".")
-        return f"Perdida estimada: ${formatted} COP/mes"
+        return f"Pérdida estimada: ${formatted} COP/mes"
 
 
 @dataclass

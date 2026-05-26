@@ -21,7 +21,7 @@ Cada mes, viajeros buscan hoteles en ${hotel_region} a través de Booking.com, E
 
 **Esto es lo que está pasando:**
 
-|| El problema | El impacto |
+| El problema | El impacto |
 |-------------|------------|
 | El viajero busca en Booking/Expedia | Cada reserva cobra comisión |
 | Su hotel compite por el mismo cliente | Más caro para el hotel, menos ganancia |

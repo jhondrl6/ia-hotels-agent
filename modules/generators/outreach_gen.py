@@ -221,7 +221,7 @@ Gracias,
 - "Necesito pensarlo": ofrecer resumen rapido.
 - "Enviame mas info": enviar audio de 2 minutos.
 
-**Perdida estimada:** ${hotel_data.get('perdida_mensual_total', 0):,.0f} COP/mes.
+**Pérdida estimada:** ${hotel_data.get('perdida_mensual_total', 0):,.0f} COP/mes.
 """
 
         (output_dir / "guia_seguimiento.md").write_text(guia, encoding="utf-8")

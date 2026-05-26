@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-25
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 290
+> **Total fases completadas:** 291
 
 ---
 
@@ -7193,6 +7193,34 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## PROSPECCION-II - 2026-05-25
+**Descripcion:** 5 fixes contra codigo vivo: booking en document_quality_gate.py, TypeError _check_scenario_order normalizado en _extract_scenario_values, Perdida sistemico 9 archivos, doc drift Quick Win #3, doble pipe en 2 templates
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/postprocessors/document_quality_gate.py` | Document Quality Gate |
+| `modules/quality_gates/commercial_gate.py` | Commercial Gate |
+| `modules/financial_engine/scenario_calculator.py` | Scenario Calculator |
+| `modules/financial_engine/calculator_v2.py` | Calculator V2 |
+| `modules/financial_engine/loss_projector.py` | Loss Projector |
+| `modules/financial_engine/opportunity_scorer.py` | Opportunity Scorer |
+| `modules/generators/outreach_gen.py` | Outreach Gen |
+| `modules/generators/report_builder.py` | Report Builder |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (55/55)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

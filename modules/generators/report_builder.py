@@ -1045,7 +1045,7 @@ class ReportBuilder:
 
 ## [MONEY] ANALISIS FINANCIERO
 
-### Perdida Mensual Estimada
+### Pérdida Mensual Estimada
 
 **${llm_analysis.get('perdida_mensual_total', 0):,.0f} COP/mes**
 

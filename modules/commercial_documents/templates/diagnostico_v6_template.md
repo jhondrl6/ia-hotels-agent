@@ -27,7 +27,7 @@ scoring_methodology_url: ./scoring_methodology.md
 
 ## 1. 🚨 HOY HAY RESERVAS ESCAPÁNDOSE POR WHATSAPP, GOOGLE MAPS E IA
 
-|| Antes (2023) | Ahora (2026) |
+| Antes (2023) | Ahora (2026) |
 |---|---|
 | Entran a Google y revisan 5 webs | Le preguntan a ChatGPT |
 | Comparan en Booking | Esperan que la IA recomiende |
@@ -97,7 +97,7 @@ IA Hoteles Agent es el sistema que acaba de analizar su hotel. Detecta las 3 fug
 
 ### Score de Visibilidad Digital
 
-|| Indicador | Su Negocio | Promedio Regional | Estado |
+| Indicador | Su Negocio | Promedio Regional | Estado |
 |-----------|------------|------------------|--------|
 | **SEO Local** (Para que te ENCUENTREN) | ${seo_score}/100 | ${seo_regional_avg}/100 | ${seo_status} |
 | **GEO** (Para que te UBIQUEN) | ${geo_score}/100 | ${geo_regional_avg}/100 | ${geo_status} |

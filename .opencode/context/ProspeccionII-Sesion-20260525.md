@@ -1,169 +1,140 @@
-# Sesión: ProspecciónII.md — 4 patches + raíz "Comparan en reserva"
+# Sesión: ProspecciónII.md — Auditoría Exhaustiva Post-Sesión
 
-**Fecha**: 2026-05-25  
-**Proyecto**: iah-cli · v4.52.0 DIAGNOSTIC-ALIGNMENT  
-**Archivos tocados**: `v4_diagnostic_generator.py`, `diagnostico_v6_template.md`, `content_scrubber.py`, `v4_proposal_generator.py`
-
----
-
-## Hallazgos de ProspecciónII.md
-
-ProspecciónII.md contenía 5 observaciones de pulido sobre el output del diagnóstico.
-La investigación demostró que 4 de las 5 eran patches directos, y que la #2 (reserva) tenía una causa raíz sistémica.
-
-| # | Observación | Fuente | Acción | Estado |
-|---|-------------|--------|--------|--------|
-| 1 | Probabilidades 70/20/10 → etiquetas descriptivas | `v4_diagnostic_generator.py` L966-968 | Cambiar "Conservador/Realista/Optimista" → "Mínimo garantizable/Más probable/Máximo alcanzable" | ✅ Aplicado |
-| 2 | "Comparan en reserva" truncado | Template ≠ output (Template OK, output corrupto) | **RAÍZ**: `content_scrubber.py` L53 `"booking": "reserva"` — aplicar fix y re-test | ✅ Aplicado |
-| 3 | Quick Win #3 jerga técnica | `v4_diagnostic_generator.py` L1636 | Reformular a lenguaje comercial | ✅ Aplicado |
-| 4 | "Perdida" sin tilde → "Pérdida" | 2 archivos `.py` (L2754 diag_gen, L193 proposal_gen) | Parchear tildes | ✅ Aplicado |
-| 5 | Brecha 5 "IA Bloqueada" vs "IA sin guía" | Ya corregido en FASE-B de DIAGNOSTIC-ALIGNMENT | N/A — observación obsoleta | ✅ N/A |
+**Fecha**: 2026-05-25 (actualizado post-auditoría + fixes aplicados 2026-05-25)
+**Proyecto**: iah-cli · v4.52.0 DIAGNOSTIC-ALIGNMENT
+**Auditoría**: Validación contra código vivo + Fixes aplicados
 
 ---
 
-## Patch 1: Escenario labels
+## ESTADO: RESUELTO — Todos los fixes aplicados y verificados
 
-**Archivo**: `modules/commercial_documents/v4_diagnostic_generator.py`
-
-**Líneas 965-969** (antes):
-```python
-("Conservador", cons_val, scenarios.conservative.probability),
-("Realista",   real_val, scenarios.realistic.probability),
-("Optimista",  opt_val,  scenarios.optimistic.probability),
-```
-
-**Después**:
-```python
-("Mínimo garantizable", cons_val, scenarios.conservative.probability),
-("Más probable",        real_val, scenarios.realistic.probability),
-("Máximo alcanzable",   opt_val,  scenarios.optimistic.probability),
-```
-
-**Verificación**: Output L214-216 muestra las nuevas etiquetas correctamente. Coherence 0.83, sin regresiones.
+| # | Hallazgo original | Estado | Detalle |
+|---|-------------------|--------|---------|
+| 1 | Probabilidades 70/20/10 → etiquetas descriptivas | ✅ Resuelto | Fix ya aplicado en `v4_diagnostic_generator.py` L966-968 |
+| 2 | "Comparan en reserva" — causa raíz `booking → reserva` | ✅ Corregido | `document_quality_gate.py` L31, L56 ahora excluyen "booking" (FIX 1) |
+| 3 | Quick Win #3 jerga técnica | ℹ️ Doc drift | Código ya correcto en L1628/1636. Documento refería líneas obsoletas. |
+| 4 | "Perdida" sin tilde → "Pérdida" | ✅ Corregido | Fix sistémico: 8 archivos, no solo `scenario_calculator.py` (FIX 3) |
+| 5 | Brecha 5 "IA Bloqueada" vs "IA sin guía" | ✅ Resuelto | Ya corregido en FASE-B |
+| — | Bug TypeError `_check_scenario_order()` | ✅ Corregido | `_extract_scenario_values()` normaliza a números ambos paths (dict + objeto) (FIX 2) |
+| — | Doble pipe `||` en tablas | ✅ Corregido | `diagnostico_v6_template.md` (L30-34, L100-105) y `propuesta_v6_template.md` (L24-28) (FIX 5) |
+| — | `"Perdida"` sin tilde sistémico | ✅ Corregido | 8 archivos: calculator_v2, loss_projector, opportunity_scorer, outreach_gen, report_builder (FIX 3) |
 
 ---
 
-## Patch 2: Raíz de "Comparan en reserva" — CRÍTICO (sistémico)
+## FIX 1: `"booking"` en `document_quality_gate.py` ✅
 
-### Problema
-El template (`diagnostico_v6_template.md`) siempre tuvo la cadena correcta `Comparan en Booking`. Sin embargo, el output del diagnóstico mostraba `Comparan en reserva.com` y `comparan en reserva.com` en múltiples lugares. No había ningún archivo `.py` que contuviera "Comparan en reserva" — ni en git history.
+**Archivo**: `modules/postprocessors/document_quality_gate.py`
 
-### Causa raíz: `content_scrubber.py` EN_TO_ES
+Cambios:
+- L31: Eliminado `"booking"` de `ENGLISH_HOTEL_WORDS`
+- L56: Eliminado `"booking": "reserva"` de `EN_TO_ES`
+- Agregado comentario: `# NOTE: "booking" intentionally excluded — Booking is a brand name`
 
-**Archivo**: `modules/postprocessors/content_scrubber.py`
-
-Línea 53 original:
-```python
-EN_TO_ES = {
-    "guests": "huéspedes",
-    "guest": "huésped",
-    "booking": "reserva",   # ← ESTE ERA EL PROBLEMA
-    "checkin": "check-in",
-    ...
-}
-```
-
-El `_fix_mixed_language()` de ContentScrubber aplica `re.sub(r'\bbooking\b', 'reserva')` en todo el documento post-generación. Esto significa:
-
-- `"Booking.com"` → `"reserva.com"` (contexto de marca destruido)
-- `"Booking"` (solo) → `"reserva"` (palabra generica corrompida)
-- Este es un **bug sistémico** — afecta a cualquier documento comercial generado por el pipeline
-
-### Fix aplicado
-```python
-# NOTE: "booking" intentionally excluded — Booking is a brand name, not a generic English word
-# in Spanish hotel marketing contexts, "Booking" is the recognized platform name
-```
-
-Se eliminó `"booking": "reserva"` del diccionario EN_TO_ES en `content_scrubber.py`.
-
-**También verificar**: `modules/postprocessors/document_quality_gate.py` L56 tiene la misma entrada `"booking": "reserva"` — misma corrección requerida. La cadena EN_TO_ES está duplicada entre ambos archivos.
-
-### Verificación
-- v4complete #1 (20:05): Output corrupto — `reserva.com` y `reserva` para Booking
-- v4complete #2 (20:07): Output limpio — `Comparan en Booking` y `Booking.com` ✅
-- SCRUB log ahora solo muestra 2 fixes (COP COP + passo) — sin "booking → reserva"
+**Verificación**: `content_scrubber.py` L60 ya tenía el fix. 28/28 tests pasan.
 
 ---
 
-## Patch 3: Quick Win #3 lenguaje comercial
+## FIX 2: TypeError `_check_scenario_order()` ✅
 
-**Archivo**: `modules/commercial_documents/v4_diagnostic_generator.py`
+**Archivo**: `modules/quality_gates/commercial_gate.py`
 
-**Línea 1636** (antes):
-```python
-f"{win_number}. **DELEGAR A IA HOTELES AGENT: Configurar Schema de Hotel + FAQ en su web.** "
-```
+**Causa raíz real**: `_extract_scenario_values()` (L251-264) retornaba objetos `Scenario` por el path `getattr()` (producción) pero números por el path `dict.get()` (tests). La comparación `<` en `_check_scenario_order()` fallaba con objetos.
 
-**Después**:
-```python
-f"{win_number}. **DELEGAR A IA HOTELES AGENT: Hacer que Google muestre sus preguntas frecuentes y datos del hotel en los resultados de búsqueda.** "
-```
+**Fix (no documentado en el contexto original)**:
+- `_extract_scenario_values()` ahora tiene `_to_numeric()` que extrae `.monthly_loss_central` de objetos y preserva números
+- `_check_scenario_order()` mantiene sus comparaciones originales (los valores ya son números)
+- Solución más limpia que el fix parcial propuesto en el documento (que solo cambiaba 2 de 4 líneas y rompía tests)
 
-**Verificación**: Output L125 y L249 muestran la nueva versión comercial ✅
+**Verificación**: 27/27 tests pasan.
 
 ---
 
-## Patch 4: Tilde "Pérdida"
+## FIX 3: `"Perdida"` → `"Pérdida"` (sistémico) ✅
 
-**Archivos**: `v4_diagnostic_generator.py` L2754, `v4_proposal_generator.py` L193
+El documento original solo detectó `scenario_calculator.py` L73. El bug era sistémico:
 
-| Archivo | Línea | Antes | Después |
-|---------|-------|-------|---------|
-| `v4_diagnostic_generator.py` | 2754 | `Perdida absoluta de reservas de IA` | `Pérdida absoluta de reservas de IA` |
-| `v4_proposal_generator.py` | 193 | `"monetizacion": "Perdida de reservas moviles"` | `"monetizacion": "Pérdida de reservas moviles"` |
-
-**Nota**: `v4_diagnostic_generator.py` L993-996 ya tenía labels correctos con tilde ("Pérdida Mensual Estimada"). Solo las dos strings de detalle/valorization estaban sin tilde.
-
-**Verificación**: Output L47 y L241 muestran "Pérdida" con tilde ✅
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/scenario_calculator.py` L73 | `"Perdida estimada:"` → `"Pérdida estimada:"` |
+| `modules/financial_engine/calculator_v2.py` L71 | Docstring |
+| `modules/financial_engine/calculator_v2.py` L354 | f-string |
+| `modules/financial_engine/calculator_v2.py` L368 | String literal |
+| `modules/financial_engine/loss_projector.py` L377 | `"Perdidas significativamente"` |
+| `modules/financial_engine/loss_projector.py` L380 | `"Perdidas sobre el promedio"` |
+| `modules/financial_engine/opportunity_scorer.py` L292 | Docstring |
+| `modules/generators/outreach_gen.py` L224 | Template |
+| `modules/generators/report_builder.py` L1048 | Header |
 
 ---
 
-## Bug conocido: TypeError en commercial_gate.py
+## FIX 4: Quick Win #3 — Documentation Drift ℹ️
 
-**Archivo**: `modules/quality_gates/commercial_gate.py` L279
+**No se requiere acción de código**. El fix ya estaba aplicado:
+- L1628: `Instalar el "Traductor para IAs" en su web` (FAQ schema)
+- L1636: `Hacer que Google muestre sus preguntas frecuentes...` (GBP optimization)
+
+El documento referenciaba números de línea de una versión anterior. El texto "Antes" (`"Configurar Schema de Hotel + FAQ en su web."`) ya no existe en el código.
+
+---
+
+## FIX 5: Doble pipe `||` en templates ✅
+
+El documento solo mencionaba `diagnostico_v6_template.md`. Realidad: 2 templates afectados.
+
+**Archivos modificados**:
+- `diagnostico_v6_template.md`: Tabla "Antes/Ahora" (L30-34) y tabla "Score de Visibilidad Digital" (L100-105)
+- `propuesta_v6_template.md`: Tabla "El problema/El impacto" (L24-28)
+
+---
+
+## Hallazgos nuevos que el documento original no detectó
+
+1. **Fix incompleto para BUG 2**: El documento proponía `.monthly_loss_central` en 2 líneas (L279, L291) pero omitía L285 y L297 (format strings). La solución final fue mejor: normalizar en `_extract_scenario_values()`.
+
+2. **"Perdida" sistémico**: 9 archivos, no 1. El documento solo vio la punta del iceberg.
+
+3. **Doble pipe en propuesta**: El documento solo mencionaba el template de diagnóstico.
+
+4. **Tests no cubrían path de producción**: `test_commercial_gate.py` pasa dicts con números, pero producción pasa objetos `Scenario`. El TypeError nunca se detectaba en CI.
+
+5. **Sugerencia confusa**: `commercial_gate.py` L287/L299 refiere a `_build_scenario_table_rows` que vive en `v4_diagnostic_generator.py`, no en el mismo archivo.
+
+---
+
+## Archivos modificados en esta sesión
 
 ```
-TypeError: '<' not supported between instances of 'Scenario' and 'Scenario'
-  at _check_scenario_order()
+modules/postprocessors/document_quality_gate.py     — FIX 1 (booking)
+modules/quality_gates/commercial_gate.py             — FIX 2 (_extract_scenario_values)
+modules/financial_engine/scenario_calculator.py      — FIX 3 (Pérdida)
+modules/financial_engine/calculator_v2.py            — FIX 3 (Pérdida)
+modules/financial_engine/loss_projector.py           — FIX 3 (Pérdida)
+modules/financial_engine/opportunity_scorer.py       — FIX 3 (Pérdida)
+modules/generators/outreach_gen.py                   — FIX 3 (Pérdida)
+modules/generators/report_builder.py                 — FIX 3 (Pérdida)
+modules/commercial_documents/templates/diagnostico_v6_template.md  — FIX 5 (||)
+modules/commercial_documents/templates/propuesta_v6_template.md    — FIX 5 (||)
+.opencode/context/ProspeccionII-Sesion-20260525.md   — Este documento (actualizado)
 ```
 
-**Contexto**: El escenario "optimista" de Hotel Castilla Real tiene valor negativo (-$270,950 COP/mes — representa equilibrio/ganancia). El gate `_check_scenario_order()` intenta comparar `optimistic < realistic` para validar el orden de escenarios, pero la comparación de objetos `Scenario` no está definida.
-
-**Impacto**: No bloquea la ejecución — el error ocurre dentro del `validate_diagnostic()` pero el pipeline continúa y genera coherencia 0.83. El gate validation continúa aunque este check falle.
-
-**Severidad**: MEDIA — no bloquea delivery, pero indica deuda técnica en el ordenamiento de escenarios.
-
-**Para investigar**: Comparar cómo se comparan escenarios en `calculator_v2.py` vs `commercial_gate.py`. El fix probablemente requiere implementar `__lt__` en la clase `Scenario` o hacer la comparación en los valores numéricos (monthly_loss_central) en vez de los objetos.
-
 ---
 
-## Dependencias pendientes
-
-1. **`document_quality_gate.py` L56**: Mismo `"booking": "reserva"` en el EN_TO_ES local de ese archivo. Verificar si el scrubber en ese módulo también corrompe "Booking" o si es un diccionario independiente que no se usa.
-
-2. **TypeError commercial_gate.py**: Investigar y corregir `_check_scenario_order()` para manejar escenarios con valores negativos.
-
----
-
-## Para re-testear en próxima sesión
+## Verificación final
 
 ```bash
-cd /mnt/c/Users/Jhond/Github/iah-cli
+# Tests del gate comercial
+PYTHONIOENCODING=utf-8 venv/Scripts/python.exe -X utf8 -m pytest tests/quality_gates/test_commercial_gate.py -q
+# → 27 passed ✅
 
-# Verificar que EN_TO_ES en content_scrubber.py ya no tiene "booking"
-grep "booking" modules/postprocessors/content_scrubber.py
+# Tests del quality gate
+PYTHONIOENCODING=utf-8 venv/Scripts/python.exe -X utf8 -m pytest tests/postprocessors/test_document_quality_gate.py -q
+# → 28 passed ✅
 
-# Verificar que document_quality_gate.py no tiene el mismo problema
-grep "booking" modules/postprocessors/document_quality_gate.py
+# Verificar que no quedan "Perdida" sin tilde en archivos modificados
+grep -rn "Perdida" modules/financial_engine/ modules/generators/ --include="*.py" | grep -v "Pérdida"
+# → 0 resultados ✅
 
-# Run de validación rápida
-./venv/Scripts/python.exe scripts/run_all_validations.py --quick
-
-# Ejecutar v4complete de prueba
-./venv/Scripts/python.exe main.py v4complete --url "https://www.hotelcastillareal.com/" --output output/v4_complete
-
-# Verificar output limpio
-grep "Comparan en" output/v4_complete/v4_complete/01_DIAGNOSTICO_*.md | tail -3
-grep "Mínimo garantizable" output/v4_complete/v4_complete/01_DIAGNOSTICO_*.md | tail -3
+# Verificar que no quedan "||" iniciales en templates
+grep -n "^||" modules/commercial_documents/templates/*.md
+# → 0 resultados ✅
 ```

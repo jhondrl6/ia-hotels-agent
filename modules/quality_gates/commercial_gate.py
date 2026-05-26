@@ -249,19 +249,32 @@ class CommercialGateValidator:
 
     @staticmethod
     def _extract_scenario_values(scenarios: Any):
-        """Extract scenario values from either dataclass or dict."""
+        """Extract numeric scenario values from either dataclass or dict.
+
+        Normalizes both paths to numeric values by extracting
+        .monthly_loss_central from Scenario objects when present.
+        """
         if scenarios is None:
             return None, None, None
+
         if isinstance(scenarios, dict):
-            return (
-                scenarios.get("optimistic"),
-                scenarios.get("realistic"),
-                scenarios.get("conservative"),
-            )
-        optimistic = getattr(scenarios, "optimistic", None)
-        realistic = getattr(scenarios, "realistic", None)
-        conservative = getattr(scenarios, "conservative", None)
-        return optimistic, realistic, conservative
+            optimistic = scenarios.get("optimistic")
+            realistic = scenarios.get("realistic")
+            conservative = scenarios.get("conservative")
+        else:
+            optimistic = getattr(scenarios, "optimistic", None)
+            realistic = getattr(scenarios, "realistic", None)
+            conservative = getattr(scenarios, "conservative", None)
+
+        # Normalize to numeric: extract monthly_loss_central if values are objects
+        def _to_numeric(val):
+            if val is None:
+                return None
+            if isinstance(val, (int, float)):
+                return val
+            return getattr(val, "monthly_loss_central", None)
+
+        return _to_numeric(optimistic), _to_numeric(realistic), _to_numeric(conservative)
 
     def _check_scenario_order(self, scenarios: Any) -> CommercialGateResult:
         """CG-SCENARIO-ORDER: optimista < realista o realista < conservador."""
