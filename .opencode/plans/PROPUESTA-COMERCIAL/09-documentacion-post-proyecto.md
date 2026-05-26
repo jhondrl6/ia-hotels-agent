@@ -32,7 +32,7 @@
 
 | Fase | Tipo | Ruta |
 |------|------|------|
-| — | — | — |
+| FASE-F | v4complete + análisis | `evidence/FASE-F/01_DIAGNOSTICO_*.md`, `02_PROPUESTA_*.md`, `v4_audit/*.json`, `analisis_post_implementacion.md` |
 
 ---
 
@@ -40,7 +40,12 @@
 
 | Fase | Métrica | Antes | Después |
 |------|---------|-------|---------|
-| — | — | — | — |
+| FASE-F | Coherence score | 0.83 (pre-fixes) | 0.83 (post-fixes) |
+| FASE-F | Publication gates | 9/11 (2 warnings) | 10/11 (1 warning) |
+| FASE-F | Bloqueantes | 2 | 0 |
+| FASE-F | Pain ledger entries | 11 | 11 |
+| FASE-F | Niveles superados (5 niveles) | — | 4.5/5 |
+| FASE-F | Known issues | — | ROI negativo (deuda comercial), G1 whatsapp_button deprecated |
 
 ---
 
@@ -57,5 +62,5 @@
 | `05-prompt-inicio-sesion-fase-C.md` | ✅ Completada |
 | `05-prompt-inicio-sesion-fase-D.md` | ✅ Completada |
 | `05-prompt-inicio-sesion-fase-E.md` | ✅ Completada |
-| `05-prompt-inicio-sesion-fase-F.md` | ⏳ |
+| `05-prompt-inicio-sesion-fase-F.md` | ✅ Completada |
 | `05-prompt-inicio-sesion-fase-RELEASE.md` | ⏳ |

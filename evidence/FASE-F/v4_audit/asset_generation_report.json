@@ -1,0 +1,242 @@
+{
+  "hotel_id": "hotelcastillareal",
+  "hotel_name": "Hotelcastillareal",
+  "timestamp": "2026-05-26T13:13:24.133385",
+  "output_dir": "output/v4_complete/hotelcastillareal",
+  "summary": {
+    "total_assets": 13,
+    "generated": 12,
+    "failed": 0,
+    "skipped": 1,
+    "can_use": 12,
+    "estimated": 7,
+    "delivery_ready_percentage": 83.33,
+    "site_verification_applied": true
+  },
+  "generated_assets": [
+    {
+      "asset_type": "whatsapp_conflict_guide",
+      "filename": "guia_conflicto_whatsapp_20260526_131324.md",
+      "delivery_filename": "guia_conflicto_whatsapp_20260526_131324.md",
+      "path": "output/v4_complete/hotelcastillareal/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260526_131324.md",
+      "metadata_path": "output/v4_complete/hotelcastillareal/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260526_131324_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "whatsapp_conflict"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "hotel_schema",
+      "filename": "hotel_schema_20260526_131324.json",
+      "delivery_filename": "hotel_schema_20260526_131324.json",
+      "path": "output/v4_complete/hotelcastillareal/hotel_schema/hotel_schema_20260526_131324.json",
+      "metadata_path": "output/v4_complete/hotelcastillareal/hotel_schema/hotel_schema_20260526_131324_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 1.0,
+      "pain_ids_resolved": [
+        "no_hotel_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "optimization_guide",
+      "filename": "ESTIMATED_guia_optimizacion_20260526_131324.md",
+      "delivery_filename": "guia_optimizacion_20260526_131324.md",
+      "path": "output/v4_complete/hotelcastillareal/optimization_guide/ESTIMATED_guia_optimizacion_20260526_131324.md",
+      "metadata_path": "output/v4_complete/hotelcastillareal/optimization_guide/ESTIMATED_guia_optimizacion_20260526_131324_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "metadata_defaults"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "llms_txt",
+      "filename": "llms_20260526_131324.txt",
+      "delivery_filename": "llms_20260526_131324.txt",
+      "path": "output/v4_complete/hotelcastillareal/llms_txt/llms_20260526_131324.txt",
+      "metadata_path": "output/v4_complete/hotelcastillareal/llms_txt/llms_20260526_131324_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 1.0,
+      "pain_ids_resolved": [
+        "low_ia_readiness"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "local_content_page",
+      "filename": "contenido_local__20260526_131324.md",
+      "delivery_filename": "contenido_local__20260526_131324.md",
+      "path": "output/v4_complete/hotelcastillareal/local_content_page/contenido_local__20260526_131324.md",
+      "metadata_path": "output/v4_complete/hotelcastillareal/local_content_page/contenido_local__20260526_131324_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 1.0,
+      "pain_ids_resolved": [
+        "low_ia_readiness"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "faq_page",
+      "filename": "ESTIMATED_faqs_20260526_131324.json",
+      "delivery_filename": "faqs_20260526_131324.json",
+      "path": "output/v4_complete/hotelcastillareal/faq_page/ESTIMATED_faqs_20260526_131324.json",
+      "metadata_path": "output/v4_complete/hotelcastillareal/faq_page/ESTIMATED_faqs_20260526_131324_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.5,
+      "pain_ids_resolved": [
+        "no_faq_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "analytics_setup_guide",
+      "filename": "ESTIMATED_guia_configuracion_ga4_20260526_131324.md",
+      "delivery_filename": "guia_configuracion_ga4_20260526_131324.md",
+      "path": "output/v4_complete/hotelcastillareal/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260526_131324.md",
+      "metadata_path": "output/v4_complete/hotelcastillareal/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260526_131324_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "no_analytics_configured"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "indirect_traffic_optimization",
+      "filename": "ESTIMATED_optimizacion_trafico_indirecto_20260526_131324.md",
+      "delivery_filename": "optimizacion_trafico_indirecto_20260526_131324.md",
+      "path": "output/v4_complete/hotelcastillareal/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260526_131324.md",
+      "metadata_path": "output/v4_complete/hotelcastillareal/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260526_131324_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "low_organic_visibility"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "og_tags_guide",
+      "filename": "ESTIMATED_guia_og_tags_20260526_131324.md",
+      "delivery_filename": "guia_og_tags_20260526_131324.md",
+      "path": "output/v4_complete/hotelcastillareal/og_tags_guide/ESTIMATED_guia_og_tags_20260526_131324.md",
+      "metadata_path": "output/v4_complete/hotelcastillareal/og_tags_guide/ESTIMATED_guia_og_tags_20260526_131324_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "no_og_tags"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "open_graph",
+      "filename": "open_graph_meta_20260526_131324.html",
+      "delivery_filename": "open_graph_meta_20260526_131324.html",
+      "path": "output/v4_complete/hotelcastillareal/open_graph/open_graph_meta_20260526_131324.html",
+      "metadata_path": "output/v4_complete/hotelcastillareal/open_graph/open_graph_meta_20260526_131324_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 1.0,
+      "pain_ids_resolved": [
+        "no_og_tags"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "org_schema",
+      "filename": "ESTIMATED_org_schema_20260526_131324.json",
+      "delivery_filename": "org_schema_20260526_131324.json",
+      "path": "output/v4_complete/hotelcastillareal/org_schema/ESTIMATED_org_schema_20260526_131324.json",
+      "metadata_path": "output/v4_complete/hotelcastillareal/org_schema/ESTIMATED_org_schema_20260526_131324_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "no_org_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "monthly_report",
+      "filename": "informe_mensual_20260526_131324.md",
+      "delivery_filename": "informe_mensual_20260526_131324.md",
+      "path": "output/v4_complete/hotelcastillareal/monthly_report/informe_mensual_20260526_131324.md",
+      "metadata_path": "output/v4_complete/hotelcastillareal/monthly_report/informe_mensual_20260526_131324_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 1.0,
+      "pain_ids_resolved": [],
+      "can_use": true
+    }
+  ],
+  "failed_assets": [],
+  "skipped_assets": [
+    {
+      "asset_type": "whatsapp_button",
+      "reason": "Asset ya implementado en sitio de producción",
+      "presence_status": "exists",
+      "site_verified": true,
+      "recommendations": [],
+      "pain_ids_affected": [
+        "no_whatsapp_visible"
+      ]
+    }
+  ],
+  "coherence_report": {
+    "is_coherent": false,
+    "overall_score": 0.83,
+    "checks": [
+      {
+        "name": "problems_have_solutions",
+        "passed": true,
+        "score": 0.9,
+        "message": "90% de problemas tienen solución automática",
+        "severity": "info"
+      },
+      {
+        "name": "assets_are_justified",
+        "passed": true,
+        "score": 0.85,
+        "message": "84% de assets justificados (11/13)",
+        "severity": "warning"
+      },
+      {
+        "name": "financial_data_validated",
+        "passed": true,
+        "score": 0.7,
+        "message": "Datos financieros validados (confidence promedio: 0.70)",
+        "severity": "info"
+      },
+      {
+        "name": "whatsapp_verified",
+        "passed": false,
+        "score": 0.3,
+        "message": "WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9",
+        "severity": "error"
+      },
+      {
+        "name": "price_matches_pain",
+        "passed": true,
+        "score": 0.8,
+        "message": "Precio en límite superior (32.1x) - rango ideal 3.0x-50.0x",
+        "severity": "warning"
+      },
+      {
+        "name": "promised_assets_exist",
+        "passed": true,
+        "score": 1.0,
+        "message": "Todos los assets prometidos están implementados (8 servicios verificados via PROPOSAL_SERVICE_TO_ASSET)",
+        "severity": "info"
+      }
+    ],
+    "errors": [
+      "[whatsapp_verified] WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9"
+    ],
+    "warnings": [],
+    "timestamp": "2026-05-26T13:13:21.306318",
+    "version": "4.2.0"
+  },
+  "coherence_score_pre": 0.83,
+  "coherence_score_post": 0.81,
+  "coherence_score_final": 0.81
+}

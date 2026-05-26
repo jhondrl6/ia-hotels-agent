@@ -76,11 +76,11 @@
 
 | ID | Tarea | Estado | Evidencia |
 |----|-------|--------|-----------|
-| F1 | Ejecutar `main.py v4complete --url https://www.hotelcastillareal.com/` | ⏳ | — |
-| F2 | Copiar outputs a `evidence/FASE-F/` (diagnóstico, propuesta, assets, JSONs) | ⏳ | — |
-| F3 | Crear análisis post-implementación verificando los 5 niveles de la auditoría | ⏳ | — |
+| F1 | Ejecutar `main.py v4complete --url https://www.hotelcastillareal.com/` | ✅ | 2026-05-26 — 92s, coherence 0.83, 12 assets, v4_complete_report.json generado |
+| F2 | Copiar outputs a `evidence/FASE-F/` (diagnóstico, propuesta, assets, JSONs) | ✅ | evidence/FASE-F/ contiene todos los archivos listados en analisis_post_implementacion.md |
+| F3 | Crear análisis post-implementación verificando los 5 niveles de la auditoría | ✅ | 4.5/5 niveles superados; analisis_post_implementacion.md creado |
 
-**Resultado FASE-F**: ⏳ PENDIENTE
+**Resultado FASE-F**: ✅ COMPLETADA (2026-05-26)
 
 ---
 
