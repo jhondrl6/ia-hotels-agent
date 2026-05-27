@@ -846,7 +846,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
 
         # CAPEX/OPEX separation: setup_fee is CAPEX (activo digital del cliente)
         # monthly_fee is OPEX (servicio)
-        'capex_total': format_cop(setup_fee),
+        'capex_total': format_cop(getattr(self, '_current_setup_fee', self.SETUP_FEE)),
         'opex_mensual': format_cop(monthly_investment),
         'opex_total_6m': format_cop(monthly_investment * 6),
 
@@ -854,7 +854,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'roi_saas': self._calculate_roi_saas(
             total_recuperacion=_maturity_result.total_recuperacion_6m,
             inversion_opex=monthly_investment * 6,
-            inversion_capex=setup_fee,
+            inversion_capex=getattr(self, '_current_setup_fee', self.SETUP_FEE),
         ),
 
         # Activos digitales propiedad del cliente
@@ -862,7 +862,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
 
         # Nota metodológica CAPEX/OPEX
         'nota_capex_opex': (
-            f"Los ${int(setup_fee):,} COP del setup fee representan activos digitales "
+            f"Los ${int(getattr(self, '_current_setup_fee', self.SETUP_FEE)):,} COP del setup fee representan activos digitales "
             f"que quedan en propiedad del cliente (Real Estate Digital). "
             f"El ROI se calcula sobre la inversión operativa (${int(monthly_investment * 6):,} COP / 6 meses), "
             f"no sobre OPEX+CAPEX combinados."

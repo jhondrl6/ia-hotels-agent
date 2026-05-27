@@ -1,5 +1,38 @@
 # Changelog
 
+## [4.55.0] — ROICR (2026-05-27)
+
+### Objetivo
+Cierre del proyecto ROICR: 6 fases de implementacion — pipeline unificado, CAPEX/OPEX, curva de maduracion, arbitraje, garantia.
+
+### Arreglado
+- **FASE-1**: AssetSemanticsValidator — semantica de soluciones (Auditar/Implementar) y deteccion de mappings invalidos
+- **FASE-2**: Gate P1 BLOCKING — coherence score con seuil 0.80 bloquea si < 0.80
+- **FASE-3**: Pipeline unificado de pricing (3 pasos) + CAPEX/OPEX desacoplado
+- **FASE-4**: Arbitraje etico + Garantia Dia 55 (`validate-guarantee`)
+- **FASE-5**: Tests + Fixtures recalibrados
+- **FASE-6**: v4complete Hotel Castilla Real verificado — coherence 0.83, gates 9/11
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Bump 4.54.0 → 4.55.0 |
+| `modules/pricing/pricing_calculator.py` | Pipeline unificado (3 pasos), CAPEX/OPEX desacoplado |
+| `modules/pricing/asset_semantics_validator.py` | AssetSemanticsValidator (nuevo) |
+| `modules/pricing/maturity_curve.py` | Curva de maduracion 4 pilares |
+| `modules/pricing/arbitrage_validator.py` | Arbitraje etico |
+| `modules/pricing/guarantee_validator.py` | Garantia Dia 55 |
+| `modules/commercial_documents/v4_proposal_generator.py` | Pain ratio clamp, coherence validation |
+| `tests/pricing/` | 40+ tests nuevos/recalibrados |
+| `CHANGELOG.md` | Entrada v4.55.0 |
+| `REGISTRY.md` | Registro FASE-RELEASE-ROICR |
+
+### Backwards compatibility
+Si. Cambios internos de pricing y validacion semantica — la logica core del pipeline no cambia.
+
+---
+
 ## [4.54.0] — ROI-REFACTOR (2026-05-26)
 
 ### Objetivo

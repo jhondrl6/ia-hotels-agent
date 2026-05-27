@@ -3,15 +3,15 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.53.0 | **Codename**: PROPUESTA-COMERCIAL
-> **Release date**: 2026-05-26 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.55.0 | **Codename**: ROI-REFACTOR
+> **Release date**: 2026-05-27 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
 
 ## Modulos del Repositorio (auto-generado)
 
-> 22 modulos detectados en `modules/` + 1 paquetes de nivel root. 185 archivos Python en total.
+> 23 modulos detectados en `modules/` + 1 paquetes de nivel root. 190 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
@@ -19,7 +19,7 @@
 |--------|----------|------------------------|
 | **scrapers/** | 16 | BookingScraper; DriverInterface; GBPAuditor; GBPAuditorAuto; GBPRevenueLeakDetector; DriverAdapterProtocol, DriverAdapterBase, SeleniumAdapter, PlaywrightAdapter; PostsAuditResult, GBPPostsAuditor; Pl |
 | **data_validation/** | 6 | ConfidenceLevel, DataSource, ValidationResult, ConfidenceTaxonomy; CrossValidator; MetadataValidator; PageSpeedResult, PageSpeedClient; SchemaType, SchemaValidationResult, RichResultsTestResult, RichR |
-| **financial_engine/** | 17 | ADRSource, ADRResolutionResult, ADRResolutionWrapper; CalculationStatus, FinancialCalculationResult, FinancialCalculatorV2; InferredChannel, EvidenceConfidence, ChannelEvidence, ChannelEvidenceResolve |
+| **financial_engine/** | 19 | ADRSource, ADRResolutionResult, ADRResolutionWrapper; CalculationStatus, FinancialCalculationResult, FinancialCalculatorV2; InferredChannel, EvidenceConfidence, ChannelEvidence, ChannelEvidenceResolve |
 | **orchestration_v4/** | 2 | OnboardingPhase, OnboardingStatus, OnboardingState, OnboardingController; Phase1Result, Phase2Result, HotelInputs, TwoPhaseOrchestrator |
 | **onboarding/** | 4 | OnboardingForm |
 
@@ -45,7 +45,7 @@
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **analytics/** | 5 | ConfidenceLevel, UnifiedAnalyticsData, AnalyticsAggregator; GoogleAnalyticsClient; GSCQueryData, GSCPageData, GSCReport, GoogleSearchConsoleClient; ProfoundClient; SemrushClient |
+| **analytics/** | 6 | ConfidenceLevel, UnifiedAnalyticsData, AnalyticsAggregator; GoogleAnalyticsClient; GSCQueryData, GSCPageData, GSCReport, GoogleSearchConsoleClient; BaselineKPIs, CurrentKPIs, GuaranteeResult; Profound |
 | **deployer/** | 4 | ConnectionResult, BaseConnector; FTPConnector; DeployAction, DeployPlan, DeployManager; WordPressConnector |
 
 ### QUALITY GATES
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-05-26 | v4.53.0 PROPUESTA-COMERCIAL*
+*Auto-generado: 2026-05-27 | v4.55.0 ROI-REFACTOR*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
