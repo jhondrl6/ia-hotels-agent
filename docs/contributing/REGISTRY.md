@@ -1,7 +1,7 @@
 # Registro de Fases - IA Hoteles Agent
 
 > **Ultima actualizacion:** 2026-05-26
-> **Version actual:** v4.46.0
+> **Version actual:** v4.54.0
 > **Total fases completadas:** 305
 
 ---
