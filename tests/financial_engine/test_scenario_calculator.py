@@ -645,7 +645,7 @@ class TestOptimistaFix:
         scenarios = calc.calculate_scenarios(data)
         cons = scenarios[ScenarioType.CONSERVATIVE]
         assert cons.is_net_gain == False
-        assert "perdida" in cons.display_label.lower() or "Perdida" in cons.display_label
+        assert "pérdida" in cons.display_label.lower()
 
     def test_display_label_positive_loss(self):
         """display_label muestra correctamente perdida positiva."""

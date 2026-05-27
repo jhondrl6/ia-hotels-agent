@@ -123,8 +123,30 @@
 - [x] `pytest tests/quality_gates/test_financial_coherence_validator.py tests/quality_gates/test_guarantee_validator.py -v` → **22 passed**
 - [x] Restricciones respetadas: NO se tocó `pipeline de pricing` (FASE-3) NI `publication_gates.py` (FASE-2)
 
-### FASE-5: Fixtures + Regression Guardian
-*Pendiente de ejecución*
+### FASE-5: Fixtures + Regression Guardian + Tests
+**Estado**: ✅ Completada (2026-05-27)
+
+**Archivos creados**:
+- `tests/fixtures/financial_scenarios.json` — 10 escenarios de pricing con valores calculados del pipeline v4.3.0 real (NO asumidos del plan). Incluye Castilla Real (expected_loss=3,741,696, monthly=465,479.68), escenarios básicos por tier, y pipeline con expected_recovery.
+- `tests/test_pricing_pipeline.py` — 18 tests nuevos: 6 categorías (determinismo, Value-Capture Cap, pain ratio trigger, operational floor, métricas desacopladas, curva 4 pilares) + 2 de integración con PricingCalculator
+
+**Archivos modificados**:
+- `tests/financial_engine/test_pricing_calculator.py` — 6 assertions actualizadas: `min_price` 1,200,000 → 800,000 (nuevo floor boutique v4.3.0)
+- `tests/financial_engine/test_pricing_resolution_wrapper.py` — 2 assertions actualizadas: `min_price` 1,200,000 → 800,000
+- `tests/financial_engine/test_scenario_calculator.py` — 1 assertion corregida: \"perdida\" → \"pérdida\" (acento en display_label)
+
+**5B — v4_regression_guardian**: Documentado como PRE-EXISTENTE. No existe en el codebase (no script, módulo ni CI check). La recalibración no aplica — se documenta para futura implementación.
+
+**Discrepancia plan vs código detectada**: El plan asume pain_ratio_threshold = pain_ratio_gate_max * 2.0 = 0.64, pero el código real en `calcular_precio_final()` usa `gate_max_ratio * 2.0` = 0.12 (L256). Los fixtures y tests reflejan el comportamiento REAL del código, no el esperado del plan.
+
+**Criterios de completitud validados**:
+- [x] `financial_scenarios.json` creado con valores del pipeline v4.3.0 real
+- [x] `v4_regression_guardian` documentado como pre-existente (no aplica)
+- [x] `tests/test_pricing_pipeline.py` existe con 18 tests pasando
+- [x] `pytest tests/financial_engine/ tests/test_pricing_pipeline.py` → **518 passed, 0 failed** (0 regresiones nuevas)
+- [x] Restricciones respetadas: NO se modificó código de FASE-1 a FASE-4; solo fixtures y tests
+
+**Resultado final**: 518/518 tests pasando. 9 tests pre-existentes actualizados para reflejar nueva realidad del pipeline v4.3.0 (min_price boutique = 800K). 18 tests nuevos cubriendo el pipeline de 3 pasos.
 
 ### FASE-7: RELEASE v4.55.0
 *Pendiente de ejecución*

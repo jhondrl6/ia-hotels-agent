@@ -39,8 +39,8 @@ class TestBoutiquePricing:
         # Low expected loss would result in price below minimum
         result = calc.calculate(rooms=15, expected_loss_cop=10_000_000)
 
-        # 3.5% of 10M = 350K, but min is 1.2M
-        assert result.monthly_price_cop == 1_200_000.00
+        # 3.5% of 10M = 350K, but min is 800K
+        assert result.monthly_price_cop == 800_000.00
         assert result.recommended_price == 350_000.00
 
     def test_boutique_max_price_enforced(self):
@@ -297,7 +297,7 @@ class TestTierConfig:
         assert config["room_min"] == 10
         assert config["room_max"] == 25
         assert config["percentage"] == 0.035
-        assert config["min_price"] == 1_200_000
+        assert config["min_price"] == 800_000
         assert config["max_price"] == 2_500_000
 
     def test_standard_config(self):
@@ -351,7 +351,7 @@ class TestMetadata:
 
         tier_config = result.metadata["tier_config"]
         assert tier_config["percentage"] == 0.035
-        assert tier_config["min_price"] == 1_200_000
+        assert tier_config["min_price"] == 800_000
 
 
 class TestYAMLLoading:
@@ -371,7 +371,7 @@ class TestYAMLLoading:
             calc = PricingCalculator()
 
         # Should fall back to defaults
-        assert calc.TIER_CONFIG[HotelTier.BOUTIQUE]["min_price"] == 1_200_000
+        assert calc.TIER_CONFIG[HotelTier.BOUTIQUE]["min_price"] == 800_000
         assert calc.GATE_MIN_RATIO == 0.03
         assert calc.GATE_MAX_RATIO == 0.06
 
@@ -384,7 +384,7 @@ class TestYAMLLoading:
             calc = PricingCalculator()
 
         # Should fall back to defaults
-        assert calc.TIER_CONFIG[HotelTier.BOUTIQUE]["min_price"] == 1_200_000
+        assert calc.TIER_CONFIG[HotelTier.BOUTIQUE]["min_price"] == 800_000
         assert calc.GATE_MIN_RATIO == 0.03
 
     def test_pricing_yaml_loaded_successfully(self):
@@ -396,7 +396,7 @@ class TestYAMLLoading:
 
         # Values from config/pricing.yaml
         assert calc.TIER_CONFIG[HotelTier.BOUTIQUE]["percentage"] == 0.035
-        assert calc.TIER_CONFIG[HotelTier.BOUTIQUE]["min_price"] == 1_200_000
+        assert calc.TIER_CONFIG[HotelTier.BOUTIQUE]["min_price"] == 800_000
         assert calc.GATE_MIN_RATIO == 0.03
         assert calc.GATE_MAX_RATIO == 0.06
 

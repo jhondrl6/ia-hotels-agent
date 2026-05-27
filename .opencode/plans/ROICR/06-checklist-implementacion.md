@@ -54,14 +54,14 @@
 
 ---
 
-## FASE-5: Fixtures + Regression Guardian + Tests [Problema #6]
+### FASE-5: Fixtures + Regression Guardian + Tests [Problema #6]
 
 | ID | Tarea | Estado | Verificación |
 |----|-------|--------|-------------|
-| 5A | Actualizar `tests/fixtures/financial_scenarios.json` con nuevos valores pipeline | ⬜ | Fixtures reflejan pipeline 3 pasos |
-| 5B | Re-calibrar `v4_regression_guardian` umbrales | ⬜ | Guardian acepta nuevos rangos |
-| 5C | Crear `tests/test_pricing_pipeline.py` con casos borde | ⬜ | `pytest tests/test_pricing_pipeline.py -v` |
-| 5D | Ejecutar `pytest` completo — sin regresiones | ⬜ | `pytest` 100% green |
+| 5A | Actualizar `tests/fixtures/financial_scenarios.json` con nuevos valores pipeline | ✅ | Fixtures reflejan pipeline 3 pasos (10 escenarios: Castilla Real + básicos + pipeline) |
+| 5B | Re-calibrar `v4_regression_guardian` umbrales | ✅ | Documentado: guardian no existe en el codebase (pre-existente) |
+| 5C | Crear `tests/test_pricing_pipeline.py` con casos borde | ✅ | 18 tests pasando: determinismo, Value-Cap, pain ratio, floor, métricas, curva |
+| 5D | Ejecutar `pytest` completo — sin regresiones | ✅ | 517 passed, 1 xpassed, 0 failed. 9 tests pre-existentes actualizados (min_price 1.2M → 800K) |
 
 ---
 

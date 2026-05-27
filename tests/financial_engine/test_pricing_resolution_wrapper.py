@@ -279,10 +279,10 @@ class TestActiveMode:
         assert result.pain_ratio == round(2_500_000 / 100_000_000, 4)
 
         # Boutique with very low loss (would be below min)
-        expected_loss = 10_000_000  # 3.5% = 350K, but min is 1.2M
+        expected_loss = 10_000_000  # 3.5% = 350K, but min is 800K
         result = wrapper.resolve(rooms=20, expected_loss_cop=expected_loss)
 
-        assert result.monthly_price_cop == 1_200_000  # floored at min
+        assert result.monthly_price_cop == 800_000  # floored at min
 
     def test_active_mode_different_tiers(self):
         """Test ACTIVE mode with different tiers."""
@@ -631,7 +631,7 @@ class TestEdgeCases:
         result = wrapper.resolve(rooms=20, expected_loss_cop=1_000_000)
 
         # Should be floored at min price for boutique
-        assert result.monthly_price_cop == 1_200_000
+        assert result.monthly_price_cop == 800_000
 
     def test_very_large_expected_loss(self):
         """Test resolution with very large expected loss."""

@@ -57,7 +57,7 @@
   "modules/commercial_documents/coherence_validator.py": "FASE-1",
   "modules/scrapers/web_scraper.py": "FASE-E",
   "modules/financial_engine/scenario_calculator.py": "PROSPECCION-II",
-  "tests/financial_engine/test_scenario_calculator.py": "FASE-B",
+  "tests/financial_engine/test_scenario_calculator.py": "FASE-5",
   "modules/financial_engine/adr_resolution_wrapper.py": "FIN-2B",
   "modules/validation/coherence_validator.py": "FASE-E",
   "modules/financial_engine/regional_adr_resolver.py": "FIN-2A",
@@ -183,5 +183,12 @@
   "modules/financial_engine/roi_formatter.py": "FASE-3",
   "modules/financial_engine/pillar_maturity_curve.py": "FASE-3",
   "config/pricing.yaml": "FASE-3",
-  "config/scenarios.yaml": "FASE-3"
+  "config/scenarios.yaml": "FASE-3",
+  "tests/fixtures/financial_scenarios.json": "FASE-5",
+  "tests/test_pricing_pipeline.py": "FASE-5",
+  "tests/financial_engine/test_pricing_calculator.py": "FASE-5",
+  "tests/financial_engine/test_pricing_resolution_wrapper.py": "FASE-5",
+  ".opencode/plans/ROICR/06-checklist-implementacion.md": "FASE-5",
+  ".opencode/plans/ROICR/09-documentacion-post-proyecto.md": "FASE-5",
+  ".opencode/plans/ROICR/dependencias-fases.md": "FASE-5"
 }
