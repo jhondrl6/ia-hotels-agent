@@ -57,7 +57,7 @@ ${asset_quality_table}
 
 ${monthly_report_disclaimer}
 
-**Nota sobre AEO**: AEO (Answer Engine Optimization) se construye sobre Schema FAQ + Open Graph — ambos incluidos en su kit. No requiere assets adicionales.
+**Nota sobre Optimización para Asistentes de Voz**: Esta tecnología (Siri, Alexa, Google Assistant) se construye sobre Schema FAQ + Open Graph — ambos incluidos en su kit. No requiere assets adicionales.
 
 ---
 
