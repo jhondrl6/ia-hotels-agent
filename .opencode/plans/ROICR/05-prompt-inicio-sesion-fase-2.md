@@ -6,6 +6,7 @@
 > **Tipo de ejecución**: DIRECTA (código + tests)
 > **Plan**: ROICR
 > **Prerrequisito**: FASE-1 completada (AssetSemanticsValidator existe)
+> **Estado**: ✅ COMPLETADA — 2026-05-27
 
 ## Contexto previo
 

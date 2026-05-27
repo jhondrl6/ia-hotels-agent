@@ -43,6 +43,7 @@ from modules.financial_engine.no_defaults_validator import (
 )
 from modules.quality_gates.ethics_gate import EthicsGate, EthicsStatus
 from modules.postprocessors.document_quality_gate import DocumentQualityGate
+from modules.quality.asset_semantics_validator import validar_semantica_comercial
 
 
 # =============================================================================
@@ -801,6 +802,10 @@ class PublicationGatesOrchestrator:
         has a corresponding generated asset. Missing assets mean the client
         is paying for something they don't receive.
 
+        FASE-2: BLOCKING para P1 — si un asset asociado a un dolor P1
+        tiene status NOT_READY o BLOCKED, el gate retorna BLOCKED.
+        Excepcion: si status == "skipped_existing" → pasa PERO narrativa AUDIT_ONLY.
+
         FASE-D: Before marking as "missing", verifies via SitePresenceChecker if the asset
         already exists in the production site. If EXISTS, marks as "present_in_production".
 
@@ -808,17 +813,17 @@ class PublicationGatesOrchestrator:
         El generador de propuestas (_generate_dynamic_services_table) filtra dinámicamente
         servicios según pain_ids detectados y assets realmente generados. Por tanto, un
         alignment_percentage < 100% puede ser esperado cuando el generador excluye
-        servicios cuyos pain_ids no están presentes o cuyos assets no se generaron.
+        servicios cujos pain_ids no están presentes o cuyos assets no se generaron.
         Ver FASE-PATCH-B para contexto completo.
 
-        Status: WARNING (not blocking) if assets are missing.
-        Threshold: All 7 promised services should have assets.
+        Status: PASSED / WARNING (servicios P2/P3), BLOCKED (servicios P1 con status NOT_READY/BLOCKED).
+        Threshold: alignment >= 80% para P2/P3.
 
         Args:
             assessment: Assessment dictionary with generated_assets and/or proposal_services
 
         Returns:
-            PublicationGateResult with status WARNING if missing assets
+            PublicationGateResult with status PASSED, WARNING, or BLOCKED
         """
         gate_name = "proposal_asset_alignment"
 
@@ -827,9 +832,24 @@ class PublicationGatesOrchestrator:
             ALL_PROMISED_SERVICES,
             PROPOSAL_SERVICE_TO_ASSET,
         )
+        from modules.commercial_documents.pain_solution_mapper import PainSolutionMapper
 
         generated_assets = assessment.get("generated_assets", [])
         proposal_services = assessment.get("proposal_services", ALL_PROMISED_SERVICES)
+
+        # FASE-2: Extract asset status map (asset_type -> status) from assessment
+        # Status values: NOT_READY, BLOCKED, skipped_existing, IMPLEMENT, DEPRECATED, etc.
+        asset_status_map: Dict[str, str] = {}
+        for asset in generated_assets:
+            at = asset.get("asset_type", "")
+            status = asset.get("status", "IMPLEMENT")  # Default to IMPLEMENT if not set
+            if at:
+                asset_status_map[at] = status
+
+        # Inyectar asset_status_map en assessment para que verify_proposal_asset_alignment
+        # pueda usarlo (retrocompatibilidad con otros consumidores)
+        assessment_with_status = dict(assessment)
+        assessment_with_status["_asset_status_map"] = asset_status_map
 
         # FASE-D: Check site presence for assets not in generated_assets
         site_presence_report = assessment.get("site_presence_report")  # Allow pre-built report in assessment
@@ -840,8 +860,8 @@ class PublicationGatesOrchestrator:
                 checker = SitePresenceChecker()
                 # Only check assets that are NOT in generated_assets (the missing ones)
                 missing_asset_types = [
-                    PROPOSAL_SERVICE_TO_ASSET.get(svc) 
-                    for svc in proposal_services 
+                    PROPOSAL_SERVICE_TO_ASSET.get(svc)
+                    for svc in proposal_services
                     if svc in PROPOSAL_SERVICE_TO_ASSET
                 ]
                 # Filter to only assets we need to check (those not generated)
@@ -868,6 +888,134 @@ class PublicationGatesOrchestrator:
             audit_schema=assessment.get("audit_schema"),  # FASE-12B: coherence/divergence detection
         )
 
+        # ========================================================================
+        # FASE-2: P1 Blocking — verificar services cuya asset status es NOT_READY
+        # o BLOCKED, y cuyo pain_id correspondiente tiene priority=1.
+        # Si existe algun P1 bloqueado (sin skipped_existing), gate BLOCKED.
+        # ========================================================================
+        pain_map = PainSolutionMapper.PAIN_SOLUTION_MAP
+        # Invert: asset_type -> pain_id(s) that this asset solves
+        # Build a map: pain_id -> priority
+        pain_priority_map: Dict[str, int] = {}
+        for pain_id, mapping in pain_map.items():
+            priority = mapping.get("priority", 3)
+            pain_priority_map[pain_id] = priority
+
+        # For each service in proposal_services, find its pain_ids and check P1 blocking
+        def get_pain_ids_for_asset(asset_type: str) -> List[str]:
+            """Find pain_ids that are solved by this asset_type."""
+            pain_ids = []
+            for pain_id, mapping in pain_map.items():
+                assets = mapping.get("assets", [])
+                if asset_type in assets:
+                    pain_ids.append(pain_id)
+            return pain_ids
+
+        p1_blocked_services: List[Dict[str, str]] = []  # [{service_name, asset_type, status, reason}]
+        p1_services_all: List[str] = []  # All services that solve P1 pains
+
+        for service_name in proposal_services:
+            asset_type = PROPOSAL_SERVICE_TO_ASSET.get(service_name)
+            if not asset_type:
+                continue
+
+            # Get asset status (from generated_assets, from site presence, or default)
+            asset_status = asset_status_map.get(asset_type)
+            if not asset_status:
+                # Check if it's present in production
+                present = next(
+                    (s for s in report.present_in_production if s.service_name == service_name),
+                    None
+                )
+                if present:
+                    # Exists in production — check if it has status metadata
+                    asset_status = "present_in_production"
+                else:
+                    # Missing, not generated — status from PainSolutionMapper might give us info
+                    asset_status = None
+
+            if not asset_status or asset_status in ("IMPLEMENT", "present_in_production"):
+                continue
+
+            if asset_status == "skipped_existing":
+                continue  # Exception: passes with AUDIT_ONLY narrative (handled elsewhere)
+
+            if asset_status not in ("NOT_READY", "BLOCKED"):
+                continue  # Only block on NOT_READY or BLOCKED
+
+            # This asset is NOT_READY or BLOCKED — check if it's for a P1 pain
+            pain_ids = get_pain_ids_for_asset(asset_type.__str__() if asset_type else "")
+            is_p1 = any(pain_priority_map.get(pid, 3) == 1 for pid in pain_ids)
+            if is_p1:
+                p1_blocked_services.append({
+                    "service_name": service_name,
+                    "asset_type": asset_type,
+                    "status": asset_status,
+                    "reason": f"Asset '{asset_type}' es {asset_status} y resuelve dolor P1"
+                })
+                p1_services_all.append(service_name)
+
+        if p1_blocked_services:
+            blocked_service_names = [s["service_name"] for s in p1_blocked_services]
+            message = (
+                f"BLOQUEO P1: {len(p1_blocked_services)} servicio(s) con asset "
+                f"bloqueado/no-listo: {', '.join(blocked_service_names)}"
+            )
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=False,
+                status=GateStatus.BLOCKED,
+                message=message,
+                value=0.0,
+                suggestion=(
+                    "Activar o resolver el asset antes de publicar. "
+                    "Un asset NOT_READY/BLOCKED asociado a dolor P1 no puede prometerse al cliente."
+                ),
+                details={
+                    "p1_blocked": p1_blocked_services,
+                    "report": report.to_dict(),
+                },
+            )
+
+        # ========================================================================
+        # FASE-1 Integration: semantic validation via validar_semantica_comercial
+        # Verificar hallucinations (Bloqueado semantico) en aligned/missing assets.
+        # ========================================================================
+        semantic_blocked: List[Dict[str, str]] = []
+        all_services = proposal_services if proposal_services else ALL_PROMISED_SERVICES
+        for service_name in all_services:
+            asset_type = PROPOSAL_SERVICE_TO_ASSET.get(service_name)
+            if not asset_type:
+                continue
+            # Get pain_ids for this asset
+            pain_ids = get_pain_ids_for_asset(asset_type)
+            for pain_id in pain_ids:
+                asset_status = asset_status_map.get(asset_type, "IMPLEMENT")
+                ok, result = validar_semantica_comercial(pain_id, asset_type, asset_status)
+                if not ok and result.startswith("BLOCKED:"):
+                    semantic_blocked.append({
+                        "service_name": service_name,
+                        "pain_id": pain_id,
+                        "asset_type": asset_type,
+                        "reason": result,
+                    })
+
+        if semantic_blocked:
+            blocked_msgs = [f"{s['service_name']}({s['pain_id']})" for s in semantic_blocked]
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=False,
+                status=GateStatus.BLOCKED,
+                message=f"ALUCINACION: mapeo dolor→asset invalido: {', '.join(blocked_msgs)}",
+                value=0.0,
+                suggestion="El asset no puede resolver este dolor semanticamente. Revisar propuesta.",
+                details={"semantic_blocked": semantic_blocked, "report": report.to_dict()},
+            )
+
+        # ========================================================================
+        # Continue with normal alignment checks (after P1 blocking and semantic validation)
+        # ========================================================================
+
         if report.all_aligned:
             # FASE-D: Count present_in_production as effectively aligned
             present_count = len(report.present_in_production)
@@ -892,7 +1040,7 @@ class PublicationGatesOrchestrator:
 
         missing_names = [s.service_name for s in report.missing]
         present_in_prod_names = [s.service_name for s in report.present_in_production]
-        
+
         # FASE-D: Build better message showing what's missing vs already exists
         message_parts = []
         if missing_names:
@@ -902,9 +1050,9 @@ class PublicationGatesOrchestrator:
         if report.redundant:
             redundant_names = [s.service_name for s in report.redundant]
             message_parts.append(f"{len(redundant_names)} redundant: {', '.join(redundant_names)}")
-        
+
         message = "; ".join(message_parts) if message_parts else f"{len(missing_names)} promised service(s) missing assets"
-        
+
         # FASE-2: Effective alignment includes present_in_production as "satisfied"
         # A service present in production counts towards the alignment target.
         total_services_with_presence = report.total_services + len(report.present_in_production)

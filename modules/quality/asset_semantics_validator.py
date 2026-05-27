@@ -19,12 +19,20 @@ logger = logging.getLogger(__name__)
 # These mappings are semantically wrong regardless of confidence.
 # Example: monthly_report is a commercial INTERNAL tool - it does NOT
 # fix FAQ/schema/IAO gaps.
+#
+# NOTE: FASE-2 audit found this dict had WRONG keys (asset_type instead of pain_id).
+# Original keys: "monthly_report" and "whatsapp_conflict_guide" (these are asset_types).
+# Corrected keys below use real pain_ids from PainSolutionMapper.PAIN_SOLUTION_MAP.
 # ---------------------------------------------------------------
 INVALID_MAPPINGS: Dict[str, List[str]] = {
     # monthly_report es un informe interno, no resuelve gaps técnicos de SEO/IAO
-    "monthly_report": ["faq_missing", "schema_missing", "llms_missing"],
+    # "monthly_report" key was wrong → correct pain_id: "no_faq_schema"
+    "no_faq_schema": ["monthly_report"],
+    "no_hotel_schema": ["monthly_report"],
+    "missing_llmstxt": ["monthly_report"],
     # whatsapp_conflict_guide no resuelve "missing WhatsApp" — the guide is advisory
-    "whatsapp_conflict_guide": ["whatsapp_missing"],
+    # "whatsapp_conflict_guide" key was wrong → correct pain_id: "no_whatsapp_visible"
+    "no_whatsapp_visible": ["whatsapp_conflict_guide"],
 }
 
 
