@@ -140,3 +140,4 @@
 | FASE-3 | 2026-05-26 | ✅ Verificación + 2 fixes | ADR ya conectado (verificado); adr_source agregado a JSON; PIPELINE_VERSION en ambos generators |
 | FASE-4 | 2026-05-26 | ✅ 3/3 fixes aplicados | Anexo APIs → párrafo transparencia; tier_explanation en financial_scenarios.json; pain_ratio_note en diagnóstico |
 | FASE-5 | 2026-05-26 | ✅ v4complete + análisis 5 niveles | `evidence/ROI-REFACTOR/analisis_post_implementacion.md`; Coherence 0.83; Gates 10/11; ROI -$5.4M COP / 0.3X; ADR fuente: handler (web scraping); versión frontmatter: 4.53.0; ⚠️ ENVIABLE CON DEUDAS COMERCIALES |
+| FASE-RELEASE | 2026-05-26 | ✅ 4/4 docs actualizados | `REGISTRY.md` + `CHANGELOG.md` + `README.md` + `VERSION.yaml` (bump a v4.54.0) |

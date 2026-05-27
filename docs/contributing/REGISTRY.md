@@ -7611,6 +7611,42 @@ _Ninguno_
 
 ---
 
+## FASE-RELEASE - 2026-05-26
+**Descripcion:** ROI-REFACTOR FASE-RELEASE: consolidacion v4.54.0 — 5 fases de implementacion validadas + 2 deuda tecnicas conocidas
+
+### Resumen de cambios
+- FASE-0: Decision comercial — Opcion E (Piloto 250K COP + credito a retainer + success fee capped)
+- FASE-A: document_audience switch + testimonios condicionales + nota pain_ratio corregida
+- FASE-B: Lenguaje de negocio (AEO/UTMs/P1-P3) + tabla entregables con Momento de entrega
+- FASE-C: ADR source en financial_scenarios.json + version dinamica desde VERSION.yaml
+- FASE-D: Anexo APIs simplificado + tier_explanation en JSON + pain_ratio_note en diagnostico
+- FASE-5: v4complete Hotel Castilla Real verificado (Coherence 0.83, Gates 10/11)
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Bump 4.53.0 → 4.54.0 (ROI-REFACTOR) |
+| `CHANGELOG.md` | Entrada [4.54.0] — ROI-REFACTOR |
+| `README.md` | Version 4.54.0 |
+| `REGISTRY.md` | FASE-RELEASE + consolidate FASE-0 a FASE-5 |
+
+### Validaciones
+- [x] v4complete Hotel Castilla Real: Coherence 0.83 >= 0.80
+- [x] Gates 10/11 PASS (1 deuda conocida: CG-ROI-NEGATIVE con pain_ratio inflado por min_price floor)
+- [x] ADR source: "handler" (web scraping via handler)
+- [x] PIPELINE_VERSION en frontmatter: 4.53.0 (leido de VERSION.yaml)
+- [x] Pain ratio note: 41% (inversion/pérdida) — corregido de 20%
+- [x] financial_scenarios.json: tier_explanation presente
+- [x] Transparency section en propuesta: párrafo en lugar de tabla de APIs
+
+### Deudas Tecnicas Conocidas (para tracking)
+| ID | Deuda | Severidad |
+|----|-------|-----------|
+| DT01 | pain_ratio 41% (propuesta) vs 20% (diagnostico) — artefacto del min_price floor | Media — no bloquea entrega |
+| DT02 | precision_tier=C + can_show_exact_money=false — sin redondeo implementado | Media — gap conocido |
+
+---
+
 ## Estadisticas
 
 ||| Fase | Fecha | Tests | Status |

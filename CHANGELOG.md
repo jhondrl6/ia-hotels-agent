@@ -1,6 +1,35 @@
 # Changelog
 
-## [4.53.0] — PROPUESTA-COMERCIAL (2026-05-26)
+## [4.54.0] — ROI-REFACTOR (2026-05-26)
+
+### Objetivo
+Cierre del proyecto ROI-REFACTOR: 5 fases de implementacion — decision comercial, simplificacion de documentos y transparencia financiera.
+
+### Arreglado
+- **FASE-0**: Decision comercial — Opcion E (Piloto 250K COP + credito a retainer + success fee capped) para hotel boutique sin GA4
+- **FASE-A**: `document_audience` switch (cliente vs interno) + testimonios condicionales (`testimonials_present`) + nota pain_ratio corregida (inversion/pérdida)
+- **FASE-B**: Lenguaje de negocio en propuesta — AEO→"Optimizacion para Asistentes de Voz", UTMs→"sistema de rastreo", P1/P2/P3→Fase 1/2/3 + tabla entregables con momento de entrega
+- **FASE-C**: `adr_source` expuesto en `input_data` de financial_scenarios.json + `_get_pipeline_version()` desde VERSION.yaml (reemplaza hardcode "4.0.0")
+- **FASE-D**: Anexo APIs → párrafo de transparencia ("múltiples modelos IA") + `tier_explanation` en JSON + `pain_ratio_note` en diagnostico y propuesta
+- **FASE-5**: v4complete Hotel Castilla Real verificado — Coherence 0.83, Gates 10/11
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Bump 4.53.0 → 4.54.0 |
+| `modules/commercial_documents/v4_proposal_generator.py` | FASE-A/B/C/D: document_audience, testimonials, business language, entregables, version dinamica, transparency paragraph, pain_ratio_note |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | FASE-A/C/D: document_audience, version dinamica, tier_explanation, pain_ratio_note |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | FASE-A/B: testimonios condicionales, lenguaje de negocio, momento de entrega, paragraph transparencia |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | FASE-D: `${pain_ratio_note}` placeholder |
+| `main.py` | FASE-C/D: adr_source en input_data, tier_explanation en financial_scenarios.json |
+| `README.md` | Version 4.54.0 |
+
+### Deudas Tecnicas (known)
+- **DT01**: pain_ratio 41% (propuesta) vs 20% (diagnostico) — artefacto del min_price floor en pricing_calculator.py. No bloquea entrega. Documentado en nota del diagnostico.
+- **DT02**: precision_tier=C + can_show_exact_money=false — sin redondeo implementado. Gap conocido, no bloquea.
+
+### Backwards compatibility
+Si. Cambios de documentos comerciales y metadata financiera — la logica core del pipeline no cambia.
 
 ### Objetivo
 Cierre del proyecto PROPUESTA-COMERCIAL: 14 hallazgos corregidos en 5 fases de implementación.

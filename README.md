@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.53.0** -- PROPUESTA-COMERCIAL | Actualizado 30 Mayo 2026 | +2,743 pruebas automatizadas | 0 errores conocidos
+**v4.54.0** -- ROI-REFACTOR | Actualizado 26 Mayo 2026 | +2,743 pruebas automatizadas | 0 errores conocidos
 
 ---
 

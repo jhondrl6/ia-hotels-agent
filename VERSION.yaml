@@ -5,13 +5,14 @@ codename: "PROPUESTA-COMERCIAL"
 release_date: "2026-05-26"
 plan_maestro_version: "v2.6.0"
 
-# v4.53.0 - PROPUESTA-COMERCIAL (2026-05-26)
-# FASE-A: CODE-1/3/4+CODE-2: Unificación financiera + gate sync
-# FASE-B: CROSS-1: Puente dual fuga bruta/recuperación efectiva
-# FASE-C: CROSS-2+4: Mapping brecha→servicio + WhatsApp conflict
-# FASE-D: V-2+V-3+A-1+CROSS-5: Labels, jargon, onboarding, confidence
-# FASE-E: A-2+V-4/5/6+A-3+CROSS-6: AEO, paquete, typo, gate blocking
-# Backwards compatible: cambios de documentos comerciales, no lógica core
+# v4.54.0 - ROI-REFACTOR (2026-05-26)
+# FASE-0: Decision comercial — Opcion E (Piloto 250K + success fee capped)
+# FASE-A: document_audience switch + testimonios condicionales + pain_ratio note
+# FASE-B: Lenguaje de negocio (AEO/UTMs/P1-P3) + tabla entregables con Momento de entrega
+# FASE-C: adr_source en financial_scenarios.json + version dinamica desde VERSION.yaml
+# FASE-D: Anexo APIs → paragraph transparencia + tier_explanation en JSON + pain_ratio_note
+# FASE-5: v4complete Hotel Castilla Real — Coherence 0.83, Gates 10/11
+# Backwards compatible: cambios de documentos comerciales, no logica core
 
 # v4.52.0 - DIAGNOSTIC-ALIGNMENT (2026-05-25)
 # FASE-A: Fix E1 (tabla escenarios → financial_value_range) + E2 (tabla Antes/Ahora)
