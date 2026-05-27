@@ -62,32 +62,32 @@
 
 ## FASE-5: v4complete + Análisis [ex-FASE-E]
 
-|| ID | Tarea | Estado | Verificación |
-|----|-------|--------|-------------|
-| E1 | Ejecutar v4complete Hotel Castilla Real | ⬜ | Output files generados |
-| E2 | Análisis post-implementación 5 niveles | ⬜ | `analisis_post_implementacion.md` |
-| E3 | Veredicto comercial + comparativa pre/post | ⬜ | Veredicto documentado |
+||| ID | Tarea | Estado | Verificación |
+||----|-------|--------|-------------|
+|| E1 | Ejecutar v4complete Hotel Castilla Real | ✅ | Output files generados (diagnóstico + propuesta + financial_scenarios) |
+|| E2 | Análisis post-implementación 5 niveles | ✅ | `evidence/ROI-REFACTOR/analisis_post_implementacion.md` — 5 niveles verificados |
+|| E3 | Veredicto comercial + comparativa pre/post | ✅ | Veredicto: ⚠️ ENVIABLE CON DEUDAS COMERCIALES; comparativa pre/post documentada |
 
 ---
 
 ## Métricas Finales (post FASE-5)
 
-|| Métrica | Pre-ROI-REFACTOR | Post-ROI-REFACTOR |
+||| Métrica | Pre-ROI-REFACTOR | Post-ROI-REFACTOR |
 |---------|-----------------|-------------------|
-| Coherence Score | 0.83 | [ ] |
-| Publication Gates | 10/11 | [ ] |
-| Blocking Issues | 0 | [ ] |
-| Alertas visibles al cliente | Sí | No |
-| Placeholder testimonios | Sí | No |
-| Nota pain_ratio correcta | No | Sí |
-| Jerga técnica | Presente | Traducida |
-| Entregables | % confianza | Momento de entrega |
-| ADR fuente | Benchmark | [ ] |
-| Versión frontmatter | 4.0.0 | [dinámica] |
-| APIs visibles | Sí | No |
-| Tiers documentados | No | Sí |
-| Decisión comercial | ❌ No tomada | ✅ Opción E documentada |
-| ROI 6m | -$5,367,168 COP | [ ] (sin cambio — deuda comercial) |
+| Coherence Score | 0.83 | 0.83 ✅ |
+| Publication Gates | 10/11 | 10/11 ✅ |
+| Blocking Issues | 0 | 0 ✅ |
+| Alertas visibles al cliente | Sí | No ✅ |
+| Placeholder testimonios | Sí | No ✅ |
+| Nota pain_ratio correcta | No | Sí ✅ |
+| Jerga técnica | Presente | Traducida ✅ |
+| Entregables | % confianza | Momento de entrega ✅ |
+| ADR fuente | Benchmark | Web scraping (handler) ✅ |
+| Versión frontmatter | 4.0.0 | 4.53.0 ✅ |
+| APIs visibles | Sí | No ✅ |
+| Tiers documentados | No | Sí ✅ |
+| Decisión comercial | ❌ No tomada | ✅ Opción E documentada ✅ |
+| ROI 6m | -$5,367,168 COP | -$5,367,168 COP (deuda comercial, sin cambio técnico) |
 
 ---
 

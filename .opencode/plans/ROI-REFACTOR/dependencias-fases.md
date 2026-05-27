@@ -83,4 +83,4 @@ Sesión 6  → FASE-5 (Ejecución — v4complete + análisis)
 | FASE-2 | ✅ COMPLETADA | 2026-05-26 | propuesta_v6_template.md + v4_proposal_generator.py |
 | FASE-3 | ✅ COMPLETADA | 2026-05-26 | main.py (adr_source en financial_scenarios.json), v4_proposal_generator.py, v4_diagnostic_generator.py (PIPELINE_VERSION) |
 | FASE-4 | ✅ COMPLETADA | 2026-05-26 | propuesta_v6_template.md (Anexo APIs → párrafo transparencia), v4_proposal_generator.py (stubs IAO removidos), main.py (tier_explanation en JSON), v4_diagnostic_generator.py (pain_ratio_note + tier_explanation en JSON), diagnostico_v6_template.md (${pain_ratio_note}) |
-| FASE-5 | ⬜ PENDIENTE | — | — |
+|| FASE-5 | ✅ COMPLETADA | 2026-05-26 | `evidence/ROI-REFACTOR/analisis_post_implementacion.md` |"
