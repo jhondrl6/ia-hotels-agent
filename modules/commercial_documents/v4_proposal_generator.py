@@ -1651,8 +1651,13 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         for asset in sorted(asset_plan, key=lambda x: x.priority):
             icon = confidence_to_icon(asset.confidence_level)
             priority = priority_icons.get(asset.priority, "⚪ P?")
-            
-            row = f"| {asset.problem_solved} | {asset.description} | `{asset.asset_type}` | {priority} | {icon} {asset.confidence_level.value} |"
+
+            # ROICR FASE-1: AUDIT_ONLY assets — audit verb instead of implementation
+            problem_text = asset.problem_solved
+            if getattr(asset, 'semantic_status', 'IMPLEMENT') == 'AUDIT_ONLY':
+                problem_text = f"Auditar y Optimizar: {problem_text}"
+
+            row = f"| {problem_text} | {asset.description} | `{asset.asset_type}` | {priority} | {icon} {asset.confidence_level.value} |"
             rows.append(row)
         
         return "\n".join(rows) if rows else "| Sin assets planificados | - | - | - | - |"

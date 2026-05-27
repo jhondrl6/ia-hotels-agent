@@ -258,6 +258,8 @@ class AssetSpec:
     can_generate: bool = False
     reason: str = ""
     requires_manual_action: bool = False  # True if asset is MANUAL_ONLY
+    # ROICR FASE-1: semantic validation — IMPLEMENT (normal) | AUDIT_ONLY (skipped_existing)
+    semantic_status: str = "IMPLEMENT"
 
 
 @dataclass

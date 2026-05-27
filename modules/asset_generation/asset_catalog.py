@@ -9,9 +9,8 @@ Created as part of FASE-ASSET-02: Catálogo Unificado.
 """
 
 from dataclasses import dataclass
-from dataclasses import dataclass
 from enum import Enum
-from typing import List, Dict, Any, Literal
+from typing import List, Dict, Any, Literal, Optional
 
 class AssetStatus(Enum):
     """Status of an asset in the catalog."""
@@ -49,6 +48,8 @@ class AssetCatalogEntry:
     status: AssetStatus
     promised_by: List[str]
     priority: Literal["REQUIRED", "RECOMMENDED"] = "REQUIRED"  # FASE-0H-G8
+    # ROICR FASE-1: migration target for deprecated assets
+    migration_target: Optional[str] = None  # None = consultoria manual / no redirect
 
 
 # Asset Catalog - Single Source of Truth
@@ -107,7 +108,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_basic_geo_guide",
         block_on_failure=False,
         status=AssetStatus.DEPRECATED,  # FASE-PROP-D: Eliminado — redundante con delivery GEO
-        promised_by=[]
+        promised_by=[],
+        migration_target=None,  # ROICR FASE-1: Deprecado sin redirect — consultoria manual GEO
     ),
     "review_plan": AssetCatalogEntry(
         asset_type="review_plan",
@@ -220,7 +222,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_voice_guide",
         block_on_failure=False,
         status=AssetStatus.DEPRECATED,  # FASE-5: ELIMINADO de pipeline - sin brecha real
-        promised_by=[]
+        promised_by=[],
+        migration_target=None,  # ROICR FASE-1: Deprecado — sin redirect automatico
     ),
     # === IAO ASSETS (GAP-IAO-01-02-C) ===
     "ssl_guide": AssetCatalogEntry(
@@ -245,6 +248,7 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         status=AssetStatus.IMPLEMENTED,
         promised_by=["no_og_tags"],
         priority="RECOMMENDED",  # FASE-0H-G8: OG tags may not exist; setup guide is still valid
+        migration_target="open_graph",  # ROICR FASE-1: open_graph genera OG tags directamente
     ),
     "alt_text_guide": AssetCatalogEntry(
         asset_type="alt_text_guide",
@@ -303,6 +307,7 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         status=AssetStatus.IMPLEMENTED,
         promised_by=["low_organic_visibility"],
         priority="RECOMMENDED",  # FASE-0H-G8: organic traffic may not be available
+        migration_target=None,  # ROICR FASE-1: consultoria manual — no hay redirect automatico
     ),
     # FASE-E: Micro-Content Local Generator
     "local_content_page": AssetCatalogEntry(
@@ -310,7 +315,7 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         template="local_content/page_template.md",
         output_name="{prefix}contenido_local_{slug}{suffix}.md",
         required_field="hotel_data",
-        required_confidence=0.5,
+        required_confidence=0.60,  # ROICR FASE-1: presentado como Bonus (antes 0.50)
         fallback="generate_basic_local_content",
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,

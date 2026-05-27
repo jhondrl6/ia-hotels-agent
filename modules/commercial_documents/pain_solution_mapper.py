@@ -42,6 +42,11 @@ class Solution:
     validation_fields: List[str]
     estimated_impact: str  # "high", "medium", "low"
     priority: int = 2  # 1=P1, 2=P2, 3=P3
+    # ROICR FASE-1: semantic validation result
+    # IMPLEMENT = normal, AUDIT_ONLY = skipped_existing, BLOCKED = hallucination
+    semantic_status: str = "IMPLEMENT"
+    semantic_blocked_reason: Optional[str] = None
+    migration_target: Optional[str] = None  # redirect asset for deprecated/llmstxt
 
 
 class PainSolutionMapper:
@@ -653,6 +658,40 @@ class PainSolutionMapper:
                         )
                         continue
                         
+                    # ROICR FASE-1: semantic validation of pain→asset mapping
+                    from modules.asset_generation.asset_catalog import ASSET_CATALOG
+                    entry = ASSET_CATALOG.get(asset_type)
+                    asset_status = entry.status.value if entry else "unknown"
+                    from modules.quality.asset_semantics_validator import validar_semantica_comercial
+                    is_valid, status = validar_semantica_comercial(pain.id, asset_type, asset_status)
+                    if not is_valid:
+                        # Semantic hallucination: check for migration_target
+                        if entry and entry.migration_target:
+                            redirect_to = entry.migration_target
+                            logger.info(
+                                f"[AssetSemantics] Redirecting BLOCKED asset '{asset_type}' "
+                                f"→ migration_target '{redirect_to}' for pain '{pain.id}'"
+                            )
+                            if redirect_to != asset_type and is_asset_implemented(redirect_to):
+                                solutions.append(Solution(
+                                    pain_id=pain.id,
+                                    asset_type=redirect_to,
+                                    asset_name=self.ASSET_NAMES.get(redirect_to, redirect_to),
+                                    description=f"[REDIRECT] {mapping['description']}",
+                                    confidence_required=mapping["confidence_required"],
+                                    validation_fields=mapping["validation_fields"],
+                                    estimated_impact=mapping["estimated_impact"],
+                                    priority=mapping.get("priority", 2),
+                                    semantic_status="IMPLEMENT",
+                                    migration_target=redirect_to
+                                ))
+                        else:
+                            logger.warning(
+                                f"[AssetSemantics] BLOCKED '{asset_type}' for pain '{pain.id}' "
+                                f"— no migration_target, marking UNRESOLVED"
+                            )
+                        continue
+
                     solutions.append(Solution(
                         pain_id=pain.id,
                         asset_type=asset_type,
@@ -661,7 +700,8 @@ class PainSolutionMapper:
                         confidence_required=mapping["confidence_required"],
                         validation_fields=mapping["validation_fields"],
                         estimated_impact=mapping["estimated_impact"],
-                        priority=mapping.get("priority", 2)
+                        priority=mapping.get("priority", 2),
+                        semantic_status=status  # IMPLEMENT or AUDIT_ONLY
                     ))
         
         return solutions
@@ -719,6 +759,21 @@ class PainSolutionMapper:
             # Get priority from mapping (default to 2 if not specified)
             priority = mapping.get("priority", 2)
             
+            # ROICR FASE-1: semantic validation
+            from modules.asset_generation.asset_catalog import ASSET_CATALOG
+            entry = ASSET_CATALOG.get(asset_type)
+            asset_status = entry.status.value if entry else "implemented"
+            from modules.quality.asset_semantics_validator import validar_semantica_comercial
+            _is_valid, semantic_status = validar_semantica_comercial(pain_id, asset_type, asset_status)
+            if not _is_valid:
+                # Semantic hallucination: skip this asset in asset_plan
+                import logging
+                logging.getLogger(__name__).debug(
+                    f"[AssetSemantics] Skipping '{asset_type}' for pain '{pain_id}': "
+                    f"{semantic_status}"
+                )
+                continue
+
             assets.append(AssetSpec(
                 asset_type=asset_type,
                 pain_ids=[pain_id],
@@ -728,7 +783,8 @@ class PainSolutionMapper:
                 priority=priority,  # FASE 2: Incluir prioridad del mapeo
                 reason=f"Confidence {avg_confidence:.2f} vs required {min_confidence}" if can_generate else f"Insufficient confidence ({avg_confidence:.2f} < {min_confidence})",
                 problem_solved=mapping["name"],
-                description=mapping["description"]
+                description=mapping["description"],
+                semantic_status=semantic_status  # ROICR FASE-1: AUDIT_ONLY or IMPLEMENT
             ))
         
         return assets
@@ -802,8 +858,23 @@ class PainSolutionMapper:
                 mapping = self.pain_map[pain.id]
                 
                 for asset_type in mapping["assets"]:
+                    # ROICR FASE-1: semantic validation (same logic as get_assets_for_pain)
+                    from modules.asset_generation.asset_catalog import ASSET_CATALOG
+                    entry = ASSET_CATALOG.get(asset_type)
+                    asset_status = entry.status.value if entry else "implemented"
+                    from modules.quality.asset_semantics_validator import validar_semantica_comercial
+                    _is_valid, semantic_status = validar_semantica_comercial(pain.id, asset_type, asset_status)
+                    if not _is_valid:
+                        import logging
+                        logging.getLogger(__name__).debug(
+                            f"[AssetSemantics] generate_asset_plan: skipping '{asset_type}' for pain '{pain.id}'"
+                        )
+                        continue
+
                     if is_asset_implemented(asset_type):
                         pain_assets = self.get_assets_for_pain(pain.id, confidence_map)
+                        for pa in pain_assets:
+                            pa.semantic_status = semantic_status
                         assets.extend(pain_assets)
                     elif asset_type in ASSET_CATALOG:
                         entry = ASSET_CATALOG[asset_type]
