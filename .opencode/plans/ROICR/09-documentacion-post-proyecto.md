@@ -86,7 +86,42 @@
 - [x] `grep "Recuperación.*OPEX.*CAPEX\|OPEX.*CAPEX.*Recuperación" modules/` retorna 0 matches (PROHIBIDO)
 
 ### FASE-4: Arbitraje Ético + Garantía Día 55
-*Pendiente de ejecución*
+**Estado**: ✅ Completada (2026-05-27)
+
+**Archivos creados**:
+- `modules/quality/financial_coherence_validator.py` — `validar_arbitraje_etico(proposal_data) → ValidationReport`
+  - Gate: `monthly_fee > expected_monthly_recovery * 0.60` → BLOCK con `ETHICS GATE`
+  - Threshold: 0.60 (60%) — DIFERENTE del Value-Capture Cap (0.50)
+  - Keys aceptadas: `monthly_fee` / `fee` / `monthly_fee_cop` y `expected_monthly_recovery` / `recovery`
+- `modules/analytics/guarantee_validator.py` — `validar_garantia_dia55(hotel_url, hotel_id) → GuaranteeResult`
+  - `load_baseline()`: carga Día 0 desde `{output}/{hotel_id}/onboarding/onboarding_data.yaml`
+  - `get_current_gsc_data()`: consulta GSC real o stub simulado si no hay API
+  - `calculate_improvement()`: `% mejora por KPI`
+  - Si `improvement < 10%` → genera `CREDIT_NOTE.md` + `billing_adjustment.yaml` en `outputs/{hotel_id}/guarantees/`
+
+**Archivos modificados**:
+- `main.py`:
+  - Comando `validate-guarantee` añadido a `choices` y help text
+  - `run_validate_guarantee_mode(args)`: handler que extrae hotel_id de URL, invoca `validar_garantia_dia55()`
+  - Routing: `if args.command == "validate-guarantee": run_validate_guarantee_mode(args)`
+
+**Tests creados**:
+- `tests/quality_gates/test_financial_coherence_validator.py` — 12 tests
+  - fee < 60% → PASS, fee > 60% → BLOCK, fee = 60% exacto → PASS (inclusivo)
+  - Zero/missing fee o recovery → inválido con mensaje claro
+  - Keys alternativas (`fee`/`recovery`) funcionan
+- `tests/quality_gates/test_guarantee_validator.py` — 10 tests
+  - `load_baseline`: YAML, alternativa `data.yaml`, FileNotFoundError
+  - `calculate_improvement`: positivo, cero, negativo
+  - `validar_garantia_dia55`: KPIs mejoran → no trigger, sin mejora → trigger + archivos generados
+  - `GuaranteeResult.to_dict()` completo
+
+**Criterios de completitud validados**:
+- [x] `financial_coherence_validator.py` existe con `validar_arbitraje_etico()`
+- [x] `guarantee_validator.py` existe con `validar_garantia_dia55()`
+- [x] `python main.py validate-guarantee --help` muestra ayuda
+- [x] `pytest tests/quality_gates/test_financial_coherence_validator.py tests/quality_gates/test_guarantee_validator.py -v` → **22 passed**
+- [x] Restricciones respetadas: NO se tocó `pipeline de pricing` (FASE-3) NI `publication_gates.py` (FASE-2)
 
 ### FASE-5: Fixtures + Regression Guardian
 *Pendiente de ejecución*

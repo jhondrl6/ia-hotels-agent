@@ -47,10 +47,10 @@
 
 | ID | Tarea | Estado | Verificación |
 |----|-------|--------|-------------|
-| 4A | Crear `modules/quality/financial_coherence_validator.py` con arbitraje check | ⬜ | `fee > recovery * 0.60` → BLOCK |
-| 4B | Crear `modules/analytics/guarantee_validator.py` | ⬜ | Función `validar_garantia_dia55()` ejecutable |
-| 4C | Agregar comando `validate-guarantee` a `main.py` | ⬜ | `python main.py validate-guarantee --help` funciona |
-| 4D | Tests: `tests/test_financial_coherence_validator.py` + `tests/test_guarantee_validator.py` | ⬜ | `pytest tests/test_guarantee_validator.py -v` |
+| 4A | Crear `modules/quality/financial_coherence_validator.py` con arbitraje check | ✅ | `fee > recovery * 0.60` → BLOCK + ETHICS GATE; 12 tests pasando |
+| 4B | Crear `modules/analytics/guarantee_validator.py` | ✅ | `validar_garantia_dia55()` ejecutable; carga baseline; stub GSC; genera CREDIT_NOTE + billing_adjustment |
+| 4C | Agregar comando `validate-guarantee` a `main.py` | ✅ | `python main.py validate-guarantee --help` funciona; `run_validate_guarantee_mode()` integrado |
+| 4D | Tests: `tests/test_financial_coherence_validator.py` + `tests/test_guarantee_validator.py` | ✅ | `pytest tests/quality_gates/test_financial_coherence_validator.py tests/quality_gates/test_guarantee_validator.py -v` → **22 passed** |
 
 ---
 

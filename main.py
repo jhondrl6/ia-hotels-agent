@@ -49,8 +49,8 @@ def build_parser() -> argparse.ArgumentParser:
         "command",
         nargs="?",
         default="audit",
-        choices=["audit", "v4audit", "v4complete", "stage", "spark", "execute", "deploy", "setup", "onboard"],
-        help="Comando a ejecutar: setup (configuración inicial), audit (diagnóstico legacy), v4audit (auditoría v4.0 con APIs), v4complete (flujo completo v4.0 con Meta-Skills), stage (pasos manuales), spark (diagnóstico rápido <5min), execute (implementación paquete), deploy (despliegue remoto), onboard (captura datos operativos)",
+        choices=["audit", "v4audit", "v4complete", "stage", "spark", "execute", "deploy", "setup", "onboard", "validate-guarantee"],
+        help="Comando a ejecutar: setup (configuración inicial), audit (diagnóstico legacy), v4audit (auditoría v4.0 con APIs), v4complete (flujo completo v4.0 con Meta-Skills), stage (pasos manuales), spark (diagnóstico rápido <5min), execute (implementación paquete), deploy (despliegue remoto), onboard (captura datos operativos), validate-guarantee (valida garantía Día 55)",
     )
     parser.add_argument("--url", required=False, help="URL del hotel a analizar")
     parser.add_argument("--output", default="./output", help="Directorio de salida base")
@@ -1424,9 +1424,89 @@ def main() -> None:
         run_v4_complete_mode(args)
         sys.exit(0)
 
+    if args.command == "validate-guarantee":
+        run_validate_guarantee_mode(args)
+        sys.exit(0)
+
     if args.command in ("audit", "stage"):
         run_audit_mode(args)
         sys.exit(0)
+
+
+def run_validate_guarantee_mode(args: argparse.Namespace) -> None:
+    """Maneja el comando 'validate-guarantee' — Garantía Día 55.
+    
+    Valida si la garantía de mejora del Día 55 se activó para un hotel.
+    Requiere --url del hotel y usa los datos de onboarding para la línea base.
+    
+    Uso:
+        python main.py validate-guarantee --url https://hotel.com --output ./output
+    """
+    from pathlib import Path
+    from modules.analytics.guarantee_validator import validar_garantia_dia55
+    
+    if not args.url:
+        print("[ERROR] --url es obligatorio para validate-guarantee")
+        sys.exit(1)
+    
+    hotel_url = args.url.rstrip("/")
+    
+    # Extraer hotel_id de la URL
+    from urllib.parse import urlparse
+    parsed = urlparse(hotel_url)
+    host = parsed.netloc or parsed.path
+    host = host.replace("www.", "").replace("https://", "").replace("http://", "")
+    hotel_id = host.split(".")[0] if host else "hotel"
+    
+    output_base = Path(args.output).resolve() if args.output else Path("./output")
+    
+    print("=" * 60)
+    print("GARANTÍA DÍA 55 — Validación")
+    print("=" * 60)
+    print(f"Hotel URL: {hotel_url}")
+    print(f"Hotel ID:  {hotel_id}")
+    print(f"Output:    {output_base}")
+    print("=" * 60)
+    
+    try:
+        result = validar_garantia_dia55(
+            hotel_url=hotel_url,
+            hotel_id=hotel_id,
+            output_base=output_base,
+        )
+        
+        print(f"\n{'🔴 GARANTÍA ACTIVADA' if result.triggered else '✅ GARANTÍA NO ACTIVADA'}")
+        print(f"Mensaje: {result.message}")
+        
+        print("\n--- Detalle de Mejora ---")
+        for kpi, val in result.improvement.items():
+            sign = "+" if val >= 0 else ""
+            if "position" in kpi:
+                print(f"  {kpi}: {sign}{val:.1f}")
+            else:
+                print(f"  {kpi}: {sign}{val*100:.1f}%")
+        
+        print(f"\nBaseline: imp={result.baseline.impressions}, clks={result.baseline.clicks}")
+        print(f"Actual:   imp={result.current.impressions}, clks={result.current.clicks}")
+        if result.current.is_simulated:
+            print("  ⚠️  (Datos SIMULADOS — sin GSC API real)")
+        
+        if result.triggered:
+            print(f"\n📄 CREDIT_NOTE: {result.credit_note_path}")
+            print(f"📄 BILLING:     {result.billing_adjustment_path}")
+        
+        sys.exit(0 if not result.triggered else 1)
+        
+    except FileNotFoundError as e:
+        print(f"\n[ERROR] {e}")
+        print("¿Ejecutaste primero el onboarding para capturar la línea base (Día 0)?")
+        sys.exit(1)
+    except Exception as e:
+        print(f"\n[ERROR] Validación falló: {e}")
+        import traceback
+        if args.debug:
+            traceback.print_exc()
+        sys.exit(1)
 
 
 def run_v4_complete_mode(args: argparse.Namespace) -> None:
