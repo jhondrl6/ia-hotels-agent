@@ -9,7 +9,7 @@ description: "Configuración de escenarios financieros (recuperación, degradaci
 
 recovery_factors:
   conservative: 0.15
-  realistic: 0.20
+  realistic: 0.35
   optimistic: 0.25
 
 scenario_weights:

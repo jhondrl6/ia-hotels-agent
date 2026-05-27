@@ -33,13 +33,13 @@
 
 | ID | Tarea | Estado | Verificación |
 |----|-------|--------|-------------|
-| 3A | Actualizar `config/pricing.yaml`: value_capture_cap, operational_floor | ⬜ | YAML tiene nuevos campos |
-| 3B | Refactorizar `pricing_calculator.py`: pipeline 3 pasos (Base→PainRatio→EthicalCap) | ⬜ | `calcular_precio_final()` con 3 pasos |
-| 3C | Crear `modules/financial_engine/roi_formatter.py`: métricas desacopladas | ⬜ | Retorna roi_saas + valorizacion_activo_digital |
-| 3D | Crear `modules/financial_engine/pillar_maturity_curve.py` | ⬜ | Curva `[0.15, 0.35, 0.60, 0.80, 0.95, 1.00]` |
-| 3E | Integrar en `v4_proposal_generator.py`: tablas CAPEX/OPEX separadas | ⬜ | Propuesta tiene 2 tablas |
-| 3F | Actualizar `config/scenarios.yaml` con recovery 35% | ⬜ | scenarios.yaml tiene 0.35 |
-| 3G | Actualizar narrativa comercial: Pitch + 4-Pillar Maturity textos | ⬜ | Templates con Value-Capture Cap, CAPEX/OPEX, Garantía Día 55, Curva |
+| 3A | Actualizar `config/pricing.yaml`: value_capture_cap, operational_floor | ✅ | YAML tiene nuevos campos (value_capture_cap=0.50, operational_floor=400K, pain_ratio_gate_max=0.32, min_price=800K) |
+| 3B | Refactorizar `pricing_calculator.py`: pipeline 3 pasos (Base→PainRatio→EthicalCap) | ✅ | `calcular_precio_final()` implementado + `_calculate_with_pipeline()` integrado en `calculate()` |
+| 3C | Crear `modules/financial_engine/roi_formatter.py`: métricas desacopladas | ✅ | `calcular_metricas_roi()` retorna roi_saas; PROHIBIDO OPEX+CAPEX combinados |
+| 3D | Crear `modules/financial_engine/pillar_maturity_curve.py` | ✅ | Curva `[0.15, 0.35, 0.60, 0.80, 0.95, 1.00]`, función `aplicar_curva_4_pilares()` |
+| 3E | Integrar en `v4_proposal_generator.py`: tablas CAPEX/OPEX separadas | ✅ | `_calculate_roi_saas()`, `_build_activos_digitales_lista()`, variables template: roi_saas, capex_total, opex_mensual, curva_4_pilares_tabla |
+| 3F | Actualizar `config/scenarios.yaml` con recovery 35% | ✅ | `realistic: 0.35` |
+| 3G | Actualizar narrativa comercial: Pitch + 4-Pillar Maturity textos | ✅ | Template con Value-Capture Cap, CAPEX/OPEX, Garantía Día 55, Curva 4 Pilares |
 
 ---
 

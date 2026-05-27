@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-26
+> **Ultima actualizacion:** 2026-05-27
 > **Version actual:** v4.54.0
-> **Total fases completadas:** 305
+> **Total fases completadas:** 307
 
 ---
 
@@ -7531,6 +7531,30 @@ _Ninguno_
 | Archivo | Cambio |
 |---------|--------|
 | `evidence/ROI-REFACTOR/analisis_post_implementacion.md` | Analisis Post Implementacion |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3 - 2026-05-27
+**Descripcion:** Pipeline_unificado_CAPEX_OPEX_Curva_4_Pilares
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/financial_engine/pricing_calculator.py` | Pricing Calculator |
+| `modules/financial_engine/roi_formatter.py` | Roi Formatter |
+| `modules/financial_engine/pillar_maturity_curve.py` | Pillar Maturity Curve |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `config/pricing.yaml` | Pricing |
+| `config/scenarios.yaml` | Scenarios |
 
 ### Validaciones
 - [x] Tests passing (0)

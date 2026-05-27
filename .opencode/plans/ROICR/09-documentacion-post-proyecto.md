@@ -49,7 +49,41 @@
 *Pendiente de ejecución*
 
 ### FASE-3: Pipeline Unificado + CAPEX/OPEX + Curva
-*Pendiente de ejecución*
+**Estado**: ✅ Completada (2026-05-27)
+
+**Archivos creados**:
+- `modules/financial_engine/roi_formatter.py` — `calcular_metricas_roi()` con CAPEX/OPEX desacoplados. ROI SaaS = Recuperación/OPEX (NUNCA OPEX+CAPEX). `ROIMetrics` dataclass + `formatear_roi_para_propuesta()`.
+- `modules/financial_engine/pillar_maturity_curve.py` — `aplicar_curva_4_pilares()` con curva `[0.15, 0.35, 0.60, 0.80, 0.95, 1.00]` (6 meses). `PillarMaturityResult` + `MaturityProjection` dataclasses + `formatear_curva_para_propuesta()`.
+
+**Archivos modificados**:
+- `config/pricing.yaml`:
+  - `tiers.boutique`: `min_price: 800K` (antes 1.2M), `value_capture_cap: 0.50`, `operational_floor: 400K`, `pain_ratio_gate_max: 0.32`
+- `config/scenarios.yaml`:
+  - `recovery_factors.realistic`: 0.20 → 0.35
+- `modules/financial_engine/pricing_calculator.py` (v4.2.0 → v4.3.0):
+  - `calcular_precio_final()`: pipeline unificado de 3 pasos (Base → Pain Ratio Adjustment → Ethical Cap)
+  - `PricingResult`: nuevos campos `expected_recovery_cop`, `ethical_cap_applied`, `adjustment_applied`, `operational_floor`, `value_capture_cap`
+  - `calculate()`: parámetro opcional `expected_recovery_cop` activa el pipeline
+  - `_calculate_with_pipeline()`: wrapper que llama `calcular_precio_final()` y retorna `PricingResult`
+  - `_load_pricing_config()` + `_DEFAULT_TIER_CONFIG`: cargan nuevos campos de YAML
+- `modules/commercial_documents/v4_proposal_generator.py`:
+  - Imports: `calcular_metricas_roi`, `aplicar_curva_4_pilares`
+  - Nuevas variables template: `roi_saas`, `capex_total`, `opex_mensual`, `curva_4_pilares_tabla`, `activos_digitales_lista`, `nota_capex_opex`
+  - `_calculate_roi_saas()`: ROI sobre OPEX (NUNCA OPEX+CAPEX)
+  - `_build_activos_digitales_lista()`: lista de assets propiedad del cliente
+  - `rec_m1..rec_m6` + `net_m1..net_m6` + `acc_m1..acc_m6`: ahora usan curva de maduración en vez de flat
+- `modules/commercial_documents/templates/propuesta_v6_template.md`:
+  - Nueva sección: "Curva de Maduración: 4 Pilares" con tabla mes a mes
+  - Nueva sección: "CAPEX vs OPEX: Lo que es suyo vs. lo que es servicio"
+  - Garantías expandidas: Value-Capture Cap (#1), Garantía Día 55 (#3)
+
+**Criterios de completitud validados**:
+- [x] `pricing.yaml` tiene `value_capture_cap`, `operational_floor`, `pain_ratio_gate_max`
+- [x] `pricing_calculator.py` tiene `calcular_precio_final()` con 3 pasos
+- [x] `roi_formatter.py` existe y retorna métricas desacopladas
+- [x] `pillar_maturity_curve.py` existe con curva `[0.15, 0.35, 0.60, 0.80, 0.95, 1.00]`
+- [x] `grep "roi_saas" modules/commercial_documents/v4_proposal_generator.py` muestra integración
+- [x] `grep "Recuperación.*OPEX.*CAPEX\|OPEX.*CAPEX.*Recuperación" modules/` retorna 0 matches (PROHIBIDO)
 
 ### FASE-4: Arbitraje Ético + Garantía Día 55
 *Pendiente de ejecución*

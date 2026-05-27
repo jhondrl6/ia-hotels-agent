@@ -21,6 +21,9 @@ from .data_structures import (
 )
 from modules.financial_engine.pricing_resolution_wrapper import PricingResolutionResult
 from modules.financial_engine.pricing_calculator import get_floor_price
+# ROICR FASE-3: CAPEX/OPEX desacoplados + Curva de Maduración 4 Pilares
+from modules.financial_engine.roi_formatter import calcular_metricas_roi, formatear_roi_para_propuesta
+from modules.financial_engine.pillar_maturity_curve import aplicar_curva_4_pilares, formatear_curva_para_propuesta
 from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
 from modules.commercial_documents.service_catalog import SERVICE_CATALOG, TECHNICAL_ASSET_CATALOG
 from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
@@ -738,6 +741,22 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             if whatsapp_status and whatsapp_status.lower() == ConfidenceLevel.CONFLICT.value:
                 whatsapp_conflict = True
 
+        # ROICR FASE-3: Curva de Maduración 4 Pilares — precompute before data dict
+        _raw_monthly_loss_for_curve = abs(raw_monthly_loss)
+        _maturity_result = aplicar_curva_4_pilares(
+            fuga_mensual=_raw_monthly_loss_for_curve,
+            recovery_factor_max=recovery_realistic,
+            meses=6,
+        )
+        _curva_data = formatear_curva_para_propuesta(_maturity_result)
+        _proyecciones = _maturity_result.proyecciones
+        _rec_map = {p.mes: int(p.recuperacion_mensual) for p in _proyecciones}
+        _acc_map = {}
+        _acum = 0
+        for p in _proyecciones:
+            _acum += int(p.recuperacion_mensual)
+            _acc_map[p.mes] = _acum
+
         data = {
             # Metadata
             'generated_at': generated_at.strftime("%Y-%m-%d %H:%M:%S"),
@@ -793,34 +812,61 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'realistic_roi': roi_6_months,
         'optimistic_gain': self._format_scenario_amount(int(self._get_main_value(financial_scenarios.optimistic) * pain_ratio)),
         'optimistic_roi': self._calculate_roi(monthly_investment, int(self._get_main_value(financial_scenarios.optimistic) * pain_ratio), 6, recovery_factor=recovery_factors['optimistic']),
-        
-        # Monthly projection variables for 6 months — HR-1 FIX: use effective
-        # gain (pain_ratio × recovery_factor) so ROI table is consistent with
-        # the pain_ratio_note instead of showing the inflated gross amount.
+
+        # Monthly projection variables for 6 months — ROICR FASE-3: Curva 4 Pilares
         'inv_m1': format_cop(monthly_investment),
-        'inv_m2': format_cop(monthly_investment),
+            'inv_m2': format_cop(monthly_investment),
         'inv_m3': format_cop(monthly_investment),
         'inv_m4': format_cop(monthly_investment),
         'inv_m5': format_cop(monthly_investment),
         'inv_m6': format_cop(monthly_investment),
-        'rec_m1': format_cop(effective_monthly_gain),
-        'rec_m2': format_cop(effective_monthly_gain),
-        'rec_m3': format_cop(effective_monthly_gain),
-        'rec_m4': format_cop(effective_monthly_gain),
-        'rec_m5': format_cop(effective_monthly_gain),
-        'rec_m6': format_cop(effective_monthly_gain),
-        'net_m1': format_cop(effective_monthly_gain - monthly_investment),
-        'net_m2': format_cop(effective_monthly_gain - monthly_investment),
-        'net_m3': format_cop(effective_monthly_gain - monthly_investment),
-        'net_m4': format_cop(effective_monthly_gain - monthly_investment),
-        'net_m5': format_cop(effective_monthly_gain - monthly_investment),
-        'net_m6': format_cop(effective_monthly_gain - monthly_investment),
-        'acc_m1': format_cop(effective_monthly_gain - monthly_investment),
-        'acc_m2': format_cop(2 * (effective_monthly_gain - monthly_investment)),
-        'acc_m3': format_cop(3 * (effective_monthly_gain - monthly_investment)),
-        'acc_m4': format_cop(4 * (effective_monthly_gain - monthly_investment)),
-        'acc_m5': format_cop(5 * (effective_monthly_gain - monthly_investment)),
-        'acc_m6': format_cop(6 * (effective_monthly_gain - monthly_investment)),
+        'rec_m1': format_cop(_rec_map.get(1, effective_monthly_gain)),
+        'rec_m2': format_cop(_rec_map.get(2, effective_monthly_gain)),
+        'rec_m3': format_cop(_rec_map.get(3, effective_monthly_gain)),
+        'rec_m4': format_cop(_rec_map.get(4, effective_monthly_gain)),
+        'rec_m5': format_cop(_rec_map.get(5, effective_monthly_gain)),
+        'rec_m6': format_cop(_rec_map.get(6, effective_monthly_gain)),
+        'net_m1': format_cop(_rec_map.get(1, effective_monthly_gain) - monthly_investment),
+        'net_m2': format_cop(_rec_map.get(2, effective_monthly_gain) - monthly_investment),
+        'net_m3': format_cop(_rec_map.get(3, effective_monthly_gain) - monthly_investment),
+        'net_m4': format_cop(_rec_map.get(4, effective_monthly_gain) - monthly_investment),
+        'net_m5': format_cop(_rec_map.get(5, effective_monthly_gain) - monthly_investment),
+        'net_m6': format_cop(_rec_map.get(6, effective_monthly_gain) - monthly_investment),
+        'acc_m1': format_cop(_acc_map.get(1, effective_monthly_gain) - monthly_investment),
+        'acc_m2': format_cop(_acc_map.get(2, 2 * effective_monthly_gain) - 2 * monthly_investment),
+        'acc_m3': format_cop(_acc_map.get(3, 3 * effective_monthly_gain) - 3 * monthly_investment),
+        'acc_m4': format_cop(_acc_map.get(4, 4 * effective_monthly_gain) - 4 * monthly_investment),
+        'acc_m5': format_cop(_acc_map.get(5, 5 * effective_monthly_gain) - 5 * monthly_investment),
+        'acc_m6': format_cop(_acc_map.get(6, 6 * effective_monthly_gain) - 6 * monthly_investment),
+
+        # ROICR FASE-3: CAPEX/OPEX desacoplados + ROI SaaS
+        'curva_4_pilares_tabla': _curva_data['curva_4_pilares_tabla'],
+        'total_recuperacion_6m': _curva_data['total_recuperacion_6m'],
+        'recuperacion_max_mensual': _curva_data['recuperacion_max_mensual'],
+
+        # CAPEX/OPEX separation: setup_fee is CAPEX (activo digital del cliente)
+        # monthly_fee is OPEX (servicio)
+        'capex_total': format_cop(setup_fee),
+        'opex_mensual': format_cop(monthly_investment),
+        'opex_total_6m': format_cop(monthly_investment * 6),
+
+        # ROI SaaS: Recuperación Total / OPEX (NUNCA OPEX+CAPEX)
+        'roi_saas': self._calculate_roi_saas(
+            total_recuperacion=_maturity_result.total_recuperacion_6m,
+            inversion_opex=monthly_investment * 6,
+            inversion_capex=setup_fee,
+        ),
+
+        # Activos digitales propiedad del cliente
+        'activos_digitales_lista': self._build_activos_digitales_lista(asset_plan),
+
+        # Nota metodológica CAPEX/OPEX
+        'nota_capex_opex': (
+            f"Los ${int(setup_fee):,} COP del setup fee representan activos digitales "
+            f"que quedan en propiedad del cliente (Real Estate Digital). "
+            f"El ROI se calcula sobre la inversión operativa (${int(monthly_investment * 6):,} COP / 6 meses), "
+            f"no sobre OPEX+CAPEX combinados."
+        ).replace(",", "."),
         
         # Additional variables for sales template
         'generated_date': generated_at.strftime("%Y-%m-%d"),
@@ -1485,6 +1531,45 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         
         return months
     
+    def _calculate_roi_saas(
+        self,
+        total_recuperacion: float,
+        inversion_opex: float,
+        inversion_capex: float,
+    ) -> str:
+        """ROICR FASE-3: ROI SaaS con CAPEX/OPEX desacoplados.
+
+        PROHIBIDO: total_recuperacion / (inversion_opex + inversion_capex)
+        — esto mezcla activo del cliente con fee de servicio y produce ROI falso.
+
+        Fórmula correcta: ROI = total_recuperacion / inversion_opex (solo fee de servicio).
+        CAPEX representa activos digitales propiedad del cliente, no costo de servicio.
+        """
+        if inversion_opex <= 0:
+            return "N/A"
+        roi_ratio = total_recuperacion / inversion_opex
+        roi_cap = self._load_commercial_config().get('roi', {}).get('cap', 5.0)
+        if roi_ratio > roi_cap:
+            roi_ratio = roi_cap
+        return f"{roi_ratio:.1f}X"
+
+    def _build_activos_digitales_lista(self, asset_plan: List[AssetSpec]) -> str:
+        """ROICR FASE-3: Genera lista de activos digitales propiedad del cliente.
+
+        Extrae nombres de assets del plan que representan activos entregables
+        (no servicios recurrentes). Estos activos forman el CAPEX.
+        """
+        if not asset_plan:
+            return "- Sin activos digitales especificados"
+        activos = []
+        for asset in asset_plan:
+            name = getattr(asset, 'asset_type', '') or getattr(asset, 'name', '') or str(asset)
+            if name:
+                activos.append(f"- {name}")
+        if not activos:
+            return "- Sin activos digitales especificados"
+        return "\n".join(activos)
+
     def _format_scenario_amount(self, amount: int) -> str:
         """Format scenario amount with semantic handling for negative/equilibrium values.
         

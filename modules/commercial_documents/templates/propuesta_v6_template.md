@@ -128,6 +128,34 @@ ${pain_ratio_note}
 
 ---
 
+## 📈 Curva de Maduración: 4 Pilares (GEO → SEO → AEO → IAO)
+
+La recuperación no es instantánea — cada pilar madura a su propio ritmo. Esta es la proyección realista mes a mes:
+
+${curva_4_pilares_tabla}
+
+**Total recuperación proyectada (6 meses): ${total_recuperacion_6m} COP**
+
+> **¿Por qué no es lineal?** GEO (Google Business Profile) da resultados desde el día 1. SEO tarda 2-3 meses en indexar y posicionar. AEO/IAO (ChatGPT, Perplexity) requiere 4-6 meses de maduración. Esta curva refleja la realidad operativa de cada pilar.
+
+---
+
+## 🏗️ CAPEX vs OPEX: Lo que es suyo vs. lo que es servicio
+
+| Concepto | Tipo | Monto | ¿De quién es? |
+|----------|------|-------|---------------|
+| Setup fee (único) | **CAPEX** | ${capex_total} | **100% suyo** — Real Estate Digital |
+| Fee mensual (×6) | **OPEX** | ${opex_total_6m} | Servicio de implementación |
+
+${nota_capex_opex}
+
+**Activos digitales que quedan en su propiedad:**
+${activos_digitales_lista}
+
+> **ROI SaaS (servicio): ${roi_saas}** — calculado solo sobre OPEX (fee de servicio), sin mezclar el activo digital que es suyo.
+
+---
+
 ## 🗓️ Plan de Trabajo: 7/30/60/90 Días
 
 ### Primeros 7 Días (Activación)
@@ -156,14 +184,22 @@ El análisis de IAO utiliza APIs de terceros (OpenRouter, Google AI, Perplexity)
 
 ## 🛡️ GARANTÍAS: Protección total para usted
 
-### 1. Resultados garantizados
+### 1. Value-Capture Cap: Solo cobramos si usted gana
+
+**Nuestro modelo nos prohíbe cobrarle más del 50% de lo que recuperamos.** Si su recuperación proyectada es de $X, nuestro fee mensual NUNCA excederá el 50% de X. Esto significa que usted siempre se queda con al menos la mitad de cada peso que recupera.
+
+### 2. Resultados garantizados
 Si en ${guarantee_satisfaction_days} días no ve un aumento del ${guarantee_improvement_percent}% en consultas directas, **le extendemos el servicio 1 mes gratis**. Sin excusas.
 Instalamos tracking propio en el Día 7 — sin necesidad de que tengas GA4.
 
-### 2. Sin compromiso
+### 3. Garantía Día 55: Auditoría automática sin intervención humana
+
+El **Día 55** de nuestro servicio, nuestra propia IA ejecuta una auditoría completa de todos los entregables. Si algún activo no cumple con los estándares de calidad pactados, **se emite una nota crédito automática** — sin que usted tenga que reclamar, sin papeleo, sin llamadas.
+
+### 4. Sin compromiso
 Contrato mes a mes. Si en cualquier momento no quiere continuar, nos avisa con ${guarantee_delivery_days} días. Sin penalizaciones.
 
-### 3. Transparencia total
+### 5. Transparencia total
 Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.
 
 {{if testimonials_present == "true"}}

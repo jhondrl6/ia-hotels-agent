@@ -1,13 +1,14 @@
-"""Hybrid Pricing Calculator v4.2.0.
+"""Hybrid Pricing Calculator v4.3.0.
 
 Calculates pricing based on hotel segment with tiered formulas.
 Ensures price/pain ratio stays within GATE (3%-6%).
 
 Segment formulas:
-- Boutique (10-25 rooms): 3.5% of expected loss, min $1.2M, max $2.5M
+- Boutique (10-25 rooms): 3.5% of expected loss, min $800K, max $2.5M
 - Standard (26-60 rooms): 2.5% of expected loss, min $1.8M, max $3.8M
 - Large (60+ rooms): 2% of expected loss, min $3.5M, max $7.5M
 
+v4.3.0: Pipeline unificado de 3 pasos (Value-Capture Cap + Floor Condicional).
 Configuration loaded from config/pricing.yaml (with hardcoded fallback for backwards compatibility).
 """
 
@@ -37,8 +38,11 @@ _DEFAULT_TIER_CONFIG: Dict[str, Dict[str, Any]] = {
         "room_min": 10,
         "room_max": 25,
         "percentage": 0.035,
-        "min_price": 1_200_000,
+        "min_price": 800_000,
         "max_price": 2_500_000,
+        "value_capture_cap": 0.50,
+        "operational_floor": 400_000,
+        "pain_ratio_gate_max": 0.32,
     },
     "standard": {
         "room_min": 26,
@@ -46,6 +50,9 @@ _DEFAULT_TIER_CONFIG: Dict[str, Dict[str, Any]] = {
         "percentage": 0.025,
         "min_price": 1_800_000,
         "max_price": 3_800_000,
+        "value_capture_cap": 0.50,
+        "operational_floor": 500_000,
+        "pain_ratio_gate_max": 0.32,
     },
     "large": {
         "room_min": 61,
@@ -53,6 +60,9 @@ _DEFAULT_TIER_CONFIG: Dict[str, Dict[str, Any]] = {
         "percentage": 0.02,
         "min_price": 3_500_000,
         "max_price": 7_500_000,
+        "value_capture_cap": 0.50,
+        "operational_floor": 800_000,
+        "pain_ratio_gate_max": 0.32,
     },
 }
 
@@ -81,6 +91,12 @@ class PricingResult:
     max_price: float
     recommended_price: float
     metadata: Dict[str, Any]
+    # v4.3.0 pipeline fields (populated when expected_recovery_cop is provided)
+    expected_recovery_cop: float = 0.0
+    ethical_cap_applied: bool = False
+    adjustment_applied: bool = False
+    operational_floor: float = 0.0
+    value_capture_cap: float = 0.0
 
 
 def _load_pricing_config() -> Dict[str, Any]:
@@ -124,6 +140,9 @@ def _load_pricing_config() -> Dict[str, Any]:
                 "max_price": float(t.get("max_price", defaults["max_price"])),
                 "room_min": defaults["room_min"],
                 "room_max": defaults["room_max"],
+                "value_capture_cap": float(t.get("value_capture_cap", defaults.get("value_capture_cap", 0.50))),
+                "operational_floor": float(t.get("operational_floor", defaults.get("operational_floor", 400_000))),
+                "pain_ratio_gate_max": float(t.get("pain_ratio_gate_max", defaults.get("pain_ratio_gate_max", 0.32))),
             }
 
         # Schema validation: gates
@@ -189,6 +208,85 @@ def get_floor_price() -> float:
     return _load_pricing_config()["packages"]["floor_price"]
 
 
+def calcular_precio_final(
+    expected_loss_cop: float,
+    expected_recovery_cop: float,
+    config: Dict[str, Any],
+    gate_max_ratio: float,
+) -> Dict[str, Any]:
+    """Pipeline unificado de 3 pasos para cálculo de precio final (v4.3.0).
+
+    ROICR design: Value-Capture Cap + Floor Condicional como pipeline,
+    NO como if/else separados — el orden es fijo e inmutable.
+
+    Paso 1: Precio Base = max(min_price, min(expected_loss * %, max_price))
+    Paso 2: Pain Ratio Adjustment — if pain_ratio > GATE_MAX * 2.0,
+            average between floor and recommended
+    Paso 3: Ethical Cap — final_price = min(base_price, expected_recovery * value_capture_cap)
+    Floor final: max(final_price, operational_floor)
+
+    Args:
+        expected_loss_cop: Expected monthly loss in COP.
+        expected_recovery_cop: Expected monthly recovery in COP
+                               (expected_loss * recovery_factor).
+        config: Tier config dict with keys: percentage, min_price, max_price,
+                value_capture_cap, operational_floor, pain_ratio_gate_max.
+        gate_max_ratio: Upper bound of GATE compliance range (e.g., 0.06).
+
+    Returns:
+        Dict with pipeline step results: final_price, base_price,
+        adjusted_price, capped_price, recommended_price, pain ratios,
+        adjustment flags.
+    """
+    percentage = config["percentage"]
+    min_price = config["min_price"]
+    max_price = config["max_price"]
+    value_capture_cap = config.get("value_capture_cap", 0.50)
+    operational_floor = config.get("operational_floor", min_price)
+    pain_ratio_gate_max = config.get("pain_ratio_gate_max", 0.32)
+
+    # --- Paso 1: Precio Base ---
+    recommended = expected_loss_cop * percentage
+    base_price = max(min_price, min(recommended, max_price))
+    base_pain_ratio = base_price / expected_loss_cop if expected_loss_cop > 0 else 0
+
+    # --- Paso 2: Pain Ratio Adjustment ---
+    adjustment_applied = False
+    adjusted_price = base_price
+    pain_ratio_threshold = gate_max_ratio * 2.0  # e.g., 0.12 for boutique
+    if base_pain_ratio > pain_ratio_threshold:
+        # Average between floor and recommended to reduce pain_ratio inflation
+        adjusted_price = (min_price + recommended) / 2
+        adjustment_applied = True
+
+    # --- Paso 3: Ethical Cap ---
+    # "Nuestro modelo nos prohíbe cobrar más del X% de lo que recuperamos"
+    ethical_cap = expected_recovery_cop * value_capture_cap
+    capped_price = min(adjusted_price, ethical_cap)
+    ethical_cap_applied = capped_price < adjusted_price
+
+    # --- Floor final ---
+    final_price = max(capped_price, operational_floor)
+
+    final_pain_ratio = (
+        final_price / expected_loss_cop if expected_loss_cop > 0 else 0
+    )
+
+    return {
+        "final_price": round(final_price, 2),
+        "base_price": round(base_price, 2),
+        "adjusted_price": round(adjusted_price, 2),
+        "capped_price": round(capped_price, 2),
+        "recommended_price": round(recommended, 2),
+        "base_pain_ratio": round(base_pain_ratio, 4),
+        "final_pain_ratio": round(final_pain_ratio, 4),
+        "adjustment_applied": adjustment_applied,
+        "ethical_cap_applied": ethical_cap_applied,
+        "operational_floor": operational_floor,
+        "value_capture_cap": value_capture_cap,
+    }
+
+
 class PricingCalculator:
     """Calculates hybrid pricing based on hotel tier.
 
@@ -224,6 +322,15 @@ class PricingCalculator:
                 "max_price": yaml_tier.get(
                     "max_price", defaults["max_price"]
                 ),
+                "value_capture_cap": yaml_tier.get(
+                    "value_capture_cap", defaults.get("value_capture_cap", 0.50)
+                ),
+                "operational_floor": yaml_tier.get(
+                    "operational_floor", defaults.get("operational_floor", 400_000)
+                ),
+                "pain_ratio_gate_max": yaml_tier.get(
+                    "pain_ratio_gate_max", defaults.get("pain_ratio_gate_max", 0.32)
+                ),
             }
 
         self.GATE_MIN_RATIO: float = cfg["gates"]["min_ratio"]
@@ -235,6 +342,7 @@ class PricingCalculator:
         rooms: int,
         expected_loss_cop: float,
         segment: Optional[str] = None,
+        expected_recovery_cop: Optional[float] = None,
     ) -> PricingResult:
         """Calculate pricing for a hotel.
 
@@ -242,12 +350,20 @@ class PricingCalculator:
             rooms: Number of rooms
             expected_loss_cop: Expected monthly loss in COP
             segment: Optional segment override (boutique/standard/large)
+            expected_recovery_cop: Optional expected monthly recovery in COP.
+                When provided (v4.3.0), activates the 3-step unified pipeline:
+                Base → Pain Ratio Adjustment → Ethical Cap.
 
         Returns:
             PricingResult with price and compliance info
         """
         tier = self._determine_tier(rooms, segment)
         config = self.TIER_CONFIG[tier]
+
+        if expected_recovery_cop is not None and expected_recovery_cop > 0:
+            return self._calculate_with_pipeline(
+                tier, config, expected_loss_cop, expected_recovery_cop, rooms,
+            )
 
         recommended = expected_loss_cop * config["percentage"]
         price = max(config["min_price"], min(recommended, config["max_price"]))
@@ -270,6 +386,59 @@ class PricingCalculator:
                 "tier_config": config,
                 "gate_min": self.GATE_MIN_RATIO,
                 "gate_max": self.GATE_MAX_RATIO,
+            },
+        )
+
+    def _calculate_with_pipeline(
+        self,
+        tier: HotelTier,
+        config: Dict[str, Any],
+        expected_loss_cop: float,
+        expected_recovery_cop: float,
+        rooms: int,
+    ) -> PricingResult:
+        """Calculate pricing using the 3-step unified pipeline (v4.3.0).
+
+        Paso 1: Precio Base = max(min_price, min(expected_loss * %, max_price))
+        Paso 2: Pain Ratio Adjustment — if pain_ratio > GATE_MAX * 2.0,
+                average between floor and recommended
+        Paso 3: Ethical Cap — final_price = min(base_price, expected_recovery * value_capture_cap)
+        Floor final: max(final_price, operational_floor)
+        """
+        pipeline = calcular_precio_final(
+            expected_loss_cop=expected_loss_cop,
+            expected_recovery_cop=expected_recovery_cop,
+            config=config,
+            gate_max_ratio=self.GATE_MAX_RATIO,
+        )
+
+        final_price = pipeline["final_price"]
+        pain_ratio = pipeline["final_pain_ratio"]
+        is_compliant = self.GATE_MIN_RATIO <= pain_ratio <= self.GATE_MAX_RATIO
+
+        return PricingResult(
+            monthly_price_cop=final_price,
+            tier=tier.value,
+            pain_ratio=pain_ratio,
+            is_compliant=is_compliant,
+            expected_loss_cop=round(expected_loss_cop, 2),
+            formula_used=(
+                f"Pipeline v4.3.0: {round(config['percentage'] * 100, 4)}% of expected loss"
+            ),
+            min_price=config["min_price"],
+            max_price=config["max_price"],
+            recommended_price=pipeline["recommended_price"],
+            expected_recovery_cop=round(expected_recovery_cop, 2),
+            ethical_cap_applied=pipeline["ethical_cap_applied"],
+            adjustment_applied=pipeline["adjustment_applied"],
+            operational_floor=config.get("operational_floor", config["min_price"]),
+            value_capture_cap=config.get("value_capture_cap", 0.50),
+            metadata={
+                "rooms": rooms,
+                "tier_config": config,
+                "gate_min": self.GATE_MIN_RATIO,
+                "gate_max": self.GATE_MAX_RATIO,
+                "pipeline_steps": pipeline,
             },
         )
 
