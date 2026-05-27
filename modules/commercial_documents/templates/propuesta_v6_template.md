@@ -166,9 +166,11 @@ Contrato mes a mes. Si en cualquier momento no quiere continuar, nos avisa con $
 ### 3. Transparencia total
 Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.
 
+{{if testimonials_present == "true"}}
 ### 🏨 Hoteles que ya confiaron en nosotros
 
-> *[Espacio para casos de éxito — hoteles del Eje Cafetero con resultados medibles]*
+{{quote}} — {{hotel_name}} ({{result}})
+{{endif}}
 
 ---
 

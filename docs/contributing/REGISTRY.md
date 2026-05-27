@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-26
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 300
+> **Total fases completadas:** 301
 
 ---
 
@@ -7427,6 +7427,27 @@ _Ninguno_
 | `.opencode/plans/ROI-REFACTOR/README.md` | Readme |
 | `.opencode/plans/ROI-REFACTOR/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
 | `.opencode/plans/ROI-REFACTOR/05-prompt-inicio-sesion-fase-0.md` | 05-Prompt-Inicio-Sesion-Fase-0 |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-A - 2026-05-26
+**Descripcion:** ROI-REFACTOR: document_audience switch + eliminar placeholder testimonios + corregir nota pain_ratio
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
 
 ### Validaciones
 - [x] Tests passing (0)

@@ -9,17 +9,21 @@
 
 ## A. Módulos Modificados
 
-|| Fase | Módulo | Archivo | Cambio |
+||| Fase | Módulo | Archivo | Cambio |
 |------|--------|---------|--------|
-| — | — | — | (Se llena al ejecutar cada fase) |
+| FASE-1 | commercial_documents | `v4_proposal_generator.py` | `document_audience` param en `generate()` + alertas condicionadas a `internal` |
+| FASE-1 | commercial_documents | `v4_diagnostic_generator.py` | `document_audience` param en `generate()` + alertas condicionadas a `internal` |
+| FASE-1 | commercial_documents | `propuesta_v6_template.md` | Eliminado placeholder testimonios, agregado `{{if testimonials_present == "true"}}...{{endif}}` |
 
 ---
 
 ## B. Funcionalidades Agregadas/Modificadas
 
-|| Fase | Funcionalidad | Descripción |
+||| Fase | Funcionalidad | Descripción |
 |------|--------------|-------------|
-| — | — | — |
+| FASE-1 | Hidden commercial alerts | El bloque `⚠️ Alertas Comerciales` se inyecta solo cuando `document_audience="internal"`; con `document_audience="client"` (default) se omite del documento |
+| FASE-1 | Testimonials conditional | La sección "Hoteles que ya confiaron en nosotros" se renderiza solo si `testimonials_present="true"`, caso contrario se omite completamente |
+| FASE-1 | pain_ratio note semántica | La nota de proyección ahora dice "La inversión mensual representa el X% de su pérdida mensual" en vez del incorrecto "el X% representa la porción del dolor financieramente abordable con IAO" |
 
 ---
 
@@ -114,7 +118,7 @@
 
 || Fase | Fecha | Resultado | Evidencia |
 |------|-------|---------|-----------|
-| FASE-1 | — | — | — |
+| FASE-1 | 2026-05-26 | ✅ 4/4 fixes aplicados | `v4_proposal_generator.py`, `v4_diagnostic_generator.py`, `propuesta_v6_template.md` |
 | FASE-2 | — | — | — |
 | FASE-3 | — | — | — |
 | FASE-4 | — | — | — |

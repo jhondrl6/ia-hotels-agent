@@ -79,7 +79,7 @@ Sesión 6  → FASE-5 (Ejecución — v4complete + análisis)
 || Fase | Estado | Fecha | Evidencia |
 |------|--------|-------|-----------|
 | FASE-0 | ✅ COMPLETADA | 2026-05-26 | 09-documentacion-post-proyecto.md §F |
-| FASE-1 | ⬜ PENDIENTE | — | — |
+| FASE-1 | ✅ COMPLETADA | 2026-05-26 | 4 files modified (proposal/diagnostic generators + template) |
 | FASE-2 | ⬜ PENDIENTE | — | — |
 | FASE-3 | ⬜ PENDIENTE | — | — |
 | FASE-4 | ⬜ PENDIENTE | — | — |

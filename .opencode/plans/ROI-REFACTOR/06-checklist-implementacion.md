@@ -23,12 +23,12 @@
 
 ## FASE-1: Bloqueantes de output (3 fixes 🔴) [ex-FASE-A]
 
-|| ID | Tarea | Estado | Verificación |
+| ID | Tarea | Estado | Verificación |
 |----|-------|--------|-------------|
-| A1 | `document_audience` switch en `v4_proposal_generator.py:generate()` | ⬜ | Sin alertas en output cliente |
-| A2 | `document_audience` switch en `v4_diagnostic_generator.py:generate()` | ⬜ | Sin alertas en output cliente |
-| A3 | Eliminar placeholder testimonios — `{% if testimonials %}` en template | ⬜ | Sin `[Espacio para...]` en output |
-| A4 | Corregir nota pain_ratio: "porción IAO" → "relación inversión/pérdida" | ⬜ | Nota corregida en output |
+| A1 | `document_audience` switch en `v4_proposal_generator.py:generate()` | ✅ | Sin alertas en output cliente |
+| A2 | `document_audience` switch en `v4_diagnostic_generator.py:generate()` | ✅ | Sin alertas en output cliente |
+| A3 | Eliminar placeholder testimonios — `{% if testimonials %}` en template | ✅ | Sin `[Espacio para...]` en output |
+| A4 | Corregir nota pain_ratio: "porción IAO" → "relación inversión/pérdida" | ✅ | Nota corregida en output |
 
 ---
 

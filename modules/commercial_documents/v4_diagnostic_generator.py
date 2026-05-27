@@ -435,6 +435,7 @@ class V4DiagnosticGenerator:
         analytics_data: Optional[Dict[str, Any]] = None,
         financial_breakdown: Optional['FinancialBreakdown'] = None,
         gate_status: Optional[str] = None,
+        document_audience: str = "client",  # FASE-A ROI-REFACTOR: "client" hides internal alerts; "internal" shows them
     ) -> str:
         """
         Generate the diagnostic document.
@@ -512,22 +513,24 @@ class V4DiagnosticGenerator:
             )
 
             if not commercial_report.blocking_passed:
-                alert_section = "\n---\n## ⚠️ Alertas Comerciales\n\n"
-                alert_section += (
-                    "Las siguientes alertas de copywriting fueron detectadas "
-                    "y deben revisarse antes de entregar al cliente:\n\n"
-                )
-                for result in commercial_report.blocking_failures:
+                if document_audience == "internal":
+                    alert_section = "\n---\n## ⚠️ Alertas Comerciales\n\n"
                     alert_section += (
-                        f"- **{result.name}** ({result.gate_id})\n"
-                        f"  {result.message}\n"
-                        f"  → {result.suggestion}\n\n"
+                        "Las siguientes alertas de copywriting fueron detectadas "
+                        "y deben revisarse antes de entregar al cliente:\n\n"
                     )
-                document_content += alert_section
-                logging.warning(
-                    "Commercial gates BLOCKING failures: %s",
-                    [r.gate_id for r in commercial_report.blocking_failures],
-                )
+                    for result in commercial_report.blocking_failures:
+                        alert_section += (
+                            f"- **{result.name}** ({result.gate_id})\n"
+                            f"  {result.message}\n"
+                            f"  → {result.suggestion}\n\n"
+                        )
+                    document_content += alert_section
+                else:
+                    logging.warning(
+                        "Diagnostic commercial gates BLOCKING (hidden from client): %s",
+                        [r.gate_id for r in commercial_report.blocking_failures],
+                    )
 
             if commercial_report.warnings:
                 logging.info(

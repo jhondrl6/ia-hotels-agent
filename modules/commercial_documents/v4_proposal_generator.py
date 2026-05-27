@@ -274,6 +274,7 @@ class V4ProposalGenerator:
         assets_generated: Optional[List[Dict[str, Any]]] = None,
         site_presence_report: Optional[Any] = None,  # FASE-D: SitePresenceReport for production presence verification
         pain_ledger: Optional[List[Any]] = None,  # FASE-0D: PainLedgerEntry list for proposal-asset matrix
+        document_audience: str = "client",  # FASE-A ROI-REFACTOR: "client" hides internal alerts; "internal" shows them
     ) -> str:
         """
         Generate the proposal document.
@@ -372,22 +373,24 @@ class V4ProposalGenerator:
             )
 
             if not commercial_report.blocking_passed:
-                alert_section = "\n---\n## ⚠️ Alertas Comerciales\n\n"
-                alert_section += (
-                    "Las siguientes alertas de copywriting fueron detectadas "
-                    "y deben revisarse antes de entregar al cliente:\n\n"
-                )
-                for result in commercial_report.blocking_failures:
+                if document_audience == "internal":
+                    alert_section = "\n---\n## ⚠️ Alertas Comerciales\n\n"
                     alert_section += (
-                        f"- **{result.name}** ({result.gate_id})\n"
-                        f"  {result.message}\n"
-                        f"  → {result.suggestion}\n\n"
+                        "Las siguientes alertas de copywriting fueron detectadas "
+                        "y deben revisarse antes de entregar al cliente:\n\n"
                     )
-                document_content += alert_section
-                logging.warning(
-                    "Proposal commercial gates BLOCKING failures: %s",
-                    [r.gate_id for r in commercial_report.blocking_failures],
-                )
+                    for result in commercial_report.blocking_failures:
+                        alert_section += (
+                            f"- **{result.name}** ({result.gate_id})\n"
+                            f"  {result.message}\n"
+                            f"  → {result.suggestion}\n\n"
+                        )
+                    document_content += alert_section
+                else:
+                    logging.warning(
+                        "Proposal commercial gates BLOCKING (hidden from client): %s",
+                        [r.gate_id for r in commercial_report.blocking_failures],
+                    )
 
             if commercial_report.warnings:
                 logging.info(
@@ -753,14 +756,18 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             'recovery_factor_pct': f"{recovery_factors['realistic']:.0%}",
             'projected_real_gain': format_cop(int(raw_monthly_loss * pain_ratio * recovery_factors['realistic'])),
             'pain_ratio_note': (
-                f"**Nota de proyección**: De su pérdida mensual estimada, el {pain_ratio:.0%} "
-                f"representa la porción del dolor financieramente abordable con IAO. "
+                f"**Nota de proyección**: La inversión mensual de ${int(monthly_investment):,} COP "
+                f"representa el {pain_ratio:.0%} de su pérdida mensual estimada. "
                 f"Aplicando una efectividad esperada de recuperación del {recovery_factors['realistic']:.0%}, "
                 f"la proyección conservadora es de aproximadamente "
                 f"${int(raw_monthly_loss * pain_ratio * recovery_factors['realistic']):,}/mes"
                 f" (vs. la cifra bruta de ${int(raw_monthly_loss * pain_ratio):,} que se mostraría "
                 f"sin ajustar por efectividad)."
             ),
+            
+            # Testimonials section — FASE-A ROI-REFACTOR: hidden when no testimonials
+            'testimonials': [],
+            'testimonials_present': "false",
             
         # All scenarios with recovery_factor per scenario
         # FASE-B: ROI = (gain * recovery_factor) / investment
