@@ -50,7 +50,7 @@ FASE-5 (v4complete + Análisis) [ex-FASE-E]
 
 ## Tabla de Conflictos
 
-|| Par de Fases | ¿Conflicto? | Razón |
+| Par de Fases | ¿Conflicto? | Razón |
 |-------------|-------------|-------|
 | 0 ↔ 1 | ✅ Ninguno | Fases distintas (decisión vs implementación) |
 | 1 ↔ 2 | ⚠️ Bajo | Archivos distintos (generators vs template entregables) |
@@ -76,11 +76,11 @@ Sesión 6  → FASE-5 (Ejecución — v4complete + análisis)
 
 ## Estado de Fases
 
-|| Fase | Estado | Fecha | Evidencia |
+| Fase | Estado | Fecha | Evidencia |
 |------|--------|-------|-----------|
 | FASE-0 | ✅ COMPLETADA | 2026-05-26 | 09-documentacion-post-proyecto.md §F |
 | FASE-1 | ✅ COMPLETADA | 2026-05-26 | 4 files modified (proposal/diagnostic generators + template) |
 | FASE-2 | ✅ COMPLETADA | 2026-05-26 | propuesta_v6_template.md + v4_proposal_generator.py |
 | FASE-3 | ✅ COMPLETADA | 2026-05-26 | main.py (adr_source en financial_scenarios.json), v4_proposal_generator.py, v4_diagnostic_generator.py (PIPELINE_VERSION) |
-| FASE-4 | ⬜ PENDIENTE | — | — |
+| FASE-4 | ✅ COMPLETADA | 2026-05-26 | propuesta_v6_template.md (Anexo APIs → párrafo transparencia), v4_proposal_generator.py (stubs IAO removidos), main.py (tier_explanation en JSON), v4_diagnostic_generator.py (pain_ratio_note + tier_explanation en JSON), diagnostico_v6_template.md (${pain_ratio_note}) |
 | FASE-5 | ⬜ PENDIENTE | — | — |

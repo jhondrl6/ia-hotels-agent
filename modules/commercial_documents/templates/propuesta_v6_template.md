@@ -217,15 +217,9 @@ Email: contacto@iahoteles.co
 
 ---
 
-## 📋 Anexo Técnico: Infraestructura IAO
+## 📋 Transparencia tecnológica
 
-La siguiente tabla muestra los costos de APIs de terceros utilizadas en el análisis de IAO (Inteligencia Artificial Outside). Estos costos son absorbidos por IAH-CLI y no se cargan al cliente.
-
-|| Proveedor | Queries | Costo Aprox. |
-|-----------|---------|---------------|
-| OpenRouter | ${openrouter_queries} | ${openrouter_cost} USD |
-| Gemini | ${gemini_queries} | ${gemini_cost} USD |
-| Perplexity | ${perplexity_queries} | ${perplexity_cost} USD |
-| **Total** | **${total_iao_queries}** | **${total_iao_cost} USD** |
-
-*Este costo es Absorbido por IAH-CLI y no se carga al cliente.*
+Nuestro análisis utiliza múltiples modelos de inteligencia artificial
+(ChatGPT, Gemini, Perplexity) para evaluar cómo los motores de búsqueda
+y asistentes de IA ven su hotel en internet. El costo de estas consultas
+lo absorbemos nosotros como parte del servicio — usted no paga nada adicional.

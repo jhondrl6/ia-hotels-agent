@@ -1882,6 +1882,13 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         }
 
     # GAP-4: precision_tier y can_show_exact_money para financial_scenarios.json
+    #
+    # RELACIÓN evidence_tier vs precision_tier:
+    # - evidence_tier (A-E): calidad de los datos fuente (A = GA4 real, B = benchmarks, C = estimados)
+    # - precision_tier (A-C): precisión de los cálculos derivados (A = datos reales, C = estimados)
+    # Relación: evidence_tier es upstream (datos), precision_tier es downstream (cálculos).
+    # Un evidence_tier B puede producir precision_tier C si los cálculos usan supuestos
+    # (shift 10%, IA boost 5%) no validados con datos reales.
     _precision_tier = "C"
     _can_show_exact = False
     try:
@@ -1926,8 +1933,13 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             # GAP-4: precision metadata
             'precision_tier': _precision_tier,
             'can_show_exact_money': _can_show_exact,
+            # D2: Explicación de la relación entre tiers para transparencia
+            'tier_explanation': {
+                'evidence_tier': f"{_breakdown_dict.get('evidence_tier', 'C')} — Datos fuente (B = benchmarks/bench regional, C = estimados sin GA4)",
+                'precision_tier': f"{_precision_tier} — Cálculos derivados (C = supuestos de shift y boost IA no validados con datos reales)",
+                'relationship': 'evidence_tier B limita precision_tier a C: sin GA4, los supuestos no son validados empíricamente'
+            },
         }, f, indent=2, ensure_ascii=False)
-    print(f"💾 Guardado: {scenarios_path}")
 
     # FASE 3.5: Generación de Documentos Comerciales
     print("\n📍 FASE 3.5: Documentos Comerciales v4.0")

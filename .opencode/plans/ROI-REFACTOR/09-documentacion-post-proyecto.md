@@ -3,7 +3,7 @@
 **Plan**: ROI-REFACTOR
 **Target**: v4.54.0
 **Iniciado**: 2026-05-26
-**Actualizado**: 2026-05-26 (FASE-C completada)
+**Actualizado**: 2026-05-26 (FASE-D completada)
 
 ---
 
@@ -19,6 +19,11 @@
 | FASE-3 | main | `main.py` | `adr_source` agregado a `financial_scenarios.json` (input_data) para trazabilidad de fuente de ADR |
 | FASE-3 | commercial_documents | `v4_proposal_generator.py` | `_get_pipeline_version()` + `PIPELINE_VERSION` desde `VERSION.yaml`; reemplazado hardcode `'4.0.0'` en frontmatter |
 | FASE-3 | commercial_documents | `v4_diagnostic_generator.py` | `_get_pipeline_version()` + `PIPELINE_VERSION` desde `VERSION.yaml`; reemplazado hardcode `'4.0.0'` en frontmatter |
+| FASE-4 | commercial_documents | `propuesta_v6_template.md` | Anexo Técnico APIs (tabla OpenRouter/Gemini/Perplexity) → párrafo transparencia tecnológica |
+| FASE-4 | commercial_documents | `v4_proposal_generator.py` | Removidos stubs IAO (`openrouter_queries`, `gemini_queries`, etc.) — ya no necesarios tras simplificación del template |
+| FASE-4 | main | `main.py` | Comentarios de documentación tiers en GAP-4 + `tier_explanation` agregado a `financial_scenarios.json` |
+| FASE-4 | commercial_documents | `v4_diagnostic_generator.py` | `pain_ratio_note` agregado al return dict de `_prepare_financial_template_vars` |
+| FASE-4 | commercial_documents | `diagnostico_v6_template.md` | Placeholder `${pain_ratio_note}` insertado tras explicación de pain_ratio 20% |
 
 ---
 
@@ -33,6 +38,9 @@
 | FASE-2 | Tabla de entregables con fechas concretas | Columnas "Nivel"→"Momento de entrega" y "Qué significa"→"Qué incluye"; estados reemplazados por fechas (Día 1, Semana 1, Semana 2); sin % confianza |
 | FASE-3 | ADR source en financial_scenarios.json | `adr_source` expuesto explícitamente en `input_data` del JSON para trazabilidad (antes solo implícito vía precision_tier) |
 | FASE-3 | Versión dinámica en frontmatter | `PIPELINE_VERSION` lee `VERSION.yaml` (v4.53.0) — antes hardcodeado `4.0.0` en proposal y diagnostic generators |
+| FASE-4 | Anexo APIs → párrafo transparencia | Tabla técnica de APIs (OpenRouter/Gemini/Perplexity) reemplazada por párrafo de negocio: "utilizamos múltiples modelos de IA... el costo lo absorbemos nosotros" |
+| FASE-4 | Tier explanation en JSON | `tier_explanation` en `financial_scenarios.json`: documenta relación upstream/downstream entre evidence_tier y precision_tier |
+| FASE-4 | pain_ratio note en diagnóstico | Nota explicativa de divergencia 20% (diagnóstico) vs % real (propuesta) insertada tras la explicación de pain_ratio |
 
 ---
 
@@ -130,5 +138,5 @@
 | FASE-1 | 2026-05-26 | ✅ 4/4 fixes aplicados | `v4_proposal_generator.py`, `v4_diagnostic_generator.py`, `propuesta_v6_template.md` |
 | FASE-2 | 2026-05-26 | ✅ 2/2 fixes aplicados | `propuesta_v6_template.md`, `v4_proposal_generator.py` |
 | FASE-3 | 2026-05-26 | ✅ Verificación + 2 fixes | ADR ya conectado (verificado); adr_source agregado a JSON; PIPELINE_VERSION en ambos generators |
-| FASE-4 | — | — | — |
+| FASE-4 | 2026-05-26 | ✅ 3/3 fixes aplicados | Anexo APIs → párrafo transparencia; tier_explanation en financial_scenarios.json; pain_ratio_note en diagnóstico |
 | FASE-5 | — | — | — |

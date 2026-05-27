@@ -928,16 +928,6 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'recuperacion_proyectada_6m': format_cop(effective_monthly_gain * 6),
         'pain_pct': int(pain_ratio * 100),
         'recov_pct': int(recovery_realistic * 100),
-
-        # FIX-OPENROUTER-C: IAO cost transparency (stub - activates when API keys available)
-        'openrouter_queries': '—',
-        'openrouter_cost': '—',
-        'gemini_queries': '—',
-        'gemini_cost': '—',
-        'perplexity_queries': '—',
-        'perplexity_cost': '—',
-        'total_iao_queries': '—',
-        'total_iao_cost': '—',
     }
 
         # FASE-CONFIG-2: Inject estimated flag when fallbacks are in use

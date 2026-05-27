@@ -151,6 +151,8 @@ ${scenario_table_rows}
 > De ese porcentaje, proyectamos recuperar un **${recov_pct}%** en los primeros 6 meses.
 > Esto es conservador: a medida que los activos digitales maduran, el porcentaje de recuperación crece.
 
+${pain_ratio_note}
+
 **Proyección 6 meses:** ${loss_6_months}
 
 > ⚠️ ${financial_disclaimer}

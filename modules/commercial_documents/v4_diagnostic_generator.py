@@ -1143,6 +1143,14 @@ class V4DiagnosticGenerator:
             'recuperacion_proyectada_6m': recuperacion_proyectada_6m,
             'pain_pct': pain_pct,
             'recov_pct': recov_pct,
+            # FASE-D: Nota explicativa de divergencia pain_ratio 20% vs 41%
+            # El diagnóstico usa 20% (conservador) mientras la propuesta usa el % real del hotel.
+            'pain_ratio_note': (
+                "**Nota sobre la proyección**: El 20% utilizado en este diagnóstico es una "
+                "estimación regional conservadora. En la propuesta personalizada, este "
+                "porcentaje se ajusta según el perfil específico de su hotel "
+                "(canal directo, ocupación, tarifas)."
+            ),
         }
 
     # FIN-3: Precision-based financial template variables
