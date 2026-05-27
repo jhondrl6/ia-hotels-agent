@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-26
 > **Version actual:** v4.46.0
-> **Total fases completadas:** 301
+> **Total fases completadas:** 303
 
 ---
 
@@ -7448,6 +7448,47 @@ _Ninguno_
 | `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
 | `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
 | `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-B - 2026-05-26
+**Descripcion:** ROI-REFACTOR: Traducir AEO/UTMs/P1-P3 + cambiar tabla entregables a Momento de entrega
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-C - 2026-05-26
+**Descripcion:** ROI-REFACTOR_FASE-C_ADR_scraper_and_dynamic_version
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
 
 ### Validaciones
 - [x] Tests passing (0)

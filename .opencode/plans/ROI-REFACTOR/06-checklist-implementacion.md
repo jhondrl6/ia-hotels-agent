@@ -36,8 +36,8 @@
 
 || ID | Tarea | Estado | Verificación |
 |----|-------|--------|-------------|
-| B1 | Traducir AEO, UTMs, P1/P2/P3 en template | ⬜ | Sin jerga técnica en output |
-| B2 | Tabla entregables: "Estado" → "Momento de entrega", sin % confianza | ⬜ | Headers correctos en output |
+| B1 | Traducir AEO, UTMs, P1/P2/P3 en template | ✅ | Sin jerga técnica en output |
+| B2 | Tabla entregables: "Estado" → "Momento de entrega", sin % confianza | ✅ | Headers correctos en output |
 
 ---
 
@@ -45,8 +45,8 @@
 
 || ID | Tarea | Estado | Verificación |
 |----|-------|--------|-------------|
-| C1 | Conectar web_scraping ADR como fallback intermedio | ⬜ | `adr_source: "web_scraping"` en JSON |
-| C2 | Dynamic version → `PIPELINE_VERSION` en L725 | ⬜ | Frontmatter != "4.0.0" |
+| C1 | Conectar web_scraping ADR como fallback intermedio | ✅ | `adr_source: "web_scraping"` en JSON (ya existía, se agregó adr_source explícito) |
+| C2 | Dynamic version → `PIPELINE_VERSION` en L725 | ✅ | Frontmatter = v4.53.0 (desde VERSION.yaml); también en v4_diagnostic_generator.py |
 
 ---
 

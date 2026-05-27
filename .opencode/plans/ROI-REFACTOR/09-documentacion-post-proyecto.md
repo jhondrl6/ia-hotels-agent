@@ -3,7 +3,7 @@
 **Plan**: ROI-REFACTOR
 **Target**: v4.54.0
 **Iniciado**: 2026-05-26
-**Actualizado**: 2026-05-26 (FASE-0 añadida)
+**Actualizado**: 2026-05-26 (FASE-C completada)
 
 ---
 
@@ -14,6 +14,11 @@
 | FASE-1 | commercial_documents | `v4_proposal_generator.py` | `document_audience` param en `generate()` + alertas condicionadas a `internal` |
 | FASE-1 | commercial_documents | `v4_diagnostic_generator.py` | `document_audience` param en `generate()` + alertas condicionadas a `internal` |
 | FASE-1 | commercial_documents | `propuesta_v6_template.md` | Eliminado placeholder testimonios, agregado `{{if testimonials_present == "true"}}...{{endif}}` |
+| FASE-2 | commercial_documents | `v4_proposal_generator.py` | Tabla entregables: "Nivel"→"Momento de entrega" + "Qué significa"→"Qué incluye"; estados mapeados a fechas concretas (Día 1, Semana 1, Semana 2); P1/P2/P3→Fase 1/2/3 con descripciones |
+| FASE-2 | commercial_documents | `propuesta_v6_template.md` | Nota AEO→"Optimización para Asistentes de Voz (Siri, Alexa, Google)"; leyenda P1/P2/P3→Fase 1/2/3 |
+| FASE-3 | main | `main.py` | `adr_source` agregado a `financial_scenarios.json` (input_data) para trazabilidad de fuente de ADR |
+| FASE-3 | commercial_documents | `v4_proposal_generator.py` | `_get_pipeline_version()` + `PIPELINE_VERSION` desde `VERSION.yaml`; reemplazado hardcode `'4.0.0'` en frontmatter |
+| FASE-3 | commercial_documents | `v4_diagnostic_generator.py` | `_get_pipeline_version()` + `PIPELINE_VERSION` desde `VERSION.yaml`; reemplazado hardcode `'4.0.0'` en frontmatter |
 
 ---
 
@@ -24,6 +29,10 @@
 | FASE-1 | Hidden commercial alerts | El bloque `⚠️ Alertas Comerciales` se inyecta solo cuando `document_audience="internal"`; con `document_audience="client"` (default) se omite del documento |
 | FASE-1 | Testimonials conditional | La sección "Hoteles que ya confiaron en nosotros" se renderiza solo si `testimonials_present="true"`, caso contrario se omite completamente |
 | FASE-1 | pain_ratio note semántica | La nota de proyección ahora dice "La inversión mensual representa el X% de su pérdida mensual" en vez del incorrecto "el X% representa la porción del dolor financieramente abordable con IAO" |
+| FASE-2 | Lenguaje de negocio en propuesta | "AEO"→"Optimización para Asistentes de Voz (Siri, Alexa, Google)"; "UTMs"→"sistema de rastreo para medir de dónde viene cada reserva"; "P1/P2/P3"→"Fase 1/2/3" con descripciones (WhatsApp+datos IA, Contenido+FAQs, Guías locales) |
+| FASE-2 | Tabla de entregables con fechas concretas | Columnas "Nivel"→"Momento de entrega" y "Qué significa"→"Qué incluye"; estados reemplazados por fechas (Día 1, Semana 1, Semana 2); sin % confianza |
+| FASE-3 | ADR source en financial_scenarios.json | `adr_source` expuesto explícitamente en `input_data` del JSON para trazabilidad (antes solo implícito vía precision_tier) |
+| FASE-3 | Versión dinámica en frontmatter | `PIPELINE_VERSION` lee `VERSION.yaml` (v4.53.0) — antes hardcodeado `4.0.0` en proposal y diagnostic generators |
 
 ---
 
@@ -119,7 +128,7 @@
 || Fase | Fecha | Resultado | Evidencia |
 |------|-------|---------|-----------|
 | FASE-1 | 2026-05-26 | ✅ 4/4 fixes aplicados | `v4_proposal_generator.py`, `v4_diagnostic_generator.py`, `propuesta_v6_template.md` |
-| FASE-2 | — | — | — |
-| FASE-3 | — | — | — |
+| FASE-2 | 2026-05-26 | ✅ 2/2 fixes aplicados | `propuesta_v6_template.md`, `v4_proposal_generator.py` |
+| FASE-3 | 2026-05-26 | ✅ Verificación + 2 fixes | ADR ya conectado (verificado); adr_source agregado a JSON; PIPELINE_VERSION en ambos generators |
 | FASE-4 | — | — | — |
 | FASE-5 | — | — | — |

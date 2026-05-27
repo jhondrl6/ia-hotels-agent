@@ -1909,6 +1909,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'input_data': {
                 'rooms': rooms,
                 'adr_cop': adr_cop,
+                'adr_source': adr_source,
                 'occupancy_rate': occupancy_rate,
                 'direct_channel_percentage': direct_channel_pct
             },

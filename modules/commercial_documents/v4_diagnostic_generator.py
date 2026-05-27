@@ -33,6 +33,22 @@ from modules.common.yaml_loader import load_yaml_config, YAMLLoadError
 from modules.financial_engine.precision_validator import PrecisionValidator  # FIN-3
 
 
+def _get_pipeline_version() -> str:
+    """Lee la version del pipeline desde VERSION.yaml con fallback seguro."""
+    try:
+        version_file = Path(__file__).parent.parent.parent / "VERSION.yaml"
+        with open(version_file, 'r', encoding='utf-8') as f:
+            for line in f:
+                if line.startswith('version:'):
+                    return line.split(':', 1)[1].strip().strip('"').strip("'")
+    except Exception:
+        pass
+    return "4.0.0"
+
+
+PIPELINE_VERSION = _get_pipeline_version()
+
+
 def _get_opportunity_scorer():
     """Lazy import del OpportunityScorer para evitar import circular."""
     try:
@@ -639,7 +655,7 @@ class V4DiagnosticGenerator:
 
         data = {
             'generated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            'version': '4.0.0',
+            'version': PIPELINE_VERSION,
             'hotel_id': hotel_id,
             'coherence_score': coherence_score_display,
             'gate_status': gate_status_display,

@@ -80,7 +80,7 @@ Sesión 6  → FASE-5 (Ejecución — v4complete + análisis)
 |------|--------|-------|-----------|
 | FASE-0 | ✅ COMPLETADA | 2026-05-26 | 09-documentacion-post-proyecto.md §F |
 | FASE-1 | ✅ COMPLETADA | 2026-05-26 | 4 files modified (proposal/diagnostic generators + template) |
-| FASE-2 | ⬜ PENDIENTE | — | — |
-| FASE-3 | ⬜ PENDIENTE | — | — |
+| FASE-2 | ✅ COMPLETADA | 2026-05-26 | propuesta_v6_template.md + v4_proposal_generator.py |
+| FASE-3 | ✅ COMPLETADA | 2026-05-26 | main.py (adr_source en financial_scenarios.json), v4_proposal_generator.py, v4_diagnostic_generator.py (PIPELINE_VERSION) |
 | FASE-4 | ⬜ PENDIENTE | — | — |
 | FASE-5 | ⬜ PENDIENTE | — | — |

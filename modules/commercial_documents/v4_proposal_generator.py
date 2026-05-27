@@ -30,6 +30,22 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def _get_pipeline_version() -> str:
+    """Lee la version del pipeline desde VERSION.yaml con fallback seguro."""
+    try:
+        version_file = Path(__file__).parent.parent.parent / "VERSION.yaml"
+        with open(version_file, 'r', encoding='utf-8') as f:
+            for line in f:
+                if line.startswith('version:'):
+                    return line.split(':', 1)[1].strip().strip('"').strip("'")
+    except Exception:
+        pass
+    return "4.0.0"
+
+
+PIPELINE_VERSION = _get_pipeline_version()
+
+
 # ============================================================
 # CONFIDENCE THRESHOLDS CACHE — FASE-CONFIG-5
 # ============================================================
@@ -488,9 +504,9 @@ Mapeo directo de cada problema a su solución con asset correspondiente:
 ${solution_table}
 
 **Leyenda de Prioridad:**
-- 🔴 **P1**: Crítica - Implementar inmediatamente
-- 🟡 **P2**: Media - Implementar en 30 días
-- 🟢 **P3**: Baja - Implementar en 60 días
+- 🔴 **Fase 1**: Crítica — WhatsApp y datos para IA
+- 🟡 **Fase 2**: Media — Contenido y FAQs
+- 🟢 **Fase 3**: Baja — Guías locales
 
 ---
 
@@ -725,7 +741,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         data = {
             # Metadata
             'generated_at': generated_at.strftime("%Y-%m-%d %H:%M:%S"),
-            'version': '4.0.0',
+            'version': PIPELINE_VERSION,
             'hotel_id': hotel_id,
             'proposal_id': f"PROP-{hotel_id.upper()}-{generated_at.strftime('%Y%m%d')}",
             'valid_until': valid_until.strftime("%Y-%m-%d"),
@@ -1276,8 +1292,8 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             # (same 7 entries as before)
             services_to_show = None  # signals to use static iteration below
 
-        # Table header
-        rows = ["| Entregable | Nivel | Que significa |", "|------------|-------|---------------|"]
+        # Table header — FASE-B: "Momento de entrega" en lugar de "Estado"
+        rows = ["| Entregable | Momento de entrega | Qué incluye |", "|------------|-------------------|-------------|"]
 
         if services_to_show is not None:
             # Dynamic: build from detected pains
@@ -1317,8 +1333,9 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 rows.append(f"| {service_name} | {nivel} | {significado} |")
 
         # FASE-PROP-E: AEO row — connects to existing assets when score is low
+        # FASE-B: "Optimización para Asistentes de Voz" replaces "AEO (Answer Engine Optimization)"
         if score_aeo is not None and score_aeo < 30:
-            rows.append("| AEO (Answer Engine Optimization) | ✅ Basado en assets existentes | AEO se construye sobre Schema FAQ + Open Graph — ambos incluidos en su kit |")
+            rows.append("| Optimización para Asistentes de Voz (Siri, Alexa, Google) | ✅ Basado en assets existentes | Se construye sobre Schema FAQ + Open Graph — ambos incluidos en su kit |")
 
         return "\n".join(rows)
 
@@ -1354,12 +1371,12 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         """
         # FASE-PROP-B: Si hay conflicto de WhatsApp, mostrar advertencia antes de cualquier otro estado
         if whatsapp_conflict_override:
-            return ("⚠️ Conflicto detectado", "Requiere resolucion manual - numeros no coinciden")
+            return ("⚠️ Intervención manual", "Requerimos sus datos para resolver")
 
         # FASE-D: Si se verificó presencia y el asset YA existe en producción,
         # es el estado más honesto que podemos mostrar
         if presence_verified and present_in_production:
-            return ("✅ Verificado en sitio", "Ya existe en su web - nosotros lo entregamos")
+            return ("✅ Día 1 (Verificado)", "Ya existe en su web - nosotros lo entregamos")
 
         if confidence is not None:
             # FASE-CONFIG-5: Usar thresholds del YAML en lugar de hardcodes
@@ -1373,19 +1390,19 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 # FIX: No mostrar "Completo" si schema_valid=false en el sitio real
                 # "Completo" solo si el schema esta implementado Y validado
                 if schema_valid_override is False or faq_schema_valid_override is False:
-                    return ("⚠️ Listo para implementar", "Requiere confirmacion post-firma")
-                return ("✅ Completo", "Listo para implementar")
+                    return ("⚠️ Semana 1 (Con sus datos)", "Requiere confirmacion post-firma")
+                return ("✅ Día 1 (Activación inicial)", "Listo para implementar")
             elif confidence >= medium_threshold:
                 # Threshold mínimo: asset generado con calidad aceptable
-                return ("⚠️ Listo para implementar", "Requiere confirmacion post-firma")
+                return ("⚠️ Semana 1 (Con sus datos)", "Requiere confirmacion post-firma")
             elif confidence >= low_threshold:
-                return ("En proceso de activación — Semana 2", "Datos pendientes del cliente")
+                return ("⚠️ Semana 2 (Configuración)", "Datos pendientes del cliente")
             else:
-                return ("🔧 En optimizacion", "Mejora continua de calidad")
+                return ("🔧 En mejora continua", "Optimización sin costo adicional")
         elif assets_generated is None:
-            return ("⏳ Incluido en su kit", "Preparacion posterior a la firma")
+            return ("✅ Día 1 (Activación inicial)", "Preparacion posterior a la firma")
         else:
-            return ("⏳ Incluido en su kit", "Preparacion posterior a la firma")
+            return ("✅ Día 1 (Activación inicial)", "Preparacion posterior a la firma")
 
     def _preprocess_conditionals(self, template_content: str, data: Dict[str, Any]) -> str:
         """Elimina bloques {{if cond}}...{{endif}} cuando cond es False.
@@ -1636,9 +1653,9 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         rows = []
         
         priority_icons = {
-            1: "🔴 P1",
-            2: "🟡 P2",
-            3: "🟢 P3",
+            1: "🔴 Fase 1",
+            2: "🟡 Fase 2",
+            3: "🟢 Fase 3",
         }
         
         for asset in sorted(asset_plan, key=lambda x: x.priority):
@@ -1825,7 +1842,7 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
 
         if p1_assets:
             asset_names = [a.asset_type.replace("_", " ").title() for a in p1_assets[:4]]
-            lines.append("- [ ] **Día 4**: Implementación de activos P1 (sin datos externos):")
+            lines.append("- [ ] **Día 4**: Implementación de activos Fase 1 (sin datos externos):")
             lines.extend(f"- [ ] {name}" for name in asset_names)
         elif score_actions:
             lines.append("- [ ] **Día 4**: Implementación de quick wins prioritarios:")
@@ -1872,7 +1889,7 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         if not asset_plan:
             lines = [
                 "- [ ] **Semana 2**: Implementación Open Graph con fotos reales (pendiente de recibir fotos del cliente)",
-                "- [ ] **Semana 2**: Configuración tracking avanzado (UTMs, conversiones)",
+                "- [ ] **Semana 2**: Configuración sistema de rastreo (sabemos de dónde viene cada reserva)",
                 "- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales",
                 "- [ ] **Día 30**: Reporte de avance con métricas de visibilidad",
             ]
@@ -1890,12 +1907,12 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         # P1 assets needing client data
         if p1_assets:
             asset_names = [a.asset_type.replace("_", " ").title() for a in p1_assets[:3]]
-            items.append(f"- [ ] **Semana 2**: Implementación P1: {', '.join(asset_names)}")
+            items.append(f"- [ ] **Semana 2**: Implementación Fase 1 (WhatsApp + datos para IA): {', '.join(asset_names)}")
 
         # P2 assets needing client data
         if p2_assets:
             asset_names = [a.asset_type.replace("_", " ").title() for a in p2_assets[:3]]
-            items.append(f"- [ ] **Semana 3**: Implementación P2: {', '.join(asset_names)}")
+            items.append(f"- [ ] **Semana 3**: Implementación Fase 2 (Contenido y FAQs): {', '.join(asset_names)}")
 
         # FASE-PROP-E: Insert score-based actions
         if score_actions:
@@ -1904,7 +1921,7 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
             items.append("- [ ] **Semana 3**: SEO Local - optimización basada en análisis técnico")
 
         items.extend([
-            "- [ ] **Semana 3**: Configuración tracking avanzado (UTMs, conversiones)",
+            "- [ ] **Semana 3**: Configuración sistema de rastreo (sabemos de dónde viene cada reserva)",
             "- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales",
             "- [ ] **Día 30**: Reporte de avance con métricas de visibilidad"
         ])
@@ -1921,7 +1938,7 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
             asset_plan: Lista de AssetSpec con priority. P3 assets son activos en 60 días.
         """
         base_plan = """- [ ] **Días 31-45**: Optimización de assets entregados (A/B testing de títulos, descripciones)
-- [ ] **Días 46-50**: Implementación de assets P2 y P3 restantes
+- [ ] **Días 46-50**: Implementación Fase 2 y Fase 3 restantes
 - [ ] **Días 51-55**: Primera medición de impacto en consultas directas (datos reales de Google Search Console)
 - [ ] **Días 56-60**: Ajustes basados en datos reales + reporte día 60"""
 
@@ -1937,10 +1954,10 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         pending_p3 = [a for a in p3_assets if a.requires_manual_action]
         if pending_p3:
             asset_names = [a.asset_type.replace("_", " ").title() for a in pending_p3[:3]]
-            p3_line = f"- [ ] **Días 46-50**: Implementación P3 (pendiente datos del cliente): {', '.join(asset_names)}"
+            p3_line = f"- [ ] **Días 46-50**: Implementación Fase 3 (Guías locales, pendiente datos del cliente): {', '.join(asset_names)}"
         else:
             asset_names = [a.asset_type.replace("_", " ").title() for a in p3_assets[:3]]
-            p3_line = f"- [ ] **Días 46-50**: Implementación P3: {', '.join(asset_names)}"
+            p3_line = f"- [ ] **Días 46-50**: Implementación Fase 3 (Guías locales): {', '.join(asset_names)}"
 
         return f"""- [ ] **Días 31-45**: Optimización de assets entregados (A/B testing de títulos, descripciones)
 {p3_line}
