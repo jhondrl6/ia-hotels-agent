@@ -374,9 +374,9 @@ class V4ProposalGenerator:
                     monthly_gain = int(raw_monthly_loss * pain_ratio * recovery_realistic)
                     net_monthly = monthly_gain - price_monthly
                     net_benefit_6m = net_monthly * 6
-                    total_investment = price_monthly * 6 + setup_fee
+                    total_investment_opex = price_monthly * 6  # ROICRII: SIN setup_fee (CAPEX es activo del cliente)
                     total_recovery = monthly_gain * 6
-                    roi = total_recovery / total_investment if total_investment > 0 else 0.0
+                    roi = total_recovery / total_investment_opex if total_investment_opex > 0 else 0.0
 
             # Check for onboarding plan in pricing_result
             has_onboarding = False

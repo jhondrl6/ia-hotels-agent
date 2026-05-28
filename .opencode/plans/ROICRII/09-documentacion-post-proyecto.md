@@ -18,11 +18,11 @@
 ---
 
 ### FASE-2: Coherencia Financiera
-**Fecha ejecución**: (pendiente)
-**Archivos modificados**: (pendiente)
-**Tests nuevos**: (pendiente)
-**Hallazgos resueltos**: NEW-03, CRIT-02
-**Notas**: (pendiente)
+**Fecha ejecución**: 2026-05-27
+**Archivos modificados**: `modules/commercial_documents/v4_proposal_generator.py` (L377: total_investment→total_investment_opex, ROI sin CAPEX), `modules/financial_engine/pricing_resolution_wrapper.py` (L143: pasa expected_recovery_cop al calculator, activa pipeline 3 pasos)
+**Tests nuevos**: `tests/test_financial_coherence.py` (TestGateOpexOnly + TestWrapperActivatesPipeline — pytest no disponible en entorno WSL, pendiente ejecución)
+**Hallazgos resueltos**: NEW-03 (gate L377 usaba CAPEX en denominador → opex-only), CRIT-02 (wrapper L143 no pasaba expected_recovery_cop → calculado y pasado: pain_ratio=0.05, recovery_factor=0.35)
+**Notas**: pipeline 3 pasos ahora se activa desde wrapper.resolve() → calculator.calculate(expected_recovery_cop=...) → _calculate_with_pipeline(). Gate ROI usa price_monthly*6 como denominador (CAPEX=activo del cliente, no inversión en servicio).
 
 ---
 

@@ -140,7 +140,14 @@ class PricingResolutionWrapper:
     ) -> PricingResolutionResult:
         """Use new hybrid pricing resolution."""
         calculator = self._get_calculator()
-        pricing_result = calculator.calculate(rooms, expected_loss_cop, segment)
+        # ROICRII: Activar pipeline 3 pasos — pasar expected_recovery_cop
+        pain_ratio = self.LEGACY_PAIN_RATIO  # 0.05 from wrapper
+        recovery_realistic = 0.35  # realistic from scenario config
+        expected_recovery_cop = expected_loss_cop * pain_ratio * recovery_realistic
+        pricing_result = calculator.calculate(
+            rooms, expected_loss_cop, segment,
+            expected_recovery_cop=expected_recovery_cop,
+        )
 
         return PricingResolutionResult(
             monthly_price_cop=pricing_result.monthly_price_cop,
