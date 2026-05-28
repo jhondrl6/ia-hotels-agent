@@ -45,3 +45,19 @@ capex_breakdown:
       amount: 500000
       description: "Transferencia de conocimiento al equipo"
   total: 2500000
+
+pilot_options:
+  piloto_30_dias:
+    nombre: "Piloto de Validación 30 Días"
+    duracion: 30
+    inversion_unica: true
+    precio: 400000
+    entregables:
+      - "Implementación completa del Kit 4 Pilares"
+      - "Reporte de brechas cerradas (evidencia técnica)"
+      - "Primera señal en GSC (consultas orgánicas)"
+    condicion_continuidad:
+      umbral_mejora: 0.10
+      metrica: "consultas_directas_gsc"
+      sin_mejora: "No hay mes 2. Activos quedan en propiedad del cliente."
+      con_mejora: "Continuamos con plan semestral a precio estándar."

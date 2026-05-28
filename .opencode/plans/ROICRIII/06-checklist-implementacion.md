@@ -13,7 +13,7 @@
 | 2 | FASE-2 | Pain Ratio + Trazabilidad (A4+A5) | ⏳ Pendiente | — |
 | 3 | FASE-3 | Validator + BREACH + WhatsApp (B1+B2+B6) | ✅ Completada | 2026-05-28 |
 | 4 | FASE-4 | Assets Deprecados Cleanup (B3+B4+B5+F5) | ✅ Completada | 2026-05-28 |
-| 5 | FASE-5 | Features: Piloto + CAPEX + Garantía (C1+C2+C3) | ⏳ Pendiente | — |
+| 5 | FASE-5 | Features: Piloto + CAPEX + Garantía (C1+C2+C3) | ✅ Completada | 2026-05-28 |
 | 6 | FASE-6 | v4complete Hotel Castilla Real + 5-niveles | ⏳ Pendiente | — |
 | 7 | FASE-RELEASE-4.57.0 | Documentación oficial + version bump | ⏳ Pendiente | — |
 
@@ -25,7 +25,7 @@
 - [x] FASE-2 completada antes de iniciar FASE-3
 - [x] FASE-3 completada antes de iniciar FASE-4
 - [x] FASE-4 completada antes de iniciar FASE-5
-- [ ] FASE-5 completada antes de iniciar FASE-6
+- [x] FASE-5 completada antes de iniciar FASE-6
 - [ ] TODAS las fases 1-6 completadas antes de FASE-RELEASE
 
 ---
@@ -34,9 +34,9 @@
 
 | Verificación | FASE-1 | FASE-2 | FASE-3 | FASE-4 | FASE-5 | FASE-6 | RELEASE |
 |-------------|--------|--------|--------|--------|--------|--------|---------|
-| Tests nuevos pasan | [x] | [ ] | [x] | [x] | [ ] | — | — |
+| Tests nuevos pasan | [x] | [ ] | [x] | [x] | [x] | — | — |
 | run_all_validations.py --quick | [x] | [ ] | [x] | [x] | [ ] | [ ] | [ ] |
-| dependencias-fases.md actualizado | [x] | [ ] | [x] | [x] | [ ] | [ ] | [ ] |
+| dependencias-fases.md actualizado | [x] | [ ] | [x] | [x] | [x] | [ ] | [ ] |
 | log_phase_completion.py ejecutado | [x] | [ ] | [x] | [x] | [ ] | [ ] | [ ] |
 | 09-documentacion actualizado | [x] | [ ] | [x] | [x] | [ ] | [ ] | [ ] |
 | REGISTRY.md actualizado | [x] | [ ] | [x] | [x] | [ ] | [ ] | — |

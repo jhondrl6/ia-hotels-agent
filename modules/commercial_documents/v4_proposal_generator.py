@@ -216,6 +216,40 @@ class V4ProposalGenerator:
         header = "| Componente | Monto | Descripción |\n|---|---|---|\n"
         return header + "\n".join(rows)
 
+    def _build_pilot_section(self) -> str:
+        """Build pilot 30 days section for the V6 proposal template.
+        
+        FASE-5 (ROICRIII): Adds low-risk validation option for clients without
+        6-month budget commitment.
+        """
+        config = self._load_commercial_config()
+        pilot = config.get('pilot_options', {}).get('piloto_30_dias', {})
+        if not pilot:
+            return ""
+        
+        precio = format_cop(pilot.get('precio', 0))
+        entregables = '\n'.join(f"- {e}" for e in pilot.get('entregables', []))
+        cond = pilot.get('condicion_continuidad', {})
+        umbral_pct = int(cond.get('umbral_mejora', 0.10) * 100)
+        metrica = cond.get('metrica', 'consultas_directas_gsc').replace('_', ' ')
+        
+        return f"""---
+## 🎯 ¿Prefiere validar antes de comprometerse?
+
+Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
+
+### {pilot.get('nombre', 'Piloto de Validación')}
+
+**Inversión única: {precio} COP** — Sin compromiso mensual.
+
+**Lo que incluye:**
+{entregables}
+
+**Condiciones transparentes:**
+- Si al día {pilot.get('duracion', 30)} no hay +{umbral_pct}% en {metrica} → {cond.get('sin_mejora', '')}
+- Si hay mejora → {cond.get('con_mejora', '')}
+"""
+
     def _get_main_value(self, scenario) -> int:
         """Obtiene valor central de presentacion, con fallback a monthly_loss_cop.
         
@@ -998,6 +1032,14 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'guarantee_improvement_percent': self._load_commercial_config().get('guarantees', {}).get('improvement_percent', 10),
         'guarantee_delivery_days': self._load_commercial_config().get('guarantees', {}).get('delivery_days', 15),
         'installment_label': self._load_commercial_config().get('payment_options', {}).get('installment_label', '3 cuotas sin interés'),
+
+        # FASE-5: Pilot 30 days section
+        'pilot_section': self._build_pilot_section(),
+
+        # FASE-5: Garantía Día 55 con KPI específico
+        'garantia_metrica': 'Clics directos desde Google Search Console',
+        'garantia_umbral': '+15% vs. línea base del Día 0',
+        'garantia_consecuencia': 'Nota crédito automática del 50% del mes 2',
 
         # GEO Section (NUEVO) + GAP-IAO-01-03 Monetary Impact
         'geo_section': (self._build_geo_section(audit_result) if audit_result else "") + self._build_monetary_impact_section(diagnostic_summary),

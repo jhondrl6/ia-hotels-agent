@@ -187,9 +187,13 @@ El análisis de IAO utiliza APIs de terceros (OpenRouter, Google AI, Perplexity)
 Si en ${guarantee_satisfaction_days} días no ve un aumento del ${guarantee_improvement_percent}% en consultas directas, **le extendemos el servicio 1 mes gratis**. Sin excusas.
 Instalamos tracking propio en el Día 7 — sin necesidad de que tengas GA4.
 
-### 3. Garantía Día 55: Auditoría automática sin intervención humana
+### 3. Garantía Día 55: Auditoría automática con KPI verificable
 
-El **Día 55** de nuestro servicio, nuestra propia IA ejecuta una auditoría completa de todos los entregables. Si algún activo no cumple con los estándares de calidad pactados, **se emite una nota crédito automática** — sin que usted tenga que reclamar, sin papeleo, sin llamadas.
+El **Día 55** de nuestro servicio, nuestra IA ejecuta una auditoría completa de todos los entregables.
+**Métrica auditada:** ${garantia_metrica}
+**Umbral mínimo:** ${garantia_umbral}
+**Si no se cumple:** ${garantia_consecuencia}
+Sin reclamos, sin papeleo, sin llamadas.
 
 ### 4. Sin compromiso
 Contrato mes a mes. Si en cualquier momento no quiere continuar, nos avisa con ${guarantee_delivery_days} días. Sin penalizaciones.
@@ -203,6 +207,9 @@ Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.
 {{quote}} — {{hotel_name}} ({{result}})
 {{endif}}
 
+---
+
+${pilot_section}
 ---
 
 ## 🚀 SIGUIENTE PASO: Empezar es simple

@@ -114,3 +114,153 @@ class TestNetBenefitPositivo:
         assert net != effective_net, (
             f"net_benefit ({net}) matches effective path ({effective_net}) — NOT unified"
         )
+
+
+class TestPilotSection:
+    """FASE-5 T1: Verifica que la sección Piloto 30 días se renderiza correctamente."""
+
+    def test_pilot_section_renders(self):
+        """El template data debe contener pilot_section con 'Piloto'."""
+        import sys
+        sys.path.insert(0, str(__file__).rsplit('/tests/', 1)[0])
+        from modules.commercial_documents.v4_proposal_generator import V4ProposalGenerator
+        from modules.commercial_documents.data_structures import DiagnosticSummary, ConfidenceLevel, FinancialScenarios, AssetSpec, Scenario
+        import tempfile, os
+
+        # Minimal mock objects with __getattr__ to handle any attribute
+        class MockDiagnostic:
+            def __init__(self):
+                self.critical_problems_count = 0
+                self.quick_wins_count = 0
+                self.overall_confidence = ConfidenceLevel.VERIFIED
+                self.top_problems = []
+                self.coherence_score = None
+                self.score_global = None
+                self.score_tecnico = None
+                self.score_aeo = None
+                self.pain_ids = None
+                self.validated_data_summary = {}
+            
+            def __getattr__(self, name):
+                return None
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            gen = V4ProposalGenerator(template_dir=tmpdir)
+            data = gen._prepare_template_data(
+                diagnostic_summary=MockDiagnostic(),
+                financial_scenarios=FinancialScenarios(
+                    conservative=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.70, description="conservador"),
+                    realistic=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.20, description="realista"),
+                    optimistic=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.10, description="optimista"),
+                ),
+                asset_plan=[],
+                hotel_name="Hotel Test",
+                audit_result=None,
+                region="eje_cafetero",
+                analytics_data=None,
+                assets_generated=None,
+                site_presence_report=None,
+                financial_breakdown=None,
+            )
+            pilot = data.get('pilot_section', '')
+            assert 'Piloto' in pilot, f"'Piloto' not found in pilot_section: {pilot[:200]}"
+
+
+class TestCapexBreakdown:
+    """FASE-5 T2: Verifica que el breakdown CAPEX se renderiza con componentes."""
+
+    def test_capex_breakdown_renders(self):
+        """capex_breakdown_table debe tener tabla con componentes, no solo total."""
+        import sys
+        sys.path.insert(0, str(__file__).rsplit('/tests/', 1)[0])
+        from modules.commercial_documents.v4_proposal_generator import V4ProposalGenerator
+        from modules.commercial_documents.data_structures import DiagnosticSummary, ConfidenceLevel, FinancialScenarios, AssetSpec, Scenario
+        import tempfile
+
+        class MockDiagnostic:
+            def __init__(self):
+                self.critical_problems_count = 0
+                self.quick_wins_count = 0
+                self.overall_confidence = ConfidenceLevel.VERIFIED
+                self.top_problems = []
+                self.coherence_score = None
+                self.score_global = None
+                self.score_tecnico = None
+                self.score_aeo = None
+                self.pain_ids = None
+                self.validated_data_summary = {}
+            
+            def __getattr__(self, name):
+                return None
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            gen = V4ProposalGenerator(template_dir=tmpdir)
+            data = gen._prepare_template_data(
+                diagnostic_summary=MockDiagnostic(),
+                financial_scenarios=FinancialScenarios(
+                    conservative=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.70, description="conservador"),
+                    realistic=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.20, description="realista"),
+                    optimistic=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.10, description="optimista"),
+                ),
+                asset_plan=[],
+                hotel_name="Hotel Test",
+                audit_result=None,
+                region="eje_cafetero",
+                analytics_data=None,
+                assets_generated=None,
+                site_presence_report=None,
+                financial_breakdown=None,
+            )
+            table = data.get('capex_breakdown_table', '')
+            assert 'Auditoría Inicial' in table, f"'Auditoría Inicial' not in table: {table}"
+            assert 'Implementación Técnica' in table, f"'Implementación Técnica' not in table: {table}"
+            assert 'Onboarding' in table, f"'Onboarding' not in table: {table}"
+
+
+class TestGarantiaConKPI:
+    """FASE-5 T3: Verifica que la garantía Día 55 tiene KPI específico."""
+
+    def test_garantia_con_kpi(self):
+        """garantia_umbral debe contener '+15%' para la garantía Día 55."""
+        import sys
+        sys.path.insert(0, str(__file__).rsplit('/tests/', 1)[0])
+        from modules.commercial_documents.v4_proposal_generator import V4ProposalGenerator
+        from modules.commercial_documents.data_structures import DiagnosticSummary, ConfidenceLevel, FinancialScenarios, AssetSpec, Scenario
+        import tempfile
+
+        class MockDiagnostic:
+            def __init__(self):
+                self.critical_problems_count = 0
+                self.quick_wins_count = 0
+                self.overall_confidence = ConfidenceLevel.VERIFIED
+                self.top_problems = []
+                self.coherence_score = None
+                self.score_global = None
+                self.score_tecnico = None
+                self.score_aeo = None
+                self.pain_ids = None
+                self.validated_data_summary = {}
+
+            def __getattr__(self, name):
+                return None
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            gen = V4ProposalGenerator(template_dir=tmpdir)
+            data = gen._prepare_template_data(
+                diagnostic_summary=MockDiagnostic(),
+                financial_scenarios=FinancialScenarios(
+                    conservative=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.70, description="conservador"),
+                    realistic=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.20, description="realista"),
+                    optimistic=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.10, description="optimista"),
+                ),
+                asset_plan=[],
+                hotel_name="Hotel Test",
+                audit_result=None,
+                region="eje_cafetero",
+                analytics_data=None,
+                assets_generated=None,
+                site_presence_report=None,
+                financial_breakdown=None,
+            )
+            umbral = data.get('garantia_umbral', '')
+            assert '+15%' in umbral, f"'+15%' not found in garantia_umbral: {umbral}"

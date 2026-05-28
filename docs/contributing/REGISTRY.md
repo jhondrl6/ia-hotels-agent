@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-28
 > **Version actual:** v4.55.0
-> **Total fases completadas:** 330
+> **Total fases completadas:** 331
 
 ---
 
@@ -7986,6 +7986,27 @@ _Ninguno_
 |---------|--------|
 | `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
 | `modules/commercial_documents/service_catalog.py` | Service Catalog |
+
+### Validaciones
+- [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-5 - 2026-05-28
+**Descripcion:** Features_Piloto_CAPEX_Garantia_C1_C2_C3
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `config/commercial.yaml` | Commercial |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
 
 ### Validaciones
 - [x] Tests passing (3)
