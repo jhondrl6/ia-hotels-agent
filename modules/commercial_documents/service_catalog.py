@@ -152,11 +152,6 @@ TECHNICAL_ASSET_CATALOG: Dict[str, TechnicalAssetEntry] = {
         asset_type="analytics_setup_guide",
         description="Instrucciones paso a paso para conectar Google Analytics 4 y Google Search Console",
     ),
-    "indirect_traffic_optimization": TechnicalAssetEntry(
-        asset_name="Optimización de Tráfico Indirecto",
-        asset_type="indirect_traffic_optimization",
-        description="Estrategia para captar reservas desde canales indirectos (OTAs, blogs, redes)",
-    ),
 }
 
 

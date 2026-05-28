@@ -18,7 +18,9 @@
 | B2: BREACH_BY_ASSET corregido | v4_proposal_generator.py | monthly_report ya no mapea a FAQ; faq_page sí resuelve no_faq_schema; deprecados eliminados (optimization_guide, local_content_page) | FASE-3 |
 | B6: narrativa WhatsApp coherente | v4_proposal_generator.py | "⚠️ Requiere corrección" → "📋 Auditoría incluida"; "Guía de corrección" → "Auditoría y Optimización de Conversión" | FASE-3 |
 
-## Sección C: Correcciones Críticas
+| B3: DEPRECATED_ASSETS filter en activos_lista | v4_proposal_generator.py | 4 deprecados filtrados del output (og_tags_guide, indirect_traffic_optimization, local_content_page, optimization_guide) | FASE-4 |
+| B4: indirect_traffic_optimization removido de TECHNICAL_ASSET_CATALOG | service_catalog.py | Entrada eliminada — movido a consultoría upsell manual | FASE-4 |
+| B5: Verificación config/ — 0 deprecados en pipeline | config/, modules/ | Grep confirma deprecados solo en archives (no afectan pipeline) | FASE-4 |
 
 | Issue ID | Descripción | Archivo | Fase |
 |----------|-------------|---------|------|

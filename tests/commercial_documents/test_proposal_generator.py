@@ -622,3 +622,48 @@ class TestHR1ROIConsistency:
         
         assert effective == projected_real_gain, \
             f"ROI table and note should show same amount: {effective} vs {projected_real_gain}"
+
+
+class TestActivatedAssetsFiltered:
+    """ROICRIII FASE-4: Deprecated assets must be excluded from activos_digitales_lista."""
+
+    def test_activated_assets_filtered(self, generator):
+        """Los 4 assets deprecados NO deben aparecer en la lista de activos del cliente."""
+        from modules.commercial_documents.data_structures import AssetSpec
+
+        deprecated = [
+            AssetSpec(asset_type="og_tags_guide"),
+            AssetSpec(asset_type="indirect_traffic_optimization"),
+            AssetSpec(asset_type="local_content_page"),
+            AssetSpec(asset_type="optimization_guide"),
+        ]
+        valid = [
+            AssetSpec(asset_type="open_graph"),
+            AssetSpec(asset_type="analytics_setup_guide"),
+        ]
+        mixed_plan = deprecated + valid
+
+        result = generator._build_activos_digitales_lista(mixed_plan)
+
+        for dep in deprecated:
+            assert dep.asset_type not in result, \
+                f"Deprecated asset '{dep.asset_type}' should NOT appear in activos_lista"
+        for v in valid:
+            assert v.asset_type in result, \
+                f"Valid asset '{v.asset_type}' should appear in activos_lista"
+
+    def test_all_deprecated_filtered(self, generator):
+        """Si TODOS los assets son deprecados, devuelve el mensaje de fallback."""
+        from modules.commercial_documents.data_structures import AssetSpec
+
+        all_deprecated = [
+            AssetSpec(asset_type="og_tags_guide"),
+            AssetSpec(asset_type="indirect_traffic_optimization"),
+        ]
+        result = generator._build_activos_digitales_lista(all_deprecated)
+        assert result == "- Sin activos digitales especificados"
+
+    def test_empty_plan(self, generator):
+        """Plan vacío devuelve el mensaje de fallback."""
+        result = generator._build_activos_digitales_lista([])
+        assert result == "- Sin activos digitales especificados"

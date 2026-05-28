@@ -54,7 +54,7 @@ FASE-1 (Motor Financiero: A1+A2+A3)
 | FASE-1 (Motor Financiero) | ✅ Completada | 2026-05-28 | Código ya unificado; 6/6 tests nuevos pasan; smoke OK |
 | FASE-2 (Pain Ratio + Trazabilidad) | ⏳ Pendiente | — | Depende de FASE-1 |
 | FASE-3 (Validator + BREACH + WhatsApp) | ✅ Completada | 2026-05-28 | Código + tests + docs cascade |
-| FASE-4 (Assets Deprecados) | ⏳ Pendiente | — | Depende de FASE-3 |
+| FASE-4 (Assets Deprecados: B3+B4+B5+F5) | ✅ Completada | 2026-05-28 | DEPRECATED_ASSETS en generator + removed from TECHNICAL_ASSET_CATALOG + test |
 | FASE-5 (Features) | ⏳ Pendiente | — | Depende de FASE-4 |
 | FASE-6 (v4complete) | ⏳ Pendiente | — | delegate_task + verificación |
 | FASE-RELEASE-4.57.0 | ⏳ Pendiente | — | Documentación oficial |

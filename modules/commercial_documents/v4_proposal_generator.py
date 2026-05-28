@@ -1600,18 +1600,27 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         
         return months
     
+    # ROICRIII FASE-4: Assets deprecados — no deben aparecer en la lista del cliente
+    DEPRECATED_ASSETS = {
+        "og_tags_guide",
+        "indirect_traffic_optimization",
+        "local_content_page",
+        "optimization_guide",
+    }
+
     def _build_activos_digitales_lista(self, asset_plan: List[AssetSpec]) -> str:
         """ROICR FASE-3: Genera lista de activos digitales propiedad del cliente.
 
         Extrae nombres de assets del plan que representan activos entregables
         (no servicios recurrentes). Estos activos forman el CAPEX.
+        ROICRIII FASE-4: Filtra assets deprecados.
         """
         if not asset_plan:
             return "- Sin activos digitales especificados"
         activos = []
         for asset in asset_plan:
             name = getattr(asset, 'asset_type', '') or getattr(asset, 'name', '') or str(asset)
-            if name:
+            if name and name not in self.DEPRECATED_ASSETS:
                 activos.append(f"- {name}")
         if not activos:
             return "- Sin activos digitales especificados"

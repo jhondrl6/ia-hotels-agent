@@ -115,6 +115,7 @@ ${pain_ratio_note}
 > 📊 **Trazabilidad financiera**: La fuga total estimada es de ${fuga_total_6m} en 6 meses.
 > Con nuestro servicio, la recuperación proyectada es de ${recuperacion_proyectada_6m}
 > (${pain_pct}% del dolor priorizado × ${recov_pct}% de recuperación conservadora).
+> **Origen**: ${trazabilidad_origen}.
 
 {{if financial_evidence_tier == "C"}}
 > **Nota importante**: Las cifras acima son estimaciones basadas en benchmarks regionales y datos limitados de su web. Para proyecciones precisas con datos reales de su hotel, complete el proceso de onboarding (15 minutos) y conecte Google Analytics.

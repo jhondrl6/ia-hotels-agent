@@ -58,3 +58,45 @@ class TestWrapperActivatesPipeline:
         # Los precios pueden ser iguales o distintos dependiendo del ethical cap
         # Lo importante es que el pipeline se activó (no falló)
         assert pipeline.monthly_price_cop > 0
+
+
+class TestCurvaMaduracionUnificada:
+    """ROICRIII-FASE-1: Verifica que la curva de maduración 4 pilares produce
+    los totales esperados para el caso Castilla Real y que el motor financiero
+    está unificado."""
+
+    # Castilla Real: fuga_mensual=$3,741,696, recovery_factor=0.35
+    FUGA_CASTILLA_REAL = 3_741_696
+    RECOVERY_FACTOR = 0.35
+    MONTHLY_INVESTMENT = 400_000
+
+    @pytest.fixture
+    def maturity_result(self):
+        from modules.financial_engine.pillar_maturity_curve import aplicar_curva_4_pilares
+        return aplicar_curva_4_pilares(
+            fuga_mensual=self.FUGA_CASTILLA_REAL,
+            recovery_factor_max=self.RECOVERY_FACTOR,
+            meses=6,
+        )
+
+    def test_curva_maduracion_suma_correcta(self, maturity_result):
+        """La suma de recuperaciones mensuales debe ser ~$5,041,935 para Castilla Real."""
+        total = maturity_result.total_recuperacion_6m
+        # El cálculo es: fuga * recovery_factor * sum(curva) = 3741696 * 0.35 * 3.85
+        expected = round(3_741_696 * 0.35 * 3.85, 2)
+        assert total == pytest.approx(expected, abs=0.02)
+        assert total > 4_000_000, f"Total recuperación ({total}) muy bajo para Castilla Real"
+
+    def test_roi_unificado_con_fee_real(self, maturity_result):
+        """ROI usando curva de maduración debe ser ~2.10X para Castilla Real
+        (fee=$400K/mes, 6 meses)."""
+        total_investment = self.MONTHLY_INVESTMENT * 6
+        roi = maturity_result.total_recuperacion_6m / total_investment
+        assert roi == pytest.approx(2.10, abs=0.05), f"ROI={roi:.2f}, expected ~2.10"
+
+    def test_net_benefit_positivo_con_curva(self, maturity_result):
+        """Beneficio neto (recuperación - inversión) debe ser positivo (> $2.6M)."""
+        total_investment = self.MONTHLY_INVESTMENT * 6
+        net = maturity_result.total_recuperacion_6m - total_investment
+        assert net > 0, f"Net benefit negativo: {net}"
+        assert net > 2_600_000, f"Net benefit ({net}) menor que $2.64M esperado"
