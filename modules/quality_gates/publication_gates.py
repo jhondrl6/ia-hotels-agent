@@ -835,6 +835,7 @@ class PublicationGatesOrchestrator:
         from modules.commercial_documents.pain_solution_mapper import PainSolutionMapper
 
         generated_assets = assessment.get("generated_assets", [])
+        skipped_assets = assessment.get("skipped_assets", [])  # FASE-1B: assets ya verificados por conditional_generator
         proposal_services = assessment.get("proposal_services", ALL_PROMISED_SERVICES)
 
         # FASE-2: Extract asset status map (asset_type -> status) from assessment
@@ -850,6 +851,37 @@ class PublicationGatesOrchestrator:
         # pueda usarlo (retrocompatibilidad con otros consumidores)
         assessment_with_status = dict(assessment)
         assessment_with_status["_asset_status_map"] = asset_status_map
+
+        # FASE-1B: Construir site_presence_report desde skipped_assets del conditional_generator
+        # Esto evita un segundo chequeo redundante que podría divergir.
+        if not assessment.get("site_presence_report") and skipped_assets:
+            # Construir un site_presence_report fake con los resultados del conditional_generator
+            skipped_types: set = set()
+            fake_results: Dict[str, Any] = {}
+            for skipped in skipped_assets:
+                at = skipped.get("asset_type", "")
+                ps = skipped.get("presence_status", "")
+                if at:
+                    skipped_types.add(at)
+                    from dataclasses import dataclass as _dc
+                    @_dc
+                    class _FakePresenceResult:
+                        status: Any
+                    # Map string status a PresenceStatus enum
+                    from modules.asset_generation.site_presence_checker import PresenceStatus
+                    _status_map = {"exists": PresenceStatus.EXISTS, "EXISTS": PresenceStatus.EXISTS,
+                                   "redundant": PresenceStatus.REDUNDANT, "REDUNDANT": PresenceStatus.REDUNDANT,
+                                   "exists_with_issues": PresenceStatus.EXISTS_WITH_ISSUES}
+                    fake_results[at] = _FakePresenceResult(
+                        status=_status_map.get(ps.lower() if isinstance(ps, str) else ps, PresenceStatus.EXISTS)
+                    )
+            # Crear objeto fake SitePresenceReport-like
+            from types import SimpleNamespace
+            assessment["site_presence_report"] = SimpleNamespace(
+                results=fake_results,
+                presence_status="mixed",
+                site_url=assessment.get("hotel_url", ""),
+            )
 
         # FASE-D: Check site presence for assets not in generated_assets
         site_presence_report = assessment.get("site_presence_report")  # Allow pre-built report in assessment

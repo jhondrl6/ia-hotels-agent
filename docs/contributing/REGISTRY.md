@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-28
 > **Version actual:** v4.55.0
-> **Total fases completadas:** 332
+> **Total fases completadas:** 334
 
 ---
 
@@ -8031,6 +8031,69 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## ROICRIIIF-FASE-1A - 2026-05-28
+**Descripcion:** Diagnostico GATE-PRESENCE: skipped_assets no se pasa a publication_gate. Root cause: conditional_generator skip con EXISTS pero gate recibe solo generated_assets. Fix recipe en /tmp/roicriiif-fase-1a-fix-recipe.md
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `modules/assessment_builder.py` | Assessment Builder |
+
+### Validaciones
+- [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1B - 2026-05-28
+**Descripcion:** Gate_Presence_Fix_Implementation_via_delegate_task
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/test_publication_gates_presence.py` | NUEVO | Test Publication Gates Presence |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/assessment_builder.py` | Assessment Builder |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+
+### Validaciones
+- [x] Tests passing (4)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-05-28
+**Descripcion:** Asset Confidence Enrichment — lista faqs tratada como ESTIMATED (0.7), metadata debe poblarse externamente
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/asset_generation/test_fase_roicriii_f2_confidence.py` | NUEVO | Test Fase Roicriii F2 Confidence |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/preflight_checks.py` | Preflight Checks |
+
+### Validaciones
+- [x] Tests passing (5)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

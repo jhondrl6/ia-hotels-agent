@@ -76,6 +76,7 @@ class AssessmentPayload:
 
     # Assets
     generated_assets: List[Dict] = field(default_factory=list)
+    skipped_assets: List[Dict] = field(default_factory=list)  # FASE-1B: skipped por SitePresenceChecker
     evidence_coverage: float = 0.95  # TODO: calcular en vez de hardcodear
 
     # Site presence (evita duplicación SitePresenceChecker)
@@ -221,6 +222,17 @@ class AssessmentBuilder:
                     "path": a.path,
                 }
                 for a in asset_result.generated_assets
+            ]
+        # FASE-1B: Propagar skipped_assets al assessment para que publication_gate los consuma
+        if asset_result and hasattr(asset_result, 'skipped_assets') and asset_result.skipped_assets:
+            self._payload.skipped_assets = [
+                {
+                    "asset_type": a.asset_type,
+                    "presence_status": a.presence_status,
+                    "reason": a.reason,
+                    "site_verified": a.site_verified,
+                }
+                for a in asset_result.skipped_assets
             ]
         # NO setear metrics (0 consumidores — dict con campos que nunca existieron)
         return self
