@@ -276,6 +276,10 @@ class PreflightChecker:
                 )
                 if has_values > 2:
                     confidence_level = ConfidenceLevel.ESTIMATED
+        elif isinstance(data_point, list):
+            # FASE-ROICRIII-F2: Lista (e.g. faqs real desde scraping sin DataPoint wrapper)
+            # → si tiene items, tratar como ESTIMATED (0.7). empty list → UNKNOWN (0.0).
+            confidence_level = ConfidenceLevel.ESTIMATED if len(data_point) > 0 else ConfidenceLevel.UNKNOWN
         else:
             confidence_level = getattr(data_point, 'confidence', ConfidenceLevel.UNKNOWN)
             
