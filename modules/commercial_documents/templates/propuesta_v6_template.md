@@ -110,12 +110,6 @@ Para que su negocio brille en Google Maps, necesitamos fotos de calidad. Esto es
 | 5 | ${inv_m5} | ${rec_m5} | ${net_m5} |
 | 6 | ${inv_m6} | ${rec_m6} | ${net_m6} |
 
-**Total 6 meses:**
-- Invierte: ${total_investment} COP
-- Recupera: ${total_recovered} COP
-- **Beneficio neto: ${net_benefit} COP**
-- **ROI: ${roi_6m}** en 6 meses
-
 ${pain_ratio_note}
 
 > 📊 **Trazabilidad financiera**: La fuga total estimada es de ${fuga_total_6m} en 6 meses.
