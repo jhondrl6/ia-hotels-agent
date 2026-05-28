@@ -11,6 +11,7 @@ class TestNewAssetTypes:
     def setup_method(self):
         self.generator = ConditionalGenerator(output_dir="/tmp/test_output")
 
+    @pytest.mark.skip(reason="DEPRECATED in FASE-PROP-D: geo_playbook generado por GeoPlaybookGenerator standalone, no por ConditionalGenerator")
     def test_generate_geo_playbook(self):
         """Test geo_playbook generation."""
         result = self.generator._generate_geo_playbook(

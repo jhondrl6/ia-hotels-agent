@@ -10,8 +10,10 @@ from modules.asset_generation.v4_asset_orchestrator import (
 class StubCoherenceReport:
     """Minimal coherence report for report serialization tests."""
 
+    overall_score = 0.91
+
     def to_dict(self):
-        return {"is_coherent": True, "overall_score": 0.91}
+        return {"is_coherent": True, "overall_score": self.overall_score}
 
 
 class TestAssetConfidenceGuardrails:
