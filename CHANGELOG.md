@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.56.0] — ROICRII (2026-05-27)
+
+### Fix (structural)
+- **ROI unificado**: Eliminados motores inline `_calculate_roi()` y `_calculate_roi_saas()`. Motor único: `roi_formatter.py`. Formato `:.2f`.
+- **Coherencia financiera**: Commercial gate calcula ROI con opex-only (sin CAPEX). Wrapper activa pipeline 3 pasos vía `expected_recovery_cop`.
+- **Gobernanza semántica**: `pain_ratio_note` diferencia addressable vs fee/loss. `operational_floor` fallback unificado a 400K.
+- **Gate estricto**: `CommercialGateBlockedError` para audiencia externa. CAPEX desglosado en componentes.
+- **QA Score**: 72% → ≥90% (ROICRII reporte v3)
+
+### Test
+- Nuevos: test_roi_unification, test_financial_coherence, test_semantics_floor_gate, test_capex_rename
+- Regresiones: 0 (517+ passed)
+
 ## [4.55.0] — ROICR (2026-05-27)
 
 ### Objetivo

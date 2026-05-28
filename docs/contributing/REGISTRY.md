@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-27
+> **Ultima actualizacion:** 2026-05-28
 > **Version actual:** v4.55.0
-> **Total fases completadas:** 318
+> **Total fases completadas:** 326
 
 ---
 
@@ -7770,6 +7770,146 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (7)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-5 - 2026-05-28
+**Descripcion:** v4complete_Hotel_Castilla_Real_5_niveles_exito
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `tests/asset_generation/test_proposal_alignment.py` | Test Proposal Alignment |
+| `tests/asset_generation/test_conditional_new_assets.py` | Test Conditional New Assets |
+| `tests/asset_generation/test_phase4_guardrails.py` | Test Phase4 Guardrails |
+
+### Validaciones
+- [x] Tests passing (32)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1 - 2026-05-28
+**Descripcion:** ROI_unificado_roi_formatter_motor_unico_formato_2f
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1 - 2026-05-28
+**Descripcion:** ROI_unificado_roi_formatter_motor_unico_formato_2f
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-05-28
+**Descripcion:** Gate_ROI_opex_only_wrapper_activa_pipeline_3_pasos
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3 - 2026-05-28
+**Descripcion:** Pain_ratio_clarificado_floor_unificado_gate_estricto
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-4 - 2026-05-28
+**Descripcion:** CAPEX_desglose_pain_ratio_renombrado
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-5 - 2026-05-28
+**Descripcion:** v4complete_Hotel_Castilla_Real_analisis_5_niveles
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-6 - 2026-05-28
+**Descripcion:** RELEASE_v4560
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

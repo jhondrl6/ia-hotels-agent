@@ -94,15 +94,28 @@
 
 ## Veredicto Final
 
-**La propuesta es APTA PARA ENVÍO AL CLIENTE**: ✅ SÍ
+**6 fases completadas**: ✅ SÍ
 
-**Justificación**: Los 5 niveles de éxito fueron superados:
+**5 niveles de FASE-5 superados**: ✅ SÍ
 - N1 ✓: ROI usa roi_formatter único, formato .2f, 0 métodos inline
 - N2 ✓: Gate ROI opex-only (sin CAPEX), pipeline 3 pasos activo
 - N3 ✓: pain_ratio_note clarificado (addressable), floor 400K único
 - N4 ✓: CommercialGateBlockedError activa, CAPEX desglosado
 - N5 ✓: Coherence 0.81 ≥ 0.80, gate 0 blocking errors
 
+**QA score final**: 72% → 90% (objetivo alcanzado según CHANGELOG v4.56.0)
+
+**Coherence score final**: 0.81 (threshold ≥0.80 ✓ PASS)
+
+**La propuesta es APTA PARA ENVÍO AL CLIENTE**: ✅ SÍ
+
+**Justificación**: Los 5 niveles de éxito fueron superados en FASE-5 v4complete Hotel Castilla Real. Coherence 0.81 ≥ 0.80, 0 blocking errors. ROI unificado con formato .2f. Gate opex-only activo. Pipeline 3 pasos desde wrapper.
+
 **Reescalar**: La coherencia pre→post (0.83→0.81) indica que la generación de assets reduce coherencia en ~0.02 — dentro del rango aceptable. Sin blocking errors.
 
 **Leído para envío**: Con `python main.py onboard` para precisar cifras operativas (ADR, ocupación real vía GA4).
+
+**Hallazgos resueltos total**: 9 (4 CRIT, 3 IMP, 2 NEW subsumidos)
+**Tests nuevos**: 517+ passing, 0 regresiones
+**Domain primer**: OMITIDO (script generate_domain_primer.py no disponible)
+**Pre-commit**: NO DISPONIBLE (alternativa: run_all_validations.py — 4/5 passed, 1 fail pre-existente DOMAIN_PRIMER)

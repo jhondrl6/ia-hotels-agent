@@ -101,7 +101,7 @@
   "tests/asset_generation/test_geo_enriched_bridge.py": "FASE-2-BRIDGE-QUALITY-GUARD",
   "tests/asset_generation/test_conditional_generator.py": "FASE-0H-G8",
   "tests/asset_generation/test_audit_data_pipeline.py": "FASE-RELEASE-4.33.0",
-  "tests/asset_generation/test_proposal_alignment.py": "FASE-3-CONTENT",
+  "tests/asset_generation/test_proposal_alignment.py": "FASE-5",
   "Ningún archivo modificado (solo lectura)": "FASE-CAUSAL-DIAG",
   "N/A (solo lectura)": "FASE-CAUSAL-DIAG",
   "N/A (verificación)": "FASE-CAUSAL-VALIDATE",
@@ -191,5 +191,7 @@
   ".opencode/plans/ROICR/06-checklist-implementacion.md": "FASE-5",
   ".opencode/plans/ROICR/09-documentacion-post-proyecto.md": "FASE-5",
   ".opencode/plans/ROICR/dependencias-fases.md": "FASE-5",
-  "config/commercial.yaml": "FASE-4"
+  "config/commercial.yaml": "FASE-4",
+  "tests/asset_generation/test_conditional_new_assets.py": "FASE-5",
+  "tests/asset_generation/test_phase4_guardrails.py": "FASE-5"
 }

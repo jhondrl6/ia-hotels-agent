@@ -1,8 +1,8 @@
-<!-- agents_version: v4.49.0 | last_update: 2026-05-27 -->
+<!-- agents_version: v4.49.0 | last_update: 2026-05-28 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.55.0 -- ROI-REFACTOR COMPLETADO**
+> **v4.56.0 -- ROI-REFACTOR COMPLETADO**
 
 ---
 

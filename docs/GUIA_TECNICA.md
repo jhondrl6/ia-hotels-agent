@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.55.0 (ROI-REFACTOR)
-**Última actualización:** 2026-05-27
+**Versión:** v4.56.0 (ROI-REFACTOR)
+**Última actualización:** 2026-05-28
 
 ---
 
