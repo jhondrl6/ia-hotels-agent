@@ -1,5 +1,37 @@
 # Changelog
 
+## [4.57.0] - Financial Coherence & Asset Semantics Rescue — 2026-05-28
+
+### Objetivo
+Resolver regresión crítica de v4.55.0: doble motor de cálculo financiero produciendo ROIs contradictorios, mapeos semánticos incorrectos, y assets deprecados en la propuesta comercial.
+
+### Cambios Implementados
+- **Motor Financiero Unificado**: `total_recovered` y `roi_6m` ahora usan `_maturity_result.total_recuperacion_6m` como única fuente de verdad (FASE-1)
+- **Pain Ratio Corregido**: `pain_ratio_note` muestra % inversión/fuga real (10.7%) en lugar del `pain_ratio` interno (FASE-2)
+- **Validator Semántico Integrado**: `asset_semantics_validator` activo en `_generate_dynamic_services_table` (FASE-3)
+- **Assets Deprecados Filtrados**: 4 assets deprecados removidos de output y catálogo (FASE-4)
+- **Piloto 30 Días**: Nueva sección de bajo riesgo para clientes sin presupuesto completo (FASE-5)
+- **CAPEX Breakdown**: Desglose detallado de Setup Fee (FASE-5)
+- **Garantía Día 55**: KPI concreto (+15% clics GSC) reemplaza texto genérico (FASE-5)
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | Unificación motor, validator, filtrado de deprecados, features |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Eliminar dualidad ROI, piloto, CAPEX, garantía |
+| `modules/commercial_documents/service_catalog.py` | Remover `indirect_traffic_optimization` del catálogo |
+| `config/commercial.yaml` | Añadir `pilot_options` |
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/commercial_documents/test_financial_coherence.py` | Tests de coherencia financiera (5 tests) |
+| `tests/quality/test_asset_semantics_integration.py` | Tests de integración del validator (5 tests) |
+
+### Tests
+- 10 tests nuevos en `test_financial_coherence.py` y `test_asset_semantics_integration.py`
+- 0 regresiones en suite existente
+
 ## [4.56.0] — ROICRII (2026-05-27)
 
 ### Fix (structural)

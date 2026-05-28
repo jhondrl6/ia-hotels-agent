@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.56.0 -- ROI-REFACTOR COMPLETADO**
+> **v4.57.0 -- FINANCIAL-COHERENCE COMPLETADO**
 
 ---
 

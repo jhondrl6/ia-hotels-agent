@@ -1,6 +1,6 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.56.0 (ROI-REFACTOR)
+**Versión:** v4.57.0 (FINANCIAL-COHERENCE)
 **Última actualización:** 2026-05-28
 
 ---
@@ -880,6 +880,35 @@ Financial Evidence Engine + Regional Benchmark Fallback + Evidence-Based Channel
 ------
 
 ## Notas de Cambios
+
+### v4.57.0 — Financial Coherence & Asset Semantics Rescue
+
+**Fecha:** 2026-05-28
+
+**Módulos Afectados**
+- `modules/commercial_documents/v4_proposal_generator.py`
+- `modules/commercial_documents/service_catalog.py`
+- `modules/commercial_documents/templates/propuesta_v6_template.md`
+- `config/commercial.yaml`
+
+**Problema**
+La v4.55.0 introdujo doble motor de cálculo en `_prepare_template_data()`:
+1. `total_recovered` usaba `effective_monthly_gain * 6` (path del pain_ratio)
+2. `_maturity_result.total_recuperacion_6m` usaba curva de maduración
+
+Resultado: dos ROIs distintos (0.45X vs 2.10X) en el mismo documento → destrucción de confianza comercial.
+
+**Solución**
+Unificar TODA la proyección financiera al motor de curva de maduración (`pillar_maturity_curve.py`).
+El `effective_monthly_gain` se mantiene para otros cálculos internos pero NO para el total renderizado.
+
+**Backwards Compatibility**
+- **Sin breaking changes**: La API pública no cambió
+- `_prepare_template_data()` retorna el mismo dict con valores corregidos
+- `asset_semantics_validator` es aditivo (solo filtra, no cambia firma)
+- Template V6: `${pilot_section}` y `${trazabilidad_origen}` son nuevos placeholders (opcionales, retornan "" si no aplican)
+
+---
 
 ### v4.35.0 - 2026-04-23 — Propuesta Dinámica desde Pain Detection
 

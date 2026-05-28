@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.55.0 | **Codename**: ROI-REFACTOR
-> **Release date**: 2026-05-27 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.57.0 | **Codename**: FINANCIAL-COHERENCE
+> **Release date**: 2026-05-28 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-05-27 | v4.55.0 ROI-REFACTOR*
+*Auto-generado: 2026-05-28 | v4.57.0 FINANCIAL-COHERENCE*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
