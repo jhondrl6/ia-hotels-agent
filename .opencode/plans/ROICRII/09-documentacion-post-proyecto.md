@@ -27,11 +27,14 @@
 ---
 
 ### FASE-3: Semántica + Floor + Gate
-**Fecha ejecución**: (pendiente)
-**Archivos modificados**: (pendiente)
-**Tests nuevos**: (pendiente)
-**Hallazgos resueltos**: IMP-01, NEW-05, NEW-02
-**Notas**: (pendiente)
+**Fecha ejecución**: 2026-05-27
+**Archivos modificados**:
+- `modules/commercial_documents/v4_proposal_generator.py` (pain_ratio_note clarificado con "addressable" + "zona addressable por IAO"; CommercialGateBlockedError añadida como clase L36 y raise L418)
+- `modules/financial_engine/pricing_calculator.py` (L245: fallback operational_floor unificado a 400_000)
+- `tests/test_semantics_floor_gate.py` — creado (5 tests)
+**Tests nuevos**: `tests/test_semantics_floor_gate.py` — 5 passed (CommercialGateBlockedError: defined, stores_gate_ids, message_format, default_message, can_be_caught)
+**Hallazgos resueltos**: IMP-01 (pain_ratio_note ahora diferencia addressable vs fee/loss), NEW-05 (operational_floor fallback = 400K en ambos caminos — 4 matches 400_000), NEW-02 (gate externo ahora lanza CommercialGateBlockedError, no solo warning)
+**Notas**: "addressable" aparece 3 matches en v4_proposal_generator.py; CommercialGateBlockedError 2 matches (class + raise); pytest tests/test_semantics_floor_gate.py 5 passed, quality_gates 27 passed.
 
 ---
 

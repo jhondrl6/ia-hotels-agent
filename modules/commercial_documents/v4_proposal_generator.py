@@ -33,6 +33,15 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+class CommercialGateBlockedError(Exception):
+    """Raised when commercial gates block proposal generation for external clients."""
+
+    def __init__(self, gate_ids: List[str], message: str = "Commercial gates blocking"):
+        self.gate_ids = gate_ids
+        self.message = message
+        super().__init__(f"{message}: {gate_ids}")
+
+
 def _get_pipeline_version() -> str:
     """Lee la version del pipeline desde VERSION.yaml con fallback seguro."""
     try:
@@ -406,9 +415,9 @@ class V4ProposalGenerator:
                         )
                     document_content += alert_section
                 else:
-                    logging.warning(
-                        "Proposal commercial gates BLOCKING (hidden from client): %s",
+                    raise CommercialGateBlockedError(
                         [r.gate_id for r in commercial_report.blocking_failures],
+                        "Proposal commercial gates BLOCKING (hidden from client)",
                     )
 
             if commercial_report.warnings:
@@ -800,12 +809,11 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             'projected_real_gain': format_cop(int(raw_monthly_loss * pain_ratio * recovery_factors['realistic'])),
             'pain_ratio_note': (
                 f"**Nota de proyección**: La inversión mensual de ${int(monthly_investment):,} COP "
-                f"representa el {pain_ratio:.0%} de su pérdida mensual estimada. "
-                f"Aplicando una efectividad esperada de recuperación del {recovery_factors['realistic']:.0%}, "
+                f"representa el {pain_ratio:.0%} de su pérdida monthly addressable por IAO. "
+                f"Applicando una efectividad esperada de recuperación del {recovery_factors['realistic']:.0%} sobre la zona addressable por IAO, "
                 f"la proyección conservadora es de aproximadamente "
                 f"${int(raw_monthly_loss * pain_ratio * recovery_factors['realistic']):,}/mes"
-                f" (vs. la cifra bruta de ${int(raw_monthly_loss * pain_ratio):,} que se mostraría "
-                f"sin ajustar por efectividad)."
+                f" (vs. la cifra bruta de ${int(raw_monthly_loss * pain_ratio):,} sin ajustar por efectividad)."
             ),
             
             # Testimonials section — FASE-A ROI-REFACTOR: hidden when no testimonials

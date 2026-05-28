@@ -242,7 +242,7 @@ def calcular_precio_final(
     min_price = config["min_price"]
     max_price = config["max_price"]
     value_capture_cap = config.get("value_capture_cap", 0.50)
-    operational_floor = config.get("operational_floor", min_price)
+    operational_floor = config.get("operational_floor", 400_000)  # ROICRII: unificar fallback con constructor
     pain_ratio_gate_max = config.get("pain_ratio_gate_max", 0.32)
 
     # --- Paso 1: Precio Base ---
