@@ -707,7 +707,15 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         pain_ratio = getattr(self, '_current_pain_ratio', scenario_config.get('pain_ratio_default', 0.20))
         projected_monthly_gain = int(raw_monthly_loss * pain_ratio)
         
-        roi_6_months = self._calculate_roi(monthly_investment, projected_monthly_gain, 6, recovery_factor=recovery_factors['realistic'])
+        roi_cap = self._load_commercial_config().get('roi', {}).get('cap', 5.0)
+        roi_6_months_metrics = calcular_metricas_roi(
+            recuperacion_total=projected_monthly_gain * recovery_factors['realistic'] * 6,
+            inversion_opex=monthly_investment * 6,
+            inversion_capex=0,
+            meses_proyeccion=6,
+            roi_cap=roi_cap,
+        )
+        roi_6_months = formatear_roi_para_propuesta(roi_6_months_metrics)['roi_saas']
         break_even = self._calculate_break_even(monthly_investment, projected_monthly_gain)
 
         # HR-1 FIX: effective_monthly_gain applies recovery_factor so the ROI
@@ -807,11 +815,23 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         # All scenarios with recovery_factor per scenario
         # FASE-B: ROI = (gain * recovery_factor) / investment
         'conservative_gain': format_cop(int(self._get_main_value(financial_scenarios.conservative) * pain_ratio)),
-        'conservative_roi': self._calculate_roi(monthly_investment, int(self._get_main_value(financial_scenarios.conservative) * pain_ratio), 6, recovery_factor=recovery_factors['conservative']),
+        'conservative_roi': formatear_roi_para_propuesta(calcular_metricas_roi(
+            recuperacion_total=int(self._get_main_value(financial_scenarios.conservative) * pain_ratio) * recovery_factors['conservative'] * 6,
+            inversion_opex=monthly_investment * 6,
+            inversion_capex=0,
+            meses_proyeccion=6,
+            roi_cap=roi_cap,
+        ))['roi_saas'],
         'realistic_gain': format_cop(projected_monthly_gain),
         'realistic_roi': roi_6_months,
         'optimistic_gain': self._format_scenario_amount(int(self._get_main_value(financial_scenarios.optimistic) * pain_ratio)),
-        'optimistic_roi': self._calculate_roi(monthly_investment, int(self._get_main_value(financial_scenarios.optimistic) * pain_ratio), 6, recovery_factor=recovery_factors['optimistic']),
+        'optimistic_roi': formatear_roi_para_propuesta(calcular_metricas_roi(
+            recuperacion_total=int(self._get_main_value(financial_scenarios.optimistic) * pain_ratio) * recovery_factors['optimistic'] * 6,
+            inversion_opex=monthly_investment * 6,
+            inversion_capex=0,
+            meses_proyeccion=6,
+            roi_cap=roi_cap,
+        ))['roi_saas'],
 
         # Monthly projection variables for 6 months — ROICR FASE-3: Curva 4 Pilares
         'inv_m1': format_cop(monthly_investment),
@@ -851,11 +871,13 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'opex_total_6m': format_cop(monthly_investment * 6),
 
         # ROI SaaS: Recuperación Total / OPEX (NUNCA OPEX+CAPEX)
-        'roi_saas': self._calculate_roi_saas(
-            total_recuperacion=_maturity_result.total_recuperacion_6m,
+        'roi_saas': formatear_roi_para_propuesta(calcular_metricas_roi(
+            recuperacion_total=_maturity_result.total_recuperacion_6m,
             inversion_opex=monthly_investment * 6,
             inversion_capex=getattr(self, '_current_setup_fee', self.SETUP_FEE),
-        ),
+            meses_proyeccion=6,
+            roi_cap=roi_cap,
+        ))['roi_saas'],
 
         # Activos digitales propiedad del cliente
         'activos_digitales_lista': self._build_activos_digitales_lista(asset_plan),
@@ -1489,31 +1511,6 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         template = Template(preprocessed)
         return template.safe_substitute(data)
     
-    def _calculate_roi(self, investment: int, gain: int, months: int, recovery_factor: float = 0.20) -> str:
-        """Calculate ROI as ratio (e.g., '3.9X' instead of '292%').
-        
-        FASE-B: Aplica recovery_factor para hacer ROI creible.
-        Formula: roi = (gain * recovery_factor * months) / (investment * months)
-               = (gain * recovery_factor) / investment
-        
-        Recovery factors: conservative=0.15, realistic=0.20, optimistic=0.25
-        
-        Returns ratio of total_gain / total_investment, capped at 5.0X max.
-        """
-        total_investment = investment * months
-        # FASE-B: apply recovery_factor so ROI is credible (not 20X)
-        total_gain = gain * recovery_factor * months
-        
-        if total_investment == 0:
-            return "N/A"
-        
-        roi_ratio = total_gain / total_investment
-        # Cap at configured maximum for credibility (FASE-CONFIG-4: from commercial.yaml)
-        roi_cap = self._load_commercial_config().get('roi', {}).get('cap', 5.0)
-        if roi_ratio > roi_cap:
-            roi_ratio = roi_cap
-        return f"{roi_ratio:.1f}X"
-    
     def _calculate_break_even(self, investment: int, gain: int) -> int:
         """Calculate break-even point in months.
         
@@ -1531,28 +1528,6 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         
         return months
     
-    def _calculate_roi_saas(
-        self,
-        total_recuperacion: float,
-        inversion_opex: float,
-        inversion_capex: float,
-    ) -> str:
-        """ROICR FASE-3: ROI SaaS con CAPEX/OPEX desacoplados.
-
-        PROHIBIDO: total_recuperacion / (inversion_opex + inversion_capex)
-        — esto mezcla activo del cliente con fee de servicio y produce ROI falso.
-
-        Fórmula correcta: ROI = total_recuperacion / inversion_opex (solo fee de servicio).
-        CAPEX representa activos digitales propiedad del cliente, no costo de servicio.
-        """
-        if inversion_opex <= 0:
-            return "N/A"
-        roi_ratio = total_recuperacion / inversion_opex
-        roi_cap = self._load_commercial_config().get('roi', {}).get('cap', 5.0)
-        if roi_ratio > roi_cap:
-            roi_ratio = roi_cap
-        return f"{roi_ratio:.1f}X"
-
     def _build_activos_digitales_lista(self, asset_plan: List[AssetSpec]) -> str:
         """ROICR FASE-3: Genera lista de activos digitales propiedad del cliente.
 

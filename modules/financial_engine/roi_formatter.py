@@ -28,6 +28,7 @@ def calcular_metricas_roi(
     inversion_capex: float,
     meses_proyeccion: int = 6,
     activos_digitales: Optional[List[str]] = None,
+    roi_cap: Optional[float] = None,
 ) -> ROIMetrics:
     """Calcula métricas de ROI con CAPEX/OPEX desacoplados.
 
@@ -52,6 +53,10 @@ def calcular_metricas_roi(
     # ROI SaaS: retorno sobre inversión operativa (servicio)
     # NUNCA dividir por OPEX+CAPEX
     roi_saas = recuperacion_total / inversion_opex if inversion_opex > 0 else 0.0
+
+    # Apply optional cap (e.g., 5.0X from commercial.yaml)
+    if roi_cap is not None and roi_saas > roi_cap:
+        roi_saas = roi_cap
 
     nota = (
         f"ROI calculado sobre inversión operativa ({meses_proyeccion} meses de servicio). "
@@ -78,7 +83,7 @@ def formatear_roi_para_propuesta(metrics: ROIMetrics) -> Dict[str, Any]:
     Retorna un dict listo para ser usado como placeholders en el template.
     """
     return {
-        "roi_saas": f"{metrics.roi_saas:.1f}X",
+        "roi_saas": f"{metrics.roi_saas:.2f}X",
         "capex_total": f"${metrics.capex_total:,.0f}".replace(",", "."),
         "opex_mensual": f"${metrics.opex_mensual:,.0f}".replace(",", "."),
         "recuperacion_total": f"${metrics.recuperacion_total:,.0f}".replace(",", "."),
