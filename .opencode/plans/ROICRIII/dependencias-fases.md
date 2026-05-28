@@ -52,12 +52,12 @@ FASE-1 (Motor Financiero: A1+A2+A3)
 | Fase | Estado | Fecha | Notas |
 |------|--------|-------|-------|
 | FASE-1 (Motor Financiero) | ✅ Completada | 2026-05-28 | Código ya unificado; 6/6 tests nuevos pasan; smoke OK |
-| FASE-2 (Pain Ratio + Trazabilidad) | ⏳ Pendiente | — | Depende de FASE-1 |
+| FASE-2 (Pain Ratio + Trazabilidad) | ✅ Completada | 2026-05-28 | Código + data dict + pain_ratio_note integrados en v4_proposal_generator.py |
 | FASE-3 (Validator + BREACH + WhatsApp) | ✅ Completada | 2026-05-28 | Código + tests + docs cascade |
 | FASE-4 (Assets Deprecados: B3+B4+B5+F5) | ✅ Completada | 2026-05-28 | DEPRECATED_ASSETS en generator + removed from TECHNICAL_ASSET_CATALOG + test |
 | FASE-5 (Features) | ✅ Completada | 2026-05-28 | Piloto 30 días + CAPEX breakdown + Garantía KPI (C1+C2+C3); 3 tests nuevos pasan |
-| FASE-6 (v4complete) | ⏳ Pendiente | — | delegate_task + verificación |
-| FASE-RELEASE-4.57.0 | ⏳ Pendiente | — | Documentación oficial |
+| FASE-6 (v4complete) | ✅ Completada | 2026-05-28 | Delegate subagente ejecutó v4complete Hotel Castilla Real; Coherence 0.83, Gates verificados |
+| FASE-RELEASE-4.57.0 | ✅ Completada | 2026-05-28 | Documentación oficial: version bump, CHANGELOG, GUIA_TECNICA, sync, validaciones finales |
 
 ---
 
