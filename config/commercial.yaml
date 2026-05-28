@@ -32,3 +32,16 @@ plans:
   plan_30d: "Implementar quick wins identificados y comenzar plan de contenido"
   plan_60d: "Desarrollar presencia en asistentes de IA y monitorear resultados"
   plan_90d: "Consolidar estrategia de IA y evaluar retorno de inversión"
+
+capex_breakdown:
+  components:
+    - component: "Auditoría Inicial"
+      amount: 800000
+      description: "Diagnóstico completo de presencia digital"
+    - component: "Implementación Técnica"
+      amount: 1200000
+      description: "Configuración de activos digitales"
+    - component: "Onboarding y Capacitación"
+      amount: 500000
+      description: "Transferencia de conocimiento al equipo"
+  total: 2500000

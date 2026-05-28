@@ -1,7 +1,7 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-0H-G8",
   "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-D",
-  "modules/commercial_documents/v4_proposal_generator.py": "FASE-6",
+  "modules/commercial_documents/v4_proposal_generator.py": "FASE-4",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-PROP-D",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
@@ -180,7 +180,7 @@
   ".opencode/plans/ROI-REFACTOR/06-checklist-implementacion.md": "FASE-0",
   ".opencode/plans/ROI-REFACTOR/05-prompt-inicio-sesion-fase-0.md": "FASE-0",
   "evidence/ROI-REFACTOR/analisis_post_implementacion.md": "FASE-5",
-  "modules/financial_engine/roi_formatter.py": "FASE-3",
+  "modules/financial_engine/roi_formatter.py": "FASE-1",
   "modules/financial_engine/pillar_maturity_curve.py": "FASE-3",
   "config/pricing.yaml": "FASE-3",
   "config/scenarios.yaml": "FASE-3",
@@ -190,5 +190,6 @@
   "tests/financial_engine/test_pricing_resolution_wrapper.py": "FASE-5",
   ".opencode/plans/ROICR/06-checklist-implementacion.md": "FASE-5",
   ".opencode/plans/ROICR/09-documentacion-post-proyecto.md": "FASE-5",
-  ".opencode/plans/ROICR/dependencias-fases.md": "FASE-5"
+  ".opencode/plans/ROICR/dependencias-fases.md": "FASE-5",
+  "config/commercial.yaml": "FASE-4"
 }

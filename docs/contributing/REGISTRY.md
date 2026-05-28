@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-27
 > **Version actual:** v4.55.0
-> **Total fases completadas:** 317
+> **Total fases completadas:** 318
 
 ---
 
@@ -7748,6 +7748,28 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-4 - 2026-05-27
+**Descripcion:** CAPEX_desglose_pain_ratio_renombrado
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/test_capex_rename.py` | NUEVO | Test Capex Rename |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `config/commercial.yaml` | Commercial |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (7)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

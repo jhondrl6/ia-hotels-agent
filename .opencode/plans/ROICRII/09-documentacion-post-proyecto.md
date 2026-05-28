@@ -39,11 +39,13 @@
 ---
 
 ### FASE-4: CAPEX + Renombrar
-**Fecha ejecución**: (pendiente)
-**Archivos modificados**: (pendiente)
-**Tests nuevos**: (pendiente)
-**Hallazgos resueltos**: IMP-03, NEW-04
-**Notas**: (pendiente)
+**Fecha ejecución**: 2026-05-27
+**Archivos modificados**:
+- `config/commercial.yaml` (+ capex_breakdown: 3 componentes + total 2.5M)
+- `modules/commercial_documents/v4_proposal_generator.py` (+ `_build_capex_breakdown_table()` L189, `${capex_breakdown_table}` template L557, `'capex_breakdown_table'` en template_data L828, `addressable_pain_ratio` alias L747)
+**Tests nuevos**: `tests/test_capex_rename.py` — 7 passed
+**Hallazgos resueltos**: IMP-03 (SETUP_FEE sin desglose → capex_breakdown config + generador), NEW-04 (pain_ratio sobrecargado → alias semántico en L747)
+**Notas**: `_build_capex_breakdown_table()` genera tabla markdown itemizada desde `commercial.yaml capex_breakdown.components`; fallback a fila única si no hay config. Alias `addressable_pain_ratio = pain_ratio` en L747 clarifica que es la porción addressable del dolor. grep: 5 matches capex, 1 match addressable_pain_ratio. pytest: 7 passed, 8 warnings (solo pydantic deprecation, no related).
 
 ---
 

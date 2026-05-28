@@ -186,6 +186,34 @@ class V4ProposalGenerator:
                 },
             }
 
+    def _build_capex_breakdown_table(self) -> str:
+        """Build CAPEX breakdown table for the proposal investment section.
+        
+        FASE-4 (ROICRII): Replaces single ${setup_fee} placeholder with itemized breakdown
+        from config/commercial.yaml capex_breakdown.components.
+        """
+        config = self._load_commercial_config()
+        capex_config = config.get('capex_breakdown', {})
+        components = capex_config.get('components', [])
+        
+        if not components:
+            # Fallback: single-row table with total
+            return f"| Cuota de Activación | {format_cop(self.SETUP_FEE)} | Única vez |"
+        
+        # Build itemized table
+        rows = []
+        for item in components:
+            if isinstance(item, dict) and 'component' in item:
+                rows.append(
+                    f"| {item['component']} | {format_cop(item.get('amount', 0))} | {item.get('description', '')} |"
+                )
+        
+        # Add total row
+        rows.append(f"| **Total CAPEX** | **{format_cop(capex_config.get('total', self.SETUP_FEE))}** | Única vez |")
+        
+        header = "| Componente | Monto | Descripción |\n|---|---|---|\n"
+        return header + "\n".join(rows)
+
     def _get_main_value(self, scenario) -> int:
         """Obtiene valor central de presentacion, con fallback a monthly_loss_cop.
         
@@ -526,9 +554,10 @@ ${solution_table}
 
 ### 💰 Estructura de Inversión
 
+${capex_breakdown_table}
+
 | Concepto | Valor | Frecuencia |
 |----------|-------|------------|
-| **Cuota de Activación** | ${setup_fee} | Única vez |
 | **Kit Hospitalidad 4.0** | ${monthly_fee} | Mensual |
 | **Compromiso mínimo** | 6 meses | - |
 
@@ -714,6 +743,8 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         recovery_factors = scenario_config['recovery_factors']
         raw_monthly_loss = self._get_main_value(main_scenario)
         pain_ratio = getattr(self, '_current_pain_ratio', scenario_config.get('pain_ratio_default', 0.20))
+        # NEW-04: Alias for semantic clarity — pain_ratio is the addressable portion
+        addressable_pain_ratio = pain_ratio
         projected_monthly_gain = int(raw_monthly_loss * pain_ratio)
         
         roi_cap = self._load_commercial_config().get('roi', {}).get('cap', 5.0)
@@ -794,6 +825,7 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             
             # Investment
             'setup_fee': format_cop(getattr(self, '_current_setup_fee', self.SETUP_FEE)),
+            'capex_breakdown_table': self._build_capex_breakdown_table(),
             'monthly_fee': format_cop(getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE)),
             
             # ROI
