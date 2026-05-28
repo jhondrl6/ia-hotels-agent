@@ -28,6 +28,8 @@ from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_T
 from modules.commercial_documents.service_catalog import SERVICE_CATALOG, TECHNICAL_ASSET_CATALOG
 from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
 from modules.common.yaml_loader import load_yaml_config, YAMLLoadError
+# FASE-3: asset_semantics_validator integrada en services table
+from modules.quality.asset_semantics_validator import validar_semantica_comercial
 import logging
 
 logger = logging.getLogger(__name__)
@@ -805,6 +807,9 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             _acum += int(p.recuperacion_mensual)
             _acc_map[p.mes] = _acum
 
+        # ROICRIII FASE-2 T1: Pre-calcular % inversión vs fuga ANTES del dict
+        _pct_inv_vs_fuga = round((monthly_investment / abs(raw_monthly_loss)) * 100, 1)
+
         data = {
             # Metadata
             'generated_at': generated_at.strftime("%Y-%m-%d %H:%M:%S"),
@@ -841,11 +846,10 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             'projected_real_gain': format_cop(int(raw_monthly_loss * pain_ratio * recovery_factors['realistic'])),
             'pain_ratio_note': (
                 f"**Nota de proyección**: La inversión mensual de ${int(monthly_investment):,} COP "
-                f"representa el {pain_ratio:.0%} de su pérdida monthly addressable por IAO. "
-                f"Applicando una efectividad esperada de recuperación del {recovery_factors['realistic']:.0%} sobre la zona addressable por IAO, "
-                f"la proyección conservadora es de aproximadamente "
-                f"${int(raw_monthly_loss * pain_ratio * recovery_factors['realistic']):,}/mes"
-                f" (vs. la cifra bruta de ${int(raw_monthly_loss * pain_ratio):,} sin ajustar por efectividad)."
+                f"representa solo el {_pct_inv_vs_fuga}% "
+                f"de su fuga mensual estimada (${int(abs(raw_monthly_loss)):,}). "
+                f"El otro {round(100 - _pct_inv_vs_fuga, 1)}% "
+                f"seguiría perdiéndose cada mes si no implementamos el Kit 4 Pilares."
             ),
             
             # Testimonials section — FASE-A ROI-REFACTOR: hidden when no testimonials
@@ -1032,10 +1036,18 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         # PROPUESTA-COMERCIAL FASE-B: Puente dual para trazabilidad financiera
         # Usa pain_ratio real del pricing (~41% Castilla Real) + recovery_factor real (20%)
         # Esto diferencia la propuesta del diagnóstico que usa defaults conservadores (20%/20%).
-        'fuga_total_6m': format_cop(raw_monthly_loss * 6),
-        'recuperacion_proyectada_6m': format_cop(effective_monthly_gain * 6),
-        'pain_pct': int(pain_ratio * 100),
-        'recov_pct': int(recovery_realistic * 100),
+        # ROICRIII FASE-2 T2: fuga_total_6m usa abs() para evitar signo negativo en el template
+        'fuga_total_6m': format_cop(abs(raw_monthly_loss) * 6),
+        # ROICRIII FASE-2 T2: recuperacion_proyectada_6m unificada con curva de maduración
+        'recuperacion_proyectada_6m': format_cop(int(_maturity_result.total_recuperacion_6m)),
+        'pain_pct': int(pain_ratio * 100),       # MANTENER — template V6 lo usa
+        'recov_pct': int(recovery_realistic * 100),  # MANTENER — template V6 lo usa
+        # ROICRIII FASE-2 T2: nueva variable de trazabilidad transparente
+        'trazabilidad_origen': (
+            f"Fuga mensual (${int(abs(raw_monthly_loss)):,}) × "
+            f"Curva de Maduración 4 Pilares (GEO→SEO→AEO→IAO) × "
+            f"Recovery Factor {int(recovery_realistic * 100)}%"
+        ),
     }
 
         # FASE-CONFIG-2: Inject estimated flag when fallbacks are in use
@@ -1134,19 +1146,31 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         Returns:
             String markdown con la tabla de servicios (8 filas + header).
         """
-        # FASE-C CROSS-2: Mapping asset_type → brecha que resuelve (auditada)
+        # FASE-2: Mapping asset_type → brecha que resuelve (auditada)
         # Formato: (brecha_num, brecha_nombre, brecha_costo_mensual)
         # whatsapp_button → None porque CROSS-4 lo maneja con whatsapp_conflict
+        # FASE-3 B1: ASSET_TO_PAIN_ID para validacion semantica
+        ASSET_TO_PAIN_ID = {
+            "monthly_report":         "no_faq_schema",
+            "faq_page":               "no_faq_schema",
+            "hotel_schema":           "no_hotel_schema",
+            "llms_txt":               "missing_llmstxt",
+            "whatsapp_button":        "no_whatsapp_visible",
+            "whatsapp_conflict_guide": "no_whatsapp_visible",
+        }
         BREACH_BY_ASSET = {
+            # FASE-3 B2: monthly_report YA NO mapea a FAQ (no_faq_schema)
+            # — muestra info general en su lugar
             "optimization_guide":  ("#1", "Sin Schema Hotel",       "$1,005,768"),
             "whatsapp_button":     None,   # CROSS-4: manejado con whatsapp_conflict
-            "hotel_schema":        ("#1", "Sin Schema Hotel",       "$1,005,768"),
-            "org_schema":          ("#7", "Sin Schema Org",         "$321,786"),
-            "monthly_report":      ("#4", "Sin FAQ",               "$482,679"),
-            "faq_page":            ("#4", "Sin FAQ",               "$482,679"),
-            "open_graph":          ("#6", "Sin OG Tags",           "$321,786"),
-            "llms_txt":            ("#3", "Baja prep. IA",         "$603,536"),
-            "local_content_page":  ("#3", "Baja prep. IA",         "$603,536"),
+            "hotel_schema":       ("#1", "Sin Schema Hotel",       "$1,005,768"),
+            "org_schema":         ("#7", "Sin Schema Org",         "$321,786"),
+            "monthly_report":     ("—", "Informe de rendimiento",   "—"),
+            # FASE-3 B2: faq_page SÍ resuelve no_faq_schema (correcto)
+            "faq_page":           ("#4", "Sin FAQ",               "$482,679"),
+            "open_graph":         ("#6", "Sin OG Tags",           "$321,786"),
+            "llms_txt":           ("#3", "Baja prep. IA",         "$603,536"),
+            # FASE-3 B2: deprecados eliminados — optimization_guide, local_content_page
         }
         # FASE-2: Build lookups for state determination
         asset_lookup = {}
@@ -1177,12 +1201,20 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             confidence = asset_lookup.get(asset_type)
             presence = presence_lookup.get(asset_type, {})
 
+            # FASE-3 B1: Validacion semantica — block hallucination mappings
+            pain_id = ASSET_TO_PAIN_ID.get(asset_type)
+            if pain_id:
+                is_valid, status = validar_semantica_comercial(pain_id, asset_type, "IMPLEMENT")
+                if not is_valid:
+                    logger.warning(f"[AssetSemantics] BLOCKED in services_table: {asset_type} → {pain_id}")
+                    continue  # skip this row — asset cant solve this pain
+
             # FASE-C CROSS-4: WhatsApp conflict → override estado
             if asset_type == "whatsapp_button" and whatsapp_conflict:
-                estado = "⚠️ Requiere corrección"
+                estado = "📋 Auditoría incluida"
                 confianza_col = "—"
                 brecha_col = "Brecha #5: WhatsApp no coincide"
-                desc = "Guía de corrección incluida"
+                desc = "Auditoría y Optimización de Conversión"
                 rows.append(f"| **{service_name}** | {estado} | {confianza_col} | {brecha_col} | {desc} |")
                 continue
 

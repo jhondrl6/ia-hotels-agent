@@ -14,6 +14,9 @@
 
 | Feature | Módulo | Descripción | Fase |
 |---------|--------|-------------|------|
+| B1: asset_semantics_validator en services table | v4_proposal_generator.py | validar_semantica_comercial integrado en _generate_dynamic_services_table — bloquea mapeos hallucination | FASE-3 |
+| B2: BREACH_BY_ASSET corregido | v4_proposal_generator.py | monthly_report ya no mapea a FAQ; faq_page sí resuelve no_faq_schema; deprecados eliminados (optimization_guide, local_content_page) | FASE-3 |
+| B6: narrativa WhatsApp coherente | v4_proposal_generator.py | "⚠️ Requiere corrección" → "📋 Auditoría incluida"; "Guía de corrección" → "Auditoría y Optimización de Conversión" | FASE-3 |
 
 ## Sección C: Correcciones Críticas
 
@@ -30,12 +33,15 @@
 |---------|-------|------|
 | ROIs en documento | 1 (antes 2) | FASE-1 |
 | Tests nuevos | 6 (test_financial_coherence.py) | FASE-1 |
+| Tests nuevos | 9 (test_asset_semantics_validator.py) | FASE-3 |
 | Regresiones | 0 detectadas (smoke OK) | FASE-1 |
+| 10 failed pre-existing in test_proposal_generator.py (post-FASE-1 baseline) | 10 | FASE-3 |
 
 ## Sección E: Archivos Afiliados Actualizados
 
 | Archivo | Cambio | Fase |
 |---------|--------|------|
+| tests/test_asset_semantics_validator.py | Reescrito (9 tests: B1/B2/B6 semantics) | FASE-3 |
+| .opencode/plans/ROICRIII/dependencias-fases.md | FASE-3 marcada completada | FASE-3 |
+| .opencode/plans/ROICRIII/06-checklist-implementacion.md | FASE-3 verificaciones marcadas | FASE-3 |
 | tests/commercial_documents/test_financial_coherence.py | Creado (6 tests: curva, ROI, net_benefit) | FASE-1 |
-| .opencode/plans/ROICRIII/dependencias-fases.md | FASE-1 marcada completada | FASE-1 |
-| .opencode/plans/ROICRIII/06-checklist-implementacion.md | FASE-1 verificaciones marcadas | FASE-1 |
