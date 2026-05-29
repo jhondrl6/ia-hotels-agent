@@ -1,7 +1,31 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.59.0 (REFACTOR-5-GAPS)
+**Versión:** v4.60.0 (CAPEX-BREAKDOWN-FIX)
 **Última actualización:** 2026-05-29
+
+---
+
+### Notas de Cambios v4.60.0 — CAPEX-BREAKDOWN-FIX
+
+**Fecha:** 2026-05-29
+
+**Módulos afectados:**
+- `modules/commercial_documents/v4_proposal_generator.py`
+- `modules/commercial_documents/templates/propuesta_v6_template.md`
+- `tests/test_capex_rename.py`
+
+**Problema:** Tablas markdown anidadas en CAPEX breakdown (template) + código muerto en generator (9 orphan keys, coherence checklist nunca usado, fallback sin header row).
+
+**Solución:**
+- F1: Placeholder `${capex_breakdown_table}` movido a sección propia — fix tablas markdown anidadas
+- F7: Eliminadas 9 keys huérfanas del template data dict
+- F8: Fallback de `_build_capex_breakdown_table()` ahora incluye header row
+- F6: Eliminado `_build_coherence_checklist()` + `'coherence_checklist'` — código muerto YAGNI
+- FASE-4: Verificación E2E v4complete Hotel Castilla Real — 11/11 gates PASS, coherence 0.85
+
+**Backwards compatibility:** Sí. Fix de rendering sin cambios en API pública ni breaking changes.
+
+**Tests:** test_capex_rename.py (integridad de pipes en tabla CAPEX) — 8/8 passing, 0 regresiones.
 
 ---
 

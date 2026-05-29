@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.59.0 -- REFACTOR-5-GAPS COMPLETADO**
+> **v4.60.0 -- CAPEX-BREAKDOWN-FIX COMPLETADO**
 
 ---
 

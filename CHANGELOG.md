@@ -1,24 +1,35 @@
 # Changelog
 
-## [4.60.0] - REFACTOR-CAPEX-BREAKDOWN-V4.60.0 - FASE-3 - 2026-05-29
+## [4.60.0] - CAPEX Breakdown Fix & Generator Cleanup — 2026-05-29
 
 ### Objetivo
-FASE-3: Eliminar código muerto `_build_coherence_checklist()` (Opción A - YAGNI). El método nunca fue renderizado en ningún template.
+Fix de tabla CAPEX corrupta (tablas markdown anidadas) + limpieza de código muerto en generator. Verificado con v4complete en Hotel Castilla Real (11/11 gates).
 
 ### Cambios Implementados
-- **F6**: Eliminado `_build_coherence_checklist()` + `'coherence_checklist'` del data dict — código muerto sin propósito
+- **F1** (FASE-1): `${capex_breakdown_table}` movido a sección independiente — fix tablas markdown anidadas + test de integridad de pipes
+- **F7** (FASE-2): Eliminadas 9 keys huérfanas del template data dict
+- **F8** (FASE-2): Fallback de `_build_capex_breakdown_table()` ahora incluye header row
+- **F6** (FASE-3): Eliminado `_build_coherence_checklist()` + `'coherence_checklist'` del data dict — código muerto sin propósito
+- **FASE-4**: Verificación E2E v4complete Hotel Castilla Real — 11/11 gates PASS, coherence 0.85
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/test_capex_rename.py` | Test de integridad de pipes en tabla CAPEX |
 
 ### Archivos Modificados
-|| Archivo | Cambio |
-||---------|--------|
-|| `modules/commercial_documents/v4_proposal_generator.py` | Eliminado método `_build_coherence_checklist()` (L1873-1922) y entrada `'coherence_checklist'` del data dict (L938) |
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | CAPEX desglose movido a sección propia |
+| `modules/commercial_documents/v4_proposal_generator.py` | Keys huérfanas eliminadas, fallback con header, coherence checklist eliminado |
 
 ### Tests
 - test_capex_rename.py: 8/8 passing
-- 45 failures preexistentes (MagicMock en test suite, no relacionadas con este cambio)
+- 0 regresiones en tests existentes
+- v4complete Hotel Castilla Real: 11/11 gates, coherence 0.85
 
 ### Backwards compatibility
-Sí. Feature eliminada nunca renderizada — sin impacto en output existente.
+Sí. Fix de rendering sin cambios en API pública.
 
 ---
 
