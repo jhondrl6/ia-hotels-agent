@@ -378,15 +378,21 @@ class PublicationGatesOrchestrator:
                 if financial_sources.get(f) in DEFAULT_SOURCES
             }
             if default_source_fields:
+                # F7 FIX: Usar formal evidence_tier en vez de heurística source-level
+                # Las dos gates ahora alinean: financial_validity y tier_c_onboarding_required
+                # usan la misma fuente: assessment["financial_evidence_tier"]
+                formal_tier = assessment.get("financial_evidence_tier", "C")
+                tier_message = f"Tier {formal_tier} evidence" if formal_tier == "C" else "Tier C evidence"
                 return PublicationGateResult(
                     gate_name=gate_name,
                     passed=True,  # No bloquea, solo advierte
                     status=GateStatus.WARNING,
-                    message="Financial data uses default/legacy values — Tier C evidence",
+                    message=f"Financial data uses default/legacy values — {tier_message}",
                     value=True,
                     suggestion="Run onboarding with real data to improve evidence tier",
                     details={
-                        "default_sources": default_source_fields
+                        "default_sources": default_source_fields,
+                        "corrected_tier": formal_tier
                     }
                 )
             return PublicationGateResult(

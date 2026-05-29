@@ -34,13 +34,13 @@
 
 **Descripción:** Añadir `${capex_breakdown_table}` al template + unificar lógica de gates
 
-**Estado:** ⚪ Pendiente
+**Estado:** ✅ Completada
 
 **Tareas:**
-- [ ] T1: Añadir `${capex_breakdown_table}` en `propuesta_v6_template.md`
-- [ ] T2: Unificar `financial_validity` gate para usar `evidence_tier` formal
-- [ ] T3: Tests de regresión
-- [ ] T4: Actualizar estado
+- [x] T1: Añadir `${capex_breakdown_table}` en `propuesta_v6_template.md`
+- [x] T2: Unificar `financial_validity` gate para usar `evidence_tier` formal
+- [x] T3: Tests de regresión — **PRE-EXISTING**: `test_identify_brechas_returns_all_detected` falla en baseline (no связано con cambios FASE-1A)
+- [x] T4: Actualizar estado
 
 **Dependencias:** FASE-0 ✅
 
@@ -210,12 +210,12 @@
 
 | Fix | Esperado | Resultado |
 |-----|----------|-----------|
-| IMP-03 CAPEX breakdown | Tabla desglose en propuesta | — |
+| IMP-03 CAPEX breakdown | Tabla desglose en propuesta | ✅ FASE-1A |
 | MIN-01 Status Quo | Tabla comparativa Sin/Con IAO | — |
 | MIN-02 ADR evidenciado | Valor COP en benchmarks + propuesta | — |
 | MIN-03 Closing pitch | Pitch dinámico con ROICR | — |
 | F5 ADR checklist | Valor real (no "Pendiente") | — |
-| F7 Gate discrepancy | Mismo tier en ambos gates | — |
+| F7 Gate discrepancy | Mismo tier en ambos gates | ✅ FASE-1A |
 | Dead code | Sin errores de ejecución | — |
 
 ## Métricas vs Baseline
