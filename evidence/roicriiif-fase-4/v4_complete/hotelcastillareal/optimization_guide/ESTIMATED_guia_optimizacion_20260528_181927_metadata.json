@@ -1,0 +1,25 @@
+{
+  "asset_type": "optimization_guide",
+  "generated_at": "2026-05-28T18:19:27.391321",
+  "confidence_level": "0.9",
+  "confidence_score": 0.5,
+  "validation_sources": [
+    "web_scraping",
+    "google_business_profile",
+    "user_input"
+  ],
+  "preflight_status": "WARNING",
+  "can_use": false,
+  "disclaimer": "Este asset fue generado con datos estimados o de una sola fuente. Se recomienda verificar antes de usar en producción. Verifique que los metadatos recomendados sean relevantes para su propiedad.",
+  "source_data_hash": "b63329f2ce0cde1a",
+  "diagnostic_reference": "None",
+  "problems_solved": [
+    "Metadatos por Defecto"
+  ],
+  "coherence_score": 0.83,
+  "problem_solved": "Metadatos por defecto del CMS que dañan SEO",
+  "impact_cop": 935424,
+  "priority": "P2",
+  "timing": "Día 3",
+  "why_this_asset": "Aborda problemas de títulos, descripciones y schema markup para mejorar visibilidad orgánica"
+}

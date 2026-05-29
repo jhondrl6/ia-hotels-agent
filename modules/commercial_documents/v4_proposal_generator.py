@@ -1082,8 +1082,6 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'fuga_total_6m': format_cop(abs(raw_monthly_loss) * 6),
         # ROICRIII FASE-2 T2: recuperacion_proyectada_6m unificada con curva de maduración
         'recuperacion_proyectada_6m': format_cop(int(_maturity_result.total_recuperacion_6m)),
-        'pain_pct': int(pain_ratio * 100),       # MANTENER — template V6 lo usa
-        'recov_pct': int(recovery_realistic * 100),  # MANTENER — template V6 lo usa
         # ROICRIII FASE-2 T2: nueva variable de trazabilidad transparente
         'trazabilidad_origen': (
             f"Fuga mensual (${int(abs(raw_monthly_loss)):,}) × "

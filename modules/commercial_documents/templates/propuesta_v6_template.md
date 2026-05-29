@@ -113,8 +113,7 @@ Para que su negocio brille en Google Maps, necesitamos fotos de calidad. Esto es
 ${pain_ratio_note}
 
 > 📊 **Trazabilidad financiera**: La fuga total estimada es de ${fuga_total_6m} en 6 meses.
-> Con nuestro servicio, la recuperación proyectada es de ${recuperacion_proyectada_6m}
-> (${pain_pct}% del dolor priorizado × ${recov_pct}% de recuperación conservadora).
+> Con nuestro servicio, la recuperación proyectada es de ${recuperacion_proyectada_6m}.
 > **Origen**: ${trazabilidad_origen}.
 
 {{if financial_evidence_tier == "C"}}
