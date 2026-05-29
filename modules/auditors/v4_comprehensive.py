@@ -37,6 +37,7 @@ from modules.auditors.ia_readiness_calculator import IAReadinessCalculator, IARe
 from modules.auditors.seo_elements_detector import SEOElementsDetector, SEOElementsResult
 from modules.auditors.aeo_snippet_tracker import AEOSnippetReport, AEOSnippetTracker
 from modules.auditors.llm_mention_checker import LLMReport, LLMMentionChecker
+from modules.financial_engine.regional_adr_resolver import RegionalADRResolver
 
 
 logger = logging.getLogger(__name__)
@@ -375,6 +376,11 @@ class V4ComprehensiveAuditor:
         self.pagespeed = pagespeed_client
         self.cross_validator = CrossValidator()
         self.competitor_analyzer = CompetitorAnalyzer()
+        self.adr_resolver = RegionalADRResolver()
+
+        # FASE-7: Regional ADR cache — computed once per audit run and reused
+        self._regional_adr_cache: Optional[float] = None
+        self._regional_adr_resolved_region: Optional[str] = None
     
     def _validate_html_integrity(self, html: str, url: str) -> bool:
         """
@@ -1359,6 +1365,68 @@ class V4ComprehensiveAuditor:
                 return True
         return False
 
+    def _resolve_regional_adr(self, gbp_address: Optional[str]) -> Optional[float]:
+        """Resolve regional ADR benchmark from GBP address (FASE-7).
+        
+        Uses gbp.address to infer region (city/region name in Colombia),
+        then queries the RegionalADRResolver for the benchmark. Result
+        is cached per audit run to avoid redundant resolutions.
+        
+        Returns:
+            Regional ADR in COP, or None if region cannot be resolved.
+        """
+        # Region detection: use cached value if already computed
+        if self._regional_adr_cache is not None:
+            return self._regional_adr_cache
+        
+        if not gbp_address:
+            return None
+        
+        # Normalize address for region detection
+        addr_lower = gbp_address.lower()
+        
+        # Colombian city/region mapping from address
+        region_map = {
+            # Eje Cafetero
+            'pereira': 'eje_cafetero',
+            'armenia': 'eje_cafetero',
+            'manizales': 'eje_cafetero',
+            'calarca': 'eje_cafetero',
+            'montenegro': 'eje_cafetero',
+            'salento': 'eje_cafetero',
+            # Antioquia
+            'medellin': 'antioquia',
+            'medellín': 'antioquia',
+            'envigado': 'antioquia',
+            'itagui': 'antioquia',
+            'rionegro': 'antioquia',
+            # Caribe
+            'cartagena': 'caribe',
+            'barranquilla': 'caribe',
+            'santa marta': 'caribe',
+            'san andres': 'caribe',
+            'colombia': 'caribe',  # fallback if only country
+            'bogota': 'default',
+            'bogotá': 'default',
+        }
+        
+        resolved_region = 'default'
+        for city_keyword, region in region_map.items():
+            if city_keyword in addr_lower:
+                resolved_region = region
+                break
+        
+        # Use a conservative default rooms=20 (boutique) for address-only context
+        result = self.adr_resolver.resolve(
+            region=resolved_region,
+            rooms=20,
+            user_provided_adr=None,
+        )
+        
+        self._regional_adr_cache = result.adr_cop
+        self._regional_adr_resolved_region = resolved_region
+        return result.adr_cop
+
     def _extract_wa_me_number(self, html: str) -> Optional[str]:
         """Extract phone number from wa.me href links in HTML.
         
@@ -1444,6 +1512,7 @@ class V4ComprehensiveAuditor:
         
         adr_dp = self.cross_validator.validate_adr(
             scraped_price=str(adr_web) if adr_web else None,
+            benchmark_region=self._resolve_regional_adr(gbp.address),
         )
         
         # Get conflicts
