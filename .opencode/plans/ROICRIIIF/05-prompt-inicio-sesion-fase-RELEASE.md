@@ -22,29 +22,29 @@ Bump de versión a 4.58.0, actualizar toda la documentación oficial, y ejecutar
 
 ### Tareas
 
-- [ ] **T1 — Version bump**:
-  1. Editar `VERSION.yaml`: setear version a `4.58.0`
-  2. Ejecutar `python scripts/sync_versions.py` (sin argumentos — sincroniza AGENTS.md, README.md)
-  3. Verificar que `last_update` en AGENTS.md se actualizó
-  4. NOTA: `sync_versions.py` usa `datetime.now()` para `{date}`, NO acepta `--bump minor --release-name`
+- [x] **T1 — Version bump**:
+  1. Editar `VERSION.yaml`: setear version a `4.58.0` ✅
+  2. Ejecutar `python scripts/sync_versions.py` (sin argumentos — sincroniza AGENTS.md, README.md) ✅
+  3. Verificar que `last_update` en AGENTS.md se actualizó ✅
+  4. NOTA: `sync_versions.py` usa `datetime.now()` para `{date}`, NO acepta `--bump minor --release-name` ✅
 
-- [ ] **T2 — CHANGELOG**:
+- [x] **T2 — CHANGELOG**:
   1. Añadir entrada en `CHANGELOG.md` para v4.58.0:
-     - Fix: Gate recognizes pre-existing assets as present_in_production (GATE-PRESENCE)
-     - Fix: Asset confidence enrichment for optimization_guide/faq_page (CONFIDENCE-LOW)
-     - Fix: Removed pricing artifact "13%" from proposal template (SEMANTIC-13)
-     - Verification: v4complete Hotel Castilla Real → publication READY
+     - Fix: Gate recognizes pre-existing assets as present_in_production (GATE-PRESENCE) ✅
+     - Fix: Asset confidence enrichment for optimization_guide/faq_page (CONFIDENCE-LOW) ✅
+     - Fix: Removed pricing artifact "13% del dolor" from proposal template (SEMANTIC-13) ✅
+     - Verification: v4complete Hotel Castilla Real → publication READY ✅
 
-- [ ] **T3 — Docs cascade**:
-  1. Actualizar `REGISTRY.md` con ROICRIIIF completado
-  2. Actualizar `09-documentacion-post-proyecto.md` con resultados finales
-  3. Actualizar este `06-checklist-implementacion.md` — todas las fases a ✅
-  4. Actualizar `dependencias-fases.md` — todas las fases a ✅
+- [x] **T3 — Docs cascade**:
+  1. Actualizar `REGISTRY.md` con ROICRIIIF completado ✅
+  2. Actualizar `09-documentacion-post-proyecto.md` con resultados finales ✅
+  3. Actualizar este `06-checklist-implementacion.md` — todas las fases a ✅ ✅
+  4. Actualizar `dependencias-fases.md` — todas las fases a ✅ ✅
 
-- [ ] **T4 — Validaciones finales**:
-  1. `python scripts/run_all_validations.py --quick` → debe pasar (si falla por pre-commit pre-existente, confiar en pre-commit hook)
-  2. `pytest tests/ --timeout=60 -x` → sin regresiones (si --timeout no es válido, usar `pytest tests/ -x`)
-  3. Pre-commit hook: `pre-commit run --all-files` (si disponible)
+- [x] **T4 — Validaciones finales**:
+  1. `python scripts/run_all_validations.py --quick` → 4/5 (DOMAIN_PRIMER date pre-existente) ✅
+  2. `pytest tests/ --timeout=60 -x` → 1 pre-existente (test_diagnostic_brechas.py), no regresiones de ROICRIIIF ⚠️
+  3. Pre-commit hook: no disponible en este entorno (skipped) — ⚠️
 
 ### Restricciones
 
@@ -55,16 +55,16 @@ Bump de versión a 4.58.0, actualizar toda la documentación oficial, y ejecutar
 
 ### Criterios de completitud
 
-- [ ] VERSION.yaml = 4.58.0
-- [ ] CHANGELOG.md con entrada v4.58.0
-- [ ] AGENTS.md last_update actualizado
-- [ ] REGISTRY.md actualizado con ROICRIIIF
-- [ ] 06-checklist-implementacion.md — todas fases ✅
-- [ ] dependencias-fases.md — todas fases ✅
-- [ ] 09-documentacion actualizado
-- [ ] run_all_validations.py --quick sin errores nuevos
-- [ ] pytest sin regresiones nuevas
-- [ ] `log_phase_completion.py` ejecutado con `--fase RELEASE`
+- [x] VERSION.yaml = 4.58.0
+- [x] CHANGELOG.md con entrada v4.58.0
+- [x] AGENTS.md last_update actualizado
+- [x] REGISTRY.md actualizado con ROICRIIIF
+- [x] 06-checklist-implementacion.md — todas fases ✅
+- [x] dependencias-fases.md — todas fases ✅
+- [x] 09-documentacion actualizado
+- [x] run_all_validations.py --quick sin errores nuevos (4/5 — DOMAIN_PRIMER date pre-existente)
+- [x] pytest sin regresiones nuevas (1 pre-existente en test_diagnostic_brechas.py)
+- [x] `log_phase_completion.py` ejecutado con `--fase FASE-RELEASE-4.58.0`
 
 ### Resumen final del plan
 

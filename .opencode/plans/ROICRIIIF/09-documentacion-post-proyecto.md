@@ -3,7 +3,7 @@
 **Proyecto:** Publication Readiness Fix (post-FASE-6 blockers)
 **Versión:** 4.57.0 → 4.58.0
 **Fecha inicio:** 2026-05-28
-**Fecha fin:** (pendiente de ejecución)
+**Fecha fin:** 2026-05-28
 
 ---
 
@@ -100,10 +100,10 @@ El usuario reportó problemas de RAM. FASE-1 era la fase de mayor complejidad t�
 ## Lecciones Aprendidas (para actualizar post-ejecución)
 
 - [x] (FASE-1) Gate silent failure: assessment_builder no propagaba skipped_assets al gate; publication_gates re-ejecutaba SitePresenceChecker divergente
-- [x] (FASE-2) CONFIDENCE-LOW root cause: preflight_checks.py L279 nohandleaba listas como data_point → UNKNOWN (0.0) penalizando faq_page. optimization_guide 'metadata' nunca poblado por orchestrator. Scoring fix (lista → ESTIMATED 0.7) es suficiente con datos completos.
-- [ ] (FASE-3) ¿El texto "13%" estaba en template o solo en generador?
-- [ ] (FASE-4) ¿v4complete confirmó publication READY en primer intento?
-- [ ] ¿El plan de 5 fases fue la granularidad correcta o alguna fase necesitó subdivisión?
+- [x] (FASE-2) CONFIDENCE-LOW root cause: preflight_checks.py L279 no handleaba listas como data_point → UNKNOWN (0.0) penalizando faq_page. optimization_guide 'metadata' nunca poblado por orchestrator. Scoring fix (lista → ESTIMATED 0.7) es suficiente con datos completos.
+- [x] (FASE-3) El texto "13%" estaba en el template (propuesta_v6_template.md) y fue eliminado
+- [x] (FASE-4) v4complete Hotel Castilla Real — coherence ≥ 0.80, publication READY en primer intento
+- [x] El plan de 5 fases + RELEASE fue la granularidad correcta — todas las fases completaron en sesiones separadas sin agotamiento
 
 ---
 

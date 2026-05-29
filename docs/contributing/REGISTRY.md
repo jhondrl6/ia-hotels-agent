@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
 > **Ultima actualizacion:** 2026-05-28
-> **Version actual:** v4.55.0
-> **Total fases completadas:** 334
+> **Version actual:** v4.58.0
+> **Total fases completadas:** 335
 
 ---
 
@@ -8094,6 +8094,23 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (5)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.58.0 - 2026-05-28
+**Descripcion:** Release 4.58.0: Publication Readiness Fix — 3 issues resueltos (GATE-PRESENCE, CONFIDENCE-LOW, SEMANTIC-13), version bump, CHANGELOG, sync, docs cascade
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

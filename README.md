@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.57.0** -- FINANCIAL-COHERENCE | Actualizado 26 Mayo 2026 | +2,743 pruebas automatizadas | 0 errores conocidos
+**v4.58.0** -- FINANCIAL-COHERENCE | Actualizado 26 Mayo 2026 | +2,743 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-## Estado del Proyecto (v4.57.0 -- FINANCIAL-COHERENCE)
+## Estado del Proyecto (v4.58.0 -- FINANCIAL-COHERENCE)
 
 - **2,743 test functions** — suite completa, 0 regresiones
 - **193 modulos Python** (~69K lineas) + **24 scripts** (~6.1K lineas) + **84 directorios de test**

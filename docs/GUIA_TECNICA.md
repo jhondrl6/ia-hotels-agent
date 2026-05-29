@@ -1,6 +1,6 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.57.0 (FINANCIAL-COHERENCE)
+**Versión:** v4.58.0 (FINANCIAL-COHERENCE)
 **Última actualización:** 2026-05-28
 
 ---

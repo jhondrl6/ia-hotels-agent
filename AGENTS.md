@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.57.0 -- FINANCIAL-COHERENCE COMPLETADO**
+> **v4.58.0 -- FINANCIAL-COHERENCE COMPLETADO**
 
 ---
 

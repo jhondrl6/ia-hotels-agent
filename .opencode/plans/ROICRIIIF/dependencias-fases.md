@@ -61,14 +61,14 @@ FASE-1A (Gate Presence DIAGNÓSTICO — lectura pura, RAM-friendly)
 
 ## Estado de Fases
 
-| Fase | Estado | Fecha | Notas |
+|| Fase | Estado | Fecha | Notas |
 |------|--------|-------|-------|
-| FASE-1A (Diagnóstico Gate) | ⬜ Pendiente | — | Lectura pura + fix recipe |
-| FASE-1B (Implementación Gate) | ✅ COMPLETED | 2026-05-28 | delegate_task con recipe. Patches: assessment_builder.py (+skipped_assets field/propagation), publication_gates.py (+FASE-1B skipped→site_presence_report bridge). Tests: 4/4 pass (test_publication_gates_presence.py). No-regression: 401 passed. run_all_validations --quick: 5/5. |
-| FASE-2 (Asset Confidence) | ✅ COMPLETED | 2026-05-28 | Fix: preflight_checks.py L279-281 trata listas como ESTIMATED. 5 tests nuevos. alignment 62%→100% con datos completos. |
-| FASE-3 (Semantic Cleanup) | ⬜ Pendiente | — | delegate_task |
-| FASE-4 (v4complete) | ⬜ Pendiente | — | delegate_task |
-| FASE-RELEASE-4.58.0 | ⬜ Pendiente | — | Version bump + docs |
+| FASE-1A (Diagnóstico Gate) | ✅ COMPLETED | 2026-05-28 | Lectura pura + fix recipe. Root cause: gate re-ejecutaba SitePresenceChecker divergente. |
+| FASE-1B (Implementación Gate) | ✅ COMPLETED | 2026-05-28 | delegate_task con recipe. Patches: assessment_builder.py + publication_gates.py. Tests: 4/4 pass. |
+| FASE-2 (Asset Confidence) | ✅ COMPLETED | 2026-05-28 | Fix: preflight_checks.py L279 lista→ESTIMATED. alignment 62%→100%. |
+| FASE-3 (Semantic Cleanup) | ✅ COMPLETED | 2026-05-28 | delegate_task. Template + generator cleanup: "13%" artifact eliminado. |
+| FASE-4 (v4complete) | ✅ COMPLETED | 2026-05-28 | delegate_task. Hotel Castilla Real E2E — Coherence ≥ 0.80, Publication READY. |
+| FASE-RELEASE-4.58.0 | ✅ COMPLETED | 2026-05-28 | Version bump 4.58.0, CHANGELOG, sync_versions, validaciones. |
 
 ---
 

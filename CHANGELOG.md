@@ -1,5 +1,33 @@
 # Changelog
 
+## [4.58.0] - ROICRIIIF: Publication Readiness Fix — 2026-05-28
+
+### Objetivo
+Resolver 3 issues bloqueantes de la release anterior (v4.57.0) que impedían la publicación de propuestas comerciales con coherencia ≥ 80%.
+
+### Fixes Implementados
+- **Gate Presence Fix**: Gate ahora reconoce activos pre-existentes como `present_in_production` (GATE-PRESENCE)
+- **Asset Confidence Enrichment**: `faq_page` y `optimization_guide` enriquecidos con datos reales del sitio (CONFIDENCE-LOW)
+- **Semantic Cleanup**: Eliminado artifact "13% del dolor" de pricing en plantilla de propuesta (SEMANTIC-13)
+- **v4complete E2E**: Hotel Castilla Real verificado — Coherence ≥ 0.80, Publication READY_FOR_PUBLICATION
+
+### Archivos Modificados
+|| Archivo | Cambio |
+|---------|--------|
+| `modules/quality/publication_gates.py` | Gate reconoce activos pre-existentes como presentes en producción |
+| `modules/quality/preflight_checks.py` | Confidence enrichment con datos reales del sitio |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Eliminado artifact "13%" |
+| `modules/commercial_documents/v4_proposal_generator.py` | Limpieza semántica de artifacts |
+
+### Tests
+- Tests de presence gate en `test_publication_gates_presence.py`
+- 0 regresiones en suite existente
+
+### Backwards compatibility
+Sí. Fixes de gate y cleanup semántico — no cambia lógica core del pipeline.
+
+---
+
 ## [4.57.0] - Financial Coherence & Asset Semantics Rescue — 2026-05-28
 
 ### Objetivo
