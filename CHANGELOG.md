@@ -1,5 +1,36 @@
 # Changelog
 
+## [4.59.0] - REFACTOR-5-GAPS - 2026-05-29
+
+### Objetivo
+Resolver 5 gaps comerciales confirmados en la propuesta comercial v4, 1 bug de gates y 1 deuda técnica. Verificado con v4complete en Hotel Castilla Real.
+
+### Cambios Implementados
+- **IMP-03**: CAPEX breakdown ahora se renderiza en propuesta (template fix)
+- **F7**: Unificada lógica de evidence tier entre publication gates
+- **F5**: ADR en coherence checklist usa fuente real (benchmarks regionales)
+- **MIN-02**: ADR evidenciado en benchmarks + propuesta comercial
+- **MIN-01**: Nueva tabla Status Quo vs Implementación IAO
+- **MIN-03**: Closing pitch dinámico basado en ROICR, payback y recuperación
+- **Debt**: Eliminado template embebido muerto en v4_proposal_generator.py
+
+### Archivos Modificados
+||| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | CAPEX table, Status Quo, Closing Pitch, ADR cascade, dead code removal |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Placeholders: capex_breakdown_table, status_quo_table, adr_display, closing_pitch |
+| `modules/quality_gates/publication_gates.py` | financial_validity usa evidence_tier formal |
+| `config/regional_benchmarks.yaml` | ADR por región (eje_cafetero, caribe, bogota, antioquia) |
+
+### Tests
+- Regresión completa: 610/611 tests passing
+- v4complete Hotel Castilla Real: 11/11 gates, coherence 0.85
+
+### Backwards compatibility
+Sí. Nuevos placeholders son opcionales — si no se producen, el template los ignora. Gates más precisos no cambian FAIL/PASS umbral.
+
+---
+
 ## [4.58.0] - ROICRIIIF: Publication Readiness Fix — 2026-05-28
 
 ### Objetivo

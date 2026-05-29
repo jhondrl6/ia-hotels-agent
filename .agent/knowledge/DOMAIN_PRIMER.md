@@ -3,7 +3,7 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.58.0 | **Codename**: FINANCIAL-COHERENCE
+> **Version del sistema**: 4.59.0 | **Codename**: REFACTOR-5-GAPS
 > **Release date**: 2026-05-29 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-05-29 | v4.58.0 FINANCIAL-COHERENCE*
+*Auto-generado: 2026-05-29 | v4.59.0 REFACTOR-5-GAPS*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

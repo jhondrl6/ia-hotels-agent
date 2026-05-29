@@ -1,7 +1,7 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-0H-G8",
   "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-D",
-  "modules/commercial_documents/v4_proposal_generator.py": "FASE-2",
+  "modules/commercial_documents/v4_proposal_generator.py": "REFACTOR-PENDIENTE-V4.58.0",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-PROP-D",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
@@ -37,7 +37,7 @@
   "modules/asset_generation/templates/indirect_traffic_optimization_template.md": "FASE-VALIDATE-RC",
   "modules/generators/report_builder.py": "PROSPECCION-II",
   "modules/analyzers/gap_analyzer.py": "FASE-D",
-  "modules/quality_gates/publication_gates.py": "FASE-1B",
+  "modules/quality_gates/publication_gates.py": "REFACTOR-PENDIENTE-V4.58.0",
   "modules/asset_generation/asset_content_validator.py": "FASE-B",
   "data_models/canonical_assessment.py": "FASE-C",
   "modules/financial_engine/calculator_v2.py": "PROSPECCION-II",
@@ -48,7 +48,7 @@
   "modules/analytics/__init__.py": "FASE-CONFIG-6",
   "modules/auditors/seo_elements_detector.py": "FASE-A",
   "tests/commercial_documents/test_diagnostic_brechas.py": "FASE-B",
-  "modules/auditors/v4_comprehensive.py": "FASE-7",
+  "modules/auditors/v4_comprehensive.py": "REFACTOR-PENDIENTE-V4.58.0",
   "modules/commercial_documents/templates/diagnostico_v4_template.md": "FASE-A",
   "templates/diagnostico_ejecutivo.md": "FASE-F",
   "modules/utils/benchmarks.py": "FASE-D",
@@ -76,7 +76,7 @@
   "templates/diagnostico_v6_template.md": "FASE-1",
   "modules/asset_generation/geo_enriched_bridge.py (NUEVO)": "FASE-GEO-BRIDGE",
   "modules/asset_generation/v4_asset_orchestrator.py (modificado)": "FASE-GEO-BRIDGE",
-  "modules/commercial_documents/templates/propuesta_v6_template.md": "FASE-2",
+  "modules/commercial_documents/templates/propuesta_v6_template.md": "REFACTOR-PENDIENTE-V4.58.0",
   "modules/postprocessors/document_quality_gate.py": "PROSPECCION-II",
   "tests/postprocessors/test_document_quality_gate.py": "FASE-CONTENT-SCRUBBER",
   "8 archivos via sync_versions.py": "FASE-RELEASE",
@@ -194,5 +194,5 @@
   "config/commercial.yaml": "FASE-5",
   "tests/asset_generation/test_conditional_new_assets.py": "FASE-5",
   "tests/asset_generation/test_phase4_guardrails.py": "FASE-5",
-  "config/regional_benchmarks.yaml": "FASE-2"
+  "config/regional_benchmarks.yaml": "REFACTOR-PENDIENTE-V4.58.0"
 }

@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-29
 > **Version actual:** v4.58.0
-> **Total fases completadas:** 337
+> **Total fases completadas:** 338
 
 ---
 
@@ -8151,6 +8151,29 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (N)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## REFACTOR-PENDIENTE-V4.58.0 - 2026-05-29
+**Descripcion:** Refactorizacion_5_gaps_propuesta_comercial:_CAPEX_breakdown_ADR_Status_Quo_Closing_Pitch_gate_unification_dead_code_cleanup_Plus_FASE-7_ADR_audit_status.Verified_con_v4complete_Hotel_Castilla_Real_coherence0.85_11gates.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `config/regional_benchmarks.yaml` | Regional Benchmarks |
+| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
+
+### Validaciones
+- [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

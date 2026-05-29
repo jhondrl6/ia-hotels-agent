@@ -1,8 +1,8 @@
-<!-- agents_version: v4.49.0 | last_update: 2026-05-28 -->
+<!-- agents_version: v4.49.0 | last_update: 2026-05-29 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.58.0 -- FINANCIAL-COHERENCE COMPLETADO**
+> **v4.59.0 -- REFACTOR-5-GAPS COMPLETADO**
 
 ---
 

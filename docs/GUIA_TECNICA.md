@@ -1,7 +1,29 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.58.0 (FINANCIAL-COHERENCE)
-**Última actualización:** 2026-05-28
+**Versión:** v4.59.0 (REFACTOR-5-GAPS)
+**Última actualización:** 2026-05-29
+
+---
+
+### Notas de Cambios v4.59.0
+
+**Fecha:** 2026-05-29
+
+**Módulos afectados:**
+- `modules/commercial_documents/v4_proposal_generator.py`
+- `modules/quality_gates/publication_gates.py`
+- `config/regional_benchmarks.yaml`
+
+**Problema:** 5 gaps comerciales donde datos se producían pero no se renderizaban (CAPEX), no existían (Status Quo, Closing Pitch), o se mostraban como placeholders vacíos (ADR). Además, 2 gates evaluaban evidence tier inconsistente.
+
+**Solución:**
+- Template fix: añadir placeholder `${capex_breakdown_table}`
+- Pipeline fix: método `_build_status_quo_table()`, `_build_closing_pitch()`
+- Data fix: ADR en `regional_benchmarks.yaml` + cascada en coherence checklist
+- Gate fix: `financial_validity` usa `evidence_tier` formal
+- Debt: template embebido L575-605 eliminado
+
+**Backwards compatibility:** Sí. Nuevos placeholders son opcionales — si no se producen, el template los ignora. Gates más precisos no cambian FAIL/PASS umbral.
 
 ---
 

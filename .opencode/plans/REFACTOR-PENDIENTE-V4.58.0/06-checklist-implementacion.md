@@ -4,11 +4,11 @@
 
 | Aspecto | Estado |
 |---------|--------|
-| Plan | ⚪ Preparación |
-| Fases de implementación | 7/10 completadas |
-| Documentación | ⚪ Pendiente |
-| v4complete ejecutado | ⚪ Pendiente |
-| Fixes verificados | 0/7 |
+| Plan | ✅ Completado |
+| Fases de implementación | 10/10 completadas |
+| Documentación | ✅ Completada |
+| v4complete ejecutado | ✅ Completado |
+| Fixes verificados | 7/7 |
 
 ---
 
@@ -16,13 +16,13 @@
 
 **Descripción:** Confirmar estado actual del código contra claims de Pendiente.md
 
-**Estado:** ⚪ Pendiente
+**Estado:** ✅ Completada
 
 **Tareas:**
-- [ ] T1: Verificar IMP-03 (CAPEX breakdown sin consumir)
-- [ ] T2: Verificar F7 (discrepancia entre gates)
-- [ ] T3: Verificar MIN-02 (ADR no evidenciado)
-- [ ] T4: Verificar MIN-01, MIN-03 y dead code
+- [x] T1: Verificar IMP-03 (CAPEX breakdown sin consumir)
+- [x] T2: Verificar F7 (discrepancia entre gates)
+- [x] T3: Verificar MIN-02 (ADR no evidenciado)
+- [x] T4: Verificar MIN-01, MIN-03 y dead code
 
 **Dependencias:** Ninguna (primera fase)
 
@@ -212,14 +212,14 @@
 
 **Descripción:** Bridge benchmark ADR → cross-validation del auditor. Cosmetic fix.
 
-**Estado:** ⚪ Pendiente
+**Estado:** ✅ Completada
 
 **Tareas:**
-- [ ] T1: Investigar acceso a benchmark ADR en auditor
-- [ ] T2: Determinar estrategia (A/B fix o C wontfix)
-- [ ] T3: Implementar fix si viable
-- [ ] T4: Tests
-- [ ] T5: Actualizar checklist + log_phase
+- [x] T1: Investigar acceso a benchmark ADR en auditor
+- [x] T2: Determinar estrategia (A/B fix o C wontfix)
+- [x] T3: Implementar fix si viable
+- [x] T4: Tests
+- [x] T5: Actualizar checklist + log_phase
 
 **Dependencias:** FASE-6 ✅
 
@@ -234,13 +234,13 @@
 
 **Descripción:** Cascade documental completo
 
-**Estado:** ⚪ Pendiente
+**Estado:** ✅ Completada
 
 **Tareas:**
-- [ ] T1: Log phase en REGISTRY.md
-- [ ] T2: Bump versión + sync_versions.py
-- [ ] T3: CHANGELOG.md + GUIA_TECNICA.md
-- [ ] T4: Validación final
+- [x] T1: Log phase en REGISTRY.md
+- [x] T2: Bump versión + sync_versions.py
+- [x] T3: CHANGELOG.md + GUIA_TECNICA.md
+- [x] T4: Validación final
 
 **Dependencias:** FASE-6 ✅
 
@@ -250,6 +250,16 @@
 - `docs/contributing/REGISTRY.md`
 - `VERSION.yaml`, `CHANGELOG.md`, `docs/GUIA_TECNICA.md`
 - `AGENTS.md`, `README.md`, `.cursorrules`, `CONTRIBUTING.md`
+
+**Validaciones:**
+- [x] REGISTRY.md: entrada REFACTOR-PENDIENTE-V4.58.0 ✅
+- [x] VERSION.yaml: 4.58.0 → 4.59.0 (MINOR bump) ✅
+- [x] CHANGELOG.md: entrada 4.59.0 ✅
+- [x] GUIA_TECNICA.md: nota técnica v4.59.0 ✅
+- [x] sync_versions.py: All files in sync ✅
+- [x] run_all_validations.py --quick: 5/5 passed ✅
+- [x] doctor.py --status: sin errores críticos ✅
+- [x] DOMAIN_PRIMER regenerado ✅
 
 ---
 
@@ -269,8 +279,8 @@
 
 | Métrica | Baseline (pre) | Post-fix | Delta |
 |---------|---------------|----------|-------|
-| Coherence score | 0.83 | — | — |
-| Publication Gates | 9/11 | — | — |
+| Coherence score | 0.83 | 0.85 | +0.02 |
+| Publication Gates | 9/11 | 11/11 | +2 |
 | Tier | B | — | — |
 | Blocking issues | 0 | — | — |
 
