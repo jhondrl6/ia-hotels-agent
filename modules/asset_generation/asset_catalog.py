@@ -86,7 +86,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_with_actual_count",
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["no_faq_schema"]
+        promised_by=["no_faq_schema"],
+        priority="RECOMMENDED",  # FIX: REQUIRED→RECOMMENDED para que WARNING+fallback=0.8≥0.7
     ),
     "hotel_schema": AssetCatalogEntry(
         asset_type="hotel_schema",
@@ -188,7 +189,8 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_basic_guide",
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["metadata_defaults", "poor_performance", "low_citability", "low_content_length"]
+        promised_by=["metadata_defaults", "poor_performance", "low_citability", "low_content_length"],
+        priority="RECOMMENDED",  # FIX: REQUIRED→RECOMMENDED para que WARNING+fallback=0.8≥0.7
     ),
     "direct_booking_campaign": AssetCatalogEntry(
         asset_type="direct_booking_campaign",

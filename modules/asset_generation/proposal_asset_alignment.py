@@ -209,6 +209,9 @@ def verify_proposal_asset_alignment(
         elif hasattr(site_presence_report, 'results'):
             for asset_type, result in site_presence_report.results.items():
                 presence_lookup[asset_type] = result
+        elif isinstance(site_presence_report, dict) and 'results' in site_presence_report:
+            # FIX: asdict() convierte SitePresenceReport a dict plano
+            presence_lookup = site_presence_report['results']
 
     for service_name in services_to_check:
         expected_asset_type = PROPOSAL_SERVICE_TO_ASSET.get(service_name)
@@ -232,15 +235,28 @@ def verify_proposal_asset_alignment(
 
             # FASE-D: Asset not generated — check if it exists in production site
             presence_result = presence_lookup.get(expected_asset_type)
+            # FIX: Handle both object (.status attr) and dict ('status' key from asdict)
             if presence_result and hasattr(presence_result, 'status'):
                 presence_status = presence_result.status
+            elif presence_result and isinstance(presence_result, dict) and 'status' in presence_result:
+                presence_status = presence_result['status']
+            else:
+                presence_status = None
+
+            # Normalize: extract string value from enum or use directly
+            if presence_status is not None:
+                presence_status_value = presence_status.value if hasattr(presence_status, 'value') else str(presence_status)
+            else:
+                presence_status_value = None
+
+            if presence_status is not None:
 
                 # FASE-12B: Coherence check — detect divergence between audit and presence
                 # When audit says hotel_schema_detected=false but presence says EXISTS,
                 # this is a false positive (e.g., org schema misidentified as hotel schema).
                 # Mark as divergent missing instead of present_in_production.
                 if (expected_asset_type == "hotel_schema"
-                        and presence_status.value == "exists"
+                        and presence_status_value == "exists"
                         and audit_schema is not None
                         and not audit_schema.get("hotel_schema_detected", True)):
                     report.missing.append(ServiceAlignment(
@@ -258,7 +274,7 @@ def verify_proposal_asset_alignment(
                     ))
                     continue
 
-                if presence_status.value == "exists":  # PresenceStatus.EXISTS
+                if presence_status_value == "exists":  # PresenceStatus.EXISTS
                     # Asset already exists in production — mark as present_in_production, not missing
                     report.present_in_production.append(ServiceAlignment(
                         service_name=service_name,
@@ -267,10 +283,10 @@ def verify_proposal_asset_alignment(
                         status="present_in_production",
                         message=f"Service '{service_name}' asset '{expected_asset_type}' already exists in production site",
                         presence_verified=True,
-                        presence_status=presence_status.value
+                        presence_status=presence_status_value
                     ))
                     continue
-                elif presence_status.value == "redundant":
+                elif presence_status_value == "redundant":
                     report.redundant.append(ServiceAlignment(
                         service_name=service_name,
                         asset_type=expected_asset_type,
@@ -278,10 +294,10 @@ def verify_proposal_asset_alignment(
                         status="redundant",
                         message=f"Service '{service_name}' asset '{expected_asset_type}' is redundant (already delivered)",
                         presence_verified=True,
-                        presence_status=presence_status.value
+                        presence_status=presence_status_value
                     ))
                     continue
-                elif presence_status.value in ("not_exists", "verification_failed"):
+                elif presence_status_value in ("not_exists", "verification_failed"):
                     # Asset not in production site either — truly missing
                     report.missing.append(ServiceAlignment(
                         service_name=service_name,
@@ -290,7 +306,7 @@ def verify_proposal_asset_alignment(
                         status="missing",
                         message=f"Service '{service_name}' promises asset '{expected_asset_type}' but it was not generated and does not exist in production",
                         presence_verified=True,
-                        presence_status=presence_status.value
+                        presence_status=presence_status_value
                     ))
                     continue
             

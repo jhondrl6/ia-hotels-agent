@@ -57,7 +57,7 @@ class TestFaqPageListConfidence:
         # Empty list → UNKNOWN → BLOCKED (below 0.5) → converts to WARNING
         assert report.overall_status == PreflightStatus.WARNING
         assert report.can_proceed is True  # block_on_failure=False
-        assert confidence == 0.5  # WARNING fallback
+        assert confidence == 0.8  # RECOMMENDED+fallback → 0.8 (was 0.5 when REQUIRED)
 
 
 class TestOptimizationGuideConfidence:
@@ -100,9 +100,9 @@ class TestOptimizationGuideConfidence:
         )
         confidence = gen._calculate_confidence_score(report)
 
-        # Only 1 non-empty value → UNKNOWN → BLOCKED → WARNING with 0.5
+        # Only 1 non-empty value → UNKNOWN → BLOCKED → WARNING with 0.8 (RECOMMENDED+fallback)
         assert report.overall_status == PreflightStatus.WARNING
-        assert confidence == 0.5
+        assert confidence == 0.8
 
 
 class TestConfidenceNotRegressed:
