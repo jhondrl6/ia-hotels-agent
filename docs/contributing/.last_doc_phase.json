@@ -195,5 +195,6 @@
   "tests/asset_generation/test_conditional_new_assets.py": "FASE-5",
   "tests/asset_generation/test_phase4_guardrails.py": "FASE-5",
   "config/regional_benchmarks.yaml": "REFACTOR-PENDIENTE-V4.58.0",
-  "test_capex_rename.py": "FASE-1"
+  "test_capex_rename.py": "FASE-1",
+  "NONE": "FASE-4"
 }

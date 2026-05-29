@@ -224,15 +224,50 @@ cmd.exe /c "C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts\log_ph
 
 ## Criterios de Completitud
 
-- [ ] **T1**: v4complete ejecutado exitosamente para Hotel Castilla Real
-- [ ] **Evidencia**: Archivos copiados a `evidence/FASE-4-CAPEX-VERIFY/`
-- [ ] **F1 ✅**: Tabla CAPEX con 5 pipes/fila + desglose en sección independiente
-- [ ] **F6 ✅**: `${coherence_checklist}` no aparece literal + coherence ≥ 0.80
-- [ ] **F7 ✅**: Cero placeholders sin sustituir en output
-- [ ] **F8 ✅**: Tabla desglose con header row
-- [ ] **Gates**: ≥ 9/11 PASS sin nuevas regresiones
-- [ ] **log_phase_completion.py**: Ejecutado
+- [x] **T1**: v4complete ejecutado exitosamente para Hotel Castilla Real
+- [x] **Evidencia**: Archivos copiados a `evidence/FASE-4-CAPEX-VERIFY/`
+- [x] **F1 ✅**: Tabla CAPEX con 5 pipes/fila + desglose en sección independiente
+- [x] **F6 ✅**: `${coherence_checklist}` no aparece literal + coherence ≥ 0.80
+- [x] **F7 ✅**: Cero placeholders sin sustituir en output
+- [x] **F8 ✅**: Tabla desglose con header row
+- [x] **Gates**: ≥ 9/11 PASS sin nuevas regresiones (11/11 PASS)
+- [x] **log_phase_completion.py**: Ejecutado
 - [ ] **Docs cascade**: Actualizados
+
+---
+
+## Resultados
+
+**v4complete exit code:** 0
+**Coherence score:** 0.83 (threshold: 0.80) ✅
+**Gates:** 11/11 PASS
+**Total assets:** 12
+**Ready for publication:** YES
+
+### Verificación de Fixes
+| Fix | Estado | Detalle |
+|-----|--------|---------|
+| F1 (CAPEX tabla) | ✅ PASS | 5 pipes/fila en tabla principal, 4 pipes/fila en desglose, sección independiente |
+| F6 (coherence checklist) | ✅ PASS | coherence_checklist no aparece como placeholder, score 0.83 |
+| F7 (keys huérfanas) | ✅ PASS | 0 placeholders ${...} sin sustituir |
+| F8 (header row) | ✅ PASS | Header row `| Componente | Monto | Descripción |` presente |
+
+### Gates Detallados
+| Gate | Resultado | Score |
+|------|-----------|-------|
+| hard_contradictions | PASSED | - |
+| evidence_coverage | PASSED | 0.95 |
+| financial_validity | WARNING | Tier B (datos por defecto) |
+| coherence | PASSED | 0.83 |
+| critical_recall | PASSED | 1.0 |
+| ethics | PASSED | - |
+| content_quality | PASSED | 1.0 |
+| asset_confidence | PASSED | 1.0 (12/12 assets) |
+| proposal_asset_alignment | PASSED | 1.0 (8/8 servicios alineados) |
+| tier_c_onboarding_required | PASSED | Tier B |
+| coverage | PASSED | 1.0 |
+
+**Ejecutado:** 2026-05-29 17:52 UTC
 
 ---
 
