@@ -199,8 +199,9 @@ class V4ProposalGenerator:
         components = capex_config.get('components', [])
         
         if not components:
-            # Fallback: single-row table with total
-            return f"| Cuota de Activación | {format_cop(self.SETUP_FEE)} | Única vez |"
+            # Fallback: single-row table with header
+            header = "| Componente | Monto | Descripción |\n|---|---|---|\n"
+            return header + f"| Cuota de Activación | {format_cop(self.SETUP_FEE)} | Única vez |"
         
         # Build itemized table
         rows = []
@@ -790,6 +791,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
             # Investment
             'setup_fee': format_cop(getattr(self, '_current_setup_fee', self.SETUP_FEE)),
             'capex_breakdown_table': self._build_capex_breakdown_table(),
+
             'monthly_fee': format_cop(getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE)),
             
             # ROI
@@ -802,7 +804,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
             # - projected_real_gain: financial_value_central * pain_ratio * recovery_factor
             'pain_ratio_pct': f"{pain_ratio:.0%}",
             'recovery_factor_pct': f"{recovery_factors['realistic']:.0%}",
-            'projected_real_gain': format_cop(int(raw_monthly_loss * pain_ratio * recovery_factors['realistic'])),
+            
             'pain_ratio_note': (
                 f"**Nota de proyección**: La inversión mensual de ${int(monthly_investment):,} COP "
                 f"representa solo el {_pct_inv_vs_fuga}% "
@@ -902,10 +904,6 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         'total_investment_6m': format_cop(monthly_investment * 6),
         'recovered_6m': format_cop(effective_monthly_gain * 6),  # FASE-A: unified to effective (was projected)
         'net_benefit_6m': format_cop((effective_monthly_gain - monthly_investment) * 6),  # FASE-A: unified to effective (was projected)
-        'plan_7d': self._build_7_day_plan(asset_plan),
-        'plan_30d': self._build_30_day_plan(asset_plan),
-        'plan_60d': self._build_60_day_plan(asset_plan),
-        'plan_90d': self._build_90_day_plan(asset_plan),
         'coherence_score': str(int(diagnostic_summary.coherence_score * 100)) if diagnostic_summary.coherence_score is not None else str(self._load_fallback('coherence_score', 70)[0]),
 
         # FASE-PROP-F: Extract precision_tier from financial_breakdown for Tier C warning banner
@@ -935,9 +933,6 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
 
         'monthly_loss': format_cop(raw_monthly_loss),
         'monthly_investment': format_cop(monthly_investment),
-        'total_investment': format_cop(monthly_investment * 6),
-        'total_recovered': format_cop(_maturity_result.total_recuperacion_6m),  # ROICRIII-FASE-1: unified to maturity curve
-        'net_benefit': format_cop(_maturity_result.total_recuperacion_6m - (monthly_investment * 6)),  # ROICRIII-FASE-1: unified to maturity curve
 
         # Coherence checklist
         'coherence_checklist': self._build_coherence_checklist(diagnostic_summary),

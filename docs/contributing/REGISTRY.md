@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-05-29
 > **Version actual:** v4.58.0
-> **Total fases completadas:** 338
+> **Total fases completadas:** 339
 
 ---
 
@@ -8194,6 +8194,25 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (1)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-05-29
+**Descripcion:** F7+F8_generator_cleanup_keys_and_fallback
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
