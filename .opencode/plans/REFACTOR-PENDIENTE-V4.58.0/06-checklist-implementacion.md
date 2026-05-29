@@ -5,7 +5,7 @@
 | Aspecto | Estado |
 |---------|--------|
 | Plan | ⚪ Preparación |
-| Fases de implementación | 5/9 completadas |
+| Fases de implementación | 6/9 completadas |
 | Documentación | ⚪ Pendiente |
 | v4complete ejecutado | ⚪ Pendiente |
 | Fixes verificados | 0/7 |
@@ -130,13 +130,13 @@
 
 **Descripción:** Reemplazar texto estático con pitch basado en ROICR + payback
 
-**Estado:** ⚪ Pendiente
+**Estado:** ✅ Completada
 
 **Tareas:**
-- [ ] T1: Implementar `_build_closing_pitch()`
-- [ ] T2: Reemplazar texto duro en template
-- [ ] T3: Inyectar en data dict
-- [ ] T4: Tests + Estado
+- [x] T1: Implementar `_build_closing_pitch()`
+- [x] T2: Reemplazar texto duro en template
+- [x] T3: Inyectar en data dict
+- [x] T4: Tests + Estado
 
 **Dependencias:** FASE-3 ✅
 
@@ -145,6 +145,12 @@
 **Archivos:**
 - `modules/commercial_documents/v4_proposal_generator.py`
 - `modules/commercial_documents/templates/propuesta_v6_template.md`
+
+**Notas:**
+- `_build_closing_pitch()` en L331 — emoji de urgencia + monto COP + payback + ROICR
+- Template: `${closing_pitch}` en L225 reemplaza texto estático "SIGUIENTE PASO"
+- `closing_pitch` inyectado en data dict L1235 con cálculo de ROICR dinámico
+- Tests relevantes pasan (pre-existing failures en `test_diagnostic_brechas.py` y `test_financial_placeholders.py` no liés a FASE-4)
 
 ---
 
@@ -221,7 +227,7 @@
 | IMP-03 CAPEX breakdown | Tabla desglose en propuesta | ✅ FASE-1A |
 | MIN-01 Status Quo | Tabla comparativa Sin/Con IAO | ✅ FASE-3 |
 | MIN-02 ADR evidenciado | Valor COP en benchmarks + propuesta | ✅ FASE-2 |
-| MIN-03 Closing pitch | Pitch dinámico con ROICR | — |
+| MIN-03 Closing pitch | Pitch dinámico con ROICR | ✅ FASE-4 |
 | F5 ADR checklist | Valor real (no "Pendiente") | — |
 | F7 Gate discrepancy | Mismo tier en ambos gates | ✅ FASE-1A |
 | Dead code | Sin errores de ejecución | — |

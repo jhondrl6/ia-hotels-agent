@@ -328,6 +328,48 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
 - Si hay mejora → {cond.get('con_mejora', '')}
 """
 
+    def _build_closing_pitch(self, financial_data: dict, hotel_name: str) -> str:
+        """Genera pitch de cierre personalizado basado en ROI y payback.
+        
+        Reemplaza el texto estático "SIGUIENTE PASO" con copy dinámico.
+        """
+        roicr = financial_data.get('roicr', 0)
+        payback_months = financial_data.get('payback_months', 12)
+        recovered_monthly = financial_data.get('recovered_amount_cop', 0)
+        
+        # Tier de urgencia baseado en ROICR
+        if roicr >= 3.0:
+            urgency = "urgente"
+            emoji = "🔴"
+        elif roicr >= 1.5:
+            urgency = "significativa"
+            emoji = "🟡"
+        else:
+            urgency = "moderada"
+            emoji = "🟢"
+        
+        # Formato COP con puntos como separadores de miles
+        recovery_fmt = f"${recovered_monthly:,.0f}".replace(',', '.')
+        
+        # Payback en meses/años
+        if payback_months and payback_months > 0:
+            if payback_months <= 12:
+                payback_text = f"{payback_months:.0f} meses"
+            else:
+                payback_text = f"{payback_months/12:.1f} años"
+        else:
+            payback_text = "el primer año"
+        
+        pitch = (
+            f"### {emoji} Oportunidad de {urgency.title()} para {hotel_name}\n\n"
+            f"Su hotel puede recuperar **{recovery_fmt} COP mensuales** "
+            f"con una inversión que se paga sola en **{payback_text}** "
+            f"(ROICR: {roicr:.2f}x).\n\n"
+            f"**Siguiente paso:** Agendemos una llamada de 15 minutos para "
+            f"revisar su caso específico y diseñar el plan de implementación.\n"
+        )
+        return pitch
+
     def _get_main_value(self, scenario) -> int:
         """Obtiene valor central de presentacion, con fallback a monthly_loss_cop.
         
@@ -1187,6 +1229,16 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
             f"Fuga mensual (${int(abs(raw_monthly_loss)):,}) × "
             f"Curva de Maduración 4 Pilares (GEO→SEO→AEO→IAO) × "
             f"Recovery Factor {int(recovery_realistic * 100)}%"
+        ),
+
+        # FASE-4 MIN-03: Closing pitch dinámico basado en ROI
+        'closing_pitch': self._build_closing_pitch(
+            financial_data={
+                'roicr': float(_maturity_result.total_recuperacion_6m / (monthly_investment * 6)) if monthly_investment > 0 else 0.0,
+                'payback_months': break_even,
+                'recovered_amount_cop': effective_monthly_gain,
+            },
+            hotel_name=hotel_name,
         ),
     }
 

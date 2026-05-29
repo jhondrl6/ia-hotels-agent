@@ -222,14 +222,7 @@ Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.
 ${pilot_section}
 ---
 
-## 🚀 SIGUIENTE PASO: Empezar es simple
-
-1. **Aceptar esta propuesta** (firma o mensaje por WhatsApp)
-2. **Nos reunimos 30 minutos** (kickoff)
-3. **Nos envía fotos y accesos** (le decimos exactamente qué necesitamos)
-4. **Nosotros implementamos todo** (usted no hace nada técnico)
-5. **En 7 días** ya ve mejoras en visibilidad
-
+${closing_pitch}
 ---
 
 ## 💳 Formas de Pago
