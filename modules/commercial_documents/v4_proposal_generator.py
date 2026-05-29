@@ -216,6 +216,84 @@ class V4ProposalGenerator:
         header = "| Componente | Monto | Descripción |\n|---|---|---|\n"
         return header + "\n".join(rows)
 
+    def _build_status_quo_table(
+        self,
+        raw_monthly_loss: int,
+        effective_monthly_gain: int,
+        monthly_investment: int,
+        pain_ratio: float,
+        recovery_realistic: float,
+        break_even: int,
+    ) -> str:
+        """Construye tabla comparativa: Status Quo vs Implementación IAO.
+        
+        Formato COP con puntos como separadores de miles (.replace(',', '.')).
+        Valores 0/None muestran "—".
+        
+        Args:
+            raw_monthly_loss: Fuga mensual sin IAO (antes de pain_ratio)
+            effective_monthly_gain: Ganancia efectiva después de pain_ratio * recovery
+            monthly_investment: Inversión mensual del servicio IAO
+            pain_ratio: Porción direccionable de la fuga
+            recovery_realistic: Factor de recuperación realista
+            break_even: Meses para recuperar la inversión
+            
+        Returns:
+            Tabla markdown comparativa
+        """
+        def _fmt(val: int | float | None) -> str:
+            """Formatea valor COP con puntos como separadores de miles."""
+            if val is None or val == 0:
+                return "—"
+            return f"${int(val):,}".replace(',', '.') + " COP"
+        
+        def _pct(val: float | None) -> str:
+            """Formatea porcentaje."""
+            if val is None or val == 0:
+                return "—"
+            return f"{val:.0%}"
+        
+        # Calcular métricas anuales
+        annual_loss_no_iao = raw_monthly_loss * 12
+        annual_recovered_with_iao = effective_monthly_gain * 12
+        annual_investment = monthly_investment * 12
+        annual_net_benefit = annual_recovered_with_iao - annual_investment
+        
+        # Pérdida evitada (lo que NO pierde con IAO)
+        # Es la diferencia entre seguir sin IAO vs implementar
+        # En 6 meses: pérdida total sin IAO vs recuperación con IAO
+        loss_6m = abs(raw_monthly_loss) * 6
+        recovered_6m = effective_monthly_gain * 6
+        investment_6m = monthly_investment * 6
+        net_benefit_6m = recovered_6m - investment_6m
+        
+        table = """| Métrica | Sin IAO (Status Quo) | Con IAO (Implementación) |
+|----------|----------------------|--------------------------|
+| Fuga mensual (pérdida) | {loss_monthly} | — |
+| Porción direccionable | {addressable_pct} | {addressable_pct} |
+| Recuperación mensual | — | {recovery_monthly} |
+| Inversión mensual | — | {investment_monthly} |
+| Beneficio mensual neto | — | {net_monthly} |
+| **Fuga anual (12 meses)** | {loss_annual} | — |
+| **Recuperación anual** | — | {recovery_annual} |
+| **Inversión anual** | — | {investment_annual} |
+| **Beneficio neto anual** | — | {net_annual} |
+| Período de recupero | — | {break_even} meses |
+""".format(
+            loss_monthly=_fmt(abs(raw_monthly_loss)),
+            addressable_pct=_pct(pain_ratio),
+            recovery_monthly=_fmt(effective_monthly_gain),
+            investment_monthly=_fmt(monthly_investment),
+            net_monthly=_fmt(effective_monthly_gain - monthly_investment),
+            loss_annual=_fmt(annual_loss_no_iao),
+            recovery_annual=_fmt(annual_recovered_with_iao),
+            investment_annual=_fmt(annual_investment),
+            net_annual=_fmt(annual_net_benefit),
+            break_even=break_even if break_even else "—",
+        )
+        
+        return table
+
     def _build_pilot_section(self) -> str:
         """Build pilot 30 days section for the V6 proposal template.
         
@@ -848,6 +926,16 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         _adr_value = self._get_adr_from_benchmarks(region or 'eje_cafetero')
         _adr_display = f"${_adr_value:,.0f} COP" if _adr_value else "No disponible"
 
+        # MIN-01: Pre-calcular tabla comparativa Status Quo vs Implementación IAO
+        _status_quo_table = self._build_status_quo_table(
+            raw_monthly_loss=raw_monthly_loss,
+            effective_monthly_gain=effective_monthly_gain,
+            monthly_investment=monthly_investment,
+            pain_ratio=pain_ratio,
+            recovery_realistic=recovery_realistic,
+            break_even=break_even,
+        )
+
         data = {
             # Metadata
             'generated_at': generated_at.strftime("%Y-%m-%d %H:%M:%S"),
@@ -1008,6 +1096,9 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         # MIN-02: ADR regional benchmark for proposal template
         'adr_display': _adr_display,
         'adr_value': str(_adr_value) if _adr_value else '',
+
+        # MIN-01: Tabla comparativa Status Quo vs Implementación IAO
+        'status_quo_table': _status_quo_table,
 
         'monthly_loss': format_cop(raw_monthly_loss),
         'monthly_investment': format_cop(monthly_investment),

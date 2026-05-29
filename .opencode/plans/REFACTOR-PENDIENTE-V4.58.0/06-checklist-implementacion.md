@@ -5,7 +5,7 @@
 | Aspecto | Estado |
 |---------|--------|
 | Plan | ⚪ Preparación |
-| Fases de implementación | 4/9 completadas |
+| Fases de implementación | 5/9 completadas |
 | Documentación | ⚪ Pendiente |
 | v4complete ejecutado | ⚪ Pendiente |
 | Fixes verificados | 0/7 |
@@ -100,21 +100,29 @@
 
 **Descripción:** Nueva tabla comparativa con pérdida mensual vs ROI
 
-**Estado:** ⚪ Pendiente
+**Estado:** ✅ Completada
 
 **Tareas:**
-- [ ] T1: Implementar `_build_status_quo_table()`
-- [ ] T2: Añadir `${status_quo_table}` en template
-- [ ] T3: Inyectar en data dict
-- [ ] T4: Tests + Estado
+- [x] T1: Investigar datos financieros disponibles (`raw_monthly_loss`, `effective_monthly_gain`, `monthly_investment`, `pain_ratio`, `recovery_realistic`, `break_even`)
+- [x] T2: Implementar `_build_status_quo_table()` con formato COP (puntos como separadores de miles)
+- [x] T3: Añadir `${status_quo_table}` en template (después de ADR regional, antes de `---`)
+- [x] T4: Inyectar `status_quo_table` en data dict (pre-calcular antes de `data = {`)
+- [x] T5: Tests — PRE-EXISTING: `test_identify_brechas_returns_all_detected` falla en baseline (no ligado a cambios FASE-3). 610/611 pass.
+- [x] T6: Actualizar checklist
 
 **Dependencias:** FASE-2 ✅
 
 **Delegate:** ✅ Sí
 
 **Archivos:**
-- `modules/commercial_documents/v4_proposal_generator.py`
-- `modules/commercial_documents/templates/propuesta_v6_template.md`
+- `modules/commercial_documents/v4_proposal_generator.py` — `_build_status_quo_table()` + inyección en data dict
+- `modules/commercial_documents/templates/propuesta_v6_template.md` — `${status_quo_table}` placeholder
+
+**Notas:**
+- Tabla comparativa muestra: Sin IAO (Status Quo) vs Con IAO (Implementación)
+- Métricas: fuga mensual/annual, porción direccionable, recuperación mensual, inversión, beneficio neto, período de recupero
+- Formato COP con `.replace(',', '.')` para separadores de miles
+- Valores 0/None muestran "—"
 
 ---
 
@@ -211,7 +219,7 @@
 | Fix | Esperado | Resultado |
 |-----|----------|-----------|
 | IMP-03 CAPEX breakdown | Tabla desglose en propuesta | ✅ FASE-1A |
-| MIN-01 Status Quo | Tabla comparativa Sin/Con IAO | — |
+| MIN-01 Status Quo | Tabla comparativa Sin/Con IAO | ✅ FASE-3 |
 | MIN-02 ADR evidenciado | Valor COP en benchmarks + propuesta | ✅ FASE-2 |
 | MIN-03 Closing pitch | Pitch dinámico con ROICR | — |
 | F5 ADR checklist | Valor real (no "Pendiente") | — |
