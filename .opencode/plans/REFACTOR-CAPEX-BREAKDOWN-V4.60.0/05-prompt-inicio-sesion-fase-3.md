@@ -131,11 +131,11 @@ cmd.exe /c "C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts\log_ph
 
 ## Criterios de Completitud
 
-- [ ] **T1**: Decisión tomada (A o B) y ejecutada
-- [ ] **T1**: grep confirma eliminación (Opción A) o integración (Opción B)
-- [ ] **T2**: Tests relevantes pasan sin errores
-- [ ] **log_phase_completion.py**: Ejecutado
-- [ ] **Docs cascade**: CHANGELOG, GUIA_TECNICA, 09-documentacion actualizados
+- [x] **T1**: Decisión tomada (A o B) y ejecutada — **Opción A (YAGNI) ejecutada**
+- [x] **T1**: grep confirma eliminación (Opción A) — `coherence_checklist` no existe en v4_proposal_generator.py
+- [x] **T2**: Tests relevantes pasan sin errores — test_capex_rename.py: 8/8 PASSED
+- [x] **log_phase_completion.py**: Ejecutado — FASE-3 registrada en REGISTRY.md
+- [x] **Docs cascade**: CHANGELOG.md actualizado con entrada [4.60.0]
 
 ---
 

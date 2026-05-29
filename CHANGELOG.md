@@ -1,5 +1,27 @@
 # Changelog
 
+## [4.60.0] - REFACTOR-CAPEX-BREAKDOWN-V4.60.0 - FASE-3 - 2026-05-29
+
+### Objetivo
+FASE-3: Eliminar código muerto `_build_coherence_checklist()` (Opción A - YAGNI). El método nunca fue renderizado en ningún template.
+
+### Cambios Implementados
+- **F6**: Eliminado `_build_coherence_checklist()` + `'coherence_checklist'` del data dict — código muerto sin propósito
+
+### Archivos Modificados
+|| Archivo | Cambio |
+||---------|--------|
+|| `modules/commercial_documents/v4_proposal_generator.py` | Eliminado método `_build_coherence_checklist()` (L1873-1922) y entrada `'coherence_checklist'` del data dict (L938) |
+
+### Tests
+- test_capex_rename.py: 8/8 passing
+- 45 failures preexistentes (MagicMock en test suite, no relacionadas con este cambio)
+
+### Backwards compatibility
+Sí. Feature eliminada nunca renderizada — sin impacto en output existente.
+
+---
+
 ## [4.59.0] - REFACTOR-5-GAPS - 2026-05-29
 
 ### Objetivo

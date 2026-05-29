@@ -934,9 +934,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         'monthly_loss': format_cop(raw_monthly_loss),
         'monthly_investment': format_cop(monthly_investment),
 
-        # Coherence checklist
-        'coherence_checklist': self._build_coherence_checklist(diagnostic_summary),
-        
+
         # Plans — FASE-D: all 4 plans now accept asset_plan for dynamic content
         # FASE-PROP-E: pass diagnostic_summary for score-based prioritization
         'plan_7_days': self._build_7_day_plan(asset_plan, diagnostic_summary),
@@ -1870,57 +1868,6 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         except (ImportError, FileNotFoundError, Exception):
             return None
 
-    def _build_coherence_checklist(self, diagnostic_summary: DiagnosticSummary) -> str:
-        """Build the coherence guarantee checklist with real validation data."""
-        # FASE 5: Usar datos reales del validated_data_summary
-        validated_data = diagnostic_summary.validated_data_summary or {}
-
-        # Verificar WhatsApp
-        whatsapp_data = validated_data.get('whatsapp', {})
-        if isinstance(whatsapp_data, dict):
-            whatsapp_verified = whatsapp_data.get('confidence') == 'VERIFIED'
-            whatsapp_detail = "Web + GBP coinciden" if whatsapp_verified else "Pendiente de validacion"
-        else:
-            whatsapp_verified = False
-            whatsapp_detail = "No disponible"
-
-        # Verificar ADR — Cascada: validated_data → benchmarks regionales → None
-        adr_value = (
-            validated_data.get('adr')
-            or self._get_adr_from_benchmarks('eje_cafetero')
-            or None
-        )
-        adr_verified = adr_value is not None and adr_value > 0
-        adr_display = f"${adr_value:,.0f} COP" if adr_verified else "Pendiente"
-        adr_detail = "Benchmark vs Input" if adr_verified else adr_display
-
-        # Verificar Schema Hotel (del top_problems)
-        top_problems = diagnostic_summary.top_problems or []
-        schema_hotel_valid = not any("Schema Hotel" in p or "schema" in p.lower() for p in top_problems)
-        schema_detail = "Rich Results Test API" if schema_hotel_valid else "Requiere implementacion"
-
-        # Verificar GBP (del top_problems)
-        gbp_valid = not any("GBP" in p or "Business Profile" in p for p in top_problems)
-        gbp_detail = "Google Places API" if gbp_valid else "Requiere optimizacion"
-
-        # Core Web Vitals - por defecto en analisis preliminar
-        cwv_verified = diagnostic_summary.overall_confidence.value == "VERIFIED"
-        cwv_detail = "PageSpeed API" if cwv_verified else "Lab data only"
-
-        items = [
-            ("Validacion Cruzada de WhatsApp", "[OK]" if whatsapp_verified else "[PENDING]", whatsapp_detail),
-            ("Validacion Cruzada de ADR", "[OK]" if adr_verified else "[PENDING]", adr_detail),
-            ("Schema Hotel Validado", "[OK]" if schema_hotel_valid else "[PENDING]", schema_detail),
-            ("Datos GBP Verificados", "[OK]" if gbp_valid else "[PENDING]", gbp_detail),
-            ("Core Web Vitals", "[OK]" if cwv_verified else "[PENDING]", cwv_detail),
-        ]
-
-        rows = []
-        for name, status, detail in items:
-            rows.append(f"| {name} | {status} | {detail} |")
-
-        return "\n".join(rows)
-    
     def _build_7_day_plan(
         self,
         asset_plan: Optional[List[AssetSpec]],
