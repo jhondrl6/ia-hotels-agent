@@ -29,7 +29,7 @@
   "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-D",
   "data_models/__init__.py": "FASE-IAO-06",
   "v4_proposal_generator.py": "FASE-G",
-  "propuesta_v6_template.md": "ANALYTICS-02",
+  "propuesta_v6_template.md": "FASE-1",
   "modules/analytics/profound_client.py": "FASE-CONFIG-6",
   "modules/analytics/semrush_client.py": "FASE-CONFIG-6",
   "modules/analytics/README.md": "ANALYTICS-03",
@@ -194,5 +194,6 @@
   "config/commercial.yaml": "FASE-5",
   "tests/asset_generation/test_conditional_new_assets.py": "FASE-5",
   "tests/asset_generation/test_phase4_guardrails.py": "FASE-5",
-  "config/regional_benchmarks.yaml": "REFACTOR-PENDIENTE-V4.58.0"
+  "config/regional_benchmarks.yaml": "REFACTOR-PENDIENTE-V4.58.0",
+  "test_capex_rename.py": "FASE-1"
 }

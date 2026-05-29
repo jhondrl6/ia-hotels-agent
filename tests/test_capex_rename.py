@@ -16,7 +16,7 @@ from unittest.mock import MagicMock, patch, PropertyMock
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from modules.commercial_documents.v4_proposal_generator import V4ProposalGenerator
-from modules.commercial_documents.data_structures import DiagnosticSummary
+from modules.commercial_documents.data_structures import DiagnosticSummary, ConfidenceLevel
 
 
 class TestCAPEXBreakdown:
@@ -135,3 +135,112 @@ class TestCAPEXTemplateData:
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])
+
+
+class TestCAPEXPipeIntegrity:
+    """FASE-1 (REFACTOR-CAPEX-BREAKDOWN): Verify rendered proposal has no nested/broken markdown tables.
+    
+    The bug (F1): ${capex_breakdown_table} (a 3-column markdown table) was embedded inside
+    a 4-column table cell, producing corrupt markdown. This test verifies the fix by
+    checking that:
+    1. The CAPEX/OPEX summary table has exactly 4 columns (4 pipes) in every non-separator row
+    2. The breakdown appears in its own standalone section, not nested in another table
+    3. Every data row in the breakdown table has exactly 3 columns (3 pipes)
+    """
+    
+    def test_capex_section_no_nested_tables(self):
+        """Generate full proposal and verify CAPEX section structure."""
+        gen = V4ProposalGenerator()
+        
+        # Mock diagnostic
+        class MockDiagnostic:
+            def __init__(self):
+                self.critical_problems_count = 0
+                self.quick_wins_count = 0
+                self.overall_confidence = ConfidenceLevel.VERIFIED
+                self.top_problems = []
+                self.coherence_score = None
+                self.score_global = None
+                self.score_tecnico = None
+                self.score_aeo = None
+                self.pain_ids = None
+                self.validated_data_summary = {}
+            def __getattr__(self, name):
+                return None
+        
+        diagnostic = MockDiagnostic()
+        
+        # Mock financial scenarios
+        from modules.commercial_documents.data_structures import FinancialScenarios, Scenario
+        scenarios = FinancialScenarios(
+            conservative=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.70, description="conservador"),
+            realistic=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.20, description="realista"),
+            optimistic=Scenario(monthly_loss_min=800000, monthly_loss_max=1500000, probability=0.10, description="optimista"),
+        )
+        
+        import tempfile, os
+        with tempfile.TemporaryDirectory() as tmpdir:
+            proposal_path = gen.generate(
+                diagnostic_summary=diagnostic,
+                financial_scenarios=scenarios,
+                asset_plan=[],
+                hotel_name="Hotel Test",
+                output_dir=tmpdir,
+            )
+            
+            content = Path(proposal_path).read_text(encoding='utf-8')
+            
+            # 1. Verify "Desglose del Setup Fee (CAPEX)" is its own section, NOT inside a table
+            assert '### Desglose del Setup Fee (CAPEX)' in content, \
+                "Breakdown section heading missing"
+            
+            # 2. The breakdown heading must NOT appear inside a table row (no leading/trailing pipe on same line)
+            for line in content.split('\n'):
+                if '### Desglose del Setup Fee (CAPEX)' in line:
+                    stripped = line.strip()
+                    assert not (stripped.startswith('|') or stripped.endswith('|')), \
+                        f"Breakdown heading is inside a table cell: {stripped}"
+            
+            # 3. Find the CAPEX/OPEX summary table and verify 4 pipes per row
+            lines = content.split('\n')
+            in_capex_table = False
+            for line in lines:
+                stripped = line.strip()
+                # Detect start of CAPEX vs OPEX section
+                if 'CAPEX vs OPEX' in stripped:
+                    in_capex_table = True
+                    continue
+                if in_capex_table and stripped.startswith('|') and 'Concepto' not in stripped:
+                    # Skip separator rows like |---|...|
+                    if not all(c in '|-: ' for c in stripped):
+                        pipes = stripped.count('|')
+                        assert pipes == 5, \
+                            f"CAPEX/OPEX summary row has {pipes} pipes (expected 5 = 4 cells): {stripped}"
+                # Stop when we hit the breakdown section
+                if in_capex_table and '### Desglose del Setup Fee' in stripped:
+                    in_capex_table = False
+            
+            # 4. Verify breakdown table has 3 pipes per non-separator row
+            in_breakdown = False
+            for line in lines:
+                stripped = line.strip()
+                if '### Desglose del Setup Fee (CAPEX)' in stripped:
+                    in_breakdown = True
+                    continue
+                if in_breakdown and stripped.startswith('|'):
+                    # Skip separator rows
+                    if not all(c in '|-: ' for c in stripped):
+                        pipes = stripped.count('|')
+                        assert pipes == 4, \
+                            f"Breakdown row has {pipes} pipes (expected 4 = 3 cells): {stripped}"
+                # Stop when we leave the CAPEX section
+                if in_breakdown and stripped.startswith('**Activos digitales'):
+                    break
+            
+            # 5. Verify the CAPEX summary table still has setup fee and monthly fee rows
+            assert 'Setup fee' in content, "Setup fee row missing from CAPEX table"
+            assert 'Fee mensual' in content, "Monthly fee row missing from CAPEX table"
+            
+            # 6. Verify Desglose CAPEX is NOT in any table row context
+            assert '| Desglose CAPEX |' not in content, \
+                "BUG REGRESSION: Desglose CAPEX still embedded as table row"

@@ -149,10 +149,13 @@ ${curva_4_pilares_tabla}
 | Concepto | Tipo | Monto | ¿De quién es? |
 |----------|------|-------|---------------|
 | Setup fee (único) | **CAPEX** | ${capex_total} | **100% suyo** — Real Estate Digital |
-| Desglose CAPEX | | ${capex_breakdown_table} | Detalle del activo |
 | Fee mensual (×6) | **OPEX** | ${opex_total_6m} | Servicio de implementación |
 
 ${nota_capex_opex}
+
+### Desglose del Setup Fee (CAPEX)
+
+${capex_breakdown_table}
 
 **Activos digitales que quedan en su propiedad:**
 ${activos_digitales_lista}

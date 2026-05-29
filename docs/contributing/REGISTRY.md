@@ -8180,6 +8180,26 @@ _Ninguno_
 ---
 
 
+## FASE-1 - 2026-05-29
+**Descripcion:** template-capex-fix-plus-pipe-integrity-test
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `propuesta_v6_template.md` | Propuesta V6 Template |
+| `test_capex_rename.py` | Test Capex Rename |
+
+### Validaciones
+- [x] Tests passing (1)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
