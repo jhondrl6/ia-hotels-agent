@@ -1,5 +1,9 @@
 # FASE-2: MIN-02 (ADR Evidenciado) — ⭐ MÁS COMPLEJA
 
+> **ESTADO**: ✅ COMPLETADA — 2026-05-29
+> **Tests**: 610/611 pass (1 pre-existing)
+> **Archivos**: YAML (4 regiones) + data dict + template
+
 ## Instrucciones de la sesión
 
 > **REGLA**: Una fase = una sesión. No ejecutar múltiples fases aquí.

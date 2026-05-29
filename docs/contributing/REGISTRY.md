@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-05-28
+> **Ultima actualizacion:** 2026-05-29
 > **Version actual:** v4.58.0
-> **Total fases completadas:** 335
+> **Total fases completadas:** 336
 
 ---
 
@@ -8111,6 +8111,27 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-05-29
+**Descripcion:** MIN-02 ADR Evidenciado: YAML benchmarks + data dict + template placeholder
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `config/regional_benchmarks.yaml` | Regional Benchmarks |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (610)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

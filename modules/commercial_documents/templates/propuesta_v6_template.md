@@ -29,6 +29,12 @@ Cada mes, viajeros buscan hoteles en ${hotel_region} a través de Booking.com, E
 
 **Fuga mensual por comisiones OTA:** ${monthly_loss} COP (estimado)
 
+#### Referencia regional
+
+| Métrica | Valor |
+|---------|-------|
+| ADR regional promedio | ${adr_display} |
+
 ---
 
 ## 😌 LA SOLUCIÓN: Nosotros hacemos todo. Usted solo atiende huéspedes.

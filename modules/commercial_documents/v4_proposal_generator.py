@@ -844,6 +844,10 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         # ROICRIII FASE-2 T1: Pre-calcular % inversión vs fuga ANTES del dict
         _pct_inv_vs_fuga = round((monthly_investment / abs(raw_monthly_loss)) * 100, 1)
 
+        # MIN-02: Pre-calcular ADR desde benchmarks regionales ANTES del dict
+        _adr_value = self._get_adr_from_benchmarks(region or 'eje_cafetero')
+        _adr_display = f"${_adr_value:,.0f} COP" if _adr_value else "No disponible"
+
         data = {
             # Metadata
             'generated_at': generated_at.strftime("%Y-%m-%d %H:%M:%S"),
@@ -1000,6 +1004,11 @@ Al firmar este documento, el representante de **${hotel_name}** acepta los térm
         'hotel_location': hotel_location,
         'hotel_region': hotel_region,
         'hotel_phone': hotel_phone,  # PATCH-6: GBP phone for contact section
+
+        # MIN-02: ADR regional benchmark for proposal template
+        'adr_display': _adr_display,
+        'adr_value': str(_adr_value) if _adr_value else '',
+
         'monthly_loss': format_cop(raw_monthly_loss),
         'monthly_investment': format_cop(monthly_investment),
         'total_investment': format_cop(monthly_investment * 6),

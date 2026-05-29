@@ -12,6 +12,13 @@ default_region: "eje_cafetero"
 regions:
   eje_cafetero:
     # =========================================================================
+    # REGIONAL BENCHMARKS (MIN-02) — Datos de referencia del mercado hotelero
+    # Fuente: Cotelco 2026, benchmarks regionales
+    # =========================================================================
+    adr: 285000
+    occupancy_rate: 0.55
+
+    # =========================================================================
     # PAIN NARRATIVES (N-05) - Impacto porcentual por tipo de dolor
     # v4_diagnostic_generator.py L2240-2311
     # CRÍTICO: Estos valores determinan las "4 Razones" con impacto monetario
@@ -79,6 +86,12 @@ regions:
   # OTRAS REGIONES - Agregar según necesidad
   # ===========================================================================
   caribe:
+    # =========================================================================
+    # REGIONAL BENCHMARKS (MIN-02)
+    # =========================================================================
+    adr: 320000
+    occupancy_rate: 0.62
+
     pain_narratives:
       no_whatsapp_visible: 0.20
       whatsapp_conflict: 0.20
@@ -111,6 +124,12 @@ regions:
       promedio_multiplier: 0.9
 
   bogota:
+    # =========================================================================
+    # REGIONAL BENCHMARKS (MIN-02)
+    # =========================================================================
+    adr: 350000
+    occupancy_rate: 0.65
+
     pain_narratives:
       no_whatsapp_visible: 0.20
       whatsapp_conflict: 0.20
@@ -143,6 +162,12 @@ regions:
       promedio_multiplier: 0.9
 
   antioquia:
+    # =========================================================================
+    # REGIONAL BENCHMARKS (MIN-02)
+    # =========================================================================
+    adr: 310000
+    occupancy_rate: 0.58
+
     pain_narratives:
       no_whatsapp_visible: 0.20
       whatsapp_conflict: 0.20

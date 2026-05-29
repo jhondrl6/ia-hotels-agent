@@ -5,7 +5,7 @@
 | Aspecto | Estado |
 |---------|--------|
 | Plan | ⚪ Preparación |
-| Fases de implementación | 0/9 completadas |
+| Fases de implementación | 4/9 completadas |
 | Documentación | ⚪ Pendiente |
 | v4complete ejecutado | ⚪ Pendiente |
 | Fixes verificados | 0/7 |
@@ -77,13 +77,13 @@
 
 **Descripción:** ADR completo en propuesta: YAML benchmarks + código + template
 
-**Estado:** ⚪ Pendiente
+**Estado:** ✅ Completada
 
 **Tareas:**
-- [ ] T1: Añadir `adr` en `config/regional_benchmarks.yaml` (todas las regiones)
-- [ ] T2: Inyectar `adr_display` y `adr_value` en el data dict
-- [ ] T3: Añadir `${adr_display}` placeholder en template
-- [ ] T4: Tests + verificación YAML
+- [x] T1: Añadir `adr` en `config/regional_benchmarks.yaml` (4 regiones: eje_cafetero, caribe, bogota, antioquia)
+- [x] T2: Inyectar `adr_display` y `adr_value` en el data dict (`_prepare_template_data`)
+- [x] T3: Añadir `${adr_display}` placeholder en template (sección "Referencia regional")
+- [x] T4: Tests de regresión — PRE-EXISTING: `test_identify_brechas_returns_all_detected` (no ligado a cambios FASE-2). 610/611 pass. Verificación YAML + import + template OK.
 
 **Dependencias:** FASE-1B ✅
 
@@ -212,7 +212,7 @@
 |-----|----------|-----------|
 | IMP-03 CAPEX breakdown | Tabla desglose en propuesta | ✅ FASE-1A |
 | MIN-01 Status Quo | Tabla comparativa Sin/Con IAO | — |
-| MIN-02 ADR evidenciado | Valor COP en benchmarks + propuesta | — |
+| MIN-02 ADR evidenciado | Valor COP en benchmarks + propuesta | ✅ FASE-2 |
 | MIN-03 Closing pitch | Pitch dinámico con ROICR | — |
 | F5 ADR checklist | Valor real (no "Pendiente") | — |
 | F7 Gate discrepancy | Mismo tier en ambos gates | ✅ FASE-1A |
