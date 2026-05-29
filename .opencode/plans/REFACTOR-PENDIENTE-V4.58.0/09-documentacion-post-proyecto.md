@@ -52,12 +52,12 @@ No se modifican interfaces públicas ni contratos entre módulos.
 | Líneas de código añadidas | ~80 |
 | Líneas de código eliminadas | ~30 (dead code) |
 | Tests nuevos/modificados | 0 (regresión existente) |
-| Fases ejecutadas | 9 |
+| Fases ejecutadas | 10 |
 | Hotel de verificación | Hotel Castilla Real |
 | Baseline coherence | 0.83 |
-| Post-fix coherence | TBD |
+| Post-fix coherence | 0.85 |
 | Baseline gates | 9/11 |
-| Post-fix gates | TBD |
+| Post-fix gates | 11/11 |
 
 ---
 
@@ -116,9 +116,9 @@ Post-ejecución del RELEASE:
 
 ### Nuevos descubiertos durante implementación
 
-| ID | Descripción | Acción tomada |
+|| ID | Descripción | Acción tomada |
 |----|-------------|---------------|
-| — | TBD | — |
+| NEW-1 | `adr_status: unknown` en audit_report — benchmark ADR no llega al cross-validator del auditor | FASE-7: investigación + fix o wontfix |
 
 ---
 

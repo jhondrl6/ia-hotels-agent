@@ -9,7 +9,7 @@
 
 ## Contexto previo
 
-- **FASE-0 a FASE-6** ✅: TODOS los gaps implementados + v4complete verificado.
+- **FASE-0 a FASE-7** ✅: TODOS los gaps implementados + v4complete verificado + FASE-7 pendiente.
 - Evidencia guardada en `evidence/FASE-PENDIENTE-V4COMPLETE/`.
 - Post-análisis documentado con tabla de fixes PASSED/FAILED.
 - Tests pasando.
@@ -33,11 +33,11 @@ sincronización de archivos de documentación, y validación final.
   cd /mnt/c/Users/Jhond/Github/iah-cli
 
   # Registrar el plan completo (una sola entrada)
-  cmd.exe /c "C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts\log_phase_completion.py \
-      --fase REFACTOR-PENDIENTE-V4.58.0 \
-      --desc Refactorizacion_5_gaps_propuesta_comercial:_CAPEX_breakdown_ADR_Status_Quo_Closing_Pitch_gate_unification_dead_code_cleanup.Verificado_con_v4complete_Hotel_Castilla_Real. \
-      --archivos-mod modules/commercial_documents/v4_proposal_generator.py,modules/commercial_documents/templates/propuesta_v6_template.md,modules/quality_gates/publication_gates.py,config/regional_benchmarks.yaml \
-      --tests 0 \
+  cmd.exe /c "C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts\log_phase_completion.py ^
+      --fase REFACTOR-PENDIENTE-V4.58.0 ^
+      --desc Refactorizacion_5_gaps_propuesta_comercial:_CAPEX_breakdown_ADR_Status_Quo_Closing_Pitch_gate_unification_dead_code_cleanup_Plus_FASE-7_ADR_audit_status.Verified_con_v4complete_Hotel_Castilla_Real_coherence0.85_11gates. ^
+      --archivos-mod modules/commercial_documents/v4_proposal_generator.py,modules/commercial_documents/templates/propuesta_v6_template.md,modules/quality_gates/publication_gates.py,config/regional_benchmarks.yaml,modules/auditors/v4_comprehensive.py ^
+      --tests 0 ^
       --check-manual-docs"
   ```
 
@@ -143,6 +143,7 @@ sincronización de archivos de documentación, y validación final.
 ### Restricciones
 
 - **NO ejecutar v4complete** — ya ejecutado en FASE-6
+- **FASE-7 DEBE ejecutarse ANTES de RELEASE** — FASE-7 resuelve adr_status cosmetic
 - **NO modificar código fuente** — solo documentación
 - Máximo 60 iteraciones (R2)
 - Si `run_all_validations.py --quick` falla, verificar si son pre-existing
@@ -180,6 +181,7 @@ REFACTOR-PENDIENTE-V4.58.0: COMPLETADO
 ├── 5 gaps comerciales resueltos
 ├── 2 bugs corregidos (F5 + F7)
 ├── 1 deuda técnica eliminada
-├── v4complete Hotel Castilla Real verificado
+├── 1 cosmetic fix (adr_status)
+├── v4complete Hotel Castilla Real verificado (coherence 0.85, 11/11 gates)
 └── Documentación sincronizada
 ```

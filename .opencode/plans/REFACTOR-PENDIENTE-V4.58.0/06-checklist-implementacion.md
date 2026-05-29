@@ -5,7 +5,7 @@
 | Aspecto | Estado |
 |---------|--------|
 | Plan | ⚪ Preparación |
-| Fases de implementación | 6/9 completadas |
+| Fases de implementación | 7/10 completadas |
 | Documentación | ⚪ Pendiente |
 | v4complete ejecutado | ⚪ Pendiente |
 | Fixes verificados | 0/7 |
@@ -185,13 +185,13 @@
 
 **Descripción:** ÚNICA ejecución de v4complete + post-análisis de los 7 fixes
 
-**Estado:** ⚪ Pendiente
+**Estado:** ✅ Completada
 
 **Tareas:**
-- [ ] T1: Ejecutar v4complete (timeout 900s)
-- [ ] T2: Guardar evidencia en `evidence/FASE-PENDIENTE-V4COMPLETE/`
-- [ ] T3: Post-análisis: verificar cada fix en output real
-- [ ] T4: Informe con métricas vs baseline
+- [x] T1: Ejecutar v4complete (timeout 900s)
+- [x] T2: Guardar evidencia en `evidence/FASE-PENDIENTE-V4COMPLETE/`
+- [x] T3: Post-análisis: verificar cada fix en output real
+- [x] T4: Informe con métricas vs baseline
 
 **Dependencias:** FASE-0 a FASE-5 ✅
 
@@ -200,6 +200,33 @@
 **Archivos:**
 - `output/v4_complete/*` (lectura)
 - `evidence/FASE-PENDIENTE-V4COMPLETE/` (creación)
+
+**Métricas post-fix:**
+- Coherence: 0.85
+- Gates: 11/11
+- Tier: B
+
+---
+
+## FASE-7: ADR audit status (adr_status: unknown → estimated)
+
+**Descripción:** Bridge benchmark ADR → cross-validation del auditor. Cosmetic fix.
+
+**Estado:** ⚪ Pendiente
+
+**Tareas:**
+- [ ] T1: Investigar acceso a benchmark ADR en auditor
+- [ ] T2: Determinar estrategia (A/B fix o C wontfix)
+- [ ] T3: Implementar fix si viable
+- [ ] T4: Tests
+- [ ] T5: Actualizar checklist + log_phase
+
+**Dependencias:** FASE-6 ✅
+
+**Delegate:** ❌ NO (investigación directa más eficiente)
+
+**Archivos:**
+- `modules/auditors/v4_comprehensive.py`
 
 ---
 
@@ -234,7 +261,7 @@
 | MIN-01 Status Quo | Tabla comparativa Sin/Con IAO | ✅ FASE-3 |
 | MIN-02 ADR evidenciado | Valor COP en benchmarks + propuesta | ✅ FASE-2 |
 | MIN-03 Closing pitch | Pitch dinámico con ROICR | ✅ FASE-4 |
-| F5 ADR checklist | Valor real (no "Pendiente") | — |
+| F5 ADR checklist | Valor real (no "Pendiente") | ✅ FASE-1B + FASE-7 pendiente |
 | F7 Gate discrepancy | Mismo tier en ambos gates | ✅ FASE-1A |
 | Dead code | Sin errores de ejecución | — |
 
@@ -251,7 +278,7 @@
 
 ## Notas de Ejecución
 
-- 9 fases totales (0, 1A, 1B, 2, 3, 4, 5, 6, RELEASE)
+- 10 fases totales (0, 1A, 1B, 2, 3, 4, 5, 6, 7, RELEASE)
 - **FASE-2 NO delegar** — la más compleja (triple capa YAML+código+template)
 - **FASE-RELEASE NO delegar** — WSL quoting traps en scripts
 - 1 fase por sesión (R1)

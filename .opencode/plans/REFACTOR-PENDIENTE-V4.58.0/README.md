@@ -5,8 +5,8 @@
 | Aspecto | Valor |
 |---------|-------|
 | Plan | ⚪ Preparación |
-| Fases totales | 9 (0, 1A, 1B, 2, 3, 4, 5, 6, RELEASE) |
-| Fases completadas | 0/9 |
+| Fases totales | 10 (0, 1A, 1B, 2, 3, 4, 5, 6, 7, RELEASE) |
+| Fases completadas | 1/10 (FASE-6 ejecutada) |
 | Hotel verificación | Hotel Castilla Real |
 | v4complete único | FASE-6 |
 
@@ -22,7 +22,8 @@
 | 4 | FASE-4 | MIN-03 (Closing pitch) | MEDIA | ✅ | 6 |
 | 5 | FASE-5 | Limpieza dead code | BAJA | ✅ | 7 |
 | 6 | FASE-6 | v4complete E2E | MEDIA | ✅ | 8 |
-| — | RELEASE | Docs cascade | MEDIA | ❌ | 9 |
+| 7 | FASE-7 | ADR audit status | BAJA | ❌ | 9 |
+| — | RELEASE | Docs cascade | MEDIA | ❌ | 10 |
 
 ## Convenciones
 
@@ -38,7 +39,8 @@
 3. **Máximo 4 tareas + 0 comandos largos** por fase (R3).
 4. Al completar una fase: actualizar `06-checklist-implementacion.md` inmediatamente.
 5. **FASE-2 NO delegar** — complejidad alta requiere razonamiento iterativo.
-6. **v4complete único** en FASE-6 — no ejecutar en fases anteriores.
+6. **FASE-7 NO delegar** — investigación directa más eficiente que subagent overhead.
+7. **v4complete único** en FASE-6 — no ejecutar en fases anteriores.
 
 ## Cómo Iniciar
 
@@ -61,4 +63,4 @@ Cada prompt de fase incluye instrucciones para continuar con la siguiente.
 | tier_c_onboarding | PASS |
 | Blocking issues | None |
 
-**Esperado post-fix:** 11/11 gates, coherence ≥0.83, todos los fixes visibles en output.
+**Esperado post-fix:** 11/11 gates, coherence ≥0.85, todos los fixes visibles en output.
