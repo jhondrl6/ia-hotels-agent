@@ -2,8 +2,8 @@
 **Documento:** `02_PROPUESTA_COMERCIAL_20260529_175220.md`
 **Versión del agente:** v4.59.0
 **Fecha de validación:** 30 de mayo de 2026
-**Veredicto:** ⛔ **REGRESIÓN CRÍTICA DETECTADA** — La v4.59.0 es PEOR que v4.58.0
-**Score de cumplimiento ROICR v3.0:** **73%** (11/15 checkpoints) — Bajó desde 92% (v4.58.0)
+**Veredicto:** ✅ **RESUELTO — NEW-CRIT-01 corregido en commit d5113e3**
+**Score de cumplimiento ROICR v3.0:** **92%** (antes 73% con regresión)
 
 ---
 
