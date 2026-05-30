@@ -362,7 +362,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
             payback_text = "el primer año"
         
         pitch = (
-            f"### {emoji} Oportunidad de {urgency.title()} para {hotel_name}\n\n"
+            f"### {emoji} Oportunidad {urgency.title()} para {hotel_name}\n\n"
             f"Su hotel puede recuperar **{recovery_fmt} COP mensuales** "
             f"con una inversión que se paga sola en **{payback_text}** "
             f"(ROICR: {roicr:.2f}x).\n\n"
@@ -760,6 +760,15 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         _adr_value = self._get_adr_from_benchmarks(region or 'eje_cafetero')
         _adr_display = f"${_adr_value:,.0f} COP" if _adr_value else "No disponible"
 
+        # REGRESSION-FIX: breakeven y avg monthly recovery desde curva de maduración
+        _maturity_breakeven = 6  # default seguro
+        if _maturity_result.proyecciones:
+            for _p in _maturity_result.proyecciones:
+                if _p.recuperacion_acumulada >= monthly_investment * _p.mes:
+                    _maturity_breakeven = _p.mes
+                    break
+        _avg_monthly_recovery = int(_maturity_result.total_recuperacion_6m / 6)
+
         data = {
             # Metadata
             'generated_at': generated_at.strftime("%Y-%m-%d %H:%M:%S"),
@@ -1010,11 +1019,12 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         ),
 
         # FASE-4 MIN-03: Closing pitch dinámico basado en ROI
+        # REGRESSION-FIX: usa curva de maduración (no modelo lineal)
         'closing_pitch': self._build_closing_pitch(
             financial_data={
                 'roicr': float(_maturity_result.total_recuperacion_6m / (monthly_investment * 6)) if monthly_investment > 0 else 0.0,
-                'payback_months': break_even,
-                'recovered_amount_cop': effective_monthly_gain,
+                'payback_months': _maturity_breakeven,
+                'recovered_amount_cop': _avg_monthly_recovery,
             },
             hotel_name=hotel_name,
         ),
