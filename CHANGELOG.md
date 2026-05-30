@@ -9,8 +9,8 @@ Fix de tabla CAPEX corrupta (tablas markdown anidadas) + limpieza de código mue
 - **F1** (FASE-1): `${capex_breakdown_table}` movido a sección independiente — fix tablas markdown anidadas + test de integridad de pipes
 - **F7** (FASE-2): Eliminadas 9 keys huérfanas del template data dict
 - **F8** (FASE-2): Fallback de `_build_capex_breakdown_table()` ahora incluye header row
-- **F6** (FASE-3): Eliminado `_build_coherence_checklist()` + `'coherence_checklist'` del data dict — código muerto sin propósito
-- **FASE-4**: Verificación E2E v4complete Hotel Castilla Real — 11/11 gates PASS, coherence 0.85
+- **F6** (FASE-3): Eliminado `_build_coherence_checklist()` + `'coherence_checklist'` del data dict — código muerto YAGNI
+- **NEW-CRIT-01** (post-release hotfix): Eliminada tabla "Status Quo vs Implementación IAO" — usaba modelo de recuperación constante (pain_ratio × recovery) contradictorio con la curva de madurez de la tabla Proyección. Un único motor de proyección (curva 4 pilares).
 
 ### Archivos Nuevos
 | Archivo | Descripción |

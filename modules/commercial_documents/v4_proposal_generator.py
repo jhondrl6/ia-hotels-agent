@@ -760,16 +760,6 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         _adr_value = self._get_adr_from_benchmarks(region or 'eje_cafetero')
         _adr_display = f"${_adr_value:,.0f} COP" if _adr_value else "No disponible"
 
-        # MIN-01: Pre-calcular tabla comparativa Status Quo vs Implementación IAO
-        _status_quo_table = self._build_status_quo_table(
-            raw_monthly_loss=raw_monthly_loss,
-            effective_monthly_gain=effective_monthly_gain,
-            monthly_investment=monthly_investment,
-            pain_ratio=pain_ratio,
-            recovery_realistic=recovery_realistic,
-            break_even=break_even,
-        )
-
         data = {
             # Metadata
             'generated_at': generated_at.strftime("%Y-%m-%d %H:%M:%S"),
@@ -876,8 +866,10 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         'opex_total_6m': format_cop(monthly_investment * 6),
 
         # ROI SaaS: Recuperación Total / OPEX (NUNCA OPEX+CAPEX)
+        # NEW-CRIT-01 FIX: use _acc_map[6] (pain_ratio-adjusted) instead of
+        # _maturity_result.total_recuperacion_6m (without pain_ratio).
         'roi_saas': formatear_roi_para_propuesta(calcular_metricas_roi(
-            recuperacion_total=_maturity_result.total_recuperacion_6m,
+            recuperacion_total=_acc_map.get(6, _maturity_result.total_recuperacion_6m),
             inversion_opex=monthly_investment * 6,
             inversion_capex=getattr(self, '_current_setup_fee', self.SETUP_FEE),
             meses_proyeccion=6,
@@ -900,7 +892,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         'main_scenario_amount': format_cop(raw_monthly_loss),  # raw loss before pain_ratio
         'web_score': str(getattr(audit_result, 'seo_score', 'N/D')) if audit_result else 'N/D',  # FASE-PATCH-B: ya no es hardcodeado
         'web_status': "VERIFIED" if diagnostic_summary.overall_confidence.value == "VERIFIED" else "ESTIMATED",
-        'roi_6m': f"{_maturity_result.total_recuperacion_6m / (monthly_investment * 6):.2f}X",  # ROICRIII-FASE-1: unified to maturity curve (~2.10X)
+        'roi_6m': f"{_acc_map.get(6, _maturity_result.total_recuperacion_6m) / (monthly_investment * 6):.2f}X",  # NEW-CRIT-01 FIX: unified to pain_ratio-adjusted _acc_map[6]
         'total_investment_6m': format_cop(monthly_investment * 6),
         'recovered_6m': format_cop(effective_monthly_gain * 6),  # FASE-A: unified to effective (was projected)
         'net_benefit_6m': format_cop((effective_monthly_gain - monthly_investment) * 6),  # FASE-A: unified to effective (was projected)
@@ -928,8 +920,10 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         'adr_display': _adr_display,
         'adr_value': str(_adr_value) if _adr_value else '',
 
-        # MIN-01: Tabla comparativa Status Quo vs Implementación IAO
-        'status_quo_table': _status_quo_table,
+        # MIN-01: Tabla comparativa Status Quo vs Implementación IAO — REMOVIDA
+        # NEW-CRIT-01: Eliminada para resolver contradicción de dos motores de proyección.
+        # La tabla de Proyección (curva de maduración 4 pilares) es el modelo coherente.
+        # Status Quo usaba pain_ratio × recovery (constante) vs Proyección sin pain_ratio (creciente).
 
         'monthly_loss': format_cop(raw_monthly_loss),
         'monthly_investment': format_cop(monthly_investment),

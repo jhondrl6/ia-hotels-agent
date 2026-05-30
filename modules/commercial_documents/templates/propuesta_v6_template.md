@@ -35,10 +35,6 @@ Cada mes, viajeros buscan hoteles en ${hotel_region} a través de Booking.com, E
 |---------|-------|
 | ADR regional promedio | ${adr_display} |
 
-#### Análisis Comparativo: Status Quo vs Implementación IAO
-
-${status_quo_table}
-
 ---
 
 ## 😌 LA SOLUCIÓN: Nosotros hacemos todo. Usted solo atiende huéspedes.
