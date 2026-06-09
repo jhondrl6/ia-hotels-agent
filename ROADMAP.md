@@ -1,7 +1,7 @@
 # ROADMAP iah-cli — Evolución Agent-First con Capa Humana Mínima
 
-> **Versión roadmap**: v3.5 (2026-05-16)
-> **Estado proyecto**: v4.47.0 — ADVISORY-WARNINGS
+> **Versión roadmap**: v3.6 (2026-06-09)
+> **Estado proyecto**: v4.60.0 — CAPEX-BREAKDOWN-FIX
 > **Tesis estratégica**: iah-cli debe evolucionar como sistema operado principalmente por agentes, con una interfaz humana mínima, clara y suficiente.
 > **Principio rector**: primero entrega confiable al cliente; después escala, automatización y crecimiento. Agentes ejecutan, validan y mantienen; humanos deciden, aprueban costos/riesgos y aportan datos reales.
 > **Horizonte operativo**: 90 días. Se reevalúa semanalmente durante validación comercial y quincenalmente después.
@@ -122,6 +122,15 @@ Cada nueva capacidad debe responder primero:
 - ¿Puede dejar evidencia auditable?
 - ¿Puede reanudarse en otra sesión?
 
+El criterio no es “automatizar más”, sino codificar contratos ejecutables:
+
+- qué estado debe existir antes y después,
+- qué artefactos son fuente de verdad,
+- qué gate valida el resultado,
+- qué evidencia debe quedar para reanudar en sesión fresca.
+
+El diseño de bucles debe definir criterios de avance, reintento, fallo y handoff humano; no depender de instrucciones aisladas.
+
 Solo después se pregunta:
 
 - ¿Qué mínimo necesita ver o decidir un humano?
@@ -156,6 +165,8 @@ Diagnósticos, propuestas, scores, gates y assets deben poder responder:
 - qué módulo lo generó,
 - qué gate lo validó,
 - qué archivo lo prueba.
+
+La evidencia debe vivir en artefactos estructurados y consultables por agentes, no solo en narrativa humana.
 
 ### P4. Manual antes que automático, pero solo para validar mercado
 
@@ -231,16 +242,19 @@ Componentes:
 
 - `AGENTS.md`: contexto global operativo, no manual humano.
 - `.agents/workflows/`: workflows semánticos y ejecutables.
-- `agent_harness/`: memoria, routing, ejecución, observación, self-healing.
+- `agent_harness/`: memoria, routing, ejecución, observación, self-healing y recuperación de estado.
 - `.agent/knowledge/DOMAIN_PRIMER.md`: conocimiento regenerable del dominio/código.
 - `scripts/doctor.py`: healthcheck del ecosistema agente.
 - `scripts/run_all_validations.py`: gate de validación.
 - `docs/contributing/*`: contrato documental para agentes.
 - `tests/`: protección contra regresión.
+- Trazas y estados de ejecución: logs, reports y snapshots mínimos para reanudar sin reconstruir contexto.
 
 Objetivo:
 
 > Un agente nuevo en sesión fresca debe poder entender el estado del repo, elegir el workflow correcto, ejecutar una fase, verificarla y registrar evidencia sin depender de memoria humana.
+
+Cada ejecución debe dejar un estado mínimo: objetivo, inputs, outputs, gates, errores y siguiente acción. Si el agente cae o cambia de sesión, el siguiente debe poder retomar desde el estado, no desde la memoria humana.
 
 ### 6.2 Capa humana mínima
 
@@ -289,6 +303,7 @@ Arquitectura objetivo:
 | Diagnóstico y oportunidad | Cobertura 1:1 o justificación explícita para cada brecha detectada | Tabla brecha → impacto → oportunidad → evidencia |
 | Propuesta comercial | Cada servicio vendido responde a una o más brechas priorizadas | Matriz brecha → servicio → promesa comercial |
 | Assets | Cada asset generado resuelve una brecha o servicio específico, no una plantilla genérica | Matriz servicio → asset → archivo → confidence |
+| Harness de ejecución / trazabilidad | Qué se ejecutó, con qué inputs, qué gates corrieron, qué falló y cómo retomar | Traza mínima + logs + estado recuperable |
 | Delivery gate | Bloquea entrega si hay brechas sin explicar, servicios sin asset o assets genéricos vendidos como específicos | `delivery_quality_report.json` + estado PASS/FAIL |
 
 Reglas obligatorias:
@@ -377,7 +392,7 @@ Objetivo: asegurar que el repo sea navegable y ejecutable por agentes sin ambig�
 | A-02 | `.agents/workflows/README.md` sincronizado con workflows reales | 16 workflows core listados, triggers claros | Script/doctor sin huérfanos |
 | A-03 | Matriz de responsabilidades humano/agente documentada | El repo sabe qué pide al humano y qué ejecuta el agente | ROADMAP + AGENTS alineados |
 | A-04 | Human-minimum CLI definida | README solo prioriza comandos esenciales | README no deriva en manual largo |
-| A-05 | Validación de contexto fresco | Un agente nuevo puede ejecutar diagnóstico de repo sin preguntar | Prompt de smoke test pasa |
+| A-05 | Validación de contexto fresco | Un agente nuevo puede ejecutar diagnóstico de repo sin preguntar | Bucle de smoke test pasa |
 
 No construir:
 
@@ -394,10 +409,11 @@ Objetivo: reducir fallos de ejecución multi-sesión.
 | ID | Entregable | Resultado esperado | Gate |
 |----|------------|-------------------|------|
 | B-01 | `phased_project_executor.md` endurecido | Reglas de fase, presupuesto y docs cascade sin ambigüedad | Plan de prueba con fase simulada |
-| B-02 | Prompts de fase estandarizados | Cada fase contiene objetivo, archivos, comandos, criterios y rollback | Template validado |
+| B-02 | Bucles de fase estandarizados | Cada bucle contiene objetivo, estado inicial, acciones permitidas, criterios de avance, gates de verificación, rollback y handoff humano cuando corresponda | Checklist de bucle validado |
 | B-03 | Evidencia post-fase obligatoria | Cada fase deja logs, tests, diff y docs tocadas | `log_phase_completion.py` usado |
 | B-04 | Regla de no-doc-drift | Cambios de código que alteran comportamiento disparan docs/checks | Validación rápida pasa |
-| B-05 | Modo recuperación | Si una fase falla, el siguiente agente sabe dónde retomar | Contexto de failure reproducible |
+| B-05 | Estado ejecutable de fase | Cada fase deja inputs, outputs, gates, errores y siguiente acción | Traza mínima + estado recuperable |
+| B-06 | Modo recuperación | Si una fase falla, el siguiente agente sabe dónde retomar | Contexto de failure reproducible |
 
 ### FASE C: Operación comercial asistida por agentes (4-8 semanas)
 
@@ -421,7 +437,7 @@ Regla:
 
 Dependencia: esta fase profundiza y productiza FASE 0. No debe tratarse como mejora tardía; FASE 0 entrega el mínimo confiable y FASE D lo convierte en estándar repetible.
 
-Objetivo: convertir el pipeline en una unidad de entrega confiable, menos dependiente de intervención manual y capaz de demostrar que lo diagnosticado, lo vendido y lo entregado están alineados.
+Objetivo: convertir el pipeline en una unidad de entrega confiable, menos dependiente de intervención manual y capaz de demostrar que lo diagnosticado, lo vendido y lo entregado están alineados. Cada ejecución de cliente debe quedar como un estado recuperable y auditable, no como una secuencia de acciones olvidables.
 
 | ID | Entregable | Resultado esperado | Gate |
 |----|------------|-------------------|------|
@@ -603,7 +619,7 @@ Hasta que existan señales:
 |--------|--------------|---------|------------|
 | El repo acumula documentación humana que los agentes no usan | Alta | Alto | AGENTS/workflows como fuente operativa primaria |
 | El humano vuelve a ejecutar pasos manuales largos | Alta | Alto | Convertir procedimientos en workflows/gates |
-| Agentes ejecutan sin suficiente contexto | Media | Alto | Contexto global + prompts de fase completos |
+| Agentes ejecutan sin suficiente contexto | Media | Alto | Contexto global + bucles de fase con estado, criterios de continuación y handoff definidos |
 | Drift entre docs, código y outputs | Alta | Alto | Doctor, validation scripts, docs cascade |
 | Hoteleros no pagan por diagnóstico | Alta | Alto | Validación Express antes de automatizar más |
 | Costos API/modelo erosionan margen del Diagnóstico Express | Media | Alto | Presupuesto máximo por diagnóstico, margen mínimo, `permission_mode`, fallback barato y revisión de precio antes de escalar |
@@ -620,8 +636,8 @@ Hasta que existan señales:
 1. `spark` está marcado como deprecado, pero puede ser útil para outreach barato. Decisión: mantenerlo solo si se usa comercialmente 10+ veces.
 2. Consolidar el rol de `.agents/workflows/` como capa ejecutable, no solo documentación.
 3. Reducir duplicación entre README, AGENTS y docs. README debe ser humano-mínimo; AGENTS debe ser agente-operativo.
-4. Fortalecer recuperación de fases fallidas para agentes en sesiones frescas.
-5. Formalizar smoke test de agent-readiness: un agente nuevo debe poder entender estado, ejecutar validación y explicar siguiente acción.
+4. Fortalecer recuperación de fases fallidas para agentes en sesiones frescas: cada fallo debe dejar estado, causa probable, artefactos tocados y siguiente acción segura.
+5. Formalizar smoke test de agent-readiness: un agente nuevo debe poder entender estado, ejecutar validación, explicar siguiente acción y demostrar que puede retomar desde bucles de fase con estado, criterios de continuación y handoff definidos.
 6. ~~Elevar el QA post-generación de `output/v4_complete` a contrato nativo del pipeline: coverage de brechas, alineación comercial y especificidad de assets.~~ ✅ Resuelto en FASE-0-DELIVERY-QUALITY: `delivery_quality_report.json` + `coverage_gate` + `proposal_asset_matrix` + `pain_ledger.json`.
 7. ~~Consolidar `delivery_quality_report.json` como evidencia obligatoria antes de empaquetar o enviar entregables.~~ ✅ Resuelto en FASE-0E: FAIL bloquea ZIP.
 8. Mantener ROADMAP como documento estratégico manual. No incluirlo en cascadas automáticas salvo solicitud explícita.
