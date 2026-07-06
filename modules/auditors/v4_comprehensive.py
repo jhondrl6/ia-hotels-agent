@@ -1152,12 +1152,20 @@ class V4ComprehensiveAuditor:
         if not gbp_result.place_found or not gbp_result.geo_score:
             return []
         
-        # We need coordinates to search - try to extract from address or use default
-        # For now, return empty but structure is in place
+        # Use GBP coordinates from Places API (BUG-1 fix: was hardcoded 0.0)
+        lat = gbp_result.lat
+        lng = gbp_result.lng
+        
+        # Validate coordinates are within Colombia range before calling API
+        if not lat or not lng:
+            return []
+        if not (0 <= lat <= 13 and -82 <= lng <= -66):
+            return []
+        
         return self.competitor_analyzer.get_nearby_competitors(
             hotel_name=gbp_result.name,
-            lat=0.0,  # TODO: Get from geocoding
-            lng=0.0,  # TODO: Get from geocoding
+            lat=lat,
+            lng=lng,
             radius_km=15
         )
     

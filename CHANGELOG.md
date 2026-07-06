@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.60.1] - Bugfixes Luxor v4complete — En progreso
+
+### Cambios Implementados — FASE-1
+- **BUG-2**: Removido `calc_result` UnboundLocalError en FASE-K (main.py ~L1942). Reemplazado por `financial_breakdown.evidence_tier` + `disclaimer`.
+- **BUG-1**: `_audit_competitors` ahora usa `gbp_result.lat/lng` en lugar de `0.0` hardcoded. Validación de rango Colombia (0-13 lat, -82 a -66 lng) antes de llamar Places API.
+
+### Archivos Modificados — FASE-1
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Línea `calc_result.metadata` reemplazada por `financial_breakdown.evidence_tier` + `disclaimer` |
+| `modules/auditors/v4_comprehensive.py` | `_audit_competitors` usa `gbp_result.lat/lng` + validación de rango Colombia |
+
+### Tests — FASE-1
+- 3 tests BUG-1: coords válidas, coords cero, coords fuera de rango
+- 1 test BUG-2: `FinancialBreakdown.evidence_tier` y `disclaimer` accesibles
+- 0 regresiones
+
 ## [4.60.0] - CAPEX Breakdown Fix & Generator Cleanup — 2026-05-29
 
 ### Objetivo

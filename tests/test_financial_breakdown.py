@@ -114,3 +114,31 @@ def test_evidence_tier_values():
     assert EvidenceTier.A.value == "A"
     assert EvidenceTier.B.value == "B"
     assert EvidenceTier.C.value == "C"
+
+
+# --- BUG-2 regression: FASE-K usa evidence_tier + disclaimer, no calc_result.metadata ---
+
+def test_breakdown_evidence_fields_not_none():
+    """BUG-2: FinancialBreakdown.evidence_tier y disclaimer deben ser accesibles (reemplazo de calc_result.metadata)."""
+    fb = FinancialBreakdown(
+        monthly_ota_commission_cop=3000000,
+        ota_commission_basis="80 noches × $250K × 15%",
+        ota_commission_source="onboarding",
+        shift_savings_cop=300000,
+        shift_percentage=0.10,
+        shift_source="benchmark",
+        ia_revenue_cop=1500000,
+        ia_boost_percentage=0.05,
+        ia_source="scraping",
+        evidence_tier="B",
+        disclaimer="Estimación benchmarks.",
+    )
+    # These two fields replace calc_result.metadata in FASE-K print
+    assert fb.evidence_tier is not None
+    assert fb.disclaimer is not None
+    assert isinstance(fb.evidence_tier, str)
+    assert isinstance(fb.disclaimer, str)
+    # Verify they can be used in f-string (as done in main.py FASE-K fix)
+    output = f"   Evidence tier: {fb.evidence_tier}, disclaimer: {fb.disclaimer}"
+    assert "Evidence tier: B" in output
+    assert "disclaimer: Estimación benchmarks." in output

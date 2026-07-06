@@ -87,3 +87,103 @@ class TestV4ComprehensiveCompetitors:
         
         assert "competitors" in data
         assert len(data["competitors"]) == 1
+
+
+class TestAuditCompetitorsCoordinates:
+    """BUG-1 regression: _audit_competitors uses gbp_result.lat/lng, not hardcoded 0.0."""
+
+    def test_uses_gbp_coordinates(self):
+        """_audit_competitors with valid coords calls get_nearby_competitors with them."""
+        from modules.auditors.v4_comprehensive import GBPApiResult
+        
+        gbp = GBPApiResult(
+            place_found=True,
+            place_id="test123",
+            name="Hotel Test",
+            rating=4.5,
+            reviews=100,
+            photos=20,
+            phone="+57 123",
+            website="https://test.com",
+            address="Calle Test",
+            geo_score=75,
+            geo_score_breakdown={},
+            confidence="VERIFIED",
+            lat=4.8,
+            lng=-75.7,
+        )
+        
+        auditor = V4ComprehensiveAuditor()
+        auditor.competitor_analyzer = Mock()
+        auditor.competitor_analyzer.get_nearby_competitors.return_value = [{"nombre": "Nearby Hotel"}]
+        
+        result = auditor._audit_competitors(gbp)
+        
+        # Should call get_nearby_competitors with real coordinates
+        auditor.competitor_analyzer.get_nearby_competitors.assert_called_once_with(
+            hotel_name="Hotel Test",
+            lat=4.8,
+            lng=-75.7,
+            radius_km=15,
+        )
+        assert len(result) == 1
+
+    def test_zero_coordinates_returns_empty(self):
+        """_audit_competitors with lat=0.0, lng=0.0 returns [] without calling API."""
+        from modules.auditors.v4_comprehensive import GBPApiResult
+        
+        gbp = GBPApiResult(
+            place_found=True,
+            place_id="test123",
+            name="Hotel Test",
+            rating=4.5,
+            reviews=100,
+            photos=20,
+            phone="+57 123",
+            website="https://test.com",
+            address="Calle Test",
+            geo_score=75,
+            geo_score_breakdown={},
+            confidence="VERIFIED",
+            lat=0.0,
+            lng=0.0,
+        )
+        
+        auditor = V4ComprehensiveAuditor()
+        auditor.competitor_analyzer = Mock()
+        
+        result = auditor._audit_competitors(gbp)
+        
+        # Should return empty without calling API
+        assert result == []
+        auditor.competitor_analyzer.get_nearby_competitors.assert_not_called()
+
+    def test_out_of_range_coords_returns_empty(self):
+        """_audit_competitors with coords outside Colombia range returns []."""
+        from modules.auditors.v4_comprehensive import GBPApiResult
+        
+        gbp = GBPApiResult(
+            place_found=True,
+            place_id="test123",
+            name="Hotel Test",
+            rating=4.5,
+            reviews=100,
+            photos=20,
+            phone="+57 123",
+            website="https://test.com",
+            address="Calle Test",
+            geo_score=75,
+            geo_score_breakdown={},
+            confidence="VERIFIED",
+            lat=40.0,  # Outside Colombia range (0-13)
+            lng=-75.0,
+        )
+        
+        auditor = V4ComprehensiveAuditor()
+        auditor.competitor_analyzer = Mock()
+        
+        result = auditor._audit_competitors(gbp)
+        
+        # Should return empty without calling API
+        assert result == []
+        auditor.competitor_analyzer.get_nearby_competitors.assert_not_called()

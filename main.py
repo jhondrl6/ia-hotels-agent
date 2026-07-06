@@ -1939,7 +1939,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         financial_breakdown = _sc.calculate_breakdown(_hotel_fin_data)
         print(f"[FASE-K] FinancialBreakdown derivado (camino unico):")
         print(f"   Comision OTA: ${financial_breakdown.monthly_ota_commission_cop:,.0f} COP")
-        print(f"   Source reliability: {calc_result.metadata.get('source_reliability', 'unknown')}")
+        print(f"   Evidence tier: {financial_breakdown.evidence_tier}, disclaimer: {financial_breakdown.disclaimer}")
     except Exception as e:
         print(f"[FASE-K] Warning: FinancialBreakdown fallo: {e}")
 

@@ -5,6 +5,28 @@
 
 ---
 
+### Notas de Cambios v4.60.1 — FASE-1 (BUGFIX-LUXOR)
+
+**Fecha:** 2026-07-06
+
+**Módulos afectados:**
+- `main.py` (~L1942)
+- `modules/auditors/v4_comprehensive.py` (`_audit_competitors`)
+
+**Problema:**
+- BUG-2: `calc_result` referenciado fuera del bloque `if not use_harness_for_financials:` donde se define, causando `UnboundLocalError` cuando el harness SÍ se usa.
+- BUG-1: `_audit_competitors` hardcodeaba `lat=0.0, lng=0.0` ignorando `gbp_result.lat/lng` reales de Places API.
+
+**Solución:**
+- BUG-2: Línea `calc_result.metadata` reemplazada por `financial_breakdown.evidence_tier` + `disclaimer` (disponibles en ambos caminos de ejecución).
+- BUG-1: Usar `gbp_result.lat/lng` + validación de rango Colombia (lat 0-13, lng -82 a -66). Si coords son 0.0 o fuera de rango, retornar `[]` sin llamar la API.
+
+**Backwards compatibility:** ✅ Sin breaking changes. `financial_breakdown` ya tenía `evidence_tier` y `disclaimer`. `gbp_result` ya tenía `lat`/`lng` desde Places API.
+
+**Tests:** 4 tests de regresión nuevos (3 BUG-1 + 1 BUG-2), 0 regresiones.
+
+---
+
 ### Notas de Cambios v4.60.0 — CAPEX-BREAKDOWN-FIX
 
 **Fecha:** 2026-05-29
