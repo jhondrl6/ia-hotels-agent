@@ -5,7 +5,7 @@
 | Fase | Título | Estado | Sesión | Tests | log_phase |
 |------|--------|--------|---------|-------|-----------|
 | FASE-1 | BUG-2 + BUG-1: Quick Wins | ✅ COMPLETADA | 2026-07-06 | 39/39 (4 nuevos) | ✅ |
-| FASE-2 | BUG-4a: Resiliencia LLM | ⬜ NO INICIADA | - | - | - |
+| FASE-2 | BUG-4a: Resiliencia LLM | ✅ COMPLETADA | 2026-07-06 | 4/4 (4 nuevos) | ✅ |
 | FASE-3 | BUG-5: Higiene Scrubber | ⬜ NO INCIADA | - | - | - |
 | FASE-4 | BUG-6: SPA Rendering | ⬜ NO INICIADA | - | - | - |
 | FASE-5 | Verificación E2E | 🔒 BLOQUEADA | - | - | - |
@@ -23,7 +23,7 @@
 |-----|------|--------|
 | BUG-1 (lat/lng 0.0) | FASE-1 | ✅ |
 | BUG-2 (calc_result) | FASE-1 | ✅ |
-| BUG-4a (openrouter 404) | FASE-2 | ⬜ |
+| BUG-4a (openrouter 404) | FASE-2 | ✅ |
 | BUG-4b (gemini 403) | FUERA DE PLAN | N/A (acción usuario) |
 | BUG-5 (scrubber SKIP) | FASE-3 | ⬜ |
 | BUG-6 (SPA OG tags) | FASE-4 | ⬜ |
@@ -34,7 +34,7 @@
 |---------|---------------------|----------------|------|
 | Coherence score | 0.83 (Castilla Real) | [pendiente] | FASE-5 |
 | Publication Gates | 9/11 | [pendiente] | FASE-5 |
-| Tests nuevos | 0 | [pendiente] | FASE-1 a FASE-4 |
+| Tests nuevos | 0 | 4 | FASE-2 |
 | Regresiones | 0 | [pendiente] | FASE-5 |
 
 ## Leyenda

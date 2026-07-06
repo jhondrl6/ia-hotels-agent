@@ -7,15 +7,18 @@ Tests cover:
 - Mention detection accuracy
 - Score calculation
 - Multiple providers
+- FASE-2 BUG-4a: Model externalization to provider_registry
 """
 
+import os
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, Mock
 from modules.auditors.llm_mention_checker import (
     LLMMentionChecker,
     LLMQueryResult,
     LLMReport,
 )
+from modules.utils.provider_registry import ProviderRegistry, ProviderConfig
 
 
 class TestLLMMentionCheckerStub:
@@ -99,7 +102,8 @@ class TestLLMMentionCheckerWithKeys:
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            "choices": [{"message": {"content": "Te recomiendo el Hotel Visperas en Manizales."}}]
+            "choices": [{"message": {"content": "Te recomiendo el Hotel Visperas en Manizales."}}],
+            "usage": {"prompt_tokens": 10, "completion_tokens": 20},
         }
         mock_response.raise_for_status = MagicMock()
         mock_post.return_value = mock_response
@@ -295,7 +299,8 @@ class TestCheckMentionsMocked:
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            "choices": [{"message": {"content": "Te recomiendo el Hotel Test en Bogota. Es excelente."}}]
+            "choices": [{"message": {"content": "Te recomiendo el Hotel Test en Bogota. Es excelente."}}],
+            "usage": {"prompt_tokens": 10, "completion_tokens": 20},
         }
         mock_response.raise_for_status = MagicMock()
         mock_post.return_value = mock_response
@@ -319,7 +324,8 @@ class TestCheckMentionsMocked:
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            "choices": [{"message": {"content": "Te recomiendo el Hotel Otro en Bogota."}}]
+            "choices": [{"message": {"content": "Te recomiendo el Hotel Otro en Bogota."}}],
+            "usage": {"prompt_tokens": 10, "completion_tokens": 20},
         }
         mock_response.raise_for_status = MagicMock()
         mock_post.return_value = mock_response
@@ -334,3 +340,104 @@ class TestCheckMentionsMocked:
         assert report.source == "llm_check"
         assert report.total_mentions == 0
         assert report.mention_rate == 0.0
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# FASE-2 BUG-4a: Model externalization to provider_registry.yaml
+# ═══════════════════════════════════════════════════════════════════════
+
+class TestOpenRouterModelFromRegistry:
+    """FASE-2 BUG-4a: Verifies model is read from provider_registry, not hardcoded."""
+
+    def test_model_not_hardcoded_in_source(self):
+        """Verify 'google/gemini-2.0-flash-001' is NOT in the source file."""
+        import inspect
+        source = inspect.getsource(LLMMentionChecker._query_openrouter)
+        assert "google/gemini-2.0-flash-001" not in source, (
+            "BUG-4a regression: modelo hardcoded en _query_openrouter"
+        )
+
+    def test_default_model_from_registry(self):
+        """Verify default_model is read from ProviderRegistry."""
+        registry = ProviderRegistry()
+        registry.load()
+        cfg = registry.get("openrouter")
+        assert cfg is not None, "openrouter not in provider_registry"
+        assert cfg.default_model == "qwen/qwen3.6-plus:free", (
+            f"Expected qwen/qwen3.6-plus:free, got {cfg.default_model}"
+        )
+
+    def test_payload_uses_registry_model(self):
+        """Mock and verify payload uses model from ProviderRegistry."""
+        ProviderRegistry.reset()
+
+        mock_cfg = ProviderConfig(
+            id="openrouter",
+            type="llm",
+            description="Test",
+            auth_type="api_key",
+            default_model="test-model-v2:free",
+            env_vars=["OPENROUTER_API_KEY"],
+        )
+
+        with patch.object(ProviderRegistry, 'load', return_value=None):
+            with patch.object(ProviderRegistry, 'get', return_value=mock_cfg):
+                with patch('requests.post') as mock_post:
+                    mock_response = Mock()
+                    mock_response.json.return_value = {
+                        "choices": [{"message": {"content": "test response"}}],
+                        "usage": {"prompt_tokens": 10, "completion_tokens": 20},
+                    }
+                    mock_post.return_value = mock_response
+
+                    checker = LLMMentionChecker(openrouter_key="test-key")
+                    result = checker._query_openrouter("test query")
+
+                    assert result is not None
+                    assert result["text"] == "test response"
+
+                    mock_post.assert_called_once()
+                    payload = mock_post.call_args[1]["json"]
+                    assert payload["model"] == "test-model-v2:free", (
+                        f"Expected test-model-v2:free in payload, got {payload['model']}"
+                    )
+
+                    assert result["cost_usd"] == 0.0
+
+    def test_payload_model_falls_back_when_registry_empty(self):
+        """When registry has no openrouter config, fallback to qwen/qwen3.6-plus:free."""
+        ProviderRegistry.reset()
+
+        with patch.object(ProviderRegistry, 'load', return_value=None):
+            with patch.object(ProviderRegistry, 'get', return_value=None):
+                with patch('requests.post') as mock_post:
+                    mock_response = Mock()
+                    mock_response.json.return_value = {
+                        "choices": [{"message": {"content": "fallback response"}}],
+                        "usage": {"prompt_tokens": 5, "completion_tokens": 10},
+                    }
+                    mock_post.return_value = mock_response
+
+                    checker = LLMMentionChecker(openrouter_key="test-key")
+                    result = checker._query_openrouter("fallback test")
+
+                    assert result is not None
+                    payload = mock_post.call_args[1]["json"]
+                    assert payload["model"] == "qwen/qwen3.6-plus:free", (
+                        f"Fallback model failed: got {payload['model']}"
+                    )
+
+    @pytest.mark.skipif(
+        not os.environ.get("OPENROUTER_API_KEY"),
+        reason="Requiere OPENROUTER_API_KEY para integración real"
+    )
+    def test_integration_real_openrouter_call(self):
+        """Integration: real OpenRouter call with model from registry."""
+        checker = LLMMentionChecker()
+        result = checker._query_openrouter("Say hello in one word.")
+
+        assert result is not None
+        assert "text" in result
+        assert len(result["text"]) > 0
+        assert result["cost_usd"] == 0.0
+        assert result["tokens_used"] > 0

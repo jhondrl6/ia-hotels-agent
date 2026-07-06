@@ -17,6 +17,8 @@ import time
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 
+from modules.utils.provider_registry import ProviderRegistry
+
 logger = logging.getLogger(__name__)
 
 
@@ -224,7 +226,7 @@ class LLMMentionChecker:
     def _query_openrouter(self, query: str) -> Optional[dict]:
         """
         Llama OpenRouter API. NUNCA usar openai SDK directo.
-        Usa google/gemini-2.0-flash-001 como modelo barato.
+        Usa el modelo configurado en provider_registry.yaml (default_model de openrouter).
         Returns dict with 'text', 'cost_usd', 'tokens_used' or None on failure.
         """
         import requests
@@ -235,8 +237,15 @@ class LLMMentionChecker:
             "HTTP-Referer": "https://iah-cli.dev",
             "X-Title": "IAH-CLI IAO Checker",
         }
+
+        # Leer modelo del provider_registry.yaml (no hardcoded)
+        registry = ProviderRegistry()
+        registry.load()
+        openrouter_cfg = registry.get("openrouter")
+        model = openrouter_cfg.default_model if openrouter_cfg else "qwen/qwen3.6-plus:free"
+
         payload = {
-            "model": "google/gemini-2.0-flash-001",
+            "model": model,
             "messages": [{"role": "user", "content": query}],
             "max_tokens": 1024,
         }
@@ -255,8 +264,8 @@ class LLMMentionChecker:
         prompt_tokens = usage.get("prompt_tokens", 0)
         completion_tokens = usage.get("completion_tokens", 0)
         total_tokens = prompt_tokens + completion_tokens
-        # Cost: gemini-2.0-flash at $0.075/1M prompt + $0.30/1M completion
-        cost = (prompt_tokens / 1_000_000) * 0.075 + (completion_tokens / 1_000_000) * 0.30
+        # Cost: model from provider_registry (default: qwen/qwen3.6-plus:free = $0)
+        cost = 0.0
         return {"text": text, "cost_usd": cost, "tokens_used": total_tokens}
 
     def _query_gemini(self, query: str) -> Optional[dict]:

@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-07-06
 > **Version actual:** v4.58.0
-> **Total fases completadas:** 342
+> **Total fases completadas:** 343
 
 ---
 
@@ -8271,6 +8271,26 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (2)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-07-06
+**Descripcion:** BUG4a_openrouter_model_externalized_to_registry
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/llm_mention_checker.py` | Llm Mention Checker |
+| `config/provider_registry.yaml` | Provider Registry |
+
+### Validaciones
+- [x] Tests passing (4)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

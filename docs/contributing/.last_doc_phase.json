@@ -43,7 +43,7 @@
   "modules/financial_engine/calculator_v2.py": "PROSPECCION-II",
   "AGENTS.md": "FASE-CMD-B",
   "VERSION.yaml": "FASE-RELEASE-4.57.0",
-  "config/provider_registry.yaml": "FASE-CONFIG-8",
+  "config/provider_registry.yaml": "FASE-2",
   "data_models/analytics_status.py": "FASE-CONFIG-6",
   "modules/analytics/__init__.py": "FASE-CONFIG-6",
   "modules/auditors/seo_elements_detector.py": "FASE-A",
@@ -196,5 +196,6 @@
   "tests/asset_generation/test_phase4_guardrails.py": "FASE-5",
   "config/regional_benchmarks.yaml": "REFACTOR-PENDIENTE-V4.58.0",
   "test_capex_rename.py": "FASE-1",
-  "NONE": "FASE-4"
+  "NONE": "FASE-4",
+  "modules/auditors/llm_mention_checker.py": "FASE-2"
 }
