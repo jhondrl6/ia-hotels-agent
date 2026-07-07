@@ -1,8 +1,8 @@
-<!-- agents_version: v4.49.0 | last_update: 2026-05-29 -->
+<!-- agents_version: v4.49.0 | last_update: 2026-07-07 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.60.0 -- CAPEX-BREAKDOWN-FIX COMPLETADO**
+> **v4.60.1 -- Bugfixes Luxor v4complete COMPLETADO**
 
 ---
 

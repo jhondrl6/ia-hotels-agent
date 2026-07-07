@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.60.0 | **Codename**: CAPEX-BREAKDOWN-FIX
-> **Release date**: 2026-05-29 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.60.1 | **Codename**: Bugfixes Luxor v4complete
+> **Release date**: 2026-07-07 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-05-29 | v4.60.0 CAPEX-BREAKDOWN-FIX*
+*Auto-generado: 2026-07-07 | v4.60.1 Bugfixes Luxor v4complete*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

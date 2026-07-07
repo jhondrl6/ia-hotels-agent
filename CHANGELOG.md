@@ -1,6 +1,9 @@
 # Changelog
 
-## [4.60.1] - Bugfixes Luxor v4complete — En progreso
+## [4.60.1] - Bugfixes Luxor v4complete — 2026-07-06
+
+### Objetivo
+Corrección de 5 bugs detectados en ejecución v4complete de Luxorhotel, no relacionados con onboarding.
 
 ### Cambios Implementados — FASE-1
 - **BUG-2**: Removido `calc_result` UnboundLocalError en FASE-K (main.py ~L1942). Reemplazado por `financial_breakdown.evidence_tier` + `disclaimer`.
@@ -75,6 +78,11 @@
 ### Tests — FASE-5
 - 0 tests nuevos (fase de verificación)
 - 0 regresiones detectadas
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `evidence/FASE-5/` | Evidencia de verificación E2E (23 archivos) |
 
 ## [4.60.0] - CAPEX Breakdown Fix & Generator Cleanup — 2026-05-29
 
