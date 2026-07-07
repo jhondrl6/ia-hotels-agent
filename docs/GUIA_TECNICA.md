@@ -79,6 +79,27 @@
 
 **Dependencias:** Playwright v1.58.0 + chromium (ya instalados).
 
+### Notas de Cambios v4.60.1 — FASE-5 (Verificación E2E)
+
+**Fecha:** 2026-07-06
+
+**Módulos afectados:**
+- Ninguno (fase de verificación — ejecución v4complete sin cambios de código)
+
+**Resultado:** v4complete ejecutado exitosamente para Luxorhotel con todos los fixes de FASE-1 a FASE-4.
+- BUG-1: ✅ Coordenadas reales usadas (lat:4.81, lng:-75.70)
+- BUG-2: ✅ Sin UnboundLocalError en FASE-K
+- BUG-4a: ⚠️ OpenRouter 404 persiste en llm_mention_checker (modelo `qwen/qwen3.6-plus:free`). DeepSeek usado como fallback exitoso.
+- BUG-4b: Gemini 403 — fuera del plan (acción del usuario)
+- BUG-5: ✅ Scrubs funcionando (post-T4FIX + post-gen), sin [SKIP]
+- BUG-6: ✅ Playwright SPA fallback presente en código. Luxorhotel no triggeró heurística (≥3 meta tags)
+- Coherence score: 0.80 | Publication Gates: 11/11 | READY_FOR_PUBLICATION
+- 0 regresiones
+
+**Backwards compatibility:** N/A (sin cambios de código).
+
+**Tests:** 0 tests nuevos. 0 regresiones detectadas en suite completa.
+
 ### Notas de Cambios v4.60.0 — CAPEX-BREAKDOWN-FIX
 
 **Fecha:** 2026-05-29

@@ -8,7 +8,7 @@
 | FASE-2 | BUG-4a: Resiliencia LLM | ✅ COMPLETADA | 2026-07-06 | 4/4 (4 nuevos) | ✅ |
 | FASE-3 | BUG-5: Higiene Scrubber | ✅ COMPLETADA | 2026-07-06 | 24/24 (0 nuevos) | ✅ |
 | FASE-4 | BUG-6: SPA Rendering | ✅ COMPLETADA | 2026-07-06 | 16/16 (7 nuevos) | ✅ |
-| FASE-5 | Verificación E2E | 🔒 BLOQUEADA | - | - | - |
+| FASE-5 | Verificación E2E | ✅ COMPLETADA | 2026-07-06 | - | ✅ |
 | FASE-RELEASE | Cierre v4.60.1 | 🔒 BLOQUEADA | - | - | - |
 
 ## Dependencias

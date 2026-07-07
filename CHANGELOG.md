@@ -55,6 +55,27 @@
 - 7 tests nuevos SPA rendering
 - 148/149 auditor tests pasan (1 skip, 0 regresiones)
 
+### Cambios Implementados — FASE-5 (Verificación E2E)
+- **v4complete ejecutado** para Luxorhotel con todos los fixes de FASE-1 a FASE-4
+- **BUG-1**: ✅ lat/lng reales (4.81, -75.70), 5 competitors encontrados
+- **BUG-2**: ✅ Sin UnboundLocalError en FASE-K. FinancialBreakdown derivado correctamente.
+- **BUG-4a**: ⚠️ OpenRouter 404 persiste en `llm_mention_checker` (modelo `qwen/qwen3.6-plus:free` no encontrado). El pipeline principal usa DeepSeek y completa exitosamente.
+- **BUG-4b (gemini 403)**: Fuera del plan — requiere acción del usuario (API key).
+- **BUG-5**: ✅ Sin warnings `[SKIP]` de scrubber. Scrubs post-T4FIX y post-gen funcionando.
+- **BUG-6**: ✅ Código Playwright SPA fallback presente en `v4_comprehensive.py`. Luxorhotel no triggeró la heurística SPA (tiene ≥3 meta tags); Open Graph: false es resultado genuino (el sitio no tiene OG tags).
+- **Coherence score**: 0.80 (≥ 0.80)
+- **Publication Gates**: 11/11 PASSED (READY_FOR_PUBLICATION)
+- **Regresiones**: 0
+
+### Archivos Modificados — FASE-5
+| Archivo | Cambio |
+|---------|--------|
+| `evidence/FASE-5/` | Evidencia de ejecución v4complete (23 archivos) |
+
+### Tests — FASE-5
+- 0 tests nuevos (fase de verificación)
+- 0 regresiones detectadas
+
 ## [4.60.0] - CAPEX Breakdown Fix & Generator Cleanup — 2026-05-29
 
 ### Objetivo
