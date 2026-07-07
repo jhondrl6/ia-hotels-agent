@@ -87,6 +87,15 @@ class LLMMentionChecker:
         "Hotel tranquilo para trabajar en {location}",
     ]
 
+    # Fallback models si el default_model configurado da 404.
+    # Ordenados por calidad/capacidad. Se prueban en orden hasta que uno funcione.
+    _OPENROUTER_FALLBACK_MODELS = [
+        "nvidia/nemotron-3-super-120b-a12b:free",   # 120B params, 1M ctx, gratuito
+        "google/gemma-4-31b-it:free",                # 31B params, 262K ctx, confiable
+        "meta-llama/llama-3.3-70b-instruct:free",    # 70B params, 131K ctx
+        "qwen/qwen3-next-80b-a3b-instruct:free",     # 80B MoE, 262K ctx
+    ]
+
     def __init__(self, openrouter_key: Optional[str] = None,
                  gemini_key: Optional[str] = None,
                  perplexity_key: Optional[str] = None):
@@ -227,6 +236,7 @@ class LLMMentionChecker:
         """
         Llama OpenRouter API. NUNCA usar openai SDK directo.
         Usa el modelo configurado en provider_registry.yaml (default_model de openrouter).
+        Si el modelo configurado da 404, prueba los fallback models en orden.
         Returns dict with 'text', 'cost_usd', 'tokens_used' or None on failure.
         """
         import requests
@@ -242,31 +252,71 @@ class LLMMentionChecker:
         registry = ProviderRegistry()
         registry.load()
         openrouter_cfg = registry.get("openrouter")
-        model = openrouter_cfg.default_model if openrouter_cfg else "qwen/qwen3.6-plus:free"
+        primary_model = openrouter_cfg.default_model if openrouter_cfg else "nvidia/nemotron-3-super-120b-a12b:free"
 
-        payload = {
-            "model": model,
-            "messages": [{"role": "user", "content": query}],
-            "max_tokens": 1024,
-        }
+        # Construir lista de modelos a probar: primario + fallbacks (sin duplicados)
+        models_to_try = [primary_model] + [
+            m for m in self._OPENROUTER_FALLBACK_MODELS if m != primary_model
+        ]
 
-        response = requests.post(
-            "https://openrouter.ai/api/v1/chat/completions",
-            headers=headers,
-            json=payload,
-            timeout=30,
+        last_error = None
+        for model in models_to_try:
+            payload = {
+                "model": model,
+                "messages": [{"role": "user", "content": query}],
+                "max_tokens": 1024,
+            }
+
+            try:
+                response = requests.post(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    headers=headers,
+                    json=payload,
+                    timeout=30,
+                )
+                response.raise_for_status()
+                data = response.json()
+                text = data["choices"][0]["message"]["content"]
+                # OpenRouter returns usage with prompt/completion tokens
+                usage = data.get("usage", {})
+                prompt_tokens = usage.get("prompt_tokens", 0)
+                completion_tokens = usage.get("completion_tokens", 0)
+                total_tokens = prompt_tokens + completion_tokens
+                # Free models: cost = 0
+                cost = 0.0
+
+                if model != primary_model:
+                    logger.info(
+                        f"OpenRouter: usado fallback model '{model}' "
+                        f"(primario '{primary_model}' no disponible)"
+                    )
+
+                return {"text": text, "cost_usd": cost, "tokens_used": total_tokens}
+
+            except requests.HTTPError as e:
+                status = e.response.status_code if hasattr(e, 'response') else None
+                if status == 404:
+                    logger.debug(
+                        f"OpenRouter model '{model}' no encontrado (404), "
+                        f"probando siguiente..."
+                    )
+                    last_error = e
+                    continue
+                # Non-404 HTTP errors: no reintentar (auth, rate limit, etc.)
+                logger.warning(f"OpenRouter query failed for '{model}': {e}")
+                return None
+
+            except Exception as e:
+                logger.warning(f"OpenRouter query failed for '{model}': {e}")
+                return None
+
+        # Todos los modelos fallaron
+        logger.warning(
+            f"OpenRouter: todos los modelos fallaron (primario='{primary_model}', "
+            f"fallbacks={self._OPENROUTER_FALLBACK_MODELS}). "
+            f"Último error: {last_error}"
         )
-        response.raise_for_status()
-        data = response.json()
-        text = data["choices"][0]["message"]["content"]
-        # OpenRouter returns usage with prompt/completion tokens
-        usage = data.get("usage", {})
-        prompt_tokens = usage.get("prompt_tokens", 0)
-        completion_tokens = usage.get("completion_tokens", 0)
-        total_tokens = prompt_tokens + completion_tokens
-        # Cost: model from provider_registry (default: qwen/qwen3.6-plus:free = $0)
-        cost = 0.0
-        return {"text": text, "cost_usd": cost, "tokens_used": total_tokens}
+        return None
 
     def _query_gemini(self, query: str) -> Optional[dict]:
         """Llama Gemini API directo (no via OpenRouter)."""

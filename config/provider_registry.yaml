@@ -106,7 +106,7 @@ providers:
     auth_type: api_key
     env_vars:
       - OPENROUTER_API_KEY
-    default_model: qwen/qwen3.6-plus:free
+    default_model: nvidia/nemotron-3-super-120b-a12b:free
     enabled: true
     cost_per_call: variable
     retry_count: 2
