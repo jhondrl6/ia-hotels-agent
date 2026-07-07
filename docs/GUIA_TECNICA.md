@@ -27,6 +27,23 @@
 
 ---
 
+### Notas de Cambios v4.60.1 — FASE-3 (BUGFIX-LUXOR)
+
+**Fecha:** 2026-07-06
+
+**Módulos afectados:**
+- `main.py` (bloque FASE 3.6 eliminado; `hotel_data` reubicado al post-gen scrub)
+
+**Problema:** FASE 3.6 del content scrubber corría antes de que los documentos existieran, produciendo warnings `[SKIP] Diagnostic/Proposal document not available for scrubbing`. Los scrubs reales ocurrían post-T4FIX y post-gen.
+
+**Solución:** Eliminado el bloque FASE 3.6 (~106 líneas: ContentScrubber + DocumentQualityGate). Las variables `quality_gate_issues/blockers/warnings` no tenían consumidores downstream. `hotel_data` fue reubicado al bloque post-gen scrub (único consumidor real).
+
+**Backwards compatibility:** ✅ Sin breaking changes — los scrubs funcionales post-T4FIX y post-gen se preservaron intactos.
+
+**Tests:** 24/24 tests existentes del scrubber pasan, 0 regresiones.
+
+---
+
 ### Notas de Cambios v4.60.0 — CAPEX-BREAKDOWN-FIX
 
 **Fecha:** 2026-05-29

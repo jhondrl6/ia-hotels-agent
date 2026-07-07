@@ -17,6 +17,18 @@
 - 1 test BUG-2: `FinancialBreakdown.evidence_tier` y `disclaimer` accesibles
 - 0 regresiones
 
+### Cambios Implementados — FASE-3
+- **BUG-5**: Eliminado bloque FASE 3.6 del content scrubber (dead code que producía warnings `[SKIP]` innecesarios). Los scrubs reales post-T4FIX y post-gen siguen intactos.
+
+### Archivos Modificados — FASE-3
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Eliminado bloque FASE 3.6 (ContentScrubber + DocumentQualityGate, ~106 líneas). `hotel_data` reubicado al post-gen scrub. |
+
+### Tests — FASE-3
+- 24/24 tests existentes del scrubber pasan (0 regresiones)
+- Scrubs post-T4FIX y post-gen verificados como intactos
+
 ## [4.60.0] - CAPEX Breakdown Fix & Generator Cleanup — 2026-05-29
 
 ### Objetivo

@@ -2369,111 +2369,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     proposal_path = None
     proposal_doc = None
 
-    # FASE 3.6: Content Scrubber + Document Quality Gate (FASE-B)
-    print("\n📍 FASE 3.6: Content Scrubber + Quality Gate (FASE-B)")
-    print("-" * 70)
-
-    try:
-        from modules.postprocessors.content_scrubber import ContentScrubber
-        from modules.postprocessors.document_quality_gate import DocumentQualityGate
-        import json
-
-        # Build hotel_data from available variables
-        hotel_data = {}
-        if region:
-            hotel_data["region"] = region.replace('_', ' ').title()
-        # Extract city/state from audit_result if available
-        if audit_result and hasattr(audit_result, 'hotel_name'):
-            hotel_data["hotel_name"] = audit_result.hotel_name
-        # Extract city from GBP address for region placeholder scrubbing
-        if audit_result and hasattr(audit_result, 'gbp') and audit_result.gbp and hasattr(audit_result.gbp, 'address'):
-            addr = audit_result.gbp.address or ""
-            # Format: "..., CityName, Department, Country" - take first city-like component
-            parts = [p.strip() for p in addr.split(',')]
-            for part in parts:
-                # Skip road markers, departments, countries
-                if any(skip in part.lower() for skip in ['vía', 'vereda', 'km', 'departamento', 'colombia', 'risaralda']):
-                    continue
-                # Likely the city (first significant noun phrase)
-                if part and len(part) > 2 and not part.isupper():
-                    hotel_data["city"] = part
-                    break
-
-        scrubber = ContentScrubber()
-
-        # Scrub diagnostic document
-        if diagnostic_path and Path(diagnostic_path).exists():
-            with open(diagnostic_path, 'r', encoding='utf-8') as f:
-                diag_content = f.read()
-            diag_scrub = scrubber.scrub(diag_content, hotel_data, "diagnostico")
-            if diag_scrub.fix_count > 0:
-                print(f"   [SCRUB] Diagnostic: {diag_scrub.fix_count} fix(es) applied")
-                for fix in diag_scrub.fixes_applied:
-                    print(f"      - {fix}")
-                with open(diagnostic_path, 'w', encoding='utf-8') as f:
-                    f.write(diag_scrub.scrubbed)
-                # Read back the scrubbed content for quality gate
-                diag_text = diag_scrub.scrubbed
-            else:
-                print(f"   [OK] Diagnostic: clean, no fixes needed")
-                diag_text = diag_content
-        else:
-            diag_text = ""
-            print("   [SKIP] Diagnostic document not available for scrubbing")
-
-        # Scrub proposal document
-        prop_text = ""
-        if proposal_path and Path(proposal_path).exists():
-            with open(proposal_path, 'r', encoding='utf-8') as f:
-                prop_content = f.read()
-            prop_scrub = scrubber.scrub(prop_content, hotel_data, "propuesta")
-            if prop_scrub.fix_count > 0:
-                print(f"   [SCRUB] Proposal: {prop_scrub.fix_count} fix(es) applied")
-                for fix in prop_scrub.fixes_applied:
-                    print(f"      - {fix}")
-                with open(proposal_path, 'w', encoding='utf-8') as f:
-                    f.write(prop_scrub.scrubbed)
-                prop_text = prop_scrub.scrubbed
-            else:
-                print(f"   [OK] Proposal: clean, no fixes needed")
-                prop_text = prop_content
-        else:
-            print("   [SKIP] Proposal document not available for scrubbing")
-
-        # Run quality gate on scrubbed documents
-        gate = DocumentQualityGate()
-
-        diag_result = gate.validate_document(diag_text, "diagnostico", hotel_data) if diag_text else None
-        prop_result = gate.validate_document(prop_text, "propuesta", hotel_data) if prop_text else None
-
-        all_issues = []
-        if diag_result:
-            all_issues.extend(diag_result.issues)
-        if prop_result:
-            all_issues.extend(prop_result.issues)
-
-        blockers = [i for i in all_issues if i.severity == "blocker"]
-        warnings = [i for i in all_issues if i.severity == "warning"]
-
-        if all_issues:
-            print(f"   [WARN] Quality gate: {len(all_issues)} issue(s) after scrubbing")
-            for issue in all_issues[:5]:
-                print(f"      [{issue.severity.upper()}] Line {issue.line_number}: {issue.message}")
-            if blockers:
-                print(f"   ⚠️  {len(blockers)} blocker(s) remain after scrubbing — document logged but delivery proceeds")
-        else:
-            print(f"   [OK] Quality gate: PASSED — all documents clean")
-
-        # Store results in locals for downstream use
-        quality_gate_issues = all_issues
-        quality_gate_blockers = blockers
-        quality_gate_warnings = warnings
-
-    except Exception as e:
-        print(f"   [WARN] Content scrubber/quality gate failed: {e}")
-        quality_gate_issues = []
-        quality_gate_blockers = []
-        quality_gate_warnings = []
+    # FASE 3.6: Content Scrubber — REMOVED (dead code, BUGFIX-LUXOR-2026-07-06 FASE-3 BUG-5)
+    # Scrubs run post-T4FIX (line ~2551) and post-gen (line ~2721) — those are the real ones.
 
     # FIX-D7: Proposal generation moved to AFTER assets
     # Create a minimal proposal_doc for asset generation (coherence validation needs price_monthly)
@@ -2720,6 +2617,23 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         # Creamos scrubber fresco — NO dependemos del del try block (L2307)
         from modules.postprocessors.content_scrubber import ContentScrubber
         from pathlib import Path
+
+        # Build hotel_data for the post-gen scrub (was in deleted FASE 3.6, BUGFIX-LUXOR-2026-07-06 FASE-3)
+        hotel_data = {}
+        if region:
+            hotel_data["region"] = region.replace('_', ' ').title()
+        if audit_result and hasattr(audit_result, 'hotel_name'):
+            hotel_data["hotel_name"] = audit_result.hotel_name
+        if audit_result and hasattr(audit_result, 'gbp') and audit_result.gbp and hasattr(audit_result.gbp, 'address'):
+            addr = audit_result.gbp.address or ""
+            parts = [p.strip() for p in addr.split(',')]
+            for part in parts:
+                if any(skip in part.lower() for skip in ['vía', 'vereda', 'km', 'departamento', 'colombia', 'risaralda']):
+                    continue
+                if part and len(part) > 2 and not part.isupper():
+                    hotel_data["city"] = part
+                    break
+
         postscrubber = ContentScrubber()
         if proposal_path and Path(proposal_path).exists():
             try:
