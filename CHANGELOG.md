@@ -29,6 +29,32 @@
 - 24/24 tests existentes del scrubber pasan (0 regresiones)
 - Scrubs post-T4FIX y post-gen verificados como intactos
 
+### Cambios Implementados — FASE-2
+- **BUG-4a**: Externalizado modelo openrouter al `provider_registry.yaml`. `llm_mention_checker.py` ya no hardcodea `openai/gpt-4o` (404). Lee `default_model` del registry con fallback `openai/gpt-4.1`.
+
+### Archivos Modificados — FASE-2
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/llm_mention_checker.py` | Modelo openrouter leído de `provider_registry.yaml` en lugar de hardcoded |
+| `config/provider_registry.yaml` | `default_model` actualizado a modelo vigente |
+
+### Tests — FASE-2
+- 4 tests de modelo dinámico (not hardcoded, from registry, payload usa registry, fallback)
+- 0 regresiones
+
+### Cambios Implementados — FASE-4
+- **BUG-6**: Integrado Playwright como fallback para renderizar SPAs antes del SEO audit. Detección heurística de SPA (scripts sin meta/OG tags) + renderizado con chromium headless + fallback graceful a BeautifulSoup si Playwright falla.
+
+### Archivos Modificados — FASE-4
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | `_run_seo_elements_audit` con detección SPA + Playwright fallback; nuevos métodos `_is_spa()` y `_render_with_playwright()` |
+| `tests/auditors/test_seo_elements_detector.py` | 7 tests SPA rendering (4 detección + 3 integración mock/fallback) |
+
+### Tests — FASE-4
+- 7 tests nuevos SPA rendering
+- 148/149 auditor tests pasan (1 skip, 0 regresiones)
+
 ## [4.60.0] - CAPEX Breakdown Fix & Generator Cleanup — 2026-05-29
 
 ### Objetivo

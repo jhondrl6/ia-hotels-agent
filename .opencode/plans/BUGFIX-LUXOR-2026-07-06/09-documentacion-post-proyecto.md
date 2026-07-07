@@ -22,7 +22,7 @@
 | Tests nuevos (BUG-2 regresión) | 1 (evidence_tier + disclaimer accesibles) | FASE-1 |
 | Tests nuevos (BUG-4a mock) | 4 (model registry, fallback, no hardcode, integration skip) | FASE-2 |
 | Tests nuevos (BUG-5 scrubber) | 0 (24/24 tests existentes pasan, sin regresiones) | FASE-3 |
-| Tests nuevos (BUG-6 SPA rendering) | [pendiente] | FASE-4 |
+| Tests nuevos (BUG-6 SPA rendering) | 7 (4 detección + 3 integración mock/fallback) | FASE-4 |
 | Coherence score post-fix | [pendiente] | FASE-5 |
 | Publication Gates post-fix | [pendiente] | FASE-5 |
 
@@ -35,4 +35,4 @@
 | VERSION.yaml | Bump a 4.60.1 | FASE-RELEASE |
 | AGENTS.md | Sync versión | FASE-RELEASE |
 | README.md | Sync versión | FASE-RELEASE |
-| REGISTRY.md | Registro de fases | FASE-1, FASE-2, FASE-3 |
+| REGISTRY.md | Registro de fases | FASE-1, FASE-2, FASE-3, FASE-4 |

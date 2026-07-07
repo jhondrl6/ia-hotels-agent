@@ -1257,9 +1257,64 @@ class V4ComprehensiveAuditor:
             )
 
     def _run_seo_elements_audit(self, html: str, url: str) -> SEOElementsResult:
-        """Run SEO elements detection."""
+        """Run SEO elements detection with SPA Playwright fallback."""
         detector = SEOElementsDetector()
-        return detector.detect(html, url)
+        effective_html = html
+        if self._is_spa(html):
+            logger.info(f"SPA detected for {url}, attempting Playwright render...")
+            rendered = self._render_with_playwright(url)
+            if rendered:
+                logger.info(f"Playwright render successful for {url}")
+                effective_html = rendered
+            else:
+                logger.warning(f"Playwright render failed for {url}, falling back to static HTML")
+        return detector.detect(effective_html, url)
+
+    def _is_spa(self, html: str) -> bool:
+        """Detect if HTML is a SPA app shell (scripts but few meta tags, no OG tags).
+
+        Heuristic:
+        - Has <script> tags → the page relies on JavaScript
+        - Very few <meta> tags (< 3) → client-side rendering hasn't run
+        - No OG tags → Open Graph metadata is injected by JS
+        """
+        if not html:
+            return False
+        from bs4 import BeautifulSoup
+        soup = BeautifulSoup(html, 'html.parser')
+        scripts = soup.find_all('script')
+        meta_tags = soup.find_all('meta')
+        og_tags = soup.find_all('meta', attrs={'property': lambda x: x and x.startswith('og:') if x else False})
+        return len(scripts) > 0 and len(meta_tags) < 3 and len(og_tags) == 0
+
+    def _render_with_playwright(self, url: str, timeout: int = 15000) -> Optional[str]:
+        """Render a page with Playwright. Returns rendered HTML or None on failure.
+
+        Graceful fallback: if Playwright is not installed, chromium is not available,
+        or the page times out, returns None so the caller can fall back to static HTML.
+        """
+        try:
+            from playwright.sync_api import sync_playwright
+        except ImportError:
+            logger.warning("Playwright not installed, cannot render SPA")
+            return None
+        try:
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True)
+                page = browser.new_page()
+                try:
+                    page.goto(url, timeout=timeout)
+                    page.wait_for_load_state('networkidle', timeout=timeout)
+                except Exception as e:
+                    logger.warning(f"Playwright page load failed for {url}: {e}")
+                    browser.close()
+                    return None
+                html = page.content()
+                browser.close()
+                return html
+        except Exception as e:
+            logger.warning(f"Playwright rendering failed for {url}: {e}")
+            return None
 
     def _check_ssl(self, url: str) -> bool:
         """

@@ -7,7 +7,7 @@
 | FASE-1 | BUG-2 + BUG-1: Quick Wins | ✅ COMPLETADA | 2026-07-06 | 39/39 (4 nuevos) | ✅ |
 | FASE-2 | BUG-4a: Resiliencia LLM | ✅ COMPLETADA | 2026-07-06 | 4/4 (4 nuevos) | ✅ |
 | FASE-3 | BUG-5: Higiene Scrubber | ✅ COMPLETADA | 2026-07-06 | 24/24 (0 nuevos) | ✅ |
-| FASE-4 | BUG-6: SPA Rendering | ⬜ NO INICIADA | - | - | - |
+| FASE-4 | BUG-6: SPA Rendering | ✅ COMPLETADA | 2026-07-06 | 16/16 (7 nuevos) | ✅ |
 | FASE-5 | Verificación E2E | 🔒 BLOQUEADA | - | - | - |
 | FASE-RELEASE | Cierre v4.60.1 | 🔒 BLOQUEADA | - | - | - |
 
@@ -26,7 +26,7 @@
 | BUG-4a (openrouter 404) | FASE-2 | ✅ |
 | BUG-4b (gemini 403) | FUERA DE PLAN | N/A (acción usuario) |
 | BUG-5 (scrubber SKIP) | FASE-3 | ✅ |
-| BUG-6 (SPA OG tags) | FASE-4 | ⬜ |
+| BUG-6 (SPA OG tags) | FASE-4 | ✅ |
 
 ## Métricas Acumulativas
 

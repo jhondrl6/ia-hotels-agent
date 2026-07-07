@@ -27,6 +27,24 @@
 
 ---
 
+### Notas de Cambios v4.60.1 — FASE-2 (BUGFIX-LUXOR)
+
+**Fecha:** 2026-07-06
+
+**Módulos afectados:**
+- `modules/auditors/llm_mention_checker.py`
+- `config/provider_registry.yaml`
+
+**Problema:** `llm_mention_checker.py` hardcodeaba modelo `openai/gpt-4o` en los payloads a OpenRouter, causando error 404 cuando el modelo no existía en el catálogo de OpenRouter.
+
+**Solución:** Externalizar modelo al `provider_registry.yaml`. `llm_mention_checker.py` ahora lee `default_model` del registry con fallback `openai/gpt-4.1`.
+
+**Backwards compatibility:** ✅ Sin breaking changes. Si el registry no tiene `default_model`, usa fallback.
+
+**Tests:** 4 tests de modelo dinámico (not hardcoded, from registry, payload usa registry, fallback). 0 regresiones.
+
+---
+
 ### Notas de Cambios v4.60.1 — FASE-3 (BUGFIX-LUXOR)
 
 **Fecha:** 2026-07-06
@@ -43,6 +61,23 @@
 **Tests:** 24/24 tests existentes del scrubber pasan, 0 regresiones.
 
 ---
+
+### Notas de Cambios v4.60.1 — FASE-4 (BUGFIX-LUXOR)
+
+**Fecha:** 2026-07-06
+
+**Módulos afectados:**
+- `modules/auditors/v4_comprehensive.py` (`_run_seo_elements_audit`, nuevos métodos `_is_spa()`, `_render_with_playwright()`)
+
+**Problema:** Sitios SPA (JavaScript app shell) retornaban HTML vacío al fetcher HTTP. El SEO elements detector no encontraba OG tags (falso negativo). AEO score incorrecto: 25 pts del componente Open Graph se perdían.
+
+**Solución:** Detectar SPAs con heurística (scripts pero < 3 meta tags y 0 OG tags) y renderizar con Playwright como fallback antes de parsear. Fallback graceful si Playwright falla (ImportError, timeout, o chromium no disponible) — retorna resultado sobre HTML estático sin crashear.
+
+**Backwards compatibility:** ✅ Sin breaking changes — `detect()` en `seo_elements_detector.py` permanece sin cambios. Playwright se usa solo cuando se detecta SPA; sitios normales no se ven afectados. Si Playwright falla, fallback a BeautifulSoup (comportamiento original).
+
+**Tests:** 7 tests nuevos SPA rendering (4 detección + 3 integración mock/fallback). 148/149 auditor tests pasan (0 regresiones).
+
+**Dependencias:** Playwright v1.58.0 + chromium (ya instalados).
 
 ### Notas de Cambios v4.60.0 — CAPEX-BREAKDOWN-FIX
 
