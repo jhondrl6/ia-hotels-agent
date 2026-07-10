@@ -203,7 +203,7 @@ python scripts/log_phase_completion.py --fase FASE-X \
 Si hay desincronizacion:
 ```bash
 python scripts/version_consistency_checker.py       # Diagnosticar
-python scripts/sync_versions.py --fix               # Auto-reparar si posible
+python scripts/sync_versions.py                     # Sincronizar (aplica cambios)
 ```
 
 ---

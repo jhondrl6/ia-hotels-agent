@@ -120,7 +120,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 2743 funciones, 211 archivos, 0 regresion |
+| **Tests** | 3,102 funciones, 229 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -357,7 +357,7 @@ Se incluyen para orientar mejoras pero nunca bloquean publicación.
 
 <!--
 ZONA REFERENCIA - Solo si es necesario para contexto profundo
-Actualizada: 2026-04-03 | v4.19.0
+Actualizada: 2026-07-10 | v4.61.0
 -->
 
 ## Transformación v3 → v4
@@ -379,10 +379,10 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (2743 funciones, 211 archivos)
+# Todas las pruebas (3,102 funciones, 229 archivos)
 python -m pytest tests/ -v
 
-# Suite de regresión (52 tests)
+# Suite de regresión (26 tests)
 python -m pytest tests/regression/ -v
 
 # Solo modulos v4 core
@@ -394,27 +394,30 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (2743 funciones totales)
+### Cobertura por Modulo (3,102 funciones totales)
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
-| financial_engine | 339 | `tests/financial_engine/` |
-| test_never_block_architecture | 159 | `tests/test_never_block_architecture/` |
-| data_validation | 126 | `tests/data_validation/` |
-| asset_generation | 150 | `tests/asset_generation/` |
+| financial_engine | 500 | `tests/financial_engine/` |
+| asset_generation | 393 | `tests/asset_generation/` |
+| quality_gates | 268 | `tests/quality_gates/` |
+| commercial_documents | 245 | `tests/commercial_documents/` |
+| auditors | 149 | `tests/auditors/` |
 | geo_enrichment | 140 | `tests/geo_enrichment/` |
-| quality_gates | 87 | `tests/quality_gates/` |
-| auditors | 75 | `tests/auditors/` |
+| test_never_block_architecture | 122 | `tests/test_never_block_architecture/` |
+| data_validation | 111 | `tests/data_validation/` |
 | orchestration_v4 | 66 | `tests/orchestration_v4/` |
-| scrapers | 29 | `tests/scrapers/` |
+| config | 61 | `tests/config/` |
+| utils | 57 | `tests/utils/` |
+| postprocessors | 52 | `tests/postprocessors/` |
+| scrapers | 38 | `tests/scrapers/` |
+| analytics | 33 | `tests/analytics/` |
+| regression | 26 | `tests/regression/` |
 | providers | 18 | `tests/providers/` |
-| e2e | 13 | `tests/e2e/` |
-| delivery | 11 | `tests/delivery/` |
+| common | 16 | `tests/common/` |
 | monitoring | 14 | `tests/monitoring/` |
-| observability | 9 | `tests/observability/` |
-| regression | 52 | `tests/regression/` |
-| commercial_documents | 9 | `tests/commercial_documents/` |
-| root test files | ~482 | `tests/test_*.py` (integration, harness, data models) |
+| delivery | 12 | `tests/delivery/` |
+| root test files | 598 | `tests/test_*.py` (integration, harness, data models) |
 
 ---
 
@@ -479,8 +482,8 @@ iah-cli/
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
 │   └── validation/             # Validaciones adicionales
-├── tests/                      # Suite de pruebas (2743 funciones, 211 archivos)
-│   ├── regression/             # Regresion permanente (52 tests)
+├── tests/                      # Suite de pruebas (3,102 funciones, 229 archivos)
+│   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/
 │   ├── orchestration_v4/
