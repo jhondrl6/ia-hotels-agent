@@ -30,6 +30,7 @@ Usage:
 
 from .v4_diagnostic_generator import V4DiagnosticGenerator
 from .v4_proposal_generator import V4ProposalGenerator
+from .hook_pdf_generator import HookPDFGenerator
 from .coherence_validator import CoherenceValidator, CoherenceReport, CoherenceCheck
 from .coherence_config import CoherenceConfig, CoherenceRule, PriceValidationRule, get_coherence_config
 from .pain_solution_mapper import PainSolutionMapper, Pain, Solution
@@ -49,6 +50,7 @@ from .data_structures import (
 __all__ = [
     'V4DiagnosticGenerator',
     'V4ProposalGenerator',
+    'HookPDFGenerator',
     'CoherenceValidator',
     'CoherenceReport',
     'CoherenceCheck',

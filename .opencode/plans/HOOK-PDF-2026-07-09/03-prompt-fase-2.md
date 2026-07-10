@@ -12,15 +12,15 @@ FASE-1 completada: weasyprint+pyyaml instalados, `HookPDFData` dataclass creado 
 Implementar la clase `HookPDFGenerator` con sus 4 métodos (extract_data, validate_data, render_html, generate) + integrar el comando `hook-pdf` en `main.py`.
 
 ### Tareas
-- [ ] 2.1 Crear `modules/commercial_documents/hook_pdf_generator.py` con clase `HookPDFGenerator`:
+- [x] 2.1 Crear `modules/commercial_documents/hook_pdf_generator.py` con clase `HookPDFGenerator`:
   - `__init__(output_dir, template_path=None, style_path=None)`
   - `extract_data() -> HookPDFData` — parsea frontmatter YAML de 01_DIAGNOSTICO + 02_PROPUESTA via glob pattern, lee v4_complete_report.json, extrae scores/dirección/GBP del cuerpo .md via regex
   - `validate_data(data) -> list[str]` — ejecuta 8 validaciones (placeholders sin llenar, campos obligatorios, timestamps, formato COP, slug, no-sobrescritura, dry-run, tier)
   - `render_html(data) -> str` — reemplaza placeholders en el template
   - `generate(force=False, dry_run=False) -> Path` — orquesta extract→validate→render→PDF via weasyprint
-- [ ] 2.2 Exportar `HookPDFGenerator` en `modules/commercial_documents/__init__.py`
-- [ ] 2.3 Modificar `main.py`: agregar `hook-pdf` a choices de argparse, dispatch en `main()`, handler `run_hook_pdf_mode(args)` con args `--output-dir`, `--template`, `--style`, `--dry-run`, `--force`, `--verbose`
-- [ ] 2.4 Smoke test: `python3 -c "from modules.commercial_documents.hook_pdf_generator import HookPDFGenerator; print('OK')"` + `python3 main.py hook-pdf --help`
+- [x] 2.2 Exportar `HookPDFGenerator` en `modules/commercial_documents/__init__.py`
+- [x] 2.3 Modificar `main.py`: agregar `hook-pdf` a choices de argparse, dispatch en `main()`, handler `run_hook_pdf_mode(args)` con args `--output-dir`, `--template`, `--style`, `--dry-run`, `--force`, `--verbose`
+- [x] 2.4 Smoke test: `python3 -c "from modules.commercial_documents.hook_pdf_generator import HookPDFGenerator; print('OK')"` + `python3 main.py hook-pdf --help`
 
 ### Restricciones
 - NO mezclar code fix + v4complete en la misma fase
@@ -34,14 +34,14 @@ Implementar la clase `HookPDFGenerator` con sus 4 métodos (extract_data, valida
 - weasyprint.render_html recibe HTML string, no markdown — el template ya es HTML (FASE-1)
 
 ### Criterios de completitud
-- [ ] `HookPDFGenerator` instanciable con `output_dir` como Path
-- [ ] `extract_data()` retorna `HookPDFData` con todos los campos llenos desde fixtures de prueba
-- [ ] `validate_data()` retorna lista de errores/warnings
-- [ ] `render_html()` retorna string sin `{{...}}` sin reemplazar
-- [ ] `generate()` produce un archivo .pdf (o muestra datos en dry-run)
-- [ ] `python3 main.py hook-pdf --help` muestra los 6 argumentos
-- [ ] `from modules.commercial_documents import HookPDFGenerator` funciona
-- [ ] Cero syntax errors en `python3 -c "import modules.commercial_documents.hook_pdf_generator"`
+- [x] `HookPDFGenerator` instanciable con `output_dir` como Path
+- [x] `extract_data()` retorna `HookPDFData` con todos los campos llenos desde fixtures de prueba
+- [x] `validate_data()` retorna lista de errores/warnings
+- [x] `render_html()` retorna string sin `{{...}}` sin reemplazar
+- [x] `generate()` produce un archivo .pdf (o muestra datos en dry-run)
+- [x] `python3 main.py hook-pdf --help` muestra los 6 argumentos
+- [x] `from modules.commercial_documents import HookPDFGenerator` funciona
+- [x] Cero syntax errors en `python3 -c "import modules.commercial_documents.hook_pdf_generator"`
 
 ### Próxima sesión
 FASE-3: Tests unitarios (8+ tests) cubriendo extract_data, validate_data, render_html, generate, formato COP, slug, glob pattern resolution, tier detection.

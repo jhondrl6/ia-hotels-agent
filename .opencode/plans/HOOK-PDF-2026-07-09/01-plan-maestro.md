@@ -89,13 +89,13 @@ La dependencia B→A es solo de import (B importa la clase de A), pero el esquel
 
 ## DoD (Definition of Done) del plan
 
-- [ ] `hook_pdf_generator.py` en `modules/commercial_documents/` con clase `HookPDFGenerator`
-- [ ] `HookPDFGenerator` exportado en `modules/commercial_documents/__init__.py`
-- [ ] `HookPDFData` dataclass en `data_structures.py` con todos los placeholders §3.2 + `evidence_tier`
-- [ ] `HookPDFData` exportado en `__init__.py`
-- [ ] Template `templates/hook_template.md` (o `.html`) con todos los placeholders del catálogo
-- [ ] Estilos `templates/hook_styles.css` con diseño 2 páginas
-- [ ] Comando `hook-pdf` en `main.py` con args: `--output-dir`, `--template`, `--style`, `--dry-run`, `--force`, `--verbose`
+- [x] `hook_pdf_generator.py` en `modules/commercial_documents/` con clase `HookPDFGenerator`
+- [x] `HookPDFGenerator` exportado en `modules/commercial_documents/__init__.py`
+- [x] `HookPDFData` dataclass en `data_structures.py` con todos los placeholders §3.2 + `evidence_tier`
+- [x] `HookPDFData` exportado en `__init__.py`
+- [x] Template `templates/hook_template.md` (o `.html`) con todos los placeholders del catálogo
+- [x] Estilos `templates/hook_styles.css` con diseño 2 páginas
+- [x] Comando `hook-pdf` en `main.py` con args: `--output-dir`, `--template`, `--style`, `--dry-run`, `--force`, `--verbose`
 - [ ] 8+ tests unitarios en `tests/commercial_documents/test_hook_pdf_generator.py`
 - [ ] PDF generado desde output real de Luxorhotel
 - [ ] PDF ocupa exactamente 2 páginas

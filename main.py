@@ -49,7 +49,7 @@ def build_parser() -> argparse.ArgumentParser:
         "command",
         nargs="?",
         default="audit",
-        choices=["audit", "v4audit", "v4complete", "stage", "spark", "execute", "deploy", "setup", "onboard", "validate-guarantee"],
+        choices=["audit", "v4audit", "v4complete", "stage", "spark", "execute", "deploy", "setup", "onboard", "validate-guarantee", "hook-pdf"],
         help="Comando a ejecutar: setup (configuración inicial), audit (diagnóstico legacy), v4audit (auditoría v4.0 con APIs), v4complete (flujo completo v4.0 con Meta-Skills), stage (pasos manuales), spark (diagnóstico rápido <5min), execute (implementación paquete), deploy (despliegue remoto), onboard (captura datos operativos), validate-guarantee (valida garantía Día 55)",
     )
     parser.add_argument("--url", required=False, help="URL del hotel a analizar")
@@ -165,6 +165,11 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Ejecutar diagnostico completo del ecosistema de agentes (skills + contexto)",
     )
+    # Hook PDF args
+    parser.add_argument("--output-dir", help="Directorio con output de v4_complete (obligatorio para hook-pdf)")
+    parser.add_argument("--template", help="Ruta al template HTML (default: templates/hook_template.md)")
+    parser.add_argument("--style", help="Ruta al CSS (default: templates/hook_styles.css)")
+    parser.add_argument("--force", action="store_true", help="Sobrescribir PDF si ya existe")
     return parser
 
 
@@ -1428,6 +1433,10 @@ def main() -> None:
         run_validate_guarantee_mode(args)
         sys.exit(0)
 
+    if args.command == "hook-pdf":
+        run_hook_pdf_mode(args)
+        sys.exit(0)
+
     if args.command in ("audit", "stage"):
         run_audit_mode(args)
         sys.exit(0)
@@ -1505,6 +1514,62 @@ def run_validate_guarantee_mode(args: argparse.Namespace) -> None:
         print(f"\n[ERROR] Validación falló: {e}")
         import traceback
         if args.debug:
+            traceback.print_exc()
+        sys.exit(1)
+
+
+def run_hook_pdf_mode(args: argparse.Namespace) -> None:
+    """Maneja el comando 'hook-pdf' — PDF gancho de 2 páginas."""
+    from pathlib import Path
+    from modules.commercial_documents.hook_pdf_generator import HookPDFGenerator
+
+    if not args.output_dir:
+        print("[ERROR] --output-dir es obligatorio para hook-pdf")
+        sys.exit(1)
+
+    output_dir = Path(args.output_dir).resolve()
+    if not output_dir.exists():
+        print(f"[ERROR] Directorio no existe: {output_dir}")
+        sys.exit(1)
+
+    # Template y style paths
+    project_root = Path(__file__).resolve().parent
+    template_path = Path(args.template) if args.template else project_root / "templates" / "hook_template.md"
+    style_path = Path(args.style) if args.style else project_root / "templates" / "hook_styles.css"
+
+    print("=" * 60)
+    print("HOOK PDF — PDF Gancho de 2 páginas")
+    print("=" * 60)
+    print(f"Output dir: {output_dir}")
+    print(f"Template:   {template_path}")
+    print(f"Style:      {style_path}")
+    if args.dry_run:
+        print("Modo:       DRY-RUN (no genera PDF)")
+    if args.force:
+        print("Force:      Sobrescribir PDF existente")
+    print("=" * 60)
+
+    try:
+        generator = HookPDFGenerator(
+            output_dir=output_dir,
+            template_path=template_path,
+            style_path=style_path
+        )
+        result = generator.generate(force=args.force, dry_run=args.dry_run)
+
+        if args.dry_run:
+            print("\n[Dry-run completado — no se generó PDF]")
+        else:
+            print(f"\n✅ PDF generado: {result}")
+        sys.exit(0)
+    except FileNotFoundError as e:
+        print(f"\n[ERROR] {e}")
+        print("¿Ejecutaste primero v4complete sobre el hotel?")
+        sys.exit(1)
+    except Exception as e:
+        print(f"\n[ERROR] {e}")
+        if args.debug:
+            import traceback
             traceback.print_exc()
         sys.exit(1)
 

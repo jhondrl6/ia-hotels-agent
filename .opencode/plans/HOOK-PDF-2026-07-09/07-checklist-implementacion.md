@@ -9,11 +9,11 @@
 - [x] 1.4 templates/hook_template.md creado (HTML, 191 líneas, 34 placeholders únicos)
 - [x] 1.5 templates/hook_styles.css creado (@page A4, 2 páginas, hook figure 28pt)
 
-## FASE-2: Generator + CLI (MAYOR COMPLEJIDAD)
-- [ ] 2.1 hook_pdf_generator.py creado (HookPDFGenerator: extract/validate/render/generate)
-- [ ] 2.2 HookPDFGenerator exportado en __init__.py
-- [ ] 2.3 main.py: comando hook-pdf + args (--output-dir, --template, --style, --dry-run, --force, --verbose)
-- [ ] 2.4 Smoke test: import OK + --help OK
+## FASE-2: Generator + CLI (MAYOR COMPLEJIDAD) ✅ (2026-07-09)
+- [x] 2.1 hook_pdf_generator.py creado (HookPDFGenerator: extract/validate/render/generate)
+- [x] 2.2 HookPDFGenerator exportado en __init__.py
+- [x] 2.3 main.py: comando hook-pdf + args (--output-dir, --template, --style, --dry-run, --force, --verbose)
+- [x] 2.4 Smoke test: import OK + --help OK
 
 ## FASE-3: Tests
 - [ ] 3.1 test_hook_pdf_generator.py creado (fixtures + 8+ tests)
