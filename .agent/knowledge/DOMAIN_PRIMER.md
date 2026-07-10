@@ -3,15 +3,15 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.60.1 | **Codename**: Bugfixes Luxor v4complete
-> **Release date**: 2026-07-07 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.61.0 | **Codename**: HOOK-PDF: PDF Gancho Command
+> **Release date**: 2026-07-10 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
 
 ## Modulos del Repositorio (auto-generado)
 
-> 23 modulos detectados en `modules/` + 1 paquetes de nivel root. 190 archivos Python en total.
+> 23 modulos detectados en `modules/` + 1 paquetes de nivel root. 191 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
@@ -35,7 +35,7 @@
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **commercial_documents/** | 7 | CoherenceRule, PriceValidationRule, CoherenceConfig; CoherenceCheck, CoherenceReport, CoherenceValidator; ValidatedField, Conflict, ValidationSummary, Scenario; Pain, Solution, PainSolutionMapper; Ser |
+| **commercial_documents/** | 8 | CoherenceRule, PriceValidationRule, CoherenceConfig; CoherenceCheck, CoherenceReport, CoherenceValidator; ValidatedField, Conflict, ValidationSummary, Scenario; HookPDFGenerator; Pain, Solution, PainS |
 | **asset_generation/** | 20 | AssetStatus, AssetCatalogEntry; ContentStatus, ContentIssue, ContentValidationResult, AssetContentValidator; AssetDiagnosticLink, AssetMetadata, AssetDiagnosticLinker; AssetStatus, AssetMetadata, Asse |
 | **delivery/** | 23 | AltTextGuideGenerator; AnalyticsSetupGuideGenerator; BlogStrategyGuideGenerator; BookingBarGenerator; CertificateGenerator; ContentGenerator; DeliveryContext; DeliveryPackager; DeployInstructionsGener |
 | **generators/** | 3 | OutreachGenerator; ReportDataBundle, ReportIntegrationAudit, ReportIntegrationAdapter, ReportBuilder; GeoStageResult, IAStageResult, SparkGenerator |
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-07-07 | v4.60.1 Bugfixes Luxor v4complete*
+*Auto-generado: 2026-07-10 | v4.61.0 HOOK-PDF: PDF Gancho Command*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

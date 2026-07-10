@@ -1,8 +1,8 @@
-<!-- agents_version: v4.49.0 | last_update: 2026-07-09 -->
+<!-- agents_version: v4.61.0 | last_update: 2026-07-10 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.60.1 -- Bugfixes Luxor v4complete COMPLETADO**
+> **v4.61.0 -- HOOK-PDF: PDF Gancho Command COMPLETADO**
 
 ---
 
@@ -142,6 +142,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 | `onboard` | ✅ Funcional | Captura datos operativos del hotel |
 | `--doctor` | ✅ Funcional | Diagnóstico del ecosistema de agentes |
 | `audit` | ⚠️ Deprecado | Legacy v3.x, usar `v4complete` |
+| `hook-pdf` | ✅ Funcional | PDF gancho 2 páginas desde output v4complete |
 
 ### Uso Recomendado
 
@@ -154,6 +155,9 @@ python main.py --doctor
 
 # Implementar paquete (usa análisis previo si existe)
 python main.py execute --url https://hotel.com --package starter_geo
+
+# Generar PDF gancho desde output v4complete
+python main.py hook-pdf --output-dir output/v4_complete/
 ```
 
 ---
@@ -194,6 +198,7 @@ python main.py execute --url https://hotel.com --package starter_geo
 | `modules/analytics/google_search_console_client.py` | Cliente GSC para keywords, posiciones, CTR | v4audit, v4complete (ADVISORY) |
 | `modules/analytics/data_aggregator.py` | Unifica GA4 + GSC en datos consolidados | v4complete (ADVISORY) |
 | `modules/commercial_documents/` | Diagnóstico, propuesta, coherencia | v4complete |
+| `modules/commercial_documents/hook_pdf_generator.py` | PDF gancho 2 páginas (hook-pdf) | hook-pdf |
 
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |

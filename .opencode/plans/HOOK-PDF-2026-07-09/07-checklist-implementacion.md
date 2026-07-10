@@ -37,11 +37,11 @@
 - [x] 4.8 Tiempo 1.486s (<30s)
 - [x] 4.9 --dry-run funciona (datos extraídos, HTML 12,732 chars, sin generar PDF)
 
-## FASE-5: RELEASE
-- [ ] 5.1 CHANGELOG.md: v4.49.0 entry
-- [ ] 5.2 VERSION.yaml: 4.49.0
-- [ ] 5.3 AGENTS.md: módulos + comandos actualizados
-- [ ] 5.4 sync_versions.py --check + apply
-- [ ] 5.5 doctor.py --regenerate-domain-primer
-- [ ] 5.6 pre-commit run --all-files
-- [ ] 5.7 log_phase_completion.py
+## FASE-5: RELEASE ✅ (2026-07-10)
+- [x] 5.1 CHANGELOG.md: v4.61.0 entry
+- [x] 5.2 VERSION.yaml: 4.61.0
+- [x] 5.3 AGENTS.md: módulos + comandos actualizados
+- [x] 5.4 sync_versions.py --check + apply
+- [x] 5.5 doctor.py --regenerate-domain-primer
+- [x] 5.6 pre-commit run --all-files
+- [x] 5.7 log_phase_completion.py

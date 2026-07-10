@@ -1,5 +1,38 @@
 # Changelog
 
+## [4.61.0] - HOOK-PDF: PDF Gancho Command — 2026-07-10
+
+### Objetivo
+Nuevo comando `hook-pdf` que genera un PDF gancho de 2 páginas ("¿Cuánto pierde su hotel?") desde el output de v4complete. Resuelve Gap #2 "Empaquetado no técnico".
+
+### Cambios Implementados
+- **hook_pdf_generator.py**: Clase `HookPDFGenerator` con extract/validate/render/generate (34 campos, weasyprint)
+- **HookPDFData**: Dataclass en `data_structures.py` con 34 campos + `evidence_tier`
+- **hook-pdf CLI**: Comando en `main.py` con args `--output-dir`, `--template`, `--style`, `--dry-run`, `--force`, `--verbose`
+- **Templates**: `hook_template.md` (HTML, 191 líneas) + `hook_styles.css` (@page A4, 2 páginas, hook figure 28pt)
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/commercial_documents/hook_pdf_generator.py` | Generador PDF gancho |
+| `templates/hook_template.md` | Template HTML con 34 placeholders |
+| `templates/hook_styles.css` | Estilos A4, 2 páginas |
+| `tests/commercial_documents/test_hook_pdf_generator.py` | 36 tests parametrizados |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `data_structures.py` | `HookPDFData` dataclass (34 campos) |
+| `modules/commercial_documents/__init__.py` | Export `HookPDFGenerator` + `HookPDFData` |
+| `main.py` | Comando `hook-pdf` + argparse |
+
+### Tests
+- 36 tests: extract_data (8), validate_data (4), render_html (3), generate (2), formato COP (11), slug (5), glob+missing (2), negativos
+- 0 regresiones (256 tests en suite completa → actualizado a 292)
+
+### E2E Validation
+- Luxorhotel: PDF 2 páginas, cero placeholders, cifra fuga 28pt, disclaimer Tier B, 1.486s
+
 ## [4.60.1] - Bugfixes Luxor v4complete — 2026-07-06
 
 ### Objetivo
