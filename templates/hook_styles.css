@@ -1,0 +1,338 @@
+/* ==========================================================
+   hook_styles.css — Estilos para el hook PDF de 2 páginas
+   "¿Cuánto pierde su hotel?"
+   ========================================================== */
+
+/* --- Página A4, sin números de página --- */
+@page {
+    size: A4;
+    margin: 0;
+}
+
+@page :first {
+    margin: 0;
+}
+
+/* --- Reset base --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.5;
+    color: #2d3436;
+    background: #ffffff;
+}
+
+/* --- Control de páginas --- */
+.page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm 18mm;
+    page-break-after: always;
+    position: relative;
+}
+
+.page:last-child {
+    page-break-after: auto;
+}
+
+/* ==========================================================
+   PÁGINA 1
+   ========================================================== */
+
+/* --- Header --- */
+#header-hotel {
+    margin-bottom: 8mm;
+    border-bottom: 2px solid #2c3e50;
+    padding-bottom: 4mm;
+}
+
+#hotel-nombre {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 2mm;
+}
+
+#hotel-meta {
+    font-size: 9pt;
+    color: #636e72;
+}
+
+#hotel-gbp {
+    font-size: 9pt;
+    color: #636e72;
+    margin-top: 1mm;
+}
+
+/* --- Hook figure (cifra gancho) --- */
+#hook-section {
+    text-align: center;
+    margin: 8mm 0;
+    padding: 6mm 0;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+#hook-title {
+    font-size: 14pt;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 3mm;
+}
+
+#hook-figure {
+    font-size: 28pt;
+    font-weight: 800;
+    color: #c0392b;
+    letter-spacing: 0.5px;
+    margin-bottom: 2mm;
+}
+
+#hook-range {
+    font-size: 9pt;
+    color: #636e72;
+    margin-bottom: 2mm;
+}
+
+#hook-disclaimer {
+    font-size: 7.5pt;
+    font-style: italic;
+    color: #95a5a6;
+}
+
+/* --- OTA commission --- */
+#ota-section {
+    text-align: center;
+    margin: 5mm 0;
+}
+
+#ota-section h3 {
+    font-size: 10pt;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1mm;
+}
+
+#comision-ota {
+    font-size: 14pt;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* --- Gaps table --- */
+#gaps-section {
+    margin: 6mm 0;
+}
+
+#gaps-section h3 {
+    font-size: 11pt;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 3mm;
+}
+
+#gaps-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+}
+
+#gaps-table thead th {
+    background: #2c3e50;
+    color: #ffffff;
+    padding: 2.5mm 3mm;
+    text-align: left;
+    font-weight: 600;
+}
+
+#gaps-table tbody td {
+    padding: 2.5mm 3mm;
+    border-bottom: 1px solid #dfe6e9;
+    vertical-align: top;
+}
+
+#gaps-table tbody tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.brecha-cop {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.brecha-justificacion {
+    color: #636e72;
+}
+
+/* --- 4 Pillars table --- */
+#pillars-section {
+    margin: 6mm 0;
+}
+
+#pillars-section h3 {
+    font-size: 11pt;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 3mm;
+}
+
+#pillars-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+}
+
+#pillars-table thead th {
+    background: #2c3e50;
+    color: #ffffff;
+    padding: 2.5mm 3mm;
+    text-align: left;
+    font-weight: 600;
+}
+
+#pillars-table tbody td {
+    padding: 2.5mm 3mm;
+    border-bottom: 1px solid #dfe6e9;
+    text-align: left;
+}
+
+#pillars-table tbody tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+.pillar-name {
+    font-weight: 600;
+}
+
+.pillar-score,
+.pillar-regional {
+    text-align: center;
+}
+
+/* ==========================================================
+   PÁGINA 2
+   ========================================================== */
+
+/* --- Explanation --- */
+#explanation-section {
+    margin-bottom: 6mm;
+}
+
+#explanation-section h2 {
+    font-size: 16pt;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 4mm;
+}
+
+#explanation-section p {
+    font-size: 10pt;
+    color: #2d3436;
+    margin-bottom: 3mm;
+}
+
+/* --- Projection table --- */
+#projection-section {
+    margin: 6mm 0;
+}
+
+#projection-section h3 {
+    font-size: 11pt;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 3mm;
+}
+
+#projection-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+}
+
+#projection-table td {
+    padding: 3mm 4mm;
+    border-bottom: 1px solid #dfe6e9;
+}
+
+.proj-label {
+    font-weight: 500;
+    color: #636e72;
+}
+
+.proj-value {
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: right;
+}
+
+/* --- CTA --- */
+#cta-section {
+    margin: 8mm 0;
+    padding: 5mm;
+    border: 2px solid #2c3e50;
+    border-radius: 4px;
+    background: #f8f9fa;
+}
+
+#cta-section h3 {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 3mm;
+}
+
+#cta-precio {
+    font-size: 12pt;
+    color: #2c3e50;
+    margin-bottom: 2mm;
+}
+
+#cta-garantia {
+    font-size: 9pt;
+    color: #27ae60;
+    font-weight: 600;
+    margin-bottom: 2mm;
+}
+
+#cta-contacto {
+    font-size: 9pt;
+    color: #636e72;
+}
+
+#cta-contacto a {
+    color: #2980b9;
+    text-decoration: none;
+}
+
+/* --- Pricing reference --- */
+#pricing-reference {
+    margin: 4mm 0;
+    font-size: 9pt;
+    color: #636e72;
+}
+
+#pricing-reference p {
+    margin-bottom: 1mm;
+}
+
+/* --- Evidence disclaimer footer --- */
+#evidence-disclaimer {
+    position: absolute;
+    bottom: 10mm;
+    left: 18mm;
+    right: 18mm;
+    text-align: center;
+    border-top: 1px solid #dfe6e9;
+    padding-top: 2mm;
+}
+
+#evidence-disclaimer small {
+    font-size: 7pt;
+    color: #95a5a6;
+}

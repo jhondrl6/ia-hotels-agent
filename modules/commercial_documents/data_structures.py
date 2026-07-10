@@ -419,6 +419,62 @@ def calculate_quick_wins(audit_result: V4AuditResult, validation_summary: Option
     return quick_wins
 
 
+@dataclass
+class HookPDFData:
+    """Data model for the 2-page hook PDF generator ("¿Cuánto pierde su hotel?").
+    
+    All fields come from v4_complete output (3 sources):
+    - 01_DIAGNOSTICO_Y_OPORTUNIDAD_{timestamp}.md (frontmatter YAML + body)
+    - 2_PROPUESTA_COMERCIAL_{timestamp}.md (frontmatter YAML + body)
+    - v4_complete_report.json (opportunity_scores, gates, pricing)
+    """
+    # Hotel data
+    hotel_nombre: str = ""
+    hotel_url: str = ""
+    hotel_region: str = ""
+    hotel_direccion: str = ""
+    gbp_resenas: str = ""
+    gbp_rating: str = ""
+    
+    # Financial data (hook figures)
+    fuga_mensual: str = ""          # Main hook figure
+    fuga_minima: str = ""           # Range lower bound (70% confidence)
+    fuga_maxima: str = ""           # Range upper bound (10% confidence)
+    comision_ota_real: str = ""     # Annual OTA commission
+    recuperacion_6m: str = ""       # 6-month recovery projection
+    roi: str = ""                   # ROI over OPEX
+    fuga_6m: str = ""               # 6-month gross churn
+    
+    # Visibility scores (4 pillars)
+    seo_score: str = ""
+    seo_regional: str = ""
+    geo_score: str = ""
+    geo_regional: str = ""
+    aeo_score: str = ""
+    aeo_regional: str = ""
+    iao_score: str = ""
+    iao_regional: str = ""
+    
+    # Top 3 gaps
+    brecha_1_nombre: str = ""
+    brecha_1_cop: str = ""
+    brecha_1_justificacion: str = ""
+    brecha_2_nombre: str = ""
+    brecha_2_cop: str = ""
+    brecha_2_justificacion: str = ""
+    brecha_3_nombre: str = ""
+    brecha_3_cop: str = ""
+    brecha_3_justificacion: str = ""
+    
+    # Pricing (business plan constants)
+    precio_express: str = ""        # $120,000 COP - from business plan
+    precio_mensual: str = ""        # $400,000 COP/month - from 02_PROPUESTA
+    setup_fee: str = ""             # $2,500,000 COP - from 02_PROPUESTA
+    
+    # Evidence tier for disclaimer
+    evidence_tier: str = ""         # "A", "B", or "C" from frontmatter
+
+
 def extract_top_problems(audit_result: V4AuditResult, limit: int = 5) -> List[str]:
     """Extrae top problems desde audit_result de forma consistente.
     

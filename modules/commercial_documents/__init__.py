@@ -43,6 +43,7 @@ from .data_structures import (
     AssetSpec,
     ValidatedField,
     ConfidenceLevel,
+    HookPDFData,
 )
 
 __all__ = [
@@ -68,4 +69,5 @@ __all__ = [
     'AssetSpec',
     'ValidatedField',
     'ConfidenceLevel',
+    'HookPDFData',
 ]

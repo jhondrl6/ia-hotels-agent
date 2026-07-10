@@ -2,12 +2,12 @@
 
 > Marcar `[x]` al completar cada tarea. Actualizar al cierre de cada sesión.
 
-## FASE-1: Setup + Dataclass + Templates
-- [ ] 1.1 Dependencias instaladas (weasyprint + pyyaml + libpango + libcairo)
-- [ ] 1.2 HookPDFData dataclass creado en data_structures.py
-- [ ] 1.3 HookPDFData exportado en __init__.py
-- [ ] 1.4 templates/hook_template.md creado (HTML con placeholders)
-- [ ] 1.5 templates/hook_styles.css creado (@page A4, 2 páginas, ≥24pt)
+## FASE-1: Setup + Dataclass + Templates ✅ (2026-07-09)
+- [x] 1.1 Dependencias instaladas (weasyprint 69.0 + pyyaml 6.0.3 + libpango + libcairo)
+- [x] 1.2 HookPDFData dataclass creado en data_structures.py (línea 422, 34 campos)
+- [x] 1.3 HookPDFData exportado en __init__.py (import + __all__)
+- [x] 1.4 templates/hook_template.md creado (HTML, 191 líneas, 34 placeholders únicos)
+- [x] 1.5 templates/hook_styles.css creado (@page A4, 2 páginas, hook figure 28pt)
 
 ## FASE-2: Generator + CLI (MAYOR COMPLEJIDAD)
 - [ ] 2.1 hook_pdf_generator.py creado (HookPDFGenerator: extract/validate/render/generate)

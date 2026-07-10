@@ -21,7 +21,7 @@
   "docs/GUIA_TECNICA.md": "FASE-RELEASE-4.57.0",
   ".agents/workflows/README.md": "FASE-7",
   "modules/asset_generation/asset_catalog.py": "FASE-0H-G8",
-  "modules/commercial_documents/data_structures.py": "FASE-A",
+  "modules/commercial_documents/data_structures.py": "FASE-HOOK-PDF-1",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
   "main.py": "FASE-3",
   "cross_validator.py": "E2E-CERT-0331",
@@ -197,5 +197,6 @@
   "config/regional_benchmarks.yaml": "REFACTOR-PENDIENTE-V4.58.0",
   "test_capex_rename.py": "FASE-1",
   "NONE": "FASE-4",
-  "modules/auditors/llm_mention_checker.py": "FASE-2"
+  "modules/auditors/llm_mention_checker.py": "FASE-2",
+  "modules/commercial_documents/__init__.py": "FASE-HOOK-PDF-1"
 }
