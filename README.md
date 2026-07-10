@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.61.0** -- HOOK-PDF: PDF Gancho Command | Actualizado 26 Mayo 2026 | +2,743 pruebas automatizadas | 0 errores conocidos
+**v4.61.0** -- HOOK-PDF: PDF Gancho Command | Actualizado 10 Julio 2026 | +3,102 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 16 skills including PhasedProjectExecutor, v4_regression_guardian |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 18 skills including PhasedProjectExecutor, v4_regression_guardian, hook_pdf_generator |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -23,10 +23,10 @@
 
 ## Estado del Proyecto (v4.61.0 -- HOOK-PDF: PDF Gancho Command)
 
-- **2,743 test functions** — suite completa, 0 regresiones
-- **193 modulos Python** (~69K lineas) + **24 scripts** (~6.1K lineas) + **84 directorios de test**
+- **3,102 test functions** — suite completa, 0 regresiones
+- **201 modulos Python** (~72K lineas) + **25 scripts** (~6.1K lineas) + **56 directorios de test**
 - **9 config YAML** con schema validado
-- **16 agent skills** en `.agents/workflows/`
+- **18 agent skills** en `.agents/workflows/`
 - **11 publication gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding)
 - **Coherence Score >= 0.8** requerido para publicacion
 - **22 assets IMPLEMENTED** (+ 2 DEPRECATED + 1 MANUAL_ONLY) en catalogo
@@ -114,6 +114,7 @@ Output: 01_DIAGNOSTICO_Y_OPORTUNIDAD.md (siempre)
 |---------|--------|-----------|--------|
 | `v4complete` | Activo | **Flujo completo con controles de coherencia** | Diagnostico + Propuesta condicional + Assets |
 | `v4audit` | Activo | Auditoria tecnica rapida con APIs | JSON con validacion cruzada |
+| `hook-pdf` | Activo | **PDF gancho de 2 paginas** desde output v4complete | PDF A4 con cifra fuga, brechas, precios |
 | `execute` | Activo | Implementacion de paquete usando analisis previo | Assets segun paquete seleccionado |
 | `stage` | Activo | Ejecuta etapas individuales (geo, ia, seo, outputs) | Resultado de fase especifica |
 | `deploy` | Activo | Despliegue remoto via FTP/WP-API | Archivos subidos al servidor |
@@ -234,7 +235,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **2,743 test functions** — suite completa, 0 regresiones
+- **3,102 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.12.1 (1 fase/sesion, max 60 iteraciones)
@@ -260,9 +261,12 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ```
 iah-cli/
-  main.py                     # CLI entry point
+  main.py                     # CLI entry point (v4complete, hook-pdf, deploy, etc.)
   VERSION.yaml                # Fuente unica de verdad (version)
   config/                     # Configuracion YAML (9 archivos)
+  templates/                  # Templates HTML/CSS para PDFs
+    hook_template.md            #   Template PDF gancho (HTML, 34 placeholders)
+    hook_styles.css             #   Estilos A4, 2 paginas, hook figure 28pt
     pricing.yaml              #   TIERs, GATEs, floor_price
     scenarios.yaml            #   Recovery factors, weights, OTA shifts
     financial_defaults.yaml   #   DEFAULTS financieros
@@ -272,9 +276,9 @@ iah-cli/
     settings.yaml             #   Legacy (puntero a nuevos YAML)
     certificates.yaml         #   Certificados de excelencia
     provider_registry.yaml    #   Catalogo de proveedores
-  modules/                    # 193 modulos Python (~69K lineas)
+  modules/                    # 201 modulos Python (~72K lineas)
     asset_generation/         #   Generacion condicional de assets
-    commercial_documents/     #   Diagnostico + Propuesta v4
+    commercial_documents/     #   Diagnostico + Propuesta v4 + PDF gancho (hook-pdf)
     financial_engine/         #   Pricing, scenarios, loss projector
     orchestration_v4/         #   Two-phase flow, auditor
     quality/                  #   Coherence validator, gates
@@ -282,11 +286,11 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
-  tests/                      # ~58K lineas de test (84 directorios)
+  tests/                      # ~63K lineas de test (56 directorios)
     config/                   #   61 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
-  scripts/                    # 24 scripts de automatizacion
+  scripts/                    # 25 scripts de automatizacion
     sync_versions.py          #   Sincronizacion versiones
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
