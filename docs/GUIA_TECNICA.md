@@ -1476,3 +1476,20 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 
 **Tests**: 11 tests nuevos (FASE-2-DEFAULT). `run_all_validations.py --quick` pasa 5/5. 0 regresiones en tests existentes (7 pre-existentes de `test_open_graph_generation.py`).
 
+## Notas de Cambios v4.49.0 — HOOK-PDF (2026-07-09)
+
+**Módulos afectados**: `commercial_documents` (nuevo módulo `hook_pdf_generator`), `main.py`, `data_structures.py`
+
+**Problema**: Output de v4complete es técnico (.md + JSON); hoteleros no leen JSON-LD. Se necesitaba un PDF gancho de 2 páginas "¿Cuánto pierde su hotel?" con datos del propio hotel para pre-venta.
+
+**Solución**:
+- **`HookPDFData`** dataclass en `data_structures.py` (34 campos): datos del hotel, financieros, scores 4 pilares, top 3 brechas, pricing, evidence_tier.
+- **`HookPDFGenerator`** en `hook_pdf_generator.py` con pipeline: `extract_data()` → `validate_data()` (8 checks) → `render_html()` → `generate()` (weasyprint).
+- **Comando CLI** `hook-pdf` en `main.py` con args: `--output-dir`, `--template`, `--style`, `--dry-run`, `--force`, `--verbose`.
+- **Template** `templates/hook_template.md` (HTML con 34 placeholders `{{CAMPO}}`) + `templates/hook_styles.css`.
+- **36 tests unitarios** en `tests/commercial_documents/test_hook_pdf_generator.py` cubren: extract_data, validate_data (8 validaciones), render_html, generate (dry-run + real), formato COP, slugify, glob pattern, tier detection.
+
+**Backwards compatibility**: Sí. Módulo nuevo, no modifica archivos existentes excepto `__init__.py` (nuevos exports) y `main.py` (nuevo comando choice). Tests existentes no afectados (256 tests en suite completa).
+
+**Tests**: 36 tests nuevos. 256/256 pasando. 0 regresiones.
+

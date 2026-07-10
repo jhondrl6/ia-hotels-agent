@@ -15,16 +15,16 @@
 - [x] 2.3 main.py: comando hook-pdf + args (--output-dir, --template, --style, --dry-run, --force, --verbose)
 - [x] 2.4 Smoke test: import OK + --help OK
 
-## FASE-3: Tests
-- [ ] 3.1 test_hook_pdf_generator.py creado (fixtures + 8+ tests)
-- [ ] 3.2 Test extract_data
-- [ ] 3.3 Test validate_data (8 validaciones)
-- [ ] 3.4 Test render_html (cero placeholders)
-- [ ] 3.5 Test generate (output existe, dry-run)
-- [ ] 3.6 Test formato COP
-- [ ] 3.7 Test slug
-- [ ] 3.8 Test glob pattern
-- [ ] 3.9 pytest -v pasa sin regresiones
+## FASE-3: Tests ✅ (2026-07-09)
+- [x] 3.1 test_hook_pdf_generator.py creado (fixtures + 36 tests parametrizados)
+- [x] 3.2 Test extract_data (8 tests: hotel, financial, GBP, scores, brechas, pricing, tier, ROI)
+- [x] 3.3 Test validate_data (4 tests: OK, missing required, empty optional, invalid tier, accent warning)
+- [x] 3.4 Test render_html (3 tests: cero placeholders, hotel name, scores present)
+- [x] 3.5 Test generate (2 tests: dry_run no genera PDF, force=True genera PDF)
+- [x] 3.6 Test formato COP (11 tests parametrizados: int, float, str, None, non-numeric)
+- [x] 3.7 Test slug (5 tests parametrizados: lowercase, acentos, espacios, especiales)
+- [x] 3.8 Test glob pattern + missing file (2 tests)
+- [x] 3.9 pytest -v pasa 36/36 sin regresiones (256 tests en suite completa)
 
 ## FASE-4: E2E Luxorhotel
 - [ ] 4.1 output/v4_complete/ localizado o regenerado
