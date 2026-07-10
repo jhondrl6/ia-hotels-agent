@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.60.1 (Bugfixes Luxor v4complete)
-**Última actualización:** 2026-07-07
+**Última actualización:** 2026-07-09
 
 ---
 
