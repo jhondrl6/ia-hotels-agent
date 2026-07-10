@@ -26,16 +26,16 @@
 - [x] 3.8 Test glob pattern + missing file (2 tests)
 - [x] 3.9 pytest -v pasa 36/36 sin regresiones (256 tests en suite completa)
 
-## FASE-4: E2E Luxorhotel
-- [ ] 4.1 output/v4_complete/ localizado o regenerado
-- [ ] 4.2 hook-pdf ejecutado → luxorhotel_gancho.pdf generado
-- [ ] 4.3 PDF: 2 páginas exactas
-- [ ] 4.4 PDF: cero {{...}} sin reemplazar
-- [ ] 4.5 PDF: cifra fuga ≥24pt
-- [ ] 4.6 PDF: disclaimer Tier B/C visible
-- [ ] 4.7 Datos coinciden con §3.2
-- [ ] 4.8 Tiempo <30s (sin v4complete)
-- [ ] 4.9 --dry-run funciona
+## FASE-4: E2E Luxorhotel ✅ (2026-07-10)
+- [x] 4.1 output/v4_complete/ regenerado vía v4complete --url luxorhotel (176s, exit 0)
+- [x] 4.2 hook-pdf ejecutado → luxorhotel_gancho.pdf generado (27,552 bytes)
+- [x] 4.3 PDF: 2 páginas exactas (PyPDF2 verified)
+- [x] 4.4 PDF: cero {{...}} sin reemplazar (verified via text extraction)
+- [x] 4.5 PDF: cifra fuga 28pt (CSS hook-figure: font-size 28pt ≥ 24pt)
+- [x] 4.6 PDF: disclaimer Tier B visible ("(Estimación basada en datos de la región...)" en página 1)
+- [x] 4.7 Datos coinciden con §3.2 (34 campos cross-validados contra diagnostic.md + proposal.md + JSON)
+- [x] 4.8 Tiempo 1.486s (<30s)
+- [x] 4.9 --dry-run funciona (datos extraídos, HTML 12,732 chars, sin generar PDF)
 
 ## FASE-5: RELEASE
 - [ ] 5.1 CHANGELOG.md: v4.49.0 entry

@@ -1493,3 +1493,11 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 
 **Tests**: 36 tests nuevos. 256/256 pasando. 0 regresiones.
 
+**E2E (FASE-4 — 2026-07-10)**:
+- v4complete regenerado para Luxorhotel (176s, exit 0). Expected monthly: $3.741.696 COP, Tier B.
+- PDF generado: `deliveries/luxorhotel_gancho.pdf` (27,552 bytes, 1.486s).
+- 2 páginas exactas. Cero placeholders `{{...}}` sin reemplazar (34/34 resueltos).
+- Cifra gancho: 28pt (≥24pt requerido). Disclaimer Tier B visible en página 1.
+- 34 campos cross-validados contra `01_DIAGNOSTICO` + `02_PROPUESTA` + `v4_complete_report.json`. Sin discrepancias.
+- `--dry-run` funcional. Tiempo generación <30s (1.486s).
+

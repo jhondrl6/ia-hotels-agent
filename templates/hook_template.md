@@ -163,8 +163,8 @@
             Si no encuentra valor en el diagnóstico, le devolvemos el 100%.
         </p>
         <p id="cta-contacto">
-            Escríbanos para agendar su diagnóstico:
-            <a href="{{HOTEL_URL}}">{{HOTEL_URL}}</a>
+            Escríbanos para agendar su diagnóstico a:
+            <strong>visibleporia WhatsApp +57 317 3628690</strong>
         </p>
     </section>
 

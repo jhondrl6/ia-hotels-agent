@@ -23,9 +23,14 @@
 | Archivos nuevos | 5 (.py, .md, .css) | FASE-1+2 |
 | Archivos modificados | 3 (data_structures, __init__, main) | FASE-1+2 |
 | Líneas nuevas (código) | ~1,066 (640 generator + 426 tests) | FASE-2+3 |
+| E2E validado | Luxorhotel PDF 2 pág (27,552 bytes) | FASE-4 |
+| Cross-validación | 34 campos vs diagnostic + proposal + JSON | FASE-4 |
+| Tiempo generación | 1.486s (límite 30s) | FASE-4 |
+| Placeholders resueltos | 0/34 sin reemplazar | FASE-4 |
 
 ## Sección E: Archivos Afiliados Actualizados
 | Archivo | Cambio | Fase |
 |---------|--------|------|
-| `docs/GUIA_TECNICA.md` | Nota técnica v4.49.0 HOOK-PDF | FASE-3 (backfill) |
-| `docs/contributing/REGISTRY.md` | 3 entradas: FASE-1, FASE-2, FASE-3 | FASE-3 (backfill) |
+| `docs/GUIA_TECNICA.md` | Nota técnica v4.49.0 HOOK-PDF + FASE-4 E2E results | FASE-3 + FASE-4 |
+| `docs/contributing/REGISTRY.md` | 4 entradas: FASE-1, FASE-2, FASE-3, FASE-4 | FASE-4 |
+| `CHANGELOG.md` | Entry v4.60.1 HOOK-PDF feature | FASE-4 |
