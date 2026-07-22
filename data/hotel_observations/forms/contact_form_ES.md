@@ -1,8 +1,9 @@
-# Formulario de Recolección — Hotel Observations (FASE A)
+# Formulario de Recolección — Hotel Observations (FASE B)
 
-**Propósito:** Estandarizar la captura de los 5 datos operacionales de un hotel
-vía contacto directo (dueño, gerente, o administrador). Pensado para ser
-llenable en una llamada de 5-10 minutos.
+**Propósito:** Estandarizar la captura de datos operacionales de hoteles
+vía contacto directo (dueño, gerente, o administrador). FASE B extiende
+el formulario FASE A con 3 preguntas adicionales para refinar la
+clasificación paso/destino.
 
 **Destino final:** este JSON se pega en
 `data/hotel_observations/observations.json` como una nueva entrada del array
@@ -29,7 +30,7 @@ llenable en una llamada de 5-10 minutos.
 
 ## El formulario (lo que preguntas)
 
-### Bloque A — Datos del hotel (5 preguntas)
+### Bloque A — Datos operacionales (5 preguntas, igual que FASE A)
 
 | # | Pregunta al hotel | Campo JSON | Tipo | Ejemplo |
 |---|-------------------|------------|------|---------|
@@ -38,6 +39,31 @@ llenable en una llamada de 5-10 minutos.
 | 3 | ¿Cuál es el valor promedio por reserva en COP? | `avg_reservation_cop` | float | `200000` |
 | 4 | De cada 10 reservas, ¿cuántas llegan por canal directo (su web, walk-in, teléfono)? | `direct_channel_percentage` | float | `60.0` |
 | 5 | ¿Su hotel es más de "paso" (viajeros que paran una noche de camino a otro destino) o más "destino" (viajeros que vienen específicamente a quedarse)? | `is_transit_hotel` (TÚ) | bool | decisión tuya |
+
+### Bloque B — Datos FASE B (3 preguntas nuevas)
+
+| # | Pregunta al hotel | Campo JSON | Tipo | Ejemplo |
+|---|-------------------|------------|------|---------|
+| 6 | En promedio, ¿cuántas noches se quedan sus huéspedes? | `avg_stay_nights` | float | `1.5` |
+| 7 | ¿Cuál es el motivo principal por el que se hospedan? (negocios, turismo, tránsito de camino a otro lugar, o una mezcla) | `trip_purpose` | enum | `negocios` |
+| 8 | Si usted tuviera que decirlo, ¿su hotel es más de paso o destino? | `hotel_self_label` | enum | `paso` |
+
+**Notas sobre las preguntas FASE B:**
+
+- **Pregunta 6** — NO preguntes "¿cuántas noches máximo?". Necesitas el
+  PROMEDIO. Si el hotel dice "de 1 a 5 noches", pregunta "¿y en promedio
+  cuántas noches se quedan?". Si no sabe, pide el dato del PMS o sugiere
+  que revise las últimas 20 reservas.
+
+- **Pregunta 7** — Acepta la respuesta tal como la da el hotel. Si dice
+  "la mayoría viene por negocios" → `negocios`. Si dice "mitad y mitad" →
+  `mixto`. Si dice "son personas que van de camino a Salento" → `transito`.
+  NO sugieras opciones — deja que el hotel describa.
+
+- **Pregunta 8** — Esta pregunta se hace DESPUÉS de las 7 anteriores, para
+  no influir en las respuestas. Es la auto-etiqueta del hotel. Se captura
+  pero NO se usa como input primario — la heurística v2 la usa solo como
+  tiebreaker cuando los datos objetivos son ambiguos.
 
 ### Pregunta 5 — Clasificación paso/destino (TÚ, no el hotel)
 
@@ -50,19 +76,7 @@ proxy y clasifica TÚ después:
 | ¿Los huéspedes preguntan por atracciones locales antes de reservar? | No → paso; Sí → destino |
 | ¿Recibe huéspedes en días laborales o solo fines de semana/festivos? | Solo festivos → destino; cualquier día → paso |
 
-**Heurística objetiva (si tienes los 4 datos numéricos):**
-
-```
-occupancy_rate = monthly_reservations / (rooms × 30)
-
-Si occupancy_rate < 15%  → probable paso
-Si occupancy_rate > 30%  → probable destino
-Si 15% ≤ occupancy ≤ 30% → ambiguous, requiere preguntas proxy
-```
-
-**Para Hotel Luxor:** occupancy=2.38% → paso (decisión clara sin preguntar).
-
-### Bloque B — Metadata (la llenas TÚ, no el hotel)
+### Bloque C — Metadata (la llenas TÚ, no el hotel)
 
 | Campo JSON | Valor |
 |------------|-------|
@@ -89,11 +103,14 @@ los derivados, valida contra el schema, y guarda por ti.
 {
   "hotel_name": "NOMBRE_DEL_HOTEL_SLUG",
   "is_transit_hotel": true,
-  "is_transit_hotel_basis": "JUSTIFICACIÓN_TEXTUAL_DE_POR_QUÉ_ES_PASO_O_DESTINO. Mínimo 20 caracteres. Ejemplo: 'Ocupación calculada 2.38% consistente con hotel de paso. Anécdota del dueño confirma estancia promedio 1 noche.'",
+  "is_transit_hotel_basis": "JUSTIFICACIÓN_TEXTUAL. Mínimo 20 caracteres.",
   "rooms": 0,
   "monthly_reservations": 0,
   "avg_reservation_cop": 0,
   "direct_channel_percentage": 0.0,
+  "avg_stay_nights": 1.0,
+  "trip_purpose": "negocios",
+  "hotel_self_label": "paso",
   "occupancy_rate": 0.0,
   "adr_cop": 0,
   "direct_channel_ratio": 0.0,
@@ -104,8 +121,8 @@ los derivados, valida contra el schema, y guarda por ti.
   "confidence": 0.95,
   "epistemic_status": "verified",
   "collected_at": "YYYY-MM-DD",
-  "notes": "Contexto adicional opcional. Ejemplo: 'Hotel en Salento, contacto vía WhatsApp con la dueña. Datos del PMS del último trimestre.'"
-},
+  "notes": "Contexto adicional opcional."
+}
 ```
 
 **Sí incluye los campos derivados** (`occupancy_rate`, `adr_cop`,
@@ -135,9 +152,10 @@ Una vez tengas el JSON adaptado:
      python3 scripts/add_observation.py
      ```
 
-     Te pregunta los 5 canónicos, calcula occupancy, sugiere clasificación
-     paso/destino por heurística, pide `is_transit_hotel_basis` si es
-     necesario, muestra preview, y guarda en `observations.json`.
+     Te pregunta los 5 canónicos + los 3 FASE B, calcula occupancy, sugiere
+     clasificación paso/destino por heurística v2, pide
+     `is_transit_hotel_basis` si es necesario, muestra preview, y guarda en
+     `observations.json`.
 
   2. **Opción manual** — si prefieres pegar el JSON a mano:
 
@@ -158,6 +176,55 @@ Una vez tengas el JSON adaptado:
 
   4. Si validación OK, commit con mensaje descriptivo:
      `data: add Hotel [Nombre] observation ([paso/destino], [N] hab)`
+
+---
+
+## Heurística v2 — Clasificación paso/destino (FASE B)
+
+La heurística v1 (solo occupancy) demostró en FASE A que 5/5 hoteles
+contradicen su auto-etiqueta. La v2 incorpora los 3 campos nuevos como
+señales primarias:
+
+### Prioridad de señales (de mayor a menor)
+
+| # | Señal | Peso | Descripción |
+|---|-------|------|-------------|
+| 1 | `avg_stay_nights` | PRIMARIA | Comportamiento real del huésped |
+| 2 | `trip_purpose` | SECUNDARIA | Contexto del motivo de viaje |
+| 3 | `occupancy_rate` | TERCIARIA | Confirmación de intensidad de demanda |
+| 4 | `hotel_self_label` | TIEBREAKER | Solo cuando señales 1-3 son ambiguas |
+
+### Reglas de clasificación
+
+```
+SI avg_stay_nights está disponible:
+  SI avg_stay_nights <= 1.5           → PASO (alta confianza)
+  SI avg_stay_nights >= 3.0           → DESTINO (alta confianza)
+  SI 1.5 < avg_stay_nights < 3.0:
+    SI trip_purpose in ["negocios", "transito"] → PASO
+    SI trip_purpose == "turismo"                 → DESTINO
+    SI trip_purpose == "mixto":
+      SI occupancy < 15%                        → PASO (lean)
+      SI occupancy > 30%                        → DESTINO (lean)
+      SI 15% <= occupancy <= 30%:
+        SI hotel_self_label == "paso"            → PASO (tiebreak)
+        SI hotel_self_label == "destino"         → DESTINO (tiebreak)
+
+SI avg_stay_nights NO está disponible (fallback FASE A):
+  Usar heurística v1 (occupancy sola) + hotel_self_label como tiebreaker
+```
+
+### Implicación para scenario_calculator.py
+
+El motor financiero NO necesita la clasificación paso/destino para calcular
+comisiones OTA — eso es función de `rooms × occupancy × ADR × commission`.
+La clasificación es útil para:
+  - Segmentar escenarios (un hotel destino tiene más potencial de mejora)
+  - Calibrar expectativas de shift OTA→directo
+  - Personalizar el pitch comercial
+
+**No tocar scenario_calculator.py hasta tener N≥10 observaciones con
+los campos FASE B completos.**
 
 ---
 
@@ -185,7 +252,14 @@ Una vez tengas el JSON adaptado:
     `estimated`, sepárela del cálculo principal o descártela para Fase A.
 
   ❌ **No modifique `scenario_calculator.py` antes de tener N≥10 observaciones
-    verificadas.** Sin evidencia empírica, el cambio es opinático.
+    verificadas con campos FASE B.** Sin evidencia empírica, el cambio es opinático.
+
+  ❌ **No estime `avg_stay_nights` sin preguntar al hotel.** Si no tienes
+    el dato, deja el campo ausente. No inventes "1 noche porque parece paso" —
+    eso contamina el dataset.
+
+  ❌ **No sugieras opciones de `trip_purpose` al hotel.** Deja que describa
+    libremente y clasifica TÚ después.
 
 ---
 
@@ -212,7 +286,11 @@ Mezcla heterogénea sin patrón claro            | Replantear hipótesis
 Luxor es caso aislado (los otros 4 normales)   | Cerrar línea
 ```
 
+**FASE B cierra cuando N=15-20** con los 8 campos (5 canónicos + 3 FASE B)
+y la heurística v2 produce clasificación consistente en ≥80% de las
+observaciones.
+
 ---
 
-**Versión:** 1.0.0 (2026-07-16)
+**Versión:** 2.0.0 (2026-07-22, FASE B)
 **Mantenedor:** usuario + agente (revisar tras cada FASE)

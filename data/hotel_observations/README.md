@@ -68,6 +68,14 @@ self-contained.
 | `collected_at` | string (ISO 8601) | ✅ | Fecha de recolección |
 | `notes` | string | ❌ | Contexto adicional (por qué se considera hotel de paso, etc.) |
 
+### Campos FASE B (refinamiento paso/destino, desde 2026-07-22)
+
+| Campo | Tipo | Obligatorio | Descripción |
+|-------|------|-------------|-------------|
+| `avg_stay_nights` | float | ❌ | Duración promedio de estancia en noches. <=1.5 → paso, >=3 → destino |
+| `trip_purpose` | enum | ❌ | `negocios`, `turismo`, `transito`, `mixto`. Motivo principal del huésped |
+| `hotel_self_label` | enum | ❌ | `paso` o `destino`. Auto-etiqueta del hotel, usada como tiebreaker |
+
 ---
 
 ## Convención de versionado
@@ -164,12 +172,31 @@ Resumen del formulario:
 
 ### Paso 2 — Clasificar `is_transit_hotel`
 
-Heurística objetiva (si tienes los 4 datos numéricos):
+**Heurística v2 (FASE B, preferida):**
+
+```
+Señales en orden de prioridad:
+1. avg_stay_nights (PRIMARIA) — comportamiento real del huésped
+2. trip_purpose (SECUNDARIA) — motivo de viaje
+3. occupancy_rate (TERCIARIA) — intensidad de demanda
+4. hotel_self_label (TIEBREAKER) — solo si señales 1-3 son ambiguas
+
+Reglas:
+  stay <= 1.5 noches                         → paso
+  stay >= 3.0 noches                         → destino
+  1.5 < stay < 3.0 + purpose negocios/trans  → paso
+  1.5 < stay < 3.0 + purpose turismo         → destino
+  1.5 < stay < 3.0 + mixto + occ < 15%      → paso
+  1.5 < stay < 3.0 + mixto + occ > 30%      → destino
+  1.5 < stay < 3.0 + mixto + occ 15-30%     → self_label tiebreak
+```
+
+**Heurística v1 (fallback si no hay avg_stay_nights):**
 ```
 occupancy_rate = monthly_reservations / (rooms × 30)
 Si occupancy < 15%  → probable paso
 Si occupancy > 30%  → probable destino
-Si 15-30%           → ambiguous, requiere preguntas proxy al hotel
+Si 15-30%           → ambiguous, usar self_label como tiebreaker
 ```
 
 **SIEMPRE documentar el criterio en `is_transit_hotel_basis`**
@@ -269,16 +296,16 @@ línea base contra la que se comparan las nuevas.
 
 ## Estado actual
 
-**Versión:** 1.0.0
+**Versión:** 1.1.0
 **Última actualización:** 2026-07-22
 **Observaciones registradas:** 6 (Hotel Luxor + 5 hoteles Pereira)
-**Estado:** Esquema definido, primera observación cargada, formulario
-estandarizado disponible, scripts de validación y captura wizard
-disponibles, pendiente FASE A de benchmarking (N=5 hoteles) antes de
-extraer patrón. **Decisión 2026-07-16:** iniciar FASE A con N=5 (NOT N≥10)
-— el test de Fase A es binario y con efecto grande esperado, 5 hoteles
-son suficientes. Detalles en `forms/contact_form_ES.md` §"Criterio de
-parada de FASE A".
+**Estado:** FASE A completada (patrón confirmado: 4/6 paso con occ<15%).
+FASE B iniciada: schema extendido con 3 campos nuevos (avg_stay_nights,
+trip_purpose, hotel_self_label), formulario y wizard actualizados,
+heurística v2 definida. Backfill de hotel_self_label aplicado a las 6
+obs existentes. avg_stay_nights y trip_purpose pendientes de recolectar
+en próxima visita a los hoteles. Objetivo: N=15-20 con campos FASE B
+completos.
 
 ---
 

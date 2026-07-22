@@ -144,6 +144,20 @@
         "is_transit_hotel_basis": {
           "type": "string",
           "description": "Justificacion explicita de por que se clasifico como hotel de paso o destino. Campo obligatorio siempre que is_transit_hotel=true; recomendado tambien para false (trazabilidad)"
+        },
+        "avg_stay_nights": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 30,
+          "description": "Duración promedio de estancia en noches (FASE B). 1 noche = fuerte señal paso; 3+ noches = fuerte señal destino. Capturado por contacto directo con el hotel."
+        },
+        "trip_purpose": {
+          "enum": ["negocios", "turismo", "transito", "mixto"],
+          "description": "Motivo principal de viaje de los huéspedes (FASE B). negocios = estancias cortas entre semana; turismo = estancias más largas, fines de semana; transito = paso intermedio; mixto = combinación sin dominancia clara."
+        },
+        "hotel_self_label": {
+          "enum": ["paso", "destino"],
+          "description": "Auto-etiqueta del hotel: cómo se percibe a sí mismo (FASE B). Se captura PERO no se usa como input primario del motor — la heurística v2 lo usa como tiebreaker cuando occupancy y stay_nights son ambiguos."
         }
       },
       "additionalProperties": false,

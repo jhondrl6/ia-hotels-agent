@@ -10,9 +10,11 @@ Flujo:
   1. Pregunta los 5 canonicos con validacion de input.
   2. Calcula occupancy_rate y sugiere is_transit_hotel.
   3. Pide is_transit_hotel_basis si la clasificacion es paso.
-  4. Calcula campos derivados (occupancy_rate, adr_cop, ratios).
-  5. Muestra preview del JSON, pide confirmacion.
-  6. Inserta en el array, actualiza last_updated, valida con Draft202012Validator.
+  4. Pregunta los 3 campos FASE B (avg_stay_nights, trip_purpose, hotel_self_label).
+  5. Aplica heuristica v2 (stay_nights > trip_purpose > occupancy > self_label).
+  6. Calcula campos derivados (occupancy_rate, adr_cop, ratios).
+  7. Muestra preview del JSON, pide confirmacion.
+  8. Inserta en el array, actualiza last_updated, valida con Draft202012Validator.
 
 Requiere TTY (input interactivo). No se puede ejecutar desde agentes no
 interactivos. Ver seccion "Pruebas" abajo para modo no-interactivo.
@@ -39,6 +41,8 @@ except ImportError:
 VALID_REGIONS = ("eje_cafetero", "caribe", "antioquia", "default")
 VALID_CATEGORIES = ("boutique_10_25", "standard_26_60")
 VALID_SOURCES = ("contacto_directo", "formulario_onboarding", "evidencia_verificable")
+VALID_TRIP_PURPOSES = ("negocios", "turismo", "transito", "mixto")
+VALID_SELF_LABELS = ("paso", "destino")
 
 
 # --- Helpers de input validados ---
@@ -158,6 +162,41 @@ def classify_by_occupancy(occ: float) -> str:
     return "ambiguo"
 
 
+def classify_v2(avg_stay_nights: float | None, trip_purpose: str | None,
+                occupancy: float, self_label: str | None) -> tuple[str, str]:
+    """Heurística v2: clasificación paso/destino con señales FASE B.
+
+    Retorna (clasificacion, razonamiento).
+    """
+    if avg_stay_nights is not None:
+        if avg_stay_nights <= 1.5:
+            return "paso", f"avg_stay_nights={avg_stay_nights} <= 1.5 → paso"
+        if avg_stay_nights >= 3.0:
+            return "destino", f"avg_stay_nights={avg_stay_nights} >= 3.0 → destino"
+        # Zona ambigua: 1.5 < stay < 3.0
+        if trip_purpose in ("negocios", "transito"):
+            return "paso", f"avg_stay_nights={avg_stay_nights}, trip_purpose={trip_purpose} → paso"
+        if trip_purpose == "turismo":
+            return "destino", f"avg_stay_nights={avg_stay_nights}, trip_purpose=turismo → destino"
+        # mixto o None → usar occupancy
+        if occupancy < 0.15:
+            return "paso", f"avg_stay_nights={avg_stay_nights}, trip_purpose={trip_purpose}, occ={occupancy:.2%} < 15% → paso"
+        if occupancy > 0.30:
+            return "destino", f"avg_stay_nights={avg_stay_nights}, trip_purpose={trip_purpose}, occ={occupancy:.2%} > 30% → destino"
+        # ambiguo total → tiebreaker
+        if self_label:
+            return self_label, f"avg_stay_nights={avg_stay_nights}, signals ambigüos → tiebreaker self_label={self_label}"
+        return "ambiguo", f"avg_stay_nights={avg_stay_nights}, sin señales claras"
+
+    # Fallback: heurística v1 (solo occupancy)
+    v1 = classify_by_occupancy(occupancy)
+    if v1 != "ambiguo":
+        return v1, f"fallback v1: occupancy={occupancy:.2%} → {v1}"
+    if self_label:
+        return self_label, f"fallback v1 ambiguo + self_label={self_label} → tiebreaker"
+    return "ambiguo", f"fallback v1: occupancy={occupancy:.2%}, sin self_label"
+
+
 # --- Construccion de la observacion ---
 
 def build_observation() -> dict:
@@ -195,6 +234,43 @@ def build_observation() -> dict:
         basis = prompt_optional(
             "  is_transit_hotel_basis (opcional para destino, recomendado para trazabilidad): "
         )
+
+    # --- FASE B: campos adicionales ---
+    print("\n  Datos FASE B (refinamiento paso/destino):\n")
+
+    avg_stay_nights_raw = prompt("  avg_stay_nights (noches promedio, ENTER si no disponible): ").strip()
+    avg_stay_nights: float | None = None
+    if avg_stay_nights_raw:
+        try:
+            avg_stay_nights = float(avg_stay_nights_raw.replace(",", "."))
+            if avg_stay_nights < 0.5 or avg_stay_nights > 30:
+                print(f"  AVISO: {avg_stay_nights} fuera de rango [0.5, 30]. Se incluira igualmente.")
+        except ValueError:
+            print(f"  AVISO: '{avg_stay_nights_raw}' no es valido. Campo omitido.")
+
+    trip_purpose: str | None = None
+    trip_raw = prompt("  trip_purpose [negocios/turismo/transito/mixto, ENTER si no disponible]: ").lower().strip()
+    if trip_raw:
+        if trip_raw in VALID_TRIP_PURPOSES:
+            trip_purpose = trip_raw
+        else:
+            print(f"  AVISO: '{trip_raw}' no es valido. Opciones: {VALID_TRIP_PURPOSES}. Campo omitido.")
+
+    hotel_self_label: str | None = None
+    label_raw = prompt("  hotel_self_label [paso/destino, ENTER si no disponible]: ").lower().strip()
+    if label_raw:
+        if label_raw in VALID_SELF_LABELS:
+            hotel_self_label = label_raw
+        else:
+            print(f"  AVISO: '{label_raw}' no es valido. Opciones: {VALID_SELF_LABELS}. Campo omitido.")
+
+    # Heuristica v2
+    v2_class, v2_reason = classify_v2(avg_stay_nights, trip_purpose, occ, hotel_self_label)
+    print(f"\n  [Heuristica v2] Clasificacion: {v2_class}")
+    print(f"  [Heuristica v2] Razonamiento: {v2_reason}")
+    if v2_class != ("paso" if is_transit else "destino"):
+        print(f"  [Heuristica v2] AVISO: v2 sugiere '{v2_class}' pero seleccionaste "
+              f"'{'paso' if is_transit else 'destino'}'. Verifica la justificacion.")
 
     print("\n  Metadata (la llenas tu, no el hotel):\n")
     region = prompt_choice("  region", VALID_REGIONS, default="eje_cafetero")
@@ -248,6 +324,13 @@ def build_observation() -> dict:
         "epistemic_status": epistemic_status,
         "collected_at": collected_at,
     }
+    # FASE B campos (opcionales, solo si fueron proporcionados)
+    if avg_stay_nights is not None:
+        obs["avg_stay_nights"] = avg_stay_nights
+    if trip_purpose is not None:
+        obs["trip_purpose"] = trip_purpose
+    if hotel_self_label is not None:
+        obs["hotel_self_label"] = hotel_self_label
     if basis:
         obs["is_transit_hotel_basis"] = basis
     if notes:

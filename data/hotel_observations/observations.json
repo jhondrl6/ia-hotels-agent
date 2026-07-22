@@ -23,7 +23,8 @@
       "confidence": 0.95,
       "epistemic_status": "verified",
       "collected_at": "2026-07-16",
-      "notes": "Datos entregados por contacto directo con el hotel en sesion 2026-07-16. Hotel aun NO ha visto el documento 01_DIAGNOSTICO_Y_OPORTUNIDAD_20260710_101420.md (decision del usuario para evitar presentar cifras infladas). Caso de referencia para recalibracion del motor."
+      "notes": "Datos entregados por contacto directo con el hotel en sesion 2026-07-16. Hotel aun NO ha visto el documento 01_DIAGNOSTICO_Y_OPORTUNIDAD_20260710_101420.md (decision del usuario para evitar presentar cifras infladas). Caso de referencia para recalibracion del motor. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita.",
+      "hotel_self_label": "paso"
     },
     {
       "hotel_name": "Hotel Don Alfonso",
@@ -43,7 +44,8 @@
       "confidence": 0.95,
       "epistemic_status": "verified",
       "collected_at": "2026-07-22",
-      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (42.4% > 30% = destino), contradice etiqueta original del hotel."
+      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (42.4% > 30% = destino), contradice etiqueta original del hotel. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita.",
+      "hotel_self_label": "paso"
     },
     {
       "hotel_name": "Luma Plaza Hotel",
@@ -63,7 +65,8 @@
       "confidence": 0.95,
       "epistemic_status": "verified",
       "collected_at": "2026-07-22",
-      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (13.2% < 15% = paso), contradice etiqueta original del hotel."
+      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (13.2% < 15% = paso), contradice etiqueta original del hotel. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita.",
+      "hotel_self_label": "destino"
     },
     {
       "hotel_name": "GHL Hotel Abadia Plaza",
@@ -83,7 +86,8 @@
       "confidence": 0.95,
       "epistemic_status": "verified",
       "collected_at": "2026-07-22",
-      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (9.3% < 15% = paso), contradice etiqueta original del hotel."
+      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (9.3% < 15% = paso), contradice etiqueta original del hotel. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita.",
+      "hotel_self_label": "destino"
     },
     {
       "hotel_name": "Hotel Castilla Real",
@@ -103,7 +107,8 @@
       "confidence": 0.95,
       "epistemic_status": "verified",
       "collected_at": "2026-07-22",
-      "notes": "Datos por contacto directo. Municipio: Pereira. ADR corregido de $2,820,000 a $282,000 (confirmado typo). Clasificación por heurística occupancy (13.9% < 15% = paso), contradice etiqueta original del hotel."
+      "notes": "Datos por contacto directo. Municipio: Pereira. ADR corregido de $2,820,000 a $282,000 (confirmado typo). Clasificación por heurística occupancy (13.9% < 15% = paso), contradice etiqueta original del hotel. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita.",
+      "hotel_self_label": "destino"
     },
     {
       "hotel_name": "Zi One Luxury",
@@ -123,7 +128,8 @@
       "confidence": 0.95,
       "epistemic_status": "verified",
       "collected_at": "2026-07-22",
-      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (78.4% > 30% = destino), contradice etiqueta original del hotel."
+      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (78.4% > 30% = destino), contradice etiqueta original del hotel. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita.",
+      "hotel_self_label": "paso"
     }
   ]
 }
