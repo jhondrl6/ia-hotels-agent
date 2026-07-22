@@ -89,9 +89,11 @@ def financial_calculation_handler(payload: Dict[str, Any], context: TaskContext)
         direct_channel_percentage = payload.get("direct_channel_percentage", 0.20)
         
         # Override occupancy with regional data if available and validated
+        # (skip override if occupancy was explicitly provided by onboarding)
+        occupancy_source = payload.get("occupancy_source", "default")
         from modules.financial_engine.feature_flags import get_flags
         flags = get_flags()
-        if flags.should_use_regional_for(region):
+        if flags.should_use_regional_for(region) and occupancy_source != "onboarding":
             from modules.financial_engine import RegionalADRResolver
             resolver = RegionalADRResolver()
             regional_occupancy = resolver.resolve_occupancy(region)

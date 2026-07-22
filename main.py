@@ -1802,7 +1802,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 "occupancy_rate": occupancy_rate,
                 "direct_channel_percentage": direct_channel_pct,
                 "hotel_id": args.url,
-                "hotel_name": hotel_name
+                "hotel_name": hotel_name,
+                "user_provided_adr": adr_from_onboarding,
+                "occupancy_source": "onboarding" if (adr_from_onboarding is not None and adr_from_onboarding > 0) else "default",
             }
         )
         
@@ -1858,7 +1860,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             
             # Initialize data_sources for assessment dict (T1.1)
             # The harness returns adr_result as part of result_data
-            adr_source = result_data.get("adr_source", "handler")
+            adr_source = result_data.get("adr_resolution", {}).get("source", "unknown")
             financial_sources = {
                 "adr_cop": adr_source,
                 "occupancy_rate": "regional" if feature_flags.should_use_regional_for(region) else ("onboarding" if onboarding_data is not None else "default"),
