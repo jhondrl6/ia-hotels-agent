@@ -2,14 +2,14 @@
 
 > **Convención**: 1 fase = 1 sesión. Marcar [x] al completar.
 
-## FASE-1: Root Cause — ADR + Occupancy Propagation ⬜ PENDIENTE
+## FASE-1: Root Cause — ADR + Occupancy Propagation ✅ COMPLETADA
 
-- [ ] 1.1 Agregar `user_provided_adr` al payload del AgentTask financiero en main.py
-- [ ] 1.2 Agregar `occupancy_source` al payload + guard en harness_handlers.py
-- [ ] 1.3 Arreglar `main.py:1861` adr_source placeholder "handler" → `adr_resolution.source`
-- [ ] 1.4 Verificación: handler test con user_provided_adr=330000
-- [ ] 1.5 Commit: `fix(BUG-1+NEW-1): propagate ADR+occupancy from onboarding to harness payload`
-- [ ] 1.6 Regresión: 700 tests preexistentes pasan
+- [x] 1.1 Agregar `user_provided_adr` al payload del AgentTask financiero en main.py
+- [x] 1.2 Agregar `occupancy_source` al payload + guard en harness_handlers.py
+- [x] 1.3 Arreglar `main.py:1861` adr_source placeholder "handler" → `adr_resolution.source`
+- [x] 1.4 Verificación: handler test con user_provided_adr=330000
+- [x] 1.5 Commit: `fix(BUG-1+NEW-1): propagate ADR+occupancy from onboarding to harness payload` (d0747ce)
+- [x] 1.6 Regresión: 700 tests preexistentes pasan
 
 ## FASE-2: Cascade — Proposal Generator (H1) + ValidationSummary (H3) ⬜ PENDIENTE
 

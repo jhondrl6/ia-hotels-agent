@@ -1,6 +1,6 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-07-10
+> **Ultima actualizacion:** 2026-07-22
 > **Version actual:** v4.58.0
 > **Total fases completadas:** 354
 
@@ -8527,6 +8527,26 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1 - 2026-07-22
+**Descripcion:** Root cause fix: propagate ADR+occupancy from onboarding to harness payload. BUG-1: ADR de onboarding ignorado en payload del harness. NEW-1: occupancy_rate sobrescrito por regional. F3: adr_source placeholder 'handler' eliminado.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `modules/financial_engine/harness_handlers.py` | Harness Handlers |
+
+### Validaciones
+- [x] Tests passing (42+447)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
