@@ -645,6 +645,7 @@ Hasta que existan señales:
 10. Resolver G0 completo: los 3 assets en `ESTIMATED` por falta de `hotel_data` requieren onboarding real para alcanzar ≥0.8 confidence. Es la última milla del primer piso.
 11. Endurecer G8 para nuevos tipos de hotel: el DataDerivationLayer cubre 5 derivaciones del audit estándar; hoteles con estructuras atípicas pueden necesitar derivaciones adicionales.
 12. Preservar el análisis Enrich Labs vertical para hoteles como contexto estratégico, no como copia de producto horizontal. Fuente: `.opencode/context/roadmap-enrichlabs-vertical-hotels-strategy.md`.
+13. Unificación total de taxonomía de fuentes y contrato de tipos para payload del harness (Opción D del plan BUGS-ONBOARDING-ADR-2026-07-22). El plan aplicó Opción C: corrige los 3 bugs puntuales + centraliza CTAs en `_build_onboarding_cta`, pero los 3 vocabularios incompatibles (`ADRSource` enum, `ValidationSummary.sources`, `JSON adr_source`) siguen existiendo como 3 cosas distintas. `build_validated_field(name, value, source)` centralizado y migración del payload a `TypedDict`/dataclass quedan como deuda. Riesgo: un nuevo campo validado o CTA puede cometer el mismo error por construcción. Fuente: `.opencode/plans/BUGS-ONBOARDING-ADR-2026-07-22/01-plan-maestro.md` §9.
 
 ---
 
