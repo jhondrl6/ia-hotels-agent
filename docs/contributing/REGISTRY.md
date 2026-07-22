@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-07-22
 > **Version actual:** v4.58.0
-> **Total fases completadas:** 354
+> **Total fases completadas:** 355
 
 ---
 
@@ -8547,6 +8547,26 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (42+447)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-07-22
+**Descripcion:** H1_fix_proposal_ADR_from_onboarding_+_H3_fix_ValidationSummary_confidence_from_adr_source
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

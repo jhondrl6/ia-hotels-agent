@@ -469,6 +469,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         self.template_path = self.template_dir / "propuesta_v6_template.md"
         if not self.template_path.exists():
             self.template_path = self.template_dir / "propuesta_v4_template.md"
+        self._user_provided_adr: Optional[float] = None
     
     def generate(
         self,
@@ -488,6 +489,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         site_presence_report: Optional[Any] = None,  # FASE-D: SitePresenceReport for production presence verification
         pain_ledger: Optional[List[Any]] = None,  # FASE-0D: PainLedgerEntry list for proposal-asset matrix
         document_audience: str = "client",  # FASE-A ROI-REFACTOR: "client" hides internal alerts; "internal" shows them
+        user_provided_adr: Optional[float] = None,  # H1-FIX: ADR from onboarding to bypass regional benchmarks
     ) -> str:
         """
         Generate the proposal document.
@@ -505,10 +507,15 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
                 If provided, uses pricing_result.monthly_price_cop directly to ensure
                 consistency with financial_scenarios.json calculation.
             region: Optional region string for regional context in templates.
+            user_provided_adr: Optional ADR from onboarding. Bypasses regional benchmark lookup.
 
         Returns:
             Path to the generated document
         """
+        # Store user_provided_adr for use in _get_adr_from_benchmarks (H1-FIX)
+        if user_provided_adr is not None:
+            self._user_provided_adr = user_provided_adr
+
         # Use pricing_result if available (from hybrid pricing model)
         # This ensures consistency with financial_scenarios.json
         if pricing_result is not None:
@@ -757,7 +764,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         _pct_inv_vs_fuga = round((monthly_investment / abs(raw_monthly_loss)) * 100, 1)
 
         # MIN-02: Pre-calcular ADR desde benchmarks regionales ANTES del dict
-        _adr_value = self._get_adr_from_benchmarks(region or 'eje_cafetero')
+        _adr_value = self._get_adr_from_benchmarks(region or 'eje_cafetero', user_provided_adr=self._user_provided_adr)
         _adr_display = f"${_adr_value:,.0f} COP" if _adr_value else "No disponible"
 
         # REGRESSION-FIX: breakeven y avg monthly recovery desde curva de maduración
@@ -1856,13 +1863,17 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
 
         return brecha_data
 
-    def _get_adr_from_benchmarks(self, region: str) -> Optional[float]:
+    def _get_adr_from_benchmarks(self, region: str, user_provided_adr: Optional[float] = None) -> Optional[float]:
         """Obtener ADR desde benchmarks regionales (regional_adr_2026.json).
 
         Usa RegionalADRResolver para resolver ADR con la cascada completa:
-        regional_adr_2026.json → plan_maestro_data.json → default.
+        user_provided_adr → regional_adr_2026.json → plan_maestro_data.json → default.
         Retorna None si ninguna fuente tiene datos.
         """
+        # H1-FIX: Si hay ADR de onboarding, usarlo directamente
+        if user_provided_adr is not None and user_provided_adr > 0:
+            return user_provided_adr
+
         try:
             from modules.financial_engine.regional_adr_resolver import RegionalADRResolver
             resolver = RegionalADRResolver()

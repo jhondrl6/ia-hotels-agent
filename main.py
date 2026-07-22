@@ -2159,10 +2159,17 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             can_use_in_assets=True
         ))
 
-    # ADR field
+    # ADR field — H3-FIX: usar adr_source real en lugar de flag binario adr_from_onboarding_verified
     if adr_cop and adr_cop > 0:
-        confidence = ConfidenceLevel.VERIFIED if adr_from_onboarding_verified else ConfidenceLevel.ESTIMATED
-        sources = ["Onboarding"] if adr_from_onboarding_verified else ["Benchmark"]
+        if adr_source == "user_provided":
+            confidence = ConfidenceLevel.VERIFIED
+            sources = ["Onboarding"]
+        elif adr_source == "regional_v410":
+            confidence = ConfidenceLevel.ESTIMATED
+            sources = ["Benchmark"]
+        else:
+            confidence = ConfidenceLevel.ESTIMATED
+            sources = ["Default"]
         validated_fields.append(ValidatedField(
             field_name="adr_cop",
             value=adr_cop,
@@ -2678,6 +2685,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             assets_generated=assets_for_quality,
             site_presence_report=site_presence_report,
             pain_ledger=pain_ledger_entries,  # PIPELINE-FIX: enable ProposalAssetMatrix.save()
+            user_provided_adr=adr_from_onboarding,  # H1-FIX: pass onboarding ADR to avoid parallel divergence
         )
         
         # FIX-PATCH-2: Re-scrub proposal now that it exists

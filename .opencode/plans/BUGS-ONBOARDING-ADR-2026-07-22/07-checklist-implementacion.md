@@ -11,13 +11,13 @@
 - [x] 1.5 Commit: `fix(BUG-1+NEW-1): propagate ADR+occupancy from onboarding to harness payload` (d0747ce)
 - [x] 1.6 Regresión: 700 tests preexistentes pasan
 
-## FASE-2: Cascade — Proposal Generator (H1) + ValidationSummary (H3) ⬜ PENDIENTE
+## FASE-2: Cascade — Proposal Generator (H1) + ValidationSummary (H3) ✅ COMPLETADA
 
-- [ ] 2.1 Fix H1: Proposal generator recibe ADR del onboarding (no resolver paralelo con None)
-- [ ] 2.2 Fix H3: ValidationSummary confidence/sources de adr_source real (no flag existencia)
-- [ ] 2.3 Verificación de invariantes: grep checks
-- [ ] 2.4 Regresión: tests commercial_documents + financial_engine
-- [ ] 2.5 Commit: `fix(H1+H3): proposal ADR from onboarding + validation summary real source`
+- [x] 2.1 Fix H1: Proposal generator recibe ADR del onboarding (no resolver paralelo con None)
+- [x] 2.2 Fix H3: ValidationSummary confidence/sources de adr_source real (no flag existencia)
+- [x] 2.3 Verificación de invariantes: grep checks
+- [x] 2.4 Regresión: tests commercial_documents + financial_engine (35+64 passed)
+- [x] 2.5 Commit: `fix(H1+H3): proposal ADR from onboarding + validation summary real source`
 
 ## FASE-3: Taxonomy Unification (H2) + CTA Fix (BUG-2, Opción C) ⬜ PENDIENTE
 
