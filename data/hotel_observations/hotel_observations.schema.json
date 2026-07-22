@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://iah-cli.local/schemas/hotel_observations.schema.json",
+  "title": "Hotel Observations",
+  "description": "Esquema para observaciones operacionales reales de hoteles individuales. Usado por data/hotel_observations/observations.json",
+  "version": "1.0.0",
+
+  "type": "object",
+  "required": ["version", "last_updated", "source_role", "epistemic_status_default", "description", "observations"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Versión semántica del archivo"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date",
+      "description": "Fecha de última actualización (YYYY-MM-DD)"
+    },
+    "source_role": {
+      "const": "individual_hotel_observations",
+      "description": "Rol de la fuente: SIEMPRE este valor para este directorio"
+    },
+    "epistemic_status_default": {
+      "enum": ["verified", "estimated"],
+      "description": "Tier epistemológico por defecto de las observaciones"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descripción breve del propósito del archivo"
+    },
+    "observations": {
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "#/$defs/observation" }
+    }
+  },
+
+  "$defs": {
+    "observation": {
+      "type": "object",
+      "description": "Una observación individual de un hotel",
+      "required": [
+        "hotel_name",
+        "is_transit_hotel",
+        "rooms",
+        "monthly_reservations",
+        "avg_reservation_cop",
+        "direct_channel_percentage",
+        "region",
+        "category",
+        "source",
+        "confidence",
+        "epistemic_status",
+        "collected_at"
+      ],
+      "properties": {
+        "hotel_name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Nombre o slug del hotel"
+        },
+        "is_transit_hotel": {
+          "type": "boolean",
+          "description": "true = hotel de paso (baja rotación, baja ocupación, ADR bajo); false = hotel destino"
+        },
+        "rooms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Número de habitaciones"
+        },
+        "monthly_reservations": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Reservas mensuales promedio"
+        },
+        "avg_reservation_cop": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Valor promedio por reserva en COP"
+        },
+        "direct_channel_percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "% de reservas por canal directo (rango 0-100)"
+        },
+        "occupancy_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Tasa de ocupación derivada (0-1): monthly_reservations / (rooms * 30)"
+        },
+        "adr_cop": {
+          "type": "number",
+          "minimum": 0,
+          "description": "ADR efectivo para el motor (en este caso = avg_reservation_cop)"
+        },
+        "direct_channel_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Versión ratio del canal directo (0-1): direct_channel_percentage / 100"
+        },
+        "ota_percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "% implícito por OTAs (0-1): 1.0 - direct_channel_ratio"
+        },
+        "region": {
+          "enum": ["eje_cafetero", "caribe", "antioquia", "default"],
+          "description": "Región (debe matchear regional_adr_2026.json)"
+        },
+        "category": {
+          "enum": ["boutique_10_25", "standard_26_60"],
+          "description": "Categoría del hotel según rooms"
+        },
+        "source": {
+          "enum": ["contacto_directo", "formulario_onboarding", "evidencia_verificable"],
+          "description": "Origen de los datos"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Confianza en los datos (0-1). contacto_directo con dueño → 0.95"
+        },
+        "epistemic_status": {
+          "enum": ["verified", "estimated"],
+          "description": "Tier epistemológico: verified = Tier A, estimated = Tier B/C"
+        },
+        "collected_at": {
+          "type": "string",
+          "format": "date",
+          "description": "Fecha de recolección (YYYY-MM-DD)"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Contexto adicional libre"
+        },
+        "is_transit_hotel_basis": {
+          "type": "string",
+          "description": "Justificacion explicita de por que se clasifico como hotel de paso o destino. Campo obligatorio siempre que is_transit_hotel=true; recomendado tambien para false (trazabilidad)"
+        }
+      },
+      "additionalProperties": false,
+
+      "allOf": [
+        {
+          "description": "Si rooms < 26, category debe ser boutique_10_25",
+          "if": { "properties": { "rooms": { "maximum": 25 } } },
+          "then": { "properties": { "category": { "const": "boutique_10_25" } } }
+        },
+        {
+          "description": "Si rooms >= 26, category debe ser standard_26_60 (o fuera de rango si rooms > 60)",
+          "if": { "properties": { "rooms": { "minimum": 26, "maximum": 60 } } },
+          "then": { "properties": { "category": { "const": "standard_26_60" } } }
+        },
+        {
+          "description": "occupancy_rate si está presente debe coincidir con cálculo",
+          "if": { "required": ["occupancy_rate", "monthly_reservations", "rooms"] },
+          "then": {
+            "properties": {
+              "occupancy_rate": {
+                "description": "Debe ser aproximadamente monthly_reservations / (rooms * 30). Tolerancia 1%"
+              }
+            }
+          }
+        },
+        {
+          "description": "direct_channel_ratio + ota_percentage deben sumar 1.0 (±0.001)",
+          "if": { "required": ["direct_channel_ratio", "ota_percentage"] },
+          "then": {
+            "properties": {
+              "ota_percentage": {
+                "description": "Debe ser 1.0 - direct_channel_ratio (tolerancia 0.001)"
+              }
+            }
+          }
+        },
+        {
+          "description": "Si source=contacto_directo o formulario_onboarding, confidence debe ser >= 0.9",
+          "if": {
+            "properties": {
+              "source": { "enum": ["contacto_directo", "formulario_onboarding"] }
+            }
+          },
+          "then": {
+            "properties": {
+              "confidence": { "minimum": 0.9 }
+            }
+          }
+        },
+        {
+          "description": "Si source=contacto_directo, epistemic_status debe ser verified",
+          "if": {
+            "properties": { "source": { "const": "contacto_directo" } }
+          },
+          "then": {
+            "properties": {
+              "epistemic_status": { "const": "verified" }
+            }
+          }
+        },
+        {
+          "description": "Si is_transit_hotel=true, is_transit_hotel_basis es obligatorio",
+          "if": {
+            "properties": { "is_transit_hotel": { "const": true } }
+          },
+          "then": {
+            "required": ["is_transit_hotel_basis"],
+            "properties": {
+              "is_transit_hotel_basis": {
+                "type": "string",
+                "minLength": 20,
+                "description": "Justificacion explicita requerida cuando is_transit_hotel=true"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+
+  "additionalProperties": false
+}
