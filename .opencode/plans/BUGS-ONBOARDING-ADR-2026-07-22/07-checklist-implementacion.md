@@ -28,15 +28,15 @@
 - [x] 3.5 Regresión: 13 diagnostic tests pasan + 0 regresiones (10 preexistentes en proposal)
 - [x] 3.6 Commit: `fix(H2+BUG-2): unify source taxonomy + centralized onboarding CTA function`
 
-## FASE-4: E2E Tests (H4) + v4complete Don Alfonso + Análisis ⬜ PENDIENTE
+## FASE-4: E2E Tests (H4) + v4complete Don Alfonso + Análisis ✅ COMPLETADA
 
-- [ ] 4.1 Tests e2e: tests/e2e/test_onboarding_to_harness_pipeline.py (6 tests)
-- [ ] 4.2 v4complete: `python3 main.py v4complete https://www.donalfonsohotel.com/`
-- [ ] 4.3 Análisis: verificar adr_cop=330000, occupancy=0.4242, adr_source!="handler"
-- [ ] 4.4 Análisis: CTA "Complete el onboarding" NO aparece en diagnóstico
-- [ ] 4.5 Análisis: ADR consistente entre diagnóstico y propuesta
-- [ ] 4.6 Llenar 08-analisis-post-implementacion.md
-- [ ] 4.7 Commit: `test(H4): e2e onboarding pipeline + v4complete Don Alfonso verification`
+- [x] 4.1 Tests e2e: tests/e2e/test_onboarding_to_harness_pipeline.py (21 tests, 20 pass, 1 skip)
+- [x] 4.2 v4complete: `python3 main.py v4complete --url https://www.donalfonsohotel.com/` (coherence 0.95, gates 9/11)
+- [x] 4.3 Análisis: verificar adr_cop=330000, occupancy=0.4242, adr_source!="handler" → ✅ JSON input_data
+- [x] 4.4 Análisis: CTA "Complete el onboarding" NO aparece en diagnóstico → ✅ 0 ocurrencias
+- [x] 4.5 Análisis: ADR consistente entre diagnóstico y propuesta → ✅ ambos $330,000 COP
+- [x] 4.6 Llenar 08-analisis-post-implementacion.md → ✅ con cifras esperadas vs reales
+- [x] 4.7 Commit: `test(H4): e2e onboarding pipeline + v4complete Don Alfonso verification`
 
 ## FASE-5: RELEASE ⬜ PENDIENTE
 
