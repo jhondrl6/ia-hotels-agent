@@ -372,6 +372,88 @@ def sugerir_paquete(score_tecnico: int) -> str:
     else:
         return "premium"
 
+# ============================================================
+# BUG-2-FIX (Opción C): Centralized onboarding CTA function
+# Single source of truth for all 7 onboarding CTAs across 5 surfaces.
+# ============================================================
+
+# Messages indexed by surface -> state, preserving original variations.
+_ONBOARDING_CTA_MESSAGES = {
+    "diagnostic_cta": {
+        "no_onboarding": (
+            "\n> **¿Quiere saber su cifra exacta?** "
+            "Complete el onboarding con sus datos reales: "
+            "número de habitaciones, reservas mensuales promedio, "
+            "valor promedio de reserva (COP) y porcentaje de canal directo. "
+            "Así podrá ver el cálculo preciso de su pérdida mensual.\n"
+        ),
+        "has_onboarding": (
+            "\n> ✅ **Datos operativos verificados.** "
+            "Para obtener la cifra exacta al peso, conecte Google Analytics 4 "
+            "y Search Console para datos de tráfico real verificable.\n"
+        ),
+    },
+    "diagnostic_banner": {
+        "no_onboarding": (
+            "> ⚠️ **Nivel de evidencia: Tier C** — Estas cifras se basan en benchmark regional\n"
+            "> + datos limitados de la web. Para precisión, ejecute onboarding con datos reales.\n"
+        ),
+        "has_onboarding": (
+            "> ⚠️ **Nivel de evidencia: Tier C** — Estas cifras se basan en datos operativos del hotel\n"
+            "> + benchmark regional. Para precisión al peso, conecte GA4 y Search Console.\n"
+        ),
+    },
+    "diagnostic_assets_note": {
+        "no_onboarding": (
+            "> ⚠️ **{n} assets generados con confianza baja (< 0.7)** — "
+            "Incluidos con disclaimer en el paquete de entrega. "
+            "Ejecute onboarding con datos reales para mejorar la precisión.\n"
+        ),
+        "has_onboarding": (
+            "> ⚠️ **{n} assets generados con confianza baja (< 0.7)** — "
+            "Incluidos con disclaimer en el paquete de entrega. "
+            "Conecte GA4 para mejorar la precisión de los activos.\n"
+        ),
+    },
+    "log_final": {
+        "no_onboarding": (
+            "\n⚠️  NOTA: Este es un análisis preliminar.\n"
+            "    Para precisar las cifras, ejecute con datos operativos:\n"
+            "    python main.py onboard --url {url}\n"
+        ),
+        "has_onboarding": (
+            "\n💡 NOTA: Datos operativos cargados. "
+            "Para cifras al peso exacto, conecte Google Analytics 4.\n"
+        ),
+    },
+}
+
+
+def _build_onboarding_cta(has_onboarding: bool, can_show_exact: bool, surface: str = "diagnostic_cta", **fmt_kwargs) -> str:
+    """
+    Centralized onboarding CTA builder (BUG-2 Fix, Opción C).
+
+    Pure function — no side effects, no I/O. Single source of truth for all
+    7 onboarding CTAs across 5 surfaces (diagnostic, banner, assets, proposal, log).
+
+    Args:
+        has_onboarding: Whether onboarding data has been loaded for this hotel.
+        can_show_exact: Whether the precision tier allows exact money display.
+        surface: Which CTA surface to render (one of _ONBOARDING_CTA_MESSAGES keys).
+        **fmt_kwargs: Format variables for dynamic messages (e.g. n=count, url=...).
+
+    Returns:
+        The appropriate CTA string for the given surface and state, or empty string.
+    """
+    if can_show_exact:
+        return ""
+    state = "has_onboarding" if has_onboarding else "no_onboarding"
+    template = _ONBOARDING_CTA_MESSAGES[surface][state]
+    if fmt_kwargs:
+        return template.format(**fmt_kwargs)
+    return template
+
+
 class V4DiagnosticGenerator:
     """
     Generates diagnostic documents for hotel audits.
@@ -606,6 +688,11 @@ class V4DiagnosticGenerator:
         # FASE-PROP-A: Gate status from coherence gate
         gate_status_display = gate_status if gate_status else "PENDIENTE"
 
+        # BUG-2-FIX: Infer has_onboarding for centralized CTA (template data + assets note)
+        _has_onb = any(
+            "Onboarding" in (f.sources or []) for f in (validation_summary.fields or [])
+        ) if validation_summary else False
+
         # Region-based variables for V6 templates
         _raw = region or "Colombia"
         if _raw.lower() in ("nacional", "general", "default", "unknown"):
@@ -692,7 +779,7 @@ class V4DiagnosticGenerator:
             'positive_findings': self._build_positive_findings(audit_result),
             'ia_metrics_table': self._build_geo_problems_table(audit_result, output_dir),
             # FASE-TRAZABILIDAD-REFINEMENT: asset_confidence transparency note
-            'asset_confidence_note': self._build_asset_confidence_note(output_dir, audit_result),
+            'asset_confidence_note': self._build_asset_confidence_note(output_dir, audit_result, has_onboarding=_has_onb),
             
             # Regional averages (3-tier fallback: competitors > regional config > default)
             'geo_regional': geo_regional,
@@ -1082,9 +1169,16 @@ class V4DiagnosticGenerator:
 
         # FASE-TRAZABILIDAD-REFINEMENT: Tier C visibility in header
         financial_tier_suffix = " *(estimado — Tier C)*" if tier == "C" else ""
-        financial_tier_banner = (
-            "> ⚠️ **Nivel de evidencia: Tier C** — Estas cifras se basan en benchmark regional\n"
-            "> + datos limitados de la web. Para precisión, ejecute onboarding con datos reales.\n"
+
+        # BUG-2-FIX: Centralized onboarding CTA for banner
+        # Infer has_onboarding from validation_summary fields
+        has_onboarding_banner = False
+        if validation_summary is not None and validation_summary.fields:
+            has_onboarding_banner = any(
+                "Onboarding" in (f.sources or []) for f in validation_summary.fields
+            )
+        financial_tier_banner = _build_onboarding_cta(
+            has_onboarding_banner, False, "diagnostic_banner"
         ) if tier == "C" else ""
 
         # PROPUESTA-COMERCIAL FASE-B: Puente dual fuga bruta / recuperación efectiva
@@ -1241,9 +1335,11 @@ class V4DiagnosticGenerator:
                     pass
 
             # Set adr_source_label based on source
-            if adr_source in ("user_provided", "web_scraping"):
+            # H2-FIX: Match Vocabulario B (PascalCase from ValidationSummary.sources)
+            # plus snake_case for backward compatibility
+            if adr_source in ("Onboarding", "user_provided", "web_scraping"):
                 adr_source_label = "datos del hotel"
-            elif adr_source == "regional_v410":
+            elif adr_source in ("Benchmark", "regional_v410"):
                 adr_source_label = "benchmark regional"
             else:
                 adr_source_label = "estimado"
@@ -1256,14 +1352,17 @@ class V4DiagnosticGenerator:
             monthly_loss_display = f"~{format_cop(min_value)}–{format_cop(max_value)} COP/mes"
 
         # Build precision warning for Tier B/C
+        # BUG-2-FIX: Infer has_onboarding from validation_summary fields
+        has_onboarding = False
+        if validation_summary is not None and validation_summary.fields:
+            has_onboarding = any(
+                "Onboarding" in (f.sources or []) for f in validation_summary.fields
+            )
+
         if not can_show_exact:
             precision_warning = self._build_precision_warning(precision_tier, adr_source_label)
-            show_onboarding_cta = (
-                "\n> **¿Quiere saber su cifra exacta?** "
-                "Complete el onboarding con sus datos reales: "
-                "número de habitaciones, reservas mensuales promedio, "
-                "valor promedio de reserva (COP) y porcentaje de canal directo. "
-                "Así podrá ver el cálculo preciso de su pérdida mensual.\n"
+            show_onboarding_cta = _build_onboarding_cta(
+                has_onboarding, can_show_exact, "diagnostic_cta"
             )
         else:
             precision_warning = ""
@@ -2472,7 +2571,7 @@ class V4DiagnosticGenerator:
             content_lines.append(f"{i}. {cleaned}")
         return '\n'.join(content_lines)
 
-    def _build_asset_confidence_note(self, output_dir: str, audit_result: 'V4AuditResult') -> str:
+    def _build_asset_confidence_note(self, output_dir: str, audit_result: 'V4AuditResult', has_onboarding: bool = False) -> str:
         """Build transparency note for assets with low confidence score (D4)."""
         if not output_dir:
             return ""
@@ -2490,10 +2589,9 @@ class V4DiagnosticGenerator:
             ]
             if not low_assets:
                 return ""
-            return (
-                f"> ⚠️ **{len(low_assets)} assets generados con confianza baja (< 0.7)** — "
-                f"Incluidos con disclaimer en el paquete de entrega. "
-                f"Ejecute onboarding con datos reales para mejorar la precisión.\n"
+            # BUG-2-FIX: Use centralized onboarding CTA
+            return _build_onboarding_cta(
+                has_onboarding, False, "diagnostic_assets_note", n=len(low_assets)
             )
         except Exception:
             return ""

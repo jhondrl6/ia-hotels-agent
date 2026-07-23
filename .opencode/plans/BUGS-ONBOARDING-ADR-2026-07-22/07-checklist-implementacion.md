@@ -19,14 +19,14 @@
 - [x] 2.4 Regresión: tests commercial_documents + financial_engine (35+64 passed)
 - [x] 2.5 Commit: `fix(H1+H3): proposal ADR from onboarding + validation summary real source`
 
-## FASE-3: Taxonomy Unification (H2) + CTA Fix (BUG-2, Opción C) ⬜ PENDIENTE
+## FASE-3: Taxonomy Unification (H2) + CTA Fix (BUG-2, Opción C) ✅ COMPLETADA
 
-- [ ] 3.1 Fix H2: Discriminador del diagnóstico matchea vocabulario correcto
-- [ ] 3.2 Fix BUG-2 (Opción C): Crear función centralizada _build_onboarding_cta + dict _ONBOARDING_CTA_MESSAGES
-- [ ] 3.3 Fix BUG-2: Refactorizar los 7 CTAs para usar _build_onboarding_cta
-- [ ] 3.4 Verificación: grep centralización + no bloques if dispersos
-- [ ] 3.5 Regresión: tests commercial_documents + financial_engine
-- [ ] 3.6 Commit: `fix(H2+BUG-2): unify source taxonomy + centralized onboarding CTA function`
+- [x] 3.1 Fix H2: Discriminador del diagnóstico matchea vocabulario correcto (Onboarding/Benchmark)
+- [x] 3.2 Fix BUG-2 (Opción C): Crear función centralizada _build_onboarding_cta + dict _ONBOARDING_CTA_MESSAGES
+- [x] 3.3 Fix BUG-2: Refactorizar los 7 CTAs para usar _build_onboarding_cta
+- [x] 3.4 Verificación: grep centralización + no bloques if dispersos
+- [x] 3.5 Regresión: 13 diagnostic tests pasan + 0 regresiones (10 preexistentes en proposal)
+- [x] 3.6 Commit: `fix(H2+BUG-2): unify source taxonomy + centralized onboarding CTA function`
 
 ## FASE-4: E2E Tests (H4) + v4complete Don Alfonso + Análisis ⬜ PENDIENTE
 

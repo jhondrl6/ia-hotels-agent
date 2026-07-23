@@ -918,6 +918,9 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         # Falls back to 'C' (most conservative) if not available
         'financial_evidence_tier': getattr(financial_breakdown, 'evidence_tier', 'C') if financial_breakdown else 'C',
 
+        # BUG-2-FIX: has_onboarding flag for centralized CTA conditionals in template
+        'has_onboarding': 'False',  # Conservative default; caller can override with actual value
+
         # Backward compatibility: score_tecnico alias for score_global
         'score_tecnico': diagnostic_summary.score_global if diagnostic_summary.score_global is not None else (
             diagnostic_summary.score_tecnico if diagnostic_summary.score_tecnico is not None else self._load_fallback('score_tecnico', 50)[0]

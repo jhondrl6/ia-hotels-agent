@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-07-22
 > **Version actual:** v4.58.0
-> **Total fases completadas:** 355
+> **Total fases completadas:** 356
 
 ---
 
@@ -8563,6 +8563,28 @@ _Ninguno_
 | Archivo | Cambio |
 |---------|--------|
 | `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3 - 2026-07-22
+**Descripcion:** BUGS-ONBOARDING-ADR: Unify source taxonomy (H2) + centralized onboarding CTA function (BUG-2, Opcion C)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
 | `main.py` | Main |
 
 ### Validaciones

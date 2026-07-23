@@ -568,13 +568,13 @@ class TestFASEPROPFtierCWarning:
             f"Expected 'A', got {data['financial_evidence_tier']}"
 
     def test_v6_template_has_tier_c_conditional(self, generator):
-        """El template V6 contiene el condicional {{if financial_evidence_tier == 'C'}}."""
+        """El template V6 contiene el condicional {{if has_onboarding == 'False'}} (BUG-2-FIX)."""
         from pathlib import Path
         template_path = Path(generator.template_dir) / "propuesta_v6_template.md"
         if template_path.exists():
             content = template_path.read_text(encoding='utf-8')
-            assert 'financial_evidence_tier' in content, \
-                "Template missing financial_evidence_tier conditional"
+            assert 'has_onboarding' in content, \
+                "Template missing has_onboarding conditional (BUG-2-FIX)"
             assert 'Tier C' in content, \
                 "Template missing Tier C warning text"
         else:

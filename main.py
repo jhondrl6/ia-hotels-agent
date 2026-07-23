@@ -3287,9 +3287,11 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     print("\n" + "=" * 70)
     print("✨ Flujo v4.0 completado exitosamente")
     print("=" * 70)
-    print("\n⚠️  NOTA: Este es un análisis preliminar.")
-    print("    Para precisar las cifras, ejecute con datos operativos:")
-    print(f"    python main.py onboard --url {args.url}")
+    # BUG-2-FIX: Only show onboarding CTA in log when onboarding is NOT loaded
+    if not has_onboarding:
+        print("\n⚠️  NOTA: Este es un análisis preliminar.")
+        print("    Para precisar las cifras, ejecute con datos operativos:")
+        print(f"    python main.py onboard --url {args.url}")
 
 
 def _detect_region_from_url(url: str) -> str:
