@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.62.0** -- BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness | Actualizado 10 Julio 2026 | +3,102 pruebas automatizadas | 0 errores conocidos
+**v4.62.0** -- BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness | Actualizado 22 Julio 2026 | 3,022 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 18 skills including PhasedProjectExecutor, v4_regression_guardian, hook_pdf_generator |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 17 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -23,13 +23,13 @@
 
 ## Estado del Proyecto (v4.62.0 -- BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness)
 
-- **3,102 test functions** — suite completa, 0 regresiones
-- **201 modulos Python** (~72K lineas) + **25 scripts** (~6.1K lineas) + **56 directorios de test**
+- **3,022 test functions** — suite completa, 0 regresiones
+- **201 modulos Python** (~72K lineas) + **25 scripts** (~6.2K lineas) + **30 directorios de test**
 - **9 config YAML** con schema validado
-- **18 agent skills** en `.agents/workflows/`
+- **17 agent skills** en `.agents/workflows/`
 - **11 publication gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding)
 - **Coherence Score >= 0.8** requerido para publicacion
-- **22 assets IMPLEMENTED** (+ 2 DEPRECATED + 1 MANUAL_ONLY) en catalogo
+- **27 assets IMPLEMENTED** (+ 4 DEPRECATED + 3 MANUAL_ONLY) en catalogo
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
@@ -235,10 +235,10 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **3,102 test functions** — suite completa, 0 regresiones
+- **3,022 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.12.1 (1 fase/sesion, max 60 iteraciones)
+- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.11.0 (1 fase/sesion, max 60 iteraciones)
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
 - **11 Publication Gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding):
   - Blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics
@@ -286,7 +286,7 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
-  tests/                      # ~63K lineas de test (56 directorios)
+  tests/                      # ~63K lineas de test (30 directorios)
     config/                   #   61 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
@@ -295,7 +295,7 @@ iah-cli/
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
     run_all_validations.py    #   Suite de validaciones
-  .agents/workflows/          # 16 agent skills
+  .agents/workflows/          # 17 agent skills
   .opencode/plans/            # Planes de fases (phased execution)
   evidence/                   # Evidencia de fases ejecutadas
 ```
