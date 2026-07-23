@@ -1,8 +1,8 @@
-<!-- agents_version: v4.61.0 | last_update: 2026-07-10 -->
+<!-- agents_version: v4.61.0 | last_update: 2026-07-22 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.61.0 -- HOOK-PDF: PDF Gancho Command COMPLETADO**
+> **v4.62.0 -- BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness COMPLETADO**
 
 ---
 

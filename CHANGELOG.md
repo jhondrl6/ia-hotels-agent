@@ -1,5 +1,39 @@
 # Changelog
 
+## [4.62.0] - BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness — 2026-07-22
+
+### Objetivo
+Fix propagación de datos de onboarding (ADR, occupancy) al harness financiero y unificación de taxonomía de fuentes.
+
+### Cambios Implementados
+- **BUG-1**: ADR de onboarding ahora se propaga al harness financiero (antes: ignorado, usaba benchmark regional)
+- **NEW-1**: Occupancy_rate del onboarding ya no es sobrescrito por benchmark regional
+- **H1**: Proposal generator usa ADR del onboarding (antes: resolver paralelo con None)
+- **H3**: ValidationSummary confidence/sources ahora reflejan fuente real del valor
+- **H2**: Unificada taxonomía de fuentes (ADRSource enum) entre diagnóstico, propuesta y JSON
+- **BUG-2**: CTAs "Complete el onboarding" ahora condicionados a has_onboarding (7 superficies)
+- **F3**: adr_source en JSON ya no es placeholder "handler"
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/e2e/__init__.py` | Package init para tests e2e |
+| `tests/e2e/conftest.py` | Fixtures para tests e2e |
+| `tests/e2e/test_onboarding_to_harness_pipeline.py` | Tests e2e onboarding → harness → JSON pipeline |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Propagación ADR+occupancy al harness payload |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Fuente real en ValidationSummary, ADRSource enum, CTA condicional |
+| `modules/commercial_documents/v4_proposal_generator.py` | ADR del onboarding en propuesta |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Ajustes template |
+| `tests/commercial_documents/test_proposal_generator.py` | Tests actualizados |
+
+### Tests
+- Tests e2e onboarding pipeline añadidos
+- 0 regresiones
+
 ## [4.61.0] - HOOK-PDF: PDF Gancho Command — 2026-07-10
 
 ### Objetivo

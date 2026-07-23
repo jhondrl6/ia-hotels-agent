@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.61.0** -- HOOK-PDF: PDF Gancho Command | Actualizado 10 Julio 2026 | +3,102 pruebas automatizadas | 0 errores conocidos
+**v4.62.0** -- BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness | Actualizado 10 Julio 2026 | +3,102 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-## Estado del Proyecto (v4.61.0 -- HOOK-PDF: PDF Gancho Command)
+## Estado del Proyecto (v4.62.0 -- BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness)
 
 - **3,102 test functions** — suite completa, 0 regresiones
 - **201 modulos Python** (~72K lineas) + **25 scripts** (~6.1K lineas) + **56 directorios de test**

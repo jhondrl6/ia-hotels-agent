@@ -1,7 +1,31 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.61.0 (HOOK-PDF: PDF Gancho Command)
-**Última actualización:** 2026-07-10
+**Versión:** v4.62.0 (BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness)
+**Última actualización:** 2026-07-22
+
+---
+
+### Notas de Cambios v4.62.0 — BUGS-ONBOARDING-ADR
+
+**Fecha:** 2026-07-22
+
+**Módulos afectados:**
+- `main.py`
+- `modules/commercial_documents/v4_diagnostic_generator.py`
+- `modules/commercial_documents/v4_proposal_generator.py`
+
+**Problema:**
+- ADR y occupancy del onboarding no se propagaban al harness financiero. El pipeline ignoraba estos datos y usaba benchmarks regionales.
+- CTAs "Complete el onboarding" aparecían incluso cuando ya existía onboarding (7 superficies).
+- Taxonomía de fuentes (ADRSource) inconsistente entre diagnóstico, propuesta y JSON.
+
+**Solución:**
+- Propagación directa de ADR y occupancy del onboarding al harness payload.
+- ADRSource enum unificado entre módulos.
+- CTAs condicionadas a `has_onboarding`.
+- ValidationSummary refleja fuente real del valor.
+
+**Tests:** e2e onboarding pipeline + 0 regresiones.
 
 ---
 
