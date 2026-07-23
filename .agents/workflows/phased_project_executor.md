@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
-version: v2.11.0
+version: v2.12.0
 ---
 
 # Skill: Phased Project Executor
@@ -188,6 +188,20 @@ SI la fase tiene 1+ comandos externos (v4complete, scraping, apis):
 SI la fase tiene trabajo paralelo independiente (2+ tracks separadas):
     → Subagente(s) para trabajo paralelo
     → Agente principal para coordinacion + docs
+
+SI la fase requiere imports del proyecto (tests, integracion) Y el proyecto
+   usa venv Windows accedido desde WSL:
+    → Ejecutar DIRECTAMENTE con el agente principal
+    → Invocar el Python del venv del proyecto via subprocess.run():
+       ./venv/Scripts/python.exe -m pytest tests/...
+    → NO delegar a subagentes: corren en WSL Linux sin acceso al venv
+       Windows, imports como bs4/selenium fallan
+    → Esta regla PREVALECE sobre la regla de trabajo paralelo (branch 3)
+    → Causa raíz: subagente WSL no comparte el Python environment del
+       venv Windows; los imports del proyecto fallan y el subagente
+       consume iteraciones intentando resolver dependencias inexistentes
+    → Lección: FASE-4 BUGS-ONBOARDING-ADR (2026-07-22) — subagente
+       atascado en imports bs4/selenium, ~40 iteraciones perdidas
 ```
 
 #### Protocolo de Subagente para v4complete
@@ -732,6 +746,9 @@ Los siguientes estandares aplican a TODOS los documentos del workflow. La fuente
 
 **Que NO hace**: NO modifica ROADMAP.md, NO edita código fuente, NO ejecuta `v4complete`.
 
+> [!TIP]
+> **FASE-RELEASE es delegable a subagente.** A diferencia de las fases de implementación que pueden requerir imports del proyecto, FASE-RELEASE solo edita YAML/MD y ejecuta scripts (`sync_versions.py`, `run_all_validations.py`, `doctor.py`). Si el agente principal tiene presupuesto limitado de iteraciones, puede delegar FASE-RELEASE a un subagente con `delegate_task`. Confirmado en BUGS-ONBOARDING-ADR (2026-07-22): 18 tool calls, ~4 minutos, sin imports del proyecto.
+
 ---
 
 #### E1. Diagnostico Inicial (CONTRIBUTING §Paso-1-Diagnostico)
@@ -865,6 +882,7 @@ git diff --stat
 - **FASE-RELEASE ejecutada sin implementaciones completadas** → abortar; verificar `dependencias-fases.md` que todas las fases previas estén en `✅`
 
 ## Versiones
+- **v2.12.0** (2026-07-22): GAP 1 — Nueva branch 4 en Regla de Decisión código+tests: proyectos con venv Windows accedidos desde WSL no deben delegar tests a subagentes (causa raíz: subagente WSL no puede importar dependencias del venv Windows como bs4/selenium; lección de FASE-4 BUGS-ONBOARDING-ADR, ~40 iteraciones perdidas). GAP 2 — Nota [!TIP] en Paso 7: FASE-RELEASE es delegable a subagente (solo edita YAML/MD + scripts, sin imports del proyecto; confirmado 18 tool calls / ~4 min).
 - **v2.11.0** (2026-05-11): Nueva sección §2.5 "Verificación Pre-Creación de Prompts". Regla anti-deuda acumulativa: cada fase de implementación ejecuta `log_phase_completion.py` al terminar — NO delegar a FASE-RELEASE. Checklist obligatorio para detectar planes mal diseñados antes de crear prompts. Si T1 de RELEASE = "registrar FASE-1 a FASE-5" → error. Agregada acción correctiva.
 - **v2.8.0** (2026-04-28): Protocolo de Evidencia Proactiva (obligatorio inmediatamente despues de output v4complete, antes de cualquier verificacion). Nueva seccion "Cierre Obligatorio de Sesion" — siempre guardar evidencia + actualizar plan antes de cerrar, sin excepciones.
 - **v2.6.0** (2026-04-26): Modelo de Ejecución por Agentes AI explícito. Flujo reestructurado a 3 etapas (Preparación → Implementación → RELEASE). FASE-RELEASE integrada como etapa del flujo principal. Paso 7 renombrado a "FASE-RELEASE — Cierre y Documentación Oficial". Eliminada contradicción "no se ejecuta por fase". Regla de dependencia explícita: RELEASE requiere todas las implementaciones completadas.
