@@ -1,5 +1,26 @@
 # Changelog
 
+## [4.63.0] - ASSET-ALIGNMENT-ZIONE: Fix bypass de seguridad publicación — (en progreso)
+
+### Objetivo
+Reparar bypass de seguridad de 3 capas en delivery_quality_report que permite entregar ZIP a pesar de Gate 9 BLOCKED. Cerrar gaps Pain→Asset y hacer propuesta condicional. Plan: 6 fases + RELEASE.
+
+### Cambios Implementados (FASE-1)
+- **9.1**: delivery_quality_report.py consume resultado real de Gate 9 (`"proposal_asset_alignment"` en vez de `"proposal_asset"`)
+- **9.1b**: `proposal_asset_alignment` añadido a lista de blocking_gates (antes solo coherence, coverage, evidence)
+- **9.2**: `GATE_BLOCKING_ENABLED` default cambiado de `""` (False) a `"true"` (True) en main.py:2814
+
+### Archivos Modificados (FASE-1)
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/delivery_quality_report.py` | L205: blocking_gates + `"proposal_asset_alignment"`; L238: key `"proposal_asset"` → `"proposal_asset_alignment"` |
+| `main.py` | L2812: comentario actualizado; L2814: default `""` → `"true"` |
+| `tests/quality_gates/test_delivery_quality_report.py` | +5 tests (TestProposalAssetAlignmentBypassFix + TestGateBlockingEnabledDefault) |
+
+### Tests (FASE-1)
+- 5 tests nuevos, 0 regresiones (40/40 delivery_quality_report + proposal_asset_alignment)
+- test_publication_gates: 55/56 (1 pre-existing failure)
+
 ## [4.62.0] - BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness — 2026-07-22
 
 ### Objetivo

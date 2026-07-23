@@ -2809,9 +2809,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     print(f"   📄 Gate report: {gate_report_path}")
     
     # FASE-E (CROSS-6): Gate blocking — prevent document delivery when gates fail
-    # Controlled via GATE_BLOCKING_ENABLED env var (default: off, for CI/tests safety)
+    # Controlled via GATE_BLOCKING_ENABLED env var (default: on, set to "false" for CI/tests)
     import os as _os_gate_block
-    _gate_blocking_enabled = _os_gate_block.getenv("GATE_BLOCKING_ENABLED", "").lower() in ("1", "true", "yes")
+    _gate_blocking_enabled = _os_gate_block.getenv("GATE_BLOCKING_ENABLED", "true").lower() in ("1", "true", "yes")
     if _gate_blocking_enabled and readiness_report["status"] == "NOT_READY":
         print("\n🚫 GATE BLOCKING ACTIVE — Publication gates NOT_READY")
         print("   Eliminando documentos cliente y generando BLOCKED_BY_GATES.md")

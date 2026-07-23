@@ -202,7 +202,7 @@ class DeliveryQualityReportGenerator:
         # ── Determine overall status ───────────────────────────────────────
         blocking_gates = [
             name for name, result in gate_results.items()
-            if not result["passed"] and name in ("coherence", "coverage", "evidence")
+            if not result["passed"] and name in ("coherence", "coverage", "evidence", "proposal_asset_alignment")
         ]
         warning_gates = [
             name for name, result in gate_results.items()
@@ -235,7 +235,7 @@ class DeliveryQualityReportGenerator:
             status=status,
             blocking=blocking,
             coverage_gate=gate_results["coverage"],
-            proposal_asset_gate=gate_results.get("proposal_asset", {"passed": True, "gate": "G9"}),
+            proposal_asset_gate=gate_results.get("proposal_asset_alignment", {"passed": True, "gate": "G9"}),
             asset_specificity_gate=gate_results["asset_specificity"],
             evidence_gate=gate_results["evidence"],
             advisory_warnings=advisory_warnings,
