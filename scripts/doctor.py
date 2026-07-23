@@ -349,6 +349,7 @@ def run_regenerate_domain_primer() -> bool:
     # Get version info
     version = "unknown"
     codename = "unknown"
+    release_date = "unknown"
     plan_maestro = "unknown"
     version_file = PROJECT_ROOT / "VERSION.yaml"
     if version_file.exists():
@@ -359,6 +360,8 @@ def run_regenerate_domain_primer() -> bool:
                 codename = line.split('"')[1].strip('"') if '"' in line else line.split(":")[1].strip()
             elif line.startswith("plan_maestro_version:"):
                 plan_maestro = line.split('"')[1].strip('"') if '"' in line else line.split(":")[1].strip()
+            elif line.startswith("release_date:"):
+                release_date = line.split('"')[1].strip('"') if '"' in line else line.split(":")[1].strip()
 
     # Helper: scan a package directory for modules
     def scan_package(pkg_path: Path) -> dict:
@@ -514,7 +517,7 @@ def run_regenerate_domain_primer() -> bool:
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
 > **Version del sistema**: {version} | **Codename**: {codename}
-> **Release date**: {now} | **Plan Maestro**: {plan_maestro}
+> **Release date**: {release_date} | **Plan Maestro**: {plan_maestro}
 > **Agent Harness**: v{harness_version}
 
 ---

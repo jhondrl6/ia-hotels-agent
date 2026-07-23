@@ -35,12 +35,25 @@ class ValidationResult:
 
 class ValidationRunner:
     """Runs all validation checks."""
-    
+
+    # Directories to skip during rglob traversal (venvs, caches, git, node_modules)
+    _SKIP_DIRS = {".venv-wsl", "venv", ".venv", "__pycache__", ".git", "node_modules",
+                  ".mypy_cache", ".pytest_cache", ".tox", "dist", "build", ".eggs"}
+
     def __init__(self, check_only: bool = False, quick: bool = False, verbose: bool = True):
         self.check_only = check_only
         self.quick = quick
         self.verbose = verbose
         self.results: list = []
+
+    def _walk(self, pattern: str):
+        """rglob wrapper that prunes _SKIP_DIRS for performance on WSL."""
+        for path in ROOT_DIR.rglob(pattern):
+            # Skip any path that has a skipped directory as a component
+            parts = path.relative_to(ROOT_DIR).parts
+            if any(p in self._SKIP_DIRS for p in parts):
+                continue
+            yield path
     
     def run_all(self) -> bool:
         """Run all validations and return overall success."""
@@ -84,7 +97,7 @@ class ValidationRunner:
         residual_extensions = {".bak", ".backup", ".tmp", ".old"}
         residual_files = []
         
-        for path in ROOT_DIR.rglob("*"):
+        for path in self._walk("*"):
             if path.is_dir():
                 continue
             if path.suffix in residual_extensions:
@@ -204,7 +217,7 @@ class ValidationRunner:
         ]
         
         violations = []
-        for py_file in ROOT_DIR.rglob("*.py"):
+        for py_file in self._walk("*.py"):
             if "test" in str(py_file).lower():
                 continue
             try:

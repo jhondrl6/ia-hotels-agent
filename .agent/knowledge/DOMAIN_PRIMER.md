@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.61.0 | **Codename**: HOOK-PDF: PDF Gancho Command
-> **Release date**: 2026-07-10 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.62.0 | **Codename**: BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness
+> **Release date**: 2026-07-22 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-07-10 | v4.61.0 HOOK-PDF: PDF Gancho Command*
+*Auto-generado: 2026-07-23 | v4.62.0 BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
