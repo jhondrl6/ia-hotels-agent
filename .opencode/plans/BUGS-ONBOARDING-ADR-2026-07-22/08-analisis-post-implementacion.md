@@ -2,7 +2,7 @@
 
 > **Fecha**: 2026-07-22
 > **Hotel de prueba**: Hotel Don Alfonso (https://www.donalfonsohotel.com/)
-> **Veredicto**: ✅ Los 3 bugs + 4 hallazgos fueron superados (con observaciones menores)
+> **Veredicto**: ✅ Los 3 bugs + 4 hallazgos fueron superados. Release v4.62.0 completado y pusheado.
 
 ## 1. Resumen de ejecución
 
@@ -11,7 +11,14 @@
 | FASE-1 | 2026-07-22 | ~25 | ✅ COMPLETADA | ✅ subagente | d0747ce |
 | FASE-2 | 2026-07-22 | ~30 | ✅ COMPLETADA | ✅ subagente | 7555869 |
 | FASE-3 | 2026-07-22 | ~28 | ✅ COMPLETADA | ✅ subagente | 99a511b |
-| FASE-4 | 2026-07-22 | ~40 | ✅ COMPLETADA | ⚠️ parcial (tests escritos directo) | pendiente |
+| FASE-4 | 2026-07-22 | ~40 | ✅ COMPLETADA | ⚠️ parcial (tests escritos directo) | 5eb3193 |
+| FASE-5 | 2026-07-22 | ~18 | ✅ COMPLETADA | ✅ subagente | 086b073 |
+
+### Commit adicional post-release
+
+| Commit | Descripción |
+|--------|-------------|
+| d6eb555 | fix: WSL performance run_all_validations.py + DOMAIN_PRIMER release_date from VERSION.yaml |
 
 ## 2. Cifras esperadas vs reales (v4complete Don Alfonso)
 
@@ -70,6 +77,7 @@ Los fixes de FASE-2 se verificaron correctamente en v4complete: `adr_source="use
 | FASE-2 | ✅ SÍ | SUBAGENTE | SUBAGENTE | ✅ Completó sin incidentes |
 | FASE-3 | ✅ SÍ | SUBAGENTE | SUBAGENTE | ✅ Completó sin incidentes |
 | FASE-4 | ⚠️ PARCIAL | MIXTO | DIRECTO (tests) + TERMINAL (v4complete) | ⚠️ Subagente de tests se atascó en imports (bs4/selenium); tests escritos por agente principal |
+| FASE-5 | ✅ SÍ | SUBAGENTE | SUBAGENTE | ✅ Completó sin incidentes (4m4s, 18 tool calls) |
 
 ### Lección aprendida: subagentes WSL + Windows venv
 
@@ -89,6 +97,8 @@ El subagente de tests (deleg_83a234b6) se atascó intentando resolver imports de
 | Regresión en 700 tests | BAJA | ALTO | Verificación en cada fase | ✅ Sin regresiones |
 | CTA residual en propuesta | MEDIA | BAJO | Documentado como deuda | ⚠️ Observado |
 | Desync ADR diagnóstico vs propuesta | BAJA | ALTO | Verificación post-v4complete | ✅ Consistente |
+| run_all_validations.py timeout WSL | ALTA | MEDIO | _walk() wrapper skip dirs | ✅ Resuelto (<5s) |
+| DOMAIN_PRIMER release_date desync | MEDIA | BAJO | Leer de VERSION.yaml en vez de datetime.now(UTC) | ✅ Resuelto |
 
 ## 6. DoD Global — Verificación final
 
@@ -103,7 +113,9 @@ El subagente de tests (deleg_83a234b6) se atascó intentando resolver imports de
 - [x] Tests e2e pasando → ✅ 20/21 tests pass
 - [x] v4complete Don Alfonso verificado → ✅ Coherence 0.95, gates 9/11
 - [x] 700 tests preexistentes sin regresión → ✅ (verificado en fases previas)
-- [ ] RELEASE completado → ⬜ Pendiente FASE-5
+- [x] RELEASE completado → ✅ FASE-5 commit 086b073 (v4.62.0)
+- [x] run_all_validations.py --quick 5/5 → ✅ post-fix d6eb555
+- [x] Push a master → ✅ 5eb3193..d6eb555
 
 ## 7. Lecciones aprendidas
 
@@ -115,6 +127,15 @@ El subagente de tests (deleg_83a234b6) se atascó intentando resolver imports de
 
 4. **Las notas de Tier C en propuesta no son CTAs**: Las menciones de "complete el onboarding" en la propuesta (L117, L139) son notas de advertencia de Tier C, no los CTAs hardcodeados que BUG-2 corregía. La función `_build_onboarding_cta` solo gobierna los CTAs del diagnóstico.
 
+5. **FASE-5 (RELEASE) como subagente es viable**: A diferencia de FASE-4, la fase de release no necesita imports del proyecto. Solo edita YAML/MD y ejecuta scripts. 18 tool calls en 4 minutos.
+
+6. **rglob en WSL sin exclusión de venvs = timeout**: `pathlib.rglob("*")` en un repo con `.venv-wsl` (1135 archivos) causa timeout. Fix: wrapper `_walk()` que salta directorios conocidos (venv, .venv-wsl, __pycache__, .git, node_modules).
+
+7. **datetime.now(UTC) ≠ release_date**: El DOMAIN_PRIMER usaba `datetime.now(timezone.utc)` para "Release date", causando desfase de +1 día en timezone negativo. Fix: leer `release_date` directamente de VERSION.yaml.
+
 ## 8. Próximos pasos
 
-- FASE-5: RELEASE — version bump, CHANGELOG, docs cascade, pre-commit.
+Plan BUGS-ONBOARDING-ADR-2026-07-22 completado al 100%. Sin fases pendientes.
+
+**Deuda documentada (no bloqueante)**:
+- Notas de Tier C en propuesta mencionan "complete el onboarding" — mejora futura para condicionarlas igual que los CTAs del diagnóstico
