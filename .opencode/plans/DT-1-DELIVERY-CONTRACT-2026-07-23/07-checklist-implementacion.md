@@ -2,7 +2,7 @@
 
 > **Plan**: DT-1-DELIVERY-CONTRACT-2026-07-23
 > **Última actualización**: 2026-07-24
-> **Estado**: En curso (FASE-A ✅, FASE-B ✅, FASE-C ✅, FASE-D pendiente)
+> **Estado**: En curso (FASE-A ✅, FASE-B ✅, FASE-C ✅, FASE-D ✅, FASE-E pendiente)
 
 ---
 
@@ -13,8 +13,8 @@
 | FASE-A — Contrato canónico | ✅ COMPLETADA | 2026-07-24 | ✅ 10/10 tests |
 | FASE-B — Pipeline físico | ✅ COMPLETADA | 2026-07-24 | ✅ 10/10 tests, 8/8 criteria |
 | FASE-C — README dinámico | ✅ COMPLETADA | 2026-07-24 | ✅ 10/10 tests, 8/11 criteria |
-| FASE-D — Tests de contrato | ⬜ PENDIENTE | — | — |
-| FASE-E — E2E + RELEASE | 🔒 BLOQUEADA (requiere D) | — | — |
+| FASE-D — Tests de contrato | ✅ COMPLETADA | 2026-07-24 | ✅ 38/38 tests (28 new + 10 existing) |
+| FASE-E — E2E + RELEASE | ⬜ PENDIENTE | — | — |
 
 ---
 
@@ -75,22 +75,22 @@
 
 ## FASE-D — Tests de contrato y gate de no-regresión
 
-### Estado: 🔒 BLOQUEADA (requiere C)
+### Estado: ✅ COMPLETADA
 
-- [ ] T1: `test_delivery_contract.py` creado con tests de `DeliveryAssetEntry`
-- [ ] T1.1: Tests para PRESENT_IN_PRODUCTION, PRESENT_WITH_ISSUES, DELIVERED, ESTIMATED, FAILED, INDETERMINATE, verification_failed
-- [ ] T1.2: Tests de DeliveryContext.from_asset_generation_report: reporte ausente, reporte inválido
-- [ ] T1.3: Tests de is_advisory: guía detectada, requires_action=False, requires_review=True
-- [ ] T2: Tests de manifest ZIP: rutas POSIX, total_files, tamaños, entradas idénticas
-- [ ] T2.1: `test_manifest_paths_posix` pasa
-- [ ] T2.2: `test_manifest_total_files_matches_zip` pasa
-- [ ] T2.3: `test_readme_size_not_zero` pasa
-- [ ] T3: Tests de README ↔ ZIP: no missing refs, filename, estructura real, sin hardcodeos
-- [ ] T3.1: `test_readme_does_not_reference_missing_files` pasa
-- [ ] T3.2: `test_readme_no_hardcoded_whatsapp_button` pasa
-- [ ] T4: `DeliveryValidationError` integrado como gate obligatorio
-- [ ] T4.1: ZIP inválido → excepción lanzada
-- [ ] Verif: Suite completa `pytest tests/delivery/ -v` PASS (29+ tests)
+- [x] T1: `test_delivery_contract.py` creado con tests de `DeliveryAssetEntry`
+- [x] T1.1: Tests para PRESENT_IN_PRODUCTION, PRESENT_WITH_ISSUES, DELIVERED, ESTIMATED, FAILED, INDETERMINATE, verification_failed
+- [x] T1.2: Tests de DeliveryContext.from_asset_generation_report: reporte ausente, reporte inválido
+- [x] T1.3: Tests de is_advisory: guía detectada, requires_action=False, requires_review=True
+- [x] T2: Tests de manifest ZIP: rutas POSIX, total_files, tamaños, entradas idénticas
+- [x] T2.1: `test_manifest_paths_posix` pasa
+- [x] T2.2: `test_manifest_total_files_matches_zip` pasa
+- [x] T2.3: `test_readme_size_not_zero` pasa
+- [x] T3: Tests de README ↔ ZIP: no missing refs, filename, estructura real, sin hardcodeos
+- [x] T3.1: `test_readme_does_not_reference_phantom_files` pasa
+- [x] T3.2: `test_readme_no_hardcoded_whatsapp_button` pasa
+- [x] T4: `DeliveryValidationError` integrado como gate obligatorio
+- [x] T4.1: ZIP inválido → excepción lanzada
+- [x] Verif: Suite completa `pytest tests/delivery/ -v` PASS (38/38 tests)
 
 ---
 
@@ -140,5 +140,5 @@
 ## Dependencias
 
 ```
-A ✅ → B ✅ → C ✅ → D ⬜ → E 🔒
+A ✅ → B ✅ → C ✅ → D ✅ → E ⬜
 ```

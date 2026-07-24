@@ -29,6 +29,17 @@ from typing import Dict, List, Any, Optional
 
 logger = logging.getLogger(__name__)
 
+
+class DeliveryValidationError(Exception):
+    """Error de validación del delivery package.
+
+    Se lanza cuando _validate_zip() detecta inconsistencias entre
+    el ZIP y el manifest después del empaquetado. El ZIP inválido
+    se elimina antes de propagar la excepción.
+    """
+    pass
+
+
 # FASE-C: Import DeliveryContext for dynamic README generation
 try:
     from modules.delivery.delivery_context import DeliveryContext, DeliveryAssetEntry, DeliveryAssetState
@@ -203,11 +214,15 @@ class DeliveryPackager:
         # Create ZIP
         self._create_zip(zip_path, zip_files, source_dir)
 
-        # ── FASE-B T4: Validate ZIP ↔ manifest consistency ──
+        # ── FASE-D T4: Validate ZIP ↔ manifest consistency (blocking gate) ──
         validation_errors = self._validate_zip(zip_path, manifest)
         if validation_errors:
-            for err in validation_errors:
-                logger.error(f"[DeliveryPackager] {err}")
+            error_msg = "ZIP validation failed:\n" + "\n".join(f"  - {e}" for e in validation_errors)
+            logger.error(f"[DeliveryPackager] {error_msg}")
+            # Delete invalid ZIP
+            if zip_path.exists():
+                zip_path.unlink()
+            raise DeliveryValidationError(error_msg)
 
         # Cleanup temp manifest
         if manifest_path.exists():

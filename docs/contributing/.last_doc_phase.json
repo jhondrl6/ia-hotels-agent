@@ -15,7 +15,7 @@
   "modules/geo_enrichment/geo_diagnostic.py": "FASE-2",
   "tests/geo_enrichment/*.py": "FASE-2",
   "modules/geo_enrichment/geo_enrichment_layer.py": "FASE-3",
-  "modules/delivery/delivery_packager.py": "FASE-C",
+  "modules/delivery/delivery_packager.py": "FASE-D",
   "modules/geo_enrichment/geo_flow.py": "FASE-6",
   "CHANGELOG.md": "FASE-5",
   "docs/GUIA_TECNICA.md": "FASE-5",
@@ -201,5 +201,6 @@
   "modules/commercial_documents/__init__.py": "FASE-2-HOOK-PDF",
   "tests/quality_gates/test_publication_gates.py": "FASE-RELEASE-4.63.0",
   "modules/asset_generation/proposal_asset_matrix.py": "FASE-RELEASE-4.63.0",
-  "templates/delivery_readme_template.md": "FASE-C"
+  "templates/delivery_readme_template.md": "FASE-C",
+  "modules/delivery/delivery_context.py": "FASE-D"
 }

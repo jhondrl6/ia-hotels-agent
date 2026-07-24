@@ -463,8 +463,12 @@ class DeliveryContext:
             # Reporte ausente → contexto vacío (README legacy)
             return cls(hotel_id=hotel_id, zip_filename=zip_filename, files=files)
 
-        with open(report_path, "r", encoding="utf-8") as f:
-            report = json.load(f)
+        try:
+            with open(report_path, "r", encoding="utf-8") as f:
+                report = json.load(f)
+        except (json.JSONDecodeError, IOError):
+            # Reporte corrupto o ilegible → contexto vacío (graceful degradation)
+            return cls(hotel_id=hotel_id, zip_filename=zip_filename, files=files)
 
         # Mapeo default asset_type → service_name
         default_names = {
