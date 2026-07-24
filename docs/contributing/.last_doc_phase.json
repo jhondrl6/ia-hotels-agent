@@ -15,7 +15,7 @@
   "modules/geo_enrichment/geo_diagnostic.py": "FASE-2",
   "tests/geo_enrichment/*.py": "FASE-2",
   "modules/geo_enrichment/geo_enrichment_layer.py": "FASE-3",
-  "modules/delivery/delivery_packager.py": "FASE-5",
+  "modules/delivery/delivery_packager.py": "FASE-4-ASSET-ALIGNMENT",
   "modules/geo_enrichment/geo_flow.py": "FASE-6",
   "CHANGELOG.md": "FASE-5",
   "docs/GUIA_TECNICA.md": "FASE-5",
@@ -76,7 +76,7 @@
   "templates/diagnostico_v6_template.md": "FASE-1",
   "modules/asset_generation/geo_enriched_bridge.py (NUEVO)": "FASE-GEO-BRIDGE",
   "modules/asset_generation/v4_asset_orchestrator.py (modificado)": "FASE-GEO-BRIDGE",
-  "modules/commercial_documents/templates/propuesta_v6_template.md": "FASE-3",
+  "modules/commercial_documents/templates/propuesta_v6_template.md": "FASE-4-ASSET-ALIGNMENT",
   "modules/postprocessors/document_quality_gate.py": "PROSPECCION-II",
   "tests/postprocessors/test_document_quality_gate.py": "FASE-CONTENT-SCRUBBER",
   "8 archivos via sync_versions.py": "FASE-RELEASE",
@@ -94,7 +94,7 @@
   ".opencode/plans/AMAZILIAHOTEL_REFACTOR/09-documentacion-post-proyecto.md": "FASE-DOC-09",
   "modules/postprocessors/content_scrubber.py": "FASE-2-PATCH-A",
   "modules/asset_generation/faq_generator.py": "FASE-5",
-  "modules/asset_generation/proposal_asset_alignment.py": "FASE-0D-PROPOSAL-ASSET",
+  "modules/asset_generation/proposal_asset_alignment.py": "FASE-4-ASSET-ALIGNMENT",
   "evidence/amh-refactor-v3-hipotesis/VEREDICTO_FASE_0.md": "FASE-0-HIPOTESIS",
   "tests/asset_generation/test_datasource_gap.py": "FASE-1-DATASOURCE-GAP",
   "modules/asset_generation/geo_enriched_bridge.py": "FASE-RELEASE-4.33.0",
@@ -198,5 +198,6 @@
   "test_capex_rename.py": "FASE-1",
   "NONE": "FASE-4",
   "modules/auditors/llm_mention_checker.py": "FASE-2",
-  "modules/commercial_documents/__init__.py": "FASE-2-HOOK-PDF"
+  "modules/commercial_documents/__init__.py": "FASE-2-HOOK-PDF",
+  "tests/quality_gates/test_publication_gates.py": "FASE-4-ASSET-ALIGNMENT"
 }
