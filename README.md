@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.63.0** -- ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps | Actualizado 22 Julio 2026 | 3,022 pruebas automatizadas | 0 errores conocidos
+**v4.63.0** -- ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps | Actualizado 23 Julio 2026 | 3,038 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -23,7 +23,7 @@
 
 ## Estado del Proyecto (v4.63.0 -- ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps)
 
-- **3,022 test functions** — suite completa, 0 regresiones
+- **3,038 test functions** — suite completa, 0 regresiones
 - **201 modulos Python** (~72K lineas) + **25 scripts** (~6.2K lineas) + **30 directorios de test**
 - **9 config YAML** con schema validado
 - **16 agent skills** en `.agents/workflows/`
@@ -235,14 +235,14 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **3,022 test functions** — suite completa, 0 regresiones
+- **3,038 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.11.0 (1 fase/sesion, max 60 iteraciones)
+- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.12.0 (1 fase/sesion, max 60 iteraciones)
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
 - **11 Publication Gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding):
-  - Blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics
-  - Advisory: content_quality, asset_confidence, proposal_asset_alignment
+  - Blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, proposal_asset_alignment
+  - Advisory: content_quality, asset_confidence
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
 
 ---

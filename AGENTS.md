@@ -1,4 +1,4 @@
-<!-- agents_version: v4.62.0 | last_update: 2026-07-23 -->
+<!-- agents_version: v4.63.0 | last_update: 2026-07-23 -->
 
 # IA Hoteles Agent (iah-cli)
 
@@ -120,7 +120,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 3,022 funciones, 228 archivos, 0 regresion |
+| **Tests** | 3,038 funciones, 247 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -203,7 +203,7 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
-| `modules/quality_gates/` | 11 publication gates (6 blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics; 3 advisory: content_quality, asset_confidence, proposal_asset_alignment; 2 quality: tier_c_onboarding_required, coverage) | v4complete |
+| `modules/quality_gates/` | 11 publication gates (6 blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics; 3 advisory: content_quality, asset_confidence; 2 quality: tier_c_onboarding_required, coverage; proposal_asset_alignment: delivery-blocking desde v4.63.0) | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
@@ -357,7 +357,7 @@ Se incluyen para orientar mejoras pero nunca bloquean publicación.
 
 <!--
 ZONA REFERENCIA - Solo si es necesario para contexto profundo
-Actualizada: 2026-07-22 | v4.62.0
+Actualizada: 2026-07-23 | v4.63.0
 -->
 
 ## Transformación v3 → v4
@@ -379,7 +379,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (3,022 funciones, 228 archivos)
+# Todas las pruebas (3,038 funciones, 247 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -394,7 +394,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (3,022 funciones totales)
+### Cobertura por Modulo (3,038 funciones totales)
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
@@ -482,7 +482,7 @@ iah-cli/
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
 │   └── validation/             # Validaciones adicionales
-├── tests/                      # Suite de pruebas (3,022 funciones, 228 archivos)
+├── tests/                      # Suite de pruebas (3,038 funciones, 247 archivos)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/
