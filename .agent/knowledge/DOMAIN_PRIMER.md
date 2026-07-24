@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.63.0 | **Codename**: ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps
-> **Release date**: 2026-07-23 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.63.1 | **Codename**: Delivery-Contract
+> **Release date**: 2026-07-24 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -37,7 +37,7 @@
 |--------|----------|------------------------|
 | **commercial_documents/** | 8 | CoherenceRule, PriceValidationRule, CoherenceConfig; CoherenceCheck, CoherenceReport, CoherenceValidator; ValidatedField, Conflict, ValidationSummary, Scenario; HookPDFGenerator; Pain, Solution, PainS |
 | **asset_generation/** | 20 | AssetStatus, AssetCatalogEntry; ContentStatus, ContentIssue, ContentValidationResult, AssetContentValidator; AssetDiagnosticLink, AssetMetadata, AssetDiagnosticLinker; AssetStatus, AssetMetadata, Asse |
-| **delivery/** | 23 | AltTextGuideGenerator; AnalyticsSetupGuideGenerator; BlogStrategyGuideGenerator; BookingBarGenerator; CertificateGenerator; ContentGenerator; DeliveryContext; DeliveryPackager; DeployInstructionsGener |
+| **delivery/** | 23 | AltTextGuideGenerator; AnalyticsSetupGuideGenerator; BlogStrategyGuideGenerator; BookingBarGenerator; CertificateGenerator; ContentGenerator; DeliveryAssetState, DeliveryAssetEntry, DeliveryContext; D |
 | **generators/** | 3 | OutreachGenerator; ReportDataBundle, ReportIntegrationAudit, ReportIntegrationAdapter, ReportBuilder; GeoStageResult, IAStageResult, SparkGenerator |
 | **geo_enrichment/** | 8 | AssetType, AssetResponsibility, AssetResponsibilityContract; GEODashboard; GEOBand, ScoreBreakdown, GEOAssessment, GEODiagnostic; GEOEnrichmentLayer; GeoFlowResult, GeoFlow; HotelSchemaEnricher; LLMsT |
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-07-24 | v4.63.0 ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps*
+*Auto-generado: 2026-07-24 | v4.63.1 Delivery-Contract*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

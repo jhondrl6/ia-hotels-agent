@@ -1,5 +1,34 @@
 # Changelog
 
+## [4.63.1] - Delivery-Contract — 2026-07-24
+
+### Objetivo
+Resolver la desincronización entre README_DELIVERY.md, MANIFEST.json, ZIP y estados de assets. El README ahora se genera desde los destinos reales del ZIP y respeta el estado canónico de cada asset.
+
+### Cambios Implementados
+- FASE-A: `DeliveryAssetState` enum, `DeliveryAssetEntry` (con `is_advisory`), `DeliveryContext` (con `from_asset_generation_report()`) en `delivery_context.py`
+- FASE-B: Rutas POSIX en manifest/ZIP, tamaños reales, filename único, `_validate_zip()`, carga automática de `DeliveryContext` en `package()`
+- FASE-C: README dinámico con secciones por estado (Present/Issues/Estimated/Advisory Guides/Evidence)
+- FASE-D: Tests cross-artifact (19+ tests) + gate de no-regresión `DeliveryValidationError`
+- FASE-E: E2E validation con Zi One Luxury + RELEASE
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/delivery/delivery_context.py` | Nuevo módulo: `DeliveryAssetState`, `DeliveryAssetEntry`, `DeliveryContext` |
+| `tests/delivery/test_delivery_contract.py` | 19+ tests de contrato cross-artifact |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/delivery/delivery_packager.py` | Rutas POSIX, tamaños reales, README dinámico, validación, carga DeliveryContext |
+| `modules/assessment_builder.py` | Propagación de pain_ids_affected en skipped_assets |
+| `templates/delivery_readme_template.md` | Template modular sin hardcodeos + sección Advisory Guides |
+
+### Tests
+- 10 tests existentes del packager: PASS
+- 19+ tests nuevos de contrato: PASS
+
 ## [4.63.0] - ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps — 2026-07-23
 
 ### Objetivo

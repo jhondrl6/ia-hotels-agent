@@ -1,9 +1,25 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.63.0 (ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps)
-**Última actualización:** 2026-07-23
+**Versión:** v4.63.1 (Delivery-Contract)
+**Última actualización:** 2026-07-24
 
 ---
+
+### Notas de Cambios v4.63.1 — Delivery Contract
+
+**Fecha:** 2026-07-24
+
+**Resumen**: El sistema de delivery ahora garantiza consistencia cross-artifact
+(README ↔ MANIFEST ↔ ZIP) mediante un contrato canónico de estados de assets.
+
+**Módulos afectados**: `modules/delivery/`, `modules/assessment_builder.py`
+
+**Arquitectura**: `DeliveryAssetState` → `DeliveryAssetEntry` (con `is_advisory`) → `DeliveryContext` (con `from_asset_generation_report()`) →
+template modular → validación post-zip obligatoria.
+
+**Backwards compatibility**: El packager mantiene comportamiento legacy si no recibe
+`DeliveryContext`. La template legacy se reemplazó completamente; los placeholders
+nuevos quedan vacíos en modo legacy.
 
 ### Notas de Cambios v4.63.0 — ASSET-ALIGNMENT
 

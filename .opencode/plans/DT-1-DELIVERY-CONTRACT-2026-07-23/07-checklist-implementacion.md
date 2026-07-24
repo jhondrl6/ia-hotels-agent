@@ -96,28 +96,28 @@
 
 ## FASE-E — E2E (Zi One) + RELEASE
 
-### Estado: 🔒 BLOQUEADA (requiere D)
+### Estado: 🔄 EN CURSO
 
-- [ ] T1: `v4complete --url https://zione.co/` ejecutado exitosamente
-- [ ] T0: Datos operativos de `output/clientes/zi-one-luxury_onboarding.yaml` verificados
-- [ ] T1.0: Directorio `output/ZiOne/v4_complete/` limpiado antes de la ejecución
-- [ ] T1.1: ZIP generado en `output/ZiOne/v4_complete/deliveries/`
-- [ ] T1.2: Evidencia copiada a `evidence/fase-E/`
-- [ ] T2: Verificación post-v4complete del delivery
-- [ ] T2.1: WhatsApp NO está en ZIP como archivo entregable
-- [ ] T2.2: WhatsApp aparece en sección de presencia/revisión
-- [ ] T2.3: Manifest rutas POSIX, tamaños reales, total_files correcto
-- [ ] T2.4: `_validate_zip()` pasa sin errores
-- [ ] T2.5: README no contiene hardcodeos
-- [ ] T2.6: ZIP filename correcto en README
-- [ ] T3: RELEASE
-- [ ] T3.1: VERSION.yaml bump (verificando versión previa antes)
-- [ ] T3.2: CHANGELOG.md entrada de versión completa
-- [ ] T3.3: `sync_versions.py` ejecutado
-- [ ] T3.4: GUIA_TECNICA.md nota técnica
-- [ ] T3.5: DOMAIN_PRIMER.md regenerado
-- [ ] T3.6: `run_all_validations.py --quick` PASS
-- [ ] T3.7: Commit realizado
+- [x] T1: `v4complete --url https://zione.co/` ejecutado exitosamente
+- [x] T0: Datos operativos de `output/clientes/zi-one-luxury_onboarding.yaml` verificados
+- [x] T1.0: Directorio `output/ZiOne/v4_complete/` limpiado antes de la ejecución
+- [x] T1.1: ZIP generado en `output/v4_complete/deliveries/`
+- [x] T1.2: Evidencia copiada a `evidence/fase-E/`
+- [x] T2: Verificación post-v4complete del delivery
+- [x] T2.1: WhatsApp NO está en ZIP como archivo entregable
+- [x] T2.2: WhatsApp aparece en sección de presencia/revisión
+- [x] T2.3: Manifest rutas POSIX, tamaños reales, total_files correcto
+- [x] T2.4: `_validate_zip()` pasa sin errores
+- [x] T2.5: README no contiene hardcodeos
+- [x] T2.6: ZIP filename correcto en README
+- [x] T3: RELEASE
+- [x] T3.1: VERSION.yaml bump (verificando versión previa antes)
+- [x] T3.2: CHANGELOG.md entrada de versión completa
+- [x] T3.3: `sync_versions.py` ejecutado
+- [x] T3.4: GUIA_TECNICA.md nota técnica
+- [x] T3.5: DOMAIN_PRIMER.md regenerado
+- [x] T3.6: `run_all_validations.py --quick` PASS
+- [x] T3.7: Commit realizado
 - [ ] T4: Análisis post-implementación
 - [ ] T4.1: `08-analisis-post-implementacion.md` completado sin placeholders
 - [ ] T4.2: Matriz de verificación 14/14 hallazgos (F-01 a F-14) completada

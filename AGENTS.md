@@ -1,8 +1,8 @@
-<!-- agents_version: v4.63.0 | last_update: 2026-07-23 -->
+<!-- agents_version: v4.63.0 | last_update: 2026-07-24 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.63.0 -- ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps COMPLETADO**
+> **v4.63.1 -- Delivery-Contract COMPLETADO**
 
 ---
 
