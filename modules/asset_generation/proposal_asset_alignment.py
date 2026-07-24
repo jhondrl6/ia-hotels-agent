@@ -493,7 +493,10 @@ class ProposalAssetMatrix:
         entries: List[ProposalAssetMatrixEntry] = []
 
         # Build fast lookups
-        ledger_pain_ids: set = {e.pain_id for e in pain_ledger}
+        ledger_pain_ids: set = {
+            e.get("pain_id") if isinstance(e, dict) else e.pain_id
+            for e in pain_ledger
+        }
 
         # Build asset_by_type lookup: handles both GeneratedAsset objects and dicts
         asset_by_type: Dict[str, Any] = {}
@@ -531,7 +534,8 @@ class ProposalAssetMatrix:
             elif matched_pain_ids and gen_asset is None:
                 status = "MISSING_ASSET"
                 confidence = max(
-                    (e.confidence for e in pain_ledger if e.pain_id in matched_pain_ids),
+                    (e.get("confidence", 0.0) if isinstance(e, dict) else getattr(e, "confidence", 0.0)
+                     for e in pain_ledger if (e.get("pain_id") if isinstance(e, dict) else e.pain_id) in matched_pain_ids),
                     default=0.0,
                 )
                 asset_path = None

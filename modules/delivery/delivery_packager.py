@@ -100,22 +100,8 @@ class DeliveryPackager:
         if not source_dir.exists():
             raise FileNotFoundError(f"Output directory not found: {source_dir}")
 
-        # Generate delivery filename
-        date_str = datetime.now().strftime("%Y%m%d")
-        zip_filename = f"{hotel_id}_{date_str}.zip"
-        zip_path = self.deliveries_dir / zip_filename
-
         # Collect files to package
         files_to_package = self._collect_files(source_dir, diagnostic_path, proposal_path)
-
-        # Create ZIP
-        self._create_zip(zip_path, files_to_package, source_dir)
-
-        # Create manifest
-        manifest = self.create_manifest(hotel_id, files_to_package)
-        manifest_path = self.deliveries_dir / f"{hotel_id}_{date_str}_MANIFEST.json"
-        with open(manifest_path, 'w', encoding='utf-8') as f:
-            json.dump(manifest, f, indent=2, ensure_ascii=False)
 
         # FASE-5: Create IMPLEMENTATION_ORDER.md based on AssetResponsibilityContract
         implementation_order_path = None
@@ -133,20 +119,37 @@ class DeliveryPackager:
             except Exception as e:
                 logger.warning(f"[DeliveryPackager] Could not generate implementation order: {e}")
 
-        # Create README
+        # Build manifest from ALL files that will be in the ZIP (including meta-files)
+        date_str = datetime.now().strftime("%Y%m%d")
+        manifest_path = self.deliveries_dir / f"{hotel_id}_{date_str}_MANIFEST.json"
+
+        # Prepare meta-file entries for manifest
+        meta_entries = [
+            {"source": str(manifest_path), "dest": "MANIFEST.json"},
+        ]
+        readme_path = self.deliveries_dir / "README_DELIVERY.md"
+        meta_entries.append({"source": str(readme_path), "dest": "README_DELIVERY.md"})
+        if implementation_order_path and implementation_order_path.exists():
+            meta_entries.append({
+                "source": str(implementation_order_path),
+                "dest": "IMPLEMENTATION_ORDER.md"
+            })
+
+        # Generate manifest from ALL files (assets + meta-files), then write temp file
+        all_files = files_to_package + meta_entries
+        manifest = self.create_manifest(hotel_id, all_files)
+        with open(manifest_path, 'w', encoding='utf-8') as f:
+            json.dump(manifest, f, indent=2, ensure_ascii=False)
+
+        # Create README from the real manifest
         self.create_readme(self.deliveries_dir, hotel_id, manifest)
 
-        # Update ZIP with manifest, README, and IMPLEMENTATION_ORDER
-        with zipfile.ZipFile(zip_path, 'a', zipfile.ZIP_DEFLATED) as zf:
-            zf.write(manifest_path, arcname="MANIFEST.json")
-            readme_path = self.deliveries_dir / "README_DELIVERY.md"
-            if readme_path.exists():
-                zf.write(readme_path, arcname="README_DELIVERY.md")
-            # FASE-5: Add implementation order to ZIP
-            if implementation_order_path and implementation_order_path.exists():
-                zf.write(implementation_order_path, arcname="IMPLEMENTATION_ORDER.md")
+        # Create ZIP with ALL files in one pass (assets + MANIFEST + README + IMPLEMENTATION_ORDER)
+        zip_filename = f"{hotel_id}_{date_str}.zip"
+        zip_path = self.deliveries_dir / zip_filename
+        self._create_zip(zip_path, all_files, source_dir)
 
-        # Remove temp manifest
+        # Cleanup temp manifest
         if manifest_path.exists():
             manifest_path.unlink()
 

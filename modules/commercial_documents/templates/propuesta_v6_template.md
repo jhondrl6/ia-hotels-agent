@@ -27,7 +27,9 @@ Cada mes, viajeros buscan hoteles en ${hotel_region} a través de Booking.com, E
 | Su hotel compite por el mismo cliente | Más caro para el hotel, menos ganancia |
 | El cliente no encuentra datos claros en Google Maps | Pierde la reserva antes de llegar |
 
-**Fuga mensual por comisiones OTA:** ${monthly_loss} COP (estimado)
+**Fuga mensual neta estimada (después de acciones recomendadas):** ${monthly_loss} COP/mes
+>
+> *Nota: Este valor es la fuga neta después de aplicar shift de canal directo (10%) y boost de IA (5%). La comisión OTA bruta sin estas acciones es mayor. Consulte el diagnóstico financiero para el detalle completo.*
 
 #### Referencia regional
 
@@ -99,7 +101,7 @@ Para que su negocio brille en Google Maps, necesitamos fotos de calidad. Esto es
 ---
 
 {{if has_onboarding == "False"}}
-> **⚠️ Advertencia:** Nivel de evidencia: Tier C. Estas proyecciones usan benchmarks regionales. Para precisión exacta, ejecute el onboarding con datos reales.
+> **⚠️ Advertencia:** Nivel de evidencia: ${financial_evidence_tier}. Estas proyecciones usan benchmarks regionales. Para precisión exacta, ejecute el onboarding con datos reales.
 
 > **📋 Nota sobre entregables:** Los activos listados en esta propuesta se generan a partir de benchmarks regionales (Tier C) y datos públicos del sitio web. Su nivel de preparación es estimado. Para activos con datos operativos reales del hotel y mayor precisión, se recomienda completar el proceso de onboarding. Esto permitirá generar activos verificados con datos reales de ocupación, ADR y canal directo.
 

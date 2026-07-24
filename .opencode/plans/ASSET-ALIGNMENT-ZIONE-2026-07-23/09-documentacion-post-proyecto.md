@@ -39,6 +39,12 @@
 | Archivos modificados | 4 | FASE-2 |
 | Archivos nuevos | 0 | FASE-1 |
 | Archivos nuevos | 1 | FASE-2 |
+| Archivos nuevos | 0 | FASE-3 |
+| Archivos modificados | 3 | FASE-3 |
+| Tests nuevos | 6 | FASE-3 |
+| Archivos modificados | 4 | FASE-4 |
+| Tests pasados (sin regresión) | 72 | FASE-4 |
+| Bugs corregidos | 6 | FASE-4 |
 | Bugs críticos resueltos | 2 | FASE-1 |
 
 ## Sección E: Archivos Afiliados Actualizados
@@ -54,3 +60,9 @@
 | `modules/asset_generation/asset_catalog.py` | `optimization_guide.promised_by` + `low_seo_score` | FASE-2 |
 | `tests/asset_generation/test_open_graph_enhance_existing.py` | +5 tests nuevos para enhance_existing mode | FASE-2 |
 | `tests/asset_generation/test_open_graph_generation.py` | Test actualizado a expect enhance_existing activation | FASE-2 |
+| `modules/commercial_documents/v4_proposal_generator.py` | Propuesta condicional: genera solo servicios con asset disponible | FASE-3 |
+| `modules/commercial_documents/service_catalog.py` | SERVICE_TO_ASSET_LOOKUP derivado de PROPOSAL_SERVICE_TO_ASSET | FASE-3 |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Template Tier C → ${financial_evidence_tier}; etiqueta Fuga mensual clarificada | FASE-4 |
+| `modules/asset_generation/proposal_asset_alignment.py` | build() maneja dicts y objetos (pain_id + confidence) | FASE-4 |
+| `modules/delivery/delivery_packager.py` | package(): MANIFEST generado del ZIP completo (assets + meta-files) en un solo paso | FASE-4 |
+| `tests/quality_gates/test_publication_gates.py` | L1191: test_asset_generation_report_exists usa path dinámico con rglob + skip condicional | FASE-4 |
