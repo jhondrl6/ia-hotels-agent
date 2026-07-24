@@ -2,7 +2,7 @@
 
 > **Plan**: DT-1-DELIVERY-CONTRACT-2026-07-23
 > **Última actualización**: 2026-07-24
-> **Estado**: En curso (FASE-A completada, FASE-B pendiente)
+> **Estado**: En curso (FASE-A ✅, FASE-B ✅, FASE-C pendiente)
 
 ---
 
@@ -11,7 +11,7 @@
 | Fase | Estado | Fecha cierre | Verificación |
 |------|--------|-------------|-------------|
 | FASE-A — Contrato canónico | ✅ COMPLETADA | 2026-07-24 | ✅ 10/10 tests |
-| FASE-B — Pipeline físico | 🔒 BLOQUEADA (requiere A) | — | — |
+| FASE-B — Pipeline físico | ✅ COMPLETADA | 2026-07-24 | ✅ 10/10 tests, 8/8 criteria |
 | FASE-C — README dinámico | 🔒 BLOQUEADA (requiere B) | — | — |
 | FASE-D — Tests de contrato | 🔒 BLOQUEADA (requiere C) | — | — |
 | FASE-E — E2E + RELEASE | 🔒 BLOQUEADA (requiere D) | — | — |
@@ -39,19 +39,19 @@
 
 ## FASE-B — Pipeline físico ZIP ↔ manifest
 
-### Estado: 🔒 BLOQUEADA (requiere A)
+### Estado: ✅ COMPLETADA
 
-- [ ] T1: `_collect_files()` usa `as_posix()` en todos los destinos
-- [ ] T1.1: ZIP generado no contiene rutas con `\\`
-- [ ] T2: `create_manifest()` registra tamaños reales (>0) para metaarchivos
-- [ ] T2.1: `total_size_bytes` coincide con suma real (margen ±1%)
-- [ ] T2.2: `total_files` coincide con `len(zipfile.namelist())`
-- [ ] T3: `_make_zip_filename()` produce nombres consistentes
-- [ ] T4: `_validate_zip()` implementado y llamado en `package()`
-- [ ] T4.1: ZIP válido → `_validate_zip()` retorna lista vacía
-- [ ] T5: `package()` carga `asset_generation_report.json` y construye `DeliveryContext` cuando `hotel_dir` disponible
-- [ ] T5.1: Sin `hotel_dir` o sin reporte, `delivery_context` queda None (legacy)
-- [ ] Verif: 10 tests existentes del packager PASS
+- [x] T1: `_collect_files()` usa `as_posix()` en todos los destinos
+- [x] T1.1: ZIP generado no contiene rutas con `\\`
+- [x] T2: `create_manifest()` registra tamaños reales (>0) para metaarchivos
+- [x] T2.1: `total_size_bytes` coincide con suma real (margen ±1%)
+- [x] T2.2: `total_files` coincide con `len(zipfile.namelist())`
+- [x] T3: `_make_zip_filename()` produce nombres consistentes
+- [x] T4: `_validate_zip()` implementado y llamado en `package()`
+- [x] T4.1: ZIP válido → `_validate_zip()` retorna lista vacía
+- [x] T5: `package()` carga `asset_generation_report.json` y construye `DeliveryContext` cuando `hotel_dir` disponible
+- [x] T5.1: Sin `hotel_dir` o sin reporte, `delivery_context` queda None (legacy)
+- [x] Verif: 10 tests existentes del packager PASS
 
 ---
 
@@ -140,5 +140,5 @@
 ## Dependencias
 
 ```
-A ✅ → B 🔒 → C 🔒 → D 🔒 → E 🔒
+A ✅ → B ✅ → C 🔒 → D 🔒 → E 🔒
 ```

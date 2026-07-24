@@ -119,35 +119,87 @@ class DeliveryPackager:
             except Exception as e:
                 logger.warning(f"[DeliveryPackager] Could not generate implementation order: {e}")
 
-        # Build manifest from ALL files that will be in the ZIP (including meta-files)
+        # ── FASE-B T3: Compute ZIP filename once ──
         date_str = datetime.now().strftime("%Y%m%d")
+        zip_filename = self._make_zip_filename(hotel_id)
+        zip_path = self.deliveries_dir / zip_filename
         manifest_path = self.deliveries_dir / f"{hotel_id}_{date_str}_MANIFEST.json"
 
-        # Prepare meta-file entries for manifest
-        meta_entries = [
-            {"source": str(manifest_path), "dest": "MANIFEST.json"},
-        ]
+        # ── FASE-B T5: Load DeliveryContext from asset_generation_report ──
+        delivery_context = None
+        try:
+            from modules.delivery.delivery_context import DeliveryContext
+            report_path = source_dir / "v4_audit" / "asset_generation_report.json"
+            if report_path.exists():
+                delivery_context = DeliveryContext.from_asset_generation_report(
+                    report_path=report_path,
+                    hotel_id=hotel_id,
+                    zip_filename=zip_filename,
+                    files=files_to_package,
+                )
+        except Exception:
+            pass  # Legacy mode: no DeliveryContext available
+
+        # Build meta entries for manifest calculation (NO manifest itself yet — handled in pass 3)
         readme_path = self.deliveries_dir / "README_DELIVERY.md"
-        meta_entries.append({"source": str(readme_path), "dest": "README_DELIVERY.md"})
+        meta_for_manifest = [
+            {"source": str(readme_path), "dest": "README_DELIVERY.md"},
+        ]
         if implementation_order_path and implementation_order_path.exists():
-            meta_entries.append({
+            meta_for_manifest.append({
                 "source": str(implementation_order_path),
                 "dest": "IMPLEMENTATION_ORDER.md"
             })
 
-        # Generate manifest from ALL files (assets + meta-files), then write temp file
-        all_files = files_to_package + meta_entries
-        manifest = self.create_manifest(hotel_id, all_files)
+        # ── FASE-B T2: 3-pass manifest with real sizes ──
+        # Pass 1: Write README first so it has real size on disk
+        self.create_readme(self.deliveries_dir, hotel_id, manifest=None)
+
+        # Pass 2: Build manifest with README now on disk (real size captured)
+        files_for_manifest = files_to_package + meta_for_manifest
+        manifest = self.create_manifest(hotel_id, files_for_manifest)
         with open(manifest_path, 'w', encoding='utf-8') as f:
             json.dump(manifest, f, indent=2, ensure_ascii=False)
 
-        # Create README from the real manifest
-        self.create_readme(self.deliveries_dir, hotel_id, manifest)
+        # Pass 3: Add MANIFEST.json's own size (can only be measured after writing)
+        # FASE-B: The self-referencing entry increases the file size. Measure
+        # before adding the entry, then correct after the rewrite to account
+        # for the entry itself.
+        manifest_size_before = manifest_path.stat().st_size
+        manifest["total_size_bytes"] += manifest_size_before
+        manifest["files"].append({
+            "name": "MANIFEST.json",
+            "size_bytes": manifest_size_before,
+            "type": "other"
+        })
+        manifest["total_files"] = len(manifest["files"])
+        with open(manifest_path, 'w', encoding='utf-8') as f:
+            json.dump(manifest, f, indent=2, ensure_ascii=False)
 
-        # Create ZIP with ALL files in one pass (assets + MANIFEST + README + IMPLEMENTATION_ORDER)
-        zip_filename = f"{hotel_id}_{date_str}.zip"
-        zip_path = self.deliveries_dir / zip_filename
-        self._create_zip(zip_path, all_files, source_dir)
+        # The added self-entry makes the file larger — correct the size
+        manifest_size_after = manifest_path.stat().st_size
+        if manifest_size_after != manifest_size_before:
+            delta = manifest_size_after - manifest_size_before
+            manifest["total_size_bytes"] += delta
+            for entry in manifest["files"]:
+                if entry["name"] == "MANIFEST.json":
+                    entry["size_bytes"] = manifest_size_after
+            with open(manifest_path, 'w', encoding='utf-8') as f:
+                json.dump(manifest, f, indent=2, ensure_ascii=False)
+
+        # Full file list for ZIP (includes manifest now)
+        zip_files = files_to_package + meta_for_manifest + [
+            {"source": str(manifest_path), "dest": "MANIFEST.json"}
+        ]
+
+        # Create ZIP
+        self._create_zip(zip_path, zip_files, source_dir)
+
+        # ── FASE-B T4: Validate ZIP ↔ manifest consistency ──
+        validation_errors = self._validate_zip(zip_path, manifest)
+        if validation_errors:
+            for err in validation_errors:
+                logger.error(f"[DeliveryPackager] {err}")
 
         # Cleanup temp manifest
         if manifest_path.exists():
@@ -190,12 +242,13 @@ class DeliveryPackager:
                         continue
 
                     # For assets in subdirectories, put them under ASSETS/
+                    # FASE-B: Always use POSIX separators in ZIP paths
                     if len(rel_path.parts) > 1:
-                        dest = f"ASSETS/{rel_path}"
+                        dest = f"ASSETS/{rel_path.as_posix()}"
                     elif rel_path.suffix in ['.md', '.json', '.csv', '.html']:
-                        dest = f"ASSETS/{rel_path}"
+                        dest = f"ASSETS/{rel_path.as_posix()}"
                     else:
-                        dest = str(rel_path)
+                        dest = rel_path.as_posix()
 
                     files.append({
                         "source": str(file_path),
@@ -212,6 +265,75 @@ class DeliveryPackager:
                 if source_path.exists():
                     # Use the destination name in the ZIP
                     zf.write(source_path, arcname=file_info["dest"])
+
+    # ═══ FASE-B: New methods ═══
+
+    def _make_zip_filename(self, hotel_id: str) -> str:
+        """Compute ZIP filename once, shared by package() and README (FASE-C).
+
+        Format: {hotel_id}_{YYYYMMDD}.zip
+        """
+        date_str = datetime.now().strftime("%Y%m%d")
+        return f"{hotel_id}_{date_str}.zip"
+
+    def _validate_zip(self, zip_path: Path, manifest: Dict[str, Any]) -> List[str]:
+        """Validate ZIP ↔ manifest consistency after packaging.
+
+        Checks:
+        1. Same entries in ZIP and manifest
+        2. All paths use POSIX separators (no backslashes)
+        3. File sizes match between ZIP and manifest
+        4. Total file count and total size match
+
+        Returns list of error messages (empty = valid).
+        """
+        errors = []
+
+        try:
+            with zipfile.ZipFile(zip_path, 'r') as z:
+                zip_names = set(z.namelist())
+                manifest_names = {f["name"] for f in manifest.get("files", [])}
+
+                # 1. Same entries
+                only_zip = zip_names - manifest_names
+                only_manifest = manifest_names - zip_names
+                if only_zip:
+                    errors.append(f"Entries in ZIP but not in manifest: {only_zip}")
+                if only_manifest:
+                    errors.append(f"Entries in manifest but not in ZIP: {only_manifest}")
+
+                # 2. POSIX paths
+                for name in zip_names:
+                    if "\\" in name:
+                        errors.append(f"Non-POSIX path in ZIP: {name}")
+
+                # 3. File sizes
+                manifest_sizes = {f["name"]: f.get("size_bytes", 0) for f in manifest.get("files", [])}
+                for name in zip_names:
+                    actual_size = len(z.read(name))
+                    declared_size = manifest_sizes.get(name, 0)
+                    if actual_size != declared_size:
+                        errors.append(
+                            f"Size mismatch for '{name}': manifest={declared_size}, actual={actual_size}"
+                        )
+
+                # 4. Totals
+                declared_total = manifest.get("total_files", 0)
+                actual_total = len(zip_names)
+                if declared_total != actual_total:
+                    errors.append(f"Total files mismatch: manifest={declared_total}, actual={actual_total}")
+
+                declared_size_total = manifest.get("total_size_bytes", 0)
+                actual_size_total = sum(len(z.read(n)) for n in zip_names)
+                if declared_size_total != actual_size_total:
+                    errors.append(
+                        f"Total size mismatch: manifest={declared_size_total}, actual={actual_size_total}"
+                    )
+
+        except Exception as e:
+            errors.append(f"ZIP validation failed: {e}")
+
+        return errors
 
     def create_manifest(self, hotel_id: str, files: List[Dict[str, Any]]) -> Dict[str, Any]:
         """

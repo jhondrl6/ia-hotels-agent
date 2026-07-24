@@ -15,7 +15,7 @@
   "modules/geo_enrichment/geo_diagnostic.py": "FASE-2",
   "tests/geo_enrichment/*.py": "FASE-2",
   "modules/geo_enrichment/geo_enrichment_layer.py": "FASE-3",
-  "modules/delivery/delivery_packager.py": "FASE-RELEASE-4.63.0",
+  "modules/delivery/delivery_packager.py": "FASE-B",
   "modules/geo_enrichment/geo_flow.py": "FASE-6",
   "CHANGELOG.md": "FASE-5",
   "docs/GUIA_TECNICA.md": "FASE-5",
