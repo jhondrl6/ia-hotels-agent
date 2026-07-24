@@ -2,7 +2,7 @@
 
 > **Plan**: DT-1-DELIVERY-CONTRACT-2026-07-23
 > **Última actualización**: 2026-07-24
-> **Estado**: En curso (FASE-A ✅, FASE-B ✅, FASE-C pendiente)
+> **Estado**: En curso (FASE-A ✅, FASE-B ✅, FASE-C ✅, FASE-D pendiente)
 
 ---
 
@@ -12,8 +12,8 @@
 |------|--------|-------------|-------------|
 | FASE-A — Contrato canónico | ✅ COMPLETADA | 2026-07-24 | ✅ 10/10 tests |
 | FASE-B — Pipeline físico | ✅ COMPLETADA | 2026-07-24 | ✅ 10/10 tests, 8/8 criteria |
-| FASE-C — README dinámico | 🔒 BLOQUEADA (requiere B) | — | — |
-| FASE-D — Tests de contrato | 🔒 BLOQUEADA (requiere C) | — | — |
+| FASE-C — README dinámico | ✅ COMPLETADA | 2026-07-24 | ✅ 10/10 tests, 8/11 criteria |
+| FASE-D — Tests de contrato | ⬜ PENDIENTE | — | — |
 | FASE-E — E2E + RELEASE | 🔒 BLOQUEADA (requiere D) | — | — |
 
 ---
@@ -57,19 +57,19 @@
 
 ## FASE-C — README derivado del delivery context
 
-### Estado: 🔒 BLOQUEADA (requiere B)
+### Estado: ✅ COMPLETADA
 
-- [ ] T1: Template `delivery_readme_template.md` sin nombres de archivo hardcodeados
-- [ ] T1.1: NO contiene `boton_whatsapp.html`, `hotel-schema.json`, `geo_playbook.md`, `faq_page.md`
-- [ ] T2: `_generate_package_structure()` produce estructura desde `files` reales
-- [ ] T3: Sección "Already Present" generada para assets PRESENT_IN_PRODUCTION
-- [ ] T3.1: Sección "Present but Requires Review" generada para PRESENT_WITH_ISSUES
-- [ ] T3.2: Sección "Estimated Assets" generada para ESTIMATED
-- [ ] T3.3: Sección "Advisory Guides" generada para assets con `is_advisory=True`
-- [ ] T4: `create_readme()` acepta `DeliveryContext` y genera secciones dinámicas
-- [ ] T4.1: Sin `DeliveryContext` → comportamiento legacy preservado
-- [ ] T4.2: `{{PACKAGE_FILENAME}}` coincide con nombre real del ZIP
-- [ ] Verif: 10 tests existentes del packager PASS
+- [x] T1: Template `delivery_readme_template.md` sin nombres de archivo hardcodeados
+- [x] T1.1: NO contiene `boton_whatsapp.html`, `hotel-schema.json`, `geo_playbook.md`, `faq_page.md`
+- [x] T2: `_generate_package_structure()` produce estructura desde `files` reales
+- [x] T3: Sección "Already Present" generada para assets PRESENT_IN_PRODUCTION
+- [x] T3.1: Sección "Present but Requires Review" generada para PRESENT_WITH_ISSUES
+- [x] T3.2: Sección "Estimated Assets" generada para ESTIMATED
+- [x] T3.3: Sección "Advisory Guides" generada para assets con `is_advisory=True`
+- [x] T4: `create_readme()` acepta `DeliveryContext` y genera secciones dinámicas
+- [x] T4.1: Sin `DeliveryContext` → comportamiento legacy preservado
+- [x] T4.2: `{{PACKAGE_FILENAME}}` coincide con nombre real del ZIP
+- [x] Verif: 10 tests existentes del packager PASS
 
 ---
 
@@ -140,5 +140,5 @@
 ## Dependencias
 
 ```
-A ✅ → B ✅ → C 🔒 → D 🔒 → E 🔒
+A ✅ → B ✅ → C ✅ → D ⬜ → E 🔒
 ```

@@ -22,11 +22,19 @@ FASE-5: Integrated AssetResponsibilityContract for implementation order.
 import json
 import logging
 import zipfile
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 logger = logging.getLogger(__name__)
+
+# FASE-C: Import DeliveryContext for dynamic README generation
+try:
+    from modules.delivery.delivery_context import DeliveryContext, DeliveryAssetEntry, DeliveryAssetState
+    HAS_DELIVERY_CONTEXT = True
+except ImportError:
+    HAS_DELIVERY_CONTEXT = False
 
 # FASE-5: Import for implementation order generation
 try:
@@ -153,7 +161,7 @@ class DeliveryPackager:
 
         # ── FASE-B T2: 3-pass manifest with real sizes ──
         # Pass 1: Write README first so it has real size on disk
-        self.create_readme(self.deliveries_dir, hotel_id, manifest=None)
+        self.create_readme(self.deliveries_dir, hotel_id, manifest=None, delivery_context=delivery_context)
 
         # Pass 2: Build manifest with README now on disk (real size captured)
         files_for_manifest = files_to_package + meta_for_manifest
@@ -397,15 +405,21 @@ class DeliveryPackager:
         self,
         delivery_dir: Path,
         hotel_id: str,
-        manifest: Optional[Dict[str, Any]] = None
+        manifest: Optional[Dict[str, Any]] = None,
+        delivery_context: Optional[Any] = None
     ) -> None:
         """
         Generate README_DELIVERY.md with instructions.
+
+        FASE-C: Dynamic README — all sections generated from DeliveryContext
+        and real file list. No hardcoded asset names. Backwards-compatible
+        with legacy template when delivery_context is None.
 
         Args:
             delivery_dir: Directory where README will be created
             hotel_id: Hotel identifier
             manifest: Optional manifest data for dynamic content
+            delivery_context: Optional DeliveryContext for dynamic sections (FASE-C)
         """
         template_path = Path(__file__).parent.parent.parent / "templates" / "delivery_readme_template.md"
 
@@ -414,9 +428,70 @@ class DeliveryPackager:
             content = template_path.read_text(encoding='utf-8')
             content = content.replace("{{HOTEL_ID}}", hotel_id)
             content = content.replace("{{DATE}}", datetime.now().strftime("%Y-%m-%d"))
-            if manifest:
-                content = content.replace("{{TOTAL_FILES}}", str(manifest.get("total_files", "N/A")))
-                content = content.replace("{{TOTAL_SIZE}}", self._format_bytes(manifest.get("total_size_bytes", 0)))
+
+            # ── FASE-C: DeliveryContext available → dynamic sections ──
+            if delivery_context and delivery_context.assets:
+                content = content.replace("{{PACKAGE_FILENAME}}", delivery_context.zip_filename)
+                content = content.replace("{{TOTAL_FILES}}", str(len(delivery_context.files)))
+                # Total size: sum real file sizes from manifest if available
+                total_size = self._compute_total_size(delivery_context.files, manifest)
+                content = content.replace("{{TOTAL_SIZE}}", self._format_bytes(total_size))
+
+                # Package Structure from real dest paths
+                structure = self._generate_package_structure(
+                    delivery_context.files, delivery_context.zip_filename
+                )
+                content = content.replace("{{PACKAGE_STRUCTURE}}", structure)
+
+                # Core Documents section
+                content = content.replace("{{CORE_DOCUMENTS}}", self._generate_core_documents())
+
+                # Deliverable Assets section
+                content = content.replace("{{DELIVERABLE_ASSETS}}",
+                    self._generate_deliverable_instructions(delivery_context))
+
+                # Per-state sections
+                content = content.replace(
+                    "{{PRESENT_IN_PRODUCTION_SECTION}}",
+                    self._generate_present_in_production_section(delivery_context.present_assets)
+                )
+                content = content.replace(
+                    "{{PRESENT_WITH_ISSUES_SECTION}}",
+                    self._generate_present_with_issues_section(delivery_context.present_with_issues_assets)
+                )
+                content = content.replace(
+                    "{{ESTIMATED_ASSETS_SECTION}}",
+                    self._generate_estimated_section(delivery_context.estimated_assets)
+                )
+                content = content.replace(
+                    "{{ADVISORY_GUIDES_SECTION}}",
+                    self._generate_advisory_section(delivery_context.advisory_assets)
+                )
+                content = content.replace(
+                    "{{EVIDENCE_SECTION}}",
+                    self._generate_evidence_section(delivery_context)
+                )
+
+                # Timeline and Checklist
+                content = content.replace("{{TIMELINE}}", self._generate_timeline(delivery_context))
+                content = content.replace("{{CHECKLIST}}", self._generate_checklist(delivery_context))
+            else:
+                # ── Legacy mode: no DeliveryContext ──
+                content = content.replace("{{PACKAGE_FILENAME}}", f"{hotel_id}_{{DATE}}.zip")
+                if manifest:
+                    content = content.replace("{{TOTAL_FILES}}", str(manifest.get("total_files", "N/A")))
+                    content = content.replace("{{TOTAL_SIZE}}", self._format_bytes(manifest.get("total_size_bytes", 0)))
+                else:
+                    content = content.replace("{{TOTAL_FILES}}", "N/A")
+                    content = content.replace("{{TOTAL_SIZE}}", "N/A")
+
+                # Empty all dynamic placeholders for legacy compatibility
+                for ph in ["{{PACKAGE_STRUCTURE}}", "{{CORE_DOCUMENTS}}",
+                            "{{DELIVERABLE_ASSETS}}", "{{PRESENT_IN_PRODUCTION_SECTION}}",
+                            "{{PRESENT_WITH_ISSUES_SECTION}}", "{{ESTIMATED_ASSETS_SECTION}}",
+                            "{{ADVISORY_GUIDES_SECTION}}", "{{EVIDENCE_SECTION}}",
+                            "{{TIMELINE}}", "{{CHECKLIST}}"]:
+                    content = content.replace(ph, "")
         else:
             content = self._default_readme(hotel_id, manifest)
 
@@ -430,6 +505,248 @@ class DeliveryPackager:
                 return f"{size:.1f} {unit}"
             size /= 1024
         return f"{size:.1f} TB"
+
+    # ═══ FASE-C: Dynamic README section generators ═══
+
+    def _compute_total_size(
+        self, files: List[Dict[str, Any]], manifest: Optional[Dict[str, Any]]
+    ) -> int:
+        """Compute total size from real files on disk or fallback to manifest."""
+        total = 0
+        for f in files:
+            source = f.get("source", "")
+            if source:
+                try:
+                    total += Path(source).stat().st_size
+                except OSError:
+                    pass
+        if total == 0 and manifest:
+            total = manifest.get("total_size_bytes", 0)
+        return total
+
+    def _generate_package_structure(
+        self, files: List[Dict[str, Any]], zip_filename: str
+    ) -> str:
+        """Generate tree structure from real ZIP dest paths (T2)."""
+        tree: Dict[str, List[str]] = defaultdict(list)
+        for f in files:
+            dest = f.get("dest", "")
+            if "/" in dest:
+                parts = dest.split("/")
+                if len(parts) >= 2:
+                    dir_name = parts[0]
+                    file_name = "/".join(parts[1:])
+                    tree[dir_name].append(file_name)
+                else:
+                    tree[""].append(dest)
+            else:
+                tree[""].append(dest)
+
+        lines = ["```", zip_filename]
+
+        # Root-level documents
+        root_files = tree.get("", [])
+        for rf in sorted(root_files):
+            if rf.endswith(".md") and not rf.startswith("README"):
+                lines.append(f"├── {rf}")
+
+        # ASSETS/ directory
+        asset_files = tree.get("ASSETS", [])
+        subdirs = defaultdict(list)
+        for af in asset_files:
+            if "/" in af:
+                subdir, fname = af.split("/", 1)
+                subdirs[subdir].append(fname)
+            else:
+                subdirs[""].append(af)
+
+        if asset_files:
+            lines.append("├── ASSETS/")
+            sorted_subdirs = sorted([d for d in subdirs if d])
+            for i, sd in enumerate(sorted_subdirs):
+                prefix = "│   ├──" if i < len(sorted_subdirs) - 1 else "│   └──"
+                lines.append(f"{prefix} {sd}/")
+
+        # Meta-files
+        lines.append("├── MANIFEST.json")
+        lines.append("└── README_DELIVERY.md")
+        lines.append("```")
+
+        return "\n".join(lines)
+
+    def _generate_core_documents(self) -> str:
+        """Static instructions for core documents (DIAGNOSTICO + PROPUESTA)."""
+        return (
+            "### DIAGNOSTICO.md\n"
+            "Review your current state analysis, identified gaps, and opportunities.\n\n"
+            "### PROPUESTA_COMERCIAL.md\n"
+            "Review the commercial proposal with ROI projections and implementation plan.\n"
+        )
+
+    def _generate_deliverable_instructions(self, ctx) -> str:
+        """Instructions for DELIVERED assets."""
+        delivered = [a for a in ctx.assets if getattr(a, 'state', None) and a.state.name == 'DELIVERED']
+        if not delivered:
+            return ""
+        lines = [
+            "The following assets were generated and are ready for implementation:\n",
+        ]
+        for a in delivered:
+            path = a.delivery_path or a.asset_type
+            lines.append(f"- **{a.service_name}** (`{path}`): {a.message}")
+        lines.append("")
+        return "\n".join(lines)
+
+    def _generate_present_in_production_section(self, assets: List[Any]) -> str:
+        """Section for assets already present in production (T3)."""
+        if not assets:
+            return ""
+        lines = [
+            "## Already Present on Your Website",
+            "",
+            "The following elements are already present on your site and do NOT require installation:",
+            "",
+            "| Service | Status |",
+            "|---------|--------|",
+        ]
+        for a in assets:
+            lines.append(f"| {a.service_name} | Verified in production |")
+        lines.append("")
+        return "\n".join(lines)
+
+    def _generate_present_with_issues_section(self, assets: List[Any]) -> str:
+        """Section for assets present but requiring review (T3)."""
+        if not assets:
+            return ""
+        lines = [
+            "## Present but Requires Review",
+            "",
+            "These elements exist on your site but need attention before they are fully effective:",
+            "",
+            "| Service | Issue | Action |",
+            "|---------|-------|--------|",
+        ]
+        for a in assets:
+            lines.append(f"| {a.service_name} | {a.message} | Review the accompanying guide |")
+        lines.append("")
+        return "\n".join(lines)
+
+    def _generate_estimated_section(self, assets: List[Any]) -> str:
+        """Section for ESTIMATED assets (T3)."""
+        if not assets:
+            return ""
+        lines = [
+            "## Estimated Assets",
+            "",
+            "The following assets were generated with estimated data. Review before using in production:",
+            "",
+        ]
+        for a in assets:
+            path = a.delivery_path or a.asset_type
+            lines.append(f"- **{a.service_name}** (`{path}`): {a.message}")
+        lines.append("")
+        return "\n".join(lines)
+
+    def _generate_advisory_section(self, assets: List[Any]) -> str:
+        """Section for advisory guides — NOT installable assets (T3)."""
+        if not assets:
+            return ""
+        lines = [
+            "## Advisory Guides",
+            "",
+            "The following guides are included for review. They are NOT installable assets,",
+            "but reference materials to help you resolve specific issues:",
+            "",
+        ]
+        for a in assets:
+            path = a.delivery_path or a.asset_type
+            lines.append(f"- **{a.service_name}** (`{path}`): {a.message}")
+        lines.append("")
+        return "\n".join(lines)
+
+    def _generate_evidence_section(self, ctx) -> str:
+        """List evidence/audit files (T3)."""
+        evidence_files = [
+            f for f in ctx.files
+            if "v4_audit" in f.get("dest", "").lower()
+            or "evidence" in f.get("dest", "").lower()
+        ]
+        if not evidence_files:
+            return ""
+        lines = [
+            "## Audit Evidence",
+            "",
+            "The following evidence files document the analysis behind the generated assets:",
+            "",
+        ]
+        for f in evidence_files:
+            dest = f.get("dest", "")
+            lines.append(f"- `{dest}`")
+        lines.append("")
+        return "\n".join(lines)
+
+    def _generate_timeline(self, ctx) -> str:
+        """Dynamic timeline based on asset states (T3)."""
+        has_deliverables = bool([a for a in ctx.assets
+            if getattr(a, 'state', None) and a.state.name in ('DELIVERED', 'ESTIMATED')])
+        has_issues = bool(ctx.present_with_issues_assets)
+
+        lines = []
+        if has_deliverables:
+            lines.extend([
+                "### Week 1: Deploy Generated Assets (1-2 hours)",
+                "- [ ] Review DIAGNOSTICO.md for gap analysis",
+                "- [ ] Review PROPUESTA_COMERCIAL.md for commercial strategy",
+                "- [ ] Deploy Schema markup (JSON-LD)",
+                "- [ ] Upload generated assets to your CMS",
+                "",
+            ])
+        if has_issues:
+            lines.extend([
+                "### Week 2: Review & Fix Issues (2-3 hours)",
+                "- [ ] Review assets flagged in 'Present but Requires Review'",
+                "- [ ] Resolve configuration conflicts",
+                "- [ ] Validate fixes on staging",
+                "",
+            ])
+        lines.extend([
+            "### Week 3: Monitor & Validate (1 hour)",
+            "- [ ] Verify schema validation at search.google.com/test/rich-results",
+            "- [ ] Check Google Search Console for indexing",
+            "- [ ] Monitor GBP insights for improvements",
+            "",
+        ])
+        return "\n".join(lines)
+
+    def _generate_checklist(self, ctx) -> str:
+        """Dynamic checklist based on asset states (T3)."""
+        lines = []
+        has_deliverables = bool([a for a in ctx.assets
+            if getattr(a, 'state', None) and a.state.name in ('DELIVERED', 'ESTIMATED')])
+
+        if has_deliverables:
+            lines.extend([
+                "### Technical",
+                "- [ ] Core documents reviewed",
+                "- [ ] Schema markup deployed and validated",
+                "- [ ] All generated assets uploaded to production",
+                "",
+            ])
+        if ctx.present_with_issues_assets:
+            lines.extend([
+                "### Issues to Resolve",
+            ])
+            for a in ctx.present_with_issues_assets:
+                lines.append(f"- [ ] {a.service_name}: {a.message}")
+            lines.append("")
+        lines.extend([
+            "### Monitoring",
+            "- [ ] Google Search Console configured",
+            "- [ ] Google Business Profile optimized",
+            "- [ ] Conversion tracking verified",
+            "",
+        ])
+        return "\n".join(lines)
 
     def _default_readme(self, hotel_id: str, manifest: Optional[Dict[str, Any]]) -> str:
         """Generate default README when template is not available."""
