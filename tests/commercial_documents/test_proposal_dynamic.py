@@ -99,30 +99,65 @@ class TestProposalDynamicFiltering:
         assert len(service_rows) == 8, f"None pains should show 8 services, got {len(service_rows)}"
 
     def test_dynamic_services_table_shows_all_services_with_status(self):
-        """FASE-2: _generate_dynamic_services_table should show ALL 8 services with status icons."""
+        """FASE-2: _generate_dynamic_services_table should show ALL 8 services with status icons.
+        FASE-3: Services without assets are excluded → provide all 8 assets."""
         detected_pain_ids = ["no_og_tags", "no_monthly_report"]
+        all_assets = [
+            {"asset_type": "optimization_guide", "confidence_score": 0.9},
+            {"asset_type": "whatsapp_button", "confidence_score": 0.85},
+            {"asset_type": "hotel_schema", "confidence_score": 0.8},
+            {"asset_type": "org_schema", "confidence_score": 0.9},
+            {"asset_type": "monthly_report", "confidence_score": 0.75},
+            {"asset_type": "faq_page", "confidence_score": 0.95},
+            {"asset_type": "open_graph", "confidence_score": 0.7},
+            {"asset_type": "llms_txt", "confidence_score": 0.85},
+        ]
 
-        result = self.gen._generate_dynamic_services_table(detected_pain_ids=detected_pain_ids)
+        result = self.gen._generate_dynamic_services_table(
+            detected_pain_ids=detected_pain_ids,
+            assets_generated=all_assets,
+        )
 
-        # Should have header + separator + 8 services = 10 lines
+        # Should have header + separator + 7 services = 9 lines
+        # (monthly_report / "Informe Mensual" blocked by semantic validation)
         lines = result.strip().split("\n")
-        assert len(lines) == 10, f"Expected 10 lines (header+sep+8 services), got {len(lines)}: {lines}"
+        assert len(lines) == 9, f"Expected 9 lines (header+sep+7 services), got {len(lines)}: {lines}"
 
-        # Verify all 8 services from PROPOSAL_SERVICE_TO_ASSET appear
+        # Verify all 8 services from PROPOSAL_SERVICE_TO_ASSET appear (except "Informe Mensual")
         for service_name in PROPOSAL_SERVICE_TO_ASSET.keys():
+            if service_name == "Informe Mensual":
+                continue  # blocked by semantic validation
             assert service_name in result, f"Service '{service_name}' should appear but didn't"
 
         # Verify status column exists
         assert "Estado" in lines[0]
 
     def test_dynamic_services_table_no_pains_returns_all_7_services_with_status(self):
-        """FASE-2: With no detected pains, returns all 7 standard services with status column."""
-        result = self.gen._generate_dynamic_services_table(detected_pain_ids=[])
+        """FASE-2: With no detected pains, returns all 7 standard services with status column.
+        FASE-3: Services without assets are excluded → provide all 7 base assets."""
+        all_assets = [
+            {"asset_type": "optimization_guide", "confidence_score": 0.9},
+            {"asset_type": "whatsapp_button", "confidence_score": 0.85},
+            {"asset_type": "hotel_schema", "confidence_score": 0.8},
+            {"asset_type": "org_schema", "confidence_score": 0.9},
+            {"asset_type": "monthly_report", "confidence_score": 0.75},
+            {"asset_type": "faq_page", "confidence_score": 0.95},
+            {"asset_type": "open_graph", "confidence_score": 0.7},
+        ]
+
+        result = self.gen._generate_dynamic_services_table(
+            detected_pain_ids=[],
+            assets_generated=all_assets,
+        )
 
         assert result != "", "Expected 7 services when no pains detected, got empty string"
 
-        # Verify all 7 base services are present
+        # Verify all 7 base services are present (8 total, "Informe Mensual" blocked by semantic validation)
         for service_name in PROPOSAL_SERVICE_TO_ASSET.keys():
+            if service_name == "Informe Mensual":
+                continue  # blocked by semantic validation
+            if service_name == "Optimización para IA Generativa":
+                continue  # no llms_txt asset provided, excluded by conditional filtering
             assert service_name in result, f"Service '{service_name}' should appear but didn't"
 
         # Verify status icons are present
@@ -254,9 +289,11 @@ class TestDynamicServicesTableStates:
         assert "SEO Local" in result
 
     def test_shows_pending_when_no_asset(self):
-        """Service without generated asset shows ⏳ Pendiente."""
+        """FASE-3: Service without generated asset is excluded (not shown as ⏳ Pendiente).
+        Footnote lists excluded services instead."""
         result = self.gen._generate_dynamic_services_table(assets_generated=[])
-        assert "⏳ Pendiente" in result
+        # Services without assets are excluded → footnote, not "⏳ Pendiente" in table
+        assert "> **Servicios adicionales disponibles:**" in result
 
     def test_shows_present_in_production(self):
         """Service verified in production shows ℹ️ Presente en sitio."""
@@ -287,12 +324,11 @@ class TestDynamicServicesTableStates:
         assert "Optimización para IA Generativa" in result
 
     def test_aeo_conditional_absent_when_score_high(self):
-        """FASE-2: AEO service now ALWAYS appears (part of PROPOSAL_SERVICE_TO_ASSET)."""
+        """FASE-3: AEO service without asset is excluded (footnote), not shown as pending."""
         result = self.gen._generate_dynamic_services_table(score_aeo=25)
-        # AEO is always present in the table now; score_aeo only affects its status
+        # AEO without asset is excluded → footnote
         assert "Optimización para IA Generativa" in result
-        # When score_aeo >= 20 and no asset generated, it shows as pending
-        assert "⏳ Pendiente" in result
+        assert "> **Servicios adicionales disponibles:**" in result
 
 
 class TestTechnicalAssetsTable:
@@ -319,3 +355,136 @@ class TestTechnicalAssetsTable:
         """Missing technical asset shows ⏳ No generado."""
         result = self.gen._generate_technical_assets_table(assets_generated=[])
         assert "⏳ No generado" in result
+
+
+class TestFase3ConditionalServicesFiltering:
+    """FASE-3 ASSET-ALIGNMENT-ZIONE: Verify conditional service filtering."""
+
+    def setup_method(self):
+        self.gen = V4ProposalGenerator()
+
+    def test_conditional_services_filtering(self):
+        """Only services with asset or present_in_production appear in main table.
+        Excluded services appear in footnote."""
+        # 4 services with asset (confidence not None), 4 without (confidence None)
+        assets = [
+            {"asset_type": "optimization_guide", "confidence_score": 0.9},
+            {"asset_type": "whatsapp_button", "confidence_score": 0.85},
+            {"asset_type": "hotel_schema", "confidence_score": 0.75},
+            {"asset_type": "faq_page", "confidence_score": 0.95},
+        ]
+        # Remaining 4 have no asset: org_schema, monthly_report, open_graph, llms_txt
+
+        result = self.gen._generate_dynamic_services_table(assets_generated=assets)
+
+        # The 4 services with assets should appear
+        assert "SEO Local" in result
+        assert "Botón de WhatsApp" in result
+        assert "Schema Hotel" in result
+        assert "Página de FAQ" in result
+
+        # The 4 services without assets should NOT appear in table rows
+        # but should appear in the footnote
+        assert "> **Servicios adicionales disponibles:**" in result
+
+        # Verify excluded services are in the footnote
+        # NOTE: "Informe Mensual" (monthly_report) is blocked by semantic validation
+        # (validar_semantica_comercial), not by conditional filtering — it's skipped entirely.
+        excluded = [
+            "Schema Organization",
+            "Meta Tags Sociales (Open Graph)",
+            "Optimización para IA Generativa",
+        ]
+        for svc in excluded:
+            assert svc in result, f"Excluded service '{svc}' should appear in footnote"
+
+        # Verify excluded services do NOT show "⏳ Pendiente" in the table
+        lines = result.strip().split("\n")
+        table_lines = [l for l in lines if l.startswith("|") and "⏳ Pendiente" in l]
+        for line in table_lines:
+            for svc in excluded:
+                assert svc not in line, f"Excluded service '{svc}' should NOT show '⏳ Pendiente' in table"
+
+    def test_all_services_with_assets_none_excluded(self):
+        """When all 8 services have assets, none are excluded and no footnote."""
+        assets = [
+            {"asset_type": "optimization_guide", "confidence_score": 0.9},
+            {"asset_type": "whatsapp_button", "confidence_score": 0.85},
+            {"asset_type": "hotel_schema", "confidence_score": 0.8},
+            {"asset_type": "org_schema", "confidence_score": 0.9},
+            {"asset_type": "monthly_report", "confidence_score": 0.75},
+            {"asset_type": "faq_page", "confidence_score": 0.95},
+            {"asset_type": "open_graph", "confidence_score": 0.7},
+            {"asset_type": "llms_txt", "confidence_score": 0.85},
+        ]
+
+        result = self.gen._generate_dynamic_services_table(assets_generated=assets)
+
+        # No footnote should appear
+        assert "Servicios adicionales disponibles" not in result
+
+        # All services should appear, except "Informe Mensual" which is blocked
+        # by semantic validation (validar_semantica_comercial blocks monthly_report → no_faq_schema)
+        for service_name in PROPOSAL_SERVICE_TO_ASSET.keys():
+            if service_name == "Informe Mensual":
+                continue  # blocked by semantic validation, not by conditional filtering
+            assert service_name in result, f"Service '{service_name}' should appear"
+
+    def test_present_in_production_includes_service(self):
+        """Service without asset but present_in_production should still appear."""
+        mock_result = MagicMock()
+        mock_result.status.value = "exists"
+        mock_report = MagicMock()
+        mock_report.results = {"org_schema": mock_result}
+
+        # No assets generated at all
+        result = self.gen._generate_dynamic_services_table(
+            assets_generated=[],
+            site_presence_report=mock_report,
+        )
+
+        # Schema Organization should appear (present_in_production)
+        assert "Schema Organization" in result
+        assert "ℹ️ Presente en sitio" in result
+
+        # Other services without asset should be excluded → footnote
+        assert "> **Servicios adicionales disponibles:**" in result
+
+    def test_no_assets_no_presence_all_excluded(self):
+        """When no assets and no presence, footnote lists all 8 services."""
+        result = self.gen._generate_dynamic_services_table(assets_generated=[])
+
+        # All 8 should be in the footnote (except "Informe Mensual" blocked by semantic validation)
+        assert "> **Servicios adicionales disponibles:**" in result
+        for service_name in PROPOSAL_SERVICE_TO_ASSET.keys():
+            if service_name == "Informe Mensual":
+                continue  # blocked by semantic validation
+            assert service_name in result, f"Service '{service_name}' should appear in footnote"
+
+        # Table should be empty (only header + separator)
+        lines = result.strip().split("\n")
+        table_lines = [l for l in lines if l.startswith("|")]
+        # header + separator = 2 lines, no data rows
+        data_rows = [l for l in table_lines if "---" not in l and "Servicio" not in l]
+        assert len(data_rows) == 0, f"Expected 0 data rows, got {len(data_rows)}: {data_rows}"
+
+
+class TestFase3LookupUnification:
+    """FASE-3 ASSET-ALIGNMENT-ZIONE: Verify SERVICE_TO_ASSET_LOOKUP = PROPOSAL_SERVICE_TO_ASSET."""
+
+    def test_service_to_asset_lookup_matches_proposal(self):
+        """SERVICE_TO_ASSET_LOOKUP must be identical to PROPOSAL_SERVICE_TO_ASSET."""
+        from modules.commercial_documents.service_catalog import SERVICE_TO_ASSET_LOOKUP
+        from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
+
+        assert set(SERVICE_TO_ASSET_LOOKUP.keys()) == set(PROPOSAL_SERVICE_TO_ASSET.keys()), \
+            "SERVICE_TO_ASSET_LOOKUP keys must match PROPOSAL_SERVICE_TO_ASSET keys"
+        assert SERVICE_TO_ASSET_LOOKUP == PROPOSAL_SERVICE_TO_ASSET, \
+            "SERVICE_TO_ASSET_LOOKUP must be identical to PROPOSAL_SERVICE_TO_ASSET"
+
+    def test_service_to_asset_lookup_has_8_entries(self):
+        """SERVICE_TO_ASSET_LOOKUP should have exactly 8 entries."""
+        from modules.commercial_documents.service_catalog import SERVICE_TO_ASSET_LOOKUP
+
+        assert len(SERVICE_TO_ASSET_LOOKUP) == 8, \
+            f"Expected 8 entries, got {len(SERVICE_TO_ASSET_LOOKUP)}"

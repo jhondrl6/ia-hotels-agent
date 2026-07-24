@@ -46,6 +46,24 @@ Reparar bypass de seguridad de 3 capas en delivery_quality_report que permite en
 - 5 tests nuevos (test_open_graph_enhance_existing.py), 0 regresiones
 - Suite completa: 80 passed (conditional_generator: 41, proposal_asset_alignment: 18, open_graph: 21)
 
+### Cambios Implementados (FASE-3)
+- **Opción C**: `_generate_dynamic_services_table()` ahora es condicional — solo muestra servicios con asset generado o `present_in_production`
+- **Nota al pie**: Servicios excluidos listados como "Servicios adicionales disponibles: ..." al final de la tabla
+- **9.6**: `SERVICE_TO_ASSET_LOOKUP` unificado — ahora se deriva de `PROPOSAL_SERVICE_TO_ASSET` como fuente única de verdad (previene divergencia futura)
+
+### Archivos Modificados (FASE-3)
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | L1190: lista `excluded_services`; L1213-1219: filtro condicional `has_asset` o `is_present`; L1284-1287: nota al pie de servicios excluidos |
+| `modules/commercial_documents/service_catalog.py` | L14: import `PROPOSAL_SERVICE_TO_ASSET`; L133: `SERVICE_TO_ASSET_LOOKUP = dict(PROPOSAL_SERVICE_TO_ASSET)` |
+| `tests/commercial_documents/test_proposal_dynamic.py` | +6 tests (TestFase3ConditionalServicesFiltering: 4 tests + TestFase3LookupUnification: 2 tests) |
+
+### Tests (FASE-3)
+- 6 tests nuevos (4 conditional filtering + 2 lookup unification), 0 regresiones
+- Suite: 29/30 test_proposal_dynamic.py (1 pre-existing failure: indirect_traffic_optimization deprecado)
+- Suite: 18/18 test_proposal_asset_alignment.py
+- run_all_validations.py --quick: 4/5 (pre-existing Version Sync)
+
 ## [4.62.0] - BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness — 2026-07-22
 
 ### Objetivo

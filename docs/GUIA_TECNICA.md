@@ -1,6 +1,6 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.63.0 (ASSET-ALIGNMENT-ZIONE: FASE-2 — gaps Pain→Asset)
+**Versión:** v4.63.0 (ASSET-ALIGNMENT-ZIONE: FASE-3 — propuesta condicional + unificación fuentes)
 **Última actualización:** 2026-07-23
 
 ---
@@ -28,6 +28,28 @@
 **Tests:** 5 tests nuevos (test_open_graph_enhance_existing.py) + 1 test actualizado. Suite: 80 passed, 0 regresiones.
 
 **Backwards compatibility:** ✅ `generate_content()` sin `existing_og_tags` = comportamiento original. `_compute_web_score()` idéntico al diagnostic generator.
+
+---
+
+### Notas de Cambios v4.63.0 — ASSET-ALIGNMENT-ZIONE (FASE-3)
+
+**Fecha:** 2026-07-23
+
+**Módulos afectados:**
+- `modules/commercial_documents/v4_proposal_generator.py`
+- `modules/commercial_documents/service_catalog.py`
+
+**Problema:**
+- La propuesta comercial mostraba los 8 servicios siempre, incluso aquellos sin asset generado ni presencia en producción (aparecían como "⏳ Pendiente").
+- `SERVICE_TO_ASSET_LOOKUP` se derivaba de `SERVICE_CATALOG` en vez de `PROPOSAL_SERVICE_TO_ASSET` (fuente única de verdad para Gate 9), creando riesgo de divergencia futura.
+
+**Solución:**
+- `_generate_dynamic_services_table()` ahora verifica si el asset fue generado (`confidence is not None`) o si el servicio está marcado como `present_in_production`. Servicios sin ninguna de las dos condiciones se excluyen de la tabla principal y se listan en nota al pie: "Servicios adicionales disponibles: ...".
+- `SERVICE_TO_ASSET_LOOKUP` ahora se deriva directamente de `PROPOSAL_SERVICE_TO_ASSET` (`dict(PROPOSAL_SERVICE_TO_ASSET)`), garantizando consistencia con Gate 9.
+
+**Tests:** 6 tests nuevos (4 TestFase3ConditionalServicesFiltering + 2 TestFase3LookupUnification). Suite: 29/30 test_proposal_dynamic (1 pre-existing), 18/18 test_proposal_asset_alignment.
+
+**Backwards compatibility:** ✅ Tabla mantiene mismo formato (5 columnas). Nota al pie solo aparece cuando hay servicios excluidos. SERVICE_TO_ASSET_LOOKUP tiene las mismas 8 entradas que antes.
 
 ---
 

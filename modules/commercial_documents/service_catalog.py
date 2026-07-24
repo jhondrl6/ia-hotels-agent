@@ -10,6 +10,9 @@ Created by FASE-CAUSAL-REFACTOR.
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
+# FASE-3 ASSET-ALIGNMENT-ZIONE: Import proposal source of truth
+from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
+
 
 @dataclass
 class ServiceEntry:
@@ -125,11 +128,9 @@ SERVICE_CATALOG["optimizacion_ia_generativa"] = ServiceEntry(
 
 
 # Backwards-compatible lookup: service_name → asset_type
-# Mirrors PROPOSAL_SERVICE_TO_ASSET for compatibility with gates.
-SERVICE_TO_ASSET_LOOKUP: Dict[str, str] = {
-    entry.service_name: entry.asset_type
-    for entry in SERVICE_CATALOG.values()
-}
+# FASE-3 ASSET-ALIGNMENT-ZIONE: Derived from PROPOSAL_SERVICE_TO_ASSET
+# as the single source of truth, instead of SERVICE_CATALOG.
+SERVICE_TO_ASSET_LOOKUP: Dict[str, str] = dict(PROPOSAL_SERVICE_TO_ASSET)
 
 
 # =============================================================================

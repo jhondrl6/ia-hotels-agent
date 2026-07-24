@@ -1187,6 +1187,8 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             "|----------|--------|-----------|----------------------|-------------|",
         ]
 
+        excluded_services: List[str] = []
+
         for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
             confidence = asset_lookup.get(asset_type)
             presence = presence_lookup.get(asset_type, {})
@@ -1206,6 +1208,14 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 brecha_col = "Brecha #5: WhatsApp no coincide"
                 desc = "Auditoría y Optimización de Conversión"
                 rows.append(f"| **{service_name}** | {estado} | {confianza_col} | {brecha_col} | {desc} |")
+                continue
+
+            # FASE-3 ASSET-ALIGNMENT-ZIONE: Conditional — only show services
+            # with a generated asset OR marked as present_in_production
+            has_asset = confidence is not None
+            is_present = presence.get('presence_verified') and presence.get('present_in_production')
+            if not has_asset and not is_present:
+                excluded_services.append(service_name)
                 continue
 
             # Determine state with icons
@@ -1270,6 +1280,11 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                     confianza_col = f"{confidence:.0%}"
 
                 rows.append(f"| **{aeo_entry.service_name}** | {estado} | {confianza_col} | — | {aeo_entry.description} |")
+
+        # FASE-3 ASSET-ALIGNMENT-ZIONE: Footnote listing excluded services
+        if excluded_services:
+            excluded_names = ", ".join(excluded_services)
+            rows.append(f"\n> **Servicios adicionales disponibles:** {excluded_names}")
 
         return "\n".join(rows)
 

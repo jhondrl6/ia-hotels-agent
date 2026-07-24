@@ -1,7 +1,7 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-2-ASSET-ALIGNMENT",
   "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-3",
-  "modules/commercial_documents/v4_proposal_generator.py": "FASE-3",
+  "modules/commercial_documents/v4_proposal_generator.py": "FASE-3-ASSET-ALIGNMENT",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-2-ASSET-ALIGNMENT",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
@@ -109,7 +109,7 @@
   "README.md": "FASE-5",
   "NINGUNO (solo lectura)": "FASE-CAUSAL-DIAG",
   "modules/commercial_documents/service_catalog.py (nuevo)": "FASE-CAUSAL-REFACTOR",
-  "modules/commercial_documents/service_catalog.py": "FASE-4",
+  "modules/commercial_documents/service_catalog.py": "FASE-3-ASSET-ALIGNMENT",
   "tests/commercial_documents/test_proposal_confidence_disclosure.py": "FASE-A",
   "tests/commercial_documents/test_proposal_dynamic.py": "FASE-D",
   "modules/orchestration_v4/two_phase_flow.py": "FASE-PATCH-B",
