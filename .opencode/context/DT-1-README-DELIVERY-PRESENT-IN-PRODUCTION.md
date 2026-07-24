@@ -5,7 +5,7 @@
 > **Origen**: ASSET-ALIGNMENT-ZIONE-2026-07-23, FASE-5, hallazgo 9.9 (residual)
 > **Severidad**: 🟡 MEDIO
 > **Estado**: Pendiente de intervención (documentado para nueva sesión)
-> **Hotel de prueba**: Zi One Luxury (https://zione.co/), output en `output/v4_complete/zione/`
+> **Hotel de prueba**: Zi One Luxury (https://zione.co/), output en `output/ZiOne/v4_complete/zione/`
 
 ---
 
@@ -73,7 +73,8 @@ No tiene lógica para secciones condicionales basadas en `present_in_production`
 ### 3.1 Fuente de verdad: asset_generation_report.json
 
 ```json
-// output/v4_complete/{hotel_id}/v4_audit/asset_generation_report.json
+// output/{HotelName}/v4_complete/{hotel_id}/v4_audit/asset_generation_report.json
+// Ejemplo real: output/ZiOne/v4_complete/zione/v4_audit/asset_generation_report.json
 {
   "skipped_assets": [
     {
@@ -90,7 +91,8 @@ No tiene lógica para secciones condicionales basadas en `present_in_production`
 ### 3.2 Fuente de verdad: gate_report.json (Gate 9)
 
 ```json
-// output/v4_complete/{hotel_id}/v4_audit/gate_report_*.json
+// output/{HotelName}/v4_complete/{hotel_id}/v4_audit/gate_report_*.json
+// Ejemplo real: output/ZiOne/v4_complete/zione/v4_audit/gate_report_20260723_201337.json
 {
   "gate_name": "proposal_asset_alignment",
   "details": {
@@ -283,13 +285,13 @@ No es necesario instalarlos — su sitio ya los tiene configurados correctamente
 
 2. Extraer y verificar README_DELIVERY.md del ZIP:
    ```bash
-   unzip -p output/v4_complete/deliveries/zione_*.zip README_DELIVERY.md | grep -i whatsapp
+   unzip -p output/ZiOne/v4_complete/deliveries/zione_*.zip README_DELIVERY.md | grep -i whatsapp
    ```
    Debe mostrar SOLO la sección "Ya implementado", NO instrucciones de instalación.
 
 3. Verificar que la estructura no lista `boton_whatsapp.html`:
    ```bash
-   unzip -p output/v4_complete/deliveries/zione_*.zip README_DELIVERY.md | grep "boton_whatsapp"
+   unzip -p output/ZiOne/v4_complete/deliveries/zione_*.zip README_DELIVERY.md | grep "boton_whatsapp"
    ```
    Si hay match, debe ser dentro de "✅ Ya Implementado", no en la estructura de archivos.
 
@@ -317,7 +319,7 @@ No es necesario instalarlos — su sitio ya los tiene configurados correctamente
 
 ## 8. Datos del ZIP de Prueba
 
-Para referencia, el ZIP actual (`output/v4_complete/deliveries/zione_20260723.zip`, 46 archivos) contiene:
+Para referencia, el ZIP actual (`output/ZiOne/v4_complete/deliveries/zione_20260723.zip`, 46 archivos) contiene:
 
 - `README_DELIVERY.md` — con las referencias hardcodeadas a `boton_whatsapp.html`
 - `MANIFEST.json` — 46 entradas, sin `boton_whatsapp.html`
