@@ -231,6 +231,7 @@ class AssessmentBuilder:
                     "presence_status": a.presence_status,
                     "reason": a.reason,
                     "site_verified": a.site_verified,
+                    "pain_ids_affected": getattr(a, 'pain_ids_affected', []),
                 }
                 for a in asset_result.skipped_assets
             ]
