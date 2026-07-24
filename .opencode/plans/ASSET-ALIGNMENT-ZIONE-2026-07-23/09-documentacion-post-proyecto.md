@@ -32,8 +32,13 @@
 | Métrica | Valor | Fase |
 |---------|-------|------|
 | Tests nuevos | 5 | FASE-1 |
+| Tests nuevos | 5 | FASE-2 |
 | Tests totales (sin regresión) | 40 | FASE-1 |
+| Tests totales (sin regresión) | 80 | FASE-2 |
 | Archivos modificados | 3 | FASE-1 |
+| Archivos modificados | 4 | FASE-2 |
+| Archivos nuevos | 0 | FASE-1 |
+| Archivos nuevos | 1 | FASE-2 |
 | Bugs críticos resueltos | 2 | FASE-1 |
 
 ## Sección E: Archivos Afiliados Actualizados
@@ -43,3 +48,9 @@
 | `modules/quality_gates/delivery_quality_report.py` | L205: blocking_gates incluye proposal_asset_alignment; L238: key `"proposal_asset"` → `"proposal_asset_alignment"` | FASE-1 |
 | `main.py` | L2812: comentario actualizado; L2814: default `""` → `"true"` (GATE_BLOCKING_ENABLED=True) | FASE-1 |
 | `tests/quality_gates/test_delivery_quality_report.py` | +5 tests: TestProposalAssetAlignmentBypassFix (2) + TestGateBlockingEnabledDefault (3) | FASE-1 |
+| `modules/commercial_documents/pain_solution_mapper.py` | +pain `low_seo_score`; modo enhance_existing en `no_og_tags`; +helpers `_compute_web_score()`, `_og_tags_incomplete()` | FASE-2 |
+| `modules/asset_generation/conditional_generator.py` | Clave duplicada `whatsapp_conflict` eliminada; +`_extract_existing_og_tags()`; dispatch open_graph pasa tags existentes | FASE-2 |
+| `modules/asset_generation/open_graph_generator.py` | `generate_content()` y `_generate_html()` aceptan `existing_og_tags`; modo enhance_existing | FASE-2 |
+| `modules/asset_generation/asset_catalog.py` | `optimization_guide.promised_by` + `low_seo_score` | FASE-2 |
+| `tests/asset_generation/test_open_graph_enhance_existing.py` | +5 tests nuevos para enhance_existing mode | FASE-2 |
+| `tests/asset_generation/test_open_graph_generation.py` | Test actualizado a expect enhance_existing activation | FASE-2 |

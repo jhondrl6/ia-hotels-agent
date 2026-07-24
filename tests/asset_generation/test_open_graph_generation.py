@@ -68,14 +68,17 @@ class TestOpenGraphPainIdActivation:
         assert no_og_pain.detected_by == "seo_elements_detection"
         assert no_og_pain.confidence == 0.9  # high confidence
     
-    def test_audit_report_open_graph_true_does_not_activate_pain_id(self):
-        """Test that open_graph=true in audit_report does NOT activate no_og_tags."""
+    def test_audit_report_open_graph_true_incomplete_tags_activates_pain_id_enhance(self):
+        """Test that open_graph=true WITH incomplete OG tags (<10) activates no_og_tags in enhance_existing mode."""
         from modules.commercial_documents.pain_solution_mapper import PainSolutionMapper
         from modules.commercial_documents.data_structures import ValidationSummary
         
-        # Create mock audit result with open_graph=True
+        # Create mock audit result with open_graph=True but FEW tags (enhance_existing mode)
         mock_audit = Mock()
-        mock_audit.seo_elements = MockSEOElements(open_graph=True, confidence="high")
+        seo_elem = MockSEOElements(open_graph=True, confidence="high")
+        # Only 3 tags → incomplete (< 10 threshold)
+        seo_elem.open_graph_tags = {"og:title": "...", "og:description": "...", "og:url": "..."}
+        mock_audit.seo_elements = seo_elem
         mock_audit.schema = Mock(faq_schema_detected=True, hotel_schema_detected=True, org_schema_detected=True)
         mock_audit.gbp = Mock(geo_score=80, reviews=50, confidence="high")
         mock_audit.performance = Mock(mobile_score=70, has_field_data=True)
@@ -92,9 +95,14 @@ class TestOpenGraphPainIdActivation:
         mapper = PainSolutionMapper()
         pains = mapper.detect_pains(mock_audit, mock_validation_summary)
         
-        # Verify no_og_tags is NOT detected
+        # Verify no_og_tags IS detected (enhance_existing mode)
         pain_ids = [p.id for p in pains]
-        assert "no_og_tags" not in pain_ids, f"Expected no_og_tags NOT in {pain_ids}"
+        assert "no_og_tags" in pain_ids, f"Expected no_og_tags in enhance_existing mode: {pain_ids}"
+        
+        # Verify enhanced pain has lower confidence
+        no_og_pain = next((p for p in pains if p.id == "no_og_tags"), None)
+        assert no_og_pain is not None
+        assert no_og_pain.confidence == 0.5  # Medium confidence in enhance_existing mode
 
 
 class TestOpenGraphAssetGeneration:

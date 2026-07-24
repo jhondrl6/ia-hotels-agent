@@ -247,7 +247,6 @@ class ConditionalGenerator:
         # FAQ
         "no_faq_schema": "faq_page",
         # NAP/WhatsApp
-        "whatsapp_conflict": "whatsapp_button",
         "whatsapp_conflict": ["whatsapp_button", "whatsapp_conflict_guide"],
         # imágenes
         "missing_alt_text": "alt_text_guide",
@@ -256,6 +255,34 @@ class ConditionalGenerator:
         # redes
         "no_social_links": "social_strategy_guide",
     }
+
+    @staticmethod
+    def _extract_existing_og_tags(validated_data: Dict) -> list:
+        """Extract existing OG tag property names from validated_data.
+
+        Checks multiple possible locations for OG tag data:
+        1. validated_data["seo_elements"]["open_graph_tags"] (dict keys)
+        2. validated_data["open_graph_tags"] (direct)
+
+        Returns list of OG property names (e.g., ["og:locale", "og:type"])
+        or empty list if no data available.
+        """
+        og_tags_dict = {}
+
+        # Try seo_elements path
+        seo = validated_data.get("seo_elements", {})
+        if isinstance(seo, dict):
+            tags = seo.get("open_graph_tags", {})
+            if isinstance(tags, dict):
+                og_tags_dict = tags
+
+        # Try direct open_graph_tags path
+        if not og_tags_dict:
+            tags = validated_data.get("open_graph_tags", {})
+            if isinstance(tags, dict):
+                og_tags_dict = tags
+
+        return list(og_tags_dict.keys()) if og_tags_dict else []
 
     def generate_for_faltantes(
         self,
@@ -530,8 +557,13 @@ class ConditionalGenerator:
             generator = OpenGraphGenerator()
             hotel_data = validated_data.get("hotel_data", validated_data)
             hotel_dict = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
+            # ASSET-ALIGNMENT FASE-2: extract existing OG tags from validated_data
+            existing_og_tags = self._extract_existing_og_tags(validated_data)
             # Use public API generate_content() instead of private methods
-            content = generator.generate_content(hotel_dict if isinstance(hotel_dict, dict) else {})
+            content = generator.generate_content(
+                hotel_dict if isinstance(hotel_dict, dict) else {},
+                existing_og_tags=existing_og_tags if isinstance(existing_og_tags, list) else None
+            )
 
         elif asset_type == "alt_text_guide":
             from modules.delivery.generators.alt_text_guide_gen import AltTextGuideGenerator

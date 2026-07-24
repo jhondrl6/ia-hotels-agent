@@ -296,6 +296,15 @@ class PainSolutionMapper:
             "name": "Contenido Muy Corto",
             "description": "El contenido es demasiado corto para ser citado por IA"
         },
+        "low_seo_score": {
+            "assets": ["optimization_guide"],
+            "confidence_required": 0.0,
+            "priority": 2,
+            "validation_fields": ["web_score"],
+            "estimated_impact": "high",
+            "name": "SEO Local Bajo",
+            "description": "El score de SEO Local (CHECKLIST_SEO) está significativamente bajo"
+        },
 
     }
     
@@ -531,6 +540,32 @@ class PainSolutionMapper:
                     detected_by="seo_elements_detection",
                     confidence=0.9 if audit_result.seo_elements.confidence == "high" else 0.6
                 ))
+            elif self._og_tags_incomplete(audit_result.seo_elements):
+                # ASSET-ALIGNMENT FASE-2: enhance_existing mode
+                # Site HAS OG tags but they're incomplete → activate with medium confidence
+                tag_count = len(audit_result.seo_elements.open_graph_tags or {})
+                logger.info(f"OG tags present but incomplete ({tag_count} tags) → activating pain_id no_og_tags (enhance_existing)")
+                pains.append(Pain(
+                    id="no_og_tags",
+                    name="Open Graph Tags Incompletos",
+                    description=f"Se detectaron {tag_count} OG tags pero faltan tags importantes para redes sociales",
+                    severity="medium",
+                    detected_by="seo_elements_detection",
+                    confidence=0.5
+                ))
+
+        # === ASSET-ALIGNMENT FASE-2: low_seo_score Detection ===
+        web_score = self._compute_web_score(audit_result)
+        if web_score is not None and web_score < 40:
+            logger.info(f"Web/SEO score {web_score}/100 below threshold 40 → activating pain_id low_seo_score")
+            pains.append(Pain(
+                id="low_seo_score",
+                name="SEO Local Bajo",
+                description=f"Score SEO Local: {web_score}/100 — significativamente bajo",
+                severity="high",
+                detected_by="web_score",
+                confidence=0.8
+            ))
         
         # Sort by severity
         severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
@@ -538,6 +573,76 @@ class PainSolutionMapper:
         
         return pains
     
+    # CHECKLIST_SEO weights — mirrors v4_diagnostic_generator:CHECKLIST_SEO
+    # Used by _compute_web_score() to evaluate SEO health without importing
+    # the diagnostic generator (avoids circular dependency)
+    _CHECKLIST_SEO = {
+        "ssl": 15,
+        "schema_hotel": 20,
+        "LCP_ok": 20,
+        "CLS_ok": 10,
+        "imagenes_alt": 15,
+        "blog_activo": 10,
+        "schema_reviews": 10,
+    }
+
+    def _compute_web_score(self, audit_result) -> int | None:
+        """Compute Web/SEO score using CHECKLIST_SEO (same logic as diagnostic generator).
+
+        Returns score 0-100, or None if audit_result is insufficient to compute.
+        """
+        if not audit_result:
+            return None
+        
+        elementos = {}
+        # SSL
+        elementos["ssl"] = audit_result.url.startswith('https') if getattr(audit_result, 'url', None) else False
+        # Schema hotel
+        elementos["schema_hotel"] = bool(audit_result.schema.hotel_schema_detected) if getattr(audit_result, 'schema', None) else False
+        # Performance
+        elementos["LCP_ok"] = (
+            getattr(audit_result, 'performance', None) is not None
+            and hasattr(audit_result.performance, 'lcp')
+            and audit_result.performance.lcp is not None
+            and isinstance(audit_result.performance.lcp, (int, float))
+            and audit_result.performance.lcp <= 2.5
+        )
+        elementos["CLS_ok"] = (
+            getattr(audit_result, 'performance', None) is not None
+            and hasattr(audit_result.performance, 'cls')
+            and audit_result.performance.cls is not None
+            and isinstance(audit_result.performance.cls, (int, float))
+            and audit_result.performance.cls <= 0.1
+        )
+        # Imagenes alt
+        if hasattr(audit_result, 'seo_elements') and audit_result.seo_elements:
+            elementos["imagenes_alt"] = audit_result.seo_elements.imagenes_alt
+        else:
+            elementos["imagenes_alt"] = False
+        # Blog activo
+        elementos["blog_activo"] = "no_evaluado"
+        # Schema reviews
+        elementos["schema_reviews"] = bool(audit_result.gbp.rating) if getattr(audit_result, 'gbp', None) else False
+
+        if not elementos:
+            return None
+        
+        score = sum(self._CHECKLIST_SEO[k] for k, v in elementos.items() if v is True and k in self._CHECKLIST_SEO)
+        return min(100, score)
+
+    def _og_tags_incomplete(self, seo_elements) -> bool:
+        """Check if existing OG tags are incomplete (fewer than 10 tags).
+
+        Used by detect_pains() to trigger no_og_tags in enhance_existing mode
+        when the site HAS OG tags but they're not comprehensive.
+        """
+        if not seo_elements:
+            return False
+        if not seo_elements.open_graph:
+            return False  # Already handled by the primary detection branch
+        og_tags = getattr(seo_elements, 'open_graph_tags', None) or {}
+        return len(og_tags) < 10
+
     def detect_pains_for_analytics(
         self,
         analytics_data: Dict[str, Any]

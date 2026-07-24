@@ -1,7 +1,33 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.62.0 (BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness)
-**Última actualización:** 2026-07-22
+**Versión:** v4.63.0 (ASSET-ALIGNMENT-ZIONE: FASE-2 — gaps Pain→Asset)
+**Última actualización:** 2026-07-23
+
+---
+
+### Notas de Cambios v4.63.0 — ASSET-ALIGNMENT-ZIONE (FASE-2)
+
+**Fecha:** 2026-07-23
+
+**Módulos afectados:**
+- `modules/commercial_documents/pain_solution_mapper.py`
+- `modules/asset_generation/conditional_generator.py`
+- `modules/asset_generation/open_graph_generator.py`
+- `modules/asset_generation/asset_catalog.py`
+
+**Problema:**
+- Gate 9 (`proposal_asset_alignment`) bloqueaba en 75% para Zi One Luxury porque `optimization_guide` y `open_graph` nunca se planificaban. El PainSolutionMapper no tenía un pain que detectara SEO Local bajo, y `no_og_tags` solo se activaba cuando NO había OG tags (no cuando eran incompletos). Además, el OpenGraphGenerator producía tags desde cero sin considerar los existentes.
+
+**Solución:**
+- Nuevo pain `low_seo_score`: computa score SEO usando CHECKLIST_SEO (misma lógica del diagnostic generator) y activa `optimization_guide` cuando < 40.
+- `no_og_tags` modo enhance_existing: cuando `open_graph=True` pero `< 10` OG tags, activa pain con confidence 0.5.
+- OpenGraphGenerator: `generate_content(existing_og_tags=[...])` genera solo tags faltantes, no duplica existentes.
+- Clave duplicada `whatsapp_conflict` eliminada de PAIN_TO_ASSET.
+- `optimization_guide.promised_by` incluye `low_seo_score` en asset_catalog.
+
+**Tests:** 5 tests nuevos (test_open_graph_enhance_existing.py) + 1 test actualizado. Suite: 80 passed, 0 regresiones.
+
+**Backwards compatibility:** ✅ `generate_content()` sin `existing_og_tags` = comportamiento original. `_compute_web_score()` idéntico al diagnostic generator.
 
 ---
 

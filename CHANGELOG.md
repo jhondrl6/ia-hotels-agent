@@ -10,6 +10,13 @@ Reparar bypass de seguridad de 3 capas en delivery_quality_report que permite en
 - **9.1b**: `proposal_asset_alignment` añadido a lista de blocking_gates (antes solo coherence, coverage, evidence)
 - **9.2**: `GATE_BLOCKING_ENABLED` default cambiado de `""` (False) a `"true"` (True) en main.py:2814
 
+### Cambios Implementados (FASE-2)
+- **3.1**: Pain `low_seo_score` agregado a PainSolutionMapper — trigger `web_score < 40` mapea a `optimization_guide`
+- **3.2**: Pain `no_og_tags` ahora se activa en modo enhance_existing (confidence 0.5) cuando el sitio tiene OG tags pero incompletos (<10)
+- **3.2b**: OpenGraphGenerator acepta `existing_og_tags` — genera solo tags faltantes, no duplica existentes
+- **9.5**: Clave duplicada `whatsapp_conflict` eliminada de PAIN_TO_ASSET en conditional_generator.py
+- **asset_catalog**: `optimization_guide.promised_by` incluye `low_seo_score`
+
 ### Archivos Modificados (FASE-1)
 | Archivo | Cambio |
 |---------|--------|
@@ -20,6 +27,24 @@ Reparar bypass de seguridad de 3 capas en delivery_quality_report que permite en
 ### Tests (FASE-1)
 - 5 tests nuevos, 0 regresiones (40/40 delivery_quality_report + proposal_asset_alignment)
 - test_publication_gates: 55/56 (1 pre-existing failure)
+
+### Archivos Nuevos (FASE-2)
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/asset_generation/test_open_graph_enhance_existing.py` | 5 tests para modo enhance_existing del OpenGraphGenerator |
+
+### Archivos Modificados (FASE-2)
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/pain_solution_mapper.py` | +pain `low_seo_score` con trigger `web_score < 40`; +modo enhance_existing en `no_og_tags`; +helpers `_compute_web_score()`, `_og_tags_incomplete()` |
+| `modules/asset_generation/conditional_generator.py` | Eliminada clave duplicada `whatsapp_conflict` en PAIN_TO_ASSET; +`_extract_existing_og_tags()`; dispatch `open_graph` pasa tags existentes al generador |
+| `modules/asset_generation/open_graph_generator.py` | `generate_content()` y `_generate_html()` aceptan `existing_og_tags`; modo enhance_existing genera solo tags faltantes |
+| `modules/asset_generation/asset_catalog.py` | `optimization_guide.promised_by` + `low_seo_score` |
+| `tests/asset_generation/test_open_graph_generation.py` | Test actualizado: `test_audit_report_open_graph_true_*` → expect enhance_existing activation |
+
+### Tests (FASE-2)
+- 5 tests nuevos (test_open_graph_enhance_existing.py), 0 regresiones
+- Suite completa: 80 passed (conditional_generator: 41, proposal_asset_alignment: 18, open_graph: 21)
 
 ## [4.62.0] - BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness — 2026-07-22
 
