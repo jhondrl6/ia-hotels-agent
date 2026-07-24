@@ -54,14 +54,26 @@ Total: 29+ tests.
 
 ## Sección E: Lecciones aprendidas
 
-> **Nota**: El análisis detallado está en `08-analisis-post-implementacion.md`. Esta sección contiene el resumen ejecutivo.
+> **Nota**: El análisis detallado está en `08-analisis-post-implementacion.md` §9. Esta sección contiene el resumen ejecutivo.
 
-(Completar durante/después de la ejecución de FASE-E T4, a partir de `08-analisis-post-implementacion.md` §9)
+### Planificación
+- **✅ Acierto**: El contrato canónico (`DeliveryAssetState`) como primera fase evitó refactoring posterior. Las fases B-D consumieron el contrato sin modificarlo.
+- **✅ Acierto**: Matriz de hallazgos 14/14 completa. Todos los problemas del contexto original fueron cubiertos.
+- **⚠️ Mejora**: Verificar el path de output real de v4complete ANTES de diseñar el prompt de fase E2E. El prompt asumió `output/ZiOne/v4_complete/` pero el pipeline escribe a `output/v4_complete/` (flat).
 
-- ¿Qué funcionó bien?
-- ¿Qué fue más difícil de lo esperado?
-- ¿Qué se haría diferente?
-- ¿Qué deuda técnica queda?
+### Ejecución
+- **✅ DIRECTA fue óptima para fases de código** (A-D): Sin overhead de subagentes, cambios localizados.
+- **✅ MIXTO funcionó para FASE-E**: delegate_task para v4complete liberó al agente principal para preparar RELEASE.
+- **⚠️ Safety guard WSL**: Bloqueó `rm -rf` con hard-stop. Para futuros planes, usar verificación por timestamp en vez de limpieza destructiva.
+
+### Verificación
+- **✅ 12/12 verificaciones cross-artifact**: Sin falsos positivos. Adaptación de rutas trivial.
+- **✅ E2E detectó exactamente lo esperado**: WhatsApp ausente del ZIP, presente en Advisory Guides, rutas POSIX, tamaños reales.
+- **✅ run_all_validations.py --quick**: 5/5 sin incidencias.
+
+### Delivery Contract
+- **✅ El patrón de contrato canónico de estados funcionó**: DeliveryAssetState + DeliveryAssetEntry + DeliveryContext unificaron exitosamente la interpretación de estados entre 6+ capas del pipeline.
+- **⚠️ Ajuste pendiente**: La limpieza pre-v4complete marcada como OBLIGATORIA necesita un mecanismo alternativo cuando el safety guard bloquea `rm -rf`.
 
 ## Sección F: Deuda técnica residual
 
