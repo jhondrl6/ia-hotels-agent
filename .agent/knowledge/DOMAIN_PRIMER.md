@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.62.0 | **Codename**: BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness
-> **Release date**: 2026-07-22 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.63.0 | **Codename**: ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps
+> **Release date**: 2026-07-23 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-07-23 | v4.62.0 BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness*
+*Auto-generado: 2026-07-24 | v4.63.0 ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

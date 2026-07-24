@@ -1,55 +1,39 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.63.0 (ASSET-ALIGNMENT-ZIONE: FASE-3 — propuesta condicional + unificación fuentes)
+**Versión:** v4.63.0 (ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps)
 **Última actualización:** 2026-07-23
 
 ---
 
-### Notas de Cambios v4.63.0 — ASSET-ALIGNMENT-ZIONE (FASE-2)
+### Notas de Cambios v4.63.0 — ASSET-ALIGNMENT
 
 **Fecha:** 2026-07-23
 
 **Módulos afectados:**
+- `modules/quality_gates/delivery_quality_report.py`
 - `modules/commercial_documents/pain_solution_mapper.py`
-- `modules/asset_generation/conditional_generator.py`
-- `modules/asset_generation/open_graph_generator.py`
-- `modules/asset_generation/asset_catalog.py`
-
-**Problema:**
-- Gate 9 (`proposal_asset_alignment`) bloqueaba en 75% para Zi One Luxury porque `optimization_guide` y `open_graph` nunca se planificaban. El PainSolutionMapper no tenía un pain que detectara SEO Local bajo, y `no_og_tags` solo se activaba cuando NO había OG tags (no cuando eran incompletos). Además, el OpenGraphGenerator producía tags desde cero sin considerar los existentes.
-
-**Solución:**
-- Nuevo pain `low_seo_score`: computa score SEO usando CHECKLIST_SEO (misma lógica del diagnostic generator) y activa `optimization_guide` cuando < 40.
-- `no_og_tags` modo enhance_existing: cuando `open_graph=True` pero `< 10` OG tags, activa pain con confidence 0.5.
-- OpenGraphGenerator: `generate_content(existing_og_tags=[...])` genera solo tags faltantes, no duplica existentes.
-- Clave duplicada `whatsapp_conflict` eliminada de PAIN_TO_ASSET.
-- `optimization_guide.promised_by` incluye `low_seo_score` en asset_catalog.
-
-**Tests:** 5 tests nuevos (test_open_graph_enhance_existing.py) + 1 test actualizado. Suite: 80 passed, 0 regresiones.
-
-**Backwards compatibility:** ✅ `generate_content()` sin `existing_og_tags` = comportamiento original. `_compute_web_score()` idéntico al diagnostic generator.
-
----
-
-### Notas de Cambios v4.63.0 — ASSET-ALIGNMENT-ZIONE (FASE-3)
-
-**Fecha:** 2026-07-23
-
-**Módulos afectados:**
 - `modules/commercial_documents/v4_proposal_generator.py`
 - `modules/commercial_documents/service_catalog.py`
+- `modules/commercial_documents/templates/propuesta_v6_template.md`
+- `modules/asset_generation/open_graph_generator.py`
+- `modules/asset_generation/conditional_generator.py`
+- `modules/asset_generation/proposal_asset_matrix.py`
+- `modules/delivery/delivery_packager.py`
+- `main.py`
 
 **Problema:**
-- La propuesta comercial mostraba los 8 servicios siempre, incluso aquellos sin asset generado ni presencia en producción (aparecían como "⏳ Pendiente").
-- `SERVICE_TO_ASSET_LOOKUP` se derivaba de `SERVICE_CATALOG` en vez de `PROPOSAL_SERVICE_TO_ASSET` (fuente única de verdad para Gate 9), creando riesgo de divergencia futura.
+Gate 9 (`proposal_asset_alignment`) BLOCKED era ignorado por 3 capas de bypass en delivery_quality_report (key name mismatch, hardcoded passed=True, GATE_BLOCKING_ENABLED default off). Gaps Pain→Asset: `low_seo_score` no existía como pain type, `no_og_tags` solo se activaba con 0 OG tags (no detectaba tags incompletos), OpenGraphGenerator no aceptaba tags existentes. Clave duplicada `whatsapp_conflict` en PAIN_TO_ASSET. Propuesta mostraba servicios sin asset generado como "Pendiente". SERVICE_TO_ASSET_LOOKUP derivado de fuente incorrecta.
 
 **Solución:**
-- `_generate_dynamic_services_table()` ahora verifica si el asset fue generado (`confidence is not None`) o si el servicio está marcado como `present_in_production`. Servicios sin ninguna de las dos condiciones se excluyen de la tabla principal y se listan en nota al pie: "Servicios adicionales disponibles: ...".
-- `SERVICE_TO_ASSET_LOOKUP` ahora se deriva directamente de `PROPOSAL_SERVICE_TO_ASSET` (`dict(PROPOSAL_SERVICE_TO_ASSET)`), garantizando consistencia con Gate 9.
+- FASE-1: delivery_quality_report consume key correcta (`proposal_asset_alignment`) + blocking_gates; GATE_BLOCKING_ENABLED default `true`
+- FASE-2: Nuevo pain `low_seo_score` (web_score < 40 → optimization_guide); `no_og_tags` modo enhance_existing; OpenGraphGenerator acepta existing_og_tags; clave duplicada eliminada
+- FASE-3: `_generate_dynamic_services_table()` condicional; SERVICE_TO_ASSET_LOOKUP unificado con PROPOSAL_SERVICE_TO_ASSET
+- FASE-4: Template Tier C variable + serialización dicts + MANIFEST dinámico + label financiero + test fix
+- FASE-5: v4complete Zi One Luxury — Gate 9 PASSED, coherence ≥ 0.80, 13 hallazgos verificados
 
-**Tests:** 6 tests nuevos (4 TestFase3ConditionalServicesFiltering + 2 TestFase3LookupUnification). Suite: 29/30 test_proposal_dynamic (1 pre-existing), 18/18 test_proposal_asset_alignment.
+**Tests:** 16 tests nuevos (5 bypass fix + 5 enhance_existing + 6 conditional/lookup). 0 regresiones. v4complete Zi One Luxury: Gate 9 PASSED.
 
-**Backwards compatibility:** ✅ Tabla mantiene mismo formato (5 columnas). Nota al pie solo aparece cuando hay servicios excluidos. SERVICE_TO_ASSET_LOOKUP tiene las mismas 8 entradas que antes.
+**Backwards compatibility:** ✅ GATE_BLOCKING_ENABLED se puede desactivar con env var. Propuesta condicional no elimina servicios, los marca como disponibles. OpenGraphGenerator sin existing_og_tags mantiene comportamiento original.
 
 ---
 

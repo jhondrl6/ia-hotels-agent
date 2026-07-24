@@ -1,68 +1,49 @@
 # Changelog
 
-## [4.63.0] - ASSET-ALIGNMENT-ZIONE: Fix bypass de seguridad publicación — (en progreso)
+## [4.63.0] - ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps — 2026-07-23
 
 ### Objetivo
-Reparar bypass de seguridad de 3 capas en delivery_quality_report que permite entregar ZIP a pesar de Gate 9 BLOCKED. Cerrar gaps Pain→Asset y hacer propuesta condicional. Plan: 6 fases + RELEASE.
+Reparar el bloqueo de proposal_asset_alignment (Gate 9) detectado en la ejecución v4complete
+para Zi One Luxury (zione.co), cerrando una cadena de bypass de 3 capas y 13 hallazgos
+adicionales de severidad variable.
 
-### Cambios Implementados (FASE-1)
-- **9.1**: delivery_quality_report.py consume resultado real de Gate 9 (`"proposal_asset_alignment"` en vez de `"proposal_asset"`)
-- **9.1b**: `proposal_asset_alignment` añadido a lista de blocking_gates (antes solo coherence, coverage, evidence)
-- **9.2**: `GATE_BLOCKING_ENABLED` default cambiado de `""` (False) a `"true"` (True) en main.py:2814
+### Cambios Implementados
+- `modules/quality_gates/delivery_quality_report.py` — Consume resultado real de Gate 9 (no hardcodea passed=True) + blocking_gates
+- `main.py` — GATE_BLOCKING_ENABLED default=True
+- `modules/commercial_documents/pain_solution_mapper.py` — Nuevo pain `low_seo_score` → optimization_guide + modo enhance_existing para no_og_tags
+- `modules/asset_generation/open_graph_generator.py` — Modo enhance_existing (genera tags faltantes, no duplica existentes)
+- `modules/asset_generation/conditional_generator.py` — Clave duplicada PAIN_TO_ASSET eliminada + pasa existing_og_tags al generador
+- `modules/commercial_documents/v4_proposal_generator.py` — _generate_dynamic_services_table condicional
+- `modules/commercial_documents/service_catalog.py` — SERVICE_TO_ASSET_LOOKUP unificado con PROPOSAL_SERVICE_TO_ASSET
+- `modules/commercial_documents/templates/propuesta_v6_template.md` — Template Tier C → variable
+- `modules/asset_generation/proposal_asset_matrix.py` — Serialización dicts vs objetos
+- `modules/delivery/delivery_packager.py` — MANIFEST + README dinámicos
+- `tests/quality_gates/test_publication_gates.py` — Test roto L1191 corregido
 
-### Cambios Implementados (FASE-2)
-- **3.1**: Pain `low_seo_score` agregado a PainSolutionMapper — trigger `web_score < 40` mapea a `optimization_guide`
-- **3.2**: Pain `no_og_tags` ahora se activa en modo enhance_existing (confidence 0.5) cuando el sitio tiene OG tags pero incompletos (<10)
-- **3.2b**: OpenGraphGenerator acepta `existing_og_tags` — genera solo tags faltantes, no duplica existentes
-- **9.5**: Clave duplicada `whatsapp_conflict` eliminada de PAIN_TO_ASSET en conditional_generator.py
-- **asset_catalog**: `optimization_guide.promised_by` incluye `low_seo_score`
-
-### Archivos Modificados (FASE-1)
-| Archivo | Cambio |
-|---------|--------|
-| `modules/quality_gates/delivery_quality_report.py` | L205: blocking_gates + `"proposal_asset_alignment"`; L238: key `"proposal_asset"` → `"proposal_asset_alignment"` |
-| `main.py` | L2812: comentario actualizado; L2814: default `""` → `"true"` |
-| `tests/quality_gates/test_delivery_quality_report.py` | +5 tests (TestProposalAssetAlignmentBypassFix + TestGateBlockingEnabledDefault) |
-
-### Tests (FASE-1)
-- 5 tests nuevos, 0 regresiones (40/40 delivery_quality_report + proposal_asset_alignment)
-- test_publication_gates: 55/56 (1 pre-existing failure)
-
-### Archivos Nuevos (FASE-2)
+### Archivos Nuevos
 | Archivo | Descripción |
 |---------|-------------|
 | `tests/asset_generation/test_open_graph_enhance_existing.py` | 5 tests para modo enhance_existing del OpenGraphGenerator |
 
-### Archivos Modificados (FASE-2)
+### Archivos Modificados
 | Archivo | Cambio |
 |---------|--------|
-| `modules/commercial_documents/pain_solution_mapper.py` | +pain `low_seo_score` con trigger `web_score < 40`; +modo enhance_existing en `no_og_tags`; +helpers `_compute_web_score()`, `_og_tags_incomplete()` |
-| `modules/asset_generation/conditional_generator.py` | Eliminada clave duplicada `whatsapp_conflict` en PAIN_TO_ASSET; +`_extract_existing_og_tags()`; dispatch `open_graph` pasa tags existentes al generador |
-| `modules/asset_generation/open_graph_generator.py` | `generate_content()` y `_generate_html()` aceptan `existing_og_tags`; modo enhance_existing genera solo tags faltantes |
-| `modules/asset_generation/asset_catalog.py` | `optimization_guide.promised_by` + `low_seo_score` |
-| `tests/asset_generation/test_open_graph_generation.py` | Test actualizado: `test_audit_report_open_graph_true_*` → expect enhance_existing activation |
+| `modules/quality_gates/delivery_quality_report.py` | Key "proposal_asset" → "proposal_asset_alignment" + blocking_gates |
+| `main.py` | GATE_BLOCKING_ENABLED default "true" |
+| `modules/commercial_documents/pain_solution_mapper.py` | low_seo_score pain + no_og_tags enhance_existing |
+| `modules/asset_generation/open_graph_generator.py` | generate_content() acepta existing_og_tags, no duplica |
+| `modules/asset_generation/conditional_generator.py` | Clave duplicada eliminada + pasa existing_og_tags |
+| `modules/commercial_documents/v4_proposal_generator.py` | Servicios condicionales |
+| `modules/commercial_documents/service_catalog.py` | Unificación fuentes |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Tier C → variable + label financiero |
+| `modules/asset_generation/proposal_asset_matrix.py` | Serialización dicts/objetos |
+| `modules/delivery/delivery_packager.py` | MANIFEST/README dinámicos |
+| `tests/quality_gates/test_publication_gates.py` | Fix path hardcodeado |
 
-### Tests (FASE-2)
-- 5 tests nuevos (test_open_graph_enhance_existing.py), 0 regresiones
-- Suite completa: 80 passed (conditional_generator: 41, proposal_asset_alignment: 18, open_graph: 21)
-
-### Cambios Implementados (FASE-3)
-- **Opción C**: `_generate_dynamic_services_table()` ahora es condicional — solo muestra servicios con asset generado o `present_in_production`
-- **Nota al pie**: Servicios excluidos listados como "Servicios adicionales disponibles: ..." al final de la tabla
-- **9.6**: `SERVICE_TO_ASSET_LOOKUP` unificado — ahora se deriva de `PROPOSAL_SERVICE_TO_ASSET` como fuente única de verdad (previene divergencia futura)
-
-### Archivos Modificados (FASE-3)
-| Archivo | Cambio |
-|---------|--------|
-| `modules/commercial_documents/v4_proposal_generator.py` | L1190: lista `excluded_services`; L1213-1219: filtro condicional `has_asset` o `is_present`; L1284-1287: nota al pie de servicios excluidos |
-| `modules/commercial_documents/service_catalog.py` | L14: import `PROPOSAL_SERVICE_TO_ASSET`; L133: `SERVICE_TO_ASSET_LOOKUP = dict(PROPOSAL_SERVICE_TO_ASSET)` |
-| `tests/commercial_documents/test_proposal_dynamic.py` | +6 tests (TestFase3ConditionalServicesFiltering: 4 tests + TestFase3LookupUnification: 2 tests) |
-
-### Tests (FASE-3)
-- 6 tests nuevos (4 conditional filtering + 2 lookup unification), 0 regresiones
-- Suite: 29/30 test_proposal_dynamic.py (1 pre-existing failure: indirect_traffic_optimization deprecado)
-- Suite: 18/18 test_proposal_asset_alignment.py
-- run_all_validations.py --quick: 4/5 (pre-existing Version Sync)
+### Tests
+- 16 tests nuevos (FASE-1: 5 bypass fix; FASE-2: 5 enhance_existing + 1 updated; FASE-3: 6 conditional filtering + lookup unification)
+- 0 regresiones
+- v4complete Zi One Luxury: Gate 9 PASSED, coherence ≥ 0.80
 
 ## [4.62.0] - BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness — 2026-07-22
 

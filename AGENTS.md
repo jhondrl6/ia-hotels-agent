@@ -1,8 +1,8 @@
-<!-- agents_version: v4.62.0 | last_update: 2026-07-22 -->
+<!-- agents_version: v4.62.0 | last_update: 2026-07-23 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.62.0 -- BUGS-ONBOARDING-ADR: Fix propagación onboarding al harness COMPLETADO**
+> **v4.63.0 -- ASSET-ALIGNMENT: Proposal asset alignment gate bypass fix + Pain->Asset gaps COMPLETADO**
 
 ---
 
