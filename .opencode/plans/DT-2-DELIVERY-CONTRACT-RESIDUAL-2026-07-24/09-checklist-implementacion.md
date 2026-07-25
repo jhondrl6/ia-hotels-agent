@@ -24,13 +24,14 @@
 - [x] log_phase_completion.py ejecutado
 - [x] Ejecución vía: directa (main agent)
 
-## FASE-C — Quality Report Post-Gen + G9 Dead Gate (P-03, P-05) ⬜ PENDIENTE
+## FASE-C — Quality Report Post-Gen + G9 Dead Gate (P-03, P-05) ✅ COMPLETADA (2026-07-25)
 
-- [ ] C-1: Fix P-03 — Leer coherence_validation_post_gen.json con fallback a pre-gen
-- [ ] C-2: Fix P-05 — Implementar G9 (o eliminar con deuda documentada)
-- [ ] C-3: 28 tests existentes pasan
-- [ ] Commit: `fix(delivery): P-03 post-gen coherence + P-05 G9 gate implemented/removed`
-- [ ] log_phase_completion.py ejecutado
+- [x] C-1: Fix P-03 — Leer coherence_validation_post_gen.json con fallback a pre-gen
+- [x] C-2: Fix P-05 — Implementar G9 proposal_asset_alignment gate (Opción 1: implementado desde proposal_asset_matrix.json)
+- [x] C-3: 28 tests existentes pasan (28/28 PASSED, 0.58s)
+- [x] Commit: `c94001d` — `fix(delivery): P-03 post-gen coherence score + P-05 G9 gate implemented`
+- [x] log_phase_completion.py ejecutado
+- [x] Ejecución vía: directa (main agent) — decisión arquitectónica Opción 1 con lectura JSON sin dependencia circular
 
 ## FASE-D — proposal_asset_matrix Path + Packaging (P-04, P-06) ⬜ PENDIENTE
 
@@ -83,9 +84,9 @@
 
 | Fase | Estado | Sesión | Fecha |
 |------|--------|--------|-------|
-| A | ⬜ PENDIENTE | — | — |
-| B | ⬜ PENDIENTE | — | — |
-| C | ⬜ PENDIENTE | — | — |
+| A | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
+| B | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
+| C | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
 | D | ⬜ PENDIENTE | — | — |
 | E | ⬜ PENDIENTE | — | — |
 | F | ⬜ PENDIENTE | — | — |
