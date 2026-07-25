@@ -206,6 +206,19 @@ class DeliveryPackager:
             with open(manifest_path, 'w', encoding='utf-8') as f:
                 json.dump(manifest, f, indent=2, ensure_ascii=False)
 
+        # ── P-01: Post-process README with final manifest totals ──
+        # In Pass 1, create_readme() was called with manifest=None, so
+        # {{TOTAL_FILES}} and {{TOTAL_SIZE}} were left as placeholders.
+        # Now that the manifest is finalized (including MANIFEST.json itself),
+        # replace them with the definitive values.
+        readme_fixup_path = self.deliveries_dir / "README_DELIVERY.md"
+        if readme_fixup_path.exists():
+            readme_content = readme_fixup_path.read_text(encoding='utf-8')
+            readme_content = readme_content.replace("{{TOTAL_FILES}}", str(manifest["total_files"]))
+            readme_content = readme_content.replace("{{TOTAL_SIZE}}",
+                                                    self._format_bytes(manifest["total_size_bytes"]))
+            readme_fixup_path.write_text(readme_content, encoding='utf-8')
+
         # Full file list for ZIP (includes manifest now)
         zip_files = files_to_package + meta_for_manifest + [
             {"source": str(manifest_path), "dest": "MANIFEST.json"}
@@ -447,10 +460,12 @@ class DeliveryPackager:
             # ── FASE-C: DeliveryContext available → dynamic sections ──
             if delivery_context and delivery_context.assets:
                 content = content.replace("{{PACKAGE_FILENAME}}", delivery_context.zip_filename)
-                content = content.replace("{{TOTAL_FILES}}", str(len(delivery_context.files)))
-                # Total size: sum real file sizes from manifest if available
-                total_size = self._compute_total_size(delivery_context.files, manifest)
-                content = content.replace("{{TOTAL_SIZE}}", self._format_bytes(total_size))
+                # TOTAL_FILES/TOTAL_SIZE: when manifest is available, compute; otherwise
+                # leave placeholders for post-manifest fixup (P-01: README count mismatch)
+                if manifest is not None:
+                    content = content.replace("{{TOTAL_FILES}}", str(len(delivery_context.files)))
+                    total_size = self._compute_total_size(delivery_context.files, manifest)
+                    content = content.replace("{{TOTAL_SIZE}}", self._format_bytes(total_size))
 
                 # Package Structure from real dest paths
                 structure = self._generate_package_structure(
@@ -600,7 +615,7 @@ class DeliveryPackager:
 
     def _generate_deliverable_instructions(self, ctx) -> str:
         """Instructions for DELIVERED assets."""
-        delivered = [a for a in ctx.assets if getattr(a, 'state', None) and a.state.name == 'DELIVERED']
+        delivered = [a for a in ctx.assets if getattr(a, 'state', None) and a.state == DeliveryAssetState.DELIVERED]
         if not delivered:
             return ""
         lines = [
@@ -703,7 +718,7 @@ class DeliveryPackager:
     def _generate_timeline(self, ctx) -> str:
         """Dynamic timeline based on asset states (T3)."""
         has_deliverables = bool([a for a in ctx.assets
-            if getattr(a, 'state', None) and a.state.name in ('DELIVERED', 'ESTIMATED')])
+            if getattr(a, 'state', None) and a.state in (DeliveryAssetState.DELIVERED, DeliveryAssetState.ESTIMATED)])
         has_issues = bool(ctx.present_with_issues_assets)
 
         lines = []
@@ -737,7 +752,7 @@ class DeliveryPackager:
         """Dynamic checklist based on asset states (T3)."""
         lines = []
         has_deliverables = bool([a for a in ctx.assets
-            if getattr(a, 'state', None) and a.state.name in ('DELIVERED', 'ESTIMATED')])
+            if getattr(a, 'state', None) and a.state in (DeliveryAssetState.DELIVERED, DeliveryAssetState.ESTIMATED)])
 
         if has_deliverables:
             lines.extend([
