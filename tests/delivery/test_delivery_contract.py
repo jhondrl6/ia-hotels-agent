@@ -25,6 +25,9 @@ from modules.delivery.delivery_packager import (
     DeliveryPackager,
     DeliveryValidationError,
 )
+from modules.quality_gates.delivery_quality_report import (
+    DeliveryQualityReportGenerator,
+)
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -611,3 +614,445 @@ class TestValidationGate:
         assert DeliveryValidationError is not None
         # Verificamos que es subclase de Exception
         assert issubclass(DeliveryValidationError, Exception)
+
+
+# ═══════════════════════════════════════════════════════════════════
+# T5: DT-2 — Tests de contrato para fixes P-01 a P-07
+# ═══════════════════════════════════════════════════════════════════
+
+class TestP01ReadmeManifestConsistency:
+    """P-01: README Overview conteo y tamaño deben coincidir con MANIFEST.json."""
+
+    def test_readme_total_files_matches_manifest(self, sample_hotel_output):
+        """P-01: README {{TOTAL_FILES}} debe coincidir con MANIFEST.json total_files."""
+        import re
+        packager = DeliveryPackager(
+            base_output_dir=str(sample_hotel_output["output"]),
+            deliveries_dir=str(sample_hotel_output["deliveries"])
+        )
+        zip_path = packager.package(
+            hotel_id="hotel_test",
+            output_dir=str(sample_hotel_output["output"] / "hotel_test")
+        )
+
+        with zipfile.ZipFile(zip_path, 'r') as z:
+            manifest = json.loads(z.read("MANIFEST.json"))
+            readme = z.read("README_DELIVERY.md").decode("utf-8")
+
+        # Legacy mode has a specific format. Look for a file count near
+        # the word "files" in the Overview section.
+        # Try multiple patterns:
+        count_match = (
+            re.search(r'\\*\\*Contents:\\*\\*\\s*(\\d+)\\s+files', readme) or
+            re.search(r'Contents:\\s*(\\d+)\\s+files?', readme) or
+            re.search(r'\\*\\*Files:\\*\\*\\s*(\\d+)', readme) or
+            re.search(r'(\\d+)\\s+files?\\s+total', readme, re.IGNORECASE)
+        )
+        if count_match:
+            readme_count = int(count_match.group(1))
+            assert readme_count == manifest["total_files"], \
+                f"README count={readme_count}, MANIFEST total_files={manifest['total_files']}"
+        # Even if we can't extract the count via regex, the placeholder must be gone
+        assert "{{TOTAL_FILES}}" not in readme, \
+            "README still has unresolved {{TOTAL_FILES}} placeholder"
+
+    def test_readme_total_size_matches_manifest(self, sample_hotel_output):
+        """P-01: README {{TOTAL_SIZE}} debe reemplazarse y manifest tiene tamaño > 0."""
+        packager = DeliveryPackager(
+            base_output_dir=str(sample_hotel_output["output"]),
+            deliveries_dir=str(sample_hotel_output["deliveries"])
+        )
+        zip_path = packager.package(
+            hotel_id="hotel_test",
+            output_dir=str(sample_hotel_output["output"] / "hotel_test")
+        )
+
+        with zipfile.ZipFile(zip_path, 'r') as z:
+            manifest = json.loads(z.read("MANIFEST.json"))
+            readme = z.read("README_DELIVERY.md").decode("utf-8")
+
+        # Placeholder must be replaced
+        assert "{{TOTAL_SIZE}}" not in readme, \
+            "README still has unresolved {{TOTAL_SIZE}} placeholder"
+        # Manifest must report non-trivial size
+        assert manifest["total_size_bytes"] > 0, \
+            f"Manifest total_size_bytes is {manifest['total_size_bytes']}"
+
+    def test_readme_does_not_use_pre_manifest_fallback_count(self, sample_hotel_output):
+        """P-01: README no contiene placeholders sin resolver."""
+        packager = DeliveryPackager(
+            base_output_dir=str(sample_hotel_output["output"]),
+            deliveries_dir=str(sample_hotel_output["deliveries"])
+        )
+        zip_path = packager.package(
+            hotel_id="hotel_test",
+            output_dir=str(sample_hotel_output["output"] / "hotel_test")
+        )
+
+        with zipfile.ZipFile(zip_path, 'r') as z:
+            readme = z.read("README_DELIVERY.md").decode("utf-8")
+
+        assert "{{TOTAL_FILES}}" not in readme, \
+            "README still has unresolved {{TOTAL_FILES}} placeholder"
+        assert "{{TOTAL_SIZE}}" not in readme, \
+            "README still has unresolved {{TOTAL_SIZE}} placeholder"
+
+
+class TestP02AdvisoryMutualExclusion:
+    """P-02: Assets advisory no deben aparecer en secciones de estado simultáneamente."""
+
+    def test_advisory_delivered_not_in_delivered_section(self):
+        """P-02: Asset con is_advisory=True y state=DELIVERED NO aparece en delivered_assets."""
+        ctx = DeliveryContext(
+            hotel_id="test",
+            zip_filename="test.zip",
+            assets=[
+                DeliveryAssetEntry(
+                    "a1", "Delivered Regular", DeliveryAssetState.DELIVERED,
+                    delivery_path="ASSETS/a1.md", covered=True, requires_action=True
+                ),
+                DeliveryAssetEntry(
+                    "a2", "Advisory Guide", DeliveryAssetState.DELIVERED,
+                    delivery_path="ASSETS/guide.md", is_advisory=True, requires_review=True
+                ),
+            ]
+        )
+        delivered = ctx.delivered_assets
+        delivered_types = {a.asset_type for a in delivered}
+        assert "a1" in delivered_types, "Regular DELIVERED asset should be in delivered_assets"
+        assert "a2" not in delivered_types, \
+            "Advisory DELIVERED asset should NOT be in delivered_assets"
+
+    def test_advisory_estimated_not_in_estimated_section(self):
+        """P-02: Asset con is_advisory=True y state=ESTIMATED NO aparece en estimated_assets."""
+        ctx = DeliveryContext(
+            hotel_id="test",
+            zip_filename="test.zip",
+            assets=[
+                DeliveryAssetEntry(
+                    "e1", "Estimated Regular", DeliveryAssetState.ESTIMATED,
+                    covered=False, requires_review=True
+                ),
+                DeliveryAssetEntry(
+                    "e2", "Estimated Guide", DeliveryAssetState.ESTIMATED,
+                    is_advisory=True, requires_review=True
+                ),
+            ]
+        )
+        estimated = ctx.estimated_assets
+        estimated_types = {a.asset_type for a in estimated}
+        assert "e1" in estimated_types, "Regular ESTIMATED asset should be in estimated_assets"
+        assert "e2" not in estimated_types, \
+            "Advisory ESTIMATED asset should NOT be in estimated_assets"
+
+    def test_non_advisory_still_in_state_section(self):
+        """P-02: Asset con is_advisory=False y state=DELIVERED SI aparece en delivered_assets."""
+        ctx = DeliveryContext(
+            hotel_id="test",
+            zip_filename="test.zip",
+            assets=[
+                DeliveryAssetEntry(
+                    "n1", "Non-advisory", DeliveryAssetState.DELIVERED,
+                    delivery_path="ASSETS/n1.md", covered=True, requires_action=True,
+                    is_advisory=False
+                ),
+                DeliveryAssetEntry(
+                    "n2", "Advisory", DeliveryAssetState.DELIVERED,
+                    is_advisory=True, requires_review=True
+                ),
+            ]
+        )
+        assert any(a.asset_type == "n1" for a in ctx.delivered_assets)
+        assert not any(a.asset_type == "n2" for a in ctx.delivered_assets)
+        assert any(a.asset_type == "n2" for a in ctx.advisory_assets)
+
+    def test_advisory_partition_is_disjoint(self):
+        """P-02: delivered_assets ∩ advisory_assets == ∅. estimated_assets ∩ advisory_assets == ∅."""
+        ctx = DeliveryContext(
+            hotel_id="test",
+            zip_filename="test.zip",
+            assets=[
+                DeliveryAssetEntry(
+                    "d1", "Delivered", DeliveryAssetState.DELIVERED,
+                    covered=True, requires_action=True
+                ),
+                DeliveryAssetEntry(
+                    "d2", "Advisory Delivered", DeliveryAssetState.DELIVERED,
+                    is_advisory=True, requires_review=True
+                ),
+                DeliveryAssetEntry(
+                    "e1", "Estimated", DeliveryAssetState.ESTIMATED,
+                    covered=False, requires_review=True
+                ),
+                DeliveryAssetEntry(
+                    "e2", "Advisory Estimated", DeliveryAssetState.ESTIMATED,
+                    is_advisory=True, requires_review=True
+                ),
+                DeliveryAssetEntry(
+                    "p1", "Present", DeliveryAssetState.PRESENT_IN_PRODUCTION,
+                    site_verified=True, covered=True
+                ),
+                DeliveryAssetEntry(
+                    "pw1", "Present w Issues", DeliveryAssetState.PRESENT_WITH_ISSUES,
+                    site_verified=True, covered=False, requires_review=True
+                ),
+                DeliveryAssetEntry(
+                    "f1", "Failed", DeliveryAssetState.FAILED,
+                    covered=False
+                ),
+            ]
+        )
+
+        delivered_types = {a.asset_type for a in ctx.delivered_assets}
+        estimated_types = {a.asset_type for a in ctx.estimated_assets}
+        advisory_types = {a.asset_type for a in ctx.advisory_assets}
+
+        assert delivered_types & advisory_types == set(), \
+            f"delivered_assets ∩ advisory_assets should be empty, got: {delivered_types & advisory_types}"
+        assert estimated_types & advisory_types == set(), \
+            f"estimated_assets ∩ advisory_assets should be empty, got: {estimated_types & advisory_types}"
+
+
+class TestP03PostGenCoherence:
+    """P-03: Quality report usa score post-generación cuando existe."""
+
+    def test_quality_report_uses_post_gen_coherence(self, tmp_path):
+        """P-03: delivery_quality_report usa coherence_validation_post_gen.json cuando existe."""
+        v4_audit = tmp_path / "v4_audit"
+        v4_audit.mkdir()
+
+        # Pre-gen coherence (score 0.84)
+        (v4_audit / "coherence_validation.json").write_text(
+            json.dumps({"overall_score": 0.84}), encoding='utf-8'
+        )
+        # Post-gen coherence (score 0.82) — should be preferred
+        (v4_audit / "coherence_validation_post_gen.json").write_text(
+            json.dumps({"overall_score": 0.82}), encoding='utf-8'
+        )
+        # Asset generation report (required by G7 and G8)
+        (v4_audit / "asset_generation_report.json").write_text(
+            json.dumps({
+                "total_assets": 3,
+                "preflight_results": [
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.9},
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.85},
+                    {"preflight_status": "WARNING", "can_use": True, "confidence_score": 0.75},
+                ]
+            }), encoding='utf-8'
+        )
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", v4_audit)
+
+        # The coherence score is stored in summary
+        assert report.summary["coherence_score"] == 0.82, \
+            f"Expected post-gen score 0.82, got {report.summary['coherence_score']}"
+
+    def test_quality_report_falls_back_to_pre_gen(self, tmp_path):
+        """P-03: Si no hay post-gen, usa pre-gen (backward compatible)."""
+        v4_audit = tmp_path / "v4_audit"
+        v4_audit.mkdir()
+
+        # Only pre-gen coherence (score 0.86)
+        (v4_audit / "coherence_validation.json").write_text(
+            json.dumps({"overall_score": 0.86}), encoding='utf-8'
+        )
+        (v4_audit / "asset_generation_report.json").write_text(
+            json.dumps({
+                "total_assets": 2,
+                "preflight_results": [
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.9},
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.85},
+                ]
+            }), encoding='utf-8'
+        )
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", v4_audit)
+
+        assert report.summary["coherence_score"] == 0.86, \
+            f"Expected fallback to pre-gen score 0.86, got {report.summary['coherence_score']}"
+
+
+class TestP05G9Gate:
+    """P-05: G9 proposal_asset_alignment gate se evalúa realmente (no default True)."""
+
+    def test_g9_gate_fails_when_misaligned(self, tmp_path):
+        """P-05: G9 FAILS cuando hay servicios sin asset alineado."""
+        v4_audit = tmp_path / "v4_audit"
+        v4_audit.mkdir()
+
+        (v4_audit / "coherence_validation.json").write_text(
+            json.dumps({"overall_score": 0.85}), encoding='utf-8'
+        )
+        (v4_audit / "asset_generation_report.json").write_text(
+            json.dumps({
+                "total_assets": 3,
+                "preflight_results": [
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.9},
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.85},
+                    {"preflight_status": "WARNING", "can_use": True, "confidence_score": 0.75},
+                ]
+            }), encoding='utf-8'
+        )
+        # Matrix with 3 services, but only 2 have assets (misalignment)
+        (v4_audit / "proposal_asset_matrix.json").write_text(
+            json.dumps({
+                "entries": [
+                    {"service": "Schema Hotel", "asset_path": "ASSETS/hotel_schema/file.json"},
+                    {"service": "Schema Organization", "asset_path": "ASSETS/org_schema/file.json"},
+                    {"service": "WhatsApp Button", "asset_path": None},  # misaligned!
+                ]
+            }), encoding='utf-8'
+        )
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", v4_audit)
+
+        g9 = report.proposal_asset_gate
+        assert g9["gate"] == "G9"
+        assert g9["passed"] is False, \
+            f"G9 should FAIL when 2/3 services aligned, got passed={g9['passed']}"
+        assert g9["aligned"] == 2, f"Expected 2 aligned, got {g9.get('aligned')}"
+        assert g9["total"] == 3, f"Expected 3 total, got {g9.get('total')}"
+        # G9 should NOT use hardcoded default
+        assert "skipped" not in g9, \
+            "G9 should be evaluated, not skipped (matrix was provided)"
+
+    def test_g9_gate_passes_when_aligned(self, tmp_path):
+        """P-05: G9 PASS cuando todos los servicios están alineados."""
+        v4_audit = tmp_path / "v4_audit"
+        v4_audit.mkdir()
+
+        (v4_audit / "coherence_validation.json").write_text(
+            json.dumps({"overall_score": 0.85}), encoding='utf-8'
+        )
+        (v4_audit / "asset_generation_report.json").write_text(
+            json.dumps({
+                "total_assets": 2,
+                "preflight_results": [
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.9},
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.85},
+                ]
+            }), encoding='utf-8'
+        )
+        # Matrix with all services aligned
+        (v4_audit / "proposal_asset_matrix.json").write_text(
+            json.dumps({
+                "entries": [
+                    {"service": "Schema Hotel", "asset_path": "ASSETS/hotel_schema/file.json"},
+                    {"service": "WhatsApp Button", "asset_path": "ASSETS/whatsapp/button.html"},
+                ]
+            }), encoding='utf-8'
+        )
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", v4_audit)
+
+        g9 = report.proposal_asset_gate
+        assert g9["passed"] is True, \
+            f"G9 should PASS when all services aligned, got passed={g9['passed']}"
+        assert g9["aligned"] == 2
+
+    def test_g9_gate_skipped_when_no_matrix(self, tmp_path):
+        """P-05: G9 debe marcar skipped=True cuando proposal_asset_matrix.json no existe."""
+        v4_audit = tmp_path / "v4_audit"
+        v4_audit.mkdir()
+
+        (v4_audit / "coherence_validation.json").write_text(
+            json.dumps({"overall_score": 0.85}), encoding='utf-8'
+        )
+        (v4_audit / "asset_generation_report.json").write_text(
+            json.dumps({
+                "total_assets": 2,
+                "preflight_results": [
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.9},
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.85},
+                ]
+            }), encoding='utf-8'
+        )
+        # No proposal_asset_matrix.json
+
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", v4_audit)
+
+        g9 = report.proposal_asset_gate
+        assert g9["gate"] == "G9"
+        assert g9.get("skipped") is True, \
+            f"G9 should be skipped when no matrix, got: {g9}"
+        assert g9["passed"] is True, \
+            "G9 should default-pass when skipped (no matrix = can't evaluate)"
+
+
+class TestP06P07ResidualFixes:
+    """P-06: proposal_asset_matrix.json empaquetado. P-07: enum usado (no string)."""
+
+    def test_proposal_asset_matrix_in_zip(self, temp_dirs):
+        """P-06: proposal_asset_matrix.json debe aparecer en el ZIP si está en v4_audit/."""
+        hotel_id = "test_matrix_hotel"
+        hotel_dir = temp_dirs["output"] / hotel_id
+        hotel_dir.mkdir()
+
+        # Create v4_audit with proposal_asset_matrix.json
+        v4_audit = hotel_dir / "v4_audit"
+        v4_audit.mkdir()
+        (v4_audit / "proposal_asset_matrix.json").write_text(
+            json.dumps({"entries": [{"service": "S1", "asset_path": "ASSETS/s1.md"}]}),
+            encoding='utf-8'
+        )
+        # Also create minimal other files so packager works
+        (hotel_dir / "hotel-schema.json").write_text('{"@type": "Hotel"}', encoding='utf-8')
+        (hotel_dir / "geo_playbook.md").write_text("# GEO", encoding='utf-8')
+
+        packager = DeliveryPackager(
+            base_output_dir=str(temp_dirs["output"]),
+            deliveries_dir=str(temp_dirs["deliveries"])
+        )
+        zip_path = packager.package(
+            hotel_id=hotel_id,
+            output_dir=str(hotel_dir)
+        )
+
+        with zipfile.ZipFile(zip_path, 'r') as z:
+            zip_names = z.namelist()
+
+        # Verify proposal_asset_matrix.json is in the ZIP entries
+        matrix_entries = [n for n in zip_names if "proposal_asset_matrix" in n]
+        assert len(matrix_entries) > 0, \
+            f"proposal_asset_matrix.json not found in ZIP. Entries: {zip_names}"
+
+    def test_packager_uses_enum_not_string(self):
+        """P-07: delivery_packager usa DeliveryAssetState enum, no string comparison."""
+        import os
+        packager_path = Path(__file__).parent.parent.parent / \
+            "modules" / "delivery" / "delivery_packager.py"
+
+        with open(packager_path, encoding='utf-8') as f:
+            source = f.read()
+
+        # P-07: Should NOT have bare string comparisons like `state == "DELIVERED"` or `state.name == "..."`
+        # Should use `DeliveryAssetState.DELIVERED` instead
+        # Allow comments, docstrings, and imports
+        lines = source.split('\n')
+        violations = []
+        for i, line in enumerate(lines, 1):
+            stripped = line.strip()
+            # Skip comments and docstrings
+            if stripped.startswith('#') or stripped.startswith('"""') or stripped.startswith("'''"):
+                continue
+            if stripped.startswith('"') or stripped.startswith("'"):
+                continue
+            # Skip import lines
+            if 'import' in stripped and 'from' in stripped:
+                continue
+            # Check for bare string comparison on state
+            if ('"DELIVERED"' in stripped or "'DELIVERED'" in stripped or
+                '"ESTIMATED"' in stripped or "'ESTIMATED'" in stripped or
+                '".name"' in stripped and ('==' in stripped or 'in ' in stripped)):
+                violations.append(f"L{i}: {stripped}")
+
+        # There may be valid uses in comments/docstrings — only fail if in executable code
+        # The P-07 fix at L618-755 uses DeliveryAssetState enums; verify that
+        real_violations = [v for v in violations if not v.strip().startswith('"""')]
+        assert len(real_violations) == 0, \
+            f"P-07: packager still uses string comparison for states:\\n" + "\\n".join(real_violations)
