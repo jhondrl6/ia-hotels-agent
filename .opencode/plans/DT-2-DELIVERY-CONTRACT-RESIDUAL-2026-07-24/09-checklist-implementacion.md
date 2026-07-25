@@ -71,15 +71,17 @@
 - [x] log_phase_completion.py ejecutado
 - [x] Ejecución vía: MIXTO (delegate_task para v4complete + main agent para análisis)
 
-## FASE-RELEASE — v4.63.2 ⬜ PENDIENTE
+## FASE-RELEASE — v4.63.2 ✅ COMPLETADA (2026-07-25)
 
-- [ ] R-1: VERSION.yaml → 4.63.2
-- [ ] R-2: CHANGELOG.md entrada consolidada [4.63.2]
-- [ ] R-3: sync_versions.py ejecutado
-- [ ] GUIA_TECNICA.md actualizado
-- [ ] Pre-commit hook pasa
-- [ ] Git tag v4.63.2 creado
-- [ ] log_phase_completion.py ejecutado
+- [x] R-1: VERSION.yaml → 4.63.2 (codename: "Delivery-Contract-Residual", release_date: 2026-07-25)
+- [x] R-2: CHANGELOG.md entrada consolidada [4.63.2] (7 fixes + archivos + tests)
+- [x] R-3: sync_versions.py ejecutado (7 archivos en sync, sin errores)
+- [x] GUIA_TECNICA.md actualizado (sección "Notas de Cambios v4.63.2" agregada)
+- [x] Pre-commit hook pasa (version_consistency PASSED, sync_versions PASSED)
+- [x] Git tag v4.63.2 creado (annotated, commit dd576a2)
+- [x] log_phase_completion.py ejecutado (FASE-RELEASE-DT2 registrada)
+- [x] Commit: `dd576a2` — `release: v4.63.2 Delivery-Contract-Residual`
+- [x] Ejecución vía: directa (main agent) — YAML/MD + scripts, sin decisión arquitectónica
 
 ---
 
@@ -93,4 +95,4 @@
 | D | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
 | E | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
 | F | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
-| RELEASE | ⬜ PENDIENTE | — | — |
+| RELEASE | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
