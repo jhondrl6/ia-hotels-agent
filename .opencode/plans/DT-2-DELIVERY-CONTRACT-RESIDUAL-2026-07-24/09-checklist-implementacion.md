@@ -33,13 +33,14 @@
 - [x] log_phase_completion.py ejecutado
 - [x] Ejecución vía: directa (main agent) — decisión arquitectónica Opción 1 con lectura JSON sin dependencia circular
 
-## FASE-D — proposal_asset_matrix Path + Packaging (P-04, P-06) ⬜ PENDIENTE
+## FASE-D — proposal_asset_matrix Path + Packaging (P-04, P-06) ✅ COMPLETADA (2026-07-25)
 
-- [ ] D-1: Fix P-06 — Corregir path de guardado de proposal_asset_matrix
-- [ ] D-2: Fix P-04 — Unificar modelo o documentar divergencia
-- [ ] D-3: 28 tests existentes pasan
-- [ ] Commit: `fix(delivery): P-04 P-06 proposal_asset_matrix path fix and packaging`
-- [ ] log_phase_completion.py ejecutado
+- [x] D-1: Fix P-06 — Corregir path de guardado de proposal_asset_matrix (v4_proposal_generator.py L642)
+- [x] D-2: Fix P-04 — Documentar divergencia semántica (ProposalAssetMatrix docstring). NO unificada: > 10 líneas, deuda técnica para v4.64.0
+- [x] D-3: 28 tests existentes pasan (28/28 PASS, 0.60s)
+- [x] Commit: `18b69b8` — `FASE-D (DT-2): P-04 + P-06 — proposal_asset_matrix path fix y documentacion de divergencia semantica`
+- [x] log_phase_completion.py ejecutado
+- [x] Ejecución vía: directa (main agent) — tracing de path mismatch entre 3 archivos
 
 ## FASE-E — Tests Nuevos P-01..P-07 ⬜ PENDIENTE
 
@@ -87,7 +88,7 @@
 | A | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
 | B | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
 | C | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
-| D | ⬜ PENDIENTE | — | — |
+| D | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
 | E | ⬜ PENDIENTE | — | — |
 | F | ⬜ PENDIENTE | — | — |
 | RELEASE | ⬜ PENDIENTE | — | — |
