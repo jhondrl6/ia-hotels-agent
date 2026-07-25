@@ -615,7 +615,7 @@ class DeliveryPackager:
 
     def _generate_deliverable_instructions(self, ctx) -> str:
         """Instructions for DELIVERED assets."""
-        delivered = [a for a in ctx.assets if getattr(a, 'state', None) and a.state == DeliveryAssetState.DELIVERED]
+        delivered = [a for a in ctx.assets if getattr(a, 'state', None) and a.state == DeliveryAssetState.DELIVERED and not getattr(a, 'is_advisory', False)]
         if not delivered:
             return ""
         lines = [

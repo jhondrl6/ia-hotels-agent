@@ -405,7 +405,7 @@ class DeliveryContext:
 
     @property
     def delivered_assets(self) -> List[DeliveryAssetEntry]:
-        return [a for a in self.assets if a.state == DeliveryAssetState.DELIVERED]
+        return [a for a in self.assets if a.state == DeliveryAssetState.DELIVERED and not a.is_advisory]
 
     @property
     def present_assets(self) -> List[DeliveryAssetEntry]:
@@ -417,7 +417,7 @@ class DeliveryContext:
 
     @property
     def estimated_assets(self) -> List[DeliveryAssetEntry]:
-        return [a for a in self.assets if a.state == DeliveryAssetState.ESTIMATED]
+        return [a for a in self.assets if a.state == DeliveryAssetState.ESTIMATED and not a.is_advisory]
 
     @property
     def advisory_assets(self) -> List[DeliveryAssetEntry]:
