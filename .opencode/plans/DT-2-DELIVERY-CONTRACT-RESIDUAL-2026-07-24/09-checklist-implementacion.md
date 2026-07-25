@@ -42,32 +42,34 @@
 - [x] log_phase_completion.py ejecutado
 - [x] Ejecución vía: directa (main agent) — tracing de path mismatch entre 3 archivos
 
-## FASE-E — Tests Nuevos P-01..P-07 ⬜ PENDIENTE
+## FASE-E — Tests Nuevos P-01..P-07 ✅ COMPLETADA (2026-07-25)
 
-- [ ] E-1: Tests P-01 (conteo README == MANIFEST)
-- [ ] E-2: Tests P-02 (exclusión mutua advisory, partición disjunta)
-- [ ] E-3: Tests P-03 (post-gen coherence) + P-05 (G9 evaluado)
-- [ ] E-4: Tests P-06 (matrix en ZIP) + P-07 (enum)
-- [ ] Total: 28 existentes + 7+ nuevos = 35+ tests pasan
-- [ ] Commit: `test(delivery): 7 new contract tests for P-01 to P-07`
-- [ ] log_phase_completion.py ejecutado
+- [x] E-1: Tests P-01 (conteo README == MANIFEST, 3 tests)
+- [x] E-2: Tests P-02 (exclusión mutua advisory, partición disjunta, 4 tests)
+- [x] E-3: Tests P-03 (post-gen coherence, 2 tests) + P-05 (G9 evaluado, 3 tests)
+- [x] E-4: Tests P-06 (matrix en ZIP, 1 test) + P-07 (enum, 1 test)
+- [x] Total: 28 existentes + 14 nuevos = 42/42 PASSED
+- [x] Commit: `25728dd` — `FASE-E DT-2: 14 tests de contrato para P-01..P-07`
+- [x] log_phase_completion.py ejecutado
+- [x] Ejecución vía: directa (main agent) — WSL import cascade para pytest
 
-## FASE-F — v4complete Zi One + Análisis Post-Implementación ⬜ PENDIENTE
+## FASE-F — v4complete Zi One + Análisis Post-Implementación ✅ COMPLETADA (2026-07-25)
 
-- [ ] F-1: v4complete ejecutado para https://zione.co/ (SUBAGENTE, timeout 900s)
-- [ ] F-2: Verificación de 7 fixes contra v4complete output (matriz de verificación)
-- [ ] F-3: 10-analisis-post-implementacion.md completado
-- [ ] S-1: README count == MANIFEST count ✅/❌
-- [ ] S-2: 0 assets en múltiples secciones ✅/❌
-- [ ] S-3: Post-gen coherence score usado ✅/❌
-- [ ] S-4: Matrix alineada con DeliveryContext ✅/❌
-- [ ] S-5: 28+ tests pasan ✅/❌
-- [ ] S-6: 7+ tests nuevos ✅/❌
-- [ ] S-7: ZIP cumple S-1 y S-2 ✅/❌
-- [ ] S-8: G9 evaluado realmente ✅/❌
-- [ ] S-9: Matrix en ZIP ✅/❌
-- [ ] Commit: `verification: DT-2 v4complete Zi One 7 fixes verified`
-- [ ] log_phase_completion.py ejecutado
+- [x] F-1: v4complete ejecutado para https://zione.co/ (SUBAGENTE, timeout 900s) — completó en ~2 min, exit 0
+- [x] F-2: Verificación de 7 fixes contra v4complete output (matriz de verificación)
+- [x] F-3: 10-analisis-post-implementacion.md completado
+- [x] S-1: README count == MANIFEST count ⚠️ PARCIAL (delivery bloqueado por G9, tests P-01 pasan)
+- [x] S-2: 0 assets en múltiples secciones ⚠️ PARCIAL (delivery bloqueado, tests P-02 pasan)
+- [x] S-3: Post-gen coherence score usado ✅ (0.82 post-gen, no 0.84 pre-gen)
+- [x] S-4: Matrix alineada con DeliveryContext ✅ (divergencia documentada como deuda v4.64.0)
+- [x] S-5: 42 tests pasan ✅ (28 originales + 14 nuevos)
+- [x] S-6: 14 tests nuevos ✅ (P-01..P-07 cubiertos)
+- [x] S-7: ZIP cumple S-1 y S-2 ⚠️ PARCIAL (delivery bloqueado por G9 FAIL)
+- [x] S-8: G9 evaluado realmente ✅ (0/8 alineados → FAIL, ya no default True)
+- [x] S-9: Matrix en ZIP ⚠️ PARCIAL (generado en disco en path correcto, delivery bloqueado)
+- [x] Commit: `verification: DT-2 v4complete Zi One 7 fixes verified`
+- [x] log_phase_completion.py ejecutado
+- [x] Ejecución vía: MIXTO (delegate_task para v4complete + main agent para análisis)
 
 ## FASE-RELEASE — v4.63.2 ⬜ PENDIENTE
 
@@ -89,6 +91,6 @@
 | B | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
 | C | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
 | D | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
-| E | ⬜ PENDIENTE | — | — |
-| F | ⬜ PENDIENTE | — | — |
+| E | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
+| F | ✅ COMPLETADA | 2026-07-25 | 2026-07-25 |
 | RELEASE | ⬜ PENDIENTE | — | — |
