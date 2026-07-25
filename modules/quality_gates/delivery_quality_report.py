@@ -2,13 +2,13 @@
 Delivery Quality Report - Pre-publication blocking quality gate.
 
 FASE-0E: Implements DeliveryQualityReport and DeliveryQualityReportGenerator.
-Evaluates G6/G7/G8 gates from the v4_audit output to determine if a delivery
+Evaluates G6/G7/G8/G9 gates from the v4_audit output to determine if a delivery
 is ready for ZIP/packaging or must be blocked.
 
 Rules:
 - FAIL blocks ZIP/publication.
 - WARNING visible but not blocking.
-- PASS requires G6/G7/G8 satisfied (coherence >= 0.8, coverage PASS, asset specificity PASS).
+- PASS requires G6/G7/G8/G9 satisfied (coherence >= 0.8, coverage PASS, asset specificity PASS, proposal-asset alignment PASS).
 """
 
 import json
@@ -65,15 +65,17 @@ class DeliveryQualityReport:
 
 class DeliveryQualityReportGenerator:
     """
-    Generates a DeliveryQualityReport by evaluating G6/G7/G8 gates
+    Generates a DeliveryQualityReport by evaluating G6/G7/G8/G9 gates
     from the v4_audit directory output.
 
-    The generator reads coherence_validation.json and asset_generation_report.json
+    The generator reads coherence_validation.json (with post-gen fallback),
+    asset_generation_report.json, and proposal_asset_matrix.json
     from the v4_audit directory and evaluates:
 
     - G6 (Coherence): coherence >= config.coherence_threshold (default 0.8)
     - G7 (Coverage): coverage ratio from coverage gate
     - G8 (Asset Specificity): asset confidence >= 0.7, proposal-asset alignment
+    - G9 (Proposal-Asset Alignment): all promised services have aligned assets
     - Evidence gate: overall evidence quality assessment
 
     Usage:
@@ -119,8 +121,22 @@ class DeliveryQualityReportGenerator:
         gate_results: Dict[str, dict] = {}
 
         # ── G6: Coherence Gate ─────────────────────────────────────────────
-        coherence_data = self._load_json(v4_audit_path / "coherence_validation.json")
-        coherence_score = self._extract_coherence(coherence_data)
+        # P-03: Prefer post-gen coherence score when available, fallback to pre-gen.
+        # Report both scores for transparency when both exist.
+        post_gen_path = v4_audit_path / "coherence_validation_post_gen.json"
+        pre_gen_path = v4_audit_path / "coherence_validation.json"
+
+        coherence_post_data = None
+        coherence_post_score = None
+        if post_gen_path.exists():
+            coherence_post_data = self._load_json(post_gen_path)
+            coherence_post_score = self._extract_coherence(coherence_post_data)
+
+        coherence_pre_data = self._load_json(pre_gen_path)
+        coherence_pre_score = self._extract_coherence(coherence_pre_data)
+
+        # Use post-gen score as the primary score; fallback to pre-gen
+        coherence_score = coherence_post_score if coherence_post_score is not None else coherence_pre_score
         coherence_passed = (
             coherence_score is not None
             and coherence_score >= self.coherence_threshold
@@ -132,6 +148,10 @@ class DeliveryQualityReportGenerator:
             "threshold": self.coherence_threshold,
             "gate": "G6",
         }
+        # Report both scores for transparency when both exist
+        if coherence_pre_score is not None and coherence_post_score is not None:
+            gate_results["coherence"]["score_pre"] = coherence_pre_score
+            gate_results["coherence"]["score_post"] = coherence_post_score
 
         if not coherence_passed:
             if coherence_score is None:
@@ -170,9 +190,37 @@ class DeliveryQualityReportGenerator:
                 f"G8: Asset specificity failed — {specificity_details.get('reason', 'unknown')}"
             )
 
+        # ── G9: Proposal-Asset Alignment Gate ───────────────────────────────
+        # P-05: Evaluate real alignment from proposal_asset_matrix.json
+        # (previously hardcoded default True — dead gate)
+        matrix_path = v4_audit_path / "proposal_asset_matrix.json"
+        if matrix_path.exists():
+            matrix_data = self._load_json(matrix_path)
+            entries = matrix_data.get("entries", [])
+            total_services = len(entries)
+            aligned_services = sum(
+                1 for e in entries
+                if e.get("asset_path") is not None and e.get("asset_path") != ""
+            )
+            passed = aligned_services == total_services if total_services > 0 else True
+            gate_results["proposal_asset_alignment"] = {
+                "passed": passed,
+                "gate": "G9",
+                "aligned": aligned_services,
+                "total": total_services,
+            }
+        else:
+            # No matrix available — gate skipped (not evaluated)
+            gate_results["proposal_asset_alignment"] = {
+                "passed": True,
+                "gate": "G9",
+                "skipped": True,
+                "reason": "proposal_asset_matrix.json not found",
+            }
+
         # ── Evidence Gate ──────────────────────────────────────────────────
         evidence_passed, evidence_details = self._evaluate_evidence(
-            coherence_data, asset_data
+            coherence_pre_data, asset_data
         )
         gate_results["evidence"] = {
             "passed": evidence_passed,
