@@ -15,13 +15,14 @@
 - [x] log_phase_completion.py ejecutado
 - [x] Ejecución vía: delegate_task (SUBAGENTE)
 
-## FASE-B — Exclusión Mutua Advisory Sections (P-02) ⬜ PENDIENTE
+## FASE-B — Exclusión Mutua Advisory Sections (P-02) ✅ COMPLETADA (2026-07-25)
 
-- [ ] B-1: Modificar delivered_assets y estimated_assets con exclusión `not is_advisory`
-- [ ] B-2: Modificar filtro L603 en delivery_packager.py con exclusión advisory
-- [ ] B-3: 28 tests existentes pasan (o cambios documentados)
-- [ ] Commit: `fix(delivery): P-02 advisory assets mutual exclusion in README sections`
-- [ ] log_phase_completion.py ejecutado
+- [x] B-1: Modificar delivered_assets y estimated_assets con exclusión `not is_advisory`
+- [x] B-2: Modificar filtro L618 en delivery_packager.py con exclusión advisory
+- [x] B-3: 28 tests existentes pasan (28/28 PASSED, 0.69s)
+- [x] Commit: `95a29e9` — `fix(delivery): P-02 advisory assets mutual exclusion in README sections`
+- [x] log_phase_completion.py ejecutado
+- [x] Ejecución vía: directa (main agent)
 
 ## FASE-C — Quality Report Post-Gen + G9 Dead Gate (P-03, P-05) ⬜ PENDIENTE
 
