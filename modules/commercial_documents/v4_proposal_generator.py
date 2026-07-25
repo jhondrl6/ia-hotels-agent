@@ -639,7 +639,12 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
                 entries = matrix.build(
                     ALL_PROMISED_SERVICES, pain_ledger, assets_generated
                 )
-                matrix_path = output_path / "v4_audit" / "proposal_asset_matrix.json"
+                # P-06 FIX: Guardar matrix en subdirectorio del hotel para
+                # que _collect_files() la encuentre via rglob(). El packager
+                # usa source_dir = output/v4_complete/{hotel_id}/ mientras
+                # la matriz se guardaba en output/v4_complete/v4_audit/ (flat).
+                hotel_slug = hotel_name.lower().replace(" ", "_").replace("-", "_")
+                matrix_path = output_path / hotel_slug / "v4_audit" / "proposal_asset_matrix.json"
                 matrix.save(entries, matrix_path)
                 logger.info(
                     f"ProposalAssetMatrix saved: {len(entries)} entries → {matrix_path}"

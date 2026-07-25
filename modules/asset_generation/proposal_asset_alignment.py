@@ -444,6 +444,20 @@ class ProposalAssetMatrix:
         - Every sold service must have a specific asset or be marked MISSING_ASSET.
         - An existing asset must resolve the associated pain_id.
 
+    Divergencia semántica con AlignmentReport (P-04, DT-2):
+        - ProposalAssetMatrix: traceability pain-driven — ¿el servicio de la
+          propuesta responde a un pain real de analytics Y tenemos asset?
+          Usa PAIN_SOLUTION_MAP + pain_ledger. Taxonomía: LINKED, MISSING_ASSET,
+          NO_BREACH, GENERIC_DRAFT.
+        - AlignmentReport: delivery verification — ¿el asset existe (generado
+          O en producción)? Usa PROPOSAL_SERVICE_TO_ASSET + site presence.
+          Taxonomía: aligned, missing, low_quality, present_in_production,
+          redundant, indeterminate.
+        - DEUDA TÉCNICA (v4.64.0): unificar ambos modelos en un solo contrato
+          canónico que consuma DeliveryContext como fuente de verdad. La
+          unificación NO es trivial (> 10 líneas) porque mezcla dimensiones
+          ortogonales: analytics (pain) × delivery (asset existence).
+
     Usage:
         matrix = ProposalAssetMatrix()
         entries = matrix.build(proposal_services, pain_ledger, generated_assets)
