@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.63.1** -- Delivery-Contract | Actualizado 23 Julio 2026 | 3,038 pruebas automatizadas | 0 errores conocidos
+**v4.63.2** -- Delivery-Contract-Residual | Actualizado 23 Julio 2026 | 3,038 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-## Estado del Proyecto (v4.63.1 -- Delivery-Contract)
+## Estado del Proyecto (v4.63.2 -- Delivery-Contract-Residual)
 
 - **3,038 test functions** — suite completa, 0 regresiones
 - **201 modulos Python** (~72K lineas) + **25 scripts** (~6.2K lineas) + **30 directorios de test**

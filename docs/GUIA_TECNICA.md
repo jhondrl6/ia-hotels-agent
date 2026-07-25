@@ -1,9 +1,39 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.63.1 (Delivery-Contract)
-**Última actualización:** 2026-07-24
+**Versión:** v4.63.2 (Delivery-Contract-Residual)
+**Última actualización:** 2026-07-25
 
 ---
+
+### Notas de Cambios v4.63.2 — Delivery Contract Residual Fixes (DT-2)
+
+**Fecha:** 2026-07-25
+
+**Resumen**: Corrección de 7 findings residuales post-DT-1 en el delivery contract.
+El quality report ahora usa el score de coherencia post-generación, el G9 gate
+evalúa alineación real (ya no hardcodea default True), los advisory assets tienen
+exclusión mutua en secciones del README, y la proposal_asset_matrix se empaqueta
+en el ZIP de entrega.
+
+**Módulos afectados**: `modules/delivery/delivery_packager.py`, `modules/delivery/delivery_context.py`,
+`modules/quality_gates/delivery_quality_report.py`, `modules/asset_generation/proposal_asset_alignment.py`,
+`modules/commercial_documents/v4_proposal_generator.py`, `tests/delivery/test_delivery_contract.py`
+
+**Cambios**:
+- P-01: README Overview conteo post-manifest (recalculado después de Pass 3)
+- P-02: Exclusión mutua advisory assets en secciones state-based del README
+- P-03: delivery_quality_report usa coherence score post-generación (`coherence_validation_post_gen.json`)
+- P-04: proposal_asset_matrix path alineado con DeliveryContext (divergencia documentada como deuda v4.64.0)
+- P-05: G9 proposal_asset_alignment gate implementado (evalúa alineación real, ya no default True)
+- P-06: proposal_asset_matrix.json empaquetado en el ZIP de entrega
+- P-07: Comparación string-vs-enum unificada a `DeliveryAssetState.DELIVERED`
+
+**Tests**: 28 tests existentes + 14 nuevos = 42 tests de contrato (42/42 PASSED).
+v4complete Zi One Luxury: verificación E2E de 7 fixes (S-1 a S-9).
+
+**Backwards compatibility**: ✅ El packager mantiene comportamiento legacy sin DeliveryContext.
+Los filtros de advisory son aditivos (no rompen comportamiento previo). G9 es evaluado
+pero solo bloquea si `GATE_BLOCKING_ENABLED=true`.
 
 ### Notas de Cambios v4.63.1 — Delivery Contract
 

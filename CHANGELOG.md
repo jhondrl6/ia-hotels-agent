@@ -1,5 +1,35 @@
 # Changelog
 
+## [4.63.2] - Delivery-Contract-Residual — 2026-07-25
+
+### Objetivo
+Corregir 7 findings residuales post-DT-1 en el delivery contract: desincronización de conteos,
+exclusión mutua de advisory assets, quality report post-generación, implementación de G9 dead gate,
+y empaquetado de proposal_asset_matrix.
+
+### Cambios Implementados (DT-2: Delivery Contract Residual Fixes)
+- P-01: README Overview ahora muestra conteo de archivos y tamaño que coinciden con MANIFEST.json (recalculado post-Manifest Pass 3)
+- P-02: Assets advisory ya no aparecen simultáneamente en secciones state-based y Advisory Guides (exclusión mutua por `is_advisory`)
+- P-03: delivery_quality_report refleja score de coherencia post-generación (`coherence_validation_post_gen.json`), con fallback al pre-gen
+- P-04: proposal_asset_matrix path alineado con DeliveryContext (divergencia semántica documentada como deuda técnica para v4.64.0)
+- P-05: G9 proposal_asset_alignment gate implementado — evalúa alineación real, ya no hardcodea default True
+- P-06: proposal_asset_matrix.json ahora se empaqueta en el ZIP de entrega
+- P-07: Comparación string-vs-enum unificada a `DeliveryAssetState.DELIVERED` (ya no compara strings)
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/delivery/delivery_packager.py` | P-01 conteo post-manifest + P-07 enum + P-02 exclusión advisory + P-06 packaging |
+| `modules/delivery/delivery_context.py` | P-02 exclusión mutua advisory en filtros delivered/estimated |
+| `modules/quality_gates/delivery_quality_report.py` | P-03 post-gen coherence + P-05 G9 gate implementado |
+| `modules/asset_generation/proposal_asset_alignment.py` | P-04 path alignment + documentación de divergencia |
+| `modules/commercial_documents/v4_proposal_generator.py` | P-04 + P-06 path de guardado de proposal_asset_matrix |
+| `tests/delivery/test_delivery_contract.py` | 14 tests nuevos de contrato P-01..P-07 |
+
+### Tests
+- 28 tests existentes + 14 nuevos = 42 tests de contrato (42/42 PASSED)
+- v4complete Zi One Luxury: verificación E2E de 7 fixes (S-1 a S-9)
+
 ## [4.63.1] - Delivery-Contract — 2026-07-24
 
 ### Objetivo

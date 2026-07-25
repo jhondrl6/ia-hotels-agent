@@ -1,8 +1,8 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.63.1"
-codename: "Delivery-Contract"
-release_date: "2026-07-24"
+version: "4.63.2"
+codename: "Delivery-Contract-Residual"
+release_date: "2026-07-25"
 plan_maestro_version: "v2.6.0"
 
 # v4.55.0 - ROICR (2026-05-27)

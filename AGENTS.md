@@ -1,8 +1,8 @@
-<!-- agents_version: v4.63.0 | last_update: 2026-07-24 -->
+<!-- agents_version: v4.63.0 | last_update: 2026-07-25 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.63.1 -- Delivery-Contract COMPLETADO**
+> **v4.63.2 -- Delivery-Contract-Residual COMPLETADO**
 
 ---
 
