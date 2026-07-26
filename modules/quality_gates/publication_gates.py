@@ -1183,7 +1183,9 @@ class PublicationGatesOrchestrator:
     # ============================================================================
     # Acceptable justification statuses — pain_ids with these statuses do NOT
     # need to appear in diagnostic or proposal.
-    _JUSTIFIED_STATUSES: Set[str] = {"JUSTIFIED_SKIP", "BLOCKED", "MAPPED_TO_SERVICE"}
+    _JUSTIFIED_STATUSES: Set[str] = {
+        "JUSTIFIED_SKIP", "BLOCKED", "MAPPED_TO_SERVICE", "ASSET_GENERATED"
+    }
 
     def _coverage_gate(self, assessment: Dict[str, Any]) -> PublicationGateResult:
         """
@@ -1227,7 +1229,13 @@ class PublicationGatesOrchestrator:
                 suggestion="Ensure diagnostic/proposal generation populates pain_ledger",
             )
 
-        pain_ledger_raw = assessment.get("pain_ledger")
+        # FASE-0 (DT-4): Try pain_ledger_resolved first (post-orchestrator reconciliation),
+        # fallback to pain_ledger if not available.
+        raw = assessment.get("pain_ledger_resolved")
+        if raw and isinstance(raw, dict):
+            pain_ledger_raw = raw.get("entries", raw)
+        else:
+            pain_ledger_raw = raw or assessment.get("pain_ledger")
         if not isinstance(pain_ledger_raw, list):
             return PublicationGateResult(
                 gate_name=gate_name,

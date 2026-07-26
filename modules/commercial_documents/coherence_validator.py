@@ -130,7 +130,8 @@ class CoherenceValidator:
         assets: List[AssetSpec],
         validation_summary: ValidationSummary,
         whatsapp_html_detected: bool = False,
-        generated_assets: Optional[Dict[str, Any]] = None  # FASE-2-PATCH-A
+        generated_assets: Optional[Dict[str, Any]] = None,  # FASE-2-PATCH-A
+        site_presence_report: Optional[Dict[str, Any]] = None,  # FASE-0 (DT-4): SitePresence boost
     ) -> CoherenceReport:
         """
         Execute all coherence validations.
@@ -150,7 +151,7 @@ class CoherenceValidator:
         self.checks.append(self._check_problems_have_solutions(diagnostic, assets))
         self.checks.append(self._check_assets_are_justified(assets, diagnostic))
         self.checks.append(self._check_financial_data_validated(proposal, validation_summary))
-        self.checks.append(self._check_whatsapp_verified(assets, validation_summary, whatsapp_html_detected))
+        self.checks.append(self._check_whatsapp_verified(assets, validation_summary, whatsapp_html_detected, site_presence_report))
         self.checks.append(self._check_price_matches_pain(proposal, diagnostic))
         self.checks.append(self._check_promised_assets_exist(assets, diagnostic, generated_assets))
         
@@ -357,14 +358,26 @@ class CoherenceValidator:
         self,
         assets: List[AssetSpec],
         validation_summary: ValidationSummary,
-        whatsapp_html_detected: bool = False
+        whatsapp_html_detected: bool = False,
+        site_presence_report: Optional[Dict[str, Any]] = None,  # FASE-0 (DT-4): SitePresence boost
     ) -> CoherenceCheck:
         """
         If there's a whatsapp_button asset, validate that the number has sufficient confidence.
         
+        FASE-0 (DT-4): If site_presence_report confirms WhatsApp exists on the site,
+        boost confidence to 0.95+ to avoid false-negative coherence failures.
+
         Score: 1.0 if passes, 0.0 if fails
         Failure (blocking): If confidence < threshold (configurable, default 0.9)
         """
+        # FASE-0 (DT-4): Boost confidence if SitePresenceChecker confirmed WhatsApp exists
+        site_whatsapp_exists = False
+        if site_presence_report:
+            whatsapp_presence = site_presence_report.get("whatsapp_button", {})
+            if isinstance(whatsapp_presence, dict):
+                presence_status = whatsapp_presence.get("presence_status") or whatsapp_presence.get("status", "")
+                site_whatsapp_exists = presence_status == "exists"
+
         threshold = self.config.get_threshold('whatsapp_verified')
         is_blocking = self.config.is_blocking('whatsapp_verified')
         
@@ -405,7 +418,11 @@ class CoherenceValidator:
             )
         
         confidence_score = self._confidence_level_to_score(whatsapp_field.confidence)
-        
+
+        # FASE-0 (DT-4): If site confirms WhatsApp exists, boost confidence
+        if site_whatsapp_exists:
+            confidence_score = max(confidence_score, 0.95)
+
         if confidence_score >= threshold:
             return CoherenceCheck(
                 name="whatsapp_verified",

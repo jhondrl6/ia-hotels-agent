@@ -36,6 +36,7 @@ from .data_assessment import DataAssessment, DataClassification  # FASE-I-01
 from .geo_enriched_bridge import try_enrich_from_geo_enriched  # FASE-GEO-BRIDGE
 from .pain_ledger import PainLedger  # FASE-0B: PainLedger facade
 from ..geo_enrichment.geo_flow import GeoFlow  # FASE-6: GEO Flow
+from ..orchestration.post_orchestrator_reconciler import PostOrchestratorReconciler  # FASE-0: DT-4 reconciliador
 from data_models.canonical_assessment import (  # FASE-6: Canonical Assessment
     CanonicalAssessment,
     SiteMetadata,
@@ -516,7 +517,21 @@ class V4AssetOrchestrator:
 
         # 10. Guardar reporte de generación
         self.save_generation_report(result)
-        
+
+        # FASE-0 (DT-4): Post-orchestration reconciliation
+        # Unifies pain_ledger + asset_generation_report → pain_ledger_resolved.json
+        reconciler = PostOrchestratorReconciler()
+        pain_ledger_path = output_dir / "v4_audit" / "pain_ledger.json"
+        pain_ledger_resolved_path = output_dir / "v4_audit" / "pain_ledger_resolved.json"
+        asset_gen_report_path = Path(result.output_dir) / "v4_audit" / "asset_generation_report.json"
+
+        if pain_ledger_path.exists() and asset_gen_report_path.exists():
+            reconciler.reconcile(
+                asset_generation_report_path=asset_gen_report_path,
+                pain_ledger_path=pain_ledger_path,
+                output_path=pain_ledger_resolved_path,
+            )
+
         return result
     
     def _sanitize_hotel_id(self, hotel_name: str) -> str:
