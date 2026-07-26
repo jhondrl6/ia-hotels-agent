@@ -234,3 +234,177 @@ class TestProposalAssetMatrixEdgeCases:
             ["Servicio Inexistente"], sample_pain_ledger, sample_generated_assets
         )
         assert len(entries) == 0
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FASE-DT-3 FASE-2: Tests para el contrato canónico unificado
+# ═══════════════════════════════════════════════════════════════════════════
+
+from modules.asset_generation.proposal_asset_alignment import (
+    AssetAlignmentMatrix,
+    AlignmentStatus,
+)
+
+
+class TestAssetAlignmentMatrixBuild:
+    """Tests para AssetAlignmentMatrix.build() con DeliveryContext."""
+
+    def test_legacy_build_matches_proposal_asset_matrix(
+        self, proposal_services, sample_pain_ledger, sample_generated_assets
+    ):
+        """AssetAlignmentMatrix.build() con generated_assets override produce
+        los mismos resultados que ProposalAssetMatrix.build() legacy."""
+        from modules.delivery.delivery_context import DeliveryContext
+        ctx = DeliveryContext()
+
+        aam = AssetAlignmentMatrix.build(
+            delivery_context=ctx,
+            pain_ledger=sample_pain_ledger,
+            generated_assets=sample_generated_assets,
+        )
+
+        # Debe coincidir con el comportamiento legacy
+        assert aam.total_services > 0
+        wa = aam.get_alignment("Botón de WhatsApp")
+        assert wa == AlignmentStatus.LINKED, f"Expected LINKED, got {wa}"
+        hotel = aam.get_alignment("Schema Hotel")
+        assert hotel == AlignmentStatus.LINKED, f"Expected LINKED, got {hotel}"
+        faq = aam.get_alignment("Página de FAQ")
+        assert faq == AlignmentStatus.NO_BREACH, f"Expected NO_BREACH, got {faq}"
+
+    def test_build_empty_ledger_returns_no_breach(
+        self, sample_generated_assets
+    ):
+        """Sin pains en el ledger → todos NO_BREACH."""
+        from modules.delivery.delivery_context import DeliveryContext
+        ctx = DeliveryContext()
+        aam = AssetAlignmentMatrix.build(
+            delivery_context=ctx,
+            pain_ledger=[],
+            generated_assets=sample_generated_assets,
+        )
+        for entry in aam.entries:
+            assert entry.status == "NO_BREACH", \
+                f"{entry.service_name} should be NO_BREACH, got {entry.status}"
+
+
+class TestAssetAlignmentMatrixDeliveryReady:
+    """Tests para is_delivery_ready()."""
+
+    def test_empty_matrix_is_ready(self):
+        """Matriz vacía → delivery ready (sin servicios accionables)."""
+        aam = AssetAlignmentMatrix()
+        assert aam.is_delivery_ready() is True
+
+    def test_all_linked_is_ready(self):
+        """Todos LINKED → delivery ready."""
+        entries = [
+            ProposalAssetMatrixEntry("S1", ["p1"], "a1", "/tmp/a1", 0.9, "LINKED"),
+            ProposalAssetMatrixEntry("S2", ["p2"], "a2", "/tmp/a2", 0.85, "LINKED"),
+        ]
+        aam = AssetAlignmentMatrix(entries=entries)
+        assert aam.is_delivery_ready() is True
+
+    def test_all_no_breach_is_ready(self):
+        """Todos NO_BREACH → delivery ready (ningún servicio accionable)."""
+        entries = [
+            ProposalAssetMatrixEntry("S1", [], "a1", None, 0.0, "NO_BREACH"),
+            ProposalAssetMatrixEntry("S2", [], "a2", None, 0.0, "NO_BREACH"),
+        ]
+        aam = AssetAlignmentMatrix(entries=entries)
+        assert aam.is_delivery_ready() is True
+
+    def test_missing_asset_blocks_delivery(self):
+        """MISSING_ASSET presente → NO delivery ready."""
+        entries = [
+            ProposalAssetMatrixEntry("S1", ["p1"], "a1", "/tmp/a1", 0.9, "LINKED"),
+            ProposalAssetMatrixEntry("S2", ["p2"], "a2", None, 0.0, "MISSING_ASSET"),
+        ]
+        aam = AssetAlignmentMatrix(entries=entries)
+        assert aam.is_delivery_ready() is False
+
+    def test_generic_draft_blocks_delivery(self):
+        """GENERIC_DRAFT presente → NO delivery ready."""
+        entries = [
+            ProposalAssetMatrixEntry("S1", ["p1"], "a1", "/tmp/a1", 0.9, "LINKED"),
+            ProposalAssetMatrixEntry("S2", ["p2"], "a2", None, 0.0, "GENERIC_DRAFT"),
+        ]
+        aam = AssetAlignmentMatrix(entries=entries)
+        assert aam.is_delivery_ready() is False
+
+    def test_mixed_linked_no_breach_is_ready(self):
+        """LINKED + NO_BREACH → delivery ready (NO_BREACH no cuenta)."""
+        entries = [
+            ProposalAssetMatrixEntry("S1", ["p1"], "a1", "/tmp/a1", 0.9, "LINKED"),
+            ProposalAssetMatrixEntry("S2", [], "a2", None, 0.0, "NO_BREACH"),
+        ]
+        aam = AssetAlignmentMatrix(entries=entries)
+        assert aam.is_delivery_ready() is True
+
+
+class TestAssetAlignmentMatrixGetAlignment:
+    """Tests para get_alignment()."""
+
+    def test_known_service_returns_correct_status(self):
+        entries = [
+            ProposalAssetMatrixEntry("S1", ["p1"], "a1", "/tmp/a1", 0.9, "LINKED"),
+        ]
+        aam = AssetAlignmentMatrix(entries=entries)
+        assert aam.get_alignment("S1") == AlignmentStatus.LINKED
+
+    def test_unknown_service_returns_indeterminate(self):
+        aam = AssetAlignmentMatrix()
+        assert aam.get_alignment("No Existe") == AlignmentStatus.INDETERMINATE
+
+    def test_all_statuses_map_correctly(self):
+        entries = [
+            ProposalAssetMatrixEntry("linked", ["p1"], "a1", "/tmp", 0.9, "LINKED"),
+            ProposalAssetMatrixEntry("missing", ["p2"], "a2", None, 0.0, "MISSING_ASSET"),
+            ProposalAssetMatrixEntry("nobre", [], "a3", None, 0.0, "NO_BREACH"),
+            ProposalAssetMatrixEntry("draft", ["p4"], "a4", None, 0.0, "GENERIC_DRAFT"),
+        ]
+        aam = AssetAlignmentMatrix(entries=entries)
+        assert aam.get_alignment("linked") == AlignmentStatus.LINKED
+        assert aam.get_alignment("missing") == AlignmentStatus.MISSING_ASSET
+        assert aam.get_alignment("nobre") == AlignmentStatus.NO_BREACH
+        assert aam.get_alignment("draft") == AlignmentStatus.GENERIC_DRAFT
+
+
+class TestAssetAlignmentMatrixToDict:
+    """Tests para to_dict() y backward compat."""
+
+    def test_empty_matrix_to_dict(self):
+        aam = AssetAlignmentMatrix()
+        d = aam.to_dict()
+        assert d["proposal_asset_matrix_version"] == "2.0"
+        assert d["delivery_ready"] is True
+        assert d["entries"] == []
+
+    def test_populated_matrix_to_dict_format(self):
+        entries = [
+            ProposalAssetMatrixEntry("S1", ["p1"], "a1", "/tmp/a1", 0.9, "LINKED"),
+        ]
+        aam = AssetAlignmentMatrix(entries=entries)
+        d = aam.to_dict()
+        assert "entries" in d
+        assert len(d["entries"]) == 1
+        e = d["entries"][0]
+        assert e["service_name"] == "S1"
+        assert e["status"] == "LINKED"
+        assert e["alignment"] == "linked"
+        assert "delivery_ready" in d
+
+    def test_to_dict_includes_backward_compat_fields(self):
+        """to_dict() debe mantener compatibilidad con consumidores legacy."""
+        entries = [
+            ProposalAssetMatrixEntry("S1", ["p1"], "a1", "/tmp/a1", 0.9, "LINKED"),
+        ]
+        aam = AssetAlignmentMatrix(entries=entries)
+        d = aam.to_dict()
+        # Campos que existían en el formato legacy
+        assert "proposal_asset_matrix_version" in d
+        assert "entries" in d
+        # Cada entry mantiene los campos legacy
+        e = d["entries"][0]
+        for field in ("service_name", "pain_ids", "asset_type", "asset_path", "confidence", "status"):
+            assert field in e, f"Missing legacy field: {field}"

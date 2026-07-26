@@ -191,22 +191,36 @@ class DeliveryQualityReportGenerator:
             )
 
         # ── G9: Proposal-Asset Alignment Gate ───────────────────────────────
-        # P-05: Evaluate real alignment from proposal_asset_matrix.json
-        # (previously hardcoded default True — dead gate)
+        # FASE-DT-3 FASE-2: Consume AssetAlignmentMatrix.is_delivery_ready()
+        # como contrato canónico unificado en vez de parsing manual de JSON.
         matrix_path = v4_audit_path / "proposal_asset_matrix.json"
         if matrix_path.exists():
-            matrix_data = self._load_json(matrix_path)
-            entries = matrix_data.get("entries", [])
-            total_services = len(entries)
-            aligned_services = sum(
-                1 for e in entries
-                if e.get("asset_path") is not None and e.get("asset_path") != ""
+            from modules.asset_generation.proposal_asset_alignment import (
+                AssetAlignmentMatrix,
+                ProposalAssetMatrixEntry,
             )
-            passed = aligned_services == total_services if total_services > 0 else True
+            matrix_data = self._load_json(matrix_path)
+            raw_entries = matrix_data.get("entries", [])
+            # Reconstruir AssetAlignmentMatrix desde los datos del JSON
+            entries = [
+                ProposalAssetMatrixEntry(
+                    service_name=e.get("service_name", ""),
+                    pain_ids=e.get("pain_ids", []),
+                    asset_type=e.get("asset_type", ""),
+                    asset_path=e.get("asset_path"),
+                    confidence=e.get("confidence", 0.0),
+                    status=e.get("status", "GENERIC_DRAFT"),
+                )
+                for e in raw_entries
+            ]
+            matrix = AssetAlignmentMatrix(entries=entries)
+            total_services = matrix.total_services
+            delivery_ready = matrix.is_delivery_ready()
+            aligned_count = matrix.aligned_count
             gate_results["proposal_asset_alignment"] = {
-                "passed": passed,
+                "passed": delivery_ready,
                 "gate": "G9",
-                "aligned": aligned_services,
+                "aligned": aligned_count,
                 "total": total_services,
             }
         else:
@@ -248,13 +262,14 @@ class DeliveryQualityReportGenerator:
                 })
 
         # ── Determine overall status ───────────────────────────────────────
+        BLOCKING_GATE_NAMES = ("coherence", "coverage", "evidence", "proposal_asset_alignment")
         blocking_gates = [
             name for name, result in gate_results.items()
-            if not result["passed"] and name in ("coherence", "coverage", "evidence", "proposal_asset_alignment")
+            if not result["passed"] and name in BLOCKING_GATE_NAMES
         ]
         warning_gates = [
             name for name, result in gate_results.items()
-            if not result["passed"] and name not in ("coherence", "coverage", "evidence")
+            if not result["passed"] and name not in BLOCKING_GATE_NAMES
         ]
 
         if blocking_gates:

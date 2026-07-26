@@ -11,8 +11,8 @@
 | Fase | Título | Estado | Sesión | Fecha | Iteraciones | delegate_task |
 |------|--------|--------|--------|-------|-------------|---------------|
 | FASE-0 | Fix sistémico rutas flat → per-hotel (BUG-1) | ✅ COMPLETADO | 2026-07-25 | 2026-07-25 | 1 | ✅ SUBAJENTE |
-| FASE-1 | Fix G9 dual-list + status-based eval (BUG-2, BUG-3) | ⬜ PENDIENTE | — | — | — | ✅ SUBAJENTE |
-| FASE-2 | Unificar ProposalAssetMatrix + AlignmentReport (P-04) | ⬜ PENDIENTE | — | — | — | ❌ DIRECTA |
+| FASE-1 | Fix G9 dual-list + status-based eval (BUG-2, BUG-3) | ✅ COMPLETADO | 2026-07-25 | 2026-07-25 | 1 | ✅ SUBAJENTE |
+| FASE-2 | Unificar ProposalAssetMatrix + AlignmentReport (P-04) | ✅ COMPLETADO | 2026-07-25 | 2026-07-25 | 1 | ❌ DIRECTA |
 | FASE-3 | v4complete Zi One + verificación E2E post-fix | ⬜ PENDIENTE | — | — | — | ⚠️ MIXTO |
 | FASE-RELEASE | Documentación + version bump v4.64.0 | ⬜ PENDIENTE | — | — | — | ✅ SUBAJENTE |
 
@@ -31,22 +31,22 @@
 
 ## FASE-1 — Fix G9 dual-list + status-based eval (BUG-2, BUG-3)
 
-- [ ] T1: Crear BLOCKING_GATE_NAMES constante y usarla en L253 + L257
-- [ ] T2: Implementar _is_service_aligned() helper (LINKED/NO_BREACH=True, resto=False)
-- [ ] T3: actionable_services excluye NO_BREACH; passed condition actualizada
-- [ ] Post: log_phase_completion.py ejecutado
-- [ ] Evidencia: grep "proposal_asset_alignment" solo en BLOCKING_GATE_NAMES
+- [x] T1: Crear BLOCKING_GATE_NAMES constante y usarla en L253 + L257
+- [x] T2: Implementar _is_service_aligned() helper (LINKED/NO_BREACH=True, resto=False)
+- [x] T3: actionable_services excluye NO_BREACH; passed condition actualizada
+- [x] Post: log_phase_completion.py ejecutado
+- [x] Evidencia: grep "proposal_asset_alignment" solo en BLOCKING_GATE_NAMES
 
 ---
 
 ## FASE-2 — Unificar ProposalAssetMatrix + AlignmentReport (P-04) ⚠️ MAYOR COMPLEJIDAD
 
-- [ ] T1: Diseñar AssetAlignmentMatrix con AlignmentStatus enum + taxonomía unificada
-- [ ] T2: Implementar build(delivery_context, pain_ledger) → AssetAlignmentMatrix
-- [ ] T3: Migrar consumidores (G9, main.py, publication_gates.py, v4_proposal_generator.py)
-- [ ] T4: Verificar 42 tests existentes PASS + agregar nuevos tests
-- [ ] Post: log_phase_completion.py ejecutado
-- [ ] Evidencia: grep "ProposalAssetMatrix\|AlignmentReport" solo en comentarios; grep "AssetAlignmentMatrix" en delivery_quality_report.py
+- [x] T1: Diseñar AssetAlignmentMatrix con AlignmentStatus enum + taxonomía unificada
+- [x] T2: Implementar build(delivery_context, pain_ledger) → AssetAlignmentMatrix
+- [x] T3: Migrar consumidores (G9, main.py, publication_gates.py, v4_proposal_generator.py)
+- [x] T4: Verificar 86 tests existentes PASS + agregar nuevos tests (14 nuevos, 86/86 PASS)
+- [x] Post: log_phase_completion.py ejecutado
+- [x] Evidencia: grep "AssetAlignmentMatrix" en delivery_quality_report.py confirmado; grep "ProposalAssetMatrix\|AlignmentReport" solo ProposalAssetMatrixEntry
 
 ---
 

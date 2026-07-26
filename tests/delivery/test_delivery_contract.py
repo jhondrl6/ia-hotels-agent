@@ -895,13 +895,20 @@ class TestP05G9Gate:
                 ]
             }), encoding='utf-8'
         )
-        # Matrix with 3 services, but only 2 have assets (misalignment)
+        # Matrix with 3 services: 2 LINKED + 1 MISSING_ASSET (misalignment)
+        # FASE-DT-3 FASE-2: Unified contract uses status + service_name fields
         (v4_audit / "proposal_asset_matrix.json").write_text(
             json.dumps({
                 "entries": [
-                    {"service": "Schema Hotel", "asset_path": "ASSETS/hotel_schema/file.json"},
-                    {"service": "Schema Organization", "asset_path": "ASSETS/org_schema/file.json"},
-                    {"service": "WhatsApp Button", "asset_path": None},  # misaligned!
+                    {"service_name": "Schema Hotel", "asset_path": "ASSETS/hotel_schema/file.json",
+                     "asset_type": "hotel_schema", "pain_ids": [], "confidence": 0.9,
+                     "status": "LINKED"},
+                    {"service_name": "Schema Organization", "asset_path": "ASSETS/org_schema/file.json",
+                     "asset_type": "org_schema", "pain_ids": [], "confidence": 0.85,
+                     "status": "LINKED"},
+                    {"service_name": "WhatsApp Button", "asset_path": None,
+                     "asset_type": "whatsapp_button", "pain_ids": [], "confidence": 0.0,
+                     "status": "MISSING_ASSET"},
                 ]
             }), encoding='utf-8'
         )
@@ -912,8 +919,8 @@ class TestP05G9Gate:
         g9 = report.proposal_asset_gate
         assert g9["gate"] == "G9"
         assert g9["passed"] is False, \
-            f"G9 should FAIL when 2/3 services aligned, got passed={g9['passed']}"
-        assert g9["aligned"] == 2, f"Expected 2 aligned, got {g9.get('aligned')}"
+            f"G9 should FAIL when MISSING_ASSET present, got passed={g9['passed']}"
+        assert g9["aligned"] == 2, f"Expected 2 aligned (LINKED), got {g9.get('aligned')}"
         assert g9["total"] == 3, f"Expected 3 total, got {g9.get('total')}"
         # G9 should NOT use hardcoded default
         assert "skipped" not in g9, \
@@ -936,12 +943,17 @@ class TestP05G9Gate:
                 ]
             }), encoding='utf-8'
         )
-        # Matrix with all services aligned
+        # Matrix with all services LINKED (fully aligned)
+        # FASE-DT-3 FASE-2: Unified contract uses status + service_name fields
         (v4_audit / "proposal_asset_matrix.json").write_text(
             json.dumps({
                 "entries": [
-                    {"service": "Schema Hotel", "asset_path": "ASSETS/hotel_schema/file.json"},
-                    {"service": "WhatsApp Button", "asset_path": "ASSETS/whatsapp/button.html"},
+                    {"service_name": "Schema Hotel", "asset_path": "ASSETS/hotel_schema/file.json",
+                     "asset_type": "hotel_schema", "pain_ids": [], "confidence": 0.9,
+                     "status": "LINKED"},
+                    {"service_name": "WhatsApp Button", "asset_path": "ASSETS/whatsapp/button.html",
+                     "asset_type": "whatsapp_button", "pain_ids": [], "confidence": 0.95,
+                     "status": "LINKED"},
                 ]
             }), encoding='utf-8'
         )

@@ -24,13 +24,13 @@ El plan corrige los 7 findings en 7 fases (1 fase por sesión).
 
 | Fase | Archivo | Findings | Ejecución | Estado |
 |------|---------|----------|-----------|--------|
-| A | 02-prompt-fase-A.md | P-01, P-07 | SUBAGENTE | ⬜ |
+| A | 02-prompt-fase-A.md | P-01, P-07 | SUBAGENTE | ✅ |
 | B | 03-prompt-fase-B.md | P-02 | DIRECTA | ✅ |
-| C | 04-prompt-fase-C.md | P-03, P-05 | DIRECTA | ⬜ |
-| D | 05-prompt-fase-D.md | P-04, P-06 | DIRECTA | ⬜ |
-| E | 06-prompt-fase-E.md | 7 tests | DIRECTA | ⬜ |
-| F | 07-prompt-fase-F.md | v4complete + análisis | MIXTO | ⬜ |
-| RELEASE | 08-prompt-fase-release.md | v4.63.2 | SUBAGENTE | ⬜ |
+| C | 04-prompt-fase-C.md | P-03, P-05 | DIRECTA | ✅ |
+| D | 05-prompt-fase-D.md | P-04, P-06 | DIRECTA | ✅ |
+| E | 06-prompt-fase-E.md | 7 tests | DIRECTA | ✅ |
+| F | 07-prompt-fase-F.md | v4complete + análisis | MIXTO | ✅ |
+| RELEASE | 08-prompt-fase-release.md | v4.63.2 | SUBAGENTE | ✅ |
 
 **Fase de mayor complejidad**: FASE-C (P-05 G9 dead gate — decisión arquitectónica)
 

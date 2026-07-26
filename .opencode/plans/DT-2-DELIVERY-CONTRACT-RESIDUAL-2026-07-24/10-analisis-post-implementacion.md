@@ -17,11 +17,11 @@
 | D | 2026-07-25 | ~40 | ✅ COMPLETADA | DIRECTA | 2026-07-25 |
 | E | 2026-07-25 | ~46 | ✅ COMPLETADA | DIRECTA | 2026-07-25 |
 | F | 2026-07-25 | ~46 | ✅ COMPLETADA | MIXTO | 2026-07-25 |
-| RELEASE | — | — | ⬜ PENDIENTE | SUBAGENTE | — |
+| RELEASE | 2026-07-25 | ~1 | ✅ COMPLETADA | DIRECTA | 2026-07-25 |
 
-**Total sesiones**: 7 (6 completadas + 1 RELEASE pendiente)
-**Total iteraciones**: ~250 estimadas
-**Total commits**: 5 (FASE-A a FASE-E) + 1 (FASE-F)
+**Total sesiones**: 7 (7 completadas)
+**Total iteraciones**: ~251 estimadas
+**Total commits**: 7 (FASE-A a FASE-F + RELEASE)
 
 ---
 

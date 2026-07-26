@@ -628,16 +628,20 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(document_content)
 
-        # FASE-0D: Build and save ProposalAssetMatrix for traceability
+        # FASE-DT-3 FASE-2: Build and save AssetAlignmentMatrix (contrato canónico unificado)
         if pain_ledger is not None and assets_generated is not None:
             try:
                 from modules.asset_generation.proposal_asset_alignment import (
-                    ProposalAssetMatrix,
-                    ALL_PROMISED_SERVICES,
+                    AssetAlignmentMatrix,
                 )
-                matrix = ProposalAssetMatrix()
-                entries = matrix.build(
-                    ALL_PROMISED_SERVICES, pain_ledger, assets_generated
+                # Use a minimal DeliveryContext just for build() signature;
+                # asset derivation falls through to the generated_assets override.
+                from modules.delivery.delivery_context import DeliveryContext
+                delivery_ctx = DeliveryContext()
+                matrix = AssetAlignmentMatrix.build(
+                    delivery_context=delivery_ctx,
+                    pain_ledger=pain_ledger,
+                    generated_assets=assets_generated,
                 )
                 # P-06 FIX: Guardar matrix en subdirectorio del hotel para
                 # que _collect_files() la encuentre via rglob(). El packager
@@ -645,12 +649,12 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
                 # la matriz se guardaba en output/v4_complete/v4_audit/ (flat).
                 hotel_slug = hotel_name.lower().replace(" ", "_").replace("-", "_")
                 matrix_path = output_path / hotel_slug / "v4_audit" / "proposal_asset_matrix.json"
-                matrix.save(entries, matrix_path)
+                matrix.save(matrix_path)
                 logger.info(
-                    f"ProposalAssetMatrix saved: {len(entries)} entries → {matrix_path}"
+                    f"AssetAlignmentMatrix saved: {matrix.total_services} entries → {matrix_path}"
                 )
             except Exception as e:
-                logger.warning(f"ProposalAssetMatrix generation failed (non-blocking): {e}")
+                logger.warning(f"AssetAlignmentMatrix generation failed (non-blocking): {e}")
 
         return str(file_path)
     

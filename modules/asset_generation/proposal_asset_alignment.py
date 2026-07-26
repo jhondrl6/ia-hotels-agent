@@ -599,11 +599,260 @@ class ProposalAssetMatrix:
             json.dump(data, f, indent=2, ensure_ascii=False, sort_keys=True)
 
 
+# ==========================================================================
+# FASE-DT-3 FASE-2: AssetAlignmentMatrix — Contrato Canónico Unificado
+# ==========================================================================
+# Unifica ProposalAssetMatrix (traceability pain-driven) y AlignmentReport
+# (delivery verification) en un solo contrato que consume DeliveryContext
+# como fuente de verdad post-DT-1.
+#
+# Taxonomía unificada (AlignmentStatus):
+#   LINKED               — Pain real + asset existe → ✅
+#   MISSING_ASSET         — Pain real + asset NO existe → ❌ (fallo real)
+#   NO_BREACH             — Pain NO existe → ⏭️ (no aplica)
+#   GENERIC_DRAFT         — Placeholder genérico → ❌
+#   PRESENT_IN_PRODUCTION — Asset existe en sitio → ✅
+#   LOW_QUALITY           — Asset generado pero baja calidad → ⚠️
+#   INDETERMINATE         — No se pudo determinar → ⚠️
+
+from enum import Enum as _Enum
+
+
+class AlignmentStatus(_Enum):
+    """Estado de alineación propuesta→asset unificado.
+
+    Combina las dimensiones ortogonales:
+    - analytics (pain-driven): ¿el servicio está justificado?
+    - delivery (asset-existence): ¿el asset está listo?
+    """
+    LINKED = "linked"
+    MISSING_ASSET = "missing_asset"
+    NO_BREACH = "no_breach"
+    GENERIC_DRAFT = "generic_draft"
+    PRESENT_IN_PRODUCTION = "present_in_production"
+    LOW_QUALITY = "low_quality"
+    INDETERMINATE = "indeterminate"
+
+
+@dataclass
+class AssetAlignmentMatrix:
+    """Contrato canónico unificado Proposal→Asset.
+
+    Reemplaza a ProposalAssetMatrix y AlignmentReport con una sola fuente
+    de verdad que responde ambas preguntas sin duplicar lógica:
+    - \"¿el servicio responde a un pain real?\" (analytics)
+    - \"¿el asset está listo para delivery?\" (delivery)
+
+    Consume DeliveryContext como fuente de verdad post-DT-1.
+    """
+
+    entries: List[ProposalAssetMatrixEntry] = field(default_factory=list)
+    _entry_map: Dict[str, ProposalAssetMatrixEntry] = field(default_factory=dict, repr=False)
+
+    def __post_init__(self) -> None:
+        """Rebuild entry map after initialization."""
+        self._rebuild_map()
+
+    def _rebuild_map(self) -> None:
+        """Rebuild fast lookup from entries list."""
+        self._entry_map = {e.service_name: e for e in self.entries if e.service_name}
+
+    # ── Factory Methods ─────────────────────────────────────────────────
+
+    @classmethod
+    def build(
+        cls,
+        delivery_context: Any,
+        pain_ledger: List[Any],
+        generated_assets: Optional[List[Any]] = None,
+    ) -> "AssetAlignmentMatrix":
+        """Build the matrix from DeliveryContext and pain_ledger.
+
+        Preferred constructor — consumes DeliveryContext as source of truth.
+
+        Args:
+            delivery_context: DeliveryContext instance (post-DT-1)
+            pain_ledger: List of PainLedgerEntry from the pain ledger
+            generated_assets: Optional override; if None, derived from
+                             delivery_context.assets
+
+        Returns:
+            AssetAlignmentMatrix with one entry per promised service
+        """
+        from ..commercial_documents.pain_solution_mapper import PainSolutionMapper
+
+        pain_map = PainSolutionMapper.PAIN_SOLUTION_MAP
+        entries: List[ProposalAssetMatrixEntry] = []
+
+        # Build fast lookups
+        ledger_pain_ids: set = {
+            e.get("pain_id") if isinstance(e, dict) else getattr(e, "pain_id", "")
+            for e in pain_ledger
+        }
+
+        # Derive assets from delivery_context or use override
+        if generated_assets is not None:
+            asset_by_type: Dict[str, Any] = {}
+            for a in generated_assets:
+                if isinstance(a, dict):
+                    asset_by_type[a.get("asset_type", "")] = a
+                else:
+                    asset_by_type[getattr(a, "asset_type", "")] = a
+        else:
+            asset_by_type = {
+                a.asset_type: a for a in getattr(delivery_context, "assets", [])
+            }
+
+        for service_name in ALL_PROMISED_SERVICES:
+            expected_asset = PROPOSAL_SERVICE_TO_ASSET.get(service_name)
+            if not expected_asset:
+                continue
+
+            # Find all pain_ids that map to this asset_type
+            candidate_pain_ids = [
+                pid for pid, mapping in pain_map.items()
+                if expected_asset in mapping.get("assets", [])
+            ]
+            matched_pain_ids = [pid for pid in candidate_pain_ids if pid in ledger_pain_ids]
+
+            gen_asset = asset_by_type.get(expected_asset)
+
+            if matched_pain_ids and gen_asset is not None:
+                status = "LINKED"
+                confidence = (
+                    gen_asset.get("confidence_score", 0.0) if isinstance(gen_asset, dict)
+                    else getattr(gen_asset, "confidence_score", 0.0)
+                )
+                asset_path = (
+                    gen_asset.get("path", None) if isinstance(gen_asset, dict)
+                    else getattr(gen_asset, "path", None)
+                )
+            elif matched_pain_ids and gen_asset is None:
+                status = "MISSING_ASSET"
+                confidence = max(
+                    (e.get("confidence", 0.0) if isinstance(e, dict) else getattr(e, "confidence", 0.0)
+                     for e in pain_ledger
+                     if (e.get("pain_id") if isinstance(e, dict) else getattr(e, "pain_id", "")) in matched_pain_ids),
+                    default=0.0,
+                )
+                asset_path = None
+            elif not matched_pain_ids:
+                status = "NO_BREACH"
+                confidence = 0.0
+                asset_path = None
+            else:
+                status = "GENERIC_DRAFT"
+                confidence = 0.0
+                asset_path = None
+
+            entries.append(ProposalAssetMatrixEntry(
+                service_name=service_name,
+                pain_ids=matched_pain_ids,
+                asset_type=expected_asset,
+                asset_path=asset_path,
+                confidence=confidence,
+                status=status,
+            ))
+
+        return cls(entries=entries)
+
+    # ── Lookup ──────────────────────────────────────────────────────────
+
+    def get_alignment(self, service_name: str) -> AlignmentStatus:
+        """Lookup alignment status for a single service.
+
+        Args:
+            service_name: Service name as it appears in the proposal
+
+        Returns:
+            AlignmentStatus enum value; INDETERMINATE if not found
+        """
+        entry = self._entry_map.get(service_name)
+        if entry is None:
+            return AlignmentStatus.INDETERMINATE
+        try:
+            return AlignmentStatus(entry.status.lower())
+        except ValueError:
+            return AlignmentStatus.INDETERMINATE
+
+    def is_delivery_ready(self) -> bool:
+        """Check if all actionable services have their assets ready.
+
+        Actionable services = those with a real pain (excludes NO_BREACH).
+        Delivery is ready when none of them are MISSING_ASSET or GENERIC_DRAFT.
+
+        Returns:
+            True if all actionable services are LINKED or PRESENT_IN_PRODUCTION
+        """
+        actionable = [e for e in self.entries if e.status != "NO_BREACH"]
+        if not actionable:
+            return True
+        return all(
+            e.status in ("LINKED", "PRESENT_IN_PRODUCTION")
+            for e in actionable
+        )
+
+    # ── Serialization ──────────────────────────────────────────────────
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serialize to dict for proposal_asset_matrix.json.
+
+        Format is backward-compatible with ProposalAssetMatrix.save() output.
+        """
+        return {
+            "proposal_asset_matrix_version": "2.0",  # Unified contract
+            "alignment_status_version": "1.0",
+            "delivery_ready": self.is_delivery_ready(),
+            "entries": [
+                {
+                    "service_name": e.service_name,
+                    "pain_ids": e.pain_ids,
+                    "asset_type": e.asset_type,
+                    "asset_path": e.asset_path,
+                    "confidence": e.confidence,
+                    "status": e.status,
+                    "alignment": self.get_alignment(e.service_name).value,
+                }
+                for e in self.entries
+            ],
+        }
+
+    def save(self, path: Path) -> None:
+        """Save the matrix to a JSON file.
+
+        Args:
+            path: Output path for proposal_asset_matrix.json
+        """
+        path.parent.mkdir(parents=True, exist_ok=True)
+        data = self.to_dict()
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2, ensure_ascii=False, sort_keys=True)
+
+    # ── Backward compat helpers ────────────────────────────────────────
+
+    @property
+    def aligned_count(self) -> int:
+        """Number of LINKED services (backward compat)."""
+        return sum(1 for e in self.entries if e.status == "LINKED")
+
+    @property
+    def missing_count(self) -> int:
+        """Number of MISSING_ASSET services (backward compat)."""
+        return sum(1 for e in self.entries if e.status == "MISSING_ASSET")
+
+    @property
+    def total_services(self) -> int:
+        """Total entries in the matrix."""
+        return len(self.entries)
+
+
 __all__ = [
     'PROPOSAL_SERVICE_TO_ASSET',
     'ALL_PROMISED_SERVICES',
     'ServiceAlignment',
     'AlignmentReport',
+    'AlignmentStatus',
+    'AssetAlignmentMatrix',
     'ProposalAssetMatrixEntry',
     'ProposalAssetMatrix',
     'verify_proposal_asset_alignment',
