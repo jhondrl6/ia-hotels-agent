@@ -24,12 +24,12 @@
 ## Estado del Proyecto (v4.64.0 -- DT-3: Tech debt resolution - AssetAlignmentMatrix unification)
 
 - **3,094 test functions** — suite completa, 0 regresiones
-- **201 modulos Python** (~72K lineas) + **25 scripts** (~6.2K lineas) + **30 directorios de test**
+- **201 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **30 directorios de test**
 - **9 config YAML** con schema validado
 - **16 agent skills** en `.agents/workflows/`
-- **11 publication gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding)
+- **5 publication gates** — 4 blocking (coherence, coverage, evidence, proposal_asset_alignment) + asset_specificity + advisory warnings por IA-Readiness Critical
 - **Coherence Score >= 0.8** requerido para publicacion
-- **27 assets IMPLEMENTED** (+ 4 DEPRECATED + 3 MANUAL_ONLY) en catalogo
+- **25 assets** en catalogo (22 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
@@ -186,7 +186,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 | Escenario | Probabilidad | recovery_factor | Base de calculo |
 |-----------|--------------|-----------------|-----------------|
 | **Conservador** | 70% | 0.15 | Peor caso plausible (recupera 15% de la perdida) |
-| **Realista** | 20% | 0.20 | Meta esperada (recupera 20% de la perdida) |
+| **Realista** | 20% | 0.35 | Meta esperada (recupera 35% de la perdida) |
 | **Optimista** | 10% | 0.25 | Mejor caso (recupera 25% de la perdida) |
 
 **Formula**: `projected_gain = monthly_loss_cop x pain_ratio x recovery_factor`
@@ -238,11 +238,11 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 - **3,094 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.12.0 (1 fase/sesion, max 60 iteraciones)
+- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.13.0 (1 fase/sesion, max 60 iteraciones)
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
-- **11 Publication Gates** (6 blocking + 3 advisory + coverage + tier_c_onboarding):
-  - Blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, proposal_asset_alignment
-  - Advisory: content_quality, asset_confidence
+- **5 Publication Gates** — 4 blocking (coherence G6, coverage G7, evidence, proposal_asset_alignment G9) + asset_specificity G8 + advisory warnings IA-Readiness Critical:
+  - Blocking: coherence (G6), coverage (G7), evidence, proposal_asset_alignment (G9)
+  - Warning: asset_specificity (G8), plus IA-Readiness Critical advisory
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
 
 ---
@@ -286,7 +286,7 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
-  tests/                      # ~63K lineas de test (30 directorios)
+  tests/                      # ~65K lineas de test (30 directorios)
     config/                   #   61 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
