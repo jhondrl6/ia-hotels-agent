@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
-version: v2.12.0
+version: v2.13.0
 ---
 
 # Skill: Phased Project Executor
@@ -181,6 +181,21 @@ SI la fase tiene SOLO tareas de investigacion/fix/implementacion de codigo:
     → Budget: ~30-40 iteraciones para trabajo + ~20 para verificacion/docs
     → Este budget reemplaza el calculo generico de "Calculo del Presupuesto"
       (seccion anterior) — la ejecucion directa elimina el overhead de spawn
+
+SI la fase requiere una decision arquitectonica cross-module que:
+  - Afecta multiples consumidores en diferentes archivos
+  - Implica elegir entre opciones de diseno no triviales (ej: unificar
+    dos taxonomias vs crear un tercer sistema)
+  - Requiere entender el contexto completo de ambas implementaciones
+    → NO delegar a subagente. Ejecutar DIRECTAMENTE con el agente principal.
+    → Un subagente carece del contexto completo para tomar decisiones
+      arquitectonicas correctas.
+    → Leccion: DT-3 FASE-2 (2026-07-25) — decision de unificar
+      ProposalAssetMatrix + AlignmentReport en AssetAlignmentMatrix
+      requeria entender ambas taxonomias + 4 consumidores.
+    → Esta regla PREVALECE sobre cualquier consideracion de eficiencia:
+      aunque la fase sea puro codigo (perfil delegable), si incluye
+      una decision arquitectonica → directa.
 
 SI la fase tiene 1+ comandos externos (v4complete, scraping, apis):
     → Regla de v4complete aplica (seccion anterior ↑)
@@ -863,6 +878,28 @@ git diff --stat
 - [ ] run_all_validations.py --quick pasa sin errores
 - [ ] git diff --stat muestra todos los archivos modificados
 
+#### E8b. README.md Line-by-Line Audit (MANUAL)
+
+> [!WARNING]
+> Los conteos numericos en README.md (test count, module count, fecha) pueden desincronizarse silenciosamente entre releases. DT-3 encontro el test count stale por 56 tests (3038 vs 3094 real).
+
+Verificar que los conteos en README.md coincidan con la realidad:
+
+```bash
+# Test count real
+./venv/Scripts/python.exe -m pytest --collect-only -q 2>&1 | tail -1
+
+# Module count real
+find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
+```
+
+**Checklist README audit:**
+- [ ] Test count en README.md (linea del banner `vX.Y.Z`) coincide con `pytest --collect-only`
+- [ ] Test count en `## Estado del Proyecto` y `## Calidad Garantizada` coincide
+- [ ] Module count en README.md coincide con `find modules/`
+- [ ] Fecha de actualizacion en el banner es la fecha actual
+- [ ] Si hay discrepancia → corregir con `replace_all=True` y commit separado post-release
+
 ---
 
 ## Criterios de Éxito
@@ -882,6 +919,7 @@ git diff --stat
 - **FASE-RELEASE ejecutada sin implementaciones completadas** → abortar; verificar `dependencias-fases.md` que todas las fases previas estén en `✅`
 
 ## Versiones
+- **v2.13.0** (2026-07-25): GAP 3 — Nueva branch en Regla de Decisión: fases con decisión arquitectónica cross-module NO son delegables (lección DT-3 FASE-2: unificar taxonomías requiere contexto completo de ambas implementaciones + consumidores). GAP 4 — Nuevo paso E8b en FASE-RELEASE: README.md line-by-line audit con live pytest count y module count para prevenir conteos stale (lección DT-3: test count desincronizado por 56 tests).
 - **v2.12.0** (2026-07-22): GAP 1 — Nueva branch 4 en Regla de Decisión código+tests: proyectos con venv Windows accedidos desde WSL no deben delegar tests a subagentes (causa raíz: subagente WSL no puede importar dependencias del venv Windows como bs4/selenium; lección de FASE-4 BUGS-ONBOARDING-ADR, ~40 iteraciones perdidas). GAP 2 — Nota [!TIP] en Paso 7: FASE-RELEASE es delegable a subagente (solo edita YAML/MD + scripts, sin imports del proyecto; confirmado 18 tool calls / ~4 min).
 - **v2.11.0** (2026-05-11): Nueva sección §2.5 "Verificación Pre-Creación de Prompts". Regla anti-deuda acumulativa: cada fase de implementación ejecuta `log_phase_completion.py` al terminar — NO delegar a FASE-RELEASE. Checklist obligatorio para detectar planes mal diseñados antes de crear prompts. Si T1 de RELEASE = "registrar FASE-1 a FASE-5" → error. Agregada acción correctiva.
 - **v2.8.0** (2026-04-28): Protocolo de Evidencia Proactiva (obligatorio inmediatamente despues de output v4complete, antes de cualquier verificacion). Nueva seccion "Cierre Obligatorio de Sesion" — siempre guardar evidencia + actualizar plan antes de cerrar, sin excepciones.
