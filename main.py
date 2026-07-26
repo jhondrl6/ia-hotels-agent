@@ -2561,6 +2561,15 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     except Exception as e:
         print(f"   [WARN] Post-T4FIX scrub failed: {e}")
 
+    # BUG-1 FIX (DT-3): Helper para rutas per-hotel — evita recurrencia de rutas flat
+    def _get_pipeline_path(output_dir, hotel_id, filename):
+        """Construye ruta per-hotel para archivos JSON del pipeline.
+
+        Centraliza el patrón output_dir / hotel_id / "v4_audit" / filename
+        para evitar recurrencia de rutas flat (BUG-1, DT-3).
+        """
+        return output_dir / hotel_id / "v4_audit" / filename
+
     # FASE-6-HOTFIX G1: Sincronizar coherence_validation.json con score final post-geo
     # El orchestrator guarda coherence_validation.json (score pre-gen: ~0.81) Y
     # coherence_validation_post_gen.json (score post-gen: ~0.826). Tras T4FIX,
@@ -2568,8 +2577,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     # el score final para que cualquier lectura posterior sea consistente.
     try:
         import shutil
-        cv_post_path = output_dir / "v4_audit" / "coherence_validation_post_gen.json"
-        cv_path = output_dir / "v4_audit" / "coherence_validation.json"
+        cv_post_path = _get_pipeline_path(output_dir, hotel_id, "coherence_validation_post_gen.json")
+        cv_path = _get_pipeline_path(output_dir, hotel_id, "coherence_validation.json")
         if cv_post_path.exists():
             shutil.copy2(str(cv_post_path), str(cv_path))
             post_score = json.load(open(cv_post_path)).get("overall_score", "?")
@@ -2647,7 +2656,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         
         # PIPELINE-FIX: Load pain_ledger for assessment injection and proposal generation
         from modules.asset_generation.pain_ledger import PainLedger
-        pain_ledger_path = output_dir / "v4_audit" / "pain_ledger.json"
+        pain_ledger_path = _get_pipeline_path(output_dir, hotel_id, "pain_ledger.json")
         if pain_ledger_path.exists():
             pain_ledger_entries = PainLedger().load(pain_ledger_path)
 

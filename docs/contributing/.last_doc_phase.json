@@ -23,7 +23,7 @@
   "modules/asset_generation/asset_catalog.py": "FASE-2-ASSET-ALIGNMENT",
   "modules/commercial_documents/data_structures.py": "FASE-1-HOOK-PDF",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
-  "main.py": "FASE-RELEASE-4.63.0",
+  "main.py": "FASE-0",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "FASE-TRAZABILIDAD-RAIZ",
   "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-D",
