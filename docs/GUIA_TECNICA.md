@@ -1,9 +1,56 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.63.2 (Delivery-Contract-Residual)
+**Versión:** v4.64.0 (DT-3: Tech debt resolution - AssetAlignmentMatrix unification)
 **Última actualización:** 2026-07-25
 
 ---
+
+### Notas de Cambios v4.64.0 — Tech Debt Resolution (DT-3)
+
+**Fecha:** 2026-07-25
+
+**Resumen**: Resolución de 4 bugs de technical debt post-DT-2 (1 CRÍTICO, 3 MEDIOS).
+Corrección sistémica de rutas flat → per-hotel, unificación de ProposalAssetMatrix +
+AlignmentReport en AssetAlignmentMatrix, y fixes al gate G9.
+
+**Módulos afectados**: `main.py`, `modules/quality_gates/delivery_quality_report.py`,
+`modules/asset_generation/proposal_asset_alignment.py`,
+`modules/commercial_documents/v4_proposal_generator.py`
+
+**Problema**: Post-DT-2, 3 archivos JSON se leían de ruta flat inexistente causando
+pain_ledger vacío (BUG-1). G9 aparecía en blocking_gates y warning_gates simultáneamente
+(BUG-2) y evaluaba asset_path en vez de status (BUG-3). ProposalAssetMatrix y
+AlignmentReport tenían taxonomías divergentes (BUG-4/P-04).
+
+**Solución**:
+- BUG-1: Helper `_get_pipeline_path()` que resuelve rutas per-hotel dinámicamente.
+  3 rutas flat corregidas en main.py (L2571, L2572, L2650).
+- BUG-2: Constante `BLOCKING_GATE_NAMES` usada para generar ambas listas (blocking y
+  warning), eliminando la duplicación.
+- BUG-3: Helper `_is_service_aligned()` evalúa status (LINKED=True, NO_BREACH=True,
+  resto=False). `actionable_services` excluye NO_BREACH. Pass condition verifica
+  `all(not aligned)` → False (hay servicios sin asset).
+- BUG-4/P-04: `AssetAlignmentMatrix` con `AlignmentStatus` enum (LINKED, NO_BREACH,
+  MISSING_ASSET). Taxonomía unificada que reemplaza ProposalAssetMatrix y AlignmentReport.
+  Consumidores migrados: G9, publication_gates.py, v4_proposal_generator.py.
+
+**Helper `_get_pipeline_path()`**: Resuelve rutas de pipeline per-hotel desde
+`pipeline_dir / hotel_slug / filename`. Si el archivo per-hotel no existe, devuelve
+la ruta flat como fallback (backward compatible).
+
+**AssetAlignmentMatrix**: Clase unificada en `proposal_asset_alignment.py` con:
+- `AlignmentStatus` enum: LINKED (servicio tiene asset), NO_BREACH (servicio no necesita
+  asset), MISSING_ASSET (servicio debería tener asset pero no lo tiene)
+- `build(delivery_context, pain_ledger)` → matriz con entradas por servicio
+- Consumido por G9 para status-based evaluation (NO_BREACH no bloquea, MISSING_ASSET sí)
+
+**Tests**: 86 tests existentes PASS (0 regresiones) + 14 tests nuevos AssetAlignmentMatrix
+(14/14 PASSED). v4complete Zi One Luxury verificado: BUG-1 (9 entries pain_ledger),
+BUG-2 (solo blocking), BUG-3 (NO_BREACH no bloquea), BUG-4 (AssetAlignmentMatrix unificado).
+
+**Backwards compatibility**: ✅ `_get_pipeline_path()` tiene fallback a ruta flat.
+AssetAlignmentMatrix mantiene el mismo contrato JSON. G9 mantiene comportamiento
+bloqueante para MISSING_ASSET. Tests existentes sin cambios.
 
 ### Notas de Cambios v4.63.2 — Delivery Contract Residual Fixes (DT-2)
 

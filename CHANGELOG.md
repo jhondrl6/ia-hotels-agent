@@ -1,5 +1,43 @@
 # Changelog
 
+## [4.64.0] - DT-3: Tech debt resolution — AssetAlignmentMatrix unification — 2026-07-25
+
+### Objetivo
+Resolver 4 bugs de technical debt post-DT-2: corrección sistémica de rutas flat → per-hotel,
+unificación de ProposalAssetMatrix + AlignmentReport en AssetAlignmentMatrix, fix de G9 dual-list,
+y evaluación status-based de G9 (NO_BREACH no bloquea).
+
+### Cambios Implementados (DT-3: Tech Debt Resolution)
+- **BUG-1**: Fix sistémico de 3 rutas flat → per-hotel. Creado helper `_get_pipeline_path()` en main.py.
+  Corrige pain_ledger.json, coherence_validation_flat.json y coherence_validation_per_hotel.json.
+- **BUG-2**: Fix G9 dual-list — G9 ya no aparece simultáneamente en blocking_gates y warning_gates.
+  Creada constante `BLOCKING_GATE_NAMES` para deduplicación.
+- **BUG-3**: Fix G9 status-based evaluation — evalúa `status` del asset (LINKED=pass, NO_BREACH=skip,
+  MISSING_ASSET=fail). `_is_service_aligned()` helper implementado; `actionable_services` excluye NO_BREACH.
+- **BUG-4 / P-04**: Unificación ProposalAssetMatrix + AlignmentReport → `AssetAlignmentMatrix`.
+  Nueva taxonomía unificada con `AlignmentStatus` enum (LINKED, NO_BREACH, MISSING_ASSET).
+  Consumidores migrados: G9, main.py, publication_gates.py, v4_proposal_generator.py.
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/asset_generation/proposal_asset_alignment.py` | AssetAlignmentMatrix con AlignmentStatus enum + taxonomía unificada |
+| `tests/asset_generation/test_proposal_asset_matrix.py` | 14 tests nuevos para contrato AssetAlignmentMatrix |
+| `per-hotel` | Placeholder para directorio de pipelines per-hotel (cargado dinámicamente) |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Helper `_get_pipeline_path()` + 3 rutas flat → per-hotel (BUG-1) |
+| `modules/quality_gates/delivery_quality_report.py` | BLOCKING_GATE_NAMES constante (BUG-2) + status-based eval (BUG-3) + consume AssetAlignmentMatrix (BUG-4) |
+| `modules/commercial_documents/v4_proposal_generator.py` | Migración a AssetAlignmentMatrix |
+| `tests/delivery/test_delivery_contract.py` | Test actualizado para AssetAlignmentMatrix |
+
+### Tests
+- 86 tests existentes PASS (0 regresiones)
+- 14 tests nuevos AssetAlignmentMatrix (14/14 PASSED)
+- v4complete Zi One Luxury: BUG-1 ✅ (9 entries pain_ledger), BUG-2 ✅ (solo blocking), BUG-3 ✅ (NO_BREACH no bloquea), BUG-4 ✅ (AssetAlignmentMatrix)
+
 ## [4.63.2] - Delivery-Contract-Residual — 2026-07-25
 
 ### Objetivo

@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.63.2 -- Delivery-Contract-Residual COMPLETADO**
+> **v4.64.0 -- DT-3: Tech debt resolution - AssetAlignmentMatrix unification COMPLETADO**
 
 ---
 
