@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.64.0 (DT-3: Tech debt resolution - AssetAlignmentMatrix unification)
-**Última actualización:** 2026-07-25
+**Última actualización:** 2026-07-26
 
 ---
 
