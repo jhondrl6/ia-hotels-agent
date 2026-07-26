@@ -1,4 +1,4 @@
-<!-- agents_version: v4.63.0 | last_update: 2026-07-25 -->
+<!-- agents_version: v4.64.0 | last_update: 2026-07-25 -->
 
 # IA Hoteles Agent (iah-cli)
 
@@ -203,7 +203,7 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
-| `modules/quality_gates/` | 11 publication gates (6 blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics; 3 advisory: content_quality, asset_confidence; 2 quality: tier_c_onboarding_required, coverage; proposal_asset_alignment: delivery-blocking desde v4.63.0) | v4complete |
+| `modules/quality_gates/` | 5 publication gates (4 blocking: coherence, coverage, evidence, proposal_asset_alignment; 1 warning: asset_specificity; advisory warnings IA-Readiness Critical) | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
@@ -357,7 +357,7 @@ Se incluyen para orientar mejoras pero nunca bloquean publicación.
 
 <!--
 ZONA REFERENCIA - Solo si es necesario para contexto profundo
-Actualizada: 2026-07-23 | v4.63.0
+Actualizada: 2026-07-25 | v4.64.0
 -->
 
 ## Transformación v3 → v4

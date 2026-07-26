@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.63.1 | **Codename**: Delivery-Contract
-> **Release date**: 2026-07-24 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.64.0 | **Codename**: DT-3: Tech debt resolution - AssetAlignmentMatrix unification
+> **Release date**: 2026-07-25 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-07-24 | v4.63.1 Delivery-Contract*
+*Auto-generado: 2026-07-26 | v4.64.0 DT-3: Tech debt resolution - AssetAlignmentMatrix unification*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
