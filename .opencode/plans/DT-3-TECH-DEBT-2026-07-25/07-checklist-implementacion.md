@@ -14,7 +14,7 @@
 | FASE-1 | Fix G9 dual-list + status-based eval (BUG-2, BUG-3) | ✅ COMPLETADO | 2026-07-25 | 2026-07-25 | 1 | ✅ SUBAJENTE |
 | FASE-2 | Unificar ProposalAssetMatrix + AlignmentReport (P-04) | ✅ COMPLETADO | 2026-07-25 | 2026-07-25 | 1 | ❌ DIRECTA |
 | FASE-3 | v4complete Zi One + verificación E2E post-fix | ✅ COMPLETADO | 2026-07-25 | 2026-07-25 | 1 | ⚠️ MIXTO |
-| FASE-RELEASE | Documentación + version bump v4.64.0 | ⬜ PENDIENTE | — | — | — | ✅ SUBAJENTE |
+| FASE-RELEASE | Documentación + version bump v4.64.0 | ✅ COMPLETADO | 2026-07-25 | 2026-07-25 | 1 | ✅ SUBAJENTE |
 
 ---
 
@@ -62,12 +62,12 @@
 
 ## FASE-RELEASE — Documentación + version bump v4.64.0
 
-- [ ] T1: VERSION.yaml → 4.64.0 + sync_versions.py
-- [ ] T2: CHANGELOG.md [4.64.0] + GUIA_TECNICA.md nota
-- [ ] T3: git commit + git tag -a v4.64.0
-- [ ] T4: version_consistency_checker.py + run_all_validations.py --quick + README.md audit
-- [ ] Post: log_phase_completion.py --force-skip-docs ejecutado
-- [ ] Evidencia: tag created, pre-commit PASS
+- [x] T1: VERSION.yaml → 4.64.0 + sync_versions.py
+- [x] T2: CHANGELOG.md [4.64.0] + GUIA_TECNICA.md nota
+- [x] T3: git commit + git tag -a v4.64.0
+- [x] T4: version_consistency_checker.py + run_all_validations.py --quick + README.md audit
+- [x] Post: log_phase_completion.py --force-skip-docs ejecutado
+- [x] Evidencia: tag v4.64.0 created (dc303e5), pre-commit PASS, README test count 3038→3094
 
 ---
 
@@ -86,4 +86,4 @@
 - [ ] S-11: ZIP generado para Zi One
 - [ ] S-12: P-01, P-02, P-06 verificados en ZIP
 - [x] S-13: v4complete post-fix: G9 PASS o WARNING legítimo
-- [ ] S-14: VERSION.yaml 4.64.0, CHANGELOG, tag creado
+- [x] S-14: VERSION.yaml 4.64.0, CHANGELOG, tag creado
