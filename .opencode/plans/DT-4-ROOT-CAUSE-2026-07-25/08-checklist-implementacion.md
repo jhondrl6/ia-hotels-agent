@@ -99,4 +99,4 @@
 | S-10 | Gates renombrados sin regresión | ⬜ |
 | S-11 | v4complete Zi One: coverage gate PASS | ⬜ |
 | S-12 | 140 tests + 3 nuevos PASS | ✅ |
-| S-13 | Pre-commit hooks limpios | ⬜ |
+| S-13 | Pre-commit hooks limpios | ✅ |
