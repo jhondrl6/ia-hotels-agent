@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.64.0** -- DT-3: Tech debt resolution - AssetAlignmentMatrix unification | Actualizado 23 Julio 2026 | 3,038 pruebas automatizadas | 0 errores conocidos
+**v4.64.0** -- DT-3: Tech debt resolution - AssetAlignmentMatrix unification | Actualizado 25 Julio 2026 | 3,094 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -23,7 +23,7 @@
 
 ## Estado del Proyecto (v4.64.0 -- DT-3: Tech debt resolution - AssetAlignmentMatrix unification)
 
-- **3,038 test functions** — suite completa, 0 regresiones
+- **3,094 test functions** — suite completa, 0 regresiones
 - **201 modulos Python** (~72K lineas) + **25 scripts** (~6.2K lineas) + **30 directorios de test**
 - **9 config YAML** con schema validado
 - **16 agent skills** en `.agents/workflows/`
@@ -235,7 +235,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **3,038 test functions** — suite completa, 0 regresiones
+- **3,094 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.12.0 (1 fase/sesion, max 60 iteraciones)
