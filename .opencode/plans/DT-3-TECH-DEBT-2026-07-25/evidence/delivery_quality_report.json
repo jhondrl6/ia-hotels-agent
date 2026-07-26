@@ -1,0 +1,51 @@
+{
+  "status": "FAIL",
+  "blocking": true,
+  "coverage_gate": {
+    "passed": true,
+    "details": {
+      "total_assets": 11,
+      "generated": 10,
+      "failed": 0,
+      "failure_rate": 0.0,
+      "reason": ""
+    },
+    "gate": "G7"
+  },
+  "proposal_asset_gate": {
+    "passed": false,
+    "gate": "G9",
+    "aligned": 5,
+    "total": 8
+  },
+  "asset_specificity_gate": {
+    "passed": true,
+    "details": {
+      "avg_confidence": 0.88,
+      "total_assets": 10,
+      "all_above_threshold": true
+    },
+    "gate": "G8"
+  },
+  "evidence_gate": {
+    "passed": true,
+    "details": {
+      "coherence_available": true,
+      "asset_data_available": true,
+      "coherence_score": 0.82
+    },
+    "gate": "EVIDENCE"
+  },
+  "advisory_warnings": [],
+  "human_review_items": [],
+  "summary": {
+    "total_gates": 5,
+    "passed": 4,
+    "failed": 1,
+    "coherence_score": 0.82,
+    "blocking_gates": [
+      "proposal_asset_alignment"
+    ],
+    "warning_gates": []
+  }
+}
