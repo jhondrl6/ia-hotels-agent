@@ -69,7 +69,7 @@ class TestCoverageGate:
         assert result.passed is False
         assert result.status == GateStatus.FAILED
         assert "no_whatsapp_visible" in result.message
-        assert result.gate_name == "coverage"
+        assert result.gate_name == "coverage_no_silent_drop"
         assert result.details["uncovered"] == ["no_whatsapp_visible"]
 
     def test_passes_when_pain_in_diagnostic(self, orchestrator):
