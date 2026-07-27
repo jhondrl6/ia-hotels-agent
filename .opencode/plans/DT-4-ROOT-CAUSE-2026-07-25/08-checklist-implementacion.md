@@ -11,7 +11,7 @@
 | Fase | Título | Estado | Sesión | Fecha | Iteraciones |
 |------|--------|--------|--------|-------|-------------|
 | FASE-0 | Reconciliador post-orchestrator | ✅ COMPLETADO | 2026-07-26 | 2026-07-26 | ~20 |
-| FASE-1 | BUG-8: Optimista reinterpretación | ⬜ PENDIENTE | — | — | — |
+| FASE-1 | BUG-8: Optimista reinterpretación | ✅ COMPLETADO | 2026-07-26 | 2026-07-26 | delegate_task (21 calls, 464s) |
 | FASE-2 | BUG-7: Commercial gates visibles | ⬜ PENDIENTE | — | — | — |
 | FASE-3 | BUG-10: monthly_report alignment | ⬜ PENDIENTE | — | — | — |
 | FASE-4 | N1: Renombrar gates coverage | ⬜ PENDIENTE | — | — | — |
@@ -31,12 +31,12 @@
 
 ---
 
-## FASE-1 — BUG-8: Optimista Reinterpretación ⬜ PENDIENTE
+## FASE-1 — BUG-8: Optimista Reinterpretación ✅ COMPLETADO
 
-- [ ] T1: `_check_scenario_negative`: optimista < 0 + realista > 0 → WARNING
-- [ ] T2: `_check_scenario_order`: optimista < 0 < realista → PASS
-- [ ] T3: Tests nuevos (2-3 casos) + 100 tests existentes PASS
-- [ ] git commit
+- [x] T1: `_check_scenario_negative`: optimista < 0 + realista > 0 → WARNING
+- [x] T2: `_check_scenario_order`: optimista < 0 < realista → PASS
+- [x] T3: Tests nuevos (4 casos) + 29/29 tests PASS
+- [x] git commit d93678c
 
 ---
 
@@ -92,7 +92,7 @@
 | S-3 | Coverage gate lee `pain_ledger_resolved` | ✅ |
 | S-4 | Coherence whatsapp_verified usa SitePresence | ✅ |
 | S-5 | `pain_ledger_resolved.json` existe post-v4complete | ⬜ |
-| S-6 | Optimista negativo → WARNING | ⬜ |
+| S-6 | Optimista negativo → WARNING | ✅ |
 | S-7 | `commercial_gates_report.json` existe | ⬜ |
 | S-8 | `BLOCKED_BY_GATES.md` menciona commercial gates | ⬜ |
 | S-9 | `monthly_report` excluido de alignment | ⬜ |

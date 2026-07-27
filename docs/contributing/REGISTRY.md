@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-07-26
 > **Version actual:** v4.58.0
-> **Total fases completadas:** 382
+> **Total fases completadas:** 383
 
 ---
 
@@ -9094,6 +9094,28 @@ _Ninguno_
 - [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
+
+---
+
+
+## FASE-1 - 2026-07-26
+**Descripcion:** BUG-8_optimista_negativo_WARNING_no_BLOCKING — reinterpretacion comercial del escenario optimista cuando savings + IA revenue > OTA loss (break-even). El calculo matematico es correcto; se cambia la interpretacion de BLOCKING a WARNING.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/commercial_gate.py` | `_check_scenario_negative`: extrae valor realista, degrada a WARNING cuando optimista<0<realista. `_check_scenario_order`: guard break-even cuando optimista<0<realista → PASS |
+| `tests/quality_gates/test_commercial_gate.py` | 4 tests nuevos/actualizados: warn break-even, block ambos negativos, pass order break-even, fail order mismo signo |
+
+### Validaciones
+- [x] 29/29 tests commercial_gate.py PASS
+- [x] Ambos negativos → BLOCKING preservado (sin relajar)
+- [x] scenario_calculator.py NO modificado (formula intacta)
+- [x] git commit d93678c
 
 ---
 
