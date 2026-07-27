@@ -14,7 +14,7 @@
 | FASE-1 | BUG-8: Optimista reinterpretación | 2026-07-26 | 1 (delegate_task) | ✅ SUBAGENTE | ✅ COMPLETADO |
 | FASE-2 | BUG-7: Commercial gates visibles | 2026-07-26 | 1 (delegate_task) + recuperación directa | ✅ SUBAGENTE → DIRECTA | ✅ COMPLETADO |
 | FASE-3 | BUG-10: monthly_report alignment | 2026-07-26 | 1 directa | ❌ DIRECTA | ✅ COMPLETADO |
-| FASE-4 | N1: Renombrar gates coverage | — | — | ✅ SUBAGENTE | ⬜ |
+| FASE-4 | N1: Renombrar gates coverage | 2026-07-26 | 1 delegate_task + fix directo | ✅ SUBAGENTE | ✅ COMPLETADO |
 | FASE-RELEASE | v4complete + version bump + análisis | — | — | ⚠️ MIXTO | ⬜ |
 
 ---
@@ -53,7 +53,7 @@
 | FASE-1 | ✅ SUBAGENTE | ✅ SUBAGENTE | ✅ Acertado | 2 funciones en 1 archivo, sin imports del proyecto. Subagente completó en 7m56s (21 API calls). Sin errores, tests PASS al primer intento. |
 | FASE-2 | ✅ SUBAGENTE | ⚠️ SUBAGENTE → DIRECTA | ⚠️ Sobrestimado | Subagente completó T1+T2+T3 (código + tests) en ~15 tool calls, pero fue interrumpido durante el full test suite (timeout 300s en WSL para 3104 tests). El agente principal retomó directamente: verificó código (git diff --stat), confirmó 34/34 tests del módulo, commiteó. **Lección**: delegate_task viable para código localizado, pero el full suite (>3000 tests en WSL venv) es demasiado lento para cualquier subagente con timeout 600s. |
 | FASE-3 | ✅ SUBAGENTE | ❌ DIRECTA | ⚠️ Sobrestimado | El plan marcaba FASE-3 como viable para subagente (1-2 líneas). En la práctica, requirió 14 tests actualizados en 3 archivos distintos de test — una decisión que el agente principal tomó mejor con contexto completo de los impactos downstream. 5 archivos modificados en total, 706 tests verificados. |
-| FASE-4 | ✅ SUBAGENTE | | | |
+| FASE-4 | ✅ SUBAGENTE | ⚠️ SUBAGENTE + DIRECTA | ⚠️ Parcialmente acertado | Subagente completó los renames (2 archivos, commit 5ab4c8e) y corrió 307 quality_gate tests (PASS), pero el full suite timeout en WSL. El agente principal corrigió `gate_name = "coverage"` interno (L1217) que el subagente sí cambió pero no reportó, y actualizó la aserción del test `gate_name == "coverage_no_silent_drop"` en test_coverage_gate.py. 279 quality_gates tests PASS confirmados. |
 | FASE-RELEASE | ⚠️ MIXTO | | | |
 
 ---
@@ -69,7 +69,7 @@
 | FIX-2 | BLOCKED_BY_GATES.md menciona commercial gates | `BLOCKED_BY_GATES.md` | ✅ Código listo | `main.py` lee `commercial_gates_report.json` si existe con `blocking_passed=false` y agrega sección "🚨 Commercial Gates Bloqueantes". Además cambia el mensaje de acción: si hay commercial gates bloqueantes, dice "Resuelva los commercial gates bloqueantes y los publication gates fallidos" en vez de "vuelva a ejecutar". 3 tests confirman los 3 escenarios. |
 | FIX-3 | Optimista negativo → WARNING/PASS | `commercial_gates_report.json` | ✅ Código listo | `_check_scenario_negative` degrada a WARNING cuando optimista<0<realista. `_check_scenario_order` hace PASS en break-even. 29/29 tests PASS. Pendiente v4complete real. |
 | FIX-4 | monthly_report excluido de alignment | `proposal_asset_matrix.json` | ✅ Código listo | `monthly_report` removido de `PROPOSAL_SERVICE_TO_ASSET` (Opción B). 706 tests quality_gates + asset_generation PASS. Commit 84470d9. |
-| FIX-5 | Gate report usa coverage_no_silent_drop | `gate_report_*.json` | ⬜ | |
+| FIX-5 | Gate report usa coverage_no_silent_drop / coverage_failure_rate | `gate_report_*.json` | ✅ Código listo | Publication G11: `coverage_no_silent_drop`. Delivery G7: `coverage_failure_rate`. Commits 5ab4c8e + 6930881. 279 quality_gates tests PASS. Pendiente v4complete real. |
 
 ---
 
@@ -145,5 +145,5 @@
 | Tests totales | ≥100 + N nuevos | 3104 totales (34 commercial gate, +5 FASE-2) | ✅ |
 | Pre-commit hooks | Limpios | ✅ 2/2 PASS, 0 warnings | ✅ |
 | v4complete exit code | 0 | 🟡 Pendiente FASE-RELEASE | 🟡 |
-| Fases completadas | 6 | 4/6 (FASE-0 ✅, FASE-1 ✅, FASE-2 ✅, FASE-3 ✅) | 🟡 67% |
-| Commits DT-4 | — | 73c0765 (FASE-0), d93678c (FASE-1), 8794312 (FASE-2), 84470d9 (FASE-3) | — |
+| Fases completadas | 6 | 5/6 (FASE-0 ✅, FASE-1 ✅, FASE-2 ✅, FASE-3 ✅, FASE-4 ✅) | 🟡 83% |
+| Commits DT-4 | — | 73c0765 (FASE-0), d93678c (FASE-1), 8794312 (FASE-2), 84470d9 (FASE-3), 5ab4c8e+6930881 (FASE-4) | — |
