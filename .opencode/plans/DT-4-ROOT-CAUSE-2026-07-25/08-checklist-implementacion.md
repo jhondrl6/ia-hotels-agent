@@ -14,7 +14,7 @@
 | FASE-1 | BUG-8: Optimista reinterpretación | ✅ COMPLETADO | 2026-07-26 | 2026-07-26 | delegate_task (21 calls, 464s) |
 | FASE-2 | BUG-7: Commercial gates visibles | ✅ COMPLETADO | 2026-07-26 | 2026-07-26 | delegate_task + directa (recuperación) |
 | FASE-3 | BUG-10: monthly_report alignment | ✅ COMPLETADO | 2026-07-26 | 2026-07-26 | directa (5 archivos) |
-| FASE-4 | N1: Renombrar gates coverage | ⬜ PENDIENTE | — | — | — |
+| FASE-4 | N1: Renombrar gates coverage | ✅ COMPLETADO | 2026-07-26 | 2026-07-26 | delegate_task + directa (fix gate_name + test) |
 | FASE-RELEASE | v4complete + version bump + análisis | ⬜ PENDIENTE | — | — | — |
 
 ---
@@ -57,12 +57,12 @@
 
 ---
 
-## FASE-4 — N1: Renombrar Gates Coverage ⬜ PENDIENTE
+## FASE-4 — N1: Renombrar Gates Coverage ✅ COMPLETADO
 
-- [ ] T1: Publication G11 `coverage` → `coverage_no_silent_drop`
-- [ ] T1: Delivery G7 `coverage_gate` → `coverage_failure_rate`
-- [ ] T2: Tests actualizados con nuevos nombres + 100 tests existentes PASS
-- [ ] git commit
+- [x] T1: Publication G11 `coverage` → `coverage_no_silent_drop`
+- [x] T1: Delivery G7 `coverage_gate` → `coverage_failure_rate`
+- [x] T2: Tests actualizados con nuevos nombres + 279 quality_gates tests PASS
+- [x] git commit 5ab4c8e + 6930881
 
 ---
 
@@ -96,7 +96,7 @@
 | S-7 | `commercial_gates_report.json` existe | ✅ Código listo |
 | S-8 | `BLOCKED_BY_GATES.md` menciona commercial gates | ✅ Código listo |
 | S-9 | `monthly_report` excluido de alignment | ⬜ |
-| S-10 | Gates renombrados sin regresión | ⬜ |
+| S-10 | Gates renombrados sin regresión | ✅ |
 | S-11 | v4complete Zi One: coverage gate PASS | ⬜ |
 | S-12 | 3104 tests totales (34 commercial gate + 5 nuevos FASE-2) | ✅ |
 | S-13 | Pre-commit hooks limpios | ✅ |
