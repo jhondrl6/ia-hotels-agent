@@ -203,7 +203,7 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
-| `modules/quality_gates/` | 5 publication gates (4 blocking: coherence, coverage, evidence, proposal_asset_alignment; 1 warning: asset_specificity; advisory warnings IA-Readiness Critical) | v4complete |
+| `modules/quality_gates/` | 5 publication gates (4 blocking: coherence, coverage_no_silent_drop, evidence, proposal_asset_alignment; 1 warning: asset_specificity; advisory warnings IA-Readiness Critical) | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
@@ -379,7 +379,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (3,038 funciones, 247 archivos)
+# Todas las pruebas (3,104 funciones, 249 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)

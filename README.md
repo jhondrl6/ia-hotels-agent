@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.65.0** -- DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes | Actualizado 25 Julio 2026 | 3,094 pruebas automatizadas | 0 errores conocidos
+**v4.65.0** -- DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes | Actualizado 27 Julio 2026 | 3,104 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -23,13 +23,13 @@
 
 ## Estado del Proyecto (v4.65.0 -- DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes)
 
-- **3,094 test functions** — suite completa, 0 regresiones
-- **201 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **30 directorios de test**
+- **3,104 test functions** — suite completa, 0 regresiones
+- **203 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **56 directorios de test**
 - **9 config YAML** con schema validado
-- **16 agent skills** en `.agents/workflows/`
-- **5 publication gates** — 4 blocking (coherence, coverage, evidence, proposal_asset_alignment) + asset_specificity + advisory warnings por IA-Readiness Critical
+- **17 agent skills** en `.agents/workflows/`
+- **5 publication gates** — 4 blocking (coherence, coverage_no_silent_drop, evidence, proposal_asset_alignment) + asset_specificity + advisory warnings por IA-Readiness Critical
 - **Coherence Score >= 0.8** requerido para publicacion
-- **25 assets** en catalogo (22 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
+- **28 assets** en catalogo (25 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
