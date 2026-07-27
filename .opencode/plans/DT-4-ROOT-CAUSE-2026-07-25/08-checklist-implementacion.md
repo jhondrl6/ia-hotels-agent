@@ -13,7 +13,7 @@
 | FASE-0 | Reconciliador post-orchestrator | ✅ COMPLETADO | 2026-07-26 | 2026-07-26 | ~20 |
 | FASE-1 | BUG-8: Optimista reinterpretación | ✅ COMPLETADO | 2026-07-26 | 2026-07-26 | delegate_task (21 calls, 464s) |
 | FASE-2 | BUG-7: Commercial gates visibles | ✅ COMPLETADO | 2026-07-26 | 2026-07-26 | delegate_task + directa (recuperación) |
-| FASE-3 | BUG-10: monthly_report alignment | ⬜ PENDIENTE | — | — | — |
+| FASE-3 | BUG-10: monthly_report alignment | ✅ COMPLETADO | 2026-07-26 | 2026-07-26 | directa (5 archivos) |
 | FASE-4 | N1: Renombrar gates coverage | ⬜ PENDIENTE | — | — | — |
 | FASE-RELEASE | v4complete + version bump + análisis | ⬜ PENDIENTE | — | — | — |
 
@@ -49,11 +49,11 @@
 
 ---
 
-## FASE-3 — BUG-10: monthly_report Alignment ⬜ PENDIENTE
+## FASE-3 — BUG-10: monthly_report Alignment ✅ COMPLETADO
 
-- [ ] T1: `monthly_report` removido de `PROPOSAL_SERVICE_TO_ASSET`
-- [ ] T2: Tests actualizados con nuevo conteo + 100 tests existentes PASS
-- [ ] git commit
+- [x] T1: `monthly_report` removido de `PROPOSAL_SERVICE_TO_ASSET` (Opción B)
+- [x] T2: 706 tests quality_gates + asset_generation PASS (14 tests actualizados 8→7)
+- [x] git commit 84470d9
 
 ---
 
