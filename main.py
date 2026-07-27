@@ -2858,9 +2858,35 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 if _issue.get("value") is not None:
                     _bf.write(f"- **Valor**: {_issue['value']}\n")
                 _bf.write("\n")
+
+            # FASE-2 DT-4: Check for commercial gates blocking
+            _commercial_gates_path = output_dir / hotel_id / "v4_audit" / "commercial_gates_report.json"
+            _has_commercial_block = False
+            if _commercial_gates_path.exists():
+                with open(_commercial_gates_path, "r", encoding="utf-8") as _cgf:
+                    _commercial_data = json.load(_cgf)
+                if not _commercial_data.get("blocking_passed", True):
+                    _has_commercial_block = True
+                    _bf.write("\n## 🚨 Commercial Gates Bloqueantes\n\n")
+                    _bf.write(
+                        "Los siguientes gates comerciales impidieron la generación "
+                        "de la propuesta. **No vuelva a ejecutar sin resolverlos** — "
+                        "la re-ejecución idéntica fallará igual.\n\n"
+                    )
+                    for _c_result in _commercial_data.get("results", []):
+                        if not _c_result.get("passed", True):
+                            _bf.write(f"- **{_c_result['gate_id']}**: {_c_result.get('message', 'Sin detalle')}\n")
+                    _bf.write(
+                        "\n> ⚠️ Estos gates evalúan la viabilidad comercial de la propuesta. "
+                        "Resuélvalos antes de re-ejecutar `v4complete`.\n"
+                    )
+
             _bf.write(f"\n---\n\n")
-            _bf.write(f"**Acción requerida**: Resuelva los issues listados arriba y vuelva a ejecutar:\n\n")
-            _bf.write(f"```bash\npython main.py v4complete --url {args.url}\n```\n\n")
+            if not _has_commercial_block:
+                _bf.write(f"**Acción requerida**: Resuelva los issues listados arriba y vuelva a ejecutar:\n\n")
+                _bf.write(f"```bash\npython main.py v4complete --url {args.url}\n```\n\n")
+            else:
+                _bf.write(f"**Acción requerida**: Resuelva los commercial gates bloqueantes y los publication gates fallidos antes de re-ejecutar.\n\n")
             _bf.write(f"El reporte `v4_complete_report.json` y `gate_report.json` se generaron\n")
             _bf.write(f"para debugging — revise esos archivos para información detallada.\n")
         print(f"   📄 BLOCKED_BY_GATES.md: {_blocked_path}")

@@ -6,6 +6,7 @@ diagnostic summary and asset plans.
 """
 
 import os
+import json
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Union
 from datetime import datetime
@@ -607,9 +608,21 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
                         )
                     document_content += alert_section
                 else:
+                    # FASE-2 DT-4: Persist commercial gates report before raising
+                    hotel_slug = hotel_name.lower().replace(" ", "_").replace("-", "_")
+                    commercial_gates_path = (
+                        output_path / hotel_slug / "v4_audit" / "commercial_gates_report.json"
+                    )
+                    commercial_gates_path.parent.mkdir(parents=True, exist_ok=True)
+                    commercial_gates_path.write_text(
+                        json.dumps(commercial_report.to_dict(), indent=2, ensure_ascii=False),
+                        encoding="utf-8",
+                    )
+                    logger.info(f"Commercial gates report persisted to {commercial_gates_path}")
+
                     raise CommercialGateBlockedError(
                         [r.gate_id for r in commercial_report.blocking_failures],
-                        "Proposal commercial gates BLOCKING (hidden from client)",
+                        "Proposal commercial gates BLOCKING — see commercial_gates_report.json for details",
                     )
 
             if commercial_report.warnings:

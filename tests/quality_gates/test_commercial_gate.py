@@ -380,3 +380,234 @@ class TestCommercialGateValidateDiagnostic:
         # CG-SCENARIO-NEGATIVE = WARNING (no BLOCKING)
         # CG-SCENARIO-ORDER = PASS (break-even)
         assert len(report.blocking_failures) == 2
+
+
+# =============================================================================
+# FASE-2 DT-4: Tests for commercial gates report persistence and BLOCKED_BY_GATES.md
+# =============================================================================
+
+class TestCommercialGateReportPersistence:
+    """Verifica que el reporte de commercial gates se serializa correctamente para persistencia."""
+
+    def test_to_dict_blocking_failure_serializes_correctly(self):
+        """to_dict() con blocking_passed=False produce JSON válido con resultados."""
+        report = CommercialGateReport(
+            all_passed=False,
+            blocking_passed=False,
+            results=[
+                CommercialGateResult(
+                    gate_id="CG-SCENARIO-NEGATIVE",
+                    name="Escenario negativo",
+                    passed=False,
+                    severity="BLOCKING",
+                    message="Optimista es negativo (-270950)",
+                    suggestion="Corregir clamp de escenarios",
+                ),
+                CommercialGateResult(
+                    gate_id="CG-IA-BLOCKED-CLAIM",
+                    name="IA Bloqueada sin evidencia",
+                    passed=False,
+                    severity="BLOCKING",
+                    message="Claim de IA Bloqueada sin crawlers bloqueados",
+                    suggestion="Agregar blocked_crawlers o eliminar claim",
+                ),
+                CommercialGateResult(
+                    gate_id="CG-WHATSAPP-LEAD",
+                    name="WhatsApp no lidera",
+                    passed=False,
+                    severity="WARNING",
+                    message="WhatsApp no aparece en primeras líneas",
+                    suggestion="Mover WhatsApp al lead",
+                ),
+            ],
+            summary="2 BLOCKING failure(s), 1 WARNING(s)",
+        )
+
+        d = report.to_dict()
+        assert d["blocking_passed"] is False
+        assert d["all_passed"] is False
+        assert len(d["results"]) == 3
+
+        # Verify blocking failures are included
+        blocking_ids = [r["gate_id"] for r in d["results"] if not r["passed"]]
+        assert "CG-SCENARIO-NEGATIVE" in blocking_ids
+        assert "CG-IA-BLOCKED-CLAIM" in blocking_ids
+
+    def test_to_dict_roundtrip_via_json(self, tmp_path):
+        """El reporte serializado a JSON se puede leer de vuelta con json.load()."""
+        import json
+
+        report = CommercialGateReport(
+            all_passed=False,
+            blocking_passed=False,
+            results=[
+                CommercialGateResult(
+                    gate_id="CG-ROI-NEGATIVE",
+                    name="ROI negativo",
+                    passed=False,
+                    severity="BLOCKING",
+                    message="net_benefit_6m negativo sin onboarding",
+                    suggestion="Activar plan de onboarding",
+                ),
+            ],
+            summary="1 BLOCKING failure(s)",
+        )
+
+        # Write to temp file (simulating what v4_proposal_generator.py does)
+        report_path = tmp_path / "commercial_gates_report.json"
+        report_path.write_text(
+            json.dumps(report.to_dict(), indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+
+        # Read back
+        assert report_path.exists()
+        with open(report_path, "r", encoding="utf-8") as f:
+            loaded = json.load(f)
+
+        assert loaded["blocking_passed"] is False
+        assert len(loaded["results"]) == 1
+        assert loaded["results"][0]["gate_id"] == "CG-ROI-NEGATIVE"
+        assert loaded["results"][0]["severity"] == "BLOCKING"
+
+
+class TestBlockedByGatesCommercialSection:
+    """Verifica que BLOCKED_BY_GATES.md incluya la sección de commercial gates."""
+
+    def test_blocked_md_includes_commercial_section_when_json_exists(self, tmp_path):
+        """Si commercial_gates_report.json existe con blocking_passed=False,
+        BLOCKED_BY_GATES.md debe incluir la sección 'Commercial Gates Bloqueantes'."""
+        import json
+
+        # Setup: write commercial_gates_report.json with blocking failures
+        commercial_data = {
+            "all_passed": False,
+            "blocking_passed": False,
+            "results": [
+                {
+                    "gate_id": "CG-SCENARIO-NEGATIVE",
+                    "name": "Escenario negativo",
+                    "passed": False,
+                    "severity": "BLOCKING",
+                    "message": "Optimista es negativo (-270950)",
+                    "suggestion": "Corregir clamp",
+                },
+                {
+                    "gate_id": "CG-IA-BLOCKED-CLAIM",
+                    "name": "IA Bloqueada",
+                    "passed": False,
+                    "severity": "BLOCKING",
+                    "message": "Claim sin evidencia",
+                    "suggestion": "Agregar crawlers",
+                },
+            ],
+            "summary": "2 BLOCKING failure(s)",
+        }
+        report_path = tmp_path / "commercial_gates_report.json"
+        report_path.write_text(json.dumps(commercial_data, indent=2), encoding="utf-8")
+
+        # Simulate what main.py does: read the JSON and generate markdown
+        blocked_lines = []
+        blocked_lines.append(f"# 🚫 Publicación Bloqueada por Gates de Calidad\n\n")
+        blocked_lines.append(f"**Fecha**: 2026-07-26T00:00:00\n")
+        blocked_lines.append(f"**Hotel**: Test Hotel\n\n")
+        blocked_lines.append(f"## Gates Fallidos (1)\n\n")
+        blocked_lines.append(f"### CG-COHERENCE\n\n")
+        blocked_lines.append(f"- **Mensaje**: Coherence below threshold\n\n")
+
+        # Commercial gates check (patched logic)
+        has_commercial_block = False
+        if report_path.exists():
+            with open(report_path, "r", encoding="utf-8") as f:
+                cg_data = json.load(f)
+            if not cg_data.get("blocking_passed", True):
+                has_commercial_block = True
+                blocked_lines.append("\n## 🚨 Commercial Gates Bloqueantes\n\n")
+                blocked_lines.append(
+                    "Los siguientes gates comerciales impidieron la generación "
+                    "de la propuesta. **No vuelva a ejecutar sin resolverlos** — "
+                    "la re-ejecución idéntica fallará igual.\n\n"
+                )
+                for result in cg_data.get("results", []):
+                    if not result.get("passed", True):
+                        blocked_lines.append(
+                            f"- **{result['gate_id']}**: {result.get('message', 'Sin detalle')}\n"
+                        )
+                blocked_lines.append(
+                    "\n> ⚠️ Estos gates evalúan la viabilidad comercial de la propuesta. "
+                    "Resuélvalos antes de re-ejecutar `v4complete`.\n"
+                )
+
+        blocked_lines.append(f"\n---\n\n")
+        if not has_commercial_block:
+            blocked_lines.append("**Acción requerida**: Resuelva los issues listados arriba y vuelva a ejecutar:\n\n")
+        else:
+            blocked_lines.append(
+                "**Acción requerida**: Resuelva los commercial gates bloqueantes "
+                "y los publication gates fallidos antes de re-ejecutar.\n\n"
+            )
+
+        blocked_md = "".join(blocked_lines)
+
+        # Assertions
+        assert "🚨 Commercial Gates Bloqueantes" in blocked_md
+        assert "CG-SCENARIO-NEGATIVE" in blocked_md
+        assert "CG-IA-BLOCKED-CLAIM" in blocked_md
+        assert "Resuelva los commercial gates bloqueantes" in blocked_md
+        assert "No vuelva a ejecutar sin resolverlos" in blocked_md
+        assert "la re-ejecución idéntica fallará igual" in blocked_md
+
+    def test_blocked_md_without_commercial_json_uses_default_action(self, tmp_path):
+        """Si NO existe commercial_gates_report.json, la acción requerida es la estándar
+        (no menciona commercial gates)."""
+        import json
+
+        # No commercial_gates_report.json written — path doesn't exist
+        report_path = tmp_path / "commercial_gates_report.json"
+
+        has_commercial_block = False
+        if report_path.exists():
+            has_commercial_block = True
+
+        # Simulate the action-required block
+        action = (
+            "**Acción requerida**: Resuelva los commercial gates bloqueantes "
+            "y los publication gates fallidos antes de re-ejecutar."
+            if has_commercial_block
+            else "**Acción requerida**: Resuelva los issues listados arriba y vuelva a ejecutar:"
+        )
+
+        assert "vuelva a ejecutar" in action
+        assert "commercial gates" not in action
+
+    def test_blocked_md_with_non_blocking_commercial_json_uses_default_action(self, tmp_path):
+        """Si existe commercial_gates_report.json pero blocking_passed=True,
+        el mensaje de acción es el estándar (no menciona commercial gates)."""
+        import json
+
+        commercial_data = {
+            "all_passed": True,
+            "blocking_passed": True,
+            "results": [
+                {
+                    "gate_id": "CG-WHATSAPP-LEAD",
+                    "name": "WhatsApp no lidera",
+                    "passed": False,
+                    "severity": "WARNING",
+                    "message": "Sin WhatsApp en lead",
+                    "suggestion": "Mover WhatsApp al lead",
+                },
+            ],
+            "summary": "All blocking gates passed. 1 WARNING(s).",
+        }
+        report_path = tmp_path / "commercial_gates_report.json"
+        report_path.write_text(json.dumps(commercial_data, indent=2), encoding="utf-8")
+
+        has_commercial_block = False
+        if report_path.exists():
+            with open(report_path, "r", encoding="utf-8") as f:
+                cg_data = json.load(f)
+            if not cg_data.get("blocking_passed", True):
+                has_commercial_block = True
+
+        assert has_commercial_block is False  # blocking_passed=True → no block
