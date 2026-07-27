@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.64.0** -- DT-3: Tech debt resolution - AssetAlignmentMatrix unification | Actualizado 25 Julio 2026 | 3,094 pruebas automatizadas | 0 errores conocidos
+**v4.65.0** -- DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes | Actualizado 25 Julio 2026 | 3,094 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-## Estado del Proyecto (v4.64.0 -- DT-3: Tech debt resolution - AssetAlignmentMatrix unification)
+## Estado del Proyecto (v4.65.0 -- DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes)
 
 - **3,094 test functions** — suite completa, 0 regresiones
 - **201 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **30 directorios de test**

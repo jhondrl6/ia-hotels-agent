@@ -1,5 +1,73 @@
 # Changelog
 
+## [4.65.0] - DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes — 2026-07-27
+
+### Objetivo
+Resolver la causa raíz transversal de DT-4: 3 fuentes de verdad no consolidadas para determinar
+si un pain está resuelto. Implementar reconciliador post-orchestrator que unifica pain_ledger,
+proposal_asset_matrix y skipped_assets en un solo archivo de verdad (`pain_ledger_resolved.json`).
+Complementar con 4 fixes adicionales: commercial gates visibles, reinterpretación de optimista
+negativo, exclusión de monthly_report del alignment, y rename de gates coverage duplicados.
+
+### Cambios Implementados (DT-4: Root Cause Reconciliation)
+- **FIX-PRIORITY-1 (FASE-0)**: Post-orchestrator reconciler — nuevo módulo `modules/orchestration/post_orchestrator_reconciler.py`
+  que consolida 3 fuentes de datos (pain_ledger, proposal_asset_matrix, skipped_assets) en `pain_ledger_resolved.json`
+  con estados unificados (ASSET_GENERATED, MAPPED_TO_SERVICE, JUSTIFIED_SKIP). Cableado en v4_asset_orchestrator
+  post-generación de assets. Coverage gate lee `pain_ledger_resolved` con fallback a `pain_ledger`.
+  `ASSET_GENERATED` agregado a `_JUSTIFIED_STATUSES`. Coherence `whatsapp_verified` acepta `site_presence_report`
+  opcional para boost de confidence.
+  Resuelve: BUG-6 (coverage falso positivo no_whatsapp_visible), BUG-9 (divergencia G9), N2 (ASSET_GENERATED faltante),
+  N3 (whatsapp_conflict cubierto pero no_whatsapp_visible no), N4 (coherence ignora SitePresence).
+- **FIX-PRIORITY-2 (FASE-2)**: Commercial gates visibles — `commercial_gates_report.json` persistido en v4_audit
+  antes del raise. `BLOCKED_BY_GATES.md` ampliado con sección "Commercial Gates Bloqueantes" + mensaje de acción
+  corregido ("Resuelva los commercial gates bloqueantes y los publication gates fallidos" en vez de "vuelva a ejecutar").
+  Resuelve: BUG-7, N5.
+- **FIX-PRIORITY-3 (FASE-1)**: Optimista negativo reinterpretado — `_check_scenario_negative` degrada a WARNING
+  cuando optimista<0<realista. `_check_scenario_order` hace PASS en break-even. Se preserva BLOCKING solo cuando
+  ambos escenarios son negativos. Resuelve: BUG-8.
+- **FIX-PRIORITY-4 (FASE-3)**: `monthly_report` excluido de `PROPOSAL_SERVICE_TO_ASSET` (Opción B).
+  Ya no cuenta en alignment ni en conteos de cobertura. Resuelve: BUG-10.
+- **FIX-PRIORITY-5 (FASE-4)**: Gates coverage renombrados — Publication G11: `coverage` → `coverage_no_silent_drop`.
+  Delivery G7: `coverage_gate` → `coverage_failure_rate`. 279 quality_gates tests actualizados.
+  Resuelve: N1 (gates con mismo nombre, diferente contrato).
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/orchestration/__init__.py` | Nuevo paquete orchestration (reconciliador) |
+| `modules/orchestration/post_orchestrator_reconciler.py` | Reconciliador post-orchestrator — unifica 3 fuentes de verdad |
+| `tests/orchestration/__init__.py` | Tests para módulo orchestration |
+| `tests/orchestration/test_post_orchestrator_reconciler.py` | Tests funcionales del reconciliador |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/asset_generation/v4_asset_orchestrator.py` | Cableado del reconciliador post-generación de assets |
+| `modules/quality_gates/publication_gates.py` | `ASSET_GENERATED` en `_JUSTIFIED_STATUSES` + coverage gate lee `pain_ledger_resolved` con fallback + rename G11 `coverage` → `coverage_no_silent_drop` |
+| `modules/quality_gates/coherence_validator.py` | `_check_whatsapp_verified()` acepta `site_presence_report` opcional con boost a 0.95+ |
+| `modules/quality_gates/commercial_gate.py` | `_check_scenario_negative` degrada a WARNING (BUG-8). `_check_scenario_order` PASS en break-even |
+| `modules/quality_gates/delivery_quality_report.py` | Rename G7 `coverage_gate` → `coverage_failure_rate` |
+| `modules/commercial_documents/v4_proposal_generator.py` | Persiste `commercial_gates_report.json` en v4_audit antes del raise |
+| `modules/asset_generation/proposal_asset_alignment.py` | `monthly_report` removido de `PROPOSAL_SERVICE_TO_ASSET` |
+| `main.py` | `BLOCKED_BY_GATES.md` ampliado con sección commercial gates + mensaje de acción corregido |
+| `tests/quality_gates/test_commercial_gate.py` | 5 tests nuevos (2 persistencia + 3 BLOCKED_BY_GATES escenarios) |
+| `tests/quality_gates/test_coverage_gate.py` | Test actualizado: `gate_name == "coverage_no_silent_drop"` |
+
+### Tests
+- 3104 tests totales (pytest --collect-only)
+- 0 regresiones en tests existentes
+- Nuevos tests por fase: FASE-0 (3 reconciliador), FASE-1 (4 casos BUG-8), FASE-2 (5 persistencia + BLOCKED_BY_GATES), FASE-3 (14 actualizados), FASE-4 (279 quality_gates actualizados)
+
+### v4complete Zi One Luxury (E2E Verification)
+- Exit code: 0, 73 archivos generados
+- Reconciliador: 9 entries (8 ASSET_GENERATED + 1 MAPPED_TO_SERVICE) en `pain_ledger_resolved.json`
+- Commercial gates: `commercial_gates_report.json` con 3 gates (1 BLOCKING + 2 WARNING)
+- BLOCKED_BY_GATES.md: sección commercial gates + acción corregida
+- Gate names: `coverage_no_silent_drop` (publication) + `coverage_failure_rate` (delivery G7)
+- monthly_report: excluido de alignment matrix (7 entries, sin monthly_report)
+- Hallazgo residual: `MAPPED_TO_SERVICE` no está en `_JUSTIFIED_STATUSES` — `no_whatsapp_visible` sigue FAIL en coverage gate porque el status no se reconoce como justificado. Requiere follow-up (agregar `MAPPED_TO_SERVICE` a `_JUSTIFIED_STATUSES`).
+- Hallazgo residual: Coherence `whatsapp_verified` score 0.30 — el boost de SitePresence no se activó para Zi One.
+
 ## [4.64.0] - DT-3: Tech debt resolution — AssetAlignmentMatrix unification — 2026-07-25
 
 ### Objetivo

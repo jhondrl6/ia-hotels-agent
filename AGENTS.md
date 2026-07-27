@@ -1,8 +1,8 @@
-<!-- agents_version: v4.64.0 | last_update: 2026-07-26 -->
+<!-- agents_version: v4.64.0 | last_update: 2026-07-27 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.64.0 -- DT-3: Tech debt resolution - AssetAlignmentMatrix unification COMPLETADO**
+> **v4.65.0 -- DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes COMPLETADO**
 
 ---
 

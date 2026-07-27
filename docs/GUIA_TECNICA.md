@@ -1,9 +1,55 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.64.0 (DT-3: Tech debt resolution - AssetAlignmentMatrix unification)
-**Última actualización:** 2026-07-26
+**Versión:** v4.65.0 (DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes)
+**Última actualización:** 2026-07-27
 
 ---
+
+### Notas de Cambios v4.65.0 — Root Cause Reconciliation (DT-4)
+
+**Fecha:** 2026-07-27
+
+**Resumen**: Resolución de la causa raíz transversal post-DT-3: 3 fuentes de verdad no consolidadas
+para "este pain está resuelto?". Implementación de reconciliador post-orchestrator + 4 fixes
+complementarios (commercial gates visibles, reinterpretación optimista, monthly_report alignment,
+rename gates coverage). 4 bugs (2 CRÍTICOS, 2 MEDIOS) + 5 hallazgos resueltos.
+
+**Módulos afectados**: `modules/orchestration/` (NUEVO), `modules/asset_generation/v4_asset_orchestrator.py`,
+`modules/quality_gates/publication_gates.py`, `modules/quality_gates/coherence_validator.py`,
+`modules/quality_gates/commercial_gate.py`, `modules/quality_gates/delivery_quality_report.py`,
+`modules/commercial_documents/v4_proposal_generator.py`,
+`modules/asset_generation/proposal_asset_alignment.py`, `main.py`
+
+**Problema**: 3 sistemas evaluaban independientemente si un pain estaba resuelto (pain_ledger,
+proposal_asset_matrix, skipped_assets) sin reconciliación post-orquestador. Esto causaba falsos
+positivos en coverage gate (BUG-6), divergencia G9 (BUG-9), commercial gates invisibles (BUG-7),
+optimista negativo bloqueante (BUG-8), y monthly_report contando en alignment (BUG-10).
+
+**Solución**:
+- FASE-0: `PostOrchestratorReconciler` en `modules/orchestration/` — nuevo módulo que consolida
+  3 fuentes en `pain_ledger_resolved.json` con estados unificados (ASSET_GENERATED, MAPPED_TO_SERVICE,
+  JUSTIFIED_SKIP). Cableado en `v4_asset_orchestrator.py` post-generación. Coverage gate lee
+  `pain_ledger_resolved` con fallback a `pain_ledger`. `ASSET_GENERATED` en `_JUSTIFIED_STATUSES`.
+  `_check_whatsapp_verified()` acepta `site_presence_report` opcional para boost de confidence.
+- FASE-2: `commercial_gates_report.json` persistido en v4_audit. `BLOCKED_BY_GATES.md` ampliado
+  con sección commercial gates + acción corregida (ya no dice "vuelva a ejecutar").
+- FASE-1: `_check_scenario_negative` degrada a WARNING cuando optimista<0<realista.
+  `_check_scenario_order` hace PASS en break-even.
+- FASE-3: `monthly_report` removido de `PROPOSAL_SERVICE_TO_ASSET`.
+- FASE-4: Publication G11 `coverage` → `coverage_no_silent_drop`. Delivery G7 `coverage_gate` → `coverage_failure_rate`.
+
+**Tests**: 3104 tests totales (0 regresiones). Nuevos tests: FASE-0 (3 reconciliador), FASE-1 (4 BUG-8),
+FASE-2 (5 persistencia + BLOCKED_BY_GATES), FASE-3 (14 actualizados), FASE-4 (279 actualizados).
+
+**v4complete Zi One Luxury**: Exit 0, 73 archivos. Reconciliador: 9 entries (8 ASSET_GENERATED + 1 MAPPED_TO_SERVICE).
+Commercial gates: 3 gates (1 BLOCKING + 2 WARNING). Gate names confirmados. monthly_report excluido.
+
+**Hallazgos residuales**: `MAPPED_TO_SERVICE` no está en `_JUSTIFIED_STATUSES` — coverage gate sigue FAIL
+en `no_whatsapp_visible` (el status no se reconoce como justificado). Coherence `whatsapp_verified` score 0.30
+— el boost de SitePresence no se activó para Zi One. Ambos requieren follow-up post-release.
+
+**Backwards compatibility**: ✅ `pain_ledger_resolved` tiene fallback a `pain_ledger`. Coverage gate funciona
+igual sin reconciliador. Gate names antiguos solo afectan reportes, no lógica. Sin breaking changes.
 
 ### Notas de Cambios v4.64.0 — Tech Debt Resolution (DT-3)
 

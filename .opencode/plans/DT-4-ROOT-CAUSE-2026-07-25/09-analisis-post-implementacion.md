@@ -15,7 +15,7 @@
 | FASE-2 | BUG-7: Commercial gates visibles | 2026-07-26 | 1 (delegate_task) + recuperación directa | ✅ SUBAGENTE → DIRECTA | ✅ COMPLETADO |
 | FASE-3 | BUG-10: monthly_report alignment | 2026-07-26 | 1 directa | ❌ DIRECTA | ✅ COMPLETADO |
 | FASE-4 | N1: Renombrar gates coverage | 2026-07-26 | 1 delegate_task + fix directo | ✅ SUBAGENTE | ✅ COMPLETADO |
-| FASE-RELEASE | v4complete + version bump + análisis | — | — | ⚠️ MIXTO | ⬜ |
+| FASE-RELEASE | v4complete + version bump + análisis | 2026-07-27 | ~25 (directa) | ⚠️ MIXTO (v4complete delegado + release directo) | ✅ COMPLETADO |
 
 ---
 
@@ -54,7 +54,7 @@
 | FASE-2 | ✅ SUBAGENTE | ⚠️ SUBAGENTE → DIRECTA | ⚠️ Sobrestimado | Subagente completó T1+T2+T3 (código + tests) en ~15 tool calls, pero fue interrumpido durante el full test suite (timeout 300s en WSL para 3104 tests). El agente principal retomó directamente: verificó código (git diff --stat), confirmó 34/34 tests del módulo, commiteó. **Lección**: delegate_task viable para código localizado, pero el full suite (>3000 tests en WSL venv) es demasiado lento para cualquier subagente con timeout 600s. |
 | FASE-3 | ✅ SUBAGENTE | ❌ DIRECTA | ⚠️ Sobrestimado | El plan marcaba FASE-3 como viable para subagente (1-2 líneas). En la práctica, requirió 14 tests actualizados en 3 archivos distintos de test — una decisión que el agente principal tomó mejor con contexto completo de los impactos downstream. 5 archivos modificados en total, 706 tests verificados. |
 | FASE-4 | ✅ SUBAGENTE | ⚠️ SUBAGENTE + DIRECTA | ⚠️ Parcialmente acertado | Subagente completó los renames (2 archivos, commit 5ab4c8e) y corrió 307 quality_gate tests (PASS), pero el full suite timeout en WSL. El agente principal corrigió `gate_name = "coverage"` interno (L1217) que el subagente sí cambió pero no reportó, y actualizó la aserción del test `gate_name == "coverage_no_silent_drop"` en test_coverage_gate.py. 279 quality_gates tests PASS confirmados. |
-| FASE-RELEASE | ⚠️ MIXTO | | | |
+| FASE-RELEASE | ⚠️ MIXTO | ⚠️ MIXTO | ✅ Acertado | v4complete delegado (deleg_d4de8214, 158s, 73 archivos). Análisis + release directo. El patrón MIXTO funcionó: subagente ejecutó el comando largo sin consumir contexto del agente principal, que pudo hacer el análisis con contexto completo. |
 
 ---
 
@@ -62,14 +62,14 @@
 
 | Fix | Verificación | Archivo | ¿Superado? | Notas |
 |-----|-------------|---------|------------|-------|
-| FIX-1 | pain_ledger_resolved.json existe con ASSET_GENERATED/MAPPED_TO_SERVICE | `pain_ledger_resolved.json` | 🟡 Código listo | Reconciliador genera el archivo; test funcional confirma estructura. Pendiente v4complete real. |
-| FIX-1 | Coverage gate PASS | `gate_report_*.json` | 🟡 Código listo | `_coverage_gate` lee `pain_ledger_resolved` con fallback; `ASSET_GENERATED` en `_JUSTIFIED_STATUSES`. Pendiente v4complete. |
-| FIX-1 | Coherence whatsapp_verified ≥ 0.9 | `coherence_validation.json` | 🟡 Código listo | `_check_whatsapp_verified` acepta `site_presence_report` opcional con boost a 0.95+. Pendiente v4complete. |
-| FIX-2 | commercial_gates_report.json existe | `commercial_gates_report.json` | ✅ Código listo | `v4_proposal_generator.py` persiste `commercial_report.to_dict()` a `{output_path}/{hotel_slug}/v4_audit/commercial_gates_report.json` antes del raise. Test `test_to_dict_roundtrip_via_json` confirma roundtrip JSON. |
-| FIX-2 | BLOCKED_BY_GATES.md menciona commercial gates | `BLOCKED_BY_GATES.md` | ✅ Código listo | `main.py` lee `commercial_gates_report.json` si existe con `blocking_passed=false` y agrega sección "🚨 Commercial Gates Bloqueantes". Además cambia el mensaje de acción: si hay commercial gates bloqueantes, dice "Resuelva los commercial gates bloqueantes y los publication gates fallidos" en vez de "vuelva a ejecutar". 3 tests confirman los 3 escenarios. |
-| FIX-3 | Optimista negativo → WARNING/PASS | `commercial_gates_report.json` | ✅ Código listo | `_check_scenario_negative` degrada a WARNING cuando optimista<0<realista. `_check_scenario_order` hace PASS en break-even. 29/29 tests PASS. Pendiente v4complete real. |
-| FIX-4 | monthly_report excluido de alignment | `proposal_asset_matrix.json` | ✅ Código listo | `monthly_report` removido de `PROPOSAL_SERVICE_TO_ASSET` (Opción B). 706 tests quality_gates + asset_generation PASS. Commit 84470d9. |
-| FIX-5 | Gate report usa coverage_no_silent_drop / coverage_failure_rate | `gate_report_*.json` | ✅ Código listo | Publication G11: `coverage_no_silent_drop`. Delivery G7: `coverage_failure_rate`. Commits 5ab4c8e + 6930881. 279 quality_gates tests PASS. Pendiente v4complete real. |
+| FIX-1 | pain_ledger_resolved.json existe con ASSET_GENERATED/MAPPED_TO_SERVICE | `pain_ledger_resolved.json` | ✅ SUPERADO | 9 entries: 8 ASSET_GENERATED + 1 MAPPED_TO_SERVICE. Reconciliador genera output correcto. |
+| FIX-1 | Coverage gate PASS | `gate_report_*.json §coverage_no_silent_drop` | ⚠️ PARCIAL | Gate lee `pain_ledger_resolved` con fallback ✅. Pero `no_whatsapp_visible` sigue FAIL porque `MAPPED_TO_SERVICE` no está en `_JUSTIFIED_STATUSES` (solo `ASSET_GENERATED`). **Hallazgo residual**: `MAPPED_TO_SERVICE` debe agregarse a `_JUSTIFIED_STATUSES` para que pains mapeados a servicios existentes en producción cuenten como justificados. |
+| FIX-1 | Coherence whatsapp_verified ≥ 0.9 | `coherence_validation.json` | ⚠️ PARCIAL | Score 0.30, passed=false. El boost de SitePresence (T4) no se activó — posiblemente SitePresenceChecker no encontró datos para Zi One, o el parámetro `site_presence_report` no llegó al validator. El código del boost existe pero no se ejerció en este run. |
+| FIX-2 | commercial_gates_report.json existe | `commercial_gates_report.json` | ✅ SUPERADO | 3 gates: 1 BLOCKING (CG-ROI-NEGATIVE) + 2 WARNING. Archivo persiste correctamente en v4_audit. |
+| FIX-2 | BLOCKED_BY_GATES.md menciona commercial gates | `BLOCKED_BY_GATES.md` | ✅ SUPERADO | Sección "🚨 Commercial Gates Bloqueantes" con 2 gates. Mensaje de acción: "Resuelva los commercial gates bloqueantes y los publication gates fallidos" (ya no dice "vuelva a ejecutar"). |
+| FIX-3 | Optimista negativo → WARNING/PASS | `commercial_gates_report.json` | ✅ SUPERADO | No hay CG-SCENARIO-NEGATIVE en el reporte → el escenario o no es negativo, o fue degradado correctamente a WARNING (no bloquea). El único BLOCKING es CG-ROI-NEGATIVE (legítimo). |
+| FIX-4 | monthly_report excluido de alignment | `proposal_asset_matrix.json` | ✅ SUPERADO | 7 entries en alignment matrix. `monthly_report` NO aparece. FASE-3 fix confirmado en v4complete real. |
+| FIX-5 | Gate report usa coverage_no_silent_drop / coverage_failure_rate | `gate_report_*.json` + `delivery_quality_report.json` | ✅ SUPERADO | Publication: `coverage_no_silent_drop`. Delivery G7: `coverage_failure_rate`. Ambos nombres nuevos confirmados en output real. |
 
 ---
 
@@ -78,10 +78,10 @@
 | Riesgo | Probabilidad | Impacto | Mitigación | ¿Se materializó? |
 |--------|-------------|---------|------------|-------------------|
 | Reconciliador no se cablea correctamente | Media | Alto | FASE-0 incluye verificación con grep | ❌ No | `grep -n "PostOrchestratorReconciler" v4_asset_orchestrator.py` confirma 2 matches (import + uso). |
-| Coverage gate sigue fallando post-fix | Media | Alto | v4complete en FASE-RELEASE | 🟡 Pendiente | Código listo pero no verificado con v4complete real. |
+| Coverage gate sigue fallando post-fix | Media | Alto | v4complete en FASE-RELEASE | ⚠️ Parcialmente | Coverage gate sigue FAIL en `no_whatsapp_visible`. El reconciliador funcionó (9 entries, `MAPPED_TO_SERVICE` asignado correctamente), pero `_JUSTIFIED_STATUSES` no incluye `MAPPED_TO_SERVICE`. Hallazgo residual — no bloquea release pero requiere follow-up. |
 | Commercial gates no se persisten por path incorrecto | Baja | Medio | Test unitario verifica escritura | ❌ No | FASE-2 completada. 5 tests confirman persistencia y BLOCKED_BY_GATES. 34/34 commercial gate tests PASS. |
 | Regresión en tests existentes | Baja | Alto | pytest -q en cada fase | ❌ No | 140/140 PASS + 3 nuevos. Sin regresiones. |
-| v4complete timeout (900s) | Media | Medio | delegate_task con timeout amplio | |
+| v4complete timeout (900s) | Media | Medio | delegate_task con timeout amplio | ❌ No | v4complete completó en ~88s (exit 0). 73 archivos generados. Sin timeout. |
 | BUG-8 Opción B rompe lógica de otros hoteles | Baja | Medio | Solo cambia interpretación, no fórmula. Se preserva BLOCKING cuando ambos escenarios son negativos. | ❌ No | Tests cubren todos los casos: break-even (WARNING), ambos negativos (BLOCKING), orden normal (PASS). |
 
 ---
@@ -138,12 +138,12 @@
 
 | Métrica | Target | Real | ¿Alcanzado? |
 |---------|--------|------|-------------|
-| Coverage gate PASS para Zi One | PASS | 🟡 Pendiente v4complete | 🟡 |
-| pain_ledger_resolved.json entries | ≥9 | 🟡 Pendiente v4complete | 🟡 |
-| commercial_gates_report.json existe | Sí | ✅ Código listo (8794312) | ✅ |
-| BLOCKED_BY_GATES.md incluye commercial gates | Sí | ✅ Código listo (8794312) | ✅ |
-| Tests totales | ≥100 + N nuevos | 3104 totales (34 commercial gate, +5 FASE-2) | ✅ |
+| Coverage gate PASS para Zi One | PASS | FAIL (coverage_no_silent_drop: `no_whatsapp_visible`) | ⚠️ PARCIAL |
+| pain_ledger_resolved.json entries | ≥9 | 9 entries (8 ASSET_GENERATED + 1 MAPPED_TO_SERVICE) | ✅ |
+| commercial_gates_report.json existe | Sí | ✅ 3 gates (1 BLOCKING + 2 WARNING) | ✅ |
+| BLOCKED_BY_GATES.md incluye commercial gates | Sí | ✅ Sección "Commercial Gates Bloqueantes" + acción corregida | ✅ |
+| Tests totales | ≥100 + N nuevos | 3104 totales (34 commercial gate, N nuevos por fase) | ✅ |
 | Pre-commit hooks | Limpios | ✅ 2/2 PASS, 0 warnings | ✅ |
-| v4complete exit code | 0 | 🟡 Pendiente FASE-RELEASE | 🟡 |
-| Fases completadas | 6 | 5/6 (FASE-0 ✅, FASE-1 ✅, FASE-2 ✅, FASE-3 ✅, FASE-4 ✅) | 🟡 83% |
+| v4complete exit code | 0 | ✅ Exit 0, 73 archivos generados | ✅ |
+| Fases completadas | 6 | 6/6 (FASE-0 ✅, FASE-1 ✅, FASE-2 ✅, FASE-3 ✅, FASE-4 ✅, FASE-RELEASE ✅) | ✅ 100% |
 | Commits DT-4 | — | 73c0765 (FASE-0), d93678c (FASE-1), 8794312 (FASE-2), 84470d9 (FASE-3), 5ab4c8e+6930881 (FASE-4) | — |
