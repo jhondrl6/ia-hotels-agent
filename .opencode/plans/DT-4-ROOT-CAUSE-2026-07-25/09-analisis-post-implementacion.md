@@ -134,6 +134,29 @@
 
 ---
 
+## FASE-RELEASE: Lecciones del Patrón MIXTO
+
+### ¿Qué funcionó bien?
+
+1. **Patrón MIXTO (delegate_task + agente principal)**: El v4complete (~88s, comando largo) se delegó al subagente, liberando al agente principal para hacer análisis con contexto completo. El subagente no necesitó entender DT-4 — solo ejecutar y reportar archivos. Funcionó en primer intento, sin iteraciones de corrección.
+2. **Live transcript como fuente pasiva**: Leer `/cache/delegation/live/deleg_d4de8214/task-0.log` permitió al agente principal ver el progreso del v4complete en tiempo real sin consumir tool calls innecesarias. Se evitó el anti-patrón "seguir trabajando mientras tanto" documentado en FASE-2.
+3. **Release formalization skill preciso**: El skill `iah-cli-release-formalization` guió la secuencia exacta (VERSION.yaml → CHANGELOG → GUIA_TECNICA → sync_versions → pre-commit → commit → tag → log_phase → doctor → doc audit). Sin errores, 3 commits limpios con pre-commit PASS en cada uno.
+4. **Post-release doc audit**: Se detectaron y corrigieron 8 discrepancias de conteos stale en README.md (tests 3094→3104, modules 201→203, dirs 30→56, skills 16→17, assets 22→25 IMPLEMENTED, gate name coverage→coverage_no_silent_drop, date) y 3 en AGENTS.md (test count, file count, gate name).
+
+### ¿Qué se haría diferente?
+
+1. **El análisis de evidencia fue redundante**: El agente principal leyó los 6 archivos JSON del v4complete manualmente, mientras el subagente ya había hecho lo mismo. Se podría optimizar: el subagente devuelve un resumen estructurado y el agente principal solo verifica assertions puntuales.
+2. **Hallazgos residuales deberían tener issues**: `MAPPED_TO_SERVICE` gap y `whatsapp_verified` score 0.30 quedaron documentados pero sin ticket de follow-up. Un paso post-release debería ser crear issues en el tracker.
+
+### Hallazgos Residuales (no bloquean release, requieren follow-up)
+
+| ID | Hallazgo | Evidencia | Acción requerida |
+|----|----------|-----------|-----------------|
+| DT4-R1 | `MAPPED_TO_SERVICE` no está en `_JUSTIFIED_STATUSES` | `coverage_no_silent_drop` FAIL en `no_whatsapp_visible` a pesar de status correcto en `pain_ledger_resolved.json` | Agregar `MAPPED_TO_SERVICE` a `_JUSTIFIED_STATUSES` en `publication_gates.py` |
+| DT4-R2 | Boost de SitePresence no se activó para `whatsapp_verified` | Score 0.30 en `coherence_validation.json` — el parámetro `site_presence_report` no llegó al validator | Verificar cableado de SitePresenceChecker → coherence_validator en `v4_asset_orchestrator.py` |
+
+---
+
 ## Métricas de Éxito
 
 | Métrica | Target | Real | ¿Alcanzado? |
@@ -146,4 +169,4 @@
 | Pre-commit hooks | Limpios | ✅ 2/2 PASS, 0 warnings | ✅ |
 | v4complete exit code | 0 | ✅ Exit 0, 73 archivos generados | ✅ |
 | Fases completadas | 6 | 6/6 (FASE-0 ✅, FASE-1 ✅, FASE-2 ✅, FASE-3 ✅, FASE-4 ✅, FASE-RELEASE ✅) | ✅ 100% |
-| Commits DT-4 | — | 73c0765 (FASE-0), d93678c (FASE-1), 8794312 (FASE-2), 84470d9 (FASE-3), 5ab4c8e+6930881 (FASE-4) | — |
+| Commits DT-4 | — | FASE-0: 73c0765, FASE-1: d93678c, FASE-2: 8794312, FASE-3: 84470d9, FASE-4: 5ab4c8e+6930881, RELEASE: 2f86543+0d89008+4a42f46 | — |
