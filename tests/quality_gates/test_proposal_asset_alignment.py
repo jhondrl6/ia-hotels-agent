@@ -264,6 +264,9 @@ class TestP2NotReadyAdvisory:
 
         Solo cuando alignment >= 80% Y el servicio bloqueante es P2/P3,
         el gate pasa con WARNING. Esto requiere al menos 4 servicios OK.
+        
+        FASE-3 (BUG-10): "Informe Mensual" / monthly_report removido de PROPOSAL_SERVICE_TO_ASSET.
+        Ahora son 5 servicios en alignment (no 6). 4/5 = 80% sigue pasando WARNING.
         """
         assessment = _minimal_assessment(
             services=[
@@ -271,7 +274,6 @@ class TestP2NotReadyAdvisory:
                 "SEO Local",               # P1, IMPLEMENT
                 "Schema Hotel",            # P1, IMPLEMENT
                 "Schema Organization",     # P3, IMPLEMENT
-                "Informe Mensual",         # P3, IMPLEMENT
                 "Página de FAQ",           # P2, NOT_READY
             ],
             generated_assets=[
@@ -279,14 +281,13 @@ class TestP2NotReadyAdvisory:
                 {"asset_type": "optimization_guide", "confidence_score": 0.9, "status": "IMPLEMENT"},
                 {"asset_type": "hotel_schema", "confidence_score": 0.9, "status": "IMPLEMENT"},
                 {"asset_type": "org_schema", "confidence_score": 0.9, "status": "IMPLEMENT"},
-                {"asset_type": "monthly_report", "confidence_score": 0.9, "status": "IMPLEMENT"},
                 # faq_page NOT_READY → P2, advisory
             ],
         )
 
         result = orchestrator._proposal_asset_alignment_gate(assessment)
 
-        # alignment = 5/6 = 83% >= 80%, P2 NOT_READY solo → WARNING
+        # FASE-3 (BUG-10): alignment = 4/5 = 80% >= 80%, P2 NOT_READY solo → WARNING
         assert result.passed is True
         assert result.status == GateStatus.WARNING
 
@@ -413,18 +414,18 @@ class TestSemanticHallucination:
 
     def test_hallucination_monthly_report_faq_blocks(self, orchestrator):
         """
-        monthly_report no puede resolver faq_missing (hallucination).
-
-        INVALID_MAPPINGS[monthly_report] = [faq_missing, schema_missing, llms_missing].
-        Cuando PainSolutionMapper.map() asigna monthly_report a faq_missing,
-        validar_semantica_comercial retorna (False, "BLOCKED: ...").
-        El gate debe retornar BLOCKED.
+        FASE-3 (BUG-10): monthly_report removido de PROPOSAL_SERVICE_TO_ASSET.
+        
+        "Informe Mensual" ya no participa en alignment — el gate lo salta (line 220-221).
+        Este test verifica que el gate maneja correctamente servicios fuera del mapping,
+        retornando un report vacío sin errores.
+        
+        Antes de BUG-10, este test documentaba que monthly_report no puede resolver
+        faq_missing (hallucination). Con monthly_report fuera de alignment, ese
+        escenario ya no puede ocurrir a través del gate.
         """
-        # Simular que el mapper asigno monthly_report a faq_missing
-        # (esto seria un bug en el mapper — el gate lo detecta)
-        # month_report NO deberia resolver faq_missing
         assessment = _minimal_assessment(
-            services=["Informe Mensual"],  # → monthly_report
+            services=["Informe Mensual"],  # → skipped, not in PROPOSAL_SERVICE_TO_ASSET
             generated_assets=[
                 {"asset_type": "monthly_report", "confidence_score": 0.9, "status": "IMPLEMENT"},
             ],
@@ -432,14 +433,9 @@ class TestSemanticHallucination:
 
         result = orchestrator._proposal_asset_alignment_gate(assessment)
 
-        # monthly_report no puede resolver nenhum pain de schema/faq/llms
-        # (es un informe interno)
-        # El gate detecta el mapping invalido
-        # NOTA: el gate solo verifica si el mapping ES INVALID segun INVALID_MAPPINGS
-        # Si PainSolutionMapper nunca asigna monthly_report a faq_missing, no hay hallucination.
-        # Este test documenta el comportamiento esperado.
-        # El gate bloquea si validar_semantica_comercial dice BLOCKED.
-        # assert result.status == GateStatus.BLOCKED (si el mapping ocurre)
+        # BUG-10: "Informe Mensual" skipped → 0 services checked → gate passes vacuously
+        assert result.passed is True
+        assert result.status == GateStatus.PASSED
 
     def test_whatsapp_conflict_guide_hallucination_no_whatsapp_visible(self, orchestrator):
         """

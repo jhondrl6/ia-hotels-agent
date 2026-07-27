@@ -3,7 +3,8 @@
 Validates the mapping and verification logic between proposal services
 and generated assets.
 
-FASE-SOL2-B: Updated to reflect 8 services (7 base + 1 conditional AEO).
+FASE-SOL2-B + FASE-3 (BUG-10): Updated to reflect 7 services (6 base + 1 conditional AEO).
+Monthly report removed from PROPOSAL_SERVICE_TO_ASSET.
 Google Maps Optimizado was removed in FASE-PROP-D.
 """
 
@@ -28,13 +29,13 @@ from datetime import datetime
 class TestProposalAssetMapping:
     """Test the proposal service to asset mapping."""
 
-    def test_all_8_services_mapped(self):
-        """All 8 promised services must have a mapping (FASE-SOL2-B + FASE-12C expansion)."""
-        assert len(PROPOSAL_SERVICE_TO_ASSET) == 8
+    def test_all_7_services_mapped(self):
+        """FASE-3 (BUG-10): 7 promised services mapped (monthly_report excluded)."""
+        assert len(PROPOSAL_SERVICE_TO_ASSET) == 7
 
     def test_all_promised_services_count(self):
-        """ALL_PROMISED_SERVICES must have 8 entries (FASE-SOL2-B + FASE-12C expansion)."""
-        assert len(ALL_PROMISED_SERVICES) == 8
+        """FASE-3 (BUG-10): ALL_PROMISED_SERVICES must have 7 entries (monthly_report excluded)."""
+        assert len(ALL_PROMISED_SERVICES) == 7
 
     def test_mapping_covers_all_services(self):
         """Every service in ALL_PROMISED_SERVICES must be in the mapping."""
@@ -47,10 +48,10 @@ class TestProposalAssetMapping:
         assert len(asset_types) == len(set(asset_types))
 
     def test_known_mappings(self):
-        """Test specific known mappings (FASE-SOL2-B: llms_txt replaces geo_playbook)."""
+        """Test specific known mappings. FASE-3 (BUG-10): monthly_report removed."""
         assert PROPOSAL_SERVICE_TO_ASSET["Optimización para IA Generativa"] == "llms_txt"
         assert PROPOSAL_SERVICE_TO_ASSET["Botón de WhatsApp"] == "whatsapp_button"
-        assert PROPOSAL_SERVICE_TO_ASSET["Informe Mensual"] == "monthly_report"
+        assert "Informe Mensual" not in PROPOSAL_SERVICE_TO_ASSET  # BUG-10
 
     def test_llms_txt_in_mapping(self):
         """GAP-C closure: llms_txt must be in PROPOSAL_SERVICE_TO_ASSET."""
@@ -66,13 +67,12 @@ class TestVerifyAlignment:
     """Test the alignment verification logic."""
 
     def test_all_aligned_when_all_assets_present(self):
-        """All services aligned when all 8 assets are present (FASE-SOL2-B + FASE-12C)."""
+        """FASE-3 (BUG-10): All 7 services aligned (monthly_report excluded)."""
         assets = [
             {"asset_type": "optimization_guide", "confidence_score": 0.8},
             {"asset_type": "whatsapp_button", "confidence_score": 0.8},
             {"asset_type": "hotel_schema", "confidence_score": 0.8},
             {"asset_type": "org_schema", "confidence_score": 0.8},
-            {"asset_type": "monthly_report", "confidence_score": 0.8},
             {"asset_type": "faq_page", "confidence_score": 0.8},
             {"asset_type": "open_graph", "confidence_score": 0.8},
             {"asset_type": "llms_txt", "confidence_score": 0.8},
@@ -83,10 +83,10 @@ class TestVerifyAlignment:
         )
         assert report.all_aligned is True
         assert len(report.missing) == 0
-        assert len(report.aligned) == 8
+        assert len(report.aligned) == 7
 
     def test_missing_assets_detected(self):
-        """Missing assets must be detected (7 of 8 missing when only optimization_guide provided)."""
+        """FASE-3 (BUG-10): 6 of 7 missing (monthly_report excluded)."""
         assets = [
             {"asset_type": "optimization_guide", "confidence_score": 0.8},
         ]
@@ -95,7 +95,7 @@ class TestVerifyAlignment:
             generated_assets=assets,
         )
         assert report.all_aligned is False
-        assert len(report.missing) == 7
+        assert len(report.missing) == 6
         assert len(report.aligned) == 1
 
     def test_low_quality_assets_detected(self):
@@ -118,23 +118,22 @@ class TestVerifyAlignment:
         assert report.low_quality[0].service_name == "Optimización para IA Generativa"
 
     def test_empty_assets_all_missing(self):
-        """With no assets, all 8 services should be missing (FASE-SOL2-B + FASE-12C)."""
+        """FASE-3 (BUG-10): With no assets, all 7 services missing (monthly_report excluded)."""
         report = verify_proposal_asset_alignment(
             proposal_services=ALL_PROMISED_SERVICES,
             generated_assets=[],
         )
-        assert len(report.missing) == 8
+        assert len(report.missing) == 7
         assert len(report.aligned) == 0
         assert report.alignment_percentage == 0.0
 
     def test_default_services_when_empty_list(self):
-        """Empty proposal_services should default to ALL_PROMISED_SERVICES (8 services, FASE-SOL2-B + FASE-12C)."""
+        """FASE-3 (BUG-10): Empty proposal_services defaults to 7 services (monthly_report excluded)."""
         assets = [
             {"asset_type": "optimization_guide", "confidence_score": 0.8},
             {"asset_type": "whatsapp_button", "confidence_score": 0.8},
             {"asset_type": "hotel_schema", "confidence_score": 0.8},
             {"asset_type": "org_schema", "confidence_score": 0.8},
-            {"asset_type": "monthly_report", "confidence_score": 0.8},
             {"asset_type": "faq_page", "confidence_score": 0.8},
             {"asset_type": "open_graph", "confidence_score": 0.8},
             {"asset_type": "llms_txt", "confidence_score": 0.8},
@@ -144,14 +143,14 @@ class TestVerifyAlignment:
             generated_assets=assets,
         )
         assert report.all_aligned is True
-        assert report.total_services == 8
+        assert report.total_services == 7
 
 
 class TestAlignmentReport:
     """Test AlignmentReport dataclass."""
 
     def test_report_to_dict(self):
-        """Report should serialize to dict correctly (FASE-SOL2-B with 8 services)."""
+        """FASE-3 (BUG-10): Report serializes with 7 services (monthly_report excluded)."""
         assets = [
             {"asset_type": "optimization_guide", "confidence_score": 0.8},
         ]
@@ -163,20 +162,20 @@ class TestAlignmentReport:
         assert "total_services" in d
         assert "aligned_count" in d
         assert "missing_count" in d
-        assert d["total_services"] == 8
+        assert d["total_services"] == 7
 
 
 class TestHelpers:
     """Test helper functions."""
 
     def test_get_missing_services(self):
-        """get_missing_services should return list of names (8 services missing when none provided)."""
+        """FASE-3 (BUG-10): get_missing_services returns 7 names (monthly_report excluded)."""
         report = verify_proposal_asset_alignment(
             proposal_services=ALL_PROMISED_SERVICES,
             generated_assets=[],
         )
         missing = get_missing_services(report)
-        assert len(missing) == 8
+        assert len(missing) == 7
         assert "Botón de WhatsApp" in missing
         assert "Optimización para IA Generativa" in missing
 
@@ -276,7 +275,7 @@ class TestDivergenceDetection:
         )
 
         # Should be in missing (not present_in_production)
-        assert len(report.missing) == 8, f"Expected 8 missing, got {len(report.missing)}"
+        assert len(report.missing) == 7, f"Expected 7 missing, got {len(report.missing)}"
         assert len(report.present_in_production) == 0
         assert report.all_aligned is False
 
@@ -316,8 +315,8 @@ class TestDivergenceDetection:
         assert hotel_entry.asset_type == "hotel_schema"
         assert hotel_entry.presence_status == "exists"
         assert hotel_entry.status == "present_in_production"
-        # Other 7 services still missing (org_schema + 6 others)
-        assert len(report.missing) == 7
+        # Other 6 services still missing (org_schema + 5 others, monthly_report excluded)
+        assert len(report.missing) == 6
 
     def test_no_audit_schema_backward_compat(self):
         """FASE-12B: Without audit_schema, presence EXISTS → present_in_production (backward compatible)."""

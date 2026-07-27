@@ -24,7 +24,9 @@ PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
     "Botón de WhatsApp": "whatsapp_button",
     "Schema Hotel": "hotel_schema",
     "Schema Organization": "org_schema",
-    "Informe Mensual": "monthly_report",
+    # FASE-3 (BUG-10): monthly_report removed — always-on complement, not pain-driven.
+    # Asset still generated, but excluded from alignment counts.
+    # "Informe Mensual": "monthly_report",  # REMOVED
     "Página de FAQ": "faq_page",
     "Meta Tags Sociales (Open Graph)": "open_graph",
     "Optimización para IA Generativa": "llms_txt",

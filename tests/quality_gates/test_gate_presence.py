@@ -290,7 +290,7 @@ class TestProposalAlignmentGateWithSitePresence:
         return PublicationGatesOrchestrator(PublicationGateConfig())
     
     def test_gate_with_site_presence_checker_integration(self, orchestrator):
-        """Gate should use SitePresenceChecker to verify missing assets."""
+        """FASE-3 (BUG-10): Gate uses SitePresenceChecker but alignment is low with only 2/7."""
         # Create a mock site presence report where whatsapp_button EXISTS
         mock_site_report = Mock()
         mock_site_report.results = {
@@ -313,10 +313,9 @@ class TestProposalAlignmentGateWithSitePresence:
         
         result = orchestrator._proposal_asset_alignment_gate(assessment)
         
-        # Should pass because whatsapp_button exists in production
-        assert result.passed is True
-        # Status should be PASSED when all aligned (including present_in_production)
-        assert result.status in (GateStatus.PASSED, GateStatus.WARNING)
+        # BUG-10: With 7 services total, 2/7 = 28.5% < 80% → BLOCKED
+        # (1 generated + 1 present_in_production = 2 covered, 5 missing)
+        assert result.status == GateStatus.BLOCKED
         assert "already in production" in result.message or "production" in result.message
     
     def test_gate_message_shows_present_in_production(self, orchestrator):
