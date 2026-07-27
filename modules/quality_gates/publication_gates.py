@@ -166,7 +166,7 @@ class PublicationGatesOrchestrator:
             "asset_confidence": self._asset_confidence_gate,
             "proposal_asset_alignment": self._proposal_asset_alignment_gate,
             "tier_c_onboarding_required": self._tier_c_onboarding_gate,
-            "coverage": self._coverage_gate,
+            "coverage_no_silent_drop": self._coverage_gate,
         }
         self.ethics_gate = EthicsGate()
         self.content_quality_gate = DocumentQualityGate()
@@ -1214,7 +1214,7 @@ class PublicationGatesOrchestrator:
             PublicationGateResult — PASSED if all pains covered/justified,
                                    FAILED if uncovered, BLOCKED if data missing
         """
-        gate_name = "coverage"
+        gate_name = "coverage_no_silent_drop"
 
         # Extract coverage data from assessment
         # Distinguish between missing key (BLOCKED - pipeline incomplete)

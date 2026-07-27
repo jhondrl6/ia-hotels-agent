@@ -53,7 +53,7 @@ class DeliveryQualityReport:
         return {
             "status": self.status,
             "blocking": self.blocking,
-            "coverage_gate": self.coverage_gate,
+            "coverage_failure_rate": self.coverage_gate,
             "proposal_asset_gate": self.proposal_asset_gate,
             "asset_specificity_gate": self.asset_specificity_gate,
             "evidence_gate": self.evidence_gate,
