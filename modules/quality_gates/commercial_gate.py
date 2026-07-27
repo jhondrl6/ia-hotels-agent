@@ -293,6 +293,19 @@ class CommercialGateValidator:
             )
 
         if optimistic < realistic:
+            # BUG-8 fix: cuando optimista < 0 < realista, el optimista negativo
+            # es break-even (savings + IA > OTA loss) — no bloquear
+            if optimistic < 0 < realistic:
+                return CommercialGateResult(
+                    gate_id="CG-SCENARIO-ORDER",
+                    name="Orden de escenarios inválido",
+                    passed=True,
+                    severity="BLOCKING",
+                    message=f"Escenario optimista ({optimistic:,.0f}) < 0 < realista ({realistic:,.0f}). "
+                            f"Reinterpretación break-even: el optimista negativo es correcto cuando "
+                            f"ahorros + IA revenue > fuga OTA. El mejor caso no tiene pérdida neta.",
+                    suggestion="",
+                )
             return CommercialGateResult(
                 gate_id="CG-SCENARIO-ORDER",
                 name="Orden de escenarios inválido",
@@ -326,8 +339,15 @@ class CommercialGateValidator:
         )
 
     def _check_scenario_negative(self, scenarios: Any) -> CommercialGateResult:
-        """CG-SCENARIO-NEGATIVE: optimista < 0 mostrado en tabla de recuperación."""
-        optimistic, _, _ = self._extract_scenario_values(scenarios)
+        """CG-SCENARIO-NEGATIVE: optimista < 0 mostrado en tabla de recuperación.
+
+        BUG-8 fix (Opción B — reinterpretación comercial):
+        Cuando optimista < 0 PERO realista > 0, el resultado negativo es
+        matemáticamente correcto (savings + IA revenue > OTA loss = break-even).
+        Se degrada a WARNING en lugar de BLOCKING.
+        Solo se mantiene BLOCKING cuando AMBOS escenarios son negativos.
+        """
+        optimistic, realistic, _ = self._extract_scenario_values(scenarios)
         if optimistic is None:
             return CommercialGateResult(
                 gate_id="CG-SCENARIO-NEGATIVE",
@@ -339,6 +359,25 @@ class CommercialGateValidator:
             )
 
         if optimistic < 0:
+            # BUG-8: cuando el optimista es negativo pero el realista positivo,
+            # es el caso break-even (savings + IA > OTA loss): WARNING, no BLOCKING
+            if realistic is not None and realistic > 0:
+                return CommercialGateResult(
+                    gate_id="CG-SCENARIO-NEGATIVE",
+                    name="Escenario negativo como recuperación",
+                    passed=False,
+                    severity="WARNING",
+                    message=f"Escenario optimista es negativo ({optimistic:,.0f}) "
+                            f"pero realista es positivo ({realistic:,.0f}). "
+                            f"Interpretación break-even: savings + IA revenue > OTA loss "
+                            f"— el mejor caso cubre la fuga.",
+                    suggestion="Validar que es comercialmente correcto mostrar el optimista "
+                              "como 'sin pérdida neta' (break-even). "
+                              "Si savings + IA > OTA loss, el optimista negativo es "
+                              "matemáticamente correcto: no hay pérdida neta en el mejor caso.",
+                )
+
+            # Ambos escenarios negativos: mantener BLOCKING
             return CommercialGateResult(
                 gate_id="CG-SCENARIO-NEGATIVE",
                 name="Escenario negativo como recuperación",

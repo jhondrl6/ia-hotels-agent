@@ -20,10 +20,26 @@ from modules.quality_gates.commercial_gate import (
 class TestCommercialGateScenarioNegative:
     """CG-SCENARIO-NEGATIVE: Escenario optimista < 0."""
 
-    def test_optimistic_negative_fails(self):
-        """Escenario optimista negativo debe fallar."""
+    def test_optimistic_negative_realistic_positive_warns(self):
+        """BUG-8: optimista negativo + realista positivo → WARNING (no BLOCKING).
+
+        Caso break-even: savings + IA revenue > OTA loss, matemáticamente correcto.
+        """
         validator = CommercialGateValidator()
         scenarios = {"optimistic": -270950, "realistic": 3741696, "conservative": 7276953}
+        result = validator._check_scenario_negative(scenarios)
+        assert result.passed is False
+        assert result.severity == "WARNING"
+        assert result.gate_id == "CG-SCENARIO-NEGATIVE"
+
+    def test_both_negative_blocks(self):
+        """BUG-8: ambos escenarios negativos → BLOCKING (sin relajación).
+
+        Cuando optimista Y realista son negativos, el hotel pierde incluso en
+        el mejor caso — bloquear la publicación.
+        """
+        validator = CommercialGateValidator()
+        scenarios = {"optimistic": -500000, "realistic": -200000, "conservative": 1000000}
         result = validator._check_scenario_negative(scenarios)
         assert result.passed is False
         assert result.severity == "BLOCKING"
@@ -116,10 +132,24 @@ class TestCommercialGateRoiNegative:
 class TestCommercialGateScenarioOrder:
     """CG-SCENARIO-ORDER: Orden de escenarios inválido."""
 
-    def test_inverted_order_fails(self):
-        """Optimista < realista debe fallar."""
+    def test_optimistic_negative_realistic_positive_order_passes(self):
+        """BUG-8: optimista < 0 < realista → PASS (break-even, no BLOCKING).
+
+        El optimista negativo es correcto cuando savings + IA > OTA loss.
+        """
         validator = CommercialGateValidator()
         scenarios = {"optimistic": -270950, "realistic": 3741696, "conservative": 7276953}
+        result = validator._check_scenario_order(scenarios)
+        assert result.passed is True
+        assert result.gate_id == "CG-SCENARIO-ORDER"
+
+    def test_optimistic_less_than_realistic_same_sign_fails(self):
+        """Optimista < realista cuando ambos tienen mismo signo → BLOCKING.
+
+        Caso normal: orden invertido sin la excepción break-even.
+        """
+        validator = CommercialGateValidator()
+        scenarios = {"optimistic": 100000, "realistic": 500000, "conservative": 50000}
         result = validator._check_scenario_order(scenarios)
         assert result.passed is False
         assert result.gate_id == "CG-SCENARIO-ORDER"
@@ -323,12 +353,18 @@ class TestCommercialGateValidateDiagnostic:
         assert report.blocking_passed is True
 
     def test_multiple_blocking_failures(self):
-        """Documento con múltiples fallos bloqueantes."""
+        """Documento con múltiples fallos bloqueantes.
+
+        BUG-8: CG-SCENARIO-NEGATIVE es WARNING (optimista negativo + realista positivo)
+        y CG-SCENARIO-ORDER es PASS (optimista < 0 < realista = break-even).
+        Solo CG-IA-BLOCKED-CLAIM y CG-CLAIM-VS-EVIDENCE son BLOCKING aquí.
+        """
         validator = CommercialGateValidator()
         text = (
             "La IA Bloqueada es crítica.\n\n"
             "El hotel no aparece en Google.\n\n"
         )
+        # optimistic negativo + realista positivo: scenario-negative → WARNING, scenario-order → PASS
         scenarios = {"optimistic": -270950, "realistic": 3741696, "conservative": 7276953}
         ai_crawlers = {"blocked_crawlers": []}
 
@@ -340,4 +376,7 @@ class TestCommercialGateValidateDiagnostic:
             gbp_rating=4.6,
         )
         assert report.blocking_passed is False
-        assert len(report.blocking_failures) >= 3  # scenario-negative + ia-blocked + claim-vs-evidence
+        # CG-IA-BLOCKED-CLAIM + CG-CLAIM-VS-EVIDENCE = 2 BLOCKING failures
+        # CG-SCENARIO-NEGATIVE = WARNING (no BLOCKING)
+        # CG-SCENARIO-ORDER = PASS (break-even)
+        assert len(report.blocking_failures) == 2
