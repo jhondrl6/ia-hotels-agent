@@ -11,7 +11,7 @@
 | Fase | Título | Sesión | Iteraciones | delegate_task | Estado |
 |------|--------|--------|-------------|---------------|--------|
 | FASE-0 | Reconciliador post-orchestrator | 2026-07-26 | ~20 | ❌ DIRECTA | ✅ COMPLETADO |
-| FASE-1 | BUG-8: Optimista reinterpretación | — | — | ✅ SUBAGENTE | ⬜ |
+| FASE-1 | BUG-8: Optimista reinterpretación | 2026-07-26 | 1 (delegate_task) | ✅ SUBAGENTE | ✅ COMPLETADO |
 | FASE-2 | BUG-7: Commercial gates visibles | — | — | ✅ SUBAGENTE | ⬜ |
 | FASE-3 | BUG-10: monthly_report alignment | — | — | ✅ SUBAGENTE | ⬜ |
 | FASE-4 | N1: Renombrar gates coverage | — | — | ✅ SUBAGENTE | ⬜ |
@@ -50,7 +50,7 @@
 | Fase | Planificado | Real | ¿Acertado? | Notas |
 |------|------------|------|------------|-------|
 | FASE-0 | ❌ DIRECTA | ❌ DIRECTA | ✅ Acertado | Cross-module + decisión arquitectónica confirmaron inviabilidad de delegación. El agente principal necesitó auditar 4 archivos antes de tocar código. |
-| FASE-1 | ✅ SUBAGENTE | | | |
+| FASE-1 | ✅ SUBAGENTE | ✅ SUBAGENTE | ✅ Acertado | 2 funciones en 1 archivo, sin imports del proyecto. Subagente completó en 7m56s (21 API calls). Sin errores, tests PASS al primer intento. |
 | FASE-2 | ✅ SUBAGENTE | | | |
 | FASE-3 | ✅ SUBAGENTE | | | |
 | FASE-4 | ✅ SUBAGENTE | | | |
@@ -67,7 +67,7 @@
 | FIX-1 | Coherence whatsapp_verified ≥ 0.9 | `coherence_validation.json` | 🟡 Código listo | `_check_whatsapp_verified` acepta `site_presence_report` opcional con boost a 0.95+. Pendiente v4complete. |
 | FIX-2 | commercial_gates_report.json existe | `commercial_gates_report.json` | ⬜ | |
 | FIX-2 | BLOCKED_BY_GATES.md menciona commercial gates | `BLOCKED_BY_GATES.md` | ⬜ | |
-| FIX-3 | Optimista negativo → WARNING/PASS | `commercial_gates_report.json` | ⬜ | |
+| FIX-3 | Optimista negativo → WARNING/PASS | `commercial_gates_report.json` | ✅ Código listo | `_check_scenario_negative` degrada a WARNING cuando optimista<0<realista. `_check_scenario_order` hace PASS en break-even. 29/29 tests PASS. Pendiente v4complete real. |
 | FIX-4 | monthly_report excluido de alignment | `proposal_asset_matrix.json` | ⬜ | |
 | FIX-5 | Gate report usa coverage_no_silent_drop | `gate_report_*.json` | ⬜ | |
 
@@ -82,7 +82,7 @@
 | Commercial gates no se persisten por path incorrecto | Baja | Medio | Test unitario verifica escritura | 🟡 Pendiente | FASE-2 pendiente. |
 | Regresión en tests existentes | Baja | Alto | pytest -q en cada fase | ❌ No | 140/140 PASS + 3 nuevos. Sin regresiones. |
 | v4complete timeout (900s) | Media | Medio | delegate_task con timeout amplio | |
-| BUG-8 Opción B rompe lógica de otros hoteles | Baja | Medio | Solo cambia interpretación, no fórmula | |
+| BUG-8 Opción B rompe lógica de otros hoteles | Baja | Medio | Solo cambia interpretación, no fórmula. Se preserva BLOCKING cuando ambos escenarios son negativos. | ❌ No | Tests cubren todos los casos: break-even (WARNING), ambos negativos (BLOCKING), orden normal (PASS). |
 
 ---
 
@@ -94,6 +94,7 @@
 2. **Fallback transparente en consumers**: La estrategia `pain_ledger_resolved or pain_ledger` en `_coverage_gate` asegura que el sistema funciona igual si el reconciliador no se ejecutó (backward compatibility total).
 3. **Auditoría previa a modificaciones**: Revisar los 4 archivos target ANTES de tocar código reveló discrepancias plan-vs-realidad (directorio `orchestration/` no existía, signature de `_check_whatsapp_verified` diferente). Corregir el approach antes de escribir evitó errores.
 4. **py_compile por archivo**: Más rápido que pytest completo para detectar errores de sintaxis post-edit. 4/4 archivos compilaron al primer intento.
+5. **delegate_task para tareas acotadas (FASE-1)**: Subagente completó FASE-1 en 7m56s con 21 API calls, sin errores, sin iteraciones de corrección. La especificación detallada en el prompt (con diff conceptual, líneas exactas, y restricciones) fue clave para el éxito en primer intento.
 
 ### ¿Qué se haría diferente?
 
@@ -114,6 +115,6 @@
 | Coverage gate PASS para Zi One | PASS | 🟡 Pendiente v4complete | 🟡 |
 | pain_ledger_resolved.json entries | ≥9 | 🟡 Pendiente v4complete | 🟡 |
 | commercial_gates_report.json existe | Sí | 🟡 Pendiente FASE-2 | 🟡 |
-| Tests totales | ≥100 + N nuevos | 140 + 3 nuevos = 143 | ✅ |
+| Tests totales | ≥100 + N nuevos | 140 + 3 (FASE-0) + 4 (FASE-1) = 147 | 🟡 Pendiente conteo real post-FASE-RELEASE |
 | Pre-commit hooks | Limpios | ✅ 2/2 PASS, 0 warnings | ✅ |
 | v4complete exit code | 0 | 🟡 Pendiente FASE-RELEASE | 🟡 |
