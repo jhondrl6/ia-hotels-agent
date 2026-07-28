@@ -1,8 +1,8 @@
 # Checklist Maestro de Implementación — DT-4 Residual Fixes
 
-> **Última sesión cerrada**: 2026-07-27 FASE-2
-> **Última fase cerrada**: FASE-2
-> **Próxima tarea**: FASE-3 (requiere FASE-2 completada)
+> **Última sesión cerrada**: 2026-07-27 FASE-5
+> **Última fase cerrada**: FASE-5
+> **Próxima tarea**: FASE-6 (E2E Zione)
 
 ## Estado de Fases
 
@@ -12,13 +12,20 @@
 | FASE-2 | DT4-R2-SITE-PRESENCE — Normalización + wiring ★ | ✅ COMPLETADA | 2026-07-27 | — |
 | FASE-3 | DT4-N4-COHERENCE — Unify coherence source | ✅ COMPLETADA | 2026-07-27 | — |
 | FASE-4 | DT4-N5-ALIGNMENT — Unify alignment | ✅ COMPLETADA | 2026-07-27 | — |
-| FASE-5 | DT4-N3-GATE-IDEMPOTENCY — Single execution | ⬜ PENDIENTE | — | 4 tareas (requiere FASE-2 ✅) |
-| FASE-6 | E2E-ZIONE — v4complete + verification | 🔒 BLOQUEADA | — | Requiere FASE-1,2,3,4,5 |
+| FASE-5 | DT4-N3-GATE-IDEMPOTENCY — Single execution | ✅ COMPLETADA | 2026-07-27 | — |
+| FASE-6 | E2E-ZIONE — v4complete + verification | ⚠️ COMPLETADA CON HALLAZGOS | 2026-07-28 | Bug path pain_ledger_resolved (C2-C4 FAIL) — ver 08-analisis |
 | FASE-RELEASE | v4.66.0 — Docs + version bump | 🔒 BLOQUEADA | — | Requiere FASE-6 |
 
 ## Log de Cierres de Sesión
 
-*(Se completa al cerrar cada fase)*
+| Fase | Fecha | Hallazgos |
+|------|-------|-----------|
+| FASE-1 | 2026-07-27 | Implementación correcta |
+| FASE-2 | 2026-07-27 | Implementación correcta |
+| FASE-3 | 2026-07-27 | Implementación correcta |
+| FASE-4 | 2026-07-27 | Implementación correcta (parcial: delivery report no actualizado) |
+| FASE-5 | 2026-07-27 | Implementación correcta |
+| FASE-6 | 2026-07-28 | **BUG CRÍTICO**: main.py:2690 path sin hotel_id. pain_ledger_resolved no se carga → C2-C4-C12-C14 FAIL. FASE-2/3/5 OK. FASE-4 delivery report roto. Ver `08-analisis-post-implementacion.md`. |
 
 ## Decisiones Arquitectónicas
 
