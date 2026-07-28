@@ -91,6 +91,7 @@ class AssetGenerationResult:
     coherence_report: CoherenceReport  # No default - va antes
     post_coherence_score: Optional[float] = None  # H6 FIX: score after real asset generation
     skipped_assets: List[SkippedAsset] = field(default_factory=list)  # FASE-CAUSAL-01
+    pain_ledger_resolved: Optional[List[Dict]] = None  # DT4-R1: reconciled post-orchestrator
     output_dir: str = ""
     timestamp: str = ""
     
@@ -244,6 +245,7 @@ class V4AssetOrchestrator:
         site_url: Optional[str] = None,  # Alias para backward compatibility
         analytics_data: Optional[Dict[str, Any]] = None,  # ANALYTICS-FIX-01: analytics pains
         audit_report_raw: Optional[Dict[str, Any]] = None,  # FASE-0H-G8: raw audit dict for derivation
+        site_presence_report: Optional[Dict[str, Any]] = None,  # FASE-2 (DT4-R2): canonical snapshot
     ) -> AssetGenerationResult:
         """
         Flujo completo de generación de assets v4.0:
@@ -281,7 +283,8 @@ class V4AssetOrchestrator:
         
         # 4. Validar coherencia ANTES de generar
         coherence = self.coherence_validator.validate(
-            diagnostic_doc, proposal_doc, asset_specs, validation_summary
+            diagnostic_doc, proposal_doc, asset_specs, validation_summary,
+            site_presence_report=site_presence_report,  # FASE-2 (DT4-R2)
         )
         
         if not coherence.is_coherent and coherence.overall_score < 0.5:
@@ -419,7 +422,8 @@ class V4AssetOrchestrator:
             # Re-run coherence validation with real assets
             post_coherence_report = self.coherence_validator.validate(
                 diagnostic_doc, proposal_doc, asset_specs, validation_summary,
-                generated_assets=generated_assets_dict
+                generated_assets=generated_assets_dict,
+                site_presence_report=site_presence_report,  # FASE-2 (DT4-R2)
             )
             post_coherence_score = post_coherence_report.overall_score
             logger.info(
@@ -526,11 +530,13 @@ class V4AssetOrchestrator:
         asset_gen_report_path = Path(result.output_dir) / "v4_audit" / "asset_generation_report.json"
 
         if pain_ledger_path.exists() and asset_gen_report_path.exists():
-            reconciler.reconcile(
+            reconciler_result = reconciler.reconcile(
                 asset_generation_report_path=asset_gen_report_path,
                 pain_ledger_path=pain_ledger_path,
                 output_path=pain_ledger_resolved_path,
             )
+            # DT4-R1: Store reconciled entries in result so consumers can access them
+            result.pain_ledger_resolved = reconciler_result.get("entries", [])
 
         return result
     

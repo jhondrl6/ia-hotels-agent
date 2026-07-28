@@ -2366,11 +2366,32 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     annual_cost = price_monthly * 12
     roi_projected = round((annual_savings / annual_cost), 2) if annual_cost > 0 else 3.5
 
+    # ═══════════════════════════════════════════════════════════════
+    # FASE-2 (DT4-R2): Compute SitePresence ONCE before the coherence gate.
+    # This snapshot is propagated to all consumers (CoherenceValidator,
+    # V4AssetOrchestrator, publication gates) — no redundant re-checks.
+    # ═══════════════════════════════════════════════════════════════
+    from modules.asset_generation.site_presence_checker import SitePresenceChecker
+    from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
+    from modules.asset_generation.site_presence_adapter import normalize_site_presence
+
+    site_presence_snapshot = None
+    try:
+        checker = SitePresenceChecker()
+        raw_report = checker.check_site(
+            args.url, asset_types=list(PROPOSAL_SERVICE_TO_ASSET.values())
+        )
+        site_presence_snapshot = normalize_site_presence(raw_report)
+        print(f"   [SitePresence] Verified {len(raw_report.results)} asset types on {args.url}")
+    except Exception as e:
+        print(f"   [WARN] SitePresence check failed: {e}")
+        site_presence_snapshot = normalize_site_presence(None)
+
     # FASE 4: Gate de Coherencia - Validar antes de generar propuesta
     from modules.commercial_documents.coherence_config import get_coherence_config
     from modules.commercial_documents.coherence_validator import CoherenceValidator
     from modules.commercial_documents.data_structures import DiagnosticDocument, ProposalDocument
-    
+
     config = get_coherence_config()
     
     # Crear documentos temporales para validación completa del GATE
@@ -2398,7 +2419,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         asset_plan,
         validation_summary,
         whatsapp_html_detected=getattr(audit_result.validation, 'whatsapp_html_detected', False) if audit_result else False,
-        generated_assets=None  # FASE-2-PATCH-A: asset_result no disponible aqui (generacion posterior L2413)
+        generated_assets=None,  # FASE-2-PATCH-A: asset_result no disponible aqui (generacion posterior L2413)
+        site_presence_report=site_presence_snapshot,  # FASE-2 (DT4-R2): canonical snapshot
     )
     pre_coherence_score = pre_coherence_report.overall_score
     
@@ -2482,7 +2504,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 proposal_doc=proposal_doc,
                 hotel_name=hotel_name,
                 hotel_url=args.url,
-                analytics_data=analytics_data  # ANALYTICS-FIX-01: activar pains de analytics
+                analytics_data=analytics_data,  # ANALYTICS-FIX-01: activar pains de analytics
+                site_presence_report=site_presence_snapshot,  # FASE-2 (DT4-R2): canonical snapshot
             )
 
         print(f"[OK] Assets generados: {len(asset_result.generated_assets)}")
@@ -2624,6 +2647,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
 
     # PIPELINE-FIX: Initialize pain_ledger for assessment scope (loaded inside generate_proposal)
     pain_ledger_entries = []
+    pain_ledger_resolved_entries = None  # DT4-R1: initialized here, loaded inside generate_proposal
 
     # FIX-D7: Proposal generation now AFTER assets so we can use asset_result.generated_assets
     # (which includes promised_by=always assets like voice_assistant_guide, whatsapp_button, monthly_report)
@@ -2660,24 +2684,15 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         if pain_ledger_path.exists():
             pain_ledger_entries = PainLedger().load(pain_ledger_path)
 
-        # FASE-D root-fix: Invoke SitePresenceChecker to verify which assets
-        # already exist in production BEFORE generating the proposal.
-        # This fixes the "Estado de los Entregables" block showing wrong status
-        # (e.g. WhatsApp showing "Incluido en su kit" when it already exists).
-        # FIX: Check ALL PROPOSAL_SERVICE_TO_ASSET types, not just generated ones.
-        # WhatsApp is SKIPPED by the conditional generator (already exists in production)
-        # but we still need to verify its presence so the proposal shows "Verificado en sitio".
-        from modules.asset_generation.site_presence_checker import SitePresenceChecker
-        from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
+        # DT4-R1: Load reconciled pain_ledger if post-orchestrator reconciliation ran
+        pain_ledger_resolved_path = output_dir / "v4_audit" / "pain_ledger_resolved.json"
+        pain_ledger_resolved_entries = None
+        if pain_ledger_resolved_path.exists():
+            pain_ledger_resolved_entries = PainLedger().load(pain_ledger_resolved_path)
 
-        site_presence_report = None
-        if asset_result and asset_result.generated_assets is not None:
-            # Check ALL asset types from PROPOSAL_SERVICE_TO_ASSET, not just generated ones.
-            # Skipped assets (should_generate=False) still need presence verification
-            # so the proposal correctly shows "Verificado en sitio" for existing assets.
-            asset_types_to_check = list(PROPOSAL_SERVICE_TO_ASSET.values())
-            checker = SitePresenceChecker()
-            site_presence_report = checker.check_site(args.url, asset_types=asset_types_to_check)
+        # FASE-2 (DT4-R2): SitePresenceSnapshot computed upfront — reuse it.
+        # No redundant re-check here. The canonical snapshot is already available.
+        site_presence_report = site_presence_snapshot
 
         proposal_gen = V4ProposalGenerator()
         proposal_path = proposal_gen.generate(
@@ -2762,6 +2777,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     )
     builder.with_coherence(pre_coherence_report, asset_result)
     builder.with_pain_ledger(pain_ledger_entries, diagnostic_summary, asset_plan)
+    # DT4-R1: Inject reconciled pain_ledger if post-orchestrator reconciliation ran
+    if pain_ledger_resolved_entries:
+        builder.with_resolved_pain_ledger(pain_ledger_resolved_entries)
     builder.with_audit(audit_result)
     builder.with_documents(diagnostic_path, proposal_path)
     builder.with_assets(asset_result)

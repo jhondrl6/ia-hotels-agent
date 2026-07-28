@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-07-27
 > **Version actual:** v4.58.0
-> **Total fases completadas:** 385
+> **Total fases completadas:** 388
 
 ---
 
@@ -9148,6 +9148,72 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE - 2026-07-27
+**Descripcion:** DT-4_v4complete_Zi_One_version_bump_v4_65_0
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1 - 2026-07-27
+**Descripcion:** DT4-R1-CONTRACT: pain_ledger_resolved injection into AssessmentPayload + builder + main.py integration
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/quality_gates/test_coverage_gate_integration.py` | NUEVO | Test Coverage Gate Integration |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/assessment_builder.py` | Assessment Builder |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (1)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-07-27
+**Descripcion:** DT4-R2-SITE-PRESENCE: canonical SitePresence adapter + wiring to 3 CoherenceValidator call sites + single computation
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/asset_generation/site_presence_adapter.py` | NUEVO | Site Presence Adapter |
+| `tests/asset_generation/test_site_presence_adapter.py` | NUEVO | Test Site Presence Adapter |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/coherence_validator.py` | Coherence Validator |
+| `modules/asset_generation/v4_asset_orchestrator.py` | V4 Asset Orchestrator |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (10)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

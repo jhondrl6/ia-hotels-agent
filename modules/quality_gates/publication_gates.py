@@ -858,65 +858,11 @@ class PublicationGatesOrchestrator:
         assessment_with_status = dict(assessment)
         assessment_with_status["_asset_status_map"] = asset_status_map
 
-        # FASE-1B: Construir site_presence_report desde skipped_assets del conditional_generator
-        # Esto evita un segundo chequeo redundante que podría divergir.
-        if not assessment.get("site_presence_report") and skipped_assets:
-            # Construir un site_presence_report fake con los resultados del conditional_generator
-            skipped_types: set = set()
-            fake_results: Dict[str, Any] = {}
-            for skipped in skipped_assets:
-                at = skipped.get("asset_type", "")
-                ps = skipped.get("presence_status", "")
-                if at:
-                    skipped_types.add(at)
-                    from dataclasses import dataclass as _dc
-                    @_dc
-                    class _FakePresenceResult:
-                        status: Any
-                    # Map string status a PresenceStatus enum
-                    from modules.asset_generation.site_presence_checker import PresenceStatus
-                    _status_map = {"exists": PresenceStatus.EXISTS, "EXISTS": PresenceStatus.EXISTS,
-                                   "redundant": PresenceStatus.REDUNDANT, "REDUNDANT": PresenceStatus.REDUNDANT,
-                                   "exists_with_issues": PresenceStatus.EXISTS_WITH_ISSUES}
-                    fake_results[at] = _FakePresenceResult(
-                        status=_status_map.get(ps.lower() if isinstance(ps, str) else ps, PresenceStatus.EXISTS)
-                    )
-            # Crear objeto fake SitePresenceReport-like
-            from types import SimpleNamespace
-            assessment["site_presence_report"] = SimpleNamespace(
-                results=fake_results,
-                presence_status="mixed",
-                site_url=assessment.get("hotel_url", ""),
-            )
-
-        # FASE-D: Check site presence for assets not in generated_assets
-        site_presence_report = assessment.get("site_presence_report")  # Allow pre-built report in assessment
-        hotel_url = assessment.get("hotel_url", "")  # builder guarantees field exists
-        if hotel_url and not site_presence_report:
-            try:
-                from modules.asset_generation.site_presence_checker import SitePresenceChecker
-                checker = SitePresenceChecker()
-                # Only check assets that are NOT in generated_assets (the missing ones)
-                missing_asset_types = [
-                    PROPOSAL_SERVICE_TO_ASSET.get(svc)
-                    for svc in proposal_services
-                    if svc in PROPOSAL_SERVICE_TO_ASSET
-                ]
-                # Filter to only assets we need to check (those not generated)
-                generated_types = {a.get("asset_type") for a in generated_assets}
-                assets_to_check = [at for at in missing_asset_types if at and at not in generated_types]
-                if assets_to_check:
-                    site_presence_report = checker.check_site(hotel_url, asset_types=assets_to_check)
-            except Exception as e:
-                # FIX-5: Log completo con traceback + status unknown en vez de None
-                import logging, traceback
-                logger = logging.getLogger(__name__)
-                logger.error(f"SitePresenceChecker error: {e}\n{traceback.format_exc()}")
-                site_presence_report = {
-                    'presence_status': 'unknown',
-                    'error': str(e),
-                    'assets_checked': {at: 'unknown' for at in assets_to_check} if assets_to_check else {}
-                }
+        # FASE-2 (DT4-R2): site_presence_report is already canonical from the
+        # assessment (computed ONCE in main.py via normalize_site_presence).
+        # No fake reconstruction, no re-execution — use the snapshot as-is.
+        site_presence_report = assessment.get("site_presence_report")
+        hotel_url = assessment.get("hotel_url", "")
 
         report = verify_proposal_asset_alignment(
             proposal_services=proposal_services,
@@ -1232,10 +1178,27 @@ class PublicationGatesOrchestrator:
         # FASE-0 (DT-4): Try pain_ledger_resolved first (post-orchestrator reconciliation),
         # fallback to pain_ledger if not available.
         raw = assessment.get("pain_ledger_resolved")
-        if raw and isinstance(raw, dict):
-            pain_ledger_raw = raw.get("entries", raw)
+        if raw is not None:
+            # DT4-R1: Reconciler ran — validate resolved entries
+            if isinstance(raw, dict):
+                pain_ledger_raw = raw.get("entries", raw)
+            elif isinstance(raw, list):
+                if not raw:
+                    # Reconciler ran but produced empty entries → BLOCKED
+                    return PublicationGateResult(
+                        gate_name=gate_name,
+                        passed=False,
+                        status=GateStatus.BLOCKED,
+                        message="pain_ledger_resolved is empty after reconciliation — reconciler ran but produced no entries",
+                        value=None,
+                        suggestion="Check post-orchestrator reconciliation output",
+                    )
+                pain_ledger_raw = raw
+            else:
+                pain_ledger_raw = raw
         else:
-            pain_ledger_raw = raw or assessment.get("pain_ledger")
+            # Reconciler never ran — fallback to pain_ledger
+            pain_ledger_raw = assessment.get("pain_ledger")
         if not isinstance(pain_ledger_raw, list):
             return PublicationGateResult(
                 gate_name=gate_name,

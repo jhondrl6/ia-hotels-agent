@@ -135,13 +135,19 @@ class CoherenceValidator:
     ) -> CoherenceReport:
         """
         Execute all coherence validations.
-        
+
         Args:
             diagnostic: The diagnostic document
             proposal: The proposal document
             assets: List of proposed assets
             validation_summary: Validation summary with confidence data
-            
+            whatsapp_html_detected: Whether WhatsApp was detected in HTML
+            generated_assets: Dict of generated assets with confidence scores (post-gen only)
+            site_presence_report: Canonical dict from normalize_site_presence() —
+                carries site_verified and confidence per asset type. Used by
+                _check_whatsapp_verified() to boost confidence when
+                SitePresenceChecker confirmed WhatsApp exists on the real site.
+
         Returns:
             CoherenceReport with all validation results
         """
