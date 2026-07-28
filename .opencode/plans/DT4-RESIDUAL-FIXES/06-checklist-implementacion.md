@@ -10,8 +10,8 @@
 |------|--------|--------|---------|-----------|
 | FASE-1 | DT4-R1-CONTRACT — pain_ledger_resolved injection | ✅ COMPLETADA | 2026-07-27 | — |
 | FASE-2 | DT4-R2-SITE-PRESENCE — Normalización + wiring ★ | ✅ COMPLETADA | 2026-07-27 | — |
-| FASE-3 | DT4-N4-COHERENCE — Unify coherence source | ⬜ PENDIENTE | — | Requiere FASE-2 ✅ |
-| FASE-4 | DT4-N5-ALIGNMENT — Unify alignment | ⬜ PENDIENTE | — | 4 tareas |
+| FASE-3 | DT4-N4-COHERENCE — Unify coherence source | ✅ COMPLETADA | 2026-07-27 | — |
+| FASE-4 | DT4-N5-ALIGNMENT — Unify alignment | ✅ COMPLETADA | 2026-07-27 | — |
 | FASE-5 | DT4-N3-GATE-IDEMPOTENCY — Single execution | ⬜ PENDIENTE | — | 4 tareas (requiere FASE-2 ✅) |
 | FASE-6 | E2E-ZIONE — v4complete + verification | 🔒 BLOQUEADA | — | Requiere FASE-1,2,3,4,5 |
 | FASE-RELEASE | v4.66.0 — Docs + version bump | 🔒 BLOQUEADA | — | Requiere FASE-6 |
