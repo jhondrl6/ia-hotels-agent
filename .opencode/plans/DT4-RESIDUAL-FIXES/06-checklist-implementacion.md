@@ -16,7 +16,7 @@
 | FASE-6 | E2E-ZIONE — v4complete + verification | ✅ COMPLETADA | 2026-07-28 | Hallazgos resueltos en post-audit (ver abajo) |
 | FASE-6-A | DT4-N7 — Fix path pain_ledger_resolved | ✅ COMPLETADA | 2026-07-28 | — |
 | FASE-6-B | DT4-N8 — Fix delivery alignment C9 | ✅ COMPLETADA | 2026-07-28 | — |
-| FASE-RELEASE | v4.66.0 — Docs + version bump | 🔓 PENDIENTE | — | CG-ROI-NEGATIVE + CG-TECH-JARGON (comercial, no técnico) |
+| FASE-RELEASE | v4.66.0 — Docs + version bump | ✅ COMPLETED | 9b51fb0 | CG-ROI-NEGATIVE + CG-TECH-JARGON (comercial, no técnico) |
 
 ## Log de Cierres de Sesión
 

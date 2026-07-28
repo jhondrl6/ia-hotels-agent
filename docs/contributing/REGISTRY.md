@@ -9303,6 +9303,34 @@ _Ninguno_
 ---
 
 
+## FASE-RELEASE-4.66.0 - 2026-07-28
+**Descripcion:** Release 4.66.0: DT-4 Residual Fixes — pain_ledger_resolved + SitePresence normalization + coherence/alignment unification + gate idempotency + post-audit path/delivery fixes (DT4-N7, DT4-N8)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Version |
+| `CHANGELOG.md` | Changelog |
+| `GUIA_TECNICA.md` | Guia Tecnica |
+| `REGISTRY.md` | Registry |
+| `DOMAIN_PRIMER.md` | Domain Primer |
+| `README.md` | Readme |
+| `AGENTS.md` | Agents |
+| `.cursorrules` | .Cursorrules |
+| `CONTRIBUTING.md` | Contributing |
+| `SYSTEM_STATUS.md` | System Status |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown

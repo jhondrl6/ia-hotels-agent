@@ -119,3 +119,17 @@ Los datos reales están en `output/clientes/v4_complete/zione/v4_audit/`:
 - ❌ Relajar CG-ROI-NEGATIVE (decisión comercial, no técnica)
 - ❌ Cambiar `PAIN_SOLUTION_MAP` o `scenario_calculator.py`
 - ❌ Modificar ROADMAP.md
+
+## 7. Estado de Ejecución
+
+| Fase | Estado | Fecha | Commit |
+|------|--------|-------|--------|
+| FASE-1 (Contract) | ✅ COMPLETED | 2026-07-27 | — |
+| FASE-2 (SitePresence) | ✅ COMPLETED | 2026-07-27 | — |
+| FASE-3 (Coherence Unify) | ✅ COMPLETED | 2026-07-27 | — |
+| FASE-4 (Alignment Unify) | ✅ COMPLETED | 2026-07-28 | — |
+| FASE-5 (Gate Idempotency) | ✅ COMPLETED | 2026-07-28 | — |
+| FASE-6 (E2E Zi One) | ✅ COMPLETED | 2026-07-28 | — |
+| FASE-6-A (DT4-N7) | ✅ COMPLETED | 2026-07-28 | — |
+| FASE-6-B (DT4-N8) | ✅ COMPLETED | 2026-07-28 | — |
+| **FASE-RELEASE v4.66.0** | ✅ COMPLETED | 2026-07-28 | **9b51fb0** |
