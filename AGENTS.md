@@ -1,4 +1,4 @@
-<!-- agents_version: v4.64.0 | last_update: 2026-07-28 -->
+<!-- agents_version: v4.66.0 | last_update: 2026-07-28 -->
 
 # IA Hoteles Agent (iah-cli)
 
@@ -120,11 +120,11 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 3,038 funciones, 247 archivos, 0 regresion |
+| **Tests** | 3,131 funciones, 252 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
-| **Mejoras** | TDD Gate, Parallel Execution, FAQGenerator, GA4 Multi-Hotel, **Doctor CLI**, **Pre-commit ecosystem validation**, **v4_quality_validator unificado**, **4 Pilares Alignment**, **Voice Readiness Proxy** |
+| **Mejoras** | TDD Gate, Parallel Execution, FAQGenerator, GA4 Multi-Hotel, **Doctor CLI**, **Pre-commit ecosystem validation**, **v4_quality_validator unificado**, **4 Pilares Alignment**, **Voice Readiness Proxy**, **DT-4 Residual Fixes (pain_ledger + SitePresence + coherence/alignment unify + gate idempotency)** |
 
 ---
 
@@ -203,7 +203,7 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
-| `modules/quality_gates/` | 5 publication gates (4 blocking: coherence, coverage_no_silent_drop, evidence, proposal_asset_alignment; 1 warning: asset_specificity; advisory warnings IA-Readiness Critical) | v4complete |
+| `modules/quality_gates/` | 11 publication gates (evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, content_quality, asset_confidence, proposal_asset_alignment, tier_c_onboarding_required) | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
@@ -260,7 +260,13 @@ FASE 4.5: PUBLICATION GATES
 ├─ evidence_coverage: ≥ 95%
 ├─ financial_validity: sin defaults
 ├─ coherence: ≥ 0.8
-└─ critical_recall: ≥ 90%
+├─ critical_recall: ≥ 90%
+├─ ethics: sin violaciones
+├─ content_quality: sin errores
+├─ asset_confidence: ≥ threshold
+├─ proposal_asset_alignment: sin divergencias
+├─ tier_c_onboarding_required: assessment dict injection
+└─ coverage_no_silent_drop: brechas_diagnostico + brechas_justificadas == brechas_detectadas
 
 FASE 4.6: CONSISTENCY CHECKER
 ─────────────────────────────
@@ -357,7 +363,7 @@ Se incluyen para orientar mejoras pero nunca bloquean publicación.
 
 <!--
 ZONA REFERENCIA - Solo si es necesario para contexto profundo
-Actualizada: 2026-07-25 | v4.64.0
+Actualizada: 2026-07-28 | v4.66.0
 -->
 
 ## Transformación v3 → v4
@@ -379,7 +385,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (3,104 funciones, 249 archivos)
+# Todas las pruebas (3,131 funciones, 252 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -394,30 +400,31 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (3,038 funciones totales)
+### Cobertura por Modulo (3,131 funciones totales)
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
 | financial_engine | 500 | `tests/financial_engine/` |
-| asset_generation | 409 | `tests/asset_generation/` |
-| quality_gates | 268 | `tests/quality_gates/` |
-| commercial_documents | 256 | `tests/commercial_documents/` |
+| asset_generation | 418 | `tests/asset_generation/` |
+| quality_gates | 294 | `tests/quality_gates/` |
+| commercial_documents | 251 | `tests/commercial_documents/` |
 | auditors | 149 | `tests/auditors/` |
-| data_validation | 145 | `tests/data_validation/` |
-| geo_enrichment | 138 | `tests/geo_enrichment/` |
+| geo_enrichment | 140 | `tests/geo_enrichment/` |
 | test_never_block_architecture | 122 | `tests/test_never_block_architecture/` |
+| data_validation | 111 | `tests/data_validation/` |
 | orchestration_v4 | 66 | `tests/orchestration_v4/` |
 | config | 61 | `tests/config/` |
 | utils | 57 | `tests/utils/` |
+| delivery | 54 | `tests/delivery/` |
 | postprocessors | 52 | `tests/postprocessors/` |
 | scrapers | 38 | `tests/scrapers/` |
 | analytics | 33 | `tests/analytics/` |
 | regression | 26 | `tests/regression/` |
+| e2e | 21 | `tests/e2e/` |
 | providers | 18 | `tests/providers/` |
 | common | 16 | `tests/common/` |
 | monitoring | 14 | `tests/monitoring/` |
-| delivery | 12 | `tests/delivery/` |
-| root test files | 621 | `tests/test_*.py` (integration, harness, data models) |
+| root test files | 601 | `tests/test_*.py` (integration, harness, data models) |
 
 ---
 
@@ -482,7 +489,7 @@ iah-cli/
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
 │   └── validation/             # Validaciones adicionales
-├── tests/                      # Suite de pruebas (3,038 funciones, 247 archivos)
+├── tests/                      # Suite de pruebas (3,131 funciones, 252 archivos)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/
