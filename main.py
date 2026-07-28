@@ -2532,9 +2532,11 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         hotel_name=hotel_name,
         hotel_url=args.url,
         output_dir=str(output_dir),
-        coherence_score=(asset_result.coherence_report.overall_score
-                        if asset_result and asset_result.coherence_report
-                        else pre_coherence_score),
+        coherence_score=(
+            asset_result.final_coherence_score  # DT4-N4: canonical score
+            if asset_result and asset_result.final_coherence_score is not None
+            else pre_coherence_score
+        ),
         gate_status=pre_gate_status,
         region=region,  # FASE-DRECONEXION-V6: Pasar region para templates V6
         analytics_data=analytics_data,  # INTEGRACION-ANALYTICS-E2E: activa transparencia analytics
@@ -2636,10 +2638,10 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'direct_channel_percentage': direct_channel_pct,
         },
         coherence_score=(
-            asset_result.post_coherence_score  # H6 FIX: use post-gen score if available
-            if asset_result and asset_result.post_coherence_score is not None
+            asset_result.final_coherence_score  # DT4-N4: canonical score
+            if asset_result and asset_result.final_coherence_score is not None
             else pre_coherence_score
-        ),  # Usar post-gen score (más preciso) o fallback a pre-gen
+        ),  # Usar score canónico (post-gen si disponible, pre-gen como fallback)
         brechas_reales=brechas_reales,  # FASE-G: impactos reales para proposal
         voice_readiness_score=getattr(diagnostic_gen, '_last_voice_score', None),
         voice_readiness_level=getattr(diagnostic_gen, '_last_voice_level', None),
@@ -2685,7 +2687,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             pain_ledger_entries = PainLedger().load(pain_ledger_path)
 
         # DT4-R1: Load reconciled pain_ledger if post-orchestrator reconciliation ran
-        pain_ledger_resolved_path = output_dir / "v4_audit" / "pain_ledger_resolved.json"
+        pain_ledger_resolved_path = output_dir / hotel_id / "v4_audit" / "pain_ledger_resolved.json"
         pain_ledger_resolved_entries = None
         if pain_ledger_resolved_path.exists():
             pain_ledger_resolved_entries = PainLedger().load(pain_ledger_resolved_path)
@@ -2788,10 +2790,10 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
 
     assessment = builder.build()
 
-    # Run publication gates
+    # Run publication gates (single execution — readiness derived from results)
     gate_config = PublicationGateConfig()
     gate_results = run_publication_gates(assessment, gate_config)
-    readiness_report = check_publication_readiness(assessment)
+    readiness_report = check_publication_readiness(assessment, gate_results)
     
     print(f"🔒 Publication Gates:")
     for result in gate_results:
@@ -2965,7 +2967,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     delivery_quality_report = None
 
     try:
-        delivery_quality_report = quality_generator.generate(hotel_id, v4_audit_dir)
+        delivery_quality_report = quality_generator.generate(
+            hotel_id, v4_audit_dir, site_presence_report=site_presence_report
+        )
         quality_generator.save(delivery_quality_report, quality_report_path)
 
         print(f"   Status: {delivery_quality_report.status}")
@@ -3171,11 +3175,10 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'quality_gates.publication_gates'
         ],
         'coherence_score': (
-            # FASE-1-COH: fuente única — score post-generación del asset orchestrator
-            # (CoherenceValidator integrado en V4AssetOrchestrator._validate_post_generation)
-            asset_result.coherence_report.overall_score
-            if asset_result and asset_result.coherence_report
-            else pre_coherence_score  # fallback: score pre-generación del validator en L2228
+            # DT4-N4: canonical source — final_coherence_score del asset orchestrator
+            asset_result.final_coherence_score
+            if asset_result and asset_result.final_coherence_score is not None
+            else pre_coherence_score  # fallback: score pre-generación
         ),
         'assets_generated': [
             {
@@ -3251,7 +3254,11 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         'timestamp': datetime.now().isoformat(),
 
         # Metadatos de coherencia v4.1.0
-        'coherence_score': asset_result.coherence_report.overall_score if asset_result else 0.0,
+        'coherence_score': (
+            asset_result.final_coherence_score  # DT4-N4: canonical score
+            if asset_result and asset_result.final_coherence_score is not None
+            else (asset_result.coherence_report.overall_score if asset_result else 0.0)
+        ),
         'coherence_checks_passed': len([c for c in asset_result.coherence_report.checks if c.passed]) if asset_result else 0,
         'coherence_checks_total': len(asset_result.coherence_report.checks) if asset_result else 0,
 

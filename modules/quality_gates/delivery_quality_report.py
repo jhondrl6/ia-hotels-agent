@@ -15,7 +15,7 @@ import json
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from modules.quality_gates.publication_gates import PublicationGateConfig
 
@@ -105,7 +105,12 @@ class DeliveryQualityReportGenerator:
             self.config, 'coherence_threshold', self.COHERENCE_THRESHOLD
         )
 
-    def generate(self, hotel_id: str, v4_audit_path: Path) -> DeliveryQualityReport:
+    def generate(
+        self,
+        hotel_id: str,
+        v4_audit_path: Path,
+        site_presence_report: Optional[Dict[str, Any]] = None,
+    ) -> DeliveryQualityReport:
         """
         Generate delivery quality report from v4_audit data.
 
@@ -113,6 +118,11 @@ class DeliveryQualityReportGenerator:
             hotel_id: Hotel identifier for logging
             v4_audit_path: Path to the v4_audit directory containing
                           coherence_validation.json and asset_generation_report.json
+            site_presence_report: Optional normalized SitePresence snapshot
+                (from site_presence_adapter.normalize_site_presence()).
+                When provided, proposal_asset_alignment cross-references
+                the static matrix against live site presence to correctly
+                count present_in_production assets.
 
         Returns:
             DeliveryQualityReport with status, blocking flag, and gate details
@@ -218,9 +228,14 @@ class DeliveryQualityReportGenerator:
             ]
             matrix = AssetAlignmentMatrix(entries=entries)
             total_services = matrix.total_services
-            delivery_ready = matrix.is_delivery_ready()
             aligned_count = matrix.aligned_count
-            alignment = AlignmentResult.from_asset_alignment_matrix(matrix)
+            # DT4-N8: Use AlignmentResult with SitePresence cross-reference
+            # instead of raw matrix.is_delivery_ready() — the matrix JSON
+            # predates runtime enrichment and never has PRESENT_IN_PRODUCTION.
+            alignment = AlignmentResult.from_asset_alignment_matrix(
+                matrix, site_presence_report
+            )
+            delivery_ready = alignment.passed
             gate_results["proposal_asset_alignment"] = {
                 "passed": delivery_ready,
                 "gate": "G9",

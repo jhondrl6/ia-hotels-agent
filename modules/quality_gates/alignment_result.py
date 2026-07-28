@@ -15,7 +15,7 @@ many already exist in production, and how many are truly unresolved.
 """
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
@@ -97,20 +97,53 @@ class AlignmentResult:
         )
 
     @classmethod
-    def from_asset_alignment_matrix(cls, matrix: Any) -> "AlignmentResult":
+    def from_asset_alignment_matrix(
+        cls, matrix: Any, site_presence_report: Optional[Dict[str, Any]] = None
+    ) -> "AlignmentResult":
         """Build AlignmentResult from an AssetAlignmentMatrix (used by delivery report).
 
         Args:
             matrix: AssetAlignmentMatrix instance
+            site_presence_report: Optional normalized SitePresence snapshot
+                (from site_presence_adapter.normalize_site_presence()).
+                When provided, entries with NO_BREACH or MISSING_ASSET status
+                are cross-referenced against live site presence — if the asset
+                exists on the real site, it is counted as present_in_production
+                instead of unresolved.
         """
         entries = matrix.entries
         total = len(entries)
 
         generated = sum(1 for e in entries if e.status == "LINKED")
-        present = sum(1 for e in entries if e.status == "PRESENT_IN_PRODUCTION")
+
+        # Cross-reference with SitePresence for entries whose static JSON status
+        # predates runtime enrichment (NO_BREACH, MISSING_ASSET → may actually
+        # be PRESENT_IN_PRODUCTION on the live site).
+        present = 0
+        present_assets: List[str] = []
+        for e in entries:
+            if e.status == "PRESENT_IN_PRODUCTION":
+                present += 1
+                present_assets.append(e.service_name)
+            elif site_presence_report and e.status in ("NO_BREACH", "MISSING_ASSET"):
+                presence = site_presence_report.get(e.asset_type, {})
+                if isinstance(presence, dict) and presence.get("status") == "exists":
+                    present += 1
+                    present_assets.append(e.service_name)
+
         unresolved_count = sum(
             1 for e in entries if e.status in ("MISSING_ASSET", "GENERIC_DRAFT")
         )
+        # Subtract entries resolved by SitePresence cross-reference
+        if site_presence_report:
+            unresolved_count = sum(
+                1 for e in entries
+                if e.status in ("MISSING_ASSET", "GENERIC_DRAFT")
+                and not (
+                    isinstance(site_presence_report.get(e.asset_type, {}), dict)
+                    and site_presence_report[e.asset_type].get("status") == "exists"
+                )
+            )
 
         return cls(
             promised_services_total=total,
@@ -118,9 +151,5 @@ class AlignmentResult:
             present_in_production=present,
             unresolved=unresolved_count,
             coverage_ratio=(generated + present) / total if total > 0 else 0.0,
-            present_assets=[
-                e.service_name
-                for e in entries
-                if e.status == "PRESENT_IN_PRODUCTION"
-            ],
+            present_assets=present_assets,
         )
