@@ -193,12 +193,15 @@ class DeliveryQualityReportGenerator:
         # ── G9: Proposal-Asset Alignment Gate ───────────────────────────────
         # FASE-DT-3 FASE-2: Consume AssetAlignmentMatrix.is_delivery_ready()
         # como contrato canónico unificado en vez de parsing manual de JSON.
+        # FASE-4 (DT4-N5): Build canonical AlignmentResult for consistent
+        # totals across publication gates and delivery quality report.
         matrix_path = v4_audit_path / "proposal_asset_matrix.json"
         if matrix_path.exists():
             from modules.asset_generation.proposal_asset_alignment import (
                 AssetAlignmentMatrix,
                 ProposalAssetMatrixEntry,
             )
+            from modules.quality_gates.alignment_result import AlignmentResult
             matrix_data = self._load_json(matrix_path)
             raw_entries = matrix_data.get("entries", [])
             # Reconstruir AssetAlignmentMatrix desde los datos del JSON
@@ -217,11 +220,13 @@ class DeliveryQualityReportGenerator:
             total_services = matrix.total_services
             delivery_ready = matrix.is_delivery_ready()
             aligned_count = matrix.aligned_count
+            alignment = AlignmentResult.from_asset_alignment_matrix(matrix)
             gate_results["proposal_asset_alignment"] = {
                 "passed": delivery_ready,
                 "gate": "G9",
                 "aligned": aligned_count,
                 "total": total_services,
+                "alignment": alignment.to_dict(),
             }
         else:
             # No matrix available — gate skipped (not evaluated)

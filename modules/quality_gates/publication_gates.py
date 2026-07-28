@@ -46,6 +46,20 @@ from modules.postprocessors.document_quality_gate import DocumentQualityGate
 from modules.quality.asset_semantics_validator import validar_semantica_comercial
 
 
+# FASE-4 (DT4-N5): Helper to merge AlignmentReport dict with canonical
+# AlignmentResult for backward-compatible details in publication gates.
+def _merge_report_with_alignment(report_dict: Dict[str, Any],
+                                  alignment_dict: Dict[str, Any]) -> Dict[str, Any]:
+    """Merge AlignmentReport with AlignmentResult at top level.
+
+    Backward compatible: ``details.total_services``, ``details.aligned_count``,
+    etc. still work directly. New canonical structure is at ``details.alignment``.
+    """
+    merged = dict(report_dict)
+    merged["alignment"] = alignment_dict
+    return merged
+
+
 # =============================================================================
 # NOTA: Citability e IA-Readiness son métricas ADVISORY.
 # NO se incluyen como gates bloqueantes.
@@ -839,6 +853,7 @@ class PublicationGatesOrchestrator:
             PROPOSAL_SERVICE_TO_ASSET,
         )
         from modules.commercial_documents.pain_solution_mapper import PainSolutionMapper
+        from modules.quality_gates.alignment_result import AlignmentResult
 
         generated_assets = assessment.get("generated_assets", [])
         skipped_assets = assessment.get("skipped_assets", [])  # FASE-1B: assets ya verificados por conditional_generator
@@ -871,6 +886,10 @@ class PublicationGatesOrchestrator:
             hotel_url=hotel_url,
             audit_schema=assessment.get("audit_schema"),  # FASE-12B: coherence/divergence detection
         )
+
+        # FASE-4 (DT4-N5): Build canonical AlignmentResult for consistent
+        # reporting across publication gates and delivery quality report.
+        alignment_result = AlignmentResult.from_alignment_report(report)
 
         # ========================================================================
         # FASE-2: P1 Blocking — verificar services cuya asset status es NOT_READY
@@ -957,7 +976,7 @@ class PublicationGatesOrchestrator:
                 ),
                 details={
                     "p1_blocked": p1_blocked_services,
-                    "report": report.to_dict(),
+                    **_merge_report_with_alignment(report.to_dict(), alignment_result.to_dict()),
                 },
             )
 
@@ -993,7 +1012,10 @@ class PublicationGatesOrchestrator:
                 message=f"ALUCINACION: mapeo dolor→asset invalido: {', '.join(blocked_msgs)}",
                 value=0.0,
                 suggestion="El asset no puede resolver este dolor semanticamente. Revisar propuesta.",
-                details={"semantic_blocked": semantic_blocked, "report": report.to_dict()},
+                details={
+                    "semantic_blocked": semantic_blocked,
+                    **_merge_report_with_alignment(report.to_dict(), alignment_result.to_dict()),
+                },
             )
 
         # ========================================================================
@@ -1019,7 +1041,7 @@ class PublicationGatesOrchestrator:
                 message=message,
                 value=pct,
                 suggestion="",
-                details=report.to_dict(),
+                details=_merge_report_with_alignment(report.to_dict(), alignment_result.to_dict()),
             )
 
         missing_names = [s.service_name for s in report.missing]
@@ -1061,7 +1083,7 @@ class PublicationGatesOrchestrator:
                     f"80% threshold. Review asset generation pipeline to ensure all promised "
                     f"services produce deliverables before publication."
                 ),
-                details=report.to_dict(),
+                details=_merge_report_with_alignment(report.to_dict(), alignment_result.to_dict()),
             )
         else:
             # WARNING: At least 80% aligned but still some missing
@@ -1076,7 +1098,7 @@ class PublicationGatesOrchestrator:
                     f"Review asset generation pipeline to ensure all promised services "
                     f"produce deliverables."
                 ),
-                details=report.to_dict(),
+                details=_merge_report_with_alignment(report.to_dict(), alignment_result.to_dict()),
             )
 
     # ============================================================================
