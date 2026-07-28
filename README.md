@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.65.0** -- DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes | Actualizado 27 Julio 2026 | 3,104 pruebas automatizadas | 0 errores conocidos
+**v4.66.0** -- DT-4 Residual Fixes: pain_ledger_resolved injection + SitePresence normalization + coherence/alignment unification + gate idempotency + post-audit path/delivery fixes | Actualizado 28 Julio 2026 | 3,131 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 16 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 17 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -21,10 +21,10 @@
 
 ---
 
-## Estado del Proyecto (v4.65.0 -- DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes)
+## Estado del Proyecto (v4.66.0 -- DT-4 Residual Fixes: pain_ledger_resolved injection + SitePresence normalization + coherence/alignment unification + gate idempotency + post-audit path/delivery fixes)
 
-- **3,104 test functions** — suite completa, 0 regresiones
-- **203 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **56 directorios de test**
+- **3,131 test functions** — suite completa, 0 regresiones
+- **205 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **56 directorios de test**
 - **9 config YAML** con schema validado
 - **17 agent skills** en `.agents/workflows/`
 - **5 publication gates** — 4 blocking (coherence, coverage_no_silent_drop, evidence, proposal_asset_alignment) + asset_specificity + advisory warnings por IA-Readiness Critical

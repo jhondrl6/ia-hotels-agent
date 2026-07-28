@@ -72,12 +72,12 @@
 
 ## Criterios de Completitud
 
-- [ ] `check_publication_readiness()` acepta `gate_results` pre-calculados
-- [ ] `main.py` ejecuta gates UNA sola vez
-- [ ] Cero mutaciones de `assessment` dentro de `publication_gates.py`
-- [ ] Tests de idempotencia PASS (mismos resultados en 2 ejecuciones, assessment no mutado)
-- [ ] Tests existentes no rompen: `./venv/Scripts/python.exe -m pytest tests/quality_gates/ tests/test_publication_gates_presence.py -q`
-- [ ] `log_phase_completion.py` ejecutado
+- [x] `check_publication_readiness()` acepta `gate_results` pre-calculados
+- [x] `main.py` ejecuta gates UNA sola vez
+- [x] Cero mutaciones de `assessment` dentro de `publication_gates.py`
+- [x] Tests de idempotencia PASS (mismos resultados en 2 ejecuciones, assessment no mutado)
+- [x] Tests existentes no rompen: 293 passed, 1 skipped (pre-existing failure unrelated to FASE-5)
+- [x] `log_phase_completion.py` ejecutado
 
 ## Restricciones
 

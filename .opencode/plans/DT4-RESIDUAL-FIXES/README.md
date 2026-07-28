@@ -73,7 +73,7 @@ FASE-5 (DT4-N3-GATE-IDEMPOTENCY)           FASE-3 (DT4-N4-COHERENCE)
 | **FASE-2** | **ALTA ★** | **Diseño arquitectónico + adapter pattern + 3 call sites + 4 redundancias** | **Shape resolution, timing pre/post, budget (estimado 67-95 iters en 60-max — riesgo de overflow)** |
 | FASE-3 | MEDIA | Refactor score sources, 3 consumers | Score drift entre pre/post |
 | FASE-4 | BAJA | DTO + 2 consumers | Diferencia semántica 5/7 vs 7/7 |
-| FASE-5 | MEDIA | Double-execution path, mutations | Orden de gates, idempotencia |
+|| FASE-5 | MEDIA | Double-execution path, mutations | Orden de gates, idempotencia | ✅ COMPLETADA | 2026-07-27 |
 | FASE-6 | MEDIA | v4complete + verificación 14 criterios | Timeout subagente, CG-ROI-NEGATIVE |
 | RELEASE | BAJA | Docs + scripts, delegable | README.md stale counts |
 

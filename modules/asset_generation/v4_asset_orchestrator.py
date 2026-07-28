@@ -90,6 +90,8 @@ class AssetGenerationResult:
     failed_assets: List[FailedAsset]
     coherence_report: CoherenceReport  # No default - va antes
     post_coherence_score: Optional[float] = None  # H6 FIX: score after real asset generation
+    final_coherence_report: Optional[CoherenceReport] = None  # DT4-N4: canonical source
+    final_coherence_score: Optional[float] = None  # DT4-N4: canonical score
     skipped_assets: List[SkippedAsset] = field(default_factory=list)  # FASE-CAUSAL-01
     pain_ledger_resolved: Optional[List[Dict]] = None  # DT4-R1: reconciled post-orchestrator
     output_dir: str = ""
@@ -197,11 +199,17 @@ class AssetGenerationResult:
             # H6 FIX: both scores for transparency
             "coherence_score_pre": round(self.coherence_report.overall_score, 2),
             "coherence_score_post": round(self.post_coherence_score, 2) if self.post_coherence_score is not None else None,
+            # DT4-N4: canonical source — single truth
             "coherence_score_final": (
-                round(self.post_coherence_score, 2)
-                if self.post_coherence_score is not None
+                round(self.final_coherence_score, 2)
+                if self.final_coherence_score is not None
                 else round(self.coherence_report.overall_score, 2)
-            )
+            ),
+            "final_coherence_report": (
+                self.final_coherence_report.to_dict()
+                if self.final_coherence_report
+                else None
+            ),
         }
 
 
@@ -472,6 +480,14 @@ class V4AssetOrchestrator:
             post_coherence_report.save(str(post_coherence_path))
         
         # 9. Crear y retornar resultado
+        # DT4-N4: canonical final_coherence — post-gen si existe, pre-gen como fallback
+        final_coherence_report = post_coherence_report if post_coherence_report else coherence
+        final_coherence_score = (
+            post_coherence_score
+            if post_coherence_score is not None
+            else coherence.overall_score
+        )
+
         result = AssetGenerationResult(
             hotel_id=hotel_id,
             hotel_name=hotel_name,
@@ -480,6 +496,8 @@ class V4AssetOrchestrator:
             skipped_assets=skipped,  # FASE-CAUSAL-01
             coherence_report=coherence,
             post_coherence_score=post_coherence_score,  # H6 FIX: post-gen score
+            final_coherence_report=final_coherence_report,  # DT4-N4: canonical source
+            final_coherence_score=final_coherence_score,  # DT4-N4: canonical score
             output_dir=str(output_dir),
             timestamp=datetime.now().isoformat()
         )

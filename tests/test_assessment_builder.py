@@ -345,6 +345,7 @@ class TestAssessmentBuilderWithCoherence:
 
     def test_builder_with_coherence(self):
         mock_asset = MagicMock()
+        mock_asset.final_coherence_report = None  # DT4-N4: no canonical report
         mock_asset.coherence_report.overall_score = 0.83
         b = AssessmentBuilder()
         b.with_coherence(None, mock_asset)
@@ -353,6 +354,33 @@ class TestAssessmentBuilderWithCoherence:
     def test_builder_with_coherence_no_asset_result(self):
         b = AssessmentBuilder()
         b.with_coherence(None, None)
+        assert b._payload.coherence_score == 0.0
+
+    def test_builder_with_coherence_final_report_priority(self):
+        """DT4-N4: final_coherence_report takes priority over coherence_report."""
+        mock_asset = MagicMock()
+        mock_asset.final_coherence_report.overall_score = 0.92
+        mock_asset.coherence_report.overall_score = 0.83
+        b = AssessmentBuilder()
+        b.with_coherence(None, mock_asset)
+        assert b._payload.coherence_score == 0.92
+
+    def test_builder_with_coherence_fallback_to_pre_gen(self):
+        """DT4-N4: fallback to coherence_report when final_coherence_report is None."""
+        mock_asset = MagicMock()
+        mock_asset.final_coherence_report = None
+        mock_asset.coherence_report.overall_score = 0.83
+        b = AssessmentBuilder()
+        b.with_coherence(None, mock_asset)
+        assert b._payload.coherence_score == 0.83
+
+    def test_builder_with_coherence_no_reports(self):
+        """DT4-N4: 0.0 when no reports are available."""
+        mock_asset = MagicMock()
+        mock_asset.final_coherence_report = None
+        mock_asset.coherence_report = None
+        b = AssessmentBuilder()
+        b.with_coherence(None, mock_asset)
         assert b._payload.coherence_score == 0.0
 
 
@@ -519,6 +547,7 @@ class TestAssessmentBuilderFullPipeline:
 
     def test_builder_full_pipeline(self):
         mock_asset = MagicMock()
+        mock_asset.final_coherence_report = None  # DT4-N4: no canonical report
         mock_asset.coherence_report.overall_score = 0.83
         mock_asset.generated_assets = []
 

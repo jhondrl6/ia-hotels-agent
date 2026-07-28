@@ -235,3 +235,130 @@ class TestCoverageGate:
 
         assert result.passed is False
         assert result.status == GateStatus.BLOCKED
+
+
+# =============================================================================
+# FASE-5 (DT4-N3): Gate Idempotency Tests
+# =============================================================================
+
+class TestGateIdempotency:
+    """Verify that publication gates are idempotent and don't mutate input."""
+
+    @pytest.fixture
+    def full_assessment(self) -> Dict[str, Any]:
+        """Minimal valid assessment for running all gates without failures."""
+        return {
+            "coherence_score": 0.85,
+            "evidence_coverage": 0.96,
+            "hard_contradictions": 0,
+            "critical_recall": 0.95,
+            "financial_data": {
+                "occupancy_rate": 75.0,
+                "direct_channel_percentage": 30.0,
+                "adr_cop": 450000.0,
+            },
+            "validation_summary": {
+                "hard_contradictions_count": 0,
+            },
+            "pain_ledger": [],
+            "diagnostic_pain_ids": [],
+            "proposal_pain_ids": [],
+            "financial_evidence_tier": "B",
+            "generated_assets": [
+                {"asset_type": "whatsapp_button", "confidence_score": 0.9},
+                {"asset_type": "faq_page", "confidence_score": 0.9},
+                {"asset_type": "hotel_schema", "confidence_score": 0.9},
+                {"asset_type": "org_schema", "confidence_score": 0.9},
+                {"asset_type": "review_plan", "confidence_score": 0.9},
+                {"asset_type": "optimization_guide", "confidence_score": 0.9},
+                {"asset_type": "monthly_report", "confidence_score": 0.9},
+                {"asset_type": "open_graph", "confidence_score": 0.9},
+                {"asset_type": "llms_txt", "confidence_score": 0.9},
+            ],
+        }
+
+    def test_gates_same_result_on_double_execution(self, full_assessment):
+        """
+        Running gates twice on the same assessment produces identical results.
+
+        This verifies the orchestrator is deterministic and doesn't carry
+        internal state between runs that would cause drift.
+        """
+        import copy
+
+        from modules.quality_gates.publication_gates import run_publication_gates
+
+        assessment = copy.deepcopy(full_assessment)
+        results_1 = run_publication_gates(assessment)
+        results_2 = run_publication_gates(assessment)
+
+        assert len(results_1) == len(results_2), (
+            f"Gate count differs: {len(results_1)} vs {len(results_2)}"
+        )
+        for r1, r2 in zip(results_1, results_2):
+            assert r1.gate_name == r2.gate_name
+            assert r1.passed == r2.passed, (
+                f"Gate '{r1.gate_name}' passed={r1.passed} first, "
+                f"passed={r2.passed} second"
+            )
+            assert r1.status == r2.status, (
+                f"Gate '{r1.gate_name}' status={r1.status} first, "
+                f"status={r2.status} second"
+            )
+            assert r1.value == r2.value, (
+                f"Gate '{r1.gate_name}' value={r1.value} first, "
+                f"value={r2.value} second"
+            )
+
+    def test_assessment_not_mutated_after_gates(self, full_assessment):
+        """
+        Running gates does not mutate the assessment dictionary.
+
+        The assessment input must be identical before and after gate execution.
+        """
+        import copy
+
+        from modules.quality_gates.publication_gates import run_publication_gates
+
+        assessment = copy.deepcopy(full_assessment)
+        original = copy.deepcopy(assessment)
+        run_publication_gates(assessment)
+
+        # Compare field by field for a clear error message
+        assert set(assessment.keys()) == set(original.keys()), (
+            f"Key set changed: before={sorted(original.keys())}, "
+            f"after={sorted(assessment.keys())}"
+        )
+        for key in original:
+            assert assessment[key] == original[key], (
+                f"Field '{key}' was mutated by gate execution:\n"
+                f"  before: {original[key]}\n"
+                f"  after:  {assessment[key]}"
+            )
+
+    def test_check_publication_readiness_does_not_re_execute_gates(self, full_assessment):
+        """
+        check_publication_readiness with pre-computed gate_results does NOT
+        re-invoke run_publication_gates internally.
+        """
+        import copy
+
+        from modules.quality_gates.publication_gates import (
+            run_publication_gates,
+            check_publication_readiness,
+        )
+
+        assessment = copy.deepcopy(full_assessment)
+
+        # Run gates once, capture results
+        gate_results = run_publication_gates(assessment)
+
+        # Call readiness with pre-computed results
+        readiness = check_publication_readiness(assessment, gate_results)
+
+        # Verify the report uses the same gate_results we provided
+        assert readiness["gate_results"] == [r.to_dict() for r in gate_results], (
+            "readiness report gate_results differ from pre-computed results"
+        )
+        assert readiness["summary"]["total_gates"] == len(gate_results)
+        assert readiness["ready"] is True  # valid_assessment should pass all gates

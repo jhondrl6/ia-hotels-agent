@@ -1,9 +1,47 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.65.0 (DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes)
-**Última actualización:** 2026-07-27
+**Versión:** v4.66.0 (DT-4 Residual Fixes: pain_ledger_resolved injection + SitePresence normalization + coherence/alignment unification + gate idempotency + post-audit path/delivery fixes)
+**Última actualización:** 2026-07-28
 
 ---
+
+### Notas de Cambios v4.66.0 — DT-4 Residual Fixes
+
+**Fecha:** 2026-07-28
+
+**Resumen**: Corrección de la causa raíz del coverage gate failure: pain_ledger_resolved
+no se inyectaba (faltaba hotel_id/ en el path), SitePresence con shapes incompatibles,
+coherence/alignment sin fuente única, gates con doble ejecución, y divergencia delivery-vs-gate.
+
+**Módulos afectados**: assessment_builder, v4_asset_orchestrator, coherence_validator,
+publication_gates, delivery_quality_report, alignment_result, site_presence_adapter, main
+
+**Problema**: El coverage gate (coverage_no_silent_drop) fallaba por dos causas raíz:
+1. El path de pain_ledger_resolved.json en main.py:2690 no incluía hotel_id/ — el archivo
+   reconciliado existía en disco pero nunca se cargaba.
+2. SitePresence se calculaba 4+ veces con shapes incompatibles (dataclass, dict, enum, SimpleNamespace).
+
+Adicionalmente: el score de coherencia no tenía fuente única, los gates se ejecutaban dos veces
+mutando el assessment, y el delivery_quality_report divergía del gate_report en alignment totals
+porque from_asset_alignment_matrix() leía el JSON estático pre-enriquecimiento SitePresence.
+
+**Solución**:
+1. Campo `pain_ledger_resolved` en AssessmentPayload + builder method + path corregido en main.py
+2. Adapter canónico `normalize_site_presence()` que acepta dataclass/dict/enum → dict unificado
+3. `final_coherence_report` como fuente única (pre/post conservados como trazabilidad)
+4. `AlignmentResult` DTO compartido; `from_asset_alignment_matrix()` cross-referencea SitePresence
+5. `check_publication_readiness()` deriva de gate_results existentes sin re-ejecutar
+
+**Issues comerciales conocidos**:
+- CG-ROI-NEGATIVE: Zi One requiere onboarding con datos reales (actualmente usa defaults regionales)
+- CG-TECH-JARGON: Jerga técnica en vista gerencia; no bloqueante
+
+**Backwards compatibility**:
+- Campos nuevos con default factory=list → consumidores existentes no afectados
+- `check_publication_readiness()` mantiene firma original
+- `CoherenceValidator.validate()` mantiene site_presence_report como keyword opcional
+- `from_asset_alignment_matrix()` mantiene site_presence_report=None como default
+- `DeliveryQualityReportGenerator.generate()` mantiene site_presence_report=None como default
 
 ### Notas de Cambios v4.65.0 — Root Cause Reconciliation (DT-4)
 

@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-07-27
-> **Version actual:** v4.58.0
-> **Total fases completadas:** 390
+> **Ultima actualizacion:** 2026-07-28
+> **Version actual:** v4.66.0
+> **Total fases completadas:** 393
 
 ---
 
@@ -9258,6 +9258,45 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (8)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-5 - 2026-07-27
+**Descripcion:** DT4-N3-GATE-IDEMPOTENCY: single gate execution, readiness derived from results, zero assessment mutations
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-6 - 2026-07-28
+**Descripcion:** E2E-ZIONE: v4complete Zi One Luxury + verification 14 criterios + post-implementation analysis. CRITICAL FINDING: Bug de path en main.py:2690 rompe FASE-1 (pain_ledger_resolved no cargado). FASE-2/3/5 funcionan. FASE-4 parcial.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `.opencode/plans/DT4-RESIDUAL-FIXES/08-analisis-post-implementacion.md` | NUEVO | 08-Analisis-Post-Implementacion |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

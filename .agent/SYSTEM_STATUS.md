@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-07-24 19:19:18 UTC
+> Auto-generado: 2026-07-28 17:56:27 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -9,7 +9,7 @@
 
 | Componente | Version | Fuente |
 |------------|---------|--------|
-| Proyecto | 4.63.1 | VERSION.yaml |
+| Proyecto | 4.66.0 | VERSION.yaml |
 | Ecosystem Convention | 1.0.0 | .agent/CONVENTION.md |
 
 ## Skills Activas (16)
@@ -39,11 +39,11 @@
 | Metrica | Valor |
 |---------|-------|
 | Shadow logs | 1166 archivos JSON |
-| Sesiones activas | 20 |
+| Sesiones activas | 28 |
 | Sesiones archivadas | 6 |
 | Ultimo shadow log | 20260723_005650_4fea0618.json |
-| Ultima sesion activa | 2026-07-24_4ec029c3.json |
-| Ultimo contexto actualizado | 2026-07-24T19:14:08.507110+00:00 |
+| Ultima sesion activa | 2026-07-28_f619f1be.json |
+| Ultimo contexto actualizado | 2026-07-28T17:26:39.870527+00:00 |
 | Ultima URL procesada | https://zione.co/ |
 
 ## Config Files (9/9 healthy)

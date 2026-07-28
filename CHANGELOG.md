@@ -1,5 +1,69 @@
 # Changelog
 
+## [4.66.0] - DT-4 Residual Fixes — 2026-07-28
+
+### Objetivo
+Corregir la causa raíz del coverage gate failure en DT-4: el pain_ledger_resolved
+no se inyectaba en el assessment por un bug de path (faltaba hotel_id/). Normalizar
+SitePresence, unificar coherence score, unificar alignment reporting, eliminar doble
+ejecución de gates, y corregir la divergencia delivery-vs-gate en alignment.
+
+### Cambios Implementados
+
+**FASE-1 a FASE-5 (plan original)**:
+- `modules/assessment_builder.py` — Campo `pain_ledger_resolved` en AssessmentPayload + builder method `with_resolved_pain_ledger()`
+- `main.py` — Carga de pain_ledger_resolved.json + SitePresence computado una vez + gates idempotentes
+- `modules/asset_generation/site_presence_adapter.py` — Nuevo adapter canónico SitePresence (dataclass/dict/enum → dict)
+- `modules/asset_generation/v4_asset_orchestrator.py` — Expone pain_ledger_resolved + final_coherence_report
+- `modules/commercial_documents/coherence_validator.py` — 3 call sites con site_presence_report normalizado
+- `modules/quality_gates/publication_gates.py` — Sin reconstrucciones fake, sin doble ejecución, sin mutaciones
+- `modules/quality_gates/alignment_result.py` — AlignmentResult DTO canónico compartido (from_alignment_report + from_asset_alignment_matrix)
+- `modules/quality_gates/delivery_quality_report.py` — Alineado con AlignmentResult
+
+**FASE-6-A (DT4-N7) — Path fix**:
+- `main.py:2690` — Corregido: `output_dir / hotel_id / "v4_audit" / "pain_ledger_resolved.json"` (faltaba hotel_id/)
+  - Impacto: coverage_no_silent_drop pasó de justified=0→9, uncovered=["no_whatsapp_visible"]→[]
+
+**FASE-6-B (DT4-N8) — Delivery alignment fix**:
+- `modules/quality_gates/alignment_result.py` — `from_asset_alignment_matrix()` acepta site_presence_report opcional; cross-referencea entries NO_BREACH/MISSING_ASSET contra presencia real en sitio
+- `modules/quality_gates/delivery_quality_report.py` — `generate()` acepta site_presence_report; delivery_ready deriva de AlignmentResult.passed
+- `main.py:2970` — Pasa site_presence_report a quality_generator.generate()
+  - Impacto: delivery status FAIL→PASS (5/5 gates), present_in_production=0→2, consistente con gate_report
+
+### Issues Comerciales Documentados (NO técnicos)
+- **CG-ROI-NEGATIVE**: Zi One tiene beneficio neto 6m negativo (-$1,330,590 COP, ROI 0.45X) con datos financieros default/regionales. Requiere onboarding con datos operativos reales para recalcular. No es un bug — es la realidad matemática con los datos disponibles.
+- **CG-TECH-JARGON**: Jerga técnica (Schema, AEO, IAO, Open Graph, Gemini) en vista gerencia. WARNING no bloqueante.
+
+### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/asset_generation/site_presence_adapter.py` | Adapter canónico SitePresence |
+| `modules/quality_gates/alignment_result.py` | AlignmentResult DTO compartido |
+| `tests/quality_gates/test_coverage_gate_integration.py` | Test integrado reconciler→builder→gate |
+| `tests/asset_generation/test_site_presence_adapter.py` | Tests normalización SitePresence |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Carga resolved ledger (path corregido) + SitePresence único + gates idempotentes + site_presence a delivery |
+| `modules/assessment_builder.py` | pain_ledger_resolved + with_resolved_pain_ledger() + with_coherence usa final |
+| `modules/asset_generation/v4_asset_orchestrator.py` | Expone pain_ledger_resolved + final_coherence_report |
+| `modules/commercial_documents/coherence_validator.py` | 3 call sites con site_presence_report |
+| `modules/quality_gates/publication_gates.py` | Sin mutaciones, sin reconstrucciones fake, sin doble ejecución |
+| `modules/quality_gates/alignment_result.py` | from_asset_alignment_matrix con SitePresence cross-reference |
+| `modules/quality_gates/delivery_quality_report.py` | Acepta site_presence_report; delivery_ready de AlignmentResult |
+| `VERSION.yaml` | 4.65.0 → 4.66.0 |
+
+### Tests
+- 1 test integrado coverage (reconciler→builder→gate)
+- 5 tests normalización SitePresence
+- 2 tests final_coherence
+- 8 tests alignment (from_alignment_report + from_asset_alignment_matrix + semantic equality)
+- 43 tests totales verificados; 0 regresiones
+
+### Verificación E2E
+- v4complete Zi One (×2): coverage_no_silent_drop PASSED, delivery PASSED, documentos generados, 13/14 criterios globales cumplidos
+
 ## [4.65.0] - DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes — 2026-07-27
 
 ### Objetivo

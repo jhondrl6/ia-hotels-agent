@@ -3,15 +3,15 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.64.0 | **Codename**: DT-3: Tech debt resolution - AssetAlignmentMatrix unification
-> **Release date**: 2026-07-25 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.66.0 | **Codename**: DT-4 Residual Fixes: pain_ledger_resolved injection + SitePresence normalization + coherence/alignment unification + gate idempotency + post-audit path/delivery fixes
+> **Release date**: 2026-07-28 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
 
 ## Modulos del Repositorio (auto-generado)
 
-> 23 modulos detectados en `modules/` + 1 paquetes de nivel root. 191 archivos Python en total.
+> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 194 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
@@ -36,7 +36,7 @@
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
 | **commercial_documents/** | 8 | CoherenceRule, PriceValidationRule, CoherenceConfig; CoherenceCheck, CoherenceReport, CoherenceValidator; ValidatedField, Conflict, ValidationSummary, Scenario; HookPDFGenerator; Pain, Solution, PainS |
-| **asset_generation/** | 20 | AssetStatus, AssetCatalogEntry; ContentStatus, ContentIssue, ContentValidationResult, AssetContentValidator; AssetDiagnosticLink, AssetMetadata, AssetDiagnosticLinker; AssetStatus, AssetMetadata, Asse |
+| **asset_generation/** | 21 | AssetStatus, AssetCatalogEntry; ContentStatus, ContentIssue, ContentValidationResult, AssetContentValidator; AssetDiagnosticLink, AssetMetadata, AssetDiagnosticLinker; AssetStatus, AssetMetadata, Asse |
 | **delivery/** | 23 | AltTextGuideGenerator; AnalyticsSetupGuideGenerator; BlogStrategyGuideGenerator; BookingBarGenerator; CertificateGenerator; ContentGenerator; DeliveryAssetState, DeliveryAssetEntry, DeliveryContext; D |
 | **generators/** | 3 | OutreachGenerator; ReportDataBundle, ReportIntegrationAudit, ReportIntegrationAdapter, ReportBuilder; GeoStageResult, IAStageResult, SparkGenerator |
 | **geo_enrichment/** | 8 | AssetType, AssetResponsibility, AssetResponsibilityContract; GEODashboard; GEOBand, ScoreBreakdown, GEOAssessment, GEODiagnostic; GEOEnrichmentLayer; GeoFlowResult, GeoFlow; HotelSchemaEnricher; LLMsT |
@@ -52,7 +52,7 @@
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **quality_gates/** | 8 | CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; CommercialGateResult, CommercialGateReport, CommercialGateValidator; DeliveryQualityReport, DeliveryQualityReportGenerator; GateT |
+| **quality_gates/** | 9 | AlignmentResult; CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; CommercialGateResult, CommercialGateReport, CommercialGateValidator; DeliveryQualityReport, DeliveryQualityRepor |
 
 ### UTILIDADES Y VALIDACION
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-07-26 | v4.64.0 DT-3: Tech debt resolution - AssetAlignmentMatrix unification*
+*Auto-generado: 2026-07-28 | v4.66.0 DT-4 Residual Fixes: pain_ledger_resolved injection + SitePresence normalization + coherence/alignment unification + gate idempotency + post-audit path/delivery fixes*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

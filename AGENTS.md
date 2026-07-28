@@ -1,8 +1,8 @@
-<!-- agents_version: v4.64.0 | last_update: 2026-07-27 -->
+<!-- agents_version: v4.64.0 | last_update: 2026-07-28 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.65.0 -- DT-4: Root cause reconciliation — Post-orchestrator reconciler + 5 bug fixes COMPLETADO**
+> **v4.66.0 -- DT-4 Residual Fixes: pain_ledger_resolved injection + SitePresence normalization + coherence/alignment unification + gate idempotency + post-audit path/delivery fixes COMPLETADO**
 
 ---
 

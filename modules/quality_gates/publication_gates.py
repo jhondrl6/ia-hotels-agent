@@ -1384,7 +1384,10 @@ def run_publication_gates(
     return orchestrator.run_all(assessment)
 
 
-def check_publication_readiness(assessment: Dict[str, Any]) -> Dict[str, Any]:
+def check_publication_readiness(
+    assessment: Dict[str, Any],
+    gate_results: Optional[List[PublicationGateResult]] = None
+) -> Dict[str, Any]:
     """
     Check if assessment is ready for publication.
     
@@ -1396,6 +1399,9 @@ def check_publication_readiness(assessment: Dict[str, Any]) -> Dict[str, Any]:
     
     Args:
         assessment: Dictionary containing all assessment data
+        gate_results: Optional pre-computed gate results. When provided,
+            readiness is derived from these results without re-executing
+            any gates. When None (default), gates are executed once.
     
     Returns:
         Dictionary with readiness report:
@@ -1408,14 +1414,23 @@ def check_publication_readiness(assessment: Dict[str, Any]) -> Dict[str, Any]:
         }
     
     Example:
+        # Single-execution pattern (recommended):
+        results = run_publication_gates(assessment)
+        report = check_publication_readiness(assessment, results)
+        
+        # Backward-compatible (gates executed once):
         report = check_publication_readiness(assessment)
+        
         if report["ready"]:
             print("Safe to publish!")
         else:
             for issue in report["blocking_issues"]:
                 print(f"Block: {issue}")
     """
-    results = run_publication_gates(assessment)
+    if gate_results is not None:
+        results = gate_results
+    else:
+        results = run_publication_gates(assessment)
     
     blocking_gates = [r for r in results if not r.passed]
     ready = len(blocking_gates) == 0

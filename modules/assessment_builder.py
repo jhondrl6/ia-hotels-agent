@@ -60,6 +60,7 @@ class AssessmentPayload:
 
     # Pain Ledger / FASE-0
     pain_ledger: List[Dict] = field(default_factory=list)
+    pain_ledger_resolved: Optional[List[Dict]] = None  # DT4-R1: post-reconciler ledger
     diagnostic_pain_ids: List[str] = field(default_factory=list)
     proposal_pain_ids: List[str] = field(default_factory=list)
 
@@ -137,11 +138,26 @@ class AssessmentBuilder:
     def with_coherence(
         self, pre_coherence_report: Any, asset_result: Any
     ) -> "AssessmentBuilder":
-        self._payload.coherence_score = (
-            asset_result.coherence_report.overall_score
-            if asset_result
-            else 0.0
-        )
+        if asset_result:
+            # DT4-N4: preferir final_coherence_report (canonical source) si existe
+            if (
+                hasattr(asset_result, "final_coherence_report")
+                and asset_result.final_coherence_report
+            ):
+                self._payload.coherence_score = (
+                    asset_result.final_coherence_report.overall_score
+                )
+            elif (
+                hasattr(asset_result, "coherence_report")
+                and asset_result.coherence_report
+            ):
+                self._payload.coherence_score = (
+                    asset_result.coherence_report.overall_score
+                )
+            else:
+                self._payload.coherence_score = 0.0
+        else:
+            self._payload.coherence_score = 0.0
         # NO setear coherence_report en el payload (0 consumidores post-simplificación)
         return self
 
@@ -164,6 +180,17 @@ class AssessmentBuilder:
                 for pid in (getattr(asset, "pain_ids", None) or [])
             )
         )
+        return self
+
+    def with_resolved_pain_ledger(
+        self, entries: List[Dict]
+    ) -> "AssessmentBuilder":
+        """DT4-R1: Inject reconciled pain_ledger into assessment.
+
+        Called after with_pain_ledger() when post-orchestrator reconciliation
+        produced a pain_ledger_resolved.json.
+        """
+        self._payload.pain_ledger_resolved = entries
         return self
 
     def with_audit(self, audit_result: Any) -> "AssessmentBuilder":
