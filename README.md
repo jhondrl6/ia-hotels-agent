@@ -27,9 +27,9 @@
 - **205 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **56 directorios de test**
 - **9 config YAML** con schema validado
 - **17 agent skills** en `.agents/workflows/`
-- **5 publication gates** — 4 blocking (coherence, coverage_no_silent_drop, evidence, proposal_asset_alignment) + asset_specificity + advisory warnings por IA-Readiness Critical
+- **11 publication gates** — blocking: evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, content_quality, asset_confidence, proposal_asset_alignment, tier_c_onboarding_required
 - **Coherence Score >= 0.8** requerido para publicacion
-- **28 assets** en catalogo (25 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
+- **25 assets** en catalogo (22 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
@@ -235,14 +235,12 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **3,094 test functions** — suite completa, 0 regresiones
+- **3,131 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.13.0 (1 fase/sesion, max 60 iteraciones)
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
-- **5 Publication Gates** — 4 blocking (coherence G6, coverage G7, evidence, proposal_asset_alignment G9) + asset_specificity G8 + advisory warnings IA-Readiness Critical:
-  - Blocking: coherence (G6), coverage (G7), evidence, proposal_asset_alignment (G9)
-  - Warning: asset_specificity (G8), plus IA-Readiness Critical advisory
+- **11 Publication Gates** — evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, content_quality, asset_confidence, proposal_asset_alignment, tier_c_onboarding_required
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
 
 ---
@@ -264,19 +262,13 @@ iah-cli/
   main.py                     # CLI entry point (v4complete, hook-pdf, deploy, etc.)
   VERSION.yaml                # Fuente unica de verdad (version)
   config/                     # Configuracion YAML (9 archivos)
-  templates/                  # Templates HTML/CSS para PDFs
+  templates/                  # Templates HTML/CSS/MD para generacion
     hook_template.md            #   Template PDF gancho (HTML, 34 placeholders)
     hook_styles.css             #   Estilos A4, 2 paginas, hook figure 28pt
-    pricing.yaml              #   TIERs, GATEs, floor_price
-    scenarios.yaml            #   Recovery factors, weights, OTA shifts
-    financial_defaults.yaml   #   DEFAULTS financieros
-    fallbacks.yaml            #   Fallback scores + estimated flags
-    commercial.yaml           #   ROI cap, garantias, planes
-    regional_benchmarks.yaml  #   Pain narratives + umbrales
-    settings.yaml             #   Legacy (puntero a nuevos YAML)
-    certificates.yaml         #   Certificados de excelencia
-    provider_registry.yaml    #   Catalogo de proveedores
-  modules/                    # 201 modulos Python (~72K lineas)
+    delivery_readme_template.md #   Template README de entrega
+    diagnostico_ejecutivo.md    #   Template diagnostico ejecutivo
+    local_content/              #   Templates de contenido local
+  modules/                    # 205 modulos Python (~74K lineas)
     asset_generation/         #   Generacion condicional de assets
     commercial_documents/     #   Diagnostico + Propuesta v4 + PDF gancho (hook-pdf)
     financial_engine/         #   Pricing, scenarios, loss projector
@@ -286,7 +278,7 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
-  tests/                      # ~65K lineas de test (30 directorios)
+  tests/                      # ~66K lineas de test (56 directorios)
     config/                   #   61 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
@@ -295,7 +287,7 @@ iah-cli/
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
     run_all_validations.py    #   Suite de validaciones
-  .agents/workflows/          # 16 agent skills
+  .agents/workflows/          # 17 agent skills
   .opencode/plans/            # Planes de fases (phased execution)
   evidence/                   # Evidencia de fases ejecutadas
 ```
