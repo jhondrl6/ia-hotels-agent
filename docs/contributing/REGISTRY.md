@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-07-28
+> **Ultima actualizacion:** 2026-07-29
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 393
+> **Total fases completadas:** 394
 
 ---
 
@@ -9325,6 +9325,25 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-0-A - 2026-07-29
+**Descripcion:** Loader reescrito con glob+URL matching. _normalize_url() implementada. Ventana 24h eliminada (ONBOARDING_FRESHNESS_HOURS opt-in). Matching por URL normalizada en vez de slug.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (0 nuevos, 616 pasan sin regresiones)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

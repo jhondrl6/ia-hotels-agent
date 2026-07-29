@@ -3393,56 +3393,77 @@ def _infer_region_from_address(address: str) -> str | None:
     return None
 
 
-def _load_latest_onboarding_data(hotel_url: str, hotel_name: str) -> Dict[str, Any] | None:
-    """Carga datos de onboarding más recientes del hotel si existen y son frescos (< 24h).
-    
+def _normalize_url(url: str) -> str:
+    """Normaliza URL para matching canónico.
+
+    Reduce https://www.zione.co/ → zione.co
+    Ignora: protocolo, www, trailing slash, path, query string.
+    """
+    from urllib.parse import urlparse
+    p = urlparse(url.rstrip('/'))
+    return p.netloc.replace('www.', '').lower()
+
+
+def _load_latest_onboarding_data(
+    hotel_url: str,
+    hotel_name: str,
+    output_dir: Path | None = None,
+) -> Dict[str, Any] | None:
+    """Carga datos de onboarding más recientes del hotel por URL normalizada.
+
+    Busca en todos los archivos YAML del directorio de clientes y matchea
+    por URL normalizada en vez de slug derivado de nombre.
+
     Args:
-        hotel_url: URL del hotel
-        hotel_name: Nombre del hotel
-        
+        hotel_url: URL del hotel (ej. https://zione.co/)
+        hotel_name: Nombre del hotel (solo para logging, no se usa para matching)
+        output_dir: Directorio donde buscar YAMLs. Default: output/clientes/
+
     Returns:
-        Diccionario con datos de onboarding o None si no existe/no es fresco
+        Diccionario con datos de onboarding o None si no existe
     """
     import yaml
-    from datetime import datetime, timezone, timedelta
-    from modules.onboarding.data_loader import generate_slug
-    
-    output_dir = Path("output/clientes")
-    if not output_dir.exists():
+
+    clientes_dir = output_dir or Path("output/clientes")
+    if not clientes_dir.exists():
         return None
-    
-    hotel_slug = generate_slug(hotel_name)
-    onboarding_file = output_dir / f"{hotel_slug}_onboarding.yaml"
-    
-    if not onboarding_file.exists():
-        return None
-    
-    try:
-        with open(onboarding_file, 'r', encoding='utf-8') as f:
-            data = yaml.safe_load(f)
-        
+
+    normalized_url = _normalize_url(hotel_url)
+
+    for yaml_file in clientes_dir.glob("*_onboarding.yaml"):
+        try:
+            with open(yaml_file, 'r', encoding='utf-8') as f:
+                data = yaml.safe_load(f)
+        except Exception:
+            continue
+
         if not data or 'metadatos' not in data:
-            return None
-        
-        fecha_captura_str = data.get('metadatos', {}).get('fecha_captura')
-        if not fecha_captura_str:
-            return None
-        
-        fecha_captura = datetime.fromisoformat(fecha_captura_str.replace('Z', '+00:00'))
-        ahora = datetime.now(timezone.utc)
-        
-        if fecha_captura.tzinfo is None:
-            fecha_captura = fecha_captura.replace(tzinfo=timezone.utc)
-        
-        diferencia = ahora - fecha_captura
-        if diferencia > timedelta(hours=24):
-            return None
-        
+            continue
+
+        yaml_url = data.get('hotel', {}).get('url', '')
+        if not yaml_url:
+            continue
+
+        if _normalize_url(yaml_url) != normalized_url:
+            continue
+
+        # Frescura: verificación via env var (Fix 3)
+        # Si ONBOARDING_FRESHNESS_HOURS no está seteada, no hay límite
+        import os
+        freshness_hours = os.getenv("ONBOARDING_FRESHNESS_HOURS")
+        if freshness_hours:
+            from datetime import datetime, timezone, timedelta
+            fecha_str = data.get('metadatos', {}).get('fecha_captura')
+            if fecha_str:
+                fecha = datetime.fromisoformat(fecha_str.replace('Z', '+00:00'))
+                if fecha.tzinfo is None:
+                    fecha = fecha.replace(tzinfo=timezone.utc)
+                if datetime.now(timezone.utc) - fecha > timedelta(hours=int(freshness_hours)):
+                    continue  # Data demasiado vieja, seguir buscando
+
         return data
-        
-    except Exception as e:
-        print(f"   ⚠️  Error cargando onboarding: {e}")
-        return None
+
+    return None
 
 
 def _extract_hotel_name_from_url(url: str) -> str:
