@@ -122,7 +122,7 @@ Todas las modificaciones son en **diferentes funciones o lineas no solapantes**:
 | Fase | Estado | Depende de | Bloquea a |
 |------|--------|------------|-----------|
 | FASE-0-A | COMPLETADA (2026-07-29) | — | FASE-0-B, FASE-2, FASE-3 |
-| FASE-0-B | NO INICIADA | FASE-0-A | FASE-3, FASE-RELEASE-A |
+| FASE-0-B | COMPLETADA (2026-07-29) | FASE-0-A | FASE-3, FASE-RELEASE-A |
 | FASE-1 | NO INICIADA | — | FASE-3, FASE-RELEASE-A |
 | FASE-2 | NO INICIADA | FASE-0-A | FASE-3, FASE-RELEASE-A |
 | FASE-3 | BLOQUEADA | FASE-0-A, FASE-0-B, FASE-1, FASE-2 | FASE-RELEASE-A |

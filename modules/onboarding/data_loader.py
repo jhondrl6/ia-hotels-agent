@@ -107,6 +107,7 @@ def create_onboarding_template() -> Dict[str, Any]:
         "hotel": {
             "nombre": None,
             "ubicacion": None,
+            "url": None,  # CAMBIO A: clave canonica para matching futuro
         },
         "datos_operativos": {
             "habitaciones": None,

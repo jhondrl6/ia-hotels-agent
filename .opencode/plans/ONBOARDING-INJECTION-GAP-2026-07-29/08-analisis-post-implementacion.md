@@ -10,6 +10,7 @@
 | Fase | Título | Sesión | Iteraciones | Estado | delegate_task | Completitud |
 |------|--------|--------|-------------|--------|---------------|-------------|
 | FASE-0-A | Loader + normalize_url + frescura | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO) | 3/3 tareas, 616 tests OK |
+| FASE-0-B | CAMBIO A+B + template url | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO) | 3/3 tareas, 3 grep checks OK |
 | FASE-1 | Taxonomía + deprecación | — | — | ⬜ | ✅ SUBAGENTE | — |
 | FASE-2 | observations.json | — | — | ⬜ | ❌ (DIRECTO) | — |
 | FASE-3 | Tests regresión | — | — | ⬜ | ⚠️ PARCIAL | — |

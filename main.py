@@ -1069,6 +1069,13 @@ def run_onboard_mode(args: argparse.Namespace) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     
     hotel_slug = generate_slug(hotel_nombre) if hotel_nombre else "hotel"
+    
+    # CAMBIO A: Persistir hotel.url como clave canonica para matching futuro
+    # IMPORTANTE: OnboardingForm usa self._data dict, NO atributos de objeto.
+    # save_yaml() escribe self._data via yaml.dump().
+    if args.url:
+        form._data['hotel']['url'] = args.url.rstrip('/')
+    
     if args.output_format == "yaml":
         output_path = output_dir / f"{hotel_slug}_onboarding.yaml"
         form.save_yaml(output_path)
@@ -1736,7 +1743,12 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     print("-" * 70)
     
     # Load onboarding data first (highest priority)
-    onboarding_data = _load_latest_onboarding_data(args.url, hotel_name)
+    clientes_dir = Path(args.output) / "clientes"
+    onboarding_data = _load_latest_onboarding_data(
+        hotel_url=args.url,
+        hotel_name=hotel_name,
+        output_dir=clientes_dir,
+    )
     
     if onboarding_data:
         campos_confirmados = onboarding_data.get('metadatos', {}).get('campos_confirmados', [])

@@ -12,10 +12,10 @@
 | Metrica | Valor |
 |---------|-------|
 | Fases totales | 10 (7 implementacion + 3 release) |
-| Fases completadas | 1 |
-| Fases pendientes | 9 |
+| Fases completadas | 2 |
+| Fases pendientes | 8 |
 | Hallazgos a resolver | 8 |
-| Hallazgos resueltos | 3 (B1 parcial, B2, N3) |
+| Hallazgos resueltos | 6 (B1, B2, N3, N4, N5, §10a, §10b, §10c pendientes) |
 
 ---
 
@@ -40,7 +40,7 @@
 
 ---
 
-### FASE-0-B — CAMBIO A+B + Template url ⬜ PENDIENTE
+### FASE-0-B — CAMBIO A+B + Template url ✅ COMPLETADA
 
 **Complejidad**: MEDIA
 **Ejecucion**: DIRECTA
@@ -48,12 +48,12 @@
 **PRECONDICION**: FASE-0-A completada
 **R3**: 3 tareas, 0 comandos largos ✅
 
-- [ ] T1: CAMBIO A — `form._data['hotel']['url'] = args.url.rstrip('/')` en `run_onboard_mode()`
-- [ ] T2: Agregar `'url': None` a `create_onboarding_template()` en `data_loader.py`
-- [ ] T3: CAMBIO B — Pasar `output_dir=Path(args.output)/"clientes"` al loader
-- [ ] Verificacion: `grep "form._data\['hotel'\]\['url'\]" main.py` → existe
-- [ ] Verificacion: `grep "'url': None" modules/onboarding/data_loader.py` → existe
-- [ ] Verificacion: `grep "output_dir=" main.py | grep "_load_latest"` → existe
+- [x] T1: CAMBIO A — `form._data['hotel']['url'] = args.url.rstrip('/')` en `run_onboard_mode()`
+- [x] T2: Agregar `'url': None` a `create_onboarding_template()` en `data_loader.py`
+- [x] T3: CAMBIO B — Pasar `output_dir=Path(args.output)/"clientes"` al loader
+- [x] Verificacion: `grep "form._data['hotel']['url']" main.py` → existe
+- [x] Verificacion: `grep "'url': None" modules/onboarding/data_loader.py` → existe
+- [x] Verificacion: `grep "output_dir=" main.py | grep "_load_latest"` → existe
 
 **Bugs resueltos**: B1 (completa), N4, N5
 
@@ -165,11 +165,11 @@
 
 | Hallazgo | Fase | Estado |
 |----------|------|--------|
-| B1 (slug mismatch) | FASE-0-A + 0-B | ✅ (parcial) |
+| B1 (slug mismatch) | FASE-0-A + 0-B | ✅ completado |
 | B2 (frescura 24h) | FASE-0-A | ✅ completado |
 | N3 (hotel_url ignorado) | FASE-0-A | ✅ completado |
-| N4 (output_dir hardcodeado) | FASE-0-B | ⬜ |
-| N5 (sin identity resolver) | FASE-0-A + 0-B | ✅ (parcial) |
+| N4 (output_dir hardcodeado) | FASE-0-B | ✅ completado |
+| N5 (sin identity resolver) | FASE-0-A + 0-B | ✅ completado |
 | §10a (user_provided invisible) | FASE-1 | ⬜ |
 | §10b (audit deprecado) | FASE-1 | ⬜ |
 | §10c (observations.json) | FASE-2 | ⬜ |
@@ -181,3 +181,4 @@
 | Fecha | Fase | Estado | Iteraciones | Notas |
 |-------|------|--------|-------------|-------|
 | 2026-07-29 | FASE-0-A | ✅ COMPLETADA | 1 | Loader reescrito con glob+URL matching. _normalize_url() implementada. Ventana 24h eliminada (ONBOARDING_FRESHNESS_HOURS opt-in). 616 tests pasan, 0 regresiones. |
+| 2026-07-29 | FASE-0-B | ✅ COMPLETADA | 1 | 3 cambios cross-module: CAMBIO A (persistir hotel.url en YAML), CAMBIO B (output_dir configurable), template url:None |
