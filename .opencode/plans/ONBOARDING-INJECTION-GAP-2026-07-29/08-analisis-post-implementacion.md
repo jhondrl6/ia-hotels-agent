@@ -28,10 +28,11 @@
 4. **5 bugs resueltos simultáneamente**: B1, B2, N3, N4, N5
 
 ### Mitigaciones aplicadas
-- _(completar post-ejecución)_
-- Diseño determinístico: URL como clave canónica inmutable
-- `_normalize_url()` es función pura — 5 reglas fijas, sin side effects
-- Comportamiento degradado seguro: si matching falla → defaults regionales (mismo que antes)
+- Diseño determinístico: URL como clave canónica inmutable — no hay ambigüedad entre comandos
+- `_normalize_url()` es función pura — 5 reglas fijas, sin side effects. Los tests de FASE-3 detectaron un edge case (URL sin protocolo) corregido con 2 líneas antes de `urlparse`
+- Comportamiento degradado seguro: si matching falla → defaults regionales (mismo que antes). Sin regresión funcional
+- Separación en 2 fases (0-A rewrite + 0-B persistence): cambios atómicos con verificación entre fases
+- Fallback a `observations.json` como capa de defensa adicional — resultó crítico porque el YAML de Zi One no tenía `hotel.url`
 
 ### Qué funcionó
 - Patch unico en `main.py`: reemplazo de la funcion completa + adicion de `_normalize_url()` en una sola operacion
@@ -105,12 +106,16 @@
 _(Completar post-ejecución de todas las fases)_
 
 ### Diseño
-- _(completar)_
+- **URL como clave canónica**: La decisión de usar URL en vez de slug fue la correcta. Eliminó ambigüedad total entre comandos. El único riesgo — YAMLs viejos sin `hotel.url` — se mitigó con fallback a `observations.json`.
+- **`_normalize_url()` como función pura**: 5 reglas fijas, sin fuzzy matching, sin side effects. Los tests de FASE-3 validaron 15 casos y encontraron un edge case (URLs sin protocolo como `zione.co`) que se corrigió con 2 líneas (`if '://' not in url: url = '//' + url`). Sin tests, este bug habría llegado a producción.
+- **Separación loader (0-A) vs persistence (0-B)**: Permitió verificar cada capa independientemente. Si se hubiera hecho en una sola fase, el debugging de `form._data['hotel']['url']` habría sido más difícil.
+- **Observations.json como fallback**: FASE-2 agregó una capa de defensa que resultó crítica. El YAML de Zi One no tenía `hotel.url`, y sin el fallback el pipeline habría retornado defaults regionales (Tier B). La premisa inicial de que los YAMLs tendrían URL era incorrecta — el fallback lo compensó.
+- **Frescura como opt-in**: Eliminar el hardcode de 24h fue acertado. El ciclo real de ventas (2-7 días) es más largo que la ventana anterior. `ONBOARDING_FRESHNESS_HOURS` como env var da flexibilidad sin romper el default.
 
 ### Ejecución
 - **FASE-1 (2 one-liners)**: Cambios atómicos e independientes — si uno falla, el otro no se afecta. Las líneas reales (L1120, L1125) diferían de las documentadas en el plan (L1113, L1118) por desplazamiento post-FASE-0-A/B. Verificar siempre contra código vivo, nunca confiar en números de línea de un plan pre-escrito.
 - **FASE-3 (tests de regresión)**: `_normalize_url()` no manejaba URLs sin protocolo (`urlparse("zione.co")` → netloc vacío). Detectado al correr el primer test. Fix de 2 líneas (`if '://' not in url: url = '//' + url`) antes de `urlparse`. Sin este fix, el caso #9 del plan habría fallado silenciosamente. Los tests atraparon el bug antes que producción.
-- **FASE-0-A/B**: _(completar según ejecución real)_
+- **FASE-0-A/B**: La reescritura de `_load_latest_onboarding_data()` (50→55 líneas) fue directa con un solo patch. LSP detectó `os` no importado en el bloque de frescura — corregido agregando `import os` local. 616 tests pasaron sin regresiones. FASE-0-B fueron 3 cambios atómicos (CAMBIO A, CAMBIO B, template url:None) verificados con grep. Ambas fases se ejecutaron sin delegación: el contexto bimodal completo del flujo onboard→v4complete es necesario para entender el impacto de cada cambio.
 - **WSL safety guard**: Bloquea `python3 -c` y pipes con heredocs. Verificación vía `grep` y `search_files` es el fallback confiable.
 
 ### delegate_task
@@ -120,7 +125,10 @@ _(Completar post-ejecución de todas las fases)_
 - `./venv/Scripts/python.exe` funciona sin problemas desde WSL para comandos largos como `v4complete`. No requiere `.venv-wsl/` ni `source activate`. El subagente hereda este path sin configuración adicional.
 
 ### Qué se haría diferente
-- _(completar)_
+- **Premisa no verificada → T0 agregado**: El plan original asumía que `observations.json` ya tenía campo `website`. Era falso — ninguno de los 6 observations lo tenía. Se agregó T0 en FASE-2 para corregirlo. En futuros planes, verificar TODAS las premisas de datos contra el archivo vivo antes de diseñar la solución.
+- **Números de línea en planes**: El plan maestro listaba L1113 y L1118 para FASE-1, pero después de FASE-0-A/B las líneas reales eran L1120 y L1125. Usar `grep` con patrón de contenido en vez de números de línea en los prompts de fase.
+- **FASE-0-A y 0-B podrían fusionarse**: Ambas modifican `main.py` en puntos no solapantes (loader vs onboard/v4complete callers). Separarlas requirió 2 sesiones para ~10 líneas netas de cambio. Para planes similares, consolidar cambios atómicos no conflictivos en una sola fase.
+- **Delegate solo para comandos largos**: FASE-RELEASE-A (v4complete) fue el único caso donde delegar funcionó bien — comando de 3 minutos sin necesidad de contexto de código. Para cambios de código, la ejecución directa fue consistentemente más rápida y menos propensa a errores de interpretación.
 
 ---
 

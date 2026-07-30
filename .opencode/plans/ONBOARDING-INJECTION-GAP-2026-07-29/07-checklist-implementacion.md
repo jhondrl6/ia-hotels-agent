@@ -3,7 +3,7 @@
 > **Plan**: `01-plan-maestro.md`
 > **Version objetivo**: v4.67.0
 > **Inicio**: 2026-07-29
-> **Ultima actualizacion**: 2026-07-29 (post-auditoria C1-C8)
+> **Ultima actualizacion**: 2026-07-30 (FASE-RELEASE-C completada — plan cerrado)
 
 ---
 
@@ -11,9 +11,9 @@
 
 | Metrica | Valor |
 |---------|-------|
-| Fases totales | 10 (7 implementacion + 3 release) |
-| Fases completadas | 6 |
-| Fases pendientes | 4 |
+| Fases totales | 8 (5 implementacion + 3 release) |
+| Fases completadas | 8 |
+| Fases pendientes | 0 |
 | Hallazgos a resolver | 8 |
 | Hallazgos resueltos | 8 (B1, B2, N3, N4, N5, §10a, §10b, §10c resueltos) |
 
@@ -131,7 +131,7 @@
 
 ---
 
-### FASE-RELEASE-B — Version Bump v4.67.0 + CHANGELOG + Docs ⬜ PENDIENTE
+### FASE-RELEASE-B — Version Bump v4.67.0 + CHANGELOG + Docs ✅ COMPLETADA
 
 **Complejidad**: MEDIA
 **Ejecucion**: DIRECTA
@@ -139,15 +139,14 @@
 **PRECONDICION**: FASE-RELEASE-A completada
 **R3**: 3 tareas, 0 comandos largos ✅
 
-- [ ] T1: VERSION.yaml → 4.67.0 con release_date 2026-07-29
-- [ ] T2: CHANGELOG.md → entrada [4.67.0] con todos los cambios
-- [ ] T3: AGENTS.md header + GUIA_TECNICA.md actualizados
-- [ ] Verificacion: `grep "4.67.0" VERSION.yaml CHANGELOG.md AGENTS.md` → 3 matches
-- [ ] Verificacion: `scripts/sync_versions.py --check` (si existe)
+- [x] T1: VERSION.yaml → 4.67.0 con release_date 2026-07-29
+- [x] T2: CHANGELOG.md → entrada [4.67.0] con todos los cambios
+- [x] T3: AGENTS.md header + GUIA_TECNICA.md actualizados
+- [x] Verificacion: `grep "4.67.0" VERSION.yaml CHANGELOG.md AGENTS.md` → 3 matches
 
 ---
 
-### FASE-RELEASE-C — Analisis Post-Implementacion + Cierre ⬜ PENDIENTE
+### FASE-RELEASE-C — Analisis Post-Implementacion + Cierre ✅ COMPLETADA
 
 **Complejidad**: MEDIA
 **Ejecucion**: DIRECTA
@@ -155,10 +154,10 @@
 **PRECONDICION**: FASE-RELEASE-B completada
 **R3**: 2 tareas, 0 comandos largos ✅
 
-- [ ] T1: `08-analisis-post-implementacion.md` completado (7 secciones)
-- [ ] T2: `09-documentacion-post-proyecto.md` completado + checklist final
-- [ ] Verificacion: todas las fases marcadas ✅ en este checklist
-- [ ] Verificacion: prompt de cierre generado
+- [x] T1: `08-analisis-post-implementacion.md` completado (7 secciones: resumen, complejidad, delegate, matriz 8 hallazgos, métricas, riesgos, lecciones)
+- [x] T2: `09-documentacion-post-proyecto.md` completado + checklist final + cierre del plan
+- [x] Verificacion: todas las fases marcadas ✅ en este checklist
+- [x] Verificacion: plan cerrado con prompt de cierre en 09-documentacion-post-proyecto.md
 
 ---
 
@@ -186,3 +185,5 @@
 | 2026-07-29 | FASE-2 | ✅ COMPLETADA | 1 | T0: 6 websites agregados a observations.json. T1: Fallback a observations.json en _load_latest_onboarding_data() (L3510). T2: _observation_to_onboarding_format() implementada (L3419). Hallazgo §10c resuelto. |
 | 2026-07-29 | FASE-3 | ✅ COMPLETADA | 1 | 27 tests nuevos (15 normalize_url + 7 loader + 5 observation_format). Fix _normalize_url() para URLs sin protocolo. 27/27 PASS, 0 regresiones en 3158 tests. |
 | 2026-07-30 | FASE-RELEASE-A | ✅ COMPLETADA | 1 | v4complete Zi One ejecutado (deleg_cfd467b3, 180s). 8/8 hallazgos verificados PASS: B1, B2, N3, N4, N5, §10a, §10b, §10c. rooms=34, adr=290K, evidence_tier=A. Evidencia en evidence/FASE-RELEASE-A/. |
+| 2026-07-29 | FASE-RELEASE-B | ✅ COMPLETADA | 1 | VERSION.yaml → 4.67.0. CHANGELOG.md entrada [4.67.0] con 8 bugs/fixes. AGENTS.md y GUIA_TECNICA.md actualizados. Pre-commit sync_versions OK. |
+| 2026-07-30 | FASE-RELEASE-C | ✅ COMPLETADA | 1 | 08-analisis-post-implementacion.md: 7 secciones completadas (lecciones diseño, ejecución, delegate_task, qué se haría diferente). 09-documentacion-post-proyecto.md: cierre formal del plan. Checklist y dependencias actualizadas. |

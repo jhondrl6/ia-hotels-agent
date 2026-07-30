@@ -1,7 +1,7 @@
 # Documentacion Post-Proyecto — ONBOARDING-INJECTION-GAP-2026-07-29
 
 > **Version final**: v4.67.0
-> **Fecha de cierre**: (completar post-ejecucion)
+> **Fecha de cierre**: 2026-07-30
 > **Plan maestro**: `01-plan-maestro.md`
 
 ---
@@ -104,20 +104,37 @@ hotel:
 
 ---
 
-## 6. Lecciones Aprendidas (completar post-ejecucion)
+## 6. Lecciones Aprendidas
 
-(Ver `08-analisis-post-implementacion.md` para el detalle completo.)
+Completado. Ver `08-analisis-post-implementacion.md` sección 7 para el detalle completo de lecciones de diseño, ejecución, delegate_task, y qué se haría diferente.
+
+**Resumen**: La decisión de diseño más acertada fue usar URL como clave canónica. La lección más importante: verificar premisas de datos contra archivos vivos (observations.json no tenía `website` como se asumió). delegate_task solo es viable para comandos largos sin dependencia de contexto de código.
 
 ---
 
-## 7. Prompt para Proxima Sesion
+## 7. Cierre del Plan
 
-```
-Carga el plan ONBOARDING-INJECTION-GAP-2026-07-29 desde:
-  .opencode/plans/ONBOARDING-INJECTION-GAP-2026-07-29/
-+ skills: iah-cli-execution-conventions, iah-cli-phased-execution
+El plan **ONBOARDING-INJECTION-GAP-2026-07-29** está COMPLETADO.
 
-Estado: FASE-0-A ✅, FASE-0-B ✅, FASE-1 ✅, FASE-2 ✅.
-Fase actual: FASE-3 (Tests de regresion)
-Prompt: 05-prompt-fase-3.md
-```
+### Estado final
+
+| Métrica | Valor |
+|---------|-------|
+| Fases ejecutadas | 8/8 (FASE-0-A, 0-B, 1, 2, 3, RELEASE-A, RELEASE-B, RELEASE-C) |
+| Hallazgos resueltos | 8/8 (B1, B2, N3, N4, N5, §10a, §10b, §10c) |
+| Bugs críticos cerrados | 2/2 (B1 slug mismatch, B2 frescura 24h) |
+| Tests nuevos | 27 (15 normalize_url + 7 loader + 5 observation_format) |
+| Regresiones | 0 |
+| Versión | v4.67.0 |
+
+### Verificación E2E
+
+Zi One Luxury (https://zione.co/): **rooms=34, adr=290K, occupancy=0.784, evidence_tier=A, ROICR=1.3x**. Datos Tier A confirmados en `output/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260730_143715.md`.
+
+### Hallazgos residuales para futuros planes
+
+| Item | Descripción |
+|------|-------------|
+| Pain ratio 7.24% vs 1.9% esperado | El plan maestro esperaba 1.9% con datos Tier A, pero el output real muestra 7.24%. No es un bug — es el valor correcto con datos reales. El 1.9% del plan era una estimación optimista pre-ejecución. |
+| `_load_latest_onboarding_data()` sin caché | Iteración O(N) sobre YAMLs. OK para <50 hoteles. Indexar si N > 100. |
+| `generate_slug()` aún en main.py | Se mantiene en `run_onboard_mode()` pero ya no en el loader. Sin acción inmediata. |
