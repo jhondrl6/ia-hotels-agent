@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.66.0** -- DT-4 Residual Fixes: pain_ledger_resolved injection + SitePresence normalization + coherence/alignment unification + gate idempotency + post-audit path/delivery fixes | Actualizado 28 Julio 2026 | 3,131 pruebas automatizadas | 0 errores conocidos
+**v4.67.0** -- Onboarding Injection Fix — URL-based canonical matching + observations.json fallback | Actualizado 30 Julio 2026 | 3,158 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -21,15 +21,15 @@
 
 ---
 
-## Estado del Proyecto (v4.66.0 -- DT-4 Residual Fixes: pain_ledger_resolved injection + SitePresence normalization + coherence/alignment unification + gate idempotency + post-audit path/delivery fixes)
+## Estado del Proyecto (v4.67.0 -- Onboarding Injection Fix — URL-based canonical matching + observations.json fallback)
 
-- **3,131 test functions** — suite completa, 0 regresiones
+- **3,158 test functions** — suite completa, 0 regresiones
 - **205 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **56 directorios de test**
 - **9 config YAML** con schema validado
 - **17 agent skills** en `.agents/workflows/`
-- **11 publication gates** — blocking: evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, content_quality, asset_confidence, proposal_asset_alignment, tier_c_onboarding_required
+- **9 publication gates** — blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics; advisory: content_quality, asset_confidence, proposal_asset_alignment
 - **Coherence Score >= 0.8** requerido para publicacion
-- **25 assets** en catalogo (22 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
+- **34 assets** en catalogo (27 IMPLEMENTED + 4 DEPRECATED + 3 MANUAL_ONLY)
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
@@ -196,7 +196,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 
 ---
 
-## Configuracion YAML (v4.38.0 a v4.44.0)
+## Configuracion YAML (v4.38.0+)
 
 31 hardcoded values migrados a 6 archivos YAML con schema validado. Todos los parametros son configurables sin tocar codigo.
 
@@ -213,7 +213,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 
 ---
 
-## Voice Readiness Proxy (v4.28.0)
+## Voice Readiness Proxy (v4.28.0+)
 
 Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google Assistant, Alexa) lo mencionen como respuesta directa. PROXY — mide los INPUTS que alimentan los asistentes de voz, NO consulta Siri/Alexa directamente.
 
@@ -235,12 +235,12 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **3,131 test functions** — suite completa, 0 regresiones
+- **3,158 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.13.0 (1 fase/sesion, max 60 iteraciones)
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
-- **11 Publication Gates** — evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, content_quality, asset_confidence, proposal_asset_alignment, tier_c_onboarding_required
+- **9 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics (blocking); content_quality, asset_confidence, proposal_asset_alignment (advisory)
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
 
 ---

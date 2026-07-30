@@ -1,8 +1,8 @@
-<!-- agents_version: v4.66.0 | last_update: 2026-07-28 -->
+<!-- agents_version: v4.67.0 | last_update: 2026-07-30 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.66.0 -- DT-4 Residual Fixes: pain_ledger_resolved injection + SitePresence normalization + coherence/alignment unification + gate idempotency + post-audit path/delivery fixes COMPLETADO**
+> **v4.67.0 — Onboarding injection: URL-based canonical matching + observations.json fallback**
 
 ---
 
@@ -120,7 +120,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 3,131 funciones, 252 archivos, 0 regresion |
+| **Tests** | 3,158 funciones, 253 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -385,7 +385,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (3,131 funciones, 252 archivos)
+# Todas las pruebas (3,158 funciones, 253 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -400,7 +400,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (3,131 funciones totales)
+### Cobertura por Modulo (3,158 funciones totales)
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
@@ -489,7 +489,7 @@ iah-cli/
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
 │   └── validation/             # Validaciones adicionales
-├── tests/                      # Suite de pruebas (3,131 funciones, 252 archivos)
+├── tests/                      # Suite de pruebas (3,158 funciones, 253 archivos)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/
