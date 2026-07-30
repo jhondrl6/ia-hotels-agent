@@ -491,7 +491,7 @@ class ScenarioCalculator:
 
         # Si al menos un dato es verificable (onboarding/verified) → A
         verified_sources = [s for s in [adr_src, occ_src, ch_src]
-                          if s in ('onboarding', 'verified', 'industry_standard_15pct')]
+                          if s in ('onboarding', 'verified', 'industry_standard_15pct', 'user_provided')]
         # Fuentes de baja calidad → C
         low_quality = [s for s in [adr_src, occ_src, ch_src]
                       if s in ('scraping', 'default', 'unknown', 'legacy_hardcode')]

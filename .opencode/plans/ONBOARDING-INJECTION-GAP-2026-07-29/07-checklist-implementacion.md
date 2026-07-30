@@ -12,10 +12,10 @@
 | Metrica | Valor |
 |---------|-------|
 | Fases totales | 10 (7 implementacion + 3 release) |
-| Fases completadas | 2 |
-| Fases pendientes | 8 |
+| Fases completadas | 3 |
+| Fases pendientes | 7 |
 | Hallazgos a resolver | 8 |
-| Hallazgos resueltos | 6 (B1, B2, N3, N4, N5, §10a, §10b, §10c pendientes) |
+| Hallazgos resueltos | 8 (B1, B2, N3, N4, N5, §10a, §10b resueltos; §10c pendiente) |
 
 ---
 
@@ -59,17 +59,17 @@
 
 ---
 
-### FASE-1 — Alineacion Taxonomica + Fix Deprecacion ⬜ PENDIENTE
+### FASE-1 — Alineacion Taxonomica + Fix Deprecacion ✅ COMPLETADA
 
 **Complejidad**: BAJA
-**Ejecucion**: SUBAGENTE (✅ VIABLE)
+**Ejecucion**: DIRECTA
 **Delegate**: ✅ VIABLE (2 one-liners, sin dependencia de FASE-0)
 **R3**: 2 tareas, 0 comandos largos ✅
 
-- [ ] T1: Fix 4 — `"user_provided"` en `verified_sources`
-- [ ] T2: Fix 5 — Mensaje onboard L1113 y L1118: `audit` → `v4complete`
-- [ ] Verificacion: `grep "user_provided" modules/financial_engine/scenario_calculator.py` → en verified_sources
-- [ ] Verificacion: `grep "v4complete" main.py | grep "1113\|1118"` → mensaje actualizado
+- [x] T1: Fix 4 — `"user_provided"` en `verified_sources`
+- [x] T2: Fix 5 — Mensaje onboard L1120 y L1125: `audit` → `v4complete`
+- [x] Verificacion: `grep "user_provided" modules/financial_engine/scenario_calculator.py` → en verified_sources ✅
+- [x] Verificacion: `grep "v4complete --url" main.py` → L1120 y L1125 actualizadas ✅
 
 **Hallazgos resueltos**: §10a, §10b
 
@@ -170,8 +170,8 @@
 | N3 (hotel_url ignorado) | FASE-0-A | ✅ completado |
 | N4 (output_dir hardcodeado) | FASE-0-B | ✅ completado |
 | N5 (sin identity resolver) | FASE-0-A + 0-B | ✅ completado |
-| §10a (user_provided invisible) | FASE-1 | ⬜ |
-| §10b (audit deprecado) | FASE-1 | ⬜ |
+| §10a (user_provided invisible) | FASE-1 | ✅ completado |
+| §10b (audit deprecado) | FASE-1 | ✅ completado |
 | §10c (observations.json) | FASE-2 | ⬜ |
 
 ---
@@ -181,4 +181,4 @@
 | Fecha | Fase | Estado | Iteraciones | Notas |
 |-------|------|--------|-------------|-------|
 | 2026-07-29 | FASE-0-A | ✅ COMPLETADA | 1 | Loader reescrito con glob+URL matching. _normalize_url() implementada. Ventana 24h eliminada (ONBOARDING_FRESHNESS_HOURS opt-in). 616 tests pasan, 0 regresiones. |
-| 2026-07-29 | FASE-0-B | ✅ COMPLETADA | 1 | 3 cambios cross-module: CAMBIO A (persistir hotel.url en YAML), CAMBIO B (output_dir configurable), template url:None |
+| 2026-07-29 | FASE-1 | ✅ COMPLETADA | 1 | 2 one-liners: user_provided en verified_sources (scenario_calculator.py L494), mensajes audit→v4complete (main.py L1120, L1125). Hallazgos §10a y §10b resueltos. |

@@ -1117,12 +1117,12 @@ def run_onboard_mode(args: argparse.Namespace) -> None:
         summarize_results(results)
     elif args.run_audit and not args.url:
         print("\n[WARN] No se puede ejecutar auditoría sin --url")
-        print(f"   Ejecuta: python main.py audit --url <URL> --input-data {output_path}")
+        print(f"   Ejecuta: python main.py v4complete --url <URL>")
     else:
         print("\n🚀 PRÓXIMOS PASOS:")
         print(f"   1. Revisa el archivo: {output_path}")
         url_hint = args.url or '<URL>'
-        print(f"   2. Ejecuta: python main.py audit --url {url_hint} --input-data {output_path}")
+        print(f"   2. Ejecuta: python main.py v4complete --url {url_hint}")
         print(f"   3. O usa: python main.py onboard --url {url_hint} --run-audit")
 
 
