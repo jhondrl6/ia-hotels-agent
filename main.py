@@ -3410,8 +3410,11 @@ def _normalize_url(url: str) -> str:
 
     Reduce https://www.zione.co/ → zione.co
     Ignora: protocolo, www, trailing slash, path, query string.
+    Soporta URLs sin protocolo (zione.co → zione.co).
     """
     from urllib.parse import urlparse
+    if '://' not in url:
+        url = '//' + url
     p = urlparse(url.rstrip('/'))
     return p.netloc.replace('www.', '').lower()
 

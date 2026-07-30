@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — ONBOARDING-INJECTION-GAP-2026-07-29
 
-> **Completar después de FASE-RELEASE**
+> **Completar después de la ejecución de cada FASE**
 > **Template — los datos de ejecución se llenan al final de cada fase**
 
 ---
@@ -13,7 +13,7 @@
 | FASE-0-B | CAMBIO A+B + template url | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO) | 3/3 tareas, 3 grep checks OK |
 | FASE-1 | Taxonomía + deprecación | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO — 2 one-liners) | 2/2 tareas, 2 grep checks OK |
 | FASE-2 | observations.json | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO) | 3/3 tareas: T0 website + T1 fallback + T2 helper |
-| FASE-3 | Tests regresión | — | — | ⬜ | ⚠️ PARCIAL | — |
+| FASE-3 | Tests regresión | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO — fix + tests) | 3/3 tareas, 27 tests PASS, 0 regresiones |
 | FASE-RELEASE | v4complete + release | — | — | ⬜ | ⚠️ MIXTO | — |
 
 ---
@@ -52,7 +52,7 @@
 | FASE-0-A | ❌ No viable | — | Funciones core con modificaciones multi-punto requieren contexto completo del flujo bimodal. Patch directo en 1 operacion: ~60 lineas reemplazadas. |
 | FASE-1 | ❌ No usado (DIRECTO) | N/A | El plan preveía SUBAGENTE, pero 2 one-liners independientes sin imports no justificaban el overhead. Patch directo en < 1 min: más rápido, más verificable (grep inmediato), sin riesgo de que el subagente malinterprete números de línea desplazados. |
 | FASE-2 | ❌ No viable | — | Modificaciones incrementales sobre código reescrito en fase anterior requieren contexto acumulado |
-| FASE-3 | _(completar)_ | _(completar)_ | _(completar)_ |
+| FASE-3 | ❌ No usado (DIRECTO) | N/A | El plan preveía PARCIAL delegate_task (solo escritura), pero el fix de `_normalize_url()` para URLs sin protocolo requería modificar main.py + ejecutar tests en el mismo contexto. 27 tests en 3 clases, ejecución directa en 0.48s: más rápido y permite depurar en tiempo real. |
 | FASE-RELEASE | _(completar)_ | _(completar)_ | v4complete en subagente: ¿timeout? ¿WSL venv funcionó? |
 
 ---
@@ -95,7 +95,7 @@
 | WSL venv no ejecutable por subagente | Media | Alto | Subagente usa `terminal()` con path Windows explícito | ⬜ |
 | YAMLs viejos sin `hotel.url` rompen matching | Alta | Medio | Loader retorna None → mismo comportamiento que antes | ⬜ |
 | `observations.json` sin campo `website` | Alta | Bajo | Se agrego `website` en FASE-2 T0 a los 6 observations existentes; fallback es silencioso | ✅ Resuelto |
-| Tests no importables desde WSL | Media | Medio | Agente principal ejecuta tests con venv Windows | ⬜ |
+| Tests no importables desde WSL | Media | Medio | Agente principal ejecuta tests con venv Windows | ✅ No ocurrió — `./venv/Scripts/python.exe -m pytest` funcionó sin problemas, 27/27 PASS |
 | Regresión en hoteles sin onboarding | Baja | Alto | Si matching falla → defaults (sin cambios de comportamiento) | ⬜ |
 
 ---
@@ -109,6 +109,7 @@ _(Completar post-ejecución de todas las fases)_
 
 ### Ejecución
 - **FASE-1 (2 one-liners)**: Cambios atómicos e independientes — si uno falla, el otro no se afecta. Las líneas reales (L1120, L1125) diferían de las documentadas en el plan (L1113, L1118) por desplazamiento post-FASE-0-A/B. Verificar siempre contra código vivo, nunca confiar en números de línea de un plan pre-escrito.
+- **FASE-3 (tests de regresión)**: `_normalize_url()` no manejaba URLs sin protocolo (`urlparse("zione.co")` → netloc vacío). Detectado al correr el primer test. Fix de 2 líneas (`if '://' not in url: url = '//' + url`) antes de `urlparse`. Sin este fix, el caso #9 del plan habría fallado silenciosamente. Los tests atraparon el bug antes que producción.
 - **FASE-0-A/B**: _(completar según ejecución real)_
 - **WSL safety guard**: Bloquea `python3 -c` y pipes con heredocs. Verificación vía `grep` y `search_files` es el fallback confiable.
 

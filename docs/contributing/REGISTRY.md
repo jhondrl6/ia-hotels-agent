@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-07-29
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 395
+> **Total fases completadas:** 396
 
 ---
 
@@ -9364,6 +9364,27 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0 (no tests en esta fase - tests en FASE-3))
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3 - 2026-07-29
+**Descripcion:** Tests de regresion para pipeline de inyeccion onboarding: _normalize_url (15 tests), _load_latest_onboarding_data URL matching (7 tests), _observation_to_onboarding_format (5 tests). Fix _normalize_url() para URLs sin protocolo.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/test_onboarding_injection.py` | NUEVO | Test Onboarding Injection |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (27 nuevos (27 passed, 0.48s))
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
