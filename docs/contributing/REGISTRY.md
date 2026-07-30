@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-07-29
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 394
+> **Total fases completadas:** 395
 
 ---
 
@@ -9344,6 +9344,26 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0 nuevos, 616 pasan sin regresiones)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-07-29
+**Descripcion:** T0: 6 websites agregados a observations.json. T1: Fallback a observations.json en _load_latest_onboarding_data(). T2: _observation_to_onboarding_format() implementada. Hallazgo 10c resuelto.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `data/hotel_observations/observations.json` | Observations |
+
+### Validaciones
+- [x] Tests passing (0 (no tests en esta fase - tests en FASE-3))
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

@@ -12,7 +12,7 @@
 | FASE-0-A | Loader + normalize_url + frescura | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO) | 3/3 tareas, 616 tests OK |
 | FASE-0-B | CAMBIO A+B + template url | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO) | 3/3 tareas, 3 grep checks OK |
 | FASE-1 | Taxonomía + deprecación | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO — 2 one-liners) | 2/2 tareas, 2 grep checks OK |
-| FASE-2 | observations.json | — | — | ⬜ | ❌ (DIRECTO) | — |
+| FASE-2 | observations.json | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO) | 3/3 tareas: T0 website + T1 fallback + T2 helper |
 | FASE-3 | Tests regresión | — | — | ⬜ | ⚠️ PARCIAL | — |
 | FASE-RELEASE | v4complete + release | — | — | ⬜ | ⚠️ MIXTO | — |
 
@@ -68,7 +68,7 @@
 | N5 | Sin identity resolver | CAMBIO A+C | URL como clave canónica | ✅ (parcial) | `_normalize_url()` implementada como resolvedor canónico. Falta CAMBIO A para persistir URL. |
 | §10a | user_provided invisible | Fix 4 | `adr_source="user_provided"` → Tier A | ✅ (codigo) | `'user_provided'` agregado a tuple de `verified_sources` en `scenario_calculator.py` L494. grep confirma presencia. |
 | §10b | audit deprecado | Fix 5 | Mensaje sugiere `v4complete` | ✅ (codigo) | 2 mensajes en `main.py` L1120 y L1125 actualizados: `audit --url <URL> --input-data {path}` → `v4complete --url <URL>`. grep `"v4complete --url"` confirma ambas lineas. |
-| §10c | observations.json | Fix 6 | Fallback funcional | ⬜ | _(completar)_ |
+| §10c | observations.json | Fix 6 | Fallback funcional | ✅ (codigo) | T0: 6 websites agregados a observations.json. T1: Fallback en _load_latest_onboarding_data() L3510. T2: _observation_to_onboarding_format() en L3419. Si no hay YAML, busca en observations.json por website normalizado. |
 
 ---
 
@@ -94,7 +94,7 @@
 | v4complete timeout (900s) | Media | Alto | Verificar archivos parciales; re-ejecutar si necesario | ⬜ |
 | WSL venv no ejecutable por subagente | Media | Alto | Subagente usa `terminal()` con path Windows explícito | ⬜ |
 | YAMLs viejos sin `hotel.url` rompen matching | Alta | Medio | Loader retorna None → mismo comportamiento que antes | ⬜ |
-| `observations.json` sin campo `website` | Alta | Bajo | Se agrega `website` en FASE-2; fallback es silencioso | ⬜ |
+| `observations.json` sin campo `website` | Alta | Bajo | Se agrego `website` en FASE-2 T0 a los 6 observations existentes; fallback es silencioso | ✅ Resuelto |
 | Tests no importables desde WSL | Media | Medio | Agente principal ejecuta tests con venv Windows | ⬜ |
 | Regresión en hoteles sin onboarding | Baja | Alto | Si matching falla → defaults (sin cambios de comportamiento) | ⬜ |
 
@@ -127,7 +127,7 @@ _(Completar post-ejecución de todas las fases)_
 
 | Item | Severidad | Descripción | Acción recomendada |
 |------|-----------|-------------|-------------------|
-| `website` en observations.json | Baja | Los 6 hoteles existentes pueden no tener `website`. Se agregó para Zi One Luxury en FASE-2. | Backfill para los 5 restantes |
+| `website` en observations.json | Baja | Los 6 hoteles ahora tienen `website`. Agregado en FASE-2 T0. | Ninguna — resuelto |
 | `_load_latest_onboarding_data()` sin caché | Baja | Iteración O(N) sobre archivos YAML. OK para <50 hoteles. | Indexar si N > 100 |
 | `generate_slug()` aún en main.py | Baja | Se mantiene en `run_onboard_mode()` pero ya no en el loader | Sin acción — OK |
 

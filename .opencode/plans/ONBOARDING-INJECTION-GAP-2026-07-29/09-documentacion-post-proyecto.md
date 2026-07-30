@@ -117,7 +117,7 @@ Carga el plan ONBOARDING-INJECTION-GAP-2026-07-29 desde:
   .opencode/plans/ONBOARDING-INJECTION-GAP-2026-07-29/
 + skills: iah-cli-execution-conventions, iah-cli-phased-execution
 
-Estado: FASE-0-A COMPLETADA. FASE-0-B desbloqueada.
-Fase actual: FASE-0-B
-Prompt: 03-prompt-fase-0-b.md
+Estado: FASE-0-A ✅, FASE-0-B ✅, FASE-1 ✅, FASE-2 ✅.
+Fase actual: FASE-3 (Tests de regresion)
+Prompt: 05-prompt-fase-3.md
 ```

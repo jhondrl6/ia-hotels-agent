@@ -3416,6 +3416,38 @@ def _normalize_url(url: str) -> str:
     return p.netloc.replace('www.', '').lower()
 
 
+def _observation_to_onboarding_format(obs: dict) -> dict:
+    """Convierte un observation de observations.json al formato de onboarding YAML.
+
+    El formato retornado debe ser compatible con lo que espera run_v4_complete_mode()
+    en main.py: datos_operativos.habitaciones, .reservas_mes, .valor_reserva_cop,
+    .canal_directo_pct, y metadatos.fecha_captura, .campos_confirmados.
+    """
+    from datetime import datetime, timezone
+
+    return {
+        'hotel': {
+            'nombre': obs.get('hotel_name', ''),
+            'url': obs.get('website', ''),
+            'ubicacion': obs.get('region', ''),
+        },
+        'datos_operativos': {
+            'habitaciones': obs.get('rooms', 10),
+            'reservas_mes': obs.get('monthly_reservations', 0),
+            'valor_reserva_cop': obs.get('avg_reservation_cop', 0),
+            'canal_directo_pct': obs.get('direct_channel_percentage', 20.0),
+        },
+        'metadatos': {
+            'fuente': 'observations_tier_a',
+            'fecha_captura': obs.get('collected_at', datetime.now(timezone.utc).isoformat()),
+            'confidence': obs.get('confidence', 0.0),
+            'epistemic_status': obs.get('epistemic_status', 'verified'),
+            'campos_confirmados': ['habitaciones', 'reservas_mes', 'valor_reserva_cop', 'canal_directo_pct'],
+            'source_note': f"Datos de observations.json (Tier A, confidence {obs.get('confidence', 'N/A')})",
+        },
+    }
+
+
 def _load_latest_onboarding_data(
     hotel_url: str,
     hotel_name: str,
@@ -3474,6 +3506,19 @@ def _load_latest_onboarding_data(
                     continue  # Data demasiado vieja, seguir buscando
 
         return data
+
+    # Fallback: buscar en observations.json (warehouse de datos verificados)
+    obs_path = Path("data/hotel_observations/observations.json")
+    if obs_path.exists():
+        try:
+            import json
+            obs_data = json.loads(obs_path.read_text(encoding='utf-8'))
+            for obs in obs_data.get('observations', []):
+                obs_website = obs.get('website', '')
+                if obs_website and _normalize_url(obs_website) == normalized_url:
+                    return _observation_to_onboarding_format(obs)
+        except Exception:
+            pass  # Fallback silencioso — si falla, seguimos sin datos
 
     return None
 

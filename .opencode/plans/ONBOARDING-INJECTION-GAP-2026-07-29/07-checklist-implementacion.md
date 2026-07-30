@@ -12,10 +12,10 @@
 | Metrica | Valor |
 |---------|-------|
 | Fases totales | 10 (7 implementacion + 3 release) |
-| Fases completadas | 3 |
-| Fases pendientes | 7 |
+| Fases completadas | 4 |
+| Fases pendientes | 6 |
 | Hallazgos a resolver | 8 |
-| Hallazgos resueltos | 8 (B1, B2, N3, N4, N5, §10a, §10b resueltos; §10c pendiente) |
+| Hallazgos resueltos | 8 (B1, B2, N3, N4, N5, §10a, §10b, §10c resueltos) |
 
 ---
 
@@ -75,7 +75,7 @@
 
 ---
 
-### FASE-2 — Integracion observations.json ⬜ PENDIENTE
+### FASE-2 — Integracion observations.json ✅ COMPLETADA
 
 **Complejidad**: MEDIA
 **Ejecucion**: DIRECTA
@@ -83,12 +83,12 @@
 **PRECONDICION**: FASE-0-A completada
 **R3**: 3 tareas, 0 comandos largos ✅
 
-- [ ] T0: Agregar campo `website` a los 6 observations en `observations.json`
-- [ ] T1: Fix 6 — Fallback a `observations.json` en `_load_latest_onboarding_data()`
-- [ ] T2: `_observation_to_onboarding_format()` implementada
-- [ ] Verificacion: `python3 -c "import json; d=json.load(open('data/hotel_observations/observations.json')); [print(o.get('hotel_name','?'), '→', o.get('website','SIN WEBSITE')) for o in d['observations']]"` → 6/6 con website
-- [ ] Verificacion: `grep "observations.json" main.py` → fallback existe
-- [ ] Verificacion: `grep "def _observation_to_onboarding_format" main.py` → helper existe
+- [x] T0: Agregar campo `website` a los 6 observations en `observations.json`
+- [x] T1: Fix 6 — Fallback a `observations.json` en `_load_latest_onboarding_data()`
+- [x] T2: `_observation_to_onboarding_format()` implementada
+- [x] Verificacion: 6/6 observations con campo `website` en observations.json
+- [x] Verificacion: `grep "observations.json" main.py` → fallback existe (L3510)
+- [x] Verificacion: `grep "def _observation_to_onboarding_format" main.py` → helper existe (L3419)
 
 **Hallazgos resueltos**: §10c
 
@@ -172,7 +172,7 @@
 | N5 (sin identity resolver) | FASE-0-A + 0-B | ✅ completado |
 | §10a (user_provided invisible) | FASE-1 | ✅ completado |
 | §10b (audit deprecado) | FASE-1 | ✅ completado |
-| §10c (observations.json) | FASE-2 | ⬜ |
+| §10c (observations.json) | FASE-2 | ✅ completado |
 
 ---
 
@@ -182,3 +182,4 @@
 |-------|------|--------|-------------|-------|
 | 2026-07-29 | FASE-0-A | ✅ COMPLETADA | 1 | Loader reescrito con glob+URL matching. _normalize_url() implementada. Ventana 24h eliminada (ONBOARDING_FRESHNESS_HOURS opt-in). 616 tests pasan, 0 regresiones. |
 | 2026-07-29 | FASE-1 | ✅ COMPLETADA | 1 | 2 one-liners: user_provided en verified_sources (scenario_calculator.py L494), mensajes audit→v4complete (main.py L1120, L1125). Hallazgos §10a y §10b resueltos. |
+| 2026-07-29 | FASE-2 | ✅ COMPLETADA | 1 | T0: 6 websites agregados a observations.json. T1: Fallback a observations.json en _load_latest_onboarding_data() (L3510). T2: _observation_to_onboarding_format() implementada (L3419). Hallazgo §10c resuelto. |
