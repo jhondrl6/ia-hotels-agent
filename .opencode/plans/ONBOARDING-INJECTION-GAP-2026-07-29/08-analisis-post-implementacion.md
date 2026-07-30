@@ -11,7 +11,7 @@
 |------|--------|--------|-------------|--------|---------------|-------------|
 | FASE-0-A | Loader + normalize_url + frescura | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO) | 3/3 tareas, 616 tests OK |
 | FASE-0-B | CAMBIO A+B + template url | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO) | 3/3 tareas, 3 grep checks OK |
-| FASE-1 | Taxonomía + deprecación | — | — | ⬜ | ✅ SUBAGENTE | — |
+| FASE-1 | Taxonomía + deprecación | 2026-07-29 | 1 | ✅ COMPLETADA | ❌ (DIRECTO — 2 one-liners) | 2/2 tareas, 2 grep checks OK |
 | FASE-2 | observations.json | — | — | ⬜ | ❌ (DIRECTO) | — |
 | FASE-3 | Tests regresión | — | — | ⬜ | ⚠️ PARCIAL | — |
 | FASE-RELEASE | v4complete + release | — | — | ⬜ | ⚠️ MIXTO | — |
@@ -50,7 +50,7 @@
 | Fase | ¿Se usó? | ¿Funcionó? | Lección |
 |------|----------|------------|---------|
 | FASE-0-A | ❌ No viable | — | Funciones core con modificaciones multi-punto requieren contexto completo del flujo bimodal. Patch directo en 1 operacion: ~60 lineas reemplazadas. |
-| FASE-1 | _(completar)_ | _(completar)_ | _(completar)_ |
+| FASE-1 | ❌ No usado (DIRECTO) | N/A | El plan preveía SUBAGENTE, pero 2 one-liners independientes sin imports no justificaban el overhead. Patch directo en < 1 min: más rápido, más verificable (grep inmediato), sin riesgo de que el subagente malinterprete números de línea desplazados. |
 | FASE-2 | ❌ No viable | — | Modificaciones incrementales sobre código reescrito en fase anterior requieren contexto acumulado |
 | FASE-3 | _(completar)_ | _(completar)_ | _(completar)_ |
 | FASE-RELEASE | _(completar)_ | _(completar)_ | v4complete en subagente: ¿timeout? ¿WSL venv funcionó? |
@@ -66,8 +66,8 @@
 | N3 | hotel_url ignorado | CAMBIO C | `hotel_url` usado en matching | ✅ (codigo) | Loader lee `data['hotel']['url']` de cada YAML y normaliza para matching. |
 | N4 | output_dir hardcodeado | CAMBIO B | `output_dir` parametrizado | ⬜ | _(completar en FASE-0-B)_ |
 | N5 | Sin identity resolver | CAMBIO A+C | URL como clave canónica | ✅ (parcial) | `_normalize_url()` implementada como resolvedor canónico. Falta CAMBIO A para persistir URL. |
-| §10a | user_provided invisible | Fix 4 | `adr_source="user_provided"` → Tier A | ⬜ | _(completar)_ |
-| §10b | audit deprecado | Fix 5 | Mensaje sugiere `v4complete` | ⬜ | _(completar)_ |
+| §10a | user_provided invisible | Fix 4 | `adr_source="user_provided"` → Tier A | ✅ (codigo) | `'user_provided'` agregado a tuple de `verified_sources` en `scenario_calculator.py` L494. grep confirma presencia. |
+| §10b | audit deprecado | Fix 5 | Mensaje sugiere `v4complete` | ✅ (codigo) | 2 mensajes en `main.py` L1120 y L1125 actualizados: `audit --url <URL> --input-data {path}` → `v4complete --url <URL>`. grep `"v4complete --url"` confirma ambas lineas. |
 | §10c | observations.json | Fix 6 | Fallback funcional | ⬜ | _(completar)_ |
 
 ---
@@ -108,7 +108,9 @@ _(Completar post-ejecución de todas las fases)_
 - _(completar)_
 
 ### Ejecución
-- _(completar)_
+- **FASE-1 (2 one-liners)**: Cambios atómicos e independientes — si uno falla, el otro no se afecta. Las líneas reales (L1120, L1125) diferían de las documentadas en el plan (L1113, L1118) por desplazamiento post-FASE-0-A/B. Verificar siempre contra código vivo, nunca confiar en números de línea de un plan pre-escrito.
+- **FASE-0-A/B**: _(completar según ejecución real)_
+- **WSL safety guard**: Bloquea `python3 -c` y pipes con heredocs. Verificación vía `grep` y `search_files` es el fallback confiable.
 
 ### delegate_task
 - _(completar)_
