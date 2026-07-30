@@ -12,8 +12,8 @@
 | Metrica | Valor |
 |---------|-------|
 | Fases totales | 10 (7 implementacion + 3 release) |
-| Fases completadas | 5 |
-| Fases pendientes | 5 |
+| Fases completadas | 6 |
+| Fases pendientes | 4 |
 | Hallazgos a resolver | 8 |
 | Hallazgos resueltos | 8 (B1, B2, N3, N4, N5, §10a, §10b, §10c resueltos) |
 
@@ -111,7 +111,7 @@
 
 ---
 
-### FASE-RELEASE-A — v4complete Zi One + Verificacion ⬜ PENDIENTE
+### FASE-RELEASE-A — v4complete Zi One + Verificacion ✅ COMPLETADA
 
 **Complejidad**: MEDIA
 **Ejecucion**: MIXTO (v4complete→SUBAGENTE, verificacion→DIRECTO)
@@ -119,15 +119,15 @@
 **PRECONDICION**: TODAS las fases anteriores completadas
 **R3**: 2 tareas + 1 comando largo ✅
 
-- [ ] PRE-v4complete check: loader existe, YAML/observations disponibles
-- [ ] T1: v4complete Zi One Luxury ejecutado (subagente, timeout=900s)
-- [ ] T2: Matriz de 8 hallazgos verificada contra output real
-- [ ] Verificacion: rooms=34 (no 10) en financial_scenarios.json
-- [ ] Verificacion: adr_cop=290000 (no 420000)
-- [ ] Verificacion: evidence_tier="A" (no "B")
-- [ ] Verificacion: 01_DIAGNOSTICO y 02_PROPUESTA EXISTEN (ls -la, no inferir)
+- [x] PRE-v4complete check: loader existe (L3455), YAML zi-one-luxury_onboarding.yaml existe, observations.json con website ✅
+- [x] T1: v4complete Zi One Luxury ejecutado (subagente deleg_cfd467b3, 180s, exitoso)
+- [x] T2: Matriz de 8 hallazgos verificada contra output real — 8/8 PASS
+- [x] Verificacion: rooms=34 (no 10) en financial_scenarios_20260730_143703.json
+- [x] Verificacion: adr_cop=290000 (no 420000)
+- [x] Verificacion: evidence_tier="A" (no "B") — 01_DIAGNOSTICO L9
+- [x] Verificacion: 01_DIAGNOSTICO y 02_PROPUESTA EXISTEN (ls -la confirmado)
 
-**Bugs verificados**: B1, B2, N3, N4, N5, §10a, §10b, §10c
+**Bugs verificados**: B1, B2, N3, N4, N5, §10a, §10b, §10c — todos PASS
 
 ---
 
@@ -185,3 +185,4 @@
 | 2026-07-29 | FASE-1 | ✅ COMPLETADA | 1 | 2 one-liners: user_provided en verified_sources (scenario_calculator.py L494), mensajes audit→v4complete (main.py L1120, L1125). Hallazgos §10a y §10b resueltos. |
 | 2026-07-29 | FASE-2 | ✅ COMPLETADA | 1 | T0: 6 websites agregados a observations.json. T1: Fallback a observations.json en _load_latest_onboarding_data() (L3510). T2: _observation_to_onboarding_format() implementada (L3419). Hallazgo §10c resuelto. |
 | 2026-07-29 | FASE-3 | ✅ COMPLETADA | 1 | 27 tests nuevos (15 normalize_url + 7 loader + 5 observation_format). Fix _normalize_url() para URLs sin protocolo. 27/27 PASS, 0 regresiones en 3158 tests. |
+| 2026-07-30 | FASE-RELEASE-A | ✅ COMPLETADA | 1 | v4complete Zi One ejecutado (deleg_cfd467b3, 180s). 8/8 hallazgos verificados PASS: B1, B2, N3, N4, N5, §10a, §10b, §10c. rooms=34, adr=290K, evidence_tier=A. Evidencia en evidence/FASE-RELEASE-A/. |
