@@ -1,5 +1,37 @@
 # Changelog
 
+## [4.67.0] — 2026-07-29
+
+### Cambios Implementados
+- **Onboarding Injection Pipeline**: Matching canónico por URL normalizada en `_load_latest_onboarding_data()`. Eliminada dependencia de slug derivado de nombre.
+- **`_normalize_url()`**: Nueva función auxiliar para matching determinístico de URLs (ignora protocolo, www, trailing slash, path, query).
+- **CAMBIO A**: `run_onboard_mode()` ahora persiste `hotel.url` en el YAML vía `form._data['hotel']['url']`.
+- **CAMBIO B**: `run_v4_complete_mode()` ahora pasa `output_dir` configurable (`args.output`) al loader.
+- **CAMBIO C**: `_load_latest_onboarding_data()` reescrita: iteración por glob, matching por URL normalizada, parámetro `output_dir`.
+- **Fix 3**: Ventana de frescura hardcodeada eliminada. `ONBOARDING_FRESHNESS_HOURS` env var como opt-in.
+- **Fix 4**: `"user_provided"` agregado a `verified_sources` en `_determine_evidence_tier()`.
+- **Fix 5**: Mensaje de `onboard` actualizado: sugiere `v4complete` en vez de `audit` (deprecado).
+- **Fix 6**: `_load_latest_onboarding_data()` ahora tiene fallback a `observations.json` vía `_observation_to_onboarding_format()`.
+
+### Archivos Modificados
+- `main.py`: `_load_latest_onboarding_data()` reescrita, `_normalize_url()`, `_observation_to_onboarding_format()`, `run_onboard_mode()` CAMBIO A, `run_v4_complete_mode()` CAMBIO B
+- `modules/onboarding/data_loader.py`: `create_onboarding_template()` — agregado `'url': None`
+- `modules/financial_engine/scenario_calculator.py`: `_determine_evidence_tier()` — `user_provided` en verified_sources
+- `data/hotel_observations/observations.json`: Agregado `website` a 6 observaciones
+
+### Tests
+- `tests/test_onboarding_injection.py`: ~15 tests nuevos (`_normalize_url`, `_load_latest_onboarding_data`, `_observation_to_onboarding_format`)
+
+### Bugs Resueltos
+- B1: Slug mismatch onboard↔v4complete (CRÍTICO)
+- B2: Ventana frescura 24h (CRÍTICO)
+- N3: hotel_url ignorado en loader
+- N4: output_dir hardcodeado en lectura
+- N5: Sin identity resolver centralizado
+- §10a: user_provided invisible al tiering
+- §10b: audit deprecado sugerido por onboard
+- §10c: observations.json no integrado
+
 ## [4.66.0] - DT-4 Residual Fixes — 2026-07-28
 
 ### Objetivo

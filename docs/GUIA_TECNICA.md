@@ -1,9 +1,44 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.66.0 (DT-4 Residual Fixes: pain_ledger_resolved injection + SitePresence normalization + coherence/alignment unification + gate idempotency + post-audit path/delivery fixes)
-**Última actualización:** 2026-07-28
+**Versión:** v4.67.0 (Onboarding Injection Fix — URL-based canonical matching + observations.json fallback)
+**Última actualización:** 2026-07-30
 
 ---
+
+### Notas de Cambios v4.67.0 — Onboarding Injection Fix
+
+**Fecha:** 2026-07-29
+
+**Resumen**: Corrección del gap de inyección de datos entre `onboard` y `v4complete`.
+El matching de datos de onboarding ahora usa URL normalizada como identidad canónica,
+eliminando la dependencia de slug derivado de nombre. Nuevo fallback a `observations.json`
+cuando no hay YAML de onboarding.
+
+**Mecanismo de matching por URL**:
+
+1. **`_normalize_url()`** — Función pura de normalización de URLs. Ignora protocolo,
+   www, trailing slash, path, y query string. Produce una clave determinística para
+   matching. Ejemplo: `https://www.hotel.com/?ref=1` → `hotel.com`.
+
+2. **`_load_latest_onboarding_data()`** — Reescrita con iteración por glob sobre
+   `data/onboarding/` + matching por URL normalizada. Acepta parámetro `output_dir`
+   configurable. Si no encuentra YAML, aplica fallback a `observations.json` vía
+   `_observation_to_onboarding_format()`.
+
+3. **Fallback a `observations.json`** — `_observation_to_onboarding_format()` convierte
+   registros de `data/hotel_observations/observations.json` al formato de onboarding YAML,
+   usando `website` como clave de matching. Esto permite que hoteles con observaciones
+   pero sin onboarding formal igual reciban inyección de datos.
+
+**Módulos afectados**: main.py, modules/onboarding/data_loader.py,
+modules/financial_engine/scenario_calculator.py, data/hotel_observations/observations.json
+
+**Bugs resueltos**: Slug mismatch onboard↔v4complete, ventana de frescura hardcodeada,
+hotel_url ignorado, output_dir hardcodeado, user_provided invisible al tiering
+
+**Backwards compatibility**: Total. `_normalize_url()` es función nueva sin consumidores
+previos. `_load_latest_onboarding_data()` mantiene firma compatible. Fallback a
+observations.json es opt-in (solo se activa si no hay YAML).
 
 ### Notas de Cambios v4.66.0 — DT-4 Residual Fixes
 

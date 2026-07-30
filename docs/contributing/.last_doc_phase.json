@@ -10,7 +10,7 @@
   "GEO_FIELD_MAPPING.md": "FASE-1",
   "06-checklist-implementacion.md": "FASE-1",
   "README.md (plans)": "FASE-1",
-  "dependencias-fases.md": "FASE-1",
+  "dependencias-fases.md": "FASE-RELEASE-C",
   "modules/geo_enrichment/__init__.py": "FASE-6",
   "modules/geo_enrichment/geo_diagnostic.py": "FASE-2",
   "tests/geo_enrichment/*.py": "FASE-2",
@@ -206,5 +206,8 @@
   "DOMAIN_PRIMER.md": "FASE-RELEASE-4.66.0",
   "CONTRIBUTING.md": "FASE-RELEASE-4.66.0",
   "SYSTEM_STATUS.md": "FASE-RELEASE-4.66.0",
-  "data/hotel_observations/observations.json": "FASE-2"
+  "data/hotel_observations/observations.json": "FASE-2",
+  "08-analisis-post-implementacion.md": "FASE-RELEASE-C",
+  "09-documentacion-post-proyecto.md": "FASE-RELEASE-C",
+  "07-checklist-implementacion.md": "FASE-RELEASE-C"
 }
