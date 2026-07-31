@@ -210,5 +210,7 @@
   "08-analisis-post-implementacion.md": "FASE-RELEASE-C",
   "09-documentacion-post-proyecto.md": "FASE-RELEASE-C",
   "07-checklist-implementacion.md": "FASE-RELEASE-C",
-  "7": "FASE-1"
+  "7": "FASE-1",
+  "09-analisis-post-implementacion.md": "5",
+  "08-checklist-implementacion.md": "5"
 }
