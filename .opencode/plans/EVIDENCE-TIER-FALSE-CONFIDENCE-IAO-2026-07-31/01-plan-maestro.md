@@ -70,7 +70,7 @@ El documento v4complete del 07-30 para Zi One Luxury tiene una **contradiccion i
 | **FASE-1** | Root Cause: Evidence Tier Honesto + B_PLUS + Downstream Consumers | **ALTA** ⚠️ | 6 (4 + T0 + T0b) | DIRECTA | ❌ WSL import cascade |
 | **FASE-2** | Proposal + Template Honesty + PricingResolution.is_onboarding | MEDIA | 5 (4 + T0 fix NP5) | DIRECTA | ❌ WSL import cascade |
 | **FASE-3** | Quality Gate (per-hotel) + Delivery Enrichment | MEDIA | 3 | ✅ COMPLETADA | ❌ WSL import cascade |
-| **FASE-4** | Tests + Regression + Update Existing Tests | MEDIA | 4 (3 + T0 NP3) | DIRECTA | ❌ WSL import cascade |
+| **FASE-4** | Tests + Regression + Update Existing Tests | MEDIA | 4 (3 + T0 NP3) | ✅ COMPLETADA | ❌ WSL import cascade |
 | **FASE-5** | v4complete Zi One + Control Sin Onboarding + Post-Implementation | MEDIA | 5 (1+3 + T0 control) | MIXTO | ✅ v4complete subagent |
 | **FASE-RELEASE** | Version v4.68.0 + Docs Cascade | BAJA | 4 | SUBAGENTE | ✅ Solo YAML/MD |
 

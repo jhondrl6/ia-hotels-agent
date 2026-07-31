@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-07-31
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 402
+> **Total fases completadas:** 403
 
 ---
 
@@ -9507,6 +9507,26 @@ _Ninguno_
 ### Validaciones
 - [x] Tests passing (549)
 - [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-4 - 2026-07-31
+**Descripcion:** Tests Evidence Tier + Gate + Integration. T0 NP3: 5 suites pre-existentes validadas (0 fixes B_PLUS). T1: 9 unit tests _determine_evidence_tier(). T2: 5 integration tests pipeline completo. T3: 8 gate tests CG-EVIDENCE-TIER-CONSISTENCY. T4: regression 549+22 passed. Archivo nuevo: tests/test_evidence_tier.py (22 tests).
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/test_evidence_tier.py` | NUEVO | Test Evidence Tier |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (22)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 1.0 (PASO)
 - [x] Capability contract verificado
 
 ---

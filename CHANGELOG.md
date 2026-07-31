@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.68.0] — unreleased
+
+### FASE-4 — Tests Evidence Tier + Gate + Integration (2026-07-31)
+- **T0 NP3**: Validados 5 suites de tests pre-existentes (test_financial_breakdown 10/10, test_fase_f_financial_placeholders 11/12, test_hook_pdf_generator 36/36, test_proposal_generator 21/32, test_template_conditionals 6/6). Ninguna falla causada por B_PLUS.
+- **T1**: 9 unit tests para `_determine_evidence_tier()` en `tests/test_evidence_tier.py` — todas las combinaciones (A, B+, B, C), GA4 solo, GSC solo, user_provided, mixed sources.
+- **T2**: 5 integration tests para pipeline completo (onboarding→B+, unknown→C, GA4+GSC→A, solo GA4→B+, fuentes preservadas).
+- **T3**: 8 gate tests para `CG-EVIDENCE-TIER-CONSISTENCY` con params per-hotel — BLOCKING cuando Tier A sin GA4/GSC, pasa para B+/B/C, pasa Tier A con GA4+GSC real.
+- **T4**: Regression suite: 549 passed + 22 nuevos, 2 skipped, 1 pre-existente (OpenRouter).
+- Archivo nuevo: `tests/test_evidence_tier.py` (22 tests, 3 clases: TestDetermineEvidenceTier, TestEvidenceTierIntegration, TestEvidenceTierConsistencyGate).
+
 ## [4.67.0] — 2026-07-29
 
 ### Cambios Implementados

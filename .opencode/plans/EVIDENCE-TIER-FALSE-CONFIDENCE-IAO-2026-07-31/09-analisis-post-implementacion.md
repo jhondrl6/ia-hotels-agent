@@ -14,7 +14,7 @@
 | FASE-1 | 2026-07-31 | ✅ COMPLETADO | 1 | ❌ DIRECTA | T0/T0b (NP1-NP4) + T1-T4. 7 archivos. Tests: 10/10 financial_breakdown + 17/17 financial_evidence. B_PLUS introducido. |
 | FASE-2 | 2026-07-31 | ✅ COMPLETADO | 1 | ❌ DIRECTA | T0 NP5 + T1-T4. 4 archivos. 549/550 tests pasan. has_onboarding sin fallback. precision_tier visible. |
 | FASE-3 | 2026-07-31 | ✅ COMPLETADO | 1 | ❌ DIRECTA | T1 NP7 (gate per-hotel, sin os.getenv) + T2 (caller en v4_diagnostic_generator) + T3 NP6 (MANIFEST en delivery_packager.py). 3 archivos + main.py caller. 549/550 tests pasan. |
-| FASE-4 | — | PENDIENTE | — | ❌ DIRECTA | Incluye T0 validacion tests pre-existentes (NP3) |
+| FASE-4 | 2026-07-31 | ✅ COMPLETADO | 1 | ❌ DIRECTA | T0 NP3 (5 suites validadas, 0 fixes) + T1 (9 unit tests) + T2 (5 integration tests) + T3 (8 gate tests). Archivo nuevo: test_evidence_tier.py (22 tests). Tests: 549+22 passed, 1 pre-existente OpenRouter. |
 
 ### Cambios realizados
 
