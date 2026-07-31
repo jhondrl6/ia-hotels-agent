@@ -209,5 +209,6 @@
   "data/hotel_observations/observations.json": "FASE-2",
   "08-analisis-post-implementacion.md": "FASE-RELEASE-C",
   "09-documentacion-post-proyecto.md": "FASE-RELEASE-C",
-  "07-checklist-implementacion.md": "FASE-RELEASE-C"
+  "07-checklist-implementacion.md": "FASE-RELEASE-C",
+  "7": "FASE-1"
 }

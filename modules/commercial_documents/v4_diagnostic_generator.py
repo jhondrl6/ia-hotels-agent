@@ -1040,7 +1040,7 @@ class V4DiagnosticGenerator:
     def _build_scenario_table_rows(
         self,
         scenarios: FinancialScenarios,
-        evidence_tier: str = "A",
+        evidence_tier: str = "C",
     ) -> str:
         """Construye filas de tabla markdown para los 3 escenarios de recuperación.
 

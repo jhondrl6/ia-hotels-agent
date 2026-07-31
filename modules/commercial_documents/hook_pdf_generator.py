@@ -506,7 +506,7 @@ class HookPDFGenerator:
         # 7. Dry-run: se maneja en generate(), no aquí
 
         # 8. Tier detection: evidence_tier debe ser "A", "B", o "C"
-        valid_tiers = {"A", "B", "C"}
+        valid_tiers = {"A", "B+", "B", "C"}
         if data.evidence_tier not in valid_tiers:
             warnings.append(
                 f"[WARN] Evidence tier invalido: '{data.evidence_tier}'. "

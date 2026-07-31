@@ -5,23 +5,23 @@
 
 ---
 
-## FASE-1 — Root Cause + Downstream Consumers Limpios ⬜ PENDIENTE
+## FASE-1 — Root Cause + Downstream Consumers Limpios ✅ COMPLETADA (2026-07-31)
 
 ### Pre-requisito (T0/T0b): Limpiar consumers downstream ANTES de introducir B_PLUS
 
-- [ ] **T0.1 NP1**: `hook_pdf_generator.py:509` → `valid_tiers = {"A", "B+", "B", "C"}`
-- [ ] **T0.2 NP2**: `publication_gates.py:399` → `tier_message` dinamico (sin condicional falso)
-- [ ] **T0.3 NP4**: `v4_diagnostic_generator.py:1043` → default `evidence_tier = "C"` (no "A")
-- [ ] **T0b.1 NP3**: `tests/test_financial_breakdown.py` → assertions para `B_PLUS.disclaimer` y `B_PLUS.value`
+- [x] **T0.1 NP1**: `hook_pdf_generator.py:509` → `valid_tiers = {"A", "B+", "B", "C"}`
+- [x] **T0.2 NP2**: `publication_gates.py:399` → `tier_message` dinamico (sin condicional falso)
+- [x] **T0.3 NP4**: `v4_diagnostic_generator.py:1043` → default `evidence_tier = "C"` (no "A")
+- [x] **T0b.1 NP3**: `tests/test_financial_breakdown.py` → assertions para `B_PLUS.disclaimer` y `B_PLUS.value`
 
 ### Tareas principales (T1-T4)
 
-- [ ] **T1**: Agregar `B_PLUS = "B+"` al enum `EvidenceTier` + disclaimer honesto
-- [ ] **T2**: Agregar `ga4_enabled`/`gsc_enabled` a `HotelFinancialData`
-- [ ] **T3**: Refactorizar `_determine_evidence_tier()` + `calculate_breakdown()`
-- [ ] **T4**: Wire `ga4_enabled`/`gsc_enabled` desde `main.py`
-- [ ] Verificacion: Grep de `EvidenceTier` consumers no rotos
-- [ ] Verificacion: Tests existentes (incluyendo test_financial_breakdown.py actualizado) pasan
+- [x] **T1**: Agregar `B_PLUS = "B+"` al enum `EvidenceTier` + disclaimer honesto
+- [x] **T2**: Agregar `ga4_enabled`/`gsc_enabled` a `HotelFinancialData`
+- [x] **T3**: Refactorizar `_determine_evidence_tier()` + `calculate_breakdown()`
+- [x] **T4**: Wire `ga4_enabled`/`gsc_enabled` desde `main.py`
+- [x] Verificacion: Grep de `EvidenceTier` consumers no rotos
+- [x] Verificacion: Tests existentes (incluyendo test_financial_breakdown.py + test_financial_evidence.py actualizados) pasan
 
 ## FASE-2 — Proposal + Template Honesty + PricingResolution Fix ⬜ PENDIENTE
 
@@ -122,4 +122,4 @@
 
 | Fecha | Fase | Estado | Iteraciones | Notas |
 |-------|------|--------|-------------|-------|
-| — | — | — | — | — |
+| 2026-07-31 | FASE-1 | ✅ COMPLETADA | 1 | T0-T4 + T0b.1 (NP1-NP4). 7 archivos modificados. Tests: 10/10 financial_breakdown + 17/17 financial_evidence. B_PLUS introducido. |

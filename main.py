@@ -2014,6 +2014,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             adr_source=adr_source,
             occupancy_source='regional' if feature_flags.should_use_regional_for(region) else ('onboarding' if onboarding_data is not None else 'default'),
             channel_source='onboarding' if onboarding_data is not None else 'default',
+            ga4_enabled=False,
+            gsc_enabled=False,
         )
         financial_breakdown = _sc.calculate_breakdown(_hotel_fin_data)
         print(f"[FASE-K] FinancialBreakdown derivado (camino unico):")

@@ -125,14 +125,20 @@ class FinancialScenarios:
 
 class EvidenceTier(Enum):
     """Clasificación de calidad de evidencia financiera."""
-    A = "A"  # GA4 + GSC conectados — datos verificables
-    B = "B"  # Benchmarks regionales + scraping — estimado con base
-    C = "C"  # Solo scraping básico — estimado con baja confianza
+    A = "A"      # GA4 + GSC conectados — datos verificables
+    B_PLUS = "B+"  # NUEVO FASE-1: onboarding verificado sin GA4/GSC
+    B = "B"      # Benchmarks regionales + scraping — estimado con base
+    C = "C"      # Solo scraping básico — estimado con baja confianza
     
     @property
     def disclaimer(self) -> str:
         if self == EvidenceTier.A:
             return "Basado en datos de Google Analytics y Search Console verificados."
+        elif self == EvidenceTier.B_PLUS:
+            return ("Datos operativos verificados de su hotel (habitaciones, ADR, ocupación, "
+                    "canal directo). Las proyecciones usan supuestos conservadores "
+                    "(shift 10%, IA boost 5%) no validados con tráfico real. "
+                    "Conecte Google Analytics 4 y Search Console para cifras exactas al peso.")
         elif self == EvidenceTier.B:
             return "Estimación basada en benchmarks regionales y datos de su web. Para mayor precisión, conecte Google Analytics 4."
         else:

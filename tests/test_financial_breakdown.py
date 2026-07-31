@@ -105,13 +105,15 @@ def test_financial_breakdown_with_sources():
 def test_evidence_tier_disclaimers():
     """Cada EvidenceTier tiene disclaimer correcto."""
     assert "Google Analytics" in EvidenceTier.A.disclaimer
+    assert "operativos" in EvidenceTier.B_PLUS.disclaimer
     assert "benchmarks" in EvidenceTier.B.disclaimer
     assert "limitados" in EvidenceTier.C.disclaimer
 
 
 def test_evidence_tier_values():
-    """EvidenceTier tiene los 3 valores esperados."""
+    """EvidenceTier tiene los 4 valores esperados (incluye B_PLUS)."""
     assert EvidenceTier.A.value == "A"
+    assert EvidenceTier.B_PLUS.value == "B+"
     assert EvidenceTier.B.value == "B"
     assert EvidenceTier.C.value == "C"
 

@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-07-30
+> **Ultima actualizacion:** 2026-07-31
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 399
+> **Total fases completadas:** 400
 
 ---
 
@@ -9442,6 +9442,26 @@ _Ninguno_
 ### Validaciones
 - [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-1 - 2026-07-31
+**Descripcion:** Root Cause: Evidence Tier Honesto + B_PLUS + Downstream Consumers. NP1-NP4 corregidos. 7 archivos: data_structures.py (B_PLUS enum + disclaimer), hook_pdf_generator.py (valid_tiers +B+), publication_gates.py (tier_message dinamico), v4_diagnostic_generator.py (default C), scenario_calculator.py (ga4_enabled/gsc_enabled + _determine_evidence_tier refactor), main.py (wire flags), test_financial_breakdown.py + test_financial_evidence.py (assertions B_PLUS). Tests: 10/10 financial_breakdown + 17/17 financial_evidence.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `7` | 7 |
+
+### Validaciones
+- [x] Tests passing (27)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 1.0 (PASO)
 - [x] Capability contract verificado
 
 ---

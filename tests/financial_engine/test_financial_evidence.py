@@ -230,7 +230,7 @@ def test_evidence_tier_consistent_from_breakdown():
     tier = breakdown.evidence_tier
     assert tier == "C", f"Expected Tier C for low quality sources, got {tier}"
 
-    # Caso 2: Fuentes verificadas -> Tier A
+    # Caso 2: Fuentes verificadas sin GA4/GSC → Tier B+ (FASE-1: honesto)
     hotel_verified = HotelFinancialData(
         adr_cop=350000.0,
         rooms=12,
@@ -239,12 +239,30 @@ def test_evidence_tier_consistent_from_breakdown():
         adr_source="onboarding",
         occupancy_source="verified",
         channel_source="verified",
+        ga4_enabled=False,
+        gsc_enabled=False,
     )
     breakdown = calc.calculate_breakdown(hotel_verified)
     tier = breakdown.evidence_tier
-    assert tier == "A", f"Expected Tier A for verified sources, got {tier}"
+    assert tier == "B+", f"Expected Tier B+ for verified sources without GA4/GSC, got {tier}"
 
-    # Caso 3: Fuentes mixtas (1 verified, 2 low) -> Tier C (>=2 low_quality)
+    # Caso 2b: Fuentes verificadas CON GA4+GSC → Tier A (FASE-1)
+    hotel_verified_with_ga4 = HotelFinancialData(
+        adr_cop=350000.0,
+        rooms=12,
+        occupancy_rate=0.55,
+        ota_commission_rate=0.15,
+        adr_source="onboarding",
+        occupancy_source="verified",
+        channel_source="verified",
+        ga4_enabled=True,
+        gsc_enabled=True,
+    )
+    breakdown = calc.calculate_breakdown(hotel_verified_with_ga4)
+    tier = breakdown.evidence_tier
+    assert tier == "A", f"Expected Tier A for verified sources with GA4+GSC, got {tier}"
+
+    # Caso 3: Fuentes mixtas (1 verified, 2 low) → Tier B+ (FASE-1: has_verified_data tiene prioridad)
     hotel_mixed = HotelFinancialData(
         adr_cop=320000.0,
         rooms=10,
@@ -256,10 +274,10 @@ def test_evidence_tier_consistent_from_breakdown():
     )
     breakdown = calc.calculate_breakdown(hotel_mixed)
     tier = breakdown.evidence_tier
-    # Con 1 verified + 2 low_quality → Tier C (>=2 low)
-    assert tier == "C", f"Expected Tier C for mixed sources (1 verified + 2 low), got {tier}"
+    # Con 1 verified + 2 low_quality → B+ (has_verified_data sin GA4/GSC)
+    assert tier == "B+", f"Expected Tier B+ for mixed sources (1 verified + 2 low) without GA4/GSC, got {tier}"
 
-    # Caso 4: Fuentes mixtas balanceadas (1 verified, 1 low, 1 other) -> Tier B
+    # Caso 4: Fuentes mixtas balanceadas (1 verified, 1 low, 1 other) → Tier B+ (FASE-1: has_verified_data)
     hotel_mixed2 = HotelFinancialData(
         adr_cop=320000.0,
         rooms=10,
@@ -271,7 +289,7 @@ def test_evidence_tier_consistent_from_breakdown():
     )
     breakdown = calc.calculate_breakdown(hotel_mixed2)
     tier = breakdown.evidence_tier
-    assert tier == "B", f"Expected Tier B for balanced mixed sources, got {tier}"
+    assert tier == "B+", f"Expected Tier B+ for balanced mixed sources without GA4/GSC, got {tier}"
 
 
 def test_diagnostic_generator_uses_breakdown_tier():

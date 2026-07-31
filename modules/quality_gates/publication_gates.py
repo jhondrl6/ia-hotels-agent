@@ -396,7 +396,7 @@ class PublicationGatesOrchestrator:
                 # Las dos gates ahora alinean: financial_validity y tier_c_onboarding_required
                 # usan la misma fuente: assessment["financial_evidence_tier"]
                 formal_tier = assessment.get("financial_evidence_tier", "C")
-                tier_message = f"Tier {formal_tier} evidence" if formal_tier == "C" else "Tier C evidence"
+                tier_message = f"Tier {formal_tier} evidence"
                 return PublicationGateResult(
                     gate_name=gate_name,
                     passed=True,  # No bloquea, solo advierte

@@ -100,6 +100,9 @@ class HotelFinancialData:
     adr_source: str = "unknown"
     occupancy_source: str = "unknown"
     channel_source: str = "unknown"
+    # NUEVO FASE-1 — conectividad real GA4/GSC
+    ga4_enabled: bool = False
+    gsc_enabled: bool = False
 
 
 class ScenarioCalculator:
@@ -480,28 +483,38 @@ class ScenarioCalculator:
     def _determine_evidence_tier(self, hotel_data: HotelFinancialData) -> EvidenceTier:
         """Determina tier basado en disponibilidad de datos.
         
-        FASE-PATCH-B: Ya no hardcodea C. Usa las fuentes de datos conocidas.
+        FASE-1: Sin GA4+GSC conectados, NUNCA devuelve A.
+        Introduce B_PLUS para onboarding verificado sin analytics.
         """
-        # Fuentes de calidad alta → tier A
-        # (adr_source/occupancy_source/channel_source indican calidad del dato)
         sources = self._trace_data_sources(hotel_data)
         adr_src = sources.get('adr', '')
         occ_src = sources.get('occupancy', '')
         ch_src = sources.get('direct_channel', '')
-
-        # Si al menos un dato es verificable (onboarding/verified) → A
-        verified_sources = [s for s in [adr_src, occ_src, ch_src]
-                          if s in ('onboarding', 'verified', 'industry_standard_15pct', 'user_provided')]
-        # Fuentes de baja calidad → C
+        
+        # Flags GA4/GSC (NUEVO en FASE-1)
+        ga4_enabled = getattr(hotel_data, 'ga4_enabled', False)
+        gsc_enabled = getattr(hotel_data, 'gsc_enabled', False)
+        
+        # Fuentes verificadas (onboarding/user_provided)
+        has_verified_data = any(s in ('onboarding', 'verified', 'industry_standard_15pct', 'user_provided')
+                                for s in [adr_src, ch_src])
         low_quality = [s for s in [adr_src, occ_src, ch_src]
-                      if s in ('scraping', 'default', 'unknown', 'legacy_hardcode')]
-
-        if len(verified_sources) >= 2 and len(low_quality) == 0:
+                       if s in ('scraping', 'default', 'unknown', 'legacy_hardcode')]
+        
+        # GA4+GSC real → A (con datos verificados)
+        if ga4_enabled and gsc_enabled and has_verified_data:
             return EvidenceTier.A
-        elif len(low_quality) >= 2:
+        
+        # Onboarding verificado sin GA4 → B+ (NUEVO)
+        if has_verified_data and not (ga4_enabled and gsc_enabled):
+            return EvidenceTier.B_PLUS
+        
+        # Baja calidad → C
+        if len(low_quality) >= 2:
             return EvidenceTier.C
-        else:
-            return EvidenceTier.B
+        
+        # Default → B
+        return EvidenceTier.B
 
     def _get_shift_percentage(self, hotel_data: HotelFinancialData) -> float:
         """Porcentaje de migración OTA→directo. Documentar fuente."""
