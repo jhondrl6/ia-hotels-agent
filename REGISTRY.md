@@ -2,6 +2,7 @@
 
 | Phase | Date | Status | Details |
 |-------|------|--------|---------|
+| FASE-RELEASE (EVIDENCE-TIER-FALSE-CONFIDENCE-IAO) | 2026-07-31 | COMPLETADO | v4.68.0. 20 hallazgos (12 + 8 NP). EvidenceTier.B_PLUS, gate CG-EVIDENCE-TIER-CONSISTENCY, proposal honesty, 3,180 tests. Commit: 25e7be3. |
 | FASE-A-02c (WHATSAPP-CONFLICT-VISIBILITY) | 2026-05-24 | COMPLETADO | Phrasing mejorado + impacto 0.10→0.20. ChatGPT readiness como sección. Commit: ver plan. Tests: 0. |
 | FASE-RELEASE (WHATSAPP-CONFLICT-VISIBILITY) | 2026-05-24 | COMPLETADO | v4complete Hotel Castilla Real (0.8261). WhatsApp conflict visible en sección contexto (ALERTA 🔴). coherence 0.83 ≥ 0.80. Evidencia: evidence/FASE-RELEASE/. v4.48.1 |
 | FASE-TRAZABILIDAD-DOCS | 2026-04-25 | COMPLETADO | Correcciones documentales "Calidad Garantizada" (9 gates, ghost cmd, Coherence variable). Commit: 83be575. Tests: 0. v4.35.1 |

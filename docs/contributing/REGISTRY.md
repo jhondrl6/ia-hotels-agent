@@ -9556,6 +9556,23 @@ _Ninguno_
 ---
 
 
+## RELEASE - 2026-07-31
+**Descripcion:** Evidence_Tier_False_Confidence_Fix
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (3180)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
 ## Estadisticas
 
 ```markdown
