@@ -1,6 +1,6 @@
 # Analisis Post-Implementacion: EVIDENCE-TIER-FALSE-CONFIDENCE-IAO
 
-> **Estado**: PENDIENTE (completar despues de FASE-5)
+> **Estado**: PENDIENTE (completar despues de cada fase)
 > **Plan**: EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31 (CORREGIDO tras auditoria 2026-07-31)
 > **Version final**: v4.68.0
 > **Hallazgos totales**: 20 (12 originales + 8 nuevos NP1-NP8)
@@ -12,7 +12,40 @@
 | Fase | Sesion | Estado | Iteraciones | delegate_task | Notas |
 |------|--------|--------|-------------|---------------|-------|
 | FASE-1 | — | PENDIENTE | — | ❌ DIRECTA | Incluye T0/T0b (NP1-NP4) |
-| FASE-2 | — | PENDIENTE | — | ❌ DIRECTA | Incluye T0 NP5 |
+| FASE-2 | 2026-07-31 | ✅ COMPLETADO | 1 | ❌ DIRECTA | T0 NP5 + T1-T4. 4 archivos. 549/550 tests pasan. |
+**4 archivos de codigo + 3 docs auto-actualizados. 549/550 tests pasan (1 pre-existente OpenRouter).**
+
+### Cambios realizados
+
+| Archivo | Cambio |
+|----------|--------|
+| `v4_proposal_generator.py` | `has_onboarding: bool = False` param en `generate()`. `self._current_has_onboarding` en `__init__`. `_build_tier_disclaimer()` nuevo metodo. Fallback `getattr(pricing_result, 'is_onboarding', False)` eliminado. Dict usa `str(self._current_has_onboarding)`. |
+| `main.py` | Wire `has_onboarding=has_onboarding` a `proposal_gen.generate()`. `relationship` f-string dinamico con tier real. |
+| `propuesta_v6_template.md` | `${financial_disclaimer}` reemplaza texto fijo "usan benchmarks regionales". |
+| `diagnostico_v6_template.md` | `${precision_tier}` expuesto. Leyenda incluye Tier B+. |
+
+### Detalle de verificaciones
+
+```
+# T0 NP5 - fallback eliminado
+grep "getattr(pricing_result, 'is_onboarding'" v4_proposal_generator.py → 0 matches
+
+# T1 - has_onboarding dinamico
+'has_onboarding': str(self._current_has_onboarding) → usa param, no 'False' hardcodeado
+
+# T2 - disclaimer condicional
+_build_tier_disclaimer(): B+ → "Datos operativos verificados", A → "GA4+GSC verificados", B/C → "benchmarks regionales"
+
+# T3 - relationship f-string
+f'evidence_tier {tier} limita precision_tier a {precision}...'
+
+# T4 - precision_tier + leyenda
+diagnostico_v6_template.md: ${precision_tier} + B+ en leyenda
+```
+
+### Test que fallo y fix
+
+`test_disclaimer_shown_when_blocked` llamaba `_prepare_template_data()` directamente (sin pasar por `generate()`), causando `AttributeError: '_current_has_onboarding'`. Fix: inicializar `self._current_has_onboarding = False` en `__init__()`.
 | FASE-3 | — | PENDIENTE | — | ❌ DIRECTA | Gate per-hotel (NP7), MANIFEST delivery_packager.py (NP6) |
 | FASE-4 | — | PENDIENTE | — | ❌ DIRECTA | Incluye T0 validacion tests pre-existentes (NP3) |
 | FASE-5 | — | PENDIENTE | — | ✅ MIXTO | Incluye T0 control sin onboarding (NP8) |

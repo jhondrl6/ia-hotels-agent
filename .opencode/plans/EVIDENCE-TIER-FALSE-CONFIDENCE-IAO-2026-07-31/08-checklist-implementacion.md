@@ -23,23 +23,23 @@
 - [x] Verificacion: Grep de `EvidenceTier` consumers no rotos
 - [x] Verificacion: Tests existentes (incluyendo test_financial_breakdown.py + test_financial_evidence.py actualizados) pasan
 
-## FASE-2 — Proposal + Template Honesty + PricingResolution Fix ⬜ PENDIENTE
+## FASE-2 — Proposal + Template Honesty + PricingResolution Fix ✅ COMPLETADA (2026-07-31)
 
 ### Pre-requisito (T0): Eliminar fallback silencioso de has_onboarding (NP5)
 
-- [ ] **T0.1 NP5**: Eliminar `getattr(pricing_result, 'is_onboarding', False)` en `v4_proposal_generator.py:583-586`
-- [ ] **T0.2 NP5**: Agregar param `has_onboarding: bool = False` a `generate()` en `v4_proposal_generator.py`
-- [ ] **T0.3 NP5**: Pasar `has_onboarding=onboarding_data is not None` en `main.py:2712-2727`
-- [ ] **T0.4 NP5**: Verificar NO hay otros usos de `pricing_result.is_onboarding` en codebase
+- [x] **T0.1 NP5**: Eliminar `getattr(pricing_result, 'is_onboarding', False)` en `v4_proposal_generator.py:583-586`
+- [x] **T0.2 NP5**: Agregar param `has_onboarding: bool = False` a `generate()` en `v4_proposal_generator.py`
+- [x] **T0.3 NP5**: Pasar `has_onboarding=onboarding_data is not None` en `main.py:2712-2727`
+- [x] **T0.4 NP5**: Verificar NO hay otros usos de `pricing_result.is_onboarding` en codebase (0 matches)
 
 ### Tareas principales (T1-T4)
 
-- [ ] **T1**: Fix `has_onboarding` hardcodeado → usa param pasado por main.py
-- [ ] **T2**: Disclaimer condicional en propuesta segun tier
-- [ ] **T3**: Fix relationship text hardcodeado en main.py:2099
-- [ ] **T4**: Exponer `precision_tier` + actualizar leyenda Tiers (incluir B+)
-- [ ] Verificacion: Propuesta no miente sobre tiers
-- [ ] Verificacion: Tests existentes pasan
+- [x] **T1**: Fix `has_onboarding` hardcodeado → usa param pasado por main.py
+- [x] **T2**: Disclaimer condicional en propuesta segun tier (nuevo metodo `_build_tier_disclaimer`)
+- [x] **T3**: Fix relationship text hardcodeado en main.py:2099 (ahora f-string dinamico)
+- [x] **T4**: Exponer `precision_tier` + actualizar leyenda Tiers (incluir B+)
+- [x] Verificacion: Propuesta no miente sobre tiers
+- [x] Verificacion: Tests existentes pasan (549/550, 1 pre-existente OpenRouter)
 
 ## FASE-3 — Quality Gate (per-hotel) + Delivery Enrichment ⬜ PENDIENTE
 

@@ -2098,7 +2098,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'tier_explanation': {
                 'evidence_tier': f"{_breakdown_dict.get('evidence_tier', 'C')} — Datos fuente (B = benchmarks/bench regional, C = estimados sin GA4)",
                 'precision_tier': f"{_precision_tier} — Cálculos derivados (C = supuestos de shift y boost IA no validados con datos reales)",
-                'relationship': 'evidence_tier B limita precision_tier a C: sin GA4, los supuestos no son validados empíricamente'
+                'relationship': f'evidence_tier {_breakdown_dict.get("evidence_tier", "C")} limita precision_tier a {_precision_tier}: sin GA4, los supuestos no son validados empíricamente'
             },
         }, f, indent=2, ensure_ascii=False)
 
@@ -2726,6 +2726,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             site_presence_report=site_presence_report,
             pain_ledger=pain_ledger_entries,  # PIPELINE-FIX: enable ProposalAssetMatrix.save()
             user_provided_adr=adr_from_onboarding,  # H1-FIX: pass onboarding ADR to avoid parallel divergence
+            has_onboarding=has_onboarding,  # FASE-2 T0 NP5: parametro explicito (reemplaza fallback silencioso)
         )
         
         # FIX-PATCH-2: Re-scrub proposal now that it exists

@@ -157,8 +157,9 @@ ${pain_ratio_note}
 
 > ⚠️ ${financial_disclaimer}
 >
-> *Nivel de evidencia: **Tier ${evidence_tier}***
+> *Nivel de evidencia: **Tier ${evidence_tier}** · Precisión: **Tier ${precision_tier}***
 > - Tier A: Basado en Google Analytics + Search Console
+> - Tier B+: Datos operativos verificados, proyecciones con supuestos conservadores
 > - Tier B: Basado en benchmarks regionales + datos web
 > - Tier C: Basado en datos limitados de su web
 

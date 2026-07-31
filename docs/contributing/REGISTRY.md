@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-07-31
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 400
+> **Total fases completadas:** 401
 
 ---
 
@@ -9462,6 +9462,29 @@ _Ninguno_
 - [x] Tests passing (27)
 - [x] Suite NEVER_BLOCK passing
 - [x] Coherence >= 0.8: 1.0 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-2 - 2026-07-31
+**Descripcion:** Fix has_onboarding NP5 + disclaimer condicional + relationship text dinamico + precision_tier expuesto
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `v4_proposal_generator.py` | V4 Proposal Generator |
+| `diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `propuesta_v6_template.md` | Propuesta V6 Template |
+
+### Validaciones
+- [x] Tests passing (549)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 600.0 (PASO)
 - [x] Capability contract verificado
 
 ---

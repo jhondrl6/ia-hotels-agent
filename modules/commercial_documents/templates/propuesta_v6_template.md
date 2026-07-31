@@ -101,7 +101,7 @@ Para que su negocio brille en Google Maps, necesitamos fotos de calidad. Esto es
 ---
 
 {{if has_onboarding == "False"}}
-> **⚠️ Advertencia:** Nivel de evidencia: ${financial_evidence_tier}. Estas proyecciones usan benchmarks regionales. Para precisión exacta, ejecute el onboarding con datos reales.
+> **⚠️ Advertencia:** Nivel de evidencia: ${financial_evidence_tier}. ${financial_disclaimer} Para precisión exacta, ejecute el onboarding con datos reales.
 
 > **📋 Nota sobre entregables:** Los activos listados en esta propuesta se generan a partir de benchmarks regionales (Tier C) y datos públicos del sitio web. Su nivel de preparación es estimado. Para activos con datos operativos reales del hotel y mayor precisión, se recomienda completar el proceso de onboarding. Esto permitirá generar activos verificados con datos reales de ocupación, ADR y canal directo.
 

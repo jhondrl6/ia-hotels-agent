@@ -137,6 +137,21 @@ class V4ProposalGenerator:
     MONTHLY_PACKAGE_PRICE = 1200000  # $1.2M COP
     SETUP_FEE = 2500000  # $2.5M COP one-time
 
+    def _build_tier_disclaimer(self, financial_breakdown: Optional[Any] = None) -> str:
+        """FASE-2 T2: Devuelve disclaimer condicional segun el evidence tier real.
+
+        - B_PLUS (B+): Datos operativos verificados, sin GA4 pero con onboarding
+        - A: GA4 + Search Console verificados
+        - B/C/B-: Estimacion basada en benchmarks regionales (mensaje actual)
+        """
+        _tier = getattr(financial_breakdown, 'evidence_tier', 'C') if financial_breakdown else 'C'
+        if _tier in ('B_PLUS', 'B+'):
+            return "Datos operativos verificados. Proyecciones con supuestos conservadores."
+        elif _tier == 'A':
+            return "Basado en Google Analytics 4 y Search Console verificados."
+        else:
+            return "Estimación basada en benchmarks regionales."
+
     def _load_fallback(self, key: str, fallback_default=None):
         """Load a fallback value from config/fallbacks.yaml.
 
@@ -471,6 +486,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         if not self.template_path.exists():
             self.template_path = self.template_dir / "propuesta_v4_template.md"
         self._user_provided_adr: Optional[float] = None
+        self._current_has_onboarding: bool = False  # FASE-2 T0 NP5: inicializado (tests pueden saltar generate())
     
     def generate(
         self,
@@ -491,6 +507,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         pain_ledger: Optional[List[Any]] = None,  # FASE-0D: PainLedgerEntry list for proposal-asset matrix
         document_audience: str = "client",  # FASE-A ROI-REFACTOR: "client" hides internal alerts; "internal" shows them
         user_provided_adr: Optional[float] = None,  # H1-FIX: ADR from onboarding to bypass regional benchmarks
+        has_onboarding: bool = False,  # FASE-2 T0 NP5: parametro explicito (reemplaza fallback silencioso)
     ) -> str:
         """
         Generate the proposal document.
@@ -516,6 +533,9 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         # Store user_provided_adr for use in _get_adr_from_benchmarks (H1-FIX)
         if user_provided_adr is not None:
             self._user_provided_adr = user_provided_adr
+
+        # FASE-2 T0 NP5: Store has_onboarding from param (reemplaza fallback silencioso)
+        self._current_has_onboarding = has_onboarding
 
         # Use pricing_result if available (from hybrid pricing model)
         # This ensures consistency with financial_scenarios.json
@@ -580,17 +600,12 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
                     total_recovery = monthly_gain * 6
                     roi = total_recovery / total_investment_opex if total_investment_opex > 0 else 0.0
 
-            # Check for onboarding plan in pricing_result
-            has_onboarding = False
-            if pricing_result is not None:
-                has_onboarding = getattr(pricing_result, 'is_onboarding', False)
-
             validator = CommercialGateValidator()
             commercial_report = validator.validate_proposal(
                 proposal_text=document_content,
                 net_benefit_6m=net_benefit_6m,
                 roi=roi,
-                has_onboarding_plan=has_onboarding,
+                has_onboarding_plan=self._current_has_onboarding,  # FASE-2 T0 NP5: usa param pasado por main.py
             )
 
             if not commercial_report.blocking_passed:
@@ -940,8 +955,11 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         # Falls back to 'C' (most conservative) if not available
         'financial_evidence_tier': getattr(financial_breakdown, 'evidence_tier', 'C') if financial_breakdown else 'C',
 
-        # BUG-2-FIX: has_onboarding flag for centralized CTA conditionals in template
-        'has_onboarding': 'False',  # Conservative default; caller can override with actual value
+        # FASE-2 T2: Disclaimer condicional segun evidence tier real
+        'financial_disclaimer': self._build_tier_disclaimer(financial_breakdown),
+
+        # FASE-2 T1: has_onboarding flag passed via generate() param, no fallback silencioso
+        'has_onboarding': str(self._current_has_onboarding),
 
         # Backward compatibility: score_tecnico alias for score_global
         'score_tecnico': diagnostic_summary.score_global if diagnostic_summary.score_global is not None else (
