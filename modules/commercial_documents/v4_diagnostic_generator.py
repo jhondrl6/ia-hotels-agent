@@ -608,6 +608,22 @@ class V4DiagnosticGenerator:
                 ai_crawlers_data=ai_crawlers_data,
                 place_found=place_found,
                 gbp_rating=gbp_rating,
+                # FASE-3 NP7: per-hotel flags for evidence tier consistency gate
+                ga4_available=(
+                    analytics_data.get('analytics_status').ga4_available
+                    if analytics_data and analytics_data.get('analytics_status')
+                    else False
+                ),
+                gsc_available=(
+                    analytics_data.get('analytics_status').gsc_available
+                    if analytics_data and analytics_data.get('analytics_status')
+                    else False
+                ),
+                financial_json=(
+                    {"breakdown": {"evidence_tier": financial_breakdown.evidence_tier}}
+                    if financial_breakdown is not None and hasattr(financial_breakdown, 'evidence_tier')
+                    else None
+                ),
             )
 
             if not commercial_report.blocking_passed:

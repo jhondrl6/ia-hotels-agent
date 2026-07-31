@@ -11,9 +11,10 @@
 
 | Fase | Sesion | Estado | Iteraciones | delegate_task | Notas |
 |------|--------|--------|-------------|---------------|-------|
-| FASE-1 | — | PENDIENTE | — | ❌ DIRECTA | Incluye T0/T0b (NP1-NP4) |
-| FASE-2 | 2026-07-31 | ✅ COMPLETADO | 1 | ❌ DIRECTA | T0 NP5 + T1-T4. 4 archivos. 549/550 tests pasan. |
-**4 archivos de codigo + 3 docs auto-actualizados. 549/550 tests pasan (1 pre-existente OpenRouter).**
+| FASE-1 | 2026-07-31 | ✅ COMPLETADO | 1 | ❌ DIRECTA | T0/T0b (NP1-NP4) + T1-T4. 7 archivos. Tests: 10/10 financial_breakdown + 17/17 financial_evidence. B_PLUS introducido. |
+| FASE-2 | 2026-07-31 | ✅ COMPLETADO | 1 | ❌ DIRECTA | T0 NP5 + T1-T4. 4 archivos. 549/550 tests pasan. has_onboarding sin fallback. precision_tier visible. |
+| FASE-3 | 2026-07-31 | ✅ COMPLETADO | 1 | ❌ DIRECTA | T1 NP7 (gate per-hotel, sin os.getenv) + T2 (caller en v4_diagnostic_generator) + T3 NP6 (MANIFEST en delivery_packager.py). 3 archivos + main.py caller. 549/550 tests pasan. |
+| FASE-4 | — | PENDIENTE | — | ❌ DIRECTA | Incluye T0 validacion tests pre-existentes (NP3) |
 
 ### Cambios realizados
 
@@ -23,6 +24,15 @@
 | `main.py` | Wire `has_onboarding=has_onboarding` a `proposal_gen.generate()`. `relationship` f-string dinamico con tier real. |
 | `propuesta_v6_template.md` | `${financial_disclaimer}` reemplaza texto fijo "usan benchmarks regionales". |
 | `diagnostico_v6_template.md` | `${precision_tier}` expuesto. Leyenda incluye Tier B+. |
+
+### Cambios FASE-3
+
+| Archivo | Cambio |
+|----------|--------|
+| `commercial_gate.py` | `CG-EVIDENCE-TIER-CONSISTENCY` en BLOCKING_GATE_IDS. Metodo `_check_evidence_tier_consistency(ga4_available, gsc_available, financial_json)` con params per-hotel, sin `os.getenv`. `validate_diagnostic()` extendido. |
+| `v4_diagnostic_generator.py` | Caller pasa `ga4_available`, `gsc_available`, `financial_json` desde `analytics_data` y `financial_breakdown`. |
+| `delivery_packager.py` | `_quality_metadata` en `__init__`. Bloque `quality_metadata` inyectado en MANIFEST despues de `create_manifest()`. |
+| `main.py` | Setter `packager._quality_metadata = {...}` con evidence_tier, precision_tier, ga4_configured, gsc_configured, onboarding_used, coherence_score. |
 
 ### Detalle de verificaciones
 
@@ -46,7 +56,6 @@ diagnostico_v6_template.md: ${precision_tier} + B+ en leyenda
 ### Test que fallo y fix
 
 `test_disclaimer_shown_when_blocked` llamaba `_prepare_template_data()` directamente (sin pasar por `generate()`), causando `AttributeError: '_current_has_onboarding'`. Fix: inicializar `self._current_has_onboarding = False` en `__init__()`.
-| FASE-3 | — | PENDIENTE | — | ❌ DIRECTA | Gate per-hotel (NP7), MANIFEST delivery_packager.py (NP6) |
 | FASE-4 | — | PENDIENTE | — | ❌ DIRECTA | Incluye T0 validacion tests pre-existentes (NP3) |
 | FASE-5 | — | PENDIENTE | — | ✅ MIXTO | Incluye T0 control sin onboarding (NP8) |
 | RELEASE | — | PENDIENTE | — | ✅ SUBAGENTE | CHANGELOG incluye NP1-NP8 |
@@ -74,7 +83,7 @@ diagnostico_v6_template.md: ${precision_tier} + B+ en leyenda
 |------|---------|----------------|---------|
 | FASE-1 | ❌ DIRECTA | — | — |
 | FASE-2 | ❌ DIRECTA | — | — |
-| FASE-3 | ❌ DIRECTA | — | — |
+| FASE-3 | ❌ DIRECTA | ✅ Completado directo | WSL import cascade confirmado — commercial_gate + delivery_packager imports |
 | FASE-4 | ❌ DIRECTA | — | — |
 | FASE-5 | ✅ MIXTO | — | T0 (control sin onboarding) y T1 (Zi One) AMBOS via subagente |
 | RELEASE | ✅ SUBAGENTE | — | — |
@@ -97,8 +106,8 @@ diagnostico_v6_template.md: ${precision_tier} + B+ en leyenda
 | 8 | relationship text hardcodeado | Dinamico | — | ⬜ |
 | 9 | precision_tier no visible | Visible | — | ⬜ |
 | 10 | Template legend sin B+ | Incluye B+ | — | ⬜ |
-| 11 | Sin gate GA4/GSC | CG-EVIDENCE-TIER-CONSISTENCY | — | ⬜ |
-| 12 | MANIFEST sin metadata | quality_metadata presente | — | ⬜ |
+| 11 | Sin gate GA4/GSC | CG-EVIDENCE-TIER-CONSISTENCY | ✅ FASE-3 T1 | ⬜ |
+| 12 | MANIFEST sin metadata | quality_metadata presente | ✅ FASE-3 T3 | ⬜ |
 
 ### 8 hallazgos nuevos NP1-NP8 (auditoria 2026-07-31)
 
@@ -109,8 +118,8 @@ diagnostico_v6_template.md: ${precision_tier} + B+ en leyenda
 | 15 | **NP3** tests pre-existentes rompen con B_PLUS | Tests pasan despues de T0b | — | ⬜ |
 | 16 | **NP4** default "A" en diagnostic generator | Default "C" | — | ⬜ |
 | 17 | **NP5** fallback silencioso has_onboarding | Param pasado correctamente | — | ⬜ |
-| 18 | **NP6** MANIFEST ubicacion incorrecta | MANIFEST enriquecido en delivery_packager.py | — | ⬜ |
-| 19 | **NP7** gate usa env vars globales | Gate con params per-hotel | — | ⬜ |
+| 18 | **NP6** MANIFEST ubicacion incorrecta | MANIFEST enriquecido en delivery_packager.py | ✅ FASE-3 T3 | ⬜ |
+| 19 | **NP7** gate usa env vars globales | Gate con params per-hotel | ✅ FASE-3 T1 | ⬜ |
 | 20 | **NP8** control sin onboarding | hotel_test_001 → Tier C sin regresion | — | ⬜ |
 
 ---

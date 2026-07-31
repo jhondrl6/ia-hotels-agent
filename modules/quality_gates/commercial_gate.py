@@ -72,6 +72,7 @@ BLOCKING_GATE_IDS = [
     "CG-IA-BLOCKED-CLAIM",
     "CG-ROI-NEGATIVE",
     "CG-CLAIM-VS-EVIDENCE",
+    "CG-EVIDENCE-TIER-CONSISTENCY",  # FASE-3 NP7: per-hotel tier vs GA4/GSC check
 ]
 
 WARNING_GATE_IDS = [
@@ -123,6 +124,10 @@ class CommercialGateValidator:
         gbp_rating: float = 0.0,
         frontmatter_tier: Optional[str] = None,
         text_tier: Optional[str] = None,
+        # FASE-3 NP7: per-hotel flags for evidence tier consistency gate
+        ga4_available: bool = False,
+        gsc_available: bool = False,
+        financial_json: Optional[Dict[str, Any]] = None,
     ) -> CommercialGateReport:
         """Valida el documento de diagnóstico contra gates comerciales.
 
@@ -134,6 +139,9 @@ class CommercialGateValidator:
             gbp_rating: Rating de GBP (0.0-5.0).
             frontmatter_tier: Tier declarado en el frontmatter del documento.
             text_tier: Tier mencionado en el texto del documento.
+            ga4_available: FASE-3 NP7 — GA4 conectado para este hotel (per-hotel, NO env var).
+            gsc_available: FASE-3 NP7 — GSC conectado para este hotel (per-hotel, NO env var).
+            financial_json: FASE-3 NP7 — datos financieros del breakdown (para extraer evidence_tier).
         """
         results: List[CommercialGateResult] = []
 
@@ -157,6 +165,13 @@ class CommercialGateValidator:
 
         # CG-TIER-CONSISTENCY: Tier inconsistente
         results.append(self._check_tier_consistency(frontmatter_tier, text_tier))
+
+        # CG-EVIDENCE-TIER-CONSISTENCY: Tier A sin GA4/GSC reales (per-hotel, FASE-3 NP7)
+        results.append(self._check_evidence_tier_consistency(
+            financial_json=financial_json,
+            ga4_available=ga4_available,
+            gsc_available=gsc_available,
+        ))
 
         # CG-TECH-JARGON: Jerga técnica en vista gerencia
         results.append(self._check_tech_jargon(diagnostic_text))
@@ -636,6 +651,74 @@ class CommercialGateValidator:
             severity="WARNING",
             message=f"Tier consistente: '{ft}' en frontmatter y texto.",
             suggestion="",
+        )
+
+    def _check_evidence_tier_consistency(
+        self,
+        financial_json: Optional[Dict[str, Any]],
+        ga4_available: bool = False,
+        gsc_available: bool = False,
+    ) -> CommercialGateResult:
+        """CG-EVIDENCE-TIER-CONSISTENCY: Tier A sin GA4/GSC reales (per-hotel, FASE-3 NP7).
+
+        Recibe ga4_available/gsc_available como parámetros per-hotel (NO os.getenv).
+        Solo aplica a Tier A: si el documento afirma Tier A (GA4+GSC verificados)
+        pero GA4 o GSC no están disponibles para este hotel → BLOCKING.
+
+        Args:
+            financial_json: Datos del breakdown financiero (para extraer evidence_tier).
+            ga4_available: True si GA4 está configurado para este hotel.
+            gsc_available: True si GSC está configurado para este hotel.
+        """
+        if financial_json is None:
+            return CommercialGateResult(
+                gate_id="CG-EVIDENCE-TIER-CONSISTENCY",
+                name="Evidencia Tier vs GA4/GSC",
+                passed=True,
+                severity="INFO",
+                message="Sin datos financieros para verificar.",
+                suggestion="",
+            )
+
+        breakdown = financial_json.get('breakdown', {})
+        evidence_tier = breakdown.get('evidence_tier', 'C')
+
+        # Solo aplica a Tier A (los demás tiers no requieren GA4/GSC)
+        if evidence_tier != 'A':
+            return CommercialGateResult(
+                gate_id="CG-EVIDENCE-TIER-CONSISTENCY",
+                name="Evidencia Tier vs GA4/GSC",
+                passed=True,
+                severity="INFO",
+                message=f"Tier {evidence_tier} no requiere verificación GA4/GSC.",
+                suggestion="",
+            )
+
+        # Verificar conectividad real (PER-HOTEL via params, NO os.getenv)
+        if ga4_available and gsc_available:
+            return CommercialGateResult(
+                gate_id="CG-EVIDENCE-TIER-CONSISTENCY",
+                name="Evidencia Tier vs GA4/GSC",
+                passed=True,
+                severity="INFO",
+                message="Tier A verificado: GA4 y GSC disponibles para este hotel.",
+                suggestion="",
+            )
+
+        missing = []
+        if not ga4_available:
+            missing.append("GA4")
+        if not gsc_available:
+            missing.append("GSC")
+
+        return CommercialGateResult(
+            gate_id="CG-EVIDENCE-TIER-CONSISTENCY",
+            name="Evidencia Tier vs GA4/GSC",
+            passed=False,
+            severity="BLOCKING",
+            message=f"CONTRADICCIÓN: El documento afirma Tier A (GA4+GSC verificados) "
+                    f"pero {', '.join(missing)} no está(n) disponible(s) para este hotel.",
+            suggestion="Reducir evidence_tier a B+ o configurar GA4/GSC para este hotel.",
         )
 
     def _check_tech_jargon(self, text: str) -> CommercialGateResult:

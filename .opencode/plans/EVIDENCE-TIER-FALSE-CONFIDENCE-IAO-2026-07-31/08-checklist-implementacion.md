@@ -41,15 +41,15 @@
 - [x] Verificacion: Propuesta no miente sobre tiers
 - [x] Verificacion: Tests existentes pasan (549/550, 1 pre-existente OpenRouter)
 
-## FASE-3 — Quality Gate (per-hotel) + Delivery Enrichment ⬜ PENDIENTE
+## FASE-3 — Quality Gate (per-hotel) + Delivery Enrichment ✅ COMPLETADA (2026-07-31)
 
-- [ ] **T1 NP7**: Nuevo gate `CG-EVIDENCE-TIER-CONSISTENCY` con params per-hotel (`ga4_available`, `gsc_available`) — NO `os.getenv`
-- [ ] **T1 NP7**: Gate agregado a `BLOCKING_GATE_IDS`
-- [ ] **T2**: Integrar en `delivery_quality.py`
-- [ ] **T2 NP7**: Caller en main.py pasa flags per-hotel al gate
-- [ ] **T3 NP6**: Enriquecer MANIFEST.json en `modules/delivery/delivery_packager.py` (NO main.py:3038)
-- [ ] Verificacion: Gate bloquea Tier A + !GA4 con params per-hotel
-- [ ] Verificacion: Tests existentes pasan
+- [x] **T1 NP7**: Nuevo gate `CG-EVIDENCE-TIER-CONSISTENCY` con params per-hotel (`ga4_available`, `gsc_available`) — NO `os.getenv`
+- [x] **T1 NP7**: Gate agregado a `BLOCKING_GATE_IDS`
+- [x] **T2**: Integrar en caller `v4_diagnostic_generator.py` (pasa `ga4_available`, `gsc_available`, `financial_json`)
+- [x] **T2 NP7**: Caller en main.py pasa flags per-hotel al gate (vía setter `_quality_metadata`)
+- [x] **T3 NP6**: Enriquecer MANIFEST.json en `modules/delivery/delivery_packager.py` (NO main.py:3038)
+- [x] Verificacion: Gate bloquea Tier A + !GA4 con params per-hotel
+- [x] Verificacion: Tests existentes pasan (549/550, 1 pre-existente OpenRouter)
 
 ## FASE-4 — Tests + Update Existing Tests ⬜ PENDIENTE
 
@@ -123,3 +123,5 @@
 | Fecha | Fase | Estado | Iteraciones | Notas |
 |-------|------|--------|-------------|-------|
 | 2026-07-31 | FASE-1 | ✅ COMPLETADA | 1 | T0-T4 + T0b.1 (NP1-NP4). 7 archivos modificados. Tests: 10/10 financial_breakdown + 17/17 financial_evidence. B_PLUS introducido. |
+| 2026-07-31 | FASE-2 | ✅ COMPLETADA | 1 | T0 NP5 (has_onboarding sin fallback) + T1-T4 (disclaimer condicional, relationship text dinamico, precision_tier visible). 5 archivos. Tests: 549/550. |
+| 2026-07-31 | FASE-3 | ✅ COMPLETADA | 1 | T1 NP7 (gate per-hotel sin os.getenv) + T2 (caller en v4_diagnostic_generator) + T3 NP6 (MANIFEST en delivery_packager.py). 3 archivos. Tests: 549/550. |

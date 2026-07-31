@@ -3041,6 +3041,21 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 deliveries_dir=str(output_dir / "deliveries")
             )
 
+            # FASE-3 NP6: Set quality metadata for MANIFEST enrichment
+            packager._quality_metadata = {
+                "evidence_tier": _breakdown_dict.get('evidence_tier', 'C'),
+                "precision_tier": _precision_tier,
+                "ga4_configured": ga4_available,
+                "gsc_configured": (
+                    analytics_data.get('analytics_status').gsc_available
+                    if analytics_data and analytics_data.get('analytics_status')
+                    else False
+                ),
+                "onboarding_used": onboarding_data is not None,
+                "coherence_score": pre_coherence_score,
+                "contradictions_detected": [],  # FASE-3: populated by coherence gate in future phases
+            }
+
             # Find diagnostic and proposal paths
             diag_path = str(diagnostic_path) if diagnostic_path else None
             prop_path = str(proposal_path) if proposal_path else None

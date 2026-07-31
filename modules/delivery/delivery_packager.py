@@ -69,6 +69,8 @@ class DeliveryPackager:
         self.base_output_dir = Path(base_output_dir)
         self.deliveries_dir = Path(deliveries_dir)
         self.deliveries_dir.mkdir(parents=True, exist_ok=True)
+        # FASE-3 NP6: quality metadata for MANIFEST enrichment (set by caller before package())
+        self._quality_metadata: Optional[Dict[str, Any]] = None
 
     def package(
         self,
@@ -177,6 +179,11 @@ class DeliveryPackager:
         # Pass 2: Build manifest with README now on disk (real size captured)
         files_for_manifest = files_to_package + meta_for_manifest
         manifest = self.create_manifest(hotel_id, files_for_manifest)
+
+        # ── FASE-3 NP6: Enrich manifest with quality metadata ──
+        if self._quality_metadata is not None:
+            manifest["quality_metadata"] = self._quality_metadata
+
         with open(manifest_path, 'w', encoding='utf-8') as f:
             json.dump(manifest, f, indent=2, ensure_ascii=False)
 

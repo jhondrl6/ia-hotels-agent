@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-07-31
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 401
+> **Total fases completadas:** 402
 
 ---
 
@@ -9485,6 +9485,28 @@ _Ninguno_
 - [x] Tests passing (549)
 - [x] Suite NEVER_BLOCK passing
 - [x] Coherence >= 0.8: 600.0 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-3 - 2026-07-31
+**Descripcion:** Quality Gate per-hotel (NP7) + Delivery Enrichment (NP6). T1: Nuevo gate CG-EVIDENCE-TIER-CONSISTENCY con params per-hotel (ga4_available, gsc_available), sin os.getenv. T2: Integrado en v4_diagnostic_generator.py. T3: MANIFEST enriquecido con quality_metadata en delivery_packager.py. 3 archivos modificados (commercial_gate.py, v4_diagnostic_generator.py, delivery_packager.py + main.py caller). Gate bloquea Tier A sin GA4/GSC real.
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/commercial_gate.py` | Commercial Gate |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/delivery/delivery_packager.py` | Delivery Packager |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (549)
+- [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
 ---
