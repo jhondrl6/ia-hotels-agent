@@ -1,0 +1,31 @@
+{
+  "all_passed": false,
+  "blocking_passed": false,
+  "results": [
+    {
+      "gate_id": "CG-ROI-NEGATIVE",
+      "name": "ROI negativo como argumento de cierre",
+      "passed": false,
+      "severity": "BLOCKING",
+      "message": "Beneficio neto 6m negativo ($-1,330,590 COP) y ROI 0.45X sin plan de onboarding alternativo. Una propuesta que dice 'págueme para perder dinero' no cierra.",
+      "suggestion": "Reestructurar oferta: (1) vender quick wins de alto dolor primero, (2) separar plan diagnóstico/onboarding de plan mensual, (3) recalcular recuperación con evidencia real antes de mostrar ROI, o (4) proponer una fase inicial de bajo riesgo (onboarding/activación)."
+    },
+    {
+      "gate_id": "CG-OTA-NARRATIVE",
+      "name": "Sin narrativa OTA",
+      "passed": true,
+      "severity": "WARNING",
+      "message": "Términos OTA encontrados: Booking, Expedia, comisión, comisiones, OTA.",
+      "suggestion": ""
+    },
+    {
+      "gate_id": "CG-TECH-JARGON",
+      "name": "Jerga técnica en vista gerencia",
+      "passed": false,
+      "severity": "WARNING",
+      "message": "Jerga técnica encontrada en vista gerencia: Schema, AEO, IAO, Open Graph, Gemini. El decisor entiende ocupación, reservas directas, comisiones, WhatsApp, reseñas y caja; no compra por leer pesos internos de scoring.",
+      "suggestion": "Mover Schema, AEO, IAO, Open Graph, Gemini al Anexo Técnico (sección 7+). Vista Gerencia (secciones 1-6): lenguaje de negocio."
+    }
+  ],
+  "summary": "1 BLOCKING failure(s): CG-ROI-NEGATIVE | 1 WARNING(s): CG-TECH-JARGON"
+}
