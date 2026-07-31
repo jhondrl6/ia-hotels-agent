@@ -1,8 +1,8 @@
-<!-- agents_version: v4.67.0 | last_update: 2026-07-30 -->
+<!-- agents_version: v4.68.0 | last_update: 2026-07-31 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.67.0 — Onboarding injection: URL-based canonical matching + observations.json fallback**
+> **v4.68.0 — Evidence Tier Honesty: B_PLUS + GA4/GSC gate + proposal truthfulness**
 
 ---
 
@@ -23,7 +23,7 @@
 - Zona Referencia (linea 295+): contexto historico, arquitectura y estructura.
 - Cambios: editar aqui primero, validar despues.
 
-**Validaciones**: 
+**Validaciones**:
 ```bash
 python scripts/run_all_validations.py --quick
 python scripts/run_all_validations.py

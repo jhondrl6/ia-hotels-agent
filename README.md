@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.67.0** -- Onboarding Injection Fix — URL-based canonical matching + observations.json fallback | Actualizado 30 Julio 2026 | 3,158 pruebas automatizadas | 0 errores conocidos
+**v4.68.0** -- Evidence Tier Honesty - B_PLUS + GA4/GSC gate + proposal truthfulness | Actualizado 31 Julio 2026 | 3,180 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -21,13 +21,13 @@
 
 ---
 
-## Estado del Proyecto (v4.67.0 -- Onboarding Injection Fix — URL-based canonical matching + observations.json fallback)
+## Estado del Proyecto (v4.68.0 -- Evidence Tier Honesty - B_PLUS + GA4/GSC gate + proposal truthfulness)
 
-- **3,158 test functions** — suite completa, 0 regresiones
-- **205 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **56 directorios de test**
+- **3,180 test functions** — suite completa, 0 regresiones
+- **205 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **10 directorios de test**
 - **9 config YAML** con schema validado
 - **17 agent skills** en `.agents/workflows/`
-- **9 publication gates** — blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics; advisory: content_quality, asset_confidence, proposal_asset_alignment
+- **10 publication gates** — blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, evidence_tier_consistency; advisory: content_quality, asset_confidence, proposal_asset_alignment
 - **Coherence Score >= 0.8** requerido para publicacion
 - **34 assets** en catalogo (27 IMPLEMENTED + 4 DEPRECATED + 3 MANUAL_ONLY)
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional

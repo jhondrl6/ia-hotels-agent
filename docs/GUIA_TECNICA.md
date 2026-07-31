@@ -1,9 +1,61 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.67.0 (Onboarding Injection Fix — URL-based canonical matching + observations.json fallback)
-**Última actualización:** 2026-07-30
+**Versión:** v4.68.0 (Evidence Tier Honesty - B_PLUS + GA4/GSC gate + proposal truthfulness)
+**Última actualización:** 2026-07-31
 
 ---
+
+### Notas de Cambios v4.68.0 — Evidence Tier Honesty
+
+**Fecha:** 2026-07-31
+
+**Resumen**: Corrección de falsa confianza en el Evidence Tier de v4complete. El sistema ahora
+verifica `ga4_enabled`/`gsc_enabled` antes de asignar Tier A. Nuevo tier intermedio B_PLUS
+para hoteles con datos operativos verificados pero sin GA4/GSC. Nuevo gate comercial
+CG-EVIDENCE-TIER-CONSISTENCY (BLOCKING, per-hotel) que bloquea delivery si Tier A sin GA4+GSC.
+
+**Cambios principales**:
+
+1. **EvidenceTier.B_PLUS** — Nuevo valor de enum `"B+"` con disclaimer honesto:
+   "Datos operativos verificados de su hotel. Para subir a Tier A, conecte GA4 y Search Console."
+   Tier A ahora requiere `ga4_enabled AND gsc_enabled`. Sin GA4/GSC → máximo B+.
+
+2. **`_determine_evidence_tier()` refactorizado** — Ahora recibe y consulta `ga4_enabled`/`gsc_enabled`
+   como flags booleanos. `HotelFinancialData` extendido con dos campos nuevos. La fuente de verdad
+   es unificada: el tier, el disclaimer, y el CTA derivan de la misma consulta.
+
+3. **Gate CG-EVIDENCE-TIER-CONSISTENCY** — Nuevo gate comercial BLOCKING que recibe params per-hotel
+   (`ga4_available`, `gsc_available`, `financial_json`). Bloquea delivery si Tier A + !GA4.
+   Para tiers != A, retorna INFO (no visible en reportes). Respeta arquitectura per-hotel:
+   NO usa `os.getenv` global.
+
+4. **Proposal honesty** — `has_onboarding` ahora es dinámico (sin fallback silencioso a False).
+   Disclaimer condicional por tier real. `precision_tier` visible en template diagnóstica.
+   Relationship text dinámico.
+
+5. **MANIFEST enrichment** — `quality_metadata` agregado a MANIFEST.json en `delivery_packager.py`
+   (evidencia, tier, GA4/GSC flags).
+
+6. **Consumers downstream limpios** — `hook_pdf_generator` acepta B+. `publication_gates`
+   `tier_message` usa lógica dinámica. Default `evidence_tier` en diagnostic generator es "C"
+   (conservador).
+
+**20 hallazgos resueltos**: 12 originales del plan (H1-H12) + 8 nuevos de auditoría pre-ejecución
+(NP1-NP8). Ver `CHANGELOG.md [4.68.0]` para matriz completa.
+
+**Módulos afectados**: `data_structures.py`, `scenario_calculator.py`, `hook_pdf_generator.py`,
+`publication_gates.py`, `v4_diagnostic_generator.py`, `v4_proposal_generator.py`,
+`commercial_gate.py`, `delivery_packager.py`, `diagnostico_v6_template.md`, `main.py`
+
+**Tests**: 22 tests nuevos en `test_evidence_tier.py`. 5 suites pre-existentes validadas sin
+regresiones (NP3). Total: 3,180 tests, 0 regresiones introducidas por B_PLUS.
+
+**v4complete E2E**: Zi One Luxury (Tier B+, honesto), Hotel Vísperas control sin onboarding
+(Tier B, sin regresión). 20/20 hallazgos verificados.
+
+**Backwards compatibility**: Total. `B_PLUS` es un nuevo valor de enum que no rompe consumidores
+existentes. `_determine_evidence_tier()` mantiene firma compatible (nuevos params son opcionales).
+Gate CG-EVIDENCE-TIER-CONSISTENCY retorna INFO para tiers != A (no bloquea pipelines existentes).
 
 ### Notas de Cambios v4.67.0 — Onboarding Injection Fix
 
@@ -482,16 +534,16 @@ Gates con status NOT_READY ahora bloquean la generación de documentos para el c
 - `modules/quality_gates/publication_gates.py`
 - `main.py`
 
-**Problema:** El diccionario `assessment` que alimenta los 11 publication gates se construía 
-manualmente en 3 etapas separadas (~87 líneas) sin tipado ni validación. Cada gate implementaba 
-4-6 fallbacks defensivos (~129 líneas de extractores) porque el dict no tenía schema. Campos 
+**Problema:** El diccionario `assessment` que alimenta los 11 publication gates se construía
+manualmente en 3 etapas separadas (~87 líneas) sin tipado ni validación. Cada gate implementaba
+4-6 fallbacks defensivos (~129 líneas de extractores) porque el dict no tenía schema. Campos
 zombie (`quality_gate_*`, `coherence_checks`) se acumulaban sin consumidores.
 
-**Solución:** `AssessmentBuilder` centraliza la construcción en una clase con dataclass tipado 
-(`AssessmentPayload`, 28 campos). API fluida: `.with_core().with_validation()...build()`. 
+**Solución:** `AssessmentBuilder` centraliza la construcción en una clase con dataclass tipado
+(`AssessmentPayload`, 28 campos). API fluida: `.with_core().with_validation()...build()`.
 Los extractores se simplifican a acceso directo (ahorro ~100 líneas). Campos zombie eliminados.
 
-**Backwards compatibility:** El builder produce un `Dict[str, Any]` idéntico al contrato 
+**Backwards compatibility:** El builder produce un `Dict[str, Any]` idéntico al contrato
 existente de `run_publication_gates()`. No se rompe ninguna interfaz pública.
 
 **Tests:** 34 tests nuevos. v4complete E2E verificado sin regresiones.
@@ -1768,4 +1820,3 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 - Cifra gancho: 28pt (≥24pt requerido). Disclaimer Tier B visible en página 1.
 - 34 campos cross-validados contra `01_DIAGNOSTICO` + `02_PROPUESTA` + `v4_complete_report.json`. Sin discrepancias.
 - `--dry-run` funcional. Tiempo generación <30s (1.486s).
-

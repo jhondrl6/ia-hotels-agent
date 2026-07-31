@@ -1,14 +1,96 @@
 # Changelog
 
-## [4.68.0] — unreleased
+## [4.68.0] — 2026-07-31 — Evidence Tier Honesty: B_PLUS + GA4/GSC Gate + Proposal Truthfulness
 
-### FASE-4 — Tests Evidence Tier + Gate + Integration (2026-07-31)
-- **T0 NP3**: Validados 5 suites de tests pre-existentes (test_financial_breakdown 10/10, test_fase_f_financial_placeholders 11/12, test_hook_pdf_generator 36/36, test_proposal_generator 21/32, test_template_conditionals 6/6). Ninguna falla causada por B_PLUS.
-- **T1**: 9 unit tests para `_determine_evidence_tier()` en `tests/test_evidence_tier.py` — todas las combinaciones (A, B+, B, C), GA4 solo, GSC solo, user_provided, mixed sources.
-- **T2**: 5 integration tests para pipeline completo (onboarding→B+, unknown→C, GA4+GSC→A, solo GA4→B+, fuentes preservadas).
-- **T3**: 8 gate tests para `CG-EVIDENCE-TIER-CONSISTENCY` con params per-hotel — BLOCKING cuando Tier A sin GA4/GSC, pasa para B+/B/C, pasa Tier A con GA4+GSC real.
-- **T4**: Regression suite: 549 passed + 22 nuevos, 2 skipped, 1 pre-existente (OpenRouter).
-- Archivo nuevo: `tests/test_evidence_tier.py` (22 tests, 3 clases: TestDetermineEvidenceTier, TestEvidenceTierIntegration, TestEvidenceTierConsistencyGate).
+### Objetivo
+
+Corregir la falsa confianza del Evidence Tier en v4complete: el sistema afirmaba "Basado en Google Analytics y Search Console verificados" (Tier A) sin verificar GA4/GSC. Esto creaba una contradicción interna en el documento — el CTA honesto (línea 84) decía "conecte GA4" mientras el disclaimer (línea 215) mentía sobre verificación.
+
+**Causa raíz**: `_determine_evidence_tier()` asignaba Tier A con ≥2 fuentes verificadas pero NUNCA consultaba `ga4_enabled`/`gsc_enabled`. `EvidenceTier.A.disclaimer` hardcodeaba "GA4 + Search Console verificados". Dos rutas de código sin fuente de verdad compartida.
+
+### 20 Hallazgos Resueltos (12 originales + 8 nuevos NP1-NP8 de auditoría 2026-07-31)
+
+**Originales (12):**
+- **H1** (CRÍTICA): `_determine_evidence_tier()` ahora consulta `ga4_enabled`/`gsc_enabled` — Tier A solo con GA4+GSC real
+- **H2** (ALTA): `EvidenceTier.A.disclaimer` honesto — solo aplica con GA4+GSC verificados
+- **H3** (ALTA): `has_onboarding` dinámico en propuesta — sin fallback silencioso a False (NP5)
+- **H4** (ALTA): Propuesta ya no dice 3 tiers diferentes — disclaimer condicional según tier real
+- **H5** (MEDIA): `main.py:2099` relationship text dinámico — usa tier real (no hardcodeado "B")
+- **H6** (MEDIA): `precision_tier` ahora visible en template diagnóstica
+- **H7** (MEDIA): Template Tiers legend incluye B+ con disclaimer "Datos operativos verificados"
+- **H8** (ALTA): Nuevo gate `CG-EVIDENCE-TIER-CONSISTENCY` (BLOCKING) — bloquea Tier A sin GA4/GSC
+- **H9** (MEDIA): MANIFEST.json enriquecido con `quality_metadata` (evidence_tier, precision_tier, ga4_available)
+- **H10** (MEDIA): 3 sistemas `precision_tier` documentados como deuda técnica (no implementado en este plan)
+- **H11** (BAJA): H1-FIX ya aplicado en `_get_adr_from_benchmarks()` — no requiere acción
+- **H12** (INFRA): Service account GCP documentado como OUT OF PLAN (acción manual del usuario)
+
+**Nuevos NP1-NP8 (auditoría pre-ejecución 2026-07-31):**
+- **NP1** (CRÍTICA): `hook_pdf_generator.py:509` `valid_tiers` actualizado a `{"A", "B+", "B", "C"}` — B_PLUS ya no es rechazado
+- **NP2** (ALTA): `publication_gates.py:399` `tier_message` lógica dinámica corregida — el else branch ya no miente
+- **NP3** (ALTA): `tests/test_financial_breakdown.py` actualizado con assertions para `B_PLUS.disclaimer` y `B_PLUS.value`
+- **NP4** (ALTA): `v4_diagnostic_generator.py:1043` default `evidence_tier = "C"` (no "A") — conservador cuando `financial_breakdown` es None
+- **NP5** (MEDIA): `v4_proposal_generator.py:586` `getattr(pricing_result, 'is_onboarding', False)` eliminado — fallback silencioso removido
+- **NP6** (MEDIA): MANIFEST enrichment en `modules/delivery/delivery_packager.py` (corregido de plan original que apuntaba a `main.py:3038`)
+- **NP7** (ALTA): Gate `CG-EVIDENCE-TIER-CONSISTENCY` recibe params per-hotel (`ga4_available`/`gsc_available`) — NO `os.getenv` global
+- **NP8** (MEDIA): Control de regresión sin onboarding — `hotel_test_001` verifica Tier B/C sin B+ ni A
+
+### Cambios Implementados (5 fases)
+
+**FASE-1 — Root Cause + Downstream Consumers (7 archivos):**
+- `data_structures.py`: `EvidenceTier.B_PLUS = "B+"` agregado al enum + disclaimer honesto
+- `hook_pdf_generator.py`: `valid_tiers` acepta B+ (NP1)
+- `publication_gates.py`: `tier_message` lógica dinámica (NP2)
+- `v4_diagnostic_generator.py`: Default `evidence_tier = "C"` (NP4)
+- `scenario_calculator.py`: `HotelFinancialData` + `ga4_enabled`/`gsc_enabled`. `_determine_evidence_tier()` recibe y usa estos flags
+- `test_financial_breakdown.py`: Assertions para B_PLUS (NP3)
+- `main.py`: Wire `ga4_enabled`/`gsc_enabled` al `HotelFinancialData`
+
+**FASE-2 — Proposal + Template Honesty (4 archivos):**
+- `v4_proposal_generator.py`: `has_onboarding` dinámico (sin fallback silencioso NP5). Disclaimer condicional por tier (`_build_tier_disclaimer`)
+- `v4_diagnostic_generator.py`: Exponer `precision_tier` en placeholders del template
+- `diagnostico_v6_template.md`: `${precision_tier}` + leyenda Tiers con B+
+- `main.py`: Relationship text dinámico (f-string con tier real)
+
+**FASE-3 — Quality Gate per-hotel + Delivery Enrichment (3 archivos):**
+- `commercial_gate.py`: Nuevo gate `CG-EVIDENCE-TIER-CONSISTENCY` con params per-hotel (NP7) + agregado a `BLOCKING_GATE_IDS`
+- `v4_diagnostic_generator.py`: Caller pasa `ga4_available`, `gsc_available`, `financial_json` al gate
+- `delivery_packager.py`: MANIFEST enriquecido con `quality_metadata` (NP6) — evidencia, tier, GA4/GSC flags
+- `main.py`: Caller pasa flags per-hotel al gate vía setter `_quality_metadata`
+
+**FASE-4 — Tests (1 archivo nuevo, 22 tests):**
+- `tests/test_evidence_tier.py`: 22 tests (9 unit `_determine_evidence_tier` + 5 integration pipeline + 8 gate `CG-EVIDENCE-TIER-CONSISTENCY`)
+- Validados 5 suites pre-existentes compatibles con B_PLUS (NP3): test_financial_breakdown 10/10, test_fase_f_financial_placeholders 11/12, test_hook_pdf_generator 36/36, test_proposal_generator 21/32, test_template_conditionals 6/6 — 0 fallas causadas por B_PLUS
+
+**FASE-5 — v4complete E2E Verification (2 hoteles):**
+- **Zi One Luxury** (https://zione.co/): evidence_tier = "B+" ✅ (no "A"). Disclaimer honesto: "Conecte GA4 y Search Console". precision_tier visible. MANIFEST con quality_metadata. Gate CG-EVIDENCE-TIER-CONSISTENCY: INFO (passed, tier != A).
+- **Hotel Vísperas (control sin onboarding)**: evidence_tier = "B" ✅ (sin B+ ni A, sin regresión). NP8 verificado.
+- 20/20 hallazgos verificados en matriz (12 originales + 8 NP1-NP8)
+
+### Archivos Modificados (17 archivos)
+| # | Archivo | Fase |
+|---|---------|------|
+| 1 | `modules/commercial_documents/data_structures.py` | FASE-1 |
+| 2 | `modules/commercial_documents/hook_pdf_generator.py` | FASE-1 (NP1) |
+| 3 | `modules/quality_gates/publication_gates.py` | FASE-1 (NP2) |
+| 4 | `modules/commercial_documents/v4_diagnostic_generator.py` | FASE-1 (NP4) + FASE-2 |
+| 5 | `tests/test_financial_breakdown.py` | FASE-1 (NP3) |
+| 6 | `modules/financial_engine/scenario_calculator.py` | FASE-1 |
+| 7 | `main.py` | FASE-1 + FASE-2 + FASE-3 |
+| 8 | `modules/commercial_documents/v4_proposal_generator.py` | FASE-2 (NP5) |
+| 9 | `modules/commercial_documents/templates/diagnostico_v6_template.md` | FASE-2 |
+| 10 | `modules/quality_gates/commercial_gate.py` | FASE-3 (NP7) |
+| 11 | `modules/delivery/delivery_packager.py` | FASE-3 (NP6) |
+| 12 | `tests/test_evidence_tier.py` | FASE-4 (nuevo) |
+| 13-17 | `data_structures.py`, `pricing_resolution_wrapper.py`, `propuesta_v6_template.md`, `no_defaults_validator.py`, `financial_evidence.py` | Varias fases |
+
+### Tests
+- 22 tests nuevos en `test_evidence_tier.py` (3 clases: TestDetermineEvidenceTier, TestEvidenceTierIntegration, TestEvidenceTierConsistencyGate)
+- 5 suites pre-existentes validadas sin regresiones (NP3)
+- Total: 3,180 tests, 0 regresiones introducidas por B_PLUS
+
+### Deuda Técnica Documentada (NO implementada)
+- **H10**: Unificar 3 sistemas de `precision_tier` (enum, string, validator) — requiere plan independiente
+- **H12**: Crear service account Google Cloud — acción manual del usuario en Google Cloud Console
 
 ## [4.67.0] — 2026-07-29
 
@@ -796,23 +878,23 @@ Hacer visible el warning de WhatsApp conflict con phrasing de impacto de negocio
 ## [4.50.0] - AssessmentBuilder: Assessment Dict Tipado — 2026-05-30
 
 ### Objetivo
-Centralizar la construcción del assessment dict en una clase tipada (`AssessmentBuilder`) 
-con esquema validable, eliminar ~120 líneas de extractores multi-path redundantes, 
+Centralizar la construcción del assessment dict en una clase tipada (`AssessmentBuilder`)
+con esquema validable, eliminar ~120 líneas de extractores multi-path redundantes,
 y eliminar campos zombie/fantasma acumulados por fases anteriores.
 
 ### Cambios Implementados
-- Creado `modules/assessment_builder.py` con `AssessmentPayload` dataclass (28 campos tipados) 
+- Creado `modules/assessment_builder.py` con `AssessmentPayload` dataclass (28 campos tipados)
   y `AssessmentBuilder` con API fluida (9 métodos `.with_*()` + `.build()`)
 - Migrado `main.py:2663-2754` (~87 líneas en 3 etapas) al builder (~15 líneas)
 - Simplificados 5 extractores multi-path en `publication_gates.py` (~129 → ~30 líneas)
 - Eliminados campos zombie: `quality_gate_issues/blockers/warnings` (locals().get(), 0 consumers)
-- Eliminados campos dead: `coherence_checks/errors/warnings` (0 consumidores), 
-  `critical_issues_detected` (duplicado tautológico de `critical_issues`), 
+- Eliminados campos dead: `coherence_checks/errors/warnings` (0 consumidores),
+  `critical_issues_detected` (duplicado tautológico de `critical_issues`),
   `metrics` dict (0 consumidores — solo duplicaba coherence_score),
   `coherence_report` del assessment dict (0 consumidores post-simplificación),
   `consistency_report` inyección en assessment dict (variable sí usada en summary JSON)
 - Simplificado `hotel_url or url` fallback en gate L836 (builder garantiza el campo)
-- Agregados al schema: `proposal_services`, `hotel_url`, `site_presence_report` 
+- Agregados al schema: `proposal_services`, `hotel_url`, `site_presence_report`
   (antes buscados por gates pero nunca inyectados — defaults salvaban)
 - Evitada duplicación de `SitePresenceChecker` (se ejecutaba 2 veces)
 
@@ -3741,7 +3823,7 @@ Completar FASE-5: Validación de coherencia y preparación para publicación.
 
 ### ✅ Completado
 
-**Fase 1-5**: 
+**Fase 1-5**:
 - Coherence score: 0.64 → 0.91 (umbral: 0.8) ✅
 - Validaciones rápidas: 4/4 passed
 - Regression tests: 52/52 passed
@@ -4207,7 +4289,7 @@ quality gates de pre-publicación, y dashboard de observabilidad. Preparado para
 
 ### 🎉 Release - Integración Completa y Flujo v4complete Funcional
 
-Esta release corrige bugs críticos y completa la integración de todas las fases técnicas (0-4), 
+Esta release corrige bugs críticos y completa la integración de todas las fases técnicas (0-4),
 habilitando la ejecución completa de v4complete con generación de todos los outputs.
 
 ### 🐛 Correcciones de Bugs
