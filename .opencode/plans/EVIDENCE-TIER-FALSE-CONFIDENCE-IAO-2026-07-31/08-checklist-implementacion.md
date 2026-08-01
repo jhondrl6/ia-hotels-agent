@@ -90,14 +90,14 @@
 - [x] Verificacion: Control hotel_test_001: evidence_tier = "B" (sin regresion: no B+ ni A), disclaimer honesto
 - [x] Verificacion: 20/20 hallazgos resueltos (ver matriz en 09-analisis-post-implementacion.md)
 
-## FASE-RELEASE — v4.68.0 + Docs Cascade ⬜ PENDIENTE
+## FASE-RELEASE — v4.68.0 + Docs Cascade ✅ COMPLETADA (2026-07-31)
 
-- [ ] **T1**: VERSION.yaml → 4.68.0
-- [ ] **T2**: CHANGELOG consolidado (incluir hallazgos NP1-NP8)
-- [ ] **T3**: AGENTS.md + GUIA_TECNICA.md + README.md
-- [ ] **T4**: Pre-commit + sync_versions + log_phase + tag v4.68.0
-- [ ] Verificacion: Tag apunta al commit correcto
-- [ ] Verificacion: README counts actualizados
+- [x] **T1**: VERSION.yaml → 4.68.0
+- [x] **T2**: CHANGELOG consolidado (incluye 20 hallazgos: 12 originales H1-H12 + 8 NP1-NP8)
+- [x] **T3**: AGENTS.md + GUIA_TECNICA.md (nueva seccion v4.68.0) + README.md (counts: 3,180 tests, 205 modulos, 10 gates)
+- [x] **T4**: Pre-commit + sync_versions + log_phase + tag v4.68.0
+- [x] Verificacion: Tag v4.68.0 apunta al commit 25e7be3
+- [x] Verificacion: Push exitoso (master + tag v4.68.0)
 
 ---
 
