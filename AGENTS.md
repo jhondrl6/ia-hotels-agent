@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.68.0 — Evidence Tier Honesty: B_PLUS + GA4/GSC gate + proposal truthfulness**
+> **v4.68.0 -- Evidence Tier Honesty - B_PLUS + GA4/GSC gate + proposal truthfulness COMPLETADO**
 
 ---
 
