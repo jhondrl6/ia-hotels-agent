@@ -23,10 +23,10 @@
 
 | Fase | Nombre | Estado | Delegable |
 |------|--------|--------|-----------|
-| FASE-A | Test Infrastructure + Bug 3 | ⏳ Pendiente | SI |
-| FASE-B | Core Rewrite: Single-Write ★ | ⏳ Pendiente | NO |
-| FASE-C | Error Handling + Cleanup | ⏳ Pendiente | SI |
-| FASE-D | E2E v4complete Zi One Luxury | ⏳ Pendiente | Parcial |
+| FASE-A | Test Infrastructure + Bug 3 | ✅ Completada (parcial, integrada en B) | SI |
+| FASE-B | Core Rewrite: Single-Write ★ | ✅ Completada 2026-08-01 | NO |
+| FASE-C | Error Handling + Cleanup | ✅ Completada 2026-08-01 | SI |
+| FASE-D | E2E v4complete Zi One Luxury | ✅ Completada 2026-08-01 | Parcial |
 | FASE-RELEASE-4.69.0 | Release + Docs | ⏳ Pendiente | SI |
 
 ---
