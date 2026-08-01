@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 17 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 16 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -24,12 +24,12 @@
 ## Estado del Proyecto (v4.68.0 -- Evidence Tier Honesty - B_PLUS + GA4/GSC gate + proposal truthfulness)
 
 - **3,180 test functions** — suite completa, 0 regresiones
-- **205 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **10 directorios de test**
+- **205 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **56 directorios de test**
 - **9 config YAML** con schema validado
-- **17 agent skills** en `.agents/workflows/`
-- **10 publication gates** — blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, evidence_tier_consistency; advisory: content_quality, asset_confidence, proposal_asset_alignment
+- **16 agent skills** en `.agents/workflows/`
+- **11 publication gates** — blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop; advisory: content_quality, asset_confidence, proposal_asset_alignment
 - **Coherence Score >= 0.8** requerido para publicacion
-- **34 assets** en catalogo (27 IMPLEMENTED + 4 DEPRECATED + 3 MANUAL_ONLY)
+- **28 assets** en catalogo (24 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY + 1 MISSING)
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
@@ -115,6 +115,7 @@ Output: 01_DIAGNOSTICO_Y_OPORTUNIDAD.md (siempre)
 | `v4complete` | Activo | **Flujo completo con controles de coherencia** | Diagnostico + Propuesta condicional + Assets |
 | `v4audit` | Activo | Auditoria tecnica rapida con APIs | JSON con validacion cruzada |
 | `hook-pdf` | Activo | **PDF gancho de 2 paginas** desde output v4complete | PDF A4 con cifra fuga, brechas, precios |
+| `validate-guarantee` | Activo | Valida garantia Dia 55 contra datos reales | Reporte de estado de garantia |
 | `execute` | Activo | Implementacion de paquete usando analisis previo | Assets segun paquete seleccionado |
 | `stage` | Activo | Ejecuta etapas individuales (geo, ia, seo, outputs) | Resultado de fase especifica |
 | `deploy` | Activo | Despliegue remoto via FTP/WP-API | Archivos subidos al servidor |
@@ -208,6 +209,9 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 | `config/fallbacks.yaml` | Fallbacks de scores con flags estimated |
 | `config/commercial.yaml` | ROI cap, break_even, descuentos, garantias, planes |
 | `config/regional_benchmarks.yaml` | Pain narratives (14) + umbrales de scoring multi-region |
+| `config/certificates.yaml` | Certificados SSL/TLS y configuracion de seguridad |
+| `config/provider_registry.yaml` | Registro de providers LLM (modelos, endpoints, fallbacks) |
+| `config/settings.yaml` | Configuracion general de la aplicacion |
 
 **Backwards compatible:** Sin YAML, el sistema funciona identicamente con defaults documentados. Con YAML, todos los valores son configurables.
 
@@ -235,12 +239,12 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **3,158 test functions** — suite completa, 0 regresiones
+- **3,180 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.13.0 (1 fase/sesion, max 60 iteraciones)
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
-- **9 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics (blocking); content_quality, asset_confidence, proposal_asset_alignment (advisory)
+- **11 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop (blocking); content_quality, asset_confidence, proposal_asset_alignment (advisory)
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
 
 ---
@@ -268,16 +272,30 @@ iah-cli/
     delivery_readme_template.md #   Template README de entrega
     diagnostico_ejecutivo.md    #   Template diagnostico ejecutivo
     local_content/              #   Templates de contenido local
-  modules/                    # 205 modulos Python (~74K lineas)
+  modules/                    # 205 modulos Python (~74K lineas) en 23 directorios
     asset_generation/         #   Generacion condicional de assets
     commercial_documents/     #   Diagnostico + Propuesta v4 + PDF gancho (hook-pdf)
     financial_engine/         #   Pricing, scenarios, loss projector
     orchestration_v4/         #   Two-phase flow, auditor
-    quality/                  #   Coherence validator, gates
+    quality/                  #   Coherence validator, asset semantics
+    quality_gates/            #   Publication gates (11), commercial gate, ethics
     scrapers/                 #   Places API, Google Travel, SerpAPI
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
     deployer/                 #   FTP/WP-API deployment
+    analyzers/                #   Analisis de datos y metricas
+    auditors/                 #   Auditoria de componentes
+    data_validation/          #   Validacion cruzada de fuentes
+    delivery/                 #   Empaquetado y entrega de assets
+    generators/               #   Generadores de contenido
+    geo_enrichment/           #   Enriquecimiento geografico (GEO)
+    monitoring/               #   Monitoreo de pipelines
+    onboarding/               #   Captura de datos operativos del hotel
+    orchestration/            #   Orquestacion de flujos
+    postprocessors/           #   Post-procesamiento de outputs
+    providers/                #   Providers LLM y API
+    utils/                    #   Utilidades compartidas
+    validation/               #   Validacion de outputs
   tests/                      # ~66K lineas de test (56 directorios)
     config/                   #   61 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
@@ -287,7 +305,7 @@ iah-cli/
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
     run_all_validations.py    #   Suite de validaciones
-  .agents/workflows/          # 17 agent skills
+  .agents/workflows/          # 16 agent skills
   .opencode/plans/            # Planes de fases (phased execution)
   evidence/                   # Evidencia de fases ejecutadas
 ```
