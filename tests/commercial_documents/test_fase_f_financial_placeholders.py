@@ -125,11 +125,12 @@ class TestFinancialPlaceholders:
         result = gen._build_financial_placeholders(scenarios)
         table = result['scenario_table_rows']
 
+        valid_names = ('Mínimo garantizable', 'Más probable', 'Máximo alcanzable')
         for row in table.strip().split('\n'):
             parts = [p.strip() for p in row.split('|') if p.strip()]
             assert len(parts) == 3, f"Row should have 3 columns: {row}"
             # Column 0: scenario name
-            assert parts[0] in ('Conservador', 'Realista', 'Optimista')
+            assert parts[0] in valid_names, f"Unexpected scenario name: {parts[0]}"
             # Column 1: formatted COP
             assert 'COP/mes' in parts[1]
             # Column 2: probability

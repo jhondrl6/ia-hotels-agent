@@ -28,15 +28,32 @@ def create_mock_audit_result():
     gbp.geo_score = 80
     gbp.reviews = 50
     gbp.confidence = "verified"
+    gbp.rating = 4.5
     
     performance = MagicMock(spec=PerformanceData)
     performance.mobile_score = 75
     performance.has_field_data = True
+    performance.lcp = None
+    performance.cls = None
     
     validation = MagicMock(spec=CrossValidationResult)
+    validation.whatsapp_html_detected = False
+
+    metadata = MagicMock()
+    metadata.has_issues = False
     
-    return MagicMock(spec=V4AuditResult, schema=schema, gbp=gbp, 
-                    performance=performance, validation=validation)
+    audit = MagicMock(spec=V4AuditResult)
+    audit.url = "https://hotel-test.com"
+    audit.schema = schema
+    audit.gbp = gbp
+    audit.performance = performance
+    audit.validation = validation
+    audit.metadata = metadata
+    audit.ai_crawlers = None
+    audit.ia_readiness = None
+    audit.citability = None
+    audit.seo_elements = None
+    return audit
 
 
 def create_validation_summary(fields):

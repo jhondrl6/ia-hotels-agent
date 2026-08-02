@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.67.0 | **Codename**: Onboarding Injection Fix — URL-based canonical matching + observations.json fallback
-> **Release date**: 2026-07-29 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.69.0 | **Codename**: Delivery ZIP Single-Write Architecture
+> **Release date**: 2026-08-01 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-07-30 | v4.67.0 Onboarding Injection Fix — URL-based canonical matching + observations.json fallback*
+*Auto-generado: 2026-08-01 | v4.69.0 Delivery ZIP Single-Write Architecture*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

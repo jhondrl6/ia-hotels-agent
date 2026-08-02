@@ -411,7 +411,7 @@ class TestManifestZipConsistency:
                 f"total_files={manifest['total_files']}, zip entries={len(z.namelist())}"
 
     def test_manifest_total_size_matches_zip(self, sample_hotel_output):
-        """total_size_bytes ≈ sum(tamaños reales)."""
+        """total_size_bytes == sum(tamaños reales) (exactitud, sin tolerancia)."""
         packager = DeliveryPackager(
             base_output_dir=str(sample_hotel_output["output"]),
             deliveries_dir=str(sample_hotel_output["deliveries"])
@@ -424,8 +424,8 @@ class TestManifestZipConsistency:
         with zipfile.ZipFile(zip_path, 'r') as z:
             manifest = json.loads(z.read("MANIFEST.json"))
             actual_total = sum(len(z.read(n)) for n in z.namelist())
-            # Margen de 5% para diferencias de compresión/metadata/self-referencing correction
-            assert abs(manifest["total_size_bytes"] - actual_total) <= actual_total * 0.05, \
+            # SINGLE-WRITE: exactitud total, 0 tolerancia
+            assert manifest["total_size_bytes"] == actual_total, \
                 f"manifest={manifest['total_size_bytes']}, actual={actual_total}"
 
     def test_readme_size_not_zero(self, sample_hotel_output):
@@ -1068,3 +1068,122 @@ class TestP06P07ResidualFixes:
         real_violations = [v for v in violations if not v.strip().startswith('"""')]
         assert len(real_violations) == 0, \
             f"P-07: packager still uses string comparison for states:\\n" + "\\n".join(real_violations)
+
+
+# ═══════════════════════════════════════════════════════════════════
+# NF-1: Test FASE-C path (DeliveryContext con asset_generation_report)
+# ═══════════════════════════════════════════════════════════════════
+
+class TestDeliveryContextPath:
+    """NF-1: Cobertura del path de producción real (con asset_generation_report.json)."""
+
+    @pytest.fixture
+    def hotel_with_report(self, temp_dirs):
+        """Hotel output con asset_generation_report.json (trigger DeliveryContext)."""
+        hotel_dir = temp_dirs["output"] / "hotel_ctx"
+        hotel_dir.mkdir()
+        (hotel_dir / "schema.json").write_text('{"@type": "Hotel"}' * 10, encoding='utf-8')
+        (hotel_dir / "geo_playbook.md").write_text("# GEO\n" + "content " * 50, encoding='utf-8')
+        (hotel_dir / "boton_whatsapp.html").write_text("<button>WA</button>" * 5, encoding='utf-8')
+        sub = hotel_dir / "v4_audit"
+        sub.mkdir()
+        report = {
+            "generated_assets": [
+                {"asset_type": "whatsapp_button", "confidence_score": 0.95,
+                 "can_use": True, "preflight_status": "PASSED", "filename": "boton_whatsapp.html"},
+            ],
+            "skipped_assets": [
+                {"asset_type": "org_schema", "presence_status": "exists",
+                 "site_verified": True, "reason": "2026-07-01"},
+            ],
+            "failed_assets": []
+        }
+        (sub / "asset_generation_report.json").write_text(
+            json.dumps(report, indent=2), encoding='utf-8'
+        )
+        return temp_dirs
+
+    def test_delivery_context_zip_materializes(self, hotel_with_report):
+        """ZIP se materializa correctamente con DeliveryContext activo."""
+        packager = DeliveryPackager(
+            base_output_dir=str(hotel_with_report["output"]),
+            deliveries_dir=str(hotel_with_report["deliveries"])
+        )
+        zip_path = packager.package(
+            hotel_id="hotel_ctx",
+            output_dir=str(hotel_with_report["output"] / "hotel_ctx")
+        )
+        assert Path(zip_path).exists(), "ZIP should materialize"
+        assert zip_path.endswith(".zip")
+
+    def test_delivery_context_exact_sizes(self, hotel_with_report):
+        """Tamaños per-file y total son EXACTOS (0 tolerancia) con DeliveryContext."""
+        packager = DeliveryPackager(
+            base_output_dir=str(hotel_with_report["output"]),
+            deliveries_dir=str(hotel_with_report["deliveries"])
+        )
+        zip_path = packager.package(
+            hotel_id="hotel_ctx",
+            output_dir=str(hotel_with_report["output"] / "hotel_ctx")
+        )
+        with zipfile.ZipFile(zip_path, 'r') as z:
+            manifest = json.loads(z.read("MANIFEST.json"))
+            # Per-file exact match
+            for entry in manifest["files"]:
+                actual = len(z.read(entry["name"]))
+                assert actual == entry["size_bytes"], \
+                    f"{entry['name']}: manifest={entry['size_bytes']}, actual={actual}"
+            # Total exact match
+            actual_total = sum(len(z.read(n)) for n in z.namelist())
+            assert manifest["total_size_bytes"] == actual_total, \
+                f"total: manifest={manifest['total_size_bytes']}, actual={actual_total}"
+
+    def test_delivery_context_no_orphan_files(self, hotel_with_report):
+        """No quedan archivos huérfanos en deliveries_dir."""
+        packager = DeliveryPackager(
+            base_output_dir=str(hotel_with_report["output"]),
+            deliveries_dir=str(hotel_with_report["deliveries"])
+        )
+        packager.package(
+            hotel_id="hotel_ctx",
+            output_dir=str(hotel_with_report["output"] / "hotel_ctx")
+        )
+        orphans = [
+            f.name for f in hotel_with_report["deliveries"].iterdir()
+            if f.is_file() and not f.name.endswith(".zip")
+        ]
+        assert orphans == [], f"Orphan files found: {orphans}"
+
+    def test_delivery_context_readme_no_placeholders(self, hotel_with_report):
+        """README dentro del ZIP no tiene placeholders sin resolver."""
+        packager = DeliveryPackager(
+            base_output_dir=str(hotel_with_report["output"]),
+            deliveries_dir=str(hotel_with_report["deliveries"])
+        )
+        zip_path = packager.package(
+            hotel_id="hotel_ctx",
+            output_dir=str(hotel_with_report["output"] / "hotel_ctx")
+        )
+        with zipfile.ZipFile(zip_path, 'r') as z:
+            readme = z.read("README_DELIVERY.md").decode("utf-8")
+        assert "{{" not in readme, f"Unresolved placeholders in README"
+
+    def test_delivery_context_manifest_self_size_exact(self, hotel_with_report):
+        """MANIFEST.json declara su propio tamaño exacto (self-reference resuelta)."""
+        packager = DeliveryPackager(
+            base_output_dir=str(hotel_with_report["output"]),
+            deliveries_dir=str(hotel_with_report["deliveries"])
+        )
+        zip_path = packager.package(
+            hotel_id="hotel_ctx",
+            output_dir=str(hotel_with_report["output"] / "hotel_ctx")
+        )
+        with zipfile.ZipFile(zip_path, 'r') as z:
+            manifest = json.loads(z.read("MANIFEST.json"))
+            manifest_actual = len(z.read("MANIFEST.json"))
+            self_entry = next(
+                (f for f in manifest["files"] if f["name"] == "MANIFEST.json"), None
+            )
+            assert self_entry is not None, "MANIFEST.json not in its own file list"
+            assert self_entry["size_bytes"] == manifest_actual, \
+                f"Self-size: declared={self_entry['size_bytes']}, actual={manifest_actual}"

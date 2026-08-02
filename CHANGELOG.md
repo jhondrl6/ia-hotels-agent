@@ -1,5 +1,40 @@
 # Changelog
 
+## [4.69.0] — 2026-08-01 — Delivery ZIP Single-Write Architecture
+
+### Objetivo
+
+Corregir el fallo critico de delivery packaging que impedia materializar el ZIP de entrega al cliente. Rewrite arquitectonico single-write con fixed-point iteration.
+
+### Cambios Implementados
+
+- `modules/delivery/delivery_packager.py` - Rewrite single-write: elimina 3-pass measure-then-mutate. Fixed-point iteration para self-reference del MANIFEST.
+- `main.py` - NF-3: severidad ERROR en fallo de delivery. NF-6: params FASE-5 conectados.
+- `tests/delivery/test_delivery_contract.py` - Bug 3: tolerancia 5% eliminada, validacion exacta por archivo.
+- `tests/delivery/test_delivery_packager.py` - NF-1: fixture FASE-C, dual mode coverage (legacy + produccion).
+
+### Archivos Nuevos
+
+| Archivo | Descripcion |
+|---------|-------------|
+| `evidence/FASE-D-E2E/` | Evidencia de verificacion E2E con Zi One Luxury |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/delivery/delivery_packager.py` | Single-write architecture, cleanup NF-4, datetime NF-5, logging NF-2 |
+| `main.py` | ERROR severity NF-3, FASE-5 params NF-6 |
+| `tests/delivery/test_delivery_contract.py` | Exact validation, per-file size test |
+| `tests/delivery/test_delivery_packager.py` | FASE-C fixture, dual mode, NF-2/NF-4/NF-5 tests |
+| `templates/delivery_readme_template.md` | Sin cambios (placeholders conservados para otros consumers) |
+
+### Tests
+
+- 6+ tests nuevos en delivery suite
+- 3,160+ tests totales, 0 regresiones
+- E2E verificado: v4complete Zi One Luxury produce ZIP valido
+
 ## [4.68.0] — 2026-07-31 — Evidence Tier Honesty: B_PLUS + GA4/GSC Gate + Proposal Truthfulness
 
 ### Objetivo

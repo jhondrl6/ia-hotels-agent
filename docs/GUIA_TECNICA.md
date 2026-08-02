@@ -1,7 +1,34 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.68.0 (Evidence Tier Honesty - B_PLUS + GA4/GSC gate + proposal truthfulness)
-**Última actualización:** 2026-07-31
+**Versión:** v4.69.0 (Delivery ZIP Single-Write Architecture)
+**Última actualización:** 2026-08-01
+
+---
+
+### Notas de Cambios v4.69.0 — Delivery ZIP Single-Write Architecture
+
+**Fecha:** 2026-08-01
+
+**Resumen**: Corrección del fallo crítico de delivery packaging. El pipeline v4complete generaba
+contenido correcto pero NUNCA materializaba el ZIP de entrega. Causa raíz: arquitectura 3-pass
+measure-then-mutate con README post-medición (-18 bytes) y self-reference inestable del MANIFEST.
+
+**Módulos afectados**: `modules/delivery/`, `main.py`
+
+**Problema**: Delivery ZIP nunca se materializaba: Bug 1 (README post-medición -18 bytes), Bug 2 (self-reference inestable), Bug 3 (tests con 5% tolerancia)
+
+**Solución**: Single-write architecture: calcular en memoria, escribir UNA vez, fixed-point iteration para MANIFEST self-reference
+
+**Backwards compatibility**: API pública de `package()` sin cambios. Modo legacy preservado.
+
+**Cambios principales**:
+
+1. **Single-write architecture** — Elimina 3-pass measure-then-mutate. Contenido calculado en memoria y escrito una sola vez.
+2. **Fixed-point iteration** — MANIFEST self-reference resuelto con iteración a punto fijo (converge en ≤3 iteraciones).
+3. **Error handling NF-3** — Severidad ERROR en fallo de delivery (antes WARNING silencioso).
+4. **Cleanup NF-4** — Archivos temporales eliminados post-packaging.
+5. **Datetime NF-5** — Timestamps ISO 8601 en MANIFEST.
+6. **Tests exactos** — Tolerancia 5% eliminada, validación exacta por archivo.
 
 ---
 

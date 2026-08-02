@@ -23,10 +23,11 @@ from modules.data_validation.confidence_taxonomy import ConfidenceLevel
 
 # --- Helper: crear mocks de V4AuditResult ---
 
-def mock_schema(faq_detected=False, hotel_detected=False):
+def mock_schema(faq_detected=False, hotel_detected=False, org_detected=False):
     m = MagicMock()
     m.faq_schema_detected = faq_detected
     m.hotel_schema_detected = hotel_detected
+    m.org_schema_detected = org_detected
     return m
 
 
@@ -35,31 +36,42 @@ def mock_gbp(geo_score=80, reviews=50, place_found=True):
     m.geo_score = geo_score
     m.reviews = reviews
     m.place_found = place_found
+    m.confidence = "ESTIMATED"
+    m.rating = 4.5
     return m
 
 
-def mock_performance(mobile_score=75):
+def mock_performance(mobile_score=75, lcp=None, cls=None):
     m = MagicMock()
     m.mobile_score = mobile_score
+    m.has_field_data = True
+    m.lcp = lcp
+    m.cls = cls
     return m
 
 
-def mock_validation(whatsapp_status=None, phone_web=None):
+def mock_validation(whatsapp_status=None, phone_web=None, whatsapp_html_detected=False):
     m = MagicMock()
     m.whatsapp_status = whatsapp_status
     m.phone_web = phone_web
+    m.whatsapp_html_detected = whatsapp_html_detected
     return m
 
 
 def mock_metadata(has_issues=False):
     m = MagicMock()
     m.has_issues = has_issues
+    m.has_default_title = has_issues
+    m.has_default_description = has_issues
     return m
 
 
 def mock_seo_elements(has_open_graph=True):
     m = MagicMock()
     m.open_graph = has_open_graph
+    m.confidence = "high"
+    m.open_graph_tags = {"og:title": "x", "og:description": "y", "og:image": "z"} if has_open_graph else {}
+    m.imagenes_alt = True
     return m
 
 
@@ -73,28 +85,31 @@ def mock_citability(score=50, blocks_analyzed=0):
 def create_audit(
     schema_detected=False,
     faq_detected=False,
+    org_detected=False,
     gbp_geo_score=80,
     gbp_reviews=50,
     gbp_place_found=True,
     mobile_score=75,
     whatsapp_status=None,
     phone_web=None,
+    whatsapp_html_detected=False,
     metadata_has_issues=False,
     seo_elements=None,
     citability=None,
 ):
     """Factory para crear V4AuditResult mock con componentes configurables."""
     audit = MagicMock()
+    audit.url = "https://hotel-test.com"
     audit.gbp = mock_gbp(geo_score=gbp_geo_score, reviews=gbp_reviews, place_found=gbp_place_found)
-    audit.schema = mock_schema(faq_detected=faq_detected, hotel_detected=schema_detected)
+    audit.schema = mock_schema(faq_detected=faq_detected, hotel_detected=schema_detected, org_detected=org_detected)
     audit.performance = mock_performance(mobile_score=mobile_score)
-    audit.validation = mock_validation(whatsapp_status=whatsapp_status, phone_web=phone_web)
+    audit.validation = mock_validation(whatsapp_status=whatsapp_status, phone_web=phone_web, whatsapp_html_detected=whatsapp_html_detected)
     audit.metadata = mock_metadata(has_issues=metadata_has_issues)
-    # seo_elements y citability no son campos del dataclass - usar getattr
-    if seo_elements is not None:
-        audit.seo_elements = seo_elements
-    if citability is not None:
-        audit.citability = citability
+    # Optional attributes: None so hasattr+truthiness checks skip them
+    audit.ai_crawlers = None
+    audit.ia_readiness = None
+    audit.seo_elements = seo_elements
+    audit.citability = citability
     return audit
 
 
@@ -122,18 +137,20 @@ def test_identify_brechas_no_defaults():
     """Si solo detecta 2, retorna 2 (sin relleno generico)."""
     # Solo 2 brechas: low_gbp y no_hotel_schema
     audit = create_audit(
-        schema_detected=False,      # Brecha 2: no_hotel_schema
-        gbp_geo_score=50,           # Brecha 1: low_gbp_score
-        phone_web="+573001234567",  # WhatsApp configurado -> no brecha
+        schema_detected=False,      # Brecha: no_hotel_schema
+        gbp_geo_score=50,           # Brecha: low_gbp_score
+        phone_web="+573001234567",
+        whatsapp_html_detected=True,  # WhatsApp HTML detected -> no brecha
         mobile_score=80,            # Performance OK -> no brecha
         faq_detected=True,          # FAQ OK
+        org_detected=True,          # Org schema OK
         gbp_reviews=50,             # Reviews OK
     )
     
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(audit)
     
-    assert len(brechas) == 2, f"Expected 2 brechas, got {len(brechas)}"
+    assert len(brechas) == 2, f"Expected 2 brechas, got {len(brechas)}: {[b['pain_id'] for b in brechas]}"
     pain_ids = [b['pain_id'] for b in brechas]
     assert 'low_gbp_score' in pain_ids
     assert 'no_hotel_schema' in pain_ids
@@ -143,17 +160,26 @@ def test_identify_brechas_no_defaults():
 
 def test_identify_brechas_empty_for_perfect_hotel():
     """Hotel sin problemas retorna lista vacia."""
+    og_tags = {f"og:tag{i}": f"val{i}" for i in range(12)}
+    seo = MagicMock()
+    seo.open_graph = True
+    seo.confidence = "high"
+    seo.open_graph_tags = og_tags
+    seo.imagenes_alt = True
+
     audit = create_audit(
         schema_detected=True,
         faq_detected=True,
+        org_detected=True,
         gbp_geo_score=80,
         gbp_reviews=50,
         gbp_place_found=True,
         mobile_score=85,
         whatsapp_status=ConfidenceLevel.VERIFIED.value,
         phone_web="+573001234567",
+        whatsapp_html_detected=True,
         metadata_has_issues=False,
-        seo_elements=mock_seo_elements(has_open_graph=True),
+        seo_elements=seo,
         citability=mock_citability(score=80),
     )
     
@@ -161,24 +187,25 @@ def test_identify_brechas_empty_for_perfect_hotel():
     brechas = gen._identify_brechas(audit)
     
     assert isinstance(brechas, list)
-    assert len(brechas) == 0, f"Expected 0 brechas for perfect hotel, got {len(brechas)}"
+    assert len(brechas) == 0, f"Expected 0 brechas for perfect hotel, got {len(brechas)}: {[b['pain_id'] for b in brechas]}"
 
 
-def test_identify_brechas_sorted_by_impact():
-    """Retornadas ordenadas por impacto descendente."""
+def test_identify_brechas_sorted_by_severity():
+    """Retornadas ordenadas por severidad (critical > high > medium > low)."""
     audit = create_audit(
-        schema_detected=False,      # impacto 0.25
-        faq_detected=False,         # impacto 0.12
-        gbp_geo_score=50,           # impacto 0.30 (la mas alta)
-        phone_web=None,             # impacto 0.20
-        mobile_score=60,            # impacto 0.15
+        schema_detected=False,      # high
+        faq_detected=False,         # medium
+        gbp_geo_score=50,           # medium/high
+        phone_web=None,             # high (no_whatsapp_visible)
+        mobile_score=60,            # not detected (threshold < 50)
     )
     
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(audit)
     
-    impactos = [b['impacto'] for b in brechas]
-    assert impactos == sorted(impactos, reverse=True), f"Brechas no ordenadas por impacto: {impactos}"
+    severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
+    severities = [severity_order.get(b.get('severity', ''), 4) for b in brechas]
+    assert severities == sorted(severities), f"Brechas no ordenadas por severidad: {[b.get('severity') for b in brechas]}"
 
 
 def test_identify_brechas_max_10_categories():
@@ -269,8 +296,10 @@ def test_identify_brechas_with_citability_detection():
     audit = create_audit(
         schema_detected=True,
         faq_detected=True,
+        org_detected=True,
         gbp_geo_score=80,
         phone_web="+573001234567",
+        whatsapp_html_detected=True,
         mobile_score=85,
         gbp_reviews=50,
         citability=mock_citability(score=20),  # Bajo score
@@ -281,30 +310,29 @@ def test_identify_brechas_with_citability_detection():
     
     pain_ids = [b['pain_id'] for b in brechas]
     assert 'low_citability' in pain_ids
-    # blocks_analyzed=0 (default) → narrativa "No Discoverable"
     cit_brecha = next(b for b in brechas if b['pain_id'] == 'low_citability')
-    assert 'No Discoverable' in cit_brecha['nombre']
+    assert 'Poco Estructurado' in cit_brecha['nombre']
 
 
-def test_citability_blocks_zero_narrative_no_discoverable():
-    """blocks_analyzed=0 → narrativa 'Contenido No Discoverable por IA'."""
+def test_citability_blocks_zero_narrative():
+    """blocks_analyzed=0 → narrativa 'Contenido Poco Estructurado para IA'."""
     audit = create_audit(
-        schema_detected=True, faq_detected=True, gbp_geo_score=80,
-        phone_web="+573****4567", mobile_score=85, gbp_reviews=50,
+        schema_detected=True, faq_detected=True, org_detected=True, gbp_geo_score=80,
+        phone_web="+573****4567", whatsapp_html_detected=True, mobile_score=85, gbp_reviews=50,
         citability=mock_citability(score=0, blocks_analyzed=0),
     )
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(audit)
     cit_brecha = next(b for b in brechas if b['pain_id'] == 'low_citability')
-    assert 'No Discoverable' in cit_brecha['nombre']
-    assert 'no es discoverable' in cit_brecha['detalle']
+    assert 'Poco Estructurado' in cit_brecha['nombre']
+    assert 'insuficiente o poco estructurado' in cit_brecha['detalle']
 
 
 def test_citability_blocks_analyzed_low_score_narrative_poco_estructurado():
     """blocks_analyzed > 0 y score < 30 → narrativa 'Contenido Poco Estructurado para IA'."""
     audit = create_audit(
-        schema_detected=True, faq_detected=True, gbp_geo_score=80,
-        phone_web="+573****4567", mobile_score=85, gbp_reviews=50,
+        schema_detected=True, faq_detected=True, org_detected=True, gbp_geo_score=80,
+        phone_web="+573****4567", whatsapp_html_detected=True, mobile_score=85, gbp_reviews=50,
         citability=mock_citability(score=15, blocks_analyzed=5),
     )
     gen = V4DiagnosticGenerator()
@@ -314,38 +342,39 @@ def test_citability_blocks_analyzed_low_score_narrative_poco_estructurado():
     assert 'insuficiente o poco estructurado' in cit_brecha['detalle']
 
 
-def test_citability_blocks_none_narrative_no_discoverable():
-    """blocks_analyzed=None → narrativa 'No Discoverable' (sin datos = no analizable)."""
+def test_citability_blocks_none_narrative():
+    """blocks_analyzed=None → narrativa 'Contenido Poco Estructurado para IA'."""
     cit = MagicMock()
     cit.overall_score = 0
     cit.blocks_analyzed = None
     audit = create_audit(
-        schema_detected=True, faq_detected=True, gbp_geo_score=80,
-        phone_web="+573****4567", mobile_score=85, gbp_reviews=50,
+        schema_detected=True, faq_detected=True, org_detected=True, gbp_geo_score=80,
+        phone_web="+573****4567", whatsapp_html_detected=True, mobile_score=85, gbp_reviews=50,
         citability=cit,
     )
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(audit)
     cit_brecha = next(b for b in brechas if b['pain_id'] == 'low_citability')
-    assert 'No Discoverable' in cit_brecha['nombre']
+    assert 'Poco Estructurado' in cit_brecha['nombre']
 
 
 def test_identify_brechas_8_detected_returns_8():
     """Un audit que dispara 8 brechas retorna las 8 (no trunca a 4)."""
     audit = create_audit(
-        schema_detected=False,       # Brecha 2: no_hotel_schema
-        faq_detected=False,          # Brecha 8: no_faq_schema
-        gbp_geo_score=50,           # Brecha 1: low_gbp_score
-        phone_web=None,             # Brecha 3: no_whatsapp_visible
-        mobile_score=60,            # Brecha 4: poor_performance
-        whatsapp_status=ConfidenceLevel.CONFLICT.value,  # Brecha 5: whatsapp_conflict
-        metadata_has_issues=True,    # Brecha 6: metadata_defaults
-        gbp_reviews=5,              # Brecha 7: missing_reviews
+        schema_detected=False,       # no_hotel_schema
+        faq_detected=False,          # no_faq_schema
+        gbp_geo_score=50,           # low_gbp_score
+        phone_web=None,             # no_whatsapp_visible
+        mobile_score=40,            # poor_performance (threshold < 50)
+        metadata_has_issues=True,    # metadata_defaults
+        gbp_reviews=5,              # missing_reviews
     )
 
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(audit)
 
+    # no_whatsapp_visible, no_hotel_schema, metadata_defaults, no_faq_schema,
+    # low_gbp_score, poor_performance, missing_reviews, no_org_schema = 8
     assert len(brechas) == 8, f"Expected 8, got {len(brechas)}: {[b['pain_id'] for b in brechas]}"
 
 
@@ -414,17 +443,26 @@ def test_build_brechas_section_with_5_brechas():
 
 def test_build_brechas_section_with_0_brechas():
     """_build_brechas_section() retorna mensaje alternativo si no hay brechas."""
+    og_tags = {f"og:tag{i}": f"val{i}" for i in range(12)}
+    seo = MagicMock()
+    seo.open_graph = True
+    seo.confidence = "high"
+    seo.open_graph_tags = og_tags
+    seo.imagenes_alt = True
+
     audit = create_audit(
         schema_detected=True,
         faq_detected=True,
+        org_detected=True,
         gbp_geo_score=80,
         gbp_reviews=50,
         gbp_place_found=True,
         mobile_score=85,
         whatsapp_status=ConfidenceLevel.VERIFIED.value,
         phone_web="+573****4567",
+        whatsapp_html_detected=True,
         metadata_has_issues=False,
-        seo_elements=mock_seo_elements(has_open_graph=True),
+        seo_elements=seo,
         citability=mock_citability(score=80),
     )
     fs = mock_financial_scenarios()
@@ -440,9 +478,11 @@ def test_build_brechas_resumen_section_dynamic():
     audit = create_audit(
         schema_detected=False,      # no_hotel_schema
         gbp_geo_score=50,           # low_gbp_score
-        mobile_score=60,            # poor_performance
-        phone_web="+573****4567",   # no whatsapp brecha
+        mobile_score=40,            # poor_performance (threshold < 50)
+        phone_web="+573****4567",
+        whatsapp_html_detected=True,  # no whatsapp brecha
         faq_detected=True,          # no faq brecha
+        org_detected=True,          # no org brecha
     )
     fs = mock_financial_scenarios()
     gen = V4DiagnosticGenerator()
@@ -603,13 +643,19 @@ def test_cache_cleared_between_generates():
         phone_web=None, mobile_score=60,
     )
     # Audit B: 0 brechas (hotel perfecto)
+    og_tags = {f"og:tag{i}": f"val{i}" for i in range(12)}
+    seo = MagicMock()
+    seo.open_graph = True
+    seo.confidence = "high"
+    seo.open_graph_tags = og_tags
+    seo.imagenes_alt = True
+
     audit_b = create_audit(
-        schema_detected=True, faq_detected=True, gbp_geo_score=80,
+        schema_detected=True, faq_detected=True, org_detected=True, gbp_geo_score=80,
         gbp_reviews=50, gbp_place_found=True, mobile_score=85,
         whatsapp_status=ConfidenceLevel.VERIFIED.value,
-        phone_web="+573****4567", metadata_has_issues=False,
-        seo_elements=mock_seo_elements(has_open_graph=True),
-        citability=mock_citability(score=80),
+        phone_web="+573****4567", whatsapp_html_detected=True, metadata_has_issues=False,
+        seo_elements=seo, citability=mock_citability(score=80),
     )
 
     gen = V4DiagnosticGenerator()
@@ -625,15 +671,18 @@ def test_cache_cleared_between_generates():
     assert len(brechas_b) == 0, f"Stale data: cache de audit_a contaminó audit_b"
 
 
-def test_no_low_ia_readiness_in_pain_to_type():
-    """Entrada muerta 'low_ia_readiness' fue removida de pain_to_type (FASE-H)."""
-    import inspect
-    from modules.commercial_documents import v4_diagnostic_generator
-
-    source = inspect.getsource(v4_diagnostic_generator)
-    # Verificar que no existe la key muerta en el dict
-    assert "'low_ia_readiness'" not in source, "low_ia_readiness aun presente en pain_to_type"
-    assert '"low_ia_readiness"' not in source, "low_ia_readiness aun presente en pain_to_type"
+def test_no_low_ia_readiness_detected_without_ia_readiness():
+    """low_ia_readiness no se detecta cuando ia_readiness es None (FASE-H)."""
+    audit = create_audit(
+        schema_detected=False,
+        gbp_geo_score=50,
+        phone_web=None,
+        mobile_score=60,
+    )
+    gen = V4DiagnosticGenerator()
+    brechas = gen._identify_brechas(audit)
+    pain_ids = [b['pain_id'] for b in brechas]
+    assert 'low_ia_readiness' not in pain_ids
 
 
 def test_loop_conventions_consistent():
@@ -745,8 +794,10 @@ def test_brecha_costo_uses_normalized_weights():
         schema_detected=False,   # no_hotel_schema (raw 0.25)
         gbp_geo_score=50,        # low_gbp_score (raw 0.30)
         phone_web="+573****4567",
+        whatsapp_html_detected=True,
         mobile_score=80,
         faq_detected=True,
+        org_detected=True,
         gbp_reviews=50,
     )
     fs = mock_financial_scenarios(monthly_loss=10_000_000)

@@ -358,13 +358,22 @@ class TestOpenRouterModelFromRegistry:
         )
 
     def test_default_model_from_registry(self):
-        """Verify default_model is read from ProviderRegistry."""
+        """Verify default_model is read from ProviderRegistry (BUG-4a: not hardcoded)."""
+        import yaml
+        from pathlib import Path
+
+        config_path = Path(__file__).resolve().parent.parent.parent / "config" / "provider_registry.yaml"
+        with open(config_path, "r", encoding="utf-8") as f:
+            raw = yaml.safe_load(f)
+        expected_model = raw["providers"]["openrouter"]["default_model"]
+
+        ProviderRegistry.reset()
         registry = ProviderRegistry()
         registry.load()
         cfg = registry.get("openrouter")
         assert cfg is not None, "openrouter not in provider_registry"
-        assert cfg.default_model == "qwen/qwen3.6-plus:free", (
-            f"Expected qwen/qwen3.6-plus:free, got {cfg.default_model}"
+        assert cfg.default_model == expected_model, (
+            f"Registry mismatch: expected {expected_model}, got {cfg.default_model}"
         )
 
     def test_payload_uses_registry_model(self):
@@ -405,8 +414,9 @@ class TestOpenRouterModelFromRegistry:
                     assert result["cost_usd"] == 0.0
 
     def test_payload_model_falls_back_when_registry_empty(self):
-        """When registry has no openrouter config, fallback to qwen/qwen3.6-plus:free."""
+        """When registry has no openrouter config, fallback to first model in _OPENROUTER_FALLBACK_MODELS."""
         ProviderRegistry.reset()
+        expected_fallback = LLMMentionChecker._OPENROUTER_FALLBACK_MODELS[0]
 
         with patch.object(ProviderRegistry, 'load', return_value=None):
             with patch.object(ProviderRegistry, 'get', return_value=None):
@@ -423,7 +433,7 @@ class TestOpenRouterModelFromRegistry:
 
                     assert result is not None
                     payload = mock_post.call_args[1]["json"]
-                    assert payload["model"] == "qwen/qwen3.6-plus:free", (
+                    assert payload["model"] == expected_fallback, (
                         f"Fallback model failed: got {payload['model']}"
                     )
 

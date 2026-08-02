@@ -1,8 +1,8 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.68.0"
-codename: "Evidence Tier Honesty - B_PLUS + GA4/GSC gate + proposal truthfulness"
-release_date: "2026-07-31"
+version: "4.69.0"
+codename: "Delivery ZIP Single-Write Architecture"
+release_date: "2026-08-01"
 plan_maestro_version: "v2.6.0"
 
 # v4.55.0 - ROICR (2026-05-27)

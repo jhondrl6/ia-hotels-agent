@@ -87,6 +87,10 @@ class DeliveryPackager:
         """
         Create a ZIP package with all assets for a hotel.
 
+        SINGLE-WRITE strategy: all content (README, MANIFEST) is computed
+        in memory first, then the ZIP is written in one atomic pass.
+        This eliminates size mismatches caused by multi-write approaches.
+
         Args:
             hotel_id: Hotel identifier (used to find output directory)
             output_dir: Override path to output directory (auto-detected if None)
@@ -100,6 +104,12 @@ class DeliveryPackager:
         Returns:
             Path to created ZIP file
         """
+        # ── NF-5: Single datetime per packaging run ──
+        now = datetime.now()
+        date_str = now.strftime("%Y%m%d")
+        date_display = now.strftime("%Y-%m-%d")
+        timestamp_iso = now.isoformat()
+
         # Resolve output directory
         if output_dir:
             source_dir = Path(output_dir)
@@ -124,29 +134,25 @@ class DeliveryPackager:
         # Collect files to package
         files_to_package = self._collect_files(source_dir, diagnostic_path, proposal_path)
 
-        # FASE-5: Create IMPLEMENTATION_ORDER.md based on AssetResponsibilityContract
-        implementation_order_path = None
+        # FASE-5: Generate IMPLEMENTATION_ORDER.md content in memory
+        implementation_order_content: Optional[str] = None
         if HAS_ASSET_CONTRACT and (core_assets or geo_assets):
             try:
                 contract = AssetResponsibilityContract()
-                impl_order_content = contract.generate_delivery_template(
+                implementation_order_content = contract.generate_delivery_template(
                     hotel_name=hotel_name or hotel_id,
                     core_assets=core_assets,
                     geo_assets=geo_assets,
                     geo_score=geo_score
                 )
-                implementation_order_path = self.deliveries_dir / "IMPLEMENTATION_ORDER.md"
-                implementation_order_path.write_text(impl_order_content, encoding='utf-8')
             except Exception as e:
                 logger.warning(f"[DeliveryPackager] Could not generate implementation order: {e}")
 
-        # ── FASE-B T3: Compute ZIP filename once ──
-        date_str = datetime.now().strftime("%Y%m%d")
-        zip_filename = self._make_zip_filename(hotel_id)
+        # ── Compute ZIP filename (NF-5: uses shared date_str) ──
+        zip_filename = self._make_zip_filename(hotel_id, date_str)
         zip_path = self.deliveries_dir / zip_filename
-        manifest_path = self.deliveries_dir / f"{hotel_id}_{date_str}_MANIFEST.json"
 
-        # ── FASE-B T5: Load DeliveryContext from asset_generation_report ──
+        # ── Load DeliveryContext from asset_generation_report ──
         delivery_context = None
         try:
             from modules.delivery.delivery_context import DeliveryContext
@@ -158,81 +164,87 @@ class DeliveryPackager:
                     zip_filename=zip_filename,
                     files=files_to_package,
                 )
-        except Exception:
-            pass  # Legacy mode: no DeliveryContext available
+        except Exception as e:
+            logger.warning(f"[DeliveryPackager] DeliveryContext unavailable, using legacy mode: {e}")
 
-        # Build meta entries for manifest calculation (NO manifest itself yet — handled in pass 3)
-        readme_path = self.deliveries_dir / "README_DELIVERY.md"
-        meta_for_manifest = [
-            {"source": str(readme_path), "dest": "README_DELIVERY.md"},
+        # ═══ SINGLE-WRITE: Compute all content in memory ═══
+
+        # Step 1: Generate README template in memory (with {{TOTAL_FILES}}/{{TOTAL_SIZE}} placeholders)
+        preliminary_readme_bytes = self._compute_readme_bytes(
+            hotel_id, files_to_package, delivery_context,
+            implementation_order_content, date_display
+        )
+
+        # Step 2: Build meta file list with preliminary README size
+        impl_bytes = (
+            implementation_order_content.encode("utf-8")
+            if implementation_order_content else None
+        )
+        meta_entries = [
+            {"name": "README_DELIVERY.md", "size_bytes": len(preliminary_readme_bytes), "type": "guide"},
         ]
-        if implementation_order_path and implementation_order_path.exists():
-            meta_for_manifest.append({
-                "source": str(implementation_order_path),
-                "dest": "IMPLEMENTATION_ORDER.md"
-            })
+        if impl_bytes is not None:
+            meta_entries.append(
+                {"name": "IMPLEMENTATION_ORDER.md", "size_bytes": len(impl_bytes), "type": "guide"}
+            )
 
-        # ── FASE-B T2: 3-pass manifest with real sizes ──
-        # Pass 1: Write README first so it has real size on disk
-        self.create_readme(self.deliveries_dir, hotel_id, manifest=None, delivery_context=delivery_context)
-
-        # Pass 2: Build manifest with README now on disk (real size captured)
-        files_for_manifest = files_to_package + meta_for_manifest
-        manifest = self.create_manifest(hotel_id, files_for_manifest)
+        # Step 3: Build manifest in memory with real sizes (NF-5: uses shared timestamp)
+        manifest = self._build_manifest_in_memory(
+            hotel_id, files_to_package, meta_entries, timestamp_iso
+        )
 
         # ── FASE-3 NP6: Enrich manifest with quality metadata ──
         if self._quality_metadata is not None:
             manifest["quality_metadata"] = self._quality_metadata
 
-        with open(manifest_path, 'w', encoding='utf-8') as f:
-            json.dump(manifest, f, indent=2, ensure_ascii=False)
+        # Step 4: Resolve MANIFEST.json self-referencing size via fixed-point
+        manifest = self._resolve_manifest_self_size(manifest)
 
-        # Pass 3: Add MANIFEST.json's own size (can only be measured after writing)
-        # FASE-B: The self-referencing entry increases the file size. Measure
-        # before adding the entry, then correct after the rewrite to account
-        # for the entry itself.
-        manifest_size_before = manifest_path.stat().st_size
-        manifest["total_size_bytes"] += manifest_size_before
-        manifest["files"].append({
-            "name": "MANIFEST.json",
-            "size_bytes": manifest_size_before,
-            "type": "other"
-        })
-        manifest["total_files"] = len(manifest["files"])
-        with open(manifest_path, 'w', encoding='utf-8') as f:
-            json.dump(manifest, f, indent=2, ensure_ascii=False)
+        # Step 5: Finalize README with actual totals from resolved manifest
+        readme_bytes = self._finalize_readme_bytes(manifest)
 
-        # The added self-entry makes the file larger — correct the size
-        manifest_size_after = manifest_path.stat().st_size
-        if manifest_size_after != manifest_size_before:
-            delta = manifest_size_after - manifest_size_before
-            manifest["total_size_bytes"] += delta
+        # Step 5b: If README size changed (placeholder → real values), update manifest
+        if len(readme_bytes) != len(preliminary_readme_bytes):
             for entry in manifest["files"]:
-                if entry["name"] == "MANIFEST.json":
-                    entry["size_bytes"] = manifest_size_after
-            with open(manifest_path, 'w', encoding='utf-8') as f:
-                json.dump(manifest, f, indent=2, ensure_ascii=False)
+                if entry["name"] == "README_DELIVERY.md":
+                    entry["size_bytes"] = len(readme_bytes)
+                    break
+            # Recompute totals and re-resolve self-size
+            manifest["total_size_bytes"] = sum(f["size_bytes"] for f in manifest["files"])
+            manifest = self._resolve_manifest_self_size(manifest)
+            # Finalize README again with updated totals (converges in 1-2 iterations)
+            readme_bytes = self._finalize_readme_bytes(manifest)
+            # Final size check (extremely unlikely to differ again)
+            if len(readme_bytes) != manifest["files"][[f["name"] for f in manifest["files"]].index("README_DELIVERY.md")]["size_bytes"]:
+                for entry in manifest["files"]:
+                    if entry["name"] == "README_DELIVERY.md":
+                        entry["size_bytes"] = len(readme_bytes)
+                        break
+                manifest["total_size_bytes"] = sum(f["size_bytes"] for f in manifest["files"])
+                manifest = self._resolve_manifest_self_size(manifest)
+                readme_bytes = self._finalize_readme_bytes(manifest)
 
-        # ── P-01: Post-process README with final manifest totals ──
-        # In Pass 1, create_readme() was called with manifest=None, so
-        # {{TOTAL_FILES}} and {{TOTAL_SIZE}} were left as placeholders.
-        # Now that the manifest is finalized (including MANIFEST.json itself),
-        # replace them with the definitive values.
-        readme_fixup_path = self.deliveries_dir / "README_DELIVERY.md"
-        if readme_fixup_path.exists():
-            readme_content = readme_fixup_path.read_text(encoding='utf-8')
-            readme_content = readme_content.replace("{{TOTAL_FILES}}", str(manifest["total_files"]))
-            readme_content = readme_content.replace("{{TOTAL_SIZE}}",
-                                                    self._format_bytes(manifest["total_size_bytes"]))
-            readme_fixup_path.write_text(readme_content, encoding='utf-8')
+        # Step 6: Serialize manifest to bytes (final)
+        manifest_bytes = json.dumps(manifest, indent=2, ensure_ascii=False).encode("utf-8")
 
-        # Full file list for ZIP (includes manifest now)
-        zip_files = files_to_package + meta_for_manifest + [
-            {"source": str(manifest_path), "dest": "MANIFEST.json"}
-        ]
-
-        # Create ZIP
-        self._create_zip(zip_path, zip_files, source_dir)
+        # Step 7: Write ZIP in a single atomic pass
+        tmp_zip_path = zip_path.with_suffix(".zip.tmp")
+        try:
+            self._create_zip_single_write(
+                tmp_zip_path, files_to_package, source_dir,
+                readme_bytes=readme_bytes,
+                implementation_order_bytes=impl_bytes,
+                manifest_bytes=manifest_bytes,
+            )
+            # Atomic rename
+            if zip_path.exists():
+                zip_path.unlink()
+            tmp_zip_path.rename(zip_path)
+        except Exception:
+            # Cleanup partial ZIP on failure
+            if tmp_zip_path.exists():
+                tmp_zip_path.unlink()
+            raise
 
         # ── FASE-D T4: Validate ZIP ↔ manifest consistency (blocking gate) ──
         validation_errors = self._validate_zip(zip_path, manifest)
@@ -243,10 +255,6 @@ class DeliveryPackager:
             if zip_path.exists():
                 zip_path.unlink()
             raise DeliveryValidationError(error_msg)
-
-        # Cleanup temp manifest
-        if manifest_path.exists():
-            manifest_path.unlink()
 
         return str(zip_path)
 
@@ -301,7 +309,7 @@ class DeliveryPackager:
         return files
 
     def _create_zip(self, zip_path: Path, files: List[Dict[str, Any]], base_dir: Path):
-        """Create ZIP file with all collected files."""
+        """Create ZIP file with all collected files (legacy, kept for compat)."""
         with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
             for file_info in files:
                 source_path = Path(file_info["source"])
@@ -309,14 +317,239 @@ class DeliveryPackager:
                     # Use the destination name in the ZIP
                     zf.write(source_path, arcname=file_info["dest"])
 
+    # ═══ SINGLE-WRITE: In-memory computation methods ═══
+
+    def _compute_readme_bytes(
+        self,
+        hotel_id: str,
+        files_to_package: List[Dict[str, Any]],
+        delivery_context: Optional[Any],
+        implementation_order_content: Optional[str],
+        date_display: Optional[str] = None,
+    ) -> bytes:
+        """Generate final README content in memory — no placeholders remain.
+
+        Uses a two-phase approach:
+        1. Generate README with placeholder markers for TOTAL_FILES/TOTAL_SIZE
+        2. Compute a preliminary manifest to get real totals
+        3. Replace placeholders with final values
+
+        Returns UTF-8 encoded bytes of the final README.
+        """
+        template_path = Path(__file__).parent.parent.parent / "templates" / "delivery_readme_template.md"
+
+        if template_path.exists():
+            content = template_path.read_text(encoding='utf-8')
+            content = content.replace("{{HOTEL_ID}}", hotel_id)
+            content = content.replace("{{DATE}}", date_display or datetime.now().strftime("%Y-%m-%d"))
+
+            if delivery_context and delivery_context.assets:
+                content = content.replace("{{PACKAGE_FILENAME}}", delivery_context.zip_filename)
+                # Leave TOTAL_FILES/TOTAL_SIZE as placeholders for now
+                # (resolved after manifest is computed)
+
+                # Package Structure from real dest paths
+                structure = self._generate_package_structure(
+                    delivery_context.files, delivery_context.zip_filename
+                )
+                content = content.replace("{{PACKAGE_STRUCTURE}}", structure)
+                content = content.replace("{{CORE_DOCUMENTS}}", self._generate_core_documents())
+                content = content.replace("{{DELIVERABLE_ASSETS}}",
+                    self._generate_deliverable_instructions(delivery_context))
+                content = content.replace(
+                    "{{PRESENT_IN_PRODUCTION_SECTION}}",
+                    self._generate_present_in_production_section(delivery_context.present_assets)
+                )
+                content = content.replace(
+                    "{{PRESENT_WITH_ISSUES_SECTION}}",
+                    self._generate_present_with_issues_section(delivery_context.present_with_issues_assets)
+                )
+                content = content.replace(
+                    "{{ESTIMATED_ASSETS_SECTION}}",
+                    self._generate_estimated_section(delivery_context.estimated_assets)
+                )
+                content = content.replace(
+                    "{{ADVISORY_GUIDES_SECTION}}",
+                    self._generate_advisory_section(delivery_context.advisory_assets)
+                )
+                content = content.replace(
+                    "{{EVIDENCE_SECTION}}",
+                    self._generate_evidence_section(delivery_context)
+                )
+                content = content.replace("{{TIMELINE}}", self._generate_timeline(delivery_context))
+                content = content.replace("{{CHECKLIST}}", self._generate_checklist(delivery_context))
+            else:
+                # Legacy mode: no DeliveryContext
+                content = content.replace("{{PACKAGE_FILENAME}}", f"{hotel_id}_{{DATE}}.zip")
+                # Empty all dynamic placeholders for legacy compatibility
+                for ph in ["{{PACKAGE_STRUCTURE}}", "{{CORE_DOCUMENTS}}",
+                            "{{DELIVERABLE_ASSETS}}", "{{PRESENT_IN_PRODUCTION_SECTION}}",
+                            "{{PRESENT_WITH_ISSUES_SECTION}}", "{{ESTIMATED_ASSETS_SECTION}}",
+                            "{{ADVISORY_GUIDES_SECTION}}", "{{EVIDENCE_SECTION}}",
+                            "{{TIMELINE}}", "{{CHECKLIST}}"]:
+                    content = content.replace(ph, "")
+        else:
+            content = self._default_readme(hotel_id, None, date_display)
+
+        # TOTAL_FILES/TOTAL_SIZE remain as placeholders — they will be
+        # resolved by the caller after manifest is finalized.
+        # Store content for later fixup.
+        self._readme_template_content = content
+        # Return preliminary bytes (with placeholders) for size estimation.
+        # The caller will invoke _finalize_readme_bytes() after manifest.
+        return content.encode("utf-8")
+
+    def _finalize_readme_bytes(self, manifest: Dict[str, Any]) -> bytes:
+        """Replace {{TOTAL_FILES}} and {{TOTAL_SIZE}} with final manifest values.
+
+        Called AFTER manifest is fully resolved (including self-size).
+        Returns the definitive README bytes that will go into the ZIP.
+        """
+        content = getattr(self, '_readme_template_content', '') or ''
+        content = content.replace("{{TOTAL_FILES}}", str(manifest.get("total_files", "N/A")))
+        content = content.replace("{{TOTAL_SIZE}}", self._format_bytes(manifest.get("total_size_bytes", 0)))
+        return content.encode("utf-8")
+
+    def _build_manifest_in_memory(
+        self,
+        hotel_id: str,
+        files_to_package: List[Dict[str, Any]],
+        meta_entries: List[Dict[str, Any]],
+        timestamp_iso: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Build manifest dict in memory from real file sizes + meta entries.
+
+        Args:
+            hotel_id: Hotel identifier
+            files_to_package: List of {source, dest} dicts for real files on disk
+            meta_entries: List of {name, size_bytes, type} for in-memory files
+            timestamp_iso: NF-5 - pre-computed ISO timestamp (single datetime per run)
+
+        Returns:
+            Manifest dict (without MANIFEST.json self-entry yet).
+        """
+        manifest: Dict[str, Any] = {
+            "version": "1.0.0",
+            "hotel_id": hotel_id,
+            "generated_at": timestamp_iso or datetime.now().isoformat(),
+            "package_type": "automated_delivery",
+            "files": []
+        }
+
+        # Add real files from disk
+        for f in files_to_package:
+            file_path = Path(f["source"])
+            stat = file_path.stat() if file_path.exists() else None
+            manifest["files"].append({
+                "name": f["dest"],
+                "size_bytes": stat.st_size if stat else 0,
+                "type": self._classify_file(f["dest"])
+            })
+
+        # Add in-memory meta files (README, IMPLEMENTATION_ORDER)
+        for entry in meta_entries:
+            manifest["files"].append({
+                "name": entry["name"],
+                "size_bytes": entry["size_bytes"],
+                "type": entry["type"]
+            })
+
+        manifest["total_files"] = len(manifest["files"])
+        manifest["total_size_bytes"] = sum(f["size_bytes"] for f in manifest["files"])
+        return manifest
+
+    def _resolve_manifest_self_size(self, manifest: Dict[str, Any]) -> Dict[str, Any]:
+        """Resolve MANIFEST.json self-referencing size via fixed-point iteration.
+
+        The manifest includes its own size, but including the size changes
+        the file size. We iterate until the serialized size converges.
+        Typically converges in 1-2 iterations (digit-count stability).
+        """
+        # Initial estimate: serialize without self-entry to get base size
+        base_json = json.dumps(manifest, indent=2, ensure_ascii=False).encode("utf-8")
+        estimated_size = len(base_json) + 120  # rough overhead for self-entry
+
+        for _ in range(10):  # max iterations (safety)
+            # Add/update self-entry
+            manifest_copy = {
+                "version": manifest["version"],
+                "hotel_id": manifest["hotel_id"],
+                "generated_at": manifest["generated_at"],
+                "package_type": manifest["package_type"],
+                "files": [f for f in manifest["files"] if f["name"] != "MANIFEST.json"],
+            }
+            # Preserve quality_metadata if present
+            if "quality_metadata" in manifest:
+                manifest_copy["quality_metadata"] = manifest["quality_metadata"]
+
+            # Compute totals without self
+            other_total = sum(f["size_bytes"] for f in manifest_copy["files"])
+
+            # Add self-entry with current estimate
+            manifest_copy["files"].append({
+                "name": "MANIFEST.json",
+                "size_bytes": estimated_size,
+                "type": "other"
+            })
+            manifest_copy["total_files"] = len(manifest_copy["files"])
+            manifest_copy["total_size_bytes"] = other_total + estimated_size
+
+            # Serialize and measure
+            serialized = json.dumps(manifest_copy, indent=2, ensure_ascii=False).encode("utf-8")
+            actual_size = len(serialized)
+
+            if actual_size == estimated_size:
+                # Converged!
+                return manifest_copy
+
+            estimated_size = actual_size
+            manifest = manifest_copy
+
+        # If not converged after 10 iterations, use last estimate
+        # (extremely unlikely — would require oscillating digit boundaries)
+        return manifest_copy  # type: ignore
+
+    def _create_zip_single_write(
+        self,
+        zip_path: Path,
+        files_to_package: List[Dict[str, Any]],
+        source_dir: Path,
+        readme_bytes: bytes,
+        implementation_order_bytes: Optional[bytes],
+        manifest_bytes: bytes,
+    ):
+        """Write ZIP in a single pass: disk files + in-memory content.
+
+        All content is finalized before this call. The ZIP is written
+        atomically (caller handles tmp → rename).
+        """
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+            # Write real files from disk
+            for file_info in files_to_package:
+                source_path = Path(file_info["source"])
+                if source_path.exists():
+                    zf.write(source_path, arcname=file_info["dest"])
+
+            # Write in-memory README
+            zf.writestr("README_DELIVERY.md", readme_bytes)
+
+            # Write in-memory IMPLEMENTATION_ORDER (if present)
+            if implementation_order_bytes is not None:
+                zf.writestr("IMPLEMENTATION_ORDER.md", implementation_order_bytes)
+
+            # Write in-memory MANIFEST
+            zf.writestr("MANIFEST.json", manifest_bytes)
+
     # ═══ FASE-B: New methods ═══
 
-    def _make_zip_filename(self, hotel_id: str) -> str:
+    def _make_zip_filename(self, hotel_id: str, date_str: Optional[str] = None) -> str:
         """Compute ZIP filename once, shared by package() and README (FASE-C).
 
+        NF-5: Accepts pre-computed date_str to avoid redundant datetime.now().
         Format: {hotel_id}_{YYYYMMDD}.zip
         """
-        date_str = datetime.now().strftime("%Y%m%d")
+        if not date_str:
+            date_str = datetime.now().strftime("%Y%m%d")
         return f"{hotel_id}_{date_str}.zip"
 
     def _validate_zip(self, zip_path: Path, manifest: Dict[str, Any]) -> List[str]:
@@ -785,13 +1018,13 @@ class DeliveryPackager:
         ])
         return "\n".join(lines)
 
-    def _default_readme(self, hotel_id: str, manifest: Optional[Dict[str, Any]]) -> str:
+    def _default_readme(self, hotel_id: str, manifest: Optional[Dict[str, Any]], date_display: Optional[str] = None) -> str:
         """Generate default README when template is not available."""
         total_files = manifest.get("total_files", "N/A") if manifest else "N/A"
 
         return f"""# Delivery Package - {hotel_id}
 
-**Generated:** {datetime.now().strftime("%Y-%m-%d")}
+**Generated:** {date_display or datetime.now().strftime("%Y-%m-%d")}
 **Package ID:** {hotel_id}
 
 ## Overview

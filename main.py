@@ -3020,6 +3020,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     # FASE 7: Delivery Packaging - Automated ZIP creation
     # SKIP ZIP if quality report is FAIL (blocking)
     delivery_zip_path = None  # Pre-initialize for safety
+    delivery_error = None  # NF-3: Preserve packaging error for report
 
     if delivery_quality_report and delivery_quality_report.status == "FAIL":
         print(f"\n   ⛔ ZIP ABORTED: Delivery quality report status is FAIL.")
@@ -3063,18 +3064,43 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             # Find output directory where assets were generated
             asset_output_dir = str(output_dir / hotel_id)
 
+            # NF-6: Derive FASE-5 params for IMPLEMENTATION_ORDER generation
+            _core_assets = None
+            _geo_assets = None
+            _geo_score = None
+            if asset_result and asset_result.generated_assets:
+                _core_assets = [
+                    Path(a.path).name for a in asset_result.generated_assets
+                    if 'geo' not in a.asset_type.lower()
+                    and 'rich' not in Path(a.path).name.lower()
+                ]
+                _geo_assets = [
+                    Path(a.path).name for a in asset_result.generated_assets
+                    if 'geo' in a.asset_type.lower()
+                    or 'rich' in Path(a.path).name.lower()
+                ]
+            if audit_result and hasattr(audit_result, 'gbp') and audit_result.gbp:
+                _geo_score = audit_result.gbp.geo_score
+
             delivery_zip_path = packager.package(
                 hotel_id=hotel_id,
                 output_dir=asset_output_dir,
                 diagnostic_path=diag_path,
-                proposal_path=prop_path
+                proposal_path=prop_path,
+                hotel_name=hotel_name,
+                geo_score=_geo_score,
+                core_assets=_core_assets,
+                geo_assets=_geo_assets,
             )
 
             print(f"   [OK] Delivery package created: {delivery_zip_path}")
 
         except Exception as e:
-            print(f"   [WARN] Delivery packaging failed: {e}")
+            print(f"   [ERROR] Delivery packaging FAILED: {e}")
+            print(f"   [ERROR] Content is ready but ZIP delivery could not be created.")
+            print(f"   [ERROR] Review deliveries/ directory for orphaned artifacts.")
             delivery_zip_path = None
+            delivery_error = str(e)  # NF-3: Preserve for report final
 
     # FASE 10: Health Dashboard - System Health Metrics
     print("\n📍 FASE 10: Health Dashboard (System Health Monitor)")
@@ -3151,6 +3177,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             'assets_generated': [a.asset_type for a in asset_result.generated_assets] if asset_result else [],
             'asset_result_path': str(output_dir / 'v4_audit' / 'asset_generation_report.json') if asset_result else None,
             'delivery_zip_path': delivery_zip_path,
+            'delivery_error': delivery_error,  # NF-3
             'health_dashboard_path': health_dashboard_path,
             'gate_report_path': str(gate_report_path),
         },

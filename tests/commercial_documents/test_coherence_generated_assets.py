@@ -27,25 +27,23 @@ class TestCoherenceGeneratedAssets:
             specs.append(mock)
         return specs
 
-    def test_generated_assets_4_of_8_score(self, validator, mock_diagnostic):
-        """4/8 assets generated (can_use=True) → score = 0.5.
+    def test_generated_assets_4_of_7_score(self, validator, mock_diagnostic):
+        """4/7 assets generated (can_use=True) → score = 4/7.
         
         The orchestrator passes ALL planned asset_specs (matching PROPOSAL_SERVICE_TO_ASSET.values()).
-        With 4 can_use=True out of 8 planned:
-        - promised_types = 8 (all planned)
-        - missing = {faq_page, open_graph, llms_txt, org_schema} = 4
-        - score = (8 - 4) / 8 = 0.5
+        With 4 can_use=True out of 7 planned (monthly_report removed in BUG-10):
+        - promised_types = 7 (all planned)
+        - missing = {faq_page, open_graph, llms_txt} = 3
+        - score = (7 - 3) / 7 = 4/7
         """
-        # All 8 planned asset_specs (like orchestrator does)
         all_planned = self._make_asset_specs(PROPOSAL_SERVICE_TO_ASSET.values())
         
-        # 4 of 8 actually generated with can_use=True
         generated_assets = {
             'optimization_guide': {'can_use': True, 'confidence_score': 0.9},
             'whatsapp_button': {'can_use': True, 'confidence_score': 0.8},
             'hotel_schema': {'can_use': True, 'confidence_score': 0.7},
-            'monthly_report': {'can_use': True, 'confidence_score': 0.6},
-            # faq_page, open_graph, llms_txt, org_schema = MISSING (can_use=False or absent)
+            'org_schema': {'can_use': True, 'confidence_score': 0.6},
+            # faq_page, open_graph, llms_txt = MISSING (can_use=False or absent)
         }
         
         result = validator._check_promised_assets_exist(

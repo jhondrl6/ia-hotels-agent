@@ -1,8 +1,8 @@
-<!-- agents_version: v4.68.0 | last_update: 2026-07-31 -->
+<!-- agents_version: v4.68.0 | last_update: 2026-08-01 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.68.0 -- Evidence Tier Honesty - B_PLUS + GA4/GSC gate + proposal truthfulness COMPLETADO**
+> **v4.69.0 -- Delivery ZIP Single-Write Architecture COMPLETADO**
 
 ---
 
@@ -120,7 +120,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 3,158 funciones, 253 archivos, 0 regresion |
+| **Tests** | 3,185 funciones, 253 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -385,7 +385,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (3,158 funciones, 253 archivos)
+# Todas las pruebas (3,185 funciones, 253 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -400,7 +400,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (3,158 funciones totales)
+### Cobertura por Modulo (3,185 funciones totales)
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
@@ -489,7 +489,7 @@ iah-cli/
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
 │   └── validation/             # Validaciones adicionales
-├── tests/                      # Suite de pruebas (3,158 funciones, 253 archivos)
+├── tests/                      # Suite de pruebas (3,185 funciones, 253 archivos)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/
