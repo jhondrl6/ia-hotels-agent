@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.69.0 (Delivery ZIP Single-Write Architecture)
-**Última actualización:** 2026-08-01
+**Última actualización:** 2026-08-03
 
 ---
 

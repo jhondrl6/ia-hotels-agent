@@ -561,9 +561,20 @@ class V4DiagnosticGenerator:
 
         # Reset brechas cache per generate() call (FASE-H)
         self._cached_brechas = None
+        self._cached_brechas_key = None  # FASE-A-COHERENCIA: invalidar key junto al caché
         
         # Store region for use in _identify_brechas -> _pain_to_brecha (FASE-CONFIG-5)
         self._region = region if region else "eje_cafetero"
+
+        # FASE-A-COHERENCIA (D2): guardar los inputs reales para que _identify_brechas
+        # los use cuando los consumidores internos no los pasen por firma.
+        # Sin esto, el VS sintético (fallback) congelaría la detección vía caché.
+        self._current_validation_summary = validation_summary
+        self._current_analytics_data = analytics_data
+        self._current_whatsapp_html_detected = (
+            getattr(audit_result.validation, 'whatsapp_html_detected', False)
+            if audit_result and hasattr(audit_result, 'validation') and audit_result.validation else False
+        )
 
         # Load template
         template_content = self._load_template()
@@ -756,6 +767,11 @@ class V4DiagnosticGenerator:
         # Regional benchmarks for IAO score reference
         benchmarks = self._get_regional_benchmarks(hotel_region)
 
+        # FASE-A-COHERENCIA (D2): contadores derivados de la MISMA lista de brechas
+        # con costo que renderizan las secciones — nunca hardcodeados.
+        brechas_pesos = self._get_brecha_pesos(audit_result)
+        brechas_destacadas = [b for b in brechas_pesos if b.get('impacto', 0) > 0]
+
         data = {
             'generated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'version': PIPELINE_VERSION,
@@ -836,6 +852,12 @@ class V4DiagnosticGenerator:
             # Brechas dinamicas (N brechas, no fijo 4) - fuente de verdad para templates V6
             'brechas_section': self._build_brechas_section(audit_result, financial_scenarios),
             'brechas_resumen_section': self._build_brechas_resumen_section(audit_result, financial_scenarios),
+
+            # FASE-A-COHERENCIA (D2): contadores dinámicos del template (L66-67),
+            # derivados de la misma lista que renderiza brechas_section.
+            'brechas_total_count': str(len(brechas_pesos)),
+            'brechas_destacadas_count': str(len(brechas_destacadas)),
+            'brechas_restantes_count': str(max(0, len(brechas_pesos) - len(brechas_destacadas))),
 
 
 
@@ -2820,7 +2842,10 @@ class V4DiagnosticGenerator:
             return None
         return assets[0] if is_asset_implemented(assets[0]) else None
     
-    def _identify_brechas(self, audit_result: V4AuditResult) -> List[Dict[str, Any]]:
+    def _identify_brechas(self, audit_result: V4AuditResult,
+                          validation_summary: Optional[ValidationSummary] = None,
+                          analytics_data: Optional[Dict[str, Any]] = None,
+                          whatsapp_html_detected: Optional[bool] = None) -> List[Dict[str, Any]]:
         """
         Identify N brechas (gaps) from audit results based on real evidence.
 
@@ -2834,9 +2859,31 @@ class V4DiagnosticGenerator:
         DEP-03: Este método DELAGA en detect_pains() de PainSolutionMapper.
         Ya no duplica lógica de detección ni usa umbrales propios.
         Los Pain[] retornados por detect_pains() se traducen al formato brecha.
+
+        FASE-A-COHERENCIA (D2): recibe los MISMO inputs que detect_pains del
+        orquestador (validation_summary, analytics_data, whatsapp_html_detected).
+        Si no se pasan, hereda los guardados en generate() (self._current_*).
+        Solo construye el ValidationSummary sintético como fallback legacy.
         """
-        # Cache: audit_result es inmutable durante generate(), resultado idéntico (FASE-H)
-        if hasattr(self, '_cached_brechas') and self._cached_brechas is not None:
+        # FASE-A-COHERENCIA: heredar inputs reales de generate() si no se pasan
+        if validation_summary is None:
+            validation_summary = getattr(self, '_current_validation_summary', None)
+        if analytics_data is None:
+            analytics_data = getattr(self, '_current_analytics_data', None)
+        if whatsapp_html_detected is None:
+            whatsapp_html_detected = getattr(self, '_current_whatsapp_html_detected', None)
+
+        # Cache keyed por inputs (FASE-A-COHERENCIA): VS real y VS sintético
+        # producen resultados distintos; el caché no debe congelar ninguno.
+        # audit_result es inmutable durante generate(), resultado idéntico (FASE-H)
+        cache_key = (
+            id(audit_result),
+            id(validation_summary) if validation_summary is not None else None,
+            id(analytics_data) if analytics_data is not None else None,
+            bool(whatsapp_html_detected),
+        )
+        if hasattr(self, '_cached_brechas') and self._cached_brechas is not None \
+                and getattr(self, '_cached_brechas_key', None) == cache_key:
             return self._cached_brechas
 
         brechas = []
@@ -2849,23 +2896,30 @@ class V4DiagnosticGenerator:
         # Umbrales centralizados en un solo lugar (detect_pains)
         try:
             pain_mapper = PainSolutionMapper()
-            # Build minimal ValidationSummary for detect_pains
-            from .data_structures import ValidationSummary as VS
-            validation_summary = VS(
-                fields=[],
-                overall_confidence=ConfidenceLevel.UNKNOWN
-            )
+            if validation_summary is None:
+                # Fallback legacy: construir VS sintético SOLO sin inputs reales
+                from .data_structures import ValidationSummary as VS
+                validation_summary = VS(
+                    fields=[],
+                    overall_confidence=ConfidenceLevel.UNKNOWN
+                )
+            if whatsapp_html_detected is None:
+                # Fallback legacy: derivar del audit
+                whatsapp_html_detected = (
+                    getattr(audit_result.validation, 'whatsapp_html_detected', False)
+                    if hasattr(audit_result, 'validation') and audit_result.validation else False
+                )
             pains = pain_mapper.detect_pains(
                 audit_result=audit_result,
                 validation_summary=validation_summary,
-                analytics_data=None,
-                whatsapp_html_detected=getattr(audit_result.validation, 'whatsapp_html_detected', False)
-                if hasattr(audit_result, 'validation') and audit_result.validation else False
+                analytics_data=analytics_data,
+                whatsapp_html_detected=whatsapp_html_detected
             )
         except Exception:
             # If PainSolutionMapper fails, fall back to empty brechas
             # (audit has critical errors — don't fabricate gaps)
             self._cached_brechas = brechas
+            self._cached_brechas_key = cache_key
             return brechas
 
         # Translate each Pain to breach format with commercial narrative
@@ -2879,8 +2933,9 @@ class V4DiagnosticGenerator:
         severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
         brechas.sort(key=lambda x: severity_order.get(x.get('severity', ''), 4))
 
-        # Store cache (FASE-H)
+        # Store cache (FASE-H) keyed por inputs (FASE-A-COHERENCIA)
         self._cached_brechas = brechas
+        self._cached_brechas_key = cache_key
         return brechas
 
     def _pain_to_brecha(self, pain, region: str = "eje_cafetero",
@@ -2971,12 +3026,29 @@ class V4DiagnosticGenerator:
                 'impacto': pain_narratives.get('no_analytics_configured', 0.10),
                 'detalle': 'Google Analytics 4 no configurado. Decisiones de marketing sin datos reales.'
             },
+            'low_seo_score': {
+                'nombre': 'SEO Local Bajo',
+                'impacto': pain_narratives.get('low_seo_score', 0.20),
+                'detalle': 'Factores tecnicos de SEO por debajo del estandar regional: la web no esta optimizada para que Google y la IA la posicionen frente a la competencia.'
+            },
+            'low_organic_visibility': {
+                'nombre': 'Baja Visibilidad Organica',
+                'impacto': pain_narratives.get('low_organic_visibility', 0.10),
+                'detalle': 'El trafico organico no se puede medir ni mejorar sin datos de analytics: el hotel opera a ciegas frente a la competencia.'
+            },
         }
 
         if pain.id not in narratives:
             return None
 
         narrative = narratives[pain.id]
+
+        # FASE-A-COHERENCIA (D1): usar name/description reales del mapper.
+        # detect_pains() ya distingue "Sin Open Graph Tags" vs "Open Graph Tags
+        # Incompletos", "SEO Local Bajo", etc. La narrativa estática los aplanaba
+        # en un único nombre genérico (ej: "Sin Meta Tags" con 8 tags reales).
+        nombre = pain.name or narrative['nombre']
+        detalle = pain.description or narrative['detalle']
 
         # FASE-COPY-B: "IA Bloqueada" solo si realmente hay crawlers bloqueados.
         # Si blocked_crawlers == [], renombrar a "IA sin guía" para no mentir.
@@ -2990,9 +3062,8 @@ class V4DiagnosticGenerator:
                     else:
                         blocked = getattr(ai_crawlers, 'blocked_crawlers', []) or []
             if not blocked:
-                narrative = dict(narrative)  # no mutar el original
-                narrative['nombre'] = 'IA sin guía (Sin mapa para asistentes de IA)'
-                narrative['detalle'] = (
+                nombre = 'IA sin guía (Sin mapa para asistentes de IA)'
+                detalle = (
                     'No se detectó robots.txt ni llms.txt. '
                     'Los asistentes de IA no tienen un mapa claro para leer y recomendar el hotel.'
                 )
@@ -3000,9 +3071,9 @@ class V4DiagnosticGenerator:
         return {
             'pain_id': pain.id,
             'severity': pain.severity,
-            'nombre': narrative['nombre'],
+            'nombre': nombre,
             'impacto': narrative['impacto'],
-            'detalle': narrative['detalle']
+            'detalle': detalle
         }
 
 

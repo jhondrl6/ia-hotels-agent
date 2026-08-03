@@ -63,8 +63,8 @@ ${financial_breakdown_section}
 
 ## 4. 🔍 LAS 3 FUGAS PRINCIPALES
 
-De las 7 brechas técnicas detectadas, estas 3 son las que más dinero le están costando HOY.
-Las otras 4 se resuelven en el plan completo de la Fase 2.
+De las ${brechas_total_count} brechas técnicas detectadas, estas ${brechas_destacadas_count} son las que más dinero le están costando HOY.
+Las otras ${brechas_restantes_count} se resuelven en el plan completo de la Fase 2.
 
 ### Fuga 1 — Contacto perdido por WhatsApp incorrecto
 Cuando un huésped quiere reservar directo, busca el WhatsApp del hotel. Si el número en Google Maps es diferente al de su web, pierde la reserva.

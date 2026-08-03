@@ -25,7 +25,7 @@
 
 | Fase | Hallazgos | Estado | Sesión | Modo |
 |------|-----------|--------|--------|------|
-| FASE-A | D1, D2 | ⏳ | — | Directo |
+| FASE-A | D1, D2 | ✅ | 2026-08-03 | Directo |
 | FASE-B | D3, D4, N1 | ⏳ | — | Directo ⚠️ |
 | FASE-C-A | D5, N2 | ⏳ | — | Directo |
 | FASE-C-B | D6, D7, D8 | ⏳ | — | Delegado parcial |

@@ -38,6 +38,8 @@ regions:
       metadata_defaults: 0.10
       missing_reviews: 0.10
       no_analytics_configured: 0.10
+      low_seo_score: 0.20
+      low_organic_visibility: 0.10
 
     # =========================================================================
     # THRESHOLDS DE SCORING
@@ -107,6 +109,8 @@ regions:
       metadata_defaults: 0.10
       missing_reviews: 0.10
       no_analytics_configured: 0.10
+      low_seo_score: 0.20
+      low_organic_visibility: 0.10
     confidence:
       high: 0.85
       medium: 0.70
@@ -145,6 +149,8 @@ regions:
       metadata_defaults: 0.10
       missing_reviews: 0.10
       no_analytics_configured: 0.10
+      low_seo_score: 0.20
+      low_organic_visibility: 0.10
     confidence:
       high: 0.85
       medium: 0.70
@@ -183,6 +189,8 @@ regions:
       metadata_defaults: 0.10
       missing_reviews: 0.10
       no_analytics_configured: 0.10
+      low_seo_score: 0.20
+      low_organic_visibility: 0.10
     confidence:
       high: 0.85
       medium: 0.70

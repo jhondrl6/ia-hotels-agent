@@ -2635,7 +2635,15 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     critical_problems_count = len(audit_result.critical_issues) if audit_result else 0
     quick_wins_count = calculate_quick_wins(audit_result, validation_summary)
     top_problems = extract_top_problems(audit_result, limit=5)
-    brechas_reales = diagnostic_gen._identify_brechas(audit_result) if audit_result else []
+    brechas_reales = diagnostic_gen._identify_brechas(
+        audit_result,
+        validation_summary=validation_summary,
+        analytics_data=analytics_data,
+        whatsapp_html_detected=(
+            getattr(audit_result.validation, 'whatsapp_html_detected', False)
+            if audit_result and hasattr(audit_result, 'validation') and audit_result.validation else False
+        ),
+    ) if audit_result else []  # FASE-A-COHERENCIA (D2): mismos inputs que detect_pains del orquestador
     pain_ids = [b.get('pain_id', '') for b in brechas_reales if b.get('pain_id')]  # FASE-PATCH-B
     diagnostic_summary = DiagnosticSummary(
         hotel_name=hotel_name,
@@ -3287,7 +3295,15 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             (lambda: (
                 diagnostic_gen._resolve_channel_context(
                     audit_result,
-                    [b.get('pain_id', '') for b in diagnostic_gen._identify_brechas(audit_result)]
+                    [b.get('pain_id', '') for b in diagnostic_gen._identify_brechas(
+                        audit_result,
+                        validation_summary=validation_summary,
+                        analytics_data=analytics_data,
+                        whatsapp_html_detected=(
+                            getattr(audit_result.validation, 'whatsapp_html_detected', False)
+                            if audit_result and hasattr(audit_result, 'validation') and audit_result.validation else False
+                        ),
+                    )]
                 ) if audit_result else None
             ))()
             if audit_result else None

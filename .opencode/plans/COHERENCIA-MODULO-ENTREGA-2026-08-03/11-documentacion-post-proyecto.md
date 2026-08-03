@@ -14,6 +14,7 @@
 
 | Feature | Módulo | Descripción | Fase |
 |---------|--------|-------------|------|
+| Brecha OG veraz (D1) | commercial_documents | `_pain_to_brecha` usa `pain.name`/`description` del mapper; ya no dice "Sin Meta Tags" con 8 tags detectados | A |
 | Detección única de brechas | commercial_documents + main | `_identify_brechas` con inputs reales, una sola invocación | A |
 | Costos de brecha de fuente única | financial_engine | `estimated_monthly_cop` == pesos normalizados del doc | B |
 | Escenarios honestos en doc | commercial_documents | 3 escenarios reales con labels correctos + CG-SCENARIO-ORDER | B |
@@ -25,15 +26,19 @@
 | Métrica | Valor | Fase |
 |---------|-------|------|
 | Tests iniciales | 3,185 funciones / 253 archivos | baseline |
-| Tests nuevos acumulados | 0 | — |
-| Hallazgos cerrados | 0/21 | — |
+| Tests nuevos acumulados | +6 (test_diagnostic_brechas.py → 40 passed) | A |
+| Hallazgos cerrados | 2/21 (D1, D2) | A |
 | Coherence última verificación | 0.9168 (run 2026-08-01) | baseline |
 
 ## Sección E: Archivos Afiliados Actualizados
 
 | Archivo | Cambio | Fase |
 |---------|--------|------|
-| (pendiente por fase) | | |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | D1 (pain.name) + D2 (firma/caché/narrativas/contadores dinámicos) | A |
+| `main.py` | `brechas_reales` y `channel_context` con inputs reales | A |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Conteo dinámico `${brechas_*_count}` | A |
+| `config/regional_benchmarks.yaml` | Pesos `low_seo_score`/`low_organic_visibility` en 4 regiones | A |
+| `tests/commercial_documents/test_diagnostic_brechas.py` | +6 tests (OG 8 tags, N unificado, pesos YAML, template, caché, low_seo) | A |
 
 ## Notas para FASE-RELEASE
 

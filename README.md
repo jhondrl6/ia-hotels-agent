@@ -208,7 +208,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 | `config/financial_defaults.yaml` | DEFAULTS financieros (12 valores) |
 | `config/fallbacks.yaml` | Fallbacks de scores con flags estimated |
 | `config/commercial.yaml` | ROI cap, break_even, descuentos, garantias, planes |
-| `config/regional_benchmarks.yaml` | Pain narratives (14) + umbrales de scoring multi-region |
+| `config/regional_benchmarks.yaml` | Pain narratives (16) + umbrales de scoring multi-region |
 | `config/certificates.yaml` | Certificados SSL/TLS y configuracion de seguridad |
 | `config/provider_registry.yaml` | Registro de providers LLM (modelos, endpoints, fallbacks) |
 | `config/settings.yaml` | Configuracion general de la aplicacion |

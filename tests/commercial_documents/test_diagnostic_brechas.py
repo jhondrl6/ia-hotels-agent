@@ -116,8 +116,8 @@ def create_audit(
 # --- Tests ---
 
 def test_identify_brechas_returns_all_detected():
-    """Si el audit detecta 5 brechas, retorna exactamente 5 (no trunca a 4)."""
-    # 5 brechas: low_gbp, no_hotel_schema, no_whatsapp, poor_performance, no_faq_schema
+    """Si el audit detecta 6 brechas, retorna exactamente 6 (no trunca a 4)."""
+    # 6 brechas: low_gbp, no_hotel_schema, no_whatsapp, poor_performance, no_faq_schema, low_seo_score
     audit = create_audit(
         schema_detected=False,      # Brecha 2: no_hotel_schema
         faq_detected=False,         # Brecha 8: no_faq_schema
@@ -129,13 +129,14 @@ def test_identify_brechas_returns_all_detected():
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(audit)
     
-    # Debe retornar exactamente 5, NO 4
-    assert len(brechas) == 5, f"Expected 5 brechas, got {len(brechas)}: {[b['pain_id'] for b in brechas]}"
+    # Debe retornar exactamente 6, NO 4
+    # (low_seo_score se detecta porque seo_elements=None → web_score 25 < 40, D2)
+    assert len(brechas) == 6, f"Expected 6 brechas, got {len(brechas)}: {[b['pain_id'] for b in brechas]}"
 
 
 def test_identify_brechas_no_defaults():
-    """Si solo detecta 2, retorna 2 (sin relleno generico)."""
-    # Solo 2 brechas: low_gbp y no_hotel_schema
+    """Si solo detecta 3, retorna 3 (sin relleno generico)."""
+    # Solo 3 brechas: low_gbp, no_hotel_schema y low_seo_score
     audit = create_audit(
         schema_detected=False,      # Brecha: no_hotel_schema
         gbp_geo_score=50,           # Brecha: low_gbp_score
@@ -150,10 +151,11 @@ def test_identify_brechas_no_defaults():
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(audit)
     
-    assert len(brechas) == 2, f"Expected 2 brechas, got {len(brechas)}: {[b['pain_id'] for b in brechas]}"
+    assert len(brechas) == 3, f"Expected 3 brechas, got {len(brechas)}: {[b['pain_id'] for b in brechas]}"
     pain_ids = [b['pain_id'] for b in brechas]
     assert 'low_gbp_score' in pain_ids
     assert 'no_hotel_schema' in pain_ids
+    assert 'low_seo_score' in pain_ids  # seo_elements=None → web_score 25 < 40 (D2)
     # No debe haber pain_ids genericos como 'low_ia_readiness'
     assert 'low_ia_readiness' not in pain_ids
 
@@ -311,11 +313,13 @@ def test_identify_brechas_with_citability_detection():
     pain_ids = [b['pain_id'] for b in brechas]
     assert 'low_citability' in pain_ids
     cit_brecha = next(b for b in brechas if b['pain_id'] == 'low_citability')
-    assert 'Poco Estructurado' in cit_brecha['nombre']
+    # D1: nombre real del mapper (detect_pains), no narrativa estática
+    assert 'Poco Citable' in cit_brecha['nombre']
+    assert 'Score citability' in cit_brecha['detalle']
 
 
 def test_citability_blocks_zero_narrative():
-    """blocks_analyzed=0 → narrativa 'Contenido Poco Estructurado para IA'."""
+    """blocks_analyzed=0 → nombre real del mapper 'Contenido Poco Citable' (D1)."""
     audit = create_audit(
         schema_detected=True, faq_detected=True, org_detected=True, gbp_geo_score=80,
         phone_web="+573****4567", whatsapp_html_detected=True, mobile_score=85, gbp_reviews=50,
@@ -324,12 +328,12 @@ def test_citability_blocks_zero_narrative():
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(audit)
     cit_brecha = next(b for b in brechas if b['pain_id'] == 'low_citability')
-    assert 'Poco Estructurado' in cit_brecha['nombre']
-    assert 'insuficiente o poco estructurado' in cit_brecha['detalle']
+    assert 'Poco Citable' in cit_brecha['nombre']
+    assert 'Score citability: 0.0/100' in cit_brecha['detalle']
 
 
 def test_citability_blocks_analyzed_low_score_narrative_poco_estructurado():
-    """blocks_analyzed > 0 y score < 30 → narrativa 'Contenido Poco Estructurado para IA'."""
+    """blocks_analyzed > 0 y score < 30 → nombre real del mapper 'Contenido Poco Citable' (D1)."""
     audit = create_audit(
         schema_detected=True, faq_detected=True, org_detected=True, gbp_geo_score=80,
         phone_web="+573****4567", whatsapp_html_detected=True, mobile_score=85, gbp_reviews=50,
@@ -338,8 +342,8 @@ def test_citability_blocks_analyzed_low_score_narrative_poco_estructurado():
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(audit)
     cit_brecha = next(b for b in brechas if b['pain_id'] == 'low_citability')
-    assert 'Poco Estructurado' in cit_brecha['nombre']
-    assert 'insuficiente o poco estructurado' in cit_brecha['detalle']
+    assert 'Poco Citable' in cit_brecha['nombre']
+    assert 'Score citability: 15.0/100 - 5 bloques' in cit_brecha['detalle']
 
 
 def test_citability_blocks_none_narrative():
@@ -355,7 +359,7 @@ def test_citability_blocks_none_narrative():
     gen = V4DiagnosticGenerator()
     brechas = gen._identify_brechas(audit)
     cit_brecha = next(b for b in brechas if b['pain_id'] == 'low_citability')
-    assert 'Poco Estructurado' in cit_brecha['nombre']
+    assert 'Poco Citable' in cit_brecha['nombre']
 
 
 def test_identify_brechas_8_detected_returns_8():
@@ -374,8 +378,9 @@ def test_identify_brechas_8_detected_returns_8():
     brechas = gen._identify_brechas(audit)
 
     # no_whatsapp_visible, no_hotel_schema, metadata_defaults, no_faq_schema,
-    # low_gbp_score, poor_performance, missing_reviews, no_org_schema = 8
-    assert len(brechas) == 8, f"Expected 8, got {len(brechas)}: {[b['pain_id'] for b in brechas]}"
+    # low_gbp_score, poor_performance, missing_reviews, no_org_schema,
+    # low_seo_score (seo_elements=None → web_score 25 < 40) = 9
+    assert len(brechas) == 9, f"Expected 9, got {len(brechas)}: {[b['pain_id'] for b in brechas]}"
 
 
 def test_inject_brecha_scores_dynamic_count():
@@ -489,8 +494,9 @@ def test_build_brechas_resumen_section_dynamic():
     resumen = gen._build_brechas_resumen_section(audit, fs)
 
     # Contar filas de tabla (lineas que empiezan con "| ")
+    # 4 brechas: no_hotel_schema, low_gbp_score, poor_performance, low_seo_score (D2)
     filas = [l for l in resumen.split("\n") if l.strip().startswith("|")]
-    assert len(filas) == 3, f"Expected 3 filas, got {len(filas)}: {filas}"
+    assert len(filas) == 4, f"Expected 4 filas, got {len(filas)}: {filas}"
 
 
 def test_inject_brecha_scores_no_truncation():
@@ -632,7 +638,7 @@ def test_identify_brechas_cached_once():
     # Mismo objeto retornado (identidad, no solo igualdad)
     assert brechas1 is brechas2, "Cache miss en segunda llamada — no reusa caché"
     assert brechas2 is brechas3, "Cache miss en tercera llamada — no reusa caché"
-    assert len(brechas1) == 5
+    assert len(brechas1) == 6  # incluye low_seo_score (D2)
 
 
 def test_cache_cleared_between_generates():
@@ -663,7 +669,7 @@ def test_cache_cleared_between_generates():
     # Simular: generate() con audit_a → cache poblado
     gen._cached_brechas = None  # reset como lo haría generate()
     brechas_a = gen._identify_brechas(audit_a)
-    assert len(brechas_a) == 5
+    assert len(brechas_a) == 6  # incluye low_seo_score (D2)
 
     # Simular: generate() con audit_b → cache reset
     gen._cached_brechas = None  # reset como lo haría generate()
@@ -811,6 +817,299 @@ def test_brecha_costo_uses_normalized_weights():
     # (no 10M * 0.30 = 3M como antes)
     brechas = gen._get_brecha_pesos(audit)
     # Verificar que el costo refleja el peso normalizado
-    assert len(brechas) == 2
+    assert len(brechas) == 3  # + low_seo_score (seo_elements=None → web_score 25 < 40, D2)
     total = sum(b['impacto'] for b in brechas)
     assert abs(total - 100.0) < 0.1
+
+
+# ============================================================================
+# Tests FASE-A-COHERENCIA: D1 (OG veraz) + D2 (detección única de brechas)
+# ============================================================================
+
+# --- Helpers: inputs reales (mismos que usa el orquestador en main.py) ---
+
+def _vs_whatsapp_conflict():
+    """ValidationSummary real con conflicto de WhatsApp (diferencia clave vs sintético)."""
+    from modules.commercial_documents.data_structures import ValidationSummary, ValidatedField
+    return ValidationSummary(
+        fields=[
+            ValidatedField(
+                field_name="whatsapp_number",
+                value="3103724544",
+                confidence=ConfidenceLevel.CONFLICT,
+                sources=["web", "gbp"],
+            ),
+        ],
+        overall_confidence=ConfidenceLevel.ESTIMATED,
+    )
+
+
+def _analytics_no_ga4():
+    """analytics_data con GA4 no configurado (como en main.py sin --ga4-property-id)."""
+    return {"use_ga4": False, "analytics_status": None, "ga4_property_id": None}
+
+
+def _real_zione_audit():
+    """V4AuditResult real con múltiples brechas (Zione-like) para generate()."""
+    from modules.commercial_documents.data_structures import (
+        V4AuditResult, SchemaValidation, GBPData, PerformanceData, CrossValidationResult,
+    )
+    return V4AuditResult(
+        url="https://zione-hotel.com",
+        hotel_name="Zione Test",
+        timestamp="2026-08-03T00:00:00",
+        schema=SchemaValidation(
+            hotel_schema_detected=False,
+            hotel_schema_valid=False,
+            hotel_confidence="estimated",
+            faq_schema_detected=False,
+            faq_schema_valid=False,
+            faq_confidence="estimated",
+            org_schema_detected=False,
+            total_schemas=0,
+        ),
+        gbp=GBPData(
+            place_found=True,
+            place_id="ChIzione",
+            name="Zione Test",
+            rating=0.0,
+            reviews=5,
+            photos=3,
+            phone="+573104724544",
+            website="https://zione-hotel.com",
+            address="Vereda La Linda, Salento, Colombia",
+            geo_score=50,
+            geo_score_breakdown={},
+            confidence="estimated",
+        ),
+        performance=PerformanceData(
+            has_field_data=True,
+            mobile_score=40,
+            desktop_score=45,
+            lcp=5.0,
+            fid=300,
+            cls=0.5,
+            status="poor",
+            message="Poor performance",
+        ),
+        validation=CrossValidationResult(
+            whatsapp_status="conflict",
+            phone_web="+573104724544",
+            phone_gbp="+573001234567",
+            adr_status="estimated",
+            adr_web=300000.0,
+            adr_benchmark=285000.0,
+        ),
+        overall_confidence="estimated",
+        critical_issues=[],
+        recommendations=[],
+    )
+
+
+def _real_financial_scenarios():
+    """FinancialScenarios real (mismo patrón que test_diagnostic_generator)."""
+    from modules.commercial_documents.data_structures import FinancialScenarios, Scenario
+    base = Scenario(
+        monthly_loss_min=1_000_000,
+        monthly_loss_max=2_000_000,
+        probability=0.7,
+        description="Test scenario",
+        assumptions=["Assumption 1"],
+        confidence_score=0.8,
+        monthly_loss_central=1_500_000,
+    )
+    return FinancialScenarios(conservative=base, realistic=base, optimistic=base)
+
+
+# --- Tests nuevos FASE-A ---
+
+def test_og_incomplete_8_tags_named_incompletos():
+    """D1: 8 OG tags detectados → brecha 'Open Graph Tags Incompletos', NUNCA 'Sin'."""
+    og_tags = {f"og:tag{i}": f"val{i}" for i in range(8)}  # 8 tags < umbral 10
+    seo = MagicMock()
+    seo.open_graph = True
+    seo.confidence = "high"
+    seo.open_graph_tags = og_tags
+    seo.imagenes_alt = True  # web_score >= 40 → sin low_seo_score (aislar la brecha OG)
+    audit = create_audit(
+        schema_detected=True, faq_detected=True, org_detected=True, gbp_geo_score=80,
+        phone_web="+573001234567", whatsapp_html_detected=True, mobile_score=85,
+        gbp_reviews=50, seo_elements=seo, citability=mock_citability(score=80),
+    )
+    gen = V4DiagnosticGenerator()
+    brechas = gen._identify_brechas(audit)
+
+    og_brecha = next(b for b in brechas if b['pain_id'] == 'no_og_tags')
+    assert 'Incompletos' in og_brecha['nombre'], f"Nombre: {og_brecha['nombre']}"
+    assert 'Sin' not in og_brecha['nombre'], f"D1 abierto: {og_brecha['nombre']}"
+    assert '8 OG tags' in og_brecha['detalle'], og_brecha['detalle']
+
+
+def test_identify_brechas_matches_orchestrator_detect_pains():
+    """D2: generator y orquestador producen el MISMO conjunto de brechas (mismo N)."""
+    from modules.commercial_documents.pain_solution_mapper import PainSolutionMapper
+
+    audit = create_audit(
+        schema_detected=False, faq_detected=False, org_detected=False, gbp_geo_score=50,
+        phone_web=None, mobile_score=40, metadata_has_issues=True, gbp_reviews=5,
+        citability=mock_citability(score=20),
+    )
+    vs = _vs_whatsapp_conflict()
+    analytics = _analytics_no_ga4()
+
+    gen = V4DiagnosticGenerator()
+    brechas = gen._identify_brechas(audit, validation_summary=vs, analytics_data=analytics,
+                                    whatsapp_html_detected=False)
+    mapper = PainSolutionMapper()
+    pains = mapper.detect_pains(audit, vs, analytics, whatsapp_html_detected=False)
+
+    brecha_ids = [b['pain_id'] for b in brechas]
+    pain_ids = [p.id for p in pains]
+    assert brecha_ids == pain_ids, f"Generator {brecha_ids} != Orquestador {pain_ids}"
+
+
+def test_normalize_weights_9_pains_from_yaml():
+    """D2: normalización sobre 9 pains con pesos reales del YAML (NO asumir 0.25/1.2)."""
+    import yaml
+    from pathlib import Path
+
+    cfg_path = Path(__file__).resolve().parents[2] / "config" / "regional_benchmarks.yaml"
+    cfg = yaml.safe_load(cfg_path.read_text(encoding="utf-8"))
+    narratives = cfg["regions"]["eje_cafetero"]["pain_narratives"]
+
+    # Los 2 pesos añadidos en FASE-A deben existir en el YAML
+    assert narratives["low_seo_score"] == 0.20
+    assert narratives["low_organic_visibility"] == 0.10
+
+    pain_ids_9 = [
+        "no_whatsapp_visible", "whatsapp_conflict", "no_hotel_schema", "no_faq_schema",
+        "no_og_tags", "low_citability", "ai_crawler_blocked", "low_seo_score",
+        "low_organic_visibility",
+    ]
+    raw_sum = sum(narratives[pid] for pid in pain_ids_9)
+    assert abs(raw_sum - 1.40) < 1e-9  # guard de regresión del YAML (verificado 2026-08-03)
+
+    brechas = [{"pain_id": pid, "impacto": narratives[pid]} for pid in pain_ids_9]
+    gen = V4DiagnosticGenerator()
+    result = gen._normalize_weights(brechas)
+
+    total = sum(b["impacto"] for b in result)
+    assert abs(total - 100.0) < 0.1, f"Suma {total} != 100%"
+    # Expectativa calculada DESDE los pesos reales del YAML, no desde 0.25/1.2
+    schema_b = next(b for b in result if b["pain_id"] == "no_hotel_schema")
+    expected = narratives["no_hotel_schema"] / raw_sum * 100
+    assert abs(schema_b["impacto"] - expected) < 0.1, (
+        f"no_hotel_schema={schema_b['impacto']:.2f} != {expected:.2f}"
+    )
+
+
+def test_low_seo_and_low_organic_brechas_with_costo():
+    """D2: low_seo_score y low_organic_visibility son brechas con costo al detectarse."""
+    from modules.commercial_documents.data_structures import ValidationSummary
+
+    audit = create_audit(
+        schema_detected=False, faq_detected=True, org_detected=True, gbp_geo_score=80,
+        phone_web="+573001234567", whatsapp_html_detected=True, mobile_score=85,
+        gbp_reviews=50,  # schema False + seo_elements=None → web_score 25 < 40 → low_seo_score
+    )
+    vs = ValidationSummary(fields=[], overall_confidence=ConfidenceLevel.ESTIMATED)
+    analytics = _analytics_no_ga4()
+    gen = V4DiagnosticGenerator()
+    # Simular generate(): guardar inputs reales como atributos (punto 3a del mandato)
+    gen._current_validation_summary = vs
+    gen._current_analytics_data = analytics
+    gen._current_whatsapp_html_detected = True
+
+    brechas = gen._identify_brechas(audit)
+    ids = [b['pain_id'] for b in brechas]
+    assert 'low_seo_score' in ids, f"Falta low_seo_score en {ids}"
+    assert 'low_organic_visibility' in ids, f"Falta low_organic_visibility en {ids}"
+
+    # Con costo: pesos normalizados > 0 y _get_brecha_costo != "0"
+    fs = mock_financial_scenarios(monthly_loss=10_000_000)
+    pesos = gen._get_brecha_pesos(audit)
+    b_seo = next(b for b in pesos if b['pain_id'] == 'low_seo_score')
+    b_org = next(b for b in pesos if b['pain_id'] == 'low_organic_visibility')
+    assert b_seo['impacto'] > 0
+    assert b_org['impacto'] > 0
+    assert gen._get_brecha_costo(audit, fs, pesos.index(b_seo)) != "0"
+    assert gen._get_brecha_costo(audit, fs, pesos.index(b_org)) != "0"
+
+
+def test_cache_not_freeze_synthetic_detection():
+    """D2 CRÍTICO: caché keyed por inputs — la detección sintética no congela la real."""
+    from modules.commercial_documents.pain_solution_mapper import PainSolutionMapper
+
+    audit = create_audit(
+        schema_detected=False, faq_detected=False, org_detected=False, gbp_geo_score=50,
+        phone_web=None, mobile_score=40, metadata_has_issues=True, gbp_reviews=5,
+        citability=mock_citability(score=20),
+    )
+    vs = _vs_whatsapp_conflict()
+    analytics = _analytics_no_ga4()
+    gen = V4DiagnosticGenerator()
+
+    # 1) Sin inputs → fallback VS sintético (fields=[], sin conflicto)
+    sinteticas = gen._identify_brechas(audit)
+    assert 'whatsapp_conflict' not in [b['pain_id'] for b in sinteticas]
+
+    # 2) Con inputs reales → key distinto → recalcula (no congela la sintética)
+    brechas = gen._identify_brechas(audit, validation_summary=vs, analytics_data=analytics,
+                                    whatsapp_html_detected=False)
+    ids = [b['pain_id'] for b in brechas]
+    assert 'whatsapp_conflict' in ids  # el VS real sí lo detecta
+
+    # 3) Mismo N y conjunto que detect_pains del orquestador (assert EXACTO, sin tolerancia)
+    mapper = PainSolutionMapper()
+    pains = mapper.detect_pains(audit, vs, analytics, whatsapp_html_detected=False)
+    assert ids == [p.id for p in pains], f"Generator {ids} != Orquestador {[p.id for p in pains]}"
+
+
+def test_generate_template_dynamic_brechas_count():
+    """D2: template renderizado usa conteo dinámico, nunca '7 brechas'."""
+    import tempfile
+    from pathlib import Path
+    from modules.commercial_documents.pain_solution_mapper import PainSolutionMapper
+
+    audit = _real_zione_audit()
+    vs = _vs_whatsapp_conflict()
+    analytics = _analytics_no_ga4()
+    financial = _real_financial_scenarios()
+    gen = V4DiagnosticGenerator()
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = gen.generate(
+            audit_result=audit,
+            validation_summary=vs,
+            financial_scenarios=financial,
+            hotel_name="Zione Test",
+            hotel_url="https://zione-hotel.com",
+            output_dir=tmpdir,
+            coherence_score=0.85,
+            gate_status="PASSED",
+            region="eje_cafetero",
+            analytics_data=analytics,
+        )
+        content = Path(path).read_text(encoding="utf-8")
+
+        # Ningún conteo hardcodeado
+        assert "7 brechas" not in content, "Template aún hardcodea '7 brechas'"
+
+        # Conteo dinámico == N de detect_pains del orquestador (mismos inputs)
+        mapper = PainSolutionMapper()
+        pains = mapper.detect_pains(audit, vs, analytics, whatsapp_html_detected=False)
+        expected_n = len(pains)
+        assert expected_n > 0
+        assert f"De las {expected_n} brechas técnicas detectadas" in content, (
+            f"Falta conteo dinámico {expected_n} en documento"
+        )
+
+        # generate() guarda los inputs reales (punto 3a del mandato)
+        assert gen._current_validation_summary is vs
+        assert gen._current_analytics_data is analytics
+
+        # Caché no congela: tras generate(), _identify_brechas con inputs reales
+        # devuelve el MISMO N que detect_pains del orquestador
+        brechas = gen._identify_brechas(audit, validation_summary=vs, analytics_data=analytics,
+                                        whatsapp_html_detected=False)
+        assert [b['pain_id'] for b in brechas] == [p.id for p in pains]
