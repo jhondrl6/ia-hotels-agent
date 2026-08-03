@@ -8,7 +8,7 @@
 |---|------|--------|-----------|------|--------|-------|
 | 1 | FASE-A: Contenido veraz | `02-prompt-fase-A.md` | D1, D2 | Directo | ✅ COMPLETADA | 2026-08-03 |
 | 2 | FASE-B: Finanzas honestas ⚠️ | `03-prompt-fase-B.md` | D3, D4, N1 | Directo (no delegable) | ✅ COMPLETADA | 2026-08-03 |
-| 3 | FASE-C-A: Gates reales | `04-prompt-fase-C-A.md` | D5, N2 | Directo | ⏳ PENDIENTE | — |
+| 3 | FASE-C-A: Gates reales | `04-prompt-fase-C-A.md` | D5, N2 | Directo | ✅ COMPLETADA | 2026-08-03 |
 | 4 | FASE-C-B: Textos dinámicos | `05-prompt-fase-C-B.md` | D6, D7, D8 | Delegado parcial | ⏳ PENDIENTE | — |
 | 5 | FASE-D: Freshness + pulido | `06-prompt-fase-D.md` | D9-D12, N3-N8 (parcial), N4 | Delegado parcial | ⏳ PENDIENTE | — |
 | 6 | FASE-E: E2E Zione (única v4complete) | `07-prompt-fase-E.md` | Verificación 21 | Delegado | ⏳ PENDIENTE | — |
@@ -22,7 +22,7 @@
 | D2 | CRÍTICA | A | ✅ |
 | D3 | ALTA | B | ✅ |
 | D4 | ALTA | B | ✅ |
-| D5 | ALTA | C-A | ⏳ |
+| D5 | ALTA | C-A | ✅ |
 | D6 | ALTA | C-B | ⏳ |
 | D7 | MEDIA | C-B | ⏳ |
 | D8 | MEDIA | C-B | ⏳ |
@@ -31,7 +31,7 @@
 | D11 | BAJA→MEDIA | D | ⏳ |
 | D12 | MEDIA | D | ⏳ |
 | N1 | ALTA | B | ✅ |
-| N2 | ALTA | C-A | ⏳ |
+| N2 | ALTA | C-A | ✅ |
 | N3 | MEDIA | D/E | ⏳ |
 | N4 | MEDIA | D | ⏳ |
 | N5 | BAJA | D | ⏳ |

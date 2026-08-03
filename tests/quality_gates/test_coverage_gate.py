@@ -116,8 +116,11 @@ class TestCoverageGate:
         assert result.passed is True
         assert result.status == GateStatus.PASSED
 
-    def test_passes_when_pain_has_status_blocked(self, orchestrator):
-        """Pain con status=BLOCKED → PASS (bloqueado por falta de datos)."""
+    def test_warning_when_pain_has_status_blocked_not_in_docs(self, orchestrator):
+        """
+        FASE-C-A (D5): Pain with status=BLOCKED but NOT in any document
+        → covered=0, justified=1 → WARNING (not PASSED).
+        """
         assessment = make_assessment(
             pain_ledger=[{"pain_id": "no_analytics_configured", "status": "BLOCKED"}],
             diagnostic_pain_ids=[],
@@ -126,12 +129,16 @@ class TestCoverageGate:
 
         result = orchestrator._coverage_gate(assessment)
 
-        assert result.passed is True
-        assert result.status == GateStatus.PASSED
+        assert result.passed is True  # WARNING does not block
+        assert result.status == GateStatus.WARNING
         assert result.details["justified"] == 1
+        assert result.details["covered"] == 0
 
-    def test_passes_when_pain_has_status_mapped_to_service(self, orchestrator):
-        """Pain con status=MAPPED_TO_SERVICE → PASS (ya tiene solucion)."""
+    def test_warning_when_pain_mapped_to_service_not_in_docs(self, orchestrator):
+        """
+        FASE-C-A (D5): Pain with status=MAPPED_TO_SERVICE but NOT in any
+        document → covered=0, justified=1 → WARNING.
+        """
         assessment = make_assessment(
             pain_ledger=[{"pain_id": "low_ota_divergence", "status": "MAPPED_TO_SERVICE"}],
             diagnostic_pain_ids=[],
@@ -140,9 +147,10 @@ class TestCoverageGate:
 
         result = orchestrator._coverage_gate(assessment)
 
-        assert result.passed is True
-        assert result.status == GateStatus.PASSED
+        assert result.passed is True  # WARNING does not block
+        assert result.status == GateStatus.WARNING
         assert result.details["justified"] == 1
+        assert result.details["covered"] == 0
 
     def test_passes_with_fixture_representative(self, orchestrator):
         """

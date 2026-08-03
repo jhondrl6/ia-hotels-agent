@@ -602,7 +602,7 @@ class TestPublicationGatesOrchestrator:
         """
         results = orchestrator.run_all(valid_assessment)
         
-        assert len(results) == 11  # 11 gates (10 original + coverage gate)
+        assert len(results) == 12  # 12 gates (10 original + coverage + doc_audit_consistency)
         assert all(r.passed for r in results)
         assert orchestrator.is_ready_for_publication(results) is True
 
@@ -707,7 +707,7 @@ class TestPublicationGatesOrchestrator:
         """
         results = run_publication_gates(valid_assessment)
         
-        assert len(results) == 11  # 11 gates
+        assert len(results) == 12  # 12 gates
         assert all(r.passed for r in results)
 
     def test_check_publication_readiness_function(self):
@@ -748,7 +748,7 @@ class TestPublicationGatesOrchestrator:
 
         assert report["ready"] is True
         assert report["status"] == "READY_FOR_PUBLICATION"
-        assert report["summary"]["passed"] == 11  # All 11 gates pass (10 original + coverage)
+        assert report["summary"]["passed"] == 12  # All 12 gates pass
         assert report["summary"]["failed"] == 0
         assert len(report["blocking_issues"]) == 0
 

@@ -32,6 +32,7 @@ Usage:
         print("Publication blocked by gate failures.")
 """
 
+import re
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Callable, Set
 from enum import Enum
@@ -181,6 +182,7 @@ class PublicationGatesOrchestrator:
             "proposal_asset_alignment": self._proposal_asset_alignment_gate,
             "tier_c_onboarding_required": self._tier_c_onboarding_gate,
             "coverage_no_silent_drop": self._coverage_gate,
+            "doc_audit_consistency": self._doc_audit_consistency_gate,
         }
         self.ethics_gate = EthicsGate()
         self.content_quality_gate = DocumentQualityGate()
@@ -1200,6 +1202,7 @@ class PublicationGatesOrchestrator:
         # FASE-0 (DT-4): Try pain_ledger_resolved first (post-orchestrator reconciliation),
         # fallback to pain_ledger if not available.
         raw = assessment.get("pain_ledger_resolved")
+        reconciler_ran = raw is not None
         if raw is not None:
             # DT4-R1: Reconciler ran — validate resolved entries
             if isinstance(raw, dict):
@@ -1256,6 +1259,16 @@ class PublicationGatesOrchestrator:
                 suggestion="",
             )
 
+        # FASE-C-A (D5): covered counts document presence BEFORE justified
+        # exemption.  A pain is "covered" when it appears in diagnostic or
+        # proposal, regardless of its status.  is_justified exempts only if
+        # the pain is additionally explained by an asset (status in
+        # _JUSTIFIED_STATUSES).  This prevents the false "Coverage completo"
+        # with covered=0 that happened in the 2026-08-01 run.
+        #
+        # When the reconciler ran (pain_ledger_resolved present), justified
+        # pains are counted as covered because the reconciler has already
+        # processed and validated them.
         uncovered: List[str] = []
         justified_count = 0
         covered = 0
@@ -1265,10 +1278,11 @@ class PublicationGatesOrchestrator:
             in_proposal = entry.pain_id in proposal_pain_ids
             is_justified = entry.status in self._JUSTIFIED_STATUSES
 
-            if is_justified:
-                justified_count += 1
-            elif in_diagnostic or in_proposal:
+            if in_diagnostic or in_proposal:
+                # Pain appears in document — covered regardless of status
                 covered += 1
+            elif is_justified:
+                justified_count += 1
             else:
                 uncovered.append(entry.pain_id)
 
@@ -1296,6 +1310,30 @@ class PublicationGatesOrchestrator:
                 },
             )
 
+        # FASE-C-A (D5): WARNING when covered=0 — never "Coverage completo"
+        # with zero pains appearing in the document.
+        if covered == 0 and justified_count > 0:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,
+                status=GateStatus.WARNING,
+                message=(
+                    f"0 pains appear in the document; "
+                    f"{justified_count} justified by asset status of {total} detected"
+                ),
+                value=coverage_ratio,
+                suggestion=(
+                    "Ensure all detected pains are mentioned in diagnostic "
+                    "or proposal documents, not just justified by asset status"
+                ),
+                details={
+                    "total_detected": total,
+                    "covered": covered,
+                    "justified": justified_count,
+                    "uncovered": [],
+                },
+            )
+
         return PublicationGateResult(
             gate_name=gate_name,
             passed=True,
@@ -1312,6 +1350,197 @@ class PublicationGatesOrchestrator:
                 "justified": justified_count,
                 "uncovered": [],
             },
+        )
+
+    # ===========================================================================
+    # FASE-C-A (N2): Doc-Audit Consistency Gate — WARNING mode
+    # ===========================================================================
+    # Known contradiction patterns between generated documents and audit data.
+    # Each entry maps a diagnostic keyword pattern to the audit field that, when
+    # True/present, contradicts the document's claim.
+    _DOC_AUDIT_CONTRADICTION_PATTERNS: List[Dict[str, Any]] = [
+        {
+            "id": "og_missing_vs_present",
+            "doc_keywords": ["sin meta tags", "sin open graph", "sin etiquetas og"],
+            "audit_section": "seo_elements",
+            "audit_field": "open_graph",
+            "audit_truth": True,
+            "description": "Doc claims missing OG tags but audit found them",
+        },
+        {
+            "id": "performance_error_vs_new_site",
+            "doc_keywords": ["sitio nuevo", "trafico bajo", "tráfico bajo"],
+            "audit_section": "performance",
+            "audit_field": "status",
+            "audit_truth": "ERROR",
+            "description": "Doc claims 'sitio nuevo/trafico bajo' but performance is ERROR",
+        },
+    ]
+
+    def _doc_audit_consistency_gate(
+        self, assessment: Dict[str, Any]
+    ) -> PublicationGateResult:
+        """
+        Gate: Doc-Audit Consistency (N2 — WARNING mode, DEC-C1).
+
+        Detects contradictions between claims in the generated diagnostic
+        document and the actual audit data.  For example, if the audit found
+        ``seo_elements.open_graph = True`` but the document says "Sin Open
+        Graph", this gate reports the contradiction.
+
+        Initial mode: **WARNING** (does not block publication).  Upgrade to
+        BLOCKING is documented for a future release.
+
+        Reads:
+            - ``assessment["diagnostico_text"]`` — generated diagnostic text
+            - ``assessment["audit_data"]`` — structured audit results
+              (``seo_elements``, ``gbp``, ``photos``, ``performance``)
+            - ``assessment["diagnostic_evidence"]`` — optional structured
+              evidence from Option A (evidence_used.json)
+
+        Args:
+            assessment: Assessment dict with diagnostic text and audit data
+
+        Returns:
+            PublicationGateResult with status WARNING, PASSED, or BLOCKED
+            (only on internal errors).
+        """
+        gate_name = "doc_audit_consistency"
+
+        diag_text = assessment.get("diagnostico_text", "")
+        if not diag_text:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,
+                status=GateStatus.PASSED,
+                message="No diagnostic text available for doc-audit consistency check",
+                value=None,
+                suggestion="",
+            )
+
+        audit_data = assessment.get("audit_data", {})
+        if not audit_data:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,
+                status=GateStatus.PASSED,
+                message="No audit data available for doc-audit consistency check",
+                value=None,
+                suggestion="",
+            )
+
+        diag_lower = diag_text.lower()
+        contradictions: List[Dict[str, str]] = []
+
+        # ------------------------------------------------------------------
+        # Check 1: Pattern-based contradictions (OG, performance, …)
+        # ------------------------------------------------------------------
+        for pattern in self._DOC_AUDIT_CONTRADICTION_PATTERNS:
+            section = audit_data.get(pattern["audit_section"], {})
+            if isinstance(section, dict):
+                actual = section.get(pattern["audit_field"])
+            else:
+                continue
+
+            if actual == pattern["audit_truth"]:
+                matched_kw = [
+                    kw for kw in pattern["doc_keywords"] if kw in diag_lower
+                ]
+                if matched_kw:
+                    contradictions.append({
+                        "pattern_id": pattern["id"],
+                        "doc_keyword": matched_kw[0],
+                        "audit_value": str(actual),
+                        "description": pattern["description"],
+                    })
+
+        # ------------------------------------------------------------------
+        # Check 2: Reviews — doc cites "N reseñas" vs gbp.reviews.total
+        # ------------------------------------------------------------------
+        gbp_data = audit_data.get("gbp", {})
+        if isinstance(gbp_data, dict):
+            gbp_reviews = gbp_data.get("reviews", {})
+            if isinstance(gbp_reviews, dict):
+                actual_reviews = gbp_reviews.get("total")
+                if actual_reviews is not None:
+                    review_mentions = re.findall(
+                        r"(\d+)\s*reseñas?", diag_lower
+                    )
+                    for mention in review_mentions:
+                        mentioned_count = int(mention)
+                        if (
+                            mentioned_count > 0
+                            and actual_reviews > 0
+                            and abs(mentioned_count - actual_reviews)
+                            > max(actual_reviews * 0.5, 10)
+                        ):
+                            contradictions.append({
+                                "pattern_id": "reviews_mismatch",
+                                "doc_keyword": f"{mentioned_count} reseñas",
+                                "audit_value": str(actual_reviews),
+                                "description": (
+                                    f"Doc says {mentioned_count} reviews but "
+                                    f"audit shows {actual_reviews}"
+                                ),
+                            })
+
+        # ------------------------------------------------------------------
+        # Check 3: Photos — doc target vs audit actual count
+        # ------------------------------------------------------------------
+        photos_data = audit_data.get("photos", {})
+        if isinstance(photos_data, dict):
+            actual_photos = photos_data.get("count")
+            if actual_photos is not None:
+                evidence = assessment.get("diagnostic_evidence", {})
+                if isinstance(evidence, dict):
+                    target_photos = evidence.get("target_photos")
+                    if (
+                        target_photos is not None
+                        and isinstance(target_photos, (int, float))
+                        and actual_photos > 0
+                        and abs(target_photos - actual_photos) > actual_photos * 0.5
+                    ):
+                        contradictions.append({
+                            "pattern_id": "photos_mismatch",
+                            "doc_keyword": f"target {int(target_photos)} fotos",
+                            "audit_value": str(actual_photos),
+                            "description": (
+                                f"Doc targets {int(target_photos)} photos but "
+                                f"audit shows {actual_photos}"
+                            ),
+                        })
+
+        # ------------------------------------------------------------------
+        # Result
+        # ------------------------------------------------------------------
+        if contradictions:
+            contradiction_msgs = [
+                f"{c['pattern_id']}: {c['description']}"
+                for c in contradictions
+            ]
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,  # WARNING does not block (DEC-C1)
+                status=GateStatus.WARNING,
+                message=(
+                    f"{len(contradictions)} doc-audit contradiction(s) detected "
+                    f"(WARNING mode): {'; '.join(contradiction_msgs[:3])}"
+                ),
+                value=len(contradictions),
+                suggestion=(
+                    "Review diagnostic text to align with audit data. "
+                    "This gate will become BLOCKING in a future release."
+                ),
+                details={"contradictions": contradictions},
+            )
+
+        return PublicationGateResult(
+            gate_name=gate_name,
+            passed=True,
+            status=GateStatus.PASSED,
+            message="Document consistent with audit data — no contradictions detected",
+            value=0,
+            suggestion="",
         )
 
     def _extract_conflicts(self, assessment: Dict[str, Any]) -> List[Dict]:

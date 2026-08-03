@@ -97,11 +97,14 @@ def test_resolved_pain_ledger_coverage_gate():
     orchestrator = PublicationGatesOrchestrator(PublicationGateConfig())
     gate_result = orchestrator._coverage_gate(assessment)
 
-    # 6. Verify: PASS, justified >= 1, no_whatsapp_visible NOT in uncovered
+    # 6. Verify: PASS (WARNING or PASSED), justified >= 1, no_whatsapp_visible NOT in uncovered
+    # FASE-C-A (D5): Resolved pains not in documents → covered=0 → WARNING is expected.
     assert gate_result.passed is True, (
         f"Coverage gate should PASS with resolved ledger, got {gate_result.message}"
     )
-    assert gate_result.status == GateStatus.PASSED
+    assert gate_result.status in (GateStatus.PASSED, GateStatus.WARNING), (
+        f"Expected PASSED or WARNING, got {gate_result.status}"
+    )
     assert gate_result.details["justified"] >= 1, (
         f"Expected at least 1 justified pain, got {gate_result.details}"
     )

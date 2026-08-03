@@ -7,8 +7,8 @@
 
 | Módulo | Archivos | Descripción | Fase |
 |--------|----------|-------------|------|
-| (posible) gate `doc_audit_consistency` | `modules/quality_gates/publication_gates.py` | Validación de pares doc↔audit (OG, reviews, fotos, performance) | C-A |
-| (posible) helper compartido de recuperación 6m | `modules/financial_engine/pillar_maturity_curve.py` | Fórmula única de recuperación proyectada | B |
+| gate `doc_audit_consistency` | `modules/quality_gates/publication_gates.py` | Validación WARNING de pares doc↔audit (OG, reviews, fotos, performance) — DEC-C1/C2 | C-A |
+| helper compartido de recuperación 6m | `modules/financial_engine/pillar_maturity_curve.py` | Fórmula única de recuperación proyectada | B |
 
 ## Sección B: Funcionalidades Nuevas
 
@@ -18,7 +18,8 @@
 | Detección única de brechas | commercial_documents + main | `_identify_brechas` con inputs reales, una sola invocación | A |
 | Costos de brecha de fuente única | financial_engine | `estimated_monthly_cop` == pesos normalizados del doc | B |
 | Escenarios honestos en doc | commercial_documents | 3 escenarios reales con labels correctos + CG-SCENARIO-ORDER | B |
-| Coverage gate honesto | quality_gates | covered cuenta antes de eximir; warning si covered=0 | C-A |
+| Coverage gate honesto | quality_gates | covered cuenta antes de eximir; warning si covered=0 (D5) | C-A |
+| Gate doc↔audit consistency | quality_gates | Detecta contradicciones OG, reviews, fotos, performance entre doc y audit (N2, WARNING mode DEC-C1) | C-A |
 | Freshness v4_audit | delivery + proposal | commercial_gates_report fresco; históricos fuera del ZIP | D |
 
 ## Sección D: Métricas Acumulativas
@@ -28,8 +29,10 @@
 | Tests iniciales | 3,185 funciones / 253 archivos | baseline |
 | Tests nuevos acumulados | +6 (test_diagnostic_brechas.py → 40 passed) | A |
 | Tests nuevos acumulados | +14 (8 nuevos FASE-B + 6 FASE-A) | B |
+| Tests nuevos acumulados | +13 (9 nuevos doc_audit + 4 coverage honest) | C-A |
 | Hallazgos cerrados | 2/21 (D1, D2) | A |
 | Hallazgos cerrados | 5/21 (D1, D2, D3, D4, N1) | B |
+| Hallazgos cerrados | 7/21 (+D5, +N2) | C-A |
 | Coherence última verificación | 0.9168 (run 2026-08-01) | baseline |
 
 ## Sección E: Archivos Afiliados Actualizados
@@ -50,9 +53,16 @@
 | `tests/commercial_documents/test_diagnostic_brechas.py` | +2 tests D3 (costo == doc, impacto == peso) | B |
 | `tests/commercial_documents/test_financial_coherence.py` | +2 tests N1 (wrapper curva, caso Zione $9.691.220) | B |
 | `tests/quality_gates/test_commercial_gate.py` | 2 tests actualizados a semántica real del orden de escenarios | B |
+| `modules/quality_gates/publication_gates.py` | D5: `_coverage_gate` reestructurado (covered cuenta antes de justified) + WARNING si covered=0 · N2: nuevo gate `_doc_audit_consistency_gate` (WARNING, DEC-C1) con 4 patrones (OG, reviews, fotos, performance) | C-A |
+| `tests/quality_gates/test_doc_audit_consistency_gate.py` | +9 tests nuevos (OG, performance, reviews, fotos, consistente, sin doc, sin audit, no bloquea, múltiples) | C-A |
+| `tests/quality_gates/test_coverage_gate.py` | +4 tests TestCoverageHonestCount (D5) + 2 tests actualizados (status→WARNING) | C-A |
+| `tests/quality_gates/test_coverage_gate_integration.py` | 1 test actualizado (acepta WARNING) | C-A |
+| `tests/quality_gates/test_publication_gates.py` | 3 aserciones actualizadas: gate count 11→12 | C-A |
 
 ## Notas para FASE-RELEASE
 
+- **DEC-C1**: Gate `doc_audit_consistency` nace en modo WARNING (no bloquea publicación). Upgrade a BLOCKING documentado para release posterior. Riesgo: si naciera BLOCKING, fallarían runs existentes con contradicciones hoy invisibles.
+- **DEC-C2**: Mecanismo de evidencia — Opción A (evidence_used.json / diagnostic_evidence) con fallback a B (parseo de patrones en markdown). El gate usa `_DOC_AUDIT_CONTRADICTION_PATTERNS` declarativo.
 - CHANGELOG formato: `## [4.70.0] - Titulo — YYYY-MM-DD` con secciones Objetivo / Cambios / Archivos Nuevos / Archivos Modificados / Tests.
 - GUIA_TECNICA: nota técnica por cada fase (módulos, problema/solución, backwards compatibility).
 - Documentar explícitamente los cambios de comportamiento: pesos normalizan sobre N real (D2) y fórmula única de recuperación (N1) cambian cifras de TODOS los hoteles.
