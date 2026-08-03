@@ -1,0 +1,864 @@
+{
+  "version": "1.0.0",
+  "hotel_id": "zione",
+  "generated_at": "2026-07-31T16:48:42.880276",
+  "package_type": "automated_delivery",
+  "files": [
+    {
+      "name": "DIAGNOSTICO.md",
+      "size_bytes": 14219,
+      "type": "diagnostic"
+    },
+    {
+      "name": "PROPUESTA_COMERCIAL.md",
+      "size_bytes": 14302,
+      "type": "proposal"
+    },
+    {
+      "name": "ASSETS/research_234c1f0ebe8d_Zione.json",
+      "size_bytes": 252,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/research_3314f9b2d98b_Zione.json",
+      "size_bytes": 252,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/research_8569d7b30171_Zione.json",
+      "size_bytes": 252,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/research_9c042b89567f_Zione.json",
+      "size_bytes": 252,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/research_cbdbea1453fb_Zione.json",
+      "size_bytes": 252,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/research_f53d1a973498_Zione.json",
+      "size_bytes": 252,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260728_091951.md",
+      "size_bytes": 4894,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260728_091951_metadata.json",
+      "size_bytes": 817,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260728_121203.md",
+      "size_bytes": 4894,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260728_121203_metadata.json",
+      "size_bytes": 817,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260728_122913.md",
+      "size_bytes": 4894,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260728_122913_metadata.json",
+      "size_bytes": 817,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260728_180542.md",
+      "size_bytes": 4894,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260728_180542_metadata.json",
+      "size_bytes": 817,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260730_143715.md",
+      "size_bytes": 4894,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260730_143715_metadata.json",
+      "size_bytes": 818,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260731_164842.md",
+      "size_bytes": 4894,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260731_164842_metadata.json",
+      "size_bytes": 818,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260728_091951.json",
+      "size_bytes": 838,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260728_091951_metadata.json",
+      "size_bytes": 826,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260728_121203.json",
+      "size_bytes": 838,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260728_121203_metadata.json",
+      "size_bytes": 826,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260728_122913.json",
+      "size_bytes": 838,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260728_122913_metadata.json",
+      "size_bytes": 826,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260728_180542.json",
+      "size_bytes": 838,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260728_180542_metadata.json",
+      "size_bytes": 826,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260730_143715.json",
+      "size_bytes": 838,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260730_143715_metadata.json",
+      "size_bytes": 827,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260731_164842.json",
+      "size_bytes": 838,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/faq_page/ESTIMATED_faqs_20260731_164842_metadata.json",
+      "size_bytes": 827,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/geo_enriched/faq_schema.json",
+      "size_bytes": 1721,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/geo_enriched/geo_badge.md",
+      "size_bytes": 1000,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/geo_enriched/geo_checklist_min.md",
+      "size_bytes": 561,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/geo_enriched/geo_dashboard.md",
+      "size_bytes": 2914,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/geo_enriched/geo_fix_kit.md",
+      "size_bytes": 2422,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/geo_enriched/hotel_schema_rich.json",
+      "size_bytes": 1062,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/geo_enriched/llms.txt",
+      "size_bytes": 1013,
+      "type": "other"
+    },
+    {
+      "name": "ASSETS/geo_enriched/robots_fix.txt",
+      "size_bytes": 1808,
+      "type": "other"
+    },
+    {
+      "name": "ASSETS/geo_enriched/seo_fix_kit.md",
+      "size_bytes": 851,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/geo_enriched/sync_report.md",
+      "size_bytes": 948,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260728_091951.json",
+      "size_bytes": 892,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260728_091951_metadata.json",
+      "size_bytes": 892,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260728_121203.json",
+      "size_bytes": 1062,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260728_121203_metadata.json",
+      "size_bytes": 892,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260728_122913.json",
+      "size_bytes": 1062,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260728_122913_metadata.json",
+      "size_bytes": 892,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260728_180542.json",
+      "size_bytes": 1062,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260728_180542_metadata.json",
+      "size_bytes": 892,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260730_143715.json",
+      "size_bytes": 1062,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260730_143715_metadata.json",
+      "size_bytes": 892,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260731_164842.json",
+      "size_bytes": 1062,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/hotel_schema/hotel_schema_20260731_164842_metadata.json",
+      "size_bytes": 892,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260728_091951.md",
+      "size_bytes": 5251,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260728_091951_metadata.json",
+      "size_bytes": 836,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260728_121203.md",
+      "size_bytes": 5251,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260728_121203_metadata.json",
+      "size_bytes": 836,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260728_122913.md",
+      "size_bytes": 5251,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260728_122913_metadata.json",
+      "size_bytes": 836,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260728_180542.md",
+      "size_bytes": 5251,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260728_180542_metadata.json",
+      "size_bytes": 836,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260730_143715.md",
+      "size_bytes": 5251,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260730_143715_metadata.json",
+      "size_bytes": 837,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260731_164842.md",
+      "size_bytes": 5251,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260731_164842_metadata.json",
+      "size_bytes": 837,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260728_091951.txt",
+      "size_bytes": 739,
+      "type": "other"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260728_091951_metadata.json",
+      "size_bytes": 874,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260728_121203.txt",
+      "size_bytes": 1013,
+      "type": "other"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260728_121203_metadata.json",
+      "size_bytes": 874,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260728_122913.txt",
+      "size_bytes": 1013,
+      "type": "other"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260728_122913_metadata.json",
+      "size_bytes": 874,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260728_180542.txt",
+      "size_bytes": 1013,
+      "type": "other"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260728_180542_metadata.json",
+      "size_bytes": 874,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260730_143715.txt",
+      "size_bytes": 1013,
+      "type": "other"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260730_143715_metadata.json",
+      "size_bytes": 875,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260731_164842.txt",
+      "size_bytes": 1013,
+      "type": "other"
+    },
+    {
+      "name": "ASSETS/llms_txt/llms_20260731_164842_metadata.json",
+      "size_bytes": 875,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260728_091951.md",
+      "size_bytes": 5341,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260728_091951_metadata.json",
+      "size_bytes": 778,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260728_121203.md",
+      "size_bytes": 5976,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260728_121203_metadata.json",
+      "size_bytes": 778,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260728_122913.md",
+      "size_bytes": 5976,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260728_122913_metadata.json",
+      "size_bytes": 778,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260728_180542.md",
+      "size_bytes": 5976,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260728_180542_metadata.json",
+      "size_bytes": 778,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260730_143715.md",
+      "size_bytes": 5976,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260730_143715_metadata.json",
+      "size_bytes": 779,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260731_164842.md",
+      "size_bytes": 5976,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/monthly_report/informe_mensual_20260731_164842_metadata.json",
+      "size_bytes": 779,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260728_091951.md",
+      "size_bytes": 1630,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260728_091951_metadata.json",
+      "size_bytes": 811,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260728_121203.md",
+      "size_bytes": 1630,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260728_121203_metadata.json",
+      "size_bytes": 811,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260728_122913.md",
+      "size_bytes": 1630,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260728_122913_metadata.json",
+      "size_bytes": 811,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260728_180542.md",
+      "size_bytes": 1630,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260728_180542_metadata.json",
+      "size_bytes": 811,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260730_143715.md",
+      "size_bytes": 1630,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260730_143715_metadata.json",
+      "size_bytes": 812,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260731_164842.md",
+      "size_bytes": 1630,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/og_tags_guide/ESTIMATED_guia_og_tags_20260731_164842_metadata.json",
+      "size_bytes": 812,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260728_091951.html",
+      "size_bytes": 1980,
+      "type": "code"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260728_091951_metadata.json",
+      "size_bytes": 808,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260728_121203.html",
+      "size_bytes": 1980,
+      "type": "code"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260728_121203_metadata.json",
+      "size_bytes": 808,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260728_122913.html",
+      "size_bytes": 1980,
+      "type": "code"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260728_122913_metadata.json",
+      "size_bytes": 808,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260728_180542.html",
+      "size_bytes": 1980,
+      "type": "code"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260728_180542_metadata.json",
+      "size_bytes": 808,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260730_143715.html",
+      "size_bytes": 1980,
+      "type": "code"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260730_143715_metadata.json",
+      "size_bytes": 809,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260731_164842.html",
+      "size_bytes": 1980,
+      "type": "code"
+    },
+    {
+      "name": "ASSETS/open_graph/open_graph_meta_20260731_164842_metadata.json",
+      "size_bytes": 809,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260728_091951.md",
+      "size_bytes": 5357,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260728_091951_metadata.json",
+      "size_bytes": 939,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260728_121203.md",
+      "size_bytes": 5357,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260728_121203_metadata.json",
+      "size_bytes": 939,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260728_122913.md",
+      "size_bytes": 5357,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260728_122913_metadata.json",
+      "size_bytes": 939,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260728_180542.md",
+      "size_bytes": 5357,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260728_180542_metadata.json",
+      "size_bytes": 939,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260730_143715.md",
+      "size_bytes": 5357,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260730_143715_metadata.json",
+      "size_bytes": 940,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260731_164842.md",
+      "size_bytes": 5357,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/optimization_guide/ESTIMATED_guia_optimizacion_20260731_164842_metadata.json",
+      "size_bytes": 940,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/asset_generation_report.json",
+      "size_bytes": 9551,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/audit_report_20260728_091940.json",
+      "size_bytes": 10705,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/audit_report_20260728_121151.json",
+      "size_bytes": 10705,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/audit_report_20260728_122901.json",
+      "size_bytes": 10705,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/audit_report_20260728_180531.json",
+      "size_bytes": 10705,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/audit_report_20260730_143703.json",
+      "size_bytes": 10705,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/audit_report_20260731_164830.json",
+      "size_bytes": 10705,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/coherence_validation.json",
+      "size_bytes": 1416,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/coherence_validation_post_gen.json",
+      "size_bytes": 1416,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/commercial_gates_report.json",
+      "size_bytes": 1604,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/delivery_quality_report.json",
+      "size_bytes": 1409,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/financial_scenarios_20260728_091940.json",
+      "size_bytes": 1852,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/financial_scenarios_20260728_121151.json",
+      "size_bytes": 1852,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/financial_scenarios_20260728_122901.json",
+      "size_bytes": 1852,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/financial_scenarios_20260728_180531.json",
+      "size_bytes": 1852,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/financial_scenarios_20260730_143703.json",
+      "size_bytes": 1825,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/financial_scenarios_20260731_164830.json",
+      "size_bytes": 2027,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/gate_report_20260728_091951.json",
+      "size_bytes": 6181,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/gate_report_20260728_121203.json",
+      "size_bytes": 5660,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/gate_report_20260728_122913.json",
+      "size_bytes": 5660,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/gate_report_20260728_180542.json",
+      "size_bytes": 5660,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/gate_report_20260730_143715.json",
+      "size_bytes": 5326,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/gate_report_20260731_164842.json",
+      "size_bytes": 5328,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/geo_flow_result.json",
+      "size_bytes": 4614,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/human_checklist.md",
+      "size_bytes": 424,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/v4_audit/ia_readiness_report.json",
+      "size_bytes": 623,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/pain_ledger.json",
+      "size_bytes": 2726,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/pain_ledger_resolved.json",
+      "size_bytes": 2944,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/v4_audit/proposal_asset_matrix.json",
+      "size_bytes": 2000,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260728_091951.md",
+      "size_bytes": 2583,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260728_091951_metadata.json",
+      "size_bytes": 816,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260728_121203.md",
+      "size_bytes": 2583,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260728_121203_metadata.json",
+      "size_bytes": 816,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260728_122913.md",
+      "size_bytes": 2583,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260728_122913_metadata.json",
+      "size_bytes": 816,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260728_180542.md",
+      "size_bytes": 2583,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260728_180542_metadata.json",
+      "size_bytes": 816,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260730_143715.md",
+      "size_bytes": 2583,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260730_143715_metadata.json",
+      "size_bytes": 816,
+      "type": "schema"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260731_164842.md",
+      "size_bytes": 2583,
+      "type": "guide"
+    },
+    {
+      "name": "ASSETS/whatsapp_conflict_guide/guia_conflicto_whatsapp_20260731_164842_metadata.json",
+      "size_bytes": 816,
+      "type": "schema"
+    },
+    {
+      "name": "README_DELIVERY.md",
+      "size_bytes": 5795,
+      "type": "guide"
+    },
+    {
+      "name": "MANIFEST.json",
+      "size_bytes": 24983,
+      "type": "other"
+    }
+  ],
+  "total_files": 169,
+  "total_size_bytes": 445966,
+  "quality_metadata": {
+    "evidence_tier": "B+",
+    "precision_tier": "C",
+    "ga4_configured": false,
+    "gsc_configured": false,
+    "onboarding_used": true,
+    "coherence_score": 0.9633333333333333,
+    "contradictions_detected": []
+  }
+}

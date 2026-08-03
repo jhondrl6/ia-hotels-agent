@@ -1,0 +1,214 @@
+{
+  "generated_at": "2026-07-31T16:49:22.518635",
+  "hotel_url": "https://www.hotelvisperas.com/es",
+  "gate_results": [
+    {
+      "gate_name": "hard_contradictions",
+      "passed": true,
+      "status": "PASSED",
+      "message": "No hard contradictions detected (count: 0)",
+      "value": 0,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "evidence_coverage",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Evidence coverage at 95.0% (threshold: 95%)",
+      "value": 0.95,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "financial_validity",
+      "passed": true,
+      "status": "WARNING",
+      "message": "Financial data uses default/legacy values — Tier B evidence",
+      "value": true,
+      "suggestion": "Run onboarding with real data to improve evidence tier",
+      "details": {
+        "default_sources": {
+          "direct_channel_percentage": "default"
+        },
+        "corrected_tier": "B"
+      }
+    },
+    {
+      "gate_name": "coherence",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Coherence score 0.88 meets threshold 0.8",
+      "value": 0.8789898989898989,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "critical_recall",
+      "passed": false,
+      "status": "BLOCKED",
+      "message": "Critical recall metric not found in assessment",
+      "value": null,
+      "suggestion": "Ensure audit results include critical issue detection data",
+      "details": {}
+    },
+    {
+      "gate_name": "ethics",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Ethics validation passed",
+      "value": null,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "content_quality",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Document quality checks passed: no issues detected",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "asset_confidence",
+      "passed": true,
+      "status": "PASSED",
+      "message": "All 10 assets meet confidence threshold (0.7)",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {
+        "total_assets": 10,
+        "above_threshold": 10,
+        "below_threshold": 0
+      }
+    },
+    {
+      "gate_name": "proposal_asset_alignment",
+      "passed": false,
+      "status": "BLOCKED",
+      "message": "2 missing: Botón de WhatsApp, Schema Hotel",
+      "value": 0.7142857142857143,
+      "suggestion": "Alignment 71% (2 services missing) is below 80% threshold. Review asset generation pipeline to ensure all promised services produce deliverables before publication.",
+      "details": {
+        "total_services": 7,
+        "aligned_count": 5,
+        "missing_count": 2,
+        "low_quality_count": 0,
+        "alignment_percentage": 0.7142857142857143,
+        "all_covered": false,
+        "all_aligned": false,
+        "aligned": [
+          {
+            "service": "SEO Local",
+            "asset": "optimization_guide",
+            "confidence": 0.8
+          },
+          {
+            "service": "Schema Organization",
+            "asset": "org_schema",
+            "confidence": 0.8
+          },
+          {
+            "service": "Página de FAQ",
+            "asset": "faq_page",
+            "confidence": 0.8
+          },
+          {
+            "service": "Meta Tags Sociales (Open Graph)",
+            "asset": "open_graph",
+            "confidence": 1.0
+          },
+          {
+            "service": "Optimización para IA Generativa",
+            "asset": "llms_txt",
+            "confidence": 1.0
+          }
+        ],
+        "missing": [
+          {
+            "service": "Botón de WhatsApp",
+            "asset": "whatsapp_button",
+            "message": "Service 'Botón de WhatsApp' promises asset 'whatsapp_button' but it was not generated and does not exist in production",
+            "presence_verified": true,
+            "presence_status": "not_exists"
+          },
+          {
+            "service": "Schema Hotel",
+            "asset": "hotel_schema",
+            "message": "Service 'Schema Hotel' promises asset 'hotel_schema' but it was not generated"
+          }
+        ],
+        "low_quality": [],
+        "indeterminate": [],
+        "present_in_production": [],
+        "redundant": [],
+        "alignment": {
+          "promised_services_total": 7,
+          "generated_aligned": 5,
+          "present_in_production": 0,
+          "unresolved": 2,
+          "coverage_ratio": 0.7142857142857143,
+          "present_assets": [],
+          "passed": false,
+          "effective_total": 5,
+          "message": "5/7 servicios cubiertos (5 generados )  — 2 sin cubrir"
+        }
+      }
+    },
+    {
+      "gate_name": "tier_c_onboarding_required",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Tier B: Datos suficientes para propuesta activa.",
+      "value": null,
+      "suggestion": "",
+      "details": {
+        "tier": "B"
+      }
+    },
+    {
+      "gate_name": "coverage_no_silent_drop",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Coverage completo: 0 en diagnostico/propuesta, 7 justificadas de 7 detectadas",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {
+        "total_detected": 7,
+        "covered": 0,
+        "justified": 7,
+        "uncovered": []
+      }
+    }
+  ],
+  "readiness": {
+    "status": "NOT_READY",
+    "ready": false,
+    "blocking_issues": [
+      {
+        "gate": "critical_recall",
+        "message": "Critical recall metric not found in assessment",
+        "suggestion": "Ensure audit results include critical issue detection data",
+        "value": null
+      },
+      {
+        "gate": "proposal_asset_alignment",
+        "message": "2 missing: Botón de WhatsApp, Schema Hotel",
+        "suggestion": "Alignment 71% (2 services missing) is below 80% threshold. Review asset generation pipeline to ensure all promised services produce deliverables before publication.",
+        "value": 0.7142857142857143
+      }
+    ],
+    "warnings": [
+      {
+        "gate": "financial_validity",
+        "message": "Financial data uses default/legacy values — Tier B evidence"
+      }
+    ]
+  },
+  "financial_sources": {
+    "adr_cop": "regional_v410",
+    "occupancy_rate": "regional",
+    "direct_channel_percentage": "default"
+  }
+}
