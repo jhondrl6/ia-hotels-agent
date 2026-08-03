@@ -14,7 +14,7 @@
 |------|--------|--------|-------------|---------------|-------|
 | FASE-A | 2026-08-03 | ✅ | Multisesión (bloqueos del equipo, ver L1) | No (directo) | D1+D2 cerrados; 0 regresiones en código modificado; validaciones 5/5 |
 | FASE-B | 2026-08-03 | ✅ | 2 sesiones (replanteo tras cuelgue del pipe, ver L6) | No (directo, no delegable) | D3+D4+N1 cerrados; DEC-B1/B2/B3 opción A; 8 tests nuevos (102 tests FASE-B green); 38 fallos probados preexistentes (22 dinámico vs HEAD, 16 evidencia estática); validaciones 5/5; REGISTRY fase 408 |
-| FASE-C-A | — | ⏳ | —/60 | No (directo) | |
+| FASE-C-A | 2026-08-03 | ✅ | 1 sesión | No (directo) | D5+N2 cerrados; DEC-C1 WARNING + DEC-C2 Option A; 9 tests nuevos + 3 actualizados; 303 tests quality_gates green; validaciones 5/5 |
 | FASE-C-B | — | ⏳ | —/60 | Sí (2 tracks paralelos) | |
 | FASE-D | — | ⏳ | —/60 | Sí (track N5-N8) | |
 | FASE-E | — | ⏳ | —/60 | Sí (v4complete) | |
@@ -114,13 +114,19 @@ Formato por lección: **qué pasó / por qué / qué lo previene** + evaluación
 - **Qué lo previene**: mantener la regla L3; los prompts de fase intermedia que aún traen `--release` en su plantilla (02/03, y probablemente 04-07) deben ignorar ese flag o corregirse en FASE-RELEASE.
 - **Pertinencia**: **INCLUIR** — ya confirmada dos veces (A y B); aplica a C-A, C-B, D y E.
 
+### L10 (FASE-C-A) — El usuario puede revertir cambios parciales: verificar estado real antes de asumir
+- **Qué pasó**: el agente implementó D5 + N2 correctamente, pero el usuario revirtió selectivamente cambios en los archivos de tests (manteniendo solo la implementación en `publication_gates.py`). El agente continuó editando tests basándose en suposiciones del estado previo, generando conflictos crecientes.
+- **Por qué**: tras la intervención del usuario, el agente no verificó el estado real del disco (`git diff`, `git status`) antes de continuar editando. Asumió que sus cambios previos seguían presentes.
+- **Qué lo previene**: cuando el usuario interviene con cambios manuales o dice "alto", SIEMPRE ejecutar `git diff --stat` y `git status --short` para ver el estado real antes de continuar. Luego clasificar qué tiene el usuario vs qué esperaba el agente, y alinear.
+- **Pertinencia**: **INCLUIR** — aplica a cualquier fase donde el usuario pueda intervenir manualmente.
+
 ---
 
 ## Seguimientos abiertos (llenar)
 
 | Tema | Estado | Acción futura |
 |------|--------|---------------|
-| Gate N2 en modo WARNING | Pendiente decisión | Upgrade a BLOCKING en release posterior, tras catalogar contradicciones conocidas |
+| Gate N2 en modo WARNING | ✅ Implementado (FASE-C-A) | Upgrade a BLOCKING en release posterior, tras catalogar contradicciones conocidas |
 | `pain_ratio` del pricing | ✅ Resuelto (FASE-B, DEC-B2) | Documentado como métrica distinta (relación precio/fuga), NUNCA como recuperación; `pain_ratio_note` de diagnóstico y propuesta actualizados |
 | Tests patológicos propuesta/precios (L1) | Pendiente — bloqueante para suite completa | `test_proposal_generator.py` (fuga ~8GB RAM), `test_price_consistency.py` (cuelgue) y `test_proposal_generator_dict.py` (MagicMock vs `score_seo < 30`): diagnosticar y corregir antes de FASE-E (declaración de suite sin regresiones). FASE-B cerró aislándolos con evidencia mixta (L7) |
 | Prompts con `--release` en plantilla (L3/L9) | Documentado | 02/03-prompt aún lo indican; ignorar el flag en C-A/C-B/D/E o corregir plantillas en FASE-RELEASE |
