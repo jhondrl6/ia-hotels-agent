@@ -12,7 +12,10 @@ import pytest
 import tempfile
 from pathlib import Path
 
-from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+from modules.commercial_documents.v4_diagnostic_generator import (
+    V4DiagnosticGenerator,
+    _build_excluded_factors_section,
+)
 from modules.commercial_documents.data_structures import (
     V4AuditResult,
     ValidationSummary,
@@ -582,3 +585,130 @@ def dataclass_replace(obj, **kwargs):
     """Create a copy of a dataclass with updated fields."""
     from dataclasses import replace
     return replace(obj, **kwargs)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# FASE-C-B: Tests para D6 (performance dinámico), D7 (reviews), D8 (atribución GEO)
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+class TestD6PerformanceStatusDinamico:
+    """D6: el texto de performance refleja el status real de la API."""
+
+    def test_d6_error_status_muestra_mensaje_api(self):
+        """Con performance.status=ERROR, el doc refleja el mensaje de error."""
+        gen = V4DiagnosticGenerator()
+        audit = _make_minimal_audit()
+        audit = dataclass_replace(
+            audit,
+            performance=PerformanceData(
+                has_field_data=False,
+                mobile_score=None,
+                desktop_score=None,
+                lcp=None,
+                fid=None,
+                cls=None,
+                status="ERROR",
+                message="API key not valid",
+            ),
+        )
+
+        result = gen._build_manual_attention_table(audit)
+
+        assert "API key not valid" in result
+        assert "🔴 Alta" in result
+        # El texto genérico NO debe aparecer
+        assert "El sitio puede ser nuevo" not in result
+
+    def test_d6_ok_sin_field_data_muestra_generico(self):
+        """Con status OK pero sin field data, muestra texto genérico (amarillo)."""
+        gen = V4DiagnosticGenerator()
+        audit = _make_minimal_audit()
+        audit = dataclass_replace(
+            audit,
+            performance=PerformanceData(
+                has_field_data=False,
+                mobile_score=None,
+                desktop_score=None,
+                lcp=None,
+                fid=None,
+                cls=None,
+                status="ok",
+                message="Success",
+            ),
+        )
+
+        result = gen._build_manual_attention_table(audit)
+
+        assert "El sitio puede ser nuevo o tener tráfico bajo" in result
+        assert "🟡 Media" in result
+        # NO debe mostrar mensaje de error
+        assert "API key not valid" not in result
+
+    def test_d6_con_field_data_no_agrega_fila(self):
+        """Con field data disponible, no se agrega fila de performance."""
+        gen = V4DiagnosticGenerator()
+        audit = _make_minimal_audit()
+        # audit ya tiene has_field_data=True por defecto
+
+        result = gen._build_manual_attention_table(audit)
+
+        assert "Sin Datos de Campo" not in result
+        assert "Core Web Vitals" not in result
+
+
+class TestD7ReviewsParametrizadas:
+    """D7: el ejemplo de reseñas usa el conteo real del audit, no '203'."""
+
+    def test_d7_con_reviews_count_real(self):
+        """Con reviews_count=966, el texto muestra '966 reseñas'."""
+        result = _build_excluded_factors_section(reviews_count=966)
+
+        assert "966 reseñas" in result
+        assert "203" not in result
+
+    def test_d7_sin_reviews_count_usa_generico(self):
+        """Sin reviews_count (None), usa texto genérico sin número."""
+        result = _build_excluded_factors_section()
+
+        assert "un hotel con muchas reseñas" in result
+        assert "203" not in result
+
+    def test_d7_reviews_count_cero(self):
+        """Con reviews_count=0, muestra '0 reseñas' (dato real)."""
+        result = _build_excluded_factors_section(reviews_count=0)
+
+        assert "0 reseñas" in result
+        assert "203" not in result
+
+
+class TestD8AtribucionGEO:
+    """D8: el template atribuye el GEO score a iah-cli, no a Google."""
+
+    def test_d8_template_sin_algoritmo_de_google(self):
+        """El template no contiene 'algoritmo propio de Google' ni 'algoritmo de Google'."""
+        template_path = (
+            Path(__file__).parent.parent.parent
+            / "modules"
+            / "commercial_documents"
+            / "templates"
+            / "diagnostico_v6_template.md"
+        )
+        content = template_path.read_text(encoding="utf-8")
+
+        assert "algoritmo propio de Google" not in content
+        assert "algoritmo de Google" not in content
+
+    def test_d8_template_con_atribucion_iah_cli(self):
+        """El template contiene la atribución correcta a IA Hoteles Agent."""
+        template_path = (
+            Path(__file__).parent.parent.parent
+            / "modules"
+            / "commercial_documents"
+            / "templates"
+            / "diagnostico_v6_template.md"
+        )
+        content = template_path.read_text(encoding="utf-8")
+
+        assert "algoritmo propio de IA Hoteles Agent" in content
+        assert "Google Places" in content

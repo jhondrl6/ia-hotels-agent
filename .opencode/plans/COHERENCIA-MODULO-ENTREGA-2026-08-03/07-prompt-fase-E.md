@@ -100,7 +100,7 @@ Además: coherence ≥ 0.8, gate_status global honesto, evidence_tier B+ (no rev
 ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-E \
     --desc "E2E v4complete Zi One Luxury: 21/21 hallazgos verificados" \
     --archivos-mod "output/clientes/zi-one-luxury_onboarding.yaml" \
-    --tests "0" --coherence <score final> --check-manual-docs --release 4.70.0
+    --tests "0" --coherence <score final> --check-manual-docs
 ```
 
 ## Criterios de Completitud (CHECKLIST)

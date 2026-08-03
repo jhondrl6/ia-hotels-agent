@@ -88,7 +88,7 @@ avanzar a la siguiente sin resolver el checkpoint.
 | FASE-A | ✅ COMPLETADA | 2026-08-03 | D1+D2 resueltos; `brechas_reales` como fuente única |
 | FASE-B | ✅ COMPLETADA | 2026-08-03 | D3+D4+N1 resueltos; DEC-B1/B2/B3 (ver `03-prompt-fase-B.md`); dinero de fuente única |
 | FASE-C-A | ✅ COMPLETADA | 2026-08-03 | D5+N2 resueltos; DEC-C1 (WARNING) + DEC-C2 (Option A + fallback B) |
-| FASE-C-B | ⏳ PENDIENTE | — | |
+| FASE-C-B | ✅ COMPLETADA | 2026-08-03 | D6+D7+D8 resueltos; performance dinámico, reviews parametrizadas, atribución GEO correcta |
 | FASE-D | ⏳ PENDIENTE | — | |
 | FASE-E | ⏳ PENDIENTE | — | Única ejecución v4complete |
 | FASE-RELEASE-4.70.0 | ⏳ PENDIENTE | — | Requiere todas las anteriores ✅ |

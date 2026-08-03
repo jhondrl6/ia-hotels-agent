@@ -28,7 +28,7 @@
 | FASE-A | D1, D2 | ✅ | 2026-08-03 | Directo |
 | FASE-B | D3, D4, N1 | ✅ | 2026-08-03 | Directo ⚠️ |
 | FASE-C-A | D5, N2 | ✅ | 2026-08-03 | Directo |
-| FASE-C-B | D6, D7, D8 | ⏳ | — | Delegado parcial |
+| FASE-C-B | D6, D7, D8 | ✅ | 2026-08-03 | Delegado parcial |
 | FASE-D | D9-D12, N3-N8 (parcial) | ⏳ | — | Delegado parcial |
 | FASE-E | E2E Zione | ⏳ | — | Delegado |
 | FASE-RELEASE-4.70.0 | Docs | ⏳ | — | Delegable |

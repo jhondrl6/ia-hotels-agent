@@ -306,15 +306,22 @@ def _build_scoring_breakdown(pilar: str, elementos: dict) -> str:
         return f"**{label} {computed_score}/100** = (ningún factor activo)"
 
 
-def _build_excluded_factors_section() -> str:
-    """Retorna sección 'Este score NO mide' con factores excluidos por pilar."""
-    return """> **Este score NO mide:**
+def _build_excluded_factors_section(reviews_count: int | None = None) -> str:
+    """Retorna sección 'Este score NO mide' con factores excluidos por pilar.
+
+    FASE-C-B (D7): parametriza el ejemplo de reseñas con el conteo real del audit.
+    """
+    if reviews_count is not None:
+        ejemplo_resenas = f"un hotel con {reviews_count} reseñas"
+    else:
+        ejemplo_resenas = "un hotel con muchas reseñas"
+    return f"""> **Este score NO mide:**
 - **SEO Local:** contenido editorial, perfil de backlinks, domain authority externo
 - **GEO:** tasa de respuesta a reseñas, tiempo de respuesta, calidad de las respuestas, engagement rate, antigüedad de reseñas nuevas
 - **AEO:** volumen de tráfico, conversiones
 - **IAO:** tráfico directo, revenue, NPS
 
-> **Para el score GEO específicamente:** un hotel con 203 reseñas y respuesta <24h puede bajar su score por fotos faltantes o inconsistencia NAP — no por la calidad de su engagement con reseñas."""
+> **Para el score GEO específicamente:** {ejemplo_resenas} y respuesta <24h puede bajar su score por fotos faltantes o inconsistencia NAP — no por la calidad de su engagement con reseñas."""
 
 
 def calcular_cumplimiento(elementos: dict) -> int:
@@ -934,7 +941,9 @@ class V4DiagnosticGenerator:
             'seo_score_breakdown': _build_scoring_breakdown('seo', self._extraer_elementos_seo(audit_result)),
             'aeo_score_breakdown': _build_scoring_breakdown('aeo', self._extraer_elementos_aeo(audit_result)),
             'iao_score_breakdown': _build_scoring_breakdown('iao', self._extraer_elementos_iao(audit_result)),
-            'excluded_factors_section': _build_excluded_factors_section(),
+            'excluded_factors_section': _build_excluded_factors_section(
+                reviews_count=audit_result.gbp.reviews if audit_result.gbp else None
+            ),
             'scoring_methodology_url': './scoring_methodology.md',
 
             # Brecha impactos y resúmenes
@@ -1800,9 +1809,14 @@ class V4DiagnosticGenerator:
         if audit_result.gbp.photos < 20:
             rows.append(f"| Fotos GBP Insuficientes | 🟡 Media | Subir al menos {20 - audit_result.gbp.photos} fotos adicionales |")
         
-        # Performance without field data
+        # Performance without field data — FASE-C-B (D6): leer status real
         if audit_result.performance and not audit_result.performance.has_field_data:
-            rows.append("| Sin Datos de Campo (Core Web Vitals) | 🟡 Media | El sitio puede ser nuevo o tener tráfico bajo |")
+            perf_status = (audit_result.performance.status or "").upper()
+            if perf_status == "ERROR":
+                msg = audit_result.performance.message or "API de PageSpeed no disponible"
+                rows.append(f"| Sin Datos de Campo (Core Web Vitals) | 🔴 Alta | {msg} |")
+            else:
+                rows.append("| Sin Datos de Campo (Core Web Vitals) | 🟡 Media | El sitio puede ser nuevo o tener tráfico bajo |")
         
         # Conflicts
         if audit_result.validation and audit_result.validation.conflicts:

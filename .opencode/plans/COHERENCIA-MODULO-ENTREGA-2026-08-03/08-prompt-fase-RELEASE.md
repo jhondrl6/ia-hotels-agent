@@ -79,12 +79,25 @@ git diff --stat
 - [ ] Symlink intacto · validaciones 4/4.
 
 ### T7 — Suite de tests por módulo (riesgo timeout)
+
+> ⚠️ **Seguridad de ejecución (L11)**: NUNCA ejecutar múltiples directorios juntos.
+> Ejecutar por módulo individualmente. El conftest.py de tests/commercial_documents
+> ya excluye los tests patológicos automáticamente.
+
 ```bash
-./venv/Scripts/python.exe -m pytest tests/ -q --co | tail -1    # conteo real
-# Si la suite completa da timeout, ejecutar por módulo (lección 5 plan ZIP):
-./venv/Scripts/python.exe -m pytest tests/commercial_documents tests/financial_engine tests/quality_gates tests/delivery -q
+# Conteo real (solo colección, no ejecución)
+./venv/Scripts/python.exe -m pytest tests/ -q --co | tail -1
+
+# Ejecución por módulo (UNO a la vez, timeout 60s cada uno):
+./venv/Scripts/python.exe -m pytest tests/commercial_documents -q --tb=line
+./venv/Scripts/python.exe -m pytest tests/financial_engine -q --tb=line
+./venv/Scripts/python.exe -m pytest tests/quality_gates -q --tb=line
+./venv/Scripts/python.exe -m pytest tests/delivery -q --tb=line
+
+# Si algún módulo cuelga: taskkill /F /IM python.exe /T INMEDIATAMENTE
 ```
 - [ ] Conteo real registrado en `11-documentacion-post-proyecto.md` sección D.
+- [ ] Fallos preexistentes documentados (no atribuir a este release).
 
 ### T8 — README audit (E8b)
 - [ ] Test count y module count del README coinciden con pytest --collect-only y find modules/ (corregir si hay discrepancia).

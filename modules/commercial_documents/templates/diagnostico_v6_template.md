@@ -110,7 +110,7 @@ ${seo_score_breakdown}
 ${aeo_score_breakdown}
 ${iao_score_breakdown}
 
-> ⚠️ **Nota sobre divergencia de scores**: El score GEO en la tabla principal viene directamente del `geo_score` de Google Business Profile (algoritmo propio de Google). El desglose GEO usa el checklist interno de iah-cli. Pueden diferir — ambos miden aspectos complementarios de tu presencia en Maps. Los scores SEO, AEO e IAO usan la misma metodología en tabla y desglose — siempre idénticos.
+> ⚠️ **Nota sobre divergencia de scores**: El score GEO en la tabla principal viene directamente del `geo_score` de Google Business Profile (algoritmo propio de IA Hoteles Agent sobre datos de Google Places: rating, reseñas, fotos, horario, web). El desglose GEO usa el checklist interno de iah-cli. Pueden diferir — ambos miden aspectos complementarios de tu presencia en Maps. Los scores SEO, AEO e IAO usan la misma metodología en tabla y desglose — siempre idénticos.
 
 ${excluded_factors_section}
 ${regional_transparency}
@@ -228,6 +228,6 @@ El score de Visibilidad Digital se calcula sobre 4 pilares independientes (0-100
 | **AEO** | FAQ Schema, OG Tags, Schema Hotel detallado, Contenido factual | Volumen de tráfico, conversiones |
 | **IAO** | Citabilidad, acceso de crawlers IA, llms.txt, señales de marca | Tráfico directo, Revenue, NPS |
 
-> ⚠️ **Divergencia GEO**: El score GEO mostrado en la tabla principal proviene directamente del `geo_score` de Google Business Profile (algoritmo de Google). El desglose mostrado arriba usa la metodología del checklist GEO de iah-cli (6 factores con pesos fijos). Ambos scores pueden diferir — son mediciones complementarias, no redundantes. El checklist GEO evalúa factores técnicos que tú controlas; el GBP score refleja la evaluación de Google.
+> ⚠️ **Divergencia GEO**: El score GEO mostrado en la tabla principal proviene del algoritmo propio de IA Hoteles Agent sobre datos de Google Places (rating, reseñas, fotos, horario, web). El desglose mostrado arriba usa la metodología del checklist GEO de iah-cli (6 factores con pesos fijos). Ambos scores pueden diferir — son mediciones complementarias, no redundantes. El checklist GEO evalúa factores técnicos que tú controlas; el score principal refleja la evaluación del agente sobre datos de Places.
 
 **Referencias:** [Metodología completa de scoring](./scoring_methodology.md)

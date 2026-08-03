@@ -20,6 +20,9 @@
 | Escenarios honestos en doc | commercial_documents | 3 escenarios reales con labels correctos + CG-SCENARIO-ORDER | B |
 | Coverage gate honesto | quality_gates | covered cuenta antes de eximir; warning si covered=0 (D5) | C-A |
 | Gate doc↔audit consistency | quality_gates | Detecta contradicciones OG, reviews, fotos, performance entre doc y audit (N2, WARNING mode DEC-C1) | C-A |
+| Performance dinámico (D6) | commercial_documents | `_build_manual_attention_table` lee `performance.status`: ERROR→mensaje API, OK→texto genérico | C-B |
+| Reviews parametrizadas (D7) | commercial_documents | `_build_excluded_factors_section(reviews_count=N)` usa conteo real del audit; ya no "203 reseñas" | C-B |
+| Atribución GEO correcta (D8) | commercial_documents | Template dice "algoritmo propio de IA Hoteles Agent sobre datos de Google Places"; ya no "algoritmo de Google" | C-B |
 | Freshness v4_audit | delivery + proposal | commercial_gates_report fresco; históricos fuera del ZIP | D |
 
 ## Sección D: Métricas Acumulativas
@@ -30,9 +33,11 @@
 | Tests nuevos acumulados | +6 (test_diagnostic_brechas.py → 40 passed) | A |
 | Tests nuevos acumulados | +14 (8 nuevos FASE-B + 6 FASE-A) | B |
 | Tests nuevos acumulados | +13 (9 nuevos doc_audit + 4 coverage honest) | C-A |
+| Tests nuevos acumulados | +8 (3 D6 perf + 3 D7 reviews + 2 D8 GEO template) | C-B |
 | Hallazgos cerrados | 2/21 (D1, D2) | A |
 | Hallazgos cerrados | 5/21 (D1, D2, D3, D4, N1) | B |
 | Hallazgos cerrados | 7/21 (+D5, +N2) | C-A |
+| Hallazgos cerrados | 10/21 (+D6, +D7, +D8) + N9 parcial | C-B |
 | Coherence última verificación | 0.9168 (run 2026-08-01) | baseline |
 
 ## Sección E: Archivos Afiliados Actualizados
@@ -58,6 +63,9 @@
 | `tests/quality_gates/test_coverage_gate.py` | +4 tests TestCoverageHonestCount (D5) + 2 tests actualizados (status→WARNING) | C-A |
 | `tests/quality_gates/test_coverage_gate_integration.py` | 1 test actualizado (acepta WARNING) | C-A |
 | `tests/quality_gates/test_publication_gates.py` | 3 aserciones actualizadas: gate count 11→12 | C-A |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | D6: `_build_manual_attention_table` lee `performance.status` (ERROR→mensaje API, OK→genérico) · D7: `_build_excluded_factors_section(reviews_count=N)` parametriza ejemplo de reseñas | C-B |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | D8: atribución GEO corregida en L113 y L231 — "algoritmo propio de IA Hoteles Agent sobre datos de Google Places" | C-B |
+| `tests/commercial_documents/test_diagnostic_generator.py` | +8 tests FASE-C-B (3 D6 performance + 3 D7 reviews + 2 D8 GEO) | C-B |
 
 ## Notas para FASE-RELEASE
 

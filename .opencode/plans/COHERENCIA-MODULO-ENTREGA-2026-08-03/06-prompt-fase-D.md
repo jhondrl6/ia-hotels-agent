@@ -70,8 +70,17 @@ Contexto para el subagente:
 
 | Test | Comando | Criterio |
 |------|---------|----------|
-| Suites afectadas | `./venv/Scripts/python.exe -m pytest tests/commercial_documents tests/delivery tests/financial_engine -q` | 0 regresiones |
+| Suites afectadas | Ver nota de seguridad ⬇️ | 0 regresiones |
 | Validaciones | `./venv/Scripts/python.exe scripts/run_all_validations.py --quick` | 4/4 |
+
+> ⚠️ **Seguridad de ejecución (L11)**: NUNCA ejecutar múltiples directorios de tests en un solo comando.
+> Ejecutar por módulo individualmente con timeout de 60s:
+> ```bash
+> ./venv/Scripts/python.exe -m pytest tests/commercial_documents -q --tb=line  # conftest excluye patológicos
+> ./venv/Scripts/python.exe -m pytest tests/delivery -q --tb=line
+> ./venv/Scripts/python.exe -m pytest tests/financial_engine -q --tb=line
+> ```
+> Si algún módulo individual cuelga, matar INMEDIATAMENTE con `taskkill /F /IM python.exe /T`.
 
 **Verificación estática**:
 ```bash
@@ -88,7 +97,7 @@ grep -rn "Por que importa" modules/  # → 0 hits (N6)
 ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-D \
     --desc "D9-D12 + N4 freshness ZIP + N3/N5-N8 pulido de texto" \
     --archivos-mod "modules/commercial_documents/v4_diagnostic_generator.py,modules/commercial_documents/v4_proposal_generator.py,modules/commercial_documents/templates/diagnostico_v6_template.md,modules/delivery/delivery_packager.py,main.py" \
-    --tests "<N nuevos>" --check-manual-docs --release 4.70.0
+    --tests "<N nuevos>" --check-manual-docs
 ```
 
 ## Criterios de Completitud (CHECKLIST)

@@ -1,6 +1,6 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-RELEASE-4.63.0",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-B",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-C-B",
   "modules/commercial_documents/v4_proposal_generator.py": "FASE-B",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-RELEASE-4.63.0",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
@@ -26,7 +26,7 @@
   "main.py": "FASE-A",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "FASE-TRAZABILIDAD-RAIZ",
-  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-A",
+  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-C-B",
   "data_models/__init__.py": "FASE-IAO-06",
   "v4_proposal_generator.py": "FASE-2",
   "propuesta_v6_template.md": "FASE-2",
