@@ -27,7 +27,9 @@
 |---------|-------|------|
 | Tests iniciales | 3,185 funciones / 253 archivos | baseline |
 | Tests nuevos acumulados | +6 (test_diagnostic_brechas.py → 40 passed) | A |
+| Tests nuevos acumulados | +14 (8 nuevos FASE-B + 6 FASE-A) | B |
 | Hallazgos cerrados | 2/21 (D1, D2) | A |
+| Hallazgos cerrados | 5/21 (D1, D2, D3, D4, N1) | B |
 | Coherence última verificación | 0.9168 (run 2026-08-01) | baseline |
 
 ## Sección E: Archivos Afiliados Actualizados
@@ -39,6 +41,15 @@
 | `modules/commercial_documents/templates/diagnostico_v6_template.md` | Conteo dinámico `${brechas_*_count}` | A |
 | `config/regional_benchmarks.yaml` | Pesos `low_seo_score`/`low_organic_visibility` en 4 regiones | A |
 | `tests/commercial_documents/test_diagnostic_brechas.py` | +6 tests (OG 8 tags, N unificado, pesos YAML, template, caché, low_seo) | A |
+| `modules/financial_engine/pillar_maturity_curve.py` | `calcular_recuperacion_6m()` — fórmula ÚNICA de recuperación 6m (N1) | B |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | D3: `estimated_monthly_cop` alineado por pain_id con pesos normalizados · D4: tabla de escenarios reales, `financial_method` derivado, `financial_value_range_label`, urgencia N8 · N1: `recuperacion_proyectada_6m` con curva · persistencia `commercial_gates_report_diagnostic_<ts>.json` | B |
+| `modules/commercial_documents/v4_proposal_generator.py` | N1: gate `net_benefit_6m`/`roi` y `recovered_6m`/`net_benefit_6m` con `calcular_recuperacion_6m` (curva única) | B |
+| `modules/quality_gates/commercial_gate.py` | CG-SCENARIO-ORDER con semántica real (conservador = peor caso = mayor pérdida) | B |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Sección "Lo que está en juego" con curva de maduración; frontmatter `financial_value_range_label` | B |
+| `tests/commercial_documents/test_fase_f_financial_placeholders.py` | +3 tests (curva N1, nota curva, range label) + method derivado | B |
+| `tests/commercial_documents/test_diagnostic_brechas.py` | +2 tests D3 (costo == doc, impacto == peso) | B |
+| `tests/commercial_documents/test_financial_coherence.py` | +2 tests N1 (wrapper curva, caso Zione $9.691.220) | B |
+| `tests/quality_gates/test_commercial_gate.py` | 2 tests actualizados a semántica real del orden de escenarios | B |
 
 ## Notas para FASE-RELEASE
 

@@ -86,7 +86,7 @@ avanzar a la siguiente sin resolver el checkpoint.
 | Fase | Estado | Fecha | Notas |
 |------|--------|-------|-------|
 | FASE-A | ✅ COMPLETADA | 2026-08-03 | D1+D2 resueltos; `brechas_reales` como fuente única |
-| FASE-B | ⏳ PENDIENTE | — | Mayor complejidad técnica |
+| FASE-B | ✅ COMPLETADA | 2026-08-03 | D3+D4+N1 resueltos; DEC-B1/B2/B3 (ver `03-prompt-fase-B.md`); dinero de fuente única |
 | FASE-C-A | ⏳ PENDIENTE | — | |
 | FASE-C-B | ⏳ PENDIENTE | — | |
 | FASE-D | ⏳ PENDIENTE | — | |

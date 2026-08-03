@@ -162,9 +162,9 @@ class TestCommercialGateScenarioOrder:
         assert result.passed is False
 
     def test_correct_order_passes(self):
-        """Orden correcto: optimista >= realista >= conservador."""
+        """FASE-B: orden correcto = conservador (peor caso) >= realista >= optimista."""
         validator = CommercialGateValidator()
-        scenarios = {"optimistic": 7000000, "realistic": 3741696, "conservative": 2000000}
+        scenarios = {"optimistic": 1000000, "realistic": 3741696, "conservative": 7276953}
         result = validator._check_scenario_order(scenarios)
         assert result.passed is True
 
@@ -340,7 +340,7 @@ class TestCommercialGateValidateDiagnostic:
             "## Qué hacemos\n\n"
             "Recuperamos sus reservas directas.\n\n"
         )
-        scenarios = {"optimistic": 7000000, "realistic": 3741696, "conservative": 2000000}
+        scenarios = {"optimistic": 1000000, "realistic": 3741696, "conservative": 7276953}
         ai_crawlers = {"blocked_crawlers": []}
 
         report = validator.validate_diagnostic(

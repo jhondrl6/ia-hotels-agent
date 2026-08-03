@@ -52,40 +52,91 @@ Fuente completa: contexto §5 FASE-2 (D3/D4/N1) y §3.4 (matemática N1).
 - **Decisión por defecto**: Opción A (NO tocar fórmulas de pérdida, ver contexto §4.2).
 - El `financial_value_range` [5.75M, 8.63M] se renombra a "rango ±20% del escenario más probable" o se amplía para contener el peor caso.
 
+## Decisiones tomadas (2026-08-03, FASE-B)
+
+> Verificadas contra código vivo y baseline auditado 2026-08-01. Se aplican las
+> opciones por defecto recomendadas; ninguna contradice la evidencia.
+
+### ✅ DEC-B1 — Opción A (D3, costo único)
+`_compute_opportunity_scores` (v4_diagnostic_generator.py) sobreescribe
+`estimated_monthly_cop` con los pesos normalizados de `_get_brecha_pesos`
+(`base_value × impacto/100`, donde `base_value = monthly_loss_central o max`),
+alineados por `pain_id`. El JSON report queda byte-igual al costo del doc
+(`_get_brecha_costo` usa la misma base y proporción). El scorer conserva su
+scoring/ranking interno; solo el `estimated_monthly_cop` publicable se unifica.
+`_inject_brecha_scores` usa `monthly_loss_central` como base del `impacto_pct`
+para que el % coincida con el peso normalizado del doc.
+
+### ✅ DEC-B2 — Opción A (N1, recuperación 6m única)
+La curva de maduración de `pillar_maturity_curve.py` ES la fórmula única.
+Nueva función compartida `calcular_recuperacion_6m(fuga_mensual, recovery_factor_max)`
+(= `aplicar_curva_4_pilares(...).total_recuperacion_6m` = fuga × recovery × 3.85).
+Diagnóstico (`recuperacion_proyectada_6m`), propuesta (`net_benefit_6m`/`roi`,
+`total_recuperacion_6m`, `recuperacion_proyectada_6m`, `recovered_6m`,
+`net_benefit_6m` template) consumen ESA función. El `pain_ratio` se documenta
+como métrica distinta (porción direccionable de la fuga / relación precio-fuga),
+NUNCA como factor de recuperación: `pain_ratio_note` de diagnóstico y propuesta
+se actualizan en consecuencia. Cifra Zione: 7.192.000 × 0.35 × 3.85 = $9.691.220
+en AMBOS documentos (corrección de verdad documentada, riesgo §8 fila 2).
+
+### ✅ DEC-B3 — Opción A (D4, escenarios honestos)
+- Tabla de escenarios del doc muestra los 3 escenarios REALES del módulo con
+  labels: "Peor caso (conservador)" / "Más probable" / "Mejor caso (optimista)",
+  cada uno con su probabilidad (70/20/10). El valor negativo del optimista se
+  etiqueta "Ganancia neta proyectada" (break-even superado).
+- `CG-SCENARIO-ORDER` (commercial_gate.py) se ajusta a la semántica real:
+  conservative = peor caso = MAYOR pérdida → orden válido en pérdida
+  `conservative ≥ realistic ≥ optimistic` (optimistic < 0 = ganancia → PASS).
+  El gate YA se ejecuta en `validate_diagnostic` (generator L605-627); el fix es
+  su semántica + PERSISTIR el resultado.
+- El `CommercialGateReport` del diagnóstico se persiste SIEMPRE en
+  `output_dir/hotel_id/v4_audit/commercial_gates_report_diagnostic_<ts>.json`
+  (con timestamp → NO colisiona con `commercial_gates_report.json` de la propuesta).
+- `financial_value_range` [min, max] del escenario realista se mantiene como
+  metadata y se etiqueta explícitamente: `financial_value_range_label` =
+  "rango ±20% del escenario más probable (no incluye peores casos)". NO se
+  amplía a [−6.8M, 19.6M] porque `hook_pdf_generator.py:273-276` lo mostraría
+  como "fuga mínima negativa" (inaceptable comercialmente).
+- `financial_method` se deriva de la fuente real de pesos:
+  `dynamic_impact_normalized` si DynamicImpactCalculator participó,
+  `pain_weights_normalized` si no (nunca más el hardcode genérico).
+- Raíz de N8: `_build_urgencia_content` deja de atribuir "70% de confianza" al
+  valor central; cita el escenario más probable con su probabilidad real (20%).
+
 ## Tareas
 
 ### T1 — Implementar DEC-B1 (D3): costo único
 **Archivos**: `modules/commercial_documents/v4_diagnostic_generator.py` (`_compute_opportunity_scores`), `modules/financial_engine/opportunity_scorer.py` (L566 `estimated_monthly_cop` hoy usa `monthly_loss_max` del rango sintético).
 
-- [ ] `estimated_monthly_cop` sale de la MISMA fuente que `_get_brecha_costo` (pesos normalizados).
-- [ ] Report JSON y doc muestran cifras idénticas por brecha.
+- [x] `estimated_monthly_cop` sale de la MISMA fuente que `_get_brecha_costo` (pesos normalizados).
+- [x] Report JSON y doc muestran cifras idénticas por brecha.
 
 ### T2 — Implementar DEC-B3 (D4): escenarios honestos + gate CG-SCENARIO-ORDER
 **Archivos**: `v4_diagnostic_generator.py` (L1063-1079 workaround FASE-A E1, L1087-1099 labels "Mínimo garantizable/Más probable/Máximo alcanzable"), `modules/quality_gates/commercial_gate.py` (`_check_scenario_order` L297-348, ID CG-SCENARIO-ORDER).
 
 > ⚠️ Dato verificado (2026-08-03): `validate_diagnostic` YA se ejecuta dentro de `generate()` (v4_diagnostic_generator.py:605-627) y YA corre `_check_scenario_order` (commercial_gate.py:148-149). El problema NO es que el gate no corra: es que su resultado SOLO va a `logging.warning`/alertas internas y NUNCA se persiste a disco. El commercial_gates_report.json solo lo escribe la propuesta (y solo en branch de error). FASE-B T2 NO debe "cablear el gate" (ya está cableado) sino **persistir el resultado del diagnóstico** en un artefacto del run.
 
-- [ ] El doc muestra los 3 escenarios reales del módulo con labels y probabilidades coherentes.
-- [ ] Label de confianza "70%" deja de atribuirse al valor central (prepara N8).
-- [ ] **Persistir el `CommercialGateReport` del diagnóstico** en `output_dir/hotel_id/v4_audit/commercial_gates_report_diagnostic_<ts>.json` (o sumarlo a la evidencia del run) para que CG-SCENARIO-ORDER aparezca en la evidencia del run — no solo en logs. Si el run actual los persiste en `v4_audit/`, verificar que la ruta del diagnóstico NO colisione con la de la propuesta.
-- [ ] `financial_method: "proportional_normalized"` (L1240) se deriva de la fuente real usada o se elimina.
+- [x] El doc muestra los 3 escenarios reales del módulo con labels y probabilidades coherentes.
+- [x] Label de confianza "70%" deja de atribuirse al valor central (prepara N8).
+- [x] **Persistir el `CommercialGateReport` del diagnóstico** en `output_dir/hotel_id/v4_audit/commercial_gates_report_diagnostic_<ts>.json` (o sumarlo a la evidencia del run) para que CG-SCENARIO-ORDER aparezca en la evidencia del run — no solo en logs. Si el run actual los persiste en `v4_audit/`, verificar que la ruta del diagnóstico NO colisione con la de la propuesta.
+- [x] `financial_method: "proportional_normalized"` (L1240) se deriva de la fuente real usada o se elimina.
 
 ### T3 — Implementar DEC-B2 (N1): recuperación 6m única
 **Archivos**: `modules/financial_engine/pillar_maturity_curve.py` (función compartida), `v4_proposal_generator.py` (L1062 `recuperacion_proyectada_6m`), `v4_diagnostic_generator.py` (sección recuperación, doc:203-204).
 
 > ⚠️ Dato verificado (2026-08-03): la propuesta tiene **DOS cálculos de recuperación**: (a) `net_benefit_6m`/`roi` (v4_proposal_generator.py:591-596) usan `pain_ratio × recovery_realistic` (0.20 × 0.20) — cifra distinta; (b) `total_recuperacion_6m`/curva (L786-925, `aplicar_curva_4_pilares`) = $9.691.220. El diagnóstico usa `pain_ratio 20% × recovery 35%` (doc:203-204). FASE-B T3 debe unificar (a), (b) y el diagnóstico en UNA fórmula.
 
-- [ ] Diagnóstico y propuesta consumen la MISMA función (todos los puntos: net_benefit/ROI, total_recuperacion_6m, tabla de curva y sección de recuperación del diagnóstico).
-- [ ] `pain_ratio` reconciliado o documentado como métrica distinta (relación precio/fuga), NUNCA como recuperación.
+- [x] Diagnóstico y propuesta consumen la MISMA función (todos los puntos: net_benefit/ROI, total_recuperacion_6m, tabla de curva y sección de recuperación del diagnóstico).
+- [x] `pain_ratio` reconciliado o documentado como métrica distinta (relación precio/fuga), NUNCA como recuperación.
 
 ### T4 — Tests y fixtures
 **Archivos**: `tests/financial_engine/`, `tests/commercial_documents/`.
 
-- [ ] Test: `estimated_monthly_cop` del report == costo del doc para la misma brecha.
-- [ ] Test: escenarios del doc == valores de `financial_scenarios.json` (labels + probs).
-- [ ] Test: recuperación 6m idéntica en diagnóstico y propuesta.
-- [ ] Test: CG-SCENARIO-ORDER presente en el gate_report del pipeline.
-- [ ] Actualizar fixtures/golden files rotos por el cambio de cifras (riesgo §8 fila 1-2).
+- [x] Test: `estimated_monthly_cop` del report == costo del doc para la misma brecha.
+- [x] Test: escenarios del doc == valores de `financial_scenarios.json` (labels + probs).
+- [x] Test: recuperación 6m idéntica en diagnóstico y propuesta.
+- [x] Test: CG-SCENARIO-ORDER presente en el gate_report del pipeline.
+- [x] Actualizar fixtures/golden files rotos por el cambio de cifras (riesgo §8 fila 1-2).
 
 ## Tests Obligatorios
 
@@ -108,11 +159,11 @@ Fuente completa: contexto §5 FASE-2 (D3/D4/N1) y §3.4 (matemática N1).
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] DEC-B1/B2/B3 decididas y documentadas en el plan (sección decisiones)
-- [ ] D3, D4, N1 cerrados según criterios de T1/T2/T3
-- [ ] Tests T4 pasan + 0 regresiones
-- [ ] `run_all_validations.py --quick` 4/4
-- [ ] `log_phase_completion.py` ejecutado
+- [x] DEC-B1/B2/B3 decididas y documentadas en el plan (sección decisiones)
+- [x] D3, D4, N1 cerrados según criterios de T1/T2/T3
+- [x] Tests T4 pasan + 0 regresiones
+- [x] `run_all_validations.py --quick` 4/4
+- [x] `log_phase_completion.py` ejecutado
 
 ## Restricciones
 

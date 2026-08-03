@@ -615,6 +615,86 @@ def test_diagnostic_summary_includes_brechas_reales():
     assert diag.brechas_reales[1]['impacto'] == 0.25
 
 
+# --- Tests FASE-B COHERENCIA (D3): Costo único por brecha ---
+
+def test_estimated_monthly_cop_matches_doc_cost():
+    """FASE-B (D3): estimated_monthly_cop del scorer == costo del documento.
+
+    _compute_opportunity_scores alinea el dinero por pain_id con los pesos
+    normalizados de _get_brecha_pesos sobre la base central (misma que
+    _get_brecha_costo). La suma de los estimated_monthly_cop == base central.
+    """
+    gen = V4DiagnosticGenerator()
+    central = 7_200_000
+    fs = mock_financial_scenarios(monthly_loss=10_000_000, monthly_loss_central=central)
+    audit = create_audit(
+        schema_detected=False,   # no_hotel_schema
+        gbp_geo_score=50,        # low_gbp_score
+        phone_web=None,          # no_whatsapp_visible
+        mobile_score=60,         # poor_performance
+        faq_detected=False,      # no_faq_schema
+    )
+
+    scores = gen._compute_opportunity_scores(audit, fs)
+    if scores is None:
+        pytest.skip("OpportunityScorer no disponible")
+    assert len(scores) >= 1
+
+    # Mismos pesos normalizados que renderiza el documento
+    brechas = gen._get_brecha_pesos(audit)
+    peso_por_pain = {b['pain_id']: b['impacto'] / 100.0 for b in brechas}
+
+    for s in scores:
+        peso = peso_por_pain.get(s['brecha_id'])
+        assert peso is not None, f"pain_id {s['brecha_id']} no está en el documento"
+        esperado = int(round(central * peso))
+        assert s['estimated_monthly_cop'] == esperado, (
+            f"Brecha {s['brecha_id']}: expected {esperado}, got {s['estimated_monthly_cop']}"
+        )
+
+    # Pesos normalizados suman 100% → la suma de costos == base central
+    total = sum(s['estimated_monthly_cop'] for s in scores)
+    assert abs(total - central) <= len(scores), (
+        f"Sum of costs ({total}) != central ({central})"
+    )
+
+
+def test_impacto_pct_equals_doc_weight():
+    """FASE-B (D3): brecha_N_impacto == peso normalizado del documento.
+
+    _inject_brecha_scores usa la base central como denominador y el costo
+    alineado por pain_id, así el % de impacto mostrado coincide exactamente
+    con el peso de _get_brecha_pesos (mismo pain_id, mismo orden de rank).
+    """
+    gen = V4DiagnosticGenerator()
+    central = 10_000_000
+    fs = mock_financial_scenarios(monthly_loss=12_000_000, monthly_loss_central=central)
+    audit = create_audit(
+        schema_detected=False,   # no_hotel_schema
+        gbp_geo_score=50,        # low_gbp_score
+        phone_web=None,          # no_whatsapp_visible
+        mobile_score=60,         # poor_performance
+    )
+
+    result = gen._inject_brecha_scores(audit, fs)
+    if 'brecha_1_score' not in result:
+        pytest.skip("OpportunityScorer no disponible")
+
+    scores = gen._compute_opportunity_scores(audit, fs)
+    assert scores, "Scores disponibles pero _compute_opportunity_scores retornó vacío"
+
+    brechas = gen._get_brecha_pesos(audit)
+    peso_por_pain = {b['pain_id']: b['impacto'] for b in brechas}
+    for i, s in enumerate(scores, start=1):
+        key = f'brecha_{i}_impacto'
+        if key not in result:
+            continue
+        peso_doc = int(peso_por_pain[s['brecha_id']])
+        assert result[key] == f"{peso_doc}%", (
+            f"{key} ({s['brecha_id']}): expected {peso_doc}% (peso doc), got {result[key]}"
+        )
+
+
 # --- Tests FASE-H: Performance Cache + Cleanup ---
 
 def test_identify_brechas_cached_once():

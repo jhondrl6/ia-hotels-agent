@@ -97,6 +97,26 @@ def aplicar_curva_4_pilares(
     )
 
 
+def calcular_recuperacion_6m(
+    fuga_mensual: float,
+    recovery_factor_max: float,
+) -> float:
+    """Fórmula ÚNICA de recuperación proyectada 6m (FASE-B COHERENCIA, N1, DEC-B2).
+
+    Una sola fuente de verdad para el concepto "recuperación proyectada 6m":
+    fuga_mensual × recovery_factor_max × Σ(CURVA_4_PILARES) = fuga × recovery × 3.85.
+
+    Diagnóstico y propuesta comercial consumen ESTA función; el pain_ratio es
+    una métrica distinta (relación precio/fuga) y NUNCA multiplica aquí.
+    """
+    result = aplicar_curva_4_pilares(
+        fuga_mensual=fuga_mensual,
+        recovery_factor_max=recovery_factor_max,
+        meses=6,
+    )
+    return result.total_recuperacion_6m
+
+
 def formatear_curva_para_propuesta(result: PillarMaturityResult) -> Dict[str, Any]:
     """Formatea la curva de maduración para inclusión en propuesta comercial.
 

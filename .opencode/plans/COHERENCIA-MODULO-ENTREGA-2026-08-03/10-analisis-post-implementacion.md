@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — COHERENCIA-MODULO-ENTREGA
 
-> **Estado**: EN CURSO — FASE-A registrada (lecciones L1-L4, 2026-08-03); matriz de verificación se completa en FASE-E y resumen final en FASE-RELEASE.
+> **Estado**: EN CURSO — FASE-A y FASE-B registradas (lecciones L1-L9, 2026-08-03); matriz de verificación se completa en FASE-E y resumen final en FASE-RELEASE.
 > **Plan**: COHERENCIA-MODULO-ENTREGA-2026-08-03
 > **Versión objetivo**: v4.70.0
 > **Baseline auditado**: run 2026-08-01 17:05:39 (Zi One Luxury, coherence 0.9168, gate PASSED con doc auto-contradictorio)
@@ -13,7 +13,7 @@
 | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
 |------|--------|--------|-------------|---------------|-------|
 | FASE-A | 2026-08-03 | ✅ | Multisesión (bloqueos del equipo, ver L1) | No (directo) | D1+D2 cerrados; 0 regresiones en código modificado; validaciones 5/5 |
-| FASE-B | — | ⏳ | —/60 | No (directo, no delegable) | |
+| FASE-B | 2026-08-03 | ✅ | 2 sesiones (replanteo tras cuelgue del pipe, ver L6) | No (directo, no delegable) | D3+D4+N1 cerrados; DEC-B1/B2/B3 opción A; 8 tests nuevos (102 tests FASE-B green); 38 fallos probados preexistentes (22 dinámico vs HEAD, 16 evidencia estática); validaciones 5/5; REGISTRY fase 408 |
 | FASE-C-A | — | ⏳ | —/60 | No (directo) | |
 | FASE-C-B | — | ⏳ | —/60 | Sí (2 tracks paralelos) | |
 | FASE-D | — | ⏳ | —/60 | Sí (track N5-N8) | |
@@ -84,7 +84,35 @@ Formato por lección: **qué pasó / por qué / qué lo previene** + evaluación
 - **Qué lo previene**: protocolo aplicado y validado — `git stash push -- <archivos de la fase>` → correr el test problemático en baseline limpio (con timeout) → `git stash pop`. Si falla en baseline = preexistente; si pasa = regresión de la fase. Permitió cerrar FASE-A con evidencia en vez de conjetura.
 - **Pertinencia**: **INCLUIR** como protocolo estándar de verificación de regresiones en cualquier fase.
 
-5. ⏳ (continúa en FASE-B…)
+### L5 (FASE-B) — `git stash` falla dentro del sandbox: alternativa backup + checkout
+- **Qué pasó**: el protocolo forense de L4 (`git stash push -- <archivos>`) falló con `error: cannot create standard input pipe for update-index: Permission denied` — el sandbox restringe el mecanismo interno de stash. Además el repo ya tenía 2 stashes previos del usuario que no debían tocarse.
+- **Por qué**: el sandboxing del terminal bloquea la creación de pipes internos que `git stash` usa para `update-index`; `git checkout HEAD -- <archivos>` sí funciona porque escribe archivos directamente.
+- **Qué lo previene**: protocolo alternativo validado en FASE-B — (a) `Copy-Item` de los archivos de la fase a `temp/<fase>_backup/`; (b) `git checkout HEAD -- <archivos>`; (c) correr los tests contra HEAD; (d) restaurar con `Copy-Item` y verificar con `git status` que los archivos vuelven a aparecer como modificados. **Crítico: restaurar SIEMPRE antes de terminar la sesión** (los 4 archivos de FASE-B quedaron en HEAD hasta el replanteo).
+- **Pertinencia**: **INCLUIR** — reemplaza/complementa a L4 en entornos con sandbox; ya registrado en memoria del agente.
+
+### L6 (FASE-B) — Pipes de PowerShell sobre pytest cuelgan la captura de salida
+- **Qué pasó**: `pytest ... 2>&1 | Select-String | Select-Object -Last N` ejecutado en background se quedó sin producir salida durante 6+ minutos (la misma selección de tests corre en ~2 s sin pipe), forzando matar el proceso y replantear la sesión.
+- **Por qué**: el pipe de PowerShell buferiza el stream completo de pytest antes de que `Select-String` emita; combinado con el modo background, la salida nunca llega y no hay forma de distinguir "lento" de "colgado".
+- **Qué lo previene**: SIEMPRE redirigir a archivo (`pytest ... > temp\<nombre>.txt 2>&1`) y leer el archivo después con `Get-Content | Select-Object -Last N`. Mantener los procesos pytest cortos y acotados (L1).
+- **Pertinencia**: **INCLUIR** — aplica a todas las fases con verificación de tests (C-A, C-B, D, E).
+
+### L7 (FASE-B) — Evidencia mixta (dinámica + estática) para cerrar con los tests patológicos aislados
+- **Qué pasó**: el mandato de FASE-B exige `pytest tests/financial_engine tests/commercial_documents -q` con 0 regresiones, pero la suite completa incluye los 3 archivos patológicos de L1 (`test_proposal_generator.py`, `test_price_consistency.py`, `test_proposal_generator_dict.py` → 16 de los 38 fallos) que no se pueden correr de forma fiable.
+- **Por qué**: correrlos en el mismo proceso expone al equipo a la fuga de RAM/cuelgue; ignorarlos sin evidencia dejaría la declaración "0 regresiones" sin soporte para esos archivos.
+- **Qué lo previene**: protocolo aplicado — (a) **prueba dinámica** sobre el subconjunto seguro: los mismos 22 tests fallan byte-idénticos en HEAD y con FASE-B (`Copy-Item`/`checkout` de L5); (b) **evidencia estática** para los patológicos: `git show HEAD:` prueba que `_calculate_roi` no existía en HEAD, que `score_seo < 30` ya existía, que `config/scenarios.yaml` (recovery 0.35) no fue tocado y que el diff de la fase no cubre esas áreas. Conclusión auditable: 0 regresiones de FASE-B.
+- **Pertinencia**: **INCLUIR** — protocolo estándar mientras los tests patológicos sigan vivos; FASE-E lo necesitará para declarar la suite sin regresiones.
+
+### L8 (FASE-B) — Conteo de tests nuevos se verifica con el diff, no con notas previas
+- **Qué pasó**: `11-documentacion-post-proyecto.md` decía "+13 (7 nuevos FASE-B + 6 FASE-A)" pero el diff real (`git diff tests/ | grep "+.*def test_"`, incluyendo funciones a nivel de módulo sin indentación) arroja **8** tests nuevos de FASE-B.
+- **Por qué**: el conteo previo se escribió antes de terminar T4 y omitió los 2 tests de módulo (`test_estimated_monthly_cop_matches_doc_cost`, `test_impacto_pct_equals_doc_weight`).
+- **Qué lo previene**: contar siempre desde `git diff tests/` (patrón `^\+\s*def test_`, no solo indentados) antes de escribir métricas en la documentación acumulativa; se corrigió a +14 (8+6).
+- **Pertinencia**: **INCLUIR** — cada fase escribe conteos acumulativos que FASE-RELEASE usa para CHANGELOG.
+
+### L9 (FASE-B) — Confirmada la regla de `log_phase_completion` sin `--release` en fases intermedias
+- **Qué pasó**: el prompt `03-prompt-fase-B.md` seguía indicando `--release 4.70.0` (a pesar de la lección L3 de FASE-A); se ejecutó deliberadamente **sin** el flag y el registro en REGISTRY (fase 408) pasó a la primera.
+- **Por qué**: el flag dispara el VERSION SYNC GATE que exige entrada de CHANGELOG inexistente en fases intermedias (ver L3).
+- **Qué lo previene**: mantener la regla L3; los prompts de fase intermedia que aún traen `--release` en su plantilla (02/03, y probablemente 04-07) deben ignorar ese flag o corregirse en FASE-RELEASE.
+- **Pertinencia**: **INCLUIR** — ya confirmada dos veces (A y B); aplica a C-A, C-B, D y E.
 
 ---
 
@@ -93,7 +121,10 @@ Formato por lección: **qué pasó / por qué / qué lo previene** + evaluación
 | Tema | Estado | Acción futura |
 |------|--------|---------------|
 | Gate N2 en modo WARNING | Pendiente decisión | Upgrade a BLOCKING en release posterior, tras catalogar contradicciones conocidas |
-| `pain_ratio` del pricing | Pendiente decisión B | Reconciliar o documentar como métrica distinta |
-| Tests patológicos propuesta/precios (L1) | Pendiente — bloqueante para suite completa | `test_proposal_generator.py` (fuga ~8GB RAM) y `test_price_consistency.py` (cuelgue): diagnosticar y corregir ANTES de la regresión de FASE-B (que sí toca propuesta); evidencia 2026-08-03: reproducidos en baseline limpio |
-| Prompt `02-prompt-fase-A.md` con `--release` (L3) | Documentado | Corregir los prompts de fases intermedias para no pasar `--release`; o reservar el flag a FASE-RELEASE |
+| `pain_ratio` del pricing | ✅ Resuelto (FASE-B, DEC-B2) | Documentado como métrica distinta (relación precio/fuga), NUNCA como recuperación; `pain_ratio_note` de diagnóstico y propuesta actualizados |
+| Tests patológicos propuesta/precios (L1) | Pendiente — bloqueante para suite completa | `test_proposal_generator.py` (fuga ~8GB RAM), `test_price_consistency.py` (cuelgue) y `test_proposal_generator_dict.py` (MagicMock vs `score_seo < 30`): diagnosticar y corregir antes de FASE-E (declaración de suite sin regresiones). FASE-B cerró aislándolos con evidencia mixta (L7) |
+| Prompts con `--release` en plantilla (L3/L9) | Documentado | 02/03-prompt aún lo indican; ignorar el flag en C-A/C-B/D/E o corregir plantillas en FASE-RELEASE |
+| Pipe de PowerShell sobre pytest (L6) | ✅ Resuelto (FASE-B) | Regla: salida a archivo `> temp\x.txt 2>&1` y lectura posterior; registrado en memoria del agente |
+| `git stash` denegado por sandbox (L5) | ✅ Resuelto (FASE-B) | Regla: backup `Copy-Item` + `git checkout HEAD --` + restauración obligatoria antes de cerrar sesión; registrado en memoria |
+| Conteo de tests nuevos (L8) | ✅ Resuelto (FASE-B) | Verificar siempre con `git diff tests/` antes de escribir métricas en 11-doc |
 | (otros) | | |

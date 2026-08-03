@@ -6,6 +6,7 @@ v4.0 audit results with confidence-based validation.
 """
 
 import copy
+import json
 import logging
 import os
 import re
@@ -601,6 +602,9 @@ class V4DiagnosticGenerator:
         # Render template
         document_content = self._render_template(template_content, template_data)
 
+        # Timestamp único del run (reutilizado para doc y report de gates)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
         # FASE-COPY-B: Commercial gate validation on generated document
         try:
             from modules.quality_gates.commercial_gate import CommercialGateValidator
@@ -662,11 +666,34 @@ class V4DiagnosticGenerator:
                     "Commercial gates WARNING(s): %s",
                     [r.gate_id for r in commercial_report.warnings],
                 )
+
+            # FASE-B COHERENCIA (D4): persistir el CommercialGateReport del
+            # diagnóstico SIEMPRE (evidencia del run) — CG-SCENARIO-ORDER debe
+            # aparecer en el gate_report del pipeline, no solo en logs.
+            # Ruta con timestamp para NO colisionar con commercial_gates_report.json
+            # (propuesta, sin timestamp).
+            try:
+                hotel_slug = hotel_name.lower().replace(" ", "_").replace("-", "_")
+                diag_gates_path = (
+                    output_path / hotel_slug / "v4_audit"
+                    / f"commercial_gates_report_diagnostic_{timestamp}.json"
+                )
+                diag_gates_path.parent.mkdir(parents=True, exist_ok=True)
+                diag_gates_path.write_text(
+                    json.dumps(commercial_report.to_dict(), indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+                logging.info(
+                    "Diagnostic commercial gates report persisted to %s", diag_gates_path
+                )
+            except Exception as e:
+                logging.warning(
+                    "No se pudo persistir el commercial gates report del diagnóstico: %s", e
+                )
         except Exception as e:
             logging.warning("Commercial gate validation skipped: %s", e, exc_info=True)
 
         # Save document
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"01_DIAGNOSTICO_Y_OPORTUNIDAD_{timestamp}.md"
         file_path = output_path / filename
         
@@ -960,6 +987,7 @@ class V4DiagnosticGenerator:
             financial_scenarios, analytics_data, source_reliability=_source_reliability,
             financial_breakdown=financial_breakdown,  # FASE-B: para ota_commission_real_formatted
             validation_summary=validation_summary,  # FIN-3: for PrecisionValidator
+            brechas_pesos=brechas_pesos,  # FASE-B (D4): financial_method desde fuente real
         )
         data.update(financial_ph)
         
@@ -1082,37 +1110,34 @@ class V4DiagnosticGenerator:
     ) -> str:
         """Construye filas de tabla markdown para los 3 escenarios de recuperación.
 
-        FASE-A (E1): Ahora usa financial_value_range del escenario realista
-        (financial_value_min/max) en lugar de monthly_loss_* de cada escenario.
-        Esto garantiza Conservador < Realista < Optimista en orden de valor.
+        FASE-B COHERENCIA (D4, DEC-B3 Opción A): muestra los 3 escenarios REALES
+        del módulo con labels honestos y sus probabilidades:
+        - conservative = peor caso (MAYOR pérdida, prob 70%)
+        - realistic = más probable (pérdida media, prob 20%)
+        - optimistic = mejor caso (menor pérdida; si es negativo = GANANCIA
+          neta proyectada / break-even superado, prob 10%)
 
-        Los valores del metadata son:
-        - Conservador → financial_value_min (2.993.356)
-        - Realista → financial_value_central (3.741.696)
-        - Optimista → financial_value_max (4.490.035)
+        Ya NO se usa el rango sintético ±20% del escenario realista (workaround
+        FASE-A E1) que ocultaba el peor caso del módulo.
         """
         rows = []
 
-        # FASE-A (E1): Usar financial_value_range del escenario realista
-        # como fuente de verdad para los 3 escenarios de recuperación.
-        realistic = scenarios.realistic
-        cons_val = realistic.monthly_loss_min   # 2.993.356 → Conservador
-        real_val = getattr(realistic, 'monthly_loss_central', None) or realistic.monthly_loss_max  # 3.741.696 → Realista
-        opt_val = realistic.monthly_loss_max    # 4.490.035 → Optimista
-
-        # Verificación: el optimistic NUNCA es menor que realista (sanity check)
-        # Si el clamp anterior estuviera activo, esto lo detectaríamos,
-        # pero ahora los valores vienen directo del rango validado.
-        assert opt_val >= real_val, f"Bug: optimistic ({opt_val}) < realista ({real_val})"
-        assert real_val >= cons_val, f"Bug: realista ({real_val}) < conservador ({cons_val})"
-
-        for name, value, prob in [
-            ("Mínimo garantizable", cons_val, scenarios.conservative.probability),
-            ("Más probable", real_val, scenarios.realistic.probability),
-            ("Máximo alcanzable", opt_val, scenarios.optimistic.probability),
+        for name, scenario in [
+            ("Peor caso (conservador)", scenarios.conservative),
+            ("Más probable", scenarios.realistic),
+            ("Mejor caso (optimista)", scenarios.optimistic),
         ]:
+            prob = scenario.probability
+            value = getattr(scenario, 'monthly_loss_central', None)
+            if value is None:
+                value = scenario.monthly_loss_max
             prob_pct = int(prob * 100)
-            if value == 0:
+            if value < 0:
+                label = (
+                    f"Ganancia neta proyectada: {format_cop(abs(value))}/mes "
+                    "(break-even superado)"
+                )
+            elif value == 0:
                 label = "$0 COP/mes (Equilibrio — sin pérdida neta)"
             else:
                 label = f"{format_cop(value)}/mes"
@@ -1146,6 +1171,7 @@ class V4DiagnosticGenerator:
         source_reliability: str = "verified",
         financial_breakdown: Optional['FinancialBreakdown'] = None,
         validation_summary: Optional[ValidationSummary] = None,  # FIN-3: for PrecisionValidator
+        brechas_pesos: Optional[List[Dict[str, Any]]] = None,  # FASE-B (D4): financial_method desde fuente real
     ) -> Dict[str, Any]:
         """
         Construye los placeholders financieros para el template V6.
@@ -1219,25 +1245,25 @@ class V4DiagnosticGenerator:
             has_onboarding_banner, False, "diagnostic_banner"
         ) if tier == "C" else ""
 
-        # PROPUESTA-COMERCIAL FASE-B: Puente dual fuga bruta / recuperación efectiva
-        # Carga pain_ratio y recovery_factor desde scenarios.yaml (defaults conservadores)
-        # La propuesta usa el pain_ratio real del pricing; el diagnóstico usa defaults
-        # para comunicar el concepto con estimaciones conservadoras iniciales.
+        # FASE-B COHERENCIA (N1, DEC-B2): recuperación 6m ÚNICA con la curva de
+        # maduración compartida (misma función que la propuesta comercial).
+        # Fórmula: fuga_mensual × recovery_factor_realista × Σ(CURVA_4_PILARES)
+        # (Σ = 3.85 meses equivalentes de recuperación en el semestre).
+        # pain_ratio ya NO participa como multiplicador de recuperación: era la
+        # causa de la triple fuente del dinero (diag 20%×35% vs propuesta 35%×3.85).
         try:
             scenario_config_diag = load_yaml_config('scenarios')
-            pain_ratio_diag = scenario_config_diag.get('pain_ratio_default', 0.20)
-            recovery_diag = scenario_config_diag.get('recovery_factors', {}).get('realistic', 0.20)
+            recovery_diag = scenario_config_diag.get('recovery_factors', {}).get('realistic', 0.35)
         except Exception:
-            pain_ratio_diag = 0.20
-            recovery_diag = 0.20
+            recovery_diag = 0.35
 
+        from modules.financial_engine.pillar_maturity_curve import calcular_recuperacion_6m
         raw_monthly_loss_diag = base_value  # fuga bruta mensual (monthly_loss_central)
-        effective_monthly_gain_diag = int(raw_monthly_loss_diag * pain_ratio_diag * recovery_diag)
+        recuperacion_6m_diag = int(calcular_recuperacion_6m(raw_monthly_loss_diag, recovery_diag))
 
-        # 4 placeholders para el puente dual
+        # Placeholders de la sección "Lo que está en juego"
         fuga_total_6m = format_cop(raw_monthly_loss_diag * 6)
-        recuperacion_proyectada_6m = format_cop(effective_monthly_gain_diag * 6)
-        pain_pct = int(pain_ratio_diag * 100)
+        recuperacion_proyectada_6m = format_cop(recuperacion_6m_diag)
         recov_pct = int(recovery_diag * 100)
 
         return {
@@ -1259,7 +1285,22 @@ class V4DiagnosticGenerator:
             'financial_value_central': str(base_value),
             'financial_value_min': str(main.monthly_loss_min),
             'financial_value_max': str(main.monthly_loss_max),
-            'financial_method': 'proportional_normalized',
+            # FASE-B COHERENCIA (D4, DEC-B3): el rango del frontmatter es el del
+            # escenario MÁS PROBABLE (realista), nunca el del peor caso
+            # (conservador) — evita que el hook PDF muestre una "fuga mínima"
+            # negativa o inflada. El label lo declara explícitamente.
+            'financial_value_range_label': (
+                f"Rango de pérdida mensual del escenario más probable "
+                f"(prob. {int(scenarios.realistic.probability * 100)}%)"
+            ),
+            # FASE-B COHERENCIA (D4, DEC-B3): el método se deriva de la fuente
+            # real de pesos usada por el documento (misma lista que
+            # _get_brecha_pesos renderiza), nunca hardcodeado.
+            'financial_method': (
+                'dynamic_impact_normalized'
+                if any(b.get('peso_source') == 'dynamic_impact' for b in (brechas_pesos or []))
+                else 'pain_weights_normalized'
+            ),
             # FASE-J: source-aware template honesty
             'financial_title_label': financial_title_label,
             'estimate_asterisk': estimate_asterisk,
@@ -1273,15 +1314,16 @@ class V4DiagnosticGenerator:
             # La propuesta usa el pain_ratio real del pricing; el diagnóstico usa estos defaults.
             'fuga_total_6m': fuga_total_6m,
             'recuperacion_proyectada_6m': recuperacion_proyectada_6m,
-            'pain_pct': pain_pct,
             'recov_pct': recov_pct,
-            # FASE-D: Nota explicativa de divergencia pain_ratio 20% vs 41%
-            # El diagnóstico usa 20% (conservador) mientras la propuesta usa el % real del hotel.
-            'pain_ratio_note': (
-                "**Nota sobre la proyección**: El 20% utilizado en este diagnóstico es una "
-                "estimación regional conservadora. En la propuesta personalizada, este "
-                "porcentaje se ajusta según el perfil específico de su hotel "
-                "(canal directo, ocupación, tarifas)."
+            # FASE-B COHERENCIA (N1): nota de la curva compartida (reemplaza la
+            # antigua nota pain_ratio 20%×35% que divergía de la propuesta).
+            'curva_maduracion_note': (
+                f"**Nota sobre la proyección**: La recuperación de 6 meses sigue "
+                f"la curva de maduración estándar de 4 pilares (GEO→SEO→AEO→IAO): "
+                f"el impacto mensual crece progresivamente (15% → 100% del factor "
+                f"realista del {recov_pct}%) y el semestre equivale a 3.85 meses "
+                f"de recuperación completa. Este cálculo es IDÉNTICO en el "
+                f"diagnóstico y en la propuesta comercial."
             ),
         }
 
@@ -2570,21 +2612,31 @@ class V4DiagnosticGenerator:
         main = financial_scenarios.get_main_scenario()
         loss_monthly = main.format_loss_cop()
         confidence = int(main.confidence_score * 100)
-        
+
+        # FASE-B COHERENCIA (N8): el valor central mostrado corresponde al escenario
+        # "Más probable". Atribuir la probabilidad del conservador (70%) como
+        # "confianza" de la cifra era engañoso: se cita la probabilidad real del
+        # escenario más probable (p.ej. 20%) y el nivel de evidencia del dato.
+        try:
+            prob_realista = int(financial_scenarios.realistic.probability * 100)
+        except Exception:
+            prob_realista = None
+
         # Use evidence tier language instead of raw confidence % to avoid "0% de confianza"
         if confidence == 0:
-            confidence_text = "basada en datos limitados de su web"
-        elif confidence < 30:
-            confidence_text = f"con baja confianza ({confidence}% — datos limitados)"
-        elif confidence < 60:
-            confidence_text = f"con {confidence}% de confianza"
+            confidence_text = "está basada en datos limitados de su web"
+        elif prob_realista is not None:
+            confidence_text = (
+                f"corresponde al escenario más probable "
+                f"(probabilidad {prob_realista}% de ocurrencia)"
+            )
         else:
-            confidence_text = f"con {confidence}% de confianza"
-        
+            confidence_text = f"cuenta con {confidence}% de confianza"
+
         return (
             f"{hotel_name} está perdiendo aproximadamente {loss_monthly} mensuales "
             f"debido a brechas en su presencia digital. "
-            f"Esta estimación está {confidence_text}, cada mes sin actuar representa "
+            f"Esta estimación {confidence_text}; cada mes sin actuar representa "
             f"una oportunidad de recuperación de ingresos no aprovechada. "
             f"El mercado hotelero en Colombia es cada vez más competitivo en el entorno digital, "
             f"y los hoteles que no optimizan su presencia en buscadores, GBP y asistentes de IA "
@@ -3267,12 +3319,31 @@ class V4DiagnosticGenerator:
                 })
 
             total_loss = None
+            base_value = None
             if financial_scenarios:
                 try:
                     main = financial_scenarios.get_main_scenario()
-                    total_loss = main.monthly_loss_max
+                    # FASE-B COHERENCIA (D3, DEC-B1): el scorer recibe el valor
+                    # CENTRAL (misma base que _get_brecha_costo y el documento)
+                    # para que estimated_monthly_cop coincida con el costo único
+                    # de cada brecha en el diagnóstico.
+                    base_value = getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max
+                    total_loss = base_value
                 except Exception:
                     pass
+
+            # FASE-B COHERENCIA (D3, DEC-B1): el costo mensual por brecha del
+            # documento (_get_brecha_costo = base central × peso normalizado) es la
+            # ÚNICA fuente de dinero. Se alinea estimated_monthly_cop por pain_id
+            # con los pesos normalizados de _get_brecha_pesos (la misma lista que
+            # renderiza el template). El scorer conserva el ranking cualitativo
+            # (severity/effort/total_score), pero el dinero SIEMPRE viene de los
+            # pesos del documento.
+            brechas_pesos = self._get_brecha_pesos(audit_result)
+            peso_por_pain = {
+                b.get('pain_id', ''): float(b.get('impacto', 0)) / 100.0
+                for b in brechas_pesos
+            }
 
             # Resolver channel evidence (CHAN-2)
             channel_context = self._resolve_channel_context(audit_result, pain_ids)
@@ -3292,7 +3363,14 @@ class V4DiagnosticGenerator:
                 'effort_score': s.effort_score,
                 'impact_score': s.impact_score,
                 'total_score': s.total_score,
-                'estimated_monthly_cop': s.estimated_monthly_cop,
+                # FASE-B COHERENCIA (D3): costo alineado por pain_id con el
+                # documento. Fallback al estimado del scorer si el pain_id no
+                # matchea (defensa extra, no debería ocurrir).
+                'estimated_monthly_cop': (
+                    int(round(base_value * peso_por_pain.get(s.brecha_id, 0.0)))
+                    if base_value is not None and peso_por_pain.get(s.brecha_id) is not None
+                    else s.estimated_monthly_cop
+                ),
                 'justification': s.justification,
                 'rank': s.rank,
                 'base_total_score': s.base_total_score,
@@ -3318,7 +3396,11 @@ class V4DiagnosticGenerator:
             try:
                 main = financial_scenarios.get_main_scenario()
                 if main:
-                    total_monthly_loss = main.monthly_loss_max
+                    # FASE-B COHERENCIA (D3): base central, misma que
+                    # _get_brecha_costo — impacto_pct == peso del documento.
+                    total_monthly_loss = (
+                        getattr(main, 'monthly_loss_central', None) or main.monthly_loss_max
+                    )
             except Exception:
                 pass
         result = {}

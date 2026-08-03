@@ -295,7 +295,16 @@ class CommercialGateValidator:
         return _to_numeric(optimistic), _to_numeric(realistic), _to_numeric(conservative)
 
     def _check_scenario_order(self, scenarios: Any) -> CommercialGateResult:
-        """CG-SCENARIO-ORDER: optimista < realista o realista < conservador."""
+        """CG-SCENARIO-ORDER: orden de escenarios según semántica real del módulo.
+
+        FASE-B COHERENCIA (D4, DEC-B3 Opción A): conservative = peor caso
+        (MAYOR pérdida, prob 70%), realistic = más probable (pérdida media),
+        optimistic = mejor caso (menor pérdida; < 0 = ganancia neta proyectada).
+        Orden válido en pérdida: conservative >= realistic >= optimistic.
+
+        Si optimistic < 0 (ganancia/break-even superado) el mejor caso es
+        correcto aunque sea el valor más bajo (savings + IA revenue > OTA loss).
+        """
         optimistic, realistic, conservative = self._extract_scenario_values(scenarios)
         if optimistic is None or realistic is None or conservative is None:
             return CommercialGateResult(
@@ -307,41 +316,43 @@ class CommercialGateValidator:
                 suggestion="",
             )
 
-        if optimistic < realistic:
-            # BUG-8 fix: cuando optimista < 0 < realista, el optimista negativo
-            # es break-even (savings + IA > OTA loss) — no bloquear
-            if optimistic < 0 < realistic:
-                return CommercialGateResult(
-                    gate_id="CG-SCENARIO-ORDER",
-                    name="Orden de escenarios inválido",
-                    passed=True,
-                    severity="BLOCKING",
-                    message=f"Escenario optimista ({optimistic:,.0f}) < 0 < realista ({realistic:,.0f}). "
-                            f"Reinterpretación break-even: el optimista negativo es correcto cuando "
-                            f"ahorros + IA revenue > fuga OTA. El mejor caso no tiene pérdida neta.",
-                    suggestion="",
-                )
+        # El conservador es el PEOR caso: debe tener la MAYOR pérdida
+        if conservative < realistic:
             return CommercialGateResult(
                 gate_id="CG-SCENARIO-ORDER",
                 name="Orden de escenarios inválido",
                 passed=False,
                 severity="BLOCKING",
-                message=f"Escenario optimista ({optimistic:,.0f}) < realista ({realistic:,.0f}). "
-                        f"El optimista debe ser el valor más alto.",
-                suggestion="Revisar _build_scenario_table_rows: verificar clamp y signos. "
-                          "El optimista debe ser >= realista.",
+                message=f"Escenario conservador ({conservative:,.0f}) < realista ({realistic:,.0f}). "
+                        f"El conservador es el peor caso (prob 70%) y debe tener la mayor pérdida.",
+                suggestion="Revisar scenario_calculator: conservative debe ser el peor caso "
+                          "plausible (mayor pérdida), realistic la meta esperada.",
             )
 
-        if realistic < conservative:
+        # El optimista es el MEJOR caso: menor pérdida (o ganancia < 0)
+        if realistic < optimistic and optimistic >= 0:
             return CommercialGateResult(
                 gate_id="CG-SCENARIO-ORDER",
                 name="Orden de escenarios inválido",
                 passed=False,
                 severity="BLOCKING",
-                message=f"Escenario realista ({realistic:,.0f}) < conservador ({conservative:,.0f}). "
-                        f"El realista debe ser >= conservador.",
-                suggestion="Revisar _build_scenario_table_rows: verificar fórmulas. "
-                          "El realista debe ser >= conservador.",
+                message=f"Escenario realista ({realistic:,.0f}) < optimista ({optimistic:,.0f}). "
+                        f"El optimista (mejor caso) debe tener la menor pérdida.",
+                suggestion="Revisar scenario_calculator: optimistic debe ser el mejor caso "
+                          "plausible (menor pérdida o ganancia).",
+            )
+
+        if optimistic < 0:
+            # Ganancia neta proyectada: savings + IA revenue > OTA loss
+            return CommercialGateResult(
+                gate_id="CG-SCENARIO-ORDER",
+                name="Orden de escenarios inválido",
+                passed=True,
+                severity="BLOCKING",
+                message=f"Escenario optimista ({optimistic:,.0f}) < 0 < realista ({realistic:,.0f}). "
+                        f"Interpretación break-even: el optimista negativo es ganancia neta "
+                        f"proyectada (savings + IA revenue > fuga OTA) — el mejor caso no tiene pérdida.",
+                suggestion="",
             )
 
         return CommercialGateResult(
@@ -349,7 +360,7 @@ class CommercialGateValidator:
             name="Orden de escenarios inválido",
             passed=True,
             severity="BLOCKING",
-            message="Orden de escenarios válido: optimista ≥ realista ≥ conservador.",
+            message="Orden de escenarios válido: conservador (peor caso) ≥ realista ≥ optimista (mejor caso).",
             suggestion="",
         )
 

@@ -24,29 +24,33 @@ from modules.commercial_documents.data_structures import (
 
 
 def make_scenarios(
-    central_cons=2_000_000,
-    central_real=2_610_000,
-    central_opt=3_100_000,
+    central_cons=7_000_000,
+    central_real=3_741_696,
+    central_opt=1_000_000,
 ):
-    """Helper: create FinancialScenarios with monthly_loss_central set."""
+    """Helper: crear FinancialScenarios con monthly_loss_central set.
+
+    FASE-B (D4): semántica real — conservative es el PEOR caso (mayor pérdida),
+    realistic el más probable y optimistic el mejor caso.
+    """
     return FinancialScenarios(
         conservative=Scenario(
-            monthly_loss_min=1_500_000,
-            monthly_loss_max=2_500_000,
+            monthly_loss_min=5_000_000,
+            monthly_loss_max=9_000_000,
             probability=0.7,
             description="Conservador",
             monthly_loss_central=central_cons,
         ),
         realistic=Scenario(
             monthly_loss_min=2_000_000,
-            monthly_loss_max=3_132_000,
+            monthly_loss_max=5_500_000,
             probability=0.2,
             description="Realista",
             monthly_loss_central=central_real,
         ),
         optimistic=Scenario(
-            monthly_loss_min=2_500_000,
-            monthly_loss_max=3_700_000,
+            monthly_loss_min=-1_000_000,
+            monthly_loss_max=2_500_000,
             probability=0.1,
             description="Optimista",
             monthly_loss_central=central_opt,
@@ -125,7 +129,7 @@ class TestFinancialPlaceholders:
         result = gen._build_financial_placeholders(scenarios)
         table = result['scenario_table_rows']
 
-        valid_names = ('Mínimo garantizable', 'Más probable', 'Máximo alcanzable')
+        valid_names = ('Peor caso (conservador)', 'Más probable', 'Mejor caso (optimista)')
         for row in table.strip().split('\n'):
             parts = [p.strip() for p in row.split('|') if p.strip()]
             assert len(parts) == 3, f"Row should have 3 columns: {row}"
@@ -169,14 +173,61 @@ class TestFinancialPlaceholders:
         assert 'estimaci' in result['financial_disclaimer'].lower() or \
                'datos' in result['financial_disclaimer'].lower()
 
-    def test_financial_method_constant(self):
-        """financial_method is always proportional_normalized."""
+    def test_financial_method_derived_from_peso_source(self):
+        """FASE-B (D4): financial_method se deriva de la fuente real de pesos,
+        nunca hardcodeado como 'proportional_normalized'."""
+        gen = V4DiagnosticGenerator()
+        scenarios = make_scenarios()
+
+        # Sin pesos dinámicos → pain_weights_normalized (default)
+        result = gen._build_financial_placeholders(scenarios)
+        assert result['financial_method'] == 'pain_weights_normalized'
+
+        # Con DynamicImpactCalculator activo → dynamic_impact_normalized
+        result_dyn = gen._build_financial_placeholders(
+            scenarios,
+            brechas_pesos=[
+                {"pain_id": "low_gbp_score", "impacto": 60.0, "peso_source": "dynamic_impact"}
+            ],
+        )
+        assert result_dyn['financial_method'] == 'dynamic_impact_normalized'
+
+    def test_recuperacion_proyectada_6m_curva_unica(self):
+        """FASE-B (N1): recuperacion_proyectada_6m usa la curva compartida
+        (fuga × recovery_realista × Σ curva), NO pain_ratio × recovery lineal."""
+        from modules.financial_engine.pillar_maturity_curve import calcular_recuperacion_6m
+
+        gen = V4DiagnosticGenerator()
+        scenarios = make_scenarios(central_real=2_610_000)
+
+        result = gen._build_financial_placeholders(scenarios)
+
+        # recovery realista = 0.35 (config/scenarios.yaml) × Σ(CURVA_4_PILARES) = 3.85
+        expected = int(calcular_recuperacion_6m(2_610_000, 0.35))
+        assert result['recuperacion_proyectada_6m'] == format_cop(expected)
+
+    def test_curva_maduracion_note_replaces_pain_ratio(self):
+        """FASE-B (N1): curva_maduracion_note reemplaza pain_ratio_note y pain_pct
+        ya no participa como multiplicador de recuperación."""
         gen = V4DiagnosticGenerator()
         scenarios = make_scenarios()
 
         result = gen._build_financial_placeholders(scenarios)
+        assert 'curva_maduracion_note' in result
+        assert '3.85' in result['curva_maduracion_note']
+        assert 'pain_pct' not in result
+        assert 'pain_ratio_note' not in result
 
-        assert result['financial_method'] == 'proportional_normalized'
+    def test_financial_value_range_label_declares_realistic(self):
+        """FASE-B (D4): el rango del frontmatter es del escenario MÁS PROBABLE y
+        el label lo declara explícitamente (evita fuga mínima negativa en PDF)."""
+        gen = V4DiagnosticGenerator()
+        scenarios = make_scenarios()
+
+        result = gen._build_financial_placeholders(scenarios)
+        assert 'financial_value_range_label' in result
+        assert 'más probable' in result['financial_value_range_label']
+        assert '20%' in result['financial_value_range_label']
 
     def test_financial_title_label_no_ota(self):
         """Label NO dice 'Comisión OTA' — ahora dice 'Pérdida Mensual Estimada'."""

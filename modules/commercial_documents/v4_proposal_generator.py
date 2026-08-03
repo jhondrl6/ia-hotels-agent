@@ -24,7 +24,7 @@ from modules.financial_engine.pricing_resolution_wrapper import PricingResolutio
 from modules.financial_engine.pricing_calculator import get_floor_price
 # ROICR FASE-3: CAPEX/OPEX desacoplados + Curva de Maduración 4 Pilares
 from modules.financial_engine.roi_formatter import calcular_metricas_roi, formatear_roi_para_propuesta
-from modules.financial_engine.pillar_maturity_curve import aplicar_curva_4_pilares, formatear_curva_para_propuesta
+from modules.financial_engine.pillar_maturity_curve import aplicar_curva_4_pilares, formatear_curva_para_propuesta, calcular_recuperacion_6m
 from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
 from modules.commercial_documents.service_catalog import SERVICE_CATALOG, TECHNICAL_ASSET_CATALOG
 from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
@@ -588,16 +588,17 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
                     raw_monthly_loss = getattr(realistic, 'monthly_loss_central', None)
                     if raw_monthly_loss is None:
                         raw_monthly_loss = getattr(realistic, 'monthly_loss_max', 0)
-                    # FASE-A: pain_ratio * recovery instead of raw loss
+                    # FASE-B COHERENCIA (N1, DEC-B2): recuperación 6m con la curva
+                    # ÚNICA compartida (misma función que el documento y el
+                    # diagnóstico). Antes usaba pain_ratio × recovery lineal, lo que
+                    # divergía de la curva del template (triple fuente del dinero).
                     scenario_config = self._load_scenario_config()
                     recovery_factors = scenario_config['recovery_factors']
                     recovery_realistic = recovery_factors.get('realistic', 0.20)
-                    pain_ratio = getattr(self, '_current_pain_ratio', scenario_config.get('pain_ratio_default', 0.20))
-                    monthly_gain = int(raw_monthly_loss * pain_ratio * recovery_realistic)
-                    net_monthly = monthly_gain - price_monthly
-                    net_benefit_6m = net_monthly * 6
+                    total_recovery = int(calcular_recuperacion_6m(raw_monthly_loss, recovery_realistic))
+                    monthly_gain = total_recovery / 6  # promedio mensual equivalente (curva)
+                    net_benefit_6m = total_recovery - price_monthly * 6
                     total_investment_opex = price_monthly * 6  # ROICRII: SIN setup_fee (CAPEX es activo del cliente)
-                    total_recovery = monthly_gain * 6
                     roi = total_recovery / total_investment_opex if total_investment_opex > 0 else 0.0
 
             validator = CommercialGateValidator()
@@ -947,8 +948,8 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         'web_status': "VERIFIED" if diagnostic_summary.overall_confidence.value == "VERIFIED" else "ESTIMATED",
         'roi_6m': f"{_acc_map.get(6, _maturity_result.total_recuperacion_6m) / (monthly_investment * 6):.2f}X",  # NEW-CRIT-01 FIX: unified to pain_ratio-adjusted _acc_map[6]
         'total_investment_6m': format_cop(monthly_investment * 6),
-        'recovered_6m': format_cop(effective_monthly_gain * 6),  # FASE-A: unified to effective (was projected)
-        'net_benefit_6m': format_cop((effective_monthly_gain - monthly_investment) * 6),  # FASE-A: unified to effective (was projected)
+        'recovered_6m': format_cop(int(_maturity_result.total_recuperacion_6m)),  # FASE-B (N1): curva única 6m
+        'net_benefit_6m': format_cop(int(_maturity_result.total_recuperacion_6m) - monthly_investment * 6),  # FASE-B (N1): curva única 6m
         'coherence_score': str(int(diagnostic_summary.coherence_score * 100)) if diagnostic_summary.coherence_score is not None else str(self._load_fallback('coherence_score', 70)[0]),
 
         # FASE-PROP-F: Extract precision_tier from financial_breakdown for Tier C warning banner

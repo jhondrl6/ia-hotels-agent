@@ -10,6 +10,7 @@ financial_evidence_tier: "${evidence_tier}"
 financial_source: "${financial_source_ref}"
 financial_value_central: ${financial_value_central}
 financial_value_range: [${financial_value_min}, ${financial_value_max}]
+financial_value_range_label: "${financial_value_range_label}"
 financial_method: "${financial_method}"
 financial_opportunity_cost: ${opportunity_cost_formatted}
 financial_ota_commission_real: ${ota_commission_real_formatted}
@@ -144,16 +145,18 @@ ${scenario_table_rows}
 | | Fuga total estimada (6 meses) | Recuperación proyectada (6 meses) |
 |---|---|---|
 | **Monto** | ${fuga_total_6m} | ${recuperacion_proyectada_6m} |
-| **Explicación** | Fuga bruta detectada en las 3 fugas digitales | Con pain_ratio ${pain_pct}% × recovery ${recov_pct}% |
+| **Explicación** | Fuga bruta detectada en las brechas digitales | Curva de maduración 6 meses (equivale a 3.85 meses al ${recov_pct}%) |
 
-> **¿Por qué la diferencia?** No toda la fuga digital es recuperable a corto plazo.
-> El **${pain_pct}%** de esta fuga es prioritaria y directamente remediable con nuestros servicios.
-> De ese porcentaje, proyectamos recuperar un **${recov_pct}%** en los primeros 6 meses.
-> Esto es conservador: a medida que los activos digitales maduran, el porcentaje de recuperación crece.
+> **¿Por qué la diferencia?** No toda la fuga digital es recuperable de inmediato.
+> La recuperación sigue una **curva de maduración de 4 pilares** (GEO→SEO→AEO→IAO):
+> el impacto mensual crece progresivamente — 15% en el mes 1 → 100% del factor
+> realista (**${recov_pct}%**) en el mes 6. El semestre equivale a **3.85 meses**
+> de recuperación al factor realista: una estimación conservadora y única,
+> idéntica en el diagnóstico y en la propuesta comercial.
 
-${pain_ratio_note}
+${curva_maduracion_note}
 
-**Proyección 6 meses:** ${loss_6_months}
+**Fuga acumulada 6 meses:** ${loss_6_months}
 
 > ⚠️ ${financial_disclaimer}
 >

@@ -7,6 +7,7 @@ Verifica que el motor financiero unificado use la curva de maduración como
 import pytest
 from modules.financial_engine.pillar_maturity_curve import (
     aplicar_curva_4_pilares,
+    calcular_recuperacion_6m,
     PillarMaturityResult,
 )
 
@@ -45,6 +46,36 @@ class TestCurvaMaduracionSumaCorrecta:
         suma_proyecciones = sum(p.recuperacion_mensual for p in result.proyecciones)
         assert abs(suma_proyecciones - result.total_recuperacion_6m) <= 6, (
             f"Sum of projections ({suma_proyecciones}) != total ({result.total_recuperacion_6m})"
+        )
+
+
+class TestFuncionCompartidaFaseB:
+    """FASE-B (N1, DEC-B2): calcular_recuperacion_6m es la ÚNICA fórmula.
+
+    Diagnóstico y propuesta deben consumir esta misma función para que la
+    recuperación 6m sea idéntica en ambos documentos (regla de oro: una fuente
+    de verdad por concepto monetario).
+    """
+
+    def test_calcular_recuperacion_6m_es_wrapper_de_curva(self):
+        """calcular_recuperacion_6m == aplicar_curva_4_pilares().total_recuperacion_6m."""
+        result = aplicar_curva_4_pilares(
+            fuga_mensual=FUGA_MENSUAL,
+            recovery_factor_max=RECOVERY_FACTOR,
+            meses=6,
+        )
+        assert calcular_recuperacion_6m(FUGA_MENSUAL, RECOVERY_FACTOR) == (
+            result.total_recuperacion_6m
+        )
+
+    def test_caso_zione_recuperacion_unica(self):
+        """Caso Zione: 7.192.000 × 0.35 × Σ curva (3.85) = $9.691.220."""
+        fuga_zione = 7_192_000
+        recovery = 0.35
+        esperado = 9_691_220
+        result = calcular_recuperacion_6m(fuga_zione, recovery)
+        assert abs(result - esperado) <= 2, (
+            f"Expected ~{esperado}, got {result}"
         )
 
 
