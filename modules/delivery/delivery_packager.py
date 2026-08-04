@@ -283,6 +283,9 @@ class DeliveryPackager:
 
         # Collect all files from source directory
         if source_dir.exists():
+            # FASE-D (N4): umbral de freshness para v4_audit
+            # Excluir artefactos con timestamp anterior al run actual
+            freshness_cutoff = datetime.now().timestamp() - 86400  # 24 horas
             for file_path in source_dir.rglob("*"):
                 if file_path.is_file():
                     # Determine destination path within ZIP
@@ -291,6 +294,16 @@ class DeliveryPackager:
                     # Skip manifest files
                     if file_path.name == "manifest.json":
                         continue
+
+                    # FASE-D (N4): filtrar v4_audit — solo artefactos del run actual
+                    if "v4_audit" in rel_path.parts:
+                        file_mtime = file_path.stat().st_mtime
+                        if file_mtime < freshness_cutoff:
+                            logger.info(
+                                f"[DeliveryPackager] Skipping stale v4_audit artifact: {rel_path} "
+                                f"(mtime={datetime.fromtimestamp(file_mtime).isoformat()})"
+                            )
+                            continue
 
                     # For assets in subdirectories, put them under ASSETS/
                     # FASE-B: Always use POSIX separators in ZIP paths

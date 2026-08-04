@@ -24,6 +24,10 @@
 | Reviews parametrizadas (D7) | commercial_documents | `_build_excluded_factors_section(reviews_count=N)` usa conteo real del audit; ya no "203 reseñas" | C-B |
 | Atribución GEO correcta (D8) | commercial_documents | Template dice "algoritmo propio de IA Hoteles Agent sobre datos de Google Places"; ya no "algoritmo de Google" | C-B |
 | Freshness v4_audit | delivery + proposal | commercial_gates_report fresco; históricos fuera del ZIP | D |
+| Target fotos GBP 40 | commercial_documents | `TARGET_GBP_PHOTOS = 40` compartido; “subir al menos N fotos adicionales” | D |
+| Dedup redes sociales | commercial_documents | `seen` set + iterar toda la lista; +TikTok/Twitter/LinkedIn | D |
+| Occupancy label real | main.py | `_occupancy_source` tracking: onboarding/regional/default | D |
+| Pulido texto N5-N8 | commercial_documents + templates | “arriba”, “Por qué importa”, truncamiento por palabra; N8 pre-resuelto FASE-B | D |
 
 ## Sección D: Métricas Acumulativas
 
@@ -38,6 +42,7 @@
 | Hallazgos cerrados | 5/21 (D1, D2, D3, D4, N1) | B |
 | Hallazgos cerrados | 7/21 (+D5, +N2) | C-A |
 | Hallazgos cerrados | 10/21 (+D6, +D7, +D8) + N9 parcial | C-B |
+| Hallazgos cerrados | 17/21 (+D9, +D10, +D11, +D12, +N4, +N5, +N6, +N7, +N8) | D |
 | Coherence última verificación | 0.9168 (run 2026-08-01) | baseline |
 
 ## Sección E: Archivos Afiliados Actualizados
@@ -66,6 +71,12 @@
 | `modules/commercial_documents/v4_diagnostic_generator.py` | D6: `_build_manual_attention_table` lee `performance.status` (ERROR→mensaje API, OK→genérico) · D7: `_build_excluded_factors_section(reviews_count=N)` parametriza ejemplo de reseñas | C-B |
 | `modules/commercial_documents/templates/diagnostico_v6_template.md` | D8: atribución GEO corregida en L113 y L231 — "algoritmo propio de IA Hoteles Agent sobre datos de Google Places" | C-B |
 | `tests/commercial_documents/test_diagnostic_generator.py` | +8 tests FASE-C-B (3 D6 performance + 3 D7 reviews + 2 D8 GEO) | C-B |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | D9: `TARGET_GBP_PHOTOS=40` · D10: dedup redes con `seen` set · N6: “Por qué importa” · N7: truncamiento `[:80].rsplit` | D |
+| `modules/commercial_documents/v4_proposal_generator.py` | D11: write `commercial_gates_report.json` SIEMPRE (fuera del branch error) | D |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | N5: “arriba” (era “acima”) | D |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | N5: “arriba” (era “acima”) | D |
+| `modules/delivery/delivery_packager.py` | N4: filtro freshness v4_audit (mtime cutoff 24h) | D |
+| `main.py` | D12: `_occupancy_source` tracking en 4 paths · D11b: warning stale commercial_gates_report | D |
 
 ## Notas para FASE-RELEASE
 

@@ -1761,14 +1761,17 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         reservas_mes = datos_operativos.get('reservas_mes')
         if reservas_mes and rooms:
             occupancy_rate = reservas_mes / (rooms * 30)
+            _occupancy_source = "onboarding"  # FASE-D (D12): label real del origen
         else:
             # Use regional occupancy if region is validated
             if feature_flags.should_use_regional_for(region):
                 from modules.financial_engine import RegionalADRResolver
                 resolver = RegionalADRResolver()
                 occupancy_rate = resolver.resolve_occupancy(region)
+                _occupancy_source = "regional"  # FASE-D (D12)
             else:
                 occupancy_rate = 0.50
+                _occupancy_source = "default"  # FASE-D (D12)
         
         canal_directo = datos_operativos.get('canal_directo_pct', 20.0)
         direct_channel_pct = canal_directo / 100
@@ -1792,8 +1795,10 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             from modules.financial_engine import RegionalADRResolver
             resolver = RegionalADRResolver()
             occupancy_rate = resolver.resolve_occupancy(region)
+            _occupancy_source = "regional"  # FASE-D (D12)
         else:
             occupancy_rate = 0.50  # Default 50%
+            _occupancy_source = "default"  # FASE-D (D12)
         direct_channel_pct = 0.20  # Default 20%
         
         # No ADR from onboarding available
@@ -1875,7 +1880,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             adr_source = result_data.get("adr_resolution", {}).get("source", "unknown")
             financial_sources = {
                 "adr_cop": adr_source,
-                "occupancy_rate": "regional" if feature_flags.should_use_regional_for(region) else ("onboarding" if onboarding_data is not None else "default"),
+                "occupancy_rate": _occupancy_source,  # FASE-D (D12): label del origen real
                 "direct_channel_percentage": "onboarding" if onboarding_data is not None else "default",
             }
         else:
@@ -1934,7 +1939,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         # Keys alineadas con CRITICAL_FIELDS de NoDefaultsValidator: occupancy_rate, direct_channel_percentage
         financial_sources = {
             "adr_cop": adr_source,
-            "occupancy_rate": "regional" if feature_flags.should_use_regional_for(region) else ("onboarding" if onboarding_data is not None else "default"),
+            "occupancy_rate": _occupancy_source,  # FASE-D (D12): label del origen real
             "direct_channel_percentage": "onboarding" if onboarding_data is not None else "default",
         }
 
@@ -2906,6 +2911,16 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             _commercial_gates_path = output_dir / hotel_id / "v4_audit" / "commercial_gates_report.json"
             _has_commercial_block = False
             if _commercial_gates_path.exists():
+                # FASE-D (D11b): warning si commercial_gates_report es más viejo que la propuesta
+                _gates_mtime = _commercial_gates_path.stat().st_mtime
+                _proposal_candidates = list((output_dir).glob("02_PROPUESTA_COMERCIAL_*.md"))
+                if _proposal_candidates:
+                    _latest_proposal = max(_proposal_candidates, key=lambda p: p.stat().st_mtime)
+                    if _latest_proposal.stat().st_mtime > _gates_mtime + 60:
+                        logger.warning(
+                            f"commercial_gates_report.json is stale: mtime={datetime.fromtimestamp(_gates_mtime).isoformat()} "
+                            f"vs proposal={_latest_proposal.stat().st_mtime}"
+                        )
                 with open(_commercial_gates_path, "r", encoding="utf-8") as _cgf:
                     _commercial_data = json.load(_cgf)
                 if not _commercial_data.get("blocking_passed", True):

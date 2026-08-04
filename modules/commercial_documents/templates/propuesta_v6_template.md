@@ -125,7 +125,7 @@ ${pain_ratio_note}
 > **Origen**: ${trazabilidad_origen}.
 
 {{if has_onboarding == "False"}}
-> **Nota importante**: Las cifras acima son estimaciones basadas en benchmarks regionales y datos limitados de su web. Para proyecciones precisas con datos reales de su hotel, complete el proceso de onboarding (15 minutos) y conecte Google Analytics.
+> **Nota importante**: Las cifras arriba son estimaciones basadas en benchmarks regionales y datos limitados de su web. Para proyecciones precisas con datos reales de su hotel, complete el proceso de onboarding (15 minutos) y conecte Google Analytics.
 {{endif}}
 
 ---

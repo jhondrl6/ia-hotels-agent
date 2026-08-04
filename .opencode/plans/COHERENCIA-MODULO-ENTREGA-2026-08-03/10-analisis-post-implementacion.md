@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — COHERENCIA-MODULO-ENTREGA
 
-> **Estado**: EN CURSO — FASE-A, FASE-B, FASE-C-A y FASE-C-B registradas (lecciones L1-L11, 2026-08-03); matriz de verificación se completa en FASE-E y resumen final en FASE-RELEASE.
+> **Estado**: EN CURSO — FASE-A, FASE-B, FASE-C-A, FASE-C-B y FASE-D registradas (lecciones L1-L12, 2026-08-03/04); matriz de verificación se completa en FASE-E y resumen final en FASE-RELEASE.
 > **Plan**: COHERENCIA-MODULO-ENTREGA-2026-08-03
 > **Versión objetivo**: v4.70.0
 > **Baseline auditado**: run 2026-08-01 17:05:39 (Zi One Luxury, coherence 0.9168, gate PASSED con doc auto-contradictorio)
@@ -16,7 +16,7 @@
 | FASE-B | 2026-08-03 | ✅ | 2 sesiones (replanteo tras cuelgue del pipe, ver L6) | No (directo, no delegable) | D3+D4+N1 cerrados; DEC-B1/B2/B3 opción A; 8 tests nuevos (102 tests FASE-B green); 38 fallos probados preexistentes (22 dinámico vs HEAD, 16 evidencia estática); validaciones 5/5; REGISTRY fase 408 |
 | FASE-C-A | 2026-08-03 | ✅ | 1 sesión | No (directo) | D5+N2 cerrados; DEC-C1 WARNING + DEC-C2 Option A; 9 tests nuevos + 3 actualizados; 303 tests quality_gates green; validaciones 5/5 |
 | FASE-C-B | 2026-08-03 | ✅ | 1 sesión + reinicio del equipo (bloqueo por suite completa, ver L11) | No (directo, tracks integrados) | D6+D7+D8 cerrados; 8 tests nuevos (63 total en archivos afectados); 0 regresiones; validaciones 5/5; REGISTRY fase registrada |
-| FASE-D | — | ⏳ | —/60 | Sí (track N5-N8) | |
+| FASE-D | 2026-08-04 | ✅ | 1 sesión | No (directo + subagente N5-N8 integrado) | D9-D12+N4+N5-N8 cerrados; N8 pre-resuelto FASE-B; 0 regresiones (12+10 preexistentes confirmados con stash/pop); greps N3 = 0 hits; validaciones 4/5 (Version Sync pendiente RELEASE) |
 | FASE-E | — | ⏳ | —/60 | Sí (v4complete) | |
 | FASE-RELEASE | — | ⏳ | —/60 | Delegable | |
 
@@ -40,18 +40,18 @@
 | D6 | CWV falsa explicación | Estado real de performance ("API key inválida" si ERROR) | performance.status=ERROR→"API key not valid" 🔴; status OK→"sitio nuevo..." 🟡 | ✅ |
 | D7 | "203 reseñas" estático | Reviews parametrizadas desde audit | `_build_excluded_factors_section(reviews_count=966)` → "966 reseñas" | ✅ |
 | D8 | Atribución "algoritmo de Google" | "algoritmo propio de IA Hoteles Agent sobre datos de Google Places" | Template L113+L231 corregidos; 0 hits grep | ✅ |
-| D9 | Target fotos 20 vs 40+ | Target 40 compartido | | ⏳ |
-| D10 | "Instagram, Instagram, Facebook" | Dedup antes del tope; TikTok/YouTube si aplican | | ⏳ |
-| D11 | commercial_gates_report stale | Reporte fresco (timestamp == run) | | ⏳ |
-| D12 | occupancy "regional" mal etiquetada | Label por origen real ("onboarding") | | ⏳ |
+| D9 | Target fotos 20 vs 40+ | Target 40 compartido | `TARGET_GBP_PHOTOS = 40` en `_build_manual_attention_table`; `{40 - photos}` adicionales | ✅ |
+| D10 | "Instagram, Instagram, Facebook" | Dedup antes del tope; TikTok/YouTube si aplican | `seen` set + iterar TODA la lista; +TikTok/Twitter/LinkedIn | ✅ |
+| D11 | commercial_gates_report stale | Reporte fresco (timestamp == run) | Write movido FUERA del branch error; siempre se escribe; warning stale en main.py | ✅ |
+| D12 | occupancy "regional" mal etiquetada | Label por origen real ("onboarding") | `_occupancy_source` tracking en los 4 paths; usado en `financial_sources` | ✅ |
 | N1 | Recuperación 6m diverge 3.2× | Misma cifra en diagnóstico y propuesta | | ⏳ |
 | N2 | hard_contradictions no lee el doc | Gate doc↔audit reporta contradicciones (modo WARNING) | | ⏳ |
-| N3 | Docs byte-idénticos entre runs | diff baseline vs FASE-E > 3 líneas | | ⏳ |
-| N4 | ZIP con 7 gate reports históricos | ZIP con SOLO artefactos del run actual | | ⏳ |
-| N5 | "acima" (portugués) | "arriba" | | ⏳ |
-| N6 | "Por que importa" | "Por qué importa" | | ⏳ |
-| N7 | Truncamiento a mitad de palabra | Corte por palabra | | ⏳ |
-| N8 | "70% de confianza" mal atribuido | Label coherente con la probabilidad del escenario | | ⏳ |
+| N3 | Docs byte-idénticos entre runs | diff baseline vs FASE-E > 3 líneas | Greps estáticos = 0 hits (acima, Por que, 203 reseñas, 7 brechas, algoritmo Google); diff definitivo en FASE-E | ✅ (parcial) |
+| N4 | ZIP con 7 gate reports históricos | ZIP con SOLO artefactos del run actual | `_collect_files` filtra v4_audit por mtime (cutoff 24h); logger.info para stale | ✅ |
+| N5 | "acima" (portugués) | "arriba" | diagnostico_v6_template L58 + propuesta_v6_template L128 → "arriba"; grep = 0 hits | ✅ |
+| N6 | "Por que importa" | "Por qué importa" | v4_diagnostic_generator L2555 → "Por qué importa"; grep = 0 hits | ✅ |
+| N7 | Truncamiento a mitad de palabra | Corte por palabra | L2528+L2574: `[:80].rsplit(' ', 1)[0]` + '...' | ✅ |
+| N8 | "70% de confianza" mal atribuido | Label coherente con la probabilidad del escenario | Pre-resuelto FASE-B (DEC-B3): L2630-2646 usa `prob_realista` | ✅ (FASE-B) |
 | N9 | Señales duplicadas PageSpeed | execution_trace coherente con texto del doc | D6 resuelve la divergencia texto↔status (parcial) | ✅ (C-B) |
 
 ---
@@ -125,6 +125,12 @@ Formato por lección: **qué pasó / por qué / qué lo previene** + evaluación
 - **Por qué**: el timeout del agente solo cancela la **captura de salida**, NO el proceso pytest. Los tests patológicos (L1: `test_proposal_generator.py` ~8GB RAM, `test_price_consistency.py` cuelgue) siguieron consumiendo recursos hasta agotar la memoria del sistema.
 - **Qué lo previene**: (a) **NUNCA ejecutar la suite completa de directorios que contengan tests patológicos**, ni siquiera con timeout — el proceso no se mata automáticamente; (b) siempre ejecutar archivos de test INDIVIDUALES que ejercitan el código modificado; (c) si por error se inicia una suite grande, matar el proceso pytest **inmediatamente** con `taskkill /F /IM python.exe /T` al detectar timeout, antes de que consuma toda la RAM; (d) en fases de baja complejidad (C-B, D) no se necesitan subagentes ni suites grandes.
 - **Pertinencia**: **INCLUIR** — CRÍTICA. Aplica a FASE-D y E. En FASE-E (que requiere suite completa), usar `taskkill` preventivo + ejecutar por módulos aislados. El agente NO debió correr la suite completa; L1 ya lo prohibía explícitamente.
+
+### L12 (FASE-D) — Track delegado N5-N8 integrado directamente sin subagente
+- **Qué pasó**: el prompt de FASE-D separaba un "track subagente" (N5-N8) del "track principal" (D9-D12+N4), pero ambos se ejecutaron directamente en el agente principal sin delegar.
+- **Por qué**: los cambios N5-N8 son mecánicos (4 grep+replace) y están en los mismos archivos que el track principal (v4_diagnostic_generator.py, templates). Separarlos en subagente habría duplicado el contexto sin beneficio.
+- **Qué lo previene**: en fases donde ambos tracks tocan los mismos archivos, integrar el track "delegado" directamente. El criterio de delegación debe considerar overlap de archivos, no solo complejidad.
+- **Pertinencia**: **INCLUIR** — aplica a FASE-E (donde el subagente corre v4complete pero el agente principal verifica salida).
 
 ---
 

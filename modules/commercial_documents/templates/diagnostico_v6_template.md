@@ -55,7 +55,7 @@ ${precision_warning}
 > **¿De dónde sale esta cifra?**
 > Cada mes, viajeros reservan en su zona a través de Booking, Expedia y otros intermediarios. Cada reserva cobra una comisión promedio del 15-25%.
 > Mientras más reservas pasan por intermediarios, menos quedan en la caja del hotel.
-> La cifra acima es nuestra mejor estimación de cuánto dinero se escapa cada mes por fugas en su visibilidad digital.
+> La cifra arriba es nuestra mejor estimación de cuánto dinero se escapa cada mes por fugas en su visibilidad digital.
 
 ${show_onboarding_cta}
 ${financial_breakdown_section}

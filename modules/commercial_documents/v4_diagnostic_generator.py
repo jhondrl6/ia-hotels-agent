@@ -1803,11 +1803,13 @@ class V4DiagnosticGenerator:
             return "| Datos de GBP no disponibles | - | - | - |"
         
         # GBP issues
+        # FASE-D (D9): target estandarizado de 40 fotos GBP (gbp_leak_detector)
+        TARGET_GBP_PHOTOS = 40
         if audit_result.gbp.geo_score < 70:
             rows.append(f"| Perfil GBP Sub-optimizado | 🟡 Media | Optimizar {audit_result.gbp.reviews} reviews y {audit_result.gbp.photos} fotos |")
         
-        if audit_result.gbp.photos < 20:
-            rows.append(f"| Fotos GBP Insuficientes | 🟡 Media | Subir al menos {20 - audit_result.gbp.photos} fotos adicionales |")
+        if audit_result.gbp.photos < TARGET_GBP_PHOTOS:
+            rows.append(f"| Fotos GBP Insuficientes | 🟡 Media | Subir al menos {TARGET_GBP_PHOTOS - audit_result.gbp.photos} fotos adicionales |")
         
         # Performance without field data — FASE-C-B (D6): leer status real
         if audit_result.performance and not audit_result.performance.has_field_data:
@@ -1927,15 +1929,31 @@ class V4DiagnosticGenerator:
             reviews = audit_result.gbp.reviews
             findings.append(f"✅ **Google Business Profile activo** — {reviews} reviews, {rating}/5 rating")
 
-        # Social media
+        # Social media — FASE-D (D10): dedupe con seen set, iterar TODA la lista
         if hasattr(audit_result, 'seo_elements') and audit_result.seo_elements:
             social = getattr(audit_result.seo_elements, 'social_links_found', [])
             if social:
                 platforms = []
-                for link in social[:3]:
-                    if 'facebook' in link: platforms.append('Facebook')
-                    elif 'instagram' in link: platforms.append('Instagram')
-                    elif 'youtube' in link: platforms.append('YouTube')
+                seen = set()
+                for link in social:
+                    if 'facebook' in link and 'Facebook' not in seen:
+                        platforms.append('Facebook')
+                        seen.add('Facebook')
+                    elif 'instagram' in link and 'Instagram' not in seen:
+                        platforms.append('Instagram')
+                        seen.add('Instagram')
+                    elif 'youtube' in link and 'YouTube' not in seen:
+                        platforms.append('YouTube')
+                        seen.add('YouTube')
+                    elif 'tiktok' in link and 'TikTok' not in seen:
+                        platforms.append('TikTok')
+                        seen.add('TikTok')
+                    elif 'twitter' in link and 'Twitter' not in seen:
+                        platforms.append('Twitter')
+                        seen.add('Twitter')
+                    elif 'linkedin' in link and 'LinkedIn' not in seen:
+                        platforms.append('LinkedIn')
+                        seen.add('LinkedIn')
                 if platforms:
                     findings.append(f"✅ **Redes sociales activas** — {', '.join(platforms)}")
 
@@ -2505,7 +2523,11 @@ class V4DiagnosticGenerator:
         brechas = self._get_brecha_pesos(audit_result)
         if index < len(brechas):
             detalle = brechas[index].get('detalle', 'Sin resumen')
-            return detalle[:80] + '...' if len(detalle) > 80 else detalle
+            # FASE-D (N7): truncamiento con corte por palabra (no a mitad de palabra)
+            if len(detalle) > 80:
+                truncated = detalle[:80].rsplit(' ', 1)[0]
+                return truncated + '...'
+            return detalle
         return "brecha no identificada"
     
 
@@ -2533,7 +2555,7 @@ class V4DiagnosticGenerator:
             sections.append(
                 f"### [BRECHA {i}] {b['nombre']}\n"
                 f"- **Detalle:** {b['detalle']}\n"
-                f"- **Por que importa:** {impacto_pct}%\n"
+                f"- **Por qué importa:** {impacto_pct}%\n"
                 f"- **Costo:** {costo}/mes\n"
             )
         return "\n".join(sections)
@@ -2547,7 +2569,9 @@ class V4DiagnosticGenerator:
         rows = []
         for i, b in enumerate(brechas, 1):
             detalle_corto = b.get('detalle', 'Sin resumen')[:80]
+            # FASE-D (N7): truncamiento con corte por palabra (no a mitad de palabra)
             if len(b.get('detalle', '')) > 80:
+                detalle_corto = detalle_corto[:80].rsplit(' ', 1)[0]
                 detalle_corto += '...'
             recuperacion = self._get_brecha_recuperacion(audit_result, financial_scenarios, i - 1)
             rows.append(f"| {detalle_corto} | +{recuperacion}/mes (Fuga mensual estimada) |")

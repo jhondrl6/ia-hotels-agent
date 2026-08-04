@@ -89,6 +89,6 @@ avanzar a la siguiente sin resolver el checkpoint.
 | FASE-B | ✅ COMPLETADA | 2026-08-03 | D3+D4+N1 resueltos; DEC-B1/B2/B3 (ver `03-prompt-fase-B.md`); dinero de fuente única |
 | FASE-C-A | ✅ COMPLETADA | 2026-08-03 | D5+N2 resueltos; DEC-C1 (WARNING) + DEC-C2 (Option A + fallback B) |
 | FASE-C-B | ✅ COMPLETADA | 2026-08-03 | D6+D7+D8 resueltos; performance dinámico, reviews parametrizadas, atribución GEO correcta |
-| FASE-D | ⏳ PENDIENTE | — | |
+| FASE-D | ✅ COMPLETADA | 2026-08-04 | D9-D12+N4 freshness ZIP + N3/N5-N8 pulido texto; 0 regresiones; N8 pre-resuelto FASE-B |
 | FASE-E | ⏳ PENDIENTE | — | Única ejecución v4complete |
 | FASE-RELEASE-4.70.0 | ⏳ PENDIENTE | — | Requiere todas las anteriores ✅ |

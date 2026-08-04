@@ -10,7 +10,7 @@
 | 2 | FASE-B: Finanzas honestas ⚠️ | `03-prompt-fase-B.md` | D3, D4, N1 | Directo (no delegable) | ✅ COMPLETADA | 2026-08-03 |
 | 3 | FASE-C-A: Gates reales | `04-prompt-fase-C-A.md` | D5, N2 | Directo | ✅ COMPLETADA | 2026-08-03 |
 | 4 | FASE-C-B: Textos dinámicos | `05-prompt-fase-C-B.md` | D6, D7, D8 | Delegado parcial | ✅ COMPLETADA | 2026-08-03 |
-| 5 | FASE-D: Freshness + pulido | `06-prompt-fase-D.md` | D9-D12, N3-N8 (parcial), N4 | Delegado parcial | ⏳ PENDIENTE | — |
+| 5 | FASE-D: Freshness + pulido | `06-prompt-fase-D.md` | D9-D12, N3-N8 (parcial), N4 | Delegado parcial | ✅ COMPLETADA | 2026-08-04 |
 | 6 | FASE-E: E2E Zione (única v4complete) | `07-prompt-fase-E.md` | Verificación 21 | Delegado | ⏳ PENDIENTE | — |
 | 7 | FASE-RELEASE-4.70.0 | `08-prompt-fase-RELEASE.md` | Docs oficiales | Delegable | ⏳ PENDIENTE | — |
 
@@ -26,18 +26,18 @@
 | D6 | ALTA | C-B | ✅ |
 | D7 | MEDIA | C-B | ✅ |
 | D8 | MEDIA | C-B | ✅ |
-| D9 | BAJA | D | ⏳ |
-| D10 | BAJA | D | ⏳ |
-| D11 | BAJA→MEDIA | D | ⏳ |
-| D12 | MEDIA | D | ⏳ |
+| D9 | BAJA | D | ✅ |
+| D10 | BAJA | D | ✅ |
+| D11 | BAJA→MEDIA | D | ✅ |
+| D12 | MEDIA | D | ✅ |
 | N1 | ALTA | B | ✅ |
 | N2 | ALTA | C-A | ✅ |
-| N3 | MEDIA | D/E | ⏳ |
-| N4 | MEDIA | D | ⏳ |
-| N5 | BAJA | D | ⏳ |
-| N6 | BAJA | D | ⏳ |
-| N7 | BAJA | D | ⏳ |
-| N8 | BAJA | D | ⏳ |
+| N3 | MEDIA | D/E | ⏳ (verif. parcial: greps 0 hits; diff FASE-E) |
+| N4 | MEDIA | D | ✅ |
+| N5 | BAJA | D | ✅ |
+| N6 | BAJA | D | ✅ |
+| N7 | BAJA | D | ✅ |
+| N8 | BAJA | D | ✅ (FASE-B) |
 | N9 | INFO | C-B/E | ✅ (C-B) |
 
 ## Gates de salida del proyecto

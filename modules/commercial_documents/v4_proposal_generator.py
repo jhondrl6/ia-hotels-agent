@@ -609,6 +609,19 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
                 has_onboarding_plan=self._current_has_onboarding,  # FASE-2 T0 NP5: usa param pasado por main.py
             )
 
+            # FASE-D (D11): Persist commercial_gates_report.json SIEMPRE
+            # (pass, warning y blocking) — antes solo se escribía en el branch de ERROR
+            hotel_slug = hotel_name.lower().replace(" ", "_").replace("-", "_")
+            commercial_gates_path = (
+                output_path / hotel_slug / "v4_audit" / "commercial_gates_report.json"
+            )
+            commercial_gates_path.parent.mkdir(parents=True, exist_ok=True)
+            commercial_gates_path.write_text(
+                json.dumps(commercial_report.to_dict(), indent=2, ensure_ascii=False),
+                encoding="utf-8",
+            )
+            logger.info(f"Commercial gates report persisted to {commercial_gates_path}")
+
             if not commercial_report.blocking_passed:
                 if document_audience == "internal":
                     alert_section = "\n---\n## ⚠️ Alertas Comerciales\n\n"
@@ -624,18 +637,6 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
                         )
                     document_content += alert_section
                 else:
-                    # FASE-2 DT-4: Persist commercial gates report before raising
-                    hotel_slug = hotel_name.lower().replace(" ", "_").replace("-", "_")
-                    commercial_gates_path = (
-                        output_path / hotel_slug / "v4_audit" / "commercial_gates_report.json"
-                    )
-                    commercial_gates_path.parent.mkdir(parents=True, exist_ok=True)
-                    commercial_gates_path.write_text(
-                        json.dumps(commercial_report.to_dict(), indent=2, ensure_ascii=False),
-                        encoding="utf-8",
-                    )
-                    logger.info(f"Commercial gates report persisted to {commercial_gates_path}")
-
                     raise CommercialGateBlockedError(
                         [r.gate_id for r in commercial_report.blocking_failures],
                         "Proposal commercial gates BLOCKING — see commercial_gates_report.json for details",
