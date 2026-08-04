@@ -1,4 +1,4 @@
-<!-- agents_version: v4.68.0 | last_update: 2026-08-04 -->
+<!-- agents_version: v4.70.0 | last_update: 2026-08-04 -->
 
 # IA Hoteles Agent (iah-cli)
 
@@ -93,6 +93,9 @@ Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto
 
 5. run_all_validations.py --quick
    → Validación final (4/4 checks)
+
+5b. validate_agents_md.py
+   → Gate de coherencia AGENTS.md (gate count, module refs, etc.)
 ```
 
 **Regla**: NO ejecutar planes de documentación directamente. SIEMPRE seguir el flujo anterior.
@@ -103,11 +106,11 @@ Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto
 
 || Documento | Seccion en AGENTS.md | Seccion en CONTRIBUTING | Seccion en Executor |
 |-----------|----------------------|-------------------------|---------------------|
-| `AGENTS.md` | (este archivo) | `§Vinculo-con-Executor` | — |
+| `AGENTS.md` | (este archivo) | `§Contrato-con-phased_project_executor` | — |
 | `CONTRIBUTING.md` | `§Vinculo-con-la-Documentacion` | — | `§Paso-2` |
 | `phased_project_executor.md` | `§Flujo-Documental-Obligatorio` | `§Flujo-Post-Fase` | — |
 | `DOMAIN_PRIMER.md` | (auto-regenerado) | `§Paso-5b` | `§E7` |
-| `prompt-fase-template.md` | — | — | `§Step-4` |
+| `prompt-fase-template.md` | — | — | `§2-Crear-Prompts` |
 | `validate_document_integration.py` | (script de validacion) | `validation.md §13` | — |
 
 **Gate de No-Regresion Documental**: Ejecutar `python scripts/validate_document_integration.py`
@@ -120,7 +123,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 3,185 funciones, 253 archivos, 0 regresion |
+| **Tests** | 3,215 funciones, 253 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -203,7 +206,7 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
-| `modules/quality_gates/` | 12 publication gates (evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, content_quality, asset_confidence, proposal_asset_alignment, tier_c_onboarding_required, doc_audit_consistency) | v4complete |
+| `modules/quality_gates/` | 12 publication gates — blocking (9): evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, tier_c_onboarding_required, doc_audit_consistency; advisory (3): content_quality, asset_confidence, proposal_asset_alignment | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
@@ -363,7 +366,7 @@ Se incluyen para orientar mejoras pero nunca bloquean publicación.
 
 <!--
 ZONA REFERENCIA - Solo si es necesario para contexto profundo
-Actualizada: 2026-07-28 | v4.66.0
+Actualizada: 2026-08-04 | v4.70.0
 -->
 
 ## Transformación v3 → v4
@@ -385,7 +388,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (3,185 funciones, 253 archivos)
+# Todas las pruebas (3,215 funciones, 253 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -400,7 +403,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (3,185 funciones totales)
+### Cobertura por Modulo (3,215 funciones totales)
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
@@ -489,7 +492,7 @@ iah-cli/
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
 │   └── validation/             # Validaciones adicionales
-├── tests/                      # Suite de pruebas (3,185 funciones, 253 archivos)
+├── tests/                      # Suite de pruebas (3,215 funciones, 253 archivos)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/

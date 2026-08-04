@@ -6,6 +6,16 @@ version: v2.13.0
 # Skill: Phased Project Executor
 
 > [!NOTE]
+> **Fuente canónica de contexto**: `AGENTS.md` contiene el contexto global del proyecto
+> (módulos activos, thresholds, flujo v4complete). Consultar AGENTS.md para:
+> - Umbrales de coherencia (≥ 0.8), confidence (≥ 0.9/0.7), publication gates
+> - Módulos activos y su propósito
+> - Flujo v4complete completo (FASE 1-5)
+>
+> Para procedimientos documentales, ver `docs/CONTRIBUTING.md`.
+> Para ejecución operativa por fases, este documento es la fuente primaria.
+
+> [!NOTE]
 > **Trigger**: "Ejecuta por fases", "Continúa en nueva sesión", "Divide en sprints", "Preserva contexto para siguiente fase", "Trabajo por fases".
 
 ## Regla de Sesión Única (OBLIGATORIO)
