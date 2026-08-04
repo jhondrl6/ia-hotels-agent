@@ -27,7 +27,7 @@
 - **194 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **56 directorios de test**
 - **9 config YAML** con schema validado
 - **17 agent skills** en `.agents/workflows/`
-- **11 publication gates** — blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop; advisory: content_quality, asset_confidence, proposal_asset_alignment
+- **12 publication gates** — blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop; advisory: content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency
 - **Coherence Score >= 0.8** requerido para publicacion
 - **29 assets** en catalogo (25 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY + 1 MISSING)
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional

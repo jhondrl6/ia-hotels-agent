@@ -203,7 +203,7 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
-| `modules/quality_gates/` | 11 publication gates (evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, content_quality, asset_confidence, proposal_asset_alignment, tier_c_onboarding_required) | v4complete |
+| `modules/quality_gates/` | 12 publication gates (evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, content_quality, asset_confidence, proposal_asset_alignment, tier_c_onboarding_required, doc_audit_consistency) | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
