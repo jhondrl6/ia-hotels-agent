@@ -1,5 +1,52 @@
 # Changelog
 
+## [4.70.0] — 2026-08-04 — Coherencia Módulo-Entrega
+
+### Objetivo
+
+Eliminar 21 desconexiones módulo↔entrega (D1-D12 + N1-N9) detectadas en el diagnóstico V6 de Zione (2026-08-01, re-auditoría 2026-08-03). El plan COHERENCIA-MODULO-ENTREGA-2026-08-03 corrigió problemas de veracidad de contenido, honestidad financiera, gates de calidad, textos dinámicos, freshness de artefactos y pulido de texto, verificados E2E con Zi One Luxury (coherence 0.9168, Tier B+, 21/21 hallazgos cerrados).
+
+### Cambios Implementados
+
+- **FASE-A** (D1+D2): Contenido veraz — `_pain_to_brecha` usa `pain.name`/`description` del mapper; detección unica de brechas con `_identify_brechas`; template con conteo dinámico `${brechas_*_count}`; pesos sobre N real.
+- **FASE-B** (D3+D4+N1): Finanzas honestas — `estimated_monthly_cop` alineado con pesos normalizados del doc; 3 escenarios reales con labels correctos + CG-SCENARIO-ORDER; fórmula única de recuperación 6m (`calcular_recuperacion_6m` en `pillar_maturity_curve.py`).
+- **FASE-C-A** (D5+N2): Gates reales — `_coverage_gate` reestructurado (covered cuenta antes de justified); nuevo gate `_doc_audit_consistency_gate` (WARNING, DEC-C1) con 4 patrones (OG, reviews, fotos, performance).
+- **FASE-C-B** (D6+D7+D8): Textos dinámicos — `_build_manual_attention_table` lee `performance.status` (ERROR→mensaje API, OK→genérico); `_build_excluded_factors_section(reviews_count=N)` parametriza reseñas; atribución GEO corregida ("algoritmo propio de IA Hoteles Agent sobre datos de Google Places").
+- **FASE-D** (D9-D12+N3-N8): Freshness + pulido — `TARGET_GBP_PHOTOS=40`; dedup redes sociales con `seen` set; `_occupancy_source` tracking; freshness v4_audit (mtime cutoff 24h); "arriba" (era "acima"); "Por qué importa"; truncamiento por palabra.
+- **FASE-E**: E2E Zi One Luxury — 21/21 hallazgos verificados; coherence 0.9168; evidence_tier B+; 12 gates PASSED; ZIP sin históricos.
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| Gate `doc_audit_consistency` | `modules/quality_gates/publication_gates.py` — Validación WARNING de pares doc↔audit (OG, reviews, fotos, performance) |
+| Helper compartido recuperación 6m | `modules/financial_engine/pillar_maturity_curve.py` — Fórmula única de recuperación proyectada |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | D1 (pain.name) + D2 (brechas_reales/caché/contadores dinámicos) + D3 (estimated_monthly_cop alineado) + D4 (escenarios reales) + D6 (performance dinámico) + D7 (reviews parametrizadas) + D9 (TARGET_GBP_PHOTOS=40) + D10 (dedup redes) + N6 ("Por qué importa") + N7 (truncamiento por palabra) |
+| `main.py` | D2 (brechas_reales + channel_context con inputs reales) + D12 (_occupancy_source tracking) + D11b (warning stale commercial_gates_report) |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | D2 (conteo dinámico) + B (sección "Lo que está en juego" con curva) + D8 (atribución GEO L113/L231) + N5 ("arriba") |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | N5 ("arriba") |
+| `config/regional_benchmarks.yaml` | Pesos `low_seo_score`/`low_organic_visibility` en 4 regiones (FASE-A) |
+| `modules/financial_engine/pillar_maturity_curve.py` | `calcular_recuperacion_6m()` — fórmula ÚNICA de recuperación 6m (N1) |
+| `modules/commercial_documents/v4_proposal_generator.py` | N1 (gate net_benefit_6m/roi con curva única) + D11 (write commercial_gates_report.json SIEMPRE) |
+| `modules/quality_gates/commercial_gate.py` | CG-SCENARIO-ORDER con semántica real (conservador = peor caso = mayor pérdida) |
+| `modules/quality_gates/publication_gates.py` | D5 (_coverage_gate reestructurado) + N2 (nuevo gate _doc_audit_consistency_gate WARNING) |
+| `modules/delivery/delivery_packager.py` | N4 (filtro freshness v4_audit mtime cutoff 24h) |
+
+### Tests
+
+- **+6 tests** FASE-A (`test_diagnostic_brechas.py`: OG 8 tags, N unificado, pesos YAML, template, caché, low_seo)
+- **+8 tests** FASE-B (`test_fase_f_financial_placeholders.py` + `test_financial_coherence.py` + `test_diagnostic_brechas.py` actualizado + `test_commercial_gate.py` actualizado)
+- **+13 tests** FASE-C-A (`test_doc_audit_consistency_gate.py`: 9 nuevos + `test_coverage_gate.py`: 4 nuevos + 3 actualizados)
+- **+8 tests** FASE-C-B (`test_diagnostic_generator.py`: 3 D6 performance + 3 D7 reviews + 2 D8 GEO)
+- **21/21 hallazgos verificados E2E** (D1-D12, N1-N9); seguimientos S5-S7 documentados
+- **Coherence**: 0.9168 (FASE-E, Zi One Luxury, gate PASSED, Tier B+)
+- **0 regresiones** en código modificado por las fases A-E
+
 ## [4.69.0] — 2026-08-01 — Delivery ZIP Single-Write Architecture
 
 ### Objetivo

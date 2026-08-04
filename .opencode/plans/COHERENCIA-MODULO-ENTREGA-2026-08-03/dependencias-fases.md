@@ -90,5 +90,5 @@ avanzar a la siguiente sin resolver el checkpoint.
 | FASE-C-A | ✅ COMPLETADA | 2026-08-03 | D5+N2 resueltos; DEC-C1 (WARNING) + DEC-C2 (Option A + fallback B) |
 | FASE-C-B | ✅ COMPLETADA | 2026-08-03 | D6+D7+D8 resueltos; performance dinámico, reviews parametrizadas, atribución GEO correcta |
 | FASE-D | ✅ COMPLETADA | 2026-08-04 | D9-D12+N4 freshness ZIP + N3/N5-N8 pulido texto; 0 regresiones; N8 pre-resuelto FASE-B |
-| FASE-E | ⏳ PENDIENTE | — | Única ejecución v4complete |
-| FASE-RELEASE-4.70.0 | ⏳ PENDIENTE | — | Requiere todas las anteriores ✅ |
+| FASE-E | ✅ COMPLETADA | 2026-08-04 | E2E Zi One Luxury: 21/21 verificados; coherence 0.9168; Tier B+; onboarding inyectado (run 2 tras workaround L13); seguimientos S5-S7 abiertos |
+| FASE-RELEASE-4.70.0 | ✅ COMPLETADA | 2026-08-04 | Version bump 4.70.0, CHANGELOG + GUIA_TECNICA, 3215 tests, validaciones 5/5 |

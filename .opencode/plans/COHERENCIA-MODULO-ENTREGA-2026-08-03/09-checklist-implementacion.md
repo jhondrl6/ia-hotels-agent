@@ -11,8 +11,8 @@
 | 3 | FASE-C-A: Gates reales | `04-prompt-fase-C-A.md` | D5, N2 | Directo | ✅ COMPLETADA | 2026-08-03 |
 | 4 | FASE-C-B: Textos dinámicos | `05-prompt-fase-C-B.md` | D6, D7, D8 | Delegado parcial | ✅ COMPLETADA | 2026-08-03 |
 | 5 | FASE-D: Freshness + pulido | `06-prompt-fase-D.md` | D9-D12, N3-N8 (parcial), N4 | Delegado parcial | ✅ COMPLETADA | 2026-08-04 |
-| 6 | FASE-E: E2E Zione (única v4complete) | `07-prompt-fase-E.md` | Verificación 21 | Delegado | ⏳ PENDIENTE | — |
-| 7 | FASE-RELEASE-4.70.0 | `08-prompt-fase-RELEASE.md` | Docs oficiales | Delegable | ⏳ PENDIENTE | — |
+| 6 | FASE-E: E2E Zione (única v4complete) | `07-prompt-fase-E.md` | Verificación 21 | Delegado | ✅ COMPLETADA | 2026-08-04 |
+| 7 | FASE-RELEASE-4.70.0 | `08-prompt-fase-RELEASE.md` | Docs oficiales | Delegable | ✅ COMPLETADA | 2026-08-04 |
 
 ## Cobertura de hallazgos (21)
 
@@ -32,7 +32,7 @@
 | D12 | MEDIA | D | ✅ |
 | N1 | ALTA | B | ✅ |
 | N2 | ALTA | C-A | ✅ |
-| N3 | MEDIA | D/E | ⏳ (verif. parcial: greps 0 hits; diff FASE-E) |
+| N3 | MEDIA | D/E | ✅ (diff 115 líneas vs baseline) |
 | N4 | MEDIA | D | ✅ |
 | N5 | BAJA | D | ✅ |
 | N6 | BAJA | D | ✅ |
@@ -42,8 +42,8 @@
 
 ## Gates de salida del proyecto
 
-- [ ] 21/21 hallazgos cerrados o con seguimiento documentado en `10-analisis-post-implementacion.md`
-- [ ] E2E v4complete Zi One Luxury: coherence ≥ 0.8, gates honestos, evidence_tier B+
-- [ ] Suite sin regresiones (conteo real registrado)
-- [ ] Release v4.70.0 con CHANGELOG + GUIA_TECNICA + sync de versión
-- [ ] `run_all_validations.py --quick` 4/4 y `validate_document_integration.py` OK
+- [x] 21/21 hallazgos cerrados o con seguimiento documentado en `10-analisis-post-implementacion.md` (S5-S7)
+- [x] E2E v4complete Zi One Luxury: coherence 0.9168 ≥ 0.8, gates honestos, evidence_tier B+
+- [x] Suite sin regresiones (conteo real registrado: 3,215 tests, 22 fallos preexistentes L1/L7)
+- [x] Release v4.70.0 con CHANGELOG + GUIA_TECNICA + sync de versión
+- [x] `run_all_validations.py --quick` 5/5 y `validate_document_integration.py` OK

@@ -1,8 +1,8 @@
-<!-- agents_version: v4.68.0 | last_update: 2026-08-03 -->
+<!-- agents_version: v4.68.0 | last_update: 2026-08-04 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.69.0 -- Delivery ZIP Single-Write Architecture COMPLETADO**
+> **v4.70.0 -- Coherencia Módulo-Entrega COMPLETADO**
 
 ---
 

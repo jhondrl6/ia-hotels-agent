@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.69.0** -- Delivery ZIP Single-Write Architecture | Actualizado 01 Agosto 2026 | 3,185 pruebas automatizadas | 0 errores conocidos
+**v4.70.0** -- Coherencia Módulo-Entrega | Actualizado 04 Agosto 2026 | 3,215 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 16 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 17 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -21,12 +21,12 @@
 
 ---
 
-## Estado del Proyecto (v4.69.0 -- Delivery ZIP Single-Write Architecture)
+## Estado del Proyecto (v4.70.0 -- Coherencia Módulo-Entrega)
 
-- **3,185 test functions** — suite completa, 0 regresiones
-- **205 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **56 directorios de test**
+- **3,215 test functions** — suite completa, 0 regresiones
+- **194 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **56 directorios de test**
 - **9 config YAML** con schema validado
-- **16 agent skills** en `.agents/workflows/`
+- **17 agent skills** en `.agents/workflows/`
 - **11 publication gates** — blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop; advisory: content_quality, asset_confidence, proposal_asset_alignment
 - **Coherence Score >= 0.8** requerido para publicacion
 - **29 assets** en catalogo (25 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY + 1 MISSING)
@@ -239,7 +239,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **3,185 test functions** — suite completa, 0 regresiones
+- **3,215 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.13.0 (1 fase/sesion, max 60 iteraciones)

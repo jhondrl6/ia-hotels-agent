@@ -1,7 +1,51 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.69.0 (Delivery ZIP Single-Write Architecture)
-**Última actualización:** 2026-08-03
+**Versión:** v4.70.0 (Coherencia Módulo-Entrega)
+**Última actualización:** 2026-08-04
+
+---
+
+### Notas de Cambios v4.70.0 — Coherencia Módulo-Entrega
+
+**Fecha:** 2026-08-04
+
+**Resumen**: Eliminación de 21 desconexiones módulo↔entrega (D1-D12 + N1-N9) detectadas en el
+diagnóstico V6 de Zione. El plan COHERENCIA-MODULO-ENTREGA-2026-08-03 corrigió problemas de
+veracidad de contenido, honestidad financiera, gates de calidad, textos dinámicos, freshness
+de artefactos y pulido de texto, verificados E2E con Zi One Luxury (coherence 0.9168, Tier B+).
+
+**Módulos afectados**: `modules/commercial_documents/`, `modules/financial_engine/`,
+`modules/quality_gates/`, `modules/delivery/`, `main.py`, `config/regional_benchmarks.yaml`
+
+**Problema**: 21 desconexiones entre lo que los módulos calculan y lo que los documentos entregan:
+- D1-D2: Contenido falso ("Sin Meta Tags" con 8 tags detectados, conteo de brechas inconsistente)
+- D3-D4, N1: Finanzas divergentes (costos diferentes entre doc y report, escenarios ocultados, recuperación 6m inconsistente)
+- D5, N2: Gates que no detectan contradicciones doc↔audit
+- D6-D8: Textos estáticos que mienten (performance, reviews, atribución GEO)
+- D9-D12, N3-N8: Freshness, duplicados, labels incorrectos, texto en portugués, truncamiento
+
+**Solución**: 6 fases de implementación (A-E + RELEASE):
+1. **FASE-A**: `_pain_to_brecha` usa `pain.name`/`description`; detección única de brechas; template con conteo dinámico
+2. **FASE-B**: `estimated_monthly_cop` alineado con pesos normalizados; fórmula única `calcular_recuperacion_6m()` en `pillar_maturity_curve.py`
+3. **FASE-C-A**: `_coverage_gate` reestructurado; nuevo gate `_doc_audit_consistency_gate` (WARNING, DEC-C1)
+4. **FASE-C-B**: Performance dinámico (lee `performance.status`); reviews parametrizadas; atribución GEO corregida
+5. **FASE-D**: `TARGET_GBP_PHOTOS=40`; dedup redes; `_occupancy_source` tracking; freshness v4_audit; pulido texto
+6. **FASE-E**: E2E Zi One Luxury — 21/21 verificados, coherence 0.9168, Tier B+
+
+**⚠️ Cambio de comportamiento documentado**:
+- **Pesos sobre N real (D2)**: Los costos de brecha ahora se calculan sobre el N real de brechas detectadas (no sobre un número fijo). Esto cambia las cifras de TODOS los hoteles.
+- **Fórmula única de recuperación (N1)**: `calcular_recuperacion_6m()` usa una sola fórmula con curva de maduración 4 pilares. Esto cambia las cifras de recuperación de TODOS los hoteles.
+
+**Backwards compatibility**: API pública sin cambios. Nuevos campos opcionales en `HotelFinancialData` (`ga4_enabled`, `gsc_enabled` ya existían desde v4.68.0). Gate `doc_audit_consistency` nace en modo WARNING (no bloquea publicación).
+
+**Tests**: +35 tests nuevos (6 FASE-A + 8 FASE-B + 13 FASE-C-A + 8 FASE-C-B). 0 regresiones en código modificado. 21/21 hallazgos verificados E2E.
+
+**E2E verificación**: Zi One Luxury — coherence 0.9168, evidence_tier B+, 12 gates PASSED, coverage_no_silent_drop 8+1/9, ZIP sin históricos. Run final `output/v4_verify_4.70.0` (timestamp 20260804_124443).
+
+**Seguimientos abiertos**:
+- S5: label `"occupancy": "regional"` residual en `breakdown` de `financial_scenarios.json` (el valor y `financial_sources` del gate_report son correctos)
+- S6: `execution_trace` lista `pagespeed_api` en executed Y skipped (deduplicar señal)
+- S7: loader de onboarding sin fallback a `output/clientes` con `--output` alternativo (workaround documentado)
 
 ---
 

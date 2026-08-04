@@ -30,8 +30,8 @@
 | FASE-C-A | D5, N2 | ✅ | 2026-08-03 | Directo |
 | FASE-C-B | D6, D7, D8 | ✅ | 2026-08-03 | Delegado parcial |
 | FASE-D | D9-D12, N3-N8 (parcial) | ✅ | 2026-08-04 | Delegado parcial |
-| FASE-E | E2E Zione | ⏳ | — | Delegado |
-| FASE-RELEASE-4.70.0 | Docs | ⏳ | — | Delegable |
+| FASE-E | E2E Zione | ✅ | 2026-08-04 | Delegado |
+| FASE-RELEASE-4.70.0 | Docs | ✅ | 2026-08-04 | Delegable |
 
 **Fase de mayor complejidad técnica**: FASE-B (ver `01-plan-maestro.md` §3).
 

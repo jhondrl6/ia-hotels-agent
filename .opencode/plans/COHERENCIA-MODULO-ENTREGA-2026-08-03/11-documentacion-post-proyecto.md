@@ -43,7 +43,15 @@
 | Hallazgos cerrados | 7/21 (+D5, +N2) | C-A |
 | Hallazgos cerrados | 10/21 (+D6, +D7, +D8) + N9 parcial | C-B |
 | Hallazgos cerrados | 17/21 (+D9, +D10, +D11, +D12, +N4, +N5, +N6, +N7, +N8) | D |
+| Hallazgos cerrados | **21/21** verificados E2E (D1-D12, N1-N9); seguimientos S5-S7 documentados | E |
+| Coherence última verificación | **0.9168** (run FASE-E 2026-08-04, Zi One Luxury, gate PASSED, Tier B+) | E |
 | Coherence última verificación | 0.9168 (run 2026-08-01) | baseline |
+| **Conteo real tests RELEASE** | **3,215 tests collected** (+30 vs baseline 3,185) | RELEASE |
+| Suite commercial_documents | 12 failed, 231 passed, 40 skipped (fallos preexistentes L1/L7) | RELEASE |
+| Suite financial_engine | 10 failed, 489 passed, 1 xpassed (fallos preexistentes L1/L7) | RELEASE |
+| Suite quality_gates | 303 passed, 0 failed ✅ | RELEASE |
+| Suite delivery | 59 passed, 0 failed ✅ | RELEASE |
+| Módulos Python | 194 archivos, 373 clases, 25 módulos (24 en modules/, 1 root) | RELEASE |
 
 ## Sección E: Archivos Afiliados Actualizados
 
@@ -79,6 +87,9 @@
 | `main.py` | D12: `_occupancy_source` tracking en 4 paths · D11b: warning stale commercial_gates_report | D |
 
 ## Notas para FASE-RELEASE
+
+- **FASE-E (2026-08-04)**: E2E Zi One Luxury completado. Run final `output/v4_verify_4.70.0` (timestamp 20260804_124443), coherence 0.9168, evidence_tier B+, 12 gates PASSED, coverage_no_silent_drop 8+1/9, ZIP sin históricos. Evidencia en `evidence/fase-E/`. Lecciones L13-L15 en `10-analisis-post-implementacion.md`. Sin código fuente modificado (solo YAML onboarding T0).
+- **Seguimientos para RELEASE**: S5 (label occupancy "regional" residual en breakdown de financial_scenarios.json), S6 (execution_trace duplica pagespeed_api), S7 (loader onboarding sin fallback a output/clientes con --output alternativo).
 
 - **DEC-C1**: Gate `doc_audit_consistency` nace en modo WARNING (no bloquea publicación). Upgrade a BLOCKING documentado para release posterior. Riesgo: si naciera BLOCKING, fallarían runs existentes con contradicciones hoy invisibles.
 - **DEC-C2**: Mecanismo de evidencia — Opción A (evidence_used.json / diagnostic_evidence) con fallback a B (parseo de patrones en markdown). El gate usa `_DOC_AUDIT_CONTRADICTION_PATTERNS` declarativo.
