@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 17 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 16 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -24,12 +24,12 @@
 ## Estado del Proyecto (v4.70.0 -- Coherencia Módulo-Entrega)
 
 - **3,215 test functions** — suite completa, 0 regresiones
-- **194 modulos Python** (~74K lineas) + **25 scripts** (~6.2K lineas) + **56 directorios de test**
+- **205 archivos Python en modules/** (~68K lineas, 24 directorios) + **25 scripts** (~5.5K lineas) + **55 directorios de test**
 - **9 config YAML** con schema validado
-- **17 agent skills** en `.agents/workflows/`
+- **16 agent skills** en `.agents/workflows/`
 - **12 publication gates** — blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop; advisory: content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency
 - **Coherence Score >= 0.8** requerido para publicacion
-- **29 assets** en catalogo (25 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY + 1 MISSING)
+- **25 assets** en catalogo (22 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
 
 ---
@@ -244,7 +244,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.13.0 (1 fase/sesion, max 60 iteraciones)
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
-- **11 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop (blocking); content_quality, asset_confidence, proposal_asset_alignment (advisory)
+- **12 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, doc_audit_consistency (blocking); content_quality, asset_confidence, proposal_asset_alignment (advisory)
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
 
 ---
@@ -272,13 +272,13 @@ iah-cli/
     delivery_readme_template.md #   Template README de entrega
     diagnostico_ejecutivo.md    #   Template diagnostico ejecutivo
     local_content/              #   Templates de contenido local
-  modules/                    # 205 modulos Python (~74K lineas) en 23 directorios
+  modules/                    # 205 archivos Python (~68K lineas) en 24 directorios
     asset_generation/         #   Generacion condicional de assets
     commercial_documents/     #   Diagnostico + Propuesta v4 + PDF gancho (hook-pdf)
     financial_engine/         #   Pricing, scenarios, loss projector
     orchestration_v4/         #   Two-phase flow, auditor
     quality/                  #   Coherence validator, asset semantics
-    quality_gates/            #   Publication gates (11), commercial gate, ethics
+    quality_gates/            #   Publication gates (12), commercial gate, ethics
     scrapers/                 #   Places API, Google Travel, SerpAPI
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
@@ -296,7 +296,7 @@ iah-cli/
     providers/                #   Providers LLM y API
     utils/                    #   Utilidades compartidas
     validation/               #   Validacion de outputs
-  tests/                      # ~67K lineas de test (56 directorios)
+  tests/                      # ~59K lineas de test (55 directorios, 256 archivos)
     config/                   #   61 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
