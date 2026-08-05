@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
-version: v2.13.0
+version: v2.14.0
 ---
 
 # Skill: Phased Project Executor
@@ -227,6 +227,18 @@ SI la fase requiere imports del proyecto (tests, integracion) Y el proyecto
        consume iteraciones intentando resolver dependencias inexistentes
     → Lección: FASE-4 BUGS-ONBOARDING-ADR (2026-07-22) — subagente
        atascado en imports bs4/selenium, ~40 iteraciones perdidas
+
+SI la fase documental (MD/YAML) requiere ademas editar UN script
+   stdlib-only del proyecto (sin imports de modulos del proyecto, sin
+   decisiones arquitectonicas — ej: añadir un check _check_* nuevo a
+   scripts/run_all_validations.py):
+    → Sigue siendo DELEGABLE a subagente (v2.14.0)
+    → Criterio: el script solo usa stdlib (argparse/subprocess/pathlib/etc.)
+      y el cambio replica un patron existente — no hay decision de diseño
+    → El agente principal verifica el diff del script y ejecuta las
+      validaciones (run_all_validations.py --quick) al integrar
+    → Ejemplo real: FASE-E de RC1-RC2-ENTREGA-COHERENTE-2026-08-04
+      (check "Prompts No Release" en run_all_validations.py)
 ```
 
 #### Protocolo de Subagente para v4complete
@@ -551,7 +563,7 @@ Verificar que `docs/GUIA_TECNICA.md` tenga nota técnica para cada fase:
 ```
 
 **Checklist Final:**
-- [ ] `run_all_validations.py --quick` pasa (4/4)
+- [ ] `run_all_validations.py --quick` pasa (TOTAL PASS — conteo dinámico del script, NO fijar "4/4": el nº de checks cambia al añadir validaciones nuevas, ej. "Prompts No Release")
 - [ ] `doctor.py --status` ejecutado sin errores
 - [ ] `version_consistency_checker.py` pasa
 - [ ] `sync_versions.py` ejecutado
@@ -929,6 +941,7 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - **FASE-RELEASE ejecutada sin implementaciones completadas** → abortar; verificar `dependencias-fases.md` que todas las fases previas estén en `✅`
 
 ## Versiones
+- **v2.14.0** (2026-08-04): Conteo de `run_all_validations.py --quick` pasa de "4/4" fijo a TOTAL PASS dinámico (el nº de checks varía al añadir validaciones nuevas, ej. check "Prompts No Release" de RC1-RC2-ENTREGA-COHERENTE-2026-08-04). Nueva branch en Regla de Decisión: fases documentales delegables pueden editar UN script stdlib-only del proyecto (sin imports de módulos ni decisiones arquitectónicas) — el parent verifica diff + validaciones. Alineado con RC3 (N13/N14): enforcement automatizado de L3/L9 vía `_check_prompts_no_release` en `scripts/run_all_validations.py`.
 - **v2.13.0** (2026-07-25): GAP 3 — Nueva branch en Regla de Decisión: fases con decisión arquitectónica cross-module NO son delegables (lección DT-3 FASE-2: unificar taxonomías requiere contexto completo de ambas implementaciones + consumidores). GAP 4 — Nuevo paso E8b en FASE-RELEASE: README.md line-by-line audit con live pytest count y module count para prevenir conteos stale (lección DT-3: test count desincronizado por 56 tests).
 - **v2.12.0** (2026-07-22): GAP 1 — Nueva branch 4 en Regla de Decisión código+tests: proyectos con venv Windows accedidos desde WSL no deben delegar tests a subagentes (causa raíz: subagente WSL no puede importar dependencias del venv Windows como bs4/selenium; lección de FASE-4 BUGS-ONBOARDING-ADR, ~40 iteraciones perdidas). GAP 2 — Nota [!TIP] en Paso 7: FASE-RELEASE es delegable a subagente (solo edita YAML/MD + scripts, sin imports del proyecto; confirmado 18 tool calls / ~4 min).
 - **v2.11.0** (2026-05-11): Nueva sección §2.5 "Verificación Pre-Creación de Prompts". Regla anti-deuda acumulativa: cada fase de implementación ejecuta `log_phase_completion.py` al terminar — NO delegar a FASE-RELEASE. Checklist obligatorio para detectar planes mal diseñados antes de crear prompts. Si T1 de RELEASE = "registrar FASE-1 a FASE-5" → error. Agregada acción correctiva.
