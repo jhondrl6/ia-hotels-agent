@@ -89,6 +89,7 @@ Razones:
 RC1-RC2-ENTREGA-COHERENTE-2026-08-04/
 ├── README.md                                    (este archivo)
 ├── dependencias-fases.md
+├── 01-plan-maestro.md
 ├── 05-prompt-inicio-sesion-fase-A.md
 ├── 05-prompt-inicio-sesion-fase-B.md
 ├── 05-prompt-inicio-sesion-fase-C.md
@@ -97,7 +98,20 @@ RC1-RC2-ENTREGA-COHERENTE-2026-08-04/
 ├── 05-prompt-inicio-sesion-fase-F.md
 ├── 05-prompt-inicio-sesion-fase-RELEASE.md
 ├── 06-checklist-implementacion.md
-└── 09-documentacion-post-proyecto.md
+├── 09-documentacion-post-proyecto.md
+└── 10-analisis-post-implementacion.md
 ```
 
 **Regla de dependencia**: FASE-RELEASE-4.71.0 solo se ejecuta cuando A-F estén ✅.
+
+## Progreso
+
+| Fase | Estado | Fecha | Notas |
+|------|--------|-------|-------|
+| FASE-A | ✅ Completa | 2026-08-05 | Cuarentena 3 archivos (40 tests). 3175 collected. Lista segura: 13 archivos. |
+| FASE-B | ⬜ Pendiente | — | |
+| FASE-C | ⬜ Pendiente | — | |
+| FASE-D | ⬜ Pendiente | — | |
+| FASE-E | ⬜ Pendiente | — | |
+| FASE-F | ⬜ Pendiente | — | |
+| FASE-RELEASE | ⬜ Pendiente | — | |

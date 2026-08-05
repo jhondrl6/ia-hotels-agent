@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
-version: v2.14.0
+version: v2.15.0
 ---
 
 # Skill: Phased Project Executor
@@ -417,7 +417,14 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
 ### 4. Documentación Incremental
 **Estrategia**: Documentar durante todo el proyecto, no solo al final.
 
-**Al inicio del proyecto**: Crear `.opencode/plans/09-documentacion-post-proyecto.md` con estructura vacía.
+**Al inicio del proyecto**: Crear AMBOS archivos con estructura vacía:
+- `.opencode/plans/09-documentacion-post-proyecto.md` (métricas y archivos por fase)
+- `.opencode/plans/10-analisis-post-implementacion.md` (lecciones aprendidas, decisiones, matriz de verificación)
+
+> [!IMPORTANT]
+> **El análisis post-implementación se crea DESDE LA CONCEPCIÓN del plan**, no al final.
+> Esto evita el reproceso de crearlo después de que las lecciones ya se perdieron.
+> Estructura: ver ejemplo real en `COHERENCIA-MODULO-ENTREGA-2026-08-03/10-analisis-post-implementacion.md`.
 
 **Después de cada fase completada**, editar directamente CHANGELOG.md y GUIA_TECNICA.md con los cambios de esa fase (segun template §6). La acumulacion en 09-documentacion-post-proyecto.md es un backup de datos para FASE-RELEASE:
 
@@ -425,6 +432,12 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
 - Sección B: Funcionalidades nuevas
 - Sección D: Métricas acumulativas
 - Sección E: Archivos afiliados actualizados
+
+**Y actualizar `10-analisis-post-implementacion.md`** con los datos de la fase:
+- Resumen de Ejecución (tabla de fases)
+- Lecciones Aprendidas nuevas (formato: qué pasó / por qué / qué lo previene)
+- Métricas de Ejecución (tests, coherencia, etc.)
+- Seguimientos abiertos detectados
 
 **Estructura concreta de 09-documentacion-post-proyecto.md:**
 
@@ -445,6 +458,40 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
 ```
 
 Cada fase completa su columna "Fase". FASE-RELEASE usa los datos acumulados para generar CHANGELOG y GUIA_TECNICA oficiales.
+
+**Estructura concreta de 10-analisis-post-implementacion.md:**
+
+```markdown
+# Análisis Post-Implementación — [ID DEL PLAN]
+
+> **Estado**: [Fase actual completada] — [resumen breve]
+> **Plan**: [ID del plan]
+> **Versión objetivo**: [X.Y.Z]
+
+## Resumen de Ejecución (llenar al cierre de cada fase)
+| Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
+
+## Matriz de Verificación de Hallazgos (llenar en FASE-E o FASE-F)
+| # | Hallazgo | Expected | Real | Status |
+
+## Lecciones Aprendidas (llenar — mínimo 3 por fase completada)
+Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXCLUIR)
+
+### Lecciones capitalizadas de planes anteriores (si aplica)
+| Lección | Aplicación en este plan |
+
+### Lecciones nuevas de este plan (L16+ si continúa numeración previa)
+
+## Seguimientos abiertos (llenar conforme avancen las fases)
+| Tema | Estado | Acción futura |
+
+## Métricas de Ejecución (llenar al cierre)
+
+## Decisiones Arquitectónicas (llenar cuando aplique)
+| ID | Decisión | Rationale | Alternativas rechazadas | Fase |
+
+## Checklist de Cierre (llenar en FASE-RELEASE)
+```
 
 ---
 
@@ -929,7 +976,7 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - [ ] Prompt creado para FASE-RELEASE (si hay version bump)
 - [ ] Checklist maestro con estados de todas las fases (incluyendo RELEASE)
 - [ ] `dependencias-fases.md` con conflictos documentados y dependencia → RELEASE
-- [ ] Documentación incremental preparada
+- [ ] Documentación incremental preparada (`09-documentacion-post-proyecto.md` + `10-analisis-post-implementacion.md`)
 - [ ] Estructura lista para que cada fase se ejecute en sesión propia de agente
 
 ## Plan de Recuperación
@@ -941,6 +988,7 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - **FASE-RELEASE ejecutada sin implementaciones completadas** → abortar; verificar `dependencias-fases.md` que todas las fases previas estén en `✅`
 
 ## Versiones
+- **v2.15.0** (2026-08-05): Paso 4 — `10-analisis-post-implementacion.md` se crea DESDE LA CONCEPCIÓN del plan (no al final), junto con `09-documentacion-post-proyecto.md`. Esto evita el reproceso de crearlo después de que las lecciones ya se perdieron. Estructura obligatoria: Resumen de Ejecución, Matriz de Verificación, Lecciones Aprendidas, Seguimientos, Métricas, Decisiones Arquitectónicas, Checklist de Cierre. Criterios de Éxito y Ejemplo de Uso actualizados para incluir el nuevo archivo.
 - **v2.14.0** (2026-08-04): Conteo de `run_all_validations.py --quick` pasa de "4/4" fijo a TOTAL PASS dinámico (el nº de checks varía al añadir validaciones nuevas, ej. check "Prompts No Release" de RC1-RC2-ENTREGA-COHERENTE-2026-08-04). Nueva branch en Regla de Decisión: fases documentales delegables pueden editar UN script stdlib-only del proyecto (sin imports de módulos ni decisiones arquitectónicas) — el parent verifica diff + validaciones. Alineado con RC3 (N13/N14): enforcement automatizado de L3/L9 vía `_check_prompts_no_release` en `scripts/run_all_validations.py`.
 - **v2.13.0** (2026-07-25): GAP 3 — Nueva branch en Regla de Decisión: fases con decisión arquitectónica cross-module NO son delegables (lección DT-3 FASE-2: unificar taxonomías requiere contexto completo de ambas implementaciones + consumidores). GAP 4 — Nuevo paso E8b en FASE-RELEASE: README.md line-by-line audit con live pytest count y module count para prevenir conteos stale (lección DT-3: test count desincronizado por 56 tests).
 - **v2.12.0** (2026-07-22): GAP 1 — Nueva branch 4 en Regla de Decisión código+tests: proyectos con venv Windows accedidos desde WSL no deben delegar tests a subagentes (causa raíz: subagente WSL no puede importar dependencias del venv Windows como bs4/selenium; lección de FASE-4 BUGS-ONBOARDING-ADR, ~40 iteraciones perdidas). GAP 2 — Nota [!TIP] en Paso 7: FASE-RELEASE es delegable a subagente (solo edita YAML/MD + scripts, sin imports del proyecto; confirmado 18 tool calls / ~4 min).
@@ -965,7 +1013,8 @@ La skill debe:
 3. Crear `05-prompt-inicio-sesion-fase-RELEASE.md` (fase de cierre)
 4. Actualizar checklist con estados de fases (incluyendo RELEASE)
 5. Crear `09-documentacion-post-proyecto.md` con estructura base
-6. Verificar numeración de todos los prompts
+6. Crear `10-analisis-post-implementacion.md` con estructura base (lecciones, decisiones, matriz de verificación)
+7. Verificar numeración de todos los prompts
 
 **Output de esta sesión:**
 ```
@@ -974,6 +1023,7 @@ La skill debe:
 ├── 05-prompt-inicio-sesion-fase-RELEASE.md      (fase de cierre)
 ├── 06-checklist-implementacion.md
 ├── 09-documentacion-post-proyecto.md
+├── 10-analisis-post-implementacion.md
 ├── dependencias-fases.md
 └── README.md
 ```

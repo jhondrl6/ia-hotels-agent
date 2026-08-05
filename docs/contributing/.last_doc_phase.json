@@ -215,5 +215,6 @@
   "08-checklist-implementacion.md": "5",
   "tests/delivery/test_delivery_packager.py": "FASE-C",
   "evidence/FASE-D-E2E/": "FASE-D",
-  "output/clientes/zi-one-luxury_onboarding.yaml": "FASE-E"
+  "output/clientes/zi-one-luxury_onboarding.yaml": "FASE-E",
+  "pytest.ini": "FASE-A"
 }

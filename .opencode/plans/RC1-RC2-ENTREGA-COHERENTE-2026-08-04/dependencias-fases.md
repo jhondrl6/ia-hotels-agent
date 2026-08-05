@@ -52,7 +52,7 @@ No hay dos fases tocando el mismo archivo.
 
 | Fase | Estado | Fecha | Notas |
 |------|--------|-------|-------|
-| FASE-A | ⬜ Pendiente | — | Prerrequisito crítico |
+| FASE-A | ✅ Completa | 2026-08-05 | Cuarentena 3 archivos (40 tests). Lista segura: 13 archivos PASS. Ver notas. |
 | FASE-B | ⬜ Pendiente | — | Mayor complejidad técnica |
 | FASE-C | ⬜ Pendiente | — | |
 | FASE-D | ⬜ Pendiente | — | Delegable (3 tracks) |
@@ -64,3 +64,33 @@ No hay dos fases tocando el mismo archivo.
 
 - Si una fase queda ⏳ INCOMPLETA: registrar aquí checkpoint + qué falta + timestamp.
 - La sesión siguiente lee esta tabla y continúa desde el checkpoint (no re-ejecuta lo ya hecho).
+
+## Notas FASE-A
+
+### Archivos en cuarentena (2026-08-05)
+- `tests/_archived_broken_tests/commercial_documents/test_proposal_generator.py` (32 tests) — fuga memoria ~8GB
+- `tests/_archived_broken_tests/commercial_documents/test_price_consistency.py` (4 tests) — cuelgue indefinido
+- `tests/_archived_broken_tests/commercial_documents/test_proposal_generator_dict.py` (4 tests) — 16/38 fallos preexistentes
+- `pytest.ini` actualizado con `--ignore` específicos (NO `norecursedirs` global — CR-8)
+- Tests collected: 3215 → 3175 (diferencia exacta: 40 tests)
+
+### Lista segura de tests del área propuesta (FASE-B puede correr estos)
+| Archivo | Resultado |
+|---------|-----------|
+| `test_financial_coherence.py` | 11 passed ✅ |
+| `test_fase_f_financial_placeholders.py` | 15 passed ✅ |
+| `test_pain_solution_mapper.py` | 5 passed ✅ |
+| `test_data_structures.py` | 4 passed ✅ |
+| `test_coherence_generated_assets.py` | PASS ✅ |
+| `test_precision_rendering.py` | PASS ✅ |
+| `test_diagnostic_generator.py` | PASS ✅ |
+| `test_diagnostic_brechas.py` | PASS ✅ |
+| `test_template_conditionals.py` | PASS ✅ |
+| `test_aeo_score.py` | PASS ✅ |
+| `test_iao_score.py` | PASS ✅ |
+| `test_proposal_fase4_h3_h4.py` | PASS ✅ |
+| `test_hook_pdf_generator.py` | PASS ✅ |
+
+### Archivos con fallos preexistentes (NO patológicos, solo aserciones)
+- `test_proposal_confidence_disclosure.py`: 5 failed (fallos de aserción, no cuelgues)
+- `test_proposal_dynamic.py`: 7 failed (fallos de aserción, no cuelgues)

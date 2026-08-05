@@ -30,7 +30,7 @@
 | Métrica | Valor | Fase |
 |---------|-------|------|
 | Tests baseline (pre-plan) | 3,215 collected | — |
-| Tests collected post-cuarentena | ⬜ (registrar) | FASE-A |
+| Tests collected post-cuarentena | 3,175 collected (2026-08-05) | FASE-A |
 | Tests nuevos RC1 | ⬜ (desde `git diff tests/`) | FASE-B |
 | Tests nuevos gates | ⬜ (desde `git diff tests/`) | FASE-C |
 | Tests nuevos delivery/loader/financial | ⬜ (desde `git diff tests/`) | FASE-D |
@@ -59,8 +59,14 @@
 ## Notas de Ejecución (por fase)
 
 ### FASE-A
-- Causa probable por archivo patológico: ⬜
-- Lista segura de tests del área propuesta: ⬜
+- Causa probable por archivo patológico:
+  - `test_proposal_generator.py`: fixture `generator` instancia `V4ProposalGenerator()` directamente; constructor carga templates/config. 32 tests × costo inicialización = fuga ~8GB.
+  - `test_price_consistency.py`: `generate()` con patches parciales; lógica no mockeada causa cuelgue indefinido.
+  - `test_proposal_generator_dict.py`: `setup_method` instancia generador; mocks insuficientes causan 16/38 fallos preexistentes.
+- Lista segura de tests del área propuesta: 13 archivos PASS (ver `dependencias-fases.md` §Notas FASE-A)
+- Archivos movidos: 3 archivos a `tests/_archived_broken_tests/commercial_documents/`
+- `pytest.ini`: `--ignore` específicos añadados (NO `norecursedirs` global — CR-8)
+- Tests collected: 3215 → 3175 (diferencia exacta: 40 tests)
 
 ### FASE-B
 - Decisión de mapeo adoptada (asset_type → pain_id): ⬜

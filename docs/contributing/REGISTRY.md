@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-08-04
+> **Ultima actualizacion:** 2026-08-05
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 413
+> **Total fases completadas:** 414
 
 ---
 
@@ -9776,6 +9776,25 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-A - 2026-08-05
+**Descripcion:** Cuarentena tests patologicos area propuesta (prerrequisito RC1)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `pytest.ini` | Pytest |
+
+### Validaciones
+- [x] Tests passing (0)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

@@ -1,6 +1,6 @@
 ---
 description: Template para prompts de inicio de fase en proyectos phased_project_executor
-version: v1.3.0
+version: v1.4.0
 ---
 
 # Template: Prompt de Inicio de Fase
@@ -113,7 +113,15 @@ Al finalizar esta fase, actualizar INMEDIATAMENTE (antes de cerrar la sesión):
    - **Seccion E**: Marcar archivos afiliados actualizados
    - **Importante**: Este archivo es la fuente de datos para FASE-RELEASE al generar CHANGELOG y GUIA_TECNICA
 
-4. **`evidence/fase-{N}/`** (si aplica)
+4. **`10-analisis-post-implementacion.md`** (ACUMULATIVO - capitalización de experiencia)
+   - **Resumen de Ejecución**: Actualizar fila de la fase completada (estado, iteraciones, notas)
+   - **Lecciones Aprendidas**: Registrar lecciones nuevas (formato: qué pasó / por qué / qué lo previene + pertinencia INCLUIR/EXCLUIR)
+   - **Métricas de Ejecución**: Actualizar con datos reales (tests collected, coherencia, etc.)
+   - **Seguimientos abiertos**: Documentar temas detectados que requieren acción futura
+   - **Decisiones Arquitectónicas**: Si aplica, registrar decisión + rationale + alternativas rechazadas
+   - **Importante**: Este archivo se crea DESDE LA CONCEPCIÓN del plan (no al final) para evitar reprocesos
+
+5. **`evidence/fase-{N}/`** (si aplica)
    - Crear directorio si hay evidencia que preservar
    - Guardar logs, screenshots, reportes, etc.
 
@@ -224,6 +232,7 @@ Antes de usar este prompt, verificar:
 
 ## Versión
 
+- **v1.4.0** (2026-08-05): Sección 5 (Post-Ejecución) — incluye actualización de `10-analisis-post-implementacion.md` como paso 4 obligatorio: lecciones aprendidas, métricas, seguimientos, decisiones. El archivo se crea desde la concepción del plan, no al final.
 - **v1.3.0** (2026-03-04): Template inicial para skill phased_project_executor v1.3.0
   - Incluye secciones Post-Ejecución y Criterios de Completitud obligatorios
   - Basado en lecciones aprendidas de implementación v4.4.0
