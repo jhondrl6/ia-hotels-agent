@@ -508,6 +508,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         document_audience: str = "client",  # FASE-A ROI-REFACTOR: "client" hides internal alerts; "internal" shows them
         user_provided_adr: Optional[float] = None,  # H1-FIX: ADR from onboarding to bypass regional benchmarks
         has_onboarding: bool = False,  # FASE-2 T0 NP5: parametro explicito (reemplaza fallback silencioso)
+        opportunity_scores: Optional[List[Dict[str, Any]]] = None,  # RC1 FASE-B: fuente viva de costos/ranks/labels de brechas
     ) -> str:
         """
         Generate the proposal document.
@@ -569,6 +570,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
             assets_generated=assets_generated,
             site_presence_report=site_presence_report,
             financial_breakdown=financial_breakdown,
+            opportunity_scores=opportunity_scores,  # RC1 FASE-B
         )
         
         # Render template
@@ -705,6 +707,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         assets_generated: Optional[List[Dict[str, Any]]] = None,
         site_presence_report: Optional[Any] = None,  # FASE-D: SitePresenceReport for production presence
         financial_breakdown: Optional[Any] = None,  # FASE-PROP-F: For precision_tier extraction
+        opportunity_scores: Optional[List[Dict[str, Any]]] = None,  # RC1 FASE-B: brechas vivas del run
     ) -> Dict[str, str]:
         """Prepare data for template rendering."""
         
@@ -1037,6 +1040,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
             assets_generated=assets_generated,
             site_presence_report=site_presence_report,
             whatsapp_conflict=whatsapp_conflict,  # FASE-C CROSS-4
+            opportunity_scores=opportunity_scores,  # RC1 FASE-B
         ),
         'asset_quality_table': self._generate_asset_quality_table(
             assets_generated,
@@ -1149,6 +1153,101 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
 """
  
 
+    def _build_dynamic_breach_map(
+        self,
+        opportunity_scores: Optional[List[Dict[str, Any]]],
+    ) -> Dict[str, Dict[str, Any]]:
+        """RC1 (FASE-B): mapa dinámico asset_type → brecha viva del run.
+
+        Consume los opportunity_scores del pipeline (la MISMA fuente que el
+        diagnóstico) en lugar de cifras hardcodeadas. Construye:
+        1. brecha_id → (rank, costo, label) desde opportunity_scores.
+        2. Mapa inverso asset_type → [brecha_ids candidatos] invirtiendo
+           PainSolutionMapper.PAIN_SOLUTION_MAP[bid]["assets"].
+        3. Para cada asset, toma el candidato PRESENTE en opportunity_scores
+           con mejor rank (desempate multi-brecha por presencia/rank).
+
+        Fallback explícito: si ningún candidato está en opportunity_scores,
+        el asset queda fuera del mapa (la tabla muestra "—", sin cifras
+        inventadas) y se registra warning.
+        """
+        result: Dict[str, Dict[str, Any]] = {}
+        if not opportunity_scores:
+            logger.warning(
+                "[RC1] opportunity_scores no disponibles — tabla de servicios "
+                "sin costos de brecha (fallback sin cifras inventadas)"
+            )
+            return result
+
+        # brecha_id → datos vivos del run
+        brecha_lookup: Dict[str, Dict[str, Any]] = {}
+        for entry in opportunity_scores:
+            if not isinstance(entry, dict):
+                continue
+            brecha_id = entry.get('brecha_id')
+            if not brecha_id:
+                continue
+            brecha_lookup[brecha_id] = {
+                'rank': entry.get('rank', 999),
+                'cost': entry.get('estimated_monthly_cop'),
+                'label': entry.get('brecha_name', brecha_id),
+            }
+
+        # Mapa inverso desde pain_solution_mapper: asset_type → brecha_ids candidatos
+        try:
+            from modules.commercial_documents.pain_solution_mapper import PainSolutionMapper
+            pain_map = PainSolutionMapper.PAIN_SOLUTION_MAP
+        except Exception as e:
+            logger.warning(f"[RC1] No se pudo importar PAIN_SOLUTION_MAP: {e}")
+            return result
+
+        asset_candidates: Dict[str, List[str]] = {}
+        for bid, entry in pain_map.items():
+            for asset in entry.get("assets", []):
+                asset_candidates.setdefault(asset, []).append(bid)
+
+        # Brechas candidatas por asset de la tabla de servicios (auditadas,
+        # coherentes con la inversión de PAIN_SOLUTION_MAP). Solo estas brechas
+        # pueden atribuirse a cada servicio — evita atribuir al servicio una
+        # brecha de otro dominio (ej: ai_crawler_blocked → llms_txt).
+        service_brecha_candidates = {
+            "optimization_guide": ["low_seo_score", "low_content_length"],
+            "whatsapp_button": ["whatsapp_conflict", "no_whatsapp_visible"],
+            "hotel_schema": ["no_hotel_schema"],
+            "org_schema": ["no_org_schema"],
+            "faq_page": ["no_faq_schema"],
+            "open_graph": ["no_og_tags"],
+            "llms_txt": ["missing_llmstxt"],
+        }
+
+        for asset_type, candidates in service_brecha_candidates.items():
+            # Defensa: los candidatos declarados deben existir en el mapa inverso
+            # real (detecta drift de PAIN_SOLUTION_MAP sin romper el render)
+            inverted = asset_candidates.get(asset_type, [])
+            drifted = [bid for bid in candidates if bid not in inverted]
+            if drifted:
+                logger.warning(
+                    f"[RC1] {asset_type}: candidatos {drifted} ya no aparecen en "
+                    f"PAIN_SOLUTION_MAP — revisar mapeo auditado"
+                )
+            present = [bid for bid in candidates if bid in brecha_lookup]
+            if not present:
+                logger.warning(
+                    f"[RC1] {asset_type}: ninguna brecha candidata {candidates} "
+                    f"presente en opportunity_scores — sin costo (fallback)"
+                )
+                continue
+            # Desempate multi-brecha: la de mejor rank en el run actual
+            best = min(present, key=lambda bid: brecha_lookup[bid]['rank'])
+            info = brecha_lookup[best]
+            result[asset_type] = {
+                'brecha_id': best,
+                'rank': info['rank'],
+                'cost': info['cost'],
+                'label': info['label'],
+            }
+        return result
+
     def _generate_dynamic_services_table(
         self,
         detected_pain_ids: Optional[List[str]] = None,
@@ -1156,6 +1255,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         assets_generated: Optional[List[Dict[str, Any]]] = None,
         site_presence_report: Optional[Any] = None,
         whatsapp_conflict: bool = False,  # FASE-C CROSS-4: muestra conflicto
+        opportunity_scores: Optional[List[Dict[str, Any]]] = None,  # RC1 FASE-B
     ) -> str:
         """Genera tabla principal de servicios mostrando TODOS los servicios prometidos.
 
@@ -1166,6 +1266,10 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         FASE-C CROSS-2: Columna adicional 'Problema que resuelve' conecta cada servicio
         con la brecha del diagnóstico que resuelve.
 
+        RC1 (FASE-B): La columna 'Problema que resuelve' consume opportunity_scores
+        del run actual (costo/rank/label vivos, misma fuente que el diagnóstico)
+        vía mapa inverso de pain_solution_mapper. Sin hardcodes de costos.
+
         Args:
             detected_pain_ids: LEGACY — ya no se usa para filtrar (backwards compat).
             score_aeo: Score AEO 0-100. Si < 20, agrega servicio AEO adicional.
@@ -1174,13 +1278,13 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             site_presence_report: SitePresenceReport para determinar present_in_production.
             whatsapp_conflict: Si True, el botón de WhatsApp muestra '⚠️ Requiere
                 corrección' en lugar de 'ℹ️ Presente en sitio'.
+            opportunity_scores: Entries de opportunity_scores del run actual
+                (brecha_id, rank, estimated_monthly_cop, brecha_name). Si None,
+                la tabla se renderiza sin costos (fallback explícito).
 
         Returns:
             String markdown con la tabla de servicios (8 filas + header).
         """
-        # FASE-2: Mapping asset_type → brecha que resuelve (auditada)
-        # Formato: (brecha_num, brecha_nombre, brecha_costo_mensual)
-        # whatsapp_button → None porque CROSS-4 lo maneja con whatsapp_conflict
         # FASE-3 B1: ASSET_TO_PAIN_ID para validacion semantica
         ASSET_TO_PAIN_ID = {
             "monthly_report":         "no_faq_schema",
@@ -1190,20 +1294,9 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             "whatsapp_button":        "no_whatsapp_visible",
             "whatsapp_conflict_guide": "no_whatsapp_visible",
         }
-        BREACH_BY_ASSET = {
-            # FASE-3 B2: monthly_report YA NO mapea a FAQ (no_faq_schema)
-            # — muestra info general en su lugar
-            "optimization_guide":  ("#1", "Sin Schema Hotel",       "$1,005,768"),
-            "whatsapp_button":     None,   # CROSS-4: manejado con whatsapp_conflict
-            "hotel_schema":       ("#1", "Sin Schema Hotel",       "$1,005,768"),
-            "org_schema":         ("#7", "Sin Schema Org",         "$321,786"),
-            "monthly_report":     ("—", "Informe de rendimiento",   "—"),
-            # FASE-3 B2: faq_page SÍ resuelve no_faq_schema (correcto)
-            "faq_page":           ("#4", "Sin FAQ",               "$482,679"),
-            "open_graph":         ("#6", "Sin OG Tags",           "$321,786"),
-            "llms_txt":           ("#3", "Baja prep. IA",         "$603,536"),
-            # FASE-3 B2: deprecados eliminados — optimization_guide, local_content_page
-        }
+        # RC1 (FASE-B): reemplaza el mapa estático hardcodeado (N10/N17/N19) —
+        # costo/rank/label vienen de opportunity_scores del mismo run.
+        breach_by_asset = self._build_dynamic_breach_map(opportunity_scores)
         # FASE-2: Build lookups for state determination
         asset_lookup = {}
         if assets_generated:
@@ -1247,7 +1340,22 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             if asset_type == "whatsapp_button" and whatsapp_conflict:
                 estado = "📋 Auditoría incluida"
                 confianza_col = "—"
-                brecha_col = "Brecha #5: WhatsApp no coincide"
+                # RC1 (FASE-B, N18): rank/label/costo vivos desde opportunity_scores
+                # (en el run Zione: whatsapp_conflict rank 1). Sin hardcode de rank.
+                wa_info = breach_by_asset.get("whatsapp_button")
+                if wa_info and wa_info.get('cost') is not None:
+                    brecha_col = (
+                        f"Brecha #{wa_info['rank']}: {wa_info['label']} "
+                        f"({format_cop(int(wa_info['cost']))}/mes)"
+                    )
+                elif wa_info:
+                    brecha_col = f"Brecha #{wa_info['rank']}: {wa_info['label']} (—)"
+                else:
+                    logger.warning(
+                        "[RC1] whatsapp_conflict sin brecha en opportunity_scores — "
+                        "sin rank/costo (fallback sin cifras inventadas)"
+                    )
+                    brecha_col = "Conflicto de WhatsApp (—)"
                 desc = "Auditoría y Optimización de Conversión"
                 rows.append(f"| **{service_name}** | {estado} | {confianza_col} | {brecha_col} | {desc} |")
                 continue
@@ -1278,10 +1386,19 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             else:
                 confianza_col = f"{confidence:.0%}"
 
-            # FASE-C CROSS-2: Breach column
-            brecha_info = BREACH_BY_ASSET.get(asset_type)
-            if brecha_info:
-                brecha_col = f"{brecha_info[0]}: {brecha_info[1]} ({brecha_info[2]}/mes)"
+            # RC1 (FASE-B): Breach column — datos vivos desde opportunity_scores.
+            # org_schema (N19): esta fila solo se renderiza si el asset fue generado
+            # o existe en producción (filtro has_asset/is_present); si no_org_schema
+            # no está en opportunity_scores, breach_by_asset no lo contiene → "—".
+            brecha_info = breach_by_asset.get(asset_type)
+            if brecha_info and brecha_info.get('cost') is not None:
+                brecha_col = (
+                    f"#{brecha_info['rank']}: {brecha_info['label']} "
+                    f"({format_cop(int(brecha_info['cost']))}/mes)"
+                )
+            elif brecha_info:
+                # Brecha detectada en el run pero sin costo — nunca inventar cifras
+                brecha_col = f"#{brecha_info['rank']}: {brecha_info['label']} (—)"
             else:
                 brecha_col = "—"
 

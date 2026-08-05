@@ -109,7 +109,7 @@ RC1-RC2-ENTREGA-COHERENTE-2026-08-04/
 | Fase | Estado | Fecha | Notas |
 |------|--------|-------|-------|
 | FASE-A | ✅ Completa | 2026-08-05 | Cuarentena 3 archivos (40 tests). 3175 collected. Lista segura: 13 archivos. |
-| FASE-B | ⬜ Pendiente | — | |
+| FASE-B | ✅ Completa | 2026-08-05 | RC1: `_build_dynamic_breach_map` + cableado opportunity_scores. 9 tests nuevos, 0 regresiones. |
 | FASE-C | ⬜ Pendiente | — | |
 | FASE-D | ⬜ Pendiente | — | |
 | FASE-E | ⬜ Pendiente | — | |

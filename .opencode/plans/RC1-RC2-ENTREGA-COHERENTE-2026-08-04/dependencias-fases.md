@@ -53,7 +53,7 @@ No hay dos fases tocando el mismo archivo.
 | Fase | Estado | Fecha | Notas |
 |------|--------|-------|-------|
 | FASE-A | ✅ Completa | 2026-08-05 | Cuarentena 3 archivos (40 tests). Lista segura: 13 archivos PASS. Ver notas. |
-| FASE-B | ⬜ Pendiente | — | Mayor complejidad técnica |
+| FASE-B | ✅ Completa | 2026-08-05 | RC1: tabla de servicios parametrizada desde opportunity_scores (N10/N17/N18/N19). 9 tests nuevos. Ver notas. |
 | FASE-C | ⬜ Pendiente | — | |
 | FASE-D | ⬜ Pendiente | — | Delegable (3 tracks) |
 | FASE-E | ⬜ Pendiente | — | Delegable (solo docs) |
@@ -94,3 +94,32 @@ No hay dos fases tocando el mismo archivo.
 ### Archivos con fallos preexistentes (NO patológicos, solo aserciones)
 - `test_proposal_confidence_disclosure.py`: 5 failed (fallos de aserción, no cuelgues)
 - `test_proposal_dynamic.py`: 7 failed (fallos de aserción, no cuelgues)
+
+## Notas FASE-B
+
+### Cambios implementados (2026-08-05)
+- `v4_proposal_generator.py`:
+  - NUEVO `_build_dynamic_breach_map()`: mapa inverso asset_type → brecha viva del run
+    (inversión de `pain_solution_mapper.PAIN_SOLUTION_MAP` + candidatos auditados por
+    servicio; desempate multi-brecha por rank presente en opportunity_scores).
+  - ELIMINADO `BREACH_BY_ASSET` estático (N10: costos factor 0.671×; N17: mapeo invertido).
+  - ELIMINADO hardcode "Brecha #5: WhatsApp no coincide" (N18) → rank/label/costo vivos.
+  - org_schema condicional sin cifras cuando `no_org_schema` no está en scores (N19).
+  - Fallback explícito: sin opportunity_scores → tabla sin costos + warning (nunca inventa).
+  - Nuevo parámetro `opportunity_scores` en `generate()` / `_prepare_template_data()` /
+    `_generate_dynamic_services_table()`.
+- `main.py` (FASE 3.5): calcula `opportunity_scores` vía
+  `diagnostic_gen._compute_opportunity_scores()` y los pasa a `proposal_gen.generate()`.
+- Backup forense: `temp/rc1_backup/v4_proposal_generator.py` (conservar hasta FASE-F).
+
+### Evidencia (evidence/FASE-B/)
+- `verify_breach_consistency_static.py` + salida: PASS contra run 20260804_124443
+  (5 services con costo vivo, 2 sin costo, N17/N18 corregidos).
+- `fase_b_test.txt`: 9 tests nuevos PASS.
+- `fase_b_safe1/2/3.txt`: lista segura FASE-A — 208 passed, 0 regresiones.
+- `fase_b_preexist.txt`: fallos preexistentes estables (7 + 5, áreas no tocadas).
+
+### Para FASE-C y siguientes
+- La propuesta ya consume opportunity_scores; el run E2E de FASE-F debe mostrar
+  costos/numeración IDÉNTICOS en diagnóstico y propuesta (check de cierre).
+- `temp/rc1_backup/` NO eliminar hasta cierre de FASE-F.

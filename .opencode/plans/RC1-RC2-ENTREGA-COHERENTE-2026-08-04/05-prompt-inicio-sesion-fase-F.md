@@ -94,13 +94,15 @@ Crear `temp/fase_f_verify.py` que valide contra el run nuevo:
 
 ### T3: Análisis post-implementación + lecciones aprendidas
 
-Crear `10-analisis-post-implementacion.md` en el directorio del plan con:
+Completar `10-analisis-post-implementacion.md` (el archivo ya existe con secciones parciales
+pobladas en FASE-A y FASE-B). Revisar primero que las filas anteriores estén correctas y luego
+añadir:
 
 1. **Matriz de fixes superados**: tabla hallazgo (N10-N21, S5, S7) → fix (fase) →
    evidencia en el run nuevo (V1-V10) → estado SUPERADO/PARCIAL/PENDIENTE.
 2. **Diff cualitativo** vs run 20260804_124443 (evidencia previa): qué cambió en los
    documentos (costos de la tabla de servicios, estado del commercial gate, contenido del ZIP).
-3. **Lecciones aprendidas NUEVAS** (numeradas desde L16): todo lo que falló, sorprendió o
+3. **Lecciones aprendidas NUEVAS** (numeradas desde Lxx+1): todo lo que falló, sorprendió o
    se descubrió durante A-F (incluye si algún delegate_task falló y por qué).
 4. **Seguimientos abiertos restantes** (ej: S6 execution_trace duplicado, upgrade del
    gate N2 a BLOCKING) con severidad y candidato a próximo release.
@@ -123,7 +125,8 @@ Crear `10-analisis-post-implementacion.md` en el directorio del plan con:
 
 1. Actualizar `dependencias-fases.md` (FASE-F ✅) y `README.md` del plan.
 2. `09-documentacion-post-proyecto.md`: Sección D (coherencia final del run, estado gates).
-3. Registrar la fase:
+3. `10-analisis-post-implementacion.md`: completar Matriz de Verificación de Causas Raíz (todas las filas ⬜ → ✅/⚠️/❌ con evidencia), Métricas (coherencia Zi One + gates), Lecciones Aprendidas de E2E, y Checklist de Cierre. T3 ya habrá dejado el archivo poblado; este paso consolida con los resultados finales del run.
+4. Registrar la fase:
 ```bash
 python scripts/log_phase_completion.py --fase FASE-F --desc "E2E v4complete Zi One Luxury: RC1/RC2 verificados (V1-V10) + analisis post-implementacion" --tests "0" --check-manual-docs
 ```

@@ -105,7 +105,8 @@ fix de RC1** porque los tests del área de propuesta son precisamente los patol�
 2. Actualizar `README.md` del plan (tabla de progreso).
 3. Actualizar `09-documentacion-post-proyecto.md` (Sección D: conteo tests collected
    antes/después de la cuarentena; Sección E: archivos movidos).
-4. Registrar la fase:
+4. Actualizar `10-analisis-post-implementacion.md` (Resumen de Ejecución, Métricas, Lecciones Aprendidas L16+ y Seguimientos abiertos correspondientes a esta fase).
+5. Registrar la fase:
 ```bash
 python scripts/log_phase_completion.py --fase FASE-A --desc "Cuarentena tests patologicos area propuesta (prerrequisito RC1)" --archivos-mod "pytest.ini" --tests "0" --check-manual-docs
 ```
@@ -120,7 +121,7 @@ python scripts/log_phase_completion.py --fase FASE-A --desc "Cuarentena tests pa
 - [ ] Lista segura de tests del área propuesta verificada y documentada
 - [ ] `run_all_validations.py --quick` TOTAL PASS (conteo dinámico del script)
 - [ ] `log_phase_completion.py` ejecutado SIN --release
-- [ ] `dependencias-fases.md` y `09-documentacion-post-proyecto.md` actualizados
+- [ ] `dependencias-fases.md`, `09-documentacion-post-proyecto.md` y `10-analisis-post-implementacion.md` actualizados
 
 ## Restricciones
 

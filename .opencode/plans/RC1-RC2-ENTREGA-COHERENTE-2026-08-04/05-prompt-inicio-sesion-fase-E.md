@@ -105,7 +105,8 @@ El agente principal verifica el diff resultante, ejecuta validaciones y hace el 
 
 1. Actualizar `dependencias-fases.md` (FASE-E ✅) y `README.md` del plan.
 2. `09-documentacion-post-proyecto.md`: Sección E (archivos documentales corregidos).
-3. Registrar la fase:
+3. `10-analisis-post-implementacion.md`: fila FASE-E en Resumen de Ejecución, Lecciones Aprendidas (R3.1-R3.4, Lxx+1), Seguimientos abiertos.
+4. Registrar la fase:
 ```bash
 python scripts/log_phase_completion.py --fase FASE-E --desc "RC3: higiene documental R3.1-R3.4 + preservacion evidencia N3 + commit Historico" --archivos-mod ".opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/11-documentacion-post-proyecto.md" --tests "0" --check-manual-docs
 ```

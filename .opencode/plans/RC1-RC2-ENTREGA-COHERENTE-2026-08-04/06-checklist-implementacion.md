@@ -6,8 +6,8 @@
 
 | # | Fase | Alcance | Estado | Delegable | Sesión | Fecha |
 |---|------|---------|--------|-----------|--------|-------|
-| 1 | FASE-A | Cuarentena tests patológicos (prerrequisito RC1) | ⬜ Pendiente | ❌ | — | — |
-| 2 | FASE-B ⚠️ | RC1: tabla de servicios dinámica (N10/N17/N18/N19) — MAYOR COMPLEJIDAD | ⬜ Pendiente | ❌ | — | — |
+| 1 | FASE-A | Cuarentena tests patológicos (prerrequisito RC1) | ✅ Completada | ❌ | 1 | 2026-08-05 |
+| 2 | FASE-B ⚠️ | RC1: tabla de servicios dinámica (N10/N17/N18/N19) — MAYOR COMPLEJIDAD | ✅ Completada | ❌ | 1 | 2026-08-05 |
 | 3 | FASE-C | RC2-a: CG-CLAIM-VS-EVIDENCE + CG-TIER-CONSISTENCY (N11/N15) | ⬜ Pendiente | ❌ | — | — |
 | 4 | FASE-D | RC2-b: ZIP entrega + loader onboarding + occupancy (N16/N21/S7/S5) | ⬜ Pendiente | ✅ 3 tracks | — | — |
 | 5 | FASE-E | RC3: higiene documental R3.1-R3.4 | ⬜ Pendiente | ✅ | — | — |
@@ -33,6 +33,16 @@
 - [x] T1 de RELEASE ≠ "registrar FASE-A a FASE-F"
 - [x] Template `prompt-fase-template.md` existe (v1.3.0) y se usó como base
 
+## Verificación Post-Ejecución por Fase (anti-omisión de `10-analisis-post-implementacion.md`)
+
+- [x] Prompt FASE-A incluye paso Post-Ejecución para `10-analisis-post-implementacion.md` (2026-08-05)
+- [x] Prompt FASE-B incluye paso Post-Ejecución para `10-analisis-post-implementacion.md`
+- [x] Prompt FASE-C incluye paso Post-Ejecución + no-regresión heredada de FASE-B
+- [x] Prompt FASE-D incluye paso Post-Ejecución + no-regresión heredada de FASE-B
+- [x] Prompt FASE-E incluye paso Post-Ejecución
+- [x] Prompt FASE-F: T3 "Crear" → "Completar" + paso Post-Ejecución
+- [x] Prompt FASE-RELEASE: sección Post-Ejecución nueva + check en Completitud
+
 ## Reglas Operativas Transversales (aplican a todas las sesiones)
 
 1. NUNCA suite completa de `tests/commercial_documents`/`tests/financial_engine` (L1/L11).
@@ -47,3 +57,5 @@
 10. V10: 0 blocking failures + READY_FOR_PUBLICATION (no exigir "12/12" — conteo dinámico).
 11. Mapa inverso `asset_type → brecha_id` desde `pain_solution_mapper` (no desde `ASSET_TO_PAIN_ID` — CR-1).
 12. Desde FASE-E: `run_all_validations.py --quick` incluye el check **"Prompts No Release"** (grep `--release` sobre prompts de fases intermedias, excluyendo `Archives/` y `*RELEASE*`) — enforcement permanente de L3/L9 (R3.1).
+13. **Post-Ejecución de cada fase incluye SIEMPRE actualizar `10-analisis-post-implementacion.md`** (Resumen de Ejecución, Métricas, Decisiones Arquitectónicas si aplica, mínimo 3 Lecciones Aprendidas, Seguimientos abiertos, notas forenses). Regla transversal desde FASE-B (2026-08-05).
+14. **No-regresión heredada de FASE-B**: `test_proposal_dynamic.py` (7 fallos preexistentes estables) y `test_proposal_confidence_disclosure.py` (5 fallos preexistentes estables) deben mantenerse en el conteo exacto documentado hasta que se diagnostiquen en release posterior.

@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — RC1-RC2-ENTREGA-COHERENTE
 
-> **Estado**: FASE-A completada (2026-08-05) — prerrequisito de tests patológicos resuelto.
+> **Estado**: FASE-B completada (2026-08-05) — RC1 resuelto a nivel código; verificación E2E en FASE-F.
 > **Plan**: RC1-RC2-ENTREGA-COHERENTE-2026-08-04
 > **Versión objetivo**: v4.71.0
 > **Baseline auditado**: run 2026-08-04 12:44:43 (Zi One Luxury, coherence 0.9168, evidence_tier B+)
@@ -14,7 +14,7 @@
 | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
 |------|--------|--------|-------------|---------------|-------|
 | FASE-A | 2026-08-05 | ✅ | 1 sesión (~30/60) | No (directo) | Cuarentena 3 archivos patológicos (40 tests). Tests collected: 3215 → 3175. Lista segura: 13 archivos PASS. 2 archivos con fallos preexistentes (no patológicos). `pytest.ini` con `--ignore` específicos (CR-8). Ver L16-L17. |
-| FASE-B | ⬜ Pendiente | — | — | No (directo, no delegable — DT-3) | |
+| FASE-B | 2026-08-05 | ✅ | 1 sesión (~20/60) | No (directo, no delegable — DT-3) | RC1: `_build_dynamic_breach_map` + cableado `opportunity_scores` en main.py. Eliminados `BREACH_BY_ASSET` (N10/N17) y hardcode L1250 (N18); org_schema condicional (N19). 9 tests nuevos PASS, lista segura 208 passed / 0 regresiones, verificación estática vs run 124443 PASS. Ver L18-L20, DEC-B1-B3. |
 | FASE-C | ⬜ Pendiente | — | — | No (directo) | |
 | FASE-D | ⬜ Pendiente | — | — | Sí (3 tracks independientes) | |
 | FASE-E | ⬜ Pendiente | — | — | Sí (solo docs, sin imports) | |
@@ -105,6 +105,24 @@ Estas lecciones ya fueron aplicadas en el diseño de este plan:
 - **Qué lo previene**: (a) leer el código de cada test (grep/read) para identificar el patrón (fixtures que instancian el generador completo, generación combinatoria, bucles); (b) si se necesita ejecutar algo, SOLO tests individuales con timeout corto (`pytest archivo.py::test_x -x --timeout=60 > temp/fase_a_diag.txt 2>&1`); (c) NUNCA ejecutar el archivo completo sin timeout.
 - **Pertinencia**: **INCLUIR** — protocolo estándar para diagnosticar tests patológicos sin bloquear el equipo.
 
+#### L18 (FASE-B) — La inversión de un mapa pain→assets NO es un mapeo asset→pain seguro
+- **Qué pasó**: la primera implementación invertía `PAIN_SOLUTION_MAP[bid]["assets"]` sin restricción y el test "llms_txt sin costo" falló: `ai_crawler_blocked` (brecha de otro dominio, rank 7 en el run) también lista `llms_txt` como asset, asignándole un costo de $899.000 que el plan esperaba ausente.
+- **Por qué**: un asset puede ser solución legítima de varios pains en el catálogo, pero la tabla comercial solo debe atribuir al servicio la brecha que ese servicio resuelve de cara al cliente (mapeo auditado 1:N acotado), no cualquier brecha que lo mencione.
+- **Qué lo previene**: definir candidatos auditados por servicio (lista explícita multi-brecha solo donde hay ambigüedad real: optimization_guide, whatsapp_button) y desempatar por presencia+rank en opportunity_scores; además una defensa de drift que warnea si un candidato deja de existir en `PAIN_SOLUTION_MAP`. Escribir el test de consistencia ANTES de verificar contra el run real fue lo que lo detectó en la iteración 1.
+- **Pertinencia**: **INCLUIR** — cualquier mapeo inverso de un mapa 1:N necesita una capa de selección semántica auditada antes de usarse en documentos de cara al cliente.
+
+#### L19 (FASE-B) — Parametrizar sin cablear el origen de datos deja el fix inerte
+- **Qué pasó**: el generador de propuesta no tenía acceso a `opportunity_scores` en ningún punto de su signature (`generate()` → `_prepare_template_data()` → tabla); el fix requirió tocar 3 niveles de signature + `main.py` (FASE 3.5), no solo la tabla.
+- **Por qué**: la fuente viva la produce `diagnostic_gen._compute_opportunity_scores()` en el orquestador; sin el cableado, la parametrización habría quedado con fallback permanente (tabla vacía de costos) y el bug visual persistiría.
+- **Qué lo previene**: al parametrizar una cifra, trazar primero el camino completo de datos (productor → parámetros → punto de render) y verificar con el run real (T3) que la cifra renderizada coincide byte a byte con el JSON del pipeline.
+- **Pertinencia**: **INCLUIR** — aplica a todo fix de "fuente de verdad aplicada a medias": la mitad faltante suele ser el cableado, no la fórmula.
+
+#### L20 (FASE-B) — Comentarios que citan símbolos eliminados disparan gates de grep
+- **Qué pasó**: tras eliminar `BREACH_BY_ASSET`, el comentario que explicaba el reemplazo mencionaba el nombre del dict eliminado y el criterio de aceptación (`grep BREACH_BY_ASSET → 0 hits`) falló falsamente.
+- **Por qué**: los criterios de aceptación basados en grep no distinguen código de comentarios.
+- **Qué lo previene**: al eliminar un símbolo, redactar los comentarios de reemplazo sin citar el literal (ej: "reemplaza el mapa estático hardcodeado"); correr el grep de aceptación inmediatamente después del edit, no al final.
+- **Pertinencia**: **INCLUIR** — regla general para cualquier refactor con criterios de aceptación grep-based.
+
 ---
 
 ## Seguimientos abiertos (llenar conforme avancen las fases)
@@ -112,8 +130,9 @@ Estas lecciones ya fueron aplicadas en el diseño de este plan:
 | Tema | Estado | Acción futura |
 |------|--------|---------------|
 | Tests patológicos propuesta/precios | ✅ Cuarentena (FASE-A) | 3 archivos aislados en `_archived_broken_tests/commercial_documents/`. Lista segura: 13 archivos PASS. FASE-B puede agregar tests nuevos sin riesgo. |
-| `test_proposal_confidence_disclosure.py` | ⚠️ 5 fallos preexistentes | Fallos de aserción (no patológicos). Diagnosticar en FASE-B o release posterior. |
-| `test_proposal_dynamic.py` | ⚠️ 7 fallos preexistentes | Fallos de aserción (no patológicos). Diagnosticar en FASE-B o release posterior. |
+| `test_proposal_confidence_disclosure.py` | ⚠️ 5 fallos preexistentes | Fallos de aserción (no patológicos), reconfirmados estables en FASE-B (área asset_quality_table, no tocada por RC1). Diagnosticar en release posterior. |
+| `test_proposal_dynamic.py` | ⚠️ 7 fallos preexistentes | Fallos de aserción (no patológicos), reconfirmados estables en FASE-B (lookups/asset_quality_table, no tocados por RC1). Diagnosticar en release posterior. |
+| Backup forense RC1 | ⚠️ Conservar | `temp/rc1_backup/v4_proposal_generator.py` — NO eliminar hasta cierre de FASE-F. |
 | Prompts con `--release` en plantilla (L3/L9) | ⬜ Pendiente | FASE-E: enforcement `_check_prompts_no_release` en `run_all_validations.py` |
 | S5: label `"occupancy": "regional"` residual | ⬜ Pendiente | FASE-D: `_occupancy_source` al bloque de fuentes del scenario calculator |
 | S7: loader de onboarding sin fallback | ⬜ Pendiente | FASE-D: fallback a `output/clientes` con `--output` alternativo |
@@ -127,7 +146,7 @@ Estas lecciones ya fueron aplicadas en el diseño de este plan:
 |---------|-------|------|
 | Tests baseline (pre-plan) | 3,215 collected | — |
 | Tests collected post-cuarentena | 3,175 collected (2026-08-05) | FASE-A |
-| Tests nuevos FASE-B | ⬜ (desde `git diff tests/`) | FASE-B |
+| Tests nuevos FASE-B | 9 (git diff tests/, patrón `^\+\s*def test_`, 2026-08-05) | FASE-B |
 | Tests nuevos FASE-C | ⬜ (desde `git diff tests/`) | FASE-C |
 | Tests nuevos FASE-D | ⬜ (desde `git diff tests/`) | FASE-D |
 | Coherencia run E2E Zione | ⬜ (≥ 0.8 exigido) | FASE-F |
@@ -140,9 +159,9 @@ Estas lecciones ya fueron aplicadas en el diseño de este plan:
 
 | ID | Decisión | Rationale | Alternativas rechazadas | Fase |
 |----|----------|-----------|------------------------|------|
-| DEC-B1 | ⬜ | ⬜ | ⬜ | FASE-B |
-| DEC-B2 | ⬜ | ⬜ | ⬜ | FASE-B |
-| DEC-B3 | ⬜ | ⬜ | ⬜ | FASE-B |
+| DEC-B1 | Mapa dinámico `_build_dynamic_breach_map()` dentro del generador de propuesta, consumiendo `opportunity_scores` pasados por parámetro desde `main.py` (FASE 3.5) | El pipeline ya produce opportunity_scores con la misma base que el diagnóstico (D3, DEC-B1 del plan anterior); pasarlos por parámetro mantiene el generador puro/testeable y evita leer JSON del disco | Recomputar scores dentro del generador (duplicaría lógica del diagnostic_gen); leer `v4_complete_report.json` desde disco (acopla al generador con rutas de output y orden de escritura) | FASE-B |
+| DEC-B2 | Candidatos de brecha por servicio restringidos a la lista auditada (`optimization_guide ← [low_seo_score, low_content_length]`, `whatsapp_button ← [whatsapp_conflict, no_whatsapp_visible]`, resto 1:1), con desempate por mejor rank presente | La inversión pura de `PAIN_SOLUTION_MAP` atribuiría brechas de otro dominio al servicio (ej: `ai_crawler_blocked → llms_txt` daría costo $899.000 al servicio de llms.txt aunque `missing_llmstxt` no esté en el run) — distorsionaría la cifra que ve el cliente; detectado por test que falló en la primera iteración | Inversión pura del mapa sin restricción (falló el caso "llms_txt sin costo" del plan); usar solo `ASSET_TO_PAIN_ID` (cubre 6/8 y su entrada whatsapp=`no_whatsapp_visible` no resuelve runs con conflicto) | FASE-B |
+| DEC-B3 | Fallback explícito sin cifras: si el asset no resuelve brecha presente en scores (o no hay scores), la columna muestra "—" + warning log | Principio "No Defaults in Money" — nunca inventar cifras ante el cliente; org_schema (N19) se vuelve naturalmente condicional | Fallback con costos estimados de benchmark (reproduciría N10); ocultar la fila (perdería trazabilidad del servicio prometido) | FASE-B |
 
 ---
 
@@ -159,6 +178,12 @@ Estas lecciones ya fueron aplicadas en el diseño de este plan:
 ### Evidencia estática para tests patológicos (L7)
 
 Mientras los tests patológicos sigan en cuarentena, usar `git show HEAD:` para verificar que el código modificado no afecta las áreas de los patológicos.
+
+### Resultado forense FASE-B (2026-08-05)
+
+- Backup: `temp/rc1_backup/v4_proposal_generator.py` (previo a todo edit; working tree limpio al iniciar, commit base `7ec1232`).
+- No fue necesario el ciclo reset/restaurar: la lista segura de FASE-A pasó completa (208 passed) y los fallos preexistentes se mantuvieron en el conteo exacto documentado (7 + 5), confirmando 0 regresiones sin tocar los archivos cuarentenados.
+- Evidencia estática (L7): verificación contra el JSON del run 124443 (`evidence/FASE-B/verify_breach_consistency_static.py`) — PASS, sin re-ejecutar v4complete.
 
 ---
 

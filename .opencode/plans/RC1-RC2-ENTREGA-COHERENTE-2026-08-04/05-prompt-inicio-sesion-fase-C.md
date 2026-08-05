@@ -99,7 +99,8 @@
 
 1. Actualizar `dependencias-fases.md` (FASE-C ✅) y `README.md` del plan.
 2. `09-documentacion-post-proyecto.md`: Sección B (gates afinados), D (+N tests), E.
-3. Registrar la fase:
+3. `10-analisis-post-implementacion.md`: fila FASE-C en Resumen de Ejecución, Métricas (+N tests), Decisiones Arquitectónicas si aplica, mínimo 3 Lecciones Aprendidas (numeradas desde Lxx+1), Seguimientos abiertos, notas forenses (backup en `temp/rc2_backup/`).
+4. Registrar la fase:
 ```bash
 python scripts/log_phase_completion.py --fase FASE-C --desc "RC2-a: CG-CLAIM-VS-EVIDENCE sin falsos positivos condicionales + CG-TIER-CONSISTENCY cableado (N11/N15)" --archivos-mod "modules/quality_gates/commercial_gate.py,modules/commercial_documents/v4_diagnostic_generator.py" --tests "N" --check-manual-docs
 ```
@@ -122,3 +123,8 @@ python scripts/log_phase_completion.py --fase FASE-C --desc "RC2-a: CG-CLAIM-VS-
 - NUNCA suite completa de `tests/quality_gates` si contiene archivos lentos; lotes pequeños (L1/L11).
 - NO ejecutar `v4complete` (reservado para FASE-F).
 - Backup previo: `Copy-Item` de los 2 archivos a `temp/rc2_backup/` (L4/L5).
+
+### No-regresión heredada de FASE-B (verificar ANTES del commit)
+- `test_proposal_dynamic.py`: 7 fallos preexistentes documentados como estables.
+- `test_proposal_confidence_disclosure.py`: 5 fallos preexistentes documentados como estables.
+- Si algún test del área `commercial_documents` **que pasaba en FASE-B** empieza a fallar, la fase queda ⏳ INCOMPLETA hasta corregir o documentar en `10-analisis-post-implementacion.md`.

@@ -1,0 +1,19 @@
+[OK] opportunity_scores cargadas: 8 entries
+[OK] Suma estimated_monthly_cop: $7,192,000 COP
+
+--- Services de PROPOSAL_SERVICE_TO_ASSET ---
+[OK]   SEO Local                                ÔåÆ #4 SEO Local Bajo ($1,198,906 COP/mes)
+[OK]   Bot├│n de WhatsApp                        ÔåÆ #1 Conflicto de WhatsApp ($1,198,906 COP/mes)
+[OK]   Schema Hotel                             ÔåÆ #2 Sin Schema Hotel ($1,498,094 COP/mes)
+[OK]   Schema Organization                      ÔåÆ sin costo ('ÔÇö', sin cifras inventadas)
+[OK]   P├ígina de FAQ                            ÔåÆ #3 Sin Schema FAQ ($719,200 COP/mes)
+[OK]   Meta Tags Sociales (Open Graph)          ÔåÆ #8 Open Graph Tags Incompletos ($479,706 COP/mes)
+[OK]   Optimizaci├│n para IA Generativa          ÔåÆ sin costo ('ÔÇö', sin cifras inventadas)
+[OK]   Tabla renderizada: WhatsApp rank vivo 1 + costo vivo
+[OK]   Tabla renderizada: N17 corregido (SEO Local ÔåÆ 'SEO Local Bajo')
+
+[RC1] org_schema: ninguna brecha candidata ['no_org_schema'] presente en opportunity_scores ù sin costo (fallback)
+RESULTADO: PASS ÔÇö 5 services con costo vivo correcto, 2 sin costo, N17/N18 corregidos
+[RC1] llms_txt: ninguna brecha candidata ['missing_llmstxt'] presente en opportunity_scores ù sin costo (fallback)
+[RC1] org_schema: ninguna brecha candidata ['no_org_schema'] presente en opportunity_scores ù sin costo (fallback)
+[RC1] llms_txt: ninguna brecha candidata ['missing_llmstxt'] presente en opportunity_scores ù sin costo (fallback)

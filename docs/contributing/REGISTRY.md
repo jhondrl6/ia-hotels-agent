@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-08-05
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 414
+> **Total fases completadas:** 415
 
 ---
 
@@ -9795,6 +9795,29 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-B - 2026-08-05
+**Descripcion:** RC1: tabla de servicios de propuesta parametrizada desde opportunity_scores (N10/N17/N18/N19)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/commercial_documents/test_proposal_breach_consistency.py` | NUEVO | Test Proposal Breach Consistency |
+| `evidence/FASE-B/verify_breach_consistency_static.py` | NUEVO | Verify Breach Consistency Static |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (9)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

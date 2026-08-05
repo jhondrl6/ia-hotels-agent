@@ -87,6 +87,15 @@ python scripts/log_phase_completion.py --fase FASE-RELEASE-4.71.0 --desc "Releas
 
 ---
 
+## Post-Ejecución (OBLIGATORIO)
+
+⚠️ **NO OMITIR** ⚠️
+
+1. `10-analisis-post-implementacion.md`: marcar el **Checklist de Cierre** (todos los checks en ✅) y cerrar la sección de Métricas con el conteo final de tests collected.
+2. Commit final (git add + commit con mensaje "release: 4.71.0 ...").
+
+---
+
 ## Criterios de Completitud (CHECKLIST)
 
 - [ ] VERSION.yaml = 4.71.0 y 6 archivos sincronizados
@@ -95,6 +104,7 @@ python scripts/log_phase_completion.py --fase FASE-RELEASE-4.71.0 --desc "Releas
 - [ ] `validate_agents_md.py` PASS + `validate_document_integration.py` PASS
 - [ ] `run_all_validations.py --quick` TOTAL PASS (incluye "Prompts No Release")
 - [ ] README audit con conteos en vivo
+- [ ] `10-analisis-post-implementacion.md` completo (Checklist de Cierre con todos los checks marcados)
 - [ ] `log_phase_completion.py --release 4.71.0` ejecutado con VERSION SYNC GATE en verde
 - [ ] Commit final
 

@@ -2723,6 +2723,17 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         # No redundant re-check here. The canonical snapshot is already available.
         site_presence_report = site_presence_snapshot
 
+        # RC1 (FASE-B): opportunity_scores del pipeline — la MISMA fuente que el
+        # diagnóstico (v4_complete_report.json) — para que la tabla de servicios
+        # de la propuesta cite costo/rank/label idénticos al diagnóstico del run.
+        opportunity_scores_for_proposal = None
+        try:
+            opportunity_scores_for_proposal = diagnostic_gen._compute_opportunity_scores(
+                audit_result, financial_scenarios_obj
+            )
+        except Exception as _opp_e:
+            print(f"   [WARN] RC1: opportunity_scores no disponibles para propuesta: {_opp_e}")
+
         proposal_gen = V4ProposalGenerator()
         proposal_path = proposal_gen.generate(
             diagnostic_summary=diagnostic_summary,
@@ -2740,6 +2751,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             pain_ledger=pain_ledger_entries,  # PIPELINE-FIX: enable ProposalAssetMatrix.save()
             user_provided_adr=adr_from_onboarding,  # H1-FIX: pass onboarding ADR to avoid parallel divergence
             has_onboarding=has_onboarding,  # FASE-2 T0 NP5: parametro explicito (reemplaza fallback silencioso)
+            opportunity_scores=opportunity_scores_for_proposal,  # RC1 FASE-B: tabla de servicios dinámica
         )
         
         # FIX-PATCH-2: Re-scrub proposal now that it exists

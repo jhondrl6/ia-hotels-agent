@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.70.0 (Coherencia Módulo-Entrega)
-**Última actualización:** 2026-08-04
+**Última actualización:** 2026-08-05
 
 ---
 

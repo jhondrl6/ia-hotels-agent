@@ -119,7 +119,8 @@ Tests: fixture con occupancy de onboarding → `data_sources.occupancy == "onboa
 
 1. Actualizar `dependencias-fases.md` (FASE-D ✅) y `README.md` del plan.
 2. `09-documentacion-post-proyecto.md`: Secciones B, D, E.
-3. Registrar la fase:
+3. `10-analisis-post-implementacion.md`: fila FASE-D en Resumen de Ejecución, Métricas (+N tests), Decisiones Arquitectónicas si aplica, mínimo 3 Lecciones Aprendidas (numeradas desde Lxx+1), Seguimientos abiertos (S5/S7 → estado post-fix).
+4. Registrar la fase:
 ```bash
 python scripts/log_phase_completion.py --fase FASE-D --desc "RC2-b: ZIP sin evidence BLOCKING ni runs anteriores + fallback loader onboarding + occupancy label veraz (N16/N21/S7/S5)" --archivos-mod "modules/delivery/delivery_packager.py,main.py" --tests "N" --check-manual-docs
 ```
@@ -141,3 +142,8 @@ python scripts/log_phase_completion.py --fase FASE-D --desc "RC2-b: ZIP sin evid
 - NO tocar archivos de FASE-B/C (v4_proposal_generator, commercial_gate).
 - NO ejecutar `v4complete` (reservado para FASE-F).
 - Si se delega: verificar el diff de cada track ANTES de integrar (L10).
+
+### No-regresión heredada de FASE-B (verificar ANTES del commit)
+- `test_proposal_dynamic.py`: 7 fallos preexistentes estables.
+- `test_proposal_confidence_disclosure.py`: 5 fallos preexistentes estables.
+- Si un cambio en `delivery_packager.py` o `main.py` afecta indirectamente al área commercial_documents, documentar el impacto en `10-analisis-post-implementacion.md`.
