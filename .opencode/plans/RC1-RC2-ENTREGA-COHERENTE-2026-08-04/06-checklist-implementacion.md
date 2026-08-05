@@ -8,8 +8,8 @@
 |---|------|---------|--------|-----------|--------|-------|
 | 1 | FASE-A | Cuarentena tests patológicos (prerrequisito RC1) | ✅ Completada | ❌ | 1 | 2026-08-05 |
 | 2 | FASE-B ⚠️ | RC1: tabla de servicios dinámica (N10/N17/N18/N19) — MAYOR COMPLEJIDAD | ✅ Completada | ❌ | 1 | 2026-08-05 |
-| 3 | FASE-C | RC2-a: CG-CLAIM-VS-EVIDENCE + CG-TIER-CONSISTENCY (N11/N15) | ⬜ Pendiente | ❌ | — | — |
-| 4 | FASE-D | RC2-b: ZIP entrega + loader onboarding + occupancy (N16/N21/S7/S5) | ⬜ Pendiente | ✅ 3 tracks | — | — |
+| 3 | FASE-C | RC2-a: CG-CLAIM-VS-EVIDENCE + CG-TIER-CONSISTENCY (N11/N15) | ✅ Completada | ❌ | 1 | 2026-08-05 |
+| 4 | FASE-D | RC2-b: ZIP entrega + loader onboarding + occupancy (N16/N21/S7/S5) | ✅ Completada | ✅ 3 tracks | 4 | 2026-08-05 |
 | 5 | FASE-E | RC3: higiene documental R3.1-R3.4 | ⬜ Pendiente | ✅ | — | — |
 | 6 | FASE-F | E2E v4complete Zi One Luxury + análisis post-implementación | ⬜ Pendiente | ✅ comando largo | — | — |
 | 7 | FASE-RELEASE-4.71.0 | Version bump + docs oficiales | ⬜ Pendiente | ✅ | — | — |

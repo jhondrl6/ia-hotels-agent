@@ -32,8 +32,8 @@
 | Tests baseline (pre-plan) | 3,215 collected | — |
 | Tests collected post-cuarentena | 3,175 collected (2026-08-05) | FASE-A |
 | Tests nuevos RC1 | 9 (git diff tests/, patrón `^\+\s*def test_`, 2026-08-05) | FASE-B |
-| Tests nuevos gates | ⬜ (desde `git diff tests/`) | FASE-C |
-| Tests nuevos delivery/loader/financial | ⬜ (desde `git diff tests/`) | FASE-D |
+| Tests nuevos gates | 20 (git diff tests/, patrón `^\+\s*def test_`, 2026-08-05) | FASE-C |
+| Tests nuevos delivery/loader/financial | 23 (10 delivery + 6 financial + 7 loader, 2026-08-05) | FASE-D |
 | Coherencia run E2E Zione | ⬜ (≥ 0.8 exigido) | FASE-F |
 | Gates publicación run E2E | ⬜ (12/12 exigido) | FASE-F |
 | Tests collected final | ⬜ (registrar en RELEASE) | FASE-RELEASE |
@@ -48,10 +48,14 @@
 | `tests/commercial_documents/test_proposal_breach_consistency.py` | Nuevo (gate de no-regresión RC1) | FASE-B |
 | `evidence/FASE-B/` | Script verificación estática + salidas (tests, lista segura) | FASE-B |
 | `modules/quality_gates/commercial_gate.py` | R2.1 + R2.2 | FASE-C |
-| `modules/commercial_documents/v4_diagnostic_generator.py` | Cableado tier al gate | FASE-C |
-| `modules/delivery/delivery_packager.py` | Política ZIP (R2.3 + N21) | FASE-D |
-| `main.py` | Fallback loader onboarding (S7) | FASE-D |
-| `modules/financial_engine/*` (occupancy) | Label fuente veraz (S5) | FASE-D |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Cableado tier al gate + `_extract_text_tier()` | FASE-C |
+| `tests/quality_gates/test_commercial_gate.py` | 20 tests nuevos (condicionales + tier + helper) | FASE-C |
+| `modules/delivery/delivery_packager.py` | Política ZIP: `_is_excluded_from_zip` (N16) + `_get_latest_run_timestamp` (N21) | FASE-D |
+| `main.py` | Fallback loader onboarding (S7): `{output}/clientes` → `output/clientes` | FASE-D |
+| `modules/financial_engine/harness_handlers.py` | Label occupancy veraz (S5): prioridad `onboarding > regional > default` + `occupancy_source` en HotelFinancialData fallback | FASE-D |
+| `tests/delivery/test_fase_d_zip_policy.py` | Nuevo (10 tests: gate report exclusion + run-based filtering) | FASE-D |
+| `tests/financial_engine/test_fase_d_occupancy_label.py` | Nuevo (6 tests: occupancy source label logic + HotelFinancialData) | FASE-D |
+| `tests/test_fase_d_onboarding_loader.py` | Nuevo (7 tests: loader fallback + URL normalization) | FASE-D |
 | `.opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/*` | R3.1/R3.2/R3.3 | FASE-E |
 | `.opencode/context/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md` | R3.4 (cita _coverage_gate) | FASE-E |
 | `scripts/run_all_validations.py` | Check "Prompts No Release" (R3.1 enforcement L3/L9) | FASE-E |
@@ -89,12 +93,20 @@
   test_proposal_confidence_disclosure (5) — áreas no tocadas (asset_quality_table/lookups).
 
 ### FASE-C
-- Patrón final CG-CLAIM-VS-EVIDENCE: ⬜
-- Comportamiento tier con inputs None: ⬜
+- Patrón final CG-CLAIM-VS-EVIDENCE: split por oraciones (`re.split(r'[.!?\n]\s*', text)`) + filtro de marcadores condicionales (`_CONDITIONAL_MARKERS`: si, siempre que, en caso de, podría, etc.). Si TODAS las oraciones que matchean son condicionales → PASS. Si al menos una es factual → evaluar `place_found` + `gbp_rating`. NO exige sujeto explícito (evita falsos negativos).
+- Comportamiento tier con inputs None: `_check_tier_consistency` ahora FALLA cuando ambos inputs son None (o uno solo). Caller (`v4_diagnostic_generator.py`) cablea `frontmatter_tier` desde `financial_breakdown.evidence_tier` y `text_tier` desde regex `_extract_text_tier()` sobre el texto del diagnóstico.
+- Tests: 20 nuevos (9 condicionales CG-CLAIM, 6 tier consistency, 5 extract_text_tier). Suite completa quality_gates: 322 passed / 1 skipped / 0 failed. Lista segura FASE-A: 145 passed / 0 regresiones. Preexistentes estables: 12 failed (7+5).
+- Backup forense: `temp/rc2_backup/commercial_gate.py` + `v4_diagnostic_generator.py`
 
 ### FASE-D
-- Modo de ejecución real (delegado vs directo): ⬜
-- Política ZIP adoptada (excluir reports / filtrar por run): ⬜
+- Modo de ejecución real: agente principal DIRECTO (3 tracks en serie — T1→T2→T3).
+- Política ZIP adoptada:
+  - N16: `_is_excluded_from_zip()` filtra `commercial_gates_report*` del ZIP de cliente.
+  - N21: `_get_latest_run_timestamp()` calcula cutoff desde el mtime más reciente de v4_audit (tolerancia 60s), reemplazando el umbral fijo de 24h.
+- Fallback loader: si `{--output}/clientes` no tiene YAML de onboarding, intenta `output/clientes` (S7).
+- Occupancy label: `data_sources.occupancy` respeta prioridad `onboarding > regional > default` (S5).
+- Tests: 23 nuevos (10 N16/N21 + 6 S5 + 7 S7). Suite delivery completa: 69 passed. Quality gates: 366 passed / 0 failed. Preexistentes estables: 12 failed (7+5). Validaciones: 5/5 TOTAL PASS.
+- Backup forense: `temp/fase_d_backup/` (3 archivos originales).
 
 ### FASE-E
 - Conteos en vivo registrados: ⬜

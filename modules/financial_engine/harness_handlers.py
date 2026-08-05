@@ -113,9 +113,10 @@ def financial_calculation_handler(payload: Dict[str, Any], context: TaskContext)
         }
 
         # Construir dict de fuentes para validacion source-aware (FASE-J)
+        # FASE-D (S5): el label de occupancy debe respetar la prioridad de "onboarding"
         data_sources = {
             "adr_cop": adr_result.source,
-            "occupancy": "regional" if flags.should_use_regional_for(region) else payload.get("occupancy_source", "default"),
+            "occupancy": occupancy_source if occupancy_source == "onboarding" else ("regional" if flags.should_use_regional_for(region) else occupancy_source),
             "direct_channel": payload.get("channel_source", "default"),
         }
 
@@ -129,6 +130,7 @@ def financial_calculation_handler(payload: Dict[str, Any], context: TaskContext)
                 adr_cop=adr_result.adr_cop,
                 occupancy_rate=occupancy_rate,
                 direct_channel_percentage=direct_channel_percentage,
+                occupancy_source=occupancy_source,
             )
             scenarios = calculator.calculate_scenarios(hotel_data)
         else:

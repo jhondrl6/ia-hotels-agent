@@ -110,8 +110,8 @@ RC1-RC2-ENTREGA-COHERENTE-2026-08-04/
 |------|--------|-------|-------|
 | FASE-A | ✅ Completa | 2026-08-05 | Cuarentena 3 archivos (40 tests). 3175 collected. Lista segura: 13 archivos. |
 | FASE-B | ✅ Completa | 2026-08-05 | RC1: `_build_dynamic_breach_map` + cableado opportunity_scores. 9 tests nuevos, 0 regresiones. |
-| FASE-C | ⬜ Pendiente | — | |
-| FASE-D | ⬜ Pendiente | — | |
+| FASE-C | ✅ Completa | 2026-08-05 | RC2-a: CG-CLAIM-VS-EVIDENCE split+condicionales (N11) + CG-TIER-CONSISTENCY cableado (N15). 20 tests nuevos, 0 regresiones. |
+| FASE-D | ✅ Completa | 2026-08-05 | RC2-b: ZIP sin gate reports + filtro run + fallback loader + occupancy label. 23 tests nuevos. |
 | FASE-E | ⬜ Pendiente | — | |
 | FASE-F | ⬜ Pendiente | — | |
 | FASE-RELEASE | ⬜ Pendiente | — | |

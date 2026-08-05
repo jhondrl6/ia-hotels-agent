@@ -1,6 +1,6 @@
 # Dependencias de Fases — RC1-RC2-ENTREGA-COHERENTE-2026-08-04
 
-> Actualizado: 2026-08-04 (Etapa 1 — Preparación)
+> Actualizado: 2026-08-05 (FASE-D completada)
 
 ## Diagrama de Dependencias
 
@@ -54,8 +54,8 @@ No hay dos fases tocando el mismo archivo.
 |------|--------|-------|-------|
 | FASE-A | ✅ Completa | 2026-08-05 | Cuarentena 3 archivos (40 tests). Lista segura: 13 archivos PASS. Ver notas. |
 | FASE-B | ✅ Completa | 2026-08-05 | RC1: tabla de servicios parametrizada desde opportunity_scores (N10/N17/N18/N19). 9 tests nuevos. Ver notas. |
-| FASE-C | ⬜ Pendiente | — | |
-| FASE-D | ⬜ Pendiente | — | Delegable (3 tracks) |
+| FASE-C | ✅ Completa | 2026-08-05 | RC2-a: CG-CLAIM-VS-EVIDENCE sin falsos positivos condicionales + CG-TIER-CONSISTENCY cableado (N11/N15). 20 tests nuevos. |
+| FASE-D | ✅ Completa | 2026-08-05 | RC2-b: ZIP sin gate reports (N16) + filtro run (N21) + fallback loader (S7) + occupancy label (S5). 23 tests nuevos. |
 | FASE-E | ⬜ Pendiente | — | Delegable (solo docs) |
 | FASE-F | ⬜ Pendiente | — | 1 solo v4complete (Zi One Luxury) |
 | FASE-RELEASE-4.71.0 | ⬜ Pendiente | — | Delegable |
@@ -123,3 +123,57 @@ No hay dos fases tocando el mismo archivo.
 - La propuesta ya consume opportunity_scores; el run E2E de FASE-F debe mostrar
   costos/numeración IDÉNTICOS en diagnóstico y propuesta (check de cierre).
 - `temp/rc1_backup/` NO eliminar hasta cierre de FASE-F.
+
+## Notas FASE-C
+
+### Cambios implementados (2026-08-05)
+- `commercial_gate.py`:
+  - `_CONDITIONAL_MARKERS`: regex compilado con marcadores condicionales (si, siempre que, en caso de, podría, etc.).
+  - `_check_claim_vs_evidence`: split por oraciones + filtro doble (antes del match + en toda la oración). Factual claim → evaluar place_found + gbp_rating; condicional → descartar.
+  - `_check_tier_consistency`: ambos inputs None → FAIL explícito (no pasa vacuo). Un input None → FAIL con mensaje del faltante.
+- `v4_diagnostic_generator.py`:
+  - `_extract_text_tier()`: método estático que extrae tier del texto (regex `Tier X` / `nivel X`).
+  - Cableado `frontmatter_tier` y `text_tier` en la invocación de `validate_diagnostic()`.
+- Backup forense: `temp/rc2_backup/commercial_gate.py` + `v4_diagnostic_generator.py`.
+
+### Evidencia (temp/)
+- `fase_c_test.txt`: 54 tests PASS (34 existentes + 20 nuevos).
+- `fase_c_gates_all.txt`: suite quality_gates 322 passed / 1 skipped / 0 failed.
+- `fase_c_diag.txt`: tests diagnóstico 63 passed / 0 failed.
+- `fase_c_safe.txt`: lista segura FASE-A 145 passed / 0 failed.
+- `fase_c_preexist.txt`: fallos preexistentes estables (12 = 7+5).
+
+### Para FASE-E y siguientes
+- CG-TIER-CONSISTENCY ahora valida inputs reales; el run E2E debe mostrar comparación de tier (no "Sin datos").
+- CG-CLAIM-VS-EVIDENCE ya no dispara falso positivo con texto condicional del diagnóstico.
+- `temp/rc2_backup/` NO eliminar hasta cierre de FASE-F.
+
+## Notas FASE-D
+
+### Cambios implementados (2026-08-05)
+- `delivery_packager.py`:
+  - `_is_excluded_from_zip()`: excluye `commercial_gates_report*` del ZIP de cliente (N16).
+  - `_get_latest_run_timestamp()`: cutoff basado en el run más reciente en v4_audit, no 24h fijo (N21).
+  - `_collect_files()`: integra ambos filtros + log de exclusiones.
+- `main.py`:
+  - Fallback de loader onboarding: si `{--output}/clientes` no tiene YAML → intenta `output/clientes` (S7).
+- `harness_handlers.py`:
+  - Label de occupancy respeta prioridad de `"onboarding"` sobre `"regional"` (S5).
+  - `HotelFinancialData` fallback recibe `occupancy_source` correctamente.
+- Backup forense: `temp/fase_d_backup/` (3 archivos originales).
+
+### Evidencia (temp/)
+- `fase_d_delivery.txt`: 10 tests nuevos FASE-D delivery PASS.
+- `fase_d_financial.txt`: 6 tests nuevos FASE-D occupancy PASS.
+- `fase_d_loader.txt`: 7 tests nuevos FASE-D loader PASS.
+- `fase_d_delivery_all.txt`: suite completa delivery 69 passed, 0 failed.
+- `fase_d_safe.txt`: batch seguro 61 passed + 2 preexistentes estables (TestRecoveryFactorROI).
+- `fase_d_quality.txt`: quality_gates 366 passed / 1 skipped / 0 failed.
+- `fase_d_preexist.txt`: fallos preexistentes estables (12 = 7+5).
+- `fase_d_validations.txt`: 5/5 TOTAL PASS.
+
+### Para FASE-F y siguientes
+- El ZIP ya no transporta `commercial_gates_report*` al cliente.
+- El loader de onboarding tiene fallback a `output/clientes` si `--output` apunta a ruta alternativa.
+- `breakdown.data_sources.occupancy` es coherente con la fuente real (onboarding > regional > default).
+- `temp/fase_d_backup/` NO eliminar hasta cierre de FASE-F.

@@ -1,0 +1,101 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 69 items
+
+tests/delivery/test_delivery_contract.py::TestDeliveryAssetEntry::test_from_skipped_exists PASSED [  1%]
+tests/delivery/test_delivery_contract.py::TestDeliveryAssetEntry::test_from_skipped_with_conflict PASSED [  2%]
+tests/delivery/test_delivery_contract.py::TestDeliveryAssetEntry::test_from_skipped_exists_with_issues PASSED [  4%]
+tests/delivery/test_delivery_contract.py::TestDeliveryAssetEntry::test_from_skipped_unknown PASSED [  5%]
+tests/delivery/test_delivery_contract.py::TestDeliveryAssetEntry::test_from_skipped_verification_failed PASSED [  7%]
+tests/delivery/test_delivery_contract.py::TestDeliveryAssetEntry::test_from_skipped_redundant PASSED [  8%]
+tests/delivery/test_delivery_contract.py::TestDeliveryAssetEntry::test_from_generated_delivered PASSED [ 10%]
+tests/delivery/test_delivery_contract.py::TestDeliveryAssetEntry::test_from_generated_estimated PASSED [ 11%]
+tests/delivery/test_delivery_contract.py::TestDeliveryAssetEntry::test_from_generated_blocked PASSED [ 13%]
+tests/delivery/test_delivery_contract.py::TestDeliveryAssetEntry::test_from_generated_advisory_guide PASSED [ 14%]
+tests/delivery/test_delivery_contract.py::TestDeliveryAssetEntry::test_from_generated_advisory_og_tags_guide PASSED [ 15%]
+tests/delivery/test_delivery_contract.py::TestDeliveryContext::test_delivery_context_properties PASSED [ 17%]
+tests/delivery/test_delivery_contract.py::TestDeliveryContext::test_delivery_context_from_missing_report PASSED [ 18%]
+tests/delivery/test_delivery_contract.py::TestDeliveryContext::test_delivery_context_from_invalid_report PASSED [ 20%]
+tests/delivery/test_delivery_contract.py::TestDeliveryContext::test_advisory_assets_property PASSED [ 21%]
+tests/delivery/test_delivery_contract.py::TestDeliveryContext::test_empty_context_properties PASSED [ 23%]
+tests/delivery/test_delivery_contract.py::TestManifestZipConsistency::test_manifest_paths_posix PASSED [ 24%]
+tests/delivery/test_delivery_contract.py::TestManifestZipConsistency::test_zip_paths_posix PASSED [ 26%]
+tests/delivery/test_delivery_contract.py::TestManifestZipConsistency::test_manifest_total_files_matches_zip PASSED [ 27%]
+tests/delivery/test_delivery_contract.py::TestManifestZipConsistency::test_manifest_total_size_matches_zip PASSED [ 28%]
+tests/delivery/test_delivery_contract.py::TestManifestZipConsistency::test_readme_size_not_zero PASSED [ 30%]
+tests/delivery/test_delivery_contract.py::TestManifestZipConsistency::test_manifest_entry_set_equals_zip_entry_set PASSED [ 31%]
+tests/delivery/test_delivery_contract.py::TestReadmeZipConsistency::test_readme_zip_filename_matches_actual PASSED [ 33%]
+tests/delivery/test_delivery_contract.py::TestReadmeZipConsistency::test_readme_package_structure_from_real_files PASSED [ 34%]
+tests/delivery/test_delivery_contract.py::TestReadmeZipConsistency::test_readme_no_hardcoded_whatsapp_button PASSED [ 36%]
+tests/delivery/test_delivery_contract.py::TestReadmeZipConsistency::test_readme_does_not_reference_phantom_files PASSED [ 37%]
+tests/delivery/test_delivery_contract.py::TestValidationGate::test_valid_zip_passes_validation PASSED [ 39%]
+tests/delivery/test_delivery_contract.py::TestValidationGate::test_invalid_zip_raises_delivery_validation_error PASSED [ 40%]
+tests/delivery/test_delivery_contract.py::TestP01ReadmeManifestConsistency::test_readme_total_files_matches_manifest PASSED [ 42%]
+tests/delivery/test_delivery_contract.py::TestP01ReadmeManifestConsistency::test_readme_total_size_matches_manifest PASSED [ 43%]
+tests/delivery/test_delivery_contract.py::TestP01ReadmeManifestConsistency::test_readme_does_not_use_pre_manifest_fallback_count PASSED [ 44%]
+tests/delivery/test_delivery_contract.py::TestP02AdvisoryMutualExclusion::test_advisory_delivered_not_in_delivered_section PASSED [ 46%]
+tests/delivery/test_delivery_contract.py::TestP02AdvisoryMutualExclusion::test_advisory_estimated_not_in_estimated_section PASSED [ 47%]
+tests/delivery/test_delivery_contract.py::TestP02AdvisoryMutualExclusion::test_non_advisory_still_in_state_section PASSED [ 49%]
+tests/delivery/test_delivery_contract.py::TestP02AdvisoryMutualExclusion::test_advisory_partition_is_disjoint PASSED [ 50%]
+tests/delivery/test_delivery_contract.py::TestP03PostGenCoherence::test_quality_report_uses_post_gen_coherence PASSED [ 52%]
+tests/delivery/test_delivery_contract.py::TestP03PostGenCoherence::test_quality_report_falls_back_to_pre_gen PASSED [ 53%]
+tests/delivery/test_delivery_contract.py::TestP05G9Gate::test_g9_gate_fails_when_misaligned PASSED [ 55%]
+tests/delivery/test_delivery_contract.py::TestP05G9Gate::test_g9_gate_passes_when_aligned PASSED [ 56%]
+tests/delivery/test_delivery_contract.py::TestP05G9Gate::test_g9_gate_skipped_when_no_matrix PASSED [ 57%]
+tests/delivery/test_delivery_contract.py::TestP06P07ResidualFixes::test_proposal_asset_matrix_in_zip PASSED [ 59%]
+tests/delivery/test_delivery_contract.py::TestP06P07ResidualFixes::test_packager_uses_enum_not_string PASSED [ 60%]
+tests/delivery/test_delivery_contract.py::TestDeliveryContextPath::test_delivery_context_zip_materializes PASSED [ 62%]
+tests/delivery/test_delivery_contract.py::TestDeliveryContextPath::test_delivery_context_exact_sizes PASSED [ 63%]
+tests/delivery/test_delivery_contract.py::TestDeliveryContextPath::test_delivery_context_no_orphan_files PASSED [ 65%]
+tests/delivery/test_delivery_contract.py::TestDeliveryContextPath::test_delivery_context_readme_no_placeholders PASSED [ 66%]
+tests/delivery/test_delivery_contract.py::TestDeliveryContextPath::test_delivery_context_manifest_self_size_exact PASSED [ 68%]
+tests/delivery/test_delivery_packager.py::TestDeliveryPackager::test_package_creates_zip PASSED [ 69%]
+tests/delivery/test_delivery_packager.py::TestDeliveryPackager::test_manifest_complete PASSED [ 71%]
+tests/delivery/test_delivery_packager.py::TestDeliveryPackager::test_readme_generated PASSED [ 72%]
+tests/delivery/test_delivery_packager.py::TestDeliveryPackager::test_package_with_diagnostic_and_proposal PASSED [ 73%]
+tests/delivery/test_delivery_packager.py::TestDeliveryPackager::test_collect_files_excludes_manifest PASSED [ 75%]
+tests/delivery/test_delivery_packager.py::TestDeliveryPackager::test_create_manifest PASSED [ 76%]
+tests/delivery/test_delivery_packager.py::TestDeliveryPackager::test_create_readme_file PASSED [ 78%]
+tests/delivery/test_delivery_packager.py::TestDeliveryPackager::test_zip_path_naming PASSED [ 79%]
+tests/delivery/test_delivery_packager.py::TestManifestStructure::test_manifest_required_fields PASSED [ 81%]
+tests/delivery/test_delivery_packager.py::TestManifestStructure::test_file_classification PASSED [ 82%]
+tests/delivery/test_faq_generator_improvements.py::test_faq_generator_output_is_jsonld PASSED [ 84%]
+tests/delivery/test_faq_generator_improvements.py::test_faq_generator_has_timestamp PASSED [ 85%]
+tests/delivery/test_fase_d_zip_policy.py::TestGateReportExclusion::test_is_excluded_matches_plain_report PASSED [ 86%]
+tests/delivery/test_fase_d_zip_policy.py::TestGateReportExclusion::test_is_excluded_matches_diagnostic_report PASSED [ 88%]
+tests/delivery/test_fase_d_zip_policy.py::TestGateReportExclusion::test_is_excluded_ignores_asset_generation_report PASSED [ 89%]
+tests/delivery/test_fase_d_zip_policy.py::TestGateReportExclusion::test_is_excluded_ignores_other_files PASSED [ 91%]
+tests/delivery/test_fase_d_zip_policy.py::TestGateReportExclusion::test_zip_excludes_gate_reports PASSED [ 92%]
+tests/delivery/test_fase_d_zip_policy.py::TestRunBasedFiltering::test_get_latest_run_timestamp_finds_latest PASSED [ 94%]
+tests/delivery/test_fase_d_zip_policy.py::TestRunBasedFiltering::test_get_latest_run_timestamp_excludes_gate_reports PASSED [ 95%]
+tests/delivery/test_fase_d_zip_policy.py::TestRunBasedFiltering::test_get_latest_run_timestamp_empty_dir PASSED [ 97%]
+tests/delivery/test_fase_d_zip_policy.py::TestRunBasedFiltering::test_get_latest_run_timestamp_missing_dir PASSED [ 98%]
+tests/delivery/test_fase_d_zip_policy.py::TestRunBasedFiltering::test_zip_filters_stale_v4_audit_artifacts PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 69 passed, 8 warnings in 11.11s =======================

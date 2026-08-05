@@ -1,0 +1,42 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 10 items
+
+tests/delivery/test_fase_d_zip_policy.py::TestGateReportExclusion::test_is_excluded_matches_plain_report PASSED [ 10%]
+tests/delivery/test_fase_d_zip_policy.py::TestGateReportExclusion::test_is_excluded_matches_diagnostic_report PASSED [ 20%]
+tests/delivery/test_fase_d_zip_policy.py::TestGateReportExclusion::test_is_excluded_ignores_asset_generation_report PASSED [ 30%]
+tests/delivery/test_fase_d_zip_policy.py::TestGateReportExclusion::test_is_excluded_ignores_other_files PASSED [ 40%]
+tests/delivery/test_fase_d_zip_policy.py::TestGateReportExclusion::test_zip_excludes_gate_reports PASSED [ 50%]
+tests/delivery/test_fase_d_zip_policy.py::TestRunBasedFiltering::test_get_latest_run_timestamp_finds_latest PASSED [ 60%]
+tests/delivery/test_fase_d_zip_policy.py::TestRunBasedFiltering::test_get_latest_run_timestamp_excludes_gate_reports PASSED [ 70%]
+tests/delivery/test_fase_d_zip_policy.py::TestRunBasedFiltering::test_get_latest_run_timestamp_empty_dir PASSED [ 80%]
+tests/delivery/test_fase_d_zip_policy.py::TestRunBasedFiltering::test_get_latest_run_timestamp_missing_dir PASSED [ 90%]
+tests/delivery/test_fase_d_zip_policy.py::TestRunBasedFiltering::test_zip_filters_stale_v4_audit_artifacts PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 10 passed, 8 warnings in 0.26s ========================

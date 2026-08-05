@@ -611,3 +611,199 @@ class TestBlockedByGatesCommercialSection:
                 has_commercial_block = True
 
         assert has_commercial_block is False  # blocking_passed=True → no block
+
+
+# =============================================================================
+# FASE-C: Tests for CG-CLAIM-VS-EVIDENCE conditional fix (N11)
+# =============================================================================
+
+class TestClaimVsEvidenceConditionalFix:
+    """FASE-C N11: CG-CLAIM-VS-EVIDENCE no dispara falso positivo con condicionales."""
+
+    def test_conditional_text_passes(self):
+        """Texto condicional 'si...no aparece' NO debe disparar el gate."""
+        validator = CommercialGateValidator()
+        text = (
+            "Si su web no tiene los datos correctos, no aparece en la respuesta "
+            "de los asistentes de IA. Esto significa pérdida de visibilidad."
+        )
+        result = validator._check_claim_vs_evidence(
+            text, place_found=True, gbp_rating=4.6
+        )
+        assert result.passed is True, (
+            "Texto condicional no debe disparar CG-CLAIM-VS-EVIDENCE"
+        )
+
+    def test_conditional_with_si_su_passes(self):
+        """'Si su hotel...' + 'no figura' es condicional → PASS."""
+        validator = CommercialGateValidator()
+        text = "Si su hotel no figura en Google Maps, perderá reservas directas."
+        result = validator._check_claim_vs_evidence(
+            text, place_found=True, gbp_rating=4.2
+        )
+        assert result.passed is True
+
+    def test_conditional_en_caso_de_passes(self):
+        """'En caso de...no está en Google' es condicional → PASS."""
+        validator = CommercialGateValidator()
+        text = "En caso de que la información no esté en Google, el viajero no lo encontrará."
+        result = validator._check_claim_vs_evidence(
+            text, place_found=True, gbp_rating=4.5
+        )
+        assert result.passed is True
+
+    def test_factual_claim_with_good_gbp_fails(self):
+        """'El hotel no aparece en Google.' (factual) + place_found=True → FAIL."""
+        validator = CommercialGateValidator()
+        text = "El hotel no aparece en Google cuando un viajero busca hoteles."
+        result = validator._check_claim_vs_evidence(
+            text, place_found=True, gbp_rating=4.6
+        )
+        assert result.passed is False
+        assert result.severity == "BLOCKING"
+
+    def test_factual_no_figura_fails(self):
+        """'El hotel no figura en búsquedas' (factual) + buen rating → FAIL."""
+        validator = CommercialGateValidator()
+        text = "El hotel no figura en búsquedas de Google."
+        result = validator._check_claim_vs_evidence(
+            text, place_found=True, gbp_rating=4.3
+        )
+        assert result.passed is False
+
+    def test_factual_claim_low_rating_passes(self):
+        """Factual claim con rating bajo → PASS (claim puede ser válido)."""
+        validator = CommercialGateValidator()
+        text = "El hotel no aparece en Google."
+        result = validator._check_claim_vs_evidence(
+            text, place_found=True, gbp_rating=3.5
+        )
+        assert result.passed is True
+
+    def test_mixed_conditional_and_factual_fails(self):
+        """Texto con oración condicional Y factual → detecta la factual."""
+        validator = CommercialGateValidator()
+        text = (
+            "Si su web no tiene Schema, no aparece en rich results. "
+            "El hotel no aparece en Google Maps."
+        )
+        result = validator._check_claim_vs_evidence(
+            text, place_found=True, gbp_rating=4.6
+        )
+        assert result.passed is False, (
+            "Oración factual debe disparar el gate aunque haya condicional"
+        )
+
+    def test_no_claim_at_all_passes(self):
+        """Sin ningún claim de invisibilidad → PASS."""
+        validator = CommercialGateValidator()
+        text = "Google sí lo encuentra, pero su ficha tiene fricciones."
+        result = validator._check_claim_vs_evidence(
+            text, place_found=True, gbp_rating=4.6
+        )
+        assert result.passed is True
+
+    def test_podria_conditional_passes(self):
+        """'Podría no aparecer' es condicional → PASS."""
+        validator = CommercialGateValidator()
+        text = "El hotel podría no aparecer en búsquedas si no corrige su Schema."
+        result = validator._check_claim_vs_evidence(
+            text, place_found=True, gbp_rating=4.6
+        )
+        assert result.passed is True
+
+
+# =============================================================================
+# FASE-C: Tests for CG-TIER-CONSISTENCY cabling (N15)
+# =============================================================================
+
+class TestTierConsistencyCabling:
+    """FASE-C N15: CG-TIER-CONSISTENCY valida inputs reales; None → fallo."""
+
+    def test_both_none_fails(self):
+        """Ambos inputs None → FAIL (no pasa vacuo)."""
+        validator = CommercialGateValidator()
+        result = validator._check_tier_consistency(None, None)
+        assert result.passed is False
+        assert result.severity == "WARNING"
+        assert "AMBOS" in result.message
+
+    def test_frontmatter_none_fails(self):
+        """Solo frontmatter_tier=None → FAIL."""
+        validator = CommercialGateValidator()
+        result = validator._check_tier_consistency(None, "B+")
+        assert result.passed is False
+        assert "frontmatter_tier" in result.message
+
+    def test_text_none_fails(self):
+        """Solo text_tier=None → FAIL."""
+        validator = CommercialGateValidator()
+        result = validator._check_tier_consistency("B+", None)
+        assert result.passed is False
+        assert "text_tier" in result.message
+
+    def test_matching_tiers_pass(self):
+        """Tiers coincidentes → PASS."""
+        validator = CommercialGateValidator()
+        result = validator._check_tier_consistency("B+", "B+")
+        assert result.passed is True
+
+    def test_mismatched_tiers_fail(self):
+        """Tiers diferentes → FAIL."""
+        validator = CommercialGateValidator()
+        result = validator._check_tier_consistency("A", "B+")
+        assert result.passed is False
+
+    def test_case_insensitive_match(self):
+        """Tier comparison es case-insensitive."""
+        validator = CommercialGateValidator()
+        result = validator._check_tier_consistency("b+", "B+")
+        assert result.passed is True
+
+
+# =============================================================================
+# FASE-C: Tests for _extract_text_tier helper
+# =============================================================================
+
+class TestExtractTextTier:
+    """FASE-C N15: _extract_text_tier extrae tier del texto del diagnóstico."""
+
+    def test_tier_b_plus(self):
+        """'Tier B+' → 'B+'."""
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        result = V4DiagnosticGenerator._extract_text_tier(
+            "El diagnóstico indica Tier B+ para este hotel."
+        )
+        assert result == "B+"
+
+    def test_tier_a(self):
+        """'Tier A' → 'A'."""
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        result = V4DiagnosticGenerator._extract_text_tier(
+            "Clasificación: Tier A con GA4 y GSC verificados."
+        )
+        assert result == "A"
+
+    def test_nivel_c(self):
+        """'nivel C' → 'C'."""
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        result = V4DiagnosticGenerator._extract_text_tier(
+            "El hotel tiene nivel C de evidencia."
+        )
+        assert result == "C"
+
+    def test_no_tier_returns_none(self):
+        """Sin mención de tier → None."""
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        result = V4DiagnosticGenerator._extract_text_tier(
+            "El diagnóstico no menciona tier explícitamente."
+        )
+        assert result is None
+
+    def test_lowercase_tier(self):
+        """'tier b+' (minúscula) → 'B+'."""
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        result = V4DiagnosticGenerator._extract_text_tier(
+            "Según el análisis, el tier b+ es apropiado."
+        )
+        assert result == "B+"

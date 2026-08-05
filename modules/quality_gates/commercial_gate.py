@@ -520,36 +520,69 @@ class CommercialGateValidator:
                       "o (4) proponer una fase inicial de bajo riesgo (onboarding/activación).",
         )
 
+    # Patrones de marcadores condicionales (FASE-C N11)
+    _CONDITIONAL_MARKERS = re.compile(
+        r'\b(?:si\s|siempre\s+que|en\s+caso\s+de|podr[ií]a|puede\s+que|'
+        r'si\s+su\s|si\s+el\s|si\s+la\s|si\s+las?\s|si\s+los?\s|'
+        r'en\s+caso\s+de\s+que|a\s+menos\s+que|salvo\s+que|'
+        r'de\s+no\s+ser\s+que|cuando\s+no\s)',
+        re.IGNORECASE,
+    )
+
     def _check_claim_vs_evidence(
         self,
         diagnostic_text: str,
         place_found: bool,
         gbp_rating: float,
     ) -> CommercialGateResult:
-        """CG-CLAIM-VS-EVIDENCE: 'No aparece' cuando place_found=True o rating > 4.0."""
-        no_aparece_pattern = re.search(
+        """CG-CLAIM-VS-EVIDENCE: 'No aparece' cuando place_found=True o rating > 4.0.
+
+        FASE-C N11: split por oraciones + filtro de condicionales para evitar
+        falsos positivos con texto condicional ("si su web no tiene los datos
+        correctos, no aparece en la respuesta").
+        """
+        no_aparece_re = re.compile(
             r'[Nn]o\s+aparece|[Nn]o\s+figura|no\s+est[aá]\s+en\s+Google|invisible\s+en\s+b[uú]squedas',
-            diagnostic_text,
         )
 
-        if not no_aparece_pattern:
+        # Split por oraciones (FASE-C: N11 fix)
+        sentences = re.split(r'[.!?\n]\s*', diagnostic_text)
+
+        factual_match: Optional[re.Match] = None
+        for sentence in sentences:
+            m = no_aparece_re.search(sentence)
+            if not m:
+                continue
+            # Verificar si la oración contiene marcador condicional ANTES del match
+            text_before_match = sentence[:m.start()]
+            if self._CONDITIONAL_MARKERS.search(text_before_match):
+                continue  # Oración condicional → descartar
+            # También revisar si la oración entera tiene estructura condicional
+            if self._CONDITIONAL_MARKERS.search(sentence):
+                continue  # Condicional en cualquier parte → descartar
+            # Oración factual con claim de invisibilidad
+            factual_match = m
+            break  # Basta una oración factual para evaluar
+
+        if not factual_match:
             return CommercialGateResult(
                 gate_id="CG-CLAIM-VS-EVIDENCE",
                 name="Claims no soportados por datos",
                 passed=True,
                 severity="BLOCKING",
-                message="No se encontraron claims absolutos de invisibilidad.",
+                message="No se encontraron claims factuales de invisibilidad "
+                        "(condicionales descartados).",
                 suggestion="",
             )
 
         if place_found and gbp_rating >= 4.0:
-            # The business IS found and rated well — "no aparece" claim contradicts data
+            # The business IS found and rated well — factual "no aparece" contradicts data
             return CommercialGateResult(
                 gate_id="CG-CLAIM-VS-EVIDENCE",
                 name="Claims no soportados por datos",
                 passed=False,
                 severity="BLOCKING",
-                message=f'El documento dice "{no_aparece_pattern.group(0)}" pero '
+                message=f'El documento dice "{factual_match.group(0)}" (factual) pero '
                         f'place_found=True y rating={gbp_rating}/5.0. '
                         f'El hotel SÍ aparece en Google.',
                 suggestion='Cambiar absolutos por claims trazables: '
@@ -629,16 +662,33 @@ class CommercialGateValidator:
         frontmatter_tier: Optional[str],
         text_tier: Optional[str],
     ) -> CommercialGateResult:
-        """CG-TIER-CONSISTENCY: Frontmatter tier ≠ texto tier."""
-        if frontmatter_tier is None or text_tier is None:
-            # Can't check — skip gracefully
+        """CG-TIER-CONSISTENCY: Frontmatter tier ≠ texto tier.
+
+        FASE-C N15: si ambos inputs son None, el gate FALLA explícitamente
+        (nunca pasa vacuo). El caller debe cablear los tiers reales.
+        """
+        if frontmatter_tier is None and text_tier is None:
             return CommercialGateResult(
                 gate_id="CG-TIER-CONSISTENCY",
                 name="Tier inconsistente",
-                passed=True,
+                passed=False,
                 severity="WARNING",
-                message="Sin datos de tier para comparar (frontmatter o texto no disponibles).",
-                suggestion="",
+                message="AMBOS inputs de tier son None — el gate no puede validar. "
+                        "El caller debe pasar frontmatter_tier y text_tier reales.",
+                suggestion="Cablear frontmatter_tier desde financial_breakdown.evidence_tier "
+                          "y text_tier desde regex sobre el texto del diagnóstico.",
+            )
+
+        if frontmatter_tier is None or text_tier is None:
+            missing = "frontmatter_tier" if frontmatter_tier is None else "text_tier"
+            return CommercialGateResult(
+                gate_id="CG-TIER-CONSISTENCY",
+                name="Tier inconsistente",
+                passed=False,
+                severity="WARNING",
+                message=f"{missing} es None — validación parcial imposible. "
+                        f"frontmatter_tier={frontmatter_tier!r}, text_tier={text_tier!r}.",
+                suggestion=f"Cablear {missing} desde la fuente correspondiente.",
             )
 
         ft = frontmatter_tier.strip().upper()

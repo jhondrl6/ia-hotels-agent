@@ -1,0 +1,17 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 7 items
+
+tests/test_fase_d_onboarding_loader.py::TestOnboardingLoaderFallback::test_loader_finds_yaml_in_custom_dir PASSED [ 14%]
+tests/test_fase_d_onboarding_loader.py::TestOnboardingLoaderFallback::test_loader_returns_none_for_nonexistent_dir PASSED [ 28%]
+tests/test_fase_d_onboarding_loader.py::TestOnboardingLoaderFallback::test_loader_returns_none_for_empty_dir PASSED [ 42%]
+tests/test_fase_d_onboarding_loader.py::TestOnboardingLoaderFallback::test_loader_matches_by_normalized_url PASSED [ 57%]
+tests/test_fase_d_onboarding_loader.py::TestOnboardingLoaderFallback::test_loader_returns_none_for_wrong_url PASSED [ 71%]
+tests/test_fase_d_onboarding_loader.py::TestOnboardingLoaderFallback::test_normalize_url_strips_protocol_and_www PASSED [ 85%]
+tests/test_fase_d_onboarding_loader.py::TestOnboardingLoaderFallback::test_fallback_pattern_in_main_flow PASSED [100%]
+
+============================== 7 passed in 0.31s ==============================

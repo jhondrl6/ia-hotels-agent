@@ -1743,12 +1743,28 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     print("-" * 70)
     
     # Load onboarding data first (highest priority)
+    # FASE-D (S7): fallback a output/clientes si --output apunta a ruta alternativa
     clientes_dir = Path(args.output) / "clientes"
+    _onboarding_source = clientes_dir
     onboarding_data = _load_latest_onboarding_data(
         hotel_url=args.url,
         hotel_name=hotel_name,
         output_dir=clientes_dir,
     )
+    if onboarding_data is None and clientes_dir != Path("output/clientes"):
+        # Fallback: intentar con la ruta por defecto
+        _fallback_dir = Path("output/clientes")
+        if _fallback_dir.exists() and any(_fallback_dir.glob("*_onboarding.yaml")):
+            logger.info(
+                f"Onboarding not found in {clientes_dir}, "
+                f"falling back to {_fallback_dir}"
+            )
+            _onboarding_source = _fallback_dir
+            onboarding_data = _load_latest_onboarding_data(
+                hotel_url=args.url,
+                hotel_name=hotel_name,
+                output_dir=_fallback_dir,
+            )
     
     if onboarding_data:
         campos_confirmados = onboarding_data.get('metadatos', {}).get('campos_confirmados', [])

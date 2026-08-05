@@ -630,6 +630,13 @@ class V4DiagnosticGenerator:
                 ai_crawlers_data=ai_crawlers_data,
                 place_found=place_found,
                 gbp_rating=gbp_rating,
+                # FASE-C N15: cablear tiers reales (nunca pasar vacuo)
+                frontmatter_tier=(
+                    financial_breakdown.evidence_tier
+                    if financial_breakdown is not None and hasattr(financial_breakdown, 'evidence_tier')
+                    else None
+                ),
+                text_tier=self._extract_text_tier(document_content),
                 # FASE-3 NP7: per-hotel flags for evidence tier consistency gate
                 ga4_available=(
                     analytics_data.get('analytics_status').ga4_available
@@ -709,6 +716,23 @@ class V4DiagnosticGenerator:
         
         return str(file_path)
     
+    @staticmethod
+    def _extract_text_tier(document_content: str) -> Optional[str]:
+        """FASE-C N15: Extrae el tier mencionado en el texto del diagnóstico.
+
+        Busca patrones como 'Tier B+', 'Tier A', 'nivel B+', etc.
+        Retorna None si no encuentra mención explícita.
+        """
+        import re as _re
+        # Patrón: "Tier X" o "nivel X" donde X es A, B+, B, C+, C, D
+        m = _re.search(
+            r'(?:[Tt]ier|[Nn]ivel)\s+([A-Da-d][+]?)',
+            document_content,
+        )
+        if m:
+            return m.group(1).upper()
+        return None
+
     def _load_template(self) -> str:
         """Load the diagnostic template."""
         if self.template_path.exists():

@@ -284,8 +284,13 @@ class DeliveryPackager:
         # Collect all files from source directory
         if source_dir.exists():
             # FASE-D (N4): umbral de freshness para v4_audit
-            # Excluir artefactos con timestamp anterior al run actual
-            freshness_cutoff = datetime.now().timestamp() - 86400  # 24 horas
+            # FASE-D (N21): cutoff basado en el run más reciente, no en 24h fijo
+            v4_audit_dir = source_dir / "v4_audit"
+            freshness_cutoff = datetime.now().timestamp() - 86400  # fallback: 24 horas
+            if v4_audit_dir.exists():
+                latest_run_ts = self._get_latest_run_timestamp(v4_audit_dir)
+                if latest_run_ts:
+                    freshness_cutoff = latest_run_ts - 60  # 60s tolerancia para archivos del mismo run
             for file_path in source_dir.rglob("*"):
                 if file_path.is_file():
                     # Determine destination path within ZIP
@@ -295,7 +300,14 @@ class DeliveryPackager:
                     if file_path.name == "manifest.json":
                         continue
 
-                    # FASE-D (N4): filtrar v4_audit — solo artefactos del run actual
+                    # FASE-D (N16): Excluir reports internos de gates del ZIP de cliente
+                    if self._is_excluded_from_zip(file_path.name):
+                        logger.info(
+                            f"[DeliveryPackager] Excluding internal gate report: {rel_path}"
+                        )
+                        continue
+
+                    # FASE-D (N4/N21): filtrar v4_audit — solo artefactos del run actual
                     if "v4_audit" in rel_path.parts:
                         file_mtime = file_path.stat().st_mtime
                         if file_mtime < freshness_cutoff:
@@ -320,6 +332,32 @@ class DeliveryPackager:
                     })
 
         return files
+
+    # FASE-D (N16): Archivos internos excluidos del ZIP de cliente
+    _GATE_REPORT_PREFIXES = ("commercial_gates_report",)
+
+    @staticmethod
+    def _is_excluded_from_zip(filename: str) -> bool:
+        """Check if a file is an internal gate report that must NOT travel to client ZIP."""
+        name_lower = filename.lower()
+        return any(name_lower.startswith(prefix) for prefix in DeliveryPackager._GATE_REPORT_PREFIXES)
+
+    @staticmethod
+    def _get_latest_run_timestamp(v4_audit_dir: Path) -> Optional[float]:
+        """Find the most recent file mtime in v4_audit (excluding gate reports).
+
+        Used as freshness cutoff so only artifacts from the latest run
+        are included in the ZIP (N21).
+        """
+        if not v4_audit_dir or not v4_audit_dir.exists():
+            return None
+        latest_mtime = 0.0
+        for f in v4_audit_dir.iterdir():
+            if f.is_file() and not DeliveryPackager._is_excluded_from_zip(f.name):
+                mtime = f.stat().st_mtime
+                if mtime > latest_mtime:
+                    latest_mtime = mtime
+        return latest_mtime if latest_mtime > 0 else None
 
     def _create_zip(self, zip_path: Path, files: List[Dict[str, Any]], base_dir: Path):
         """Create ZIP file with all collected files (legacy, kept for compat)."""

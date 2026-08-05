@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-08-05
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 415
+> **Total fases completadas:** 417
 
 ---
 
@@ -9818,6 +9818,47 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (9)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-C - 2026-08-05
+**Descripcion:** RC2-a: CG-CLAIM-VS-EVIDENCE sin falsos positivos condicionales + CG-TIER-CONSISTENCY cableado (N11/N15)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/commercial_gate.py` | Commercial Gate |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (20)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-D - 2026-08-05
+**Descripcion:** RC2-b: ZIP sin evidence BLOCKING ni runs anteriores + fallback loader onboarding + occupancy label veraz (N16/N21/S7/S5)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/delivery/delivery_packager.py` | Delivery Packager |
+| `main.py` | Main |
+| `modules/financial_engine/harness_handlers.py` | Harness Handlers |
+
+### Validaciones
+- [x] Tests passing (23)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
