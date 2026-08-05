@@ -149,7 +149,7 @@
   ".agents/workflows/phased_project_executor.md": "FASE-C",
   "docs/contributing/documentation_rules.md": "FASE-D",
   "scripts/validate_document_integration.py": "FASE-C",
-  "scripts/run_all_validations.py": "FASE-C",
+  "scripts/run_all_validations.py": "FASE-E",
   "docs/contributing/validation.md": "FASE-C",
   "modules/delivery/generators/indirect_traffic_optimization_gen.py": "FASE-2-A",
   "modules/asset_generation/open_graph_generator.py": "FASE-2-ASSET-ALIGNMENT",
@@ -216,5 +216,12 @@
   "tests/delivery/test_delivery_packager.py": "FASE-C",
   "evidence/FASE-D-E2E/": "FASE-D",
   "output/clientes/zi-one-luxury_onboarding.yaml": "FASE-E",
-  "pytest.ini": "FASE-A"
+  "pytest.ini": "FASE-A",
+  ".opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/02-prompt-fase-A.md": "FASE-E",
+  ".opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/03-prompt-fase-B.md": "FASE-E",
+  ".opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/04-prompt-fase-C-A.md": "FASE-E",
+  ".opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/05-prompt-fase-C-B.md": "FASE-E",
+  ".opencode/plans/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/09-documentacion-post-proyecto.md": "FASE-E",
+  ".opencode/plans/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/10-analisis-post-implementacion.md": "FASE-E",
+  "evidence/N3-diff/": "FASE-E"
 }

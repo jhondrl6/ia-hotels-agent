@@ -78,8 +78,9 @@ grep -rn "El sitio puede ser nuevo o tener tráfico bajo" modules/  # → solo r
 ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-C-B \
     --desc "D6 performance dinámico + D7 reviews parametrizadas + D8 atribución GEO" \
     --archivos-mod "modules/commercial_documents/v4_diagnostic_generator.py,modules/commercial_documents/templates/diagnostico_v6_template.md" \
-    --tests "<N nuevos>" --check-manual-docs --release 4.70.0
+    --tests "<N nuevos>" --check-manual-docs
 ```
+> ⚠️ NO usar `--release` en fases intermedias (L3/L9) — solo en FASE-RELEASE.
 
 ## Criterios de Completitud (CHECKLIST)
 

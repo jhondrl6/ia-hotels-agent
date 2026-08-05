@@ -154,8 +154,9 @@ en AMBOS documentos (corrección de verdad documentada, riesgo §8 fila 2).
 ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-B \
     --desc "D3 costo único + D4 escenarios honestos + N1 recuperación 6m única" \
     --archivos-mod "modules/commercial_documents/v4_diagnostic_generator.py,modules/commercial_documents/v4_proposal_generator.py,modules/financial_engine/opportunity_scorer.py,modules/financial_engine/pillar_maturity_curve.py" \
-    --tests "<N nuevos>" --check-manual-docs --release 4.70.0
+    --tests "<N nuevos>" --check-manual-docs
 ```
+> ⚠️ NO usar `--release` en fases intermedias (L3/L9) — solo en FASE-RELEASE.
 
 ## Criterios de Completitud (CHECKLIST)
 

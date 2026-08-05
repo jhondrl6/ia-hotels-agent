@@ -1,6 +1,6 @@
 # Dependencias de Fases — RC1-RC2-ENTREGA-COHERENTE-2026-08-04
 
-> Actualizado: 2026-08-05 (FASE-D completada)
+> Actualizado: 2026-08-05 (FASE-E completada)
 
 ## Diagrama de Dependencias
 
@@ -56,7 +56,7 @@ No hay dos fases tocando el mismo archivo.
 | FASE-B | ✅ Completa | 2026-08-05 | RC1: tabla de servicios parametrizada desde opportunity_scores (N10/N17/N18/N19). 9 tests nuevos. Ver notas. |
 | FASE-C | ✅ Completa | 2026-08-05 | RC2-a: CG-CLAIM-VS-EVIDENCE sin falsos positivos condicionales + CG-TIER-CONSISTENCY cableado (N11/N15). 20 tests nuevos. |
 | FASE-D | ✅ Completa | 2026-08-05 | RC2-b: ZIP sin gate reports (N16) + filtro run (N21) + fallback loader (S7) + occupancy label (S5). 23 tests nuevos. |
-| FASE-E | ⬜ Pendiente | — | Delegable (solo docs) |
+| FASE-E | ✅ Completa | 2026-08-05 | RC3: prompts sin --release + enforcement `_check_prompts_no_release` + conteos fuente viva + evidencia N3 preservada. Delegable (solo docs). |
 | FASE-F | ⬜ Pendiente | — | 1 solo v4complete (Zi One Luxury) |
 | FASE-RELEASE-4.71.0 | ⬜ Pendiente | — | Delegable |
 
@@ -177,3 +177,29 @@ No hay dos fases tocando el mismo archivo.
 - El loader de onboarding tiene fallback a `output/clientes` si `--output` apunta a ruta alternativa.
 - `breakdown.data_sources.occupancy` es coherente con la fuente real (onboarding > regional > default).
 - `temp/fase_d_backup/` NO eliminar hasta cierre de FASE-F.
+
+## Notas FASE-E
+
+### Cambios implementados (2026-08-05)
+- `.opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/0{2,3,4,5}-prompt-*.md`:
+  - Eliminado `--release 4.70.0` de los 4 prompts intermedios (R3.1).
+  - Añadida nota "⚠️ NO usar `--release` en fases intermedias (L3/L9) — solo en FASE-RELEASE".
+  - Verificación: grep `log_phase_completion.*--release` en los 4 archivos → 0 hits.
+- `scripts/run_all_validations.py`:
+  - Nuevo método `_check_prompts_no_release()`: escanea `0[2-5]-prompt*.md` en `.opencode/plans/` buscando `--release` en comandos `log_phase_completion.py`. Excluye Archives, RELEASE, y referencias documentales.
+  - Registrado en `run_all()` tras `_check_document_integration` (ejecuta en `--quick`).
+  - Verificación: `run_all_validations.py --quick` → 6/6 TOTAL PASS.
+- `.opencode/plans/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/09-documentacion-post-proyecto.md`:
+  - Conteos fuente viva: 205 .py, 391 clases, 27 dirs __init__, 3,227 tests collected.
+  - Lista D3 completa (8 valores, incluye 2º $1,198,906 de low_seo_score).
+- `evidence/N3-diff/`: 14 JSON del run 123637 preservados + README (diff 97 líneas no reproducible).
+- `.opencode/context/...CONTEXT-...-2026-08-04.md`: cita `_coverage_gate` → L1160 confirmada.
+
+### Evidencia (evidence/N3-diff/)
+- 14 archivos JSON del run 123637/123636 (gate_report, commercial_gates, schemas, metadata).
+- README.md explicando la no-reproducibilidad del diff de 97 líneas (N20).
+
+### Para FASE-F y siguientes
+- `run_all_validations.py --quick` ahora incluye 6 checks (5 existentes + "Prompts No Release").
+- El enforcement anti `--release` es permanente: cualquier plan futuro con `--release` en prompts intermedios será detectado.
+- La evidencia N3 está preservada para referencia histórica.

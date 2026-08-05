@@ -81,8 +81,9 @@ Pares clave a validar (doc parseado/evidence_used vs audit):
 ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-C-A \
     --desc "D5 coverage gate honesto + N2 gate doc-audit consistency (WARNING)" \
     --archivos-mod "modules/quality_gates/publication_gates.py" \
-    --tests "<N nuevos>" --check-manual-docs --release 4.70.0
+    --tests "<N nuevos>" --check-manual-docs
 ```
+> ⚠️ NO usar `--release` en fases intermedias (L3/L9) — solo en FASE-RELEASE.
 
 ## Criterios de Completitud (CHECKLIST)
 

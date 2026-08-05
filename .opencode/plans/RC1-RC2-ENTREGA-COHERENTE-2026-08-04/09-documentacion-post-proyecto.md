@@ -34,9 +34,15 @@
 | Tests nuevos RC1 | 9 (git diff tests/, patrón `^\+\s*def test_`, 2026-08-05) | FASE-B |
 | Tests nuevos gates | 20 (git diff tests/, patrón `^\+\s*def test_`, 2026-08-05) | FASE-C |
 | Tests nuevos delivery/loader/financial | 23 (10 delivery + 6 financial + 7 loader, 2026-08-05) | FASE-D |
+| Tests acumulados (3175 + 52) | 3,227 collected (2026-08-05, fuente viva) | FASE-E |
+| Módulos .py en modules/ | 205 (fuente viva, 2026-08-05) | FASE-E |
+| Clases en modules/ | 391 (fuente viva, 2026-08-05) | FASE-E |
+| Dirs con __init__.py en modules/ | 27 (fuente viva, 2026-08-05) | FASE-E |
 | Coherencia run E2E Zione | ⬜ (≥ 0.8 exigido) | FASE-F |
-| Gates publicación run E2E | ⬜ (12/12 exigido) | FASE-F |
+| Gates publicación run E2E | ⬜ (conteo dinámico) | FASE-F |
 | Tests collected final | ⬜ (registrar en RELEASE) | FASE-RELEASE |
+
+> **Nota D3 completa (8 valores)**: opportunity_scores del run 124443 — whatsapp_conflict $1,198,906 / no_hotel_schema $1,498,094 / no_faq_schema $719,200 / low_seo_score $1,198,906 / no_analytics $599,094 / low_organic $599,094 / ai_crawler $899,000 / no_og $479,706 — suma $7,192,000. (R3.2: el 2º $1,198,906 de `low_seo_score` estaba omitido en la lista original de 7 valores.)
 
 ## Sección E: Archivos Afiliados Actualizados
 
@@ -109,7 +115,11 @@
 - Backup forense: `temp/fase_d_backup/` (3 archivos originales).
 
 ### FASE-E
-- Conteos en vivo registrados: ⬜
+- Conteos en vivo registrados: 205 .py, 391 clases, 27 dirs con __init__ (2026-08-05).
+- Tests collected: 3,227 (3,175 + 52 nuevos de FASE-B/C/D).
+- D3 lista completa: 8 valores (incluye 2º $1,198,906 de low_seo_score).
+- Enforcement `_check_prompts_no_release` implementado en `run_all_validations.py`.
+- Prompts 02-05 del plan anterior: `--release 4.70.0` eliminado + nota preventiva añadida.
 
 ### FASE-F
 - Run: timestamp ⬜ — coherencia ⬜ — gates ⬜

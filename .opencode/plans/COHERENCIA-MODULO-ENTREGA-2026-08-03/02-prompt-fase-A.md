@@ -111,8 +111,10 @@ grep -rn "De las 7 brechas" modules/     # → 0 hits
 ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-A \
     --desc "D1 brecha OG veraz + D2 detección única de brechas" \
     --archivos-mod "modules/commercial_documents/v4_diagnostic_generator.py,main.py,modules/commercial_documents/templates/diagnostico_v6_template.md" \
-    --tests "<N nuevos>" --check-manual-docs --release 4.70.0
+    --tests "<N nuevos>" --check-manual-docs
 ```
+> ⚠️ NO usar `--release` en fases intermedias (L3/L9) — solo en FASE-RELEASE.
+
 4. NO editar CHANGELOG/GUIA_TECNICA todavía (se acumulan para RELEASE).
 
 ## Criterios de Completitud (CHECKLIST)

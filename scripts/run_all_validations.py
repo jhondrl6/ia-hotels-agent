@@ -69,6 +69,7 @@ class ValidationRunner:
         self._check_version_sync()
         self._check_no_secrets()
         self._check_document_integration()
+        self._check_prompts_no_release()
         
         if not self.quick:
             self._check_dependencies()
@@ -272,6 +273,70 @@ class ValidationRunner:
                 passed=False,
                 message="Cross-document validation failed",
                 details=issues
+            ))
+    
+    def _check_prompts_no_release(self) -> None:
+        """Check that intermediate phase prompts don't use --release flag (L3/L9 enforcement).
+        
+        Scans 0[2-5]-prompt*.md files in .opencode/plans/ for --release used in
+        log_phase_completion.py commands. Excludes Archives, RELEASE plans/prompts,
+        and documentation-only references to --release.
+        """
+        print("[6/?] Checking prompts for --release flag in intermediate phases...")
+        
+        import re
+        
+        plans_dir = ROOT_DIR / ".opencode" / "plans"
+        if not plans_dir.exists():
+            self.results.append(ValidationResult(
+                name="Prompts No Release",
+                passed=True,
+                message="No .opencode/plans/ directory found, skipping"
+            ))
+            return
+        
+        # Only flag --release when it appears AFTER log_phase_completion.py on the same line.
+        # This matches actual command invocations like:
+        #   scripts/log_phase_completion.py --fase FASE-X ... --release 4.70.0
+        # but NOT documentation that discusses the flag in reverse order or separately.
+        cmd_release_pattern = re.compile(r'log_phase_completion\.py.*--release\s+\d')
+        violations = []
+        
+        for plan_dir in plans_dir.iterdir():
+            if not plan_dir.is_dir():
+                continue
+            # Skip Archives directories (historical, not audited)
+            if "archive" in plan_dir.name.lower():
+                continue
+            # Skip RELEASE plans (those phases DO use --release)
+            if "RELEASE" in plan_dir.name:
+                continue
+            
+            for md_file in plan_dir.glob("0[2-5]-prompt*.md"):
+                # Exclude RELEASE prompt files even within non-RELEASE plans
+                if "RELEASE" in md_file.name:
+                    continue
+                try:
+                    content = md_file.read_text(encoding="utf-8")
+                    matches = cmd_release_pattern.findall(content)
+                    if matches:
+                        rel_path = md_file.relative_to(ROOT_DIR)
+                        violations.append(f"{rel_path} ({len(matches)} occurrence(s))")
+                except Exception:
+                    continue
+        
+        if violations:
+            self.results.append(ValidationResult(
+                name="Prompts No Release",
+                passed=False,
+                message=f"Found --release in {len(violations)} intermediate prompt(s)",
+                details=violations
+            ))
+        else:
+            self.results.append(ValidationResult(
+                name="Prompts No Release",
+                passed=True,
+                message="No --release flag in intermediate prompts"
             ))
     
     def _check_dependencies(self) -> None:

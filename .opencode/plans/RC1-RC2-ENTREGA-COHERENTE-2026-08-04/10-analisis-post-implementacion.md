@@ -1,11 +1,16 @@
 # Análisis Post-Implementación — RC1-RC2-ENTREGA-COHERENTE
 
-> **Estado**: FASE-D completada (2026-08-05) — RC1 + RC2-a + RC2-b resueltos a nivel código; RC3 (FASE-E) pendiente.
+> **Estado**: FASE-E completada (2026-08-05) — RC1 + RC2-a + RC2-b resueltos a nivel código; RC3 resuelto (higiene documental + enforcement).
 > **Plan**: RC1-RC2-ENTREGA-COHERENTE-2026-08-04
 > **Versión objetivo**: v4.71.0
 > **Baseline auditado**: run 2026-08-04 12:44:43 (Zi One Luxury, coherence 0.9168, evidence_tier B+)
 > **Run de verificación E2E**: FASE-F (pendiente) — `output/v4_verify_4.71.0`
 > **Plan anterior**: COHERENCIA-MODULO-ENTREGA-2026-08-03 (15 lecciones aprendidas capitalizadas)
+>
+> **Nota pre-bump (R3.3)**: los artefactos E2E del baseline llevan la versión del código
+> que corrió (4.69.0 + fixes); el bump a 4.70.0 es posterior y no se re-ejecutó v4complete.
+> Evidencia del run 123637 preservada en `evidence/N3-diff/` (14 JSON; diff de 97 líneas
+> NO reproducible — los .md del run 1 fueron sobrescritos por el run 2).
 
 ---
 
@@ -17,7 +22,7 @@
 | FASE-B | 2026-08-05 | ✅ | 1 sesión (~20/60) | No (directo, no delegable — DT-3) | RC1: `_build_dynamic_breach_map` + cableado `opportunity_scores` en main.py. Eliminados `BREACH_BY_ASSET` (N10/N17) y hardcode L1250 (N18); org_schema condicional (N19). 9 tests nuevos PASS, lista segura 208 passed / 0 regresiones, verificación estática vs run 124443 PASS. Ver L18-L20, DEC-B1-B3. |
 | FASE-C | 2026-08-05 | ✅ | 1 sesión (~15/60) | No (directo) | RC2-a: split oraciones + filtro condicionales CG-CLAIM-VS-EVIDENCE (N11) + cableado frontmatter_tier/text_tier en CG-TIER-CONSISTENCY (N15). 20 tests nuevos PASS, quality_gates 322 passed / 0 regresiones, preexistentes estables (12 failed). Ver L21-L23, DEC-C1. |
 | FASE-D | 2026-08-05 | ✅ | 1 sesión (~15/60) | No (directo, 3 tracks serie) | RC2-b: `_is_excluded_from_zip` + `_get_latest_run_timestamp` (N16/N21) + fallback loader onboarding (S7) + occupancy label priority (S5). 23 tests nuevos PASS, delivery 69 passed, quality_gates 366 passed, preexistentes estables (12 failed). Ver L24-L26. |
-| FASE-E | ⬜ Pendiente | — | — | Sí (solo docs, sin imports) | |
+| FASE-E | 2026-08-05 | ✅ | 1 sesión (~25/60) | Sí (solo docs, sin imports) | RC3: `--release 4.70.0` eliminado de 4 prompts + nota preventiva. `_check_prompts_no_release` en `run_all_validations.py` (6/6 TOTAL PASS). Conteos fuente viva: 205 .py, 391 clases, 27 dirs, 3,227 tests. Lista D3 completa (8 valores). Evidencia N3 preservada (14 JSON). Ver L27. |
 | FASE-F | ⬜ Pendiente | — | — | Sí parcial (v4complete background) | |
 | FASE-RELEASE | ⬜ Pendiente | — | — | Sí (delegate_task) | |
 
@@ -53,10 +58,10 @@
 
 | # | Hallazgo | Expected | Real | Status |
 |---|----------|----------|------|--------|
-| R3.1 | Prompts con `--release` en fases intermedias | Sin `--release` en A-F | ⬜ | ⬜ |
-| R3.2 | Conteos desactualizados | Conteos desde fuente viva (L8) | ⬜ | ⬜ |
-| R3.3 | Citas driftadas | Referencias verificadas | ⬜ | ⬜ |
-| R3.4 | Evidencia no preservada | `evidence/FASE-F/` completo | ⬜ | ⬜ |
+| R3.1 | Prompts con `--release` en fases intermedias | Sin `--release` en A-F | Eliminados de 4 prompts + nota preventiva + enforcement `_check_prompts_no_release` (6/6 PASS) | ✅ |
+| R3.2 | Conteos desactualizados | Conteos desde fuente viva (L8) | 205 .py, 391 clases, 27 dirs, 3,227 tests; lista D3 completa (8 valores) | ✅ |
+| R3.3 | Citas driftadas | Referencias verificadas | Nota pre-bump añadida; evidencia N3 preservada (14 JSON en `evidence/N3-diff/`) | ✅ |
+| R3.4 | Evidencia no preservada | `evidence/N3-diff/` completo | 14 JSON del run 123637 + README (diff 97 líneas no reproducible) | ✅ |
 
 ### Seguimientos heredados
 
@@ -159,6 +164,12 @@ Estas lecciones ya fueron aplicadas en el diseño de este plan:
 - **Qué lo previene**: al construir un dict de fuentes, reutilizar la variable ya resuelta (`occupancy_source`) en vez de recalcular la condición. El label debe ser un reflejo del valor, no una segunda decisión.
 - **Pertinencia**: **INCLUIR** — aplica a cualquier sistema de trazabilidad donde el label de fuente se construye independientemente del valor que describe.
 
+#### L27 (FASE-E) — Regex de enforcement debe distinguir comando real de documentación que cita el flag
+- **Qué pasó**: el check `_check_prompts_no_release` con regex genérico `--release\s+\d` detectaba falsos positivos en el propio prompt de FASE-E que documenta el problema (ej: "Eliminar `--release 4.70.0` del comando `log_phase_completion.py`" o "NO usar `--release` en fases intermedias").
+- **Por qué**: la regex no distinguía entre un comando real (`scripts/log_phase_completion.py --fase FASE-X ... --release 4.70.0`) y documentación que discute el flag en orden inverso o como referencia.
+- **Qué lo previene**: usar una regex que solo matchea cuando `log_phase_completion.py` aparece ANTES de `--release\s+\d` en la misma línea (`log_phase_completion\.py.*--release\s+\d`). Esto captura solo invocaciones de comando reales, no citas documentales. El enforcement es así auto-aplicable: el plan que corrige la violación puede ser escaneado sin falsos positivos.
+- **Pertinencia**: **INCLUIR** — cualquier check de enforcement basado en regex sobre archivos que también documentan la violación necesita anclaje contextual (orden de tokens, no solo presencia).
+
 ---
 
 ## Seguimientos abiertos (llenar conforme avancen las fases)
@@ -170,7 +181,7 @@ Estas lecciones ya fueron aplicadas en el diseño de este plan:
 | `test_proposal_dynamic.py` | ⚠️ 7 fallos preexistentes | Fallos de aserción (no patológicos), reconfirmados estables en FASE-B (lookups/asset_quality_table, no tocados por RC1). Diagnosticar en release posterior. |
 | Backup forense RC1 | ⚠️ Conservar | `temp/rc1_backup/v4_proposal_generator.py` — NO eliminar hasta cierre de FASE-F. |
 | Backup forense RC2-a | ⚠️ Conservar | `temp/rc2_backup/commercial_gate.py` + `v4_diagnostic_generator.py` — NO eliminar hasta cierre de FASE-F. |
-| Prompts con `--release` en plantilla (L3/L9) | ⬜ Pendiente | FASE-E: enforcement `_check_prompts_no_release` en `run_all_validations.py` |
+| Prompts con `--release` en plantilla (L3/L9) | ✅ Resuelto (FASE-E) | `_check_prompts_no_release` en `run_all_validations.py` escanea `0[2-5]-prompt*.md` buscando `--release` en comandos `log_phase_completion.py`. 6/6 TOTAL PASS en `--quick`. Enforcement permanente anti-regresión. |
 | S5: label `"occupancy": "regional"` residual | ✅ Resuelto (FASE-D) | `data_sources.occupancy` prioriza `"onboarding"`. `HotelFinancialData` fallback recibe `occupancy_source`. Verificar en E2E FASE-F. |
 | S7: loader de onboarding sin fallback | ✅ Resuelto (FASE-D) | Fallback a `output/clientes` si `{--output}/clientes` no tiene YAML. 7 tests cubren el patrón. Verificar en E2E FASE-F. |
 | Backup forense FASE-D | ⚠️ Conservar | `temp/fase_d_backup/` (3 archivos originales) — NO eliminar hasta cierre de FASE-F. |

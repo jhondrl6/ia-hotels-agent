@@ -112,6 +112,6 @@ RC1-RC2-ENTREGA-COHERENTE-2026-08-04/
 | FASE-B | ✅ Completa | 2026-08-05 | RC1: `_build_dynamic_breach_map` + cableado opportunity_scores. 9 tests nuevos, 0 regresiones. |
 | FASE-C | ✅ Completa | 2026-08-05 | RC2-a: CG-CLAIM-VS-EVIDENCE split+condicionales (N11) + CG-TIER-CONSISTENCY cableado (N15). 20 tests nuevos, 0 regresiones. |
 | FASE-D | ✅ Completa | 2026-08-05 | RC2-b: ZIP sin gate reports + filtro run + fallback loader + occupancy label. 23 tests nuevos. |
-| FASE-E | ⬜ Pendiente | — | |
+| FASE-E | ✅ Completa | 2026-08-05 | RC3: prompts sin --release + enforcement + conteos fuente viva + evidencia N3. |
 | FASE-F | ⬜ Pendiente | — | |
 | FASE-RELEASE | ⬜ Pendiente | — | |
