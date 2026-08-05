@@ -1,7 +1,48 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.70.0 (Coherencia Módulo-Entrega)
+**Versión:** v4.71.0 (Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega)
 **Última actualización:** 2026-08-05
+
+---
+
+### Notas de Cambios v4.71.0 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
+
+**Fecha:** 2026-08-05
+
+**Resumen**: Eliminación de 3 causas raíz residuales del plan v4.70.0: RC1 (propuesta con costos hardcodeados que no consumen `opportunity_scores`), RC2 (gates comerciales con inputs no cableados + ZIP con reportes BLOCKING junto a docs PASSED), RC3 (higiene documental sin enforcement). Plan RC1-RC2-ENTREGA-COHERENTE-2026-08-04 con 7 fases (A-F + RELEASE), verificado E2E con Zi One Luxury (coherence 0.9238, READY_FOR_PUBLICATION).
+
+**Módulos afectados**: `modules/commercial_documents/`, `modules/quality_gates/`, `modules/delivery/`, `modules/financial_engine/`, `main.py`, `scripts/run_all_validations.py`
+
+**Problema** (3 causas raíz):
+- **RC1 (ALTA)**: `BREACH_BY_ASSET` estático en `v4_proposal_generator.py` con costos factor 0.671× respecto al diagnóstico. El pipeline produce `opportunity_scores` pero la propuesta no los consume.
+- **RC2 (MEDIA)**: `CG-CLAIM-VS-EVIDENCE` dispara falso positivo con texto condicional; `CG-TIER-CONSISTENCY` pasa vacuo siempre; ZIP transporta `commercial_gates_report` BLOCKING junto al doc PASSED.
+- **RC3 (BAJA)**: Prompts con `--release` en fases intermedias, conteos desactualizados, evidencia no preservada.
+
+**Solución**: 7 fases de implementación (A-F + RELEASE):
+1. **FASE-A**: Cuarentena de 3 tests patológicos + lista segura (40 tests aislados)
+2. **FASE-B**: `_build_dynamic_breach_map()` — mapa inverso `pain_solution_mapper` → `opportunity_scores`. `BREACH_BY_ASSET` estático eliminado
+3. **FASE-C**: `CG-CLAIM-VS-EVIDENCE` split por oraciones + filtro condicionales; `CG-TIER-CONSISTENCY` cableado con `_extract_text_tier()`
+4. **FASE-D**: Política ZIP (`_is_excluded_from_zip`) + fallback loader onboarding + occupancy label veraz
+5. **FASE-E**: Enforcement `_check_prompts_no_release()` en `run_all_validations.py` + conteos fuente viva
+6. **FASE-F**: Run E2E único Zi One Luxury (coherence 0.9238) + recuperación S5b (occupancy_source en FASE-K + PrecisionValidator)
+7. **FASE-RELEASE**: Version bump, CHANGELOG, GUIA_TECNICA, sync, validaciones
+
+**⚠️ Cambio de comportamiento documentado**:
+- **Tabla de servicios dinámica**: La propuesta ahora consume `opportunity_scores` del pipeline. Costos, ranks y labels son idénticos a los del diagnóstico (construcción dinámica vía mapa inverso).
+- **CG-CLAIM-VS-EVIDENCE**: Ya no dispara falso positivo con texto condicional ("si...no aparece"). Split por oraciones + filtro de marcadores condicionales.
+- **CG-TIER-CONSISTENCY**: Ahora valida inputs reales. `None` → FAIL explícito (nunca pasa vacuo). Caller cablea `frontmatter_tier` + `text_tier`.
+- **Política ZIP**: `commercial_gates_report*` excluido del ZIP de cliente. Filtro por run más reciente (mtime cutoff).
+
+**Backwards compatibility**: La firma de `validate_diagnostic()` recibe nuevos parámetros (`frontmatter_tier`, `text_tier`) — ambos opcionales con default `None`. Si no se proveen, el gate falla explícitamente (comportamiento deseado). API pública de `v4complete` sin cambios.
+
+**Tests**: +58 tests nuevos (9 FASE-B + 20 FASE-C + 23 FASE-D + 6 FASE-F/S5b). 0 regresiones. 3,233 tests collected (post-cuarentena FASE-A). V1-V10: 10/10 PASS.
+
+**E2E verificación**: Zi One Luxury — coherence 0.9238, READY_FOR_PUBLICATION (12 gates: 11 passed + 1 WARNING advisory `asset_confidence`, 0 blocking). Onboarding real ("4 campos confirmados"). Run oficial `output/v4_verify_4.71.0` + recuperación S5b `output/v4_verify_s5b`.
+
+**Seguimientos abiertos**:
+- S5b: ✅ CERRADO (recuperación aplicada, 6 tests anti-regresión)
+- S8: Tier B+ (frontmatter) vs D (texto) — inconsistencia de contenido real detectada por CG-TIER-CONSISTENCY (MEDIA, próximo release)
+- S9: Numeración divergente en brechas (BAJA, cosmético)
 
 ---
 

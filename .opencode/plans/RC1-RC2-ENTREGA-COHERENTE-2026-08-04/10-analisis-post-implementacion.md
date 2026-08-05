@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — RC1-RC2-ENTREGA-COHERENTE
 
-> **Estado**: FASE-F completada (2026-08-05, 2 sesiones: ejecución + recuperación S5b) — RC1 + RC2 + S5 + S7 SUPERADOS con evidencia E2E; V1-V10 = 10/10 PASS.
+> **Estado**: ✅ PLAN COMPLETO (2026-08-05, 8 sesiones: FASE-A a FASE-RELEASE). RC1 + RC2 + RC3 + S5 + S7 SUPERADOS con evidencia E2E; V1-V10 = 10/10 PASS. Versión 4.71.0 publicada.
 > **Plan**: RC1-RC2-ENTREGA-COHERENTE-2026-08-04
 > **Versión objetivo**: v4.71.0
 > **Baseline auditado**: run 2026-08-04 12:44:43 (Zi One Luxury, coherence 0.9168, evidence_tier B+)
@@ -24,7 +24,7 @@
 | FASE-D | 2026-08-05 | ✅ | 1 sesión (~15/60) | No (directo, 3 tracks serie) | RC2-b: `_is_excluded_from_zip` + `_get_latest_run_timestamp` (N16/N21) + fallback loader onboarding (S7) + occupancy label priority (S5). 23 tests nuevos PASS, delivery 69 passed, quality_gates 366 passed, preexistentes estables (12 failed). Ver L24-L26. |
 | FASE-E | 2026-08-05 | ✅ | 1 sesión (~25/60) | Sí (solo docs, sin imports) | RC3: `--release 4.70.0` eliminado de 4 prompts + nota preventiva. `_check_prompts_no_release` en `run_all_validations.py` (6/6 TOTAL PASS). Conteos fuente viva: 205 .py, 391 clases, 27 dirs, 3,227 tests. Lista D3 completa (8 valores). Evidencia N3 preservada (14 JSON). Ver L27. |
 | FASE-F | 2026-08-05 | ✅ | 2 sesiones (~25/60 + ~15/60) | Sí (v4complete vía subagente) | Sesión 1: run E2E único exitoso (exit 0, onboarding real, coherence 0.9238). V1-V10: 9/10 — V8 (S5) FAIL. Sesión 2 (recuperación S5b): fix en 2 sitios de main.py (bloque FASE-K + PrecisionValidator/GAP-4) + 6 tests nuevos + re-verificación V8 PASS en run acotado. Regresión 0. Ver L28-L32. |
-| FASE-RELEASE | ⬜ Pendiente | — | — | Sí (delegate_task) | Desbloqueada (A-F ✅). |
+| FASE-RELEASE | 2026-08-05 | ✅ | 1 sesión (~15/60) | Sí (documental, sin imports) | Version bump 4.71.0 + sync 6 archivos + CHANGELOG formato CONTRIBUTING + GUIA_TECNICA nota v4.71.0 + SYSTEM_STATUS + DOMAIN_PRIMER + README audit (conteos en vivo: 3,233 tests, 17 skills, 26 dirs) + validaciones finales (validate_agents_md ALL PASS, validate_document_integration ALL PASS, run_all_validations 6/6) + log_phase_completion --release 4.71.0 (VERSION SYNC GATE PASSED). |
 
 ### Evidencia v4complete FASE-F
 
@@ -246,16 +246,16 @@ Estas lecciones ya fueron aplicadas en el diseño de este plan:
 | Tests patológicos propuesta/precios | ✅ Cuarentena (FASE-A) | 3 archivos aislados en `_archived_broken_tests/commercial_documents/`. Lista segura: 13 archivos PASS. FASE-B puede agregar tests nuevos sin riesgo. |
 | `test_proposal_confidence_disclosure.py` | ⚠️ 5 fallos preexistentes | Fallos de aserción (no patológicos), reconfirmados estables en FASE-B (área asset_quality_table, no tocada por RC1). Diagnosticar en release posterior. |
 | `test_proposal_dynamic.py` | ⚠️ 7 fallos preexistentes | Fallos de aserción (no patológicos), reconfirmados estables en FASE-B (lookups/asset_quality_table, no tocados por RC1). Diagnosticar en release posterior. |
-| Backup forense RC1 | ⚠️ Conservar | `temp/rc1_backup/v4_proposal_generator.py` — NO eliminar hasta cierre de FASE-F. |
-| Backup forense RC2-a | ⚠️ Conservar | `temp/rc2_backup/commercial_gate.py` + `v4_diagnostic_generator.py` — NO eliminar hasta cierre de FASE-F. |
+| Backup forense RC1 | ✅ Liberar | `temp/rc1_backup/v4_proposal_generator.py` — FASE-F cerrada, backup liberable. |
+| Backup forense RC2-a | ✅ Liberar | `temp/rc2_backup/commercial_gate.py` + `v4_diagnostic_generator.py` — FASE-F cerrada, backups liberables. |
 | Prompts con `--release` en plantilla (L3/L9) | ✅ Resuelto (FASE-E) | `_check_prompts_no_release` en `run_all_validations.py` escanea `0[2-5]-prompt*.md` buscando `--release` en comandos `log_phase_completion.py`. 6/6 TOTAL PASS en `--quick`. Enforcement permanente anti-regresión. |
 | S5: label `"occupancy": "regional"` residual | ✅ SUPERADO (FASE-F + recuperación S5b) | Fix FASE-D (handlers + `financial_sources`) + recuperación S5b: 2 sitios de `main.py` (bloque FASE-K + input `PrecisionValidator`/GAP-4) reutilizan `_occupancy_source`. V8 re-verificado PASS. Cerrado. |
 | **S5b (NUEVO FASE-F)**: occupancy label en bloque FASE-K | ✅ Resuelto (2026-08-05) | Fix aplicado en misma fecha: `occupancy_source=_occupancy_source` (bloque FASE-K) + `_occ_source = _occupancy_source` (GAP-4). 6 tests nuevos (`tests/financial_engine/test_fase_f_recovery_s5b.py`, incluye contrato estático anti-regresión). Backup forense: `temp/fase_f_recovery_backup/main.py`. Re-verificación V8 PASS en run acotado 20260805_161042. |
 | S7: loader de onboarding sin fallback | ✅ SUPERADO (FASE-F) | Verificado en aislamiento (3/3) + E2E con onboarding real inyectado. Cerrado. |
 | **S8 (NUEVO FASE-F)**: tier inconsistente en diagnóstico generado | ⬜ Pendiente | CG-TIER-CONSISTENCY (ya cableado) detectó que el diagnóstico de Zione dice tier B+ en frontmatter y tier D en el texto (WARNING). Es defecto de CONTENIDO del generador de diagnóstico, no del gate. Investigar origen del tier D en texto (probablemente plantilla legacy). Severidad MEDIA (el cliente ve dos tiers). |
 | **S9 (NUEVO FASE-F)**: numeración divergente diagnóstico↔propuesta | ⬜ Pendiente | Diagnóstico numera por aparición, propuesta por rank de oportunidad (L31). Evaluar alineación en próximo release. Severidad BAJA (estética/comercial). |
-| Backup forense FASE-D | ⚠️ Conservar | `temp/fase_d_backup/` (3 archivos originales) — NO eliminar hasta FASE-RELEASE. |
-| Backup forense recuperación S5b | ⚠️ Conservar | `temp/fase_f_recovery_backup/main.py` (pre-fix S5b) — NO eliminar hasta FASE-RELEASE. |
+| Backup forense FASE-D | ✅ Liberar | `temp/fase_d_backup/` (3 archivos originales) — FASE-RELEASE alcanzada, backups liberables. |
+| Backup forense recuperación S5b | ✅ Liberar | `temp/fase_f_recovery_backup/main.py` (pre-fix S5b) — FASE-RELEASE alcanzada, backup liberable. |
 | (otros) | | |
 
 ---
@@ -275,7 +275,7 @@ Estas lecciones ya fueron aplicadas en el diseño de este plan:
 | Fixes verificados E2E (V1-V10) | 10/10 PASS (V8 cerrado en recuperación S5b, run acotado 20260805_161042) | FASE-F |
 | Fixes SUPERADOS | 12/12 (matriz de fixes: N10-N21, S5+S5b, S7, D10, coherencia global) | FASE-F |
 | Regresión recuperación S5b | 0 — batch 78 tests + lista segura FASE-A 208 passed; validaciones 6/6 | FASE-F |
-| Tests collected final | ⬜ (registrar en RELEASE) | FASE-RELEASE |
+| Tests collected final | 3,233 collected (pytest --collect-only -q, 2026-08-05, post-cuarentena FASE-A) | FASE-RELEASE |
 
 ---
 
@@ -342,16 +342,15 @@ Mientras los tests patológicos sigan en cuarentena, usar `git show HEAD:` para 
 
 ## Checklist de Cierre (llenar en FASE-RELEASE)
 
-> **Estado FASE-F (2026-08-05)**: ✅ COMPLETA — V1-V10 = 10/10 PASS tras recuperación S5b.
-> El análisis post-implementación de FASE-F (matriz de fixes 12/12, diff cualitativo, L28-L32,
-> seguimientos S8/S9) quedó poblado en estas sesiones; consolidar al cierre definitivo.
+> **Estado FASE-RELEASE (2026-08-05)**: ✅ COMPLETA — Plan RC1-RC2-ENTREGA-COHERENTE cerrado.
+> Versión 4.71.0 publicada. A-G: todas ✅. 58 tests nuevos, 0 regresiones, 3,233 collected.
 
 - [x] Todas las causas raíz (RC1, RC2, RC3) verificadas en E2E — 10/10 V-checks PASS
 - [x] Seguimientos S5 y S7 resueltos o documentados — S5 ✅ (con S5b), S7 ✅
 - [x] `run_all_validations.py --quick` TOTAL PASS (6/6, 2026-08-05)
-- [ ] `validate_agents_md.py` PASS (FASE-RELEASE)
-- [ ] CHANGELOG.md actualizado con formato CONTRIBUTING.md (FASE-RELEASE)
-- [ ] GUIA_TECNICA.md con notas técnicas por fase (FASE-RELEASE)
-- [ ] VERSION.yaml sincronizado (sync_versions.py) (FASE-RELEASE)
+- [x] `validate_agents_md.py` PASS (FASE-RELEASE, ALL PASS: modules 29/29, gates 12/12, test count 0.6% diff)
+- [x] CHANGELOG.md actualizado con formato CONTRIBUTING.md (5 secciones: Objetivo, Cambios, Archivos Nuevos, Archivos Modificados, Tests)
+- [x] GUIA_TECNICA.md con nota v4.71.0 completa (módulos, problema/solución, backwards compatibility, tests, seguimientos)
+- [x] VERSION.yaml = 4.71.0 sincronizado (sync_versions.py → 6 archivos: AGENTS, README, .cursorrules, CONTRIBUTING, GUIA_TECNICA, REGISTRY)
 - [x] Lecciones aprendidas L16+ capitalizadas en memoria del agente (L16-L32)
-- [x] Análisis post-implementación completo
+- [x] Análisis post-implementación completo (matriz 12/12 SUPERADO, diff cualitativo, L28-L32, métricas finales)

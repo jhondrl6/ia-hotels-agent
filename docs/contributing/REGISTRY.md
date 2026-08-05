@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-08-05
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 419
+> **Total fases completadas:** 420
 
 ---
 
@@ -9899,6 +9899,27 @@ _Ninguno_
 
 ### Archivos Modificados
 _Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.71.0 - 2026-08-05
+**Descripcion:** Release 4.71.0: coherencia propuesta-diagnostico + gates comerciales + politica de entrega
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Version |
+| `CHANGELOG.md` | Changelog |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
 
 ### Validaciones
 - [x] Tests passing

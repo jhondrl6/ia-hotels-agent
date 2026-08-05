@@ -114,4 +114,4 @@ RC1-RC2-ENTREGA-COHERENTE-2026-08-04/
 | FASE-D | ✅ Completa | 2026-08-05 | RC2-b: ZIP sin gate reports + filtro run + fallback loader + occupancy label. 23 tests nuevos. |
 | FASE-E | ✅ Completa | 2026-08-05 | RC3: prompts sin --release + enforcement + conteos fuente viva + evidencia N3. |
 | FASE-F | ✅ Completa | 2026-08-05 | Run E2E único OK (coherence 0.9238). V1-V10: 10/10 PASS tras recuperación S5b (main.py FASE-K + PrecisionValidator). |
-| FASE-RELEASE | ⬜ Pendiente | — | Desbloqueada: A-F ✅. |
+| FASE-RELEASE | ✅ Completa | 2026-08-05 | Version bump 4.71.0 + CHANGELOG + GUIA_TECNICA + sync + validaciones 6/6 + README audit. |

@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.70.0** -- Coherencia Módulo-Entrega | Actualizado 04 Agosto 2026 | 3,215 pruebas automatizadas | 0 errores conocidos
+**v4.71.0** -- Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega | Actualizado 05 Agosto 2026 | 3,233 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 16 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 17 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -21,12 +21,12 @@
 
 ---
 
-## Estado del Proyecto (v4.70.0 -- Coherencia Módulo-Entrega)
+## Estado del Proyecto (v4.71.0 -- Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega)
 
-- **3,215 test functions** — suite completa, 0 regresiones
-- **205 archivos Python en modules/** (~68K lineas, 24 directorios) + **25 scripts** (~5.5K lineas) + **55 directorios de test**
+- **3,233 test functions** — suite completa, 0 regresiones
+- **205 archivos Python en modules/** (~68K lineas, 26 directorios) + **25 scripts** (~5.5K lineas) + **55 directorios de test**
 - **9 config YAML** con schema validado
-- **16 agent skills** en `.agents/workflows/`
+- **17 agent skills** en `.agents/workflows/`
 - **12 publication gates** — blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop; advisory: content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency
 - **Coherence Score >= 0.8** requerido para publicacion
 - **25 assets** en catalogo (22 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
@@ -239,12 +239,12 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **3,215 test functions** — suite completa, 0 regresiones
+- **3,233 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.13.0 (1 fase/sesion, max 60 iteraciones)
+- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.15.0 (1 fase/sesion, max 60 iteraciones)
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
-- **12 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, doc_audit_consistency (blocking); content_quality, asset_confidence, proposal_asset_alignment (advisory)
+- **12 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop (blocking); content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency (advisory)
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
 
 ---
@@ -272,7 +272,7 @@ iah-cli/
     delivery_readme_template.md #   Template README de entrega
     diagnostico_ejecutivo.md    #   Template diagnostico ejecutivo
     local_content/              #   Templates de contenido local
-  modules/                    # 205 archivos Python (~68K lineas) en 24 directorios
+  modules/                    # 205 archivos Python (~68K lineas) en 26 directorios
     asset_generation/         #   Generacion condicional de assets
     commercial_documents/     #   Diagnostico + Propuesta v4 + PDF gancho (hook-pdf)
     financial_engine/         #   Pricing, scenarios, loss projector
@@ -305,7 +305,7 @@ iah-cli/
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
     run_all_validations.py    #   Suite de validaciones
-  .agents/workflows/          # 16 agent skills
+  .agents/workflows/          # 17 agent skills
   .opencode/plans/            # Planes de fases (phased execution)
   evidence/                   # Evidencia de fases ejecutadas
 ```

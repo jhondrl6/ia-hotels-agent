@@ -1,6 +1,6 @@
 # Dependencias de Fases — RC1-RC2-ENTREGA-COHERENTE-2026-08-04
 
-> Actualizado: 2026-08-05 (FASE-F completada en sesión de recuperación S5b)
+> Actualizado: 2026-08-05 (FASE-RELEASE completada — plan RC1-RC2-ENTREGA-COHERENTE cerrado, v4.71.0 publicada)
 
 ## Diagrama de Dependencias
 
@@ -58,7 +58,7 @@ No hay dos fases tocando el mismo archivo.
 | FASE-D | ✅ Completa | 2026-08-05 | RC2-b: ZIP sin gate reports (N16) + filtro run (N21) + fallback loader (S7) + occupancy label (S5). 23 tests nuevos. |
 | FASE-E | ✅ Completa | 2026-08-05 | RC3: prompts sin --release + enforcement `_check_prompts_no_release` + conteos fuente viva + evidencia N3 preservada. Delegable (solo docs). |
 | FASE-F | ✅ Completa | 2026-08-05 | Run E2E único + V1-V10: 10/10 PASS (V8 cerrado en recuperación S5b). Ver Notas FASE-F. |
-| FASE-RELEASE-4.71.0 | ⬜ Pendiente | — | Delegable — desbloqueada (A-F ✅) |
+| FASE-RELEASE-4.71.0 | ✅ Completa | 2026-08-05 | Version bump + sync + CHANGELOG + GUIA_TECNICA + validaciones 6/6 + README audit. PLAN COMPLETO. |
 
 ## Notas de Recuperación
 

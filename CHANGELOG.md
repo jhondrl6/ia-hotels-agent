@@ -1,5 +1,66 @@
 # Changelog
 
+## [4.71.0] — 2026-08-05 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
+
+### Objetivo
+
+Eliminar 3 causas raíz residuales del plan v4.70.0: RC1 (fuente de verdad de costos aplicada a medias — propuesta hardcodeada), RC2 (gates comerciales con inputs no cableados + veredicto oculto en ZIP), RC3 (higiene documental sin enforcement). Incluye prerrequisito FASE-A (tests patológicos), seguimientos S5/S7, verificación E2E con Zi One Luxury (coherence 0.9238, READY_FOR_PUBLICATION) y recuperación S5b (occupancy_source en bloque FASE-K + PrecisionValidator).
+
+### Cambios Implementados
+
+- **FASE-A** (Prerrequisito): Cuarentena de 3 tests patológicos (`test_proposal_generator.py`, `test_price_consistency.py`, `test_proposal_generator_dict.py`) → `tests/_archived_broken_tests/`. `pytest.ini` con `--ignore` específicos. Lista segura de 13 archivos documentada. 3,215 → 3,175 collected (40 tests aislados).
+- **FASE-B** (RC1 — N10/N17/N18/N19): Tabla de servicios dinámica — `_build_dynamic_breach_map()` invierte `pain_solution_mapper.PAIN_SOLUTION_MAP` para construir mapa `asset_type → brecha_id` con desempate por `opportunity_scores`. `BREACH_BY_ASSET` estático eliminado. `main.py` cablea `opportunity_scores` en FASE 3.5 → `proposal_gen.generate()`. Org_schema condicional sin cifras cuando `no_org_schema` no está en scores.
+- **FASE-C** (RC2-a — N11/N15): `CG-CLAIM-VS-EVIDENCE` split por oraciones + filtro condicionales (`_CONDITIONAL_MARKERS`) — sin falsos positivos con texto "si...no aparece". `CG-TIER-CONSISTENCY` cableado: `_extract_text_tier()` en `v4_diagnostic_generator.py` + inputs `frontmatter_tier`/`text_tier`; None → FAIL explícito (nunca vacuo).
+- **FASE-D** (RC2-b — N16/N21/S5/S7): Política ZIP — `_is_excluded_from_zip()` filtra `commercial_gates_report*` del ZIP de cliente. `_get_latest_run_timestamp()` cutoff por mtime del run más reciente. Fallback loader onboarding: `{output}/clientes` → `output/clientes`. Occupancy label veraz: prioridad `onboarding > regional > default`.
+- **FASE-E** (RC3 — R3.1-R3.4): Higiene documental — `--release` eliminado de 4 prompts intermedios del plan anterior. Enforcement `_check_prompts_no_release()` en `run_all_validations.py`. Conteos fuente viva (205 .py, 391 clases, 27 dirs, 3,227 tests). Evidencia N3 preservada (14 JSON del run 123637).
+- **FASE-F** (E2E): Run único `v4complete` Zi One Luxury — coherence 0.9238, READY_FOR_PUBLICATION (12 gates: 11 passed + 1 WARNING advisory, 0 blocking). Onboarding real ("4 campos confirmados", sin "Using defaults"). V1-V10: 10/10 PASS tras recuperación S5b.
+- **FASE-F/S5b** (Recuperación): Fix `occupancy_source` en DOS sitios de `main.py` (bloque FASE-K + input PrecisionValidator/GAP-4). 6 tests nuevos (contrato estático + comportamiento camino FASE-K). Re-verificación V8 PASS.
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/commercial_documents/test_proposal_breach_consistency.py` | Gate de no-regresión RC1 (9 tests: breach map dinámico + costos opportunity_scores) |
+| `tests/quality_gates/test_commercial_gate.py` | Tests ampliados (20 nuevos: condicionales CG-CLAIM + tier consistency + extract_text_tier) |
+| `tests/delivery/test_fase_d_zip_policy.py` | Política ZIP N16/N21 (10 tests: exclusión gate reports + run-based filtering) |
+| `tests/financial_engine/test_fase_d_occupancy_label.py` | Occupancy label S5 (6 tests: source priority + HotelFinancialData) |
+| `tests/test_fase_d_onboarding_loader.py` | Fallback loader S7 (7 tests: fallback path + URL normalization) |
+| `tests/financial_engine/test_fase_f_recovery_s5b.py` | Recuperación S5b (6 tests: contrato estático anti-regresión + camino FASE-K) |
+| `scripts/sync_data.py` | Sincronización de datos de benchmark |
+| `scripts/validate_cross_refs.py` | Validación de referencias cruzadas documentales |
+| `evidence/FASE-B/` | Verificación estática breach consistency + tests + lista segura |
+| `evidence/FASE-F/` | Run E2E completo (16 JSON, docs comerciales, ZIP, verificación V1-V10, s5b_rerun) |
+| `evidence/N3-diff/` | 14 JSON del run 123637 preservados + README (diff 97 líneas no reproducible) |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | `_build_dynamic_breach_map()` + eliminación `BREACH_BY_ASSET` estático + hardcode L1250 + org_schema condicional (N10/N17/N18/N19) |
+| `main.py` | Cableado `opportunity_scores` FASE 3.5 → propuesta (FASE-B) + fallback loader onboarding S7 (FASE-D) + fix `_occupancy_source` FASE-K + PrecisionValidator GAP-4 (S5b) |
+| `modules/quality_gates/commercial_gate.py` | `_check_claim_vs_evidence` split por oraciones + condicionales (N11) + `_check_tier_consistency` inputs reales + None → FAIL (N15) |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | `_extract_text_tier()` + cableado `frontmatter_tier`/`text_tier` al gate (N15) |
+| `modules/delivery/delivery_packager.py` | `_is_excluded_from_zip()` N16 + `_get_latest_run_timestamp()` N21 + `_collect_files()` integra filtros |
+| `modules/financial_engine/harness_handlers.py` | Label occupancy veraz S5: prioridad `onboarding > regional > default` + `occupancy_source` en HotelFinancialData fallback |
+| `scripts/run_all_validations.py` | Check `_check_prompts_no_release()` (enforcement R3.1, L3/L9) |
+| `pytest.ini` | `--ignore` específicos para 3 archivos en cuarentena (FASE-A) |
+| `AGENTS.md` | Versión 4.71.0 + codename actualizado |
+| `README.md` | Versión 4.71.0 + codename actualizado |
+| `docs/GUIA_TECNICA.md` | Versión 4.71.0 + codename actualizado |
+| `.agents/workflows/phased_project_executor.md` | v2.15.0 + análisis post-implementación obligatorio |
+
+### Tests
+
+- **+9 tests** FASE-B (`test_proposal_breach_consistency.py`: breach map dinámico + costos opportunity_scores + org_schema condicional)
+- **+20 tests** FASE-C (`test_commercial_gate.py`: 9 condicionales CG-CLAIM + 6 tier consistency + 5 extract_text_tier)
+- **+23 tests** FASE-D (10 delivery ZIP policy + 6 occupancy label + 7 onboarding loader)
+- **+6 tests** FASE-F/S5b (`test_fase_f_recovery_s5b.py`: contrato estático + comportamiento camino FASE-K)
+- **Total: +58 tests nuevos** (git diff fuente viva), 0 regresiones
+- **3,233 tests collected** (pytest --collect-only, post-cuarentena FASE-A)
+- **E2E Zi One Luxury**: coherence 0.9238, 12 gates (11 passed + 1 WARNING advisory), READY_FOR_PUBLICATION
+- **V1-V10**: 10/10 PASS (V8 cerrado vía recuperación S5b)
+- **Validaciones**: `run_all_validations.py --quick` 6/6 TOTAL PASS
+
 ## [4.70.0] — 2026-08-04 — Coherencia Módulo-Entrega
 
 ### Objetivo

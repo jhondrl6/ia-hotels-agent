@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.70.0 -- Coherencia Módulo-Entrega COMPLETADO**
+> **v4.71.0 -- Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega COMPLETADO**
 
 ---
 
