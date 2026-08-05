@@ -22,7 +22,7 @@
 | Política de entrega ZIP | delivery | Sin `commercial_gates_report*` al cliente + filtro por run | FASE-D |
 | Fallback loader onboarding | main.py | `{output}/clientes` → fallback `output/clientes` (S7) | FASE-D |
 | Occupancy label veraz | financial_engine | `data_sources.occupancy` coherente con fuente real (S5) | FASE-D |
-| E2E certificado Zi One Luxury | — | Run único con onboarding real, V1-V10 PASS | FASE-F |
+| E2E certificado Zi One Luxury | — | Run único con onboarding real, V1-V10 = 10/10 (V8 cerrado vía recuperación S5b) | FASE-F |
 | Enforcement anti `--release` | scripts | Check "Prompts No Release" en `run_all_validations.py` (L3/L9, R3.1) | FASE-E |
 
 ## Sección D: Métricas Acumulativas
@@ -38,8 +38,8 @@
 | Módulos .py en modules/ | 205 (fuente viva, 2026-08-05) | FASE-E |
 | Clases en modules/ | 391 (fuente viva, 2026-08-05) | FASE-E |
 | Dirs con __init__.py en modules/ | 27 (fuente viva, 2026-08-05) | FASE-E |
-| Coherencia run E2E Zione | ⬜ (≥ 0.8 exigido) | FASE-F |
-| Gates publicación run E2E | ⬜ (conteo dinámico) | FASE-F |
+| Coherencia run E2E Zione | 0.9238 (≥ 0.8 exigido) ✅ | FASE-F |
+| Gates publicación run E2E | 12 gates: 11 passed + 1 WARNING advisory, 0 blocking, READY_FOR_PUBLICATION | FASE-F |
 | Tests collected final | ⬜ (registrar en RELEASE) | FASE-RELEASE |
 
 > **Nota D3 completa (8 valores)**: opportunity_scores del run 124443 — whatsapp_conflict $1,198,906 / no_hotel_schema $1,498,094 / no_faq_schema $719,200 / low_seo_score $1,198,906 / no_analytics $599,094 / low_organic $599,094 / ai_crawler $899,000 / no_og $479,706 — suma $7,192,000. (R3.2: el 2º $1,198,906 de `low_seo_score` estaba omitido en la lista original de 7 valores.)
@@ -121,7 +121,11 @@
 - Enforcement `_check_prompts_no_release` implementado en `run_all_validations.py`.
 - Prompts 02-05 del plan anterior: `--release 4.70.0` eliminado + nota preventiva añadida.
 
-### FASE-F
-- Run: timestamp ⬜ — coherencia ⬜ — gates ⬜
-- V1-V10: ⬜/10 PASS
-- Lecciones nuevas (L16+): ver `10-analisis-post-implementacion.md`
+### FASE-F (✅ COMPLETA — recuperación S5b incluida)
+- Run oficial: `output/v4_verify_4.71.0` timestamps 20260805_154855/154910 — coherencia 0.9238 — readiness READY_FOR_PUBLICATION (12 gates: 11 passed + 1 WARNING advisory `asset_confidence`, 0 blocking).
+- Onboarding real inyectado: "Onboarding data loaded: 4 campos confirmados", sin "Using defaults". S7 verificado en aislamiento antes del run (3/3 PASS).
+- V1-V10: 10/10 PASS. V8 falló inicialmente (`data_sources.occupancy == "regional"` con valor de onboarding): DOS sitios en `main.py` no cubiertos por el fix S5 de FASE-D (bloque FASE-K + input de PrecisionValidator/GAP-4).
+- Recuperación S5b (misma fecha): ambos sitios reutilizan `_occupancy_source`; 6 tests nuevos (`tests/financial_engine/test_fase_f_recovery_s5b.py`); re-verificación V8 PASS en run acotado 20260805_161042 (`output/v4_verify_s5b`, evidencia `evidence/FASE-F/s5b_rerun/`). Regresión 0 (batch 78 + lista segura 208 passed).
+- RC1 (N10/N17/N18/N19), RC2 (N11/N15/N16/N21), S5 y S7: SUPERADOS con evidencia E2E. CG-TIER-CONSISTENCY detectó inconsistencia real de contenido (tier B+ frontmatter vs D texto) → seguimiento S8 (próximo release).
+- Evidencia completa en `evidence/FASE-F/` (docs, 16 JSON, ZIP 53 archivos, log, verificacion.md/txt, s5b_rerun/).
+- Lecciones nuevas L28-L32: ver `10-analisis-post-implementacion.md`.

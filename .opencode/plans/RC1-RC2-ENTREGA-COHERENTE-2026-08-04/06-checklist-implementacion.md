@@ -11,7 +11,7 @@
 | 3 | FASE-C | RC2-a: CG-CLAIM-VS-EVIDENCE + CG-TIER-CONSISTENCY (N11/N15) | ✅ Completada | ❌ | 1 | 2026-08-05 |
 | 4 | FASE-D | RC2-b: ZIP entrega + loader onboarding + occupancy (N16/N21/S7/S5) | ✅ Completada | ✅ 3 tracks | 4 | 2026-08-05 |
 | 5 | FASE-E | RC3: higiene documental R3.1-R3.4 | ✅ Completada | ✅ | 5 | 2026-08-05 |
-| 6 | FASE-F | E2E v4complete Zi One Luxury + análisis post-implementación | ⬜ Pendiente | ✅ comando largo | — | — |
+| 6 | FASE-F | E2E v4complete Zi One Luxury + análisis post-implementación | ✅ Completada (V1-V10 10/10 tras recuperación S5b) | ✅ comando largo | 2 | 2026-08-05 |
 | 7 | FASE-RELEASE-4.71.0 | Version bump + docs oficiales | ⬜ Pendiente | ✅ | — | — |
 
 ## Gate por Fase (resumen de criterios bloqueantes)

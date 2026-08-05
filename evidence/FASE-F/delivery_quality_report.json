@@ -1,0 +1,68 @@
+{
+  "status": "WARNING",
+  "blocking": false,
+  "coverage_failure_rate": {
+    "passed": true,
+    "details": {
+      "total_assets": 13,
+      "generated": 12,
+      "failed": 0,
+      "failure_rate": 0.0,
+      "reason": ""
+    },
+    "gate": "G7"
+  },
+  "proposal_asset_gate": {
+    "passed": true,
+    "gate": "G9",
+    "aligned": 5,
+    "total": 7,
+    "alignment": {
+      "promised_services_total": 7,
+      "generated_aligned": 5,
+      "present_in_production": 2,
+      "unresolved": 0,
+      "coverage_ratio": 1.0,
+      "present_assets": [
+        "Botón de WhatsApp",
+        "Schema Organization"
+      ],
+      "passed": true,
+      "effective_total": 7,
+      "message": "7/7 servicios cubiertos (5 generados  + 2 ya en producción )"
+    }
+  },
+  "asset_specificity_gate": {
+    "passed": false,
+    "details": {
+      "reason": "2 assets below confidence threshold",
+      "avg_confidence": 0.82,
+      "low_confidence_count": 2,
+      "total_assets": 12
+    },
+    "gate": "G8"
+  },
+  "evidence_gate": {
+    "passed": true,
+    "details": {
+      "coherence_available": true,
+      "asset_data_available": true,
+      "coherence_score": 0.92
+    },
+    "gate": "EVIDENCE"
+  },
+  "advisory_warnings": [],
+  "human_review_items": [
+    "G8: Asset specificity failed — 2 assets below confidence threshold"
+  ],
+  "summary": {
+    "total_gates": 5,
+    "passed": 4,
+    "failed": 1,
+    "coherence_score": 0.92,
+    "blocking_gates": [],
+    "warning_gates": [
+      "asset_specificity"
+    ]
+  }
+}

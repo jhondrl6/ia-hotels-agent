@@ -1,0 +1,53 @@
+{
+  "hotel": "Zione",
+  "url": "https://zione.co/",
+  "input_data": {
+    "rooms": 34,
+    "adr_cop": 290000,
+    "adr_source": "user_provided",
+    "occupancy_rate": 0.7843137254901961,
+    "direct_channel_percentage": 0.4
+  },
+  "scenarios": {
+    "conservative": 19627200.0,
+    "realistic": 7192000.0,
+    "optimistic": -6820800.0
+  },
+  "expected_monthly_cop": 7192000.0,
+  "breakdown": {
+    "ota_commission_cop": 20880000.0,
+    "ota_commission_basis": "480 noches OTA × $290,000 ADR × 15% comisión",
+    "ota_commission_source": "industry_standard_15pct",
+    "shift_savings_cop": 2088000.0,
+    "shift_percentage": 0.1,
+    "shift_source": "hardcoded: sin GA4",
+    "ia_revenue_cop": 11600000.0,
+    "ia_boost_percentage": 0.05,
+    "ia_source": "estimado: sin datos GA4",
+    "evidence_tier": "B+",
+    "disclaimer": "Datos operativos verificados de su hotel (habitaciones, ADR, ocupación, canal directo). Las proyecciones usan supuestos conservadores (shift 10%, IA boost 5%) no validados con tráfico real. Conecte Google Analytics 4 y Search Console para cifras exactas al peso.",
+    "data_sources": {
+      "adr": "user_provided",
+      "rooms": "hotel_data",
+      "occupancy": "regional",
+      "ota_commission": "industry_standard_15pct",
+      "direct_channel": "onboarding",
+      "shift": "hardcoded: sin GA4",
+      "ia_boost": "estimado: sin datos GA4"
+    }
+  },
+  "pricing": {
+    "tier": "standard",
+    "monthly_price_cop": 500000.0,
+    "pain_ratio": 0.0724,
+    "is_compliant": false,
+    "source": "hybrid_v410"
+  },
+  "precision_tier": "C",
+  "can_show_exact_money": false,
+  "tier_explanation": {
+    "evidence_tier": "B+ — Datos fuente (B = benchmarks/bench regional, C = estimados sin GA4)",
+    "precision_tier": "C — Cálculos derivados (C = supuestos de shift y boost IA no validados con datos reales)",
+    "relationship": "evidence_tier B+ limita precision_tier a C: sin GA4, los supuestos no son validados empíricamente"
+  }
+}

@@ -1,0 +1,15 @@
+==============================================================================
+FASE-F ÔÇö Verificaci├│n de fixes RC1/RC2/S5 ÔÇö run 20260805_154910 (Zi One Luxury)
+==============================================================================
+Ô£à V1 [RC1/N10] PASS: 6 refs: #6 SEO Local Bajo: 899000 OK; #1 Conflicto de WhatsApp: 899000 OK; #3 Sin Schema Hotel: 1123390 OK; #4 Sin Schema FAQ: 539400 OK; #10 Open Graph Tags Incompletos: 359600 OK; #1 Conflicto de WhatsApp: 899000 OK
+Ô£à V2 [RC1/N17] PASS: fila referencia #6 ÔåÆ low_seo_score
+Ô£à V3 [RC1/N18] PASS: rank=1 label='Conflicto de WhatsApp' costo=899000 | hardcode 'Brecha #5: WhatsApp' count=0
+Ô£à V4 [RC1/N19] PASS: org_schema asset=False, filas Schema Organization=0
+Ô£à V5 [RC2/N11] PASS: passed=True msg='No se encontraron claims factuales de invisibilidad (condicionales descartados).'
+Ô£à V6 [RC2/N15] PASS: msg='Frontmatter dice tier 'B+' pero el texto dice tier 'D'.' (passed=False, severidad=WARNING)
+Ô£à V7 [RC2/N16+N21] PASS: 0 commercial_gates_report* en ZIP; sin artefactos de runs anteriores (53 archivos)
+ÔØî V8 [S5] FAIL: data_sources.occupancy='regional' (esperado 'onboarding'; occupancy_rate=0.7843137254901961 = 800/(34*30) ÔåÆ valor S├ì viene de onboarding)
+Ô£à V9 [D10] PASS: 'seo local bajo': 899000 id├®ntico; 'conflicto de whatsapp': 899000 id├®ntico; 'sin schema hotel': 1123390 id├®ntico; 'sin schema faq': 539400 id├®ntico; 'open graph tags incompletos': 359600 id├®ntico; numeraci├│n divergente diagÔåöpropuesta: 'seo local bajo' diag#4 vs prop#6; 'sin schema hotel' diag#2 vs prop#3; 'sin schema faq' diag#5 vs prop#4
+Ô£à V10 [Coherencia global] PASS: readiness=READY_FOR_PUBLICATION, blocking_issues=[], gates=12 (12 passed, 1 warning), coherence=0.9237728937728937
+------------------------------------------------------------------------------
+TOTAL: 9/10 PASS ÔÇö 1 FAIL

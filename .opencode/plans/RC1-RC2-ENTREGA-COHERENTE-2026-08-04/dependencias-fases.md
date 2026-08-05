@@ -1,6 +1,6 @@
 # Dependencias de Fases — RC1-RC2-ENTREGA-COHERENTE-2026-08-04
 
-> Actualizado: 2026-08-05 (FASE-E completada)
+> Actualizado: 2026-08-05 (FASE-F completada en sesión de recuperación S5b)
 
 ## Diagrama de Dependencias
 
@@ -57,8 +57,8 @@ No hay dos fases tocando el mismo archivo.
 | FASE-C | ✅ Completa | 2026-08-05 | RC2-a: CG-CLAIM-VS-EVIDENCE sin falsos positivos condicionales + CG-TIER-CONSISTENCY cableado (N11/N15). 20 tests nuevos. |
 | FASE-D | ✅ Completa | 2026-08-05 | RC2-b: ZIP sin gate reports (N16) + filtro run (N21) + fallback loader (S7) + occupancy label (S5). 23 tests nuevos. |
 | FASE-E | ✅ Completa | 2026-08-05 | RC3: prompts sin --release + enforcement `_check_prompts_no_release` + conteos fuente viva + evidencia N3 preservada. Delegable (solo docs). |
-| FASE-F | ⬜ Pendiente | — | 1 solo v4complete (Zi One Luxury) |
-| FASE-RELEASE-4.71.0 | ⬜ Pendiente | — | Delegable |
+| FASE-F | ✅ Completa | 2026-08-05 | Run E2E único + V1-V10: 10/10 PASS (V8 cerrado en recuperación S5b). Ver Notas FASE-F. |
+| FASE-RELEASE-4.71.0 | ⬜ Pendiente | — | Delegable — desbloqueada (A-F ✅) |
 
 ## Notas de Recuperación
 
@@ -203,3 +203,23 @@ No hay dos fases tocando el mismo archivo.
 - `run_all_validations.py --quick` ahora incluye 6 checks (5 existentes + "Prompts No Release").
 - El enforcement anti `--release` es permanente: cualquier plan futuro con `--release` en prompts intermedios será detectado.
 - La evidencia N3 está preservada para referencia histórica.
+
+## Notas FASE-F
+
+### Ejecución (2026-08-05)
+- Pre-run: workaround L13 (copia YAML) + S7 verificado en aislamiento (`temp/verify_s7_loader.py`, 3/3 PASS).
+- Run E2E único vía subagente: exit 0, "Onboarding data loaded: 4 campos confirmados", sin "Using defaults", coherence 0.9238, READY_FOR_PUBLICATION.
+- Evidencia proactiva completa en `evidence/FASE-F/` (docs, 16 JSON, `v4_complete_report.json`, ZIP, log).
+- `temp/fase_f_verify.py` → V1-V10: 9/10 PASS (`evidence/FASE-F/verificacion.md` + `.txt`).
+- `10-analisis-post-implementacion.md` poblado: matriz de fixes (11/12 SUPERADO), diff cualitativo vs baseline 124443, lecciones L28-L31, seguimientos S5b/S8/S9.
+- `run_all_validations.py --quick`: 6/6 TOTAL PASS.
+
+### ✅ RECUPERACIÓN S5b — CERRADA (2026-08-05)
+- **Defecto**: V8 (S5) — `breakdown.data_sources.occupancy` decía `"regional"` con valor real de onboarding. DOS sitios en `main.py` recalculaban la condición: bloque FASE-K (construcción `HotelFinancialData` para `calculate_breakdown`) e input `_occ_source` de `PrecisionValidator` (GAP-4).
+- **Fix aplicado**: ambos sitios reutilizan `_occupancy_source` (label resuelto en FASE 3 con prioridad onboarding > regional > default). Backup forense: `temp/fase_f_recovery_backup/main.py`.
+- **Tests nuevos**: `tests/financial_engine/test_fase_f_recovery_s5b.py` — 6 tests (3 contrato estático anti-regresión sobre main.py + 3 comportamiento camino FASE-K, caso Zione 34 hab/800 reservas).
+- **Re-verificación V8**: run acotado 20260805_161042 (`output/v4_verify_s5b`, evidencia `evidence/FASE-F/s5b_rerun/`): `occupancy == "onboarding"`, occupancy_rate 0.7843 intacto, READY_FOR_PUBLICATION. El run E2E oficial NO se repitió (preservado en `output/v4_verify_4.71.0`).
+- **Regresión**: 0 — batch 78 tests (S5b + loader + injection + evidence_tier + breakdown) + lista segura FASE-A 208 passed.
+- **Validaciones**: `run_all_validations.py --quick` 6/6 TOTAL PASS.
+- **Descubierto adicional (lección L32)**: el grep de sitios de construcción (L28) reveló el segundo sitio (GAP-4) que el análisis inicial de V8 no había visto — el protocolo funcionó.
+- Seguimientos restantes post-FASE-F: S8 (tier B+ vs D en diagnóstico, MEDIA), S9 (numeración divergente, BAJA). Backups forenses liberables en FASE-RELEASE.

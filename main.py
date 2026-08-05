@@ -2033,7 +2033,10 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             direct_channel_percentage=direct_channel_pct,
             ota_commission_rate=0.15,
             adr_source=adr_source,
-            occupancy_source='regional' if feature_flags.should_use_regional_for(region) else ('onboarding' if onboarding_data is not None else 'default'),
+            # S5b (FASE-F recovery): reutiliza el label ya resuelto en FASE 3
+            # (onboarding > regional > default) en vez de recalcular la condición;
+            # evita que el label diverja del valor real usado (lección L26/L28).
+            occupancy_source=_occupancy_source,
             channel_source='onboarding' if onboarding_data is not None else 'default',
             ga4_enabled=False,
             gsc_enabled=False,
@@ -2075,7 +2078,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     _can_show_exact = False
     try:
         from modules.financial_engine.precision_validator import PrecisionValidator
-        _occ_source = "regional" if feature_flags.should_use_regional_for(region) else ("onboarding" if onboarding_data is not None else "default")
+        # S5b (FASE-F recovery): mismo label resuelto en FASE 3 (L26/L28) —
+        # nunca recalcular la condición aquí.
+        _occ_source = _occupancy_source
         _pv_result = PrecisionValidator.validate(
             adr_cop=float(adr_cop),
             adr_source=adr_source,
