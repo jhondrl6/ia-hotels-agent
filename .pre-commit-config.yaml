@@ -37,7 +37,7 @@ repos:
   # === LOCAL VALIDATIONS v4.0 ===
   - repo: local
     hooks:
-      # Run all v4.0 tests
+      # Run all v4.0 tests (core modules only)
       - id: pytest-v4
         name: pytest v4.0 (all modules)
         entry: python -m pytest tests/data_validation tests/financial_engine tests/orchestration_v4 tests/asset_generation -q --tb=short

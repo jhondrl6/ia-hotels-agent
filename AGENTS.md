@@ -1,4 +1,4 @@
-<!-- agents_version: v4.70.0 | last_update: 2026-08-05 -->
+<!-- agents_version: v4.71.0 | last_update: 2026-08-19 -->
 
 # IA Hoteles Agent (iah-cli)
 
@@ -123,7 +123,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 3,215 funciones, 253 archivos, 0 regresion |
+| **Tests** | 3,233 funciones, 261 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -300,10 +300,10 @@ FASE 5: DELIVERY QUALITY (FASE-0)
 
 | Check | Umbral | Configurable en |
 |-------|--------|-----------------|
-| Coherence Score | ≥ 0.8 | `.conductor/guidelines.yaml` |
-| WhatsApp Verificado | ≥ 0.9 | `.conductor/guidelines.yaml` |
-| Datos Financieros | ≥ 0.7 | `.conductor/guidelines.yaml` |
-| Price/Loss Ratio | 3x-6x | `.conductor/guidelines.yaml` |
+| Coherence Score | ≥ 0.8 | `modules/quality_gates/publication_gates.py` |
+| WhatsApp Verificado | ≥ 0.9 | `modules/quality_gates/domain_gates.py` |
+| Datos Financieros | ≥ 0.7 | `modules/quality_gates/coherence_gate.py` |
+| Price/Loss Ratio | 3x-6x | `config/pricing.yaml` |
 | Vigencia análisis | < 20 días | `agent_harness/memory.py` |
 
 ---
@@ -388,7 +388,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (3,215 funciones, 253 archivos)
+# Todas las pruebas (3,233 funciones, 261 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -403,7 +403,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (3,215 funciones totales)
+### Cobertura por Modulo (3,233 funciones totales)
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
@@ -456,9 +456,6 @@ iah-cli/
 │   ├── self_healer.py
 │   ├── skill_executor.py
 │   └── skill_router.py
-├── observability/              # Dashboard y calibracion
-│   ├── dashboard.py
-│   └── calibration.py
 ├── enums/                      # Enumeraciones
 │   ├── severity.py
 │   ├── confidence_level.py
@@ -492,7 +489,7 @@ iah-cli/
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
 │   └── validation/             # Validaciones adicionales
-├── tests/                      # Suite de pruebas (3,215 funciones, 253 archivos)
+├── tests/                      # Suite de pruebas (3,233 funciones, 261 archivos)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/
@@ -502,7 +499,6 @@ iah-cli/
 │   ├── geo_enrichment/
 │   ├── quality_gates/
 │   ├── commercial_documents/
-│   ├── observability/
 │   ├── scrapers/
 │   ├── providers/
 │   ├── delivery/
