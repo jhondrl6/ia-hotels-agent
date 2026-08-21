@@ -8,12 +8,16 @@
 | Módulo | Archivos | Descripción | Fase |
 |--------|----------|-------------|------|
 | (pendiente) | | | |
+| scrapers (google_places_client) | modules/scrapers/google_places_client.py | +search_by_name(): búsqueda Places API (New) por texto (nombre+ciudad) con category filter lodging | FASE-P2-B |
+| scripts (preload_prospects_gbp) | scripts/preload_prospects_gbp.py | Script reutilizable de pre-carga GBP batch con gate de completitud (teléfono+dirección+categoría); soporta YAML/CSV/builtin; dry-run; reporte MD + JSON | FASE-P2-B |
 
 ## Sección B: Funcionalidades Nuevas/Afinadas
 
 | Feature | Módulo | Descripción | Fase |
 |---------|--------|-------------|------|
 | Fuente única de pricing (D6) | commercial_documents, financial_engine, config | pricing.yaml master con `express_price` nuevo; hook_pdf_generator y v4_proposal_generator consumen dinámicamente; constantes `PRECIO_EXPRESS/PRECIO_MENSUAL/SETUP_FEE/MONTHLY_PACKAGE_PRICE` eliminadas | FASE-P0-A |
+| Pre-carga GBP batch con gate de completitud (F9) | scrapers, scripts | search_by_name en GooglePlacesClient (Places API New searchText); preload_prospects_gbp.py con 30 prospectos embebidos; gate VERIFIED/PARTIAL/MISSING; reporte MD y JSON; modo dry-run | FASE-P2-B |
+| Higiene documental comercial (F10) | docs, evidence/Recomendaciones | PRECIOS_PAQUETES.md unificado con pricing.yaml (COP, no USD); PROPUESTA_EMPAQUETADO actualizada (ADR $420K→$280K, ZIP actual, pricing.yaml citado); PROMPT_INGRESOS y README con ADR calibrado | FASE-P2-B |
 | Gate pricing_compliance (D1 floor-aware) | quality_gates | Gate BLOCKING floor-aware: BLOCKED si pain_ratio > pain_ratio_gate_max del tier (0.32 boutique); WARNING si fuera del rango ideal 0.03-0.06 con operational_floor aplicado. Consume pricing_data del AssessmentBuilder + umbrales de pricing.yaml vía _load_pricing_config() | FASE-P0-B |
 | Encoding utf-8 global en writers (F7) | quality_gates, utils | Todos los writers de artefactos (write_text) usan encoding='utf-8' explícito; auditoría estática AST anti-regresión | FASE-P0-C |
 | Benchmark maestro único (F2+F4) | config, data/benchmarks, financial_engine | regional_adr_2026.json como master ADR/occupancy; Bogotá agregada; valores calibrados vs 6 observaciones Tier A; plan_maestro_data.json sincronizado; script validate_benchmark_sync.py anti-divergencia; normalización de regiones (aliases + lowercase) en RegionalADRResolver | FASE-P1-A |
@@ -30,7 +34,7 @@
 |---------|-------|------|
 | Tests base al inicio del plan | 3,233 funciones / 261 archivos (v4.71.0) | Preparación |
 | Línea base de fallos preexistentes (suites tocadas) | 22 fallos: 12 commercial_documents + 10 financial_engine — evidence/BASELINE-TESTS-v4.71.0.txt | FASE-P0-A |
-| Tests nuevos acumulados | 127 (3 P0-A + 18 P0-B + 4 P0-C + 19 P1-A + 24 P1-B + 27 P1-C + 21 P1-D + 11 P2-A) | FASE-P2-A |
+| Tests nuevos acumulados | 127 (3 P0-A + 18 P0-B + 4 P0-C + 19 P1-A + 24 P1-B + 27 P1-C + 21 P1-D + 11 P2-A) | FASE-P2-B |
 | Coherence última corrida | 0.9237 (evidence/FASE-F, pre-plan) | Preparación |
 | Coherence E2E Zi One (post-plan) | (pendiente) | FASE-E2E-ZIONE |
 | Tiempo corrida con caches cálidos (C9) | (pendiente) | FASE-E2E-ZIONE |
@@ -93,3 +97,9 @@
 | `tests/data_validation/test_whatsapp_multisede.py` | NUEVO — 11 tests F12: caso Zione VERIFIED sin conflicto, degrade a ESTIMATED, conflicto real misma sede, legacy mono-sede, scanner con labels (fixture ZIONE_FOOTER_HTML) | FASE-P1-D |
 | `modules/commercial_documents/coherence_validator.py` | F14: +_extract_verified_in_production_types (helper site_presence_report→set); _check_promised_assets_exist acepta site_presence_report (assets exists/redundant + site_verified → no missing); validate() cablea site_presence_report al check; mensaje enriquecido con production_only_types | FASE-P2-A |
 | `tests/commercial_documents/test_promised_assets_production.py` | NUEVO — 11 tests F14: C1 (verified→PASSED), C2 (missing→FAILED), C3 (mix→PASSED), C4 (legacy), C5 (coherence↔gate alignment), edge cases (empty/verification_failed/site_verified=False) | FASE-P2-A |
+| `modules/scrapers/google_places_client.py` | +search_by_name(): POST a places:searchText con textQuery=name+city, includedType=lodging, maxResultCount=3; cachea resultado; manejo errores HTTP 429/403/404 | FASE-P2-B |
+| `scripts/preload_prospects_gbp.py` | NUEVO — ~300 líneas: parse YAML/CSV, 30 prospectos builtin Eje Cafetero, preload_prospect() con gate completitud (phone+address+category), generate_report() MD, save_json_results(), --dry-run, --builtin, --json-output | FASE-P2-B |
+| `docs/PRECIOS_PAQUETES.md` | Reescrito v4.72.0: precios USD→COP, tiers desde pricing.yaml, paquetes Express/Starter/Professional/Enterprise, política de coherencia FASE-P0-A, benchmarks de regional_adr_2026.json | FASE-P2-B |
+| `evidence/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md` | ADR $420K→$280K (sección 2.8, benchmark master v1.1.0); Express $120K citado desde pricing.yaml (sección 2.5); nota ZIP actual con README_DELIVERY+MANIFEST+IMPLEMENTATION_ORDER (sección 1) | FASE-P2-B |
+| `evidence/Recomendaciones/PROMPT_INGRESOS.md` | ADR $420K→$280K (bloque de contexto, línea 5); fuente citada: data/benchmarks/regional_adr_2026.json | FASE-P2-B |
+| `evidence/Recomendaciones/PROMPT_INGRESOS_README.md` | ADR $420K→$280K (tabla de datos calibrados, línea 29); referencia master v1.1.0 FASE-P1-A | FASE-P2-B |

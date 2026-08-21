@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CREDIBILIDAD-NUMERICA-2026-08-20
 
-> **Estado**: 8/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅, P1-C ✅, P1-D ✅, P2-A ✅) — 3 restantes
+> **Estado**: 9/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅, P1-C ✅, P1-D ✅, P2-A ✅, P2-B ✅) — 2 restantes
 > **Plan**: CREDIBILIDAD-NUMERICA-2026-08-20
 > **Versión objetivo**: v4.72.0
 > **Creado DESDE LA CONCEPCIÓN** (phased_project_executor v2.15.0): cada fase agrega lecciones aquí al cerrar sesión.
@@ -17,7 +17,7 @@
 | FASE-P1-C | 2026-08-21 | ✅ | ~30 | No | 27 tests nuevos (14 F6/D4 + 13 F11); benchmark master cableado al hook; cap plausibilidad 5x (D7); trazabilidad Hook→Express; suite orchestration_v4 66→93; validaciones --quick 6/6 PASS |
 | FASE-P1-D | 2026-08-21 | ✅ | ~35 | No (DIRECTO) | 21 tests nuevos (11 F12 multi-sede + 10 F13 propagación); firma backwards-compatible en validate_whatsapp; D8 (VERIFIED_IN_SITE primera clase); suites data_validation+asset_generation 603 passed; suites ampliadas: solo los 12 fallos preexistentes de la línea base; 0 regresiones |
 | FASE-P2-A | 2026-08-21 | ✅ | ~30 | No (DIRECTO) | 11 tests nuevos F14; coherence acepta site_presence_report; F8 auditoría sin rutas residuales; validaciones --quick 6/6 PASS; 0 regresiones |
-| FASE-P2-B | — | ⬜ | — | No | |
+| FASE-P2-B | 2026-08-21 | ✅ | ~30 | No (DIRECTO) | Script preload_prospects_gbp.py (dry-run OK, 30 prospectos builtin); search_by_name en GooglePlacesClient; 4 docs higienizadas (PRECIOS_PAQUETES, PROPUESTA_EMPAQUETADO, PROMPT_INGRESOS x2); ADR $420K→$280K; scrapers 34 passed 0 nuevos fallos; validaciones --quick 6/6 PASS |
 | FASE-E2E-ZIONE | — | ⬜ | — | Sí (v4complete) | |
 | FASE-RELEASE-4.72.0 | — | ⬜ | — | Opcional | |
 
@@ -111,6 +111,14 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | L21 | F13 se resolvió extendiendo la taxonomía de status (VERIFIED_IN_SITE) + agregándolo al whitelist de justificación del coverage gate (_JUSTIFIED_STATUSES), sin alterar la fórmula "cubiertas + justificadas == detectadas". El reconciler solo necesitó una línea de preservación. Extender estados existentes es más barato y auditable que crear lógica paralela de "brechas ignoradas". | INCLUIR: para nuevos estados de verdad, preferir extensión de taxonomía + whitelist de gates sobre lógica paralela; verificar SIEMPRE que los reconciliadores intermedios preserven el nuevo estado |
 | L22 | La firma backwards-compatible (parámetros opcionales web_alternates/gbp_location) permitió que `two_phase_flow._validate_all_inputs` quedara intacto (no tiene DOM disponible) y solo se enriquecieran los callers con acceso al HTML (v4_comprehensive, main.py). Mono-sede conserva comportamiento legacy exacto. | INCLUIR: al cambiar firmas con múltiples callers, parámetros opcionales + enriquecer solo callers con datos disponibles preserva compatibilidad sin branch masivo |
 
+#### FASE-P2-B
+
+| # | Lección | Pertinencia |
+|---|---------|-------------|
+| L26 | `GooglePlacesClient` solo tenía `search_nearby_lodging` (requiere lat/lng). Para pre-carga de prospectos por nombre+ciudad se necesita `search_by_name` con Places API (New) `places:searchText`. El nuevo método usa `textQuery`, `includedType=lodging`, `maxResultCount=3` y cachea el resultado. | INCLUIR: nuevos scripts que busquen hoteles por nombre deben usar `search_by_name`, no construir queries HTTP ad-hoc |
+| L27 | La higiene documental reveló que `PRECIOS_PAQUETES.md` tenía precios en USD ($299/$599/$999/$1499) completamente desconectados de `config/pricing.yaml` (COP). Los documentos comerciales son frecuentemente editados manualmente y se desincronizan del código. La solución es citar la fuente única (`config/pricing.yaml`) en vez de hardcodear cifras, y agregar una "Política de Coherencia de Pricing" visible en el documento. | INCLUIR: docs comerciales SIEMPRE deben citar la fuente de verdad (archivo YAML/JSON) en vez de repetir valores; incluir nota de política de coherencia |
+| L28 | El benchmark ADR Eje Cafetero en `PROPUESTA_EMPAQUETADO` y `PROMPT_INGRESOS` aún citaba $420K (valor pre-calibración FASE-P1-A). Grep con `$420` y `420K` encontró 4 documentos activos con el valor obsoleto. Los archivos de evidencia histórica (outputs pasados de v4complete) NO se modifican — son registro de lo que el sistema produjo. | INCLUIR: tras recalibración de benchmarks, SIEMPRE buscar con grep en docs activos (evidence/Recomendaciones, docs/) y NO tocar archivos de evidencia histórica |
+
 #### FASE-P2-A
 
 | # | Lección | Pertinencia |
@@ -137,7 +145,8 @@ Decisión: benchmark $420K era desactualizado/aspiracional. Master calibrado a $
 | Tema | Estado | Acción futura |
 |------|--------|---------------|
 | Ruta productora del pricing $500K no trazada a fondo (CONTEXT §4.2) | ✅ Cerrado | FASE-P0-A trazó la cadena: pricing.yaml → _load_pricing_config() → _calculate_dynamic_price() → pricing_result.monthly_price_cop |
-| Comportamiento de scrapers con prospectos nuevos (CONTEXT §4.3) | Abierto | FASE-P2-B script pre-carga; medir en ejecución operativa |
+| Comportamiento de scrapers con prospectos nuevos (CONTEXT §4.3) | Parcialmente cubierto | FASE-P2-B creó el script y el método search_by_name; ejecución batch real (30 prospectos) pendiente como tarea operativa post-plan |
+| Ejecución batch operativa de pre-carga GBP sobre 30 prospectos | Abierto (post-plan) | Ejecutar `scripts/preload_prospects_gbp.py --builtin` con GOOGLE_MAPS_API_KEY configurada; revisar reporte; contactar prospectos VERIFIED |
 | Widget Elementor `e-fab-whatsapp` (F12) | ✅ Cubierto sin cambio de código | `_check_html_element` de SitePresenceChecker ya lo detecta por substring 'whatsapp'; verificado en T1, sin acción pendiente |
 | P3: deployer real, Express 5 páginas, monitoreo | Fuera de alcance | Solo tras primer Express pagado |
 

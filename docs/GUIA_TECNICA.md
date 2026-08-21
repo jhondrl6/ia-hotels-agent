@@ -176,6 +176,24 @@
 
 ---
 
+### Notas de Cambios v4.72.0-WIP — FASE-P2-B: Pre-carga GBP de prospectos + higiene documental comercial
+
+**Fecha:** 2026-08-21
+
+**Resumen**: Fix F9 — nuevo script `preload_prospects_gbp.py` para pre-carga GBP batch de prospectos con gate de completitud (teléfono + dirección + categoría). Nuevo método `search_by_name()` en `GooglePlacesClient` usando Places API (New) `places:searchText`. Fix F10 — higiene de 4 documentos comerciales: PRECIOS_PAQUETES.md reescrito (USD→COP, pricing.yaml como fuente única); PROPUESTA_EMPAQUETADO actualizada (ADR $420K→$280K); PROMPT_INGRESOS y su README con ADR calibrado.
+
+**Módulos afectados**: `modules/scrapers/google_places_client.py`, `scripts/preload_prospects_gbp.py`, `docs/PRECIOS_PAQUETES.md`, `evidence/Recomendaciones/`
+
+**Problema**: F9 — lista de 30 prospectos con 66 menciones "Pendiente verificar" y solo 1 teléfono real; compilación manual sin gate de completitud. F10 — docs comerciales con precios USD desconectados de pricing.yaml y ADR $420K obsoleto (el benchmark master v1.1.0 calibró $280K).
+
+**Solución**: F9 — `search_by_name(name, city, category)` en GooglePlacesClient (POST a `places:searchText`); script con soporte YAML/CSV/builtin, gate VERIFIED/PARTIAL/MISSING, reporte MD + JSON, `--dry-run`. F10 — PRECIOS_PAQUETES.md cita `config/pricing.yaml` como fuente única; PROPUESTA_EMPAQUETADO cita `data/benchmarks/regional_adr_2026.json` como master; grep exhaustivo para documentos con ADR obsoleto.
+
+**Backwards compatibility**: `search_by_name()` es método nuevo en GooglePlacesClient (no altera `search_nearby_lodging` ni `get_place_details`). Docs actualizadas sin afectar lógica de código.
+
+**Tests**: Script `--dry-run` OK (30 prospectos). Suite scrapers 34 passed, 4 skipped, 0 nuevos fallos. `run_all_validations.py --quick`: 6/6 PASS.
+
+---
+
 ### Notas de Cambios v4.71.0 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 **Fecha:** 2026-08-05

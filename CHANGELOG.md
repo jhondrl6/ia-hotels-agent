@@ -244,6 +244,38 @@ Alinear el coherence validator con el gate `proposal_asset_alignment` para que a
 
 ---
 
+### FASE-P2-B — Pre-carga GBP de prospectos (F9) + higiene documental comercial (F10)
+
+#### Objetivo
+Crear el script de pre-carga GBP batch de prospectos con gate de completitud de datos de contacto (F9), y actualizar la documentación comercial desactualizada (F10) para que cite las fuentes únicas de pricing (pricing.yaml) y benchmarks (regional_adr_2026.json).
+
+#### Cambios
+- `modules/scrapers/google_places_client.py`: nuevo método `search_by_name(name, city, category)` — POST a Places API (New) `places:searchText` con `textQuery`, `includedType=lodging`, `maxResultCount=3`; cachea resultado; manejo de errores HTTP 429/403/404
+- `scripts/preload_prospects_gbp.py`: NUEVO — ~300 líneas; parse YAML/CSV de prospectos; 30 prospectos embebidos del Eje Cafetero; gate de completitud VERIFIED/PARTIAL/MISSING (teléfono + dirección + categoría); reporte Markdown; salida JSON opcional; modo `--dry-run` y `--builtin`
+- `docs/PRECIOS_PAQUETES.md`: reescrito v4.72.0 — precios USD→COP; tiers desde pricing.yaml; paquetes Express/Starter/Professional/Enterprise; política de coherencia de pricing (FASE-P0-A)
+- `evidence/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md`: ADR $420K→$280K (benchmark master v1.1.0, sección 2.8); Express $120K citado desde pricing.yaml (sección 2.5); nota ZIP actual (sección 1)
+- `evidence/Recomendaciones/PROMPT_INGRESOS.md`: ADR $420K→$280K con fuente citada
+- `evidence/Recomendaciones/PROMPT_INGRESOS_README.md`: ADR $420K→$280K con referencia a master v1.1.0
+
+#### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `scripts/preload_prospects_gbp.py` | Script de pre-carga GBP batch con gate de completitud (F9) |
+
+#### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/scrapers/google_places_client.py` | +search_by_name(): Places API searchText por nombre+ciudad |
+| `docs/PRECIOS_PAQUETES.md` | Reescrito v4.72.0: USD→COP, pricing.yaml como fuente única |
+| `evidence/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md` | ADR $420K→$280K; Express desde pricing.yaml; nota ZIP actual |
+| `evidence/Recomendaciones/PROMPT_INGRESOS.md` | ADR $420K→$280K |
+| `evidence/Recomendaciones/PROMPT_INGRESOS_README.md` | ADR $420K→$280K; referencia master v1.1.0 |
+
+#### Tests
+Script `preload_prospects_gbp.py --dry-run` ejecuta sin error (30 prospectos listados). Suite `tests/scrapers/` 34 passed, 4 skipped, 0 fallos nuevos. `run_all_validations.py --quick`: 6/6 PASS.
+
+---
+
 ## [4.71.0] — 2026-08-05 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 ### Objetivo

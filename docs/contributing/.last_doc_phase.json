@@ -237,5 +237,10 @@
   "modules/orchestration_v4/onboarding_controller.py": "FASE-P1-C",
   "modules/data_validation/cross_validator.py": "FASE-P1-D",
   "modules/asset_generation/pain_ledger.py": "FASE-P1-D",
-  "modules/orchestration/post_orchestrator_reconciler.py": "FASE-P1-D"
+  "modules/orchestration/post_orchestrator_reconciler.py": "FASE-P1-D",
+  "modules/scrapers/google_places_client.py": "FASE-P2-B",
+  "docs/PRECIOS_PAQUETES.md": "FASE-P2-B",
+  "evidence/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md": "FASE-P2-B",
+  "evidence/Recomendaciones/PROMPT_INGRESOS.md": "FASE-P2-B",
+  "evidence/Recomendaciones/PROMPT_INGRESOS_README.md": "FASE-P2-B"
 }

@@ -26,7 +26,7 @@
 | 6 | FASE-P1-C — Cableado benchmark→hook + cap de plausibilidad + trazabilidad Hook→Express | F6, F11 | ✅ | 2026-08-21 | ~30 | DIRECTO; cableado D4 antes del cap; 27 tests nuevos (14 cap/cableado + 13 trazabilidad); suite orchestration_v4 66→93 passed; cap ratio fijo 5.0 configurable (D7); 0 regresiones |
 | 7 | **FASE-P1-D — Verdad del sitio vivo (sedes + site_verification)** | F12, F13 | ✅ | 2026-08-21 | ~35 | **MÁXIMA COMPLEJIDAD**, DIRECTO; 21 tests nuevos (11 F12 multi-sede + 10 F13 propagación); firma backwards-compatible; D8 (VERIFIED_IN_SITE primera clase); 0 regresiones |
 | 8 | FASE-P2-A — Coherence acepta "verificado en producción" + occupancy label | F14, F8 | ✅ | 2026-08-21 | ~30 | DIRECTO; 11 tests nuevos F14; promised_assets_exist acepta site_presence_report; F8 auditoría sin rutas residuales; 0 regresiones |
-| 9 | FASE-P2-B — Pre-carga GBP de prospectos + higiene docs comerciales | F9, F10 | ⬜ | — | — | DIRECTO |
+| 9 | FASE-P2-B — Pre-carga GBP de prospectos + higiene docs comerciales | F9, F10 | ✅ | 2026-08-21 | ~30 | DIRECTO; script preload_prospects_gbp.py (dry-run OK); search_by_name en GooglePlacesClient; 4 docs higienizadas (pricing/benchmark); scrapers 34 passed 0 nuevos fallos; validaciones 6/6 PASS |
 
 ## Etapa 2b — Verificación E2E
 

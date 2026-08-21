@@ -26,7 +26,7 @@ No es un prompt genérico de "¿cómo monetizo mi SaaS?". Está calibrado con da
 | Dato en el contexto | De dónde sale |
 |---------------------|---------------|
 | Nicho: boutique 10-25 hab, Eje Cafetero | `data/benchmarks/regional_adr_2026.json` |
-| ADR $420K, ocupación 51.2% | `regional_adr_2026.json` § eje_cafetero.boutique_10_25 |
+| ADR $280K, ocupación 51.2% | `regional_adr_2026.json` § eje_cafetero.boutique_10_25 (master v1.1.0, FASE-P1-A) |
 | Caso Luxorhotel: $3.7M fuga, ROI 2.10X, $400K+$2.5M | `output/v4_complete/01_DIAGNOSTICO...` + `02_PROPUESTA_COMERCIAL...` |
 | Competencia: GEO 77 vs 61, SEO 59 vs 25 | `01_DIAGNOSTICO...` § Score de Visibilidad Digital |
 | Propuesta de valor: "Nosotros implementamos, usted atiende huéspedes" | `02_PROPUESTA_COMERCIAL...` § LA SOLUCIÓN |

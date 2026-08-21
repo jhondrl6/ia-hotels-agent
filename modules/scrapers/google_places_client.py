@@ -256,6 +256,113 @@ class GooglePlacesClient:
             search_query=search_query
         )
 
+    def search_by_name(
+        self,
+        name: str,
+        city: str = "",
+        category: str = "lodging"
+    ) -> Optional[PlaceData]:
+        """
+        Busca un lugar por nombre y ciudad usando Places API (New) searchText.
+
+        Args:
+            name: Nombre del negocio/hotel
+            city: Ciudad o municipio
+            category: Tipo de lugar (default: lodging)
+
+        Returns:
+            PlaceData del primer resultado o PlaceData con error
+        """
+        query = f"{name} {city}".strip()
+        search_query = f"text:{query}"
+
+        if not self.is_available:
+            return self._create_error_place(
+                error_type="NO_API_KEY",
+                error_message="Google Places API key not configured",
+                search_query=search_query
+            )
+
+        self._rate_limit()
+        self._request_count += 1
+
+        try:
+            url = f"{self.BASE_URL}/places:searchText"
+            headers = {
+                'Content-Type': 'application/json',
+                'X-Goog-Api-Key': self.api_key,
+                'X-Goog-FieldMask': (
+                    'places.displayName,places.rating,places.userRatingCount,'
+                    'places.location,places.id,places.photos,'
+                    'places.regularOpeningHours,places.websiteUri,'
+                    'places.nationalPhoneNumber,places.formattedAddress,'
+                    'places.addressComponents,places.primaryTypeDisplayName'
+                )
+            }
+            payload = {
+                'textQuery': query,
+                'maxResultCount': 3
+            }
+            if category:
+                payload['includedType'] = category
+
+            response = requests.post(url, json=payload, headers=headers, timeout=15)
+
+            if response.status_code == 429:
+                return self._create_error_place(
+                    error_type="QUOTA_EXCEEDED",
+                    error_message="API quota exceeded",
+                    search_query=search_query
+                )
+            if response.status_code == 403:
+                return self._create_error_place(
+                    error_type="API_ERROR",
+                    error_message="API key invalid or restricted",
+                    search_query=search_query
+                )
+
+            response.raise_for_status()
+            data = response.json()
+            places_raw = data.get('places', [])
+
+            if not places_raw:
+                return self._create_error_place(
+                    error_type="ZERO_RESULTS",
+                    error_message=f"No results for '{query}'",
+                    search_query=search_query
+                )
+
+            place_data = self._parse_place_response(places_raw[0])
+            if place_data:
+                place_data.search_query = search_query
+                self._cache_place(place_data)
+                return place_data
+
+            return self._create_error_place(
+                error_type="PARSE_ERROR",
+                error_message=f"Could not parse result for '{query}'",
+                search_query=search_query
+            )
+
+        except requests.Timeout:
+            return self._create_error_place(
+                error_type="TIMEOUT",
+                error_message="Request timed out after 15 seconds",
+                search_query=search_query
+            )
+        except requests.RequestException as e:
+            return self._create_error_place(
+                error_type="API_ERROR",
+                error_message=f"Request error: {str(e)}",
+                search_query=search_query
+            )
+        except Exception as e:
+            return self._create_error_place(
+                error_type="API_ERROR",
+                error_message=f"Unexpected error: {str(e)}",
+                search_query=search_query
+            )
+
     def search_nearby_lodging(
         self,
         lat: float,

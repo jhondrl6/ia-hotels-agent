@@ -22,7 +22,7 @@ FASE-P1-D (verdad sitio vivo) ✅  [independiente de P1-A/B/C]
     │
     ├──→ FASE-P2-A (coherence acepta "verificado en producción"; occupancy label) ✅
     │
-FASE-P2-B (prospectos + docs)  [independiente; docs de pricing requieren P0-A ✅]
+FASE-P2-B (prospectos + docs) ✅  [independiente; docs de pricing requieren P0-A ✅]
     │
     ▼
 FASE-E2E-ZIONE (requiere: P0-A,B,C + P1-A,B,C,D + P2-A,B todas ✅)

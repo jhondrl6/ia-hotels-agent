@@ -28,6 +28,11 @@ Requiere equipo: Diseño pro (opcional, Canva basta)
 | `02_PROPUESTA_COMERCIAL_20260707_121034.md` | 343 | Tablas con "Schema Hotel", "OpenGraph", "FAQ Schema" — ruido técnico |
 | `luxorhotel_*.zip` | 110 archivos | El hotelero nunca abre un ZIP |
 
+> **Nota de vigencia (FASE-P2-B):** la estructura del ZIP actual es limpia y bien organizada:
+> `deliveries/{hotel_id}_{date}.zip` contiene `README_DELIVERY.md`, `MANIFEST.json`,
+> `IMPLEMENTATION_ORDER.md` + assets. Ver `modules/delivery/delivery_packager.py`.
+> El problema de fondo sigue siendo el mismo: el hotelero no abre ZIPs tecnicos.
+
 > **Nota:** la propuesta comercial YA está bien redactada en español llano ("Nosotros hacemos todo. Usted solo atiende huéspedes.") pero está enterrada entre 343 líneas de markdown y mezclada con detalles técnicos.
 
 ### Lo que el hotelero necesita
@@ -116,7 +121,7 @@ Verificado contra los archivos reales del caso Luxorhotel. **Estos son los ÚNIC
 | JSON | `pricing.tier` | `"boutique"` | interno |
 | Resultados.ini § P3 | Express | `$120.000 COP` | `{{PRECIO_EXPRESS}}` (constante del plan de negocio) |
 
-> El precio de Diagnóstico Express $120K NO está en el output de v4_complete. Es dato del plan de negocio (`output/Recomendaciones/Resultados.ini` § P3). Decisión: el template lleva el $120K como constante hardcoded en la sección CTA, con un comentario explícito "valor del plan de negocio, no del diagnóstico individual". Si el plan cambia, se edita el template una vez.
+> El precio de Diagnóstico Express $120K proviene de `config/pricing.yaml` (`express_price: 120000`, FASE-P0-A como fuente unica). El template lleva el $120K como constante, con este comentario de trazabilidad. Si pricing.yaml cambia, se edita el template una vez.
 
 ### 2.6 Datos que NINGUNA fuente contiene (prohibido usar)
 
@@ -165,10 +170,16 @@ Si en el futuro el template se reutiliza para el PDF del Express (5 páginas, po
 
 ### 2.8 Datos que vienen del benchmark regional (uso limitado)
 
-`data/benchmarks/regional_adr_2026.json` provee:
-- ADR Eje Cafetero boutique: `$420.000` — `{{ADR_REGION}}`
+`data/benchmarks/regional_adr_2026.json` (master, FASE-P1-A) provee:
+- ADR Eje Cafetero boutique (10-25 hab): `$280.000 COP` — `{{ADR_REGION}}`
+- Occupancy regional Eje Cafetero: `51.2%`
 
-> Este archivo se autodefine como `valid_for_exct_projection: false` y `epistemic_status: regional_benchmark`. Se puede usar en el PDF SOLO como contexto regional, NO como afirmación del hotel individual. El ADR regional ya aparece en el 02_PROPUESTA (línea 36).
+> **Nota de vigencia (FASE-P2-B):** este archivo se autodefine como `valid_for_exact_projection: false`
+> y `epistemic_status: regional_benchmark`. Version anterior citaba $420K (obsoleto; el benchmark
+> maestro v1.1.0 calibro $280K vs Don Alfonso $330K y Castilla Real $282K, excluyendo
+> Luxor $200K por hotel de paso). Verificar siempre contra el JSON master.
+> Se puede usar en el PDF SOLO como contexto regional, NO como afirmacion del hotel individual.
+> El ADR regional ya aparece en el 02_PROPUESTA (linea 36).
 
 ---
 
