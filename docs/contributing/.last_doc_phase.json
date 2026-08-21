@@ -54,7 +54,7 @@
   "modules/utils/benchmarks.py": "FASE-P1-B",
   "modules/financial_engine/opportunity_scorer.py": "PROSPECCION-II",
   "tests/commercial_documents/test_pain_solution_mapper.py": "FASE-D",
-  "modules/commercial_documents/coherence_validator.py": "FASE-2",
+  "modules/commercial_documents/coherence_validator.py": "FASE-P2-A",
   "modules/scrapers/web_scraper.py": "FASE-E",
   "modules/financial_engine/scenario_calculator.py": "FASE-P1-B",
   "tests/financial_engine/test_scenario_calculator.py": "FASE-5",

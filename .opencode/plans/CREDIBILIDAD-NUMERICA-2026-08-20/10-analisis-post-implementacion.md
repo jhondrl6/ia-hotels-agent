@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CREDIBILIDAD-NUMERICA-2026-08-20
 
-> **Estado**: 7/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅, P1-C ✅, P1-D ✅) — 4 restantes
+> **Estado**: 8/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅, P1-C ✅, P1-D ✅, P2-A ✅) — 3 restantes
 > **Plan**: CREDIBILIDAD-NUMERICA-2026-08-20
 > **Versión objetivo**: v4.72.0
 > **Creado DESDE LA CONCEPCIÓN** (phased_project_executor v2.15.0): cada fase agrega lecciones aquí al cerrar sesión.
@@ -16,7 +16,7 @@
 | FASE-P1-B | 2026-08-21 | ✅ | ~45 | No (DIRECTO) | 24 tests nuevos (12 F3 + 12 F5); comisión OTA parametrizada en 5 sitios + 3 archivos de tests actualizados; 0 regresiones vs baseline (148 auditors, 10 preexistentes financial_engine) |
 | FASE-P1-C | 2026-08-21 | ✅ | ~30 | No | 27 tests nuevos (14 F6/D4 + 13 F11); benchmark master cableado al hook; cap plausibilidad 5x (D7); trazabilidad Hook→Express; suite orchestration_v4 66→93; validaciones --quick 6/6 PASS |
 | FASE-P1-D | 2026-08-21 | ✅ | ~35 | No (DIRECTO) | 21 tests nuevos (11 F12 multi-sede + 10 F13 propagación); firma backwards-compatible en validate_whatsapp; D8 (VERIFIED_IN_SITE primera clase); suites data_validation+asset_generation 603 passed; suites ampliadas: solo los 12 fallos preexistentes de la línea base; 0 regresiones |
-| FASE-P2-A | — | ⬜ | — | No | |
+| FASE-P2-A | 2026-08-21 | ✅ | ~30 | No (DIRECTO) | 11 tests nuevos F14; coherence acepta site_presence_report; F8 auditoría sin rutas residuales; validaciones --quick 6/6 PASS; 0 regresiones |
 | FASE-P2-B | — | ⬜ | — | No | |
 | FASE-E2E-ZIONE | — | ⬜ | — | Sí (v4complete) | |
 | FASE-RELEASE-4.72.0 | — | ⬜ | — | Opcional | |
@@ -110,6 +110,14 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | L20 | El matching label↔gbp_location por substring completo falla con direcciones reales: "Pereira Contact" no es substring de "Cra 13 # 5-20, Pereira, Risaralda". Matching por tokens (palabras ≥4 chars del label contenidas en gbp_location) resuelve sin falsos positivos de palabras cortas ("Sede", "Tel"). | INCLUIR: matching de ubicaciones entre texto libre y labels DOM SIEMPRE por tokens con longitud mínima, nunca substring completo |
 | L21 | F13 se resolvió extendiendo la taxonomía de status (VERIFIED_IN_SITE) + agregándolo al whitelist de justificación del coverage gate (_JUSTIFIED_STATUSES), sin alterar la fórmula "cubiertas + justificadas == detectadas". El reconciler solo necesitó una línea de preservación. Extender estados existentes es más barato y auditable que crear lógica paralela de "brechas ignoradas". | INCLUIR: para nuevos estados de verdad, preferir extensión de taxonomía + whitelist de gates sobre lógica paralela; verificar SIEMPRE que los reconciliadores intermedios preserven el nuevo estado |
 | L22 | La firma backwards-compatible (parámetros opcionales web_alternates/gbp_location) permitió que `two_phase_flow._validate_all_inputs` quedara intacto (no tiene DOM disponible) y solo se enriquecieran los callers con acceso al HTML (v4_comprehensive, main.py). Mono-sede conserva comportamiento legacy exacto. | INCLUIR: al cambiar firmas con múltiples callers, parámetros opcionales + enriquecer solo callers con datos disponibles preserva compatibilidad sin branch masivo |
+
+#### FASE-P2-A
+
+| # | Lección | Pertinencia |
+|---|---------|-------------|
+| L23 | `_extract_verified_in_production_types` extrae asset_types del site_presence_report canónico (normalize_site_presence) iterando sobre "results" + top-level keys. El dict canónico tiene la data duplicada en ambos niveles, y algunos callers pasan solo uno. Iterar sobre ambos garantiza robustez. | INCLUIR: al consumir dicts canónicos de normalize_site_presence, SIEMPRE verificar ambos niveles (results + top-level keys) para no perder datos |
+| L24 | El test C5 (coherence ↔ gate alignment) verifica el contrato end-to-end: mismo input → misma decisión en coherence_validator._check_promised_assets_exist y proposal_asset_alignment.verify_proposal_asset_alignment. Sin este test de integración, la alineación semántica entre ambos validadores sería frágil a cambios independientes. | INCLUIR: cuando dos validadores deben producir la misma señal sobre el mismo input, SIEMPRE escribir un test de alineación end-to-end |
+| L25 | La auditoría F8 (occupancy provenance) reveló una discrepancia semántica menor en main.py L1854: el payload del harness usa `adr_from_onboarding > 0` para etiquetar occupancy_source, pero el valor real del occupancy_rate viene de `reservas_mes`. No es un bug porque el valor es correcto, pero el label en el payload no refleja la fuente real. El label canónico (`_occupancy_source`) usado en todas partes es correcto. | INCLUIR: al auditar provenance, verificar SIEMPRE que el label y el valor provengan de la misma condición; discrepancias semánticas pueden confundir debugging futuro |
 
 **T0b: Desviación benchmark vs observaciones Tier A (Eje Cafetero)**
 

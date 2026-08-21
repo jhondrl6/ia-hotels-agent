@@ -221,6 +221,29 @@ Restaurar el estado de verdad del sitio vivo como fuente única en dos frentes: 
 
 ---
 
+### FASE-P2-A — Coherence acepta "verificado en producción" + occupancy label (F14+F8)
+
+#### Objetivo
+Alinear el coherence validator con el gate `proposal_asset_alignment` para que ambos acepten el estado "verificado en producción" sobre `promised_assets_exist` (F14), eliminando la contradicción PASSED/FAILED sobre el mismo asset. Verificar que no existan rutas residuales de etiquetado de occupancy (F8 residual).
+
+#### Cambios
+- `modules/commercial_documents/coherence_validator.py`: nuevo helper `_extract_verified_in_production_types(site_presence_report)` extrae asset_types con status "exists"/"redundant" + site_verified=True del dict canónico de `normalize_site_presence`; `_check_promised_assets_exist` acepta `site_presence_report` opcional; assets verificados en producción NO se cuentan como missing; `validate()` cablea `site_presence_report` al check; mensaje enriquecido con `production_only_types`
+
+#### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/commercial_documents/test_promised_assets_production.py` | 11 tests F14: C1 (verified→PASSED), C2 (missing→FAILED, gate no debilitado), C3 (mix→PASSED), C4 (legacy preservado), C5 (coherence↔gate alignment E2E), edge cases (empty report, verification_failed, site_verified=False) |
+
+#### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/coherence_validator.py` | +_extract_verified_in_production_types; _check_promised_assets_exist acepta site_presence_report; validate() cablea site_presence_report al check |
+
+#### Tests
++11 tests nuevos (TestPromisedAssetsProductionVerification). Suites commercial_documents + financial_engine: 12 + 11 fallos preexistentes de la línea base, 0 regresiones. `run_all_validations.py --quick`: 6/6 PASS.
+
+---
+
 ## [4.71.0] — 2026-08-05 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 ### Objetivo

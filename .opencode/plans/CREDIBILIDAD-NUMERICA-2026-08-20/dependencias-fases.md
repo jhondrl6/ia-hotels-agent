@@ -20,7 +20,7 @@ FASE-P1-A (benchmark maestro) ✅
     │
 FASE-P1-D (verdad sitio vivo) ✅  [independiente de P1-A/B/C]
     │
-    ├──→ FASE-P2-A (coherence acepta "verificado en producción"; occupancy label)
+    ├──→ FASE-P2-A (coherence acepta "verificado en producción"; occupancy label) ✅
     │
 FASE-P2-B (prospectos + docs)  [independiente; docs de pricing requieren P0-A ✅]
     │

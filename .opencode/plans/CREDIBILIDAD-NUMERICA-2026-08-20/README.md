@@ -34,7 +34,7 @@ múltiples fuentes no sincronizadas. Cada fase restaura una fuente única para u
 | 5 | `FASE-P1-B` Fallback región + comisión OTA | F3, F5 | **DELEGABLE** (2 tracks independientes) | Sí | ✅ 2026-08-21 |
 | 6 | `FASE-P1-C` Cap plausibilidad + trazabilidad rango | F6, F11 | DIRECTO (decisión arquitectónica) | No | ✅ 2026-08-21 |
 | 7 | `FASE-P1-D` Verdad del sitio vivo | F12, F13 | DIRECTO — **FASE DE MAYOR COMPLEJIDAD TÉCNICA** | No | ✅ 2026-08-21 |
-| 8 | `FASE-P2-A` Coherence vs gate + occupancy label | F14, F8 residual | DIRECTO | No | Nueva |
+| 8 | `FASE-P2-A` Coherence vs gate + occupancy label | F14, F8 residual | DIRECTO | No | ✅ 2026-08-21 |
 | 9 | `FASE-P2-B` Pre-carga prospectos + higiene docs | F9, F10 | DIRECTO | No | Nueva |
 | 10 | `FASE-E2E-ZIONE` v4complete Zi One Luxury | Verificación E2E de todos los fixes | **delegate_task para v4complete** (timeout=900) | Sí (obligatorio) | Nueva |
 | 11 | `FASE-RELEASE-4.72.0` Cierre oficial | — | **DELEGABLE** (solo docs/scripts) | Sí (opcional) | Nueva |

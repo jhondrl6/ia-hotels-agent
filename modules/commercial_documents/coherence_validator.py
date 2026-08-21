@@ -159,7 +159,7 @@ class CoherenceValidator:
         self.checks.append(self._check_financial_data_validated(proposal, validation_summary))
         self.checks.append(self._check_whatsapp_verified(assets, validation_summary, whatsapp_html_detected, site_presence_report))
         self.checks.append(self._check_price_matches_pain(proposal, diagnostic))
-        self.checks.append(self._check_promised_assets_exist(assets, diagnostic, generated_assets))
+        self.checks.append(self._check_promised_assets_exist(assets, diagnostic, generated_assets, site_presence_report))
         
         # Calculate weighted overall score
         total_weight = sum(self.CHECK_WEIGHTS.get(c.name, 1.0) for c in self.checks)
@@ -528,11 +528,65 @@ class CoherenceValidator:
             severity=severity
         )
     
+    def _extract_verified_in_production_types(
+        self,
+        site_presence_report: Optional[Dict[str, Any]]
+    ) -> set:
+        """FASE-P2-A (F14): extrae asset_types verificados en producción.
+
+        Un asset se considera "verificado en producción" cuando el
+        site_presence_report (dict canónico de normalize_site_presence)
+        confirma status "exists" o "redundant" con site_verified=True.
+
+        Estos assets NO deben contarse como "missing" en promised_assets_exist
+        aunque no tengan archivo físico generado, porque el sitio vivo ya los
+        tiene implementados — coherente con el gate proposal_asset_alignment
+        que los marca como "present_in_production".
+
+        Args:
+            site_presence_report: Dict canónico con resultados de SitePresenceChecker.
+
+        Returns:
+            Set de asset_type verificados en producción.
+        """
+        if not site_presence_report:
+            return set()
+
+        verified_types: set = set()
+        # El dict canónico tiene "results" + keys de asset_type en top-level
+        results = site_presence_report.get("results", {}) or {}
+
+        # Iterar sobre ambos: top-level keys y "results" (pueden diferir)
+        all_keys = set(results.keys())
+        for key in site_presence_report:
+            if key not in ("results", "site_url", "checked_at",
+                           "site_reachable", "verification_errors",
+                           "presence_status"):
+                all_keys.add(key)
+
+        for asset_type in all_keys:
+            presence = results.get(asset_type) or site_presence_report.get(asset_type)
+            if not isinstance(presence, dict):
+                continue
+
+            status = str(presence.get("status", "")).lower()
+            site_verified = presence.get("site_verified", False)
+
+            # Normalizar enum value si viene como PresenceStatus.value
+            if hasattr(status, 'value'):
+                status = str(status.value).lower()
+
+            if status in ("exists", "redundant") and site_verified:
+                verified_types.add(asset_type)
+
+        return verified_types
+
     def _check_promised_assets_exist(
         self,
         assets: List[AssetSpec],
         diagnostic: DiagnosticDocument,
-        generated_assets: Optional[Dict[str, Any]] = None
+        generated_assets: Optional[Dict[str, Any]] = None,
+        site_presence_report: Optional[Dict[str, Any]] = None
     ) -> CoherenceCheck:
         """Valida que todos los assets prometidos existen en el generador.
 
@@ -546,6 +600,12 @@ class CoherenceValidator:
         to ensure all 7 promised services have implemented assets. This unifies
         the baseline with proposal_asset_alignment_gate (Gate 9).
 
+        FASE-P2-A (F14): If site_presence_report confirms an asset exists in
+        production (status "exists"/"redundant" + site_verified=True), it is
+        treated as "present" even without a generated file. This aligns
+        coherence with proposal_asset_alignment_gate, which already accepts
+        "present_in_production" status.
+
         Both validators now agree on "what was promised":
         - coherence_validator: checks asset types from diagnostic + PROPOSAL_SERVICE_TO_ASSET
         - proposal_asset_alignment_gate: checks services from PROPOSAL_SERVICE_TO_ASSET
@@ -553,8 +613,14 @@ class CoherenceValidator:
         from ..asset_generation.asset_catalog import is_asset_implemented
         from ..asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
 
+        # FASE-P2-A (F14): asset_types verificados en el sitio vivo
+        verified_in_production = self._extract_verified_in_production_types(
+            site_presence_report
+        )
+
         promised_types = {a.asset_type for a in assets}
         missing_types = []
+        production_only_types = []  # F14: track for message clarity
         
         # H6 FIX: Use generated_assets as source of truth when available
         # For pre-gen, generated_assets=None -> use static catalog (legacy)
@@ -564,17 +630,27 @@ class CoherenceValidator:
         # We check: asset_type exists in dict AND can_use=True to consider it present.
         if generated_assets is not None:
             # Post-generation: each promised asset type must be in generated_assets with can_use=True
+            # FASE-P2-A (F14): OR verified in production via site_presence_report
             for asset_type in promised_types:
                 gen_info = generated_assets.get(asset_type, {})
                 # can_use must be explicitly True (not just dict existing)
-                if not gen_info.get('can_use', False):
-                    missing_types.append(asset_type)
+                if gen_info.get('can_use', False):
+                    continue
+                # F14: asset verificado en producción no es "missing"
+                if asset_type in verified_in_production:
+                    production_only_types.append(asset_type)
+                    continue
+                missing_types.append(asset_type)
         else:
             # Pre-generation fallback: use static catalog
-            missing_types = [
-                t for t in promised_types
-                if not is_asset_implemented(t)
-            ]
+            # F14: still accept site presence as valid
+            for t in promised_types:
+                if is_asset_implemented(t):
+                    continue
+                if t in verified_in_production:
+                    production_only_types.append(t)
+                    continue
+                missing_types.append(t)
 
         # FASE-SOL2-B: Cross-check all PROPOSAL_SERVICE_TO_ASSET entries
         # Ensure every promised service maps to an implemented asset.
@@ -587,6 +663,9 @@ class CoherenceValidator:
             # Legacy pre-generation check: use static catalog for PROPOSAL_SERVICE_TO_ASSET
             for service_name, asset_type in PROPOSAL_SERVICE_TO_ASSET.items():
                 if not is_asset_implemented(asset_type):
+                    # F14: accept production-verified assets here too
+                    if asset_type in verified_in_production:
+                        continue
                     missing_service_assets.append(f"{service_name}→{asset_type}")
 
         # SOL-1: Deduplicate — if an asset_type appears in both lists,
@@ -594,29 +673,37 @@ class CoherenceValidator:
         # from "service→asset" entries to avoid false duplicates.
         service_asset_types = set()
         for entry in missing_service_assets:
-            if "→" in entry:
-                service_asset_types.add(entry.split("→")[1])
+            if "\u2192" in entry:
+                service_asset_types.add(entry.split("\u2192")[1])
         # Only include from missing_types if not also in missing_service_assets
         deduped_missing_types = [t for t in missing_types if t not in service_asset_types]
         all_missing = deduped_missing_types + missing_service_assets
         if not all_missing:
+            # F14: enrich message with production-verified info
+            prod_note = ""
+            if production_only_types:
+                prod_note = f" (incluye {len(production_only_types)} verificado(s) en producción: {', '.join(sorted(production_only_types))})"
             return CoherenceCheck(
                 name="promised_assets_exist",
                 passed=True,
                 score=1.0,
-                message=f"Todos los assets prometidos están implementados ({len(PROPOSAL_SERVICE_TO_ASSET)} servicios verificados via PROPOSAL_SERVICE_TO_ASSET)",
+                message=f"Todos los assets prometidos están implementados ({len(PROPOSAL_SERVICE_TO_ASSET)} servicios verificados via PROPOSAL_SERVICE_TO_ASSET){prod_note}",
                 severity="info"
             )
 
         # Calcular score basado en % de assets disponibles
         total_checked = len(promised_types | set(PROPOSAL_SERVICE_TO_ASSET.values()))
-        score = (total_checked - len(set(all_missing))) / total_checked if total_checked else 1.0
+        # F14: production-verified assets count as present for scoring
+        effective_present = total_checked - len(set(all_missing))
+        score = effective_present / total_checked if total_checked else 1.0
 
         msg_parts = []
         if missing_types:
             msg_parts.append(f"Assets no implementados: {', '.join(missing_types)}")
         if missing_service_assets:
             msg_parts.append(f"Servicios sin asset implementado: {', '.join(missing_service_assets)}")
+        if production_only_types:
+            msg_parts.append(f"Verificados en producción (sin archivo): {', '.join(sorted(production_only_types))}")
 
         return CoherenceCheck(
             name="promised_assets_exist",

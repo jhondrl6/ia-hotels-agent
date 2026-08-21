@@ -154,6 +154,28 @@
 
 ---
 
+### Notas de Cambios v4.72.0-WIP — FASE-P2-A: Coherence acepta "verificado en producción" + occupancy label
+
+**Fecha:** 2026-08-21
+
+**Resumen**: Fix F14 — el coherence validator ahora acepta assets "verificados en producción" (status "exists"/"redundant" + site_verified=True en el site_presence_report canónico) como presentes, eliminando la contradicción PASSED/FAILED sobre el mismo asset entre coherence y gate `proposal_asset_alignment`. Nuevo helper `_extract_verified_in_production_types` extrae asset_types del dict canónico. Fix F8 residual — auditoría de provenance de occupancy: sin rutas residuales, todas las rutas de inyección etiquetan correctamente (onboarding > regional > default).
+
+**Módulos afectados**: `modules/commercial_documents/coherence_validator.py`
+
+**Problema**: F14 — tres componentes discrepan sobre `whatsapp_button`: coherence post-generación = FAILED (busca archivo físico), gate_report `proposal_asset_alignment` = PASSED ("verified in production"), pain_ledger = DETECTED HIGH. Causa raíz: `promised_assets_exist` del coherence validator no contemplaba el estado "existe en producción sin archivo" que el gate sí contempla. F8 residual — verificar que no existan rutas que etiqueten mal la provenance de occupancy.
+
+**Solución**: F14 — `_check_promised_assets_exist` acepta `site_presence_report` opcional; `_extract_verified_in_production_types` itera sobre "results" + top-level keys del dict canónico; assets con status "exists"/"redundant" + site_verified=True no se cuentan como missing; `validate()` cablea `site_presence_report` al check; mensaje enriquecido con production_only_types. F8 — auditoría completa de 8 sitios en main.py + 4 módulos del financial_engine + v4_diagnostic_generator: todos etiquetan correctamente.
+
+**⚠️ Cambio de comportamiento documentado**:
+- Coherence y gate `proposal_asset_alignment` ahora producen la MISMA señal sobre assets verificados en producción (ambos PASSED)
+- Assets prometidos sin archivo Y sin verificación en producción siguen fallando (gate no debilitado)
+
+**Backwards compatibility**: `_check_promised_assets_exist` mantiene firma original (nuevo parámetro opcional `site_presence_report`). Legacy behavior preservado cuando `site_presence_report=None`.
+
+**Tests**: +11 tests nuevos (TestPromisedAssetsProductionVerification). Suites commercial_documents + financial_engine: 12 + 11 fallos preexistentes de la línea base — 0 regresiones.
+
+---
+
 ### Notas de Cambios v4.71.0 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 **Fecha:** 2026-08-05

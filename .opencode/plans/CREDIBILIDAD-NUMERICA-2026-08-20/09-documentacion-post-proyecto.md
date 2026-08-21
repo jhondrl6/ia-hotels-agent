@@ -22,7 +22,7 @@
 | Verdad del sitio vivo (F12+F13, D8) | data_validation, auditors, asset_generation, orchestration, quality_gates, commercial_documents | F12: validate_whatsapp con mapeo número→sede (web_alternates + gbp_location, firma backwards-compatible); scanner extrae todos los candidatos wa.me/tel con label de sede; GBP coincide con algún número web → VERIFIED, multi-sede sin mapeo → ESTIMATED, conflicto real misma sede → CONFLICT. F13: status VERIFIED_IN_SITE de primera clase en pain_ledger (apply_site_verification); reconciler lo preserva; coverage gate lo justifica (_JUSTIFIED_STATUSES); diagnóstico filtra brechas verificadas en producción | FASE-P1-D |
 | Cableado benchmark master al hook (F6 causa raíz, D4) | orchestration_v4 | OnboardingController carga el master P1-A (regional_adr_2026.json) y lo pasa a TwoPhaseOrchestrator; normalización de keys de región (aliases del resolver); región sin match cae al "default" del master | FASE-P1-C |
 | Cap de plausibilidad del rango del hook (F6, D7) | orchestration_v4, config | Ratio fijo max/min configurable (hook_range_max_ratio: 5.0 en financial_defaults.yaml); se aplica en la generación del rango del hook, no en escenarios; el extremo optimista se trunca sobre el piso conservador | FASE-P1-C |
-| Trazabilidad del rango Hook→Express (F11) | orchestration_v4, commercial_documents | HookRangeTraceability + validate_hook_range_traceability(): verifica la cifra Express contra el corredor prometido y genera narrativa de la delta benchmark→dato real; formato markdown para output Express; check advisory corredor en validate_data del hook PDF (consumo de fuga_minima/fuga_maxima); disclaimer declara el rango como promesa falsable | FASE-P1-C |
+| Coherence acepta "verificado en producción" (F14) | commercial_documents | `_check_promised_assets_exist` acepta site_presence_report: assets con status "exists"/"redundant" + site_verified=True NO se cuentan como missing; nuevo helper `_extract_verified_in_production_types`; mensaje enriquecido con production_only_types; alineado con gate proposal_asset_alignment | FASE-P2-A |
 
 ## Sección D: Métricas Acumulativas
 
@@ -30,7 +30,7 @@
 |---------|-------|------|
 | Tests base al inicio del plan | 3,233 funciones / 261 archivos (v4.71.0) | Preparación |
 | Línea base de fallos preexistentes (suites tocadas) | 22 fallos: 12 commercial_documents + 10 financial_engine — evidence/BASELINE-TESTS-v4.71.0.txt | FASE-P0-A |
-| Tests nuevos acumulados | 116 (3 P0-A + 18 P0-B + 4 P0-C + 19 P1-A + 24 P1-B + 27 P1-C + 21 P1-D) | FASE-P1-D |
+| Tests nuevos acumulados | 127 (3 P0-A + 18 P0-B + 4 P0-C + 19 P1-A + 24 P1-B + 27 P1-C + 21 P1-D + 11 P2-A) | FASE-P2-A |
 | Coherence última corrida | 0.9237 (evidence/FASE-F, pre-plan) | Preparación |
 | Coherence E2E Zi One (post-plan) | (pendiente) | FASE-E2E-ZIONE |
 | Tiempo corrida con caches cálidos (C9) | (pendiente) | FASE-E2E-ZIONE |
@@ -91,4 +91,5 @@
 | `modules/quality_gates/publication_gates.py` | F13: VERIFIED_IN_SITE agregado a _JUSTIFIED_STATUSES del coverage gate (cubiertas + justificadas == detectadas) | FASE-P1-D |
 | `modules/commercial_documents/v4_diagnostic_generator.py` | F13: +_load_verified_in_site_pain_ids (pain_ledger_resolved.json con fallback pain_ledger.json); _identify_brechas filtra pains VERIFIED_IN_SITE; cache_key incluye verified_ids | FASE-P1-D |
 | `tests/data_validation/test_whatsapp_multisede.py` | NUEVO — 11 tests F12: caso Zione VERIFIED sin conflicto, degrade a ESTIMATED, conflicto real misma sede, legacy mono-sede, scanner con labels (fixture ZIONE_FOOTER_HTML) | FASE-P1-D |
-| `tests/asset_generation/test_site_verification_propagation.py` | NUEVO — 10 tests F13: exists→VERIFIED_IN_SITE LOW, not_exists→DETECTED, redundant→verified, unmapped intacto, noop sin reporte, reconciler preserva status, coverage gate justifica, diagnóstico carga/filtra | FASE-P1-D |
+| `modules/commercial_documents/coherence_validator.py` | F14: +_extract_verified_in_production_types (helper site_presence_report→set); _check_promised_assets_exist acepta site_presence_report (assets exists/redundant + site_verified → no missing); validate() cablea site_presence_report al check; mensaje enriquecido con production_only_types | FASE-P2-A |
+| `tests/commercial_documents/test_promised_assets_production.py` | NUEVO — 11 tests F14: C1 (verified→PASSED), C2 (missing→FAILED), C3 (mix→PASSED), C4 (legacy), C5 (coherence↔gate alignment), edge cases (empty/verification_failed/site_verified=False) | FASE-P2-A |
