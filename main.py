@@ -2045,7 +2045,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             adr_cop=adr_cop,
             occupancy_rate=occupancy_rate,
             direct_channel_percentage=direct_channel_pct,
-            ota_commission_rate=0.15,
+            ota_commission_rate=FinancialFactors().get_comision_ota()['base'],  # FIX V6: config en lugar de hardcode 0.15
             adr_source=adr_source,
             # S5b (FASE-F recovery): reutiliza el label ya resuelto en FASE 3
             # (onboarding > regional > default) en vez de recalcular la condición;
