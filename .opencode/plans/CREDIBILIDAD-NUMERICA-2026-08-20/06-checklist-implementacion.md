@@ -23,7 +23,7 @@
 | 3 | FASE-P0-C — Encoding utf-8 en writers de artefactos | F7 | ✅ | 2026-08-21 | ~15 | DIRECTO; 4 tests nuevos encoding; auditoría estática AST; 0 regresiones |
 | 4 | FASE-P1-A — Benchmark maestro único (incluye Bogotá) | F2, F4 | ✅ | 2026-08-21 | ~45 | DIRECTO; 19 tests nuevos benchmark_master; normalización regiones; script sync; 0 regresiones vs baseline (10 preexistentes) |
 | 5 | FASE-P1-B — Fallback región conservador + comisión OTA parametrizada | F3, F5 | ✅ | 2026-08-21 | ~45 | DIRECTO; 12 tests F3 + 12 tests F5; 0 regresiones vs baseline (148 auditors, 10 preexistentes financial_engine) |
-| 6 | FASE-P1-C — Cableado benchmark→hook + cap de plausibilidad + trazabilidad Hook→Express | F6, F11 | ⬜ | — | — | DIRECTO; el cableado (D4) va ANTES del cap |
+| 6 | FASE-P1-C — Cableado benchmark→hook + cap de plausibilidad + trazabilidad Hook→Express | F6, F11 | ✅ | 2026-08-21 | ~30 | DIRECTO; cableado D4 antes del cap; 27 tests nuevos (14 cap/cableado + 13 trazabilidad); suite orchestration_v4 66→93 passed; cap ratio fijo 5.0 configurable (D7); 0 regresiones |
 | 7 | **FASE-P1-D — Verdad del sitio vivo (sedes + site_verification)** | F12, F13 | ⬜ | — | — | **MÁXIMA COMPLEJIDAD**, DIRECTO |
 | 8 | FASE-P2-A — Coherence acepta "verificado en producción" + occupancy label | F14, F8 | ⬜ | — | — | DIRECTO; requiere P1-D ✅ |
 | 9 | FASE-P2-B — Pre-carga GBP de prospectos + higiene docs comerciales | F9, F10 | ⬜ | — | — | DIRECTO |

@@ -9,8 +9,106 @@ from enum import Enum
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Callable
 from datetime import datetime
-from .two_phase_flow import TwoPhaseOrchestrator, Phase1Result, Phase2Result, HotelInputs
+import json
+from pathlib import Path
+from .two_phase_flow import (
+    TwoPhaseOrchestrator,
+    Phase1Result,
+    Phase2Result,
+    HotelInputs,
+    HookRangeTraceability,
+)
 from ..utils.permission_mode import PermissionMode, DEFAULT_MODE
+
+# FASE-P1-C (T1, D4): master de benchmarks de FASE-P1-A (regional_adr_2026.json)
+BENCHMARK_MASTER_FILENAME = "regional_adr_2026.json"
+
+
+def _convert_master_region(region_data: Dict[str, Any]) -> Optional[Dict[str, float]]:
+    """Convierte una región del master (segmentos boutique/standard) al formato
+    plano min_/max_ que consume TwoPhaseOrchestrator._get_regional_benchmarks."""
+    adrs: List[float] = []
+    occs: List[float] = []
+    rooms_lows: List[int] = []
+    rooms_highs: List[int] = []
+
+    for segment_key in ("boutique_10_25", "standard_26_60"):
+        segment = region_data.get(segment_key) or {}
+        if segment.get("adr_cop") is not None:
+            adrs.append(float(segment["adr_cop"]))
+        if segment.get("occupancy_rate") is not None:
+            occs.append(float(segment["occupancy_rate"]))
+        rooms_range = segment.get("rooms_range")
+        if isinstance(rooms_range, list) and len(rooms_range) == 2:
+            rooms_lows.append(int(rooms_range[0]))
+            rooms_highs.append(int(rooms_range[1]))
+
+    # Región "default" del master usa la key "any"
+    if not adrs:
+        any_segment = region_data.get("any") or {}
+        if any_segment.get("adr_cop") is not None:
+            adrs.append(float(any_segment["adr_cop"]))
+        if any_segment.get("occupancy_rate") is not None:
+            occs.append(float(any_segment["occupancy_rate"]))
+
+    if not adrs:
+        return None
+
+    return {
+        "min_adr": min(adrs),
+        "max_adr": max(adrs),
+        "min_occupancy": min(occs) if occs else 0.40,
+        "max_occupancy": max(occs) if occs else 0.75,
+        # Sin rango de habitaciones en el master: defaults conservadores documentados
+        "min_rooms": min(rooms_lows) if rooms_lows else 15,
+        "max_rooms": max(rooms_highs) if rooms_highs else 50,
+    }
+
+
+def load_benchmark_master(master_path: Optional[str] = None) -> Dict[str, Any]:
+    """Carga el benchmark master de FASE-P1-A y lo convierte al formato que
+    consume TwoPhaseOrchestrator (plan_maestro_data).
+
+    Búsqueda: ruta explícita → data/benchmarks/ → ../data/benchmarks/.
+    Retorna {} si el master no está disponible: el orquestador cae a los
+    defaults conservadores documentados (comportamiento explícito, sin master).
+    """
+    candidates: List[Path] = []
+    if master_path:
+        candidates.append(Path(master_path))
+    else:
+        candidates.extend([
+            Path("data/benchmarks") / BENCHMARK_MASTER_FILENAME,
+            Path("../data/benchmarks") / BENCHMARK_MASTER_FILENAME,
+        ])
+
+    master: Dict[str, Any] = {}
+    for candidate in candidates:
+        if candidate.exists():
+            try:
+                with open(candidate, "r", encoding="utf-8") as f:
+                    master = json.load(f)
+                break
+            except (json.JSONDecodeError, IOError):
+                master = {}
+
+    if not master:
+        return {}
+
+    regions: Dict[str, Dict[str, float]] = {}
+    for region_code, region_data in master.get("regions", {}).items():
+        entry = _convert_master_region(region_data or {})
+        if entry:
+            regions[region_code] = entry
+
+    if not regions:
+        return {}
+
+    return {
+        "regions": regions,
+        "master_source": "regional_adr_2026",
+        "master_version": master.get("version"),
+    }
 
 
 class OnboardingPhase(Enum):
@@ -52,10 +150,15 @@ class OnboardingController:
         self,
         permission_mode: PermissionMode = DEFAULT_MODE,
         on_ask_permission: Optional[Callable] = None,
+        benchmark_master_path: Optional[str] = None,
     ):
         self.permission_mode = permission_mode
         self.on_ask_permission = on_ask_permission
+        # FASE-P1-C (T1, D4): cablear el benchmark master de P1-A al orquestador
+        # para que el rango del hook use valores calibrados, no defaults hardcodeados.
+        master_data = load_benchmark_master(benchmark_master_path)
         self._orchestrator = TwoPhaseOrchestrator(
+            plan_maestro_data=master_data,
             permission_mode=permission_mode,
             on_ask_permission=on_ask_permission,
         )
@@ -172,6 +275,37 @@ class OnboardingController:
             summary.append(f"[CONFLICT] {conflict}")
 
         return summary
+
+    def get_range_traceability(
+        self,
+        hotel_id: str,
+        express_monthly_loss: Optional[float] = None,
+    ) -> Optional[HookRangeTraceability]:
+        """F11 (FASE-P1-C): verifica la cifra del Express contra el corredor
+        prometido por el Hook y genera la narrativa de la delta.
+
+        Si no se pasa un valor explícito, se toma la cifra del escenario
+        "realista" de la Fase 2 (fallback: conservador, optimista).
+        Retorna None si no hay Hook o no hay cifra Express disponible.
+        """
+        state = self.get_state(hotel_id)
+        if not state or not state.phase_1_result:
+            return None
+
+        express_value = express_monthly_loss
+        if express_value is None and state.phase_2_result and state.phase_2_result.scenarios:
+            for scenario_key in ("realista", "conservador", "optimista"):
+                scenario = state.phase_2_result.scenarios.get(scenario_key)
+                if scenario and scenario.get("monthly_loss_cop") is not None:
+                    express_value = float(scenario["monthly_loss_cop"])
+                    break
+
+        if express_value is None:
+            return None
+
+        return self._orchestrator.validate_hook_range_traceability(
+            state.phase_1_result, express_value
+        )
 
     def get_progress_percentage(self, hotel_id: str) -> int:
         state = self.get_state(hotel_id)

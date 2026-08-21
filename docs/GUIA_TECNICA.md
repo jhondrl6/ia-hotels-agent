@@ -86,6 +86,51 @@
 
 ---
 
+### Notas de Cambios v4.72.0-WIP — FASE-P1-B: Fallback región conservador + comisión OTA parametrizada
+
+**Fecha:** 2026-08-21
+
+**Resumen**: Fix F3 — `'colombia'` ahora resuelve a `'default'` ($300K conservador) en lugar de `'caribe'` ($450K) en el mapa de fallback de región de `v4_comprehensive.py`, eliminando sobreestimación 2.3-3.2x del hook. Fix F5 — comisión OTA parametrizada (D2): rango 18-22% con base 20% y fuente documentada en `config/financial_defaults.yaml`; 5 sitios hardcodeados con 0.15 eliminados; `FinancialFactors.get_comision_ota()` como API centralizada.
+
+**Módulos afectados**: `modules/auditors/v4_comprehensive.py`, `config/financial_defaults.yaml`, `modules/utils/financial_factors.py`, `modules/financial_engine/scenario_calculator.py`, `modules/financial_engine/calculator_v2.py`, `modules/financial_engine/inputs_contract.py`, `modules/financial_engine/financial_evidence.py`, `modules/orchestration_v4/two_phase_flow.py`, `modules/utils/benchmarks.py`
+
+**Problema**: F3 — prospectos sin ciudad específica caían al benchmark del Caribe, inflando la fuga estimada. F5 — comisión OTA hardcodeada en 15% en 5 sitios de 3 módulos, contradiciendo el rango real 17-25% de la narrativa comercial y sin fuente citada.
+
+**Solución**: D2 — reutilizar el campo EXISTENTE `comision_ota` del YAML (el flatten de `financial_factors.py` convierte automáticamente el nuevo campo `source` en `comision_ota_source`). Defaults de dataclasses/funciones cambiados 0.15→0.20 (valor actual de config) porque no pueden cargar dinámicamente en tiempo de definición.
+
+**⚠️ Cambio de comportamiento documentado**:
+- Fuga estimada de prospectos genéricos "Colombia" disminuye ~33% (default $300K en vez de $450K)
+- Defaults de comisión OTA cambian de 0.15 a 0.20 en todos los consumidores; valores pasados explícitamente NO cambian
+
+**Backwards compatibility**: API pública sin cambios. `_estimate_monthly_loss`, `ScenarioCalculator` y dataclasses mantienen la misma firma (solo cambian defaults). Tests que usaban 0.15 como valor explícito siguen pasando.
+
+**Tests**: +24 tests nuevos (12 F3 test_region_fallback + 12 F5 test_ota_commission). 160 passed en auditors. 0 regresiones nuevas (11 fallos preexistentes financial_engine intactos). Baseline auditors en `evidence/BASELINE-TESTS-auditors-v4.71.0.txt`.
+
+---
+
+### Notas de Cambios v4.72.0-WIP — FASE-P1-C: Cableado benchmark master al hook + cap plausibilidad + trazabilidad Hook→Express
+
+**Fecha:** 2026-08-21
+
+**Resumen**: Fix F6 (causa raíz, D4) — el benchmark master de P1-A (`regional_adr_2026.json`) ahora se cablea al rango del hook: `OnboardingController.load_benchmark_master()` lo carga y lo pasa como `plan_maestro_data` a `TwoPhaseOrchestrator` (parámetro que ya existía pero nadie pasaba). Fix F6 (síntoma, D7) — cap de plausibilidad configurable (`hook_range_max_ratio: 5.0` en financial_defaults.yaml) aplicado en la generación del rango del hook. Fix F11 — trazabilidad Hook→Express: `HookRangeTraceability` verifica la cifra del Express contra el corredor prometido y genera narrativa de la delta benchmark→dato real.
+
+**Módulos afectados**: `modules/orchestration_v4/two_phase_flow.py`, `modules/orchestration_v4/onboarding_controller.py`, `modules/commercial_documents/hook_pdf_generator.py`, `config/financial_defaults.yaml`
+
+**Problema**: F6 — el rango del hook mostraba ratios de hasta 23x (defaults hardcodeados min $604K / max $14M) porque el constructor del orquestador aceptaba `plan_maestro_data` pero el controller nunca lo pasaba. F11 — el rango prometido por el Hook nunca se verificaba contra el cálculo real del Express, dejando la promesa comercial sin cierre falsable.
+
+**Solución**: D4 — cableado ANTES del cap (capar defaults hardcodeados acotaría un rango fabricado). Capa conversora `_convert_master_region()` traduce la estructura por segmentos del master al formato plano que espera el orquestador. D7 — ratio fijo max/min configurable aplicado en el hook (no en escenarios, para no contaminar la verdad financiera); el extremo optimista se trunca sobre el piso conservador. Región sin match cae al "default" del master antes que a defaults hardcodeados. Check advisory #9 en `validate_data` del hook PDF verifica el corredor con tolerancia 10%.
+
+**⚠️ Cambio de comportamiento documentado**:
+- El rango del hook para eje_cafetero pasa de ratio 6.46x a 5.0x (max capado de ~$7.23M a ~$5.59M con datos master reales)
+- Regiones sin match con master cargado usan el "default" del master (~3.3x) en vez de defaults hardcodeados (23x); los defaults hardcodeados solo aplican si el master está ausente
+- El disclaimer del hook ahora declara el rango como promesa falsable verificada por el análisis Express
+
+**Backwards compatibility**: API pública extendida sin romper firmas: `OnboardingController.__init__` agrega `benchmark_master_path` opcional; la trazabilidad se expone como métodos (`validate_hook_range_traceability`, `get_range_traceability`) sin añadir campos a `Phase1Result`/`Phase2Result` (tests de contrato de dataclasses intactos).
+
+**Tests**: +27 tests nuevos (14 test_hook_plausibility_cap + 13 test_hook_express_traceability). Suite orchestration_v4: 66→93 passed. 0 regresiones. `run_all_validations.py --quick`: 6/6 TOTAL PASS.
+
+---
+
 ### Notas de Cambios v4.71.0 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 **Fecha:** 2026-08-05

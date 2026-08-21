@@ -153,6 +153,36 @@ Corregir el mapa de fallback de región (`'colombia'→'caribe'` inflaba la fuga
 
 ---
 
+### FASE-P1-C — Cableado benchmark master al hook + cap de plausibilidad + trazabilidad Hook→Express (F6+F11)
+
+#### Objetivo
+Cerrar la causa raíz de F6: el rango del hook se generaba con defaults hardcodeados (ratio 23x) porque el benchmark master de P1-A nunca se cableaba al orquestador (decisión D4: cableado ANTES del cap). Además, cap de plausibilidad configurable (decisión D7: ratio fijo max/min = 5.0) y trazabilidad del rango Hook→Express (F11): la cifra del Express se verifica contra el corredor prometido por el Hook con narrativa de la delta benchmark→dato real.
+
+#### Cambios
+- `modules/orchestration_v4/two_phase_flow.py`: `_calculate_hook_range` aplica cap de plausibilidad (`hook_range_max_ratio`, fallback 5.0) truncando el extremo optimista sobre el piso conservador; `_get_regional_benchmarks` normaliza keys de región (aliases de `RegionalADRResolver.REGION_ALIASES` + lowercase/underscore) y cae al "default" del master antes que a defaults hardcodeados; nuevo dataclass `HookRangeTraceability` + `validate_hook_range_traceability()` + `format_traceability_section()`; disclaimer actualizado (rango acotado por cap y promesa falsable verificada por el Express)
+- `modules/orchestration_v4/onboarding_controller.py`: `load_benchmark_master()` carga `data/benchmarks/regional_adr_2026.json` y `_convert_master_region()` traduce estructura por segmentos al formato plano; `__init__` acepta `benchmark_master_path` y pasa `plan_maestro_data` a `TwoPhaseOrchestrator` (el parámetro ya existía); `get_range_traceability()` integra la trazabilidad con el resultado Express
+- `modules/commercial_documents/hook_pdf_generator.py`: helper `_parse_cop_number()` + check advisory #9 en `validate_data` que verifica que la fuga mensual caiga dentro del corredor (tolerancia 10%)
+- `config/financial_defaults.yaml`: +`hook_range_max_ratio: 5.0` (decisión D7)
+
+#### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/orchestration_v4/test_hook_plausibility_cap.py` | 14 tests: cableado D4, conversión del master, cap 5x, fallback de config |
+| `tests/orchestration_v4/test_hook_express_traceability.py` | 13 tests: validación del corredor, narrativa, formato markdown, integración controller |
+
+#### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/orchestration_v4/two_phase_flow.py` | +cap plausibilidad; +normalización de región; +HookRangeTraceability/validate/format; disclaimer actualizado |
+| `modules/orchestration_v4/onboarding_controller.py` | +load_benchmark_master(); +_convert_master_region(); +benchmark_master_path; +get_range_traceability() |
+| `modules/commercial_documents/hook_pdf_generator.py` | +_parse_cop_number(); +check advisory #9 corredor F11 |
+| `config/financial_defaults.yaml` | +hook_range_max_ratio: 5.0 (D7) |
+
+#### Tests
++27 tests nuevos (14 F6/D4 + 13 F11). Suite orchestration_v4: 66→93 passed, 0 fallos. hook_pdf_generator: 39 passed. benchmark_master: 19 passed. 2 fallos preexistentes en tests/config (pricing.yaml/scenarios.yaml, ajenos a P1-C — verificados vía git status). `run_all_validations.py --quick`: 6/6 TOTAL PASS.
+
+---
+
 ## [4.71.0] — 2026-08-05 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 ### Objetivo

@@ -112,7 +112,7 @@
   "modules/commercial_documents/service_catalog.py": "FASE-RELEASE-4.63.0",
   "tests/commercial_documents/test_proposal_confidence_disclosure.py": "FASE-A",
   "tests/commercial_documents/test_proposal_dynamic.py": "FASE-D",
-  "modules/orchestration_v4/two_phase_flow.py": "FASE-P1-B",
+  "modules/orchestration_v4/two_phase_flow.py": "FASE-P1-C",
   "modules/asset_generation/whatsapp_conflict_guide.py": "FASE-VALIDATE-RC",
   ".agents/workflows/v4_complete.md": "FASE-TRAZABILIDAD-DOCS",
   "diagnostico_v6_template.md": "FASE-2",
@@ -224,7 +224,7 @@
   ".opencode/plans/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/09-documentacion-post-proyecto.md": "FASE-E",
   ".opencode/plans/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/10-analisis-post-implementacion.md": "FASE-E",
   "evidence/N3-diff/": "FASE-E",
-  "modules/commercial_documents/hook_pdf_generator.py": "FASE-P0-A",
+  "modules/commercial_documents/hook_pdf_generator.py": "FASE-P1-C",
   "tests/commercial_documents/test_hook_pdf_generator.py": "FASE-P0-A",
   "modules/utils/config_checker.py": "FASE-P0-C",
   "tests/test_encoding_artifacts.py": "FASE-P0-C",
@@ -233,5 +233,6 @@
   "scripts/validate_benchmark_sync.py": "FASE-P1-A",
   "modules/financial_engine/inputs_contract.py": "FASE-P1-B",
   "modules/financial_engine/financial_evidence.py": "FASE-P1-B",
-  "config/financial_defaults.yaml": "FASE-P1-B"
+  "config/financial_defaults.yaml": "FASE-P1-C",
+  "modules/orchestration_v4/onboarding_controller.py": "FASE-P1-C"
 }

@@ -81,6 +81,17 @@ def _parse_score_cell(value: str) -> str:
     return value
 
 
+def _parse_cop_number(value: str) -> float | None:
+    """Parsea un string COP formateado ('3.741.696') a float. None si no es numérico."""
+    if not value or not isinstance(value, str):
+        return None
+    clean = value.replace("$", "").replace(".", "").replace(",", "").strip()
+    try:
+        return float(clean)
+    except ValueError:
+        return None
+
+
 def _extract_row_cells(text: str, section_label: str, row_label: str) -> list[str]:
     """
     Encuentra una tabla en el markdown y extrae celdas de una fila específica.
@@ -526,6 +537,22 @@ class HookPDFGenerator:
                 f"[WARN] Evidence tier invalido: '{data.evidence_tier}'. "
                 f"Debe ser A, B o C. Usando 'B' como fallback."
             )
+
+        # 9. F11 (FASE-P1-C): corredor Hook → Express — si el rango del hook está
+        # disponible, verificar que la fuga real calculada caiga dentro del
+        # corredor prometido (advisory, tolerancia 10%).
+        if data.fuga_minima and data.fuga_maxima and data.fuga_mensual:
+            vmin = _parse_cop_number(data.fuga_minima)
+            vmax = _parse_cop_number(data.fuga_maxima)
+            vreal = _parse_cop_number(data.fuga_mensual)
+            if vmin is not None and vmax is not None and vreal is not None and vmin > 0:
+                tolerance = 0.10
+                if vreal < vmin * (1 - tolerance) or vreal > vmax * (1 + tolerance):
+                    warnings.append(
+                        f"[WARN] F11: fuga_mensual {data.fuga_mensual} fuera del "
+                        f"corredor del hook [{data.fuga_minima} - {data.fuga_maxima}] "
+                        f"(tolerancia 10%). Documentar la delta benchmark → dato real."
+                    )
 
         return warnings
 

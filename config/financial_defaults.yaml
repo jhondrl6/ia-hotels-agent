@@ -32,3 +32,9 @@ reservas_directo_proporcion: 0.35
 
 uso_ia_proporcion_min: 0.10
 uso_ia_proporcion_max: 0.20
+
+# F6 (FASE-P1-C, decisión D7): cap de plausibilidad del rango del hook.
+# Ratio máximo max/min del corredor de pérdida mostrado en el hook; si el rango
+# calculado lo excede, el extremo optimista se trunca sobre el piso conservador.
+# Objetivo: rango comercialmente creíble y falsable por el análisis Express (F11).
+hook_range_max_ratio: 5.0

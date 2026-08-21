@@ -20,7 +20,9 @@
 | Fallback región conservador (F3) | auditors | 'colombia' resuelve a default ($300K) en lugar de caribe ($450K); evita sobreestimación 2.3-3.2x en hook | FASE-P1-B |
 | Comisión OTA parametrizada (F5) | financial_engine, orchestration_v4, utils, config | Comisión OTA leída desde config/financial_defaults.yaml (18-22%, base 20%) con fuente documentada; 5 sitios hardcodeados eliminados; FinancialFactors.get_comision_ota() como API centralizada | FASE-P1-B |
 | Verdad del sitio vivo | data_validation, asset_generation | Mapeo sedes + propagación site_verification | FASE-P1-D |
-| Trazabilidad del rango Hook→Express | orchestration_v4 | Cap de plausibilidad + cierre del rango | FASE-P1-C |
+| Cableado benchmark master al hook (F6 causa raíz, D4) | orchestration_v4 | OnboardingController carga el master P1-A (regional_adr_2026.json) y lo pasa a TwoPhaseOrchestrator; normalización de keys de región (aliases del resolver); región sin match cae al "default" del master | FASE-P1-C |
+| Cap de plausibilidad del rango del hook (F6, D7) | orchestration_v4, config | Ratio fijo max/min configurable (hook_range_max_ratio: 5.0 en financial_defaults.yaml); se aplica en la generación del rango del hook, no en escenarios; el extremo optimista se trunca sobre el piso conservador | FASE-P1-C |
+| Trazabilidad del rango Hook→Express (F11) | orchestration_v4, commercial_documents | HookRangeTraceability + validate_hook_range_traceability(): verifica la cifra Express contra el corredor prometido y genera narrativa de la delta benchmark→dato real; formato markdown para output Express; check advisory corredor en validate_data del hook PDF (consumo de fuga_minima/fuga_maxima); disclaimer declara el rango como promesa falsable | FASE-P1-C |
 
 ## Sección D: Métricas Acumulativas
 
@@ -28,7 +30,7 @@
 |---------|-------|------|
 | Tests base al inicio del plan | 3,233 funciones / 261 archivos (v4.71.0) | Preparación |
 | Línea base de fallos preexistentes (suites tocadas) | 22 fallos: 12 commercial_documents + 10 financial_engine — evidence/BASELINE-TESTS-v4.71.0.txt | FASE-P0-A |
-| Tests nuevos acumulados | 68 (3 P0-A + 18 P0-B + 4 P0-C + 19 P1-A + 24 P1-B) | FASE-P1-B |
+| Tests nuevos acumulados | 95 (3 P0-A + 18 P0-B + 4 P0-C + 19 P1-A + 24 P1-B + 27 P1-C) | FASE-P1-C |
 | Coherence última corrida | 0.9237 (evidence/FASE-F, pre-plan) | Preparación |
 | Coherence E2E Zi One (post-plan) | (pendiente) | FASE-E2E-ZIONE |
 | Tiempo corrida con caches cálidos (C9) | (pendiente) | FASE-E2E-ZIONE |
@@ -74,3 +76,9 @@
 | `tests/financial_engine/test_inputs_contract.py` | F5: 1 assertion actualizado 0.15→0.20 (default normalized) | FASE-P1-B |
 | `tests/financial_engine/test_financial_evidence.py` | F5: 1 test actualizado: value 0.15→0.20, source→config/financial_defaults.yaml | FASE-P1-B |
 | `evidence/BASELINE-TESTS-auditors-v4.71.0.txt` | NUEVO — baseline de auditors (148 passed, 1 skipped) previa a FASE-P1-B | FASE-P1-B |
+| `modules/orchestration_v4/two_phase_flow.py` | F6+F11: cableado de keys normalizadas en _get_regional_benchmarks (fallback al "default" del master); cap de plausibilidad en _calculate_hook_range (_get_hook_range_max_ratio desde config); dataclass HookRangeTraceability + validate_hook_range_traceability() + format_traceability_section(); disclaimer declara rango falsable | FASE-P1-C |
+| `modules/orchestration_v4/onboarding_controller.py` | F6 (D4): load_benchmark_master() + _convert_master_region() cargan/convierten regional_adr_2026.json; __init__ pasa plan_maestro_data al orquestador (parámetro opcional benchmark_master_path); +get_range_traceability() (cifra Express desde escenario realista o valor explícito) | FASE-P1-C |
+| `modules/commercial_documents/hook_pdf_generator.py` | F11: check advisory #9 en validate_data — fuga_mensual dentro del corredor [fuga_minima, fuga_maxima] con tolerancia 10%; +helper _parse_cop_number() | FASE-P1-C |
+| `config/financial_defaults.yaml` | F6 (D7): +hook_range_max_ratio: 5.0 con fuente documentada | FASE-P1-C |
+| `tests/orchestration_v4/test_hook_plausibility_cap.py` | NUEVO — 14 tests: cableado master (valores determinísticos con comisión patcheada), defaults documentados sin master, aliases, región sin match sin 23x, conversión del master real, cap configurable/fallback/piso 1.0, hook message acotado | FASE-P1-C |
+| `tests/orchestration_v4/test_hook_express_traceability.py` | NUEVO — 13 tests: dentro/debajo/encima del corredor, límites inclusivos, narrativa benchmark→dato real, sección markdown, integración full-flow via OnboardingController (escenario realista como cifra Express) | FASE-P1-C |

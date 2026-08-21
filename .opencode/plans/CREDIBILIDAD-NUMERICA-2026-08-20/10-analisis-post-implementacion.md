@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CREDIBILIDAD-NUMERICA-2026-08-20
 
-> **Estado**: 5/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅) — 6 restantes
+> **Estado**: 6/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅, P1-C ✅) — 5 restantes
 > **Plan**: CREDIBILIDAD-NUMERICA-2026-08-20
 > **Versión objetivo**: v4.72.0
 > **Creado DESDE LA CONCEPCIÓN** (phased_project_executor v2.15.0): cada fase agrega lecciones aquí al cerrar sesión.
@@ -14,7 +14,7 @@
 | FASE-P0-C | 2026-08-21 | ✅ | ~15 | No (DIRECTO) | 4 tests nuevos encoding; auditoría estática AST; fix en 3 writers (1 delivery_quality_report + 2 config_checker); 0 regresiones |
 | FASE-P1-A | 2026-08-21 | ✅ | ~45 | No | 19 tests nuevos benchmark_master; normalización regiones; script sync; D3+D3b documentadas; 0 regresiones vs baseline (10 preexistentes) |
 | FASE-P1-B | 2026-08-21 | ✅ | ~45 | No (DIRECTO) | 24 tests nuevos (12 F3 + 12 F5); comisión OTA parametrizada en 5 sitios + 3 archivos de tests actualizados; 0 regresiones vs baseline (148 auditors, 10 preexistentes financial_engine) |
-| FASE-P1-C | — | ⬜ | — | No | |
+| FASE-P1-C | 2026-08-21 | ✅ | ~30 | No | 27 tests nuevos (14 F6/D4 + 13 F11); benchmark master cableado al hook; cap plausibilidad 5x (D7); trazabilidad Hook→Express; suite orchestration_v4 66→93; validaciones --quick 6/6 PASS |
 | FASE-P1-D | — | ⬜ | — | No | Máxima complejidad |
 | FASE-P2-A | — | ⬜ | — | No | |
 | FASE-P2-B | — | ⬜ | — | No | |
@@ -94,6 +94,14 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | L14 | Los defaults de parámetros en dataclasses y funciones no pueden cargar dinámicamente de config en tiempo de definición. La solución fue cambiar el default hardcoded de 0.15 a 0.20 (valor actual de config) y cargar dinámicamente solo en `__init__` y métodos que lo necesitan (ScenarioCalculator, _to_hotel_financial_data, _estimate_monthly_loss). | INCLUIR: para parametrizar defaults de parámetros, usar el valor actual de config como literal y cargar dinámicamente solo donde sea posible |
 | L15 | Al cambiar defaults de 0.15 a 0.20, 4 tests existentes se rompieron (test_hotel_financial_data_defaults, test_scenario_calculator_initialization, test_all_optional_defaults, test_build_financial_evidence_ota_defaults). Los tests que usaban 0.15 como valor explícito pasado como parámetro NO se rompieron. Diferenciar entre “tests que verifican defaults” y “tests que usan valores explícitos” es crucial al cambiar constantes. | INCLUIR: tras cambiar defaults, ejecutar tests y actualizar solo las aserciones de default, no los valores explícitos |
 
+#### FASE-P1-C
+
+| # | Lección | Pertinencia |
+|---|---------|-------------|
+| L16 | El fix de cableado D4 fue en el caller (`OnboardingController`), no en el orquestador: el constructor de `TwoPhaseOrchestrator` ya aceptaba `plan_maestro_data`, solo nadie lo pasaba. Una capa conversora (`load_benchmark_master`/`_convert_master_region`) en el controller traduce la estructura por segmentos del master (boutique_10_25/standard_26_60) al formato plano que espera `_get_regional_benchmarks`, aislando al orquestador de la estructura del master. | INCLUIR: antes de modificar un constructor, verificar si el parámetro ya existe y el gap está en el caller; las conversiones de formato van en una capa adaptadora, no en el consumidor |
+| L17 | Los tests existentes assertean conjuntos EXACTOS de campos de `Phase1Result`/`Phase2Result`. Añadir la trazabilidad como campos nuevos en el dataclass habría roto esos assertions. Se implementó como métodos separados (`validate_hook_range_traceability` en el orquestador, `get_range_traceability` en el controller), manteniendo los dataclasses intactos. | INCLUIR: antes de añadir campos a dataclasses con tests de contrato sobre sus campos, exponer la nueva información vía métodos/objetos separados |
+| L18 | Reutilizar `RegionalADRResolver.REGION_ALIASES` para normalizar keys de región evita duplicar la tabla de aliases (coffee_axis→eje_cafetero, medellin→antioquia). Región sin match cae al "default" del master (conversado, ratio ~3.3x) antes que a los defaults hardcodeados (ratio 23x); estos últimos solo aplican si el master está ausente, comportamiento documentado explícitamente. | INCLUIR: reutilizar tablas de normalización existentes en vez de duplicarlas; documentar explícitamente el último nivel de fallback |
+
 **T0b: Desviación benchmark vs observaciones Tier A (Eje Cafetero)**
 
 | Hotel | Categoría | ADR observado | Benchmark anterior | Desviación |
@@ -135,7 +143,7 @@ Decisión: benchmark $420K era desactualizado/aspiracional. Master calibrado a $
 | D4 | Rango del hook cableado al benchmark master ANTES del cap | El cap sobre defaults hardcodeados acota un rango fabricado | Cap directo sin cableado | FASE-P1-C |
 | D5 | AGENTS.md gate count 12→13 actualizado en P0-B y validado con validate_agents_md.py | `--quick` no valida gate count; drift invisible si se pospone a RELEASE | Posponer actualización a RELEASE | FASE-P0-B |
 | D6 | pricing.yaml como fuente única de pricing: constantes `PRECIO_EXPRESS/PRECIO_MENSUAL/SETUP_FEE` (hook_pdf) y `MONTHLY_PACKAGE_PRICE/SETUP_FEE` (proposal) eliminadas; ambos módulos consumen de `_load_pricing_config()["packages"]`; +express_price: 120000 agregado a pricing.yaml | Principio "una fuente de verdad por concepto": 3 fuentes Python no sincronizadas generaban riesgo de cifras contradictorias en output del cliente. La solución reutiliza infraestructura existente (pricing_calculator._load_pricing_config con caché) sin crear módulo nuevo | Crear pricing_service.py nuevo (más abstracción); mantener constantes con sync manual (más frágil) | FASE-P0-A ✅ |
-| D7 | (pendiente) Cap de plausibilidad: percentil vs ratio fijo | Decidir en fase | | FASE-P1-C |
+| D7 | Cap de plausibilidad por ratio fijo max/min = 5.0 configurable (`hook_range_max_ratio` en `config/financial_defaults.yaml`, fallback hardcoded 5.0); aplicado en la GENERACIÓN del rango del hook (`_calculate_hook_range`), no en los escenarios financieros; el extremo optimista se trunca sobre el piso conservador (min × ratio) | Ratio fijo es simple, configurable y auditable; aplicar el cap en el hook preserva la verdad financiera de los escenarios (capear escenarios contaminaría el cálculo real con un artefacto de presentación); D4 exige cableado ANTES del cap (master real eje_cafetero: 6.46x → capado a 5x) | Cap por percentil P95 (requiere maquinaria de escenarios completa dentro del hook, complejidad sin beneficio); cap aplicado en escenarios (contamina la verdad financiera); ratio 8x (demasiado permisivo, sigue permitiendo rangos poco creíbles) | FASE-P1-C ✅ |
 | D8 | (pendiente) Estado "verificado en producción" como primera clase | Cierra F13/F14 | | FASE-P1-D |
 
 > D1-D6 están pre-resueltas en `01-plan-maestro.md §7`; D7/D8 se deciden en su fase.

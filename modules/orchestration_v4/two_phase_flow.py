@@ -13,13 +13,21 @@ from datetime import datetime
 from ..data_validation.cross_validator import CrossValidator
 from ..data_validation.confidence_taxonomy import ConfidenceLevel
 from ..financial_engine.scenario_calculator import ScenarioCalculator, HotelFinancialData
+from ..financial_engine.regional_adr_resolver import RegionalADRResolver
 from ..utils.financial_factors import FinancialFactors
+from ..common.yaml_loader import load_yaml_config, YAMLLoadError
 from ..utils.permission_mode import (
     PermissionMode,
     OperationPermission,
     check_permission,
     DEFAULT_MODE,
 )
+
+# F6 (FASE-P1-C, decisión D7): cap de plausibilidad del rango del hook.
+# Ratio máximo max/min del corredor de pérdida mostrado en el hook. Configurable
+# en config/financial_defaults.yaml (hook_range_max_ratio); este valor solo opera
+# como fallback si la config no está disponible.
+HOOK_RANGE_MAX_RATIO_FALLBACK = 5.0
 
 
 @dataclass
@@ -60,6 +68,39 @@ class Phase2Result:
     conflicts_report: List[str]
     can_proceed: bool
     scenarios: Optional[Dict] = None
+
+
+@dataclass
+class HookRangeTraceability:
+    """
+    F11 (FASE-P1-C): reporte de trazabilidad del rango Hook → Express.
+
+    Verifica que la cifra calculada por el análisis Express (datos reales del
+    hotel) caiga dentro del corredor prometido por el Hook (benchmarks
+    regionales) y documenta la delta benchmark → dato real. El rango del Hook
+    se trata como una promesa falsable que el Express debe cerrar.
+    """
+
+    hook_range_min: float
+    hook_range_max: float
+    express_monthly_loss: float
+    within_corridor: bool
+    status: str  # DENTRO_CORREDOR | DEBAJO_CORREDOR | ENCIMA_CORREDOR
+    delta_pct: float  # desviación (%) del valor Express vs punto medio del corredor
+    region: str
+    narrative: str
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "hook_range_min": self.hook_range_min,
+            "hook_range_max": self.hook_range_max,
+            "express_monthly_loss": self.express_monthly_loss,
+            "within_corridor": self.within_corridor,
+            "status": self.status,
+            "delta_pct": self.delta_pct,
+            "region": self.region,
+            "narrative": self.narrative,
+        }
 
 
 @dataclass
@@ -144,12 +185,15 @@ class TwoPhaseOrchestrator:
         # Format the hook message
         hook_message = self._format_hook_message(hotel_name, loss_min, loss_max)
 
-        # Format disclaimer
+        # Format disclaimer (F11: el rango se declara como promesa falsable que
+        # el análisis Express verificará contra los datos reales del hotel)
         disclaimer = (
-            "Esta estimacion inicial se basa en benchmarks regionales promedio. "
-            "Para obtener un calculo preciso personalizado para su hotel, "
-            "necesitamos algunos datos adicionales. Su informacion se mantiene "
-            "confidencial y se utiliza unicamente para generar el analisis."
+            "Esta estimacion inicial se basa en benchmarks regionales promedio, "
+            "acotada por un cap de plausibilidad. Para obtener un calculo preciso "
+            "personalizado para su hotel, necesitamos algunos datos adicionales: "
+            "el analisis Express verificara este rango contra sus datos reales. "
+            "Su informacion se mantiene confidencial y se utiliza unicamente para "
+            "generar el analisis."
         )
 
         return Phase1Result(
@@ -211,7 +255,28 @@ class TwoPhaseOrchestrator:
             optimistic_rooms, optimistic_adr, optimistic_occupancy
         )
 
+        # F6 (FASE-P1-C, D7): cap de plausibilidad — acota el corredor al ratio
+        # max/min configurable (config/financial_defaults.yaml). Se aplica en la
+        # generación del rango del hook, NO en el cálculo de escenarios.
+        max_ratio = self._get_hook_range_max_ratio()
+        if min_loss > 0 and max_loss > min_loss * max_ratio:
+            max_loss = round(min_loss * max_ratio, 2)
+
         return (min_loss, max_loss)
+
+    @staticmethod
+    def _get_hook_range_max_ratio() -> float:
+        """Ratio max/min del cap de plausibilidad del rango del hook (F6).
+
+        Fuente única: config/financial_defaults.yaml (hook_range_max_ratio).
+        Fallback: HOOK_RANGE_MAX_RATIO_FALLBACK. Nunca menor que 1.0.
+        """
+        try:
+            config = load_yaml_config('financial_defaults')
+            ratio = float(config.get('hook_range_max_ratio', HOOK_RANGE_MAX_RATIO_FALLBACK))
+        except (YAMLLoadError, TypeError, ValueError):
+            ratio = HOOK_RANGE_MAX_RATIO_FALLBACK
+        return max(ratio, 1.0)
 
     def _get_regional_benchmarks(self, region: str) -> Dict[str, float]:
         """Get benchmark data for a specific region."""
@@ -228,7 +293,21 @@ class TwoPhaseOrchestrator:
             return default_benchmarks
 
         regions = self.plan_maestro_data.get("regions", {})
-        return regions.get(region, default_benchmarks)
+        # FASE-P1-C (T1): alinear keys de región con el master (aliases + lowercase)
+        key = self._normalize_region_key(region)
+        if key in regions:
+            return regions[key]
+        # Región sin match (ej. 'colombia'): caer al "default" del master si existe,
+        # nunca producir un rango fabricado por accidente de key.
+        if "default" in regions:
+            return regions["default"]
+        return default_benchmarks
+
+    @staticmethod
+    def _normalize_region_key(region: str) -> str:
+        """Normaliza la key de región (lowercase, underscores, aliases del master P1-A)."""
+        lowered = str(region or "").strip().lower().replace(" ", "_").replace("-", "_")
+        return RegionalADRResolver.REGION_ALIASES.get(lowered, lowered)
 
     def _estimate_monthly_loss(self, rooms: int, adr: float, occupancy: float) -> float:
         """
@@ -419,6 +498,114 @@ class TwoPhaseOrchestrator:
                 validated["direct_channel_percentage"] = dcp_dp.to_dict()
 
         return validated
+
+    def validate_hook_range_traceability(
+        self,
+        phase_1_result: Phase1Result,
+        express_monthly_loss: float,
+    ) -> HookRangeTraceability:
+        """
+        F11: verifica que la cifra del Express caiga dentro del corredor
+        prometido por el Hook y genera la narrativa de la delta
+        benchmark → dato real.
+
+        Args:
+            phase_1_result: Resultado del Hook (rango prometido + región)
+            express_monthly_loss: Pérdida mensual calculada por el Express
+                                  con datos reales del hotel
+
+        Returns:
+            HookRangeTraceability con estado, delta y narrativa
+        """
+        loss_min = float(phase_1_result.loss_range_min)
+        loss_max = float(phase_1_result.loss_range_max)
+        express_value = float(express_monthly_loss)
+
+        within = loss_min <= express_value <= loss_max
+        if express_value < loss_min:
+            status = "DEBAJO_CORREDOR"
+        elif express_value > loss_max:
+            status = "ENCIMA_CORREDOR"
+        else:
+            status = "DENTRO_CORREDOR"
+
+        midpoint = (loss_min + loss_max) / 2.0
+        delta_pct = ((express_value - midpoint) / midpoint * 100.0) if midpoint > 0 else 0.0
+
+        def fmt_cop(value: float) -> str:
+            return f"{value:,.0f}".replace(",", ".")
+
+        hook_part = (
+            f"El Hook estimo una fuga mensual entre ${fmt_cop(loss_min)} y "
+            f"${fmt_cop(loss_max)} COP usando benchmarks regionales "
+            f"(region '{phase_1_result.region}')"
+        )
+        express_part = (
+            f"el analisis Express con los datos reales del hotel "
+            f"(habitaciones, ADR y ocupacion) calculo ${fmt_cop(express_value)} COP"
+        )
+
+        if status == "DENTRO_CORREDOR":
+            narrative = (
+                f"{hook_part}; {express_part}: DENTRO del corredor prometido "
+                f"(delta {delta_pct:+.1f}% vs punto medio). La promesa del Hook "
+                f"queda validada por el dato real: la correccion benchmark → dato "
+                f"real confirma el orden de magnitud de la fuga."
+            )
+        elif status == "DEBAJO_CORREDOR":
+            pct_below = (
+                (loss_min - express_value) / loss_min * 100.0 if loss_min > 0 else 0.0
+            )
+            narrative = (
+                f"{hook_part}; {express_part}: DEBAJO del corredor prometido "
+                f"({pct_below:.1f}% por debajo del minimo). La correccion "
+                f"benchmark → dato real muestra que la fuga efectiva del hotel es "
+                f"menor que la estimacion regional; la desviacion queda documentada "
+                f"en esta seccion de trazabilidad."
+            )
+        else:
+            pct_above = (
+                (express_value - loss_max) / loss_max * 100.0 if loss_max > 0 else 0.0
+            )
+            narrative = (
+                f"{hook_part}; {express_part}: ENCIMA del corredor prometido "
+                f"({pct_above:.1f}% por encima del maximo). La correccion "
+                f"benchmark → dato real muestra que la fuga efectiva del hotel "
+                f"supera la estimacion regional; la desviacion queda documentada "
+                f"en esta seccion de trazabilidad."
+            )
+
+        return HookRangeTraceability(
+            hook_range_min=loss_min,
+            hook_range_max=loss_max,
+            express_monthly_loss=express_value,
+            within_corridor=within,
+            status=status,
+            delta_pct=round(delta_pct, 2),
+            region=phase_1_result.region,
+            narrative=narrative,
+        )
+
+    @staticmethod
+    def format_traceability_section(report: HookRangeTraceability) -> str:
+        """
+        F11: genera la sección markdown de trazabilidad del rango Hook → Express
+        para el output del análisis Express.
+        """
+        def fmt_cop(value: float) -> str:
+            return f"{value:,.0f}".replace(",", ".")
+
+        return (
+            "### Trazabilidad del rango Hook → Express\n\n"
+            "| Etapa | Valor |\n"
+            "|-------|-------|\n"
+            f"| Hook (benchmark regional '{report.region}') | "
+            f"${fmt_cop(report.hook_range_min)} - ${fmt_cop(report.hook_range_max)} COP/mes |\n"
+            f"| Express (dato real del hotel) | ${fmt_cop(report.express_monthly_loss)} COP/mes |\n"
+            f"| Estado | {report.status} |\n"
+            f"| Delta vs punto medio | {report.delta_pct:+.1f}% |\n\n"
+            f"{report.narrative}\n"
+        )
 
     def _get_regional_adr_benchmark(self) -> Optional[float]:
         """Get average ADR benchmark for default region."""

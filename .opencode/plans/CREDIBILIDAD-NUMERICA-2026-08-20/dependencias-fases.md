@@ -16,7 +16,7 @@ FASE-P1-A (benchmark maestro) ✅
     ├──→ FASE-P1-B (fallback región + OTA; usa benchmark maestro) ✅
     │        │
     │        └──→ FASE-P1-C (cablea master al hook + cap plausibilidad +
-    │                         trazabilidad rango; consume benchmarks estables + OTA)
+    │                         trazabilidad rango; consume benchmarks estables + OTA) ✅
     │
 FASE-P1-D (verdad sitio vivo)  [independiente de P1-A/B/C]
     │
