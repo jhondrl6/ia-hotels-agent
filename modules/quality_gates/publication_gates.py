@@ -1,7 +1,7 @@
 """
 Publication Gates - Pre-publication Quality Gates for Phase 5.
 
-This module implements 9 publication gates (6 blocking + 3 advisory)
+This module implements 13 publication gates (10 blocking + 3 advisory)
 that must be evaluated before any commercial document or asset can
 be published to a client.
 
@@ -12,11 +12,15 @@ Blocking gates (must pass to publish):
 4. coherence_gate: Blocks if coherence < 0.8
 5. critical_recall_gate: Blocks if critical recall < 90%
 6. ethics_gate: Blocks if ethics validation fails
+7. tier_c_onboarding_required_gate: Blocks if tier C onboarding missing
+8. coverage_no_silent_drop_gate: Blocks if pain coverage gap detected
+9. doc_audit_consistency_gate: Blocks on doc-audit contradictions (WARNING mode)
+10. pricing_compliance_gate: Blocks if pain_ratio > tier gate_max (floor-aware D1)
 
 Advisory gates (pass with WARNING, do not block):
-7. content_quality_gate: Reports document quality issues
-8. asset_confidence_gate: Reports low-confidence assets
-9. proposal_asset_alignment_gate: Reports missing promised assets
+11. content_quality_gate: Reports document quality issues
+12. asset_confidence_gate: Reports low-confidence assets
+13. proposal_asset_alignment_gate: Reports missing promised assets
 
 Usage:
     from modules.quality_gates.publication_gates import (
@@ -33,6 +37,8 @@ Usage:
 """
 
 import re
+import os
+import logging
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Callable, Set
 from enum import Enum
@@ -45,6 +51,8 @@ from modules.financial_engine.no_defaults_validator import (
 from modules.quality_gates.ethics_gate import EthicsGate, EthicsStatus
 from modules.postprocessors.document_quality_gate import DocumentQualityGate
 from modules.quality.asset_semantics_validator import validar_semantica_comercial
+
+logger = logging.getLogger(__name__)
 
 
 # FASE-4 (DT4-N5): Helper to merge AlignmentReport dict with canonical
@@ -149,9 +157,9 @@ class PublicationGateConfig:
 
 class PublicationGatesOrchestrator:
     """
-    Orchestrates the execution of all 9 publication gates.
+    Orchestrates the execution of all 13 publication gates.
     
-    This class manages 6 blocking gates and 3 advisory gates,
+    This class manages 10 blocking gates and 3 advisory gates,
     providing a unified interface for checking publication readiness.
     
     Example:
@@ -183,6 +191,7 @@ class PublicationGatesOrchestrator:
             "tier_c_onboarding_required": self._tier_c_onboarding_gate,
             "coverage_no_silent_drop": self._coverage_gate,
             "doc_audit_consistency": self._doc_audit_consistency_gate,
+            "pricing_compliance": self._pricing_compliance_gate,
         }
         self.ethics_gate = EthicsGate()
         self.content_quality_gate = DocumentQualityGate()
@@ -1541,6 +1550,214 @@ class PublicationGatesOrchestrator:
             message="Document consistent with audit data — no contradictions detected",
             value=0,
             suggestion="",
+        )
+
+    # ===========================================================================
+    # FASE-P0-B: Pricing Compliance Gate — BLOCKING floor-aware (D1)
+    # ===========================================================================
+
+    # Hardcoded fallback when pricing.yaml is unreachable (tests, isolated envs).
+    _PRICING_FALLBACK: Dict[str, Any] = {
+        "tiers": {
+            "boutique": {"pain_ratio_gate_max": 0.32, "operational_floor": 400_000},
+            "standard": {"pain_ratio_gate_max": 0.32, "operational_floor": 500_000},
+            "large":    {"pain_ratio_gate_max": 0.32, "operational_floor": 800_000},
+        },
+        "gates": {"min_ratio": 0.03, "max_ratio": 0.06, "ideal_ratio": 0.045},
+    }
+
+    def _load_pricing_thresholds(self) -> Dict[str, Any]:
+        """Load pricing thresholds from config/pricing.yaml (cached).
+
+        Falls back to hardcoded defaults when the YAML is unreachable.
+        """
+        try:
+            from modules.financial_engine.pricing_calculator import _load_pricing_config
+            return _load_pricing_config()
+        except Exception as exc:
+            logger.debug("pricing_compliance: using fallback config (%s)", exc)
+            return self._PRICING_FALLBACK
+
+    def _pricing_compliance_gate(
+        self, assessment: Dict[str, Any]
+    ) -> PublicationGateResult:
+        """
+        Gate: Pricing Compliance — BLOCKING floor-aware (D1).
+
+        Blocks when ``pain_ratio`` exceeds the tier's ``pain_ratio_gate_max``
+        (e.g. 0.32 for boutique).  Emits a non-blocking WARNING when the
+        ``pain_ratio`` falls outside the ideal range (0.03-0.06) but the
+        ``operational_floor`` was applied (structural ratio inflation).
+
+        Design rationale (01-plan-maestro §7 D1):
+            For hotels where ``expected_loss * percentage < operational_floor``,
+            the floor forces a price whose ratio = floor / loss.  With the
+            global gates (0.03-0.06) as BLOCKING, hotels with loss < 6.67 M/mes
+            could NEVER pass.  The tier-level ``pain_ratio_gate_max`` (0.32)
+            represents the true abuse threshold; the ideal range is advisory
+            when the floor is in play.
+
+        Reads from assessment:
+            - ``pricing_data.pain_ratio``
+            - ``pricing_data.tier``
+            - ``pricing_data.monthly_price_cop``
+            - ``pricing_data.expected_loss_cop``
+
+        Reads from ``config/pricing.yaml``:
+            - ``tiers.<tier>.pain_ratio_gate_max``
+            - ``tiers.<tier>.operational_floor``
+            - ``gates.min_ratio``, ``gates.max_ratio``
+
+        Args:
+            assessment: Assessment dict with ``pricing_data`` injected by
+                ``AssessmentBuilder.with_pricing``.
+
+        Returns:
+            PublicationGateResult — BLOCKING / WARNING / PASSED.
+        """
+        gate_name = "pricing_compliance"
+
+        # ── Extract pricing data ─────────────────────────────────────
+        pricing_data = assessment.get("pricing_data")
+        if not pricing_data or not isinstance(pricing_data, dict):
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,
+                status=GateStatus.PASSED,
+                message="No pricing data available for compliance check (skipped)",
+                value=None,
+                suggestion="",
+            )
+
+        pain_ratio = pricing_data.get("pain_ratio")
+        if pain_ratio is None:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,
+                status=GateStatus.PASSED,
+                message="pain_ratio not found in pricing data (skipped)",
+                value=None,
+                suggestion="",
+            )
+
+        try:
+            pain_ratio = float(pain_ratio)
+        except (TypeError, ValueError):
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=False,
+                status=GateStatus.BLOCKED,
+                message=f"pain_ratio is not numeric: {pain_ratio!r}",
+                value=pain_ratio,
+                suggestion="Ensure pricing pipeline produces a numeric pain_ratio",
+            )
+
+        tier = pricing_data.get("tier", "boutique")
+        monthly_price = float(pricing_data.get("monthly_price_cop", 0))
+        expected_loss = float(pricing_data.get("expected_loss_cop", 0))
+
+        # ── Load thresholds ──────────────────────────────────────────
+        config = self._load_pricing_thresholds()
+        tier_config = config.get("tiers", {}).get(tier, {})
+        gates = config.get("gates", {})
+
+        gate_max = float(tier_config.get("pain_ratio_gate_max", 0.32))
+        operational_floor = float(tier_config.get("operational_floor", 0))
+        ideal_min = float(gates.get("min_ratio", 0.03))
+        ideal_max = float(gates.get("max_ratio", 0.06))
+
+        # ── Detect floor application ─────────────────────────────────
+        floor_applied = (
+            operational_floor > 0
+            and monthly_price > 0
+            and monthly_price <= operational_floor * 1.01
+        )
+
+        # ── Evaluate ─────────────────────────────────────────────────
+        # BLOCKING: pain_ratio > tier gate_max → abusive pricing
+        if pain_ratio > gate_max:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=False,
+                status=GateStatus.BLOCKED,
+                message=(
+                    f"Pricing non-compliant: pain_ratio {pain_ratio:.4f} exceeds "
+                    f"tier '{tier}' gate_max {gate_max}"
+                ),
+                value=pain_ratio,
+                suggestion=(
+                    f"Reduce price or verify expected_loss. "
+                    f"Tier '{tier}' maximum allowed ratio is {gate_max}. "
+                    f"Current price ${monthly_price:,.0f} COP vs "
+                    f"expected loss ${expected_loss:,.0f} COP."
+                ),
+                details={
+                    "pain_ratio": pain_ratio,
+                    "tier": tier,
+                    "tier_gate_max": gate_max,
+                    "operational_floor": operational_floor,
+                    "floor_applied": floor_applied,
+                    "ideal_range": [ideal_min, ideal_max],
+                    "monthly_price_cop": monthly_price,
+                    "expected_loss_cop": expected_loss,
+                },
+            )
+
+        # WARNING: outside ideal range with floor applied
+        outside_ideal = pain_ratio < ideal_min or pain_ratio > ideal_max
+        if outside_ideal and floor_applied:
+            return PublicationGateResult(
+                gate_name=gate_name,
+                passed=True,
+                status=GateStatus.WARNING,
+                message=(
+                    f"Pricing compliance PASSED with WARNING: pain_ratio "
+                    f"{pain_ratio:.4f} outside ideal range "
+                    f"[{ideal_min}-{ideal_max}] — operational_floor "
+                    f"${operational_floor:,.0f} applied "
+                    f"(tier '{tier}' gate_max {gate_max}: OK)"
+                ),
+                value=pain_ratio,
+                suggestion=(
+                    f"pain_ratio is structurally inflated by "
+                    f"operational_floor ${operational_floor:,.0f}. "
+                    f"Tier '{tier}' allows up to {gate_max}. "
+                    f"No action required; informational only."
+                ),
+                details={
+                    "pain_ratio": pain_ratio,
+                    "tier": tier,
+                    "tier_gate_max": gate_max,
+                    "operational_floor": operational_floor,
+                    "floor_applied": True,
+                    "ideal_range": [ideal_min, ideal_max],
+                    "monthly_price_cop": monthly_price,
+                    "expected_loss_cop": expected_loss,
+                },
+            )
+
+        # PASSED: within tier gate_max
+        return PublicationGateResult(
+            gate_name=gate_name,
+            passed=True,
+            status=GateStatus.PASSED,
+            message=(
+                f"Pricing compliant: pain_ratio {pain_ratio:.4f} within "
+                f"tier '{tier}' gate_max {gate_max} "
+                f"(ideal range [{ideal_min}-{ideal_max}])"
+            ),
+            value=pain_ratio,
+            suggestion="",
+            details={
+                "pain_ratio": pain_ratio,
+                "tier": tier,
+                "tier_gate_max": gate_max,
+                "operational_floor": operational_floor,
+                "floor_applied": floor_applied,
+                "ideal_range": [ideal_min, ideal_max],
+                "monthly_price_cop": monthly_price,
+                "expected_loss_cop": expected_loss,
+            },
         )
 
     def _extract_conflicts(self, assessment: Dict[str, Any]) -> List[Dict]:

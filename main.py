@@ -2848,6 +2848,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     builder.with_assets(asset_result)
     builder.with_site_presence(site_presence_report)
     builder.with_hotel_data(region)
+    builder.with_pricing(pricing_result)  # FASE-P0-B: inject pricing for pricing_compliance gate
 
     assessment = builder.build()
 

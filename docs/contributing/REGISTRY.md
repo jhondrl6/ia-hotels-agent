@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-08-20
+> **Ultima actualizacion:** 2026-08-21
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 421
+> **Total fases completadas:** 422
 
 ---
 
@@ -9946,6 +9946,28 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-P0-B - 2026-08-21
+**Descripcion:** Gate bloqueante pricing_compliance floor-aware (F1) + AGENTS.md 13 gates
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `modules/assessment_builder.py` | Assessment Builder |
+| `main.py` | Main |
+| `AGENTS.md` | Agents |
+
+### Validaciones
+- [x] Tests passing (18)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

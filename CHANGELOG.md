@@ -28,6 +28,32 @@ Eliminar las constantes de pricing hardcodeadas del Hook PDF y la propuesta come
 
 ---
 
+### FASE-P0-B — Gate bloqueante `pricing_compliance` floor-aware (F1)
+
+#### Objetivo
+Crear el gate de publicación `pricing_compliance` (BLOCKING) que bloquea cuando el pricing calculado incumple los ratios de `config/pricing.yaml`. Diseño floor-aware (decisión D1): BLOCKING solo si `pain_ratio > pain_ratio_gate_max` del tier (0.32 boutique); WARNING si fuera del rango ideal 0.03-0.06 con `operational_floor` aplicado.
+
+#### Cambios
+- `modules/quality_gates/publication_gates.py`: nuevo gate `_pricing_compliance_gate` (gate 13); `_load_pricing_thresholds()` reutiliza `_load_pricing_config()` con fallback; docstring actualizado a 13 gates (10 blocking + 3 advisory)
+- `modules/assessment_builder.py`: nuevo campo `pricing_data` en `AssessmentPayload`; nuevo método `with_pricing()` inyecta pain_ratio/tier/price desde PricingResult
+- `main.py`: `builder.with_pricing(pricing_result)` cableado en FASE 4.5
+- `AGENTS.md`: gate count 12→13 (blocking 9→10); `pricing_compliance` en §Módulos y FASE 4.5
+
+#### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/publication_gates.py` | +_pricing_compliance_gate; +_load_pricing_thresholds; imports logging+os; docstring 13 gates |
+| `modules/assessment_builder.py` | +pricing_data campo; +with_pricing() método fluid |
+| `main.py` | +builder.with_pricing(pricing_result) en FASE 4.5 |
+| `AGENTS.md` | Gate count 12→13; pricing_compliance en §Módulos y FASE 4.5 |
+| `tests/quality_gates/test_pricing_compliance_gate.py` | NUEVO — 18 tests |
+| `tests/quality_gates/test_publication_gates.py` | 4 assertions actualizadas 12→13 |
+
+#### Tests
++18 tests nuevos (TestPricingComplianceGate). 0 regresiones vs línea base (340 passed en quality_gates).
+
+---
+
 ## [4.71.0] — 2026-08-05 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 ### Objetivo

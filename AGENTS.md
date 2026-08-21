@@ -206,7 +206,7 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
-| `modules/quality_gates/` | 12 publication gates — blocking (9): evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, tier_c_onboarding_required, doc_audit_consistency; advisory (3): content_quality, asset_confidence, proposal_asset_alignment | v4complete |
+| `modules/quality_gates/` | 13 publication gates — blocking (10): evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, tier_c_onboarding_required, doc_audit_consistency, pricing_compliance; advisory (3): content_quality, asset_confidence, proposal_asset_alignment | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
@@ -269,6 +269,7 @@ FASE 4.5: PUBLICATION GATES
 ├─ asset_confidence: ≥ threshold
 ├─ proposal_asset_alignment: sin divergencias
 ├─ tier_c_onboarding_required: assessment dict injection
+├─ pricing_compliance: pain_ratio ≤ tier gate_max (floor-aware D1)
 └─ coverage_no_silent_drop: brechas_diagnostico + brechas_justificadas == brechas_detectadas
 
 FASE 4.6: CONSISTENCY CHECKER

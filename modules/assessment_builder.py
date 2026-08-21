@@ -86,6 +86,9 @@ class AssessmentPayload:
     # Hotel data
     hotel_data: Dict[str, str] = field(default_factory=dict)
 
+    # FASE-P0-B: Pricing data for pricing_compliance gate
+    pricing_data: Optional[Dict[str, Any]] = None
+
 
 class AssessmentBuilder:
     """API fluida para construir AssessmentPayload y convertirlo a dict.
@@ -275,6 +278,23 @@ class AssessmentBuilder:
         self._payload.hotel_data = (
             {"region": region.replace("_", " ").title()} if region else {}
         )
+        return self
+
+    def with_pricing(self, pricing_result: Any) -> "AssessmentBuilder":
+        """FASE-P0-B: Inject pricing data for pricing_compliance gate.
+
+        Extracts pain_ratio, tier, monthly_price_cop, expected_loss_cop
+        from PricingResult / PricingResolutionResult (both have these fields).
+        """
+        if pricing_result is None:
+            return self
+        self._payload.pricing_data = {
+            "pain_ratio": getattr(pricing_result, "pain_ratio", None),
+            "tier": getattr(pricing_result, "tier", "boutique"),
+            "monthly_price_cop": getattr(pricing_result, "monthly_price_cop", 0),
+            "expected_loss_cop": getattr(pricing_result, "expected_loss_cop", 0),
+            "is_compliant": getattr(pricing_result, "is_compliant", None),
+        }
         return self
 
     # ─── Build ──────────────────────────────────────────────────────────────

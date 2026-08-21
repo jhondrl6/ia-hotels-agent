@@ -27,6 +27,24 @@
 
 ---
 
+### Notas de Cambios v4.72.0-WIP — FASE-P0-B: Gate pricing_compliance floor-aware
+
+**Fecha:** 2026-08-21
+
+**Resumen**: Nuevo gate de publicación `pricing_compliance` (gate 13, BLOCKING). Diseño floor-aware (D1): BLOCKED solo si `pain_ratio > pain_ratio_gate_max` del tier (0.32 boutique); WARNING si fuera del rango ideal 0.03-0.06 con `operational_floor` aplicado. Sin este diseño, hoteles con fuga < $6.67M/mes y floor 400K nunca podrían cumplir ratio ≤ 0.06.
+
+**Módulos afectados**: `modules/quality_gates/publication_gates.py`, `modules/assessment_builder.py`, `main.py`, `AGENTS.md`
+
+**Problema**: `financial_scenarios.json` reporta `is_compliant: false` (pain_ratio 0.0724 > 0.06 del gate global) y ningún gate lo bloquea. Un gate BLOCKING con umbral global 0.06 haría imposible la publicación de hoteles con floor aplicado.
+
+**Solución**: D1 — Gate floor-aware. Umbral BLOCKING = `pain_ratio_gate_max` del tier (0.32 boutique, ya en pricing.yaml). WARNING si ratio fuera del rango ideal con floor aplicado (structural inflation). Precedente: PATCH-A en `coherence_validator._check_price_matches_pain` (max_ratio 0.50 para floors).
+
+**Backwards compatibility**: El nuevo gate no afecta los 12 existentes. `AssessmentBuilder.with_pricing()` es optional (sin pricing_data → gate PASSED/skipped). AGENTS.md actualizado a 13 gates (validate_agents_md.py PASS).
+
+**Tests**: +18 tests nuevos (TestPricingComplianceGate). 0 regresiones (340 passed en quality_gates).
+
+---
+
 ### Notas de Cambios v4.71.0 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 **Fecha:** 2026-08-05

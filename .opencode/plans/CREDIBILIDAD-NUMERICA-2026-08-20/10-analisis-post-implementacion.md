@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CREDIBILIDAD-NUMERICA-2026-08-20
 
-> **Estado**: Preparación completada — 11 fases diseñadas, ninguna ejecutada aún
+> **Estado**: 2/11 fases completadas (P0-A ✅, P0-B ✅) — 9 restantes
 > **Plan**: CREDIBILIDAD-NUMERICA-2026-08-20
 > **Versión objetivo**: v4.72.0
 > **Creado DESDE LA CONCEPCIÓN** (phased_project_executor v2.15.0): cada fase agrega lecciones aquí al cerrar sesión.
@@ -10,7 +10,7 @@
 | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
 |------|--------|--------|-------------|---------------|-------|
 | FASE-P0-A | 2026-08-20 | ✅ | ~35 | No | 3 tests nuevos contrato F1; 0 regresiones; 22 fallos línea base intactos |
-| FASE-P0-B | — | ⬜ | — | No | |
+| FASE-P0-B | 2026-08-21 | ✅ | ~30 | No | 18 tests nuevos pricing_compliance; gate floor-aware D1; AGENTS.md 12→13 gates; 0 regresiones |
 | FASE-P0-C | — | ⬜ | — | Opcional | |
 | FASE-P1-A | — | ⬜ | — | No | |
 | FASE-P1-B | — | ⬜ | — | Sí (2 tracks) | |
@@ -61,6 +61,14 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | L1 | `_load_pricing_config()` ya existía en `pricing_calculator.py` con caché module-level y fallback. Reutilizarla evita duplicar lógica de carga YAML y garantiza consistencia con el financial engine. | INCLUIR: futuros consumidores de pricing deben importar de pricing_calculator, no reimplementar |
 | L2 | Al eliminar constantes de clase y reemplazarlas con método de instancia `_get_pricing_packages()`, los `getattr(self, '_current_*', self.CONSTANTE)` en 15 sitios del proposal generator requerían migración individual. Un grep global (`self.SETUP_FEE\|self.MONTHLY_PACKAGE_PRICE`) confirmó 0 residuales. | INCLUIR: tras refactor de constantes, SIEMPRE verificar con grep que no queden referencias |
 | L3 | El test `test_pricing_constants` con valores hardcodeados ("120.000", "400.000") se rompió con el refactor. Reescribirlo para comparar contra `_load_pricing_config()` lo hace resiliente a cambios futuros en pricing.yaml. | INCLUIR: tests de contrato deben comparar contra fuente dinámica, no valores fijos |
+
+#### FASE-P0-B
+
+| # | Lección | Pertinencia |
+|---|---------|-------------|
+| L4 | El gate `pricing_compliance` necesita datos de pricing (pain_ratio, tier, monthly_price) en el assessment, pero `AssessmentBuilder` no los inyectaba. Agregar `with_pricing()` como método fluid y `pricing_data` como campo en `AssessmentPayload` resuelve el vacío sin tocar los 12 gates existentes. | INCLUIR: al agregar un gate nuevo, verificar SIEMPRE que el assessment builder propague los datos necesarios |
+| L5 | La detección de `operational_floor` aplicado se implementa comparando `monthly_price <= operational_floor * 1.01` (tolerancia 1%). Sin tolerancia, precios exactos al floor fallan la detección por redondeo de punto flotante. | INCLUIR: comparaciones de precios con floor SIEMPRE deben incluir tolerancia (1% mínimo) |
+| L6 | Los tests existentes (test_all_gates_pass, test_visperas_comprehensive_report) asumen un conteo FIJO de gates (12). Al agregar un gate nuevo, 4 tests se rompieron por assertions `len(results) == 12`. Actualizar a 13 fue trivial pero evitable con assertions dinámicas (`len(orchestrator.gates)`). | INCLUIR: assertions de conteo de gates deben usar `len(orchestrator.gates)` en vez de hardcoded — mejora resiliencia ante futuros gates |
 
 ## Seguimientos abiertos (llenar conforme avancen las fases)
 

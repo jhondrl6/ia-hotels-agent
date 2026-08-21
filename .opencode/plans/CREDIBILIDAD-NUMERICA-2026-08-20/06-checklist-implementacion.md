@@ -19,7 +19,7 @@
 | # | Fase | Fallos | Estado | Sesión | Iteraciones | Notas |
 |---|------|--------|--------|--------|-------------|-------|
 | 1 | FASE-P0-A — Fuente única de pricing + hook PDF dinámico | F1 | ✅ | 2026-08-20 | ~35 | DIRECTO; 3 tests nuevos contrato F1; 0 regresiones |
-| 2 | FASE-P0-B — Gate `pricing_compliance` bloqueante | F1 | ⬜ | — | — | DIRECTO; requiere P0-A ✅ |
+| 2 | FASE-P0-B — Gate `pricing_compliance` bloqueante | F1 | ✅ | 2026-08-21 | ~30 | DIRECTO; 18 tests nuevos pricing_compliance; gate floor-aware D1; AGENTS.md 12→13 gates; 0 regresiones |
 | 3 | FASE-P0-C — Encoding utf-8 en writers de artefactos | F7 | ⬜ | — | — | DELEGABLE opcional |
 | 4 | FASE-P1-A — Benchmark maestro único (incluye Bogotá) | F2, F4 | ⬜ | — | — | DIRECTO |
 | 5 | FASE-P1-B — Fallback región conservador + comisión OTA parametrizada | F3, F5 | ⬜ | — | — | delegate_task 2 tracks |
