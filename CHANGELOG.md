@@ -76,6 +76,39 @@ Garantizar que TODOS los writers de artefactos (JSON/MD/HTML de output) usen `en
 
 ---
 
+### FASE-P1-A — Benchmark maestro único de ADR regional (F2+F4)
+
+#### Objetivo
+Unificar las 3 fuentes de benchmark ADR en una sola (`regional_adr_2026.json` como master), agregar cobertura de Bogotá, calibrar valores contra 6 observaciones Tier A de hoteles reales, y agregar mecanismo de sincronización anti-divergencia.
+
+#### Cambios
+- `data/benchmarks/regional_adr_2026.json`: MASTER ADR/occupancy v1.1.0; Bogotá agregada; eje_cafetero calibrado ($420K→$280K boutique, $350K→$260K standard) vs observaciones Tier A
+- `data/benchmarks/plan_maestro_data.json`: ADR/occupancy sincronizados con master; Bogotá agregada; antioquia y caribe actualizados
+- `config/regional_benchmarks.yaml`: ADR/occupancy sincronizados (referencial); v1.1.0
+- `modules/financial_engine/regional_adr_resolver.py`: +`_normalize_region()` (lowercase-first + alias lookup); Bogotá alias; occupancy normalizada; `_get_known_regions()` unificado de ambas fuentes; `_determine_confidence()` normalizado
+- `scripts/validate_benchmark_sync.py`: NUEVO — valida sincronización ADR/occupancy entre master y plan_maestro_data
+
+#### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `scripts/validate_benchmark_sync.py` | Script de validación de sincronización benchmark |
+| `tests/financial_engine/test_benchmark_master.py` | 19 tests de contrato F2/F4 |
+
+#### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `data/benchmarks/regional_adr_2026.json` | v1.0→v1.1.0; Bogotá; valores calibrados |
+| `data/benchmarks/plan_maestro_data.json` | ADR/occ sync; Bogotá nueva región |
+| `config/regional_benchmarks.yaml` | ADR/occ sync (referencial); v1.1.0 |
+| `modules/financial_engine/regional_adr_resolver.py` | +_normalize_region(); Bogotá alias; occupancy fix; known_regions unificado |
+| `tests/financial_engine/test_regional_adr_resolver.py` | 6 assertions actualizadas: alias→canónico |
+| `tests/financial_engine/test_adr_resolution_wrapper.py` | 1 assertion actualizada: metadata region normalizada |
+
+#### Tests
++19 tests nuevos (TestBenchmarkMaster). 520 passed en suite financial_engine. 10 fallos preexistentes intactos (test_calculator_v2 ×2 + test_pricing_resolution_wrapper ×8). 0 regresiones nuevas.
+
+---
+
 ## [4.71.0] — 2026-08-05 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 ### Objetivo

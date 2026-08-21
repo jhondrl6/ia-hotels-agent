@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.71.0 (Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega)
-**Última actualización:** 2026-08-20
+**Última actualización:** 2026-08-21
 
 ---
 
@@ -60,6 +60,29 @@
 **Backwards compatibility**: 100%. El fix no cambia lógica de negocio, solo agrega encoding explícito. Los readers ya usaban `encoding="utf-8"` (ver `_load_json` en delivery_quality_report.py).
 
 **Tests**: +4 tests nuevos (TestDeliveryQualityReportEncoding + TestEncodingContractStatic). 470 passed en suite delivery+quality_gates+encoding. 0 regresiones.
+
+---
+
+### Notas de Cambios v4.72.0-WIP — FASE-P1-A: Benchmark maestro único de ADR regional
+
+**Fecha:** 2026-08-21
+
+**Resumen**: Unificación de 3 fuentes de benchmark ADR (regional_adr_2026.json, plan_maestro_data.json, regional_benchmarks.yaml) en una sola: `regional_adr_2026.json` como master. Bogotá agregada (F4). Valores calibrados contra 6 observaciones Tier A de hoteles reales del Eje Cafetero (F2). Script de sincronización anti-divergencia. Normalización de nombres de región (aliases + lowercase).
+
+**Módulos afectados**: `data/benchmarks/regional_adr_2026.json`, `data/benchmarks/plan_maestro_data.json`, `config/regional_benchmarks.yaml`, `modules/financial_engine/regional_adr_resolver.py`, `scripts/validate_benchmark_sync.py`
+
+**Problema**: F2 — 3 valores de ADR para eje_cafetero ($285K YAML vs $420K JSON runtime vs $330K plan_maestro). F4 — Bogotá ausente en JSON runtime → degradaba a default $300K. Causa raíz: dos fuentes de benchmarks sin mecanismo de sincronización.
+
+**Solución**: D3 — `regional_adr_2026.json` como master (gana en runtime, estructura por categoría, default_region alineado con nicho). D3b — Retroalimentación benchmark←observations diferida (≥3 hoteles VERIFIED por región). Script `validate_benchmark_sync.py` detecta divergencias. `_normalize_region()` con lowercase-first + alias lookup.
+
+**⚠️ Cambio de comportamiento documentado**:
+- ADR para eje_cafetero boutique cambió de $420K a $280K (calibrado vs observaciones Tier A)
+- Bogotá ahora resuelve a $350K (boutique) / $300K (standard) en vez de degradar al default $300K
+- `result.region` en RegionalADRResolver ahora retorna nombres normalizados ("eje_cafetero" en vez de "coffee_axis")
+
+**Backwards compatibility**: API pública sin cambios. `RegionalADRResolver.resolve()` y `resolve_regional_adr()` mantienen la misma firma. Alias legacy ("coffee_axis", "medellin") siguen funcionando pero retornan el nombre canónico normalizado.
+
+**Tests**: +19 tests nuevos (TestBenchmarkMaster: 6 clases). 520 passed en suite financial_engine. 10 fallos preexistentes intactos. 0 regresiones.
 
 ---
 

@@ -204,7 +204,7 @@ class TestResolveBoutiqueSegment:
         result = resolver_with_data.resolve("coffee_axis", 20)
 
         assert result.adr_cop == 250000.0
-        assert result.region == "coffee_axis"
+        assert result.region == "eje_cafetero"  # P1-A: normalized from coffee_axis
         assert result.segment == "boutique"
         assert result.source == "plan_maestro_v2.5"
 
@@ -221,7 +221,7 @@ class TestResolveBoutiqueSegment:
         result = resolver_with_data.resolve("medellin", 22)
 
         assert result.adr_cop == 290000.0
-        assert result.region == "medellin"
+        assert result.region == "antioquia"  # P1-A: normalized from medellin
         assert result.segment == "boutique"
 
     def test_boutique_boundary_10_rooms(self, resolver_with_data):
@@ -247,7 +247,7 @@ class TestResolveStandardSegment:
         result = resolver_with_data.resolve("coffee_axis", 45)
 
         assert result.adr_cop == 300000.0
-        assert result.region == "coffee_axis"
+        assert result.region == "eje_cafetero"  # P1-A: normalized from coffee_axis
         assert result.segment == "standard"
 
     def test_standard_bogota(self, resolver_with_data):
@@ -263,7 +263,7 @@ class TestResolveStandardSegment:
         result = resolver_with_data.resolve("medellin", 35)
 
         assert result.adr_cop == 350000.0
-        assert result.region == "medellin"
+        assert result.region == "antioquia"  # P1-A: normalized from medellin
         assert result.segment == "standard"
 
     def test_standard_boundary_26_rooms(self, resolver_with_data):
@@ -290,7 +290,7 @@ class TestResolveLargeHotels:
 
         assert result.segment == "large"
         assert result.adr_cop == 280000.0  # Falls back to region adr_cop
-        assert result.region == "coffee_axis"
+        assert result.region == "eje_cafetero"  # P1-A: normalized from coffee_axis
 
     def test_large_hotel_100_rooms(self, resolver_with_data):
         """Test large segment with 100 rooms."""
@@ -306,7 +306,7 @@ class TestResolveLargeHotels:
 
         assert result.segment == "large"
         assert result.adr_cop == 320000.0  # Falls back to region adr_cop
-        assert result.region == "medellin"
+        assert result.region == "antioquia"  # P1-A: normalized from medellin
 
 
 class TestUnknownRegion:

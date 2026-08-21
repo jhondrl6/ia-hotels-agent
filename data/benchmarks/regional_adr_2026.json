@@ -1,46 +1,62 @@
 {
-  "version": "1.0.0",
-  "description": "Benchmarks regionales 2026 para motor financiero — estimaciones, NO datos exactos de hotel",
-  "last_updated": "2026-05-04",
-  "source_document": "data/benchmarks/Benchmarking.md",
+  "version": "1.1.0",
+  "description": "Benchmarks regionales 2026 para motor financiero — estimaciones calibradas vs observaciones Tier A",
+  "last_updated": "2026-08-21",
+  "source_document": "data/benchmarks/Benchmarking.md + data/hotel_observations/observations.json",
   "source_role": "regional_benchmark_not_hotel_specific",
   "valid_for_exact_projection": false,
   "epistemic_status": "regional_benchmark",
   "default_region": "eje_cafetero",
+  "master": true,
+  "sync_note": "Este archivo es el MASTER para ADR y occupancy. plan_maestro_data.json debe sincronizarse via scripts/validate_benchmark_sync.py. Calibrado en FASE-P1-A vs 6 hoteles observados (eje_cafetero).",
   "regions": {
     "eje_cafetero": {
       "boutique_10_25": {
-        "adr_cop": 420000,
+        "adr_cop": 280000,
         "occupancy_rate": 0.512,
-        "rooms_range": [10, 25]
+        "rooms_range": [10, 25],
+        "calibration_note": "Calibrado vs Don Alfonso ($330K) y Castilla Real ($282K). Luxor ($200K) excluido por hotel de paso."
       },
       "standard_26_60": {
-        "adr_cop": 350000,
+        "adr_cop": 260000,
         "occupancy_rate": 0.512,
-        "rooms_range": [26, 60]
+        "rooms_range": [26, 60],
+        "calibration_note": "Calibrado vs Zi One ($290K), Luma ($200K) y Abadia ($300K)."
       }
     },
     "caribe": {
       "boutique_10_25": {
-        "adr_cop": 950000,
+        "adr_cop": 450000,
         "occupancy_rate": 0.685,
         "rooms_range": [10, 25]
       },
       "standard_26_60": {
-        "adr_cop": 750000,
+        "adr_cop": 380000,
         "occupancy_rate": 0.685,
         "rooms_range": [26, 60]
       }
     },
     "antioquia": {
       "boutique_10_25": {
-        "adr_cop": 620000,
+        "adr_cop": 500000,
         "occupancy_rate": 0.642,
         "rooms_range": [10, 25]
       },
       "standard_26_60": {
-        "adr_cop": 480000,
+        "adr_cop": 400000,
         "occupancy_rate": 0.642,
+        "rooms_range": [26, 60]
+      }
+    },
+    "bogota": {
+      "boutique_10_25": {
+        "adr_cop": 350000,
+        "occupancy_rate": 0.65,
+        "rooms_range": [10, 25]
+      },
+      "standard_26_60": {
+        "adr_cop": 300000,
+        "occupancy_rate": 0.65,
         "rooms_range": [26, 60]
       }
     },

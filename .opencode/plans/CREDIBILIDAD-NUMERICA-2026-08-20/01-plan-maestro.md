@@ -88,7 +88,8 @@ FASE-RELEASE-4.72.0 (requiere E2E ✅)
 ## 5. Fuera de Alcance (explícito)
 
 - P3: deployer real, Express 5 páginas, monitoreo mensual automatizado (post primer cliente pagado).
-- Modificación de `ROADMAP.md`, `observations.json` (solo lectura), y ejecución de la batería de prospectos (F9 entrega el script; la ejecución batch es operativa).
+- Modificación de `ROADMAP.md` y ejecución de la batería de prospectos (F9 entrega el script; la ejecución batch es operativa).
+- `observations.json`: solo lectura en este plan. Ciclo de retroalimentación benchmark ← observations documentado en P1-A (D3b), implementación diferida a P1-C/P2.
 - Contacto comercial con prospectos.
 
 ## 6. Línea Base de Tests y Regla de Interpretación (verificada 2026-08-20)
@@ -130,10 +131,18 @@ aquí para que los prompts las ejecuten sin re-abrir el análisis:
    Cobertura: los 5 sitios hardcodeados (ver F5 §1); el flatten `comision_ota_min/base/max` ya
    existe en `financial_factors.py` L78-86 — los consumidores (`main.py` L361,
    `plan_validator.py` L38) no deben romperse.
-3. **D3 (P1-A, benchmark master)**: la decisión YAML-vs-JSON debe incluir la dimensión
-   plano-vs-categoría y el destino de `plan_maestro_data.json` (tercera fuente viva con 9+
-   consumidores: regional_adr_resolver, v4_proposal_generator, v4_diagnostic_generator,
-   scraper_fallback, dynamic_impact, utils/benchmarks, plan_validator, financial_factors).
+3. **D3 (P1-A, benchmark master)**: **Resuelta: JSON (`regional_adr_2026.json`) como master.**
+   Rationale: ya gana en runtime, estructura por categoría (boutique/standard) más granular
+   que ADR plano del YAML, `default_region = "eje_cafetero"` alineado con nicho fundacional.
+   YAML se adapta como vista legible o se depreca. La dimensión plano-vs-categoría y el
+   destino de `plan_maestro_data.json` (tercera fuente viva con 9+ consumidores:
+   regional_adr_resolver, v4_proposal_generator, v4_diagnostic_generator, scraper_fallback,
+   dynamic_impact, utils/benchmarks, plan_validator, financial_factors) quedan documentados
+   en `10-analisis-post-implementacion.md`.
+   **D3b (retroalimentación benchmark ← observations)**: `observations.json` es activo
+   estratégico creciente (contacto personal hotelero). El mecanismo de recalibración de
+   benchmarks a partir de observaciones Tier A (umbral: ≥3 hoteles VERIFIED por región)
+   se documenta en P1-A pero se implementa en fase posterior (P1-C o P2).
 4. **D4 (P1-C, rango del hook)**: cablear el rango al benchmark master ANTES de aplicar el cap
    (el cap sobre defaults hardcodeados acota un rango fabricado). El constructor de
    `TwoPhaseOrchestrator` ya acepta `plan_maestro_data` (two_phase_flow.py L93); el cableado es

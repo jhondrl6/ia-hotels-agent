@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CREDIBILIDAD-NUMERICA-2026-08-20
 
-> **Estado**: 3/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅) — 8 restantes
+> **Estado**: 4/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅) — 7 restantes
 > **Plan**: CREDIBILIDAD-NUMERICA-2026-08-20
 > **Versión objetivo**: v4.72.0
 > **Creado DESDE LA CONCEPCIÓN** (phased_project_executor v2.15.0): cada fase agrega lecciones aquí al cerrar sesión.
@@ -12,7 +12,7 @@
 | FASE-P0-A | 2026-08-20 | ✅ | ~35 | No | 3 tests nuevos contrato F1; 0 regresiones; 22 fallos línea base intactos |
 | FASE-P0-B | 2026-08-21 | ✅ | ~30 | No | 18 tests nuevos pricing_compliance; gate floor-aware D1; AGENTS.md 12→13 gates; 0 regresiones |
 | FASE-P0-C | 2026-08-21 | ✅ | ~15 | No (DIRECTO) | 4 tests nuevos encoding; auditoría estática AST; fix en 3 writers (1 delivery_quality_report + 2 config_checker); 0 regresiones |
-| FASE-P1-A | — | ⬜ | — | No | |
+| FASE-P1-A | 2026-08-21 | ✅ | ~45 | No | 19 tests nuevos benchmark_master; normalización regiones; script sync; D3+D3b documentadas; 0 regresiones vs baseline (10 preexistentes) |
 | FASE-P1-B | — | ⬜ | — | Sí (2 tracks) | |
 | FASE-P1-C | — | ⬜ | — | No | |
 | FASE-P1-D | — | ⬜ | — | No | Máxima complejidad |
@@ -60,7 +60,7 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 |---|---------|-------------|
 | L1 | `_load_pricing_config()` ya existía en `pricing_calculator.py` con caché module-level y fallback. Reutilizarla evita duplicar lógica de carga YAML y garantiza consistencia con el financial engine. | INCLUIR: futuros consumidores de pricing deben importar de pricing_calculator, no reimplementar |
 | L2 | Al eliminar constantes de clase y reemplazarlas con método de instancia `_get_pricing_packages()`, los `getattr(self, '_current_*', self.CONSTANTE)` en 15 sitios del proposal generator requerían migración individual. Un grep global (`self.SETUP_FEE\|self.MONTHLY_PACKAGE_PRICE`) confirmó 0 residuales. | INCLUIR: tras refactor de constantes, SIEMPRE verificar con grep que no queden referencias |
-| L3 | El test `test_pricing_constants` con valores hardcodeados ("120.000", "400.000") se rompió con el refactor. Reescribirlo para comparar contra `_load_pricing_config()` lo hace resiliente a cambios futuros en pricing.yaml. | INCLUIR: tests de contrato deben comparar contra fuente dinámica, no valores fijos |
+| L3 | El test `test_pricing_constants` con valores hardcodeados (“120.000”, “400.000”) se rompió con el refactor. Reescribirlo para comparar contra `_load_pricing_config()` lo hace resiliente a cambios futuros en pricing.yaml. | INCLUIR: tests de contrato deben comparar contra fuente dinámica, no valores fijos |
 
 #### FASE-P0-B
 
@@ -77,6 +77,27 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | L7 | La auditoría de writers sin encoding reveló que de ~60 writers en modules/, solo 3 carecían de encoding='utf-8'. El patrón dominante es que los writers YA estaban corregidos (probablemente por P0-A o convenciones previas). Un test estático con AST (ast.parse + walk) es más robusto que grep para detectar violaciones futuras porque entiende la estructura del código y no genera falsos positivos con comentarios o strings. | INCLUIR: para contratos de código transversales (encoding, imports prohibidos), usar AST en vez de regex/grep |
 | L8 | `delivery_quality_report.py` era el writer crítico (F7 original: UnicodeDecodeError byte 0xf3). El fix fue trivial (1 línea) pero el impacto es alto: es el primer archivo que se lee al abrir el ZIP de entrega. Los writers de config_checker.py son archivos temporales de prueba de permisos — el fix es preventivo (evita fallo en sistemas con locale no-UTF-8). | INCLUIR: priorizar fixes de encoding por impacto en el usuario final, no por cantidad de writers |
 | L9 | El test de contrato anti-regresión con caracteres Unicode (em-dash “–”, tildes “ó”, “é”) verifica el roundtrip save→load. Sin estos caracteres explícitos en el test, un futuro cambio podría reintroducir write_text sin encoding y el test pasaría porque ASCII no distingue cp1252 de utf-8. | INCLUIR: tests de encoding SIEMPRE deben incluir caracteres no-ASCII (tildes, ñ, em-dash) para ser efectivos |
+
+#### FASE-P1-A
+
+| # | Lección | Pertinencia |
+|---|---------|-------------|
+| L10 | El inventario T0 reveló **3 fuentes** de benchmarks (no 2 como asumía el plan original): regional_adr_2026.json, plan_maestro_data.json, regional_benchmarks.yaml. El YAML resultó NO consumirse en cálculos financieros (solo pain_narratives y thresholds). Un grep exhaustivo ANTES de decidir master evitó migrar consumidores irrelevantes. | INCLUIR: siempre verificar consumo real con grep antes de refactor multi-fuente |
+| L11 | `_normalize_region()` debe aplicar lowercase ANTES del alias lookup, no después. Caso: “Bogotá” (mayúscula) no matchea alias “bogotá” (minúscula) si el lookup va primero. Orden correcto: lowercase → alias → lowercase final. | INCLUIR: normalización de strings con aliases SIEMPRE lowercase-first |
+| L12 | `_get_known_regions()` retornaba keys crudas del data source, pero `_normalize_region()` retornaba nombres normalizados. Mismatch causaba que regiones conocidas se marcaran como `is_default=True` al consultarlas con alias (coffee_axis→eje_cafetero no matcheaba “coffee_axis” en known). Fix: normalizar keys en `_get_known_regions()`. | INCLUIR: cuando hay normalización de entrada, la comparación SIEMPRE debe usar la misma normalización en ambos lados |
+
+**T0b: Desviación benchmark vs observaciones Tier A (Eje Cafetero)**
+
+| Hotel | Categoría | ADR observado | Benchmark anterior | Desviación |
+|-------|-----------|--------------|-------------------|------------|
+| Don Alfonso | boutique | $330K | $420K | -21% |
+| Castilla Real | boutique | $282K | $420K | -33% |
+| Luxor (tránsito) | boutique | $200K | $420K | -52% |
+| Zi One | standard | $290K | $350K | -17% |
+| Luma Plaza (tránsito) | standard | $200K | $350K | -43% |
+| Abadia Plaza (tránsito) | standard | $300K | $350K | -14% |
+
+Decisión: benchmark $420K era desactualizado/aspiracional. Master calibrado a $280K boutique (promedio no-tránsito: $306K) y $260K standard (promedio: $263K). Hoteles de tránsito excluidos del benchmark por no ser competidores del nicho boutique-destino.
 
 ## Seguimientos abiertos (llenar conforme avancen las fases)
 
@@ -101,7 +122,8 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 |----|----------|-----------|--------------------------|------|
 | D1 | Gate pricing_compliance floor-aware: BLOCKING solo si pain_ratio > pain_ratio_gate_max del tier (0.32 boutique); WARNING fuera de 0.03-0.06 con operational_floor aplicado | Con umbrales globales 0.03-0.06 como blocking, fuga < 6.67M/mes con floor 400K nunca cumple ratio ≤ 0.06 → V12 inalcanzable; precedente PATCH-A en coherence_validator (max_ratio 0.50) | Umbrales globales como blocking | FASE-P0-B |
 | D2 | Comisión OTA: campo EXISTENTE `comision_ota` (0.18-0.22) + `source`; 5 sitios hardcodeados eliminados | Campo ya existente dentro de la narrativa 17-25%; consumidores activos (financial_factors.py, main.py L361) | Crear campo nuevo `ota_commission` | FASE-P1-B |
-| D3 | Benchmark master: ¿YAML o JSON? (dimensiones: plano vs categoría; destino de plan_maestro_data.json) | Decidir en fase con el mapa T0 de 3 fuentes y 9+ consumidores | — | FASE-P1-A |
+| D3 | JSON (regional_adr_2026.json) como master ADR/occupancy por región. YAML es referencial (no consumido en cálculos). plan_maestro_data.json sincronizado via validate_benchmark_sync.py | Ya gana en runtime; estructura por categoría (boutique/standard) más granular que YAML plano; default_region alineado con nicho fundacional. Calibrado vs 6 observaciones Tier A | YAML como master (pierde categoría); crear un cuarto archivo consolidado (más complejidad sin beneficio) | FASE-P1-A ✅ |
+| D3b | Retroalimentación benchmark←observations: diferida a P1-C o P2. Umbral: ≥3 hoteles VERIFIED por región+segmento para recalibrar. Strategy: calcular mediana de observaciones no-transit, comparar vs benchmark, actualizar si desviación >20% | Suficiente data hoy solo para eje_cafetero (6 hoteles, todos Eje Cafetero). Otras regiones sin observaciones Tier A. Implementar ahora sería prematuro | Implementar ahora (sin data suficiente fuera de Eje Cafetero); umbral ≥5 (retrasaría demasiado la retroalimentación) | FASE-P1-A ✅ |
 | D4 | Rango del hook cableado al benchmark master ANTES del cap | El cap sobre defaults hardcodeados acota un rango fabricado | Cap directo sin cableado | FASE-P1-C |
 | D5 | AGENTS.md gate count 12→13 actualizado en P0-B y validado con validate_agents_md.py | `--quick` no valida gate count; drift invisible si se pospone a RELEASE | Posponer actualización a RELEASE | FASE-P0-B |
 | D6 | pricing.yaml como fuente única de pricing: constantes `PRECIO_EXPRESS/PRECIO_MENSUAL/SETUP_FEE` (hook_pdf) y `MONTHLY_PACKAGE_PRICE/SETUP_FEE` (proposal) eliminadas; ambos módulos consumen de `_load_pricing_config()["packages"]`; +express_price: 120000 agregado a pricing.yaml | Principio "una fuente de verdad por concepto": 3 fuentes Python no sincronizadas generaban riesgo de cifras contradictorias en output del cliente. La solución reutiliza infraestructura existente (pricing_calculator._load_pricing_config con caché) sin crear módulo nuevo | Crear pricing_service.py nuevo (más abstracción); mantener constantes con sync manual (más frágil) | FASE-P0-A ✅ |

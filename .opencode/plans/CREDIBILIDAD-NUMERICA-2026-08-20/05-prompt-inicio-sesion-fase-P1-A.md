@@ -23,6 +23,16 @@ CONTEXT §2 fallos **F2** y **F4**:
 Causa raíz: dos fuentes de benchmarks sin mecanismo de sincronización. P1 exige consistencia de
 benchmarks antes del primer hook enviado (la fuga debe ser defendible).
 
+### Prioridad de regiones (orden de atención)
+1. **Eje Cafetero**: nicho fundacional, mayor densidad de observaciones Tier A (6 hoteles en `observations.json`). Benchmark DEBE ser consistente con datos observados.
+2. **Caribe/Antioquia**: expansiones posteriores, sin hoteles Tier A verificados. Consistencia interna suficiente.
+3. **Bogotá**: cobertura de tercera generación. Resolver default (F4) es necesario pero secundario vs. consistencia del core.
+
+### Observaciones Tier A como activo estratégico
+`data/hotel_observations/observations.json` crece sostenidamente por el modelo de negocio
+(contacto personal hotelero). Hoy: 6 hoteles (todos Eje Cafetero). Este archivo es fuente de
+verdad individual que eventualmente debe retroalimentar los benchmarks regionales agregados.
+
 ### Estado de Fases Anteriores
 | Fase | Estado |
 |------|--------|
@@ -47,11 +57,37 @@ consumidor adicional NO listado. Grep sugerido: `regional_benchmarks|regional_ad
 - [ ] Inventario escrito: fuente → esquema (plano/categoría) → consumidores (archivo+línea) → concepto que consume (ADR/occupancy/scores/factores)
 - [ ] Los 9+ consumidores de plan_maestro_data verificados y clasificados por concepto (solo los de ADR/occupancy entran en scope de unificación; scores/factores quedan documentados pero fuera de esta fase — no romper financial_factors)
 
+### T0b: Calibración benchmark vs observaciones Tier A
+**Objetivo**: comparar ADR del benchmark contra hoteles reales de `observations.json` para
+detectar desviaciones antes de consolidar el master.
+
+**Verificación mínima (Eje Cafetero boutique)**:
+| Fuente | ADR |
+|--------|-----|
+| `regional_adr_2026.json` (benchmark) | $420K |
+| Hotel Luxor (observado) | $200K |
+| Don Alfonso (observado) | $330K |
+| Zi One (observado) | $290K |
+| Castilla Real (observado) | $282K |
+
+**Criterios de aceptación**:
+- [ ] Desviación benchmark vs observados documentada en `10-analisis-post-implementacion.md`
+- [ ] Decisión: ¿benchmark es aspiracional, desactualizado, u observados son atípicos?
+- [ ] Si se ajusta el master, el valor para Eje Cafetero boutique refleja la realidad observada (o se documenta rationale para mantener el valor actual)
+
 ### T1: Diseñar e implementar el benchmark maestro único
 **Decisión a documentar** (10-analisis-post-implementacion.md, decisión D3 del maestro §7):
-- ¿YAML o JSON como master? (JSON gana en runtime; YAML es más legible para edición manual)
-- **¿ADR plano o por categoría?** (asimetría estructural NO contemplada en el plan original: YAML es plano, JSON es por categoría — el master hereda una de las dos y el otro archivo se adapta o deprecia)
+- **Recomendación: JSON (`regional_adr_2026.json`) como master.** Rationale: ya gana en runtime, estructura por categoría (boutique/standard) más granular que ADR plano del YAML, `default_region = "eje_cafetero"` alineado con nicho fundacional. YAML se adapta como vista legible o se depreca.
 - **¿Destino de plan_maestro_data.json?** (tercera fuente viva: ¿se convierte en derivado del master para ADR/occupancy conservando scores/paquetes, o se acota su rol con validación anti-divergencia?)
+
+### T1b: Documentar mecanismo de retroalimentación benchmark ← observations
+**Objetivo**: dejar documentada (NO implementar en P1-A) la estrategia para que
+`observations.json` recalibre los benchmarks cuando haya suficientes hoteles por región.
+
+**Criterios de aceptación**:
+- [ ] Decisión D3b documentada en `10-analisis-post-implementacion.md`
+- [ ] Umbral mínimo definido (sugerido: ≥3 hoteles VERIFIED por región para recalibrar)
+- [ ] Nota: este ciclo se implementa en fase posterior (P1-C o P2)
 
 **Archivos afectados**:
 - `config/regional_benchmarks.yaml` o `data/benchmarks/regional_adr_2026.json` (elegir master)
@@ -102,7 +138,7 @@ consumidor adicional NO listado. Grep sugerido: `regional_benchmarks|regional_ad
 1. `dependencias-fases.md` y `06-checklist-implementacion.md`: marcar FASE-P1-A ✅.
 2. `README.md` del plan: actualizar tabla de progreso.
 3. `09-documentacion-post-proyecto.md`: secciones A/B/D/E.
-4. `10-analisis-post-implementacion.md`: fila de ejecución + mínimo 3 lecciones + **decisión D3 documentada** (cuál archivo es master + rationale).
+4. `10-analisis-post-implementacion.md`: fila de ejecución + mínimo 3 lecciones + **decisión D3 documentada** (JSON como master + rationale) + **decisión D3b** (mecanismo de retroalimentación benchmark ← observations).
 5. **Registrar la fase**:
 ```powershell
 .\venv\Scripts\python.exe scripts/log_phase_completion.py --fase FASE-P1-A --desc "Benchmark maestro unico de ADR regional (F2+F4) con mapa de 3 fuentes y 9+ consumidores" --archivos-mod "config/regional_benchmarks.yaml,data/benchmarks/regional_adr_2026.json,modules/financial_engine/regional_adr_resolver.py" --tests "<N>" --check-manual-docs
@@ -112,7 +148,9 @@ consumidor adicional NO listado. Grep sugerido: `regional_benchmarks|regional_ad
 ## Criterios de Completitud (CHECKLIST)
 
 - [ ] Bogotá y eje_cafetero resuelven a valores únicos y consistentes
+- [ ] Eje Cafetero benchmark calibrado vs observaciones Tier A (T0b)
 - [ ] Mecanismo de sincronización implementado (o migración total)
+- [ ] Mecanismo de retroalimentación benchmark ← observations documentado (T1b, decisión D3b)
 - [ ] Suite financial_engine sin fallos NUEVOS vs línea base (§6)
 - [ ] `run_all_validations.py --quick` TOTAL PASS
 - [ ] Post-ejecución completada

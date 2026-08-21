@@ -60,7 +60,7 @@
   "tests/financial_engine/test_scenario_calculator.py": "FASE-5",
   "modules/financial_engine/adr_resolution_wrapper.py": "FIN-2B",
   "modules/validation/coherence_validator.py": "FASE-E",
-  "modules/financial_engine/regional_adr_resolver.py": "FIN-2A",
+  "modules/financial_engine/regional_adr_resolver.py": "FASE-P1-A",
   "modules/scrapers/scraper_fallback.py": "FASE-H",
   "tests/financial_engine/test_regional_adr_resolver.py": "FASE-H",
   ".opencode/plans/context/diagnostico_3132_cop_investigacion.md": "FASE-H",
@@ -194,7 +194,7 @@
   "config/commercial.yaml": "FASE-5",
   "tests/asset_generation/test_conditional_new_assets.py": "FASE-5",
   "tests/asset_generation/test_phase4_guardrails.py": "FASE-5",
-  "config/regional_benchmarks.yaml": "FASE-A",
+  "config/regional_benchmarks.yaml": "FASE-P1-A",
   "test_capex_rename.py": "FASE-1",
   "NONE": "FASE-4",
   "modules/auditors/llm_mention_checker.py": "FASE-2",
@@ -227,5 +227,8 @@
   "modules/commercial_documents/hook_pdf_generator.py": "FASE-P0-A",
   "tests/commercial_documents/test_hook_pdf_generator.py": "FASE-P0-A",
   "modules/utils/config_checker.py": "FASE-P0-C",
-  "tests/test_encoding_artifacts.py": "FASE-P0-C"
+  "tests/test_encoding_artifacts.py": "FASE-P0-C",
+  "data/benchmarks/regional_adr_2026.json": "FASE-P1-A",
+  "data/benchmarks/plan_maestro_data.json": "FASE-P1-A",
+  "scripts/validate_benchmark_sync.py": "FASE-P1-A"
 }

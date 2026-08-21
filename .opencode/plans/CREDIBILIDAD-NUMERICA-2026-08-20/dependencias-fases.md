@@ -11,7 +11,7 @@ FASE-P0-A (pricing único) ✅
     │
 FASE-P0-C (encoding) ✅  [independiente]
     │
-FASE-P1-A (benchmark maestro)
+FASE-P1-A (benchmark maestro) ✅
     │
     ├──→ FASE-P1-B (fallback región + OTA; usa benchmark maestro)
     │        │

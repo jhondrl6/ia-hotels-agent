@@ -1,11 +1,13 @@
 # Regional Benchmarks Configuration
 # FASE-CONFIG-5: Extracción de Umbrales y Narrativas de Impacto
-# Versión: 1.0.0
+# FASE-P1-A: ADR sincronizado con regional_adr_2026.json (master). El campo adr aquí
+# es REFERENCIAL — no se consume en cálculos financieros (ADR fluye via RegionalADRResolver).
+# Versión: 1.1.0
 # Fuente: v4_diagnostic_generator.py, v4_proposal_generator.py
-# Uso: Centralizar thresholds de scoring para soporte multi-región
+# Uso: Centralizar thresholds de scoring y narrativas de impacto por región
 
-version: "1.0.0"
-description: "Umbrales de scoring y narrativas de impacto por región"
+version: "1.1.0"
+description: "Umbrales de scoring y narrativas de impacto por región (ADR referencial, master en regional_adr_2026.json)"
 
 default_region: "eje_cafetero"
 
@@ -13,10 +15,11 @@ regions:
   eje_cafetero:
     # =========================================================================
     # REGIONAL BENCHMARKS (MIN-02) — Datos de referencia del mercado hotelero
-    # Fuente: Cotelco 2026, benchmarks regionales
+    # Fuente: Cotelco 2026, benchmarks regionales + observaciones Tier A
+    # P1-A: Calibrado vs Don Alfonso ($330K), Castilla Real ($282K)
     # =========================================================================
-    adr: 285000
-    occupancy_rate: 0.55
+    adr: 280000
+    occupancy_rate: 0.512
 
     # =========================================================================
     # PAIN NARRATIVES (N-05) - Impacto porcentual por tipo de dolor
@@ -90,9 +93,10 @@ regions:
   caribe:
     # =========================================================================
     # REGIONAL BENCHMARKS (MIN-02)
+    # P1-A: ADR sincronizado con regional_adr_2026.json (master)
     # =========================================================================
-    adr: 320000
-    occupancy_rate: 0.62
+    adr: 450000
+    occupancy_rate: 0.685
 
     pain_narratives:
       no_whatsapp_visible: 0.20
@@ -170,9 +174,10 @@ regions:
   antioquia:
     # =========================================================================
     # REGIONAL BENCHMARKS (MIN-02)
+    # P1-A: ADR sincronizado con regional_adr_2026.json (master)
     # =========================================================================
-    adr: 310000
-    occupancy_rate: 0.58
+    adr: 500000
+    occupancy_rate: 0.642
 
     pain_narratives:
       no_whatsapp_visible: 0.20

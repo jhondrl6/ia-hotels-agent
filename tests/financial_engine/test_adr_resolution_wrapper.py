@@ -311,7 +311,7 @@ class TestActiveMode:
 
         result = wrapper.resolve("coffee_axis", 30)
 
-        assert result.metadata["region"] == "coffee_axis"
+        assert result.metadata["region"] == "eje_cafetero"  # P1-A: normalized from coffee_axis
         assert result.metadata["segment"] == "standard"
         assert result.metadata["is_default"] is False
         assert result.metadata["regional_source"] == "plan_maestro_v2.5"

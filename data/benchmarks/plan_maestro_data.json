@@ -137,11 +137,12 @@
         "geo_score_ref": 85,
         "aeo_score_ref": 40,
         "seo_score_ref": 59,
-        "iao_score_ref": 15
+        "iao_score_ref": 15,
+        "adr_sync_note": "ADR/occupancy sincronizados con regional_adr_2026.json (master) en FASE-P1-A"
       },
       "antioquia": {
-        "precio_promedio": 280000,
-        "ocupacion": 0.6,
+        "precio_promedio": 500000,
+        "ocupacion": 0.642,
         "habitaciones_promedio": 18,
         "geo_score_ref": 84,
         "aeo_score_ref": 43,
@@ -149,8 +150,8 @@
         "iao_score_ref": 18
       },
       "eje_cafetero": {
-        "precio_promedio": 330000,
-        "ocupacion": 0.52,
+        "precio_promedio": 280000,
+        "ocupacion": 0.512,
         "habitaciones_promedio": 12,
         "geo_score_ref": 89,
         "aeo_score_ref": 44,
@@ -158,13 +159,22 @@
         "iao_score_ref": 20
       },
       "caribe": {
-        "precio_promedio": 410000,
-        "ocupacion": 0.66,
+        "precio_promedio": 450000,
+        "ocupacion": 0.685,
         "habitaciones_promedio": 25,
         "geo_score_ref": 82,
         "aeo_score_ref": 32,
         "seo_score_ref": 53,
         "iao_score_ref": 12
+      },
+      "bogota": {
+        "precio_promedio": 350000,
+        "ocupacion": 0.65,
+        "habitaciones_promedio": 20,
+        "geo_score_ref": 80,
+        "aeo_score_ref": 45,
+        "seo_score_ref": 62,
+        "iao_score_ref": 22
       }
     },
     "coherence_gate": {

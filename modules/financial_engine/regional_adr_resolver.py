@@ -102,6 +102,9 @@ class RegionalADRResolver:
     def resolve(self, region: str, rooms: int, user_provided_adr: Optional[float] = None) -> RegionalADRResult:
         segment = self._determine_segment(rooms)
 
+        # P1-A: Normalize region name (aliases + lowercase) for consistent is_default/region checks
+        normalized_region = self._normalize_region(region)
+
         # FIN-2A: Try regional_adr_2026.json first
         adr, occupancy, epistemic_status, source = self._resolve_from_regional_benchmarks(region, segment)
 
@@ -114,11 +117,12 @@ class RegionalADRResolver:
             source = "plan_maestro_v2.5"
 
         confidence = self._determine_confidence(region, user_provided_adr, adr)
-        is_default = region not in self._get_known_regions()
+        known = self._get_known_regions()
+        is_default = normalized_region not in known
 
         return RegionalADRResult(
             adr_cop=adr,
-            region=region if region in self._get_known_regions() else "default",
+            region=normalized_region if normalized_region in known else "default",
             segment=segment,
             confidence=confidence,
             source=source,
@@ -137,18 +141,25 @@ class RegionalADRResolver:
     REGION_ALIASES = {
         "coffee_axis": "eje_cafetero",
         "medellin": "antioquia",
-        # bogota not mapped — no coverage in regional_adr_2026.json, use default
+        "bogotá": "bogota",
     }
+
+    def _normalize_region(self, region: str) -> str:
+        """Apply aliases and normalize to lowercase_underscore (P1-A).
+
+        Order: lowercase first, then alias lookup, then final normalize.
+        """
+        lowered = region.lower().replace(' ', '_')
+        aliased = self.REGION_ALIASES.get(lowered, lowered)
+        return aliased.lower().replace(' ', '_')
 
     def _resolve_from_regional_benchmarks(self, region: str, segment: str):
         """Try to resolve ADR from regional_adr_2026.json. Returns (adr, occupancy, epistemic_status, source)."""
         if not self._regional_benchmarks:
             return None, None, None, None
 
-        # Apply legacy region alias if present, then normalize for JSON key lookup
-        # Handle both legacy aliases ("coffee_axis") and raw DOM strings ("Eje Cafetero")
-        aliased = self.REGION_ALIASES.get(region, region)
-        resolved_region = aliased.lower().replace(' ', '_')
+        # P1-A: Use _normalize_region for consistent resolution
+        resolved_region = self._normalize_region(region)
         regions = self._regional_benchmarks.get("regions", {})
         region_data = regions.get(resolved_region)
 
@@ -207,7 +218,8 @@ class RegionalADRResolver:
         return region_data.get("adr_cop", region_data.get("precio_promedio", 300000.0))
     
     def _determine_confidence(self, region: str, user_provided_adr: Optional[float], benchmark_adr: float) -> str:
-        if region not in self._get_known_regions():
+        normalized = self._normalize_region(region)
+        if normalized not in self._get_known_regions():
             return "ESTIMATED"
         if user_provided_adr is None:
             return "ESTIMATED"
@@ -227,23 +239,40 @@ class RegionalADRResolver:
         return abs(user_adr - benchmark_adr) / benchmark_adr * 100
     
     def _get_known_regions(self) -> set:
-        if not self._data:
-            return {"default"}
-        regiones = self._data.get("v25_config", {}).get("regiones", {})
-        if not regiones:
-            regiones = self._data.get("regiones", {})
-        return set(regiones.keys())
+        """Get all known region keys from both data sources (P1-A: unified).
+
+        Returns NORMALIZED keys (aliases resolved + lowercase) to match
+        _normalize_region() output for consistent comparison.
+        """
+        known = set()
+        # From regional_adr_2026.json (master)
+        if self._regional_benchmarks:
+            regions = self._regional_benchmarks.get("regions", {})
+            for k in regions.keys():
+                if k != "default":
+                    known.add(self._normalize_region(k))
+        # From plan_maestro_data.json
+        if self._data:
+            regiones = self._data.get("v25_config", {}).get("regiones", {})
+            if not regiones:
+                regiones = self._data.get("regiones", {})
+            for k in regiones.keys():
+                known.add(self._normalize_region(k))
+        known.add("default")
+        return known
     
     def resolve_occupancy(self, region: str) -> float:
         """Resolve occupancy rate for a region.
 
         FIN-2A: First tries regional_adr_2026.json, then falls back to plan_maestro_data.
+        P1-A: Uses _normalize_region for consistent resolution with resolve().
         Returns the calibrated occupancy or 0.50 as default.
         """
         # FIN-2A: Try regional benchmarks first
         if self._regional_benchmarks:
+            resolved_region = self._normalize_region(region)
             regions = self._regional_benchmarks.get("regions", {})
-            region_data = regions.get(region)
+            region_data = regions.get(resolved_region)
             if region_data is None:
                 region_data = regions.get("default", {})
             if region_data:
