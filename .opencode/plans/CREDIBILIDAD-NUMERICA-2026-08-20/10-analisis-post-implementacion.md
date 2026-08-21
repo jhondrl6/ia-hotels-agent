@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CREDIBILIDAD-NUMERICA-2026-08-20
 
-> **Estado**: 4/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅) — 7 restantes
+> **Estado**: 5/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅) — 6 restantes
 > **Plan**: CREDIBILIDAD-NUMERICA-2026-08-20
 > **Versión objetivo**: v4.72.0
 > **Creado DESDE LA CONCEPCIÓN** (phased_project_executor v2.15.0): cada fase agrega lecciones aquí al cerrar sesión.
@@ -13,7 +13,7 @@
 | FASE-P0-B | 2026-08-21 | ✅ | ~30 | No | 18 tests nuevos pricing_compliance; gate floor-aware D1; AGENTS.md 12→13 gates; 0 regresiones |
 | FASE-P0-C | 2026-08-21 | ✅ | ~15 | No (DIRECTO) | 4 tests nuevos encoding; auditoría estática AST; fix en 3 writers (1 delivery_quality_report + 2 config_checker); 0 regresiones |
 | FASE-P1-A | 2026-08-21 | ✅ | ~45 | No | 19 tests nuevos benchmark_master; normalización regiones; script sync; D3+D3b documentadas; 0 regresiones vs baseline (10 preexistentes) |
-| FASE-P1-B | — | ⬜ | — | Sí (2 tracks) | |
+| FASE-P1-B | 2026-08-21 | ✅ | ~45 | No (DIRECTO) | 24 tests nuevos (12 F3 + 12 F5); comisión OTA parametrizada en 5 sitios + 3 archivos de tests actualizados; 0 regresiones vs baseline (148 auditors, 10 preexistentes financial_engine) |
 | FASE-P1-C | — | ⬜ | — | No | |
 | FASE-P1-D | — | ⬜ | — | No | Máxima complejidad |
 | FASE-P2-A | — | ⬜ | — | No | |
@@ -86,6 +86,14 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | L11 | `_normalize_region()` debe aplicar lowercase ANTES del alias lookup, no después. Caso: “Bogotá” (mayúscula) no matchea alias “bogotá” (minúscula) si el lookup va primero. Orden correcto: lowercase → alias → lowercase final. | INCLUIR: normalización de strings con aliases SIEMPRE lowercase-first |
 | L12 | `_get_known_regions()` retornaba keys crudas del data source, pero `_normalize_region()` retornaba nombres normalizados. Mismatch causaba que regiones conocidas se marcaran como `is_default=True` al consultarlas con alias (coffee_axis→eje_cafetero no matcheaba “coffee_axis” en known). Fix: normalizar keys en `_get_known_regions()`. | INCLUIR: cuando hay normalización de entrada, la comparación SIEMPRE debe usar la misma normalización en ambos lados |
 
+#### FASE-P1-B
+
+| # | Lección | Pertinencia |
+|---|---------|-------------|
+| L13 | La decisión D2 (usar campo existente `comision_ota` en lugar de crear `ota_commission` nuevo) demostró ser correcta: el flatten en `financial_factors.py` ya convertía `comision_ota.{min,base,max}` en `comision_ota_min/base/max`. Añadir `source` al YAML fue transparente porque el flatten lo convirtió automáticamente en `comision_ota_source`. | INCLUIR: cuando exista infraestructura de flatten/parse, aprovecharla para nuevos campos en lugar de crear rutas paralelas |
+| L14 | Los defaults de parámetros en dataclasses y funciones no pueden cargar dinámicamente de config en tiempo de definición. La solución fue cambiar el default hardcoded de 0.15 a 0.20 (valor actual de config) y cargar dinámicamente solo en `__init__` y métodos que lo necesitan (ScenarioCalculator, _to_hotel_financial_data, _estimate_monthly_loss). | INCLUIR: para parametrizar defaults de parámetros, usar el valor actual de config como literal y cargar dinámicamente solo donde sea posible |
+| L15 | Al cambiar defaults de 0.15 a 0.20, 4 tests existentes se rompieron (test_hotel_financial_data_defaults, test_scenario_calculator_initialization, test_all_optional_defaults, test_build_financial_evidence_ota_defaults). Los tests que usaban 0.15 como valor explícito pasado como parámetro NO se rompieron. Diferenciar entre “tests que verifican defaults” y “tests que usan valores explícitos” es crucial al cambiar constantes. | INCLUIR: tras cambiar defaults, ejecutar tests y actualizar solo las aserciones de default, no los valores explícitos |
+
 **T0b: Desviación benchmark vs observaciones Tier A (Eje Cafetero)**
 
 | Hotel | Categoría | ADR observado | Benchmark anterior | Desviación |
@@ -121,7 +129,7 @@ Decisión: benchmark $420K era desactualizado/aspiracional. Master calibrado a $
 | ID | Decisión | Rationale | Alternativas rechazadas | Fase |
 |----|----------|-----------|--------------------------|------|
 | D1 | Gate pricing_compliance floor-aware: BLOCKING solo si pain_ratio > pain_ratio_gate_max del tier (0.32 boutique); WARNING fuera de 0.03-0.06 con operational_floor aplicado | Con umbrales globales 0.03-0.06 como blocking, fuga < 6.67M/mes con floor 400K nunca cumple ratio ≤ 0.06 → V12 inalcanzable; precedente PATCH-A en coherence_validator (max_ratio 0.50) | Umbrales globales como blocking | FASE-P0-B |
-| D2 | Comisión OTA: campo EXISTENTE `comision_ota` (0.18-0.22) + `source`; 5 sitios hardcodeados eliminados | Campo ya existente dentro de la narrativa 17-25%; consumidores activos (financial_factors.py, main.py L361) | Crear campo nuevo `ota_commission` | FASE-P1-B |
+| D2 | Comisión OTA: campo EXISTENTE `comision_ota` (0.18-0.22) + `source`; 5 sitios hardcodeados eliminados; FinancialFactors.get_comision_ota() como API centralizada; defaults 0.15→0.20 en dataclasses y funciones | Campo ya existente dentro de la narrativa 17-25%; consumidores activos (financial_factors.py, main.py L361); flatten automático convierte source en comision_ota_source | Crear campo nuevo `ota_commission` | FASE-P1-B ✅ |
 | D3 | JSON (regional_adr_2026.json) como master ADR/occupancy por región. YAML es referencial (no consumido en cálculos). plan_maestro_data.json sincronizado via validate_benchmark_sync.py | Ya gana en runtime; estructura por categoría (boutique/standard) más granular que YAML plano; default_region alineado con nicho fundacional. Calibrado vs 6 observaciones Tier A | YAML como master (pierde categoría); crear un cuarto archivo consolidado (más complejidad sin beneficio) | FASE-P1-A ✅ |
 | D3b | Retroalimentación benchmark←observations: diferida a P1-C o P2. Umbral: ≥3 hoteles VERIFIED por región+segmento para recalibrar. Strategy: calcular mediana de observaciones no-transit, comparar vs benchmark, actualizar si desviación >20% | Suficiente data hoy solo para eje_cafetero (6 hoteles, todos Eje Cafetero). Otras regiones sin observaciones Tier A. Implementar ahora sería prematuro | Implementar ahora (sin data suficiente fuera de Eje Cafetero); umbral ≥5 (retrasaría demasiado la retroalimentación) | FASE-P1-A ✅ |
 | D4 | Rango del hook cableado al benchmark master ANTES del cap | El cap sobre defaults hardcodeados acota un rango fabricado | Cap directo sin cableado | FASE-P1-C |

@@ -109,6 +109,50 @@ Unificar las 3 fuentes de benchmark ADR en una sola (`regional_adr_2026.json` co
 
 ---
 
+### FASE-P1-B — Fallback región conservador + comisión OTA parametrizada (F3+F5)
+
+#### Objetivo
+Corregir el mapa de fallback de región (`'colombia'→'caribe'` inflaba la fuga 2.3-3.2x) y parametrizar la comisión OTA con rango y fuente citada (antes hardcodeada en 15% en 5 sitios de 3 módulos).
+
+#### Cambios
+- `modules/auditors/v4_comprehensive.py`: `'colombia'` mapeado a `'default'` ($300K conservador) en lugar de `'caribe'` ($450K)
+- `config/financial_defaults.yaml`: añadido `source` a `comision_ota` (rango 18-22%, base 20%, fuente documentada)
+- `modules/utils/financial_factors.py`: `comision_ota_source` en `FinancialFactorsConfig` + `get_comision_ota()` API centralizada
+- `modules/financial_engine/scenario_calculator.py`: import `FinancialFactors`; defaults 0.15→0.20; `_trace_data_sources` usa fuente de config
+- `modules/financial_engine/calculator_v2.py`: import `FinancialFactors`; defaults 0.15→0.20 en `_to_hotel_financial_data` y `calculate_financial_scenarios`
+- `modules/financial_engine/inputs_contract.py`: import `FinancialFactors`; defaults 0.15→0.20 en dataclass, `validate()` y `from_dict()`
+- `modules/financial_engine/financial_evidence.py`: import `FinancialFactors`; defaults 0.15→0.20; source actualizado a `config/financial_defaults.yaml`
+- `modules/orchestration_v4/two_phase_flow.py`: import `FinancialFactors`; `_estimate_monthly_loss` y `phase_2` usan comisión OTA de config
+- `modules/utils/benchmarks.py`: `DEFAULT_DATA` `comision_ota_base` 0.15→0.20
+
+#### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/auditors/test_region_fallback.py` | 12 tests F3: colombia→default, ciudades específicas→región correcta, cache |
+| `tests/financial_engine/test_ota_commission.py` | 12 tests F5: rango 18-22%, source, defaults en todos los consumidores |
+| `evidence/BASELINE-TESTS-auditors-v4.71.0.txt` | Baseline de auditors (148 passed, 1 skipped) previa a FASE-P1-B |
+
+#### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/v4_comprehensive.py` | F3: 'colombia'→'default' en region_map |
+| `config/financial_defaults.yaml` | F5: +source en comision_ota |
+| `modules/utils/financial_factors.py` | F5: +comision_ota_source en Config + get_comision_ota() |
+| `modules/financial_engine/scenario_calculator.py` | F5: defaults 0.15→0.20; trace source de config |
+| `modules/financial_engine/calculator_v2.py` | F5: defaults 0.15→0.20 |
+| `modules/financial_engine/inputs_contract.py` | F5: defaults 0.15→0.20 |
+| `modules/financial_engine/financial_evidence.py` | F5: defaults 0.15→0.20; source actualizado |
+| `modules/orchestration_v4/two_phase_flow.py` | F5: comisión OTA desde config |
+| `modules/utils/benchmarks.py` | F5: DEFAULT_DATA 0.15→0.20 |
+| `tests/financial_engine/test_scenario_calculator.py` | 2 assertions actualizados 0.15→0.20 |
+| `tests/financial_engine/test_inputs_contract.py` | 1 assertion actualizado 0.15→0.20 |
+| `tests/financial_engine/test_financial_evidence.py` | 1 test actualizado: value+source |
+
+#### Tests
++24 tests nuevos (12 F3 + 12 F5). 160 passed en auditors (148 baseline + 12 nuevos). 11 fallos en financial_engine (mismos preexistentes). 0 regresiones nuevas. `run_all_validations.py --quick`: 6/6 PASSED.
+
+---
+
 ## [4.71.0] — 2026-08-05 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 ### Objetivo

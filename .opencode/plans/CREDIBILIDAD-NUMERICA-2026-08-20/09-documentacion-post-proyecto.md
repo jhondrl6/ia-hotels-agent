@@ -17,6 +17,8 @@
 | Gate pricing_compliance (D1 floor-aware) | quality_gates | Gate BLOCKING floor-aware: BLOCKED si pain_ratio > pain_ratio_gate_max del tier (0.32 boutique); WARNING si fuera del rango ideal 0.03-0.06 con operational_floor aplicado. Consume pricing_data del AssessmentBuilder + umbrales de pricing.yaml vía _load_pricing_config() | FASE-P0-B |
 | Encoding utf-8 global en writers (F7) | quality_gates, utils | Todos los writers de artefactos (write_text) usan encoding='utf-8' explícito; auditoría estática AST anti-regresión | FASE-P0-C |
 | Benchmark maestro único (F2+F4) | config, data/benchmarks, financial_engine | regional_adr_2026.json como master ADR/occupancy; Bogotá agregada; valores calibrados vs 6 observaciones Tier A; plan_maestro_data.json sincronizado; script validate_benchmark_sync.py anti-divergencia; normalización de regiones (aliases + lowercase) en RegionalADRResolver | FASE-P1-A |
+| Fallback región conservador (F3) | auditors | 'colombia' resuelve a default ($300K) en lugar de caribe ($450K); evita sobreestimación 2.3-3.2x en hook | FASE-P1-B |
+| Comisión OTA parametrizada (F5) | financial_engine, orchestration_v4, utils, config | Comisión OTA leída desde config/financial_defaults.yaml (18-22%, base 20%) con fuente documentada; 5 sitios hardcodeados eliminados; FinancialFactors.get_comision_ota() como API centralizada | FASE-P1-B |
 | Verdad del sitio vivo | data_validation, asset_generation | Mapeo sedes + propagación site_verification | FASE-P1-D |
 | Trazabilidad del rango Hook→Express | orchestration_v4 | Cap de plausibilidad + cierre del rango | FASE-P1-C |
 
@@ -26,7 +28,7 @@
 |---------|-------|------|
 | Tests base al inicio del plan | 3,233 funciones / 261 archivos (v4.71.0) | Preparación |
 | Línea base de fallos preexistentes (suites tocadas) | 22 fallos: 12 commercial_documents + 10 financial_engine — evidence/BASELINE-TESTS-v4.71.0.txt | FASE-P0-A |
-| Tests nuevos acumulados | 44 (3 P0-A + 18 P0-B + 4 P0-C + 19 P1-A) | FASE-P1-A |
+| Tests nuevos acumulados | 68 (3 P0-A + 18 P0-B + 4 P0-C + 19 P1-A + 24 P1-B) | FASE-P1-B |
 | Coherence última corrida | 0.9237 (evidence/FASE-F, pre-plan) | Preparación |
 | Coherence E2E Zi One (post-plan) | (pendiente) | FASE-E2E-ZIONE |
 | Tiempo corrida con caches cálidos (C9) | (pendiente) | FASE-E2E-ZIONE |
@@ -57,3 +59,18 @@
 | `tests/financial_engine/test_benchmark_master.py` | NUEVO — 19 tests: Bogotá cobertura, eje_cafetero consistencia, sync todas regiones, mecanismo sync, normalización occupancy, known regions | FASE-P1-A |
 | `tests/financial_engine/test_regional_adr_resolver.py` | Actualizados 6 assertions: region normalizado de alias a canónico (coffee_axis→eje_cafetero, medellin→antioquia) | FASE-P1-A |
 | `tests/financial_engine/test_adr_resolution_wrapper.py` | Actualizado 1 assertion: metadata region normalizada | FASE-P1-A |
+| `modules/auditors/v4_comprehensive.py` | F3: 'colombia' mapeado a 'default' en lugar de 'caribe' (L1471) | FASE-P1-B |
+| `config/financial_defaults.yaml` | F5: añadido source a comision_ota (rango 18-22%, base 20%) | FASE-P1-B |
+| `modules/utils/financial_factors.py` | F5: comision_ota_source en FinancialFactorsConfig + get_comision_ota() API centralizada | FASE-P1-B |
+| `modules/financial_engine/scenario_calculator.py` | F5: import FinancialFactors; defaults 0.15→0.20; _trace_data_sources usa fuente de config | FASE-P1-B |
+| `modules/financial_engine/calculator_v2.py` | F5: import FinancialFactors; defaults 0.15→0.20 en _to_hotel_financial_data y calculate_financial_scenarios | FASE-P1-B |
+| `modules/financial_engine/inputs_contract.py` | F5: import FinancialFactors; defaults 0.15→0.20 en dataclass, validate() y from_dict() | FASE-P1-B |
+| `modules/financial_engine/financial_evidence.py` | F5: import FinancialFactors; defaults 0.15→0.20; source actualizado a config/financial_defaults.yaml | FASE-P1-B |
+| `modules/orchestration_v4/two_phase_flow.py` | F5: import FinancialFactors; _estimate_monthly_loss y phase_2 usan comisión OTA de config | FASE-P1-B |
+| `modules/utils/benchmarks.py` | F5: DEFAULT_DATA comision_ota_base 0.15→0.20 | FASE-P1-B |
+| `tests/auditors/test_region_fallback.py` | NUEVO — 12 tests F3: colombia→default, ciudades específicas→región correcta, cache, sin dirección | FASE-P1-B |
+| `tests/financial_engine/test_ota_commission.py` | NUEVO — 12 tests F5: rango 18-22%, source, defaults en todos los consumidores, trace_data_sources | FASE-P1-B |
+| `tests/financial_engine/test_scenario_calculator.py` | F5: 2 assertions actualizados 0.15→0.20 (defaults) | FASE-P1-B |
+| `tests/financial_engine/test_inputs_contract.py` | F5: 1 assertion actualizado 0.15→0.20 (default normalized) | FASE-P1-B |
+| `tests/financial_engine/test_financial_evidence.py` | F5: 1 test actualizado: value 0.15→0.20, source→config/financial_defaults.yaml | FASE-P1-B |
+| `evidence/BASELINE-TESTS-auditors-v4.71.0.txt` | NUEVO — baseline de auditors (148 passed, 1 skipped) previa a FASE-P1-B | FASE-P1-B |
