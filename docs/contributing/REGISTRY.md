@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-08-19
+> **Ultima actualizacion:** 2026-08-20
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 420
+> **Total fases completadas:** 421
 
 ---
 
@@ -9923,6 +9923,29 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-P0-A - 2026-08-20
+**Descripcion:** Fuente unica de pricing + hook PDF dinamico (F1)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/hook_pdf_generator.py` | Hook Pdf Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `config/pricing.yaml` | Pricing |
+| `modules/financial_engine/pricing_calculator.py` | Pricing Calculator |
+| `tests/commercial_documents/test_hook_pdf_generator.py` | Test Hook Pdf Generator |
+
+### Validaciones
+- [x] Tests passing (3)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

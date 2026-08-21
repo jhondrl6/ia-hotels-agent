@@ -23,6 +23,7 @@ import yaml
 from weasyprint import HTML
 
 from modules.commercial_documents.data_structures import HookPDFData
+from modules.financial_engine.pricing_calculator import _load_pricing_config
 
 
 # ---------------------------------------------------------------------------
@@ -113,12 +114,10 @@ def _extract_row_cells(text: str, section_label: str, row_label: str) -> list[st
 # ---------------------------------------------------------------------------
 
 class HookPDFGenerator:
-    """Genera el PDF de gancho comercial de 2 páginas para v4_complete."""
+    """Genera el PDF de gancho comercial de 2 páginas para v4_complete.
 
-    # Constantes de pricing del plan de negocio
-    PRECIO_EXPRESS = "120.000"
-    PRECIO_MENSUAL = "400.000"
-    SETUP_FEE = "2.500.000"
+    Pricing cargado dinámicamente desde config/pricing.yaml (D6: fuente única).
+    """
 
     def __init__(
         self,
@@ -137,6 +136,20 @@ class HookPDFGenerator:
 
         self.template_path = template_path or self.project_root / "templates" / "hook_template.md"
         self.style_path = style_path or self.project_root / "templates" / "hook_styles.css"
+        self._pricing_packages = None
+
+    def _get_pricing_packages(self) -> dict:
+        """Carga pricing.yaml con caché de instancia. Fuente única D6."""
+        if self._pricing_packages is None:
+            try:
+                self._pricing_packages = _load_pricing_config()["packages"]
+            except Exception:
+                self._pricing_packages = {
+                    "monthly_default": 1_200_000,
+                    "setup_fee_default": 2_500_000,
+                    "express_price": 120_000,
+                }
+        return self._pricing_packages
 
     # ------------------------------------------------------------------
     # extract_data
@@ -356,10 +369,11 @@ class HookPDFGenerator:
                 brecha_3_cop = cop
                 brecha_3_justificacion = justificacion
 
-        # --- 8. Pricing (constantes del plan de negocio) ---
-        precio_express = self.PRECIO_EXPRESS
-        precio_mensual = self.PRECIO_MENSUAL
-        setup_fee = self.SETUP_FEE
+        # --- 8. Pricing desde pricing.yaml (D6: fuente única) ---
+        pricing = self._get_pricing_packages()
+        precio_express = _format_cop(pricing.get("express_price", 120_000))
+        precio_mensual = _format_cop(pricing.get("monthly_default", 1_200_000))
+        setup_fee = _format_cop(pricing.get("setup_fee_default", 2_500_000))
 
         # --- 9. Evidence tier ---
         evidence_tier = ""

@@ -1,5 +1,33 @@
 # Changelog
 
+## [Unreleased] — v4.72.0 WIP — Credibilidad Numérica y Verdad del Sitio Vivo
+
+### FASE-P0-A — Fuente única de pricing + hook PDF dinámico (F1)
+
+#### Objetivo
+Eliminar las constantes de pricing hardcodeadas del Hook PDF y la propuesta comercial, haciendo que TODO el pipeline consuma `config/pricing.yaml` como fuente única (decisión D6).
+
+#### Cambios
+- `config/pricing.yaml`: nuevo campo `express_price: 120000` en packages
+- `modules/financial_engine/pricing_calculator.py`: `express_price` reconocido en `validated_packages` y fallback defaults
+- `modules/commercial_documents/hook_pdf_generator.py`: constantes `PRECIO_EXPRESS/PRECIO_MENSUAL/SETUP_FEE` eliminadas; nuevo método `_get_pricing_packages()` carga pricing.yaml con caché de instancia
+- `modules/commercial_documents/v4_proposal_generator.py`: constantes `MONTHLY_PACKAGE_PRICE/SETUP_FEE` eliminadas; nuevo método `_get_pricing_packages()`; 15 usoss migrados a `pricing.yaml`
+- `tests/commercial_documents/test_hook_pdf_generator.py`: +3 tests contrato F1 (TestPricingContractF1); `test_pricing_constants` actualizado a fuente dinámica
+
+#### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `config/pricing.yaml` | +express_price: 120000 |
+| `modules/financial_engine/pricing_calculator.py` | +express_price en validated_packages + fallbacks |
+| `modules/commercial_documents/hook_pdf_generator.py` | -constantes PRECIO_*; +_get_pricing_packages() |
+| `modules/commercial_documents/v4_proposal_generator.py` | -MONTHLY_PACKAGE_PRICE/SETUP_FEE; +_get_pricing_packages(); 15 usoss migrados |
+| `tests/commercial_documents/test_hook_pdf_generator.py` | +3 tests contrato F1; test_pricing_constants dinámico |
+
+#### Tests
++3 tests nuevos (TestPricingContractF1). 0 regresiones vs línea base (22 fallos preexistentes documentados en evidence/BASELINE-TESTS-v4.71.0.txt).
+
+---
+
 ## [4.71.0] — 2026-08-05 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 ### Objetivo

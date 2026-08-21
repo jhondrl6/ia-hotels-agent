@@ -1,0 +1,93 @@
+........................................................................ [  5%]
+........................................................................ [ 11%]
+............................................................FFFFF.FF.... [ 16%]
+.....FFF......F.......F................................................. [ 22%]
+............................FF.......................................... [ 27%]
+....................X................................................... [ 33%]
+........................................................................ [ 38%]
+........................................................................ [ 44%]
+.....................................................FFFF.....F.....F... [ 49%]
+F...F................................................................... [ 55%]
+........................................................................ [ 61%]
+........................................................................ [ 66%]
+........................................................................ [ 72%]
+........................................................................ [ 77%]
+....................................................................s... [ 83%]
+........................................................................ [ 88%]
+........................................................................ [ 94%]
+........................................................................ [ 99%]
+..                                                                       [100%]
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+tests/financial_engine/test_adr_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_pricing_comparison_deltas
+  C:\Users\Jhond\Github\iah-cli\modules\financial_engine\shadow_logger.py:42: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return f"{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
+
+tests/financial_engine/test_adr_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_pricing_comparison_deltas
+  C:\Users\Jhond\Github\iah-cli\modules\financial_engine\shadow_logger.py:55: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow().isoformat(),
+
+tests/financial_engine/test_opportunity_scorer.py::test_extractor_from_assessment
+tests/financial_engine/test_opportunity_scorer.py::test_extractor_from_assessment
+tests/financial_engine/test_opportunity_scorer.py::test_extractor_from_assessment
+tests/financial_engine/test_opportunity_scorer.py::test_extractor_empty_assessment
+tests/financial_engine/test_opportunity_scorer.py::test_score_from_assessment
+tests/financial_engine/test_opportunity_scorer.py::test_score_from_assessment
+tests/financial_engine/test_opportunity_scorer.py::test_score_from_assessment
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\main.py:250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+tests/data_validation/test_metadata_validator.py: 20 warnings
+tests/data_validation/test_schema_validator_v2.py: 14 warnings
+  <string>:9: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_proposal_includes_quality_table
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_quality_table_reflects_real_confidence
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_missing_asset_shows_incluido_en_su_kit
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_none_assets_shows_incluido_en_su_kit
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_low_confidence_shows_en_optimizacion
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestProposalDynamicFiltering::test_asset_quality_table_empty_pains_shows_all_static
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestProposalDynamicFiltering::test_asset_quality_table_none_pains_shows_all_static
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestBackwardsCompatibility::test_proposal_service_to_asset_still_present
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestBackwardsCompatibility::test_service_to_asset_lookup_has_8_entries
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestBackwardsCompatibility::test_all_service_catalog_services_have_lookup_entry
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestTechnicalAssetsTable::test_technical_assets_table_shows_both_assets
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestFase3LookupUnification::test_service_to_asset_lookup_has_8_entries
+FAILED tests/financial_engine/test_calculator_v2.py::TestRecoveryFactorROI::test_roi_calculation_uses_recovery_factor
+FAILED tests/financial_engine/test_calculator_v2.py::TestRecoveryFactorROI::test_realistic_roi_max_5x
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestActiveMode::test_active_mode_uses_hybrid_calculator
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestActiveMode::test_active_mode_applies_tier_bounds
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestActiveMode::test_active_mode_different_tiers
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestActiveMode::test_active_mode_compliance
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestCanaryMode::test_canary_mode_uses_new_when_valid
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_returns_result
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestEdgeCases::test_very_small_expected_loss
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_pricing_comparison_deltas
+22 failed, 1274 passed, 1 skipped, 1 xpassed, 57 warnings in 4.04s

@@ -21,7 +21,7 @@ from .data_structures import (
     format_cop,
 )
 from modules.financial_engine.pricing_resolution_wrapper import PricingResolutionResult
-from modules.financial_engine.pricing_calculator import get_floor_price
+from modules.financial_engine.pricing_calculator import get_floor_price, _load_pricing_config
 # ROICR FASE-3: CAPEX/OPEX desacoplados + Curva de Maduración 4 Pilares
 from modules.financial_engine.roi_formatter import calcular_metricas_roi, formatear_roi_para_propuesta
 from modules.financial_engine.pillar_maturity_curve import aplicar_curva_4_pilares, formatear_curva_para_propuesta, calcular_recuperacion_6m
@@ -133,9 +133,7 @@ class V4ProposalGenerator:
         )
     """
 
-    # Default pricing
-    MONTHLY_PACKAGE_PRICE = 1200000  # $1.2M COP
-    SETUP_FEE = 2500000  # $2.5M COP one-time
+    # Pricing cargado dinámicamente desde config/pricing.yaml (D6: fuente única)
 
     def _build_tier_disclaimer(self, financial_breakdown: Optional[Any] = None) -> str:
         """FASE-2 T2: Devuelve disclaimer condicional segun el evidence tier real.
@@ -217,7 +215,7 @@ class V4ProposalGenerator:
         if not components:
             # Fallback: single-row table with header
             header = "| Componente | Monto | Descripción |\n|---|---|---|\n"
-            return header + f"| Cuota de Activación | {format_cop(self.SETUP_FEE)} | Única vez |"
+            return header + f"| Cuota de Activación | {format_cop(self._get_pricing_packages().get('setup_fee_default', 2_500_000))} | Única vez |"
         
         # Build itemized table
         rows = []
@@ -228,7 +226,7 @@ class V4ProposalGenerator:
                 )
         
         # Add total row
-        rows.append(f"| **Total CAPEX** | **{format_cop(capex_config.get('total', self.SETUP_FEE))}** | Única vez |")
+        rows.append(f"| **Total CAPEX** | **{format_cop(capex_config.get('total', self._get_pricing_packages().get('setup_fee_default', 2_500_000)))}** | Única vez |")
         
         header = "| Componente | Monto | Descripción |\n|---|---|---|\n"
         return header + "\n".join(rows)
@@ -487,6 +485,19 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
             self.template_path = self.template_dir / "propuesta_v4_template.md"
         self._user_provided_adr: Optional[float] = None
         self._current_has_onboarding: bool = False  # FASE-2 T0 NP5: inicializado (tests pueden saltar generate())
+        self._pricing_packages = None  # D6: caché de instancia para pricing.yaml
+
+    def _get_pricing_packages(self) -> dict:
+        """Carga pricing.yaml packages con caché de instancia. Fuente única D6."""
+        if self._pricing_packages is None:
+            try:
+                self._pricing_packages = _load_pricing_config()["packages"]
+            except Exception:
+                self._pricing_packages = {
+                    "monthly_default": 1_200_000,
+                    "setup_fee_default": 2_500_000,
+                }
+        return self._pricing_packages
     
     def generate(
         self,
@@ -545,7 +556,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         elif price_monthly is None:
             price_monthly = self._calculate_dynamic_price(financial_scenarios)
         if setup_fee is None:
-            setup_fee = self.SETUP_FEE
+            setup_fee = self._get_pricing_packages().get('setup_fee_default', 2_500_000)
         
         # Store for use in template preparation
         self._current_price_monthly = price_monthly
@@ -734,7 +745,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         
         # Calculate ROI with recovery_factor per scenario
         # FASE-B: ROI = (gain * recovery_factor) / investment, capped at 5.0X
-        monthly_investment = getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE)
+        monthly_investment = getattr(self, '_current_price_monthly', self._get_pricing_packages().get('monthly_default', 1_200_000))
         # FASE-B: projected_gain uses pain_ratio, not 100% of loss
         scenario_config = self._load_scenario_config()
         recovery_factors = scenario_config['recovery_factors']
@@ -837,10 +848,10 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
             'solution_table': self._build_solution_table(asset_plan),
             
             # Investment
-            'setup_fee': format_cop(getattr(self, '_current_setup_fee', self.SETUP_FEE)),
+            'setup_fee': format_cop(getattr(self, '_current_setup_fee', self._get_pricing_packages().get('setup_fee_default', 2_500_000))),
             'capex_breakdown_table': self._build_capex_breakdown_table(),
 
-            'monthly_fee': format_cop(getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE)),
+            'monthly_fee': format_cop(getattr(self, '_current_price_monthly', self._get_pricing_packages().get('monthly_default', 1_200_000))),
             
             # ROI
             'projected_gain': format_cop(projected_monthly_gain),
@@ -919,7 +930,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
 
         # CAPEX/OPEX separation: setup_fee is CAPEX (activo digital del cliente)
         # monthly_fee is OPEX (servicio)
-        'capex_total': format_cop(getattr(self, '_current_setup_fee', self.SETUP_FEE)),
+        'capex_total': format_cop(getattr(self, '_current_setup_fee', self._get_pricing_packages().get('setup_fee_default', 2_500_000))),
         'opex_mensual': format_cop(monthly_investment),
         'opex_total_6m': format_cop(monthly_investment * 6),
 
@@ -929,7 +940,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         'roi_saas': formatear_roi_para_propuesta(calcular_metricas_roi(
             recuperacion_total=_acc_map.get(6, _maturity_result.total_recuperacion_6m),
             inversion_opex=monthly_investment * 6,
-            inversion_capex=getattr(self, '_current_setup_fee', self.SETUP_FEE),
+            inversion_capex=getattr(self, '_current_setup_fee', self._get_pricing_packages().get('setup_fee_default', 2_500_000)),
             meses_proyeccion=6,
             roi_cap=roi_cap,
         ))['roi_saas'],
@@ -939,7 +950,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
 
         # Nota metodológica CAPEX/OPEX
         'nota_capex_opex': (
-            f"Los ${int(getattr(self, '_current_setup_fee', self.SETUP_FEE)):,} COP del setup fee representan activos digitales "
+            f"Los ${int(getattr(self, '_current_setup_fee', self._get_pricing_packages().get('setup_fee_default', 2_500_000))):,} COP del setup fee representan activos digitales "
             f"que quedan en propiedad del cliente (Real Estate Digital). "
             f"El ROI se calcula sobre la inversión operativa (${int(monthly_investment * 6):,} COP / 6 meses), "
             f"no sobre OPEX+CAPEX combinados."
@@ -1002,10 +1013,10 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
 
         # Payment options (FASE-CONFIG-4: from commercial.yaml)
         # N-04/N-04b: single_payment_discount=0.90, quarterly_discount=0.95
-        'single_payment_total': format_cop(int((getattr(self, '_current_setup_fee', self.SETUP_FEE) + getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE) * 6) * self._load_commercial_config().get('payment_options', {}).get('single_payment_discount', 0.90))),
-        'single_payment_savings': format_cop(int((getattr(self, '_current_setup_fee', self.SETUP_FEE) + getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE) * 6) * (1 - self._load_commercial_config().get('payment_options', {}).get('single_payment_discount', 0.90)))),
-        'quarterly_fee': format_cop(int(getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE) * 3 * self._load_commercial_config().get('payment_options', {}).get('quarterly_discount', 0.95))),
-        'quarterly_savings': format_cop(int(getattr(self, '_current_price_monthly', self.MONTHLY_PACKAGE_PRICE) * 3 * (1 - self._load_commercial_config().get('payment_options', {}).get('quarterly_discount', 0.95)))),
+        'single_payment_total': format_cop(int((getattr(self, '_current_setup_fee', self._get_pricing_packages().get('setup_fee_default', 2_500_000)) + getattr(self, '_current_price_monthly', self._get_pricing_packages().get('monthly_default', 1_200_000)) * 6) * self._load_commercial_config().get('payment_options', {}).get('single_payment_discount', 0.90))),
+        'single_payment_savings': format_cop(int((getattr(self, '_current_setup_fee', self._get_pricing_packages().get('setup_fee_default', 2_500_000)) + getattr(self, '_current_price_monthly', self._get_pricing_packages().get('monthly_default', 1_200_000)) * 6) * (1 - self._load_commercial_config().get('payment_options', {}).get('single_payment_discount', 0.90)))),
+        'quarterly_fee': format_cop(int(getattr(self, '_current_price_monthly', self._get_pricing_packages().get('monthly_default', 1_200_000)) * 3 * self._load_commercial_config().get('payment_options', {}).get('quarterly_discount', 0.95))),
+        'quarterly_savings': format_cop(int(getattr(self, '_current_price_monthly', self._get_pricing_packages().get('monthly_default', 1_200_000)) * 3 * (1 - self._load_commercial_config().get('payment_options', {}).get('quarterly_discount', 0.95)))),
 
         # Discounts for template (H-23: FASE-CONFIG-4)
         'quarterly_discount': self._load_commercial_config().get('discounts', {}).get('quarterly', 10),
@@ -1757,7 +1768,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             return self._load_commercial_config().get('break_even', {}).get('default_months', 6)
         
         months = 0
-        cumulative = -getattr(self, '_current_setup_fee', self.SETUP_FEE)
+        cumulative = -getattr(self, '_current_setup_fee', self._get_pricing_packages().get('setup_fee_default', 2_500_000))
         while cumulative < 0 and months < 24:
             months += 1
             cumulative += (gain - investment)

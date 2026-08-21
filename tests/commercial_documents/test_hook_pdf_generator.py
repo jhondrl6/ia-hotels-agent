@@ -13,6 +13,7 @@ Aislamiento: cada test crea sus propios archivos en tmp_path.
 
 import json
 import re
+import ast
 from dataclasses import asdict
 from pathlib import Path
 
@@ -24,6 +25,7 @@ from modules.commercial_documents.hook_pdf_generator import (
     _format_cop,
     _slugify,
 )
+from modules.financial_engine.pricing_calculator import _load_pricing_config
 
 # ---------------------------------------------------------------------------
 # Ruta al template real del repo (solo para render_html / generate)
@@ -192,9 +194,11 @@ class TestExtractData:
         assert luxor_data.brecha_3_nombre == "Presencia en Maps"
 
     def test_pricing_constants(self, luxor_data: HookPDFData) -> None:
-        assert luxor_data.precio_express == "120.000"
-        assert luxor_data.precio_mensual == "400.000"
-        assert luxor_data.setup_fee == "2.500.000"
+        """F1: pricing viene de pricing.yaml (D6 fuente única)."""
+        pricing = _load_pricing_config()["packages"]
+        assert luxor_data.precio_express == _format_cop(pricing["express_price"])
+        assert luxor_data.precio_mensual == _format_cop(pricing["monthly_default"])
+        assert luxor_data.setup_fee == _format_cop(pricing["setup_fee_default"])
 
     def test_evidence_tier(self, luxor_data: HookPDFData) -> None:
         assert luxor_data.evidence_tier == "B"
@@ -424,3 +428,48 @@ def test_generate_creates_pdf(luxor_gen: HookPDFGenerator) -> None:
     assert pdf_path.exists(), f"PDF no creado: {pdf_path}"
     assert pdf_path.suffix == ".pdf"
     assert pdf_path.stat().st_size > 0, "PDF vacío"
+
+
+# ---------------------------------------------------------------------------
+# 13. Contrato F1: pricing desde pricing.yaml (D6 fuente única)
+# ---------------------------------------------------------------------------
+
+class TestPricingContractF1:
+    """Contrato F1: precio del hook == precio de pricing.yaml."""
+
+    def test_hook_pricing_matches_yaml(self, luxor_data: HookPDFData) -> None:
+        """Los precios del hook PDF coinciden con pricing.yaml packages."""
+        pricing = _load_pricing_config()["packages"]
+        assert luxor_data.precio_express == _format_cop(pricing["express_price"])
+        assert luxor_data.precio_mensual == _format_cop(pricing["monthly_default"])
+        assert luxor_data.setup_fee == _format_cop(pricing["setup_fee_default"])
+
+    def test_no_hardcoded_price_constants_in_hook(self) -> None:
+        """hook_pdf_generator.py NO debe tener constantes de precio en la clase."""
+        import modules.commercial_documents.hook_pdf_generator as mod
+        src = Path(mod.__file__).read_text(encoding="utf-8")
+        tree = ast.parse(src)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef) and node.name == "HookPDFGenerator":
+                for item in node.body:
+                    if isinstance(item, ast.Assign):
+                        for target in item.targets:
+                            if isinstance(target, ast.Name):
+                                assert target.id not in (
+                                    "PRECIO_EXPRESS", "PRECIO_MENSUAL", "SETUP_FEE"
+                                ), f"Constante hardcodeada residual: {target.id}"
+
+    def test_no_hardcoded_price_constants_in_proposal(self) -> None:
+        """v4_proposal_generator.py NO debe tener constantes de precio en la clase."""
+        import modules.commercial_documents.v4_proposal_generator as mod
+        src = Path(mod.__file__).read_text(encoding="utf-8")
+        tree = ast.parse(src)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef) and node.name == "V4ProposalGenerator":
+                for item in node.body:
+                    if isinstance(item, ast.Assign):
+                        for target in item.targets:
+                            if isinstance(target, ast.Name):
+                                assert target.id not in (
+                                    "MONTHLY_PACKAGE_PRICE", "SETUP_FEE"
+                                ), f"Constante hardcodeada residual: {target.id}"

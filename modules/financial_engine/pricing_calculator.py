@@ -156,6 +156,7 @@ def _load_pricing_config() -> Dict[str, Any]:
             "monthly_default": float(packages.get("monthly_default", 1_200_000)),
             "setup_fee_default": float(packages.get("setup_fee_default", 2_500_000)),
             "floor_price": float(packages.get("floor_price", 1_200_000)),
+            "express_price": float(packages.get("express_price", 120_000)),
         }
 
         _CACHED_CONFIG = {
@@ -182,11 +183,12 @@ def _load_pricing_config() -> Dict[str, Any]:
                 "monthly_default": 1_200_000,
                 "setup_fee_default": 2_500_000,
                 "floor_price": 1_200_000,
+                "express_price": 120_000,
             },
         }
     except Exception as exc:
         logger.warning(
-            "Failed to load pricing.yaml (%s) — using hardcoded defaults: %s",
+            "Failed to load pricing.yaml (%s) \u2014 using hardcoded defaults: %s",
             config_path,
             exc,
         )
@@ -197,6 +199,7 @@ def _load_pricing_config() -> Dict[str, Any]:
                 "monthly_default": 1_200_000,
                 "setup_fee_default": 2_500_000,
                 "floor_price": 1_200_000,
+                "express_price": 120_000,
             },
         }
 

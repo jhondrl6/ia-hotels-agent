@@ -1,7 +1,7 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-RELEASE-4.63.0",
   "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-C",
-  "modules/commercial_documents/v4_proposal_generator.py": "FASE-B",
+  "modules/commercial_documents/v4_proposal_generator.py": "FASE-P0-A",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-RELEASE-4.63.0",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
@@ -124,7 +124,7 @@
   "scripts/version_consistency_checker.py": "FASE-PATCH-A",
   "scripts/sync_config.yaml": "FASE-CONFIG-1",
   "scripts/sync_versions.py": "FASE-CONFIG-1",
-  "modules/financial_engine/pricing_calculator.py": "FASE-3",
+  "modules/financial_engine/pricing_calculator.py": "FASE-P0-A",
   "modules/financial_engine/loss_projector.py": "PROSPECCION-II",
   "modules/utils/financial_factors.py": "FASE-CONFIG-3B",
   "modules/common/yaml_loader.py": "FASE-CONFIG-5",
@@ -182,7 +182,7 @@
   "evidence/ROI-REFACTOR/analisis_post_implementacion.md": "FASE-5",
   "modules/financial_engine/roi_formatter.py": "FASE-1",
   "modules/financial_engine/pillar_maturity_curve.py": "FASE-B",
-  "config/pricing.yaml": "FASE-3",
+  "config/pricing.yaml": "FASE-P0-A",
   "config/scenarios.yaml": "FASE-3",
   "tests/fixtures/financial_scenarios.json": "FASE-5",
   "tests/test_pricing_pipeline.py": "FASE-5",
@@ -223,5 +223,7 @@
   ".opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/05-prompt-fase-C-B.md": "FASE-E",
   ".opencode/plans/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/09-documentacion-post-proyecto.md": "FASE-E",
   ".opencode/plans/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/10-analisis-post-implementacion.md": "FASE-E",
-  "evidence/N3-diff/": "FASE-E"
+  "evidence/N3-diff/": "FASE-E",
+  "modules/commercial_documents/hook_pdf_generator.py": "FASE-P0-A",
+  "tests/commercial_documents/test_hook_pdf_generator.py": "FASE-P0-A"
 }

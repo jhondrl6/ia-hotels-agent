@@ -1,7 +1,29 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.71.0 (Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega)
-**Última actualización:** 2026-08-19
+**Última actualización:** 2026-08-20
+
+---
+
+### Notas de Cambios v4.72.0-WIP — FASE-P0-A: Fuente única de pricing
+
+**Fecha:** 2026-08-20
+
+**Resumen**: Eliminación de constantes de pricing hardcodeadas en `hook_pdf_generator.py` y `v4_proposal_generator.py`. Ambos módulos ahora consumen `config/pricing.yaml` vía `_load_pricing_config()` (reutilizando infraestructura del financial engine). Nuevo campo `express_price` en pricing.yaml.
+
+**Módulos afectados**: `modules/commercial_documents/hook_pdf_generator.py`, `modules/commercial_documents/v4_proposal_generator.py`, `modules/financial_engine/pricing_calculator.py`, `config/pricing.yaml`
+
+**Problema**: 3 fuentes Python no sincronizadas de pricing (constantes en hook PDF, constantes en propuesta, pricing.yaml). El cliente podría ver $400K en el Hook PDF y $500K en la propuesta del mismo output.
+
+**Solución**: D6 — pricing.yaml como fuente única. Constantes `PRECIO_EXPRESS/PRECIO_MENSUAL/SETUP_FEE` (hook) y `MONTHLY_PACKAGE_PRICE/SETUP_FEE` (propuesta) eliminadas. Método `_get_pricing_packages()` con caché de instancia en ambos generadores.
+
+**⚠️ Cambio de comportamiento documentado**:
+- Hook PDF y propuesta comercial ahora leen precios de `config/pricing.yaml` dinámicamente. Cambios en pricing.yaml se reflejan automáticamente en ambos documentos sin editar código.
+- El cache de pricing es a nivel de instancia (no módulo), por lo que cambios en pricing.yaml entre instancias de generadores se reflejan correctamente.
+
+**Backwards compatibility**: API pública sin cambios. `HookPDFGenerator.__init__()` y `V4ProposalGenerator.__init__()` mantienen la misma firma. Tests existentes siguen pasando (valores numéricos de pricing.yaml coinciden con las constantes eliminadas).
+
+**Tests**: +3 tests contrato F1 (TestPricingContractF1). 0 regresiones.
 
 ---
 
