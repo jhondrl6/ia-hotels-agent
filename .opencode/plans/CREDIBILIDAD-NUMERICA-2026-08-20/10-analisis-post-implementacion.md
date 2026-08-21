@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CREDIBILIDAD-NUMERICA-2026-08-20
 
-> **Estado**: 10/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅, P1-C ✅, P1-D ✅, P2-A ✅, P2-B ✅, E2E-ZIONE ✅) — 1 restante (RELEASE)
+> **Estado**: 11/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅, P1-C ✅, P1-D ✅, P2-A ✅, P2-B ✅, E2E-ZIONE ✅, RELEASE ✅) — PLAN COMPLETADO
 > **Plan**: CREDIBILIDAD-NUMERICA-2026-08-20
 > **Versión objetivo**: v4.72.0
 > **Creado DESDE LA CONCEPCIÓN** (phased_project_executor v2.15.0): cada fase agrega lecciones aquí al cerrar sesión.
@@ -19,7 +19,7 @@
 | FASE-P2-A | 2026-08-21 | ✅ | ~30 | No (DIRECTO) | 11 tests nuevos F14; coherence acepta site_presence_report; F8 auditoría sin rutas residuales; validaciones --quick 6/6 PASS; 0 regresiones |
 | FASE-P2-B | 2026-08-21 | ✅ | ~30 | No (DIRECTO) | Script preload_prospects_gbp.py (dry-run OK, 30 prospectos builtin); search_by_name en GooglePlacesClient; 4 docs higienizadas (PRECIOS_PAQUETES, PROPUESTA_EMPAQUETADO, PROMPT_INGRESOS x2); ADR $420K→$280K; scrapers 34 passed 0 nuevos fallos; validaciones --quick 6/6 PASS |
 | FASE-E2E-ZIONE | 2026-08-21 | ✅ | ~20 | Sí (v4complete) | 4m08s caches cálidos; coherence 0.95; 13/13 gates PASSED (pricing_compliance WARNING floor-aware D1); READY_FOR_PUBLICATION; 9/9 assets; V1-V13 verificados |
-| FASE-RELEASE-4.72.0 | — | ⬜ | — | Opcional | |
+| FASE-RELEASE-4.72.0 | 2026-08-21 | ✅ | ~18 | No (DIRECTO) | VERSION.yaml 4.72.0; sync_versions 6 archivos; CHANGELOG+GUIA_TECNICA oficiales; SYSTEM_STATUS+DOMAIN_PRIMER regenerados; run_all_validations 6/6; validate_agents_md ALL PASS; test count 3,360 |
 
 ## Matriz de Verificación de Fixes (llenar en FASE-E2E-ZIONE)
 
@@ -186,7 +186,7 @@ Decisión: benchmark $420K era desactualizado/aspiracional. Master calibrado a $
 
 | Métrica | Valor |
 |---------|-------|
-| Tests totales al cierre | (pendiente — se actualizará en RELEASE) |
+| Tests totales al cierre | 3,360 funciones / 261 archivos |
 | Coherence E2E Zi One | 0.9485 (6/6 checks PASSED) |
 | Gates PASSED E2E | 13/13 (12 PASSED + 1 WARNING pricing_compliance floor-aware) |
 | Tiempo corrida con caches cálidos (C9) | 4 min 8 seg (17:53:45→17:57:53) |
@@ -212,5 +212,7 @@ Decisión: benchmark $420K era desactualizado/aspiracional. Master calibrado a $
 - [x] Todos los fixes F1-F14 verificados en matriz V1-V13 (12/13 PASSED, V6 seguimiento cosmético)
 - [x] Corrida única v4complete Zi One Luxury en `evidence/E2E-ZIONE/` (16 artefactos)
 - [x] Lecciones aprendidas ≥ 3 por fase (E2E: L29-L32)
-- [ ] CHANGELOG + GUIA_TECNICA + VERSION.yaml = 4.72.0 (pendiente FASE-RELEASE)
-- [ ] run_all_validations.py --quick TOTAL PASS (pendiente FASE-RELEASE)
+- [x] CHANGELOG + GUIA_TECNICA + VERSION.yaml = 4.72.0 (FASE-RELEASE ✅)
+- [x] run_all_validations.py --quick TOTAL PASS 6/6 (FASE-RELEASE ✅)
+- [x] validate_agents_md.py ALL PASS (gate count 13/13, test count ±5% OK)
+- [x] Test count actualizado 3,233 → 3,360 en AGENTS.md + README.md

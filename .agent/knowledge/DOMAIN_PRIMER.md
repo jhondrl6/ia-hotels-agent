@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.71.0 | **Codename**: Coherencia Propuesta-DiagnÃ³stico, Gates Comerciales y Entrega
-> **Release date**: 2026-08-05 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.72.0 | **Codename**: Credibilidad NumÃ©rica y Verdad del Sitio Vivo
+> **Release date**: 2026-08-21 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -20,7 +20,7 @@
 | **scrapers/** | 16 | BookingScraper; DriverInterface; GBPAuditor; GBPAuditorAuto; GBPRevenueLeakDetector; DriverAdapterProtocol, DriverAdapterBase, SeleniumAdapter, PlaywrightAdapter; PostsAuditResult, GBPPostsAuditor; Pl |
 | **data_validation/** | 6 | ConfidenceLevel, DataSource, ValidationResult, ConfidenceTaxonomy; CrossValidator; MetadataValidator; PageSpeedResult, PageSpeedClient; SchemaType, SchemaValidationResult, RichResultsTestResult, RichR |
 | **financial_engine/** | 19 | ADRSource, ADRResolutionResult, ADRResolutionWrapper; CalculationStatus, FinancialCalculationResult, FinancialCalculatorV2; InferredChannel, EvidenceConfidence, ChannelEvidence, ChannelEvidenceResolve |
-| **orchestration_v4/** | 2 | OnboardingPhase, OnboardingStatus, OnboardingState, OnboardingController; Phase1Result, Phase2Result, HotelInputs, TwoPhaseOrchestrator |
+| **orchestration_v4/** | 2 | OnboardingPhase, OnboardingStatus, OnboardingState, OnboardingController; Phase1Result, Phase2Result, HookRangeTraceability, HotelInputs |
 | **onboarding/** | 4 | OnboardingForm |
 
 ### ANALISIS Y AUDITORIA
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-08-05 | v4.71.0 Coherencia Propuesta-DiagnÃ³stico, Gates Comerciales y Entrega*
+*Auto-generado: 2026-08-21 | v4.72.0 Credibilidad NumÃ©rica y Verdad del Sitio Vivo*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

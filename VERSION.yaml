@@ -1,10 +1,24 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.71.0"
-codename: "Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega"
-release_date: "2026-08-05"
+version: "4.72.0"
+codename: "Credibilidad Numérica y Verdad del Sitio Vivo"
+release_date: "2026-08-21"
 plan_maestro_version: "v2.6.0"
 
+# v4.72.0 - CREDIBILIDAD-NUMERICA (2026-08-21)
+# FASE-P0-A: Fuente unica de pricing (D6) — pricing.yaml master; constantes hardcodeadas eliminadas
+# FASE-P0-B: Gate pricing_compliance floor-aware (D1) — gate 13 (10 blocking + 3 advisory)
+# FASE-P0-C: Encoding utf-8 global en writers de artefactos (F7)
+# FASE-P1-A: Benchmark maestro unico (D3) — regional_adr_2026.json master; Bogota agregada
+# FASE-P1-B: Fallback region conservador (F3) + comision OTA parametrizada (F5, D2)
+# FASE-P1-C: Cableado benchmark master al hook (D4) + cap plausibilidad (D7) + trazabilidad Hook->Express
+# FASE-P1-D: Verdad del sitio vivo (F12+F13, D8) — STATUS_VERIFIED_IN_SITE; multi-sede WhatsApp
+# FASE-P2-A: Coherence acepta "verificado en produccion" (F14) + occupancy label (F8)
+# FASE-P2-B: Pre-carga GBP batch prospectos (F9) + higiene docs comerciales (F10)
+# FASE-E2E-ZIONE: v4complete Zi One Luxury — coherence 0.9485; 13/13 gates PASSED; READY_FOR_PUBLICATION
+# 127 tests nuevos; 0 regresiones vs linea base (22 fallos preexistentes)
+# Backwards compatible: credibilidad numerica + verdad sitio vivo, no logica core
+#
 # v4.55.0 - ROICR (2026-05-27)
 # Pipeline unificado de pricing (3 pasos)
 # CAPEX/OPEX desacoplado

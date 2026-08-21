@@ -1,11 +1,11 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.71.0 (Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega)
+**Versión:** v4.72.0 (Credibilidad Numérica y Verdad del Sitio Vivo)
 **Última actualización:** 2026-08-21
 
 ---
 
-### Notas de Cambios v4.72.0-WIP — FASE-P0-A: Fuente única de pricing
+### Notas de Cambios v4.72.0 — FASE-P0-A: Fuente única de pricing
 
 **Fecha:** 2026-08-20
 
@@ -27,7 +27,7 @@
 
 ---
 
-### Notas de Cambios v4.72.0-WIP — FASE-P0-B: Gate pricing_compliance floor-aware
+### Notas de Cambios v4.72.0 — FASE-P0-B: Gate pricing_compliance floor-aware
 
 **Fecha:** 2026-08-21
 
@@ -45,7 +45,7 @@
 
 ---
 
-### Notas de Cambios v4.72.0-WIP — FASE-P0-C: Encoding utf-8 en writers de artefactos
+### Notas de Cambios v4.72.0 — FASE-P0-C: Encoding utf-8 en writers de artefactos
 
 **Fecha:** 2026-08-21
 
@@ -63,7 +63,7 @@
 
 ---
 
-### Notas de Cambios v4.72.0-WIP — FASE-P1-A: Benchmark maestro único de ADR regional
+### Notas de Cambios v4.72.0 — FASE-P1-A: Benchmark maestro único de ADR regional
 
 **Fecha:** 2026-08-21
 
@@ -86,7 +86,7 @@
 
 ---
 
-### Notas de Cambios v4.72.0-WIP — FASE-P1-B: Fallback región conservador + comisión OTA parametrizada
+### Notas de Cambios v4.72.0 — FASE-P1-B: Fallback región conservador + comisión OTA parametrizada
 
 **Fecha:** 2026-08-21
 
@@ -108,7 +108,7 @@
 
 ---
 
-### Notas de Cambios v4.72.0-WIP — FASE-P1-C: Cableado benchmark master al hook + cap plausibilidad + trazabilidad Hook→Express
+### Notas de Cambios v4.72.0 — FASE-P1-C: Cableado benchmark master al hook + cap plausibilidad + trazabilidad Hook→Express
 
 **Fecha:** 2026-08-21
 
@@ -131,7 +131,7 @@
 
 ---
 
-### Notas de Cambios v4.72.0-WIP — FASE-P1-D: Verdad del sitio vivo (sedes WhatsApp multi-sede + propagación site_verification)
+### Notas de Cambios v4.72.0 — FASE-P1-D: Verdad del sitio vivo (sedes WhatsApp multi-sede + propagación site_verification)
 
 **Fecha:** 2026-08-21
 
@@ -154,7 +154,7 @@
 
 ---
 
-### Notas de Cambios v4.72.0-WIP — FASE-P2-A: Coherence acepta "verificado en producción" + occupancy label
+### Notas de Cambios v4.72.0 — FASE-P2-A: Coherence acepta "verificado en producción" + occupancy label
 
 **Fecha:** 2026-08-21
 
@@ -176,7 +176,7 @@
 
 ---
 
-### Notas de Cambios v4.72.0-WIP — FASE-P2-B: Pre-carga GBP de prospectos + higiene documental comercial
+### Notas de Cambios v4.72.0 — FASE-P2-B: Pre-carga GBP de prospectos + higiene documental comercial
 
 **Fecha:** 2026-08-21
 

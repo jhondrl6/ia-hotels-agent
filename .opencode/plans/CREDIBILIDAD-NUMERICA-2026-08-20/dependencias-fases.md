@@ -28,7 +28,7 @@ FASE-P2-B (prospectos + docs) ✅  [independiente; docs de pricing requieren P0-
 FASE-E2E-ZIONE (requiere: P0-A,B,C + P1-A,B,C,D + P2-A,B todas ✅) ✅
     │
     ▼
-FASE-RELEASE-4.72.0 (requiere E2E ✅ — regla de dependencia del executor)
+FASE-RELEASE-4.72.0 (requiere E2E ✅ — regla de dependencia del executor) ✅
 ```
 
 ## Tabla de Conflictos Potenciales de Archivos

@@ -38,7 +38,7 @@
 
 | # | Fase | Estado | Sesión | Iteraciones | Notas |
 |---|------|--------|--------|-------------|-------|
-| 11 | FASE-RELEASE-4.72.0 — Version bump, CHANGELOG, GUIA_TECNICA, validaciones | ⬜ | — | — | DELEGABLE opcional; requiere E2E ✅ |
+| 11 | FASE-RELEASE-4.72.0 — Version bump, CHANGELOG, GUIA_TECNICA, validaciones | ✅ | 2026-08-21 | ~18 | DELEGABLE ejecutado DIRECTO; VERSION.yaml 4.72.0; sync_versions 6 archivos; CHANGELOG formato CONTRIBUTING; GUIA_TECNICA notas actualizadas; SYSTEM_STATUS+DOMAIN_PRIMER regenerados; run_all_validations 6/6 PASS; validate_agents_md ALL PASS; test count 3,360 actualizado |
 
 ## Gates de Entrada
 

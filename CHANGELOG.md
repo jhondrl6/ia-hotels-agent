@@ -1,6 +1,10 @@
 # Changelog
 
-## [Unreleased] — v4.72.0 WIP — Credibilidad Numérica y Verdad del Sitio Vivo
+## [4.72.0] - Credibilidad Numérica y Verdad del Sitio Vivo — 2026-08-21
+
+### Objetivo
+
+Implementar las soluciones P0/P1/P2 identificadas en la validación comercial contra código vivo (F1-F14): unificar la credibilidad numérica del pipeline (pricing, benchmarks, comisión OTA, rango del hook), propagar la verdad del sitio vivo (WhatsApp multi-sede, verificación de assets en producción), corregir encoding de artefactos y cerrar el bucle Hook→Express. Todo como prerrequisito del primer cliente ("el primer cliente no puede ver cifras contradictorias ni brechas falsas"). Plan: CREDIBILIDAD-NUMERICA-2026-08-20 (11 fases: P0-A/B/C, P1-A/B/C/D, P2-A/B, E2E-ZIONE, RELEASE).
 
 ### FASE-P0-A — Fuente única de pricing + hook PDF dinámico (F1)
 
@@ -275,6 +279,82 @@ Crear el script de pre-carga GBP batch de prospectos con gate de completitud de 
 Script `preload_prospects_gbp.py --dry-run` ejecuta sin error (30 prospectos listados). Suite `tests/scrapers/` 34 passed, 4 skipped, 0 fallos nuevos. `run_all_validations.py --quick`: 6/6 PASS.
 
 ---
+
+### Cambios Implementados
+
+- **FASE-P0-A** (F1, D6): Fuente única de pricing — pricing.yaml master con `express_price`; constantes `PRECIO_EXPRESS/PRECIO_MENSUAL/SETUP_FEE/MONTHLY_PACKAGE_PRICE` eliminadas de hook_pdf_generator y v4_proposal_generator; ambos consumen dinámicamente de `_load_pricing_config()`.
+- **FASE-P0-B** (F1, D1): Gate `pricing_compliance` (gate 13, BLOCKING floor-aware) — BLOCKED si pain_ratio > pain_ratio_gate_max del tier (0.32 boutique); WARNING si fuera del rango ideal 0.03-0.06 con operational_floor. `with_pricing()` en AssessmentBuilder.
+- **FASE-P0-C** (F7): Encoding utf-8 global — todos los writers de artefactos usan `encoding='utf-8'` explícito; auditoría estática AST anti-regresión.
+- **FASE-P1-A** (F2+F4, D3): Benchmark maestro único — `regional_adr_2026.json` como master ADR/occupancy; Bogotá agregada; valores calibrados vs 6 observaciones Tier A; script `validate_benchmark_sync.py` anti-divergencia; normalización de regiones.
+- **FASE-P1-B** (F3+F5, D2): Fallback región conservador — `'colombia'` resuelve a default ($300K) en lugar de caribe ($450K). Comisión OTA parametrizada — rango 18-22% desde `financial_defaults.yaml` con fuente documentada; 5 sitios hardcodeados eliminados; `FinancialFactors.get_comision_ota()` como API centralizada.
+- **FASE-P1-C** (F6+F11, D4+D7): Cableado benchmark master al hook ANTES del cap; cap de plausibilidad ratio fijo 5.0 configurable; trazabilidad Hook→Express con narrativa benchmark→dato real; disclaimer de rango falsable.
+- **FASE-P1-D** (F12+F13, D8): Verdad del sitio vivo — `validate_whatsapp` con mapeo número→sede (multi-sede WhatsApp); status `VERIFIED_IN_SITE` de primera clase en pain_ledger; reconciler lo preserva; coverage gate lo justifica; diagnóstico filtra brechas verificadas en producción.
+- **FASE-P2-A** (F14+F8): Coherence acepta "verificado en producción" — `_check_promised_assets_exist` acepta `site_presence_report`; assets verificados en producción NO se cuentan como missing; alineado con gate `proposal_asset_alignment`.
+- **FASE-P2-B** (F9+F10): Pre-carga GBP batch — `search_by_name()` en GooglePlacesClient; `preload_prospects_gbp.py` con 30 prospectos builtin y gate de completitud. Higiene documental — PRECIOS_PAQUETES, PROPUESTA_EMPAQUETADO, PROMPT_INGRESOS actualizados (ADR $420K→$280K, pricing.yaml como fuente).
+- **FASE-E2E-ZIONE**: v4complete Zi One Luxury — coherence 0.9485; 13/13 gates PASSED (pricing_compliance WARNING floor-aware); READY_FOR_PUBLICATION; 9/9 assets; V1-V13 verificados (12/13 PASSED, V6 seguimiento cosmético).
+
+### Archivos Nuevos
+
+| Archivo | Descripción | Fase |
+|---------|-------------|------|
+| `scripts/validate_benchmark_sync.py` | Validación sincronización ADR/occupancy master↔plan_maestro_data | P1-A |
+| `tests/financial_engine/test_benchmark_master.py` | 19 tests contrato F2/F4 | P1-A |
+| `tests/auditors/test_region_fallback.py` | 12 tests F3: colombia→default | P1-B |
+| `tests/financial_engine/test_ota_commission.py` | 12 tests F5: rango 18-22% | P1-B |
+| `evidence/BASELINE-TESTS-auditors-v4.71.0.txt` | Baseline auditors pre-P1-B | P1-B |
+| `tests/orchestration_v4/test_hook_plausibility_cap.py` | 14 tests F6/D4 | P1-C |
+| `tests/orchestration_v4/test_hook_express_traceability.py` | 13 tests F11 | P1-C |
+| `tests/data_validation/test_whatsapp_multisede.py` | 11 tests F12 | P1-D |
+| `tests/asset_generation/test_site_verification_propagation.py` | 10 tests F13 | P1-D |
+| `tests/commercial_documents/test_promised_assets_production.py` | 11 tests F14 | P2-A |
+| `tests/quality_gates/test_pricing_compliance_gate.py` | 18 tests pricing_compliance | P0-B |
+| `tests/test_encoding_artifacts.py` | 4 tests encoding F7 | P0-C |
+| `scripts/preload_prospects_gbp.py` | Pre-carga GBP batch con gate completitud | P2-B |
+| `modules/scrapers/google_places_client.py` | +search_by_name() Places API searchText | P2-B |
+
+### Archivos Modificados
+
+| Archivo | Cambio | Fase |
+|---------|--------|------|
+| `config/pricing.yaml` | +express_price: 120000 | P0-A |
+| `modules/financial_engine/pricing_calculator.py` | +express_price en validated_packages | P0-A |
+| `modules/commercial_documents/hook_pdf_generator.py` | -constantes PRECIO_*; +_get_pricing_packages(); +_parse_cop_number(); +check advisory #9 | P0-A, P1-C |
+| `modules/commercial_documents/v4_proposal_generator.py` | -MONTHLY_PACKAGE_PRICE/SETUP_FEE; +_get_pricing_packages() | P0-A |
+| `modules/quality_gates/publication_gates.py` | +_pricing_compliance_gate (gate 13); +VERIFIED_IN_SITE en _JUSTIFIED_STATUSES | P0-B, P1-D |
+| `modules/assessment_builder.py` | +pricing_data campo; +with_pricing() | P0-B |
+| `main.py` | +with_pricing(); caller validate_whatsapp enriquecido | P0-B, P1-D |
+| `modules/quality_gates/delivery_quality_report.py` | +encoding="utf-8" en save() | P0-C |
+| `modules/utils/config_checker.py` | +encoding="utf-8" en 2 write_text | P0-C |
+| `data/benchmarks/regional_adr_2026.json` | MASTER v1.1.0; Bogotá; calibrado | P1-A |
+| `data/benchmarks/plan_maestro_data.json` | Sync con master; Bogotá | P1-A |
+| `config/regional_benchmarks.yaml` | Sync ADR/occ referencial v1.1.0 | P1-A |
+| `modules/financial_engine/regional_adr_resolver.py` | +_normalize_region(); Bogotá alias | P1-A |
+| `modules/auditors/v4_comprehensive.py` | F3: colombia→default; F12: +_extract_all_whatsapp_candidates | P1-B, P1-D |
+| `config/financial_defaults.yaml` | F5: +source comision_ota; F6: +hook_range_max_ratio | P1-B, P1-C |
+| `modules/utils/financial_factors.py` | F5: +comision_ota_source + get_comision_ota() | P1-B |
+| `modules/financial_engine/scenario_calculator.py` | F5: defaults 0.15→0.20 | P1-B |
+| `modules/financial_engine/calculator_v2.py` | F5: defaults 0.15→0.20 | P1-B |
+| `modules/financial_engine/inputs_contract.py` | F5: defaults 0.15→0.20 | P1-B |
+| `modules/financial_engine/financial_evidence.py` | F5: defaults 0.15→0.20 | P1-B |
+| `modules/orchestration_v4/two_phase_flow.py` | F5: comisión OTA config; F6: +cap +normalización; +HookRangeTraceability | P1-B, P1-C |
+| `modules/utils/benchmarks.py` | F5: DEFAULT_DATA 0.15→0.20 | P1-B |
+| `modules/orchestration_v4/onboarding_controller.py` | +load_benchmark_master(); +_convert_master_region(); +get_range_traceability() | P1-C |
+| `modules/data_validation/cross_validator.py` | F12: +web_alternates/gbp_location; +_reconcile_whatsapp_multisede | P1-D |
+| `modules/asset_generation/pain_ledger.py` | F13: +STATUS_VERIFIED_IN_SITE; +apply_site_verification | P1-D |
+| `modules/asset_generation/v4_asset_orchestrator.py` | F13: cableado apply_site_verification | P1-D |
+| `modules/orchestration/post_orchestrator_reconciler.py` | F13: preserva VERIFIED_IN_SITE | P1-D |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | F13: filtra brechas verificadas en producción | P1-D |
+| `modules/commercial_documents/coherence_validator.py` | F14: acepta site_presence_report | P2-A |
+| `modules/scrapers/google_places_client.py` | F9: +search_by_name() | P2-B |
+| `docs/PRECIOS_PAQUETES.md` | F10: reescrito v4.72.0 COP | P2-B |
+| `evidence/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md` | F10: ADR $280K; pricing.yaml | P2-B |
+| `evidence/Recomendaciones/PROMPT_INGRESOS.md` | F10: ADR $280K | P2-B |
+| `evidence/Recomendaciones/PROMPT_INGRESOS_README.md` | F10: ADR $280K | P2-B |
+| `AGENTS.md` | Gate count 12→13; versión 4.72.0 | P0-B, RELEASE |
+
+### Tests
+
++127 tests nuevos acumulados (3 P0-A + 18 P0-B + 4 P0-C + 19 P1-A + 24 P1-B + 27 P1-C + 21 P1-D + 11 P2-A). Línea base de 22 fallos preexistentes intacta (12 commercial_documents + 10 financial_engine). 0 regresiones. E2E Zi One: coherence 0.9485, 13/13 gates PASSED, READY_FOR_PUBLICATION.
 
 ## [4.71.0] — 2026-08-05 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 

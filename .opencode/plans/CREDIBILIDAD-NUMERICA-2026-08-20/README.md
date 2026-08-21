@@ -37,7 +37,7 @@ múltiples fuentes no sincronizadas. Cada fase restaura una fuente única para u
 | 8 | `FASE-P2-A` Coherence vs gate + occupancy label | F14, F8 residual | DIRECTO | No | ✅ 2026-08-21 |
 | 9 | `FASE-P2-B` Pre-carga prospectos + higiene docs | F9, F10 | DIRECTO | No | ✅ 2026-08-21 |
 | 10 | `FASE-E2E-ZIONE` v4complete Zi One Luxury | Verificación E2E de todos los fixes | **delegate_task para v4complete** (timeout=900) | Sí (obligatorio) | ✅ 2026-08-21 |
-| 11 | `FASE-RELEASE-4.72.0` Cierre oficial | — | **DELEGABLE** (solo docs/scripts) | Sí (opcional) | Nueva |
+| 11 | `FASE-RELEASE-4.72.0` Cierre oficial | — | **DELEGABLE** (solo docs/scripts) | Sí (opcional) | ✅ 2026-08-21 |
 
 **Total: 11 sesiones** (9 de implementación + 1 E2E + 1 RELEASE).
 
