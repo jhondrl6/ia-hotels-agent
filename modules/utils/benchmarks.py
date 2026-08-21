@@ -25,7 +25,7 @@ DEFAULT_DATA: Dict[str, Any] = {
             "revpar_cop": 197120,
             "habitaciones_promedio": 15,
             "factor_captura_aila": 0.70,
-            "comision_ota_base": 0.15,
+            "comision_ota_base": 0.20,  # FIX F5: default 0.20 from config/financial_defaults.yaml
             "penalizacion_invisibilidad_ia": 0.05,
             "factor_perdida_base": 0.06,
             "factor_captura_fuente": "Indice AILA Colombia (estimado)",

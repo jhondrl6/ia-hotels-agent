@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 from enum import Enum
 import re
+from modules.utils.financial_factors import FinancialFactors
 
 
 class ValidationSeverity(Enum):
@@ -44,7 +45,7 @@ class FinancialInputsContract:
     adr_cop: float
     occupancy_rate: float = 0.50
     direct_channel_percentage: float = 0.0
-    ota_commission_rate: float = 0.15
+    ota_commission_rate: float = 0.20  # FIX F5: default 0.20 from config/financial_defaults.yaml
     ota_presence: List[str] = field(default_factory=lambda: ["booking", "expedia"])
     region: str = "default"
     whatsapp_number: Optional[str] = None
@@ -115,10 +116,10 @@ class FinancialInputsContract:
                 normalized["ota_commission_rate"] = round(comm, 4)
             else:
                 warnings.append(ValidationError("ota_commission_rate", "out of range, using default", ValidationSeverity.WARNING, comm))
-                normalized["ota_commission_rate"] = 0.15
+                normalized["ota_commission_rate"] = 0.20  # FIX F5: default 0.20 from config/financial_defaults.yaml
         except (TypeError, ValueError):
             warnings.append(ValidationError("ota_commission_rate", "not numeric, using default", ValidationSeverity.WARNING, self.ota_commission_rate))
-            normalized["ota_commission_rate"] = 0.15
+            normalized["ota_commission_rate"] = 0.20  # FIX F5: default 0.20 from config/financial_defaults.yaml
 
         # Validate region
         if self.region not in self.KNOWN_REGIONS:
@@ -143,7 +144,7 @@ class FinancialInputsContract:
             adr_cop=data.get("adr_cop", data.get("adr", 0)),
             occupancy_rate=data.get("occupancy_rate", data.get("occupancy", 0.50)),
             direct_channel_percentage=data.get("direct_channel_percentage", 0.0),
-            ota_commission_rate=data.get("ota_commission_rate", 0.15),
+            ota_commission_rate=data.get("ota_commission_rate", 0.20),  # FIX F5: default 0.20 from config/financial_defaults.yaml
             ota_presence=data.get("ota_presence", ["booking", "expedia"]),
             region=data.get("region", "default"),
             whatsapp_number=data.get("whatsapp_number"),

@@ -213,5 +213,5 @@ class TestValidationEdgeCases:
         
         assert result.normalized["occupancy_rate"] == 0.50
         assert result.normalized["direct_channel_percentage"] == 0.0
-        assert result.normalized["ota_commission_rate"] == 0.15
+        assert result.normalized["ota_commission_rate"] == 0.20  # FIX F5: default 0.20 from config/financial_defaults.yaml
         assert result.normalized["region"] == "default"

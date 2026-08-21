@@ -174,12 +174,12 @@ class TestBuildFinancialEvidence:
         assert fe.occupancy_rate.epistemic_status == EpistemicStatus.DEFAULTED
 
     def test_build_financial_evidence_ota_defaults_to_industry_standard(self):
-        """OTA commission usa industry_standard por defecto."""
+        """OTA commission usa config/financial_defaults.yaml por defecto (FIX F5)."""
         fe = build_financial_evidence(
             350000.0, "user_provided", 0.75, "user_provided", 0.30, "user_provided"
         )
-        assert fe.ota_commission_rate.value == 0.15
-        assert fe.ota_commission_rate.source == "industry_standard"
+        assert fe.ota_commission_rate.value == 0.20  # FIX F5: default 0.20 from config/financial_defaults.yaml
+        assert fe.ota_commission_rate.source == "config/financial_defaults.yaml"  # FIX F5
         assert fe.ota_commission_rate.epistemic_status == EpistemicStatus.DEFAULTED
         assert fe.ota_commission_rate.can_show_exact is False
 

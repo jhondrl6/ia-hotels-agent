@@ -8,6 +8,7 @@ y con que confianza se puede mostrar.
 from enum import Enum
 from dataclasses import dataclass, field
 from typing import Dict, Optional, Any
+from modules.utils.financial_factors import FinancialFactors
 
 
 class EpistemicStatus(Enum):
@@ -63,8 +64,8 @@ class FinancialEvidence:
     occupancy_rate: FieldEvidence
     direct_channel_percentage: FieldEvidence
     ota_commission_rate: FieldEvidence = field(default_factory=lambda: FieldEvidence(
-        value=0.15,
-        source="industry_standard",
+        value=0.20,  # FIX F5: default 0.20 from config/financial_defaults.yaml
+        source="config/financial_defaults.yaml",
         epistemic_status=EpistemicStatus.DEFAULTED,
         precision="range",
         can_show_exact=False,
@@ -110,8 +111,8 @@ def build_financial_evidence(
     occupancy_source: str,
     direct_channel_pct: float,
     channel_source: str,
-    ota_commission_rate: float = 0.15,
-    ota_source: str = "industry_standard",
+    ota_commission_rate: float = 0.20,  # FIX F5: default 0.20 from config/financial_defaults.yaml
+    ota_source: str = "config/financial_defaults.yaml",
 ) -> FinancialEvidence:
     """Factory: construye FinancialEvidence desde fuentes dispersas.
 
@@ -122,8 +123,8 @@ def build_financial_evidence(
         occupancy_source: Fuente de occupancy ("user_provided", "web_scraping", "regional_v410", "legacy_hardcode").
         direct_channel_pct: Porcentaje de canal directo (0.0-1.0).
         channel_source: Fuente del canal directo.
-        ota_commission_rate: Tasa de comision OTA (default 0.15).
-        ota_source: Fuente de comision OTA (default "industry_standard").
+        ota_commission_rate: Tasa de comision OTA (default 0.20 from config/financial_defaults.yaml).
+        ota_source: Fuente de comision OTA (default "config/financial_defaults.yaml").
 
     Returns:
         FinancialEvidence con status epistemico resuelto.

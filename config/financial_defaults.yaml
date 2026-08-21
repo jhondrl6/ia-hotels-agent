@@ -15,6 +15,7 @@ comision_ota:
   min: 0.18
   base: 0.20
   max: 0.22
+  source: "config/financial_defaults.yaml — rango 18-22% basado en comisiones OTA típicas (Booking 15-20%, Expedia 18-25%)"
 
 penalizacion_invisibilidad_ia: 0.05
 

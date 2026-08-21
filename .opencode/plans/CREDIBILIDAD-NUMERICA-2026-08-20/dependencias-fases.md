@@ -13,7 +13,7 @@ FASE-P0-C (encoding) ✅  [independiente]
     │
 FASE-P1-A (benchmark maestro) ✅
     │
-    ├──→ FASE-P1-B (fallback región + OTA; usa benchmark maestro)
+    ├──→ FASE-P1-B (fallback región + OTA; usa benchmark maestro) ✅
     │        │
     │        └──→ FASE-P1-C (cablea master al hook + cap plausibilidad +
     │                         trazabilidad rango; consume benchmarks estables + OTA)

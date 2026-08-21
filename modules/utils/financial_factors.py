@@ -32,6 +32,7 @@ class FinancialFactorsConfig:
     comision_ota_min: float
     comision_ota_base: float
     comision_ota_max: float
+    comision_ota_source: str
     penalizacion_invisibilidad_ia: float
     exclusion_rating_bajo: float
     factor_perdida_base: float
@@ -57,6 +58,7 @@ class FinancialFactors:
         'comision_ota_min': 0.18,
         'comision_ota_base': 0.20,
         'comision_ota_max': 0.22,
+        'comision_ota_source': 'config/financial_defaults.yaml — rango 18-22% basado en comisiones OTA típicas',
         'penalizacion_invisibilidad_ia': 0.05,
         'exclusion_rating_bajo': 0.40,
         'factor_perdida_base': 0.09,
@@ -134,6 +136,10 @@ class FinancialFactors:
                 'comision_ota_max', 
                 defaults['comision_ota_max']
             ),
+            comision_ota_source=defaults.get(
+                'comision_ota_source',
+                'config/financial_defaults.yaml — rango 18-22% basado en comisiones OTA típicas'
+            ),
             penalizacion_invisibilidad_ia=thresholds.get(
                 'penalizacion_invisibilidad_ia', 
                 defaults['penalizacion_invisibilidad_ia']
@@ -177,7 +183,24 @@ class FinancialFactors:
     def get_factor_captura_aila(self, region: str) -> float:
         """Shortcut para obtener factor_captura_aila de una región."""
         return self.get_config(region).factor_captura_aila
-    
+
+    def get_comision_ota(self, region: str = 'default') -> Dict[str, Any]:
+        """
+        Shortcut para obtener comisión OTA con rango y fuente.
+
+        FIX F5: Reemplaza el hardcode 0.15 con valores de config/financial_defaults.yaml.
+
+        Returns:
+            Dict con keys: min, base, max, source
+        """
+        config = self.get_config(region)
+        return {
+            'min': config.comision_ota_min,
+            'base': config.comision_ota_base,
+            'max': config.comision_ota_max,
+            'source': config.comision_ota_source,
+        }
+
     def get_source_info(self, region: str) -> Dict[str, Any]:
         """
         Retorna información de fuentes para documentación.

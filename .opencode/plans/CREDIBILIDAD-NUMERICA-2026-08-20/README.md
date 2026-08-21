@@ -31,7 +31,7 @@ múltiples fuentes no sincronizadas. Cada fase restaura una fuente única para u
 | 2 | `FASE-P0-B` Gate pricing_compliance | F1 (gate) | DIRECTO | No | ✅ 2026-08-21 |
 | 3 | `FASE-P0-C` Encoding utf-8 global | F7 | **DELEGABLE** (fix mecánico) | Sí (opcional) | ✅ 2026-08-21 |
 | 4 | `FASE-P1-A` Benchmark maestro único | F2, F4 | DIRECTO (decisión arquitectónica) | No | ✅ 2026-08-21 |
-| 5 | `FASE-P1-B` Fallback región + comisión OTA | F3, F5 | **DELEGABLE** (2 tracks independientes) | Sí | Nueva |
+| 5 | `FASE-P1-B` Fallback región + comisión OTA | F3, F5 | **DELEGABLE** (2 tracks independientes) | Sí | ✅ 2026-08-21 |
 | 6 | `FASE-P1-C` Cap plausibilidad + trazabilidad rango | F6, F11 | DIRECTO (decisión arquitectónica) | No | Nueva |
 | 7 | `FASE-P1-D` Verdad del sitio vivo | F12, F13 | DIRECTO — **FASE DE MAYOR COMPLEJIDAD TÉCNICA** | No | Nueva |
 | 8 | `FASE-P2-A` Coherence vs gate + occupancy label | F14, F8 residual | DIRECTO | No | Nueva |

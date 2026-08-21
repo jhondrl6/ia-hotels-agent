@@ -38,7 +38,7 @@ class TestHotelFinancialData:
             occupancy_rate=0.65,
         )
 
-        assert hotel.ota_commission_rate == 0.15
+        assert hotel.ota_commission_rate == 0.20  # FIX F5: default 0.20 from config/financial_defaults.yaml
         assert hotel.direct_channel_percentage == 0.0
         assert hotel.ota_presence == ["booking", "expedia"]
 
@@ -65,7 +65,7 @@ class TestScenarioCalculatorInitialization:
         """Test ScenarioCalculator initializes with default values."""
         calculator = ScenarioCalculator()
 
-        assert calculator.default_ota_commission == 0.15
+        assert calculator.default_ota_commission == 0.20  # FIX F5: default 0.20 from config/financial_defaults.yaml
 
     def test_scenario_calculator_is_callable(self):
         """Test that initialized calculator has required methods."""

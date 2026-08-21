@@ -19,6 +19,7 @@ from modules.financial_engine.financial_evidence import (
     FinancialEvidence,
     build_financial_evidence,
 )
+from modules.utils.financial_factors import FinancialFactors
 
 
 class ScenarioType(Enum):
@@ -82,7 +83,7 @@ class HotelFinancialData:
         rooms: Number of rooms in the hotel
         adr_cop: Average Daily Rate in Colombian Pesos
         occupancy_rate: Current occupancy rate (0.0 - 1.0)
-        ota_commission_rate: Average OTA commission rate (0.0 - 1.0, default 0.15)
+        ota_commission_rate: Average OTA commission rate (0.0 - 1.0, default 0.20 from config/financial_defaults.yaml)
         direct_channel_percentage: Percentage of direct bookings (0.0 - 1.0)
         ota_presence: List of OTAs where the hotel is present
         adr_source: Source of ADR data (for traceability)
@@ -93,7 +94,7 @@ class HotelFinancialData:
     rooms: int
     adr_cop: float  # Average Daily Rate
     occupancy_rate: float  # 0.0 - 1.0
-    ota_commission_rate: float = 0.15  # 0.0 - 1.0 (default 0.15)
+    ota_commission_rate: float = 0.20  # 0.0 - 1.0 (default 0.20 from config/financial_defaults.yaml comision_ota.base)
     direct_channel_percentage: float = 0.0  # 0.0 - 1.0
     ota_presence: List[str] = field(default_factory=lambda: ["booking", "expedia"])
     # NUEVOS — trazabilidad de fuente
@@ -114,8 +115,10 @@ class ScenarioCalculator:
     """
 
     def __init__(self):
-        """Initialize the calculator with default OTA commission rate."""
-        self.default_ota_commission = 0.15
+        """Initialize the calculator with default OTA commission rate from config."""
+        # FIX F5: cargar comisión OTA desde config en lugar de hardcodear 0.15
+        factors = FinancialFactors()
+        self.default_ota_commission = factors.get_comision_ota()['base']
 
     def _load_scenario_config(self) -> dict:
         """Load config/scenarios.yaml with caching. Falls back to defaults."""
@@ -536,11 +539,14 @@ class ScenarioCalculator:
 
     def _trace_data_sources(self, hotel_data: HotelFinancialData) -> Dict[str, str]:
         """Trazabilidad: mapea cada input a su fuente."""
+        # FIX F5: usar fuente real de config en lugar de 'industry_standard_15pct'
+        factors = FinancialFactors()
+        ota_source = factors.get_comision_ota()['source']
         return {
             'adr': getattr(hotel_data, 'adr_source', 'unknown'),
             'rooms': 'hotel_data',
             'occupancy': getattr(hotel_data, 'occupancy_source', 'unknown'),
-            'ota_commission': 'industry_standard_15pct',
+            'ota_commission': ota_source,
             'direct_channel': getattr(hotel_data, 'channel_source', 'unknown'),
             'shift': 'hardcoded: sin GA4',
             'ia_boost': 'estimado: sin datos GA4'

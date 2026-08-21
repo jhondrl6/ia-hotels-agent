@@ -24,6 +24,7 @@ from modules.financial_engine.no_defaults_validator import (
     NoDefaultsValidator,
     NoDefaultsValidationResult,
 )
+from modules.utils.financial_factors import FinancialFactors
 
 
 # ============================================================
@@ -434,12 +435,15 @@ class FinancialCalculatorV2:
 
     def _to_hotel_financial_data(self, data: Dict[str, Any]) -> HotelFinancialData:
         """Convierte dict a HotelFinancialData."""
+        # FIX F5: cargar comisión OTA desde config en lugar de hardcodear 0.15
+        factors = FinancialFactors()
+        ota_commission_default = factors.get_comision_ota()['base']
         # Extraer valores con defaults seguros
         rooms = int(data.get("rooms", 0))
         adr_cop = float(data.get("adr_cop", 0))
         occupancy_rate = float(data.get("occupancy_rate", 0))
         direct_channel_percentage = float(data.get("direct_channel_percentage", 0))
-        ota_commission_rate = float(data.get("ota_commission_rate", 0.15))
+        ota_commission_rate = float(data.get("ota_commission_rate", ota_commission_default))
 
         # Validar que los valores criticos no sean cero (ya deberian estar validados)
         if rooms <= 0:
@@ -463,7 +467,7 @@ def calculate_financial_scenarios(
     adr_cop: float,
     occupancy_rate: float,
     direct_channel_percentage: float = 0.0,
-    ota_commission_rate: float = 0.15,
+    ota_commission_rate: float = 0.20,  # FIX F5: default 0.20 from config/financial_defaults.yaml
     coherence_score: float = 0.0,
     min_coherence: float = 0.8,
     opportunity_scores: Optional[List[Any]] = None,

@@ -13,6 +13,7 @@ from datetime import datetime
 from ..data_validation.cross_validator import CrossValidator
 from ..data_validation.confidence_taxonomy import ConfidenceLevel
 from ..financial_engine.scenario_calculator import ScenarioCalculator, HotelFinancialData
+from ..utils.financial_factors import FinancialFactors
 from ..utils.permission_mode import (
     PermissionMode,
     OperationPermission,
@@ -236,13 +237,16 @@ class TwoPhaseOrchestrator:
         Uses simplified assumptions:
         - 30 days in month
         - 70% of bookings through OTAs (typical for hotels without direct channel focus)
-        - 15% average OTA commission
+        - OTA commission from config/financial_defaults.yaml (comision_ota.base)
         - 20% potential shift to direct with proper IA visibility
         """
+        # FIX F5: cargar comisión OTA desde config en lugar de hardcodear 0.15
+        factors = FinancialFactors()
+        ota_commission = factors.get_comision_ota()['base']
         days_in_month = 30
         room_nights = rooms * days_in_month * occupancy
         ota_bookings = room_nights * 0.70  # 70% through OTAs
-        commission_loss = ota_bookings * adr * 0.15  # 15% commission
+        commission_loss = ota_bookings * adr * ota_commission  # OTA commission from config
         potential_savings = commission_loss * 0.20  # 20% can shift to direct
         return round(potential_savings, 2)
 
@@ -310,12 +314,15 @@ class TwoPhaseOrchestrator:
         hotel_data = None
 
         if can_proceed:
+            # FIX F5: cargar comisión OTA desde config en lugar de hardcodear 0.15
+            factors = FinancialFactors()
+            ota_commission = factors.get_comision_ota()['base']
             # Create HotelFinancialData from validated inputs
             hotel_data = HotelFinancialData(
                 rooms=user_inputs.rooms,
                 adr_cop=user_inputs.adr_cop,
                 occupancy_rate=user_inputs.occupancy_rate or 0.50,
-                ota_commission_rate=0.15,
+                ota_commission_rate=ota_commission,
                 direct_channel_percentage=user_inputs.direct_channel_percentage or 0.0,
                 ota_presence=user_inputs.ota_presence or ["booking", "expedia"]
             )

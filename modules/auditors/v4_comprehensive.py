@@ -1468,7 +1468,7 @@ class V4ComprehensiveAuditor:
             'barranquilla': 'caribe',
             'santa marta': 'caribe',
             'san andres': 'caribe',
-            'colombia': 'caribe',  # fallback if only country
+            'colombia': 'default',  # FIX F3: fallback conservador ($300K), NO caribe ($450K)
             'bogota': 'default',
             'bogotá': 'default',
         }
