@@ -1,0 +1,242 @@
+{
+  "hotel_id": "zione",
+  "hotel_name": "Zione",
+  "timestamp": "2026-08-21T17:57:06.127997",
+  "output_dir": "output/v4_complete/zione",
+  "summary": {
+    "total_assets": 9,
+    "generated": 9,
+    "failed": 0,
+    "skipped": 0,
+    "can_use": 9,
+    "estimated": 5,
+    "delivery_ready_percentage": 100.0,
+    "site_verification_applied": false
+  },
+  "generated_assets": [
+    {
+      "asset_type": "hotel_schema",
+      "filename": "hotel_schema_20260821_175705.json",
+      "delivery_filename": "hotel_schema_20260821_175705.json",
+      "path": "output/v4_complete/zione/hotel_schema/hotel_schema_20260821_175705.json",
+      "metadata_path": "output/v4_complete/zione/hotel_schema/hotel_schema_20260821_175705_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 1.0,
+      "pain_ids_resolved": [
+        "no_hotel_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "optimization_guide",
+      "filename": "ESTIMATED_guia_optimizacion_20260821_175705.md",
+      "delivery_filename": "guia_optimizacion_20260821_175705.md",
+      "path": "output/v4_complete/zione/optimization_guide/ESTIMATED_guia_optimizacion_20260821_175705.md",
+      "metadata_path": "output/v4_complete/zione/optimization_guide/ESTIMATED_guia_optimizacion_20260821_175705_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "low_seo_score"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "faq_page",
+      "filename": "ESTIMATED_faqs_20260821_175706.json",
+      "delivery_filename": "faqs_20260821_175706.json",
+      "path": "output/v4_complete/zione/faq_page/ESTIMATED_faqs_20260821_175706.json",
+      "metadata_path": "output/v4_complete/zione/faq_page/ESTIMATED_faqs_20260821_175706_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "no_faq_schema"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "analytics_setup_guide",
+      "filename": "ESTIMATED_guia_configuracion_ga4_20260821_175706.md",
+      "delivery_filename": "guia_configuracion_ga4_20260821_175706.md",
+      "path": "output/v4_complete/zione/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260821_175706.md",
+      "metadata_path": "output/v4_complete/zione/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260821_175706_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "no_analytics_configured"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "indirect_traffic_optimization",
+      "filename": "ESTIMATED_optimizacion_trafico_indirecto_20260821_175706.md",
+      "delivery_filename": "optimizacion_trafico_indirecto_20260821_175706.md",
+      "path": "output/v4_complete/zione/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260821_175706.md",
+      "metadata_path": "output/v4_complete/zione/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260821_175706_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "low_organic_visibility"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "llms_txt",
+      "filename": "llms_20260821_175706.txt",
+      "delivery_filename": "llms_20260821_175706.txt",
+      "path": "output/v4_complete/zione/llms_txt/llms_20260821_175706.txt",
+      "metadata_path": "output/v4_complete/zione/llms_txt/llms_20260821_175706_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 1.0,
+      "pain_ids_resolved": [
+        "ai_crawler_blocked"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "og_tags_guide",
+      "filename": "ESTIMATED_guia_og_tags_20260821_175706.md",
+      "delivery_filename": "guia_og_tags_20260821_175706.md",
+      "path": "output/v4_complete/zione/og_tags_guide/ESTIMATED_guia_og_tags_20260821_175706.md",
+      "metadata_path": "output/v4_complete/zione/og_tags_guide/ESTIMATED_guia_og_tags_20260821_175706_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "no_og_tags"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "open_graph",
+      "filename": "open_graph_meta_20260821_175706.html",
+      "delivery_filename": "open_graph_meta_20260821_175706.html",
+      "path": "output/v4_complete/zione/open_graph/open_graph_meta_20260821_175706.html",
+      "metadata_path": "output/v4_complete/zione/open_graph/open_graph_meta_20260821_175706_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 1.0,
+      "pain_ids_resolved": [
+        "no_og_tags"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "monthly_report",
+      "filename": "informe_mensual_20260821_175706.md",
+      "delivery_filename": "informe_mensual_20260821_175706.md",
+      "path": "output/v4_complete/zione/monthly_report/informe_mensual_20260821_175706.md",
+      "metadata_path": "output/v4_complete/zione/monthly_report/informe_mensual_20260821_175706_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 1.0,
+      "pain_ids_resolved": [],
+      "can_use": true
+    }
+  ],
+  "failed_assets": [],
+  "skipped_assets": [],
+  "coherence_report": {
+    "is_coherent": true,
+    "overall_score": 0.95,
+    "checks": [
+      {
+        "name": "problems_have_solutions",
+        "passed": true,
+        "score": 1.0,
+        "message": "100% de problemas tienen solución automática",
+        "severity": "info"
+      },
+      {
+        "name": "assets_are_justified",
+        "passed": true,
+        "score": 0.89,
+        "message": "88% de assets justificados (8/9)",
+        "severity": "warning"
+      },
+      {
+        "name": "financial_data_validated",
+        "passed": true,
+        "score": 0.95,
+        "message": "Datos financieros validados (confidence promedio: 0.95)",
+        "severity": "info"
+      },
+      {
+        "name": "whatsapp_verified",
+        "passed": true,
+        "score": 1.0,
+        "message": "No hay asset de WhatsApp button",
+        "severity": "info"
+      },
+      {
+        "name": "price_matches_pain",
+        "passed": true,
+        "score": 0.8,
+        "message": "Precio en límite inferior (3.7x) - rango ideal 3.0x-50.0x",
+        "severity": "warning"
+      },
+      {
+        "name": "promised_assets_exist",
+        "passed": true,
+        "score": 1.0,
+        "message": "Todos los assets prometidos están implementados (7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET)",
+        "severity": "info"
+      }
+    ],
+    "errors": [],
+    "warnings": [],
+    "timestamp": "2026-08-21T17:57:01.850358",
+    "version": "4.2.0"
+  },
+  "coherence_score_pre": 0.95,
+  "coherence_score_post": 0.95,
+  "coherence_score_final": 0.95,
+  "final_coherence_report": {
+    "is_coherent": true,
+    "overall_score": 0.95,
+    "checks": [
+      {
+        "name": "problems_have_solutions",
+        "passed": true,
+        "score": 1.0,
+        "message": "100% de problemas tienen solución automática",
+        "severity": "info"
+      },
+      {
+        "name": "assets_are_justified",
+        "passed": true,
+        "score": 0.89,
+        "message": "88% de assets justificados (8/9)",
+        "severity": "warning"
+      },
+      {
+        "name": "financial_data_validated",
+        "passed": true,
+        "score": 0.95,
+        "message": "Datos financieros validados (confidence promedio: 0.95)",
+        "severity": "info"
+      },
+      {
+        "name": "whatsapp_verified",
+        "passed": true,
+        "score": 1.0,
+        "message": "No hay asset de WhatsApp button",
+        "severity": "info"
+      },
+      {
+        "name": "price_matches_pain",
+        "passed": true,
+        "score": 0.8,
+        "message": "Precio en límite inferior (3.7x) - rango ideal 3.0x-50.0x",
+        "severity": "warning"
+      },
+      {
+        "name": "promised_assets_exist",
+        "passed": true,
+        "score": 1.0,
+        "message": "Todos los assets prometidos están implementados (7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET)",
+        "severity": "info"
+      }
+    ],
+    "errors": [],
+    "warnings": [],
+    "timestamp": "2026-08-21T17:57:06.119511",
+    "version": "4.2.0"
+  }
+}

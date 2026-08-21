@@ -36,8 +36,8 @@
 | Línea base de fallos preexistentes (suites tocadas) | 22 fallos: 12 commercial_documents + 10 financial_engine — evidence/BASELINE-TESTS-v4.71.0.txt | FASE-P0-A |
 | Tests nuevos acumulados | 127 (3 P0-A + 18 P0-B + 4 P0-C + 19 P1-A + 24 P1-B + 27 P1-C + 21 P1-D + 11 P2-A) | FASE-P2-B |
 | Coherence última corrida | 0.9237 (evidence/FASE-F, pre-plan) | Preparación |
-| Coherence E2E Zi One (post-plan) | (pendiente) | FASE-E2E-ZIONE |
-| Tiempo corrida con caches cálidos (C9) | (pendiente) | FASE-E2E-ZIONE |
+| Coherence E2E Zi One (post-plan) | 0.9485 (6/6 checks PASSED, READY_FOR_PUBLICATION, 13 gates PASSED) | FASE-E2E-ZIONE |
+| Tiempo corrida con caches cálidos (C9) | 4 min 8 seg (17:53:45→17:57:53) | FASE-E2E-ZIONE |
 
 ## Sección E: Archivos Afiliados Actualizados
 

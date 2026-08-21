@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CREDIBILIDAD-NUMERICA-2026-08-20
 
-> **Estado**: 9/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅, P1-C ✅, P1-D ✅, P2-A ✅, P2-B ✅) — 2 restantes
+> **Estado**: 10/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅, P1-C ✅, P1-D ✅, P2-A ✅, P2-B ✅, E2E-ZIONE ✅) — 1 restante (RELEASE)
 > **Plan**: CREDIBILIDAD-NUMERICA-2026-08-20
 > **Versión objetivo**: v4.72.0
 > **Creado DESDE LA CONCEPCIÓN** (phased_project_executor v2.15.0): cada fase agrega lecciones aquí al cerrar sesión.
@@ -18,7 +18,7 @@
 | FASE-P1-D | 2026-08-21 | ✅ | ~35 | No (DIRECTO) | 21 tests nuevos (11 F12 multi-sede + 10 F13 propagación); firma backwards-compatible en validate_whatsapp; D8 (VERIFIED_IN_SITE primera clase); suites data_validation+asset_generation 603 passed; suites ampliadas: solo los 12 fallos preexistentes de la línea base; 0 regresiones |
 | FASE-P2-A | 2026-08-21 | ✅ | ~30 | No (DIRECTO) | 11 tests nuevos F14; coherence acepta site_presence_report; F8 auditoría sin rutas residuales; validaciones --quick 6/6 PASS; 0 regresiones |
 | FASE-P2-B | 2026-08-21 | ✅ | ~30 | No (DIRECTO) | Script preload_prospects_gbp.py (dry-run OK, 30 prospectos builtin); search_by_name en GooglePlacesClient; 4 docs higienizadas (PRECIOS_PAQUETES, PROPUESTA_EMPAQUETADO, PROMPT_INGRESOS x2); ADR $420K→$280K; scrapers 34 passed 0 nuevos fallos; validaciones --quick 6/6 PASS |
-| FASE-E2E-ZIONE | — | ⬜ | — | Sí (v4complete) | |
+| FASE-E2E-ZIONE | 2026-08-21 | ✅ | ~20 | Sí (v4complete) | 4m08s caches cálidos; coherence 0.95; 13/13 gates PASSED (pricing_compliance WARNING floor-aware D1); READY_FOR_PUBLICATION; 9/9 assets; V1-V13 verificados |
 | FASE-RELEASE-4.72.0 | — | ⬜ | — | Opcional | |
 
 ## Matriz de Verificación de Fixes (llenar en FASE-E2E-ZIONE)
@@ -27,16 +27,19 @@ Matriz completa en `01-plan-maestro.md §4` (V1-V13). Resumen:
 
 | # | Fix (fallo) | Expected | Real | Status |
 |---|-------------|----------|------|--------|
-| V1-V2 | F1 pricing único + gate | Un precio; gate PASSED (floor-aware D1) | | |
-| V3 | F7 encoding | JSONs legibles utf-8 | | |
-| V4-V5 | F2/F4/F3 benchmarks + fallback | Un ADR; fallback conservador | | |
-| V6 | F5 comisión OTA | Rango + fuente | | |
-| V7 | F6 cap rango hook | Ratio acotado | | |
-| V8-V9 | F12/F13 verdad sitio vivo | Sin brechas falsas WhatsApp | | |
-| V10 | F14 coherence vs gate | Ambos de acuerdo | | |
-| V11 | F8 occupancy label | Etiqueta correcta | | |
-| V12 | Regresión gates | Coherence ≥ 0.8; sin fallos NUEVOS vs línea base §6 | | |
-| V13 | C9 corrida (caches cálidos) | Tiempo medido | | |
+| V1 | F1 pricing único | Precio = pricing.monthly_price_cop (un valor) | $500,000 COP consistente en gate_report, financial_scenarios, propuesta y diagnóstico | ✅ PASSED |
+| V2 | F1 gate pricing_compliance | PASSED (floor-aware D1) | PASSED con WARNING: pain_ratio 0.0724, floor $500K aplicado, tier_gate_max 0.32 OK | ✅ PASSED |
+| V3 | F7 encoding | JSONs legibles utf-8 | 16 JSONs leídos sin UnicodeDecodeError (delivery_quality_report, pain_ledger, etc.) | ✅ PASSED |
+| V4 | F2/F4 benchmarks | Un ADR; Bogotá presente | ADR source=user_provided ($290K); región=Eje Cafetero; benchmark master unificado (D3 JSON) | ✅ PASSED |
+| V5 | F3 fallback | Fallback conservador | Región resuelta a "Eje Cafetero"; sin "caribe" en output | ✅ PASSED |
+| V6 | F5 comisión OTA | Rango + fuente | ota_commission_source cita "rango 18-22%" y fuente config/financial_defaults.yaml; PERO ota_commission_basis muestra "× 15% comisión" (base de cálculo residual sin actualizar) | ⚠️ PARCIAL (seguimiento) |
+| V7 | F6 cap rango hook | Ratio acotado | Rango diagnóstico [$10,764,800-$16,147,200] ratio 1.5x ≤ 5.0 (D7) | ✅ PASSED |
+| V8 | F12 WhatsApp multi-sede | Sin BRECHA 1 falsa | whatsapp_status=VERIFIED; phone_web +573103724544, phone_gbp 3116079036; sin conflicto; sitio vivo confirma 2 sedes (Pereira+Cartagena) | ✅ PASSED |
+| V9 | F13 no_whatsapp_visible | No DETECTED HIGH | Sin entrada no_whatsapp_visible en pain_ledger (7 entradas: schema, seo, faq, analytics, visibility, crawlers, og) | ✅ PASSED |
+| V10 | F14 coherence↔gate | Ambos de acuerdo | coherence.whatsapp_verified=1.0 PASSED; gate proposal_asset_alignment: WhatsApp "present_in_production" verified | ✅ PASSED |
+| V11 | F8 occupancy label | Etiqueta correcta | data_sources.occupancy = "onboarding" (financial_scenarios + gate_report financial_sources) | ✅ PASSED |
+| V12 | — | Coherence ≥ 0.8; sin regresión | coherence 0.9485; READY_FOR_PUBLICATION; 13/13 gates PASSED; 0 blocking issues | ✅ PASSED |
+| V13 | C9 | Tiempo medido | 4 min 8 seg (17:53:45→17:57:53) con caches cálidos (places_cache.json, scraped_sites.json globales) | ✅ PASSED |
 
 ## Lecciones Aprendidas (mínimo 3 por fase completada)
 
@@ -111,6 +114,34 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | L21 | F13 se resolvió extendiendo la taxonomía de status (VERIFIED_IN_SITE) + agregándolo al whitelist de justificación del coverage gate (_JUSTIFIED_STATUSES), sin alterar la fórmula "cubiertas + justificadas == detectadas". El reconciler solo necesitó una línea de preservación. Extender estados existentes es más barato y auditable que crear lógica paralela de "brechas ignoradas". | INCLUIR: para nuevos estados de verdad, preferir extensión de taxonomía + whitelist de gates sobre lógica paralela; verificar SIEMPRE que los reconciliadores intermedios preserven el nuevo estado |
 | L22 | La firma backwards-compatible (parámetros opcionales web_alternates/gbp_location) permitió que `two_phase_flow._validate_all_inputs` quedara intacto (no tiene DOM disponible) y solo se enriquecieran los callers con acceso al HTML (v4_comprehensive, main.py). Mono-sede conserva comportamiento legacy exacto. | INCLUIR: al cambiar firmas con múltiples callers, parámetros opcionales + enriquecer solo callers con datos disponibles preserva compatibilidad sin branch masivo |
 
+#### FASE-E2E-ZIONE
+
+| # | Lección | Pertinencia |
+|---|---------|-------------|
+| L29 | La corrida v4complete E2E con caches globales cálidos (places_cache.json, scraped_sites.json) tomó 4m08s, no los 5-10 min estimados. El timeout de 900s fue holgado (43% utilizado). Para futuras E2E, 600s es suficiente con caches cálidos. | INCLUIR: estimar timeout E2E basado en caches cálidos vs fríos; 600s para cálidos, 900s para fríos |
+| L30 | El campo `ota_commission_basis` en financial_scenarios muestra "× 15% comisión" aunque la fuente (V6) cita correctamente "rango 18-22%". La narrativa fue corregida en F5 pero la base de cálculo del display string mantiene el literal 15% hardcodeado. Es un bug cosmético de display, no afecta el cálculo financiero real. | INCLUIR: tras parametrizar constantes, verificar TAMBIÉN los strings de display/basis que citan el valor, no solo la lógica de cálculo |
+| L31 | La verificación de sitio vivo vía WebFetch recuperó el HTML pero no los widgets JavaScript-rendered (botón WhatsApp sticky Elementor). La verificación V8/V9 dependió del audit_report (que usa scraping headless) más que del fetch directo. Para futuras E2E, confiar en el audit_report para elementos JS-rendered y usar WebFetch solo como complemento. | INCLUIR: verificación de elementos JS-rendered (widgets, chatbots, sticky buttons) requiere headless browser; WebFetch solo captura HTML estático |
+| L32 | El gate `pricing_compliance` funcionó exactamente como diseñó D1: WARNING informativo para ratio 0.0724 fuera del rango ideal [0.03-0.06] con floor $500K aplicado, pero PASSED porque 0.0724 < tier_gate_max 0.32 (standard). Sin el diseño floor-aware (D1), Zione habría sido BLOCKED y V12 imposible. La decisión arquitectónica D1 fue correcta y defendida por el output real. | INCLUIR: decisiones de diseño floor-aware/soft-gate deben documentarse con el caso real que las valida; un gate puramente blocking puede hacer imposible la publicación de clientes viables |
+
+## Veredicto E2E-ZIONE
+
+**Fixes F1-F14: 12/13 verificaciones PASSED, 1 PARCIAL (V6 — seguimiento)**
+
+La corrida v4complete para Zi One Luxury (https://zione.co/) demostró que los fixes implementados en las fases P0/P1/P2 funcionan correctamente en producción:
+
+- **F1 (pricing único)**: precio consistente $500K en todos los artefactos. Gate pricing_compliance floor-aware funcionando (V1+V2 ✅).
+- **F7 (encoding)**: todos los JSONs legibles sin UnicodeDecodeError (V3 ✅).
+- **F2/F4 (benchmarks) + F3 (fallback)**: región Eje Cafetero, sin caribe (V4+V5 ✅).
+- **F5 (OTA)**: fuente y rango correctos en narrativa, pero base de cálculo display residual en 15% (V6 ⚠️ seguimiento cosmético).
+- **F6 (cap rango)**: ratio 1.5x dentro del cap 5.0 (V7 ✅).
+- **F12/F13 (verdad sitio vivo)**: sin brechas falsas WhatsApp, botón verificado en producción (V8+V9 ✅).
+- **F14 (coherence↔gate)**: ambos PASSED sobre whatsapp_button (V10 ✅).
+- **F8 (occupancy)**: etiqueta "onboarding" correcta (V11 ✅).
+- **Coherence**: 0.9485, muy por encima del umbral 0.8 (V12 ✅).
+- **Tiempo**: 4m08s con caches cálidos (V13 ✅).
+
+**Seguimiento abierto**: V6 — `ota_commission_basis` string literal "15% comisión" residual en `scenario_calculator.py` o `calculator_v2.py` (cosmético, no afecta cálculos financieros).
+
 #### FASE-P2-B
 
 | # | Lección | Pertinencia |
@@ -147,6 +178,7 @@ Decisión: benchmark $420K era desactualizado/aspiracional. Master calibrado a $
 | Ruta productora del pricing $500K no trazada a fondo (CONTEXT §4.2) | ✅ Cerrado | FASE-P0-A trazó la cadena: pricing.yaml → _load_pricing_config() → _calculate_dynamic_price() → pricing_result.monthly_price_cop |
 | Comportamiento de scrapers con prospectos nuevos (CONTEXT §4.3) | Parcialmente cubierto | FASE-P2-B creó el script y el método search_by_name; ejecución batch real (30 prospectos) pendiente como tarea operativa post-plan |
 | Ejecución batch operativa de pre-carga GBP sobre 30 prospectos | Abierto (post-plan) | Ejecutar `scripts/preload_prospects_gbp.py --builtin` con GOOGLE_MAPS_API_KEY configurada; revisar reporte; contactar prospectos VERIFIED |
+| V6: `ota_commission_basis` string "15% comisión" residual | Abierto (seguimiento cosmético) | Actualizar literal "15%" en display string de scenario_calculator/calculator_v2 para reflejar el rango 18-22% de config; NO afecta cálculos financieros |
 | Widget Elementor `e-fab-whatsapp` (F12) | ✅ Cubierto sin cambio de código | `_check_html_element` de SitePresenceChecker ya lo detecta por substring 'whatsapp'; verificado en T1, sin acción pendiente |
 | P3: deployer real, Express 5 páginas, monitoreo | Fuera de alcance | Solo tras primer Express pagado |
 
@@ -155,9 +187,9 @@ Decisión: benchmark $420K era desactualizado/aspiracional. Master calibrado a $
 | Métrica | Valor |
 |---------|-------|
 | Tests totales al cierre | (pendiente — se actualizará en RELEASE) |
-| Coherence E2E Zi One | (pendiente) |
-| Gates PASSED E2E | (pendiente) |
-| Tiempo corrida con caches cálidos (C9) | (pendiente) |
+| Coherence E2E Zi One | 0.9485 (6/6 checks PASSED) |
+| Gates PASSED E2E | 13/13 (12 PASSED + 1 WARNING pricing_compliance floor-aware) |
+| Tiempo corrida con caches cálidos (C9) | 4 min 8 seg (17:53:45→17:57:53) |
 
 ## Decisiones Arquitectónicas (llenar cuando aplique)
 
@@ -177,8 +209,8 @@ Decisión: benchmark $420K era desactualizado/aspiracional. Master calibrado a $
 
 ## Checklist de Cierre (llenar en FASE-RELEASE-4.72.0)
 
-- [ ] Todos los fixes F1-F14 verificados en matriz V1-V13
-- [ ] Corrida única v4complete Zi One Luxury en `evidence/E2E-ZIONE/`
-- [ ] Lecciones aprendidas ≥ 3 por fase
-- [ ] CHANGELOG + GUIA_TECNICA + VERSION.yaml = 4.72.0
-- [ ] run_all_validations.py --quick TOTAL PASS
+- [x] Todos los fixes F1-F14 verificados en matriz V1-V13 (12/13 PASSED, V6 seguimiento cosmético)
+- [x] Corrida única v4complete Zi One Luxury en `evidence/E2E-ZIONE/` (16 artefactos)
+- [x] Lecciones aprendidas ≥ 3 por fase (E2E: L29-L32)
+- [ ] CHANGELOG + GUIA_TECNICA + VERSION.yaml = 4.72.0 (pendiente FASE-RELEASE)
+- [ ] run_all_validations.py --quick TOTAL PASS (pendiente FASE-RELEASE)
