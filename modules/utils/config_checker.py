@@ -143,7 +143,7 @@ class ConfigChecker:
                     # Verificar permisos de escritura
                     test_file = path / ".write_test"
                     try:
-                        test_file.write_text("test")
+                        test_file.write_text("test", encoding="utf-8")
                         test_file.unlink()
                         self.checks.append((f"[OK] Permisos: {path_str}", "ok"))
                     except (IOError, OSError):
@@ -166,7 +166,7 @@ class ConfigChecker:
                 output_path.mkdir(parents=True, exist_ok=True)
                 # Test de escritura
                 test_file = output_path / "write_test.txt"
-                test_file.write_text("test")
+                test_file.write_text("test", encoding="utf-8")
                 test_file.unlink()
                 self.checks.append((f"[OK] Directorio salida: {args.output}", "ok"))
             except Exception as e:

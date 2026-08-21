@@ -335,7 +335,10 @@ class DeliveryQualityReportGenerator:
             path: Destination file path
         """
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(report.to_dict(), indent=2, ensure_ascii=False))
+        path.write_text(
+            json.dumps(report.to_dict(), indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
 
     # ── Private helpers ────────────────────────────────────────────────────
 

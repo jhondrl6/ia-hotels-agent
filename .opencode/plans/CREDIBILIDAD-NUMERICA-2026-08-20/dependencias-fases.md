@@ -9,7 +9,7 @@ FASE-P0-A (pricing único) ✅
     │
     ├──→ FASE-P0-B (gate pricing_compliance consume la fuente única) ✅
     │
-FASE-P0-C (encoding)  [independiente]
+FASE-P0-C (encoding) ✅  [independiente]
     │
 FASE-P1-A (benchmark maestro)
     │

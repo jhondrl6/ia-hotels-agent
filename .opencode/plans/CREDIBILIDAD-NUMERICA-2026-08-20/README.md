@@ -29,7 +29,7 @@ múltiples fuentes no sincronizadas. Cada fase restaura una fuente única para u
 |---|------|------------------|-------------------|---------------|--------|
 | 1 | `FASE-P0-A` Fuente única de pricing | F1 (constantes) | DIRECTO (decisión arquitectónica) | No | ✅ 2026-08-20 |
 | 2 | `FASE-P0-B` Gate pricing_compliance | F1 (gate) | DIRECTO | No | ✅ 2026-08-21 |
-| 3 | `FASE-P0-C` Encoding utf-8 global | F7 | **DELEGABLE** (fix mecánico) | Sí (opcional) | Nueva |
+| 3 | `FASE-P0-C` Encoding utf-8 global | F7 | **DELEGABLE** (fix mecánico) | Sí (opcional) | ✅ 2026-08-21 |
 | 4 | `FASE-P1-A` Benchmark maestro único | F2, F4 | DIRECTO (decisión arquitectónica) | No | Nueva |
 | 5 | `FASE-P1-B` Fallback región + comisión OTA | F3, F5 | **DELEGABLE** (2 tracks independientes) | Sí | Nueva |
 | 6 | `FASE-P1-C` Cap plausibilidad + trazabilidad rango | F6, F11 | DIRECTO (decisión arquitectónica) | No | Nueva |

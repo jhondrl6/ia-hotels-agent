@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CREDIBILIDAD-NUMERICA-2026-08-20
 
-> **Estado**: 2/11 fases completadas (P0-A ✅, P0-B ✅) — 9 restantes
+> **Estado**: 3/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅) — 8 restantes
 > **Plan**: CREDIBILIDAD-NUMERICA-2026-08-20
 > **Versión objetivo**: v4.72.0
 > **Creado DESDE LA CONCEPCIÓN** (phased_project_executor v2.15.0): cada fase agrega lecciones aquí al cerrar sesión.
@@ -11,7 +11,7 @@
 |------|--------|--------|-------------|---------------|-------|
 | FASE-P0-A | 2026-08-20 | ✅ | ~35 | No | 3 tests nuevos contrato F1; 0 regresiones; 22 fallos línea base intactos |
 | FASE-P0-B | 2026-08-21 | ✅ | ~30 | No | 18 tests nuevos pricing_compliance; gate floor-aware D1; AGENTS.md 12→13 gates; 0 regresiones |
-| FASE-P0-C | — | ⬜ | — | Opcional | |
+| FASE-P0-C | 2026-08-21 | ✅ | ~15 | No (DIRECTO) | 4 tests nuevos encoding; auditoría estática AST; fix en 3 writers (1 delivery_quality_report + 2 config_checker); 0 regresiones |
 | FASE-P1-A | — | ⬜ | — | No | |
 | FASE-P1-B | — | ⬜ | — | Sí (2 tracks) | |
 | FASE-P1-C | — | ⬜ | — | No | |
@@ -69,6 +69,14 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | L4 | El gate `pricing_compliance` necesita datos de pricing (pain_ratio, tier, monthly_price) en el assessment, pero `AssessmentBuilder` no los inyectaba. Agregar `with_pricing()` como método fluid y `pricing_data` como campo en `AssessmentPayload` resuelve el vacío sin tocar los 12 gates existentes. | INCLUIR: al agregar un gate nuevo, verificar SIEMPRE que el assessment builder propague los datos necesarios |
 | L5 | La detección de `operational_floor` aplicado se implementa comparando `monthly_price <= operational_floor * 1.01` (tolerancia 1%). Sin tolerancia, precios exactos al floor fallan la detección por redondeo de punto flotante. | INCLUIR: comparaciones de precios con floor SIEMPRE deben incluir tolerancia (1% mínimo) |
 | L6 | Los tests existentes (test_all_gates_pass, test_visperas_comprehensive_report) asumen un conteo FIJO de gates (12). Al agregar un gate nuevo, 4 tests se rompieron por assertions `len(results) == 12`. Actualizar a 13 fue trivial pero evitable con assertions dinámicas (`len(orchestrator.gates)`). | INCLUIR: assertions de conteo de gates deben usar `len(orchestrator.gates)` en vez de hardcoded — mejora resiliencia ante futuros gates |
+
+#### FASE-P0-C
+
+| # | Lección | Pertinencia |
+|---|---------|-------------|
+| L7 | La auditoría de writers sin encoding reveló que de ~60 writers en modules/, solo 3 carecían de encoding='utf-8'. El patrón dominante es que los writers YA estaban corregidos (probablemente por P0-A o convenciones previas). Un test estático con AST (ast.parse + walk) es más robusto que grep para detectar violaciones futuras porque entiende la estructura del código y no genera falsos positivos con comentarios o strings. | INCLUIR: para contratos de código transversales (encoding, imports prohibidos), usar AST en vez de regex/grep |
+| L8 | `delivery_quality_report.py` era el writer crítico (F7 original: UnicodeDecodeError byte 0xf3). El fix fue trivial (1 línea) pero el impacto es alto: es el primer archivo que se lee al abrir el ZIP de entrega. Los writers de config_checker.py son archivos temporales de prueba de permisos — el fix es preventivo (evita fallo en sistemas con locale no-UTF-8). | INCLUIR: priorizar fixes de encoding por impacto en el usuario final, no por cantidad de writers |
+| L9 | El test de contrato anti-regresión con caracteres Unicode (em-dash “–”, tildes “ó”, “é”) verifica el roundtrip save→load. Sin estos caracteres explícitos en el test, un futuro cambio podría reintroducir write_text sin encoding y el test pasaría porque ASCII no distingue cp1252 de utf-8. | INCLUIR: tests de encoding SIEMPRE deben incluir caracteres no-ASCII (tildes, ñ, em-dash) para ser efectivos |
 
 ## Seguimientos abiertos (llenar conforme avancen las fases)
 

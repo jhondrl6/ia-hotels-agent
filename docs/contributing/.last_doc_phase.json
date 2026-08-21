@@ -165,7 +165,7 @@
   ".agent/knowledge/DOMAIN_PRIMER.md": "N8-RELEASE",
   "scripts/verify_ga4.py": "FASE-B",
   "scripts/validate_structure.py": "FASE-B",
-  "modules/quality_gates/delivery_quality_report.py": "FASE-4",
+  "modules/quality_gates/delivery_quality_report.py": "FASE-P0-C",
   "evidence/fase-B/analysis.md": "FASE-B",
   "modules/assessment_builder.py": "FASE-P0-B",
   "tests/test_assessment_builder.py": "N8-B",
@@ -225,5 +225,7 @@
   ".opencode/plans/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/10-analisis-post-implementacion.md": "FASE-E",
   "evidence/N3-diff/": "FASE-E",
   "modules/commercial_documents/hook_pdf_generator.py": "FASE-P0-A",
-  "tests/commercial_documents/test_hook_pdf_generator.py": "FASE-P0-A"
+  "tests/commercial_documents/test_hook_pdf_generator.py": "FASE-P0-A",
+  "modules/utils/config_checker.py": "FASE-P0-C",
+  "tests/test_encoding_artifacts.py": "FASE-P0-C"
 }

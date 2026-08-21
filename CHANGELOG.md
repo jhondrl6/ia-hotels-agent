@@ -54,6 +54,28 @@ Crear el gate de publicación `pricing_compliance` (BLOCKING) que bloquea cuando
 
 ---
 
+### FASE-P0-C — Encoding utf-8 en writers de artefactos (F7)
+
+#### Objetivo
+Garantizar que TODOS los writers de artefactos (JSON/MD/HTML de output) usen `encoding='utf-8'` explícito para eliminar el encoding corrupto que produce artefactos ilegibles (cp1252 por defecto en Windows). Fallo original F7: `delivery_quality_report.json` lanzaba `UnicodeDecodeError` (byte 0xf3) y mojibake "B+ ? Datos fuente" en diagnóstico.
+
+#### Cambios
+- `modules/quality_gates/delivery_quality_report.py`: `save()` — `path.write_text(...)` ahora usa `encoding="utf-8"` explícito
+- `modules/utils/config_checker.py`: 2 `test_file.write_text("test")` ahora usan `encoding="utf-8"` (fix preventivo en tests de permisos)
+- `tests/test_encoding_artifacts.py`: nuevo — 4 tests de contrato anti-regresión (save utf-8, no mojibake, roundtrip special chars, auditoría estática AST)
+
+#### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/delivery_quality_report.py` | +encoding="utf-8" en save() write_text |
+| `modules/utils/config_checker.py` | +encoding="utf-8" en 2 write_text de permisos |
+| `tests/test_encoding_artifacts.py` | NUEVO — 4 tests contrato F7 + auditoría estática AST |
+
+#### Tests
++4 tests nuevos (TestDeliveryQualityReportEncoding + TestEncodingContractStatic). 470 passed en suite delivery+quality_gates+encoding. 0 regresiones vs línea base.
+
+---
+
 ## [4.71.0] — 2026-08-05 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 ### Objetivo

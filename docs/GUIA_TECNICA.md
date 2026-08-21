@@ -45,6 +45,24 @@
 
 ---
 
+### Notas de Cambios v4.72.0-WIP — FASE-P0-C: Encoding utf-8 en writers de artefactos
+
+**Fecha:** 2026-08-21
+
+**Resumen**: Fix del fallo F7 — todos los writers de artefactos (`Path.write_text()`) en `modules/` ahora usan `encoding='utf-8'` explícito. Causa raíz: Windows usa cp1252 por defecto en `open()`/`write_text()` sin encoding, produciendo mojibake y `UnicodeDecodeError` en artefactos JSON de entrega.
+
+**Módulos afectados**: `modules/quality_gates/delivery_quality_report.py`, `modules/utils/config_checker.py`
+
+**Problema**: `delivery_quality_report.json` dentro del ZIP de entrega lanzaba `UnicodeDecodeError` (byte 0xf3). Mojibake "B+ ? Datos fuente" en diagnóstico. El writer `save()` usaba `path.write_text(json.dumps(...))` sin encoding.
+
+**Solución**: Agregado `encoding="utf-8"` en 3 writers (1 crítico en delivery_quality_report + 2 preventivos en config_checker). Test de contrato anti-regresión con auditoría estática AST que verifica que NINGÚN `write_text()` en `modules/` carezca de encoding.
+
+**Backwards compatibility**: 100%. El fix no cambia lógica de negocio, solo agrega encoding explícito. Los readers ya usaban `encoding="utf-8"` (ver `_load_json` en delivery_quality_report.py).
+
+**Tests**: +4 tests nuevos (TestDeliveryQualityReportEncoding + TestEncodingContractStatic). 470 passed en suite delivery+quality_gates+encoding. 0 regresiones.
+
+---
+
 ### Notas de Cambios v4.71.0 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 **Fecha:** 2026-08-05
