@@ -282,6 +282,16 @@ class V4AssetOrchestrator:
         # FASE-0B: Crear PainLedger y guardar como fuente de verdad de brechas
         pain_ledger_path = output_dir / "v4_audit" / "pain_ledger.json"
         pain_ledger_entries = self.pain_ledger.from_pains(pains, source_module="pain_solution_mapper")
+
+        # FASE-P1-D (F13): propagar la verdad del sitio vivo al ledger ANTES de
+        # guardarlo — si un asset ya existe en producción, el pain deja de ser
+        # DETECTED HIGH y pasa a VERIFIED_IN_SITE (coherente con el skip del
+        # asset layer y el gate "verified in production").
+        if site_presence_report:
+            pain_ledger_entries = self.pain_ledger.apply_site_verification(
+                pain_ledger_entries, site_presence_report
+            )
+
         self.pain_ledger.save(pain_ledger_entries, pain_ledger_path)
         logger.info(f"[V4AssetOrchestrator] PainLedger saved: {len(pain_ledger_entries)} entries")
 

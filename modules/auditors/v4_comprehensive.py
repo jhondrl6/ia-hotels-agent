@@ -108,6 +108,12 @@ class CrossValidationResult:
     whatsapp_html_detected: bool = False  # True si scraper detecto boton WhatsApp en HTML
     whatsapp_href_number: Optional[str] = None  # Numero extraido del href wa.me (puede diferir del phone_web)
 
+    # FASE-P1-D (F12): multi-sede — todos los numeros wa.me/tel del DOM con
+    # label de sede (best-effort) y la sede del perfil GBP, para que la
+    # validacion cruzada pueda mapear numero→sede en sitios multi-ubicacion.
+    web_whatsapp_alternates: List[Dict[str, Any]] = field(default_factory=list)
+    gbp_location: Optional[str] = None
+
     # NUEVOS CAMPOS (GAP-IAO-01-02-B):
     address_status: str = "unknown"
     email_status: str = "unknown"
@@ -1508,6 +1514,67 @@ class V4ComprehensiveAuditor:
             return match.group(1)
         return None
 
+    def _extract_all_whatsapp_candidates(self, html: str) -> List[Dict[str, Any]]:
+        """FASE-P1-D (F12): extract ALL wa.me/tel numbers with sede labels.
+
+        Multi-location sites (e.g. Zione: Pereira + Cartagena) expose several
+        contact numbers in the DOM, usually with a nearby label per sede
+        ("Pereira Contact", "Cartagena Contact"). The legacy single-number
+        extraction discarded this sede metadata and produced false conflicts.
+
+        Returns:
+            List of {"number": str, "label": Optional[str], "type": "wa.me"|"tel"}
+            deduplicated by normalized number (first occurrence wins).
+        """
+        if not html:
+            return []
+        import re
+
+        candidates: List[Dict[str, Any]] = []
+        seen: set = set()
+
+        patterns = [
+            (r'wa\.me/(\d+)', 'wa.me'),
+            (r'api\.whatsapp\.com/send\?phone=(\d+)', 'wa.me'),
+            (r'href=["\']tel:([^"\']+)["\']', 'tel'),
+        ]
+
+        for pattern, kind in patterns:
+            for match in re.finditer(pattern, html, re.IGNORECASE):
+                raw = match.group(1)
+                digits = ''.join(c for c in raw if c.isdigit())
+                # Normalize Colombian country code for dedup
+                norm = digits[2:] if digits.startswith('57') and len(digits) > 10 else digits
+                if not norm or len(norm) < 7 or norm in seen:
+                    continue
+                seen.add(norm)
+                candidates.append({
+                    "number": raw.strip(),
+                    "label": self._extract_sede_label(html, match.start()),
+                    "type": kind,
+                })
+
+        return candidates
+
+    @staticmethod
+    def _extract_sede_label(html: str, position: int) -> Optional[str]:
+        """Best-effort extraction of the sede label near a number occurrence.
+
+        Takes the HTML window preceding the match, strips tags and keeps the
+        last visible text fragment (e.g. "Pereira Contact"). Returns None when
+        no usable text is found — consumers MUST treat labels as unreliable
+        and degrade gracefully (FASE-P1-D F12 acceptance criteria).
+        """
+        import re
+        window = html[max(0, position - 600):position]
+        text = re.sub(r'<[^>]+>', ' ', window)
+        text = re.sub(r'\s+', ' ', text).strip()
+        if not text:
+            return None
+        # Last fragment before the number is typically the sede label
+        fragment = text[-60:].strip(' -:|>')
+        return fragment or None
+
     def _extract_phone_from_html(self, html: str) -> Optional[str]:
         """Extract phone number from <a href='tel:...'> links in HTML.
         
@@ -1553,10 +1620,18 @@ class V4ComprehensiveAuditor:
         
         # PATCH-6: Extract wa.me href number for conflict detection
         wa_me_number = self._extract_wa_me_number(page_html) if page_html else None
-        
+
+        # FASE-P1-D (F12): extract ALL numbers with sede labels for
+        # multi-location aware validation
+        wa_candidates = (
+            self._extract_all_whatsapp_candidates(page_html) if page_html else []
+        )
+
         whatsapp_dp = self.cross_validator.validate_whatsapp(
             web_value=web_phone,
             gbp_value=gbp_phone,
+            web_alternates=wa_candidates,
+            gbp_location=gbp.address,
         )
         
         # Validate ADR (if available)
@@ -1612,6 +1687,9 @@ class V4ComprehensiveAuditor:
             address_gbp=gbp_address,
             whatsapp_html_detected=whatsapp_html_detected,
             whatsapp_href_number=wa_me_number,
+            # FASE-P1-D (F12): propagate multi-sede data to downstream callers
+            web_whatsapp_alternates=wa_candidates,
+            gbp_location=gbp.address,
         )
     
     def _calculate_overall_confidence(

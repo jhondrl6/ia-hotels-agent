@@ -183,6 +183,44 @@ Cerrar la causa raíz de F6: el rango del hook se generaba con defaults hardcode
 
 ---
 
+### FASE-P1-D — Verdad del sitio vivo: sedes WhatsApp multi-sede + propagación site_verification (F12+F13)
+
+#### Objetivo
+Restaurar el estado de verdad del sitio vivo como fuente única en dos frentes: F12 — el cross-validator debe distinguir sedes en negocios multi-ubicación (caso Zione: 2 sedes Pereira/Cartagena generaban un falso conflicto que inflaba la fuga $1.198.906/mes); F13 — propagar `site_verification_applied` al pain_ledger y al diagnóstico (decisión D8: status `VERIFIED_IN_SITE` de primera clase, que consumirá FASE-P2-A/F14).
+
+#### Cambios
+- `modules/data_validation/cross_validator.py`: `validate_whatsapp` acepta `web_alternates` + `gbp_location` (firma backwards-compatible); nuevo `_reconcile_whatsapp_multisede`: GBP coincide con algún número web → VERIFIED (disclaimer lista sedes alternas); multi-sede sin mapeo confiable → degrada CONFLICT a ESTIMATED (WARNING); conflicto real de misma sede (matching por tokens ≥4 chars) → CONFLICT preservado; mono-sede conserva comportamiento legacy
+- `modules/auditors/v4_comprehensive.py`: nuevo `_extract_all_whatsapp_candidates` (wa.me / api.whatsapp / tel con dedup normalizado) + `_extract_sede_label` (ventana de contexto DOM); `CrossValidationResult` agrega `web_whatsapp_alternates` + `gbp_location`; `_run_cross_validation` enriquece `validate_whatsapp`
+- `main.py`: caller `validate_whatsapp` (L1735) enriquecido con alternates y ubicación GBP desde `audit_result.validation`
+- `modules/asset_generation/pain_ledger.py`: nuevo `STATUS_VERIFIED_IN_SITE` + `apply_site_verification(entries, site_presence_report)` — entradas DETECTED cuyo asset mapeado (`PAIN_TO_PRESENCE_ASSET`) existe/redundant y está site_verified → VERIFIED_IN_SITE, severity LOW, evidence_refs `site_verification:{asset}:{status}`
+- `modules/asset_generation/v4_asset_orchestrator.py`: cableado `apply_site_verification` tras `from_pains` y antes de guardar el ledger
+- `modules/orchestration/post_orchestrator_reconciler.py`: `_resolve_status` preserva VERIFIED_IN_SITE en `pain_ledger_resolved.json`
+- `modules/quality_gates/publication_gates.py`: VERIFIED_IN_SITE agregado a `_JUSTIFIED_STATUSES` del coverage gate (cubiertas + justificadas == detectadas)
+- `modules/commercial_documents/v4_diagnostic_generator.py`: `_load_verified_in_site_pain_ids` (pain_ledger_resolved con fallback pain_ledger); `_identify_brechas` filtra pains verificados en producción; cache_key incluye verified_ids
+
+#### Archivos Nuevos
+| Archivo | Descripción |
+|---------|-------------|
+| `tests/data_validation/test_whatsapp_multisede.py` | 11 tests F12: caso Zione VERIFIED sin conflicto, degrade a ESTIMATED, conflicto real misma sede, legacy mono-sede, scanner con labels |
+| `tests/asset_generation/test_site_verification_propagation.py` | 10 tests F13: exists→VERIFIED_IN_SITE LOW, not_exists→DETECTED, redundant→verified, unmapped intacto, reconciler preserva, coverage gate justifica, diagnóstico filtra |
+
+#### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/data_validation/cross_validator.py` | +web_alternates/gbp_location en validate_whatsapp; +_reconcile_whatsapp_multisede (tokens ≥4 chars) |
+| `modules/auditors/v4_comprehensive.py` | +_extract_all_whatsapp_candidates; +_extract_sede_label; CrossValidationResult +2 campos |
+| `main.py` | Caller validate_whatsapp L1735 enriquecido |
+| `modules/asset_generation/pain_ledger.py` | +STATUS_VERIFIED_IN_SITE; +apply_site_verification; +PAIN_TO_PRESENCE_ASSET |
+| `modules/asset_generation/v4_asset_orchestrator.py` | Cableado apply_site_verification antes de save |
+| `modules/orchestration/post_orchestrator_reconciler.py` | _resolve_status preserva VERIFIED_IN_SITE |
+| `modules/quality_gates/publication_gates.py` | +VERIFIED_IN_SITE en _JUSTIFIED_STATUSES |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | +_load_verified_in_site_pain_ids; filtrado de brechas verificadas |
+
+#### Tests
++21 tests nuevos (11 F12 + 10 F13). Suites data_validation + asset_generation: 603 passed, 0 failed. Suites ampliadas (quality_gates, commercial_documents, orchestration_v4, auditors, reconciler): solo los 12 fallos preexistentes de la línea base (commercial_documents) — 0 regresiones.
+
+---
+
 ## [4.71.0] — 2026-08-05 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 ### Objetivo

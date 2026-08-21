@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CREDIBILIDAD-NUMERICA-2026-08-20
 
-> **Estado**: 6/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅, P1-C ✅) — 5 restantes
+> **Estado**: 7/11 fases completadas (P0-A ✅, P0-B ✅, P0-C ✅, P1-A ✅, P1-B ✅, P1-C ✅, P1-D ✅) — 4 restantes
 > **Plan**: CREDIBILIDAD-NUMERICA-2026-08-20
 > **Versión objetivo**: v4.72.0
 > **Creado DESDE LA CONCEPCIÓN** (phased_project_executor v2.15.0): cada fase agrega lecciones aquí al cerrar sesión.
@@ -15,7 +15,7 @@
 | FASE-P1-A | 2026-08-21 | ✅ | ~45 | No | 19 tests nuevos benchmark_master; normalización regiones; script sync; D3+D3b documentadas; 0 regresiones vs baseline (10 preexistentes) |
 | FASE-P1-B | 2026-08-21 | ✅ | ~45 | No (DIRECTO) | 24 tests nuevos (12 F3 + 12 F5); comisión OTA parametrizada en 5 sitios + 3 archivos de tests actualizados; 0 regresiones vs baseline (148 auditors, 10 preexistentes financial_engine) |
 | FASE-P1-C | 2026-08-21 | ✅ | ~30 | No | 27 tests nuevos (14 F6/D4 + 13 F11); benchmark master cableado al hook; cap plausibilidad 5x (D7); trazabilidad Hook→Express; suite orchestration_v4 66→93; validaciones --quick 6/6 PASS |
-| FASE-P1-D | — | ⬜ | — | No | Máxima complejidad |
+| FASE-P1-D | 2026-08-21 | ✅ | ~35 | No (DIRECTO) | 21 tests nuevos (11 F12 multi-sede + 10 F13 propagación); firma backwards-compatible en validate_whatsapp; D8 (VERIFIED_IN_SITE primera clase); suites data_validation+asset_generation 603 passed; suites ampliadas: solo los 12 fallos preexistentes de la línea base; 0 regresiones |
 | FASE-P2-A | — | ⬜ | — | No | |
 | FASE-P2-B | — | ⬜ | — | No | |
 | FASE-E2E-ZIONE | — | ⬜ | — | Sí (v4complete) | |
@@ -102,6 +102,15 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | L17 | Los tests existentes assertean conjuntos EXACTOS de campos de `Phase1Result`/`Phase2Result`. Añadir la trazabilidad como campos nuevos en el dataclass habría roto esos assertions. Se implementó como métodos separados (`validate_hook_range_traceability` en el orquestador, `get_range_traceability` en el controller), manteniendo los dataclasses intactos. | INCLUIR: antes de añadir campos a dataclasses con tests de contrato sobre sus campos, exponer la nueva información vía métodos/objetos separados |
 | L18 | Reutilizar `RegionalADRResolver.REGION_ALIASES` para normalizar keys de región evita duplicar la tabla de aliases (coffee_axis→eje_cafetero, medellin→antioquia). Región sin match cae al "default" del master (conversado, ratio ~3.3x) antes que a los defaults hardcodeados (ratio 23x); estos últimos solo aplican si el master está ausente, comportamiento documentado explícitamente. | INCLUIR: reutilizar tablas de normalización existentes en vez de duplicarlas; documentar explícitamente el último nivel de fallback |
 
+#### FASE-P1-D
+
+| # | Lección | Pertinencia |
+|---|---------|-------------|
+| L19 | La deduplicación de candidatos WhatsApp por número normalizado descartaba el alterno COMPLETO, perdiendo su label de sede (test C3 falló: ESTIMATED en vez de CONFLICT real). Fix: cuando el número ya existe como candidato sin label, adoptar el label del duplicado. La metadata complementaria (label/tipo) nunca debe perderse al deduplicar por clave numérica. | INCLUIR: al deduplicar por clave normalizada, SIEMPRE fusionar metadata complementaria (labels, tipos) en la entrada existente en vez de descartar el duplicado completo |
+| L20 | El matching label↔gbp_location por substring completo falla con direcciones reales: "Pereira Contact" no es substring de "Cra 13 # 5-20, Pereira, Risaralda". Matching por tokens (palabras ≥4 chars del label contenidas en gbp_location) resuelve sin falsos positivos de palabras cortas ("Sede", "Tel"). | INCLUIR: matching de ubicaciones entre texto libre y labels DOM SIEMPRE por tokens con longitud mínima, nunca substring completo |
+| L21 | F13 se resolvió extendiendo la taxonomía de status (VERIFIED_IN_SITE) + agregándolo al whitelist de justificación del coverage gate (_JUSTIFIED_STATUSES), sin alterar la fórmula "cubiertas + justificadas == detectadas". El reconciler solo necesitó una línea de preservación. Extender estados existentes es más barato y auditable que crear lógica paralela de "brechas ignoradas". | INCLUIR: para nuevos estados de verdad, preferir extensión de taxonomía + whitelist de gates sobre lógica paralela; verificar SIEMPRE que los reconciliadores intermedios preserven el nuevo estado |
+| L22 | La firma backwards-compatible (parámetros opcionales web_alternates/gbp_location) permitió que `two_phase_flow._validate_all_inputs` quedara intacto (no tiene DOM disponible) y solo se enriquecieran los callers con acceso al HTML (v4_comprehensive, main.py). Mono-sede conserva comportamiento legacy exacto. | INCLUIR: al cambiar firmas con múltiples callers, parámetros opcionales + enriquecer solo callers con datos disponibles preserva compatibilidad sin branch masivo |
+
 **T0b: Desviación benchmark vs observaciones Tier A (Eje Cafetero)**
 
 | Hotel | Categoría | ADR observado | Benchmark anterior | Desviación |
@@ -121,6 +130,7 @@ Decisión: benchmark $420K era desactualizado/aspiracional. Master calibrado a $
 |------|--------|---------------|
 | Ruta productora del pricing $500K no trazada a fondo (CONTEXT §4.2) | ✅ Cerrado | FASE-P0-A trazó la cadena: pricing.yaml → _load_pricing_config() → _calculate_dynamic_price() → pricing_result.monthly_price_cop |
 | Comportamiento de scrapers con prospectos nuevos (CONTEXT §4.3) | Abierto | FASE-P2-B script pre-carga; medir en ejecución operativa |
+| Widget Elementor `e-fab-whatsapp` (F12) | ✅ Cubierto sin cambio de código | `_check_html_element` de SitePresenceChecker ya lo detecta por substring 'whatsapp'; verificado en T1, sin acción pendiente |
 | P3: deployer real, Express 5 páginas, monitoreo | Fuera de alcance | Solo tras primer Express pagado |
 
 ## Métricas de Ejecución (llenar al cierre)
@@ -144,7 +154,7 @@ Decisión: benchmark $420K era desactualizado/aspiracional. Master calibrado a $
 | D5 | AGENTS.md gate count 12→13 actualizado en P0-B y validado con validate_agents_md.py | `--quick` no valida gate count; drift invisible si se pospone a RELEASE | Posponer actualización a RELEASE | FASE-P0-B |
 | D6 | pricing.yaml como fuente única de pricing: constantes `PRECIO_EXPRESS/PRECIO_MENSUAL/SETUP_FEE` (hook_pdf) y `MONTHLY_PACKAGE_PRICE/SETUP_FEE` (proposal) eliminadas; ambos módulos consumen de `_load_pricing_config()["packages"]`; +express_price: 120000 agregado a pricing.yaml | Principio "una fuente de verdad por concepto": 3 fuentes Python no sincronizadas generaban riesgo de cifras contradictorias en output del cliente. La solución reutiliza infraestructura existente (pricing_calculator._load_pricing_config con caché) sin crear módulo nuevo | Crear pricing_service.py nuevo (más abstracción); mantener constantes con sync manual (más frágil) | FASE-P0-A ✅ |
 | D7 | Cap de plausibilidad por ratio fijo max/min = 5.0 configurable (`hook_range_max_ratio` en `config/financial_defaults.yaml`, fallback hardcoded 5.0); aplicado en la GENERACIÓN del rango del hook (`_calculate_hook_range`), no en los escenarios financieros; el extremo optimista se trunca sobre el piso conservador (min × ratio) | Ratio fijo es simple, configurable y auditable; aplicar el cap en el hook preserva la verdad financiera de los escenarios (capear escenarios contaminaría el cálculo real con un artefacto de presentación); D4 exige cableado ANTES del cap (master real eje_cafetero: 6.46x → capado a 5x) | Cap por percentil P95 (requiere maquinaria de escenarios completa dentro del hook, complejidad sin beneficio); cap aplicado en escenarios (contamina la verdad financiera); ratio 8x (demasiado permisivo, sigue permitiendo rangos poco creíbles) | FASE-P1-C ✅ |
-| D8 | (pendiente) Estado "verificado en producción" como primera clase | Cierra F13/F14 | | FASE-P1-D |
+| D8 | Estado "verificado en producción" como primera clase: `STATUS_VERIFIED_IN_SITE` en pain_ledger (apply_site_verification antes de save); reconciler lo preserva; coverage gate lo justifica vía _JUSTIFIED_STATUSES; diagnóstico filtra brechas verificadas. FASE-P2-A/F14 consumirá este mismo estado en coherence_validator | Cierra F13 sin alterar la fórmula del coverage gate (cubiertas + justificadas == detectadas) y deja LISTO el estado para F14 (restricción explícita del prompt: no tocar coherence en P1-D); la trazabilidad pain_id → site_verification:{asset}:{status} queda en evidence_refs | Metadata sin estado propio (el diagnóstico seguiría reportando la brecha falsa); borrar la entrada del ledger (pierde trazabilidad y viola el gate de no-regresión documental del coverage) | FASE-P1-D ✅ |
 
 > D1-D6 están pre-resueltas en `01-plan-maestro.md §7`; D7/D8 se deciden en su fase.
 

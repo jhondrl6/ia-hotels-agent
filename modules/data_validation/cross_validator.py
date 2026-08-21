@@ -7,7 +7,12 @@ Implements cross-validation between different data sources
 
 from typing import Dict, List, Optional, Any
 from datetime import datetime
-from .confidence_taxonomy import DataPoint, DataSource, ConfidenceLevel
+from .confidence_taxonomy import (
+    DataPoint,
+    DataSource,
+    ConfidenceLevel,
+    ValidationResult,
+)
 
 
 class CrossValidator:
@@ -124,15 +129,32 @@ class CrossValidator:
         self,
         web_value: str = None,
         gbp_value: str = None,
-        user_value: str = None
+        user_value: str = None,
+        web_alternates: Optional[List[Dict[str, Any]]] = None,
+        gbp_location: Optional[str] = None
     ) -> DataPoint:
         """
         Validate WhatsApp number across multiple sources.
 
+        FASE-P1-D (F12): multi-sede aware. Sites with multiple locations expose
+        several wa.me/tel numbers in the DOM (one per sede). Comparing the GBP
+        number against only the FIRST number produces false conflicts, so this
+        method accepts all web numbers (``web_alternates``) and reconciles:
+
+        - GBP matches ANY web number -> VERIFIED (number belongs to one sede).
+        - No match + multiple distinct web numbers + no reliable sede mapping
+          -> degrades to ESTIMATED with disclaimer (WARNING, not CONFLICT).
+        - No match + sede mapping available (label matches ``gbp_location``)
+          -> real same-sede CONFLICT is preserved.
+        - Single web number, no match -> CONFLICT (legacy behavior).
+
         Args:
-            web_value: WhatsApp from web scraping
+            web_value: WhatsApp from web scraping (primary number)
             gbp_value: WhatsApp from GBP API
             user_value: WhatsApp from user input
+            web_alternates: Optional list of ALL numbers found in the DOM,
+                each as {"number": str, "label": Optional[str]}
+            gbp_location: Optional sede/city of the GBP profile (address)
 
         Returns:
             Validated DataPoint for "whatsapp"
@@ -146,17 +168,189 @@ class CrossValidator:
         # Add all provided values
         if web_value is not None:
             normalized = normalize_phone_number(web_value)
-            self.add_scraped_data(field_name, normalized, {"original": web_value})
+            self.add_scraped_data(field_name, normalized, {
+                "original": web_value,
+                "web_alternates": web_alternates or [],
+            })
 
         if gbp_value is not None:
             normalized = normalize_phone_number(gbp_value)
-            self.add_gbp_data(field_name, normalized, {"original": gbp_value})
+            self.add_gbp_data(field_name, normalized, {
+                "original": gbp_value,
+                "gbp_location": gbp_location,
+            })
 
         if user_value is not None:
             normalized = normalize_phone_number(user_value)
             self.add_user_input(field_name, normalized, {"original": user_value})
 
-        return self.data_points.get(field_name)
+        dp = self.data_points.get(field_name)
+
+        # FASE-P1-D (F12): multi-sede reconciliation overrides the generic
+        # pairwise comparison when the DOM exposes numbers from several sedes.
+        if dp is not None and gbp_value is not None:
+            self._reconcile_whatsapp_multisede(
+                dp, web_value, gbp_value, web_alternates, gbp_location
+            )
+
+        return dp
+
+    def _reconcile_whatsapp_multisede(
+        self,
+        dp: DataPoint,
+        web_value: Optional[str],
+        gbp_value: str,
+        web_alternates: Optional[List[Dict[str, Any]]],
+        gbp_location: Optional[str]
+    ) -> None:
+        """Reconcile WhatsApp validation for multi-location (multi-sede) sites.
+
+        Overrides ``dp._validation_result`` in place when multi-sede logic
+        changes the verdict (same override pattern as ``validate_address``).
+        """
+        gbp_norm = normalize_phone_number(gbp_value)
+        if not gbp_norm:
+            return
+
+        # Build candidate list: primary web number + alternates from the DOM
+        candidates: List[Dict[str, Any]] = []
+        if web_value is not None:
+            candidates.append({
+                "number": normalize_phone_number(web_value),
+                "original": web_value,
+                "label": None,
+            })
+        for alt in web_alternates or []:
+            if not isinstance(alt, dict):
+                continue
+            norm = normalize_phone_number(str(alt.get("number", "")))
+            if not norm:
+                continue
+            existing = next(
+                (c for c in candidates if c["number"] == norm), None
+            )
+            if existing is not None:
+                # Duplicate number: adopt the alternate's sede label when the
+                # existing candidate has none (primary lacked DOM context).
+                if existing["label"] is None and alt.get("label"):
+                    existing["label"] = alt.get("label")
+                continue
+            candidates.append({
+                "number": norm,
+                "original": alt.get("number"),
+                "label": alt.get("label"),
+            })
+
+        if not candidates:
+            return
+
+        base = dp._validation_result
+        sources = base.sources_used if base else []
+
+        # Case 1: GBP matches ANY web number -> VERIFIED (same sede exists)
+        matched = next((c for c in candidates if c["number"] == gbp_norm), None)
+        if matched is not None:
+            sede_note = (
+                f" (sede: {matched['label']})" if matched.get("label") else ""
+            )
+            others = [c for c in candidates if c["number"] != gbp_norm]
+            disclaimer = (
+                f"Número GBP verificado contra el sitio vivo{sede_note}."
+            )
+            if others:
+                alternos_txt = ", ".join(
+                    f"{c['original'] or c['number']}"
+                    + (f" ({c['label']})" if c.get("label") else "")
+                    for c in others
+                )
+                disclaimer += f" Sede(s) alterna(s) con número propio: {alternos_txt}."
+            dp._validation_result = ValidationResult(
+                confidence_level=ConfidenceLevel.VERIFIED,
+                final_value=gbp_value,
+                sources_used=sources,
+                match_percentage=100.0,
+                discrepancies=[],
+                requires_manual_review=False,
+                can_use_in_assets=True,
+                disclaimer=disclaimer,
+                icon="✓"
+            )
+            return
+
+        # Case 2: no match — decide between real conflict and multi-sede degrade
+        distinct_numbers = {c["number"] for c in candidates}
+        if len(distinct_numbers) < 2:
+            return  # Single web number: keep legacy CONFLICT behavior
+
+        # Sede mapping: if a candidate's label matches the GBP sede, compare
+        # against THAT number — a mismatch is a real same-sede conflict.
+        if gbp_location:
+            gbp_loc_norm = str(gbp_location).lower()
+
+            def _label_matches_gbp(label: Any) -> bool:
+                # Token-based fuzzy match: any meaningful word of the label
+                # (e.g. "Pereira" from "Pereira Contact") present in the GBP
+                # address counts as same-sede evidence.
+                import re
+                words = [
+                    w for w in re.split(r'\W+', str(label).lower())
+                    if len(w) >= 4
+                ]
+                return any(w in gbp_loc_norm for w in words)
+
+            same_sede = next(
+                (
+                    c for c in candidates
+                    if c.get("label") and _label_matches_gbp(c["label"])
+                ),
+                None,
+            )
+            if same_sede is not None:
+                # Real same-sede conflict — keep CONFLICT, clarify disclaimer
+                if base and base.confidence_level == ConfidenceLevel.CONFLICT:
+                    dp._validation_result = ValidationResult(
+                        confidence_level=ConfidenceLevel.CONFLICT,
+                        final_value=base.final_value,
+                        sources_used=sources,
+                        match_percentage=base.match_percentage,
+                        discrepancies=base.discrepancies,
+                        requires_manual_review=True,
+                        can_use_in_assets=False,
+                        disclaimer=(
+                            f"Conflicto real en la misma sede "
+                            f"({same_sede['label']}): GBP {gbp_value} != "
+                            f"web {same_sede['original']}."
+                        ),
+                        icon="⚠"
+                    )
+                return
+
+        # Multi-sede without reliable number->sede mapping: degrade to WARNING
+        alternos_txt = ", ".join(
+            f"{c['original'] or c['number']}"
+            + (f" ({c['label']})" if c.get("label") else "")
+            for c in candidates
+        )
+        dp._validation_result = ValidationResult(
+            confidence_level=ConfidenceLevel.ESTIMATED,
+            final_value=base.final_value if base else gbp_value,
+            sources_used=sources,
+            match_percentage=base.match_percentage if base else 0.0,
+            discrepancies=[
+                f"sede alterna: {c['original'] or c['number']}"
+                + (f" ({c['label']})" if c.get("label") else "")
+                for c in candidates
+            ],
+            requires_manual_review=True,
+            can_use_in_assets=True,
+            disclaimer=(
+                "Sitio multi-sede detectado: el sitio expone varios números "
+                f"({alternos_txt}) y no fue posible mapear el número del GBP "
+                "a una sede específica. La diferencia NO se reporta como "
+                "conflicto; requiere verificación manual."
+            ),
+            icon="~"
+        )
 
     def validate_adr(
         self,

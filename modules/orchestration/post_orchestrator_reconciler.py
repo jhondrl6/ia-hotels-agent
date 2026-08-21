@@ -115,6 +115,11 @@ class PostOrchestratorReconciler:
         """Determine final status for a single pain."""
         if in_generated:
             return PainResolutionStatus.ASSET_GENERATED
+        # FASE-P1-D (F13): VERIFIED_IN_SITE es estado de primera clase — el
+        # reconciler lo preserva (el asset ya está confirmado en producción;
+        # el skip del asset layer no debe degradarlo a MAPPED_TO_SERVICE).
+        if current_status == "VERIFIED_IN_SITE":
+            return current_status
         if skipped_info:
             presence = skipped_info.get("presence_status", "")
             if presence == "exists":

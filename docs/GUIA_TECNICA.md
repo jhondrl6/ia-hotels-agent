@@ -131,6 +131,29 @@
 
 ---
 
+### Notas de Cambios v4.72.0-WIP — FASE-P1-D: Verdad del sitio vivo (sedes WhatsApp multi-sede + propagación site_verification)
+
+**Fecha:** 2026-08-21
+
+**Resumen**: Fix F12 — `validate_whatsapp` ahora distingue sedes en negocios multi-ubicación: el scanner extrae TODOS los candidatos `wa.me`/`api.whatsapp`/`tel` del DOM con label de sede (`_extract_all_whatsapp_candidates` + `_extract_sede_label`), y la reconciliación mapea número→sede: GBP coincide con algún número web → VERIFIED; multi-sede sin mapeo confiable → ESTIMATED (WARNING) en vez de falso CONFLICT; conflicto real de misma sede → CONFLICT preservado. Fix F13 (decisión D8) — el estado "verificado en producción" es de primera clase: `STATUS_VERIFIED_IN_SITE` en pain_ledger vía `apply_site_verification`, preservado por `PostOrchestratorReconciler`, justificado por el coverage gate y filtrado del diagnóstico.
+
+**Módulos afectados**: `modules/data_validation/cross_validator.py`, `modules/auditors/v4_comprehensive.py`, `main.py`, `modules/asset_generation/pain_ledger.py`, `modules/asset_generation/v4_asset_orchestrator.py`, `modules/orchestration/post_orchestrator_reconciler.py`, `modules/quality_gates/publication_gates.py`, `modules/commercial_documents/v4_diagnostic_generator.py`
+
+**Problema**: F12 — caso Zione (2 sedes Pereira/Cartagena): el cross-validator comparaba GBP contra el PRIMER `wa.me` del DOM sin mapear número→sede, generando un falso conflicto (BRECHA 1 inexistente) que inflaba la fuga $1.198.906/mes. F13 — `site_verification` ya existía y la consumían el asset layer y el gate, pero NO el pain_ledger ni el diagnóstico: brechas ya resueltas en el sitio vivo seguían reportándose como DETECTED HIGH.
+
+**Solución**: F12 — firma backwards-compatible (parámetros opcionales `web_alternates`/`gbp_location`); override de `_validation_result` en `_reconcile_whatsapp_multisede` (patrón `validate_address`); matching sede por tokens (palabras ≥4 chars del label contenidas en `gbp_location`); dedup por número normalizado que FUSIONA labels (L19). Mono-sede conserva comportamiento legacy exacto; `two_phase_flow._validate_all_inputs` queda intacto (no tiene DOM). F13 — extensión de taxonomía de status + whitelist del coverage gate (`_JUSTIFIED_STATUSES`), sin alterar la fórmula "cubiertas + justificadas == detectadas"; trazabilidad `pain_id → site_verification:{asset}:{status}` en evidence_refs.
+
+**⚠️ Cambio de comportamiento documentado**:
+- Negocios multi-sede: conflictos WhatsApp falsos por sede alterna ahora degradan a ESTIMATED (WARNING) con disclaimer "Sitio multi-sede detectado" en vez de CONFLICT
+- Brechas cuyo asset ya existe verificado en producción pasan a VERIFIED_IN_SITE (severity LOW) y dejan de aparecer como brechas en el diagnóstico
+- El coverage gate cuenta VERIFIED_IN_SITE como brecha justificada (no como drop silencioso)
+
+**Backwards compatibility**: `validate_whatsapp` mantiene firma original (parámetros nuevos opcionales); callers sin DOM no cambian; mono-sede idéntico a legacy. FASE-P2-A/F14 consumirá `VERIFIED_IN_SITE` en coherence_validator (estado dejado LISTO, no tocado en esta fase).
+
+**Tests**: +21 tests nuevos (11 test_whatsapp_multisede + 10 test_site_verification_propagation). Suites data_validation + asset_generation: 603 passed, 0 failed. Suites ampliadas: solo los 12 fallos preexistentes de la línea base — 0 regresiones.
+
+---
+
 ### Notas de Cambios v4.71.0 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
 
 **Fecha:** 2026-08-05

@@ -1732,7 +1732,21 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     whatsapp_gbp = audit_result.validation.phone_gbp if audit_result else None
     
     if whatsapp_web and whatsapp_gbp:
-        whatsapp_validation = validator.validate_whatsapp(whatsapp_web, whatsapp_gbp)
+        # FASE-P1-D (F12): propagar numeros alternos multi-sede y la sede del
+        # GBP para evitar falsos conflictos en sitios multi-ubicacion.
+        wa_alternates = (
+            getattr(audit_result.validation, 'web_whatsapp_alternates', None)
+            if audit_result else None
+        )
+        wa_gbp_location = (
+            getattr(audit_result.validation, 'gbp_location', None)
+            if audit_result else None
+        )
+        whatsapp_validation = validator.validate_whatsapp(
+            whatsapp_web, whatsapp_gbp,
+            web_alternates=wa_alternates,
+            gbp_location=wa_gbp_location,
+        )
         print(f"   WhatsApp: {whatsapp_validation.confidence.name} (confidence: {whatsapp_validation._validation_result.match_percentage})")
     else:
         print(f"   WhatsApp: Datos insuficientes para validación")

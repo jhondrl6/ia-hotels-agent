@@ -127,7 +127,7 @@ class PainLedgerEntry:
     proposal, or have an acceptable justification status.
     """
     pain_id: str
-    status: str  # "DETECTED" | "JUSTIFIED_SKIP" | "BLOCKED" | "MAPPED_TO_SERVICE"
+    status: str  # "DETECTED" | "JUSTIFIED_SKIP" | "BLOCKED" | "MAPPED_TO_SERVICE" | "VERIFIED_IN_SITE"
 
 
 @dataclass
@@ -1163,7 +1163,10 @@ class PublicationGatesOrchestrator:
     # Acceptable justification statuses — pain_ids with these statuses do NOT
     # need to appear in diagnostic or proposal.
     _JUSTIFIED_STATUSES: Set[str] = {
-        "JUSTIFIED_SKIP", "BLOCKED", "MAPPED_TO_SERVICE", "ASSET_GENERATED"
+        "JUSTIFIED_SKIP", "BLOCKED", "MAPPED_TO_SERVICE", "ASSET_GENERATED",
+        # FASE-P1-D (F13): pain cuyo asset fue confirmado en el sitio vivo —
+        # justificado por la verificación de producción (no es brecha abierta).
+        "VERIFIED_IN_SITE",
     }
 
     def _coverage_gate(self, assessment: Dict[str, Any]) -> PublicationGateResult:

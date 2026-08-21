@@ -584,6 +584,11 @@ class V4DiagnosticGenerator:
             if audit_result and hasattr(audit_result, 'validation') and audit_result.validation else False
         )
 
+        # FASE-P1-D (F13): cargar pains verificados en el sitio vivo para NO
+        # reportarlos como brechas abiertas en el diagnóstico (el diagnóstico
+        # se regenera POST-FASE4, cuando pain_ledger*.json ya existen).
+        self._verified_in_site_pain_ids = self._load_verified_in_site_pain_ids(output_dir)
+
         # Load template
         template_content = self._load_template()
         
@@ -2990,11 +2995,14 @@ class V4DiagnosticGenerator:
         # Cache keyed por inputs (FASE-A-COHERENCIA): VS real y VS sintético
         # producen resultados distintos; el caché no debe congelar ninguno.
         # audit_result es inmutable durante generate(), resultado idéntico (FASE-H)
+        # FASE-P1-D (F13): el set de pains verificados en sitio también es input.
+        verified_ids = frozenset(getattr(self, '_verified_in_site_pain_ids', frozenset()))
         cache_key = (
             id(audit_result),
             id(validation_summary) if validation_summary is not None else None,
             id(analytics_data) if analytics_data is not None else None,
             bool(whatsapp_html_detected),
+            verified_ids,
         )
         if hasattr(self, '_cached_brechas') and self._cached_brechas is not None \
                 and getattr(self, '_cached_brechas_key', None) == cache_key:
@@ -3029,6 +3037,11 @@ class V4DiagnosticGenerator:
                 analytics_data=analytics_data,
                 whatsapp_html_detected=whatsapp_html_detected
             )
+            # FASE-P1-D (F13): excluir brechas cuyo asset fue verificado en el
+            # sitio vivo (status VERIFIED_IN_SITE en el pain_ledger) — el
+            # diagnóstico no puede reportarlas como fugas abiertas.
+            if verified_ids:
+                pains = [p for p in pains if p.id not in verified_ids]
         except Exception:
             # If PainSolutionMapper fails, fall back to empty brechas
             # (audit has critical errors — don't fabricate gaps)
@@ -3051,6 +3064,32 @@ class V4DiagnosticGenerator:
         self._cached_brechas = brechas
         self._cached_brechas_key = cache_key
         return brechas
+
+    def _load_verified_in_site_pain_ids(self, output_dir: str) -> frozenset:
+        """FASE-P1-D (F13): pain_ids con status VERIFIED_IN_SITE en el ledger.
+
+        Lee pain_ledger_resolved.json (post-reconciliación) con fallback a
+        pain_ledger.json. Retorna frozenset vacío si ningún archivo existe o
+        ninguna entrada está verificada en producción.
+        """
+        import json as _json
+        base = Path(output_dir) / "v4_audit"
+        verified = set()
+        for filename in ("pain_ledger_resolved.json", "pain_ledger.json"):
+            path = base / filename
+            if not path.exists():
+                continue
+            try:
+                data = _json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            for entry in data.get("entries", []):
+                if entry.get("status") == "VERIFIED_IN_SITE":
+                    verified.add(entry.get("pain_id", ""))
+            if verified:
+                break
+        verified.discard("")
+        return frozenset(verified)
 
     def _pain_to_brecha(self, pain, region: str = "eje_cafetero",
                         audit_result: Any = None) -> Optional[Dict[str, Any]]:
