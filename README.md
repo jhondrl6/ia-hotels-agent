@@ -11,7 +11,7 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — 17 skills including PhasedProjectExecutor, v4_regression_guardian, v4_complete |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — phased_project_executor (skills v4_* archivados en v4.72.2) |
 | **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
 | **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
@@ -24,10 +24,10 @@
 ## Estado del Proyecto (v4.72.2 -- Limpieza de Skills)
 
 - **3,379 test functions** — suite completa, 0 regresiones
-- **205 archivos Python en modules/** (~68K lineas, 26 directorios) + **25 scripts** (~5.5K lineas) + **55 directorios de test**
+- **205 archivos Python en modules/** (~68K lineas, 23 directorios) + **28 scripts** (~5.5K lineas) + **56 directorios de test**
 - **9 config YAML** con schema validado
-- **17 agent skills** en `.agents/workflows/`
-- **12 publication gates** — blocking: hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop; advisory: content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency
+- **1 agent skill** en `.agents/workflows/` (phased_project_executor)
+- **13 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, pricing_compliance (blocking); content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency (advisory)
 - **Coherence Score >= 0.8** requerido para publicacion
 - **25 assets** en catalogo (22 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
@@ -199,7 +199,7 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 
 ## Configuracion YAML (v4.38.0+)
 
-31 hardcoded values migrados a 6 archivos YAML con schema validado. Todos los parametros son configurables sin tocar codigo.
+31 hardcoded values migrados originalmente a 6 archivos YAML; hoy **9 archivos YAML** con schema validado. Todos los parametros son configurables sin tocar codigo.
 
 | Archivo | Contenido |
 |---------|-----------|
@@ -272,13 +272,13 @@ iah-cli/
     delivery_readme_template.md #   Template README de entrega
     diagnostico_ejecutivo.md    #   Template diagnostico ejecutivo
     local_content/              #   Templates de contenido local
-  modules/                    # 205 archivos Python (~68K lineas) en 26 directorios
+  modules/                    # 205 archivos Python (~68K lineas) en 23 directorios
     asset_generation/         #   Generacion condicional de assets
     commercial_documents/     #   Diagnostico + Propuesta v4 + PDF gancho (hook-pdf)
     financial_engine/         #   Pricing, scenarios, loss projector
     orchestration_v4/         #   Two-phase flow, auditor
     quality/                  #   Coherence validator, asset semantics
-    quality_gates/            #   Publication gates (12), commercial gate, ethics
+    quality_gates/            #   Publication gates (13), commercial gate, ethics
     scrapers/                 #   Places API, Google Travel, SerpAPI
     common/                   #   yaml_loader, fallback_loader
     analytics/                #   GA4, GSC (Profound/Semrush deprecados)
@@ -296,16 +296,16 @@ iah-cli/
     providers/                #   Providers LLM y API
     utils/                    #   Utilidades compartidas
     validation/               #   Validacion de outputs
-  tests/                      # ~59K lineas de test (55 directorios, 256 archivos)
+  tests/                      # ~59K lineas de test (253 archivos, 24 directorios principales)
     config/                   #   61 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
-  scripts/                    # 25 scripts de automatizacion
+  scripts/                    # 28 scripts de automatizacion
     sync_versions.py          #   Sincronizacion versiones
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
     run_all_validations.py    #   Suite de validaciones
-  .agents/workflows/          # 17 agent skills
+  .agents/workflows/          # Agent skills (phased_project_executor + README)
   .opencode/plans/            # Planes de fases (phased execution)
   evidence/                   # Evidencia de fases ejecutadas
 ```
