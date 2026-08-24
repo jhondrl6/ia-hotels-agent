@@ -12,7 +12,7 @@
 | 3 | FASE-R0-C | B3+B5 títulos/contadores | `05-prompt-inicio-sesion-fase-R0-C.md` | ✅ COMPLETADA (2026-08-24, Sesión 3) | +3 | ✅ |
 | 4 | FASE-R0-D | B6+B7 propuesta condicional | `05-prompt-inicio-sesion-fase-R0-D.md` | ✅ COMPLETADA (2026-08-24, Sesión 4) | +4 | ☐ |
 | 5 | FASE-R0-E | E2E única v4complete Zione | `05-prompt-inicio-sesion-fase-R0-E.md` | ✅ COMPLETADA (2026-08-24, Sesión 5 + recuperación) | +6 (recovery) | ✅ |
-| 6 | FASE-R0-F | Verificación AC1-AC12 + análisis | `05-prompt-inicio-sesion-fase-R0-F.md` | ⏳ PENDIENTE | 0 (12/12 ACs) | ☐ |
+| 6 | FASE-R0-F | Verificación AC1-AC12 + análisis | `05-prompt-inicio-sesion-fase-R0-F.md` | ✅ COMPLETADA (2026-08-24, Sesión 6) | 0 (12/12 ACs) | ✅ |
 | 7 | FASE-RELEASE-4.72.1 | Docs oficiales + bump | `05-prompt-inicio-sesion-fase-RELEASE.md` | ⏳ PENDIENTE | 0 | ☐ (auto-detect) |
 
 ## Gates de Entrada/Salida por Fase
@@ -57,6 +57,6 @@
 |---------|----------------|--------|----------|
 | Tests totales | 3,360 | 3,378 | 3,372 (+12) + 6 recovery |
 | Bugs B1-B7 abiertos | 7 | 0 | 0 |
-| AC1-AC12 certificados | 0/12 | 10/12 (unit/grep: AC1, AC2, AC3, AC4, AC7, AC9, AC10, AC11, AC12 + B6 unit) | 12/12 |
+| AC1-AC12 certificados | 0/12 | 12/12 PASA (10 con verificación E2E + 2 por unit test exclusivo) | 12/12 |
 | Coherence E2E Zione | 0.9485 (anómalo narrativo) | 0.9485 (corrida 20260824_113525, narrativa dinámica verificada) | ≥ 0.8 con narrativa correcta |
 | Gates | 13/13 (12 PASSED + 1 WARNING) | 12 PASSED + 1 WARNING (idéntico baseline, tier B+) | mismo estado (sin regresión) |

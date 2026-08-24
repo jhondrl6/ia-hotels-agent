@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
-version: v2.15.0
+version: v2.16.0
 ---
 
 # Skill: Phased Project Executor
@@ -96,24 +96,31 @@ ENTONCES:
 > |------|---------|---------|-------------|
 > | Iteracion | `FASE-N` | `FASE-12` | Iteration de desarrollo |
 > | Feature | `FASE-{LETRA}` | `FASE-A`, `FASE-B` | Sub-fase de un feature (A..Z) |
+> | Verificación | `FASE-VERIFY` | `FASE-VERIFY` | Certificación ACs contra output E2E (condicional, §4.6) |
 > | Release | `FASE-RELEASE-X.Y.Z` | `FASE-RELEASE-4.10.0` | Fase ejecutable de cierre + documentación (sesión propia) |
 >
 > **Regla:** Si la fase cambia la versión (nueva release), usar `FASE-RELEASE-X.Y.Z`.
 > Esto activa automaticamente el Version Sync Gate.
+>
+> **Regla FASE-VERIFY:** Solo se incluye cuando el plan cumple los criterios de activación (§4.6). Si no aplica, las etapas son 3.
 
-**Fases del workflow (3 etapas):**
+**Fases del workflow (3 o 4 etapas):**
 
 | Etapa | Tipo de fase | Sesiones | Descripción |
 |-------|-------------|----------|-------------|
 | 1. Preparación | (orquestación) | 1 sesión | Crear todos los prompts, checklists, docs para todas las fases |
 | 2. Implementación | `FASE-{N\|LETRA}` | N sesiones | Cada fase de código en su propia sesión nueva de agente |
+| 2.5 Verificación | `FASE-VERIFY` | 1 sesión | Certificación formal de ACs contra output E2E (**condicional**, §4.6) |
 | 3. Cierre / Release | `FASE-RELEASE-X.Y.Z` | 1 sesión | Documentación oficial, version bump, validaciones finales |
 
-**Regla de dependencia:** `FASE-RELEASE-X.Y.Z` solo se ejecuta cuando TODAS las fases de implementación (etapa 2) están completadas (`✅`).
+> **Nota**: La etapa 2.5 (FASE-VERIFY) solo se incluye cuando el plan cumple los criterios de activación (§4.6). Si no aplica, el workflow tiene 3 etapas.
+
+**Regla de dependencia:** `FASE-RELEASE-X.Y.Z` solo se ejecuta cuando TODAS las fases previas (implementación + verificación, si aplica) están completadas (`✅`).
 
 **Aplicación:**
 - **Etapa 1 (Preparación):** En UNA sesión, Hermes (orquestador) genera todos los prompts de fase, incluyendo el de RELEASE
 - **Etapa 2 (Implementación):** Cada fase requiere una sesión NUEVA del agente. El agente lee su `05-prompt-inicio-sesion-fase-{X}.md` y ejecuta las tareas de código
+- **Etapa 2.5 (FASE-VERIFY, condicional):** Si el plan activa esta etapa (§4.6), una sesión NUEVA verifica formalmente que los criterios de aceptación se cumplen contra el output E2E real. No modifica código. Produce evidencia de certificación.
 - **Etapa 3 (RELEASE):** Una sesión NUEVA del agente. El agente ejecuta `05-prompt-inicio-sesion-fase-RELEASE.md`. Tareas: version bump, sync, CHANGELOG, GUIA_TECNICA, validaciones, log. **NO modifica código fuente.**
 - La sesión termina cuando el checklist de la fase muestra ✅ completo
 
@@ -471,7 +478,7 @@ Cada fase completa su columna "Fase". FASE-RELEASE usa los datos acumulados para
 ## Resumen de Ejecución (llenar al cierre de cada fase)
 | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
 
-## Matriz de Verificación de Hallazgos (llenar en FASE-E o FASE-F)
+## Matriz de Verificación de Hallazgos (llenar en FASE-VERIFY si aplica; si no, al cierre de última fase impl)
 | # | Hallazgo | Expected | Real | Status |
 
 ## Lecciones Aprendidas (llenar — mínimo 3 por fase completada)
@@ -651,6 +658,75 @@ Después de ejecutar el plan, verificar:
 | GUIA_TECNICA actualizada | Manual: verificar notas técnicas | [ ] |
 | Validaciones pasan | `scripts/run_all_validations.py --quick` | [ ] |
 | Doctor sin errores | `scripts/doctor.py --status` | [ ] |
+
+---
+
+### 4.6. FASE-VERIFY — Certificación Formal de ACs (CONDICIONAL)
+
+> [!IMPORTANT]
+> **Etapa condicional**: Solo se incluye cuando el plan cumple los criterios de activación. Si no aplica, el workflow tiene 3 etapas (Preparación → Implementación → RELEASE).
+
+#### Criterios de Activación
+
+El orquestador DEBE incluir `FASE-VERIFY` cuando **TODOS** estos criterios se cumplen:
+
+```
+INCLUIR FASE-VERIFY cuando:
+  1. El plan tiene ≥3 fases de implementación (complejidad suficiente)
+  2. Existe al menos una fase con ejecución E2E (v4complete, v4audit, etc.)
+  3. Hay criterios de aceptación (ACs) que cruzan múltiples fases
+     (no verificables completamente en una sola fase de implementación)
+
+NO INCLUIR cuando:
+  - Plan de 1-2 fases con ACs autocontenidos en cada fase
+  - No hay ejecución E2E (puro refactor unitario o documental)
+  - Plan sin criterios de aceptación formales
+```
+
+#### Propósito
+
+FASE-VERIFY es una fase de **verificación sin código**: certifica formalmente que los criterios de aceptación del plan se cumplen contra el output E2E real generado en las fases de implementación. No modifica código fuente ni templates.
+
+> **Diferencia con las verificaciones de cada fase**: cada fase de implementación verifica sus propios criterios locales (tests pasan, greps limpios). FASE-VERIFY verifica la **integración coherente de todos los cambios** en el output renderizado final.
+
+#### Metodología Mínima (generalizable)
+
+| Paso | Acción | Entregable |
+|------|--------|------------|
+| 1 | Leer output post-fix y baseline (si existe) | Contexto para comparación |
+| 2 | Verificar cada AC contra output real (no solo unit tests) | Columna "Real" de la matriz completada |
+| 3 | Comparar antes/después (si hay baseline) | Diff narrativo/técnico documentado |
+| 4 | Greps residuales de strings que deberían haber desaparecido | Tabla de patrones con 0 matches |
+| 5 | Completar matriz de verificación del `10-analisis` | Todas las filas con Real/Status |
+| 6 | Registrar lecciones aprendidas de la verificación | Mínimo 3 lecciones nuevas |
+| 7 | Ejecutar `log_phase_completion.py` (SIN `--release`) + `run_all_validations.py --quick` | Registro + validación |
+
+#### Reglas Específicas
+
+- **Modo de ejecución**: DIRECTO (agente principal). No delegable — requiere juicio y contexto completo del plan.
+- **NO modifica código**: si un AC falla, se documenta en "Seguimientos abiertos" y se planifica sesión de recuperación separada.
+- **NO ejecuta `v4complete`**: la ejecución E2E ya ocurrió en una fase de implementación previa.
+- **Dependencia**: requiere todas las fases de implementación ✅.
+- **FASE-RELEASE requiere**: FASE-VERIFY ✅ (cuando aplique).
+
+#### Estructura del Prompt (`05-prompt-inicio-sesion-fase-VERIFY.md`)
+
+El prompt de FASE-VERIFY debe incluir:
+- Lista de ACs con método de verificación (lectura directa, grep, comparación JSON, etc.)
+- Rutas a baseline y output post-fix
+- Tabla de diff antes/después (zonas a verificar)
+- Restricción: NO modificar código, NO ejecutar v4complete
+- Post-ejecución: documentación estándar + actualización de `10-analisis-post-implementacion.md`
+
+#### Ejemplo de Plan con/sin FASE-VERIFY
+
+| Plan | Fases impl | E2E | ACs cross-fase | ¿Incluye FASE-VERIFY? |
+|------|-----------|-----|----------------|----------------------|
+| REFACTOR-COHERENCIA-NARRATIVA (7 fases) | 5 (A-E) | SÍ (R0-E) | SÍ (AC1-AC12 cruzan A-D) | SÍ |
+| BUGS-ONBOARDING-ADR (4 fases) | 3 | SÍ | Parcial | Opcional |
+| Fix unitario (1-2 fases) | 1-2 | NO | NO | NO |
+
+> **Lección origen**: FASE-R0-F del plan REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 demostró que la verificación formal con diff antes/después detecta incoherencias transversales que los tests unitarios individuales no capturan (título S4=7 ↔ listado=7 ↔ intro=7 ↔ contador S6=7 ↔ pain_ledger=7).
 
 ---
 
@@ -973,9 +1049,10 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 
 ## Criterios de Éxito
 - [ ] Prompts creados para todas las fases de implementación (1 por fase)
+- [ ] Prompt creado para FASE-VERIFY (si criterios de activación §4.6 se cumplen)
 - [ ] Prompt creado para FASE-RELEASE (si hay version bump)
-- [ ] Checklist maestro con estados de todas las fases (incluyendo RELEASE)
-- [ ] `dependencias-fases.md` con conflictos documentados y dependencia → RELEASE
+- [ ] Checklist maestro con estados de todas las fases (incluyendo VERIFY y RELEASE)
+- [ ] `dependencias-fases.md` con conflictos documentados y dependencia → VERIFY → RELEASE
 - [ ] Documentación incremental preparada (`09-documentacion-post-proyecto.md` + `10-analisis-post-implementacion.md`)
 - [ ] Estructura lista para que cada fase se ejecute en sesión propia de agente
 
@@ -985,9 +1062,11 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - Prompts muy grandes → dividir en secciones dentro del mismo archivo
 - **Límite de 60 iteraciones alcanzado** → marcar fase como `INCOMPLETA`, documentar progreso parcial en `dependencias-fases.md`, retomar en nueva sesión fresca
 - Fase retomada (INCOMPLETA) → leer estado de `dependencias-fases.md`, continuar desde donde se dejó
-- **FASE-RELEASE ejecutada sin implementaciones completadas** → abortar; verificar `dependencias-fases.md` que todas las fases previas estén en `✅`
+- **FASE-RELEASE ejecutada sin implementaciones completadas** → abortar; verificar `dependencias-fases.md` que todas las fases previas estén en `✅` (incluyendo FASE-VERIFY si aplica)
+- **FASE-VERIFY incluida en plan simple** → evaluar si los 3 criterios de activación se cumplen; si no, eliminar y documentar por qué en `dependencias-fases.md`
 
 ## Versiones
+- **v2.16.0** (2026-08-24): Nueva etapa condicional FASE-VERIFY (§4.6) entre Implementación y RELEASE. Certificación formal de ACs contra output E2E real, sin modificar código. Criterios de activación: ≥3 fases impl + E2E + ACs cross-fase. Resuelve gap: la referencia "llenar en FASE-E o FASE-F" en la matriz de verificación no tenía definición formal. Metodología mínima generalizable (7 pasos). Origen: FASE-R0-F del plan REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 (12/12 ACs certificados con diff narrativo antes/después).
 - **v2.15.0** (2026-08-05): Paso 4 — `10-analisis-post-implementacion.md` se crea DESDE LA CONCEPCIÓN del plan (no al final), junto con `09-documentacion-post-proyecto.md`. Esto evita el reproceso de crearlo después de que las lecciones ya se perdieron. Estructura obligatoria: Resumen de Ejecución, Matriz de Verificación, Lecciones Aprendidas, Seguimientos, Métricas, Decisiones Arquitectónicas, Checklist de Cierre. Criterios de Éxito y Ejemplo de Uso actualizados para incluir el nuevo archivo.
 - **v2.14.0** (2026-08-04): Conteo de `run_all_validations.py --quick` pasa de "4/4" fijo a TOTAL PASS dinámico (el nº de checks varía al añadir validaciones nuevas, ej. check "Prompts No Release" de RC1-RC2-ENTREGA-COHERENTE-2026-08-04). Nueva branch en Regla de Decisión: fases documentales delegables pueden editar UN script stdlib-only del proyecto (sin imports de módulos ni decisiones arquitectónicas) — el parent verifica diff + validaciones. Alineado con RC3 (N13/N14): enforcement automatizado de L3/L9 vía `_check_prompts_no_release` en `scripts/run_all_validations.py`.
 - **v2.13.0** (2026-07-25): GAP 3 — Nueva branch en Regla de Decisión: fases con decisión arquitectónica cross-module NO son delegables (lección DT-3 FASE-2: unificar taxonomías requiere contexto completo de ambas implementaciones + consumidores). GAP 4 — Nuevo paso E8b en FASE-RELEASE: README.md line-by-line audit con live pytest count y module count para prevenir conteos stale (lección DT-3: test count desincronizado por 56 tests).
@@ -1010,16 +1089,18 @@ Usuario: "Divide este proyecto de refactorización en fases y prepáralo para ej
 La skill debe:
 1. Leer plan existente
 2. Crear `05-prompt-inicio-sesion-fase-{X}.md` para cada fase de implementación
-3. Crear `05-prompt-inicio-sesion-fase-RELEASE.md` (fase de cierre)
-4. Actualizar checklist con estados de fases (incluyendo RELEASE)
-5. Crear `09-documentacion-post-proyecto.md` con estructura base
-6. Crear `10-analisis-post-implementacion.md` con estructura base (lecciones, decisiones, matriz de verificación)
-7. Verificar numeración de todos los prompts
+3. Evaluar criterios de activación §4.6 → si aplica, crear `05-prompt-inicio-sesion-fase-VERIFY.md`
+4. Crear `05-prompt-inicio-sesion-fase-RELEASE.md` (fase de cierre)
+5. Actualizar checklist con estados de fases (incluyendo VERIFY y RELEASE)
+6. Crear `09-documentacion-post-proyecto.md` con estructura base
+7. Crear `10-analisis-post-implementacion.md` con estructura base (lecciones, decisiones, matriz de verificación)
+8. Verificar numeración de todos los prompts
 
 **Output de esta sesión:**
 ```
 .opencode/plans/
 ├── 05-prompt-inicio-sesion-fase-{X}.md         (1 por fase de implementación)
+├── 05-prompt-inicio-sesion-fase-VERIFY.md       (si criterios §4.6 aplican)
 ├── 05-prompt-inicio-sesion-fase-RELEASE.md      (fase de cierre)
 ├── 06-checklist-implementacion.md
 ├── 09-documentacion-post-proyecto.md
@@ -1028,4 +1109,4 @@ La skill debe:
 └── README.md
 ```
 
-La implementación de cada fase se hace en UNA sesión nueva de agente por fase. FASE-RELEASE es la última sesión.
+La implementación de cada fase se hace en UNA sesión nueva de agente por fase. FASE-VERIFY (si aplica) va después de todas las implementaciones. FASE-RELEASE es la última sesión.

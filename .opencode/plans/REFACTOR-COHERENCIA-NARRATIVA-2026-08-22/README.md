@@ -13,7 +13,7 @@
 | FASE-R0-C | B3+B5 — Título Sección 1 condicional + contador Sección 6 | Baja-Media | ✅ Completada | Sesión 3 | 2026-08-24 |
 | FASE-R0-D | B6+B7 — Propuesta condicional | Baja-Media | ✅ Completada | Sesión 4 | 2026-08-24 |
 | FASE-R0-E | E2E — única ejecución v4complete Zione (delegate_task) | Media (ejecución) | ✅ Completada | Sesión 5 | 2026-08-24 |
-| FASE-R0-F | Verificación AC1-AC12 + análisis post-implementación | Media | ⏳ Pendiente | — | — |
+| FASE-R0-F | Verificación AC1-AC12 + análisis post-implementación | Media | ✅ Completada | Sesión 6 | 2026-08-24 |
 | FASE-RELEASE-4.72.1 | Docs oficiales + version bump (delegable) | Baja | ⏳ Pendiente | — | — |
 
 ## Archivos del Plan

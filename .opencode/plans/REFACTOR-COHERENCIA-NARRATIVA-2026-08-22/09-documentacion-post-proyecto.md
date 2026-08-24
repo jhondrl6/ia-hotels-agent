@@ -91,7 +91,19 @@
 - **FASE-R0-E COMPLETADA**. FASE-R0-F desbloqueada.
 
 ### FASE-R0-F
-- (pendiente — registrar: veredicto AC1-AC12, lecciones capturadas, seguimientos abiertos)
+- Fecha: 2026-08-24. Modo: DIRECTO (presupuesto holgado, greps ejecutados en sesión). Iteraciones: ~12.
+- Verificación formal AC1-AC12 sobre output E2E Zione (corrida 20260824_113525) vs baseline anómalo (20260821_175706).
+- **12/12 ACs PASA**: AC1/AC2/AC3/AC5/AC6/AC8/AC9/AC10/AC11 verificados por lectura directa del output post-fix + comparación con baseline. AC4 verificado por unit test (Zione sin conflicto WhatsApp). AC7/AC12 por grep residual (0 matches).
+- Diff narrativo antes/después documentado en 8 zonas (Sección 1 título+cláusula, Sección 4 título+contenido, Sección 5/8 Quick Wins, Sección 6, Propuesta L60/L203).
+- Pain_ledger comparado byte-a-byte: idéntico (7 pain_ids, sin WhatsApp, mismas confidence/severity/status).
+- Gate report verificado: 12 PASSED + 1 WARNING (idéntico baseline). Tier B+. READY_FOR_PUBLICATION.
+- Coherence: 0.9485 (delta=0 vs baseline).
+- 3 lecciones nuevas registradas: L-NC10 (fosilización como clase de bug), L-NC11 (E2E sobre unit tests), L-NC12 (diff como evidencia formal).
+- `10-analisis-post-implementacion.md` completado: matriz B1-B7, AC1-AC12, diff narrativo, métricas, lecciones, seguimientos.
+- Sin incidencias.
+
+### FASE-RELEASE-4.72.1
+- (pendiente — registrar: docs oficiales + version bump)
 
 ## Sección D: Métricas Acumulativas
 
@@ -110,7 +122,7 @@
 | Gates E2E post-fix | 12 PASSED + 1 WARNING (pricing_compliance) — idéntico al baseline, tier B+ | FASE-R0-E |
 | Pain_ids post-fix | 7 (no_hotel_schema, low_seo_score, no_faq_schema, no_analytics_configured, low_organic_visibility, ai_crawler_blocked, no_og_tags) — SIN WhatsApp ✅ | FASE-R0-E |
 | Tests nuevos recovery FASE-R0-E | +6 (fix regresión `FinancialFactors` en main.py, clases TestR0ERecovery* — 2 AST estáticos + 2 comportamiento + 2 cadena assessment) | FASE-R0-E (recuperación) |
-| Veredicto AC1-AC12 | (llenar — esperado 12/12 PASA) | FASE-R0-F |
+| Veredicto AC1-AC12 | 12/12 PASA (10 con verificación E2E + 2 por unit test exclusivo) | FASE-R0-F |
 
 ## Sección E: Archivos Afiliados Actualizados
 
