@@ -103,7 +103,20 @@
 - Sin incidencias.
 
 ### FASE-RELEASE-4.72.1
-- (pendiente — registrar: docs oficiales + version bump)
+- Fecha: 2026-08-24. Modo: DIRECTO. Iteraciones: ~20.
+- Version bump: VERSION.yaml 4.72.0 → 4.72.1 “Coherencia Narrativa Dinámica” + bloque de comentarios del release.
+- sync_versions.py: 6 archivos sincronizados (AGENTS.md, README.md, .cursorrules, CONTRIBUTING.md, GUIA_TECNICA.md, REGISTRY.md).
+- CHANGELOG.md: entrada [4.72.1] con formato CONTRIBUTING completo (Objetivo/Cambios/Nuevos/Modificados/Tests).
+- GUIA_TECNICA.md: sección “Notas de Cambios v4.72.1” con 4 campos (Módulos/Problema/Solución/Backwards).
+- SYSTEM_STATUS.md regenerado (doctor.py --status).
+- DOMAIN_PRIMER.md regenerado (194 archivos Python, 373 clases, 25 módulos).
+- README.md audit: test count 3,360 → 3,379; fecha actualizada; gate count 12 → 13 (pricing_compliance).
+- AGENTS.md audit: test count 3,360 → 3,379; archivos test 261 → 253; commercial_documents 251 → 279; financial_engine 500 → 549.
+- run_all_validations.py --quick: 6/6 TOTAL PASS.
+- validate_agents_md.py: ALL PASS (módulos 32/32, gates 13/13, test count within ±5%).
+- Version Sync Gate: OK (CHANGELOG + VERSION.yaml sincronizados en 4.72.1).
+- log_phase_completion.py ejecutado con --release automático.
+- Sin incidencias.
 
 ## Sección D: Métricas Acumulativas
 
@@ -146,4 +159,4 @@
 | `VERSION.yaml` | bump 4.72.0 → 4.72.1 "Coherencia Narrativa Dinámica" + bloque de comentarios del release | FASE-RELEASE-4.72.1 |
 | `CHANGELOG.md` | Entrada `[4.72.1]` (Objetivo/Cambios/Nuevos/Modificados/Tests) | FASE-RELEASE-4.72.1 |
 | `docs/GUIA_TECNICA.md` | Sección "Notas de Cambios v4.72.1" | FASE-RELEASE-4.72.1 |
-| `README.md` / `AGENTS.md` | Test count 3,360 → 3,372 (audit E8b) | FASE-RELEASE-4.72.1 |
+| `README.md` / `AGENTS.md` | Test count 3,360 → 3,379; gate count 12 → 13; fecha actualizada | FASE-RELEASE-4.72.1 |

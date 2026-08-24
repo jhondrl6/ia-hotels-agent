@@ -14,7 +14,9 @@
 | FASE-R0-D | B6+B7 — Propuesta condicional | Baja-Media | ✅ Completada | Sesión 4 | 2026-08-24 |
 | FASE-R0-E | E2E — única ejecución v4complete Zione (delegate_task) | Media (ejecución) | ✅ Completada | Sesión 5 | 2026-08-24 |
 | FASE-R0-F | Verificación AC1-AC12 + análisis post-implementación | Media | ✅ Completada | Sesión 6 | 2026-08-24 |
-| FASE-RELEASE-4.72.1 | Docs oficiales + version bump (delegable) | Baja | ⏳ Pendiente | — | — |
+| FASE-RELEASE-4.72.1 | Docs oficiales + version bump (delegable) | Baja | ✅ Completada | Sesión 7 | 2026-08-24 |
+
+> **Plan COMPLETADO** — 2026-08-24. Todas las fases ✅. Release v4.72.1 “Coherencia Narrativa Dinámica” publicado.
 
 ## Archivos del Plan
 

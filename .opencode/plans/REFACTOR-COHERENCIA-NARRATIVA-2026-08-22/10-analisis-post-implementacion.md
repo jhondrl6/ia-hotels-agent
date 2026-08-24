@@ -17,7 +17,7 @@
 | FASE-R0-D (B6+B7 propuesta) | Sesión 4 | ✅ COMPLETADA | ~15 | NO (directo) | Fix B6+B7: `_build_30_day_plan()` con parámetro `whatsapp_conflict` cableado; B7: botón WhatsApp fuera de "Servicios adicionales" sin brecha (signal `breach_by_asset`). 4 tests nuevos (total 3,372). Suites pasan. |
 | FASE-R0-E (E2E Zione) | Sesión 5 | ✅ COMPLETADA | ~20 | NO (terminal bg) | Corrida inicial bloqueada por tier_c falso (regresión externa: commit 3e88251 "FIX V6" — `FinancialFactors` sin import en `run_v4_complete_mode`). Recuperación en misma sesión (autorizada): import + 6 tests + re-ejecución 20260824_113525. Coherence 0.9485, gates 12P+1W, tier B+, READY. Smoke 7/7 ✅, narrativa E2E verificada (LAS 7 FUGAS, S1 sin WhatsApp, contador dinámico, plan sin WhatsApp, botón fuera de adicionales). |
 | FASE-R0-F (verificación ACs) | Sesión 6 | ✅ COMPLETADA | ~12 | NO (directo, presupuesto holgado) | Verificación formal AC1-AC12 sobre output E2E Zione (20260824_113525): **12/12 PASA**. Diff narrativo antes/después documentado (7 zonas). Greps residuales 0 matches. Pain_ledger pre/post idéntico (7 pain_ids, sin WhatsApp). Gates 12 PASSED + 1 WARNING (idéntico baseline). Coherence 0.9485 (sin delta). 3 lecciones nuevas L-NC10 a L-NC12. |
-| FASE-RELEASE-4.72.1 | — | ⏳ PENDIENTE | — | OPCIONAL (delegable) | |
+| FASE-RELEASE-4.72.1 | Sesión 7 | ✅ COMPLETADA | ~20 | NO (directo) | Version bump 4.72.1. CHANGELOG + GUIA_TECNICA + sync 6 archivos. SYSTEM_STATUS + DOMAIN_PRIMER regenerados. README/AGENTS audit (test count 3,379). run_all_validations 6/6 TOTAL PASS. validate_agents_md ALL PASS. Version Sync Gate OK. |
 
 ---
 
@@ -116,7 +116,7 @@
 
 | Métrica | Baseline (pre-fix) | Post-fix | Delta |
 |---------|--------------------|----------|-------|
-| Tests totales | 3,360 | 3,378 (3,372 plan + 6 recovery) | +18 |
+| Tests totales | 3,360 | 3,379 (3,372 plan + 6 recovery + 1 adicional) | +19 |
 | Coherence E2E Zione | 0.9485 | 0.9485 | 0 (idéntico — coherencia numérica intacta; corrida 20260824_113525) |
 | Gates de publicación | 13/13 (12 PASSED + 1 WARNING pricing_compliance) | 12 PASSED + 1 WARNING (idéntico baseline, tier B+, READY_FOR_PUBLICATION) | 0 (sin regresión) |
 | Pain_ids detectados | 7 (schema, seo, faq, analytics, visibility, crawlers, og) | 7 (no_hotel_schema, low_seo_score, no_faq_schema, no_analytics_configured, low_organic_visibility, ai_crawler_blocked, no_og_tags) | 0 (idénticos, sin WhatsApp ✅) |
@@ -140,15 +140,15 @@
 
 ---
 
-## Checklist de Cierre (llenar en FASE-RELEASE)
+## Checklist de Cierre (FASE-RELEASE — 2026-08-24)
 
-- [ ] Todas las fases ✅ en `06-checklist-implementacion.md` (R0-A a R0-F)
-- [ ] Matriz de Verificación completa: 7/7 bugs + 12/12 ACs con Real/Status
-- [ ] Lecciones nuevas registradas (mínimo 3, formato qué pasó/por qué/qué lo previene)
-- [ ] Métricas de Ejecución post-fix completadas
-- [ ] VERSION.yaml == "4.72.1" + sync 6 archivos + Version Sync Gate OK
-- [ ] CHANGELOG `[4.72.1]` + GUIA_TECNICA "Notas de Cambios v4.72.1"
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] README/AGENTS audit: test count 3,372
-- [ ] Commit de release ejecutado
-- [ ] Seguimientos abiertos: ninguno o con plan asignado
+- [x] Todas las fases ✅ en `06-checklist-implementacion.md` (R0-A a R0-F)
+- [x] Matriz de Verificación completa: 7/7 bugs + 12/12 ACs con Real/Status
+- [x] Lecciones nuevas registradas (mínimo 3, formato qué pasó/por qué/qué lo previene) — 12 lecciones L-NC1 a L-NC12
+- [x] Métricas de Ejecución post-fix completadas
+- [x] VERSION.yaml == "4.72.1" + sync 6 archivos + Version Sync Gate OK
+- [x] CHANGELOG `[4.72.1]` + GUIA_TECNICA "Notas de Cambios v4.72.1"
+- [x] `run_all_validations.py --quick` TOTAL PASS (6/6)
+- [x] README/AGENTS audit: test count 3,379 verificado contra `pytest --collect-only`
+- [ ] Commit de release ejecutado — pendiente de ejecución por el usuario
+- [x] Seguimientos abiertos: ninguno o con plan asignado (gate tier_c default “C” → mejora opcional futura)

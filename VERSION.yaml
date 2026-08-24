@@ -1,10 +1,20 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.72.0"
-codename: "Credibilidad Numérica y Verdad del Sitio Vivo"
-release_date: "2026-08-21"
+version: "4.72.1"
+codename: "Coherencia Narrativa Dinámica"
+release_date: "2026-08-24"
 plan_maestro_version: "v2.6.0"
 
+# v4.72.1 - REFACTOR-COHERENCIA-NARRATIVA (2026-08-24)
+# FASE-R0-A: Quick Win Schema condicionado a whatsapp_conflict (B2)
+# FASE-R0-B: Seccion 4 fugas derivada del pain_ledger (B1) + titulo LAS {N} FUGAS dinamico (B4)
+# FASE-R0-C: Titulo Seccion 1 condicional (B3) + contador Seccion 6 dinamico (B5)
+# FASE-R0-D: Plan 30 dias condicional (B6) + boton WhatsApp fuera de servicios adicionales sin brecha (B7)
+# FASE-R0-E: E2E v4complete Zi One Luxury post-fix — smoke 7/7
+# FASE-R0-F: Certificacion AC1-AC12 (12/12 PASA)
+# 12 tests nuevos (3,372 total); 0 regresiones
+# Backwards compatible: narrativa condicional en documentos comerciales, no logica core
+#
 # v4.72.0 - CREDIBILIDAD-NUMERICA (2026-08-21)
 # FASE-P0-A: Fuente unica de pricing (D6) — pricing.yaml master; constantes hardcodeadas eliminadas
 # FASE-P0-B: Gate pricing_compliance floor-aware (D1) — gate 13 (10 blocking + 3 advisory)

@@ -1,7 +1,25 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.72.0 (Credibilidad Numérica y Verdad del Sitio Vivo)
+**Versión:** v4.72.1 (Coherencia Narrativa Dinámica)
 **Última actualización:** 2026-08-24
+
+---
+
+### Notas de Cambios v4.72.1 — Coherencia Narrativa Dinámica
+
+**Fecha:** 2026-08-24
+
+**Resumen**: Eliminación de 7 manifestaciones de fosilización narrativa (bugs B1-B7) en documentos comerciales. Los textos hardcoded de WhatsApp que ignoraban `whatsapp_status=VERIFIED` y el pain_ledger ahora se derivan dinámicamente de la fuente única de verdad. Causa raíz única: templates con texto estático que no consumían la capa de datos dinámica. Plan: REFACTOR-COHERENCIA-NARRATIVA-2026-08-22.
+
+**Módulos afectados**: `modules/commercial_documents/` (v4_diagnostic_generator.py, diagnostico_v6_template.md, v4_proposal_generator.py)
+
+**Problema**: 7 bugs narrativos donde documentos comerciales mostraban "Fuga 1 — Contacto perdido por WhatsApp incorrecto" con whatsapp VERIFIED, "LAS 3 FUGAS PRINCIPALES" cuando Zione tenía 7 brechas, título Sección 1 hardcoded "POR WHATSAPP, GOOGLE MAPS E IA" sin condición, plan 30 días con "WhatsApp +" hardcoded, y botón WhatsApp como servicio adicional cuando no era brecha. Impacto: contradicción directa entre secciones del documento, erosionando credibilidad comercial.
+
+**Solución**: Condicionales de narrativa cableadas a `whatsapp_conflict` (helper `_has_whatsapp_conflict()` compartido) + Sección 4 derivada del pain_ledger vía `_build_fugas_principales_section()` (reutiliza narrativa dinámica de `_pain_to_brecha()`, D-NC6, sin tabla estática nueva). Título "LAS {N} FUGAS" con N = `len(brechas_destacadas)` (D-NC1). Contadores y cláusulas condicionales en template. Plan 30 días y servicios adicionales con signal dinámico `breach_by_asset` + `whatsapp_conflict`.
+
+**Backwards compatibility**: Sí — no cambia API pública ni lógica core; firmas con defaults conservadores (`whatsapp_conflict: bool = False`). Template `diagnostico_v6_template.md` mantiene variables existentes (`${brechas_total_count}`, `${brechas_destacadas_count}`, `${brechas_restantes_count}`).
+
+**Tests**: +12 tests nuevos del plan (2 R0-A + 4 R0-B + 3 R0-C + 4 R0-D) + 6 tests recovery (R0-E). Total: 3,378 funciones. 0 regresiones. E2E: v4complete Zi One Luxury certificado AC1-AC12 (12/12 PASA).
 
 ---
 

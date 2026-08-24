@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-08-24
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 437
+> **Total fases completadas:** 438
 
 ---
 
@@ -10272,6 +10272,23 @@ _Ninguno_
 
 ## FASE-R0-F - 2026-08-24
 **Descripcion:** Verificacion AC1-AC12 post-implementacion: 12/12 PASA + analisis post-implementacion completo (matriz B1-B7, diff narrativo 8 zonas, 3 lecciones L-NC10 a L-NC12)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.72.1 - 2026-08-24
+**Descripcion:** Release 4.72.1 - Coherencia Narrativa Dinamica: 7 fixes B1-B7 fosilizacion narrativa, 12 tests, E2E Zione certificado AC1-AC12
 
 ### Archivos Nuevos
 _Ninguno_

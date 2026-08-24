@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.72.0** -- Credibilidad Numérica y Verdad del Sitio Vivo | Actualizado 05 Agosto 2026 | 3,360 pruebas automatizadas | 0 errores conocidos
+**v4.72.1** -- Coherencia Narrativa Dinámica | Actualizado 24 Agosto 2026 | 3,379 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -21,9 +21,9 @@
 
 ---
 
-## Estado del Proyecto (v4.72.0 -- Credibilidad Numérica y Verdad del Sitio Vivo)
+## Estado del Proyecto (v4.72.1 -- Coherencia Narrativa Dinámica)
 
-- **3,360 test functions** — suite completa, 0 regresiones
+- **3,379 test functions** — suite completa, 0 regresiones
 - **205 archivos Python en modules/** (~68K lineas, 26 directorios) + **25 scripts** (~5.5K lineas) + **55 directorios de test**
 - **9 config YAML** con schema validado
 - **17 agent skills** en `.agents/workflows/`
@@ -239,12 +239,12 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **3,360 test functions** — suite completa, 0 regresiones
+- **3,379 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
 - **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.15.0 (1 fase/sesion, max 60 iteraciones)
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
-- **12 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop (blocking); content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency (advisory)
+- **13 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, pricing_compliance (blocking); content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency (advisory)
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
 
 ---

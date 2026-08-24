@@ -1,5 +1,47 @@
 # Changelog
 
+## [4.72.1] - Coherencia Narrativa Dinámica — 2026-08-24
+
+### Objetivo
+
+Eliminación de la fosilización narrativa: 7 bugs B1-B7 donde documentos comerciales mostraban textos hardcoded de WhatsApp ("Fuga 1 — Contacto perdido por WhatsApp incorrecto", "LAS 3 FUGAS PRINCIPALES", etc.) pese a `whatsapp_status=VERIFIED` y pain_ledger dinámico. La narrativa ahora se deriva dinámicamente del pain_ledger (fuente única de verdad). Plan: REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 (7 fases: R0-A/B/C/D/E/F + RELEASE).
+
+### Cambios Implementados
+
+- `modules/commercial_documents/v4_diagnostic_generator.py` — Quick Win Schema/WhatsApp condicionado a `whatsapp_conflict` (B2); nuevo método `_build_fugas_principales_section()` que reutiliza narrativa dinámica de `_pain_to_brecha()` (B1, D-NC6); título "LAS {N} FUGAS PRINCIPALES" dinámico con pluralización (B4, D-NC1); helper `_has_whatsapp_conflict()` extraído (B3, D-NC4); variables `seccion_1_canales` + `seccion_1_whatsapp_clausula` inyectadas en render dict (B3+B5)
+- `modules/commercial_documents/templates/diagnostico_v6_template.md` — Bloques de fugas hardcoded → `${fugas_principales_section}`; título L65 → `${fugas_title}` (pluralización dinámica); título Sección 1 → `${seccion_1_canales}` condicional (B3); cláusula L39 → `${seccion_1_whatsapp_clausula}` condicional; contador Sección 6 → `${brechas_total_count}` dinámico (B5, D-NC5)
+- `modules/commercial_documents/v4_proposal_generator.py` — Plan 30 días condicional a `whatsapp_conflict` (B6): parámetro cableado a `_build_30_day_plan()`; botón de WhatsApp fuera de "Servicios adicionales" cuando no hay brecha ni conflicto (B7, signal `breach_by_asset` + `whatsapp_conflict`)
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| (ninguno — refactor de módulos existentes) | |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | B2: Quick Win condicionado; B1+B4: `_build_fugas_principales_section()` + `${fugas_title}`; B3: helper `_has_whatsapp_conflict()` + variables condicionales |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | B1+B4: bloques fugas → `${fugas_principales_section}` + título `${fugas_title}`; B3: título S1 + cláusula condicionales; B5: contador S6 dinámico |
+| `modules/commercial_documents/v4_proposal_generator.py` | B6: `_build_30_day_plan()` con `whatsapp_conflict`; B7: botón WhatsApp fuera de adicionales sin brecha |
+| `main.py` | Recovery: import `FinancialFactors` en `run_v4_complete_mode` (fix regresión commit 3e88251) |
+| `tests/commercial_documents/test_diagnostic_generator.py` | +2 tests B2 (TestB2QuickWinSchemaText) + 4 tests B1/B4 (TestFugasPrincipalesDinamicas) |
+| `tests/commercial_documents/test_template_conditionals.py` | +3 tests B3/B5 (TestSeccion1Conditional, TestSeccion6Contador, TestTemplateNoHardcodedFugas) |
+| `tests/commercial_documents/test_proposal_dynamic.py` | +4 tests B6/B7 (TestFaseR0DPlan30DaysConditional, TestFaseR0DServiciosAdicionalesWhatsApp) |
+| `tests/financial_engine/test_fase_r0e_recovery_financial_factors.py` | +6 tests recovery (TestR0ERecocoveryStaticContract, TestR0ERecoveryFaseKBehavior, TestR0ERecoveryAssessmentTierChain) |
+| `evidence/FASE-R0-E/baseline/` | Baseline anómalo preservado (corrida 20260821_175706) |
+| `evidence/FASE-R0-E/` | Evidencia post-fix completa (corrida 20260824_113525) |
+
+### Tests
+
+- 12 tests nuevos del plan: 2 (R0-A, TestB2QuickWinSchemaText) + 4 (R0-B, TestFugasPrincipalesDinamicas) + 3 (R0-C, TestSeccion1Conditional/TestSeccion6Contador/TestTemplateNoHardcodedFugas) + 4 (R0-D, TestFaseR0DPlan30DaysConditional/TestFaseR0DServiciosAdicionalesWhatsApp)
+- 6 tests recovery (R0-E, TestR0ERecovery*): fix regresión `FinancialFactors` en main.py
+- E2E: v4complete Zi One Luxury post-fix (FASE-R0-E, corrida 20260824_113525), certificación AC1-AC12 12/12 PASA (FASE-R0-F)
+- Total: 3,378 funciones (3,360 base + 12 plan + 6 recovery); 0 regresiones
+
+---
+
 ## [4.72.0] - Credibilidad Numérica y Verdad del Sitio Vivo — 2026-08-21
 
 ### Objetivo
