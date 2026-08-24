@@ -712,3 +712,210 @@ class TestD8AtribucionGEO:
 
         assert "algoritmo propio de IA Hoteles Agent" in content
         assert "Google Places" in content
+
+
+class TestB2QuickWinSchemaText:
+    """B2: Quick Win para not hotel_schema_detected menciona datos/Schema, no WhatsApp."""
+
+    def test_quick_wins_schema_text_sin_schema(self):
+        """Con hotel_schema_detected=False, el Quick Win menciona datos/Google, no WhatsApp."""
+        gen = V4DiagnosticGenerator()
+        audit = _make_minimal_audit()
+        audit = dataclass_replace(
+            audit,
+            schema=SchemaValidation(
+                hotel_schema_detected=False,
+                hotel_schema_valid=False,
+                hotel_confidence="missing",
+                faq_schema_detected=True,
+                faq_schema_valid=True,
+                faq_confidence="verified",
+                org_schema_detected=True,
+                total_schemas=2,
+            ),
+        )
+
+        result = gen._build_quick_wins(audit)
+
+        # Assert 1: NO contiene mención de WhatsApp
+        assert "WhatsApp" not in result
+        # Assert 2: menciona Google y/o datos (correspondencia con condición Schema)
+        assert "Google" in result or "datos" in result
+
+    def test_quick_wins_schema_no_aparece_con_schema_detectado(self):
+        """Con hotel_schema_detected=True, el Quick Win de Schema NO aparece."""
+        gen = V4DiagnosticGenerator()
+        audit = _make_minimal_audit()
+        # _make_minimal_audit() ya tiene hotel_schema_detected=True
+
+        result = gen._build_quick_wins(audit)
+
+        # El texto de verificación de datos en Google no debe aparecer
+        assert "Verificar qué datos de su hotel faltan en Google" not in result
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# FUGAS-WHATSAPP (FASE-R0-B, B1+B4): Sección 4 dinámica desde pain_ledger
+# ────────────────────────────────────────────────────────────────────────────
+
+
+def _make_zione_like_audit(geo_score: int = 45) -> V4AuditResult:
+    """Audit tipo Zione: WhatsApp VERIFIED + brechas reales (schema/GBP/FAQ/org)."""
+    audit = _make_minimal_audit()
+    return dataclass_replace(
+        audit,
+        schema=SchemaValidation(
+            hotel_schema_detected=False,
+            hotel_schema_valid=False,
+            hotel_confidence="missing",
+            faq_schema_detected=False,
+            faq_schema_valid=False,
+            faq_confidence="missing",
+            org_schema_detected=False,
+            total_schemas=0,
+        ),
+        gbp=dataclass_replace(audit.gbp, geo_score=geo_score),
+        validation=dataclass_replace(
+            audit.validation,
+            whatsapp_status="verified",
+            phone_web="+573001111111",
+            phone_gbp="+573001111111",
+        ),
+    )
+
+
+def _make_validation_with_whatsapp(confidence: ConfidenceLevel) -> ValidationSummary:
+    """ValidationSummary con campo whatsapp_number en el nivel de confianza dado."""
+    return ValidationSummary(
+        fields=[
+            ValidatedField(
+                field_name="whatsapp_number",
+                value="+573001111111",
+                confidence=confidence,
+                sources=["web", "gbp"],
+            ),
+        ],
+        overall_confidence=confidence,
+        conflicts=[],
+    )
+
+
+class TestFugasPrincipalesDinamicas:
+    """FASE-R0-B (B1+B4): la Sección 4 se deriva del pain_ledger, no de texto estático."""
+
+    def test_fugas_principales_sin_whatsapp_conflict(self):
+        """AC1: con WhatsApp VERIFIED no aparece la fuga estática de WhatsApp."""
+        gen = V4DiagnosticGenerator()
+        audit = _make_zione_like_audit()
+        validation = _make_validation_with_whatsapp(ConfidenceLevel.VERIFIED)
+        financial = _make_minimal_financial_scenarios()
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = gen.generate(
+                audit_result=audit,
+                validation_summary=validation,
+                financial_scenarios=financial,
+                hotel_name="Hotel Test",
+                hotel_url="https://example.com",
+                output_dir=tmpdir,
+                coherence_score=0.85,
+                gate_status="PASSED",
+            )
+            content = Path(path).read_text(encoding="utf-8")
+
+        # AC1: la narrativa estática fosilizada desapareció del output
+        assert "Contacto perdido por WhatsApp" not in content
+        assert "WhatsApp incorrecto" not in content
+        # Guard anti-residuos (safe_substitute): 0 variables sin renderizar
+        assert "${" not in content
+        # Contiene al menos una fuga derivada de un pain real del audit
+        assert "### Fuga 1 —" in content
+        assert "Sin Schema Hotel" in content  # pain.name real de no_hotel_schema
+
+    def test_fugas_principales_con_whatsapp_conflict(self):
+        """AC4: con conflicto real, la fuga de WhatsApp SÍ aparece (derivada del pain)."""
+        gen = V4DiagnosticGenerator()
+        audit = _make_zione_like_audit()
+        validation = _make_validation_with_whatsapp(ConfidenceLevel.CONFLICT)
+        financial = _make_minimal_financial_scenarios()
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = gen.generate(
+                audit_result=audit,
+                validation_summary=validation,
+                financial_scenarios=financial,
+                hotel_name="Hotel Test",
+                hotel_url="https://example.com",
+                output_dir=tmpdir,
+                coherence_score=0.85,
+                gate_status="PASSED",
+            )
+            content = Path(path).read_text(encoding="utf-8")
+
+        # La fuga aparece con el nombre dinámico del pain (pain.name del mapper),
+        # NO con el string estático eliminado
+        fuga_lines = [ln for ln in content.splitlines() if ln.startswith("### Fuga")]
+        assert any("Conflicto de WhatsApp" in ln for ln in fuga_lines)
+        assert "Contacto perdido por WhatsApp incorrecto" not in content
+
+    def test_fugas_count_matches_brechas(self):
+        """AC9/D-NC1: el contador del título coincide con las fugas listadas."""
+        gen = V4DiagnosticGenerator()
+        audit = _make_zione_like_audit()
+        validation = _make_validation_with_whatsapp(ConfidenceLevel.VERIFIED)
+        financial = _make_minimal_financial_scenarios()
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = gen.generate(
+                audit_result=audit,
+                validation_summary=validation,
+                financial_scenarios=financial,
+                hotel_name="Hotel Test",
+                hotel_url="https://example.com",
+                output_dir=tmpdir,
+                coherence_score=0.85,
+                gate_status="PASSED",
+            )
+            content = Path(path).read_text(encoding="utf-8")
+
+        n = content.count("### Fuga ")
+        assert n > 0
+        # Título dinámico coincide con las fugas listadas…
+        assert f"LAS {n} FUGAS PRINCIPALES" in content
+        # …y con el contador ${brechas_destacadas_count} de la intro
+        assert f"estas {n} son las que más dinero" in content
+
+    def test_fugas_derivan_de_pain_ids(self):
+        """AC3: cada fuga listada corresponde 1:1 a una brecha real del ledger."""
+        import re
+
+        gen = V4DiagnosticGenerator()
+        audit = _make_zione_like_audit()
+        validation = _make_validation_with_whatsapp(ConfidenceLevel.VERIFIED)
+        financial = _make_minimal_financial_scenarios()
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = gen.generate(
+                audit_result=audit,
+                validation_summary=validation,
+                financial_scenarios=financial,
+                hotel_name="Hotel Test",
+                hotel_url="https://example.com",
+                output_dir=tmpdir,
+                coherence_score=0.85,
+                gate_status="PASSED",
+            )
+            content = Path(path).read_text(encoding="utf-8")
+
+        # Nombres renderizados en la Sección 4
+        rendered_names = re.findall(r"### Fuga \d+ — (.+)", content)
+        assert rendered_names, "La Sección 4 debe listar al menos una fuga"
+
+        # Brechas destacadas según la misma fuente de verdad del generador
+        brechas_destacadas = [
+            b for b in gen._get_brecha_pesos(audit) if b.get("impacto", 0) > 0
+        ]
+        expected_names = [b["nombre"] for b in brechas_destacadas]
+
+        assert sorted(rendered_names) == sorted(expected_names)
+        assert "Contacto perdido por WhatsApp incorrecto" not in rendered_names

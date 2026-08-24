@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-08-21 | v4.72.0 Credibilidad NumÃ©rica y Verdad del Sitio Vivo*
+*Auto-generado: 2026-08-24 | v4.72.0 Credibilidad NumÃ©rica y Verdad del Sitio Vivo*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

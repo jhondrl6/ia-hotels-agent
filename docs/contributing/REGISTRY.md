@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-08-21
+> **Ultima actualizacion:** 2026-08-24
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 431
+> **Total fases completadas:** 436
 
 ---
 
@@ -10166,6 +10166,105 @@ _Ninguno_
 ### Validaciones
 - [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-R0-A - 2026-08-24
+**Descripcion:** Fix B2: Quick Win #1 texto corresponde a condicion hotel_schema (sin WhatsApp)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (1)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-R0-B - 2026-08-24
+**Descripcion:** Fix B1+B4: Seccion 4 fugas dinamicas desde pain_ledger + contador en titulo
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+
+### Validaciones
+- [x] Tests passing (4)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-R0-C - 2026-08-24
+**Descripcion:** Fix B3+B5: titulo S1 condicional a conflicto WhatsApp + contador dinamico S6
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (3)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-R0-D - 2026-08-24
+**Descripcion:** Fix B6+B7: plan 30 dias condicional a whatsapp_conflict + boton WhatsApp fuera de servicios adicionales sin brecha
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+
+### Validaciones
+- [x] Tests passing (4)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-R0-E - 2026-08-24
+**Descripcion:** E2E v4complete Zione post-fixes narrativos: evidencia baseline+nueva, smoke 7/7. Recovery: fix FinancialFactors import (regresion commit 3e88251) + 6 tests
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `tests/financial_engine/test_fase_r0e_recovery_financial_factors.py` | Test Fase R0E Recovery Financial Factors |
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.9485 (PASO)
 - [x] Capability contract verificado
 
 ---

@@ -1007,7 +1007,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         # Plans — FASE-D: all 4 plans now accept asset_plan for dynamic content
         # FASE-PROP-E: pass diagnostic_summary for score-based prioritization
         'plan_7_days': self._build_7_day_plan(asset_plan, diagnostic_summary),
-        'plan_30_days': self._build_30_day_plan(asset_plan, diagnostic_summary),
+        'plan_30_days': self._build_30_day_plan(asset_plan, diagnostic_summary, whatsapp_conflict=whatsapp_conflict),
         'plan_60_days': self._build_60_day_plan(asset_plan),
         'plan_90_days': self._build_90_day_plan(asset_plan),
 
@@ -1451,10 +1451,32 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
 
                 rows.append(f"| **{aeo_entry.service_name}** | {estado} | {confianza_col} | — | {aeo_entry.description} |")
 
+        # FASE-R0-D (B7): derivar service_name del botón de WhatsApp desde
+        # PROPOSAL_SERVICE_TO_ASSET (NO hardcodear el string)
+        whatsapp_service_name = None
+        for svc_name, asset_t in PROPOSAL_SERVICE_TO_ASSET.items():
+            if asset_t == "whatsapp_button":
+                whatsapp_service_name = svc_name
+                break
+
+        # FASE-R0-D (B7): WhatsApp sin brecha ni conflicto → no listar en
+        # "Servicios adicionales" (ofrecer algo que el diagnóstico no señala
+        # como problema es ruido narrativo). Sin claim de presencia.
+        whatsapp_sin_brecha = (
+            (whatsapp_service_name is not None)
+            and (not whatsapp_conflict)
+            and not breach_by_asset.get("whatsapp_button")
+        )
+
         # FASE-3 ASSET-ALIGNMENT-ZIONE: Footnote listing excluded services
         if excluded_services:
-            excluded_names = ", ".join(excluded_services)
-            rows.append(f"\n> **Servicios adicionales disponibles:** {excluded_names}")
+            if whatsapp_sin_brecha:
+                filtered = [s for s in excluded_services if s != whatsapp_service_name]
+            else:
+                filtered = list(excluded_services)
+            if filtered:
+                excluded_names = ", ".join(filtered)
+                rows.append(f"\n> **Servicios adicionales disponibles:** {excluded_names}")
 
         return "\n".join(rows)
 
@@ -2149,6 +2171,7 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         self,
         asset_plan: Optional[List[AssetSpec]],
         diagnostic_summary: Optional[DiagnosticSummary] = None,
+        whatsapp_conflict: bool = False,
     ) -> str:
         """Build detailed 30-day quick wins plan.
 
@@ -2160,6 +2183,7 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         Args:
             asset_plan: Lista de AssetSpec con priority. P1+P2 assets son activos en 30 días.
             diagnostic_summary: Summary con scores de 4 pilares para priorización.
+            whatsapp_conflict: Si True, menciona WhatsApp en plan Fase 1 (AC11).
         """
         # FASE-PROP-E: Acciones específicas para scores bajos en 30 días
         score_actions = []
@@ -2192,7 +2216,9 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
         # P1 assets needing client data
         if p1_assets:
             asset_names = [a.asset_type.replace("_", " ").title() for a in p1_assets[:3]]
-            items.append(f"- [ ] **Semana 2**: Implementación Fase 1 (WhatsApp + datos para IA): {', '.join(asset_names)}")
+            # FASE-R0-D (B6): condicional a whatsapp_conflict real (AC11)
+            whatsapp_mention = "WhatsApp + " if whatsapp_conflict else ""
+            items.append(f"- [ ] **Semana 2**: Implementación Fase 1 ({whatsapp_mention}datos para IA): {', '.join(asset_names)}")
 
         # P2 assets needing client data
         if p2_assets:

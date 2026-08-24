@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.72.0 (Credibilidad Numérica y Verdad del Sitio Vivo)
-**Última actualización:** 2026-08-21
+**Última actualización:** 2026-08-24
 
 ---
 

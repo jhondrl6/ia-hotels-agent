@@ -1596,6 +1596,11 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     from modules.data_validation import CrossValidator
     from modules.data_validation.confidence_taxonomy import ConfidenceLevel
     from modules.financial_engine import ScenarioCalculator, HotelFinancialData
+    # RECOVERY FASE-R0-E (FIX V6 follow-up): FinancialFactors usado en bloque FASE-K
+    # (ota_commission_rate desde config). Sin este import, NameError era atrapado
+    # silenciosamente → financial_breakdown=None → tier default "C" → gate
+    # tier_c_onboarding_required BLOCKED falso.
+    from modules.utils.financial_factors import FinancialFactors
     from modules.commercial_documents.data_structures import FinancialBreakdown
     from modules.financial_engine.scenario_calculator import ScenarioType
     from modules.financial_engine import resolve_adr_with_shadow, ADRResolutionResult

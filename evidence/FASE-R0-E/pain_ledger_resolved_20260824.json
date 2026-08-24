@@ -1,0 +1,82 @@
+{
+  "version": "1.0",
+  "source": "post_orchestrator_reconciler",
+  "entries": [
+    {
+      "confidence": 1.0,
+      "evidence_refs": [],
+      "human_label": "Sin Schema Hotel",
+      "pain_id": "no_hotel_schema",
+      "severity": "HIGH",
+      "source_file": "schema",
+      "source_module": "pain_solution_mapper",
+      "status": "ASSET_GENERATED"
+    },
+    {
+      "confidence": 0.8,
+      "evidence_refs": [],
+      "human_label": "SEO Local Bajo",
+      "pain_id": "low_seo_score",
+      "severity": "HIGH",
+      "source_file": "web_score",
+      "source_module": "pain_solution_mapper",
+      "status": "ASSET_GENERATED"
+    },
+    {
+      "confidence": 1.0,
+      "evidence_refs": [],
+      "human_label": "Sin Schema FAQ",
+      "pain_id": "no_faq_schema",
+      "severity": "MEDIUM",
+      "source_file": "schema",
+      "source_module": "pain_solution_mapper",
+      "status": "ASSET_GENERATED"
+    },
+    {
+      "confidence": 0.9,
+      "evidence_refs": [],
+      "human_label": "Sin Analytics Configurado",
+      "pain_id": "no_analytics_configured",
+      "severity": "MEDIUM",
+      "source_file": "analytics",
+      "source_module": "pain_solution_mapper",
+      "status": "ASSET_GENERATED"
+    },
+    {
+      "confidence": 0.8,
+      "evidence_refs": [],
+      "human_label": "Baja Visibilidad de Trafico Organico",
+      "pain_id": "low_organic_visibility",
+      "severity": "MEDIUM",
+      "source_file": "analytics",
+      "source_module": "pain_solution_mapper",
+      "status": "ASSET_GENERATED"
+    },
+    {
+      "confidence": 0.5,
+      "evidence_refs": [],
+      "human_label": "Crawlers de IA Bloqueados",
+      "pain_id": "ai_crawler_blocked",
+      "severity": "MEDIUM",
+      "source_file": "ai_crawler_audit",
+      "source_module": "pain_solution_mapper",
+      "status": "ASSET_GENERATED"
+    },
+    {
+      "confidence": 0.5,
+      "evidence_refs": [],
+      "human_label": "Open Graph Tags Incompletos",
+      "pain_id": "no_og_tags",
+      "severity": "MEDIUM",
+      "source_file": "seo_elements_detection",
+      "source_module": "pain_solution_mapper",
+      "status": "ASSET_GENERATED"
+    }
+  ],
+  "summary": {
+    "total": 7,
+    "asset_generated": 7,
+    "mapped_to_service": 0,
+    "justified_skip": 0
+  }
+}

@@ -26,7 +26,7 @@ scoring_methodology_url: ./scoring_methodology.md
 
 ---
 
-## 1. 🚨 HOY HAY RESERVAS ESCAPÁNDOSE POR WHATSAPP, GOOGLE MAPS E IA
+## 1. 🚨 HOY HAY RESERVAS ESCAPÁNDOSE POR ${seccion_1_canales}
 
 | Antes (2023) | Ahora (2026) |
 |---|---|
@@ -36,7 +36,7 @@ scoring_methodology_url: ./scoring_methodology.md
 
 ${whatsapp_conflict_business_note}
 
-Cada día que pasa, viajeros potenciales buscan su hotel en Google Maps, le preguntan a ChatGPT o comparan en Booking.com — y algunos se van sin reservar porque no encuentran lo que buscan o el número de WhatsApp no responde.
+Cada día que pasa, viajeros potenciales buscan su hotel en Google Maps, le preguntan a ChatGPT o comparan en Booking.com — y algunos se van sin reservar porque no encuentran lo que buscan${seccion_1_whatsapp_clausula}.
 
 ---
 
@@ -62,19 +62,12 @@ ${financial_breakdown_section}
 
 ---
 
-## 4. 🔍 LAS 3 FUGAS PRINCIPALES
+## 4. 🔍 ${fugas_title}
 
 De las ${brechas_total_count} brechas técnicas detectadas, estas ${brechas_destacadas_count} son las que más dinero le están costando HOY.
 Las otras ${brechas_restantes_count} se resuelven en el plan completo de la Fase 2.
 
-### Fuga 1 — Contacto perdido por WhatsApp incorrecto
-Cuando un huésped quiere reservar directo, busca el WhatsApp del hotel. Si el número en Google Maps es diferente al de su web, pierde la reserva.
-
-### Fuga 2 — Visibilidad insuficiente en Google Maps
-Cuando alguien busca "hotel boutique cerca de ${hotel_landmark}", su hotel aparece más abajo que la competencia. Pocos llegan a su web.
-
-### Fuga 3 — Las IA no recomiendan su hotel
-Cuando alguien le pregunta a ChatGPT o Google AI "hotel boutique en ${hotel_region}", si su web no tiene los datos correctos, no aparece en la respuesta.
+${fugas_principales_section}
 
 ---
 
@@ -86,7 +79,7 @@ ${quick_wins_content}
 
 ## 6. 🤖 QUÉ HACE IA HOTELES AGENT
 
-IA Hoteles Agent es el sistema que acaba de analizar su hotel. Detecta las 3 fugas digitales, calcula la fuga financiera aproximada y genera un plan de recuperación personalizado.
+IA Hoteles Agent es el sistema que acaba de analizar su hotel. Detecta las ${brechas_total_count} fugas digitales, calcula la fuga financiera aproximada y genera un plan de recuperación personalizado.
 
 **El resultado**: un documento llamado "Propuesta Comercial" con exactamente qué hacer, cuánto cuesta y cuánto puede recuperar.
 

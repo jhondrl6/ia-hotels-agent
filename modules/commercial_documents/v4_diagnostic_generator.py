@@ -922,6 +922,18 @@ class V4DiagnosticGenerator:
             'brechas_destacadas_count': str(len(brechas_destacadas)),
             'brechas_restantes_count': str(max(0, len(brechas_pesos) - len(brechas_destacadas))),
 
+            # FUGAS-WHATSAPP (B1+B4): Sección 4 dinámica — fugas derivadas del
+            # pain_ledger (fuente única de verdad; lista ya filtrada por
+            # VERIFIED_IN_SITE en _identify_brechas y ordenada por severidad).
+            # D-NC1: el contador del título coincide con las fugas listadas.
+            'fugas_principales_section': self._build_fugas_principales_section(audit_result, brechas_destacadas),
+            'fugas_count_display': str(len(brechas_destacadas)),
+            'fugas_title': (
+                "SIN FUGAS PRINCIPALES" if len(brechas_destacadas) == 0
+                else "LA FUGA PRINCIPAL" if len(brechas_destacadas) == 1
+                else f"LAS {len(brechas_destacadas)} FUGAS PRINCIPALES"
+            ),
+
 
 
             # Additional variables for sales template
@@ -944,6 +956,11 @@ class V4DiagnosticGenerator:
             'hotel_landmark': hotel_landmark,
             'regional_context': regional_context,
             'whatsapp_conflict_business_note': self._build_whatsapp_conflict_note(audit_result),
+
+            # FUGAS-WHATSAPP (B3): título S1 y cláusula condicionales al mismo
+            # signal de conflicto real que _build_whatsapp_conflict_note().
+            'seccion_1_canales': "WHATSAPP, GOOGLE MAPS E IA" if self._has_whatsapp_conflict(audit_result) else "GOOGLE MAPS E IA",
+            'seccion_1_whatsapp_clausula': " o el número de WhatsApp no responde" if self._has_whatsapp_conflict(audit_result) else "",
             'monthly_loss': format_cop(base_value),
             'urgencia_contenido': self._build_urgencia_content(financial_scenarios, hotel_name),
             'quick_wins_content': self._build_quick_wins_content(audit_result),
@@ -1882,8 +1899,8 @@ class V4DiagnosticGenerator:
         # Schema implementation — translated to owner's action + delegation
         if audit_result.schema and not audit_result.schema.hotel_schema_detected:
             wins.append(
-                f"{win_number}. **HOY (5 minutos): Corregir el número de WhatsApp en Google Maps.** "
-                f"→ Usted mismo puede hacerlo desde su celular."
+                f"{win_number}. **HOY (5 minutos): Verificar qué datos de su hotel faltan en Google (ficha y resultados de búsqueda).** "
+                f"→ Usted mismo puede hacerlo desde su celular: busque su hotel y anote qué información no aparece."
             )
             win_number += 1
 
@@ -2606,6 +2623,37 @@ class V4DiagnosticGenerator:
             rows.append(f"| {detalle_corto} | +{recuperacion}/mes (Fuga mensual estimada) |")
         return "\n".join(rows)
 
+    def _build_fugas_principales_section(self, audit_result: V4AuditResult,
+                                         brechas_destacadas: List[Dict[str, Any]]) -> str:
+        """FUGAS-WHATSAPP (B1+B4): Sección 4 dinámica derivada del pain_ledger.
+
+        Consume la lista de brechas YA filtrada por VERIFIED_IN_SITE y ordenada
+        por severidad (la misma que alimenta los contadores del template en
+        _prepare_template_data). La narrativa se toma EXCLUSIVAMENTE de los
+        campos dinámicos del dict de brecha (nombre/detalle derivados de
+        _pain_to_brecha) — nunca hardcoded ni inventada (D-NC3, D-NC6).
+
+        Args:
+            audit_result: Audit completo (se conserva en firma por extensibilidad).
+            brechas_destacadas: Brechas con impacto > 0 (orden por severidad).
+
+        Returns:
+            Bloques markdown '### Fuga {n} — {nombre}' numerados secuencialmente.
+            Si la lista está vacía, texto neutro de fallback (nunca string vacío).
+        """
+        if not brechas_destacadas:
+            return (
+                "No se detectaron fugas críticas en este momento. "
+                "Su presencia digital está en buen estado."
+            )
+
+        sections = []
+        for n, brecha in enumerate(brechas_destacadas, 1):
+            nombre = brecha.get('nombre') or 'Brecha detectada'
+            detalle = brecha.get('detalle') or ''
+            sections.append(f"### Fuga {n} — {nombre}\n{detalle}")
+        return "\n\n".join(sections)
+
     def _build_regional_context(self, region: str) -> str:
         """Build regional context text for the hotel location."""
         if not region:
@@ -2632,6 +2680,34 @@ class V4DiagnosticGenerator:
         region_display = region if region and region.lower() not in ("nacional", "colombia", "general", "") else "esta zona"
         return f"{region_display} en Colombia presenta oportunidades de crecimiento en presencia digital hotelera."
 
+    def _has_whatsapp_conflict(self, audit_result: 'V4AuditResult') -> bool:
+        """Check if a real WhatsApp conflict exists (web vs GBP number mismatch).
+
+        Shared signal used by _build_whatsapp_conflict_note() and by the
+        conditional Section 1 title/clause (FUGAS-WHATSAPP B3). Returns True
+        only when validation.conflicts contains a whatsapp field discrepancy
+        with both phone_web and phone_gbp present.
+        """
+        validation = getattr(audit_result, 'validation', None)
+        if not validation:
+            return False
+
+        if validation.conflicts and isinstance(validation.conflicts, list):
+            has_conflict = any(
+                c.get('field_name') == 'whatsapp'
+                for c in validation.conflicts
+                if isinstance(c, dict)
+            )
+            if not has_conflict:
+                return False
+
+            # Both numbers must be present for a meaningful conflict
+            phone_web = getattr(validation, 'phone_web', None)
+            phone_gbp = getattr(validation, 'phone_gbp', None)
+            return bool(phone_web and phone_gbp)
+
+        return False
+
     def _build_whatsapp_conflict_note(self, audit_result: 'V4AuditResult') -> str:
         """Build business impact note for WhatsApp number conflict (FASE-A-02b).
 
@@ -2640,30 +2716,13 @@ class V4DiagnosticGenerator:
         from audit_result.validation (NOT from conflicts dict, which only carries
         the generic 'value' and 'discrepancies' string).
         """
-        # Check if validation data exists
-        validation = getattr(audit_result, 'validation', None)
-        if not validation:
-            return ""
-
-        # Check for whatsapp conflict in the conflicts list
-        has_whatsapp_conflict = False
-        if validation.conflicts and isinstance(validation.conflicts, list):
-            has_whatsapp_conflict = any(
-                c.get('field_name') == 'whatsapp'
-                for c in validation.conflicts
-                if isinstance(c, dict)
-            )
-
-        if not has_whatsapp_conflict:
+        if not self._has_whatsapp_conflict(audit_result):
             return ""
 
         # Get phone numbers directly from validation (not from conflicts dict)
+        validation = audit_result.validation
         phone_web = getattr(validation, 'phone_web', None)
         phone_gbp = getattr(validation, 'phone_gbp', None)
-
-        # If either is None, no point showing conflict
-        if not phone_web or not phone_gbp:
-            return ""
 
         # Build the alert note with both numbers
         return (

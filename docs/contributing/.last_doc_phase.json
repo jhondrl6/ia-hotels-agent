@@ -1,7 +1,7 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-RELEASE-4.63.0",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-P1-D",
-  "modules/commercial_documents/v4_proposal_generator.py": "FASE-P0-A",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-R0-C",
+  "modules/commercial_documents/v4_proposal_generator.py": "FASE-R0-D",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-RELEASE-4.63.0",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
@@ -23,10 +23,10 @@
   "modules/asset_generation/asset_catalog.py": "FASE-2-ASSET-ALIGNMENT",
   "modules/commercial_documents/data_structures.py": "FASE-1-HOOK-PDF",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
-  "main.py": "FASE-P1-D",
+  "main.py": "FASE-R0-E",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "FASE-TRAZABILIDAD-RAIZ",
-  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-D",
+  "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-R0-C",
   "data_models/__init__.py": "FASE-IAO-06",
   "v4_proposal_generator.py": "FASE-2",
   "propuesta_v6_template.md": "FASE-2",
@@ -242,5 +242,6 @@
   "docs/PRECIOS_PAQUETES.md": "FASE-P2-B",
   "evidence/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md": "FASE-P2-B",
   "evidence/Recomendaciones/PROMPT_INGRESOS.md": "FASE-P2-B",
-  "evidence/Recomendaciones/PROMPT_INGRESOS_README.md": "FASE-P2-B"
+  "evidence/Recomendaciones/PROMPT_INGRESOS_README.md": "FASE-P2-B",
+  "tests/financial_engine/test_fase_r0e_recovery_financial_factors.py": "FASE-R0-E"
 }

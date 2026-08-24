@@ -12,6 +12,7 @@ import pytest
 from unittest.mock import MagicMock, patch
 from modules.commercial_documents.v4_proposal_generator import V4ProposalGenerator
 from modules.commercial_documents.service_catalog import SERVICE_CATALOG
+from modules.commercial_documents.data_structures import AssetSpec
 from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
 
 
@@ -488,3 +489,116 @@ class TestFase3LookupUnification:
 
         assert len(SERVICE_TO_ASSET_LOOKUP) == 8, \
             f"Expected 8 entries, got {len(SERVICE_TO_ASSET_LOOKUP)}"
+
+
+class TestFaseR0DPlan30DaysConditional:
+    """FASE-R0-D (B6/AC11): Plan 30 días condicional a whatsapp_conflict."""
+
+    def setup_method(self):
+        self.gen = V4ProposalGenerator()
+
+    def test_proposal_plan_sin_whatsapp(self):
+        """whatsapp_conflict=False: plan NO contiene 'WhatsApp + datos para IA' (AC11)."""
+        p1_assets = [
+            AssetSpec(asset_type="hotel_schema", priority=1),
+        ]
+        result = self.gen._build_30_day_plan(
+            asset_plan=p1_assets,
+            diagnostic_summary=None,
+            whatsapp_conflict=False,
+        )
+        # NO debe mencionar WhatsApp cuando no hay conflicto
+        assert "WhatsApp + datos para IA" not in result, \
+            "Plan 30 días NO debe mencionar 'WhatsApp + datos para IA' sin conflicto (AC11)"
+        # SÍ debe mencionar 'datos para IA' (la parte no-WhatsApp permanece)
+        assert "datos para IA" in result, \
+            "Plan 30 días debe contener 'datos para IA' (texto base siempre presente)"
+        # El asset dinámico debe aparecer
+        assert "Hotel Schema" in result
+
+    def test_proposal_plan_con_whatsapp(self):
+        """whatsapp_conflict=True: plan SÍ contiene 'WhatsApp + datos para IA'."""
+        p1_assets = [
+            AssetSpec(asset_type="hotel_schema", priority=1),
+        ]
+        result = self.gen._build_30_day_plan(
+            asset_plan=p1_assets,
+            diagnostic_summary=None,
+            whatsapp_conflict=True,
+        )
+        # SÍ debe mencionar WhatsApp cuando hay conflicto
+        assert "WhatsApp + datos para IA" in result, \
+            "Plan 30 días debe mencionar 'WhatsApp + datos para IA' con conflicto"
+
+
+class TestFaseR0DServiciosAdicionalesWhatsApp:
+    """FASE-R0-D (B7): Botón WhatsApp fuera de 'Servicios adicionales' sin brecha."""
+
+    def setup_method(self):
+        self.gen = V4ProposalGenerator()
+
+    def test_servicios_adicionales_sin_brecha_whatsapp(self):
+        """Sin conflicto ni brecha whatsapp: botón NO aparece en footnote (B7).
+
+        Setup: whatsapp_conflict=False, opportunity_scores sin brecha whatsapp,\n        whatsapp_button sin asset → va a excluded_services pero se filtra.
+        """
+        # Algunos assets (NO whatsapp_button) para que la tabla no esté vacía
+        assets = [
+            {"asset_type": "optimization_guide", "confidence_score": 0.9},
+            {"asset_type": "hotel_schema", "confidence_score": 0.85},
+        ]
+        result = self.gen._generate_dynamic_services_table(
+            detected_pain_ids=[],
+            assets_generated=assets,
+            whatsapp_conflict=False,
+            opportunity_scores=None,  # sin brechas → breach_by_asset vacío
+        )
+        # Debe existir la footnote (hay servicios excluidos: whatsapp_button, etc.)
+        assert "> **Servicios adicionales disponibles:**" in result, \
+            "Debe existir footnote de servicios adicionales"
+        # Botón de WhatsApp NO debe estar en la footnote
+        # Extraer el texto de la footnote
+        footnote_line = ""
+        for line in result.split("\n"):
+            if "Servicios adicionales disponibles" in line:
+                footnote_line = line
+                break
+        assert "Botón de WhatsApp" not in footnote_line, \
+            "Botón de WhatsApp NO debe aparecer en 'Servicios adicionales' sin brecha (B7)"
+
+    def test_servicios_adicionales_con_brecha_whatsapp(self):
+        """Con brecha whatsapp en opportunity_scores: botón SÍ aparece en footnote (B7).
+
+        Setup: whatsapp_conflict=False, opportunity_scores con brecha no_whatsapp_visible,
+        whatsapp_button sin asset → va a excluded_services y NO se filtra.
+        """
+        assets = [
+            {"asset_type": "optimization_guide", "confidence_score": 0.9},
+            {"asset_type": "hotel_schema", "confidence_score": 0.85},
+        ]
+        # Brecha whatsapp en opportunity_scores → breach_by_asset["whatsapp_button"] existe
+        opportunity_scores = [
+            {
+                "brecha_id": "no_whatsapp_visible",
+                "rank": 2,
+                "estimated_monthly_cop": 5_000_000,
+                "brecha_name": "WhatsApp no visible",
+            },
+        ]
+        result = self.gen._generate_dynamic_services_table(
+            detected_pain_ids=[],
+            assets_generated=assets,
+            whatsapp_conflict=False,
+            opportunity_scores=opportunity_scores,
+        )
+        # Debe existir la footnote
+        assert "> **Servicios adicionales disponibles:**" in result, \
+            "Debe existir footnote de servicios adicionales"
+        # Botón de WhatsApp SÍ debe estar en la footnote (hay brecha real)
+        footnote_line = ""
+        for line in result.split("\n"):
+            if "Servicios adicionales disponibles" in line:
+                footnote_line = line
+                break
+        assert "Botón de WhatsApp" in footnote_line, \
+            "Botón de WhatsApp SÍ debe aparecer en 'Servicios adicionales' con brecha (B7)"
