@@ -3,7 +3,7 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.72.1 | **Codename**: Coherencia Narrativa DinÃ¡mica
+> **Version del sistema**: 4.72.2 | **Codename**: Limpieza de Skills
 > **Release date**: 2026-08-24 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-08-24 | v4.72.1 Coherencia Narrativa DinÃ¡mica*
+*Auto-generado: 2026-08-24 | v4.72.2 Limpieza de Skills*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

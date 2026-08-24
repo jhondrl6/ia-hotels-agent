@@ -203,12 +203,12 @@ Guia rapida para encontrar la informacion que necesitas tras la actualizacion Fi
 
 | Skill | Ubicacion |
 |-------|-----------|
-| Truth Protocol | [.agents/workflows/truth_protocol.md](.agents/workflows/truth_protocol.md) |
-| Audit Guardian | [.agents/workflows/audit_guardian.md](.agents/workflows/audit_guardian.md) |
-| Delivery Wizard | [.agents/workflows/delivery_wizard.md](.agents/workflows/delivery_wizard.md) |
-| QA Guardian | [.agents/workflows/qa_guardian.md](.agents/workflows/qa_guardian.md) |
-| Deployment Assistant | [.agents/workflows/deployment_assistant.md](.agents/workflows/deployment_assistant.md) |
-| Meta Skill Creator | [.agents/workflows/meta_skill_creator.md](.agents/workflows/meta_skill_creator.md) |
+| Phased Project Executor | [.agents/workflows/phased_project_executor.md](.agents/workflows/phased_project_executor.md) |
+
+> Limpieza 2026-08-24: los 16 skills restantes fueron archivados en
+> [archives/deprecated_workflows_20260824/](archives/deprecated_workflows_20260824/).
+> Los skills historicos `audit_guardian` y `qa_guardian` fueron reemplazados en su momento
+> por `v4_quality_validator` (hoy archivado: su logica vive en `modules/quality_gates/`).
 
 ### Historial de Cambios
 

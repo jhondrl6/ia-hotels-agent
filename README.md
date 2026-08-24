@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.72.1** -- Coherencia Narrativa Dinámica | Actualizado 24 Agosto 2026 | 3,379 pruebas automatizadas | 0 errores conocidos
+**v4.72.2** -- Limpieza de Skills | Actualizado 24 Agosto 2026 | 3,379 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-## Estado del Proyecto (v4.72.1 -- Coherencia Narrativa Dinámica)
+## Estado del Proyecto (v4.72.2 -- Limpieza de Skills)
 
 - **3,379 test functions** — suite completa, 0 regresiones
 - **205 archivos Python en modules/** (~68K lineas, 26 directorios) + **25 scripts** (~5.5K lineas) + **55 directorios de test**

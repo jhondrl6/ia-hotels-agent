@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.72.1 -- Coherencia Narrativa Dinámica COMPLETADO**
+> **v4.72.2 -- Limpieza de Skills COMPLETADO**
 
 ---
 
@@ -41,22 +41,12 @@ python scripts/validate_agent_ecosystem.py  # Verificar integridad de skills
 
 | Workflow | Trigger | Descripcion |
 |----------|---------|-------------|
-| `v4_complete.md` | "diagnostico", "analiza este hotel" | Flujo v4 completo: onboarding, validacion, assets |
-| `v4_quality_validator.md` | "valida calidad", "QA", "verifica" | Validador integral pre-generacion y post-entrega |
-| `v4_financial_scenarios.md` | "calcula escenarios", "financiero" | Escenarios conservador/realista/optimista v4 |
-| `v4_regional_resolver.md` | "benchmark regional", "resuelve region" | resuelve ADR y benchmarks regionales |
-| `v4_asset_conditional.md` | "genera assets", "assets condicionales" | Genera assets con preflight checks y gates |
-| `v4_regression_guardian.md` | "regresion", "post-implementacion" | Validacion post-implementacion flujo v4complete |
-| `truth_protocol.md` | "verifica datos", "certifica veracidad" | Certificar veracidad datos financieros |
-| `delivery_wizard.md` | "entrega", "kit de entrega" | Generar kit de entrega completo |
-| `deployment_assistant.md` | "despliega", "deploy" | Desplegar kits AEO en WordPress |
-| `seo_technical.md` | "SEO tecnico", "auditoria tecnica" | Auditoria tecnica y credibilidad web |
-| `env_rerun.md` | "fallo entorno", "API key" | Solucionar fallos de entorno y API Keys |
-| `maintenance_autopilot.md` | "mantenimiento skills" | Auto-mantenimiento arquitectura de skills |
-| `meta_skill_creator.md` | "crear skill", "nuevo workflow" | Fabrica para crear nuevas Meta-Skills |
-| `watchdog_check.md` | "vigilancia", "anomalias" | Escaner de vigilancia y alertas |
-| `monitor_bg.md` | "monitorea", "segundo plano" | Monitoreo de tareas en segundo plano |
 | `phased_project_executor.md` | "por fases", "una fase" | Executor de proyectos por fases (1 fase/sesion) |
+
+> **Nota (limpieza 2026-08-24)**: Los 16 skills restantes fueron archivados en
+> `archives/deprecated_workflows_20260824/`. La funcionalidad de la familia v4_* ya vive
+> en codigo (`python main.py v4complete`, `tests/regression/`); los stubs nunca se usaron.
+> Para "diagnostico"/"analiza este hotel" usar el comando CLI `v4complete`.
 
 ---
 

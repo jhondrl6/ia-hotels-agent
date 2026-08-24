@@ -1,5 +1,44 @@
 # Changelog
 
+## [4.72.2] - Limpieza de Skills — 2026-08-24
+
+### Objetivo
+
+Reducir el ruido del ecosistema de skills: de 17 workflows en `.agents/workflows/` solo
+`phased_project_executor.md` tiene uso real y evolucion activa. Los 16 restantes estaban
+congelados desde 2026-04/05 y su funcionalidad o ya vive en codigo, o nunca paso de stub.
+Archivado (no eliminacion) para preservar historial y permitir restauracion.
+
+### Cambios
+
+- Movidos 16 archivos a `archives/deprecated_workflows_20260824/` via `git mv` (historial preservado):
+  - Familia v4_* (funcionalidad ya en codigo — `main.py v4complete`, `modules/orchestration_v4/`, `modules/financial_engine/`, `modules/quality_gates/`): `v4_complete.md`, `v4_asset_conditional.md`, `v4_financial_scenarios.md`, `v4_quality_validator.md`, `v4_regional_resolver.md`, `v4_regression_guardian.md`, `v4_regression_guardian.py` (cubierto por `tests/regression/` — 26 tests)
+  - Stubs sin uso (~1.5 KB c/u): `delivery_wizard.md`, `deployment_assistant.md`, `env_rerun.md`, `maintenance_autopilot.md`, `meta_skill_creator.md`, `monitor_bg.md`, `seo_technical.md`, `truth_protocol.md`, `watchdog_check.md`
+- Sin cambios de codigo: `agent_harness/skill_router.py` escanea el directorio dinamicamente; ningun modulo referencia los nombres archivados
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `archives/deprecated_workflows_20260824/README.md` | Motivo del archivado, inventario y procedimiento de restauracion |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `.agents/workflows/README.md` | Reescrito: index con unico skill activo (`phased_project_executor` v2.15.0) + puntero al archivo |
+| `AGENTS.md` | Tabla "Workflows Disponibles": 16 filas removidas, nota de limpieza agregada |
+| `INDICE_DOCUMENTACION.md` | Seccion "Skills Principales" actualizada (tabla tenia refs a skills ya inexistentes: `audit_guardian`, `qa_guardian`) |
+| `VERSION.yaml` | 4.72.1 → 4.72.2 + bloque de historial |
+
+### Tests
+
+- 0 tests nuevos (cambio documental/de estructura)
+- Validaciones: `run_all_validations.py --quick`, `validate_agent_ecosystem.py`, `validate_agents_md.py`, `validate_document_integration.py`
+- Suite completa sin impacto: 3,378 funciones; 0 regresiones
+
+---
+
 ## [4.72.1] - Coherencia Narrativa Dinámica — 2026-08-24
 
 ### Objetivo

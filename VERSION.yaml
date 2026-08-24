@@ -1,10 +1,21 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.72.1"
-codename: "Coherencia Narrativa Dinámica"
+version: "4.72.2"
+codename: "Limpieza de Skills"
 release_date: "2026-08-24"
 plan_maestro_version: "v2.6.0"
 
+# v4.72.2 - LIMPIEZA-DE-SKILLS (2026-08-24)
+# Archivado de 16 workflows sin uso en archives/deprecated_workflows_20260824/:
+# - Familia v4_* (6 .md + 1 .py): funcionalidad ya vive en codigo (main.py v4complete,
+#   modules/orchestration_v4/, financial_engine/, quality_gates/, tests/regression/)
+# - 9 stubs (~1.5 KB) sin evolucion desde 2026-04: delivery_wizard, deployment_assistant,
+#   env_rerun, maintenance_autopilot, meta_skill_creator, monitor_bg, seo_technical,
+#   truth_protocol, watchdog_check
+# Skill activo unico: phased_project_executor.md
+# Sincronizacion documental: AGENTS.md, workflows/README.md, INDICE_DOCUMENTACION.md, CHANGELOG
+# Sin cambios de codigo: skill_router escanea dinamicamente; 0 regresiones
+#
 # v4.72.1 - REFACTOR-COHERENCIA-NARRATIVA (2026-08-24)
 # FASE-R0-A: Quick Win Schema condicionado a whatsapp_conflict (B2)
 # FASE-R0-B: Seccion 4 fugas derivada del pain_ledger (B1) + titulo LAS {N} FUGAS dinamico (B4)

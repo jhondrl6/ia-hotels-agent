@@ -1,6 +1,6 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.72.1 (Coherencia Narrativa Dinámica)
+**Versión:** v4.72.2 (Limpieza de Skills)
 **Última actualización:** 2026-08-24
 
 ---
