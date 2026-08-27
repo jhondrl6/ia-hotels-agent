@@ -1774,8 +1774,11 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         # Fallback: intentar con la ruta por defecto
         _fallback_dir = Path("output/clientes")
         if _fallback_dir.exists() and any(_fallback_dir.glob("*_onboarding.yaml")):
-            logger.info(
-                f"Onboarding not found in {clientes_dir}, "
+            # FIX (prueba salentoreal 2026-08-27): logger no existe en main.py;
+            # NameError mataba el flujo cuando --output alternativo activaba
+            # este fallback (FASE-D S7). Se usa print, estilo del archivo.
+            print(
+                f"[INFO] Onboarding not found in {clientes_dir}, "
                 f"falling back to {_fallback_dir}"
             )
             _onboarding_source = _fallback_dir
@@ -2970,8 +2973,10 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 if _proposal_candidates:
                     _latest_proposal = max(_proposal_candidates, key=lambda p: p.stat().st_mtime)
                     if _latest_proposal.stat().st_mtime > _gates_mtime + 60:
-                        logger.warning(
-                            f"commercial_gates_report.json is stale: mtime={datetime.fromtimestamp(_gates_mtime).isoformat()} "
+                        # FIX (prueba salentoreal 2026-08-27): logger no existe
+                        # en main.py; NameError latente en ruta BLOCKED_BY_GATES.
+                        print(
+                            f"[WARN] commercial_gates_report.json is stale: mtime={datetime.fromtimestamp(_gates_mtime).isoformat()} "
                             f"vs proposal={_latest_proposal.stat().st_mtime}"
                         )
                 with open(_commercial_gates_path, "r", encoding="utf-8") as _cgf:
