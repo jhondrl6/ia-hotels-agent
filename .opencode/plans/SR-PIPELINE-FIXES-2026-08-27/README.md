@@ -1,6 +1,6 @@
 # SR-PIPELINE-FIXES-2026-08-27
 
-> **Fixes del pipeline v4complete tras la E2E de Hotel Salento Real** — unificación de la contabilidad promesa/matriz/gate, self-healing de claims, canonicalización de `target_id`, preflight `hotel_schema`, investigación de varianza y fixes de display comercial.
+> **Fixes del pipeline v4complete tras la E2E de Hotel Salento Real** — unificación de la contabilidad promesa/matriz/gate, self-healing de claims, canonicalización de `target_id`, fix de detección de schema + contabilización de presencia (revisión causa-raíz 2026-08-28), investigación de varianza y fixes de display comercial.
 >
 > **Versión**: v4.72.2 → **v4.73.0** · **Workflow**: phased_project_executor v2.16.0 · **1 fase por sesión**
 
@@ -8,11 +8,11 @@
 
 | Fase | Fixes/Contenido | Complejidad | Delegación | Estado | Sesión | Fecha |
 |------|-----------------|-------------|------------|--------|--------|-------|
-| FASE-SR-A | N1/rec#9 — Helper único `compute_unresolved()` + test estático guardián L-SR1 | Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
-| FASE-SR-B ⚠️ | rec#1 — Unificación promesa/matriz/gate (L-SR3, L-NC10) | **MÁXIMA** (§4 plan maestro) | ❌ DIRECTO (DT-3) | ⏳ Pendiente | — | — |
+| FASE-SR-A | N1/rec#9 — Helper único `compute_unresolved()` + test estático guardián L-SR1 | Media | ❌ DIRECTO | ✅ Completada | agente | 2026-08-28 |
+| FASE-SR-B ⚠️ | rec#1 — Unificación promesa/matriz/gate (L-SR3, L-NC10) | **MÁXIMA** (§4 plan maestro) | ❌ DIRECTO (DT-3) | ✅ Completada | agente | 2026-08-28 |
 | FASE-SR-C | rec#2 — Self-healing loop CG-CLAIM-VS-EVIDENCE (L-SR5) | Alta | ❌ DIRECTO | ⏳ Pendiente | — | — |
-| FASE-SR-D | rec#3/#10 — Canonicalización de `target_id` con `_normalize_url` (L-SR2, L16) | Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
-| FASE-SR-E | rec#4/#11 — Preflight `hotel_schema` desde fuentes disponibles (L-SR4, N4) | Media-Alta | ❌ DIRECTO | ⏳ Pendiente | — | — |
+| FASE-SR-D | rec#3/#10 — Canonicalización de `target_id` con `_normalize_url` + `generate_hotel_id` (L-SR2, L16) | Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
+| FASE-SR-E | rec#4/#11 (H7) — Fix falso negativo schema (JSON-LD array) + contabilización única `exists_with_issues` (revisión 2026-08-28) | Alta | ❌ DIRECTO | ⏳ Pendiente | — | — |
 | FASE-SR-F | rec#5/#6 — Investigación varianza plan de assets + PageSpeed (OPS) | Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
 | FASE-SR-G | rec#8 — Display: CG-TIER-CONSISTENCY (L30) + CG-TECH-JARGON (L27) | Baja-Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
 | FASE-SR-H | **ÚNICA ejecución v4complete Salento Real** (baseline + evidencia + smoke) | Media (ejecución) | ✅ DELEGABLE (subagente terminal) | ⏳ Pendiente | — | — |

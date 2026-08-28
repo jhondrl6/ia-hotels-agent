@@ -7,8 +7,8 @@
 | Fase | Estado | Fecha | Sesión | Iteraciones | delegate_task |
 |------|--------|-------|--------|-------------|---------------|
 | Preparación | ✅ COMPLETADA | 2026-08-27 | orquestación | ~20 | NO |
-| FASE-SR-A | ⏳ PENDIENTE | — | — | — | NO |
-| FASE-SR-B | ⏳ PENDIENTE | — | — | — | NO |
+| FASE-SR-A | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 1) | ~30 | NO |
+| FASE-SR-B | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 2) | ~35 | NO |
 | FASE-SR-C | ⏳ PENDIENTE | — | — | — | NO |
 | FASE-SR-D | ⏳ PENDIENTE | — | — | — | NO |
 | FASE-SR-E | ⏳ PENDIENTE | — | — | — | NO |
@@ -21,19 +21,19 @@
 ## Criterios por Fase (marcar ✅ al cerrar)
 
 ### FASE-SR-A — Helper compute_unresolved + guardián L-SR1
-- [ ] `AlignmentResult.compute_unresolved()` implementado y consumido por `publication_gates.py` y `delivery_quality_report.py`
-- [ ] Test estático AST guardián de `main.py` creado (logger = 0, py_compile OK)
-- [ ] Tests nuevos pasan (procesos aislados, salida a archivo); 0 regresiones en suites tocadas
-- [ ] `log_phase_completion.py --fase FASE-SR-A` ejecutado (SIN --release)
-- [ ] Documentación post-fase completa (09 + 10 + dependencias + README)
+- [x] `AlignmentResult.compute_unresolved()` implementado y consumido por `publication_gates.py` y `delivery_quality_report.py`
+- [x] Test estático AST guardián de `main.py` creado (logger = 0, py_compile OK)
+- [x] Tests nuevos pasan (procesos aislados, salida a archivo); 0 regresiones en suites tocadas
+- [x] `log_phase_completion.py --fase FASE-SR-A` ejecutado (SIN --release)
+- [x] Documentación post-fase completa (09 + 10 + dependencias + README)
 
 ### FASE-SR-B — Unificación promesa/matriz/gate
-- [ ] Propuesta deriva servicios prometidos del pain_ledger + present_in_production
-- [ ] Gate excluye NO_BREACH del denominador de coverage_ratio (reutiliza `actionable`)
-- [ ] Taxonomía única de estados compartida (sin criterios paralelos — L-NC10)
-- [ ] Tests de contrato propuesta↔matriz↔gate pasan
-- [ ] Fix B7 respetado (sin promesas sin pain/presencia)
-- [ ] `log_phase_completion.py --fase FASE-SR-B` (SIN --release) + docs post-fase
+- [x] Propuesta deriva servicios prometidos del pain_ledger + present_in_production
+- [x] Gate excluye NO_BREACH del denominador de coverage_ratio (reutiliza `actionable`)
+- [x] Taxonomía única de estados compartida (sin criterios paralelos — L-NC10)
+- [x] Tests de contrato propuesta↔matriz↔gate pasan
+- [x] Fix B7 respetado (sin promesas sin pain/presencia)
+- [x] `log_phase_completion.py --fase FASE-SR-B` (SIN --release) + docs post-fase → REGISTRY.md actualizado, audit sin gaps, evidence/FASE-SR-B/ (103 tests passed = 57 gates + 46 RC1)
 
 ### FASE-SR-C — Self-healing CG-CLAIM-VS-EVIDENCE
 - [ ] Loop de regeneración con `suggestion` del gate + re-validación implementado (máx. 1 reintento)
@@ -49,11 +49,13 @@
 - [ ] Tests anti-fragmentación (UTM ≡ limpia ≡ mismo id) pasan
 - [ ] `log_phase_completion.py --fase FASE-SR-D` (SIN --release) + docs post-fase
 
-### FASE-SR-E — Preflight hotel_schema
-- [ ] Confianza del asset calculada desde fuentes disponibles para construirlo (GBP/web), no desde presencia de la brecha
-- [ ] Preflight respeta `fallback` + `block_on_failure=False` del catálogo (contrato del catálogo gana)
-- [ ] Caso "0 schemas + GBP completo" → asset hotel_schema generado (test)
-- [ ] Caso sin GBP → sin invención (test)
+### FASE-SR-E — Falso negativo schema + contabilización única (rediseñada 2026-08-28)
+- [ ] Bug del parser reproducido con test rojo: JSON-LD formato ARRAY → AttributeError tragado → 0 schemas falsos
+- [ ] `rich_results_client` soporta arrays JSON-LD; bloque corrupto no invalida los demás
+- [ ] `SchemaAuditResult` propaga `error_message` (distinguir ausencia verificada de detección fallida)
+- [ ] Fixture real Salento Real (3 bloques) → ≥ 2 schemas Hotel detectados; pain `no_hotel_schema` no generado
+- [ ] `exists_with_issues` cuenta como `present_in_production` en alignment (contabilización única)
+- [ ] Ausencia genuina sin GBP → sin invención (test) + fallback catálogo residual D-PF3
 - [ ] `log_phase_completion.py --fase FASE-SR-E` (SIN --release) + docs post-fase
 
 ### FASE-SR-F — Varianza + PageSpeed OPS
@@ -72,7 +74,7 @@
 - [ ] Baseline corrida C copiado a `evidence/FASE-SR-H/baseline/` ANTES de la corrida
 - [ ] Corrida ejecutada (delegate_task o terminal bg con notify) con `--output output/salentoreal_final_v4c`
 - [ ] Evidencia proactiva copiada a `evidence/FASE-SR-H/` (OBLIGATORIO, antes de cualquier verificación)
-- [ ] Smoke 7/7 checks OK (readiness, gate PASSED, coherencia, hotel_schema, target_id, 01/02, G9)
+- [ ] Smoke 7/7 checks OK (readiness, gate PASSED, coherencia, hotel_schema cubierto por presencia, target_id, 01/02, G9)
 - [ ] `log_phase_completion.py --fase FASE-SR-H` (SIN --release) + docs post-fase
 
 ### FASE-SR-VERIFY — Certificación ACs

@@ -50,7 +50,7 @@ Usar EXACTAMENTE `https://www.hotelsalentoreal.com/` — sin UTM, sin fragmento,
 - [ ] Smoke de 7 checks, comparando contra baseline:
   1. Veredicto final READY_FOR_PUBLICATION (sin BLOCKED_BY_GATES)
   2. Coherence score ≥ 0.8
-  3. `promised_assets_exist` PASS (hotel_schema generado — AC6/AC7)
+  3. `promised_assets_exist` PASS — `hotel_schema` cubierto por PRESENCIA: el sitio tiene schemas reales (incl. array JSON-LD); el audit detecta ≥ 1 schema Hotel y el pain `no_hotel_schema` no aparece o queda resuelto por presencia (AC6/AC7 — NO se espera "asset generado"; generar sobre un schema existente sería el comportamiento incorrecto)
   4. Unresolved idéntico gate vs delivery (AC3)
   5. `01_DIAGNOSTICO_Y_OPORTUNIDAD.md` + `02_PROPUESTA_COMERCIAL.md` presentes (AC12)
   6. ZIP de entrega generado

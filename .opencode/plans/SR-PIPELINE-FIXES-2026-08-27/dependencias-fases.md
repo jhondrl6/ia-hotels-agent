@@ -16,7 +16,7 @@
                                                            ▼
                                                       ┌─────────┐
                                                       │ FASE-SR-E│
-                                                      │ preflight│
+                                                      │schema+pres│
                                                       └────┬────┘
                                                            ▼
                                                       ┌─────────┐
@@ -47,8 +47,8 @@
 | Fase | Estado | Sesión | Checkpoint |
 |------|--------|--------|------------|
 | Preparación | ✅ COMPLETADA | orquestación 2026-08-27 | 13 archivos del plan creados; 0 fases ejecutadas |
-| FASE-SR-A | ⏳ PENDIENTE | — | — |
-| FASE-SR-B | ⏳ PENDIENTE | — | — |
+| FASE-SR-A | ✅ COMPLETADA | agente 2026-08-28 | Helper `compute_unresolved()` + guardián AST L-SR1; 148 tests aislados PASSED (6 nuevos, 0 regresiones); greps residuos 0; quick 5/6 (Version Sync preexistente → RELEASE E2) |
+| FASE-SR-B | ✅ COMPLETADA | agente 2026-08-28 | D-PF1 implementada: promesa derivada de pain_ledger + present_in_production (RC1 ↔ matriz ↔ gate, fuente única); coverage sobre actionable 3/4=0.75 en corrida C (estado intermedio hasta SR-E); suite gates 57 PASSED (10 tests nuevos de contrato); 8 fallos preexistentes en test_proposal_dynamic certificados en HEAD (0 regresiones); greps residuos 0 ("sin costo (fallback)", conteos paralelos); quick 5/6 (Version Sync preexistente → RELEASE E2) |
 | FASE-SR-C | ⏳ PENDIENTE | — | — |
 | FASE-SR-D | ⏳ PENDIENTE | — | — |
 | FASE-SR-E | ⏳ PENDIENTE | — | — |
@@ -70,6 +70,10 @@
 | `modules/quality_gates/commercial_gate.py` | — | — | ✏️ ESCRIBE | — | — | — | ✏️ ESCRIBE | — | SR-C PRIMERO que SR-G |
 | `main.py` | — | — | (posible, flujo regeneración) | ✏️ ESCRIBE | — | — | — | — | SR-C PRIMERO que SR-D |
 | `modules/commercial_documents/pain_solution_mapper.py` | — | — | — | — | ✏️ ESCRIBE | ✏️ (fix mínimo) | — | — | SR-E PRIMERO que SR-F |
+| `modules/data_validation/external_apis/rich_results_client.py` | — | — | — | — | ✏️ ESCRIBE | — | — | — | fix parser JSON-LD array (H7, revisión 2026-08-28) |
+| `modules/auditors/v4_comprehensive.py` | — | — | — | — | ✏️ ESCRIBE | — | — | — | propagación error_message (H7) |
+| `modules/asset_generation/site_presence_checker.py` | — | — | — | — | ✏️ ESCRIBE | — | — | — | contabilización única exists_with_issues (H7) |
+| `modules/orchestration_v4/onboarding_controller.py` | — | — | — | ✏️ ESCRIBE | — | — | — | — | `generate_hotel_id` (añadido revisión 2026-08-28) |
 | `modules/asset_generation/asset_catalog.py` | — | — | — | — | 📖 LEE | — | — | — | contrato fallback (sin cambios) |
 | `agent_harness/memory.py` | — | — | — | 📖 LEE | — | — | — | — | solo lectura (find_latest) |
 | `config/settings.yaml` | — | — | — | — | — | 📖 LEE | — | — | PageSpeed key (sin tocar secretos) |

@@ -11,11 +11,11 @@
 
 | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
 |------|--------|--------|-------------|---------------|-------|
-| FASE-SR-A (helper unresolved) | Sesión 1 | ⏳ | — | NO (directo) | |
-| FASE-SR-B (unificación) ⚠️ | Sesión 2 | ⏳ | — | NO (DT-3) | |
+| FASE-SR-A (helper unresolved) | Sesión 1 | ✅ | ~30 | NO (directo) | Helper único + bucket no_breach + guardián AST L-SR1; 148 tests (6 nuevos), 0 regresiones; N1 cerrado a nivel de CONTEO (decisión de bloqueo → SR-B) |
+| FASE-SR-B (unificación) ⚠️ | Sesión 2 | ✅ | ~35 | NO (DT-3) | D-PF1: promesa derivada de pain_ledger + presencia (RC1↔matriz↔gate, fuente única); NO_BREACH fuera del coverage (3/4=0.75 corrida C, intermedio); 57 PASSED gates (10 contrato nuevos); 0 regresiones (8 preexistentes certificados en HEAD); greps residuos 0 |
 | FASE-SR-C (self-healing) | Sesión 3 | ⏳ | — | NO (directo) | |
 | FASE-SR-D (target_id) | Sesión 4 | ⏳ | — | NO (directo) | |
-| FASE-SR-E (preflight) | Sesión 5 | ⏳ | — | NO (directo) | |
+| FASE-SR-E (schema detect + presencia) | Sesión 5 | ⏳ | — | NO (directo) | |
 | FASE-SR-F (varianza+OPS) | Sesión 6 | ⏳ | — | NO (directo) | |
 | FASE-SR-G (display) | Sesión 7 | ⏳ | — | NO (directo) | |
 | FASE-SR-H (E2E Salento Real) | Sesión 8 | ⏳ | — | SÍ (v4complete) | |
@@ -35,8 +35,8 @@
 | AC3 | Unresolved idéntico en gate_report y delivery_quality_report | Mismo número `unresolved` en ambos reportes del MISMO run (fin del 4-vs-1) | ⏳ | ⏳ |
 | AC4 | Claims vs evidencia ciclan | 0 claims "no aparece" contradiendo GBP publicados (o BLOCKED real) | ⏳ | ⏳ |
 | AC5 | target_id canónico | target_id sin query string en log de corrida final; unit tests UTM≡limpia | ⏳ | ⏳ |
-| AC6 | hotel_schema generado | Asset generado vía fallback; no_hotel_schema = ASSET_GENERATED | ⏳ | ⏳ |
-| AC7 | Paradoja de coherencia resuelta | coherence_validation sin "Assets no implementados: hotel_schema"; score ≥ 0.8 | ⏳ | ⏳ |
+| AC6 | Detección schema correcta + contabilización única | Audit detecta schemas del sitio (fixture real ≥ 2 Hotel, incl. array JSON-LD); pain no_hotel_schema no generado; exists_with_issues = present_in_production | ⏳ | ⏳ |
+| AC7 | Coherencia resuelta (revisión 2026-08-28) | coherence_validation sin "Assets no implementados: hotel_schema"; score ≥ 0.8; ausencia genuina cubierta por fallback catálogo (D-PF3) | ⏳ | ⏳ |
 | AC8 | Varianza explicada | Informe con hipótesis verificada del 7→5 (o fix con test) | ⏳ | ⏳ |
 | AC9 | Display sincronizado | 0 WARNING CG-TIER-CONSISTENCY; jerga reducida vs baseline | ⏳ | ⏳ |
 | AC10 | 0 regresión financiera | Escenarios idénticos al baseline: $6.57M / $4.04M / $1.26M COP | ⏳ | ⏳ |
@@ -76,8 +76,8 @@
 
 | ID | Lección | Fase |
 |----|---------|------|
-| L-PF1 | (llenar al cerrar SR-A) | SR-A |
-| L-PF2 | (llenar al cerrar SR-B) | SR-B |
+| L-PF1 | QUÉ PASÓ: dos reportes del MISMO run reportaban unresolved distinto (4 vs 1). POR QUÉ: el DTO AlignmentResult tenía dos paths de construcción que re-derivaban "unresolved" con reglas distintas (len(report.missing) vs suma de estados) — el AlignmentReport pierde la taxonomía NO_BREACH. QUÉ LO PREVIENE: UN helper canónico (compute_unresolved) consumido por ambos reportes + el caller deriva la taxonomía con el MISMO builder que ya produce el artefacto (AssetAlignmentMatrix.build desde pain_ledger) + test de igualdad entre paths. Pertinencia: INCLUIR en memoria (patrón de unificación de conteo en DTOs multi-consumer). | SR-A |
+| L-PF2 | QUÉ PASÓ: el gate bloqueaba con coverage 3/7 mientras la propuesta mostraba solo 3 filas y la matriz marcaba 3 servicios como "sin costo" — tres contabilizaciones del mismo hecho desde dos fuentes distintas (catálogo estático del tier vs pain_ledger). POR QUÉ: la promesa provenía de un catálogo estático fosilizado que nadie reconciliaba con el pain_ledger (L-SR3/L-NC10); el gate contaba como missing servicios que la propia propuesta no prometía. QUÉ LO PREVIENE: UNA función derivadora única (comprometido = pain mapeado OR presencia `exists`) consumida por propuesta, matriz y gate + coverage_ratio sobre actionable (NO_BREACH fuera del denominador) + test de contrato de 3 capas contra pain_ledger real + fallback explícito al catálogo cuando no hay pain_ledger. Pertinencia: INCLUIR en memoria (fuente única de la promesa comercial entre capas de documentos y gating). | SR-B |
 | L-PF3 | (llenar al cerrar SR-C) | SR-C |
 | L-PF4 | (llenar al cerrar VERIFY) | VERIFY |
 
@@ -87,15 +87,16 @@
 
 | Tema | Estado | Acción futura |
 |------|--------|---------------|
-| Bloqueo estructural proposal_asset_alignment (3ª manifestación) | 🔴 → SR-B | FASE-SR-B |
+| Bloqueo estructural proposal_asset_alignment (3ª manifestación) | ✅ RESUELTO (SR-B, 2026-08-28) | Fuente única D-PF1 (pain_ledger + presencia) en RC1/matriz/gate; coverage sobre actionable; test de contrato permanente `tests/quality_gates/test_alignment_contract.py` |
 | Self-healing CG-CLAIM-VS-EVIDENCE | 🔴 → SR-C | FASE-SR-C |
 | target_id con query string / fragmentación memoria | 🔴 → SR-D | FASE-SR-D |
 | Preflight hotel_schema paradoja + fallback ignorado (N4) | 🔴 → SR-E | FASE-SR-E |
 | Varianza plan de assets entre corridas (7→5) | 💡 → SR-F | FASE-SR-F |
-| G9 divergente 4-vs-1 (N1) | 🔴 → SR-A | FASE-SR-A |
+| G9 divergente 4-vs-1 (N1) | ✅ RESUELTO (SR-A conteo + SR-B decisión, 2026-08-28) | Conteo unificado en `AlignmentResult.compute_unresolved` (gate + delivery); decisión de bloqueo unificada en SR-B (coverage sobre actionable desde el DTO canónico) |
 | CG-TIER-CONSISTENCY + CG-TECH-JARGON | 🔴 → SR-G | FASE-SR-G |
 | PageSpeed API key inválida | 💡 OPS → SR-F | Verificación de config en SR-F; ROTACIÓN DE LA KEY = decisión del usuario (no se tocan secretos en el plan) |
 | Gate de coherencia usa score agregado e ignora `is_coherent: false` del mismo archivo (CONTEXT §5) | 💡 FUERA DE ALCANCE | Evaluar en plan futuro; no bloquea este plan |
+| Ubicación de DOMAIN_PRIMER: dualidad `.agent/` vs `.agents/` (knowledge en singular; workflows canónico en plural + symlink; `FALLBACK_PATH` defensivo en doctor.py) | 💡 FUERA DE ALCANCE (SR-A, 2026-08-28) | Consolidar bajo `.agents/` en mini-plan propio futuro; costo estimado: doctor.py, log_phase_completion, CONTRIBUTING §5b, README, AGENTS.md, validadores (25+ refs); no bloquea este plan |
 | Fix H1 logger (main.py) | ✅ RESUELTO (d8e509d) | Guardián estático en SR-A cierra la clase |
 
 ---
@@ -119,7 +120,7 @@
 
 | ID | Decisión | Rationale | Alternativas rechazadas | Fase |
 |----|----------|-----------|-------------------------|------|
-| D-PF1 | UNA fuente de verdad del estado de servicio = pain_ledger + present_in_production (SitePresence); reutilizar el concepto `actionable` existente en `proposal_asset_alignment.py:783-789`; NO_BREACH fuera del denominador del gate Y de la tabla de compromiso de la propuesta | Nunca dos criterios en paralelo (L-NC10); el catálogo estático del tier ya demostró fosilización (L-SR3) | (a) Solo que el gate respete NO_BREACH sin tocar la propuesta — dejaría promesas vacías en el texto; (b) crear taxonomía nueva paralela — viola L-NC10 | SR-B |
+| D-PF1 | UNA fuente de verdad del estado de servicio = pain_ledger + present_in_production (SitePresence); reutilizar el concepto `actionable` existente en `proposal_asset_alignment.py:783-789`; NO_BREACH fuera del denominador del gate Y de la tabla de compromiso de la propuesta | Nunca dos criterios en paralelo (L-NC10); el catálogo estático del tier ya demostró fosilización (L-SR3) | (a) Solo que el gate respete NO_BREACH sin tocar la propuesta — dejaría promesas vacías en el texto; (b) crear taxonomía nueva paralela — viola L-NC10 | SR-B ✅ CONFIRMADA (2026-08-28, implementada tal cual; matices registrados en 09 §Notas: AEO no se renderiza bajo D-PF1 — dedup del mismo asset llms_txt; legacy sin pain_ledger intacto) |
 | D-PF2 | Self-healing CG-CLAIM-VS-EVIDENCE: máx. 1 regeneración con el `suggestion` del gate como restricción; si persiste → BLOCKED real (documentos retenidos, ZIP abortado) | Detectar sin ciclar deja pasar la erosión de credibilidad (L-SR5); el loop infinito es un anti-patrón de gates | (a) Regeneración ilimitada — riesgo de bucle; (b) solo WARNING — mantiene el statu quo | SR-C |
 | D-PF3 | Para brechas de ausencia ("no existe X"), la confianza del asset se calcula desde las fuentes disponibles para construir X (GBP/web); el preflight respeta `fallback` + `block_on_failure=False` del catálogo (contrato del catálogo gana — nunca ambos criterios, N4) | Separa "confianza en datos de entrada" de "confianza en implementación del asset" (L-SR4); el catálogo YA declara capacidad de fallback | (a) Eliminar el fallback del catálogo — dejaría el pain #1 estructuralmente irresoluble; (b) bajar el umbral 0.8 — enmascara el problema semántico | SR-E |
 | D-PF4 | Canonicalizar la URL al inicio de cada comando con `--url` usando el helper EXISTENTE `_normalize_url()` (L16: el gap está en el caller); URL original solo para scraping | Reutilización sobre código nuevo; el helper ya ignora protocolo/www/path/query | (a) Crear normalizador nuevo; (b) normalizar solo en memory.py — dejaría los call sites inconsistentes | SR-D |

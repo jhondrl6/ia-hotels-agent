@@ -868,7 +868,68 @@ class PublicationGatesOrchestrator:
 
         generated_assets = assessment.get("generated_assets", [])
         skipped_assets = assessment.get("skipped_assets", [])  # FASE-1B: assets ya verificados por conditional_generator
+
+        # FASE-2 (DT4-R2): site_presence_report is already canonical from the
+        # assessment (computed ONCE in main.py via normalize_site_presence).
+        # No fake reconstruction, no re-execution — use the snapshot as-is.
+        site_presence_report = assessment.get("site_presence_report")
+        hotel_url = assessment.get("hotel_url", "")
+        pain_ledger = assessment.get("pain_ledger") or []
+
+        # ====================================================================
+        # FASE-SR-B (D-PF1): fuente única de la promesa (L-SR3/L-NC10).
+        # Deriva semantic_entries + proposal_services del pain_ledger ANTES de
+        # verify_proposal_asset_alignment: el gate verifica EXACTAMENTE los
+        # servicios comprometidos (pain mapeado OR presencia ``exists``) que
+        # produce AssetAlignmentMatrix — la MISMA matriz que alimenta
+        # proposal_asset_matrix.json y delivery_quality_report. Sin
+        # pain_ledger: catálogo estático (comportamiento legacy pre-SR-B).
+        # Enrichment never blocks the gate: on failure, log and degrade.
+        # ====================================================================
+        matrix = None
+        semantic_entries = None
         proposal_services = assessment.get("proposal_services", ALL_PROMISED_SERVICES)
+        if pain_ledger:
+            try:
+                from modules.asset_generation.proposal_asset_alignment import (
+                    AssetAlignmentMatrix,
+                )
+                from modules.delivery.delivery_context import DeliveryContext
+
+                matrix = AssetAlignmentMatrix.build(
+                    delivery_context=DeliveryContext(),
+                    pain_ledger=pain_ledger,
+                    generated_assets=generated_assets,
+                )
+                semantic_entries = matrix.entries
+                # D-PF1: la promesa es el conjunto comprometido — no el
+                # catálogo estático ALL_PROMISED_SERVICES.
+                committed = matrix.committed_services(site_presence_report)
+                if committed:
+                    proposal_services = committed
+                else:
+                    # 0 servicios comprometidos → nada puede estar "missing"
+                    # (nada prometido sin pain ni presencia). PASS trivial
+                    # (never-block): sin deuda de entrega que verificar.
+                    trivial_result = AlignmentResult.from_asset_alignment_matrix(
+                        matrix, site_presence_report
+                    )
+                    return PublicationGateResult(
+                        gate_name=gate_name,
+                        passed=True,
+                        status=GateStatus.PASSED,
+                        value=1.0,
+                        message=trivial_result.message,
+                        suggestion="",
+                        details={"alignment": trivial_result.to_dict()},
+                    )
+            except Exception as e:
+                logger.warning(
+                    "FASE-SR-B: semantic matrix derivation failed — falling back "
+                    "to static catalog (ALL_PROMISED_SERVICES): %s", e,
+                )
+                matrix = None
+                semantic_entries = None
 
         # FASE-2: Extract asset status map (asset_type -> status) from assessment
         # Status values: NOT_READY, BLOCKED, skipped_existing, IMPLEMENT, DEPRECATED, etc.
@@ -884,12 +945,6 @@ class PublicationGatesOrchestrator:
         assessment_with_status = dict(assessment)
         assessment_with_status["_asset_status_map"] = asset_status_map
 
-        # FASE-2 (DT4-R2): site_presence_report is already canonical from the
-        # assessment (computed ONCE in main.py via normalize_site_presence).
-        # No fake reconstruction, no re-execution — use the snapshot as-is.
-        site_presence_report = assessment.get("site_presence_report")
-        hotel_url = assessment.get("hotel_url", "")
-
         report = verify_proposal_asset_alignment(
             proposal_services=proposal_services,
             generated_assets=generated_assets,
@@ -898,9 +953,18 @@ class PublicationGatesOrchestrator:
             audit_schema=assessment.get("audit_schema"),  # FASE-12B: coherence/divergence detection
         )
 
-        # FASE-4 (DT4-N5): Build canonical AlignmentResult for consistent
-        # reporting across publication gates and delivery quality report.
-        alignment_result = AlignmentResult.from_alignment_report(report)
+        # FASE-4 (DT4-N5) + FASE-SR-B (D-PF1): canonical AlignmentResult for
+        # consistent reporting across publication gates and delivery quality
+        # report. Con semantic_entries (derivadas ARRIBA, antes de verify) el
+        # resultado se computa desde las MISMAS entradas de matriz que consume
+        # delivery_quality_report (AC3: ambos reportes idénticos en el MISMO
+        # run) y coverage_ratio usa el denominador actionable (AC1). Sin
+        # pain_ledger: fallback delivery-verification (legacy pre-SR-B).
+        alignment_result = AlignmentResult.from_alignment_report(
+            report,
+            semantic_entries=semantic_entries,
+            site_presence_report=site_presence_report,
+        )
 
         # ========================================================================
         # FASE-2: P1 Blocking — verificar services cuya asset status es NOT_READY
@@ -1034,15 +1098,13 @@ class PublicationGatesOrchestrator:
         # ========================================================================
 
         if report.all_aligned:
-            # FASE-D: Count present_in_production as effectively aligned
-            present_count = len(report.present_in_production)
-            indeterminate_count = len(report.indeterminate)
-            total_checked = report.total_services + present_count
-            aligned_plus_present = len(report.aligned) + present_count
-            pct = aligned_plus_present / total_checked if total_checked > 0 else 0.0
-            message = f"All {total_checked} promised services have assets ({aligned_plus_present}/{total_checked} aligned, {present_count} already in production)"
+            # FASE-SR-B (D-PF1): value = coverage_ratio del AlignmentResult
+            # canónico (denominador actionable; NO_BREACH fuera del coverage) —
+            # sin conteos paralelos sobre las categorías del report (L-NC10).
+            message = alignment_result.message
             # FIX-5: Note indeterminate assets that couldn't be verified
-            if indeterminate_count > 0:
+            if report.indeterminate:
+                indeterminate_count = len(report.indeterminate)
                 indeterminate_names = [s.service_name for s in report.indeterminate]
                 message += f"; {indeterminate_count} unverified (SitePresenceChecker failed): {', '.join(indeterminate_names)}"
             return PublicationGateResult(
@@ -1050,7 +1112,7 @@ class PublicationGatesOrchestrator:
                 passed=True,
                 status=GateStatus.PASSED,
                 message=message,
-                value=pct,
+                value=alignment_result.coverage_ratio,
                 suggestion="",
                 details=_merge_report_with_alignment(report.to_dict(), alignment_result.to_dict()),
             )
@@ -1070,16 +1132,12 @@ class PublicationGatesOrchestrator:
 
         message = "; ".join(message_parts) if message_parts else f"{len(missing_names)} promised service(s) missing assets"
 
-        # FASE-2: Effective alignment includes present_in_production as "satisfied"
-        # A service present in production counts towards the alignment target.
-        total_services_with_presence = report.total_services + len(report.present_in_production)
-        aligned_plus_present = len(report.aligned) + len(report.present_in_production)
-        effective_alignment = (
-            aligned_plus_present / total_services_with_presence
-            if total_services_with_presence > 0 else 0.0
-        )
-        alignment = effective_alignment
-        missing_count = len(missing_names)
+        # FASE-SR-B (D-PF1): métricas desde el AlignmentResult canónico —
+        # coverage_ratio con denominador actionable (NO_BREACH fuera) y
+        # unresolved desde compute_unresolved — los MISMOS números que
+        # delivery_quality_report (AC3). Sin criterios paralelos (L-NC10).
+        alignment = alignment_result.coverage_ratio
+        missing_count = alignment_result.unresolved
 
         if alignment < 0.8:
             # BLOCKED: Less than 80% of promised services have assets or are present in production

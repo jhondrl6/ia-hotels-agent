@@ -47,7 +47,7 @@
 ### T3: Tests de contrato (L3 — contra fuente dinámica)
 **Criterios**:
 - [ ] Test de contrato: para un pain_ledger dado, propuesta ↔ matriz ↔ gate reportan estados idénticos por servicio
-- [ ] Test escenario corrida C (7 servicios: 2 LINKED, 1 present_in_production, 1 MISSING-con-pain, 3 NO_BREACH): sin fix SR-E, coverage sobre actionable = 3/4 (≥ 0.8 pasa el umbral solo tras SR-E generar hotel_schema — documentar el estado intermedio esperado)
+- [ ] Test escenario corrida C (7 servicios: 2 LINKED, 1 present_in_production, 1 MISSING-con-pain, 3 NO_BREACH): sin fix SR-E, coverage sobre actionable = 3/4 (0.75 < 0.80 — documentar el estado intermedio esperado). Tras SR-E (revisión 2026-08-28): el sitio SÍ tiene schema → el pain `no_hotel_schema` desaparece (detección corregida) o se resuelve por presencia (`exists_with_issues` cuenta como present_in_production) → actionable = 3, coverage = 3/3 = 1.0
 - [ ] Test anti-regresión B7: servicio sin pain ni presencia nunca aparece como comprometido
 - [ ] Tests de regresión de las suites tocadas (procesos aislados)
 

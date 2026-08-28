@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-08-24
+> **Ultima actualizacion:** 2026-08-28
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 438
+> **Total fases completadas:** 440
 
 ---
 
@@ -10298,6 +10298,51 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SR-A - 2026-08-28
+**Descripcion:** Helper AlignmentResult.compute_unresolved unificado + test estatico guardiano L-SR1
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/test_main_static_guards.py` | NUEVO | Test Main Static Guards |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/alignment_result.py` | Alignment Result |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `modules/quality_gates/delivery_quality_report.py` | Delivery Quality Report |
+
+### Validaciones
+- [x] Tests passing (148 (6 nuevos), 0 regresiones)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SR-B - 2026-08-28
+**Descripcion:** Unificacion promesa/matriz/gate: promesa derivada de pain_ledger + present_in_production; NO_BREACH fuera de coverage
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `modules/asset_generation/proposal_asset_alignment.py` | Proposal Asset Alignment |
+| `modules/quality_gates/publication_gates.py` | Publication Gates |
+| `modules/quality_gates/delivery_quality_report.py` | Delivery Quality Report |
+
+### Validaciones
+- [x] Tests passing (103)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

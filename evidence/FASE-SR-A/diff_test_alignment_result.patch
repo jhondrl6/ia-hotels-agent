@@ -1,0 +1,117 @@
+diff --git a/tests/quality_gates/test_alignment_result.py b/tests/quality_gates/test_alignment_result.py
+index ccbbe48..e556e3f 100644
+--- a/tests/quality_gates/test_alignment_result.py
++++ b/tests/quality_gates/test_alignment_result.py
+@@ -14,6 +14,8 @@ from modules.asset_generation.proposal_asset_alignment import (
+     AssetAlignmentMatrix,
+     ProposalAssetMatrixEntry,
+     ALL_PROMISED_SERVICES,
++    PROPOSAL_SERVICE_TO_ASSET,
++    verify_proposal_asset_alignment,
+ )
+ 
+ 
+@@ -284,3 +286,103 @@ class TestSemanticEquality:
+         assert d["effective_total"] == 7
+         assert "message" in d
+         assert "7/7" in d["message"]
++
++
++class TestCorridaCSemantics:
++    """FASE-SR-A (N1): ambos reportes producen el MISMO unresolved para el
++    escenario corrida C (Hotel Salento Real, 2026-08-27 18:30).
++
++    7 servicios prometidos: 2 LINKED (org_schema, faq_page), 1 MISSING con pain
++    (hotel_schema), 3 NO_BREACH "sin costo (fallback)" (SEO Local, WhatsApp,
++    Open Graph) y llms_txt (NO_BREACH en matriz) resuelto por SitePresence
++    (1 ya en producci├│n). Sem├íntica correcta: unresolved=1 ÔÇö solo el MISSING
++    con pain es "sin cubrir". Este test certifica el fin del 4-vs-1 (AC3).
++    """
++
++    # pain_ids REALES de PainSolutionMapper.PAIN_SOLUTION_MAP (fuente del
++    # contrato ÔÇö L3: tests contra fuente din├ímica, no valores inventados):
++    #   no_hotel_schema ÔåÆ hotel_schema ┬À no_org_schema ÔåÆ org_schema ┬À
++    #   no_faq_schema ÔåÆ faq_page
++    PAIN_LEDGER = [
++        {"pain_id": "no_hotel_schema"},
++        {"pain_id": "no_org_schema"},
++        {"pain_id": "no_faq_schema"},
++    ]
++    GENERATED_ASSETS = [
++        {"asset_type": "org_schema", "confidence_score": 0.9},
++        {"asset_type": "faq_page", "confidence_score": 0.85},
++    ]
++    # Snapshot can├│nico (misma forma que site_presence_adapter
++    # .normalize_site_presence: clave "results" + claves planas por asset-type).
++    SITE_PRESENCE = {
++        "results": {"llms_txt": {"status": "exists"}},
++        "llms_txt": {"status": "exists"},
++    }
++
++    def _semantic_entries(self):
++        """Misma derivaci├│n que usa el gate (cableado FASE-SR-A en
++        publication_gates): AssetAlignmentMatrix.build desde pain_ledger."""
++        from modules.delivery.delivery_context import DeliveryContext
++
++        matrix = AssetAlignmentMatrix.build(
++            delivery_context=DeliveryContext(),
++            pain_ledger=self.PAIN_LEDGER,
++            generated_assets=self.GENERATED_ASSETS,
++        )
++        return matrix.entries
++
++    def _gate_report(self):
++        """AlignmentReport real (mismo verify que consume el gate)."""
++        return verify_proposal_asset_alignment(
++            proposal_services=list(PROPOSAL_SERVICE_TO_ASSET.keys()),
++            generated_assets=self.GENERATED_ASSETS,
++            site_presence_report=self.SITE_PRESENCE,
++        )
++
++    def test_corrida_c_same_unresolved_both_paths(self):
++        """from_alignment_report y matriz+SitePresence ÔåÆ MISMO unresolved."""
++        from_report = AlignmentResult.from_alignment_report(
++            self._gate_report(),
++            semantic_entries=self._semantic_entries(),
++            site_presence_report=self.SITE_PRESENCE,
++        )
++        matrix = AssetAlignmentMatrix(entries=self._semantic_entries())
++        from_matrix = AlignmentResult.from_asset_alignment_matrix(
++            matrix, self.SITE_PRESENCE
++        )
++
++        # Fin del 4-vs-1: mismo n├║mero en ambos reportes del MISMO run
++        assert from_report.unresolved == from_matrix.unresolved == 1  # hotel_schema
++        assert from_report.generated_aligned == from_matrix.generated_aligned == 2
++        assert from_report.present_in_production == from_matrix.present_in_production == 1
++        assert from_report.no_breach == from_matrix.no_breach == 3
++        assert from_report.promised_services_total == from_matrix.promised_services_total == 7
++        assert from_report.coverage_ratio == pytest.approx(3 / 7)
++        assert from_matrix.coverage_ratio == pytest.approx(3 / 7)
++        assert from_report.passed is False
++        assert from_matrix.passed is False
++        # Mensaje G9 derivado del helper, coherente con unresolved y coverage (AC3)
++        assert from_report.message == from_matrix.message
++        assert "1 sin cubrir" in from_report.message
++        assert "3 sin brecha" in from_report.message
++
++    def test_no_breach_arithmetic_coherence(self):
++        """El mensaje es coherente con sus propios datos:
++        effective_total + unresolved + no_breach == promised_services_total."""
++        result = AlignmentResult.from_alignment_report(
++            self._gate_report(),
++            semantic_entries=self._semantic_entries(),
++            site_presence_report=self.SITE_PRESENCE,
++        )
++        assert (
++            result.effective_total + result.unresolved + result.no_breach
++            == result.promised_services_total
++        )
++
++    def test_legacy_path_without_semantic_entries_counts_missing(self):
++        """Sin semantic_entries (pain_ledger ausente), el fallback cuenta
++        report.missing v├¡a el MISMO helper ÔÇö sin conteos paralelos."""
++        result = AlignmentResult.from_alignment_report(self._gate_report())
++        # report.missing = SEO Local, WhatsApp, hotel_schema, Open Graph = 4
++        assert result.unresolved == 4
++        assert result.no_breach == 0  # taxonom├¡a pain-driven no conocible aqu├¡

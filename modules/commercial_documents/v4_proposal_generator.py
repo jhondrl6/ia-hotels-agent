@@ -582,6 +582,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
             site_presence_report=site_presence_report,
             financial_breakdown=financial_breakdown,
             opportunity_scores=opportunity_scores,  # RC1 FASE-B
+            pain_ledger=pain_ledger,  # FASE-SR-B (D-PF1): fuente única de la promesa
         )
         
         # Render template
@@ -719,6 +720,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         site_presence_report: Optional[Any] = None,  # FASE-D: SitePresenceReport for production presence
         financial_breakdown: Optional[Any] = None,  # FASE-PROP-F: For precision_tier extraction
         opportunity_scores: Optional[List[Dict[str, Any]]] = None,  # RC1 FASE-B: brechas vivas del run
+        pain_ledger: Optional[List[Any]] = None,  # FASE-SR-B (D-PF1): fuente única de la promesa
     ) -> Dict[str, str]:
         """Prepare data for template rendering."""
         
@@ -1052,6 +1054,9 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
             site_presence_report=site_presence_report,
             whatsapp_conflict=whatsapp_conflict,  # FASE-C CROSS-4
             opportunity_scores=opportunity_scores,  # RC1 FASE-B
+            committed_services=self._derive_committed_services(
+                pain_ledger, site_presence_report, assets_generated
+            ),  # FASE-SR-B (D-PF1): fuente única de la promesa
         ),
         'asset_quality_table': self._generate_asset_quality_table(
             assets_generated,
@@ -1164,6 +1169,48 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
 """
  
 
+    def _derive_committed_services(
+        self,
+        pain_ledger: Optional[List[Any]],
+        site_presence_report: Optional[Any],
+        assets_generated: Optional[List[Dict[str, Any]]],
+    ) -> Optional[List[str]]:
+        """FASE-SR-B (D-PF1): servicios comprometidos desde la fuente única.
+
+        Delega en ``derive_committed_services`` (pain mapeado OR presencia
+        ``exists``) — la MISMA matriz canónica que consumen el gate
+        (publication_gates) y delivery_quality_report. Un servicio sin pain ni
+        presencia NO se promete: pasa al footnote "Servicios adicionales"
+        (respetando el fix B7/D-NC7).
+
+        Returns:
+            Lista de service_name comprometidos, o None si no hay pain_ledger
+            (modo legacy: catálogo estático, filtro has_asset/is_present) o si
+            la derivación falla (never-block).
+        """
+        if not pain_ledger:
+            return None
+        try:
+            from modules.asset_generation.proposal_asset_alignment import (
+                derive_committed_services,
+            )
+            committed = derive_committed_services(
+                pain_ledger=pain_ledger,
+                site_presence_report=site_presence_report,
+                generated_assets=assets_generated,
+            )
+            logger.info(
+                f"[RC1][D-PF1] Servicios comprometidos (fuente única pain_ledger "
+                f"+ presencia): {committed}"
+            )
+            return committed
+        except Exception as e:
+            logger.warning(
+                f"[RC1][D-PF1] Derivación de servicios comprometidos falló — "
+                f"tabla en modo legacy (catálogo estático): {e}"
+            )
+            return None
+
     def _build_dynamic_breach_map(
         self,
         opportunity_scores: Optional[List[Dict[str, Any]]],
@@ -1186,7 +1233,8 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         if not opportunity_scores:
             logger.warning(
                 "[RC1] opportunity_scores no disponibles — tabla de servicios "
-                "sin costos de brecha (fallback sin cifras inventadas)"
+                "sin costos de brecha (sin cifras inventadas; no se compromete "
+                "costo alguno)"
             )
             return result
 
@@ -1245,7 +1293,8 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             if not present:
                 logger.warning(
                     f"[RC1] {asset_type}: ninguna brecha candidata {candidates} "
-                    f"presente en opportunity_scores — sin costo (fallback)"
+                    f"presente en opportunity_scores — brecha sin costo atribuible "
+                    f"(sin cifras inventadas)"
                 )
                 continue
             # Desempate multi-brecha: la de mejor rank en el run actual
@@ -1267,6 +1316,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         site_presence_report: Optional[Any] = None,
         whatsapp_conflict: bool = False,  # FASE-C CROSS-4: muestra conflicto
         opportunity_scores: Optional[List[Dict[str, Any]]] = None,  # RC1 FASE-B
+        committed_services: Optional[List[str]] = None,  # FASE-SR-B (D-PF1)
     ) -> str:
         """Genera tabla principal de servicios mostrando TODOS los servicios prometidos.
 
@@ -1292,6 +1342,12 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             opportunity_scores: Entries de opportunity_scores del run actual
                 (brecha_id, rank, estimated_monthly_cop, brecha_name). Si None,
                 la tabla se renderiza sin costos (fallback explícito).
+            committed_services: FASE-SR-B (D-PF1) — servicios comprometidos
+                según la fuente única (pain mapeado OR presencia ``exists``).
+                Cuando no es None (hay pain_ledger), SOLO estos servicios se
+                muestran como filas: el resto pasa al footnote "Servicios
+                adicionales disponibles" sin compromiso (B7 intacto). None =
+                modo legacy (sin pain_ledger): filtro has_asset/is_present.
 
         Returns:
             String markdown con la tabla de servicios (8 filas + header).
@@ -1347,6 +1403,12 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                     logger.warning(f"[AssetSemantics] BLOCKED in services_table: {asset_type} → {pain_id}")
                     continue  # skip this row — asset cant solve this pain
 
+            # FASE-SR-B (D-PF1): sin compromiso no hay fila — tampoco la fila
+            # de auditoría (la fuente única decide la promesa, no el catálogo).
+            if committed_services is not None and service_name not in committed_services:
+                excluded_services.append(service_name)
+                continue
+
             # FASE-C CROSS-4: WhatsApp conflict → override estado
             if asset_type == "whatsapp_button" and whatsapp_conflict:
                 estado = "📋 Auditoría incluida"
@@ -1364,7 +1426,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 else:
                     logger.warning(
                         "[RC1] whatsapp_conflict sin brecha en opportunity_scores — "
-                        "sin rank/costo (fallback sin cifras inventadas)"
+                        "sin rank/costo atribuible (sin cifras inventadas)"
                     )
                     brecha_col = "Conflicto de WhatsApp (—)"
                 desc = "Auditoría y Optimización de Conversión"
@@ -1373,9 +1435,14 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
 
             # FASE-3 ASSET-ALIGNMENT-ZIONE: Conditional — only show services
             # with a generated asset OR marked as present_in_production
+            # FASE-SR-B (D-PF1): bajo fuente única la decisión de fila ya se
+            # tomó arriba (service_name in committed_services) — un servicio
+            # comprometido sin asset ni presencia se muestra como Pendiente
+            # (coherente con el gate: MISSING_ASSET cuenta en coverage). El
+            # filtro has_asset/is_present aplica SOLO en modo legacy.
             has_asset = confidence is not None
             is_present = presence.get('presence_verified') and presence.get('present_in_production')
-            if not has_asset and not is_present:
+            if committed_services is None and not has_asset and not is_present:
                 excluded_services.append(service_name)
                 continue
 
@@ -1425,7 +1492,21 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             rows.append(f"| **{service_name}** | {estado} | {confianza_col} | {brecha_col} | {desc} |")
 
         # FASE-E: AEO conditional service — unified threshold with technical assets table
-        if score_aeo is not None and score_aeo < 30:
+        # FASE-SR-B (D-PF1): bajo fuente única el servicio AEO no es
+        # comprometible (no está en la matriz pain→asset) y su asset
+        # (llms_txt) ya se renderiza como fila propia si está comprometido —
+        # añadir la fila duplicaría la promesa del mismo asset. Solo el modo
+        # legacy (sin pain_ledger) muestra la fila condicional.
+        aeo_dpf1_skip = (
+            score_aeo is not None and score_aeo < 30 and committed_services is not None
+        )
+        if aeo_dpf1_skip:
+            logger.info(
+                "[RC1][D-PF1] Fila AEO omitida: servicio no comprometido por la "
+                "fuente única (pain/presencia); su asset ya se representa con su "
+                "servicio principal si aplica"
+            )
+        if score_aeo is not None and score_aeo < 30 and not aeo_dpf1_skip:
             aeo_entry = SERVICE_CATALOG.get("optimizacion_ia_generativa")
             if aeo_entry:
                 aeo_asset_type = aeo_entry.asset_type
@@ -1469,6 +1550,9 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         )
 
         # FASE-3 ASSET-ALIGNMENT-ZIONE: Footnote listing excluded services
+        # FASE-SR-B (D-PF1): bajo fuente única los excluidos son servicios SIN
+        # pain ni presencia → "disponibles SIN compromiso" (fuera del coverage
+        # del gate). Filtro B7 intacto (WhatsApp sin brecha no se lista).
         if excluded_services:
             if whatsapp_sin_brecha:
                 filtered = [s for s in excluded_services if s != whatsapp_service_name]
@@ -1476,7 +1560,12 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 filtered = list(excluded_services)
             if filtered:
                 excluded_names = ", ".join(filtered)
-                rows.append(f"\n> **Servicios adicionales disponibles:** {excluded_names}")
+                suffix = (
+                    " — disponibles sin compromiso (fuera del coverage)"
+                    if committed_services is not None
+                    else ""
+                )
+                rows.append(f"\n> **Servicios adicionales disponibles:** {excluded_names}{suffix}")
 
         return "\n".join(rows)
 

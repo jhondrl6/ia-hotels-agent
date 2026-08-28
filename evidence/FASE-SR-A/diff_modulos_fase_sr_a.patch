@@ -1,0 +1,296 @@
+diff --git a/modules/quality_gates/alignment_result.py b/modules/quality_gates/alignment_result.py
+index d26284c..d32dc13 100644
+--- a/modules/quality_gates/alignment_result.py
++++ b/modules/quality_gates/alignment_result.py
+@@ -12,10 +12,34 @@ different totals:
+ 
+ AlignmentResult makes the breakdown explicit: how many were generated, how
+ many already exist in production, and how many are truly unresolved.
++
++FASE-SR-A (N1): "truly unresolved" is computed in exactly one place ÔÇö
++AlignmentResult.compute_unresolved() ÔÇö consumed by both reports. The
++NO_BREACH bucket ("sin costo (fallback)") is neither covered nor unresolved
++and is disclosed separately via ``no_breach`` so the message stays coherent
++with ``coverage_ratio`` (fixes gate_report unresolved=4 vs delivery=1 in the
++same run).
+ """
+ 
+ from dataclasses import dataclass, field
+-from typing import Any, Dict, List, Optional
++from typing import Any, Dict, Iterable, List, Optional, Tuple
++
++# FASE-SR-A (N1): statuses that count as "sin cubrir" (unresolved). Single rule
++# shared by gate_report (from_alignment_report) and delivery_quality_report
++# (from_asset_alignment_matrix) via AlignmentResult.compute_unresolved().
++# NO_BREACH ("sin costo (fallback)") and presence-resolved entries are NOT
++# unresolved ÔÇö same semantics as AssetAlignmentMatrix.is_delivery_ready().
++UNRESOLVED_STATUSES = ("MISSING_ASSET", "GENERIC_DRAFT")
++
++
++def _presence_resolved(
++    site_presence_report: Optional[Dict[str, Any]], asset_type: str
++) -> bool:
++    """True when the normalized SitePresence snapshot reports the asset exists."""
++    if not site_presence_report:
++        return False
++    presence = site_presence_report.get(asset_type, {})
++    return isinstance(presence, dict) and presence.get("status") == "exists"
+ 
+ 
+ @dataclass
+@@ -29,6 +53,9 @@ class AlignmentResult:
+         unresolved: Services with no asset generated and not present in production (e.g., 0)
+         coverage_ratio: Proportion covered (generated + present) / promised (e.g., 1.0)
+         present_assets: Human-readable names of assets already in production
++        no_breach: Services declared "sin costo (fallback)" (NO_BREACH) ÔÇö neither
++            covered nor unresolved; disclosed so the message stays coherent with
++            coverage_ratio (FASE-SR-A)
+     """
+ 
+     promised_services_total: int
+@@ -37,6 +64,9 @@ class AlignmentResult:
+     unresolved: int
+     coverage_ratio: float
+     present_assets: List[str] = field(default_factory=list)
++    # FASE-SR-A (N1): NO_BREACH services are neither covered nor unresolved;
++    # effective_total + unresolved + no_breach == promised_services_total.
++    no_breach: int = 0
+ 
+     @property
+     def passed(self) -> bool:
+@@ -58,6 +88,8 @@ class AlignmentResult:
+         parts.append(")")
+         if self.unresolved > 0:
+             parts.append(f" ÔÇö {self.unresolved} sin cubrir")
++        if self.no_breach > 0:
++            parts.append(f" ÔÇö {self.no_breach} sin brecha (no comprometidos)")
+         return " ".join(parts)
+ 
+     def to_dict(self) -> Dict[str, Any]:
+@@ -69,24 +101,110 @@ class AlignmentResult:
+             "unresolved": self.unresolved,
+             "coverage_ratio": self.coverage_ratio,
+             "present_assets": self.present_assets,
++            "no_breach": self.no_breach,
+             "passed": self.passed,
+             "effective_total": self.effective_total,
+             "message": self.message,
+         }
+ 
+     @classmethod
+-    def from_alignment_report(cls, report: Any) -> "AlignmentResult":
++    def compute_unresolved(
++        cls,
++        entries: Iterable[Any],
++        site_presence_report: Optional[Dict[str, Any]] = None,
++    ) -> int:
++        """FASE-SR-A (N1): the single computation of "sin cubrir" (unresolved).
++
++        Both reports ÔÇö gate_report (from_alignment_report) and
++        delivery_quality_report (from_asset_alignment_matrix) ÔÇö MUST count
++        unresolved through this helper. No parallel sums allowed (L-NC10).
++
++        Rule (matrix + SitePresence semantics, matches
++        AssetAlignmentMatrix.is_delivery_ready()):
++        - Only actionable failures count: MISSING_ASSET / GENERIC_DRAFT.
++        - NO_BREACH ("sin costo (fallback)") is a non-committed service, not
++          an uncovered one.
++        - An entry whose asset already exists on the live site (SitePresence
++          cross-reference) is covered, not unresolved.
++
++        Args:
++            entries: iterable of matrix-like entries exposing ``.status`` and
++                ``.asset_type`` (ProposalAssetMatrixEntry) ÔÇö or plain
++                ``(status, asset_type)`` tuples.
++            site_presence_report: normalized SitePresence snapshot
++                (from site_presence_adapter.normalize_site_presence()).
++
++        Returns:
++            Number of truly unresolved (sin cubrir) services.
++        """
++        unresolved = 0
++        for entry in entries:
++            status, asset_type = cls._entry_status_and_asset(entry)
++            if status not in UNRESOLVED_STATUSES:
++                continue
++            if _presence_resolved(site_presence_report, asset_type):
++                continue
++            unresolved += 1
++        return unresolved
++
++    @staticmethod
++    def _entry_status_and_asset(entry: Any) -> Tuple[str, str]:
++        """Accept matrix-like entries or (status, asset_type) tuples."""
++        if isinstance(entry, tuple) and len(entry) == 2:
++            return entry[0], entry[1]
++        return getattr(entry, "status", ""), getattr(entry, "asset_type", "")
++
++    @classmethod
++    def from_alignment_report(
++        cls,
++        report: Any,
++        semantic_entries: Optional[List[Any]] = None,
++        site_presence_report: Optional[Dict[str, Any]] = None,
++    ) -> "AlignmentResult":
+         """Build AlignmentResult from an AlignmentReport (used by publication gates).
+ 
+         Args:
+             report: AlignmentReport instance from verify_proposal_asset_alignment()
++            semantic_entries: FASE-SR-A (N1) ÔÇö optional pain-driven matrix entries
++                (AssetAlignmentMatrix.build() output) carrying the NO_BREACH
++                taxonomy the delivery-verification report cannot know. When
++                provided, unresolved is computed by compute_unresolved() from
++                these entries (same basis as delivery_quality_report); otherwise
++                it is derived from the report categories alone (legacy
++                delivery-verification semantics).
++            site_presence_report: normalized SitePresence snapshot, used with
++                semantic_entries for the presence cross-reference.
+         """
+         generated = len(report.aligned)
+         present = len(report.present_in_production)
+-        unresolved_count = len(report.missing)
+         # total services includes present_in_production as they are part of the promise
+         total = report.total_services + present
+ 
++        if semantic_entries is not None:
++            # FASE-SR-A: unified counting ÔÇö same helper as delivery report
++            unresolved_count = cls.compute_unresolved(semantic_entries, site_presence_report)
++            no_breach_count = sum(
++                1 for e in semantic_entries
++                if getattr(e, "status", "") == "NO_BREACH"
++                and not _presence_resolved(site_presence_report, getattr(e, "asset_type", ""))
++            )
++        else:
++            # Legacy fallback: derive semantic states from the report categories
++            # and count through the SAME helper (no parallel sums). low_quality
++            # assets are generated (delivered) ÔÇö they map to LINKED here, exactly
++            # as they were never counted as missing before FASE-SR-A.
++            derived: List[Tuple[str, str]] = [
++                ("LINKED", s.asset_type) for s in report.aligned
++            ]
++            derived += [("LINKED", s.asset_type) for s in report.low_quality]
++            derived += [("MISSING_ASSET", s.asset_type) for s in report.missing]
++            derived += [
++                ("PRESENT_IN_PRODUCTION", s.asset_type)
++                for s in report.present_in_production
++            ]
++            unresolved_count = cls.compute_unresolved(derived)
++            no_breach_count = 0  # NO_BREACH is pain-driven ÔÇö not knowable here
++
+         return cls(
+             promised_services_total=total,
+             generated_aligned=generated,
+@@ -94,6 +212,7 @@ class AlignmentResult:
+             unresolved=unresolved_count,
+             coverage_ratio=(generated + present) / total if total > 0 else 0.0,
+             present_assets=[s.service_name for s in report.present_in_production],
++            no_breach=no_breach_count,
+         )
+ 
+     @classmethod
+@@ -125,25 +244,19 @@ class AlignmentResult:
+             if e.status == "PRESENT_IN_PRODUCTION":
+                 present += 1
+                 present_assets.append(e.service_name)
+-            elif site_presence_report and e.status in ("NO_BREACH", "MISSING_ASSET"):
+-                presence = site_presence_report.get(e.asset_type, {})
+-                if isinstance(presence, dict) and presence.get("status") == "exists":
+-                    present += 1
+-                    present_assets.append(e.service_name)
+-
+-        unresolved_count = sum(
+-            1 for e in entries if e.status in ("MISSING_ASSET", "GENERIC_DRAFT")
++            elif e.status in ("NO_BREACH", "MISSING_ASSET") and _presence_resolved(
++                site_presence_report, e.asset_type
++            ):
++                present += 1
++                present_assets.append(e.service_name)
++
++        # FASE-SR-A (N1): unified counting ÔÇö single helper shared with the gate
++        unresolved_count = cls.compute_unresolved(entries, site_presence_report)
++        no_breach_count = sum(
++            1 for e in entries
++            if e.status == "NO_BREACH"
++            and not _presence_resolved(site_presence_report, e.asset_type)
+         )
+-        # Subtract entries resolved by SitePresence cross-reference
+-        if site_presence_report:
+-            unresolved_count = sum(
+-                1 for e in entries
+-                if e.status in ("MISSING_ASSET", "GENERIC_DRAFT")
+-                and not (
+-                    isinstance(site_presence_report.get(e.asset_type, {}), dict)
+-                    and site_presence_report[e.asset_type].get("status") == "exists"
+-                )
+-            )
+ 
+         return cls(
+             promised_services_total=total,
+@@ -152,4 +265,5 @@ class AlignmentResult:
+             unresolved=unresolved_count,
+             coverage_ratio=(generated + present) / total if total > 0 else 0.0,
+             present_assets=present_assets,
++            no_breach=no_breach_count,
+         )
+diff --git a/modules/quality_gates/delivery_quality_report.py b/modules/quality_gates/delivery_quality_report.py
+index c21a774..9353993 100644
+--- a/modules/quality_gates/delivery_quality_report.py
++++ b/modules/quality_gates/delivery_quality_report.py
+@@ -232,6 +232,10 @@ class DeliveryQualityReportGenerator:
+             # DT4-N8: Use AlignmentResult with SitePresence cross-reference
+             # instead of raw matrix.is_delivery_ready() ÔÇö the matrix JSON
+             # predates runtime enrichment and never has PRESENT_IN_PRODUCTION.
++            # FASE-SR-A (N1): unresolved is counted by the single helper
++            # AlignmentResult.compute_unresolved() ÔÇö the same one the gate
++            # (publication_gates) consumes via from_alignment_report, ending
++            # the 4-vs-1 divergence within a single run.
+             alignment = AlignmentResult.from_asset_alignment_matrix(
+                 matrix, site_presence_report
+             )
+diff --git a/modules/quality_gates/publication_gates.py b/modules/quality_gates/publication_gates.py
+index 5cfafd2..d39b4b6 100644
+--- a/modules/quality_gates/publication_gates.py
++++ b/modules/quality_gates/publication_gates.py
+@@ -900,7 +900,41 @@ class PublicationGatesOrchestrator:
+ 
+         # FASE-4 (DT4-N5): Build canonical AlignmentResult for consistent
+         # reporting across publication gates and delivery quality report.
+-        alignment_result = AlignmentResult.from_alignment_report(report)
++        #
++        # FASE-SR-A (N1): unify the "unresolved" count with delivery_quality_report.
++        # The gate derives the pain-driven matrix states (LINKED / MISSING_ASSET /
++        # NO_BREACH) from the pain_ledger using the SAME builder that produces
++        # proposal_asset_matrix.json (single taxonomy ÔÇö L-NC10/L-SR3), so both
++        # reports count unresolved via AlignmentResult.compute_unresolved().
++        # Without a pain_ledger the report falls back to its
++        # delivery-verification semantics (legacy). Enrichment must never block
++        # the gate: on failure, log and degrade to the fallback count.
++        semantic_entries = None
++        pain_ledger = assessment.get("pain_ledger") or []
++        if pain_ledger:
++            try:
++                from modules.asset_generation.proposal_asset_alignment import (
++                    AssetAlignmentMatrix,
++                )
++                from modules.delivery.delivery_context import DeliveryContext
++
++                semantic_entries = AssetAlignmentMatrix.build(
++                    delivery_context=DeliveryContext(),
++                    pain_ledger=pain_ledger,
++                    generated_assets=generated_assets,
++                ).entries
++            except Exception as e:
++                logger.warning(
++                    "FASE-SR-A: semantic matrix derivation failed ÔÇö falling back "
++                    "to delivery-verification-only unresolved count: %s", e,
++                )
++                semantic_entries = None
++
++        alignment_result = AlignmentResult.from_alignment_report(
++            report,
++            semantic_entries=semantic_entries,
++            site_presence_report=site_presence_report,
++        )
+ 
+         # ========================================================================
+         # FASE-2: P1 Blocking ÔÇö verificar services cuya asset status es NOT_READY

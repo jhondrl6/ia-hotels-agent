@@ -1,0 +1,1689 @@
+diff --git a/.agent/knowledge/DOMAIN_PRIMER.md b/.agent/knowledge/DOMAIN_PRIMER.md
+index 168632c..513efa4 100644
+--- a/.agent/knowledge/DOMAIN_PRIMER.md
++++ b/.agent/knowledge/DOMAIN_PRIMER.md
+@@ -81,6 +81,6 @@
+ 
+ ---
+ 
+-*Auto-generado: 2026-08-24 | v4.72.2 Limpieza de Skills*
++*Auto-generado: 2026-08-28 | v4.72.2 Limpieza de Skills*
+ *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
+ *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
+diff --git a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/01-plan-maestro.md b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/01-plan-maestro.md
+index 3b45ecf..93dad27 100644
+--- a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/01-plan-maestro.md
++++ b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/01-plan-maestro.md
+@@ -4,6 +4,7 @@
+ **Fecha de concepción**: 2026-08-27
+ **Versión base**: v4.72.2 → **Versión objetivo**: v4.73.0 (minor — cambios funcionales en gates/propuesta/preflight)
+ **Fuente de contexto**: `.opencode/context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md` (6 hallazgos + N1–N4, re-validados 6/6 contra código vivo el 2026-08-27)
++**Revisión causa-raíz**: 2026-08-28 — bucle de verificación contra código vivo, artefactos de corrida C y sitio vivo; H4/N4 RECLASIFICADOS (premisa original falsa), hallazgo H7 añadido, FASE-SR-E rediseñada (ver §1 y prompt SR-E)
+ **Lecciones fuente**: `.opencode/plans/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/10-analisis-post-implementacion.md` (L-NC1–L-NC12) + lecciones nuevas L-SR1–L-SR5 del contexto
+ **Workflow rector**: `.agents/workflows/phased_project_executor.md` v2.16.0
+ **Reglas mandatorias**: R1 (1 fase por sesión) · R2 (máx. 60 iteraciones por fase) · R3 (scope de fase)
+@@ -19,7 +20,8 @@ La prueba E2E de `v4complete` sobre Hotel Salento Real (https://www.hotelsalento
+ | H1 ✅ | NameError `logger` en main.py (rama FASE-D S7) — YA CORREGIDO y comiteado (d8e509d) | main.py (~1777, ~2976) | — (solo guardián estático) |
+ | H2/N3 | `target_id` de memoria se construye desde URL raw → UTM fragmenta la memoria | main.py:3248/3394/3460, helper `_normalize_url()` en main.py:3542 | #3/#10 |
+ | H3 | Bloqueo estructural `proposal_asset_alignment` (3ª manifestación): propuesta promete del catálogo estático, matriz registra NO_BREACH, gate cuenta `missing` — 3 contabilizaciones del mismo hecho | `v4_proposal_generator.py` (L1248 "sin costo (fallback)"), `proposal_asset_alignment.py`, `publication_gates.py:862-903` | #1 |
+-| H4/N4 | Paradoja del preflight `hotel_schema`: el pain #1 no puede generar su asset porque la evidencia del problema (0 schemas) degrada la confianza a 0.00 < 0.8; el catálogo declara `fallback="generate_basic_schema"` + `block_on_failure=False` que el preflight ignora | `pain_solution_mapper.py:889`, `asset_catalog.py:98`, `coherence_validator.py:543/611` | #4/#11 |
++| H4/N4 ⚠️ RECLASIFICADO (2026-08-28) | La "paradoja de confianza" (`pain_solution_mapper.py:889`, "0.00 < 0.8") solo afecta el DISPLAY del plan (`main.py:2411`); el orquestador regenera specs con `can_generate=True` (`v4_asset_orchestrator._solutions_to_asset_specs` ~L712-722). La generación fue detenida por el gate SitePresence (`exists_with_issues` → skip, `conditional_generator.py:110-127`), NO por el preflight. El mecanismo de la premisa original es falso → ver H7 | `conditional_generator.py`, `v4_asset_orchestrator.py` | #4/#11 (vía H7) |
++| **H7** (causa raíz real de #4/#11) | **Falso negativo del audit + doble contabilidad**: el sitio SÍ tiene 2 schemas Hotel (uno en JSON-LD formato ARRAY); `rich_results_client` no soporta arrays → `AttributeError: 'list' object has no attribute 'get'` tragado por `test_url` → `total_schemas=0` (falso) → pain `no_hotel_schema` es FALSO POSITIVO. Además `EXISTS_WITH_ISSUES` bloquea generación ("existe") pero no cuenta como `present_in_production` en alignment ("no existe") — doble contabilidad (viola L-SR3) | `rich_results_client.py` (~L96-220, ~L497-547), `v4_comprehensive.py:680-697`, `site_presence_checker.py` (~L76-82), `conditional_generator.py:110-127`, `pain_solution_mapper.py` (~L393-399) | #4/#11 (SR-E rediseñada) |
+ | H5 | Varianza del plan de assets entre corridas (7→5 brechas; `low_ia_readiness` y `ai_crawler_blocked` ausentes en C de forma determinista, no por score de robots) | `pain_solution_mapper.py` (hipótesis), caches | #5 |
+ | H6 | PageSpeed API key inválida (OPS) + `CG-CLAIM-VS-EVIDENCE` BLOCKING sin ciclo de corrección + CG-TIER-CONSISTENCY ('B' vs 'D') + CG-TECH-JARGON | `commercial_gate.py:538-595, 665-709, 786-812`, config | #2/#6/#8 |
+ | N1 | G9 divergente en el MISMO run: `gate_report` unresolved=4 vs `delivery_quality_report` unresolved=1 (dos caminos: `alignment_result.py:86` `len(report.missing)` vs `alignment_result.py:134/139` `sum(...)`) | `alignment_result.py`, `delivery_quality_report.py:235` | #9 |
+@@ -32,7 +34,7 @@ Resolver los seguimientos abiertos del CONTEXT (recomendaciones #1-#5, #8-#11) c
+ 
+ **Criterio de éxito (CONTEXT §9)**: una corrida v4complete de Salento Real con `readiness: READY_FOR_PUBLICATION` y 0 falsos claim-fact gates, **sin tocar la capa financiera** (determinista, intacta).
+ 
+-**Alcance IN**: `modules/quality_gates/` (alignment_result, publication_gates, delivery_quality_report, commercial_gate), `modules/asset_generation/` (proposal_asset_alignment, asset_catalog consumo), `modules/commercial_documents/` (v4_proposal_generator, pain_solution_mapper preflight), `main.py` (target_id), tests, docs oficiales.
++**Alcance IN**: `modules/quality_gates/` (alignment_result, publication_gates, delivery_quality_report, commercial_gate), `modules/asset_generation/` (proposal_asset_alignment, site_presence_checker, conditional_generator, asset_catalog consumo), `modules/commercial_documents/` (v4_proposal_generator, pain_solution_mapper preflight), `modules/data_validation/external_apis/rich_results_client.py` (fix parser JSON-LD array — H7), `modules/auditors/v4_comprehensive.py` (propagación error_message — H7), `main.py` (target_id), `modules/orchestration_v4/onboarding_controller.py` (`generate_hotel_id` — contamina hotel_id del log Phase 1), tests, docs oficiales.
+ **Alcance OUT**: capa financiera (`modules/financial_engine/` — determinista, INTACTA), detección de pains, ROADMAP.md, outputs históricos en `output/` y `evidence/`, rotación de secretos (PageSpeed key = instrucción OPS documentada, no código).
+ 
+ ## 3. Estructura de Fases
+@@ -42,8 +44,8 @@ Resolver los seguimientos abiertos del CONTEXT (recomendaciones #1-#5, #8-#11) c
+ | FASE-SR-A | N1/#9 | Helper único `AlignmentResult.compute_unresolved()` para gate_report + delivery_quality_report + test estático guardián L-SR1 | `alignment_result.py`, `publication_gates.py`, `delivery_quality_report.py` | DIRECTO | 45-60 min |
+ | **FASE-SR-B** ⚠️ | #1 | **Unificación promesa/matriz/gate**: propuesta deriva del pain_ledger + present_in_production; gate excluye NO_BREACH del denominador; taxonomía única de estados | `v4_proposal_generator.py`, `proposal_asset_alignment.py`, `publication_gates.py` | DIRECTO (decisión arquitectónica) | 60-90 min |
+ | FASE-SR-C | #2 | Self-healing loop para `CG-CLAIM-VS-EVIDENCE`: regenerar con `suggestion` del gate + re-validar; persistencia → BLOCKED real | `commercial_gate.py`, flujo de regeneración (orchestration) | DIRECTO | 60-90 min |
+-| FASE-SR-D | #3/#10 | Canonicalizar URL antes de construir `target_id` (helper `_normalize_url` existente — L16: el gap está en el caller) | `main.py`, `agent_harness/memory.py` (solo lectura) | DIRECTO | 45-60 min |
+-| FASE-SR-E | #4/#11 | Preflight `hotel_schema`: confianza desde fuentes disponibles (GBP/web) + respetar `fallback`/`block_on_failure` del catálogo | `pain_solution_mapper.py`, `asset_catalog.py` (lectura), `coherence_validator.py` | DIRECTO | 60 min |
++| FASE-SR-D | #3/#10 | Canonicalizar URL antes de construir `target_id` (helper `_normalize_url` existente — L16: el gap está en el caller) + `generate_hotel_id` de `onboarding_controller.py:339-350` (sanitiza URL cruda → hotel_id contaminado del log Phase 1) | `main.py`, `modules/orchestration_v4/onboarding_controller.py`, `agent_harness/memory.py` (solo lectura) | DIRECTO | 45-60 min |
++| FASE-SR-E | #4/#11 (H7) | **Rediseñada 2026-08-28**: fix falso negativo schema (JSON-LD array en `rich_results_client` + propagación `error_message` al audit) + contabilización única `exists_with_issues` → `present_in_production` + fallback catálogo residual D-PF3 (ausencia genuina) | `rich_results_client.py`, `v4_comprehensive.py`, `site_presence_checker.py`, `publication_gates.py`/alignment, `pain_solution_mapper.py` | DIRECTO | 60-90 min |
+ | FASE-SR-F | #5/#6 | Investigación varianza plan de assets (7→5) con fix mínimo si procede + verificación config PageSpeed (OPS) | `pain_solution_mapper.py` (investigación), `config/` (lectura) | DIRECTO | 45-60 min |
+ | FASE-SR-G | #8 | Display: CG-TIER-CONSISTENCY (texto derivado de fuente financiera) + CG-TECH-JARGON (lenguaje de negocio en vista gerencia) | `commercial_gate.py`, generadores de display | DIRECTO | 30-45 min |
+ | FASE-SR-H | E2E | **ÚNICA ejecución v4complete Salento Real** + preservación baseline + evidencia + smoke 7 checks | `output/salentoreal_final_v4c/`, `evidence/FASE-SR-H/` | **DELEGATE_TASK** (subagente terminal) | 30 min + corrida 5-10 min |
+@@ -71,8 +73,8 @@ Escala: `Baja → Baja-Media → Media → Media-Alta → Alta → MÁXIMA` (mis
+ | SR-A | 4 (investigar, helper+integración, test estático AST, tests+greps+docs) | 0 | Media (unificar 2 caminos de conteo + guardián AST nuevo) | ✅ (máx. 4 + 0) |
+ | **SR-B** | 4 (investigar contratos, implementar 3 partes, tests de contrato, greps+docs) | 0 | **MÁXIMA** (ver §4: decisión cross-module, 4 consumidores, taxonomía única) | ✅ |
+ | SR-C | 4 (investigar flujo, implementar loop, tests, greps+docs) | 0 | Alta (nuevo mecanismo self-healing con re-validación, escalado y guard anti-bucle) | ✅ |
+-| SR-D | 4 (investigar callers, implementar canonicalización, tests anti-fragmentación, docs) | 0 | Media (multi-caller con helper existente; riesgo en `_detect_region_from_url`) | ✅ |
+-| SR-E | 4 (investigar preflight+catálogo, implementar, tests 2 casos, docs) | 0 | Media-Alta (semántica de confianza nueva; reconciliar contratos preflight↔catálogo) | ✅ |
++| SR-D | 4 (investigar callers incl. `generate_hotel_id`, implementar canonicalización, tests anti-fragmentación, docs) | 0 | Media (multi-caller con helper existente; riesgo en `_detect_region_from_url`) | ✅ |
++| SR-E | 4 (reproducir cadena de fallo con tests rojos, fix parser+contabilización, tests con fixture real, greps+docs) | 0 | Alta (fix cross-module: parser + audit + SitePresence + alignment; revisar §4 del prompt SR-E) | ✅ |
+ | SR-F | 4 (investigar varianza, fix mínimo o seguimiento, PageSpeed OPS, docs) | 0 | Media (investigación forense entre corridas; outcome condicional pre-decidido) | ✅ |
+ | SR-G | 4 (fix tier, fix jerga, tests, docs) | 0 | Baja-Media (2 fixes display acotados, L30/L27 ya catalogadas) | ✅ |
+ | SR-H | 3 (baseline+corrida, evidencia+smoke, docs) | 1 (v4complete) | Media (ejecución: corrida irrepetible, disciplina de evidencia) | ✅ (máx. 3 + 1) |
+@@ -87,7 +89,7 @@ Escala: `Baja → Baja-Media → Media → Media-Alta → Alta → MÁXIMA` (mis
+ | SR-B | ❌ NO | Decisión arquitectónica cross-module (4 consumidores, taxonomías) → directa, PREVALECE sobre eficiencia (lección DT-3, §Regla-de-Decisión) |
+ | SR-C | ❌ NO | Diseño de mecanismo nuevo cross-module (gates + regeneración) + código+tests → directa |
+ | SR-D | ❌ NO | Código+tests con venv → directa (regla venv prevalece sobre paralelismo) |
+-| SR-E | ❌ NO | Decisión de semántica de confianza (contrato preflight↔catálogo) → directa |
++| SR-E | ❌ NO | Fix cross-module con decisión de semántica (parser + contabilización única de presencia + arbitraje de detectores) → directa |
+ | SR-F | ❌ NO | Investigación forense con juicio sobre corridas reales → directa (análogo a VERIFY) |
+ | SR-G | ❌ NO | Código+tests → directa |
+ | SR-H | ✅ SÍ | v4complete vía subagente: `delegate_task(timeout=900, notify_on_complete=True, toolsets=["terminal"])` (§Protocolo-de-Subagente-para-v4complete). El parent preserva baseline, ejecuta el Protocolo de Evidencia Proactiva, verifica smoke y documenta |
+@@ -103,8 +105,8 @@ Escala: `Baja → Baja-Media → Media → Media-Alta → Alta → MÁXIMA` (mis
+ | AC3 | En el MISMO run, `gate_report` y `delivery_quality_report` reportan el mismo `unresolved` (helper único); mensaje G9 coherente con sus propios datos (corrección del 4-vs-1) | SR-A | SR-H/VERIFY |
+ | AC4 | Claims contradichos por evidencia se corrigen o bloquean: en la corrida final, 0 claims "no aparece" contradiendo GBP propio publicados (o BLOCKED real con documentos retenidos) | SR-C | SR-H/VERIFY |
+ | AC5 | `target_id` canónico: unit tests prueban URL con UTM ≡ URL limpia ≡ mismo target_id; el log de la corrida final muestra target_id sin query string | SR-D | SR-H/VERIFY |
+-| AC6 | Con 0 schemas detectados y GBP completo, el asset `hotel_schema` SE genera (preflight respeta fallback + block_on_failure=False); `no_hotel_schema` queda ASSET_GENERATED en pain_ledger | SR-E | SR-H/VERIFY |
+-| AC7 | `coherence_validation` ya no marca "Assets no implementados: hotel_schema"; coherence score ≥ 0.8 sin degradación por la paradoja | SR-E | SR-H/VERIFY |
++| AC6 | Detección de schema correcta: el audit detecta los schemas Hotel del sitio (incl. JSON-LD formato ARRAY — fixture real Salento Real ≥ 2 schemas); el pain `no_hotel_schema` NO se genera (falso positivo eliminado de raíz); `exists_with_issues` cuenta como `present_in_production` (contabilización única) | SR-E | SR-H/VERIFY |
++| AC7 | `coherence_validation` sin "Assets no implementados: hotel_schema"; coherence score ≥ 0.8; caso residual de ausencia GENUINA cubierto por fallback del catálogo (D-PF3) con `justified_skip` trazable | SR-E | SR-H/VERIFY |
+ | AC8 | Varianza documentada: informe con hipótesis verificada sobre por qué el plan de assets varió 7→5 entre corridas (o fix aplicado con test) | SR-F | VERIFY |
+ | AC9 | CG-TIER-CONSISTENCY: tier de frontmatter == tier del texto == fuente financiera en la corrida final (0 WARNING de tier); CG-TECH-JARGON reducido vs baseline | SR-G | SR-H/VERIFY |
+ | AC10 | 0 regresión financiera: escenarios idénticos al baseline corrida C ($6.57M / $4.04M / $1.26M COP) | — (restricción global) | SR-H/VERIFY |
+@@ -132,7 +134,7 @@ Escala: `Baja → Baja-Media → Media → Media-Alta → Alta → MÁXIMA` (mis
+ - **Output**: `--output output/salentoreal_final_v4c` (dir aislado y alternativo → ejercita la rama FASE-D S7 corregida del fix H1; el hotel no tiene onboarding yaml → la rama fallback se ejecuta, verificando L-SR1 en vivo).
+ - **Baseline ANTES de la corrida**: copiar artefactos de la corrida C (`output/test_salentoreal_v4c/v4_complete/...`: gate_report, delivery_quality_report, proposal_asset_matrix, pain_ledger_resolved, coherence_validation, commercial_gates_report, 01/02 .md si existen) a `evidence/FASE-SR-H/baseline/`.
+ - **ÚNICA ejecución del plan**. Si falla: NO re-ejecutar; aplicar el Protocolo de Recuperación de Agotamiento del executor (evidencia primero, checkpoint, sesión fresca).
+-- Smoke 7 checks post-corrida: (1) `v4_complete_report.json` con readiness; (2) gate_report 13 gates con `proposal_asset_alignment` PASSED; (3) coherence ≥ 0.8; (4) `hotel_schema` generado + `no_hotel_schema` ASSET_GENERATED; (5) `target_id` sin UTM; (6) 01/02 presentes, sin BLOCKED_BY_GATES; (7) delivery_quality PASS con `unresolved` coherente gate↔delivery.
++- Smoke 7 checks post-corrida: (1) `v4_complete_report.json` con readiness; (2) gate_report 13 gates con `proposal_asset_alignment` PASSED; (3) coherence ≥ 0.8; (4) `hotel_schema` cubierto por PRESENCIA (el sitio tiene schemas reales, incl. array JSON-LD — el audit detecta ≥ 1 schema Hotel, el pain `no_hotel_schema` no aparece o queda resuelto por presencia; NO se espera "asset generado", la generación es el comportamiento incorrecto aquí); (5) `target_id` sin UTM; (6) 01/02 presentes, sin BLOCKED_BY_GATES; (7) delivery_quality PASS con `unresolved` coherente gate↔delivery.
+ 
+ ## 10. Entregables del Plan
+ 
+diff --git a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-B.md b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-B.md
+index 4882c0e..f108198 100644
+--- a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-B.md
++++ b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-B.md
+@@ -47,7 +47,7 @@
+ ### T3: Tests de contrato (L3 — contra fuente dinámica)
+ **Criterios**:
+ - [ ] Test de contrato: para un pain_ledger dado, propuesta ↔ matriz ↔ gate reportan estados idénticos por servicio
+-- [ ] Test escenario corrida C (7 servicios: 2 LINKED, 1 present_in_production, 1 MISSING-con-pain, 3 NO_BREACH): sin fix SR-E, coverage sobre actionable = 3/4 (≥ 0.8 pasa el umbral solo tras SR-E generar hotel_schema — documentar el estado intermedio esperado)
++- [ ] Test escenario corrida C (7 servicios: 2 LINKED, 1 present_in_production, 1 MISSING-con-pain, 3 NO_BREACH): sin fix SR-E, coverage sobre actionable = 3/4 (0.75 < 0.80 — documentar el estado intermedio esperado). Tras SR-E (revisión 2026-08-28): el sitio SÍ tiene schema → el pain `no_hotel_schema` desaparece (detección corregida) o se resuelve por presencia (`exists_with_issues` cuenta como present_in_production) → actionable = 3, coverage = 3/3 = 1.0
+ - [ ] Test anti-regresión B7: servicio sin pain ni presencia nunca aparece como comprometido
+ - [ ] Tests de regresión de las suites tocadas (procesos aislados)
+ 
+diff --git a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-D.md b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-D.md
+index b832a2c..168ece6 100644
+--- a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-D.md
++++ b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-D.md
+@@ -1,7 +1,7 @@
+ # FASE-SR-D — Canonicalización de `target_id` (URL Canónica como Identidad de Memoria)
+ 
+ **ID**: FASE-SR-D
+-**Objetivo**: Que la identidad de memoria (`target_id`) se derive de la URL **canónica** (vía el helper EXISTENTE `_normalize_url()`, main.py:3542) y no de la URL raw, eliminando la fragmentación de memoria por parámetros UTM/campaña (H2/N3, L-SR2, L16: el gap está en el caller).
++**Objetivo**: Que la identidad de memoria (`target_id`) se derive de la URL **canónica** (vía el helper EXISTENTE `_normalize_url()`, main.py:3542) y no de la URL raw, eliminando la fragmentación de memoria por parámetros UTM/campaña (H2/N3, L-SR2, L16: el gap está en el caller). INCLUYE `generate_hotel_id` de `modules/orchestration_v4/onboarding_controller.py:339-350` (añadido en revisión causa-raíz 2026-08-28): sanitiza la URL cruda con `replace('?','_')` etc. → produce el hotel_id contaminado del log "Phase 1 iniciada".
+ **Dependencias**: FASE-SR-C ✅ (evitar conflicto sobre `main.py`).
+ **Complejidad**: Media · **Delegación**: ❌ DIRECTO (código+tests con venv)
+ **Duración estimada**: 45-60 min · **Presupuesto**: ~20 iteraciones trabajo + ~15 verificación/docs (R2: máx. 60)
+@@ -26,26 +26,28 @@
+ - Call sites que graban `target_id=args.url` crudo: `main.py` L3248/3394/3460 (vía `memory.append_log` / `save_analysis_reference`); `find_latest_v4_analysis` en `agent_harness/memory.py:665` busca por ese ID.
+ - Evidencia: corrida A (URL limpia) y corrida C (URL con UTM) = mismo hotel, **2 identidades distintas** → `find_latest_analysis`/`_find_recent_v4_analysis` no reutilizan → re-ejecución de audit con costo de API (GBP re-consultado, PageSpeed caído).
+ - `main.py:742` (`target_id = args.url or ...`) — otros comandos (onboard/execute/validate-guarantee) también construyen IDs desde URL cruda.
++- ⚠️ **GAP añadido en revisión 2026-08-28**: `modules/orchestration_v4/onboarding_controller.py:339-350` — `generate_hotel_id()` sanitiza la URL **cruda** (`replace` de `?`, `&`, `=` por `_`) → `hotel_hotelsalentoreal.com__utm_source_...`. Este es el origen del hotel_id contaminado del log Phase 1; NO se corrige solo con `main.py`. Debe normalizar la URL (quitar query string) antes de construir el id.
+ - Detección de región: `_detect_region_from_url` hace substring sobre la URL — verificar que sigue funcionando con la URL normalizada (el dominio `hotelsalentoreal.com` conserva 'salento'; el path se pierde — confirmar que ninguna detección dependa del path).
+ 
+ ## Tareas
+ 
+ ### T1: Investigar TODOS los call sites de target_id
+-**Archivos**: `main.py` (L742, L890, L3248, L3394, L3460), `agent_harness/memory.py` (solo lectura: `find_latest_v4_analysis`, `append_log`, vigencia < 20 días).
++**Archivos**: `main.py` (L742, L890, L3248, L3394, L3460), `modules/orchestration_v4/onboarding_controller.py` (`generate_hotel_id`, L339-350), `agent_harness/memory.py` (solo lectura: `find_latest_v4_analysis`, `append_log`, vigencia < 20 días).
+ **Criterios**:
+-- [ ] Inventario completo de call sites que construyen target_id desde URL (v4complete + onboard + execute + validate-guarantee)
++- [ ] Inventario completo de call sites que construyen target_id/hotel_id desde URL (v4complete + onboard + execute + validate-guarantee + `generate_hotel_id`)
+ - [ ] Confirmar semántica exacta de `_normalize_url()` (tests/lectura) y de `_detect_region_from_url` con URL normalizada
+ 
+ ### T2: Implementar canonicalización (D-PF4)
+ **Criterios**:
+ - [ ] La URL se pasa por `_normalize_url()` como **primer paso** de `run_v4_complete_mode` (y de onboard/execute/validate-guarantee)
+ - [ ] `target_id` se construye desde la URL **normalizada**; la URL **original** solo se usa para scraping/audit
++- [ ] `generate_hotel_id` (onboarding_controller) normaliza la URL antes de sanitizar (sin query string → ids estables con/sin UTM)
+ - [ ] El log de Phase 1 muestra el target_id canónico (`hotel_hotelsalentoreal.com` — sin UTM)
+ - [ ] Sin cambios en `agent_harness/memory.py` (la reutilización funciona sola cuando los IDs coinciden)
+ 
+ ### T3: Tests anti-fragmentación
+ **Criterios**:
+-- [ ] Test: `https://www.hotelsalentoreal.com/` ≡ misma URL con UTM completo (corrida B/C) ≡ con `?partner=5792` ≡ mismo `target_id`
++- [ ] Test: `https://www.hotelsalentoreal.com/` ≡ misma URL con UTM completo (corrida B/C) ≡ con `?partner=5792` ≡ mismo `target_id` (incl. `generate_hotel_id`)
+ - [ ] Test: variaciones protocolo/www producen el mismo target_id
+ - [ ] Test: `_detect_region_from_url` con URL normalizada sigue retornando `eje_cafetero` para Salento Real
+ - [ ] Smoke L-SR1: la rama modificada se ejecuta al menos una vez en test (o test estático cubre el símbolo)
+@@ -53,6 +55,7 @@
+ ### T4: Greps + docs
+ **Criterios**:
+ - [ ] Grep: 0 call sites restantes que graben `target_id=args.url` (crudo) en comandos con `--url`
++- [ ] Grep: 0 `replace(` sobre URL cruda dentro de `generate_hotel_id` sin normalización previa
+ - [ ] Grep: `grep "_normalize_url_for_matching"` = 0 en todo el repo (el nombre erróneo no debe reaparecer)
+ 
+ ## Tests Obligatorios
+@@ -72,7 +75,7 @@
+ 
+ 1. `dependencias-fases.md` §2 → ✅. 2. `README.md` → ✅. 3. `06-checklist` → SR-D. 4. `09-documentacion` → B/D/E + Notas. 5. `10-analisis` → Resumen + L-PF (si aplica) + D-PF4 confirmada. 6. `evidence/FASE-SR-D/` → diff + tests. 7. Registro (SIN `--release`):
+ ```bash
+-./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-SR-D --desc "Canonicalizacion de target_id via _normalize_url() en caller (v4complete + onboard + execute + validate-guarantee)" --archivos-mod "main.py" --tests "<N reales>" --check-manual-docs
++./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-SR-D --desc "Canonicalizacion de target_id via _normalize_url() en caller (v4complete + onboard + execute + validate-guarantee) + generate_hotel_id de onboarding_controller" --archivos-mod "main.py,modules/orchestration_v4/onboarding_controller.py" --tests "<N reales>" --check-manual-docs
+ ```
+ 8. `./venv/Scripts/python.exe scripts/doctor.py --regenerate-domain-primer`
+ 
+diff --git a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-E.md b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-E.md
+index ed89e2d..aae5056 100644
+--- a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-E.md
++++ b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-E.md
+@@ -1,94 +1,111 @@
+-# FASE-SR-E — Preflight `hotel_schema`: Confianza desde Fuentes Disponibles
++# FASE-SR-E — Falso Negativo de Detección de Schema + Contabilización Única de `exists_with_issues`
+ 
+ **ID**: FASE-SR-E
+-**Objetivo**: Resolver la paradoja del pain #1 (H4/N4, L-SR4): con 0 schemas detectados y GBP completo, el asset `hotel_schema` DEBE generarse vía el fallback declarado del catálogo. Separar "confianza en los datos de entrada" de "confianza en la implementación del asset": para brechas de ausencia, la confianza se calcula desde las fuentes disponibles para CONSTRUIR el asset (GBP/web), no desde la presencia de la brecha.
+-**Dependencias**: FASE-SR-D ✅ (orden del plan; SR-E PRIMERO que SR-F — mismo archivo `pain_solution_mapper.py`).
+-**Complejidad**: Media-Alta · **Delegación**: ❌ DIRECTO (decisión de semántica de confianza + contrato con catálogo)
+-**Duración estimada**: 60 min · **Presupuesto**: ~22 iteraciones trabajo + ~15 verificación/docs (R2: máx. 60)
++**Objetivo**: Corregir la causa raíz REAL del bloqueo de `hotel_schema` (revisión causa-raíz 2026-08-28, ver §Base Técnica): (1) el audit reporta 0 schemas siendo FALSO — el sitio tiene 2 schemas Hotel (uno en formato JSON-LD ARRAY) y `rich_results_client` no soporta arrays → AttributeError tragado → falso pain `no_hotel_schema`; (2) doble contabilidad de `EXISTS_WITH_ISSUES`: bloquea la generación ("existe") pero NO cuenta como `present_in_production` en alignment ("no existe"). Mantener como hardening residual la semántica D-PF3 (fallback del catálogo para ausencia genuina).
++**Dependencias**: FASE-SR-D ✅ (orden del plan; SR-E PRIMERO que SR-F — `pain_solution_mapper.py` en común).
++**Complejidad**: Alta · **Delegación**: ❌ DIRECTO (fix cross-module: parser + audit + SitePresence + alignment)
++**Duración estimada**: 60-90 min · **Presupuesto**: ~25 iteraciones trabajo + ~15 verificación/docs (R2: máx. 60)
+ 
+ ## Reglas de Sesión (MANDATORIO)
+ 
+ - R1: Una fase por sesión. R2: máx. 60 iteraciones (checkpoint + evidencia si se agota). R3: 4 tareas + 0 comandos largos.
+ - Python: `./venv/Scripts/python.exe`.
++- NO ejecutar `v4complete`/`v4audit` (la única corrida es SR-H). La verificación en vivo del parser se hace con tests con fixtures del HTML real, NO con corridas.
+ 
+ ## Contexto
+ 
+-**Lectura previa obligatoria**: CONTEXT-SALENTOREAL §5 (H4), §9.5.2 N4, §8.2 L-SR4, §9 #4 y #11 + plan maestro §8.
++**Lectura previa obligatoria**: CONTEXT-SALENTOREAL §5 (H4), §9.5.2 N4, §8.2 L-SR4 + plan maestro §1 (H4 reclasificado + H7) y §8.
+ 
+ ### Estado de Fases Anteriores
+ | Fase | Estado |
+ |------|--------|
+ | FASE-SR-A…SR-D | ✅ Completadas |
+ 
+-### Base Técnica Disponible (N4 verificado contra código vivo)
+-- `modules/commercial_documents/pain_solution_mapper.py:889`: `reason=f"...Insufficient confidence ({avg_confidence:.2f} < {min_confidence})"` — el preflight de confianza que mató la generación en corrida C (`hotel_schema: Insufficient confidence (0.00 < 0.8)`).
+-- `modules/asset_generation/asset_catalog.py:92-98`: `hotel_schema` declara `fallback="generate_basic_schema"`, `block_on_failure=False` → el catálogo DICE "puedo generar desde GBP". Dos contratos contradictorios para el mismo asset (N4): el preflight lo bloquea antes de que el fallback opere. **Decisión D-PF3: el contrato del catálogo gana — nunca ambos criterios.**
+-- Evidencia corrida C: pain #1 `no_hotel_schema` (score 85, HIGH, $1.06M COP/mes); audit = 0 schemas; asset NO generado; `coherence_validation.json` check `promised_assets_exist` FAILED ("Assets no implementados: hotel_schema"); `pain_ledger_resolved.json`: `no_hotel_schema` = DETECTED, `mapped_to_service: 0`, `justified_skip: 0`.
+-- Datos GBP disponibles para construir el schema: nombre, dirección, rating 4.5, 984 reseñas, teléfono (todos presentes). Nota: `geo_enriched/hotel_schema_rich.json` y `faq_schema.json` sí se generan en la rama GEO pero NO cuentan como asset `hotel_schema` para ningún gate.
++### Base Técnica Disponible (revisión causa-raíz 2026-08-28 — verificada contra código vivo y sitio vivo)
++
++**La premisa original de esta fase (H4/N4: "el preflight de confianza bloqueó la generación") es FALSA. Evidencia:**
++
++1. **El sitio SÍ tiene schemas** (verificado con fetch en vivo): `hotelsalentoreal.com` tiene 3 bloques `application/ld+json`: (a) `@graph` Yoast/WebPage, (b) **ARRAY** JSON `[{ "@type": "Hotel", ... }]`, (c) dict single `{ "@type": "Hotel", telephone: "+57 316 6296142", ... }`.
++2. **El parser falla en el formato array**: `modules/data_validation/external_apis/rich_results_client.py` — `_validate_schema`/`_validate_single_schema` (~L198-220) manejan `@graph` y dict single, pero NO listas: `data.get("@type", ...)` sobre una list lanza `AttributeError: 'list' object has no attribute 'get'`. El `except` del bucle de parsing (~L128-196) solo captura `(json.JSONDecodeError, TypeError)`.
++3. **El error se traga**: `test_url` (~L96-126) `except Exception → status="ERROR"`, y `get_hotel_schema_report` (~L497-547) con ERROR retorna `has_hotel_schema=False, all_schemas=[]`. Prueba empírica ejecutada: `status: ERROR, error: 'list' object has no attribute 'get', detected_items: 0`.
++4. **El audit propaga el falso negativo en silencio**: `modules/auditors/v4_comprehensive.py:680-697` (`_audit_schemas`) consume `get_hotel_schema_report` → `SchemaAuditResult(total_schemas=0)`; el `error_message` del resultado ERROR NUNCA llega al `SchemaAuditResult`. Artefacto corrida C: `audit_report.total_schemas = 0` (falso).
++5. **El pain `no_hotel_schema` es un FALSO POSITIVO**: `pain_solution_mapper.py` ~L393-399 genera el pain si `not audit_result.schema.hotel_schema_detected`. Score 85, HIGH, $1.06M COP/mes — cifra inventada sobre una detección rota.
++6. **Lo que realmente detuvo la generación**: `conditional_generator.py:110-127` — gate de presencia (FASE-CAUSAL-01) ANTES del preflight: `SitePresenceChecker` (vía el detector `modules/scrapers/schema_finder.py`, que SÍ detectó el schema) retornó `EXISTS_WITH_ISSUES` ("Campos faltantes: ['priceRange', 'amenityFeature', 'image', 'url']") → `should_generate=False` → SKIPPED. El mensaje "Insufficient confidence (0.00 < 0.8)" de `pain_solution_mapper.py:889` solo afecta el DISPLAY del plan en `main.py:2411`; el orquestador regenera specs con `can_generate=True` (`v4_asset_orchestrator._solutions_to_asset_specs` ~L712-722).
++7. **Doble contabilidad** (viola L-SR3): `EXISTS_WITH_ISSUES` bloquea la generación ("existe en producción") pero `site_presence_checker.should_generate` (~L76-82) NO lo cuenta como `present_in_production` en alignment → queda `unresolved`. El mismo hecho tratado como "existe" y "no existe" según el consumidor.
++8. **Dos detectores contradictorios sin arbitraje**: `schema_finder.py` (scrapers, detectó el schema) vs `rich_results_client` (auditors, 0 schemas).
+ 
+ ## Tareas
+ 
+-### T1: Investigar el flujo preflight ↔ catálogo ↔ coherence_validator
+-**Archivos**: `pain_solution_mapper.py` (cálculo de `avg_confidence` y `min_confidence`), `asset_catalog.py` (contrato `fallback`/`block_on_failure`), `modules/commercial_documents/coherence_validator.py` (`_check_promised_assets_exist`, L543/611), orquestador de preflight (linker/orchestrator — localizar el caller de la decisión 0.00 < 0.8).
++### T1: Confirmar la cadena de fallo con tests reproduciendo el bug
++**Archivos**: `modules/data_validation/external_apis/rich_results_client.py`, `modules/auditors/v4_comprehensive.py` (L640-700), `modules/scrapers/schema_finder.py`, `modules/asset_generation/site_presence_checker.py`, `modules/asset_generation/conditional_generator.py` (L90-200), `modules/commercial_documents/pain_solution_mapper.py` (~L393-399).
+ **Criterios**:
+-- [ ] Mapa: de dónde sale `avg_confidence` para `hotel_schema` (por qué es 0.00 con 0 schemas) y dónde se consulta `min_confidence`
+-- [ ] Confirmar cómo el catálogo expone `fallback`/`block_on_failure` y quién debería consumirlo
++- [ ] Test rojo que reproduce: bloque ld+json en formato ARRAY con `@type: Hotel` → `get_hotel_schema_report` hoy retorna `has_hotel_schema=False` (bug confirmado)
++- [ ] Test rojo: `SchemaAuditResult` no expone el `error_message` del resultado ERROR (falso negativo silencioso)
++- [ ] Mapa documentado: qué detector consume SitePresenceChecker vs qué detector consume el audit, y dónde se decide `present_in_production` en alignment
+ 
+-### T2: Implementar D-PF3
++### T2: Fix de detección + contabilización única
+ **Criterios**:
+-- [ ] Para brechas de **ausencia** (pain "no existe X"), la confianza del asset se calcula desde las fuentes disponibles para construir X (GBP completo → confianza alta; sin GBP y sin web → confianza baja, comportamiento previo)
+-- [ ] El preflight respeta `fallback` + `block_on_failure=False` del catálogo: si hay fallback disponible, NO bloquea por confianza de datos de entrada
+-- [ ] Consistencia con SR-B: un asset generado vía fallback cuenta como LINKED/GENERATED en la matriz y en el gate (un solo criterio)
+-- [ ] Sin invención: si no hay fuentes para construir el asset, el comportamiento de bloqueo se mantiene (con `justified_skip` trazable)
+-
+-### T3: Tests (2 casos opuestos)
++- [ ] `rich_results_client` soporta JSON-LD en formato ARRAY (iterar elementos de la lista; cada elemento se valida como schema individual) y el bucle de parsing captura `AttributeError`/`Exception` por bloque (un bloque corrupto NO invalida los demás)
++- [ ] Si TODOS los bloques fallan o el resultado es ERROR, el error se PROPAGA: `SchemaAuditResult` expone `error_message`/warnings (el audit nunca reporta "0 schemas" en silencio cuando hubo error de parsing — distinguir "ausencia verificada" de "detección fallida")
++- [ ] Contabilización única (L-SR3): `EXISTS_WITH_ISSUES` cuenta como `present_in_production` en alignment/matrix (el asset existe en el sitio; sus campos faltantes van como mejora sugerida, no como brecha unresolved). Un solo criterio compartido con SR-B
++- [ ] Con schema detectado por el audit (`hotel_schema_detected=True`), el pain `no_hotel_schema` NO se genera (elimina el falso positivo de raíz)
++- [ ] Hardening residual D-PF3 (solo para ausencia GENUINA verificada): si el sitio realmente no tiene schema y hay GBP completo, el preflight respeta `fallback="generate_basic_schema"` + `block_on_failure=False` del catálogo; sin fuentes → bloqueo con `justified_skip`
++- [ ] `generate_basic_schema` queda cableado a un consumidor real o se documenta su no-implementación como seguimiento explícito (grep: 0 declaraciones sin consumidor)
++
++### T3: Tests (fixture real + casos opuestos)
+ **Criterios**:
+-- [ ] Test caso Salento Real: 0 schemas + GBP completo (nombre/dirección/rating/teléfono) → asset `hotel_schema` GENERADO; `no_hotel_schema` = ASSET_GENERATED en pain_ledger; `promised_assets_exist` sin "Assets no implementados"
+-- [ ] Test caso sin fuentes: 0 schemas + sin GBP → sin generación, sin invención, `justified_skip` documentado
+-- [ ] Test de consistencia: el asset por fallback satisface `promised_assets_exist`
+-- [ ] Tests de regresión de pain_solution_mapper y coherence_validator (archivos específicos)
++- [ ] Fixture con los 3 bloques reales de hotelsalentoreal.com (`@graph` + ARRAY Hotel + dict Hotel) → `get_hotel_schema_report` detecta ≥ 2 schemas Hotel; `total_schemas ≥ 1`
++- [ ] Con detección correcta: pain `no_hotel_schema` NO generado; `promised_assets_exist` sin "Assets no implementados: hotel_schema"
++- [ ] `EXISTS_WITH_ISSUES` → `present_in_production` en alignment (cuenta como cubierto, no unresolved)
++- [ ] Bloque corrupto aislado no invalida bloques válidos; resultado ERROR propaga `error_message` al audit
++- [ ] Ausencia genuina (0 schemas + sin GBP) → sin generación, sin invención, `justified_skip`
++- [ ] Regresión: suites de auditors y asset_generation tocadas (archivos específicos)
+ 
+ ### T4: Greps + docs
+ **Criterios**:
+-- [ ] Grep: 0 residuos del criterio "confianza desde presencia de la brecha" para assets con fallback
+-- [ ] Grep: 0 referencias a `generate_basic_schema` sin su consumidor del preflight (el fallback pasa a estar cableado)
++- [ ] Grep: el criterio de presencia es UNO solo — 0 paths que traten `EXISTS_WITH_ISSUES` como "no presente" en alignment
++- [ ] Grep: `get_hotel_schema_report` sin consumidores que ignoren su `error_message`/status ERROR
++- [ ] Documentar en `10-analisis` la decisión sobre el arbitraje schema_finder vs rich_results (¿fuente única? ¿unión? — decidir y registrar, no dejar ambos sin contrato)
+ 
+ ## Tests Obligatorios
+ 
+ | Test | Archivo | Criterio de Éxito |
+ |------|---------|-------------------|
+-| caso Salento Real | tests de `tests/commercial_documents/test_pain_solution_mapper*.py` (específicos) | asset generado + ASSET_GENERATED |
+-| caso sin fuentes | ídem | bloqueo mantenido + justified_skip |
+-| consistencia promised_assets_exist | tests del coherence_validator | sin "Assets no implementados" |
++| parser array JSON-LD (fixture real Salento) | `tests/data_validation/` (archivo existente de rich_results o nuevo específico) | ≥2 schemas Hotel detectados |
++| propagación de error al audit | tests de `v4_comprehensive` (específicos) | ERROR → error_message visible, nunca 0 silencioso |
++| contabilización única exists_with_issues | tests de alignment/site_presence | cuenta como present_in_production |
++| ausencia genuina sin fuentes | tests de pain_solution_mapper (específicos) | bloqueo + justified_skip |
+ 
+ **Comandos** (procesos aislados, salida a archivo):
+ ```bash
+-./venv/Scripts/python.exe -m pytest tests/commercial_documents -k "mapper or schema" -v > temp/fase_sr_e_tests1.txt 2>&1
+-./venv/Scripts/python.exe -m pytest tests/asset_generation -k "catalog or preflight" -v > temp/fase_sr_e_tests2.txt 2>&1
++./venv/Scripts/python.exe -m pytest tests/data_validation -k "rich_results or schema" -v > temp/fase_sr_e_tests1.txt 2>&1
++./venv/Scripts/python.exe -m pytest tests/asset_generation -k "presence or alignment" -v > temp/fase_sr_e_tests2.txt 2>&1
++./venv/Scripts/python.exe -m pytest tests/auditors -k "comprehensive or schema" -v > temp/fase_sr_e_tests3.txt 2>&1
+ ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
+ ```
+ 
+ ## Post-Ejecución (OBLIGATORIO — antes de cerrar la sesión)
+ 
+-1. `dependencias-fases.md` §2 → ✅. 2. `README.md` → ✅. 3. `06-checklist` → SR-E. 4. `09-documentacion` → B/D/E + Notas. 5. `10-analisis` → Resumen + D-PF3 confirmada/ajustada + lecciones. 6. `evidence/FASE-SR-E/` → diff + tests. 7. Registro (SIN `--release`):
++1. `dependencias-fases.md` §2 → ✅. 2. `README.md` → ✅. 3. `06-checklist` → SR-E. 4. `09-documentacion` → B/D/E + Notas. 5. `10-analisis` → Resumen + D-PF3 ajustada (revisión causa-raíz 2026-08-28) + lecciones + decisión de arbitraje de detectores. 6. `evidence/FASE-SR-E/` → diff + tests + fixture del HTML real. 7. Registro (SIN `--release`):
+ ```bash
+-./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-SR-E --desc "Preflight hotel_schema: confianza desde fuentes disponibles (GBP/web); respeta fallback del catalogo" --archivos-mod "modules/commercial_documents/pain_solution_mapper.py" --tests "<N reales>" --check-manual-docs
++./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-SR-E --desc "Fix falso negativo schema (JSON-LD array en rich_results_client + propagacion de error al audit) + contabilizacion unica exists_with_issues como present_in_production + fallback catalogo residual (D-PF3)" --archivos-mod "modules/data_validation/external_apis/rich_results_client.py,modules/auditors/v4_comprehensive.py,modules/asset_generation/site_presence_checker.py,modules/quality_gates/publication_gates.py,modules/commercial_documents/pain_solution_mapper.py" --tests "<N reales>" --check-manual-docs
+ ```
+ 8. `./venv/Scripts/python.exe scripts/doctor.py --regenerate-domain-primer`
+ 
+ ## Criterios de Completitud (CHECKLIST)
+ 
+-- [ ] Tests de los 2 casos pasan; regresiones = 0
+-- [ ] `run_all_validations.py --quick` TOTAL PASS
+-- [ ] D-PF3 implementada (contrato del catálogo gana; sin doble criterio)
++- [ ] Bug del parser reproducido con test rojo ANTES del fix
++- [ ] Fixture real de Salento detecta ≥2 schemas Hotel; falso pain eliminado
++- [ ] Contabilización única de `exists_with_issues` implementada y testeada
++- [ ] `run_all_validations.py --quick` TOTAL PASS; regresiones = 0 en suites tocadas
+ - [ ] Docs post-fase completos (1-8)
+ - [ ] Evidencia en `evidence/FASE-SR-E/`
+ 
+ ## Restricciones
+ 
+ - Máx. 60 iteraciones; NO ejecutar v4complete/v4audit.
+-- NO modificar `asset_catalog.py` (el contrato del catálogo es la fuente — se consume, no se reescribe).
+-- NO bajar el umbral global 0.8 (enmascara el problema semántico — D-PF3).
+-- NO tocar la rama GEO existente (`geo_enriched/hotel_schema_rich.json`) — esta fase trata el asset del catálogo.
++- NO bajar el umbral global 0.8 (enmascara problemas semánticos).
++- NO tocar la rama GEO existente (`geo_enriched/hotel_schema_rich.json`) — esta fase trata la detección y el asset del catálogo.
++- NO silenciar errores de parsing (todo ERROR debe ser visible en el audit — L-SR5).
+ - NO delegar a subagente; NO usar `--release` en log_phase_completion.
+ - AC10: capa financiera intacta.
+diff --git a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-H.md b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-H.md
+index dba0de8..d3df88d 100644
+--- a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-H.md
++++ b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-H.md
+@@ -50,7 +50,7 @@ Usar EXACTAMENTE `https://www.hotelsalentoreal.com/` — sin UTM, sin fragmento,
+ - [ ] Smoke de 7 checks, comparando contra baseline:
+   1. Veredicto final READY_FOR_PUBLICATION (sin BLOCKED_BY_GATES)
+   2. Coherence score ≥ 0.8
+-  3. `promised_assets_exist` PASS (hotel_schema generado — AC6/AC7)
++  3. `promised_assets_exist` PASS — `hotel_schema` cubierto por PRESENCIA: el sitio tiene schemas reales (incl. array JSON-LD); el audit detecta ≥ 1 schema Hotel y el pain `no_hotel_schema` no aparece o queda resuelto por presencia (AC6/AC7 — NO se espera "asset generado"; generar sobre un schema existente sería el comportamiento incorrecto)
+   4. Unresolved idéntico gate vs delivery (AC3)
+   5. `01_DIAGNOSTICO_Y_OPORTUNIDAD.md` + `02_PROPUESTA_COMERCIAL.md` presentes (AC12)
+   6. ZIP de entrega generado
+diff --git a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-VERIFY.md b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-VERIFY.md
+index fc80bb9..3400baa 100644
+--- a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-VERIFY.md
++++ b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-VERIFY.md
+@@ -30,7 +30,7 @@
+ ### T1: Certificación AC1-AC13 (Expected → Observed → Verdict)
+ **Criterios**:
+ - [ ] Por cada AC: evidencia citada (archivo + campo/valor) desde el output E2E — nunca desde código ni tests
+-- [ ] AC1 gate no bloquea por NO_BREACH · AC2 promesa pain_ledger+presence · AC3 unresolved idéntico · AC4 claims ciclan (reporte gates) · AC5 target_id canónico · AC6 hotel_schema generado · AC7 promised_assets_exist limpio · AC8 varianza explicada · AC9 display sincronizado · AC10 financiera $6.57M/$4.04M/$1.26M · AC11 READY_FOR_PUBLICATION · AC12 01/02+ZIP sin BLOCKED_BY_GATES · AC13 guardián estático
++- [ ] AC1 gate no bloquea por NO_BREACH · AC2 promesa pain_ledger+presence · AC3 unresolved idéntico · AC4 claims ciclan (reporte gates) · AC5 target_id canónico · AC6 detección schema correcta (audit ≥ 1 Hotel, incl. array JSON-LD; sin pain falso; exists_with_issues = presencia) · AC7 promised_assets_exist limpio + ausencia genuina vía fallback · AC8 varianza explicada · AC9 display sincronizado · AC10 financiera $6.57M/$4.04M/$1.26M · AC11 READY_FOR_PUBLICATION · AC12 01/02+ZIP sin BLOCKED_BY_GATES · AC13 guardián estático
+ - [ ] Veredicto por AC: SUPERADO / NO SUPERADO (con causa y fase responsable si falla)
+ 
+ ### T2: Diff antes/después vs baseline (L-NC12)
+diff --git a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/06-checklist-implementacion.md b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/06-checklist-implementacion.md
+index 7536f23..1c98223 100644
+--- a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/06-checklist-implementacion.md
++++ b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/06-checklist-implementacion.md
+@@ -7,7 +7,7 @@
+ | Fase | Estado | Fecha | Sesión | Iteraciones | delegate_task |
+ |------|--------|-------|--------|-------------|---------------|
+ | Preparación | ✅ COMPLETADA | 2026-08-27 | orquestación | ~20 | NO |
+-| FASE-SR-A | ⏳ PENDIENTE | — | — | — | NO |
++| FASE-SR-A | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 1) | ~30 | NO |
+ | FASE-SR-B | ⏳ PENDIENTE | — | — | — | NO |
+ | FASE-SR-C | ⏳ PENDIENTE | — | — | — | NO |
+ | FASE-SR-D | ⏳ PENDIENTE | — | — | — | NO |
+@@ -21,11 +21,11 @@
+ ## Criterios por Fase (marcar ✅ al cerrar)
+ 
+ ### FASE-SR-A — Helper compute_unresolved + guardián L-SR1
+-- [ ] `AlignmentResult.compute_unresolved()` implementado y consumido por `publication_gates.py` y `delivery_quality_report.py`
+-- [ ] Test estático AST guardián de `main.py` creado (logger = 0, py_compile OK)
+-- [ ] Tests nuevos pasan (procesos aislados, salida a archivo); 0 regresiones en suites tocadas
+-- [ ] `log_phase_completion.py --fase FASE-SR-A` ejecutado (SIN --release)
+-- [ ] Documentación post-fase completa (09 + 10 + dependencias + README)
++- [x] `AlignmentResult.compute_unresolved()` implementado y consumido por `publication_gates.py` y `delivery_quality_report.py`
++- [x] Test estático AST guardián de `main.py` creado (logger = 0, py_compile OK)
++- [x] Tests nuevos pasan (procesos aislados, salida a archivo); 0 regresiones en suites tocadas
++- [x] `log_phase_completion.py --fase FASE-SR-A` ejecutado (SIN --release)
++- [x] Documentación post-fase completa (09 + 10 + dependencias + README)
+ 
+ ### FASE-SR-B — Unificación promesa/matriz/gate
+ - [ ] Propuesta deriva servicios prometidos del pain_ledger + present_in_production
+@@ -49,11 +49,13 @@
+ - [ ] Tests anti-fragmentación (UTM ≡ limpia ≡ mismo id) pasan
+ - [ ] `log_phase_completion.py --fase FASE-SR-D` (SIN --release) + docs post-fase
+ 
+-### FASE-SR-E — Preflight hotel_schema
+-- [ ] Confianza del asset calculada desde fuentes disponibles para construirlo (GBP/web), no desde presencia de la brecha
+-- [ ] Preflight respeta `fallback` + `block_on_failure=False` del catálogo (contrato del catálogo gana)
+-- [ ] Caso "0 schemas + GBP completo" → asset hotel_schema generado (test)
+-- [ ] Caso sin GBP → sin invención (test)
++### FASE-SR-E — Falso negativo schema + contabilización única (rediseñada 2026-08-28)
++- [ ] Bug del parser reproducido con test rojo: JSON-LD formato ARRAY → AttributeError tragado → 0 schemas falsos
++- [ ] `rich_results_client` soporta arrays JSON-LD; bloque corrupto no invalida los demás
++- [ ] `SchemaAuditResult` propaga `error_message` (distinguir ausencia verificada de detección fallida)
++- [ ] Fixture real Salento Real (3 bloques) → ≥ 2 schemas Hotel detectados; pain `no_hotel_schema` no generado
++- [ ] `exists_with_issues` cuenta como `present_in_production` en alignment (contabilización única)
++- [ ] Ausencia genuina sin GBP → sin invención (test) + fallback catálogo residual D-PF3
+ - [ ] `log_phase_completion.py --fase FASE-SR-E` (SIN --release) + docs post-fase
+ 
+ ### FASE-SR-F — Varianza + PageSpeed OPS
+@@ -72,7 +74,7 @@
+ - [ ] Baseline corrida C copiado a `evidence/FASE-SR-H/baseline/` ANTES de la corrida
+ - [ ] Corrida ejecutada (delegate_task o terminal bg con notify) con `--output output/salentoreal_final_v4c`
+ - [ ] Evidencia proactiva copiada a `evidence/FASE-SR-H/` (OBLIGATORIO, antes de cualquier verificación)
+-- [ ] Smoke 7/7 checks OK (readiness, gate PASSED, coherencia, hotel_schema, target_id, 01/02, G9)
++- [ ] Smoke 7/7 checks OK (readiness, gate PASSED, coherencia, hotel_schema cubierto por presencia, target_id, 01/02, G9)
+ - [ ] `log_phase_completion.py --fase FASE-SR-H` (SIN --release) + docs post-fase
+ 
+ ### FASE-SR-VERIFY — Certificación ACs
+diff --git a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/09-documentacion-post-proyecto.md b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/09-documentacion-post-proyecto.md
+index 6be3afc..e08c8af 100644
+--- a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/09-documentacion-post-proyecto.md
++++ b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/09-documentacion-post-proyecto.md
+@@ -17,7 +17,7 @@
+ | Promesa derivada de fuente única | `modules/commercial_documents/v4_proposal_generator.py` + `modules/asset_generation/proposal_asset_alignment.py` | Servicios prometidos derivados del pain_ledger + present_in_production; NO_BREACH fuera del coverage (fin del bloqueo estructural) | SR-B |
+ | Self-healing de claims | `modules/quality_gates/commercial_gate.py` + flujo de regeneración | CG-CLAIM-VS-EVIDENCE cicla: regenera con suggestion + re-valida; persistencia → BLOCKED real | SR-C |
+ | target_id canónico | `main.py` | URL normalizada vía `_normalize_url()` antes de construir target_id (fin de fragmentación por UTM) | SR-D |
+-| Preflight con confianza de fuentes | `modules/commercial_documents/pain_solution_mapper.py` | Confianza del asset desde fuentes para construirlo (GBP/web); respeta fallback del catálogo | SR-E |
++| Fix detección schema + contabilización única | `rich_results_client.py`, `v4_comprehensive.py`, `site_presence_checker.py`, `pain_solution_mapper.py` | JSON-LD array soportado; error_message propagado al audit; `exists_with_issues` = `present_in_production`; fallback catálogo residual (D-PF3) | SR-E |
+ | Determinismo del plan de assets | `pain_solution_mapper.py` (o cache) | Hipótesis de varianza 7→5 verificada/fixeada | SR-F |
+ | Display sincronizado con fuente | `modules/quality_gates/commercial_gate.py` | CG-TIER-CONSISTENCY deriva de fuente financiera; jerga reducida en vista gerencia | SR-G |
+ 
+@@ -26,7 +26,7 @@
+ | Métrica | Valor | Fase |
+ |---------|-------|------|
+ | Tests totales (baseline) | 3,379 | — |
+-| Tests nuevos SR-A | (contar al cerrar) | SR-A |
++| Tests nuevos SR-A | 6 (3 corrida-C + 3 guardián AST); 148 ejecutados aislados, 0 regresiones | SR-A |
+ | Tests nuevos SR-B | (contar al cerrar) | SR-B |
+ | Tests nuevos SR-C | (contar al cerrar) | SR-C |
+ | Tests nuevos SR-D | (contar al cerrar) | SR-D |
+@@ -48,12 +48,17 @@
+ | `modules/asset_generation/proposal_asset_alignment.py` | Taxonomía única / actionable como fuente | SR-B |
+ | `modules/quality_gates/commercial_gate.py` | Self-healing + tier display + jerga | SR-C/SR-G |
+ | `main.py` | Canonicalización target_id | SR-D |
+-| `modules/commercial_documents/pain_solution_mapper.py` | Preflight confianza de fuentes + determinismo | SR-E/SR-F |
++| `modules/data_validation/external_apis/rich_results_client.py` + `modules/auditors/v4_comprehensive.py` + `modules/asset_generation/site_presence_checker.py` | Fix detección schema + contabilización única (H7) | SR-E |
++| `modules/commercial_documents/pain_solution_mapper.py` | Falso pain eliminado + determinismo | SR-E/SR-F |
+ 
+ ## Notas de Ejecución por Fase
+ 
+ ### FASE-SR-A
+-- (llenar al cerrar: decisiones, desviaciones, incidentes)
++- Sesión agente 2026-08-28 (DIRECTO, venv). Helper único `AlignmentResult.compute_unresolved()` + bucket `no_breach` → mensaje G9 aritméticamente coherente (3 cubiertos + 1 sin cubrir + 3 sin brecha = 7 en corrida C).
++- Decisión: el gate deriva los estados semánticos con el MISMO builder que produce `proposal_asset_matrix.json` (`AssetAlignmentMatrix.build` desde el `pain_ledger` del assessment) — sin duplicar criterios (L-NC10); fallback narrow con `logger.warning` (never-block).
++- La decisión de bloqueo del gate NO cambia (usa `effective_alignment`): SR-A unifica el CONTEO (N1); la unificación de decisión es SR-B.
++- Desviación esperada: `run_all_validations --quick` = 5/6 — fallo Version Sync PREEXISTENTE (headers AGENTS/.cursorrules/GUIA_TECNICA; git confirma archivos intocados; `version_consistency_checker` OK). Resolución: E2 de FASE-RELEASE (`sync_versions.py`).
++- Greps (L2): 0 conteos paralelos de unresolved G9; `logger.` en main.py = 0 (AC13). Evidencia: `evidence/FASE-SR-A/`.
+ 
+ ### FASE-SR-B
+ - (llenar al cerrar)
+diff --git a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/10-analisis-post-implementacion.md b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/10-analisis-post-implementacion.md
+index 0b9dc83..96d1aa0 100644
+--- a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/10-analisis-post-implementacion.md
++++ b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/10-analisis-post-implementacion.md
+@@ -11,11 +11,11 @@
+ 
+ | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
+ |------|--------|--------|-------------|---------------|-------|
+-| FASE-SR-A (helper unresolved) | Sesión 1 | ⏳ | — | NO (directo) | |
++| FASE-SR-A (helper unresolved) | Sesión 1 | ✅ | ~30 | NO (directo) | Helper único + bucket no_breach + guardián AST L-SR1; 148 tests (6 nuevos), 0 regresiones; N1 cerrado a nivel de CONTEO (decisión de bloqueo → SR-B) |
+ | FASE-SR-B (unificación) ⚠️ | Sesión 2 | ⏳ | — | NO (DT-3) | |
+ | FASE-SR-C (self-healing) | Sesión 3 | ⏳ | — | NO (directo) | |
+ | FASE-SR-D (target_id) | Sesión 4 | ⏳ | — | NO (directo) | |
+-| FASE-SR-E (preflight) | Sesión 5 | ⏳ | — | NO (directo) | |
++| FASE-SR-E (schema detect + presencia) | Sesión 5 | ⏳ | — | NO (directo) | |
+ | FASE-SR-F (varianza+OPS) | Sesión 6 | ⏳ | — | NO (directo) | |
+ | FASE-SR-G (display) | Sesión 7 | ⏳ | — | NO (directo) | |
+ | FASE-SR-H (E2E Salento Real) | Sesión 8 | ⏳ | — | SÍ (v4complete) | |
+@@ -35,8 +35,8 @@
+ | AC3 | Unresolved idéntico en gate_report y delivery_quality_report | Mismo número `unresolved` en ambos reportes del MISMO run (fin del 4-vs-1) | ⏳ | ⏳ |
+ | AC4 | Claims vs evidencia ciclan | 0 claims "no aparece" contradiendo GBP publicados (o BLOCKED real) | ⏳ | ⏳ |
+ | AC5 | target_id canónico | target_id sin query string en log de corrida final; unit tests UTM≡limpia | ⏳ | ⏳ |
+-| AC6 | hotel_schema generado | Asset generado vía fallback; no_hotel_schema = ASSET_GENERATED | ⏳ | ⏳ |
+-| AC7 | Paradoja de coherencia resuelta | coherence_validation sin "Assets no implementados: hotel_schema"; score ≥ 0.8 | ⏳ | ⏳ |
++| AC6 | Detección schema correcta + contabilización única | Audit detecta schemas del sitio (fixture real ≥ 2 Hotel, incl. array JSON-LD); pain no_hotel_schema no generado; exists_with_issues = present_in_production | ⏳ | ⏳ |
++| AC7 | Coherencia resuelta (revisión 2026-08-28) | coherence_validation sin "Assets no implementados: hotel_schema"; score ≥ 0.8; ausencia genuina cubierta por fallback catálogo (D-PF3) | ⏳ | ⏳ |
+ | AC8 | Varianza explicada | Informe con hipótesis verificada del 7→5 (o fix con test) | ⏳ | ⏳ |
+ | AC9 | Display sincronizado | 0 WARNING CG-TIER-CONSISTENCY; jerga reducida vs baseline | ⏳ | ⏳ |
+ | AC10 | 0 regresión financiera | Escenarios idénticos al baseline: $6.57M / $4.04M / $1.26M COP | ⏳ | ⏳ |
+@@ -76,7 +76,7 @@
+ 
+ | ID | Lección | Fase |
+ |----|---------|------|
+-| L-PF1 | (llenar al cerrar SR-A) | SR-A |
++| L-PF1 | QUÉ PASÓ: dos reportes del MISMO run reportaban unresolved distinto (4 vs 1). POR QUÉ: el DTO AlignmentResult tenía dos paths de construcción que re-derivaban "unresolved" con reglas distintas (len(report.missing) vs suma de estados) — el AlignmentReport pierde la taxonomía NO_BREACH. QUÉ LO PREVIENE: UN helper canónico (compute_unresolved) consumido por ambos reportes + el caller deriva la taxonomía con el MISMO builder que ya produce el artefacto (AssetAlignmentMatrix.build desde pain_ledger) + test de igualdad entre paths. Pertinencia: INCLUIR en memoria (patrón de unificación de conteo en DTOs multi-consumer). | SR-A |
+ | L-PF2 | (llenar al cerrar SR-B) | SR-B |
+ | L-PF3 | (llenar al cerrar SR-C) | SR-C |
+ | L-PF4 | (llenar al cerrar VERIFY) | VERIFY |
+@@ -92,10 +92,11 @@
+ | target_id con query string / fragmentación memoria | 🔴 → SR-D | FASE-SR-D |
+ | Preflight hotel_schema paradoja + fallback ignorado (N4) | 🔴 → SR-E | FASE-SR-E |
+ | Varianza plan de assets entre corridas (7→5) | 💡 → SR-F | FASE-SR-F |
+-| G9 divergente 4-vs-1 (N1) | 🔴 → SR-A | FASE-SR-A |
++| G9 divergente 4-vs-1 (N1) | ✅ RESUELTO (SR-A, 2026-08-28) | Conteo unificado en `AlignmentResult.compute_unresolved` (gate + delivery); SR-B unifica la DECISIÓN de bloqueo (`effective_alignment`) |
+ | CG-TIER-CONSISTENCY + CG-TECH-JARGON | 🔴 → SR-G | FASE-SR-G |
+ | PageSpeed API key inválida | 💡 OPS → SR-F | Verificación de config en SR-F; ROTACIÓN DE LA KEY = decisión del usuario (no se tocan secretos en el plan) |
+ | Gate de coherencia usa score agregado e ignora `is_coherent: false` del mismo archivo (CONTEXT §5) | 💡 FUERA DE ALCANCE | Evaluar en plan futuro; no bloquea este plan |
++| Ubicación de DOMAIN_PRIMER: dualidad `.agent/` vs `.agents/` (knowledge en singular; workflows canónico en plural + symlink; `FALLBACK_PATH` defensivo en doctor.py) | 💡 FUERA DE ALCANCE (SR-A, 2026-08-28) | Consolidar bajo `.agents/` en mini-plan propio futuro; costo estimado: doctor.py, log_phase_completion, CONTRIBUTING §5b, README, AGENTS.md, validadores (25+ refs); no bloquea este plan |
+ | Fix H1 logger (main.py) | ✅ RESUELTO (d8e509d) | Guardián estático en SR-A cierra la clase |
+ 
+ ---
+diff --git a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/README.md b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/README.md
+index 40b8cf6..c4c90be 100644
+--- a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/README.md
++++ b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/README.md
+@@ -1,6 +1,6 @@
+ # SR-PIPELINE-FIXES-2026-08-27
+ 
+-> **Fixes del pipeline v4complete tras la E2E de Hotel Salento Real** — unificación de la contabilidad promesa/matriz/gate, self-healing de claims, canonicalización de `target_id`, preflight `hotel_schema`, investigación de varianza y fixes de display comercial.
++> **Fixes del pipeline v4complete tras la E2E de Hotel Salento Real** — unificación de la contabilidad promesa/matriz/gate, self-healing de claims, canonicalización de `target_id`, fix de detección de schema + contabilización de presencia (revisión causa-raíz 2026-08-28), investigación de varianza y fixes de display comercial.
+ >
+ > **Versión**: v4.72.2 → **v4.73.0** · **Workflow**: phased_project_executor v2.16.0 · **1 fase por sesión**
+ 
+@@ -8,11 +8,11 @@
+ 
+ | Fase | Fixes/Contenido | Complejidad | Delegación | Estado | Sesión | Fecha |
+ |------|-----------------|-------------|------------|--------|--------|-------|
+-| FASE-SR-A | N1/rec#9 — Helper único `compute_unresolved()` + test estático guardián L-SR1 | Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
++| FASE-SR-A | N1/rec#9 — Helper único `compute_unresolved()` + test estático guardián L-SR1 | Media | ❌ DIRECTO | ✅ Completada | agente | 2026-08-28 |
+ | FASE-SR-B ⚠️ | rec#1 — Unificación promesa/matriz/gate (L-SR3, L-NC10) | **MÁXIMA** (§4 plan maestro) | ❌ DIRECTO (DT-3) | ⏳ Pendiente | — | — |
+ | FASE-SR-C | rec#2 — Self-healing loop CG-CLAIM-VS-EVIDENCE (L-SR5) | Alta | ❌ DIRECTO | ⏳ Pendiente | — | — |
+-| FASE-SR-D | rec#3/#10 — Canonicalización de `target_id` con `_normalize_url` (L-SR2, L16) | Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
+-| FASE-SR-E | rec#4/#11 — Preflight `hotel_schema` desde fuentes disponibles (L-SR4, N4) | Media-Alta | ❌ DIRECTO | ⏳ Pendiente | — | — |
++| FASE-SR-D | rec#3/#10 — Canonicalización de `target_id` con `_normalize_url` + `generate_hotel_id` (L-SR2, L16) | Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
++| FASE-SR-E | rec#4/#11 (H7) — Fix falso negativo schema (JSON-LD array) + contabilización única `exists_with_issues` (revisión 2026-08-28) | Alta | ❌ DIRECTO | ⏳ Pendiente | — | — |
+ | FASE-SR-F | rec#5/#6 — Investigación varianza plan de assets + PageSpeed (OPS) | Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
+ | FASE-SR-G | rec#8 — Display: CG-TIER-CONSISTENCY (L30) + CG-TECH-JARGON (L27) | Baja-Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
+ | FASE-SR-H | **ÚNICA ejecución v4complete Salento Real** (baseline + evidencia + smoke) | Media (ejecución) | ✅ DELEGABLE (subagente terminal) | ⏳ Pendiente | — | — |
+diff --git a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/dependencias-fases.md b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/dependencias-fases.md
+index 1a97d93..66998bb 100644
+--- a/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/dependencias-fases.md
++++ b/.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/dependencias-fases.md
+@@ -16,7 +16,7 @@
+                                                            ▼
+                                                       ┌─────────┐
+                                                       │ FASE-SR-E│
+-                                                      │ preflight│
++                                                      │schema+pres│
+                                                       └────┬────┘
+                                                            ▼
+                                                       ┌─────────┐
+@@ -47,7 +47,7 @@
+ | Fase | Estado | Sesión | Checkpoint |
+ |------|--------|--------|------------|
+ | Preparación | ✅ COMPLETADA | orquestación 2026-08-27 | 13 archivos del plan creados; 0 fases ejecutadas |
+-| FASE-SR-A | ⏳ PENDIENTE | — | — |
++| FASE-SR-A | ✅ COMPLETADA | agente 2026-08-28 | Helper `compute_unresolved()` + guardián AST L-SR1; 148 tests aislados PASSED (6 nuevos, 0 regresiones); greps residuos 0; quick 5/6 (Version Sync preexistente → RELEASE E2) |
+ | FASE-SR-B | ⏳ PENDIENTE | — | — |
+ | FASE-SR-C | ⏳ PENDIENTE | — | — |
+ | FASE-SR-D | ⏳ PENDIENTE | — | — |
+@@ -70,6 +70,10 @@
+ | `modules/quality_gates/commercial_gate.py` | — | — | ✏️ ESCRIBE | — | — | — | ✏️ ESCRIBE | — | SR-C PRIMERO que SR-G |
+ | `main.py` | — | — | (posible, flujo regeneración) | ✏️ ESCRIBE | — | — | — | — | SR-C PRIMERO que SR-D |
+ | `modules/commercial_documents/pain_solution_mapper.py` | — | — | — | — | ✏️ ESCRIBE | ✏️ (fix mínimo) | — | — | SR-E PRIMERO que SR-F |
++| `modules/data_validation/external_apis/rich_results_client.py` | — | — | — | — | ✏️ ESCRIBE | — | — | — | fix parser JSON-LD array (H7, revisión 2026-08-28) |
++| `modules/auditors/v4_comprehensive.py` | — | — | — | — | ✏️ ESCRIBE | — | — | — | propagación error_message (H7) |
++| `modules/asset_generation/site_presence_checker.py` | — | — | — | — | ✏️ ESCRIBE | — | — | — | contabilización única exists_with_issues (H7) |
++| `modules/orchestration_v4/onboarding_controller.py` | — | — | — | ✏️ ESCRIBE | — | — | — | — | `generate_hotel_id` (añadido revisión 2026-08-28) |
+ | `modules/asset_generation/asset_catalog.py` | — | — | — | — | 📖 LEE | — | — | — | contrato fallback (sin cambios) |
+ | `agent_harness/memory.py` | — | — | — | 📖 LEE | — | — | — | — | solo lectura (find_latest) |
+ | `config/settings.yaml` | — | — | — | — | — | 📖 LEE | — | — | PageSpeed key (sin tocar secretos) |
+diff --git a/docs/contributing/.last_doc_phase.json b/docs/contributing/.last_doc_phase.json
+index e901ce8..666f8a2 100644
+--- a/docs/contributing/.last_doc_phase.json
++++ b/docs/contributing/.last_doc_phase.json
+@@ -37,7 +37,7 @@
+   "modules/asset_generation/templates/indirect_traffic_optimization_template.md": "FASE-VALIDATE-RC",
+   "modules/generators/report_builder.py": "PROSPECCION-II",
+   "modules/analyzers/gap_analyzer.py": "FASE-D",
+-  "modules/quality_gates/publication_gates.py": "FASE-P1-D",
++  "modules/quality_gates/publication_gates.py": "FASE-SR-A",
+   "modules/asset_generation/asset_content_validator.py": "FASE-B",
+   "data_models/canonical_assessment.py": "FASE-C",
+   "modules/financial_engine/calculator_v2.py": "FASE-P1-B",
+@@ -165,7 +165,7 @@
+   ".agent/knowledge/DOMAIN_PRIMER.md": "N8-RELEASE",
+   "scripts/verify_ga4.py": "FASE-B",
+   "scripts/validate_structure.py": "FASE-B",
+-  "modules/quality_gates/delivery_quality_report.py": "FASE-P0-C",
++  "modules/quality_gates/delivery_quality_report.py": "FASE-SR-A",
+   "evidence/fase-B/analysis.md": "FASE-B",
+   "modules/assessment_builder.py": "FASE-P0-B",
+   "tests/test_assessment_builder.py": "N8-B",
+@@ -243,5 +243,6 @@
+   "evidence/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md": "FASE-P2-B",
+   "evidence/Recomendaciones/PROMPT_INGRESOS.md": "FASE-P2-B",
+   "evidence/Recomendaciones/PROMPT_INGRESOS_README.md": "FASE-P2-B",
+-  "tests/financial_engine/test_fase_r0e_recovery_financial_factors.py": "FASE-R0-E"
++  "tests/financial_engine/test_fase_r0e_recovery_financial_factors.py": "FASE-R0-E",
++  "modules/quality_gates/alignment_result.py": "FASE-SR-A"
+ }
+diff --git a/docs/contributing/REGISTRY.md b/docs/contributing/REGISTRY.md
+index c2814c6..95e4495 100644
+--- a/docs/contributing/REGISTRY.md
++++ b/docs/contributing/REGISTRY.md
+@@ -1,8 +1,8 @@
+ # Registro de Fases - IA Hoteles Agent
+ 
+-> **Ultima actualizacion:** 2026-08-24
++> **Ultima actualizacion:** 2026-08-28
+ > **Version actual:** v4.66.0
+-> **Total fases completadas:** 438
++> **Total fases completadas:** 439
+ 
+ ---
+ 
+@@ -10304,6 +10304,29 @@ _Ninguno_
+ ---
+ 
+ 
++## FASE-SR-A - 2026-08-28
++**Descripcion:** Helper AlignmentResult.compute_unresolved unificado + test estatico guardiano L-SR1
++
++### Archivos Nuevos
++| Archivo | Tipo | Descripcion |
++|---------|------|-------------|
++| `tests/test_main_static_guards.py` | NUEVO | Test Main Static Guards |
++
++### Archivos Modificados
++| Archivo | Cambio |
++|---------|--------|
++| `modules/quality_gates/alignment_result.py` | Alignment Result |
++| `modules/quality_gates/publication_gates.py` | Publication Gates |
++| `modules/quality_gates/delivery_quality_report.py` | Delivery Quality Report |
++
++### Validaciones
++- [x] Tests passing (148 (6 nuevos), 0 regresiones)
++- [x] Suite NEVER_BLOCK passing
++- [x] Capability contract verificado
++
++---
++
++
+ ## Estadisticas
+ 
+ ```markdown
+diff --git a/modules/asset_generation/proposal_asset_alignment.py b/modules/asset_generation/proposal_asset_alignment.py
+index d197179..853ffcd 100644
+--- a/modules/asset_generation/proposal_asset_alignment.py
++++ b/modules/asset_generation/proposal_asset_alignment.py
+@@ -412,6 +412,86 @@ def get_alignment_summary(report: AlignmentReport) -> str:
+     return "\n".join(lines)
+ 
+ 
++# ==========================================================================
++# FASE-SR-B (D-PF1): Fuente única de la promesa comercial
++# ==========================================================================
++# L-SR3/L-NC10: la propuesta, la matriz y el gate deben compartir UNA fuente
++# de verdad para el estado de un servicio. Un servicio es COMPROMETIDO si y
++# solo si:
++#   a) su asset_type resuelve al menos un pain_id presente en el pain_ledger
++#      (brecha real con solución mapeada → LINKED / MISSING_ASSET), o
++#   b) su asset ya existe en el sitio en producción (SitePresence "exists" →
++#      PRESENT_IN_PRODUCTION, cuenta como cubierto).
++#
++# Los servicios sin pain ni presencia (NO_BREACH tras enriquecimiento de
++# presencia) NO se prometen como comprometidos: pasan a "Servicios adicionales
++# disponibles" (footnote de la propuesta), respetando el fix B7/D-NC7. Esta
++# derivación es LA fuente que consumen la propuesta (RC1), el gate
++# (publication_gates) y G9 — nunca catálogos estáticos en paralelo.
++
++
++def _presence_exists(
++    site_presence_report: Optional[Any], asset_type: str
++) -> bool:
++    """True cuando el snapshot SitePresence reporta ``exists`` para el asset.
++
++    Acepta las 3 formas en circulación (mismo contrato que
++    site_presence_adapter.normalize_site_presence y que
++    AlignmentResult._presence_resolved en quality_gates):
++      - dict normalizado: {"results": {asset_type: {"status": ...}}}
++      - dict plano:       {asset_type: {"status": ...}}
++      - objeto con .results (SitePresenceReport)
++    """
++    if not site_presence_report:
++        return False
++
++    results: Any = None
++    if isinstance(site_presence_report, dict):
++        raw = site_presence_report.get("results")
++        results = raw if isinstance(raw, dict) else site_presence_report
++    elif hasattr(site_presence_report, "results"):
++        results = getattr(site_presence_report, "results", None)
++
++    if not isinstance(results, dict):
++        return False
++
++    entry = results.get(asset_type)
++    if entry is None:
++        return False
++    status = entry.get("status") if isinstance(entry, dict) else getattr(entry, "status", None)
++    if status is not None and hasattr(status, "value"):
++        status = status.value
++    return status == "exists"
++
++
++def committed_services_from_entries(
++    entries: List[Any],
++    site_presence_report: Optional[Any] = None,
++) -> List[str]:
++    """D-PF1: servicios comprometidos desde entradas de la matriz canónica.
++
++    Comprometido = pain_ids no vacíos (brecha real mapeada) OR presencia
++    ``exists`` en producción. Es el conjunto ``actionable`` de
++    ``AssetAlignmentMatrix.is_delivery_ready()`` enriquecido con presencia —
++    se REUTILIZA la taxonomía existente, sin criterios paralelos (L-NC10).
++
++    Args:
++        entries: ProposalAssetMatrixEntry (o similares con .pain_ids/.asset_type)
++        site_presence_report: snapshot SitePresence (dict normalizado, plano u
++            objeto con .results)
++
++    Returns:
++        Lista de service_name comprometidos, en el orden de ``entries``.
++    """
++    committed: List[str] = []
++    for entry in entries:
++        pain_ids = getattr(entry, "pain_ids", None) or []
++        asset_type = getattr(entry, "asset_type", "")
++        if pain_ids or _presence_exists(site_presence_report, asset_type):
++            committed.append(getattr(entry, "service_name", ""))
++    return [name for name in committed if name]
++
++
+ # ==========================================================================
+ # FASE-0D: ProposalAssetMatrix — Matriz Propuesta → Brecha → Asset
+ # ==========================================================================
+@@ -794,6 +874,24 @@ class AssetAlignmentMatrix:
+             for e in actionable
+         )
+ 
++    def committed_services(
++        self, site_presence_report: Optional[Any] = None
++    ) -> List[str]:
++        """FASE-SR-B (D-PF1): servicios comprometidos según la fuente única.
++
++        Delega en ``committed_services_from_entries`` (pain mapeado OR presencia
++        ``exists``). Es el MISMO conjunto que consume el gate
++        (publication_gates) y la propuesta (RC1) — una sola taxonomía.
++
++        Args:
++            site_presence_report: snapshot SitePresence para enriquecer los
++                NO_BREACH cuyo asset ya existe en producción.
++
++        Returns:
++            Lista de service_name comprometidos.
++        """
++        return committed_services_from_entries(self.entries, site_presence_report)
++
+     # ── Serialization ──────────────────────────────────────────────────
+ 
+     def to_dict(self) -> Dict[str, Any]:
+@@ -848,6 +946,46 @@ class AssetAlignmentMatrix:
+         return len(self.entries)
+ 
+ 
++def derive_committed_services(
++    pain_ledger: List[Any],
++    site_presence_report: Optional[Any] = None,
++    generated_assets: Optional[List[Any]] = None,
++) -> List[str]:
++    """FASE-SR-B (D-PF1): FUENTE ÚNICA de la lista de servicios prometidos.
++
++    Deriva los servicios comprometidos del pain_ledger (pains con solución
++    mapeada) + present_in_production (SitePresence ``exists`` cuenta como
++    cubierto), usando el MISMO builder que produce proposal_asset_matrix.json
++    y que el gate usa para sus semantic_entries (AssetAlignmentMatrix.build).
++    Así promesa, matriz y gate comparten una sola taxonomía (L-SR3/L-NC10).
++
++    Servicios sin pain ni presencia NO se prometen como comprometidos: la
++    propuesta los lista como "Servicios adicionales disponibles" y el gate los
++    excluye del denominador de coverage_ratio (NO_BREACH fuera del coverage),
++    respetando el fix B7/D-NC7 (WhatsApp sin brecha ni presencia no se ofrece).
++
++    Args:
++        pain_ledger: entries del ledger (PainLedgerEntry o dicts con pain_id).
++        site_presence_report: snapshot SitePresence (dict normalizado/plano u
++            objeto con .results).
++        generated_assets: assets generados en el run (dicts u objetos con
++            asset_type). Determina LINKED vs MISSING_ASSET — no altera qué
++            servicios están comprometidos (eso lo deciden pain/presencia).
++
++    Returns:
++        Lista de service_name comprometidos (posiblemente vacía: nada
++        prometido → el gate pasa trivialmente, nada puede estar "missing").
++    """
++    from modules.delivery.delivery_context import DeliveryContext
++
++    matrix = AssetAlignmentMatrix.build(
++        delivery_context=DeliveryContext(),
++        pain_ledger=pain_ledger,
++        generated_assets=generated_assets or [],
++    )
++    return matrix.committed_services(site_presence_report)
++
++
+ __all__ = [
+     'PROPOSAL_SERVICE_TO_ASSET',
+     'ALL_PROMISED_SERVICES',
+@@ -860,4 +998,6 @@ __all__ = [
+     'verify_proposal_asset_alignment',
+     'get_missing_services',
+     'get_alignment_summary',
++    'committed_services_from_entries',
++    'derive_committed_services',
+ ]
+diff --git a/modules/commercial_documents/v4_proposal_generator.py b/modules/commercial_documents/v4_proposal_generator.py
+index 344f8ff..6e3c768 100644
+--- a/modules/commercial_documents/v4_proposal_generator.py
++++ b/modules/commercial_documents/v4_proposal_generator.py
+@@ -582,6 +582,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
+             site_presence_report=site_presence_report,
+             financial_breakdown=financial_breakdown,
+             opportunity_scores=opportunity_scores,  # RC1 FASE-B
++            pain_ledger=pain_ledger,  # FASE-SR-B (D-PF1): fuente única de la promesa
+         )
+         
+         # Render template
+@@ -719,6 +720,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
+         site_presence_report: Optional[Any] = None,  # FASE-D: SitePresenceReport for production presence
+         financial_breakdown: Optional[Any] = None,  # FASE-PROP-F: For precision_tier extraction
+         opportunity_scores: Optional[List[Dict[str, Any]]] = None,  # RC1 FASE-B: brechas vivas del run
++        pain_ledger: Optional[List[Any]] = None,  # FASE-SR-B (D-PF1): fuente única de la promesa
+     ) -> Dict[str, str]:
+         """Prepare data for template rendering."""
+         
+@@ -1052,6 +1054,9 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
+             site_presence_report=site_presence_report,
+             whatsapp_conflict=whatsapp_conflict,  # FASE-C CROSS-4
+             opportunity_scores=opportunity_scores,  # RC1 FASE-B
++            committed_services=self._derive_committed_services(
++                pain_ledger, site_presence_report, assets_generated
++            ),  # FASE-SR-B (D-PF1): fuente única de la promesa
+         ),
+         'asset_quality_table': self._generate_asset_quality_table(
+             assets_generated,
+@@ -1164,6 +1169,48 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+ """
+  
+ 
++    def _derive_committed_services(
++        self,
++        pain_ledger: Optional[List[Any]],
++        site_presence_report: Optional[Any],
++        assets_generated: Optional[List[Dict[str, Any]]],
++    ) -> Optional[List[str]]:
++        """FASE-SR-B (D-PF1): servicios comprometidos desde la fuente única.
++
++        Delega en ``derive_committed_services`` (pain mapeado OR presencia
++        ``exists``) — la MISMA matriz canónica que consumen el gate
++        (publication_gates) y delivery_quality_report. Un servicio sin pain ni
++        presencia NO se promete: pasa al footnote "Servicios adicionales"
++        (respetando el fix B7/D-NC7).
++
++        Returns:
++            Lista de service_name comprometidos, o None si no hay pain_ledger
++            (modo legacy: catálogo estático, filtro has_asset/is_present) o si
++            la derivación falla (never-block).
++        """
++        if not pain_ledger:
++            return None
++        try:
++            from modules.asset_generation.proposal_asset_alignment import (
++                derive_committed_services,
++            )
++            committed = derive_committed_services(
++                pain_ledger=pain_ledger,
++                site_presence_report=site_presence_report,
++                generated_assets=assets_generated,
++            )
++            logger.info(
++                f"[RC1][D-PF1] Servicios comprometidos (fuente única pain_ledger "
++                f"+ presencia): {committed}"
++            )
++            return committed
++        except Exception as e:
++            logger.warning(
++                f"[RC1][D-PF1] Derivación de servicios comprometidos falló — "
++                f"tabla en modo legacy (catálogo estático): {e}"
++            )
++            return None
++
+     def _build_dynamic_breach_map(
+         self,
+         opportunity_scores: Optional[List[Dict[str, Any]]],
+@@ -1186,7 +1233,8 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+         if not opportunity_scores:
+             logger.warning(
+                 "[RC1] opportunity_scores no disponibles — tabla de servicios "
+-                "sin costos de brecha (fallback sin cifras inventadas)"
++                "sin costos de brecha (sin cifras inventadas; no se compromete "
++                "costo alguno)"
+             )
+             return result
+ 
+@@ -1245,7 +1293,8 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+             if not present:
+                 logger.warning(
+                     f"[RC1] {asset_type}: ninguna brecha candidata {candidates} "
+-                    f"presente en opportunity_scores — sin costo (fallback)"
++                    f"presente en opportunity_scores — brecha sin costo atribuible "
++                    f"(sin cifras inventadas)"
+                 )
+                 continue
+             # Desempate multi-brecha: la de mejor rank en el run actual
+@@ -1267,6 +1316,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+         site_presence_report: Optional[Any] = None,
+         whatsapp_conflict: bool = False,  # FASE-C CROSS-4: muestra conflicto
+         opportunity_scores: Optional[List[Dict[str, Any]]] = None,  # RC1 FASE-B
++        committed_services: Optional[List[str]] = None,  # FASE-SR-B (D-PF1)
+     ) -> str:
+         """Genera tabla principal de servicios mostrando TODOS los servicios prometidos.
+ 
+@@ -1292,6 +1342,12 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+             opportunity_scores: Entries de opportunity_scores del run actual
+                 (brecha_id, rank, estimated_monthly_cop, brecha_name). Si None,
+                 la tabla se renderiza sin costos (fallback explícito).
++            committed_services: FASE-SR-B (D-PF1) — servicios comprometidos
++                según la fuente única (pain mapeado OR presencia ``exists``).
++                Cuando no es None (hay pain_ledger), SOLO estos servicios se
++                muestran como filas: el resto pasa al footnote "Servicios
++                adicionales disponibles" sin compromiso (B7 intacto). None =
++                modo legacy (sin pain_ledger): filtro has_asset/is_present.
+ 
+         Returns:
+             String markdown con la tabla de servicios (8 filas + header).
+@@ -1347,6 +1403,12 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+                     logger.warning(f"[AssetSemantics] BLOCKED in services_table: {asset_type} → {pain_id}")
+                     continue  # skip this row — asset cant solve this pain
+ 
++            # FASE-SR-B (D-PF1): sin compromiso no hay fila — tampoco la fila
++            # de auditoría (la fuente única decide la promesa, no el catálogo).
++            if committed_services is not None and service_name not in committed_services:
++                excluded_services.append(service_name)
++                continue
++
+             # FASE-C CROSS-4: WhatsApp conflict → override estado
+             if asset_type == "whatsapp_button" and whatsapp_conflict:
+                 estado = "📋 Auditoría incluida"
+@@ -1364,7 +1426,7 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+                 else:
+                     logger.warning(
+                         "[RC1] whatsapp_conflict sin brecha en opportunity_scores — "
+-                        "sin rank/costo (fallback sin cifras inventadas)"
++                        "sin rank/costo atribuible (sin cifras inventadas)"
+                     )
+                     brecha_col = "Conflicto de WhatsApp (—)"
+                 desc = "Auditoría y Optimización de Conversión"
+@@ -1373,9 +1435,14 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+ 
+             # FASE-3 ASSET-ALIGNMENT-ZIONE: Conditional — only show services
+             # with a generated asset OR marked as present_in_production
++            # FASE-SR-B (D-PF1): bajo fuente única la decisión de fila ya se
++            # tomó arriba (service_name in committed_services) — un servicio
++            # comprometido sin asset ni presencia se muestra como Pendiente
++            # (coherente con el gate: MISSING_ASSET cuenta en coverage). El
++            # filtro has_asset/is_present aplica SOLO en modo legacy.
+             has_asset = confidence is not None
+             is_present = presence.get('presence_verified') and presence.get('present_in_production')
+-            if not has_asset and not is_present:
++            if committed_services is None and not has_asset and not is_present:
+                 excluded_services.append(service_name)
+                 continue
+ 
+@@ -1425,7 +1492,21 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+             rows.append(f"| **{service_name}** | {estado} | {confianza_col} | {brecha_col} | {desc} |")
+ 
+         # FASE-E: AEO conditional service — unified threshold with technical assets table
+-        if score_aeo is not None and score_aeo < 30:
++        # FASE-SR-B (D-PF1): bajo fuente única el servicio AEO no es
++        # comprometible (no está en la matriz pain→asset) y su asset
++        # (llms_txt) ya se renderiza como fila propia si está comprometido —
++        # añadir la fila duplicaría la promesa del mismo asset. Solo el modo
++        # legacy (sin pain_ledger) muestra la fila condicional.
++        aeo_dpf1_skip = (
++            score_aeo is not None and score_aeo < 30 and committed_services is not None
++        )
++        if aeo_dpf1_skip:
++            logger.info(
++                "[RC1][D-PF1] Fila AEO omitida: servicio no comprometido por la "
++                "fuente única (pain/presencia); su asset ya se representa con su "
++                "servicio principal si aplica"
++            )
++        if score_aeo is not None and score_aeo < 30 and not aeo_dpf1_skip:
+             aeo_entry = SERVICE_CATALOG.get("optimizacion_ia_generativa")
+             if aeo_entry:
+                 aeo_asset_type = aeo_entry.asset_type
+@@ -1469,6 +1550,9 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+         )
+ 
+         # FASE-3 ASSET-ALIGNMENT-ZIONE: Footnote listing excluded services
++        # FASE-SR-B (D-PF1): bajo fuente única los excluidos son servicios SIN
++        # pain ni presencia → "disponibles SIN compromiso" (fuera del coverage
++        # del gate). Filtro B7 intacto (WhatsApp sin brecha no se lista).
+         if excluded_services:
+             if whatsapp_sin_brecha:
+                 filtered = [s for s in excluded_services if s != whatsapp_service_name]
+@@ -1476,7 +1560,12 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+                 filtered = list(excluded_services)
+             if filtered:
+                 excluded_names = ", ".join(filtered)
+-                rows.append(f"\n> **Servicios adicionales disponibles:** {excluded_names}")
++                suffix = (
++                    " — disponibles sin compromiso (fuera del coverage)"
++                    if committed_services is not None
++                    else ""
++                )
++                rows.append(f"\n> **Servicios adicionales disponibles:** {excluded_names}{suffix}")
+ 
+         return "\n".join(rows)
+ 
+diff --git a/modules/quality_gates/alignment_result.py b/modules/quality_gates/alignment_result.py
+index d26284c..45af569 100644
+--- a/modules/quality_gates/alignment_result.py
++++ b/modules/quality_gates/alignment_result.py
+@@ -12,10 +12,59 @@ different totals:
+ 
+ AlignmentResult makes the breakdown explicit: how many were generated, how
+ many already exist in production, and how many are truly unresolved.
++
++FASE-SR-A (N1): "truly unresolved" is computed in exactly one place —
++AlignmentResult.compute_unresolved() — consumed by both reports. The
++NO_BREACH bucket ("sin brecha — no comprometido, fuera del coverage") is
++neither covered nor unresolved and is disclosed separately via ``no_breach``
++so the message stays coherent with ``coverage_ratio`` (fixes gate_report
++unresolved=4 vs delivery=1 in the same run).
++
++FASE-SR-B (D-PF1): ``coverage_ratio`` se calcula sobre el conjunto
++``actionable`` — NO_BREACH queda fuera del denominador (L-NC10/L-SR3/AC1).
++Ambos constructores delegan en UN solo cálculo canónico
++(``_from_entries``) alimentado por las mismas entradas de matriz, así el
++gate_report y delivery_quality_report producen resultados idénticos. Con
++``no_breach == 0`` (ruta legacy sin pain_ledger) el denominador es el total
++de servicios prometidos — comportamiento idéntico al pre-SR-B.
+ """
+ 
+ from dataclasses import dataclass, field
+-from typing import Any, Dict, List, Optional
++from typing import Any, Dict, Iterable, List, Optional, Tuple
++
++# FASE-SR-A (N1): statuses that count as "sin cubrir" (unresolved). Single rule
++# shared by gate_report (from_alignment_report) and delivery_quality_report
++# (from_asset_alignment_matrix) via AlignmentResult.compute_unresolved().
++# NO_BREACH ("no comprometido, fuera del coverage") and presence-resolved
++# entries are NOT unresolved — same semantics as
++# AssetAlignmentMatrix.is_delivery_ready().
++UNRESOLVED_STATUSES = ("MISSING_ASSET", "GENERIC_DRAFT")
++
++
++@dataclass
++class _DerivedEntry:
++    """Legacy-path entry derived from AlignmentReport categories.
++
++    Light stand-in for ProposalAssetMatrixEntry: exposes the attributes
++    that _from_entries() and compute_unresolved() read via getattr()
++    (``status``, ``asset_type``, ``service_name``) so the no-pain_ledger
++    legacy path of ``from_alignment_report`` reuses the SAME canonical
++    computation.
++    """
++
++    status: str
++    asset_type: str
++    service_name: str = ""
++
++
++def _presence_resolved(
++    site_presence_report: Optional[Dict[str, Any]], asset_type: str
++) -> bool:
++    """True when the normalized SitePresence snapshot reports the asset exists."""
++    if not site_presence_report:
++        return False
++    presence = site_presence_report.get(asset_type, {})
++    return isinstance(presence, dict) and presence.get("status") == "exists"
+ 
+ 
+ @dataclass
+@@ -29,6 +78,9 @@ class AlignmentResult:
+         unresolved: Services with no asset generated and not present in production (e.g., 0)
+         coverage_ratio: Proportion covered (generated + present) / promised (e.g., 1.0)
+         present_assets: Human-readable names of assets already in production
++        no_breach: Services declared "no comprometido, fuera del coverage"
++            (NO_BREACH) — neither covered nor unresolved; disclosed so the
++            message stays coherent with coverage_ratio (FASE-SR-A)
+     """
+ 
+     promised_services_total: int
+@@ -37,6 +89,9 @@ class AlignmentResult:
+     unresolved: int
+     coverage_ratio: float
+     present_assets: List[str] = field(default_factory=list)
++    # FASE-SR-A (N1): NO_BREACH services are neither covered nor unresolved;
++    # effective_total + unresolved + no_breach == promised_services_total.
++    no_breach: int = 0
+ 
+     @property
+     def passed(self) -> bool:
+@@ -48,16 +103,47 @@ class AlignmentResult:
+         """Services effectively covered (generated + pre-existing)."""
+         return self.generated_aligned + self.present_in_production
+ 
++    @property
++    def actionable_total(self) -> int:
++        """FASE-SR-B (D-PF1): servicios comprometidos (denominador del coverage).
++
++        Accionables = prometidos - NO_BREACH (mismo concepto que
++        ``AssetAlignmentMatrix.is_delivery_ready()``): los servicios "sin costo
++        (fallback)" no comprometidos no cuentan como deuda de entrega.
++        """
++        return max(self.promised_services_total - self.no_breach, 0)
++
+     @property
+     def message(self) -> str:
+-        """Human-readable alignment message consistent across all consumers."""
+-        parts = [f"{self.effective_total}/{self.promised_services_total} servicios cubiertos"]
++        """Human-readable alignment message consistent across all consumers.
++
++        FASE-SR-B (D-PF1): el denominador del mensaje es ``actionable_total``
++        (coherente con ``coverage_ratio``); los NO_BREACH se revelan como
++        "no comprometidos, fuera del coverage".
++        """
++        if self.actionable_total == 0:
++            base = (
++                f"0 servicios comprometidos — nada prometido sin pain ni "
++                f"presencia ({self.no_breach} sin brecha, fuera del coverage)"
++                if self.no_breach > 0
++                else "0 servicios comprometidos — nada prometido"
++            )
++            return base
++        parts = [
++            f"{self.effective_total}/{self.actionable_total} "
++            f"servicios comprometidos cubiertos"
++        ]
+         parts.append(f"({self.generated_aligned} generados")
+         if self.present_in_production > 0:
+             parts.append(f" + {self.present_in_production} ya en producción")
+         parts.append(")")
+         if self.unresolved > 0:
+             parts.append(f" — {self.unresolved} sin cubrir")
++        if self.no_breach > 0:
++            parts.append(
++                f" — {self.no_breach} sin brecha (no comprometidos, "
++                f"fuera del coverage)"
++            )
+         return " ".join(parts)
+ 
+     def to_dict(self) -> Dict[str, Any]:
+@@ -69,87 +155,183 @@ class AlignmentResult:
+             "unresolved": self.unresolved,
+             "coverage_ratio": self.coverage_ratio,
+             "present_assets": self.present_assets,
++            "no_breach": self.no_breach,
+             "passed": self.passed,
+             "effective_total": self.effective_total,
++            "actionable_total": self.actionable_total,
+             "message": self.message,
+         }
+ 
+     @classmethod
+-    def from_alignment_report(cls, report: Any) -> "AlignmentResult":
+-        """Build AlignmentResult from an AlignmentReport (used by publication gates).
++    def compute_unresolved(
++        cls,
++        entries: Iterable[Any],
++        site_presence_report: Optional[Dict[str, Any]] = None,
++    ) -> int:
++        """FASE-SR-A (N1): the single computation of "sin cubrir" (unresolved).
++
++        Both reports — gate_report (from_alignment_report) and
++        delivery_quality_report (from_asset_alignment_matrix) — MUST count
++        unresolved through this helper. No parallel sums allowed (L-NC10).
++
++        Rule (matrix + SitePresence semantics, matches
++        AssetAlignmentMatrix.is_delivery_ready()):
++        - Only actionable failures count: MISSING_ASSET / GENERIC_DRAFT.
++        - NO_BREACH ("no comprometido, fuera del coverage") is a non-committed
++          service, not an uncovered one.
++        - An entry whose asset already exists on the live site (SitePresence
++          cross-reference) is covered, not unresolved.
+ 
+         Args:
+-            report: AlignmentReport instance from verify_proposal_asset_alignment()
++            entries: iterable of matrix-like entries exposing ``.status`` and
++                ``.asset_type`` (ProposalAssetMatrixEntry) — or plain
++                ``(status, asset_type)`` tuples.
++            site_presence_report: normalized SitePresence snapshot
++                (from site_presence_adapter.normalize_site_presence()).
++
++        Returns:
++            Number of truly unresolved (sin cubrir) services.
+         """
+-        generated = len(report.aligned)
+-        present = len(report.present_in_production)
+-        unresolved_count = len(report.missing)
+-        # total services includes present_in_production as they are part of the promise
+-        total = report.total_services + present
++        unresolved = 0
++        for entry in entries:
++            status, asset_type = cls._entry_status_and_asset(entry)
++            if status not in UNRESOLVED_STATUSES:
++                continue
++            if _presence_resolved(site_presence_report, asset_type):
++                continue
++            unresolved += 1
++        return unresolved
+ 
+-        return cls(
+-            promised_services_total=total,
+-            generated_aligned=generated,
+-            present_in_production=present,
+-            unresolved=unresolved_count,
+-            coverage_ratio=(generated + present) / total if total > 0 else 0.0,
+-            present_assets=[s.service_name for s in report.present_in_production],
+-        )
++    @staticmethod
++    def _entry_status_and_asset(entry: Any) -> Tuple[str, str]:
++        """Accept matrix-like entries or (status, asset_type) tuples."""
++        if isinstance(entry, tuple) and len(entry) == 2:
++            return entry[0], entry[1]
++        return getattr(entry, "status", ""), getattr(entry, "asset_type", "")
+ 
+     @classmethod
+-    def from_asset_alignment_matrix(
+-        cls, matrix: Any, site_presence_report: Optional[Dict[str, Any]] = None
++    def _from_entries(
++        cls,
++        entries: Iterable[Any],
++        site_presence_report: Optional[Dict[str, Any]] = None,
+     ) -> "AlignmentResult":
+-        """Build AlignmentResult from an AssetAlignmentMatrix (used by delivery report).
++        """FASE-SR-B (D-PF1): cálculo canónico desde entradas de matriz.
+ 
+-        Args:
+-            matrix: AssetAlignmentMatrix instance
+-            site_presence_report: Optional normalized SitePresence snapshot
+-                (from site_presence_adapter.normalize_site_presence()).
+-                When provided, entries with NO_BREACH or MISSING_ASSET status
+-                are cross-referenced against live site presence — if the asset
+-                exists on the real site, it is counted as present_in_production
+-                instead of unresolved.
++        ÚNICO punto donde se computan generated/present/no_breach/unresolved/
++        coverage. Tanto ``from_alignment_report`` (con semantic_entries) como
++        ``from_asset_alignment_matrix`` delegan aquí, alimentados por las
++        mismas entradas → los dos reportes del MISMO run son idénticos (AC3)
++        y el coverage usa el denominador actionable (AC1).
+         """
+-        entries = matrix.entries
+-        total = len(entries)
++        entry_list = list(entries)
++        total = len(entry_list)
+ 
+-        generated = sum(1 for e in entries if e.status == "LINKED")
++        generated = sum(1 for e in entry_list if getattr(e, "status", "") == "LINKED")
+ 
+         # Cross-reference with SitePresence for entries whose static JSON status
+         # predates runtime enrichment (NO_BREACH, MISSING_ASSET → may actually
+         # be PRESENT_IN_PRODUCTION on the live site).
+         present = 0
+         present_assets: List[str] = []
+-        for e in entries:
+-            if e.status == "PRESENT_IN_PRODUCTION":
++        for e in entry_list:
++            status = getattr(e, "status", "")
++            asset_type = getattr(e, "asset_type", "")
++            if status == "PRESENT_IN_PRODUCTION":
++                present += 1
++                present_assets.append(getattr(e, "service_name", ""))
++            elif status in ("NO_BREACH", "MISSING_ASSET") and _presence_resolved(
++                site_presence_report, asset_type
++            ):
+                 present += 1
+-                present_assets.append(e.service_name)
+-            elif site_presence_report and e.status in ("NO_BREACH", "MISSING_ASSET"):
+-                presence = site_presence_report.get(e.asset_type, {})
+-                if isinstance(presence, dict) and presence.get("status") == "exists":
+-                    present += 1
+-                    present_assets.append(e.service_name)
+-
+-        unresolved_count = sum(
+-            1 for e in entries if e.status in ("MISSING_ASSET", "GENERIC_DRAFT")
++                present_assets.append(getattr(e, "service_name", ""))
++
++        # FASE-SR-A (N1): unified counting — single helper shared by both reports
++        unresolved_count = cls.compute_unresolved(entry_list, site_presence_report)
++        no_breach_count = sum(
++            1 for e in entry_list
++            if getattr(e, "status", "") == "NO_BREACH"
++            and not _presence_resolved(site_presence_report, getattr(e, "asset_type", ""))
+         )
+-        # Subtract entries resolved by SitePresence cross-reference
+-        if site_presence_report:
+-            unresolved_count = sum(
+-                1 for e in entries
+-                if e.status in ("MISSING_ASSET", "GENERIC_DRAFT")
+-                and not (
+-                    isinstance(site_presence_report.get(e.asset_type, {}), dict)
+-                    and site_presence_report[e.asset_type].get("status") == "exists"
+-                )
+-            )
++
++        # FASE-SR-B (D-PF1): coverage sobre el conjunto actionable — NO_BREACH
++        # fuera del denominador (AC1). Accionables cubiertos = 0 → ratio 1.0
++        # (nada comprometido sin pain ni presencia → nada puede estar faltante).
++        actionable = max(total - no_breach_count, 0)
++        coverage = (generated + present) / actionable if actionable > 0 else 1.0
+ 
+         return cls(
+             promised_services_total=total,
+             generated_aligned=generated,
+             present_in_production=present,
+             unresolved=unresolved_count,
+-            coverage_ratio=(generated + present) / total if total > 0 else 0.0,
++            coverage_ratio=coverage,
+             present_assets=present_assets,
++            no_breach=no_breach_count,
+         )
++
++    @classmethod
++    def from_alignment_report(
++        cls,
++        report: Any,
++        semantic_entries: Optional[List[Any]] = None,
++        site_presence_report: Optional[Dict[str, Any]] = None,
++    ) -> "AlignmentResult":
++        """Build AlignmentResult from an AlignmentReport (used by publication gates).
++
++        Args:
++            report: AlignmentReport instance from verify_proposal_asset_alignment()
++            semantic_entries: FASE-SR-A (N1) — optional pain-driven matrix entries
++                (AssetAlignmentMatrix.build() output) carrying the NO_BREACH
++                taxonomy the delivery-verification report cannot know. When
++                provided, the WHOLE result is computed from these entries via
++                _from_entries() — the exact same computation as
++                delivery_quality_report (same basis, same taxonomy, same
++                coverage denominator); otherwise it is derived from the report
++                categories alone (legacy delivery-verification semantics).
++            site_presence_report: normalized SitePresence snapshot, used with
++                semantic_entries for the presence cross-reference.
++        """
++        if semantic_entries is not None:
++            # FASE-SR-B (D-PF1): fuente única — mismas entradas que la matriz
++            # canónica que consume delivery_quality_report.
++            return cls._from_entries(semantic_entries, site_presence_report)
++
++        # Legacy fallback: derive semantic states from the report categories
++        # and count through the SAME helper (no parallel sums). low_quality
++        # assets are generated (delivered) — they map to LINKED here, exactly
++        # as they were never counted as missing before FASE-SR-A.
++        derived: List[Any] = [
++            _DerivedEntry("LINKED", s.asset_type, s.service_name) for s in report.aligned
++        ]
++        derived += [
++            _DerivedEntry("LINKED", s.asset_type, s.service_name)
++            for s in report.low_quality
++        ]
++        derived += [
++            _DerivedEntry("MISSING_ASSET", s.asset_type, s.service_name)
++            for s in report.missing
++        ]
++        derived += [
++            _DerivedEntry("PRESENT_IN_PRODUCTION", s.asset_type, s.service_name)
++            for s in report.present_in_production
++        ]
++        # no_breach = 0 (NO_BREACH is pain-driven — not knowable here) →
++        # actionable == total → legacy coverage semantics preserved.
++        return cls._from_entries(derived, None)
++
++    @classmethod
++    def from_asset_alignment_matrix(
++        cls, matrix: Any, site_presence_report: Optional[Dict[str, Any]] = None
++    ) -> "AlignmentResult":
++        """Build AlignmentResult from an AssetAlignmentMatrix (used by delivery report).
++
++        Args:
++            matrix: AssetAlignmentMatrix instance
++            site_presence_report: Optional normalized SitePresence snapshot
++                (from site_presence_adapter.normalize_site_presence()).
++                When provided, entries with NO_BREACH or MISSING_ASSET status
++                are cross-referenced against live site presence — if the asset
++                exists on the real site, it is counted as present_in_production
++                instead of unresolved.
++        """
++        return cls._from_entries(matrix.entries, site_presence_report)
+diff --git a/modules/quality_gates/delivery_quality_report.py b/modules/quality_gates/delivery_quality_report.py
+index c21a774..9353993 100644
+--- a/modules/quality_gates/delivery_quality_report.py
++++ b/modules/quality_gates/delivery_quality_report.py
+@@ -232,6 +232,10 @@ class DeliveryQualityReportGenerator:
+             # DT4-N8: Use AlignmentResult with SitePresence cross-reference
+             # instead of raw matrix.is_delivery_ready() — the matrix JSON
+             # predates runtime enrichment and never has PRESENT_IN_PRODUCTION.
++            # FASE-SR-A (N1): unresolved is counted by the single helper
++            # AlignmentResult.compute_unresolved() — the same one the gate
++            # (publication_gates) consumes via from_alignment_report, ending
++            # the 4-vs-1 divergence within a single run.
+             alignment = AlignmentResult.from_asset_alignment_matrix(
+                 matrix, site_presence_report
+             )
+diff --git a/modules/quality_gates/publication_gates.py b/modules/quality_gates/publication_gates.py
+index 5cfafd2..5a119ec 100644
+--- a/modules/quality_gates/publication_gates.py
++++ b/modules/quality_gates/publication_gates.py
+@@ -868,7 +868,68 @@ class PublicationGatesOrchestrator:
+ 
+         generated_assets = assessment.get("generated_assets", [])
+         skipped_assets = assessment.get("skipped_assets", [])  # FASE-1B: assets ya verificados por conditional_generator
++
++        # FASE-2 (DT4-R2): site_presence_report is already canonical from the
++        # assessment (computed ONCE in main.py via normalize_site_presence).
++        # No fake reconstruction, no re-execution — use the snapshot as-is.
++        site_presence_report = assessment.get("site_presence_report")
++        hotel_url = assessment.get("hotel_url", "")
++        pain_ledger = assessment.get("pain_ledger") or []
++
++        # ====================================================================
++        # FASE-SR-B (D-PF1): fuente única de la promesa (L-SR3/L-NC10).
++        # Deriva semantic_entries + proposal_services del pain_ledger ANTES de
++        # verify_proposal_asset_alignment: el gate verifica EXACTAMENTE los
++        # servicios comprometidos (pain mapeado OR presencia ``exists``) que
++        # produce AssetAlignmentMatrix — la MISMA matriz que alimenta
++        # proposal_asset_matrix.json y delivery_quality_report. Sin
++        # pain_ledger: catálogo estático (comportamiento legacy pre-SR-B).
++        # Enrichment never blocks the gate: on failure, log and degrade.
++        # ====================================================================
++        matrix = None
++        semantic_entries = None
+         proposal_services = assessment.get("proposal_services", ALL_PROMISED_SERVICES)
++        if pain_ledger:
++            try:
++                from modules.asset_generation.proposal_asset_alignment import (
++                    AssetAlignmentMatrix,
++                )
++                from modules.delivery.delivery_context import DeliveryContext
++
++                matrix = AssetAlignmentMatrix.build(
++                    delivery_context=DeliveryContext(),
++                    pain_ledger=pain_ledger,
++                    generated_assets=generated_assets,
++                )
++                semantic_entries = matrix.entries
++                # D-PF1: la promesa es el conjunto comprometido — no el
++                # catálogo estático ALL_PROMISED_SERVICES.
++                committed = matrix.committed_services(site_presence_report)
++                if committed:
++                    proposal_services = committed
++                else:
++                    # 0 servicios comprometidos → nada puede estar "missing"
++                    # (nada prometido sin pain ni presencia). PASS trivial
++                    # (never-block): sin deuda de entrega que verificar.
++                    trivial_result = AlignmentResult.from_asset_alignment_matrix(
++                        matrix, site_presence_report
++                    )
++                    return PublicationGateResult(
++                        gate_name=gate_name,
++                        passed=True,
++                        status=GateStatus.PASSED,
++                        value=1.0,
++                        message=trivial_result.message,
++                        suggestion="",
++                        details={"alignment": trivial_result.to_dict()},
++                    )
++            except Exception as e:
++                logger.warning(
++                    "FASE-SR-B: semantic matrix derivation failed — falling back "
++                    "to static catalog (ALL_PROMISED_SERVICES): %s", e,
++                )
++                matrix = None
++                semantic_entries = None
+ 
+         # FASE-2: Extract asset status map (asset_type -> status) from assessment
+         # Status values: NOT_READY, BLOCKED, skipped_existing, IMPLEMENT, DEPRECATED, etc.
+@@ -884,12 +945,6 @@ class PublicationGatesOrchestrator:
+         assessment_with_status = dict(assessment)
+         assessment_with_status["_asset_status_map"] = asset_status_map
+ 
+-        # FASE-2 (DT4-R2): site_presence_report is already canonical from the
+-        # assessment (computed ONCE in main.py via normalize_site_presence).
+-        # No fake reconstruction, no re-execution — use the snapshot as-is.
+-        site_presence_report = assessment.get("site_presence_report")
+-        hotel_url = assessment.get("hotel_url", "")
+-
+         report = verify_proposal_asset_alignment(
+             proposal_services=proposal_services,
+             generated_assets=generated_assets,
+@@ -898,9 +953,18 @@ class PublicationGatesOrchestrator:
+             audit_schema=assessment.get("audit_schema"),  # FASE-12B: coherence/divergence detection
+         )
+ 
+-        # FASE-4 (DT4-N5): Build canonical AlignmentResult for consistent
+-        # reporting across publication gates and delivery quality report.
+-        alignment_result = AlignmentResult.from_alignment_report(report)
++        # FASE-4 (DT4-N5) + FASE-SR-B (D-PF1): canonical AlignmentResult for
++        # consistent reporting across publication gates and delivery quality
++        # report. Con semantic_entries (derivadas ARRIBA, antes de verify) el
++        # resultado se computa desde las MISMAS entradas de matriz que consume
++        # delivery_quality_report (AC3: ambos reportes idénticos en el MISMO
++        # run) y coverage_ratio usa el denominador actionable (AC1). Sin
++        # pain_ledger: fallback delivery-verification (legacy pre-SR-B).
++        alignment_result = AlignmentResult.from_alignment_report(
++            report,
++            semantic_entries=semantic_entries,
++            site_presence_report=site_presence_report,
++        )
+ 
+         # ========================================================================
+         # FASE-2: P1 Blocking — verificar services cuya asset status es NOT_READY
+@@ -1034,15 +1098,13 @@ class PublicationGatesOrchestrator:
+         # ========================================================================
+ 
+         if report.all_aligned:
+-            # FASE-D: Count present_in_production as effectively aligned
+-            present_count = len(report.present_in_production)
+-            indeterminate_count = len(report.indeterminate)
+-            total_checked = report.total_services + present_count
+-            aligned_plus_present = len(report.aligned) + present_count
+-            pct = aligned_plus_present / total_checked if total_checked > 0 else 0.0
+-            message = f"All {total_checked} promised services have assets ({aligned_plus_present}/{total_checked} aligned, {present_count} already in production)"
++            # FASE-SR-B (D-PF1): value = coverage_ratio del AlignmentResult
++            # canónico (denominador actionable; NO_BREACH fuera del coverage) —
++            # sin conteos paralelos sobre las categorías del report (L-NC10).
++            message = alignment_result.message
+             # FIX-5: Note indeterminate assets that couldn't be verified
+-            if indeterminate_count > 0:
++            if report.indeterminate:
++                indeterminate_count = len(report.indeterminate)
+                 indeterminate_names = [s.service_name for s in report.indeterminate]
+                 message += f"; {indeterminate_count} unverified (SitePresenceChecker failed): {', '.join(indeterminate_names)}"
+             return PublicationGateResult(
+@@ -1050,7 +1112,7 @@ class PublicationGatesOrchestrator:
+                 passed=True,
+                 status=GateStatus.PASSED,
+                 message=message,
+-                value=pct,
++                value=alignment_result.coverage_ratio,
+                 suggestion="",
+                 details=_merge_report_with_alignment(report.to_dict(), alignment_result.to_dict()),
+             )
+@@ -1070,16 +1132,12 @@ class PublicationGatesOrchestrator:
+ 
+         message = "; ".join(message_parts) if message_parts else f"{len(missing_names)} promised service(s) missing assets"
+ 
+-        # FASE-2: Effective alignment includes present_in_production as "satisfied"
+-        # A service present in production counts towards the alignment target.
+-        total_services_with_presence = report.total_services + len(report.present_in_production)
+-        aligned_plus_present = len(report.aligned) + len(report.present_in_production)
+-        effective_alignment = (
+-            aligned_plus_present / total_services_with_presence
+-            if total_services_with_presence > 0 else 0.0
+-        )
+-        alignment = effective_alignment
+-        missing_count = len(missing_names)
++        # FASE-SR-B (D-PF1): métricas desde el AlignmentResult canónico —
++        # coverage_ratio con denominador actionable (NO_BREACH fuera) y
++        # unresolved desde compute_unresolved — los MISMOS números que
++        # delivery_quality_report (AC3). Sin criterios paralelos (L-NC10).
++        alignment = alignment_result.coverage_ratio
++        missing_count = alignment_result.unresolved
+ 
+         if alignment < 0.8:
+             # BLOCKED: Less than 80% of promised services have assets or are present in production
+diff --git a/tests/quality_gates/test_alignment_result.py b/tests/quality_gates/test_alignment_result.py
+index ccbbe48..280d0d5 100644
+--- a/tests/quality_gates/test_alignment_result.py
++++ b/tests/quality_gates/test_alignment_result.py
+@@ -14,6 +14,8 @@ from modules.asset_generation.proposal_asset_alignment import (
+     AssetAlignmentMatrix,
+     ProposalAssetMatrixEntry,
+     ALL_PROMISED_SERVICES,
++    PROPOSAL_SERVICE_TO_ASSET,
++    verify_proposal_asset_alignment,
+ )
+ 
+ 
+@@ -284,3 +286,114 @@ class TestSemanticEquality:
+         assert d["effective_total"] == 7
+         assert "message" in d
+         assert "7/7" in d["message"]
++
++
++class TestCorridaCSemantics:
++    """FASE-SR-A (N1) + FASE-SR-B (D-PF1): ambos reportes producen el MISMO
++    resultado para el escenario corrida C (Hotel Salento Real, 2026-08-27
++    18:30).
++
++    7 servicios prometidos: 2 LINKED (org_schema, faq_page), 1 MISSING con pain
++    (hotel_schema), 3 NO_BREACH "no comprometidos, fuera del coverage"
++    (SEO Local, WhatsApp, Open Graph) y llms_txt (NO_BREACH en matriz) resuelto
++    por SitePresence (1 ya en producción). Semántica correcta: unresolved=1 —
++    solo el MISSING con pain es "sin cubrir". Este test certifica el fin del
++    4-vs-1 (AC3).
++
++    FASE-SR-B (D-PF1): coverage_ratio se calcula sobre el conjunto actionable
++    (total − NO_BREACH-no-presencia = 4) → 3/4 = 0.75. Estado intermedio
++    documentado: 0.75 < 0.80 hasta SR-E (tras SR-E, el pain no_hotel_schema
++    desaparece → actionable=3 → coverage 3/3 = 1.0).
++    """
++
++    # pain_ids REALES de PainSolutionMapper.PAIN_SOLUTION_MAP (fuente del
++    # contrato — L3: tests contra fuente dinámica, no valores inventados):
++    #   no_hotel_schema → hotel_schema · no_org_schema → org_schema ·
++    #   no_faq_schema → faq_page
++    PAIN_LEDGER = [
++        {"pain_id": "no_hotel_schema"},
++        {"pain_id": "no_org_schema"},
++        {"pain_id": "no_faq_schema"},
++    ]
++    GENERATED_ASSETS = [
++        {"asset_type": "org_schema", "confidence_score": 0.9},
++        {"asset_type": "faq_page", "confidence_score": 0.85},
++    ]
++    # Snapshot canónico (misma forma que site_presence_adapter
++    # .normalize_site_presence: clave "results" + claves planas por asset-type).
++    SITE_PRESENCE = {
++        "results": {"llms_txt": {"status": "exists"}},
++        "llms_txt": {"status": "exists"},
++    }
++
++    def _semantic_entries(self):
++        """Misma derivación que usa el gate (cableado FASE-SR-A en
++        publication_gates): AssetAlignmentMatrix.build desde pain_ledger."""
++        from modules.delivery.delivery_context import DeliveryContext
++
++        matrix = AssetAlignmentMatrix.build(
++            delivery_context=DeliveryContext(),
++            pain_ledger=self.PAIN_LEDGER,
++            generated_assets=self.GENERATED_ASSETS,
++        )
++        return matrix.entries
++
++    def _gate_report(self):
++        """AlignmentReport real (mismo verify que consume el gate)."""
++        return verify_proposal_asset_alignment(
++            proposal_services=list(PROPOSAL_SERVICE_TO_ASSET.keys()),
++            generated_assets=self.GENERATED_ASSETS,
++            site_presence_report=self.SITE_PRESENCE,
++        )
++
++    def test_corrida_c_same_unresolved_both_paths(self):
++        """from_alignment_report y matriz+SitePresence → MISMO unresolved."""
++        from_report = AlignmentResult.from_alignment_report(
++            self._gate_report(),
++            semantic_entries=self._semantic_entries(),
++            site_presence_report=self.SITE_PRESENCE,
++        )
++        matrix = AssetAlignmentMatrix(entries=self._semantic_entries())
++        from_matrix = AlignmentResult.from_asset_alignment_matrix(
++            matrix, self.SITE_PRESENCE
++        )
++
++        # Fin del 4-vs-1: mismo número en ambos reportes del MISMO run
++        assert from_report.unresolved == from_matrix.unresolved == 1  # hotel_schema
++        assert from_report.generated_aligned == from_matrix.generated_aligned == 2
++        assert from_report.present_in_production == from_matrix.present_in_production == 1
++        assert from_report.no_breach == from_matrix.no_breach == 3
++        assert from_report.promised_services_total == from_matrix.promised_services_total == 7
++        # FASE-SR-B (D-PF1): coverage sobre actionable — NO_BREACH fuera del
++        # denominador (AC1). 3/4 = 0.75: estado intermedio esperado hasta SR-E.
++        assert from_report.actionable_total == from_matrix.actionable_total == 4
++        assert from_report.coverage_ratio == pytest.approx(3 / 4)
++        assert from_matrix.coverage_ratio == pytest.approx(3 / 4)
++        assert from_report.passed is False
++        assert from_matrix.passed is False
++        # Mensaje G9 derivado del helper, coherente con unresolved y coverage (AC3)
++        assert from_report.message == from_matrix.message
++        assert "3/4" in from_report.message
++        assert "1 sin cubrir" in from_report.message
++        assert "3 sin brecha" in from_report.message
++
++    def test_no_breach_arithmetic_coherence(self):
++        """El mensaje es coherente con sus propios datos:
++        effective_total + unresolved + no_breach == promised_services_total."""
++        result = AlignmentResult.from_alignment_report(
++            self._gate_report(),
++            semantic_entries=self._semantic_entries(),
++            site_presence_report=self.SITE_PRESENCE,
++        )
++        assert (
++            result.effective_total + result.unresolved + result.no_breach
++            == result.promised_services_total
++        )
++
++    def test_legacy_path_without_semantic_entries_counts_missing(self):
++        """Sin semantic_entries (pain_ledger ausente), el fallback cuenta
++        report.missing vía el MISMO helper — sin conteos paralelos."""
++        result = AlignmentResult.from_alignment_report(self._gate_report())
++        # report.missing = SEO Local, WhatsApp, hotel_schema, Open Graph = 4
++        assert result.unresolved == 4
++        assert result.no_breach == 0  # taxonomía pain-driven no conocible aquí

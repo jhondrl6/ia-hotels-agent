@@ -1,94 +1,111 @@
-# FASE-SR-E — Preflight `hotel_schema`: Confianza desde Fuentes Disponibles
+# FASE-SR-E — Falso Negativo de Detección de Schema + Contabilización Única de `exists_with_issues`
 
 **ID**: FASE-SR-E
-**Objetivo**: Resolver la paradoja del pain #1 (H4/N4, L-SR4): con 0 schemas detectados y GBP completo, el asset `hotel_schema` DEBE generarse vía el fallback declarado del catálogo. Separar "confianza en los datos de entrada" de "confianza en la implementación del asset": para brechas de ausencia, la confianza se calcula desde las fuentes disponibles para CONSTRUIR el asset (GBP/web), no desde la presencia de la brecha.
-**Dependencias**: FASE-SR-D ✅ (orden del plan; SR-E PRIMERO que SR-F — mismo archivo `pain_solution_mapper.py`).
-**Complejidad**: Media-Alta · **Delegación**: ❌ DIRECTO (decisión de semántica de confianza + contrato con catálogo)
-**Duración estimada**: 60 min · **Presupuesto**: ~22 iteraciones trabajo + ~15 verificación/docs (R2: máx. 60)
+**Objetivo**: Corregir la causa raíz REAL del bloqueo de `hotel_schema` (revisión causa-raíz 2026-08-28, ver §Base Técnica): (1) el audit reporta 0 schemas siendo FALSO — el sitio tiene 2 schemas Hotel (uno en formato JSON-LD ARRAY) y `rich_results_client` no soporta arrays → AttributeError tragado → falso pain `no_hotel_schema`; (2) doble contabilidad de `EXISTS_WITH_ISSUES`: bloquea la generación ("existe") pero NO cuenta como `present_in_production` en alignment ("no existe"). Mantener como hardening residual la semántica D-PF3 (fallback del catálogo para ausencia genuina).
+**Dependencias**: FASE-SR-D ✅ (orden del plan; SR-E PRIMERO que SR-F — `pain_solution_mapper.py` en común).
+**Complejidad**: Alta · **Delegación**: ❌ DIRECTO (fix cross-module: parser + audit + SitePresence + alignment)
+**Duración estimada**: 60-90 min · **Presupuesto**: ~25 iteraciones trabajo + ~15 verificación/docs (R2: máx. 60)
 
 ## Reglas de Sesión (MANDATORIO)
 
 - R1: Una fase por sesión. R2: máx. 60 iteraciones (checkpoint + evidencia si se agota). R3: 4 tareas + 0 comandos largos.
 - Python: `./venv/Scripts/python.exe`.
+- NO ejecutar `v4complete`/`v4audit` (la única corrida es SR-H). La verificación en vivo del parser se hace con tests con fixtures del HTML real, NO con corridas.
 
 ## Contexto
 
-**Lectura previa obligatoria**: CONTEXT-SALENTOREAL §5 (H4), §9.5.2 N4, §8.2 L-SR4, §9 #4 y #11 + plan maestro §8.
+**Lectura previa obligatoria**: CONTEXT-SALENTOREAL §5 (H4), §9.5.2 N4, §8.2 L-SR4 + plan maestro §1 (H4 reclasificado + H7) y §8.
 
 ### Estado de Fases Anteriores
 | Fase | Estado |
 |------|--------|
 | FASE-SR-A…SR-D | ✅ Completadas |
 
-### Base Técnica Disponible (N4 verificado contra código vivo)
-- `modules/commercial_documents/pain_solution_mapper.py:889`: `reason=f"...Insufficient confidence ({avg_confidence:.2f} < {min_confidence})"` — el preflight de confianza que mató la generación en corrida C (`hotel_schema: Insufficient confidence (0.00 < 0.8)`).
-- `modules/asset_generation/asset_catalog.py:92-98`: `hotel_schema` declara `fallback="generate_basic_schema"`, `block_on_failure=False` → el catálogo DICE "puedo generar desde GBP". Dos contratos contradictorios para el mismo asset (N4): el preflight lo bloquea antes de que el fallback opere. **Decisión D-PF3: el contrato del catálogo gana — nunca ambos criterios.**
-- Evidencia corrida C: pain #1 `no_hotel_schema` (score 85, HIGH, $1.06M COP/mes); audit = 0 schemas; asset NO generado; `coherence_validation.json` check `promised_assets_exist` FAILED ("Assets no implementados: hotel_schema"); `pain_ledger_resolved.json`: `no_hotel_schema` = DETECTED, `mapped_to_service: 0`, `justified_skip: 0`.
-- Datos GBP disponibles para construir el schema: nombre, dirección, rating 4.5, 984 reseñas, teléfono (todos presentes). Nota: `geo_enriched/hotel_schema_rich.json` y `faq_schema.json` sí se generan en la rama GEO pero NO cuentan como asset `hotel_schema` para ningún gate.
+### Base Técnica Disponible (revisión causa-raíz 2026-08-28 — verificada contra código vivo y sitio vivo)
+
+**La premisa original de esta fase (H4/N4: "el preflight de confianza bloqueó la generación") es FALSA. Evidencia:**
+
+1. **El sitio SÍ tiene schemas** (verificado con fetch en vivo): `hotelsalentoreal.com` tiene 3 bloques `application/ld+json`: (a) `@graph` Yoast/WebPage, (b) **ARRAY** JSON `[{ "@type": "Hotel", ... }]`, (c) dict single `{ "@type": "Hotel", telephone: "+57 316 6296142", ... }`.
+2. **El parser falla en el formato array**: `modules/data_validation/external_apis/rich_results_client.py` — `_validate_schema`/`_validate_single_schema` (~L198-220) manejan `@graph` y dict single, pero NO listas: `data.get("@type", ...)` sobre una list lanza `AttributeError: 'list' object has no attribute 'get'`. El `except` del bucle de parsing (~L128-196) solo captura `(json.JSONDecodeError, TypeError)`.
+3. **El error se traga**: `test_url` (~L96-126) `except Exception → status="ERROR"`, y `get_hotel_schema_report` (~L497-547) con ERROR retorna `has_hotel_schema=False, all_schemas=[]`. Prueba empírica ejecutada: `status: ERROR, error: 'list' object has no attribute 'get', detected_items: 0`.
+4. **El audit propaga el falso negativo en silencio**: `modules/auditors/v4_comprehensive.py:680-697` (`_audit_schemas`) consume `get_hotel_schema_report` → `SchemaAuditResult(total_schemas=0)`; el `error_message` del resultado ERROR NUNCA llega al `SchemaAuditResult`. Artefacto corrida C: `audit_report.total_schemas = 0` (falso).
+5. **El pain `no_hotel_schema` es un FALSO POSITIVO**: `pain_solution_mapper.py` ~L393-399 genera el pain si `not audit_result.schema.hotel_schema_detected`. Score 85, HIGH, $1.06M COP/mes — cifra inventada sobre una detección rota.
+6. **Lo que realmente detuvo la generación**: `conditional_generator.py:110-127` — gate de presencia (FASE-CAUSAL-01) ANTES del preflight: `SitePresenceChecker` (vía el detector `modules/scrapers/schema_finder.py`, que SÍ detectó el schema) retornó `EXISTS_WITH_ISSUES` ("Campos faltantes: ['priceRange', 'amenityFeature', 'image', 'url']") → `should_generate=False` → SKIPPED. El mensaje "Insufficient confidence (0.00 < 0.8)" de `pain_solution_mapper.py:889` solo afecta el DISPLAY del plan en `main.py:2411`; el orquestador regenera specs con `can_generate=True` (`v4_asset_orchestrator._solutions_to_asset_specs` ~L712-722).
+7. **Doble contabilidad** (viola L-SR3): `EXISTS_WITH_ISSUES` bloquea la generación ("existe en producción") pero `site_presence_checker.should_generate` (~L76-82) NO lo cuenta como `present_in_production` en alignment → queda `unresolved`. El mismo hecho tratado como "existe" y "no existe" según el consumidor.
+8. **Dos detectores contradictorios sin arbitraje**: `schema_finder.py` (scrapers, detectó el schema) vs `rich_results_client` (auditors, 0 schemas).
 
 ## Tareas
 
-### T1: Investigar el flujo preflight ↔ catálogo ↔ coherence_validator
-**Archivos**: `pain_solution_mapper.py` (cálculo de `avg_confidence` y `min_confidence`), `asset_catalog.py` (contrato `fallback`/`block_on_failure`), `modules/commercial_documents/coherence_validator.py` (`_check_promised_assets_exist`, L543/611), orquestador de preflight (linker/orchestrator — localizar el caller de la decisión 0.00 < 0.8).
+### T1: Confirmar la cadena de fallo con tests reproduciendo el bug
+**Archivos**: `modules/data_validation/external_apis/rich_results_client.py`, `modules/auditors/v4_comprehensive.py` (L640-700), `modules/scrapers/schema_finder.py`, `modules/asset_generation/site_presence_checker.py`, `modules/asset_generation/conditional_generator.py` (L90-200), `modules/commercial_documents/pain_solution_mapper.py` (~L393-399).
 **Criterios**:
-- [ ] Mapa: de dónde sale `avg_confidence` para `hotel_schema` (por qué es 0.00 con 0 schemas) y dónde se consulta `min_confidence`
-- [ ] Confirmar cómo el catálogo expone `fallback`/`block_on_failure` y quién debería consumirlo
+- [ ] Test rojo que reproduce: bloque ld+json en formato ARRAY con `@type: Hotel` → `get_hotel_schema_report` hoy retorna `has_hotel_schema=False` (bug confirmado)
+- [ ] Test rojo: `SchemaAuditResult` no expone el `error_message` del resultado ERROR (falso negativo silencioso)
+- [ ] Mapa documentado: qué detector consume SitePresenceChecker vs qué detector consume el audit, y dónde se decide `present_in_production` en alignment
 
-### T2: Implementar D-PF3
+### T2: Fix de detección + contabilización única
 **Criterios**:
-- [ ] Para brechas de **ausencia** (pain "no existe X"), la confianza del asset se calcula desde las fuentes disponibles para construir X (GBP completo → confianza alta; sin GBP y sin web → confianza baja, comportamiento previo)
-- [ ] El preflight respeta `fallback` + `block_on_failure=False` del catálogo: si hay fallback disponible, NO bloquea por confianza de datos de entrada
-- [ ] Consistencia con SR-B: un asset generado vía fallback cuenta como LINKED/GENERATED en la matriz y en el gate (un solo criterio)
-- [ ] Sin invención: si no hay fuentes para construir el asset, el comportamiento de bloqueo se mantiene (con `justified_skip` trazable)
+- [ ] `rich_results_client` soporta JSON-LD en formato ARRAY (iterar elementos de la lista; cada elemento se valida como schema individual) y el bucle de parsing captura `AttributeError`/`Exception` por bloque (un bloque corrupto NO invalida los demás)
+- [ ] Si TODOS los bloques fallan o el resultado es ERROR, el error se PROPAGA: `SchemaAuditResult` expone `error_message`/warnings (el audit nunca reporta "0 schemas" en silencio cuando hubo error de parsing — distinguir "ausencia verificada" de "detección fallida")
+- [ ] Contabilización única (L-SR3): `EXISTS_WITH_ISSUES` cuenta como `present_in_production` en alignment/matrix (el asset existe en el sitio; sus campos faltantes van como mejora sugerida, no como brecha unresolved). Un solo criterio compartido con SR-B
+- [ ] Con schema detectado por el audit (`hotel_schema_detected=True`), el pain `no_hotel_schema` NO se genera (elimina el falso positivo de raíz)
+- [ ] Hardening residual D-PF3 (solo para ausencia GENUINA verificada): si el sitio realmente no tiene schema y hay GBP completo, el preflight respeta `fallback="generate_basic_schema"` + `block_on_failure=False` del catálogo; sin fuentes → bloqueo con `justified_skip`
+- [ ] `generate_basic_schema` queda cableado a un consumidor real o se documenta su no-implementación como seguimiento explícito (grep: 0 declaraciones sin consumidor)
 
-### T3: Tests (2 casos opuestos)
+### T3: Tests (fixture real + casos opuestos)
 **Criterios**:
-- [ ] Test caso Salento Real: 0 schemas + GBP completo (nombre/dirección/rating/teléfono) → asset `hotel_schema` GENERADO; `no_hotel_schema` = ASSET_GENERATED en pain_ledger; `promised_assets_exist` sin "Assets no implementados"
-- [ ] Test caso sin fuentes: 0 schemas + sin GBP → sin generación, sin invención, `justified_skip` documentado
-- [ ] Test de consistencia: el asset por fallback satisface `promised_assets_exist`
-- [ ] Tests de regresión de pain_solution_mapper y coherence_validator (archivos específicos)
+- [ ] Fixture con los 3 bloques reales de hotelsalentoreal.com (`@graph` + ARRAY Hotel + dict Hotel) → `get_hotel_schema_report` detecta ≥ 2 schemas Hotel; `total_schemas ≥ 1`
+- [ ] Con detección correcta: pain `no_hotel_schema` NO generado; `promised_assets_exist` sin "Assets no implementados: hotel_schema"
+- [ ] `EXISTS_WITH_ISSUES` → `present_in_production` en alignment (cuenta como cubierto, no unresolved)
+- [ ] Bloque corrupto aislado no invalida bloques válidos; resultado ERROR propaga `error_message` al audit
+- [ ] Ausencia genuina (0 schemas + sin GBP) → sin generación, sin invención, `justified_skip`
+- [ ] Regresión: suites de auditors y asset_generation tocadas (archivos específicos)
 
 ### T4: Greps + docs
 **Criterios**:
-- [ ] Grep: 0 residuos del criterio "confianza desde presencia de la brecha" para assets con fallback
-- [ ] Grep: 0 referencias a `generate_basic_schema` sin su consumidor del preflight (el fallback pasa a estar cableado)
+- [ ] Grep: el criterio de presencia es UNO solo — 0 paths que traten `EXISTS_WITH_ISSUES` como "no presente" en alignment
+- [ ] Grep: `get_hotel_schema_report` sin consumidores que ignoren su `error_message`/status ERROR
+- [ ] Documentar en `10-analisis` la decisión sobre el arbitraje schema_finder vs rich_results (¿fuente única? ¿unión? — decidir y registrar, no dejar ambos sin contrato)
 
 ## Tests Obligatorios
 
 | Test | Archivo | Criterio de Éxito |
 |------|---------|-------------------|
-| caso Salento Real | tests de `tests/commercial_documents/test_pain_solution_mapper*.py` (específicos) | asset generado + ASSET_GENERATED |
-| caso sin fuentes | ídem | bloqueo mantenido + justified_skip |
-| consistencia promised_assets_exist | tests del coherence_validator | sin "Assets no implementados" |
+| parser array JSON-LD (fixture real Salento) | `tests/data_validation/` (archivo existente de rich_results o nuevo específico) | ≥2 schemas Hotel detectados |
+| propagación de error al audit | tests de `v4_comprehensive` (específicos) | ERROR → error_message visible, nunca 0 silencioso |
+| contabilización única exists_with_issues | tests de alignment/site_presence | cuenta como present_in_production |
+| ausencia genuina sin fuentes | tests de pain_solution_mapper (específicos) | bloqueo + justified_skip |
 
 **Comandos** (procesos aislados, salida a archivo):
 ```bash
-./venv/Scripts/python.exe -m pytest tests/commercial_documents -k "mapper or schema" -v > temp/fase_sr_e_tests1.txt 2>&1
-./venv/Scripts/python.exe -m pytest tests/asset_generation -k "catalog or preflight" -v > temp/fase_sr_e_tests2.txt 2>&1
+./venv/Scripts/python.exe -m pytest tests/data_validation -k "rich_results or schema" -v > temp/fase_sr_e_tests1.txt 2>&1
+./venv/Scripts/python.exe -m pytest tests/asset_generation -k "presence or alignment" -v > temp/fase_sr_e_tests2.txt 2>&1
+./venv/Scripts/python.exe -m pytest tests/auditors -k "comprehensive or schema" -v > temp/fase_sr_e_tests3.txt 2>&1
 ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
 ```
 
 ## Post-Ejecución (OBLIGATORIO — antes de cerrar la sesión)
 
-1. `dependencias-fases.md` §2 → ✅. 2. `README.md` → ✅. 3. `06-checklist` → SR-E. 4. `09-documentacion` → B/D/E + Notas. 5. `10-analisis` → Resumen + D-PF3 confirmada/ajustada + lecciones. 6. `evidence/FASE-SR-E/` → diff + tests. 7. Registro (SIN `--release`):
+1. `dependencias-fases.md` §2 → ✅. 2. `README.md` → ✅. 3. `06-checklist` → SR-E. 4. `09-documentacion` → B/D/E + Notas. 5. `10-analisis` → Resumen + D-PF3 ajustada (revisión causa-raíz 2026-08-28) + lecciones + decisión de arbitraje de detectores. 6. `evidence/FASE-SR-E/` → diff + tests + fixture del HTML real. 7. Registro (SIN `--release`):
 ```bash
-./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-SR-E --desc "Preflight hotel_schema: confianza desde fuentes disponibles (GBP/web); respeta fallback del catalogo" --archivos-mod "modules/commercial_documents/pain_solution_mapper.py" --tests "<N reales>" --check-manual-docs
+./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-SR-E --desc "Fix falso negativo schema (JSON-LD array en rich_results_client + propagacion de error al audit) + contabilizacion unica exists_with_issues como present_in_production + fallback catalogo residual (D-PF3)" --archivos-mod "modules/data_validation/external_apis/rich_results_client.py,modules/auditors/v4_comprehensive.py,modules/asset_generation/site_presence_checker.py,modules/quality_gates/publication_gates.py,modules/commercial_documents/pain_solution_mapper.py" --tests "<N reales>" --check-manual-docs
 ```
 8. `./venv/Scripts/python.exe scripts/doctor.py --regenerate-domain-primer`
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] Tests de los 2 casos pasan; regresiones = 0
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] D-PF3 implementada (contrato del catálogo gana; sin doble criterio)
+- [ ] Bug del parser reproducido con test rojo ANTES del fix
+- [ ] Fixture real de Salento detecta ≥2 schemas Hotel; falso pain eliminado
+- [ ] Contabilización única de `exists_with_issues` implementada y testeada
+- [ ] `run_all_validations.py --quick` TOTAL PASS; regresiones = 0 en suites tocadas
 - [ ] Docs post-fase completos (1-8)
 - [ ] Evidencia en `evidence/FASE-SR-E/`
 
 ## Restricciones
 
 - Máx. 60 iteraciones; NO ejecutar v4complete/v4audit.
-- NO modificar `asset_catalog.py` (el contrato del catálogo es la fuente — se consume, no se reescribe).
-- NO bajar el umbral global 0.8 (enmascara el problema semántico — D-PF3).
-- NO tocar la rama GEO existente (`geo_enriched/hotel_schema_rich.json`) — esta fase trata el asset del catálogo.
+- NO bajar el umbral global 0.8 (enmascara problemas semánticos).
+- NO tocar la rama GEO existente (`geo_enriched/hotel_schema_rich.json`) — esta fase trata la detección y el asset del catálogo.
+- NO silenciar errores de parsing (todo ERROR debe ser visible en el audit — L-SR5).
 - NO delegar a subagente; NO usar `--release` en log_phase_completion.
 - AC10: capa financiera intacta.

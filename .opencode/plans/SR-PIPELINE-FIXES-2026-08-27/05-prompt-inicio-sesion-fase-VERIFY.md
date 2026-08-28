@@ -30,7 +30,7 @@
 ### T1: Certificación AC1-AC13 (Expected → Observed → Verdict)
 **Criterios**:
 - [ ] Por cada AC: evidencia citada (archivo + campo/valor) desde el output E2E — nunca desde código ni tests
-- [ ] AC1 gate no bloquea por NO_BREACH · AC2 promesa pain_ledger+presence · AC3 unresolved idéntico · AC4 claims ciclan (reporte gates) · AC5 target_id canónico · AC6 hotel_schema generado · AC7 promised_assets_exist limpio · AC8 varianza explicada · AC9 display sincronizado · AC10 financiera $6.57M/$4.04M/$1.26M · AC11 READY_FOR_PUBLICATION · AC12 01/02+ZIP sin BLOCKED_BY_GATES · AC13 guardián estático
+- [ ] AC1 gate no bloquea por NO_BREACH · AC2 promesa pain_ledger+presence · AC3 unresolved idéntico · AC4 claims ciclan (reporte gates) · AC5 target_id canónico · AC6 detección schema correcta (audit ≥ 1 Hotel, incl. array JSON-LD; sin pain falso; exists_with_issues = presencia) · AC7 promised_assets_exist limpio + ausencia genuina vía fallback · AC8 varianza explicada · AC9 display sincronizado · AC10 financiera $6.57M/$4.04M/$1.26M · AC11 READY_FOR_PUBLICATION · AC12 01/02+ZIP sin BLOCKED_BY_GATES · AC13 guardián estático
 - [ ] Veredicto por AC: SUPERADO / NO SUPERADO (con causa y fase responsable si falla)
 
 ### T2: Diff antes/después vs baseline (L-NC12)

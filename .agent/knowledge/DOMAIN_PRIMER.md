@@ -52,7 +52,7 @@
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **quality_gates/** | 9 | AlignmentResult; CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; CommercialGateResult, CommercialGateReport, CommercialGateValidator; DeliveryQualityReport, DeliveryQualityRepor |
+| **quality_gates/** | 9 | _DerivedEntry, AlignmentResult; CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; CommercialGateResult, CommercialGateReport, CommercialGateValidator; DeliveryQualityReport, Deliv |
 
 ### UTILIDADES Y VALIDACION
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-08-24 | v4.72.2 Limpieza de Skills*
+*Auto-generado: 2026-08-28 | v4.72.2 Limpieza de Skills*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

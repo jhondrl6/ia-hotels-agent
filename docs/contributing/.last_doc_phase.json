@@ -1,7 +1,7 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-RELEASE-4.63.0",
   "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-R0-C",
-  "modules/commercial_documents/v4_proposal_generator.py": "FASE-R0-D",
+  "modules/commercial_documents/v4_proposal_generator.py": "FASE-SR-B",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-RELEASE-4.63.0",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
@@ -37,7 +37,7 @@
   "modules/asset_generation/templates/indirect_traffic_optimization_template.md": "FASE-VALIDATE-RC",
   "modules/generators/report_builder.py": "PROSPECCION-II",
   "modules/analyzers/gap_analyzer.py": "FASE-D",
-  "modules/quality_gates/publication_gates.py": "FASE-P1-D",
+  "modules/quality_gates/publication_gates.py": "FASE-SR-B",
   "modules/asset_generation/asset_content_validator.py": "FASE-B",
   "data_models/canonical_assessment.py": "FASE-C",
   "modules/financial_engine/calculator_v2.py": "FASE-P1-B",
@@ -94,7 +94,7 @@
   ".opencode/plans/AMAZILIAHOTEL_REFACTOR/09-documentacion-post-proyecto.md": "FASE-DOC-09",
   "modules/postprocessors/content_scrubber.py": "FASE-2-PATCH-A",
   "modules/asset_generation/faq_generator.py": "FASE-5",
-  "modules/asset_generation/proposal_asset_alignment.py": "FASE-2",
+  "modules/asset_generation/proposal_asset_alignment.py": "FASE-SR-B",
   "evidence/amh-refactor-v3-hipotesis/VEREDICTO_FASE_0.md": "FASE-0-HIPOTESIS",
   "tests/asset_generation/test_datasource_gap.py": "FASE-1-DATASOURCE-GAP",
   "modules/asset_generation/geo_enriched_bridge.py": "FASE-RELEASE-4.33.0",
@@ -165,7 +165,7 @@
   ".agent/knowledge/DOMAIN_PRIMER.md": "N8-RELEASE",
   "scripts/verify_ga4.py": "FASE-B",
   "scripts/validate_structure.py": "FASE-B",
-  "modules/quality_gates/delivery_quality_report.py": "FASE-P0-C",
+  "modules/quality_gates/delivery_quality_report.py": "FASE-SR-B",
   "evidence/fase-B/analysis.md": "FASE-B",
   "modules/assessment_builder.py": "FASE-P0-B",
   "tests/test_assessment_builder.py": "N8-B",
@@ -243,5 +243,6 @@
   "evidence/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md": "FASE-P2-B",
   "evidence/Recomendaciones/PROMPT_INGRESOS.md": "FASE-P2-B",
   "evidence/Recomendaciones/PROMPT_INGRESOS_README.md": "FASE-P2-B",
-  "tests/financial_engine/test_fase_r0e_recovery_financial_factors.py": "FASE-R0-E"
+  "tests/financial_engine/test_fase_r0e_recovery_financial_factors.py": "FASE-R0-E",
+  "modules/quality_gates/alignment_result.py": "FASE-SR-A"
 }

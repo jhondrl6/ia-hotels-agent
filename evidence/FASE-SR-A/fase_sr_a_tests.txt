@@ -1,0 +1,46 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 14 items
+
+tests/quality_gates/test_alignment_result.py::TestAlignmentResultFromReport::test_all_7_aligned_no_presence PASSED [  7%]
+tests/quality_gates/test_alignment_result.py::TestAlignmentResultFromReport::test_5_aligned_2_in_production PASSED [ 14%]
+tests/quality_gates/test_alignment_result.py::TestAlignmentResultFromReport::test_5_aligned_0_presence_2_missing PASSED [ 21%]
+tests/quality_gates/test_alignment_result.py::TestAlignmentResultFromMatrix::test_all_linked_delivery_ready PASSED [ 28%]
+tests/quality_gates/test_alignment_result.py::TestAlignmentResultFromMatrix::test_5_linked_2_present_in_production PASSED [ 35%]
+tests/quality_gates/test_alignment_result.py::TestAlignmentResultFromMatrix::test_missing_assets_not_delivery_ready PASSED [ 42%]
+tests/quality_gates/test_alignment_result.py::TestSemanticEquality::test_same_totals_from_both_paths PASSED [ 50%]
+tests/quality_gates/test_alignment_result.py::TestSemanticEquality::test_to_dict_contains_all_required_keys PASSED [ 57%]
+tests/quality_gates/test_alignment_result.py::TestCorridaCSemantics::test_corrida_c_same_unresolved_both_paths PASSED [ 64%]
+tests/quality_gates/test_alignment_result.py::TestCorridaCSemantics::test_no_breach_arithmetic_coherence PASSED [ 71%]
+tests/quality_gates/test_alignment_result.py::TestCorridaCSemantics::test_legacy_path_without_semantic_entries_counts_missing PASSED [ 78%]
+tests/test_main_static_guards.py::test_main_py_exists PASSED             [ 85%]
+tests/test_main_static_guards.py::test_main_py_compiles PASSED           [ 92%]
+tests/test_main_static_guards.py::test_main_py_has_no_forbidden_symbols PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 14 passed, 8 warnings in 3.22s ========================

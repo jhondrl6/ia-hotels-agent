@@ -413,6 +413,86 @@ def get_alignment_summary(report: AlignmentReport) -> str:
 
 
 # ==========================================================================
+# FASE-SR-B (D-PF1): Fuente única de la promesa comercial
+# ==========================================================================
+# L-SR3/L-NC10: la propuesta, la matriz y el gate deben compartir UNA fuente
+# de verdad para el estado de un servicio. Un servicio es COMPROMETIDO si y
+# solo si:
+#   a) su asset_type resuelve al menos un pain_id presente en el pain_ledger
+#      (brecha real con solución mapeada → LINKED / MISSING_ASSET), o
+#   b) su asset ya existe en el sitio en producción (SitePresence "exists" →
+#      PRESENT_IN_PRODUCTION, cuenta como cubierto).
+#
+# Los servicios sin pain ni presencia (NO_BREACH tras enriquecimiento de
+# presencia) NO se prometen como comprometidos: pasan a "Servicios adicionales
+# disponibles" (footnote de la propuesta), respetando el fix B7/D-NC7. Esta
+# derivación es LA fuente que consumen la propuesta (RC1), el gate
+# (publication_gates) y G9 — nunca catálogos estáticos en paralelo.
+
+
+def _presence_exists(
+    site_presence_report: Optional[Any], asset_type: str
+) -> bool:
+    """True cuando el snapshot SitePresence reporta ``exists`` para el asset.
+
+    Acepta las 3 formas en circulación (mismo contrato que
+    site_presence_adapter.normalize_site_presence y que
+    AlignmentResult._presence_resolved en quality_gates):
+      - dict normalizado: {"results": {asset_type: {"status": ...}}}
+      - dict plano:       {asset_type: {"status": ...}}
+      - objeto con .results (SitePresenceReport)
+    """
+    if not site_presence_report:
+        return False
+
+    results: Any = None
+    if isinstance(site_presence_report, dict):
+        raw = site_presence_report.get("results")
+        results = raw if isinstance(raw, dict) else site_presence_report
+    elif hasattr(site_presence_report, "results"):
+        results = getattr(site_presence_report, "results", None)
+
+    if not isinstance(results, dict):
+        return False
+
+    entry = results.get(asset_type)
+    if entry is None:
+        return False
+    status = entry.get("status") if isinstance(entry, dict) else getattr(entry, "status", None)
+    if status is not None and hasattr(status, "value"):
+        status = status.value
+    return status == "exists"
+
+
+def committed_services_from_entries(
+    entries: List[Any],
+    site_presence_report: Optional[Any] = None,
+) -> List[str]:
+    """D-PF1: servicios comprometidos desde entradas de la matriz canónica.
+
+    Comprometido = pain_ids no vacíos (brecha real mapeada) OR presencia
+    ``exists`` en producción. Es el conjunto ``actionable`` de
+    ``AssetAlignmentMatrix.is_delivery_ready()`` enriquecido con presencia —
+    se REUTILIZA la taxonomía existente, sin criterios paralelos (L-NC10).
+
+    Args:
+        entries: ProposalAssetMatrixEntry (o similares con .pain_ids/.asset_type)
+        site_presence_report: snapshot SitePresence (dict normalizado, plano u
+            objeto con .results)
+
+    Returns:
+        Lista de service_name comprometidos, en el orden de ``entries``.
+    """
+    committed: List[str] = []
+    for entry in entries:
+        pain_ids = getattr(entry, "pain_ids", None) or []
+        asset_type = getattr(entry, "asset_type", "")
+        if pain_ids or _presence_exists(site_presence_report, asset_type):
+            committed.append(getattr(entry, "service_name", ""))
+    return [name for name in committed if name]
+
+
+# ==========================================================================
 # FASE-0D: ProposalAssetMatrix — Matriz Propuesta → Brecha → Asset
 # ==========================================================================
 
@@ -794,6 +874,24 @@ class AssetAlignmentMatrix:
             for e in actionable
         )
 
+    def committed_services(
+        self, site_presence_report: Optional[Any] = None
+    ) -> List[str]:
+        """FASE-SR-B (D-PF1): servicios comprometidos según la fuente única.
+
+        Delega en ``committed_services_from_entries`` (pain mapeado OR presencia
+        ``exists``). Es el MISMO conjunto que consume el gate
+        (publication_gates) y la propuesta (RC1) — una sola taxonomía.
+
+        Args:
+            site_presence_report: snapshot SitePresence para enriquecer los
+                NO_BREACH cuyo asset ya existe en producción.
+
+        Returns:
+            Lista de service_name comprometidos.
+        """
+        return committed_services_from_entries(self.entries, site_presence_report)
+
     # ── Serialization ──────────────────────────────────────────────────
 
     def to_dict(self) -> Dict[str, Any]:
@@ -848,6 +946,46 @@ class AssetAlignmentMatrix:
         return len(self.entries)
 
 
+def derive_committed_services(
+    pain_ledger: List[Any],
+    site_presence_report: Optional[Any] = None,
+    generated_assets: Optional[List[Any]] = None,
+) -> List[str]:
+    """FASE-SR-B (D-PF1): FUENTE ÚNICA de la lista de servicios prometidos.
+
+    Deriva los servicios comprometidos del pain_ledger (pains con solución
+    mapeada) + present_in_production (SitePresence ``exists`` cuenta como
+    cubierto), usando el MISMO builder que produce proposal_asset_matrix.json
+    y que el gate usa para sus semantic_entries (AssetAlignmentMatrix.build).
+    Así promesa, matriz y gate comparten una sola taxonomía (L-SR3/L-NC10).
+
+    Servicios sin pain ni presencia NO se prometen como comprometidos: la
+    propuesta los lista como "Servicios adicionales disponibles" y el gate los
+    excluye del denominador de coverage_ratio (NO_BREACH fuera del coverage),
+    respetando el fix B7/D-NC7 (WhatsApp sin brecha ni presencia no se ofrece).
+
+    Args:
+        pain_ledger: entries del ledger (PainLedgerEntry o dicts con pain_id).
+        site_presence_report: snapshot SitePresence (dict normalizado/plano u
+            objeto con .results).
+        generated_assets: assets generados en el run (dicts u objetos con
+            asset_type). Determina LINKED vs MISSING_ASSET — no altera qué
+            servicios están comprometidos (eso lo deciden pain/presencia).
+
+    Returns:
+        Lista de service_name comprometidos (posiblemente vacía: nada
+        prometido → el gate pasa trivialmente, nada puede estar "missing").
+    """
+    from modules.delivery.delivery_context import DeliveryContext
+
+    matrix = AssetAlignmentMatrix.build(
+        delivery_context=DeliveryContext(),
+        pain_ledger=pain_ledger,
+        generated_assets=generated_assets or [],
+    )
+    return matrix.committed_services(site_presence_report)
+
+
 __all__ = [
     'PROPOSAL_SERVICE_TO_ASSET',
     'ALL_PROMISED_SERVICES',
@@ -860,4 +998,6 @@ __all__ = [
     'verify_proposal_asset_alignment',
     'get_missing_services',
     'get_alignment_summary',
+    'committed_services_from_entries',
+    'derive_committed_services',
 ]

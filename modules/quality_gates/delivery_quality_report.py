@@ -232,6 +232,10 @@ class DeliveryQualityReportGenerator:
             # DT4-N8: Use AlignmentResult with SitePresence cross-reference
             # instead of raw matrix.is_delivery_ready() — the matrix JSON
             # predates runtime enrichment and never has PRESENT_IN_PRODUCTION.
+            # FASE-SR-A (N1): unresolved is counted by the single helper
+            # AlignmentResult.compute_unresolved() — the same one the gate
+            # (publication_gates) consumes via from_alignment_report, ending
+            # the 4-vs-1 divergence within a single run.
             alignment = AlignmentResult.from_asset_alignment_matrix(
                 matrix, site_presence_report
             )
