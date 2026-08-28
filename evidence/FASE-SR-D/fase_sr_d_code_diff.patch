@@ -1,0 +1,147 @@
+diff --git a/main.py b/main.py
+index d4d18f8..677fcb1 100644
+--- a/main.py
++++ b/main.py
+@@ -739,7 +739,12 @@ def run_execution_mode(args: argparse.Namespace) -> None:
+     delivery_context = None
+     
+     # Auto-discover prior analysis unless --force-new is specified
+-    target_id = args.url or args.nombre or args.input_data or "unknown"
++    # FASE-SR-D (L-SR2/D-PF4): identidad de memoria desde URL canónica —
++    # mismo target_id con/sin UTM; nombre/input_data quedan intactos.
++    target_id = (
++        _normalize_url(args.url) if args.url
++        else (args.nombre or args.input_data or "unknown")
++    )
+     discovered_analysis = None
+     v4_analysis = None
+ 
+@@ -1074,7 +1079,13 @@ def run_onboard_mode(args: argparse.Namespace) -> None:
+     # IMPORTANTE: OnboardingForm usa self._data dict, NO atributos de objeto.
+     # save_yaml() escribe self._data via yaml.dump().
+     if args.url:
+-        form._data['hotel']['url'] = args.url.rstrip('/')
++        # FASE-SR-D (L-SR2): URL persistida SIN query string (UTM/campaña) para
++        # estabilidad de la clave; esquema+path se conservan porque los assets
++        # consumen este campo como website navegable. El matching de
++        # _load_latest_onboarding_data ya normaliza ambos lados (_normalize_url).
++        from urllib.parse import urlparse, urlunparse
++        _parsed = urlparse(args.url.rstrip('/'))
++        form._data['hotel']['url'] = urlunparse(_parsed._replace(query='', fragment=''))
+     
+     if args.output_format == "yaml":
+         output_path = output_dir / f"{hotel_slug}_onboarding.yaml"
+@@ -1467,12 +1478,11 @@ def run_validate_guarantee_mode(args: argparse.Namespace) -> None:
+     
+     hotel_url = args.url.rstrip("/")
+     
+-    # Extraer hotel_id de la URL
+-    from urllib.parse import urlparse
+-    parsed = urlparse(hotel_url)
+-    host = parsed.netloc or parsed.path
+-    host = host.replace("www.", "").replace("https://", "").replace("http://", "")
+-    hotel_id = host.split(".")[0] if host else "hotel"
++    # FASE-SR-D (L-SR2/D-PF4): hotel_id desde la URL canónica (_normalize_url)
++    # — estable ante protocolo/www/query (UTM). La URL original se conserva
++    # para la consulta GSC (scraping).
++    canonical_url = _normalize_url(args.url)
++    hotel_id = canonical_url.split(".")[0] if canonical_url else "hotel"
+     
+     output_base = Path(args.output).resolve() if args.output else Path("./output")
+     
+@@ -1634,6 +1644,14 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
+     # Create output directory
+     output_dir = Path(args.output).resolve() / "v4_complete"
+     output_dir.mkdir(parents=True, exist_ok=True)
++
++    # FASE-SR-D (L-SR2/D-PF4): URL canónica como identidad de memoria.
++    # target_id/hotel_id derivan de la URL normalizada (_normalize_url: sin
++    # protocolo, www, path ni query string); la URL ORIGINAL args.url se
++    # conserva para scraping/audit. Con/sin UTM producen el mismo target_id,
++    # lo que reactiva la reutilización de análisis (find_latest_v4_analysis,
++    # vigencia < 20 días) sin tocar agent_harness/memory.py.
++    canonical_url = _normalize_url(args.url)
+     
+     # FASE 1: Hook Generation (Automated)
+     print("\n📍 FASE 1: Hook Generation (Automático)")
+@@ -1682,8 +1700,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
+     # Initialize cross-validator
+     validator = CrossValidator()
+     
+-    # Check for prior analysis
+-    discovered_analysis = memory.find_latest_analysis(args.url)
++    # Check for prior analysis (FASE-SR-D: búsqueda por URL canónica)
++    discovered_analysis = memory.find_latest_analysis(canonical_url)
+     if discovered_analysis:
+         print(f"📂 Análisis previo encontrado: {discovered_analysis}")
+     
+@@ -3285,8 +3303,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
+         health_dashboard_path = None
+ 
+     # Guardar referencia completa en Agent Harness
++    # FASE-SR-D: target_id canónico (la URL original va solo en 'url', trazabilidad del scrape)
+     memory.append_log({
+-        'target_id': args.url,
++        'target_id': canonical_url,
+         'task_name': 'v4complete',
+         'url': args.url,
+         'hotel_name': hotel_name,
+@@ -3431,8 +3450,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
+     print(f"[OK] Reporte completo guardado: {report_path}")
+     
+     # Log to memory - v4.1.0 enriquecido con metadatos
++    # FASE-SR-D: target_id canónico (la URL original va solo en 'url', trazabilidad del scrape)
+     log_entry = {
+-        'target_id': args.url,
++        'target_id': canonical_url,
+         'task_name': 'v4complete',
+         'url': args.url,
+         'hotel_name': hotel_name,
+@@ -3497,8 +3517,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
+     memory.append_log(log_entry)
+ 
+     # También guardar referencia para acceso rápido
++    # FASE-SR-D: referencia indexada bajo la URL canónica
+     memory.save_analysis_reference(
+-        target_id=args.url,
++        target_id=canonical_url,
+         analysis_path=output_dir,
+         metadata={
+             'type': 'v4complete',
+diff --git a/modules/orchestration_v4/onboarding_controller.py b/modules/orchestration_v4/onboarding_controller.py
+index 502a622..9888343 100644
+--- a/modules/orchestration_v4/onboarding_controller.py
++++ b/modules/orchestration_v4/onboarding_controller.py
+@@ -337,17 +337,22 @@ class OnboardingController:
+ 
+     @staticmethod
+     def generate_hotel_id(hotel_url: str) -> str:
+-        sanitized = (
+-            hotel_url.lower()
+-            .replace("https://", "")
+-            .replace("http://", "")
+-            .replace("www.", "")
+-            .replace("/", "_")
+-            .replace("?", "_")
+-            .replace("&", "_")
+-            .replace("=", "_")
++        # FASE-SR-D (L-SR2/D-PF4): normalizar la URL ANTES de construir el id.
++        # Sin query string (UTM/campaña), path, www ni protocolo — variaciones
++        # del mismo sitio producen el MISMO hotel_id (log "Phase 1 iniciada"
++        # canónico: hotel_hotelsalentoreal.com). Semántica idéntica al helper
++        # canónico _normalize_url() (main.py) — no importable aquí porque
++        # main importa modules (dependencia inversa).
++        from urllib.parse import urlparse
++        if '://' not in hotel_url:
++            hotel_url = '//' + hotel_url
++        canonical = (
++            urlparse(hotel_url.rstrip('/'))
++            .netloc
++            .replace('www.', '')
++            .lower()
+         )
+-        return f"hotel_{sanitized}"
++        return f"hotel_{canonical}"
+ 
+     @staticmethod
+     def format_status_report(state: OnboardingState) -> str:

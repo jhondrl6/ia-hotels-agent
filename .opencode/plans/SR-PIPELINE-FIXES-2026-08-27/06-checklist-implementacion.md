@@ -10,7 +10,7 @@
 | FASE-SR-A | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 1) | ~30 | NO |
 | FASE-SR-B | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 2) | ~35 | NO |
 | FASE-SR-C | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 3) | ~45 | NO |
-| FASE-SR-D | ⏳ PENDIENTE | — | — | — | NO |
+| FASE-SR-D | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 4) | ~40 | NO |
 | FASE-SR-E | ⏳ PENDIENTE | — | — | — | NO |
 | FASE-SR-F | ⏳ PENDIENTE | — | — | — | NO |
 | FASE-SR-G | ⏳ PENDIENTE | — | — | — | NO |
@@ -43,11 +43,11 @@
 - [x] `log_phase_completion.py --fase FASE-SR-C` (SIN --release) + docs post-fase → evidence/FASE-SR-C/ (quick 6/6)
 
 ### FASE-SR-D — Canonicalización target_id
-- [ ] URL canónica vía `_normalize_url()` como primer paso en v4complete + onboard + execute + validate-guarantee
-- [ ] `target_id` construido desde URL normalizada; URL original solo para scraping
-- [ ] `_detect_region_from_url` sigue funcionando con URL normalizada (test)
-- [ ] Tests anti-fragmentación (UTM ≡ limpia ≡ mismo id) pasan
-- [ ] `log_phase_completion.py --fase FASE-SR-D` (SIN --release) + docs post-fase
+- [x] URL canónica vía `_normalize_url()` como primer paso en v4complete + onboard + execute + validate-guarantee
+- [x] `target_id` construido desde URL normalizada; URL original solo para scraping
+- [x] `_detect_region_from_url` sigue funcionando con URL normalizada (test)
+- [x] Tests anti-fragmentación (UTM ≡ limpia ≡ mismo id) pasan — 28/28 en `tests/test_target_id_canonicalization.py`
+- [x] `log_phase_completion.py --fase FASE-SR-D` (SIN --release) + docs post-fase
 
 ### FASE-SR-E — Falso negativo schema + contabilización única (rediseñada 2026-08-28)
 - [ ] Bug del parser reproducido con test rojo: JSON-LD formato ARRAY → AttributeError tragado → 0 schemas falsos

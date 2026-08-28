@@ -337,17 +337,22 @@ class OnboardingController:
 
     @staticmethod
     def generate_hotel_id(hotel_url: str) -> str:
-        sanitized = (
-            hotel_url.lower()
-            .replace("https://", "")
-            .replace("http://", "")
-            .replace("www.", "")
-            .replace("/", "_")
-            .replace("?", "_")
-            .replace("&", "_")
-            .replace("=", "_")
+        # FASE-SR-D (L-SR2/D-PF4): normalizar la URL ANTES de construir el id.
+        # Sin query string (UTM/campaña), path, www ni protocolo — variaciones
+        # del mismo sitio producen el MISMO hotel_id (log "Phase 1 iniciada"
+        # canónico: hotel_hotelsalentoreal.com). Semántica idéntica al helper
+        # canónico _normalize_url() (main.py) — no importable aquí porque
+        # main importa modules (dependencia inversa).
+        from urllib.parse import urlparse
+        if '://' not in hotel_url:
+            hotel_url = '//' + hotel_url
+        canonical = (
+            urlparse(hotel_url.rstrip('/'))
+            .netloc
+            .replace('www.', '')
+            .lower()
         )
-        return f"hotel_{sanitized}"
+        return f"hotel_{canonical}"
 
     @staticmethod
     def format_status_report(state: OnboardingState) -> str:

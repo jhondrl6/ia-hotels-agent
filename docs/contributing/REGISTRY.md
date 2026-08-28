@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-08-28
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 441
+> **Total fases completadas:** 442
 
 ---
 
@@ -10367,6 +10367,26 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (20 nuevos; regresiones aisladas 79+27+57 PASSED, 0 fallos)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SR-D - 2026-08-28
+**Descripcion:** Canonicalizacion de target_id via _normalize_url() en caller (v4complete + onboard + execute + validate-guarantee) + generate_hotel_id de onboarding_controller
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `modules/orchestration_v4/onboarding_controller.py` | Onboarding Controller |
+
+### Validaciones
+- [x] Tests passing (28)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
