@@ -117,3 +117,60 @@ Posibles respuestas y manejo:
 - [ ] Registrar en el pipeline: hotel, contacto, tamaño, fuga estimada, estado (reunión hecha / propuesta enviada / ganado / perdido), próxima acción y fecha
 - [ ] Si compró: confirmar anticipo recibido antes de correr el diagnóstico completo
 - [ ] Anotar las objeciones que surgieron (alimentan el ajuste del guion)
+
+---
+---
+
+# ADAPTACIÓN POST-SISMO (vigente desde 2026-08-26 — terremoto M7.4 del 2026-08-10)
+
+> La ESTRUCTURA de los 20 minutos NO cambia. Cambian el tono de los bloques 1-2, una demo del bloque 3 y las objeciones del cierre. Esta adaptación aplica SOLO a prospectos verificados como `OPERANDO` o `OPERANDO CON DAÑOS LEVES` en la lista v2 post-sismo.
+
+## Preparación previa — ajustes
+
+- [ ] **La ocupación 60% ya NO es válido.** Usar rango conservador (40-50%) y decirlo: "es un supuesto; con sus datos reales hacemos la cifra exacta". Los benchmarks regionales (ocupación 51,2%, ADR $280K) son PRE-terremoto: toda cifra se presenta como ESTIMACIÓN (disclaimer §6.5, D4).
+- [ ] Capturar también las búsquedas de HOY: "hoteles abiertos en [ciudad]", "¿es seguro viajar al Eje Cafetero?", "hoteles en [municipio] con daño" → qué responde Google, Maps y la IA sobre SU hotel.
+- [ ] Confirmar ese mismo día que el hotel sigue operando (reservable en Booking/Maps, reseñas o posts de los últimos 7 días). Si la duda persiste, llamar antes de desplazarse.
+
+## BLOQUE 1 SISMO — Apertura (min 0-2)
+
+> "Gracias por los 20 minutos, [Nombre]. Antes de todo: espero que usted y su equipo estén bien después del terremoto. Voy al grano porque sé cómo han estado estas semanas. No vengo a venderle pauta ni publicidad: corrí el diagnóstico de visibilidad de SU hotel con mi herramienta, y quiero mostrarle cómo lo está encontrando la gente exactamente ahora — que es el momento en que los viajeros están decidiendo entre los hoteles que siguen abiertos."
+
+(Si el interlocutor quiere hablar del sismo, de los daños o de cómo está el pueblo: ESCUCHAR sin interrumpir y sin redirigir a la venta. El bloque 1 puede volverse 70% él. Si se hace evidente que no es el momento, cierre digno: "Entonces lo mejor es que vuelva en unas semanas — le dejo el resumen de todas formas, está hecho con su hotel y es suyo.")
+
+## BLOQUE 2 SISMO — El problema, con dos dolores acumulados (min 2-6)
+
+Orden obligatorio: primero la demanda congelada, después la demanda desplazada.
+
+> "Después del sismo están pasando dos cosas con las reservas. Primera: la gente sigue buscando, pero ahora pregunta '¿qué hoteles están ABIERTOS?' y '¿es seguro viajar?'. Los que aparecen en esa respuesta se llevan la reserva; los demás, no existen. Segunda: alrededor de [40] hoteles de la región quedaron fuera de operación. Esos huéspedes no desaparecieron — se están repartiendo entre los hoteles que siguen abiertos. La única pregunta es si lo encuentran a usted, o encuentran al de otro municipio."
+
+> "Hice la cuenta con sus números y una ocupación conservadora para la situación actual: usted tiene [N] habitaciones a [$X], y aun siendo prudentes esto representa [$Y] al mes que se puede estar quedando en Booking o en la competencia. Este cálculo es una estimación con datos del sector previos al sismo — la cifra exacta la hacemos con sus datos reales en el diagnóstico Express, y se la digo con esa misma honestidad."
+
+## BLOQUE 3 SISMO — Demo extra obligatoria
+
+Además de los 3 hallazgos estándar, abrir con la búsqueda que define el momento:
+
+> "Busquemos juntos, ahora mismo: 'hoteles abiertos en [ciudad/municipio]'."
+(En vivo. Si su hotel no sale, o sale sin señal de operación, ESE es el hallazgo #1 — reemplaza al más débil de los tres estándar, nunca mostrar 4.)
+> "Esta es la búsqueda que está haciendo la gente esta semana. Cada día que usted no aparece ahí, esa reserva se la lleva otro que sí aparece."
+
+## BLOQUES 5-6 SISMO — Oferta, precio y cierre
+
+- **La oferta vigente es la escalera canónica** (fuente única: `config/pricing.yaml`): Gancho $0 (este PDF) → **Diagnóstico Express $120.000, entrega 72 h** → Implementación → Seguimiento mensual. La cifra de $600.000 del bloque 5 original es PRE-sismo y está SUPERADA: no se usa.
+- Cierre post-sismo por alternativas:
+> "Le soy directo: en temporada baja lo peor que puede pasarle a un hotel es ser invisible. El Express cuesta $120.000, se entrega en 72 horas y queda en sus manos pase lo que pase. ¿Arrancamos esta semana para que [Hotel X] esté posicionado cuando la demanda vuelva, o la siguiente?"
+- El anclaje ya NO es "lo que pierde al mes" (la ocupación cayó): el anclaje es el COSTO DE OPORTUNIDAD de la reactivación: "Cuando la campaña del gremio traiga la ola de reservas, quien esté visible la captura; esto cuesta menos que una noche de habitación."
+
+## Objeciones post-sismo (se suman a las estándar)
+
+- **"Ahora no hay plata":** no bajar precio, reducir alcance. "Por eso la entrada es mínima: $120.000 por el Express, 72 horas, informe suyo. Es menos que una noche de habitación suya. Lo costoso es que cuando vuelva la plata de las reservas, no lo encuentren."
+- **"No sabemos cuándo vuelve la demanda":** "Nadie lo sabe, y no le voy a inventar una fecha. Lo que sí se sabe es que va a volver — el gremio y los destinos están haciendo campaña para eso. Quien esté visible ese día se lleva las reservas; quien no, empieza desde cero."
+- **"El edificio está averiado / estamos en reparación":** "Entiendo, eso es lo primero. La parte de visibilidad se trabaja en días y no interfiere con ninguna obra: si quiere la dejamos lista ahora para la reapertura; si prefiere, agendamos para cuando esté listo." (Daño grave confirmado → no presionar; registrar `CERRADO` y volver a los 90+ días.)
+- **"La gente tiene miedo de viajar para acá":** "Ese miedo se responde con información actualizada: 'abierto', 'operando con normalidad', fotos recientes, reseñas vigentes. Eso es exactamente lo que muestran Google, Maps y las IA — y es exactamente lo que yo arreglo."
+- **"Está caro para lo que estamos viviendo":** mismo manejo que "está caro" estándar + anclaje de costo de oportunidad. Nunca descuento por lástima: devalúa el producto justo cuando el sector necesita tomárselo en serio.
+
+## Reglas post-sismo de la reunión
+
+1. Toda cifra lleva disclaimer verbal: estimación basada en benchmarks pre-terremoto; la exacta sale de los datos reales del hotel (pasada 2 / Express).
+2. Nunca prometer fechas de recuperación de la demanda ni niveles de ocupación. La honestidad sobre la incertidumbre ES la ventaja competitiva frente a quien prometa milagros.
+3. La empatía del bloque 1 es real, no retórica: si el interlocutor necesita hablar, los 20 minutos son de él. Una reunión perdida por decencia vale más que una venta forzada que quema el nombre en el pueblo.
+4. Al registrar en el pipeline, incluir el estado post-sismo del hotel (OPERANDO / OPERANDO CON DAÑOS LEVES) y la fuente de verificación.
