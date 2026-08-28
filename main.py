@@ -2606,6 +2606,21 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     )
     print(f"[OK] Diagnóstico regenerado con coherence_score: {pre_coherence_score:.2f} (gate: {pre_gate_status})")
 
+    # FASE-SR-C (D-PF2, L-SR5): self-healing CG-CLAIM-VS-EVIDENCE — si el
+    # claim factual falso PERSISTIÓ tras 1 regeneración (guard anti-bucle),
+    # escalar a BLOCKED real: documentos cliente retenidos, ZIP abortado y
+    # BLOCKED_BY_GATES registra la causa (ver GATE BLOCKING más abajo).
+    _claim_healing = getattr(diagnostic_gen, "last_claim_healing", None)
+    _claim_escalated = bool(
+        _claim_healing is not None
+        and _claim_healing.status == "escalated_to_blocked"
+    )
+    if _claim_escalated:
+        print(
+            "   [BLOCKED] CG-CLAIM-VS-EVIDENCE persiste tras 1 regeneración "
+            "(claim factual falso) — escalando a BLOCKED real"
+        )
+
     # FASE-1B-PATCH: ContentScrubber post-T4FIX — limpiar diagnóstico regenerado
     # ANTES de FASE 4.5 (publication gates)
     # El diagnóstico original (FASE 3.6) se scrubbeó ANTES de T4FIX.
@@ -2925,9 +2940,13 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     # Controlled via GATE_BLOCKING_ENABLED env var (default: on, set to "false" for CI/tests)
     import os as _os_gate_block
     _gate_blocking_enabled = _os_gate_block.getenv("GATE_BLOCKING_ENABLED", "true").lower() in ("1", "true", "yes")
-    if _gate_blocking_enabled and readiness_report["status"] == "NOT_READY":
+    if _gate_blocking_enabled and (
+        readiness_report["status"] == "NOT_READY" or _claim_escalated
+    ):
         print("\n🚫 GATE BLOCKING ACTIVE — Publication gates NOT_READY")
         print("   Eliminando documentos cliente y generando BLOCKED_BY_GATES.md")
+        if _claim_escalated:
+            print("   🚨 Causa adicional: CG-CLAIM-VS-EVIDENCE persistente (self-healing agotado)")
         
         # Remove diagnostic file if it was generated
         _diag_var = "diagnostic_path"
@@ -2996,6 +3015,25 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                         "\n> ⚠️ Estos gates evalúan la viabilidad comercial de la propuesta. "
                         "Resuélvalos antes de re-ejecutar `v4complete`.\n"
                     )
+
+            # FASE-SR-C (D-PF2): registra la causa real de la escalada —
+            # claim factual falso persistente tras el self-healing loop.
+            if _claim_escalated and _claim_healing is not None:
+                _bf.write("\n## 🚨 CG-CLAIM-VS-EVIDENCE — Claim factual falso persistente\n\n")
+                _bf.write(
+                    "El self-healing loop detectó claims factuales no soportados "
+                    "por la evidencia, regeneró el documento usando el `suggestion` "
+                    "del gate como restricción (1 regeneración, guard anti-bucle) "
+                    "y el claim PERSISTIÓ. Escalado a BLOCKED real: documentos "
+                    "cliente retenidos y ZIP abortado.\n\n"
+                )
+                if _claim_healing.revalidated_report is not None:
+                    for _r in _claim_healing.revalidated_report.blocking_failures:
+                        if _r.gate_id == "CG-CLAIM-VS-EVIDENCE":
+                            _bf.write(f"- **{_r.gate_id}**: {_r.message}\n")
+                            if _r.suggestion:
+                                _bf.write(f"  - Sugerencia: {_r.suggestion}\n")
+                _has_commercial_block = True
 
             _bf.write(f"\n---\n\n")
             if not _has_commercial_block:
@@ -3103,8 +3141,11 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     delivery_zip_path = None  # Pre-initialize for safety
     delivery_error = None  # NF-3: Preserve packaging error for report
 
-    if delivery_quality_report and delivery_quality_report.status == "FAIL":
-        print(f"\n   ⛔ ZIP ABORTED: Delivery quality report status is FAIL.")
+    if (delivery_quality_report and delivery_quality_report.status == "FAIL") or _claim_escalated:
+        if _claim_escalated:
+            print("\n   ⛔ ZIP ABORTED: CG-CLAIM-VS-EVIDENCE persistente (BLOCKED real por self-healing).")
+        else:
+            print(f"\n   ⛔ ZIP ABORTED: Delivery quality report status is FAIL.")
         print(f"   Review: {quality_report_path}")
         delivery_zip_path = None
     else:

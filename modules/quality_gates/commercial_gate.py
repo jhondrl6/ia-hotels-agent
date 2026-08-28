@@ -13,6 +13,28 @@ import re
 
 
 # ──────────────────────────────────────────────────────────────
+# Patrones compartidos (fuente única gate ↔ self-healer)
+# ──────────────────────────────────────────────────────────────
+
+# FASE-SR-C (D-PF2): patrón de claims de invisibilidad compartido por el
+# gate ``CG-CLAIM-VS-EVIDENCE`` y el self-healer (``claim_self_healing.py``)
+# — una sola definición evita caminos paralelos de detección (L-NC10/L27).
+CLAIM_VS_EVIDENCE_RE = re.compile(
+    r'[Nn]o\s+aparece|[Nn]o\s+figura|no\s+est[aá]\s+en\s+Google|invisible\s+en\s+b[uú]squedas',
+)
+
+# FASE-C N11: marcadores condicionales (el gate descarta oraciones
+# condicionales; el self-healer las preserva intactas).
+CONDITIONAL_MARKERS_RE = re.compile(
+    r'\b(?:si\s|siempre\s+que|en\s+caso\s+de|podr[ií]a|puede\s+que|'
+    r'si\s+su\s|si\s+el\s|si\s+la\s|si\s+las?\s|si\s+los?\s|'
+    r'en\s+caso\s+de\s+que|a\s+menos\s+que|salvo\s+que|'
+    r'de\s+no\s+ser\s+que|cuando\s+no\s)',
+    re.IGNORECASE,
+)
+
+
+# ──────────────────────────────────────────────────────────────
 # Data Classes
 # ──────────────────────────────────────────────────────────────
 
@@ -520,14 +542,9 @@ class CommercialGateValidator:
                       "o (4) proponer una fase inicial de bajo riesgo (onboarding/activación).",
         )
 
-    # Patrones de marcadores condicionales (FASE-C N11)
-    _CONDITIONAL_MARKERS = re.compile(
-        r'\b(?:si\s|siempre\s+que|en\s+caso\s+de|podr[ií]a|puede\s+que|'
-        r'si\s+su\s|si\s+el\s|si\s+la\s|si\s+las?\s|si\s+los?\s|'
-        r'en\s+caso\s+de\s+que|a\s+menos\s+que|salvo\s+que|'
-        r'de\s+no\s+ser\s+que|cuando\s+no\s)',
-        re.IGNORECASE,
-    )
+    # Patrones de marcadores condicionales (FASE-C N11) — alias del
+    # constante de módulo (fuente única, FASE-SR-C D-PF2).
+    _CONDITIONAL_MARKERS = CONDITIONAL_MARKERS_RE
 
     def _check_claim_vs_evidence(
         self,
@@ -541,9 +558,7 @@ class CommercialGateValidator:
         falsos positivos con texto condicional ("si su web no tiene los datos
         correctos, no aparece en la respuesta").
         """
-        no_aparece_re = re.compile(
-            r'[Nn]o\s+aparece|[Nn]o\s+figura|no\s+est[aá]\s+en\s+Google|invisible\s+en\s+b[uú]squedas',
-        )
+        no_aparece_re = CLAIM_VS_EVIDENCE_RE
 
         # Split por oraciones (FASE-C: N11 fix)
         sentences = re.split(r'[.!?\n]\s*', diagnostic_text)

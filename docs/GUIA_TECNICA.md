@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.72.2 (Limpieza de Skills)
-**Última actualización:** 2026-08-24
+**Última actualización:** 2026-08-28
 
 ---
 

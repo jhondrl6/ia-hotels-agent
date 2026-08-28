@@ -28,7 +28,7 @@
 | Tests totales (baseline) | 3,379 | — |
 | Tests nuevos SR-A | 6 (3 corrida-C + 3 guardián AST); 148 ejecutados aislados, 0 regresiones | SR-A |
 | Tests nuevos SR-B | 10 (TestContractProposalLayer 4 + TestAntiB7 2 + TestContractGateLayer 4 en `tests/quality_gates/test_alignment_contract.py`); gates 57 PASSED aislado; 0 regresiones (8 fallos preexistentes en test_proposal_dynamic certificados en HEAD) | SR-B |
-| Tests nuevos SR-C | (contar al cerrar) | SR-C |
+| Tests nuevos SR-C | 20 (`test_claim_self_healing.py`, 6 clases); regresiones aisladas: 79 gates + 27 generator + 57 gate/guardián L-SR1, 0 fallos; quick 6/6 | SR-C |
 | Tests nuevos SR-D | (contar al cerrar) | SR-D |
 | Tests nuevos SR-E | (contar al cerrar) | SR-E |
 | Tests nuevos SR-F | (contar al cerrar) | SR-F |
@@ -69,7 +69,14 @@
 - Corrida C: coverage sobre actionable 3/4 = 0.75 (estado intermedio documentado) → tras SR-E 3/3 = 1.0. Suite gates: 57 PASSED (10 tests de contrato nuevos). `test_proposal_dynamic.py`: 8 fallos PREEXISTENTES certificados contra HEAD (git show baseline; catálogo 7 entradas vs test espera 8; B7 quita WhatsApp del footnote) — 0 regresiones SR-B.
 
 ### FASE-SR-C
-- (llenar al cerrar)
+- Sesión agente 2026-08-28 (DIRECTO, venv; continuada post-compactación). D-PF2 implementada: `ClaimSelfHealer` en `modules/quality_gates/claim_self_healing.py` (NUEVO, 404 líneas) — al fallo BLOCKING CG-CLAIM-VS-EVIDENCE: regeneración con el claim trazable textual del `suggestion` (restricción obligatoria) → re-validación con la MISMA closure `_validate_diagnostic` (0 caminos paralelos); máx 1 reintento (guard anti-bucle); persistencia → `escalated_to_blocked`.
+- Estrategias por tipo de oración: condicional intacta; instrucción al lector/otro sujeto → neutralizada con sinónimo ("falta"); sujeto GBP → claim trazable del suggestion (preserva prefijo lista/etiqueta/tabla y puntuación).
+- main.py: flag `_claim_escalated` → GATE BLOCKING extendido, BLOCKED_BY_GATES.md con causa, ZIP abortado. "hidden from client" intacto (solo cambió la consecuencia).
+- Regexes del gate extraídas a constantes de módulo compartidas gate↔healer (L-NC10/L27); traza `self_healing` en `commercial_gates_report_diagnostic_*.json` (sin consumidores existentes).
+- Sustitución documentada: `tests/commercial_documents/test_commercial_gates.py` del prompt NO existe → `tests/quality_gates/test_commercial_gate.py` (real, incluida en los conteos 79/57).
+- Autorrevisión pre-tests corrigió 2 defectos: `_TRAILING_PUNCT` (hack de reversa con `$`) y `_LIST_PREFIX` con `\s*` que consumía énfasis markdown.
+- Version Sync resuelto in-session (`sync_versions.py`: fecha de 3 headers 2026-08-24→2026-08-28; el patrón de versión no matchea el prefijo "v" y no se verifica) → quick 6/6 en SR-C (SR-A/B reportaron 5/6 por esto).
+- Greps (T4): 0 caminos paralelos de regeneración; "hidden from client" persiste. Evidencia: `evidence/FASE-SR-C/` (20+79+27+57 passed).
 
 ### FASE-SR-D
 - (llenar al cerrar)

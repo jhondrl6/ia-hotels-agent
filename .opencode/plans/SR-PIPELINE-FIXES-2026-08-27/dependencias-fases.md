@@ -49,7 +49,7 @@
 | Preparación | ✅ COMPLETADA | orquestación 2026-08-27 | 13 archivos del plan creados; 0 fases ejecutadas |
 | FASE-SR-A | ✅ COMPLETADA | agente 2026-08-28 | Helper `compute_unresolved()` + guardián AST L-SR1; 148 tests aislados PASSED (6 nuevos, 0 regresiones); greps residuos 0; quick 5/6 (Version Sync preexistente → RELEASE E2) |
 | FASE-SR-B | ✅ COMPLETADA | agente 2026-08-28 | D-PF1 implementada: promesa derivada de pain_ledger + present_in_production (RC1 ↔ matriz ↔ gate, fuente única); coverage sobre actionable 3/4=0.75 en corrida C (estado intermedio hasta SR-E); suite gates 57 PASSED (10 tests nuevos de contrato); 8 fallos preexistentes en test_proposal_dynamic certificados en HEAD (0 regresiones); greps residuos 0 ("sin costo (fallback)", conteos paralelos); quick 5/6 (Version Sync preexistente → RELEASE E2) |
-| FASE-SR-C | ⏳ PENDIENTE | — | — |
+| FASE-SR-C | ✅ COMPLETADA | agente 2026-08-28 | D-PF2 implementada: loop self-healing (regenera con suggestion del gate → re-valida con la MISMA closure; máx 1 reintento; persistencia → escalada a BLOCKED real: docs retenidos + ZIP abortado); traza `self_healing` en JSON de gates; 20 tests nuevos (20/20) + regresiones 79/27/57 PASSED, 0 fallos; greps 0 caminos paralelos; "hidden from client" intacto; quick 6/6 (Version Sync preexistente resuelto in-session vía sync_versions.py) |
 | FASE-SR-D | ⏳ PENDIENTE | — | — |
 | FASE-SR-E | ⏳ PENDIENTE | — | — |
 | FASE-SR-F | ⏳ PENDIENTE | — | — |

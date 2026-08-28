@@ -509,6 +509,10 @@ class V4DiagnosticGenerator:
         self._cached_brechas = None
         self._last_voice_score = None
         self._last_voice_level = None
+        # FASE-SR-C (D-PF2): resultado del self-healing loop de la última
+        # generación (None si el loop no se ejecutó). Consumido por main.py
+        # para escalar a BLOCKED real si el claim persiste.
+        self.last_claim_healing = None
 
     def _load_commercial_config(self) -> dict:
         """Load config/commercial.yaml with caching. Falls back to hardcoded defaults.
@@ -629,36 +633,88 @@ class V4DiagnosticGenerator:
             place_found = getattr(getattr(audit_result, 'gbp', None), 'place_found', False)
             gbp_rating = getattr(getattr(audit_result, 'gbp', None), 'rating', 0.0)
 
-            commercial_report = validator.validate_diagnostic(
-                diagnostic_text=document_content,
-                scenarios=financial_scenarios,
-                ai_crawlers_data=ai_crawlers_data,
-                place_found=place_found,
-                gbp_rating=gbp_rating,
-                # FASE-C N15: cablear tiers reales (nunca pasar vacuo)
-                frontmatter_tier=(
-                    financial_breakdown.evidence_tier
-                    if financial_breakdown is not None and hasattr(financial_breakdown, 'evidence_tier')
-                    else None
-                ),
-                text_tier=self._extract_text_tier(document_content),
-                # FASE-3 NP7: per-hotel flags for evidence tier consistency gate
-                ga4_available=(
-                    analytics_data.get('analytics_status').ga4_available
-                    if analytics_data and analytics_data.get('analytics_status')
-                    else False
-                ),
-                gsc_available=(
-                    analytics_data.get('analytics_status').gsc_available
-                    if analytics_data and analytics_data.get('analytics_status')
-                    else False
-                ),
-                financial_json=(
-                    {"breakdown": {"evidence_tier": financial_breakdown.evidence_tier}}
-                    if financial_breakdown is not None and hasattr(financial_breakdown, 'evidence_tier')
-                    else None
-                ),
-            )
+            # FASE-SR-C (D-PF2): única función de validación del diagnóstico —
+            # la 1ª evaluación y la re-validación del self-healing comparten
+            # exactamente los mismos parámetros (0 caminos paralelos, L-NC10).
+            def _validate_diagnostic(text: str):
+                return validator.validate_diagnostic(
+                    diagnostic_text=text,
+                    scenarios=financial_scenarios,
+                    ai_crawlers_data=ai_crawlers_data,
+                    place_found=place_found,
+                    gbp_rating=gbp_rating,
+                    # FASE-C N15: cablear tiers reales (nunca pasar vacuo)
+                    frontmatter_tier=(
+                        financial_breakdown.evidence_tier
+                        if financial_breakdown is not None and hasattr(financial_breakdown, 'evidence_tier')
+                        else None
+                    ),
+                    text_tier=self._extract_text_tier(text),
+                    # FASE-3 NP7: per-hotel flags for evidence tier consistency gate
+                    ga4_available=(
+                        analytics_data.get('analytics_status').ga4_available
+                        if analytics_data and analytics_data.get('analytics_status')
+                        else False
+                    ),
+                    gsc_available=(
+                        analytics_data.get('analytics_status').gsc_available
+                        if analytics_data and analytics_data.get('analytics_status')
+                        else False
+                    ),
+                    financial_json=(
+                        {"breakdown": {"evidence_tier": financial_breakdown.evidence_tier}}
+                        if financial_breakdown is not None and hasattr(financial_breakdown, 'evidence_tier')
+                        else None
+                    ),
+                )
+
+            commercial_report = _validate_diagnostic(document_content)
+
+            # FASE-SR-C (D-PF2, L-SR5): self-healing loop — al detectar
+            # CG-CLAIM-VS-EVIDENCE BLOCKING se regenera el documento usando el
+            # `suggestion` del gate como restricción obligatoria y se
+            # re-valida (máx. 1 regeneración, guard anti-bucle). Si persiste,
+            # el estado queda en self.last_claim_healing y main.py escala a
+            # BLOCKED real (documentos retenidos, ZIP abortado).
+            try:
+                from modules.quality_gates.claim_self_healing import (
+                    GATE_ID_CLAIM_VS_EVIDENCE,
+                    STATUS_ESCALATED,
+                    STATUS_RESOLVED,
+                    ClaimSelfHealer,
+                )
+
+                if any(
+                    r.gate_id == GATE_ID_CLAIM_VS_EVIDENCE
+                    for r in commercial_report.blocking_failures
+                ):
+                    healer = ClaimSelfHealer()
+                    healing = healer.heal(
+                        document_text=document_content,
+                        report=commercial_report,
+                        revalidate_fn=_validate_diagnostic,
+                    )
+                    self.last_claim_healing = healing
+                    if healing.status in (STATUS_RESOLVED, STATUS_ESCALATED):
+                        document_content = healing.healed_text
+                        commercial_report = (
+                            healing.revalidated_report or commercial_report
+                        )
+                        logging.info(
+                            "Claim self-healing loop: status=%s attempts=%d "
+                            "actions=%d",
+                            healing.status,
+                            healing.attempts,
+                            len(healing.actions),
+                        )
+            except Exception as e:
+                # Never-block: un fallo del loop no rompe la generación; el
+                # reporte de la 1ª evaluación sigue siendo la verdad.
+                logging.warning(
+                    "Claim self-healing loop failed (non-blocking): %s",
+                    e,
+                    exc_info=True,
+                )
 
             if not commercial_report.blocking_passed:
                 if document_audience == "internal":
@@ -698,8 +754,15 @@ class V4DiagnosticGenerator:
                     / f"commercial_gates_report_diagnostic_{timestamp}.json"
                 )
                 diag_gates_path.parent.mkdir(parents=True, exist_ok=True)
+                # FASE-SR-C (D-PF2): trazabilidad del loop — el reporte final
+                # distingue "resuelto por regeneración" de "escalado a BLOCKED".
+                diag_gates_payload = commercial_report.to_dict()
+                if self.last_claim_healing is not None:
+                    diag_gates_payload["self_healing"] = (
+                        self.last_claim_healing.to_dict()
+                    )
                 diag_gates_path.write_text(
-                    json.dumps(commercial_report.to_dict(), indent=2, ensure_ascii=False),
+                    json.dumps(diag_gates_payload, indent=2, ensure_ascii=False),
                     encoding="utf-8",
                 )
                 logging.info(

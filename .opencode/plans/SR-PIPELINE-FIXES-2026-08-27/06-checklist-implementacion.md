@@ -9,7 +9,7 @@
 | Preparación | ✅ COMPLETADA | 2026-08-27 | orquestación | ~20 | NO |
 | FASE-SR-A | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 1) | ~30 | NO |
 | FASE-SR-B | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 2) | ~35 | NO |
-| FASE-SR-C | ⏳ PENDIENTE | — | — | — | NO |
+| FASE-SR-C | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 3) | ~45 | NO |
 | FASE-SR-D | ⏳ PENDIENTE | — | — | — | NO |
 | FASE-SR-E | ⏳ PENDIENTE | — | — | — | NO |
 | FASE-SR-F | ⏳ PENDIENTE | — | — | — | NO |
@@ -36,11 +36,11 @@
 - [x] `log_phase_completion.py --fase FASE-SR-B` (SIN --release) + docs post-fase → REGISTRY.md actualizado, audit sin gaps, evidence/FASE-SR-B/ (103 tests passed = 57 gates + 46 RC1)
 
 ### FASE-SR-C — Self-healing CG-CLAIM-VS-EVIDENCE
-- [ ] Loop de regeneración con `suggestion` del gate + re-validación implementado (máx. 1 reintento)
-- [ ] Persistencia → BLOCKED real (documentos retenidos)
-- [ ] Guard anti-bucle probado
-- [ ] Tests del loop pasan
-- [ ] `log_phase_completion.py --fase FASE-SR-C` (SIN --release) + docs post-fase
+- [x] Loop de regeneración con `suggestion` del gate + re-validación implementado (máx. 1 reintento) — `claim_self_healing.py` + closure única `_validate_diagnostic`
+- [x] Persistencia → BLOCKED real (documentos retenidos) — flag `_claim_escalated` en main.py: GATE BLOCKING + BLOCKED_BY_GATES.md + ZIP abortado
+- [x] Guard anti-bucle probado (MAX_REGENERATIONS=1; 2ª llamada no reescribe ni revalida — spy)
+- [x] Tests del loop pasan — 20/20 nuevos + regresiones 79 (gates) / 27 (generator) / 57 (gate+guardián L-SR1), 0 fallos
+- [x] `log_phase_completion.py --fase FASE-SR-C` (SIN --release) + docs post-fase → evidence/FASE-SR-C/ (quick 6/6)
 
 ### FASE-SR-D — Canonicalización target_id
 - [ ] URL canónica vía `_normalize_url()` como primer paso en v4complete + onboard + execute + validate-guarantee

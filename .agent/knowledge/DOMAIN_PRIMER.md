@@ -11,7 +11,7 @@
 
 ## Modulos del Repositorio (auto-generado)
 
-> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 194 archivos Python en total.
+> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 195 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
@@ -52,7 +52,7 @@
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **quality_gates/** | 9 | _DerivedEntry, AlignmentResult; CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; CommercialGateResult, CommercialGateReport, CommercialGateValidator; DeliveryQualityReport, Deliv |
+| **quality_gates/** | 10 | _DerivedEntry, AlignmentResult; ClaimHealingAction, ClaimHealingResult, ClaimSelfHealer; CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; CommercialGateResult, CommercialGateRepo |
 
 ### UTILIDADES Y VALIDACION
 

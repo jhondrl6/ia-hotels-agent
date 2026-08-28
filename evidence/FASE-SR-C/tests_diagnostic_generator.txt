@@ -1,0 +1,59 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 27 items
+
+tests/commercial_documents/test_diagnostic_generator.py::TestCoherenceScoreUnification::test_external_coherence_score_used_directly PASSED [  3%]
+tests/commercial_documents/test_diagnostic_generator.py::TestCoherenceScoreUnification::test_none_coherence_score_shows_pending PASSED [  7%]
+tests/commercial_documents/test_diagnostic_generator.py::TestCoherenceScoreUnification::test_zero_coherence_score_shows_pending PASSED [ 11%]
+tests/commercial_documents/test_diagnostic_generator.py::TestCoherenceScoreUnification::test_fallback_never_auto_invoked PASSED [ 14%]
+tests/commercial_documents/test_diagnostic_generator.py::TestCoherenceScoreUnification::test_generate_accepts_gate_status PASSED [ 18%]
+tests/commercial_documents/test_diagnostic_generator.py::TestCoherenceScoreUnification::test_generate_with_none_shows_pending PASSED [ 22%]
+tests/commercial_documents/test_diagnostic_generator.py::TestDeprecatedFallback::test_deprecated_method_exists PASSED [ 25%]
+tests/commercial_documents/test_diagnostic_generator.py::TestIAReadinessAdvisoryAlert::test_ia_critical_shows_alert PASSED [ 29%]
+tests/commercial_documents/test_diagnostic_generator.py::TestIAReadinessAdvisoryAlert::test_ia_ready_no_alert PASSED [ 33%]
+tests/commercial_documents/test_diagnostic_generator.py::TestIAReadinessAdvisoryAlert::test_ia_needs_work_no_alert PASSED [ 37%]
+tests/commercial_documents/test_diagnostic_generator.py::TestWhatsappConflictNote::test_whatsapp_conflict_note_generated PASSED [ 40%]
+tests/commercial_documents/test_diagnostic_generator.py::TestWhatsappConflictNote::test_whatsapp_conflict_note_empty_no_conflict PASSED [ 44%]
+tests/commercial_documents/test_diagnostic_generator.py::TestWhatsappConflictNote::test_whatsapp_conflict_note_empty_no_validation PASSED [ 48%]
+tests/commercial_documents/test_diagnostic_generator.py::TestD6PerformanceStatusDinamico::test_d6_error_status_muestra_mensaje_api PASSED [ 51%]
+tests/commercial_documents/test_diagnostic_generator.py::TestD6PerformanceStatusDinamico::test_d6_ok_sin_field_data_muestra_generico PASSED [ 55%]
+tests/commercial_documents/test_diagnostic_generator.py::TestD6PerformanceStatusDinamico::test_d6_con_field_data_no_agrega_fila PASSED [ 59%]
+tests/commercial_documents/test_diagnostic_generator.py::TestD7ReviewsParametrizadas::test_d7_con_reviews_count_real PASSED [ 62%]
+tests/commercial_documents/test_diagnostic_generator.py::TestD7ReviewsParametrizadas::test_d7_sin_reviews_count_usa_generico PASSED [ 66%]
+tests/commercial_documents/test_diagnostic_generator.py::TestD7ReviewsParametrizadas::test_d7_reviews_count_cero PASSED [ 70%]
+tests/commercial_documents/test_diagnostic_generator.py::TestD8AtribucionGEO::test_d8_template_sin_algoritmo_de_google PASSED [ 74%]
+tests/commercial_documents/test_diagnostic_generator.py::TestD8AtribucionGEO::test_d8_template_con_atribucion_iah_cli PASSED [ 77%]
+tests/commercial_documents/test_diagnostic_generator.py::TestB2QuickWinSchemaText::test_quick_wins_schema_text_sin_schema PASSED [ 81%]
+tests/commercial_documents/test_diagnostic_generator.py::TestB2QuickWinSchemaText::test_quick_wins_schema_no_aparece_con_schema_detectado PASSED [ 85%]
+tests/commercial_documents/test_diagnostic_generator.py::TestFugasPrincipalesDinamicas::test_fugas_principales_sin_whatsapp_conflict PASSED [ 88%]
+tests/commercial_documents/test_diagnostic_generator.py::TestFugasPrincipalesDinamicas::test_fugas_principales_con_whatsapp_conflict PASSED [ 92%]
+tests/commercial_documents/test_diagnostic_generator.py::TestFugasPrincipalesDinamicas::test_fugas_count_matches_brechas PASSED [ 96%]
+tests/commercial_documents/test_diagnostic_generator.py::TestFugasPrincipalesDinamicas::test_fugas_derivan_de_pain_ids PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 27 passed, 8 warnings in 1.45s ========================
