@@ -16,6 +16,7 @@ Usage:
 import json
 import logging
 from typing import Dict, List, Optional, Any
+from urllib.parse import urlparse
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -1268,7 +1269,13 @@ class V4ComprehensiveAuditor:
             http_client = HttpClient()
             has_llmstxt = False
             try:
-                llms_txt_response, _ = http_client.get(f"{url.rstrip('/')}/llms.txt")
+                # FASE-SR-F (H5): sonda /llms.txt anclada al origen del sitio.
+                # Con query UTM se pedía …/?utm=…/llms.txt (homepage 200) →
+                # llms_txt=100 falso → ia_readiness inflado → pain
+                # low_ia_readiness omitido de forma determinista.
+                parsed = urlparse(url)
+                probe_base = f"{parsed.scheme}://{parsed.netloc}"
+                llms_txt_response, _ = http_client.get(f"{probe_base}/llms.txt")
                 has_llmstxt = llms_txt_response and llms_txt_response.status_code == 200
             except:
                 pass

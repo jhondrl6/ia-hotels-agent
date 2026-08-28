@@ -518,9 +518,14 @@ class SitePresenceChecker:
         try:
             import requests
             headers = {"User-Agent": "Mozilla/5.0"}
-            
+
+            # FASE-SR-F (H5): anclar la sonda al ORIGEN del sitio. Con query
+            # UTM se pedía …/?utm=…/llms.txt (homepage 200) → falso
+            # "presente en producción" para llms_txt.
+            parsed = urlparse(site_url)
+            origin = f"{parsed.scheme}://{parsed.netloc}"
             for path in paths:
-                full_url = site_url.rstrip("/") + path
+                full_url = origin + path
                 try:
                     response = requests.get(full_url, headers=headers, timeout=5)
                     if response.status_code == 200:

@@ -48,7 +48,7 @@
   "modules/analytics/__init__.py": "FASE-CONFIG-6",
   "modules/auditors/seo_elements_detector.py": "FASE-4",
   "tests/commercial_documents/test_diagnostic_brechas.py": "FASE-B",
-  "modules/auditors/v4_comprehensive.py": "FASE-SR-E",
+  "modules/auditors/v4_comprehensive.py": "FASE-SR-F",
   "modules/commercial_documents/templates/diagnostico_v4_template.md": "FASE-A",
   "templates/diagnostico_ejecutivo.md": "FASE-F",
   "modules/utils/benchmarks.py": "FASE-P1-B",
@@ -140,7 +140,7 @@
   "modules/commercial_documents/templates/": "FIN-3",
   "docs/CHANGELOG.md": "FASE-SCORING-C",
   "tests/commercial_documents/test_precision_rendering.py": "FASE-REFACTOR-CTA-ONBOARDING",
-  "modules/asset_generation/site_presence_checker.py": "FASE-SR-E",
+  "modules/asset_generation/site_presence_checker.py": "FASE-SR-F",
   "modules/commercial_documents/coherence_config.py": "PATCH-A",
   "INDICE_DOCUMENTACION.md": "FASE-SOL2-A",
   ".opencode/plans/SOL-2-REFACTOR/05-prompt-inicio-sesion-fase-SOL2-A.md": "SOL2-PATCH-B",
@@ -245,5 +245,6 @@
   "evidence/Recomendaciones/PROMPT_INGRESOS_README.md": "FASE-P2-B",
   "tests/financial_engine/test_fase_r0e_recovery_financial_factors.py": "FASE-R0-E",
   "modules/quality_gates/alignment_result.py": "FASE-SR-E",
-  "modules/data_validation/external_apis/rich_results_client.py": "FASE-SR-E"
+  "modules/data_validation/external_apis/rich_results_client.py": "FASE-SR-E",
+  "modules/auditors/ai_crawler_auditor.py": "FASE-SR-F"
 }

@@ -1,0 +1,47 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 15 items
+
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestAICrawlerAuditorProbeOrigin::test_robots_probe_url_strips_query_string PASSED [  6%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestAICrawlerAuditorProbeOrigin::test_utm_url_no_longer_mimics_permissive_robots PASSED [ 13%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestAICrawlerAuditorProbeOrigin::test_determinism_clean_vs_utm_same_robots_content PASSED [ 20%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestAICrawlerAuditorProbeOrigin::test_clean_url_preserves_existing_behavior PASSED [ 26%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestIAReadinessLlmsProbeOrigin::test_llms_probe_url_strips_query_string PASSED [ 33%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestIAReadinessLlmsProbeOrigin::test_homepage_200_no_longer_counts_as_llmstxt PASSED [ 40%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestIAReadinessLlmsProbeOrigin::test_llms_txt_present_when_real_file_returns_200 PASSED [ 46%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestIAReadinessLlmsProbeOrigin::test_ia_readiness_delta_between_runs_reproducible PASSED [ 53%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestSitePresenceProbeOrigin::test_direct_fetch_strips_query_string PASSED [ 60%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestSitePresenceProbeOrigin::test_homepage_200_no_longer_counts_as_present_in_production PASSED [ 66%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestSitePresenceProbeOrigin::test_404_for_all_paths_returns_not_found PASSED [ 73%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestPainDetectionDeterminism::test_run_c_values_omit_both_pains PASSED [ 80%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestPainDetectionDeterminism::test_run_a_values_include_both_pains_with_exact_confidence PASSED [ 86%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestPainDetectionDeterminism::test_mapper_is_deterministic_same_input_same_plan PASSED [ 93%]
+tests/auditors/test_fase_sr_f_probe_url_canonicalization.py::TestPainDetectionDeterminism::test_low_ia_readiness_maps_to_llms_txt_and_local_content PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 15 passed, 8 warnings in 2.58s ========================

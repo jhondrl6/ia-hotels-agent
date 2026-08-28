@@ -18,7 +18,7 @@
 | Self-healing de claims | `modules/quality_gates/commercial_gate.py` + flujo de regeneración | CG-CLAIM-VS-EVIDENCE cicla: regenera con suggestion + re-valida; persistencia → BLOCKED real | SR-C |
 | target_id canónico | `main.py` + `modules/orchestration_v4/onboarding_controller.py` | Identidad de memoria derivada de la URL canónica (`_normalize_url()`): v4complete graba/busca con `canonical_url`, execute y validate-guarantee derivan su id desde la canónica; `generate_hotel_id` normaliza via urlparse (fin de fragmentación por UTM/campaña — L-SR2/N3) | SR-D |
 | Fix detección schema + contabilización única | `rich_results_client.py`, `v4_comprehensive.py`, `site_presence_checker.py`, `pain_solution_mapper.py` | JSON-LD array soportado; error_message propagado al audit; `exists_with_issues` = `present_in_production`; fallback catálogo residual (D-PF3) | SR-E |
-| Determinismo del plan de assets | `pain_solution_mapper.py` (o cache) | Hipótesis de varianza 7→5 verificada/fixeada | SR-F |
+| Sondas URL ancladas al origen | `modules/auditors/ai_crawler_auditor.py` + `modules/auditors/v4_comprehensive.py` + `modules/asset_generation/site_presence_checker.py` | Sondas robots.txt/llms.txt ancladas al ORIGEN del sitio (urlparse, sin query UTM): fin de la varianza 7→5 del plan de assets (H5) — mapper verificado determinista (D-PF6: FIX) | SR-F |
 | Display sincronizado con fuente | `modules/quality_gates/commercial_gate.py` | CG-TIER-CONSISTENCY deriva de fuente financiera; jerga reducida en vista gerencia | SR-G |
 
 ## Sección D: Métricas Acumulativas
@@ -31,7 +31,7 @@
 | Tests nuevos SR-C | 20 (`test_claim_self_healing.py`, 6 clases); regresiones aisladas: 79 gates + 27 generator + 57 gate/guardián L-SR1, 0 fallos; quick 6/6 | SR-C |
 | Tests nuevos SR-D | 28 (`tests/test_target_id_canonicalization.py`: 9 target_id + 8 generate_hotel_id + 5 región + 3 reutilización memoria + 3 guardián estático); regresión aislada 108 (guardián 3 + onboarding_controller 37 + hook_traceability 13 + fase_d_loader 13 + onboarding_injection 7 + evidence_paths 27 + harness_core 8), 0 fallos; quick 6/6 | SR-D |
 | Tests nuevos SR-E | 31 (11 `tests/data_validation/test_fase_sr_e_schema_detection.py` + 20 `tests/asset_generation/test_fase_sr_e_presence_accounting.py`); regresión 148 aislada (58 data_validation + 81 asset_generation + 9 auditors), 0 fallos; quick 6/6 | SR-E |
-| Tests nuevos SR-F | (contar al cerrar) | SR-F |
+| Tests nuevos SR-F | 15 (`tests/auditors/test_fase_sr_f_probe_url_canonicalization.py`, 4 clases: sondas sin query, UTM ya no simula robots permisivo, homepage 200 ≠ llms.txt, delta 22.222 reproducible, plan de pains determinista 5-vs-7); regresión 58 aislada (31 auditors + 22 site_presence + 5 mapper), 0 fallos | SR-F |
 | Tests nuevos SR-G | (contar al cerrar) | SR-G |
 | Coherence corrida final | (llenar en SR-H) | SR-H |
 | Gates PASSED corrida final | (llenar en SR-H) | SR-H |
@@ -52,7 +52,11 @@
 | `tests/test_target_id_canonicalization.py` | 28 tests anti-fragmentación + guardián estático de call sites | SR-D |
 | `modules/data_validation/external_apis/rich_results_client.py` + `modules/auditors/v4_comprehensive.py` + `modules/asset_generation/site_presence_checker.py` | Fix detección schema (parser JSON-LD array + parse_errors + propagación error_message) + criterio canónico presencia (H7) | SR-E |
 | `modules/quality_gates/alignment_result.py` + `modules/asset_generation/proposal_asset_alignment.py` + `modules/asset_generation/pain_ledger.py` + `modules/commercial_documents/coherence_validator.py` + `modules/commercial_documents/v4_proposal_generator.py` | Contabilización única `exists_with_issues` = `present_in_production` (6 consumidores vía `is_present_in_production`) | SR-E |
-| `modules/commercial_documents/pain_solution_mapper.py` | Falso pain eliminado + determinismo | SR-E/SR-F |
+| `modules/commercial_documents/pain_solution_mapper.py` | Falso pain eliminado (SR-E); determinismo verificado por investigación SR-F SIN cambios (mapper inocente) | SR-E |
+| `modules/auditors/ai_crawler_auditor.py` | Sonda robots.txt anclada al origen (urlparse; fin de robots malformado con query UTM → score 1.0/robots_exists=True falsos) | SR-F |
+| `modules/auditors/v4_comprehensive.py` | Sonda /llms.txt anclada al origen en `_calculate_ia_readiness` (fin de llms_txt=100 falso) | SR-F |
+| `modules/asset_generation/site_presence_checker.py` | `_check_direct_resource` anclada al origen (fin de "presente en producción" falso con query UTM) | SR-F |
+| `tests/auditors/test_fase_sr_f_probe_url_canonicalization.py` | 15 tests de determinismo de sondas + plan de pains (clean ≡ UTM; A=7 vs C=5 reproducible) | SR-F |
 
 ## Notas de Ejecución por Fase
 

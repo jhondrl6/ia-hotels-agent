@@ -13,7 +13,7 @@ Usage:
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Dict, List, Optional
-from urllib.parse import urljoin
+from urllib.parse import urlparse
 import re
 
 import httpx
@@ -86,7 +86,14 @@ class AICrawlerAuditor:
         Returns:
             AICrawlerAuditReport with per-crawler analysis.
         """
-        base_url = url.rstrip('/')
+        # FASE-SR-F (H5): la sonda robots.txt se ancla al ORIGEN del sitio.
+        # Con una URL con query string (UTM) se construía …/?utm=…/robots.txt,
+        # el servidor respondía 200 con la homepage y el parser la interpretaba
+        # como "sin bloqueos" (score 1.0) — exclusión determinista de los pains
+        # ai_crawler_blocked/low_ia_readiness entre corridas. Patrón idéntico a
+        # seo_accelerator_pro._check_robots_and_sitemap.
+        parsed = urlparse(url)
+        base_url = f"{parsed.scheme}://{parsed.netloc}"
         robots_url = f"{base_url}/robots.txt"
         
         robots_content = self._fetch_robots_txt(robots_url)

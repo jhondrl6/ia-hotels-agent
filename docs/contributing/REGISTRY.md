@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-08-28
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 443
+> **Total fases completadas:** 444
 
 ---
 
@@ -10414,6 +10414,29 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (179 (31 nuevos: 11 schema_detection + 20 presence_accounting; 148 regresion: 58 data_validation + 81 asset_generation + 9 auditors))
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SR-F - 2026-08-28
+**Descripcion:** Varianza del plan de assets investigada (7->5): sondas robots/llms con query UTM median homepage 200; fix minimo en 3 sondas ancladas al origen + 15 tests; PageSpeed OPS documentado
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/auditors/test_fase_sr_f_probe_url_canonicalization.py` | NUEVO | Test Fase Sr F Probe Url Canonicalization |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/ai_crawler_auditor.py` | Ai Crawler Auditor |
+| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
+| `modules/asset_generation/site_presence_checker.py` | Site Presence Checker |
+
+### Validaciones
+- [x] Tests passing (15)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

@@ -12,7 +12,7 @@
 | FASE-SR-C | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 3) | ~45 | NO |
 | FASE-SR-D | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 4) | ~40 | NO |
 | FASE-SR-E | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 5) | ~45 | NO |
-| FASE-SR-F | ⏳ PENDIENTE | — | — | — | NO |
+| FASE-SR-F | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 6) | ~55 | NO |
 | FASE-SR-G | ⏳ PENDIENTE | — | — | — | NO |
 | FASE-SR-H | ⏳ PENDIENTE | — | — | — | SÍ (v4complete) |
 | FASE-SR-VERIFY | ⏳ PENDIENTE | — | — | — | NO (§4.6) |
@@ -59,10 +59,10 @@
 - [x] `log_phase_completion.py --fase FASE-SR-E` (SIN --release) + docs post-fase
 
 ### FASE-SR-F — Varianza + PageSpeed OPS
-- [ ] Hipótesis de varianza verificada contra pain_ledgers A vs C (7→5)
-- [ ] Fix mínimo aplicado con test, O seguimiento documentado (decisión pre-registrada)
-- [ ] Estado PageSpeed key verificado en config + instrucción OPS documentada (sin tocar secretos)
-- [ ] `log_phase_completion.py --fase FASE-SR-F` (SIN --release) + docs post-fase
+- [x] Hipótesis de varianza verificada contra pain_ledgers A vs C (7→5) — hipótesis del mapper FALSA; causa real: sondas robots/llms con query UTM medían homepage 200 (robots 1.0/robots_exists=True, llms_txt=100 falso; delta 22.222 reproducible con pesos)
+- [x] Fix mínimo aplicado con test, O seguimiento documentado (decisión pre-registrada) — D-PF6=FIX: 3 sondas ancladas al origen (urlparse) en ai_crawler_auditor/v4_comprehensive/site_presence_checker; mapper verificado inocente; 15/15 tests nuevos + regresión 58, 0 fallos
+- [x] Estado PageSpeed key verificado en config + instrucción OPS documentada (sin tocar secretos) — GOOGLE_PAGESPEED_API_KEY presente pero inválida/sin habilitar vs GOOGLE_MAPS_API_KEY funcional; rotación = decisión del usuario
+- [x] `log_phase_completion.py --fase FASE-SR-F` (SIN --release) + docs post-fase
 
 ### FASE-SR-G — Display tier + jerga
 - [ ] CG-TIER-CONSISTENCY: texto deriva el tier de la fuente financiera (no hardcode)
