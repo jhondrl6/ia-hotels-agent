@@ -30,7 +30,7 @@
 | Tests nuevos SR-B | 10 (TestContractProposalLayer 4 + TestAntiB7 2 + TestContractGateLayer 4 en `tests/quality_gates/test_alignment_contract.py`); gates 57 PASSED aislado; 0 regresiones (8 fallos preexistentes en test_proposal_dynamic certificados en HEAD) | SR-B |
 | Tests nuevos SR-C | 20 (`test_claim_self_healing.py`, 6 clases); regresiones aisladas: 79 gates + 27 generator + 57 gate/guardián L-SR1, 0 fallos; quick 6/6 | SR-C |
 | Tests nuevos SR-D | 28 (`tests/test_target_id_canonicalization.py`: 9 target_id + 8 generate_hotel_id + 5 región + 3 reutilización memoria + 3 guardián estático); regresión aislada 108 (guardián 3 + onboarding_controller 37 + hook_traceability 13 + fase_d_loader 13 + onboarding_injection 7 + evidence_paths 27 + harness_core 8), 0 fallos; quick 6/6 | SR-D |
-| Tests nuevos SR-E | (contar al cerrar) | SR-E |
+| Tests nuevos SR-E | 31 (11 `tests/data_validation/test_fase_sr_e_schema_detection.py` + 20 `tests/asset_generation/test_fase_sr_e_presence_accounting.py`); regresión 148 aislada (58 data_validation + 81 asset_generation + 9 auditors), 0 fallos; quick 6/6 | SR-E |
 | Tests nuevos SR-F | (contar al cerrar) | SR-F |
 | Tests nuevos SR-G | (contar al cerrar) | SR-G |
 | Coherence corrida final | (llenar en SR-H) | SR-H |
@@ -50,7 +50,8 @@
 | `main.py` | Canonicalización target_id: `canonical_url` en v4complete (búsqueda + 2 append_log + save_analysis_reference), execute, validate-guarantee; onboard persiste hotel['url'] sin query | SR-D |
 | `modules/orchestration_v4/onboarding_controller.py` | `generate_hotel_id` normaliza via urlparse antes de construir el id | SR-D |
 | `tests/test_target_id_canonicalization.py` | 28 tests anti-fragmentación + guardián estático de call sites | SR-D |
-| `modules/data_validation/external_apis/rich_results_client.py` + `modules/auditors/v4_comprehensive.py` + `modules/asset_generation/site_presence_checker.py` | Fix detección schema + contabilización única (H7) | SR-E |
+| `modules/data_validation/external_apis/rich_results_client.py` + `modules/auditors/v4_comprehensive.py` + `modules/asset_generation/site_presence_checker.py` | Fix detección schema (parser JSON-LD array + parse_errors + propagación error_message) + criterio canónico presencia (H7) | SR-E |
+| `modules/quality_gates/alignment_result.py` + `modules/asset_generation/proposal_asset_alignment.py` + `modules/asset_generation/pain_ledger.py` + `modules/commercial_documents/coherence_validator.py` + `modules/commercial_documents/v4_proposal_generator.py` | Contabilización única `exists_with_issues` = `present_in_production` (6 consumidores vía `is_present_in_production`) | SR-E |
 | `modules/commercial_documents/pain_solution_mapper.py` | Falso pain eliminado + determinismo | SR-E/SR-F |
 
 ## Notas de Ejecución por Fase
@@ -90,7 +91,14 @@
 - Greps (T4): 0 `target_id=args.url` / `'target_id': args.url` en código (solo assertions del guardián estático); 0 `_normalize_url_for_matching` (solo patch documental de SR-B); 0 `replace()` sobre URL cruda dentro de `generate_hotel_id`. Evidencia: `evidence/FASE-SR-D/` (28 nuevos + 108 regresión passed, quick 6/6).
 
 ### FASE-SR-E
-- (llenar al cerrar)
+- Sesión agente 2026-08-28 (DIRECTO, venv; continuada post-compactación). Causa raíz REAL (H7): `_validate_schema` no soporta JSON-LD ARRAY (`data.get` sobre list → AttributeError); el `except (json.JSONDecodeError, TypeError)` no lo captura → `test_url` lo traga como status ERROR → `get_hotel_schema_report` retorna `has_hotel_schema=False` → audit `total_schemas=0` en silencio → pain falso `no_hotel_schema` (85, HIGH, $1.06M COP/mes).
+- Fix parser: `_validate_schema` itera elementos dict de listas; bucle de parsing por bloque con `except Exception` → `parse_errors[idx]` (corrupto NO invalida los demás); ERROR solo si TODOS los bloques fallan (mensaje cita N bloques); `get_hotel_schema_report`/`get_faq_schema_report` exponen `status`/`error_message`/`parse_errors`.
+- Fix audit: `SchemaAuditResult.error_message` (None por defecto) + `_audit_schemas` propaga ERROR como warning severity ERROR ("0 schemas NO es ausencia verificada") + `to_dict()` incluye error_message.
+- Contabilización única (L-SR3/L-NC10): `PRODUCTION_PRESENT_STATUSES=("exists","exists_with_issues")` + `is_present_in_production()` en site_presence_checker; 6 consumidores migrados: alignment_result._presence_resolved, proposal_asset_alignment._presence_exists, pain_ledger.apply_site_verification (VERIFIED_IN_SITE + severity LOW), coherence_validator._extract_verified_in_production_types, v4_proposal_generator ×3 presence_lookup. Exclusión DELIBERADA: coherence_validator L385 WhatsApp (HTML check nunca produce exists_with_issues).
+- D-PF3 residual: `get_assets_for_pain("no_hotel_schema")` — con fuentes para CONSTRUIR el asset (cualquier confianza > 0, L-SR4) → `can_generate=True` vía fallback del catálogo (`block_on_failure=False`); sin fuentes → bloqueo `justified_skip`; el preflight ya derivaba `ASSET_REQUIREMENTS` de `ASSET_CATALOG` (contrato respetado, test de contrato añadido).
+- Decisión de arbitraje detectores: `rich_results_client` = detector canónico del AUDIT (propaga error); `schema_finder` (scrapers) = detector de PRESENCIA (SitePresenceChecker), intacto (fuera de alcance — matriz de conflictos no lo lista); contrato común = taxonomía de presencia + criterio canónico compartido. Para Salento ambos convergen: audit ≥2 Hotel (array+dict), presencia EXISTS_WITH_ISSUES → presente en producción.
+- `generate_basic_schema`: sigue siendo string declarativo del catálogo sin consumidor directo — no-implementación documentada como seguimiento explícito (el efecto práctico del contrato D-PF3 es generar con lo disponible; nota G6 WON'T FIX del orquestador).
+- TDD: 11/11 rojos (schema detection) + ImportError esperado (presence) ANTES del fix; 31/31 verdes después. Greps (L2): 0 `== "exists"` residuales salvo WhatsApp (deliberado); único consumidor de `get_hotel_schema_report` = `_audit_schemas` (propaga). Evidencia: `evidence/FASE-SR-E/` (31 nuevos + 148 regresión passed, quick 6/6).
 
 ### FASE-SR-F
 - (llenar al cerrar)

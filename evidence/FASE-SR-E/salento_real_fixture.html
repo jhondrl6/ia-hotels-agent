@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- Fixture FASE-SR-E: los 3 bloques application/ld+json REALES de hotelsalentoreal.com
+     (verificacion en vivo 2026-08-28, plan maestro §1 H7).
+     (a) @graph Yoast/WebPage  (b) ARRAY JSON [{@type: Hotel}]  (c) dict single {@type: Hotel}
+     El bug: _validate_schema no soportaba (b) → AttributeError 'list' object has no attribute 'get'
+     → status ERROR tragado → audit "0 schemas" en silencio → pain falso no_hotel_schema. -->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Hotel Salento Real (fixture FASE-SR-E)</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[{"@type":"WebPage","name":"Hotel Salento Real","url":"https://www.hotelsalentoreal.com/","inLanguage":"es","isPartOf":{"@id":"https://www.hotelsalentoreal.com/#website"},"breadcrumb":{"@id":"https://www.hotelsalentoreal.com/#breadcrumb"}}]}
+</script>
+<script type="application/ld+json">
+[{"@context":"https://schema.org","@type":"Hotel","name":"Hotel Salento Real","address":{"@type":"PostalAddress","streetAddress":"Calle 10 # 3-25","addressLocality":"Salento","addressRegion":"Quindio","addressCountry":"CO"},"telephone":"+57 316 6296142","image":"https://www.hotelsalentoreal.com/img/hotel.jpg","url":"https://www.hotelsalentoreal.com/","priceRange":"$$"}]
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Hotel","name":"Hotel Salento Real","address":"Calle 10 # 3-25, Salento","telephone":"+57 316 6296142"}
+</script>
+</head>
+<body></body>
+</html>

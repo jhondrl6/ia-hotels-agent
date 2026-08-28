@@ -165,7 +165,15 @@ class PainLedger:
             if not isinstance(presence, dict):
                 continue
             status = str(presence.get("status", "")).lower()
-            if status in ("exists", "redundant") and presence.get("site_verified"):
+            # FASE-SR-E (H7, L-SR3): criterio canónico — exists_with_issues
+            # también verifica presencia (el asset existe; sus campos faltantes
+            # son mejora sugerida, no brecha activa).
+            from modules.asset_generation.site_presence_checker import (
+                is_present_in_production,
+            )
+            if (
+                status in ("redundant",) or is_present_in_production(status)
+            ) and presence.get("site_verified"):
                 entry.status = self.STATUS_VERIFIED_IN_SITE
                 # La brecha ya no es una fuga activa: severidad baja, evidencia
                 # apunta a la verificación del sitio vivo.

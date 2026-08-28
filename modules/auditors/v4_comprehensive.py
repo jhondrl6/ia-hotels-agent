@@ -57,6 +57,9 @@ class SchemaAuditResult:
     errors: List[Dict] = field(default_factory=list)
     warnings: List[Dict] = field(default_factory=list)
     properties: Dict[str, Any] = field(default_factory=dict)
+    # FASE-SR-E (H7): "detección fallida" visible — nunca reportar "0 schemas"
+    # en silencio cuando el detector lanzó error (L-SR5).
+    error_message: Optional[str] = None
 
 
 @dataclass
@@ -222,6 +225,7 @@ class V4AuditResult:
                 "errors": self.schema.errors,
                 "warnings": self.schema.warnings,
                 "properties": self.schema.properties,
+                "error_message": self.schema.error_message,
             },
             "gbp": {
                 "place_found": self.gbp.place_found,
@@ -678,9 +682,32 @@ class V4ComprehensiveAuditor:
         return result
     
     def _audit_schemas(self, url: str) -> SchemaAuditResult:
-        """Audit structured data schemas on the page."""
+        """Audit structured data schemas on the page.
+
+        FASE-SR-E (H7): si el detector reporta ERROR, el error se PROPAGA en
+        ``error_message`` + warning — distinguir "ausencia verificada" de
+        "detección fallida" (nunca un falso "0 schemas" silencioso).
+        """
         report = self.rich_results.get_hotel_schema_report(url)
         faq_report = self.rich_results.get_faq_schema_report(url)
+        
+        warnings = list(report.get("warnings", []))
+        error_message = report.get("error_message")
+        if report.get("status") == "ERROR" and error_message:
+            warnings.append({
+                "message": (
+                    f"Schema detection failed (status=ERROR): {error_message}. "
+                    f"total_schemas=0 NO es ausencia verificada."
+                ),
+                "severity": "ERROR",
+            })
+        faq_error = faq_report.get("error_message")
+        if faq_report.get("status") == "ERROR" and faq_error:
+            error_message = error_message or faq_error
+            warnings.append({
+                "message": f"FAQ schema detection failed (status=ERROR): {faq_error}",
+                "severity": "ERROR",
+            })
         
         return SchemaAuditResult(
             hotel_schema_detected=report["has_hotel_schema"],
@@ -692,8 +719,9 @@ class V4ComprehensiveAuditor:
             org_schema_detected="Organization" in report.get("all_schemas", []),
             total_schemas=len(report.get("all_schemas", [])),
             errors=report.get("errors", []),
-            warnings=report.get("warnings", []),
+            warnings=warnings,
             properties=report.get("properties", {}),
+            error_message=error_message,
         )
     
     def _audit_metadata(self, url: str, html_content: Optional[str] = None) -> Optional[MetadataAuditResult]:

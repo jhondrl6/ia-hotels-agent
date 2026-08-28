@@ -1,0 +1,430 @@
+diff --git a/modules/asset_generation/pain_ledger.py b/modules/asset_generation/pain_ledger.py
+index a05ac7b..c6e1f9b 100644
+--- a/modules/asset_generation/pain_ledger.py
++++ b/modules/asset_generation/pain_ledger.py
+@@ -165,7 +165,15 @@ class PainLedger:
+             if not isinstance(presence, dict):
+                 continue
+             status = str(presence.get("status", "")).lower()
+-            if status in ("exists", "redundant") and presence.get("site_verified"):
++            # FASE-SR-E (H7, L-SR3): criterio canónico — exists_with_issues
++            # también verifica presencia (el asset existe; sus campos faltantes
++            # son mejora sugerida, no brecha activa).
++            from modules.asset_generation.site_presence_checker import (
++                is_present_in_production,
++            )
++            if (
++                status in ("redundant",) or is_present_in_production(status)
++            ) and presence.get("site_verified"):
+                 entry.status = self.STATUS_VERIFIED_IN_SITE
+                 # La brecha ya no es una fuga activa: severidad baja, evidencia
+                 # apunta a la verificación del sitio vivo.
+diff --git a/modules/asset_generation/proposal_asset_alignment.py b/modules/asset_generation/proposal_asset_alignment.py
+index 853ffcd..8cdecc9 100644
+--- a/modules/asset_generation/proposal_asset_alignment.py
++++ b/modules/asset_generation/proposal_asset_alignment.py
+@@ -461,7 +461,10 @@ def _presence_exists(
+     status = entry.get("status") if isinstance(entry, dict) else getattr(entry, "status", None)
+     if status is not None and hasattr(status, "value"):
+         status = status.value
+-    return status == "exists"
++    # FASE-SR-E (H7, L-SR3): criterio canónico — exists_with_issues también
++    # es presencia en producción (contabilización única con el gate).
++    from modules.asset_generation.site_presence_checker import is_present_in_production
++    return is_present_in_production(status)
+ 
+ 
+ def committed_services_from_entries(
+diff --git a/modules/asset_generation/site_presence_checker.py b/modules/asset_generation/site_presence_checker.py
+index 513eedc..fb4d90c 100644
+--- a/modules/asset_generation/site_presence_checker.py
++++ b/modules/asset_generation/site_presence_checker.py
+@@ -52,6 +52,34 @@ from modules.data_validation.external_apis.rich_results_client import (
+ )
+ 
+ 
++# FASE-SR-E (H7, L-SR3): criterio ÚNICO de "presente en producción".
++# ``exists_with_issues`` significa que el asset EXISTE en el sitio (con campos
++# mejorables que viajan como ``recommendations``): cuenta como
++# ``present_in_production`` en alignment/matrix/ledger/coherencia. Un solo
++# criterio compartido por todos los consumidores (L-NC10: nunca dos criterios
++# en paralelo).
++PRODUCTION_PRESENT_STATUSES = ("exists", "exists_with_issues")
++
++
++def presence_status_value(status: Any) -> Optional[str]:
++    """Normaliza un estado de presencia (Enum PresenceStatus o str) a str."""
++    if status is None:
++        return None
++    if hasattr(status, "value"):
++        return str(status.value)
++    return str(status)
++
++
++def is_present_in_production(status: Any) -> bool:
++    """FASE-SR-E (H7): True cuando el asset existe en el sitio de producción.
++
++    Acepta ``PresenceStatus`` (Enum) o su valor string. ``exists_with_issues``
++    cuenta como presente: el asset existe; sus campos faltantes son una mejora
++    sugerida, no una brecha unresolved (contabilización única, L-SR3).
++    """
++    return presence_status_value(status) in PRODUCTION_PRESENT_STATUSES
++
++
+ class PresenceStatus(Enum):
+     """Estado de presencia de un asset en el sitio real."""
+     EXISTS = "exists"                    # Ya existe en el sitio
+@@ -74,7 +102,13 @@ class PresenceCheckResult:
+     
+     @property
+     def should_generate(self) -> bool:
+-        """¿Deberíamos generar este asset?"""
++        """¿Deberíamos generar este asset?
++
++        FASE-SR-E (H7, L-SR3): ``EXISTS_WITH_ISSUES`` NO se regenera (el asset
++        ya existe en producción — sus campos faltantes viajan como
++        ``recommendations``) y SÍ cuenta como ``present_in_production`` en
++        alignment vía ``is_present_in_production`` (criterio único).
++        """
+         return self.status in (
+             PresenceStatus.NOT_EXISTS,
+             PresenceStatus.VERIFICATION_FAILED,
+diff --git a/modules/auditors/v4_comprehensive.py b/modules/auditors/v4_comprehensive.py
+index 6497fbd..5a67d76 100644
+--- a/modules/auditors/v4_comprehensive.py
++++ b/modules/auditors/v4_comprehensive.py
+@@ -57,6 +57,9 @@ class SchemaAuditResult:
+     errors: List[Dict] = field(default_factory=list)
+     warnings: List[Dict] = field(default_factory=list)
+     properties: Dict[str, Any] = field(default_factory=dict)
++    # FASE-SR-E (H7): "detección fallida" visible — nunca reportar "0 schemas"
++    # en silencio cuando el detector lanzó error (L-SR5).
++    error_message: Optional[str] = None
+ 
+ 
+ @dataclass
+@@ -222,6 +225,7 @@ class V4AuditResult:
+                 "errors": self.schema.errors,
+                 "warnings": self.schema.warnings,
+                 "properties": self.schema.properties,
++                "error_message": self.schema.error_message,
+             },
+             "gbp": {
+                 "place_found": self.gbp.place_found,
+@@ -678,10 +682,33 @@ class V4ComprehensiveAuditor:
+         return result
+     
+     def _audit_schemas(self, url: str) -> SchemaAuditResult:
+-        """Audit structured data schemas on the page."""
++        """Audit structured data schemas on the page.
++
++        FASE-SR-E (H7): si el detector reporta ERROR, el error se PROPAGA en
++        ``error_message`` + warning — distinguir "ausencia verificada" de
++        "detección fallida" (nunca un falso "0 schemas" silencioso).
++        """
+         report = self.rich_results.get_hotel_schema_report(url)
+         faq_report = self.rich_results.get_faq_schema_report(url)
+         
++        warnings = list(report.get("warnings", []))
++        error_message = report.get("error_message")
++        if report.get("status") == "ERROR" and error_message:
++            warnings.append({
++                "message": (
++                    f"Schema detection failed (status=ERROR): {error_message}. "
++                    f"total_schemas=0 NO es ausencia verificada."
++                ),
++                "severity": "ERROR",
++            })
++        faq_error = faq_report.get("error_message")
++        if faq_report.get("status") == "ERROR" and faq_error:
++            error_message = error_message or faq_error
++            warnings.append({
++                "message": f"FAQ schema detection failed (status=ERROR): {faq_error}",
++                "severity": "ERROR",
++            })
++        
+         return SchemaAuditResult(
+             hotel_schema_detected=report["has_hotel_schema"],
+             hotel_schema_valid=report["schema_valid"],
+@@ -692,8 +719,9 @@ class V4ComprehensiveAuditor:
+             org_schema_detected="Organization" in report.get("all_schemas", []),
+             total_schemas=len(report.get("all_schemas", [])),
+             errors=report.get("errors", []),
+-            warnings=report.get("warnings", []),
++            warnings=warnings,
+             properties=report.get("properties", {}),
++            error_message=error_message,
+         )
+     
+     def _audit_metadata(self, url: str, html_content: Optional[str] = None) -> Optional[MetadataAuditResult]:
+diff --git a/modules/commercial_documents/coherence_validator.py b/modules/commercial_documents/coherence_validator.py
+index 7175422..655d8c9 100644
+--- a/modules/commercial_documents/coherence_validator.py
++++ b/modules/commercial_documents/coherence_validator.py
+@@ -576,7 +576,15 @@ class CoherenceValidator:
+             if hasattr(status, 'value'):
+                 status = str(status.value).lower()
+ 
+-            if status in ("exists", "redundant") and site_verified:
++            # FASE-SR-E (H7, L-SR3): criterio canónico — exists_with_issues
++            # también cuenta como verificado en producción (el asset existe;
++            # sus campos faltantes son mejora sugerida, no asset ausente).
++            from ..asset_generation.site_presence_checker import (
++                is_present_in_production,
++            )
++            if (
++                status in ("redundant",) or is_present_in_production(status)
++            ) and site_verified:
+                 verified_types.add(asset_type)
+ 
+         return verified_types
+diff --git a/modules/commercial_documents/pain_solution_mapper.py b/modules/commercial_documents/pain_solution_mapper.py
+index 1d3a570..69c1d40 100644
+--- a/modules/commercial_documents/pain_solution_mapper.py
++++ b/modules/commercial_documents/pain_solution_mapper.py
+@@ -848,8 +848,46 @@ class PainSolutionMapper:
+             # because the conflict itself justifies the asset as solution
+             if pain_id == "whatsapp_conflict":
+                 can_generate = True  # El conflicto justifica generar el asset
++                reason = f"Confidence {avg_confidence:.2f} vs required {min_confidence}"
+             else:
+                 can_generate = avg_confidence >= min_confidence
++                reason = (
++                    f"Confidence {avg_confidence:.2f} vs required {min_confidence}"
++                    if can_generate
++                    else f"Insufficient confidence ({avg_confidence:.2f} < {min_confidence})"
++                )
++                # FASE-SR-E (D-PF3, L-SR4): para la brecha de AUSENCIA genuina
++                # de schema, el contrato del catálogo manda — con fuentes
++                # disponibles (GBP/web) el fallback ``generate_basic_schema``
++                # (block_on_failure=False) permite generar la versión básica;
++                # sin fuentes → bloqueo explícito con justified_skip. La
++                # confianza de la brecha ("schema_hotel_detected") no mide las
++                # fuentes para CONSTRUIR el asset (L-SR4).
++                if not can_generate and pain_id == "no_hotel_schema":
++                    from modules.asset_generation.asset_catalog import ASSET_CATALOG
++                    catalog_entry = ASSET_CATALOG.get(asset_type)
++                    has_sources = any(
++                        score > 0 for score in available_confidence.values()
++                    )
++                    if (
++                        catalog_entry is not None
++                        and catalog_entry.fallback
++                        and not catalog_entry.block_on_failure
++                        and has_sources
++                    ):
++                        can_generate = True
++                        reason = (
++                            f"D-PF3 fallback '{catalog_entry.fallback}': ausencia "
++                            f"genuina con fuentes disponibles (confianza media "
++                            f"{avg_confidence:.2f} < {min_confidence} requerida "
++                            f"por la brecha)"
++                        )
++                    elif not has_sources:
++                        reason = (
++                            f"Sin fuentes para generar el asset (confianza "
++                            f"{avg_confidence:.2f}) — bloqueo con justified_skip "
++                            f"(D-PF3)"
++                        )
+             
+             # Determine confidence level
+             if avg_confidence >= 0.9:
+@@ -886,7 +924,7 @@ class PainSolutionMapper:
+                 confidence_required=min_confidence,
+                 can_generate=can_generate,
+                 priority=priority,  # FASE 2: Incluir prioridad del mapeo
+-                reason=f"Confidence {avg_confidence:.2f} vs required {min_confidence}" if can_generate else f"Insufficient confidence ({avg_confidence:.2f} < {min_confidence})",
++                reason=reason,
+                 problem_solved=mapping["name"],
+                 description=mapping["description"],
+                 semantic_status=semantic_status  # ROICR FASE-1: AUDIT_ONLY or IMPLEMENT
+diff --git a/modules/commercial_documents/v4_proposal_generator.py b/modules/commercial_documents/v4_proposal_generator.py
+index 6e3c768..d645cef 100644
+--- a/modules/commercial_documents/v4_proposal_generator.py
++++ b/modules/commercial_documents/v4_proposal_generator.py
+@@ -26,6 +26,7 @@ from modules.financial_engine.pricing_calculator import get_floor_price, _load_p
+ from modules.financial_engine.roi_formatter import calcular_metricas_roi, formatear_roi_para_propuesta
+ from modules.financial_engine.pillar_maturity_curve import aplicar_curva_4_pilares, formatear_curva_para_propuesta, calcular_recuperacion_6m
+ from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
++from modules.asset_generation.site_presence_checker import is_present_in_production
+ from modules.commercial_documents.service_catalog import SERVICE_CATALOG, TECHNICAL_ASSET_CATALOG
+ from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
+ from modules.common.yaml_loader import load_yaml_config, YAMLLoadError
+@@ -1377,7 +1378,9 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+         if site_presence_report and hasattr(site_presence_report, 'results'):
+             for asset_type, result in site_presence_report.results.items():
+                 presence_lookup[asset_type] = {
+-                    'present_in_production': result.status.value == "exists",
++                    # FASE-SR-E (H7, L-SR3): criterio canónico —
++                    # exists_with_issues también es presente en producción.
++                    'present_in_production': is_present_in_production(result.status),
+                     'presence_verified': True,
+                 }
+ 
+@@ -1603,7 +1606,9 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+         if site_presence_report and hasattr(site_presence_report, 'results'):
+             for asset_type, result in site_presence_report.results.items():
+                 presence_lookup[asset_type] = {
+-                    'present_in_production': result.status.value == "exists",
++                    # FASE-SR-E (H7, L-SR3): criterio canónico —
++                    # exists_with_issues también es presente en producción.
++                    'present_in_production': is_present_in_production(result.status),
+                     'presence_verified': True,
+                 }
+ 
+@@ -1669,7 +1674,9 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
+         if site_presence_report and hasattr(site_presence_report, 'results'):
+             for asset_type, result in site_presence_report.results.items():
+                 presence_lookup[asset_type] = {
+-                    'present_in_production': result.status.value == "exists",
++                    # FASE-SR-E (H7, L-SR3): criterio canónico —
++                    # exists_with_issues también es presente en producción.
++                    'present_in_production': is_present_in_production(result.status),
+                     'presence_verified': True,
+                 }
+ 
+diff --git a/modules/data_validation/external_apis/rich_results_client.py b/modules/data_validation/external_apis/rich_results_client.py
+index bce3507..f554a5d 100644
+--- a/modules/data_validation/external_apis/rich_results_client.py
++++ b/modules/data_validation/external_apis/rich_results_client.py
+@@ -142,16 +142,24 @@ class RichResultsTestClient:
+             
+             soup = BeautifulSoup(response.text, 'html.parser')
+             schemas = []
++            parse_errors: List[str] = []  # FASE-SR-E (L-SR5): errores visibles, no tragados
+             
+             # Extract JSON-LD structured data
+             jsonld_scripts = soup.find_all('script', type='application/ld+json')
+             
+-            for script in jsonld_scripts:
++            for idx, script in enumerate(jsonld_scripts):
+                 try:
+                     data = json.loads(script.string)
+                     schema_results = self._validate_schema(data)
+                     schemas.extend(schema_results)
+-                except (json.JSONDecodeError, TypeError):
++                except Exception as e:
++                    # FASE-SR-E (H7): un bloque corrupto NO invalida los demás.
++                    # Se captura Exception (incluye AttributeError de listas y
++                    # errores de validación) y el error queda REGISTRADO —
++                    # nunca se traga en silencio (L-SR5).
++                    parse_errors.append(
++                        f"jsonld_block[{idx}]: {type(e).__name__}: {e}"
++                    )
+                     continue
+             
+             # Extract Microdata
+@@ -177,6 +185,21 @@ class RichResultsTestClient:
+             errors = sum(len(s.errors) for s in schemas)
+             warnings = sum(len(s.warnings) for s in schemas)
+             
++            # FASE-SR-E (H7): distinguir "ausencia verificada" de "detección
++            # fallida". Si HAY bloques JSON-LD pero TODOS fallaron el parsing y
++            # no quedó ningún schema (ni microdata), el resultado es ERROR con
++            # el detalle — nunca "0 schemas" en silencio (L-SR5).
++            if not schemas and parse_errors:
++                return RichResultsTestResult(
++                    url=url,
++                    status="ERROR",
++                    error_message=(
++                        f"JSON-LD parsing failed for all {len(parse_errors)} "
++                        f"block(s): {'; '.join(parse_errors)}"
++                    ),
++                    raw_response={"jsonld_count": len(jsonld_scripts), "parse_errors": parse_errors}
++                )
++            
+             return RichResultsTestResult(
+                 url=url,
+                 status="COMPLETE",
+@@ -185,7 +208,7 @@ class RichResultsTestClient:
+                 valid_items=valid,
+                 error_items=errors,
+                 warnings_count=warnings,
+-                raw_response={"jsonld_count": len(jsonld_scripts)}
++                raw_response={"jsonld_count": len(jsonld_scripts), "parse_errors": parse_errors}
+             )
+             
+         except requests.RequestException as e:
+@@ -195,13 +218,25 @@ class RichResultsTestClient:
+                 error_message=f"Failed to fetch URL: {str(e)}"
+             )
+     
+-    def _validate_schema(self, data: Dict[str, Any]) -> List[SchemaValidationResult]:
++    def _validate_schema(self, data: Any) -> List[SchemaValidationResult]:
+         """Validate a schema object and return results.
+         
+-        Handles both single schemas and @graph arrays.
++        Handles single schemas, @graph arrays and top-level JSON-LD ARRAY
++        blocks (FASE-SR-E H7: ``[{"@type": "Hotel"}]``).
+         """
+         results = []
+         
++        # FASE-SR-E (H7): bloque JSON-LD en formato ARRAY — cada elemento se
++        # valida como schema individual (antes: AttributeError 'list' object
++        # has no attribute 'get').
++        if isinstance(data, list):
++            for item in data:
++                if isinstance(item, dict):
++                    result = self._validate_single_schema(item)
++                    if result:
++                        results.append(result)
++            return results
++        
+         # Handle @graph syntax (multiple schemas in one JSON-LD)
+         if "@graph" in data and isinstance(data["@graph"], list):
+             for item in data["@graph"]:
+@@ -543,6 +578,11 @@ class RichResultsTestClient:
+             "properties": schema_data.properties if schema_data else {},
+             "confidence": confidence.value,
+             "all_schemas": [s.schema_type for s in result.schemas],
++            # FASE-SR-E (H7): "detección fallida" (ERROR) vs "ausencia
++            # verificada" (COMPLETE) — el audit NUNCA ve un 0 silencioso.
++            "status": result.status,
++            "error_message": result.error_message,
++            "parse_errors": (result.raw_response or {}).get("parse_errors", []),
+             "timestamp": result.timestamp
+         }
+     
+@@ -577,6 +617,8 @@ class RichResultsTestClient:
+             "errors": faq_schemas[0].errors if has_faq else [],
+             "warnings": faq_schemas[0].warnings if has_faq else [],
+             "confidence": confidence.value,
++            "status": result.status,
++            "error_message": result.error_message,
+             "timestamp": result.timestamp
+         }
+     
+diff --git a/modules/quality_gates/alignment_result.py b/modules/quality_gates/alignment_result.py
+index 45af569..885645b 100644
+--- a/modules/quality_gates/alignment_result.py
++++ b/modules/quality_gates/alignment_result.py
+@@ -32,6 +32,8 @@ de servicios prometidos — comportamiento idéntico al pre-SR-B.
+ from dataclasses import dataclass, field
+ from typing import Any, Dict, Iterable, List, Optional, Tuple
+ 
++from modules.asset_generation.site_presence_checker import is_present_in_production
++
+ # FASE-SR-A (N1): statuses that count as "sin cubrir" (unresolved). Single rule
+ # shared by gate_report (from_alignment_report) and delivery_quality_report
+ # (from_asset_alignment_matrix) via AlignmentResult.compute_unresolved().
+@@ -60,11 +62,18 @@ class _DerivedEntry:
+ def _presence_resolved(
+     site_presence_report: Optional[Dict[str, Any]], asset_type: str
+ ) -> bool:
+-    """True when the normalized SitePresence snapshot reports the asset exists."""
++    """True when the normalized SitePresence snapshot reports the asset exists.
++
++    FASE-SR-E (H7, L-SR3): usa el criterio canónico ``is_present_in_production``
++    — ``exists_with_issues`` también resuelve (el asset existe; sus campos
++    faltantes son mejora sugerida, no brecha unresolved).
++    """
+     if not site_presence_report:
+         return False
+     presence = site_presence_report.get(asset_type, {})
+-    return isinstance(presence, dict) and presence.get("status") == "exists"
++    return isinstance(presence, dict) and is_present_in_production(
++        presence.get("status")
++    )
+ 
+ 
+ @dataclass

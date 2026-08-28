@@ -848,8 +848,46 @@ class PainSolutionMapper:
             # because the conflict itself justifies the asset as solution
             if pain_id == "whatsapp_conflict":
                 can_generate = True  # El conflicto justifica generar el asset
+                reason = f"Confidence {avg_confidence:.2f} vs required {min_confidence}"
             else:
                 can_generate = avg_confidence >= min_confidence
+                reason = (
+                    f"Confidence {avg_confidence:.2f} vs required {min_confidence}"
+                    if can_generate
+                    else f"Insufficient confidence ({avg_confidence:.2f} < {min_confidence})"
+                )
+                # FASE-SR-E (D-PF3, L-SR4): para la brecha de AUSENCIA genuina
+                # de schema, el contrato del catálogo manda — con fuentes
+                # disponibles (GBP/web) el fallback ``generate_basic_schema``
+                # (block_on_failure=False) permite generar la versión básica;
+                # sin fuentes → bloqueo explícito con justified_skip. La
+                # confianza de la brecha ("schema_hotel_detected") no mide las
+                # fuentes para CONSTRUIR el asset (L-SR4).
+                if not can_generate and pain_id == "no_hotel_schema":
+                    from modules.asset_generation.asset_catalog import ASSET_CATALOG
+                    catalog_entry = ASSET_CATALOG.get(asset_type)
+                    has_sources = any(
+                        score > 0 for score in available_confidence.values()
+                    )
+                    if (
+                        catalog_entry is not None
+                        and catalog_entry.fallback
+                        and not catalog_entry.block_on_failure
+                        and has_sources
+                    ):
+                        can_generate = True
+                        reason = (
+                            f"D-PF3 fallback '{catalog_entry.fallback}': ausencia "
+                            f"genuina con fuentes disponibles (confianza media "
+                            f"{avg_confidence:.2f} < {min_confidence} requerida "
+                            f"por la brecha)"
+                        )
+                    elif not has_sources:
+                        reason = (
+                            f"Sin fuentes para generar el asset (confianza "
+                            f"{avg_confidence:.2f}) — bloqueo con justified_skip "
+                            f"(D-PF3)"
+                        )
             
             # Determine confidence level
             if avg_confidence >= 0.9:
@@ -886,7 +924,7 @@ class PainSolutionMapper:
                 confidence_required=min_confidence,
                 can_generate=can_generate,
                 priority=priority,  # FASE 2: Incluir prioridad del mapeo
-                reason=f"Confidence {avg_confidence:.2f} vs required {min_confidence}" if can_generate else f"Insufficient confidence ({avg_confidence:.2f} < {min_confidence})",
+                reason=reason,
                 problem_solved=mapping["name"],
                 description=mapping["description"],
                 semantic_status=semantic_status  # ROICR FASE-1: AUDIT_ONLY or IMPLEMENT

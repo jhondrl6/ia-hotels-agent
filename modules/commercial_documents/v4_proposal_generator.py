@@ -26,6 +26,7 @@ from modules.financial_engine.pricing_calculator import get_floor_price, _load_p
 from modules.financial_engine.roi_formatter import calcular_metricas_roi, formatear_roi_para_propuesta
 from modules.financial_engine.pillar_maturity_curve import aplicar_curva_4_pilares, formatear_curva_para_propuesta, calcular_recuperacion_6m
 from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
+from modules.asset_generation.site_presence_checker import is_present_in_production
 from modules.commercial_documents.service_catalog import SERVICE_CATALOG, TECHNICAL_ASSET_CATALOG
 from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
 from modules.common.yaml_loader import load_yaml_config, YAMLLoadError
@@ -1377,7 +1378,9 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         if site_presence_report and hasattr(site_presence_report, 'results'):
             for asset_type, result in site_presence_report.results.items():
                 presence_lookup[asset_type] = {
-                    'present_in_production': result.status.value == "exists",
+                    # FASE-SR-E (H7, L-SR3): criterio canónico —
+                    # exists_with_issues también es presente en producción.
+                    'present_in_production': is_present_in_production(result.status),
                     'presence_verified': True,
                 }
 
@@ -1603,7 +1606,9 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         if site_presence_report and hasattr(site_presence_report, 'results'):
             for asset_type, result in site_presence_report.results.items():
                 presence_lookup[asset_type] = {
-                    'present_in_production': result.status.value == "exists",
+                    # FASE-SR-E (H7, L-SR3): criterio canónico —
+                    # exists_with_issues también es presente en producción.
+                    'present_in_production': is_present_in_production(result.status),
                     'presence_verified': True,
                 }
 
@@ -1669,7 +1674,9 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         if site_presence_report and hasattr(site_presence_report, 'results'):
             for asset_type, result in site_presence_report.results.items():
                 presence_lookup[asset_type] = {
-                    'present_in_production': result.status.value == "exists",
+                    # FASE-SR-E (H7, L-SR3): criterio canónico —
+                    # exists_with_issues también es presente en producción.
+                    'present_in_production': is_present_in_production(result.status),
                     'presence_verified': True,
                 }
 

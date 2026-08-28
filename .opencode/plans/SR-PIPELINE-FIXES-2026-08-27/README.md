@@ -12,7 +12,7 @@
 | FASE-SR-B ⚠️ | rec#1 — Unificación promesa/matriz/gate (L-SR3, L-NC10) | **MÁXIMA** (§4 plan maestro) | ❌ DIRECTO (DT-3) | ✅ Completada | agente | 2026-08-28 |
 | FASE-SR-C | rec#2 — Self-healing loop CG-CLAIM-VS-EVIDENCE (L-SR5) | Alta | ❌ DIRECTO | ✅ Completada | agente | 2026-08-28 |
 | FASE-SR-D | rec#3/#10 — Canonicalización de `target_id` con `_normalize_url` + `generate_hotel_id` (L-SR2, L16) | Media | ❌ DIRECTO | ✅ Completada | agente | 2026-08-28 |
-| FASE-SR-E | rec#4/#11 (H7) — Fix falso negativo schema (JSON-LD array) + contabilización única `exists_with_issues` (revisión 2026-08-28) | Alta | ❌ DIRECTO | ⏳ Pendiente | — | — |
+| FASE-SR-E | rec#4/#11 (H7) — Fix falso negativo schema (JSON-LD array) + contabilización única `exists_with_issues` (revisión 2026-08-28) | Alta | ❌ DIRECTO | ✅ Completada | agente | 2026-08-28 |
 | FASE-SR-F | rec#5/#6 — Investigación varianza plan de assets + PageSpeed (OPS) | Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
 | FASE-SR-G | rec#8 — Display: CG-TIER-CONSISTENCY (L30) + CG-TECH-JARGON (L27) | Baja-Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
 | FASE-SR-H | **ÚNICA ejecución v4complete Salento Real** (baseline + evidencia + smoke) | Media (ejecución) | ✅ DELEGABLE (subagente terminal) | ⏳ Pendiente | — | — |

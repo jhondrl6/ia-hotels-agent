@@ -1,0 +1,38 @@
+============================= test session starts =============================
+collecting ... collected 11 items
+
+tests/data_validation/test_fase_sr_e_schema_detection.py::TestArrayJsonLdSupport::test_validate_schema_accepts_array_block PASSED [  9%]
+tests/data_validation/test_fase_sr_e_schema_detection.py::TestArrayJsonLdSupport::test_validate_schema_array_with_mixed_elements PASSED [ 18%]
+tests/data_validation/test_fase_sr_e_schema_detection.py::TestArrayJsonLdSupport::test_salento_fixture_detects_two_hotel_schemas PASSED [ 27%]
+tests/data_validation/test_fase_sr_e_schema_detection.py::TestArrayJsonLdSupport::test_salento_report_has_hotel_schema_verified PASSED [ 36%]
+tests/data_validation/test_fase_sr_e_schema_detection.py::TestErrorPropagation::test_report_exposes_error_when_detection_fails PASSED [ 45%]
+tests/data_validation/test_fase_sr_e_schema_detection.py::TestErrorPropagation::test_report_verified_absence_has_no_error PASSED [ 54%]
+tests/data_validation/test_fase_sr_e_schema_detection.py::TestErrorPropagation::test_corrupt_block_does_not_invalidate_valid_blocks PASSED [ 63%]
+tests/data_validation/test_fase_sr_e_schema_detection.py::TestErrorPropagation::test_all_blocks_corrupt_propagates_error PASSED [ 72%]
+tests/data_validation/test_fase_sr_e_schema_detection.py::TestAuditPropagation::test_schema_audit_result_has_error_message_field PASSED [ 81%]
+tests/data_validation/test_fase_sr_e_schema_detection.py::TestAuditPropagation::test_audit_propagates_detection_error PASSED [ 90%]
+tests/data_validation/test_fase_sr_e_schema_detection.py::TestAuditPropagation::test_audit_clean_report_has_no_error PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 11 passed, 8 warnings in 1.20s ========================

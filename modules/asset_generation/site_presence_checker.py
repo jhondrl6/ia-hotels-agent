@@ -52,6 +52,34 @@ from modules.data_validation.external_apis.rich_results_client import (
 )
 
 
+# FASE-SR-E (H7, L-SR3): criterio ÚNICO de "presente en producción".
+# ``exists_with_issues`` significa que el asset EXISTE en el sitio (con campos
+# mejorables que viajan como ``recommendations``): cuenta como
+# ``present_in_production`` en alignment/matrix/ledger/coherencia. Un solo
+# criterio compartido por todos los consumidores (L-NC10: nunca dos criterios
+# en paralelo).
+PRODUCTION_PRESENT_STATUSES = ("exists", "exists_with_issues")
+
+
+def presence_status_value(status: Any) -> Optional[str]:
+    """Normaliza un estado de presencia (Enum PresenceStatus o str) a str."""
+    if status is None:
+        return None
+    if hasattr(status, "value"):
+        return str(status.value)
+    return str(status)
+
+
+def is_present_in_production(status: Any) -> bool:
+    """FASE-SR-E (H7): True cuando el asset existe en el sitio de producción.
+
+    Acepta ``PresenceStatus`` (Enum) o su valor string. ``exists_with_issues``
+    cuenta como presente: el asset existe; sus campos faltantes son una mejora
+    sugerida, no una brecha unresolved (contabilización única, L-SR3).
+    """
+    return presence_status_value(status) in PRODUCTION_PRESENT_STATUSES
+
+
 class PresenceStatus(Enum):
     """Estado de presencia de un asset en el sitio real."""
     EXISTS = "exists"                    # Ya existe en el sitio
@@ -74,7 +102,13 @@ class PresenceCheckResult:
     
     @property
     def should_generate(self) -> bool:
-        """¿Deberíamos generar este asset?"""
+        """¿Deberíamos generar este asset?
+
+        FASE-SR-E (H7, L-SR3): ``EXISTS_WITH_ISSUES`` NO se regenera (el asset
+        ya existe en producción — sus campos faltantes viajan como
+        ``recommendations``) y SÍ cuenta como ``present_in_production`` en
+        alignment vía ``is_present_in_production`` (criterio único).
+        """
         return self.status in (
             PresenceStatus.NOT_EXISTS,
             PresenceStatus.VERIFICATION_FAILED,

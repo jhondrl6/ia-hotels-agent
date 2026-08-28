@@ -576,7 +576,15 @@ class CoherenceValidator:
             if hasattr(status, 'value'):
                 status = str(status.value).lower()
 
-            if status in ("exists", "redundant") and site_verified:
+            # FASE-SR-E (H7, L-SR3): criterio canónico — exists_with_issues
+            # también cuenta como verificado en producción (el asset existe;
+            # sus campos faltantes son mejora sugerida, no asset ausente).
+            from ..asset_generation.site_presence_checker import (
+                is_present_in_production,
+            )
+            if (
+                status in ("redundant",) or is_present_in_production(status)
+            ) and site_verified:
                 verified_types.add(asset_type)
 
         return verified_types

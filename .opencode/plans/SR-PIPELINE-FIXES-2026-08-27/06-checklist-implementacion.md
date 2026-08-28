@@ -11,7 +11,7 @@
 | FASE-SR-B | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 2) | ~35 | NO |
 | FASE-SR-C | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 3) | ~45 | NO |
 | FASE-SR-D | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 4) | ~40 | NO |
-| FASE-SR-E | ⏳ PENDIENTE | — | — | — | NO |
+| FASE-SR-E | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 5) | ~45 | NO |
 | FASE-SR-F | ⏳ PENDIENTE | — | — | — | NO |
 | FASE-SR-G | ⏳ PENDIENTE | — | — | — | NO |
 | FASE-SR-H | ⏳ PENDIENTE | — | — | — | SÍ (v4complete) |
@@ -50,13 +50,13 @@
 - [x] `log_phase_completion.py --fase FASE-SR-D` (SIN --release) + docs post-fase
 
 ### FASE-SR-E — Falso negativo schema + contabilización única (rediseñada 2026-08-28)
-- [ ] Bug del parser reproducido con test rojo: JSON-LD formato ARRAY → AttributeError tragado → 0 schemas falsos
-- [ ] `rich_results_client` soporta arrays JSON-LD; bloque corrupto no invalida los demás
-- [ ] `SchemaAuditResult` propaga `error_message` (distinguir ausencia verificada de detección fallida)
-- [ ] Fixture real Salento Real (3 bloques) → ≥ 2 schemas Hotel detectados; pain `no_hotel_schema` no generado
-- [ ] `exists_with_issues` cuenta como `present_in_production` en alignment (contabilización única)
-- [ ] Ausencia genuina sin GBP → sin invención (test) + fallback catálogo residual D-PF3
-- [ ] `log_phase_completion.py --fase FASE-SR-E` (SIN --release) + docs post-fase
+- [x] Bug del parser reproducido con test rojo: JSON-LD formato ARRAY → AttributeError tragado → 0 schemas falsos
+- [x] `rich_results_client` soporta arrays JSON-LD; bloque corrupto no invalida los demás
+- [x] `SchemaAuditResult` propaga `error_message` (distinguir ausencia verificada de detección fallida)
+- [x] Fixture real Salento Real (3 bloques) → ≥ 2 schemas Hotel detectados; pain `no_hotel_schema` no generado
+- [x] `exists_with_issues` cuenta como `present_in_production` en alignment (contabilización única)
+- [x] Ausencia genuina sin GBP → sin invención (test) + fallback catálogo residual D-PF3
+- [x] `log_phase_completion.py --fase FASE-SR-E` (SIN --release) + docs post-fase
 
 ### FASE-SR-F — Varianza + PageSpeed OPS
 - [ ] Hipótesis de varianza verificada contra pain_ledgers A vs C (7→5)

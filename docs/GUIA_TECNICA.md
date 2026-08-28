@@ -2139,3 +2139,22 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 - Cifra gancho: 28pt (≥24pt requerido). Disclaimer Tier B visible en página 1.
 - 34 campos cross-validados contra `01_DIAGNOSTICO` + `02_PROPUESTA` + `v4_complete_report.json`. Sin discrepancias.
 - `--dry-run` funcional. Tiempo generación <30s (1.486s).
+
+---
+
+## Nota Técnica — FASE-SR-E: Fix falso negativo de detección de Schema + contabilización única de `exists_with_issues` (2026-08-28, plan SR-PIPELINE-FIXES)
+
+**Módulos afectados**: `modules/data_validation/external_apis/rich_results_client.py`, `modules/auditors/v4_comprehensive.py`, `modules/asset_generation/site_presence_checker.py`, `modules/quality_gates/alignment_result.py`, `modules/asset_generation/proposal_asset_alignment.py`, `modules/asset_generation/pain_ledger.py`, `modules/commercial_documents/coherence_validator.py`, `modules/commercial_documents/v4_proposal_generator.py`, `modules/commercial_documents/pain_solution_mapper.py`
+
+**Problema**: JSON-LD válido en formato ARRAY (`[{@type: Hotel}]`) detonaba `AttributeError` en `_validate_schema`; el `except (json.JSONDecodeError, TypeError)` no lo capturaba, `test_url` lo tragaba como status ERROR y `get_hotel_schema_report` retornaba `has_hotel_schema=False` con `total_schemas=0` en silencio, generando el pain falso `no_hotel_schema` (HIGH, $1.06M COP/mes). Además, `EXISTS_WITH_ISSUES` bloqueaba la generación ("existe") pero NO contaba como `present_in_production` ("no existe") — doble contabilidad (L-SR3).
+
+**Solución**:
+- Parser polimórfico: `_validate_schema` itera elementos dict de listas; parsing por bloque con `parse_errors[idx]` (corrupto NO invalida los demás); ERROR solo si TODOS los bloques fallan.
+- Propagación (L-SR5): `get_hotel_schema_report`/`get_faq_schema_report` exponen `status`/`error_message`/`parse_errors`; `SchemaAuditResult.error_message` + warning severity ERROR ("0 schemas NO es ausencia verificada") + `to_dict()`.
+- Criterio canónico único: `PRODUCTION_PRESENT_STATUSES=("exists","exists_with_issues")` + `is_present_in_production()` en `site_presence_checker`; 6 consumidores migrados (alignment_result, proposal_asset_alignment, pain_ledger VERIFIED_IN_SITE, coherence_validator, v4_proposal_generator x3). Exclusión deliberada: WhatsApp HTML check (coherence_validator L385).
+- D-PF3 residual: `get_assets_for_pain("no_hotel_schema")` aplica fallback del catálogo cuando hay fuentes para construir el asset (L-SR4) y `justified_skip` sin fuentes; el preflight ya derivaba `ASSET_REQUIREMENTS` de `ASSET_CATALOG`.
+- Arbitraje de detectores: `rich_results_client` = detector canónico del audit (propaga error); `schema_finder` = detector de presencia (SitePresenceChecker), intacto; contrato común = taxonomía de presencia + criterio canónico compartido.
+
+**Backwards compatibility**: Sí. Campos nuevos adicionales (`error_message=None` por defecto); `exists` sigue contando como presente.
+
+**Tests**: 31 nuevos (11 `test_fase_sr_e_schema_detection.py` + 20 `test_fase_sr_e_presence_accounting.py`); regresión 148 aislada (58 data_validation + 81 asset_generation + 9 auditors), 0 fallos; `run_all_validations --quick` 6/6.

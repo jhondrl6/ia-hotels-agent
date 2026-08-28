@@ -461,7 +461,10 @@ def _presence_exists(
     status = entry.get("status") if isinstance(entry, dict) else getattr(entry, "status", None)
     if status is not None and hasattr(status, "value"):
         status = status.value
-    return status == "exists"
+    # FASE-SR-E (H7, L-SR3): criterio canónico — exists_with_issues también
+    # es presencia en producción (contabilización única con el gate).
+    from modules.asset_generation.site_presence_checker import is_present_in_production
+    return is_present_in_production(status)
 
 
 def committed_services_from_entries(

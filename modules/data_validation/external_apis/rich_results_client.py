@@ -142,16 +142,24 @@ class RichResultsTestClient:
             
             soup = BeautifulSoup(response.text, 'html.parser')
             schemas = []
+            parse_errors: List[str] = []  # FASE-SR-E (L-SR5): errores visibles, no tragados
             
             # Extract JSON-LD structured data
             jsonld_scripts = soup.find_all('script', type='application/ld+json')
             
-            for script in jsonld_scripts:
+            for idx, script in enumerate(jsonld_scripts):
                 try:
                     data = json.loads(script.string)
                     schema_results = self._validate_schema(data)
                     schemas.extend(schema_results)
-                except (json.JSONDecodeError, TypeError):
+                except Exception as e:
+                    # FASE-SR-E (H7): un bloque corrupto NO invalida los demás.
+                    # Se captura Exception (incluye AttributeError de listas y
+                    # errores de validación) y el error queda REGISTRADO —
+                    # nunca se traga en silencio (L-SR5).
+                    parse_errors.append(
+                        f"jsonld_block[{idx}]: {type(e).__name__}: {e}"
+                    )
                     continue
             
             # Extract Microdata
@@ -177,6 +185,21 @@ class RichResultsTestClient:
             errors = sum(len(s.errors) for s in schemas)
             warnings = sum(len(s.warnings) for s in schemas)
             
+            # FASE-SR-E (H7): distinguir "ausencia verificada" de "detección
+            # fallida". Si HAY bloques JSON-LD pero TODOS fallaron el parsing y
+            # no quedó ningún schema (ni microdata), el resultado es ERROR con
+            # el detalle — nunca "0 schemas" en silencio (L-SR5).
+            if not schemas and parse_errors:
+                return RichResultsTestResult(
+                    url=url,
+                    status="ERROR",
+                    error_message=(
+                        f"JSON-LD parsing failed for all {len(parse_errors)} "
+                        f"block(s): {'; '.join(parse_errors)}"
+                    ),
+                    raw_response={"jsonld_count": len(jsonld_scripts), "parse_errors": parse_errors}
+                )
+            
             return RichResultsTestResult(
                 url=url,
                 status="COMPLETE",
@@ -185,7 +208,7 @@ class RichResultsTestClient:
                 valid_items=valid,
                 error_items=errors,
                 warnings_count=warnings,
-                raw_response={"jsonld_count": len(jsonld_scripts)}
+                raw_response={"jsonld_count": len(jsonld_scripts), "parse_errors": parse_errors}
             )
             
         except requests.RequestException as e:
@@ -195,12 +218,24 @@ class RichResultsTestClient:
                 error_message=f"Failed to fetch URL: {str(e)}"
             )
     
-    def _validate_schema(self, data: Dict[str, Any]) -> List[SchemaValidationResult]:
+    def _validate_schema(self, data: Any) -> List[SchemaValidationResult]:
         """Validate a schema object and return results.
         
-        Handles both single schemas and @graph arrays.
+        Handles single schemas, @graph arrays and top-level JSON-LD ARRAY
+        blocks (FASE-SR-E H7: ``[{"@type": "Hotel"}]``).
         """
         results = []
+        
+        # FASE-SR-E (H7): bloque JSON-LD en formato ARRAY — cada elemento se
+        # valida como schema individual (antes: AttributeError 'list' object
+        # has no attribute 'get').
+        if isinstance(data, list):
+            for item in data:
+                if isinstance(item, dict):
+                    result = self._validate_single_schema(item)
+                    if result:
+                        results.append(result)
+            return results
         
         # Handle @graph syntax (multiple schemas in one JSON-LD)
         if "@graph" in data and isinstance(data["@graph"], list):
@@ -543,6 +578,11 @@ class RichResultsTestClient:
             "properties": schema_data.properties if schema_data else {},
             "confidence": confidence.value,
             "all_schemas": [s.schema_type for s in result.schemas],
+            # FASE-SR-E (H7): "detección fallida" (ERROR) vs "ausencia
+            # verificada" (COMPLETE) — el audit NUNCA ve un 0 silencioso.
+            "status": result.status,
+            "error_message": result.error_message,
+            "parse_errors": (result.raw_response or {}).get("parse_errors", []),
             "timestamp": result.timestamp
         }
     
@@ -577,6 +617,8 @@ class RichResultsTestClient:
             "errors": faq_schemas[0].errors if has_faq else [],
             "warnings": faq_schemas[0].warnings if has_faq else [],
             "confidence": confidence.value,
+            "status": result.status,
+            "error_message": result.error_message,
             "timestamp": result.timestamp
         }
     

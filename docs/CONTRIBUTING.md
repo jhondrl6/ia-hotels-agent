@@ -51,6 +51,12 @@ FASE completada
         └── Verifica capability contracts en docs/contributing/capabilities.md
 ```
 
+**Registro reciente de fases** (check-manual-docs resuelto): FASE-SR-E (2026-08-28, plan
+SR-PIPELINE-FIXES — fix falso negativo de detección de schema + contabilización única de
+`exists_with_issues`; docs de fase en `.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/`,
+evidencia en `evidence/FASE-SR-E/`). Las notas técnicas por fase viven en GUIA_TECNICA.md
+y el detalle completo en los documentos del plan.
+
 ### Paso 5.5: Validar AGENTS.md (OBLIGATORIO)
 
 Ejecutar el validador de coherencia de AGENTS.md:

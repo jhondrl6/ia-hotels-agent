@@ -32,6 +32,8 @@ de servicios prometidos — comportamiento idéntico al pre-SR-B.
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+from modules.asset_generation.site_presence_checker import is_present_in_production
+
 # FASE-SR-A (N1): statuses that count as "sin cubrir" (unresolved). Single rule
 # shared by gate_report (from_alignment_report) and delivery_quality_report
 # (from_asset_alignment_matrix) via AlignmentResult.compute_unresolved().
@@ -60,11 +62,18 @@ class _DerivedEntry:
 def _presence_resolved(
     site_presence_report: Optional[Dict[str, Any]], asset_type: str
 ) -> bool:
-    """True when the normalized SitePresence snapshot reports the asset exists."""
+    """True when the normalized SitePresence snapshot reports the asset exists.
+
+    FASE-SR-E (H7, L-SR3): usa el criterio canónico ``is_present_in_production``
+    — ``exists_with_issues`` también resuelve (el asset existe; sus campos
+    faltantes son mejora sugerida, no brecha unresolved).
+    """
     if not site_presence_report:
         return False
     presence = site_presence_report.get(asset_type, {})
-    return isinstance(presence, dict) and presence.get("status") == "exists"
+    return isinstance(presence, dict) and is_present_in_production(
+        presence.get("status")
+    )
 
 
 @dataclass
