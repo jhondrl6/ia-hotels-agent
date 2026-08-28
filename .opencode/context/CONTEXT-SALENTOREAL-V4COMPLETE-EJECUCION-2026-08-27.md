@@ -5,7 +5,7 @@
 > **Origen**: Solicitud de prueba v4complete para Hotel Salento Real (Eje Cafetero) con informe de comportamiento. La corrida reveló un crash (NameError) en FASE 3 que solo se manifiesta con `--output` alternativo, y confirmó un bloqueo estructural ya visto en Zione (2026-07-23).
 > **Método**: Corridas E2E reales (3: una con output por defecto pre-existente, dos con output aislado), lectura de artefactos (gate_report, delivery_quality_report, proposal_asset_matrix, pain_ledger, coherence_validation, commercial_gates_report ×2), diff corrida-a-corrida, y cruce con lecciones L-NC1–L-NC12 del plan REFACTOR-COHERENCIA-NARRATIVA-2026-08-22.
 > **Versión actual del sistema**: v4.72.2
-> **Estado de validación**: ✅ Todos los hallazgos verificados contra artefactos reales de las corridas + código vivo (`main.py`, `output/test_salentoreal_v4c/`, `output/v4_complete/`)
+> **Estado de validación**: ✅ Todos los hallazgos verificados contra artefactos reales de las corridas + código vivo (`main.py`, `output/test_salentoreal_v4c/`, `output/v4_complete/`). **Re-validación exhaustiva 2026-08-27**: 6/6 hallazgos CONFIRMADOS contra código vivo + disco; 1 corrección de hecho (nombre del helper); 4 hallazgos nuevos (N1–N4, ver §9.5).
 
 ---
 
@@ -116,7 +116,7 @@ El `target_id` de memoria se construye desde la URL **raw**, sin canonicalizar. 
 
 1. La memoria de análisis (`agent_harness/memory.py`, vigencia < 20 días) registra la sesión bajo un ID distinto al de la URL limpia → `find_latest_analysis` / `_find_recent_v4_analysis` **no reutilizarán** el análisis de la corrida A para la URL con UTM, ni viceversa.
 2. Los IDs polucionan listados y logs (legibilidad, debugging).
-3. El helper correcto **ya existe**: `_normalize_url_for_matching()` en `main.py` (ignora protocolo, www, path y **query string**) — el gap está en el caller, no en la fuente (patrón L-NC6/L16).
+3. El helper correcto **ya existe**: `_normalize_url()` en `main.py:3542` (ignora protocolo, www, path y **query string**) — el gap está en el caller, no en la fuente (patrón L-NC6/L16). ⚠️ **CORRECCIÓN DE VALIDACIÓN**: el contexto original citó `_normalize_url_for_matching()`; ese símbolo **no existe** en el repo (grep = 0 en main.py y modules/). El helper real es `_normalize_url`. Cualquier fix futuro debe usar el nombre real.
 
 Impacto: medio (no rompe la corrida; rompe la reutilización y encarece re-ejecuciones con cuota de APIs).
 
@@ -185,7 +185,7 @@ Dato menor verificado: el mensaje interno de G9 dice "3/7 servicios cubiertos �
 | Gate bloqueante | proposal_asset_alignment | proposal_asset_alignment (idéntico) | 0 |
 | Escenarios financieros | $6.57M / $4.04M / $1.26M | idénticos | 0 (determinista) |
 
-La capa financiera es determinista; la capa de brechas/assets **no lo es** entre corridas separadas por horas, con la misma URL efectiva. Hipótesis no verificada (requiere investigación): differencia en derivación del plan (`pain_solution_mapper`) o en SitePresence/caché entre corridas. Ninguna de las dos corridas alcanza a explicar por qué `ai_crawler_blocked` desaparece si el audit de C también midió robots 1.00/1.00 (accesible ⇒ ¿brecha deja de existir? en A no fue así con el mismo score).
+La capa financiera es determinista; la capa de brechas/assets **no lo es** entre corridas separadas por horas, con la misma URL efectiva (verificado en disco: pain_ledger A=7 pain_ids, C=5 pain_ids; asset_generation_report A=7 assets, C=5 assets). **CORRECCIÓN DE VALIDACIÓN sobre la hipótesis**: el contexto original conjeturó que `ai_crawler_blocked` "desaparece si el audit mide robots 1.00/1.00". La verificación directa (grep en AMBOS `audit_report`) muestra que `ai_crawler_blocked` **no aparece en ninguno de los dos** ledger (grep = 0 en A y en C). Lo que cambia entre corridas no es "que desaparezca una brecha por robots accesibles", sino que el pain_id simplemente no está presente en el ledger de C (filtro estable por hotel, no condicional a robots). `low_ia_readiness` es el otro pain_id ausente en C. Hipótesis de investigación revisada: `pain_solution_mapper` (o cache de audit/SitePresence) aplica un filtro distinto entre corridas que excluye estos dos pain_ids de forma determinista, no por score de robots. Requiere investigación en `pain_solution_mapper.py`.
 
 ---
 
@@ -211,14 +211,14 @@ La capa financiera es determinista; la capa de brechas/assets **no lo es** entre
 | **L30** (tras parametrizar, verificar strings de display) | CG-TIER-CONSISTENCY 'B' vs 'D': la fuente financiera dice B, el texto muestra D. Instancia viva de la lección. |
 | **L27** (citar fuente de verdad, no hardcodear) | El diagnóstico cita pain_ledger correctamente (coverage_no_silent_drop 5/5 ✅) pero la PROPUESTA promete del catálogo estático de servicios — mitad del sistema cumple L27, mitad no. |
 | **L2** (grep de residuos post-fix) | Aplicado: `grep "logger\."` en main.py = 0 tras el fix. |
-| **L16** (el gap está en el caller) | Caso target_id: `_normalize_url_for_matching()` ya existe; falta invocarla al construir el target_id (§3). |
+| **L16** (el gap está en el caller) | Caso target_id: `_normalize_url()` ya existe (main.py:3542); falta invocarla al construir el target_id (§3). ⚠️ El contexto original escribió `_normalize_url_for_matching` (inexistente). |
 
 ### 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)
 
 | ID | Lección | Fuente |
 |----|---------|--------|
 | L-SR1 | **Las ramas no ejercitadas por la corrida estándar acumulan defectos latentes.** / Qué pasó: el fallback FASE-D S7 con `logger` inexistente convivió con el código desde su fase sin detonar hasta una prueba con `--output` alternativo. / Por qué: la corrida estándar (output default) nunca evalúa la condición `clientes_dir != Path("output/clientes")`, así que el código muerto-en-práctica no se ejecuta en ninguna validación regular. / Qué lo previene: (1) smoke E2E periódico con `--output` alternativo como variación de parámetros; (2) tras cada fase, grep de símbolos sospechosos en ramas nuevas (`logger\.`, imports no usados); (3) test estático que compile main.py y verifique ausencia de referencias a símbolos no definidos. INCLUIR (memoria ya registrada 2026-08-27). | Corrida B |
-| L-SR2 | **La identidad de memoria debe derivarse de la URL canónica, no de la raw.** / Qué pasó: los UTM params llegaron íntegros al `target_id`, fragmentando la memoria del mismo hotel en N identidades según cómo se pegue el link. / Por qué: el caller construye el ID antes de canonicalizar, pese a existir `_normalize_url_for_matching()`. / Qué lo previene: pasar toda URL por el normalizador canónico como primer paso de `run_v4_complete_mode` (y `onboard`, `execute`, `validate-guarantee`), usando la versión normalizada para target_id y la original solo para scraping. INCLUIR. | Log L67 |
+| L-SR2 | **La identidad de memoria debe derivarse de la URL canónica, no de la raw.** / Qué pasó: los UTM params llegaron íntegros al `target_id`, fragmentando la memoria del mismo hotel en N identidades según cómo se pegue el link. / Por qué: el caller construye el ID antes de canonicalizar, pese a existir `_normalize_url()` (main.py:3542; el contexto lo nombró mal como `_normalize_url_for_matching`, símbolo inexistente). / Qué lo previene: pasar toda URL por el normalizador canónico como primer paso de `run_v4_complete_mode` (y `onboard`, `execute`, `validate-guarantee`), usando la versión normalizada para target_id y la original solo para scraping. INCLUIR. | Log L67 |
 | L-SR3 | **Promesa, matriz y gate deben compartir UNA fuente de verdad para el estado de un servicio.** / Qué pasó: RC1 declara "sin costo", la matriz registra NO_BREACH, y el gate cuenta missing — el mismo servicio está "no comprometido" y "faltante" según el artefacto que se lea, y el bloqueo resultante (43%) sorprende porque el propio generador de propuesta "sabía" que esos 4 servicios no tenían costo/compromiso. / Por qué: la composición de la propuesta viene del catálogo de servicios del tier (estático), no del pain_ledger (dinámico); el gate evalúa contra la promesa estática. / Qué lo previene: (1) que el catálogo de servicios prometidos se derive del pain_ledger + assets disponibles (present_in_production cuenta); (2) que el gate respete el estado NO_BREACH o que RC1 deje de emitirlo; nunca ambos criterios en paralelo (extensión de L-NC10 a la capa de gating). INCLUIR. | §4.2 |
 | L-SR4 | **La confianza de un asset no debe degradarse por la evidencia del problema que resuelve.** / Qué pasó: `hotel_schema` (pain #1, score 85) quedó bloqueado por preflight 0.00 < 0.8 precisamente porque el sitio tiene 0 schemas — más evidencia del problema = menos confianza del correctivo. / Por qué: el preflight confunde "confianza en los datos de entrada" con "confianza en la implementación del asset"; con 0 schemas no hay qué verificar, pero el asset correctivo es precisamente más necesario y su contenido derivable del GBP (nombre, dirección, rating — todos presentes). / Qué lo previene: separar ambas confianzas; cuando la brecha es "ausencia de X", la confianza del asset debe calcularse desde las fuentes disponibles para construir X (GBP/web), no desde la presencia de X. INCLUIR. | §5 |
 | L-SR5 | **Un gate BLOCKING que solo loggea no previene: debe ciclar o escalar.** / Qué pasó: `CG-CLAIM-VS-EVIDENCE` detectó un claim factualmente falso en el diagnóstico ("no aparece" vs GBP 4.5★), se marcó BLOCKING y "hidden from client", y el flujo siguió publicando el mismo claim en la versión final. / Por qué: el resultado del gate no se inyecta de vuelta en la regeneración del documento (no hay self-healing loop para claims), solo se archiva. / Qué lo previene: al detectar claims vs evidencia, regenerar la sección con el `suggestion` del gate como restricción (el gate ya provee el texto trazable correcto) y re-validar; si persiste, escalar a BLOCKED real. INCLUIR. | §7.2 |
@@ -231,16 +231,38 @@ La capa financiera es determinista; la capa de brechas/assets **no lo es** entre
 |---|-----------|---------------|----------|---------|
 | 1 | **P0** | Unificar contabilidad promesa/matriz/gate: derivar servicios prometidos del pain_ledger + present_in_production, o hacer que el gate respete NO_BREACH. Resuelve el bloqueo estructural recurrente (Zione jul + Salento ago). | §4 | L-SR3, L-NC10 |
 | 2 | **P0** | Self-healing loop para `CG-CLAIM-VS-EVIDENCE`: regenerar sección con el suggestion del gate y re-validar. | §7.2 | L-SR5 |
-| 3 | **P1** | Canonicalizar URL antes de construir `target_id` (usar `_normalize_url_for_matching` en todos los comandos con `--url`). | §3 | L-SR2, L16 |
+| 3 | **P1** | Canonicalizar URL antes de construir `target_id` (usar `_normalize_url` en `main.py:3248/3394/3460` y todos los comandos con `--url`). ⚠️ El helper real es `_normalize_url` (no `_normalize_url_for_matching`). | §3, N3 | L-SR2, L16 |
 | 4 | **P1** | Rediseñar preflight de `hotel_schema`: confianza desde fuentes disponibles (GBP/web), no desde presencia de la brecha. | §5 | L-SR4 |
 | 5 | **P2** | Investigar varianza del plan de assets entre corridas (7→5 brechas; `ai_crawler_blocked` desaparece con robots 1.00 en ambas). | §6 | L-NC12 |
 | 6 | **P2** | Corregir/rotar la API key de PageSpeed (la de Maps funciona; verificar si son keys distintas en settings.yaml). | §7.1 | — |
 | 7 | **P3** | Alinear mensaje interno de G9 con sus propios contadores ("1 sin cubrir" vs unresolved 4). | §4.3 | L30 |
 | 8 | **P3** | CG-TIER-CONSISTENCY ('B' vs 'D') y CG-TECH-JARGON: strings de display contra fuente financiera / lenguaje de negocio en vista gerencia. | §7.3-7.4 | L30, L27 |
+| 9 | **P0** | Unificar conteo `unresolved` de G9 en UN helper `AlignmentResult.compute_unresolved()` usado por `gate_report` y `delivery_quality_report` (elimina la divergencia 4-vs-1 del mismo run). | N1 | — |
+| 10 | **P1** | Canonicalizar `target_id` con `_normalize_url()` en `main.py:3248/3394/3460` (y onboard/execute/validate-guarantee) para evitar fragmentación de memoria y costo de API repetido. | N3, §3 | L-SR2 |
+| 11 | **P1** | Hacer que el preflight de `hotel_schema` respete `fallback`+`block_on_failure=False` del catálogo (o eliminar el fallback si realmente no debe generarse). | N4, §5 | L-SR4 |
 
 Criterio de éxito sugerido para un plan sobre #1+#2: una corrida v4complete de Salento Real con `readiness: READY_FOR_PUBLICATION` y 0 falsos claim-fact gates, sin tocar la capa financiera (determinista, intacta).
 
 ---
+
+## 9.5 Re-validación contra código vivo y hallazgos amplificados (2026-08-27, post-escritura)
+
+Veredicto de re-auditoría: los 6 hallazgos originales fueron verificados contra código vivo y artefactos en disco (24 comprobaciones: grep, ls directo, read_file, json en disco, run logs, git log). Resultado: **6/6 CONFIRMADOS**. 1 corrección de hecho (nombre del helper, ver §9.5.1). 4 hallazgos nuevos (N1–N4).
+
+### 9.5.1 Corrección de hecho
+- **Nombre del helper** (afecta §3, §8.2 L-SR2, §9 #3): el contexto cita `_normalize_url_for_matching()` como existente en main.py. Verificación: ese símbolo **NO existe** en todo el repo (grep = 0 en main.py y modules/). El helper real es `_normalize_url()` en `main.py:3542`, que sí ignora protocolo/www/path/query string. Toda recomendación/fix debe usar `_normalize_url`.
+
+### 9.5.2 Hallazgos nuevos (amplificación)
+
+| ID | Hallazgo | Evidencia (código vivo / disco) | Causa raíz | Recomendación causa raíz |
+|----|----------|--------------------------------|-----------|--------------------------|
+| N1 | **G9 divergente entre dos reportes del MISMO run** | `gate_report` (gate_results[8]): unresolved=4, mensaje "4 sin cubrir". `delivery_quality_report`: unresolved=1, mensaje "1 sin cubrir". coverage_ratio idéntico (0.4286). | Dos caminos de código computan `unresolved` distinto: `gate_report`→`verify_proposal_asset_alignment`→`AlignmentResult.from_alignment_report` (publication_gates.py:903); `delivery_quality_report`→reconstruye desde `proposal_asset_matrix.json`+SitePresence (delivery_quality_report.py:235). | Unificar el conteo en UN helper `AlignmentResult.compute_unresolved()` llamado por AMBOS reportes. No parchear el texto del mensaje. |
+| N2 | **Nombre del helper incorrecto** (ver §9.5.1) | grep `_normalize_url_for_matching` = 0 en repo; `_normalize_url` en main.py:3542. | El contexto transcribió mal el nombre del símbolo. | Usar `_normalize_url` en todo fix/recomendación. |
+| N3 | **target_id crudo rompe reutilización de memoria** (impacto de H2 subestimado) | `main.py:3248/3394/3460` graban `target_id=args.url` crudo vía `memory.append_log`/`save_analysis_reference`; `find_latest_v4_analysis` (665) busca por ese ID. A (URL limpia) y C (URL con UTM) = mismo hotel, 2 identidades distintas en `agent_harness/memory.py`. | El ID de memoria se construye antes de canonicalizar; cada variación de link de campaña fragmenta la memoria y fuerza re-ejecución del audit (costo de API repetido: PageSpeed cae, GBP se reconsulta). | Impacto MEDIO-ALTO (no medio): canonicalizar con `_normalize_url` antes de `main.py:3248/3394/3460`. |
+| N4 | **Fallback de hotel_schema no se invoca** (raíz de H4 más profunda) | `asset_catalog.py:92` hotel_schema: `fallback="generate_basic_schema"`, `block_on_failure=False` → debería generarse desde GBP. Pero `coherence_validator._check_promised_assets_exist` (543/611) marca MISSING_ASSET porque no se generó; el preflight de confianza 0.00 (linker/orchestrator) mata la generación antes. | Dos contratos contradictorios para el mismo asset: el catálogo DICE "puedo generar con fallback" pero el preflight lo bloquea. | El preflight debe respetar `fallback`+`block_on_failure=False` del catálogo, o eliminar el fallback si realmente no debe generarse. Nunca ambos. |
+
+### 9.5.3 Estado de compromiso del fix H1
+El contexto (§2.3, §11) marcó el fix `logger` como "pendiente de commit del usuario". Verificación: **YA ESTÁ COMITEADO** en `d8e509d` (2026-08-27 18:59, "fix(v4complete): NameError logger en main.py + contexto E2E Salento Real"). `grep "logger\." main.py` = 0 (sin residuos). No requiere acción de commit adicional.
 
 ## 10. Evidencia y Artefactos
 
@@ -267,10 +289,14 @@ Criterio de éxito sugerido para un plan sobre #1+#2: una corrida v4complete de 
 
 | Tema | Estado | Acción |
 |------|--------|--------|
-| Fix `logger` en main.py (2 sitios) | ✅ CORREGIDO (2026-08-27, verificado en corrida C) | Commit pendiente de decisión del usuario; considerar test estático anti-`logger.` como guardián |
+| Fix `logger` en main.py (2 sitios) | ✅ CORREGIDO + **YA COMITEADO** (d8e509d, 2026-08-27) | `grep "logger\." main.py` = 0; considerar test estático anti-`logger.` como guardián |
 | Gate `proposal_asset_alignment` estructural | 🔴 ABIERTO (3ª manifestación) | Recomendación #1 — candidato a plan dedicado |
 | Self-healing para CG-CLAIM-VS-EVIDENCE | 🔴 ABIERTO | Recomendación #2 |
 | target_id con query string | 🔴 ABIERTO | Recomendación #3 (gap en caller, helper existente) |
 | Preflight hotel_schema paradoja | 🔴 ABIERTO | Recomendación #4 |
 | Varianza plan de assets entre corridas | 💡 INVESTIGAR | Recomendación #5 |
 | PageSpeed API key | 💡 OPS | Recomendación #6 |
+| G9 divergente 4-vs-1 (gate_report vs delivery_quality) | 🔴 ABIERTO (no detectado en corrida original) | Recomendación #9 (N1) |
+| target_id fragmenta memoria (costo API repetido) | 🔴 ABIERTO | Recomendación #10 (N3) |
+| Preflight hotel_schema ignora fallback del catálogo | 🔴 ABIERTO | Recomendación #11 (N4) |
+| Nombre helper `_normalize_url_for_matching` (inexistente) | ✅ CORREGIDO (es `_normalize_url`) | Actualizar toda referencia futura |
