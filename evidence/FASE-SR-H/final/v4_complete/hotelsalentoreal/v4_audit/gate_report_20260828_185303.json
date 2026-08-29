@@ -1,0 +1,237 @@
+{
+  "generated_at": "2026-08-28T18:53:03.651387",
+  "hotel_url": "https://www.hotelsalentoreal.com/",
+  "gate_results": [
+    {
+      "gate_name": "hard_contradictions",
+      "passed": true,
+      "status": "PASSED",
+      "message": "No hard contradictions detected (count: 0)",
+      "value": 0,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "evidence_coverage",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Evidence coverage at 95.0% (threshold: 95%)",
+      "value": 0.95,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "financial_validity",
+      "passed": true,
+      "status": "WARNING",
+      "message": "Financial data uses default/legacy values — Tier B evidence",
+      "value": true,
+      "suggestion": "Run onboarding with real data to improve evidence tier",
+      "details": {
+        "default_sources": {
+          "direct_channel_percentage": "default"
+        },
+        "corrected_tier": "B"
+      }
+    },
+    {
+      "gate_name": "coherence",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Coherence score 0.88 meets threshold 0.8",
+      "value": 0.88,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "critical_recall",
+      "passed": false,
+      "status": "BLOCKED",
+      "message": "Critical recall metric not found in assessment",
+      "value": null,
+      "suggestion": "Ensure audit results include critical issue detection data",
+      "details": {}
+    },
+    {
+      "gate_name": "ethics",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Ethics validation passed",
+      "value": null,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "content_quality",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Document quality checks passed: no issues detected",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "asset_confidence",
+      "passed": true,
+      "status": "PASSED",
+      "message": "All 4 assets meet confidence threshold (0.7)",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {
+        "total_assets": 4,
+        "above_threshold": 4,
+        "below_threshold": 0
+      }
+    },
+    {
+      "gate_name": "proposal_asset_alignment",
+      "passed": true,
+      "status": "WARNING",
+      "message": "2 missing: Schema Hotel, Schema Organization; 1 already in production: Página de FAQ",
+      "value": 1.0,
+      "suggestion": "Alignment 100%: 0 services still missing. Review asset generation pipeline to ensure all promised services produce deliverables.",
+      "details": {
+        "total_services": 3,
+        "aligned_count": 1,
+        "missing_count": 2,
+        "low_quality_count": 0,
+        "alignment_percentage": 0.3333333333333333,
+        "all_covered": false,
+        "all_aligned": false,
+        "aligned": [
+          {
+            "service": "Optimización para IA Generativa",
+            "asset": "llms_txt",
+            "confidence": 1.0
+          }
+        ],
+        "missing": [
+          {
+            "service": "Schema Hotel",
+            "asset": "hotel_schema",
+            "message": "Service 'Schema Hotel' promises asset 'hotel_schema' but it was not generated"
+          },
+          {
+            "service": "Schema Organization",
+            "asset": "org_schema",
+            "message": "Service 'Schema Organization' promises asset 'org_schema' but it was not generated"
+          }
+        ],
+        "low_quality": [],
+        "indeterminate": [],
+        "present_in_production": [
+          {
+            "service": "Página de FAQ",
+            "asset": "faq_page",
+            "presence_verified": true,
+            "presence_status": "exists"
+          }
+        ],
+        "redundant": [],
+        "alignment": {
+          "promised_services_total": 7,
+          "generated_aligned": 1,
+          "present_in_production": 3,
+          "unresolved": 0,
+          "coverage_ratio": 1.0,
+          "present_assets": [
+            "Schema Hotel",
+            "Schema Organization",
+            "Página de FAQ"
+          ],
+          "no_breach": 3,
+          "passed": true,
+          "effective_total": 4,
+          "actionable_total": 4,
+          "message": "4/4 servicios comprometidos cubiertos (1 generados  + 3 ya en producción )  — 3 sin brecha (no comprometidos, fuera del coverage)"
+        }
+      }
+    },
+    {
+      "gate_name": "tier_c_onboarding_required",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Tier B: Datos suficientes para propuesta activa.",
+      "value": null,
+      "suggestion": "",
+      "details": {
+        "tier": "B"
+      }
+    },
+    {
+      "gate_name": "coverage_no_silent_drop",
+      "passed": true,
+      "status": "PASSED",
+      "message": "Coverage completo: 3 en diagnostico/propuesta, 0 justificadas de 3 detectadas",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {
+        "total_detected": 3,
+        "covered": 3,
+        "justified": 0,
+        "uncovered": []
+      }
+    },
+    {
+      "gate_name": "doc_audit_consistency",
+      "passed": true,
+      "status": "PASSED",
+      "message": "No audit data available for doc-audit consistency check",
+      "value": null,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "pricing_compliance",
+      "passed": true,
+      "status": "WARNING",
+      "message": "Pricing compliance PASSED with WARNING: pain_ratio 0.2041 outside ideal range [0.03-0.06] — operational_floor $400,000 applied (tier 'boutique' gate_max 0.32: OK)",
+      "value": 0.2041,
+      "suggestion": "pain_ratio is structurally inflated by operational_floor $400,000. Tier 'boutique' allows up to 0.32. No action required; informational only.",
+      "details": {
+        "pain_ratio": 0.2041,
+        "tier": "boutique",
+        "tier_gate_max": 0.32,
+        "operational_floor": 400000.0,
+        "floor_applied": true,
+        "ideal_range": [
+          0.03,
+          0.06
+        ],
+        "monthly_price_cop": 400000.0,
+        "expected_loss_cop": 1959999.9999999998
+      }
+    }
+  ],
+  "readiness": {
+    "status": "NOT_READY",
+    "ready": false,
+    "blocking_issues": [
+      {
+        "gate": "critical_recall",
+        "message": "Critical recall metric not found in assessment",
+        "suggestion": "Ensure audit results include critical issue detection data",
+        "value": null
+      }
+    ],
+    "warnings": [
+      {
+        "gate": "financial_validity",
+        "message": "Financial data uses default/legacy values — Tier B evidence"
+      },
+      {
+        "gate": "proposal_asset_alignment",
+        "message": "2 missing: Schema Hotel, Schema Organization; 1 already in production: Página de FAQ"
+      },
+      {
+        "gate": "pricing_compliance",
+        "message": "Pricing compliance PASSED with WARNING: pain_ratio 0.2041 outside ideal range [0.03-0.06] — operational_floor $400,000 applied (tier 'boutique' gate_max 0.32: OK)"
+      }
+    ]
+  },
+  "financial_sources": {
+    "adr_cop": "regional_v410",
+    "occupancy_rate": "regional",
+    "direct_channel_percentage": "default"
+  }
+}

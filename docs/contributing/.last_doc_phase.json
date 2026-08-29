@@ -1,7 +1,7 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-RELEASE-4.63.0",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-SR-C",
-  "modules/commercial_documents/v4_proposal_generator.py": "FASE-SR-E",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-SR-G",
+  "modules/commercial_documents/v4_proposal_generator.py": "FASE-SR-G",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-SR-E",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
   "modules/asset_generation/data_assessment.py": "FASE-I-01",
@@ -172,7 +172,7 @@
   "docs/contributing/procedures.md": "FASE-CMD-B",
   "output/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260525_191213.md": "FASE-D",
   "output/v4_complete/02_PROPUESTA_COMERCIAL_20260525_191224.md": "FASE-D",
-  "modules/quality_gates/commercial_gate.py": "FASE-SR-C",
+  "modules/quality_gates/commercial_gate.py": "FASE-SR-G",
   "modules/generators/outreach_gen.py": "PROSPECCION-II",
   ".opencode/plans/ROI-REFACTOR/09-documentacion-post-proyecto.md": "FASE-0",
   ".opencode/plans/ROI-REFACTOR/dependencias-fases.md": "FASE-0",
@@ -246,5 +246,9 @@
   "tests/financial_engine/test_fase_r0e_recovery_financial_factors.py": "FASE-R0-E",
   "modules/quality_gates/alignment_result.py": "FASE-SR-E",
   "modules/data_validation/external_apis/rich_results_client.py": "FASE-SR-E",
-  "modules/auditors/ai_crawler_auditor.py": "FASE-SR-F"
+  "modules/auditors/ai_crawler_auditor.py": "FASE-SR-F",
+  "tests/quality_gates/test_commercial_gate.py": "FASE-SR-G",
+  "tests/commercial_documents/test_diagnostic_generator.py": "FASE-SR-G",
+  "(ninguno - fase de ejecucion)": "FASE-SR-H",
+  "modules/quality_gates/publication_gates.py; tests/quality_gates/test_extractors_simplified.py; tests/quality_gates/test_publication_gates.py": "FASE-SR-H2"
 }

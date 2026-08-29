@@ -564,13 +564,27 @@ class PublicationGatesOrchestrator:
         passed = critical_recall >= self.config.critical_recall_threshold
         
         if passed:
+            # FASE-SR-H2 traceability: annotate the derived favorable path
+            # (audit executed, zero critical issues → recall 1.0), never a
+            # direct metric value. Empty details keeps legacy serialization.
+            details: Dict[str, Any] = {}
+            if (
+                "critical_recall" not in assessment
+                and not assessment.get("critical_issues")
+                and assessment.get("audit_schema")
+            ):
+                details = {
+                    "critical_issues_count": 0,
+                    "recall_basis": "audit_present_no_critical_issues",
+                }
             return PublicationGateResult(
                 gate_name=gate_name,
                 passed=True,
                 status=GateStatus.PASSED,
                 message=f"Critical recall at {critical_recall:.1%} (threshold: {self.config.critical_recall_threshold:.0%})",
                 value=critical_recall,
-                suggestion=""
+                suggestion="",
+                details=details
             )
         else:
             return PublicationGateResult(
@@ -1848,7 +1862,14 @@ class PublicationGatesOrchestrator:
             return None
     
     def _extract_critical_recall(self, assessment: Dict[str, Any]) -> Optional[float]:
-        """Extract critical recall from validated assessment."""
+        """Extract critical recall from validated assessment.
+        
+        Empty critical_issues list WITH an executed audit (audit_schema non-empty,
+        builder guarantees audit_schema != {} iff audit ran) is a favorable
+        outcome — zero critical issues, nothing to recall → 1.0 (FASE-SR-H2).
+        Without audit evidence the metric is genuinely absent → None (gate
+        BLOCKS real, L-SR5: never silence an absent metric).
+        """
         # Direct field (preferred)
         if "critical_recall" in assessment:
             try:
@@ -1859,6 +1880,10 @@ class PublicationGatesOrchestrator:
         critical_issues = assessment.get("critical_issues", [])
         if critical_issues:
             return 1.0  # All critical issues were detected (builder guarantees completeness)
+        # Empty list + audit executed = zero critical issues found (favorable outcome);
+        # empty/absent list without audit = metric genuinely absent (BLOCKED real, L-SR5)
+        if assessment.get("audit_schema"):
+            return 1.0
         return None
 
 

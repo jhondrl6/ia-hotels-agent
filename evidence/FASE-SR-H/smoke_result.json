@@ -1,0 +1,34 @@
+{
+  "passed": 5,
+  "total": 7,
+  "checks": {
+    "1_veredicto_READY": {
+      "pass": false,
+      "detail": "BLOCKED: [WindowsPath('evidence/FASE-SR-H/final/v4_complete/BLOCKED_BY_GATES.md')]"
+    },
+    "2_coherence_ge_0.8": {
+      "pass": true,
+      "detail": "coherence=0.88 (baseline=0.8644444444444445)"
+    },
+    "3_promised_assets_exist_PRESENCIA": {
+      "pass": true,
+      "detail": "gate={'name': 'promised_assets_exist', 'passed': True, 'score': 1.0, 'message': 'Todos los assets prometidos están implementados (7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET)', 'severity': 'info'}; no_hotel_schema_mencionado=False; resuelto_por_presencia=None; schemas_en_audit=0"
+    },
+    "4_unresolved_identico": {
+      "pass": true,
+      "detail": "valores por archivo: {'gate_report_20260828_185303.json': [0], 'delivery_quality_report.json': [0]}"
+    },
+    "5_docs_comerciales": {
+      "pass": false,
+      "detail": "diagnostico=[], propuesta=[]"
+    },
+    "6_zip_entrega": {
+      "pass": true,
+      "detail": "zips=['hotelsalentoreal_20260828.zip']"
+    },
+    "7_financiera_identica_baseline": {
+      "pass": true,
+      "detail": "final={'conservative': 6571622.4, 'realistic': 4042752.0, 'optimistic': 1264435.2} vs baseline={'conservative': 6571622.4, 'realistic': 4042752.0, 'optimistic': 1264435.2}"
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "status": "FAIL",
+  "blocking": true,
+  "coverage_failure_rate": {
+    "passed": true,
+    "details": {
+      "total_assets": 6,
+      "generated": 5,
+      "failed": 0,
+      "failure_rate": 0.0,
+      "reason": ""
+    },
+    "gate": "G7"
+  },
+  "proposal_asset_gate": {
+    "passed": false,
+    "gate": "G9",
+    "aligned": 2,
+    "total": 7,
+    "alignment": {
+      "promised_services_total": 7,
+      "generated_aligned": 2,
+      "present_in_production": 1,
+      "unresolved": 1,
+      "coverage_ratio": 0.42857142857142855,
+      "present_assets": [
+        "Optimización para IA Generativa"
+      ],
+      "passed": false,
+      "effective_total": 3,
+      "message": "3/7 servicios cubiertos (2 generados  + 1 ya en producción )  — 1 sin cubrir"
+    }
+  },
+  "asset_specificity_gate": {
+    "passed": true,
+    "details": {
+      "avg_confidence": 0.84,
+      "total_assets": 5,
+      "all_above_threshold": true
+    },
+    "gate": "G8"
+  },
+  "evidence_gate": {
+    "passed": true,
+    "details": {
+      "coherence_available": true,
+      "asset_data_available": true,
+      "coherence_score": 0.86
+    },
+    "gate": "EVIDENCE"
+  },
+  "advisory_warnings": [],
+  "human_review_items": [],
+  "summary": {
+    "total_gates": 5,
+    "passed": 4,
+    "failed": 1,
+    "coherence_score": 0.86,
+    "blocking_gates": [
+      "proposal_asset_alignment"
+    ],
+    "warning_gates": []
+  }
+}

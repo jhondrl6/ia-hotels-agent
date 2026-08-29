@@ -29,6 +29,9 @@ from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_T
 from modules.asset_generation.site_presence_checker import is_present_in_production
 from modules.commercial_documents.service_catalog import SERVICE_CATALOG, TECHNICAL_ASSET_CATALOG
 from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
+# FASE-SR-G (L27): glosario único jerga → lenguaje de negocio (compartido
+# con el gate CG-TECH-JARGON y el generador de diagnóstico).
+from modules.commercial_documents.tech_jargon_glossary import apply_glossary
 from modules.common.yaml_loader import load_yaml_config, YAMLLoadError
 # FASE-3: asset_semantics_validator integrada en services table
 from modules.quality.asset_semantics_validator import validar_semantica_comercial
@@ -588,6 +591,11 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         
         # Render template
         document_content = self._render_template(template_content, template_data)
+
+        # FASE-SR-G (L27, H6.4): el documento cliente pasa por el glosario
+        # único (jerga técnica → lenguaje de negocio) ANTES de validarse y
+        # escribirse: el texto validado == texto publicado (L-SR3).
+        document_content = apply_glossary(document_content)
 
         # FASE-COPY-B: Commercial gate validation on generated proposal
         try:

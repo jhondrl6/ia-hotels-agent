@@ -1,0 +1,23 @@
+{
+  "asset_type": "monthly_report",
+  "generated_at": "2026-08-28T19:19:21.934802",
+  "confidence_level": "ESTIMATED",
+  "confidence_score": 1.0,
+  "validation_sources": [
+    "web_scraping",
+    "google_business_profile",
+    "user_input"
+  ],
+  "preflight_status": "WARNING",
+  "can_use": true,
+  "disclaimer": "Este asset fue generado con datos estimados o de una sola fuente. Se recomienda verificar antes de usar en producción.",
+  "source_data_hash": "64751298f9049fe2",
+  "diagnostic_reference": "None",
+  "problems_solved": [],
+  "coherence_score": 0.88,
+  "problem_solved": "Problema identificado en el diagnóstico",
+  "impact_cop": 606412,
+  "priority": "P3",
+  "timing": "Semana 1",
+  "why_this_asset": "Mejora la presencia online del hotel"
+}

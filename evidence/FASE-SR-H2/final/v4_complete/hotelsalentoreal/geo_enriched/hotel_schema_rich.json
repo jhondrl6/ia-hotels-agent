@@ -1,0 +1,44 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Hotel",
+      "name": "Hotel Salento Real",
+      "url": "https://www.hotelsalentoreal.com/",
+      "description": "Discover the charm of Salento at Hotel Salento Real. Enjoy colonial style, sustainability, and warm ",
+      "image": "https://www.hotelsalentoreal.com/",
+      "priceRange": "$$",
+      "amenityFeature": [
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "WiFi gratuito",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Recepción 24 horas",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Aire acondicionado",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Restaurante",
+          "value": "true"
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Servicio de limpieza",
+          "value": "true"
+        }
+      ],
+      "starRating": "4",
+      "numberOfRooms": "10",
+      "checkinTime": "15:00",
+      "checkoutTime": "12:00"
+    }
+  ]
+}

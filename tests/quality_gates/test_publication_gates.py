@@ -586,6 +586,41 @@ class TestCriticalRecallGate:
         assert result.status == GateStatus.BLOCKED
         assert "not found" in result.message
 
+    def test_empty_critical_issues_with_audit_passes(self, orchestrator):
+        """
+        FASE-SR-H2: empty critical_issues with an executed audit (audit_schema
+        non-empty) is a favorable outcome — gate PASSED with recall 1.0 and
+        traceability details (fixes the spurious BLOCKED "metric not found").
+        """
+        assessment = {
+            "critical_issues": [],
+            "audit_schema": {"rich_results": {"status": "OK"}},
+        }
+        
+        result = orchestrator._critical_recall_gate(assessment)
+        
+        assert result.passed is True
+        assert result.status == GateStatus.PASSED
+        assert result.value == 1.0
+        assert result.details.get("critical_issues_count") == 0
+        assert result.details.get("recall_basis") == "audit_present_no_critical_issues"
+
+    def test_empty_critical_issues_without_audit_blocks(self, orchestrator):
+        """
+        FASE-SR-H2: empty critical_issues WITHOUT audit evidence is genuinely
+        missing data — gate BLOCKED (L-SR5: never silence an absent metric).
+        """
+        assessment = {
+            "critical_issues": [],
+            "audit_schema": {},
+        }
+        
+        result = orchestrator._critical_recall_gate(assessment)
+        
+        assert result.passed is False
+        assert result.status == GateStatus.BLOCKED
+        assert "not found" in result.message
+
 
 # =============================================================================
 # Test Class 6: TestPublicationGatesOrchestrator

@@ -27,6 +27,9 @@ from .data_structures import (
     extract_top_problems,
 )
 from .pain_solution_mapper import PainSolutionMapper
+# FASE-SR-G (L27): glosario único jerga → lenguaje de negocio (compartido
+# con el gate CG-TECH-JARGON y el generador de propuesta).
+from .tech_jargon_glossary import apply_glossary
 
 from data_models.analytics_status import AnalyticsStatus
 from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
@@ -618,6 +621,12 @@ class V4DiagnosticGenerator:
         # Render template
         document_content = self._render_template(template_content, template_data)
 
+        # FASE-SR-G (L27, H6.4): el documento cliente pasa por el glosario
+        # único (jerga técnica → lenguaje de negocio) ANTES de validarse y
+        # del self-healing: el texto validado == texto publicado (L-SR3) y
+        # el healing opera sobre lenguaje de negocio (un solo camino, L-NC10).
+        document_content = apply_glossary(document_content)
+
         # Timestamp único del run (reutilizado para doc y report de gates)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
@@ -788,13 +797,26 @@ class V4DiagnosticGenerator:
     def _extract_text_tier(document_content: str) -> Optional[str]:
         """FASE-C N15: Extrae el tier mencionado en el texto del diagnóstico.
 
-        Busca patrones como 'Tier B+', 'Tier A', 'nivel B+', etc.
-        Retorna None si no encuentra mención explícita.
+        Busca patrones como 'Tier B+', 'Tier A', etc. Retorna None si no
+        encuentra mención explícita.
+
+        FASE-SR-G (L30): el token de tier es SIEMPRE una letra A-D MAYÚSCULA
+        con '+' opcional — los valores canónicos del financial engine que el
+        template V6 renderiza. El regex anterior aceptaba minúsculas y
+        capturaba la 'd' de "Nivel de evidencia" como un tier 'D' espurio
+        (corrida C 2026-08-27: frontmatter 'B' vs texto 'D' → falso positivo
+        de CG-TIER-CONSISTENCY). Solo tokens canónicos se comparan; el resto
+        es prosa.
+
+        El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+        'Tier Básico' (prosa con inicial mayúscula) produzca un 'B' espurio,
+        sin el bug de backtracking de \b: en "Tier B+ para" no hay boundary
+        tras el '+' (transición no-palabra→no-palabra), \b retrocede y
+        captura 'B' sin el '+' (bug detectado en test_tier_b_plus).
         """
         import re as _re
-        # Patrón: "Tier X" o "nivel X" donde X es A, B+, B, C+, C, D
         m = _re.search(
-            r'(?:[Tt]ier|[Nn]ivel)\s+([A-Da-d][+]?)',
+            r'(?:[Tt]ier|[Nn]ivel)\s+([A-D][+]?)(?![^\W\d_])',
             document_content,
         )
         if m:

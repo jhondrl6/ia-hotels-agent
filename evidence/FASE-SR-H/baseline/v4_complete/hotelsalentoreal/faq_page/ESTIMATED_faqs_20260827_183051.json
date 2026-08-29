@@ -1,0 +1,30 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Cuáles son los horarios de check-in y check-out en Hotelsalentoreal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Check-in desde las 15:00 horas. Check-out hasta las 12:00 horas."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hotelsalentoreal incluye desayuno?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí, todos nuestros planes incluyen desayuno tipo buffet."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hotelsalentoreal tiene políticas de cancelación?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cancelación gratuita hasta 48 horas antes de la fecha de llegada."
+      }
+    }
+  ]
+}

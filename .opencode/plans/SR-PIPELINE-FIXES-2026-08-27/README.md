@@ -14,8 +14,9 @@
 | FASE-SR-D | rec#3/#10 — Canonicalización de `target_id` con `_normalize_url` + `generate_hotel_id` (L-SR2, L16) | Media | ❌ DIRECTO | ✅ Completada | agente | 2026-08-28 |
 | FASE-SR-E | rec#4/#11 (H7) — Fix falso negativo schema (JSON-LD array) + contabilización única `exists_with_issues` (revisión 2026-08-28) | Alta | ❌ DIRECTO | ✅ Completada | agente | 2026-08-28 |
 | FASE-SR-F | rec#5/#6 — Investigación varianza plan de assets + PageSpeed (OPS) — H5: sondas robots/llms con query UTM medían homepage 200 (D-PF6: FIX en 3 sondas + 15 tests) | Media | ❌ DIRECTO | ✅ Completada | agente | 2026-08-28 |
-| FASE-SR-G | rec#8 — Display: CG-TIER-CONSISTENCY (L30) + CG-TECH-JARGON (L27) | Baja-Media | ❌ DIRECTO | ⏳ Pendiente | — | — |
-| FASE-SR-H | **ÚNICA ejecución v4complete Salento Real** (baseline + evidencia + smoke) | Media (ejecución) | ✅ DELEGABLE (subagente terminal) | ⏳ Pendiente | — | — |
+| FASE-SR-G | rec#8 — Display: CG-TIER-CONSISTENCY (L30) + CG-TECH-JARGON (L27) — glosario único `tech_jargon_glossary.py` + extractor de tier canónico (regex `[A-D][+]?` mayúsculas, lookahead de letra) | Baja-Media | ❌ DIRECTO | ✅ Completada | agente | 2026-08-28 |
+| FASE-SR-H | **ÚNICA ejecución v4complete Salento Real** (baseline + evidencia + smoke) | Media (ejecución) | ✅ DELEGABLE (subagente terminal) | ✅ Completada (smoke 5/7 — bloqueo `critical_recall` documentado y escalado) | agente | 2026-08-28 |
+| FASE-SR-H2 ⚠️ | Hotfix `_extract_critical_recall` (lista vacía+audit=1.0 con traza; audit ausente=BLOCKED) + corrida de verificación única (D-PF7, desviación §9) + smoke 7/7 | Baja-Media | fix DIRECTO · corrida DELEGABLE | ✅ Completada (smoke 7/7 — READY_FOR_PUBLICATION, AC11/AC12 observables) | agente | 2026-08-28 |
 | FASE-SR-VERIFY | Certificación AC1-AC13 contra output E2E + diff antes/después | Media | ❌ DIRECTO (§4.6) | ⏳ Pendiente | — | — |
 | FASE-RELEASE-4.73.0 | Docs oficiales + version bump + validaciones E1-E8b | Baja | ✅ DELEGABLE (subagente) | ⏳ Pendiente | — | — |
 
@@ -28,6 +29,7 @@
 | `01-plan-maestro.md` | Diseño completo: fases, complejidad, R3, delegación, ACs |
 | `dependencias-fases.md` | Diagrama de dependencias + tabla de conflictos de archivos |
 | `05-prompt-inicio-sesion-fase-*.md` | Prompt de inicio por fase (1 por sesión de agente) |
+| `05-prompt-inicio-sesion-fase-SR-H2.md` | Prompt del hotfix pre-VERIFY (creado 2026-08-28 tras la E2E de SR-H; decisión del orquestador opción 1) |
 | `06-checklist-implementacion.md` | Checklist maestro de estados |
 | `09-documentacion-post-proyecto.md` | Acumulador documental (fuente de FASE-RELEASE) |
 | `10-analisis-post-implementacion.md` | Matriz AC1-AC13, lecciones, decisiones, seguimientos |

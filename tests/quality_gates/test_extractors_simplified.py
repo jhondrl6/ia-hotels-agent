@@ -164,9 +164,24 @@ class TestExtractCriticalRecall:
         result = orchestrator._extract_critical_recall(assessment)
         assert result is None
 
-    def test_extract_critical_recall_empty_critical_issues(self, orchestrator):
-        """critical_issues vacío → None (no hay issues detectados)"""
-        assessment = {"critical_issues": []}
+    def test_extract_critical_recall_empty_with_audit_present(self, orchestrator):
+        """critical_issues vacío + audit ejecutado (audit_schema no vacío) → 1.0 (FASE-SR-H2).
+
+        Lista vacía con audit presente = resultado favorable (0 issues críticos,
+        nada que recordar), NO dato ausente. El builder garantiza que audit_schema
+        no vacío ⟺ audit ejecutado (assessment_builder.py ~L200-213).
+        """
+        assessment = {"critical_issues": [], "audit_schema": {"rich_results": {"status": "OK"}}}
+        result = orchestrator._extract_critical_recall(assessment)
+        assert result == 1.0
+
+    def test_extract_critical_recall_empty_without_audit(self, orchestrator):
+        """critical_issues vacío SIN audit (audit_schema vacío) → None (dato ausente).
+
+        L-SR5: sin evidencia de audit la métrica está genuinamente ausente →
+        el gate debe BLOCKED real (ciclar o escalar, nunca silenciar).
+        """
+        assessment = {"critical_issues": [], "audit_schema": {}}
         result = orchestrator._extract_critical_recall(assessment)
         assert result is None
 

@@ -830,7 +830,11 @@ class TestFugasPrincipalesDinamicas:
         assert "${" not in content
         # Contiene al menos una fuga derivada de un pain real del audit
         assert "### Fuga 1 —" in content
-        assert "Sin Schema Hotel" in content  # pain.name real de no_hotel_schema
+        # FASE-SR-G (L27/L-SR3): el texto publicado pasa por el glosario único —
+        # pain.name "Sin Schema Hotel" (no_hotel_schema) se publica como lenguaje
+        # de negocio; la jerga cruda NO aparece al cliente.
+        assert "Sin Ficha del Hotel en Google e IA" in content
+        assert "Sin Schema Hotel" not in content
 
     def test_fugas_principales_con_whatsapp_conflict(self):
         """AC4: con conflicto real, la fuga de WhatsApp SÍ aparece (derivada del pain)."""
@@ -911,11 +915,16 @@ class TestFugasPrincipalesDinamicas:
         rendered_names = re.findall(r"### Fuga \d+ — (.+)", content)
         assert rendered_names, "La Sección 4 debe listar al menos una fuga"
 
-        # Brechas destacadas según la misma fuente de verdad del generador
+        # Brechas destacadas según la misma fuente de verdad del generador.
+        # FASE-SR-G (L27): el texto publicado es la fuente interna pasada por el
+        # glosario único — la comparación aplica la MISMA transformación compartida
+        # (nunca nombres hardcodeados en dos sitios).
+        from modules.commercial_documents.tech_jargon_glossary import apply_glossary
+
         brechas_destacadas = [
             b for b in gen._get_brecha_pesos(audit) if b.get("impacto", 0) > 0
         ]
-        expected_names = [b["nombre"] for b in brechas_destacadas]
+        expected_names = [apply_glossary(b["nombre"]) for b in brechas_destacadas]
 
         assert sorted(rendered_names) == sorted(expected_names)
         assert "Contacto perdido por WhatsApp incorrecto" not in rendered_names

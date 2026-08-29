@@ -1,0 +1,10 @@
+ .../09-documentacion-post-proyecto.md              | 18 +++++--
+ .../10-analisis-post-implementacion.md             | 10 ++--
+ .../plans/SR-PIPELINE-FIXES-2026-08-27/README.md   |  2 +-
+ .../dependencias-fases.md                          |  2 +-
+ .../v4_diagnostic_generator.py                     | 30 +++++++++--
+ .../commercial_documents/v4_proposal_generator.py  |  8 +++
+ modules/quality_gates/commercial_gate.py           | 25 +++++----
+ .../test_diagnostic_generator.py                   | 15 ++++--
+ tests/quality_gates/test_commercial_gate.py        | 60 +++++++++++++++++++++-
+ 9 files changed, 142 insertions(+), 28 deletions(-)

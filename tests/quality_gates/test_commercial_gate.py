@@ -801,9 +801,65 @@ class TestExtractTextTier:
         assert result is None
 
     def test_lowercase_tier(self):
-        """'tier b+' (minúscula) → 'B+'."""
+        """FASE-SR-G (L30): 'tier b+' en minúscula es prosa, NO token canónico.
+
+        Los valores canónicos del financial engine son MAYÚSCULAS (el template
+        V6 los renderiza tal cual). Aceptar minúsculas capturaba la 'd' de
+        "Nivel de evidencia" como tier 'D' espurio (corrida C 2026-08-27).
+        """
         from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
         result = V4DiagnosticGenerator._extract_text_tier(
             "Según el análisis, el tier b+ es apropiado."
         )
-        assert result == "B+"
+        assert result is None
+
+    def test_nivel_de_evidencia_not_d(self):
+        """FASE-SR-G regresión corrida C: 'Nivel de evidencia' NO es tier 'D'.
+
+        Línea real del template V6 renderizado (diagnostico_v6_template L156):
+        el regex viejo capturaba la 'd' de 'de' → text_tier='D' vs
+        frontmatter_tier='B' → falso CG-TIER-CONSISTENCY.
+        """
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        result = V4DiagnosticGenerator._extract_text_tier(
+            "> *Nivel de evidencia: **Tier B** · Precisión: **Tier C***"
+        )
+        assert result == "B"
+
+    def test_nivel_de_evidencia_sin_token_returns_none(self):
+        """FASE-SR-G: mención de 'Nivel de evidencia' sin token canónico → None."""
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        result = V4DiagnosticGenerator._extract_text_tier(
+            "El nivel de evidencia queda registrado en el frontmatter del documento."
+        )
+        assert result is None
+
+    def test_corrida_c_tier_gate_resolution(self):
+        """FASE-SR-G: extracción corregida + gate → 'B' canónico == 'B' → PASS.
+
+        Mismo wiring de la corrida C (frontmatter desde
+        financial_breakdown.evidence_tier, text_tier desde el documento) con
+        la línea real del template V6: el falso positivo desaparece.
+        """
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        text_tier = V4DiagnosticGenerator._extract_text_tier(
+            "> *Nivel de evidencia: **Tier B** · Precisión: **Tier C***"
+        )
+        validator = CommercialGateValidator()
+        result = validator._check_tier_consistency("B", text_tier)
+        assert result.passed is True
+
+    def test_real_mismatch_still_detected_via_extraction(self):
+        """FASE-SR-G test negativo: mismatch REAL sigue disparando el gate.
+
+        Documento cuyo texto canónico dice 'Tier C' mientras el financial
+        engine declaró 'B' → el gate debe FALLAR (no se enmascara).
+        """
+        from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+        text_tier = V4DiagnosticGenerator._extract_text_tier(
+            "Nivel de evidencia: **Tier C** con datos limitados de su web."
+        )
+        assert text_tier == "C"
+        validator = CommercialGateValidator()
+        result = validator._check_tier_consistency("B", text_tier)
+        assert result.passed is False

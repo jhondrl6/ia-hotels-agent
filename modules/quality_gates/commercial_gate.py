@@ -11,6 +11,14 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 import re
 
+# FASE-SR-G (L27): fuente única del vocabulario técnico — el gate DETECTA
+# estos términos en la vista gerencia y los generadores los TRADUCEN vía
+# apply_glossary() del mismo módulo (un solo glosario, cero duplicados).
+from modules.commercial_documents.tech_jargon_glossary import (
+    TECH_JARGON_TERMS,
+    jargon_pattern,
+)
+
 
 # ──────────────────────────────────────────────────────────────
 # Patrones compartidos (fuente única gate ↔ self-healer)
@@ -104,14 +112,8 @@ WARNING_GATE_IDS = [
     "CG-TECH-JARGON",
 ]
 
-# Términos técnicos que no deben aparecer en las primeras 6 secciones (vista gerencia)
-TECH_JARGON_TERMS = [
-    "Schema", "AEO", "IAO", "Open Graph", "NAP", "Rich Snippets",
-    "schema.org", "JSON-LD", "markup estructurado",
-    # PROPUESTA-COMERCIAL FASE-D: términos adicionales
-    "OpenRouter", "Perplexity", "Gemini", "GA4_PROPERTY_ID",
-    "GSC_SITE_URL", "UTM", "iah-cli", "iahotels.co",
-]
+# Términos técnicos que no deben aparecer en las primeras 6 secciones
+# (vista gerencia) — definidos en tech_jargon_glossary.py (FASE-SR-G, L27).
 
 
 # ──────────────────────────────────────────────────────────────
@@ -809,8 +811,11 @@ class CommercialGateValidator:
 
         found_terms = []
         for term in TECH_JARGON_TERMS:
-            # Match as whole word/term, case-insensitive
-            if re.search(r'\b' + re.escape(term) + r'\b', early_text, re.IGNORECASE):
+            # Match as whole word/term, case-insensitive.
+            # FASE-SR-G: patrón compartido con el glosario (fuente única de
+            # la semántica de matching; permite términos con paréntesis como
+            # "sin costo (fallback)").
+            if re.search(jargon_pattern(term), early_text, re.IGNORECASE):
                 found_terms.append(term)
 
         if not found_terms:

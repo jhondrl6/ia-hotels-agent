@@ -1,0 +1,76 @@
+{
+  "alignment_status_version": "1.0",
+  "delivery_ready": false,
+  "entries": [
+    {
+      "alignment": "no_breach",
+      "asset_path": null,
+      "asset_type": "optimization_guide",
+      "confidence": 0.0,
+      "pain_ids": [],
+      "service_name": "SEO Local",
+      "status": "NO_BREACH"
+    },
+    {
+      "alignment": "no_breach",
+      "asset_path": null,
+      "asset_type": "whatsapp_button",
+      "confidence": 0.0,
+      "pain_ids": [],
+      "service_name": "Botón de WhatsApp",
+      "status": "NO_BREACH"
+    },
+    {
+      "alignment": "missing_asset",
+      "asset_path": null,
+      "asset_type": "hotel_schema",
+      "confidence": 1.0,
+      "pain_ids": [
+        "no_hotel_schema"
+      ],
+      "service_name": "Schema Hotel",
+      "status": "MISSING_ASSET"
+    },
+    {
+      "alignment": "linked",
+      "asset_path": null,
+      "asset_type": "org_schema",
+      "confidence": 0.8,
+      "pain_ids": [
+        "no_org_schema"
+      ],
+      "service_name": "Schema Organization",
+      "status": "LINKED"
+    },
+    {
+      "alignment": "linked",
+      "asset_path": null,
+      "asset_type": "faq_page",
+      "confidence": 0.8,
+      "pain_ids": [
+        "no_faq_schema"
+      ],
+      "service_name": "Página de FAQ",
+      "status": "LINKED"
+    },
+    {
+      "alignment": "no_breach",
+      "asset_path": null,
+      "asset_type": "open_graph",
+      "confidence": 0.0,
+      "pain_ids": [],
+      "service_name": "Meta Tags Sociales (Open Graph)",
+      "status": "NO_BREACH"
+    },
+    {
+      "alignment": "no_breach",
+      "asset_path": null,
+      "asset_type": "llms_txt",
+      "confidence": 0.0,
+      "pain_ids": [],
+      "service_name": "Optimización para IA Generativa",
+      "status": "NO_BREACH"
+    }
+  ],
+  "proposal_asset_matrix_version": "2.0"
+}

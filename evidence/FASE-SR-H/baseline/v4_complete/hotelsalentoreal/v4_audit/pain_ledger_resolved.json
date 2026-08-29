@@ -1,0 +1,62 @@
+{
+  "version": "1.0",
+  "source": "post_orchestrator_reconciler",
+  "entries": [
+    {
+      "confidence": 1.0,
+      "evidence_refs": [],
+      "human_label": "Sin Schema Hotel",
+      "pain_id": "no_hotel_schema",
+      "severity": "HIGH",
+      "source_file": "schema",
+      "source_module": "pain_solution_mapper",
+      "status": "DETECTED"
+    },
+    {
+      "confidence": 1.0,
+      "evidence_refs": [],
+      "human_label": "Sin Schema FAQ",
+      "pain_id": "no_faq_schema",
+      "severity": "MEDIUM",
+      "source_file": "schema",
+      "source_module": "pain_solution_mapper",
+      "status": "ASSET_GENERATED"
+    },
+    {
+      "confidence": 0.9,
+      "evidence_refs": [],
+      "human_label": "Sin Analytics Configurado",
+      "pain_id": "no_analytics_configured",
+      "severity": "MEDIUM",
+      "source_file": "analytics",
+      "source_module": "pain_solution_mapper",
+      "status": "ASSET_GENERATED"
+    },
+    {
+      "confidence": 0.8,
+      "evidence_refs": [],
+      "human_label": "Baja Visibilidad de Trafico Organico",
+      "pain_id": "low_organic_visibility",
+      "severity": "MEDIUM",
+      "source_file": "analytics",
+      "source_module": "pain_solution_mapper",
+      "status": "ASSET_GENERATED"
+    },
+    {
+      "confidence": 1.0,
+      "evidence_refs": [],
+      "human_label": "Sin Schema Organization",
+      "pain_id": "no_org_schema",
+      "severity": "LOW",
+      "source_file": "schema",
+      "source_module": "pain_solution_mapper",
+      "status": "ASSET_GENERATED"
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "asset_generated": 4,
+    "mapped_to_service": 0,
+    "justified_skip": 0
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "asset_type": "analytics_setup_guide",
+  "generated_at": "2026-08-28T18:53:03.467044",
+  "confidence_level": "0.9",
+  "confidence_score": 0.8,
+  "validation_sources": [
+    "web_scraping",
+    "google_business_profile",
+    "user_input"
+  ],
+  "preflight_status": "WARNING",
+  "can_use": false,
+  "disclaimer": "Este asset fue generado con datos estimados o de una sola fuente. Se recomienda verificar antes de usar en producción.",
+  "source_data_hash": "ca8745066f6b95ba",
+  "diagnostic_reference": "None",
+  "problems_solved": [
+    "Sin Analytics Configurado"
+  ],
+  "coherence_score": 0.88,
+  "problem_solved": "Problema identificado en el diagnóstico",
+  "impact_cop": 1010688,
+  "priority": "P3",
+  "timing": "Semana 1",
+  "why_this_asset": "Mejora la presencia online del hotel"
+}

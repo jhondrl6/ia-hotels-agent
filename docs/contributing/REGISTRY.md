@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-08-28
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 444
+> **Total fases completadas:** 447
 
 ---
 
@@ -10437,6 +10437,70 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (15)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SR-G - 2026-08-28
+**Descripcion:** Fix display comercial H6.3/H6.4: CG-TIER-CONSISTENCY (extractor canonico _extract_text_tier solo MAYUSCULAS [A-D][+]? con lookahead de letra; fuente = evidence_tier del financial engine, pricing.yaml intacto; gate intacto) + CG-TECH-JARGON (glosario unico tech_jargon_glossary.py: TECH_JARGON_TERMS + JARGON_BUSINESS_MAP + jargon_pattern compartido gate/generadores; apply_glossary post-render en v4_diagnostic_generator y v4_proposal_generator, pre-validacion/self-healing L-SR3; guardia sin costo (fallback))
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/commercial_documents/tech_jargon_glossary.py` | NUEVO | Tech Jargon Glossary |
+| `tests/commercial_documents/test_tech_jargon_glossary.py` | NUEVO | Test Tech Jargon Glossary |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/commercial_gate.py` | Commercial Gate |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `tests/quality_gates/test_commercial_gate.py` | Test Commercial Gate |
+| `tests/commercial_documents/test_diagnostic_generator.py` | Test Diagnostic Generator |
+
+### Validaciones
+- [x] Tests passing (147)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SR-H - 2026-08-28
+**Descripcion:** E2E unica v4complete Salento Real ejecutada; evidencia proactive capturada (baseline + final); smoke 7 checks
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `(ninguno - fase de ejecucion)` | (Ninguno - Fase De Ejecucion) |
+
+### Validaciones
+- [x] Tests passing (7 smoke checks)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-SR-H2 - 2026-08-28
+**Descripcion:** Hotfix _extract_critical_recall (lista vacia + audit presente = recall 1.0 con traza; audit ausente = BLOCKED real) + corrida de verificacion unica (D-PF7) + smoke 7/7
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/publication_gates.py; tests/quality_gates/test_extractors_simplified.py; tests/quality_gates/test_publication_gates.py` | Test Publication Gates |
+
+### Validaciones
+- [x] Tests passing (4 contrato nuevos + regresion aislada + smoke 7 checks)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
