@@ -16,7 +16,7 @@
 | FASE-SR-G | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 7) | ~45 | NO |
 | FASE-SR-H | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 8) | ~20 | SÍ (v4complete) |
 | FASE-SR-H2 | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 9) | ~25 | fix directo + corrida DELEGADA (D-PF7) |
-| FASE-SR-VERIFY | ⏳ PENDIENTE | — | — | — | NO (§4.6) |
+| FASE-SR-VERIFY | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 10) | ~40 | NO (§4.6) |
 | FASE-RELEASE-4.73.0 | ⏳ PENDIENTE | — | — | — | opcional |
 
 ## Criterios por Fase (marcar ✅ al cerrar)
@@ -85,11 +85,11 @@
 - [x] Docs post-fase (1-7) + D-PF7 registrada en `10-analisis` §Decisiones + `log_phase_completion` SIN --release (DOMAIN_PRIMER NO regenerado: es del RELEASE)
 
 ### FASE-SR-VERIFY — Certificación ACs
-- [ ] AC1-AC13 verificados contra output real (matriz completa con Real/Status)
-- [ ] Diff narrativo antes/después documentado (todas las zonas afectadas)
-- [ ] Greps residuales = 0 matches
-- [ ] ≥3 lecciones nuevas registradas en 10-analisis
-- [ ] `log_phase_completion.py --fase FASE-SR-VERIFY` (SIN --release) + `run_all_validations.py --quick`
+- [x] AC1-AC13 verificados contra output real (matriz completa con Real/Status) — **13/13 SUPERADOS** (`evidence/FASE-VERIFY/matriz_ac_final.md`; AC11/AC12 contra `evidence/FASE-SR-H2/final/` según dependencias §4)
+- [x] Diff narrativo antes/después documentado (todas las zonas afectadas) — 17 dimensiones, 0 regresiones funcionales + 2 observaciones display (`evidence/FASE-VERIFY/diff_baseline_vs_h2.md`)
+- [x] Greps residuales = 0 matches — 7 patrones, 0 residuos reales (matches por diseño justificados; `evidence/FASE-VERIFY/greps_residuales.md`)
+- [x] ≥3 lecciones nuevas registradas en 10-analisis — L-PF5, L-PF11, L-PF12 + veredicto global "fixes superados SÍ → RELEASE habilitada"
+- [x] `log_phase_completion.py --fase FASE-VERIFY` (SIN --release) + `run_all_validations.py --quick` — REGISTRY.md actualizado, audit sin gaps; quick 6/6 TOTAL PASS (T3, `evidence/FASE-VERIFY/validaciones_quick.txt`)
 
 ### FASE-RELEASE-4.73.0 — Cierre
 - [ ] E1: version_consistency_checker + doctor sin errores

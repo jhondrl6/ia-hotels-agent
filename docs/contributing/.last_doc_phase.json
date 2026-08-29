@@ -250,5 +250,7 @@
   "tests/quality_gates/test_commercial_gate.py": "FASE-SR-G",
   "tests/commercial_documents/test_diagnostic_generator.py": "FASE-SR-G",
   "(ninguno - fase de ejecucion)": "FASE-SR-H",
-  "modules/quality_gates/publication_gates.py; tests/quality_gates/test_extractors_simplified.py; tests/quality_gates/test_publication_gates.py": "FASE-SR-H2"
+  "modules/quality_gates/publication_gates.py; tests/quality_gates/test_extractors_simplified.py; tests/quality_gates/test_publication_gates.py": "FASE-SR-H2",
+  "(ninguno - fase de verificacion": "FASE-VERIFY",
+  "sin codigo)": "FASE-VERIFY"
 }
