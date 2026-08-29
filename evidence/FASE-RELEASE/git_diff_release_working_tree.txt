@@ -1,0 +1,14 @@
+warning: in the working copy of '.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/README.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'VERSION.yaml', CRLF will be replaced by LF the next time Git touches it
+ .agent/SYSTEM_STATUS.md                            | 29 ++------
+ .agent/knowledge/DOMAIN_PRIMER.md                  |  6 +-
+ .cursorrules                                       |  2 +-
+ .../plans/SR-PIPELINE-FIXES-2026-08-27/README.md   |  2 +-
+ AGENTS.md                                          |  2 +-
+ CHANGELOG.md                                       | 86 ++++++++++++++++++++++
+ README.md                                          |  4 +-
+ VERSION.yaml                                       | 14 +++-
+ docs/CONTRIBUTING.md                               |  2 +-
+ docs/GUIA_TECNICA.md                               | 28 ++++++-
+ docs/contributing/REGISTRY.md                      | 20 ++++-
+ 11 files changed, 159 insertions(+), 36 deletions(-)

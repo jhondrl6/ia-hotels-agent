@@ -18,7 +18,7 @@
 | FASE-SR-H | **ÚNICA ejecución v4complete Salento Real** (baseline + evidencia + smoke) | Media (ejecución) | ✅ DELEGABLE (subagente terminal) | ✅ Completada (smoke 5/7 — bloqueo `critical_recall` documentado y escalado) | agente | 2026-08-28 |
 | FASE-SR-H2 ⚠️ | Hotfix `_extract_critical_recall` (lista vacía+audit=1.0 con traza; audit ausente=BLOCKED) + corrida de verificación única (D-PF7, desviación §9) + smoke 7/7 | Baja-Media | fix DIRECTO · corrida DELEGABLE | ✅ Completada (smoke 7/7 — READY_FOR_PUBLICATION, AC11/AC12 observables) | agente | 2026-08-28 |
 | FASE-SR-VERIFY | Certificación AC1-AC13 contra output E2E + diff antes/después | Media | ❌ DIRECTO (§4.6) | ✅ Completada (13/13 SUPERADOS — fixes superados SÍ → RELEASE habilitada) | agente | 2026-08-28 |
-| FASE-RELEASE-4.73.0 | Docs oficiales + version bump + validaciones E1-E8b | Baja | ✅ DELEGABLE (subagente) | ⏳ Pendiente | — | — |
+| FASE-RELEASE-4.73.0 | Docs oficiales + version bump + validaciones E1-E8b | Baja | ✅ DELEGABLE (subagente) | ✅ Completada (version 4.73.0, 6/6 validaciones, 26/26 regresión, CHANGELOG+GUIA_TECNICA+SYSTEM_STATUS+DOMAIN_PRIMER sincronizados) | agente | 2026-08-28 |
 
 > **Preparación**: completada 2026-08-27 (sesión de orquestación). Fases de implementación pendientes.
 

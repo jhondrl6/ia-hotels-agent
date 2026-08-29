@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.72.2** -- Limpieza de Skills | Actualizado 24 Agosto 2026 | 3,379 pruebas automatizadas | 0 errores conocidos
+**v4.73.0** -- Reparacion-Pipeline-Salento-Real | Actualizado 28 Agosto 2026 | 3,621 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -21,12 +21,12 @@
 
 ---
 
-## Estado del Proyecto (v4.72.2 -- Limpieza de Skills)
+## Estado del Proyecto (v4.73.0 -- Reparacion-Pipeline-Salento-Real)
 
-- **3,379 test functions** — suite completa, 0 regresiones
-- **205 archivos Python en modules/** (~68K lineas, 23 directorios) + **28 scripts** (~5.5K lineas) + **56 directorios de test**
+- **3,621 test functions** — suite completa, 0 regresiones
+- **207 archivos Python en modules/** (~78K lineas, 24 directorios) + **29 scripts** (~7.2K lineas) + **57 directorios de test**
 - **9 config YAML** con schema validado
-- **1 agent skill** en `.agents/workflows/` (phased_project_executor)
+- **1 agent skill** en `.agents/workflows/` (phased_project_executor) + README.md
 - **13 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, pricing_compliance (blocking); content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency (advisory)
 - **Coherence Score >= 0.8** requerido para publicacion
 - **25 assets** en catalogo (22 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
@@ -239,10 +239,10 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **3,379 test functions** — suite completa, 0 regresiones
+- **3,621 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
 - **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.15.0 (1 fase/sesion, max 60 iteraciones)
+- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.16.0 (1 fase/sesion, max 60 iteraciones)
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
 - **13 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, pricing_compliance (blocking); content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency (advisory)
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
@@ -272,7 +272,7 @@ iah-cli/
     delivery_readme_template.md #   Template README de entrega
     diagnostico_ejecutivo.md    #   Template diagnostico ejecutivo
     local_content/              #   Templates de contenido local
-  modules/                    # 205 archivos Python (~68K lineas) en 23 directorios
+  modules/                    # 207 archivos Python (~78K lineas) en 24 directorios
     asset_generation/         #   Generacion condicional de assets
     commercial_documents/     #   Diagnostico + Propuesta v4 + PDF gancho (hook-pdf)
     financial_engine/         #   Pricing, scenarios, loss projector
@@ -296,11 +296,11 @@ iah-cli/
     providers/                #   Providers LLM y API
     utils/                    #   Utilidades compartidas
     validation/               #   Validacion de outputs
-  tests/                      # ~59K lineas de test (253 archivos, 24 directorios principales)
+  tests/                      # ~74K lineas de test (280 archivos, 57 directorios)
     config/                   #   61 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
-  scripts/                    # 28 scripts de automatizacion
+  scripts/                    # 29 scripts de automatizacion
     sync_versions.py          #   Sincronizacion versiones
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md

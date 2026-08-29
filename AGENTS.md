@@ -2,7 +2,7 @@
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.72.2 -- Limpieza de Skills COMPLETADO**
+> **v4.73.0 -- Reparacion-Pipeline-Salento-Real COMPLETADO**
 
 ---
 
@@ -113,7 +113,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 3,379 funciones, 253 archivos, 0 regresion |
+| **Tests** | 3,621 funciones, 280 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -379,7 +379,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (3,379 funciones, 253 archivos)
+# Todas las pruebas (3,621 funciones, 280 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -394,7 +394,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (3,379 funciones totales)
+### Cobertura por Modulo (3,621 funciones totales)
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
@@ -480,7 +480,7 @@ iah-cli/
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
 │   └── validation/             # Validaciones adicionales
-├── tests/                      # Suite de pruebas (3,379 funciones, 253 archivos)
+├── tests/                      # Suite de pruebas (3,621 funciones, 280 archivos)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/

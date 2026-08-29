@@ -1,0 +1,45 @@
+============================================================
+DOCUMENT INTEGRATION VALIDATOR
+============================================================
+Project: /mnt/c/Users/Jhond/Github/iah-cli
+
+[PASS] Cross-References (executor <-> CONTRIBUTING)
+      Executor section refs: 10
+      CONTRIBUTING section name entries: 7
+      Executor line refs (§LNN-MM): 0
+
+[PASS] CHANGELOG format consistency
+      Checked 3 recent entries
+      Last entry uses em-dash separator (correct)
+
+[PASS] Version headers with 'v' prefix
+      EXECUTOR: version v2.16.0 (OK)
+      TEMPLATE: version v1.4.0 (OK)
+      AGENTS.md: version v4.71.0 (OK)
+
+[PASS] Python path consistency (WSL)
+      phased_project_executor.md: python path OK
+
+[PASS] AGENTS.md cross-reference table
+      Cross-reference table has 6 entries
+
+[PASS] DOMAIN_PRIMER vs VERSION.yaml
+      Version aligned: 4.73.0
+      Release date aligned: 2026-08-28
+
+[PASS] README.md numerical counts vs code
+      Test files: no claim found in README
+      Publication gates: could not import (No module named 'requests')
+      Pain narratives: 16 (OK)
+
+[PASS] Line endings (LF, no CRLF)
+      CONTRIBUTING.md: LF (OK)
+      phased_project_executor.md: LF (OK)
+      DOMAIN_PRIMER.md: LF (OK)
+      AGENTS.md: LF (OK)
+      prompt-fase-template.md: LF (OK)
+      CHANGELOG.md: LF (OK)
+
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------

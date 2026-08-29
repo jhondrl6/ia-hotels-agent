@@ -27,7 +27,8 @@
 
 | Métrica | Valor | Fase |
 |---------|-------|------|
-| Tests totales (baseline) | 3,379 | — |
+| Tests totales (baseline plan) | 3,379 | — |
+| Tests totales (repo vivo post-release) | 3,621 | — |
 | Tests nuevos SR-A | 6 (3 corrida-C + 3 guardián AST); 148 ejecutados aislados, 0 regresiones | SR-A |
 | Tests nuevos SR-B | 10 (TestContractProposalLayer 4 + TestAntiB7 2 + TestContractGateLayer 4 en `tests/quality_gates/test_alignment_contract.py`); gates 57 PASSED aislado; 0 regresiones (8 fallos preexistentes en test_proposal_dynamic certificados en HEAD) | SR-B |
 | Tests nuevos SR-C | 20 (`test_claim_self_healing.py`, 6 clases); regresiones aisladas: 79 gates + 27 generator + 57 gate/guardián L-SR1, 0 fallos; quick 6/6 | SR-C |
@@ -154,4 +155,12 @@
 - Lecciones nuevas: L-PF5 (agrupar checks de smoke por causa-raíz antes de escalar — 7 checks reducibles a 3 causas), L-PF11 (la certificación E2E de identidad canónica se logra vía lookup cross-run H2→SR-H, no solo con tests unitarios), L-PF12 (reproducibilidad del plan de assets como criterio de cierre E2E). Matriz AC, lecciones, seguimientos y veredicto consolidados en `10-analisis` (completada al cierre de esta fase).
 
 ### FASE-RELEASE-4.73.0
-- (llenar al cerrar)
+- Sesión agente 2026-08-28 (DIRECTO, WSL venv-wsl + Windows venv para pytest). Flujo documental obligatorio completo:
+  - T1: `VERSION.yaml` → 4.73.0 (codename `Reparacion-Pipeline-Salento-Real`, release_date 2026-08-28) + `sync_versions.py` propaga a 6 archivos (README, AGENTS, .cursorrules, CONTRIBUTING, GUIA_TECNICA, REGISTRY) + `version_consistency_checker.py` sin divergencias tras escribir CHANGELOG.
+  - T2: `CHANGELOG.md` entrada `[4.73.0]` en formato CONTRIBUTING (Objetivo/Cambios/Archivos Nuevos/Archivos Modificados/Tests/E2E Validation) + `GUIA_TECNICA.md` nota técnica "Notas de Cambios v4.73.0".
+  - T3: `run_all_validations.py --quick` = **6/6 TOTAL PASS**; `validate_agents_md.py` = PASS; `validate_document_integration.py` = PASS (tras regenerar DOMAIN_PRIMER con `doctor.py --regenerate-domain-primer`); `doctor.py --status` (SYSTEM_STATUS) + `doctor.py --context` (coherencia OK, todas PASS); regresión `tests/regression/` = **26/26 PASS**; README audit: badge fecha 24→28 Ago 2026.
+  - T4: `log_phase_completion.py --fase FASE-RELEASE-4.73.0 --tests 132 --coherence 0.88 --check-manual-docs --release 4.73.0` → **Version Sync Gate PASSED (4.73.0)**; REGISTRY.md actualizado; `evidence/FASE-RELEASE/` con diff acumulado del plan (cbb51a2..HEAD) + working-tree diff + salidas de validaciones/regresión.
+  - Plan 10/10 fases ✅ en README.md del plan (FASE-RELEASE marcada ✅ Completada).
+  - Restricción R4: NO commit automático — pendiente confirmación del usuario (working tree con 11 archivos de release sin committear).
+- Desviación documentada: el prompt usó `--release` (flag sin valor) pero el script espera `--release 4.73.0` (versión como arg); ejecutado con el valor correcto. `--fases` del prompt NO es arg del script (se omite; el script registra la fase de --fase).
+- Desviación de entorno: en WSL el venv de Windows `./venv/Scripts/python.exe` ejecuta pytest (regresión); el resto de scripts con `.venv-wsl/bin/python` (sync/doctor/validations).

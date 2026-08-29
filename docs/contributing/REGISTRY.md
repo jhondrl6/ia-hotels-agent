@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-08-28
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 448
+> **Total fases completadas:** 449
 
 ---
 
@@ -10522,6 +10522,24 @@ _Ninguno_
 ### Validaciones
 - [x] Tests passing (0 nuevos (29 ejecutados: guardian 3/3 + regresion 26/26 + quick 6/6))
 - [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.73.0 - 2026-08-28
+**Descripcion:** Release v4.73.0: pipeline fixes Salento Real (SR-A..SR-G) verificados en E2E (VERIFY); alignment/coherencia/preflight/canonicalizacion/self-healing
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (132)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.88 (PASO)
 - [x] Capability contract verificado
 
 ---

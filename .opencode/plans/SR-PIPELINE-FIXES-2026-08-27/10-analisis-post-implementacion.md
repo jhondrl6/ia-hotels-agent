@@ -152,7 +152,7 @@
 
 | Métrica | Baseline (corrida C) | Post-fix (corrida final) | Delta |
 |---------|----------------------|--------------------------|-------|
-| Tests totales | 3,379 | 3,379+ (SR-H no añade tests; smoke 7 checks) | — |
+| Tests totales | 3,379 (baseline plan; repo vivo post-release = 3,621) | 3,379+ (SR-H no añade tests; smoke 7 checks) | — |
 | Coherence E2E Salento Real | 0.8644 | 0.88 | +0.0156 |
 | Gates de publicación | 12 PASSED + 1 BLOCKED (alignment 43%) | Corrida SR-H: 12 PASSED/WARNING + 1 BLOCKED (critical_recall; alignment ya no bloquea: WARNING con cobertura 3/3) → Corrida H2: 13/13 sin bloqueos (critical_recall PASSED 1.0 con traza `recall_basis`) | 0 bloqueos post-hotfix |
 | Alineación propuesta-assets | 43% (3/7) | coverage_no_silent_drop PASSED (3/3 detectadas, 0 justificadas); alignment WARNING no bloqueante (2 schemas presentes en producción, 1 FAQ ya en producción) | fin del bloqueo por alignment |
@@ -180,13 +180,13 @@
 
 ## Checklist de Cierre (FASE-RELEASE — llenar al cierre)
 
-- [ ] Todas las fases ✅ en `06-checklist-implementacion.md` (SR-A a SR-H + VERIFY)
-- [ ] Matriz de Verificación completa: 13/13 ACs con Real/Status
-- [ ] Lecciones nuevas registradas (mínimo 3, formato qué pasó/por qué/qué lo previene)
-- [ ] Métricas de Ejecución post-fix completadas
-- [ ] VERSION.yaml == "4.73.0" + sync 6 archivos + Version Sync Gate OK
-- [ ] CHANGELOG `[4.73.0]` + GUIA_TECNICA "Notas de Cambios v4.73.0"
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] README/AGENTS audit: test count verificado contra `pytest --collect-only`
-- [ ] Seguimientos abiertos: ninguno o con plan asignado
-- [ ] Commit de release ejecutado
+- [x] Todas las fases ✅ en `06-checklist-implementacion.md` (SR-A a SR-H + VERIFY)
+- [x] Matriz de Verificación completa: 13/13 ACs con Real/Status (evidence/FASE-VERIFY/matriz_ac_final.md)
+- [x] Lecciones nuevas registradas (mínimo 3, formato qué pasó/por qué/qué lo previene): L-PF5, L-PF11, L-PF12
+- [x] Métricas de Ejecución post-fix completadas
+- [x] VERSION.yaml == "4.73.0" + sync 6 archivos + Version Sync Gate OK
+- [x] CHANGELOG `[4.73.0]` + GUIA_TECNICA "Notas de Cambios v4.73.0"
+- [x] `run_all_validations.py --quick` TOTAL PASS (6/6)
+- [x] README/AGENTS audit: test count verificado contra pytest (regresión 26/26; README badge 3,621 con fecha 28 Ago 2026 actualizada; 207 modules / 29 scripts / 57 test dirs / phased v2.16.0)
+- [x] Seguimientos abiertos: PageSpeed API key (ACCION USUARIO OPS) + 2 observaciones display no bloqueantes documentadas (assets_are_justified 75%; mensaje gate "2 missing" vs cobertura presencia 1.0)
+- [ ] Commit de release ejecutado (PENDIENTE — requiere confirmación del usuario; restricción R4 del prompt: NO commits automáticos)

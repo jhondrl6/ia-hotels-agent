@@ -1,7 +1,33 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.72.2 (Limpieza de Skills)
+**Versión:** v4.73.0 (Reparacion-Pipeline-Salento-Real)
 **Última actualización:** 2026-08-28
+
+---
+
+### Notas de Cambios v4.73.0 — Reparación Pipeline Salento Real
+
+**Fecha:** 2026-08-28
+
+**Resumen**: Corrección de la divergencia estructural del pipeline de Salento Real expuesta por la E2E (FASE-SR-VERIFY: AC1-AC13 = 13/13 superados). Ocho ejes de fix (SR-A…SR-G + hotfix SR-H2) sobre gates, propuesta comercial, preflight y canonicalización — todos verificados sin regresiones. Plan: SR-PIPELINE-FIXES-2026-08-27.
+
+**Módulos afectados**: `modules/quality_gates/` (alignment_result.py, publication_gates.py, delivery_quality_report.py, commercial_gate.py, claim_self_healing.py NUEVO), `modules/commercial_documents/` (v4_proposal_generator.py, coherence_validator.py, v4_diagnostic_generator.py, tech_jargon_glossary.py NUEVO, pain_solution_mapper.py), `modules/asset_generation/proposal_asset_alignment.py`, `modules/data_validation/external_apis/rich_results_client.py`, `modules/auditors/` (v4_comprehensive.py, ai_crawler_auditor.py), `modules/asset_generation/site_presence_checker.py`, `modules/orchestration_v4/onboarding_controller.py`, `main.py`
+
+**Problema**: En la corrida baseline C del Hotel Salento Real el pipeline producía métricas divergentes de la realidad: conteo de servicios no resueltos 4-vs-1, bloqueo estructural de propuesta por promesa vs matriz, claims sin self-healing (1 bloqueo BLOCKING), fragmentación de target_id por UTM/campaña, falso negativo de schema JSON-LD (`no_hotel_schema` $1.06M COP/mes), varianza 7→5 del plan de assets por sondas con query UTM, jerga técnica sin traducir y tier espurio 'D', y `critical_recall` BLOCKED espurio (lista crítica vacía colapsada con métrica ausente).
+
+**Solución**:
+- SR-A: `AlignmentResult.compute_unresolved()` como helper único (fin divergencia 4-vs-1); bucket `no_breach` excluido del conteo.
+- SR-B: promesa derivada del `pain_ledger` (fuente única D-PF1); `committed_services` canónico en `proposal_asset_alignment.py`; NO_BREACH fuera del coverage (fin bloqueo estructural).
+- SR-C: `ClaimSelfHealer` regenera con claim trazable del `suggestion` + re-valida con la MISMA closure (máx 1 reintento); persistencia → `escalated_to_blocked`.
+- SR-D: `canonical_url = _normalize_url(args.url)` como primer paso de `run_v4_complete_mode`; target_id canónico en 3 call sites de memoria; `generate_hotel_id` normaliza vía urlparse (fin fragmentación por UTM).
+- SR-E: parser JSON-LD ARRAY + `error_message` propagado al audit; contabilización única `exists_with_issues` = `present_in_production` (6 consumidores vía `is_present_in_production`).
+- SR-F: sondas robots.txt/llms.txt ancladas al ORIGEN (urlparse, sin query UTM) — fin varianza 7→5 del plan de assets.
+- SR-G: glosario único `tech_jargon_glossary.py` (fuente única L27) + `_extract_text_tier` canónico `[A-D][+]?` (lookahead negativo de letra); `apply_glossary` post-render pre-validación.
+- SR-H2: `_extract_critical_recall` distingue lista VACÍA con audit ejecutado (1.0 favorable) de dato AUSENTE (None → BLOCKED real, L-SR5); traza `details={critical_issues_count:0, recall_basis:audit_present_no_critical_issues}` en el camino derivado.
+
+**Backwards compatibility**: Sí — no cambia API pública ni lógica core de generación; firmas con defaults conservadores. Determinismo verificado: plan de assets reproducible 5-vs-7, lookup cross-run H2→SR-H estable.
+
+**Tests**: +132 tests nuevos (SR-A 6, SR-B 10, SR-C 20, SR-D 28, SR-E 31, SR-F 15, SR-G 18, SR-H2 4). Suite completa ~3,511 funciones; guardián estático 3/3 + regresión 26/26 (FASE-VERIFY). 0 regresiones. E2E: v4complete Hotel Salento Real (corrida H2) — Coherence 0.88, 13/13 gates PASSED, READY_FOR_PUBLICATION.
 
 ---
 

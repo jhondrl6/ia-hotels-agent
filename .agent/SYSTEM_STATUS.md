@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-08-24 17:20:42 UTC
+> Auto-generado: 2026-08-29 01:20:36 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -9,29 +9,14 @@
 
 | Componente | Version | Fuente |
 |------------|---------|--------|
-| Proyecto | 4.72.1 | VERSION.yaml |
+| Proyecto | 4.73.0 | VERSION.yaml |
 | Ecosystem Convention | 1.0.0 | .agent/CONVENTION.md |
 
-## Skills Activas (16)
+## Skills Activas (1)
 
 | Skill | Descripcion |
 |-------|-------------|
-| delivery_wizard.md | Generar el kit de entrega completo para el hotel. |
-| deployment_assistant.md | Asistente para el despliegue de kits AEO en sitios WordPress del hotel. |
-| env_rerun.md | Solucionar fallos de entorno y configuración de API Keys. |
-| maintenance_autopilot.md | Protocolo de auto-mantenimiento para la arquitectura de skills. |
-| meta_skill_creator.md | Fábrica agéntica para la creación de nuevas Meta-Skills. |
-| monitor_bg.md | Monitoreo y control de tareas ejecutadas en segundo plano. |
 | phased_project_executor.md | Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI. |
-| seo_technical.md | Auditoría técnica y aceleración de credibilidad web para hoteles. |
-| truth_protocol.md | Validar y certificar la veracidad de los datos financieros de un hotel antes de emitir un diagnóstico. |
-| v4_asset_conditional.md | Generate assets conditionally based on preflight checks and confidence gates. |
-| v4_complete.md | Complete v4.0 workflow - Two-phase onboarding with validation, scenarios, and conditional asset generation. |
-| v4_financial_scenarios.md | Calculate financial scenarios (Conservative, Realistic, Optimistic) using v4.0 financial engine. |
-| v4_quality_validator.md | Validador integral de calidad del flujo v4. Fase A (pre-generación): coherencia estructural. Fase B (post-entrega): QA de entregables. |
-| v4_regional_resolver.md | Resolve regional ADR and benchmarks using plan_maestro_data.json with Agent Harness. |
-| v4_regression_guardian.md | Ejecutor de validación post-implementación para el flujo v4complete. |
-| watchdog_check.md | Escáner de vigilancia ligera y alertas de anomalías. |
 
 
 ## Estado de Datos
@@ -39,12 +24,12 @@
 | Metrica | Valor |
 |---------|-------|
 | Shadow logs | 1190 archivos JSON |
-| Sesiones activas | 10 |
+| Sesiones activas | 14 |
 | Sesiones archivadas | 6 |
 | Ultimo shadow log | 20260821_221232_45465863.json |
-| Ultima sesion activa | 2026-08-24_e2ac4837.json |
-| Ultimo contexto actualizado | 2026-08-24T16:33:42.245827+00:00 |
-| Ultima URL procesada | https://zione.co/ |
+| Ultima sesion activa | 2026-08-28_e07f774e.json |
+| Ultimo contexto actualizado | 2026-08-29T00:17:33.326050+00:00 |
+| Ultima URL procesada | https://www.hotelsalentoreal.com/ |
 
 ## Config Files (9/9 healthy)
 

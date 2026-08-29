@@ -17,7 +17,7 @@
 | FASE-SR-H | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 8) | ~20 | SÍ (v4complete) |
 | FASE-SR-H2 | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 9) | ~25 | fix directo + corrida DELEGADA (D-PF7) |
 | FASE-SR-VERIFY | ✅ COMPLETADA | 2026-08-28 | agente (Sesión 10) | ~40 | NO (§4.6) |
-| FASE-RELEASE-4.73.0 | ⏳ PENDIENTE | — | — | — | opcional |
+| FASE-RELEASE-4.73.0 | ✅ COMPLETADA | 2026-08-28 | 11 archivos + evidence/FASE-RELEASE/ | documental | opcional |
 
 ## Criterios por Fase (marcar ✅ al cerrar)
 
@@ -92,13 +92,13 @@
 - [x] `log_phase_completion.py --fase FASE-VERIFY` (SIN --release) + `run_all_validations.py --quick` — REGISTRY.md actualizado, audit sin gaps; quick 6/6 TOTAL PASS (T3, `evidence/FASE-VERIFY/validaciones_quick.txt`)
 
 ### FASE-RELEASE-4.73.0 — Cierre
-- [ ] E1: version_consistency_checker + doctor sin errores
-- [ ] E2: sync_versions.py ejecutado (6 archivos)
-- [ ] E3: CHANGELOG `[4.73.0]` formato CONTRIBUTING (Objetivo/Cambios/Nuevos/Modificados/Tests)
-- [ ] E4: GUIA_TECNICA "Notas de Cambios v4.73.0"
-- [ ] E5: skills/workflows listados sin huérfanos
-- [ ] E6: SYSTEM_STATUS.md regenerado
-- [ ] E7: DOMAIN_PRIMER regenerado + `doctor.py --context`
-- [ ] E8: symlink intacto + `run_all_validations.py --quick` TOTAL PASS
-- [ ] E8b: README audit (test count vs `pytest --collect-only`, module count, fecha)
-- [ ] `log_phase_completion.py --fase FASE-RELEASE-4.73.0` (marker release) + Version Sync Gate OK
+- [x] E1: version_consistency_checker + doctor sin errores
+- [x] E2: sync_versions.py ejecutado (6 archivos)
+- [x] E3: CHANGELOG `[4.73.0]` formato CONTRIBUTING (Objetivo/Cambios/Nuevos/Modificados/Tests)
+- [x] E4: GUIA_TECNICA "Notas de Cambios v4.73.0"
+- [x] E5: skills/workflows listados sin huérfanos
+- [x] E6: SYSTEM_STATUS.md regenerado
+- [x] E7: DOMAIN_PRIMER regenerado + `doctor.py --context`
+- [x] E8: symlink intacto + `run_all_validations.py --quick` TOTAL PASS
+- [x] E8b: README audit (test count vs `pytest --collect-only`, module count, fecha) — corregido a 3,621 tests / 207 modules / 29 scripts / 57 test dirs / phased v2.16.0
+- [x] `log_phase_completion.py --fase FASE-RELEASE-4.73.0 --release 4.73.0` + Version Sync Gate OK

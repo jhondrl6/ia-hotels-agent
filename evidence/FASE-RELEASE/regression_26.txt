@@ -1,0 +1,66 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 26 items
+
+tests/regression/test_fase3_guardrails_integration.py::TestPhase3Integration::test_end_to_end_valid_data PASSED [  3%]
+tests/regression/test_fase3_guardrails_integration.py::TestPhase3Integration::test_end_to_end_blocked_by_defaults PASSED [  7%]
+tests/regression/test_fase3_guardrails_integration.py::TestPhase3Integration::test_end_to_end_blocked_by_coherence PASSED [ 11%]
+tests/regression/test_fase3_guardrails_integration.py::TestHotelVisperasRegression::test_visperas_blocked_by_coherence PASSED [ 15%]
+tests/regression/test_fase3_guardrails_integration.py::TestHotelVisperasRegression::test_visperas_blocked_by_defaults PASSED [ 19%]
+tests/regression/test_fase3_guardrails_integration.py::TestHotelVisperasRegression::test_visperas_complete_flow_blocked PASSED [ 23%]
+tests/regression/test_fase3_guardrails_integration.py::TestHotelVisperasRegression::test_visperas_no_financial_projection PASSED [ 26%]
+tests/regression/test_fase3_guardrails_integration.py::TestPhase3AcceptanceCriteria::test_occupancy_rate_zero_blocks PASSED [ 30%]
+tests/regression/test_fase3_guardrails_integration.py::TestPhase3AcceptanceCriteria::test_direct_channel_zero_blocks PASSED [ 34%]
+tests/regression/test_fase3_guardrails_integration.py::TestPhase3AcceptanceCriteria::test_adr_cop_zero_blocks PASSED [ 38%]
+tests/regression/test_fase3_guardrails_integration.py::TestPhase3AcceptanceCriteria::test_coherence_below_0_8_blocks_certified PASSED [ 42%]
+tests/regression/test_fase3_guardrails_integration.py::TestPhase3AcceptanceCriteria::test_descriptive_error_messages PASSED [ 46%]
+tests/regression/test_hotel_visperas_conflicts.py::test_visperas_whatsapp_conflict_detected PASSED [ 50%]
+tests/regression/test_hotel_visperas_conflicts.py::test_visperas_gbp_conflict_detected PASSED [ 53%]
+tests/regression/test_hotel_visperas_conflicts.py::test_visperas_no_false_positives PASSED [ 57%]
+tests/regression/test_hotel_visperas_conflicts.py::test_visperas_whatsapp_number_mismatch PASSED [ 61%]
+tests/regression/test_hotel_visperas_conflicts.py::test_visperas_assessment_blocked_export PASSED [ 65%]
+tests/regression/test_hotel_visperas_conflicts.py::test_visperas_consistency_report PASSED [ 69%]
+tests/regression/test_schema_confusion.py::TestSchemaConfusion::test_schema_hotel_correctly_identified PASSED [ 73%]
+tests/regression/test_schema_confusion.py::TestSchemaConfusion::test_schema_missing_critical_fields_detected PASSED [ 76%]
+tests/regression/test_schema_confusion.py::TestSchemaConfusion::test_schema_coverage_calculation PASSED [ 80%]
+tests/regression/test_schema_confusion.py::TestSchemaConfusion::test_schema_postalcode_optional_handling PASSED [ 84%]
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_web_vs_gbp_conflict_detected PASSED [ 88%]
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_consistent_across_sources PASSED [ 92%]
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_schema_extraction PASSED [ 96%]
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_verified_status_assigned PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_web_vs_gbp_conflict_detected
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_web_vs_gbp_conflict_detected
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_consistent_across_sources
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_schema_extraction
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_verified_status_assigned
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\main.py:250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 26 passed, 13 warnings in 1.06s =======================

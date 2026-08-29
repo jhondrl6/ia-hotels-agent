@@ -1,10 +1,18 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.72.2"
-codename: "Limpieza de Skills"
-release_date: "2026-08-24"
+version: "4.73.0"
+codename: "Reparacion-Pipeline-Salento-Real"
+release_date: "2026-08-28"
 plan_maestro_version: "v2.6.0"
 
+# v4.73.0 - REPARACION-PIPELINE-SALENTO-REAL (2026-08-28)
+# Pipeline fixes Salento Real (SR-A..SR-G) verificados en E2E (VERIFY) + SR-H2 hotfix critical_recall.
+# unification conteo unresolved (SR-A); promesa fuente unica (SR-B); self-healing claims (SR-C);
+# target_id canonico via _normalize_url (SR-D); fix deteccion schema JSON-LD array + contabilizacion
+# presencia unica exists_with_issues (SR-E); sondas URL ancladas al origen (SR-F); glosario unico
+# jerga + tier canonico (SR-G); semantica critical_recall vacio!=ausente (SR-H2).
+# 0 regresiones; Coherence 0.88; READY_FOR_PUBLICATION en corrida H2 (AC11). Sin cambios de logica core.
+#
 # v4.72.2 - LIMPIEZA-DE-SKILLS (2026-08-24)
 # Archivado de 16 workflows sin uso en archives/deprecated_workflows_20260824/:
 # - Familia v4_* (6 .md + 1 .py): funcionalidad ya vive en codigo (main.py v4complete,

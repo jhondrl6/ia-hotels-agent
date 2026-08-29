@@ -1,5 +1,91 @@
 # Changelog
 
+## [4.73.0] - Reparación Pipeline Salento Real — 2026-08-28
+
+### Objetivo
+
+Publicar la versión 4.73.0 con los pipeline fixes SR-A…SR-G (más hotfix SR-H2) verificados en E2E (FASE-SR-VERIFY: AC1-AC13 = 13/13 superados). Corrección de la divergencia estructural del pipeline de Salento Real: conteo de servicios no resueltos, promesa de servicios, self-healing de claims, identidad canónica de target_id, detección de schema JSON-LD, sondas URL ancladas al origen, glosario único de jerga, y semántica de `critical_recall`. Plan: SR-PIPELINE-FIXES-2026-08-27.
+
+### Cambios
+
+- `modules/quality_gates/alignment_result.py` — `AlignmentResult.compute_unresolved()` como helper único (fin de divergencia 4-vs-1); `AlignmentResult` con cálculo canónico `_from_entries`; propiedad `actionable_total` (SR-A/SR-B)
+- `modules/quality_gates/publication_gates.py` — consumo del helper único; `no_breach` excluido del conteo (SR-A/SR-B); `_extract_critical_recall` distingue lista crítica VACÍA con audit ejecutado (1.0 favorable) de dato AUSENTE (None → BLOCKED real, L-SR5) (SR-H2)
+- `modules/quality_gates/delivery_quality_report.py` — G9 consume helper único de conteo (SR-A)
+- `modules/commercial_documents/v4_proposal_generator.py` — promesas derivadas del `pain_ledger` (fuente única, D-PF1); `apply_glossary` post-render (SR-B/SR-G)
+- `modules/asset_generation/proposal_asset_alignment.py` — taxonomía única / `committed_services` como fuente canónica (SR-B); contabilización única `exists_with_issues` = `present_in_production` (SR-E)
+- `modules/quality_gates/commercial_gate.py` — `ClaimSelfHealer` (auto-regeneración + re-validación con la misma closure, máx 1 reintento); `_check_tech_jargon` consume glosario único (SR-C/SR-G)
+- `modules/quality_gates/claim_self_healing.py` — NUEVO: `ClaimSelfHealer` (404 líneas), cierra el ciclo CG-CLAIM-VS-EVIDENCE (SR-C)
+- `main.py` — `canonical_url = _normalize_url(args.url)` como primer paso de `run_v4_complete_mode`; target_id canónico en 3 call sites de memoria; execute y validate-guarantee derivan id desde la canónica (SR-D)
+- `modules/orchestration_v4/onboarding_controller.py` — `generate_hotel_id` normaliza vía urlparse (SR-D)
+- `modules/data_validation/external_apis/rich_results_client.py` + `modules/auditors/v4_comprehensive.py` + `modules/asset_generation/site_presence_checker.py` — parser JSON-LD ARRAY; `error_message` propagado al audit; criterio canónico de presencia `exists_with_issues` (SR-E)
+- `modules/auditors/ai_crawler_auditor.py` + `modules/auditors/v4_comprehensive.py` + `modules/asset_generation/site_presence_checker.py` — sondas robots.txt/llms.txt ancladas al ORIGEN (urlparse, sin query UTM) (SR-F)
+- `modules/commercial_documents/tech_jargon_glossary.py` — NUEVO: glosario único jerga→negocio (fuente única L27) (SR-G)
+- `modules/commercial_documents/coherence_validator.py` + `modules/commercial_documents/v4_diagnostic_generator.py` — `_extract_text_tier` canónico (solo tokens `[A-D][+]?`); `apply_glossary` post-render (SR-G)
+- `tests/test_target_id_canonicalization.py` — 28 tests anti-fragmentación + guardián estático (SR-D)
+- `tests/commercial_documents/test_tech_jargon_glossary.py` — 14 tests de fuente única gate↔glosario (SR-G)
+- `tests/quality_gates/test_extractors_simplified.py` + `tests/quality_gates/test_publication_gates.py` — contratos `critical_recall` (vacío+audit=1.0; vacío+sin audit=BLOCKED) (SR-H2)
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/quality_gates/claim_self_healing.py` | `ClaimSelfHealer`: cierra CG-CLAIM-VS-EVIDENCE vía regeneración trazable + re-validación (SR-C) |
+| `modules/commercial_documents/tech_jargon_glossary.py` | Glosario único jerga→negocio: detección + mapeo + patrón compartido + traducción idempotente (SR-G) |
+| `tests/test_target_id_canonicalization.py` | 28 tests de canonicalización target_id + guardián estático de call sites (SR-D) |
+| `tests/commercial_documents/test_tech_jargon_glossary.py` | 14 tests de fuente única gate↔glosario (SR-G) |
+| `tests/auditors/test_fase_sr_f_probe_url_canonicalization.py` | 15 tests de determinismo de sondas ancladas al origen (SR-F) |
+| `tests/data_validation/test_fase_sr_e_schema_detection.py` | 11 tests de detección schema JSON-LD array + contabilización única (SR-E) |
+| `tests/asset_generation/test_fase_sr_e_presence_accounting.py` | 20 tests de contabilización única de presencia (SR-E) |
+| `tests/commercial_documents/test_diagnostic_generator.py` | `TestFugasPrincipalesDinamicas` verifica texto publicado post-glosario (SR-G) |
+| `tests/quality_gates/test_commercial_gate.py` | 4 tests regresión corrida C en `TestExtractTextTier` + `test_lowercase_tier` al contrato L30 (SR-G) |
+| `tests/test_main_static_guards.py` | Guardián AST anti-símbolos no definidos en ramas no ejercitadas de main.py (SR-A) |
+| `tests/quality_gates/test_alignment_contract.py` | 10 tests de contrato promesa/matriz/gate (SR-B) |
+| `tests/quality_gates/test_claim_self_healing.py` | 20 tests del ciclo de self-healing (SR-C) |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | 4.72.2 → 4.73.0 + bloque de historial |
+| `AGENTS.md` | Header versión 4.73.0 + badge + tabla de workflows/estado |
+| `README.md` | Header versión 4.73.0 + badge |
+| `.cursorrules` | Header versión 4.73.0 |
+| `docs/CONTRIBUTING.md` | Header versión 4.73.0 |
+| `docs/GUIA_TECNICA.md` | Header 4.73.0 + nota técnica de fase |
+| `modules/quality_gates/alignment_result.py` | `compute_unresolved` + cálculo canónico `_from_entries` + `actionable_total` |
+| `modules/quality_gates/publication_gates.py` | consumo helper único; exclusión `no_breach`; `_extract_critical_recall` semántica vacío≠ausente (SR-H2) |
+| `modules/quality_gates/delivery_quality_report.py` | G9 consume helper único |
+| `modules/commercial_documents/v4_proposal_generator.py` | promesas desde pain_ledger; `apply_glossary` post-render |
+| `modules/asset_generation/proposal_asset_alignment.py` | taxonomía única; `committed_services` canónico; presencia única |
+| `modules/quality_gates/commercial_gate.py` | `ClaimSelfHealer` + `_check_tech_jargon` glosario único |
+| `main.py` | canonicalización target_id vía `_normalize_url` |
+| `modules/orchestration_v4/onboarding_controller.py` | `generate_hotel_id` normaliza vía urlparse |
+| `modules/data_validation/external_apis/rich_results_client.py` | parser JSON-LD array + `error_message` |
+| `modules/auditors/v4_comprehensive.py` | sondas llms.txt ancladas al origen; detección schema array |
+| `modules/asset_generation/site_presence_checker.py` | `_check_direct_resource` anclada al origen; presencia única |
+| `modules/auditors/ai_crawler_auditor.py` | sonda robots.txt anclada al origen |
+| `modules/commercial_documents/coherence_validator.py` | `_extract_text_tier` canónico |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | `apply_glossary` post-render + `_extract_text_tier` canónico |
+| `modules/commercial_documents/pain_solution_mapper.py` | falso pain eliminado (SR-E) |
+
+### Tests
+
+- Tests nuevos SR-A…SR-H2: 6 + 10 + 20 + 28 + 31 + 15 + 18 + 4 = 132 tests nuevos de contrato/regresión
+- Suite completa: 3,621 funciones (3,379 baseline + 132 SR + tests de planes posteriores); guardián estático 3/3 + regresión 26/26 (FASE-VERIFY)
+- 0 regresiones funcionales (FASE-VERIFY): diff baseline C → SR-H2 confirma 17 dimensiones sin retroceso
+- Validaciones: `run_all_validations.py --quick` 6/6 TOTAL PASS; `validate_agents_md.py` PASS; `validate_document_integration.py` PASS
+- E2E: v4complete Hotel Salento Real (corrida H2) — Coherence 0.88, 13/13 gates PASSED, READY_FOR_PUBLICATION (AC11)
+
+### E2E Validation
+
+- Hotel: Hotel Salento Real (https://www.hotelsalentoreal.com/) — corrida H2 post-hotfix
+- Coherence: 0.88 (baseline 0.8644); Consistency: 0.80, 0 conflictos; unresolved 0=0 (AC3)
+- Gates: 13/13 PASSED (critical_recall PASSED 1.0 con `recall_basis=audit_present_no_critical_issues`); readiness READY_FOR_PUBLICATION (AC11)
+- Financiera idéntica al baseline: $6,571,622.4 / $4,042,752.0 / $1,264,435.2 (AC10)
+- `no_hotel_schema` falso → ausente con 8 schemas verificados; target_id con UTM → canónico + lookup cross-run H2→SR-H (AC12)
+
+---
+
 ## [4.72.2] - Limpieza de Skills — 2026-08-24
 
 ### Objetivo

@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.72.2 | **Codename**: Limpieza de Skills
-> **Release date**: 2026-08-24 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.73.0 | **Codename**: Reparacion-Pipeline-Salento-Real
+> **Release date**: 2026-08-28 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-08-28 | v4.72.2 Limpieza de Skills*
+*Auto-generado: 2026-08-29 | v4.73.0 Reparacion-Pipeline-Salento-Real*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
