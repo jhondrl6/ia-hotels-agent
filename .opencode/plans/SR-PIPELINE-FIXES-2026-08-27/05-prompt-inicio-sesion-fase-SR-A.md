@@ -15,7 +15,7 @@
 
 ## Contexto
 
-**Lectura previa obligatoria**: `.opencode/context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md` (§4.3, §9 #9, §9.5.2 N1) + `01-plan-maestro.md` de este plan (§8 Restricciones) + `10-analisis-post-implementacion.md` (lecciones capitalizadas).
+**Lectura previa obligatoria**: `/.opencode/context/Historico/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md` (§4.3, §9 #9, §9.5.2 N1) + `01-plan-maestro.md` de este plan (§8 Restricciones) + `10-analisis-post-implementacion.md` (lecciones capitalizadas).
 
 ### Estado de Fases Anteriores
 | Fase | Estado |

@@ -36,7 +36,7 @@
 
 ## Contexto Fuente
 
-- `.opencode/context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md` — 6 hallazgos + N1-N4 + recomendaciones #1-#11, re-validados contra código vivo (2026-08-27). **Lectura previa obligatoria de toda fase.**
+- `/.opencode/context/Historico/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md` — 6 hallazgos + N1-N4 + recomendaciones #1-#11, re-validados contra código vivo (2026-08-27). **Lectura previa obligatoria de toda fase.**
 - Lecciones fuente: `.opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/10-analisis-post-implementacion.md` (L-NC1–L-NC12).
 
 ## Reglas Clave del Plan
