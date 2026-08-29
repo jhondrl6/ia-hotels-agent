@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.73.0** -- Reparacion-Pipeline-Salento-Real | Actualizado 28 Agosto 2026 | 3,621 pruebas automatizadas | 0 errores conocidos
+**v4.73.0** -- Reparacion-Pipeline-Salento-Real | Actualizado 29 Agosto 2026 | 3,631 pruebas automatizadas | 0 errores conocidos
 
 ---
 
@@ -23,11 +23,11 @@
 
 ## Estado del Proyecto (v4.73.0 -- Reparacion-Pipeline-Salento-Real)
 
-- **3,621 test functions** — suite completa, 0 regresiones
-- **207 archivos Python en modules/** (~78K lineas, 24 directorios) + **29 scripts** (~7.2K lineas) + **57 directorios de test**
+- **3,631 test functions** — suite completa, 0 regresiones
+- **207 archivos Python en modules/** (~78K lineas, 24 directorios) + **30 scripts** (~7.6K lineas) + **57 directorios de test**
 - **9 config YAML** con schema validado
 - **1 agent skill** en `.agents/workflows/` (phased_project_executor) + README.md
-- **13 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, pricing_compliance (blocking); content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency (advisory)
+- **13 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, doc_audit_consistency (modo WARNING), pricing_compliance (blocking); content_quality, asset_confidence, proposal_asset_alignment (advisory)
 - **Coherence Score >= 0.8** requerido para publicacion
 - **25 assets** en catalogo (22 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
 - **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
@@ -239,12 +239,13 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 ## Calidad Garantizada
 
-- **3,621 test functions** — suite completa, 0 regresiones
+- **3,631 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
-- **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, secrets, residual files)
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.16.0 (1 fase/sesion, max 60 iteraciones)
+- **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, agent-ecosystem, secrets, residual files, referencias .opencode con auto-fix)
+- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.17.0 (1 fase/sesion, max 60 iteraciones)
+- **Capitalizacion de Lecciones** — cada plan recupera la experiencia de planes anteriores (memoria del agente + QMind `iah-cli-lecciones`) antes de planificar y escribe sus lecciones nuevas al cerrar cada fase
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
-- **13 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, pricing_compliance (blocking); content_quality, asset_confidence, proposal_asset_alignment, doc_audit_consistency (advisory)
+- **13 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, doc_audit_consistency (modo WARNING), pricing_compliance (blocking); content_quality, asset_confidence, proposal_asset_alignment (advisory)
 - **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
 
 ---
@@ -296,15 +297,16 @@ iah-cli/
     providers/                #   Providers LLM y API
     utils/                    #   Utilidades compartidas
     validation/               #   Validacion de outputs
-  tests/                      # ~74K lineas de test (280 archivos, 57 directorios)
+  tests/                      # ~74K lineas de test (281 archivos, 57 directorios)
     config/                   #   61 tests de migracion YAML
     financial_engine/         #   Tests de motor financiero
     commercial_documents/     #   Tests de documentos comerciales
-  scripts/                    # 29 scripts de automatizacion
+  scripts/                    # 30 scripts de automatizacion
     sync_versions.py          #   Sincronizacion versiones
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
     run_all_validations.py    #   Suite de validaciones
+    validate_opencode_refs.py #   Referencias .opencode validas (auto-fix)
   .agents/workflows/          # Agent skills (phased_project_executor + README)
   .opencode/plans/            # Planes de fases (phased execution)
   evidence/                   # Evidencia de fases ejecutadas
