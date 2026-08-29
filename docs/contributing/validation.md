@@ -11,9 +11,16 @@ El sistema utiliza pre-commit hooks + Validation Engine nativo.
 ### Instalacion (una vez)
 
 ```bash
+# Hooks activos del proyecto (version consistency + sync + referencias .opencode auto-fix)
+python scripts/install_git_hooks.py
+
+# Stack completo opcional (black, ruff, pytest-v4, etc. — ver .pre-commit-config.yaml)
 pip install pre-commit
 pre-commit install
 ```
+
+> Nota: `pre-commit install` reemplaza el hook custom en `.git/hooks/pre-commit`.
+> Para restaurar el hook del proyecto ejecutar de nuevo `python scripts/install_git_hooks.py`.
 
 ### Antes de cada commit
 

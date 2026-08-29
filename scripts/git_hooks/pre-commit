@@ -1,0 +1,100 @@
+#!/bin/bash
+# Pre-commit hook - IA Hoteles Agent
+# Versionado en scripts/git_hooks/ — instalar con: python scripts/install_git_hooks.py
+#
+# Checks:
+#   [1/3] Version consistency (version_consistency_checker.py)
+#   [2/3] File synchronization (sync_versions.py --check)
+#   [3/3] Referencias .opencode (validate_opencode_refs.py --fix, auto-fix)
+#
+# Si detecta gaps, el commit es bloqueado (salvo --no-verify, NO recomendado).
+
+set -e
+
+echo ""
+echo "========================================"
+echo "Pre-Commit Hook - IA Hoteles Agent"
+echo "========================================"
+echo ""
+
+# Detectar Python CON las dependencias del proyecto (python3 de Git Bash no las tiene)
+PYTHON_CMD=""
+for candidate in python3 python; do
+    if command -v "$candidate" &> /dev/null && "$candidate" -c "import yaml" &> /dev/null; then
+        PYTHON_CMD="$candidate"
+        break
+    fi
+done
+
+if [ -z "$PYTHON_CMD" ]; then
+    echo "WARN: no se encontro un Python con las dependencias del proyecto, se omiten los checks"
+    exit 0
+fi
+
+# [1/3] Version consistency
+echo "[1/3] Checking version consistency..."
+CHECKER_OUT=$($PYTHON_CMD scripts/version_consistency_checker.py --verbose 2>&1) || CHECKER_EXIT=$?
+echo "$CHECKER_OUT" | head -30
+
+if [ "${CHECKER_EXIT:-0}" -ne 0 ]; then
+    echo ""
+    echo "FAIL: Version consistency check FAILED"
+    echo ""
+    echo "El commit ha sido BLOQUEADO por inconsistencias en la documentacion."
+    echo ""
+    echo "Para resolver:"
+    echo "  1. python scripts/version_consistency_checker.py --fix"
+    echo "  2. python scripts/sync_versions.py"
+    echo "  3. git add -A && git commit"
+    echo ""
+    echo "O para forzar el commit (NO RECOMENDADO):"
+    echo "  git commit --no-verify"
+    echo ""
+    exit 1
+fi
+
+echo "[1/3] OK: Version consistency PASSED"
+
+# [2/3] File synchronization
+echo "[2/3] Checking file synchronization..."
+SYNC_OUT=$($PYTHON_CMD scripts/sync_versions.py --check 2>&1) || SYNC_EXIT=$?
+echo "$SYNC_OUT" | grep -E "(OK|FAIL|WARN)" | head -20 || true
+
+if [ "${SYNC_EXIT:-0}" -ne 0 ]; then
+    echo ""
+    echo "FAIL: File synchronization check FAILED"
+    echo ""
+    echo "Ejecuta: python scripts/sync_versions.py"
+    echo "O fuerza con: git commit --no-verify"
+    echo ""
+    exit 1
+fi
+
+echo "[2/3] OK: Files synchronized"
+
+# [3/3] Referencias .opencode (auto-fix)
+echo "[3/3] Checking .opencode references..."
+REFS_OUT=$($PYTHON_CMD scripts/validate_opencode_refs.py --fix 2>&1) || REFS_EXIT=$?
+echo "$REFS_OUT"
+
+if echo "$REFS_OUT" | grep -q " \[FIX\] "; then
+    echo ""
+    echo "FAIL: referencias .opencode reparadas automaticamente."
+    echo "Re-stage los archivos modificados (git add) y re-commit."
+    echo ""
+    exit 1
+elif [ "${REFS_EXIT:-0}" -ne 0 ]; then
+    echo ""
+    echo "FAIL: referencias .opencode irreparables (ver reporte arriba)."
+    echo "Resuelve manualmente o congela con --write-baseline si son historicas."
+    echo ""
+    exit 1
+fi
+
+echo "[3/3] OK: OpenCode references PASSED"
+
+echo ""
+echo "========================================"
+echo "All checks PASSED - Commit allowed"
+echo "========================================"
+echo ""

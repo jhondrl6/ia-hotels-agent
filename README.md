@@ -241,7 +241,7 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 - **3,631 test functions** — suite completa, 0 regresiones
 - **61 config tests** — migracion YAML, fallback, schema, integracion
-- **Pre-commit hooks** — Validaciones automaticas en cada commit (version-sync, agent-ecosystem, secrets, residual files, referencias .opencode con auto-fix)
+- **Pre-commit hooks** — version-sync + referencias .opencode (auto-fix) enforcementadas en cada commit (`scripts/install_git_hooks.py`); stack completo declarado en `.pre-commit-config.yaml`
 - **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.17.0 (1 fase/sesion, max 60 iteraciones)
 - **Capitalizacion de Lecciones** — cada plan recupera la experiencia de planes anteriores (memoria del agente + QMind `iah-cli-lecciones`) antes de planificar y escribe sus lecciones nuevas al cerrar cada fase
 - **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
