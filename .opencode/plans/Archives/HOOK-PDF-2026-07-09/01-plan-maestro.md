@@ -5,7 +5,7 @@
 **Target version:** v4.49.0 (minor — nuevo comando `hook-pdf`)
 **Fecha creación:** 2026-07-09
 **Convención:** 1 fase por sesión
-**Fuente de autoridad:** `.opencode/context/MODULO-HOOK-PDF.md` (arquitectura) + `output/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md` (visual/estructural)
+**Fuente de autoridad:** `/.opencode/context/Historico/MODULO-HOOK-PDF.md` (arquitectura) + `output/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md` (visual/estructural)
 
 ---
 

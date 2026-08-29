@@ -158,6 +158,6 @@ Commit with message: "fix(delivery): P-01 README count post-manifest + P-07 enum
 ## Próxima Sesión
 
 ```
-Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
+Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
 Ejecuta FASE-B: 03-prompt-fase-B.md (P-02: exclusión mutua advisory sections)
 ```

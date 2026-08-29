@@ -70,6 +70,7 @@ class ValidationRunner:
         self._check_no_secrets()
         self._check_document_integration()
         self._check_prompts_no_release()
+        self._check_opencode_refs()
         
         if not self.quick:
             self._check_dependencies()
@@ -337,6 +338,41 @@ class ValidationRunner:
                 name="Prompts No Release",
                 passed=True,
                 message="No --release flag in intermediate prompts"
+            ))
+    
+    def _check_opencode_refs(self) -> None:
+        """Check that .opencode path references in Markdown docs still exist.
+
+        Catches forgotten reference updates after archiving plans (Archives/)
+        or contexts (Historico/). Repair manually with --fix on the script.
+        """
+        print("[7/?] Checking .opencode references...")
+        
+        script_path = ROOT_DIR / "scripts" / "validate_opencode_refs.py"
+        if not script_path.exists():
+            self.results.append(ValidationResult(
+                name="OpenCode References",
+                passed=False,
+                message="validate_opencode_refs.py not found"
+            ))
+            return
+        
+        exit_code, output = self._run_command([sys.executable, str(script_path)])
+        
+        if exit_code == 0:
+            self.results.append(ValidationResult(
+                name="OpenCode References",
+                passed=True,
+                message="All .opencode references exist"
+            ))
+        else:
+            lines = output.split('\n')
+            issues = [l.strip() for l in lines if '->' in l][:5]
+            self.results.append(ValidationResult(
+                name="OpenCode References",
+                passed=False,
+                message="Broken .opencode references (fix: scripts/validate_opencode_refs.py --fix)",
+                details=issues
             ))
     
     def _check_dependencies(self) -> None:

@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.73.0 (Reparacion-Pipeline-Salento-Real)
-**Última actualización:** 2026-08-28
+**Última actualización:** 2026-08-29
 
 ---
 

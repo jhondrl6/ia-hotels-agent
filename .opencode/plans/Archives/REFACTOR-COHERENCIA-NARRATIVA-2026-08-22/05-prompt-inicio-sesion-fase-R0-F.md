@@ -5,7 +5,7 @@
 **Dependencias**: FASE-R0-E ✅ (hard — verifica contra su output y evidencia).
 **Duración estimada**: 45 minutos
 **Skill**: phased_project_executor v2.15.0
-**Lectura previa obligatoria**: `.opencode/context/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §8 (AC1-AC12), §3 (lecciones aplicables), §11 (validación factual)
+**Lectura previa obligatoria**: `.opencode/context/Historico/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §8 (AC1-AC12), §3 (lecciones aplicables), §11 (validación factual)
 
 ---
 

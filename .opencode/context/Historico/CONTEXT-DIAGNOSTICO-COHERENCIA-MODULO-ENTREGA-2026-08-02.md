@@ -369,6 +369,6 @@ El §Sección F del 09-documentación confirma el mismo E2E que audité: run 202
    venv/Scripts/python.exe scripts/log_phase_completion.py --fase <N> --desc "<desc>" --tests <N> --archivos-mod <paths> --coherence <0-1> --release 4.70.0
    ```
    (Sin `--status`; `--release` sin prefijo "v"; Version Sync Gate compara CHANGELOG.md [X.Y.Z].)
-3. Antes de FASE-1: re-ejecutar baseline `v4complete --url https://zione.co/ --output output/baseline_d1d2` y guardar análisis en `.opencode/plans/context/` (o `Historico/`).
+3. Antes de FASE-1: re-ejecutar baseline `v4complete --url https://zione.co/ --output output/baseline_d1d2` y guardar análisis en `/.opencode/context/` (o `Historico/`).
 4. Cargar skills: `iah-cli-output-forensics`, `iah-cli-data-provenance-forensics`, `iah-cli-code-modification`, `iah-cli-execution-conventions`.
 5. Bloqueo externo conocido: en WSL, `rm`/`shutil.copy`/heredocs pueden ser bloqueados por el safety guard — usar write_file para inputs y rutas explícitas (ver skill `wsl-safety-guard-bypass`).

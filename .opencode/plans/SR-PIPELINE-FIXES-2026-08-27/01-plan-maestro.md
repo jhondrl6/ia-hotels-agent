@@ -5,7 +5,7 @@
 **Versión base**: v4.72.2 → **Versión objetivo**: v4.73.0 (minor — cambios funcionales en gates/propuesta/preflight)
 **Fuente de contexto**: `.opencode/context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md` (6 hallazgos + N1–N4, re-validados 6/6 contra código vivo el 2026-08-27)
 **Revisión causa-raíz**: 2026-08-28 — bucle de verificación contra código vivo, artefactos de corrida C y sitio vivo; H4/N4 RECLASIFICADOS (premisa original falsa), hallazgo H7 añadido, FASE-SR-E rediseñada (ver §1 y prompt SR-E)
-**Lecciones fuente**: `.opencode/plans/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/10-analisis-post-implementacion.md` (L-NC1–L-NC12) + lecciones nuevas L-SR1–L-SR5 del contexto
+**Lecciones fuente**: `.opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/10-analisis-post-implementacion.md` (L-NC1–L-NC12) + lecciones nuevas L-SR1–L-SR5 del contexto
 **Workflow rector**: `.agents/workflows/phased_project_executor.md` v2.16.0
 **Reglas mandatorias**: R1 (1 fase por sesión) · R2 (máx. 60 iteraciones por fase) · R3 (scope de fase)
 

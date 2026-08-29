@@ -6,7 +6,7 @@
 **Dependencias**: FASE-R0-A ✅ (soft: mismo archivo `.py`, zona distinta).
 **Duración estimada**: 60-90 minutos
 **Skill**: phased_project_executor v2.15.0
-**Lectura previa obligatoria**: `.opencode/context/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §2 (Bug 1, Bug 4), §4.1, §4.5, §6.3, §8 (AC1, AC3, AC4, AC7, AC9)
+**Lectura previa obligatoria**: `.opencode/context/Historico/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §2 (Bug 1, Bug 4), §4.1, §4.5, §6.3, §8 (AC1, AC3, AC4, AC7, AC9)
 
 ---
 

@@ -147,6 +147,6 @@ cd /mnt/c/Users/Jhond/Github/iah-cli
 ## Próxima Sesión
 
 ```
-Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
+Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
 Ejecuta FASE-F: 07-prompt-fase-F.md (v4complete Zi One + análisis post-implementación)
 ```

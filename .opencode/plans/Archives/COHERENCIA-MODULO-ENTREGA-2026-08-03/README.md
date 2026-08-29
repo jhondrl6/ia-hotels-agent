@@ -44,6 +44,6 @@
 
 ## Fuentes
 
-- Contexto: `.opencode/context/CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md`
+- Contexto: `/.opencode/context/Historico/CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md`
 - Baseline auditado: run 2026-08-01 (`output/v4_complete/`, ZIP zione_20260801)
 - Onboarding real: `output/clientes/zi-one-luxury_onboarding.yaml` (Tier A: 34 hab, 800 res/mes, ADR 290K, canal 40%)

@@ -184,6 +184,6 @@ Commit with message: "fix(delivery): P-02 advisory assets mutual exclusion in RE
 ## Próxima Sesión
 
 ```
-Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
+Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
 Ejecuta FASE-C: 04-prompt-fase-C.md (P-03 + P-05: quality report post-gen + G9 dead gate)
 ```

@@ -196,6 +196,6 @@ cd /mnt/c/Users/Jhond/Github/iah-cli
 ## Próxima Sesión
 
 ```
-Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
+Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
 Ejecuta FASE-D: 05-prompt-fase-D.md (P-04 + P-06: proposal_asset_matrix path + packaging)
 ```

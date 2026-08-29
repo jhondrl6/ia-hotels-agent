@@ -177,7 +177,7 @@ El cambio propuesto en el contexto sería un no-op y no debe implementarse.
 
 El archivo preservado demuestra que la reconciliación sí funcionó:
 
-`.opencode/plans/DT-4-ROOT-CAUSE-2026-07-25/evidence/pain_ledger_resolved.json`:
+`/.opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/pain_ledger_resolved.json`:
 
 ```json
 {
@@ -824,7 +824,7 @@ Usar este prompt en una NUEVA sesión. No implementar en la sesión de actualiza
 
 ```text
 Carga y ejecuta una auditoría de implementación sobre:
-/mnt/c/Users/Jhond/Github/iah-cli/.opencode/context/CONTEXT-DT4-RESIDUAL-FIXES.md
+/mnt/c/Users/Jhond/Github/iah-cli//.opencode/context/Historico/CONTEXT-DT4-RESIDUAL-FIXES.md
 
 El contexto ya fue validado contra el código vivo. NO asumas que DT4-R1 consiste en agregar MAPPED_TO_SERVICE: ese status ya existe en publication_gates.py.
 

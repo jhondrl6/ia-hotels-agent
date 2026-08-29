@@ -1,7 +1,7 @@
 # Plan: Coherencia Propuesta↔Diagnóstico + Gates + Entrega (RC1/RC2/RC3)
 
 **ID**: RC1-RC2-ENTREGA-COHERENTE-2026-08-04
-**Fuente**: `.opencode/context/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md`
+**Fuente**: `/.opencode/context/Historico/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md`
 **Skill rectora**: `.agents/workflows/phased_project_executor.md` v2.14.0 (R1/R2/R3 estrictas)
 **Versión actual**: 4.70.0 → **Release objetivo: 4.71.0**
 **Tests baseline**: 3,215 (pytest --collect-only, 2026-08-04)

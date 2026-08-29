@@ -42,7 +42,7 @@ FASE-2: Implementar `hook_pdf_generator.py` (clase HookPDFGenerator con extract/
 ```
 Goal: Eres un subagente trabajando en el repositorio iah-cli en /mnt/c/Users/Jhond/Github/iah-cli. Tu tarea es ejecutar FASE-1 del plan HOOK-PDF-2026-07-09.
 
-Contexto: Estás implementando un módulo generador de PDFs gancho de 2 páginas para hoteleros. El plan maestro está en .opencode/plans/HOOK-PDF-2026-07-09/01-plan-maestro.md. La especificación completa está en .opencode/context/MODULO-HOOK-PDF.md (arquitectura) y output/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md (visual).
+Contexto: Estás implementando un módulo generador de PDFs gancho de 2 páginas para hoteleros. El plan maestro está en /.opencode/plans/Archives/HOOK-PDF-2026-07-09/01-plan-maestro.md. La especificación completa está en /.opencode/context/Historico/MODULO-HOOK-PDF.md (arquitectura) y output/Recomendaciones/PROPUESTA_EMPAQUETADO_NO_TECNICO.md (visual).
 
 Tareas:
 1. Instalar dependencias: sudo apt install -y libpango-1.0-0 libcairo2 libgdk-pixbuf2.0-0 libffi-dev. Luego en el venv del proyecto: uv pip install weasyprint pyyaml. Verificar imports.

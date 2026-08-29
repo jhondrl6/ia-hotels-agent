@@ -102,7 +102,7 @@ obsoleto y confuso para futuros desarrolladores.
 ### Próxima sesión
 
 ```
-Carga y ejecuta .opencode/plans/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-6.md
+Carga y ejecuta /.opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-6.md
 ```
 
 Esa fase ejecuta v4complete para Hotel Castilla Real y realiza el análisis post-implementación.

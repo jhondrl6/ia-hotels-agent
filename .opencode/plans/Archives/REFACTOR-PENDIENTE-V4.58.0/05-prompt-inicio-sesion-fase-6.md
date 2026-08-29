@@ -170,7 +170,7 @@ verificar post-implementación que todos los 7 fixes se reflejan en el output re
 ### Próxima sesión
 
 ```
-Carga y ejecuta .opencode/plans/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-RELEASE.md
+Carga y ejecuta /.opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-RELEASE.md
 ```
 
 Esa fase ejecuta el cascade documental completo (REGISTRY, CHANGELOG, GUIA_TECNICA, sync).

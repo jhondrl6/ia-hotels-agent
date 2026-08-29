@@ -106,7 +106,7 @@ Este plan ejecuta 5 fases de implementación + RELEASE, priorizando el fix de ca
 ## Archivos del Plan
 
 ```
-.opencode/plans/DT-3-TECH-DEBT-2026-07-25/
+/.opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/
 ├── 01-plan-maestro.md                 ← ESTE ARCHIVO
 ├── 02-prompt-fase-0.md                ← Fix sistémico BUG-1
 ├── 03-prompt-fase-1.md                ← Fix G9 BUG-2 + BUG-3

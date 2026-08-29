@@ -11,7 +11,7 @@
 ## Contexto
 
 Plan: BUGFIX-LUXOR-2026-07-06 v4.60.1
-Contexto origen: `.opencode/context/bugs_no_onboarding_luxor_2026-07-06.md`
+Contexto origen: `/.opencode/context/Historico/bugs_no_onboarding_luxor_2026-07-06.md`
 
 El pipeline LLM tiene un modelo hardcoded (`google/gemini-2.0-flash-001`) que fue removido/renombrado en OpenRouter (404). El `provider_registry.yaml` ya declara `default_model: qwen/qwen3.6-plus:free` pero NO se usa — el modelo está hardcoded en el `.py`.
 

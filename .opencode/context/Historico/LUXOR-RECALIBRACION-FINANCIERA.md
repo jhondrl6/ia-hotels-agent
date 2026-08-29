@@ -519,7 +519,7 @@ hechos muy recurrentes."**
 
 Implicaciones:
   - **NO se reintentará la consolidación de memoria.** El archivo
-    `.opencode/context/LUXOR-RECALIBRACION-FINANCIERA.md` y el directorio
+    `/.opencode/context/Historico/LUXOR-RECALIBRACION-FINANCIERA.md` y el directorio
     `data/hotel_observations/README.md` son las fuentes durables de la
     lección Luxor.
   - **Memoria queda en su estado actual (7 entradas, 2,184/2,200 chars).**

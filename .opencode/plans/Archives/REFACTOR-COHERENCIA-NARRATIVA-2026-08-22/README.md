@@ -31,7 +31,7 @@
 
 ## Contexto Fuente
 
-- `.opencode/context/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — análisis completo validado contra código vivo (2026-08-22). **Lectura previa obligatoria de toda fase.**
+- `.opencode/context/Historico/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — análisis completo validado contra código vivo (2026-08-22). **Lectura previa obligatoria de toda fase.**
 
 ## Reglas Clave del Plan
 

@@ -55,7 +55,7 @@
 | v4complete ejecutado (exit_code=0, ~80s) | Zi One Luxury | FASE-6 |
 | Verificación 14 criterios | 7/13 PASSED, 5 FAILED (3 por bug de path), 1 WARNING | FASE-6 |
 | delegate_task viability | ✅ v4complete subagente exitoso (~3min total) | FASE-6 |
-| Archivos nuevos | 3 (.opencode/plans/DT4-RESIDUAL-FIXES/08-analisis-post-implementacion.md, evidence/FASE-6/ con 16 archivos, BLOCKED_BY_GATES.md) | FASE-6 |
+| Archivos nuevos | 3 (/.opencode/plans/Archives/DT4-RESIDUAL-FIXES/08-analisis-post-implementacion.md, evidence/FASE-6/ con 16 archivos, BLOCKED_BY_GATES.md) | FASE-6 |
 | **Fixes pendientes para RELEASE** | | |
 | Bug path pain_ledger_resolved | main.py:2690 — 1 línea (agregar `hotel_id /`) | FASE-6 |
 | Delivery report AlignmentResult | delivery_quality_report.py — consumir DTO canónico | FASE-6 |
@@ -72,7 +72,7 @@
 | `modules/quality_gates/publication_gates.py` | Refactor: `check_publication_readiness()` acepta `gate_results` opcional; backward-compat conservada | FASE-5 |
 | `main.py` | L2796: pasa `gate_results` a `check_publication_readiness()` — ejecución única | FASE-5 |
 | `tests/quality_gates/test_coverage_gate.py` | +3 tests de idempotencia (TestGateIdempotency class) | FASE-5 |
-| `.opencode/plans/DT4-RESIDUAL-FIXES/08-analisis-post-implementacion.md` | Análisis completo post-implementación (11KB, 8 secciones) | FASE-6 |
-| `.opencode/plans/DT4-RESIDUAL-FIXES/evidence/FASE-6/` | 16 archivos JSON de evidencia + BLOCKED_BY_GATES.md | FASE-6 |
-| `.opencode/plans/DT4-RESIDUAL-FIXES/06-checklist-implementacion.md` | Actualizado con FASE-6 status y log de cierres | FASE-6 |
-| `.opencode/plans/DT4-RESIDUAL-FIXES/09-documentacion-post-proyecto.md` | Este archivo — actualizado con FASE-6 | FASE-6 |
+| `/.opencode/plans/Archives/DT4-RESIDUAL-FIXES/08-analisis-post-implementacion.md` | Análisis completo post-implementación (11KB, 8 secciones) | FASE-6 |
+| `/.opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/` | 16 archivos JSON de evidencia + BLOCKED_BY_GATES.md | FASE-6 |
+| `/.opencode/plans/Archives/DT4-RESIDUAL-FIXES/06-checklist-implementacion.md` | Actualizado con FASE-6 status y log de cierres | FASE-6 |
+| `/.opencode/plans/Archives/DT4-RESIDUAL-FIXES/09-documentacion-post-proyecto.md` | Este archivo — actualizado con FASE-6 | FASE-6 |

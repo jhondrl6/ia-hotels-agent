@@ -70,10 +70,10 @@ Return the paths to all generated files and the exit code of v4complete.""",
 **2a. Guardar evidencia** (inmediatamente después de que el subagente complete):
 
 ```bash
-mkdir -p /mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/DT4-RESIDUAL-FIXES/evidence/FASE-6
-cp output/v4_complete/01_DIAGNOSTICO_*.md .opencode/plans/DT4-RESIDUAL-FIXES/evidence/FASE-6/
-cp output/v4_complete/02_PROPUESTA_*.md .opencode/plans/DT4-RESIDUAL-FIXES/evidence/FASE-6/
-cp output/v4_complete/zione/v4_audit/*.json .opencode/plans/DT4-RESIDUAL-FIXES/evidence/FASE-6/
+mkdir -p /mnt/c/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6
+cp output/v4_complete/01_DIAGNOSTICO_*.md /.opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/
+cp output/v4_complete/02_PROPUESTA_*.md /.opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/
+cp output/v4_complete/zione/v4_audit/*.json /.opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/
 ```
 
 **2b. Verificar 14 criterios** contra el output generado:
@@ -152,7 +152,7 @@ print("\n".join(f"{'✅' if r[2] else '❌'} {r[0]}: {r[1]}" for r in results))
 
 ### T3: Generar análisis post-implementación
 
-Crear archivo `.opencode/plans/DT4-RESIDUAL-FIXES/08-analisis-post-implementacion.md` con:
+Crear archivo `/.opencode/plans/Archives/DT4-RESIDUAL-FIXES/08-analisis-post-implementacion.md` con:
 
 ### 1. Execution Summary Table
 
@@ -223,7 +223,7 @@ Documentar:
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-6 \
     --desc "E2E-ZIONE: v4complete Zi One Luxury + verification 14 criterios + post-implementation analysis" \
-    --archivos-nuevos ".opencode/plans/DT4-RESIDUAL-FIXES/08-analisis-post-implementacion.md" \
+    --archivos-nuevos "/.opencode/plans/Archives/DT4-RESIDUAL-FIXES/08-analisis-post-implementacion.md" \
     --tests "N" \
     --check-manual-docs
 ```

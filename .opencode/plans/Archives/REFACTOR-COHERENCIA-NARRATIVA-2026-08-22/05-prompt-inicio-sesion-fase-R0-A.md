@@ -5,7 +5,7 @@
 **Dependencias**: Ninguna (primera fase del plan).
 **Duración estimada**: 30-45 minutos
 **Skill**: phased_project_executor v2.15.0
-**Lectura previa obligatoria**: `.opencode/context/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §2 (Bug 2), §4.2 (Fix propuesto), §8 (AC2, AC12)
+**Lectura previa obligatoria**: `.opencode/context/Historico/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §2 (Bug 2), §4.2 (Fix propuesto), §8 (AC2, AC12)
 
 ---
 

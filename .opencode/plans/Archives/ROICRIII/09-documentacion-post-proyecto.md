@@ -44,6 +44,6 @@
 | Archivo | Cambio | Fase |
 |---------|--------|------|
 | tests/test_asset_semantics_validator.py | Reescrito (9 tests: B1/B2/B6 semantics) | FASE-3 |
-| .opencode/plans/ROICRIII/dependencias-fases.md | FASE-3 marcada completada | FASE-3 |
-| .opencode/plans/ROICRIII/06-checklist-implementacion.md | FASE-3 verificaciones marcadas | FASE-3 |
+| /.opencode/plans/Archives/ROICRIII/dependencias-fases.md | FASE-3 marcada completada | FASE-3 |
+| /.opencode/plans/Archives/ROICRIII/06-checklist-implementacion.md | FASE-3 verificaciones marcadas | FASE-3 |
 | tests/commercial_documents/test_financial_coherence.py | Creado (6 tests: curva, ROI, net_benefit) | FASE-1 |

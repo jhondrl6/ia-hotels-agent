@@ -267,7 +267,7 @@ git commit -m "release: v4.63.1 — Delivery Contract cross-artifact consistency
 
 1. Leer la template:
 ```bash
-cat .opencode/plans/DT-1-DELIVERY-CONTRACT-2026-07-23/08-analisis-post-implementacion.md
+cat /.opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/08-analisis-post-implementacion.md
 ```
 
 2. Completar cada sección con datos reales de la ejecución:

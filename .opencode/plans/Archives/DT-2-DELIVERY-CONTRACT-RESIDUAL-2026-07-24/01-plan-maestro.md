@@ -8,7 +8,7 @@
 > **Datos reales**: `output/clientes/zi-one-luxury_onboarding.yaml`
 > **Severidad**: MEDIA-ALTA — no bloquea entrega, pero el "4/4 gates PASS" es factualmente incorrecto
 > **Fecha**: 2026-07-24
-> **Contexto fuente**: `.opencode/context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md`
+> **Contexto fuente**: `/.opencode/context/Historico/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md`
 
 ---
 
@@ -237,7 +237,7 @@ El análisis post-implementación (08-analisis-post-implementacion.md) incluirá
 ## 12. Estructura de Archivos del Plan
 
 ```
-.opencode/plans/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
+/.opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
 ├── README.md                           # Este índice
 ├── 01-plan-maestro.md                  # Plan maestro (este archivo)
 ├── 02-prompt-fase-A.md                 # P-01 + P-07: conteo README + string vs enum

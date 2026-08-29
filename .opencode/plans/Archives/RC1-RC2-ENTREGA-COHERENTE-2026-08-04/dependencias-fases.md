@@ -40,7 +40,7 @@ FASE-RELEASE-4.71.0 (requiere A-F ✅)
 | `main.py` (loader onboarding) | FASE-D (S7) | Ninguno |
 | `modules/financial_engine/harness_handlers.py` L118 (occupancy label) | FASE-D (S5) | Ninguno |
 | `pytest.ini` / `tests/_archived_broken_tests/` | FASE-A | Ninguno |
-| `.opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/*` | FASE-E | Ninguno (solo MD) |
+| `/.opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/*` | FASE-E | Ninguno (solo MD) |
 | `scripts/run_all_validations.py` | FASE-E (nuevo check `_check_prompts_no_release`) | Ninguno (solo E; stdlib-only, sin imports del proyecto) |
 | CHANGELOG / VERSION / GUIA_TECNICA / AGENTS | FASE-RELEASE | Ninguno (solo RELEASE edita versión) |
 | `tests/commercial_documents/test_*propuesta*` | FASE-B (nuevos), FASE-A (triage) | A aisla patológicos ANTES de que B agregue tests → sin conflicto por orden |
@@ -181,7 +181,7 @@ No hay dos fases tocando el mismo archivo.
 ## Notas FASE-E
 
 ### Cambios implementados (2026-08-05)
-- `.opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/0{2,3,4,5}-prompt-*.md`:
+- `/.opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/0{2,3,4,5}-prompt-*.md`:
   - Eliminado `--release 4.70.0` de los 4 prompts intermedios (R3.1).
   - Añadida nota "⚠️ NO usar `--release` en fases intermedias (L3/L9) — solo en FASE-RELEASE".
   - Verificación: grep `log_phase_completion.*--release` en los 4 archivos → 0 hits.
@@ -189,7 +189,7 @@ No hay dos fases tocando el mismo archivo.
   - Nuevo método `_check_prompts_no_release()`: escanea `0[2-5]-prompt*.md` en `.opencode/plans/` buscando `--release` en comandos `log_phase_completion.py`. Excluye Archives, RELEASE, y referencias documentales.
   - Registrado en `run_all()` tras `_check_document_integration` (ejecuta en `--quick`).
   - Verificación: `run_all_validations.py --quick` → 6/6 TOTAL PASS.
-- `.opencode/plans/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/09-documentacion-post-proyecto.md`:
+- `/.opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/09-documentacion-post-proyecto.md`:
   - Conteos fuente viva: 205 .py, 391 clases, 27 dirs __init__, 3,227 tests collected.
   - Lista D3 completa (8 valores, incluye 2º $1,198,906 de low_seo_score).
 - `evidence/N3-diff/`: 14 JSON del run 123637 preservados + README (diff 97 líneas no reproducible).

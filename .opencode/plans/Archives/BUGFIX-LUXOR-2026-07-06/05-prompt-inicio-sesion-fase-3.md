@@ -11,7 +11,7 @@
 ## Contexto
 
 Plan: BUGFIX-LUXOR-2026-07-06 v4.60.1
-Contexto origen: `.opencode/context/bugs_no_onboarding_luxor_2026-07-06.md`
+Contexto origen: `/.opencode/context/Historico/bugs_no_onboarding_luxor_2026-07-06.md`
 
 El content scrubber en FASE 3.6 corre antes de que los documentos existan, produciendo warnings `[SKIP]`. Los scrubs reales ocurren post-T4FIX y post-gen. FASE 3.6 es dead code efectivo.
 

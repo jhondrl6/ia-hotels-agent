@@ -55,6 +55,16 @@ repos:
         stages: [pre-commit]
         always_run: true
 
+      # Auto-fix .opencode path references after archiving (black/ruff pattern:
+      # modifies files on first commit attempt; re-commit passes)
+      - id: opencode-refs
+        name: OpenCode References (plans/context)
+        entry: python scripts/validate_opencode_refs.py --fix
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+        always_run: true
+
       # Validate Plan Maestro coherence
       - id: validate-plan
         name: Validate Plan Maestro

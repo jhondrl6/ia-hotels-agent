@@ -91,7 +91,7 @@ Resolver 2 gaps de bajo esfuerzo:
 ### Próxima sesión
 
 ```
-Carga y ejecuta .opencode/plans/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-1B.md
+Carga y ejecuta /.opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-1B.md
 ```
 
 Esa fase resuelve el bug F5 (ADR checklist siempre [PENDING]).

@@ -141,7 +141,7 @@ financieros del hotel (ROICR, payback, recuperación mensual).
 ### Próxima sesión
 
 ```
-Carga y ejecuta .opencode/plans/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-5.md
+Carga y ejecuta /.opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-5.md
 ```
 
 Esa fase elimina el template embebido muerto (deuda técnica).

@@ -9,7 +9,7 @@
 
 Primera fase del plan REFACTOR-PENDIENTE-V4.58.0. No hay fases previas.
 
-El contexto del plan está en `.opencode/context/Pendiente.md` y reporta:
+El contexto del plan está en `/.opencode/context/Historico/Pendiente.md` y reporta:
 - 5 gaps confirmados (IMP-03, MIN-01, MIN-02, MIN-03, F5)
 - 1 bug de gates (F7)
 - 1 deuda técnica (template embebido muerto)
@@ -111,7 +111,7 @@ Documentar cuántos tests pasan actualmente (baseline).
 ### Próxima sesión
 
 ```
-Carga y ejecuta .opencode/plans/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-1A.md
+Carga y ejecuta /.opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-1A.md
 ```
 
 Esa fase implementa IMP-03 (añadir `${capex_breakdown_table}` al template) y F7 (unificar lógica de gates).

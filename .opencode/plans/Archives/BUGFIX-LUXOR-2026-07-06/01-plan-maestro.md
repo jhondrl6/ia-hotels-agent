@@ -2,7 +2,7 @@
 
 ## Origen
 
-Contexto: `.opencode/context/bugs_no_onboarding_luxor_2026-07-06.md`
+Contexto: `/.opencode/context/Historico/bugs_no_onboarding_luxor_2026-07-06.md`
 Auditoría con doctrina validate-against-live-code — cada bug verificado contra código vivo del repo.
 Ejecución origen: `main.py v4complete --url http://www.luxorhotel.com.co/` (motor v4.60.0)
 Versión base: v4.60.0

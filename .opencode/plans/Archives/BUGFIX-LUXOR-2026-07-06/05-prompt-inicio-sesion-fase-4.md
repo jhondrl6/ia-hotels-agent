@@ -16,7 +16,7 @@ Requiere integrar Playwright como fallback para renderizar SPAs, manejar timeout
 ## Contexto
 
 Plan: BUGFIX-LUXOR-2026-07-06 v4.60.1
-Contexto origen: `.opencode/context/bugs_no_onboarding_luxor_2026-07-06.md`
+Contexto origen: `/.opencode/context/Historico/bugs_no_onboarding_luxor_2026-07-06.md`
 
 El sitio de Luxorhotel es un SPA (JavaScript app shell). El fetcher HTTP obtiene el app shell vacío, por lo que el SEO elements detector no encuentra OG tags. Playwright está instalado pero no se usa para renderizar SPAs antes del audit.
 

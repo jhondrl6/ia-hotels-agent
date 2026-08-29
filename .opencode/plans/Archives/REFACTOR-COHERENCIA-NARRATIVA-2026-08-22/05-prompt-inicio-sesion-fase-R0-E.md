@@ -5,7 +5,7 @@
 **Dependencias**: FASE-R0-A ✅ + FASE-R0-B ✅ + FASE-R0-C ✅ + FASE-R0-D ✅ (hard — la corrida debe reflejar TODOS los fixes).
 **Duración estimada**: ~30 minutos de agente + 5-10 minutos de corrida v4complete.
 **Skill**: phased_project_executor v2.15.0 (§Protocolo-de-Subagente-para-v4complete + §Protocolo-de-Evidencia-Proactiva)
-**Lectura previa obligatoria**: `.opencode/context/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §1 (mapa de artefactos), §8 (AC5, AC6, AC8), §9 (datos del sistema)
+**Lectura previa obligatoria**: `.opencode/context/Historico/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §1 (mapa de artefactos), §8 (AC5, AC6, AC8), §9 (datos del sistema)
 
 ---
 

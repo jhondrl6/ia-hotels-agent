@@ -1,6 +1,6 @@
 # Contexto VALIDADO: Análisis Post-DT-3 (Zione.co) — Validación Exhaustiva 2026-07-25 (sesión actual)
 
-> **Origen validado**: `.opencode/plans/DT-3-TECH-DEBT-2026-07-25/08-analisis-post-implementacion.md` (20.7 KB)
+> **Origen validado**: `/.opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/08-analisis-post-implementacion.md` (20.7 KB)
 > **Sesión de validación**: 2026-07-25 (actual)
 > **Versión auditada**: iah-cli v4.64.0
 > **Método**: Lectura completa del análisis + verificación de cada claim factual contra:
@@ -303,8 +303,8 @@ Total: 7 fases = 7 sesiones mínimo. R3 cumplido (≤4 tareas + 0 comandos largo
 
 ## 9. Referencias verificadas
 
-- **Análisis original (validado)**: `/mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/DT-3-TECH-DEBT-2026-07-25/08-analisis-post-implementacion.md` (20.7 KB)
-- **Contexto DT-3 origen**: `/mnt/c/Users/Jhond/Github/iah-cli/.opencode/context/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md`
+- **Análisis original (validado)**: `/mnt/c/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/08-analisis-post-implementacion.md` (20.7 KB)
+- **Contexto DT-3 origen**: `/mnt/c/Users/Jhond/Github/iah-cli//.opencode/context/Historico/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md`
 - **Evidencia ejecución**: `/mnt/c/Users/Jhond/Github/iah-cli/output/clientes/v4_complete/zione/v4_audit/`
 - **BLOCKED_BY_GATES.md**: 16 líneas, solo menciona coverage
 - **Versión actual**: `v4.64.0` (VERSION.yaml)

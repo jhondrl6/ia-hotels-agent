@@ -62,8 +62,8 @@
 | `tests/delivery/test_fase_d_zip_policy.py` | Nuevo (10 tests: gate report exclusion + run-based filtering) | FASE-D |
 | `tests/financial_engine/test_fase_d_occupancy_label.py` | Nuevo (6 tests: occupancy source label logic + HotelFinancialData) | FASE-D |
 | `tests/test_fase_d_onboarding_loader.py` | Nuevo (7 tests: loader fallback + URL normalization) | FASE-D |
-| `.opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/*` | R3.1/R3.2/R3.3 | FASE-E |
-| `.opencode/context/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md` | R3.4 (cita _coverage_gate) | FASE-E |
+| `/.opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/*` | R3.1/R3.2/R3.3 | FASE-E |
+| `/.opencode/context/Historico/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md` | R3.4 (cita _coverage_gate) | FASE-E |
 | `scripts/run_all_validations.py` | Check "Prompts No Release" (R3.1 enforcement L3/L9) | FASE-E |
 | `evidence/FASE-F/` | Run E2E + verificación V1-V10 + análisis post-implementación | FASE-F |
 | `VERSION.yaml`, `CHANGELOG.md`, `docs/GUIA_TECNICA.md` | Bump 4.71.0 + docs oficiales | FASE-RELEASE |

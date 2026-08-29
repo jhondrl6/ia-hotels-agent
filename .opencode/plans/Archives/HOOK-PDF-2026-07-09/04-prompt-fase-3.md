@@ -46,7 +46,7 @@ Goal: Eres un subagente trabajando en el repositorio iah-cli en /mnt/c/Users/Jho
 
 Contexto: FASE-1 y FASE-2 del plan HOOK-PDF-2026-07-09 están completas. La clase HookPDFGenerator está en modules/commercial_documents/hook_pdf_generator.py con métodos: extract_data() -> HookPDFData, validate_data(data) -> list[str], render_html(data) -> str, generate(force=False, dry_run=False) -> Path. El dataclass HookPDFData está en data_structures.py.
 
-La especificación de validaciones está en .opencode/context/MODULO-HOOK-PDF.md §3.4 (8 checks). Los valores de prueba del Luxorhotel están en MODULO-HOOK-PDF.md §3.2.
+La especificación de validaciones está en /.opencode/context/Historico/MODULO-HOOK-PDF.md §3.4 (8 checks). Los valores de prueba del Luxorhotel están en MODULO-HOOK-PDF.md §3.2.
 
 Crea tests para:
 1. extract_data con fixtures (crear 01_DIAGNOSTICO_*.md, 02_PROPUESTA_*.md, v4_complete_report.json en tmp_path con datos del Luxorhotel)

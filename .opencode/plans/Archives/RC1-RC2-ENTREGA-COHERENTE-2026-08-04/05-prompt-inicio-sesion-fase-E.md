@@ -16,9 +16,9 @@ RC3 = higiene documental sin enforcement (el conocimiento existe, falla la aplic
 | Rec | Acción | Archivos |
 |-----|--------|----------|
 | **R3.1** | Eliminar `--release 4.70.0` de prompts 02-05 del plan anterior + añadir nota "NO usar --release en fases intermedias" + **implementar check automatizado `_check_prompts_no_release` en `scripts/run_all_validations.py`** (enforcement permanente de L3/L9 — ver T1) | `.opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/0{2,3,4,5}-prompt-*.md`, `scripts/run_all_validations.py` |
-| **R3.2** | Corregir conteos del 11-doc DESDE FUENTE VIVA (L8): módulos 205 .py, 391 clases, 27 dirs con `__init__`; aritmética acumulativa FASE-D (19, no 17); lista D3 completa (8 valores) | `.opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/11-documentacion-post-proyecto.md` |
+| **R3.2** | Corregir conteos del 11-doc DESDE FUENTE VIVA (L8): módulos 205 .py, 391 clases, 27 dirs con `__init__`; aritmética acumulativa FASE-D (19, no 17); lista D3 completa (8 valores) | `/.opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/11-documentacion-post-proyecto.md` |
 | **R3.3** | Anotar en 10-analisis/11-doc que los artefactos E2E llevan versión 4.69.0 (pre-bump, correcto por diseño) + preservar la evidencia JSON que sobrevive del run 123637 en `evidence/N3-diff/` con nota "diff de 97 líneas NO reproducible: los .md del run1 fueron sobrescritos" | 10-analisis, 11-doc, `evidence/N3-diff/` |
-| **R3.4** | Corregir la cita `_coverage_gate` → L1160 en el contexto fuente | `.opencode/context/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md` (§4) |
+| **R3.4** | Corregir la cita `_coverage_gate` → L1160 en el contexto fuente | `/.opencode/context/Historico/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md` (§4) |
 | **+** | Commit de la reorganización Historico pendiente (CONTEXT-DELIVERY movido, REGISTRY.md borrado — §4 del contexto) | git |
 
 ### Estado de Fases Anteriores
@@ -34,7 +34,7 @@ RC3 = higiene documental sin enforcement (el conocimiento existe, falla la aplic
 delegate_task(
   goal="FASE-E: higiene documental R3.1-R3.4 del plan RC1-RC2-ENTREGA-COHERENTE-2026-08-04",
   context="SOLO edición de archivos MD/YAML. Detalle de tareas en
-           .opencode/plans/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-E.md.
+           /.opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-E.md.
            Conteos R3.2 verificarlos con comandos reales (pytest --collect-only, find/grep),
            nunca de memoria (L8). Al terminar: git add -A && git status --short (NO commit
            si hay código de otras fases sin commitear — coordinar con el parent).",
@@ -108,7 +108,7 @@ El agente principal verifica el diff resultante, ejecuta validaciones y hace el 
 3. `10-analisis-post-implementacion.md`: fila FASE-E en Resumen de Ejecución, Lecciones Aprendidas (R3.1-R3.4, Lxx+1), Seguimientos abiertos.
 4. Registrar la fase:
 ```bash
-python scripts/log_phase_completion.py --fase FASE-E --desc "RC3: higiene documental R3.1-R3.4 + preservacion evidencia N3 + commit Historico" --archivos-mod ".opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/11-documentacion-post-proyecto.md" --tests "0" --check-manual-docs
+python scripts/log_phase_completion.py --fase FASE-E --desc "RC3: higiene documental R3.1-R3.4 + preservacion evidencia N3 + commit Historico" --archivos-mod "/.opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/11-documentacion-post-proyecto.md" --tests "0" --check-manual-docs
 ```
 **SIN `--release`** (L3/L9 — y esta fase es precisamente la que corrige esa violación).
 

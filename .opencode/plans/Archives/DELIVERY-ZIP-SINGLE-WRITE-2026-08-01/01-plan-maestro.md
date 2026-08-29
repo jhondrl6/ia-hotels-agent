@@ -2,7 +2,7 @@
 
 **ID**: DELIVERY-ZIP-SINGLE-WRITE-2026-08-01
 **Version objetivo**: v4.69.0
-**Contexto**: `.opencode/context/CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01.md`
+**Contexto**: `/.opencode/context/Historico/CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01.md`
 **Hotel de verificacion**: Zi One Luxury (https://zione.co/)
 **Onboarding**: `output/clientes/zi-one-luxury_onboarding.yaml`
 **Fecha**: 2026-08-01
@@ -114,7 +114,7 @@ FASE-RELEASE-4.69.0 (requiere A+B+C+D completas)
 ## 8. Estructura del Plan
 
 ```
-.opencode/plans/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/
+/.opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/
 ├── 01-plan-maestro.md                    (este archivo)
 ├── 02-prompt-fase-A.md                   (Test Infrastructure)
 ├── 03-prompt-fase-B.md                   (Core Rewrite)

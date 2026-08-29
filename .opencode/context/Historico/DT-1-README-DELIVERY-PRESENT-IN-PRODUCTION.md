@@ -1137,7 +1137,7 @@ Copiar en una sesión nueva, no ejecutar en esta sesión:
 
 ```text
 Lee y valida primero el contexto:
-/mnt/c/Users/Jhond/Github/iah-cli/.opencode/context/DT-1-README-DELIVERY-PRESENT-IN-PRODUCTION.md
+/mnt/c/Users/Jhond/Github/iah-cli//.opencode/context/Historico/DT-1-README-DELIVERY-PRESENT-IN-PRODUCTION.md
 
 Diseña un plan de intervención, sin implementar aún, para resolver la causa raíz completa de la desincronización entre README_DELIVERY.md, MANIFEST.json, ZIP, estados de assets y evidencia de producción.
 

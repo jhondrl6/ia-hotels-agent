@@ -122,7 +122,7 @@ porque `_build_coherence_checklist()` busca `validated_data.get('adr')` que siem
 ### Próxima sesión
 
 ```
-Carga y ejecuta .opencode/plans/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-2.md
+Carga y ejecuta /.opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-2.md
 ```
 
 Esa fase implementa MIN-02 (ADR completo en propuesta) — **la más compleja del plan, ejecución directa sin delegar**.

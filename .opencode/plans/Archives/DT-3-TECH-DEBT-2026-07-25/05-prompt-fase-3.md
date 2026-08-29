@@ -60,7 +60,7 @@ Inmediatamente después de completar v4complete, copiar los archivos de evidenci
 
 ```bash
 # Crear directorio de evidencia
-mkdir -p .opencode/plans/DT-3-TECH-DEBT-2026-07-25/evidence/
+mkdir -p /.opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/evidence/
 
 # Copiar archivos clave
 cp output/v4_complete/zione/v4_audit/pain_ledger.json evidence/pain_ledger.json
@@ -125,7 +125,7 @@ TASKS:
 3. After completion, verify the output exists:
    - output/v4_complete/ should contain zione/ directory
    - output/v4_complete/ should contain a .zip file
-4. Copy key evidence files to .opencode/plans/DT-3-TECH-DEBT-2026-07-25/evidence/:
+4. Copy key evidence files to /.opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/evidence/:
    - pain_ledger.json
    - proposal_asset_matrix.json
    - delivery_quality_report.json

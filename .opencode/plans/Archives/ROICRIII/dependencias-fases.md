@@ -2,7 +2,7 @@
 
 **Proyecto:** Financial Coherence & Asset Semantics Rescue
 **Versión target:** 4.57.0 (desde 4.56.0)
-**Contexto:** .opencode/context/ROICRIII.md
+**Contexto:** /.opencode/context/Historico/ROICRIII.md
 **Score cumplimiento actual:** 44% → target 96%
 **Fecha creación:** 2026-05-28
 

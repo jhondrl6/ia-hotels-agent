@@ -21,7 +21,7 @@ SI el agente principal tiene presupuesto limitado:
       context="""
         Seguir .agents/workflows/phased_project_executor.md §Paso-7 (E1-E8).
         Version objetivo: 4.72.0. Datos acumulados en
-        .opencode/plans/CREDIBILIDAD-NUMERICA-2026-08-20/09-documentacion-post-proyecto.md.
+        /.opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/09-documentacion-post-proyecto.md.
         NO modificar codigo fuente. NO ejecutar v4complete. NO registrar fases anteriores
         (cada fase ya ejecuto log_phase_completion.py al cerrar).
       """,

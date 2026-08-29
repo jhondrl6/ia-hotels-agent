@@ -37,6 +37,7 @@ python .agents/workflows/v4_regression_guardian.py --quick
 | `python scripts/validate.py --plan` | Validar coherencia Plan Maestro |
 | `python scripts/validate.py --security` | Detectar secrets hardcoded |
 | `python scripts/validate.py --content <file>` | Validar contenido de archivo |
+| `python scripts/validate_opencode_refs.py` | Validar referencias .opencode en docs (`--fix` repara) |
 | `pre-commit run --all-files` | Ejecutar todos los hooks manualmente |
 
 Si alguna validacion falla, corregir antes de hacer commit.

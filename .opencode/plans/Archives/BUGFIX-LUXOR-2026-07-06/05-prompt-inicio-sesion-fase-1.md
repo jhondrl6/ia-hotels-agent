@@ -11,7 +11,7 @@
 ## Contexto
 
 Plan: BUGFIX-LUXOR-2026-07-06 v4.60.1
-Contexto origen: `.opencode/context/bugs_no_onboarding_luxor_2026-07-06.md`
+Contexto origen: `/.opencode/context/Historico/bugs_no_onboarding_luxor_2026-07-06.md`
 
 Estos dos bugs son quick wins: cambios mínimos de código, bajo riesgo de regresión, alto valor inmediato.
 

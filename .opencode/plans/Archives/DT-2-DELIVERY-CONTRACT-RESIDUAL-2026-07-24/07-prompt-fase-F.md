@@ -148,6 +148,6 @@ Steps:
 ## Próxima Sesión
 
 ```
-Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
+Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
 Ejecuta FASE-RELEASE: 08-prompt-fase-release.md (RELEASE v4.63.2)
 ```

@@ -126,7 +126,7 @@ FASE-A y FASE-B se pueden fusionar cuando el fix es arquitectonico: los tests nu
 
 | Artefacto | Path | Estado |
 |-----------|------|--------|
-| Plan maestro | `.opencode/plans/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/01-plan-maestro.md` | ✅ CREADO |
+| Plan maestro | `/.opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/01-plan-maestro.md` | ✅ CREADO |
 | Prompts de fase | `02-06-prompt-fase-*.md` | ✅ CREADOS |
 | Checklist | `07-checklist-implementacion.md` | ✅ ACTUALIZADO |
 | Analisis | `08-analisis-post-implementacion.md` | ✅ ACTUALIZADO (FASE-D) |

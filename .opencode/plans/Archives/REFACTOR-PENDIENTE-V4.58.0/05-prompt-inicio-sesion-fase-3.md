@@ -136,7 +136,7 @@ frente al escenario con implementación (reducción de pérdida + ROI).
 ### Próxima sesión
 
 ```
-Carga y ejecuta .opencode/plans/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-4.md
+Carga y ejecuta /.opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-4.md
 ```
 
 Esa fase implementa MIN-03 (closing pitch dinámico basado en ROICR).

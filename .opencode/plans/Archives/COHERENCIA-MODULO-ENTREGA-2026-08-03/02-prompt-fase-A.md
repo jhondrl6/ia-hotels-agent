@@ -10,7 +10,7 @@
 
 El diagnóstico 2026-08-01 vendió "Sin Meta Tags Sociales (Open Graph)" con costo $958.694/mes cuando el propio audit detectó 8 tags OG completos (D1), y mostró 3 conteos de brechas distintos: 9 en pain_ledger, 4 con costo en el doc, "7" hardcodeado en el template (D2). Causa raíz: `_pain_to_brecha` ignora `pain.name` del mapper (que YA distingue "Sin" vs "Incompletos") y `_identify_brechas` construye un `ValidationSummary` sintético con caché, divergiendo del orquestador.
 
-Fuente completa: `.opencode/context/CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md` §5 FASE-1.
+Fuente completa: `/.opencode/context/Historico/CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md` §5 FASE-1.
 
 ### Estado de Fases Anteriores
 

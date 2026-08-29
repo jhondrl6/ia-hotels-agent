@@ -5,7 +5,7 @@
 **Dependencias**: FASE-R0-B ✅ (hard: el test estático de template exige B1+B4 ya aplicados).
 **Duración estimada**: 45 minutos
 **Skill**: phased_project_executor v2.15.0
-**Lectura previa obligatoria**: `.opencode/context/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §2 (Bug 3, Bug 5), §4.3 (Opción B), §4.5, §8 (AC10)
+**Lectura previa obligatoria**: `.opencode/context/Historico/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §2 (Bug 3, Bug 5), §4.3 (Opción B), §4.5, §8 (AC10)
 
 ---
 

@@ -1,7 +1,7 @@
 # Plan Maestro: BUGS-ONBOARDING-ADR-2026-07-22
 
 > **Fecha**: 2026-07-22
-> **Contexto origen**: `.opencode/context/BUGS-ONBOARDING-ADR-TEMPLATE-2026-07-22.md`
+> **Contexto origen**: `/.opencode/context/Historico/BUGS-ONBOARDING-ADR-TEMPLATE-2026-07-22.md`
 > **Hotel de prueba**: Hotel Don Alfonso (https://www.donalfonsohotel.com/)
 > **Datos reales**: `data/hotel_observations/observations.json` (entry: Hotel Don Alfonso)
 > **Estado base**: 700 tests pasan, 55 fallan (preexistentes, no relacionados)
@@ -115,7 +115,7 @@ El plan implementa Opción C (robusta) para BUG-1+NEW-1 y Opción C (centralizad
 ## 10. Estructura del plan
 
 ```
-.opencode/plans/BUGS-ONBOARDING-ADR-2026-07-22/
+/.opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/
 ├── 01-plan-maestro.md                    # Este archivo
 ├── 02-prompt-fase-1.md                   # Root cause: ADR + occupancy propagation
 ├── 03-prompt-fase-2.md                   # Cascade: proposal + validation (MAYOR COMPLEJIDAD)

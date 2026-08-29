@@ -15,7 +15,7 @@
 delegate_task(
   goal="FASE-RELEASE-4.71.0 del plan RC1-RC2-ENTREGA-COHERENTE-2026-08-04: pasos E1-E8b
         del phased_project_executor.md §Paso-7. Detalle completo en
-        .opencode/plans/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-RELEASE.md",
+        /.opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-RELEASE.md",
   context="Version objetivo 4.71.0 (VERSION.yaml es la fuente unica). Datos acumulados en
            09-documentacion-post-proyecto.md del plan. Python del venv para scripts.",
   timeout=900, notify_on_complete=True

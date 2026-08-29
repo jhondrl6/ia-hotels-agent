@@ -131,7 +131,7 @@ FASE-0-A (Loader rewrite + normalize + frescura) ── nucleo del matching
 ## Archivos del Plan
 
 ```
-.opencode/plans/ONBOARDING-INJECTION-GAP-2026-07-29/
+/.opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/
 ├── 01-plan-maestro.md                   ← Este archivo
 ├── 02-prompt-fase-0-a.md                ← Loader rewrite + normalize + frescura
 ├── 03-prompt-fase-0-b.md                ← CAMBIO A+B + template url

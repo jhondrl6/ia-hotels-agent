@@ -4,8 +4,8 @@
 > **Fecha**: 2026-07-25
 > **Modelo origen**: deepseek-v4-pro (68 mensajes)
 > **Trigger original**: Ejecución fresca de v4complete para Zione.co reveló 5 bugs no cubiertos por DT-3
-> **Documento principal**: `.opencode/plans/DT-3-TECH-DEBT-2026-07-25/08-analisis-post-implementacion.md` (20.7 KB)
-> **Contexto DT-3**: `.opencode/context/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md`
+> **Documento principal**: `/.opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/08-analisis-post-implementacion.md` (20.7 KB)
+> **Contexto DT-3**: `/.opencode/context/Historico/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md`
 > **Evidencia ejecución**: `output/clientes/v4_complete/zione/v4_audit/`
 
 ---
@@ -87,8 +87,8 @@ BUG-8 (scenario optimista negativo) → fix: clamp max(0, calculated)
 
 ## Referencias en disco
 
-- **Análisis completo (20.7 KB)**: `/mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/DT-3-TECH-DEBT-2026-07-25/08-analisis-post-implementacion.md`
-- **Contexto DT-3 origen**: `/mnt/c/Users/Jhond/Github/iah-cli/.opencode/context/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md`
+- **Análisis completo (20.7 KB)**: `/mnt/c/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/08-analisis-post-implementacion.md`
+- **Contexto DT-3 origen**: `/mnt/c/Users/Jhond/Github/iah-cli//.opencode/context/Historico/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md`
 - **Evidencia ejecución fresca**: `/mnt/c/Users/Jhond/Github/iah-cli/output/clientes/v4_complete/zione/v4_audit/`
 - **BLOCKED_BY_GATES.md**: `/mnt/c/Users/Jhond/Github/iah-cli/output/clientes/v4_complete/BLOCKED_BY_GATES.md`
 - **Sesión origen**: 20260725_210646_571283 (deepseek-v4-pro, 68 mensajes, terminada 21:23)

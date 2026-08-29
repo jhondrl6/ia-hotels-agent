@@ -2,7 +2,7 @@
 
 **Proyecto:** Publication Readiness Fix (post-FASE-6 blockers)
 **Versión target:** 4.57.0 → 4.58.0
-**Contexto:** .opencode/context/ROICRIII-fase-6-resultado-y-faltantes.md
+**Contexto:** /.opencode/context/Historico/ROICRIII-fase-6-resultado-y-faltantes.md
 **Score publication readiness:** 62.5% → target ≥80%
 **Fecha creación:** 2026-05-28
 

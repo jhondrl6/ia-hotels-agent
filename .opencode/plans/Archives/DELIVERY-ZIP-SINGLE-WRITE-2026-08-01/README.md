@@ -15,7 +15,7 @@
 | **Fases** | 5 (A, B, C, D, RELEASE) |
 | **Hotel de verificacion** | Zi One Luxury (https://zione.co/) |
 | **Complejidad maxima** | FASE-B (Core Rewrite) ★ |
-| **Contexto** | `.opencode/context/CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01.md` |
+| **Contexto** | `/.opencode/context/Historico/CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01.md` |
 
 ---
 

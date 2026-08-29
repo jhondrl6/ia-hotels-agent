@@ -129,7 +129,7 @@ La auditoria pre-ejecucion que detecto NP1-NP8 fue CRITICA. Sin ella, el plan or
 
 | Artefacto | Path | Estado |
 |-----------|------|--------|
-| Plan maestro | `.opencode/plans/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/01-plan-maestro.md` | ✅ CORREGIDO |
+| Plan maestro | `/.opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/01-plan-maestro.md` | ✅ CORREGIDO |
 | Prompts de fase | `02-07-prompt-fase-*.md` | ✅ CORREGIDOS |
 | Checklist | `08-checklist-implementacion.md` | ✅ ACTUALIZADO (FASE-5 completada) |
 | Analisis | `09-analisis-post-implementacion.md` | ✅ COMPLETADO |

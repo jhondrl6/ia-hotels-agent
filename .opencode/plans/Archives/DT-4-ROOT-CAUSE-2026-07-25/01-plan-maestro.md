@@ -136,7 +136,7 @@ FASE-1, FASE-3 y FASE-4 son independientes entre sí pero todas dependen de FASE
 ## Archivos del Plan
 
 ```
-.opencode/plans/DT-4-ROOT-CAUSE-2026-07-25/
+/.opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/
 ├── 01-plan-maestro.md                   ← Este archivo
 ├── 02-prompt-fase-0.md                  ← FIX-PRIORITY-1: Reconciliador post-orchestrator
 ├── 03-prompt-fase-1.md                  ← FIX-PRIORITY-3: BUG-8 optimista

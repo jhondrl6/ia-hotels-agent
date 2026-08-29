@@ -51,7 +51,7 @@ FASE-3: Tests unitarios (8+ tests) cubriendo extract_data, validate_data, render
 ```
 Goal: Eres un subagente trabajando en el repositorio iah-cli en /mnt/c/Users/Jhond/Github/iah-cli. Implementa la clase HookPDFGenerator en modules/commercial_documents/hook_pdf_generator.py.
 
-Contexto: FASE-1 del plan HOOK-PDF-2026-07-09 está completa. El dataclass HookPDFData ya existe en data_structures.py con todos los campos del catálogo. El template hook_template.md y los estilos hook_styles.css ya existen en templates/. La especificación completa está en .opencode/context/MODULO-HOOK-PDF.md §3.6 (firma del script) y §3.1-3.4 (fuentes de datos, placeholders, validaciones).
+Contexto: FASE-1 del plan HOOK-PDF-2026-07-09 está completa. El dataclass HookPDFData ya existe en data_structures.py con todos los campos del catálogo. El template hook_template.md y los estilos hook_styles.css ya existen en templates/. La especificación completa está en /.opencode/context/Historico/MODULO-HOOK-PDF.md §3.6 (firma del script) y §3.1-3.4 (fuentes de datos, placeholders, validaciones).
 
 Implementa la clase HookPDFGenerator con:
 1. __init__(self, output_dir: Path, template_path: Path = None, style_path: Path = None) — defaults apuntan a templates/hook_template.md y templates/hook_styles.css

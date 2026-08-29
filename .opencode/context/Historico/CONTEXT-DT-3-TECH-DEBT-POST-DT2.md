@@ -15,9 +15,9 @@
 
 | Archivo | Rol |
 |---------|-----|
-| `.opencode/plans/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/10-analisis-post-implementacion.md` | Análisis de lo completado y pendiente |
-| `.opencode/plans/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/09-checklist-implementacion.md` | Checklist maestro (7/7 fases ✅) |
-| `.opencode/context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md` | Contexto original de DT-2 |
+| `/.opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/10-analisis-post-implementacion.md` | Análisis de lo completado y pendiente |
+| `/.opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/09-checklist-implementacion.md` | Checklist maestro (7/7 fases ✅) |
+| `/.opencode/context/Historico/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md` | Contexto original de DT-2 |
 | `modules/asset_generation/proposal_asset_alignment.py` | ProposalAssetMatrix (L439) + AlignmentReport (L60) — divergencia semántica documentada L447-459 |
 | `modules/quality_gates/delivery_quality_report.py` | G9 gate (L193-219) — implementado post-DT-2, lee proposal_asset_matrix.json |
 | `modules/delivery/delivery_packager.py` | Packager — P-01, P-02, P-06, P-07 fixes aplicados |

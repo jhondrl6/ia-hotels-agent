@@ -45,7 +45,7 @@ ROICRIIIF resuelve los 3 issues en 4 fases de código + v4complete E2E + RELEASE
 ## Estructura del Plan
 
 ```
-.opencode/plans/ROICRIIIF/
+/.opencode/plans/Archives/ROICRIIIF/
 ├── 05-prompt-inicio-sesion-fase-1A.md       ← Gate Presence DIAGNÓSTICO (lectura pura)
 ├── 05-prompt-inicio-sesion-fase-1B.md       ← Gate Presence IMPLEMENTACIÓN [delegate_task]
 ├── 05-prompt-inicio-sesion-fase-2.md        ← Asset Confidence Enrichment

@@ -192,7 +192,7 @@ no como campo vacío. Esto requiere cambios en 3 capas:
 ### Próxima sesión
 
 ```
-Carga y ejecuta .opencode/plans/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-3.md
+Carga y ejecuta /.opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-3.md
 ```
 
 Esa fase implementa MIN-01 (tabla Status Quo vs Implementación).

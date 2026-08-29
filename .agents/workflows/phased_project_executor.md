@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
-version: v2.16.0
+version: v2.17.0
 ---
 
 # Skill: Phased Project Executor
@@ -345,6 +345,25 @@ Cuando la fase no completa por agotamiento:
 
 ## Pasos de Ejecución
 
+### 0. Recuperación de Lecciones Aprendidas (OBLIGATORIO — antes de planificar)
+
+> [!IMPORTANT]
+> Ningún plan se redacta desde cero: la experiencia de planes anteriores vive en dos capas y DEBE consultarse antes de diseñar fases, prompts o CONTEXT.
+
+**Capa caliente — memoria del proyecto** (siempre disponible):
+- Leer el índice `MEMORY.md` de la memoria de proyecto del agente y las entradas relevantes al tema del plan (pitfalls, convenciones de cierre de fase, decisiones resueltas).
+
+**Capa tibia — QMind** (si el notebook está disponible):
+- `retrieve` sobre el notebook `iah-cli-lecciones` con el tema/objetivo del plan como query (2-3 queries acotadas: módulo afectado, tipo de fallo, etapa del workflow).
+- Corpus del notebook: `CONTEXT-*.md` (`.opencode/context/`) y `10-analisis-post-implementacion.md` de cada plan.
+
+**Output del paso** — lista corta de lecciones aplicables, que se inyecta en:
+1. `10-analisis-post-implementacion.md` del plan nuevo → tabla "Lecciones capitalizadas de planes anteriores".
+2. El contexto de los prompts de fase (§2) donde cada lección sea pertinente.
+3. El `CONTEXT-*.md` del plan (sección "Lecciones capitalizadas"), si el plan genera contexto.
+
+**Fallback**: si el notebook QMind no existe o no es accesible, continuar solo con la memoria del proyecto y registrar la limitación en `dependencias-fases.md`.
+
 ### 1. Analizar Plan y Detectar Conflictos
 Leer el plan maestro:
 - Número de fases/sprints
@@ -363,6 +382,7 @@ Usar template `.agents/workflows/templates/prompt-fase-template.md`
 
 **Obligatorio en cada prompt (segun CONTRIBUTING §Flujo-Post-Fase):**
 - Contexto de fases anteriores
+- **Lecciones aprendidas recuperadas en el Paso 0** que apliquen a esta fase (solo las pertinentes, no el corpus completo)
 - Tareas específicas de la fase
 - Seccion de documentacion post-fase (editar CHANGELOG, GUIA_TECNICA, y acumular en 09-documentacion-post-proyecto.md)
 - **Post-Ejecución** (marcar checklist, actualizar estados)
@@ -445,6 +465,14 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
 - Lecciones Aprendidas nuevas (formato: qué pasó / por qué / qué lo previene)
 - Métricas de Ejecución (tests, coherencia, etc.)
 - Seguimientos abiertos detectados
+
+**Write-back de lecciones (al cierre de cada fase)** — cierra el ciclo del Paso 0:
+- Cada lección nueva con pertinencia INCLUIR se persiste en la **memoria del proyecto** del agente (una entrada durable por lección).
+- El `10-analisis-post-implementacion.md` actualizado se re-ingere al notebook **`iah-cli-lecciones`** de QMind (si está disponible).
+- Lecciones con pertinencia EXCLUIR quedan solo en el análisis del plan.
+
+> [!NOTE]
+> **QMind y archivado**: QMind indexa snapshots de contenido, no rutas locales. Mover un plan a `Archives/` o un contexto a `Historico/` NO requiere acción en QMind (solo actualizar referencias en repo/memoria). Re-ingerir SOLO cuando cambia el contenido. Orden correcto: write-back final → archivar el directorio (el contenido archivado queda congelado y no necesita mantenimiento).
 
 **Estructura concreta de 09-documentacion-post-proyecto.md:**
 
@@ -1066,6 +1094,7 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - **FASE-VERIFY incluida en plan simple** → evaluar si los 3 criterios de activación se cumplen; si no, eliminar y documentar por qué en `dependencias-fases.md`
 
 ## Versiones
+- **v2.17.0** (2026-08-28): Ciclo de capitalización de lecciones aprendidas. Nuevo Paso 0 obligatorio (recuperación desde memoria del proyecto + notebook QMind `iah-cli-lecciones` antes de planificar), inyección de lecciones pertinentes en prompts de fase (§2), y write-back al cierre de cada fase (§4): lecciones INCLUIR a memoria del proyecto y re-ingesta del 10-analisis a QMind. Fallback explícito si el notebook no está disponible.
 - **v2.16.0** (2026-08-24): Nueva etapa condicional FASE-VERIFY (§4.6) entre Implementación y RELEASE. Certificación formal de ACs contra output E2E real, sin modificar código. Criterios de activación: ≥3 fases impl + E2E + ACs cross-fase. Resuelve gap: la referencia "llenar en FASE-E o FASE-F" en la matriz de verificación no tenía definición formal. Metodología mínima generalizable (7 pasos). Origen: FASE-R0-F del plan REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 (12/12 ACs certificados con diff narrativo antes/después).
 - **v2.15.0** (2026-08-05): Paso 4 — `10-analisis-post-implementacion.md` se crea DESDE LA CONCEPCIÓN del plan (no al final), junto con `09-documentacion-post-proyecto.md`. Esto evita el reproceso de crearlo después de que las lecciones ya se perdieron. Estructura obligatoria: Resumen de Ejecución, Matriz de Verificación, Lecciones Aprendidas, Seguimientos, Métricas, Decisiones Arquitectónicas, Checklist de Cierre. Criterios de Éxito y Ejemplo de Uso actualizados para incluir el nuevo archivo.
 - **v2.14.0** (2026-08-04): Conteo de `run_all_validations.py --quick` pasa de "4/4" fijo a TOTAL PASS dinámico (el nº de checks varía al añadir validaciones nuevas, ej. check "Prompts No Release" de RC1-RC2-ENTREGA-COHERENTE-2026-08-04). Nueva branch en Regla de Decisión: fases documentales delegables pueden editar UN script stdlib-only del proyecto (sin imports de módulos ni decisiones arquitectónicas) — el parent verifica diff + validaciones. Alineado con RC3 (N13/N14): enforcement automatizado de L3/L9 vía `_check_prompts_no_release` en `scripts/run_all_validations.py`.
@@ -1087,6 +1116,7 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 Usuario: "Divide este proyecto de refactorización en fases y prepáralo para ejecutar por sesiones"
 
 La skill debe:
+0. Recuperar lecciones aprendidas (Paso 0: memoria del proyecto + QMind) y listar las aplicables
 1. Leer plan existente
 2. Crear `05-prompt-inicio-sesion-fase-{X}.md` para cada fase de implementación
 3. Evaluar criterios de activación §4.6 → si aplica, crear `05-prompt-inicio-sesion-fase-VERIFY.md`

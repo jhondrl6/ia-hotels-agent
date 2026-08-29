@@ -257,7 +257,7 @@ cd /mnt/c/Users/Jhond/Github/iah-cli
 python scripts/log_phase.py --phase "FASE-3" --plan "ROICRII" --status "completed" --desc "Pain_ratio_clarificado_floor_unificado_gate_estricto" 2>/dev/null || echo "log_phase no disponible"
 
 # 3. Actualizar documentación
-# Leer y actualizar .opencode/plans/ROICRII/09-documentacion-post-proyecto.md
+# Leer y actualizar /.opencode/plans/Archives/ROICRII/09-documentacion-post-proyecto.md
 ```
 
 ---

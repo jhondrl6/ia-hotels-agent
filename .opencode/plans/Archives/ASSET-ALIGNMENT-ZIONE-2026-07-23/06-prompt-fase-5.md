@@ -134,7 +134,7 @@ cp output/v4_complete/v4_complete_report.json evidence/fase-5/
 8. Próximos pasos / deuda técnica
 
 **Archivo a crear**:
-- `.opencode/plans/ASSET-ALIGNMENT-ZIONE-2026-07-23/08-analisis-post-implementacion.md`
+- `/.opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/08-analisis-post-implementacion.md`
 
 **Criterios de aceptación**:
 - [ ] Análisis post-implementación creado

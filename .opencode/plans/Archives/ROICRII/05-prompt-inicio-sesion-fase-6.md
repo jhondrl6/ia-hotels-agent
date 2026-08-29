@@ -164,7 +164,7 @@ python scripts/run_all_validations.py --quick 2>&1 | tail -20 || echo "run_all_v
 
 ### Tarea 6G: Veredicto final
 
-**Archivo**: `.opencode/plans/ROICRII/09-documentacion-post-proyecto.md`
+**Archivo**: `/.opencode/plans/Archives/ROICRII/09-documentacion-post-proyecto.md`
 
 Completar la sección "Veredicto Final" con:
 - ¿6 fases completadas? SÍ

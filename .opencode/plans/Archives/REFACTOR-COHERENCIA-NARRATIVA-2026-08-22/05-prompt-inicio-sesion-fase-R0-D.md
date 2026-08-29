@@ -5,7 +5,7 @@
 **Dependencias**: Ninguna hard (archivos independientes de A/B/C); orden canónico tras FASE-R0-C por R1.
 **Duración estimada**: 45-60 minutos
 **Skill**: phased_project_executor v2.15.0
-**Lectura previa obligatoria**: `.opencode/context/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §2 (Bug 6, Bug 7), §4.4, §4.6, §4.7, §8 (AC11)
+**Lectura previa obligatoria**: `.opencode/context/Historico/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` — §2 (Bug 6, Bug 7), §4.4, §4.6, §4.7, §8 (AC11)
 
 ---
 

@@ -303,7 +303,7 @@ Tests patológicos L1/L11 (`test_proposal_generator.py` ~8GB RAM, `test_price_co
 ## 6. Prompt sugerido para la próxima sesión (enriquecido con causas raíz y lecciones capitalizadas)
 
 ```
-Valida contra código vivo y diseña el fix de RC1 (contexto .opencode/context/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md):
+Valida contra código vivo y diseña el fix de RC1 (contexto /.opencode/context/Historico/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md):
 BREACH_BY_ASSET en modules/commercial_documents/v4_proposal_generator.py L1193-1206 + hardcode L1250 ("Brecha #5: WhatsApp no coincide")
 muestran costos, ranks y labels de brechas que NO coinciden con el diagnóstico del mismo run, y el mapeo servicio→brecha está
 INVERTIDO (SEO Local → "Sin Schema Hotel"; optimization_guide debe apuntar a low_seo_score — N17). Alcance confirmado por N18

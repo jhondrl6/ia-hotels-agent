@@ -3,7 +3,7 @@
 **ID del Plan**: REFACTOR-COHERENCIA-NARRATIVA-2026-08-22
 **Fecha de concepción**: 2026-08-22
 **Versión base**: v4.72.0 → **Versión objetivo**: v4.72.1 (patch — bugfix capa narrativa)
-**Fuente de contexto**: `.opencode/context/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` (hallazgos validados factualmente contra código vivo el 2026-08-22)
+**Fuente de contexto**: `.opencode/context/Historico/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md` (hallazgos validados factualmente contra código vivo el 2026-08-22)
 **Workflow rector**: `.agents/workflows/phased_project_executor.md` v2.15.0
 **Reglas mandatorias**: R1 (1 fase por sesión) · R2 (máx. 60 iteraciones por fase) · R3 (scope de fase)
 

@@ -1,7 +1,7 @@
 # Plan: ASSET-ALIGNMENT-ZIONE-2026-07-23
 
 > **Fecha**: 2026-07-23
-> **Contexto**: `.opencode/context/ZIONE-PROPOSAL-ASSET-ALIGNMENT-BLOCK-2026-07-23.md`
+> **Contexto**: `/.opencode/context/Historico/ZIONE-PROPOSAL-ASSET-ALIGNMENT-BLOCK-2026-07-23.md`
 > **Hotel**: Zi One Luxury (https://zione.co/)
 > **Versión**: 4.62.0 → 4.63.0
 > **Convención**: 1 fase = 1 sesión. Sin excepciones.
@@ -15,7 +15,7 @@ Validación final: única ejecución de v4complete para zione.co con análisis p
 ## Estructura del Plan
 
 ```
-.opencode/plans/ASSET-ALIGNMENT-ZIONE-2026-07-23/
+/.opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/
 ├── 01-plan-maestro.md                    # Plan maestro con hallazgos, dependencias, DoD
 ├── 02-prompt-fase-1.md                    # Bypass de seguridad (CRÍTICO)
 ├── 03-prompt-fase-2.md                    # Gaps Pain→Asset (MAYOR COMPLEJIDAD)

@@ -1,7 +1,7 @@
 # Plan Maestro: Coherencia Módulo ↔ Entrega (D1-D12 + N1-N9)
 
 **ID del plan**: COHERENCIA-MODULO-ENTREGA-2026-08-03
-**Contexto fuente**: `.opencode/context/CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md` (re-auditoría 2026-08-03: 12/12 hallazgos confirmados + 9 ampliaciones N1-N9)
+**Contexto fuente**: `/.opencode/context/Historico/CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md` (re-auditoría 2026-08-03: 12/12 hallazgos confirmados + 9 ampliaciones N1-N9)
 **Workflow rector**: `.agents/workflows/phased_project_executor.md` v2.13.0
 **Versión actual**: v4.69.0 → **Release objetivo: v4.70.0**
 **Hotel de verificación E2E**: Zi One Luxury (https://zione.co/) — onboarding real en `output/clientes/zi-one-luxury_onboarding.yaml`

@@ -4,7 +4,7 @@
 > **Versión base**: v4.63.1 → **Versión objetivo**: v4.63.2
 > **Hotel de referencia**: Zi One Luxury (https://zione.co/)
 > **Datos reales**: `output/clientes/zi-one-luxury_onboarding.yaml`
-> **Contexto fuente**: `.opencode/context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md`
+> **Contexto fuente**: `/.opencode/context/Historico/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md`
 > **Fecha**: 2026-07-24
 
 ---
@@ -54,7 +54,7 @@ RELEASE depende de F.
 
 ```bash
 # En una nueva sesión:
-Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
+Carga el plan DT-2 en /mnt/c/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/
 Lee 01-plan-maestro.md y 02-prompt-fase-A.md
 Ejecuta FASE-A: P-01 (conteo README post-manifest) + P-07 (string vs enum)
 ```

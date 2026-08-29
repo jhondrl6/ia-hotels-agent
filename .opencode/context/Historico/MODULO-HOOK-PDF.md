@@ -1,6 +1,6 @@
 # Contexto: Módulo Hook PDF Generator para iah-cli
 
-**Archivo:** `.opencode/context/MODULO-HOOK-PDF.md`
+**Archivo:** `/.opencode/context/Historico/MODULO-HOOK-PDF.md`
 **Fecha:** 2026-07-09
 **Propósito:** Insumo completo para planificar la implementación del módulo `hook_pdf_generator` como parte de `modules/commercial_documents/`, resolviendo el gap #2 "Empaquetado no técnico" del plan de negocio.
 **Origen:** Conversación analítica entre el usuario y Hermes Agent sobre coherencia arquitectónica del diseño actual en `PROPUESTA_EMPAQUETADO_NO_TECNICO.md`.

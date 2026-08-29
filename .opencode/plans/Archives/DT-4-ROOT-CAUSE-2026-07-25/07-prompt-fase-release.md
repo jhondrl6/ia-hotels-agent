@@ -67,9 +67,9 @@ Después de recibir el resultado del v4complete, el agente principal ejecuta el 
 ```bash
 # Guardar evidencia de la ejecución post-fix
 cp output/clientes/v4_complete/v4_complete_report.json \
-   .opencode/plans/DT-4-ROOT-CAUSE-2026-07-25/evidence/v4complete_report_post_fix.json
+   /.opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/v4complete_report_post_fix.json
 cp output/clientes/v4_complete/zione/v4_audit/gate_report_*.json \
-   .opencode/plans/DT-4-ROOT-CAUSE-2026-07-25/evidence/
+   /.opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/
 ```
 
 #### 2.2 Verificar matriz de fixes

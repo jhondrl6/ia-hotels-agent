@@ -47,7 +47,7 @@
 Copiar y pegar en la siguiente sesión:
 
 ```
-Carga y ejecuta .opencode/plans/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-0.md
+Carga y ejecuta /.opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-0.md
 ```
 
 Cada prompt de fase incluye instrucciones para continuar con la siguiente.

@@ -196,7 +196,7 @@ cd /mnt/c/Users/Jhond/Github/iah-cli
 python scripts/log_phase.py --phase "FASE-2" --plan "ROICRII" --status "completed" --desc "Gate_ROI_opex_only_wrapper_activa_pipeline_3_pasos" 2>/dev/null || echo "log_phase no disponible — skip"
 
 # 3. Actualizar documentación post-fase
-# Leer y actualizar .opencode/plans/ROICRII/09-documentacion-post-proyecto.md
+# Leer y actualizar /.opencode/plans/Archives/ROICRII/09-documentacion-post-proyecto.md
 # Sección FASE-2: completar con archivos modificados, tests, hallazgos resueltos
 ```
 

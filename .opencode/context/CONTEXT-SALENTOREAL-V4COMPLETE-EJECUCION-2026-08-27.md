@@ -281,7 +281,7 @@ El contexto (§2.3, §11) marcó el fix `logger` como "pendiente de commit del u
 | Corrida A (output default, 18:03) | `output/v4_complete/{BLOCKED_BY_GATES.md, v4_complete_report.json, hotelsalentoreal/}` |
 | Fix aplicado | `main.py` (+9/−4, sitios ~1777 y ~2976; sin commit — pendiente de decisión del usuario) |
 | Precedente histórico | `.opencode/context/Historico/ZIONE-PROPOSAL-ASSET-ALIGNMENT-BLOCK-2026-07-23.md` |
-| Lecciones fuente | `.opencode/plans/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/10-analisis-post-implementacion.md` (L-NC1–L-NC12) |
+| Lecciones fuente | `.opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/10-analisis-post-implementacion.md` (L-NC1–L-NC12) |
 
 ---
 

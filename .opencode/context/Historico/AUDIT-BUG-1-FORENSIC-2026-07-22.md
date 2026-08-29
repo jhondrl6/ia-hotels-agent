@@ -1,7 +1,7 @@
 # Auditoría Forense BUG-1 — ADR de Onboarding Ignorado
 
 > **Fecha auditoría**: 2026-07-22
-> **Documento auditado**: `.opencode/context/BUGS-ONBOARDING-ADR-TEMPLATE-2026-07-22.md`
+> **Documento auditado**: `/.opencode/context/Historico/BUGS-ONBOARDING-ADR-TEMPLATE-2026-07-22.md`
 > **Alcance**: Validar cada claim de BUG-1 contra código vivo, trazar el flujo completo
 > YAML → harness → resolver → escenarios → JSON → ValidationSummary → tests.
 > Buscar consumidores paralelos, divergencias de claves, procedencia/confianza falsa

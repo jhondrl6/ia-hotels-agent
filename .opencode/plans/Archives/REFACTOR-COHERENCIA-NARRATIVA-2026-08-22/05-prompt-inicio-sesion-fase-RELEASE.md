@@ -22,7 +22,7 @@ SI el agente principal tiene presupuesto limitado de iteraciones:
         Seguir .agents/workflows/phased_project_executor.md §Paso-7 (E1-E8b).
         Version objetivo: 4.72.1 (patch). Codename: "Coherencia Narrativa Dinámica".
         Datos acumulados en
-        .opencode/plans/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/09-documentacion-post-proyecto.md
+        .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/09-documentacion-post-proyecto.md
         (fuente para CHANGELOG y GUIA_TECNICA).
         Tests esperados: 3,372 funciones (3,360 base + 12 nuevos de R0-A/R0-B/R0-C/R0-D).
         REGLAS:

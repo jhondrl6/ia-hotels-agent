@@ -147,7 +147,7 @@ Al finalizar FASE-E, debe cumplirse:
 ## 7. Archivos del plan
 
 ```
-.opencode/plans/DT-1-DELIVERY-CONTRACT-2026-07-23/
+/.opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/
 ├── README.md                         ← Este archivo (índice)
 ├── dependencias-fases.md             ← Diagrama de dependencias + conflictos
 ├── 01-plan-maestro.md                ← Este archivo (maestro)
@@ -167,5 +167,5 @@ Copiar en una **nueva sesión**:
 
 ```text
 Ejecuta FASE-A del plan DT-1-DELIVERY-CONTRACT-2026-07-23:
-/mnt/c/Users/Jhond/Github/iah-cli/.opencode/plans/DT-1-DELIVERY-CONTRACT-2026-07-23/02-prompt-fase-A.md
+/mnt/c/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/02-prompt-fase-A.md
 ```

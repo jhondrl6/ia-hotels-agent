@@ -2,7 +2,7 @@
 
 **Proyecto:** Publication Readiness Fix (post-FASE-6 blockers)
 **Versión:** 4.57.0 → 4.58.0
-**Contexto:** .opencode/context/ROICRIII-fase-6-resultado-y-faltantes.md
+**Contexto:** /.opencode/context/Historico/ROICRIII-fase-6-resultado-y-faltantes.md
 
 ---
 

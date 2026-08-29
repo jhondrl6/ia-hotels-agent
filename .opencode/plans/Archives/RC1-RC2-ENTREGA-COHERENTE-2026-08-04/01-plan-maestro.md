@@ -1,7 +1,7 @@
 # Plan Maestro: Coherencia Propuesta↔Diagnóstico + Gates + Entrega (RC1/RC2/RC3)
 
 **ID del plan**: RC1-RC2-ENTREGA-COHERENTE-2026-08-04
-**Contexto fuente**: `.opencode/context/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md`
+**Contexto fuente**: `/.opencode/context/Historico/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md`
 **Workflow rector**: `.agents/workflows/phased_project_executor.md` v2.14.0
 **Versión actual**: v4.70.0 → **Release objetivo: v4.71.0**
 **Hotel de verificación E2E**: Zi One Luxury (https://zione.co/) — onboarding real en `output/clientes/zi-one-luxury_onboarding.yaml`
@@ -87,7 +87,7 @@ Razones:
 | `main.py` | D (S7) | Único (loader onboarding L1746, fallback) |
 | `modules/financial_engine/harness_handlers.py` | D (S5) | Único (occupancy label L118) |
 | `pytest.ini` / `tests/_archived_broken_tests/commercial_documents/` | A | Único (cuarentena 3 archivos, --ignore específicos) |
-| `.opencode/plans/COHERENCIA-MODULO-ENTREGA-2026-08-03/*` | E | Único (solo MD, corrección R3.1-R3.3) |
+| `/.opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/*` | E | Único (solo MD, corrección R3.1-R3.3) |
 | `scripts/run_all_validations.py` | E | Único (nuevo check `_check_prompts_no_release`, stdlib-only) |
 | `evidence/FASE-F/` | F | Único (run E2E + verificación V1-V10) |
 | `VERSION.yaml`, `CHANGELOG.md`, `docs/GUIA_TECNICA.md` | RELEASE | Único (bump 4.71.0 + docs oficiales) |

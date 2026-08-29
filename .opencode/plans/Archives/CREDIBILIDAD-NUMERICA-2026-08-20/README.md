@@ -1,7 +1,7 @@
 # PLAN: CREDIBILIDAD-NUMERICA-2026-08-20
 
 > **ID**: CREDIBILIDAD-NUMERICA-2026-08-20
-> **Fuente de hallazgos**: `.opencode/context/CONTEXT-VALIDACION-COMERCIAL-CODIGO-VIVO-2026-08-19.md` (fallos F1-F14)
+> **Fuente de hallazgos**: `/.opencode/context/Historico/CONTEXT-VALIDACION-COMERCIAL-CODIGO-VIVO-2026-08-19.md` (fallos F1-F14)
 > **Workflow**: `.agents/workflows/phased_project_executor.md` v2.15.0 (R1: una fase por sesión, R2: max 60 iteraciones, R3: max 4 tareas + 1 comando largo por fase)
 > **Versión objetivo**: v4.72.0 — "Credibilidad Numérica y Verdad del Sitio Vivo"
 > **Cierre del plan**: ÚNICA ejecución de `v4complete` para **Zi One Luxury** (https://zione.co/) con onboarding real (`output/clientes/zi-one-luxury_onboarding.yaml`) + análisis post-implementación de fixes superados + lecciones aprendidas.
@@ -105,7 +105,7 @@ lectura de módulos). Correcciones aplicadas a 01-plan-maestro.md y a los prompt
 ## Archivos del Plan
 
 ```
-.opencode/plans/CREDIBILIDAD-NUMERICA-2026-08-20/
+/.opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/
 ├── README.md                                    (este archivo)
 ├── 01-plan-maestro.md                           (mapeo F1-F14 → fases, alcance)
 ├── dependencias-fases.md                        (diagrama + conflictos de archivos)

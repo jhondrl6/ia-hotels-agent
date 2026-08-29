@@ -11,7 +11,7 @@
 ## Contexto
 
 Plan: BUGFIX-LUXOR-2026-07-06 v4.60.1
-Contexto origen: `.opencode/context/bugs_no_onboarding_luxor_2026-07-06.md`
+Contexto origen: `/.opencode/context/Historico/bugs_no_onboarding_luxor_2026-07-06.md`
 
 Esta fase ejecuta el pipeline completo contra Luxorhotel para verificar que todos los fixes de FASE-1 a FASE-4 funcionan en un entorno real. El comando `v4complete` tarda 5-10 minutos (scraping + APIs + generación de documentos + assets).
 

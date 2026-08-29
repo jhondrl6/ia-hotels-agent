@@ -155,7 +155,7 @@
 | `evidence/FASE-R0-E/` | Evidencia proactiva post-fix (output completo 20260824_113525: diagnóstico, propuesta, report, gate_report, pain_ledgers, delivery ZIP) | FASE-R0-E |
 | `main.py` | Recovery: import `FinancialFactors` en `run_v4_complete_mode` (fix regresión commit 3e88251 "FIX V6" que causaba tier_c BLOCKED falso) | FASE-R0-E (recuperación) |
 | `tests/financial_engine/test_fase_r0e_recovery_financial_factors.py` | +6 tests: contrato AST (import presente y precede uso), comportamiento FASE-K, cadena assessment tier B+ | FASE-R0-E (recuperación) |
-| `.opencode/plans/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/10-analisis-post-implementacion.md` | Matriz AC1-AC12 + lecciones + métricas completadas | FASE-R0-F |
+| `.opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/10-analisis-post-implementacion.md` | Matriz AC1-AC12 + lecciones + métricas completadas | FASE-R0-F |
 | `VERSION.yaml` | bump 4.72.0 → 4.72.1 "Coherencia Narrativa Dinámica" + bloque de comentarios del release | FASE-RELEASE-4.72.1 |
 | `CHANGELOG.md` | Entrada `[4.72.1]` (Objetivo/Cambios/Nuevos/Modificados/Tests) | FASE-RELEASE-4.72.1 |
 | `docs/GUIA_TECNICA.md` | Sección "Notas de Cambios v4.72.1" | FASE-RELEASE-4.72.1 |

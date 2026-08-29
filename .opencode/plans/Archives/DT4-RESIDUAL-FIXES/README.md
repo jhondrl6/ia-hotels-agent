@@ -2,7 +2,7 @@
 
 > **Versión objetivo**: v4.66.0
 > **Hotel de evidencia**: Zi One Luxury — https://zione.co/
-> **Contexto fuente**: `.opencode/context/CONTEXT-DT4-RESIDUAL-FIXES.md`
+> **Contexto fuente**: `/.opencode/context/Historico/CONTEXT-DT4-RESIDUAL-FIXES.md`
 > **Workflow**: `.agents/workflows/phased_project_executor.md` v2.13.0
 > **Regla**: 1 fase por sesión. Máximo 60 iteraciones por fase.
 > **Creado**: 2026-07-27

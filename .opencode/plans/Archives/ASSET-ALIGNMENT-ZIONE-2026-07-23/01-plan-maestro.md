@@ -1,7 +1,7 @@
 # Plan Maestro: ASSET-ALIGNMENT-ZIONE-2026-07-23
 
 > **Fecha**: 2026-07-23
-> **Contexto origen**: `.opencode/context/ZIONE-PROPOSAL-ASSET-ALIGNMENT-BLOCK-2026-07-23.md`
+> **Contexto origen**: `/.opencode/context/Historico/ZIONE-PROPOSAL-ASSET-ALIGNMENT-BLOCK-2026-07-23.md`
 > **Hotel de prueba**: Zi One Luxury (https://zione.co/)
 > **Datos reales**: `data/hotel_observations/observations.json` (entry: Zi One Luxury, Tier A, confidence 0.95)
 > **Estado base**: v4.62.0, 136 tests relevantes ejecutados (1 pre-existing failure)
@@ -211,7 +211,7 @@ Esto es mejor que el plan original porque:
 ## 9. Estructura del plan
 
 ```
-.opencode/plans/ASSET-ALIGNMENT-ZIONE-2026-07-23/
+/.opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/
 ├── 01-plan-maestro.md                    # Este archivo
 ├── 02-prompt-fase-1.md                    # Bypass de seguridad (CRÍTICO)
 ├── 03-prompt-fase-2.md                    # Gaps Pain→Asset (MAYOR COMPLEJIDAD)
