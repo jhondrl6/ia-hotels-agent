@@ -28,7 +28,7 @@ gates:
   ideal_ratio: 0.045
 
 packages:
-  monthly_default: 1200000
+  monthly_default: 400000
   setup_fee_default: 2500000
   floor_price: 1200000
   express_price: 120000
