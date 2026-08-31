@@ -85,6 +85,9 @@ class TestC1RechazoPorCategoria:
         (URL_INSTAGRAM, "red_social"),
         (URL_FACEBOOK, "red_social"),
         (URL_GOOGLE, "buscador"),
+        # Blocklist v2 (2026-08-31): booking engine de terceros y typo-squat.
+        ("https://sys.hosroom.com/booking/382-hotel-carriqui", "ota"),
+        ("https://istagram.com/hotelgranpalacio", "red_social"),
     ])
     def test_url_no_propia_lanza_con_categoria(self, url, categoria):
         with pytest.raises(UrlNoPropiaError) as excinfo:
@@ -146,6 +149,9 @@ class TestC3SubdominiosYRegionales:
         ("https://www.airbnb.com.co/rooms/123", "ota"),
         ("https://www.google.com.co/search?q=hotel", "buscador"),
         ("https://maps.google.com/place/x", "buscador"),
+        # Blocklist v2: subdominios de los nuevos patrones.
+        ("https://www.istagram.com/hotelgranpalacio", "red_social"),
+        ("https://sys.hosroom.com/booking/504-hotel-suite-santa-rosa", "ota"),
     ])
     def test_subdominios_y_regionales_bloqueados(self, url, categoria):
         with pytest.raises(UrlNoPropiaError) as excinfo:
@@ -219,6 +225,9 @@ class TestC7AntiFalsosPositivos:
         "https://mytripadvisorhotel.com/",
         "https://expediahotel.com.co/",
         "https://googlehotel.com/",
+        # Blocklist v2: dominios parecidos a los nuevos patrones NO bloqueados.
+        "https://myhosroom.com/",
+        "https://istagramhotel.com/",
     ])
     def test_dominios_parecidos_no_bloqueados(self, url):
         clasif = assert_own_site(url)

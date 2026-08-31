@@ -1,5 +1,33 @@
 # Changelog
 
+## [4.74.1] - Blocklist v2 (URL propia) — 2026-08-31
+
+### Objetivo
+
+Cerrar dos gaps detectados en la prospección comercial con Google Maps (2026-08-31): URLs que PASABAN técnicamente el guard `own_site_guard` sin ser sitio web propio del hotel — `hosroom.com` (booking engine de terceros usado como "web" en fichas Google) e `istagram.com` (typo-squat de Instagram). Cambio de configuración + tests, sin tocar código del guard.
+
+### Cambios Implementados
+
+- `config/url_blocklist.yaml` v1→v2: `+hosroom.com` (categoría `ota`; matching por sufijo de etiquetas cubre `sys.hosroom.com/booking/...`) y `+istagram.com` (categoría `red_social`)
+- `tests/test_url_propia_guard.py`: +6 casos parametrize — C1 rechazo por categoría (sys.hosroom.com, istagram.com), C3 subdominios (www.istagram.com, sys.hosroom.com), C7 anti-falsos-positivos (myhosroom.com, istagramhotel.com NO bloqueados)
+
+### Archivos Nuevos
+
+Ninguno.
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `config/url_blocklist.yaml` | v1→v2: 2 patrones nuevos con comentario de procedencia |
+| `tests/test_url_propia_guard.py` | +6 casos parametrize en contratos C1/C3/C7 |
+
+### Tests
+
+- 98/98 tests del guard verdes (test_url_propia_guard + superficies + guardián AST)
+- Verificación empírica: las URLs gap ahora BLOQUEADAS (`istagram.com` → red_social, `sys.hosroom.com` → ota); los 8 prospectos viables del pipeline comercial (evidence/Ingresos) siguen PASSED
+- Conteo canónico `def test_` sin cambio (3,689): solo se agregaron casos parametrize
+
 ## [4.74.0] - Guard de URL propia (VALIDADOR-URL-PROPIA) — 2026-08-31
 
 ### Objetivo

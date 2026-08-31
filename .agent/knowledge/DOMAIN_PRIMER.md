@@ -3,7 +3,7 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.74.0 | **Codename**: Guard-URL-Propia
+> **Version del sistema**: 4.74.1 | **Codename**: Blocklist-v2
 > **Release date**: 2026-08-31 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-08-31 | v4.74.0 Guard-URL-Propia*
+*Auto-generado: 2026-08-31 | v4.74.1 Blocklist-v2*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

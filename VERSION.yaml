@@ -1,10 +1,20 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.74.0"
-codename: "Guard-URL-Propia"
+version: "4.74.1"
+codename: "Blocklist-v2"
 release_date: "2026-08-31"
 plan_maestro_version: "v2.6.0"
 
+# v4.74.1 - BLOCKLIST-V2 (2026-08-31)
+# config/url_blocklist.yaml v1→v2 (fuera del ciclo trimestral, detectado en prospección
+# comercial Maps 31-08): +hosroom.com (ota, booking engine de terceros: sys.hosroom.com
+# no es sitio propio) y +istagram.com (red_social, typo-squat de Instagram usado como
+# "web" en fichas Google Maps).
+# +6 casos parametrize en tests/test_url_propia_guard.py (C1 rechazo, C3 subdominios,
+# C7 anti-falsos-positivos myhosroom.com/istagramhotel.com); 98/98 tests del guard verdes.
+# Validación empírica: las 2 URLs gap ahora BLOQUEADAS; los 8 prospectos viables del
+# pipeline (evidence/Ingresos) siguen PASSED. Sin cambios de código (solo config + tests).
+#
 # v4.74.0 - GUARD-URL-PROPIA (2026-08-31)
 # VALIDADOR-URL-PROPIA: guard de entrada blocklistado que rechaza URLs de OTAs/redes sociales
 # antes de cualquier llamada de red/API (GA-1/GA-2).

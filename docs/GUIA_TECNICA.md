@@ -1,6 +1,6 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.74.0 (Guard-URL-Propia)
+**Versión:** v4.74.1 (Blocklist-v2)
 **Última actualización:** 2026-08-31
 
 ---

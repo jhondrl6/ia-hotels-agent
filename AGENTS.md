@@ -1,8 +1,8 @@
-<!-- agents_version: v4.74.0 | last_update: 2026-08-31 -->
+<!-- agents_version: v4.74.1 | last_update: 2026-08-31 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.74.0 -- Guard-URL-Propia COMPLETADO**
+> **v4.74.1 -- Blocklist-v2 COMPLETADO**
 
 ---
 

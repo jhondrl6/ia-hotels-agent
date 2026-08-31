@@ -14,8 +14,8 @@
 #   - "plataforma.*"     → cualquier TLD (google.com, google.com.co, google.es, ...)
 #
 # Mantenimiento: revisar trimestralmente (ver 10-analisis, Seguimientos abiertos).
-version: 1
-actualizado: "2026-08-30"
+version: 2
+actualizado: "2026-08-31"
 description: "Blocklist de URLs no-propias consumida por own_site_guard.py (guard de entrada v4complete)"
 
 categorias:
@@ -35,9 +35,16 @@ categorias:
     - agoda.com
     - kayak.com
     - momondo.com
+    # v2 (2026-08-31, agregado fuera del ciclo trimestral): motor de reservas de
+    # terceros detectado en prospección Maps — sys.hosroom.com/booking/... no es
+    # sitio web propio del hotel.
+    - hosroom.com
 
   red_social:
     - instagram.com
+    # v2 (2026-08-31): typo-squat de Instagram usado como "web" en fichas Google
+    # Maps (istagram.com); suplantación de red social, no sitio propio.
+    - istagram.com
     - facebook.com
     - fb.com
     - tiktok.com
