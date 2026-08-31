@@ -73,6 +73,8 @@
 | `main.py:247` hardcodea `sys.exit(2)` en vez de `EXIT_CODE_URL_NO_PROPIA` (el valor 2 está congelado por el guardián AST de FASE-A) | Debt menor | Unificar cuando se toque `ensure_url`; hoy hook-pdf sí usa la constante y el guardián AST acepta ambas formas |
 | AC7 se evalúa DESPUÉS de leer los 3 archivos fuente (el guard va tras `report_json["url"]`, que exige la carga) | Aceptado | Si alguna vez el reporte fuera potencialmente hostil por tamaño, mover la validación a una lectura previa del JSON |
 | `hook-pdf` sin `--url` reinyecta `last_url` en `args.url` (rama L222-229) aunque el comando no la usa: en el smoke A se vio `[HARNESS] 🔄 Usando URL persistente` antes del rechazo AC7 | Quirk preexistente | **FASE-C P6**: sembrar/verificar que el `last_url` del estado NO coincida con la url del fixture de reporte, para que el exit 2 se atribuya a AC7 y no al choke point |
+| Gate `version-sync` bloqueó el commit de FASE-B y `sync_versions.py` NO lo despeja: solo reescribe las fechas `last_update`, deja `agents_version: v4.71.0` en AGENTS.md mientras VERSION.yaml marca 4.73.0 (medición 2026-08-31, `temp/fase_b_sync_versions.txt`) | **FASE-RELEASE, bloqueante del commit** | En el paso de bump a 4.74.0 editar además el encabezado `agents_version` de AGENTS.md (y revisar `.cursorrules`/GUIA_TECNICA). NO usar `--no-verify` |
+| Conteo global de tests: grep `def test_` en `tests/` = **3677** tras FASE-B vs base documentada 3,631 + 58 del plan = 3,689 | Descuadre documental (no de código) | Conciliar en FASE-RELEASE con el método canónico (`def test_`, no `collect-only`) y actualizar README + AGENTS juntos con la cifra real |
 
 ## Métricas de Ejecución (llenar al cierre)
 | Métrica | Valor |
