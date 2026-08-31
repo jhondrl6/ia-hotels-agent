@@ -19,15 +19,15 @@
 ## Matriz de Verificación de Hallazgos (llenar en FASE-VERIFY)
 | # | Hallazgo / Gap | Expected | Real | Status |
 |---|----------------|----------|------|--------|
-| GA-1 | Colapso de identidad: URLs OTA producen target_id compartido | v4complete/onboard/execute/deploy rechazan URL OTA con exit 2, mensaje claro, sin red/API | — | ⏳ |
-| GA-2 | Scraper emite datos de tercero con confianza arbitraria | Guard aborta antes del scrapeo; capa datos protegida (assert_own_site) | — | ⏳ |
+| GA-1 | Colapso de identidad: URLs OTA producen target_id compartido | v4complete/onboard/execute/deploy rechazan URL OTA con exit 2, mensaje claro, sin red/API | Choke point + contra-condición F2 congelados por el guardián AST (10 defs); smoke `v4complete --url booking…` → exit 2 sin red | ⏳ falta medición P1-P4 (C) |
+| GA-2 | Scraper emite datos de tercero con confianza arbitraria | Guard aborta antes del scrapeo; capa datos protegida (assert_own_site) | `assert_own_site` primera sentencia de `extract_hotel_data` y de `audit()`, con centinelas que prueban que no hay HTTP tras el rechazo + guardián AST | ✅ B (empírico: C) |
 | N1 | Contaminación cruzada de onboarding por netloc | Imposible: la URL OTA ya no entra al pipeline | — | ⏳ |
 | N2 | ADR de OTA entra al motor financiero | Imposible: rechazo previo al fallback de ADR | — | ⏳ |
-| N3 | last_url propaga URLs envenenadas | No se persisten bloqueadas; reinyección rechazada con mención del estado | — | ⏳ |
+| N3 | last_url propaga URLs envenenadas | No se persisten bloqueadas; reinyección rechazada con mención del estado | AC6: orden `ensure_url`(L1428)→`save_state`(L1433) contratado subiendo `main()` (con contrapositivo de mutación) + rechazo de estado envenenado que nombra el origen | ✅ B (empírico: P5 en C) |
 | N4 | Coste Places API con queries basura | Rechazo antes de cualquier llamada API (probe P1: duración < 30 s) | — | ⏳ |
-| N6 | Identidad duplicada (onboarding_controller) | Fix ortogonal: no se tocaron los normalizadores; guardián AST cubre las superficies de entrada | — | ⏳ |
-| N8 | hook-pdf sin superficie para guard | Validación sobre `report_json["url"]` (probe P6) | — | ⏳ |
-| AC3/AC8 | No-regresión tradicional | 28/28 canonicalización + E2E Salento Real equivalente al baseline H2 | — | ⏳ |
+| N6 | Identidad duplicada (onboarding_controller) | Fix ortogonal: no se tocaron los normalizadores; guardián AST cubre las superficies de entrada | 28/28 canonicalización re-verificado tras B; normalizadores intactos | ✅ B |
+| N8 | hook-pdf sin superficie para guard | Validación sobre `report_json["url"]` (probe P6) | AC7 cableado + `run_hook_pdf_mode` → exit 2 sin PDF (smoke A con reporte OTA real) | ✅ B (empírico: P6 en C) |
+| AC3/AC8 | No-regresión tradicional | 28/28 canonicalización + E2E Salento Real equivalente al baseline H2 | 28/28 verde tras B (dentro de los 120 passed); smoke `hook-pdf --dry-run` sobre el reporte real de Salento Real → exit 0 | ⏳ E2E en D |
 
 ## Lecciones Aprendidas
 
