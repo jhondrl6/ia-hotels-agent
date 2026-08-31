@@ -169,7 +169,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-dir", help="Directorio con output de v4_complete (obligatorio para hook-pdf)")
     parser.add_argument("--template", help="Ruta al template HTML (default: templates/hook_template.md)")
     parser.add_argument("--style", help="Ruta al CSS (default: templates/hook_styles.css)")
-    parser.add_argument("--force", action="store_true", help="Sobrescribir PDF si ya existe")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Sobrescribir PDF si ya existe; además, bypass explícito del guard de URL propia (permite URLs de OTA/red social/buscador y registra el evento)",
+    )
     return parser
 
 
@@ -214,15 +218,33 @@ def normalize_stages(raw_stages: List[str] | None) -> List[str]:
 
 
 def ensure_url(parser: argparse.ArgumentParser, args: argparse.Namespace) -> None:
+    origen_url = "--url"
     if args.command not in ("execute", "deploy", "setup", "onboard") and not args.url:
         from agent_harness.memory import MemoryManager
         memory = MemoryManager()
         state = memory.load_state()
         if state.get("last_url"):
             args.url = state["last_url"]
+            origen_url = "estado_persistente"
             print(f"[HARNESS] 🔄 Usando URL persistente: {args.url}")
         else:
             parser.error("--url es obligatorio para este comando")
+
+    # Guard de URL propia (VALIDADOR-URL-PROPIA FASE-A, D-VUP-A1): va DESPUÉS de
+    # la reinyección de last_url para validar también el estado persistente (AC6)
+    # y ANTES de cualquier red/API (ensure_url precede al routing en main()).
+    if args.url:
+        from modules.data_validation.own_site_guard import UrlNoPropiaError, assert_own_site
+        try:
+            assert_own_site(
+                args.url,
+                force=getattr(args, "force", False),
+                origen=origen_url,
+                comando=getattr(args, "command", "") or "",
+            )
+        except UrlNoPropiaError as exc:
+            print(str(exc), file=sys.stderr)
+            sys.exit(2)
 
 
 def _audit_handler(payload: dict, context) -> dict:

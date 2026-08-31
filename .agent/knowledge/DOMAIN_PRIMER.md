@@ -11,14 +11,14 @@
 
 ## Modulos del Repositorio (auto-generado)
 
-> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 196 archivos Python en total.
+> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 197 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
 | **scrapers/** | 16 | BookingScraper; DriverInterface; GBPAuditor; GBPAuditorAuto; GBPRevenueLeakDetector; DriverAdapterProtocol, DriverAdapterBase, SeleniumAdapter, PlaywrightAdapter; PostsAuditResult, GBPPostsAuditor; Pl |
-| **data_validation/** | 6 | ConfidenceLevel, DataSource, ValidationResult, ConfidenceTaxonomy; CrossValidator; MetadataValidator; PageSpeedResult, PageSpeedClient; SchemaType, SchemaValidationResult, RichResultsTestResult, RichR |
+| **data_validation/** | 7 | ConfidenceLevel, DataSource, ValidationResult, ConfidenceTaxonomy; CrossValidator; MetadataValidator; UrlNoPropiaError, UrlClassification; PageSpeedResult, PageSpeedClient; SchemaType, SchemaValidatio |
 | **financial_engine/** | 19 | ADRSource, ADRResolutionResult, ADRResolutionWrapper; CalculationStatus, FinancialCalculationResult, FinancialCalculatorV2; InferredChannel, EvidenceConfidence, ChannelEvidence, ChannelEvidenceResolve |
 | **orchestration_v4/** | 2 | OnboardingPhase, OnboardingStatus, OnboardingState, OnboardingController; Phase1Result, Phase2Result, HookRangeTraceability, HotelInputs |
 | **onboarding/** | 4 | OnboardingForm |
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-08-29 | v4.73.0 Reparacion-Pipeline-Salento-Real*
+*Auto-generado: 2026-08-31 | v4.73.0 Reparacion-Pipeline-Salento-Real*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

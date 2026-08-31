@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — VALIDADOR-URL-PROPIA-2026-08-30
 
-> **Estado**: Preparación completada — pendiente FASE-A
+> **Estado**: FASE-A completada 2026-08-30 — siguiente: FASE-B
 > **Plan**: VALIDADOR-URL-PROPIA-2026-08-30
 > **Versión objetivo**: 4.74.0
 > **Creado desde la concepción** (executor v2.17.0 §4): cada fase llena sus secciones AL CIERRE.
@@ -9,7 +9,7 @@
 | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
 |------|--------|--------|-------------|---------------|-------|
 | Preparación | 2026-08-30 | ✅ | ~30 | No | Paso 0 ejecutado: memoria + QMind `iah-cli-lecciones` (2 queries) |
-| FASE-A | — | ⏳ | — | No (DIRECTO) | |
+| FASE-A | 2026-08-30 | ✅ | ~28 | No (DIRECTO) | TDD rojo→verde: 45/45 contratos (23 def test_); baseline real 14 rojos preexistentes registrada; 28/28 canonicalización; validaciones 7/7; smoke CLI exit 2 |
 | FASE-B | — | ⏳ | — | Sí (2 subagentes) | |
 | FASE-C | — | ⏳ | — | Sí | |
 | FASE-D | — | ⏳ | — | Mixto | |
@@ -50,15 +50,15 @@
 ### Lecciones nuevas de este plan (numeración L-VUP-n)
 | ID | Qué pasó | Por qué | Qué lo previene | Pertinencia | Fase |
 |----|----------|---------|-----------------|-------------|------|
-| L-VUP-1 | (llenar) | | | | A |
-| L-VUP-2 | (llenar) | | | | A |
-| L-VUP-3 | (llenar) | | | | A |
-| ... | mínimo 3 por fase completada | | | | B-D, VERIFY |
+| L-VUP-1 | La baseline "13 rojos" del audit midió 14 en FASE-A T1: `test_function_default_flags` es orden-dependiente (falla en combinación, pasa aislado) | El estado de algunos tests de pricing depende del orden/estado de la sesión pytest, no solo del código | Registrar la baseline con la COMBINACIÓN EXACTA de archivos que se usará para comparar en cada fase; los "fallos nuevos" se juzgan con corridas idénticas | Alta (todas las fases comparan contra baseline) | A |
+| L-VUP-2 | El archivo de eventos `--force` es append-only y NO está en .gitignore: los tests lo contaminarían | `MemoryManager.save_state` tiene semántica REPLACE (memory.py:303-318) y main.py:1411 la llama después de ensure_url; JSON Lines es el formato append-only natural | Archivo DEDICADO JSON Lines + fixture snapshot/restore en tests (restaura el contenido previo o elimina el archivo si no existía) | Alta (FASE-B/C también escriben/leen eventos) | A |
+| L-VUP-3 | Matching de dominios por substring produce falsos positivos (`bookingbogota.com`) y el patrón `X.*` mal anclado produce falsos negativos/positivos | Los dominios son secuencias de etiquetas; la identidad de plataforma vive en fronteras de punto | Matching por SUFIJO DE ETIQUETAS (split por `.`): patrón plano = etiquetas finales iguales; `X.*` = base alineada en frontera con ≥1 etiqueta después (el TLD); contrato C7 congela los anti-falsos-positivos | Alta (mantenimiento de la blocklist) | A |
+| L-VUP-4 | Reusar `_normalize_url()` desde un módulo exige import lazy dentro de la función | `main.py` importa los módulos; un import top-level en `own_site_guard` ciclaría cuando FASE-B cablee el guard en el scraper (main→scrapers→guard→main) — la misma dependencia inversa de N6 | `from main import _normalize_url` DENTRO de `_netloc_de()`; FASE-B debe mantener imports lazy del guard en web_scraper/v4_comprehensive | Alta (FASE-B: cableado en capa de datos) | A |
 
 ## Seguimientos abiertos
 | Tema | Estado | Acción futura |
 |------|--------|---------------|
-| Línea base sucia: hasta 12 tests rojos preexistentes (2026-08-29) | Re-verificar en FASE-A T1 | Registrar conteo real; NO atribuir al plan |
+| Línea base sucia: **14 tests rojos preexistentes verificados 2026-08-30 (FASE-A T1)** — calculator_v2 ×3, pricing_resolution_wrapper ×9 (+1 vs los ×8 documentados), site_verification_propagation ×1, config_pricing ×1; canonicalización 28/28 verde (`temp/fase_a_baseline.txt`) | REGISTRADO | NO atribuir al plan; las fases comparan contra estos 14 |
 | Residuo `test_config_pricing::test_tiers_boutique_min_price` + N10 (pricing.yaml inconsistente) | Fuera de alcance | Decisión separada: ¿test, yaml o ambos contra escalera canónica? |
 | RC3: confidence/CMS mide estructura, no identidad de fuente (terceros no blocklisted) | Watchlist | Vigilar con la blocklist versionada; posible plan futuro |
 | N5: bug numérico latente en `generar_reporte_ejecutivo()` | Fuera de alcance | Fix de la familia credibilidad numérica |
@@ -69,9 +69,9 @@
 ## Métricas de Ejecución (llenar al cierre)
 | Métrica | Valor |
 |---------|-------|
-| Tests nuevos totales | — |
-| Tests finales (def test_) | — |
-| Regresiones nuevas | 0 (objetivo) |
+| Tests nuevos totales | +23 def test_ (45 casos parametrize) tras FASE-A |
+| Tests finales (def test_) | — (FASE-RELEASE: conteo con grep/collect-only) |
+| Regresiones nuevas | 0 (verificado FASE-A vs baseline de 14) |
 | Coherence E2E Salento Real | — (baseline H2: 0.88) |
 | Probes Don Julio superados | —/11 |
 | ACs certificados | —/8 |
@@ -84,6 +84,8 @@
 | D-VUP-A2 | Guard ORTOGONAL: no cambia `_normalize_url` ni `generate_hotel_id` | 28 tests congelan semántica netloc-only (N9); netloc es correcto para sitios propios | Cambiar normalización para preservar path (rompería identidad SR-D) | A |
 | D-VUP-A3 | Blocklist versionada `config/url_blocklist.yaml` (categorías ota/red_social/buscador) | Mantenible sin tocar código; centraliza semillas existentes (no tercer sistema) | Lista hardcoded en main.py; detección heurística de OTA | A |
 | D-VUP-A4 | Modo "sin web" (Opción C) fuera de alcance | Es producto nuevo; merece contexto de decisión comercial propio | Construir runner GBP-only ahora | Preparación |
+| D-VUP-A5 | Eventos `--force` en archivo DEDICADO append-only `.agent/memory/url_guard_force_events.json` (JSON Lines: {timestamp, url, comando} por línea) | `MemoryManager.save_state` es REPLACE (memory.py:303-318) y main.py:1411 la llama DESPUÉS de ensure_url → borraría el evento; JSON Lines permite append sin read-modify-write | save_state / estado general; JSON array (exige reescritura completa) | A |
+| D-VUP-A6 | Import lazy de `_normalize_url` dentro de `_netloc_de()` (no top-level) | Dependencia inversa con main (N6): un import top-level ciclaría al cablear FASE-B el guard en scrapers/auditors que main importa | Import top-level (frágil ante el cableado de FASE-B); copiar el normalizador (tercer sistema) | A |
 
 ## Checklist de Cierre (llenar en FASE-RELEASE)
 - [ ] Todas las fases ✅ en `06-checklist-implementacion.md`

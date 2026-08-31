@@ -5,7 +5,7 @@
 ## Sección A: Módulos Nuevos
 | Módulo | Archivos | Descripción | Fase |
 |--------|----------|-------------|------|
-| (pendiente FASE-A) | `modules/data_validation/own_site_guard.py` | Guard de URL propia: classify_url / assert_own_site / UrlNoPropiaError | A |
+| Guard de URL propia | `modules/data_validation/own_site_guard.py` | Guard de URL propia: classify_url / assert_own_site / UrlNoPropiaError (exit 2, mensaje en español que nombra la plataforma) | A |
 
 ## Sección B: Funcionalidades Nuevas
 | Feature | Módulo | Descripción | Fase |
@@ -21,7 +21,7 @@
 | Métrica | Valor | Fase |
 |---------|-------|------|
 | Tests base (def test_) | 3,631 | Preparación |
-| Tests nuevos | — | A |
+| Tests nuevos | +23 def test_ (45 casos con parametrize) | A |
 | Tests nuevos | — | B |
 | 28 canonicalización | verde (requisito) | A-C |
 | Probes Don Julio | —/11 | C |
@@ -42,3 +42,4 @@
 
 ## Notas de Ejecución (por fase)
 - **Preparación (2026-08-30)**: plan orquestado desde contexto verificado; lecciones Paso 0 recuperadas (memoria + QMind iah-cli-lecciones).
+- **FASE-A (2026-08-30)**: TDD rojo→verde (`temp/fase_a_red.txt` → `temp/fase_a_guard.txt`, 45/45); guardián AST del choke point; 28/28 canonicalización sin tocar el normalizador; regresión dirigida data_validation 166/166 y orchestration_v4 93/93; baseline re-verificada: 14 fallos preexistentes (pricing_resolution_wrapper ×9, uno orden-dependiente — pasa aislado), 0 nuevos; validaciones 7/7; smoke CLI `v4complete --url booking…` → exit 2 sin red y sin contaminar `last_url`.

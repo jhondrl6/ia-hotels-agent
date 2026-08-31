@@ -1,0 +1,49 @@
+# Blocklist de URLs no-propias — plan VALIDADOR-URL-PROPIA-2026-08-30 (FASE-A).
+#
+# Fuente única versionada que consume el guard de entrada
+# (modules/data_validation/own_site_guard.py). Centraliza las semillas que ya
+# existían en el repo (NO crear un tercer sistema):
+#   - modules/scrapers/web_scraper.py:523        (lista otas: booking.com, expedia, airbnb, hotels.com)
+#   - modules/orchestration_v4/two_phase_flow.py:716-722 (booking, expedia, hotels,
+#     airbnb, despegar, trivago, tripadvisor)
+#
+# Matching: por SUFIJO DE ETIQUETAS de dominio, NUNCA por substring
+# (evita falsos positivos tipo bookingbogota.com — contrato C7/F6):
+#   - "plataforma.tld"   → netloc exacto o subdominio (*.plataforma.tld)
+#   - "plataforma.tld.*" → dominios regionales (plataforma.tld.co, .mx, .ar, ...)
+#   - "plataforma.*"     → cualquier TLD (google.com, google.com.co, google.es, ...)
+#
+# Mantenimiento: revisar trimestralmente (ver 10-analisis, Seguimientos abiertos).
+version: 1
+actualizado: "2026-08-30"
+
+categorias:
+  ota:
+    - booking.com
+    - booking.com.*
+    - expedia.com
+    - expedia.com.*
+    - hotels.com
+    - airbnb.com
+    - airbnb.com.*
+    - despegar.com
+    - despegar.com.*
+    - trivago.com
+    - tripadvisor.com
+    - tripadvisor.com.*
+    - agoda.com
+    - kayak.com
+    - momondo.com
+
+  red_social:
+    - instagram.com
+    - facebook.com
+    - fb.com
+    - tiktok.com
+    - twitter.com
+    - x.com
+
+  buscador:
+    - google.*
+    - bing.com
+    - duckduckgo.com

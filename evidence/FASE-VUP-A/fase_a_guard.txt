@@ -1,0 +1,55 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 45 items
+
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_url_no_propia_lanza_con_categoria[https://www.booking.com/hotel/co/finca-don-julio.es.html-ota] PASSED [  2%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_url_no_propia_lanza_con_categoria[https://booking.com/hotel/co/x-ota] PASSED [  4%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_url_no_propia_lanza_con_categoria[https://www.instagram.com/fincahoteldonjulio-red_social] PASSED [  6%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_url_no_propia_lanza_con_categoria[https://www.facebook.com/fincahoteldonjulio-red_social] PASSED [  8%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_url_no_propia_lanza_con_categoria[https://www.google.com/search?q=finca+hotel+don+julio-buscador] PASSED [ 11%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_mensaje_nombra_plataforma_y_pide_sitio_propio[https://www.booking.com/hotel/co/finca-don-julio.es.html] PASSED [ 13%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_mensaje_nombra_plataforma_y_pide_sitio_propio[https://www.instagram.com/fincahoteldonjulio] PASSED [ 15%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_mensaje_nombra_plataforma_y_pide_sitio_propio[https://www.google.com/search?q=finca+hotel+don+julio] PASSED [ 17%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_default_origen_es_cli PASSED [ 20%]
+tests/test_url_propia_guard.py::TestC2UrlPropiaPasa::test_sitio_propio_no_lanza[https://www.hotelsalentoreal.com/] PASSED [ 22%]
+tests/test_url_propia_guard.py::TestC2UrlPropiaPasa::test_sitio_propio_no_lanza[https://hotelsalentoreal.com/habitaciones?utm_source=google] PASSED [ 24%]
+tests/test_url_propia_guard.py::TestC2UrlPropiaPasa::test_sitio_propio_no_lanza[https://zione.co] PASSED [ 26%]
+tests/test_url_propia_guard.py::TestC2UrlPropiaPasa::test_sitio_propio_no_lanza[hotelsalentoreal.com/reservas] PASSED [ 28%]
+tests/test_url_propia_guard.py::TestC2UrlPropiaPasa::test_classify_marca_no_bloqueada PASSED [ 31%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://secure.instagram.com/fincahoteldonjulio-red_social] PASSED [ 33%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://m.facebook.com/x-red_social] PASSED [ 35%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://booking.com.co/hotel/co/x-ota] PASSED [ 37%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://www.booking.com.co/hotel/co/x-ota] PASSED [ 40%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://www.airbnb.com.co/rooms/123-ota] PASSED [ 42%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://www.google.com.co/search?q=hotel-buscador] PASSED [ 44%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://maps.google.com/place/x-buscador] PASSED [ 46%]
+tests/test_url_propia_guard.py::TestC4ForceBypass::test_force_no_lanza_y_marca_clasificacion PASSED [ 48%]
+tests/test_url_propia_guard.py::TestC4ForceBypass::test_evento_persistido_en_ruta_por_defecto PASSED [ 51%]
+tests/test_url_propia_guard.py::TestC4ForceBypass::test_evento_tiene_timestamp_url_comando PASSED [ 53%]
+tests/test_url_propia_guard.py::TestC4ForceBypass::test_append_only_acumula_eventos PASSED [ 55%]
+tests/test_url_propia_guard.py::TestC5ReusaNormalizeUrl::test_ast_referencia_normalize_url PASSED [ 57%]
+tests/test_url_propia_guard.py::TestC5ReusaNormalizeUrl::test_soporta_url_sin_protocolo_como_normalize_url PASSED [ 60%]
+tests/test_url_propia_guard.py::TestC7AntiFalsosPositivos::test_dominios_parecidos_no_bloqueados[https://bookingbogota.com/habitaciones] PASSED [ 62%]
+tests/test_url_propia_guard.py::TestC7AntiFalsosPositivos::test_dominios_parecidos_no_bloqueados[https://hotelairbnb.co/] PASSED [ 64%]
+tests/test_url_propia_guard.py::TestC7AntiFalsosPositivos::test_dominios_parecidos_no_bloqueados[https://mytripadvisorhotel.com/] PASSED [ 66%]
+tests/test_url_propia_guard.py::TestC7AntiFalsosPositivos::test_dominios_parecidos_no_bloqueados[https://expediahotel.com.co/] PASSED [ 68%]
+tests/test_url_propia_guard.py::TestC7AntiFalsosPositivos::test_dominios_parecidos_no_bloqueados[https://googlehotel.com/] PASSED [ 71%]
+tests/test_url_propia_guard.py::TestAC6OrigenEstadoPersistente::test_rechazo_menciona_estado_persistente PASSED [ 73%]
+tests/test_url_propia_guard.py::TestAC6OrigenEstadoPersistente::test_origen_cli_sin_mencion PASSED [ 75%]
+tests/test_url_propia_guard.py::TestAC6OrigenEstadoPersistente::test_ciclo_force_reinyeccion_auto_consistente PASSED [ 77%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_url_bloqueada_sale_con_codigo_2 PASSED [ 80%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_cubre_todos_los_comandos[execute] PASSED [ 82%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_cubre_todos_los_comandos[onboard] PASSED [ 84%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_cubre_todos_los_comandos[deploy] PASSED [ 86%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_cubre_todos_los_comandos[v4audit] PASSED [ 88%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_url_propia_no_altera_el_flujo PASSED [ 91%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_force_no_sale_y_mantiene_url PASSED [ 93%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_reinyeccion_envenenada_rechazada_con_mencion PASSED [ 95%]
+tests/test_guardian_ast_url_guard.py::test_ensure_url_invoca_assert_own_site PASSED [ 97%]
+tests/test_guardian_ast_url_guard.py::test_ensure_url_captura_url_no_propia_y_sale_con_2 PASSED [100%]
+
+============================= 45 passed in 0.60s ==============================

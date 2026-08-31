@@ -52,7 +52,7 @@ Overlap en `main.py` SOLO en subagente 1 → tracks paralelizables; el parent in
 | Sondas `temp/probe_donjulio_viability.py`, `temp/probe2_donjulio.py` | Posiblemente limpiadas | Regenerar desde Apéndice A del contexto (no son requisito del guard; solo referencia empírica) |
 | Baseline E2E `output/salentoreal_final_v4c_h2/` | ✅ Verificado 2026-08-30 (reporte en `v4_complete/v4_complete_report.json`) | Si desaparece, la comparación usa solo criterios absolutos (coherence ≥ 0.8, gates, target_id) |
 | Onboarding Salento Real (`output/clientes/*salento*.yaml`) | ❌ NO existe (verificado 2026-08-30; solo zi-one-luxury) | Auditoría F5: NO fabricar — el baseline H2 corrió con defaults, la equivalencia AC8 exige defaults |
-| Línea base 12 tests rojos preexistentes (2026-08-29) | ✅ Re-verificado 2026-08-30: 13 fallos exactos (3+8+1+1) | Registrar en 10-analisis en FASE-A T1; NO atribuirlos al plan |
+| Línea base de tests rojos preexistentes | ✅ Re-verificado en FASE-A T1 (2026-08-30): **14 fallos** — calculator_v2 ×3, pricing_resolution_wrapper ×9 (uno orden-dependiente: `test_function_default_flags` pasa aislado), site_verification_propagation ×1, config_pricing ×1 (`temp/fase_a_baseline.txt`) | Registrar en 10-analisis; NO atribuirlos al plan; comparar siempre con la MISMA combinación de archivos |
 
 ## Fallback documentado (Paso 0 executor)
 
@@ -64,3 +64,4 @@ Overlap en `main.py` SOLO en subagente 1 → tracks paralelizables; el parent in
 |-------|--------|--------|
 | 2026-08-30 | Preparación | Plan creado; 6 prompts + docs base listos; pendiente FASE-A |
 | 2026-08-30 | Auditoría de estrategia | Re-verificación contra código vivo HEAD; 10 fallos corregidos (F1-F10, detalle en README §Auditoría): --force existente, ensure_url cubre todos los comandos, P5 sembrado, mecanismo de warning, FASE-D con defaults, matching anti-falsos-positivos |
+| 2026-08-30 | **FASE-A ✅** | Núcleo del guard implementado (TDD rojo→verde 45/45): `config/url_blocklist.yaml`, `modules/data_validation/own_site_guard.py`, choke point en `ensure_url()` DESPUÉS de la reinyección `last_url`, `--force` reutilizado con eventos en `.agent/memory/url_guard_force_events.json`. Baseline real: 14 rojos preexistentes (wrapper ×9, uno orden-dependiente). 28/28 canonicalización. Sin fallos nuevos. Evidencia: `evidence/FASE-VUP-A/`. Sigue: FASE-B (sesión nueva, `git status` limpio tras el commit de A) |

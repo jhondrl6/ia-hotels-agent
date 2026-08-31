@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-08-30
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 449
+> **Total fases completadas:** 450
 
 ---
 
@@ -10540,6 +10540,30 @@ _Ninguno_
 - [x] Tests passing (132)
 - [x] Suite NEVER_BLOCK passing
 - [x] Coherence >= 0.8: 0.88 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-A - 2026-08-30
+**Descripcion:** Guard de URL propia: blocklist config + own_site_guard + choke point ensure_url + --force (TDD)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `config/url_blocklist.yaml` | NUEVO | Url Blocklist |
+| `modules/data_validation/own_site_guard.py` | NUEVO | Own Site Guard |
+| `tests/test_url_propia_guard.py` | NUEVO | Test Url Propia Guard |
+| `tests/test_guardian_ast_url_guard.py` | NUEVO | Test Guardian Ast Url Guard |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+
+### Validaciones
+- [x] Tests passing (23)
+- [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
 ---
