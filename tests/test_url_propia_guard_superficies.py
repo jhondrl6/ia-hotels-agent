@@ -53,9 +53,11 @@ def registro_forzadas_aislado():
 @pytest.fixture
 def eventos_force():
     """Snapshot/restore del archivo append-only de eventos --force (mismo
-    contrato que el fixture de FASE-A)."""
+    contrato que el fixture de FASE-A). Se vacía antes del test: los eventos
+    reales de producción (ej. sondas --force) no deben contaminar conteos."""
     path = Path(FORCE_EVENTS_PATH)
     previo = path.read_text(encoding="utf-8") if path.exists() else None
+    path.write_text("", encoding="utf-8")
     yield path
     if previo is None:
         if path.exists():

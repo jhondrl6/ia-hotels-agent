@@ -30,11 +30,11 @@ class TestScenariosYAMLValues:
         assert data['recovery_factors']['conservative'] == 0.15
 
     def test_recovery_factors_realistic(self):
-        """recovery_factors.realistic == 0.2"""
+        """recovery_factors.realistic == 0.35 (ROICRII FASE-3: pipeline unificado)"""
         config_path = os.path.join(os.path.dirname(__file__), '../../config/scenarios.yaml')
         with open(config_path, encoding='utf-8') as f:
             data = yaml.safe_load(f)
-        assert data['recovery_factors']['realistic'] == 0.2
+        assert data['recovery_factors']['realistic'] == 0.35
 
     def test_ota_shift_minimal(self):
         """ota_shift.minimal == 0.05"""

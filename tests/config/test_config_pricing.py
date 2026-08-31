@@ -23,11 +23,11 @@ class TestPricingYAMLValues:
         assert os.path.exists(config_path), f"pricing.yaml no encontrado en {config_path}"
 
     def test_tiers_boutique_min_price(self):
-        """tiers.boutique.min_price == 1200000"""
+        """tiers.boutique.min_price == 800000 (FASE-P0-A: pricing.yaml fuente única)"""
         config_path = os.path.join(os.path.dirname(__file__), '../../config/pricing.yaml')
         with open(config_path, encoding='utf-8') as f:
             data = yaml.safe_load(f)
-        assert data['tiers']['boutique']['min_price'] == 1200000
+        assert data['tiers']['boutique']['min_price'] == 800000
 
     def test_tiers_standard_min_price(self):
         """tiers.standard.min_price == 1800000"""

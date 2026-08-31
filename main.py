@@ -1459,11 +1459,6 @@ def main() -> None:
         run_v4_audit_mode(args)
         sys.exit(0)
 
-    if args.command == "v4audit":
-        maybe_run_config_check(args)
-        run_v4_audit_mode(args)
-        sys.exit(0)
-
     if args.command == "v4complete":
         maybe_run_config_check(args)
         run_v4_complete_mode(args)

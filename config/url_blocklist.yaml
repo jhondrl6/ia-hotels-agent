@@ -16,6 +16,7 @@
 # Mantenimiento: revisar trimestralmente (ver 10-analisis, Seguimientos abiertos).
 version: 1
 actualizado: "2026-08-30"
+description: "Blocklist de URLs no-propias consumida por own_site_guard.py (guard de entrada v4complete)"
 
 categorias:
   ota:

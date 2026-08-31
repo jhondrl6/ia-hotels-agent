@@ -252,12 +252,12 @@ class TestActiveMode:
         )
         wrapper = PricingResolutionWrapper(feature_flags=flags)
 
-        # Boutique: 3.5% of expected loss, min 1.2M, max 2.5M
+        # Pipeline v4.3.0 (ROICRII): base 3.5% de 50M = 1.75M, pero el ethical
+        # cap = (50M * 0.05 * 0.35) * 0.5 = 437.5K domina; floor 400K no activa.
         expected_loss = 50_000_000
         result = wrapper.resolve(rooms=20, expected_loss_cop=expected_loss)
 
-        # 3.5% of 50M = 1.75M, within bounds
-        assert result.monthly_price_cop == 1_750_000
+        assert result.monthly_price_cop == 437_500
         assert result.source == "hybrid_v410"
         assert result.tier == "boutique"
         assert result.used_new_calculation is True
@@ -271,18 +271,20 @@ class TestActiveMode:
         )
         wrapper = PricingResolutionWrapper(feature_flags=flags)
 
-        # Boutique with very high loss (would exceed max)
-        expected_loss = 100_000_000  # 3.5% = 3.5M, but max is 2.5M
+        # Boutique con pérdida alta: base = max 2.5M (Paso 1), pero el ethical
+        # cap = (100M * 0.0175) * 0.5 = 875K domina el precio final.
+        expected_loss = 100_000_000
         result = wrapper.resolve(rooms=20, expected_loss_cop=expected_loss)
 
-        assert result.monthly_price_cop == 2_500_000  # capped at max
-        assert result.pain_ratio == round(2_500_000 / 100_000_000, 4)
+        assert result.monthly_price_cop == 875_000
+        assert result.pain_ratio == round(875_000 / 100_000_000, 4)
 
-        # Boutique with very low loss (would be below min)
-        expected_loss = 10_000_000  # 3.5% = 350K, but min is 800K
+        # Boutique con pérdida baja: el ethical cap (8.75K) queda por debajo
+        # del operational floor (400K), que domina el precio final.
+        expected_loss = 10_000_000
         result = wrapper.resolve(rooms=20, expected_loss_cop=expected_loss)
 
-        assert result.monthly_price_cop == 800_000  # floored at min
+        assert result.monthly_price_cop == 400_000
 
     def test_active_mode_different_tiers(self):
         """Test ACTIVE mode with different tiers."""
@@ -294,20 +296,20 @@ class TestActiveMode:
 
         expected_loss = 80_000_000
 
-        # Boutique (3.5%): 2.8M, capped at 2.5M max
+        # Boutique: ethical cap = 80M * 0.00875 = 700K (domina sobre base 2.5M)
         result = wrapper.resolve(rooms=20, expected_loss_cop=expected_loss)
         assert result.tier == "boutique"
-        assert result.monthly_price_cop == 2_500_000  # 3.5% of 80M = 2.8M, capped
+        assert result.monthly_price_cop == 700_000
 
-        # Standard (2.5%): 2.0M
+        # Standard: ethical cap 700K por encima de su floor 500K
         result = wrapper.resolve(rooms=40, expected_loss_cop=expected_loss)
         assert result.tier == "standard"
-        assert result.monthly_price_cop == 2_000_000  # 2.5% of 80M
+        assert result.monthly_price_cop == 700_000
 
-        # Large (2%): 1.6M, but min is 3.5M
+        # Large: ethical cap 700K por debajo de su floor 800K → floor domina
         result = wrapper.resolve(rooms=80, expected_loss_cop=expected_loss)
         assert result.tier == "large"
-        assert result.monthly_price_cop == 3_500_000  # floored at min for large
+        assert result.monthly_price_cop == 800_000
 
     def test_active_mode_compliance(self):
         """Test ACTIVE mode GATE compliance."""
@@ -317,10 +319,11 @@ class TestActiveMode:
         )
         wrapper = PricingResolutionWrapper(feature_flags=flags)
 
-        # Compliant case (pain ratio ~4.5%)
+        # El ethical cap produce un pain ratio (0.875%) por debajo del GATE
+        # (3%-6%): precio favorable al cliente, is_compliant=False.
         result = wrapper.resolve(rooms=20, expected_loss_cop=50_000_000)
-        assert result.is_compliant is True
-        assert 0.03 <= result.pain_ratio <= 0.06
+        assert result.is_compliant is False
+        assert result.pain_ratio < 0.03
 
     def test_active_mode_metadata(self):
         """Test ACTIVE mode includes comprehensive metadata."""
@@ -447,8 +450,8 @@ class TestCanaryMode:
         expected_loss = 50_000_000
         result = wrapper.resolve(rooms=20, expected_loss_cop=expected_loss)
 
-        # would_use_new is True, so should use new result
-        assert result.monthly_price_cop == 1_750_000  # 3.5% of 50M (hybrid)
+        # would_use_new is True, so should use new result (pipeline: 437.5K)
+        assert result.monthly_price_cop == 437_500
         assert result.source == "hybrid_v410"
         assert result.used_new_calculation is True
 
@@ -569,7 +572,7 @@ class TestCalculatePriceWithShadowFunction:
         )
 
         assert isinstance(result, PricingResolutionResult)
-        assert result.monthly_price_cop == 1_750_000  # 3.5% of 50M
+        assert result.monthly_price_cop == 437_500  # pipeline: ethical cap sobre 50M
 
     def test_function_passes_all_parameters(self, mock_shadow_logger):
         """Test function passes all parameters to wrapper."""
@@ -630,8 +633,8 @@ class TestEdgeCases:
         # Small loss that would result in price below minimum
         result = wrapper.resolve(rooms=20, expected_loss_cop=1_000_000)
 
-        # Should be floored at min price for boutique
-        assert result.monthly_price_cop == 800_000
+        # Ethical cap (8.75K) < operational floor boutique (400K) → floor domina
+        assert result.monthly_price_cop == 400_000
 
     def test_very_large_expected_loss(self):
         """Test resolution with very large expected loss."""
@@ -742,8 +745,8 @@ class TestIntegration:
             log_files = list(Path(log_dir).glob("*.json"))
             with open(log_files[0], 'r') as f:
                 log_data = json.load(f)
-                # Legacy: 2.5M, New: 1.5M
+                # Legacy: 2.5M, New (pipeline): 437.5K
                 assert log_data["legacy_pricing"]["monthly_price_cop"] == 2_500_000
-                assert log_data["new_pricing"]["monthly_price_cop"] == 1_750_000
-                assert log_data["pricing_delta"] == -750_000
-                assert log_data["pricing_delta_pct"] == -30.0
+                assert log_data["new_pricing"]["monthly_price_cop"] == 437_500
+                assert log_data["pricing_delta"] == -2_062_500
+                assert log_data["pricing_delta_pct"] == -82.5

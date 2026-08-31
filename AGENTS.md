@@ -136,6 +136,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 | `--doctor` | ✅ Funcional | Diagnóstico del ecosistema de agentes |
 | `audit` | ⚠️ Deprecado | Legacy v3.x, usar `v4complete` |
 | `hook-pdf` | ✅ Funcional | PDF gancho 2 páginas desde output v4complete |
+| `validate-guarantee` | ✅ Funcional | Valida garantía Día 55 sobre output v4complete |
 
 ### Uso Recomendado
 
@@ -162,7 +163,7 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `data_validation/` | Validación cruzada web+GBP+input | v4audit, v4complete |
 | `data_validation/metadata_validator.py` | Detección de CMS defaults | v4complete |
 | `data_validation/consistency_checker.py` | Validación inter-documento | v4complete |
-|| `data_validation/evidence_ledger.py` | [DEPRECADO] reemplazado por pain_ledger en `modules/asset_generation/` | v4complete, v4audit |
+| `data_validation/evidence_ledger.py` | [DEPRECADO] reemplazado por pain_ledger en `modules/asset_generation/` | v4complete, v4audit |
 | `data_validation/contradiction_engine.py` | Detección de hard/soft conflicts | v4complete |
 | `modules/data_validation/schema_validator_v2.py` | Coverage scoring | v4audit |
 | `modules/financial_engine/` | Escenarios: conservador/realista/optimista | v4audit, v4complete |
@@ -192,17 +193,31 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `modules/analytics/data_aggregator.py` | Unifica GA4 + GSC en datos consolidados | v4complete (ADVISORY) |
 | `modules/commercial_documents/` | Diagnóstico, propuesta, coherencia | v4complete |
 | `modules/commercial_documents/hook_pdf_generator.py` | PDF gancho 2 páginas (hook-pdf) | hook-pdf |
-
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
 | `modules/quality_gates/` | 13 publication gates — blocking (10): evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, tier_c_onboarding_required, doc_audit_consistency, pricing_compliance; advisory (3): content_quality, asset_confidence, proposal_asset_alignment | v4complete |
-| `data_models/` | Modelos: CanonicalAssessment, Claim, Evidence, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
+| `data_models/` | Modelos: CanonicalAssessment, Claim, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
 | `modules/scrapers/` | Scrapers externos (Booking, TripAdvisor, etc.) | v4audit |
 | `modules/delivery/` | Packaging y entrega de resultados | execute |
 | `modules/commercial_documents/pain_solution_mapper.py` | Mapeo problemas→assets con pain types analytics | v4complete |
+| `modules/utils/` | Utilidades transversales (config_checker, benchmarks, http_client) | Todos los comandos |
+| `modules/common/` | Loaders compartidos YAML/fallback | financial_engine, commercial_documents |
+| `modules/providers/` | LLM providers, benchmark resolver, disclaimers | scrapers, analyzers |
+| `modules/deployer/` | Despliegue FTP/WP-API | deploy |
+| `modules/onboarding/` | Formularios, validadores y carga de datos | onboard |
+| `modules/generators/` | Generadores auxiliares (report_builder, spark, outreach) | spark |
+| `modules/analyzers/` | Analizadores de gaps, competencia y ROI | v4audit, config_checker |
+| `modules/monitoring/` | Health dashboard y métricas | main.py |
+| `modules/postprocessors/` | Quality gate y scrubber de contenido | publication_gates |
+| `modules/quality/` | Validadores semánticos y de coherencia financiera | publication_gates, pain_solution_mapper |
+| `modules/orchestration/` | Reconciliador post-orquestación | tests |
+| `modules/validation/` | Validación de contenido, plan y seguridad | interno |
+| `modules/assessment_builder.py` | Construcción del assessment canónico | v4complete |
+| `modules/data_validation/own_site_guard.py` | Guard URL propia (v4.74.0) | v4complete, hook-pdf |
+| `modules/analytics/guarantee_validator.py` | Validación Garantía Día 55 | validate-guarantee |
 
 ---
 
@@ -272,7 +287,7 @@ Validación cruzada de claims:
 
 FASE 4.7: PROMISE vs IMPLEMENTATION
 ──────────────────────────────
-├─ promised_assets_exist: valida que assets prometidos existen en генератор
+├─ promised_assets_exist: valida que assets prometidos existen en el generador de assets
 └─ severity: error (blocking)
 
 FASE 5: DELIVERY QUALITY (FASE-0)
@@ -357,7 +372,7 @@ Se incluyen para orientar mejoras pero nunca bloquean publicación.
 
 <!--
 ZONA REFERENCIA - Solo si es necesario para contexto profundo
-Actualizada: 2026-08-04 | v4.70.0
+Actualizada: 2026-08-31 | v4.74.0
 -->
 
 ## Transformación v3 → v4
@@ -432,7 +447,6 @@ iah-cli/
 ├── data_models/                # Modelos de datos Pydantic
 │   ├── canonical_assessment.py
 │   ├── claim.py
-│   ├── evidence.py
 │   ├── aeo_kpis.py
 │   └── analytics_status.py
 ├── data_validation/            # Validación cruzada
@@ -446,11 +460,11 @@ iah-cli/
 │   ├── observer.py
 │   ├── self_healer.py
 │   ├── skill_executor.py
-│   └── skill_router.py
+│   ├── skill_router.py
+│   └── types.py
 ├── enums/                      # Enumeraciones
 │   ├── severity.py
-│   ├── confidence_level.py
-│   └── types.py
+│   └── confidence_level.py
 ├── modules/                    # Modulos funcionales
 │   ├── analytics/              # GA4, Profound, Semrush
 │   ├── asset_generation/       # Generacion condicional + templates
@@ -459,17 +473,20 @@ iah-cli/
 │   ├── financial_engine/       # Escenarios + no_defaults_validator
 │   ├── geo_enrichment/         # Enriquecimiento geografico (GEO)
 │   ├── quality_gates/          # Gates de publicacion
-│   │   ├── pain_ledger.py
+│   │   ├── publication_gates.py
+│   │   ├── domain_gates.py
+│   │   ├── coherence_gate.py
 │   │   ├── delivery_quality_report.py
-│   │   ├── human_checklist_generator.py
-│   │   └── publication_gates.py
+│   │   └── human_checklist_generator.py
 │   ├── data_validation/        # Validacion avanzada
 │   │   ├── confidence_taxonomy.py
 │   │   ├── cross_validator.py
 │   │   ├── metadata_validator.py
+│   │   ├── own_site_guard.py
 │   │   ├── schema_validator_v2.py
 │   │   └── external_apis/
 │   ├── orchestration_v4/       # Flujo dos fases Hook → Validacion
+│   ├── orchestration/          # Reconciliador post-orquestacion
 │   ├── scrapers/               # Scrapers externos (Booking, TripAdvisor)
 │   ├── delivery/               # Packaging y entrega
 │   ├── generators/             # Generadores auxiliares
@@ -479,7 +496,10 @@ iah-cli/
 │   ├── onboarding/             # Captura datos hotel
 │   ├── providers/              # LLM providers
 │   ├── utils/                  # Utilidades
-│   └── validation/             # Validaciones adicionales
+│   ├── validation/             # Validaciones adicionales
+│   ├── common/                 # Loaders YAML/fallback compartidos
+│   ├── postprocessors/         # Quality gate + scrubber de contenido
+│   └── quality/                # Validadores semanticos y de coherencia financiera
 ├── tests/                      # Suite de pruebas (3,689 funciones, 284 archivos)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/

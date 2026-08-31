@@ -74,14 +74,18 @@ def test_not_exists_keeps_detected():
     assert result[0].severity == "HIGH"
 
 
-def test_exists_with_issues_keeps_detected():
-    """Existe pero con problemas → el pain sigue abierto (los problemas son reales)."""
+def test_exists_with_issues_verifies_presence():
+    """FASE-SR-E: exists_with_issues + site_verified → VERIFIED_IN_SITE.
+
+    El asset existe en producción; sus campos faltantes son mejora
+    sugerida, no brecha activa — el sitio vivo es fuente de verdad.
+    """
     ledger = PainLedger()
     entries = [_entry("no_whatsapp_visible")]
     result = ledger.apply_site_verification(
         entries, _presence("exists_with_issues", True)
     )
-    assert result[0].status == "DETECTED"
+    assert result[0].status == "VERIFIED_IN_SITE"
 
 
 def test_redundant_delivery_also_verified():
