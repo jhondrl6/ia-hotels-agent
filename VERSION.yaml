@@ -1,10 +1,21 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.73.0"
-codename: "Reparacion-Pipeline-Salento-Real"
-release_date: "2026-08-28"
+version: "4.74.0"
+codename: "Guard-URL-Propia"
+release_date: "2026-08-31"
 plan_maestro_version: "v2.6.0"
 
+# v4.74.0 - GUARD-URL-PROPIA (2026-08-31)
+# VALIDADOR-URL-PROPIA: guard de entrada blocklistado que rechaza URLs de OTAs/redes sociales
+# antes de cualquier llamada de red/API (GA-1/GA-2).
+# FASE-A: nucleo TDD (own_site_guard + config/url_blocklist.yaml + choke point ensure_url + --force reutilizado)
+# FASE-B: superficies secundarias (last_url saneamiento, hook-pdf AC7, capa datos assert_own_site + D-VUP-B1 FORZADAS_PROCESO)
+# FASE-C: verificacion empirica 11/11 probes Don Julio + regresion 101 passed
+# FASE-D: E2E v4complete Salento Real post-guard 7/7 checks vs baseline H2 (coherence 0.88, 13/13 gates identicos)
+# FASE-VERIFY: certificacion AC1-AC8 contra evidencia real (8/8 CERTIFICADO)
+# +58 def test_ (92 casos) en 3 archivos nuevos; 0 regresiones; 28/28 canonicalizacion intacta
+# Backwards compatible: sitios propios sin cambio de comportamiento; --force documentado para bypass
+#
 # v4.73.0 - REPARACION-PIPELINE-SALENTO-REAL (2026-08-28)
 # Pipeline fixes Salento Real (SR-A..SR-G) verificados en E2E (VERIFY) + SR-H2 hotfix critical_recall.
 # unification conteo unresolved (SR-A); promesa fuente unica (SR-B); self-healing claims (SR-C);

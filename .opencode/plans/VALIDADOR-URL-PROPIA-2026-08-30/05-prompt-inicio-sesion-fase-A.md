@@ -12,7 +12,7 @@
 
 ## Contexto
 
-El contexto fuente es `.opencode/context/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md` (leerlo primero). Resumen: `_normalize_url()` (main.py:3604-3615) reduce toda URL a netloc; con URLs de OTA el path ES la identidad del hotel → colisión de `target_id` (GA-1). El scraper no distingue sitio propio de tercero y emite datos con confianza arbitraria: sonda real 29-08 → Instagram produjo `confidence: alta` y `cms: shopify` FALSOS (GA-2). El invariante "URL de entrada ≡ sitio propio" es implícito (RC1): ninguna etapa lo valida.
+El contexto fuente es `/.opencode/context/Historico/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md` (leerlo primero). Resumen: `_normalize_url()` (main.py:3604-3615) reduce toda URL a netloc; con URLs de OTA el path ES la identidad del hotel → colisión de `target_id` (GA-1). El scraper no distingue sitio propio de tercero y emite datos con confianza arbitraria: sonda real 29-08 → Instagram produjo `confidence: alta` y `cms: shopify` FALSOS (GA-2). El invariante "URL de entrada ≡ sitio propio" es implícito (RC1): ninguna etapa lo valida.
 
 **Decisión adoptada (contexto §5)**: Opción A — guard de entrada blocklistado con abort fuerte antes de cualquier red/API.
 

@@ -1,7 +1,23 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.73.0 (Reparacion-Pipeline-Salento-Real)
+**Versión:** v4.74.0 (Guard-URL-Propia)
 **Última actualización:** 2026-08-31
+
+---
+
+### Notas de Cambios v4.74.0 — Guard de URL propia (VALIDADOR-URL-PROPIA)
+
+**Fecha:** 2026-08-31
+
+**Resumen**: Guard de entrada blocklistado que rechaza URLs de OTAs, redes sociales y buscadores antes de cualquier llamada de red/API. Resuelve GA-1 (colapso de identidad por netloc en URLs de terceros) y GA-2 (scraper emite datos de tercero con confianza arbitraria). Plan: VALIDADOR-URL-PROPIA-2026-08-30. FASE-VERIFY: AC1-AC8 = 8/8 certificados. E2E Salento Real post-guard: 7/7 checks vs baseline H2.
+
+**Módulos afectados**: `modules/data_validation/own_site_guard.py` (NUEVO), `config/url_blocklist.yaml` (NUEVO), `main.py` (ensure_url choke point + --force reutilizado), `modules/commercial_documents/hook_pdf_generator.py` (guard AC7), `modules/scrapers/web_scraper.py` (assert_own_site), `modules/auditors/v4_comprehensive.py` (assert_own_site)
+
+**Problema**: (GA-1) `_normalize_url()` reduce todo a netloc; en URLs de OTA el path ES la identidad → `booking.com/hotel/co/finca-don-julio` produce target_id `booking.com`, causando colisión entre hoteles y análisis cruzados vía memoria. (GA-2) El scraper no distingue sitio propio de página de tercero → sonda real Instagram produjo `confidence: alta` + `cms: shopify` FALSOS que entraban silenciosos hasta gates y hook PDF.
+
+**Solución**: Guard ORTOGONAL al normalizador (28 tests de canonicalización intactos). Choke point único en `ensure_url()` (main.py) para TODOS los comandos antes del routing. Blocklist versionada en YAML con matching por sufijo de etiquetas de dominio (anti-falsos-positivos: `bookingbogota.com` pasa, `booking.com` se bloquea). Defensa en profundidad: `assert_own_site()` en scraper y auditor como primera sentencia (fuera del try). `--force` global reutilizado para bypass explícito con evento persistido en archivo dedicado JSON Lines. Propagación D-VUP-B1: `FORZADAS_PROCESO` permite que el bypass sobreviva a la capa de datos sin romper contratos de FASE-A.
+
+**Backwards compatibility**: Sitios propios sin cambio de comportamiento. `--force` documentado para bypass. Normalizadores `_normalize_url`/`generate_hotel_id` intactos. 0 regresiones en E2E Salento Real (coherence 0.88=, 13/13 gates perfil idéntico, plan de assets byte-equivalente).
 
 ---
 

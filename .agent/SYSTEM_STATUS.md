@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-08-29 01:20:36 UTC
+> Auto-generado: 2026-08-31 18:15:38 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -9,7 +9,7 @@
 
 | Componente | Version | Fuente |
 |------------|---------|--------|
-| Proyecto | 4.73.0 | VERSION.yaml |
+| Proyecto | 4.74.0 | VERSION.yaml |
 | Ecosystem Convention | 1.0.0 | .agent/CONVENTION.md |
 
 ## Skills Activas (1)
@@ -23,15 +23,15 @@
 
 | Metrica | Valor |
 |---------|-------|
-| Shadow logs | 1190 archivos JSON |
-| Sesiones activas | 14 |
+| Shadow logs | 1195 archivos JSON |
+| Sesiones activas | 16 |
 | Sesiones archivadas | 6 |
-| Ultimo shadow log | 20260821_221232_45465863.json |
-| Ultima sesion activa | 2026-08-28_e07f774e.json |
-| Ultimo contexto actualizado | 2026-08-29T00:17:33.326050+00:00 |
+| Ultimo shadow log | 20260831_014411_bd308a66.json |
+| Ultima sesion activa | 2026-08-31_996a1a9b.json |
+| Ultimo contexto actualizado | 2026-08-31T17:25:13.071061+00:00 |
 | Ultima URL procesada | https://www.hotelsalentoreal.com/ |
 
-## Config Files (9/9 healthy)
+## Config Files (9/10 healthy)
 
 | Archivo | Estado |
 |---------|--------|
@@ -44,8 +44,9 @@
 | `regional_benchmarks.yaml` | OK |
 | `scenarios.yaml` | OK |
 | `settings.yaml` | OK |
+| `url_blocklist.yaml` | MISSING FIELDS |
 
-**Total:** 9/9 archivos con version+description
+**Total:** 9/10 archivos con version+description
 
 ## Validaciones
 

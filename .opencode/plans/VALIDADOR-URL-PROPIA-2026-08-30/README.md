@@ -1,8 +1,8 @@
 # VALIDADOR-URL-PROPIA-2026-08-30
 
-> **Versión objetivo**: 4.74.0 | **Estado**: FASE-A ✅ → FASE-B ✅ → FASE-C ✅ → FASE-D ✅ 2026-08-31 (E2E Salento Real EXIT_CODE=0; 7/7 checks vs baseline H2, coherence 0.88, 13/13 gates sin regresión) — siguiente: FASE-VERIFY
+> **Versión objetivo**: 4.74.0 | **Estado**: ✅ PROYECTO COMPLETADO — FASE-A ✅ → FASE-B ✅ → FASE-C ✅ → FASE-D ✅ → FASE-VERIFY ✅ → FASE-RELEASE-4.74.0 ✅ (2026-08-31)
 > **Workflow**: `phased_project_executor.md` v2.17.0 (R1: una fase/sesión, R2: ≤60 iteraciones, R3: scope por fase)
-> **Contexto fuente**: `.opencode/context/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md` (verificado contra código vivo v4.73.0)
+> **Contexto fuente**: `/.opencode/context/Historico/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md` (verificado contra código vivo v4.73.0)
 > **Auditoría de estrategia (2026-08-30)**: re-verificado contra código vivo HEAD (todos los claims de líneas/funciones confirmados; 28/28 canonicalización y 13 rojos baseline reproducidos). Corregidos 6 fallos de causa raíz: F1 `--force` YA existe en argparse (reutilizar, no re-crear); F2 ensure_url SÍ cubre execute/onboard/deploy → eliminados los guards redundantes por modo; F3 probe P5 requiere sembrar el estado (la URL bloqueada nunca se persiste sola); F4 mecanismo concreto para el warning de `--force` (`.agent/memory/url_guard_force_events.json`); F5 el baseline H2 corrió CON DEFAULTS → FASE-D NO puebla clientes; F6 contrato anti-falsos-positivos de matching ( dominios parecidos). Detalle en §Auditoría.
 
 ## Problema (2 gaps empíricos, Opción A recomendada)

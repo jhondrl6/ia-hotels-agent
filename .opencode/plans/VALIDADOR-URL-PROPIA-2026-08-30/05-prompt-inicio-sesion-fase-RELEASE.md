@@ -52,7 +52,7 @@ Versión actual 4.73.0 (codename Reparacion-Pipeline-Salento-Real) → 4.74.0 co
 1. `dependencias-fases.md` → FASE-RELEASE ✅.
 2. `06-checklist-implementacion.md` → fila RELEASE ✅; proyecto COMPLETADO.
 3. `README.md` del plan → estado final.
-4. Archivar el contexto disparador según convención: evaluar mover `.opencode/context/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md` a `.opencode/context/Historico/` (el contenido queda congelado; QMind no requiere acción por el move) — SOLO tras el write-back final.
+4. Archivar el contexto disparador según convención: evaluar mover `/.opencode/context/Historico/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md` a `.opencode/context/Historico/` (el contenido queda congelado; QMind no requiere acción por el move) — SOLO tras el write-back final.
 
 ## Criterios de Completitud (CHECKLIST)
 

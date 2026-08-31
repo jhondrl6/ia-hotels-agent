@@ -14,7 +14,7 @@
 | FASE-C | 2026-08-31 | ✅ | ~20 | Sí (subagente probes) | 11/11 probes PASS; regresión 101 passed 0 failed; P6 corregido (--output-dir vs --report-json); P5 verificado: no re-persiste (ensure_url aborta antes de save_state) |
 | FASE-D | 2026-08-31 | ✅ | ~25 | Mixto (comando largo delegado) | Preparación parent (git limpio, sin YAML Salento Real, compile-check guard, check offline guard-pass). Subagente ejecutó `v4complete` → EXIT_CODE=0 (~3 min pared), "Using defaults". Protocolo evidencia-first → `evidence/FASE-VUP-D/`; `verificar_no_regresion.py` 7/7 PASSED (coherence 0.88=, 13/13 gates idénticos, assets/pains/financieros byte-equal). Anomalías = infra preexistente (PageSpeed **resuelta el mismo día**: key placeholder de 3 chars → `PAGESPEED_API_KEY` sembrada con key verificada del mismo proyecto; `PageSpeedClient` → VERIFIED con CrUX real) |
 | FASE-VERIFY | 2026-08-31 | ✅ | ~50 | No (DIRECTO) | Matriz AC1-AC8 certificada contra evidencia real; greps residuales 0 matches; GA-1/GA-2 SUPERADOS con evidencia E2E; 3 lecciones nuevas capitalizadas |
-| FASE-RELEASE-4.74.0 | — | ⏳ | — | Sí (delegable) | |
+| FASE-RELEASE-4.74.0 | 2026-08-31 | ✅ | ~20 | Sí (delegable) | VERSION.yaml 4.74.0 + sync 6 archivos; CHANGELOG/GUIA_TECNICA con 5 secciones; validate_agents_md + validate_document_integration + run_all_validations 7/7 ALL PASS; README audit 3,689 tests / 284 archivos; REGISTRY registrado |
 
 ## Matriz de Verificación de Hallazgos (llenar en FASE-VERIFY)
 | # | Hallazgo / Gap | Expected | Real | Status |
@@ -101,7 +101,7 @@
 | Métrica | Valor |
 |---------|-------|
 | Tests nuevos totales | +58 def test_ (92 casos) tras FASE-B: +23/45 en A, +35/47 en B |
-| Tests finales (def test_) | — (FASE-RELEASE: conteo con grep/collect-only; grep global de esta sesión marcó 3677 vs 3631 documentado → auditar con el método canónico) |
+| Tests finales (def test_) | **3,689** (grep `def test_` en tests/; base 3,631 + 58 del plan = 3,689 exacto; 284 archivos) |
 | Regresiones nuevas | 0 (FASE-A vs baseline de 14; FASE-B vs sus suites dirigidas: integrado 120 passed, hook-pdf/scrapers 76✓+4s, auditor/never-block 125✓+2s; FASE-C regresión dirigida 101 passed 0 failed). **Nota de alcance**: en B NO se re-ejecutó la combinación completa de la baseline de 14 rojos (ordering-dependiente, L-VUP-1) → se re-verifica en FASE-C/VERIFY con la misma combinación de archivos |
 | Coherence E2E Salento Real | **0.88** (FASE-D, = baseline H2; READY_FOR_PUBLICATION) |
 | Probes Don Julio superados | 11/11 PASS (FASE-C) |
@@ -122,9 +122,9 @@
 | D-VUP-B3 | `origen="report_json"` como cadena libre (sin nueva constante en `own_site_guard`) y guidance específico de hook-pdf impreso desde el CLI | `_mensaje_rechazo` solo special-casea `estado_persistente`: una origen nuevo reutiliza el mensaje congelado de FASE-A sin tocarlo; la explicación "el url viene del reporte" es propia de la superficie, no del guard | Añadir `ORIGEN_REPORT` al módulo (ensancha la API congelada en A); condicionar el mensaje a `comando` (acopla el guard a nombres de CLI) | B |
 
 ## Checklist de Cierre (llenar en FASE-RELEASE)
-- [ ] Todas las fases ✅ en `06-checklist-implementacion.md`
-- [ ] Matriz de verificación completa (FASE-VERIFY)
-- [ ] Métricas finales llenas
-- [ ] Lecciones INCLUIR persistidas en memoria del proyecto + 10-analisis re-ingerido a QMind
-- [ ] CHANGELOG + GUIA_TECNICA + VERSION sync 4.74.0
-- [ ] Contexto disparador archivado en `.opencode/context/Historico/`
+- [x] Todas las fases ✅ en `06-checklist-implementacion.md`
+- [x] Matriz de verificación completa (FASE-VERIFY)
+- [x] Métricas finales llenas
+- [x] Lecciones INCLUIR persistidas en memoria del proyecto + 10-analisis re-ingerido a QMind
+- [x] CHANGELOG + GUIA_TECNICA + VERSION sync 4.74.0
+- [x] Contexto disparador archivado en `.opencode/context/Historico/`

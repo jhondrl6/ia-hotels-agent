@@ -1,5 +1,50 @@
 # Changelog
 
+## [4.74.0] - Guard de URL propia (VALIDADOR-URL-PROPIA) — 2026-08-31
+
+### Objetivo
+
+Publicar la versión 4.74.0 con el guard de entrada blocklistado que rechaza URLs de OTAs, redes sociales y buscadores antes de cualquier llamada de red/API, resolviendo los gaps GA-1 (colapso de identidad por netloc en URLs de terceros) y GA-2 (scraper emite datos de tercero con confianza arbitraria). Plan: VALIDADOR-URL-PROPIA-2026-08-30. FASE-VERIFY: AC1-AC8 = 8/8 certificados contra evidencia real. E2E Salento Real post-guard: 7/7 checks vs baseline H2 (coherence 0.88, 13/13 gates perfil idéntico).
+
+### Cambios Implementados
+
+- `modules/data_validation/own_site_guard.py` — NUEVO: `classify_url()`, `assert_own_site()`, `UrlNoPropiaError` (exit 2, mensaje en español que nombra la plataforma); matching por sufijo de etiquetas de dominio (anti-falsos-positivos); `ORIGEN_CAPA_DATOS` + `FORZADAS_PROCESO` para propagación de `--force` a scraper/auditor (D-VUP-B1)
+- `config/url_blocklist.yaml` — NUEVO: blocklist versionada de plataformas (categorías ota/red_social/buscador) con patrones regionales; fuente única centralizada (semillas OTA de web_scraper.py y two_phase_flow.py)
+- `main.py` — choke point en `ensure_url()`: guard para TODOS los comandos antes del routing; reutilización de `--force` global (main.py:173) con semántica dual (bypass guard / sobrescribir PDF); evento persistido en `.agent/memory/url_guard_force_events.json`; `run_hook_pdf_mode` captura `UrlNoPropiaError` antes del handler genérico
+- `modules/commercial_documents/hook_pdf_generator.py` — `extract_data(force=False)` valida `report_json["url"]` (AC7); `generate()` reenvía `--force` del CLI
+- `modules/scrapers/web_scraper.py` — `assert_own_site()` como primera sentencia de `extract_hotel_data()` (fuera del try, import lazy)
+- `modules/auditors/v4_comprehensive.py` — `assert_own_site()` como primera sentencia de `audit()` (antes de prints/schemas/Places, import lazy)
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/data_validation/own_site_guard.py` | Guard de URL propia: classify_url / assert_own_site / UrlNoPropiaError |
+| `config/url_blocklist.yaml` | Blocklist versionada de plataformas OTA/red social/buscador |
+| `tests/test_url_propia_guard.py` | Contratos núcleo C1-C10 + AC6 (paridad mensaje, orden ensure_url→save_state, cero repersistencia) |
+| `tests/test_url_propia_guard_superficies.py` | 19 defs: AC7 librería+CLI, capa de datos, 6 contratos D-VUP-B1 |
+| `tests/test_guardian_ast_url_guard.py` | Guardián AST: choke point único + 4 superficies reales + propagación force |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | ensure_url (guard + --force reutilizado); run_hook_pdf_mode captura UrlNoPropiaError |
+| `modules/commercial_documents/hook_pdf_generator.py` | extract_data(force) + guard sobre report_json["url"]; generate() reenvía force |
+| `modules/scrapers/web_scraper.py` | assert_own_site primera sentencia de extract_hotel_data |
+| `modules/auditors/v4_comprehensive.py` | assert_own_site primera sentencia de audit() |
+
+### Tests
+
+- **+58 `def test_` (92 casos)** en 3 archivos nuevos
+- 28/28 canonicalización (`test_target_id_canonicalization.py`) verde sin tocar normalizadores
+- 11/11 probes empíricos Don Julio (Booking/Instagram rechazadas sin costo API)
+- Regresión dirigida: 101 passed 0 failed (FASE-C); integrado 120 passed (FASE-B)
+- E2E Salento Real: coherence 0.88 (= baseline H2), READY_FOR_PUBLICATION, 13/13 gates perfil idéntico
+- 0 regresiones nuevas
+
+---
+
 ## [4.73.0] - Reparación Pipeline Salento Real — 2026-08-28
 
 ### Objetivo

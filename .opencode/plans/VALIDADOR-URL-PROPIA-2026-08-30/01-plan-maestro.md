@@ -1,7 +1,7 @@
 # Plan Maestro — VALIDADOR-URL-PROPIA-2026-08-30
 
 > **ID**: VALIDADOR-URL-PROPIA-2026-08-30 | **Versión objetivo**: 4.74.0
-> **Executor**: `phased_project_executor.md` v2.17.0 | **Contexto**: `.opencode/context/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md`
+> **Executor**: `phased_project_executor.md` v2.17.0 | **Contexto**: `/.opencode/context/Historico/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md`
 > **Escala de complejidad**: Baja → Baja-Media → Media → Alta → MÁXIMA
 
 ## 1. Objetivo

@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.73.0** -- Reparacion-Pipeline-Salento-Real | Actualizado 29 Agosto 2026 | 3,631 pruebas automatizadas | 0 errores conocidos
+**v4.74.0** -- Guard-URL-Propia | Actualizado 31 Agosto 2026
 
 ---
 
@@ -11,40 +11,13 @@
 | Si buscas... | Ir a... |
 |--------------|---------|
 | **Indice Completo de Documentacion** | [INDICE_DOCUMENTACION.md](INDICE_DOCUMENTACION.md) |
-| **Habilidades del Agente (Skills)** | `.agents/workflows/` — phased_project_executor (skills v4_* archivados en v4.72.2) |
-| **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
-| **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
 | **Guia Tecnica (Arquitectura)** | [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) |
-| **Dominio Hotelero-Digital** | [.agent/knowledge/DOMAIN_PRIMER.md](.agent/knowledge/DOMAIN_PRIMER.md) |
-| **Contexto Global del Agente** | [AGENTS.md](AGENTS.md) (canonico) + [.cursorrules](.cursorrules) (puente) |
+| **Historial de Cambios** | [CHANGELOG.md](CHANGELOG.md) |
+| **Estrategia y Roadmap 2026** | [ROADMAP.md](ROADMAP.md) |
+| **Estado Interno del Proyecto** | [AGENTS.md](AGENTS.md) (canonico) + [.cursorrules](.cursorrules) (puente) |
 | **Convenciones de Contribucion** | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) |
-
----
-
-## Estado del Proyecto (v4.73.0 -- Reparacion-Pipeline-Salento-Real)
-
-- **3,631 test functions** — suite completa, 0 regresiones
-- **207 archivos Python en modules/** (~78K lineas, 24 directorios) + **30 scripts** (~7.6K lineas) + **57 directorios de test**
-- **9 config YAML** con schema validado
-- **1 agent skill** en `.agents/workflows/` (phased_project_executor) + README.md
-- **13 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, doc_audit_consistency (modo WARNING), pricing_compliance (blocking); content_quality, asset_confidence, proposal_asset_alignment (advisory)
-- **Coherence Score >= 0.8** requerido para publicacion
-- **25 assets** en catalogo (22 IMPLEMENTED + 2 DEPRECATED + 1 MANUAL_ONLY)
-- **Financial Evidence Engine** — metadata epistemica, benchmarks regionales 2026, channel-aware scoring, rendering condicional
-
----
-
-## Como Funciona el Sistema
-
-IA Hoteles Agent opera como un **cerebro orquestador** (Agent Harness) que valida, analiza y protege:
-
-1. **Datos** -> Recolecta informacion de web, Google Business Profile y APIs
-2. **Valida** -> Compara fuentes para detectar inconsistencias (cruzada)
-3. **Calcula** -> Proyecciones financieras en 3 escenarios (70/20/10) con recovery_factor
-4. **Genera** -> Diagnostico + Propuesta + Assets condicionales
-5. **Certifica** -> Controles de coherencia antes de entregar
-
-Todos los parametros financieros, umbrales de scoring, fallbacks y narrativas de impacto son configurables via YAML sin tocar codigo. Backwards compatible: sin YAML, usa defaults documentados.
+| **Dominio Hotelero-Digital** | [.agent/knowledge/DOMAIN_PRIMER.md](.agent/knowledge/DOMAIN_PRIMER.md) |
+| **Habilidades del Agente (Skills)** | `.agents/workflows/` — phased_project_executor |
 
 ---
 
@@ -61,31 +34,84 @@ Sistema que responde a la pregunta: "Por que este hotel pierde reservas que van 
 | AEO | Answer Engine Optimization | **Para que te CITEN** | Siri lee tu ficha: "Cierra a las 8:00 PM" |
 | IAO | Intelligent Agent Optimization | **Para que te RECOMIENDEN** | ChatGPT te recomienda vs competidores |
 
+Desde v4.74.0 incluye un **guard de URL propia**: las URLs de OTAs, redes sociales y buscadores (Booking, Instagram, etc.) se rechazan antes de cualquier llamada de red/API, evitando analisis sobre paginas de terceros. El bypass explicito existe via `--force`.
+
 ---
 
-## Inicio Rapido (5 minutos)
+## Que Produce
+
+Cada corrida de `v4complete` entrega un paquete completo de diagnostico comercial y assets tecnicos:
+
+```
+output/<corrida>/v4_complete/
+├── 01_DIAGNOSTICO_Y_OPORTUNIDAD_<fecha>.md   # Diagnostico con brechas cuantificadas en COP
+├── 02_PROPUESTA_COMERCIAL_<fecha>.md         # Propuesta (solo si coherence >= 0.8)
+├── v4_complete_report.json                   # Reporte maquina-legible completo
+├── <hotel>/                                  # Assets tecnicos generados
+│   ├── llms_txt/                             #   llms.txt estandar para IAs
+│   ├── geo_enriched/                         #   Enriquecimiento geografico
+│   ├── analytics_setup_guide/                #   Guia GA4 + trafico indirecto
+│   └── ...                                   #   Segun brechas detectadas (P1/P2/P3)
+├── deliveries/<hotel>_<fecha>.zip            # Paquete de entrega final
+└── health_dashboard/                         # Dashboard de observabilidad
+```
+
+Adicionalmente, `hook-pdf` genera un **PDF gancho de 2 paginas** (A4) con la cifra de fuga mensual, brechas principales y precios — pensado para el primer contacto comercial.
+
+---
+
+## Como Funciona el Sistema
+
+IA Hoteles Agent opera como un **cerebro orquestador** (Agent Harness) que valida, analiza y protege:
+
+1. **Datos** -> Recolecta informacion de web, Google Business Profile y APIs
+2. **Valida** -> Compara fuentes para detectar inconsistencias (validacion cruzada)
+3. **Calcula** -> Proyecciones financieras en 3 escenarios (70/20/10)
+4. **Genera** -> Diagnostico + Propuesta + Assets condicionales
+5. **Certifica** -> Controles de coherencia (gates) antes de entregar
+
+Todos los parametros financieros, umbrales de scoring, fallbacks y narrativas de impacto son configurables via YAML sin tocar codigo. Sin YAML, el sistema usa defaults documentados.
+
+---
+
+## Inicio Rapido
+
+**Requisitos:**
+
+- Python 3.13+ y un entorno virtual
+- API keys de Google (ver tabla abajo). Sin keys el sistema funciona con benchmarks regionales (arquitectura NeverBlock), pero las validaciones externas quedan marcadas como ESTIMATED en vez de VERIFIED
 
 ```bash
 # 1. Clonar e instalar
 git clone https://github.com/jhondrl6/ia-hotels-agent.git
 cd iah-cli
 python -m venv venv
-.\venv\Scripts\Activate.ps1   # Windows PowerShell
+.\venv\Scripts\Activate.ps1   # Windows PowerShell (bash: source venv/bin/activate)
 pip install -r requirements.txt
 
-# 2. Configuracion Inicial
+# 2. Configuracion de API keys (asistente interactivo)
 python main.py setup
 
-# 3. Primer analisis
-python main.py v4complete --url https://hotel.com
+# 3. Primer analisis (URL del sitio PROPIO del hotel)
+python main.py v4complete --url https://hoteldomino.com
 ```
+
+**API keys (`python main.py setup` o editar `.env` directamente):**
+
+| Key | Uso | Nivel |
+|-----|-----|-------|
+| `PAGESPEED_API_KEY` | Core Web Vitals reales | Recomendada |
+| `GOOGLE_MAPS_API_KEY` | Places API (datos del hotel, fotos) | Recomendada |
+| `GA4_PROPERTY_ID` + service account | Trafico real del sitio | Opcional (advisory) |
+| Google Search Console | Keywords, posiciones, CTR | Opcional (advisory) |
+| `DEEPSEEK_API_KEY` / `ANTHROPIC_API_KEY` | Generacion narrativa | Opcional |
 
 ---
 
-## Flujo v4complete (5 Fases)
+## Flujo v4complete
 
 ```bash
-python main.py v4complete --url https://hotel.com --nombre "Hotel Nombre"
+python main.py v4complete --url https://hoteldomino.com --nombre "Hotel Domino"
 ```
 
 ```
@@ -96,12 +122,13 @@ Auto          APIs Cruzada     PainSolution    Score >=0.8       Validados
 
 Output: 01_DIAGNOSTICO_Y_OPORTUNIDAD.md (siempre)
         02_PROPUESTA_COMERCIAL.md (si coherence >= 0.8)
-        delivery_assets/ (segun confianza de cada asset)
+        Assets (segun confianza de cada asset: PASSED / WARNING / BLOCKED)
 ```
 
 **Caracteristicas clave:**
+- Guard de URL propia: rechaza OTAs/redes sociales antes de red/API (blocklist versionada en `config/url_blocklist.yaml`, `--force` para bypass auditado)
 - Validacion cruzada de datos (Web + Google Business Profile + Input)
-- Calculo de escenarios financieros (Conservador 70% / Realista 20% / Optimista 10%)
+- Escenarios financieros: Conservador 70% / Realista 20% / Optimista 10%
 - Gate de coherencia con score calculado vs umbral configurable (default >= 0.8)
 - Generacion condicional: diagnostico siempre, propuesta solo si pasa coherencia
 - PainSolutionMapper: mapeo automatico problemas -> assets con prioridades P1/P2/P3
@@ -115,12 +142,12 @@ Output: 01_DIAGNOSTICO_Y_OPORTUNIDAD.md (siempre)
 | `v4complete` | Activo | **Flujo completo con controles de coherencia** | Diagnostico + Propuesta condicional + Assets |
 | `v4audit` | Activo | Auditoria tecnica rapida con APIs | JSON con validacion cruzada |
 | `hook-pdf` | Activo | **PDF gancho de 2 paginas** desde output v4complete | PDF A4 con cifra fuga, brechas, precios |
-| `validate-guarantee` | Activo | Valida garantia Dia 55 contra datos reales | Reporte de estado de garantia |
 | `execute` | Activo | Implementacion de paquete usando analisis previo | Assets segun paquete seleccionado |
 | `stage` | Activo | Ejecuta etapas individuales (geo, ia, seo, outputs) | Resultado de fase especifica |
-| `deploy` | Activo | Despliegue remoto via FTP/WP-API | Archivos subidos al servidor |
-| `setup` | Activo | Configuracion interactiva de API keys | Credenciales configuradas |
 | `onboard` | Activo | Captura datos operativos reales del hotel | Mejora precision del analisis |
+| `deploy` | Activo | Despliegue remoto via FTP/WP-API | Archivos subidos al servidor |
+| `validate-guarantee` | Activo | Valida garantia Dia 55 contra datos reales | Reporte de estado de garantia |
+| `setup` | Activo | Configuracion interactiva de API keys | Credenciales configuradas |
 | `--doctor` | Activo | Diagnostico del ecosistema de agentes | Reporte de salud completo |
 | `spark` | Deprecado | Legacy v3.x | Usar `v4complete` |
 | `audit` | Deprecado | Legacy v3.x | Usar `v4audit` |
@@ -129,77 +156,61 @@ Output: 01_DIAGNOSTICO_Y_OPORTUNIDAD.md (siempre)
 
 | Flag | Uso |
 |------|-----|
-| `--url` | URL del hotel a analizar (requerido) |
+| `--url` | URL del sitio propio del hotel (requerida; OTAs/redes se rechazan salvo `--force`) |
 | `--nombre` | Nombre del hotel (opcional, extraido de URL) |
 | `--output` | Directorio de salida (default: ./output) |
 | `--debug` | Modo verbose con informacion detallada |
+| `--force` | Bypass del guard de URL propia / sobrescribir PDF existente (evento auditado) |
 
----
+### onboard - Datos Operativos Reales
 
-## Comando onboard - Datos Operativos Reales
-
-Captura datos operativos reales del hotel para mejorar la precision del analisis v4complete.
-
-**Cuando usar:** Despues de `v4complete` para mejorar coherence score, cuando se requieren proyecciones financieras precisas, o para convertir assets de WARNING a PASSED.
+Captura datos reales del hotel (habitaciones, reservas/mes, ADR, % canal directo, % ocupacion) para subir la confianza del analisis: ESTIMATED -> VERIFIED, assets WARNING -> PASSED.
 
 ```bash
-python main.py onboard --url https://hotel.com --nombre "Hotel Nombre"
-python main.py onboard --url https://hotel.com --run-audit
+python main.py onboard --url https://hoteldomino.com --nombre "Hotel Domino"
 ```
 
-**Datos que captura:** Habitaciones, reservas/mes, ADR real, % canal directo, % ocupacion, tarifa promedio.
+### hook-pdf - PDF Gancho Comercial
 
-**Resultado:** Confidence ESTIMATED -> VERIFIED | Coherence potencialmente >= 0.8 | Assets WARNING -> PASSED
+```bash
+python main.py hook-pdf --output-dir output/v4_complete/   # desde una corrida v4complete
+```
 
----
+Valida que el reporte apunte a un sitio propio (misma proteccion que v4complete); `--force` omite el guard y/o sobrescribe el PDF existente.
 
-## Doctor - Diagnostico del Ecosistema
+### Doctor - Diagnostico del Ecosistema
 
 ```bash
 python main.py --doctor              # Check completo
-python scripts/doctor.py             # Directo
 python scripts/doctor.py --status    # Regenerar SYSTEM_STATUS.md
-python scripts/doctor.py --regenerate-domain-primer  # Regenerar DOMAIN_PRIMER.md
-python scripts/doctor.py --agent     # Diagnostico ecosistema agentes
-python scripts/doctor.py --context   # Solo integridad de contexto
 python scripts/doctor.py --json      # Output maquina-legible
 ```
 
-**Que verifica:**
+Verifica symlink de workflows, skills, memoria del agente, gitignore, DOMAIN_PRIMER e integridad de los YAML de config.
 
-| Check | Descripcion |
-|-------|-------------|
-| Symlink integrity | `.agent/workflows` -> `.agents/workflows` |
-| README dead references | Skills referenciados pero inexistentes |
-| Skills tracked | Todos los .md en workflows reflejados en README |
-| Shadow logs health | JSON validos y estructura correcta |
-| Memory structure | current_state.json, error_catalog, sesiones |
-| Gitignore patterns | Datos runtime excluidos de version control |
-| Knowledge base | DOMAIN_PRIMER.md existe |
-| Config files integrity | 9 YAML con estructura valida |
+---
+
+## Estado del Proyecto (v4.74.0 -- Guard-URL-Propia) vive en **[AGENTS.md](AGENTS.md)** — fuente unica del estado interno. Historial de cambios: [CHANGELOG.md](CHANGELOG.md). Registro de fases: [docs/contributing/REGISTRY.md](docs/contributing/REGISTRY.md).
 
 ---
 
 ## Escenarios Financieros
 
-Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Parametros configurables via `config/scenarios.yaml`, `config/pricing.yaml` y `config/financial_defaults.yaml`.
+Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Cada cifra tiene origen trazable (ADR regional, occupancy validada), etiqueta honesta (VERIFIED/ESTIMATED) y base verificable (comision OTA).
 
-| Escenario | Probabilidad | recovery_factor | Base de calculo |
-|-----------|--------------|-----------------|-----------------|
-| **Conservador** | 70% | 0.15 | Peor caso plausible (recupera 15% de la perdida) |
-| **Realista** | 20% | 0.35 | Meta esperada (recupera 35% de la perdida) |
-| **Optimista** | 10% | 0.25 | Mejor caso (recupera 25% de la perdida) |
+| Escenario | Probabilidad | Base de calculo |
+|-----------|--------------|-----------------|
+| **Conservador** | 70% | Peor caso plausible |
+| **Realista** | 20% | Meta esperada |
+| **Optimista** | 10% | Mejor caso |
 
-**Formula**: `projected_gain = monthly_loss_cop x pain_ratio x recovery_factor`
-**ROI**: `roi = (projected_gain x 6) / (precio_mensual x 6)` — cap en 5.0X (configurable en `config/commercial.yaml`)
-
-**Motor Financiero Verificable**: Cada COP tiene origen trazable (ADR regional, occupancy validada), peso proporcional, etiqueta honesta (VERIFIED/ESTIMATED) y base verificable (comision OTA). El escenario optimista con valor negativo se presenta como "ganancia neta".
+Formulas y parametros exactos (recovery_factor, ROI cap, degradacion): [docs/GUIA_TECNICA.md](docs/GUIA_TECNICA.md) y `config/scenarios.yaml`.
 
 ---
 
-## Configuracion YAML (v4.38.0+)
+## Configuracion YAML
 
-31 hardcoded values migrados originalmente a 6 archivos YAML; hoy **9 archivos YAML** con schema validado. Todos los parametros son configurables sin tocar codigo.
+**10 archivos YAML** con schema validado; todos los parametros configurables sin tocar codigo. Sin YAML, el sistema usa defaults documentados (backwards compatible).
 
 | Archivo | Contenido |
 |---------|-----------|
@@ -212,41 +223,24 @@ Cada hotel recibe proyecciones personalizadas basadas en sus datos validados. Pa
 | `config/certificates.yaml` | Certificados SSL/TLS y configuracion de seguridad |
 | `config/provider_registry.yaml` | Registro de providers LLM (modelos, endpoints, fallbacks) |
 | `config/settings.yaml` | Configuracion general de la aplicacion |
-
-**Backwards compatible:** Sin YAML, el sistema funciona identicamente con defaults documentados. Con YAML, todos los valores son configurables.
-
----
-
-## Voice Readiness Proxy (v4.28.0+)
-
-Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google Assistant, Alexa) lo mencionen como respuesta directa. PROXY — mide los INPUTS que alimentan los asistentes de voz, NO consulta Siri/Alexa directamente.
-
-| Componente | Peso | Que evalua |
-|------------|------|------------|
-| GBP Completeness | 30% | NAP, categorias, horarios, fotos, atributos |
-| Schema for Voice | 25% | Hotel/LocalBusiness, FAQ, Speakable markup |
-| Featured Snippets | 25% | Optimizacion para posicion cero en Google |
-| Factual Coverage | 20% | Datos factuales accesibles (horarios, precios, direccion) |
-
-| Nivel | Rango | Significado |
-|-------|-------|-------------|
-| Critical | 0-25 | Sin presencia detectable por asistentes de voz |
-| Basic | 26-50 | Presencia minima, datos parciales |
-| Good | 51-75 | Optimizacion solida, capturable por voz |
-| Excellent | 76-100 | Presencia completa y consistente para voz |
+| `config/url_blocklist.yaml` | Blocklist versionada de plataformas OTA/red social/buscador (v4.74.0+) |
 
 ---
 
-## Calidad Garantizada
+## Metricas Advisory (no bloqueantes)
 
-- **3,631 test functions** — suite completa, 0 regresiones
-- **61 config tests** — migracion YAML, fallback, schema, integracion
-- **Pre-commit hooks** — version-sync + referencias .opencode (auto-fix) enforcementadas en cada commit (`scripts/install_git_hooks.py`); stack completo declarado en `.pre-commit-config.yaml`
-- **Phased Workflow** — `.agents/workflows/phased_project_executor.md` v2.17.0 (1 fase/sesion, max 60 iteraciones)
-- **Capitalizacion de Lecciones** — cada plan recupera la experiencia de planes anteriores (memoria del agente + QMind `iah-cli-lecciones`) antes de planificar y escribe sus lecciones nuevas al cerrar cada fase
-- **Coherence Score >= 0.8** — Validacion cruzada documentos <-> assets
-- **13 Publication Gates** — hard_contradictions, evidence_coverage, financial_validity, coherence, critical_recall, ethics, tier_c_onboarding_required, coverage_no_silent_drop, doc_audit_consistency (modo WARNING), pricing_compliance (blocking); content_quality, asset_confidence, proposal_asset_alignment (advisory)
-- **Delivery Quality Report** — QA bloqueante pre-ZIP, advisory warnings para IA-Readiness Critical
+Ademas de los gates de publicacion, cada corrida reporta metricas orientativas:
+
+- **Voice Readiness Proxy** — preparacion para asistentes de voz (GBP 30%, Schema 25%, Snippets 25%, Factual 20%); mide inputs, no consulta Siri/Alexa
+- **Citability Score / IA-Readiness / AI Crawler Score** — calidad de contenido para citacion por IAs y accesibilidad de crawlers
+
+Se reportan para orientar mejoras pero nunca bloquean la publicacion.
+
+---
+
+## Calidad
+
+Publicacion protegida por gates de calidad automaticos (coherencia documental, cobertura de evidencia, validez financiera, etica) y un QA bloqueante pre-entrega. La suite de pruebas, la lista completa de gates y sus umbrales se documentan en [AGENTS.md](AGENTS.md); las convenciones de contribucion y validacion en [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md).
 
 ---
 
@@ -254,8 +248,10 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 
 | Problema | Solucion |
 |----------|----------|
-| Fallo Gate de Coherencia | Verifica que los datos tengan confianza suficiente (>=0.8) y no haya conflictos entre fuentes |
+| URL rechazada por el guard ("agregador de reservas / red social") | Es el comportamiento esperado (v4.74.0+): usa la URL del sitio propio del hotel; `--force` solo para casos excepcionales auditados |
+| Fallo Gate de Coherencia | Verifica que los datos tengan confianza suficiente y no haya conflictos entre fuentes; `onboard` sube la confianza |
 | No LLM API key configured | Ejecuta `python main.py setup` para configurar de forma segura |
+| Symlink `.agent/workflows` roto en Windows | Windows requiere terminal con permisos de admin para crear symlinks (ver AGENTS.md §Diagnostico Rapido) |
 | sync_versions.py desincronizado | Ejecuta `python scripts/sync_versions.py` para resincronizar headers de version |
 
 ---
@@ -266,50 +262,41 @@ Evalua que tan preparado esta un hotel para que asistentes de voz (Siri, Google 
 iah-cli/
   main.py                     # CLI entry point (v4complete, hook-pdf, deploy, etc.)
   VERSION.yaml                # Fuente unica de verdad (version)
-  config/                     # Configuracion YAML (9 archivos)
+  config/                     # Configuracion YAML (10 archivos)
   templates/                  # Templates HTML/CSS/MD para generacion
     hook_template.md            #   Template PDF gancho (HTML, 34 placeholders)
     hook_styles.css             #   Estilos A4, 2 paginas, hook figure 28pt
     delivery_readme_template.md #   Template README de entrega
     diagnostico_ejecutivo.md    #   Template diagnostico ejecutivo
     local_content/              #   Templates de contenido local
-  modules/                    # 207 archivos Python (~78K lineas) en 24 directorios
-    asset_generation/         #   Generacion condicional de assets
+  modules/                    # Modulos funcionales (24 directorios)
+    data_validation/          #   Validacion cruzada + guard de URL propia (own_site_guard)
     commercial_documents/     #   Diagnostico + Propuesta v4 + PDF gancho (hook-pdf)
     financial_engine/         #   Pricing, scenarios, loss projector
+    asset_generation/         #   Generacion condicional de assets
+    quality_gates/            #   Publication gates, commercial gate, ethics
     orchestration_v4/         #   Two-phase flow, auditor
-    quality/                  #   Coherence validator, asset semantics
-    quality_gates/            #   Publication gates (13), commercial gate, ethics
+    auditors/                 #   APIs externas (Rich Results, Places, PageSpeed)
+    analytics/                #   GA4, GSC, agregacion de datos
     scrapers/                 #   Places API, Google Travel, SerpAPI
-    common/                   #   yaml_loader, fallback_loader
-    analytics/                #   GA4, GSC (Profound/Semrush deprecados)
-    deployer/                 #   FTP/WP-API deployment
-    analyzers/                #   Analisis de datos y metricas
-    auditors/                 #   Auditoria de componentes
-    data_validation/          #   Validacion cruzada de fuentes
-    delivery/                 #   Empaquetado y entrega de assets
-    generators/               #   Generadores de contenido
     geo_enrichment/           #   Enriquecimiento geografico (GEO)
-    monitoring/               #   Monitoreo de pipelines
+    delivery/                 #   Empaquetado y entrega de assets
+    deployer/                 #   FTP/WP-API deployment
     onboarding/               #   Captura de datos operativos del hotel
-    orchestration/            #   Orquestacion de flujos
-    postprocessors/           #   Post-procesamiento de outputs
     providers/                #   Providers LLM y API
-    utils/                    #   Utilidades compartidas
-    validation/               #   Validacion de outputs
-  tests/                      # ~74K lineas de test (281 archivos, 57 directorios)
-    config/                   #   61 tests de migracion YAML
-    financial_engine/         #   Tests de motor financiero
-    commercial_documents/     #   Tests de documentos comerciales
-  scripts/                    # 30 scripts de automatizacion
+    common/                   #   yaml_loader, fallback_loader
+    ...                       #   analyzers, generators, monitoring, utils, validation
+  agent_harness/              # Core del agente (memoria, routing, self-healing)
+  tests/                      # Suite de pruebas (25 directorios por modulo)
+  scripts/                    # Scripts de automatizacion y validacion
     sync_versions.py          #   Sincronizacion versiones
     doctor.py                 #   Diagnostico ecosistema
     log_phase_completion.py   #   Registro de fases en REGISTRY.md
     run_all_validations.py    #   Suite de validaciones
-    validate_opencode_refs.py #   Referencias .opencode validas (auto-fix)
   .agents/workflows/          # Agent skills (phased_project_executor + README)
   .opencode/plans/            # Planes de fases (phased execution)
   evidence/                   # Evidencia de fases ejecutadas
+  docs/                       # Documentacion detallada (GUIA_TECNICA, CONTRIBUTING)
 ```
 
 ---
