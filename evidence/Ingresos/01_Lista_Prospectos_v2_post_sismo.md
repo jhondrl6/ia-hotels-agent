@@ -34,7 +34,7 @@ Conclusión: el filtro "incluir solo hoteles con sitio web" se **descarta** (dec
 | Hallazgo | Evidencia | Impacto en la lista |
 |----------|-----------|---------------------|
 | **Hotel Cataluña Pereira (#2): DAÑOS GRAVES** | Instagram oficial del hotel (12-ago-2026): "A causa del terremoto, nuestro querido hotel sufrió graves daños" | **EXCLUIDO de prospección** |
-| **Hotel Condina Pereira (#1): afectado, gravedad por confirmar** | Tema viral TikTok "Cómo quedó el Hotel Condina después del terremoto en Pereira" + centro de Pereira gravemente dañado | **EN VERIFICACIÓN — no contactar** |
+| **Hotel Condina Pereira (#1): NO OPERATIVO — verificado in situ 2026-08-29** | Desplazamiento del equipo al lugar + TikTok viral "Cómo quedó el Hotel Condina" | **EXCLUIDO — reemplazado en top 10 por Finca Hotel Don Julio (Santa Rosa de Cabal); re-evaluar Condina 90+ días (2026-11-29)** |
 | Hotel Veneton (Dosquebradas) en desmonte | Video Noti90/Instagram | No estaba en la lista; confirma riesgo ALTO en Dosquebradas |
 | Balance Cotelco: 33 hoteles afectados, 6 por demoler (Cali), ~$13 mil millones COP en pérdidas sectoriales | Noti90 / AlInstante (ago-2026) | Contexto sectorial; sin lista nominal pública → la verificación es hotel por hotel |
 | Quindío: ~2.500 inmuebles con afectaciones; Armenia, Quimbaya y Salento mencionados | Reportes de prensa | Riesgo municipal: ver tabla inferior |
@@ -62,7 +62,7 @@ Conclusión: el filtro "incluir solo hoteles con sitio web" se **descarta** (dec
 
 | # | Hotel | Municipio | Riesgo municipal | Estado post-sismo | Evidencia / Fuente | Próxima acción |
 |---|-------|-----------|------------------|-------------------|--------------------|----------------|
-| 1 | Hotel Condina Pereira | Pereira centro | ALTO | **AFECTADO — VERIFICAR GRAVEDAD (llamada pendiente)** | TikTok viral + centro dañado; web 26-ago: agregadores listan reservas SIN confirmar reapertura post-sismo | **LLAMADA obligatoria** antes de incluir; no contactar |
+| 1 | Finca Hotel Don Julio (reemplaza a Condina, cerrado in situ 29-08) | Santa Rosa de Cabal | MEDIO | **OPERANDO*** (reservable en Booking/Agoda 29-08; verificar same-day) | Booking/Agoda/Trivago/Google Hotels activos; **sin web propia detectada** (solo OTAs + IG @fincahoteldonjulio) | **Verificar web propia + teléfono** antes de Mensaje 1 (si no tiene web = caso Segorbe) |
 | 2 | Hotel Cataluña Pereira | Pereira centro | ALTO | **CERRADO / DAÑO GRAVE — EXCLUIDO** | Instagram oficial 12-ago + web 26-ago: listados históricos sin disponibilidad confirmada | **EXCLUIDO**; re-evaluar a 90+ días |
 | 3 | Hostal Ciudad de Segorbe | Salento | BAJO | **OPERANDO** | Booking activo (364 rev, 8.2) + Trip.com rev 2026; Salento riesgo BAJO | **Contactar (embudo)** |
 | 4 | Hotel Salento Real Eje Cafetero | Salento | BAJO | **OPERANDO** | Booking activo (296 rev, 8.6, Genius); web propia confirmada hotelsalentoreal.com (34 hab, reservas online) — señal "sin web" de v1 es OBSOLETA; debilidad GBP/AEO/schema por verificar con v4complete | **Contactar (embudo)** |
@@ -111,7 +111,7 @@ Método §6.5: fuentes gremiales/prensa → Google Maps/Booking (¿reservable? �
 
 | # | Hotel | Municipio | Estado verificado | Entra al embudo |
 |---|-------|-----------|------------------|-----------------|
-| 1 | Hotel Condina Pereira | Pereira centro | AFECTADO — VERIFICAR GRAVEDAD (llamada pendiente) | NO (no contactar) |
+| 1 | Finca Hotel Don Julio (reemplaza a Condina) | Santa Rosa de Cabal | OPERANDO* (verificar same-day + web propia) | SÍ, tras verificar teléfono y web |
 | 2 | Hotel Cataluña Pereira | Pereira centro | CERRADO / DAÑO GRAVE — EXCLUIDO | NO |
 | 3 | Hostal Ciudad de Segorbe | Salento | OPERANDO | SÍ |
 | 4 | Hotel Salento Real Eje Cafetero | Salento | OPERANDO | SÍ |
@@ -124,11 +124,11 @@ Método §6.5: fuentes gremiales/prensa → Google Maps/Booking (¿reservable? �
 
 **Recuento:** 8 de 10 en `OPERANDO` (≥5). ✅ La regla de prudencia NO se activa → la ola de mensajes procede.
 
-**Excluidos (2):** #1 Condina (pendiente de llamada — no contactar hasta confirmar gravedad) y #2 Cataluña (daño grave confirmado, EXCLUIDO, re-evaluar a 90+ días).
+**Excluidos:** #2 Cataluña (daño grave confirmado, re-evaluar 90+ días). ~~#1 Condina~~ — **CERRADO in situ 2026-08-29: NO OPERATIVO**, excluido (re-evaluar 2026-11-29); su slot del top 10 lo ocupa **Finca Hotel Don Julio** (Santa Rosa de Cabal, OPERANDO* pendiente de verificación same-day + web propia + teléfono).
 
 **Acciones pendientes previas a enviar (Semana 1):**
 - Llamadas confirmatorias de daños leves a los 4 de Dosquebradas (#5–#8) por riesgo municipal ALTO-MEDIO (la web no discrimina "daño leve" vs intacto; la llamada cierra la distinción OPERANDO vs OPERANDO CON DAÑOS LEVES).
-- Llamada a #1 Condina para decidir inclusión o archivo definitivo.
+- ~~Llamada a #1 Condina para decidir inclusión o archivo definitivo.~~ **CERRADO 29-08 in situ: NO OPERATIVO → excluido.** Nueva acción: validar #1 Finca Hotel Don Julio (teléfono + web propia + estado same-day) antes de sumarlo a la ola.
 - Verificar teléfonos de los 8 OPERANDO (Google Maps) antes del primer WhatsApp.
 - Primer contacto 100% empático (§6.5.3) para Salento y Santa Rosa; para Dosquebradas, confirmar daños antes de definir tono.
 
