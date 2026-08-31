@@ -1,0 +1,34 @@
+{
+  "passed": 7,
+  "total": 7,
+  "checks": {
+    "1_target_id_hotelsalentoreal": {
+      "pass": true,
+      "detail": "hotel_id='hotel_hotelsalentoreal.com' url='https://www.hotelsalentoreal.com/'"
+    },
+    "2_coherence_ge_0.8": {
+      "pass": true,
+      "detail": "coherence=0.88 (baseline H2=0.88); readiness=READY_FOR_PUBLICATION"
+    },
+    "3_ready_for_publication": {
+      "pass": true,
+      "detail": "status=READY_FOR_PUBLICATION blocking_issues=[]"
+    },
+    "4_gates_sin_regresion_blocking": {
+      "pass": true,
+      "detail": "n_gates new=13 base=13; regresiones=ninguna; faltantes=ninguno; extra=ninguno; perfil_nuevo={'hard_contradictions': True, 'evidence_coverage': True, 'financial_validity': True, 'coherence': True, 'critical_recall': True, 'ethics': True, 'content_quality': True, 'asset_confidence': True, 'proposal_asset_alignment': True, 'tier_c_onboarding_required': True, 'coverage_no_silent_drop': True, 'doc_audit_consistency': True, 'pricing_compliance': True}"
+    },
+    "5_plan_assets_equivalente": {
+      "pass": true,
+      "detail": "new=[('analytics_setup_guide', 'WARNING', 0.8), ('indirect_traffic_optimization', 'WARNING', 0.8), ('llms_txt', 'PASSED', 1.0), ('monthly_report', 'PASSED', 1.0)] base=[('analytics_setup_guide', 'WARNING', 0.8), ('indirect_traffic_optimization', 'WARNING', 0.8), ('llms_txt', 'PASSED', 1.0), ('monthly_report', 'PASSED', 1.0)]"
+    },
+    "6_pains_to_assets_equivalente": {
+      "pass": true,
+      "detail": "pains new={'no_analytics_configured': ('ASSET_GENERATED', 'MEDIUM'), 'low_organic_visibility': ('ASSET_GENERATED', 'MEDIUM'), 'ai_crawler_blocked': ('ASSET_GENERATED', 'MEDIUM')} base={'no_analytics_configured': ('ASSET_GENERATED', 'MEDIUM'), 'low_organic_visibility': ('ASSET_GENERATED', 'MEDIUM'), 'ai_crawler_blocked': ('ASSET_GENERATED', 'MEDIUM')} | matrix diff_keys=ninguna"
+    },
+    "7_financiera_identica_baseline": {
+      "pass": true,
+      "detail": "new={\"scenarios\": {\"conservative\": 6571622.4, \"realistic\": 4042752.0, \"optimistic\": 1264435.2}, \"expected_monthly\": 4042752.0} base={\"scenarios\": {\"conservative\": 6571622.4, \"realistic\": 4042752.0, \"optimistic\": 1264435.2}, \"expected_monthly\": 4042752.0}"
+    }
+  }
+}

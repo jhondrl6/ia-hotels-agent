@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "blocking": false,
+  "coverage_failure_rate": {
+    "passed": true,
+    "details": {
+      "total_assets": 4,
+      "generated": 4,
+      "failed": 0,
+      "failure_rate": 0.0,
+      "reason": ""
+    },
+    "gate": "G7"
+  },
+  "proposal_asset_gate": {
+    "passed": true,
+    "gate": "G9",
+    "aligned": 1,
+    "total": 7,
+    "alignment": {
+      "promised_services_total": 7,
+      "generated_aligned": 1,
+      "present_in_production": 3,
+      "unresolved": 0,
+      "coverage_ratio": 1.0,
+      "present_assets": [
+        "Schema Hotel",
+        "Schema Organization",
+        "Página de FAQ"
+      ],
+      "no_breach": 3,
+      "passed": true,
+      "effective_total": 4,
+      "actionable_total": 4,
+      "message": "4/4 servicios comprometidos cubiertos (1 generados  + 3 ya en producción )  — 3 sin brecha (no comprometidos, fuera del coverage)"
+    }
+  },
+  "asset_specificity_gate": {
+    "passed": true,
+    "details": {
+      "avg_confidence": 0.9,
+      "total_assets": 4,
+      "all_above_threshold": true
+    },
+    "gate": "G8"
+  },
+  "evidence_gate": {
+    "passed": true,
+    "details": {
+      "coherence_available": true,
+      "asset_data_available": true,
+      "coherence_score": 0.88
+    },
+    "gate": "EVIDENCE"
+  },
+  "advisory_warnings": [],
+  "human_review_items": [],
+  "summary": {
+    "total_gates": 5,
+    "passed": 5,
+    "failed": 0,
+    "coherence_score": 0.88,
+    "blocking_gates": [],
+    "warning_gates": []
+  }
+}

@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — VALIDADOR-URL-PROPIA-2026-08-30
 
-> **Estado**: FASE-B completada 2026-08-31 — siguiente: FASE-C
+> **Estado**: FASE-D completada 2026-08-31 (7/7 checks vs baseline H2) — siguiente: FASE-VERIFY
 > **Plan**: VALIDADOR-URL-PROPIA-2026-08-30
 > **Versión objetivo**: 4.74.0
 > **Creado desde la concepción** (executor v2.17.0 §4): cada fase llena sus secciones AL CIERRE.
@@ -12,7 +12,7 @@
 | FASE-A | 2026-08-30 | ✅ | ~28 | No (DIRECTO) | TDD rojo→verde: 45/45 contratos (23 def test_); baseline real 14 rojos preexistentes registrada; 28/28 canonicalización; validaciones 7/7; smoke CLI exit 2 |
 | FASE-B | 2026-08-31 | ✅ | ~31 | Sí (2 subagentes) | 47 casos nuevos (35 `def test_`) en 3 archivos; integrado 120 passed (guardián AST 4 superficies + F2 + canonicalización 28/28); regresión hook-pdf/scrapers 76✓+4s, auditor/never-block 125✓+2s; smokes CLI: hook-pdf OTA→exit 2, reporte real Salento Real→exit 0, v4complete OTA→exit 2; validaciones 6/7 (Version Sync = drift documental preexistente, no código) |
 | FASE-C | 2026-08-31 | ✅ | ~20 | Sí (subagente probes) | 11/11 probes PASS; regresión 101 passed 0 failed; P6 corregido (--output-dir vs --report-json); P5 verificado: no re-persiste (ensure_url aborta antes de save_state) |
-| FASE-D | — | ⏳ | — | Mixto | |
+| FASE-D | 2026-08-31 | ✅ | ~25 | Mixto (comando largo delegado) | Preparación parent (git limpio, sin YAML Salento Real, compile-check guard, check offline guard-pass). Subagente ejecutó `v4complete` → EXIT_CODE=0 (~3 min pared), "Using defaults". Protocolo evidencia-first → `evidence/FASE-VUP-D/`; `verificar_no_regresion.py` 7/7 PASSED (coherence 0.88=, 13/13 gates idénticos, assets/pains/financieros byte-equal). Anomalías = infra preexistente |
 | FASE-VERIFY | — | ⏳ | — | No (DIRECTO) | |
 | FASE-RELEASE-4.74.0 | — | ⏳ | — | Sí (delegable) | |
 
@@ -27,7 +27,7 @@
 | N4 | Coste Places API con queries basura | Rechazo antes de cualquier llamada API (probe P1: duración < 30 s) | P1-P4: exit 2 instantáneo, sin marcadores de scraping/auditoría en stdout, sin artefactos en output/ | ✅ C |
 | N6 | Identidad duplicada (onboarding_controller) | Fix ortogonal: no se tocaron los normalizadores; guardián AST cubre las superficies de entrada | 28/28 canonicalización re-verificado tras B; normalizadores intactos | ✅ B |
 | N8 | hook-pdf sin superficie para guard | Validación sobre `report_json["url"]` (probe P6) | P6: hook-pdf con fixture OTA → exit 2, rechazo claro, sin PDF | ✅ C |
-| AC3/AC8 | No-regresión tradicional | 28/28 canonicalización + E2E Salento Real equivalente al baseline H2 | P10: 28/28 canonicalización PASSED; regresión 101 passed 0 failed | ⏳ E2E en D |
+| AC3/AC8 | No-regresión tradicional | 28/28 canonicalización + E2E Salento Real equivalente al baseline H2 | P10: 28/28 canonicalización PASSED; regresión 101 passed 0 failed. **FASE-D E2E**: EXIT_CODE=0 con "Using defaults"; 7/7 checks vs baseline H2 (coherence 0.88=, READY_FOR_PUBLICATION, 13/13 gates perfil idéntico, plan assets/pains/financieros byte-equal); 0 interferencias del guard | ✅ C+D (certificación formal en VERIFY) |
 
 ## Lecciones Aprendidas
 
@@ -61,6 +61,9 @@
 | L-VUP-9 | Los prompts de probes deben usar los argumentos CLI reales, no suposiciones | P6 usó `--report-json` (inexistente); hook-pdf usa `--output-dir` para buscar el reporte. El subagente ejecutó fielmente un comando inválido y reportó FAIL sin poder evaluar AC7 | Verificar `--help` del comando ANTES de redactar el probe; o incluir un paso de validación de argumentos en el prompt delegado | Alta (todos los prompts de probes futuros) | C |
 | L-VUP-10 | "No re-persistir" ≠ "limpiar el estado previo": el rechazo aborta antes de save_state, así que la URL sembrada permanece en disco | P5: el subagente marcó FAIL porque la URL bloqueada seguía en current_state.json tras el rechazo; pero el criterio AC6 es "no RE-persistir" (no escribir de nuevo), no "limpiar lo que ya estaba" | Distinguir entre "el proceso escribió X" vs "X ya estaba ahí y el proceso no lo tocó"; verificar con spy/diff del archivo ANTES y DESPUÉS, no solo con el estado final | Alta (cualquier probe que evalúe efectos secundarios sobre estado persistente) | C |
 | L-VUP-11 | El formato de archivos de eventos persistidos debe documentarse en el plan/prompt | P9: el script de verificación asumió lista (`data[-3:]`) pero el archivo es un dict simple; KeyError silencioso que el subagente reportó como anomalía | Incluir el esquema exacto del archivo en el prompt del probe (o referenciar el contrato TDD que lo define) | Media (probes que inspeccionan artefactos) | C |
+| L-VUP-12 | El protocolo evidencia-first pagó su coste: copiar artefactos ANTES del análisis permitió clasificar correctamente el "Status: ERROR" del log (PageSpeed) como infraestructura preexistente — el baseline H2 también lo tiene `skipped` — en vez de atribuirlo al guard | Sin la copia temprana, el análisis se haría sobre artefactos mutables y la clasificación L14 dependería de memoria de trabajo; además el script de comparación se redactó DURANTE la corrida delegada (~3 min de pared), ahorrando presupuesto del parent | Mantener el orden: (1) run delegado, (2) copia de evidencia, (3) verificación con script versionado en la propia carpeta de evidencia, (4) análisis. Redactar el script de comparación durante el tiempo de pared del comando delegado | Alta (cualquier fase con E2E delegado) | D |
+| L-VUP-13 | El estado de onboarding (L13 reinterprentada, F5) se confirmó empíricamente: "Using defaults (no fresh onboarding data found)" apareció en el log (línea 166) y el gate report nuevo repite el warning Tier B ("uses default/legacy values") del baseline. Fabricar onboarding habría cambiado tier/pricing/gates y roto la equivalencia AC8 | El loader lee `{--output}/clientes` con fallback a `output/clientes/` (solo zi-one-luxury); no existe YAML de Salento Real en el repo | Verificar SIEMPRE `ls output/clientes/` y el contenido del log antes de un E2E de equivalencia; si el baseline corrió con defaults, el run de comparación TAMBIÉN. "Using defaults" en el log es condición de equivalencia, no un fallo | Alta (E2E de equivalencia futuros) | D |
+| L-VUP-14 | El diff vs baseline debe ser estructural (parseo JSON), no visual: 7 checks byte-equivalentes (target_id, coherence, readiness, perfil de 13 gates, plan de assets, pains→assets, financieros) detectan divergencias que una lectura de consola pasa por alto; y la heurística de parseo del script debe validarse contra la estructura REAL del baseline ANTES del run (p. ej. pain_ledger usa `entries`, no `pains`) | Los reportes son JSON con claves anidadas que cambian de forma entre artefactos; un regex de consola no distingue "igual" de "parecido" | Script de comparación versionado (`verificar_no_regresion.py` en la evidencia) con checks numerados y salida JSON; probar el parseo contra el baseline antes de lanzar el run costoso | Alta (reutilizable como plantilla de E2E de no-regresión) | D |
 
 ## Seguimientos abiertos
 | Tema | Estado | Acción futura |
@@ -85,7 +88,7 @@
 | Tests nuevos totales | +58 def test_ (92 casos) tras FASE-B: +23/45 en A, +35/47 en B |
 | Tests finales (def test_) | — (FASE-RELEASE: conteo con grep/collect-only; grep global de esta sesión marcó 3677 vs 3631 documentado → auditar con el método canónico) |
 | Regresiones nuevas | 0 (FASE-A vs baseline de 14; FASE-B vs sus suites dirigidas: integrado 120 passed, hook-pdf/scrapers 76✓+4s, auditor/never-block 125✓+2s; FASE-C regresión dirigida 101 passed 0 failed). **Nota de alcance**: en B NO se re-ejecutó la combinación completa de la baseline de 14 rojos (ordering-dependiente, L-VUP-1) → se re-verifica en FASE-C/VERIFY con la misma combinación de archivos |
-| Coherence E2E Salento Real | — (baseline H2: 0.88) |
+| Coherence E2E Salento Real | **0.88** (FASE-D, = baseline H2; READY_FOR_PUBLICATION) |
 | Probes Don Julio superados | 11/11 PASS (FASE-C) |
 | ACs certificados | —/8 |
 | Duración total del plan | — |
