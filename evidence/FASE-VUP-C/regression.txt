@@ -1,0 +1,134 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 101 items
+
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_url_no_propia_lanza_con_categoria[https://www.booking.com/hotel/co/finca-don-julio.es.html-ota] PASSED [  0%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_url_no_propia_lanza_con_categoria[https://booking.com/hotel/co/x-ota] PASSED [  1%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_url_no_propia_lanza_con_categoria[https://www.instagram.com/fincahoteldonjulio-red_social] PASSED [  2%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_url_no_propia_lanza_con_categoria[https://www.facebook.com/fincahoteldonjulio-red_social] PASSED [  3%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_url_no_propia_lanza_con_categoria[https://www.google.com/search?q=finca+hotel+don+julio-buscador] PASSED [  4%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_mensaje_nombra_plataforma_y_pide_sitio_propio[https://www.booking.com/hotel/co/finca-don-julio.es.html] PASSED [  5%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_mensaje_nombra_plataforma_y_pide_sitio_propio[https://www.instagram.com/fincahoteldonjulio] PASSED [  6%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_mensaje_nombra_plataforma_y_pide_sitio_propio[https://www.google.com/search?q=finca+hotel+don+julio] PASSED [  7%]
+tests/test_url_propia_guard.py::TestC1RechazoPorCategoria::test_default_origen_es_cli PASSED [  8%]
+tests/test_url_propia_guard.py::TestC2UrlPropiaPasa::test_sitio_propio_no_lanza[https://www.hotelsalentoreal.com/] PASSED [  9%]
+tests/test_url_propia_guard.py::TestC2UrlPropiaPasa::test_sitio_propio_no_lanza[https://hotelsalentoreal.com/habitaciones?utm_source=google] PASSED [ 10%]
+tests/test_url_propia_guard.py::TestC2UrlPropiaPasa::test_sitio_propio_no_lanza[https://zione.co] PASSED [ 11%]
+tests/test_url_propia_guard.py::TestC2UrlPropiaPasa::test_sitio_propio_no_lanza[hotelsalentoreal.com/reservas] PASSED [ 12%]
+tests/test_url_propia_guard.py::TestC2UrlPropiaPasa::test_classify_marca_no_bloqueada PASSED [ 13%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://secure.instagram.com/fincahoteldonjulio-red_social] PASSED [ 14%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://m.facebook.com/x-red_social] PASSED [ 15%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://booking.com.co/hotel/co/x-ota] PASSED [ 16%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://www.booking.com.co/hotel/co/x-ota] PASSED [ 17%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://www.airbnb.com.co/rooms/123-ota] PASSED [ 18%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://www.google.com.co/search?q=hotel-buscador] PASSED [ 19%]
+tests/test_url_propia_guard.py::TestC3SubdominiosYRegionales::test_subdominios_y_regionales_bloqueados[https://maps.google.com/place/x-buscador] PASSED [ 20%]
+tests/test_url_propia_guard.py::TestC4ForceBypass::test_force_no_lanza_y_marca_clasificacion PASSED [ 21%]
+tests/test_url_propia_guard.py::TestC4ForceBypass::test_evento_persistido_en_ruta_por_defecto PASSED [ 22%]
+tests/test_url_propia_guard.py::TestC4ForceBypass::test_evento_tiene_timestamp_url_comando PASSED [ 23%]
+tests/test_url_propia_guard.py::TestC4ForceBypass::test_append_only_acumula_eventos PASSED [ 24%]
+tests/test_url_propia_guard.py::TestC5ReusaNormalizeUrl::test_ast_referencia_normalize_url PASSED [ 25%]
+tests/test_url_propia_guard.py::TestC5ReusaNormalizeUrl::test_soporta_url_sin_protocolo_como_normalize_url PASSED [ 26%]
+tests/test_url_propia_guard.py::TestC7AntiFalsosPositivos::test_dominios_parecidos_no_bloqueados[https://bookingbogota.com/habitaciones] PASSED [ 27%]
+tests/test_url_propia_guard.py::TestC7AntiFalsosPositivos::test_dominios_parecidos_no_bloqueados[https://hotelairbnb.co/] PASSED [ 28%]
+tests/test_url_propia_guard.py::TestC7AntiFalsosPositivos::test_dominios_parecidos_no_bloqueados[https://mytripadvisorhotel.com/] PASSED [ 29%]
+tests/test_url_propia_guard.py::TestC7AntiFalsosPositivos::test_dominios_parecidos_no_bloqueados[https://expediahotel.com.co/] PASSED [ 30%]
+tests/test_url_propia_guard.py::TestC7AntiFalsosPositivos::test_dominios_parecidos_no_bloqueados[https://googlehotel.com/] PASSED [ 31%]
+tests/test_url_propia_guard.py::TestAC6OrigenEstadoPersistente::test_rechazo_menciona_estado_persistente PASSED [ 32%]
+tests/test_url_propia_guard.py::TestAC6OrigenEstadoPersistente::test_origen_cli_sin_mencion PASSED [ 33%]
+tests/test_url_propia_guard.py::TestAC6OrigenEstadoPersistente::test_ciclo_force_reinyeccion_auto_consistente PASSED [ 34%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_url_bloqueada_sale_con_codigo_2 PASSED [ 35%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_cubre_todos_los_comandos[execute] PASSED [ 36%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_cubre_todos_los_comandos[onboard] PASSED [ 37%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_cubre_todos_los_comandos[deploy] PASSED [ 38%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_cubre_todos_los_comandos[v4audit] PASSED [ 39%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_url_propia_no_altera_el_flujo PASSED [ 40%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_force_no_sale_y_mantiene_url PASSED [ 41%]
+tests/test_url_propia_guard.py::TestEnsureUrlExitCode2::test_reinyeccion_envenenada_rechazada_con_mencion PASSED [ 42%]
+tests/test_url_propia_guard.py::TestT11RechazoIdenticoEnComandosSecundarios::test_rechazo_contains_plataforma_y_sitio_propio[execute] PASSED [ 43%]
+tests/test_url_propia_guard.py::TestT11RechazoIdenticoEnComandosSecundarios::test_rechazo_contains_plataforma_y_sitio_propio[onboard] PASSED [ 44%]
+tests/test_url_propia_guard.py::TestT11RechazoIdenticoEnComandosSecundarios::test_rechazo_contains_plataforma_y_sitio_propio[deploy] PASSED [ 45%]
+tests/test_url_propia_guard.py::TestT11RechazoIdenticoEnComandosSecundarios::test_mensaje_byte_a_byte_igual_que_v4complete PASSED [ 46%]
+tests/test_url_propia_guard.py::TestT11RechazoIdenticoEnComandosSecundarios::test_url_propia_no_altera_el_flujo_del_comando[execute] PASSED [ 47%]
+tests/test_url_propia_guard.py::TestT11RechazoIdenticoEnComandosSecundarios::test_url_propia_no_altera_el_flujo_del_comando[onboard] PASSED [ 48%]
+tests/test_url_propia_guard.py::TestT11RechazoIdenticoEnComandosSecundarios::test_url_propia_no_altera_el_flujo_del_comando[deploy] PASSED [ 49%]
+tests/test_url_propia_guard.py::TestT12GarantiaDeOrdenEnMain::test_url_bloqueada_nunca_llega_a_save_state[v4complete] PASSED [ 50%]
+tests/test_url_propia_guard.py::TestT12GarantiaDeOrdenEnMain::test_url_bloqueada_nunca_llega_a_save_state[execute] PASSED [ 51%]
+tests/test_url_propia_guard.py::TestT12GarantiaDeOrdenEnMain::test_url_bloqueada_nunca_llega_a_save_state[onboard] PASSED [ 52%]
+tests/test_url_propia_guard.py::TestT12GarantiaDeOrdenEnMain::test_url_bloqueada_nunca_llega_a_save_state[deploy] PASSED [ 53%]
+tests/test_url_propia_guard.py::TestT12GarantiaDeOrdenEnMain::test_url_propia_si_persiste_en_main PASSED [ 54%]
+tests/test_url_propia_guard.py::TestT13Ac6SinRepersistenciaEnMain::test_estado_envenenado_rechazado_y_no_repersistido[v4complete] PASSED [ 55%]
+tests/test_url_propia_guard.py::TestT13Ac6SinRepersistenciaEnMain::test_estado_envenenado_rechazado_y_no_repersistido[v4audit] PASSED [ 56%]
+tests/test_url_propia_guard.py::TestT13Ac6SinRepersistenciaEnMain::test_disco_no_cambia_con_estado_envenenado PASSED [ 57%]
+tests/test_url_propia_guard.py::TestT13Ac6SinRepersistenciaEnMain::test_ensure_url_no_reinyecta_en_comandos_del_tuple_de_exclusion PASSED [ 58%]
+tests/test_guardian_ast_url_guard.py::test_ensure_url_invoca_assert_own_site PASSED [ 59%]
+tests/test_guardian_ast_url_guard.py::test_ensure_url_captura_url_no_propia_y_sale_con_2 PASSED [ 60%]
+tests/test_guardian_ast_url_guard.py::test_superficie_de_capa_datos_llama_al_guard[path0-extract_hotel_data] PASSED [ 61%]
+tests/test_guardian_ast_url_guard.py::test_superficie_de_capa_datos_llama_al_guard[path1-audit] PASSED [ 62%]
+tests/test_guardian_ast_url_guard.py::test_superficie_de_capa_datos_llama_al_guard[path2-extract_data] PASSED [ 63%]
+tests/test_guardian_ast_url_guard.py::test_scraper_guard_antes_de_cualquier_http PASSED [ 64%]
+tests/test_guardian_ast_url_guard.py::test_auditor_guard_antes_de_salida_y_red PASSED [ 65%]
+tests/test_guardian_ast_url_guard.py::test_hook_pdf_extrae_force_y_lo_pasa_al_guard PASSED [ 66%]
+tests/test_guardian_ast_url_guard.py::test_generate_pasa_force_a_extract_data PASSED [ 67%]
+tests/test_guardian_ast_url_guard.py::test_run_hook_pdf_mode_capture_exit_code PASSED [ 68%]
+tests/test_guardian_ast_url_guard.py::test_main_tiene_una_sola_llamada_al_guard PASSED [ 69%]
+tests/test_guardian_ast_url_guard.py::test_modos_sin_guard_propio[run_execution_mode] PASSED [ 70%]
+tests/test_guardian_ast_url_guard.py::test_modos_sin_guard_propio[run_onboard_mode] PASSED [ 71%]
+tests/test_guardian_ast_url_guard.py::test_modos_sin_guard_propio[run_deploy_mode] PASSED [ 72%]
+tests/test_target_id_canonicalization.py::TestAntiFragmentacionTargetId::test_variaciones_producen_mismo_target_id[https://www.hotelsalentoreal.com/] PASSED [ 73%]
+tests/test_target_id_canonicalization.py::TestAntiFragmentacionTargetId::test_variaciones_producen_mismo_target_id[https://www.hotelsalentoreal.com/?utm_source=google&utm_medium=organic&utm_campaign=googlemybusiness&partner=5792] PASSED [ 74%]
+tests/test_target_id_canonicalization.py::TestAntiFragmentacionTargetId::test_variaciones_producen_mismo_target_id[https://www.hotelsalentoreal.com/?partner=5792] PASSED [ 75%]
+tests/test_target_id_canonicalization.py::TestAntiFragmentacionTargetId::test_variaciones_producen_mismo_target_id[http://hotelsalentoreal.com/] PASSED [ 76%]
+tests/test_target_id_canonicalization.py::TestAntiFragmentacionTargetId::test_variaciones_producen_mismo_target_id[https://hotelsalentoreal.com] PASSED [ 77%]
+tests/test_target_id_canonicalization.py::TestAntiFragmentacionTargetId::test_variaciones_producen_mismo_target_id[www.hotelsalentoreal.com] PASSED [ 78%]
+tests/test_target_id_canonicalization.py::TestAntiFragmentacionTargetId::test_variaciones_producen_mismo_target_id[https://www.hotelsalentoreal.com/habitaciones] PASSED [ 79%]
+tests/test_target_id_canonicalization.py::TestAntiFragmentacionTargetId::test_utm_completa_igual_a_limpia PASSED [ 80%]
+tests/test_target_id_canonicalization.py::TestAntiFragmentacionTargetId::test_partner_igual_a_limpia PASSED [ 81%]
+tests/test_target_id_canonicalization.py::TestGenerateHotelIdCanonico::test_variaciones_producen_mismo_hotel_id[https://www.hotelsalentoreal.com/] PASSED [ 82%]
+tests/test_target_id_canonicalization.py::TestGenerateHotelIdCanonico::test_variaciones_producen_mismo_hotel_id[https://www.hotelsalentoreal.com/?utm_source=google&utm_medium=organic&utm_campaign=googlemybusiness&partner=5792] PASSED [ 83%]
+tests/test_target_id_canonicalization.py::TestGenerateHotelIdCanonico::test_variaciones_producen_mismo_hotel_id[https://www.hotelsalentoreal.com/?partner=5792] PASSED [ 84%]
+tests/test_target_id_canonicalization.py::TestGenerateHotelIdCanonico::test_variaciones_producen_mismo_hotel_id[http://hotelsalentoreal.com/] PASSED [ 85%]
+tests/test_target_id_canonicalization.py::TestGenerateHotelIdCanonico::test_variaciones_producen_mismo_hotel_id[www.hotelsalentoreal.com] PASSED [ 86%]
+tests/test_target_id_canonicalization.py::TestGenerateHotelIdCanonico::test_variaciones_producen_mismo_hotel_id[https://www.hotelsalentoreal.com/habitaciones] PASSED [ 87%]
+tests/test_target_id_canonicalization.py::TestGenerateHotelIdCanonico::test_hotel_id_canonico_sin_utm PASSED [ 88%]
+tests/test_target_id_canonicalization.py::TestGenerateHotelIdCanonico::test_compatibilidad_url_limpia_formato_previo PASSED [ 89%]
+tests/test_target_id_canonicalization.py::TestRegionConUrlNormalizada::test_eje_cafetero_con_url_normalizada[https://www.hotelsalentoreal.com/] PASSED [ 90%]
+tests/test_target_id_canonicalization.py::TestRegionConUrlNormalizada::test_eje_cafetero_con_url_normalizada[https://www.hotelsalentoreal.com/?utm_source=google&utm_medium=organic&utm_campaign=googlemybusiness&partner=5792] PASSED [ 91%]
+tests/test_target_id_canonicalization.py::TestRegionConUrlNormalizada::test_eje_cafetero_con_url_normalizada[https://www.hotelsalentoreal.com/habitaciones] PASSED [ 92%]
+tests/test_target_id_canonicalization.py::TestRegionConUrlNormalizada::test_eje_cafetero_con_url_normalizada[hotelsalentoreal.com] PASSED [ 93%]
+tests/test_target_id_canonicalization.py::TestRegionConUrlNormalizada::test_region_url_cruda_con_utm_tambien_detecta PASSED [ 94%]
+tests/test_target_id_canonicalization.py::TestReutilizacionMemoria::test_corrida_con_utm_reutilizada_por_url_limpia PASSED [ 95%]
+tests/test_target_id_canonicalization.py::TestReutilizacionMemoria::test_corrida_limpia_reutilizada_por_url_con_utm PASSED [ 96%]
+tests/test_target_id_canonicalization.py::TestReutilizacionMemoria::test_sin_fragmentacion_dos_corridas_mismo_hotel PASSED [ 97%]
+tests/test_target_id_canonicalization.py::TestGuardianEstaticoCanonicalizacion::test_main_sin_target_id_crudo PASSED [ 98%]
+tests/test_target_id_canonicalization.py::TestGuardianEstaticoCanonicalizacion::test_main_con_target_id_canonico PASSED [ 99%]
+tests/test_target_id_canonicalization.py::TestGuardianEstaticoCanonicalizacion::test_generate_hotel_id_normaliza_antes_de_sanitizar PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 101 passed, 8 warnings in 2.05s =======================
+EXIT_CODE=0

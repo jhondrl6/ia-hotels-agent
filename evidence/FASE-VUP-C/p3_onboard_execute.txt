@@ -1,0 +1,4 @@
+URL rechazada: https://www.booking.com/hotel/co/finca-don-julio.es.html pertenece a un agregador de reservas (OTA) (booking.com), no al sitio web propio del hotel. Proporciona la URL del sitio web propio del hotel (ej: https://www.tuhotel.com). Para auditar esta URL de todos modos usa --force (bypass explícito del operador; el evento queda registrado).
+EXIT_CODE_ONBOARD=2
+URL rechazada: https://www.booking.com/hotel/co/finca-don-julio.es.html pertenece a un agregador de reservas (OTA) (booking.com), no al sitio web propio del hotel. Proporciona la URL del sitio web propio del hotel (ej: https://www.tuhotel.com). Para auditar esta URL de todos modos usa --force (bypass explícito del operador; el evento queda registrado).
+EXIT_CODE_EXECUTE=2

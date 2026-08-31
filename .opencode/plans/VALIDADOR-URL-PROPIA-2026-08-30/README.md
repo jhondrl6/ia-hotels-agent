@@ -1,6 +1,6 @@
 # VALIDADOR-URL-PROPIA-2026-08-30
 
-> **Versión objetivo**: 4.74.0 | **Estado**: FASE-A ✅ 2026-08-30 (guard núcleo TDD 45/45) → FASE-B ✅ 2026-08-31 (AC6 + AC7 + capa de datos; +35 `def test_` / 47 casos; 120 passed integrados; 3 smokes CLI) — siguiente: FASE-C
+> **Versión objetivo**: 4.74.0 | **Estado**: FASE-A ✅ → FASE-B ✅ → FASE-C ✅ 2026-08-31 (11/11 probes PASS, regresión 101 passed) — siguiente: FASE-D
 > **Workflow**: `phased_project_executor.md` v2.17.0 (R1: una fase/sesión, R2: ≤60 iteraciones, R3: scope por fase)
 > **Contexto fuente**: `.opencode/context/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md` (verificado contra código vivo v4.73.0)
 > **Auditoría de estrategia (2026-08-30)**: re-verificado contra código vivo HEAD (todos los claims de líneas/funciones confirmados; 28/28 canonicalización y 13 rojos baseline reproducidos). Corregidos 6 fallos de causa raíz: F1 `--force` YA existe en argparse (reutilizar, no re-crear); F2 ensure_url SÍ cubre execute/onboard/deploy → eliminados los guards redundantes por modo; F3 probe P5 requiere sembrar el estado (la URL bloqueada nunca se persiste sola); F4 mecanismo concreto para el warning de `--force` (`.agent/memory/url_guard_force_events.json`); F5 el baseline H2 corrió CON DEFAULTS → FASE-D NO puebla clientes; F6 contrato anti-falsos-positivos de matching ( dominios parecidos). Detalle en §Auditoría.

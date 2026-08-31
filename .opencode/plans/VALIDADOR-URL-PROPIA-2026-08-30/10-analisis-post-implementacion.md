@@ -11,7 +11,7 @@
 | Preparación | 2026-08-30 | ✅ | ~30 | No | Paso 0 ejecutado: memoria + QMind `iah-cli-lecciones` (2 queries) |
 | FASE-A | 2026-08-30 | ✅ | ~28 | No (DIRECTO) | TDD rojo→verde: 45/45 contratos (23 def test_); baseline real 14 rojos preexistentes registrada; 28/28 canonicalización; validaciones 7/7; smoke CLI exit 2 |
 | FASE-B | 2026-08-31 | ✅ | ~31 | Sí (2 subagentes) | 47 casos nuevos (35 `def test_`) en 3 archivos; integrado 120 passed (guardián AST 4 superficies + F2 + canonicalización 28/28); regresión hook-pdf/scrapers 76✓+4s, auditor/never-block 125✓+2s; smokes CLI: hook-pdf OTA→exit 2, reporte real Salento Real→exit 0, v4complete OTA→exit 2; validaciones 6/7 (Version Sync = drift documental preexistente, no código) |
-| FASE-C | — | ⏳ | — | Sí | |
+| FASE-C | 2026-08-31 | ✅ | ~20 | Sí (subagente probes) | 11/11 probes PASS; regresión 101 passed 0 failed; P6 corregido (--output-dir vs --report-json); P5 verificado: no re-persiste (ensure_url aborta antes de save_state) |
 | FASE-D | — | ⏳ | — | Mixto | |
 | FASE-VERIFY | — | ⏳ | — | No (DIRECTO) | |
 | FASE-RELEASE-4.74.0 | — | ⏳ | — | Sí (delegable) | |
@@ -19,15 +19,15 @@
 ## Matriz de Verificación de Hallazgos (llenar en FASE-VERIFY)
 | # | Hallazgo / Gap | Expected | Real | Status |
 |---|----------------|----------|------|--------|
-| GA-1 | Colapso de identidad: URLs OTA producen target_id compartido | v4complete/onboard/execute/deploy rechazan URL OTA con exit 2, mensaje claro, sin red/API | Choke point + contra-condición F2 congelados por el guardián AST (10 defs); smoke `v4complete --url booking…` → exit 2 sin red | ⏳ falta medición P1-P4 (C) |
-| GA-2 | Scraper emite datos de tercero con confianza arbitraria | Guard aborta antes del scrapeo; capa datos protegida (assert_own_site) | `assert_own_site` primera sentencia de `extract_hotel_data` y de `audit()`, con centinelas que prueban que no hay HTTP tras el rechazo + guardián AST | ✅ B (empírico: C) |
+| GA-1 | Colapso de identidad: URLs OTA producen target_id compartido | v4complete/onboard/execute/deploy rechazan URL OTA con exit 2, mensaje claro, sin red/API | P1-P4: exit 2, mensaje español nombra plataforma, duración < 30s, sin artefactos en output/ | ✅ C |
+| GA-2 | Scraper emite datos de tercero con confianza arbitraria | Guard aborta antes del scrapeo; capa datos protegida (assert_own_site) | P7: UrlNoPropiaError en WebScraper 0 HTTP; P8: UrlNoPropiaError en V4ComprehensiveAuditor 0 Places | ✅ C |
 | N1 | Contaminación cruzada de onboarding por netloc | Imposible: la URL OTA ya no entra al pipeline | — | ⏳ |
 | N2 | ADR de OTA entra al motor financiero | Imposible: rechazo previo al fallback de ADR | — | ⏳ |
-| N3 | last_url propaga URLs envenenadas | No se persisten bloqueadas; reinyección rechazada con mención del estado | AC6: orden `ensure_url`(L1428)→`save_state`(L1433) contratado subiendo `main()` (con contrapositivo de mutación) + rechazo de estado envenenado que nombra el origen | ✅ B (empírico: P5 en C) |
-| N4 | Coste Places API con queries basura | Rechazo antes de cualquier llamada API (probe P1: duración < 30 s) | — | ⏳ |
+| N3 | last_url propaga URLs envenenadas | No se persisten bloqueadas; reinyección rechazada con mención del estado | P5: estado envenenado → rechazo con mención "estado persistente"; ensure_url aborta antes de save_state — NO re-persiste | ✅ C |
+| N4 | Coste Places API con queries basura | Rechazo antes de cualquier llamada API (probe P1: duración < 30 s) | P1-P4: exit 2 instantáneo, sin marcadores de scraping/auditoría en stdout, sin artefactos en output/ | ✅ C |
 | N6 | Identidad duplicada (onboarding_controller) | Fix ortogonal: no se tocaron los normalizadores; guardián AST cubre las superficies de entrada | 28/28 canonicalización re-verificado tras B; normalizadores intactos | ✅ B |
-| N8 | hook-pdf sin superficie para guard | Validación sobre `report_json["url"]` (probe P6) | AC7 cableado + `run_hook_pdf_mode` → exit 2 sin PDF (smoke A con reporte OTA real) | ✅ B (empírico: P6 en C) |
-| AC3/AC8 | No-regresión tradicional | 28/28 canonicalización + E2E Salento Real equivalente al baseline H2 | 28/28 verde tras B (dentro de los 120 passed); smoke `hook-pdf --dry-run` sobre el reporte real de Salento Real → exit 0 | ⏳ E2E en D |
+| N8 | hook-pdf sin superficie para guard | Validación sobre `report_json["url"]` (probe P6) | P6: hook-pdf con fixture OTA → exit 2, rechazo claro, sin PDF | ✅ C |
+| AC3/AC8 | No-regresión tradicional | 28/28 canonicalización + E2E Salento Real equivalente al baseline H2 | P10: 28/28 canonicalización PASSED; regresión 101 passed 0 failed | ⏳ E2E en D |
 
 ## Lecciones Aprendidas
 
@@ -58,6 +58,9 @@
 | L-VUP-6 | La delegación funcionó en ejecución y falló en cobertura de diseño: 0 colisiones de archivo, 0 decisiones inventadas por los subagentes, pero el conflicto `--force` vs capa de datos NO estaba en el plan y apareció solo al redactar el brief | Los briefs llevaban la API exacta, los mensajes/exit code congelados y una lista de archivos PROHIBIDOS; el plan, en cambio, asumía que "assert_own_site en scraper/auditor" era mecánico y no había previsto que esos llamadores no reciben `args.force` | Delegar solo lo que ya está decidido y cerrar las decisiones nuevas EN EL PARENT antes de lanzar los subagentes (aquí: D-VUP-B1 implementada y verde antes del brief del Track 2). Coste medido: Track 1 gastó 38 tool calls / ~581 s en un resultado que era "solo tests" → en fases de baja complejidad, evaluar si la delegación paga su propio contexto | Alta (FASE-C/D también son delegadas) | B |
 | L-VUP-7 | `UrlNoPropiaError` lanzado por scraper/auditor sería **tragado** por los `except Exception` de sus callers en `main.py` (L568/592/865/1371/1760/1981) y convertiría el rechazo en warning | Los modos de main.py ya envuelven los accesos de red con except amplios (patrón never-block); la defensa en capa de datos solo es efectiva para llamadores FUERA de main (sondas, handlers del harness, uso de librería) | No afirmar en docs que la capa de datos protege dentro del CLI (ahí manda `ensure_url`); si algún día se necesita, añadir `except UrlNoPropiaError: raise` en esos bloques — registrado en Seguimientos. Lección emparentada: NameError silencioso en gate tier_c | Alta (interpretación de AC en FASE-VERIFY) | B |
 | L-VUP-8 | `FORZADAS_PROCESO` es estado mutable de módulo y pytest puede alterar resultados según el orden de recolección | Un bypass registrado por un test contaminaría el rechazo que otro test espera | Fixture `registro_forzadas_aislado` (autouse) con snapshot/clear/restore del set + verificación empírica en **orden inverso** de archivos (`temp/fase_b_track1_conjunto_inverso.txt`): 0 fallos en ambas direcciones | Alta (cualquier test sobre estado global de módulo) | B |
+| L-VUP-9 | Los prompts de probes deben usar los argumentos CLI reales, no suposiciones | P6 usó `--report-json` (inexistente); hook-pdf usa `--output-dir` para buscar el reporte. El subagente ejecutó fielmente un comando inválido y reportó FAIL sin poder evaluar AC7 | Verificar `--help` del comando ANTES de redactar el probe; o incluir un paso de validación de argumentos en el prompt delegado | Alta (todos los prompts de probes futuros) | C |
+| L-VUP-10 | "No re-persistir" ≠ "limpiar el estado previo": el rechazo aborta antes de save_state, así que la URL sembrada permanece en disco | P5: el subagente marcó FAIL porque la URL bloqueada seguía en current_state.json tras el rechazo; pero el criterio AC6 es "no RE-persistir" (no escribir de nuevo), no "limpiar lo que ya estaba" | Distinguir entre "el proceso escribió X" vs "X ya estaba ahí y el proceso no lo tocó"; verificar con spy/diff del archivo ANTES y DESPUÉS, no solo con el estado final | Alta (cualquier probe que evalúe efectos secundarios sobre estado persistente) | C |
+| L-VUP-11 | El formato de archivos de eventos persistidos debe documentarse en el plan/prompt | P9: el script de verificación asumió lista (`data[-3:]`) pero el archivo es un dict simple; KeyError silencioso que el subagente reportó como anomalía | Incluir el esquema exacto del archivo en el prompt del probe (o referenciar el contrato TDD que lo define) | Media (probes que inspeccionan artefactos) | C |
 
 ## Seguimientos abiertos
 | Tema | Estado | Acción futura |
@@ -81,9 +84,9 @@
 |---------|-------|
 | Tests nuevos totales | +58 def test_ (92 casos) tras FASE-B: +23/45 en A, +35/47 en B |
 | Tests finales (def test_) | — (FASE-RELEASE: conteo con grep/collect-only; grep global de esta sesión marcó 3677 vs 3631 documentado → auditar con el método canónico) |
-| Regresiones nuevas | 0 (FASE-A vs baseline de 14; FASE-B vs sus suites dirigidas: integrado 120 passed, hook-pdf/scrapers 76✓+4s, auditor/never-block 125✓+2s). **Nota de alcance**: en B NO se re-ejecutó la combinación completa de la baseline de 14 rojos (ordering-dependiente, L-VUP-1) → se re-verifica en FASE-C/VERIFY con la misma combinación de archivos |
+| Regresiones nuevas | 0 (FASE-A vs baseline de 14; FASE-B vs sus suites dirigidas: integrado 120 passed, hook-pdf/scrapers 76✓+4s, auditor/never-block 125✓+2s; FASE-C regresión dirigida 101 passed 0 failed). **Nota de alcance**: en B NO se re-ejecutó la combinación completa de la baseline de 14 rojos (ordering-dependiente, L-VUP-1) → se re-verifica en FASE-C/VERIFY con la misma combinación de archivos |
 | Coherence E2E Salento Real | — (baseline H2: 0.88) |
-| Probes Don Julio superados | —/11 |
+| Probes Don Julio superados | 11/11 PASS (FASE-C) |
 | ACs certificados | —/8 |
 | Duración total del plan | — |
 
