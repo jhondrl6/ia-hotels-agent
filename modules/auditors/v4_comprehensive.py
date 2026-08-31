@@ -439,7 +439,24 @@ class V4ComprehensiveAuditor:
             
         Returns:
             V4AuditResult with all audit data
+
+        Raises:
+            UrlNoPropiaError: If the URL belongs to an OTA / social network /
+                search engine and the operator did not authorize it with
+                --force in this process (data-layer defense, plan
+                VALIDADOR-URL-PROPIA-2026-08-30). Raised BEFORE any network or
+                API call.
         """
+        # Capa de datos (T2): primera linea, antes de los prints de cabecera,
+        # de _audit_schemas y de cualquier llamada Places/red. Import lazy:
+        # patron FASE-A, evita el ciclo con main (el guard reusa
+        # main._normalize_url).
+        from modules.data_validation.own_site_guard import (
+            ORIGEN_CAPA_DATOS,
+            assert_own_site,
+        )
+        assert_own_site(url, origen=ORIGEN_CAPA_DATOS, comando="v4_comprehensive")
+
         print(f"\n{'='*60}")
         print(f"V4.0 COMPREHENSIVE AUDIT")
         print(f"{'='*60}")

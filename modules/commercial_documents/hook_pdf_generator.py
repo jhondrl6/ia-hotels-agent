@@ -166,15 +166,23 @@ class HookPDFGenerator:
     # extract_data
     # ------------------------------------------------------------------
 
-    def extract_data(self) -> HookPDFData:
+    def extract_data(self, force: bool = False) -> HookPDFData:
         """
         Extrae todos los datos desde los 3 archivos fuente de v4_complete.
+
+        Args:
+            force: Bypass explícito del operador del guard de URL propia
+                (plan VALIDADOR-URL-PROPIA-2026-08-30, AC7). Con True, una url
+                de OTA/red social/buscador en el reporte no bloquea el PDF y el
+                evento queda registrado. Default False: se bloquea.
 
         Returns:
             HookPDFData con los 34 campos poblados.
 
         Raises:
             FileNotFoundError: Si falta alguno de los 3 archivos fuente.
+            UrlNoPropiaError: Si la url del reporte no es el sitio web propio
+                del hotel y force=False.
         """
         # --- 1. Localizar archivos fuente con glob ---
         diag_files = sorted(self.output_dir.glob("01_DIAGNOSTICO_*.md"))
@@ -210,6 +218,19 @@ class HookPDFGenerator:
         # --- 4. Datos del hotel ---
         hotel_nombre = report_json.get("hotel_name", "")
         hotel_url = report_json.get("url", "")
+
+        # AC7 (VALIDADOR-URL-PROPIA-2026-08-30): la url del reporte NO es
+        # confianza heredada del choke point -- puede venir de un analisis
+        # antiguo o de una reinyeccion. Import lazy: patron FASE-A, evita el
+        # ciclo con main (el guard reusa main._normalize_url).
+        from modules.data_validation.own_site_guard import assert_own_site
+        assert_own_site(
+            hotel_url,
+            force=force,
+            origen="report_json",
+            comando="hook-pdf",
+        )
+
         hotel_region = report_json.get("region", "")
 
         # Dirección: buscar en el cuerpo del diagnóstico (línea con "##" que contiene hotel + dirección)
@@ -616,7 +637,8 @@ class HookPDFGenerator:
         Orquesta la generación completa del PDF.
 
         Args:
-            force: Si True, sobrescribe PDF existente.
+            force: Si True, sobrescribe PDF existente y ademas autoriza el
+                bypass del guard de URL propia sobre el reporte (AC7).
             dry_run: Si True, imprime los datos y retorna sin generar PDF.
 
         Returns:
@@ -625,9 +647,11 @@ class HookPDFGenerator:
         Raises:
             FileNotFoundError: Si faltan archivos fuente.
             RuntimeError: Si hay errores fatales de validación.
+            UrlNoPropiaError: Si la url del reporte no es el sitio web propio
+                del hotel y force=False.
         """
         # 1. Extraer datos
-        data = self.extract_data()
+        data = self.extract_data(force=force)
 
         # 2. Validar
         warnings = self.validate_data(data)

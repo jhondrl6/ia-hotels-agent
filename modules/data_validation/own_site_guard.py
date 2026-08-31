@@ -13,6 +13,9 @@ API:
     assert_own_site(url, force=False, origen=ORIGEN_CLI, comando="", events_path=None)
     UrlNoPropiaError  (mensaje en español, nombre la plataforma, exit 2 en CLI)
 
+Orígenes: ORIGEN_CLI (--url), ORIGEN_ESTADO_PERSISTENTE (reinyección last_url) y
+ORIGEN_CAPA_DATOS (defensa en scrapers/auditors, FASE-B).
+
 Blocklist versionada: config/url_blocklist.yaml (matching por SUFIJO DE
 ETIQUETAS de dominio, nunca substring — contrato C7).
 
@@ -36,8 +39,14 @@ FORCE_EVENTS_PATH = REPO_ROOT / ".agent" / "memory" / "url_guard_force_events.js
 
 ORIGEN_CLI = "--url"
 ORIGEN_ESTADO_PERSISTENTE = "estado_persistente"
+ORIGEN_CAPA_DATOS = "capa_datos"
 
 EXIT_CODE_URL_NO_PROPIA = 2
+
+# D-VUP-B1: netlocs que el operador autorizó con --force en ESTE proceso. Lo
+# consulta solo ORIGEN_CAPA_DATOS (scraper/auditor), que no recibe args.force:
+# sin este registro el guard de capa de datos anularía el bypass del choke point.
+FORZADAS_PROCESO: set = set()
 
 NOMBRE_CATEGORIA = {
     "ota": "un agregador de reservas (OTA)",
@@ -178,15 +187,23 @@ def assert_own_site(
     evento en el archivo dedicado append-only. Nótese que en ese caso main.py
     SÍ persiste la URL como last_url; una reinyección posterior será rechazada
     con mención del estado persistente (ciclo auto-consistente).
+
+    Con origen="capa_datos" (scraper/auditor) se honra el --force ya concedido
+    en el proceso para ese netloc (D-VUP-B1): esos llamadores no reciben
+    args.force y otherwise anularían la autorización del operador. Los orígenes
+    --url y estado_persistente conservan la semántica de FASE-A.
     """
     clasif = classify_url(url)
     if not clasif.bloqueada:
         return clasif
     if force:
+        FORZADAS_PROCESO.add(clasif.netloc)
         path = _registrar_evento_force(clasif, comando, events_path)
         print(
             f"[GUARD] --force activo: se permite la URL no propia {url}. "
             f"Evento registrado en {path}"
         )
+        return clasif
+    if origen == ORIGEN_CAPA_DATOS and clasif.netloc in FORZADAS_PROCESO:
         return clasif
     raise UrlNoPropiaError(_mensaje_rechazo(clasif, origen), clasificacion=clasif)

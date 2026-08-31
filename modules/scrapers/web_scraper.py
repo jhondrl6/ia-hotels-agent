@@ -41,7 +41,22 @@ class WebScraper:
         Extraccion inteligente de datos del hotel
         Maneja: Schema.org, OpenGraph, HTML parsing
         Con fallback SSL para certificados expirados
+
+        Raises:
+            UrlNoPropiaError: Si la url es de una OTA/red social/buscador y el
+                operador no autorizo esa url con --force en este proceso
+                (defensa en capa de datos, plan VALIDADOR-URL-PROPIA-2026-08-30).
+                Se lanza ANTES de cualquier peticion HTTP.
         """
+        # Capa de datos (T2): el guard va FUERA del try para que el except
+        # propio de abajo no se trague UrlNoPropiaError. Import lazy: patron
+        # FASE-A, evita el ciclo con main (el guard reusa main._normalize_url).
+        from modules.data_validation.own_site_guard import (
+            ORIGEN_CAPA_DATOS,
+            assert_own_site,
+        )
+        assert_own_site(url, origen=ORIGEN_CAPA_DATOS, comando="web_scraper")
+
         try:
             # Usar HttpClient con fallback SSL
             response, fallback_info = self.http_client.get(url, headers=self.headers)

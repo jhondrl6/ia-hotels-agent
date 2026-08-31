@@ -1561,6 +1561,10 @@ def run_hook_pdf_mode(args: argparse.Namespace) -> None:
     """Maneja el comando 'hook-pdf' — PDF gancho de 2 páginas."""
     from pathlib import Path
     from modules.commercial_documents.hook_pdf_generator import HookPDFGenerator
+    from modules.data_validation.own_site_guard import (
+        EXIT_CODE_URL_NO_PROPIA,
+        UrlNoPropiaError,
+    )
 
     if not args.output_dir:
         print("[ERROR] --output-dir es obligatorio para hook-pdf")
@@ -1601,6 +1605,17 @@ def run_hook_pdf_mode(args: argparse.Namespace) -> None:
         else:
             print(f"\n✅ PDF generado: {result}")
         sys.exit(0)
+    except UrlNoPropiaError as e:
+        print(f"\n[ERROR] {e}", file=sys.stderr)
+        print(
+            "El campo 'url' del PDF gancho viene de v4_complete_report.json, "
+            "generado por `python main.py v4complete --url <URL>`. Vuelva a "
+            "ejecutar v4complete con la URL del sitio web propio del hotel, o "
+            "use --force para generar el PDF con esta URL de todos modos "
+            "(el evento queda registrado).",
+            file=sys.stderr,
+        )
+        sys.exit(EXIT_CODE_URL_NO_PROPIA)
     except FileNotFoundError as e:
         print(f"\n[ERROR] {e}")
         print("¿Ejecutaste primero v4complete sobre el hotel?")

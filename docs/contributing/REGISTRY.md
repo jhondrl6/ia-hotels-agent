@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-08-30
+> **Ultima actualizacion:** 2026-08-31
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 450
+> **Total fases completadas:** 451
 
 ---
 
@@ -10563,6 +10563,39 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (23)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-B (VALIDADOR-URL-PROPIA) - 2026-08-31
+**Descripcion:** Guard de URL propia extendido a las superficies secundarias: AC6 last_url (garantia de orden rechazo>save_state congelada por contratos), AC7 hook-pdf sobre report_json[url] con exit 2 y propagacion de --force, defensa en capa de datos (web_scraper + v4_comprehensive) y registro FORZADAS_PROCESO (D-VUP-B1) para que el bypass del operador no se anule. +35 def test_ / 47 casos; guardián AST extendido a las 4 superficies
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/test_url_propia_guard_superficies.py` | NUEVO | Test Url Propia Guard Superficies |
+| `evidence/FASE-VUP-B/README.md` | NUEVO | Readme |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `modules/data_validation/own_site_guard.py` | Own Site Guard |
+| `modules/commercial_documents/hook_pdf_generator.py` | Hook Pdf Generator |
+| `modules/scrapers/web_scraper.py` | Web Scraper |
+| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
+| `tests/test_url_propia_guard.py` | Test Url Propia Guard |
+| `tests/test_guardian_ast_url_guard.py` | Test Guardian Ast Url Guard |
+| `.opencode/plans/VALIDADOR-URL-PROPIA-2026-08-30/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+| `.opencode/plans/VALIDADOR-URL-PROPIA-2026-08-30/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/VALIDADOR-URL-PROPIA-2026-08-30/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/VALIDADOR-URL-PROPIA-2026-08-30/README.md` | Readme |
+| `.opencode/plans/VALIDADOR-URL-PROPIA-2026-08-30/dependencias-fases.md` | Dependencias-Fases |
+
+### Validaciones
+- [x] Tests passing (47)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

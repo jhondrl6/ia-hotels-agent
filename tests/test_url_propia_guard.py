@@ -302,3 +302,246 @@ class TestEnsureUrlExitCode2:
         assert excinfo.value.code == 2
         stderr = capsys.readouterr().err
         assert "persistente" in stderr
+
+
+# ===========================================================================
+# FASE-B Track 1 — Superficies secundarias (last_url / comandos no-v4)
+# ===========================================================================
+# Congelan las tres garantias del Track 1 del plan VALIDADOR-URL-PROPIA
+# (FASE-B). Auditoria F2: main() llama ensure_url() para TODOS los comandos
+# (main.py L1428) ANTES de MemoryManager().save_state() (L1433), por lo que NO
+# se agregan guards por modo (run_execution_mode / run_onboard_mode /
+# run_deploy_mode) — seria redundancia fosilizada. Las garantias quedan
+# fijadas a nivel de main():
+#
+#   T1-1  execute / onboard / deploy con URL bloqueada → rechazo IDENTICO que
+#         v4complete (mismo mensaje, mismo exit code 2, misma API).
+#   T1-2  Garantia de orden: con URL bloqueada save_state() NUNCA se llama,
+#         ni siquiera a traves de main() (el rechazo precede a la persistencia).
+#   T1-3  AC6 end-to-end: estado legacy envenenado (last_url bloqueada) sin
+#         --url → SystemExit 2 con mencion de "persistente" y la URL NO se
+#         re-persiste (ni en memoria ni en disco).
+#
+
+
+class _CentinelaModo(Exception):
+    """Senal de que main() avanzo mas alla del guard (no debe ocurrir)."""
+
+
+def _stub_modos(monkeypatch) -> None:
+    """Neutraliza los runners de modo y el config-check de main().
+
+    Motivo: estos tests suben hasta main() para congelar el ORDEN
+    ensure_url → save_state. Si el guard dejara de bloquear, el test debe
+    fallar rapido y en local (centinela), no lanzar pipelines reales con
+    llamadas de red.
+    """
+    def _prohibido(*args, **kwargs):
+        raise _CentinelaModo(
+            "main() avanzo mas alla del guard de URL propia: el rechazo deberia "
+            "haber ocurrido en ensure_url() antes de persistir/ejecutar"
+        )
+
+    for nombre in (
+        "run_execution_mode",
+        "run_onboard_mode",
+        "run_deploy_mode",
+        "run_v4_complete_mode",
+        "run_v4_audit_mode",
+        "maybe_run_config_check",
+    ):
+        monkeypatch.setattr(f"main.{nombre}", _prohibido)
+
+
+@pytest.fixture
+def spy_save_state(monkeypatch):
+    """Registra las llamadas a MemoryManager.save_state SIN escribir en disco.
+
+    Devuelve la lista de dicts recibidos. Main() persiste la URL justo despues
+    de ensure_url(), asi que cualquier entrada con una URL bloqueada prueba que
+    se rompio la garantia de orden.
+    """
+    llamadas: list = []
+
+    def _spy(self, state):
+        llamadas.append(dict(state))
+        return True
+
+    monkeypatch.setattr("agent_harness.memory.MemoryManager.save_state", _spy)
+    return llamadas
+
+
+@pytest.fixture
+def snapshot_current_state():
+    """Snapshot/restore del estado persistente REAL.
+
+    Necesario solo para el test que usa save_state() real (el mas fuerte:
+    demuestra que el archivo en disco no cambia). El restore deja el repo limpio
+    haya o no regresion.
+    """
+    path = REPO_ROOT / ".agent" / "memory" / "current_state.json"
+    previo = path.read_bytes() if path.exists() else None
+    yield path
+    if previo is None:
+        if path.exists():
+            path.unlink()
+    else:
+        path.write_bytes(previo)
+
+
+def _contenido(path: Path):
+    return path.read_bytes() if path.exists() else None
+
+
+# ---------------------------------------------------------------------------
+# T1-1 — execute / onboard / deploy rechazan exactamente igual que v4complete
+# ---------------------------------------------------------------------------
+
+class TestT11RechazoIdenticoEnComandosSecundarios:
+
+    @pytest.mark.parametrize("command", ["execute", "onboard", "deploy"])
+    def test_rechazo_contains_plataforma_y_sitio_propio(self, command, capsys):
+        from main import ensure_url
+        with pytest.raises(SystemExit) as excinfo:
+            ensure_url(argparse.ArgumentParser(), _args(command=command, url=URL_BOOKING))
+        assert excinfo.value.code == 2
+        stderr = capsys.readouterr().err
+        assert "URL rechazada" in stderr
+        assert "booking" in stderr
+        assert "sitio web propio" in stderr
+        # El origen es --url, no el estado persistente.
+        assert "persistente" not in stderr
+
+    def test_mensaje_byte_a_byte_igual_que_v4complete(self, capsys):
+        """Un solo guard, un solo mensaje: prohibido divergir por comando
+        (mitigacion del riesgo 'divergencia de mensajes/exit code respecto a
+        FASE-A' listado en el plan maestro)."""
+        from main import ensure_url
+        textos = {}
+        for command in ("v4complete", "execute", "onboard", "deploy", "v4audit", "stage"):
+            capsys.readouterr()
+            args = _args(command=command, url=URL_BOOKING)
+            with pytest.raises(SystemExit) as excinfo:
+                ensure_url(argparse.ArgumentParser(), args)
+            assert excinfo.value.code == 2, f"exit code divergente en {command}"
+            textos[command] = capsys.readouterr().err
+        referencia = textos["v4complete"]
+        assert referencia, "el rechazo debe imprimir en stderr"
+        for command, stderr in textos.items():
+            assert stderr == referencia, f"mensaje divergente para el comando {command}"
+
+    @pytest.mark.parametrize("command", ["execute", "onboard", "deploy"])
+    def test_url_propia_no_altera_el_flujo_del_comando(self, command):
+        from main import ensure_url
+        assert ensure_url(argparse.ArgumentParser(), _args(command=command, url=URL_PROPIA)) is None
+
+
+# ---------------------------------------------------------------------------
+# T1-2 — Garantia de orden: ensure_url() (L1428) precede a save_state() (L1433)
+# ---------------------------------------------------------------------------
+
+class TestT12GarantiaDeOrdenEnMain:
+
+    @pytest.mark.parametrize("command", ["v4complete", "execute", "onboard", "deploy"])
+    def test_url_bloqueada_nunca_llega_a_save_state(
+        self, command, monkeypatch, spy_save_state, capsys
+    ):
+        import main
+        _stub_modos(monkeypatch)
+        monkeypatch.setattr("sys.argv", ["main.py", command, "--url", URL_BOOKING])
+        with pytest.raises(SystemExit) as excinfo:
+            main.main()
+        assert excinfo.value.code == 2
+        # Contracto duro: ninguna URL bloqueada se persiste...
+        assert not any(URL_BOOKING in str(call) for call in spy_save_state), (
+            f"main() persistio una URL bloqueada en {command}: se rompio el orden "
+            "ensure_url -> save_state"
+        )
+        # ... y en este camino save_state() no deberia invocarse nunca.
+        assert spy_save_state == [], f"save_state() llamado con {spy_save_state}"
+        assert "sitio web propio" in capsys.readouterr().err
+
+    def test_url_propia_si_persiste_en_main(self, monkeypatch, spy_save_state, capsys):
+        """Contrapositivo: el spy no es un falso verde — con URL propia main()
+        SI llega a save_state(), luego el filtro del test anterior es real."""
+        import main
+        _stub_modos(monkeypatch)
+        monkeypatch.setattr("sys.argv", ["main.py", "v4complete", "--url", URL_PROPIA])
+        with pytest.raises(_CentinelaModo):
+            main.main()
+        assert any(URL_PROPIA in str(call) for call in spy_save_state), (
+            "main() deberia persistir last_url con una URL propia"
+        )
+
+
+# ---------------------------------------------------------------------------
+# T1-3 — AC6 end-to-end: estado legacy envenenado se rechaza y NO se re-persiste
+# ---------------------------------------------------------------------------
+
+class TestT13Ac6SinRepersistenciaEnMain:
+
+    @pytest.mark.parametrize("command", ["v4complete", "v4audit"])
+    def test_estado_envenenado_rechazado_y_no_repersistido(
+        self, command, monkeypatch, spy_save_state, capsys
+    ):
+        """AC6 subiendo hasta main(): un last_url bloqueado (huérfano de una
+        corrida anterior al guard) se rechaza con mencion explicita del estado
+        persistente y no vuelve a escribirse en el estado."""
+        import main
+        monkeypatch.setattr(
+            "agent_harness.memory.MemoryManager.load_state",
+            lambda self: {"last_url": URL_BOOKING},
+        )
+        _stub_modos(monkeypatch)
+        monkeypatch.setattr("sys.argv", ["main.py", command])
+        with pytest.raises(SystemExit) as excinfo:
+            main.main()
+        assert excinfo.value.code == 2
+        stderr = capsys.readouterr().err
+        assert "persistente" in stderr
+        assert "booking" in stderr
+        assert "sitio web propio" in stderr
+        assert spy_save_state == [], "la URL bloqueada no debe re-persistirse"
+
+    def test_disco_no_cambia_con_estado_envenenado(
+        self, monkeypatch, snapshot_current_state, capsys
+    ):
+        """Version mas fuerte de AC6 sin spy: con save_state() REAL el archivo
+        .agent/memory/current_state.json queda intacto tras el rechazo."""
+        import main
+        monkeypatch.setattr(
+            "agent_harness.memory.MemoryManager.load_state",
+            lambda self: {"last_url": URL_BOOKING},
+        )
+        _stub_modos(monkeypatch)
+        monkeypatch.setattr("sys.argv", ["main.py", "v4complete"])
+        previo = _contenido(snapshot_current_state)
+        with pytest.raises(SystemExit) as excinfo:
+            main.main()
+        assert excinfo.value.code == 2
+        assert "persistente" in capsys.readouterr().err
+        assert _contenido(snapshot_current_state) == previo, (
+            "current_state.json fue modificado tras rechazar una URL bloqueada"
+        )
+
+    def test_ensure_url_no_reinyecta_en_comandos_del_tuple_de_exclusion(self):
+        """Documento de comportamiento actual (no contracto deseado): el tuple
+        main.py L222 ("execute","deploy","setup","onboard") EXCLUYE esos
+        comandos de la reinyeccion de last_url, por lo que un estado legacy
+        envenenado nunca se inyecta alli. Se verifica que ensure_url() con
+        url=None no lanza: si algun dia se cambia la politica de --url
+        obligatorio para esos comandos, este test debe actualizarse a conciencia
+        (reportado al parent como ambiguedad D-T1-1)."""
+        from main import ensure_url
+        import agent_harness.memory as memory_mod
+        original = memory_mod.MemoryManager.load_state
+        memory_mod.MemoryManager.load_state = lambda self: {"last_url": URL_BOOKING}
+        try:
+            for command in ("execute", "onboard", "deploy"):
+                args = _args(command=command, url=None)
+                assert ensure_url(argparse.ArgumentParser(), args) is None
+                assert args.url is None, (
+                    f"{command} no deberia reinyectar last_url (tuple de exclusion)"
+                )
+        finally:
+            memory_mod.MemoryManager.load_state = original
