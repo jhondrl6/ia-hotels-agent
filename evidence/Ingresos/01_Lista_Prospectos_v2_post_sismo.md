@@ -10,22 +10,19 @@
 2. `CERRADO / DAÑO GRAVE` = excluido de prospección; registro respetuoso, re-evaluación a 90+ días (futuro cliente de relanzamiento cuando reabra).
 3. Estados `SIN VERIFICAR` requieren verificación activa ANTES de cualquier contacto (fuentes en orden: Cotelco/alcaldías → Google Maps/Booking: ¿reservable? ¿reseñas/posts recientes? → llamada/visita).
 4. La v1 queda como histórico: usar SUS fichas para teléfonos y detalle, NUNCA sus estados.
-5. **Presencia de sitio web propio NO es criterio de inclusión ni exclusión.** El pipeline iah-cli v4.72.2 acepta como entrada `--url` cualquier ficha del hotel: sitio propio, ficha de Google Maps o listado de OTA (fallback chain Places API → Google Travel → SerpAPI). Filtrar prospectos "solo los que tienen sitio web" se descarta (decisión usuario 2026-08-27): contradice la tesis de negocio (Contexto Maestro §2/§4 — el cliente ideal es el hotel que PIERDE reservas directas por depender de OTAs) y descartaría a los mejores prospectos. La señal de debilidad digital se re-audita caso a caso (ver "Re-auditoría de debilidad digital" más abajo).
+5. **Presencia de sitio web propio que pase el guard `own_site_guard` (v4.74.1, blocklist v2) ES requisito para entrar al embudo WhatsApp/v4complete.** El pipeline iah-cli v4.74.x rechaza URLs de OTAs, redes sociales y booking engines antes de cualquier llamada de red/API (`modules/data_validation/own_site_guard.py`; exit code 2). Prospectos sin web propia o cuya "web" sea Facebook/Instagram/hosroom.com/istagram.com quedan marcados como **inviables v4complete** → flujo manual o archivo. La señal de debilidad digital se re-audita caso a caso corriendo `v4complete` sobre la URL del sitio propio validado por el guard.
 
 ---
 
-## Re-auditoría de debilidad digital (2026-08-27)
+## Re-auditoría de debilidad digital (actualizada 2026-08-31)
 
-La señal "sin web propia" de la lista v1 (compilada 2026-07-21) está **obsoleta**. Evidencia:
+La señal "sin web propia" de la lista v1 (compilada 2026-07-21) estaba **obsoleta**. Evidencia:
 - **Hotel Salento Real (#4):** tiene sitio oficial `hotelsalentoreal.com` (34 hab, reservas online). La ficha v1 decía "sin web propia clara".
-- **Hotel Vísperas (#9):** tiene sitio oficial `hotelvisperas.com` (confirmado 2026-08-27). La ficha v1 decía "solo listados OTAs; sin web propia".
+- **Hotel Vísperas (#9):** tenía sitio oficial `hotelvisperas.com` (confirmado 2026-08-27), pero fue marcado **INVIABLE** el 2026-08-31 por Jhon → excluido del embudo.
 
-Conclusión: el filtro "incluir solo hoteles con sitio web" se **descarta** (decisión usuario 2026-08-27). Razones:
-1. Contradice la tesis de negocio (Contexto Maestro §2/§4): el cliente ideal es el hotel que depende de OTAs y pierde reservas directas — justamente los que no tienen (o tienen débil) sitio propio.
-2. El pipeline iah-cli v4.72.2 **no requiere** sitio propio del hotel para producir diagnóstico: acepta `--url` de ficha Google Maps / OTA, con fallback chain Places API → Google Travel → SerpAPI. Evidencia en código: `archives/gbp_profiles.json` usa URL de Maps como entrada canónica; `tests/regression/test_hotel_visperas_conflicts.py` es suite de regresión sobre el hotel sin dependencia de sitio propio. *(Ejecución en vivo de un caso 100% sin-sitio-propio queda PENDIENTE: el venv local requiere `python-dotenv` y el caso de prueba inicial — Vísperas — resultó tener sitio; la arquitectura lo confirma por diseño.)*
-3. La señal de debilidad digital se re-audita **caso a caso** corriendo `v4complete` sobre la URL real del hotel (propia o de Maps/OTA) — no se asume a priori.
+**Criterio vigente desde 2026-08-31:** el filtro "web propia que pase el guard `own_site_guard`" **SÍ es requisito** para entrar al embudo WhatsApp/v4complete. Razón: el plan VALIDADOR-URL-PROPIA (v4.74.0) + blocklist v2 (v4.74.1) enforcean que la URL de entrada sea el sitio propio del hotel; URLs de OTAs, redes sociales y booking engines se rechazan antes de cualquier llamada de red/API. Esto NO contradice la tesis de negocio: el cliente ideal sigue siendo el hotel con debilidad digital, pero esa debilidad se diagnostica CON v4complete sobre su sitio propio (no sobre fichas de terceros). Los hoteles sin web propia quedan marcados como inviables v4complete → flujo manual o archivo.
 
-**Acción:** para los prospectos de Santa Rosa y Cerritos, verificar presencia de sitio propio real antes de etiquetar "debilidad", pero esa verificación NUNCA es criterio de inclusión/exclusión. El ejemplo `hotelsalentoreal.com` se usa aquí como PRUEBA de que la lista necesita re-auditoría de debilidad digital, no como filtro de inclusión.
+**Acción:** verificar presencia de sitio propio real ANTES de incluir cualquier prospecto en el embudo. Usar `classify_url()` del guard como filtro automático; los dominios `istagram.com` (typo-squat) y `hosroom.com` (booking engine) fueron agregados a la blocklist v2 (2026-08-31) tras detectarse en prospección Maps.
 
 ---
 
@@ -66,32 +63,39 @@ Conclusión: el filtro "incluir solo hoteles con sitio web" se **descarta** (dec
 | 2 | Hotel Cataluña Pereira | Pereira centro | ALTO | **CERRADO / DAÑO GRAVE — EXCLUIDO** | Instagram oficial 12-ago + web 26-ago: listados históricos sin disponibilidad confirmada | **EXCLUIDO**; re-evaluar a 90+ días |
 | 3 | Hostal Ciudad de Segorbe | Salento | BAJO | **OPERANDO** | Booking activo (364 rev, 8.2) + Trip.com rev 2026; Salento riesgo BAJO | **Contactar (embudo)** |
 | 4 | Hotel Salento Real Eje Cafetero | Salento | BAJO | **OPERANDO** | Booking activo (296 rev, 8.6, Genius); web propia confirmada hotelsalentoreal.com (34 hab, reservas online) — señal "sin web" de v1 es OBSOLETA; debilidad GBP/AEO/schema por verificar con v4complete | **Contactar (embudo)** |
-| 5 | Hotel Guadalupe Plaza | Dosquebradas | ALTO-MEDIO | **OPERANDO** (confirmar daños leves por llamada) | IMPT 203 rev 10/10, momondo 242 rev 8.0, Kayak; Dosquebradas s/evidencia cierre | **Contactar**; llamada confirmatoria de daños |
-| 6 | Hotel Platino Plaza | Dosquebradas | ALTO-MEDIO | **OPERANDO** (confirmar daños leves por llamada) | Trip.com 8.7, IMPT 9.3 (27 rev), Booking city page reservable | **Contactar**; llamada confirmatoria de daños |
-| 7 | Hotel Tangara | Dosquebradas | ALTO-MEDIO | **OPERANDO** (confirmar daños leves por llamada) | letsbookhotel/skyscanner/IMPT reservable; web 26-ago s/cierre | **Contactar**; llamada confirmatoria de daños |
-| 8 | Finca Hotel Villa Ilusión | Dosquebradas | ALTO-MEDIO | **OPERANDO** (confirmar daños leves por llamada) | IMPT 220 rev 9.3, Expedia reservable; s/cierre reportado | **Contactar**; llamada confirmatoria de daños |
-| 9 | Hotel Vísperas | Santa Rosa (vía termales) | POR VERIFICAR | **OPERANDO** | momondo 801 rev 9.4, Airbnb 4.82; web propia confirmada hotelvisperas.com (2026-08-27) — señal "sin web" de v1 OBSOLETA; Santa Rosa s/cierre reportado | **Contactar (embudo)** |
-| 10 | Hotel Recreacional Marcelandia | Santa Rosa (km 3) | POR VERIFICAR | **OPERANDO** | momondo 589 rev 8.9, hotel.com.au reservable | **Contactar (embudo)** |
-| 11 | Hotel El Mirador del Cocora | Salento | BAJO | SIN VERIFICAR | — | Fase 1 |
-| 12 | Mahalo Hostal Boutique | Salento | BAJO | SIN VERIFICAR | — | Fase 1 |
-| 13 | Colina del Sol Hotel Hacienda | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
-| 14 | Finca Hotel Los Girasoles | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
-| 15 | Finca Hotel Casa Nostra | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
-| 16 | Hotel Campestre Nogal de Cafetal | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
-| 17 | Finca Hotel Jardín Cafetero del Quindío | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
-| 18 | Origen Finca Hotel | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
-| 19 | Pausa Hospedaje Filandia | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
-| 20 | Hostal La Luz de la Colina | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
-| 21 | Hostal Amelia Filandia | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
-| 22 | Hospedaje Mandarinos Filandia | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
-| 23 | La Casita Filandia | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
-| 24 | Mot Mot Glamping | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
-| 25 | Alua Glamping | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
-| 26 | Hotel Cafe Bernal | Armenia zona norte | MEDIO | SIN VERIFICAR | — | Fase 4 |
-| 27 | Hostería Mi Mónaco | Armenia periferia | MEDIO | SIN VERIFICAR | — | Fase 4 |
-| 28 | Finca Hotel Nuestro Sueño | Montenegro (vía Panaca) | POR VERIFICAR | SIN VERIFICAR | — | Fase 4 |
-| 29 | Casa Azul Boutique Hostel | Pereira (La Elvira) | MEDIO | SIN VERIFICAR | — | Fase 4 |
-| 30 | La Iguana Café y Hostal | Pereira (Arboleda) | MEDIO | SIN VERIFICAR | — | Fase 4 |
+| 5 | Hotel Guadalupe Plaza | Dosquebradas | ALTO-MEDIO | **OPERANDO** (confirmado 31-08) | IMPT 203 rev 10/10, momondo 242 rev 8.0, Kayak; **SIN WEB PROPIA** (verificado 31-08) → inviable v4complete | Flujo manual o archivo |
+| 6 | Hotel Platino Plaza | Dosquebradas | ALTO-MEDIO | **OPERANDO** (confirmado 31-08) | Trip.com 8.7, IMPT 9.3 (27 rev), Booking city page; **SIN WEB PROPIA** (verificado 31-08) → inviable v4complete | Flujo manual o archivo |
+| 7 | Hotel Tangara | Dosquebradas | ALTO-MEDIO | **OPERANDO** (confirmado 31-08) | letsbookhotel/skyscanner/IMPT reservable; **SIN WEB PROPIA** (verificado 31-08) → inviable v4complete | Flujo manual o archivo |
+| 8 | Finca Hotel Villa Ilusión | Dosquebradas | ALTO-MEDIO | **OPERANDO** (confirmado 31-08) | IMPT 220 rev 9.3, Expedia reservable; **CON WEB PROPIA** (verificado 31-08) → v4complete viable | Contactar (embudo); confirmar daños leves vs intacto |
+| 9 | Hotel Vísperas | Santa Rosa (vía termales) | POR VERIFICAR | **EXCLUIDO — INVIABLE** (verificado 31-08 por Jhon) | momondo 801 rev 9.4, Airbnb 4.82; web propia hotelvisperas.com confirmada 27-08 pero marcada inviable 31-08 | Archivado; buscar reemplazo en Google Maps |
+| 10 | Hotel Recreacional Marcelandia | Santa Rosa (km 3) | POR VERIFICAR | **OPERANDO** | momondo 589 rev 8.9, hotel.com.au reservable; **SIN WEB PROPIA** (verificado 31-08) → inviable v4complete | Flujo manual o archivo |
+| 11 | Hotel El Jardín Salento | Salento | BAJO | OPERANDO* (verificar same-day §6.5) | hoteleljardinsalento.com ✅ PASSED guard; +57 310 595 3017; 4.3★ Maps | Contactar (embudo); Mensaje 1 con hallazgo real |
+| 12 | HOTEL D'LYON | Santa Rosa de Cabal | POR VERIFICAR | OPERANDO* (verificar same-day §6.5) | hoteldlyonsrc.com ✅ PASSED guard; +57 310 538 6037; 4.3★ Maps | Contactar (embudo); Mensaje 1 + contacto |
+| 13 | Sazagua Pereira Hotel Boutique | Cerritos, Pereira | MEDIO | OPERANDO* (verificar same-day §6.5) | sazagua.com ✅ PASSED guard; +57 313 649 4579; 4.7★ Maps | Contactar (embudo); boutique = Tier A/B potencial |
+| 14 | Hotel Rosales Suites | Pereira | MEDIO | OPERANDO* (verificar same-day §6.5) | hotelrosalesuites.com ✅ PASSED guard; +57 322 587 6653; 4.4★ Maps | Contactar (embudo); Mensaje 1 + contacto |
+| 15 | Hotel San Antonio del Cerro | La Virginia/Cerritos | MEDIO | OPERANDO* (verificar same-day §6.5) | hotelsanantoniodelcerro.com.co ✅ PASSED guard; 606 340 0229 (fijo; capturar celular); 4.4★ Maps | Obtener WhatsApp/celular + Mensaje 1 |
+| 16 | San Vicente Reserva Termal | Santa Rosa — Termales | POR VERIFICAR | OPERANDO* (verificar same-day §6.5) | sanvicente.com.co ✅ PASSED guard; +57 320 693 3707; 4.3★ Maps | Contactar (embudo); resort termal = Tier A potencial |
+| 17 | Termales Tierra Viva | Villamaría (Caldas, vía Gallinazo) | POR VERIFICAR | **OPERANDO** (confirmado por Jhon 31-08; sin afectaciones) | termalestierraviva.com ✅ PASSED guard (URL proporcionada por Jhon); +57 301 261 7394; 4.5★ Maps (5,123 opiniones) | Contactar (embudo); verificación same-day YA hecha → Mensaje 1 (Var D); resort termal = Tier A potencial |
+| 18 | Hotel El Mirador del Cocora | Salento | BAJO | SIN VERIFICAR | — | Fase 1 |
+| 19 | Mahalo Hostal Boutique | Salento | BAJO | SIN VERIFICAR | — | Fase 1 |
+| 20 | Colina del Sol Hotel Hacienda | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
+| 21 | Finca Hotel Los Girasoles | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
+| 22 | Finca Hotel Casa Nostra | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
+| 23 | Hotel Campestre Nogal de Cafetal | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
+| 24 | Finca Hotel Jardín Cafetero del Quindío | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
+| 25 | Origen Finca Hotel | Quimbaya | ALTO | SIN VERIFICAR | — | Fase 5 |
+| 26 | Pausa Hospedaje Filandia | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
+| 27 | Hostal La Luz de la Colina | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
+| 28 | Hostal Amelia Filandia | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
+| 29 | Hospedaje Mandarinos Filandia | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
+| 30 | La Casita Filandia | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
+| 31 | Mot Mot Glamping | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
+| 32 | Alua Glamping | Filandia | MEDIO | SIN VERIFICAR | — | Fase 3 |
+| 33 | Hotel Cafe Bernal | Armenia zona norte | MEDIO | SIN VERIFICAR | — | Fase 4 |
+| 34 | Hostería Mi Mónaco | Armenia periferia | MEDIO | SIN VERIFICAR | — | Fase 4 |
+| 35 | Finca Hotel Nuestro Sueño | Montenegro (vía Panaca) | POR VERIFICAR | SIN VERIFICAR | — | Fase 4 |
+| 36 | Casa Azul Boutique Hostel | Pereira (La Elvira) | MEDIO | SIN VERIFICAR | — | Fase 4 |
+| 37 | La Iguana Café y Hostal | Pereira (Arboleda) | MEDIO | SIN VERIFICAR | — | Fase 4 |
 | E1 | Hotel Natura Cocora | Salento | BAJO | SIN VERIFICAR | — | Fase 1 |
 | E2 | Hospedaje Vista Hermosa | Salento | BAJO | SIN VERIFICAR | Reservas por WhatsApp (ficha Google) | Fase 1 |
 | E3 | San Remo Ecolodge | Santa Rosa (zona termal) | POR VERIFICAR | SIN VERIFICAR | — | Fase 2 |
@@ -105,67 +109,72 @@ Conclusión: el filtro "incluir solo hoteles con sitio web" se **descarta** (dec
 
 ---
 
-## Resultado de verificación del top 10 — Paso 0 (2026-08-26)
+## Resultado de verificación del top 10 — Paso 0 (actualizado 31-08)
 
-Método §6.5: fuentes gremiales/prensa → Google Maps/Booking (¿reservable? ¿reseñas recientes?) → llamada (pendiente para varios, ver notas). Búsquedas ejecutadas vía Keenable contra Booking, momondo, Trip.com, IMPT, Expedia, Airbnb, Kayak, Skyscanner, Trivago, Atrápalo y prensa (El País).
+Método §6.5: fuentes gremiales/prensa → Google Maps/Booking (¿reservable? ¿reseñas recientes?) → llamada (pendiente para varios, ver notas). Búsquedas ejecutadas vía Keenable contra Booking, momondo, Trip.com, IMPT, Expedia, Airbnb, Kayak, Skyscanner, Trivago, Atrápalo y prensa (El País). Verificación web propia 31-08: guard `own_site_guard` v4.74.1 + blocklist v2.
 
-| # | Hotel | Municipio | Estado verificado | Entra al embudo |
-|---|-------|-----------|------------------|-----------------|
-| 1 | Finca Hotel Don Julio (reemplaza a Condina) | Santa Rosa de Cabal | OPERANDO* (verificar same-day + web propia) | SÍ, tras verificar teléfono y web |
-| 2 | Hotel Cataluña Pereira | Pereira centro | CERRADO / DAÑO GRAVE — EXCLUIDO | NO |
-| 3 | Hostal Ciudad de Segorbe | Salento | OPERANDO | SÍ |
-| 4 | Hotel Salento Real Eje Cafetero | Salento | OPERANDO | SÍ |
-| 5 | Hotel Guadalupe Plaza | Dosquebradas | OPERANDO (confirmar daños leves) | SÍ |
-| 6 | Hotel Platino Plaza | Dosquebradas | OPERANDO (confirmar daños leves) | SÍ |
-| 7 | Hotel Tangara | Dosquebradas | OPERANDO (confirmar daños leves) | SÍ |
-| 8 | Finca Hotel Villa Ilusión | Dosquebradas | OPERANDO (confirmar daños leves) | SÍ |
-| 9 | Hotel Vísperas | Santa Rosa | OPERANDO | SÍ |
-| 10 | Hotel Recreacional Marcelandia | Santa Rosa | OPERANDO | SÍ |
+| # | Hotel | Municipio | Estado verificado | Web propia (guard) | Entra al embudo v4complete |
+|---|-------|-----------|------------------|--------------------|---------------------------|
+| 1 | Finca Hotel Don Julio (reemplaza a Condina) | Santa Rosa de Cabal | OPERANDO* (verificar same-day) | Sin web detectada (solo OTAs + IG) | NO (inviable hasta confirmar web) |
+| 2 | Hotel Cataluña Pereira | Pereira centro | CERRADO / DAÑO GRAVE — EXCLUIDO | — | NO |
+| 3 | Hostal Ciudad de Segorbe | Salento | OPERANDO | SIN WEB PROPIA | NO (flujo manual) |
+| 4 | Hotel Salento Real Eje Cafetero | Salento | OPERANDO | hotelsalentoreal.com ✅ PASSED | SÍ |
+| 5 | Hotel Guadalupe Plaza | Dosquebradas | OPERANDO (confirmado 31-08) | SIN WEB PROPIA (verificado 31-08) | NO (flujo manual) |
+| 6 | Hotel Platino Plaza | Dosquebradas | OPERANDO (confirmado 31-08) | SIN WEB PROPIA (verificado 31-08) | NO (flujo manual) |
+| 7 | Hotel Tangara | Dosquebradas | OPERANDO (confirmado 31-08) | SIN WEB PROPIA (verificado 31-08) | NO (flujo manual) |
+| 8 | Finca Hotel Villa Ilusión | Dosquebradas | OPERANDO (confirmado 31-08) | CON WEB PROPIA (verificado 31-08) ✅ PASSED | SÍ |
+| 9 | Hotel Vísperas | Santa Rosa | EXCLUIDO — INVIABLE (31-08 por Jhon) | hotelvisperas.com (confirmada 27-08 pero inviable 31-08) | NO |
+| 10 | Hotel Recreacional Marcelandia | Santa Rosa | OPERANDO | SIN WEB PROPIA (verificado 31-08) | NO (flujo manual) |
 
-**Recuento:** 8 de 10 en `OPERANDO` (≥5). ✅ La regla de prudencia NO se activa → la ola de mensajes procede.
+**Recuento top 10:** 2 de 10 viables v4complete (#4, #8). 5 sin web propia (#3, #5, #6, #7, #10). 1 excluido por daño grave (#2). 1 inviable (#9). 1 por verificar web (#1).
 
-**Excluidos:** #2 Cataluña (daño grave confirmado, re-evaluar 90+ días). ~~#1 Condina~~ — **CERRADO in situ 2026-08-29: NO OPERATIVO**, excluido (re-evaluar 2026-11-29); su slot del top 10 lo ocupa **Finca Hotel Don Julio** (Santa Rosa de Cabal, OPERANDO* pendiente de verificación same-day + web propia + teléfono).
+**+ Nuevos candidatos Maps (31-08):** 6 hoteles con web propia que PASAN el guard (#11–#16) + 1 aportado por Jhon (#17 Termales Tierra Viva). Total viables v4complete: **9** (#4, #8, #11, #12, #13, #14, #15, #16, #17). Cuello de botella RESUELTO.
+
+**Excluidos definitivos:** #2 Cataluña (daño grave), #9 Vísperas (inviable 31-08), Condina (no operativo in situ 29-08). Re-evaluar todos a 90+ días.
 
 **Acciones pendientes previas a enviar (Semana 1):**
-- Llamadas confirmatorias de daños leves a los 4 de Dosquebradas (#5–#8) por riesgo municipal ALTO-MEDIO (la web no discrimina "daño leve" vs intacto; la llamada cierra la distinción OPERANDO vs OPERANDO CON DAÑOS LEVES).
-- ~~Llamada a #1 Condina para decidir inclusión o archivo definitivo.~~ **CERRADO 29-08 in situ: NO OPERATIVO → excluido.** Nueva acción: validar #1 Finca Hotel Don Julio (teléfono + web propia + estado same-day) antes de sumarlo a la ola.
-- Verificar teléfonos de los 8 OPERANDO (Google Maps) antes del primer WhatsApp.
+- Verificar estado post-sismo same-day (§6.5) de los 6 candidatos Maps restantes (#11–#16) antes del primer WhatsApp. (#17 Tierra Viva ya confirmado sin afectaciones por Jhon 31-08.)
+- Obtener celular de #15 San Antonio del Cerro (solo fijo publicado).
+- Obtener teléfono + verificar web de Don Julio (#1).
+- Decidir flujo para los 5 sin web (#3, #5, #6, #7, #10): contacto manual con diagnóstico verbal / archivar.
 - Primer contacto 100% empático (§6.5.3) para Salento y Santa Rosa; para Dosquebradas, confirmar daños antes de definir tono.
 
-### Teléfonos verificados de los 8 OPERANDO (Google Maps / agregadores, 2026-08-26)
+### Teléfonos verificados — Viables v4complete (9 hoteles)
 
-| # | Hotel | Municipio | Teléfono verificado | Fuente |
-|---|-------|-----------|---------------------|--------|
-| 3 | Hostal Ciudad de Segorbe | Salento | +57 310 825 2436 | momondo / thecoffeeroutes |
-| 4 | Hotel Salento Real Eje Cafetero | Salento | +57 316 629 6142 | momondo (coincide v1) |
-| 5 | Hotel Guadalupe Plaza | Dosquebradas | +57 317 543 9207 | momondo / TheGuide (3175439207) |
-| 6 | Hotel Platino Plaza | Dosquebradas | +57 314 654 3050 | Trip.com |
-| 7 | Hotel Tangara | Dosquebradas | +57 316 328 9569 | turismo.dosquebradas.gov.co |
+| # | Hotel | Municipio | Teléfono | Fuente |
+|---|-------|-----------|----------|--------|
+| 4 | Hotel Salento Real Eje Cafetero | Salento | +57 316 629 6142 | momondo (coincide v1) + Maps |
 | 8 | Finca Hotel Villa Ilusión | Dosquebradas | +57 315 271 1519 | momondo (front desk) |
-| 9 | Hotel Vísperas | Santa Rosa | +57 316 824 5636 | momondo |
-| 10 | Hotel Recreacional Marcelandia | Santa Rosa | +57 320 204 2595 | momondo / hotelscombined |
+| 11 | Hotel El Jardín Salento | Salento | +57 310 595 3017 | Google Maps |
+| 12 | HOTEL D'LYON | Santa Rosa de Cabal | +57 310 538 6037 | Google Maps |
+| 13 | Sazagua Pereira Hotel Boutique | Cerritos, Pereira | +57 313 649 4579 | Google Maps |
+| 14 | Hotel Rosales Suites | Pereira | +57 322 587 6653 | Google Maps |
+| 15 | Hotel San Antonio del Cerro | La Virginia/Cerritos | 606 340 0229 (fijo; capturar celular) | Google Maps |
+| 16 | San Vicente Reserva Termal | Santa Rosa — Termales | +57 320 693 3707 | Google Maps |
+| 17 | Termales Tierra Viva | Villamaría (Caldas) | +57 301 261 7394 | Google Maps |
 
-Nota: los números son celulares colombianos (formato +57 3XX…), válidos para WhatsApp. Todos los 8 OPERANDO tienen teléfono verificado; Villa Ilusión (#8) se confirmó vía momondo (front desk) al no exponer fijo en su sitio oficial ni Booking.
+Nota: todos son celulares colombianos (+57 3XX…) válidos para WhatsApp, excepto #15 que solo tiene fijo publicado (requiere obtener celular). Los 9 viables tienen teléfono verificado y web propia que pasa el guard `own_site_guard` v4.74.1.
 
 ---
 
-## Orden de verificación recomendado (re-priorización post-sismo)
+## Orden de contacto recomendado (actualizado 31-08)
 
-La prioridad de contacto de la v1 (Pereira centro primero) queda **invertida**. Nuevo orden por probabilidad de encontrar `OPERANDO` + intensidad del dolor de demanda:
+Prioridad por probabilidad de conversión + intensidad del dolor de demanda + viabilidad v4complete confirmada:
 
-- **Fase 1 — Salento (6 hoteles):** riesgo estructural bajo + turismo colapsado = prospectos intactos con el máximo dolor. Mensaje ideal: reactivación ("ser la respuesta cuando pregunten quién está abierto"). Empieza aquí.
-- **Fase 2 — Santa Rosa de Cabal (5):** verificar estado del municipio primero; los de la ruta termal dependen de flujo regional.
-- **Fase 3 — Filandia (7):** daño medio; verificar edificio por edificio.
-- **Fase 4 — Armenia periferia + Montenegro + Pereira no céntrico + Cerritos (Corregimiento Pereira, keyword "Zona de Cerritos") (8):** campestres, fuera de cascos antiguos. Cerritos añadido 2026-08-27 (Hotel Amazilia como ancla; ver censo). Conteo Fase 4: #26, #27, #28, #29, #30, E6, E9, C1.
-- **Fase 5 — Dosquebradas, Quimbaya, Pereira centro (10):** alta tasa de exclusión esperada (Cataluña ya está fuera; Condina en verificación). Verificar igual (los que operan capturan demanda desplazada), pero sin apurar contactos.
+- **Prioridad 1 — Viables listos (#4, #8):** Salento Real y Villa Ilusión ya tienen diagnóstico v4complete corrido o listo para correr. Contactar primero.
+- **Prioridad 2 — Nuevos Maps Salento (#11):** El Jardín Salento está en zona conocida (Salento, riesgo BAJO). Verificar same-day + Mensaje 1.
+- **Prioridad 3 — Nuevos zona termal (#12, #16, #17):** D'Lyon, San Vicente Reserva Termal y Termales Tierra Viva (Villamaría). Zona termal con dolor de demanda post-sismo; #17 tiene 5,123 opiniones (operación grande = Tier A) y ya está **confirmado OPERANDO sin afectaciones** (Jhon 31-08) → listo para Mensaje 1 (Var D). Verificar same-day solo #12 y #16.
+- **Prioridad 4 — Nuevos Maps Pereira/Cerritos (#13, #14, #15):** Sazagua, Rosales Suites, San Antonio del Cerro. Verificar same-day + Mensaje 1. #15 requiere obtener celular primero.
+- **Fase manual/archivo — Sin web propia (#3, #5, #6, #7, #10):** decidir flujo manual con diagnóstico verbal o archivar.
+- **Fase 1–5 — Lista original SIN VERIFICAR (#18–#37, E1–E9, C1):** verificar estado post-sismo y presencia de web propia antes de incluir. Usar `classify_url()` del guard como filtro automático.
 
-**Resultado de la re-priorización:** el top de contacto inicial pasa de {Condina, Cataluña} a {Segorbe, Salento Real, Mirador del Cocora, Mahalo, Natura Cocora, Vista Hermosa} — todos de Salento.
+**Santa Rosa de Cabal AGOTADA** en prospección Maps (31-08): solo 2 con web propia encontradas (#12 D'Lyon, #16 San Vicente). No buscar más en esta zona salvo nueva evidencia.
 
-## Censo de nuevos candidatos (tarea de las semanas 1–2)
+## Censo de nuevos candidatos (actualizado 31-08)
 
-- Los ~130 hoteles de Cotelco "con daños leves que siguen operando" NO están en la v1 (que excluía cadenas y hoteles pulidos). Tras el sismo, cualquier hotel `OPERANDO` con debilidad digital es candidato.
-- Fuente de censo: Google Maps por municipio ("hotel + Salento/Filandia/Santa Rosa…"), filtrando los que sigan "abierto" en la ficha.
-- **Censo Cerritos (Corregimiento de Pereira, keyword "Zona de Cerritos")** añadido 2026-08-27: Hotel Amazilia (Vía Pereira-Cerritos, Entrada 8 Cafelia — confirmado real en Trip.com/Kayak, solo OTA, sin web propia localizada) como ancla de Fase 4; candidatos adicionales por verificar propio sitio: Finca Hotel Cerritos Plaza, Casa Toscana, Estancia El Caney (todos en OTAs).
+- **Prospección Google Maps completada 31-08:** 22 fichas revisadas en Pereira / Salento / Santa Rosa de Cabal (urbana + zona termal) → 6 nuevos candidatos con web propia que PASAN el guard (#11–#16) + **#17 Termales Tierra Viva aportado por Jhon** (termalestierraviva.com, Villamaría/Caldas — eje termal contiguo). Filtro: dominio real (no Facebook/Instagram/booking engine) + `classify_url()` del guard `own_site_guard` v4.74.1 (blocklist v2 incluye `hosroom.com` y `istagram.com`).
+- Los ~130 hoteles de Cotelco "con daños leves que siguen operando" NO están en la v1 (que excluía cadenas y hoteles pulidos). Tras el sismo, cualquier hotel `OPERANDO` con web propia que pase el guard es candidato.
+- Fuente de censo adicional (si se requiere ampliar): Google Maps por municipio ("hotel + Filandia/Montenegro/Armenia…"), filtrando los que sigan "abierto" en la ficha Y tengan web propia real. Verificar cada URL con `classify_url()` antes de incluir.
 - Un hotel cerrado que REABRA tras reparaciones = cliente ideal de relanzamiento digital (registrarlos al detectarlos, contacto a 90+ días).
 
 ## Nota sobre datos financieros
