@@ -4,9 +4,9 @@
 > **Sesión:** análisis de arquitectura de bots para escalar credibilidad y entrega
 > **Propósito central:** iah-cli vende diagnóstico, NO una herramienta de IA — el diagnóstico es el producto, la herramienta es invisible para el cliente
 > **Archivo retomable:** cualquier sesión futura que hable de bots, Capa 3, Capa 4, delivery, credibilidad, debottlenecking
-> **Validado contra el repo (2026-09-01):** citas de código corregidas (13 publication gates, ~10 CG-*, `proposal_asset_alignment.py`, 1 workflow activo, ~308 .py). Ver §10 para el **plan de implementación priorizado y secuencial anclado en P6** (ROADMAP línea 195).
-> **Auditado contra el código vivo (2026-09-02):** la afirmación "10 blocking + 3 advisory" es **falsa en el código** (los 13 gates bloquean) y la lista advisory correcta es de **2 miembros, no 3** — `asset_confidence` debe conservar su bloqueo. Ver **§12** para la corrección medida, la decisión y las tareas que culminan el tema en una sesión nueva. Otras cifras de este documento fueron refutadas en la misma auditoría y están listadas en **§12.7**; no consumir §3, §8 ni §10 sin leerlas antes.
-> **Hallazgos estructurales de la misma auditoría → §13:** seis agujeros vivos no documentados en el repo (A1-A6, entre ellos G9 que se salta en verde y el oráculo de presencia que no se persiste), el mecanismo causal verificado de `no_breach = 6/7` con la doble falla de mapeo (B1-B5, insumo de la sesión de **punto 8**), tabla consolidada de todas las mediciones (13.4) y los siete falsos positivos corregidos (13.5).
+> **Validado contra el repo (2026-09-01):** citas de código corregidas entonces (13 publication gates, `proposal_asset_alignment.py`, 1 workflow activo). ⚠️ **Dos cifras de esa validación fueron refutadas después:** los "~10 CG-*" son en realidad **12 repartidos en dos archivos**, y los "~308 .py" son en realidad **291 fuente / 284 test** (con `venv/` aportando 7.597 .py dentro del repo). El plan que esta línea anunciaba en §10 **ya no vive ahí**: está en **`ROADMAP.md` §7.2 (FASE T, v4.2)**, con equivalencia de nomenclaturas en **§10.4**.
+> **Auditado contra el código vivo (2026-09-02):** la afirmación "10 blocking + 3 advisory" es **falsa en el código** (los 13 gates bloquean) y la lista advisory correcta es de **2 miembros, no 3** — `asset_confidence` debe conservar su bloqueo. Ver **§12** para la corrección medida, la decisión y las tareas que culminan el tema en una sesión nueva. Otras cifras de este documento fueron refutadas en la misma auditoría y están listadas en **§12.7**; no consumir §3 ni §8 sin leerlas antes. **§10 es ahora un stub supersedido**: §10.2 lista lo refutado, §10.3 preserva el detalle que el ROADMAP no replica, §10.4 mapea ambas nomenclaturas.
+> **Hallazgos estructurales de la misma auditoría → §13:** seis agujeros vivos (A1-A6, entre ellos G9 que se salta en verde y el oráculo de presencia que no se persiste), el mecanismo causal verificado de `no_breach = 6/7` con la doble falla de mapeo (B1-B5, insumo de la sesión de **punto 8**), tabla consolidada de todas las mediciones (13.4) y los siete falsos positivos corregidos (13.5). **Desde el 2026-09-02 los seis están registrados como deuda en `ROADMAP.md` v4.2 §13** (A1→H9 · A2→H7 · A3→P12 · A4→T0.2 · A5→P10 · A6→§6.4/G11); ya no son hallazgos sin destino.
 
 ---
 
@@ -139,7 +139,7 @@ Un grupo de bots de revisión es la capa de credibilidad que falta entre "paquet
 - **Entrada:** `financial_scenarios.json` + `commercial_gates_report.json` + `02_PROPUESTA_COMERCIAL.md` + `quality_metadata` del MANIFEST
 - **Revisa:** cifras de fuga y proyecciones tienen `evidence_tier` declarado; propuesta no presenta ESTIMATED como verificado; escenarios son los 3 declarados (70/20/10), no solo el favorable; claims de "recuperación en X meses" tienen base de cálculo visible; no hay contradicciones entre propuesta y gates financieros.
 - **Salida:** `revision_honestidad.json` con hallazgos de presentación engañosa + veredicto.
-- **Existente hoy:** ~10 commercial gates (CG-*) en `modules/quality_gates/commercial_gate.py` — 6 blocking (CG-SCENARIO-ORDER, CG-SCENARIO-NEGATIVE, CG-IA-BLOCKED-CLAIM, CG-ROI-NEGATIVE, CG-CLAIM-VS-EVIDENCE, CG-EVIDENCE-TIER-CONSISTENCY) + 4 warning (CG-WHATSAPP-LEAD, CG-OTA-NARRATIVE, CG-TIER-CONSISTENCY, CG-TECH-JARGON) — y `financial_engine` generan escenarios con `EvidenceConfidence`. `DisclaimerGenerator` produce descargos. **Lo nuevo:** revisor que **lea propuesta y verifique que no sobre-presente lo que los datos soportan**, cubriendo los ~10 CG-* (no solo 4). El LLM solo *propone* hallazgos de sobre-presentación; el Juez aplica veredicto determinista contra tier labels y CG-* (ver §10, Etapa 4).
+- **Existente hoy:** ~10 commercial gates (CG-*) en `modules/quality_gates/commercial_gate.py` — 6 blocking (CG-SCENARIO-ORDER, CG-SCENARIO-NEGATIVE, CG-IA-BLOCKED-CLAIM, CG-ROI-NEGATIVE, CG-CLAIM-VS-EVIDENCE, CG-EVIDENCE-TIER-CONSISTENCY) + 4 warning (CG-WHATSAPP-LEAD, CG-OTA-NARRATIVE, CG-TIER-CONSISTENCY, CG-TECH-JARGON) — y `financial_engine` generan escenarios con `EvidenceConfidence`. `DisclaimerGenerator` produce descargos. **Lo nuevo:** revisor que **lea propuesta y verifique que no sobre-presente lo que los datos soportan**, cubriendo los ~10 CG-* (no solo 4). El LLM solo *propone* hallazgos de sobre-presentación; el Juez aplica veredicto determinista contra tier labels y CG-* (ver **ROADMAP §7.2 T4**; antes §10 Etapa 4). ⚠️ El conteo "~10 CG-*" de esta línea fue refutado: son **12 repartidos en dos archivos** (§12.7, ROADMAP §7.2).
 
 #### Bot 5 — Juez / Agregador
 - **Entrada:** 4 reportes de revisión + gate_report + delivery_quality_report
@@ -174,7 +174,7 @@ La diferencia clave: hoy el pipeline genera y valida internamente. Con el tribun
 
 ### Orden de construcción
 
-El orden **ya no es mecánico-first**. Está anclado en el principio P6 del ROADMAP ("primer piso obligatorio") y se detalla en **§10 — Plan de implementación priorizado y secuencial**: primero el Juez certificador del contrato P6, luego los revisores que alimentan cláusulas P6 específicas, descendiendo hasta onboarding, deploy y escala.
+El orden **ya no es mecánico-first**. Está anclado en el principio P6 del ROADMAP ("primer piso obligatorio") y se detalla en **`ROADMAP.md` §7.2 (FASE T)** — antes §10 de este documento, hoy stub supersedido: primero las **precondiciones medidas T0.1-T0.4**, luego el Juez certificador del contrato P6 (T1), después los revisores que alimentan cláusulas P6 específicas, descendiendo hasta onboarding, deploy y escala. Equivalencia Etapa↔T en **§10.4**.
 
 ---
 
@@ -236,14 +236,18 @@ El orden **ya no es mecánico-first**. Está anclado en el principio P6 del ROAD
 
 ---
 
-## 9. Preguntas abiertas — resueltas por el plan (§10)
+## 9. Preguntas abiertas — resueltas por el plan (hoy `ROADMAP.md` §7.2; antes §10)
+
+> ⚠️ Las cinco resoluciones siguen siendo la respuesta correcta a la pregunta que las originó, pero **dos quedaron parcialmente refutadas por la auditoría del 2026-09-02** en su mecanismo de implementación: la **2** (el anfitrión `two_phase_flow.py` / FASE 5.5 no existe como orquestador de producción) y la **3** (`publication_state.py` está huérfano). Están marcadas en su lugar. Equivalencias en **§10.4**.
 
 1. **Capa 3 primero o Capa 4 primero?** — El usuario enfatizó que calidad del diagnóstico es el eje central (Capa 3), pero identificó Capa 4 como cuello de botella real. El orden de ejecución afecta cuál es el primer bot a construir.
    → **Resolución (§10):** Capa 3 (Etapa 3) va ANTES que Capa 4 (Etapa 5). Justificación P6: un paquete Tier B/C no cierra el primer piso y desplegar assets no verificados viola P6.5. Para el primer ingreso ≤30 días la restricción real es **credibilidad**, no volumen de deploy.
 2. **¿El tribunal de revisión es un agente orquestado por el AgentHarness existente, o un conjunto de scripts independientes?** — Determina la arquitectura de implementación.
    → **Resolución (§10):** módulo gate-family (`modules/quality_gates/tribunal/`) orquestado por `orchestration_v4` como **FASE 5.5** post-`delivery_quality_report`; NO scripts sueltos (evita drift, reutiliza loaders, la evidencia cae en `v4_audit/`). Cada bot = clase revisora independiente y testeable.
+   → ⚠️ **Parcialmente refutada (2026-09-02):** la decisión de *gate-family, no scripts sueltos* y el destino de la evidencia en `v4_audit/` **siguen en pie**. El **anfitrión no**: `orchestration_v4/two_phase_flow.py` no es el orquestador de producción (solo lo importan `onboarding_controller.py` por sus tipos, el `__init__` y tests), así que la FASE 5.5 no existe como punto de integración. **Elegir anfitrión real es precondición de T1**; el natural es `main.py` junto a `delivery_quality_report` (FASE 7, `:3178-3200`), que es donde hoy ya se decide el ZIP. Ver ROADMAP §7.2 y deuda **H8**.
 3. **¿El acta de revisión va en la entrega al hotel como evidencia de rigor, o es solo un gate interno?** — Cambia el diseño del Bot 5 y el valor comercial del tribunal.
    → **Resolución (§10):** **dual** — gate interno (alimenta `publication_state`, puede bloquear ZIP) Y documento cliente-facing (evidencia de rigor vendible: "diagnóstico auditado con acta firmada").
+   → ⚠️ **Parcialmente refutada (2026-09-02):** el **acta dual sigue en pie** y es la decisión correcta. El destino interno no: `publication_state.py` está **huérfano** (sin importadores fuera de sí mismo) ⟹ o se le da llamador real o no se cita como destino (deuda **H8**). Y el bloqueo del ZIP **no es un punto único**: hoy existen **tres rutas** (`main.py:3194`, `:3205`, `:3274`) más el kill switch `GATE_BLOCKING_ENABLED` (`:2990-2992`); el veredicto del Juez debe **alimentar una de las tres, no añadir una cuarta** (deuda **H9**). Que el acta viaje al ZIP del cliente requiere además lista blanca explícita — `delivery_packager.py:337` excluye reports internos por prefijo (deuda **P6**).
 4. **¿Qué nivel de inferencia es aceptable para Bot 2 y Bot 4?** — Verificar alineación propuesta-brecha requiere leer lenguaje natural. ¿Se puede hacer con prompts estructurados al LLM del pipeline, o requiere lógica adicional?
    → **Resolución (§10, Etapa 4):** **híbrido acotado** — el LLM solo *extrae* promesas/claims en lenguaje natural; una capa determinista los *verifica* contra artefactos (matriz, tier labels, CG-*). El LLM propone hallazgos, el Juez aplica veredicto. Nunca es juez de registro (preserva auditabilidad P3).
 5. **¿El primer ingreso objetivo (≤30 días, ≤$65/mes actual) cambia si el tribunal añade un paso de revisión antes de entregar?** — Afecta la urgencia y el diseño del flujo.
@@ -251,112 +255,73 @@ El orden **ya no es mecánico-first**. Está anclado en el principio P6 del ROAD
 
 ---
 
-## 10. Plan de implementación priorizado y secuencial (anclado en P6)
+## 10. Plan de implementación — SUPERSEDIDO por ROADMAP §7.2 (FASE T)
 
-> **Principio rector:** ROADMAP §P6 (línea 195) — *"Coherencia comercial como contrato de entrega — primer piso obligatorio"* y *"Este contrato debe ser ejecutado por agentes y gates, no recordado manualmente por el humano en cada entrega."*
-> **Regla de secuenciación:** se implementa **primero lo que operationaliza P6** y se **desciende en orden de importancia**. No se construye "todo a la vez": cada etapa tiene criterio de aceptación verificable y depende de la anterior.
-> **Marco AOA (Diagnóstico antes de la cura):** **A**udita (tribunal) → **O**ptimiza (acta + onboarding) → **A**utomatiza (deploy + escala). Nada se automatiza sobre un paquete que el Juez no haya aprobado.
-> **Anclaje para la reestructura del ROADMAP:** las 6 cláusulas de P6 son el *checklist de aceptación* del tribunal. "Vendemos un diagnóstico" se operationaliza como: **ningún diagnóstico sale sin acta que certifique las 6 cláusulas de P6** — un contrato verificable, no una consigna.
+> ⚠️ **Esta sección ya no es el plan de registro.** El 2026-09-02 fue sustituida por **`ROADMAP.md` §7.2 "FASE T: Tribunal certificador del contrato P6 + P7"** (v4.2), que incorpora las correcciones verificadas contra código vivo y artefactos reales. ROADMAP §7.2 ya advertía que este §10 estaba parcialmente refutado; **el enlace ahora es simétrico**.
+>
+> **Para ejecutar, leer ROADMAP §7.2.** Lo que sigue se conserva por dos motivos y solo dos: registrar **qué fue refutado** (§10.2, para no reutilizarlo) y preservar el **detalle de implementación que el ROADMAP no replica** (§10.3). El diseño por bot sigue vivo en **§5** de este documento, que no fue refutado.
 
-### Convenciones del plan
+### 10.1 Por qué dejó de ser el plan
 
-- **Módulo nuevo:** `modules/quality_gates/tribunal/` (familia de gates, no scripts sueltos).
-- **Integración:** `modules/orchestration_v4/two_phase_flow.py` invoca el tribunal como **FASE 5.5**, después de `delivery_quality_report.py` y antes de `delivery/manager.py`.
-- **Evidencia:** todo artefacto del tribunal cae en `output/<corrida>/v4_complete/<hotel>/v4_audit/` (principio P3).
-- **Costo:** Bots 1/3/5 = deterministas (sin LLM). Solo Bots 2/4 usan LLM (extracción acotada, modelo barato + cache).
-- **Tests:** `tests/quality_gates/tribunal/` con contrato I/O explícito por bot.
+Tres cambios de fondo, todos medidos el 2026-09-02 sobre los artefactos de la corrida SalenteReal 2026-08-31:
 
----
+1. **El orden estaba invertido.** §10 proponía Etapa 1 → Etapa 6 sin precondiciones. ROADMAP §7.2 establece **T0.1-T0.4 ANTES de T1**. Medido: tocar el denominador de `coverage_ratio` antes de convertirlo en divulgación advisory **bloquea en 10/10 configuraciones** (rango 0.125-0.714) y es insatisfacible por medios honestos; y unificar el registro 7→8 antes de eso **empeora alignment 0.571 → 0.500** a cambio de **Δcoherence = 0.0000 exacto**. Hacerlo en el orden de §10 era pagar el costo sin recibir el beneficio.
+2. **FASE T no es una fase lineal.** ROADMAP v4.2 la parte en **tramo offline** (T0/T1/T2/T4 — certificable ya contra los artefactos de SalenteReal, sin nada externo) y **tramo externo** (T3 datos operativos reales del hotel · T5 credenciales FTP/WP + staging · T6 escala sobre los dos). §10 no hacía la distinción, así que se leía como deuda de implementación lo que en realidad es **falta de acceso**.
+3. **Debajo del plan hay una causa raíz que §10 no ve.** El ledger resuelto tiene **3 pains** y el orquestador genera **4 assets**, de los cuales **2 son huérfanos**, y **6 de 7 servicios prometidos responden a pains que no se detectaron**. Esa única causa produce a la vez `no_breach = 6/7` **e** `is_coherent = false` (`assets_are_justified` 3/4 = 0.75). La **propuesta dinámica** — solo prometer servicios con brecha detectada — cierra ambos síntomas y hace `no_breach = 0` por construcción. Todo lo que §10 proponía (advisory, remapeos, orden de etapas) es parche sobre un contrato comercial que sigue vendiendo lo que no diagnostica. Ver ROADMAP §7.2 *"Causa raíz por debajo de T0"* y §13.2 de este documento.
 
-### Etapa 1 — Juez certificador del contrato P6 (PRIMER PISO) ← **directriz ROADMAP, máxima prioridad**
+### 10.2 Claims de esta sección que fueron refutados — no reutilizar
 
-- **Objetivo:** convertir P6 en un contrato ejecutado por agente. Es la capa que hoy no existe: nadie certifica las 6 cláusulas como un todo ni produce un acta.
-- **Cláusula P6:** las 6 (agregación) + P6.6 (bloqueo).
-- **Qué se construye:**
-  - `modules/quality_gates/tribunal/judge.py` (Bot 5) — **determinista, sin LLM**.
-  - Lee artefactos YA generados: `gate_report.json` (13 publication gates), `commercial_gates_report.json` (~10 CG-*), `delivery_quality_report.json`, `pain_ledger.json` / `pain_ledger_resolved.json`, `proposal_asset_matrix.json`, `quality_metadata` del `MANIFEST.json`.
-  - Emite `acta_revision.json` + `acta_revision.md` (legible, cliente-facing).
-  - **Regla determinista de primer piso:** `evidence_tier ∈ {B,C}` → veredicto máximo `APROBADO-CONDICIONAL-PENDING-ONBOARDING`; nunca `APROBADO-PARA-ENTREGA`.
-  - Veredicto alimenta `modules/quality_gates/publication_state.py` y puede bloquear el ZIP en `delivery/manager.py`.
-- **Criterio de aceptación (verificable):** corrido sobre la entrega real `output/FASE-D_salentoreal_post_guard/.../hotelsalentoreal_20260831/` (tier B, coherence 0.9133, 37 archivos) → produce acta con veredicto `APROBADO-CONDICIONAL-PENDING-ONBOARDING`, las 6 cláusulas P6 evaluadas contra artefactos reales, y el `IMPLEMENTATION_ORDER.md` vacío señalado como hallazgo. Test determinista verde.
-- **Dependencia:** ninguna (usa gates existentes). **No re-ejecuta lógica de gates** (ver §5, regla inviolable).
-- **Por qué primero:** sin el Juez no hay contrato certificado; los demás bots enchufan sus hallazgos a un acta que aún no existe.
+| §10 decía | Verificado contra código/artefactos el 2026-09-02 | Dónde vive ahora |
+|---|---|---|
+| Anclaje en "ROADMAP §P6 (**línea 195**)" | La reestructura v4.1/v4.2 movió todo el documento. **Referir por sección, nunca por línea** | ROADMAP §4 (P6), §7.2 |
+| Integración desde `two_phase_flow.py` como **FASE 5.5** | Ese módulo **no es el orquestador de producción**: solo lo importan `onboarding_controller.py` (que usa únicamente sus tipos), el `__init__` del paquete y tests. **Elegir anfitrión real es precondición de T1**; el natural es `main.py` junto a `delivery_quality_report` (FASE 7, `:3178-3200`) | ROADMAP §7.2 |
+| El Juez lee `gate_report.json` y `commercial_gates_report.json` con "**~10 CG-***" | Los nombres son **timestamped y sin índice** (`gate_report_20260831_122803.json`). El reporte comercial está **partido en 3 + 9**: el archivo de nombre canónico trae 3 gates en verde y el único que falló en la corrida real (**`CG-WHATSAPP-LEAD`**, WARNING) está en el diagnóstico que §10 no leía. Conteo real: **12 `CG-*`** | ROADMAP §7.2 + deuda **H7** |
+| El veredicto **alimenta `publication_state.py`** | Módulo **huérfano**, sin importadores fuera de sí mismo (igual que `coherence_gate.py`) | ROADMAP §9 + deuda **H8** |
+| Coherence de SalenteReal **0.9133** | Es el `pre_coherence_score` **no canónico** (regresión DT4-N4). El canónico es **0.88** (`coherence_score_pre/post/final` en `asset_generation_report.json`) | ROADMAP §7.1 |
+| "**37 archivos**" como el paquete entregado | El ZIP pesa **46.552 bytes**; los 37 archivos son el **directorio expandido** | ROADMAP §7.1 |
+| `pain_ledger.json` como fuente suficiente para el Bot 1 | **No serializa la clave `assets`** (`pain_ledger_resolved.json` trae `assets: null` en las 3 entradas) ⟹ la matriz **no es reproducible desde disco** | ROADMAP §7.2 + **H7** |
+| **Definition of Done única** (a)-(e) | **Insatisfacible en este repo**: la cláusula (c) depende de infraestructura del cliente (T5 + deuda P1), así que un Done único vuelve incerificable también el tramo offline | ROADMAP §7.2 **DoD-técnico / DoD-comercial** |
+| Margen de costo en "ROADMAP **línea 229-231**" | Referencia por línea, stale | ROADMAP §5 |
+| Etapa 3 cierra el primer piso | Cierra **una** precondición. G0 exige además `evidence_tier: A` + assets ≥ 0.8 + acta `APROBADO-PARA-ENTREGA`, y hoy está **NO CERRADO** | ROADMAP §9 (G0) |
 
----
+### 10.3 Detalle de implementación que el ROADMAP no replica
 
-### Etapa 2 — Revisores mecánicos deterministas (cláusulas P6.1, P6.3, P6.4)
+Único contenido de la §10 original que sigue siendo útil y **no** está en ROADMAP §7.2:
 
-- **Objetivo:** dar al Juez hallazgos estructurados de diagnóstico y assets, sin LLM.
-- **Qué se construye:**
-  - `modules/quality_gates/tribunal/asset_reviewer.py` (Bot 3) → **P6.3, P6.4**. Lee `proposal_asset_matrix.json` (generado por `modules/asset_generation/proposal_asset_alignment.py`) + `delivery_quality_report.json` + `MANIFEST.json` + archivos reales en `ASSETS/`. Clasifica: CON-ASSET / SIN-ASSET / ASSET-GENERICO / ASSET-ESTIMATED-NO-ETIQUETADO.
-  - `modules/quality_gates/tribunal/diagnosis_reviewer.py` (Bot 1) → **P6.1**. Lee `pain_ledger.json` + `pain_ledger_resolved.json` + `coherence_validation.json`. Verifica brecha→pain_id trazable, fuente declarada, cifras desde inputs.
-- **Criterio de aceptación:** el acta de SalenteReal ahora incluye hallazgos de Bot 1 y Bot 3 por severidad; Bot 3 detecta el `IMPLEMENTATION_ORDER.md` vacío como asset incompleto/genérico. Tests de contrato verdes.
-- **Dependencia:** Etapa 1 (enchufan al acta del Juez).
-- **Costo:** determinista, sin LLM.
+- **Tests:** `tests/quality_gates/tribunal/`, con contrato I/O explícito por bot.
+- **Convención de evidencia:** todo artefacto del tribunal cae en `output/<corrida>/v4_complete/<hotel>/v4_audit/` (principio P3).
+- **Rutas de módulo para T3 (onboarding):** `modules/orchestration_v4/onboarding_controller.py` y `modules/onboarding/`; el humano interviene solo si los datos son inconsistentes.
+- **Rutas de módulo para T5 (deploy):** CMS detection en `modules/delivery/generators/deploy_instructions_gen.py`; conectores en `modules/deployer/connectors/ftp_connector.py` (`upload_file`) y `wordpress_connector.py` (`inject_code`).
+- **Vocabulario de Bot 2:** marca `promesa-sin-matriz` y `SIN-BRECHA-ASOCIADA` — el segundo no está nombrado en ROADMAP T4.
+- **Regla de dependencia fina:** Bot 1 y Bot 3 enchufan al acta del Juez, así que T1 debe tener contrato de acta estable antes de T2/T4 (ROADMAP lo da por supuesto en el orden de la tabla).
+- **Diseño completo de Bot 1-5** (responsabilidad, entradas, salidas, qué añade cada uno): **§5** de este documento. No fue refutado.
 
----
+### 10.4 Equivalencias de nomenclatura — este documento ↔ ROADMAP v4.2
 
-### Etapa 3 — Capa 3: onboarding como precondición del primer piso (P6.5)
+Dos vocabularios describen **el mismo plan**. Esta tabla es el puente; **la columna ROADMAP es la autoritativa**.
 
-- **Objetivo:** cerrar el gap que mantiene TODO paquete en `APROBADO-CONDICIONAL`. Es lo que permite que el primer piso cierre de verdad.
-- **Cláusula P6:** P6.5 (datos reales → VERIFIED).
-- **Qué se construye:** bot de diálogo estructurado (3-4 preguntas: rooms, occupancy_rate, direct_channel_pct, adr) que ejecuta `main.py onboard` (ver `modules/orchestration_v4/onboarding_controller.py` y `modules/onboarding/`) y re-corre `v4complete` en Tier A. El humano interviene solo si los datos son inconsistentes.
-- **Criterio de aceptación:** un paquete con onboarding completo alcanza `evidence_tier: A`, assets ≥ 0.8 (gap G0 cerrado) y el Juez emite `APROBADO-PARA-ENTREGA`.
-- **Dependencia:** Etapa 2 (el tribunal dice exactamente qué datos faltan y por qué bloquean).
-- **Nota de secuencia:** va ANTES que Capa 4 (deploy) porque desplegar assets Tier B/C viola P6.5.
-
----
-
-### Etapa 4 — Revisores de inferencia NL con LLM acotado (cláusulas P6.2, P6.5)
-
-- **Objetivo:** cubrir lo único que ningún gate cubre: lenguaje natural de la propuesta.
-- **Qué se construye:**
-  - `modules/quality_gates/tribunal/alignment_reviewer.py` (Bot 2) → **P6.2**. LLM extrae promesas verbales de `02_PROPUESTA_COMERCIAL.md`; capa determinista verifica contra `proposal_asset_matrix.json`. Marca promesa-sin-matriz / SIN-BRECHA-ASOCIADA.
-  - `modules/quality_gates/tribunal/honesty_reviewer.py` (Bot 4) → **P6.5**. LLM detecta sobre-presentación; determinista verifica contra tier labels + los ~10 CG-* (no solo 4).
-- **Regla inviolable:** el LLM **propone** hallazgos, el **Juez aplica veredicto determinista**. El LLM nunca es juez de registro (preserva auditabilidad P3).
-- **Criterio de aceptación:** test con propuesta que promete verbalmente un servicio ausente en la matriz → Bot 2 lo marca; test con ESTIMATED presentado como verificado → Bot 4 lo marca. Ambos con LLM mockeado en el test (determinismo).
-- **Dependencia:** Etapa 1 (contrato de acta estable).
-- **Costo:** LLM barato + cache; marginal.
-
----
-
-### Etapa 5 — Capa 4: entrega y deploy (solo tras APROBADO-PARA-ENTREGA)
-
-- **Objetivo:** cerrar el cuello de botella de entrega, pero **gateado** por el tribunal.
-- **Qué se construye / arregla (en este orden):**
-  1. **Fix concreto del `IMPLEMENTATION_ORDER.md` vacío** — causa raíz en `modules/geo_enrichment/asset_responsibility_contract.py` (`generate_delivery_template()`) y `modules/delivery/generators/implementation_order_gen.py` cuando no reciben `core_assets`/`geo_assets` explícitos. Independiente del tribunal; se arregla primero.
-  2. **CMS detection** desde `hotel_data.cms_detected` (ver `modules/delivery/generators/deploy_instructions_gen.py`).
-  3. **Conectores deploy** fuera de `dry_run`: FTP `upload_file` (`modules/deployer/connectors/ftp_connector.py`), WP `inject_code` (`wordpress_connector.py`) — con aprobación humana (impacto externo real).
-- **Regla AOA:** el deploy solo se dispara si el Juez emitió `APROBADO-PARA-ENTREGA`. **Nunca** sobre Tier B/C.
-- **Criterio de aceptación:** paquete Tier A aprobado → `IMPLEMENTATION_ORDER.md` con contenido real; deploy de un asset de prueba a un entorno de staging verificado en producción (`site_verification_applied: true`).
-- **Dependencia:** Etapas 1-3.
-
----
-
-### Etapa 6 — Capa 1/2: throughput + gancho (escala)
-
-- **Objetivo:** escalar volumen **solo cuando el primer piso cierra de forma consistente**.
-- **Qué se construye:** agente que recibe lista de URLs propias y ejecuta `v4complete` + tribunal por cada una (Capa 1); agente de primer contacto que envía `hook-pdf` + mensaje WhatsApp con cifra de fuga en COP (Capa 2).
-- **Nota:** `hook-pdf` de **prospección** puede correr en paralelo desde antes (es pre-contrato: gancho, no entrega). La escala de **entregas** va gateada por el tribunal.
-- **Criterio de aceptación:** N hoteles diagnosticados por semana con acta, sin intervención humana por corrida; costo por diagnóstico dentro del margen (ROADMAP línea 229-231).
-- **Dependencia:** Etapas 1-5 estables.
-
----
-
-### Resumen de secuencia (descendente en importancia)
-
-| # | Etapa | Ancla | LLM | Dependencia |
-|---|-------|-------|-----|-------------|
-| 1 | Juez certificador P6 | **ROADMAP P6 (primer piso)** | No | — |
-| 2 | Revisores mecánicos (Bot 1, Bot 3) | P6.1/3/4 | No | Etapa 1 |
-| 3 | Onboarding (Capa 3) | P6.5 (cierra primer piso) | No | Etapa 2 |
-| 4 | Revisores NL (Bot 2, Bot 4) | P6.2/5 | Sí (acotado) | Etapa 1 |
-| 5 | Entrega/Deploy (Capa 4) | AOA "automatiza" | No | Etapas 1-3 |
-| 6 | Throughput + gancho (Capa 1/2) | escala | Sí | Etapas 1-5 |
-
-### Definition of Done global
-
-El plan está completo cuando: (a) ningún paquete sale sin `acta_revision.md` que certifique las 6 cláusulas P6; (b) ningún paquete Tier B/C recibe `APROBADO-PARA-ENTREGA`; (c) ningún deploy se ejecuta sin veredicto de aprobación; (d) el tribunal no duplica lógica de gates (auditoría de fuente-única); (e) costo marginal por diagnóstico dentro del margen del ROADMAP.
+| Etiqueta en este documento | Equivalente en ROADMAP v4.2 | Nota |
+|---|---|---|
+| §10 Etapa 1 — Juez certificador | **T1** | tramo offline |
+| §10 Etapa 2 — revisores mecánicos (Bot 1, Bot 3) | **T2** | tramo offline |
+| §10 Etapa 3 — onboarding (Capa 3) | **T3** | **tramo externo**: datos reales del hotel |
+| §10 Etapa 4 — revisores NL (Bot 2, Bot 4) | **T4** | tramo offline (LLM mockeado en tests) |
+| §10 Etapa 5 — entrega/deploy (Capa 4) | **T5** | **tramo externo**: FTP/WP + staging + deuda **P1** |
+| §10 Etapa 6 — throughput + gancho (Capa 1/2) | **T6** | **tramo externo**: escala sobre T3 y T5 |
+| *(inexistente en §10)* | **T0.1-T0.4** | precondiciones medidas; van **ANTES** de T1 |
+| §12.3 / §12.5 escenario **S2.3** (denominador = `total`) | **T0.1** | ROADMAP ya usa la etiqueta S2.3; descartado como bloqueante |
+| §13.1 **A4** — doble oráculo de presencia | **T0.2** | no voltea ningún veredicto en 10/10 |
+| §13.1 **A5** — skip silencioso + dos builders | **P10** extendido | trampa de falso negativo para **T0.3** |
+| §13.2 bloque B — mecanismo causal de `no_breach = 6/7` | §7.2 **"Causa raíz por debajo de T0"** | dos derivaciones independientes que coinciden |
+| §12.7 **N11** — el gate ignora `is_coherent` | **T0.4** + deuda **P9** | la deuda de producto más grave abierta |
+| §13.1 **A1** — G9 se salta en verde | **H9** extendido | latente, no observado |
+| §13.1 **A2** — oráculo de presencia no persistido | **H7** extendido | vuelve **T0.2** no retro-testeable |
+| §13.1 **A3** — `promised_assets_exist` solo pre-gen | **P12** + §6.4 *"Nota pre-gen (P6.3)"* | mecanismo del Δcoherence 0.0000 |
+| §13.1 **A6** — `asset_path: null` | §6.4 + **G11** + criterio de **T2** | P6.3 no verificable desde el artefacto |
+| §12.3 decisión **advisory = 2, no 3** | §6.4 tabla *"Objetivo decidido"* + **H10** | `asset_confidence` **conserva** el bloqueo |
+| §10 Definition of Done única | **DoD-técnico / DoD-comercial** | partida en v4.2 |
+| §9 preguntas abiertas 1-5 | resueltas en ROADMAP §4, §6.4, §7.2, §8, §9 | ⚠️ las resoluciones 2 y 3 de §9 quedaron refutadas (§10.2) |
+| §8 estado del proyecto v4.74.1 | `VERSION.yaml` + `python scripts/doctor.py --status` | fuente única; no replicar |
 
 ---
 
@@ -430,7 +395,7 @@ Por eso el umbral `< 0.8` de `publication_gates.py:1156` no añade protección *
 2. **Corregir `AGENTS.md`** (tabla Módulos Activos, fila `quality_gates/`, y el bloque FASE 4.5 del flujo v4) **y `publication_gates.py:4` y `:162`** a "11 blocking + 2 advisory".
 3. **NO tocar `delivery_quality_report.py:289`** (`BLOCKING_GATE_NAMES`). Ese tuple rige el ZIP (`main.py:3198` "⛔ ZIP ABORTED") y pertenece a un régimen distinto — delivery, no publicación. Unificarlos es una decisión separada con su propio radio de impacto.
 4. **Añadir candado de regresión**: hoy **0 tests** referencian `BLOCKING_GATE_NAMES` y ningún test de `tests/regression/` ni `tests/e2e/` fija la lista advisory. Sin candado, el cuarto régimen reaparece.
-5. **Actualizar §8 y §10 de este documento** una vez implementado.
+5. **Cerrar el ciclo en el plan de registro, no en este documento.** Una vez implementado, actualizar **ROADMAP §6.4** (la columna "Objetivo decidido" de la tabla de severidad pasa a "Implementado") y dar de baja la deuda **H10**. La redacción original de este item —"actualizar §8 y §10 de este documento"— quedó **sin objeto** desde el 2026-09-02: §10 es un stub supersedido (§10.2 lista lo refutado) y §8 es estado histórico del proyecto cuya fuente única es `VERSION.yaml` + `python scripts/doctor.py --status` (ROADMAP §3: no replicar datos sincronizables).
 
 ### 12.5 Qué NO hacer
 
@@ -454,13 +419,15 @@ Por eso el umbral `< 0.8` de `publication_gates.py:1156` no añade protección *
 
 ### 12.7 Correcciones adyacentes — otras cifras de este documento refutadas en la misma auditoría
 
-No consumir §3, §8 ni §10 sin leer esto. Todo verificado contra el código vivo y los artefactos reales el 2026-09-02.
+No consumir §3 ni §8 sin leer esto (§10 ya se autodescribe como stub supersedido). Todo verificado contra el código vivo y los artefactos reales el 2026-09-02.
+
+> ⚠️ **Las referencias de línea de esta tabla que caen dentro del antiguo §10 (rango 254-361) son históricas.** Ese texto fue **eliminado** el 2026-09-02 al convertir §10 en stub, así que esas líneas ya no existen en este archivo: R3 (279), R9 (325), R10 (262), N3 (278) y R11 (275) apuntaban a las Etapas 1-5 y a las Convenciones del plan. La versión corregida de cada una vive en **`ROADMAP.md` §7.2** y el registro consolidado de lo refutado en **§10.2**. Las referencias fuera de ese rango (62, 90, 60, 146, 230, 89, 231, 182-200, 228) siguen siendo válidas.
 
 | # | Línea(s) | Afirmación del doc | Realidad medida |
 |---|---|---|---|
 | R1 | 62 | "Entrega tipo: directorio expandido, no ZIP empacado" | Falso. Existe `deliveries/hotelsalentoreal_20260831.zip` (**46,552 bytes**, verificado 2026-09-02); los 37 archivos son del directorio expandido. Ambas cosas coexisten |
 | R2 | 90 | "`site_verification_applied: false` — nada se verificó en producción" | Semántica invertida. Ver `v4_asset_orchestrator.py:150-162`: el flag indica si la verificación *se aplicó al flujo*, no si el sitio fue verificado |
-| R3 | 60, 146, 279 | `coherence_score` 0.913 / 0.9133 | Ese es `pre_coherence_score` (`main.py:3228`), **no canónico**. El canónico DT4-N4 es **0.88**. ⚠️ El criterio de aceptación de §10 Etapa 1 usa el valor equivocado |
+| R3 | 60, 146, ~~279~~ | `coherence_score` 0.913 / 0.9133 | Ese es `pre_coherence_score` (`main.py:3228`), **no canónico**. El canónico DT4-N4 es **0.88**. La ocurrencia en 279 (criterio de aceptación de la antigua Etapa 1) **fue eliminada con el stub**; `ROADMAP.md` §7.2 T1 trae el valor correcto |
 | R8 | 230 | "~308 .py" / "604" | Real: **291 archivos fuente**, **284 de test** |
 | R9 | 89, 231, 325 | `IMPLEMENTATION_ORDER.md` vacío porque `generate_delivery_template()` no encontró `core_assets` ni `geo_assets` | Causa raíz mal atribuida. La real es doble: `main.py:3239-3255` (derivación NF-6) + `asset_responsibility_contract.py:316-317` donde `core_assets = core_assets or []` **destruye el centinela `None`** |
 | R10 | 262 | `two_phase_flow.py` como base del flujo | No tiene ningún llamador en producción |
@@ -468,7 +435,7 @@ No consumir §3, §8 ni §10 sin leer esto. Todo verificado contra el código vi
 | R11 | 182-200, 275 | Nombres fijos de artefactos | No existen con nombre fijo: son **timestamped** (`audit_report_20260831_122757.json`, `gate_report_20260831_122803.json`, `financial_scenarios_20260831_122757.json`) |
 | R13 | 228 | Castilla Real 0.8261 | Evidencia **archivada** del 2026-05-28, no corrida viva |
 | R14 | 363 | `/mnt/c/Users/Jhond/Github/iah-cli` | Ruta WSL; la plataforma real es `win32` → `C:\Users\Jhond\Github\iah-cli` |
-| — | §5, §10 | `modules/quality_gates/tribunal/` | **No existe.** Ninguno de los 5 bots del tribunal está implementado; §10 es plan, no estado |
+| — | §5, ROADMAP §7.2 | `modules/quality_gates/tribunal/` | **No existe.** Ninguno de los 5 bots del tribunal está implementado; §5 y ROADMAP §7.2 son **plan, no estado** (antes §10, hoy stub) |
 
 **Hallazgo adicional (N11), crítico para el Bot 1 del tribunal:** el gate de coherencia **ignora `is_coherent`**. `publication_gates.py` `_coherence_gate` (~L458-520) decide con `passed = coherence_score >= self.config.coherence_threshold` — solo el score, nunca `report.is_coherent`. Los artefactos reales de SalenteReal dicen `is_coherent: false` en cuatro lugares y aun así el gate PASÓ. Añadir errores no bloquea nada. Causa única del `is_coherent=False`: `_check_assets_are_justified` = 3/4 = 0.75 → `severity="error"` (`coherence_validator.py:255-309`), porque `monthly_report` es always-on y no tiene pain que lo justifique. Contraste: `coherence_gate.py:289` sí usa `passed = report.is_coherent` (más estricto) pero **no tiene llamador en producción** — es huérfano. El Bot 1 debe leer `is_coherent`, no el score.
 
@@ -476,12 +443,12 @@ No consumir §3, §8 ni §10 sin leer esto. Todo verificado contra el código vi
 
 ## 13. Hallazgos estructurales de la auditoría 2026-09-02 (no cubiertos por §12)
 
-> **Propósito:** preservar medición verificada para evitar reproceso. Nada de esto está implementado y ningún archivo de código fue modificado durante la auditoría. §12 resuelve la severidad de los gates; §13 documenta lo que la auditoría encontró *alrededor*, que necesitan (a) la sesión del **punto 8** —propuesta dinámica— y (b) la del **tribunal** (§5/§10).
+> **Propósito:** preservar medición verificada para evitar reproceso. Nada de esto está implementado y ningún archivo de código fue modificado durante la auditoría. §12 resuelve la severidad de los gates; §13 documenta lo que la auditoría encontró *alrededor*, que necesitan (a) la sesión del **punto 8** —propuesta dinámica, causa raíz en ROADMAP §7.2— y (b) la del **tribunal** (§5 para el diseño por bot, **ROADMAP §7.2** para el plan). Los seis agujeros A1-A6 ya están registrados como deuda en ROADMAP v4.2 §13 — ver la equivalencia en **§10.4**.
 > **Corpus de referencia:** `output/FASE-D_salentoreal_post_guard/v4_complete/hotelsalentoreal/v4_audit/` (corrida 2026-08-31 12:28:03), re-verificado el 2026-09-02.
 
 ### 13.1 Seis agujeros vivos (bloque A)
 
-Ninguno está documentado en el repo. Todos verificados contra código vivo y artefactos reales el 2026-09-02.
+Verificados contra código vivo y artefactos reales el 2026-09-02. Al momento del hallazgo **ninguno estaba documentado en el repo**; desde **ROADMAP v4.2** los seis están registrados como deuda o precondición — A1→**H9**, A2→**H7**, A3→**P12**, A4→**T0.2**, A5→**P10**, A6→§6.4/**G11**. Se conservan aquí con su evidencia por archivo.
 
 **A1 — G9 se salta en verde.**
 - *Qué:* si no existe `proposal_asset_matrix.json`, el gate de alignment de delivery se marca como pasado.
@@ -638,4 +605,4 @@ Siete afirmaciones que se hicieron durante el análisis y que la medición refut
 
 ---
 
-*Contexto generado 2026-09-01, validado y convertido en plan implementable (§10) el 2026-09-01, auditado contra el código vivo el 2026-09-02 (§12 decisión + §13 hallazgos estructurales). Retomar cuando la sesión aborde: bots para iah-cli, credibilidad de diagnóstico, Capa 3 onboarding, Capa 4 delivery/deploy, tribunal de revisión multi-bot, debottlenecking del proceso de entrega, ejecución del plan priorizado anclado en P6 (§10, Etapa 1 = Juez certificador), culminar la corrección de la lista advisory de gates — 2, no 3 (§12.4), **o abordar la causa raíz del punto 8 — propuesta dinámica (§13.2, que además cierra N11)**.*
+*Contexto generado 2026-09-01 y convertido en plan implementable (§10) ese mismo día; auditado contra el código vivo el 2026-09-02 (§12 decisión advisory + §13 hallazgos estructurales). Esa auditoría **migró el plan a `ROADMAP.md` §7.2 (FASE T, v4.2)** y dejó §10 como stub supersedido: §10.2 lo refutado, §10.3 el detalle de implementación preservado, §10.4 la equivalencia de nomenclaturas. Retomar cuando la sesión aborde: bots para iah-cli, credibilidad de diagnóstico, Capa 3 onboarding, Capa 4 delivery/deploy, tribunal de revisión multi-bot, debottlenecking del proceso de entrega, ejecución del plan anclado en P6 (**punto de entrada: ROADMAP §7.2 T0.1-T0.4, y solo después T1 = Juez certificador**; el tramo offline T0/T1/T2/T4 es certificable ya, el tramo externo T3/T5/T6 depende de datos reales del hotel y credenciales FTP/WP), culminar la corrección de la lista advisory de gates — 2, no 3 (§12.4 + ROADMAP **H10**), **o abordar la causa raíz del punto 8 — propuesta dinámica (§13.2 = ROADMAP §7.2 "Causa raíz por debajo de T0", que además cierra N11 = T0.4/**P9**).*
