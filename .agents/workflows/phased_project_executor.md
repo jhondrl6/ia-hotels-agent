@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
-version: v2.17.0
+version: v2.18.0
 ---
 
 # Skill: Phased Project Executor
@@ -304,7 +304,10 @@ Cuando se usa `delegate_task` para ejecutar `v4complete`:
 > 2. **Actualizar el plan de fase** con estado real:
 >    - Si completo: marcar todos los items del checklist como ✅
 >    - Si incompleto: marcar como `⏳ INCOMPLETA` con checkpoint y que falta
-> 3. **Solo entonces** cerrar la sesion.
+> 3. **Preguntar por el aporte durable de todo `CONTEXT-*.md` escrito o editado en la sesion** (criterio y write-back en §4): ¿contiene una leccion de forma o de metodo que cambie como trabajara una sesion futura?
+>    - Si → etiquetarla en el propio archivo (`Leccion de forma:`) y ejecutar el write-back de CONTEXT: memoria del proyecto + `add_source` al notebook `iah-cli-lecciones`.
+>    - No → no se etiqueta y no se ingiere; el archivo queda solo en el repo como estado de plan o medicion. No hace falta declarar la ausencia.
+> 4. **Solo entonces** cerrar la sesion.
 
 **Esta regla no tiene excepciones.** Aunque la sesion termine en iteracion 1 y no haya hecho nada, el plan debe reflejar ese estado.
 
@@ -355,7 +358,7 @@ Cuando la fase no completa por agotamiento:
 
 **Capa tibia — QMind** (si el notebook está disponible):
 - `retrieve` sobre el notebook `iah-cli-lecciones` con el tema/objetivo del plan como query (2-3 queries acotadas: módulo afectado, tipo de fallo, etapa del workflow).
-- Corpus del notebook: `CONTEXT-*.md` (`.opencode/context/`) y `10-analisis-post-implementacion.md` de cada plan.
+- Corpus del notebook: `CONTEXT-*.md` (`.opencode/context/`) y `10-analisis-post-implementacion.md` de cada plan. Un CONTEXT entra al corpus **solo si autodeclara un aporte durable** (criterio binario en el write-back del paso 4); si no lo declara, es estado de plan o medición y se recupera del repo, no de QMind. Que un CONTEXT no esté en el notebook no es un olvido: o no declaró aporte, o la sesión que lo escribió incumplió el Cierre Obligatorio.
 
 **Output del paso** — lista corta de lecciones aplicables, que se inyecta en:
 1. `10-analisis-post-implementacion.md` del plan nuevo → tabla "Lecciones capitalizadas de planes anteriores".
@@ -470,6 +473,16 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
 - Cada lección nueva con pertinencia INCLUIR se persiste en la **memoria del proyecto** del agente (una entrada durable por lección).
 - El `10-analisis-post-implementacion.md` actualizado se re-ingere al notebook **`iah-cli-lecciones`** de QMind (si está disponible).
 - Lecciones con pertinencia EXCLUIR quedan solo en el análisis del plan.
+
+**Write-back de CONTEXT (disparador por aporte, NO por edición)** — los `CONTEXT-*.md` de `.opencode/context/` no se ingieren por existir ni por editarse. Se ingieren cuando **autodeclaran un aporte durable**.
+
+- **Criterio binario (sin juicio de relevancia):** ¿el archivo etiqueta explícitamente una lección de forma o de método — `Lección de forma:`, `Lección durable:`, o una sección `Lecciones capitalizadas`? Sí → ingerir. No → se queda solo en el repo.
+  - Ejemplo real: `CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` §13.5 — *"Lección de forma: en este pipeline, revalidar citas de código no revalida premisas. Todo hallazgo está anclado a un artefacto o a una corrida, no a una lectura."* Ese aporte cambia cómo trabaja cualquier sesión futura ⟹ se ingiere. Las tablas de medición del mismo archivo no cambian cómo se trabaja ⟹ no son, por sí solas, motivo de ingesta.
+- **Por qué autodeclarado y no inferido:** la relevancia la decide quien escribe el contexto, en el momento en que tiene la evidencia delante. Un agente futuro tendría que inferirla, y ese juicio subjetivo es exactamente lo que volvió letra muerta la sección "Lecciones capitalizadas" antes de v2.17.0. Declarar es además la única forma de que el disparador sea verificable.
+- **Si declara, dos acciones (mismo ciclo que el 10-analisis):** (1) persistir la lección como entrada durable en la **memoria del proyecto**; (2) `add_source` del CONTEXT al notebook `iah-cli-lecciones`, con título que lleve la fecha de la lección.
+- **Si no declara:** nada. El contenido es estado de plan, decisión pendiente o medición, y vive en el repo. No ingerirlo no es perderlo.
+- **Re-ingesta:** solo cuando cambia el aporte declarado, no cuando cambian las secciones de estado o medición. El MCP no tiene `delete_source`: cada re-ingesta acumula una versión previa en el notebook, así que ingerir de más es ruido permanente.
+- **Dónde se declara:** en el Cierre Obligatorio de Sesión (ver §Cierre-Obligatorio-de-Sesion). La declaración es parte del cierre, no un paso opcional posterior.
 
 > [!NOTE]
 > **QMind y archivado**: QMind indexa snapshots de contenido, no rutas locales. Mover un plan a `Archives/` o un contexto a `Historico/` NO requiere acción en QMind (solo actualizar referencias en repo/memoria). Re-ingerir SOLO cuando cambia el contenido. Orden correcto: write-back final → archivar el directorio (el contenido archivado queda congelado y no necesita mantenimiento).
@@ -1094,6 +1107,7 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - **FASE-VERIFY incluida en plan simple** → evaluar si los 3 criterios de activación se cumplen; si no, eliminar y documentar por qué en `dependencias-fases.md`
 
 ## Versiones
+- **v2.18.0** (2026-09-02): Write-back de CONTEXT por aporte, no por edición. Los `CONTEXT-*.md` de `.opencode/context/` se ingieren a QMind solo cuando **autodeclaran** una lección durable con etiqueta explícita (`Lección de forma:`); el criterio es binario para que no dependa de un juicio de relevancia inferido (§4). La pregunta se hace en el Cierre Obligatorio de Sesión (paso 3 nuevo), que es donde el archivo se escribe, para que el disparador no sea letra muerta. Se aclara en el Paso 0 que un CONTEXT ausente del notebook no es un olvido. Origen medido: `CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` no estaba en el notebook (40 fuentes, última ingesta 2026-08-31) pese a declarar en §13.5 *"Lección de forma: revalidar citas de código no revalida premisas"* — el ciclo v2.17.0 solo disparaba sobre `10-analisis-post-implementacion.md` al cierre de fase, y un CONTEXT de análisis/auditoría no es cierre de fase.
 - **v2.17.0** (2026-08-28): Ciclo de capitalización de lecciones aprendidas. Nuevo Paso 0 obligatorio (recuperación desde memoria del proyecto + notebook QMind `iah-cli-lecciones` antes de planificar), inyección de lecciones pertinentes en prompts de fase (§2), y write-back al cierre de cada fase (§4): lecciones INCLUIR a memoria del proyecto y re-ingesta del 10-analisis a QMind. Fallback explícito si el notebook no está disponible.
 - **v2.16.0** (2026-08-24): Nueva etapa condicional FASE-VERIFY (§4.6) entre Implementación y RELEASE. Certificación formal de ACs contra output E2E real, sin modificar código. Criterios de activación: ≥3 fases impl + E2E + ACs cross-fase. Resuelve gap: la referencia "llenar en FASE-E o FASE-F" en la matriz de verificación no tenía definición formal. Metodología mínima generalizable (7 pasos). Origen: FASE-R0-F del plan REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 (12/12 ACs certificados con diff narrativo antes/después).
 - **v2.15.0** (2026-08-05): Paso 4 — `10-analisis-post-implementacion.md` se crea DESDE LA CONCEPCIÓN del plan (no al final), junto con `09-documentacion-post-proyecto.md`. Esto evita el reproceso de crearlo después de que las lecciones ya se perdieron. Estructura obligatoria: Resumen de Ejecución, Matriz de Verificación, Lecciones Aprendidas, Seguimientos, Métricas, Decisiones Arquitectónicas, Checklist de Cierre. Criterios de Éxito y Ejemplo de Uso actualizados para incluir el nuevo archivo.
