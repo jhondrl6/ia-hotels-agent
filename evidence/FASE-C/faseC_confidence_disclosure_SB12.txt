@@ -1,0 +1,122 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+_________ TestAssetQualityTable.test_proposal_includes_quality_table __________
+
+self = <commercial_documents.test_proposal_confidence_disclosure.TestAssetQualityTable object at 0x000001A450AB4A50>
+
+    def test_proposal_includes_quality_table(self):
+        """La tabla generada contiene header y filas para los 7 servicios."""
+        table = self.gen._generate_asset_quality_table(None)
+    
+        # Must have header
+        assert "| Entregable |" in table
+>       assert "| Nivel |" in table
+E       AssertionError: assert '| Nivel |' in '| Entregable | Momento de entrega | Qu\xe9 incluye |\\n|------------|-------------------|-------------|\\n| SEO Local | \u2705 ...or a la firma |\\n| Optimizaci\xf3n para IA Generativa | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |'
+
+tests\commercial_documents\test_proposal_confidence_disclosure.py:23: AssertionError
+______ TestAssetQualityTable.test_quality_table_reflects_real_confidence ______
+
+self = <commercial_documents.test_proposal_confidence_disclosure.TestAssetQualityTable object at 0x000001A450AB4F50>
+
+    def test_quality_table_reflects_real_confidence(self):
+        """Si hotel_schema tiene confidence 0.5, muestra 'En preparacion'."""
+        assets = [
+            {"asset_type": "hotel_schema", "confidence_score": 0.5},
+            {"asset_type": "geo_playbook", "confidence_score": 0.9},
+            {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
+            {"asset_type": "optimization_guide", "confidence_score": 0.85},
+            {"asset_type": "whatsapp_button", "confidence_score": 0.6},
+            {"asset_type": "monthly_report", "confidence_score": 0.75},
+        ]
+        table = self.gen._generate_asset_quality_table(assets)
+    
+        # FASE-C: "En preparacion" en lugar de "Requiere datos"
+>       assert "En preparacion" in table
+E       AssertionError: assert 'En preparacion' in '| Entregable | Momento de entrega | Qu\xe9 incluye |\\n|------------|-------------------|-------------|\\n| SEO Local | \u2705 ...or a la firma |\\n| Optimizaci\xf3n para IA Generativa | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |'
+
+tests\commercial_documents\test_proposal_confidence_disclosure.py:52: AssertionError
+______ TestAssetQualityTable.test_missing_asset_shows_incluido_en_su_kit ______
+
+self = <commercial_documents.test_proposal_confidence_disclosure.TestAssetQualityTable object at 0x000001A450A86520>
+
+    def test_missing_asset_shows_incluido_en_su_kit(self):
+        """FASE-C: Si un asset falta en la lista, muestra 'Incluido en su kit' (no 'No generado')."""
+        # Only pass 5 of 7 assets
+        assets = [
+            {"asset_type": "geo_playbook", "confidence_score": 0.8},
+            {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.8},
+            {"asset_type": "voice_assistant_guide", "confidence_score": 0.8},
+            {"asset_type": "optimization_guide", "confidence_score": 0.8},
+            {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+        ]
+        table = self.gen._generate_asset_quality_table(assets)
+    
+        # FASE-C: "Incluido en su kit" en lugar de "No generado"
+        lines = table.split("\n")
+>       schema_line = [l for l in lines if "Datos Estructurados" in l][0]
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\commercial_documents\test_proposal_confidence_disclosure.py:79: IndexError
+_______ TestAssetQualityTable.test_none_assets_shows_incluido_en_su_kit _______
+
+self = <commercial_documents.test_proposal_confidence_disclosure.TestAssetQualityTable object at 0x000001A450A86780>
+
+    def test_none_assets_shows_incluido_en_su_kit(self):
+        """FASE-C: Si assets_generated es None, todos muestran 'Incluido en su kit'."""
+        table = self.gen._generate_asset_quality_table(None)
+        # FASE-C: "Incluido en su kit" en lugar de "Pendiente"
+>       assert "Incluido en su kit" in table
+E       AssertionError: assert 'Incluido en su kit' in '| Entregable | Momento de entrega | Qu\xe9 incluye |\\n|------------|-------------------|-------------|\\n| SEO Local | \u2705 ...or a la firma |\\n| Optimizaci\xf3n para IA Generativa | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |'
+
+tests\commercial_documents\test_proposal_confidence_disclosure.py:89: AssertionError
+_______ TestAssetQualityTable.test_low_confidence_shows_en_optimizacion _______
+
+self = <commercial_documents.test_proposal_confidence_disclosure.TestAssetQualityTable object at 0x000001A450AB3530>
+
+    def test_low_confidence_shows_en_optimizacion(self):
+        """FASE-C: Si confidence < 0.4, muestra 'En optimizacion'."""
+        assets = [
+            {"asset_type": "hotel_schema", "confidence_score": 0.2},
+            {"asset_type": "geo_playbook", "confidence_score": 0.2},
+            {"asset_type": "indirect_traffic_optimization", "confidence_score": 0.2},
+            {"asset_type": "voice_assistant_guide", "confidence_score": 0.2},
+            {"asset_type": "optimization_guide", "confidence_score": 0.2},
+            {"asset_type": "whatsapp_button", "confidence_score": 0.2},
+            {"asset_type": "monthly_report", "confidence_score": 0.2},
+        ]
+        table = self.gen._generate_asset_quality_table(assets)
+        # FASE-C: "En optimizacion" en lugar de "En desarrollo"
+>       assert "En optimizacion" in table
+E       AssertionError: assert 'En optimizacion' in '| Entregable | Momento de entrega | Qu\xe9 incluye |\\n|------------|-------------------|-------------|\\n| SEO Local | \U0001f527 ...or a la firma |\\n| Optimizaci\xf3n para IA Generativa | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |'
+
+tests\commercial_documents\test_proposal_confidence_disclosure.py:105: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_proposal_includes_quality_table
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_quality_table_reflects_real_confidence
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_missing_asset_shows_incluido_en_su_kit
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_none_assets_shows_incluido_en_su_kit
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_low_confidence_shows_en_optimizacion
+5 failed, 8 warnings in 1.27s

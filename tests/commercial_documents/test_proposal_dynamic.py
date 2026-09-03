@@ -483,15 +483,38 @@ class TestFase3ConditionalServicesFiltering:
         assert "> **Servicios adicionales disponibles:**" in result
 
     def test_no_assets_no_presence_all_excluded(self):
-        """When no assets and no presence, footnote lists all 8 services."""
+        """Sin assets ni presencia, ningún servicio desaparece en silencio.
+
+        S-B11 (FASE-C): este test esperaba los 8 servicios en el footnote y fallaba.
+        Dos premisas suyas eran falsas — ``PROPOSAL_SERVICE_TO_ASSET`` **deriva** de
+        Capa 2 y ya no contiene el complemento siempre-activo (``Informe Mensual``,
+        ``counts_in_alignment=False``), y ``validar_semantica_comercial`` devuelve
+        True para las 8 identidades. La excepción real es **B7** (FASE-R0-D,
+        reafirmada por D-PF1): WhatsApp sin brecha ni conflicto no se ofrece como
+        "servicio adicional". Aquí se fija la intención original —todo servicio no
+        comprometido es visible— y la excepción B7 en ambos sentidos; el positivo
+        (con brecha → sí aparece) vive en
+        ``TestFaseR0DServiciosAdicionalesWhatsApp``.
+        """
         result = self.gen._generate_dynamic_services_table(assets_generated=[])
 
-        # All 8 should be in the footnote (except "Informe Mensual" blocked by semantic validation)
         assert "> **Servicios adicionales disponibles:**" in result
+        footnote_line = next(
+            line for line in result.split("\n")
+            if "Servicios adicionales disponibles" in line
+        )
+        whatsapp_service = next(
+            name for name, asset in PROPOSAL_SERVICE_TO_ASSET.items()
+            if asset == "whatsapp_button"
+        )
+
         for service_name in PROPOSAL_SERVICE_TO_ASSET.keys():
-            if service_name == "Informe Mensual":
-                continue  # blocked by semantic validation
-            assert service_name in result, f"Service '{service_name}' should appear in footnote"
+            if service_name == whatsapp_service:
+                continue  # excepción B7, afirmada abajo
+            assert service_name in footnote_line, \
+                f"'{service_name}' debe ser visible en el footnote: nada se descarta en silencio"
+        assert whatsapp_service not in footnote_line, \
+            f"B7: '{whatsapp_service}' sin brecha ni conflicto no se ofrece como adicional"
 
         # Table should be empty (only header + separator)
         lines = result.strip().split("\n")
