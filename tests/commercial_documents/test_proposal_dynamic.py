@@ -14,6 +14,14 @@ from modules.commercial_documents.v4_proposal_generator import V4ProposalGenerat
 from modules.commercial_documents.service_catalog import SERVICE_CATALOG
 from modules.commercial_documents.data_structures import AssetSpec
 from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
+from modules.common.service_identity import SERVICE_IDENTITIES
+
+# FASE-A: el esperado se CALCULA desde el registro canónico (anti-lección L-NC10).
+# Sustituir un literal equivocado por uno correcto sólo re-fosiliza el drift «8 vs 7».
+SERVICIOS_ALINEABLES = {i.service_name for i in SERVICE_IDENTITIES if i.counts_in_alignment}
+COMPLEMENTO_SIEMPRE_ACTIVO = {
+    i.service_name for i in SERVICE_IDENTITIES if not i.counts_in_alignment
+}
 
 
 class TestProposalDynamicFiltering:
@@ -83,8 +91,11 @@ class TestProposalDynamicFiltering:
         lines = result.strip().split("\n")
         service_rows = [l for l in lines if l.startswith("| ") and "Entregable" not in l]
 
-        # Should have 8 services (static mode)
-        assert len(service_rows) == 8, f"Backwards compat should show 8 services, got {len(service_rows)}"
+        # Una fila por servicio prometido: el conteo lo fija el registro, no este test
+        assert len(service_rows) == len(PROPOSAL_SERVICE_TO_ASSET), (
+            f"Backwards compat should show one row per promised service "
+            f"({len(PROPOSAL_SERVICE_TO_ASSET)}), got {len(service_rows)}"
+        )
 
     def test_asset_quality_table_none_pains_shows_all_static(self):
         """With detected_pain_ids=None, should fall back to static (backwards compat)."""
@@ -96,12 +107,15 @@ class TestProposalDynamicFiltering:
         lines = result.strip().split("\n")
         service_rows = [l for l in lines if l.startswith("| ") and "Entregable" not in l]
 
-        # Should have 8 services
-        assert len(service_rows) == 8, f"None pains should show 8 services, got {len(service_rows)}"
+        assert len(service_rows) == len(PROPOSAL_SERVICE_TO_ASSET), (
+            f"None pains should show one row per promised service "
+            f"({len(PROPOSAL_SERVICE_TO_ASSET)}), got {len(service_rows)}"
+        )
 
     def test_dynamic_services_table_shows_all_services_with_status(self):
-        """FASE-2: _generate_dynamic_services_table should show ALL 8 services with status icons.
-        FASE-3: Services without assets are excluded → provide all 8 assets."""
+        """FASE-2: _generate_dynamic_services_table muestra los servicios prometidos con
+        iconos de estado. FASE-3: los servicios sin asset quedan excluidos → se pasan
+        todos los assets. FASE-A: el conteo sale de PROPOSAL_SERVICE_TO_ASSET."""
         detected_pain_ids = ["no_og_tags", "no_monthly_report"]
         all_assets = [
             {"asset_type": "optimization_guide", "confidence_score": 0.9},
@@ -258,20 +272,37 @@ class TestBackwardsCompatibility:
         """PROPOSAL_SERVICE_TO_ASSET must still exist for gate compatibility."""
         from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
         assert PROPOSAL_SERVICE_TO_ASSET, "PROPOSAL_SERVICE_TO_ASSET must exist for backwards compat"
-        assert len(PROPOSAL_SERVICE_TO_ASSET) == 8, f"Expected 8 entries, got {len(PROPOSAL_SERVICE_TO_ASSET)}"
+        # FASE-A (V14): el esperado sale del registro canónico, no de un literal
+        assert set(PROPOSAL_SERVICE_TO_ASSET) == SERVICIOS_ALINEABLES, (
+            f"PROPOSAL_SERVICE_TO_ASSET debe proyectar las identidades alineables del "
+            f"canónico. Sobran {sorted(set(PROPOSAL_SERVICE_TO_ASSET) - SERVICIOS_ALINEABLES)}, "
+            f"faltan {sorted(SERVICIOS_ALINEABLES - set(PROPOSAL_SERVICE_TO_ASSET))}"
+        )
 
-    def test_service_to_asset_lookup_has_8_entries(self):
-        """SERVICE_TO_ASSET_LOOKUP should have 8 entries (7 base + AEO conditional, FASE-D)."""
+    def test_service_to_asset_lookup_refleja_alignment(self):
+        """SERVICE_TO_ASSET_LOOKUP es retro-compatibilidad: calca PROPOSAL_SERVICE_TO_ASSET."""
         from modules.commercial_documents.service_catalog import SERVICE_TO_ASSET_LOOKUP
         assert SERVICE_TO_ASSET_LOOKUP, "SERVICE_TO_ASSET_LOOKUP must exist"
-        assert len(SERVICE_TO_ASSET_LOOKUP) == 8, f"Expected 8 entries (7 base + AEO), got {len(SERVICE_TO_ASSET_LOOKUP)}"
+        assert SERVICE_TO_ASSET_LOOKUP == PROPOSAL_SERVICE_TO_ASSET, (
+            "SERVICE_TO_ASSET_LOOKUP se deriva de PROPOSAL_SERVICE_TO_ASSET; si difieren, "
+            "alguien volvió a mantener una copia a mano"
+        )
 
-    def test_all_service_catalog_services_have_lookup_entry(self):
-        """Every SERVICE_CATALOG service should have an entry in SERVICE_TO_ASSET_LOOKUP."""
-        from modules.commercial_documents.service_catalog import SERVICE_CATALOG, SERVICE_TO_ASSET_LOOKUP
+    def test_solo_servicios_alineables_tienen_lookup_entry(self):
+        """El complemento siempre-activo está en SERVICE_CATALOG (sí se genera) pero NO
+        en SERVICE_TO_ASSET_LOOKUP (no se promete por pain — BUG-10 / FASE-3).
+
+        La versión anterior de este test exigía que TODO SERVICE_CATALOG tuviera entrada
+        en el lookup: esa exigencia ES el drift «8 vs 7» de V14 (dos registros que
+        responden preguntas distintas forzados a tener el mismo tamaño).
+        """
+        from modules.commercial_documents.service_catalog import SERVICE_TO_ASSET_LOOKUP
         for key, entry in SERVICE_CATALOG.items():
-            assert entry.service_name in SERVICE_TO_ASSET_LOOKUP, \
-                f"Service '{entry.service_name}' from SERVICE_CATALOG has no lookup in SERVICE_TO_ASSET_LOOKUP"
+            debe_estar = entry.service_name not in COMPLEMENTO_SIEMPRE_ACTIVO
+            assert (entry.service_name in SERVICE_TO_ASSET_LOOKUP) is debe_estar, (
+                f"Service '{entry.service_name}' (key={key}): su presencia en "
+                f"SERVICE_TO_ASSET_LOOKUP debería ser {debe_estar}"
+            )
 
 
 class TestDynamicServicesTableStates:
@@ -483,12 +514,15 @@ class TestFase3LookupUnification:
         assert SERVICE_TO_ASSET_LOOKUP == PROPOSAL_SERVICE_TO_ASSET, \
             "SERVICE_TO_ASSET_LOOKUP must be identical to PROPOSAL_SERVICE_TO_ASSET"
 
-    def test_service_to_asset_lookup_has_8_entries(self):
-        """SERVICE_TO_ASSET_LOOKUP should have exactly 8 entries."""
+    def test_service_to_asset_lookup_cubre_identidades_alineables(self):
+        """SERVICE_TO_ASSET_LOOKUP must cover exactly the alignment-counted identities."""
         from modules.commercial_documents.service_catalog import SERVICE_TO_ASSET_LOOKUP
 
-        assert len(SERVICE_TO_ASSET_LOOKUP) == 8, \
-            f"Expected 8 entries, got {len(SERVICE_TO_ASSET_LOOKUP)}"
+        assert set(SERVICE_TO_ASSET_LOOKUP) == SERVICIOS_ALINEABLES, (
+            f"SERVICE_TO_ASSET_LOOKUP debe cubrir las identidades alineables del canónico. "
+            f"Sobran {sorted(set(SERVICE_TO_ASSET_LOOKUP) - SERVICIOS_ALINEABLES)}, "
+            f"faltan {sorted(SERVICIOS_ALINEABLES - set(SERVICE_TO_ASSET_LOOKUP))}"
+        )
 
 
 class TestFaseR0DPlan30DaysConditional:

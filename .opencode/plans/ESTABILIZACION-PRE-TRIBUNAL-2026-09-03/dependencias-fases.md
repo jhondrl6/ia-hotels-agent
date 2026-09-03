@@ -6,6 +6,50 @@
 
 ---
 
+## 0. Estado de ejecución
+
+| Fase | Estado | Fecha | Qué desbloquea ahora |
+|------|--------|-------|----------------------|
+| **A** | ✅ Completada | 2026-09-03 | **B**, **C** (vía B), **D** — el canónico existe en `modules/common/service_identity.py` |
+| B | ⬜ Pendiente | — | C, E, H |
+| C | ⬜ Pendiente | — | F, G, I |
+| D | ⬜ Pendiente | — | F, I |
+| E | ⬜ Pendiente | — | F, I |
+| F | ⬜ Pendiente | — | G, H, I |
+| G | ⬜ Pendiente | — | H, I |
+| H | ⬜ Pendiente | — | I |
+| I | ⬜ Pendiente | — | VERIFY |
+| VERIFY | ⬜ Pendiente | — | RELEASE |
+| RELEASE | ⬜ Pendiente | — | — |
+
+**Notas de ejecución de FASE-A** (relevantes para las fases que heredan sus archivos):
+
+- El canónico vive en **`modules/common/service_identity.py`** (no en `asset_generation/`, como predecía
+  `09` §A). Motivo: `modules/common/` no importa nada del proyecto, así que `asset_generation`,
+  `commercial_documents` y `financial_engine` pueden consumirlo sin ciclo. **Cualquier fase que necesite
+  identidad servicio↔asset↔pain importa de ahí; crear otra tabla es L-NC4 y el guardián AST la detecta.**
+- Arquitectura de **dos capas**: Capa 1 = `PainSolutionMapper.PAIN_SOLUTION_MAP` (27 pains, universo de
+  pain_id, contenido intacto). Capa 2 = `SERVICE_IDENTITIES` (8 entradas). Ningún registro puede declarar
+  un pain_id ausente de Capa 1 — eso es lo que fijan los contract tests.
+- `PROPOSAL_SERVICE_TO_ASSET` es ahora **derivado** y su **orden de inserción es parte del contrato**
+  (ordena la tabla de servicios de la propuesta). FASE-C, que reescribe los dos builders de
+  `proposal_asset_alignment.py`, debe preservar ese orden o cambiarlo con decisión registrada.
+- `v4_proposal_generator.py:1281-1289` (`service_brecha_candidates`) ya **deriva su identidad** del
+  canónico; su **lógica** quedó intacta, como exigía A4. FASE-C reescribe la lógica sobre una identidad
+  ya unificada.
+- **FASE-B hereda una precondición dura (N-A1)**: `narratives` en
+  `v4_diagnostic_generator.py:3338-3339` descarta en silencio **11** pain_id. `missing_llmstxt` está a la
+  vez en los 9 pains muertos de V1 y en esa lista ⟹ darle punto de emisión sin tocar `narratives` deja
+  el fix de B **inerte**. Ver `10-analisis` §5 S6.
+- **FASE-F hereda**: `PAIN_TO_PRESENCE_ASSET` (6 entradas) **no** se derivó — la derivación completa
+  produce 13 y cambia la semántica de `apply_site_verification`. Es exactamente el doble oráculo de
+  A4/V15. Ver `10-analisis` §5 S8.
+- `pain_ledger.py` y `conditional_generator.py` quedan **liberados** (eran A-exclusivos).
+  `proposal_asset_alignment.py` y `v4_proposal_generator.py` pasan a C; `v4_diagnostic_generator.py`
+  pasa a H.
+
+---
+
 ## 1. Grafo de dependencias
 
 ```

@@ -124,12 +124,16 @@ def clear_benchmarks_cache() -> None:
 
 
 # ============================================================
-# ELEMENTO_KB_TO_PAIN_ID — ÚNICA FUENTE DE VERDAD
-# Conecta cada elemento del CHECKLIST_IAO (KB) con su pain_id
-# y el asset que lo resuelve.
-# Sincronizar con:
-#   - PainSolutionMapper.PAIN_SOLUTION_MAP
-#   - ASSET_CATALOG
+# ELEMENTO_KB_TO_PAIN_ID — elemento de knowledge-base → (pain_id, asset)
+# Conecta cada elemento de los CHECKLIST_SEO/GEO/AEO/IAO con el pain_id
+# que lo monetiza y el asset que lo remedia.
+#
+# FASE-A: los pain_ids se VALIDAN contra Capa 1 (PainSolutionMapper.PAIN_SOLUTION_MAP)
+# y los asset_types contra ASSET_CATALOG, por contrato automático en
+# tests/common/test_service_identity_registry.py. La identidad de los SERVICIOS
+# comerciales vive en modules/common/service_identity.py (Capa 2).
+# Un pain_id None significa: el gap se mide, pero no existe pain en Capa 1 que lo
+# nombre, así que no se monetiza como servicio propio.
 # ============================================================
 
 ELEMENTO_KB_TO_PAIN_ID: Dict[str, tuple] = {
@@ -147,13 +151,17 @@ ELEMENTO_KB_TO_PAIN_ID: Dict[str, tuple] = {
     "imagenes_alt":       ("missing_alt_text",    "alt_text_guide",      None),
     "blog_activo":        ("no_blog_content",     "blog_strategy_guide", None),
     "redes_activas":      ("no_social_links",     "social_strategy_guide", None),
-    # Nuevos elementos (FASE-A: 4-pilar scoring)
-    "speakable_schema":   ("no_speakable",        "voice_guide",         None),
-    "llms_txt_exists":    ("no_llms_txt",         "llms_txt",            None),
-    "crawler_access":     ("ia_crawler_blocked",  "optimization_guide",  None),
-    "brand_signals":      ("weak_brand_signals",  "org_schema",          None),
-    "schema_advanced":    ("no_entity_schema",    "org_schema",          None),
-    "contenido_factual":  ("no_factual_data",     "hotel_schema",        None),
+    # Elementos del 4-pilar scoring.
+    # pain_id None = el gap se mide, pero no existe pain en Capa 1 que lo nombre, así
+    # que no se monetiza como servicio propio. El asset se conserva cuando sí remedia
+    # el gap. speakable_schema tampoco tiene asset vendible: el único relacionado está
+    # DEPRECATED en ASSET_CATALOG y ningún servicio lo promete.
+    "speakable_schema":   (None,                  None,                  None),
+    "llms_txt_exists":    ("missing_llmstxt",     "llms_txt",            None),
+    "crawler_access":     ("ai_crawler_blocked",  "optimization_guide",  None),
+    "brand_signals":      (None,                  "org_schema",          None),
+    "schema_advanced":    (None,                  "org_schema",          None),
+    "contenido_factual":  (None,                  "hotel_schema",        None),
 }
 
 ELEMENTOS_MONETIZABLES: set = {

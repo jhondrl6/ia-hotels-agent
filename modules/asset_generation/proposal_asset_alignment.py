@@ -12,36 +12,35 @@ from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Dict, List, Any, Optional
 
+from ..common.service_identity import SERVICE_IDENTITIES
+
 
 # ==========================================================================
-# MAPPING: Proposal Service → Asset Type (Source of Truth)
+# MAPPING: Proposal Service → Asset Type
 # ==========================================================================
-# Each key is a service name as it appears in the commercial proposal.
-# Each value is the asset_type that should be generated for that service.
-
-PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
-    "SEO Local": "optimization_guide",
-    "Botón de WhatsApp": "whatsapp_button",
-    "Schema Hotel": "hotel_schema",
-    "Schema Organization": "org_schema",
-    # FASE-3 (BUG-10): monthly_report removed — always-on complement, not pain-driven.
-    # Asset still generated, but excluded from alignment counts.
-    # "Informe Mensual": "monthly_report",  # REMOVED
-    "Página de FAQ": "faq_page",
-    "Meta Tags Sociales (Open Graph)": "open_graph",
-    "Optimización para IA Generativa": "llms_txt",
-}
-
-# All 8 services that the proposal promises (as of FASE-12C):
-# - 7 base services (SEO, WhatsApp, Schema Hotel, Schema Organization, Monthly Report, FAQ, Open Graph)
-# - 1 conditional AEO service (Optimización para IA Generativa → llms_txt)
+# PROYECCIÓN de modules/common/service_identity.py (Capa 2), no una fuente propia.
+# Cada clave es el nombre del servicio tal como aparece en la propuesta; cada valor,
+# el asset_type que lo entrega. El ORDEN proviene del canónico y sostiene el orden de
+# filas de la tabla de servicios.
+#
+# `counts_in_alignment=False` deja fuera el complemento siempre-activo (Informe
+# Mensual, BUG-10 / FASE-3): se genera pero no se promete por pain, e incluirlo en el
+# recuento empeora coverage_ratio (medido en dossier §8.5).
+#
 # NOTE: Google Maps Optimizado was removed in FASE-PROP-D because geo_playbook
 # was redundant with geo_fix_kit.md and other GEO assets.
 # NOTE: "Datos Estructurados" was split into "Schema Hotel" + "Schema Organization" in FASE-12C
 # for commercial transparency.
-# SOURCE OF TRUTH: This dict is consumed by proposal_asset_alignment_gate (Gate 9)
-# and cross-referenced by coherence_validator._check_promised_assets_exist().
-# See FASE-SOL2-B for unification rationale.
+# Consumido por proposal_asset_alignment_gate (Gate 9) y verificado en cruz por
+# coherence_validator._check_promised_assets_exist(). Ver FASE-SOL2-B.
+
+PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
+    identidad.service_name: identidad.asset_type
+    for identidad in SERVICE_IDENTITIES
+    if identidad.counts_in_alignment
+}
+
+# Servicios que la propuesta promete: las claves de la proyección anterior.
 ALL_PROMISED_SERVICES: List[str] = list(PROPOSAL_SERVICE_TO_ASSET.keys())
 
 

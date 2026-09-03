@@ -1,0 +1,673 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 37 items
+
+tests/common/test_service_identity_registry.py::test_existe_modulo_canonico_de_identidad FAILED [  2%]
+tests/common/test_service_identity_registry.py::test_identidades_canonicas_tripla_completa_y_unica FAILED [  5%]
+tests/common/test_service_identity_registry.py::test_asset_types_canonicos_existen_en_asset_catalog FAILED [  8%]
+tests/common/test_service_identity_registry.py::test_pain_ids_canonicos_existen_en_pain_solution_map FAILED [ 10%]
+tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[no_speakable] FAILED [ 13%]
+tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[no_llms_txt] FAILED [ 16%]
+tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[ia_crawler_blocked] FAILED [ 18%]
+tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[weak_brand_signals] FAILED [ 21%]
+tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[no_entity_schema] FAILED [ 24%]
+tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[no_factual_data] FAILED [ 27%]
+tests/common/test_service_identity_registry.py::test_elemento_kb_no_declara_assets_fantasma FAILED [ 29%]
+tests/common/test_service_identity_registry.py::test_un_asset_no_se_atribuye_a_pains_distintos_entre_registros FAILED [ 32%]
+tests/common/test_service_identity_registry.py::test_monthly_report_resuelto_a_favor_del_canonico FAILED [ 35%]
+tests/common/test_service_identity_registry.py::test_divergencias_trigger_atribucion_declaradas_y_justificadas FAILED [ 37%]
+tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/asset_generation/proposal_asset_alignment.py-PROPOSAL_SERVICE_TO_ASSET] FAILED [ 40%]
+tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/asset_generation/proposal_asset_alignment.py-ALL_PROMISED_SERVICES] FAILED [ 43%]
+tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/asset_generation/pain_ledger.py-NORMALIZATION_RULES] FAILED [ 45%]
+tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/commercial_documents/service_catalog.py-SERVICE_CATALOG] FAILED [ 48%]
+tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/commercial_documents/v4_proposal_generator.py-ASSET_TO_PAIN_ID] FAILED [ 51%]
+tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/commercial_documents/v4_proposal_generator.py-service_brecha_candidates] FAILED [ 54%]
+tests/common/test_service_identity_registry.py::test_canonico_no_redeclara_tablas_paralelas FAILED [ 56%]
+tests/common/test_service_identity_registry.py::test_narrativa_no_hardcodea_conteo_de_servicios[modules/asset_generation/proposal_asset_alignment.py] FAILED [ 59%]
+tests/common/test_service_identity_registry.py::test_narrativa_no_hardcodea_conteo_de_servicios[modules/asset_generation/conditional_generator.py] PASSED [ 62%]
+tests/common/test_service_identity_registry.py::test_narrativa_no_hardcodea_conteo_de_servicios[modules/asset_generation/pain_ledger.py] PASSED [ 64%]
+tests/common/test_service_identity_registry.py::test_narrativa_no_hardcodea_conteo_de_servicios[modules/common/service_identity.py] SKIPPED [ 67%]
+tests/common/test_service_identity_registry.py::test_narrativa_no_hardcodea_conteo_de_servicios[modules/commercial_documents/service_catalog.py] PASSED [ 70%]
+tests/common/test_service_identity_registry.py::test_narrativa_no_hardcodea_conteo_de_servicios[modules/commercial_documents/v4_proposal_generator.py] FAILED [ 72%]
+tests/common/test_service_identity_registry.py::test_narrativa_no_hardcodea_conteo_de_servicios[modules/commercial_documents/v4_diagnostic_generator.py] PASSED [ 75%]
+tests/common/test_service_identity_registry.py::test_alignment_excluye_informe_mensual_por_diseno FAILED [ 78%]
+tests/common/test_service_identity_registry.py::test_elemento_kb_valida_contra_capa1 FAILED [ 81%]
+tests/common/test_service_identity_registry.py::test_pain_to_asset_valida_contra_capa1 PASSED [ 83%]
+tests/common/test_service_identity_registry.py::test_pain_to_type_es_un_puente_valido PASSED [ 86%]
+tests/common/test_service_identity_registry.py::test_narratives_subset_de_capa1 PASSED [ 89%]
+tests/common/test_service_identity_registry.py::test_invalid_mappings_valida_contra_capa1 PASSED [ 91%]
+tests/common/test_service_identity_registry.py::test_normalization_rules_es_biyeccion_con_capa1 FAILED [ 94%]
+tests/common/test_service_identity_registry.py::test_pain_to_presence_asset_valida_contra_capa1 PASSED [ 97%]
+tests/common/test_service_identity_registry.py::test_service_catalog_es_biyeccion_con_el_canonico FAILED [100%]
+
+================================== FAILURES ===================================
+__________________ test_existe_modulo_canonico_de_identidad ___________________
+
+    def test_existe_modulo_canonico_de_identidad():
+>       assert _ruta(CANONICO_REL).exists(), (
+               ^^^^^^^^^^^^^^^^^^^
+            f"Falta {CANONICO_REL}: FASE-A AC1 exige UNA fuente de identidad "
+            f"servicio\u2194asset\u2194pain de la que deriven los registros censados."
+        )
+
+tests\common\test_service_identity_registry.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+rel = 'modules/common/service_identity.py'
+
+    def _ruta(rel: str) -> Path:
+        path = REPO_ROOT / rel
+>       assert path.exists(), f"No existe {rel}"
+E       AssertionError: No existe modules/common/service_identity.py
+E       assert False
+E        +  where False = exists()
+E        +    where exists = WindowsPath('C:/Users/Jhond/Github/iah-cli/modules/common/service_identity.py').exists
+
+tests\common\test_service_identity_registry.py:100: AssertionError
+_____________ test_identidades_canonicas_tripla_completa_y_unica ______________
+
+    def test_identidades_canonicas_tripla_completa_y_unica():
+>       canon = _canonico()
+                ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+_____________ test_asset_types_canonicos_existen_en_asset_catalog _____________
+
+    def test_asset_types_canonicos_existen_en_asset_catalog():
+>       for i in _canonico().SERVICE_IDENTITIES:
+                 ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+____________ test_pain_ids_canonicos_existen_en_pain_solution_map _____________
+
+    def test_pain_ids_canonicos_existen_en_pain_solution_map():
+        """Capa 1: el canónico de Capa 2 no puede inventar pains."""
+>       for i in _canonico().SERVICE_IDENTITIES:
+                 ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:244: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+___________ test_cero_ids_fantasma_en_alcance_del_ac1[no_speakable] ___________
+
+fantasma = 'no_speakable'
+
+    @pytest.mark.parametrize("fantasma", IDS_FANTASMA)
+    def test_cero_ids_fantasma_en_alcance_del_ac1(fantasma):
+        """Un pain_id que no existe en PAIN_SOLUTION_MAP no puede disparar nada: la brecha
+        se declara y nunca se detecta. Es el mecanismo exacto de V2."""
+        apariciones = []
+        for carpeta in ALCANCE_FANTASMAS:
+            for path in sorted((REPO_ROOT / carpeta).rglob("*.py")):
+                if "__pycache__" in path.parts:
+                    continue
+                for n, linea in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                    if fantasma in linea:
+                        apariciones.append(f"{path.relative_to(REPO_ROOT)}:{n}")
+>       assert not apariciones, (
+            f"ID fantasma '{fantasma}' sigue presente (no existe en PAIN_SOLUTION_MAP): "
+            + ", ".join(apariciones)
+        )
+E       AssertionError: ID fantasma 'no_speakable' sigue presente (no existe en PAIN_SOLUTION_MAP): modules\commercial_documents\v4_diagnostic_generator.py:151
+E       assert not ['modules\\commercial_documents\\v4_diagnostic_generator.py:151']
+
+tests\common\test_service_identity_registry.py:270: AssertionError
+___________ test_cero_ids_fantasma_en_alcance_del_ac1[no_llms_txt] ____________
+
+fantasma = 'no_llms_txt'
+
+    @pytest.mark.parametrize("fantasma", IDS_FANTASMA)
+    def test_cero_ids_fantasma_en_alcance_del_ac1(fantasma):
+        """Un pain_id que no existe en PAIN_SOLUTION_MAP no puede disparar nada: la brecha
+        se declara y nunca se detecta. Es el mecanismo exacto de V2."""
+        apariciones = []
+        for carpeta in ALCANCE_FANTASMAS:
+            for path in sorted((REPO_ROOT / carpeta).rglob("*.py")):
+                if "__pycache__" in path.parts:
+                    continue
+                for n, linea in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                    if fantasma in linea:
+                        apariciones.append(f"{path.relative_to(REPO_ROOT)}:{n}")
+>       assert not apariciones, (
+            f"ID fantasma '{fantasma}' sigue presente (no existe en PAIN_SOLUTION_MAP): "
+            + ", ".join(apariciones)
+        )
+E       AssertionError: ID fantasma 'no_llms_txt' sigue presente (no existe en PAIN_SOLUTION_MAP): modules\commercial_documents\v4_diagnostic_generator.py:152
+E       assert not ['modules\\commercial_documents\\v4_diagnostic_generator.py:152']
+
+tests\common\test_service_identity_registry.py:270: AssertionError
+________ test_cero_ids_fantasma_en_alcance_del_ac1[ia_crawler_blocked] ________
+
+fantasma = 'ia_crawler_blocked'
+
+    @pytest.mark.parametrize("fantasma", IDS_FANTASMA)
+    def test_cero_ids_fantasma_en_alcance_del_ac1(fantasma):
+        """Un pain_id que no existe en PAIN_SOLUTION_MAP no puede disparar nada: la brecha
+        se declara y nunca se detecta. Es el mecanismo exacto de V2."""
+        apariciones = []
+        for carpeta in ALCANCE_FANTASMAS:
+            for path in sorted((REPO_ROOT / carpeta).rglob("*.py")):
+                if "__pycache__" in path.parts:
+                    continue
+                for n, linea in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                    if fantasma in linea:
+                        apariciones.append(f"{path.relative_to(REPO_ROOT)}:{n}")
+>       assert not apariciones, (
+            f"ID fantasma '{fantasma}' sigue presente (no existe en PAIN_SOLUTION_MAP): "
+            + ", ".join(apariciones)
+        )
+E       AssertionError: ID fantasma 'ia_crawler_blocked' sigue presente (no existe en PAIN_SOLUTION_MAP): modules\commercial_documents\v4_diagnostic_generator.py:153
+E       assert not ['modules\\commercial_documents\\v4_diagnostic_generator.py:153']
+
+tests\common\test_service_identity_registry.py:270: AssertionError
+________ test_cero_ids_fantasma_en_alcance_del_ac1[weak_brand_signals] ________
+
+fantasma = 'weak_brand_signals'
+
+    @pytest.mark.parametrize("fantasma", IDS_FANTASMA)
+    def test_cero_ids_fantasma_en_alcance_del_ac1(fantasma):
+        """Un pain_id que no existe en PAIN_SOLUTION_MAP no puede disparar nada: la brecha
+        se declara y nunca se detecta. Es el mecanismo exacto de V2."""
+        apariciones = []
+        for carpeta in ALCANCE_FANTASMAS:
+            for path in sorted((REPO_ROOT / carpeta).rglob("*.py")):
+                if "__pycache__" in path.parts:
+                    continue
+                for n, linea in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                    if fantasma in linea:
+                        apariciones.append(f"{path.relative_to(REPO_ROOT)}:{n}")
+>       assert not apariciones, (
+            f"ID fantasma '{fantasma}' sigue presente (no existe en PAIN_SOLUTION_MAP): "
+            + ", ".join(apariciones)
+        )
+E       AssertionError: ID fantasma 'weak_brand_signals' sigue presente (no existe en PAIN_SOLUTION_MAP): modules\commercial_documents\v4_diagnostic_generator.py:154
+E       assert not ['modules\\commercial_documents\\v4_diagnostic_generator.py:154']
+
+tests\common\test_service_identity_registry.py:270: AssertionError
+_________ test_cero_ids_fantasma_en_alcance_del_ac1[no_entity_schema] _________
+
+fantasma = 'no_entity_schema'
+
+    @pytest.mark.parametrize("fantasma", IDS_FANTASMA)
+    def test_cero_ids_fantasma_en_alcance_del_ac1(fantasma):
+        """Un pain_id que no existe en PAIN_SOLUTION_MAP no puede disparar nada: la brecha
+        se declara y nunca se detecta. Es el mecanismo exacto de V2."""
+        apariciones = []
+        for carpeta in ALCANCE_FANTASMAS:
+            for path in sorted((REPO_ROOT / carpeta).rglob("*.py")):
+                if "__pycache__" in path.parts:
+                    continue
+                for n, linea in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                    if fantasma in linea:
+                        apariciones.append(f"{path.relative_to(REPO_ROOT)}:{n}")
+>       assert not apariciones, (
+            f"ID fantasma '{fantasma}' sigue presente (no existe en PAIN_SOLUTION_MAP): "
+            + ", ".join(apariciones)
+        )
+E       AssertionError: ID fantasma 'no_entity_schema' sigue presente (no existe en PAIN_SOLUTION_MAP): modules\commercial_documents\v4_diagnostic_generator.py:155
+E       assert not ['modules\\commercial_documents\\v4_diagnostic_generator.py:155']
+
+tests\common\test_service_identity_registry.py:270: AssertionError
+_________ test_cero_ids_fantasma_en_alcance_del_ac1[no_factual_data] __________
+
+fantasma = 'no_factual_data'
+
+    @pytest.mark.parametrize("fantasma", IDS_FANTASMA)
+    def test_cero_ids_fantasma_en_alcance_del_ac1(fantasma):
+        """Un pain_id que no existe en PAIN_SOLUTION_MAP no puede disparar nada: la brecha
+        se declara y nunca se detecta. Es el mecanismo exacto de V2."""
+        apariciones = []
+        for carpeta in ALCANCE_FANTASMAS:
+            for path in sorted((REPO_ROOT / carpeta).rglob("*.py")):
+                if "__pycache__" in path.parts:
+                    continue
+                for n, linea in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                    if fantasma in linea:
+                        apariciones.append(f"{path.relative_to(REPO_ROOT)}:{n}")
+>       assert not apariciones, (
+            f"ID fantasma '{fantasma}' sigue presente (no existe en PAIN_SOLUTION_MAP): "
+            + ", ".join(apariciones)
+        )
+E       AssertionError: ID fantasma 'no_factual_data' sigue presente (no existe en PAIN_SOLUTION_MAP): modules\commercial_documents\v4_diagnostic_generator.py:156
+E       assert not ['modules\\commercial_documents\\v4_diagnostic_generator.py:156']
+
+tests\common\test_service_identity_registry.py:270: AssertionError
+_________________ test_elemento_kb_no_declara_assets_fantasma _________________
+
+    def test_elemento_kb_no_declara_assets_fantasma():
+        """Complemento de N-A4: el asset de la tupla también debe existir."""
+        from modules.commercial_documents.v4_diagnostic_generator import ELEMENTO_KB_TO_PAIN_ID
+    
+        for kb, tupla in ELEMENTO_KB_TO_PAIN_ID.items():
+            for posicion, asset in ((1, tupla[1]), (2, tupla[2])):
+                if asset is None:
+                    continue
+>               assert asset in ASSET_TYPES_CONOCIDOS, (
+                    f"ELEMENTO_KB_TO_PAIN_ID['{kb}'][{posicion}] = '{asset}' no existe en "
+                    f"ASSET_CATALOG"
+                )
+E               AssertionError: ELEMENTO_KB_TO_PAIN_ID['speakable_schema'][1] = 'voice_guide' no existe en ASSET_CATALOG
+E               assert 'voice_guide' in {'alt_text_guide', 'analytics_setup_guide', 'barra_reserva_movil', 'blog_strategy_guide', 'direct_booking_campaign', 'faq_page', ...}
+
+tests\common\test_service_identity_registry.py:284: AssertionError
+_______ test_un_asset_no_se_atribuye_a_pains_distintos_entre_registros ________
+
+    def test_un_asset_no_se_atribuye_a_pains_distintos_entre_registros():
+        """Caso V3: `ASSET_TO_PAIN_ID['monthly_report'] = 'no_faq_schema'` mientras
+        SERVICE_CATALOG decía `no_monthly_report`. Dos verdades para el mismo asset.
+    
+        El esperado se CALCULA desde el canónico (anti-lección L-NC10): pain canónico más
+        las brechas declaradas por esa identidad, más las divergencias revisadas a mano.
+        """
+>       canon = _canonico()
+                ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:347: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+______________ test_monthly_report_resuelto_a_favor_del_canonico ______________
+
+    def test_monthly_report_resuelto_a_favor_del_canonico():
+        """AC3 explícito. La perla de V3 era un fósil de la inversión de claves previa a
+        FASE-2 (asset_type usado como pain_id), ya documentada en
+        `asset_semantics_validator.py:23-25`."""
+        node, _ = _binding("modules/commercial_documents/v4_proposal_generator.py", "ASSET_TO_PAIN_ID")
+        if isinstance(node, ast.Dict):
+            literal = {
+                k.value: v.value
+                for k, v in zip(node.keys, node.values)
+                if isinstance(k, ast.Constant) and isinstance(v, ast.Constant)
+            }
+>           assert literal.get("monthly_report") != "no_faq_schema", (
+                "ASSET_TO_PAIN_ID sigue atribuyendo monthly_report a no_faq_schema (V3)"
+            )
+E           AssertionError: ASSET_TO_PAIN_ID sigue atribuyendo monthly_report a no_faq_schema (V3)
+E           assert 'no_faq_schema' != 'no_faq_schema'
+E            +  where 'no_faq_schema' = <built-in method get of dict object at 0x0000027F21DD63C0>('monthly_report')
+E            +    where <built-in method get of dict object at 0x0000027F21DD63C0> = {'faq_page': 'no_faq_schema', 'hotel_schema': 'no_hotel_schema', 'llms_txt': 'missing_llmstxt', 'monthly_report': 'no_faq_schema', ...}.get
+
+tests\common\test_service_identity_registry.py:379: AssertionError
+_______ test_divergencias_trigger_atribucion_declaradas_y_justificadas ________
+
+    def test_divergencias_trigger_atribucion_declaradas_y_justificadas():
+        """\xa75.4 del censo: trigger (qu\xe9 pain dispara el servicio) \u2260 atribuci\xf3n (qu\xe9 brecha
+        se le imputa en la tabla). Ambas mitades son legítimas y las sostiene
+        PAIN_SOLUTION_MAP, pero NINGÚN registro las expresaba. Ahora se declaran."""
+>       canon = _canonico()
+                ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:391: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+_ test_registro_derivado_no_es_una_copia_literal[modules/asset_generation/proposal_asset_alignment.py-PROPOSAL_SERVICE_TO_ASSET] _
+
+rel = 'modules/asset_generation/proposal_asset_alignment.py'
+nombre = 'PROPOSAL_SERVICE_TO_ASSET'
+
+    @pytest.mark.parametrize("rel,nombre", REGISTROS_DERIVADOS)
+    def test_registro_derivado_no_es_una_copia_literal(rel, nombre):
+        """Una copia literal es drift garantizado: nada la obliga a seguir a la fuente.
+        El esperado no es una lista de nombres fijos — se calcula la superficie pública
+        del canónico más las fuentes de Capa 1 ya legitimadas."""
+>       canon = _canonico()
+                ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:422: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+_ test_registro_derivado_no_es_una_copia_literal[modules/asset_generation/proposal_asset_alignment.py-ALL_PROMISED_SERVICES] _
+
+rel = 'modules/asset_generation/proposal_asset_alignment.py'
+nombre = 'ALL_PROMISED_SERVICES'
+
+    @pytest.mark.parametrize("rel,nombre", REGISTROS_DERIVADOS)
+    def test_registro_derivado_no_es_una_copia_literal(rel, nombre):
+        """Una copia literal es drift garantizado: nada la obliga a seguir a la fuente.
+        El esperado no es una lista de nombres fijos — se calcula la superficie pública
+        del canónico más las fuentes de Capa 1 ya legitimadas."""
+>       canon = _canonico()
+                ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:422: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+_ test_registro_derivado_no_es_una_copia_literal[modules/asset_generation/pain_ledger.py-NORMALIZATION_RULES] _
+
+rel = 'modules/asset_generation/pain_ledger.py', nombre = 'NORMALIZATION_RULES'
+
+    @pytest.mark.parametrize("rel,nombre", REGISTROS_DERIVADOS)
+    def test_registro_derivado_no_es_una_copia_literal(rel, nombre):
+        """Una copia literal es drift garantizado: nada la obliga a seguir a la fuente.
+        El esperado no es una lista de nombres fijos — se calcula la superficie pública
+        del canónico más las fuentes de Capa 1 ya legitimadas."""
+>       canon = _canonico()
+                ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:422: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+_ test_registro_derivado_no_es_una_copia_literal[modules/commercial_documents/service_catalog.py-SERVICE_CATALOG] _
+
+rel = 'modules/commercial_documents/service_catalog.py'
+nombre = 'SERVICE_CATALOG'
+
+    @pytest.mark.parametrize("rel,nombre", REGISTROS_DERIVADOS)
+    def test_registro_derivado_no_es_una_copia_literal(rel, nombre):
+        """Una copia literal es drift garantizado: nada la obliga a seguir a la fuente.
+        El esperado no es una lista de nombres fijos — se calcula la superficie pública
+        del canónico más las fuentes de Capa 1 ya legitimadas."""
+>       canon = _canonico()
+                ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:422: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+_ test_registro_derivado_no_es_una_copia_literal[modules/commercial_documents/v4_proposal_generator.py-ASSET_TO_PAIN_ID] _
+
+rel = 'modules/commercial_documents/v4_proposal_generator.py'
+nombre = 'ASSET_TO_PAIN_ID'
+
+    @pytest.mark.parametrize("rel,nombre", REGISTROS_DERIVADOS)
+    def test_registro_derivado_no_es_una_copia_literal(rel, nombre):
+        """Una copia literal es drift garantizado: nada la obliga a seguir a la fuente.
+        El esperado no es una lista de nombres fijos — se calcula la superficie pública
+        del canónico más las fuentes de Capa 1 ya legitimadas."""
+>       canon = _canonico()
+                ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:422: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+_ test_registro_derivado_no_es_una_copia_literal[modules/commercial_documents/v4_proposal_generator.py-service_brecha_candidates] _
+
+rel = 'modules/commercial_documents/v4_proposal_generator.py'
+nombre = 'service_brecha_candidates'
+
+    @pytest.mark.parametrize("rel,nombre", REGISTROS_DERIVADOS)
+    def test_registro_derivado_no_es_una_copia_literal(rel, nombre):
+        """Una copia literal es drift garantizado: nada la obliga a seguir a la fuente.
+        El esperado no es una lista de nombres fijos — se calcula la superficie pública
+        del canónico más las fuentes de Capa 1 ya legitimadas."""
+>       canon = _canonico()
+                ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:422: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+_________________ test_canonico_no_redeclara_tablas_paralelas _________________
+
+    def test_canonico_no_redeclara_tablas_paralelas():
+        """Guardrail L-NC4: el canónico debe añadir IDENTIDAD, no una nueva tabla de
+        pain_id\u2192texto que compita con PAIN_SOLUTION_MAP."""
+>       canon = _canonico()
+                ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:442: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+_ test_narrativa_no_hardcodea_conteo_de_servicios[modules/asset_generation/proposal_asset_alignment.py] _
+
+rel = 'modules/asset_generation/proposal_asset_alignment.py'
+
+    @pytest.mark.parametrize("rel", MODULOS_NARRATIVA)
+    def test_narrativa_no_hardcodea_conteo_de_servicios(rel):
+        """El drift «8 vs 7» sobrevivió porque la narrativa fijaba un número que el código
+        ya no cumplía. Comparar el número contra la fuente solo lo esconde hasta el próximo
+        cambio: la forma duradera es PROHIBIR el numeral y nombrar el registro.
+    
+        (Anti-lección L-NC10: no se fija `== 7` ni `== 8` en ningún sitio.)
+        """
+        if not (REPO_ROOT / rel).exists():
+            pytest.skip(f"{rel} aún no existe")
+        culpables = []
+        for lineno, texto in _tokens_texto(rel):
+            limpio = " ".join(texto.split())
+            if NUMERAL_ANTES.search(limpio) or NUMERAL_DESPUES.search(limpio):
+                culpables.append(f"L{lineno}: {limpio[:110]}")
+>       assert not culpables, (
+            f"{rel} hardcodea un conteo de servicios en narrativa: " + " | ".join(culpables)
+            + " || Nombrar el registro (PROPOSAL_SERVICE_TO_ASSET / SERVICE_IDENTITIES) en "
+            "vez del número: el número es lo que derivó en «8 vs 7» (V14)."
+        )
+E       AssertionError: modules/asset_generation/proposal_asset_alignment.py hardcodea un conteo de servicios en narrativa: L35: # All 8 services that the proposal promises (as of FASE-12C): || Nombrar el registro (PROPOSAL_SERVICE_TO_ASSET / SERVICE_IDENTITIES) en vez del número: el número es lo que derivó en «8 vs 7» (V14).
+E       assert not ['L35: # All 8 services that the proposal promises (as of FASE-12C):']
+
+tests\common\test_service_identity_registry.py:487: AssertionError
+_ test_narrativa_no_hardcodea_conteo_de_servicios[modules/commercial_documents/v4_proposal_generator.py] _
+
+rel = 'modules/commercial_documents/v4_proposal_generator.py'
+
+    @pytest.mark.parametrize("rel", MODULOS_NARRATIVA)
+    def test_narrativa_no_hardcodea_conteo_de_servicios(rel):
+        """El drift «8 vs 7» sobrevivió porque la narrativa fijaba un número que el código
+        ya no cumplía. Comparar el número contra la fuente solo lo esconde hasta el próximo
+        cambio: la forma duradera es PROHIBIR el numeral y nombrar el registro.
+    
+        (Anti-lección L-NC10: no se fija `== 7` ni `== 8` en ningún sitio.)
+        """
+        if not (REPO_ROOT / rel).exists():
+            pytest.skip(f"{rel} aún no existe")
+        culpables = []
+        for lineno, texto in _tokens_texto(rel):
+            limpio = " ".join(texto.split())
+            if NUMERAL_ANTES.search(limpio) or NUMERAL_DESPUES.search(limpio):
+                culpables.append(f"L{lineno}: {limpio[:110]}")
+>       assert not culpables, (
+            f"{rel} hardcodea un conteo de servicios en narrativa: " + " | ".join(culpables)
+            + " || Nombrar el registro (PROPOSAL_SERVICE_TO_ASSET / SERVICE_IDENTITIES) en "
+            "vez del número: el número es lo que derivó en «8 vs 7» (V14)."
+        )
+E       AssertionError: modules/commercial_documents/v4_proposal_generator.py hardcodea un conteo de servicios en narrativa: L1330: """Genera tabla principal de servicios mostrando TODOS los servicios prometidos. FASE-2: Ahora muestra los 8 s | L1396: # plus AEO conditional — always show 8 services with status || Nombrar el registro (PROPOSAL_SERVICE_TO_ASSET / SERVICE_IDENTITIES) en vez del número: el número es lo que derivó en «8 vs 7» (V14).
+E       assert not ['L1330: """Genera tabla principal de servicios mostrando TODOS los servicios prometidos. FASE-2: Ahora muestra los 8 s', 'L1396: # plus AEO conditional — always show 8 services with status']
+
+tests\common\test_service_identity_registry.py:487: AssertionError
+______________ test_alignment_excluye_informe_mensual_por_diseno ______________
+
+    def test_alignment_excluye_informe_mensual_por_diseno():
+        """BUG-10 / FASE-3: `monthly_report` es complemento siempre-activo, no servicio
+        dirigido por pain. Contar 8 en alignment empeora coverage_ratio (0.571\u21920.500,
+        medido en dossier §8.5) — de ahí la restricción «NO agregar el 8º servicio».
+    
+        El esperado se calcula desde `counts_in_alignment`, no se fija en 7.
+        """
+        from modules.asset_generation.proposal_asset_alignment import (
+            ALL_PROMISED_SERVICES,
+            PROPOSAL_SERVICE_TO_ASSET,
+        )
+    
+>       esperados = {i.service_name for i in _canonico().SERVICE_IDENTITIES if i.counts_in_alignment}
+                                             ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:506: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+____________________ test_elemento_kb_valida_contra_capa1 _____________________
+
+    def test_elemento_kb_valida_contra_capa1():
+        from modules.commercial_documents.v4_diagnostic_generator import ELEMENTO_KB_TO_PAIN_ID
+    
+        invalidos = [
+            f"{kb}\u2192{tupla[0]}" for kb, tupla in ELEMENTO_KB_TO_PAIN_ID.items()
+            if tupla[0] is not None and tupla[0] not in PAIN_IDS_CANONICOS
+        ]
+>       assert not invalidos, (
+            "ELEMENTO_KB_TO_PAIN_ID declara pain_ids fuera de Capa 1: " + ", ".join(invalidos)
+        )
+E       AssertionError: ELEMENTO_KB_TO_PAIN_ID declara pain_ids fuera de Capa 1: speakable_schema\u2192no_speakable, llms_txt_exists\u2192no_llms_txt, crawler_access\u2192ia_crawler_blocked, brand_signals\u2192weak_brand_signals, schema_advanced\u2192no_entity_schema, contenido_factual\u2192no_factual_data
+E       assert not ['speakable_schema\u2192no_speakable', 'llms_txt_exists\u2192no_llms_txt', 'crawler_access\u2192ia_crawler_blocked', 'brand_signals\u2192weak_brand_signals', 'schema_advanced\u2192no_entity_schema', 'contenido_factual\u2192no_factual_data']
+
+tests\common\test_service_identity_registry.py:528: AssertionError
+_______________ test_normalization_rules_es_biyeccion_con_capa1 _______________
+
+    def test_normalization_rules_es_biyeccion_con_capa1():
+        """N-A2: 26 reglas para 27 pains, con la clave obsoleta 'No WhatsApp Visible' y sin
+        `low_seo_score`. Derivarlo de Capa 1 corrige ambos defectos a costo conductual cero:
+        `normalize()` se aplica sobre `pain.id`, que ya viene canonicalizado."""
+        from modules.asset_generation.pain_ledger import PainLedger
+    
+        NORMALIZATION_RULES = PainLedger.NORMALIZATION_RULES
+        esperado = {v["name"]: k for k, v in PAIN_SOLUTION_MAP.items()}
+>       assert set(NORMALIZATION_RULES) == set(esperado), (
+            f"NORMALIZATION_RULES no es biyección con PAIN_SOLUTION_MAP. "
+            f"Sobran {sorted(set(NORMALIZATION_RULES) - set(esperado))}, "
+            f"faltan {sorted(set(esperado) - set(NORMALIZATION_RULES))}"
+        )
+E       AssertionError: NORMALIZATION_RULES no es biyección con PAIN_SOLUTION_MAP. Sobran ['No WhatsApp Visible'], faltan ['SEO Local Bajo', 'Sin WhatsApp Visible']
+E       assert {'Alta Depend...hatsApp', ...} == {'Alta Depend...hatsApp', ...}
+E         
+E         Extra items in the left set:
+E         'No WhatsApp Visible'
+E         Extra items in the right set:
+E         'Sin WhatsApp Visible'
+E         'SEO Local Bajo'
+E         ...
+E         
+E         ...Full output truncated (31 lines hidden), use '-vv' to show
+
+tests\common\test_service_identity_registry.py:602: AssertionError
+______________ test_service_catalog_es_biyeccion_con_el_canonico ______________
+
+    def test_service_catalog_es_biyeccion_con_el_canonico():
+        """SERVICE_CATALOG era el único registro con la tripleta completa; por eso es la
+        base de Capa 2. Debe quedar en biyección exacta con SERVICE_IDENTITIES."""
+        from modules.commercial_documents.service_catalog import SERVICE_CATALOG
+    
+>       identidades = {i.key: i for i in _canonico().SERVICE_IDENTITIES}
+                                         ^^^^^^^^^^^
+
+tests\common\test_service_identity_registry.py:631: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def _canonico():
+>       from modules.common import service_identity
+E       ImportError: cannot import name 'service_identity' from 'modules.common' (C:\Users\Jhond\Github\iah-cli\modules\common\__init__.py)
+
+tests\common\test_service_identity_registry.py:194: ImportError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+tests/common/test_service_identity_registry.py::test_pain_to_type_es_un_puente_valido
+tests/common/test_service_identity_registry.py::test_narratives_subset_de_capa1
+  <unknown>:811: SyntaxWarning: invalid escape sequence '\W'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/common/test_service_identity_registry.py::test_existe_modulo_canonico_de_identidad
+FAILED tests/common/test_service_identity_registry.py::test_identidades_canonicas_tripla_completa_y_unica
+FAILED tests/common/test_service_identity_registry.py::test_asset_types_canonicos_existen_en_asset_catalog
+FAILED tests/common/test_service_identity_registry.py::test_pain_ids_canonicos_existen_en_pain_solution_map
+FAILED tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[no_speakable]
+FAILED tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[no_llms_txt]
+FAILED tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[ia_crawler_blocked]
+FAILED tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[weak_brand_signals]
+FAILED tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[no_entity_schema]
+FAILED tests/common/test_service_identity_registry.py::test_cero_ids_fantasma_en_alcance_del_ac1[no_factual_data]
+FAILED tests/common/test_service_identity_registry.py::test_elemento_kb_no_declara_assets_fantasma
+FAILED tests/common/test_service_identity_registry.py::test_un_asset_no_se_atribuye_a_pains_distintos_entre_registros
+FAILED tests/common/test_service_identity_registry.py::test_monthly_report_resuelto_a_favor_del_canonico
+FAILED tests/common/test_service_identity_registry.py::test_divergencias_trigger_atribucion_declaradas_y_justificadas
+FAILED tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/asset_generation/proposal_asset_alignment.py-PROPOSAL_SERVICE_TO_ASSET]
+FAILED tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/asset_generation/proposal_asset_alignment.py-ALL_PROMISED_SERVICES]
+FAILED tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/asset_generation/pain_ledger.py-NORMALIZATION_RULES]
+FAILED tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/commercial_documents/service_catalog.py-SERVICE_CATALOG]
+FAILED tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/commercial_documents/v4_proposal_generator.py-ASSET_TO_PAIN_ID]
+FAILED tests/common/test_service_identity_registry.py::test_registro_derivado_no_es_una_copia_literal[modules/commercial_documents/v4_proposal_generator.py-service_brecha_candidates]
+FAILED tests/common/test_service_identity_registry.py::test_canonico_no_redeclara_tablas_paralelas
+FAILED tests/common/test_service_identity_registry.py::test_narrativa_no_hardcodea_conteo_de_servicios[modules/asset_generation/proposal_asset_alignment.py]
+FAILED tests/common/test_service_identity_registry.py::test_narrativa_no_hardcodea_conteo_de_servicios[modules/commercial_documents/v4_proposal_generator.py]
+FAILED tests/common/test_service_identity_registry.py::test_alignment_excluye_informe_mensual_por_diseno
+FAILED tests/common/test_service_identity_registry.py::test_elemento_kb_valida_contra_capa1
+FAILED tests/common/test_service_identity_registry.py::test_normalization_rules_es_biyeccion_con_capa1
+FAILED tests/common/test_service_identity_registry.py::test_service_catalog_es_biyeccion_con_el_canonico
+============ 27 failed, 9 passed, 1 skipped, 10 warnings in 1.83s =============

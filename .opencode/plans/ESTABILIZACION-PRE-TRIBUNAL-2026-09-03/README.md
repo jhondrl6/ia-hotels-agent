@@ -1,6 +1,6 @@
 # ESTABILIZACION-PRE-TRIBUNAL-2026-09-03
 
-> **Versión objetivo**: 4.75.0 | **Estado**: 🟡 PLAN CONCEBIDO — 0 de 11 sesiones ejecutadas
+> **Versión objetivo**: 4.75.0 | **Estado**: 🟡 EN EJECUCIÓN — 1 de 11 sesiones ejecutadas (FASE-A ✅ 2026-09-03)
 > **Workflow**: `phased_project_executor.md` v2.18.0 (R1: una fase/sesión, R2: ≤60 iteraciones, R3: ≤4 tareas de investigación/fix ó 3 tareas + 1 comando largo)
 > **Contexto fuente**: `.opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md` (dossier de estabilización pre-tribunal, 717 líneas)
 > **Anclaje estratégico**: `ROADMAP.md` v4.2 §7.2 (FASE T) y §13 (deudas P9/P10/P12/H7/H9/H10)
@@ -210,7 +210,7 @@ Recuperadas de QMind `iah-cli-lecciones` (8 fuentes) y de 3 memorias de proyecto
 
 | Fase | Estado | Fecha | Iteraciones | Tests nuevos | Notas |
 |------|--------|-------|-------------|--------------|-------|
-| FASE-A | ⬜ Pendiente | — | — | — | Fuente única de identidad |
+| FASE-A | ✅ Completada | 2026-09-03 | 55/55 | 21 func. test (37 casos) | Canónico en `modules/common/service_identity.py` (dos capas); 6 registros derivados, 6 validados contra Capa 1; 0 IDs fantasma; drift «8 vs 7» disuelto en sus 3 copias; AC1/AC2/AC3 ✅ |
 | FASE-B | ⬜ Pendiente | — | — | — | Biyección mapa↔emisión |
 | FASE-C | ⬜ Pendiente | — | — | — | Punto 8 propuesta dinámica |
 | FASE-D | ⬜ Pendiente | — | — | — | Severidad 11+2 |

@@ -28,6 +28,7 @@ from modules.financial_engine.pillar_maturity_curve import aplicar_curva_4_pilar
 from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
 from modules.asset_generation.site_presence_checker import is_present_in_production
 from modules.commercial_documents.service_catalog import SERVICE_CATALOG, TECHNICAL_ASSET_CATALOG
+from modules.common.service_identity import SERVICE_IDENTITIES
 from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
 # FASE-SR-G (L27): glosario único jerga → lenguaje de negocio (compartido
 # con el gate CG-TECH-JARGON y el generador de diagnóstico).
@@ -1274,18 +1275,15 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             for asset in entry.get("assets", []):
                 asset_candidates.setdefault(asset, []).append(bid)
 
-        # Brechas candidatas por asset de la tabla de servicios (auditadas,
-        # coherentes con la inversión de PAIN_SOLUTION_MAP). Solo estas brechas
-        # pueden atribuirse a cada servicio — evita atribuir al servicio una
-        # brecha de otro dominio (ej: ai_crawler_blocked → llms_txt).
+        # Brechas candidatas por asset de la tabla de servicios: proyección de la
+        # ATRIBUCIÓN declarada en modules/common/service_identity.py (Capa 2). Solo
+        # estas brechas pueden atribuirse a cada servicio — evita atribuir al servicio
+        # una brecha de otro dominio. FASE-A deriva la identidad; la lógica de abajo
+        # (defensa RC1 y desempate por rank) no cambia: la propuesta dinámica es FASE-C.
         service_brecha_candidates = {
-            "optimization_guide": ["low_seo_score", "low_content_length"],
-            "whatsapp_button": ["whatsapp_conflict", "no_whatsapp_visible"],
-            "hotel_schema": ["no_hotel_schema"],
-            "org_schema": ["no_org_schema"],
-            "faq_page": ["no_faq_schema"],
-            "open_graph": ["no_og_tags"],
-            "llms_txt": ["missing_llmstxt"],
+            identidad.asset_type: list(identidad.brecha_candidates)
+            for identidad in SERVICE_IDENTITIES
+            if identidad.brecha_candidates
         }
 
         for asset_type, candidates in service_brecha_candidates.items():
@@ -1329,9 +1327,11 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
     ) -> str:
         """Genera tabla principal de servicios mostrando TODOS los servicios prometidos.
 
-        FASE-2: Ahora muestra los 8 servicios definidos en PROPOSAL_SERVICE_TO_ASSET
-        con sus estados reales (aligned, missing, present_in_production), en vez de
-        filtrar dinámicamente por assets generados o pains detectados.
+        FASE-2: muestra los servicios definidos en PROPOSAL_SERVICE_TO_ASSET con sus
+        estados reales (aligned, missing, present_in_production), en vez de filtrar
+        dinámicamente por assets generados o pains detectados. FASE-A: ese registro es
+        una proyección de modules/common/service_identity.py, así que la fila del
+        complemento siempre-activo (counts_in_alignment=False) no aparece aquí.
 
         FASE-C CROSS-2: Columna adicional 'Problema que resuelve' conecta cada servicio
         con la brecha del diagnóstico que resuelve.
@@ -1359,16 +1359,15 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                 modo legacy (sin pain_ledger): filtro has_asset/is_present.
 
         Returns:
-            String markdown con la tabla de servicios (8 filas + header).
+            String markdown con la tabla de servicios (una fila por servicio prometido,
+            más el header).
         """
-        # FASE-3 B1: ASSET_TO_PAIN_ID para validacion semantica
+        # FASE-3 B1 / FASE-A (AC3): TRIGGER canónico por asset, para la validación
+        # semántica. Derivado de Capa 2: la copia literal anterior atribuía
+        # monthly_report al pain de FAQ — fósil de la inversión de claves pre-FASE-2
+        # que asset_semantics_validator ya había auditado en su propio diccionario.
         ASSET_TO_PAIN_ID = {
-            "monthly_report":         "no_faq_schema",
-            "faq_page":               "no_faq_schema",
-            "hotel_schema":           "no_hotel_schema",
-            "llms_txt":               "missing_llmstxt",
-            "whatsapp_button":        "no_whatsapp_visible",
-            "whatsapp_conflict_guide": "no_whatsapp_visible",
+            identidad.asset_type: identidad.pain_id for identidad in SERVICE_IDENTITIES
         }
         # RC1 (FASE-B): reemplaza el mapa estático hardcodeado (N10/N17/N19) —
         # costo/rank/label vienen de opportunity_scores del mismo run.
@@ -1392,8 +1391,9 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                     'presence_verified': True,
                 }
 
-        # FASE-2: Iterate over ALL promised services (PROPOSAL_SERVICE_TO_ASSET)
-        # plus AEO conditional — always show 8 services with status
+        # FASE-2: recorrer TODOS los servicios prometidos (PROPOSAL_SERVICE_TO_ASSET),
+        # incluido el condicional de AEO — siempre con su estado. FASE-A: el conteo de
+        # filas lo decide el registro, no esta narrativa.
         # FASE-C CROSS-2: 4 columnas + FASE-D: columna Confianza (5 cols)
         rows = [
             "| Servicio | Estado | Confianza | Problema que resuelve | Qué obtiene |",

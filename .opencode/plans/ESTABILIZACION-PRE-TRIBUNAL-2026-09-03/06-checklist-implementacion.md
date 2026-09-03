@@ -6,7 +6,7 @@
 
 **Versión objetivo**: 4.75.0 · **Versión actual del repo**: 4.74.1
 **Sesiones totales**: 11 (9 implementación + VERIFY + RELEASE)
-**Sesiones completadas**: 0
+**Sesiones completadas**: 1 (FASE-A ✅ 2026-09-03)
 
 ---
 
@@ -14,7 +14,7 @@
 
 | # | Fase | Complejidad | Modo | Estado | Fecha | Iter. | Tests nuevos | ACs cerrados |
 |---|------|-------------|------|--------|-------|-------|--------------|--------------|
-| 1 | FASE-A — Fuente única de identidad | ALTA | DIRECTO | ⬜ Pendiente | — | —/55 | — | AC1, AC2, AC3 |
+| 1 | FASE-A — Fuente única de identidad | ALTA | DIRECTO | ✅ Completada | 2026-09-03 | 55/55 | 21 func (37 casos) | AC1, AC2, AC3 |
 | 2 | FASE-B — Biyección mapa↔emisión | MEDIA-ALTA | DIRECTO | ⬜ Pendiente | — | —/40 | — | AC4 |
 | 3 | FASE-C — Punto 8 propuesta dinámica | **MÁXIMA** | DIRECTO | ⬜ Pendiente | — | —/60 | — | AC5, AC6 |
 | 4 | FASE-D — Severidad 11+2 (H10) | MEDIA | MIXTO | ⬜ Pendiente | — | —/35 | — | AC7, AC8 |
@@ -36,9 +36,9 @@ Leyenda: ⬜ Pendiente · 🟡 En curso · ✅ Completada · 🔴 Bloqueada · �
 
 | AC | Descripción corta | Fase dueña | Estado | Evidencia |
 |----|-------------------|-----------|--------|-----------|
-| AC1 | Registro canónico único; 0 IDs fantasma | A | ⬜ | — |
-| AC2 | Drift «8 vs 7» corregido en sus 3 copias + contract test | A | ⬜ | — |
-| AC3 | `ASSET_TO_PAIN_ID["monthly_report"]` resuelto a favor del canónico | A | ⬜ | — |
+| AC1 | Registro canónico único; 0 IDs fantasma | A | ✅ (2026-09-03) | `modules/common/service_identity.py` (`SERVICE_IDENTITIES`, 8 entradas); 6 registros derivados + 6 validados contra Capa 1; grep IDs fantasma → **0** en `modules/commercial_documents` + `modules/asset_generation`; `tests/common/test_service_identity_registry.py` 37/37 casos (21 funciones). **Nota**: las 3 claves en `opportunity_scorer.py` son del namespace `brecha_type`, no pain_id — no modificadas (decisión DA8). FASE-VERIFY certifica contra salida real |
+| AC2 | Drift «8 vs 7» corregido en sus 3 copias + contract test | A | ✅ (2026-09-03) | Las 3 copias eliminadas físicamente: `proposal_asset_alignment.py:35-40` (derivado), `service_catalog.py` (derivado + mutación post-hoc borrada), `v4_proposal_generator.py:1332` (derivado). Contract test `test_narrativa_no_hardcodea_conteo_de_servicios` prohíbe la **forma numeral** en 7 módulos de narrativa (L-NC10: no compara contra un número) |
+| AC3 | `ASSET_TO_PAIN_ID["monthly_report"]` resuelto a favor del canónico | A | ✅ (2026-09-03) | `ASSET_TO_PAIN_ID` derivado del canónico ⟹ `monthly_report → no_monthly_report`. La perla `no_faq_schema` ya no existe en ningún registro; `test_un_asset_no_se_atribuye_a_pains_distintos_entre_registros` la vuelve imposible |
 | AC4 | Biyección mapa↔emisión fijada; 0 pains muertos sin decisión | B | ⬜ | — |
 | AC5 | Propuesta solo promete servicios con brecha; `no_breach = 0` | C | ⬜ | — |
 | AC6 | `is_coherent = false` estructural desaparece por el punto 8 | C | ⬜ | — |
@@ -57,7 +57,7 @@ Leyenda: ⬜ Pendiente · 🟡 En curso · ✅ Completada · 🔴 Bloqueada · �
 | NR2 | `_identify_critical_issues` cubre PageSpeed ERROR + banda GEO critical | G | ⬜ | — |
 | NR3 | Escotilla V5 cerrada **sin revertir** BUG-6/N2 | G | ⬜ | — |
 | NR4 | Escotilla V9 cerrada (ledger vacío ≠ PASS) | G | ⬜ | — |
-| NR5 | Baseline 848 passed / 2 skipped preservado | todas | ⬜ | — |
+| NR5 | Baseline 848 passed / 2 skipped preservado | todas | 🟡 1/11 | FASE-A: `tests/quality_gates` + `tests/asset_generation` → **848 passed / 2 skipped**, byte-idéntico al pre-cambio (`evidence/FASE-A/`, `temp/faseA_baseline_post.txt`) |
 | NR6 | Corrida FASE-I: coherence ≥ 0.80 + perfil de gates esperado | I | ⬜ | — |
 
 > **Dos familias de NR** (auditoría del plan 2026-09-03): NR1-NR6 son «de hallazgo» (la tabla anterior);
@@ -88,7 +88,7 @@ Cada fila debe quedar en estado final explícito al cierre de VERIFY (tarea V3).
 
 | Candado | Defecto | Fase | Estado |
 |---------|---------|------|--------|
-| `coverage_no_silent_drop` | Tautología extremo a extremo (ledger y doc de la misma llamada) | A+B+C (cura) · G3/G4 (escotillas) | ⬜ |
+| `coverage_no_silent_drop` | Tautología extremo a extremo (ledger y doc de la misma llamada) | A+B+C (cura) · G3/G4 (escotillas) | 🟡 A ✅ (identidad unificada aguas arriba) · B, C, G3/G4 ⬜ |
 | `doc_audit_consistency` | Llegó sin datos → PASSED con `value=null` | G1 | ⬜ |
 | `critical_recall` | 1.0 vacuo | G2 | ⬜ |
 | `hard_contradictions` | Fuera de alcance del motor | — (documentado como límite) | ⬜ |
@@ -109,8 +109,8 @@ Cada fila debe quedar en estado final explícito al cierre de VERIFY (tarea V3).
 | V# | Hallazgo | Nivel | Fase | Estado |
 |----|----------|-------|------|--------|
 | V1 | 9 pains muertos, no 1 | 1 | B | ⬜ |
-| V2 | 6 IDs fantasma en `ELEMENTO_KB_TO_PAIN_ID` | 1 | A | ⬜ |
-| V3 | ≥9 registros, no 6 (+ perla `monthly_report → no_faq_schema`) | 1 | A | ⬜ |
+| V2 | 6 IDs fantasma en `ELEMENTO_KB_TO_PAIN_ID` | 1 | A | ✅ 2026-09-03 — los 6 pain_id y el asset fantasma sustituidos por `None`/asset real en `v4_diagnostic_generator.py:126-166`; grep de AC → **0**; comportamiento preservado (consumidores verificados: ruta muerta `generate_for_faltantes`, `ELEMENTOS_MONETIZABLES` sin consumidores, `:3083/:3086` solo iteran `.keys()`) |
+| V3 | ≥9 registros, no 6 (+ perla `monthly_report → no_faq_schema`) | 1 | A | ✅ 2026-09-03 — censo real: **14** registros (no ≥9). Dos capas: Capa 1 `PAIN_SOLUTION_MAP` (27, intacto) + Capa 2 `SERVICE_IDENTITIES` (8). **6 derivados** del canónico, **6 validados** contra Capa 1 con razón registrada, 2 fuera de alcance. Perla eliminada (ver AC3) |
 | V4 | Atribución de brechas excluye por diseño el pain real | 1 | C | ⬜ |
 | V5 | `ASSET_GENERATED` = segunda escotilla (⚠️ anti-reversión BUG-6) | 2-3 | G3 | ⬜ |
 | V6 | `except Exception` silencioso | 3 | H2 | ⬜ |
@@ -121,7 +121,7 @@ Cada fila debe quedar en estado final explícito al cierre de VERIFY (tarea V3).
 | V11 | Residuos D6 | 3 | H3 | ⬜ |
 | V12 | Placeholder `.env` inválido (decisión **OPS**) | 3 | H4 (documentar) | ⬜ |
 | V13 | Dos `MetadataValidator` gemelos | 3 | H4 | ⬜ |
-| V14 | Drift «8 vs 7» tercera copia | 1 | A | ⬜ |
+| V14 | Drift «8 vs 7» tercera copia | 1 | A | ✅ 2026-09-03 — las 3 copias eliminadas por derivación (no comparadas). Un contract test prohíbe la forma numeral `\b\d+\s+servic` en los 7 módulos de narrativa. **Detalle del censo**: un primer regex `\b\d+\s+servicio` solo halló 2 de las 3 copias porque no casaba con el inglés «8 services» — la forma prohibida se ancló a la raíz `servic` |
 | V15 | Mecanismo 6→3 de `no_breach` resuelto | 2 | F1 (vía A4) | ⬜ |
 | V16 | `is_coherent: false` en `asset_generation_report.json` | 2 | F3 (vía N11) | ⬜ |
 
@@ -130,7 +130,7 @@ Cada fila debe quedar en estado final explícito al cierre de VERIFY (tarea V3).
 | Deuda | Descripción | Fase | Estado |
 |-------|-------------|------|--------|
 | **P9** | El gate ignora `is_coherent` (la más grave abierta) | F3 | ⬜ |
-| **P10** | ≥9 registros de identidad (extendido por A5) | A | ⬜ |
+| **P10** | ≥9 registros de identidad (extendido por A5) | A | ✅ 2026-09-03 — fuente única en `modules/common/service_identity.py`; censo real **14** registros: 6 derivados, 6 validados contra Capa 1 (razón registrada en cada uno), 2 fuera de alcance (`gap_analyzer` legacy, `asset_semantics_validator.INVALID_MAPPINGS`). **La extensión A5 (skip silencioso de los 2 builders) sigue abierta → FASE-C** |
 | **P11** | `precision_tier` degrada a `"C"` bajo `except` desnudo | H2 (misma familia) | ⬜ |
 | **P12** | `promised_assets_exist` pre-gen only | C4 (documentar alcance) | ⬜ |
 | **H7** | Nombres timestamped sin índice + oráculo no persistido | E1 | ⬜ |

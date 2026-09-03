@@ -1,0 +1,60 @@
+.....................F.....F......                                       [100%]
+================================== FAILURES ===================================
+___ TestTechnicalAssetsTable.test_technical_assets_table_shows_both_assets ____
+
+self = <commercial_documents.test_proposal_dynamic.TestTechnicalAssetsTable object at 0x0000014BCFE64190>
+
+    def test_technical_assets_table_shows_both_assets(self):
+        """Technical assets table shows analytics_setup_guide and indirect_traffic_optimization."""
+        result = self.gen._generate_technical_assets_table()
+        assert "Guía de Configuración Analytics" in result
+>       assert "Optimización de Tráfico Indirecto" in result
+E       AssertionError: assert 'Optimizaci\xf3n de Tr\xe1fico Indirecto' in '| Asset T\xe9cnico | Estado | Descripci\xf3n |\\n|---------------|--------|-------------|\\n| **Gu\xeda de Configuraci\xf3n Analytics** | \u23f3 No generado | Instrucciones paso a paso para conectar Google Analytics 4 y Google Search Console |'
+
+tests\commercial_documents\test_proposal_dynamic.py:376: AssertionError
+_ TestFase3ConditionalServicesFiltering.test_no_assets_no_presence_all_excluded _
+
+self = <commercial_documents.test_proposal_dynamic.TestFase3ConditionalServicesFiltering object at 0x0000014BCFE29810>
+
+    def test_no_assets_no_presence_all_excluded(self):
+        """When no assets and no presence, footnote lists all 8 services."""
+        result = self.gen._generate_dynamic_services_table(assets_generated=[])
+    
+        # All 8 should be in the footnote (except "Informe Mensual" blocked by semantic validation)
+        assert "> **Servicios adicionales disponibles:**" in result
+        for service_name in PROPOSAL_SERVICE_TO_ASSET.keys():
+            if service_name == "Informe Mensual":
+                continue  # blocked by semantic validation
+>           assert service_name in result, f"Service '{service_name}' should appear in footnote"
+E           AssertionError: Service 'Botón de WhatsApp' should appear in footnote
+E           assert 'Botón de WhatsApp' in '| Servicio | Estado | Confianza | Problema que resuelve | Qué obtiene |\n|----------|--------|-----------|-----------...al, Schema Hotel, Schema Organization, Página de FAQ, Meta Tags Sociales (Open Graph), Optimización para IA Generativa'
+
+tests\commercial_documents\test_proposal_dynamic.py:494: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  modules.commercial_documents.v4_proposal_generator:v4_proposal_generator.py:1244 [RC1] opportunity_scores no disponibles — tabla de servicios sin costos de brecha (sin cifras inventadas; no se compromete costo alguno)
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestTechnicalAssetsTable::test_technical_assets_table_shows_both_assets
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestFase3ConditionalServicesFiltering::test_no_assets_no_presence_all_excluded
+2 failed, 32 passed, 8 warnings in 1.46s

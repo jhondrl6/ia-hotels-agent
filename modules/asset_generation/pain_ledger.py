@@ -11,7 +11,7 @@ from dataclasses import dataclass, asdict, field
 from pathlib import Path
 from typing import List, Dict, Any
 
-from ..commercial_documents.pain_solution_mapper import Pain
+from ..commercial_documents.pain_solution_mapper import Pain, PainSolutionMapper
 
 logger = logging.getLogger(__name__)
 
@@ -48,34 +48,15 @@ class PainLedger:
     Conserva backward compatibility con pain_ids_resolved.
     """
 
-    # Mapping de normalización: title case / caps → normalized
+    # Normalización: nombre humano → pain_id canónico.
+    # FASE-A (N-A2): derivado de Capa 1 en vez de mantenido a mano. La copia anterior
+    # tenía una clave obsoleta ("No WhatsApp Visible", renombrado a "Sin WhatsApp
+    # Visible") y le faltaban entradas: declaraba menos reglas que pains existen.
+    # Derivar es conservativo porque `_normalize_pain_id` ya tiene fallback
+    # lower()/replace() y en la ruta viva `pain.id` llega canonicalizado.
     NORMALIZATION_RULES = {
-        "No WhatsApp Visible": "no_whatsapp_visible",
-        "Conflicto de WhatsApp": "whatsapp_conflict",
-        "Sin Schema FAQ": "no_faq_schema",
-        "Bajo Score GBP": "low_gbp_score",
-        "Sin Motor de Reservas": "no_motor_reservas",
-        "Sin Schema Hotel": "no_hotel_schema",
-        "Performance Deficiente": "poor_performance",
-        "Sin Schema Organization": "no_org_schema",
-        "Falta de Reviews": "missing_reviews",
-        "Alta Dependencia OTAs": "low_ota_divergence",
-        "Metadatos por Defecto": "metadata_defaults",
-        "Sin llms.txt": "missing_llmstxt",
-        "Sin Analytics Configurado": "no_analytics_configured",
-        "Baja Visibilidad Organica": "low_organic_visibility",
-        "GA4 sin Configuracion Avanzada": "no_ga4_enhanced",
-        "Crawlers IA Bloqueados": "ai_crawler_blocked",
-        "Contenido Poco Citable": "low_citability",
-        "Baja Preparación IA": "low_ia_readiness",
-        "Sin Schema de Reviews": "no_schema_reviews",
-        "Sin SSL/HTTPS": "no_ssl",
-        "Sin Open Graph Tags": "no_og_tags",
-        "Imágenes sin Texto Alternativo": "missing_alt_text",
-        "Sin Informe Mensual": "no_monthly_report",
-        "Blog Inactivo": "no_blog_content",
-        "Sin Presencia en Redes Sociales": "no_social_links",
-        "Contenido Muy Corto": "low_content_length",
+        solucion["name"]: pain_id
+        for pain_id, solucion in PainSolutionMapper.PAIN_SOLUTION_MAP.items()
     }
 
     # FASE-P1-D (F13): status de primera clase para "verificado en producción".

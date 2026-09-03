@@ -228,8 +228,15 @@ class ConditionalGenerator:
         }
 
     # ============================================================
-    # GAP-IAO-01-04: PAIN_ID → ASSET MAPPING
-    # Única fuente de verdad: ELEMENTO_KB_TO_PAIN_ID
+    # GAP-IAO-01-04: PAIN_ID → ASSET MAPPING (enrutamiento de generación)
+    #
+    # FASE-A: esta tabla responde «qué archivos de asset producir ante un pain
+    # detectado», que NO es la misma pregunta que la identidad comercial del servicio
+    # (modules/common/service_identity.py). Por eso se VALIDA contra Capa 1
+    # (PAIN_SOLUTION_MAP + ASSET_CATALOG) por contrato automático en
+    # tests/common/test_service_identity_registry.py, en vez de derivarse: derivarla
+    # cambiaría el enrutamiento (poor_performance genera performance_audit, mientras
+    # que el servicio SEO Local entrega optimization_guide).
     # ============================================================
     PAIN_TO_ASSET = {
         # KB element: (pain_id, asset_principal)

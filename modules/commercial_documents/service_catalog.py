@@ -12,6 +12,8 @@ from typing import Dict, List, Optional
 
 # FASE-3 ASSET-ALIGNMENT-ZIONE: Import proposal source of truth
 from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
+# FASE-A: identidad canónica servicio↔asset↔pain (Capa 2)
+from modules.common.service_identity import SERVICE_IDENTITIES
 
 
 @dataclass
@@ -24,61 +26,21 @@ class ServiceEntry:
 
 
 # =============================================================================
-# SERVICE_CATALOG — Complete mapping of pains → vendible services
+# SERVICE_CATALOG — PROYECCIÓN del registro canónico de identidad
 # =============================================================================
-# Each entry represents a service that can be sold in a commercial proposal.
-# The pain_id links it to PainSolutionMapper.PAIN_SOLUTION_MAP.
+# FASE-A: este catálogo era el único de los censados que cargaba la tripleta completa
+# (servicio, asset, pain), y por eso fue la base de Capa 2. Ahora DERIVA de ella en vez
+# de ser copia independiente: una copia es drift garantizado (V3/V14).
+# El orden de SERVICE_IDENTITIES sostiene el orden de las filas en la propuesta.
 
 SERVICE_CATALOG: Dict[str, ServiceEntry] = {
-    # SEO
-    "seo_local": ServiceEntry(
-        service_name="SEO Local",
-        asset_type="optimization_guide",
-        pain_id="poor_performance",
-        description="Para aparecer en las primeras posiciones de Google tradicional",
-    ),
-    # WhatsApp
-    "boton_whatsapp": ServiceEntry(
-        service_name="Botón de WhatsApp",
-        asset_type="whatsapp_button",
-        pain_id="no_whatsapp_visible",
-        description="Sus huéspedes reservan con 1 clic desde su web",
-    ),
-    # Schema Hotel
-    "schema_hotel": ServiceEntry(
-        service_name="Schema Hotel",
-        asset_type="hotel_schema",
-        pain_id="no_hotel_schema",
-        description="Datos estructurados para Google y IA sobre tu hotel",
-    ),
-    # Schema Organization
-    "schema_organization": ServiceEntry(
-        service_name="Schema Organization",
-        asset_type="org_schema",
-        pain_id="no_org_schema",
-        description="Datos estructurados sobre la organización del hotel",
-    ),
-    # FAQ
-    "pagina_faq": ServiceEntry(
-        service_name="Página de FAQ",
-        asset_type="faq_page",
-        pain_id="no_faq_schema",
-        description="Sus huéspedes encuentran respuestas sin salir de su web",
-    ),
-    # Open Graph / Social
-    "meta_tags_sociales": ServiceEntry(
-        service_name="Meta Tags Sociales (Open Graph)",
-        asset_type="open_graph",
-        pain_id="no_og_tags",
-        description="Sus fotos brillan cuando alguien comparte su link en redes",
-    ),
-    # Informe Mensual
-    "informe_mensual": ServiceEntry(
-        service_name="Informe Mensual",
-        asset_type="monthly_report",
-        pain_id="no_monthly_report",
-        description="Reporte mensual con metricas de rendimiento y oportunidades",
-    ),
+    identidad.key: ServiceEntry(
+        service_name=identidad.service_name,
+        asset_type=identidad.asset_type,
+        pain_id=identidad.pain_id,
+        description=identidad.description,
+    )
+    for identidad in SERVICE_IDENTITIES
 }
 
 
@@ -115,16 +77,6 @@ def get_service_names_for_pains(detected_pain_ids: List[str]) -> List[str]:
     """
     services = get_services_for_pains(detected_pain_ids)
     return [s.service_name for s in services]
-
-
-# FASE-D: AEO conditional service — included when score_aeo < 20
-# Triggered by DiagnosticSummary.score_aeo field (0-100, from 4-pillars scoring)
-SERVICE_CATALOG["optimizacion_ia_generativa"] = ServiceEntry(
-    service_name="Optimización para IA Generativa",
-    asset_type="llms_txt",
-    pain_id="low_ia_readiness",
-    description="Aparece cuando clientes preguntan a ChatGPT/Gemini 'dónde hospedarme en [región]'",
-)
 
 
 # Backwards-compatible lookup: service_name → asset_type

@@ -1,0 +1,64 @@
+[AssetSemantics] BLOCKED � HALLUCINATION: asset 'monthly_report' cannot logically solve pain 'no_faq_schema'
+[AssetSemantics] BLOCKED � HALLUCINATION: asset 'whatsapp_conflict_guide' cannot logically solve pain 'no_whatsapp_visible'
+[RC1] opportunity_scores no disponibles � tabla de servicios sin costos de brecha (sin cifras inventadas; no se compromete costo alguno)
+==============================================================================
+1. service_brecha_candidates — derivado vs literal anterior
+==============================================================================
+  IDENTICOS: True
+  orden de claves preservado: True
+
+==============================================================================
+2. PROPOSAL_SERVICE_TO_ASSET — derivado vs literal anterior (orden incluido)
+==============================================================================
+  IDENTICOS: True
+  orden: True
+
+==============================================================================
+3. SERVICE_CATALOG — claves y orden
+==============================================================================
+  IDENTICOS: True
+  claves: ['seo_local', 'boton_whatsapp', 'schema_hotel', 'schema_organization', 'pagina_faq', 'meta_tags_sociales', 'informe_mensual', 'optimizacion_ia_generativa']
+
+==============================================================================
+4. ASSET_TO_PAIN_ID — efecto REAL sobre la validación semántica
+   (sólo los assets iterados desde PROPOSAL_SERVICE_TO_ASSET cuentan)
+==============================================================================
+  asset                      ANTES(pain,resultado)                  AHORA(pain,resultado)                  iterado
+  faq_page                   no_faq_schema,IMPLEMENT                no_faq_schema,IMPLEMENT                True
+  hotel_schema               no_hotel_schema,IMPLEMENT              no_hotel_schema,IMPLEMENT              True
+  llms_txt                   missing_llmstxt,IMPLEMENT              low_ia_readiness,IMPLEMENT             True
+  monthly_report             no_faq_schema,BLOCKED: HALLUCINATION: asset 'monthly_report' cannot logically solve pain 'no_faq_schema' no_monthly_report,IMPLEMENT            False
+  open_graph                 None,SKIP(sin pain)                    no_og_tags,IMPLEMENT                   True  <<< CAMBIO
+  optimization_guide         None,SKIP(sin pain)                    poor_performance,IMPLEMENT             True  <<< CAMBIO
+  org_schema                 None,SKIP(sin pain)                    no_org_schema,IMPLEMENT                True  <<< CAMBIO
+  whatsapp_button            no_whatsapp_visible,IMPLEMENT          no_whatsapp_visible,IMPLEMENT          True
+  whatsapp_conflict_guide    no_whatsapp_visible,BLOCKED: HALLUCINATION: asset 'whatsapp_conflict_guide' cannot logically solve pain 'no_whatsapp_visible' None,SKIP(sin pain)                    False
+
+  Cambios EFECTIVOS en assets iterados: ['open_graph', 'optimization_guide', 'org_schema']
+
+==============================================================================
+5. Salida real — _generate_dynamic_services_table
+==============================================================================
+| Servicio | Estado | Confianza | Problema que resuelve | Qué obtiene |
+|----------|--------|-----------|----------------------|-------------|
+| **SEO Local** | ✅ Alineado | 90% | — | Para aparecer en las primeras posiciones de Google tradicional |
+| **Botón de WhatsApp** | ✅ Alineado | 90% | — | Sus huéspedes reservan con 1 clic desde su web |
+| **Schema Hotel** | ✅ Alineado | 90% | — | Datos estructurados para Google y IA sobre tu hotel |
+| **Schema Organization** | ✅ Alineado | 90% | — | Datos estructurados sobre la organización del hotel |
+| **Página de FAQ** | ✅ Alineado | 90% | — | Sus huéspedes encuentran respuestas sin salir de su web |
+| **Meta Tags Sociales (Open Graph)** | ✅ Alineado | 90% | — | Sus fotos brillan cuando alguien comparte su link en redes |
+| **Optimización para IA Generativa** | ✅ Alineado | 90% | — | Aparece cuando clientes preguntan a ChatGPT/Gemini 'dónde hospedarme en [región]' |
+  filas: 7
+
+==============================================================================
+6. Salida real — _generate_asset_quality_table (modo backwards-compat)
+==============================================================================
+| Entregable | Momento de entrega | Qué incluye |
+|------------|-------------------|-------------|
+| SEO Local | ✅ Día 1 (Activación inicial) | Preparacion posterior a la firma |
+| Botón de WhatsApp | ✅ Día 1 (Activación inicial) | Preparacion posterior a la firma |
+| Schema Hotel | ✅ Día 1 (Activación inicial) | Preparacion posterior a la firma |
+| Schema Organization | ✅ Día 1 (Activación inicial) | Preparacion posterior a la firma |
+| Página de FAQ | ✅ Día 1 (Activación inicial) | Preparacion posterior a la firma |
+| Meta Tags Sociales (Open Graph) | ✅ Día 1 (Activación inicial) | Preparacion posterior a la firma |
+| Optimización para IA Generativa | ✅ Día 1 (Activación inicial) | Preparacion posterior a la firma |
