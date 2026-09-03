@@ -60,7 +60,7 @@ DT4-R2.
 | Fase | Estado |
 |------|--------|
 | FASE-A — Fuente única de identidad | ✅ Completada |
-| FASE-B — Biyección mapa↔emisión | ✅ Completada |
+| FASE-B — Biyección triple mapa↔emisión↔narrativa | ✅ Completada |
 | FASE-C — Punto 8 propuesta dinámica | ✅ Completada |
 | FASE-D — Severidad 11+2 | ✅ Completada |
 

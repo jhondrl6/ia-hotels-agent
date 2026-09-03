@@ -4,6 +4,18 @@
 > **R1 del executor**: una fase por sesión. Este archivo existe para que cada sesión sepa qué NO puede
 > tocar y qué debe esperar.
 
+> ⚠️ **Regla transversal (L-A6, `10-analisis` §8) — aplica a TODAS las fases**: las citas de **número de
+> línea** de este plan pueden estar **desfasadas**. Cada fase que edita código desplaza las líneas que las
+> fases posteriores citan, y nadie las re-verifica. Medido al cerrar FASE-A: **4 citas falsas**, la peor
+> repetida **12 veces en 6 archivos** (V6 citaba `v4_diagnostic_generator.py:3189-3194`, que ya era la
+> llamada a `detect_pains`; el `except Exception: return brechas` real estaba en `:3197-3202`). Las 4
+> quedaron corregidas el 2026-09-03, pero la **clase** sigue viva.
+>
+> **Antes de editar una región citada**: `grep`/`Read` para confirmar que la línea contiene lo que el plan
+> dice. Si difiere → editar la región **correcta**, corregir la cita en el plan y registrarlo en
+> `10-analisis` §5. **Preferir símbolos** (`def _pain_to_brecha`) sobre números de línea al citar: los
+> símbolos no se desplazan.
+
 ---
 
 ## 0. Estado de ejecución
@@ -37,16 +49,35 @@
 - `v4_proposal_generator.py:1281-1289` (`service_brecha_candidates`) ya **deriva su identidad** del
   canónico; su **lógica** quedó intacta, como exigía A4. FASE-C reescribe la lógica sobre una identidad
   ya unificada.
-- **FASE-B hereda una precondición dura (N-A1)**: `narratives` en
-  `v4_diagnostic_generator.py:3338-3339` descarta en silencio **11** pain_id. `missing_llmstxt` está a la
-  vez en los 9 pains muertos de V1 y en esa lista ⟹ darle punto de emisión sin tocar `narratives` deja
-  el fix de B **inerte**. Ver `10-analisis` §5 S6.
+- **FASE-B hereda una precondición dura (N-A1, medida en `evidence/FASE-A/faseA_narratives_audit.txt`)**:
+  `_pain_to_brecha` descarta pains en silencio en `v4_diagnostic_generator.py:3346-3347`; `narratives`
+  (`:3263-3344`) tiene **16** claves frente a las **27** de Capa 1 ⟹ **11 ausentes**, que son
+  exactamente **los 9 pains muertos de V1 + 2 que sí se emiten y sí se descartan hoy**
+  (`no_ga4_enhanced`, `low_ota_divergence`). `narratives` y `detect_pains` son las dos mitades del mismo
+  agujero: **arreglar solo la emisión deja el fix de B inerte** (los 9 rebotan en `:3346`). La biyección
+  de AC4 debe ser **triple**: mapa↔emisión↔narrativa. Ver `10-analisis` §5 S6/S12/S13.
+- **Orden forzoso nuevo B→H para `low_ota_divergence`**: V7 (FASE-H) arregla el guard `__iter__` que hoy
+  impide que dispare. Si H va sin que B le haya dado entrada en `narratives`, el pain pasa de **«nunca
+  dispara»** a **«dispara y se desvanece»** — peor para auditabilidad, porque el test de V7 pasa y la
+  caída se vuelve invisible en vez de inexistente. **FASE-H debe verificar** (leer
+  `evidence/FASE-B/decision-pains-muertos.md`) que B resolvió ese pain **antes** de tocar el guard.
+- **FASE-B hereda también el registro #15 (C-5 / S14)**: los pesos de impacto que sirve `narratives`
+  viven en `config/regional_benchmarks.yaml::pain_narratives` — **4 copias literales idénticas** (una por
+  región, sin anclajes YAML) + **16 fallbacks hardcodeados** en Python = **80 literales para 16 valores**.
+  El censo de A no lo contó (corregido como C-5 en `evidence/FASE-A/censo-registros.md` §8.1). Medido en
+  `evidence/FASE-A/faseA_yaml_narratives_audit.txt` y `faseA_yaml_region_blind.txt`. Si B rellena
+  `narratives` a 27 sin decidir el origen del peso, los 11 pains nuevos heredan un default en silencio
+  (familia V6/P11/S7, dinero-adyacente). Ver `10-analisis` §5 S14.
 - **FASE-F hereda**: `PAIN_TO_PRESENCE_ASSET` (6 entradas) **no** se derivó — la derivación completa
   produce 13 y cambia la semántica de `apply_site_verification`. Es exactamente el doble oráculo de
   A4/V15. Ver `10-analisis` §5 S8.
 - `pain_ledger.py` y `conditional_generator.py` quedan **liberados** (eran A-exclusivos).
-  `proposal_asset_alignment.py` y `v4_proposal_generator.py` pasan a C; `v4_diagnostic_generator.py`
-  pasa a H.
+  `proposal_asset_alignment.py` y `v4_proposal_generator.py` pasan a C.
+  ⚠️ **`v4_diagnostic_generator.py` ya NO pasa limpio a H**: por N-A1, **B necesita la región
+  `:3246-3347`** (`_pain_to_brecha` + `narratives`) y **H necesita `:3197-3202`** (V6) y **`:1953`**
+  (V11). Son regiones **disjuntas** del mismo archivo ⟹ B y H pueden convivir, pero los cambios de B
+  deben confinarse a su región (regla añadida en `05-prompt-inicio-sesion-fase-B.md` §Restricciones).
+  `config/regional_benchmarks.yaml` queda asignado a **B** (S14).
 
 ---
 
@@ -155,8 +186,9 @@ D y E están fuera del camino crítico y pueden ejecutarse en cualquier hueco tr
 | `modules/asset_generation/proposal_asset_alignment.py` | **A**, **C** | A → C | A3 migra `PROPOSAL_SERVICE_TO_ASSET` (`:22`) al canónico; C3 modifica los dos builders (`:575`, `:748`) y sus rutas de skip silencioso (`:609-612`, `:792-794`) |
 | `modules/quality_gates/alignment_result.py` | **C**, **F** | C → F | C3 toca `_from_entries` (`:222-276`) y `compute_unresolved` (`:175-212`); F1 toca `_presence_resolved` (`:62`) — **la misma región** |
 | `modules/quality_gates/delivery_quality_report.py` | **E**, **F** | E → F | E2 puebla `asset_path` (`:223`); F2 modifica la región de skip (`:251-255`), el summary (`:310-319`) y los defaults (`:325`) — adyacentes |
-| `modules/commercial_documents/v4_proposal_generator.py` | **A**, **C**, **H** | A → C → H | A4 corrige el drift «8 vs 7» (`:1332`); C2 reescribe `service_brecha_candidates` (`:1281-1289`); H2 reemplaza el `except Exception` de `_identify_brechas` |
-| `modules/commercial_documents/v4_diagnostic_generator.py` | **A**, **H** | A → H | A3/A4 migran `ELEMENTO_KB_TO_PAIN_ID` (`:135-157`, `:160`, `:3067-3086`); H3 limpia residuos D6 (`:1945-1952`) |
+| `modules/commercial_documents/v4_proposal_generator.py` | **A**, **C** | A → C | A4 corrige el drift «8 vs 7» (`:1332`) — ✅ cerrado; C2 reescribe `service_brecha_candidates` (`:1281-1289`). ⚠️ **Corregido 2026-09-03**: esta fila atribuía a H2 «el `except Exception` de `_identify_brechas`», pero ese método **solo existe en `v4_diagnostic_generator.py:3116`** (`grep -rn "def _identify_brechas"` = 1 resultado) y el prompt de FASE-H no menciona este archivo. H2 ya está correctamente asignado en la fila siguiente |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | **A**, **B**, **H** | A → B → H | A3/A4 migran `ELEMENTO_KB_TO_PAIN_ID` (`:135-157`, `:160`, `:3067-3086`) — ✅ cerrado; **B edita `_pain_to_brecha` + `narratives` (`:3246-3347`) por N-A1**; H2 reemplaza el `except Exception: return brechas` + caché en **`:3197-3202`** (⚠️ el dossier V6 citaba `:3189-3194`, que hoy es la **llamada a `detect_pains`** — cita fósil verificada y corregida el 2026-09-03 en los 6 archivos del plan que la repetían) y H3 limpia residuos D6 (`:1953`, V11 — el dossier citaba `:1952`, off-by-one). Regiones **disjuntas** ⟹ convivibles, pero B debe confinarse a la suya |
+| `config/regional_benchmarks.yaml` | **B** | — | B decide el origen de los pesos `pain_narratives` (4 copias literales idénticas + 16 fallbacks Python = 80 literales para 16 valores). Hallazgo C-5 / S14, post-censo de A |
 | `modules/asset_generation/pain_ledger.py` | **A** | — | A3 migra `NORMALIZATION_RULES` / `PAIN_TO_PRESENCE_ASSET` (`:52-94`) |
 | `modules/asset_generation/conditional_generator.py` | **A** | — | A3 migra `PAIN_TO_ASSET` (`:234-257`) y el import de `ELEMENTO_KB_TO_PAIN_ID` (`:314-326`) |
 | `modules/commercial_documents/coherence_validator.py` | **C** (lectura), **F** (decisión) | C → F | C4 **no** puede apoyarse en `promised_assets_exist` (`:670`, acotado por `if not generated_assets:`, P12/A3); F3 decide sobre `is_coherent` (`:185-188`) |

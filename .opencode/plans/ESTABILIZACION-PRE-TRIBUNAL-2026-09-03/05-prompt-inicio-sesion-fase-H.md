@@ -27,7 +27,7 @@ el sistema pierde información y no lo dice.
 
 ### V6 — Excepción silenciosa en el generador de brechas (verbatim)
 
-> `except Exception: return brechas` + cache (`v4_diagnostic_generator.py:3189-3194`): si `detect_pains`
+> `except Exception: return brechas` + cache (`v4_diagnostic_generator.py:3197-3202`): si `detect_pains`
 > lanza, el diagnóstico sale con **cero brechas** y sin señal (mismo patrón que el NameError silencioso
 > del gate `tier_c`, ya documentado en memoria de proyecto).
 
@@ -107,7 +107,7 @@ disparan `metadata_defaults` con **narrativa equivocada** («por defecto»). La 
 
 ### Base Técnica Disponible
 
-- Biyección mapa↔emisión fija (FASE-B) — V8 deduplica sobre un contrato ya estable
+- Biyección triple mapa↔emisión↔narrativa fija (FASE-B) — V8 deduplica sobre un contrato ya estable
 - Estado `NOT_EVALUATED` (FASE-F) — V6 puede usarlo en vez de degradar en silencio
 - Registro canónico (FASE-A) — V11 no debe crear textos paralelos (L-NC4)
 - **Baseline**: 848 passed / 2 skipped + delta A-G
@@ -135,7 +135,7 @@ disparan `metadata_defaults` con **narrativa equivocada** («por defecto»). La 
 ### Tarea H2: V6 — `except Exception` → logging + estado visible  · *Subagente 1*
 
 **Archivos afectados**:
-- `modules/commercial_documents/v4_diagnostic_generator.py:3189-3194` (`_identify_brechas`, `except Exception: return brechas` + cache)
+- `modules/commercial_documents/v4_diagnostic_generator.py:3197-3202` (`_identify_brechas`, `except Exception: return brechas` + cache)
 
 **Criterios de aceptación**:
 - [ ] La excepción **se loggea** con el traceback (no se traga)
@@ -203,11 +203,11 @@ disparan `metadata_defaults` con **narrativa equivocada** («por defecto»). La 
 
 | Track | Tareas | Archivos | Agente |
 |-------|--------|----------|--------|
-| 1 | H1 + H2 | `pain_solution_mapper.py:450-455` · `v4_diagnostic_generator.py:3189-3194` | Subagente 1 |
+| 1 | H1 + H2 | `pain_solution_mapper.py:450-455` · `v4_diagnostic_generator.py:3197-3202` | Subagente 1 |
 | 2 | H3 + H4 | `pain_solution_mapper.py:694,716` · `v4_diagnostic_generator.py:1952` · `v4_comprehensive.py:1841` · los dos `metadata_validator.py` · `09-documentacion-post-proyecto.md` | Subagente 2 |
 
 ⚠️ **Los tracks comparten `pain_solution_mapper.py` y `v4_diagnostic_generator.py`** en regiones
-**distintas** (`:450-455` vs `:694,716`; `:3189-3194` vs `:1952`). Son paralelizables, pero el parent
+**distintas** (`:450-455` vs `:694,716`; `:3197-3202` vs `:1952`). Son paralelizables, pero el parent
 **debe verificar que no hubo solapamiento** al integrar. Si se prefiere cero riesgo, ejecutar H1+H2
 primero y H3+H4 después en la misma sesión (sigue siendo una fase, R1 se respeta).
 
@@ -340,7 +340,7 @@ TRACKS:
   hasattr __iter__), :455 (isinstance muerto). Validación numérica + normalización de unidades
   (0.2 y 20 deben significar lo mismo) + usar ota_field. low_ota_divergence debe poder disparar con
   direct_channel=0.2 que el pipeline YA conoce.
-            → H2 (V6): v4_diagnostic_generator.py:3189-3194 `except Exception: return brechas` + cache.
+            → H2 (V6): v4_diagnostic_generator.py:3197-3202 `except Exception: return brechas` + cache.
   Loggear traceback + estado visible (NOT_EVALUATED de FASE-F si aplica). Cero brechas por fallo ≠ cero
   por sitio sano. La cache no persiste el resultado degradado como válido.
 - Subagente 2 → H3 (V8): pain_solution_mapper.py:694 y :716 → low_organic_visibility no puede emitirse

@@ -70,7 +70,7 @@ cada AC, su evidencia concreta (archivo + campo + valor observado) y el test que
 | AC1 | Existe **una** fuente canónica de identidad servicio↔asset↔pain | Un único registro importado; grep de duplicados = 0 | A |
 | AC2 | Drift «8 vs 7» corregido en sus **tres** copias + contract test | Ningún doc/string dice «8 servicios»; contract test narrativa↔fuente verde | A |
 | AC3 | `ASSET_TO_PAIN_ID["monthly_report"]` resuelto a favor del registro canónico | test de contrato verde; `monthly_report` ya no apunta a `no_faq_schema` | A |
-| AC4 | Biyección mapa↔emisión: cada pain del mapa o se emite o está justificado | test AST de biyección verde; 9 pains muertos resueltos | B |
+| AC4 | **Biyección triple** mapa↔emisión↔narrativa: cada pain del mapa o se emite **y** tiene narrativa, o está justificado | test AST **tridireccional** verde; **11** pains resueltos (9 muertos + 2 que se emitían y se descartaban — N-A1); delta re-medido con `evidence/FASE-A/faseA_narratives_audit.py` | B |
 | AC5 | **Punto 8**: la propuesta solo promete servicios con brecha detectada → `no_breach = 0` **por construcción** | `proposal_asset_matrix.json`: conteo NO_BREACH = 0 | C |
 | AC6 | Disuelta la tautología de coverage y el `is_coherent = false` estructural | `coverage_ratio` ya no es 1.000 algebraico; `is_coherent: true` en los 3 artefactos (6 copias) que hoy lo declaran false | C (+F) |
 | AC7 | Estructura de severidad: **11 blocking + 2 advisory** | `get_blocking_gates` devuelve 11; advisory = {content_quality, proposal_asset_alignment} | D |
@@ -87,6 +87,13 @@ cada AC, su evidencia concreta (archivo + campo + valor observado) y el test que
       razón (regla de oro).
 - [ ] AC5 y AC6 se certifican con el **valor numérico real** de la corrida I, no con el del test fixture.
 - [ ] Todo AC ⚠️ o ❌ genera un **seguimiento abierto** en §Seguimientos (no se barre bajo la alfombra).
+- [ ] **Citas de código re-verificadas (L-A6)**: por cada AC certificado, `grep`/`Read` confirma que la
+      región citada contiene lo que el plan dice. FASE-A halló **4 citas falsas**, la peor repetida
+      **12 veces en 6 archivos** (V6 citaba `:3189-3194` cuando el código real estaba en `:3197-3202`).
+      Una cita desfasada se corrige en el plan y se registra en `10-analisis` §5.
+- [ ] **Ninguna evidencia afirma más de lo medido**: FASE-A registró dos «byte-idéntico» cuyo diff real
+      era **1 línea** (la duración de la corrida). Si la claim es más fuerte que la medición, se reformula
+      a lo que el artefacto soporta y se cita el artefacto que lo reproduce.
 
 ---
 

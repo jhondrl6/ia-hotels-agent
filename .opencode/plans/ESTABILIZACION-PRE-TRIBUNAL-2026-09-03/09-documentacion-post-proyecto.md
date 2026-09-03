@@ -18,7 +18,7 @@
 | A | `modules/common/service_identity.py` *(el plan predecía `modules/asset_generation/service_asset_registry.py` — nombre y ubicación corregidos al cierre)* | Fuente canónica única de identidad servicio↔asset↔pain (Capa 2). `modules/common/` no importa nada del proyecto ⟹ lo consumen `asset_generation`, `commercial_documents` y `financial_engine` sin ciclo | ✅ 2026-09-03 |
 | A | `tests/common/test_service_identity_registry.py` *(el plan predecía `tests/asset_generation/test_canonical_registry_contract.py`)* | **21 funciones test / 37 casos parametrizados**, en 6 secciones: AC1 integridad del canónico, AC1/V2 cero IDs fantasma, V3 biyección asset↔pain, guardián AST «derivar no copiar», AC2/V14 narrativa↔fuente, validación de registros no derivados contra Capa 1 | ✅ 2026-09-03 |
 | A | `evidence/FASE-A/` (`censo-registros.md`, `tdd-contract-tests-ROJO.txt`, `tdd-contract-tests-post-canonico.txt`) | Censo de los 14 registros + la curva TDD completa (27 fallados → 37 pasados) | ✅ 2026-09-03 |
-| B | `tests/commercial_documents/test_pain_bijection.py` | Guardián AST de la biyección mapa↔emisión (patrón SR-A, no regex) | ⬜ Pendiente |
+| B | `tests/commercial_documents/test_pain_map_bijection.py` | Guardián AST **tridireccional** de la biyección mapa↔emisión↔narrativa (patrón SR-A, no regex) | ⬜ Pendiente |
 | E | `modules/.../site_presence_writer.py` *(nombre a confirmar en E1)* | Persiste `site_presence_snapshot` en disco (mitad pendiente de DT4-R2) | ⬜ Pendiente |
 | D | `tests/quality_gates/test_gate_severity.py` | Lock de regresión de la estructura 11 blocking + 2 advisory | ⬜ Pendiente |
 | … | *(agregar filas si una fase crea archivos no previstos)* | | |
@@ -35,7 +35,7 @@ fase con el nombre real. Lo importante para RELEASE es la **lista consolidada de
 | Fase | Funcionalidad | Hallazgo del dossier que cura | Estado |
 |------|---------------|-------------------------------|--------|
 | A | Fuente única de identidad servicio↔asset↔pain en `modules/common/service_identity.py`, en **dos capas** (Capa 1 = `PAIN_SOLUTION_MAP` 27 pains como universo de pain_id, intacto; Capa 2 = `SERVICE_IDENTITIES` 8 entradas). De los **14** registros censados (el dossier decía ≥9): **6 derivados** del canónico, **6 validados** contra Capa 1 con razón registrada, 2 fuera de alcance. Drift «8 vs 7» disuelto **eliminando sus 3 copias**, no comparándolas. Perla `monthly_report → no_faq_schema` eliminada. 6 IDs fantasma + 1 asset fantasma corregidos sin cambio de comportamiento (contrafactual medido) | V2, V3, V14 (§12.3); causa raíz §12.5 (≥9 registros); deuda P10 | ✅ 2026-09-03 |
-| B | Biyección mapa↔emisión: cada pain o se emite o está justificado | V1 (9 pains muertos); §3 candado de biyección | ⬜ Pendiente |
+| B | Biyección **triple** mapa↔emisión↔narrativa: cada pain o se emite **y** tiene narrativa, o está justificado | V1 (9 pains muertos) + N-A1 (2 que se emitían y se descartaban) = **11**; §3 candado de biyección | ⬜ Pendiente |
 | C | **Punto 8**: propuesta dinámica — solo promete servicios con brecha detectada (`no_breach = 0` por construcción) | §9.2 B1-B5; tautología de coverage; `is_coherent = false` estructural | ⬜ Pendiente |
 | D | Severidad de gates: **11 blocking + 2 advisory** con piso explícito y WARNING a `human_checklist` | H10; §8.4; docstrings 10+3 vs código 13 | ⬜ Pendiente |
 | E | A2: `site_presence_snapshot` persistido en disco + A6: `asset_path` poblado | A2, A6 (§9.1); H7; DT4-N2 mitad disco pendiente | ⬜ Pendiente |
@@ -73,11 +73,11 @@ fase con el nombre real. Lo importante para RELEASE es la **lista consolidada de
 | Métrica | Valor inicial | Valor actual | Última fase que actualizó |
 |---------|---------------|--------------|---------------------------|
 | Tests totales (`def test_`) | 3,689 | **3,710** (285 archivos `.py` en `tests/`) | A |
-| Tests quality_gates + asset_generation | 848 passed / 2 skipped | **848 passed / 2 skipped** (byte-idéntico — NR5 ✅) | A |
+| Tests quality_gates + asset_generation | 848 passed / 2 skipped | **848 passed / 2 skipped / 11 warnings** (NR5 ✅ — diff vs pre-cambio = 1 línea, la duración) | A |
 | Contract tests agregados | 0 | **21 funciones / 37 casos parametrizados** (`tests/common/test_service_identity_registry.py`) | A |
 | Fases completadas | 0 / 11 | **1 / 11** | A |
 | Versión | 4.74.1 | 4.74.1 *(solo RELEASE la mueve)* | — |
-| Registros de identidad consolidados | ≥9 dispersos (dossier) → **14** reales tras el censo | **1 canónico** (`SERVICE_IDENTITIES`) + **6 derivados** + **6 validados contra Capa 1** + 2 fuera de alcance | A |
+| Registros de identidad consolidados | ≥9 dispersos (dossier) → **15** reales tras el censo (C-5 añadió el #15) | **1 canónico** (`SERVICE_IDENTITIES`) + **Capa 1** (`PAIN_SOLUTION_MAP`) + **6 derivados** + **4 validados contra Capa 1** + **3 fuera de alcance** — censo §8.2 | A |
 | Gates blocking / advisory | 10 / 3 (declarado) · 13 plano (código) | 10 / 3 · 13 plano *(sin cambio — es FASE-D)* | — |
 
 > **Conteos de tests** (memoria `conteos-tests-documentados-metodo-def_test`): documentar por
@@ -112,7 +112,7 @@ fase con el nombre real. Lo importante para RELEASE es la **lista consolidada de
 | G | `modules/quality_gates/publication_gates.py` | `:1244` `doc_audit_consistency`, `:1237-1242` V5, `:1295-1344` V9 | ⬜ Pendiente |
 | G | `modules/auditors/v4_comprehensive.py` | `:1789` `_identify_critical_issues` (PageSpeed ERROR + GEO) | ⬜ Pendiente |
 | H | `modules/commercial_documents/pain_solution_mapper.py` | `:453` V7, `:677-701` V8 | ⬜ Pendiente |
-| H | `modules/commercial_documents/v4_diagnostic_generator.py` | `:3189-3194` V6, `:1945-1952` V11 | ⬜ Pendiente |
+| H | `modules/commercial_documents/v4_diagnostic_generator.py` | `:3197-3202` V6, `:1945-1952` V11 | ⬜ Pendiente |
 | H | `modules/auditors/v4_comprehensive.py` | `:1841` residuo D6 | ⬜ Pendiente |
 | H | `data_validation/metadata_validator.py` + `modules/data_validation/metadata_validator.py` | V13 unificación de gemelos | ⬜ Pendiente |
 | RELEASE | `VERSION.yaml`, `CHANGELOG.md`, `GUIA_TECNICA.md`, `REGISTRY.md`, `README.md`, `.cursorrules`, `docs/CONTRIBUTING.md`, `DOMAIN_PRIMER.md` | Cierre documental 4.75.0 | ⬜ Pendiente |

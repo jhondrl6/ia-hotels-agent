@@ -15,7 +15,7 @@
 | # | Fase | Complejidad | Modo | Estado | Fecha | Iter. | Tests nuevos | ACs cerrados |
 |---|------|-------------|------|--------|-------|-------|--------------|--------------|
 | 1 | FASE-A — Fuente única de identidad | ALTA | DIRECTO | ✅ Completada | 2026-09-03 | 55/55 | 21 func (37 casos) | AC1, AC2, AC3 |
-| 2 | FASE-B — Biyección mapa↔emisión | MEDIA-ALTA | DIRECTO | ⬜ Pendiente | — | —/40 | — | AC4 |
+| 2 | FASE-B — Biyección **triple** mapa↔emisión↔narrativa (N-A1) | MEDIA-ALTA | DIRECTO | ⬜ Pendiente | — | —/40 ⚠️ | — | AC4 |
 | 3 | FASE-C — Punto 8 propuesta dinámica | **MÁXIMA** | DIRECTO | ⬜ Pendiente | — | —/60 | — | AC5, AC6 |
 | 4 | FASE-D — Severidad 11+2 (H10) | MEDIA | MIXTO | ⬜ Pendiente | — | —/35 | — | AC7, AC8 |
 | 5 | FASE-E — A2 snapshot + A6 asset_path | MEDIA | DELEGADO | ⬜ Pendiente | — | —/30 | — | AC9 |
@@ -36,10 +36,10 @@ Leyenda: ⬜ Pendiente · 🟡 En curso · ✅ Completada · 🔴 Bloqueada · �
 
 | AC | Descripción corta | Fase dueña | Estado | Evidencia |
 |----|-------------------|-----------|--------|-----------|
-| AC1 | Registro canónico único; 0 IDs fantasma | A | ✅ (2026-09-03) | `modules/common/service_identity.py` (`SERVICE_IDENTITIES`, 8 entradas); 6 registros derivados + 6 validados contra Capa 1; grep IDs fantasma → **0** en `modules/commercial_documents` + `modules/asset_generation`; `tests/common/test_service_identity_registry.py` 37/37 casos (21 funciones). **Nota**: las 3 claves en `opportunity_scorer.py` son del namespace `brecha_type`, no pain_id — no modificadas (decisión DA8). FASE-VERIFY certifica contra salida real |
+| AC1 | Registro canónico único; 0 IDs fantasma | A | ✅ (2026-09-03) | `modules/common/service_identity.py` (`SERVICE_IDENTITIES`, 8 entradas); **15 registros** resueltos: 1 canónico (Capa 2) + 1 Capa 1 + **6 derivados** + **4 validados contra Capa 1** + **3 fuera de alcance** (`evidence/FASE-A/censo-registros.md` §8.2); grep IDs fantasma → **0** en `modules/commercial_documents` + `modules/asset_generation`; `tests/common/test_service_identity_registry.py` 37/37 casos (21 funciones). **Nota**: las 3 claves en `opportunity_scorer.py` son del namespace `brecha_type`, no pain_id — no modificadas (decisión DA8). FASE-VERIFY certifica contra salida real |
 | AC2 | Drift «8 vs 7» corregido en sus 3 copias + contract test | A | ✅ (2026-09-03) | Las 3 copias eliminadas físicamente: `proposal_asset_alignment.py:35-40` (derivado), `service_catalog.py` (derivado + mutación post-hoc borrada), `v4_proposal_generator.py:1332` (derivado). Contract test `test_narrativa_no_hardcodea_conteo_de_servicios` prohíbe la **forma numeral** en 7 módulos de narrativa (L-NC10: no compara contra un número) |
 | AC3 | `ASSET_TO_PAIN_ID["monthly_report"]` resuelto a favor del canónico | A | ✅ (2026-09-03) | `ASSET_TO_PAIN_ID` derivado del canónico ⟹ `monthly_report → no_monthly_report`. La perla `no_faq_schema` ya no existe en ningún registro; `test_un_asset_no_se_atribuye_a_pains_distintos_entre_registros` la vuelve imposible |
-| AC4 | Biyección mapa↔emisión fijada; 0 pains muertos sin decisión | B | ⬜ | — |
+| AC4 | Biyección **triple** mapa↔emisión↔narrativa fijada; 0 pains sin decisión (**11**, no 9 — N-A1) | B | ⬜ | — |
 | AC5 | Propuesta solo promete servicios con brecha; `no_breach = 0` | C | ⬜ | — |
 | AC6 | `is_coherent = false` estructural desaparece por el punto 8 | C | ⬜ | — |
 | AC7 | Severidad explícita 11 blocking + 2 advisory; `asset_confidence` bloquea | D | ⬜ | — |
@@ -57,7 +57,7 @@ Leyenda: ⬜ Pendiente · 🟡 En curso · ✅ Completada · 🔴 Bloqueada · �
 | NR2 | `_identify_critical_issues` cubre PageSpeed ERROR + banda GEO critical | G | ⬜ | — |
 | NR3 | Escotilla V5 cerrada **sin revertir** BUG-6/N2 | G | ⬜ | — |
 | NR4 | Escotilla V9 cerrada (ledger vacío ≠ PASS) | G | ⬜ | — |
-| NR5 | Baseline 848 passed / 2 skipped preservado | todas | 🟡 1/11 | FASE-A: `tests/quality_gates` + `tests/asset_generation` → **848 passed / 2 skipped**, byte-idéntico al pre-cambio (`evidence/FASE-A/`, `temp/faseA_baseline_post.txt`) |
+| NR5 | Baseline 848 passed / 2 skipped preservado | todas | 🟡 1/11 | FASE-A: `tests/quality_gates` + `tests/asset_generation` → **848 passed / 2 skipped / 11 warnings**, igual al pre-cambio. ⚠️ No «byte-idéntico»: `diff evidence/FASE-A/faseA_baseline_{pre,post}.txt` da **1 línea** — la duración (`7.05s` → `6.02s`). Conteos y warnings idénticos |
 | NR6 | Corrida FASE-I: coherence ≥ 0.80 + perfil de gates esperado | I | ⬜ | — |
 
 > **Dos familias de NR** (auditoría del plan 2026-09-03): NR1-NR6 son «de hallazgo» (la tabla anterior);

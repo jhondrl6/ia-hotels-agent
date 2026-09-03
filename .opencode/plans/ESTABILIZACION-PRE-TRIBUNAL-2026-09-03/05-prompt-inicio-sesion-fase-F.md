@@ -92,7 +92,7 @@ estructural) volvería a pasar en verde.
 | Fase | Estado |
 |------|--------|
 | FASE-A — Fuente única de identidad | ✅ |
-| FASE-B — Biyección mapa↔emisión | ✅ |
+| FASE-B — Biyección triple mapa↔emisión↔narrativa | ✅ |
 | FASE-C — Punto 8 propuesta dinámica | ✅ |
 | FASE-D — Severidad 11+2 | ✅ |
 | FASE-E — A2 snapshot + A6 asset_path | ✅ (ver `evidence/FASE-E/consumidores-snapshot.md`: rutas de reconstrucción vivas) |

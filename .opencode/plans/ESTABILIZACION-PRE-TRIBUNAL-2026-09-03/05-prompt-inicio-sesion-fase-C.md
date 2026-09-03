@@ -6,7 +6,7 @@ los 7-8 servicios del registro haya o no brecha, lo que produce `no_breach = 6/7
 `coverage_ratio = 1.000` sea algebraico. Con propuesta dinámica, `no_breach = 0` **por construcción** ⟹
 `total == actionable` ⟹ los denominadores convergen y se disuelven la tautología de coverage **y** el
 `is_coherent = false` estructural (B5).
-**Dependencias**: FASE-A ✅ (registro canónico), FASE-B ✅ (biyección mapa↔emisión)
+**Dependencias**: FASE-A ✅ (registro canónico), FASE-B ✅ (biyección triple mapa↔emisión↔narrativa)
 **Duración estimada**: 6-9 horas
 **Complejidad técnica**: **MÁXIMA**
 **Modo de ejecución**: **DIRECTO** (no delegable)
@@ -119,7 +119,7 @@ score mínimo de un check para mantener overall ≥ 0.8 = **0.7000** (M=3 de 10 
 | Fase | Estado |
 |------|--------|
 | FASE-A — Fuente única de identidad | ✅ Completada |
-| FASE-B — Biyección mapa↔emisión | ✅ Completada |
+| FASE-B — Biyección triple mapa↔emisión↔narrativa | ✅ Completada |
 
 ### Base Técnica Disponible
 

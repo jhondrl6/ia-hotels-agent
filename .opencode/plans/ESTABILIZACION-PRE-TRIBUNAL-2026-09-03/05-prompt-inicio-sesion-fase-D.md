@@ -66,7 +66,7 @@ nunca por delante.** AC7 y AC8 se certifican juntas o ninguna.
 | Fase | Estado |
 |------|--------|
 | FASE-A — Fuente única de identidad | ✅ Completada |
-| FASE-B — Biyección mapa↔emisión | ✅ Completada |
+| FASE-B — Biyección triple mapa↔emisión↔narrativa | ✅ Completada |
 | FASE-C — Punto 8 propuesta dinámica | ✅ Completada (verificar en `06-checklist`) |
 
 ### Base Técnica Disponible

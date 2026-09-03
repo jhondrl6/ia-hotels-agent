@@ -88,7 +88,7 @@ debe ser **coherente con esa decisión**, no inventar una tercera.
 
 - Criterio de presencia **único** (FASE-F)
 - Severidad explícita 11+2 (FASE-D) — `_coverage_gate` y `doc_audit_consistency` son **blocking**
-- Biyección mapa↔emisión (FASE-B) — el ledger ya solo contiene pains que realmente se emiten
+- Biyección triple mapa↔emisión↔narrativa (FASE-B) — el ledger ya solo contiene pains que realmente se emiten **y** tienen narrativa
 - **Corpus de referencia**: `output/FASE-D_salentoreal_post_guard/v4_complete/hotelsalentoreal/v4_audit/audit_report_20260831_122803.json`
 - **Baseline**: 848 passed / 2 skipped + delta A-F
 

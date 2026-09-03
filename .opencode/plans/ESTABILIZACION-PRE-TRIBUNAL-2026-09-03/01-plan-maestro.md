@@ -67,11 +67,18 @@ error de migración cambia lo que se le promete al cliente, no solo un conteo in
 
 ---
 
-### FASE-B — Biyección mapa↔emisión de `detect_pains` (V1)
+### FASE-B — Biyección **triple** mapa↔emisión↔narrativa (V1 + N-A1)
 
 **Complejidad: MEDIA-ALTA.** El código es sencillo; la dificultad es la **decisión de producto** por
-cada uno de los 9 pains muertos (implementar la detección ⟹ nueva brecha vendible, o retirarla del
-mapa ⟹ dejar de prometerla).
+cada uno de los **11** pains sin narrativa (implementar la detección ⟹ nueva brecha vendible, o retirarla
+del mapa ⟹ dejar de prometerla).
+
+> ⚠️ **Enmendado post-FASE-A (N-A1, medido en `evidence/FASE-A/faseA_narratives_audit.txt`)**: la
+> biyección **doble** deja el fix **inerte**. `_pain_to_brecha` descarta en silencio todo `pain_id` sin
+> entrada en `narratives` (`v4_diagnostic_generator.py:3346-3347`); `narratives` tiene **16** claves vs
+> las **27** de Capa 1 ⟹ **11 ausentes** = los 9 pains muertos de V1 **+ 2 que hoy sí se emiten y sí se
+> descartan** (`no_ga4_enhanced`, `low_ota_divergence`). Ver `10-analisis` §5 S6/S12/S13 y
+> `05-prompt-inicio-sesion-fase-B.md` §Contexto N-A1.
 
 V1 verbatim: además de `missing_llmstxt`, `detect_pains` nunca emite `no_motor_reservas`, `no_ssl`,
 `no_schema_reviews`, `missing_alt_text`, `no_monthly_report`, `no_blog_content`, `no_social_links`,
@@ -79,9 +86,9 @@ V1 verbatim: además de `missing_llmstxt`, `detect_pains` nunca emite `no_motor_
 
 | # | Tarea | Archivos | AC |
 |---|-------|----------|-----|
-| B1 | **Decisión por pain muerto**: tabla de 9 filas — implementar / retirar / diferir, con justificación y señal de dato necesaria. Salida: `evidence/FASE-B/decision-pains-muertos.md` | — (análisis) | AC4 |
-| B2 | **Ejecutar la decisión**: puntos de emisión reales en `detect_pains` para los que se implementan; retiro del mapa para los que no. `missing_llmstxt` es caso confirmado: el asset se genera y el sitio no tiene `llms.txt` (`ia_readiness llms_txt=0`), pero ninguna rama lo emite | `pain_solution_mapper.py:339` `detect_pains` · `:60` `PAIN_SOLUTION_MAP` · `:160-168` `missing_llmstxt` | AC4 |
-| B3 | **Candado de biyección**: test que falla fuerte si el mapa declara un `pain_id` que `detect_pains` no puede emitir. Patrón: guardián AST de FASE-SR-A | `tests/commercial_documents/test_pain_map_bijection.py` | AC4 |
+| B1 | **Decisión por pain sin narrativa**: tabla de **11 filas** en dos grupos disjuntos — **(a)** 9 pains muertos (no se emiten *ni* tienen narrativa): implementar / retirar / diferir, con justificación y señal de dato necesaria; **(b)** 2 pains vivos que se emiten y se descartan (`no_ga4_enhanced`, `low_ota_divergence`): darles narrativa o retirarlos del mapa — ninguno puede quedar en el estado actual. Salida: `evidence/FASE-B/decision-pains-muertos.md` | — (análisis) | AC4 |
+| B2 | **Ejecutar la decisión**: puntos de emisión reales en `detect_pains` para los que se implementan; **entrada en `narratives`** para los que se narran; retiro del mapa para los que no. `missing_llmstxt` es caso confirmado: el asset se genera y el sitio no tiene `llms.txt` (`ia_readiness llms_txt=0`), pero ninguna rama lo emite. **Decisión arquitectónica obligada** (L-NC4 vs S14): de dónde salen los pesos de impacto de las entradas nuevas — `narratives` es una tabla paralela pain_id→texto de 16 entradas y los pesos viven duplicados ×4 regiones en `config/regional_benchmarks.yaml::pain_narratives` + 16 fallbacks Python (80 literales para 16 valores) | `pain_solution_mapper.py:339` `detect_pains` · `:60` `PAIN_SOLUTION_MAP` · `:160-168` `missing_llmstxt` · `v4_diagnostic_generator.py:3246-3347` `_pain_to_brecha` + `narratives` · `config/regional_benchmarks.yaml` `pain_narratives` | AC4 |
+| B3 | **Candado de biyección tridireccional**: test que falla fuerte si el mapa declara un `pain_id` que `detect_pains` no puede emitir **o** que `narratives` no puede narrar, y en sentido inverso. Debe **haber fallado en rojo contra el estado actual** (los 11 ausentes medidos son la prueba de que detecta el defecto real). Patrón: guardián AST de FASE-SR-A | `tests/commercial_documents/test_pain_map_bijection.py` | AC4 |
 
 **Restricción**: NO agregar el 8º servicio al registro (§8.5 del dossier). La unificación 7→8
 **empeora** `coverage_ratio` (0.571 → 0.500) — medido.
@@ -212,7 +219,7 @@ quedan.
 | # | Tarea | Archivos | Hallazgo |
 |---|-------|----------|----------|
 | H1 | **V7** — reemplazar el guard `hasattr(direct_field.value, '__iter__')` por validación numérica con normalización de unidades y uso de `ota_field`. Hoy `low_ota_divergence` (HIGH, priority 1) **no puede disparar** con valor numérico: el guard excluye float/int y el pipeline conoce `direct_channel=0.2` ("default"). Triple defecto | `pain_solution_mapper.py:453` | V7 |
-| H2 | **V6** — `except Exception: return brechas` de `_identify_brechas` + caché → logging + estado visible. Hoy degrada en silencio (misma familia que el NameError de `tier_c` y que `precision_tier` defaulteando a `"C"`) | `v4_diagnostic_generator.py:3189-3194` | V6 |
+| H2 | **V6** — `except Exception: return brechas` de `_identify_brechas` + caché → logging + estado visible. Hoy degrada en silencio (misma familia que el NameError de `tier_c` y que `precision_tier` defaulteando a `"C"`) | `v4_diagnostic_generator.py:3197-3202` | V6 |
 | H3 | **V8** — deduplicar `low_organic_visibility` + **V11** — residuos D6 de la cadena de presentación de PageSpeed | `pain_solution_mapper.py:677-701` · `v4_diagnostic_generator.py:1945-1952` | V8, V11 |
 | H4 | **V13** — unificar los dos `MetadataValidator` gemelos + **V12** — **documentar** (no editar) la decisión OPS del placeholder inválido en `.env` | `data_validation/metadata_validator.py` · `modules/data_validation/metadata_validator.py` · `09-documentacion-post-proyecto.md` | V13, V12 |
 
