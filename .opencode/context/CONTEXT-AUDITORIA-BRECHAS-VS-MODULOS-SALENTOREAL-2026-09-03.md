@@ -10,7 +10,10 @@
 > (Zione D6 → SR-F → fix OPS 2026-08-31) con el delta que sigue abierto, y —desde la reestructuración del
 > 2026-09-03— la corrección medida de la severidad de gates (advisory = 2, no 3; H10), los seis agujeros
 > vivos A1-A6, el mecanismo causal B1-B5 del `no_breach = 6/7` (insumo del punto 8), la tabla consolidada
-> de mediciones y los falsos positivos corregidos con su lección de forma. No contiene secretos.
+> de mediciones y los falsos positivos corregidos con su lección de forma. El mismo día, una validación
+> externa exhaustiva contra código vivo (§12) confirmó ~50 afirmaciones, corrigió 7 (C1-C7, §12.2) y añadió
+> 16 hallazgos nuevos (V1-V16, §12.3), consolidó la causa raíz —contrato de detección fragmentado y sin
+> candado— y dejó recomendaciones en 3 niveles (§12.5). Sin implementación. No contiene secretos.
 
 ---
 
@@ -22,7 +25,8 @@ Pregunta del usuario (2026-09-03): las brechas del diagnóstico
 
 Método: contraste doc ↔ artefactos de `hotelsalentoreal/v4_audit/` (corrida 2026-08-31 12:28) ↔ código.
 El doc auditado es idéntico byte a byte al `DIAGNOSTICO.md` del ZIP entregado (`deliveries/hotelsalentoreal_20260831/`).
-Cero archivos de código modificados (sigue vigente: la reestructuración documental del 2026-09-03 tampoco tocó código).
+Cero archivos de código modificados (sigue vigente: la reestructuración documental del 2026-09-03 tampoco
+tocó código, ni la validación externa de §12).
 Originalmente extendía el eje servicios↔assets de `CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` §13 al eje brechas↔módulos.
 
 **Reestructuración del 2026-09-03 (aprobada por el usuario):** este documento absorbió **§12.1-12.6 y §13** de
@@ -54,7 +58,9 @@ Fuentes recuperadas (Paso 0 del ciclo de capitalización):
 - Fix de presentación D6: commit `e544a59` (2026-08-03 18:49) `feat(FASE-C-B): D6+D7+D8 — textos dinámicos`.
   Es el código vigente en `v4_diagnostic_generator.py:1945-1952` (lee `performance.status/message` reales).
 - Cadena de fallback vigente: `modules/data_validation/external_apis/pagespeed_client.py:25`.
-- Release v4.74.0 (donde se cerró el fix OPS): commits `f914e0e`/`f77f8ae` del **2026-08-31 15:08**.
+- Release v4.74.0 (donde se cerró el fix OPS): commits `f914e0e`/`f77f8ae` del **2026-08-31 15:08**
+  (matiz de la validación, §12.2: `f914e0e` es 13:37 y 15:08 es `f77f8ae`; ambas horas posteriores a la
+  corrida 12:28 — la lectura no cambia).
 - `.env` actual contiene `PAGESPEED_API_KEY` y `GOOGLE_PAGESPEED_API_KEY` (nombres verificados; valores no leídos).
 - **La corrida auditada es 2026-08-31 12:28 — anterior al cierre del fix OPS (~15:08).** Por eso el doc todavía
   muestra el error de la key: la corrección de credenciales llegó después de la corrida, no falta por hacer.
@@ -101,16 +107,22 @@ ausente) presentado como 2 brechas con costos idénticos (28%+28%+42% mostrados 
    (79 Places / 85 checklist ✅ / 29 crítico) y el desglose marca ✅ `fotos_gbp` contra otra fila
    "Fotos GBP Insuficientes".
 3. **Visibilidad LLM = 0** — `llm_report` mention_rate 0.0, SoV 0.0 (3 queries); `aeo_snippets` 0/5
-   (`source: "stub"`). No existe pain_id de visibilidad LLM/snippets en el mapa de 24. El doc afirma
+   (`source: "stub"`). No existe pain_id de visibilidad LLM/snippets en el mapa (27 entradas tras la
+   corrección C5, §12.2 — el punto se sostiene: ninguno de los 27 es de visibilidad LLM/snippets). El doc afirma
    "Visibilidad en IA: Alta" y "Recomendaciones de IA ✅ Superior" — contradicción directa no cubierta
    por `hard_contradictions`.
 4. **`missing_llmstxt` detección muerta** — existe en el mapa (`pain_solution_mapper.py:160-168`), el asset
    se implementa y se generó, pero ninguna rama de `detect_pains` lo emite. El sitio no tiene llms.txt
    (`ia_readiness.components.llms_txt = 0`).
 5. **2 schema warnings** (image, priceRange) — solo recommendation (`v4_comprehensive.py:1828-1829`).
-6. **Fotos GBP 10/40** — solo fila en la tabla rota (`v4_diagnostic_generator.py:1942-1943`).
-7. **`title=""`/`description=""` vacíos** — el validador solo detecta defaults; vacío ⇒ `has_issues=false`,
-   sin pain (`pain_solution_mapper.py:469-484`).
+6. **Fotos GBP 10/40** — solo fila en la tabla rota (`v4_diagnostic_generator.py:1942-1943`). Matiz C7
+   (§12.2): la cifra 10/40 vive en el audit (recommendations), no en el doc — el doc dice «Subir al menos
+   30 fotos adicionales». La caída se sostiene.
+7. **`title=""`/`description=""` vacíos** — **REFUTADO por la validación (C4, §12.2)**: `validate_title`
+   sí tiene check de vacío CRITICAL (`data_validation/metadata_validator.py:150-159`) y
+   `validate_description` HIGH (`:196-205`); los vacíos disparan `metadata_defaults`, con narrativa
+   equivocada («por defecto» cuando el sitio tiene campos vacíos). La vía silenciosa real es
+   `metadata=None` si el audit crashea (`v4_comprehensive.py:811-812`).
 8. **`low_ota_divergence` estructuralmente muerto** — guard `hasattr(direct_field.value,'__iter__')`
    (`pain_solution_mapper.py:453`) excluye float/int; el pipeline conoce `direct_channel_percentage=0.2`
    ("default"). Pain HIGH, priority 1, imposible de disparar para valores escalares.
@@ -123,6 +135,8 @@ Por umbral (visibles, discutibles): `low_citability` <50 (hay 57.42 con recomend
 - **`coverage_no_silent_drop` tautología extremo a extremo (confirmado en código):** el gate cuenta
   `total = len(pain_ledger_resolved)` (`publication_gates.py:1288-1373`); ledger y brechas del doc salen de
   LA MISMA llamada `detect_pains` (`v4_asset_orchestrator.py:280`; `v4_diagnostic_generator.py:3178`, DEP-03).
+  Matiz de la validación (§12.1): es la misma **función con los mismos inputs** en 3 puntos (el tercero:
+  `main.py:2434`), no una única llamada literal — la tautología se sostiene igual.
   La brecha que no entra al ledger es invisible por construcción. Histórico conexo: D2 (Zione, doble
   invocación con inputs distintos) fue corregido unificando la llamada — la unificación creó la tautología.
   **Familia de tautologías:** esta es la del eje brechas↔módulos. Existe una segunda del mismo patrón en el
@@ -147,7 +161,11 @@ Por umbral (visibles, discutibles): `low_citability` <50 (hay 57.42 con recomend
   (stale) en un run del 31-08.
 - Gate alignment autocontradictorio: `alignment_percentage: 0.333` + `missing_count: 2` en details vs mensaje
   "Alignment 100%: 0 services still missing"; `no_breach: 3` en el gate vs 6 NO_BREACH en
-  `proposal_asset_matrix.json`.
+  `proposal_asset_matrix.json` — **mecanismo resuelto por la validación (V15, §12.3):** `_presence_resolved`
+  absorbió 3 NO_BREACH (Schema Hotel, Schema Organization, FAQ) moviéndolos a `present` con el oráculo
+  permisivo; ambas cifras son reales en etapas distintas y es la reproducción exacta de A4. Verificado
+  además: el mensaje del gate dice «**2 missing**: Schema Hotel, Schema Organization» mientras la
+  suggestion del mismo gate result dice «0 services still missing».
 - `financial_scenarios.pricing.is_compliant: false` vs gate `pricing_compliance` PASSED (WARNING); tres
   doctrinas de ratio (9.9x coherence / 0.2041 gate / 3x-6x AGENTS.md).
 - coherence `is_coherent=false` (assets_are_justified 3/4) vs gate PASSED 0.88 y frontmatter del doc
@@ -184,7 +202,8 @@ Resultado: **cuatro regímenes contradictorios** para la misma severidad. El ún
 
 ### 8.2 Evidencia medida — por qué `asset_confidence` no puede ser advisory
 
-Corpus completo de corridas históricas en `output/`: **29 corridas únicas, 10 hoteles**.
+Corpus completo de corridas históricas en `output/`: **29 corridas únicas, 10 hoteles** — corregido por
+la validación (C2, §12.2): **27 corridas únicas** (10 hoteles se mantiene).
 
 **4 de 29 (14%) tienen 100% de assets ESTIMATED** — exactamente el caso que `asset_confidence` bloquea en `publication_gates.py:802-820`:
 
@@ -195,11 +214,19 @@ Corpus completo de corridas históricas en `output/`: **29 corridas únicas, 10 
 | `hotel_vísperas` | 2026-03-26 | 6/6 | `None` |
 | `hotelvisperas` | 2026-03-25 | 6/6 | `None` |
 
-Las cuatro comparten `coherence_score_final = None`: no hay score canónico que las rescate. Si `asset_confidence` fuera advisory, **el 14% del histórico saldría a entrega sin un solo dato real** — el escenario exacto que la cláusula P6.5 y el primer piso del Juez (diseño: CONTEXT-BOTS §5, regla determinista) existen para impedir.
+Las cuatro comparten `coherence_score_final = None`: no hay score canónico que las rescate (matiz C3,
+§12.2: sus `coherence_validation.json` sí traen `overall_score` 0.84-0.87 pre-gen — no cambia la decisión).
+Si `asset_confidence` fuera advisory, **el 14% del histórico saldría a entrega sin un solo dato real** — el escenario exacto que la cláusula P6.5 y el primer piso del Juez (diseño: CONTEXT-BOTS §5, regla determinista) existen para impedir.
 
 Distribución de `ESTIMATED/total` en las 29 corridas: 0.00→1, 0.50→4, 0.54→3, 0.55→4, 0.56→2, 0.62→3, 0.67→1, 0.75→1, 0.77→1, 0.80→1, 0.86→1, 0.88→1, 0.90→2, **1.00→4**.
 
 El bloque duro de `asset_confidence` (`all_estimated` → `GateStatus.BLOCKED`, mensaje *"Delivery bloqueado hasta onboarding o datos reales"*) es hoy **el único mecanismo** que convierte un paquete Tier C en no-entregable. No hay sustituto.
+
+> **Corrección C2 (validación, §12.2):** el corpus real es **27 corridas únicas** y, bajo el criterio
+> `estimated == generated`, las corridas 100% ESTIMATED son **~10 (37%)**, no 4 (14%). La distribución de
+> arriba hereda el subconteo. El argumento queda **reforzado**: el bloqueo protege ~37% del histórico.
+> (Refuerzo adicional V10, §12.3: el régimen de delivery tampoco bloquea 100% ESTIMATED — `asset_confidence`
+> de publicación es el único bloqueo duro del pipeline.)
 
 ### 8.3 Decisión
 
@@ -316,21 +343,21 @@ Y el ledger resuelto tiene **exactamente 3 entradas**, las tres MEDIUM y ASSET_G
 **La doble falla de mapeo, que es la causa raíz:**
 - `low_organic_visibility` **sí se detectó** y produjo `indirect_traffic_optimization` (`pain_solution_mapper.py:179`; `asset_catalog.py:300-313` IMPLEMENTED) — pero **ningún servicio prometido mapea a ese asset**: es un **huérfano**. Se genera, se entrega y no responde a nada vendido.
 - `no_analytics_configured` produjo `analytics_setup_guide` — **segundo huérfano**, mismo mecanismo (`pain_solution_mapper.py:170`).
-- "SEO Local" promete `optimization_guide`, que solo se mapea desde `low_citability` (`pain_solution_mapper.py:207-215`) — pain que **no se detectó**. El servicio prometido queda NO_BREACH.
+- "SEO Local" promete `optimization_guide`, que se mapea desde **5 pains** (`poor_performance`, `metadata_defaults`, `low_citability`, `low_content_length`, `low_seo_score`; corrección C6, §12.2) — **ninguno se detectó** en esa corrida. El servicio prometido queda NO_BREACH.
 
 ⟹ **El registro promete por pains que no aparecieron, y los pains que aparecieron producen assets que nadie promete.** Los dos extremos del contrato comercial están desalineados por construcción del mapper, no por los datos del hotel. De 4 assets generados, **2 son huérfanos** y 1 (`monthly_report`) no tiene pain.
 
 **B2 — Brecha runtime vs estática.** El registro estático `PROPOSAL_SERVICE_TO_ASSET` está **completo: 7/7 con asset implementado**. El problema no es el registro. En runtime se generan **4 assets** (`asset_generation_report.json`: `analytics_setup_guide` WARNING, `indirect_traffic_optimization` WARNING, `llms_txt` PASSED, `monthly_report` PASSED; `total_assets = 4`, `estimated = 2`, `delivery_ready_percentage = 100.0`) y la **intersección prometido ∩ generado = {`llms_txt`}** — un solo elemento. `monthly_report` se genera pero **no está en el registro** (comentado en `proposal_asset_alignment.py:27-29`, FASE-3 BUG-10).
 ⟹ Quien confunda "registro completo" con "cobertura real" llega a la conclusión opuesta. Fue un falso positivo de esta misma auditoría (§9.5, #3).
 
-**B3 — Los seis registros de identidad de servicios.** Punto 8 es imposible sin decidir cuál manda.
+**B3 — Los seis registros de identidad de servicios** (la validación amplía el inventario a **≥9**: V3, §12.3). Punto 8 es imposible sin decidir cuál manda.
 
 | Registro | Ubicación | Tamaño | Rol |
 |---|---|---|---|
 | `service_catalog` | config | **8** | lo que se declara vendible |
 | `PROPOSAL_SERVICE_TO_ASSET` | `proposal_asset_alignment.py:22-33` | **7** | lo que la propuesta promete → asset |
 | `ASSET_CATALOG` | `asset_catalog.py` | **25** | lo que se sabe generar |
-| `PAIN_SOLUTION_MAP` | `pain_solution_mapper.py` | **22 mapeables** | pain → asset |
+| `PAIN_SOLUTION_MAP` | `pain_solution_mapper.py` | **27 entradas** (C5, §12.2; ~18 emitidos por `detect_pains`, V1) | pain → asset |
 | Output runtime del orquestador | `asset_generation_report.json` | **4** | lo que de hecho se generó |
 | Contract registry | `asset_responsibility_contract.py` | **3 CORE + 3 GEO** | responsabilidad de deploy |
 
@@ -368,14 +395,14 @@ Seis fuentes, ninguna canónica. `ALL_PROMISED_SERVICES = list(PROPOSAL_SERVICE_
 | Advisory 2 (§8.4) | **~6** de alignment | 0 hoy; hay que crearlos (§8.4, ítem 4) | **0** — coverage es 1.000 siempre; no se pierde nada |
 | S2.3 (denominador) | **~41 tests / 152 asserts** | 0 | **Negativo** — revierte D-PF1 y bloquea 3 de 4 configuraciones históricas (75%) |
 
-Baseline medido antes de tocar nada: **140 passed, 1 skipped, 8 warnings, ~1.23s** sobre los 7 archivos de tests de alignment/gates (141 tests, 32 asserts de bloqueo). **0 tests** referencian `BLOCKING_GATE_NAMES`.
+Baseline medido antes de tocar nada: **140 passed, 1 skipped, 8 warnings, ~1.23s** sobre los 7 archivos de tests de alignment/gates (141 tests, 32 asserts de bloqueo). **0 tests** referencian `BLOCKING_GATE_NAMES`. (Matiz de la validación, §12.1: la suite completa `tests/quality_gates + tests/asset_generation` mide **848 passed, 2 skipped** en ~11.7s; la cifra de 7 archivos/141 tests no fue reproducible tal cual — para baseline de suite usar 848/2.)
 
 ### 9.4 Tabla consolidada de mediciones (para no re-medir)
 
 | Magnitud | Valor | Dónde |
 |---|---|---|
-| Corridas históricas únicas en `output/` | **29** (10 hoteles) | §8.2 |
-| Corridas con 100% assets ESTIMATED | **4 (14%)** — `hotel_visperas`/`hotel_vísperas`, 2026-03-25 → 2026-04-05, todas con `coherence_score_final = None` | §8.2 |
+| Corridas históricas únicas en `output/` | **29** → corregido a **27** (C2, §12.2); 10 hoteles | §8.2 |
+| Corridas con 100% assets ESTIMATED | **4 (14%)** → corregido a **~10 (37%)** bajo `estimated == generated` (C2, §12.2) — `hotel_visperas`/`hotel_vísperas`, 2026-03-25 → 2026-04-05, todas con `coherence_score_final = None` | §8.2 |
 | Configuraciones únicas de alignment en el histórico | **4**, con `no_breach = None` en 3 | §8.5 |
 | Matriz SalenteReal | 7 entradas: 6 NO_BREACH + 1 LINKED, `delivery_ready: True`, versión 2.0 | B1 |
 | Ledger resuelto | **3 pains**, todos MEDIUM / ASSET_GENERATED | B1 |
@@ -386,8 +413,8 @@ Baseline medido antes de tocar nada: **140 passed, 1 skipped, 8 warnings, ~1.23s
 | `unresolved` / G9 | **0** / **PASS** en 10/10 ⟹ S2.4 sin efecto | B4 |
 | Δcoherence 7→8 | **+0.0000** | B5 |
 | Δcoherence R22 | **−0.0121** (0.88 → 0.8679) | B5 |
-| coherence canónico SalenteReal | **0.88** (DT4-N4); `0.9133` es `pre_coherence_score`, **no canónico** | CONTEXT-BOTS §13 R3 |
-| `is_coherent` | **false** en 4 lugares del artefacto; el gate PASÓ igual. Causa: 3/4 = 0.75 | N11 / B5 |
+| coherence canónico SalenteReal | **0.88** (DT4-N4); `0.9133` no existe en artefactos (solo en docs de contexto) — el `coherence_score_pre` real es **0.88** (C1, §12.2) | CONTEXT-BOTS §13 R3 + §12.2 |
+| `is_coherent` | **false** en 4 archivos del run, incluido `asset_generation_report.json` ×2 (V16, §12.3); el gate PASÓ igual. Causa: 3/4 = 0.75 | N11 / B5 |
 | Sensibilidad de coherence | **0.2667**/unidad; headroom **0.08**; mínimo por check **0.7000** | B5 |
 | ZIP de la entrega | `hotelsalentoreal_20260831.zip`, **46,552 bytes**; directorio expandido **37 archivos** | CONTEXT-BOTS §13 R1 |
 | Artefactos `site_presence*` persistidos | **0** en todo `output/` | A2 |
@@ -419,7 +446,7 @@ Siete afirmaciones que se hicieron durante el análisis y que la medición refut
 | §13.5 | §9.5 (este dossier) | falsos positivos + lección de forma |
 | §12.7 | CONTEXT-BOTS §13 (se queda) | correcciones adyacentes de §3/§8; N11 → puntero a §9.2 |
 
-Etiquetas **invariables** (vocabulario compartido con ROADMAP v4.2): A1-A6, B1-B5, R*, N11, H10, T0.x, G9/G11, P6/P9/P10/P12, D-PF1, S1.2/S2.3/S2.4, R8c, R22.
+Etiquetas **invariables** (vocabulario compartido con ROADMAP v4.2): A1-A6, B1-B5, R*, N11, H10, T0.x, G9/G11, P6/P9/P10/P12, D-PF1, S1.2/S2.3/S2.4, R8c, R22. **V1-V16** (§12.3): etiquetas de la validación externa del 2026-09-03, prefijo `V` para no colisionar con `N11`; sus correcciones se rotulan **C1-C7** (§12.2) para no colisionar con las `R*` de CONTEXT-BOTS §13 ya citadas aquí (R1 ZIP, R2 site_verification, R3 coherence).
 
 **Hard precondiciones del tramo offline del tribunal** (orden sugerido para el plan de estabilización):
 1. **Punto 8** (§9.2) — sin él el Bot 2 marcaría SIN-BRECHA-ASOCIADA en 6/7 servicios de toda corrida: el tribunal devolvería todo paquete y no añadiría valor.
@@ -436,7 +463,9 @@ El resto del dossier (§4, §5, §6, §7) es **completitud del diagnóstico**: v
 - Código: `pain_solution_mapper.py`, `v4_diagnostic_generator.py`, `publication_gates.py`,
   `v4_comprehensive.py`, `ai_crawler_auditor.py`, `pagespeed_client.py`, `v4_asset_orchestrator.py`,
   `proposal_asset_alignment.py`, `alignment_result.py`, `coherence_validator.py`, `asset_catalog.py`,
-  `delivery_quality_report.py`, `site_presence_checker.py`, `commercial_gate.py`.
+  `delivery_quality_report.py`, `site_presence_checker.py`, `commercial_gate.py`,
+  `v4_proposal_generator.py`, `pain_ledger.py`, `conditional_generator.py`,
+  `data_validation/metadata_validator.py`, `service_catalog.py`, `asset_responsibility_contract.py`, `main.py`.
 - QMind `iah-cli-lecciones`: CONTEXT-H (Zione 2026-08-02/03), CONTEXT Salento Real ejecución (2026-08-27),
   10-analisis SR-PIPELINE-FIXES (2026-08-28), 10-analisis VALIDADOR-URL-PROPIA (2026-08-31).
 - Git: `e544a59` (2026-08-03), `f914e0e`/`f77f8ae` (2026-08-31).
@@ -445,3 +474,208 @@ El resto del dossier (§4, §5, §6, §7) es **completitud del diagnóstico**: v
 - Memoria de proyecto: `auditoria-brechas-diagnostico-vs-modulos-salentoreal.md`,
   `medicion-deltas-coverage-ratio-y-coherence-salento-real.md`, `plan-tribunal-bots-anclado-en-p6.md`,
   `decision-advisory-gates-2-no-3.md`.
+- Validación externa 2026-09-03: re-verificación completa destilada en §12 (informe original en la sesión que la produjo).
+
+## 12. Validación externa exhaustiva contra código vivo (2026-09-03)
+
+> **Qué es:** re-verificación independiente del dossier completo (§1-§9) contra el código vigente y los
+> artefactos de `output/FASE-D_salentoreal_post_guard/`, solicitada el mismo 2026-09-03. Veredicto: el
+> dossier es sustancialmente factual — de ~60 afirmaciones verificables, **~50 confirmadas literalmente,
+> 7 refutadas o matizadas (C1-C7), 16 hallazgos nuevos (V1-V16)**. Ninguna corrección invalida una decisión
+> del dossier; una de ellas (C2) **refuerza** la conclusión que toca. Cero archivos de código modificados
+> (sigue vigente).
+> **Etiquetas:** hallazgos nuevos `V1-V16` (prefijo `V` para no colisionar con `N11`, §9.2-B5) y
+> correcciones `C1-C7` (prefijo `C` para no colisionar con las `R*` de CONTEXT-BOTS §13 ya citadas aquí —
+> R1 ZIP, R2 site_verification, R3 coherence). En el informe original de la sesión las correcciones se
+> rotularon R1-R7.
+> **Advertencia heredada, revalidada:** revalidar citas de código no revalida premisas — las mediciones de
+> experimento (B4/S2.3/R8c/R22) no fueron re-derivadas aquí; el mecanismo de código que las soporta sí
+> quedó confirmado. Antes de tocar denominadores, reproducir el experimento, no confiar en la tabla.
+
+### 12.1 Confirmaciones destacadas
+
+- **Doble tautología confirmada en código:** `coverage_no_silent_drop` cuenta `total = len(pain_ledger)`
+  (`publication_gates.py:1373-1374`) y `coverage_ratio` es algebraicamente 1.0 con `unresolved == 0`
+  (`alignment_result.py:105-108, 251-263, 268-269`). Matiz: ledger y doc salen de la misma **función con
+  los mismos inputs** en 3 puntos (`v4_asset_orchestrator.py:280`, `v4_diagnostic_generator.py:3178`,
+  `main.py:2434`), no de una única llamada literal — la tautología se sostiene igual.
+- **Los 4 regímenes de severidad (§8.1) verificados literalmente:** docstrings `:4`/`:162`,
+  `blocking_gates = [r for r in results if not r.passed]` en `:1967-1968` y `:239-249`,
+  `BLOCKING_GATE_NAMES` en `delivery_quality_report.py:289`. Patrón a copiar confirmado
+  (`commercial_gate.py:99-113`, 6 BLOCKING + 4 WARNING). **0 tests** referencian `BLOCKING_GATE_NAMES`
+  (re-grepeado). `asset_confidence` bloquea 100% ESTIMATED (`:802-820`).
+- **Causa del punto 8 confirmada en artefactos:** matriz 7 = 6 NO_BREACH + 1 LINKED
+  (`delivery_ready: true`), ledger exactamente 3 pains MEDIUM/ASSET_GENERATED, 4 assets generados
+  (2 WARNING/2 PASSED), intersección prometido∩generado = {`llms_txt`}, 2 huérfanos
+  (`analytics_setup_guide` `asset_catalog.py:297`, `indirect_traffic_optimization` `:309`, ambos
+  IMPLEMENTED sin servicio que los prometa).
+- **A1-A6 confirmados con sus literales:** skip verde `:250-257`, `passed_count` sobre valores (`:311`),
+  segundo default `:325`; `find output -iname "*site_presence*"` → **0** (re-ejecutado); el snapshot se
+  pasa a 4 consumidores (`main.py:2535, 2620, 2936, 3155`) y jamás se escribe; cross-check solo pre-gen
+  (`coherence_validator.py:670`), éxito hardcodea `score=1.0` (`:697`), unión en `:703`; oráculo estricto
+  `== "exists"` (`proposal_asset_alignment.py:279`) vs permisivo `("exists", "exists_with_issues")`
+  (`site_presence_checker.py:61`); skip silencioso `:610-612` y `delivery_context` ignorado `:779-789`;
+  `asset_path: null` en la matriz v2.0 real (el builder sí poblaría `path` si el caller lo pasara — el
+  defecto está aguas arriba).
+- **N11 confirmado:** `_coherence_gate` (`publication_gates.py:458-526`) jamás lee `is_coherent`;
+  `is_coherent: false` convive con gate PASSED 0.88; pesos 1.5/1.0/1.5/0.5/1.0/2.0 (`coherence_validator.py:101-108`);
+  3/4 → severity error (`:299-301`).
+- **Integridad de la entrega:** ZIP 46,552 bytes / 37 archivos; `DIAGNOSTICO` byte a byte idéntico al del
+  directorio (SHA256 coincidente). **46** `audit_report_*.json` en el repo, **todos**
+  `performance.status: "ERROR"`; el más reciente 2026-08-31 12:27:57 — el pendiente §7.2 (corrida post-fix
+  persistida) sigue abierto.
+- **Brecha 3 (crawlers IA):** parser retorna False al primer `Disallow:` no vacío
+  (`ai_crawler_auditor.py:189-192`), ignora `Allow:` (`:193-194`), score 0.50 exacto con conf 1.0
+  (`:234-243`), y **5 de los 14** crawlers son buscadores tradicionales (`:22-37`: Googlebot, Bingbot,
+  Baiduspider, YandexBot, DuckDuckBot).
+- **Baseline de tests (matiz):** la suite completa `tests/quality_gates + tests/asset_generation` mide
+  **848 passed, 2 skipped** (~11.7s). La cifra de §8.6/§9.3 "141 tests / 7 archivos" no fue reproducible
+  tal cual — para baseline de suite usar 848/2.
+- Menores verificados: `use_ga4` literal en `main.py:2424`; truncamiento int
+  (`v4_diagnostic_generator.py:2685/:2689`); `execution_trace` con `pagespeed_api` en `executed` y
+  `skipped` a la vez; umbrales de §4 (citability 57.42/50, ia_readiness 73.8/50, gbp 79/70, seo 60/40 —
+  el "60" solo existe en el doc, no en el audit JSON); `robots_fix.txt` 2026-03-30; sync_report
+  «✅ consistente» con «No especificada».
+
+### 12.2 Correcciones (C1-C7)
+
+| # | Afirmación del dossier | Realidad verificada | Impacto en decisiones |
+|---|---|---|---|
+| C1 | `0.9133` como `pre_coherence_score` (§9.4) | `0.9133` no existe en artefactos (solo en docs de contexto); `coherence_score_pre` real **0.88** | Ninguno: el 0.88 canónico se sostiene |
+| C2 | Corpus 29 corridas; 4 (14%) al 100% ESTIMATED (§8.2, §9.4) | **27 corridas únicas** (10 hoteles ✓); bajo `estimated == generated` son **~10 (37%)** | **Refuerza** §8.2: el bloqueo de `asset_confidence` protege ~37% del histórico, no 14% |
+| C3 | Las 4 corridas ESTIMATED «sin score que las rescate» | `coherence_score_final: None` ✓, pero sus `coherence_validation.json` **sí** traen `overall_score` 0.84-0.87 (pre-gen, sin post-gen) | Ninguno en la decisión; premisa imprecisa |
+| C4 | §4.7: vacíos title/description sin pain | **Refutada**: check de vacío existe — CRITICAL (`data_validation/metadata_validator.py:150-159`) y HIGH (`:196-205`); vacíos disparan `metadata_defaults` con narrativa equivocada («por defecto») | La vía silenciosa real es `metadata=None` si el audit crashea (`v4_comprehensive.py:811-812`) |
+| C5 | «Mapa de 24» (§4.3) / «22 mapeables» (B3) | `PAIN_SOLUTION_MAP` tiene **27 entradas** (26 con asset implementado; solo `low_ota_divergence` → MANUAL_ONLY) | Amplifica V1: el mapa declara 27, `detect_pains` emite ~18 |
+| C6 | «`optimization_guide` solo se mapea desde `low_citability`» (B1) | **5 pains** mapean a ese asset (`poor_performance`, `metadata_defaults`, `low_citability`, `low_content_length`, `low_seo_score`) | Sustancia intacta: ninguno se detectó en la corrida |
+| C7 | «Fotos GBP 10/40» en el doc (§4.6) | El 10/40 vive en el audit (recommendations); el doc dice «Subir al menos 30 fotos adicionales» | Ninguno: la fila rota y la caída se sostienen |
+
+Matiz horario (§1): `f914e0e` es 2026-08-31 **13:37**; 15:08 es `f77f8ae`. Ambas horas siguen posteriores
+a la corrida 12:28 — la lectura del dossier no cambia.
+
+### 12.3 Hallazgos nuevos (V1-V16)
+
+**V1 — Familia de pains muertos: 9, no 1.** Además de `missing_llmstxt`, `detect_pains` nunca emite:
+`no_motor_reservas`, `no_ssl`, `no_schema_reviews`, `missing_alt_text`, `no_monthly_report`,
+`no_blog_content`, `no_social_links`, `low_content_length` (grep: 0 puntos de emisión en `modules/`).
+El mapa declara 27 (C5), `detect_pains` implementa ~18. La caída #4 de §4 es un **patrón sistemático**,
+no un caso.
+
+**V2 — Segundo universo de detección con IDs fantasma.** `ELEMENTO_KB_TO_PAIN_ID`
+(`v4_diagnostic_generator.py:135-157`) referencia 6 pain IDs que **no existen** en el mapa del mapper:
+`no_speakable`, `no_llms_txt`, `ia_crawler_blocked` (vs `ai_crawler_blocked`), `weak_brand_signals`,
+`no_entity_schema`, `no_factual_data`. Drift de nombres entre universos — aunque el doc emitiera esas
+brechas, el mapper no podría mapearlas.
+
+**V3 — La fragmentación de registros es mayor: ≥9, no 6 (B3).** Se suman a los seis de B3:
+`conditional_generator.PAIN_TO_ASSET` (`:234-257`), `v4_proposal_generator.service_brecha_candidates`
+(`:1281-1289`) y `ASSET_TO_PAIN_ID` (`:1365-1372`), `pain_ledger.NORMALIZATION_RULES/PAIN_TO_PRESENCE_ASSET`
+(`pain_ledger.py:52-94`). Perla: `ASSET_TO_PAIN_ID` atribuye `monthly_report → "no_faq_schema"` (`:1366`),
+contradiciendo a `service_catalog` (`no_monthly_report`).
+
+**V4 — La atribución de brechas del doc excluye por diseño el pain real.** `service_brecha_candidates`
+asigna a `llms_txt` solo `missing_llmstxt` (muerto, V1) y el comentario excluye explícitamente
+`ai_crawler_blocked` (`v4_proposal_generator.py:1280`). Resultado: el único servicio LINKED del run no
+puede mostrar la brecha que efectivamente lo originó — la columna «Problema que resuelve» es
+estructuralmente ciega para él.
+
+**V5 — Segunda escotilla del coverage gate.** `_JUSTIFIED_STATUSES` incluye `ASSET_GENERATED`
+(`publication_gates.py:1237-1242`): un pain con asset generado cuenta como justificado **aunque el doc
+jamás lo mencione**. La tautología tiene dos salidas, no una.
+
+**V6 — Excepción silenciosa en el generador de brechas.** `except Exception: return brechas` + cache
+(`v4_diagnostic_generator.py:3189-3194`): si `detect_pains` lanza, el diagnóstico sale con **cero
+brechas** y sin señal (mismo patrón que el NameError silencioso del gate tier_c, ya documentado en
+memoria de proyecto).
+
+**V7 — `low_ota_divergence` aún más muerto que §4.8.** El `isinstance(direct_field.value, (int, float, str))`
+interno (`pain_solution_mapper.py:455`) es código muerto por el guard de `:453` (un numérico jamás pasa
+`hasattr(__iter__)`). Además el umbral `< 0.3` asume fracción (un 20% numérico nunca dispara; un string
+"20" pasaría el guard y `float("20") = 20` tampoco; solo un string "0.2" podría), y `ota_field` (`:450`)
+se lee y no se usa. Triple defecto: guard, unidades, evidencia ignorada.
+
+**V8 — Emisión duplicada.** `low_organic_visibility` puede emitirse dos veces en una llamada (rama
+`not ga4_available` `:694` + rama `organic < 1000` `:716`).
+
+**V9 — Inconsistencia de ledger vacío en el coverage gate.** `pain_ledger` (fallback) vacío = **PASS**
+(`publication_gates.py:1336-1344`); `pain_ledger_resolved` vacío = **BLOCKED** (`:1295-1304`).
+
+**V10 — El régimen delivery tampoco bloquea 100% ESTIMATED.** En `delivery_quality_report`, G8 «some
+below threshold» retorna `False` pero fuera de `BLOCKING_GATE_NAMES` → WARNING → el ZIP procede
+(`main.py:3194` solo aborta con FAIL). Refuerza §8.2: `asset_confidence` de publicación es **el único**
+bloqueo duro, tal como el dossier afirma.
+
+**V11 — Residuos D6: el texto viejo sobrevive en dos sitios.** Rama else
+`v4_diagnostic_generator.py:1952` («El sitio puede ser nuevo o tener tráfico bajo») para no-ERROR sin
+field data, y recomendaciones `v4_comprehensive.py:1841` («site may be new or low traffic»). El fix D6
+(`e544a59`) solo cubrió la rama ERROR.
+
+**V12 — Trampa `.env` confirmada empíricamente** (solo longitudes, no valores):
+`GOOGLE_PAGESPEED_API_KEY` = 3 chars (placeholder inválido), `PAGESPEED_API_KEY` = 39. Si se elimina la
+canónica, el fallback resuelve la inválida y el síntoma reaparece (§1.e).
+
+**V13 — Dos `MetadataValidator` gemelos** (`data_validation/metadata_validator.py`, live vía
+`v4_comprehensive.py:33`; `modules/data_validation/metadata_validator.py`, solo tests) con checks
+idénticos — deuda de duplicación.
+
+**V14 — Drift «8 vs 7» adicional:** `v4_proposal_generator.py:1332` dice «los 8 servicios definidos en
+PROPOSAL_SERVICE_TO_ASSET» (tiene 7). Tercera copia del drift que §8.5 ya documentó en
+`proposal_asset_alignment.py:35-37` y `service_catalog`.
+
+**V15 — El mecanismo 6→3 de `no_breach`, resuelto.** La matriz tiene 6 NO_BREACH pero el gate reporta 3:
+`_presence_resolved` absorbió 3 NO_BREACH (Schema Hotel, Schema Organization, FAQ) moviéndolos a
+`present` con el oráculo permisivo. Por eso `details` dice «2 missing» (oráculo estricto) mientras la
+decisión los cuenta como presentes, y la suggestion del mismo gate result dice «0 services still
+missing». Es la reproducción exacta de A4 con nombres reales — la «contradicción» de la segunda viñeta
+de §6 son dos etapas del mismo pipeline.
+
+**V16 — `is_coherent: false` también en `asset_generation_report.json`** (×2): el flag contradicho por
+el gate vive en 4 archivos del run, no solo en los `coherence_validation`.
+
+### 12.4 Causa raíz consolidada
+
+El dossier la enunció (§0, «una causa raíz, tres manifestaciones») y esta validación la **consolida y
+amplía**: el pipeline tiene un **contrato de detección fragmentado y sin candado** — una misma realidad
+se describe en ≥9 registros no canónicos (mapa de 27 vs ~18 emitidos, IDs fantasma entre universos, 6→3
+en `no_breach` por doble oráculo), y todos los consumidores (ledger, doc, gates, matriz) derivan de
+copias parciales de ese contrato sin test que fije la biyección. De ahí las tres manifestaciones **y los
+16 hallazgos nuevos V1-V16**: cada uno es una copia desincronizada del mismo contrato, o un consumidor
+que no puede ver la desincronización (gates ciegos, severidad mal declarada, snapshot no persistido).
+
+### 12.5 Recomendaciones enfocadas en causa raíz (NO implementar aún)
+
+**Nivel 1 — Contrato único y candado (cura estructural):**
+1. **Punto 8 (propuesta dinámica)** — confirmado como la cura; disuelve la tautología de coverage y el
+   `is_coherent = false` estructural (B5).
+2. **Fuente única de identidad servicio↔asset↔pain:** un registro canónico del que deriven (o contra el
+   que validen) los ≥9 actuales; contract tests que fallen fuerte ante drift (IDs fantasma de V2, 8-vs-7
+   de V14, `monthly_report → no_faq_schema` de V3). Incluye la biyección mapa↔emisión de `detect_pains`
+   (V1) — el patrón de test ya existe: el guardián AST de FASE-SR-A.
+3. **Severidad explícita** (§8.4 tal cual: copiar `commercial_gate.py:99-113`, piso bajo advisory,
+   consumidor nombrado, candado de regresión sobre ambas listas) — la decisión «advisory = 2» queda
+   validada y **reforzada** por el corpus corregido (C2).
+
+**Nivel 2 — Auditabilidad (precondiciones del tribunal):**
+4. Persistir el snapshot de presencia junto a `v4_audit/` (A2) y poblar `asset_path` en el caller del
+   builder (A6).
+5. Un oráculo de presencia para decidir y narrar (A4/V15): narrativa derivada de la decisión, no de un
+   segundo criterio.
+6. `skipped ≠ passed` y unificar los dos defaults de G9 (A1); gate de coherencia que respete
+   `is_coherent` o lo elimine a favor de sus checks (N11).
+
+**Nivel 3 — Ceguera de gates (completitud del diagnóstico, faseable):**
+7. Cablear `audit_data`/`diagnostico_text` a `doc_audit_consistency` + aceptar `gbp.reviews` int; ampliar
+   `_identify_critical_issues` a PageSpeed ERROR y banda GEO critical; cerrar las escotillas del coverage
+   gate (`ASSET_GENERATED` sin mención en doc — V5 — y ledger vacío PASS vs BLOCKED — V9).
+8. Quirúrgicos: reemplazar el guard `__iter__` por validación numérica con normalización de unidades y
+   uso de `ota_field` (V7); `except Exception` de `_identify_brechas` → logging + estado visible (V6);
+   deduplicar `low_organic_visibility` (V8); residuos D6 (V11); eliminar el placeholder `.env` (decisión
+   OPS, V12); unificar los dos `MetadataValidator` (V13).
+
+**Reparto de los hallazgos nuevos en ese orden:** V1/V2/V3/V14 → Nivel 1; V5/V9/V15 → Niveles 2-3 (V15
+se resuelve con el oráculo único de A4); el resto son quirúrgicos de Nivel 3.
+
+### 12.6 Estado
+
+Sin código modificado (la validación fue solo lectura de código, artefactos y `.env` — longitudes, no
+valores — más la suite de tests en modo observación: 848 passed / 2 skipped). Siguiente paso natural:
+convertir Nivel 1+2 en el plan de estabilización, que ya tiene su orden fijado en §10.
