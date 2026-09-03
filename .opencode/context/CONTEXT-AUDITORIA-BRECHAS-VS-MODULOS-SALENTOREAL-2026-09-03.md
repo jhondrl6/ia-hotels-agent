@@ -45,7 +45,13 @@ secuencia que ROADMAP v4.2 §7.2 ya registró (precondiciones T0.1-T0.4 antes de
 
 ## 1. Validación previa contra lecciones QMIND (notebook `iah-cli-lecciones`)
 
-Fuentes recuperadas (Paso 0 del ciclo de capitalización):
+Fuentes recuperadas (Paso 0 del ciclo de capitalización). **Dos corridas:** la primera (filas 1-4) cuando
+el dossier era solo el eje 1 (§0-§7), orientada a PageSpeed/detección; la **segunda corrida (2026-09-03,
+filas 5-8)**, dirigida a las temáticas que la reestructuración absorbió de §8/§9 y a la validación §12
+(severidad de gates, tautología/huérfanos, oráculo de presencia, contrato fragmentado, lecciones de forma).
+Límite del corpus: nada en el notebook contradice ni extiende §12 (C1-C7/V1-V16) — es material más nuevo
+que todo QMind. El write-back del ciclo ya está hecho: este dossier está ingestado en QMind
+(sourceId `01a06501-ff19-7210-af46-5383911bc170`).
 
 | Fuente (QMind) | Lección relevante |
 |---|---|
@@ -53,6 +59,10 @@ Fuentes recuperadas (Paso 0 del ciclo de capitalización):
 | `CONTEXT: Salento Real v4complete ejecución (2026-08-27)` (sourceId `01a04d9a-e267-7ae7-b486-0ea19addf5f3`) | Hallazgo 6: mismo `Status: ERROR — API key not valid` en corrida del 27-08; no bloquea, degrada evidencia. |
 | `10-analisis: SR-PIPELINE-FIXES-2026-08-27` (sourceId `01a04d99-e68b-778a-a86b-40ff5f41ec8a`) | PageSpeed API key inválida → **✅ VERIFICADO (SR-F, 2026-08-28) → ACCIÓN USUARIO (OPS)**. Causa: `.env` resolvía `GOOGLE_PAGESPEED_API_KEY` (presente PERO inválida o sin PSI habilitada). Fallback chain `PAGESPEED_API_KEY → GOOGLE_PAGESPEED_API_KEY → GOOGLE_API_KEY`. También registra: `critical_recall` colapsaba lista vacía con dato ausente (resuelto SR-H2, L-SR5 — familia "vacío vs ausente"). |
 | `VALIDADOR-URL-PROPIA 10-analisis-post-implementacion` (sourceId `01a0590c-6979-70ce-94dc-c6987f36f188`) | **GOOGLE_PAGESPEED_API_KEY inválida → RESUELTO 2026-08-31**: la variable era un placeholder de 3 caracteres. Fix OPS: `PAGESPEED_API_KEY` (canónica de `.env.template`) sembrada con la key de Maps del mismo proyecto; verificado empíricamente `PageSpeedClient` → status VERIFIED con datos CrUX (perf 55, LCP 3.03s). |
+| `CONTEXT-H: DT-4 root cause` (Zione 2026-07-25) (sourceId `01a04d9c-ce3d-7240-bed1-e91c8af314de`) | **BUG-6/N2 (CRÍTICA)**: entonces `_JUSTIFIED_STATUSES` NO incluía `ASSET_GENERATED` y el coverage gate bloqueaba Zione con el botón de WhatsApp existente en producción (falso positivo); fix prescrito: "agregar ASSET_GENERATED a `_JUSTIFIED_STATUSES`" — es el **origen histórico de la escotilla V5** (nota en §12.3-V5). Misma fuente: 3 fuentes de verdad para "¿este pain está resuelto?" (ledger/matriz/skipped_assets) + reconciliador post-orchestrator cuyo único fix resolvía BUG-6+BUG-9+N2+N4 (antecedente de §12.4 y Nivel 1.2); decisión de producto: excluir `monthly_report` del registro por ser anexo no facturado (origen de la exclusión que §8.5 protege). |
+| `CONTEXT-H: Zione proposal asset alignment block` (2026-07-23) (sourceId `01a04d9f-2399-7717-96df-4d43ab999bae`) | **Fase 3 del plan de ataque: "_generate_dynamic_services_table(): excluir servicios sin asset generado y sin presencia en producción"** — el punto 8 propuesto 6 semanas antes y nunca ejecutado (precedente registrado en §8.5). CAPA 1 ya diagnosticaba: "promete 8 servicios siempre... el Gate 9 es el sintomizador, no la causa". Con Zione, 2 de 8 servicios prometidos eran promesas vacías (SEO Local, Open Graph): segunda evidencia cross-hotel del fenómeno NO_BREACH-hueco (B1). Su Fase 1 añadió `proposal_asset_alignment` al bloqueo de delivery — por qué el tuple de `delivery_quality_report.py:289` tiene 4 miembros (§8.4, ítem 3). |
+| `CONTEXT-H: DT4 residual fixes` (sourceId `01a04d9c-e6ce-70f2-8959-98c78314c847`) | **DT4-N2**: SitePresence se calculaba/reconstruía por 4 rutas (ConditionalGenerator, `main.py:2673-2680`, reporte fake `publication_gates.py:861-890`, segundo SitePresenceChecker `:895-919`); solución raíz: "calcular una vez por ejecución y propagar el snapshot normalizado — **los gates deben validar, no descubrir ni reconstruir la evidencia primaria**" (nota en §9.1-A2; el principio fundamenta el oráculo único de A4). |
+| `10-analisis: REFACTOR-COHERENCIA-NARRATIVA-2026-08-22` (sourceId `01a04d9a-b307-75ed-9600-8ba2fb0680e2`) | **L-NC10 (fosilización narrativa)**: "la capa que no consume la fuente de verdad produce hallazgos recurrentes"; prevención: tests de contrato narrativa↔fuente (no valores fijos) + detección proactiva de strings hardcodeados (nota en §12.4). **L-NC4**: crear tablas paralelas pain_id→texto re-fosiliza — guardrail para Nivel 1.2 al construir el registro canónico. |
 
 **Verificación local de la línea de tiempo (evidencia en repo):**
 - Fix de presentación D6: commit `e544a59` (2026-08-03 18:49) `feat(FASE-C-B): D6+D7+D8 — textos dinámicos`.
@@ -258,6 +268,13 @@ Por eso el umbral `< 0.8` de `publication_gates.py:1156` no añade protección *
 - **No tratar el punto 8 como opcional.** La causa raíz es que la propuesta es **estática**: promete los 7-8 servicios del registro haya o no brecha detectada. Una **propuesta dinámica que solo prometa servicios con brecha detectada** hace `no_breach = 0` por construcción ⟹ `total == actionable` ⟹ los denominadores convergen y toda la discusión anterior se disuelve. Advisory es un parche legítimo; el punto 8 es la cura.
 - Datos de sensibilidad útiles si se toca coherencia: pesos en `coherence_validator.py:101-108` (1.5/1.0/1.5/0.5/1.0/2.0, total 7.5) ⟹ sensibilidad 0.2667 por unidad; headroom actual 0.08; score mínimo de un check para mantener overall ≥ 0.8 = **0.7000** (M=3 de 10 faltantes).
 
+**Precedente del punto 8 (QMind, CONTEXT-H Zione 2026-07-23):** la cura ya se prescribió una vez y no se
+ejecutó — la Fase 3 del plan de ataque Zione ("propuesta condicional") decía
+"_generate_dynamic_services_table(): excluir servicios sin asset generado y sin presencia en producción",
+y su CAPA 1 ya diagnosticaba "promete 8 servicios siempre... el Gate 9 es el sintomizador, no la causa".
+El fenómeno NO_BREACH-hueco es cross-hotel: en Zione 2 de 8 servicios prometidos eran promesas vacías
+(SEO Local, Open Graph). Refuerza "por construcción del mapper, no por los datos del hotel" (B1, §9.2).
+
 ### 8.6 Criterio de aceptación
 
 - **Baseline antes de tocar nada:** 140 passed, 1 skipped, 8 warnings en ~1.23s sobre los 7 archivos de tests de alignment/gates (141 tests, 32 asserts de bloqueo).
@@ -292,6 +309,7 @@ Verificados contra código vivo y artefactos reales el 2026-09-02. Al momento de
 - *Evidencia:* `find output -iname "*site_presence*"` → **0 resultados** en todo el histórico. Para medir hubo que reconstruir el snapshot a mano.
 - *Consecuencia:* el número más decisivo del gate de alignment **no es auditable post-hoc**. El Bot 3 del tribunal (diseño: CONTEXT-BOTS §5) no puede revisar lo que no existe y ninguna corrida pasada puede re-evaluarse bajo un oráculo distinto.
 - *Requisito:* persistir el snapshot canónico — el concepto ya existe (`main.py:2535` lo pasa como `site_presence_snapshot`, DT4-R2); falta escribirlo junto a los demás artefactos de `v4_audit/`.
+- *Linaje (QMind, DT4 residual fixes):* DT4-N2 ya había diagnosticado 4 rutas de reconstrucción de SitePresence y prescrito "calcular una vez por ejecución y propagar el snapshot normalizado — los gates deben validar, no descubrir ni reconstruir la evidencia primaria". DT4-R2 implementó la propagación en memoria; A2 es la mitad pendiente (disco). El mismo principio fundamenta el oráculo único de A4.
 
 **A3 — `promised_assets_exist`, el check más pesado, solo corre pre-gen.**
 - *Qué:* el cross-check contra el registro estático se ejecuta únicamente cuando no hay assets generados.
@@ -466,8 +484,11 @@ El resto del dossier (§4, §5, §6, §7) es **completitud del diagnóstico**: v
   `delivery_quality_report.py`, `site_presence_checker.py`, `commercial_gate.py`,
   `v4_proposal_generator.py`, `pain_ledger.py`, `conditional_generator.py`,
   `data_validation/metadata_validator.py`, `service_catalog.py`, `asset_responsibility_contract.py`, `main.py`.
-- QMind `iah-cli-lecciones`: CONTEXT-H (Zione 2026-08-02/03), CONTEXT Salento Real ejecución (2026-08-27),
-  10-analisis SR-PIPELINE-FIXES (2026-08-28), 10-analisis VALIDADOR-URL-PROPIA (2026-08-31).
+- QMind `iah-cli-lecciones` (Paso 0 en dos corridas): CONTEXT-H (Zione 2026-08-02/03), CONTEXT Salento Real
+  ejecución (2026-08-27), 10-analisis SR-PIPELINE-FIXES (2026-08-28), 10-analisis VALIDADOR-URL-PROPIA
+  (2026-08-31); segunda corrida (2026-09-03): CONTEXT-H DT-4 root cause (Zione 2026-07-25), CONTEXT-H Zione
+  proposal asset alignment block (2026-07-23), CONTEXT-H DT4 residual fixes, 10-analisis
+  REFACTOR-COHERENCIA-NARRATIVA (2026-08-22).
 - Git: `e544a59` (2026-08-03), `f914e0e`/`f77f8ae` (2026-08-31).
 - CONTEXT-BOTS `CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md`: origen del material migrado (§12.1-12.6 → §8; §13 → §9); su §10.4 conserva el puente de nomenclaturas con ROADMAP.
 - ROADMAP v4.2: §7.2 (plan del tribunal, tramos, precondiciones T0), §13 (registro de deudas A1-A6 → H9/H7/P12/T0.2/P10/G11).
@@ -582,6 +603,12 @@ estructuralmente ciega para él.
 (`publication_gates.py:1237-1242`): un pain con asset generado cuenta como justificado **aunque el doc
 jamás lo mencione**. La tautología tiene dos salidas, no una.
 
+**Origen histórico (QMind, DT-4 root cause, Zione 2026-07-25):** esa inclusión fue el fix deliberado de
+BUG-6/N2 — en 2026-07-25 `_JUSTIFIED_STATUSES` NO tenía `ASSET_GENERATED` y el coverage gate bloqueaba
+Zione con el botón de WhatsApp existente en producción (falso positivo CRÍTICO). Quitar `ASSET_GENERATED`
+sin más resucitaría BUG-6: cerrar la escotilla exige distinguir "asset generado y mencionado en doc" de
+"asset generado y silencioso", no revertir el status. Segundo péndulo de la familia D2→tautología (§5).
+
 **V6 — Excepción silenciosa en el generador de brechas.** `except Exception: return brechas` + cache
 (`v4_diagnostic_generator.py:3189-3194`): si `detect_pains` lanza, el diagnóstico sale con **cero
 brechas** y sin señal (mismo patrón que el NameError silencioso del gate tier_c, ya documentado en
@@ -641,6 +668,14 @@ copias parciales de ese contrato sin test que fije la biyección. De ahí las tr
 16 hallazgos nuevos V1-V16**: cada uno es una copia desincronizada del mismo contrato, o un consumidor
 que no puede ver la desincronización (gates ciegos, severidad mal declarada, snapshot no persistido).
 
+**Segunda familia de consumidores (QMind, L-NC10):** la capa narrativa. "La capa que no consume la fuente
+de verdad produce hallazgos recurrentes" (REFACTOR-COHERENCIA-NARRATIVA, 2026-08-22: 7 manifestaciones de
+una sola causa raíz en Zione). Reaparece aquí: "Visibilidad en IA: Alta" contra llm_report 0.0 (§4.3),
+narrativa «por defecto» sobre campos vacíos (C4), residuos D6 (V11). Toolkit reutilizable para Nivel 1.2 y
+Nivel 3: tests de contrato narrativa↔fuente (no valores fijos) + detección proactiva de strings
+hardcodeados. Guardrail L-NC4 para Nivel 1.2: al construir el registro canónico NO crear tablas paralelas
+nuevas — el registro debe ser consumido por la narrativa, no duplicado para ella.
+
 ### 12.5 Recomendaciones enfocadas en causa raíz (NO implementar aún)
 
 **Nivel 1 — Contrato único y candado (cura estructural):**
@@ -665,7 +700,8 @@ que no puede ver la desincronización (gates ciegos, severidad mal declarada, sn
 **Nivel 3 — Ceguera de gates (completitud del diagnóstico, faseable):**
 7. Cablear `audit_data`/`diagnostico_text` a `doc_audit_consistency` + aceptar `gbp.reviews` int; ampliar
    `_identify_critical_issues` a PageSpeed ERROR y banda GEO critical; cerrar las escotillas del coverage
-   gate (`ASSET_GENERATED` sin mención en doc — V5 — y ledger vacío PASS vs BLOCKED — V9).
+   gate (`ASSET_GENERATED` sin mención en doc — V5 — y ledger vacío PASS vs BLOCKED — V9). La de V5 con la
+   advertencia anti-reversión de su nota en §12.3: el `ASSET_GENERATED` fue el fix de BUG-6 (2026-07-25).
 8. Quirúrgicos: reemplazar el guard `__iter__` por validación numérica con normalización de unidades y
    uso de `ota_field` (V7); `except Exception` de `_identify_brechas` → logging + estado visible (V6);
    deduplicar `low_organic_visibility` (V8); residuos D6 (V11); eliminar el placeholder `.env` (decisión
