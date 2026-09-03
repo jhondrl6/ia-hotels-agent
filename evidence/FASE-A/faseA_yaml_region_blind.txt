@@ -1,0 +1,10 @@
+Python fallbacks hardcoded en `narratives`: 16
+Regiones con pain_narratives en YAML: ['eje_cafetero', 'caribe', 'bogota', 'antioquia']
+
+¿Los fallbacks de Python == eje_cafetero?
+   coincidencias: 16/16   divergencias: {}
+
+Regiones cuyo valor difiere de eje_cafetero (es decir, donde el fallback Python seria INCORRECTO):
+   caribe: 0 de 16 difieren -> {}
+   bogota: 0 de 16 difieren -> {}
+   antioquia: 0 de 16 difieren -> {}

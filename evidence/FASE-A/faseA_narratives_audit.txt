@@ -1,0 +1,43 @@
+<unknown>:819: SyntaxWarning: invalid escape sequence '\W'
+==============================================================================
+1. CAPA 1  (PAIN_SOLUTION_MAP)          : 27
+2. narratives (_pain_to_brecha)         : 16
+3. pain_id emitidos por detect_pains    : 18
+
+==============================================================================
+A. En Capa 1 pero AUSENTES de narratives  (descarte posible)
+   low_content_length              
+   low_ota_divergence                <-- detect_pains LO EMITE
+   missing_alt_text                
+   missing_llmstxt                 
+   no_blog_content                 
+   no_ga4_enhanced                   <-- detect_pains LO EMITE
+   no_monthly_report               
+   no_motor_reservas               
+   no_schema_reviews               
+   no_social_links                 
+   no_ssl                          
+   total: 11
+
+==============================================================================
+B. En narratives pero AUSENTES de Capa 1  (violaria la regla de Capa 1)
+   total: 0
+
+==============================================================================
+C. DESCARTE REAL = emitido por detect_pains Y ausente de narratives
+   low_ota_divergence               (en Capa 1)
+   no_ga4_enhanced                  (en Capa 1)
+   total: 2
+
+==============================================================================
+D. missing_llmstxt - el caso de FASE-B
+   en Capa 1                : True
+   en narratives            : False
+   emitido por detect_pains : False
+   en SERVICE_IDENTITIES    : False (pain_id)
+   en brecha_candidates     : True
+
+==============================================================================
+E. Falsos amigos ia_/ai_ (verificar que no se confundieron)
+   ia_crawler_blocked     Capa1=False narratives=False emitido=False
+   ai_crawler_blocked     Capa1=True  narratives=True  emitido=True

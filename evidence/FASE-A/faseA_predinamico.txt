@@ -1,0 +1,167 @@
+.FF.........FFF......F.....F.F....                                       [100%]
+================================== FAILURES ===================================
+_ TestProposalDynamicFiltering.test_asset_quality_table_empty_pains_shows_all_static _
+
+self = <commercial_documents.test_proposal_dynamic.TestProposalDynamicFiltering object at 0x000001F30596BC50>
+
+    def test_asset_quality_table_empty_pains_shows_all_static(self):
+        """With no detected pains, should fall back to PROPOSAL_SERVICE_TO_ASSET (backwards compat)."""
+        # Empty list = backwards-compat mode
+        result = self.gen._generate_asset_quality_table(
+            assets_generated=[],
+            detected_pain_ids=[],
+        )
+    
+        lines = result.strip().split("\n")
+        service_rows = [l for l in lines if l.startswith("| ") and "Entregable" not in l]
+    
+        # Should have 8 services (static mode)
+>       assert len(service_rows) == 8, f"Backwards compat should show 8 services, got {len(service_rows)}"
+E       AssertionError: Backwards compat should show 8 services, got 7
+E       assert 7 == 8
+E        +  where 7 = len(['| SEO Local | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |', '| Bot\xf3n de WhatsApp | \u2705 D\xeda 1 (Ac...firma |', '| Meta Tags Sociales (Open Graph) | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |', ...])
+
+tests\commercial_documents\test_proposal_dynamic.py:87: AssertionError
+_ TestProposalDynamicFiltering.test_asset_quality_table_none_pains_shows_all_static _
+
+self = <commercial_documents.test_proposal_dynamic.TestProposalDynamicFiltering object at 0x000001F305AE4C30>
+
+    def test_asset_quality_table_none_pains_shows_all_static(self):
+        """With detected_pain_ids=None, should fall back to static (backwards compat)."""
+        result = self.gen._generate_asset_quality_table(
+            assets_generated=[],
+            detected_pain_ids=None,
+        )
+    
+        lines = result.strip().split("\n")
+        service_rows = [l for l in lines if l.startswith("| ") and "Entregable" not in l]
+    
+        # Should have 8 services
+>       assert len(service_rows) == 8, f"None pains should show 8 services, got {len(service_rows)}"
+E       AssertionError: None pains should show 8 services, got 7
+E       assert 7 == 8
+E        +  where 7 = len(['| SEO Local | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |', '| Bot\xf3n de WhatsApp | \u2705 D\xeda 1 (Ac...firma |', '| Meta Tags Sociales (Open Graph) | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |', ...])
+
+tests\commercial_documents\test_proposal_dynamic.py:100: AssertionError
+___ TestBackwardsCompatibility.test_proposal_service_to_asset_still_present ___
+
+self = <commercial_documents.test_proposal_dynamic.TestBackwardsCompatibility object at 0x000001F30596BD90>
+
+    def test_proposal_service_to_asset_still_present(self):
+        """PROPOSAL_SERVICE_TO_ASSET must still exist for gate compatibility."""
+        from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
+        assert PROPOSAL_SERVICE_TO_ASSET, "PROPOSAL_SERVICE_TO_ASSET must exist for backwards compat"
+>       assert len(PROPOSAL_SERVICE_TO_ASSET) == 8, f"Expected 8 entries, got {len(PROPOSAL_SERVICE_TO_ASSET)}"
+E       AssertionError: Expected 8 entries, got 7
+E       assert 7 == 8
+E        +  where 7 = len({'Botón de WhatsApp': 'whatsapp_button', 'Meta Tags Sociales (Open Graph)': 'open_graph', 'Optimización para IA Generativa': 'llms_txt', 'Página de FAQ': 'faq_page', ...})
+
+tests\commercial_documents\test_proposal_dynamic.py:261: AssertionError
+____ TestBackwardsCompatibility.test_service_to_asset_lookup_has_8_entries ____
+
+self = <commercial_documents.test_proposal_dynamic.TestBackwardsCompatibility object at 0x000001F30596BED0>
+
+    def test_service_to_asset_lookup_has_8_entries(self):
+        """SERVICE_TO_ASSET_LOOKUP should have 8 entries (7 base + AEO conditional, FASE-D)."""
+        from modules.commercial_documents.service_catalog import SERVICE_TO_ASSET_LOOKUP
+        assert SERVICE_TO_ASSET_LOOKUP, "SERVICE_TO_ASSET_LOOKUP must exist"
+>       assert len(SERVICE_TO_ASSET_LOOKUP) == 8, f"Expected 8 entries (7 base + AEO), got {len(SERVICE_TO_ASSET_LOOKUP)}"
+E       AssertionError: Expected 8 entries (7 base + AEO), got 7
+E       assert 7 == 8
+E        +  where 7 = len({'Botón de WhatsApp': 'whatsapp_button', 'Meta Tags Sociales (Open Graph)': 'open_graph', 'Optimización para IA Generativa': 'llms_txt', 'Página de FAQ': 'faq_page', ...})
+
+tests\commercial_documents\test_proposal_dynamic.py:267: AssertionError
+_ TestBackwardsCompatibility.test_all_service_catalog_services_have_lookup_entry _
+
+self = <commercial_documents.test_proposal_dynamic.TestBackwardsCompatibility object at 0x000001F305AE4FC0>
+
+    def test_all_service_catalog_services_have_lookup_entry(self):
+        """Every SERVICE_CATALOG service should have an entry in SERVICE_TO_ASSET_LOOKUP."""
+        from modules.commercial_documents.service_catalog import SERVICE_CATALOG, SERVICE_TO_ASSET_LOOKUP
+        for key, entry in SERVICE_CATALOG.items():
+>           assert entry.service_name in SERVICE_TO_ASSET_LOOKUP, \
+                f"Service '{entry.service_name}' from SERVICE_CATALOG has no lookup in SERVICE_TO_ASSET_LOOKUP"
+E           AssertionError: Service 'Informe Mensual' from SERVICE_CATALOG has no lookup in SERVICE_TO_ASSET_LOOKUP
+E           assert 'Informe Mensual' in {'Botón de WhatsApp': 'whatsapp_button', 'Meta Tags Sociales (Open Graph)': 'open_graph', 'Optimización para IA Generativa': 'llms_txt', 'Página de FAQ': 'faq_page', ...}
+E            +  where 'Informe Mensual' = ServiceEntry(service_name='Informe Mensual', asset_type='monthly_report', pain_id='no_monthly_report', description='Reporte mensual con metricas de rendimiento y oportunidades').service_name
+
+tests\commercial_documents\test_proposal_dynamic.py:273: AssertionError
+___ TestTechnicalAssetsTable.test_technical_assets_table_shows_both_assets ____
+
+self = <commercial_documents.test_proposal_dynamic.TestTechnicalAssetsTable object at 0x000001F305B142D0>
+
+    def test_technical_assets_table_shows_both_assets(self):
+        """Technical assets table shows analytics_setup_guide and indirect_traffic_optimization."""
+        result = self.gen._generate_technical_assets_table()
+        assert "Guía de Configuración Analytics" in result
+>       assert "Optimización de Tráfico Indirecto" in result
+E       AssertionError: assert 'Optimizaci\xf3n de Tr\xe1fico Indirecto' in '| Asset T\xe9cnico | Estado | Descripci\xf3n |\\n|---------------|--------|-------------|\\n| **Gu\xeda de Configuraci\xf3n Analytics** | \u23f3 No generado | Instrucciones paso a paso para conectar Google Analytics 4 y Google Search Console |'
+
+tests\commercial_documents\test_proposal_dynamic.py:345: AssertionError
+_ TestFase3ConditionalServicesFiltering.test_no_assets_no_presence_all_excluded _
+
+self = <commercial_documents.test_proposal_dynamic.TestFase3ConditionalServicesFiltering object at 0x000001F305AE55B0>
+
+    def test_no_assets_no_presence_all_excluded(self):
+        """When no assets and no presence, footnote lists all 8 services."""
+        result = self.gen._generate_dynamic_services_table(assets_generated=[])
+    
+        # All 8 should be in the footnote (except "Informe Mensual" blocked by semantic validation)
+        assert "> **Servicios adicionales disponibles:**" in result
+        for service_name in PROPOSAL_SERVICE_TO_ASSET.keys():
+            if service_name == "Informe Mensual":
+                continue  # blocked by semantic validation
+>           assert service_name in result, f"Service '{service_name}' should appear in footnote"
+E           AssertionError: Service 'Botón de WhatsApp' should appear in footnote
+E           assert 'Botón de WhatsApp' in '| Servicio | Estado | Confianza | Problema que resuelve | Qué obtiene |\n|----------|--------|-----------|-----------...al, Schema Hotel, Schema Organization, Página de FAQ, Meta Tags Sociales (Open Graph), Optimización para IA Generativa'
+
+tests\commercial_documents\test_proposal_dynamic.py:463: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  modules.commercial_documents.v4_proposal_generator:v4_proposal_generator.py:1243 [RC1] opportunity_scores no disponibles — tabla de servicios sin costos de brecha (sin cifras inventadas; no se compromete costo alguno)
+____ TestFase3LookupUnification.test_service_to_asset_lookup_has_8_entries ____
+
+self = <commercial_documents.test_proposal_dynamic.TestFase3LookupUnification object at 0x000001F305B14910>
+
+    def test_service_to_asset_lookup_has_8_entries(self):
+        """SERVICE_TO_ASSET_LOOKUP should have exactly 8 entries."""
+        from modules.commercial_documents.service_catalog import SERVICE_TO_ASSET_LOOKUP
+    
+>       assert len(SERVICE_TO_ASSET_LOOKUP) == 8, \
+            f"Expected 8 entries, got {len(SERVICE_TO_ASSET_LOOKUP)}"
+E       AssertionError: Expected 8 entries, got 7
+E       assert 7 == 8
+E        +  where 7 = len({'Botón de WhatsApp': 'whatsapp_button', 'Meta Tags Sociales (Open Graph)': 'open_graph', 'Optimización para IA Generativa': 'llms_txt', 'Página de FAQ': 'faq_page', ...})
+
+tests\commercial_documents\test_proposal_dynamic.py:490: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestProposalDynamicFiltering::test_asset_quality_table_empty_pains_shows_all_static
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestProposalDynamicFiltering::test_asset_quality_table_none_pains_shows_all_static
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestBackwardsCompatibility::test_proposal_service_to_asset_still_present
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestBackwardsCompatibility::test_service_to_asset_lookup_has_8_entries
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestBackwardsCompatibility::test_all_service_catalog_services_have_lookup_entry
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestTechnicalAssetsTable::test_technical_assets_table_shows_both_assets
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestFase3ConditionalServicesFiltering::test_no_assets_no_presence_all_excluded
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestFase3LookupUnification::test_service_to_asset_lookup_has_8_entries
+8 failed, 26 passed, 8 warnings in 1.22s

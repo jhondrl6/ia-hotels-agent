@@ -4,7 +4,7 @@
 **Método**: uso real (import/llamada), no mención en docstring. Conteos verificados
 programáticamente con `./venv/Scripts/python.exe` sobre master limpio (commit `064dcde`).
 **Baseline de tests confirmado**: 848 passed / 2 skipped en `tests/quality_gates` + `tests/asset_generation`
-(`temp/faseA_baseline.txt`) — coincide con dossier §8.6.
+(`evidence/FASE-A/faseA_baseline_pre.txt`) — coincide con dossier §8.6.
 
 ---
 
@@ -105,7 +105,7 @@ vive solo como comentario en otro módulo.
 
 **Aserciones fósiles (L-NC10) — rojo preexistente en master limpio.**
 `tests/commercial_documents/test_proposal_dynamic.py`: **8 failed / 26 passed**
-(`temp/faseA_predinamico.txt`, master sin cambios):
+(`evidence/FASE-A/faseA_predinamico.txt`, master sin cambios):
 
 | Test | Línea | Causa | ¿Drift «8 vs 7»? |
 |------|-------|-------|------------------|
@@ -120,6 +120,12 @@ vive solo como comentario en otro módulo.
 
 ⟹ **6 de 8 fallos son la familia del drift**; 2 son preexistentes ajenos y se registran en
 §Seguimientos abiertos sin atribuirlos al plan.
+
+> ⚠️ **Las líneas de esta tabla son del estado PRE-cambio** (`faseA_predinamico.txt`, master sin
+> cambios). FASE-A editó ese archivo de tests al invertir las 6 aserciones fósiles (L-A5), así que
+> los 2 supervivientes se desplazaron: `test_technical_assets_table_shows_both_assets` `:345`→**`:376`**
+> y `test_no_assets_no_presence_all_excluded` `:463`→**`:494`**. Es un caso de L-A6 dentro de la
+> propia evidencia. Verificado con `faseA_s5_preexist_verify.py` (`VEREDICTO: S5 confirmado`).
 
 Contraste: `tests/asset_generation/test_proposal_alignment.py:34,38` afirma `== 7` y está **verde** —
 el mismo hecho fijado con dos valores distintos en dos suites.
@@ -272,13 +278,13 @@ sino una exclusión deliberada (BUG-10) que ningún registro expresa — corregi
 habría sido el fix equivocado; (d) `ASSET_CATALOG` tiene **25** entradas.
 
 > Las secciones 1-7 son el censo **de A1** y quedan intactas como registro histórico. Las correcciones
-> halladas al ejecutar A2-A4 están en §8.
+> halladas al ejecutar A2-A4 —y la hallada tras el cierre de A (C-5)— están en §8.
 
 ---
 
-## 8. Correcciones post-censo (halladas al ejecutar A2-A4)
+## 8. Correcciones post-censo (halladas al ejecutar A2-A4 y tras el cierre de A)
 
-### 8.1 El censo de A1 se corrigió a sí mismo en 4 puntos
+### 8.1 El censo de A1 se corrigió a sí mismo en 5 puntos
 
 | # | A1 decía | Real | Cómo se detectó |
 |---|----------|------|-----------------|
@@ -286,8 +292,9 @@ habría sido el fix equivocado; (d) `ASSET_CATALOG` tiene **25** entradas.
 | C-2 | N-A2: «`NORMALIZATION_RULES` tiene 1 entrada faltante» | Faltan **2** (`SEO Local Bajo`→`low_seo_score`, `Sin WhatsApp Visible`→`no_whatsapp_visible`) **más 1 clave obsoleta** (`No WhatsApp Visible`) | Al derivarlo de Capa 1 y diffar contra el literal |
 | C-3 | `ASSET_TO_PAIN_ID` tiene 9 entradas | **6** entradas | Al derivarlo: el consumidor único (`v4_proposal_generator.py:1410`) confirma que 6 bastan |
 | C-4 | `opportunity_scorer.py` contiene IDs fantasma y hay que limpiarlo | **No son pain_id**: son claves legítimas de `brecha_type` (namespace propio de 17 entradas), puenteado por `pain_to_type` (10 entradas + fallback silencioso `'cms_defaults'`). **El archivo NO se modificó** | Al buscar el registro que legítimamente posee cada string (lección L-A3). Eliminarlos habría roto `tests/financial_engine/test_opportunity_scorer*.py` en código dinero-adyacente sin curar nada |
+| C-5 | El censo enumeró **14** registros de identidad | **15** — falta `config/regional_benchmarks.yaml::pain_narratives`, con **4 copias literales** (una por región) de las **mismas 16** claves pain_id→impacto, **más 16 fallbacks hardcodeados** en Python: **80 literales de 16 valores**, todos idénticos entre sí. 0 huérfanos vs Capa 1 y **los mismos 11 ausentes**. No se modificó: cae en FASE-B, que es quien decide `narratives` ⟹ **S14** | Al auditar N-A1 (`evidence/FASE-A/faseA_yaml_narratives_audit.py`, `faseA_yaml_region_blind.py`): el dict `narratives` de `_pain_to_brecha` resulta no ser el dueño de esos números sino su **quinta copia** |
 
-### 8.2 Resolución final de los 14 registros
+### 8.2 Resolución final de los 15 registros
 
 | Tratamiento | Cantidad | Registros |
 |-------------|----------|-----------|
@@ -295,11 +302,11 @@ habría sido el fix equivocado; (d) `ASSET_CATALOG` tiene **25** entradas.
 | **Capa 1 (universo de pain_id, intacto)** | 1 | `PainSolutionMapper.PAIN_SOLUTION_MAP` (27) |
 | **DERIVADOS del canónico** | 6 | `PROPOSAL_SERVICE_TO_ASSET` · `ALL_PROMISED_SERVICES` · `SERVICE_CATALOG` · `ASSET_TO_PAIN_ID` · `service_brecha_candidates` · `NORMALIZATION_RULES` *(este último de Capa 1)* |
 | **VALIDADOS contra Capa 1** (literales, con razón registrada — DA9) | 4 | `PAIN_TO_ASSET` (11, enruta generación no venta) · `ELEMENTO_KB_TO_PAIN_ID` (otra pregunta) · `PAIN_TO_PRESENCE_ASSET` (6; derivado = 13 y cambia `apply_site_verification` → S8/FASE-F) · `INVALID_MAPPINGS` (fuera de alcance → S9) |
-| **Fuera de alcance de A** | 2 | `gap_analyzer` (legacy, decisión registrada en `01-plan-maestro`) · `opportunity_scorer.pain_to_type` (namespace distinto → S7) |
+| **Fuera de alcance de A** | 3 | `gap_analyzer` (legacy, decisión registrada en `01-plan-maestro`) · `opportunity_scorer.pain_to_type` (namespace distinto → S7) · `regional_benchmarks.yaml::pain_narratives` (4 copias + fallbacks Python; hallado post-cierre, decide FASE-B → **S14**) |
 
 ### 8.3 Contrafactual: delta cero medido
 
-`temp/faseA_contrafactual.py` → `temp/faseA_contrafactual.txt`. Comparó cada registro derivado contra el
+`evidence/FASE-A/faseA_contrafactual.py` → `faseA_contrafactual.txt`. Comparó cada registro derivado contra el
 literal que reemplazó, **importando ambos**:
 
 - `PROPOSAL_SERVICE_TO_ASSET`: contenido **y orden** idénticos.
@@ -310,6 +317,9 @@ literal que reemplazó, **importando ambos**:
   False`; con `pain_id is None` el bloque `if pain_id:` se salta y la fila se renderiza normal.
   `monthly_report` y `whatsapp_conflict_guide` cambian desde BLOCKED pero tienen `iterado=False`
   (nunca se alcanzan).
+- **Reproducibilidad verificada el 2026-09-03**: el script se re-ejecutó desde un cwd ajeno (`temp/`)
+  contra el árbol post-FASE-A y su salida es **idéntica** a `faseA_contrafactual.txt` (`diff` vacío).
+  La evidencia durable es re-ejecutable, no una captura muerta.
 - Tablas renderizadas: `_generate_dynamic_services_table` **7 filas** con descripciones correctas;
   `_generate_asset_quality_table` **7 filas**.
 - **Bug latente corregido de paso** (S10): `monthly_report` ya valida como IMPLEMENT en vez de ser
@@ -331,10 +341,10 @@ literal que reemplazó, **importando ambos**:
 |-------|-----------|
 | Contract tests — curva TDD | ROJO **27 failed / 9 passed / 1 skipped** → post-canónico **18 failed / 29 passed** → post-A3 **8 failed / 29 passed** → final **37 passed / 0 failed** (21 funciones) |
 | Grep IDs fantasma (AC1) | **OK: 0** en `modules/commercial_documents` + `modules/asset_generation` |
-| Baseline NR5 | **848 passed / 2 skipped** — byte-idéntico al pre-cambio |
+| Baseline NR5 | **848 passed / 2 skipped / 11 warnings** — igual al pre-cambio. ⚠️ No «byte-idéntico»: `diff faseA_baseline_{pre,post}.txt` da **1 línea**, la duración (`7.05s` → `6.02s`) |
 | `run_all_validations.py --quick` | **7/7 PASSED** |
 | `validate_agents_md.py` | **6 PASS / 0 FAIL** |
 | Regresión amplia | `tests/financial_engine` + `data_validation` + `orchestration_v4`: **807 passed, 1 xpassed, 0 failed** |
 | Suites de diagnóstico | `test_aeo_score` + `test_iao_score` + `test_diagnostic_generator` + `test_diagnostic_brechas`: **113 passed** |
-| `test_proposal_dynamic.py` | 8 failed / 26 passed → **2 failed / 32 passed**. Los 2 restantes verificados **byte-idénticos** a la evidencia pre-cambio `temp/faseA_predinamico.txt` ⟹ preexistentes, **no atribuibles al plan** (S5) |
+| `test_proposal_dynamic.py` | 8 failed / 26 passed → **2 failed / 32 passed**. Los 2 restantes tienen la **aserción idéntica** a la evidencia pre-cambio `faseA_predinamico.txt` ⟹ preexistentes, **no atribuibles al plan** (S5). ⚠️ No «byte-idénticos»: difieren direcciones de objeto, duración y el número de línea del propio test (`:345`→`:376`, `:463`→`:494`), desplazado porque FASE-A lo editó. Reproducible: `faseA_s5_preexist_verify.py` → `VEREDICTO: S5 confirmado` |
 

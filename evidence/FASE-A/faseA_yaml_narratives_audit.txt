@@ -1,0 +1,15 @@
+Capa 1 (PAIN_SOLUTION_MAP): 27
+
+region 'eje_cafetero': 16 pain_narratives
+   huérfanos (no están en Capa 1): []
+region 'caribe': 16 pain_narratives
+   huérfanos (no están en Capa 1): []
+region 'bogota': 16 pain_narratives
+   huérfanos (no están en Capa 1): []
+region 'antioquia': 16 pain_narratives
+   huérfanos (no están en Capa 1): []
+
+UNIÓN de todas las regiones: 16
+   huérfanos vs Capa 1: []
+   Capa 1 sin narrativa YAML en NINGUNA región: 11
+   Capa 1 presente en ALGUNA región: 16

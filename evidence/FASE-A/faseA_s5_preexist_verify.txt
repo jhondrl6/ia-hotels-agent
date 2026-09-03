@@ -1,0 +1,25 @@
+PRE  (faseA_predinamico.txt): 8 bloques de fallo
+POST (faseA_dynamic_final.txt): 2 bloques de fallo
+
+[PREEXISTENTE] TestFase3ConditionalServicesFiltering.test_no_assets_no_presence_all_excluded -- asercion identica pre y post FASE-A
+
+[PREEXISTENTE] TestTechnicalAssetsTable.test_technical_assets_table_shows_both_assets -- asercion identica pre y post FASE-A
+
+=== Sumario PRE (antes de tocar nada) ===
+  FAILED tests/commercial_documents/test_proposal_dynamic.py::TestProposalDynamicFiltering::test_asset_quality_table_empty_pains_shows_all_static
+  FAILED tests/commercial_documents/test_proposal_dynamic.py::TestProposalDynamicFiltering::test_asset_quality_table_none_pains_shows_all_static
+  FAILED tests/commercial_documents/test_proposal_dynamic.py::TestBackwardsCompatibility::test_proposal_service_to_asset_still_present
+  FAILED tests/commercial_documents/test_proposal_dynamic.py::TestBackwardsCompatibility::test_service_to_asset_lookup_has_8_entries
+  FAILED tests/commercial_documents/test_proposal_dynamic.py::TestBackwardsCompatibility::test_all_service_catalog_services_have_lookup_entry
+  FAILED tests/commercial_documents/test_proposal_dynamic.py::TestTechnicalAssetsTable::test_technical_assets_table_shows_both_assets
+  FAILED tests/commercial_documents/test_proposal_dynamic.py::TestFase3ConditionalServicesFiltering::test_no_assets_no_presence_all_excluded
+  FAILED tests/commercial_documents/test_proposal_dynamic.py::TestFase3LookupUnification::test_service_to_asset_lookup_has_8_entries
+  8 failed, 26 passed, 8 warnings in 1.22s
+
+=== Sumario POST (cierre de FASE-A) ===
+  FAILED tests/commercial_documents/test_proposal_dynamic.py::TestTechnicalAssetsTable::test_technical_assets_table_shows_both_assets
+  FAILED tests/commercial_documents/test_proposal_dynamic.py::TestFase3ConditionalServicesFiltering::test_no_assets_no_presence_all_excluded
+  2 failed, 32 passed, 8 warnings in 1.46s
+
+Rojos: PRE=8  POST=2  (FASE-A cerro 6 fosilizados)
+VEREDICTO: S5 confirmado
