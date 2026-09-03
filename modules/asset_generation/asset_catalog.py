@@ -295,7 +295,7 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         fallback="generate_analytics_guide",
         block_on_failure=False,
         status=AssetStatus.IMPLEMENTED,
-        promised_by=["no_analytics_configured", "no_ga4_enhanced"],
+        promised_by=["no_analytics_configured"],  # FASE-B: "no_ga4_enhanced" retirado de Capa 1
         priority="RECOMMENDED",  # FASE-0H-G8: hotel may not have GA4; fallback acceptable
     ),
     "indirect_traffic_optimization": AssetCatalogEntry(

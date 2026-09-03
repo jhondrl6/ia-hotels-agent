@@ -1,0 +1,75 @@
+==============================================================================
+NOTA DE FASE-B — LEER ANTES DE INTERPRETAR ESTE ARCHIVO
+==============================================================================
+Comando que lo genera (el que pidió el prompt de FASE-B, sin modificar):
+
+    ./venv/Scripts/python.exe evidence/FASE-A/faseA_narratives_audit.py
+
+SU SECCIÓN C ("DESCARTE REAL = 4") ES UN ARTEFACTO DE SINTAXIS, NO UN RETROCESO.
+
+El script de FASE-A mide `narratives` leyendo el DICT LITERAL por AST. B2 decidió
+DERIVAR el complemento desde Capa 1 en vez de inflar ese literal (guardrail L-NC4:
+una segunda tabla pain_id->texto re-fosiliza el defecto). El literal sigue teniendo
+las 16 claves heredadas y por eso este script reporta más "descartes" que antes:
+está midiendo qué claves están escritas a mano, no qué pains sabe narrar el código.
+
+MEDICIÓN CORRECTA (conductual, llama a _pain_to_brecha y observa si devuelve None):
+
+    ./venv/Scripts/python.exe evidence/FASE-B/faseB_narratives_audit.py
+    -> evidence/FASE-B/faseB_bijeccion_audit.txt
+
+    narratives literal   16 -> 16   (sin cambio: no se creó tabla paralela)
+    narratives efectivo   n/d -> 26 (cobertura TOTAL sobre Capa 1)
+    DESCARTE REAL          2 ->  0  (defecto de N-A1 cerrado)
+
+Este archivo se conserva porque reproducir el comando especificado es parte de la
+evidencia, y porque su delta literal 16->16 es justamente la prueba de L-NC4.
+
+==============================================================================
+SALIDA ORIGINAL DEL SCRIPT DE FASE-A, SIN MODIFICAR
+==============================================================================
+
+<unknown>:819: SyntaxWarning: invalid escape sequence '\W'
+==============================================================================
+1. CAPA 1  (PAIN_SOLUTION_MAP)          : 26
+2. narratives (_pain_to_brecha)         : 16
+3. pain_id emitidos por detect_pains    : 20
+
+==============================================================================
+A. En Capa 1 pero AUSENTES de narratives  (descarte posible)
+   low_content_length              
+   low_ota_divergence                <-- detect_pains LO EMITE
+   missing_alt_text                  <-- detect_pains LO EMITE
+   missing_llmstxt                   <-- detect_pains LO EMITE
+   no_blog_content                 
+   no_monthly_report               
+   no_motor_reservas               
+   no_schema_reviews               
+   no_social_links                   <-- detect_pains LO EMITE
+   no_ssl                          
+   total: 10
+
+==============================================================================
+B. En narratives pero AUSENTES de Capa 1  (violaria la regla de Capa 1)
+   total: 0
+
+==============================================================================
+C. DESCARTE REAL = emitido por detect_pains Y ausente de narratives
+   low_ota_divergence               (en Capa 1)
+   missing_alt_text                 (en Capa 1)
+   missing_llmstxt                  (en Capa 1)
+   no_social_links                  (en Capa 1)
+   total: 4
+
+==============================================================================
+D. missing_llmstxt - el caso de FASE-B
+   en Capa 1                : True
+   en narratives            : False
+   emitido por detect_pains : True
+   en SERVICE_IDENTITIES    : False (pain_id)
+   en brecha_candidates     : True
+
+==============================================================================
+E. Falsos amigos ia_/ai_ (verificar que no se confundieron)
+   ia_crawler_blocked     Capa1=False narratives=False emitido=False
+   ai_crawler_blocked     Capa1=True  narratives=True  emitido=True

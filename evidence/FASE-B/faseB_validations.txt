@@ -1,0 +1,50 @@
+=== FASE-B validaciones de cierre (post log_phase_completion) ===
+2026-09-03T17:15:56-05:00
+
+--- scripts/validate_document_integration.py ---
+[PASS] Cross-References (executor <-> CONTRIBUTING)
+[PASS] CHANGELOG format consistency
+[PASS] Version headers with 'v' prefix
+[PASS] Python path consistency (WSL)
+[PASS] AGENTS.md cross-reference table
+[PASS] DOMAIN_PRIMER vs VERSION.yaml
+[PASS] README.md numerical counts vs code
+[PASS] Line endings (LF, no CRLF)
+RESULT: All checks passed
+
+--- scripts/validate_agents_md.py  (exit code al final) ---
+exit=0
+PASS  modules_exist
+PASS  test_count
+PASS  gate_count
+PASS  fase0_modules
+PASS  no_deprecated_active
+PASS  scripts_exist
+
+--- scripts/run_all_validations.py --quick ---
+[6/?] Checking prompts for --release flag in intermediate phases...
+[7/?] Checking .opencode references...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: No hardcoded secrets found
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+
+------------------------------------------------------------
+  TOTAL: 7/7 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+
+--- scripts/log_phase_completion.py (registro en docs/contributing/REGISTRY.md) ---
+ejecutado SIN --release, con --check-manual-docs.
+GAP informativo reportado: GUIA_TECNICA.md requiere nota por los 2 modulos
+modificados. NO es fallo: la nota tecnica por fase es tarea R3 de
+FASE-RELEASE (ver 05-prompt-inicio-sesion-fase-RELEASE.md:100-129), que la
+redacta desde 09-documentacion-post-proyecto.md secciones A/B (ya pobladas).
+El mismo GAP aplico a FASE-A y tampoco se resolvio en la fase.

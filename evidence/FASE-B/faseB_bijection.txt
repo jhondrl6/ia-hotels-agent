@@ -1,0 +1,64 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 28 items
+
+tests/commercial_documents/test_pain_map_bijection.py::test_todo_pain_del_mapa_tiene_emision_o_esta_diferido PASSED [  3%]
+tests/commercial_documents/test_pain_map_bijection.py::test_toda_emision_esta_en_el_mapa PASSED [  7%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narrativa_es_total_sobre_capa1 PASSED [ 10%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narratives_no_tiene_huerfanos PASSED [ 14%]
+tests/commercial_documents/test_pain_map_bijection.py::test_toda_emision_tiene_narrativa PASSED [ 17%]
+tests/commercial_documents/test_pain_map_bijection.py::test_diferidos_estan_en_capa1 PASSED [ 21%]
+tests/commercial_documents/test_pain_map_bijection.py::test_diferido_no_tiene_emision PASSED [ 25%]
+tests/commercial_documents/test_pain_map_bijection.py::test_diferidos_forman_particion_con_emisiones PASSED [ 28%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[low_content_length] PASSED [ 32%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[no_blog_content] PASSED [ 35%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[no_monthly_report] PASSED [ 39%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[no_motor_reservas] PASSED [ 42%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[no_schema_reviews] PASSED [ 46%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[no_ssl] PASSED [ 50%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narrativa_derivada_sale_de_capa1[low_content_length] PASSED [ 53%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narrativa_derivada_sale_de_capa1[low_ota_divergence] PASSED [ 57%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narrativa_derivada_sale_de_capa1[missing_alt_text] PASSED [ 60%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narrativa_derivada_sale_de_capa1[missing_llmstxt] PASSED [ 64%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narrativa_derivada_sale_de_capa1[no_blog_content] PASSED [ 67%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narrativa_derivada_sale_de_capa1[no_monthly_report] PASSED [ 71%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narrativa_derivada_sale_de_capa1[no_motor_reservas] PASSED [ 75%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narrativa_derivada_sale_de_capa1[no_schema_reviews] PASSED [ 78%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narrativa_derivada_sale_de_capa1[no_social_links] PASSED [ 82%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narrativa_derivada_sale_de_capa1[no_ssl] PASSED [ 85%]
+tests/commercial_documents/test_pain_map_bijection.py::test_peso_de_impacto_no_vive_de_un_default_mudo[low_ota_divergence] PASSED [ 89%]
+tests/commercial_documents/test_pain_map_bijection.py::test_peso_de_impacto_no_vive_de_un_default_mudo[missing_alt_text] PASSED [ 92%]
+tests/commercial_documents/test_pain_map_bijection.py::test_peso_de_impacto_no_vive_de_un_default_mudo[missing_llmstxt] PASSED [ 96%]
+tests/commercial_documents/test_pain_map_bijection.py::test_peso_de_impacto_no_vive_de_un_default_mudo[no_social_links] PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+<unknown>:819
+tests/commercial_documents/test_pain_map_bijection.py::test_narratives_no_tiene_huerfanos
+  <unknown>:819: SyntaxWarning: invalid escape sequence '\W'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 28 passed, 10 warnings in 1.08s =======================

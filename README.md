@@ -219,7 +219,7 @@ Formulas y parametros exactos (recovery_factor, ROI cap, degradacion): [docs/GUI
 | `config/financial_defaults.yaml` | DEFAULTS financieros (12 valores) |
 | `config/fallbacks.yaml` | Fallbacks de scores con flags estimated |
 | `config/commercial.yaml` | ROI cap, break_even, descuentos, garantias, planes |
-| `config/regional_benchmarks.yaml` | Pain narratives (16) + umbrales de scoring multi-region |
+| `config/regional_benchmarks.yaml` | Pain narratives (20) + umbrales de scoring multi-region |
 | `config/certificates.yaml` | Certificados SSL/TLS y configuracion de seguridad |
 | `config/provider_registry.yaml` | Registro de providers LLM (modelos, endpoints, fallbacks) |
 | `config/settings.yaml` | Configuracion general de la aplicacion |

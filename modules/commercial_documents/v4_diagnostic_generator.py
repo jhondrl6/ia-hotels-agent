@@ -3343,10 +3343,30 @@ class V4DiagnosticGenerator:
             },
         }
 
-        if pain.id not in narratives:
-            return None
-
-        narrative = narratives[pain.id]
+        narrative = narratives.get(pain.id)
+        if narrative is None:
+            # FASE-B (N-A1): esto era `return None` — descarte silencioso de los 11 pain_ids
+            # de Capa 1 sin entrada literal (medidos en
+            # evidence/FASE-A/faseA_narratives_audit.txt). Rellenar el dict a mano hasta 27
+            # re-fosiliza una tabla paralela pain_id→texto (L-NC4), así que el complemento
+            # se DERIVA de Capa 1: nombre y detalle salen del registro canónico, y el peso
+            # de pain_narratives (YAML, 4 regiones) con fallback derivado del
+            # estimated_impact que Capa 1 ya declara — nunca un default mudo.
+            # Los 6 pains sin señal de dato verificable siguen en Capa 1 pero no llegan
+            # aquí porque detect_pains no los emite (registro PAINS_DIFERIDOS y motivación
+            # en evidence/FASE-B/decision-pains-muertos.md §3).
+            entrada_capa1 = PainSolutionMapper.PAIN_SOLUTION_MAP.get(pain.id)
+            if entrada_capa1 is None:
+                return None
+            impacto_por_estimado = {"high": 0.20, "medium": 0.10, "low": 0.08}
+            narrative = {
+                'nombre': entrada_capa1.get('name') or pain.id,
+                'impacto': pain_narratives.get(
+                    pain.id,
+                    impacto_por_estimado.get(entrada_capa1.get('estimated_impact'), 0.08),
+                ),
+                'detalle': entrada_capa1.get('description') or '',
+            }
 
         # FASE-A-COHERENCIA (D1): usar name/description reales del mapper.
         # detect_pains() ya distingue "Sin Open Graph Tags" vs "Open Graph Tags

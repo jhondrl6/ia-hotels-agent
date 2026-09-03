@@ -1,0 +1,185 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 17 items
+
+tests/commercial_documents/test_pain_map_bijection.py::test_todo_pain_del_mapa_tiene_emision_o_esta_diferido FAILED [  5%]
+tests/commercial_documents/test_pain_map_bijection.py::test_toda_emision_esta_en_el_mapa PASSED [ 11%]
+tests/commercial_documents/test_pain_map_bijection.py::test_todo_pain_del_mapa_tiene_narrativa_o_esta_diferido FAILED [ 17%]
+tests/commercial_documents/test_pain_map_bijection.py::test_narratives_no_tiene_huerfanos PASSED [ 23%]
+tests/commercial_documents/test_pain_map_bijection.py::test_toda_emision_tiene_narrativa FAILED [ 29%]
+tests/commercial_documents/test_pain_map_bijection.py::test_diferidos_estan_en_capa1 PASSED [ 35%]
+tests/commercial_documents/test_pain_map_bijection.py::test_diferido_no_tiene_emision PASSED [ 41%]
+tests/commercial_documents/test_pain_map_bijection.py::test_diferido_no_tiene_narrativa PASSED [ 47%]
+tests/commercial_documents/test_pain_map_bijection.py::test_diferidos_forman_particion_con_narratives FAILED [ 52%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[low_content_length] PASSED [ 58%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[no_blog_content] PASSED [ 64%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[no_monthly_report] PASSED [ 70%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[no_motor_reservas] PASSED [ 76%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[no_schema_reviews] PASSED [ 82%]
+tests/commercial_documents/test_pain_map_bijection.py::test_cada_diferido_tiene_motivo_y_seguimiento[no_ssl] PASSED [ 88%]
+tests/commercial_documents/test_pain_map_bijection.py::test_ningun_pain_del_mapa_se_descarta_en_silencio FAILED [ 94%]
+tests/commercial_documents/test_pain_map_bijection.py::test_brecha_generada_carga_identidad_de_capa1 FAILED [100%]
+
+================================== FAILURES ===================================
+____________ test_todo_pain_del_mapa_tiene_emision_o_esta_diferido ____________
+
+capa1 = {'ai_crawler_blocked', 'low_citability', 'low_content_length', 'low_gbp_score', 'low_ia_readiness', 'low_organic_visibility', ...}
+emitidos = {'ai_crawler_blocked', 'low_citability', 'low_gbp_score', 'low_ia_readiness', 'low_organic_visibility', 'low_ota_divergence', ...}
+
+    def test_todo_pain_del_mapa_tiene_emision_o_esta_diferido(capa1, emitidos):
+        """V1: los 9 pains muertos. Ningún pain puede quedarse sin decisión."""
+        sin_decision = sorted(capa1 - emitidos - set(PAINS_DIFERIDOS))
+>       assert not sin_decision, (
+            "PAIN_SOLUTION_MAP declara pain_ids que detect_pains no emite y no están "
+            f"registrados como diferidos: {sin_decision}. Implementar la emisión (con señal de "
+            "dato verificable), retirar el pain, o registrar la decisión en PAINS_DIFERIDOS con "
+            "motivo y seguimiento. Ver evidence/FASE-B/decision-pains-muertos.md."
+        )
+E       AssertionError: PAIN_SOLUTION_MAP declara pain_ids que detect_pains no emite y no están registrados como diferidos: ['missing_alt_text', 'missing_llmstxt', 'no_social_links']. Implementar la emisión (con señal de dato verificable), retirar el pain, o registrar la decisión en PAINS_DIFERIDOS con motivo y seguimiento. Ver evidence/FASE-B/decision-pains-muertos.md.
+E       assert not ['missing_alt_text', 'missing_llmstxt', 'no_social_links']
+
+tests\commercial_documents\test_pain_map_bijection.py:211: AssertionError
+___________ test_todo_pain_del_mapa_tiene_narrativa_o_esta_diferido ___________
+
+capa1 = {'ai_crawler_blocked', 'low_citability', 'low_content_length', 'low_gbp_score', 'low_ia_readiness', 'low_organic_visibility', ...}
+narrados = {'ai_crawler_blocked', 'low_citability', 'low_gbp_score', 'low_ia_readiness', 'low_organic_visibility', 'low_seo_score', ...}
+
+    def test_todo_pain_del_mapa_tiene_narrativa_o_esta_diferido(capa1, narrados):
+        """N-A1: sin entrada en narratives el pain rebota en :3346 y no llega al documento."""
+        sin_narrativa = sorted(capa1 - narrados - set(PAINS_DIFERIDOS))
+>       assert not sin_narrativa, (
+            "PAIN_SOLUTION_MAP declara pain_ids sin entrada en `narratives`: "
+            f"{sin_narrativa}. `_pain_to_brecha` los descarta en silencio (return None) y la "
+            "brecha nunca llega al diagnóstico, aunque detect_pains la emita."
+        )
+E       AssertionError: PAIN_SOLUTION_MAP declara pain_ids sin entrada en `narratives`: ['low_ota_divergence', 'missing_alt_text', 'missing_llmstxt', 'no_ga4_enhanced', 'no_social_links']. `_pain_to_brecha` los descarta en silencio (return None) y la brecha nunca llega al diagnóstico, aunque detect_pains la emita.
+E       assert not ['low_ota_divergence', 'missing_alt_text', 'missing_llmstxt', 'no_ga4_enhanced', 'no_social_links']
+
+tests\commercial_documents\test_pain_map_bijection.py:234: AssertionError
+______________________ test_toda_emision_tiene_narrativa ______________________
+
+emitidos = {'ai_crawler_blocked', 'low_citability', 'low_gbp_score', 'low_ia_readiness', 'low_organic_visibility', 'low_ota_divergence', ...}
+narrados = {'ai_crawler_blocked', 'low_citability', 'low_gbp_score', 'low_ia_readiness', 'low_organic_visibility', 'low_seo_score', ...}
+
+    def test_toda_emision_tiene_narrativa(emitidos, narrados):
+        """El defecto compuesto: emitido Y descartado. FASE-A midió 2 (low_ota_divergence,
+        no_ga4_enhanced). Es la arista que vuelve invisible una caída en producción."""
+        descartados = sorted(emitidos - narrados)
+>       assert not descartados, (
+            f"detect_pains emite pain_ids que `_pain_to_brecha` descarta en silencio: "
+            f"{descartados}. La brecha se detecta, se paga el costo de detectarla, y no aparece "
+            "en ningún documento."
+        )
+E       AssertionError: detect_pains emite pain_ids que `_pain_to_brecha` descarta en silencio: ['low_ota_divergence', 'no_ga4_enhanced']. La brecha se detecta, se paga el costo de detectarla, y no aparece en ningún documento.
+E       assert not ['low_ota_divergence', 'no_ga4_enhanced']
+
+tests\commercial_documents\test_pain_map_bijection.py:258: AssertionError
+_______________ test_diferidos_forman_particion_con_narratives ________________
+
+capa1 = {'ai_crawler_blocked', 'low_citability', 'low_content_length', 'low_gbp_score', 'low_ia_readiness', 'low_organic_visibility', ...}
+narrados = {'ai_crawler_blocked', 'low_citability', 'low_gbp_score', 'low_ia_readiness', 'low_organic_visibility', 'low_seo_score', ...}
+
+    def test_diferidos_forman_particion_con_narratives(capa1, narrados):
+        """Capa 1 = narratives \u228e PAINS_DIFERIDOS: la partici\xf3n completa, sin solapamiento.
+    
+        Es la forma fuerte de AC4 — «0 pains muertos sin decisión».
+        """
+        solapamiento = sorted(set(PAINS_DIFERIDOS) & narrados)
+        assert not solapamiento, f"pain_ids a la vez diferidos y narrados: {solapamiento}"
+        sin_cubrir = sorted(capa1 - narrados - set(PAINS_DIFERIDOS))
+>       assert not sin_cubrir, f"pain_ids de Capa 1 sin narrativa ni decisión: {sin_cubrir}"
+E       AssertionError: pain_ids de Capa 1 sin narrativa ni decisión: ['low_ota_divergence', 'missing_alt_text', 'missing_llmstxt', 'no_ga4_enhanced', 'no_social_links']
+E       assert not ['low_ota_divergence', 'missing_alt_text', 'missing_llmstxt', 'no_ga4_enhanced', 'no_social_links']
+
+tests\commercial_documents\test_pain_map_bijection.py:308: AssertionError
+______________ test_ningun_pain_del_mapa_se_descarta_en_silencio ______________
+
+capa1 = {'ai_crawler_blocked', 'low_citability', 'low_content_length', 'low_gbp_score', 'low_ia_readiness', 'low_organic_visibility', ...}
+
+    def test_ningun_pain_del_mapa_se_descarta_en_silencio(capa1):
+        """Prueba conductual de la arista narrativa: `_pain_to_brecha` nunca retorna None
+        para un pain de Capa 1 no diferido.
+    
+        Complementa a los tests AST: estos verifican las tablas, este verifica el
+        **comportamiento** del guard `if pain.id not in narratives: return None`
+        (v4_diagnostic_generator.py:3346-3347). Es inmune a si `narratives` es literal o
+        derivado, y por eso es el que prueba que la caída silenciosa es estructuralmente
+        imposible y no solo que dos dicts coinciden.
+        """
+        generador = V4DiagnosticGenerator()
+        descartados = []
+        for pain_id in sorted(capa1 - set(PAINS_DIFERIDOS)):
+            brecha = generador._pain_to_brecha(
+                _pain(pain_id, PainSolutionMapper.PAIN_SOLUTION_MAP[pain_id]),
+                region="eje_cafetero",
+                audit_result=None,
+            )
+            if brecha is None:
+                descartados.append(pain_id)
+>       assert not descartados, (
+            f"_pain_to_brecha descartó en silencio estos pain_ids de Capa 1: {descartados}"
+        )
+E       AssertionError: _pain_to_brecha descartó en silencio estos pain_ids de Capa 1: ['low_ota_divergence', 'missing_alt_text', 'missing_llmstxt', 'no_ga4_enhanced', 'no_social_links']
+E       assert not ['low_ota_divergence', 'missing_alt_text', 'missing_llmstxt', 'no_ga4_enhanced', 'no_social_links']
+
+tests\commercial_documents\test_pain_map_bijection.py:358: AssertionError
+________________ test_brecha_generada_carga_identidad_de_capa1 ________________
+
+capa1 = {'ai_crawler_blocked', 'low_citability', 'low_content_length', 'low_gbp_score', 'low_ia_readiness', 'low_organic_visibility', ...}
+
+    def test_brecha_generada_carga_identidad_de_capa1(capa1):
+        """La brecha devuelta debe nombrar el pain con el texto de Capa 1, no con un genérico.
+    
+        Fija que la narrativa derivada no introduce una tabla paralela de prosa (L-NC4): el
+        `nombre` y el `detalle` que llegan al documento salen de Capa 1 o del Pain.
+        """
+        generador = V4DiagnosticGenerator()
+        for pain_id in ("missing_llmstxt", "missing_alt_text", "no_social_links",
+                        "low_ota_divergence"):
+            assert pain_id in capa1, f"{pain_id} ya no está en Capa 1: actualizar este test"
+            entrada = PainSolutionMapper.PAIN_SOLUTION_MAP[pain_id]
+            brecha = generador._pain_to_brecha(
+                _pain(pain_id, entrada), region="eje_cafetero", audit_result=None
+            )
+>           assert brecha is not None, f"{pain_id} se descarta en silencio"
+E           AssertionError: missing_llmstxt se descarta en silencio
+E           assert None is not None
+
+tests\commercial_documents\test_pain_map_bijection.py:377: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+tests/commercial_documents/test_pain_map_bijection.py::test_todo_pain_del_mapa_tiene_narrativa_o_esta_diferido
+  <unknown>:819: SyntaxWarning: invalid escape sequence '\W'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/commercial_documents/test_pain_map_bijection.py::test_todo_pain_del_mapa_tiene_emision_o_esta_diferido
+FAILED tests/commercial_documents/test_pain_map_bijection.py::test_todo_pain_del_mapa_tiene_narrativa_o_esta_diferido
+FAILED tests/commercial_documents/test_pain_map_bijection.py::test_toda_emision_tiene_narrativa
+FAILED tests/commercial_documents/test_pain_map_bijection.py::test_diferidos_forman_particion_con_narratives
+FAILED tests/commercial_documents/test_pain_map_bijection.py::test_ningun_pain_del_mapa_se_descarta_en_silencio
+FAILED tests/commercial_documents/test_pain_map_bijection.py::test_brecha_generada_carga_identidad_de_capa1
+================== 6 failed, 11 passed, 9 warnings in 1.49s ===================

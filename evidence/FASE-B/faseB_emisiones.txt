@@ -1,0 +1,50 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 18 items
+
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestMissingLlmsTxt::test_se_emite_cuando_la_sonda_devuelve_cero PASSED [  5%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestMissingLlmsTxt::test_no_se_emite_cuando_llms_txt_existe PASSED [ 11%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestMissingLlmsTxt::test_no_se_emite_si_ia_readiness_no_se_midio PASSED [ 16%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestMissingLlmsTxt::test_no_se_emite_si_components_no_trae_la_clave PASSED [ 22%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestMissingLlmsTxt::test_datos_del_pain_emitido PASSED [ 27%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestMissingAltText::test_se_emite_con_recuento_positivo PASSED [ 33%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestMissingAltText::test_el_detalle_lleva_el_recuento PASSED [ 38%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestMissingAltText::test_no_se_emite_con_bandera_en_falso_pero_recuento_cero PASSED [ 44%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestMissingAltText::test_no_se_emite_cuando_el_detector_fallo PASSED [ 50%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestMissingAltText::test_no_se_emite_si_no_hay_medicion PASSED [ 55%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestMissingAltText::test_no_se_emite_con_alt_correctos PASSED [ 61%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestNoSocialLinks::test_se_emite_cuando_no_hay_enlaces PASSED [ 66%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestNoSocialLinks::test_no_se_emite_cuando_si_hay_enlaces PASSED [ 72%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestNoSocialLinks::test_no_se_emite_si_no_hay_medicion PASSED [ 77%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestNoSocialLinks::test_datos_del_pain_emitido PASSED [ 83%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestNoGa4EnhancedRetirado::test_ya_no_esta_en_capa1 PASSED [ 88%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestNoGa4EnhancedRetirado::test_no_se_emite_ni_con_un_status_que_si_tiene_el_campo PASSED [ 94%]
+tests/commercial_documents/test_detect_pains_emisiones_faseB.py::TestNoGa4EnhancedRetirado::test_analytics_setup_guide_sigue_prometido_por_el_pain_vivo PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 18 passed, 8 warnings in 1.14s ========================

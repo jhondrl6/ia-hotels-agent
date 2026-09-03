@@ -1,0 +1,74 @@
+<unknown>:819: SyntaxWarning: invalid escape sequence '\W'
+<unknown>:819: SyntaxWarning: invalid escape sequence '\W'
+==============================================================================
+BIYECCIÓN TRIPLE — ESTADO POST-B2
+==============================================================================
+1. Capa 1 (PAIN_SOLUTION_MAP)             : 26
+2. narratives LITERAL (dict en el fuente)  : 16
+3. narratives EFECTIVO (sonda conductual)  : 26
+4. emisiones (AST, funciones emisoras)     : 20
+5. pains DIFERIDOS (registro con motivo)   : 6
+
+==============================================================================
+A. DESCARTE REAL = emitido por detect_pains Y `_pain_to_brecha` devuelve None
+   (ninguno)
+   total: 0
+
+==============================================================================
+B. Huérfanos (en narratives pero fuera de Capa 1)
+   (ninguno)
+   total: 0
+
+==============================================================================
+C. PARTICIÓN DE LA EMISIÓN: Capa 1 = emitidos ⊎ diferidos
+   emitidos            : 20
+   diferidos           : 6
+   sin decisión        : 0 
+   a la vez ambas      : 0 
+   ¿partición exacta?  : True
+
+==============================================================================
+D. COBERTURA NARRATIVA TOTAL: ¿todo pain de Capa 1 es narrable?
+   no narrables        : 0 
+   ¿total?             : True
+   nota: los 6 diferidos TAMBIÉN son narrables. Es deliberado — la capa
+   narrativa es total para que el día que un diferido gane emisión la brecha
+   aparezca sola, sin editar una segunda tabla. Ver el docstring del candado.
+
+==============================================================================
+E. DELTA FASE-A → FASE-B
+   métrica                                   FASE-A    FASE-B
+   ----------------------------------------------------------
+   Capa 1 (pain_ids declarados)                  27        26
+   narratives literal                            16        16
+   narratives efectivo                            —        26
+   emisiones                                     18        20
+   DESCARTE REAL                                  2         0
+
+   Lectura del delta:
+   · Capa 1 27→26: se retiró no_ga4_enhanced (guardia insatisfacible, §3.10).
+   · emisiones 18→20: +3 implementados (missing_llmstxt, missing_alt_text,
+     no_social_links) −1 retirado (no_ga4_enhanced).
+   · literal 16→16: SIN CAMBIO. Ninguna entrada nueva se escribió a mano
+     (L-NC4); el complemento se deriva. Que el literal no crezca es la prueba
+     de que no se creó una tabla paralela.
+   · efectivo 26/26: la columna que FASE-A no podía medir.
+   · DESCARTE REAL 2→0: el defecto de N-A1 está cerrado.
+
+==============================================================================
+F. VERIFICACIÓN DE LA PREMISA N-A1 (seguimiento S-B7)
+   N-A1 afirmó: «2 pains VIVOS que se emiten y se descartan en producción»
+   (no_ga4_enhanced, low_ota_divergence). Medido:
+   no_ga4_enhanced          en Capa 1=False  punto de emisión=False  narrable=False
+   low_ota_divergence       en Capa 1=True   punto de emisión=True   narrable=True
+
+   no_ga4_enhanced tenía (pre-B2) punto de emisión escrito pero guardia
+   insatisfacible: is_enhanced no existe en AnalyticsStatus ni se puebla en
+   ningún punto del repo → NUNCA se emitió. B2 borró la rama muerta, de ahí
+   que la tabla de arriba lo reporte en False en las tres columnas.
+   low_ota_divergence sigue con su punto de emisión pero su guard (rama
+   'direct_channel_percentage' de detect_pains, pain_solution_mapper.py:447)
+   hace hasattr(float, '__iter__') → nunca dispara (V7, se arregla en FASE-H).
+   La premisa de N-A1 era falsa en ambos
+   casos: el regex de FASE-A contó sintaxis, no alcanzabilidad. Corregido en
+   decision-pains-muertos.md §1.

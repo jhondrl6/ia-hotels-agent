@@ -185,15 +185,9 @@ class PainSolutionMapper:
             "name": "Baja Visibilidad Organica",
             "description": "Trafico organico por debajo del umbral esperado para el segmento hotelero"
         },
-        "no_ga4_enhanced": {
-            "assets": ["analytics_setup_guide"],
-            "confidence_required": 0.0,
-            "priority": 3,
-            "validation_fields": ["ga4_enhanced"],
-            "estimated_impact": "low",
-            "name": "GA4 sin Configuracion Avanzada",
-            "description": "GA4 existe pero sin eventos de conversion ni medicion de revenue mejorada"
-        },
+        # FASE-B: "no_ga4_enhanced" retirado de Capa 1 — su guardia de emisión era
+        # insatisfacible (is_enhanced no existe en AnalyticsStatus). Ver
+        # evidence/FASE-B/decision-pains-muertos.md §3.10.
         # === PROBLEMAS GEO (Fase 2) ===
         "ai_crawler_blocked": {
             "assets": ["llms_txt"],
@@ -567,6 +561,68 @@ class PainSolutionMapper:
                 confidence=0.8
             ))
         
+        # === FASE-B: emisiones de pains que estaban muertos en Capa 1 (V1) ===
+        # Regla de B1: ninguna emisión sin señal de dato verificable Y sin evidencia
+        # positiva de que la medición ocurrió. Un guard que confunda "no medido" con
+        # "medido en False" produce pains que disparan en falso (el defecto de
+        # ai_crawler_blocked, dossier §3).
+
+        # missing_llmstxt — sonda HTTP real: v4_comprehensive hace GET {base}/llms.txt y
+        # ia_readiness_calculator puebla components["llms_txt"] = 100 | 0. La presencia de
+        # la clave es la prueba de que la sonda corrió; si ia_readiness es None, no se midió.
+        if getattr(audit_result, 'ia_readiness', None):
+            componentes = getattr(audit_result.ia_readiness, 'components', None)
+            if isinstance(componentes, dict) and componentes.get("llms_txt") == 0:
+                logger.info("llms.txt ausente (sonda HTTP) → activating pain_id missing_llmstxt")
+                pains.append(Pain(
+                    id="missing_llmstxt",
+                    name="Sin llms.txt",
+                    description="No existe archivo /llms.txt: los asistentes de IA no tienen mapa del sitio",
+                    severity="low",
+                    detected_by="ia_readiness_calculator",
+                    confidence=0.9
+                ))
+
+        # El detector devuelve confidence="low" con todos los flags en False cuando lanza
+        # excepción (seo_elements_detector.py:70-74); emitir sobre ese resultado sería un
+        # falso positivo. Solo se emite con la medición realmente completada.
+        seo_elements = getattr(audit_result, 'seo_elements', None)
+        seo_medido = bool(seo_elements) and getattr(seo_elements, 'confidence', None) == "high"
+
+        # missing_alt_text — exige recuento positivo: images_without_alt > 0 solo es posible
+        # si el HTML se parseó y había imágenes sin alt. Sin imágenes el detector devuelve
+        # imagenes_alt=True (seo_elements_detector.py:92), así que no dispara.
+        if seo_medido and seo_elements.imagenes_alt is False \
+                and getattr(seo_elements, 'images_without_alt', 0) > 0:
+            logger.info(
+                f"{seo_elements.images_without_alt} imágenes sin alt → "
+                f"activating pain_id missing_alt_text"
+            )
+            pains.append(Pain(
+                id="missing_alt_text",
+                name="Imágenes sin Texto Alternativo",
+                description=(
+                    f"{seo_elements.images_without_alt} imágenes sin atributo alt descriptivo"
+                ),
+                severity="medium",
+                detected_by="seo_elements_detection",
+                confidence=0.9
+            ))
+
+        # no_social_links — redes_activas es len(found) > 0 sobre los <a href> del HTML
+        # (seo_elements_detector.py:95-103). La ausencia solo es creíble si la medición
+        # se completó, de ahí el guard seo_medido.
+        if seo_medido and seo_elements.redes_activas is False:
+            logger.info("Sin enlaces a redes sociales → activating pain_id no_social_links")
+            pains.append(Pain(
+                id="no_social_links",
+                name="Sin Presencia en Redes Sociales",
+                description="No se detectan enlaces a redes sociales en el sitio",
+                severity="low",
+                detected_by="seo_elements_detection",
+                confidence=0.9
+            ))
+
         # Sort by severity
         severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
         pains.sort(key=lambda p: severity_order.get(p.severity, 4))
@@ -699,17 +755,6 @@ class PainSolutionMapper:
                 detected_by="analytics",
                 confidence=0.8
             ))
-
-        elif status and hasattr(status, "is_enhanced"):
-            if not status.is_enhanced:
-                pains.append(Pain(
-                    id="no_ga4_enhanced",
-                    name="GA4 sin Configuracion Avanzada",
-                    description="GA4 detectado pero sin eventos de conversion ni enhanced ecommerce",
-                    severity="low",
-                    detected_by="analytics",
-                    confidence=0.6
-                ))
 
         organic = analytics_data.get("organic_traffic")
         if organic is not None and isinstance(organic, (int, float)) and organic < 1000:
