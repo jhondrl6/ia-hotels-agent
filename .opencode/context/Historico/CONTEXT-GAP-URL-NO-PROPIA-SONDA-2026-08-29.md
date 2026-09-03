@@ -74,7 +74,7 @@ Scripts: `temp/probe_donjulio_viability.py` y `temp/probe2_donjulio.py` (referen
 | Sondas ancladas al origen (nota Sonda 1) | CONFIRMADO en código | `ai_crawler_auditor.py:89-97` (FASE-SR-F H5): robots.txt se pide al origen → con URL OTA se atribuye la política de Booking al hotel |
 | Evidencia bajo `hotels/booking_com/` | IMPRECISO | No existe writer de `hotels/` en el código → corregido en §1 (superficies reales) |
 | §4 estado comercial (Condina/Don Julio/Segorbe) | CONFIRMADO | `evidence/Ingresos/05_Pipeline_PostSismo.md` líneas 17, 19, 42, 56 |
-| §8 referencias | EXISTEN | `.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/`, `VERSION.yaml` 4.73.0, sondas en `temp/` |
+| §8 referencias | EXISTEN | `/.opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/`, `VERSION.yaml` 4.73.0, sondas en `temp/` |
 
 ## 2c. Hallazgos nuevos de la verificación (amplificación)
 
@@ -156,7 +156,7 @@ Scripts: `temp/probe_donjulio_viability.py` y `temp/probe2_donjulio.py` (referen
 
 ## 8. Referencias
 
-- Plan madre de los fixes previos: `.opencode/plans/SR-PIPELINE-FIXES-2026-08-27/` (README 11 fases ✅, v4.73.0, VERIFY 13/13).
+- Plan madre de los fixes previos: `/.opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/` (README 11 fases ✅, v4.73.0, VERIFY 13/13).
 - Precedente de contexto→plan: `.opencode/context/Historico/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md` (si archive movió la ruta, localizar por nombre).
 - Pipeline comercial: `evidence/Ingresos/05_Pipeline_PostSismo.md` (LOG 2026-08-28/29) + `01_Lista_Prospectos_v2_post_sismo.md` (tabla top 10, recuento).
 - E2E de referencia con sitio propio: `output/salentoreal_final_v4c_h2/` + `evidence/FASE-SR-H2/smoke_result_h2.json` (smoke 7/7).

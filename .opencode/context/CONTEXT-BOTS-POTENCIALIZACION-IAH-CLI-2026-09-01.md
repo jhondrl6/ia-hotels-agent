@@ -1,12 +1,12 @@
 # Contexto: Potencializar iah-cli con Bots — Diagnóstico como Producto, Entrega como Cuello de Botella
 
-> **Fecha:** 2026-09-01
+> **Fecha:** 2026-09-01 · **Reestructurado:** 2026-09-03
 > **Sesión:** análisis de arquitectura de bots para escalar credibilidad y entrega
 > **Propósito central:** iah-cli vende diagnóstico, NO una herramienta de IA — el diagnóstico es el producto, la herramienta es invisible para el cliente
+> **Alcance desde el 2026-09-03:** este documento quedó **exclusivo de bots** (tribunal §5, capas §2, análisis Capa 4 §3). Las correcciones de severidad de gates (ex §12.1-12.6) y los hallazgos estructurales del pipeline (ex §13: A1-A6, B1-B5/punto 8, mediciones, falsos positivos) **migraron al dossier de estabilización** `.opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md` (§8 y §9; mapa de migración en su §10). Las precondiciones del tribunal viven ahora en **§12** de este documento.
 > **Archivo retomable:** cualquier sesión futura que hable de bots, Capa 3, Capa 4, delivery, credibilidad, debottlenecking
 > **Validado contra el repo (2026-09-01):** citas de código corregidas entonces (13 publication gates, `proposal_asset_alignment.py`, 1 workflow activo). ⚠️ **Dos cifras de esa validación fueron refutadas después:** los "~10 CG-*" son en realidad **12 repartidos en dos archivos**, y los "~308 .py" son en realidad **291 fuente / 284 test** (con `venv/` aportando 7.597 .py dentro del repo). El plan que esta línea anunciaba en §10 **ya no vive ahí**: está en **`ROADMAP.md` §7.2 (FASE T, v4.2)**, con equivalencia de nomenclaturas en **§10.4**.
-> **Auditado contra el código vivo (2026-09-02):** la afirmación "10 blocking + 3 advisory" es **falsa en el código** (los 13 gates bloquean) y la lista advisory correcta es de **2 miembros, no 3** — `asset_confidence` debe conservar su bloqueo. Ver **§12** para la corrección medida, la decisión y las tareas que culminan el tema en una sesión nueva. Otras cifras de este documento fueron refutadas en la misma auditoría y están listadas en **§12.7**; no consumir §3 ni §8 sin leerlas antes. **§10 es ahora un stub supersedido**: §10.2 lista lo refutado, §10.3 preserva el detalle que el ROADMAP no replica, §10.4 mapea ambas nomenclaturas.
-> **Hallazgos estructurales de la misma auditoría → §13:** seis agujeros vivos (A1-A6, entre ellos G9 que se salta en verde y el oráculo de presencia que no se persiste), el mecanismo causal verificado de `no_breach = 6/7` con la doble falla de mapeo (B1-B5, insumo de la sesión de **punto 8**), tabla consolidada de todas las mediciones (13.4) y los siete falsos positivos corregidos (13.5). **Desde el 2026-09-02 los seis están registrados como deuda en `ROADMAP.md` v4.2 §13** (A1→H9 · A2→H7 · A3→P12 · A4→T0.2 · A5→P10 · A6→§6.4/G11); ya no son hallazgos sin destino.
+> **Auditado contra el código vivo (2026-09-02):** la corrección de severidad advisory = 2, no 3 (`asset_confidence` conserva su bloqueo) **migró al dossier: CONTEXT-AUDITORIA §8** (decisión H10 en ROADMAP). Otras cifras de este documento fueron refutadas en la misma auditoría y están listadas en **§13**; no consumir §3 ni §8 sin leerlas antes. **§10 es ahora un stub supersedido**: §10.2 lista lo refutado, §10.3 preserva el detalle que el ROADMAP no replica, §10.4 mapea ambas nomenclaturas (las filas que apuntaban al ex §12/§13 hoy apuntan al dossier).
 
 ---
 
@@ -139,7 +139,7 @@ Un grupo de bots de revisión es la capa de credibilidad que falta entre "paquet
 - **Entrada:** `financial_scenarios.json` + `commercial_gates_report.json` + `02_PROPUESTA_COMERCIAL.md` + `quality_metadata` del MANIFEST
 - **Revisa:** cifras de fuga y proyecciones tienen `evidence_tier` declarado; propuesta no presenta ESTIMATED como verificado; escenarios son los 3 declarados (70/20/10), no solo el favorable; claims de "recuperación en X meses" tienen base de cálculo visible; no hay contradicciones entre propuesta y gates financieros.
 - **Salida:** `revision_honestidad.json` con hallazgos de presentación engañosa + veredicto.
-- **Existente hoy:** ~10 commercial gates (CG-*) en `modules/quality_gates/commercial_gate.py` — 6 blocking (CG-SCENARIO-ORDER, CG-SCENARIO-NEGATIVE, CG-IA-BLOCKED-CLAIM, CG-ROI-NEGATIVE, CG-CLAIM-VS-EVIDENCE, CG-EVIDENCE-TIER-CONSISTENCY) + 4 warning (CG-WHATSAPP-LEAD, CG-OTA-NARRATIVE, CG-TIER-CONSISTENCY, CG-TECH-JARGON) — y `financial_engine` generan escenarios con `EvidenceConfidence`. `DisclaimerGenerator` produce descargos. **Lo nuevo:** revisor que **lea propuesta y verifique que no sobre-presente lo que los datos soportan**, cubriendo los ~10 CG-* (no solo 4). El LLM solo *propone* hallazgos de sobre-presentación; el Juez aplica veredicto determinista contra tier labels y CG-* (ver **ROADMAP §7.2 T4**; antes §10 Etapa 4). ⚠️ El conteo "~10 CG-*" de esta línea fue refutado: son **12 repartidos en dos archivos** (§12.7, ROADMAP §7.2).
+- **Existente hoy:** ~10 commercial gates (CG-*) en `modules/quality_gates/commercial_gate.py` — 6 blocking (CG-SCENARIO-ORDER, CG-SCENARIO-NEGATIVE, CG-IA-BLOCKED-CLAIM, CG-ROI-NEGATIVE, CG-CLAIM-VS-EVIDENCE, CG-EVIDENCE-TIER-CONSISTENCY) + 4 warning (CG-WHATSAPP-LEAD, CG-OTA-NARRATIVE, CG-TIER-CONSISTENCY, CG-TECH-JARGON) — y `financial_engine` generan escenarios con `EvidenceConfidence`. `DisclaimerGenerator` produce descargos. **Lo nuevo:** revisor que **lea propuesta y verifique que no sobre-presente lo que los datos soportan**, cubriendo los ~10 CG-* (no solo 4). El LLM solo *propone* hallazgos de sobre-presentación; el Juez aplica veredicto determinista contra tier labels y CG-* (ver **ROADMAP §7.2 T4**; antes §10 Etapa 4). ⚠️ El conteo "~10 CG-*" de esta línea fue refutado: son **12 repartidos en dos archivos** (§13, ROADMAP §7.2).
 
 #### Bot 5 — Juez / Agregador
 - **Entrada:** 4 reportes de revisión + gate_report + delivery_quality_report
@@ -205,7 +205,7 @@ El orden **ya no es mecánico-first**. Está anclado en el principio P6 del ROAD
 
 ### Módulos base del pipeline (para entender qué ya valida)
 - `modules/data_validation/cross_validator.py` — validación cruzada de datos
-- `modules/quality_gates/publication_gates.py` — 13 publication gates. **Documentados como "10 blocking + 3 advisory" (líneas 4 y 162) pero el código no implementa la distinción: los 13 bloquean** (`check_publication_readiness:1967`). Lista advisory correcta = **2**, no 3. Ver §12.
+- `modules/quality_gates/publication_gates.py` — 13 publication gates. **Documentados como "10 blocking + 3 advisory" (líneas 4 y 162) pero el código no implementa la distinción: los 13 bloquean** (`check_publication_readiness:1967`). Lista advisory correcta = **2**, no 3 — corrección medida migrada al dossier: **CONTEXT-AUDITORIA §8** (decisión H10 en ROADMAP).
 - `modules/quality_gates/commercial_gate.py` — ~10 commercial gates CG-* (6 blocking + 4 warning)
 - `modules/quality_gates/delivery_quality_report.py` — QA post-generación
 - `modules/quality_gates/human_checklist_generator.py` — checklist ≤10 items
@@ -267,7 +267,7 @@ Tres cambios de fondo, todos medidos el 2026-09-02 sobre los artefactos de la co
 
 1. **El orden estaba invertido.** §10 proponía Etapa 1 → Etapa 6 sin precondiciones. ROADMAP §7.2 establece **T0.1-T0.4 ANTES de T1**. Medido: tocar el denominador de `coverage_ratio` antes de convertirlo en divulgación advisory **bloquea en 10/10 configuraciones** (rango 0.125-0.714) y es insatisfacible por medios honestos; y unificar el registro 7→8 antes de eso **empeora alignment 0.571 → 0.500** a cambio de **Δcoherence = 0.0000 exacto**. Hacerlo en el orden de §10 era pagar el costo sin recibir el beneficio.
 2. **FASE T no es una fase lineal.** ROADMAP v4.2 la parte en **tramo offline** (T0/T1/T2/T4 — certificable ya contra los artefactos de SalenteReal, sin nada externo) y **tramo externo** (T3 datos operativos reales del hotel · T5 credenciales FTP/WP + staging · T6 escala sobre los dos). §10 no hacía la distinción, así que se leía como deuda de implementación lo que en realidad es **falta de acceso**.
-3. **Debajo del plan hay una causa raíz que §10 no ve.** El ledger resuelto tiene **3 pains** y el orquestador genera **4 assets**, de los cuales **2 son huérfanos**, y **6 de 7 servicios prometidos responden a pains que no se detectaron**. Esa única causa produce a la vez `no_breach = 6/7` **e** `is_coherent = false` (`assets_are_justified` 3/4 = 0.75). La **propuesta dinámica** — solo prometer servicios con brecha detectada — cierra ambos síntomas y hace `no_breach = 0` por construcción. Todo lo que §10 proponía (advisory, remapeos, orden de etapas) es parche sobre un contrato comercial que sigue vendiendo lo que no diagnostica. Ver ROADMAP §7.2 *"Causa raíz por debajo de T0"* y §13.2 de este documento.
+3. **Debajo del plan hay una causa raíz que §10 no ve.** El ledger resuelto tiene **3 pains** y el orquestador genera **4 assets**, de los cuales **2 son huérfanos**, y **6 de 7 servicios prometidos responden a pains que no se detectaron**. Esa única causa produce a la vez `no_breach = 6/7` **e** `is_coherent = false` (`assets_are_justified` 3/4 = 0.75). La **propuesta dinámica** — solo prometer servicios con brecha detectada — cierra ambos síntomas y hace `no_breach = 0` por construcción. Todo lo que §10 proponía (advisory, remapeos, orden de etapas) es parche sobre un contrato comercial que sigue vendiendo lo que no diagnostica. Ver ROADMAP §7.2 *"Causa raíz por debajo de T0"* y el dossier de estabilización §9.2 (ex §13.2 de este documento).
 
 ### 10.2 Claims de esta sección que fueron refutados — no reutilizar
 
@@ -298,7 +298,7 @@ Tres cambios de fondo, todos medidos el 2026-09-02 sobre los artefactos de la co
 
 ### 10.4 Equivalencias de nomenclatura — este documento ↔ ROADMAP v4.2
 
-Dos vocabularios describen **el mismo plan**. Esta tabla es el puente; **la columna ROADMAP es la autoritativa**.
+Dos vocabularios describen **el mismo plan**. Esta tabla es el puente; **la columna ROADMAP es la autoritativa**. Los hallazgos A/B y las mediciones citados en la columna izquierda viven desde el 2026-09-03 en el dossier de estabilización (`CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md`; mapa de migración en su §10).
 
 | Etiqueta en este documento | Equivalente en ROADMAP v4.2 | Nota |
 |---|---|---|
@@ -309,16 +309,16 @@ Dos vocabularios describen **el mismo plan**. Esta tabla es el puente; **la colu
 | §10 Etapa 5 — entrega/deploy (Capa 4) | **T5** | **tramo externo**: FTP/WP + staging + deuda **P1** |
 | §10 Etapa 6 — throughput + gancho (Capa 1/2) | **T6** | **tramo externo**: escala sobre T3 y T5 |
 | *(inexistente en §10)* | **T0.1-T0.4** | precondiciones medidas; van **ANTES** de T1 |
-| §12.3 / §12.5 escenario **S2.3** (denominador = `total`) | **T0.1** | ROADMAP ya usa la etiqueta S2.3; descartado como bloqueante |
-| §13.1 **A4** — doble oráculo de presencia | **T0.2** | no voltea ningún veredicto en 10/10 |
-| §13.1 **A5** — skip silencioso + dos builders | **P10** extendido | trampa de falso negativo para **T0.3** |
-| §13.2 bloque B — mecanismo causal de `no_breach = 6/7` | §7.2 **"Causa raíz por debajo de T0"** | dos derivaciones independientes que coinciden |
-| §12.7 **N11** — el gate ignora `is_coherent` | **T0.4** + deuda **P9** | la deuda de producto más grave abierta |
-| §13.1 **A1** — G9 se salta en verde | **H9** extendido | latente, no observado |
-| §13.1 **A2** — oráculo de presencia no persistido | **H7** extendido | vuelve **T0.2** no retro-testeable |
-| §13.1 **A3** — `promised_assets_exist` solo pre-gen | **P12** + §6.4 *"Nota pre-gen (P6.3)"* | mecanismo del Δcoherence 0.0000 |
-| §13.1 **A6** — `asset_path: null` | §6.4 + **G11** + criterio de **T2** | P6.3 no verificable desde el artefacto |
-| §12.3 decisión **advisory = 2, no 3** | §6.4 tabla *"Objetivo decidido"* + **H10** | `asset_confidence` **conserva** el bloqueo |
+| Dossier §8.3/§8.5 escenario **S2.3** (denominador = `total`) | **T0.1** | ROADMAP ya usa la etiqueta S2.3; descartado como bloqueante |
+| Dossier §9.1 **A4** — doble oráculo de presencia | **T0.2** | no voltea ningún veredicto en 10/10 |
+| Dossier §9.1 **A5** — skip silencioso + dos builders | **P10** extendido | trampa de falso negativo para **T0.3** |
+| Dossier §9.2 bloque B — mecanismo causal de `no_breach = 6/7` | §7.2 **"Causa raíz por debajo de T0"** | dos derivaciones independientes que coinciden |
+| Dossier §9.2 (B5) **N11** — el gate ignora `is_coherent` | **T0.4** + deuda **P9** | la deuda de producto más grave abierta |
+| Dossier §9.1 **A1** — G9 se salta en verde | **H9** extendido | latente, no observado |
+| Dossier §9.1 **A2** — oráculo de presencia no persistido | **H7** extendido | vuelve **T0.2** no retro-testeable |
+| Dossier §9.1 **A3** — `promised_assets_exist` solo pre-gen | **P12** + §6.4 *"Nota pre-gen (P6.3)"* | mecanismo del Δcoherence 0.0000 |
+| Dossier §9.1 **A6** — `asset_path: null` | §6.4 + **G11** + criterio de **T2** | P6.3 no verificable desde el artefacto |
+| Dossier §8.3 decisión **advisory = 2, no 3** | §6.4 tabla *"Objetivo decidido"* + **H10** | `asset_confidence` **conserva** el bloqueo |
 | §10 Definition of Done única | **DoD-técnico / DoD-comercial** | partida en v4.2 |
 | §9 preguntas abiertas 1-5 | resueltas en ROADMAP §4, §6.4, §7.2, §8, §9 | ⚠️ las resoluciones 2 y 3 de §9 quedaron refutadas (§10.2) |
 | §8 estado del proyecto v4.74.1 | `VERSION.yaml` + `python scripts/doctor.py --status` | fuente única; no replicar |
@@ -337,91 +337,30 @@ Dos vocabularios describen **el mismo plan**. Esta tabla es el puente; **la colu
 
 ---
 
-## 12. Corrección medida — la lista advisory es de 2, no de 3 (auditado 2026-09-02)
+## 12. Precondiciones que me preceden — dossier de estabilización (2026-09-03)
 
-> **Estado:** decisión tomada, **no implementada**. Ningún archivo de código fue modificado durante la auditoría. Esta sección es autocontenida: una sesión nueva puede ejecutarla sin leer la conversación que la produjo.
+El tribunal (§5) es un **revisor de artefactos**: lee outputs y produce evidencia legible, no reimplementa gates (regla arquitectónica de §5). Si los artefactos están rotos, certifica basura. Las correcciones que el tribunal necesita **antes de T1** son trabajo de pipeline y viven en el dossier de estabilización `.opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md`:
 
-### 12.1 El hecho a corregir
-
-El repo dice cosas incompatibles sobre la severidad de sus 13 publication gates:
-
-| Lugar | Qué afirma | Realidad |
+| Precondición | Dossier | Por qué bloquea al tribunal |
 |---|---|---|
-| `AGENTS.md` (tabla "Módulos Activos", fila `quality_gates/`) | 10 blocking + **3 advisory** (`content_quality`, `asset_confidence`, `proposal_asset_alignment`) | Falso en el código |
-| `publication_gates.py:4` (docstring de módulo) | "13 publication gates (10 blocking + 3 advisory)" | Falso |
-| `publication_gates.py:162` (docstring de clase) | "manages 10 blocking gates and 3 advisory gates" | Falso |
-| `publication_gates.py:1967-1968` `check_publication_readiness` | — | `blocking_gates = [r for r in results if not r.passed]` / `ready = len(blocking_gates) == 0` → **los 13 bloquean**; el concepto advisory no existe |
-| `publication_gates.py:239-249` `get_blocking_gates` | — | `return [r for r in results if not r.passed]` — idéntico, vestigial |
-| `delivery_quality_report.py:289` | `BLOCKING_GATE_NAMES = ("coherence", "coverage", "evidence", "proposal_asset_alignment")` | **Tercer régimen**: aquí `proposal_asset_alignment` SÍ es bloqueante explícito |
+| **Punto 8** — propuesta dinámica (solo prometer servicios con brecha detectada) | §9.2 (B1-B5) | Sin él, Bot 2 marcaría SIN-BRECHA-ASOCIADA en 6/7 servicios de toda corrida: el tribunal devolvería todo paquete y no añadiría valor |
+| **A2** — persistir el oráculo de presencia | §9.1 | Bot 3 no puede auditar post-hoc lo que no se escribió a disco (0 `site_presence*` en todo `output/`) |
+| **A6** — poblar `asset_path` en la matriz | §9.1 | P6.3 no verificable desde el artefacto que Bot 3 debe revisar |
+| **N11 / P9** — el gate decide con score, ignora `is_coherent` | §9.2 (B5) | Bot 1 debe leer `is_coherent`; el pipeline debe respetarlo primero (deuda de producto más grave abierta) |
+| **H10** — severidad advisory = 2, no 3 | §8 | Bot 5 necesita saber qué gate es advisory para su veredicto; hoy hay 4 regímenes contradictorios |
+| **T0.1-T0.4** — precondiciones medidas de FASE T | ROADMAP §7.2 | Ya registradas como el orden oficial antes de T1 |
 
-Resultado: **cuatro regímenes contradictorios** para la misma severidad. El único lugar del repo donde la distinción blocking/advisory está realmente implementada es `commercial_gate.py:99-113` (`BLOCKING_GATE_IDS` de 6 + `WARNING_GATE_IDS` de 4) — **ese es el patrón a copiar**.
+El resto del dossier (ocho caídas silenciosas, blind gates, contradicciones entre módulos, pendientes de verificación) es **completitud del diagnóstico**: condición de calidad del producto, no bloqueante directo del tramo offline del tribunal. Orden acordado (2026-09-03): **estabilización primero** (dossier), **tribunal después** — la secuencia que ROADMAP §7.2 ya registró. El acta dual, su destino interno y la lista blanca del ZIP (deudas H8/P6) siguen en §9 de este documento.
 
-### 12.2 Evidencia medida — por qué `asset_confidence` no puede ser advisory
+---
 
-Corpus completo de corridas históricas en `output/`: **29 corridas únicas, 10 hoteles**.
+## 13. Correcciones adyacentes de la misma auditoría — guarda de §3/§8 (2026-09-02)
 
-**4 de 29 (14%) tienen 100% de assets ESTIMATED** — exactamente el caso que `asset_confidence` bloquea en `publication_gates.py:802-820`:
-
-| Hotel | Fecha | ESTIMATED / total | `coherence_score_final` |
-|---|---|---|---|
-| `hotel_visperas` | 2026-04-05 | 9/9 | `None` |
-| `hotelvisperas` | 2026-04-04 | 9/9 | `None` |
-| `hotel_vísperas` | 2026-03-26 | 6/6 | `None` |
-| `hotelvisperas` | 2026-03-25 | 6/6 | `None` |
-
-Las cuatro comparten `coherence_score_final = None`: no hay score canónico que las rescate. Si `asset_confidence` fuera advisory, **el 14% del histórico saldría a entrega sin un solo dato real** — el escenario exacto que la cláusula P6.5 y el primer piso del Juez (§5, regla determinista) existen para impedir.
-
-Distribución de `ESTIMATED/total` en las 29 corridas: 0.00→1, 0.50→4, 0.54→3, 0.55→4, 0.56→2, 0.62→3, 0.67→1, 0.75→1, 0.77→1, 0.80→1, 0.86→1, 0.88→1, 0.90→2, **1.00→4**.
-
-El bloque duro de `asset_confidence` (`all_estimated` → `GateStatus.BLOCKED`, mensaje *"Delivery bloqueado hasta onboarding o datos reales"*) es hoy **el único mecanismo** que convierte un paquete Tier C en no-entregable. No hay sustituto.
-
-### 12.3 Decisión
-
-- Lista advisory = **2 miembros**: `content_quality` y `proposal_asset_alignment`.
-- `asset_confidence` **conserva su bloqueo**.
-- La documentación correcta es **"11 blocking + 2 advisory"**. Hay que corregir `AGENTS.md` y `publication_gates.py:4,162` hacia esta decisión — **no al revés**: el código no debe relajarse para coincidir con un docstring que nunca fue implementado.
-
-Fundamento de que `proposal_asset_alignment` sí puede ser advisory: su bloqueo actual es redundante. `alignment_result.py:105-108` define `passed = (unresolved == 0)` y `alignment_result.py:268-269` define `actionable = max(total - no_breach, 0)` / `coverage = (generated + present) / actionable if actionable > 0 else 1.0`.
-
-**La tautología es demostrable algebraicamente, no solo medible.** La misma llamada `_presence_resolved` que resuelve una entrada NO_BREACH la saca de `no_breach` (L259-263, encoge el denominador) y la mete en `present` (L251-255, agranda el numerador). Si `unresolved == 0`, las entradas se particionan en `generated + present + no_breach == total` ⟹ `generated + present == total - no_breach == actionable` ⟹ **`coverage == 1.0` siempre que `passed == True`**. Numerador y denominador se mueven juntos por construcción.
-
-Por eso el umbral `< 0.8` de `publication_gates.py:1156` no añade protección *independiente* sobre `unresolved`. Ojo con la lectura: es **redundante, no muerto** — sí disparó BLOCKED en 2 de las 4 configuraciones históricas y 3 tests lo ejercitan. Medido en **10 configuraciones** (5 variantes de registro × 2 oráculos de presencia): `coverage_ratio = 1.000` en las 10 y `unresolved = 0` en las 10, con ambos oráculos. Demoterlo no pierde cobertura y **gana** coherencia con lo que los docs ya prometen. Ver §13.2 para el mecanismo completo.
-
-### 12.4 Tareas para la sesión que culmina el tema
-
-1. **Implementar la distinción** en `publication_gates.py`: estructura explícita (`ADVISORY_GATE_NAMES` / `BLOCKING_GATE_NAMES`) copiando `commercial_gate.py:99-113`, y consumirla en `check_publication_readiness:1967-1968` y en `get_blocking_gates:239-249`. Los advisory fallidos deben reportarse con estado WARNING pero no impedir `ready = True`. Dos requisitos inseparables de esa tarea:
-   - **Piso explícito (riesgo B).** Advisory sin umbral mínimo deja pasar en silencio coberturas de 0.125 (medido, ver §13.2). Definir un piso bajo el cual el advisory degrada a blocking, o justificar por escrito por qué no hace falta.
-   - **Divulgación con consumidor nombrado (riesgo C).** El WARNING debe aterrizar en `human_checklist_generator.py` (≤10 items) y en el `acta_revision.md` del Bot 5 (§5). Un advisory que no entra en un artefacto que el humano lee es indistinguible de un advisory que no existe.
-2. **Corregir `AGENTS.md`** (tabla Módulos Activos, fila `quality_gates/`, y el bloque FASE 4.5 del flujo v4) **y `publication_gates.py:4` y `:162`** a "11 blocking + 2 advisory".
-3. **NO tocar `delivery_quality_report.py:289`** (`BLOCKING_GATE_NAMES`). Ese tuple rige el ZIP (`main.py:3198` "⛔ ZIP ABORTED") y pertenece a un régimen distinto — delivery, no publicación. Unificarlos es una decisión separada con su propio radio de impacto.
-4. **Añadir candado de regresión**: hoy **0 tests** referencian `BLOCKING_GATE_NAMES` y ningún test de `tests/regression/` ni `tests/e2e/` fija la lista advisory. Sin candado, el cuarto régimen reaparece.
-5. **Cerrar el ciclo en el plan de registro, no en este documento.** Una vez implementado, actualizar **ROADMAP §6.4** (la columna "Objetivo decidido" de la tabla de severidad pasa a "Implementado") y dar de baja la deuda **H10**. La redacción original de este item —"actualizar §8 y §10 de este documento"— quedó **sin objeto** desde el 2026-09-02: §10 es un stub supersedido (§10.2 lista lo refutado) y §8 es estado histórico del proyecto cuya fuente única es `VERSION.yaml` + `python scripts/doctor.py --status` (ROADMAP §3: no replicar datos sincronizables).
-
-### 12.5 Qué NO hacer
-
-- **No demoter `asset_confidence`** — ver §12.2 (14% del histórico).
-- **No implementar S2.3** (cambiar el denominador de `coverage_ratio` de `actionable_total` a `promised_services_total`). Es **revertir la decisión D-PF1** de FASE-SR-B (`alignment_result.py:115-123`, *"los servicios 'sin costo (fallback)' no comprometidos no cuentan como deuda de entrega"*). Efecto medido: convierte un 0.571 BLOCKED en 1.000 WARNING. Bloquearía **3 de las 4 configuraciones históricas de alignment (75%)**. En 3 de esas 4, `no_breach = None` ⟹ históricamente `coverage == coverage/total`: S2.3 no corrige nada real, penaliza una deuda que D-PF1 decidió explícitamente no contar.
-- **No añadir todavía el octavo servicio al registro.** `PROPOSAL_SERVICE_TO_ASSET` tiene 7 entradas (`monthly_report` comentado en `proposal_asset_alignment.py:27-29`, FASE-3 BUG-10), mientras `service_catalog` declara 8 y el comentario de L35-37 dice "All 8". Medido: **Δcoherence = +0.0000 exacto** (la rama de éxito hardcodea `score=1.0` en `coherence_validator.py:689-700` y solo pone el tamaño del registro en el mensaje; la rama de fallo usa una **UNIÓN** en L703 donde `monthly_report` ya está en `promised_types`), pero **`promise_coverage` cae 0.571 → 0.500** porque el pain `no_monthly_report` no se detecta. Neutro en coherencia, negativo en coverage: no vale la pena sin el punto 8.
-- **No tratar el punto 8 como opcional.** La causa raíz es que la propuesta es **estática**: promete los 7-8 servicios del registro haya o no brecha detectada. Una **propuesta dinámica que solo prometa servicios con brecha detectada** hace `no_breach = 0` por construcción ⟹ `total == actionable` ⟹ los denominadores convergen y toda la discusión anterior se disuelve. Advisory es un parche legítimo; el punto 8 es la cura.
-- Datos de sensibilidad útiles si se toca coherencia: pesos en `coherence_validator.py:101-108` (1.5/1.0/1.5/0.5/1.0/2.0, total 7.5) ⟹ sensibilidad 0.2667 por unidad; headroom actual 0.08; score mínimo de un check para mantener overall ≥ 0.8 = **0.7000** (M=3 de 10 faltantes).
-
-### 12.6 Criterio de aceptación
-
-- **Baseline antes de tocar nada:** 140 passed, 1 skipped, 8 warnings en ~1.23s sobre los 7 archivos de tests de alignment/gates (141 tests, 32 asserts de bloqueo).
-- **Costo esperado:** ~6 tests específicos de alignment a actualizar. No hay candados en `tests/regression/` ni `tests/e2e/`.
-- **Verificación:**
-  ```bash
-  python -m pytest tests/quality_gates tests/asset_generation -q
-  python scripts/run_all_validations.py --quick
-  python scripts/validate_agents_md.py    # gate de coherencia AGENTS.md (conteo de gates)
-  ```
-- **Definición de hecho:** un gate advisory fallido produce WARNING visible en el acta y `ready` sigue siendo `True`; un gate blocking fallido produce `ready = False`; `AGENTS.md`, `publication_gates.py:4`, `:162` y el código dicen los mismos 11 + 2; existe al menos un test que fija ambas listas.
-
-### 12.7 Correcciones adyacentes — otras cifras de este documento refutadas en la misma auditoría
+> Antes "§12.7". Se queda en este documento porque corrige cifras de §3 (análisis Capa 4) y §8 (estado del proyecto), que aquí permanecen. Las correcciones de severidad y los hallazgos estructurales del pipeline migraron al dossier (CONTEXT-AUDITORIA §8-§9).
 
 No consumir §3 ni §8 sin leer esto (§10 ya se autodescribe como stub supersedido). Todo verificado contra el código vivo y los artefactos reales el 2026-09-02.
 
-> ⚠️ **Las referencias de línea de esta tabla que caen dentro del antiguo §10 (rango 254-361) son históricas.** Ese texto fue **eliminado** el 2026-09-02 al convertir §10 en stub, así que esas líneas ya no existen en este archivo: R3 (279), R9 (325), R10 (262), N3 (278) y R11 (275) apuntaban a las Etapas 1-5 y a las Convenciones del plan. La versión corregida de cada una vive en **`ROADMAP.md` §7.2** y el registro consolidado de lo refutado en **§10.2**. Las referencias fuera de ese rango (62, 90, 60, 146, 230, 89, 231, 182-200, 228) siguen siendo válidas.
+> ⚠️ **Las referencias de línea de esta tabla que caen dentro del antiguo §10 (rango 254-361) son históricas.** Ese texto fue **eliminado** el 2026-09-02 al convertir §10 en stub, así que esas líneas ya no existen en este archivo: R3 (279), R9 (325), R10 (262), N3 (278) y R11 (275) apuntaban a las Etapas 1-5 y a las Convenciones del plan. La versión corregida de cada una vive en **`ROADMAP.md` §7.2** y el registro consolidado de lo refutado en **§10.2**. Las referencias fuera de ese rango (62, 90, 60, 146, 230, 89, 231, 182-200, 228) siguen siendo válidas **contra el snapshot 2026-09-02 del archivo**; tras la reestructuración del 2026-09-03 los números cambiaron — mapa por sección: R1→§3 (tabla Estado de la entrega) · R2→§3 (bullets de deploy) · R3→§3 y §5 (regla P6.5) · R8→§8 · R9→§3 y §8 · R13→§8 · R14→§11.
 
 | # | Línea(s) | Afirmación del doc | Realidad medida |
 |---|---|---|---|
@@ -437,172 +376,10 @@ No consumir §3 ni §8 sin leer esto (§10 ya se autodescribe como stub supersed
 | R14 | 363 | `/mnt/c/Users/Jhond/Github/iah-cli` | Ruta WSL; la plataforma real es `win32` → `C:\Users\Jhond\Github\iah-cli` |
 | — | §5, ROADMAP §7.2 | `modules/quality_gates/tribunal/` | **No existe.** Ninguno de los 5 bots del tribunal está implementado; §5 y ROADMAP §7.2 son **plan, no estado** (antes §10, hoy stub) |
 
-**Hallazgo adicional (N11), crítico para el Bot 1 del tribunal:** el gate de coherencia **ignora `is_coherent`**. `publication_gates.py` `_coherence_gate` (~L458-520) decide con `passed = coherence_score >= self.config.coherence_threshold` — solo el score, nunca `report.is_coherent`. Los artefactos reales de SalenteReal dicen `is_coherent: false` en cuatro lugares y aun así el gate PASÓ. Añadir errores no bloquea nada. Causa única del `is_coherent=False`: `_check_assets_are_justified` = 3/4 = 0.75 → `severity="error"` (`coherence_validator.py:255-309`), porque `monthly_report` es always-on y no tiene pain que lo justifique. Contraste: `coherence_gate.py:289` sí usa `passed = report.is_coherent` (más estricto) pero **no tiene llamador en producción** — es huérfano. El Bot 1 debe leer `is_coherent`, no el score.
+**N11 — el gate de coherencia ignora `is_coherent` — migró al dossier** (mecanismo completo: CONTEXT-AUDITORIA §9.2, B5; deuda P9/T0.4 en ROADMAP). Lo único que importa aquí para el diseño del tribunal: **el Bot 1 debe leer `is_coherent`, no el score** (§5), y el pipeline debe respetar `is_coherent` antes de que ese check sea certificable.
 
 ---
 
-## 13. Hallazgos estructurales de la auditoría 2026-09-02 (no cubiertos por §12)
-
-> **Propósito:** preservar medición verificada para evitar reproceso. Nada de esto está implementado y ningún archivo de código fue modificado durante la auditoría. §12 resuelve la severidad de los gates; §13 documenta lo que la auditoría encontró *alrededor*, que necesitan (a) la sesión del **punto 8** —propuesta dinámica, causa raíz en ROADMAP §7.2— y (b) la del **tribunal** (§5 para el diseño por bot, **ROADMAP §7.2** para el plan). Los seis agujeros A1-A6 ya están registrados como deuda en ROADMAP v4.2 §13 — ver la equivalencia en **§10.4**.
-> **Corpus de referencia:** `output/FASE-D_salentoreal_post_guard/v4_complete/hotelsalentoreal/v4_audit/` (corrida 2026-08-31 12:28:03), re-verificado el 2026-09-02.
-
-### 13.1 Seis agujeros vivos (bloque A)
-
-Verificados contra código vivo y artefactos reales el 2026-09-02. Al momento del hallazgo **ninguno estaba documentado en el repo**; desde **ROADMAP v4.2** los seis están registrados como deuda o precondición — A1→**H9**, A2→**H7**, A3→**P12**, A4→**T0.2**, A5→**P10**, A6→§6.4/**G11**. Se conservan aquí con su evidencia por archivo.
-
-**A1 — G9 se salta en verde.**
-- *Qué:* si no existe `proposal_asset_matrix.json`, el gate de alignment de delivery se marca como pasado.
-- *Evidencia:* `delivery_quality_report.py:250-257` → `{"passed": True, "gate": "G9", "skipped": True, "reason": "proposal_asset_matrix.json not found"}`. El summary (`:310-319`) cuenta `passed_count` sobre `gate_results.values()` ⟹ **un gate saltado se cuenta como gate pasado**. Hay además un **segundo default independiente** en `:325` (`{"passed": True, "gate": "G9"}`) para cuando la clave no existe.
-- *Consecuencia:* un paquete sin matriz pasa el gate de delivery de forma vacuamente verde. Dos defaults para la misma clave = dos fuentes de verdad.
-- *Requisito:* `skipped` no debe contar como `passed`; debe ser `NOT_EVALUATED` y visible en el acta. Unificar los dos defaults.
-
-**A2 — El oráculo de presencia no se persiste.**
-- *Qué:* `site_presence_report` es la entrada que decide `present_in_production` y por tanto `no_breach`, `unresolved`, `coverage_ratio` y G9. No se escribe a disco.
-- *Evidencia:* `find output -iname "*site_presence*"` → **0 resultados** en todo el histórico. Para medir hubo que reconstruir el snapshot a mano.
-- *Consecuencia:* el número más decisivo del gate de alignment **no es auditable post-hoc**. El Bot 3 del tribunal (§5) no puede revisar lo que no existe y ninguna corrida pasada puede re-evaluarse bajo un oráculo distinto.
-- *Requisito:* persistir el snapshot canónico — el concepto ya existe (`main.py:2535` lo pasa como `site_presence_snapshot`, DT4-R2); falta escribirlo junto a los demás artefactos de `v4_audit/`.
-
-**A3 — `promised_assets_exist`, el check más pesado, solo corre pre-gen.**
-- *Qué:* el cross-check contra el registro estático se ejecuta únicamente cuando no hay assets generados.
-- *Evidencia:* `coherence_validator.py:670` `if not generated_assets:`, con comentario H6 FIX explícito (*"With real generated_assets, we trust the orchestrator's actual output"*). El acoplamiento oculto con el registro está en `:622`.
-- *Consecuencia:* el check de peso **2.0** (el mayor de los 6, sobre total 7.5) devuelve `score=1.0` **hardcoded** en la rama de éxito (`:689-700`); el tamaño del registro solo entra al *mensaje*. Post-generación —que es cuando importa— el check confía en el orquestador sin re-verificar el contrato. Esto explica por qué Δcoherence = 0.0000 al cambiar el registro (B5).
-- *Requisito:* si el Bot 1 va a certificar P6.3, no puede apoyarse en este check tal como está.
-
-**A4 — Doble oráculo de presencia: decisión y narrativa divergen.**
-- *Qué:* un mismo resultado de gate puede afirmar que un asset falta y a la vez listarlo como presente en producción.
-- *Evidencia:* reproducido con nombres reales sobre SalenteReal — el resultado dice que **Schema Hotel** está `missing` y simultáneamente lo incluye en `present_assets`. Mecanismo: el oráculo **permisivo** (`PRODUCTION_PRESENT_STATUSES = ("exists", "exists_with_issues")`, `site_presence_checker.py:73`, decisión FASE-SR-E H7/L-SR3) es el que **decide**; el **estricto** es el que **escribe el mensaje**.
-- *Consecuencia:* el humano (y el Bot 3) lee una narrativa que no corresponde con la decisión tomada. Misma forma de defecto que R2 (`site_verification_applied`).
-- *Requisito:* un solo oráculo para decidir y para narrar, o narrativa derivada de la decisión.
-
-**A5 — Parámetro fantasma y skip silencioso en los dos builders de matriz.**
-- *Qué:* hay dos constructores de matriz y ambos tienen rutas de silencio.
-- *Evidencia:* `AssetAlignmentMatrix.build` (`proposal_asset_alignment.py:748-789`) declara `delivery_context` como fuente de verdad preferida en su docstring, pero **lo ignora** cuando `generated_assets is not None` (L779-789). `ProposalAssetMatrix.build` (`:575-659`) hace **skip silencioso** en `:610-612` (`if not expected_asset: continue`): un servicio sin asset esperado desaparece de la matriz sin dejar rastro. Medido: los dos builders son **empíricamente idénticos en las 5 variantes probadas**.
-- *Consecuencia:* hoy no divergen, pero hay dos rutas por las que un servicio puede esfumarse sin señal. Duplicación sin divergencia es deuda latente, no seguridad.
-- *Requisito:* un solo builder; el skip de `:610-612` debe dejar una entrada con estado explícito (`NO_ASSET_MAPPED`), no desaparecer.
-
-**A6 — La matriz persistida pierde el puntero al artefacto.**
-- *Qué:* `asset_path` se serializa como `null` incluso para la entrada LINKED cuyo asset sí se generó.
-- *Evidencia* (entrada real de `proposal_asset_matrix.json`, versión 2.0):
-  ```json
-  {"alignment": "linked", "asset_path": null, "asset_type": "llms_txt",
-   "confidence": 1.0, "pain_ids": ["ai_crawler_blocked"],
-   "service_name": "Optimización para IA Generativa", "status": "LINKED"}
-  ```
-- *Consecuencia:* la trazabilidad P6.3 (*"recomendación vendida → asset específico trazable"*) **no se puede verificar desde el artefacto**: no hay ruta al archivo. El Bot 3 tendría que adivinar el nombre.
-- *Requisito:* poblar `asset_path` cuando el asset existe; es el campo que hace auditable P6.3.
-
-### 13.2 Mecanismo causal de `no_breach = 6/7` (bloque B)
-
-Esto es lo que necesita una sesión de **punto 8**. Sin esto se vuelve a medir desde cero.
-
-**B1 — La matriz real, verificada entrada por entrada.** 7 servicios: **6 NO_BREACH + 1 LINKED**, `delivery_ready: True`.
-
-| Servicio prometido | `asset_type` | Estado | conf | `pain_ids` |
-|---|---|---|---|---|
-| SEO Local | `optimization_guide` | NO_BREACH | 0.0 | `[]` |
-| Botón de WhatsApp | `whatsapp_button` | NO_BREACH | 0.0 | `[]` |
-| Schema Hotel | `hotel_schema` | NO_BREACH | 0.0 | `[]` |
-| Schema Organization | `org_schema` | NO_BREACH | 0.0 | `[]` |
-| Página de FAQ | `faq_page` | NO_BREACH | 0.0 | `[]` |
-| Meta Tags Sociales (Open Graph) | `open_graph` | NO_BREACH | 0.0 | `[]` |
-| **Optimización para IA Generativa** | `llms_txt` | **LINKED** | 1.0 | `["ai_crawler_blocked"]` |
-
-Y el ledger resuelto tiene **exactamente 3 entradas**, las tres MEDIUM y ASSET_GENERATED: `no_analytics_configured`, `low_organic_visibility`, `ai_crawler_blocked`.
-
-**La doble falla de mapeo, que es la causa raíz:**
-- `low_organic_visibility` **sí se detectó** y produjo `indirect_traffic_optimization` (`pain_solution_mapper.py:179`; `asset_catalog.py:300-313` IMPLEMENTED) — pero **ningún servicio prometido mapea a ese asset**: es un **huérfano**. Se genera, se entrega y no responde a nada vendido.
-- `no_analytics_configured` produjo `analytics_setup_guide` — **segundo huérfano**, mismo mecanismo (`pain_solution_mapper.py:170`).
-- "SEO Local" promete `optimization_guide`, que solo se mapea desde `low_citability` (`pain_solution_mapper.py:207-215`) — pain que **no se detectó**. El servicio prometido queda NO_BREACH.
-
-⟹ **El registro promete por pains que no aparecieron, y los pains que aparecieron producen assets que nadie promete.** Los dos extremos del contrato comercial están desalineados por construcción del mapper, no por los datos del hotel. De 4 assets generados, **2 son huérfanos** y 1 (`monthly_report`) no tiene pain.
-
-**B2 — Brecha runtime vs estática.** El registro estático `PROPOSAL_SERVICE_TO_ASSET` está **completo: 7/7 con asset implementado**. El problema no es el registro. En runtime se generan **4 assets** (`asset_generation_report.json`: `analytics_setup_guide` WARNING, `indirect_traffic_optimization` WARNING, `llms_txt` PASSED, `monthly_report` PASSED; `total_assets = 4`, `estimated = 2`, `delivery_ready_percentage = 100.0`) y la **intersección prometido ∩ generado = {`llms_txt`}** — un solo elemento. `monthly_report` se genera pero **no está en el registro** (comentado en `proposal_asset_alignment.py:27-29`, FASE-3 BUG-10).
-⟹ Quien confunda "registro completo" con "cobertura real" llega a la conclusión opuesta. Fue un falso positivo de esta misma auditoría (§13.5, #3).
-
-**B3 — Los seis registros de identidad de servicios.** Punto 8 es imposible sin decidir cuál manda.
-
-| Registro | Ubicación | Tamaño | Rol |
-|---|---|---|---|
-| `service_catalog` | config | **8** | lo que se declara vendible |
-| `PROPOSAL_SERVICE_TO_ASSET` | `proposal_asset_alignment.py:22-33` | **7** | lo que la propuesta promete → asset |
-| `ASSET_CATALOG` | `asset_catalog.py` | **25** | lo que se sabe generar |
-| `PAIN_SOLUTION_MAP` | `pain_solution_mapper.py` | **22 mapeables** | pain → asset |
-| Output runtime del orquestador | `asset_generation_report.json` | **4** | lo que de hecho se generó |
-| Contract registry | `asset_responsibility_contract.py` | **3 CORE + 3 GEO** | responsabilidad de deploy |
-
-Seis fuentes, ninguna canónica. `ALL_PROMISED_SERVICES = list(PROPOSAL_SERVICE_TO_ASSET.keys())` (`:45`) hace que el registro de 7 mande sobre el de 8, mientras el comentario de `:35-37` dice "All 8".
-
-**B4 — Palancas medidas sobre la cobertura.** Bajo el régimen actual `coverage_ratio` = **1.000 en las 10 configuraciones** (tautología, §12.3). Lo que varía es el resultado bajo **S2.3** (denominador = `promised_services_total`):
-
-| Configuración | coverage bajo S2.3 |
-|---|---|
-| Rango en las 10 (5 registros × 2 oráculos) | **0.125 – 0.714** |
-| Registro actual (7), oráculo permisivo | **0.571** (4/7) |
-| Registro actual + S1.2 (añadir `monthly_report`) | **0.500** — *empeora*, porque el pain `no_monthly_report` no se detecta |
-| **R8c** (remapear "SEO Local" → `indirect_traffic_optimization`) | **0.714** (5/7) — única palanca que sube |
-| R8 (8 servicios), oráculo estricto | **0.125** |
-
-- **S2.3 bloquea en las 10** (ninguna alcanza 0.8) ⟹ por eso §12.5 lo descarta.
-- `unresolved = 0` y **G9 = PASS en las 10** ⟹ **S2.4 no tiene efecto alguno**.
-- **Ninguna variante de registro llega a 1.0 sin punto 8.** La mejor (R8c) se queda en 0.714.
-
-**B5 — Δcoherence medido, y por qué es cero.**
-
-| Cambio de registro | Δ coherence_score | Mecanismo |
-|---|---|---|
-| 7 → 8 servicios (añadir `monthly_report`) | **+0.0000 exacto** | Dos candados independientes: (1) la rama de éxito hardcodea `score=1.0` (`coherence_validator.py:689-700`) y el tamaño del registro solo entra al mensaje; (2) la rama de fallo usa una **UNIÓN** (`:703`, `total_checked = len(promised_types \| set(PROPOSAL_SERVICE_TO_ASSET.values()))`) y `monthly_report` ya está en `promised_types` ⟹ la unión vale 10 para R7 y para R8 |
-| R22 (vocabulario completo de 22 del mapper) | **−0.0121** (0.88 → 0.8679) | Único cambio que sí mueve el score. Causa: `direct_booking_campaign` es **MANUAL_ONLY** en `asset_catalog.py` ⟹ `is_asset_implemented` False ⟹ entra a `missing_service_assets` |
-
-- **Sensibilidad:** pesos `1.5/1.0/1.5/0.5/1.0/2.0` (total 7.5, `coherence_validator.py:101-108`) ⟹ **0.2667 por unidad**. Headroom actual **0.08**. Score mínimo de un check para mantener overall ≥ 0.8 = **0.7000** (M=3 de 10 faltantes).
-- **Landmine:** unificar los registros con el vocabulario del mapper (22) cuesta 0.0121 de coherencia por un asset MANUAL_ONLY. Unificar no es gratis.
-- **Cierre con N11:** el gate decide con `coherence_score`, **nunca con `is_coherent`**; los artefactos dicen `is_coherent: false` en cuatro lugares y el gate PASÓ. Causa única: `_check_assets_are_justified` = **3/4 = 0.75** → `severity="error"` (`coherence_validator.py:255-309`). **Ese 3/4 está confirmado por el artefacto real**: 4 assets generados, 3 con pain en el ledger, 1 (`monthly_report`) always-on sin pain. ⟹ **La misma falla estructural de B1 (assets sin pain y pains sin servicio) produce a la vez el `no_breach = 6/7` y el `is_coherent = false`.** Punto 8 elimina las dos.
-
-### 13.3 Costos comparados (bloque C)
-
-| Cambio | Tests a tocar | Candados de regresión | Δ protección real |
-|---|---|---|---|
-| Advisory 2 (§12.4) | **~6** de alignment | 0 hoy; hay que crearlos (§12.4, item 4) | **0** — coverage es 1.000 siempre; no se pierde nada |
-| S2.3 (denominador) | **~41 tests / 152 asserts** | 0 | **Negativo** — revierte D-PF1 y bloquea 3 de 4 configuraciones históricas (75%) |
-
-Baseline medido antes de tocar nada: **140 passed, 1 skipped, 8 warnings, ~1.23s** sobre los 7 archivos de tests de alignment/gates (141 tests, 32 asserts de bloqueo). **0 tests** referencian `BLOCKING_GATE_NAMES`.
-
-### 13.4 Tabla consolidada de mediciones (para no re-medir)
-
-| Magnitud | Valor | Dónde |
-|---|---|---|
-| Corridas históricas únicas en `output/` | **29** (10 hoteles) | §12.2 |
-| Corridas con 100% assets ESTIMATED | **4 (14%)** — `hotel_visperas`/`hotel_vísperas`, 2026-03-25 → 2026-04-05, todas con `coherence_score_final = None` | §12.2 |
-| Configuraciones únicas de alignment en el histórico | **4**, con `no_breach = None` en 3 | §12.5 |
-| Matriz SalenteReal | 7 entradas: 6 NO_BREACH + 1 LINKED, `delivery_ready: True`, versión 2.0 | B1 |
-| Ledger resuelto | **3 pains**, todos MEDIUM / ASSET_GENERATED | B1 |
-| Assets generados en runtime | **4** (2 WARNING, 2 PASSED), `estimated = 2`, `delivery_ready_percentage = 100.0` | B2 |
-| Intersección prometido ∩ generado | **{`llms_txt`}** — 1 elemento; 2 assets huérfanos | B1/B2 |
-| `coverage_ratio` (régimen actual) | **1.000** en 10/10 | §12.3 |
-| `coverage_ratio` bajo S2.3 | **0.125 – 0.714**, bloquea en 10/10 | B4 |
-| `unresolved` / G9 | **0** / **PASS** en 10/10 ⟹ S2.4 sin efecto | B4 |
-| Δcoherence 7→8 | **+0.0000** | B5 |
-| Δcoherence R22 | **−0.0121** (0.88 → 0.8679) | B5 |
-| coherence canónico SalenteReal | **0.88** (DT4-N4); `0.9133` es `pre_coherence_score`, **no canónico** | §12.7 R3 |
-| `is_coherent` | **false** en 4 lugares del artefacto; el gate PASÓ igual. Causa: 3/4 = 0.75 | N11 / B5 |
-| Sensibilidad de coherence | **0.2667**/unidad; headroom **0.08**; mínimo por check **0.7000** | B5 |
-| ZIP de la entrega | `hotelsalentoreal_20260831.zip`, **46,552 bytes**; directorio expandido **37 archivos** | §12.7 R1 |
-| Artefactos `site_presence*` persistidos | **0** en todo `output/` | A2 |
-| Tests que fijan la lista advisory | **0** | §12.4 |
-
-### 13.5 Falsos positivos de esta auditoría (corregidos, para no repetirlos)
-
-Siete afirmaciones que se hicieron durante el análisis y que la medición refutó. Se listan porque son las trampas naturales de este código:
-
-1. "Dos rutas de veredicto independientes desde un mismo DTO" → **algebraicamente redundantes** (§12.3).
-2. "S2.4 volteaba G9 → ZIP ABORTED" → **falso en SalenteReal**: hay cero MISSING_ASSET en la matriz.
-3. "La intersección prometido × generado es solo `{llms_txt}`" → cierto **en runtime**, falso **para el registro estático** (7/7 completo). Ver B2.
-4. "Los dos builders de matriz divergen" → **empíricamente idénticos** en las 5 variantes. Ver A5.
-5. "El umbral de coverage es código muerto" → **impreciso: redundante, no muerto** (3 tests lo ejercitan, disparó en 2 de 4 configuraciones históricas).
-6. "S2.3 es insatisfacible" → **refinado**: insatisfacible bajo el régimen de SalenteReal; una configuración histórica sí lo pasa.
-7. "El 0.88 canónico no es estable bajo S1.2" → **refutado**: Δ = 0.0000 exacto.
-
-**Lección de forma:** en este pipeline, revalidar citas de código **no** revalida premisas. Las siete afirmaciones de arriba eran coherentes con el código leído y falsas contra el artefacto real. Todo hallazgo de §13 está anclado a un artefacto o a una corrida, no a una lectura.
-
 ---
 
-*Contexto generado 2026-09-01 y convertido en plan implementable (§10) ese mismo día; auditado contra el código vivo el 2026-09-02 (§12 decisión advisory + §13 hallazgos estructurales). Esa auditoría **migró el plan a `ROADMAP.md` §7.2 (FASE T, v4.2)** y dejó §10 como stub supersedido: §10.2 lo refutado, §10.3 el detalle de implementación preservado, §10.4 la equivalencia de nomenclaturas. Retomar cuando la sesión aborde: bots para iah-cli, credibilidad de diagnóstico, Capa 3 onboarding, Capa 4 delivery/deploy, tribunal de revisión multi-bot, debottlenecking del proceso de entrega, ejecución del plan anclado en P6 (**punto de entrada: ROADMAP §7.2 T0.1-T0.4, y solo después T1 = Juez certificador**; el tramo offline T0/T1/T2/T4 es certificable ya, el tramo externo T3/T5/T6 depende de datos reales del hotel y credenciales FTP/WP), culminar la corrección de la lista advisory de gates — 2, no 3 (§12.4 + ROADMAP **H10**), **o abordar la causa raíz del punto 8 — propuesta dinámica (§13.2 = ROADMAP §7.2 "Causa raíz por debajo de T0", que además cierra N11 = T0.4/**P9**).*
+*Contexto generado 2026-09-01; auditado contra el código vivo el 2026-09-02 (plan migrado a `ROADMAP.md` §7.2, FASE T v4.2); reestructurado el 2026-09-03 como documento **exclusivo de bots** — la corrección de severidad de gates (ex §12.1-12.6) y los hallazgos estructurales del pipeline (ex §13: A1-A6, B1-B5/punto 8, mediciones, falsos positivos con su lección de forma) viven ahora en el dossier de estabilización `.opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md` (§8-§9; mapa de migración en su §10). Retomar cuando la sesión aborde: bots para iah-cli, credibilidad de diagnóstico, Capa 3 onboarding, Capa 4 delivery/deploy, tribunal de revisión multi-bot, debottlenecking del proceso de entrega, ejecución del plan anclado en P6 — **punto de entrada: §12 (precondiciones) y ROADMAP §7.2 T0.1-T0.4, y solo después T1 = Juez certificador**; el tramo offline T0/T1/T2/T4 es certificable ya, el tramo externo T3/T5/T6 depende de datos reales del hotel y credenciales FTP/WP.*
