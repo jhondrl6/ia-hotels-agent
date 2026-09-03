@@ -63,11 +63,36 @@ nunca por delante.** AC7 y AC8 se certifican juntas o ninguna.
 
 ### Estado de Fases Anteriores
 
-| Fase | Estado |
-|------|--------|
-| FASE-A — Fuente única de identidad | ✅ Completada |
-| FASE-B — Biyección triple mapa↔emisión↔narrativa | ✅ Completada |
-| FASE-C — Punto 8 propuesta dinámica | ✅ Completada (verificar en `06-checklist`) |
+> ⚠️ **Corregido 2026-09-03, en la ejecución de FASE-D.** Esta tabla afirmaba
+> «FASE-B ✅ / FASE-C ✅» y era **falsa**: `06-checklist-implementacion.md` y
+> `git log` registraban **solo FASE-A** completada. **La fuente única del estado es
+> `06-checklist-implementacion.md`**, no esta tabla copiada en cada prompt (los prompts
+> de C, E y F repiten el mismo error → seguimiento **S23** en `10-analisis`).
+
+| Fase | Estado real al ejecutar D | Impacto en FASE-D |
+|------|---------------------------|-------------------|
+| FASE-A — Fuente única de identidad | ✅ Completada (2026-09-03) | Es la **única dependencia dura** de D |
+| FASE-B — Biyección triple mapa↔emisión↔narrativa | 🟡 **Cerrada en paralelo** (otra sesión, 2026-09-03 16:45) | Ninguno en D, pero sí en el árbol compartido — ver riesgo abajo |
+| FASE-C — Punto 8 propuesta dinámica | ⬜ Pendiente | **No re-verifica la nota post-C** — ver abajo |
+
+⚠️ **Riesgo de concurrencia (hallazgo de esta sesión, L-D1 + S21)**: FASE-B y FASE-D se
+ejecutaron **a la vez sobre el mismo working tree**, violando R1 del executor («una fase
+por sesión»). No chocaron porque `dependencias-fases.md` §3 les asigna archivos disjuntos,
+pero el commit de FASE-D tuvo que construirse con `git add` explícito de 15 rutas para no
+arrastrar el trabajo en vuelo de B. **Dos sesiones commiteando a la vez sobre un árbol
+limpio compartido es una condición de carrera**, no una coincidencia inocua.
+
+**Por qué D pudo correr sin B ni C**: `dependencias-fases.md` §2 fija la dependencia dura
+de D solo en A y declara «D y E están fuera del camino crítico y pueden ejecutarse en
+cualquier hueco tras A y B respectivamente».
+
+**Consecuencia sobre la nota post-FASE-C**: al no haber corrido C, la tautología de
+`coverage_ratio` (§8.3 del dossier) **sigue intacta** ⟹ la justificación de
+`proposal_asset_alignment` como advisory se sostiene hoy **en su base original**
+(«redundante porque es tautológico»), no en la reformulada. Medido en
+`evidence/FASE-D/faseD_contrafactual.py`: 0 flips de `ready` sobre la corrida real
+disponible. **La re-verificación sigue pendiente para cuando C cierre AC5** → seguimiento
+S24 en `10-analisis`.
 
 ### Base Técnica Disponible
 

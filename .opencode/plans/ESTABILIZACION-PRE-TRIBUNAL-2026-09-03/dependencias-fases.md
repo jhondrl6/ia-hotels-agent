@@ -23,9 +23,9 @@
 | Fase | Estado | Fecha | Qué desbloquea ahora |
 |------|--------|-------|----------------------|
 | **A** | ✅ Completada | 2026-09-03 | **B**, **C** (vía B), **D** — el canónico existe en `modules/common/service_identity.py` |
-| B | ⬜ Pendiente | — | C, E, H |
+| **B** | ✅ Completada | 2026-09-03 | **C**, **E**, **H** — biyección triple cerrada (DESCARTE REAL 2→0), candado AST en verde |
 | C | ⬜ Pendiente | — | F, G, I |
-| D | ⬜ Pendiente | — | F, I |
+| **D** | ✅ Completada | 2026-09-03 | **F**, **I** — severidad explícita 11 blocking + 2 advisory con única fuente en `publication_gates.py` |
 | E | ⬜ Pendiente | — | F, I |
 | F | ⬜ Pendiente | — | G, H, I |
 | G | ⬜ Pendiente | — | H, I |
@@ -53,7 +53,10 @@
   `_pain_to_brecha` descarta pains en silencio en `v4_diagnostic_generator.py:3346-3347`; `narratives`
   (`:3263-3344`) tiene **16** claves frente a las **27** de Capa 1 ⟹ **11 ausentes**, que son
   exactamente **los 9 pains muertos de V1 + 2 que sí se emiten y sí se descartan hoy**
-  (`no_ga4_enhanced`, `low_ota_divergence`). `narratives` y `detect_pains` son las dos mitades del mismo
+  (`no_ga4_enhanced`, `low_ota_divergence`). ⚠️ **FASE-B midió que esa última afirmación era
+  falsa: ninguno de los dos se emitía realmente** (guardias insatisfacibles) — ver las Notas de
+  ejecución de FASE-B abajo y S-B7. El resto de la nota sigue vigente.
+  `narratives` y `detect_pains` son las dos mitades del mismo
   agujero: **arreglar solo la emisión deja el fix de B inerte** (los 9 rebotan en `:3346`). La biyección
   de AC4 debe ser **triple**: mapa↔emisión↔narrativa. Ver `10-analisis` §5 S6/S12/S13.
 - **Orden forzoso nuevo B→H para `low_ota_divergence`**: V7 (FASE-H) arregla el guard `__iter__` que hoy
@@ -78,6 +81,102 @@
   (V11). Son regiones **disjuntas** del mismo archivo ⟹ B y H pueden convivir, pero los cambios de B
   deben confinarse a su región (regla añadida en `05-prompt-inicio-sesion-fase-B.md` §Restricciones).
   `config/regional_benchmarks.yaml` queda asignado a **B** (S14).
+
+**Notas de ejecución de FASE-B** (relevantes para las fases que heredan sus archivos):
+
+- **Delta medido** (`evidence/FASE-B/faseB_bijeccion_audit.txt`): Capa 1 **27 → 26** (se retiró
+  `no_ga4_enhanced`), emisiones **18 → 20**, `narratives` literal **16 → 16** (sin cambio: el
+  complemento se **deriva** de Capa 1, no se escribió a mano — L-NC4), cobertura narrativa
+  efectiva **26/26**, **DESCARTE REAL 2 → 0**. AC4 cerrado.
+- ⚠️ **La premisa de N-A1 citada arriba («2 que sí se emiten y sí se descartan hoy») era FALSA.**
+  Medido en B1: `no_ga4_enhanced` **nunca se emitió** — su guardia `hasattr(status, "is_enhanced")`
+  es insatisfacible porque el campo no existe en `AnalyticsStatus` ni se puebla en ningún punto
+  del repo. `low_ota_divergence` tampoco: su guard hace `hasattr(float, '__iter__')` (V7). El
+  script de FASE-A contaba *puntos de emisión escritos* por regex, no *emisiones alcanzables*.
+  Consecuencia: `no_ga4_enhanced` se **retiró** (décimo pain muerto) en vez de narrarse.
+  Seguimiento **S-B7**. Ver `evidence/FASE-B/decision-pains-muertos.md` §1.
+- ✅ **El orden forzoso B→H para `low_ota_divergence` quedó SATISFECHO.** La nota de FASE-A exigía
+  que **H verifique** que B resolvió ese pain antes de tocar el guard `__iter__`: está resuelto.
+  Más aún — la capa narrativa es ahora **total sobre Capa 1**, así que cuando H arregle el guard
+  la brecha aparece en el diagnóstico **sin editar ninguna segunda tabla**. H ya no puede
+  convertir «nunca dispara» en «dispara y se desvanece».
+- **L-A6 — citas desplazadas por B.** B añadió ~50 líneas a `pain_solution_mapper.py`
+  (`detect_pains`, antes del `# Sort by severity`) y ~20 a `v4_diagnostic_generator.py`
+  (dentro de `_pain_to_brecha`). Posiciones vigentes:
+  - `pain_solution_mapper.py`: guard de V7 **`:447`** (era `:453`), emisión `low_ota_divergence`
+    **`:452`** (era `:457`), `detect_pains` `:333`, `_detect_analytics_pains` `:720`.
+  - `v4_diagnostic_generator.py`: **V6 `:3197-3202` y V11 `:1953` SIGUEN SIENDO VÁLIDAS** (los
+    edits de B cayeron después). `_pain_to_brecha` sigue en `:3246` y `narratives` en `:3263`,
+    pero la región de B ya no termina en `:3347`: el guard derivado ocupa `:3346-3369`.
+- **Capa 1 tiene 26 pain_ids, no 27.** Cualquier documento, test o prompt de fase posterior que
+  cite «27» quedó desactualizado. El candado **no** fija el conteo (L-NC10): fija la relación.
+- **Archivos nuevos que ninguna fase posterior debe duplicar**:
+  `tests/commercial_documents/test_pain_map_bijection.py` (candado de la biyección triple, incluye
+  el registro `PAINS_DIFERIDOS` con los 6 pains sin señal verificable),
+  `tests/commercial_documents/test_detect_pains_emisiones_faseB.py` (18 tests, 9 negativos
+  «vacío vs ausente»), `evidence/FASE-B/faseB_narratives_audit.py` (re-ejecutable).
+- **S14 / C-5 resuelto**: los 4 pains que dejaron de descartarse tienen peso explícito en las
+  **4 regiones** de `config/regional_benchmarks.yaml::pain_narratives` (16 → 20 entradas por
+  región) + fallback Python **derivado del `estimated_impact` de Capa 1**, nunca un default mudo.
+  `README.md:222` actualizado a «Pain narratives (20)» — lo exige
+  `scripts/validate_document_integration.py`, que comparaba contra el YAML. **No se colapsaron las
+  4 copias en anclajes YAML**: la estructura de 4 regiones es la costura de regionalización sobre
+  configuración dinero-adyacente; el beneficio real (no divergir en silencio) se captura con un
+  lint → **S-B8**.
+- ⚠️ **FASE-C hereda 7 tests ROJOS preexistentes** en `tests/commercial_documents/`, todos del área
+  de propuesta dinámica y todos fuera del diff de B: `test_proposal_dynamic.py` (2) y
+  `test_proposal_confidence_disclosure.py::TestAssetQualityTable` (5). Prueba de causalidad y
+  detalle en `decision-pains-muertos.md` §6 → **S-B10, S-B11, S-B12**. Dos de ellos viven en
+  `proposal_asset_alignment.py`, el archivo que C reescribe.
+- **Resto del barrido en verde**: baseline del prompt **848 passed / 2 skipped** (idéntico),
+  barrido ancho **1121 passed**, contratos de FASE-A **42 passed** (incluida la precondición dura
+  `test_narratives_subset_de_capa1`), `run_all_validations.py --quick` **7/7**.
+
+**Notas de ejecución de FASE-D** (relevantes para las fases que heredan sus archivos):
+
+- **Fuente única del régimen de publicación**: `BLOCKING_GATE_NAMES` (11) y `ADVISORY_GATE_NAMES` (2)
+  en `modules/quality_gates/publication_gates.py`, más `gate_blocks_publication()` como **único
+  predicado** de bloqueo. `check_publication_readiness`, `get_blocking_gates` e
+  `is_ready_for_publication` deciden por ese predicado, no por `not r.passed` plano. **Fase que añada
+  un gate nuevo**: registrarlo en `self.gates` **y** en una de las dos listas — el `RuntimeError` de
+  fail-fast en `__init__` falla si los dos conjuntos no son disjuntos y su unión no es `self.gates`.
+- **`is_ready_for_publication` quedó CONECTADA** (no eliminada, como ofrecía el prompt D): hoy la usa
+  `main.py`. Era huérfana de producción antes de D.
+- **Piso D2 (decisión del usuario)**: un advisory degrada a blocking bajo su corte estructural —
+  `content_quality` con `details["blockers"]` no vacío, `proposal_asset_alignment` con `value <`
+  `PROPOSAL_ASSET_ALIGNMENT_FLOOR` (0.8). Un advisory que **no se ejecutó** siempre bloquea
+  (`details[GATE_EXECUTION_FAILED_KEY]`, señalada por el camino de excepción de `run_all`).
+- **`summary` de `check_publication_readiness` creció**: `blocking_gate_names` y `advisory_issues`.
+  **F/E/G consumen ese dict, no reconstruyan severidades por su cuenta** (sería el cuarto régimen).
+- ⚠️ **`delivery_quality_report.py` NO fue tocado por D** — pertenece al régimen delivery (E→F, aún
+  pendiente). La divulgación de advisories va por `HumanChecklistGenerator.generate(report,
+  advisory_issues=...)`, cableada en `main.py`. **F7 de FASE-F puede cerrar el otro extremo**
+  (meter los gates en el `DeliveryQualityReport`) ahora que existe un canal de consumo.
+- **L-A6 — citas desplazadas por D.** `publication_gates.py` creció **2064 → 2181** líneas (+117:
+  +70 del bloque de severidad antes de la clase, +47 repartidos en `__init__`, `run_all`,
+  `check_publication_readiness` y `_content_quality_gate`). **Todas las citas de línea del archivo en
+  los prompts C, D, F y G están desfasadas en +91** para símbolos posteriores a la línea 130.
+  Posiciones vigentes medidas: `_coherence_gate` **549** (el plan decía 458) · `_critical_recall_gate`
+  **619** (528) · `_content_quality_gate` **751** (660) · `_proposal_asset_alignment_gate` **933**
+  (842) · `_JUSTIFIED_STATUSES` **1328** (1237) · `_coverage_gate` **1335** (1244) ·
+  `_doc_audit_consistency_gate` **1555** (1464) · `_extract_coherence_score` **1946** (1855) ·
+  `check_publication_readiness` **2010** (1919). **Usar símbolos.**
+- **Hallazgo colateral**: el bloque «FASE 4.5» de `AGENTS.md` listaba **12** gates, no 13 — faltaba
+  `doc_audit_consistency`. Corregido junto con la regrouping por severidad; lo detecta
+  `validate_agents_md.py` (`missing_roadmap: []`).
+- **Medido, no asumido**: contrafactual sobre la corrida real de SalentoReal ⟹ **0 flips** de `ready`
+  (`evidence/FASE-D/faseD_contrafactual.py`). D **no relajó ningún veredicto**: lo que cambia es la
+  divulgación (2 advisories antes silenciosos aparecen ahora en `human_checklist.md`) y el estado
+  `PASSED → WARNING` de `content_quality` con solo warnings, que antes era invisible para cualquier
+  consumidor de warnings. **S24**: la justificación de retirar `content_quality` y
+  `proposal_asset_alignment` de blocking no estaba medida en el dossier (solo se midió
+  `asset_confidence`) y descansa en que C cierre AC5 → **re-verificar tras FASE-C**.
+- 🟡 **Concurrencia L-D1 + L-B5 (se materializó)**: D se ejecutó en una sesión **distinta y simultánea** a la
+  de FASE-B sobre el **mismo working tree** (rama `master`, sin worktree). Mitigación aplicada: staging
+  de **15 rutas explícitas** (nunca `git add -A`) para no arrastrar el trabajo en vuelo de B, y
+  re-validación del baseline sobre el árbol combinado (**872 passed / 2 skipped** = 848 + 24 nuevos).
+  Las dos sesiones se corrigieron mutuamente estados de fase en los documentos compartidos.
+  → **S23** (tablas de estado duplicadas en los prompts) y **S-B15** (sobrescritura entre sesiones).
 
 ---
 

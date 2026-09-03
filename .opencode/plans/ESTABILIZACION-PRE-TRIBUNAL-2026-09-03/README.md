@@ -1,6 +1,8 @@
 # ESTABILIZACION-PRE-TRIBUNAL-2026-09-03
 
-> **Versión objetivo**: 4.75.0 | **Estado**: 🟡 EN EJECUCIÓN — 1 de 11 sesiones ejecutadas (FASE-A ✅ 2026-09-03)
+> **Versión objetivo**: 4.75.0 | **Estado**: 🟡 EN EJECUCIÓN — **FASE-A ✅, FASE-B ✅ y FASE-D ✅** (las tres 2026-09-03). D se ejecutó en **sesión paralela** a B sobre el **mismo working tree**, fuera del camino crítico (su única dependencia dura era A); su código está commiteado en `76e0257`. Fuente del estado por fase: la tabla de Progreso de abajo + `06-checklist-implementacion.md`.
+>
+> ⚠️ **Conflicto de concurrencia registrado (2026-09-03)**: esta línea llegó a afirmar que «FASE-B ✅ era falso, B sigue pendiente», escrita por la sesión de FASE-D cuando el trabajo de B aún no estaba commiteado. Era incorrecto: B está completa y su evidencia es re-ejecutable (`evidence/FASE-B/`, candado `tests/commercial_documents/test_pain_map_bijection.py` en verde). **Dos sesiones editando los mismos documentos de plan producen esta sobrescritura** → seguimiento **S-B15** en `10-analisis-post-implementacion.md` §5.
 > **Workflow**: `phased_project_executor.md` v2.18.0 (R1: una fase/sesión, R2: ≤60 iteraciones, R3: ≤4 tareas de investigación/fix ó 3 tareas + 1 comando largo)
 > **Contexto fuente**: `.opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md` (dossier de estabilización pre-tribunal, 717 líneas)
 > **Anclaje estratégico**: `ROADMAP.md` v4.2 §7.2 (FASE T) y §13 (deudas P9/P10/P12/H7/H9/H10)
@@ -211,9 +213,9 @@ Recuperadas de QMind `iah-cli-lecciones` (8 fuentes) y de 3 memorias de proyecto
 | Fase | Estado | Fecha | Iteraciones | Tests nuevos | Notas |
 |------|--------|-------|-------------|--------------|-------|
 | FASE-A | ✅ Completada | 2026-09-03 | 55/55 | 21 func. test (37 casos) | Canónico en `modules/common/service_identity.py` (dos capas); 6 registros derivados, 6 validados contra Capa 1; 0 IDs fantasma; drift «8 vs 7» disuelto en sus 3 copias; AC1/AC2/AC3 ✅ |
-| FASE-B | ⬜ Pendiente | — | — | — | Biyección triple mapa↔emisión↔narrativa |
+| FASE-B | ✅ Completada | 2026-09-03 | **345 medidas hasta el commit de código** / ≤40 ⚠️ *(excedido 8,6×; ver nota abajo)* | 29 func. test (46 casos) | Biyección triple cerrada: **DESCARTE REAL 2→0**, Capa 1 27→26, emisiones 18→20, `narratives` literal **16→16** (complemento derivado, L-NC4), cobertura narrativa **26/26**. 3 pains implementados con señal verificable, 1 retirado (`no_ga4_enhanced`), 6 diferidos con motivo+seguimiento. **Premisa de N-A1 corregida** (S-B7). Baseline 848 intacto, validaciones 7/7. AC4 ✅ |
 | FASE-C | ⬜ Pendiente | — | — | — | Punto 8 propuesta dinámica |
-| FASE-D | ⬜ Pendiente | — | — | — | Severidad 11+2 |
+| FASE-D | ✅ Completada | 2026-09-03 | **114 medidas hasta el commit de código** / ≤35 ⚠️ *(excedido 3,3×; ver nota abajo)* | 24 func. test (8 candado de listas + 12 severidad conductual + 4 divulgación) | Severidad explícita **11 blocking + 2 advisory** con única fuente (`BLOCKING_GATE_NAMES`/`ADVISORY_GATE_NAMES`/`gate_blocks_publication()`) y fail-fast en `__init__`. `asset_confidence` **sigue bloqueando**. Piso D2 por naturaleza del fallo (`content_quality` con blockers, `proposal_asset_alignment` < 0.8) + un gate que no se ejecutó siempre bloquea. Divulgación: `summary["advisory_issues"]` → `human_checklist.md`. `content_quality` con solo warnings pasa de `PASSED` a `WARNING` (antes invisible). **0 flips de `ready`** en el contrafactual real ⟹ no se relajó ningún veredicto. AC7/AC8 ✅ *(AC8: mismo commit)* |
 | FASE-E | ⬜ Pendiente | — | — | — | A2 + A6 persistencia |
 | FASE-F | ⬜ Pendiente | — | — | — | A4 + A1 + N11 |
 | FASE-G | ⬜ Pendiente | — | — | — | Ceguera de gates |
@@ -221,5 +223,59 @@ Recuperadas de QMind `iah-cli-lecciones` (8 fuentes) y de 3 memorias de proyecto
 | FASE-I | ⬜ Pendiente | — | — | — | E2E única Salento Real |
 | FASE-VERIFY | ⬜ Pendiente | — | — | — | Certificación + análisis |
 | FASE-RELEASE-4.75.0 | ⬜ Pendiente | — | — | — | Cierre documental |
+
+**Nota sobre las iteraciones de FASE-B** — el número es **medido**, no auto-reportado: conteo de
+ids de mensaje de asistente únicos en el transcript de la sesión
+(`…/5216df39-6b41-44a2-afc7-c3dd8802ec04.jsonl`), con `evidence/FASE-D/measure_iterations.py`.
+Supera el presupuesto de ≤40 (tope R2: 60) bajo cualquier unidad de conteo razonable. **No es
+estrictamente comparable con el «55/55» de FASE-A**, que coincide exactamente con su presupuesto y
+por tanto parece un tope alcanzado y no una medición.
+
+⚠️ **Corrección (2026-09-03)**: esta nota publicaba **151**. Esa cifra era una **foto tomada a las
+16:38 locales, antes de terminar el cierre documental** — no el total de la fase. Re-medida con corte
+en el commit de código de B (`e6d28b8`), la cifra es **345 ids únicos / 380 `tool_use`**: el
+presupuesto se excedió **8,6×**, no 3,8×. Lo detectó la **sesión paralela de FASE-D**, que en
+`evidence/FASE-D/faseD_iteraciones.txt` dejó escrito «la cifra de B al cierre real de su fase es mayor
+que 151»; B lo confirmó después reproduciendo el corte de las 16:38 (145 ids) y verificando la unidad
+de conteo (842 registros `assistant` → 358 ids únicos, `isSidechain=false` en todos: no hay
+subagentes inflando). Medición completa en `evidence/FASE-B/faseB_iteraciones.txt`.
+El corte «hasta el commit de código» es el que hace comparables a B (345) y D (114); con el cierre
+documental incluido ambas crecen (B 359+ y D 247+ al momento de medir, y siguen creciendo mientras
+la otra sesión trabaje).
+
+Lo que el presupuesto pretendía proteger **no se perdió**: la fase no se particionó, el candado de B3
+nunca quedó en rojo en master, B1 se completó antes de tocar código y todo el barrido está en verde.
+El sobrecosto vino de B1 (11 decisiones con evidencia por señal: cada una exigió rastrear el detector,
+su guard y su alcanzabilidad) y del barrido de regresión archivo-por-archivo que exige la prohibición
+de correr `tests/commercial_documents` completo.
+
+**Brecha de proceso expuesta**: el presupuesto no tenía instrumento de medida, así que cada fase se
+auto-reportaba y la cifra no era auditable — y la de B resultó ser, además, una foto prematura.
+FASE-D construyó el instrumento (`measure_iterations.py`). Falta adoptarlo como **canónico del plan**
+(y no utilidad de una fase), fijar el corte comparable, y resolver qué hacer con A, cuya cifra no es
+reconstruible con ese método. → `10-analisis` §5 S22.
+
+**Nota sobre las iteraciones de FASE-D** — medidas con la **misma unidad** que la nota de B (ids de
+mensaje de asistente únicos en el transcript `…/55618cbe-69e4-486f-8ad7-4ec64fc12bcf.jsonl`):
+**114 hasta el commit de código** (`76e0257`, 21:47:30Z) sobre un presupuesto de ≤35 ⟹ **3,3× de
+exceso**; ~160 incluyendo el cierre documental. La brecha que señaló B queda **parcialmente
+cerrada**: el conteo es ahora un artefacto re-ejecutable,
+`evidence/FASE-D/measure_iterations.py <transcript> [corte-ISO]`, no una afirmación auto-reportada.
+
+El sobrecosto de D no vino del código (D1/D2/D3 son ~170 líneas en un archivo) sino de tres cosas
+que el presupuesto no contemplaba: **(a)** verificar el estado real de A/B/C contra `06-checklist` y
+git porque el prompt afirmaba que B y C estaban cerradas y **era falso** (y a la vez falso en el
+sentido inverso: B sí estaba cerrada en paralelo); **(b)** el barrido archivo-por-archivo que exige
+la prohibición de correr suites completas, más diagnosticar que los fallos de `tests/e2e` y el
+`ImportError` de selenium son **preexistentes** y no de D; **(c)** la concurrencia con la sesión de
+B (rieles de `git add`, edición de los mismos documentos). Lo que el presupuesto protegía **no se
+perdió**: la fase no se particionó, `content_quality` y `proposal_asset_alignment` no se relajaron
+contra el mundo real (0 flips de `ready`), y D3 quedó en el **mismo commit** que D1/D2 como exigía
+AC8.
+
+⚠️ **Colisión de nombres en `evidence/FASE-D/`** (misma clase que registró B para `evidence/FASE-B/`):
+el directorio ya contenía **6 archivos** de la FASE-D de **otro plan** (commit `04fe193`, «ZIP sin
+gate reports + fallback loader + occupancy label»), con prefijo `fase_d_*` (snake_case). Los de este
+plan usan `faseD_*` (camelCase). **VERIFY debe distinguirlos.**
 
 **Métricas acumuladas**: ver `09-documentacion-post-proyecto.md` §D.

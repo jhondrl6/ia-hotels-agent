@@ -1,0 +1,26 @@
+# Medicion de iteraciones de FASE-D y corroboracion de FASE-B
+# Instrumento: evidence/FASE-D/measure_iterations.py (unidad: ids de mensaje de asistente unicos en el transcript)
+# Interes: C:/Users/Jhond/.qoder/projects/C--Users-Jhond-Github-iah-cli/<sessionId>.jsonl
+
+## Correccion del instrumento (2026-09-03, cierre documental de D)
+La version inicial del script comparaba el corte como cadena. El transcript mezcla
+dos formatos de timestamp (epoch en milisegundos e ISO-8601 UTC), y '1788468421646' >
+'2026-09-03T21:47:24Z' lexicamente, asi que TODO record epoch quedaba fuera del corte:
+la medicion con corte devolvia 0 ids. Se normalizo a segundos UTC (_to_utc_seconds).
+Con el instrumento corregido, las cifras publicadas por D y por B se reproducen.
+
+## FASE-D (transcript 55618cbe-69e4-486f-8ad7-4ec64fc12bcf)
+commit de codigo = 76e0257, 2026-09-03 16:47:24-05:00 = 21:47:24Z
+iteraciones (timestamp <= 2026-09-03T21:47:24Z): 114 ids de mensaje unicos, 114 tool_use, 1387 records
+iteraciones (transcript completo): 251 ids de mensaje unicos, 256 tool_use, 1387 records
+
+## FASE-B (transcript 5216df39-6b41-44a2-afc7-c3dd8802ec04)
+El 151 publicado por B es legitimo y se corrobora con instante:
+su id unico #151 aparece en 2026-09-03T21:38:54Z (16:38:54-05:00).
+B sigue en vuelo sin commitear: al momento de esta medición tenía 346 ids unicos
+(ultimo id 2026-09-03T22:17:47Z). La cifra de B al cierre real de su fase es mayor que 151.
+
+## Presupuesto
+D: presupuesto <=35 (prompt de fase) / 114 en implementacion (3.3x) / 247 con cierre documental (7.1x)
+B: presupuesto <=40 / 151 a las 16:38 locales (3.8x), en crecimiento
+A: 55 auto-reportado, no reconstruible con este instrumento (S22)

@@ -1,4 +1,20 @@
-..................                                                       [100%]
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 8 items
+
+tests/quality_gates/test_gate_severity_lists.py::TestSeveridadListas::test_asset_confidence_no_es_advisory PASSED [ 12%]
+tests/quality_gates/test_gate_severity_lists.py::TestSeveridadListas::test_advisory_son_exactamente_dos PASSED [ 25%]
+tests/quality_gates/test_gate_severity_lists.py::TestSeveridadListas::test_listas_suman_13_y_son_disjuntas PASSED [ 37%]
+tests/quality_gates/test_gate_severity_lists.py::TestSeveridadListas::test_registro_de_gates_coincide_con_la_severidad PASSED [ 50%]
+tests/quality_gates/test_gate_severity_lists.py::TestNoRegresionEstructural::test_check_publication_readiness_no_decide_con_not_passed_plano PASSED [ 62%]
+tests/quality_gates/test_gate_severity_lists.py::TestNoRegresionEstructural::test_no_apesta_una_segunda_copia_del_criterio PASSED [ 75%]
+tests/quality_gates/test_gate_severity_lists.py::TestNoRegresionEstructural::test_no_hay_tercera_lista_de_severidad_en_el_regimen_de_publicacion PASSED [ 87%]
+tests/quality_gates/test_gate_severity_lists.py::TestNoRegresionEstructural::test_docstrings_no_prometen_el_regimen_antiguo PASSED [100%]
+
 ============================== warnings summary ===============================
 data_models\canonical_assessment.py:17
   C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
@@ -21,4 +37,4 @@ data_models\canonical_assessment.py:257
     class CanonicalAssessment(BaseModel):
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-18 passed, 8 warnings in 1.21s
+======================== 8 passed, 8 warnings in 1.19s ========================
