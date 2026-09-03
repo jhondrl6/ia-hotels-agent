@@ -1,0 +1,33 @@
+=== FASE-B iteraciones reales, medidas con el instrumento canonico ===
+Instrumento: evidence/FASE-D/measure_iterations.py (unidad: ids de mensaje de
+asistente unicos, un id 'chatcmpl-*' por peticion al modelo; la misma con la que
+B y D publicaron sus cifras).
+Transcript : C:\Users\Jhond\.qoder\projects\C--Users-Jhond-Github-iah-cli\5216df39-6b41-44a2-afc7-c3dd8802ec04.jsonl
+Fecha medicion: 2026-09-03T17:24:33-05:00
+
+CORTE = commit de codigo de FASE-B (e6d28b8, 2026-09-03T17:17:31-05:00)
+iteraciones (timestamp <= 2026-09-03T17:17:31-05:00): 345 ids de mensaje unicos, 380 tool_use, 2127 records
+
+Transcript completo al momento de la medicion (incluye cierre documental, sigue creciendo):
+iteraciones (transcript completo): 359 ids de mensaje unicos, 394 tool_use, 2127 records
+
+--- Verificacion de la unidad de conteo ---
+842 registros 'assistant' -> 358 ids unicos (~2,4 bloques por id: thinking +
+tool_use/text del mismo request). isSidechain=false en todos: no hay subagentes
+inflando el conteo. Muestra de los ultimos ids:
+  17:18:40 chatcmpl-dbcd7 | 17:18:51 chatcmpl-092d7 | 17:20:04 chatcmpl-366b7
+  17:21:02 chatcmpl-568a7 | 17:21:13 chatcmpl-70b4a | 17:22:32 chatcmpl-2bead
+Un id por request confirmado.
+
+--- CORRECCION a la cifra publicada por B ---
+B publico 151 en el README del plan y en 10-analisis. Esa cifra se midio a las
+16:38 locales, ANTES de terminar el cierre documental. Reproducida con el corte:
+iteraciones (timestamp <= 2026-09-03T16:38:00-05:00): 145 ids de mensaje unicos, 180 tool_use, 2127 records
+  (145 a las 16:38; 151 minutos despues, cuando B la escribio: mismo orden)
+La sesion paralela de FASE-D ya lo habia detectado: evidence/FASE-D/faseD_iteraciones.txt
+dice literalmente 'La cifra de B al cierre real de su fase es mayor que 151'.
+
+Cifra comparable entre fases = la del CORTE al commit de codigo:
+  A: 55 auto-reportado, NO reconstruible con este instrumento (S22)
+  B: 345 al commit e6d28b8  -> presupuesto <=40, excedido 8.6x (no 3.8x)
+  D: 114 al commit 76e0257  -> presupuesto <=35, excedido 3.3x
