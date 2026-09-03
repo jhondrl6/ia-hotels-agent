@@ -7,6 +7,10 @@ reconstruct coherence or re-validate gates.
 
 Design:
 - Derives items from delivery_quality_report.json data.
+- Publication-gate ADVISORY outcomes arrive through ``advisory_issues``
+  (FASE-D): ``content_quality`` is not exposed on DeliveryQualityReport, and
+  an advisory that reaches no human artifact is indistinguishable from one
+  that does not exist.
 - Items cover: pending exceptions, data conflicts, asset specificity estimates,
   commercial decision, and final tone.
 - Max 10 checkbox items total.
@@ -15,6 +19,7 @@ Design:
 import logging
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 from modules.quality_gates.delivery_quality_report import DeliveryQualityReport
 
@@ -29,16 +34,23 @@ class HumanChecklistGenerator:
 
     Usage:
         generator = HumanChecklistGenerator()
-        checklist_md = generator.generate(report)
+        checklist_md = generator.generate(
+            report,
+            advisory_issues=readiness_report["summary"]["advisory_issues"],
+        )
         generator.save(checklist_md, Path("output/.../human_checklist.md"))
     """
 
-    def generate(self, report: DeliveryQualityReport) -> str:
+    def generate(self, report: DeliveryQualityReport,
+                 advisory_issues: Optional[List[Dict[str, Any]]] = None) -> str:
         """
         Generate a markdown checklist with <= 10 human-review items.
 
         Args:
             report: DeliveryQualityReport from quality gate evaluation.
+            advisory_issues: Publication-gate advisory outcomes to disclose, as
+                produced by ``check_publication_readiness`` under
+                ``summary["advisory_issues"]``.
 
         Returns:
             Markdown string with checkbox items for human review.
@@ -87,6 +99,13 @@ class HumanChecklistGenerator:
         if warning:
             gates_str = ", ".join(warning)
             items.append(f"WARNING gates active: {gates_str} — review before proceeding")
+
+        # ── 5b. Advisory gates de publicacion (FASE-D, riesgo C) ──────────
+        for issue in advisory_issues or []:
+            items.append(
+                f"ADVISORY {issue.get('gate', 'unknown')}: {issue.get('message', '')} "
+                "— no bloquea la publicacion, decidir antes de entregar"
+            )
 
         # ── 6. Commercial decision ───────────────────────────────────────
         if report.status == "FAIL":

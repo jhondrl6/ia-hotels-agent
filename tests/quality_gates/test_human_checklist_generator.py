@@ -186,3 +186,51 @@ class TestHumanChecklistGenerator:
             assert out_path.exists()
             saved = out_path.read_text(encoding="utf-8")
             assert saved == checklist
+
+
+class TestAdvisoryDisclosureFASED:
+    """FASE-D D2 (riesgo C): un advisory que no entra en un artefacto que el
+    humano lee es indistinguible de un advisory que no existe.
+
+    `content_quality` no esta expuesto en DeliveryQualityReport, asi que la
+    divulgacion llega por el parametro `advisory_issues` (resultado de
+    check_publication_readiness).
+    """
+
+    def test_advisory_fallido_aparece_en_el_checklist(self, generator, report_pass):
+        checklist = generator.generate(
+            report_pass,
+            advisory_issues=[{
+                "gate": "content_quality",
+                "message": "Content quality: 1 warning(s) - idioma mixto",
+                "severity": "advisory_failed",
+            }],
+        )
+        assert "ADVISORY content_quality" in checklist
+        assert "idioma mixto" in checklist
+
+    def test_advisory_warning_aparece_en_el_checklist(self, generator, report_pass):
+        checklist = generator.generate(
+            report_pass,
+            advisory_issues=[{
+                "gate": "proposal_asset_alignment",
+                "message": "Alignment 85%: 1 services still missing",
+                "severity": "warning",
+            }],
+        )
+        assert "ADVISORY proposal_asset_alignment" in checklist
+
+    def test_sin_advisories_no_inventa_items(self, generator, report_pass):
+        """Regresion inversa: advisory_issues=None debe dejar el checklist previo."""
+        assert generator.generate(report_pass) == generator.generate(
+            report_pass, advisory_issues=[]
+        )
+
+    def test_advisories_no_rompen_el_tope_de_10_items(self, generator, report_warning):
+        advisories = [
+            {"gate": f"gate_{i}", "message": "msg", "severity": "warning"}
+            for i in range(20)
+        ]
+        checklist = generator.generate(report_warning, advisory_issues=advisories)
+        items = [l for l in checklist.splitlines() if l.strip().startswith("- [ ]")]
+        assert len(items) <= 10

@@ -24,6 +24,9 @@ from modules.quality_gates.publication_gates import (
     GateStatus,
     run_publication_gates,
     check_publication_readiness,
+    BLOCKING_GATE_NAMES,
+    ADVISORY_GATE_NAMES,
+    GATE_EXECUTION_FAILED_KEY,
 )
 from modules.financial_engine.no_defaults_validator import (
     NoDefaultsValidator,
@@ -1422,3 +1425,127 @@ class TestTRAZABILIDADRAIZNewBehavior:
 # Import for type hints used above
 # =============================================================================
 from typing import List
+
+
+# =============================================================================
+# FASE-D (H10 / T0.1): severidad explicita — 11 blocking + 2 advisory
+# =============================================================================
+
+def _gate(gate_name, passed, status=None, value=None, details=None):
+    """Build a PublicationGateResult without executing the pipeline."""
+    return PublicationGateResult(
+        gate_name=gate_name,
+        passed=passed,
+        status=status or (GateStatus.PASSED if passed else GateStatus.BLOCKED),
+        message=f"{gate_name} synthetic",
+        value=value,
+        suggestion="",
+        details=details or {},
+    )
+
+
+class TestFASEDGateSeverity:
+    """`check_publication_readiness` decide por severidad, no por `not passed` plano."""
+
+    def test_advisory_fallido_sobre_el_piso_no_impide_ready(self):
+        results = [
+            _gate("coherence", True),
+            _gate("content_quality", False, details={"warnings": ["mixticismo"]}),
+        ]
+        report = check_publication_readiness({}, results)
+        assert report["ready"] is True
+        assert report["blocking_issues"] == []
+        assert [i["gate"] for i in report["summary"]["advisory_issues"]] == ["content_quality"]
+        assert report["summary"]["advisory_issues"][0]["severity"] == "advisory_failed"
+
+    def test_content_quality_con_blockers_degrada_a_blocking(self):
+        """Riesgo B: 'COP COP' / '0% confianza' no pueden publicarse por ser advisory."""
+        results = [
+            _gate("coherence", True),
+            _gate("content_quality", False, details={"blockers": ["duplicate_currency"]}),
+        ]
+        report = check_publication_readiness({}, results)
+        assert report["ready"] is False
+        assert [i["gate"] for i in report["blocking_issues"]] == ["content_quality"]
+        assert report["summary"]["advisory_issues"] == []
+
+    def test_alignment_debajo_del_piso_degrada_a_blocking(self):
+        results = [_gate("proposal_asset_alignment", False, value=0.5)]
+        report = check_publication_readiness({}, results)
+        assert report["ready"] is False
+        assert report["blocking_issues"][0]["gate"] == "proposal_asset_alignment"
+
+    def test_alignment_sobre_el_piso_no_bloquea(self):
+        results = [_gate("proposal_asset_alignment", False, value=0.85,
+                         status=GateStatus.FAILED)]
+        report = check_publication_readiness({}, results)
+        assert report["ready"] is True
+        assert report["summary"]["advisory_issues"][0]["gate"] == "proposal_asset_alignment"
+
+    def test_asset_confidence_100_estimated_sigue_bloqueando(self):
+        """Dossier §8.2: es el unico mecanismo que vuelve no-entregable un Tier C."""
+        results = [_gate("asset_confidence", False, value=0.3)]
+        report = check_publication_readiness({}, results)
+        assert report["ready"] is False
+        assert report["blocking_issues"][0]["gate"] == "asset_confidence"
+
+    def test_advisory_en_WARNING_se_divulga_sin_bloquear(self):
+        results = [_gate("content_quality", True, status=GateStatus.WARNING, value=0.9)]
+        report = check_publication_readiness({}, results)
+        assert report["ready"] is True
+        assert report["summary"]["advisory_issues"] == [
+            {
+                "gate": "content_quality",
+                "message": "content_quality synthetic",
+                "severity": "warning",
+            }
+        ]
+
+    def test_gate_advisory_que_no_se_ejecuto_bloquea(self):
+        """Un gate que no emitió veredicto propio no puede declararse inocuo."""
+        results = [_gate("content_quality", False,
+                         details={GATE_EXECUTION_FAILED_KEY: True})]
+        report = check_publication_readiness({}, results)
+        assert report["ready"] is False
+
+    def test_run_all_marca_el_fallo_de_ejecucion(self, orchestrator):
+        """El path de excepcion de run_all debe señalar gate_execution_failed."""
+        class _Boom:
+            def __getitem__(self, key):
+                raise RuntimeError("boom")
+
+        results = orchestrator.run_all(_Boom())
+        failed = [r for r in results if not r.passed]
+        assert failed, "run_all debe producir fallos con un assessment que explota"
+        assert all(r.details.get(GATE_EXECUTION_FAILED_KEY) for r in failed)
+
+    def test_get_blocking_gates_usa_el_mismo_criterio(self):
+        results = [
+            _gate("coherence", False),
+            _gate("content_quality", False, details={"warnings": ["tone"]}),
+        ]
+        orchestrator = PublicationGatesOrchestrator()
+        assert [r.gate_name for r in orchestrator.get_blocking_gates(results)] == ["coherence"]
+        assert orchestrator.is_ready_for_publication(results) is False
+
+    def test_get_blocking_gates_excluye_advisory_no_degradado(self):
+        results = [
+            _gate("coherence", True),
+            _gate("content_quality", False, details={"warnings": ["tone"]}),
+        ]
+        orchestrator = PublicationGatesOrchestrator()
+        assert orchestrator.get_blocking_gates(results) == []
+        assert orchestrator.is_ready_for_publication(results) is True
+
+    def test_content_quality_warnings_se_marcan_WARNING(self, orchestrator):
+        """Riesgo C: con status=PASSED los warnings eran invisibles para todo consumidor."""
+        result = orchestrator._content_quality_gate({
+            "diagnostico_text": "En la era digital actual el hotel debe destacar.",
+        })
+        assert result.passed is True
+        assert result.status is GateStatus.WARNING
+        assert result.details["warnings"]
+
+    def test_blocking_gate_names_tiene_once_entradas(self):
+        assert len(BLOCKING_GATE_NAMES) == 11
+        assert len(ADVISORY_GATE_NAMES) == 2

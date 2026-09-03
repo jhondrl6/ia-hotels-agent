@@ -1,7 +1,7 @@
 """
 Publication Gates - Pre-publication Quality Gates for Phase 5.
 
-This module implements 13 publication gates (10 blocking + 3 advisory)
+This module implements 13 publication gates (11 blocking + 2 advisory)
 that must be evaluated before any commercial document or asset can
 be published to a client.
 
@@ -12,15 +12,15 @@ Blocking gates (must pass to publish):
 4. coherence_gate: Blocks if coherence < 0.8
 5. critical_recall_gate: Blocks if critical recall < 90%
 6. ethics_gate: Blocks if ethics validation fails
-7. tier_c_onboarding_required_gate: Blocks if tier C onboarding missing
-8. coverage_no_silent_drop_gate: Blocks if pain coverage gap detected
-9. doc_audit_consistency_gate: Blocks on doc-audit contradictions (WARNING mode)
-10. pricing_compliance_gate: Blocks if pain_ratio > tier gate_max (floor-aware D1)
+7. asset_confidence_gate: Blocks when 100% of assets are ESTIMATED
+8. tier_c_onboarding_required_gate: Blocks if tier C onboarding missing
+9. coverage_no_silent_drop_gate: Blocks if pain coverage gap detected
+10. doc_audit_consistency_gate: Blocks on doc-audit contradictions (WARNING mode)
+11. pricing_compliance_gate: Blocks if pain_ratio > tier gate_max (floor-aware D1)
 
-Advisory gates (pass with WARNING, do not block):
-11. content_quality_gate: Reports document quality issues
-12. asset_confidence_gate: Reports low-confidence assets
-13. proposal_asset_alignment_gate: Reports missing promised assets
+Advisory gates (report WARNING; their structural floor still blocks — FASE-D):
+12. content_quality_gate: Reports document quality issues (blockers degrade to blocking)
+13. proposal_asset_alignment_gate: Reports missing promised assets (coverage < 0.8 degrades)
 
 Usage:
     from modules.quality_gates.publication_gates import (
@@ -118,6 +118,76 @@ class PublicationGateResult:
         }
 
 
+# =============================================================================
+# FASE-D (H10 / T0.1): severidad explicita de los publication gates.
+# Unica fuente del criterio blocking/advisory en el regimen de publicacion.
+# Patron: commercial_gate.py (BLOCKING_GATE_IDS / WARNING_GATE_IDS).
+# Decision medida: advisory = 2, no 3 — asset_confidence CONSERVA su bloqueo
+# (dossier §8.2: es el unico mecanismo que vuelve no-entregable un paquete
+# con 100% de assets ESTIMATED).
+# =============================================================================
+
+BLOCKING_GATE_NAMES: List[str] = [
+    "hard_contradictions",
+    "evidence_coverage",
+    "financial_validity",
+    "coherence",
+    "critical_recall",
+    "ethics",
+    "asset_confidence",
+    "tier_c_onboarding_required",
+    "coverage_no_silent_drop",
+    "doc_audit_consistency",
+    "pricing_compliance",
+]
+
+ADVISORY_GATE_NAMES: List[str] = [
+    "content_quality",
+    "proposal_asset_alignment",
+]
+
+# Piso del advisory proposal_asset_alignment: es el umbral que el propio gate ya
+# aplicaba (coverage < 0.8 => BLOCKED). Demoter el gate no relaja ninguna
+# cobertura; solo libera la banda >= 0.8, que ya pasaba con WARNING.
+PROPOSAL_ASSET_ALIGNMENT_FLOOR: float = 0.8
+
+# Clave de details que marca que un gate no llego a emitir veredicto propio.
+GATE_EXECUTION_FAILED_KEY: str = "gate_execution_failed"
+
+
+def gate_severity(gate_name: str) -> str:
+    """Return "advisory" or "blocking" for a publication gate name."""
+    return "advisory" if gate_name in ADVISORY_GATE_NAMES else "blocking"
+
+
+def advisory_degrades_to_blocking(result: "PublicationGateResult") -> bool:
+    """FASE-D D2 (riesgo B): un advisory sin piso deja pasar coberturas de 0.125
+    en silencio (dossier §9.2 B4). Cada advisory conserva su corte estructural.
+
+    Un advisory sin piso definido degrada siempre (falla cerrado).
+    """
+    if result.gate_name == "content_quality":
+        # "COP COP", region "default", "0% confianza" — errores visibles para el
+        # cliente, no una opinion de calidad.
+        return bool(result.details.get("blockers"))
+    if result.gate_name == "proposal_asset_alignment":
+        value = result.value
+        return isinstance(value, (int, float)) and value < PROPOSAL_ASSET_ALIGNMENT_FLOOR
+    return True
+
+
+def gate_blocks_publication(result: "PublicationGateResult") -> bool:
+    """Whether a result prevents publication, decided by severity — not by passed."""
+    if result.passed:
+        return False
+    if result.details.get(GATE_EXECUTION_FAILED_KEY):
+        # Un gate que no se ejecuto no puede declararse inocuo.
+        return True
+    if result.gate_name not in ADVISORY_GATE_NAMES:
+        return True
+    return advisory_degrades_to_blocking(result)
+
+
 @dataclass
 class PainLedgerEntry:
     """FASE-0C: Entry in the pain ledger tracking detected problems.
@@ -159,8 +229,10 @@ class PublicationGatesOrchestrator:
     """
     Orchestrates the execution of all 13 publication gates.
     
-    This class manages 10 blocking gates and 3 advisory gates,
+    This class manages 11 blocking gates and 2 advisory gates,
     providing a unified interface for checking publication readiness.
+    Severity lives in ``BLOCKING_GATE_NAMES`` / ``ADVISORY_GATE_NAMES``;
+    ``self.gates`` must stay in exact correspondence with their union.
     
     Example:
         orchestrator = PublicationGatesOrchestrator(config)
@@ -193,6 +265,17 @@ class PublicationGatesOrchestrator:
             "doc_audit_consistency": self._doc_audit_consistency_gate,
             "pricing_compliance": self._pricing_compliance_gate,
         }
+        # FASE-D: registro de gates y severidad son la misma verdad. Un gate nuevo
+        # sin clasificar rompe aqui, no en produccion.
+        _declared = set(BLOCKING_GATE_NAMES) | set(ADVISORY_GATE_NAMES)
+        if set(BLOCKING_GATE_NAMES) & set(ADVISORY_GATE_NAMES):
+            raise RuntimeError("BLOCKING_GATE_NAMES y ADVISORY_GATE_NAMES no son disjuntas")
+        if set(self.gates) != _declared:
+            raise RuntimeError(
+                "self.gates y las listas de severidad divergen: "
+                f"sin clasificar={sorted(set(self.gates) - _declared)}, "
+                f"fantasma={sorted(_declared - set(self.gates))}"
+            )
         self.ethics_gate = EthicsGate()
         self.content_quality_gate = DocumentQualityGate()
     
@@ -220,33 +303,41 @@ class PublicationGatesOrchestrator:
                     status=GateStatus.BLOCKED,
                     message=f"Gate execution failed: {str(e)}",
                     value=None,
-                    suggestion="Review assessment data structure and retry"
+                    suggestion="Review assessment data structure and retry",
+                    details={GATE_EXECUTION_FAILED_KEY: True},
                 ))
         return results
     
     def is_ready_for_publication(self, results: List[PublicationGateResult]) -> bool:
         """
-        Check if all gates passed and publication is allowed.
+        Check if publication is allowed, i.e. no blocking-severity gate failed.
+        
+        Advisory failures are disclosed, not suppressed — see
+        ``check_publication_readiness`` ``summary["advisory_issues"]``.
         
         Args:
             results: List of gate results from run_all()
         
         Returns:
-            True if all gates passed, False otherwise
+            True if no gate that blocks publication failed, False otherwise
         """
-        return all(r.passed for r in results)
+        return not [r for r in results if gate_blocks_publication(r)]
     
     def get_blocking_gates(self, results: List[PublicationGateResult]) -> List[PublicationGateResult]:
         """
-        Get list of gates that failed or blocked publication.
+        Get list of failed results whose severity actually blocks publication.
+        
+        Advisory failures that hold above their floor are excluded — they are
+        reported as advisories instead. Uses the same predicate as
+        ``check_publication_readiness`` (no second copy of the criterion).
         
         Args:
             results: List of gate results from run_all()
         
         Returns:
-            List of failed/blocked gate results
+            List of blocking gate results that failed
         """
-        return [r for r in results if not r.passed]
+        return [r for r in results if gate_blocks_publication(r)]
     
     def _hard_contradictions_gate(self, assessment: Dict[str, Any]) -> PublicationGateResult:
         """
@@ -733,7 +824,7 @@ class PublicationGatesOrchestrator:
         return PublicationGateResult(
             gate_name=gate_name,
             passed=True,
-            status=GateStatus.PASSED,
+            status=GateStatus.WARNING,
             message=f"Content quality: {len(warnings)} warning(s) - {'; '.join(warning_msgs)}",
             value=0.0 if diag_result is None else max(diag_result.score, prop_result.score if prop_result else diag_result.score),
             suggestion="Consider running ContentScrubber for cleaner documents",
@@ -1922,19 +2013,20 @@ def check_publication_readiness(
 ) -> Dict[str, Any]:
     """
     Check if assessment is ready for publication.
-    
+
     Provides a comprehensive readiness report including:
-    - Overall readiness status
+    - Overall readiness status (decided by gate SEVERITY, not by `passed`)
     - Individual gate results
     - Blocking issues
+    - Advisory issues disclosed in ``summary["advisory_issues"]``
     - Recommendations
-    
+
     Args:
         assessment: Dictionary containing all assessment data
         gate_results: Optional pre-computed gate results. When provided,
             readiness is derived from these results without re-executing
             any gates. When None (default), gates are executed once.
-    
+
     Returns:
         Dictionary with readiness report:
         {
@@ -1942,7 +2034,10 @@ def check_publication_readiness(
             "status": "READY" | "NOT_READY",
             "gate_results": [...],
             "blocking_issues": [...],
-            "summary": {...}
+            "summary": {
+                ...,
+                "advisory_issues": [{"gate", "message", "severity"}],
+            }
         }
     
     Example:
@@ -1964,7 +2059,21 @@ def check_publication_readiness(
     else:
         results = run_publication_gates(assessment)
     
-    blocking_gates = [r for r in results if not r.passed]
+    # FASE-D (H10/T0.1): readiness se decide por SEVERIDAD, no por `not passed`
+    # plano — el plano hacia que los 13 gates bloquearan pese a que la
+    # documentacion prometia advisorys desde el primer dia.
+    blocking_gates = [r for r in results if gate_blocks_publication(r)]
+    advisory_issues = [
+        {
+            "gate": r.gate_name,
+            "message": r.message,
+            "severity": "advisory_failed" if not r.passed else "warning",
+        }
+        for r in results
+        if r.gate_name in ADVISORY_GATE_NAMES
+        and not gate_blocks_publication(r)
+        and (not r.passed or r.status == GateStatus.WARNING)
+    ]
     ready = len(blocking_gates) == 0
     
     # Build summary
@@ -1975,6 +2084,8 @@ def check_publication_readiness(
         "passed": passed_count,
         "failed": len(results) - passed_count,
         "blocked": sum(1 for r in results if r.status == GateStatus.BLOCKED),
+        "blocking_gate_names": [r.gate_name for r in blocking_gates],
+        "advisory_issues": advisory_issues,
         "warnings": [
             {
                 "gate": r.gate_name,
@@ -2060,5 +2171,11 @@ __all__ = [
     "PublicationGatesOrchestrator",
     "run_publication_gates",
     "check_publication_readiness",
-    "generate_gate_failure_report"
+    "generate_gate_failure_report",
+    "BLOCKING_GATE_NAMES",
+    "ADVISORY_GATE_NAMES",
+    "PROPOSAL_ASSET_ALIGNMENT_FLOOR",
+    "gate_severity",
+    "advisory_degrades_to_blocking",
+    "gate_blocks_publication",
 ]

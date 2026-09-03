@@ -1,0 +1,20 @@
+
+output\FASE-D_salentoreal_post_guard\v4_complete\deliveries\hotelsalentoreal_20260831\ASSETS\v4_audit\gate_report_20260831_122803.json
+  gates=13
+  OLD ready=True blocking=[]
+  NEW ready=True blocking=[]
+  flips de ready = ninguno
+  advisory divulgados al checklist = ['proposal_asset_alignment']
+
+output\FASE-D_salentoreal_post_guard\v4_complete\hotelsalentoreal\v4_audit\gate_report_20260831_122803.json
+  gates=13
+  OLD ready=True blocking=[]
+  NEW ready=True blocking=[]
+  flips de ready = ninguno
+  advisory divulgados al checklist = ['proposal_asset_alignment']
+
+==============================================================
+corridas analizadas: 2
+flips totales de `ready`: 0
+advisories nuevos divulgados al humano: 2
+LECTURA: el cambio de severidad es neutro en `ready` para el corpus disponible (ningun advisory falla hoy por encima de su piso) y lo que SI cambia es la divulgacion: los outcomes advisory aterrzan en human_checklist.md, que antes no los veia.

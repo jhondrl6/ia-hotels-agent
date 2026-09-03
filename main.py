@@ -2912,6 +2912,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     from modules.quality_gates.publication_gates import (
         run_publication_gates,
         check_publication_readiness,
+        gate_blocks_publication,
         PublicationGateConfig
     )
     
@@ -2946,7 +2947,12 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     
     print(f"🔒 Publication Gates:")
     for result in gate_results:
-        icon = "✅" if result.passed else "❌"
+        if result.passed:
+            icon = "✅"
+        elif gate_blocks_publication(result):
+            icon = "❌"
+        else:
+            icon = "⚠️"
         print(f"   {icon} {result.gate_name}: {result.message}")
     
     print(f"\n📋 Publication Readiness: {readiness_report['status']}")
@@ -2956,6 +2962,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             print(f"      - {issue['gate']}: {issue['message']}")
     else:
         print(f"   ✅ Listo para publicación")
+    for issue in readiness_report.get("summary", {}).get("advisory_issues", []):
+        print(f"   ⚠️  Advisory no bloqueante ({issue['gate']}): {issue['message']}")
     
     # T2: Generate gate_report.json for independent audit and downstream systems
     gate_report = {
@@ -3170,7 +3178,12 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         from modules.quality_gates import HumanChecklistGenerator
 
         checklist_generator = HumanChecklistGenerator()
-        human_checklist_md = checklist_generator.generate(delivery_quality_report)
+        human_checklist_md = checklist_generator.generate(
+            delivery_quality_report,
+            # FASE-D D2 (riesgo C): un advisory que no llega a un artefacto que el
+            # humano lee es indistinguible de un advisory que no existe.
+            advisory_issues=readiness_report.get("summary", {}).get("advisory_issues", []),
+        )
         human_checklist_path = v4_audit_dir / "human_checklist.md"
         checklist_generator.save(human_checklist_md, human_checklist_path)
         print(f"   📋 Human checklist ({len([l for l in human_checklist_md.splitlines() if l.strip().startswith('- [ ]')])} items) → {human_checklist_path}")

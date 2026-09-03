@@ -196,7 +196,7 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `modules/commercial_documents/coherence_validator.py` | Validador de coherencia con promised_assets_exist | v4complete |
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
-| `modules/quality_gates/` | 13 publication gates — blocking (10): evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, tier_c_onboarding_required, doc_audit_consistency, pricing_compliance; advisory (3): content_quality, asset_confidence, proposal_asset_alignment | v4complete |
+| `modules/quality_gates/` | 13 publication gates — blocking (11): evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, tier_c_onboarding_required, doc_audit_consistency, pricing_compliance, asset_confidence; advisory (2): content_quality, proposal_asset_alignment (degraden a blocking bajo su piso — `publication_gates.py`) | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
@@ -264,18 +264,22 @@ Nomenclatura:
 
 FASE 4.5: PUBLICATION GATES
 ────────────────────────────
+blocking (11) — cualquiera fallido impide ready:
 ├─ hard_contradictions: count = 0
 ├─ evidence_coverage: ≥ 95%
 ├─ financial_validity: sin defaults
 ├─ coherence: ≥ 0.8
 ├─ critical_recall: ≥ 90%
 ├─ ethics: sin violaciones
-├─ content_quality: sin errores
-├─ asset_confidence: ≥ threshold
-├─ proposal_asset_alignment: sin divergencias
+├─ asset_confidence: blocking si 100% de assets son ESTIMATED
 ├─ tier_c_onboarding_required: assessment dict injection
+├─ doc_audit_consistency: sin contradicciones doc↔audit
 ├─ pricing_compliance: pain_ratio ≤ tier gate_max (floor-aware D1)
 └─ coverage_no_silent_drop: brechas_diagnostico + brechas_justificadas == brechas_detectadas
+
+advisory (2) — se divulgan en human_checklist.md, solo degradan a blocking bajo su piso:
+├─ content_quality: sin blockers ("COP COP", región "default", "0% confianza")
+└─ proposal_asset_alignment: coverage ≥ 0.8
 
 FASE 4.6: CONSISTENCY CHECKER
 ─────────────────────────────

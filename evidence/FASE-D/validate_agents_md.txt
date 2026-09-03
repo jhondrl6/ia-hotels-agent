@@ -1,0 +1,65 @@
+{
+  "modules_exist": {
+    "status": "PASS",
+    "total": 35,
+    "found": 35,
+    "missing": []
+  },
+  "test_count": {
+    "status": "PASS",
+    "agents_md_count": 3689,
+    "pytest_count": 3725,
+    "pct_diff": 1.0,
+    "tolerance": "±5%"
+  },
+  "gate_count": {
+    "status": "PASS",
+    "code_gate_count": 13,
+    "agents_md_count": 13,
+    "gate_names": [
+      "hard_contradictions",
+      "evidence_coverage",
+      "financial_validity",
+      "coherence",
+      "critical_recall",
+      "ethics",
+      "content_quality",
+      "asset_confidence",
+      "proposal_asset_alignment",
+      "tier_c_onboarding_required",
+      "coverage_no_silent_drop",
+      "doc_audit_consistency",
+      "pricing_compliance"
+    ]
+  },
+  "fase0_modules": {
+    "status": "PASS",
+    "modules_checked": [
+      "pain_ledger",
+      "delivery_quality_report",
+      "human_checklist",
+      "data_derivation_layer"
+    ],
+    "missing_agents_md": [],
+    "missing_roadmap": []
+  },
+  "no_deprecated_active": {
+    "status": "PASS",
+    "exclusively_deprecated": [
+      "assessment.py",
+      "calibration.py",
+      "dashboard.py",
+      "evidence.py",
+      "evidence_ledger.py",
+      "instagram_scraper.py",
+      "tripadvisor_scraper.py"
+    ],
+    "active_references": []
+  },
+  "scripts_exist": {
+    "status": "PASS",
+    "total": 6,
+    "found": 6,
+    "missing": []
+  }
+}
