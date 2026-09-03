@@ -1,0 +1,846 @@
+........................................................................ [  8%]
+...............................s........................................ [ 16%]
+........................................................................ [ 24%]
+........................................................................ [ 32%]
+........................................................................ [ 40%]
+..............................................F..F..F................... [ 48%]
+.......................................................F.F...F.F........ [ 56%]
+F....................................................................... [ 64%]
+........................................................................ [ 72%]
+........................................................................ [ 80%]
+..................FF................................................FFFF [ 88%]
+FFFF.FFF...FF..FF...................................F........F.......... [ 96%]
+....s......................                                              [100%]
+================================== FAILURES ===================================
+_ TestProposalAssetMatrixServiceWithoutBreach.test_fails_when_service_sold_without_real_breach _
+
+self = <asset_generation.test_proposal_asset_matrix.TestProposalAssetMatrixServiceWithoutBreach object at 0x0000014B0A9D91D0>
+proposal_services = ['Botón de WhatsApp', 'Schema Hotel', 'Schema Organization', 'Página de FAQ']
+sample_pain_ledger = [PainLedgerEntry(pain_id='no_whatsapp_visible', source_module='pain_solution_mapper', source_file='schema_validator_v2...onfidence=0.85, status='DETECTED', human_label='Sin Schema Organization', evidence_refs=['org_schema_detected=false'])]
+sample_generated_assets = [GeneratedAsset(asset_type='whatsapp_button', filename='whatsapp_button.html', path='/tmp/output/whatsapp_button.html'...', confidence_score=0.9, pain_ids_resolved=['no_hotel_schema'], can_use=True, delivery_filename='hotel_schema.jsonld')]
+
+    def test_fails_when_service_sold_without_real_breach(
+        self, proposal_services, sample_pain_ledger, sample_generated_assets
+    ):
+        """
+        A service sold in the proposal MUST have a corresponding pain/breach
+        in the pain ledger. Services without a real breach should be flagged.
+        """
+        matrix = ProposalAssetMatrix()
+        entries = matrix.build(proposal_services, sample_pain_ledger, sample_generated_assets)
+    
+        # Find entry for "Página de FAQ" — no pain in ledger for this
+        faq_entry = next(
+            (e for e in entries if e.service_name == "Página de FAQ"), None
+        )
+>       assert faq_entry is not None, "FAQ service should be in matrix"
+E       AssertionError: FAQ service should be in matrix
+E       assert None is not None
+
+tests\asset_generation\test_proposal_asset_matrix.py:119: AssertionError
+___________ TestProposalAssetMatrixSave.test_save_writes_valid_json ___________
+
+self = <asset_generation.test_proposal_asset_matrix.TestProposalAssetMatrixSave object at 0x0000014B0A9D9590>
+proposal_services = ['Botón de WhatsApp', 'Schema Hotel', 'Schema Organization', 'Página de FAQ']
+sample_pain_ledger = [PainLedgerEntry(pain_id='no_whatsapp_visible', source_module='pain_solution_mapper', source_file='schema_validator_v2...onfidence=0.85, status='DETECTED', human_label='Sin Schema Organization', evidence_refs=['org_schema_detected=false'])]
+sample_generated_assets = [GeneratedAsset(asset_type='whatsapp_button', filename='whatsapp_button.html', path='/tmp/output/whatsapp_button.html'...', confidence_score=0.9, pain_ids_resolved=['no_hotel_schema'], can_use=True, delivery_filename='hotel_schema.jsonld')]
+
+    def test_save_writes_valid_json(
+        self, proposal_services, sample_pain_ledger, sample_generated_assets
+    ):
+        """save() should write a valid JSON file with all entries."""
+        matrix = ProposalAssetMatrix()
+        entries = matrix.build(proposal_services, sample_pain_ledger, sample_generated_assets)
+    
+        with TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "proposal_asset_matrix.json"
+            matrix.save(entries, path)
+    
+            assert path.exists(), "JSON file should be created"
+            import json
+            data = json.loads(path.read_text(encoding="utf-8"))
+    
+            assert "entries" in data
+            assert len(data["entries"]) == len(entries)
+            # Verify statuses
+            statuses = {e["service_name"]: e["status"] for e in data["entries"]}
+            assert statuses["Botón de WhatsApp"] == "LINKED"
+            assert statuses["Schema Hotel"] == "LINKED"
+            assert statuses["Schema Organization"] == "MISSING_ASSET"
+>           assert statuses["Página de FAQ"] == "NO_BREACH"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'Página de FAQ'
+
+tests\asset_generation\test_proposal_asset_matrix.py:216: KeyError
+_ TestAssetAlignmentMatrixBuild.test_legacy_build_matches_proposal_asset_matrix _
+
+self = <asset_generation.test_proposal_asset_matrix.TestAssetAlignmentMatrixBuild object at 0x0000014B0A9D9950>
+proposal_services = ['Botón de WhatsApp', 'Schema Hotel', 'Schema Organization', 'Página de FAQ']
+sample_pain_ledger = [PainLedgerEntry(pain_id='no_whatsapp_visible', source_module='pain_solution_mapper', source_file='schema_validator_v2...onfidence=0.85, status='DETECTED', human_label='Sin Schema Organization', evidence_refs=['org_schema_detected=false'])]
+sample_generated_assets = [GeneratedAsset(asset_type='whatsapp_button', filename='whatsapp_button.html', path='/tmp/output/whatsapp_button.html'...', confidence_score=0.9, pain_ids_resolved=['no_hotel_schema'], can_use=True, delivery_filename='hotel_schema.jsonld')]
+
+    def test_legacy_build_matches_proposal_asset_matrix(
+        self, proposal_services, sample_pain_ledger, sample_generated_assets
+    ):
+        """AssetAlignmentMatrix.build() con generated_assets override produce
+        los mismos resultados que ProposalAssetMatrix.build() legacy."""
+        from modules.delivery.delivery_context import DeliveryContext
+        ctx = DeliveryContext()
+    
+        aam = AssetAlignmentMatrix.build(
+            delivery_context=ctx,
+            pain_ledger=sample_pain_ledger,
+            generated_assets=sample_generated_assets,
+        )
+    
+        # Debe coincidir con el comportamiento legacy
+        assert aam.total_services > 0
+        wa = aam.get_alignment("Botón de WhatsApp")
+        assert wa == AlignmentStatus.LINKED, f"Expected LINKED, got {wa}"
+        hotel = aam.get_alignment("Schema Hotel")
+        assert hotel == AlignmentStatus.LINKED, f"Expected LINKED, got {hotel}"
+        faq = aam.get_alignment("Página de FAQ")
+>       assert faq == AlignmentStatus.NO_BREACH, f"Expected NO_BREACH, got {faq}"
+E       AssertionError: Expected NO_BREACH, got AlignmentStatus.INDETERMINATE
+E       assert <AlignmentStatus.INDETERMINATE: 'indeterminate'> == <AlignmentStatus.NO_BREACH: 'no_breach'>
+E        +  where <AlignmentStatus.NO_BREACH: 'no_breach'> = AlignmentStatus.NO_BREACH
+
+tests\asset_generation\test_proposal_asset_matrix.py:273: AssertionError
+______ TestContractProposalLayer.test_committed_none_without_pain_ledger ______
+
+self = <quality_gates.test_alignment_contract.TestContractProposalLayer object at 0x0000014B0A9DBED0>
+
+    def test_committed_none_without_pain_ledger(self):
+        """Sin pain_ledger \u2192 None (modo legacy: cat\xe1logo est\xe1tico)."""
+        gen = self._generator()
+        assert gen._derive_committed_services(
+            None, SITE_PRESENCE_DICT, GENERATED_ASSETS
+        ) is None
+>       assert gen._derive_committed_services(
+            [], SITE_PRESENCE_DICT, GENERATED_ASSETS
+        ) is None
+E       AssertionError: assert ['Optimización para IA Generativa'] is None
+E        +  where ['Optimización para IA Generativa'] = _derive_committed_services([], {'llms_txt': {'status': 'exists'}, 'results': {'llms_txt': {'status': 'exists'}}}, [{'asset_type': 'org_schema', 'confidence_score': 0.9}, {'asset_type': 'faq_page', 'confidence_score': 0.85}])
+E        +    where _derive_committed_services = <modules.commercial_documents.v4_proposal_generator.V4ProposalGenerator object at 0x0000014B0B7EE030>._derive_committed_services
+
+tests\quality_gates\test_alignment_contract.py:96: AssertionError
+__ TestContractProposalLayer.test_states_identical_per_service_across_layers __
+
+self = <quality_gates.test_alignment_contract.TestContractProposalLayer object at 0x0000014B0AA21BA0>
+
+    def test_states_identical_per_service_across_layers(self):
+        """Estados por servicio idénticos entre la matriz (capa 2) y la fila
+        textual de la propuesta (capa 1)."""
+        matrix = AssetAlignmentMatrix.build(
+            delivery_context=DeliveryContext(),
+            pain_ledger=PAIN_LEDGER,
+            generated_assets=GENERATED_ASSETS,
+        )
+        status_of = {e.service_name: e.status for e in matrix.entries}
+        gen = self._generator()
+        committed = gen._derive_committed_services(
+            PAIN_LEDGER, SITE_PRESENCE_DICT, GENERATED_ASSETS
+        )
+        table = gen._generate_dynamic_services_table(
+            assets_generated=GENERATED_ASSETS,
+            site_presence_report=SITE_PRESENCE_OBJ,
+            committed_services=committed,
+        )
+        body, _, _footnote = table.partition(
+            "> **Servicios adicionales disponibles:**"
+        )
+        row_of = {
+            svc: next(ln for ln in body.splitlines() if f"**{svc}**" in ln)
+            for svc in COMMITTED_C
+        }
+        # Taxonomía de la matriz (capa 2)
+        assert status_of["Schema Organization"] == "LINKED"
+        assert status_of["Página de FAQ"] == "LINKED"
+        # NO_BREACH estático en matriz — la presencia lo re-clasifica a
+        # covered en el DTO canónico (_from_entries) y se muestra como
+        # "Presente en sitio" en la propuesta (capa 1).
+>       assert status_of["Optimización para IA Generativa"] == "NO_BREACH"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'Optimización para IA Generativa'
+
+tests\quality_gates\test_alignment_contract.py:164: KeyError
+------------------------------ Captured log call ------------------------------
+WARNING  modules.commercial_documents.v4_proposal_generator:v4_proposal_generator.py:1248 [RC1] opportunity_scores no disponibles — tabla de servicios sin costos de brecha (sin cifras inventadas; no se compromete costo alguno)
+______ TestContractGateLayer.test_gate_matches_delivery_report_same_run _______
+
+self = <quality_gates.test_alignment_contract.TestContractGateLayer object at 0x0000014B0AA78410>
+
+    def test_gate_matches_delivery_report_same_run(self):
+        """AC3: gate_report \u2261 delivery_quality_report para el MISMO run."""
+        result = self._orchestrator()._proposal_asset_alignment_gate(
+            self._assessment()
+        )
+        matrix = AssetAlignmentMatrix.build(
+            delivery_context=DeliveryContext(),
+            pain_ledger=PAIN_LEDGER,
+            generated_assets=GENERATED_ASSETS,
+        )
+        delivery = AlignmentResult.from_asset_alignment_matrix(
+            matrix, SITE_PRESENCE_DICT
+        )
+>       assert result.details["alignment"] == delivery.to_dict()
+E       AssertionError: assert {'actionable_...gned': 2, ...} == {'actionable_...gned': 2, ...}
+E         
+E         Omitting 4 identical items, use -vv to show
+E         Differing items:
+E         {'coverage_ratio': 0.75} != {'coverage_ratio': 0.6666666666666666}
+E         {'promised_services_total': 4} != {'promised_services_total': 3}
+E         {'present_in_production': 1} != {'present_in_production': 0}
+E         {'message': '3/4 servicios comprometidos cubiertos (2 generados  + 1 ya en producción )  — 1 sin cubrir'} != {'message': '2/3 servicios comprometidos cubiertos (2 generados )  — 1 sin cubrir'}...
+E         
+E         ...Full output truncated (4 lines hidden), use '-vv' to show
+
+tests\quality_gates\test_alignment_contract.py:239: AssertionError
+_ TestContractGateLayer.test_gate_legacy_without_pain_ledger_uses_static_catalog _
+
+self = <quality_gates.test_alignment_contract.TestContractGateLayer object at 0x0000014B0AA21E00>
+
+    def test_gate_legacy_without_pain_ledger_uses_static_catalog(self):
+        """Sin pain_ledger \u2192 comportamiento legacy pre-SR-B (cat\xe1logo
+        estático): 7 servicios, coverage 3/7 (verificación de entrega)."""
+        result = self._orchestrator()._proposal_asset_alignment_gate({
+            "pain_ledger": [],
+            "generated_assets": GENERATED_ASSETS,
+            "site_presence_report": SITE_PRESENCE_DICT,
+            "hotel_url": "",
+        })
+>       assert result.details["alignment"]["promised_services_total"] == 7
+E       assert 1 == 7
+
+tests\quality_gates\test_alignment_contract.py:263: AssertionError
+_______ TestCorridaCSemantics.test_corrida_c_same_unresolved_both_paths _______
+
+self = <quality_gates.test_alignment_result.TestCorridaCSemantics object at 0x0000014B0AA79090>
+
+    def test_corrida_c_same_unresolved_both_paths(self):
+        """from_alignment_report y matriz+SitePresence \u2192 MISMO unresolved."""
+        from_report = AlignmentResult.from_alignment_report(
+            self._gate_report(),
+            semantic_entries=self._semantic_entries(),
+            site_presence_report=self.SITE_PRESENCE,
+        )
+        matrix = AssetAlignmentMatrix(entries=self._semantic_entries())
+        from_matrix = AlignmentResult.from_asset_alignment_matrix(
+            matrix, self.SITE_PRESENCE
+        )
+    
+        # Fin del 4-vs-1: mismo número en ambos reportes del MISMO run
+        assert from_report.unresolved == from_matrix.unresolved == 1  # hotel_schema
+        assert from_report.generated_aligned == from_matrix.generated_aligned == 2
+>       assert from_report.present_in_production == from_matrix.present_in_production == 1
+E       assert 0 == 1
+E        +  where 0 = AlignmentResult(promised_services_total=3, generated_aligned=2, present_in_production=0, unresolved=1, coverage_ratio=0.6666666666666666, present_assets=[], no_breach=0).present_in_production
+
+tests\quality_gates\test_alignment_result.py:364: AssertionError
+_ TestProposalAlignmentGateWithSitePresence.test_gate_with_site_presence_checker_integration _
+
+self = <quality_gates.test_gate_presence.TestProposalAlignmentGateWithSitePresence object at 0x0000014B0AF9BB10>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0B00CDE0>
+
+    def test_gate_with_site_presence_checker_integration(self, orchestrator):
+        """FASE-3 (BUG-10): Gate uses SitePresenceChecker but alignment is low with only 2/7."""
+        # Create a mock site presence report where whatsapp_button EXISTS
+        mock_site_report = Mock()
+        mock_site_report.results = {
+            "whatsapp_button": PresenceCheckResult(
+                asset_type="whatsapp_button",
+                status=PresenceStatus.EXISTS,
+                verified_at=datetime.now(),
+                site_url="https://example.com",
+                details={}
+            )
+        }
+    
+        assessment = {
+            "hotel_url": "https://example.com",
+            "site_presence_report": mock_site_report,  # Pre-built report
+            "generated_assets": [
+                {"asset_type": "faq_page", "confidence_score": 0.85}
+            ]
+        }
+    
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+    
+        # BUG-10: With 7 services total, 2/7 = 28.5% < 80% \u2192 BLOCKED
+        # (1 generated + 1 present_in_production = 2 covered, 5 missing)
+>       assert result.status == GateStatus.BLOCKED
+E       AssertionError: assert <GateStatus.PASSED: 'PASSED'> == <GateStatus.B...ED: 'BLOCKED'>
+E         
+E         - BLOCKED
+E         + PASSED
+
+tests\quality_gates\test_gate_presence.py:318: AssertionError
+_ TestProposalAlignmentGateWithSitePresence.test_gate_message_shows_present_in_production _
+
+self = <quality_gates.test_gate_presence.TestProposalAlignmentGateWithSitePresence object at 0x0000014B0AF9BC50>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0AACD390>
+
+    def test_gate_message_shows_present_in_production(self, orchestrator):
+        """Gate message should show both missing and present_in_production counts."""
+        mock_site_report = Mock()
+        mock_site_report.results = {
+            "whatsapp_button": PresenceCheckResult(
+                asset_type="whatsapp_button",
+                status=PresenceStatus.EXISTS,
+                verified_at=datetime.now(),
+                site_url="https://example.com",
+                details={}
+            ),
+            "open_graph": PresenceCheckResult(
+                asset_type="open_graph",
+                status=PresenceStatus.NOT_EXISTS,
+                verified_at=datetime.now(),
+                site_url="https://example.com",
+                details={}
+            )
+        }
+    
+        assessment = {
+            "hotel_url": "https://example.com",
+            "site_presence_report": mock_site_report,
+            "generated_assets": [
+                {"asset_type": "faq_page", "confidence_score": 0.85}
+            ]
+        }
+    
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+    
+        # Should show that whatsapp_button is already in production
+>       assert "Botón de WhatsApp" in result.message or "production" in result.message
+E       AssertionError: assert ('Botón de WhatsApp' in '1/1 servicios comprometidos cubiertos (0 generados  + 1 ya en producción )' or 'production' in '1/1 servicios comprometidos cubiertos (0 generados  + 1 ya en producción )')
+E        +  where '1/1 servicios comprometidos cubiertos (0 generados  + 1 ya en producción )' = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...': 1, 'actionable_total': 1, 'message': '1/1 servicios comprometidos cubiertos (0 generados  + 1 ya en producción )'}}).message
+E        +  and   '1/1 servicios comprometidos cubiertos (0 generados  + 1 ya en producción )' = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...': 1, 'actionable_total': 1, 'message': '1/1 servicios comprometidos cubiertos (0 generados  + 1 ya en producción )'}}).message
+
+tests\quality_gates\test_gate_presence.py:352: AssertionError
+___ TestProposalAssetAlignmentGate.test_gate_passes_when_all_assets_present ___
+
+self = <quality_gates.test_proposal_alignment_gate.TestProposalAssetAlignmentGate object at 0x0000014B0B03D950>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0A9CFC40>
+
+    def test_gate_passes_when_all_assets_present(self, orchestrator):
+        """FASE-3 (BUG-10): Gate passes when all 7 services have assets (monthly_report excluded)."""
+        assessment = {
+            "generated_assets": [
+                {"asset_type": "optimization_guide", "confidence_score": 0.8},
+                {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+                {"asset_type": "hotel_schema", "confidence_score": 0.8},
+                {"asset_type": "org_schema", "confidence_score": 0.8},
+                {"asset_type": "faq_page", "confidence_score": 0.8},
+                {"asset_type": "open_graph", "confidence_score": 0.8},
+                {"asset_type": "llms_txt", "confidence_score": 0.8},
+            ]
+        }
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+        assert result.passed is True
+        assert result.status == GateStatus.PASSED
+>       assert "7/7" in result.message
+E       AssertionError: assert '7/7' in '0 servicios comprometidos — nada prometido'
+E        +  where '0 servicios comprometidos — nada prometido' = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).message
+
+tests\quality_gates\test_proposal_alignment_gate.py:44: AssertionError
+_ TestProposalAssetAlignmentGate.test_gate_warns_when_alignment_above_80_pct __
+
+self = <quality_gates.test_proposal_alignment_gate.TestProposalAssetAlignmentGate object at 0x0000014B0B104B00>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0AF6B850>
+
+    def test_gate_warns_when_alignment_above_80_pct(self, orchestrator):
+        """FASE-3 (BUG-10): Gate returns WARNING when 6/7 = 85.7% >= 80%."""
+        # 6 out of 7 = 85.7% alignment, above 80% threshold \u2192 WARNING (not blocking)
+        assessment = {
+            "generated_assets": [
+                {"asset_type": "optimization_guide", "confidence_score": 0.8},
+                {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+                {"asset_type": "hotel_schema", "confidence_score": 0.8},
+                {"asset_type": "org_schema", "confidence_score": 0.8},
+                {"asset_type": "faq_page", "confidence_score": 0.8},
+                {"asset_type": "open_graph", "confidence_score": 0.8},
+                # Missing: llms_txt
+            ]
+        }
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+        assert result.passed is True  # WARNING, not blocking
+>       assert result.status == GateStatus.WARNING
+E       AssertionError: assert <GateStatus.PASSED: 'PASSED'> == <GateStatus.W...NG: 'WARNING'>
+E         
+E         - WARNING
+E         + PASSED
+
+tests\quality_gates\test_proposal_alignment_gate.py:62: AssertionError
+______ TestProposalAssetAlignmentGate.test_gate_detects_llms_txt_missing ______
+
+self = <quality_gates.test_proposal_alignment_gate.TestProposalAssetAlignmentGate object at 0x0000014B0B104C30>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0AFB27B0>
+
+    def test_gate_detects_llms_txt_missing(self, orchestrator):
+        """FASE-2: Gate detects when llms_txt is missing."""
+        assessment = {
+            "generated_assets": [
+                {"asset_type": "optimization_guide", "confidence_score": 0.8},
+                {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+                {"asset_type": "hotel_schema", "confidence_score": 0.8},
+                {"asset_type": "org_schema", "confidence_score": 0.8},
+                {"asset_type": "faq_page", "confidence_score": 0.8},
+                {"asset_type": "open_graph", "confidence_score": 0.8},
+                # llms_txt MISSING
+            ]
+        }
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+        assert result.passed is True  # WARNING, not blocking
+>       assert result.status == GateStatus.WARNING
+E       AssertionError: assert <GateStatus.PASSED: 'PASSED'> == <GateStatus.W...NG: 'WARNING'>
+E         
+E         - WARNING
+E         + PASSED
+
+tests\quality_gates\test_proposal_alignment_gate.py:80: AssertionError
+_ TestProposalAssetAlignmentGate.test_gate_blocks_when_alignment_below_80_pct _
+
+self = <quality_gates.test_proposal_alignment_gate.TestProposalAssetAlignmentGate object at 0x0000014B0B0E8290>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0B0D42F0>
+
+    def test_gate_blocks_when_alignment_below_80_pct(self, orchestrator):
+        """FASE-3 (BUG-10): Gate BLOCKS when 5/7 = 71.4% < 80% (monthly_report excluded)."""
+        # 5 out of 7 = 71.4% alignment, below 80% threshold \u2192 BLOCKED
+        assessment = {
+            "generated_assets": [
+                {"asset_type": "optimization_guide", "confidence_score": 0.8},
+                {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+                {"asset_type": "hotel_schema", "confidence_score": 0.8},
+                {"asset_type": "org_schema", "confidence_score": 0.8},
+                {"asset_type": "faq_page", "confidence_score": 0.8},
+                # Missing: open_graph, llms_txt
+            ]
+        }
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+>       assert result.passed is False  # BLOCKED
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert True is False
+E        +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+
+tests\quality_gates\test_proposal_alignment_gate.py:97: AssertionError
+_ TestProposalAssetAlignmentGate.test_gate_passes_with_present_in_production __
+
+self = <quality_gates.test_proposal_alignment_gate.TestProposalAssetAlignmentGate object at 0x0000014B0AFC6360>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0AACC3D0>
+
+    def test_gate_passes_with_present_in_production(self, orchestrator):
+        """FASE-3 (BUG-10): Gate PASSES when aligned + present_in_production >= 80% (7 services)."""
+        from unittest.mock import MagicMock
+        # 4 generated + 2 present_in_production out of 7 = 85.7% \u2192 PASSES (WARNING)
+        mock_result = MagicMock()
+        mock_result.status.value = "exists"
+        mock_report = MagicMock()
+        mock_report.results = {
+            "faq_page": mock_result,
+            "open_graph": mock_result,
+        }
+    
+        assessment = {
+            "generated_assets": [
+                {"asset_type": "optimization_guide", "confidence_score": 0.8},
+                {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+                {"asset_type": "hotel_schema", "confidence_score": 0.8},
+                {"asset_type": "org_schema", "confidence_score": 0.8},
+                # Missing: faq_page, open_graph, llms_txt
+            ],
+            "site_presence_report": mock_report,
+            "hotel_url": "https://example.com",
+        }
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+        assert result.passed is True
+>       assert result.status == GateStatus.WARNING  # 85.7% aligned, 1 missing \u2192 WARNING
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert <GateStatus.PASSED: 'PASSED'> == <GateStatus.W...NG: 'WARNING'>
+E         
+E         - WARNING
+E         + PASSED
+
+tests\quality_gates\test_proposal_alignment_gate.py:126: AssertionError
+____ TestProposalAssetAlignmentGate.test_gate_blocks_when_alignment_0_pct _____
+
+self = <quality_gates.test_proposal_alignment_gate.TestProposalAssetAlignmentGate object at 0x0000014B0AFC6470>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0AACDE10>
+
+    def test_gate_blocks_when_alignment_0_pct(self, orchestrator):
+        """Gate BLOCKS when alignment = 0% (no assets at all)."""
+        assessment = {"generated_assets": []}
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+>       assert result.passed is False  # BLOCKED
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert True is False
+E        +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+
+tests\quality_gates\test_proposal_alignment_gate.py:133: AssertionError
+_____ TestProposalAssetAlignmentGate.test_gate_blocks_when_no_assets_key ______
+
+self = <quality_gates.test_proposal_alignment_gate.TestProposalAssetAlignmentGate object at 0x0000014B0AF7EF50>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0AF3FA10>
+
+    def test_gate_blocks_when_no_assets_key(self, orchestrator):
+        """Gate BLOCKS when generated_assets key is missing (0% alignment)."""
+        assessment = {}
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+>       assert result.passed is False  # BLOCKED
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert True is False
+E        +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+
+tests\quality_gates\test_proposal_alignment_gate.py:140: AssertionError
+_________ TestProposalAssetAlignmentGate.test_gate_result_has_details _________
+
+self = <quality_gates.test_proposal_alignment_gate.TestProposalAssetAlignmentGate object at 0x0000014B0AF7F050>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0AFB27B0>
+
+    def test_gate_result_has_details(self, orchestrator):
+        """FASE-3 (BUG-10): Gate result details reflect 7 services (monthly_report excluded)."""
+        assessment = {
+            "generated_assets": [
+                {"asset_type": "optimization_guide", "confidence_score": 0.8},
+                {"asset_type": "whatsapp_button", "confidence_score": 0.8},
+                {"asset_type": "hotel_schema", "confidence_score": 0.8},
+                {"asset_type": "org_schema", "confidence_score": 0.8},
+                {"asset_type": "faq_page", "confidence_score": 0.8},
+                {"asset_type": "open_graph", "confidence_score": 0.8},
+                {"asset_type": "llms_txt", "confidence_score": 0.8},
+            ]
+        }
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+>       assert "total_services" in result.details
+E       AssertionError: assert 'total_services' in {'alignment': {'actionable_total': 0, 'coverage_ratio': 1.0, 'effective_total': 0, 'generated_aligned': 0, ...}}
+E        +  where {'alignment': {'actionable_total': 0, 'coverage_ratio': 1.0, 'effective_total': 0, 'generated_aligned': 0, ...}} = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).details
+
+tests\quality_gates\test_proposal_alignment_gate.py:157: AssertionError
+________ TestP1NotReadyBlocking.test_whatsapp_button_not_ready_blocks _________
+
+self = <quality_gates.test_proposal_asset_alignment.TestP1NotReadyBlocking object at 0x0000014B0B03DD10>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0B0D42F0>
+
+    def test_whatsapp_button_not_ready_blocks(self, orchestrator):
+        """
+        Bot\xf3n de WhatsApp (P1) con status NOT_READY \u2192 BLOCKING.
+    
+        whatsapp_button resuelve pain_id "no_whatsapp_visible" (priority=1).
+        Cuando el asset está NOT_READY, no puede prometerse al cliente.
+        El gate debe retornar BLOCKED.
+        """
+        assessment = _minimal_assessment(
+            services=["Botón de WhatsApp"],
+            generated_assets=[
+                {
+                    "asset_type": "whatsapp_button",
+                    "confidence_score": 0.5,
+                    "status": "NOT_READY",  # P1 asset NOT_READY
+                }
+            ],
+        )
+    
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+    
+>       assert result.passed is False
+E       AssertionError: assert True is False
+E        +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+
+tests\quality_gates\test_proposal_asset_alignment.py:104: AssertionError
+_________ TestP1NotReadyBlocking.test_whatsapp_button_blocked_blocks __________
+
+self = <quality_gates.test_proposal_asset_alignment.TestP1NotReadyBlocking object at 0x0000014B0B03DE50>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0B6EE970>
+
+    def test_whatsapp_button_blocked_blocks(self, orchestrator):
+        """
+        Bot\xf3n de WhatsApp (P1) con status BLOCKED \u2192 BLOCKING.
+    
+        Same as NOT_READY — cualquier status que no sea IMPLEMENT
+        o skipped_existing para P1 debe bloquear.
+        """
+        assessment = _minimal_assessment(
+            services=["Botón de WhatsApp"],
+            generated_assets=[
+                {
+                    "asset_type": "whatsapp_button",
+                    "confidence_score": 0.5,
+                    "status": "BLOCKED",  # P1 asset BLOCKED
+                }
+            ],
+        )
+    
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+    
+>       assert result.passed is False
+E       AssertionError: assert True is False
+E        +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+
+tests\quality_gates\test_proposal_asset_alignment.py:128: AssertionError
+_______ TestP1NotReadyBlocking.test_multiple_p1_assets_not_ready_blocks _______
+
+self = <quality_gates.test_proposal_asset_alignment.TestP1NotReadyBlocking object at 0x0000014B0B104D60>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0B6EE820>
+
+    def test_multiple_p1_assets_not_ready_blocks(self, orchestrator):
+        """
+        Dos assets P1 NOT_READY \u2192 BLOCKING con detalle de ambos.
+        """
+        assessment = _minimal_assessment(
+            services=["Botón de WhatsApp", "SEO Local"],
+            generated_assets=[
+                {
+                    "asset_type": "whatsapp_button",
+                    "confidence_score": 0.5,
+                    "status": "NOT_READY",
+                },
+                {
+                    "asset_type": "optimization_guide",
+                    "confidence_score": 0.5,
+                    "status": "NOT_READY",
+                },
+            ],
+        )
+    
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+    
+>       assert result.passed is False
+E       AssertionError: assert True is False
+E        +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+
+tests\quality_gates\test_proposal_asset_alignment.py:153: AssertionError
+_ TestP2NotReadyAdvisory.test_p2_not_ready_mixed_alignment_75_percent_blocks __
+
+self = <quality_gates.test_proposal_asset_alignment.TestP2NotReadyAdvisory object at 0x0000014B0B03E210>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0B6EF230>
+
+    def test_p2_not_ready_mixed_alignment_75_percent_blocks(self, orchestrator):
+        """
+        P2 (NOT_READY) + P1 (IMPLEMENT) con alignment 75% < 80% \u2192 BLOCKED.
+    
+        3 OK + 1 P2 NOT_READY (no asset) = 3/4 = 75% alignment < 80%.
+        No P1 blocked \u2192 BLOCKED por threshold, no por P1.
+        """
+        assessment = _minimal_assessment(
+            services=[
+                "Botón de WhatsApp",       # P1, IMPLEMENT
+                "SEO Local",               # P1, IMPLEMENT
+                "Página de FAQ",           # P2, NOT_READY
+                "Optimización para IA Generativa",  # P3, IMPLEMENT
+            ],
+            generated_assets=[
+                {"asset_type": "whatsapp_button", "confidence_score": 0.9, "status": "IMPLEMENT"},
+                {"asset_type": "optimization_guide", "confidence_score": 0.9, "status": "IMPLEMENT"},
+                # faq_page NOT_READY (no asset generated)
+                {"asset_type": "llms_txt", "confidence_score": 0.9, "status": "IMPLEMENT"},
+            ],
+        )
+    
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+    
+        # alignment = 3/4 = 75% < 80% \u2192 BLOCKED por threshold
+>       assert result.passed is False
+E       AssertionError: assert True is False
+E        +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+
+tests\quality_gates\test_proposal_asset_alignment.py:258: AssertionError
+____ TestP2NotReadyAdvisory.test_faq_page_not_ready_above_threshold_warns _____
+
+self = <quality_gates.test_proposal_asset_alignment.TestP2NotReadyAdvisory object at 0x0000014B0B03E350>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0B6EF070>
+
+    def test_faq_page_not_ready_above_threshold_warns(self, orchestrator):
+        """
+        FAQ Page (P2) NOT_READY con otros servicios OK \u2192 alignment >= 80% \u2192 WARNING.
+    
+        Solo cuando alignment >= 80% Y el servicio bloqueante es P2/P3,
+        el gate pasa con WARNING. Esto requiere al menos 4 servicios OK.
+    
+        FASE-3 (BUG-10): "Informe Mensual" / monthly_report removido de PROPOSAL_SERVICE_TO_ASSET.
+        Ahora son 5 servicios en alignment (no 6). 4/5 = 80% sigue pasando WARNING.
+        """
+        assessment = _minimal_assessment(
+            services=[
+                "Botón de WhatsApp",       # P1, IMPLEMENT
+                "SEO Local",               # P1, IMPLEMENT
+                "Schema Hotel",            # P1, IMPLEMENT
+                "Schema Organization",     # P3, IMPLEMENT
+                "Página de FAQ",           # P2, NOT_READY
+            ],
+            generated_assets=[
+                {"asset_type": "whatsapp_button", "confidence_score": 0.9, "status": "IMPLEMENT"},
+                {"asset_type": "optimization_guide", "confidence_score": 0.9, "status": "IMPLEMENT"},
+                {"asset_type": "hotel_schema", "confidence_score": 0.9, "status": "IMPLEMENT"},
+                {"asset_type": "org_schema", "confidence_score": 0.9, "status": "IMPLEMENT"},
+                # faq_page NOT_READY \u2192 P2, advisory
+            ],
+        )
+    
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+    
+        # FASE-3 (BUG-10): alignment = 4/5 = 80% >= 80%, P2 NOT_READY solo \u2192 WARNING
+        assert result.passed is True
+>       assert result.status == GateStatus.WARNING
+E       AssertionError: assert <GateStatus.PASSED: 'PASSED'> == <GateStatus.W...NG: 'WARNING'>
+E         
+E         - WARNING
+E         + PASSED
+
+tests\quality_gates\test_proposal_asset_alignment.py:292: AssertionError
+______ TestAlignmentThreshold.test_mixed_p1_p2_below_80_alignment_blocks ______
+
+self = <quality_gates.test_proposal_asset_alignment.TestAlignmentThreshold object at 0x0000014B0B03E710>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0B6EE5F0>
+
+    def test_mixed_p1_p2_below_80_alignment_blocks(self, orchestrator):
+        """
+        Mix de P1 (OK) + P2 (NOT_READY) con alignment < 80% \u2192 BLOCKED.
+    
+        1 P1 OK + 2 P2 missing de 3 servicios = 33% alignment.
+        Como alignment < 80%, el gate original bloquearia por alignment,
+        no por P1. En este caso el P2 es NOT_READY (advisory), pero
+        el threshold de alignment fuerza BLOCKED.
+        """
+        assessment = _minimal_assessment(
+            services=["Botón de WhatsApp", "Página de FAQ", "Meta Tags Sociales (Open Graph)"],
+            generated_assets=[
+                {"asset_type": "whatsapp_button", "confidence_score": 0.9, "status": "IMPLEMENT"},
+                # faq_page NOT_READY (P2 — advisory)
+                # open_graph missing
+            ],
+        )
+    
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+    
+        # Alignment = 1/3 = 33% < 80% \u2192 BLOCKED por threshold
+>       assert result.passed is False
+E       AssertionError: assert True is False
+E        +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+
+tests\quality_gates\test_proposal_asset_alignment.py:374: AssertionError
+______ TestAlignmentThreshold.test_p2_not_ready_above_80_alignment_warns ______
+
+self = <quality_gates.test_proposal_asset_alignment.TestAlignmentThreshold object at 0x0000014B0B03E850>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0AFB2580>
+
+    def test_p2_not_ready_above_80_alignment_warns(self, orchestrator):
+        """
+        P2 NOT_READY con alignment >= 80% \u2192 WARNING (no bloquea).
+    
+        4/5 servicios = 80% alignment. EI P2 (faq_page NOT_READED) no bloquea.
+        El gate pasa con WARNING.
+        """
+        assessment = _minimal_assessment(
+            services=[
+                "Botón de WhatsApp",       # P1, IMPLEMENT
+                "SEO Local",               # P1, IMPLEMENT
+                "Schema Hotel",            # P1, IMPLEMENT
+                "Schema Organization",     # P3, IMPLEMENT
+                "Página de FAQ",           # P2, NOT_READY
+            ],
+            generated_assets=[
+                {"asset_type": "whatsapp_button", "confidence_score": 0.9, "status": "IMPLEMENT"},
+                {"asset_type": "optimization_guide", "confidence_score": 0.9, "status": "IMPLEMENT"},
+                {"asset_type": "hotel_schema", "confidence_score": 0.9, "status": "IMPLEMENT"},
+                {"asset_type": "org_schema", "confidence_score": 0.9, "status": "IMPLEMENT"},
+                # faq_page NOT_READY \u2192 P2, advisory
+            ],
+        )
+    
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+    
+        # alignment = 4/5 = 80% >= 80%, solo P2 NOT_READY \u2192 WARNING
+        assert result.passed is True
+>       assert result.status == GateStatus.WARNING
+E       AssertionError: assert <GateStatus.PASSED: 'PASSED'> == <GateStatus.W...NG: 'WARNING'>
+E         
+E         - WARNING
+E         + PASSED
+
+tests\quality_gates\test_proposal_asset_alignment.py:405: AssertionError
+_________ TestPublicationGatesOrchestrator.test_multiple_gates_block __________
+
+self = <quality_gates.test_publication_gates.TestPublicationGatesOrchestrator object at 0x0000014B0B1068B0>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x0000014B0B6EEF90>
+
+    def test_multiple_gates_block(self, orchestrator):
+        """
+        Test that multiple failing gates are all reported.
+        """
+        assessment = {
+            "coherence_score": 0.3,  # Fail
+            "evidence_coverage": 0.50,  # Fail
+            "hard_contradictions": 5,  # Fail
+            "critical_recall": 0.50,  # Fail
+            "financial_data": {
+                "occupancy_rate": 0,  # Fail
+                "direct_channel_percentage": 0,
+                "adr_cop": 0,
+            },
+            "validation_summary": {"hard_contradictions_count": 5},
+            "conflicts": [{"severity": "HARD"}] * 5
+        }
+    
+        results = orchestrator.run_all(assessment)
+    
+        assert orchestrator.is_ready_for_publication(results) is False
+    
+        blocking = orchestrator.get_blocking_gates(results)
+>       assert len(blocking) == 9  # hard_cont, evidence_cov, financial, coherence, recall, ethics, asset_align, tier_c, coverage
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 8 == 9
+E        +  where 8 = len([PublicationGateResult(gate_name='hard_contradictions', passed=False, status=<GateStatus.BLOCKED: 'BLOCKED'>, message=...ct_channel_percentage': 0, 'adr_cop': 0}}], 'roi_projected': None, 'pricing_total': 0, 'projected_return': None}), ...])
+
+tests\quality_gates\test_publication_gates.py:740: AssertionError
+________ TestHotelVisperasScenario.test_visperas_comprehensive_report _________
+
+self = <quality_gates.test_publication_gates.TestHotelVisperasScenario object at 0x0000014B0AFC7CE0>
+visperas_assessment = {'coherence_score': 0.0, 'conflicts': [{'field': 'whatsapp', 'severity': 'HARD', 'type': 'HARD'}, {'field': 'address',...HARD'}, {'field': 'phone', 'severity': 'HARD', 'type': 'HARD'}], 'critical_recall': 0.5, 'evidence_coverage': 0.2, ...}
+
+    def test_visperas_comprehensive_report(self, visperas_assessment):
+        """
+        Test the full readiness report for Hotel Vísperas.
+        """
+        report = check_publication_readiness(visperas_assessment)
+    
+        # Should not be ready
+        assert report["ready"] is False
+        assert report["status"] == "NOT_READY"
+    
+        # Should have multiple blocking issues
+        assert len(report["blocking_issues"]) >= 4
+    
+        # Summary should show failures
+>       assert report["summary"]["passed"] < 5  # At most 4 gates pass (ethics, content_quality, confidence, pricing_compliance skipped)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert 5 < 5
+
+tests\quality_gates\test_publication_gates.py:907: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/asset_generation/test_proposal_asset_matrix.py::TestProposalAssetMatrixServiceWithoutBreach::test_fails_when_service_sold_without_real_breach
+FAILED tests/asset_generation/test_proposal_asset_matrix.py::TestProposalAssetMatrixSave::test_save_writes_valid_json
+FAILED tests/asset_generation/test_proposal_asset_matrix.py::TestAssetAlignmentMatrixBuild::test_legacy_build_matches_proposal_asset_matrix
+FAILED tests/quality_gates/test_alignment_contract.py::TestContractProposalLayer::test_committed_none_without_pain_ledger
+FAILED tests/quality_gates/test_alignment_contract.py::TestContractProposalLayer::test_states_identical_per_service_across_layers
+FAILED tests/quality_gates/test_alignment_contract.py::TestContractGateLayer::test_gate_matches_delivery_report_same_run
+FAILED tests/quality_gates/test_alignment_contract.py::TestContractGateLayer::test_gate_legacy_without_pain_ledger_uses_static_catalog
+FAILED tests/quality_gates/test_alignment_result.py::TestCorridaCSemantics::test_corrida_c_same_unresolved_both_paths
+FAILED tests/quality_gates/test_gate_presence.py::TestProposalAlignmentGateWithSitePresence::test_gate_with_site_presence_checker_integration
+FAILED tests/quality_gates/test_gate_presence.py::TestProposalAlignmentGateWithSitePresence::test_gate_message_shows_present_in_production
+FAILED tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_passes_when_all_assets_present
+FAILED tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_warns_when_alignment_above_80_pct
+FAILED tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_detects_llms_txt_missing
+FAILED tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_blocks_when_alignment_below_80_pct
+FAILED tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_passes_with_present_in_production
+FAILED tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_blocks_when_alignment_0_pct
+FAILED tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_blocks_when_no_assets_key
+FAILED tests/quality_gates/test_proposal_alignment_gate.py::TestProposalAssetAlignmentGate::test_gate_result_has_details
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestP1NotReadyBlocking::test_whatsapp_button_not_ready_blocks
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestP1NotReadyBlocking::test_whatsapp_button_blocked_blocks
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestP1NotReadyBlocking::test_multiple_p1_assets_not_ready_blocks
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestP2NotReadyAdvisory::test_p2_not_ready_mixed_alignment_75_percent_blocks
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestP2NotReadyAdvisory::test_faq_page_not_ready_above_threshold_warns
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestAlignmentThreshold::test_mixed_p1_p2_below_80_alignment_blocks
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestAlignmentThreshold::test_p2_not_ready_above_80_alignment_warns
+FAILED tests/quality_gates/test_publication_gates.py::TestPublicationGatesOrchestrator::test_multiple_gates_block
+FAILED tests/quality_gates/test_publication_gates.py::TestHotelVisperasScenario::test_visperas_comprehensive_report
+27 failed, 862 passed, 2 skipped in 7.53s

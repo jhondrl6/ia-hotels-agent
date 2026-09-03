@@ -696,6 +696,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
                     delivery_context=delivery_ctx,
                     pain_ledger=pain_ledger,
                     generated_assets=assets_generated,
+                    site_presence_report=site_presence_report,
                 )
                 # P-06 FIX: Guardar matrix en subdirectorio del hotel para
                 # que _collect_files() la encuentre via rglob(). El packager
@@ -1198,7 +1199,10 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
             (modo legacy: catálogo estático, filtro has_asset/is_present) o si
             la derivación falla (never-block).
         """
-        if not pain_ledger:
+        # FASE-C: vacío ≠ ausente. ``[]`` = ledger resuelto sin brechas ⟹ 0
+        # servicios comprometidos (la tabla no promete nada); ``None`` = sin
+        # fuente ⟹ modo legacy de catálogo estático.
+        if pain_ledger is None:
             return None
         try:
             from modules.asset_generation.proposal_asset_alignment import (

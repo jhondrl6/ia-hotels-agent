@@ -1,0 +1,89 @@
+........................................................................ [  8%]
+...............................s........................................ [ 16%]
+........................................................................ [ 24%]
+........................................................................ [ 32%]
+........................................................................ [ 40%]
+..............................................F..F..F................... [ 48%]
+.......................................................F.F...F.F........ [ 56%]
+F....................................................................... [ 64%]
+........................................................................ [ 72%]
+........................................................................ [ 80%]
+........................................................................ [ 88%]
+.....FFF...FF..FF....................................................... [ 96%]
+....s......................                                              [100%]
+================================== FAILURES ===================================
+E   AssertionError: FAQ service should be in matrix
+    assert None is not None
+C:\Users\Jhond\Github\iah-cli\tests\asset_generation\test_proposal_asset_matrix.py:119: AssertionError: FAQ service should be in matrix
+E   KeyError: 'Página de FAQ'
+C:\Users\Jhond\Github\iah-cli\tests\asset_generation\test_proposal_asset_matrix.py:216: KeyError: 'Página de FAQ'
+E   AssertionError: Expected NO_BREACH, got AlignmentStatus.INDETERMINATE
+    assert <AlignmentStatus.INDETERMINATE: 'indeterminate'> == <AlignmentStatus.NO_BREACH: 'no_breach'>
+     +  where <AlignmentStatus.NO_BREACH: 'no_breach'> = AlignmentStatus.NO_BREACH
+C:\Users\Jhond\Github\iah-cli\tests\asset_generation\test_proposal_asset_matrix.py:273: AssertionError: Expected NO_BREACH, got AlignmentStatus.INDETERMINATE
+E   AssertionError: assert ['Optimización para IA Generativa'] is None
+     +  where ['Optimización para IA Generativa'] = _derive_committed_services([], {'llms_txt': {'status': 'exists'}, 'results': {'llms_txt': {'status': 'exists'}}}, [{'asset_type': 'org_schema', 'confidence_score': 0.9}, {'asset_type': 'faq_page', 'confidence_score': 0.85}])
+     +    where _derive_committed_services = <modules.commercial_documents.v4_proposal_generator.V4ProposalGenerator object at 0x00000132E25C17B0>._derive_committed_services
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_alignment_contract.py:96: AssertionError: assert ['Optimización para IA Generativa'] is None
+E   KeyError: 'Optimización para IA Generativa'
+------------------------------ Captured log call ------------------------------
+WARNING  modules.commercial_documents.v4_proposal_generator:v4_proposal_generator.py:1248 [RC1] opportunity_scores no disponibles — tabla de servicios sin costos de brecha (sin cifras inventadas; no se compromete costo alguno)
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_alignment_contract.py:164: KeyError: 'Optimización para IA Generativa'
+E   AssertionError: assert {'actionable_...gned': 2, ...} == {'actionable_...gned': 2, ...}
+      
+      Omitting 4 identical items, use -vv to show
+      Differing items:
+      {'effective_total': 3} != {'effective_total': 2}
+      {'promised_services_total': 4} != {'promised_services_total': 3}
+      {'present_in_production': 1} != {'present_in_production': 0}
+      {'present_assets': ['Optimización para IA Generativa']} != {'present_assets': []}...
+      
+      ...Full output truncated (4 lines hidden), use '-vv' to show
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_alignment_contract.py:239: AssertionError: assert {'actionable_...gned': 2, ...} == {'actionable_...gned': 2, ...}
+E   assert 1 == 7
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_alignment_contract.py:263: assert 1 == 7
+E   assert 0 == 1
+     +  where 0 = AlignmentResult(promised_services_total=3, generated_aligned=2, present_in_production=0, unresolved=1, coverage_ratio=0.6666666666666666, present_assets=[], no_breach=0).present_in_production
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_alignment_result.py:364: assert 0 == 1
+E   AssertionError: assert True is False
+     +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_proposal_asset_alignment.py:104: AssertionError: assert True is False
+E   AssertionError: assert True is False
+     +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_proposal_asset_alignment.py:128: AssertionError: assert True is False
+E   AssertionError: assert True is False
+     +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_proposal_asset_alignment.py:153: AssertionError: assert True is False
+E   AssertionError: assert True is False
+     +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_proposal_asset_alignment.py:258: AssertionError: assert True is False
+E   AssertionError: assert <GateStatus.PASSED: 'PASSED'> == <GateStatus.W...NG: 'WARNING'>
+      
+      - WARNING
+      + PASSED
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_proposal_asset_alignment.py:292: AssertionError: assert <GateStatus.PASSED: 'PASSED'> == <GateStatus.W...NG: 'WARNING'>
+E   AssertionError: assert True is False
+     +  where True = PublicationGateResult(gate_name='proposal_asset_alignment', passed=True, status=<GateStatus.PASSED: 'PASSED'>, message...'passed': True, 'effective_total': 0, 'actionable_total': 0, 'message': '0 servicios comprometidos — nada prometido'}}).passed
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_proposal_asset_alignment.py:374: AssertionError: assert True is False
+E   AssertionError: assert <GateStatus.PASSED: 'PASSED'> == <GateStatus.W...NG: 'WARNING'>
+      
+      - WARNING
+      + PASSED
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_proposal_asset_alignment.py:405: AssertionError: assert <GateStatus.PASSED: 'PASSED'> == <GateStatus.W...NG: 'WARNING'>
+=========================== short test summary info ===========================
+FAILED tests/asset_generation/test_proposal_asset_matrix.py::TestProposalAssetMatrixServiceWithoutBreach::test_fails_when_service_sold_without_real_breach
+FAILED tests/asset_generation/test_proposal_asset_matrix.py::TestProposalAssetMatrixSave::test_save_writes_valid_json
+FAILED tests/asset_generation/test_proposal_asset_matrix.py::TestAssetAlignmentMatrixBuild::test_legacy_build_matches_proposal_asset_matrix
+FAILED tests/quality_gates/test_alignment_contract.py::TestContractProposalLayer::test_committed_none_without_pain_ledger
+FAILED tests/quality_gates/test_alignment_contract.py::TestContractProposalLayer::test_states_identical_per_service_across_layers
+FAILED tests/quality_gates/test_alignment_contract.py::TestContractGateLayer::test_gate_matches_delivery_report_same_run
+FAILED tests/quality_gates/test_alignment_contract.py::TestContractGateLayer::test_gate_legacy_without_pain_ledger_uses_static_catalog
+FAILED tests/quality_gates/test_alignment_result.py::TestCorridaCSemantics::test_corrida_c_same_unresolved_both_paths
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestP1NotReadyBlocking::test_whatsapp_button_not_ready_blocks
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestP1NotReadyBlocking::test_whatsapp_button_blocked_blocks
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestP1NotReadyBlocking::test_multiple_p1_assets_not_ready_blocks
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestP2NotReadyAdvisory::test_p2_not_ready_mixed_alignment_75_percent_blocks
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestP2NotReadyAdvisory::test_faq_page_not_ready_above_threshold_warns
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestAlignmentThreshold::test_mixed_p1_p2_below_80_alignment_blocks
+FAILED tests/quality_gates/test_proposal_asset_alignment.py::TestAlignmentThreshold::test_p2_not_ready_above_80_alignment_warns
+15 failed, 874 passed, 2 skipped in 6.30s

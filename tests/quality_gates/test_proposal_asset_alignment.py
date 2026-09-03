@@ -66,7 +66,10 @@ def _minimal_assessment(
             "adr_cop": 450000.0,
         },
         "validation_summary": {"hard_contradictions_count": 0},
-        "pain_ledger": [],
+        # FASE-C: clave AUSENTE a propósito. ``pain_ledger: []`` ahora significa
+        # "ledger resuelto sin brechas" → 0 servicios comprometidos → PASS
+        # trivial. Estos tests ejercitan el bloqueo P1/P2 sobre una
+        # proposal_services explícita, que es la ruta legacy sin fuente.
         "diagnostic_pain_ids": [],
         "proposal_pain_ids": [],
         "financial_evidence_tier": "B",

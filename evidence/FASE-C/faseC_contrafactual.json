@@ -1,0 +1,54 @@
+{
+  "matriz": {
+    "promised_services_total": 1,
+    "effective_total": 1,
+    "unresolved": 0,
+    "no_breach": 0,
+    "coverage_ratio": 1.0,
+    "actionable_total": 1,
+    "delivery_ready": true,
+    "status_counts": {
+      "LINKED": 1
+    },
+    "invariante_ok": true,
+    "message": "1/1 servicios comprometidos cubiertos (1 generados )"
+  },
+  "coherencia": {
+    "asset_specs": [
+      [
+        "analytics_setup_guide",
+        [
+          "no_analytics_configured"
+        ]
+      ],
+      [
+        "indirect_traffic_optimization",
+        [
+          "low_organic_visibility"
+        ]
+      ],
+      [
+        "llms_txt",
+        [
+          "ai_crawler_blocked"
+        ]
+      ],
+      [
+        "monthly_report",
+        []
+      ]
+    ],
+    "specs_total": 4,
+    "specs_sin_pain": [
+      "monthly_report"
+    ],
+    "assets_are_justified_score": 1.0,
+    "assets_are_justified_passed": true,
+    "assets_are_justified_severity": "info",
+    "assets_are_justified_message": "100% de assets justificados",
+    "overall_score": 0.9133,
+    "threshold": 0.8,
+    "errors": [],
+    "is_coherent": true
+  }
+}

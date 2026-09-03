@@ -8,11 +8,14 @@ Created as part of FASE-ASSETS-VALIDACION.
 """
 
 import json
+import logging
 from pathlib import Path
 from dataclasses import dataclass, field
-from typing import Dict, List, Any, Optional
+from typing import Dict, FrozenSet, List, Any, Optional, Tuple
 
 from ..common.service_identity import SERVICE_IDENTITIES
+
+logger = logging.getLogger(__name__)
 
 
 # ==========================================================================
@@ -42,6 +45,17 @@ PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
 
 # Servicios que la propuesta promete: las claves de la proyección anterior.
 ALL_PROMISED_SERVICES: List[str] = list(PROPOSAL_SERVICE_TO_ASSET.keys())
+
+# FASE-C (Punto 8): el complemento del lado negativo de la misma proyección.
+# Estos assets SE GENERAN pero NO SE PROMETEN por pain (BUG-10 / FASE-3), así
+# que jamás pueden tener un pain_id que los justifique: exigirles justificación
+# los condena estructuralmente y arrastra assets_are_justified < 0.8 en toda
+# corrida (AC6). Se derivan del registro, no se listan a mano.
+ALWAYS_ACTIVE_COMPLEMENT_ASSETS: FrozenSet[str] = frozenset(
+    identidad.asset_type
+    for identidad in SERVICE_IDENTITIES
+    if not identidad.counts_in_alignment
+)
 
 
 @dataclass
@@ -494,6 +508,132 @@ def committed_services_from_entries(
     return [name for name in committed if name]
 
 
+def classify_promised_services(
+    proposal_services: List[str],
+    pain_ledger: Optional[List[Any]],
+    generated_assets: Optional[List[Any]],
+    site_presence_report: Optional[Any] = None,
+) -> Tuple[List["ProposalAssetMatrixEntry"], List[str], List[str]]:
+    """FASE-C (Punto 8): la ÚNICA partición propuesta → brecha → asset.
+
+    Anti-A5: ``ProposalAssetMatrix.build`` y ``AssetAlignmentMatrix.build``
+    duplicaban esta lógica y ambos descartaban en silencio lo que no calzaba.
+    Ahora los dos delegan aquí, así no pueden derivar.
+
+    Regla de promesa (D-PF1, fuente única): un servicio entra a la matriz si
+    tiene un pain mapeado en el ledger **o** si su asset ya existe en el sitio.
+    Lo que no cumple ninguna de las dos **no se promete** y pasa a
+    ``not_promised`` — visible, no descartado. Ese es el origen de AC5:
+    ``no_breach`` deja de existir por construcción, no por resta.
+
+    vacío ≠ ausente (SR-H2 / L-SR5):
+      * ``pain_ledger is None`` → sin ledger: modo legacy, se recorre el
+        catálogo completo y lo sin pain queda ``NO_BREACH``.
+      * ``pain_ledger == []`` → ledger resuelto sin brechas: 0 comprometidos,
+        todo a ``not_promised``.
+
+    Args:
+        proposal_services: nombres de servicio como aparecen en la propuesta.
+        pain_ledger: entradas del ledger, ``[]`` o ``None``.
+        generated_assets: ``GeneratedAsset``/dicts, o ``None``.
+        site_presence_report: snapshot SitePresence (cualquiera de las formas
+            que acepta ``_presence_exists``).
+
+    Returns:
+        ``(entries, not_promised, unknown_services)``.
+    """
+    from ..commercial_documents.pain_solution_mapper import PainSolutionMapper
+
+    pain_map = PainSolutionMapper.PAIN_SOLUTION_MAP
+    ledger_present = pain_ledger is not None
+    ledger_pain_ids: set = {
+        e.get("pain_id") if isinstance(e, dict) else getattr(e, "pain_id", "")
+        for e in (pain_ledger or [])
+    }
+
+    asset_by_type: Dict[str, Any] = {}
+    for a in (generated_assets or []):
+        if isinstance(a, dict):
+            asset_by_type[a.get("asset_type", "")] = a
+        else:
+            asset_by_type[getattr(a, "asset_type", "")] = a
+
+    entries: List["ProposalAssetMatrixEntry"] = []
+    not_promised: List[str] = []
+    unknown_services: List[str] = []
+
+    for service_name in proposal_services:
+        expected_asset = PROPOSAL_SERVICE_TO_ASSET.get(service_name)
+        if not expected_asset:
+            # FASE-C: el descarte deja de ser silencioso (anti-A5).
+            unknown_services.append(service_name)
+            logger.warning(
+                "[FASE-C] Servicio fuera del registro canónico — no se promete "
+                "ni se cuenta: %r", service_name,
+            )
+            continue
+
+        candidate_pain_ids = [
+            pid for pid, mapping in pain_map.items()
+            if expected_asset in mapping.get("assets", [])
+        ]
+        matched_pain_ids = [pid for pid in candidate_pain_ids if pid in ledger_pain_ids]
+        gen_asset = asset_by_type.get(expected_asset)
+
+        if matched_pain_ids and gen_asset is not None:
+            status = "LINKED"
+            confidence = (
+                gen_asset.get("confidence_score", 0.0) if isinstance(gen_asset, dict)
+                else getattr(gen_asset, "confidence_score", 0.0)
+            )
+            asset_path = (
+                gen_asset.get("path", None) if isinstance(gen_asset, dict)
+                else getattr(gen_asset, "path", None)
+            )
+        elif matched_pain_ids and gen_asset is None:
+            status = "MISSING_ASSET"
+            confidence = max(
+                (e.get("confidence", 0.0) if isinstance(e, dict) else getattr(e, "confidence", 0.0)
+                 for e in (pain_ledger or [])
+                 if (e.get("pain_id") if isinstance(e, dict) else getattr(e, "pain_id", "")) in matched_pain_ids),
+                default=0.0,
+            )
+            asset_path = None
+        elif not ledger_present:
+            # Ledger AUSENTE: no hay fuente para decidir la promesa, así que se
+            # conserva el catálogo estático (comportamiento legacy pre-C).
+            status = "NO_BREACH"
+            confidence = 0.0
+            asset_path = None
+        elif _presence_exists(site_presence_report, expected_asset):
+            # D-PF1: la presencia también compromete, aunque no haya brecha.
+            status = "PRESENT_IN_PRODUCTION"
+            confidence = 0.0
+            asset_path = None
+        else:
+            # Punto 8: sin brecha y sin presencia → NO se promete.
+            not_promised.append(service_name)
+            continue
+
+        entries.append(ProposalAssetMatrixEntry(
+            service_name=service_name,
+            pain_ids=matched_pain_ids,
+            asset_type=expected_asset,
+            asset_path=asset_path,
+            confidence=confidence,
+            status=status,
+        ))
+
+    if not_promised:
+        logger.info(
+            "[FASE-C] Propuesta dinámica: %d de %d servicios sin brecha ni "
+            "presencia — no prometidos: %s",
+            len(not_promised), len(proposal_services), ", ".join(not_promised),
+        )
+
+    return entries, not_promised, unknown_services
+
+
 # ==========================================================================
 # FASE-0D: ProposalAssetMatrix — Matriz Propuesta → Brecha → Asset
 # ==========================================================================
@@ -552,6 +692,9 @@ class ProposalAssetMatrix:
         """Initialize with PainSolutionMapper for pain-to-asset mapping."""
         from ..commercial_documents.pain_solution_mapper import PainSolutionMapper
         self._pain_map = PainSolutionMapper.PAIN_SOLUTION_MAP
+        # FASE-C: auditoría de la partición — llenados por build().
+        self.not_promised: List[str] = []
+        self.unknown_services: List[str] = []
 
     def _get_pain_ids_for_asset_type(self, asset_type: str) -> List[str]:
         """Find all pain_ids that map to the given asset_type.
@@ -574,87 +717,35 @@ class ProposalAssetMatrix:
     def build(
         self,
         proposal_services: List[str],
-        pain_ledger: List[Any],  # List[PainLedgerEntry]
-        generated_assets: List[Any],  # List[GeneratedAsset] or List[dict]
+        pain_ledger: Optional[List[Any]],  # List[PainLedgerEntry] | [] | None
+        generated_assets: Optional[List[Any]],  # List[GeneratedAsset] or List[dict]
+        site_presence_report: Optional[Any] = None,
     ) -> List[ProposalAssetMatrixEntry]:
         """Build the proposal-asset-brecha matrix.
 
+        FASE-C (Punto 8): delega en ``classify_promised_services``, la MISMA
+        partición que usa ``AssetAlignmentMatrix.build`` (anti-A5). Los
+        servicios sin brecha ni presencia ya no se emiten como ``NO_BREACH``:
+        no se prometen y quedan registrados en ``self.not_promised``.
+
         Args:
             proposal_services: Service names as they appear in the proposal
-            pain_ledger: List of PainLedgerEntry from the pain ledger
+            pain_ledger: List of PainLedgerEntry from the pain ledger.
+                ``None`` = ledger ausente (catálogo estático legacy);
+                ``[]`` = ledger resuelto sin brechas (0 comprometidos).
             generated_assets: List of GeneratedAsset or dicts with
                 'asset_type', 'confidence_score', 'path' keys
+            site_presence_report: snapshot SitePresence; la presencia también
+                compromete un servicio aunque no tenga brecha (D-PF1).
 
         Returns:
-            List of ProposalAssetMatrixEntry, one per service
+            List of ProposalAssetMatrixEntry, one per promised service
         """
-        entries: List[ProposalAssetMatrixEntry] = []
-
-        # Build fast lookups
-        ledger_pain_ids: set = {
-            e.get("pain_id") if isinstance(e, dict) else e.pain_id
-            for e in pain_ledger
-        }
-
-        # Build asset_by_type lookup: handles both GeneratedAsset objects and dicts
-        asset_by_type: Dict[str, Any] = {}
-        for a in generated_assets:
-            if isinstance(a, dict):
-                asset_by_type[a.get("asset_type", "")] = a
-            else:
-                asset_by_type[getattr(a, "asset_type", "")] = a
-
-        for service_name in proposal_services:
-            expected_asset = PROPOSAL_SERVICE_TO_ASSET.get(service_name)
-            if not expected_asset:
-                # Unknown service — skip silently
-                continue
-
-            # Find all pain_ids that could map to this asset_type
-            candidate_pain_ids = self._get_pain_ids_for_asset_type(expected_asset)
-            # Filter to only those actually present in the ledger
-            matched_pain_ids = [pid for pid in candidate_pain_ids if pid in ledger_pain_ids]
-
-            # Find generated asset for this type
-            gen_asset = asset_by_type.get(expected_asset)
-
-            # Determine status based on breach + asset presence
-            if matched_pain_ids and gen_asset is not None:
-                status = "LINKED"
-                confidence = (
-                    gen_asset.get("confidence_score", 0.0) if isinstance(gen_asset, dict)
-                    else getattr(gen_asset, "confidence_score", 0.0)
-                )
-                asset_path = (
-                    gen_asset.get("path", None) if isinstance(gen_asset, dict)
-                    else getattr(gen_asset, "path", None)
-                )
-            elif matched_pain_ids and gen_asset is None:
-                status = "MISSING_ASSET"
-                confidence = max(
-                    (e.get("confidence", 0.0) if isinstance(e, dict) else getattr(e, "confidence", 0.0)
-                     for e in pain_ledger if (e.get("pain_id") if isinstance(e, dict) else e.pain_id) in matched_pain_ids),
-                    default=0.0,
-                )
-                asset_path = None
-            elif not matched_pain_ids:
-                status = "NO_BREACH"
-                confidence = 0.0
-                asset_path = None
-            else:
-                status = "GENERIC_DRAFT"
-                confidence = 0.0
-                asset_path = None
-
-            entries.append(ProposalAssetMatrixEntry(
-                service_name=service_name,
-                pain_ids=matched_pain_ids,
-                asset_type=expected_asset,
-                asset_path=asset_path,
-                confidence=confidence,
-                status=status,
-            ))
-
+        entries, not_promised, unknown = classify_promised_services(
+            proposal_services, pain_ledger, generated_assets, site_presence_report
+        )
+        self.not_promised = not_promised
+        self.unknown_services = unknown
         return entries
 
     def save(self, entries: List[ProposalAssetMatrixEntry], path: Path) -> None:
@@ -732,6 +823,10 @@ class AssetAlignmentMatrix:
 
     entries: List[ProposalAssetMatrixEntry] = field(default_factory=list)
     _entry_map: Dict[str, ProposalAssetMatrixEntry] = field(default_factory=dict, repr=False)
+    # FASE-C (Punto 8): auditoría de la partición. Lo que la propuesta dinámica
+    # decide NO prometer se declara aquí — nunca se descarta en silencio.
+    not_promised: List[str] = field(default_factory=list)
+    unknown_services: List[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         """Rebuild entry map after initialization."""
@@ -747,98 +842,49 @@ class AssetAlignmentMatrix:
     def build(
         cls,
         delivery_context: Any,
-        pain_ledger: List[Any],
+        pain_ledger: Optional[List[Any]],
         generated_assets: Optional[List[Any]] = None,
+        site_presence_report: Optional[Any] = None,
     ) -> "AssetAlignmentMatrix":
         """Build the matrix from DeliveryContext and pain_ledger.
 
         Preferred constructor — consumes DeliveryContext as source of truth.
 
+        FASE-C (Punto 8): la matriz refleja la PROPUESTA, y la propuesta sólo
+        promete servicios con brecha detectada o con presencia verificada. Los
+        demás no se emiten como ``NO_BREACH``: pasan a ``not_promised``. Así
+        ``no_breach == 0`` por construcción y ``total == actionable``, con lo
+        que los denominadores de gate y delivery convergen (AC5).
+
+        Anti-A5: delega en ``classify_promised_services``, la misma partición
+        que ``ProposalAssetMatrix.build`` — no pueden derivar.
+
         Args:
             delivery_context: DeliveryContext instance (post-DT-1)
-            pain_ledger: List of PainLedgerEntry from the pain ledger
+            pain_ledger: List of PainLedgerEntry from the pain ledger.
+                ``None`` = ausente (catálogo estático legacy, conserva
+                ``NO_BREACH``); ``[]`` = resuelto sin brechas (0 comprometidos).
             generated_assets: Optional override; if None, derived from
                              delivery_context.assets
+            site_presence_report: snapshot SitePresence — la presencia también
+                compromete un servicio sin brecha (D-PF1).
 
         Returns:
-            AssetAlignmentMatrix with one entry per promised service
+            AssetAlignmentMatrix with one entry per PROMISED service
         """
-        from ..commercial_documents.pain_solution_mapper import PainSolutionMapper
-
-        pain_map = PainSolutionMapper.PAIN_SOLUTION_MAP
-        entries: List[ProposalAssetMatrixEntry] = []
-
-        # Build fast lookups
-        ledger_pain_ids: set = {
-            e.get("pain_id") if isinstance(e, dict) else getattr(e, "pain_id", "")
-            for e in pain_ledger
-        }
-
-        # Derive assets from delivery_context or use override
-        if generated_assets is not None:
-            asset_by_type: Dict[str, Any] = {}
-            for a in generated_assets:
-                if isinstance(a, dict):
-                    asset_by_type[a.get("asset_type", "")] = a
-                else:
-                    asset_by_type[getattr(a, "asset_type", "")] = a
-        else:
-            asset_by_type = {
-                a.asset_type: a for a in getattr(delivery_context, "assets", [])
-            }
-
-        for service_name in ALL_PROMISED_SERVICES:
-            expected_asset = PROPOSAL_SERVICE_TO_ASSET.get(service_name)
-            if not expected_asset:
-                continue
-
-            # Find all pain_ids that map to this asset_type
-            candidate_pain_ids = [
-                pid for pid, mapping in pain_map.items()
-                if expected_asset in mapping.get("assets", [])
-            ]
-            matched_pain_ids = [pid for pid in candidate_pain_ids if pid in ledger_pain_ids]
-
-            gen_asset = asset_by_type.get(expected_asset)
-
-            if matched_pain_ids and gen_asset is not None:
-                status = "LINKED"
-                confidence = (
-                    gen_asset.get("confidence_score", 0.0) if isinstance(gen_asset, dict)
-                    else getattr(gen_asset, "confidence_score", 0.0)
-                )
-                asset_path = (
-                    gen_asset.get("path", None) if isinstance(gen_asset, dict)
-                    else getattr(gen_asset, "path", None)
-                )
-            elif matched_pain_ids and gen_asset is None:
-                status = "MISSING_ASSET"
-                confidence = max(
-                    (e.get("confidence", 0.0) if isinstance(e, dict) else getattr(e, "confidence", 0.0)
-                     for e in pain_ledger
-                     if (e.get("pain_id") if isinstance(e, dict) else getattr(e, "pain_id", "")) in matched_pain_ids),
-                    default=0.0,
-                )
-                asset_path = None
-            elif not matched_pain_ids:
-                status = "NO_BREACH"
-                confidence = 0.0
-                asset_path = None
-            else:
-                status = "GENERIC_DRAFT"
-                confidence = 0.0
-                asset_path = None
-
-            entries.append(ProposalAssetMatrixEntry(
-                service_name=service_name,
-                pain_ids=matched_pain_ids,
-                asset_type=expected_asset,
-                asset_path=asset_path,
-                confidence=confidence,
-                status=status,
-            ))
-
-        return cls(entries=entries)
+        assets = (
+            generated_assets
+            if generated_assets is not None
+            else list(getattr(delivery_context, "assets", []) or [])
+        )
+        entries, not_promised, unknown = classify_promised_services(
+            ALL_PROMISED_SERVICES, pain_ledger, assets, site_presence_report
+        )
+        return cls(
+            entries=entries,
+            not_promised=not_promised,
+            unknown_services=unknown,
+        )
 
     # ── Lookup ──────────────────────────────────────────────────────────
 
@@ -905,6 +951,14 @@ class AssetAlignmentMatrix:
             "proposal_asset_matrix_version": "2.0",  # Unified contract
             "alignment_status_version": "1.0",
             "delivery_ready": self.is_delivery_ready(),
+            # FASE-C (Punto 8): lo que la propuesta dinámica NO promete.
+            "not_promised": list(self.not_promised),
+            "unknown_services": list(self.unknown_services),
+            "summary": {
+                "promised": len(self.entries),
+                "not_promised": len(self.not_promised),
+                "unknown": len(self.unknown_services),
+            },
             "entries": [
                 {
                     "service_name": e.service_name,
@@ -984,6 +1038,7 @@ def derive_committed_services(
         delivery_context=DeliveryContext(),
         pain_ledger=pain_ledger,
         generated_assets=generated_assets or [],
+        site_presence_report=site_presence_report,
     )
     return matrix.committed_services(site_presence_report)
 
@@ -991,6 +1046,8 @@ def derive_committed_services(
 __all__ = [
     'PROPOSAL_SERVICE_TO_ASSET',
     'ALL_PROMISED_SERVICES',
+    'ALWAYS_ACTIVE_COMPLEMENT_ASSETS',
+    'classify_promised_services',
     'ServiceAlignment',
     'AlignmentReport',
     'AlignmentStatus',

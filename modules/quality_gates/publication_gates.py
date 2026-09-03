@@ -979,7 +979,10 @@ class PublicationGatesOrchestrator:
         # No fake reconstruction, no re-execution — use the snapshot as-is.
         site_presence_report = assessment.get("site_presence_report")
         hotel_url = assessment.get("hotel_url", "")
-        pain_ledger = assessment.get("pain_ledger") or []
+        # FASE-C: vacío ≠ ausente. Sin ``or []``: un assessment sin pain_ledger
+        # es AUSENCIA de fuente (catálogo estático legacy), no un ledger
+        # resuelto con 0 brechas (que daría 0 servicios comprometidos).
+        pain_ledger = assessment.get("pain_ledger")
 
         # ====================================================================
         # FASE-SR-B (D-PF1): fuente única de la promesa (L-SR3/L-NC10).
@@ -994,7 +997,10 @@ class PublicationGatesOrchestrator:
         matrix = None
         semantic_entries = None
         proposal_services = assessment.get("proposal_services", ALL_PROMISED_SERVICES)
-        if pain_ledger:
+        # FASE-C: vacío ≠ ausente. ``[]`` es un ledger RESUELTO sin brechas
+        # (0 servicios comprometidos); ``None`` es la ausencia de fuente, que
+        # conserva el catálogo estático legacy.
+        if pain_ledger is not None:
             try:
                 from modules.asset_generation.proposal_asset_alignment import (
                     AssetAlignmentMatrix,
@@ -1005,6 +1011,7 @@ class PublicationGatesOrchestrator:
                     delivery_context=DeliveryContext(),
                     pain_ledger=pain_ledger,
                     generated_assets=generated_assets,
+                    site_presence_report=site_presence_report,
                 )
                 semantic_entries = matrix.entries
                 # D-PF1: la promesa es el conjunto comprometido — no el

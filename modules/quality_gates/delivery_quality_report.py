@@ -230,8 +230,13 @@ class DeliveryQualityReportGenerator:
             total_services = matrix.total_services
             aligned_count = matrix.aligned_count
             # DT4-N8: Use AlignmentResult with SitePresence cross-reference
-            # instead of raw matrix.is_delivery_ready() — the matrix JSON
-            # predates runtime enrichment and never has PRESENT_IN_PRODUCTION.
+            # instead of raw matrix.is_delivery_ready().
+            # FASE-C: el JSON YA puede traer PRESENT_IN_PRODUCTION — la
+            # propuesta dinámica lo escribe con site_presence_report y la
+            # presencia se resuelve dentro de la partición canónica. El
+            # cross-reference de todos modos se mantiene: cubre artefactos
+            # generados antes de FASE-C y los estados que la matriz no pudo
+            # conocer al escribirse.
             # FASE-SR-A (N1): unresolved is counted by the single helper
             # AlignmentResult.compute_unresolved() — the same one the gate
             # (publication_gates) consumes via from_alignment_report, ending

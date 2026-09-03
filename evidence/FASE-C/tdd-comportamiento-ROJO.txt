@@ -1,0 +1,7 @@
+4:ImportError while importing test module 'C:\Users\Jhond\Github\iah-cli\tests\asset_generation\test_fase_c_propuesta_dinamica.py'.
+12:E   ImportError: cannot import name 'ALWAYS_ACTIVE_COMPLEMENT_ASSETS' from 'modules.asset_generation.proposal_asset_alignment' (C:\Users\Jhond\Github\iah-cli\modules\asset_generation\proposal_asset_alignment.py)
+[ROJO AC6] assets_are_justified score=0.75 passed=False severity=error
+           msg=Solo 75% de assets tienen justificación
+           esperado por contrato: score=1.0 passed=True severity!=error
+[ROJO AC5] entradas=7/7 statuses={'NO_BREACH': 6, 'MISSING_ASSET': 1}
+           esperado por contrato: 1 entrada, 0 NO_BREACH, 6 en not_promised

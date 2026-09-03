@@ -1,0 +1,13 @@
+.....................F.....F....................                         [100%]
+================================== FAILURES ===================================
+E   AssertionError: assert 'Optimizaci\xf3n de Tr\xe1fico Indirecto' in '| Asset T\xe9cnico | Estado | Descripci\xf3n |\\n|---------------|--------|-------------|\\n| **Gu\xeda de Configuraci\xf3n Analytics** | \u23f3 No generado | Instrucciones paso a paso para conectar Google Analytics 4 y Google Search Console |'
+C:\\Users\\Jhond\\Github\\iah-cli\\tests\\commercial_documents\\test_proposal_dynamic.py:376: AssertionError: assert 'Optimizaci\xf3n de Tr\xe1fico Indirecto' in '| Asset T\xe9cnico | Estado | Descripci\xf3n |\\n|---------------|--------|-------------|\\n| **Gu\xeda de Configuraci\xf3n Analytics** | \u23f3 No generado | Instrucciones paso a paso para conectar Google Analytics 4 y Google Search Console |'
+E   AssertionError: Service 'Botón de WhatsApp' should appear in footnote
+    assert 'Botón de WhatsApp' in '| Servicio | Estado | Confianza | Problema que resuelve | Qué obtiene |\n|----------|--------|-----------|-----------...al, Schema Hotel, Schema Organization, Página de FAQ, Meta Tags Sociales (Open Graph), Optimización para IA Generativa'
+------------------------------ Captured log call ------------------------------
+WARNING  modules.commercial_documents.v4_proposal_generator:v4_proposal_generator.py:1248 [RC1] opportunity_scores no disponibles — tabla de servicios sin costos de brecha (sin cifras inventadas; no se compromete costo alguno)
+C:\Users\Jhond\Github\iah-cli\tests\commercial_documents\test_proposal_dynamic.py:494: AssertionError: Service 'Botón de WhatsApp' should appear in footnote
+=========================== short test summary info ===========================
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestTechnicalAssetsTable::test_technical_assets_table_shows_both_assets
+FAILED tests/commercial_documents/test_proposal_dynamic.py::TestFase3ConditionalServicesFiltering::test_no_assets_no_presence_all_excluded
+2 failed, 46 passed in 1.01s

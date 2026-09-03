@@ -1,0 +1,132 @@
+........................................................................ [  2%]
+................................................................s....... [  4%]
+........................................................................ [  6%]
+........................................................................ [  8%]
+........................................................................ [ 10%]
+........................................................................ [ 12%]
+........................................................................ [ 14%]
+........................................................................ [ 16%]
+.........................................s.............................. [ 19%]
+........................................................................ [ 21%]
+..............................................s......................... [ 23%]
+........................................................................ [ 25%]
+........................................................................ [ 27%]
+........................................................................ [ 29%]
+.....................................FFFFFFFFEEEEEEEEsEsss.............. [ 31%]
+........................................................................ [ 33%]
+...................................................................x.... [ 35%]
+........................................................................ [ 38%]
+........................................................................ [ 40%]
+........................................................................ [ 42%]
+.........................................................F.............. [ 44%]
+........................................................................ [ 46%]
+........................................................................ [ 48%]
+........................................................................ [ 50%]
+........................................................................ [ 52%]
+........................................................................ [ 54%]
+........................................................................ [ 57%]
+........................................................................ [ 59%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+........................................................................ [ 65%]
+........................................................................ [ 67%]
+..........s............................................................. [ 69%]
+...s.....s.............ss............................................... [ 71%]
+....................................................s................... [ 73%]
+........................................................................ [ 76%]
+................F.X.................................F................... [ 78%]
+........F.....................................sssss..s.................. [ 80%]
+..............sss.s........s.................................s.......... [ 82%]
+........................................................................ [ 84%]
+................................................ss...................... [ 86%]
+........................................................................ [ 88%]
+........................................................................ [ 90%]
+.........sss.....F.....F................................................ [ 93%]
+....................................s................................... [ 95%]
+........................................................................ [ 97%]
+........................................................................ [ 99%]
+....................xx                                                   [100%]
+=================================== ERRORS ====================================
+___ ERROR at setup of TestHandlerReturnsOnboardingADR.test_handler_success ____
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+__ ERROR at setup of TestHandlerReturnsOnboardingADR.test_adr_cop_is_330000 ___
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestHandlerReturnsOnboardingADR.test_adr_source_is_user_provided _
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestHandlerReturnsOnboardingADR.test_adr_source_is_not_handler _
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestHandlerReturnsOnboardingADR.test_adr_source_is_not_regional _
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestHandlerRespectsOnboardingOccupancy.test_occupancy_not_overwritten _
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestHandlerRespectsOnboardingOccupancy.test_scenarios_exist _
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestValidationSummaryConfidence.test_user_provided_adr_yields_estimated_or_verified_confidence _
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestJSONAdrSourceNotHandler.test_adr_resolution_source_not_handler _
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+================================== FAILURES ===================================
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+C:\Users\Jhond\Github\iah-cli\tests\e2e\test_onboarding_to_harness_pipeline.py:29: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+C:\Users\Jhond\Github\iah-cli\tests\e2e\test_onboarding_to_harness_pipeline.py:29: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+C:\Users\Jhond\Github\iah-cli\tests\e2e\test_onboarding_to_harness_pipeline.py:29: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+C:\Users\Jhond\Github\iah-cli\tests\e2e\test_onboarding_to_harness_pipeline.py:29: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+C:\Users\Jhond\Github\iah-cli\tests\e2e\test_onboarding_to_harness_pipeline.py:29: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+C:\Users\Jhond\Github\iah-cli\tests\e2e\test_onboarding_to_harness_pipeline.py:29: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+C:\Users\Jhond\Github\iah-cli\tests\e2e\test_onboarding_to_harness_pipeline.py:29: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+C:\Users\Jhond\Github\iah-cli\tests\e2e\test_onboarding_to_harness_pipeline.py:29: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+E   AssertionError: assert 437500.0 == 2500000
+     +  where 437500.0 = PricingResolutionResult(monthly_price_cop=437500.0, tier='boutique', pain_ratio=0.0088, is_compliant=False, expected_l...0000.0, 'max_price': 2500000.0, 'value_capture_cap': 0.5, 'operational_floor': 400000.0, 'pain_ratio_gate_max': 0.32}}).monthly_price_cop
+C:\Users\Jhond\Github\iah-cli\tests\financial_engine\test_pricing_resolution_wrapper.py:606: AssertionError: assert 437500.0 == 2500000
+E   AssertionError: Found 'COP COP' in modules:
+      modules\quality_gates\publication_gates.py:170
+    assert 1 == 0
+     +  where 1 = len(['modules\\quality_gates\\publication_gates.py:170'])
+C:\Users\Jhond\Github\iah-cli\tests\test_cop_cop_regression.py:52: AssertionError: Found 'COP COP' in modules:
+E   AssertionError: assert 'Métricas de Optimización para IA' in '\n|| Métrica | Score | Detalle | Estado ||\n|---------|-------|---------|--------|\n| Accesibilidad IA | 0.65/1.00 | ...Estas métricas evalúan cómo los motores de IA (ChatGPT, Claude, Perplexity) pueden descubrir y citar su contenido.\n\n'
+C:\Users\Jhond\Github\iah-cli\tests\test_diagnostic_geo_metrics.py:68: AssertionError: assert 'Métricas de Optimización para IA' in '\n|| Métrica | Score | Detalle | Estado ||\n|---------|-------|---------|--------|\n| Accesibilidad IA | 0.65/1.00 | ...Estas métricas evalúan cómo los motores de IA (ChatGPT, Claude, Perplexity) pueden descubrir y citar su contenido.\n\n'
+E   AssertionError: assert 'config/finan...pedia 18-25%)' == 'industry_standard_15pct'
+      
+      - industry_standard_15pct
+      + config/financial_defaults.yaml — rango 18-22% basado en comisiones OTA típicas (Booking 15-20%, Expedia 18-25%)
+C:\Users\Jhond\Github\iah-cli\tests\test_evidence_tier.py:255: AssertionError: assert 'config/finan...pedia 18-25%)' == 'industry_standard_15pct'
+E   AssertionError: assert '$4.500.000 COP' == '$0'
+      
+      - $0
+      + $4.500.000 COP
+C:\Users\Jhond\Github\iah-cli\tests\test_proposal_alignment.py:205: AssertionError: assert '$4.500.000 COP' == '$0'
+E   AssertionError: whatsapp_button should be present_in_production, not missing. present_in_production=[], missing=[]
+    assert 'whatsapp_button' in []
+C:\Users\Jhond\Github\iah-cli\tests\test_publication_gates_presence.py:129: AssertionError: whatsapp_button should be present_in_production, not missing. present_in_production=[], missing=[]
+=========================== short test summary info ===========================
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestOnboardingYAMLLoad::test_yaml_loads_with_expected_adr
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestOnboardingYAMLLoad::test_yaml_loads_with_expected_occupancy
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestOnboardingYAMLLoad::test_yaml_loads_with_expected_rooms
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestOnboardingYAMLLoad::test_yaml_has_required_metadata
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestHarnessPayloadConstruction::test_payload_includes_user_provided_adr
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestHarnessPayloadConstruction::test_payload_occupancy_source_is_onboarding
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestHarnessPayloadConstruction::test_payload_occupancy_rate_matches_onboarding
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestHarnessPayloadConstruction::test_payload_has_required_fields
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+FAILED tests/test_cop_cop_regression.py::TestNoCOPCOPRegression::test_no_cop_cop_in_modules
+FAILED tests/test_diagnostic_geo_metrics.py::TestDiagnosticGEOMetrics::test_diagnostic_includes_geo_metrics
+FAILED tests/test_evidence_tier.py::TestEvidenceTierIntegration::test_breakdown_preserves_hotel_data_sources
+FAILED tests/test_proposal_alignment.py::test_proposal_uses_real_impact_weights
+FAILED tests/test_publication_gates_presence.py::test_gate_presence_with_skipped_assets
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerReturnsOnboardingADR::test_handler_success
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerReturnsOnboardingADR::test_adr_cop_is_330000
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerReturnsOnboardingADR::test_adr_source_is_user_provided
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerReturnsOnboardingADR::test_adr_source_is_not_handler
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerReturnsOnboardingADR::test_adr_source_is_not_regional
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerRespectsOnboardingOccupancy::test_occupancy_not_overwritten
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerRespectsOnboardingOccupancy::test_scenarios_exist
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestValidationSummaryConfidence::test_user_provided_adr_yields_estimated_or_verified_confidence
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestJSONAdrSourceNotHandler::test_adr_resolution_source_not_handler
+14 failed, 3348 passed, 32 skipped, 3 xfailed, 1 xpassed, 9 errors in 213.05s (0:03:33)

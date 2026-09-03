@@ -278,13 +278,42 @@ class CoherenceValidator:
                 problem_ids.add(problem.id)
             elif isinstance(problem, dict):
                 problem_ids.add(problem.get('id'))
-        
+
+        # FASE-C (Punto 8, AC6): el complemento siempre-activo se GENERA pero no
+        # se PROMETE por pain (counts_in_alignment=False en el registro canónico),
+        # así que nunca puede tener un pain_id que lo justifique. Dejarlo en el
+        # denominador condena este check a < 0.8 en toda corrida y vuelve
+        # is_coherent=False estructural, no por el hotel analizado. Fuera del
+        # denominador; los dientes quedan para cualquier otro asset sin pain.
+        from modules.asset_generation.proposal_asset_alignment import (
+            ALWAYS_ACTIVE_COMPLEMENT_ASSETS,
+        )
+        promised_assets = [
+            a for a in assets
+            if getattr(a, "asset_type", "") not in ALWAYS_ACTIVE_COMPLEMENT_ASSETS
+        ]
+        complementos = len(assets) - len(promised_assets)
+
+        if not promised_assets:
+            return CoherenceCheck(
+                name="assets_are_justified",
+                passed=True,
+                score=1.0,
+                message=(
+                    "Ningún asset prometido por brecha que validar "
+                    f"({complementos} complemento(s) siempre-activo(s) fuera del denominador)"
+                    if complementos
+                    else "No assets to validate"
+                ),
+                severity="info"
+            )
+
         justified_assets = 0
-        for asset in assets:
+        for asset in promised_assets:
             if any(pid in problem_ids for pid in asset.pain_ids):
                 justified_assets += 1
         
-        total_assets = len(assets)
+        total_assets = len(promised_assets)
         score = justified_assets / total_assets if total_assets > 0 else 1.0
         
         if score >= 0.9:

@@ -1,0 +1,46 @@
+.F.F.............                                                        [100%]
+================================== FAILURES ===================================
+_ TestComplementosFueraDeJustificacion.test_complemento_no_cuenta_en_el_denominador _
+
+self = <asset_generation.test_fase_c_propuesta_dinamica.TestComplementosFueraDeJustificacion object at 0x00000222CE0D20D0>
+
+    def test_complemento_no_cuenta_en_el_denominador(self):
+        validator = CoherenceValidator()
+        assets = [
+            AssetSpec(asset_type="whatsapp_button", pain_ids=["no_whatsapp_visible"]),
+            AssetSpec(asset_type="hotel_schema", pain_ids=["no_hotel_schema"]),
+            AssetSpec(asset_type="faq_page", pain_ids=["no_faq_schema"]),
+            AssetSpec(asset_type="monthly_report", pain_ids=[]),  # complemento
+        ]
+        check = validator._check_assets_are_justified(
+            assets, _diagnostic(["no_whatsapp_visible", "no_hotel_schema", "no_faq_schema"])
+        )
+        # 3 prometidos por pain, 3 justificados \u27f9 1.0 (no 0.75)
+>       assert check.score == pytest.approx(1.0)
+E       assert 0.75 == 1.0 ± 1.0e-06
+E         
+E         comparison failed
+E         Obtained: 0.75
+E         Expected: 1.0 ± 1.0e-06
+
+tests\asset_generation\test_fase_c_propuesta_dinamica.py:133: AssertionError
+_ TestComplementosFueraDeJustificacion.test_solo_complementos_no_divide_por_cero _
+
+self = <asset_generation.test_fase_c_propuesta_dinamica.TestComplementosFueraDeJustificacion object at 0x00000222CE164180>
+
+    def test_solo_complementos_no_divide_por_cero(self):
+        validator = CoherenceValidator()
+        assets = [AssetSpec(asset_type="monthly_report", pain_ids=[])]
+        check = validator._check_assets_are_justified(assets, _diagnostic([]))
+>       assert check.score == pytest.approx(1.0)
+E       assert 0.0 == 1.0 ± 1.0e-06
+E         
+E         comparison failed
+E         Obtained: 0.0
+E         Expected: 1.0 ± 1.0e-06
+
+tests\asset_generation\test_fase_c_propuesta_dinamica.py:155: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/asset_generation/test_fase_c_propuesta_dinamica.py::TestComplementosFueraDeJustificacion::test_complemento_no_cuenta_en_el_denominador
+FAILED tests/asset_generation/test_fase_c_propuesta_dinamica.py::TestComplementosFueraDeJustificacion::test_solo_complementos_no_divide_por_cero
+2 failed, 15 passed in 1.57s

@@ -107,22 +107,26 @@ class TestProposalAssetMatrixServiceWithoutBreach:
     ):
         """
         A service sold in the proposal MUST have a corresponding pain/breach
-        in the pain ledger. Services without a real breach should be flagged.
+        in the pain ledger.
+
+        FASE-C (Punto 8): sin brecha no hay promesa. El servicio ya no se emite
+        como entrada NO_BREACH — se excluye y queda DECLARADO en not_promised,
+        que es la forma auditable de no prometerlo.
         """
         matrix = ProposalAssetMatrix()
         entries = matrix.build(proposal_services, sample_pain_ledger, sample_generated_assets)
 
-        # Find entry for "Página de FAQ" — no pain in ledger for this
         faq_entry = next(
             (e for e in entries if e.service_name == "Página de FAQ"), None
         )
-        assert faq_entry is not None, "FAQ service should be in matrix"
-        # No faq-related pain in the ledger → NO_BREACH
-        assert faq_entry.status == "NO_BREACH", (
-            f"Expected NO_BREACH for FAQ (no pain in ledger), got {faq_entry.status}"
+        assert faq_entry is None, "Sin brecha en el ledger, FAQ no se promete"
+        assert "Página de FAQ" in matrix.not_promised, (
+            "Lo no prometido debe declararse, no descartarse en silencio"
         )
-        assert faq_entry.pain_ids == [], "Should have no pain_ids"
-        assert faq_entry.confidence == 0.0, "Confidence should be 0.0 for NO_BREACH"
+        # Los que sí tienen brecha siguen en la matriz
+        assert {e.service_name for e in entries} == {
+            "Botón de WhatsApp", "Schema Hotel", "Schema Organization"
+        }
 
 
 class TestProposalAssetMatrixServiceWithoutAsset:
@@ -213,7 +217,9 @@ class TestProposalAssetMatrixSave:
             assert statuses["Botón de WhatsApp"] == "LINKED"
             assert statuses["Schema Hotel"] == "LINKED"
             assert statuses["Schema Organization"] == "MISSING_ASSET"
-            assert statuses["Página de FAQ"] == "NO_BREACH"
+            # FASE-C (Punto 8): sin brecha no se promete ⟹ no hay entrada que
+            # serializar.
+            assert "Página de FAQ" not in statuses
 
 
 # ── Edge Cases ─────────────────────────────────────────────────────────
@@ -269,23 +275,66 @@ class TestAssetAlignmentMatrixBuild:
         assert wa == AlignmentStatus.LINKED, f"Expected LINKED, got {wa}"
         hotel = aam.get_alignment("Schema Hotel")
         assert hotel == AlignmentStatus.LINKED, f"Expected LINKED, got {hotel}"
+        # FASE-C (Punto 8): sin brecha no se promete ⟹ no hay entrada y el
+        # lookup no puede inventar un estado.
         faq = aam.get_alignment("Página de FAQ")
-        assert faq == AlignmentStatus.NO_BREACH, f"Expected NO_BREACH, got {faq}"
+        assert faq == AlignmentStatus.INDETERMINATE, f"Expected INDETERMINATE, got {faq}"
+        assert "Página de FAQ" in aam.not_promised
 
-    def test_build_empty_ledger_returns_no_breach(
+        # anti-A5: los DOS builders comparten la partición canónica, así que
+        # deben dar exactamente los mismos pares (servicio, estado).
+        legacy = ProposalAssetMatrix()
+        legacy_entries = legacy.build(
+            list(proposal_services), sample_pain_ledger, sample_generated_assets
+        )
+        assert sorted((e.service_name, e.status) for e in legacy_entries) == \
+            sorted((e.service_name, e.status) for e in aam.entries
+                   if e.service_name in proposal_services)
+        assert sorted(legacy.not_promised) == sorted(
+            n for n in aam.not_promised if n in proposal_services
+        )
+
+    def test_build_empty_ledger_promises_nothing(
         self, sample_generated_assets
     ):
-        """Sin pains en el ledger → todos NO_BREACH."""
+        """FASE-C: ledger VACÍO = resuelto sin brechas → 0 servicios prometidos.
+
+        Antes este test era vacuamente verde: recorría entradas que ya no
+        existen. Ahora fija el contrato (vacío ≠ ausente).
+        """
         from modules.delivery.delivery_context import DeliveryContext
+        from modules.asset_generation.proposal_asset_alignment import (
+            ALL_PROMISED_SERVICES,
+        )
         ctx = DeliveryContext()
         aam = AssetAlignmentMatrix.build(
             delivery_context=ctx,
             pain_ledger=[],
             generated_assets=sample_generated_assets,
         )
+        assert aam.entries == []
+        assert sorted(aam.not_promised) == sorted(ALL_PROMISED_SERVICES)
+
+    def test_build_absent_ledger_keeps_static_catalog(
+        self, sample_generated_assets
+    ):
+        """FASE-C: ledger AUSENTE (None) → modo legacy, catálogo estático con
+        NO_BREACH donde no haya pain. No se colapsa con el caso anterior."""
+        from modules.delivery.delivery_context import DeliveryContext
+        from modules.asset_generation.proposal_asset_alignment import (
+            ALL_PROMISED_SERVICES,
+        )
+        ctx = DeliveryContext()
+        aam = AssetAlignmentMatrix.build(
+            delivery_context=ctx,
+            pain_ledger=None,
+            generated_assets=sample_generated_assets,
+        )
+        assert len(aam.entries) == len(ALL_PROMISED_SERVICES)
+        assert aam.not_promised == []
         for entry in aam.entries:
-            assert entry.status == "NO_BREACH", \
-                f"{entry.service_name} should be NO_BREACH, got {entry.status}"
+            assert entry.status in ("LINKED", "MISSING_ASSET", "NO_BREACH"), \
+                f"{entry.service_name}: estado inesperado {entry.status}"
 
 
 class TestAssetAlignmentMatrixDeliveryReady:

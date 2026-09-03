@@ -105,6 +105,13 @@ TECHNICAL_ASSET_CATALOG: Dict[str, TechnicalAssetEntry] = {
         asset_type="analytics_setup_guide",
         description="Instrucciones paso a paso para conectar Google Analytics 4 y Google Search Console",
     ),
+    # FASE-C (S-B10): se generaba y no se mostraba en ninguna tabla. No es un
+    # servicio comercial vendible por sí solo (contrato §3), así que vive aquí.
+    "indirect_traffic_optimization": TechnicalAssetEntry(
+        asset_name="Optimización de Tráfico Indirecto",
+        asset_type="indirect_traffic_optimization",
+        description="Diagnóstico y corrección del tráfico que llega por canales indirectos y no convierte",
+    ),
 }
 
 

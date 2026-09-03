@@ -1,0 +1,43 @@
+============================================================================
+FASE-C — CONTRAFACTUAL punto 8 sobre artefactos REALES de SalenteReal
+============================================================================
+corpus: C:\Users\Jhond\Github\iah-cli\output\FASE-D_salentoreal_post_guard\v4_complete\hotelsalentoreal\v4_audit
+run:    2026-08-31T12:28:03.812302  hotel_id=hotelsalentoreal
+ledger resuelto: 3 pains -> ['no_analytics_configured', 'low_organic_visibility', 'ai_crawler_blocked']
+assets generados: ['analytics_setup_guide', 'indirect_traffic_optimization', 'llms_txt', 'monthly_report']
+site_presence persistido: NO (A2 lo persiste en FASE-E) -> presencia=None
+
+--- MATRIZ / ALIGNMENT (AC5) ---
+  promised_services_total: 7
+  effective_total: 1
+  unresolved: 0
+  no_breach: 6
+  coverage_ratio: 1.0
+  actionable_total: 1
+  delivery_ready: True
+  status_counts: {'NO_BREACH': 6, 'LINKED': 1}
+  invariante_ok: True
+  message: 1/1 servicios comprometidos cubiertos (1 generados )  — 6 sin brecha (no comprometidos, fuera del coverage)
+
+--- COHERENCIA (AC6) ---
+  asset_specs: [('analytics_setup_guide', ['no_analytics_configured']), ('indirect_traffic_optimization', ['low_organic_visibility']), ('llms_txt', ['ai_crawler_blocked']), ('monthly_report', [])]
+  specs_total: 4
+  specs_sin_pain: ['monthly_report']
+  assets_are_justified_score: 0.75
+  assets_are_justified_passed: False
+  assets_are_justified_severity: error
+  assets_are_justified_message: Solo 75% de assets tienen justificación
+  overall_score: 0.88
+  threshold: 0.8
+  errors: ['[assets_are_justified] Solo 75% de assets tienen justificación']
+  is_coherent: False
+
+--- LÍMITE P12/A3 (declarado, no ocultado) ---
+  promised_assets_exist: passed=True score=1.0
+  message: Todos los assets prometidos están implementados (7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET)
+  => la rama de éxito hardcodea score=1.0 (coherence_validator.py:689-700)
+     y está acotada por `if not generated_assets:` (:670, comentario H6 FIX):
+     post-gen P6.3 NO tiene verificación de score. Este experimento NO se
+     apoya en ese check para certificar nada; solo lo reporta como límite.
+
+JSON -> evidence/FASE-C/faseC_contrafactual.json

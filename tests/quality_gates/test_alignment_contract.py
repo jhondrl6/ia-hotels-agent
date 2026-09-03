@@ -88,14 +88,24 @@ class TestContractProposalLayer:
         assert set(committed) == COMMITTED_C
 
     def test_committed_none_without_pain_ledger(self):
-        """Sin pain_ledger → None (modo legacy: catálogo estático)."""
+        """Ledger AUSENTE (None) → None (modo legacy: catálogo estático)."""
         gen = self._generator()
         assert gen._derive_committed_services(
             None, SITE_PRESENCE_DICT, GENERATED_ASSETS
         ) is None
-        assert gen._derive_committed_services(
+
+    def test_committed_empty_ledger_is_not_legacy(self):
+        """FASE-C: ledger VACÍO ([]) ≠ ausente. Es un ledger resuelto sin
+        brechas, así que no cae al catálogo estático: sólo la presencia
+        verificada puede comprometer un servicio (D-PF1)."""
+        gen = self._generator()
+        committed = gen._derive_committed_services(
             [], SITE_PRESENCE_DICT, GENERATED_ASSETS
-        ) is None
+        )
+        assert committed is not None
+        assert committed == ["Optimización para IA Generativa"]
+        # Sin presencia tampoco: 0 comprometidos, no los 7 por defecto
+        assert gen._derive_committed_services([], None, GENERATED_ASSETS) == []
 
     def test_table_renders_exactly_committed_rows(self):
         gen = self._generator()
@@ -137,6 +147,7 @@ class TestContractProposalLayer:
             delivery_context=DeliveryContext(),
             pain_ledger=PAIN_LEDGER,
             generated_assets=GENERATED_ASSETS,
+            site_presence_report=SITE_PRESENCE_DICT,
         )
         status_of = {e.service_name: e.status for e in matrix.entries}
         gen = self._generator()
@@ -158,10 +169,11 @@ class TestContractProposalLayer:
         # Taxonomía de la matriz (capa 2)
         assert status_of["Schema Organization"] == "LINKED"
         assert status_of["Página de FAQ"] == "LINKED"
-        # NO_BREACH estático en matriz — la presencia lo re-clasifica a
-        # covered en el DTO canónico (_from_entries) y se muestra como
-        # "Presente en sitio" en la propuesta (capa 1).
-        assert status_of["Optimización para IA Generativa"] == "NO_BREACH"
+        # FASE-C (AC5): la presencia se resuelve DENTRO de la partición, así que
+        # el servicio nace PRESENT_IN_PRODUCTION en la matriz (antes nacía
+        # NO_BREACH y el DTO lo re-clasificaba después). La capa 1 lo muestra
+        # como "Presente en sitio".
+        assert status_of["Optimización para IA Generativa"] == "PRESENT_IN_PRODUCTION"
         assert status_of["Schema Hotel"] == "MISSING_ASSET"
         # Estados textuales de la propuesta (capa 1) — equivalentes
         assert "✅ Alineado" in row_of["Schema Organization"]
@@ -232,6 +244,7 @@ class TestContractGateLayer:
             delivery_context=DeliveryContext(),
             pain_ledger=PAIN_LEDGER,
             generated_assets=GENERATED_ASSETS,
+            site_presence_report=SITE_PRESENCE_DICT,
         )
         delivery = AlignmentResult.from_asset_alignment_matrix(
             matrix, SITE_PRESENCE_DICT
@@ -252,13 +265,28 @@ class TestContractGateLayer:
         assert "0 servicios comprometidos" in result.message
 
     def test_gate_legacy_without_pain_ledger_uses_static_catalog(self):
-        """Sin pain_ledger → comportamiento legacy pre-SR-B (catálogo
-        estático): 7 servicios, coverage 3/7 (verificación de entrega)."""
+        """Ledger AUSENTE → comportamiento legacy pre-SR-B (catálogo
+        estático): 7 servicios, coverage 3/7 (verificación de entrega).
+
+        FASE-C: la clave va AUSENTE, no vacía. ``pain_ledger: []`` es un ledger
+        resuelto sin brechas y ya no cae aquí (ver el test siguiente)."""
         result = self._orchestrator()._proposal_asset_alignment_gate({
-            "pain_ledger": [],
             "generated_assets": GENERATED_ASSETS,
             "site_presence_report": SITE_PRESENCE_DICT,
             "hotel_url": "",
         })
         assert result.details["alignment"]["promised_services_total"] == 7
         assert result.details["alignment"]["no_breach"] == 0  # no knowable aquí
+
+    def test_gate_empty_ledger_is_not_static_catalog(self):
+        """FASE-C: ledger VACÍO ≠ ausente. Sin brechas y sin presencia no hay
+        nada comprometido: PASS trivial, no los 7 servicios del catálogo."""
+        result = self._orchestrator()._proposal_asset_alignment_gate({
+            "pain_ledger": [],
+            "generated_assets": GENERATED_ASSETS,
+            "site_presence_report": None,
+            "hotel_url": "",
+        })
+        assert result.passed is True
+        assert result.details["alignment"]["promised_services_total"] == 0
+        assert result.details["alignment"]["no_breach"] == 0

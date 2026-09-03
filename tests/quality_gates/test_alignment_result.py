@@ -328,13 +328,18 @@ class TestCorridaCSemantics:
 
     def _semantic_entries(self):
         """Misma derivación que usa el gate (cableado FASE-SR-A en
-        publication_gates): AssetAlignmentMatrix.build desde pain_ledger."""
+        publication_gates): AssetAlignmentMatrix.build desde pain_ledger.
+
+        FASE-C: con ``site_presence_report``, igual que el gate — la presencia
+        también compromete (D-PF1) y ambas rutas deben ver el mismo conjunto.
+        """
         from modules.delivery.delivery_context import DeliveryContext
 
         matrix = AssetAlignmentMatrix.build(
             delivery_context=DeliveryContext(),
             pain_ledger=self.PAIN_LEDGER,
             generated_assets=self.GENERATED_ASSETS,
+            site_presence_report=self.SITE_PRESENCE,
         )
         return matrix.entries
 
@@ -362,11 +367,16 @@ class TestCorridaCSemantics:
         assert from_report.unresolved == from_matrix.unresolved == 1  # hotel_schema
         assert from_report.generated_aligned == from_matrix.generated_aligned == 2
         assert from_report.present_in_production == from_matrix.present_in_production == 1
-        assert from_report.no_breach == from_matrix.no_breach == 3
-        assert from_report.promised_services_total == from_matrix.promised_services_total == 7
-        # FASE-SR-B (D-PF1): coverage sobre actionable — NO_BREACH fuera del
-        # denominador (AC1). 3/4 = 0.75: estado intermedio esperado hasta SR-E.
-        assert from_report.actionable_total == from_matrix.actionable_total == 4
+        # FASE-C (AC5): la propuesta dinámica no promete servicios sin brecha,
+        # así que NO_BREACH desaparece por construcción — no por resta.
+        assert from_report.no_breach == from_matrix.no_breach == 0
+        # Los denominadores convergen: total == actionable (se disuelve la
+        # tautología coverage_ratio == 1.000 del dossier §9.2).
+        assert from_report.promised_services_total == from_matrix.promised_services_total
+        assert from_report.actionable_total == from_report.promised_services_total
+        assert from_matrix.actionable_total == from_matrix.promised_services_total
+        # 3 comprometidos por pain + 1 por presencia = 4; coverage 3/4 = 0.75
+        assert from_report.actionable_total == 4
         assert from_report.coverage_ratio == pytest.approx(3 / 4)
         assert from_matrix.coverage_ratio == pytest.approx(3 / 4)
         assert from_report.passed is False
@@ -375,7 +385,7 @@ class TestCorridaCSemantics:
         assert from_report.message == from_matrix.message
         assert "3/4" in from_report.message
         assert "1 sin cubrir" in from_report.message
-        assert "3 sin brecha" in from_report.message
+        assert "sin brecha" not in from_report.message
 
     def test_no_breach_arithmetic_coherence(self):
         """El mensaje es coherente con sus propios datos:

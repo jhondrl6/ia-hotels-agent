@@ -1,0 +1,4 @@
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_proposal_alignment.py::test_proposal_uses_real_impact_weights
+1 failed, 99 passed, 3 skipped, 8 warnings in 1.54s
