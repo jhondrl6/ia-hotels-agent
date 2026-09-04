@@ -1,0 +1,75 @@
+........................................................................ [ 42%]
+........................................................................ [ 84%]
+...................F.......                                              [100%]
+================================== FAILURES ===================================
+______________ TestP05G9Gate.test_g9_gate_skipped_when_no_matrix ______________
+
+self = <test_delivery_contract.TestP05G9Gate object at 0x0000014A71BBA9E0>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-119/test_g9_gate_skipped_when_no_m0')
+
+    def test_g9_gate_skipped_when_no_matrix(self, tmp_path):
+        """P-05: G9 debe marcar skipped=True cuando proposal_asset_matrix.json no existe."""
+        v4_audit = tmp_path / "v4_audit"
+        v4_audit.mkdir()
+    
+        (v4_audit / "coherence_validation.json").write_text(
+            json.dumps({"overall_score": 0.85}), encoding='utf-8'
+        )
+        (v4_audit / "asset_generation_report.json").write_text(
+            json.dumps({
+                "total_assets": 2,
+                "preflight_results": [
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.9},
+                    {"preflight_status": "PASSED", "can_use": True, "confidence_score": 0.85},
+                ]
+            }), encoding='utf-8'
+        )
+        # No proposal_asset_matrix.json
+    
+        generator = DeliveryQualityReportGenerator()
+        report = generator.generate("test_hotel", v4_audit)
+    
+        g9 = report.proposal_asset_gate
+        assert g9["gate"] == "G9"
+>       assert g9.get("skipped") is True, \
+            f"G9 should be skipped when no matrix, got: {g9}"
+E       AssertionError: G9 should be skipped when no matrix, got: {'passed': False, 'state': 'NOT_EVALUATED', 'gate': 'G9', 'reason': 'proposal_asset_matrix.json not found'}
+E       assert None is True
+E        +  where None = <built-in method get of dict object at 0x0000014A72623500>('skipped')
+E        +    where <built-in method get of dict object at 0x0000014A72623500> = {'gate': 'G9', 'passed': False, 'reason': 'proposal_asset_matrix.json not found', 'state': 'NOT_EVALUATED'}.get
+
+tests\delivery\test_delivery_contract.py:993: AssertionError
+------------------------------ Captured log call ------------------------------
+WARNING  modules.quality_gates.delivery_quality_report:delivery_quality_report.py:404 Could not load C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-119\test_g9_gate_skipped_when_no_m0\v4_audit\ia_readiness_report.json: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\AppData\\Local\\Temp\\pytest-of-Jhond\\pytest-119\\test_g9_gate_skipped_when_no_m0\\v4_audit\\ia_readiness_report.json'
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+<unknown>:855
+tests/common/test_service_identity_registry.py::test_pain_to_type_es_un_puente_valido
+tests/common/test_service_identity_registry.py::test_narratives_subset_de_capa1
+tests/commercial_documents/test_pain_map_bijection.py::test_narratives_no_tiene_huerfanos
+  <unknown>:855: SyntaxWarning: invalid escape sequence '\W'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/delivery/test_delivery_contract.py::TestP05G9Gate::test_g9_gate_skipped_when_no_matrix
+1 failed, 170 passed, 12 warnings in 4.38s
+EXIT=1

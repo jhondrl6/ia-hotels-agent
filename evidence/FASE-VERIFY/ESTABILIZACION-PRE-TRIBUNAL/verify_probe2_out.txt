@@ -1,0 +1,41 @@
+Could not load C:\Users\Jhond\AppData\Local\Temp\tmpaaeic5on\v4_audit\ia_readiness_report.json: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\AppData\\Local\\Temp\\tmpaaeic5on\\v4_audit\\ia_readiness_report.json'
+AC1 SERVICE_IDENTITIES = 8 | pain_ids: ['low_ia_readiness', 'no_faq_schema', 'no_hotel_schema', 'no_monthly_report', 'no_og_tags', 'no_org_schema', 'no_whatsapp_visible', 'poor_performance']
+AC3 monthly_report -> pain_id canónico: ['no_monthly_report']
+AC4 Capa1 pain_ids = 26
+AC1 ghost no_speakable           modules/commercial_documents   -> 0 []
+AC1 ghost no_llms_txt            modules/commercial_documents   -> 0 []
+AC1 ghost ia_crawler_blocked     modules/commercial_documents   -> 0 []
+AC1 ghost weak_brand_signals     modules/commercial_documents   -> 0 []
+AC1 ghost no_entity_schema       modules/commercial_documents   -> 0 []
+AC1 ghost no_factual_data        modules/commercial_documents   -> 0 []
+AC1 ghost no_speakable           modules/asset_generation       -> 0 []
+AC1 ghost no_llms_txt            modules/asset_generation       -> 0 []
+AC1 ghost ia_crawler_blocked     modules/asset_generation       -> 0 []
+AC1 ghost weak_brand_signals     modules/asset_generation       -> 0 []
+AC1 ghost no_entity_schema       modules/asset_generation       -> 0 []
+AC1 ghost no_factual_data        modules/asset_generation       -> 0 []
+AC2 numeral-servicios modules/analyzers/gap_analyzer.py -> 1 :: [(485, '"action": "Reescribe la descripción de tu hotel en 2 párrafos: (1) Quiénes somos + ubicación + 2-3 servicios ú')]
+AC2 numeral-servicios modules/quality_gates/alignment_result.py -> 2 :: [(135, 'f"0 servicios comprometidos — nada prometido sin pain ni "'), (138, 'else "0 servicios comprometidos — nada prometido"')]
+AC2 numeral-servicios modules/quality_gates/publication_gates.py -> 3 :: [(1035, '# resuelto con 0 brechas (que daría 0 servicios comprometidos).'), (1052, '# (0 servicios comprometidos); ``None`` es la ausencia de fuente, que'), (1074, '# 0 servicios comprometidos → nada puede estar "missing"')]
+AC7 BLOCKING = 11 ADVISORY = 2 ['content_quality', 'proposal_asset_alignment']
+AC7 asset_confidence blocking: True | disjuntas: True | suma: 13
+AC7/AC8 cite :4 This module implements 13 publication gates (11 blocking + 2 advisory)
+AC7/AC8 cite :243 This class manages 11 blocking gates and 2 advisory gates,
+AC7/AC8 cite :2222 # plano — el plano hacia que los 13 gates bloquearan pese a que la
+AC7 get_blocking_gates() -> 0 []
+AC8 AGENTS.md 'blocking (11)': True | 'advisory (2)': True | '10 blocking': False | '3 advisory': False
+AC12 verdict(0.88/0.8/False): False (True): True (None): True
+AC12/F publicacion_state existe: False
+AC9 entry None                             PRESENT_IN_PRODUCTION  asset_path=None
+AC9 entry None                             PRESENT_IN_PRODUCTION  asset_path=None
+AC9 entry None                             PRESENT_IN_PRODUCTION  asset_path=None
+AC9 entry None                             LINKED                 asset_path='C:\\Users\\Jhond\\Github\\iah-cli\\output\\FASE-I_salentoreal_post_estabilizacion\\v4_complete\\hotelsalentoreal\\llms_txt\\llms_20260904_120413.txt'
+AC9 not_promised: ['SEO Local', 'Botón de WhatsApp', 'Meta Tags Sociales (Open Graph)'] | unknown: []
+AC11 delivery keys: ['status', 'blocking', 'coverage_failure_rate', 'proposal_asset_gate', 'asset_specificity_gate', 'evidence_gate', 'advisory_warnings', 'human_review_items', 'summary']
+AC11 delivery gates: null
+AC11 human_review_items: []
+AC11 readiness: null
+NR9 readiness del gate_report: {"status": "READY_FOR_PUBLICATION", "ready": true, "blocking_issues": [], "warnings": [{"gate": "financial_validity", "message": "Financial data uses default/legacy values — Tier B evidence"}, {"gate": "pricing_compliance", "message": "Pricing compliance PASSED with WARNING: pain_ratio 0.2041 outside ideal range [0.03-0.06] — operational_floor $400,000 applied (tier 'boutique' gate_max 0.32: OK)"}]}
+NR2 audit critical_issues: ["PageSpeed API ERROR - performance not measurable (API de PageSpeed no disponible)"]
+AC11 G9 sin matriz -> {"passed": false, "state": "NOT_EVALUATED", "gate": "G9", "reason": "proposal_asset_matrix.json not found"}
+AC11 summary -> {"total_gates": 5, "passed": 2, "failed": 2, "not_evaluated": ["proposal_asset_alignment"], "coherence_score": 0.85, "blocking_gates": ["coverage"], "warning_gates": ["asset_specificity"]}

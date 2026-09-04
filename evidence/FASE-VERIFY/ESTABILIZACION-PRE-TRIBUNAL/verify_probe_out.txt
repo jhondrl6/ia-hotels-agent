@@ -1,0 +1,439 @@
+== MATRIZ keys ==
+[
+ "alignment_status_version",
+ "delivery_ready",
+ "entries",
+ "not_promised",
+ "proposal_asset_matrix_version",
+ "summary",
+ "unknown_services"
+]
+== MATRIZ statuses ==
+{
+ "PRESENT_IN_PRODUCTION": 3,
+ "LINKED": 1
+}
+== MATRIZ summary ==
+{
+ "not_promised": 3,
+ "promised": 4,
+ "unknown": 0
+}
+== MATRIZ coverage_ratio ==
+null
+NO_BREACH count = 0
+== COHER coherence_validation.json ==
+{
+ "is_coherent": true,
+ "overall_score": 0.83
+}
+== COHER coherence_validation_post_gen.json ==
+{
+ "is_coherent": true,
+ "overall_score": 0.83
+}
+== COHER asset_generation_report.json ==
+{
+ "coherence_report": {
+  "is_coherent": true,
+  "overall_score": 0.83,
+  "checks": [
+   {
+    "name": "problems_have_solutions",
+    "passed": true,
+    "score": 0.6,
+    "message": "Solo 60% de problemas tienen solución (3/5)",
+    "severity": "warning"
+   },
+   {
+    "name": "assets_are_justified",
+    "passed": true,
+    "score": 1.0,
+    "message": "100% de assets justificados",
+    "severity": "info"
+   },
+   {
+    "name": "financial_data_validated",
+    "passed": true,
+    "score": 0.7,
+    "message": "Datos financieros validados (confidence promedio: 0.70)",
+    "severity": "info"
+   },
+   {
+    "name": "whatsapp_verified",
+    "passed": true,
+    "score": 1.0,
+    "message": "No hay asset de WhatsApp button",
+    "severity": "info"
+   },
+   {
+    "name": "price_matches_pain",
+    "passed": true,
+    "score": 0.8,
+    "message": "Precio en límite superior (9.9x) - rango ideal 3.0x-50.0x",
+    "severity": "warning"
+   },
+   {
+    "name": "promised_assets_exist",
+    "passed": true,
+    "score": 1.0,
+    "message": "Todos los assets prometidos están implementados (7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET)",
+    "severity": "info"
+   }
+  ],
+  "errors": [],
+  "warnings": [],
+  "timestamp": "2026-09-04T12:04:12.145424",
+  "version": "4.2.0"
+ },
+ "coherence_score_pre": 0.83,
+ "coherence_score_post": 0.83,
+ "coherence_score_final": 0.83,
+ "final_coherence_report": {
+  "is_coherent": true,
+  "overall_score": 0.83,
+  "checks": [
+   {
+    "name": "problems_have_solutions",
+    "passed": true,
+    "score": 0.6,
+    "message": "Solo 60% de problemas tienen solución (3/5)",
+    "severity": "warning"
+   },
+   {
+    "name": "assets_are_justified",
+    "passed": true,
+    "score": 1.0,
+    "message": "100% de assets justificados",
+    "severity": "info"
+   },
+   {
+    "name": "financial_data_validated",
+    "passed": true,
+    "score": 0.7,
+    "message": "Datos financieros validados (confidence promedio: 0.70)",
+    "severity": "info"
+   },
+   {
+    "name": "whatsapp_verified",
+    "passed": true,
+    "score": 1.0,
+    "message": "No hay asset de WhatsApp button",
+    "severity": "info"
+   },
+   {
+    "name": "price_matches_pain",
+    "passed": true,
+    "score": 0.8,
+    "message": "Precio en límite superior (9.9x) - rango ideal 3.0x-50.0x",
+    "severity": "warning"
+   },
+   {
+    "name": "promised_assets_exist",
+    "passed": true,
+    "score": 1.0,
+    "message": "Todos los assets prometidos están implementados (7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET)",
+    "severity": "info"
+   }
+  ],
+  "errors": [],
+  "warnings": [],
+  "timestamp": "2026-09-04T12:04:13.359458",
+  "version": "4.2.0"
+ }
+}
+== GATE REPORT gate_report_20260904_120413.json: 13 results ==
+  hard_contradictions              passed=True  status=PASSED         value=0 details_keys=[]
+  evidence_coverage                passed=True  status=PASSED         value=0.95 details_keys=[]
+  financial_validity               passed=True  status=WARNING        value=True details_keys=['corrected_tier', 'default_sources']
+  coherence                        passed=True  status=PASSED         value=0.8333333333333334 details_keys=[]
+  critical_recall                  passed=True  status=PASSED         value=1.0 details_keys=[]
+  ethics                           passed=True  status=PASSED         value=None details_keys=[]
+  content_quality                  passed=True  status=PASSED         value=1.0 details_keys=[]
+  asset_confidence                 passed=True  status=PASSED         value=1.0 details_keys=['above_threshold', 'below_threshold', 'total_assets']
+  proposal_asset_alignment         passed=True  status=PASSED         value=1.0 details_keys=['aligned', 'aligned_count', 'alignment', 'alignment_percentage', 'all_aligned', 'all_covered', 'indeterminate', 'low_quality', 'low_quality_count', 'missing', 'missing_count', 'present_in_production', 'redundant', 'total_services']
+  tier_c_onboarding_required       passed=True  status=PASSED         value=None details_keys=['tier']
+  coverage_no_silent_drop          passed=True  status=PASSED         value=1.0 details_keys=['covered', 'justified', 'total_detected', 'uncovered']
+  doc_audit_consistency            passed=True  status=PASSED         value=0 details_keys=[]
+  pricing_compliance               passed=True  status=WARNING        value=0.2041 details_keys=['expected_loss_cop', 'floor_applied', 'ideal_range', 'monthly_price_cop', 'operational_floor', 'pain_ratio', 'tier', 'tier_gate_max']
+  severity key present in any gate: False
+  blocking key present in any gate: False
+== GATE summary ==
+null
+== GATE top-level keys ==
+[
+ "generated_at",
+ "hotel_url",
+ "gate_results",
+ "readiness",
+ "financial_sources"
+]
+== GATE coherence ==
+{
+ "gate_name": "coherence",
+ "passed": true,
+ "status": "PASSED",
+ "message": "Coherence score 0.83 meets threshold 0.8",
+ "value": 0.8333333333333334,
+ "suggestion": "",
+ "details": {}
+}
+== GATE critical_recall ==
+{
+ "gate_name": "critical_recall",
+ "passed": true,
+ "status": "PASSED",
+ "message": "Critical recall at 100.0% (threshold: 90%)",
+ "value": 1.0,
+ "suggestion": "",
+ "details": {}
+}
+== GATE proposal_asset_alignment ==
+{
+ "gate_name": "proposal_asset_alignment",
+ "passed": true,
+ "status": "PASSED",
+ "message": "4/4 servicios comprometidos cubiertos (1 generados  + 3 ya en producción )",
+ "value": 1.0,
+ "suggestion": "",
+ "details": {
+  "total_services": 1,
+  "aligned_count": 1,
+  "missing_count": 0,
+  "low_quality_count": 0,
+  "alignment_percentage": 1.0,
+  "all_covered": true,
+  "all_aligned": true,
+  "aligned": [
+   {
+    "service": "Optimización para IA Generativa",
+    "asset": "llms_txt",
+    "confidence": 1.0
+   }
+  ],
+  "missing": [],
+  "low_quality": [],
+  "indeterminate": [],
+  "present_in_production": [
+   {
+    "service": "Schema Hotel",
+    "asset": "hotel_schema",
+    "presence_verified": true,
+    "presence_status": "exists_with_issues"
+   },
+   {
+    "service": "Schema Organization",
+    "asset": "org_schema",
+    "presence_verified": true,
+    "presence_status": "exists_with_issues"
+   },
+   {
+    "service": "Página de FAQ",
+    "asset": "faq_page",
+    "presence_verified": true,
+    "presence_status": "exists"
+   }
+  ],
+  "redundant": [],
+  "alignment": {
+   "promised_services_total": 4,
+   "generated_aligned": 1,
+   "present_in_production": 3,
+   "unresolved": 0,
+   "coverage_ratio": 1.0,
+   "present_assets": [
+    "Schema Hotel",
+    "Schema Organization",
+    "Página de FAQ"
+   ],
+   "no_breach": 0,
+   "passed": true,
+   "effective_total": 4,
+   "actionable_total": 4,
+   "message": "4/4 servicios comprometidos cubiertos (1 generados  + 3 ya en producción )"
+  }
+ }
+}
+== GATE coverage_no_silent_drop ==
+{
+ "gate_name": "coverage_no_silent_drop",
+ "passed": true,
+ "status": "PASSED",
+ "message": "Coverage completo: 5 en diagnostico/propuesta, 0 justificadas de 5 detectadas",
+ "value": 1.0,
+ "suggestion": "",
+ "details": {
+  "total_detected": 5,
+  "covered": 5,
+  "justified": 0,
+  "uncovered": []
+ }
+}
+== GATE doc_audit_consistency ==
+{
+ "gate_name": "doc_audit_consistency",
+ "passed": true,
+ "status": "PASSED",
+ "message": "Document consistent with audit data — no contradictions detected",
+ "value": 0,
+ "suggestion": "",
+ "details": {}
+}
+== DELIVERY summary ==
+{
+ "total_gates": 5,
+ "passed": 5,
+ "failed": 0,
+ "not_evaluated": [],
+ "coherence_score": 0.83,
+ "blocking_gates": [],
+ "warning_gates": []
+}
+NOT_EVALUATED occurrences in delivery report: 0
+asset_path occurrences / non-null: 0 / 0
+== DELIVERY asset_path/path ==
+[]
+== snapshot exists=True size=1421 ==
+== SNAPSHOT keys ==
+[
+ "snapshot",
+ "snapshot_version"
+]
+== SNAPSHOT summary ==
+{
+ "checked_at": "2026-09-04T12:04:04.766257",
+ "faq_page": 3,
+ "hotel_schema": 3,
+ "llms_txt": 3,
+ "org_schema": 3,
+ "results": 5,
+ "site_url": "https://www.hotelsalentoreal.com/",
+ "whatsapp_button": 3
+}
+== HUMAN CHECKLIST (406 chars) ==
+# Human Review Checklist
+
+> Generated: 2026-09-04 12:04 | Status: **PASS** | Blocking: **False**
+> Gates: 5/5 passed
+
+The human reviews **exceptions only** — do NOT reconstruct coherence or re-validate gates.
+
+- [ ] Commercial decision: All gates passed — confirm delivery is ready
+- [ ] Final review: Coherence score 0.83 — acceptable range
+
+---
+*Checklist generated by HumanChecklistGenerator (FASE-0F)*
+
+== LEDGER ids ==
+{
+ "raw": [
+  "low_ota_divergence",
+  "no_analytics_configured",
+  "low_organic_visibility",
+  "ai_crawler_blocked",
+  "missing_llmstxt"
+ ],
+ "resolved": [
+  "low_ota_divergence",
+  "no_analytics_configured",
+  "low_organic_visibility",
+  "ai_crawler_blocked",
+  "missing_llmstxt"
+ ]
+}
+== LEDGER resolved summary ==
+{
+ "total": 5,
+ "asset_generated": 3,
+ "mapped_to_service": 0,
+ "justified_skip": 0
+}
+== ZIP 38 files, size 47358 ==
+  snapshot in zip: ['ASSETS/v4_audit/site_presence_snapshot.json']
+== ZIP is_coherent ==
+[
+ [
+  "ASSETS/v4_audit/asset_generation_report.json",
+  [
+   "true"
+  ]
+ ],
+ [
+  "ASSETS/v4_audit/coherence_validation.json",
+  [
+   "true"
+  ]
+ ],
+ [
+  "ASSETS/v4_audit/coherence_validation_post_gen.json",
+  [
+   "true"
+  ]
+ ]
+]
+== V4REPORT keys ==
+[
+ "v4_complete",
+ "hotel_name",
+ "url",
+ "region",
+ "hotel_id",
+ "phases",
+ "modules_used",
+ "coherence_score",
+ "assets_generated",
+ "financial_data",
+ "seo_score",
+ "pricing",
+ "analytics",
+ "opportunity_scores",
+ "channel_context"
+]
+== V4REPORT assets path keys ==
+[
+ {
+  "asset_type": "analytics_setup_guide",
+  "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\FASE-I_salentoreal_post_estabilizacion\\v4_complete\\hotelsalentoreal\\analytics_setup_guide\\ESTIMATED_guia_configuracion_ga4_20260904_120413.md",
+  "filename": "ESTIMATED_guia_configuracion_ga4_20260904_120413.md",
+  "asset_path": null
+ },
+ {
+  "asset_type": "indirect_traffic_optimization",
+  "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\FASE-I_salentoreal_post_estabilizacion\\v4_complete\\hotelsalentoreal\\indirect_traffic_optimization\\ESTIMATED_optimizacion_trafico_indirecto_20260904_120413.md",
+  "filename": "ESTIMATED_optimizacion_trafico_indirecto_20260904_120413.md",
+  "asset_path": null
+ },
+ {
+  "asset_type": "llms_txt",
+  "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\FASE-I_salentoreal_post_estabilizacion\\v4_complete\\hotelsalentoreal\\llms_txt\\llms_20260904_120413.txt",
+  "filename": "llms_20260904_120413.txt",
+  "asset_path": null
+ },
+ {
+  "asset_type": "monthly_report",
+  "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\FASE-I_salentoreal_post_estabilizacion\\v4_complete\\hotelsalentoreal\\monthly_report\\informe_mensual_20260904_120413.md",
+  "filename": "informe_mensual_20260904_120413.md",
+  "asset_path": null
+ }
+]
+== DISK is_coherent ==
+[
+ [
+  "evidence/FASE-I/corrida/hotelsalentoreal/v4_audit/asset_generation_report.json",
+  [
+   "true"
+  ]
+ ],
+ [
+  "evidence/FASE-I/corrida/hotelsalentoreal/v4_audit/coherence_validation.json",
+  [
+   "true"
+  ]
+ ],
+ [
+  "evidence/FASE-I/corrida/hotelsalentoreal/v4_audit/coherence_validation_post_gen.json",
+  [
+   "true"
+  ]
+ ]
+]
