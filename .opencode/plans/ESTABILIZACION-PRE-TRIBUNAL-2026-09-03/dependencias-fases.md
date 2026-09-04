@@ -26,7 +26,7 @@
 | **B** | ✅ Completada | 2026-09-03 | **C**, **E**, **H** — biyección triple cerrada (DESCARTE REAL 2→0), candado AST en verde |
 | **C** | ✅ Completada | 2026-09-03 | **F**, **G**, **I** — punto 8 implementado: `no_breach = 0` por construcción y `is_coherent` False→True. Código en `c1bf5e2`, corrección de S-B11 en `552c190` |
 | **D** | ✅ Completada | 2026-09-03 | **F**, **I** — severidad explícita 11 blocking + 2 advisory con única fuente en `publication_gates.py` |
-| E | ⬜ Pendiente | — | F, I |
+| **E** | ✅ Completada | 2026-09-03 | **F**, **I** — oráculo persistido (`save_site_presence_snapshot`, passthrough) y `asset_path` poblado para LINKED (causa raíz en el caller de `main.py`) |
 | F | ⬜ Pendiente | — | G, H, I |
 | G | ⬜ Pendiente | — | H, I |
 | H | ⬜ Pendiente | — | I |
@@ -232,6 +232,53 @@
   Las dos sesiones se corrigieron mutuamente estados de fase en los documentos compartidos.
   → **S23** (tablas de estado duplicadas en los prompts) y **S-B15** (sobrescritura entre sesiones).
 
+**Notas de ejecución de FASE-E** (relevantes para las fases que heredan sus archivos):
+
+- **El oráculo persistido es un passthrough, no una reconstrucción** (DT4-N2): `save_site_presence_snapshot()` en
+  `modules/asset_generation/site_presence_adapter.py` serializa el snapshot **tal cual** ya propagado por DT4-R2 —
+  no llama `normalize_site_presence` ni reconstruye nada. Envoltorio versionado `{"snapshot_version": "1.0",
+  "snapshot": ...}`, UTF-8 explícito, un solo archivo por corrida: `v4_audit/site_presence_snapshot.json`. Un test
+  sonda (campos de probe que sobreviven arriba y dentro de `results`) garantiza que una normalización no puede
+  colarse en silencio. **FASE-F (A4)**: ese archivo es el insumo del oráculo único; la partición ya consume el
+  parámetro (nota de C arriba), no hace falta cablear nada nuevo.
+- **Punto de persistencia**: `main.py`, inmediatamente después de crear `v4_audit_dir`. Usa
+  **`site_presence_snapshot`** (definido incondicionalmente), NO `site_presence_report` (solo existe dentro de
+  `if generate_proposal:` — NameError latente preexistente, registrado abajo). Persistencia en `try/except` con
+  `[WARN]`: la evidencia no bloquea la corrida.
+- **Causa raíz de A6 — `asset_path` null era culpa del caller, no de la matriz**: `classify_promised_services()`
+  ya poblaba `asset_path` correctamente; el caller de `main.py` (`assets_for_quality`) construía los dicts **sin
+  la clave `path`**. Fix: `"path": a.path or None` (1 línea). La rama fallback de `asset_plan` sigue **sin** rutas
+  a propósito — no se inventan rutas que no hay. Los tests de E2 cubren: LINKED poblado, `path=None` se queda
+  null, MISSING_ASSET null, forma pre-E (sin clave) null, y el extremo E2E del consumidor delivery
+  (`DeliveryQualityReportGenerator` → `proposal_asset_gate.passed=True` con la ruta real persistida en JSON).
+- ⚠️ **Desviación justificada de §4**: el plan declaraba E1 ‖ E2 paralelizables como subagentes, pero **ambos
+  tracks editan `main.py`** (regiones ~`:2798` y ~`:3157`) — la misma condición que materializó L-D1/S-B15 en
+  FASE-D. Se ejecutaron **secuenciales** (E1 → E2) con verificación `git diff` entre ambos; la verificación de
+  consumidores (E4) fue censo de lectura, sin edición. Corregir §4 si H/I reutilizan la fila.
+- **Baseline preservado**: 892 passed / 2 skipped → **897 / 2** (+10 tests nuevos: 5 en
+  `tests/test_site_presence_persistence.py`, 5 en `tests/quality_gates/test_delivery_asset_path.py`).
+  `run_all_validations.py --quick` 7/7. Evidencia: `evidence/FASE-E/faseE_persist.txt`,
+  `faseE_baseline_antes.txt`, `faseE_baseline_despues.txt`, `faseE_validaciones.txt`.
+- **Censo de consumidores (E4) → insumo duro para F**: `evidence/FASE-E/consumidores-snapshot.md`. Resumen:
+  **6 consumidores activos** leen el snapshot propagado (coherence_validator `:410-411`/`:581-597`,
+  pain_ledger `:134-145`, proposal_asset_alignment `:446-480`, publication_gates `:980-1078`,
+  alignment_result `:62-76`, delivery_quality_report `:244-246`); **1 ruta viva de re-verificación**
+  (`conditional_generator.py:64/:111`, por-asset, incluye historial delivery); **3 puntos muertos/degradados**
+  heredados de antes de DT4: bloques `presence_lookup` de `v4_proposal_generator.py:1388-1396`/`:1617-1625`/
+  `:1685-1693` (guard `hasattr` insatisfacible contra el dict canónico; **inicios re-verificados con grep al
+  cierre de E** — esta nota los citaba corridos en 1: `:1389`/`:1618`/`:1686`), instanciación muerta
+  `v4_asset_orchestrator.py:240`, y el NameError latente de `main.py` arriba. **Ningún consumidor reconstruye
+  el oráculo** — las "4 rutas de reconstrucción" de DT4-N2 quedan en: 1 viva (legítima, per-asset con skip),
+  resto muerto → decisión F1.
+- **Archivos nuevos que ninguna fase posterior debe duplicar**: `modules/asset_generation/
+  site_presence_adapter.py::save_site_presence_snapshot` (único writer del oráculo),
+  `tests/test_site_presence_persistence.py`, `tests/quality_gates/test_delivery_asset_path.py`.
+  ⚠️ `main.py` y `site_presence_adapter.py` no estaban en la matriz §3 — añadidos vía esta nota; F1 edita
+  el writer/lector sobre esta base, no crea otro.
+- **L-A6 — posiciones vigentes tras E**: `main.py` creció en dos hunks (E1 tras `v4_audit_dir` en FASE 0E;
+  E2 en `assets_for_quality`). Citas de `main.py` en prompts F/G/I posteriores a esas regiones pueden estar
+  desfasadas; usar símbolos (`save_site_presence_snapshot`, `assets_for_quality`).
+
 ---
 
 ## 1. Grafo de dependencias
@@ -338,7 +385,7 @@ D y E están fuera del camino crítico y pueden ejecutarse en cualquier hueco tr
 | `modules/quality_gates/publication_gates.py` | **D**, **C**, **F**, **G** | D → C → F → G | D reestructura `self.gates` (`:181-195`) y `check_publication_readiness` (`:1919`) — ✅ cerrado; F3 modifica `_coherence_gate` (`:458`); G1/G3/G4 modifican `_doc_audit_consistency_gate` (`:1464`) y `_coverage_gate` (`:1244`). ⚠️ **C también lo editó, fuera de la predicción** (la matriz no lo listaba): **3 hunks `:979-1011`**, todos dentro de `_proposal_asset_alignment_gate` — (1) `assessment.get("pain_ledger") or []` → sin `or []`, que era el sitio de colapso **aguas arriba** y el que convirtió «sin ledger» en «resuelto con 0 brechas» (27 fallos en cadena hasta quitarlo), (2) `if pain_ledger:` → `if pain_ledger is not None:`, (3) el build de la matriz recibe `site_presence_report` (sin esto, gate y delivery report divergían y rompían AC3). **Ni la severidad de D, ni `:458`, ni `:1244`, ni `:1464` fueron tocados** |
 | `modules/asset_generation/proposal_asset_alignment.py` | **A**, **C** | A → C | ✅ **Cerrado 2026-09-03.** A3 migró `PROPOSAL_SERVICE_TO_ASSET` (`:22`) al canónico; C3 modificó los dos builders (`:575`, `:748`) — pero **no parcheó sus rutas de skip silencioso** (`:609-612`, `:792-794`): las **eliminó** extrayendo una única `classify_promised_services()` que ambos consumen, así que ya no existen dos caminos que puedan divergir (A5 curado, no esquivado). Diff real: 359 líneas |
 | `modules/quality_gates/alignment_result.py` | ~~**C**~~, **F** | — | ⚠️ **Predicción corregida 2026-09-03**: se esperaba que C3 tocara `_from_entries` (`:222-276`) y `compute_unresolved` (`:175-212`), pero **C no modificó este archivo de producción** — verificado con `git show --stat c1bf5e2` (solo actualizó su test, `tests/quality_gates/test_alignment_result.py`). La región queda **libre para F1**, que ya no tiene conflicto con C. Lo que F1 **sí** hereda: la presencia ahora se resuelve **aguas arriba**, dentro de `classify_promised_services()` (`_presence_exists`), así que `_presence_resolved` (`:62`) puede haber quedado redundante para artefactos post-C → decidir en F1 junto a A4 |
-| `modules/quality_gates/delivery_quality_report.py` | **C** (comentario), **E**, **F** | C → E → F | E2 puebla `asset_path` (`:223`); F2 modifica la región de skip (`:251-255`), el summary (`:310-319`) y los defaults (`:325`) — adyacentes. ⚠️ **C también lo tocó, fuera de la predicción**: **un solo hunk `:230-243`**, sin cambio de comportamiento — el comentario afirmaba «la matriz JSON nunca tiene `PRESENT_IN_PRODUCTION`» y C volvió esa afirmación **falsa** (la presencia ahora se resuelve dentro de la partición, así que el JSON sí puede traerlo). Se corrigió el comentario y se conservó el cross-reference para artefactos **pre-C**. E y F heredan esa región ya reescrita |
+| `modules/quality_gates/delivery_quality_report.py` | **C** (comentario), ~~**E**~~, **F** | C → F | ⚠️ **Predicción corregida 2026-09-03**: se esperaba que E2 editara este archivo, pero la causa raíz del `asset_path` null estaba en el **caller** (`main.py`, dicts de `assets_for_quality` sin clave `path`) — E no tocó este archivo; su consumo de `asset_path` (`:244-246`) ya funcionaba y se verificó E2E en `tests/quality_gates/test_delivery_asset_path.py`. F2 modifica la región de skip (`:251-255`), el summary (`:310-319`) y los defaults (`:325`) — adyacentes. C dejó un hunk `:230-243` sin cambio de comportamiento (comentario «la matriz JSON nunca tiene `PRESENT_IN_PRODUCTION`» corregido, cross-reference conservado para artefactos pre-C). F hereda esa región ya reescrita |
 | `modules/commercial_documents/v4_proposal_generator.py` | **A**, **C** | A → C | A4 corrige el drift «8 vs 7» (`:1332`) — ✅ cerrado. ⚠️ **C NO reescribió `service_brecha_candidates` (`:1281-1289`)** como predecía esta fila: ese dict ya **deriva** su identidad de Capa 2 desde A y su **lógica** es la que produce V4 (atribución ciega al pain real), que **sigue abierta** → **S-C5**. Los 2 hunks reales de C (verificados con `git show c1bf5e2`): **`:696-702`** (el build de la matriz pasa `site_presence_report`, sin el cual gate y delivery report divergían — AC3) y **`:1199-1208`** (`_derive_committed_services`: `if not pain_ledger` → `if pain_ledger is None`, vacío ≠ ausente). Diff total: 6 líneas. ⚠️ **Corregido 2026-09-03**: esta fila atribuía a H2 «el `except Exception` de `_identify_brechas`», pero ese método **solo existe en `v4_diagnostic_generator.py:3116`** (`grep -rn "def _identify_brechas"` = 1 resultado) y el prompt de FASE-H no menciona este archivo. H2 ya está correctamente asignado en la fila siguiente |
 | `modules/commercial_documents/v4_diagnostic_generator.py` | **A**, **B**, **H** | A → B → H | A3/A4 migran `ELEMENTO_KB_TO_PAIN_ID` (`:135-157`, `:160`, `:3067-3086`) — ✅ cerrado; **B edita `_pain_to_brecha` + `narratives` (`:3246-3347`) por N-A1**; H2 reemplaza el `except Exception: return brechas` + caché en **`:3197-3202`** (⚠️ el dossier V6 citaba `:3189-3194`, que hoy es la **llamada a `detect_pains`** — cita fósil verificada y corregida el 2026-09-03 en los 6 archivos del plan que la repetían) y H3 limpia residuos D6 (`:1953`, V11 — el dossier citaba `:1952`, off-by-one). Regiones **disjuntas** ⟹ convivibles, pero B debe confinarse a la suya |
 | `config/regional_benchmarks.yaml` | **B** | — | B decide el origen de los pesos `pain_narratives` (4 copias literales idénticas + 16 fallbacks Python = 80 literales para 16 valores). Hallazgo C-5 / S14, post-censo de A |
@@ -361,7 +408,7 @@ R1 prohíbe paralelizar **fases**. Dentro de una fase, la delegación paralela e
 | Fase | Tracks paralelos | Integración |
 |------|------------------|-------------|
 | **D** | Track 1 (D1+D2 estructura de severidad, DIRECTO) ‖ Track 2 (D3 corrección documental, DELEGADO) | Parent hace D4 (candado) y verifica que D3 y D1 queden en el **mismo commit** |
-| **E** | Subagente 1 (E1 snapshot) ‖ Subagente 2 (E2 asset_path) | Parent hace E3 (tests) + E4 (verificación de los 6 consumidores) |
+| **E** | ~~Subagente 1 (E1 snapshot) ‖ Subagente 2 (E2 asset_path)~~ **Secuencial E1 → E2** | ⚠️ Corregido 2026-09-03: ambos tracks editan `main.py` → no paralelizables (L-D1/S-B15). E1/E2 delegados en secuencia; parent hace E3 (tests) + E4 (censo de los 6 consumidores, solo lectura) |
 | **H** | Subagente 1 (H1+H2 en `pain_solution_mapper`/`v4_proposal_generator`) ‖ Subagente 2 (H3+H4 en `v4_diagnostic_generator`/`metadata_validator`) | Parent verifica que no haya solapamiento con G ya cerrado |
 | **I** | Subagente único para I2 (comando largo, timeout 900, notify) | Parent hace I1 (pre-flight), I3 (evidencia) e I4 (comparación) |
 

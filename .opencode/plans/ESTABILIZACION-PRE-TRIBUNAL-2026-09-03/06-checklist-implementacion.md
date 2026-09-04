@@ -6,7 +6,7 @@
 
 **Versión objetivo**: 4.75.0 · **Versión actual del repo**: 4.74.1
 **Sesiones totales**: 11 (9 implementación + VERIFY + RELEASE)
-**Sesiones completadas**: 4 (FASE-A ✅, FASE-B ✅, FASE-C ✅, FASE-D ✅ 2026-09-03)
+**Sesiones completadas**: 5 (FASE-A ✅, FASE-B ✅, FASE-C ✅, FASE-D ✅, FASE-E ✅ 2026-09-03)
 
 ---
 
@@ -18,7 +18,7 @@
 | 2 | FASE-B — Biyección **triple** mapa↔emisión↔narrativa (N-A1) | MEDIA-ALTA | DIRECTO | ✅ Completada | 2026-09-03 | **345 medidas**/40 ⚠️ | 29 func (46 casos) | AC4 |
 | 3 | FASE-C — Punto 8 propuesta dinámica | **MÁXIMA** | DIRECTO | ✅ Completada | 2026-09-03 | **142 medidas**/60 ⚠️ | 14 func (17 casos) + 3 netos en archivos existentes | AC5, AC6 |
 | 4 | FASE-D — Severidad 11+2 (H10) | MEDIA | MIXTO | ✅ Completada | 2026-09-03 | **114 medidas**/35 ⚠️ | 24 func (24 casos) | AC7, AC8 |
-| 5 | FASE-E — A2 snapshot + A6 asset_path | MEDIA | DELEGADO | ⬜ Pendiente | — | —/30 | — | AC9 |
+| 5 | FASE-E — A2 snapshot + A6 asset_path | MEDIA | DELEGADO | ✅ Completada | 2026-09-03 | **72 medidas**/30 ⚠️ | 10 func (10 casos) | AC9 |
 | 6 | FASE-F — A4 + A1 + N11 | MEDIA-ALTA | DIRECTO | ⬜ Pendiente | — | —/45 | — | AC10, AC11, AC12 |
 | 7 | FASE-G — Ceguera de gates | MEDIA-ALTA | DIRECTO | ⬜ Pendiente | — | —/50 | — | NR1, NR2, NR3, NR4 |
 | 8 | FASE-H — Quirúrgicos | BAJA-MEDIA | DELEGADO | ⬜ Pendiente | — | —/35 | — | V6, V7, V8, V11, V12, V13 |
