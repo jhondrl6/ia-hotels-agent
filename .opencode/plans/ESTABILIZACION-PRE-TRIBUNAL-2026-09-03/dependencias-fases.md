@@ -27,7 +27,7 @@
 | **C** | ✅ Completada | 2026-09-03 | **F**, **G**, **I** — punto 8 implementado: `no_breach = 0` por construcción y `is_coherent` False→True. Código en `c1bf5e2`, corrección de S-B11 en `552c190` |
 | **D** | ✅ Completada | 2026-09-03 | **F**, **I** — severidad explícita 11 blocking + 2 advisory con única fuente en `publication_gates.py` |
 | **E** | ✅ Completada | 2026-09-03 | **F**, **I** — oráculo persistido (`save_site_presence_snapshot`, passthrough) y `asset_path` poblado para LINKED (causa raíz en el caller de `main.py`) |
-| F | ⬜ Pendiente | — | G, H, I |
+| **F** | ✅ Completada | 2026-09-03 | **G**, **H**, **I** — oráculo único (`is_present_in_production` decide y narra; el consumo directo de la partición de C reconciliado con el DTO), `NOT_EVALUATED` ≠ passed con defaults G9 unificados, gate de coherencia respeta `is_coherent` (`coherence_verdict_passes()`, decisión (a): respetar), `publication_state.py` eliminado (H8). Código en `23d0978` |
 | G | ⬜ Pendiente | — | H, I |
 | H | ⬜ Pendiente | — | I |
 | I | ⬜ Pendiente | — | VERIFY |
@@ -280,6 +280,49 @@
   desfasadas; usar símbolos (`save_site_presence_snapshot`, `assets_for_quality`).
 
 ---
+
+---
+
+**Notas de ejecución de FASE-F** (relevantes para las fases que heredan sus archivos):
+
+- **A4 — el segundo oráculo vivía en `proposal_asset_alignment.py`**, no en `alignment_result.py`:
+  la clasificación de `verify_proposal_asset_alignment` usaba `== "exists"` (estricto) mientras
+  `_presence_resolved` del DTO ya usaba el criterio canónico. F1 cambió la clasificación a
+  `is_present_in_production()` y extendió el veto de divergencia FASE-12B a `exists_with_issues`
+  (si no, unificar habría debilitado la guardia). `alignment_result.py` no se tocó.
+- **V15 — el cross-reference del DTO se conserva**: cubre artefactos pre-C cuya matriz nace
+  `NO_BREACH`/`MISSING_ASSET`. Con ambos lados usando el mismo criterio, narrativa y veredicto
+  ya no pueden divergir; test anti-A4 fija el invariante (`report.missing ∩ present_assets = ∅`).
+- **A1 — estado `NOT_EVALUATED`**: `_not_evaluated_g9()` es el único default de G9
+  (el segundo default independiente y la rama `"skipped": True` desaparecieron). El summary
+  separa `passed`/`failed`/`not_evaluated` (lista de nombres); un gate no evaluado NO bloquea
+  y NO cuenta como pasado. **No re-clasificar severidades** — el `BLOCKING_GATE_NAMES` de
+  delivery quedó intacto (régimen distinto del de publicación).
+- **N11/P9 — decisión (a): respetar `is_coherent`**. `coherence_verdict_passes(score, threshold,
+  declared_is_coherent)` en `coherence_gate.py` es la ÚNICA definición del veredicto; la consume
+  `_coherence_gate` (publicación) y `CoherenceGate` (legacy + validator). Un score ≥ umbral con
+  `is_coherent=False` ⟹ `BLOCKED`; `None` (vacío ≠ ausente, L-SR5) ⟹ legacy por score. El umbral
+  0.8 no se tocó. **coherence_gate.py quedó conectado** (`publication_gates.py:56` importa la
+  función) — los 3 referenciadores previos (test de regresión, never-block, validate_context_integrity)
+  no se tocaron.
+- **H8 — `publication_state.py` ELIMINADO** (decisión conectar/eliminar: cero referencias
+  verificadas por grep en modules/, main.py, tests/ y scripts/; sin imports dinámicos). El
+  ROADMAP §7.2 conserva la tabla como correspondencia de diseño.
+- **F4 — corpus**: `evidence/FASE-F/impacto-corpus.md` (script preservado en la misma carpeta).
+  28 primarias + 4 copias delivery. **0 corridas liberadas**; 4 veredictos READY→NOT_READY
+  (`final_coherence_report.is_coherent=False` persistido que el gate pre-F ignoraba — familia
+  exacta de N11, incluye la repro SalentoReal FASE-D 0.88/False); las ~10-11 ESTIMATED siguen
+  bloqueadas (`coherence_score_final=None` ⟹ gate sin score; `asset_confidence` intacto). El
+  conteo C2 de 27 se midió sobre `output/` pre-archivo; la medición barre `output/` +
+  `archives/outputs/`.
+- **Baseline**: 920 passed / 2 skipped (`tests/quality_gates` + `tests/asset_generation`;
+  848/2 + delta A–F con 23 tests nuevos de F). Validaciones `--quick` 7/7.
+  Evidencia: `evidence/FASE-F/faseF_*.txt` + `impacto-corpus.md`.
+- **Citas de línea desfasadas en el prompt F**: `_coherence_gate` estaba en `:549` (no `:458`);
+  los defaults de G9 se reubicaron por grep antes de editar (regla del propio prompt). Los
+  consumos de `assessment["is_coherent"]` entran por `AssessmentPayload.is_coherent`
+  (`assessment_builder.py`, poblado en `with_coherence` desde `final_coherence_report`,
+  preferido sobre `coherence_report` — DT4-N4).
 
 ## 1. Grafo de dependencias
 

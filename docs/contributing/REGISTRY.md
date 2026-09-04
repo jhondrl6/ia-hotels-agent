@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-03
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 460
+> **Total fases completadas:** 461
 
 ---
 
@@ -10768,6 +10768,23 @@ _Ninguno_
 
 ## FASE-E - 2026-09-03
 **Descripcion:** A2 persistir site_presence_snapshot + A6 poblar asset_path
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-F - 2026-09-03
+**Descripcion:** Oraculo unico presencia (A4) + skipped!=passed (A1) + gate respeta is_coherent (N11/P9)
 
 ### Archivos Nuevos
 _Ninguno_
