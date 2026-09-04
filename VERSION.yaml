@@ -1,10 +1,38 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.74.1"
-codename: "Blocklist-v2"
-release_date: "2026-08-31"
+version: "4.75.0"
+codename: "Estabilización pre-tribunal"
+release_date: "2026-09-04"
 plan_maestro_version: "v2.6.0"
 
+# v4.75.0 - ESTABILIZACION-PRE-TRIBUNAL (2026-09-04)
+# Dossier de estabilización pre-tribunal (ex auditoría SalentoReal): 8 caídas de detección y
+# gates ciegos curados desde la causa raíz §12.5 — el contrato de identidad servicio↔asset↔pain
+# estaba fragmentado en ≥9 registros sin candado que lo vigilara.
+# FASE-A: fuente unica SERVICE_IDENTITIES (capa 2) + PAIN_SOLUTION_MAP (capa 1) en modules/common/;
+#         6 registros derivados, 6 validados, drift "8 vs 7" disuelto eliminando sus 3 copias
+# FASE-B: biyeccion triple mapa<->emision<->narrativa; descarte silencioso 2->0; Capa 1 27->26
+#         (no_ga4_enhanced retirado por guardia insatisfacible); 3 pains ganan senal verificable
+# FASE-C: punto 8 propuesta dinamica — classify_promised_services() unica particion; no_breach 6->0;
+#         is_coherent False->True con el umbral 0.8 intacto
+# FASE-D: regimen de gates 13 plano -> 11 blocking + 2 advisory por gate_blocks_publication() con
+#         fail-fast en __init__; advisory degrada a blocking bajo su piso; divulgacion en checklist
+# FASE-E: site_presence_snapshot en disco (A2, oráculo auditable) + asset_path LINKED poblado (A6)
+# FASE-F: oraculo unico de presencia, skipped != passed (NOT_EVALUATED visible) y el gate respeta
+#         el veredicto (coherence_verdict_passes unica definicion); publication_state.py eliminado (H8)
+# FASE-G: ceguera de gates NR1-NR4 — doc_audit_consistency con audit_data, critical_recall deja de
+#         ser vacuo, escotillas V5 (sin revertir BUG-6) y V9 (ledger normalizado)
+# FASE-H: quirurgicos V6/V7/V8/V11/V12/V13 — degradacion silenciosa notificada, pain high
+#         habilitado, emision duplicada unificada, criterio de performance en modules/common/
+# FASE-I: unica corrida v4complete (Salento Real) — 14/16 checks vs baseline, snapshot en el ZIP
+# FASE-VERIFY: 11 AC ✅ / 1 ⚠️ / 0 ❌ y 10 NR ✅ / 1 ⚠️ / 1 ❌ con sonda propia
+# FASE-HOTFIX-PRE-RELEASE: severidad y coverage legibles en el artefacto (gate_report 9 claves,
+#         matriz 2.1 con coverage_ratio + denominador, mensaje narrando la pasada) sin tocar umbrales
+# +245 funciones test / +14 archivos (3.689/284 -> 3.934 funciones / 298 archivos); bateria de
+# contratos A+B+C+D+delivery 180 passed / 0 failed; suite quality_gates+asset_generation 944 -> 950/2
+# Backwards compatible: sin cambios en la API publica; regimen de delivery intacto (H10); umbrales
+# de coherencia (0.8) y severidad de gates sin relajar — verificado por contrafactual: 0 flips de ready
+#
 # v4.74.1 - BLOCKLIST-V2 (2026-08-31)
 # config/url_blocklist.yaml v1→v2 (fuera del ciclo trimestral, detectado en prospección
 # comercial Maps 31-08): +hosroom.com (ota, booking engine de terceros: sys.hosroom.com

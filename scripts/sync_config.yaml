@@ -47,8 +47,8 @@ rules:
     file: "AGENTS.md"
     description: "HTML comment header: version and date"
     replacements:
-      - pattern: '<!--\s*agents_version:\s*[\d.]+\s*\|'
-        template: '<!-- agents_version: {version} |'
+      - pattern: '<!--\s*agents_version:\s*v?[\d.]+\s*\|'
+        template: '<!-- agents_version: v{version} |'
       - pattern: 'last_update:\s*[\d-]+\s*-->'
         template: 'last_update: {date} -->'
 

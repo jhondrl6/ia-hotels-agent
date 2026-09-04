@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-04
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 466
+> **Total fases completadas:** 467
 
 ---
 
@@ -10881,6 +10881,33 @@ _Ninguno_
 - `scripts/run_all_validations.py` · `.agents/workflows/phased_project_executor.md` (**v2.19.0**) + `.agents/workflows/README.md`
 - `tests/delivery/test_delivery_contract.py` (S-V1) · `tests/asset_generation/test_proposal_asset_matrix.py` (versión `2.1`) · `tests/common/test_service_identity_registry.py` (candado AST + `MODULOS_NARRATIVA`)
 - Plan: `README.md`, `01`, `06`, `09` (§C.1 nota, §C.2, §D, §E), `10` (§2.2, §5, §5.8, §6, §7.3, L-HF1/L-HF2), `dependencias-fases.md`, y el prompt `05-prompt-inicio-sesion-fase-HOTFIX-PRE-RELEASE.md`
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.75.0 - 2026-09-04
+**Descripcion:** Release 4.75.0 Estabilizacion pre-tribunal: fuente unica de identidad + punto 8 dinamico + severidad 11+2 + oraculo unico + ceguera de gates + quirurgicos + legibilidad en artefacto (HOTFIX)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Version |
+| `CHANGELOG.md` | Changelog |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
+| `AGENTS.md` | Agents |
+| `README.md` | Readme |
+| `.cursorrules` | .Cursorrules |
+| `docs/CONTRIBUTING.md` | Contributing |
+| `docs/contributing/REGISTRY.md` | Registry |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | Domain Primer |
 
 ### Validaciones
 - [x] Tests passing

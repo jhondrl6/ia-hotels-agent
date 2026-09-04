@@ -1,5 +1,84 @@
 # Changelog
 
+## [4.75.0] - Estabilización pre-tribunal — 2026-09-04
+
+### Objetivo
+
+Curar la causa raíz del dossier de estabilización (ex auditoría SalentoReal) §12.5: el contrato de identidad **servicio ↔ asset ↔ pain** estaba fragmentado en ≥9 registros sin ningún candado que lo vigilara, y de ahí salían 8 caídas de detección y gates ciegos. El plan `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` lo cierra con **fuente única + derivación + contra-test**, no con parches paralelos. FASE-VERIFY certificó **11 AC ✅ / 1 ⚠️ / 0 ❌** y **10 NR ✅ / 1 ⚠️ / 1 ❌** con sonda propia sobre la única corrida E2E del plan.
+
+### Cambios Implementados
+
+- **FASE-A — fuente única de identidad**: `modules/common/service_identity.py` (`SERVICE_IDENTITIES`, Capa 2, 8 entradas, sobre `PAIN_SOLUTION_MAP` como Capa 1). De los **15** registros censados: 6 derivados del canónico, 4 validados contra Capa 1 con razón registrada, 3 fuera de alcance. El drift «8 vs 7» se disolvió **eliminando sus 3 copias**, no comparándolas; 6 IDs fantasma + 1 asset fantasma corregidos sin cambio de comportamiento (contrafactual medido).
+- **FASE-B — biyección triple mapa ↔ emisión ↔ narrativa**: `_pain_to_brecha` ya no descarta en silencio (el `return None` se reemplazó por derivación de Capa 1 ⟹ capa narrativa **total 26/26**, 0 entradas escritas a mano). 3 pains ganan señal verificable (`missing_llmstxt`, `missing_alt_text`, `no_social_links`) con guard «vacío vs ausente»; `no_ga4_enhanced` se **retira** (guardia insatisfacible) ⟹ Capa 1 27 → **26**; 6 pains se difieren con decisión registrada. Delta: emisiones 18 → 20, **DESCARTE REAL 2 → 0**.
+- **FASE-C — punto 8, propuesta dinámica**: `classify_promised_services()` es la **única** partición propuesta→brecha→asset y los dos builders de la matriz delegan en ella (el drift A5 deja de ser posible). Un servicio sin brecha y sin presencia verificada **no se promete** (`not_promised`, publicado en el JSON) ⟹ `no_breach` **6 → 0** y `total == actionable` como identidad estructural. Complementos siempre-activos fuera del denominador de justificación. Delta medido en corrida real: `is_coherent` **False → True** con el umbral 0.8 intacto.
+- **FASE-D — severidad explícita de gates**: el régimen pasa de «los 13 bloquean» a **11 blocking + 2 advisory** decidido por un único predicado `gate_blocks_publication()`, con **fail-fast en `__init__`** (añadir un gate sin severidad definido revienta al instantiar). Advisory degrada a blocking bajo su piso estructural y **un gate que no se ejecutó siempre bloquea**; los advisories se divulgan en `human_checklist.md`. `asset_confidence` **sigue bloqueando**. Contrafactual sobre 2 corridas reales: **0 flips de `ready`**.
+- **FASE-E — presencia auditable y ruta de asset**: `site_presence_snapshot` se persiste en `v4_audit/site_presence_snapshot.json` (writer **passthrough versionado**, sin reconstrucción — un test sonda lo impide), cerrando A2; `asset_path` deja de ser `null` en entradas LINKED (causa raíz en el **caller** de `main.py`, no en la matriz), cerrando A6.
+- **FASE-F — oráculo único, `skipped ≠ passed` y veredicto respetado**: la clasificación de presencia usa el criterio canónico `is_present_in_production()` (H7 intacto); los 2 defaults G9 independientes se unifican en `_not_evaluated_g9()` con estado `NOT_EVALUATED` visible en `summary` y en el checklist; `coherence_verdict_passes()` es la **única** definición del veredicto — `is_coherent=False` bloquea aunque el score supere el umbral. `modules/quality_gates/publication_state.py` (675 líneas, 0 importers) **eliminado** (H8). F4: corpus de 28 corridas re-evaluado ⟹ **0 liberadas / 4 flips READY→NOT_READY**, dirección segura.
+- **FASE-G — ceguera de gates (NR1-NR4)**: `doc_audit_consistency` recibe `audit_data` (crudo, vía `AssessmentPayload`) y pasa de `PASSED` con `value=null` a `value=0` con mensaje real; datos ausentes → `NOT_EVALUATED`. `critical_recall` deja de ser vacuo (PageSpeed `status=ERROR` y banda GEO `critical` se registran como críticos; SR-H2 queda **condicionado**). Escotilla V5 sin revertir BUG-6 (`ASSET_GENERATED` sigue justificado; lo que se estrecha es la **regla de mención**) y escotilla V9 sobre ledger normalizado (`reconciler_dropped_entries` → BLOCKED).
+- **FASE-H — seis quirúrgicos del Nivel 3.8**: V7 `low_ota_divergence` (high, priority 1) **puede disparar** — el guard insatisfacible `hasattr(..., '__iter__')` se reemplaza por validación numérica con normalización de unidades; V8 `low_organic_visibility` deja de emitirse dos veces conservando el dato medido; V6 el `except` de `_identify_brechas` loguea traceback, fija `NOT_EVALUATED` **por corrida** y el documento lo dice; V11 la tabla de atención manual renderiza como tabla y la rama de performance distingue «la API no respondió» de «el sitio no tiene datos» (criterio único en `modules/common/performance_status.py`) + `sanitize_pagespeed_message` + `disjoint_executed_validators()`; V13 el `MetadataValidator` gemelo se **borra físicamente** (−219 líneas); V12 **medido y documentado** como decisión OPS, `.env` no editado.
+- **FASE-I — evidencia E2E**: única corrida `v4complete` del plan (Salento Real, exit 0 en 174 s) con comparación **14/16** contra el baseline FASE-D y las anomalías clasificadas (9 fix esperado / 4 deuda / 3 infraestructura preexistente / 0 variación natural).
+- **FASE-HOTFIX-PRE-RELEASE — legibilidad en el artefacto** (sesión extra; 0 umbrales tocados, 0 corridas E2E nuevas): `gate_report_*.json` publica `severity` y `blocks_publication` **derivadas** del predicado canónico (`severity` 0 → **13 ocurrencias**); `proposal_asset_matrix.json` `2.0 → 2.1` publica `coverage_ratio` **con su denominador** delegando en `AlignmentResult` (un solo oráculo); `promised_assets_exist` narra el conteo **verificado en la pasada** y su fuente real, no el tamaño del catálogo estático; executor **v2.19.0** con las reglas R2.1-R2.4 y `scripts/validate_plan_citations.py` como **check 8** de `--quick`.
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/common/service_identity.py` | Fuente canónica única de identidad servicio↔asset↔pain (Capa 2), en `modules/common/` por cero imports ⟹ consumible sin ciclo |
+| `modules/common/performance_status.py` | Única definición del criterio «¿el eje PageSpeed quedó medido?» — `PERFORMANCE_OK_STATUSES` + `is_performance_api_unavailable()` (lista blanca: vacío ≠ ausente) |
+| `scripts/validate_plan_citations.py` | Verificador stdlib-only de citas de código en planes (citar símbolos, no números de línea) — check 8 de `run_all_validations.py --quick`, **reporta, no reescribe** |
+| `modules/asset_generation/site_presence_adapter.py::save_site_presence_snapshot` | Writer passthrough versionado del snapshot de presencia (A2) — función nueva en archivo existente |
+| `tests/common/test_service_identity_registry.py` | 21→**22** funciones / 46 casos: integridad del canónico, cero IDs fantasma, biyección asset↔pain, guardián AST «derivar no copiar» |
+| `tests/commercial_documents/test_pain_map_bijection.py` | Guardián AST **tridireccional** mapa↔emisión↔narrativa (11 funciones / 28 casos) + `PAINS_DIFERIDOS` con motivo |
+| `tests/commercial_documents/test_detect_pains_emisiones_faseB.py` | 18 tests (9 negativos) sobre las 3 ramas emisoras nuevas y el retiro de `no_ga4_enhanced` |
+| `tests/asset_generation/test_fase_c_propuesta_dinamica.py` | Candado del punto 8: 14 funciones / 17 casos, incl. anti-A5 (los dos builders producen los mismos pares) |
+| `tests/quality_gates/test_gate_severity_lists.py` | 8 funciones que fijan la estructura 11+2 y guardan contra un `not r.passed` plano o un cuarto régimen |
+| `tests/test_site_presence_persistence.py` | 5 tests del writer: versiona, **no reconstruye** (los campos de probe sobreviven), UTF-8 sin escapes, alimenta `_presence_*` |
+| `tests/quality_gates/test_delivery_asset_path.py` | 5 tests de A6 incl. retrocompatibilidad con la forma pre-E y el extremo E2E del reporte de delivery |
+| `tests/auditors/test_v4_comprehensive.py` | 16 funciones sobre el detector real (PageSpeed ERROR, banda GEO `critical`, criterios legacy intactos) |
+| `tests/quality_gates/test_coverage_gate_v5.py` | 14 funciones: escotilla V5 (anti-reversión BUG-6) y V9 (`ledger_vacio`, 4 combinaciones) |
+| `tests/test_gate_report_severity_artifact.py` | 7 contract tests de **artefacto**: el JSON que queda en disco lleva `severity`/`blocks_publication` |
+| `tests/asset_generation/test_matrix_coverage_artifact.py` | 6 contract tests: `coverage_ratio` + `actionable_total` en la matriz `2.1`, caso negativo 0.75 reproducido |
+| `tests/commercial_documents/test_promised_assets_message_artifact.py` | 5 contract tests: el mensaje narra la pasada, no el catálogo estático |
+| `tests/test_asset_path_clave_canonica.py` | 7 tests de la clave canónica por DTO (`GeneratedAsset.path` vs matriz `asset_path`) |
+| `tests/test_validate_plan_citations.py` | 9 self-tests del verificador nuevo (un validador que nunca falla no verifica nada) |
+| `evidence/FASE-{A..I,VERIFY,HOTFIX-PRE-RELEASE}/` | Censo, curva TDD, contrafactuales **re-ejecutables**, parejas pre/post y `measure_iterations.py` |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/pain_solution_mapper.py` | B: Capa 1 27→26, rama muerta eliminada, 3 ramas emisoras nuevas con guard · H: `_normalize_to_fraction`, `_describe_ota_presence`, emisión única de `low_organic_visibility` (1202 → 1297 líneas) |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | A: IDs fantasma corregidos · B: `_pain_to_brecha` derivado de Capa 1 · H: estados `BRECHAS_STATE_*`, aviso `NOT_EVALUATED`, `MANUAL_ATTENTION_TABLE_HEADER`, rama de performance (3715 → 3843 líneas) |
+| `modules/asset_generation/proposal_asset_alignment.py` | A: `PROPOSAL_SERVICE_TO_ASSET` derivado · C: `classify_promised_services()` + `summary` publicado · F: criterio canónico de presencia · HOTFIX: `to_dict()` delega en `AlignmentResult`, matriz `2.1` |
+| `modules/quality_gates/publication_gates.py` | D: listas de severidad + predicado + fail-fast + `GateStatus.WARNING` · C: 3 sitios de «vacío ≠ ausente» · F: `_coherence_gate` con el veredicto · G: `doc_audit_consistency`, escotillas V5/V9 (2064 → 2346 líneas) |
+| `modules/quality_gates/delivery_quality_report.py` | C: comentario de contrato · F: `_not_evaluated_g9()` único default, `summary` con `not_evaluated`, skip visible en `human_review_items` (498 → 547 líneas) |
+| `modules/quality_gates/coherence_gate.py` | F: `coherence_verdict_passes()` — única definición del veredicto, en ambos caminos (`CERTIFIED→REVIEW` con `can_certify=False`) |
+| `modules/quality_gates/human_checklist_generator.py` | D: nuevo parámetro `advisory_issues` (retrocompatible) y sección 5b de divulgación advisory |
+| `modules/quality_gates/publication_state.py` | F: **ELIMINADO** (H8) — 675 líneas, 0 importers verificados por grep antes de borrar |
+| `modules/auditors/v4_comprehensive.py` | G: `GEO_CRITICAL_MAX_SCORE` + `geo_band_critical_issue()` + 2 criterios en `_identify_critical_issues` · H: `sanitize_pagespeed_message()`, `disjoint_executed_validators()` (1885 → 2025 líneas) |
+| `modules/commercial_documents/coherence_validator.py` | C: complemento fuera del denominador de `assets_are_justified` (0.75 → 1.0 estructural) · HOTFIX: el `message` de `promised_assets_exist` narra la pasada; `passed/score/severity` intactos |
+| `modules/assessment_builder.py` | F: `is_coherent` propagado desde la misma fuente del score · G: `audit_data` + `with_audit_data()` + `with_geo_flow()` (320 → 346 líneas) |
+| `modules/commercial_documents/v4_proposal_generator.py` | A/C: registros de método derivados del canónico, `site_presence_report` en el build y `if pain_ledger is None` (vacío ≠ ausente) |
+| `modules/commercial_documents/service_catalog.py` | A: `SERVICE_CATALOG` construido desde `SERVICE_IDENTITIES` (copia #2 del drift eliminada) · C: `indirect_traffic_optimization` entra a `TECHNICAL_ASSET_CATALOG` |
+| `modules/asset_generation/{conditional_generator,pain_ledger,asset_catalog,v4_asset_orchestrator,site_presence_adapter}.py` | A/B/E/HOTFIX: `NORMALIZATION_RULES` derivado, `promised_by` sin el pain retirado, writer del snapshot, clave `path` documentada en el DTO |
+| `modules/data_validation/metadata_validator.py` | H (V13): **borrado** (`git rm`, −219 líneas); el único que queda es `data_validation/metadata_validator.py`, con sus 2 consumidores repuntados al vivo |
+| `main.py` | D: consola en 3 estados + cable de `advisory_issues` · E: `path` en `assets_for_quality` + persistencia del snapshot · G: `with_audit_data` + carga de `geo_flow_result.json` · HOTFIX: `_build_gate_report_payload()`, única forma del artefacto |
+| `config/regional_benchmarks.yaml` | B: `pain_narratives` 16 → **20** entradas en las 4 regiones con peso explícito |
+| `tests/{commercial_documents,asset_generation,quality_gates,auditors,data_validation,delivery,common}/*` | Contratos y units migrados al contrato nuevo (patrón S-B11: el test contradecía el cerrojo, no el código) |
+| `.agents/workflows/phased_project_executor.md` | HOTFIX: **v2.18.0 → v2.19.0** con R2.1-R2.4 (presupuesto medido, citas por símbolo, no-regresión como delta, AC no legible en el artefacto = ⚠️) |
+| `AGENTS.md` · `README.md` · `.cursorrules` · `docs/CONTRIBUTING.md` · `docs/GUIA_TECNICA.md` · `docs/contributing/REGISTRY.md` · `.agent/knowledge/DOMAIN_PRIMER.md` | RELEASE: sync documental 4.75.0, cabeceras, nota técnica por fase y `DOMAIN_PRIMER` regenerado por script |
+
+### Tests
+
+- Conteo canónico `def test_`: **3.689 funciones / 284 archivos → 3.934 funciones / 298 archivos** (+245 funciones / +14 archivos). Desglose del plan: A 21 + B 29 + C 14 + D 24 + E 10 + F 23 + G 40 netas + H 46 netas + HOTFIX 35.
+- Suite dirigida `quality_gates` + `asset_generation`: baseline **848 → 944 passed / 2 skipped** (G/H), **delta cero** en FASE-I (pareja pre/post medida) y **950 passed / 2 skipped** al cierre del HOTFIX (+6 exactos, 0 fallos ajenos, `skipped` idéntico).
+- Batería canónica de contratos A+B+C+D+delivery: **180 passed / 0 failed** (incluye los 9 casos del track A del HOTFIX). Cierra **S-V1**, el único rojo que el plan había causado, migrando el test al contrato de FASE-F — no por `xfail`.
+- Validaciones del ecosistema: `run_all_validations.py --quick` **7/7 → 8/8** (entra el check 8 «Plan Citations»: 738 citas históricas en 78 archivos, 0 nuevas, 0 crecimientos) · `validate_agents_md.py` **6 PASS / 0 FAIL** · `validate_document_integration.py` sin errores.
+- E2E (única corrida del plan, Salento Real): `READY_FOR_PUBLICATION`, 13/13 gates (11 `PASSED` + 2 `WARNING`), `blocking_issues: []`, `is_coherent=true`, ZIP de 38 archivos (+1 = el snapshot). Coherencia **0.88 → 0.8333**: caída aritmética de honestidad medida — el denominador de `problems_have_solutions` pasó de 3 a 5 porque el sistema ahora conoce 2 pains antes invisibles (**S-I4**).
+- Diferidos **con dueño, no de esta release**: **S-HF1** (AC10 ⚠️ — `details.total_services` dice «total» y excluye lo ya presente en producción), mitad estructural de **S-C3** (P12) y **S-I1** (NR2 ❌, `critical_recall` con `details: {}`) → dueño el **tribunal**. Se publican como ⚠️ y ❌, no como verde.
+
+---
+
 ## [4.74.1] - Blocklist v2 (URL propia) — 2026-08-31
 
 ### Objetivo

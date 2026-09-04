@@ -1,7 +1,161 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.74.1 (Blocklist-v2)
+**Versión:** v4.75.0 (Estabilización pre-tribunal)
 **Última actualización:** 2026-09-04
+
+---
+
+### Notas de Cambios v4.75.0 — FASE-A: fuente única de identidad servicio↔asset↔pain
+
+**Fecha:** 2026-09-03
+
+**Módulos afectados**: `modules/common/service_identity.py` (NUEVO), `modules/asset_generation/proposal_asset_alignment.py`, `conditional_generator.py`, `pain_ledger.py`, `modules/commercial_documents/v4_diagnostic_generator.py`, `v4_proposal_generator.py`, `service_catalog.py`, `tests/common/test_service_identity_registry.py` (NUEVO)
+
+**Problema**: el contrato de identidad estaba repartido en **15** registros (el dossier decía ≥9) que se copiaban entre sí. El «drift 8 vs 7» se parcheaba comparando copias, y 6 pain_ids + 1 asset referenciaban entradas que no existían en ningún catálogo.
+
+**Solución**: dos capas — **Capa 1** `PAIN_SOLUTION_MAP` (universo de pain_id, intacto) y **Capa 2** `SERVICE_IDENTITIES` (8 entradas). Vive en `modules/common/` porque ese paquete **no importa nada del proyecto**, así que `asset_generation`, `commercial_documents` y `financial_engine` lo consumen sin ciclo. 6 registros se **derivan** del canónico (dict-comprehension, no copia), 4 se **validan** contra Capa 1 con la razón registrada, 3 quedan fuera de alcance. El orden de derivación es contrato. El drift se disolvió **eliminando las 3 copias**, no comparándolas. Guardián AST: «derivar, no copiar».
+
+**Backwards compatibility**: sin cambio de comportamiento — los 6 IDs fantasma se corrigieron a `None`/asset real y el contrafactual lo midió. `monthly_report → no_faq_schema` (perla) eliminada. Capa 1 intacta para consumidores externos.
+
+---
+
+### Notas de Cambios v4.75.0 — FASE-B: biyección triple mapa ↔ emisión ↔ narrativa
+
+**Fecha:** 2026-09-03
+
+**Módulos afectados**: `modules/commercial_documents/pain_solution_mapper.py`, `v4_diagnostic_generator.py` (región `_pain_to_brecha`), `modules/asset_generation/asset_catalog.py`, `config/regional_benchmarks.yaml`, `README.md`, 2 archivos de test nuevos
+
+**Problema**: 9 pains existían en el mapa pero **nunca se emitían** (V1) y 2 sí se emitían pero se **descartaban en silencio** al pasar a la narrativa (N-A1). `_pain_to_brecha` terminaba en `return None` sin dejar rastro: la capa narrativa era 16/27 y nadie podía saber qué se había caído.
+
+**Solución**: el `return None` se reemplaza por una **derivación de Capa 1** (nombre, detalle y peso tomados del registro canónico, con fallback derivado de `estimated_impact`), así que la narrativa pasa a **total (26/26)** sin escribir una sola entrada a mano — el dict literal queda byte-idéntico en 16 entradas, prueba de que no nació una tabla paralela. 3 pains ganan señal verificable con guard «vacío vs ausente». `no_ga4_enhanced` se **retira** de Capa 1 y del catálogo (su guardia era insatisfacible: `is_enhanced` no existe en el repo) ⟹ Capa 1 27 → **26**. 6 pains se difieren con motivo y seguimiento (`PAINS_DIFERIDOS`). El candado es un **AST tridireccional** con la partición puesta **del lado de la emisión**.
+
+**Backwards compatibility**: delta medido, no declarado: emisiones 18 → 20, **DESCARTE REAL 2 → 0**. ⚠️ La premisa N-A1 del dossier resultó **falsa** (S-B7). Retirar un pain_id es cambio de contenido para diagnósticos futuros, no de API.
+
+---
+
+### Notas de Cambios v4.75.0 — FASE-C: punto 8, propuesta dinámica con partición única
+
+**Fecha:** 2026-09-03
+
+**Módulos afectados**: `modules/asset_generation/proposal_asset_alignment.py` (1005 → 1062), `modules/commercial_documents/coherence_validator.py`, `v4_proposal_generator.py`, `service_catalog.py`, `modules/quality_gates/publication_gates.py`, `modules/quality_gates/delivery_quality_report.py` (comentario), 5 archivos de tests
+
+**Problema**: dos builders de la matriz **parafaseaban** la misma partición propuesta→brecha→asset con la misma ruta de skip silencioso (A5), y un servicio sin brecha mapeada se prometía igual como `NO_BREACH`, inflando el denominador. Consecuencia medida en SalentoReal: `no_breach = 6`, `assets_are_justified = 0.75` con un asset de `pain_ids=[]` cuyo `any()` es **siempre** False ⟹ `is_coherent = false` **estructural**, en toda corrida y cualquier hotel.
+
+**Solución**: **una** función decide qué se promete — `classify_promised_services()`, consumida por los dos builders (duplicar el arreglo en gemelos era exactamente la derivación que A5 midió). Sin brecha **y** sin presencia verificada el servicio **no se promete**: pasa a `not_promised`, que se **publica** en `proposal_asset_matrix.json` (`summary = {promised, not_promised, unknown}`) ⟹ la exclusión es auditable en el JSON, no solo en el log. La presencia entra en la partición (nace `PRESENT_IN_PRODUCTION`, no se re-clasifica después). Los complementos siempre-activos salen del denominador de justificación (`ALWAYS_ACTIVE_COMPLEMENT_ASSETS` **derivado** de `counts_in_alignment=False`), generándose igual. `None` → catálogo estático legacy, `[]` → 0 comprometidos.
+
+**Backwards compatibility**: `no_breach` 6→0, `promised_services_total` 7→1, `assets_are_justified` 0.75→1.0, `is_coherent` **False→True** con el **umbral 0.8 intacto** y `_coherence_gate` sin tocar. Los dientes quedan: un asset sin `pain_ids` que **no** sea complemento sigue restando. ⚠️ La premisa B5 del dossier era falsa (señalaba `promised_assets_exist`).
+
+---
+
+### Notas de Cambios v4.75.0 — FASE-D: régimen de severidad de gates (11 blocking + 2 advisory)
+
+**Fecha:** 2026-09-03
+
+**Módulos afectados**: `modules/quality_gates/publication_gates.py` (2064 → 2181), `human_checklist_generator.py`, `main.py`, `AGENTS.md`, 2 archivos de tests
+
+**Problema**: cuatro regímenes de severidad convivían (docstrings decían 10+3, el código 13 plano, `delivery_quality_report` el suyo propio) y los fallos **advisory eran invisibles para el humano**: un gate no bloqueante que fallaba no aparecía en ningún lado.
+
+**Solución**: **una** fuente (`BLOCKING_GATE_NAMES` 11 / `ADVISORY_GATE_NAMES` 2) con **fail-fast en `__init__`** — añadir un gate sin declarar severidad revienta al instantiar, no en producción. Un único predicado `gate_blocks_publication()` decide; `advisory_degrades_to_blocking()` aplica el **piso por naturaleza del fallo** (`content_quality` con `details["blockers"]`; `proposal_asset_alignment` bajo `FLOOR = 0.8`) y **un gate que no se ejecutó siempre bloquea** (`GATE_EXECUTION_FAILED_KEY`), para que «advisory» no pueda volverse «inocuo por fallo de infraestructura». Los advisories se divulgan en `human_checklist.md` (sección 5b, antes de los ítems de decisión comercial para que `MAX_ITEMS` no los corte). `content_quality` con solo warnings emite el estado `WARNING` que ya existía y nadie producía. `asset_confidence` **sigue bloqueando**. El cuarto régimen (delivery) queda **intacto a propósito** (H10).
+
+**Backwards compatibility**: contrafactual re-ejecutable sobre las 2 corridas reales ⟹ **0 flips de `ready`** y 2 advisories antes silenciosos ahora divulgados. La fase corrigió mecanismo y visibilidad, **no relajó veredictos**. Nuevo parámetro con default en `HumanChecklistGenerator.generate()` ⟹ retrocompatible.
+
+---
+
+### Notas de Cambios v4.75.0 — FASE-E: snapshot de presencia en disco (A2) y `asset_path` (A6)
+
+**Fecha:** 2026-09-03
+
+**Módulos afectados**: `modules/asset_generation/site_presence_adapter.py` (writer nuevo), `main.py` (2 hunks), `tests/test_site_presence_persistence.py` (NUEVO), `tests/quality_gates/test_delivery_asset_path.py` (NUEVO)
+
+**Problema**: (A2) el dato que decide `present_in_production` → `no_breach`/`coverage_ratio`/G9 **no se persistía**, así que ningún revisor podía contrastar post-hoc qué afirmaron los gates contra qué respondió el sitio. (A6) `asset_path` salía `null` hasta en entradas `LINKED`.
+
+**Solución**: `save_site_presence_snapshot()` escribe `v4_audit/site_presence_snapshot.json` — **passthrough puro** del snapshot ya propagado (no llama `normalize_site_presence`; un test sonda de campos de probe impide que una normalización se cuele en silencio), envoltorio `{"snapshot_version": "1.0", ...}`, UTF-8 explícito. La causa raíz de A6 **no estaba en la matriz** (esa ya poblaba bien) sino en el **caller** de `main.py`: `assets_for_quality` construía dicts sin la clave `path` — 1 línea. La rama fallback de `asset_plan` queda deliberadamente sin rutas: no se inventan. Censo E4 de consumidores registrado: 6 activos, 1 ruta viva de re-verificación, 3 puntos muertos heredados + **NameError latente** (`site_presence_report` solo existe si `generate_proposal=True`) → insumo duro para FASE-F.
+
+**Backwards compatibility**: artefacto nuevo, ningún contrato existente cambia. El writer se llama en `try/except` con `[WARN]` no bloqueante. Baseline 892 → **897** (10 tests). ⚠️ Desviación de §4: E1/E2 **secuenciales**, no paralelos — ambos tracks editan `main.py`.
+
+---
+
+### Notas de Cambios v4.75.0 — FASE-F: oráculo único, `skipped ≠ passed` y el gate respeta el veredicto
+
+**Fecha:** 2026-09-03
+
+**Módulos afectados**: `modules/asset_generation/proposal_asset_alignment.py`, `modules/quality_gates/{delivery_quality_report,coherence_gate,publication_gates}.py`, `modules/assessment_builder.py`, `modules/quality_gates/publication_state.py` (**eliminado**), 4 archivos de tests
+
+**Problema**: tres focos de doble fuente de verdad. (A4) `verify_proposal_asset_alignment` clasificaba con su propio `== "exists"` mientras el oráculo canónico decidía otra cosa. (A1) en `delivery_quality_report` había **2 defaults G9 independientes** y un gate `skipped` se contaba como `passed`. (N11/P9) `publication_gates` miraba solo el score, así que un `is_coherent=False` explícito **no bloqueaba**. Y `publication_state.py` duplicaba la readiness con otra semántica sin que nadie lo importara (H8).
+
+**Solución**: la narración usa el **mismo criterio canónico** `is_present_in_production()` y el veto FASE-12B se extiende a `exists_with_issues` (cambió **quién** consulta el criterio, no el criterio — H7/L-SR3 intactos); `details.missing_count` == conteo de la matriz, igualdad oráculo↔narrador fijada por test. `_not_evaluated_g9()` es el **único** default, con estado `NOT_EVALUATED` distinto de passed/failed, visible en `summary` y en `human_review_items` (no bloquea: régimen delivery intacto). `coherence_verdict_passes(score, threshold, declared_is_coherent)` es la **única** definición del veredicto — `None` es vacío ≠ ausente (legacy por score), solo `False` explícito bloquea — consumida por el gate **y** por `CoherenceGate` (`CERTIFIED→REVIEW` con `can_certify=False`). `publication_state.py`: **eliminación, no conexión** (675 líneas, 0 importers verificados por grep antes de borrar).
+
+**Backwards compatibility**: **umbral 0.8 intacto**. F4 corpus re-evaluado sin correr `v4complete`: 28 corridas primarias ⟹ **0 liberadas** y **4 veredictos READY→NOT_READY**, todas con `is_coherent=False` persistido; las ~11 corridas ESTIMATED siguen bloqueadas en ambos mundos. El cross-reference de `AlignmentResult` se **conserva** para artefactos pre-C (DA-F2). Un test que consagraba el defecto (0.81/False → CERTIFIED) se corrigió al contrato nuevo. Residual divulgado: G6-delivery sigue leyendo solo score → **S-F2**. Baseline 897 → **920**.
+
+---
+
+### Notas de Cambios v4.75.0 — FASE-G: ceguera de gates NR1-NR4
+
+**Fecha:** 2026-09-04
+
+**Módulos afectados**: `modules/quality_gates/publication_gates.py` (2231 → 2346), `modules/auditors/v4_comprehensive.py` (1885 → 1945), `modules/assessment_builder.py`, `main.py`, 2 archivos de test nuevos + 3 reescritos
+
+**Problema**: cuatro gates estaban **ciegos**. `doc_audit_consistency` no recibía el audit y caía en «No audit data available» **PASSED con `value=null`**. `critical_recall` podía valer 1.0 sin ningún crítico. La escotilla V5 contaba un asset generado como cubierto aunque nadie lo mencionara. La escotilla V9 leía el ledger sin normalizar y distinguía mal «vacío» de «ausente».
+
+**Solución**: `AssessmentPayload.audit_data` (crudo) poblado por `with_audit_data(audit_result.to_dict())` en `main.py`; datos ausentes → `NOT_EVALUATED` con `state_reason` (coherente con A1: no bloquea, no cuenta como pasado, visible en `summary`), contradicciones reales → FAILED. `_identify_critical_issues` califica PageSpeed `status=ERROR` no cubierto y banda GEO `critical` (helper módulo-level `geo_band_critical_issue`, `GEO_CRITICAL_MAX_SCORE = 35`, cargado por `with_geo_flow()` desde `v4_audit/geo_flow_result.json`); **SR-H2 queda condicionado**: el atajo favorable solo opera si `performance.status != "ERROR"`. V5: `ASSET_GENERATED` **sigue** en `_JUSTIFIED_STATUSES` (no se revierte BUG-6) — el estrechamiento vive en la **regla de mención** del loop de coverage; `VERIFIED_IN_SITE` justifica sin mención. V9: normalización única dict/lista, `resolved` vacío + `original` no vacío → BLOCKED (`reconciler_dropped_entries`).
+
+**Backwards compatibility**: ⚠️ **`pain_solution_mapper.py` NO se tocó** — la cuarta predicción de archivo falsa del plan: los criterios del detector viven en `v4_comprehensive.py`, así que H1/H3 quedaron sin orden forzoso. Tres tests preexistentes codificaban el contrato pre-G y se actualizaron con registro (patrón S-B11). Baseline 920 → **944**.
+
+---
+
+### Notas de Cambios v4.75.0 — FASE-H: quirúrgicos V6/V7/V8/V11/V12/V13
+
+**Fecha:** 2026-09-04
+
+**Módulos afectados**: `modules/commercial_documents/pain_solution_mapper.py` (1202 → 1297), `v4_diagnostic_generator.py` (3715 → 3843), `modules/auditors/v4_comprehensive.py` (1945 → 2025), `modules/common/performance_status.py` (NUEVO), `data_validation/metadata_validator.py` (+ gemelo **borrado**), 5 archivos de tests
+
+**Problema**: seis formas de degradación silenciosa. `low_ota_divergence` (pain **high**, priority 1) era código muerto por un guard `hasattr(value, '__iter__')` insatisfacible con un número; `low_organic_visibility` se emitía **dos veces**; el `except Exception` de `_identify_brechas` devolvía lista vacía sin ruido y el documento afirmaba «No se detectaron brechas»; el texto de D6 atribuía a «sitio nuevo» un fallo **nuestro** de PageSpeed; existían **dos** `MetadataValidator` byte a byte idénticos; y `GOOGLE_PAGESPEED_API_KEY` era un placeholder de 3 caracteres.
+
+**Solución**: **V7** validación numérica con normalización de unidades (`_normalize_to_fraction`: `0.2`, `20`, `"0.2"`, `"20"` y `"20 %"` son todos 20 %) y `ota_presence` como **evidencia no bloqueante**, nunca como guard (con `main.py` sin registrarlo en el `ValidationSummary`, usarlo de guard habría devuelto el pain a código muerto). **V8** dos señales calculadas primero y **un solo punto de emisión** que conserva el dato medido. **V6** traceback logueado, estado `BRECHAS_STATE_NOT_EVALUATED` **por corrida**, el caché deja de escribirse y el **render lo dice** (aviso + título `FUGAS PRINCIPALES (NO EVALUADAS)`), barrido también a `_build_brechas_section` y `_build_brechas_resumen_section`. **V11** cabecera de tabla construida por código (no por template, para que el conteo de columnas no se desincronice), criterio compartido en `modules/common/performance_status.py` — **lista blanca a propósito**: vacío/`None`/desconocido caen del lado «no evaluable» — `sanitize_pagespeed_message()` en la fuente y `disjoint_executed_validators()` para que `executed ∩ skipped = ∅`. **V13** el gemelo se **borra físicamente** (`git rm`, −219 líneas) con los 2 consumidores repuntados al vivo y una guardia que fija la **ausencia**. **V12** medido y documentado, **`.env` no editado**.
+
+**Backwards compatibility**: severidades, nombres y `detected_by` de cada caso intactos. El literal `NOT_EVALUATED` se **replica**, no se importa: el import top-level desde `publication_gates` produce `ImportError` por ciclo (verificado empíricamente) y la deriva la corta un test. Residuales: el predicado de skip sigue confundiendo «sin datos de campo» con «no se llamó» (**S-H3**), y la capa de pain sigue descartando el ERROR sin justificación (**S-H2**). Baseline **944/2 intacto**, batería de la fase 188 passed / 0 failed.
+
+---
+
+### Notas de Cambios v4.75.0 — FASE-I: única corrida E2E del plan (Salento Real)
+
+**Fecha:** 2026-09-04
+
+**Módulos afectados**: ninguno de código — `evidence/FASE-I/` (16 checks de `comparar_faseI_vs_baseline.py`, pareja pre/post de baseline y la corrida capturada)
+
+**Problema**: todo lo anterior eran contratos y unidades; faltaba el veredicto sobre **artefactos reales de una corrida**, que es donde el tribunal va a mirar.
+
+**Solución**: una sola corrida `v4complete` (exit 0, 174 s, 0 tracebacks, sin `--force`) comparada contra el baseline FASE-D del 2026-08-31. **14/16 checks** y las anomalías **clasificadas**, no enumeradas: 9 fix esperado del plan, 4 deuda propia del plan (S-I1, S-I2, S-I4, S-I7), 3 infraestructura preexistente, 0 variación natural del sitio (verificado: GBP, rating, competidores y escenarios financieros numéricamente idénticos en ambas corridas).
+
+**Backwards compatibility**: `is_coherent` false→true, `no_breach` 6→0, snapshot viajando en el ZIP (37 → **38** archivos), `doc_audit_consistency` `null` → `0`, pains 3 → 5. ⚠️ Lo no esperado: la coherencia **bajó** 0.88 → **0.8333** y la caída es aritmética de honestidad medida (el denominador de `problems_have_solutions` pasó de 3 a 5 porque el sistema ahora conoce 2 pains que antes se tragaba). El «0.88 → 0.9133» publicado por FASE-C **no era una predicción**: se midió sobre el ledger viejo de 3 pains → **S-I4**.
+
+---
+
+### Notas de Cambios v4.75.0 — FASE-VERIFY: certificación con sonda propia
+
+**Fecha:** 2026-09-04
+
+**Módulos afectados**: ninguno — `evidence/FASE-VERIFY/ESTABILIZACION-PRE-TRIBUNAL/` (2 sondas re-ejecutables, matriz AC/NR y write-back a QMind)
+
+**Problema**: cada fase publicaba sus propias cifras sobre sus propios fixtures. Sin una medición independiente sobre los artefactos de la corrida, el cierre habría certificado **lo que el plan dijo**, no lo que el sistema hizo.
+
+**Solución**: VERIFY **no** re-corrrió `v4complete`: re-midió los artefactos con sonda propia y reportó el valor **observado**, diciendo dónde difiere del auto-reporte. Saldo: **8 AC ✅ / 4 ⚠️ / 0 ❌** y **10 NR ✅ / 1 ⚠️ / 1 ❌**. Los 4 ⚠️ no eran de criterio sino de **lo que el sistema escribe en sus artefactos** (coverage, severidad, mensaje), y el rojo S-V1 lo había causado el propio plan. De ahí salieron 4 reglas de proceso para el executor y una sesión extra.
+
+**Backwards compatibility**: 0 código y 0 tests. Dos hallazgos de forma que quedaron en el executor (**v2.19.0**): un **AC no legible en el artefacto que el sistema produce es ⚠️, no ✅** (R2.4), y la no-regresión de conteos se formula como **delta con pareja pre/post** (R2.3).
+
+---
+
+### Notas de Cambios v4.75.0 — FASE-HOTFIX-PRE-RELEASE: serialización legible en el artefacto
+
+**Fecha:** 2026-09-04
+
+**Módulos afectados**: `main.py` (`_build_gate_report_payload()`), `modules/asset_generation/proposal_asset_alignment.py`, `modules/commercial_documents/coherence_validator.py`, `modules/asset_generation/v4_asset_orchestrator.py`, `scripts/validate_plan_citations.py` (NUEVO), `scripts/run_all_validations.py` (check 8), `.agents/workflows/phased_project_executor.md` (v2.19.0), 5 archivos de test nuevos
+
+**Problema**: el saldo ⚠️ de VERIFY no era de criterio sino de **serialización**: `gate_report_*.json` no publicaba `severity` ni `blocks_publication`, `proposal_asset_matrix.json` no publicaba `coverage_ratio` con su denominador, y `promised_assets_exist` narraba el tamaño del catálogo estático («7 servicios verificados») al cliente. S-V1 además era un rojo que el plan había causado.
+
+**Solución**: regla de oro — **serialización, prosa de artefacto y plantilla; 0 decisiones de negocio, 0 umbrales, 0 corridas E2E nuevas**. La forma del `gate_report` se extrae a una **única** función y `severity`/`blocks_publication` salen **derivadas** del predicado canónico de FASE-D, no copiadas de una tercera lista. `to_dict()` de la matriz **delegan** en `AlignmentResult.from_asset_alignment_matrix(...)`: un ratio recalculado ahí habría sido el segundo oráculo del mismo número (el defecto A4 en vertical), y la versión del formato sube `2.0 → 2.1` porque el formato cambió y la versión debe delatarlo. El mensaje narra la **pasada** y su fuente real. La regla de citas se materializa como verificador que **reporta, nunca reescribe** (baseline: 738 citas históricas en 78 archivos).
+
+**Backwards compatibility**: `passed`/`score`/`severity` de los gates **sin tocar**; contrafactual **re-producido** sobre los 3 `gate_report_*.json` persistidos ⟹ **0 flips de `ready`**. Clave `severity` nueva en el artefacto (9 claves por gate, antes 7) — aditiva. Suite 944 → **950/2** (+6 exactos), batería de contratos **180 passed / 0 failed**, validaciones **7/7 → 8/8**. Difiere con dueño y no es de RELEASE: **S-HF1** (AC10), mitad estructural de **S-C3** (P12) y **S-I1** (NR2 ❌) → **tribunal**.
 
 ---
 

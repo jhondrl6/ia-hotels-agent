@@ -1,8 +1,8 @@
-<!-- agents_version: v4.74.1 | last_update: 2026-09-04 -->
+<!-- agents_version: v4.75.0 | last_update: 2026-09-04 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.74.1 -- Blocklist-v2 COMPLETADO**
+> **v4.75.0 -- Estabilización pre-tribunal COMPLETADO**
 
 ---
 
@@ -113,7 +113,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 3,689 funciones, 284 archivos, 0 regresion |
+| **Tests** | 3,934 funciones, 298 archivos, 0 regresion |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -398,7 +398,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (3,689 funciones, 284 archivos)
+# Todas las pruebas (3,934 funciones, 298 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -413,31 +413,35 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (3,689 funciones totales)
+### Cobertura por Modulo (3,934 funciones totales)
+
+> Medido 2026-09-04 con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
+> (no `pytest --collect-only`, que da 3,932). Las filas suman el total.
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
 | financial_engine | 549 | `tests/financial_engine/` |
-| asset_generation | 418 | `tests/asset_generation/` |
-| quality_gates | 294 | `tests/quality_gates/` |
-| commercial_documents | 279 | `tests/commercial_documents/` |
-| auditors | 149 | `tests/auditors/` |
+| asset_generation | 470 | `tests/asset_generation/` |
+| quality_gates | 459 | `tests/quality_gates/` |
+| commercial_documents | 351 | `tests/commercial_documents/` |
+| auditors | 202 | `tests/auditors/` |
 | geo_enrichment | 140 | `tests/geo_enrichment/` |
+| data_validation | 133 | `tests/data_validation/` |
 | test_never_block_architecture | 122 | `tests/test_never_block_architecture/` |
-| data_validation | 111 | `tests/data_validation/` |
-| orchestration_v4 | 66 | `tests/orchestration_v4/` |
+| orchestration_v4 | 93 | `tests/orchestration_v4/` |
+| delivery | 69 | `tests/delivery/` |
 | config | 61 | `tests/config/` |
 | utils | 57 | `tests/utils/` |
-| delivery | 54 | `tests/delivery/` |
 | postprocessors | 52 | `tests/postprocessors/` |
 | scrapers | 38 | `tests/scrapers/` |
+| common | 38 | `tests/common/` |
 | analytics | 33 | `tests/analytics/` |
 | regression | 26 | `tests/regression/` |
 | e2e | 21 | `tests/e2e/` |
 | providers | 18 | `tests/providers/` |
-| common | 16 | `tests/common/` |
 | monitoring | 14 | `tests/monitoring/` |
-| root test files | 611 | `tests/test_*.py` (integration, harness, data models) |
+| archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
+| root test files | 768 | `tests/test_*.py` (integration, harness, data models) |
 
 ---
 
@@ -504,7 +508,7 @@ iah-cli/
 │   ├── common/                 # Loaders YAML/fallback compartidos
 │   ├── postprocessors/         # Quality gate + scrubber de contenido
 │   └── quality/                # Validadores semanticos y de coherencia financiera
-├── tests/                      # Suite de pruebas (3,689 funciones, 284 archivos)
+├── tests/                      # Suite de pruebas (3,934 funciones, 298 archivos)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/

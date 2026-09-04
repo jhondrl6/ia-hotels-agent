@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-08-31 18:15:38 UTC
+> Auto-generado: 2026-09-04 23:11:52 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -9,29 +9,29 @@
 
 | Componente | Version | Fuente |
 |------------|---------|--------|
-| Proyecto | 4.74.0 | VERSION.yaml |
+| Proyecto | 4.75.0 | VERSION.yaml |
 | Ecosystem Convention | 1.0.0 | .agent/CONVENTION.md |
 
 ## Skills Activas (1)
 
 | Skill | Descripcion |
 |-------|-------------|
-| phased_project_executor.md | Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI. |
+| phased_project_executor.md | Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código. Ejecutado por agentes AI. |
 
 
 ## Estado de Datos
 
 | Metrica | Valor |
 |---------|-------|
-| Shadow logs | 1195 archivos JSON |
-| Sesiones activas | 16 |
+| Shadow logs | 1201 archivos JSON |
+| Sesiones activas | 18 |
 | Sesiones archivadas | 6 |
-| Ultimo shadow log | 20260831_014411_bd308a66.json |
-| Ultima sesion activa | 2026-08-31_996a1a9b.json |
-| Ultimo contexto actualizado | 2026-08-31T17:25:13.071061+00:00 |
+| Ultimo shadow log | 20260903_212834_9d212284.json |
+| Ultima sesion activa | 2026-09-04_9d9b4f36.json |
+| Ultimo contexto actualizado | 2026-09-04T17:01:34.765883+00:00 |
 | Ultima URL procesada | https://www.hotelsalentoreal.com/ |
 
-## Config Files (9/10 healthy)
+## Config Files (10/10 healthy)
 
 | Archivo | Estado |
 |---------|--------|
@@ -44,9 +44,9 @@
 | `regional_benchmarks.yaml` | OK |
 | `scenarios.yaml` | OK |
 | `settings.yaml` | OK |
-| `url_blocklist.yaml` | MISSING FIELDS |
+| `url_blocklist.yaml` | OK |
 
-**Total:** 9/10 archivos con version+description
+**Total:** 10/10 archivos con version+description
 
 ## Validaciones
 

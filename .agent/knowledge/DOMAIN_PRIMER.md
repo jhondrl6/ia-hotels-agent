@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.74.1 | **Codename**: Blocklist-v2
-> **Release date**: 2026-08-31 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.75.0 | **Codename**: Estabilización pre-tribunal
+> **Release date**: 2026-09-04 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -18,7 +18,7 @@
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
 | **scrapers/** | 16 | BookingScraper; DriverInterface; GBPAuditor; GBPAuditorAuto; GBPRevenueLeakDetector; DriverAdapterProtocol, DriverAdapterBase, SeleniumAdapter, PlaywrightAdapter; PostsAuditResult, GBPPostsAuditor; Pl |
-| **data_validation/** | 7 | ConfidenceLevel, DataSource, ValidationResult, ConfidenceTaxonomy; CrossValidator; MetadataValidator; UrlNoPropiaError, UrlClassification; PageSpeedResult, PageSpeedClient; SchemaType, SchemaValidatio |
+| **data_validation/** | 6 | ConfidenceLevel, DataSource, ValidationResult, ConfidenceTaxonomy; CrossValidator; UrlNoPropiaError, UrlClassification; PageSpeedResult, PageSpeedClient; SchemaType, SchemaValidationResult, RichResult |
 | **financial_engine/** | 19 | ADRSource, ADRResolutionResult, ADRResolutionWrapper; CalculationStatus, FinancialCalculationResult, FinancialCalculatorV2; InferredChannel, EvidenceConfidence, ChannelEvidence, ChannelEvidenceResolve |
 | **orchestration_v4/** | 2 | OnboardingPhase, OnboardingStatus, OnboardingState, OnboardingController; Phase1Result, Phase2Result, HookRangeTraceability, HotelInputs |
 | **onboarding/** | 4 | OnboardingForm |
@@ -52,7 +52,7 @@
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **quality_gates/** | 10 | _DerivedEntry, AlignmentResult; ClaimHealingAction, ClaimHealingResult, ClaimSelfHealer; CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; CommercialGateResult, CommercialGateRepo |
+| **quality_gates/** | 9 | _DerivedEntry, AlignmentResult; ClaimHealingAction, ClaimHealingResult, ClaimSelfHealer; CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateResult; CommercialGateResult, CommercialGateRepo |
 
 ### UTILIDADES Y VALIDACION
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-08-31 | v4.74.1 Blocklist-v2*
+*Auto-generado: 2026-09-04 | v4.75.0 Estabilización pre-tribunal*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
