@@ -1484,3 +1484,106 @@ fuente consolidada del plan** (la granularidad que el notebook tiene), no como 3
 `keywords: *…*` — medido sobre la fuente ingerida: **6 de 41** (ver §9.1). Lo que el retrieve indexa es el
 texto de la lección, y eso está verificado con dos sondeos. Las cuatro de VERIFY son las únicas que **no**
 podían conocerse antes de este plan: nacen de medir sobre artefactos, no de escribir código.
+
+---
+
+## 10. Cierre del plan — **FASE-RELEASE (2026-09-04)**
+
+> Punto 4 del Post-Ejecución obligatorio del prompt de RELEASE. **El plan está cerrado: 11/11 sesiones +
+> la extra (HOTFIX).** Esta sección no re-mide lo que §7.3 consolidó: registra qué quedó **publicado** y
+> qué se **hereda abierto** a la siguiente sesión del proyecto (el tribunal).
+
+### 10.1 Versión publicada
+
+| Campo | Valor |
+|-------|-------|
+| Versión | **4.75.0** (MINOR — MINOR porque hay funcionalidad nueva: punto 8, fuente única, severidad 11+2) |
+| Codename | **«Estabilización pre-tribunal»** (confirmado con el usuario en esta sesión) |
+| `release_date` | 2026-09-04 |
+| Fuente única | `VERSION.yaml` — **0** escrituras de versión fuera del flujo de sync |
+| Cabeceras sincronizadas | **6/6** (`AGENTS.md`, `README.md`, `.cursorrules`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md`, `docs/contributing/REGISTRY.md`) — grep `4.74.1` sobre las seis = **0** |
+| `DOMAIN_PRIMER.md` | **regenerado por script** (`doctor.py --regenerate-domain-primer`): 197 archivos Python, 375 clases, 25 módulos |
+| `SYSTEM_STATUS.md` | regenerado (`doctor.py --status`, paso E6 del executor) |
+| REGISTRY | entrada `FASE-RELEASE-4.75.0` vía `log_phase_completion.py --release` → **Version Sync Gate PASSED** |
+| Documentación | entrada `[4.75.0]` en `CHANGELOG.md` con las 5 subsecciones (copiada de `09` **§C.2**) + **11 notas técnicas** en `GUIA_TECNICA.md`, una por fase |
+
+### 10.2 Validadores en verde — pareja pre/post (regla R2.3)
+
+RELEASE **sí** publicó su pareja pre/post, aunque no cambió código, porque su trabajo (reescribir 9
+documentos que varios candados leen) **sí** podía romper algo.
+
+| Validador | **PRE** (HEAD `580ec9c`) | **POST** (con los documentos de RELEASE) |
+|-----------|--------------------------|-------------------------------------------|
+| `run_all_validations.py --quick` | **8/8** | **8/8** |
+| `validate_agents_md.py` | **5 PASS / 1 FAIL** — `test_count` 3.689 vs 3.932 (6,2 % > ±5 %) → **S-I6** | **6 PASS / 0 FAIL** — 3.934 vs 3.932 (0,1 %) |
+| `validate_document_integration.py` | sin errores | sin errores |
+| Batería de contratos A+B+C+D+delivery | 180/0 (registrada por HOTFIX) | **180 passed / 0 failed** (3,67 s) — re-ejecutada por RELEASE |
+| Suite dirigida `quality_gates` + `asset_generation` | 950/2 (registrada por HOTFIX) | **950 passed / 2 skipped** (5,90 s) — re-ejecutada por RELEASE |
+
+**Lectura**: **0 regresiones causadas por RELEASE** y un fallo documental histórico (**S11/S-I6**) cerrado.
+El `test_count` llevaba **releases** fallando en verde relativo: el número canónico crecía fase a fase y
+nadie lo volvía a escribir, porque **ningún candado impedía publicar con el conteo viejo** — solo lo
+reportaba.
+
+### 10.3 Qué cerró RELEASE y qué no, con el motivo
+
+**Cerró**: **S11/S-I6** (conteos de `AGENTS.md`, y de paso la tabla «Cobertura por Modulo», que **no
+sumaba su propio total**: 3.129 sobre 3.689, sin fila para `tests/_archived_broken_tests/`) · la fecha
+legible del banner de `README.md`, que seguía diciendo «31 Agosto 2026» (audit E8b) · publicar la
+**AC10 ⚠️** y la **NR2 ❌** **como ⚠️ y ❌** en el CHANGELOG, con su dueño nombrado.
+
+**No cerró, y no era suyo**: **S-HF1** (AC10: `details.total_services`), la **mitad estructural de S-C3**
+(P12: `score=1.0` hardcode + unión del denominador) y **S-I1** (NR2 ❌: `critical_recall` con `details: {}`)
+— tres decisiones de **criterio de negocio**, dueño el **tribunal** (DA-V5).
+
+**Queda abierto con motivo explícito**: **S-H15/S-H16/S-H17/S-I8**. La **suite ancha** no la re-ejecutó
+nadie desde FASE-H. El alcance de RELEASE declara **«Comandos largos: 0»**, así que correrla habría sido
+exceder el alcance, no cumplirlo. **Consecuencia registrada**: las cifras publicadas de «0 regresiones» son
+**reales sobre la ventana que el plan midió siempre** (`quality_gates` + `asset_generation` + contratos +
+validadores del ecosistema documental), **no** sobre el árbol completo. Nadie debe leer 180/0 y 950/2 como
+«los 3.934 tests pasan».
+
+### 10.4 Write-back a QMind — **ejecutado, con un efecto colateral que queda pendiente**
+
+El ciclo pedía **refrescar la fuente consolidada del plan** para incluir **L-HF1** (HOTFIX la clasificó
+INCLUIR y dejó el ciclo en RELEASE; **L-HF2** sigue **excluida con razón** — §9.1). Lo que se hizo y lo que
+se midió:
+
+1. Se añadió el **adendum** al vehículo de la fuente — `evidence/FASE-VERIFY/ESTABILIZACION-PRE-TRIBUNAL/QMIND-WRITE-BACK.md`
+   — rotulado explícitamente como *«Adendum añadido por FASE-RELEASE, no es parte del registro de VERIFY»*,
+   para no reescribir lo que VERIFY midió (misma regla que `09` §C.1).
+2. Se re-ingirió ese archivo al notebook `iah-cli-lecciones`. **Medido**: `add_source` **no actualiza en
+   sitio** — creó una fuente **nueva**, `01a06ebb-001b-7a1a-a195-2714a9db271e` (`markdown`, `ready`, 64 chunks,
+   23:22:24Z), con el mismo título que la de VERIFY.
+3. Verificación de que el contenido indexó: `retrieve` restringido a esa fuente devuelve **L-HF1** con
+   score **0,986** (chunk 63) y **0,973** (chunk 64). Con la fuente vieja, la misma consulta no la encontraba.
+
+⚠️ **Consecuencia sin resolver, y no es accionable desde esta sesión**: el notebook quedó con **dos** fuentes
+del mismo plan — la nueva (completa) y `01a06dae-b1f5-7a7b-9159-9b2f163b07a2` (la de VERIFY, **62 chunks, sin
+L-HF1**). Eso **rompe la granularidad que el propio plan fijó** («una fuente por plan») y, peor, deja una
+fuente **caduca recuperable**: un `Paso 0` futuro puede consultarla y creer que el plan tuvo 41 lecciones.
+**No existe herramienta de borrado** en el conector QMind (solo `add_source`/`read_source`/`list_sources`/
+`retrieve`/`search`), así que **queda en manos del usuario eliminar `01a06dae-…` desde la UI**. Reportado
+aquí, en `09` §D y en el resumen de cierre, no como nota al pie.
+
+### 10.5 Dos lecciones de forma que aporta esta fase
+
+- **Una regla de sincronización que no coincide con el patrón que su propio validador exige es letra
+  muerta con ruido de salud.** `agents_version_comment` buscaba `agents_version:\s*[\d.]+`, pero
+  `AGENTS.md` lleva `v4.74.1` — con `v`, que es justo lo que **ordena**
+  `validate_document_integration.py`. La regla nunca disparaba y `sync_versions.py` respondía
+  **«in sync»**, que es la forma más cara de un fallo silencioso: un mensaje de éxito. Es **R2.4 con signo
+  invertido** — el candado no leía el artefacto que afirmaba vigilar, sino una forma que ya no existía. Se corrigió
+  el **patrón**, no la cabecera a mano, porque editar a mano habría vuelto a romperlo en la próxima release
+  y porque `09` prohíbe hardcodear versiones fuera del flujo de sync. **Misma familia**: `L-G1` (un log de
+  rechazo no es la causa) y su gemela positiva — *un log de éxito tampoco es el efecto*.
+- **Un total documentado que sus propias filas no suman no es un total.** La tabla de cobertura
+  de `AGENTS.md` llevaba 3.129 funciones listadas bajo un encabezado de 3.689 y sin fila para el
+  directorio archivado. Al re-medir, **3.934 = 2.946 (módulos) + 220 (archivados) + 768 (archivos raíz)**
+  ✔. Un conteo agregado sin su partición auditable es exactamente la tautología que el plan perseguía
+  erradicar en los gates (`medicion-deltas-coverage-ratio-y-coherence`).
+
+**Cierre**: el plan **ESTABILIZACION-PRE-TRIBUNAL-2026-09-03** queda **COMPLETADO** con **v4.75.0**
+publicada. Su producto no es solo el código: es que la identidad del contrato quedó en **una** fuente,
+**derivada** y **candada**, y legible en los artefactos que el cliente recibe. Lo que sigue vive en el
+**tribunal** (S-HF1, P12, S-I1) y en **OPS** (V12, `09` §Nota OPS).

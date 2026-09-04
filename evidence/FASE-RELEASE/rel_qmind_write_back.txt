@@ -1,0 +1,56 @@
+# FASE-RELEASE — write-back a QMind (refresco de la fuente del plan con L-HF1)
+
+Nivel de ciclo: **una fuente consolidada por plan** (regla fijada por FASE-VERIFY, §9.1 de `10-analisis`;
+dueño del ciclo según `09` §D: **RELEASE**).
+
+Notebook: `iah-cli-lecciones` — id `01a04d98-b7bd-778c-8441-26fdc7e35f45`
+
+## Qué se ingirió
+
+Vehículo: `evidence/FASE-VERIFY/ESTABILIZACION-PRE-TRIBUNAL/QMIND-WRITE-BACK.md` (857 → **929** líneas,
+**+72** por el adendum), con un bloque añadido por esta fase y rotulado como tal:
+
+- `## Adendum añadido por FASE-RELEASE (2026-09-04) — no es parte del registro de VERIFY`
+  - **L-HF1** «Un candado con la *cobertura* equivocada pasa en verde mientras el artefacto miente»
+    (clasificada INCLUIR por HOTFIX, pendiente de ingestión).
+  - **L-HF2** registrada como **EXCLUIDA de QMind con razón** (novena entrada de una clase ya cargada;
+    sigue en `10-analisis` como registro de la fase).
+  - Balance del ciclo corregido: **43 = 33 con texto propio + 7 fusionadas en 4 destinos + 3 excluidas** ✔
+  - Cierre del plan: versión publicada, saldo de ACs/NRs, ventana real de la medición, diferidos con dueño.
+
+## Resultado medido
+
+| Campo | Valor |
+|-------|-------|
+| Herramienta | `add_source(kind="file")` |
+| Fuente creada | `01a06ebb-001b-7a1a-a195-2714a9db271e` |
+| Título | `10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 (lecciones aprendidas y decisiones)` |
+| Estado | `ready` (createdAt 2026-09-04T23:22:24.155Z, updatedAt 23:22:29.426Z) |
+| Chunks | **64** (antes 62) |
+
+## Verificación de que indexó (no asumida)
+
+`retrieve(notebookId=iah-cli-lecciones, sourceIds=[01a06ebb-…], query="candado con la cobertura equivocada
+pasa en verde mientras el artefacto miente len de registro estatico")`:
+
+- chunk **63** → score **0,986** — texto de **L-HF1** completo
+- chunk **64** → score **0,973** — cierre de L-HF1 + exclusión de L-HF2 + balance 43
+
+Sonda negativa: la misma consulta contra la fuente anterior (`01a06dae-…`) no devolvía L-HF1 — la fuente de
+VERIFY contiene L-A1…L-V4 pero **ninguna** lección del HOTFIX (comprobado sobre el propio archivo antes de
+editar: `grep -o "L-[A-Z]*[0-9]*"` no incluía L-HF1/L-HF2).
+
+## ⚠️ Efecto colateral, sin resolver (no accionable desde el agente)
+
+`add_source` **no actualiza en sitio**: no hay `update_source` ni `delete_source` en el conector. Por tanto
+el notebook quedó con **dos** fuentes del mismo plan:
+
+| Fuente | Chunks | ¿Tiene L-HF1? | Acción |
+|--------|--------|---------------|--------|
+| `01a06dae-b1f5-7a7b-9159-9b2f163b07a2` (VERIFY) | 62 | **No** | **Borrar desde la UI** — es la que caducó |
+| `01a06ebb-001b-7a1a-a195-2714a9db271e` (RELEASE) | 64 | Sí | Queda como la fuente del plan |
+
+Riesgo si no se borra: un `Paso 0` futuro puede recuperar la versión vieja y leer **41** lecciones donde el
+plan dejó **43**, replicando la clase de defecto que HOTFIX registró en L-HF2 (una cifra publicada que ya no
+corresponde a lo medido). El borrado es una acción sobre un recurso compartido del usuario, así que se
+**reporta y se pide**, no se ejecuta por iniciativa propia.

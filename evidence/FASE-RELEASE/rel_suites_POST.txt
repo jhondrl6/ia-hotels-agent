@@ -1,0 +1,14 @@
+# FASE-RELEASE — bateria de contratos A+B+C+D+delivery (mismo comando registrado por HOTFIX, R2.3 delta)
+# python -m pytest tests/common/test_service_identity_registry.py tests/commercial_documents/test_pain_map_bijection.py tests/commercial_documents/test_detect_pains_emisiones_faseB.py tests/asset_generation/test_fase_c_propuesta_dinamica.py tests/quality_gates/test_gate_severity_lists.py tests/delivery/test_delivery_contract.py tests/quality_gates/test_publication_gates.py::TestFASEDGateSeverity tests/quality_gates/test_human_checklist_generator.py::TestAdvisoryDisclosureFASED -q
+tests/common/test_service_identity_registry.py::test_narratives_subset_de_capa1
+tests/commercial_documents/test_pain_map_bijection.py::test_narratives_no_tiene_huerfanos
+  <unknown>:855: SyntaxWarning: invalid escape sequence '\W'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+180 passed, 13 warnings in 3.67s
+
+# NR5 suite dirigida quality_gates + asset_generation (esperado 950 passed / 2 skipped)
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+950 passed, 2 skipped, 11 warnings in 5.90s

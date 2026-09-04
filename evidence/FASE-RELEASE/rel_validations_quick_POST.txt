@@ -1,0 +1,31 @@
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-09-04 18:13:42
+Mode: FULL
+============================================================
+
+[1/8] Checking for residual files...
+[2/8] Checking Plan Maestro sync...
+[3/8] Checking version synchronization...
+[4/8] Checking for hardcoded secrets...
+[5/8] Checking document integration...
+[6/8] Checking prompts for --release flag in intermediate phases...
+[7/8] Checking .opencode references...
+[8/8] Checking plan citations (simbolos, no numeros de linea)...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: No hardcoded secrets found
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 738 citas historicas, 0 nuevas y 0 crecimientos (78 archivos en el inventario)
+
+------------------------------------------------------------
+  TOTAL: 8/8 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED

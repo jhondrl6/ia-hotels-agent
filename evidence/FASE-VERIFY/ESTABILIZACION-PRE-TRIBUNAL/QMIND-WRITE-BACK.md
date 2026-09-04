@@ -855,3 +855,75 @@ previa de este párrafo afirmaba que *cada* lección quedó redactada con el for
 `keywords: *…*`. Medido sobre esta fuente: **6 de 41**. Las demás llevan los términos de búsqueda en prosa
 dentro de la línea de Pertinencia, que es lo que el retrieve efectivamente indexa. Quien busque el formato
 literal no encontrará 35 lecciones que sí están.
+
+---
+
+## Adendum añadido por **FASE-RELEASE (2026-09-04)** — no es parte del registro de VERIFY
+
+> Este bloque lo escribe la fase que **dueño del ciclo** del write-back (`09` §D «Estado para RELEASE»:
+> *«una fuente por plan, dueño del ciclo: RELEASE»*). Lo que VERIFY escribió arriba **no se reescribe**:
+> VERIFY no podía conocer las lecciones de una sesión que aún no existía. Se añaden las dos del
+> FASE-HOTFIX-PRE-RELEASE y el cierre del plan.
+
+**L-HF1 — Un candado con la *cobertura* equivocada pasa en verde mientras el artefacto miente** *(FASE-HOTFIX)*
+- **Qué pasó**: AC2 se cerró prohibiendo la **forma numeral** (un dígito pegado a «servic» en cualquier
+  dirección) en 7 módulos de narrativa. FASE-VERIFY midió después que el mensaje que **sí llega al
+  cliente** —`promised_assets_exist` en `coherence_validator.py`— narraba «7 servicios verificados» con
+  una matriz de 4. El candado estaba en verde por dos razones independientes: el archivo **no estaba en
+  la tupla** y el número no era un literal sino `len(REGISTRO)` — **una forma que la regla de forma no
+  puede ver**.
+- **Por qué**: un candado de forma codifica *la apariencia del defecto observado*, no *la propiedad que
+  debe sostenerse*. Cuando la misma mentira viaja en otra representación (derivación en vez de literal),
+  el verde es exactamente lo que este plan denuncia: un validador que afirma sin mirar.
+- **Qué lo previene**: al extender la cobertura de un candado, **medir primero su población** (aquí: 0
+  colisiones en el archivo entrante, así que extender no relaja nada) y escribir el candado sobre la
+  **propiedad** — «un `message` no puede contener `len(<registro estático>)`», evaluado en AST, no con
+  regex sobre el texto. Y re-correr la barreda **después de escribir el comentario explicativo**: la sesión
+  violó su propia barra con un comentario que enunciaba las dos formas prohibidas (octava instancia de la
+  memoria `grep-de-criterio-de-aceptacion-tambien-cuenta-prosa`).
+- **Pertinencia**: **INCLUIDA** en QMind y en la memoria de proyecto
+  (`candado-con-cobertura-equivocada-pasa-en-verde`). Complementa **L-B1** (un candado con la forma
+  equivocada falla en rojo aunque el código esté bien) con el signo invertido — pasa en verde aunque el
+  artefacto esté mal — y extiende **L-V2** (barreda de tests espejo) a la barra de **cubrimiento** del
+  candado. Términos de búsqueda: *lock/candado que pasa en verde, cobertura de un guardián, población del
+  candado, regla de forma vs propiedad, AST en vez de regex, `len()` de un registro estático narrado en un
+  mensaje de gate*.
+
+**L-HF2 — EXCLUIDA de QMind, con razón registrada** *(FASE-HOTFIX)*: «la evidencia que no registra su
+comando no es re-ejecutable, aunque publique la cifra» (VERIFY publicó «170 passed / 1 failed» sin comando;
+tres reconstrucciones dieron 137, 155 y 171). Se excluye porque su contenido ya lo cargan dos entradas de
+esta misma fuente — **L-V4/L-A6** en su hallazgo de FASE-A y la regla general **L-B3** — y era la **novena**
+entrada de la misma clase. No se pierde: queda como registro de la fase en `10-analisis` §5/§8.
+
+### Balance corregido del ciclo completo (43 lecciones)
+
+**43 = 33 con texto propio en esta fuente (32 de VERIFY + L-HF1) + 7 fusionadas en 4 destinos + 3
+excluidas** (L-D5, L-H5 y **L-HF2**) ✔. Ninguna de las dos del HOTFIX reescribe las 41 anteriores.
+
+### Cierre del plan — v4.75.0 (lo que el tribunal va a encontrar)
+
+- **Publicado 2026-09-04**: `VERSION.yaml` **4.75.0** «Estabilización pre-tribunal», 6 cabeceras sincronizadas
+  (grep `4.74.1` = 0), `CHANGELOG.md` con la entrada de las 5 subsecciones, **11 notas técnicas** en
+  `GUIA_TECNICA.md` (una por fase), `DOMAIN_PRIMER.md` regenerado por script y `FASE-RELEASE-4.75.0` en
+  REGISTRY con **Version Sync Gate PASSED**.
+- **Saldo certificado**: ACs **11 ✅ / 1 ⚠️ (AC10) / 0 ❌** · NRs **10 ✅ / 1 ⚠️ (NR12) / 1 ❌ (NR2)** ·
+  suite dirigida **950 passed / 2 skipped** · contratos A+B+C+D+delivery **180 passed / 0 failed** ·
+  `run_all_validations.py --quick` **8/8** · `validate_agents_md.py` **6/6** · tests **3.934 funciones /
+  298 archivos**. **0 rojos causados por el plan** (S-V1 lo cerró HOTFIX por migración, no por `xfail`).
+- **Ventana de la medición, dicho explícitamente**: las cifras de «0 regresiones» valen sobre
+  `quality_gates` + `asset_generation` + contratos + validadores del ecosistema documental. **La suite ancha
+  no la re-ejecutó nadie desde FASE-H** (S-H16 sigue abierto; el alcance de RELEASE declara
+  «Comandos largos: 0»). Nadie debe leer 180/0 y 950/2 como «los 3.934 tests pasan».
+- **Lección de forma que aporta el propio cierre** — *un log de éxito tampoco es el efecto* (gemela
+  positiva de **L-G1**, «un log de rechazo no es la causa»): la regla `agents_version_comment` de
+  `scripts/sync_config.yaml` buscaba `agents_version:\s*[\d.]+` mientras `AGENTS.md` lleva el prefijo `v`
+  que **ordena** `validate_document_integration.py`. La regla nunca disparaba y `sync_versions.py` lo
+  reportaba como **«in sync»**, así que la cabecera quedó stale release tras release bajo un mensaje de
+  salud. Se corrigió el **patrón**, no la cabecera a mano. Segunda mitad del mismo hallazgo: la tabla
+  «Cobertura por Modulo» de `AGENTS.md` listaba **3.129** funciones bajo un encabezado de **3.689** y sin
+  fila para `tests/_archived_broken_tests/` — **un total agregado cuyas filas no suman no es un total**;
+  ahora 3.934 = 2.946 + 220 + 768 ✔, que es la tautología que el plan persiguió erradicar en los gates.
+- **Diferidos con dueño**: **S-HF1** (AC10 — `details.total_services` dice «total» y excluye lo ya presente
+  en producción), la **mitad estructural de S-C3** (P12 — `score=1.0` hardcode + unión del denominador) y
+  **S-I1** (NR2 ❌ — `critical_recall` con `details: {}`). Los tres son **criterio de lo que se narra**, no
+  serialización: dueño el **tribunal** (DA-V5). Y **V12** sigue siendo decisión **OPS** (`09` §Nota OPS).

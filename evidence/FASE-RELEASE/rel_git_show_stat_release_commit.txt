@@ -1,0 +1,38 @@
+commit 082c9e1e7ac0a3bbdc99c999d08e5de161358ca2
+Author: Hermes CLI <hermes@iah-cli.local>
+Date:   Fri Sep 4 18:28:58 2026 -0500
+
+    release(FASE-RELEASE-4.75.0): publicar v4.75.0 «Estabilización pre-tribunal»
+    
+    Cierre documental del plan ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 (11/11 + HOTFIX).
+    No agrega funcionalidad ni toca código de producción: convierte el trabajo certificado
+    por VERIFY en la documentación oficial del repositorio.
+    
+    - VERSION.yaml 4.74.1 -> 4.75.0 con codename y release_date (única fuente de versión;
+      0 ocurrencias de 4.74.1 en código Python)
+    - CHANGELOG.md: entrada [4.75.0] con las 5 subsecciones del formato, copiada de 09 §C.2
+      (no §C.1, que es el registro de VERIFY) y publicando AC10 como ⚠️ y NR2 como ❌
+    - docs/GUIA_TECNICA.md: 11 notas técnicas, una por fase (A-I + VERIFY + HOTFIX), con
+      módulos afectados / problema / solución / retrocompatibilidad
+    - REGISTRY: FASE-RELEASE-4.75.0 vía log_phase_completion.py --release (Version Sync
+      Gate PASSED); sync_versions.py sobre las 6 cabeceras (grep 4.74.1 = 0)
+    - DOMAIN_PRIMER.md y SYSTEM_STATUS.md regenerados por script, no editados a mano
+    - S11/S-I6 cerrado: AGENTS.md 3.689/284 -> 3.934 funciones/298 archivos medidos, y la
+      tabla de cobertura ahora suma su total (antes listaba 3.129 y omitía los archivados)
+    - scripts/sync_config.yaml: la regla agents_version_comment buscaba la versión sin el
+      prefijo «v» que exige validate_document_integration.py, así que nunca disparaba y
+      sync_versions.py lo reportaba como «in sync» release tras release
+
+ .agent/SYSTEM_STATUS.md                |  22 ++---
+ .agent/knowledge/DOMAIN_PRIMER.md      |  10 +--
+ .cursorrules                           |   2 +-
+ AGENTS.md                              |  34 +++----
+ CHANGELOG.md                           |  79 +++++++++++++++++
+ README.md                              |   4 +-
+ VERSION.yaml                           |  34 ++++++-
+ docs/CONTRIBUTING.md                   |   2 +-
+ docs/GUIA_TECNICA.md                   | 156 ++++++++++++++++++++++++++++++++-
+ docs/contributing/.last_doc_phase.json |  18 ++--
+ docs/contributing/REGISTRY.md          |  29 +++++-
+ scripts/sync_config.yaml               |   4 +-
+ 12 files changed, 343 insertions(+), 51 deletions(-)

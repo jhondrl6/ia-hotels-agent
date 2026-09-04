@@ -1,0 +1,20 @@
+[PASS] DOMAIN_PRIMER vs VERSION.yaml
+      Version aligned: 4.74.1
+      Release date aligned: 2026-08-31
+
+[PASS] README.md numerical counts vs code
+      Test files: no claim found in README
+      Publication gates: could not import (module 'modules.quality_gates.publication_gates' has no attribute 'PublicationGates')
+      Pain narratives: 20 (OK)
+
+[PASS] Line endings (LF, no CRLF)
+      CONTRIBUTING.md: LF (OK)
+      phased_project_executor.md: LF (OK)
+      DOMAIN_PRIMER.md: LF (OK)
+      AGENTS.md: LF (OK)
+      prompt-fase-template.md: LF (OK)
+      CHANGELOG.md: LF (OK)
+
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------

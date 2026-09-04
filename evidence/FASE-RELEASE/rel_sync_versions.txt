@@ -1,0 +1,38 @@
+============================================================
+VERSION SYNC
+============================================================
+
+Source: C:\Users\Jhond\Github\iah-cli\VERSION.yaml
+  version: 4.75.0
+  codename: Estabilización pre-tribunal
+  date: 2026-09-04
+
+OK: README.md (readme_version_header) - updated
+OK: AGENTS.md (agents_version_comment) - in sync
+OK: AGENTS.md (agents_header_banner) - updated
+OK: .cursorrules (cursorrules_header) - updated
+OK: docs/CONTRIBUTING.md (contributing_version_header) - updated
+OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - updated
+OK: docs/contributing/REGISTRY.md (registry_last_update) - in sync
+
+============================================================
+Result: All files in sync
+============================================================
+VERSION SYNC
+============================================================
+
+Source: C:\Users\Jhond\Github\iah-cli\VERSION.yaml
+  version: 4.75.0
+  codename: Estabilización pre-tribunal
+  date: 2026-09-04
+
+OK: README.md (readme_version_header) - in sync
+OK: AGENTS.md (agents_version_comment) - updated
+OK: AGENTS.md (agents_header_banner) - in sync
+OK: .cursorrules (cursorrules_header) - in sync
+OK: docs/CONTRIBUTING.md (contributing_version_header) - in sync
+OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - in sync
+OK: docs/contributing/REGISTRY.md (registry_last_update) - in sync
+
+============================================================
+Result: All files in sync

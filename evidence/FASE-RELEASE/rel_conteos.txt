@@ -1,0 +1,18 @@
+# FASE-RELEASE — conteos medidos (metodo canonico del proyecto: 'def test_', no --collect-only)
+
+cmd: grep -rE "^\s*def test_" tests --include=*.py | wc -l
+funciones totales:                 3934
+cmd: find tests -name "*.py" ! -path "*__pycache__*" | wc -l
+archivos .py en tests/:            298
+pytest --collect-only -q (lo que lee validate_agents_md.py): 3932
+
+# particion que SUMA el total
+# (la tabla 'Cobertura por Modulo' de AGENTS.md listaba 3129 funciones bajo un
+#  encabezado de 3689 y sin fila para tests/_archived_broken_tests/)
+suma de tests/<dir>/ (incluye archivados):  3166
+  de los cuales tests/_archived_broken_tests/ (no coleccionables): 220
+archivos raiz tests/*.py:                   768
+verificacion: 3166 + 768 = 3934  vs total 3934
+
+# modules/ (check modules_exist de validate_agents_md.py)
+archivos .py en modules/: 208

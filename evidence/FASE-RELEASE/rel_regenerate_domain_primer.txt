@@ -1,0 +1,2 @@
+[OK] DOMAIN_PRIMER.md regenerado en .agent\knowledge\DOMAIN_PRIMER.md
+     197 archivos Python, 375 clases en 25 modulos (24 en modules/, 1 root)
