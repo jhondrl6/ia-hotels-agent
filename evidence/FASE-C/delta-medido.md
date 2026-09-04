@@ -64,11 +64,28 @@ Las otras dos brechas del run (`no_analytics_configured`,
 del contrato §3 (S-C2). Siguen generándose y siguen fuera del recuento de
 servicios; FASE-C no los convirtió en servicio comercial.
 
-## 3. AC6 — la causa real no era la que decía el dossier
+## 3. AC6 — el dossier acertó la causa; lo que no previó es que el punto 8 no basta
 
-El dossier §9.2 (B5) atribuía el `is_coherent=false` estructural a los dos
-cerrojos de `promised_assets_exist`. **Medido: falso.** Ese check pasa en 1.0
-tanto antes como después (ver §5). El mecanismo real:
+⚠️ **Corrección registrada al cierre.** Una versión anterior de esta sección afirmaba que
+«el dossier §9.2 (B5) atribuía el `is_coherent=false` estructural a los dos cerrojos de
+`promised_assets_exist`» y que eso era falso. **El que era falso era ese enunciado mío, no el
+dossier.** Releído §9.2-B5 «Cierre con N11», el dossier dice textualmente: *«Causa única:
+`_check_assets_are_justified` = **3/4 = 0.75** → `severity="error"` … **Ese 3/4 está confirmado
+por el artefacto real**: 4 assets generados, 3 con pain en el ledger, 1 (`monthly_report`)
+always-on sin pain. ⟹ La misma falla estructural de B1 produce a la vez el `no_breach = 6/7` y el
+`is_coherent = false`. Punto 8 elimina las dos.»* Acertó el check, acertó la fracción, acertó el
+asset responsable y acertó que una sola causa produce los dos síntomas.
+
+Los «dos candados» de `promised_assets_exist` (`score=1.0` hardcode + la unión de `:703`) son
+**otro hallazgo** — A3/P12, sobre por qué *cambiar el registro* no mueve coherence — y siguen
+intactos y sin ser la causa (§5 → **S-C3**).
+
+**Lo que el dossier no previó**, y es lo que C tuvo que decidir además del punto 8: hacer dinámica
+la promesa de **servicios** no saca a `monthly_report` de la lista de **assets** que coherence
+cuenta. Ese asset se genera incondicionalmente (D4-FIX, `promised_by=["always"]`) y
+`_check_assets_are_justified` recorre su argumento `assets: List[AssetSpec]`, no los servicios
+prometidos ⟹ con el punto 8 solo, el `3/4 = 0.75` **sobrevive**. AC6 necesitó una segunda decisión
+distinta: excluir los complementos siempre-activos del denominador. El mecanismo medido:
 
 1. `_solutions_to_asset_specs` (`v4_asset_orchestrator.py`) añade por D4-FIX los
    assets con `promised_by=["always"]`, entre ellos `monthly_report`, con
@@ -88,8 +105,12 @@ sin `pain_id` que **no** sea complemento sigue restando
 (`test_asset_sin_pain_que_no_es_complemento_sigue_restando`, score 0.5,
 `passed=False`).
 
-Es la tercera aplicación en este plan de *"revalidar citas de código no
-revalida premisas"*: la cita era correcta, la premisa no.
+Es la **cuarta** aplicación en este plan de *"revalidar citas de código no revalida premisas"*, y
+es la primera **en dirección inversa**: acá la premisa falsa no era del dossier sino **mía**, al
+parafrasearlo. Las tres anteriores (A, B y D) habían encontrado fuentes que decían algo distinto de
+lo que el plan repetía; esta encontró al plan repitiendo mal una fuente que decía lo correcto. La
+única defensa que funcionó fue **releer el original al cerrar**, no confiar en el resumen propio —
+el resumen llevaba dos secciones de este mismo archivo escrito sobre él.
 
 ## 4. vacío ≠ ausente
 

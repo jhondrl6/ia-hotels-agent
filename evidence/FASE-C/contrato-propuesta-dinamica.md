@@ -134,11 +134,36 @@ en `SERVICE_IDENTITIES`: son huérfanos del lado de la venta, no del lado de la 
    `assets_are_justified` de 4 a 2 assets y perdería entrega real.
 5. **Lo que sí se corrige ahora**: `TECHNICAL_ASSET_CATALOG` tiene **1 sola entrada**
    (`analytics_setup_guide`) desde `9623a44`, y `_generate_technical_assets_table` la recorre
-   **incondicionalmente** (`v4_proposal_generator.py:1625`) — una cuarta superficie de promesa
-   estática. Se (a) incorpora `indirect_traffic_optimization` y (b) hace la tabla **dinámica**:
-   solo muestra assets técnicos con brecha detectada o asset generado. Esto resuelve **S-B10**
-   en la dirección que la evidencia indica (re-incorporar el asset, no aggiornar el test a la
-   baja) y cierra el costado simétrico de la causa raíz.
+   **incondicionalmente** (`v4_proposal_generator.py:1625`; **hoy `:1629`** — el propio diff de C
+   desplazó +4 la cita, L-A6) — una cuarta superficie de promesa estática. Se (a) incorpora
+   `indirect_traffic_optimization` y (b) hace la tabla **dinámica**: solo muestra assets técnicos
+   con brecha detectada o asset generado. Esto resuelve **S-B10** en la dirección que la evidencia
+   indica (re-incorporar el asset, no aggiornar el test a la baja) y cierra el costado simétrico de
+   la causa raíz.
+
+   > ⚠️ **DESVIACIÓN REGISTRADA AL CIERRE — (a) se hizo, (b) NO.** `service_catalog.py:110`
+   > incorpora `indirect_traffic_optimization` y **S-B10 queda cerrado** (34 passed en
+   > `tests/commercial_documents/test_proposal_dynamic.py`, `evidence/FASE-C/faseC_dynamic_verde.txt`).
+   > La tabla **sigue estática**: `for entry in TECHNICAL_ASSET_CATALOG.values()` (`:1629`) no filtra.
+   >
+   > **Por qué**: (b) **contradice a los dos tests que FASE-B le entregó a C para poner en verde**.
+   > `test_technical_assets_table_shows_both_assets` llama a `_generate_technical_assets_table()`
+   > **sin argumentos** y exige las dos entradas; `test_technical_assets_table_shows_not_generated`
+   > la llama con `assets_generated=[]` y exige ver la fila `⏳ No generado`. Una tabla que solo
+   > muestre «brecha detectada o asset generado» rompe **los dos a la vez**. El contrato escribió (b)
+   > antes de medir ese choque (C1 precede a C2), y al implementarlo la contradicción resultó
+   > insalvable sin reescribir tests que otra fase había declarado como su criterio de cierre.
+   >
+   > **Qué se hizo en su lugar**: nada — se eligió el costado que la propia evidencia del contrato
+   > señala (punto 5: «re-incorporar el asset, no aggiornar el test a la baja») y se dejó la
+   > superficie estática **declarada** en `delta-medido.md` §7 como la única de las cuatro sin curar.
+   >
+   > **Dueño**: **S-C4** en `10-analisis-post-implementacion.md` §5. Quien la cierre debe resolver
+   > primero la contradicción con esos dos tests (o los reescribe, o decide que la tabla técnica es
+   > catálogo y no promesa — que es lo que su nombre y su docstring **`:1592-1604`** ya dicen:
+   > *«Muestra assets técnicos … con su **estado real**»*, no «promete»). Dato verificado de paso: ese
+   > docstring **ya nombraba las dos entradas** cuando el catálogo tenía una sola desde `9623a44` ⟹
+   > era un fósil que el fix de S-B10 volvió verdadero, no una promesa que hubiera que escribir.
 
 **Seguimiento que queda abierto** (no es de esta fase): decidir si `indirect_traffic_optimization`
 y `analytics_setup_guide` merecen servicio comercial propio con precio. → **S-C2** para

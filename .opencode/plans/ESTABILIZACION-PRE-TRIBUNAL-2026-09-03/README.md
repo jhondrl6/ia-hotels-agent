@@ -1,6 +1,6 @@
 # ESTABILIZACION-PRE-TRIBUNAL-2026-09-03
 
-> **Versión objetivo**: 4.75.0 | **Estado**: 🟡 EN EJECUCIÓN — **FASE-A ✅, FASE-B ✅ y FASE-D ✅** (las tres 2026-09-03). D se ejecutó en **sesión paralela** a B sobre el **mismo working tree**, fuera del camino crítico (su única dependencia dura era A); su código está commiteado en `76e0257`. Fuente del estado por fase: la tabla de Progreso de abajo + `06-checklist-implementacion.md`.
+> **Versión objetivo**: 4.75.0 | **Estado**: 🟡 EN EJECUCIÓN — **FASE-A ✅, FASE-B ✅, FASE-C ✅ y FASE-D ✅** (las cuatro 2026-09-03). D se ejecutó en **sesión paralela** a B sobre el **mismo working tree**, fuera del camino crítico (su única dependencia dura era A); su código está commiteado en `76e0257`. El código de C está en `c1bf5e2`. **C erradicó la causa raíz del plan** (punto 8: propuesta dinámica ⟹ `no_breach` 6→0, `is_coherent` False→True). Fuente del estado por fase: la tabla de Progreso de abajo + `06-checklist-implementacion.md`.
 >
 > ⚠️ **Conflicto de concurrencia registrado (2026-09-03)**: esta línea llegó a afirmar que «FASE-B ✅ era falso, B sigue pendiente», escrita por la sesión de FASE-D cuando el trabajo de B aún no estaba commiteado. Era incorrecto: B está completa y su evidencia es re-ejecutable (`evidence/FASE-B/`, candado `tests/commercial_documents/test_pain_map_bijection.py` en verde). **Dos sesiones editando los mismos documentos de plan producen esta sobrescritura** → seguimiento **S-B15** en `10-analisis-post-implementacion.md` §5.
 > **Workflow**: `phased_project_executor.md` v2.18.0 (R1: una fase/sesión, R2: ≤60 iteraciones, R3: ≤4 tareas de investigación/fix ó 3 tareas + 1 comando largo)
@@ -214,7 +214,7 @@ Recuperadas de QMind `iah-cli-lecciones` (8 fuentes) y de 3 memorias de proyecto
 |------|--------|-------|-------------|--------------|-------|
 | FASE-A | ✅ Completada | 2026-09-03 | 55/55 | 21 func. test (37 casos) | Canónico en `modules/common/service_identity.py` (dos capas); 6 registros derivados, 6 validados contra Capa 1; 0 IDs fantasma; drift «8 vs 7» disuelto en sus 3 copias; AC1/AC2/AC3 ✅ |
 | FASE-B | ✅ Completada | 2026-09-03 | **345 medidas hasta el commit de código** / ≤40 ⚠️ *(excedido 8,6×; ver nota abajo)* | 29 func. test (46 casos) | Biyección triple cerrada: **DESCARTE REAL 2→0**, Capa 1 27→26, emisiones 18→20, `narratives` literal **16→16** (complemento derivado, L-NC4), cobertura narrativa **26/26**. 3 pains implementados con señal verificable, 1 retirado (`no_ga4_enhanced`), 6 diferidos con motivo+seguimiento. **Premisa de N-A1 corregida** (S-B7). Baseline 848 intacto, validaciones 7/7. AC4 ✅ |
-| FASE-C | ⬜ Pendiente | — | — | — | Punto 8 propuesta dinámica |
+| FASE-C | ✅ Completada | 2026-09-03 | **142 medidas hasta el commit de código** / ≤60 ⚠️ *(excedido 2,4×; ver nota abajo)* | 14 func. test (17 casos) + 3 netos en archivos existentes | **Punto 8 — propuesta dinámica**: la propuesta solo promete servicios con brecha mapeada o presencia verificada. Partición canónica **única** (`classify_promised_services()`) consumida por los **dos** builders de la matriz ⟹ A5 curada de raíz, no esquivada. `not_promised` y `unknown_services` publicados en el JSON. Delta medido sobre la corrida real de SalentoReal: `no_breach` **6→0**, `promised_services_total` **7→1**, `total == actionable` por construcción, `assets_are_justified` **0.75/error → 1.0/info**, `overall_score` **0.88 → 0.9133**, `is_coherent` **False → True** con el **umbral 0.8 intacto**. **vacío ≠ ausente** en 3 sitios. **El dossier §9.2-B5 acertó la causa**; lo falsificado fue el **parafraseo que C hizo de él** (S-C1) — y lo que el dossier **no previó** es que una promesa dinámica de *servicios* no saca a `monthly_report` de la lista de *assets* que coherence cuenta, así que AC6 exigió una segunda decisión (complementos fuera del denominador). Baseline 872→**892**, validaciones 7/7. AC5/AC6 ✅ |
 | FASE-D | ✅ Completada | 2026-09-03 | **114 medidas hasta el commit de código** / ≤35 ⚠️ *(excedido 3,3×; ver nota abajo)* | 24 func. test (8 candado de listas + 12 severidad conductual + 4 divulgación) | Severidad explícita **11 blocking + 2 advisory** con única fuente (`BLOCKING_GATE_NAMES`/`ADVISORY_GATE_NAMES`/`gate_blocks_publication()`) y fail-fast en `__init__`. `asset_confidence` **sigue bloqueando**. Piso D2 por naturaleza del fallo (`content_quality` con blockers, `proposal_asset_alignment` < 0.8) + un gate que no se ejecutó siempre bloquea. Divulgación: `summary["advisory_issues"]` → `human_checklist.md`. `content_quality` con solo warnings pasa de `PASSED` a `WARNING` (antes invisible). **0 flips de `ready`** en el contrafactual real ⟹ no se relajó ningún veredicto. AC7/AC8 ✅ *(AC8: mismo commit)* |
 | FASE-E | ⬜ Pendiente | — | — | — | A2 + A6 persistencia |
 | FASE-F | ⬜ Pendiente | — | — | — | A4 + A1 + N11 |
@@ -277,5 +277,40 @@ AC8.
 el directorio ya contenía **6 archivos** de la FASE-D de **otro plan** (commit `04fe193`, «ZIP sin
 gate reports + fallback loader + occupancy label»), con prefijo `fase_d_*` (snake_case). Los de este
 plan usan `faseD_*` (camelCase). **VERIFY debe distinguirlos.**
+
+**Nota sobre las iteraciones de FASE-C** — medidas con la **misma unidad** que las notas de B y D (ids
+de mensaje de asistente únicos en el transcript de la sesión,
+`evidence/FASE-D/measure_iterations.py`): **142 hasta el commit de código** (`c1bf5e2`,
+2026-09-03T18:22:55-05:00) sobre un presupuesto de ≤60 ⟹ **2,4× de exceso**, el menor de las tres
+fases medidas pero igualmente fuera de presupuesto. Medición en
+`evidence/FASE-C/faseC_iteraciones.txt`.
+
+El sobrecosto no vino de escribir la partición (~120 líneas) sino de tres cosas que el presupuesto no
+contemplaba: **(a)** revalidar las premisas del prompt contra el código vivo — dos resultaron falsas
+(el archivo de tests citado no existe con ese nombre; el baseline «7 archivos / 141 tests» no es
+reproducible) y **una tercera resultó falsa en dirección inversa**: C parafraseó mal el §9.2-B5 del
+dossier y escribió dos secciones de evidencia sobre esa paráfrasis antes de releer el original, que
+**acertaba** la causa (`_check_assets_are_justified` 3/4 = 0.75, `monthly_report` always-on sin
+pain); **(b)** una **regresión que C introdujo y tuvo que corregir dentro de la
+fase**: pasar `site_presence_report` al build del gate sin pasarlo al del delivery report volvió a
+divergir los dos reportes del mismo run (AC3), y lo expuso
+`test_gate_matches_delivery_report_same_run`; **(c)** el barrido archivo-por-archivo que exige la
+prohibición de correr `tests/commercial_documents` completo, más demostrar con `git stash` que los 14
+failed / 9 errors del árbol ancho son **preexistentes en HEAD**.
+
+Lo que el presupuesto pretendía proteger **no se perdió**, y aquí importa más que en B o D porque C
+tenía un **punto de partición predefinido** (`C1' = C1+C2`, `C2' = C3+C4`): **no se usó, con motivo.**
+C2 y C3 resultaron ser **una sola cadena causal** — el mismo concepto de «promesa» vivido en tres
+superficies — así que la partición prescrita habría dejado exactamente el **estado intermedio
+prohibido** por el prompt (propuesta dinámica + matriz estática ⟹ artefactos que se contradicen). Se
+ejecutó la fase entera y se registra el exceso en vez de cortar por un punto que no era una costura
+real → `10-analisis` §6 **DA-C4**. El candado (`test_fase_c_propuesta_dinamica.py`, 17 casos) se
+escribió **antes** de tocar producción y su rojo quedó capturado
+(`tdd-colecta-ROJO.txt`, `tdd-comportamiento-ROJO.txt`); master nunca tuvo el candado en rojo.
+
+✅ **Sin colisión de nombres en `evidence/FASE-C/`**: a diferencia de `evidence/FASE-B/` y
+`evidence/FASE-D/`, el directorio **no existía** antes de este plan — los 20 archivos los creó el
+commit `c1bf5e2` y `git log --all -- evidence/FASE-C/` no devuelve ningún otro commit. Verificado, no
+asumido.
 
 **Métricas acumuladas**: ver `09-documentacion-post-proyecto.md` §D.
