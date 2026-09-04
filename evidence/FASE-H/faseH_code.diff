@@ -1,0 +1,1813 @@
+diff --git a/modules/auditors/v4_comprehensive.py b/modules/auditors/v4_comprehensive.py
+index 621d6ac..6ce640e 100644
+--- a/modules/auditors/v4_comprehensive.py
++++ b/modules/auditors/v4_comprehensive.py
+@@ -32,6 +32,7 @@ from modules.scrapers.serpapi_client import SerpAPIClient
+ from modules.analyzers.competitor_analyzer import CompetitorAnalyzer
+ from data_validation.metadata_validator import MetadataValidator
+ from modules.utils.http_client import HttpClient
++from modules.common.performance_status import is_performance_api_unavailable
+ from modules.auditors.ai_crawler_auditor import AICrawlerAuditor
+ from modules.auditors.citability_scorer import CitabilityScorer, CitabilityScore
+ from modules.auditors.ia_readiness_calculator import IAReadinessCalculator, IAReadinessReport
+@@ -43,6 +44,54 @@ from modules.financial_engine.regional_adr_resolver import RegionalADRResolver
+ 
+ logger = logging.getLogger(__name__)
+ 
++# FASE-H (V11 / punto (b) del dossier §1): el crudo del API llegaba al cliente.
++# `PageSpeedClient` propaga `message=str(e)` ("Invalid URL or request: API key not
++# valid...") y el audit lo re-expone tal cual, de donde `critical_issues`
++# (:1864-1868) y `recommendations` lo toman textual — y `extract_top_problems`
++# (data_structures.py:532-536) vierte esas recomendaciones en el diagnóstico.
++# CONTEXT-H fijó el diseño: status ERROR -> "API de PageSpeed no disponible
++# (verificar clave)". Se define UNA sola vez aquí, en la fuente que publica el
++# audit, para que los consumidores lean `performance.message` y nadie monte una
++# tabla paralela pain_id->texto (lección L-NC4).
++PAGESPEED_KEY_MESSAGE = "API de PageSpeed no disponible (verificar clave)"
++PAGESPEED_GENERIC_MESSAGE = "API de PageSpeed no disponible"
++PAGESPEED_NOT_CONFIGURED_MESSAGE = "API de PageSpeed no disponible (clave no configurada)"
++
++_PAGESPEED_KEY_MARKERS = (
++    "api key",
++    "apikey",
++    "key not valid",
++    "invalid api",
++    "quota",
++    "permission",
++    "forbidden",
++)
++
++
++def sanitize_pagespeed_message(raw_message: Optional[str]) -> str:
++    """Traducir el fallo técnico de PageSpeed a un mensaje apto para el cliente.
++
++    Distingue fallo de credencial (verificable por OPS) de cualquier otra caída,
++    y conserva el detalle crudo solo en el log (`logger`), nunca en el documento.
++    """
++    text = (raw_message or "").lower()
++    if any(marker in text for marker in _PAGESPEED_KEY_MARKERS):
++        return PAGESPEED_KEY_MESSAGE
++    return PAGESPEED_GENERIC_MESSAGE
++
++
++def disjoint_executed_validators(
++    executed: List[str], skipped: List[str]
++) -> List[str]:
++    """`executed` sin los nombres que ya figuran en `skipped` (conserva el orden).
++
++    FASE-H (V11 / punto (d)): un validator no puede haberse ejecutado y haberse
++    saltado en el mismo `execution_trace`; la contradicción se leía como
++    "ejecutado" por cualquier consumidor que mirara solo esa lista.
++    """
++    skipped_set = set(skipped)
++    return [name for name in executed if name not in skipped_set]
++
+ 
+ @dataclass
+ class SchemaAuditResult:
+@@ -703,6 +752,15 @@ class V4ComprehensiveAuditor:
+         if not perf_result.has_field_data:
+             skipped_validators.append("pagespeed_api")
+         
++        # FASE-H (V11 / punto (d) del dossier §1): `pagespeed_api` —y cualquier
++        # otro nombre— podia aparecer en `executed` Y en `skipped` en el mismo
++        # trace. Las dos listas son excluyentes por definicion. El predicado de
++        # skip sigue siendo `not has_field_data`, que confunde "la API no
++        # devolvio datos de campo" con "no se llamo a la API": seguimiento S-H4.
++        executed_validators = disjoint_executed_validators(
++            executed_validators, skipped_validators
++        )
++        
+         # Calculate IA Readiness (ADVISORY)
+         ia_readiness_result = None
+         if citability_result:
+@@ -1460,13 +1518,24 @@ class V4ComprehensiveAuditor:
+                     fid=None,
+                     cls=None,
+                     status="API_NOT_CONFIGURED",
+-                    message="PageSpeed API key not configured",
++                    message=PAGESPEED_NOT_CONFIGURED_MESSAGE,
+                 )
+         
+         try:
+             mobile_result = self.pagespeed.analyze_url(url, device="mobile")
+             desktop_result = self.pagespeed.analyze_url(url, device="desktop")
+-            
++
++            # PageSpeedClient atrapa sus propias excepciones y devuelve
++            # status="ERROR" con message=str(e) en ingles: el crudo se sanitiza
++            # aqui (FASE-H / V11) y se conserva solo en el log.
++            client_status = (mobile_result.status or "").upper()
++            client_message = mobile_result.message
++            if client_status == "ERROR":
++                logger.warning(
++                    "PageSpeed ERROR para %s: %s", url, mobile_result.message
++                )
++                client_message = sanitize_pagespeed_message(mobile_result.message)
++
+             return PerformanceResult(
+                 has_field_data=mobile_result.has_field_data,
+                 mobile_score=mobile_result.performance_score,
+@@ -1475,9 +1544,11 @@ class V4ComprehensiveAuditor:
+                 fid=mobile_result.fid,
+                 cls=mobile_result.cls,
+                 status=mobile_result.status,
+-                message=mobile_result.message,
++                message=client_message,
+             )
+         except Exception as e:
++            # FASE-H (V11): el detalle tecnico queda en el log, no en el documento.
++            logger.exception("PageSpeed audit fallo para %s", url)
+             return PerformanceResult(
+                 has_field_data=False,
+                 mobile_score=None,
+@@ -1486,7 +1557,7 @@ class V4ComprehensiveAuditor:
+                 fid=None,
+                 cls=None,
+                 status="ERROR",
+-                message=str(e),
++                message=sanitize_pagespeed_message(str(e)),
+             )
+     
+     def _detect_whatsapp_from_html(self, html: str) -> bool:
+@@ -1898,7 +1969,16 @@ class V4ComprehensiveAuditor:
+             recs.append(f"Encourage more reviews (current: {gbp.reviews}, target: 100+)")
+         
+         if not perf.has_field_data:
+-            recs.append("No Core Web Vitals data - site may be new or low traffic")
++            # FASE-H (V11): este texto estaba hardcodeado y afirmaba "site may be
++            # new or low traffic" tambien cuando la causa era nuestra (API caida o
++            # sin clave). Importa para el cliente porque `extract_top_problems`
++            # (data_structures.py:532-536) rellena los problemas top con estas
++            # recomendaciones textuales. Mismo criterio que el documento: lista
++            # blanca de status que si midieron (modules/common/performance_status).
++            if is_performance_api_unavailable(perf.status):
++                recs.append(perf.message or PAGESPEED_GENERIC_MESSAGE)
++            else:
++                recs.append("No Core Web Vitals data - site may be new or low traffic")
+         elif perf.mobile_score and perf.mobile_score < 70:
+             recs.append("Optimize mobile performance for better rankings")
+         
+diff --git a/modules/commercial_documents/pain_solution_mapper.py b/modules/commercial_documents/pain_solution_mapper.py
+index a6dc65d..1e35111 100644
+--- a/modules/commercial_documents/pain_solution_mapper.py
++++ b/modules/commercial_documents/pain_solution_mapper.py
+@@ -441,23 +441,33 @@ class PainSolutionMapper:
+             ))
+         
+         # Check OTA divergence (from validation)
++        # FASE-H (V7): el guard historico `hasattr(direct_field.value, '__iter__')` era
++        # insatisfacible para el valor canonico del pipeline — main.py:2306 registra
++        # direct_channel_percentage como float en fraccion 0-1 (main.py:1865 hace
++        # `canal_directo / 100`, default 0.20 en main.py:1890), de modo que el pain nunca
++        # disparaba y el `isinstance(..., (int, float, str))` interno era codigo muerto.
++        # Ahora: validacion numerica + normalizacion de unidades (0.2 == 20 == "0.2" == "20"
++        # => 20%). `ota_field` tampoco se registra en el flujo real (main.py solo anade
++        # adr_cop / occupancy_rate / direct_channel_percentage), por eso se usa como
++        # ENRIQUECIMIENTO no bloqueante del description y nunca como guard: como guard el
++        # pain volveria a ser codigo muerto.
+         ota_field = validation_summary.get_field("ota_presence")
+         direct_field = validation_summary.get_field("direct_channel_percentage")
+-        
+-        if direct_field and hasattr(direct_field.value, '__iter__'):
+-            try:
+-                direct_pct = float(direct_field.value) if isinstance(direct_field.value, (int, float, str)) else 0.3
+-                if direct_pct < 0.3:
+-                    pains.append(Pain(
+-                        id="low_ota_divergence",
+-                        name="Alta Dependencia OTAs",
+-                        description=f"Solo {int(direct_pct * 100)}% de reservas por canal directo",
+-                        severity="high",
+-                        detected_by="validation",
+-                        confidence=self._confidence_to_float(direct_field.confidence)
+-                    ))
+-            except (ValueError, TypeError):
+-                pass
++        direct_pct = self._normalize_to_fraction(direct_field.value) if direct_field else None
++
++        if direct_pct is not None and direct_pct < 0.3:
++            description = f"Solo {round(direct_pct * 100)}% de reservas por canal directo"
++            ota_evidence = self._describe_ota_presence(ota_field)
++            if ota_evidence:
++                description = f"{description}. OTAs confirmadas: {ota_evidence}"
++            pains.append(Pain(
++                id="low_ota_divergence",
++                name="Alta Dependencia OTAs",
++                description=description,
++                severity="high",
++                detected_by="validation",
++                confidence=self._confidence_to_float(direct_field.confidence)
++            ))
+         
+         # Check metadata defaults
+         if audit_result.metadata and audit_result.metadata.has_issues:
+@@ -730,6 +740,13 @@ class PainSolutionMapper:
+         status = analytics_data.get("analytics_status")
+         ga4_available = analytics_data.get("use_ga4", False)
+ 
++        organic = analytics_data.get("organic_traffic")
++        organic_measured_low = (
++            organic is not None
++            and isinstance(organic, (int, float))
++            and organic < 1000
++        )
++
+         if not ga4_available:
+             error_text = ""
+             if status and hasattr(status, "ga4_error") and status.ga4_error:
+@@ -746,25 +763,39 @@ class PainSolutionMapper:
+                 confidence=0.9
+             ))
+ 
+-            # Sin GA4 no se puede medir trafico organico → implicitamente baja visibilidad
+-            pains.append(Pain(
+-                id="low_organic_visibility",
+-                name="Baja Visibilidad de Trafico Organico",
+-                description="Sin analytics configurado, no se puede medir ni optimizar el trafico organico.",
+-                severity="medium",
+-                detected_by="analytics",
+-                confidence=0.8
+-            ))
++        # FASE-H (V8): antes este id se anexaba desde DOS ramas (sin GA4 + trafico medido
++        # bajo el umbral) y detect_pains recibia el pain duplicado, que se traduce en dos
++        # brechas identicas con costo propio. Ahora hay UN solo punto de emision para
++        # low_organic_visibility: se deciden primero las dos señales y se consolida la
++        # construccion. Cuando ambas aplican, la emision unica conserva el dato medido
++        # (sesiones/umbral) ADEMAS del motivo "sin analytics"; los nombres, severidades y
++        # detected_by de cada caso quedan intactos.
++        if not ga4_available or organic_measured_low:
++            if not ga4_available:
++                name = "Baja Visibilidad de Trafico Organico"
++                description = (
++                    "Sin analytics configurado, no se puede medir ni optimizar el trafico organico."
++                )
++                if organic_measured_low:
++                    description = (
++                        f"{description} Trafico organico estimado: {organic} sesiones/mes "
++                        "(umbral hotelero: 1000)"
++                    )
++                confidence = 0.8
++            else:
++                name = "Baja Visibilidad Organica"
++                description = (
++                    f"Trafico organico estimado: {organic} sesiones/mes (umbral hotelero: 1000)"
++                )
++                confidence = 0.7
+ 
+-        organic = analytics_data.get("organic_traffic")
+-        if organic is not None and isinstance(organic, (int, float)) and organic < 1000:
+             pains.append(Pain(
+                 id="low_organic_visibility",
+-                name="Baja Visibilidad Organica",
+-                description=f"Trafico organico estimado: {organic} sesiones/mes (umbral hotelero: 1000)",
++                name=name,
++                description=description,
+                 severity="medium",
+                 detected_by="analytics",
+-                confidence=0.7
++                confidence=confidence
+             ))
+ 
+         return pains
+@@ -1200,3 +1231,67 @@ class PainSolutionMapper:
+     def _confidence_to_score(self, confidence: ConfidenceLevel) -> float:
+         """Convert ConfidenceLevel to numeric score."""
+         return self._confidence_to_float(confidence)
++
++    def _normalize_to_fraction(self, value: Any) -> Optional[float]:
++        """Normalizar un valor de porcentaje a fraccion 0-1.
++
++        FASE-H (V7): senal `direct_channel_percentage`. La unidad canonica del pipeline es
++        la fraccion (main.py:1865 `canal_directo / 100`; default `0.20` en main.py:1890;
++        calculator_v2.py:481 documenta "Porcentaje canal directo (0-1)"), pero un
++        ValidatedField puede llegar en porcentaje o como string de input humano. Criterio de
++        desempate: valor > 1 => porcentaje (se divide entre 100). Por eso `0.2`, `20`,
++        `"0.2"`, `"20"` y `"20 %"` significan todos 20%.
++
++        Devuelve None —y el caller no dispara el pain— para bool, negativo, NaN, inf, u
++        otro tipo no convertible. Nunca lanza.
++        """
++        if value is None or isinstance(value, bool):
++            return None
++
++        if isinstance(value, str):
++            text = value.strip().rstrip("%").strip()
++            if not text:
++                return None
++            try:
++                number = float(text)
++            except ValueError:
++                return None
++        elif isinstance(value, (int, float)):
++            number = float(value)
++        else:
++            return None
++
++        if number != number or number in (float("inf"), float("-inf")):
++            return None
++        if number < 0:
++            return None
++
++        return number / 100 if number > 1 else number
++
++    def _describe_ota_presence(self, ota_field: Any) -> str:
++        """Render (tolerante) de la evidencia OTA para el description de un pain.
++
++        Evidencia NO bloqueante: `ota_presence` es List[str] en el modelo del pipeline
++        (inputs_contract.py:49) pero main.py nunca lo registra en el ValidationSummary, asi
++        que devolver "" es el caso normal del flujo real y NUNCA debe condicionar la
++        emision del pain. Acepta str / dict / secuencias por tolerancia; devuelve "" si no
++        hay nada que nombrar.
++        """
++        value = getattr(ota_field, "value", None)
++
++        if isinstance(value, str):
++            nombres = [value]
++        elif isinstance(value, dict):
++            nombres = [str(clave) for clave in value.keys()]
++        elif isinstance(value, (list, tuple, set)):
++            nombres = [str(elemento) for elemento in value]
++        else:
++            nombres = []
++
++        nombres = [n.strip() for n in nombres if isinstance(n, str) and n.strip()]
++        if not nombres:
++            return ""
++
++        if len(nombres) > 3:
++            return ", ".join(nombres[:3]) + f", +{len(nombres) - 3} mas"
++        return ", ".join(nombres)
+diff --git a/modules/commercial_documents/v4_diagnostic_generator.py b/modules/commercial_documents/v4_diagnostic_generator.py
+index fdbe4db..aedd2cb 100644
+--- a/modules/commercial_documents/v4_diagnostic_generator.py
++++ b/modules/commercial_documents/v4_diagnostic_generator.py
+@@ -52,6 +52,33 @@ def _get_pipeline_version() -> str:
+ 
+ PIPELINE_VERSION = _get_pipeline_version()
+ 
++# ============================================================================
++# FASE-H (V6): estado visible de la deteccion de brechas
++# ============================================================================
++# El literal canonico es GateStatus.NOT_EVALUATED
++# (modules/quality_gates/publication_gates.py:90, introducido en FASE-F). NO se
++# importa GateStatus en top-level: publication_gates -> coherence_gate ->
++# commercial_documents.coherence_validator reactiva el __init__ del paquete y
++# deja este modulo parcialmente inicializado (ImportError verificado). La guardia
++# anti-deriva que compara este literal con GateStatus.NOT_EVALUATED.value vive en
++# tests/commercial_documents/test_diagnostic_brechas.py.
++BRECHAS_STATE_EVALUATED = "EVALUATED"
++BRECHAS_STATE_NOT_EVALUATED = "NOT_EVALUATED"
++
++# ============================================================================
++# FASE-H (V11): el vocabulario de performance.status y el predicado que decide
++# qué puede afirmarse ante el cliente viven en modules/common/performance_status
++# — el documento y las recomendaciones del audit comparten el mismo criterio.
++# ============================================================================
++from modules.common.performance_status import is_performance_api_unavailable
++
++# FASE-H (V11 / punto (c) del dossier §1): ${manual_attention_table} se inyectaba
++# en el template sin cabecera, asi que sus filas no renderizaban como tabla.
++MANUAL_ATTENTION_TABLE_HEADER = (
++    "| Atención manual requerida | Prioridad | Acción |\n"
++    "|---|---|---|"
++)
++
+ 
+ def _get_opportunity_scorer():
+     """Lazy import del OpportunityScorer para evitar import circular."""
+@@ -518,6 +545,12 @@ class V4DiagnosticGenerator:
+         # FASE-PROP-A: Initialize instance attributes used across methods
+         self._region = None
+         self._cached_brechas = None
++        # FASE-H (V6): estado de la deteccion de brechas del ultimo intento —
++        # None = aun no se ha ejecutado, BRECHAS_STATE_EVALUATED = detecto
++        # (aunque sea 0 brechas), BRECHAS_STATE_NOT_EVALUATED = el detector
++        # fallo. Consumido por _build_fugas_principales_section() para que
++        # "0 brechas por fallo" nunca se lea como "sitio sin fugas".
++        self._brechas_detection_state = None
+         self._last_voice_score = None
+         self._last_voice_level = None
+         # FASE-SR-C (D-PF2): resultado del self-healing loop de la última
+@@ -585,6 +618,9 @@ class V4DiagnosticGenerator:
+         # Reset brechas cache per generate() call (FASE-H)
+         self._cached_brechas = None
+         self._cached_brechas_key = None  # FASE-A-COHERENCIA: invalidar key junto al caché
++        # FASE-H (V6): el estado de deteccion tampoco sobrevive entre runs — un
++        # fallo del generate() anterior no puede manchar el documento nuevo.
++        self._brechas_detection_state = None
+         
+         # Store region for use in _identify_brechas -> _pain_to_brecha (FASE-CONFIG-5)
+         self._region = region if region else "eje_cafetero"
+@@ -1021,8 +1057,12 @@ class V4DiagnosticGenerator:
+             # D-NC1: el contador del título coincide con las fugas listadas.
+             'fugas_principales_section': self._build_fugas_principales_section(audit_result, brechas_destacadas),
+             'fugas_count_display': str(len(brechas_destacadas)),
++            # FASE-H (V6): con el detector caido el titulo tampoco puede
++            # afirmar "SIN FUGAS" — 0 brechas por fallo != 0 brechas por sitio sano.
+             'fugas_title': (
+-                "SIN FUGAS PRINCIPALES" if len(brechas_destacadas) == 0
++                "FUGAS PRINCIPALES (NO EVALUADAS)"
++                if self._brechas_detection_state == BRECHAS_STATE_NOT_EVALUATED
++                else "SIN FUGAS PRINCIPALES" if len(brechas_destacadas) == 0
+                 else "LA FUGA PRINCIPAL" if len(brechas_destacadas) == 1
+                 else f"LAS {len(brechas_destacadas)} FUGAS PRINCIPALES"
+             ),
+@@ -1936,10 +1976,18 @@ class V4DiagnosticGenerator:
+     def _build_manual_attention_table(self, audit_result: V4AuditResult) -> str:
+         """Build table of problems requiring manual attention."""
+         rows = []
+-        
++
++        def _render() -> str:
++            # FASE-H (V11 / punto (c)): el template inyectaba estas filas sin
++            # cabecera, así que Markdown no las renderizaba como tabla. La
++            # cabecera va aquí y no en el template porque las filas nacen de
++            # esta función: separarlas volvería a desincronizar columnas.
++            return "\n".join([MANUAL_ATTENTION_TABLE_HEADER, *rows])
++
+         # Guard against None audit_result or gbp
+         if audit_result is None or audit_result.gbp is None:
+-            return "| Datos de GBP no disponibles | - | - | - |"
++            rows.append("| Datos de GBP no disponibles | - | - |")
++            return _render()
+         
+         # GBP issues
+         # FASE-D (D9): target estandarizado de 40 fotos GBP (gbp_leak_detector)
+@@ -1952,11 +2000,15 @@ class V4DiagnosticGenerator:
+         
+         # Performance without field data — FASE-C-B (D6): leer status real
+         if audit_result.performance and not audit_result.performance.has_field_data:
+-            perf_status = (audit_result.performance.status or "").upper()
+-            if perf_status == "ERROR":
++            if is_performance_api_unavailable(audit_result.performance.status):
++                # FASE-H (V11): antes solo "ERROR" caía aquí, así que
++                # API_NOT_CONFIGURED y un status vacío afirmaban ante el cliente
++                # que su sitio era nuevo cuando la causa era nuestra.
+                 msg = audit_result.performance.message or "API de PageSpeed no disponible"
+                 rows.append(f"| Sin Datos de Campo (Core Web Vitals) | 🔴 Alta | {msg} |")
+             else:
++                # Único caso donde "sitio nuevo o con poco tráfico" es cierto:
++                # la API respondió y CrUX todavía no tiene datos de campo.
+                 rows.append("| Sin Datos de Campo (Core Web Vitals) | 🟡 Media | El sitio puede ser nuevo o tener tráfico bajo |")
+         
+         # Conflicts
+@@ -1964,7 +2016,9 @@ class V4DiagnosticGenerator:
+             for conflict in audit_result.validation.conflicts:
+                 rows.append(f"| Conflicto: {conflict.get('field_name', 'Desconocido')} | 🔴 Alta | Revisión manual requerida |")
+         
+-        return "\n".join(rows) if rows else "| No se detectaron problemas que requieran atención manual | - | - |"
++        if not rows:
++            rows.append("| No se detectaron problemas que requieran atención manual | - | - |")
++        return _render()
+     
+     def _build_top_critical_problems(self, audit_result: V4AuditResult) -> str:
+         """Build the top 3 critical problems section using shared function."""
+@@ -2681,10 +2735,25 @@ class V4DiagnosticGenerator:
+             return f"{recuperacion:,.0f}"
+         return "0"
+ 
++    def _brechas_detection_failed(self) -> bool:
++        """True si la ULTIMA deteccion de brechas fallo (FASE-H / V6).
++
++        Leerlo despues de `_get_brecha_pesos()` es lo que hace el estado
++        fiable: ese
++        call es el que ejecuta `_identify_brechas()`.
++        """
++        return (
++            getattr(self, '_brechas_detection_state', None)
++            == BRECHAS_STATE_NOT_EVALUATED
++        )
++
+     def _build_brechas_section(self, audit_result: V4AuditResult, financial_scenarios: FinancialScenarios) -> str:
+         """Genera seccion markdown con TODAS las brechas detectadas (0-10+)."""
+         brechas = self._get_brecha_pesos(audit_result)
+         if not brechas:
++            # FASE-H (V6): 0 brechas por fallo del detector no es "sitio sano".
++            if self._brechas_detection_failed():
++                return self._FUGAS_NOT_EVALUATED_NOTICE
+             return "No se detectaron brechas criticas. Su presencia digital esta en buen estado."
+ 
+         sections = ["## 🔍 Trazabilidad: Brechas Identificadas"]
+@@ -2703,6 +2772,8 @@ class V4DiagnosticGenerator:
+         """Genera tabla resumen dinamica de N brechas -> oportunidades."""
+         brechas = self._get_brecha_pesos(audit_result)
+         if not brechas:
++            if self._brechas_detection_failed():
++                return "| Brechas no evaluables (falló en la detección) | — |"
+             return "| Sin brechas detectadas | — |"
+ 
+         rows = []
+@@ -2716,6 +2787,18 @@ class V4DiagnosticGenerator:
+             rows.append(f"| {detalle_corto} | +{recuperacion}/mes (Fuga mensual estimada) |")
+         return "\n".join(rows)
+ 
++    # FASE-H (V6): aviso visible cuando el detector de brechas fallo.
++    # "0 fugas" nunca debe presentarse como "sitio sano" si la deteccion no
++    # se ejecuto. Texto en espanol de cliente, sin jerga tecnica (la Seccion 4
++    # cae dentro de la vista gerencia que audita CG-TECH-JARGON).
++    _FUGAS_NOT_EVALUATED_NOTICE = (
++        "⚠️ **Aún no pudimos evaluar sus fugas de visibilidad.** "
++        "La herramienta que detecta y prioriza las fugas no completó su revisión "
++        "en esta ejecución, por eso el listado aparece vacío. **Esto no significa "
++        "que su presencia digital esté sin fugas:** este punto queda PENDIENTE y "
++        "debe volver a ejecutarse antes de tomar una decisión de inversión."
++    )
++
+     def _build_fugas_principales_section(self, audit_result: V4AuditResult,
+                                          brechas_destacadas: List[Dict[str, Any]]) -> str:
+         """FUGAS-WHATSAPP (B1+B4): Sección 4 dinámica derivada del pain_ledger.
+@@ -2726,6 +2809,12 @@ class V4DiagnosticGenerator:
+         campos dinámicos del dict de brecha (nombre/detalle derivados de
+         _pain_to_brecha) — nunca hardcoded ni inventada (D-NC3, D-NC6).
+ 
++        FASE-H (V6): si la deteccion de brechas fallo
++        (``self._brechas_detection_state == BRECHAS_STATE_NOT_EVALUATED``) la
++        seccion renderiza un aviso honesto de "no evaluado" en lugar del texto
++        "su presencia digital está en buen estado": cero brechas por fallo NO es
++        cero brechas por sitio sano. En la ruta no degradada el render no cambia.
++
+         Args:
+             audit_result: Audit completo (se conserva en firma por extensibilidad).
+             brechas_destacadas: Brechas con impacto > 0 (orden por severidad).
+@@ -2733,7 +2822,19 @@ class V4DiagnosticGenerator:
+         Returns:
+             Bloques markdown '### Fuga {n} — {nombre}' numerados secuencialmente.
+             Si la lista está vacía, texto neutro de fallback (nunca string vacío).
++            Si la detección quedó NO_EVALUADA, aviso explícito de pendiente.
+         """
++        # FASE-H (V6): estado NO_EVALUADO tiene prioridad sobre el fallback.
++        if getattr(self, '_brechas_detection_state', None) == BRECHAS_STATE_NOT_EVALUATED:
++            if not brechas_destacadas:
++                return self._FUGAS_NOT_EVALUATED_NOTICE
++            degraded_blocks = [
++                f"### Fuga {n} — {b.get('nombre') or 'Brecha detectada'}\n"
++                f"{b.get('detalle') or ''}"
++                for n, b in enumerate(brechas_destacadas, 1)
++            ]
++            return "\n\n".join([self._FUGAS_NOT_EVALUATED_NOTICE] + degraded_blocks)
++
+         if not brechas_destacadas:
+             return (
+                 "No se detectaron fugas críticas en este momento. "
+@@ -3135,6 +3236,15 @@ class V4DiagnosticGenerator:
+         orquestador (validation_summary, analytics_data, whatsapp_html_detected).
+         Si no se pasan, hereda los guardados en generate() (self._current_*).
+         Solo construye el ValidationSummary sintético como fallback legacy.
++
++        FASE-H (V6): si la detección delegada lanza, el fallo NO se traga —
++        se registra con traceback, deja ``self._brechas_detection_state ==
++        BRECHAS_STATE_NOT_EVALUATED``, retorna [] y NO escribe el caché (la
++        siguiente llamada con los mismos inputs debe reintentar). Los
++        consumidores que listen brechas deben consultar ese estado
++        (ver _build_fugas_principales_section) para que una lista vacía por
++        fallo nunca se presente como "sitio sin fugas". Un audit_result
++        ausente NO es un fallo de detección y no altera el estado.
+         """
+         # FASE-A-COHERENCIA: heredar inputs reales de generate() si no se pasan
+         if validation_summary is None:
+@@ -3158,6 +3268,10 @@ class V4DiagnosticGenerator:
+         )
+         if hasattr(self, '_cached_brechas') and self._cached_brechas is not None \
+                 and getattr(self, '_cached_brechas_key', None) == cache_key:
++            # FASE-H (V6): servir del caché == servir un resultado de una
++            # deteccion que SI completo (el camino de fallo nunca escribe el
++            # caché), asi que el estado vuelve a ser EVALUATED.
++            self._brechas_detection_state = BRECHAS_STATE_EVALUATED
+             return self._cached_brechas
+ 
+         brechas = []
+@@ -3195,10 +3309,21 @@ class V4DiagnosticGenerator:
+             if verified_ids:
+                 pains = [p for p in pains if p.id not in verified_ids]
+         except Exception:
+-            # If PainSolutionMapper fails, fall back to empty brechas
+-            # (audit has critical errors — don't fabricate gaps)
+-            self._cached_brechas = brechas
+-            self._cached_brechas_key = cache_key
++            # FASE-H (V6): el detector FALLO — esto no es un "sitio sin brechas".
++            # 1) El traceback queda en el log (antes se tragaba en silencio).
++            # 2) El estado NOT_EVALUATED hace el fallo visible en el documento
++            #    (ver _build_fugas_principales_section).
++            # 3) NO se escribe _cached_brechas/_cached_brechas_key: un fallo
++            #    jamas debe servirse como resultado valido para los mismos
++            #    inputs; la siguiente llamada debe reintentar.
++            # Misma familia de patron que la deuda P11 (main.py: precision_tier
++            # defaulteando "C" bajo except desnudo) — esa NO se corrige aqui.
++            logging.getLogger(__name__).exception(
++                "[V6] PainSolutionMapper.detect_pains() fallo: deteccion de "
++                "brechas NO EVALUADA. El diagnostico sale con 0 brechas, lo que "
++                "NO debe leerse como 'sitio sin fugas'."
++            )
++            self._brechas_detection_state = BRECHAS_STATE_NOT_EVALUATED
+             return brechas
+ 
+         # Translate each Pain to breach format with commercial narrative
+@@ -3213,6 +3338,9 @@ class V4DiagnosticGenerator:
+         brechas.sort(key=lambda x: severity_order.get(x.get('severity', ''), 4))
+ 
+         # Store cache (FASE-H) keyed por inputs (FASE-A-COHERENCIA)
++        # FASE-H (V6): ruta de exito — un intento anterior fallado queda
++        # explícitamente superado (incluye el caso "0 brechas en sitio sano").
++        self._brechas_detection_state = BRECHAS_STATE_EVALUATED
+         self._cached_brechas = brechas
+         self._cached_brechas_key = cache_key
+         return brechas
+diff --git a/modules/data_validation/metadata_validator.py b/modules/data_validation/metadata_validator.py
+index 332bc15..0a0191c 100644
+--- a/modules/data_validation/metadata_validator.py
++++ b/modules/data_validation/metadata_validator.py
+@@ -1,219 +1,26 @@
+-"""Validador de metadatos para detección de configuraciones por defecto de CMS.
+-
+-Sprint 1, Fase 1: Detecta strings por defecto de WordPress y otros CMS
+-que indican sitios no configurados profesionalmente.
++"""FASE-H (V13): este modulo ya NO implementa un validador: delega en el vivo.
++
++Hubo dos `MetadataValidator` byte a byte identicos (219 lineas cada uno, verificados
++con `diff`). El vivo era `data_validation/metadata_validator.py`, importado por el
++audit en `modules/auditors/v4_comprehensive.py:33` y re-exportado por
++`data_validation/__init__.py`; este gemelo solo lo consumian tests, asi que sus
++checks podian divergir del que decide lo que se publica sin que nadie se enterara
++— la misma familia de deuda de duplicacion que denuncia el dossier §4 caida #7.
++
++Se conserva como punto de import con delegacion explicita (opcion admitida por el AC
++de V13) porque borrar el archivo versionado requiere aprobacion. Al no quedar una
++segunda implementacion ya no hay nada que se desincronice: un test que importe esta
++ruta ejerce los checks reales (CRITICAL `title`, HIGH `description`).
+ """
+-from typing import List, Optional
+-
+-from bs4 import BeautifulSoup
+ 
+-from data_models.claim import Claim
+-from enums.severity import Severity
++from data_validation.metadata_validator import (
++    DEFAULT_WORDPRESS_STRINGS,
++    GENERIC_DESCRIPTIONS,
++    MetadataValidator,
++)
+ 
+-DEFAULT_WORDPRESS_STRINGS = [
+-    "My WordPress Blog",
+-    "My WordPress Website",
+-    "Just another WordPress site",
+-    "Just another WordPress blog",
+-    "Sitio de WordPress",
+-    "Mi sitio web",
+-    "Un sitio de WordPress",
+-    "Otro sitio de WordPress",
+-    "Mi blog de WordPress",
++__all__ = [
++    "MetadataValidator",
++    "DEFAULT_WORDPRESS_STRINGS",
++    "GENERIC_DESCRIPTIONS",
+ ]
+-
+-GENERIC_DESCRIPTIONS = [
+-    "This is an example page",
+-    "This is a sample page",
+-    "Page not found",
+-    "Just another WordPress site",
+-]
+-
+-
+-class MetadataValidator:
+-    """Valida metadatos HTML para detectar configuraciones por defecto de CMS."""
+-
+-    def __init__(self, default_strings: Optional[List[str]] = None):
+-        """Inicializa el validador con strings por defecto configurables.
+-
+-        Args:
+-            default_strings: Lista opcional de strings por defecto a detectar.
+-                           Si no se proporciona, usa DEFAULT_WORDPRESS_STRINGS.
+-        """
+-        self.default_strings = default_strings or DEFAULT_WORDPRESS_STRINGS
+-
+-    def analyze(self, html_content: str, url: str) -> List[Claim]:
+-        """Analiza el HTML para detectar metadatos por defecto.
+-
+-        Extrae el título y meta description del HTML, detecta si contienen
+-        strings por defecto de CMS, y genera Claims con la severidad apropiada.
+-
+-        Args:
+-            html_content: Contenido HTML del sitio web.
+-            url: URL del sitio analizado (para metadata).
+-
+-        Returns:
+-            List[Claim]: Lista de claims generados, puede estar vacía.
+-        """
+-        claims: List[Claim] = []
+-        soup = BeautifulSoup(html_content, "html.parser")
+-
+-        title = self._extract_title(soup)
+-        description = self._extract_description(soup)
+-
+-        title_claim = self.validate_title(title)
+-        if title_claim:
+-            claims.append(title_claim)
+-
+-        description_claim = self.validate_description(description)
+-        if description_claim:
+-            claims.append(description_claim)
+-
+-        return claims
+-
+-    def _extract_title(self, soup: BeautifulSoup) -> str:
+-        """Extrae el título del HTML parseado.
+-
+-        Args:
+-            soup: Objeto BeautifulSoup con el HTML parseado.
+-
+-        Returns:
+-            str: Contenido del tag <title> o string vacío si no existe.
+-        """
+-        title_tag = soup.find("title")
+-        if title_tag and title_tag.string:
+-            return title_tag.string.strip()
+-        return ""
+-
+-    def _extract_description(self, soup: BeautifulSoup) -> str:
+-        """Extrae la meta description del HTML parseado.
+-
+-        Args:
+-            soup: Objeto BeautifulSoup con el HTML parseado.
+-
+-        Returns:
+-            str: Contenido del meta description o string vacío si no existe.
+-        """
+-        meta = soup.find("meta", attrs={"name": "description"})
+-        if meta and meta.get("content"):
+-            return meta["content"].strip()
+-        return ""
+-
+-    def detect_cms(self, html_content: str) -> str:
+-        """Detecta el CMS utilizado basado en patrones en el HTML.
+-
+-        Args:
+-            html_content: Contenido HTML del sitio web.
+-
+-        Returns:
+-            str: Identificador del CMS detectado: "wordpress", "shopify",
+-                 "wix", o "custom" si no se detecta ninguno conocido.
+-        """
+-        soup = BeautifulSoup(html_content, "html.parser")
+-        html_str = str(soup).lower()
+-
+-        if any(marker in html_str for marker in [
+-            "wp-content",
+-            "wp-includes",
+-            "wordpress",
+-            'meta name="generator" content="wordpress',
+-        ]):
+-            return "wordpress"
+-
+-        if any(marker in html_str for marker in [
+-            "cdn.shopify.com",
+-            "shopify.com",
+-            'meta name="shopify',
+-        ]):
+-            return "shopify"
+-
+-        if any(marker in html_str for marker in [
+-            "wix.com",
+-            "wixsite",
+-            "x-wix",
+-            'meta name="generator" content="wix',
+-        ]):
+-            return "wix"
+-
+-        return "custom"
+-
+-    def validate_title(self, title: str) -> Optional[Claim]:
+-        """Valida el título de la página contra strings por defecto.
+-
+-        Args:
+-            title: El título de la página extraído del HTML.
+-
+-        Returns:
+-            Optional[Claim]: Claim CRITICAL si el título coincide con strings
+-            por defecto, está vacío, o es muy corto. None si es válido.
+-        """
+-        if not title:
+-            return Claim(
+-                source_id="metadata_validator",
+-                evidence_excerpt="<empty>",
+-                severity=Severity.CRITICAL,
+-                category="metadata",
+-                message="El título de la página está vacío",
+-                confidence=0.95,
+-                field_path="title",
+-            )
+-
+-        for default_string in self.default_strings:
+-            if default_string.lower() in title.lower():
+-                return Claim(
+-                    source_id="metadata_validator",
+-                    evidence_excerpt=title,
+-                    severity=Severity.CRITICAL,
+-                    category="metadata",
+-                    message=f"Título contiene string por defecto de CMS: '{default_string}'",
+-                    confidence=0.95,
+-                    field_path="title",
+-                )
+-
+-        if len(title) < 10:
+-            return Claim(
+-                source_id="metadata_validator",
+-                evidence_excerpt=title,
+-                severity=Severity.HIGH,
+-                category="metadata",
+-                message=f"Título demasiado corto ({len(title)} caracteres, mínimo 10)",
+-                confidence=0.95,
+-                field_path="title",
+-            )
+-
+-        return None
+-
+-    def validate_description(self, description: str) -> Optional[Claim]:
+-        """Valida la meta description contra patrones genéricos.
+-
+-        Args:
+-            description: El contenido de la meta description.
+-
+-        Returns:
+-            Optional[Claim]: Claim HIGH si está vacía, MEDIUM si es genérica.
+-            None si es válida.
+-        """
+-        if not description:
+-            return Claim(
+-                source_id="metadata_validator",
+-                evidence_excerpt="<empty>",
+-                severity=Severity.HIGH,
+-                category="metadata",
+-                message="Meta description está vacía",
+-                confidence=0.95,
+-                field_path="meta.description",
+-            )
+-
+-        for generic in GENERIC_DESCRIPTIONS:
+-            if generic.lower() in description.lower():
+-                return Claim(
+-                    source_id="metadata_validator",
+-                    evidence_excerpt=description,
+-                    severity=Severity.MEDIUM,
+-                    category="metadata",
+-                    message=f"Meta description contiene texto genérico: '{generic}'",
+-                    confidence=0.95,
+-                    field_path="meta.description",
+-                )
+-
+-        return None
+diff --git a/tests/auditors/test_v4_comprehensive.py b/tests/auditors/test_v4_comprehensive.py
+index d9c1efe..aaab2f7 100644
+--- a/tests/auditors/test_v4_comprehensive.py
++++ b/tests/auditors/test_v4_comprehensive.py
+@@ -16,14 +16,20 @@ import pytest
+ 
+ from modules.auditors.v4_comprehensive import (
+     GEO_CRITICAL_MAX_SCORE,
++    PAGESPEED_GENERIC_MESSAGE,
++    PAGESPEED_KEY_MESSAGE,
++    PAGESPEED_NOT_CONFIGURED_MESSAGE,
+     CrossValidationResult,
+     GBPApiResult,
+     PerformanceResult,
+     SchemaAuditResult,
+     V4ComprehensiveAuditor,
++    disjoint_executed_validators,
+     geo_band_critical_issue,
++    sanitize_pagespeed_message,
+ )
+ from modules.data_validation import ConfidenceLevel
++from modules.data_validation.external_apis import PageSpeedResult
+ 
+ 
+ # =============================================================================
+@@ -239,3 +245,155 @@ class TestLegacyCriteriaIntact:
+         """Audit sano completo → lista vacía (favorable SR-H2 no contaminado)."""
+         issues = identify(auditor)
+         assert issues == []
++
++
++# =============================================================================
++# FASE-H (V11): el crudo del API no se publica y el trace no se contradice
++# =============================================================================
++
++RAW_API_ERROR = "Invalid URL or request: API key not valid. Please pass a valid API key."
++
++
++def _client_result(status: str, message: str) -> PageSpeedResult:
++    return PageSpeedResult(
++        url="https://hotelsalentoreal.com",
++        device="mobile",
++        has_field_data=False,
++        performance_score=None,
++        lcp=None,
++        fid=None,
++        cls=None,
++        tbt=None,
++        status=status,
++        message=message,
++    )
++
++
++class _StubPageSpeedClient:
++    """Reproduce lo que PageSpeedClient hace hoy con una clave inválida.
++
++    El cliente atrapa su propia excepción y devuelve status="ERROR" con
++    message=str(e) en inglés — ese es el camino real por el que el crudo llegaba
++    al diagnóstico (no el except de _audit_performance).
++    """
++
++    def __init__(self, result: PageSpeedResult):
++        self._result = result
++
++    def analyze_url(self, url, device="mobile") -> PageSpeedResult:
++        return self._result
++
++
++class TestV11MensajeSanitizadoEnLaFuente:
++    """Punto (b) del dossier §1: el doc insertaba el string crudo del API."""
++
++    def test_sanitizador_detecta_fallo_de_credencial(self):
++        assert sanitize_pagespeed_message(RAW_API_ERROR) == PAGESPEED_KEY_MESSAGE
++
++    def test_sanitizador_cubre_cualquier_otra_caida(self):
++        assert (
++            sanitize_pagespeed_message("Request to PageSpeed API timed out.")
++            == PAGESPEED_GENERIC_MESSAGE
++        )
++        assert sanitize_pagespeed_message(None) == PAGESPEED_GENERIC_MESSAGE
++
++    def test_el_audit_publica_el_mensaje_sanitizado_no_el_crudo(self, auditor):
++        auditor.pagespeed = _StubPageSpeedClient(_client_result("ERROR", RAW_API_ERROR))
++
++        perf = auditor._audit_performance("https://hotelsalentoreal.com")
++
++        assert perf.status == "ERROR"
++        assert perf.message == PAGESPEED_KEY_MESSAGE
++        assert "API key not valid" not in perf.message
++
++    def test_sin_clave_estado_y_texto_propios(self, auditor, monkeypatch):
++        def _sin_clave():
++            raise ValueError("API key is required")
++
++        monkeypatch.setattr(
++            "modules.auditors.v4_comprehensive.PageSpeedClient", _sin_clave
++        )
++        auditor.pagespeed = None
++
++        perf = auditor._audit_performance("https://hotelsalentoreal.com")
++
++        # API_NOT_CONFIGURED ya no puede quedar disfrazado de "sitio nuevo":
++        # is_performance_api_unavailable lo clasifica como indisponibilidad nuestra.
++        assert perf.status == "API_NOT_CONFIGURED"
++        assert perf.message == PAGESPEED_NOT_CONFIGURED_MESSAGE
++
++
++class TestV11RecomendacionesLeenElEstadoReal:
++    """El residuo D6 en `_generate_recommendations` afirmaba "site may be new"."""
++
++    def _recs(self, auditor, perf):
++        return auditor._generate_recommendations(
++            schema=make_schema(), gbp=make_gbp(), perf=perf, validation=make_validation()
++        )
++
++    def test_error_nuestro_no_afirma_sitio_nuevo(self, auditor):
++        perf = PerformanceResult(
++            has_field_data=False,
++            mobile_score=None,
++            desktop_score=None,
++            lcp=None,
++            fid=None,
++            cls=None,
++            status="ERROR",
++            message=PAGESPEED_KEY_MESSAGE,
++        )
++
++        recs = self._recs(auditor, perf)
++
++        assert PAGESPEED_KEY_MESSAGE in recs
++        assert not any("site may be new" in rec for rec in recs)
++
++    def test_status_vacio_tampoco_afirma_sitio_nuevo(self, auditor):
++        perf = PerformanceResult(
++            has_field_data=False,
++            mobile_score=None,
++            desktop_score=None,
++            lcp=None,
++            fid=None,
++            cls=None,
++            status="",
++            message=PAGESPEED_GENERIC_MESSAGE,
++        )
++
++        recs = self._recs(auditor, perf)
++
++        assert not any("site may be new" in rec for rec in recs)
++        assert PAGESPEED_GENERIC_MESSAGE in recs
++
++    def test_api_ok_sin_crux_conserva_el_texto_generico(self, auditor):
++        """LAB_DATA_ONLY es el único caso donde 'site may be new' es cierto."""
++        recs = self._recs(
++            auditor, make_perf(status="LAB_DATA_ONLY", has_field_data=False)
++        )
++
++        assert any("site may be new or low traffic" in rec for rec in recs)
++
++
++class TestV11ExecutionTraceNoSeContradice:
++    """Punto (d): `pagespeed_api` figuraba en executed Y en skipped."""
++
++    def test_ejecuted_queda_excluido_de_skipped(self):
++        executed = ["schema_validation", "pagespeed_api", "gbp_api"]
++
++        assert disjoint_executed_validators(executed, ["pagespeed_api"]) == [
++            "schema_validation",
++            "gbp_api",
++        ]
++
++    def test_sin_skips_no_toqueada(self):
++        executed = ["schema_validation", "pagespeed_api"]
++
++        assert disjoint_executed_validators(executed, []) == executed
++
++    def test_el_trace_del_audit_aplica_el_filtro(self):
++        """Guarda de cableado: audit() construye el trace con el filtro."""
++        import inspect
++
++        assert "disjoint_executed_validators(" in inspect.getsource(
++            V4ComprehensiveAuditor.audit
++        )
+diff --git a/tests/commercial_documents/test_diagnostic_brechas.py b/tests/commercial_documents/test_diagnostic_brechas.py
+index d801e83..52e4058 100644
+--- a/tests/commercial_documents/test_diagnostic_brechas.py
++++ b/tests/commercial_documents/test_diagnostic_brechas.py
+@@ -12,12 +12,19 @@ Tests:
+ - test_brecha_impacts_sum_reasonable: Suma de impactos no excede 1.0
+ """
+ 
++import logging
++from contextlib import contextmanager
++
+ import pytest
+ from unittest.mock import MagicMock, patch
+ from dataclasses import dataclass, field
+ from typing import List, Dict, Any, Optional
+ 
+-from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
++from modules.commercial_documents.v4_diagnostic_generator import (
++    BRECHAS_STATE_EVALUATED,
++    BRECHAS_STATE_NOT_EVALUATED,
++    V4DiagnosticGenerator,
++)
+ from modules.data_validation.confidence_taxonomy import ConfidenceLevel
+ 
+ 
+@@ -1193,3 +1200,267 @@ def test_generate_template_dynamic_brechas_count():
+         brechas = gen._identify_brechas(audit, validation_summary=vs, analytics_data=analytics,
+                                         whatsapp_html_detected=False)
+         assert [b['pain_id'] for b in brechas] == [p.id for p in pains]
++
++
++# ═══════════════════════════════════════════════════════════════════════════
++# FASE-H (V6): el `except Exception` de _identify_brechas ya no es silencioso
++# ═══════════════════════════════════════════════════════════════════════════
++# Dossier: "si detect_pains lanza, el diagnóstico sale con cero brechas y sin
++# señal". Aceptaciones: traceback en log, estado NOT_EVALUADO visible en el
++# documento, 0-brechas-por-fallo distinguible de 0-brechas-por-sitio-sano y
++# el fallo nunca se cachea como resultado válido.
++
++
++LOGGER_NAME = "modules.commercial_documents.v4_diagnostic_generator"
++
++
++def _audit_with_gaps():
++    """Audit con brechas reales (mismas 6 que usa test_identify_brechas_cached_once)."""
++    return create_audit(
++        schema_detected=False, faq_detected=False, gbp_geo_score=50,
++        phone_web=None, mobile_score=60,
++    )
++
++
++def test_v6_estado_not_evaluated_reutiliza_literal_canonico_del_gate():
++    """El literal local es el MISMO que GateStatus.NOT_EVALUATED (FASE-F).
++
++    Se replica el valor (no el import) para no crear el ciclo
++    publication_gates -> coherence_gate -> commercial_documents.__init__;
++    este test es la guardia anti-deriva de esa decisión.
++    """
++    from modules.quality_gates.publication_gates import GateStatus
++    from modules.commercial_documents.v4_diagnostic_generator import (
++        BRECHAS_STATE_NOT_EVALUATED,
++    )
++
++    assert BRECHAS_STATE_NOT_EVALUATED == "NOT_EVALUATED"
++    assert BRECHAS_STATE_NOT_EVALUATED == GateStatus.NOT_EVALUATED.value
++
++
++def test_v6_fallo_detect_pains_loguea_traceback_y_deja_estado_visible(caplog):
++    """AC1+AC2: detect_pains lanza ⟹ se registra el traceback y queda NOT_EVALUATED."""
++    from modules.commercial_documents.v4_diagnostic_generator import (
++        BRECHAS_STATE_NOT_EVALUATED,
++    )
++
++    audit = _audit_with_gaps()
++    gen = V4DiagnosticGenerator()
++
++    with caplog.at_level(logging.ERROR, logger=LOGGER_NAME):
++        with patch(f"{LOGGER_NAME}.PainSolutionMapper") as mock_mapper:
++            mock_mapper.return_value.detect_pains.side_effect = RuntimeError("boom V6")
++            brechas = gen._identify_brechas(audit)
++
++    # AC3: lista vacía...
++    assert brechas == []
++    # ...pero con estado visible que la distingue de un sitio sano (AC2)
++    assert gen._brechas_detection_state == BRECHAS_STATE_NOT_EVALUATED
++
++    # AC1: la excepción se loguea CON traceback (antes se tragaba en silencio)
++    error_records = [r for r in caplog.records if r.levelno >= logging.ERROR]
++    assert error_records, "El fallo de detect_pains debe registrarse (no tragarse)"
++    assert any(r.exc_info is not None for r in error_records), \
++        "Debe usarse logging.exception (exc_info) para conservar el traceback"
++    assert "boom V6" in caplog.text
++    assert "Traceback" in caplog.text, "El log debe incluir el traceback completo"
++
++
++def test_v6_fallo_detect_pains_no_se_cachea_como_resultado_valido():
++    """AC4: un fallo jamas se sirve del caché — la siguiente llamada reintenta."""
++    from modules.commercial_documents.v4_diagnostic_generator import (
++        BRECHAS_STATE_EVALUATED,
++    )
++
++    audit = _audit_with_gaps()
++    gen = V4DiagnosticGenerator()
++
++    with patch(f"{LOGGER_NAME}.PainSolutionMapper") as mock_mapper:
++        mock_mapper.return_value.detect_pains.side_effect = RuntimeError("boom V6")
++        assert gen._identify_brechas(audit) == []
++
++    # El resultado degradado no quedó escrito en el caché
++    assert gen._cached_brechas is None
++    assert getattr(gen, '_cached_brechas_key', None) is None
++
++    # Mismos inputs, detector sano: REINTENTA y devuelve brechas reales
++    brechas = gen._identify_brechas(audit)
++    assert len(brechas) > 0, "El fallo cacheado congeló una detección válida"
++    # AC2: la ruta de éxito restablece el estado a EVALUATED
++    assert gen._brechas_detection_state == BRECHAS_STATE_EVALUATED
++
++
++def test_v6_ruta_exito_estado_evaluated_inicialmente_none():
++    """Sin fallar, el estado nunca es NOT_EVALUATED (0 brechas ≠ fallo)."""
++    from modules.commercial_documents.v4_diagnostic_generator import (
++        BRECHAS_STATE_EVALUATED,
++        BRECHAS_STATE_NOT_EVALUATED,
++    )
++
++    gen = V4DiagnosticGenerator()
++    assert gen._brechas_detection_state is None  # aún no se ha detectado nada
++
++    # Hotel perfecto: 0 brechas por detección exitosa, NO por fallo
++    og = MagicMock()
++    og.open_graph = True
++    og.confidence = "high"
++    og.open_graph_tags = {f"og:tag{i}": f"val{i}" for i in range(12)}
++    og.imagenes_alt = True
++    audit = create_audit(
++        schema_detected=True, faq_detected=True, org_detected=True,
++        gbp_geo_score=80, mobile_score=85,
++        whatsapp_status=ConfidenceLevel.VERIFIED.value,
++        phone_web="+573****4567", whatsapp_html_detected=True,
++        seo_elements=og, citability=mock_citability(score=80),
++    )
++    assert gen._identify_brechas(audit) == []
++    assert gen._brechas_detection_state == BRECHAS_STATE_EVALUATED
++    assert gen._brechas_detection_state != BRECHAS_STATE_NOT_EVALUATED
++
++
++def test_v6_fugas_no_evaluado_distinguible_de_sitio_sano():
++    """AC3: el render de la Sección 4 distingue fallo de sitio sano."""
++    from modules.commercial_documents.v4_diagnostic_generator import (
++        BRECHAS_STATE_EVALUATED,
++        BRECHAS_STATE_NOT_EVALUATED,
++    )
++
++    audit = create_audit()
++    gen = V4DiagnosticGenerator()
++
++    # Sitio sano: detección completó y no encontró fugas
++    gen._brechas_detection_state = BRECHAS_STATE_EVALUATED
++    sano = gen._build_fugas_principales_section(audit, [])
++    assert "No se detectaron fugas críticas en este momento." in sano
++    assert "Su presencia digital está en buen estado." in sano
++
++    # Detector caído: aviso honesto, nunca "está en buen estado"
++    gen._brechas_detection_state = BRECHAS_STATE_NOT_EVALUATED
++    fallo = gen._build_fugas_principales_section(audit, [])
++    assert fallo != sano
++    assert "está en buen estado" not in fallo
++    assert "No se detectaron fugas críticas" not in fallo
++    assert "PENDIENTE" in fallo
++    # Sin variables sin sustituir y sin jerga (Sección 4 cae en vista gerencia)
++    assert "${" not in fallo
++    assert "Schema" not in fallo and "AEO" not in fallo and "IAO" not in fallo
++
++
++def test_v6_fugas_no_evaluado_con_brechas_lista_aviso_y_fugas():
++    """Defensivo: si llega una lista no vacía con estado caído, se avisa IGUAL."""
++    from modules.commercial_documents.v4_diagnostic_generator import (
++        BRECHAS_STATE_NOT_EVALUATED,
++    )
++
++    gen = V4DiagnosticGenerator()
++    gen._brechas_detection_state = BRECHAS_STATE_NOT_EVALUATED
++    out = gen._build_fugas_principales_section(
++        create_audit(), [{"nombre": "Fuga parcial", "detalle": "detalle"}]
++    )
++    assert "PENDIENTE" in out
++    assert "### Fuga 1 — Fuga parcial" in out
++
++
++def test_v6_documento_renderiza_estado_no_evaluado(caplog):
++    """AC3 end-to-end: el documento publicado dice que no se pudo evaluar."""
++    import tempfile
++    from pathlib import Path
++
++    audit = _real_zione_audit()
++    vs = _vs_whatsapp_conflict()
++    analytics = _analytics_no_ga4()
++    financial = _real_financial_scenarios()
++    gen = V4DiagnosticGenerator()
++
++    with caplog.at_level(logging.ERROR, logger=LOGGER_NAME):
++        with patch(f"{LOGGER_NAME}.PainSolutionMapper") as mock_mapper:
++            mock_mapper.return_value.detect_pains.side_effect = RuntimeError("boom V6")
++            with tempfile.TemporaryDirectory() as tmpdir:
++                path = gen.generate(
++                    audit_result=audit,
++                    validation_summary=vs,
++                    financial_scenarios=financial,
++                    hotel_name="Zione Test",
++                    hotel_url="https://zione-hotel.com",
++                    output_dir=tmpdir,
++                    coherence_score=0.85,
++                    gate_status="PASSED",
++                    region="eje_cafetero",
++                    analytics_data=analytics,
++                )
++                content = Path(path).read_text(encoding="utf-8")
++
++    # El fallo quedó en el log con traceback
++    assert "Traceback" in caplog.text
++    # Estado visible en el documento: titulo + aviso, NUNCA "todo en orden"
++    assert "FUGAS PRINCIPALES (NO EVALUADAS)" in content
++    assert "Aún no pudimos evaluar sus fugas de visibilidad." in content
++    assert "Su presencia digital está en buen estado." not in content
++    # Guard anti-residuos (safe_substitute): 0 variables sin renderizar
++    assert "${" not in content
++
++
++@contextmanager
++def _detector_caido():
++    """detect_pains en fallo permanente: el render debe ocurrir DENTRO del bloque.
++
++    `_build_brechas_section` y `_build_brechas_resumen_section` vuelven a ejecutar
++    `_identify_brechas()`; si el parche ya se salió, esa segunda detección tiene
++    éxito y resetea el estado a EVALUATED, que es justo lo que se quiere probar.
++    """
++    with patch(f"{LOGGER_NAME}.PainSolutionMapper") as mock_mapper:
++        mock_mapper.return_value.detect_pains.side_effect = RuntimeError("boom V6")
++        yield
++
++
++def test_v6_seccion_de_brechas_no_afirma_que_no_hay_brechas():
++    """El aviso no-evaluado debe llegar a TODAS las secciones derivadas."""
++    audit = _audit_with_gaps()
++    gen = V4DiagnosticGenerator()
++
++    with _detector_caido():
++        gen._identify_brechas(audit)
++        section = gen._build_brechas_section(audit, mock_financial_scenarios())
++
++    assert gen._brechas_detection_failed() is True
++    assert "Aún no pudimos evaluar" in section
++    assert "No se detectaron brechas criticas" not in section
++
++
++def test_v6_tabla_resumen_de_brechas_tampoco_dice_sin_brechas():
++    audit = _audit_with_gaps()
++    gen = V4DiagnosticGenerator()
++
++    with _detector_caido():
++        row = gen._build_brechas_resumen_section(audit, mock_financial_scenarios())
++
++    assert "Sin brechas detectadas" not in row
++    assert "falló en la detección" in row
++
++
++def test_v6_ruta_sana_deja_decir_sin_brechas():
++    """Sin fallo, el texto de sitio sano sigue siendo legítimo (no se censura)."""
++    og_tags = {f"og:tag{i}": f"val{i}" for i in range(12)}
++    seo = MagicMock()
++    seo.open_graph = True
++    seo.confidence = "high"
++    seo.open_graph_tags = og_tags
++    seo.imagenes_alt = True
++    audit = create_audit(
++        schema_detected=True, faq_detected=True, org_detected=True,
++        gbp_geo_score=80, gbp_reviews=50, gbp_place_found=True, mobile_score=85,
++        whatsapp_status=ConfidenceLevel.VERIFIED.value,
++        phone_web="+573001234567", whatsapp_html_detected=True,
++        metadata_has_issues=False, seo_elements=seo,
++        citability=mock_citability(score=80),
++    )
++    gen = V4DiagnosticGenerator()
++
++    assert gen._identify_brechas(audit) == []
++    assert gen._brechas_detection_failed() is False
++    assert "No se detectaron brechas criticas" in gen._build_brechas_section(
++        audit, mock_financial_scenarios()
++    )
++    assert gen._build_brechas_resumen_section(audit, mock_financial_scenarios()) == (
++        "| Sin brechas detectadas | — |"
++    )
+diff --git a/tests/commercial_documents/test_diagnostic_generator.py b/tests/commercial_documents/test_diagnostic_generator.py
+index 081d58e..aa70e74 100644
+--- a/tests/commercial_documents/test_diagnostic_generator.py
++++ b/tests/commercial_documents/test_diagnostic_generator.py
+@@ -657,6 +657,154 @@ class TestD6PerformanceStatusDinamico:
+         assert "Core Web Vitals" not in result
+ 
+ 
++# ────────────────────────────────────────────────────────────────────────────
++# FASE-H (V11): residuos del fix D6 — la rama else seguía hardcodeada
++# ────────────────────────────────────────────────────────────────────────────
++
++
++def _audit_with_performance(status, message, has_field_data: bool = False) -> V4AuditResult:
++    """Audit mínimo con el eje performance en el estado pedido."""
++    audit = dataclass_replace(
++        _make_minimal_audit(),
++        performance=PerformanceData(
++            has_field_data=has_field_data,
++            mobile_score=None,
++            desktop_score=None,
++            lcp=None,
++            fid=None,
++            cls=None,
++            status=status,
++            message=message,
++        ),
++    )
++    # GBP limpio: evita filas extrañas para poder aislar la fila de performance
++    return dataclass_replace(
++        audit,
++        gbp=dataclass_replace(audit.gbp, geo_score=80, photos=60, reviews=100),
++        validation=dataclass_replace(audit.validation, conflicts=[]),
++    )
++
++
++def _row_cells(result: str):
++    """Filas de tabla Markdown (header, separador y datos) como listas de celdas."""
++    return [
++        [c.strip() for c in line.strip().strip("|").split("|")]
++        for line in result.splitlines()
++        if line.count("|") >= 2
++    ]
++
++
++class TestV11ResiduosFixD6:
++    """V11: "sitio nuevo o tráfico bajo" solo es válido si la API respondió bien."""
++
++    def test_v11_api_not_configured_muestra_mensaje_real_y_rojo(self):
++        """API_NOT_CONFIGURED es indisponibilidad nuestra: 🔴 Alta + mensaje fuente."""
++        gen = V4DiagnosticGenerator()
++        audit = _audit_with_performance(
++            "API_NOT_CONFIGURED", "API de PageSpeed no disponible (verificar clave)"
++        )
++
++        result = gen._build_manual_attention_table(audit)
++
++        # Mensaje real leído de la fuente (nunca narrativa paralela hardcodeada)
++        assert "API de PageSpeed no disponible (verificar clave)" in result
++        assert "🔴 Alta" in result
++        # La afirmación que D6 dejó viva en la rama else NO puede aparecer
++        assert "El sitio puede ser nuevo" not in result
++        assert "tráfico bajo" not in result
++
++    def test_v11_status_vacio_es_no_evaluado_no_sitio_nuevo(self):
++        """Status vacío != datos del sitio: se reporta como no evaluable (🔴 Alta)."""
++        gen = V4DiagnosticGenerator()
++        audit = _audit_with_performance("", "")
++
++        result = gen._build_manual_attention_table(audit)
++
++        assert "El sitio puede ser nuevo" not in result
++        assert "🔴 Alta" in result
++        # Hay una explicación explícita, no una celda vacía
++        row = next(r for r in _row_cells(result) if r[0].startswith("Sin Datos de Campo"))
++        assert row[2].strip() not in ("", "-")
++
++    def test_v11_status_none_es_no_evaluado(self):
++        """status=None (campo ausente) cae del lado no-evaluado, no del genérico."""
++        gen = V4DiagnosticGenerator()
++        audit = _audit_with_performance(None, None)
++
++        result = gen._build_manual_attention_table(audit)
++
++        assert "El sitio puede ser nuevo" not in result
++        assert "🔴 Alta" in result
++
++    def test_v11_status_desconocido_es_no_evaluado(self):
++        """Lista blanca: un estado jamás visto no autoriza afirmar nada del sitio."""
++        gen = V4DiagnosticGenerator()
++        audit = _audit_with_performance("QUOTA_EXCEEDED", "Cuota de la API agotada")
++
++        result = gen._build_manual_attention_table(audit)
++
++        assert "Cuota de la API agotada" in result
++        assert "El sitio puede ser nuevo" not in result
++        assert "🔴 Alta" in result
++
++    def test_v11_lab_data_only_conserva_texto_generico(self):
++        """LAB_DATA_ONLY (API respondió, CrUX sin datos) SÍ es el caso genérico."""
++        gen = V4DiagnosticGenerator()
++        audit = _audit_with_performance("LAB_DATA_ONLY", "Lighthouse lab data available.")
++
++        result = gen._build_manual_attention_table(audit)
++
++        assert "El sitio puede ser nuevo o tener tráfico bajo" in result
++        assert "🟡 Media" in result
++
++    def test_v11_ok_sin_field_data_conserva_texto_generico(self):
++        """Cualquier sinónimo de OK de la API mantiene el 🟡 Media histórico."""
++        gen = V4DiagnosticGenerator()
++        audit = _audit_with_performance("OK", "Success")
++
++        result = gen._build_manual_attention_table(audit)
++
++        assert "El sitio puede ser nuevo o tener tráfico bajo" in result
++        assert "🟡 Media" in result
++
++    def test_v11_error_sigue_mostrando_mensaje_api(self):
++        """Regresión D6: la rama ERROR conserva su comportamiento."""
++        gen = V4DiagnosticGenerator()
++        audit = _audit_with_performance("ERROR", "API key not valid")
++
++        result = gen._build_manual_attention_table(audit)
++
++        assert "API key not valid" in result
++        assert "🔴 Alta" in result
++        assert "El sitio puede ser nuevo" not in result
++
++    def test_v11_tabla_renderiza_con_header_y_separador(self):
++        """Punto (c) del dossier: las filas vivían sin cabecera y no renderizaban."""
++        gen = V4DiagnosticGenerator()
++        audit = _audit_with_performance("API_NOT_CONFIGURED", "sin clave")
++
++        result = gen._build_manual_attention_table(audit)
++        rows = _row_cells(result)
++
++        assert len(rows) >= 3, f"Esperaba header + separador + datos, obtuve {rows}"
++        # Header de 3 columnas, ninguna vacía
++        assert len(rows[0]) == 3 and all(rows[0]), rows[0]
++        # Separador Markdown en la segunda línea
++        assert all(cell and set(cell) <= {"-"} for cell in rows[1]), rows[1]
++        # Toda fila de datos respeta el contrato de 3 columnas del header
++        for row in rows[2:]:
++            assert len(row) == 3, f"Fila con columnas inconsistentes: {row}"
++
++    def test_v11_header_no_duplica_narrativa_de_fuente(self):
++        """El header no introduce textos de dolor propios (lección L-NC4)."""
++        from modules.commercial_documents.v4_diagnostic_generator import (
++            MANUAL_ATTENTION_TABLE_HEADER,
++        )
++
++        assert "Schema" not in MANUAL_ATTENTION_TABLE_HEADER
++        assert "WhatsApp" not in MANUAL_ATTENTION_TABLE_HEADER
++
++
+ class TestD7ReviewsParametrizadas:
+     """D7: el ejemplo de reseñas usa el conteo real del audit, no '203'."""
+ 
+diff --git a/tests/commercial_documents/test_pain_solution_mapper.py b/tests/commercial_documents/test_pain_solution_mapper.py
+index 943fffa..4af37d3 100644
+--- a/tests/commercial_documents/test_pain_solution_mapper.py
++++ b/tests/commercial_documents/test_pain_solution_mapper.py
+@@ -1,9 +1,12 @@
+ """
+-Tests for PainSolutionMapper - WhatsApp detection fixes (FASE-A).
++Tests for PainSolutionMapper - WhatsApp detection fixes (FASE-A) y
++guardias de emision low_ota_divergence / low_organic_visibility (FASE-H, V7 y V8).
+ 
+ Tests:
+ - test_detect_pain_no_whatsapp_unknown: Existing behavior must still pass
+ - test_detect_pain_whatsapp_conflict: New behavior for CONFLICT confidence
++- TestLowOtaDivergenceUnits / TestLowOtaDivergenceOtaEvidence (V7)
++- TestLowOrganicVisibilityDedup (V8)
+ """
+ 
+ import pytest
+@@ -162,3 +165,254 @@ class TestPainSolutionMapperWhatsApp:
+         assert conflict_entry["validation_fields"] == ["whatsapp_number"]
+         assert conflict_entry["estimated_impact"] == "high"
+         assert conflict_entry["name"] == "Conflicto de WhatsApp"
++
++
++# =============================================================================
++# FASE-H (V7) — low_ota_divergence: guard numerico + normalizacion de unidades
++# =============================================================================
++#
++# El guard original hacia `hasattr(direct_field.value, '__iter__')` sobre el valor del
++# ValidatedField. La unidad canonica del pipeline es float en fraccion 0-1
++# (main.py:1865 `canal_directo / 100`, default 0.20 en main.py:1890, campo construido en
++# main.py:2306) y un float NUNCA tiene `__iter__`: el pain era codigo muerto y el
++# `isinstance(..., (int, float, str))` interno era inalcanzable. Ademas `ota_field` se leia
++# y no se usaba. Estos tests fijan las tres mitades del defecto.
++
++def create_direct_field(value, confidence=ConfidenceLevel.ESTIMATED, sources=("Default",)):
++    """ValidatedField `direct_channel_percentage` tal como lo construye main.py:2306-2314."""
++    return ValidatedField(
++        field_name="direct_channel_percentage",
++        value=value,
++        confidence=confidence,
++        sources=list(sources),
++        can_use_in_assets=False,
++    )
++
++
++def _ota_pain(pains):
++    return next((p for p in pains if p.id == "low_ota_divergence"), None)
++
++
++class TestLowOtaDivergenceUnits:
++    """AC1: `0.2`, `20`, `"0.2"` y `"20"` deben significar todos lo mismo (20%)."""
++
++    @pytest.mark.parametrize("value", [0.2, 20, "0.2", "20", 20.0, "20 %", 0.29])
++    def test_dispara_en_ambas_unidades_y_formatos(self, value):
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        vs = create_validation_summary([create_direct_field(value)])
++
++        pain = _ota_pain(mapper.detect_pains(audit, vs))
++        assert pain is not None, f"valor {value!r} (20%-equivalente) no disparo low_ota_divergence"
++        assert pain.severity == "high"
++        assert pain.detected_by == "validation"
++        assert pain.id in mapper.pain_map
++
++    @pytest.mark.parametrize("value", [0.2, 20, "0.2", "20"])
++    def test_description_normalizado_a_porcentaje(self, value):
++        """AC5: tras normalizar, el description expresa 20% en los cuatro casos."""
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        vs = create_validation_summary([create_direct_field(value)])
++
++        pain = _ota_pain(mapper.detect_pains(audit, vs))
++        assert pain is not None
++        assert "20%" in pain.description, f"{value!r} => {pain.description!r}"
++
++    @pytest.mark.parametrize("value", [0.5, 60, 0.3, "0.3", 1, "100", "0.5"])
++    def test_no_dispara_por_encima_del_umbral(self, value):
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        vs = create_validation_summary([create_direct_field(value)])
++
++        assert _ota_pain(mapper.detect_pains(audit, vs)) is None, \
++            f"valor {value!r} esta en o sobre el umbral (30%) y no debe disparar"
++
++    @pytest.mark.parametrize("value", ["n/a", "", None, [], {}, "dos", float("nan"),
++                                       float("inf"), -20, True, False])
++    def test_valor_basura_no_dispara_y_no_lanza(self, value):
++        """AC1: un valor no numerico / no convertible no dispara y no lanza."""
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        vs = create_validation_summary([create_direct_field(value)])
++
++        assert _ota_pain(mapper.detect_pains(audit, vs)) is None
++
++    def test_sin_campo_direct_channel_no_dispara(self):
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        vs = create_validation_summary([])
++
++        assert _ota_pain(mapper.detect_pains(audit, vs)) is None
++
++    def test_dispara_con_default_del_pipeline(self):
++        """AC4: `direct_channel_percentage=0.2` de fuente 'Default' (lo que el pipeline ya
++        conoce, main.py:1890) debe poder disparar el pain priority 1."""
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        vs = create_validation_summary([
++            create_direct_field(0.2, ConfidenceLevel.ESTIMATED, ("Default",))
++        ])
++
++        pain = _ota_pain(mapper.detect_pains(audit, vs))
++        assert pain is not None, "el default real del pipeline (0.2/Default) seguia muerto"
++        assert pain.confidence == 0.7  # ESTIMATED -> _confidence_to_float
++
++
++class TestLowOtaDivergenceOtaEvidence:
++    """AC2: `ota_presence` es enriquecimiento NO bloqueante, jamas guard.
++
++    main.py nunca registra `ota_presence` en el ValidationSummary (solo adr_cop,
++    occupancy_rate, direct_channel_percentage), de modo que usarlo como guard volveria a
++    dejar el pain en codigo muerto.
++    """
++
++    def test_evidencia_ota_reflejada_en_description(self):
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        ota_field = ValidatedField(
++            field_name="ota_presence",
++            value=["booking", "expedia"],
++            confidence=ConfidenceLevel.VERIFIED,
++            sources=["Onboarding"],
++        )
++        vs = create_validation_summary([create_direct_field(0.2), ota_field])
++
++        pain = _ota_pain(mapper.detect_pains(audit, vs))
++        assert pain is not None
++        assert "booking" in pain.description
++        assert "expedia" in pain.description
++        assert "OTAs confirmadas" in pain.description
++
++    def test_sin_ota_presence_el_pain_sigue_disparando(self):
++        """Flujo real: `get_field('ota_presence')` devuelve None y el pain NO desaparece."""
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        vs = create_validation_summary([create_direct_field(0.2)])
++
++        assert vs.get_field("ota_presence") is None
++        pain = _ota_pain(mapper.detect_pains(audit, vs))
++        assert pain is not None
++        assert "OTAs confirmadas" not in pain.description
++
++    def test_ota_presence_vacio_no_agrega_ruido(self):
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        ota_vacia = ValidatedField(
++            field_name="ota_presence", value=[], confidence=ConfidenceLevel.UNKNOWN,
++        )
++        vs = create_validation_summary([create_direct_field(0.2), ota_vacia])
++
++        pain = _ota_pain(mapper.detect_pains(audit, vs))
++        assert pain is not None
++        assert "OTAs confirmadas" not in pain.description
++
++
++# =============================================================================
++# FASE-H (V8) — low_organic_visibility no puede emitirse dos veces
++# =============================================================================
++
++class TestLowOrganicVisibilityDedup:
++    """AC1/AC2: emision unica que conserva las dos narrativas cuando ambas aplican."""
++
++    @staticmethod
++    def _analytics_no_ga4(organic=None):
++        data = {"analytics_status": None, "use_ga4": False}
++        if organic is not None:
++            data["organic_traffic"] = organic
++        return data
++
++    def test_ambas_ramas_activas_una_sola_emision(self):
++        """use_ga4=False Y organic_traffic < 1000: antes se anexaba el pain dos veces."""
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        vs = create_validation_summary([])
++
++        pains = mapper.detect_pains(
++            audit, vs, self._analytics_no_ga4(organic=500), whatsapp_html_detected=True,
++        )
++        ids = [p.id for p in pains]
++
++        assert ids.count("low_organic_visibility") == 1, f"emision duplicada: {ids}"
++        assert "no_analytics_configured" in ids, "el otro pain de la rama no debe perderse"
++        assert ids.count("no_analytics_configured") == 1
++
++    def test_emision_unica_conserva_dato_medido_y_motivo(self):
++        """AC2: la emision unica conserva sesiones/umbral ADEMAS del motivo sin analytics."""
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        vs = create_validation_summary([])
++
++        pains = mapper.detect_pains(
++            audit, vs, self._analytics_no_ga4(organic=500), whatsapp_html_detected=True,
++        )
++        pain = next(p for p in pains if p.id == "low_organic_visibility")
++
++        assert "Sin analytics configurado" in pain.description
++        assert "500" in pain.description
++        assert "1000" in pain.description
++        # premisa, severidad, nombre y detected_by intactos (prohibido re-escribirlos)
++        assert pain.severity == "medium"
++        assert pain.detected_by == "analytics"
++        assert pain.name in ("Baja Visibilidad de Trafico Organico", "Baja Visibilidad Organica")
++
++    def test_control_ga4_disponible_narrativa_medida(self):
++        """GA4 disponible + organic_traffic=500: una emision con la narrativa medida."""
++        mapper = PainSolutionMapper()
++
++        pains = mapper.detect_pains_for_analytics(
++            {"analytics_status": None, "use_ga4": True, "organic_traffic": 500}
++        )
++        ids = [p.id for p in pains]
++
++        assert ids.count("low_organic_visibility") == 1
++        assert "no_analytics_configured" not in ids
++        pain = next(p for p in pains if p.id == "low_organic_visibility")
++        assert pain.name == "Baja Visibilidad Organica"
++        assert "500" in pain.description
++        assert "Sin analytics configurado" not in pain.description
++        assert pain.confidence == 0.7
++
++    def test_solo_sin_ga4_narrativa_de_motivo(self):
++        mapper = PainSolutionMapper()
++
++        pains = mapper.detect_pains_for_analytics(self._analytics_no_ga4())
++        ids = [p.id for p in pains]
++
++        assert ids.count("low_organic_visibility") == 1
++        pain = next(p for p in pains if p.id == "low_organic_visibility")
++        assert pain.name == "Baja Visibilidad de Trafico Organico"
++        assert pain.confidence == 0.8
++        assert "500" not in pain.description
++
++    def test_trafico_sobre_umbral_no_dispara(self):
++        mapper = PainSolutionMapper()
++
++        pains = mapper.detect_pains_for_analytics(
++            {"analytics_status": None, "use_ga4": True, "organic_traffic": 5000}
++        )
++        assert "low_organic_visibility" not in [p.id for p in pains]
++
++    def test_organic_no_numeric_no_dispara(self):
++        """organic_traffic puede llegar como dict (data_derivation_layer): no debe disparar."""
++        mapper = PainSolutionMapper()
++
++        pains = mapper.detect_pains_for_analytics(
++            {"analytics_status": None, "use_ga4": True,
++             "organic_traffic": {"value": {"mobile_score": 75}}}
++        )
++        assert "low_organic_visibility" not in [p.id for p in pains]
++
++    def test_detect_pains_y_detect_pains_for_analytics_coincidentes(self):
++        """AC1: detect_pains delega en _detect_analytics_pains, ninguna via duplica."""
++        mapper = PainSolutionMapper()
++        audit = create_mock_audit_result()
++        vs = create_validation_summary([])
++        analytics = self._analytics_no_ga4(organic=500)
++
++        via_detect = [p.id for p in mapper.detect_pains(audit, vs, analytics,
++                                                        whatsapp_html_detected=True)]
++        via_analytics = [p.id for p in mapper.detect_pains_for_analytics(analytics)]
++
++        assert via_analytics.count("low_organic_visibility") == 1
++        assert via_detect.count("low_organic_visibility") == 1
+diff --git a/tests/data_validation/test_metadata_validator.py b/tests/data_validation/test_metadata_validator.py
+index b1e9843..c4e1f68 100644
+--- a/tests/data_validation/test_metadata_validator.py
++++ b/tests/data_validation/test_metadata_validator.py
+@@ -12,7 +12,7 @@ sys.path.insert(0, project_root)
+ 
+ import pytest
+ 
+-from modules.data_validation.metadata_validator import MetadataValidator
++from data_validation.metadata_validator import MetadataValidator
+ from enums.severity import Severity
+ 
+ 
+@@ -294,3 +294,20 @@ class TestEdgeCases:
+         assert len(title_claims) == 1
+         assert title_claims[0].severity == Severity.CRITICAL
+         assert "Sitio en construcción" in title_claims[0].message
++
++
++def test_v13_no_existe_segunda_implementacion_del_validador():
++    """V13: la ruta `modules/data_validation` delega en el validador vivo.
++
++    Hubo dos `MetadataValidator` byte a byte idénticos y solo uno decide qué se
++    publica (`v4_comprehensive.py:33`). Se conservó el punto de import con
++    delegación explícita, así que ya no hay dos checklists que se desincronicen:
++    este test fija la IDENTIDAD de la clase, no la equivalencia de comportamiento.
++    """
++    import data_validation.metadata_validator as vivo
++    import modules.data_validation.metadata_validator as punto_de_import
++
++    assert punto_de_import.MetadataValidator is vivo.MetadataValidator
++    assert (
++        punto_de_import.DEFAULT_WORDPRESS_STRINGS is vivo.DEFAULT_WORDPRESS_STRINGS
++    )
+diff --git a/tests/test_hotel_visperas_regression.py b/tests/test_hotel_visperas_regression.py
+index d82ee8a..cc5391e 100644
+--- a/tests/test_hotel_visperas_regression.py
++++ b/tests/test_hotel_visperas_regression.py
+@@ -19,7 +19,7 @@ sys.path.insert(0, str(project_root))
+ import pytest
+ from typing import Dict, Any
+ 
+-from modules.data_validation.metadata_validator import MetadataValidator
++from data_validation.metadata_validator import MetadataValidator
+ from modules.data_validation.schema_validator_v2 import SchemaValidatorV2
+ from modules.auditors.pagespeed_auditor_v2 import PageSpeedAuditorV2
+ from data_models.canonical_assessment import (

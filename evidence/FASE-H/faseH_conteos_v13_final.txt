@@ -1,0 +1,3 @@
+test_metadata_validator.py: 23 passed, 28 warnings in 0.36s
+test_hotel_visperas_regression.py: 5 passed, 32 warnings in 1.22s
+v13-decision: borrado fisico con aprobacion del usuario (2026-09-04); git rm -f tras repunteo de los 2 consumidores al modulo vivo; guardia test_v13_no_existe_segunda_implementacion_del_validador afirma find_spec(...) is None

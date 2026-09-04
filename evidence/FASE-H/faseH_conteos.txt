@@ -1,0 +1,5 @@
+test_pain_solution_mapper.py: 46 passed, 8 warnings in 1.06s
+test_diagnostic_brechas.py: 52 passed, 8 warnings in 1.32s
+test_diagnostic_generator.py: 36 passed, 8 warnings in 1.24s
+test_metadata_validator.py: 23 passed, 28 warnings in 0.31s
+test_v4_comprehensive.py: 26 passed, 8 warnings in 1.09s

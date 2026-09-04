@@ -1,0 +1,35 @@
+# Iteraciones FASE-H (presupuesto: <=35, R2 tope 60)
+
+## Limite de medicion (hallazgo, no excusa)
+`evidence/FASE-D/measure_iterations.py <transcript.jsonl> [corte]` NO pudo ejecutarse en esta
+sesion: el transcript vive fuera del workspace
+(`%LOCALAPPDATA%/Temp/qoder-cli/...`) y la politica de permisos del entorno bloquea tanto la
+lectura como el `find` sobre esa ruta. Es la primera vez que el contador automatizado del plan
+queda inaplicable, y por eso se registra: el script asume un sistema de archivos accesible,
+que no es el caso bajo Qoder con sandbox activo. Corte que se habria usado:
+`2026-09-04T10:46:38-05:00` (mtime de `evidence/FASE-H/faseH_validations.txt`, ultima
+verificacion de codigo antes del cierre documental).
+
+## Auto-reporte auditable por partes
+| Actor | Herramientas | Fuente del numero |
+|-------|--------------|-------------------|
+| Parent (integracion + V11-fuente + V13 + V12 + cierre) | ~58 llamadas | conteo propio de la sesion |
+| Subagente 2 (generador: V6 + V11-documento) | 97 `tool_use` | lo devolvio el runtime al cerrar el agente |
+| Subagente 1 (mapper: V7 + V8) | no reportado | el runtime no devolvio usage en su cierre |
+
+Total conocido: **>=155** llamadas de herramienta, muy por encima del presupuesto de 35 y en la
+zona de las fases anteriores (FASE-G publico 154 ids de mensaje unicos, FASE-F 182, FASE-B 345).
+
+## Que consumio el presupuesto de esta fase (señal para el plan)
+1. **Dos intentos de delegacion sobre el mismo archivo compartido** y la deduccion manual de
+   constantes duplicadas que eso provoco (L-H2, L-H1).
+2. Re-verificacion de **cinco citas de linea fosiles** del prompt de fase (L-H4).
+3. Un track delegante que reporto dos veces con cifras contradictorias entre si ("cero tests
+   preexistentes modificados" vs "16 tests adaptados"); la resolución fue el arbol de trabajo,
+   no el informe.
+4. El cierre documental de 5 archivos con 16 seguimientos.
+
+## Decision
+El presupuesto <=35 de FASE-H queda **incumplido** y se reporta como tal. La accion sugerida
+para FASE-VERIFY/RELEASE: instrumentar el contador (o declarar formalmente que el presupuesto
+por fase no es verificable bajo sandbox).
