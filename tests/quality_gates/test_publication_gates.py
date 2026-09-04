@@ -66,6 +66,20 @@ def valid_assessment() -> Dict[str, Any]:
         "validation_summary": {
             "hard_contradictions_count": 0,
         },
+        # FASE-G (G1): doc_audit_consistency ya no pasa en verde con datos
+        # ausentes (NOT_EVALUATED) — un assessment "válido" debe traer doc y
+        # audit_data consistentes entre sí.
+        "diagnostico_text": (
+            "## Diagnostico\n\n"
+            "El sitio cuenta con etiquetas Open Graph configuradas y "
+            "datos estructurados. Se recomienda ampliar el contenido "
+            "local para captar consultas de la region."
+        ),
+        "audit_data": {
+            "seo_elements": {"open_graph": True, "hotel_schema": True},
+            "performance": {"status": "OK", "score": 72},
+            "gbp": {"reviews": 120},
+        },
         # FASE-0C: coverage gate data
         "pain_ledger": [],
         "diagnostic_pain_ids": [],
@@ -617,12 +631,117 @@ class TestCriticalRecallGate:
             "critical_issues": [],
             "audit_schema": {},
         }
-        
+
         result = orchestrator._critical_recall_gate(assessment)
-        
+
         assert result.passed is False
         assert result.status == GateStatus.BLOCKED
         assert "not found" in result.message
+
+
+# =============================================================================
+# Test Class 5b: TestFaseGCriticalRecallNoVacuo (FASE-G G2/NR2)
+# =============================================================================
+
+class TestFaseGCriticalRecallNoVacuo:
+    """
+    FASE-G (G2/NR2): el atajo favorable de SR-H2 deja de ser vacuo cuando los
+    datos primarios del audit lo contradicen. Fixture SalentoReal (2026-08-31):
+    performance.status=ERROR con critical_issues=[] daba recall 1.0 PASSED.
+    """
+
+    def test_salentoreal_fixture_recall_cero_blocked(self, orchestrator):
+        """audit_schema presente + critical_issues=[] + performance ERROR →
+        el recall vacuo 1.0 cae a 0.0 → BLOCKED."""
+        assessment = {
+            "critical_issues": [],
+            "audit_schema": {"rich_results": {"status": "OK"}},
+            "audit_data": {
+                "performance": {
+                    "status": "ERROR",
+                    "message": "Invalid URL or request: API key not valid",
+                },
+            },
+        }
+
+        result = orchestrator._critical_recall_gate(assessment)
+
+        assert result.passed is False
+        assert result.status == GateStatus.BLOCKED
+        assert result.value == 0.0
+
+    def test_detector_expandido_cubre_evidente(self, orchestrator):
+        """Si la lista registrada SÍ reporta el eje caído (PageSpeed ERROR),
+        el recall vuelve a 1.0 — el problema era la lista incompleta, no el
+        criterio nuevo."""
+        assessment = {
+            "critical_issues": [
+                "PageSpeed API ERROR - performance not measurable "
+                "(Invalid URL or request: API key not valid)",
+            ],
+            "audit_schema": {"rich_results": {"status": "OK"}},
+            "audit_data": {
+                "performance": {
+                    "status": "ERROR",
+                    "message": "Invalid URL or request: API key not valid",
+                },
+            },
+        }
+
+        result = orchestrator._critical_recall_gate(assessment)
+
+        assert result.passed is True
+        assert result.value == 1.0
+
+    def test_recall_con_issues_y_un_no_reportado(self, orchestrator):
+        """Con issues registrados y un eje evidente sin reportar:
+        recall = registrados / (registrados + no-reportados)."""
+        assessment = {
+            "critical_issues": ["No Hotel schema detected - critical for SEO"],
+            "audit_schema": {"rich_results": {"status": "OK"}},
+            "audit_data": {"performance": {"status": "ERROR"}},
+        }
+
+        result = orchestrator._critical_recall_gate(assessment)
+
+        assert result.passed is False
+        assert result.value == pytest.approx(1 / 2)
+
+    def test_srh2_favorable_preservado_sin_datos_contradictorios(self, orchestrator):
+        """Sin audit_data (o con performance OK), el camino favorable SR-H2
+        queda intacto: critical_issues=[] + audit ejecutado → 1.0 PASSED."""
+        assessment = {
+            "critical_issues": [],
+            "audit_schema": {"rich_results": {"status": "OK"}},
+        }
+
+        result = orchestrator._critical_recall_gate(assessment)
+
+        assert result.passed is True
+        assert result.value == 1.0
+        assert result.details.get("recall_basis") == "audit_present_no_critical_issues"
+
+    def test_performance_ok_no_genera_missed(self, orchestrator):
+        """performance.status != ERROR → sin missed (el criterio nuevo solo
+        aplica al eje caído)."""
+        assessment = {
+            "critical_issues": [],
+            "audit_schema": {"rich_results": {"status": "OK"}},
+            "audit_data": {"performance": {"status": "OK", "score": 72}},
+        }
+
+        result = orchestrator._critical_recall_gate(assessment)
+
+        assert result.passed is True
+        assert result.value == 1.0
+
+    def test_metrica_ausente_sin_audit_sigue_bloqueando(self, orchestrator):
+        """No-regresión L-SR5: sin critical_recall, sin critical_issues y sin
+        audit_schema → BLOCKED (métrica genuinamente ausente)."""
+        result = orchestrator._critical_recall_gate({})
+
+        assert result.passed is False
+        assert result.status == GateStatus.BLOCKED
 
 
 # =============================================================================
@@ -762,6 +881,17 @@ class TestPublicationGatesOrchestrator:
                 "direct_channel_percentage": 30.0,
                 "adr_cop": 450000.0,
             },
+            # FASE-G (G1): doc y audit_data consistentes para que
+            # doc_audit_consistency evalúe de verdad (NOT_EVALUATED si faltan)
+            "diagnostico_text": (
+                "El sitio cuenta con etiquetas Open Graph y datos "
+                "estructurados en orden."
+            ),
+            "audit_data": {
+                "seo_elements": {"open_graph": True},
+                "performance": {"status": "OK", "score": 72},
+                "gbp": {"reviews": 120},
+            },
             # FASE-0C: coverage gate data
             "pain_ledger": [],
             "diagnostic_pain_ids": [],
@@ -789,6 +919,46 @@ class TestPublicationGatesOrchestrator:
         assert report["summary"]["passed"] == 13  # All 13 gates pass
         assert report["summary"]["failed"] == 0
         assert len(report["blocking_issues"]) == 0
+
+    def test_not_evaluated_gate_divulged_in_summary(self):
+        """
+        FASE-G (G1/A1): un gate sin datos para evaluar (doc_audit_consistency
+        sin diagnostico_text/audit_data) no cuenta como pasado ni como
+        fallido — se divulga en summary["not_evaluated"] y no bloquea.
+        """
+        assessment = {
+            "coherence_score": 0.85,
+            "evidence_coverage": 0.96,
+            "hard_contradictions": 0,
+            "critical_recall": 0.95,
+            "financial_data": {
+                "occupancy_rate": 75.0,
+                "direct_channel_percentage": 30.0,
+                "adr_cop": 450000.0,
+            },
+            "pain_ledger": [],
+            "diagnostic_pain_ids": [],
+            "proposal_pain_ids": [],
+            "financial_evidence_tier": "B",
+            "generated_assets": [
+                {"asset_type": "whatsapp_button", "confidence_score": 0.9},
+                {"asset_type": "faq_page", "confidence_score": 0.9},
+                {"asset_type": "hotel_schema", "confidence_score": 0.9},
+                {"asset_type": "org_schema", "confidence_score": 0.9},
+                {"asset_type": "review_plan", "confidence_score": 0.9},
+                {"asset_type": "optimization_guide", "confidence_score": 0.9},
+                {"asset_type": "monthly_report", "confidence_score": 0.9},
+                {"asset_type": "open_graph", "confidence_score": 0.9},
+                {"asset_type": "llms_txt", "confidence_score": 0.9},
+            ],
+        }
+
+        report = check_publication_readiness(assessment)
+
+        assert report["ready"] is True  # NOT_EVALUATED no bloquea
+        assert report["summary"]["not_evaluated"] == ["doc_audit_consistency"]
+        assert report["summary"]["passed"] == 12
+        assert report["summary"]["failed"] == 0
 
 
 # =============================================================================

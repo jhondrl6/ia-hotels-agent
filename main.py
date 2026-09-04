@@ -2933,6 +2933,18 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     if pain_ledger_resolved_entries:
         builder.with_resolved_pain_ledger(pain_ledger_resolved_entries)
     builder.with_audit(audit_result)
+    # FASE-G (G1): audit_data crudo para doc_audit_consistency (antes nunca
+    # llegaba al gate → PASSED silencioso "No audit data available")
+    builder.with_audit_data(audit_result.to_dict() if audit_result else {})
+    # FASE-G (G2): banda GEO critical → critical_issue. El geo flow corre en
+    # FASE 4, después del audit, así que se lee su JSON persistido aquí.
+    try:
+        _geo_flow_path = output_dir / hotel_id / "v4_audit" / "geo_flow_result.json"
+        if _geo_flow_path.exists():
+            with open(_geo_flow_path, "r", encoding="utf-8") as _gf:
+                builder.with_geo_flow(json.load(_gf))
+    except Exception as _geo_err:
+        print(f"   [WARN] No se pudo cargar geo_flow_result.json: {_geo_err}")
     builder.with_documents(diagnostic_path, proposal_path)
     builder.with_assets(asset_result)
     builder.with_site_presence(site_presence_report)

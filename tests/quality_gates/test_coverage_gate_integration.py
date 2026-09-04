@@ -79,7 +79,10 @@ def test_resolved_pain_ledger_coverage_gate():
         {"pain_id": "no_whatsapp_visible", "status": "DETECTED"},
         {"pain_id": "no_hotel_schema", "status": "DETECTED"},
     ]
-    builder._payload.diagnostic_pain_ids = []
+    # FASE-G (G3/V5): ASSET_GENERATED solo justifica junto a mención en doc.
+    # El doc menciona no_hotel_schema (covered); no_whatsapp_visible queda
+    # justificado por MAPPED_TO_SERVICE (existe en producción, primera clase).
+    builder._payload.diagnostic_pain_ids = ["no_hotel_schema"]
     builder._payload.proposal_pain_ids = []
 
     # Set pain_ledger_resolved (reconciled — the resolved entries list)
@@ -161,6 +164,8 @@ def test_empty_resolved_ledger_blocked():
 
     assert gate_result.passed is False
     assert gate_result.status == GateStatus.BLOCKED
-    assert "empty after reconciliation" in gate_result.message
+    # FASE-G (G4/V9): mensaje unificado — misma semántica BLOCKED, texto nuevo.
+    assert "reconciliación" in gate_result.message
+    assert gate_result.details["coverage_basis"] == "reconciler_dropped_entries"
 
     print("test_empty_resolved_ledger_blocked: PASSED")

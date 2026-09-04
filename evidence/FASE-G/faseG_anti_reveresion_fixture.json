@@ -1,0 +1,33 @@
+{
+  "caso": "Zione 2026-07-25 — asset existe en producción, doc no lo menciona",
+  "regla_v5": "ASSET_GENERATED permanece en _JUSTIFIED_STATUSES (anti-reversión BUG-6); solo el par generado+silencioso deja de justificar. El caso moderno 'existe en producción' es VERIFIED_IN_SITE y justifica sin mención.",
+  "assessment": {
+    "pain_ledger": [
+      {
+        "pain_id": "no_whatsapp_visible",
+        "status": "VERIFIED_IN_SITE"
+      }
+    ],
+    "diagnostic_pain_ids": [],
+    "proposal_pain_ids": []
+  },
+  "gate_result": {
+    "gate_name": "coverage_no_silent_drop",
+    "passed": true,
+    "status": "WARNING",
+    "value": 1.0,
+    "message": "0 pains appear in the document; 1 justified by asset status of 1 detected",
+    "details": {
+      "total_detected": 1,
+      "covered": 0,
+      "justified": 1,
+      "uncovered": []
+    }
+  },
+  "aserciones": {
+    "passed": true,
+    "justified_1": true,
+    "uncovered_vacio": true,
+    "asset_generated_en_justified_statuses": true
+  }
+}

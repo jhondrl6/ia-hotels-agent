@@ -1,16 +1,18 @@
 """
-Tests for Doc-Audit Consistency Gate (N2 — FASE-C-A).
+Tests for Doc-Audit Consistency Gate (N2 — FASE-C-A, contract updated FASE-G G1/NR1).
 
-FASE-C-A (N2): Detects contradictions between claims in the generated
-diagnostic document and the actual audit data.
+FASE-G (G1/NR1) contract changes vs the legacy WARNING mode (DEC-C1):
+- A confirmed doc-vs-audit contradiction is FAILED (blocking — the gate is in
+  BLOCKING_GATE_NAMES since FASE-D), not WARNING.
+- Missing diagnostico_text or missing audit_data → NOT_EVALUATED (A1:
+  skipped ≠ passed). The gate no longer passes green on data absence —
+  in the SalentoReal 2026-08-31 run the gate reported "No audit data
+  available" PASSED with value=None while audit_report existed on disk.
+- gbp.reviews is accepted as int (real audits: SalentoReal has 986), not
+  only as {"total": N}.
 
-Known contradiction patterns:
-- audit.seo_elements.open_graph=True → doc cannot say "Sin Open Graph"
-- reviews cited in doc vs gbp.reviews.total
-- photo target in doc vs audit photos count
-- performance.status=ERROR → doc cannot say "sitio nuevo o trafico bajo"
-
-Initial mode: WARNING (DEC-C1) — does not block publication.
+Both directions tested: doc claims X → audit contradicts; doc cites N
+reviews → audit gbp.reviews int mismatches.
 """
 
 import pytest
@@ -48,16 +50,14 @@ def make_assessment_with_audit(
 
 
 # =============================================================================
-# Test Class: Doc-Audit Consistency Gate (N2)
+# Contradiction → FAILED (blocking, FASE-G G1)
 # =============================================================================
 
-class TestDocAuditConsistencyGate:
-    """Test cases for _doc_audit_consistency_gate()."""
-
+class TestContradictionsBlocking:
     def test_og_contradiction_detected(self, orchestrator):
         """
         Doc says 'Sin Open Graph' but audit shows open_graph=True
-        → gate reports WARNING with the contradiction.
+        → FAILED with the contradiction (blocking since FASE-D).
         """
         assessment = make_assessment_with_audit(
             diag_text=(
@@ -75,8 +75,8 @@ class TestDocAuditConsistencyGate:
 
         result = orchestrator._doc_audit_consistency_gate(assessment)
 
-        assert result.passed is True  # WARNING does not block (DEC-C1)
-        assert result.status == GateStatus.WARNING
+        assert result.passed is False
+        assert result.status == GateStatus.FAILED
         assert result.value == 1  # 1 contradiction
         contradictions = result.details["contradictions"]
         assert len(contradictions) == 1
@@ -86,7 +86,7 @@ class TestDocAuditConsistencyGate:
     def test_performance_error_vs_new_site(self, orchestrator):
         """
         Doc says 'sitio nuevo o tráfico bajo' but performance status=ERROR
-        → gate reports the contradiction.
+        → FAILED.
         """
         assessment = make_assessment_with_audit(
             diag_text=(
@@ -104,15 +104,17 @@ class TestDocAuditConsistencyGate:
 
         result = orchestrator._doc_audit_consistency_gate(assessment)
 
-        assert result.passed is True
-        assert result.status == GateStatus.WARNING
+        assert result.passed is False
+        assert result.status == GateStatus.FAILED
         contradictions = result.details["contradictions"]
-        assert any(c["pattern_id"] == "performance_error_vs_new_site" for c in contradictions)
+        assert any(
+            c["pattern_id"] == "performance_error_vs_new_site" for c in contradictions
+        )
 
-    def test_reviews_mismatch_detected(self, orchestrator):
+    def test_reviews_mismatch_int_986(self, orchestrator):
         """
-        Doc cites '203 reseñas' but audit shows 50 reviews
-        → gate reports the contradiction.
+        Doc cites '203 reseñas' but gbp.reviews is a plain int (SalentoReal:
+        986) → FAILED. FASE-G: int is accepted, not only {"total": N}.
         """
         assessment = make_assessment_with_audit(
             diag_text=(
@@ -121,26 +123,48 @@ class TestDocAuditConsistencyGate:
                 "con una calificación promedio de 4.2 estrellas."
             ),
             audit_data={
-                "gbp": {
-                    "reviews": {
-                        "total": 50,
-                        "average_rating": 4.2,
-                    },
-                },
+                "gbp": {"reviews": 986},
             },
         )
 
         result = orchestrator._doc_audit_consistency_gate(assessment)
 
-        assert result.passed is True
-        assert result.status == GateStatus.WARNING
+        assert result.passed is False
+        assert result.status == GateStatus.FAILED
         contradictions = result.details["contradictions"]
         assert any(c["pattern_id"] == "reviews_mismatch" for c in contradictions)
+        assert any(c["audit_value"] == "986" for c in contradictions)
+
+    def test_reviews_mismatch_dict_total_still_works(self, orchestrator):
+        """Legacy shape {"total": N} keeps working (no-regression)."""
+        assessment = make_assessment_with_audit(
+            diag_text="El hotel cuenta con 203 reseñas en Google.",
+            audit_data={
+                "gbp": {"reviews": {"total": 50, "average_rating": 4.2}},
+            },
+        )
+
+        result = orchestrator._doc_audit_consistency_gate(assessment)
+
+        assert result.passed is False
+        assert any(c["pattern_id"] == "reviews_mismatch" for c in result.details["contradictions"])
+
+    def test_reviews_match_int_no_contradiction(self, orchestrator):
+        """Doc cites the same count as gbp.reviews int → no contradiction."""
+        assessment = make_assessment_with_audit(
+            diag_text="El hotel cuenta con 986 reseñas en Google.",
+            audit_data={"gbp": {"reviews": 986}},
+        )
+
+        result = orchestrator._doc_audit_consistency_gate(assessment)
+
+        assert result.passed is True
+        assert result.status == GateStatus.PASSED
 
     def test_photos_mismatch_detected(self, orchestrator):
         """
         Doc targets 40 photos but audit shows only 5
-        → gate reports the contradiction.
+        → FAILED.
         """
         assessment = make_assessment_with_audit(
             diag_text="El hotel debería subir al menos 40 fotos adicionales.",
@@ -152,11 +176,102 @@ class TestDocAuditConsistencyGate:
 
         result = orchestrator._doc_audit_consistency_gate(assessment)
 
-        assert result.passed is True
-        assert result.status == GateStatus.WARNING
+        assert result.passed is False
+        assert result.status == GateStatus.FAILED
         contradictions = result.details["contradictions"]
         assert any(c["pattern_id"] == "photos_mismatch" for c in contradictions)
 
+    def test_multiple_contradictions_reported(self, orchestrator):
+        """
+        Multiple contradictions in the same doc → all reported, FAILED.
+        """
+        assessment = make_assessment_with_audit(
+            diag_text=(
+                "## Diagnóstico\n\n"
+                "Sin Open Graph Tags. Sitio nuevo o trafico bajo. "
+                "Cuenta con 500 reseñas en Google."
+            ),
+            audit_data={
+                "seo_elements": {"open_graph": True},
+                "performance": {"status": "ERROR", "score": None},
+                "gbp": {"reviews": 30},
+            },
+        )
+
+        result = orchestrator._doc_audit_consistency_gate(assessment)
+
+        assert result.status == GateStatus.FAILED
+        assert result.value >= 2  # At least OG + performance + reviews
+        assert len(result.details["contradictions"]) >= 2
+
+    def test_contradiction_blocks_publication(self, orchestrator):
+        """FAILED (not WARNING) blocks publication readiness."""
+        assessment = make_assessment_with_audit(
+            diag_text="El sitio presenta Sin Open Graph Tags incompletos.",
+            audit_data={
+                "seo_elements": {"open_graph": True},
+            },
+        )
+
+        result = orchestrator._doc_audit_consistency_gate(assessment)
+        assert result.status == GateStatus.FAILED
+
+        results = [result]
+        assert orchestrator.is_ready_for_publication(results) is False
+
+
+# =============================================================================
+# Datos ausentes → NOT_EVALUATED (A1: skipped ≠ passed)
+# =============================================================================
+
+class TestDatosAusentes:
+    def test_no_diagnostic_text_not_evaluated(self, orchestrator):
+        """Sin diagnostico_text el check no corrió → NOT_EVALUATED (no PASSED)."""
+        assessment = make_assessment_with_audit(
+            diag_text="",
+            audit_data={"seo_elements": {"open_graph": True}},
+        )
+
+        result = orchestrator._doc_audit_consistency_gate(assessment)
+
+        assert result.passed is False
+        assert result.status == GateStatus.NOT_EVALUATED
+        assert result.details["state_reason"] == "missing_diagnostico_text"
+
+    def test_no_audit_data_not_evaluated(self, orchestrator):
+        """Sin audit_data → NOT_EVALUATED. En la corrida SalentoReal
+        2026-08-31 esto pasaba en verde con value=None (audit_report existía
+        en disco) — ese es el defecto NR1 que G1 cierra."""
+        assessment = make_assessment_with_audit(
+            diag_text="Sin Open Graph Tags detectados.",
+            audit_data={},
+        )
+
+        result = orchestrator._doc_audit_consistency_gate(assessment)
+
+        assert result.passed is False
+        assert result.status == GateStatus.NOT_EVALUATED
+        assert result.details["state_reason"] == "missing_audit_data"
+        assert result.value is None
+
+    def test_not_evaluated_does_not_block_publication(self, orchestrator):
+        """NOT_EVALUATED es visible pero no bloquea (coherente con A1)."""
+        assessment = make_assessment_with_audit(
+            diag_text="Sin Open Graph Tags detectados.",
+            audit_data={},
+        )
+
+        result = orchestrator._doc_audit_consistency_gate(assessment)
+        assert result.status == GateStatus.NOT_EVALUATED
+
+        assert orchestrator.is_ready_for_publication([result]) is True
+
+
+# =============================================================================
+# Consistencia real → PASSED
+# =============================================================================
+
+class TestConsistenciaReal:
     def test_consistent_doc_passes_silently(self, orchestrator):
         """
         Doc is consistent with audit data → gate PASSED, no contradictions.
@@ -185,73 +300,3 @@ class TestDocAuditConsistencyGate:
         assert result.status == GateStatus.PASSED
         assert result.value == 0
         assert "no contradictions" in result.message.lower()
-
-    def test_no_diagnostic_text_passes(self, orchestrator):
-        """
-        No diagnostic text available → gate PASSED (nothing to check).
-        """
-        assessment = make_assessment_with_audit(
-            diag_text="",
-            audit_data={"seo_elements": {"open_graph": True}},
-        )
-
-        result = orchestrator._doc_audit_consistency_gate(assessment)
-
-        assert result.passed is True
-        assert result.status == GateStatus.PASSED
-
-    def test_no_audit_data_passes(self, orchestrator):
-        """
-        No audit data available → gate PASSED (nothing to compare).
-        """
-        assessment = make_assessment_with_audit(
-            diag_text="Sin Open Graph Tags detectados.",
-            audit_data={},
-        )
-
-        result = orchestrator._doc_audit_consistency_gate(assessment)
-
-        assert result.passed is True
-        assert result.status == GateStatus.PASSED
-
-    def test_warning_does_not_block_publication(self, orchestrator):
-        """
-        WARNING mode (DEC-C1) must not block publication.
-        Verify via is_ready_for_publication that WARNING results pass.
-        """
-        assessment = make_assessment_with_audit(
-            diag_text="El sitio presenta Sin Open Graph Tags incompletos.",
-            audit_data={
-                "seo_elements": {"open_graph": True},
-            },
-        )
-
-        result = orchestrator._doc_audit_consistency_gate(assessment)
-        assert result.status == GateStatus.WARNING
-
-        # WARNING counts as passed for publication readiness
-        results = [result]
-        assert orchestrator.is_ready_for_publication(results) is True
-
-    def test_multiple_contradictions_reported(self, orchestrator):
-        """
-        Multiple contradictions in the same doc → all reported.
-        """
-        assessment = make_assessment_with_audit(
-            diag_text=(
-                "## Diagnóstico\n\n"
-                "Sin Open Graph Tags. Sitio nuevo o trafico bajo. "
-                "Cuenta con 500 reseñas en Google."
-            ),
-            audit_data={
-                "seo_elements": {"open_graph": True},
-                "performance": {"status": "ERROR", "score": None},
-                "gbp": {"reviews": {"total": 30}},
-            },
-        )
-
-        result = orchestrator._doc_audit_consistency_gate(assessment)
-
-        assert result.status == GateStatus.WARNING
-        assert result.value >= 2  # At least OG + performance + reviews
-        assert len(result.details["contradictions"]) >= 2

@@ -352,6 +352,47 @@ class V4AuditResult:
         return result
 
 
+# =============================================================================
+# FASE-G (G2/NR2): banda GEO critical califica como issue crítico.
+# Única fuente de la regla — consumida por _identify_critical_issues y por
+# AssessmentBuilder.with_geo_flow (el geo flow corre DESPUÉS del audit, dentro
+# del asset orchestrator, así que el assessment es el punto de cableado).
+# =============================================================================
+GEO_CRITICAL_MAX_SCORE = 35  # GEOBand.CRITICAL = 0-35 (modules/geo_enrichment/sync_contract.py)
+
+
+def geo_band_critical_issue(geo_flow_result: Any) -> Optional[str]:
+    """Critical issue cuando la banda GEO del geo flow es critical.
+
+    Args:
+        geo_flow_result: dict serializado de geo_flow_result.json
+            (``{"geo_assessment": {"band": ..., "total_score": ...}}``) u
+            objeto con ``to_dict()``.
+
+    Returns:
+        El issue crítico, o None si la banda no es critical / no hay datos.
+        Sin datos NO emite (vacío ≠ ausente — L-SR5 / DA-B19).
+    """
+    if geo_flow_result is None:
+        return None
+    if hasattr(geo_flow_result, "to_dict") and not isinstance(geo_flow_result, dict):
+        geo_flow_result = geo_flow_result.to_dict()
+    if not isinstance(geo_flow_result, dict):
+        return None
+    ga = geo_flow_result.get("geo_assessment")
+    if not isinstance(ga, dict):
+        return None
+    band = str(ga.get("band") or "").lower()
+    score = ga.get("total_score", ga.get("score"))
+    score_critical = isinstance(score, (int, float)) and score <= GEO_CRITICAL_MAX_SCORE
+    if "critical" in band or score_critical:
+        return (
+            f"GEO readiness critical (score {score}/100, band "
+            f"'{band or 'critical'}') - crisis técnica GEO"
+        )
+    return None
+
+
 class V4ComprehensiveAuditor:
     """v4.0 Comprehensive Auditor with API integrations.
     
@@ -1792,25 +1833,44 @@ class V4ComprehensiveAuditor:
         gbp: GBPApiResult,
         perf: PerformanceResult,
         validation: CrossValidationResult,
+        geo_flow_result: Any = None,
     ) -> List[str]:
-        """Identify critical issues from audit."""
+        """Identify critical issues from audit.
+
+        FASE-G (G2/NR2): dos criterios nuevos —
+        - PageSpeed ``status == "ERROR"``: el eje de rendimiento no fue
+          medible, no puede afirmarse "sin issues críticos" desde un eje caído.
+        - Banda GEO ``critical`` (0-35): vía ``geo_flow_result`` (opcional;
+          el geo flow corre después del audit, cableado por el AssessmentBuilder).
+        Los 4 criterios preexistentes quedan intactos.
+        """
         issues = []
-        
+
         if not schema.hotel_schema_detected:
             issues.append("No Hotel schema detected - critical for SEO")
-        
+
         if schema.hotel_schema_detected and not schema.hotel_schema_valid:
             issues.append("Hotel schema has validation errors")
-        
+
         if validation.whatsapp_status == ConfidenceLevel.CONFLICT.value:
             issues.append("WhatsApp number conflict between sources")
-        
+
         if gbp.geo_score < 50:
             issues.append(f"Low GBP geo_score ({gbp.geo_score}/100) - optimization needed")
-        
+
         if perf.has_field_data and perf.mobile_score and perf.mobile_score < 50:
             issues.append(f"Poor mobile performance ({perf.mobile_score}/100)")
-        
+
+        if perf.status == "ERROR":
+            issues.append(
+                f"PageSpeed API ERROR - performance not measurable "
+                f"({(perf.message or '')[:80]})"
+            )
+
+        geo_issue = geo_band_critical_issue(geo_flow_result)
+        if geo_issue:
+            issues.append(geo_issue)
+
         return issues
     
     def _generate_recommendations(

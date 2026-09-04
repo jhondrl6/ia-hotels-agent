@@ -84,6 +84,10 @@ class GateStatus(str, Enum):
     FAILED = "FAILED"
     BLOCKED = "BLOCKED"
     WARNING = "WARNING"
+    # FASE-G (G1, coherente con A1/DA-F4): un gate cuyo insumo no llegó no es
+    # un gate pasado en verde ni un gate bloqueado por contradicción — es un
+    # gate NO EVALUADO: visible, no cuenta como pasado, no bloquea.
+    NOT_EVALUATED = "NOT_EVALUATED"
 
 
 @dataclass
@@ -186,6 +190,10 @@ def gate_blocks_publication(result: "PublicationGateResult") -> bool:
     if result.details.get(GATE_EXECUTION_FAILED_KEY):
         # Un gate que no se ejecuto no puede declararse inocuo.
         return True
+    if result.status == GateStatus.NOT_EVALUATED:
+        # FASE-G (G1/A1): un gate no evaluado no bloquea — pero tampoco pasa
+        # (queda visible en summary["not_evaluated"]).
+        return False
     if result.gate_name not in ADVISORY_GATE_NAMES:
         return True
     return advisory_degrades_to_blocking(result)
@@ -1426,6 +1434,9 @@ class PublicationGatesOrchestrator:
 
         # FASE-0 (DT-4): Try pain_ledger_resolved first (post-orchestrator reconciliation),
         # fallback to pain_ledger if not available.
+        # FASE-G (G4/V9): el tratamiento del ledger vacío vive UNIFICADO tras la
+        # normalización (abajo) — aplica por igual a la ruta resolved y a la
+        # fallback (incluida la ruta dict con "entries": []).
         raw = assessment.get("pain_ledger_resolved")
         reconciler_ran = raw is not None
         if raw is not None:
@@ -1433,16 +1444,6 @@ class PublicationGatesOrchestrator:
             if isinstance(raw, dict):
                 pain_ledger_raw = raw.get("entries", raw)
             elif isinstance(raw, list):
-                if not raw:
-                    # Reconciler ran but produced empty entries → BLOCKED
-                    return PublicationGateResult(
-                        gate_name=gate_name,
-                        passed=False,
-                        status=GateStatus.BLOCKED,
-                        message="pain_ledger_resolved is empty after reconciliation — reconciler ran but produced no entries",
-                        value=None,
-                        suggestion="Check post-orchestrator reconciliation output",
-                    )
                 pain_ledger_raw = raw
             else:
                 pain_ledger_raw = raw
@@ -1473,15 +1474,50 @@ class PublicationGatesOrchestrator:
         diagnostic_pain_ids: Set[str] = set(assessment.get("diagnostic_pain_ids", []))
         proposal_pain_ids: Set[str] = set(assessment.get("proposal_pain_ids", []))
 
-        # Empty ledger = nothing to check = PASS
+        # ------------------------------------------------------------------
+        # FASE-G (G4/V9): tratamiento del ledger vacío UNIFICADO en un solo
+        # punto (antes: fallback vacío = PASS silencioso vs resolved vacío =
+        # BLOCKED). Semántica (DA-C3: vacío ≠ ausente):
+        #   - ledger presente pero vacío = estado favorable legítimo
+        #     "resuelto, 0 brechas" → PASS CON TRAZA (no silencioso).
+        #   - resolved vacío con ledger original NO vacío = caída silenciosa
+        #     del reconciler → BLOCKED.
+        #   - ledger ausente (clave inexistente) → BLOCKED arriba (L-SR5).
+        # ------------------------------------------------------------------
         if not pain_ledger:
+            original = assessment.get("pain_ledger")
+            if reconciler_ran and original:
+                original_count = len(original) if hasattr(original, "__len__") else "?"
+                return PublicationGateResult(
+                    gate_name=gate_name,
+                    passed=False,
+                    status=GateStatus.BLOCKED,
+                    message=(
+                        f"pain_ledger_resolved vacío tras reconciliación pero "
+                        f"pain_ledger tenía {original_count} entrada(s) — caída "
+                        f"silenciosa del reconciler"
+                    ),
+                    value=None,
+                    suggestion="Revisar PostOrchestratorReconciler: perdió entradas del ledger original",
+                    details={
+                        "coverage_basis": "reconciler_dropped_entries",
+                        "original_entries": original_count,
+                    },
+                )
             return PublicationGateResult(
                 gate_name=gate_name,
                 passed=True,
                 status=GateStatus.PASSED,
-                message="Pain ledger vacio — todas las brechas accounted for",
+                message=(
+                    "Pain ledger vacio (0 brechas registradas) — nada que validar "
+                    "(DA-C3: vacío ≠ ausente)"
+                ),
                 value=1.0,
                 suggestion="",
+                details={
+                    "coverage_basis": "ledger_present_zero_entries",
+                    "reconciler_ran": reconciler_ran,
+                },
             )
 
         # FASE-C-A (D5): covered counts document presence BEFORE justified
@@ -1502,6 +1538,19 @@ class PublicationGatesOrchestrator:
             in_diagnostic = entry.pain_id in diagnostic_pain_ids
             in_proposal = entry.pain_id in proposal_pain_ids
             is_justified = entry.status in self._JUSTIFIED_STATUSES
+
+            # FASE-G (G3/V5/NR3): "generado y silencioso" deja de justificar.
+            # ASSET_GENERATED permanece en _JUSTIFIED_STATUSES (anti-reversión
+            # BUG-6/N2, Zione 2026-07-25 — NO quitar de la lista) pero solo
+            # justifica junto a mención en el documento. El caso "existe en
+            # producción" hoy es VERIFIED_IN_SITE (primera clase desde
+            # FASE-P1-D, preservado por el reconciler), que sigue justificando
+            # sin mención. El gate valida contra ledger+doc: no re-detecta.
+            if (
+                entry.status == "ASSET_GENERATED"
+                and not (in_diagnostic or in_proposal)
+            ):
+                is_justified = False
 
             if in_diagnostic or in_proposal:
                 # Pain appears in document — covered regardless of status
@@ -1606,15 +1655,18 @@ class PublicationGatesOrchestrator:
         self, assessment: Dict[str, Any]
     ) -> PublicationGateResult:
         """
-        Gate: Doc-Audit Consistency (N2 — WARNING mode, DEC-C1).
+        Gate: Doc-Audit Consistency (N2 — BLOCKING, severidad FASE-D).
 
         Detects contradictions between claims in the generated diagnostic
         document and the actual audit data.  For example, if the audit found
         ``seo_elements.open_graph = True`` but the document says "Sin Open
         Graph", this gate reports the contradiction.
 
-        Initial mode: **WARNING** (does not block publication).  Upgrade to
-        BLOCKING is documented for a future release.
+        FASE-G (G1/NR1): el gate deja de pasar en verde con datos ausentes —
+        sin ``diagnostico_text`` o sin ``audit_data`` el check no corrió y se
+        reporta ``NOT_EVALUATED`` (visible, no bloquea; coherente con A1).
+        Una contradicción confirmada es ``FAILED`` (bloquea: el gate está en
+        ``BLOCKING_GATE_NAMES`` desde FASE-D).
 
         Reads:
             - ``assessment["diagnostico_text"]`` — generated diagnostic text
@@ -1627,8 +1679,7 @@ class PublicationGatesOrchestrator:
             assessment: Assessment dict with diagnostic text and audit data
 
         Returns:
-            PublicationGateResult with status WARNING, PASSED, or BLOCKED
-            (only on internal errors).
+            PublicationGateResult with status FAILED, PASSED, or NOT_EVALUATED
         """
         gate_name = "doc_audit_consistency"
 
@@ -1636,22 +1687,31 @@ class PublicationGatesOrchestrator:
         if not diag_text:
             return PublicationGateResult(
                 gate_name=gate_name,
-                passed=True,
-                status=GateStatus.PASSED,
-                message="No diagnostic text available for doc-audit consistency check",
+                passed=False,
+                status=GateStatus.NOT_EVALUATED,
+                message=(
+                    "diagnostico_text ausente — check doc-vs-audit no evaluado "
+                    "(A1: skipped ≠ passed)"
+                ),
                 value=None,
                 suggestion="",
+                details={"state_reason": "missing_diagnostico_text"},
             )
 
-        audit_data = assessment.get("audit_data", {})
+        audit_data = assessment.get("audit_data") or {}
         if not audit_data:
             return PublicationGateResult(
                 gate_name=gate_name,
-                passed=True,
-                status=GateStatus.PASSED,
-                message="No audit data available for doc-audit consistency check",
+                passed=False,
+                status=GateStatus.NOT_EVALUATED,
+                message=(
+                    "audit_data ausente — check doc-vs-audit no evaluado "
+                    "(A1: skipped ≠ passed; el audit_report existía en disco "
+                    "en la corrida SalentoReal 2026-08-31 y el gate pasó en verde)"
+                ),
                 value=None,
                 suggestion="",
+                details={"state_reason": "missing_audit_data"},
             )
 
         diag_lower = diag_text.lower()
@@ -1681,33 +1741,39 @@ class PublicationGatesOrchestrator:
 
         # ------------------------------------------------------------------
         # Check 2: Reviews — doc cites "N reseñas" vs gbp.reviews.total
+        # FASE-G (G1/NR1): el audit real trae gbp.reviews como int (SalentoReal:
+        # 986) — se acepta int/float además del dict {"total": N}.
         # ------------------------------------------------------------------
         gbp_data = audit_data.get("gbp", {})
         if isinstance(gbp_data, dict):
-            gbp_reviews = gbp_data.get("reviews", {})
+            gbp_reviews = gbp_data.get("reviews")
             if isinstance(gbp_reviews, dict):
                 actual_reviews = gbp_reviews.get("total")
-                if actual_reviews is not None:
-                    review_mentions = re.findall(
-                        r"(\d+)\s*reseñas?", diag_lower
-                    )
-                    for mention in review_mentions:
-                        mentioned_count = int(mention)
-                        if (
-                            mentioned_count > 0
-                            and actual_reviews > 0
-                            and abs(mentioned_count - actual_reviews)
-                            > max(actual_reviews * 0.5, 10)
-                        ):
-                            contradictions.append({
-                                "pattern_id": "reviews_mismatch",
-                                "doc_keyword": f"{mentioned_count} reseñas",
-                                "audit_value": str(actual_reviews),
-                                "description": (
-                                    f"Doc says {mentioned_count} reviews but "
-                                    f"audit shows {actual_reviews}"
-                                ),
-                            })
+            elif isinstance(gbp_reviews, (int, float)):
+                actual_reviews = gbp_reviews
+            else:
+                actual_reviews = None
+            if actual_reviews is not None:
+                review_mentions = re.findall(
+                    r"(\d+)\s*reseñas?", diag_lower
+                )
+                for mention in review_mentions:
+                    mentioned_count = int(mention)
+                    if (
+                        mentioned_count > 0
+                        and actual_reviews > 0
+                        and abs(mentioned_count - actual_reviews)
+                        > max(actual_reviews * 0.5, 10)
+                    ):
+                        contradictions.append({
+                            "pattern_id": "reviews_mismatch",
+                            "doc_keyword": f"{mentioned_count} reseñas",
+                            "audit_value": str(actual_reviews),
+                            "description": (
+                                f"Doc says {mentioned_count} reviews but "
+                                f"audit shows {actual_reviews}"
+                            ),
+                        })
 
         # ------------------------------------------------------------------
         # Check 3: Photos — doc target vs audit actual count
@@ -1736,7 +1802,9 @@ class PublicationGatesOrchestrator:
                         })
 
         # ------------------------------------------------------------------
-        # Result
+        # Result — FASE-G (G1/NR1): contradicción confirmada = FAILED.
+        # El gate está en BLOCKING_GATE_NAMES desde FASE-D; el modo WARNING
+        # (DEC-C1) era el estado legacy que pasaba contradicciones en verde.
         # ------------------------------------------------------------------
         if contradictions:
             contradiction_msgs = [
@@ -1745,16 +1813,16 @@ class PublicationGatesOrchestrator:
             ]
             return PublicationGateResult(
                 gate_name=gate_name,
-                passed=True,  # WARNING does not block (DEC-C1)
-                status=GateStatus.WARNING,
+                passed=False,
+                status=GateStatus.FAILED,
                 message=(
-                    f"{len(contradictions)} doc-audit contradiction(s) detected "
-                    f"(WARNING mode): {'; '.join(contradiction_msgs[:3])}"
+                    f"{len(contradictions)} contradicción(es) doc-vs-audit: "
+                    f"{'; '.join(contradiction_msgs[:3])}"
                 ),
                 value=len(contradictions),
                 suggestion=(
-                    "Review diagnostic text to align with audit data. "
-                    "This gate will become BLOCKING in a future release."
+                    "Corregir el diagnóstico para alinearlo con los datos del "
+                    "audit (gate bloqueante por severidad FASE-D)."
                 ),
                 details={"contradictions": contradictions},
             )
@@ -2002,14 +2070,48 @@ class PublicationGatesOrchestrator:
         except (TypeError, ValueError):
             return None
     
+    def _evident_critical_missed(
+        self, assessment: Dict[str, Any], critical_issues: List[str]
+    ) -> int:
+        """FASE-G (G2/NR2): condiciones críticas EVIDENTES en los datos
+        primarios del audit que la lista registrada no cubre.
+
+        Solo lee campos que el propio audit declaró (``audit_data.performance.
+        status == "ERROR"`` = eje de rendimiento no medible) y los contrasta
+        con la lista registrada — NO re-detecta pains (DT4-N2: los gates
+        validan contra evidencia primaria, no reconstruyen).
+        """
+        audit_data = assessment.get("audit_data") or {}
+        if not isinstance(audit_data, dict):
+            return 0
+        perf = audit_data.get("performance")
+        if not isinstance(perf, dict):
+            return 0
+        if str(perf.get("status", "")).upper() != "ERROR":
+            return 0
+        covered = any(
+            "performance" in str(issue).lower()
+            or "pagespeed" in str(issue).lower()
+            for issue in critical_issues
+        )
+        return 0 if covered else 1
+
     def _extract_critical_recall(self, assessment: Dict[str, Any]) -> Optional[float]:
         """Extract critical recall from validated assessment.
-        
+
         Empty critical_issues list WITH an executed audit (audit_schema non-empty,
         builder guarantees audit_schema != {} iff audit ran) is a favorable
         outcome — zero critical issues, nothing to recall → 1.0 (FASE-SR-H2).
         Without audit evidence the metric is genuinely absent → None (gate
         BLOCKS real, L-SR5: never silence an absent metric).
+
+        FASE-G (G2/NR2): el atajo favorable deja de ser vacuo cuando los datos
+        primarios del audit lo contradicen — con ``performance.status=ERROR``
+        el eje de rendimiento NO fue medible, así que "cero issues críticos"
+        es inverificable y la lista que no lo reporta está incompleta:
+        recall = registrados / (registrados + no-reportados-evidentes).
+        En el fixture SalentoReal (corrida 2026-08-31 12:28) esto baja el
+        recall vacuo 1.0 → 0.0.
         """
         # Direct field (preferred)
         if "critical_recall" in assessment:
@@ -2018,12 +2120,19 @@ class PublicationGatesOrchestrator:
             except (TypeError, ValueError):
                 pass
         # Calculate from critical issues
-        critical_issues = assessment.get("critical_issues", [])
+        critical_issues = assessment.get("critical_issues", []) or []
+        missed = self._evident_critical_missed(assessment, critical_issues)
         if critical_issues:
+            if missed:
+                return len(critical_issues) / (len(critical_issues) + missed)
             return 1.0  # All critical issues were detected (builder guarantees completeness)
         # Empty list + audit executed = zero critical issues found (favorable outcome);
         # empty/absent list without audit = metric genuinely absent (BLOCKED real, L-SR5)
         if assessment.get("audit_schema"):
+            if missed:
+                # G2: "sin issues críticos" contradicho por el propio audit —
+                # ya no es el camino favorable de SR-H2.
+                return 0.0
             return 1.0
         return None
 
@@ -2128,11 +2237,17 @@ def check_publication_readiness(
     
     # Build summary
     passed_count = sum(1 for r in results if r.passed)
-    
+    # FASE-G (G1/A1): los NOT_EVALUATED no cuentan ni como pasados ni como
+    # fallidos — se divulgan por separado (mismo régimen que delivery G9).
+    not_evaluated_names = [
+        r.gate_name for r in results if r.status == GateStatus.NOT_EVALUATED
+    ]
+
     summary = {
         "total_gates": len(results),
         "passed": passed_count,
-        "failed": len(results) - passed_count,
+        "failed": len(results) - passed_count - len(not_evaluated_names),
+        "not_evaluated": not_evaluated_names,
         "blocked": sum(1 for r in results if r.status == GateStatus.BLOCKED),
         "blocking_gate_names": [r.gate_name for r in blocking_gates],
         "advisory_issues": advisory_issues,

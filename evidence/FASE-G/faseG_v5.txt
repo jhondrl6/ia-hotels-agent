@@ -1,0 +1,45 @@
+............................F.                                           [100%]
+================================== FAILURES ===================================
+____________ TestV9LedgerVacio.test_resolved_ausente_usa_fallback _____________
+
+self = <quality_gates.test_coverage_gate_v5.TestV9LedgerVacio object at 0x00000227C3D2A7B0>
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x00000227C3D2E190>
+
+    def test_resolved_ausente_usa_fallback(self, orchestrator):
+        """Sin pain_ledger_resolved \u2192 ruta fallback intacta (no-regresi\xf3n)."""
+        assessment = make_assessment(
+            ledger=[entry("whatsapp_button", "ASSET_GENERATED")],
+            diagnostic_pain_ids=["whatsapp_button"],
+        )
+        result = orchestrator._coverage_gate(assessment)
+        assert result.passed is True
+>       assert result.details["reconciler_ran"] is False
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'reconciler_ran'
+
+tests\quality_gates\test_coverage_gate_v5.py:217: KeyError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/test_coverage_gate_v5.py::TestV9LedgerVacio::test_resolved_ausente_usa_fallback
+1 failed, 29 passed, 8 warnings in 3.04s

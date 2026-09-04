@@ -70,6 +70,9 @@ class AssessmentPayload:
     # Audit
     audit_schema: Dict[str, Any] = field(default_factory=dict)
     critical_issues: List[str] = field(default_factory=list)
+    # FASE-G (G1): audit_data crudo para doc_audit_consistency — antes el
+    # payload no lo traía y el gate caía en "No audit data available" PASSED.
+    audit_data: Dict[str, Any] = field(default_factory=dict)
 
     # Proposal
     proposal_services: List[str] = field(default_factory=list)
@@ -216,6 +219,29 @@ class AssessmentBuilder:
             "faq_schema_valid": audit_result.schema.faq_schema_valid,
             "faq_confidence": audit_result.schema.faq_confidence,
         }
+        return self
+
+    def with_audit_data(self, audit_data: Dict[str, Any]) -> "AssessmentBuilder":
+        """FASE-G (G1): audit_data crudo (to_dict del auditor) para el gate
+        doc_audit_consistency — es la única fuente de gbp.reviews int y
+        performance.status que el gate puede contrastar contra el doc."""
+        self._payload.audit_data = audit_data or {}
+        return self
+
+    def with_geo_flow(self, geo_flow_result: Any) -> "AssessmentBuilder":
+        """FASE-G (G2): banda GEO critical califica como critical_issue.
+
+        El geo flow corre en FASE 4 (después del audit de FASE 2), así que
+        _identify_critical_issues no pudo verlo en audit-time; se anexa al
+        critical_issues del assessment antes de correr los gates.
+        """
+        if not geo_flow_result:
+            return self
+        from modules.auditors.v4_comprehensive import geo_band_critical_issue
+
+        issue = geo_band_critical_issue(geo_flow_result)
+        if issue and issue not in self._payload.critical_issues:
+            self._payload.critical_issues.append(issue)
         return self
 
     def with_documents(

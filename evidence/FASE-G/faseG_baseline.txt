@@ -1,0 +1,115 @@
+........................................................................ [  6%]
+........................................................................ [ 12%]
+........................................................................ [ 18%]
+........................................................................ [ 24%]
+........................................................................ [ 30%]
+.......................................................................s [ 36%]
+........................................................................ [ 42%]
+..........................................................s............. [ 48%]
+........................................................................ [ 55%]
+........................................................................ [ 61%]
+........................................................................ [ 67%]
+........................................................................ [ 73%]
+........................................................................ [ 79%]
+........................................................................ [ 85%]
+...................................s.................................... [ 91%]
+........................................................................ [ 97%]
+......................F...                                               [100%]
+================================== FAILURES ===================================
+___________________ test_gate_presence_with_skipped_assets ____________________
+
+orchestrator = <modules.quality_gates.publication_gates.PublicationGatesOrchestrator object at 0x000001F8EE473E00>
+base_assessment = {'coherence_score': 0.85, 'critical_recall': 0.95, 'diagnostic_pain_ids': [], 'evidence_coverage': 0.96, ...}
+
+    def test_gate_presence_with_skipped_assets(orchestrator, base_assessment):
+        """
+        Given an assessment with skipped_assets (whatsapp_button status=EXISTS),
+        the gate must mark whatsapp_button as present_in_production, NOT as missing.
+    
+        Before FASE-1B fix: skipped_assets were lost and the gate would run
+        a redundant SitePresenceChecker or mark the asset as missing.
+        """
+        assessment = dict(base_assessment)
+        # generated_assets does NOT include whatsapp_button
+        assessment["generated_assets"] = [
+            {"asset_type": "faq_page", "confidence_score": 0.9, "filename": "faq.html", "path": "/tmp/faq.html", "preflight_status": "PASSED"},
+            {"asset_type": "hotel_schema", "confidence_score": 0.9, "filename": "schema.json", "path": "/tmp/schema.json", "preflight_status": "PASSED"},
+            {"asset_type": "optimization_guide", "confidence_score": 0.9, "filename": "guide.html", "path": "/tmp/guide.html", "preflight_status": "PASSED"},
+            {"asset_type": "org_schema", "confidence_score": 0.9, "filename": "org.json", "path": "/tmp/org.json", "preflight_status": "PASSED"},
+            {"asset_type": "monthly_report", "confidence_score": 0.9, "filename": "report.html", "path": "/tmp/report.html", "preflight_status": "PASSED"},
+            {"asset_type": "open_graph", "confidence_score": 0.9, "filename": "og.html", "path": "/tmp/og.html", "preflight_status": "PASSED"},
+            {"asset_type": "llms_txt", "confidence_score": 0.9, "filename": "llms.txt", "path": "/tmp/llms.txt", "preflight_status": "PASSED"},
+        ]
+        # But skipped_assets says whatsapp_button already EXISTS
+        assessment["skipped_assets"] = [
+            {
+                "asset_type": "whatsapp_button",
+                "presence_status": "EXISTS",
+                "reason": "whatsapp_button already present on site",
+                "site_verified": True,
+            }
+        ]
+    
+        result = orchestrator._proposal_asset_alignment_gate(assessment)
+    
+        # The fix ensures whatsapp_button is recognized as present_in_production
+        details = result.details
+        assert details is not None, "Gate result should have details"
+    
+        # Check present_in_production list includes whatsapp_button
+        present = details.get("present_in_production", [])
+        present_assets = [p.get("asset") for p in present]
+>       assert "whatsapp_button" in present_assets, (
+            f"whatsapp_button should be present_in_production, not missing. "
+            f"present_in_production={present_assets}, "
+            f"missing={[m.get('asset') for m in details.get('missing', [])]}"
+        )
+E       AssertionError: whatsapp_button should be present_in_production, not missing. present_in_production=[], missing=[]
+E       assert 'whatsapp_button' in []
+
+tests\test_publication_gates_presence.py:129: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/asset_generation/test_content_gates.py::TestContentGates::test_performance_audit_generates_with_zeros
+  C:\Users\Jhond\Github\iah-cli\tests\asset_generation\test_content_gates.py:84: DeprecationWarning: support for supplying keyword arguments to pathlib.PurePath is deprecated and scheduled for removal in Python 3.14
+    content = Path(result["file_path"], errors='ignore').read_text(encoding='utf-8', errors='ignore')
+
+tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/auditors/test_pagespeed_auditor_v2.py: 10 warnings
+tests/auditors/test_v4_comprehensive_competitors.py: 2 warnings
+  <string>:9: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_publication_gates_presence.py::test_gate_presence_with_skipped_assets
+1 failed, 1174 passed, 3 skipped, 23 warnings in 180.20s (0:03:00)
