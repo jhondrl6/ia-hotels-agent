@@ -756,7 +756,7 @@ class V4ComprehensiveAuditor:
         # otro nombre— podia aparecer en `executed` Y en `skipped` en el mismo
         # trace. Las dos listas son excluyentes por definicion. El predicado de
         # skip sigue siendo `not has_field_data`, que confunde "la API no
-        # devolvio datos de campo" con "no se llamo a la API": seguimiento S-H4.
+        # devolvio datos de campo" con "no se llamo a la API": seguimiento S-H3.
         executed_validators = disjoint_executed_validators(
             executed_validators, skipped_validators
         )

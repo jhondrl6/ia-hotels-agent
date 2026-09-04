@@ -343,15 +343,22 @@ en HEAD (worktree temporal) antes de atribuirlo; (c) el fixture anti-reversión 
 registrada por G (2026-09-04)**: la fila de F dice «ver nota abajo» pero su nota de iteraciones
 nunca se escribió en este README — su cifra (182) solo vive en la fila y en `10-analisis` §7.
 
-**Nota sobre las iteraciones de FASE-H** — **esta fase no publica cifra en este README**: el
-recuento lo hace el **parent al commitear** con el instrumento canónico
+**Nota sobre las iteraciones de FASE-H** — cifra publicada en
+`evidence/FASE-H/faseH_iteraciones.txt`: **≥155 llamadas de herramienta contra presupuesto ≤35**
+(tope R2: 60) ⟹ **≈4,4× de exceso, PRESUPUESTO INCUMPLIDO y reportado como tal**. ⚠️ **Es la
+primera fase cuya cifra NO pudo producirla el instrumento canónico**
 (`evidence/FASE-D/measure_iterations.py`, ids de mensaje de asistente únicos del transcript, corte
-en el commit de código) y lo deja en `evidence/FASE-H/faseH_iteraciones.txt`. Presupuesto: **≤35**
-(tope R2: 60). Lo que qualitativemente costó la fase, y que VERIFY debe pesar al recalibrar (S22):
+en el commit de código): el transcript vive fuera del workspace y la política de permisos bloquea
+su lectura bajo sandbox. El número es **auto-reporte auditable por partes** (parent ~58 +
+Subagente 2 97 `tool_use` + Subagente 1 sin reporte del runtime) en unidad **`tool_use`, no ids
+únicos** ⟹ **no es la misma métrica** de las fases anteriores (**S22**). Lo que cualitativamente
+costó la fase, y que VERIFY debe pesar al recalibrar:
 (a) **re-partir la delegación** cuando §4 declaraba tracks que compartían archivo (**L-H2**);
 (b) **re-verificar citas fósiles** del propio prompt — cinco números de línea desplazados y un
 archivo de test que no existe con el nombre citado (**L-H4**, sexto caso de la clase L-A6);
 (c) **barrer hasta la fuente** el hallazgo V11, que resultó tener dos residuos y un criterio
-compartido, no un texto viejo en un sitio (**L-H6**).
+compartido, no un texto viejo en un sitio (**L-H6**);
+(d) un track delegante que reportó dos veces con cifras contradictorias entre sí — resolvió el
+árbol de trabajo, no su informe (**L-H1**).
 
 **Métricas acumuladas**: ver `09-documentacion-post-proyecto.md` §D.

@@ -419,11 +419,13 @@
   (`v4_comprehensive.py`). Es lista **blanca** a propósito: vacío ≠ ausente (SR-H2). Quien necesite
   ese predicado importa de ahí; re-decidirlo en un consumidor es L-NC4 (misma familia H10/A1 que
   denuncia el dossier).
-- **V13 quedó en SHIM de delegación, no en borrado**: `modules/data_validation/metadata_validator.py`
-  pasó de 219 → **26** líneas y ya no implementa nada (delega en `data_validation/metadata_validator.py`,
-  que es el vivo). **El borrado físico se ejecutó el mismo 2026-09-04 con autorización del usuario**
-  (el primer `git rm` lo bloqueó la política de permisos del entorno) → **S-H14 cerrado en la fase**. `metadata=None` cuando el
-  audit crashea **no** era parte de V13 y sigue abierto → **S-H4**.
+- **V13: el gemelo `MetadataValidator` quedó BORRADO**: el primer `git rm` lo bloqueó la política de
+  permisos del entorno, así que quedó un shim de delegación explícita (219 → **26** líneas, la opción
+  que admite el AC); con autorización del usuario se ejecutó el **borrado físico el mismo 2026-09-04**.
+  Solo existe `data_validation/metadata_validator.py` (el vivo: lo importa
+  `modules/auditors/v4_comprehensive.py:33` y lo re-exporta `data_validation/__init__.py`) y la guardia
+  fija su **ausencia** (`find_spec(...) is None`) → **S-H14 cerrado en la fase**.
+  `metadata=None` cuando el audit crashea **no** era parte de V13 y sigue abierto → **S-H4**.
 - **V12 se documentó y `.env` NO se tocó** (`git diff --stat .env` vacío), como exigía la regla
   transversal del README y DA5. Hoy la cadena de fallback de `pagespeed_client.py` resuelve la clave
   válida; **eliminar `PAGESPEED_API_KEY` reintroduce el síntoma** porque el fallback cae en el
