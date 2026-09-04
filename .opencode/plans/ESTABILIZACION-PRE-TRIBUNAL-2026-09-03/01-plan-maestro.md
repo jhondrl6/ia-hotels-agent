@@ -140,6 +140,30 @@ Documentación correcta: **"11 blocking + 2 advisory"**.
 | D3 | **Mitad documental MONTADA en D1** (mismo commit, nunca por delante): docstrings + `AGENTS.md` | `publication_gates.py:4` (*"13 publication gates (10 blocking + 3 advisory)"*) · `:162` (*"manages 10 blocking gates and 3 advisory gates"*) · `AGENTS.md` tabla Módulos Activos fila `quality_gates/` + bloque FASE 4.5 | AC8 |
 | D4 | **Candado de regresión sobre ambas listas**: hoy hay **0 tests** que fijen la pertenencia. Test que falla si `asset_confidence` aparece en advisory o si las listas no suman 13 | `tests/quality_gates/test_gate_severity_lists.py` | AC7, AC8 |
 
+**⚠️ Reformulación de AC8 (FASE-HOTFIX-PRE-RELEASE, tarea H5, 2026-09-04 — S-V4/S-V5).**
+El prompt de FASE-VERIFY definía **dos** AC8: el de esta tabla (D3, mitad documental — el que
+**DA-V1** declaró oficial) y un «AC8-(b): advisory con piso explícito + WARNING con consumidor
+nombrado» (origen: D2). **(b) quedó ⚠️ no por el sistema sino por su redacción**: exigía ver el
+WARNING en el `human_checklist.md` de **una corrida**, y en la única corrida del plan ningún
+advisory falló — además el checklist que ahí se materializa es el del régimen de **delivery**
+(S-V4). Un AC que solo puede celebrarse con una corrida enferma no es un criterio.
+
+**Criterio reformulado (de test, no de corrida)**: *la mitad D2 está certificada por el verde de
+sus candados*, que ejercitan el gate real y el generador del checklist con advisories fallidos,
+en WARNING y sobre el piso:
+
+- `TestFASEDGateSeverity` (12) en `tests/quality_gates/test_publication_gates.py` — degradación
+  por piso, `content_quality` con blockers degrada, advisory sobre el piso no bloquea.
+- `TestAdvisoryDisclosureFASED` (4) en `tests/quality_gates/test_human_checklist_generator.py` —
+  el advisory fallido y el en WARNING aparecen en el checklist, sin inventar ítems y sin romper
+  el tope de 10.
+- `test_docstrings_no_prometen_el_regimen_antiguo` — mitad (a), docstring ↔ régimen.
+
+**Evidencia admisible = el verde de esos candados. NO es admisible ni exigible una corrida con
+advisory fallido.** Ningún candado se modificó para cerrar el AC (restricción expresa de H5); se
+reescribió solo el criterio. Con esto AC8 pasa de «✅ (a) / ⚠️ (b)» a **✅ en sus dos mitades**, y
+**S-V4** se cierra como defecto de redacción del plan.
+
 **Qué NO hacer** (§8.5 del dossier + memoria):
 - **NO demoter `asset_confidence`**. Es hoy el único mecanismo que vuelve no-entregable un paquete
   Tier C. Relajarlo dejaría salir el 14% del histórico (4 de 29 corridas, todas

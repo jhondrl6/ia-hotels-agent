@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-04
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 465
+> **Total fases completadas:** 466
 
 ---
 
@@ -10859,6 +10859,28 @@ _Ninguno_
 
 ### Archivos Modificados
 _Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-HOTFIX-PRE-RELEASE - 2026-09-04
+**Descripcion:** H1-H9: S-V1 cerrado (contratos 171/0 en H1, bateria al cierre 180/0); AC7 y AC6 legibles en artefacto (severity+blocks_publication desde el predicado canonico; coverage_ratio+denominador desde el oraculo unico, matriz 2.1, NR5 como delta 944/2->950/2); AC8-b reformulada como criterio de test; mensaje de promised_assets_exist narrando runtime + candado AST contra len(REGISTRO); clave canonica asset_path/path fijada por contract test; executor v2.19.0 con las 4 reglas de VERIFY y validate_plan_citations.py como check 8 (validaciones 8/8). Contrafactual 0 flips de ready sobre 3 artefactos. Difiere con causa: S-I7/AC10 (S-HF1, tribunal) y estructura P12 (tribunal).
+
+### Archivos Nuevos
+- `scripts/validate_plan_citations.py` (check 8 de `run_all_validations.py --quick`) + `.opencode/plans/plan_citations_baseline.json`
+- `tests/test_gate_report_severity_artifact.py` (7) · `tests/asset_generation/test_matrix_coverage_artifact.py` (6) · `tests/commercial_documents/test_promised_assets_message_artifact.py` (5) · `tests/test_asset_path_clave_canonica.py` (7) · `tests/test_validate_plan_citations.py` (9)
+- `evidence/FASE-HOTFIX-PRE-RELEASE/` (sonda y contrafactual re-ejecutables, pareja pre/post de NR5, delta H4 y mediciones de alcance H9)
+
+### Archivos Modificados
+- `main.py` (`_build_gate_report_payload`) · `modules/asset_generation/proposal_asset_alignment.py` (matriz `2.1`) · `modules/commercial_documents/coherence_validator.py` (mensaje de runtime) · `modules/asset_generation/v4_asset_orchestrator.py` (doc de clave)
+- `scripts/run_all_validations.py` · `.agents/workflows/phased_project_executor.md` (**v2.19.0**) + `.agents/workflows/README.md`
+- `tests/delivery/test_delivery_contract.py` (S-V1) · `tests/asset_generation/test_proposal_asset_matrix.py` (versión `2.1`) · `tests/common/test_service_identity_registry.py` (candado AST + `MODULOS_NARRATIVA`)
+- Plan: `README.md`, `01`, `06`, `09` (§C.1 nota, §C.2, §D, §E), `10` (§2.2, §5, §5.8, §6, §7.3, L-HF1/L-HF2), `dependencias-fases.md`, y el prompt `05-prompt-inicio-sesion-fase-HOTFIX-PRE-RELEASE.md`
 
 ### Validaciones
 - [x] Tests passing
