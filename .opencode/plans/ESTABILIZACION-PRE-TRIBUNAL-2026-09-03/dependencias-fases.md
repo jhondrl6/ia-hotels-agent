@@ -577,8 +577,8 @@
 | **G** | F | G3/G4 cierran escotillas del `_coverage_gate` cuyo criterio de presencia ya unificó F1; cerrarlas antes fijaría el criterio doble | H, I |
 | **H** | B, F, ~~G~~ | ✅ **Ejecutada 2026-09-04**. ⚠️ **Predicción corregida**: el orden forzoso G→H era por conflicto de archivo (H1 toca `pain_solution_mapper.py` que se predecía también tocado por G) — **G no lo tocó** (G2 vive en `v4_comprehensive.py`), así que nunca hubo orden forzoso por archivo. Lo que H **sí** consumió de sus predecesoras: la **biyección de B** (V7 quedó sobre un pain que ya tiene narrativa derivada + peso `0.20` en las 4 regiones ⟹ al arreglar el guard la brecha **aparece en el documento**, no se desvanece; V8 es dedup dentro del mismo `_detect_analytics_pains` que B agrandó), el **estado `NOT_EVALUATED` de F/A1** (replicado como `BRECHAS_STATE_NOT_EVALUATED` para V6, no importado — ciclo de paquetes) y el **`v4_comprehensive.py` de G** (V11-lado-fuente y `disjoint_executed_validators()` caen sobre el archivo que G había crecido +60 líneas) | I |
 | **I** | A-H ✅ | Es la validación integrada; correrla antes mediría un sistema a medio refactorizar | VERIFY |
-| **VERIFY** | I | Certifica contra evidencia real de la corrida | RELEASE |
-| **RELEASE** | VERIFY | El CHANGELOG y GUIA_TECNICA se alimentan de `09` y `10`, que VERIFY completa | — |
+| **VERIFY** | I | Certifica contra evidencia real de la corrida · **✅ ejecutada 2026-09-04** — 8 AC ✅ / 4 ⚠️ (AC6, AC7, AC8-b, AC10) / 0 ❌; 10 NR ✅ / 1 ⚠️ (NR12) / 1 ❌ (NR2); mediciones: 944/2, contratos 170 passed + **1 failed (S-V1)**, validaciones 7/7 | RELEASE |
+| **RELEASE** | VERIFY | El CHANGELOG y GUIA_TECNICA se alimentan de `09` y `10`, que VERIFY **ya completó**. ⚠️ Hereda un rojo **ajeno a su alcance**: `tests/delivery/test_delivery_contract.py::TestP05G9Gate::test_g9_gate_skipped_when_no_matrix` (**S-V1**, lo causó FASE-F) — si aparece en la corrida ancha, no es un fallo del sync de versiones | — |
 
 **Camino crítico**: A → B → C → F → G → H → I → VERIFY → RELEASE (9 sesiones).
 D y E están fuera del camino crítico y pueden ejecutarse en cualquier hueco tras A y B respectivamente.

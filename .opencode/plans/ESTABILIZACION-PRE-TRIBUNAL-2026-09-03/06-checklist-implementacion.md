@@ -6,7 +6,7 @@
 
 **Versión objetivo**: 4.75.0 · **Versión actual del repo**: 4.74.1
 **Sesiones totales**: 11 (9 implementación + VERIFY + RELEASE)
-**Sesiones completadas**: 8 (FASE-A ✅, FASE-B ✅, FASE-C ✅, FASE-D ✅, FASE-E ✅, FASE-F ✅ 2026-09-03; FASE-G ✅ y **FASE-H ✅** 2026-09-04)
+**Sesiones completadas**: 10 (FASE-A ✅, FASE-B ✅, FASE-C ✅, FASE-D ✅, FASE-E ✅, FASE-F ✅ 2026-09-03; FASE-G ✅, **FASE-H ✅**, **FASE-I ✅** y **FASE-VERIFY ✅** 2026-09-04)
 
 ---
 
@@ -23,7 +23,7 @@
 | 7 | FASE-G — Ceguera de gates | MEDIA-ALTA | DIRECTO | ✅ Completada | 2026-09-04 | **154 medidas**/50 ⚠️ | 40 netas (16 detector + 14 V5/V9 en 2 archivos nuevos + 3 netas doc_audit + 7 netas publication_gates; 12 reescritas al contrato post-G) | NR1, NR2, NR3, NR4 |
 | 8 | FASE-H — Quirúrgicos | BAJA-MEDIA | DELEGADO (2 subagentes + parent, **por archivos disjuntos**) | ✅ Completada | 2026-09-04 | ver `evidence/FASE-H/faseH_iteraciones.txt` (la calcula el parent al commitear)/35 | 46 func (74 casos) | V6, V7, V8, V11, V12 (documentado, no editado), V13 |
 | 9 | FASE-I — E2E única Salento Real | BAJA | MIXTO | ✅ Completada | 2026-09-04 | ≈76 llamadas/25 ⚠️ *(INCUMPLIDO ≈3×; `measure_iterations.py` no ejecutable en sandbox — precedente H)* | 0 (fase de evidencia) | NR6 ✅ + deltas **AC5/AC6/AC9/AC12 ✅ sobre artefactos reales**; **AC7 ❌ / NR2 ❌** (S-I1, S-I2) |
-| 10 | FASE-VERIFY — Certificación | MEDIA | DIRECTO | ⬜ Pendiente | — | —/40 | — | AC1-AC12 + NR1-NR12 |
+| 10 | FASE-VERIFY — Certificación | MEDIA | DIRECTO | ✅ Completada | 2026-09-04 | **≈65 llamadas de herramienta** /40 ⚠️ **(INCUMPLIDO ≈1,6×)** *(auto-reporte en unidad `tool_use`; `measure_iterations.py` no ejecutable bajo sandbox → S22/DA-V6. ⚠️ El primer auto-reporte decía «≈36» y fue corregido — la fase que debía cerrar S22 reprodujo su defecto: subestimar el propio conteo)* | 0 (fase de certificación: no escribe código ni tests) | **AC1-AC12 + NR1-NR12 certificados**: **8 ✅ / 4 ⚠️ (AC6, AC7, AC8-b, AC10) / 0 ❌** y **10 ✅ / 1 ⚠️ (NR12) / 1 ❌ (NR2)**. Matriz en `10-analisis` §2.1, §3 y §3.1. Mediciones: suites tocadas **944/2 · 0 failed**; contratos A+B+C+D+delivery **170 passed / 1 failed** (**S-V1**, rojo causado por F); validaciones **7/7**. Nueve seguimientos nuevos **S-V1…S-V10** y seis re-asignaciones con dueño real (ninguna a RELEASE → DA-V5). **Write-back a QMind ejecutado** (V4): **una** fuente consolidada del plan en `iah-cli-lecciones`, id `01a06dae-b1f5-7a7b-9159-9b2f163b07a2`, `ready`, retrieve sondeado 0.953/0.958 ⟹ **41 = 32 con texto propio + 7 fusionadas + 2 excluidas** (`10-analisis` §9.1) |
 | 11 | FASE-RELEASE-4.75.0 | BAJA | DELEGABLE | ⬜ Pendiente | — | —/25 | — | Cierre documental |
 
 Leyenda: ⬜ Pendiente · 🟡 En curso · ✅ Completada · 🔴 Bloqueada · ⏸️ Suspendida
@@ -63,6 +63,50 @@ presupuestos por fase o retirar la métrica.
 | AC10 | Un oráculo de presencia decide **y** narra | F | ✅ (2026-09-03) | `verify_proposal_asset_alignment` clasifica y narra con el criterio canónico `is_present_in_production` (FASE-SR-E H7/L-SR3 **intacto**); el caso repro del dossier es imposible por test (`TestFaseFOraculoUnicoPresencia`, 5 tests: anti-A4 overlap + `details.missing_count == unresolved` + not_exists sigue missing + veto FASE-12B extendido a `exists_with_issues`). `coverage_ratio` sin tocar |
 | AC11 | `skipped ≠ passed` en G9 | F | ✅ (2026-09-03) | `NOT_EVALUATED` distinto de passed/failed (`_not_evaluated_g9()`, único default — el segundo eliminado); `summary.passed` ya no lo cuenta; visible en `summary["not_evaluated"]` + `human_review_items`; NO bloquea. 6 tests (`TestFaseFSkippedNeqPassed`) |
 | AC12 | El gate de coherencia respeta `is_coherent` (o lo elimina con decisión) | F | ✅ (2026-09-03) | **Decisión (a): respetar**. `coherence_verdict_passes()` única definición del veredicto, consumida por `publication_gates._coherence_gate` y por `CoherenceGate` (legacy + validator). Repro SalenteReal (0.88 + False ⟹ BLOCKED) candada en `TestFaseFCoherenceRespetaIsCoherent`; umbral 0.8 intacto; `vacío ≠ ausente` (None = legacy) · ⟹ **FASE-I (2026-09-04) certificado sobre artefactos reales**: el baseline **empaquetó y entregó con `is_coherent=false`** (ZIP 46.552 B / 37 archivos); esta corrida empaqueta con `is_coherent=true`, `readiness.ready=true`, `READY_FOR_PUBLICATION` (ZIP 47.358 B / 38 archivos). Veredicto, empaquetado y coherencia apuntan en la misma dirección en los dos sentidos del check (C10) |
+
+### Certificación FASE-VERIFY (2026-09-04) — estado final por AC, NR y hallazgo
+
+> Medido con sonda propia sobre `evidence/FASE-I/corrida/` y el árbol vivo; salidas en
+> `evidence/FASE-VERIFY/ESTABILIZACION-PRE-TRIBUNAL/`. Valores concretos (archivo + campo + número) en
+> `10-analisis-post-implementacion.md` §2.1, §3 y §3.1.
+
+| AC | Estado final | Por qué, si no es ✅ | Seguimiento |
+|----|--------------|----------------------|-------------|
+| AC1 | ✅ | — | — |
+| AC2 | ✅ | cerrado en el universo que declaró (narrativa); la forma numeral sigue viva en 3 archivos de otras capas | S-V2 |
+| AC3 | ✅ | — (evidencia corregida: lo que desapareció es **el par** `monthly_report → no_faq_schema`; el pain `no_faq_schema` sigue existiendo y es legítimo) | — |
+| AC4 | ✅ | — | — |
+| AC5 | ✅ | `NO_BREACH = 0` contado por VERIFY en la matriz real; «promised 7→1» era del contrafactual (en el run son 4) | S-V3 |
+| AC6 | ⚠️ | mitad `is_coherent` ✅ medida (4 declaraciones + 3 copias del ZIP); mitad «coverage ya no es 1.0 algebraico» **no legible en el artefacto** (la matriz no serializa el ratio y el run da 1.0 sobre 4/4) | S-V3 |
+| AC7 | ⚠️ | régimen ✅ en runtime (11+2, disjuntas, `asset_confidence` blocking, 2 advisories FAILED ⟹ **0** bloqueadores); ❌ en el `gate_report` (`severity`: 0 ocurrencias) | S-I2 |
+| AC8 | ✅ (a) / ⚠️ (b) | **S25 resuelto (DA-V1)**: AC8 = definición (a). (b) no es ejercitable con una corrida sana y el checklist del run es el de delivery | S-V4 |
+| AC9 | ✅ | snapshot 1.421 B en disco y **dentro del ZIP**; `asset_path` de la LINKED poblado | S-I3, S-V5 |
+| AC10 | ⚠️ | oráculo de presencia único ✅ (`missing_count 0 == unresolved 0`); el **conteo** del mensaje sigue divergiendo del de `details` (4 vs 1) | S-I7 |
+| AC11 | ✅ | `NOT_EVALUATED` reproducido por VERIFY sin matriz (`passed=false`, no bloquea); la corrida no lo ejercita | **S-V1** |
+| AC12 | ✅ | `coherence_verdict_passes(0.88,0.8,False)=False` medido; `publication_state.py` ya no existe; ZIP coherente con el veredicto | — |
+
+| NR | Estado final | Nota |
+|----|--------------|------|
+| NR1 ✅ · NR3 ✅ · NR4 ✅ · NR6 ✅ | sobre artefacto real | doc_audit `value: 0` (baseline `null`); `ASSET_GENERATED` sigue justificando + regla de mención (BUG-6 intacto); `coverage_basis` en las dos ramas; 0.8333 ≥ 0.80 con 13 gates |
+| NR2 ❌ | `critical_recall = 1.0` con `details={}` pese a crítico registrado — el detector queda a la sombra del registro de FASE-H. **Decisión de VERIFY: exigir `details` fundado, no retirar el detector** | S-I1 |
+| NR5 ✅ **reformulada** | regla de delta, no número literal (**DA-V2**) | 848 → **944/2**, delta +96 = contract tests, 0 fallos |
+| NR7 ✅ · NR8 ✅ · NR9 ✅ · NR10 ✅ · NR11 ✅ | 944/2 · 0.8333 · 13 gates (11 PASSED + 2 WARNING) · ZIP 38 archivos/47.358 B · `asset_confidence` blocking | — |
+| NR12 ⚠️ | 3 anomalías nuevas medidas (S-I2, S-I1, **S-V1**); las preexistentes clasificadas y **no** contadas como regresión | — |
+
+**Celdas que quedaron ⬜ en los Ejes 1-5 de esta ficha y su estado final** (para que ninguna se lea como
+«pendiente de una fase que ya cerró»): `doc_audit_consistency` → ✅ (NR1, `value: 0` medido);
+`critical_recall` → ❌/🟡 (NR2, S-I1); `hard_contradictions` → ➖ **no aplica** (cuarto candado que no es de
+los tres del dossier §3; motor fuera de alcance, en la corrida da `PASSED value=0`); A2 → ✅ (AC9);
+A6 → ✅ (AC9, con S-V5); V5 → ✅ (NR3); V10 → ➖ confirmado sin acción; V15 → ✅ con residuo S-I7;
+H7 → 🟡 (mitad nombres ❌ → S-V7); **F3** (riesgo de voltear veredictos) → ✅ no materializado (F4: 0
+liberadas, 4 flips seguros); **G3** (revertir BUG-6) → ✅ no materializado (medido en `:1387` + fixture);
+**Run I contaminado** → 🟡 materializado en infraestructura y clasificado (S-I1 es su única consecuencia
+real sobre la certificación).
+
+⚠️ **Único rojo que VERIFY añade al conteo global del plan**:
+`tests/delivery/test_delivery_contract.py::TestP05G9Gate::test_g9_gate_skipped_when_no_matrix` — **rojo
+causado por FASE-F y no detectable por NR5**, cuya ventanilla (`tests/quality_gates` + `tests/asset_generation`)
+no incluye `tests/delivery`. Ver **S-V1** y **L-V2**.
 
 ### ACs de no-regresión
 

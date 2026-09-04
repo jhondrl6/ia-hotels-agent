@@ -111,6 +111,35 @@ El «0.88 → 0.9133» que publicó FASE-C **no era una predicción de la corrid
 
 ---
 
+### Sección C.1 — Valores **certificados** por FASE-VERIFY (2026-09-04)
+
+> VERIFY no re-corrió `v4complete`: re-midió los artefactos de la corrida con sonda propia
+> (`evidence/FASE-VERIFY/ESTABILIZACION-PRE-TRIBUNAL/verify_probe*.py`) y reporta el valor **observado**, no
+> el que cada fase publicó. Donde difieren, se dice. RELEASE consume esta tabla para el CHANGELOG.
+
+| Check | Valor medido por VERIFY | AC/NR | Lectura |
+|-------|--------------------------|-------|---------|
+| `proposal_asset_matrix.json → entries` | 4 entradas: 3 `PRESENT_IN_PRODUCTION` + 1 `LINKED`; **`NO_BREACH` = 0** | AC5 ✅ | certificado sobre corrida real |
+| `… → summary` | `{promised: 4, not_promised: 3, unknown: 0}`; `not_promised` = SEO Local / Botón de WhatsApp / Meta Tags Sociales (Open Graph) | AC5 ✅ | la exclusión es auditable en el artefacto, no solo en el log |
+| `… → coverage_ratio` | **clave inexistente** en la matriz; en `gate_report.details.alignment` = **1.0** (`promised 4 / effective 4 / actionable 4 / unresolved 0`) | AC6 ⚠️ | ⚠️ corrige al plan: en la corrida el ratio **vuelve a ser 1.0** → **S-V3** |
+| `is_coherent` | **`true`** en las 4 declaraciones de 3 archivos y en las 3 copias dentro del ZIP (baseline: `false` en 4 declaraciones / 8 copias) | AC6 ✅ | umbral 0.8 intacto |
+| `assets_are_justified` | `passed: true`, `score: 1.0`, `severity: "info"`, `errors: []` | AC6 ✅ | la causa V16 está disuelta |
+| `coherence_score` | **0.8333** (`overall_score` 0.83 en los tres archivos) | NR6 ✅, NR8 ✅ | ⚠️ el 0.9133 del contrafactual de C **no se reproduce** → S-I4 |
+| `promised_assets_exist` (mensaje) | `score: 1.0` + `«7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET»` | A3/P12 ❌ | **el mensaje stale está en el artefacto del cliente** → S-C3 (hotfix pre-tribunal) |
+| `gate_report_20260904_120413.json` | 13 resultados: 11 `PASSED` + 2 `WARNING` (`financial_validity`, `pricing_compliance`); `readiness = READY_FOR_PUBLICATION`, `blocking_issues: []`; **`severity`: 0 ocurrencias**, `blocking`: 0 | AC7 ⚠️, NR9 ✅ | → S-I2 |
+| `doc_audit_consistency` | `PASSED`, **`value: 0`** con mensaje real (baseline: `value: null`) | NR1 ✅ | el cable de G llega y se ve en el artefacto |
+| `critical_recall` | `1.0 / PASSED` con **`details: {}`** y **1** crítico en `overall.critical_issues` (+ banda GEO `critical` por `with_geo_flow()`) | NR2 ❌ | → S-I1; ⚠️ el plan decía «2 críticos en esa lista» — medido: **1** |
+| `coverage_no_silent_drop` | `1.0` · `total_detected 5 / covered 5 / justified 0 / uncovered: []` | NR6 ✅ | los 5 pains se cubren **documentalmente** |
+| `site_presence_snapshot.json` | **existe**, 1.421 B, `snapshot_version` + 5 resultados + `site_url`; **dentro del ZIP** | AC9 ✅ | A2 cerrado en disco |
+| `asset_path` (LINKED) | `…\llms_txt\llms_20260904_120413.txt` **poblado**; 3 `PRESENT_IN_PRODUCTION` en `null` por diseño; **`delivery_quality_report.json` no tiene la clave** | AC9 ✅ | S-V5 (criterio de AC inverificable) + S-I3 (dos claves) |
+| `pain_ledger` / `resolved` | **5 pains** (`low_ota_divergence` HIGH, `no_analytics_configured`, `low_organic_visibility`, `ai_crawler_blocked`, `missing_llmstxt`); `summary = {total 5, asset_generated 3, mapped_to_service 0, justified_skip 0}` | AC4, S-I4 | causa medida de la coherencia 0.8333 |
+| `human_checklist.md` | 406 chars, régimen **delivery** («Gates: 5/5 passed», `HumanChecklistGenerator (FASE-0F)`), **sin sección advisory** | AC8(b) ⚠️ | → S-V4 |
+| ZIP de entrega | `deliveries/hotelsalentoreal_20260904.zip`, 47.358 B, **38 archivos** (baseline 37) | NR10 ✅, AC12 ✅ | el +1 es exactamente el snapshot |
+| `coherence_verdict_passes` (runtime) | `(0.88,0.8,False) → **False**` · `(…,True) → True` · `(…,None) → True` | AC12 ✅ | vacío ≠ ausente, umbral sin tocar |
+| Listas de severidad (runtime) | 11 blocking / 2 advisory (`content_quality`, `proposal_asset_alignment`), disjuntas, suma 13, `asset_confidence ∈ BLOCKING`; con 2 advisories **FAILED** ⟹ `get_blocking_gates()` = **0** | AC7 ✅ (régimen), NR11 ✅ | la prueba de que el filtro es **por severidad** |
+| Registros (runtime) | `SERVICE_IDENTITIES` = **8** · `PAIN_SOLUTION_MAP` = **26** · `ASSET_TO_PAIN_ID` en **1** lugar y derivado · `monthly_report → no_monthly_report` · 12 cruces de ID fantasma → **0** | AC1/AC3/AC4 ✅ | — |
+| G9 sin matriz (reproducido) | `{"passed": false, "state": "NOT_EVALUATED", "gate": "G9", "reason": "proposal_asset_matrix.json not found"}`; `summary.not_evaluated: ["proposal_asset_alignment"]` | AC11 ✅ | skipped ≠ passed y no bloquea |
+
 ## Sección D — Métricas acumulativas
 
 > Se actualiza al cierre de **cada** fase. RELEASE cierra con el total final.
@@ -125,6 +154,12 @@ El «0.88 → 0.9133» que publicó FASE-C **no era una predicción de la corrid
 | Registros de identidad consolidados | ≥9 dispersos (dossier) → **15** reales tras el censo (C-5 añadió el #15) | **1 canónico** (`SERVICE_IDENTITIES`) + **Capa 1** (`PAIN_SOLUTION_MAP`) + **6 derivados** + **4 validados contra Capa 1** + **3 fuera de alcance** — censo §8.2. **B retiró 1 pain_id de Capa 1** (`no_ga4_enhanced`, guardia insatisfacible) ⟹ Capa 1 = **26**, no 27: cualquier cita de «27» en docs/prompts posteriores quedó desactualizada | B |
 | Peso de impacto de narratives (S14/C-5) | 16 valores × 4 copias YAML + 16 fallbacks Python = **80 literales** | **20 valores × 4 regiones** (los 4 pains nuevos declarados en `regional_benchmarks.yaml`) + fallback Python **derivado del `estimated_impact` de Capa 1** (nunca un default mudo). La costura de regionalización se preservó a propósito (S-B8 pide el lint, no el colapso) | B |
 | Gates blocking / advisory | 10 / 3 (declarado) · 13 plano (código) | **11 / 2 declarado = 11 / 2 en código**, decidido por `gate_blocks_publication()`. El `RuntimeError` de `__init__` hace imposible que las dos vistas diverjan. **Tres regímenes cerrados, el cuarto (delivery) intacto a propósito** (H10). Verificado por contrafactual: **0 flips de `ready`** sobre 2 corridas reales | D |
+| **ACs certificados** | 0 / 12 | **8 ✅ / 4 ⚠️ / 0 ❌** — ⚠️ = AC6 (coverage no legible en el artefacto), AC7 (severidad no serializada), AC8-def.(b) (no ejercitable con corrida sana), AC10 (mensaje↔`details`). Cada uno con su seguimiento (S-V3, S-I2, S-V4, S-I7) | **VERIFY** |
+| **NRs certificadas** | 0 / 12 | **10 ✅ / 1 ⚠️ (NR12) / 1 ❌ (NR2)** — NR2 con decisión de VERIFY tomada: exigir `details` fundado, no retirar el detector (**S-I1**). NR5 **reformulada como delta** (**DA-V2**, cierra S26) | **VERIFY** |
+| **Verificadores ejecutados por VERIFY** | — | `verify_nr1.txt` **944 passed / 2 skipped / 0 failed (5.87 s)** · `verify_contracts.txt` **170 passed / 1 failed** · `verify_ac124.txt` **139 passed / 1 failed / 1 skipped / 3749 deselected** · `verify_validations.txt` **7/7** · 2 sondas propias re-ejecutables (`verify_probe.py`, `verify_probe2.py`) sobre `evidence/FASE-I/corrida/` y el árbol | **VERIFY** |
+| **Iteraciones** | ≤40 presupuestadas | **≈65 llamadas de herramienta (auto-reporte, unidad `tool_use`) ⟹ INCUMPLIDO ≈1,6×** — tercer caso en que el instrumento canónico no es ejecutable bajo sandbox (tras H e I). ⚠️ El primer auto-reporte de la fase decía «≈36» y fue corregido: **subestimar el propio conteo es el defecto de S22/L-B3 reproduciéndose en la fase que debía resolverlo**. Recomendación al executor: **DA-V6** | **VERIFY** |
+| **Lecciones** | 36 de fases | **41** (36 + L-I1 + L-V1…L-V4); **write-back EJECUTADO 2026-09-04** → fuente `10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 (lecciones aprendidas y decisiones)`, notebook `iah-cli-lecciones`, id `01a06dae-b1f5-7a7b-9159-9b2f163b07a2`, `ready`, 62 chunks, retrieve sondeado (0.953 / 0.958). Clasificación definitiva: **32 con texto propio · 7 fusionadas en 4 destinos · 2 excluidas = 41** ✔. ⚠️ La cifra que se publicó en el cierre (**33/5/2**) sumaba **40 sobre 41** y usaba la unidad «fuente por lección», que el notebook no tiene — **una fuente consolidada por plan** es su granularidad real. **El criterio de pertinencia había llegado sin aplicar (36/36 INCLUIR, 0 EXCLUIR)** | **VERIFY** |
+| **Estado para RELEASE** | — | `09` §C.1 y §D y `10` completos: **RELEASE ya tiene todo lo que consume, no se difiere nada**. Hereda **S11/S-I6** (conteos de `AGENTS.md` 3.689/284 → 3.899/293), **S-H15/S-H16/S-H17/S-I8** (documental e indicador de fase) y **un rojo que NO es suyo: S-V1** | **VERIFY** |
 
 > **Conteos de tests** (memoria `conteos-tests-documentados-metodo-def_test`): documentar por
 > `grep "def test_"`, no por `--collect-only` (3,631 vs 3,520). Actualizar README + AGENTS **juntos**.
