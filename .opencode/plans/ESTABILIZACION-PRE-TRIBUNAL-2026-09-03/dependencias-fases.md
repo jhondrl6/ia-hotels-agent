@@ -478,7 +478,7 @@
 - **La coherencia BAJÓ (0.88 → 0.8333) y está atribuida**: `problems_have_solutions` 1.0→0.6 porque el
   ledger pasó de 3 a 5 pains. **Ninguna diferencia se cerró como «variación natural»**: fotos 10,
   `metadata.title=""`, competidores y los 3 escenarios financieros son numéricamente idénticos. → **S-I4**.
-- **Hereda de VERIFY**: S-I1..S-I7 (`10-analisis` §5.7) más el residuo que I no podía cerrar —
+- **Hereda de VERIFY**: S-I1..S-I8 (`10-analisis` §5.7) más el residuo que I no podía cerrar —
   **S-C3, S-E2, S-F2, S-H2, S-B12/S-C6, S-B13, S-B14, S-H16, S-H18** (esta última con resultado negativo
   documentado: FASE-I leyó 41 artefactos de producción y no apareció ninguna cadena imperativa; el barrido
   sigue **sin automatizar**).
