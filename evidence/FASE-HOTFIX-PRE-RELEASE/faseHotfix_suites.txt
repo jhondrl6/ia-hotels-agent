@@ -1,0 +1,15 @@
+# FASE-HOTFIX-PRE-RELEASE — suites tocadas (comando y resultado)
+[H1]      python -m pytest tests/delivery/test_delivery_contract.py -q                -> 47 passed / 0 failed
+[H1 bateria] ver faseHotfix_contracts_post_H1.txt                                    -> 171 passed / 0 failed  (antes 170+1 failed = S-V1)
+[bateria al cierre] mismo comando, sobre HEAD 736eea8                                  -> 180 passed / 0 failed  (+9 casos del track A: 8 del candado AST + 1 por coherence_validator en MODULOS_NARRATIVA)
+[H2]      python -m pytest tests/test_gate_report_severity_artifact.py -q            -> 7 passed (leye END JSON en disco)
+[H3]      python -m pytest tests/asset_generation/test_matrix_coverage_artifact.py -q -> 6 passed (leye END JSON en disco)
+[H6]      python -m pytest tests/commercial_documents/test_promised_assets_message_artifact.py -q -> 5 passed
+[H7]      python -m pytest tests/test_asset_path_clave_canonica.py -q                 -> 7 passed
+[H9]      python -m pytest tests/ -k plan_citations -q                                -> 9 passed, 1 skipped
+[A/B/C]   python -m pytest tests/common tests/commercial_documents/test_pain_map_bijection.py tests/asset_generation/test_fase_c_propuesta_dinamica.py -q -> 107 passed
+[delivery] python -m pytest tests/delivery -q                                         -> 69 passed
+[coherencia] 4 suites de coherence_validator + las 3 nuevas                            -> 43 passed
+[regresion] python -m pytest tests/regression -q                                      -> 26 passed
+[gate_report lectores] grep -rln "gate_report" tests/ --include=*.py | xargs python -m pytest -q  -> 105 passed
+NR5 (delta): 944/2 -> 950/2 (+6 = los 6 tests nuevos en asset_generation), 0 fallos ajenos

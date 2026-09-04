@@ -1,0 +1,38 @@
+# FASE-HOTFIX-PRE-RELEASE — bateria de contratos A+B+C+D+delivery (post-H1)
+#
+# Reconstruccion necesaria: FASE-VERIFY publico «170 passed / 1 failed» en
+# verify_contracts.txt sin registrar el comando, asi que la cifra no era
+# re-ejecutable. La bateria canonica de esta sesion es exactamente:
+#
+#   python -m pytest \
+#     tests/common/test_service_identity_registry.py \
+#     tests/commercial_documents/test_pain_map_bijection.py \
+#     tests/commercial_documents/test_detect_pains_emisiones_faseB.py \
+#     tests/asset_generation/test_fase_c_propuesta_dinamica.py \
+#     tests/quality_gates/test_gate_severity_lists.py \
+#     tests/delivery/test_delivery_contract.py \
+#     "tests/quality_gates/test_publication_gates.py::TestFASEDGateSeverity" \
+#     "tests/quality_gates/test_human_checklist_generator.py::TestAdvisoryDisclosureFASED" \
+#     -q
+#
+# Aritmetica: 37 (A) + 28 + 18 (B) + 17 (C) + 8 + 12 + 4 (D) + 47 (delivery) = 171
+#
+# ANTES   (FASE-VERIFY, HEAD a653305): 1 failed, 170 passed          <- S-V1
+# DESPUES (H1, 2026-09-04):
+171 passed, 12 warnings in 4.29s
+#
+# Criterio H1: «171 contracts / 0 failed». El rojo se cierra migrando el test al
+# contrato de FASE-F (_not_evaluated_g9()), sin xfail ni skip y sin tocar el default.
+#
+# ------------------------------------------------------------------
+# RE-EJECUCION AL CIERRE DE LA FASE (2026-09-04, mismo comando, sobre HEAD 736eea8):
+180 passed, 13 warnings in 3.92s
+#
+# Por que la cifra de cierre no es 171: el numero de arriba es el instante de H1, y
+# entre H1 y el cierre la fase sumo +9 casos al track A (37 -> 46) con el mismo
+# comando. Desglose medido con --collect-only por archivo:
+#   A 46 + B (28 + 18) + C 17 + D (8 + 12 + 4) + delivery 47 = 180
+# Los +9 de A: 1 caso por entrar `coherence_validator.py` en MODULOS_NARRATIVA
+# (tests ya parametrizados sobre esa lista) + 8 casos del candado AST nuevo
+# `test_mensaje_no_narra_el_tamano_de_un_registro_estatico` (H6, L-HF1).
+# Aritmetica de cierre: 171 + 9 = 180, 0 failed.

@@ -1,0 +1,31 @@
+
+==============================================================================
+H2 / AC7 / S-I2 — severidad en gate_report_*.json
+==============================================================================
+ANTES  (artefact de la corrida): gate_results = 13, con 'severity' = 0, ocurrencias de 'severity' en el archivo = 0
+DESPUES (writer real, en disco): claves por gate = ['blocks_publication', 'details', 'gate_name', 'message', 'passed', 'severity', 'status', 'suggestion', 'value']
+  severity=advisory -> ['content_quality', 'proposal_asset_alignment']
+  blocks_publication=True -> [] (la corrida dio ready=True, coherente)
+  ocurrencias de 'severity' en el archivo = 13
+
+==============================================================================
+H3 / AC6 / S-V3 — coverage_ratio en proposal_asset_matrix.json
+==============================================================================
+ANTES  : claves = ['alignment_status_version', 'delivery_ready', 'entries', 'not_promised', 'proposal_asset_matrix_version', 'summary', 'unknown_services']
+         coverage_ratio presente = False  (VERIFY: la clave no existia en el artefacto)
+         el unico ratio visible era gate_report.details.alignment.coverage_ratio = 1.0 (actionable_total = 4)
+DESPUES: version = 2.1, coverage_ratio = 1.0, actionable_total = 4, summary = {'actionable_total': 4, 'not_promised': 3, 'promised': 4, 'unknown': 0, 'unresolved': 0}
+  coincide con el gate (un solo oraculo) = True
+  caso negativo (LINKED -> MISSING_ASSET): coverage_ratio = 0.75 unresolved = 1 delivery_ready = False  <-- discrimina
+
+==============================================================================
+H6 / S-C3 mitad textual — que narran los artefactos del cliente
+==============================================================================
+ANTES  coherence_validation.json: 1 hit de «N servicios verificados» -> ['7 servicios verificados']
+ANTES  coherence_validation_post_gen.json: 1 hit de «N servicios verificados» -> ['7 servicios verificados']
+ANTES  asset_generation_report.json: 2 hit de «N servicios verificados» -> ['7 servicios verificados']
+         el numero narrado (7) es el tamano del catalogo estatico; la matriz de esa corrida promete 4
+DESPUES coherence_validation.json (writer real): Todos los assets prometidos están implementados (4 assets verificados en esta pasada via generated_assets)
+  ocurrencias de «servicios verificados» en el archivo = 0, PROPOSAL_SERVICE_TO_ASSET = 0
+
+SONDA COMPLETA

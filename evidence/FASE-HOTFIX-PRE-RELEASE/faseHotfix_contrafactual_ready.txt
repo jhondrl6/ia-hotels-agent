@@ -1,0 +1,15 @@
+hotelsalentoreal/gate_report_20260904_120413.json
+  gates re-evaluados = 13 (blocking declarados = 11, advisory = 2)
+  ready  publicado = True   ready  re-producido = True   IGUAL
+  blocking_issues publicado = 0   re-producido = 0
+hotelsalentoreal/gate_report_20260831_122803.json
+  gates re-evaluados = 13 (blocking declarados = 11, advisory = 2)
+  ready  publicado = True   ready  re-producido = True   IGUAL
+  blocking_issues publicado = 0   re-producido = 0
+ASSETS/gate_report_20260831_122803.json
+  gates re-evaluados = 13 (blocking declarados = 11, advisory = 2)
+  ready  publicado = True   ready  re-producido = True   IGUAL
+  blocking_issues publicado = 0   re-producido = 0
+
+FLIPS de ready = 0 / 3 artefactos evaluados
+CONTRAFACTUAL: 0 flips => ninguna decision de negocio cambio

@@ -1,0 +1,6 @@
+# FASE-HOTFIX-PRE-RELEASE — baseline POST (regla de delta, R2.3 del executor v2.19.0)
+# comando: python -m pytest tests/quality_gates tests/asset_generation -q
+# PRE  = 944 passed / 2 skipped / 0 failed  (faseHotfix_baseline_pre.txt)
+# tests nuevos de ESTA sesion en esos dos directorios: 6 (tests/asset_generation/test_matrix_coverage_artifact.py)
+# esperado POST = 944 + 6 = 950 passed / 2 skipped / 0 fallos ajenos
+950 passed, 2 skipped, 11 warnings in 5.46s
