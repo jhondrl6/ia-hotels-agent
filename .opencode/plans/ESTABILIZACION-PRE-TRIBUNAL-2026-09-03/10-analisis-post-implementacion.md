@@ -1543,7 +1543,7 @@ exceder el alcance, no cumplirlo. **Consecuencia registrada**: las cifras public
 validadores del ecosistema documental), **no** sobre el árbol completo. Nadie debe leer 180/0 y 950/2 como
 «los 3.934 tests pasan».
 
-### 10.4 Write-back a QMind — **ejecutado, con un efecto colateral que queda pendiente**
+### 10.4 Write-back a QMind — **ejecutado, duplicado resuelto y verificado**
 
 El ciclo pedía **refrescar la fuente consolidada del plan** para incluir **L-HF1** (HOTFIX la clasificó
 INCLUIR y dejó el ciclo en RELEASE; **L-HF2** sigue **excluida con razón** — §9.1). Lo que se hizo y lo que
@@ -1558,13 +1558,21 @@ se midió:
 3. Verificación de que el contenido indexó: `retrieve` restringido a esa fuente devuelve **L-HF1** con
    score **0,986** (chunk 63) y **0,973** (chunk 64). Con la fuente vieja, la misma consulta no la encontraba.
 
-⚠️ **Consecuencia sin resolver, y no es accionable desde esta sesión**: el notebook quedó con **dos** fuentes
-del mismo plan — la nueva (completa) y `01a06dae-b1f5-7a7b-9159-9b2f163b07a2` (la de VERIFY, **62 chunks, sin
-L-HF1**). Eso **rompe la granularidad que el propio plan fijó** («una fuente por plan») y, peor, deja una
-fuente **caduca recuperable**: un `Paso 0` futuro puede consultarla y creer que el plan tuvo 41 lecciones.
-**No existe herramienta de borrado** en el conector QMind (solo `add_source`/`read_source`/`list_sources`/
-`retrieve`/`search`), así que **queda en manos del usuario eliminar `01a06dae-…` desde la UI**. Reportado
-aquí, en `09` §D y en el resumen de cierre, no como nota al pie.
+**✅ Cerrado y verificado el mismo día.** El conector no tiene `delete_source` ni `update_source`, y
+`browser-use` no controla el panel de QMind de la app — así que el **borrado de la fuente caduca
+(`01a06dae-…`, 62 chunks, sin L-HF1) lo ejecutó el usuario desde la UI**. Medido después:
+
+- `list_sources(iah-cli-lecciones)`: **45 → 44** fuentes; `01a06dae-…` **ya no figura**.
+- Fuentes con ese título: **1** — `01a06ebb-001b-7a1a-a195-2714a9db271e` (la completa).
+- `retrieve` **a nivel notebook** (sin restringir fuentes) sobre L-HF1: 5 chunks, **todos** de la fuente
+  nueva, top score **0,986**. No queda ninguna versión caduca recuperable.
+
+**Regla que deja esto para el ciclo de capitalización**: refrescar «una fuente por plan» en QMind es una
+operación de **dos pasos** — `add_source` + **borrado manual en la UI** del id anterior — y el segundo **no
+es accionable por el agente**. Quien cierre el ciclo tiene que **nombrar en su evidencia el id exacto a
+borrar** (y no solo «la fuente vieja»), porque las dos filas comparten título y la única señal
+distinguible es el `createdAt` y el conteo de chunks. Precedente de lo que pasa si no se dice: el notebook
+arrastra duplicado «CONTEXT: Decisión pre-commit framework vs hook custom (2026-08-29)» desde agosto.
 
 ### 10.5 Dos lecciones de forma que aporta esta fase
 

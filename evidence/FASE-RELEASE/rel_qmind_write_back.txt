@@ -40,17 +40,25 @@ Sonda negativa: la misma consulta contra la fuente anterior (`01a06dae-…`) no 
 VERIFY contiene L-A1…L-V4 pero **ninguna** lección del HOTFIX (comprobado sobre el propio archivo antes de
 editar: `grep -o "L-[A-Z]*[0-9]*"` no incluía L-HF1/L-HF2).
 
-## ⚠️ Efecto colateral, sin resolver (no accionable desde el agente)
+## ✅ Efecto colateral RESUELTO y verificado (2026-09-04)
 
-`add_source` **no actualiza en sitio**: no hay `update_source` ni `delete_source` en el conector. Por tanto
-el notebook quedó con **dos** fuentes del mismo plan:
+`add_source` **no actualiza en sitio**: no hay `update_source` ni `delete_source` en el conector, así que el
+refresco creó una fuente **nueva** y dejó la de VERIFY (`01a06dae-b1f5-7a7b-9159-9b2f163b07a2`, 62 chunks,
+**sin L-HF1**) como segunda fila con el **mismo título**. Riesgo: un `Paso 0` futuro la recuperara y leyera
+**41** lecciones donde el plan dejó **43** — la misma clase de defecto que HOTFIX registró en L-HF2 (una
+cifra publicada que ya no corresponde a lo medido).
 
-| Fuente | Chunks | ¿Tiene L-HF1? | Acción |
-|--------|--------|---------------|--------|
-| `01a06dae-b1f5-7a7b-9159-9b2f163b07a2` (VERIFY) | 62 | **No** | **Borrar desde la UI** — es la que caducó |
-| `01a06ebb-001b-7a1a-a195-2714a9db271e` (RELEASE) | 64 | Sí | Queda como la fuente del plan |
+El conector no puede borrar y `browser-use` solo ve una página `about:blank` (no controla el panel de QMind
+de la app), así que el borrado **lo ejecutó el usuario desde la UI**. Verificación posterior, medida:
 
-Riesgo si no se borra: un `Paso 0` futuro puede recuperar la versión vieja y leer **41** lecciones donde el
-plan dejó **43**, replicando la clase de defecto que HOTFIX registró en L-HF2 (una cifra publicada que ya no
-corresponde a lo medido). El borrado es una acción sobre un recurso compartido del usuario, así que se
-**reporta y se pide**, no se ejecuta por iniciativa propia.
+| Check | Resultado |
+|-------|-----------|
+| `list_sources(iah-cli-lecciones)` | **45 → 44** fuentes; `01a06dae-…` **ya no figura** |
+| Fuentes con ese título | **1** (`01a06ebb-001b-7a1a-a195-2714a9db271e`) |
+| `retrieve` a nivel notebook, consulta por L-HF1 | 5 chunks devueltos, **todos** de `01a06ebb-…`; top score **0,986** (chunk 63) |
+
+**Lección de proceso para el ciclo de capitalización**: refrescar «una fuente por plan» en QMind es una
+operación de **dos pasos** — `add_source` + **borrado manual en la UI** del id anterior — y el segundo paso
+no es accionable por el agente. Quien ejecute el ciclo debe **nombrar el id a borrar** en su propia
+evidencia, o el notebook acumula versiones caducas recuperables. (Precedente ya presente en el notebook:
+«CONTEXT: Decisión pre-commit framework vs hook custom (2026-08-29)» está duplicado por el mismo motivo.)

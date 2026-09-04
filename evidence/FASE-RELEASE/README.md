@@ -79,9 +79,13 @@ del flujo de sync).
 **quinto caso consecutivo** (H, I, VERIFY, HOTFIX, RELEASE) ⟹ R2.1 del executor v2.19.0 quedó escrita en
 la sesión anterior y esta volvió a incumplirla por la misma causa: no hay instrumento, hay convención.
 
-## Pendencia que deja abierta esta fase
+## Pendencia abierta al cerrar → **RESUELTA el mismo día**
 
 El refresco de QMind creó una fuente **nueva** (`01a06ebb-…`) porque el conector no expone actualización ni
-borrado. La fuente de VERIFY (`01a06dae-…`, 62 chunks, **sin L-HF1**) sigue recuperable en el notebook
-`iah-cli-lecciones` ⟹ **el usuario debe borrarla desde la UI** para no romper la regla «una fuente por plan»
-ni dejar que un `Paso 0` futuro lea 41 lecciones donde hay 43.
+borrado. La fuente de VERIFY (`01a06dae-…`, 62 chunks, **sin L-HF1**) quedó recuperable en el notebook
+`iah-cli-lecciones` con el **mismo título**, lo que rompía la regla «una fuente por plan» y dejaba una
+versión caduca que un `Paso 0` futuro podía leer (41 lecciones donde hay 43).
+
+**El borrado lo ejecutaste tú desde la UI y está verificado**: `list_sources` pasó de **45 a 44** fuentes,
+`01a06dae-…` ya no figura, y un `retrieve` a nivel notebook sobre L-HF1 devuelve 5 chunks **todos** de
+`01a06ebb-…` (top score 0,986). Detalle en `rel_qmind_write_back.txt`.
