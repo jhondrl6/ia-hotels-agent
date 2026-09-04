@@ -136,7 +136,10 @@ class TestDeliveryQualityReportGenerator:
         assert report.status == "PASS"
         assert report.blocking is False
         assert report.coverage_gate["passed"] is True
-        assert len(report.human_review_items) == 0
+        # FASE-F (A1): sin proposal_asset_matrix.json, G9 es NOT_EVALUATED —
+        # visible en human_review_items (antes pasaba en verde vacuo).
+        assert len(report.human_review_items) == 1
+        assert "G9: NOT_EVALUATED" in report.human_review_items[0]
 
     def test_generate_fail_when_coherence_below_threshold(self, temp_v4_audit_dir):
         """Generate returns FAIL when coherence < 0.8."""
@@ -416,9 +419,8 @@ class TestProposalAssetAlignmentBypassFix:
 
     def test_proposal_asset_alignment_key_is_correct(self, temp_v4_audit_dir):
         """Verify that the key lookup in generate() uses 'proposal_asset_alignment'
-        (not the old 'proposal_asset'). When the key is absent from gate_results,
-        the default {passed: True} should be used — report should be PASS or WARNING,
-        not FAIL from a missing key."""
+        (not the old 'proposal_asset'). Sin matriz, el gate queda NOT_EVALUATED
+        (FASE-F A1): no bloquea, pero tampoco figura como pasado."""
         _write_coherence_json(temp_v4_audit_dir, overall_score=0.85)
         _write_asset_generation_json(temp_v4_audit_dir, assets=[
             {"asset_type": "hotel_schema", "confidence_score": 0.95, "can_use": True, "preflight_status": "PASSED"},
@@ -427,12 +429,13 @@ class TestProposalAssetAlignmentBypassFix:
         generator = DeliveryQualityReportGenerator()
         report = generator.generate("test_hotel", temp_v4_audit_dir)
 
-        # When proposal_asset_alignment is not in gate_results (which is the
-        # current state since generate() doesn't populate it yet), the default
-        # should be passed=True, and the report should NOT fail because of it.
-        assert report.proposal_asset_gate["passed"] is True
+        # FASE-F (A1): sin proposal_asset_matrix.json el gate NO se evalúa —
+        # estado NOT_EVALUATED, no cuenta como pasado y es visible.
+        assert report.proposal_asset_gate["state"] == "NOT_EVALUATED"
+        assert report.proposal_asset_gate["passed"] is False
         assert report.proposal_asset_gate["gate"] == "G9"
         assert report.status in ("PASS", "WARNING")
+        assert "proposal_asset_alignment" in report.summary["not_evaluated"]
 
 
 class TestGateBlockingEnabledDefault:
@@ -471,3 +474,77 @@ class TestGateBlockingEnabledDefault:
             monkeypatch.setenv("GATE_BLOCKING_ENABLED", val)
             result = _os_test.getenv("GATE_BLOCKING_ENABLED", "true").lower() in ("1", "true", "yes")
             assert result is True, f"Expected True for GATE_BLOCKING_ENABLED={val}"
+
+
+# ── Tests: FASE-F (A1) — skipped ≠ passed ──────────────────────────────────
+
+class TestFaseFSkippedNeqPassed:
+    """FASE-F (A1): un gate no evaluado NO es un gate pasado.
+
+    Antes: sin proposal_asset_matrix.json, G9 se escribía
+    ``{"passed": True, "skipped": True}`` y el summary lo contaba en
+    ``passed_count`` — verde vacuo (dossier §9.1 A1, dos defaults
+    independientes). Ahora: estado NOT_EVALUATED, no bloquea, no figura
+    como pasado y queda visible.
+    """
+
+    def _generate_without_matrix(self, temp_v4_audit_dir):
+        _write_coherence_json(temp_v4_audit_dir, overall_score=0.85)
+        _write_asset_generation_json(temp_v4_audit_dir, assets=[
+            {"asset_type": "hotel_schema", "confidence_score": 0.95, "can_use": True, "preflight_status": "PASSED"},
+        ])
+        generator = DeliveryQualityReportGenerator()
+        return generator.generate("test_hotel", temp_v4_audit_dir)
+
+    def test_g9_sin_matriz_es_not_evaluated(self, temp_v4_audit_dir):
+        """Gate saltado → estado NOT_EVALUATED, distinto de passed y failed."""
+        report = self._generate_without_matrix(temp_v4_audit_dir)
+        gate = report.proposal_asset_gate
+        assert gate["state"] == "NOT_EVALUATED"
+        assert gate["passed"] is False
+        assert gate["failed"] if False else True  # estado explícito, no booleano
+        assert "skipped" not in gate
+        assert gate["reason"] == "proposal_asset_matrix.json not found"
+
+    def test_summary_no_cuenta_not_evaluated_como_passed(self, temp_v4_audit_dir):
+        """El summary no infla passed_count con gates no evaluados."""
+        report = self._generate_without_matrix(temp_v4_audit_dir)
+        summary = report.summary
+        # 5 gates: coherence, coverage, asset_specificity, evidence evaluados
+        # (4) + proposal_asset_alignment NOT_EVALUATED (1)
+        assert summary["total_gates"] == 5
+        assert summary["passed"] == 4
+        assert summary["failed"] == 0
+        assert summary["passed"] + summary["failed"] + len(summary["not_evaluated"]) == summary["total_gates"]
+        assert summary["not_evaluated"] == ["proposal_asset_alignment"]
+
+    def test_not_evaluated_es_visible_en_el_reporte(self, temp_v4_audit_dir):
+        """El estado aparece en human_review_items — no silencioso."""
+        report = self._generate_without_matrix(temp_v4_audit_dir)
+        assert any("NOT_EVALUATED" in item and "G9" in item
+                   for item in report.human_review_items)
+
+    def test_not_evaluated_no_bloquea(self, temp_v4_audit_dir):
+        """NOT_EVALUATED no entra en blocking_gates (régimen delivery intacto)."""
+        report = self._generate_without_matrix(temp_v4_audit_dir)
+        assert "proposal_asset_alignment" not in report.summary["blocking_gates"]
+        assert report.blocking is False
+
+    def test_unico_default_g9_sin_segundo_default(self):
+        """Anti-reaparición: el módulo ya no contiene ninguno de los DOS
+        defaults independientes que existed antes de FASE-F."""
+        import inspect
+        from modules.quality_gates import delivery_quality_report as dqr
+        source = inspect.getsource(dqr)
+        assert '"skipped": True' not in source
+        assert '"passed": True, "gate": "G9"' not in source
+        # El estado unificado se produce en UN solo lugar (el helper);
+        # menciones en docstrings o mensajes de revisión no cuentan.
+        assert source.count('"state": "NOT_EVALUATED"') == 1
+
+    def test_default_producto_por_helper_es_not_evaluated(self):
+        """El default unificado (helper) nunca declara un gate pasado."""
+        from modules.quality_gates.delivery_quality_report import _not_evaluated_g9
+        default = _not_evaluated_g9()
+        assert default["passed"] is False
+        assert default["state"] == "NOT_EVALUATED"

@@ -51,6 +51,9 @@ from modules.financial_engine.no_defaults_validator import (
 from modules.quality_gates.ethics_gate import EthicsGate, EthicsStatus
 from modules.postprocessors.document_quality_gate import DocumentQualityGate
 from modules.quality.asset_semantics_validator import validar_semantica_comercial
+# FASE-F (N11/P9): veredicto de coherencia en UN solo lugar — este módulo ya
+# no decide por su cuenta; consume la función canónica de coherence_gate.
+from modules.quality_gates.coherence_gate import coherence_verdict_passes
 
 logger = logging.getLogger(__name__)
 
@@ -557,6 +560,11 @@ class PublicationGatesOrchestrator:
         which was calculated by CoherenceValidator.validate() (weighted average of
         6 checks). The gate does NOT recalculate — it consumes the single source
         of truth from coherence_validation.json / coherence_report.overall_score.
+
+        FASE-F (N11/P9): el veredicto binario ``is_coherent`` del validador
+        MANDA sobre el score — score >= threshold con ``is_coherent=False``
+        declarado BLOCKEA (decisión canónica en
+        coherence_gate.coherence_verdict_passes). Umbral 0.8 intacto.
         
         Threshold: >= 0.8
         Interpretation:
@@ -585,8 +593,12 @@ class PublicationGatesOrchestrator:
                 suggestion="Run coherence validation to generate coherence score"
             )
         
-        passed = coherence_score >= self.config.coherence_threshold
-        
+        passed = coherence_verdict_passes(
+            coherence_score,
+            self.config.coherence_threshold,
+            assessment.get("is_coherent"),
+        )
+
         if passed:
             return PublicationGateResult(
                 gate_name=gate_name,
@@ -596,25 +608,56 @@ class PublicationGatesOrchestrator:
                 value=coherence_score,
                 suggestion=""
             )
-        else:
-            status = GateStatus.BLOCKED if coherence_score < 0.5 else GateStatus.FAILED
+        # FASE-F (N11/P9): score sobre el umbral pero veredicto binario
+        # negativo del validador (checks error-severity abiertos). Los cuatro
+        # artefactos de SalentoReal declaraban is_coherent=false con score
+        # 0.88 y el paquete salió READY_FOR_PUBLICATION — el gate solo leía
+        # el score. Ya no: el veredicto manda, el umbral queda intacto.
+        if (
+            coherence_score >= self.config.coherence_threshold
+            and assessment.get("is_coherent") is False
+        ):
             return PublicationGateResult(
                 gate_name=gate_name,
                 passed=False,
-                status=status,
-                message=f"Coherence score {coherence_score:.2f} below threshold {self.config.coherence_threshold}",
+                status=GateStatus.BLOCKED,
+                message=(
+                    f"Coherence score {coherence_score:.2f} meets threshold "
+                    f"{self.config.coherence_threshold} but validator declared "
+                    f"is_coherent=False (error-severity checks unresolved)"
+                ),
                 value=coherence_score,
                 suggestion=(
-                    "Review alignment between diagnostic problems and proposed assets. "
-                    "Ensure every problem has a corresponding solution and all assets are justified. "
-                    f"Current gap: {(self.config.coherence_threshold - coherence_score):.2f} points."
+                    "Resolve the coherence validator errors before publication: "
+                    "a passing score with is_coherent=False means open "
+                    "error-severity checks (see coherence_validation.json). "
+                    "The validator verdict is authoritative over the score."
                 ),
                 details={
                     "coherence_score": coherence_score,
                     "threshold": self.config.coherence_threshold,
-                    "gap": self.config.coherence_threshold - coherence_score
+                    "is_coherent": False,
                 }
             )
+        # Score bajo el umbral (veredicto legacy por score)
+        status = GateStatus.BLOCKED if coherence_score < 0.5 else GateStatus.FAILED
+        return PublicationGateResult(
+            gate_name=gate_name,
+            passed=False,
+            status=status,
+            message=f"Coherence score {coherence_score:.2f} below threshold {self.config.coherence_threshold}",
+            value=coherence_score,
+            suggestion=(
+                "Review alignment between diagnostic problems and proposed assets. "
+                "Ensure every problem has a corresponding solution and all assets are justified. "
+                f"Current gap: {(self.config.coherence_threshold - coherence_score):.2f} points."
+            ),
+            details={
+                "coherence_score": coherence_score,
+                "threshold": self.config.coherence_threshold,
+                "gap": self.config.coherence_threshold - coherence_score
+            }
+        )
     
     def _critical_recall_gate(self, assessment: Dict[str, Any]) -> PublicationGateResult:
         """

@@ -8,6 +8,7 @@ totals from both code paths:
 
 import pytest
 from modules.quality_gates.alignment_result import AlignmentResult
+from modules.asset_generation.site_presence_adapter import normalize_site_presence
 from modules.asset_generation.proposal_asset_alignment import (
     AlignmentReport,
     ServiceAlignment,
@@ -407,3 +408,122 @@ class TestCorridaCSemantics:
         # report.missing = SEO Local, WhatsApp, hotel_schema, Open Graph = 4
         assert result.unresolved == 4
         assert result.no_breach == 0  # taxonomía pain-driven no conocible aquí
+
+
+class TestFaseFOraculoUnicoPresencia:
+    """FASE-F (A4/V15): UN solo oráculo de presencia decide y narra.
+
+    Repro del dossier §9.1: presencia ``exists_with_issues`` para los
+    schemas/FAQ — el oráculo permisivo (``PRODUCTION_PRESENT_STATUSES``)
+    los contaba en ``present_assets`` mientras el oráculo estricto
+    (``== "exists"`` dentro de verify_proposal_asset_alignment) los narraba
+    ``missing``. Ahora la narrativa DERIVA del criterio canónico
+    (``is_present_in_production``, decisión FASE-SR-E H7/L-SR3 intacta).
+    """
+
+    _RAW_PRESENCE = {
+        "results": {
+            "hotel_schema": {"status": "exists_with_issues"},
+            "org_schema": {"status": "exists_with_issues"},
+            "faq_page": {"status": "exists_with_issues"},
+        }
+    }
+    # Forma canónica (normalize_site_presence) — la misma que producen los
+    # callers de producción; _presence_resolved lee claves top-level.
+    PRESENCE = normalize_site_presence(_RAW_PRESENCE)
+    SERVICES = ["Schema Hotel", "Schema Organization", "Página de FAQ"]
+
+    def _entries(self):
+        """Entradas matriz como las que absorbía _presence_resolved (V15)."""
+        return [
+            ProposalAssetMatrixEntry("Schema Hotel", ["no_hotel_schema"],
+                                     "hotel_schema", None, 0.0, "NO_BREACH"),
+            ProposalAssetMatrixEntry("Schema Organization", ["no_org_schema"],
+                                     "org_schema", None, 0.0, "NO_BREACH"),
+            ProposalAssetMatrixEntry("Página de FAQ", ["no_faq_schema"],
+                                     "faq_page", None, 0.0, "NO_BREACH"),
+        ]
+
+    def test_exists_with_issues_se_narra_presente_no_missing(self):
+        """El caso reproducido del dossier queda imposible: exists_with_issues
+        NO puede narrarse missing (era el oráculo estricto)."""
+        report = verify_proposal_asset_alignment(
+            proposal_services=self.SERVICES,
+            generated_assets=[],
+            site_presence_report=self.PRESENCE,
+        )
+        assert report.missing == []
+        assert sorted(s.asset_type for s in report.present_in_production) == [
+            "faq_page", "hotel_schema", "org_schema",
+        ]
+        assert report.all_covered is True
+
+    def test_resultado_nunca_missing_y_present_assets(self):
+        """Anti-A4: en el merge que produce los details del gate, ningún
+        servicio puede estar en report.missing Y en alignment.present_assets."""
+        report = verify_proposal_asset_alignment(
+            proposal_services=self.SERVICES,
+            generated_assets=[],
+            site_presence_report=self.PRESENCE,
+        )
+        result = AlignmentResult.from_alignment_report(
+            report,
+            semantic_entries=self._entries(),
+            site_presence_report=self.PRESENCE,
+        )
+        missing_names = {s.service_name for s in report.missing}
+        overlap = missing_names & set(result.present_assets)
+        assert not overlap, f"A4 vivo — narrado missing Y listado presente: {overlap}"
+        assert result.present_in_production == 3
+        assert result.unresolved == 0
+
+    def test_details_missing_count_converge_con_matriz(self):
+        """details['missing_count'] (narrativa) == unresolved del AlignmentResult
+        (decisión/matríz) — fin de la divergencia del dossier V15."""
+        report = verify_proposal_asset_alignment(
+            proposal_services=self.SERVICES,
+            generated_assets=[],
+            site_presence_report=self.PRESENCE,
+        )
+        result = AlignmentResult.from_alignment_report(
+            report,
+            semantic_entries=self._entries(),
+            site_presence_report=self.PRESENCE,
+        )
+        details = report.to_dict()
+        assert details["missing_count"] == result.unresolved == 0
+
+    def test_sin_presencia_sigue_siendo_missing(self):
+        """El criterio canónico NO relaja: snapshot not_exists → missing real,
+        coherente en narrativa y decisión."""
+        presence = normalize_site_presence(
+            {"results": {"hotel_schema": {"status": "not_exists"}}}
+        )
+        report = verify_proposal_asset_alignment(
+            proposal_services=["Schema Hotel"],
+            generated_assets=[],
+            site_presence_report=presence,
+        )
+        entries = [ProposalAssetMatrixEntry(
+            "Schema Hotel", ["no_hotel_schema"], "hotel_schema", None, 0.0, "MISSING_ASSET",
+        )]
+        result = AlignmentResult.from_alignment_report(
+            report, semantic_entries=entries, site_presence_report=presence,
+        )
+        assert len(report.missing) == 1
+        assert report.missing[0].asset_type == "hotel_schema"
+        assert result.unresolved == 1
+        assert "Schema Hotel" not in result.present_assets
+
+    def test_divergencia_audits_schema_cubre_exists_with_issues(self):
+        """FASE-12B: el veto por divergencia audit↔presencia también aplica
+        cuando la presencia es exists_with_issues (criterio canónico)."""
+        presence = {"results": {"hotel_schema": {"status": "exists_with_issues"}}}
+        report = verify_proposal_asset_alignment(
+            proposal_services=["Schema Hotel"],
+            generated_assets=[],
+            site_presence_report=presence,
+            audit_schema={"hotel_schema_detected": False},
+        )
+        assert len(report.missing) == 1
+        assert report.missing[0].presence_status == "divergent"

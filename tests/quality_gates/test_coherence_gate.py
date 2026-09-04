@@ -15,6 +15,7 @@ from modules.quality_gates.coherence_gate import (
     PublicationStatus,
     CoherenceGap,
     check_coherence,
+    coherence_verdict_passes,
 )
 
 
@@ -385,8 +386,11 @@ class TestCoherenceGateValidatorIntegration:
         mock_validate.assert_called_once()
         assert result.coherence_score == 0.81
         assert result.passed is False  # is_coherent=False aunque score >= threshold
-        # _determine_status usa el score: 0.81 >= 0.8 → CERTIFIED
-        assert result.status == CoherenceStatus.CERTIFIED
+        # FASE-F (N11/P9): el veredicto manda — score 0.81 >= 0.8 con
+        # is_coherent=False NO queda CERTIFIED (antes can_certify=True
+        # contradecía passed=False); baja a REQUIRES_REVIEW.
+        assert result.status == CoherenceStatus.REVIEW
+        assert result.can_certify is False
         assert result.checks is not None
         assert len(result.checks) == 2
         assert result.validator_errors == ["[financial_data_validated] Low confidence"]
@@ -515,3 +519,50 @@ class TestCoherenceGateValidatorIntegration:
         validator_gap_categories = {g.category for g in result.gaps 
                                      if g.category not in ("gbp", "financial", "evidence")}
         assert len(validator_gap_categories) == 0  # Solo gaps legacy, no del validator
+
+
+# =============================================================================
+# FASE-F (N11/P9): coherence_verdict_passes — única definición del veredicto
+# =============================================================================
+
+class TestFaseFCoherenceVerdictPasses:
+    """FASE-F (N11/P9): la definición única del veredicto binario.
+
+    Reproducción SalenteReal: score 0.88 + is_coherent=false salió
+    READY_FOR_PUBLICATION porque el gate solo leía el score.
+    """
+
+    def test_score_alto_veredicto_false_no_pasa(self):
+        """El caso SalenteReal: 0.88 + is_coherent=False ⟹ False."""
+        assert coherence_verdict_passes(0.88, 0.8, False) is False
+
+    def test_score_alto_veredicto_true_pasa(self):
+        assert coherence_verdict_passes(0.88, 0.8, True) is True
+
+    def test_score_alto_veredicto_ausente_pasa(self):
+        """Vacío ≠ ausente: None mantiene el comportamiento legacy por score."""
+        assert coherence_verdict_passes(0.88, 0.8, None) is True
+
+    def test_score_bajo_umbral_no_pasa_aunque_veredicto_true(self):
+        """El umbral 0.8 NO se relaja."""
+        assert coherence_verdict_passes(0.79, 0.8, True) is False
+
+    def test_umbral_exacto_con_veredicto_true_pasa(self):
+        assert coherence_verdict_passes(0.8, 0.8, True) is True
+
+    def test_execute_legacy_respeta_is_coherent_false(self):
+        """execute() con is_coherent=False declarado en assessment_data no certifica."""
+        gate = CoherenceGate()
+        result = gate.execute(assessment_data={"coherence_score": 0.88, "is_coherent": False})
+
+        assert result.passed is False
+        assert result.coherence_score == 0.88
+        assert result.can_certify is False
+
+    def test_execute_legacy_sin_is_coherent_certifica(self):
+        """Backward compat: assessment legacy sin is_coherent no cambia."""
+        gate = CoherenceGate()
+        result = gate.execute(assessment_data={"coherence_score": 0.88})
+
+        assert result.passed is True
+        assert result.status == CoherenceStatus.CERTIFIED

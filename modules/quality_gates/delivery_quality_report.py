@@ -22,6 +22,37 @@ from modules.quality_gates.publication_gates import PublicationGateConfig
 logger = logging.getLogger(__name__)
 
 
+def _not_evaluated_g9() -> Dict:
+    """FASE-F (A1): ÚNICO default para el gate G9 no evaluado.
+
+    Un gate no evaluado NO es un gate pasado: ``passed=False`` con
+    ``state="NOT_EVALUATED"`` — no bloquea (mismo efecto que antes sobre
+    ``blocking``) pero tampoco figura como pasado en ``summary.passed`` y
+    queda visible en ``summary["not_evaluated"]``. Antes existían DOS
+    defaults independientes ({passed: True, skipped: True} y
+    {passed: True}) que contaban el gate como pasado en verde vacuo.
+    """
+    return {
+        "passed": False,
+        "state": "NOT_EVALUATED",
+        "gate": "G9",
+        "reason": "proposal_asset_matrix.json not found",
+    }
+
+
+def _gate_state(result: Dict[str, Any]) -> str:
+    """Estado canónico de un gate del reporte delivery.
+
+    ``state`` explícito manda (NOT_EVALUATED); los gates evaluados derivan
+    PASSED/FAILED de ``passed`` — ``not passed`` solo decide sobre estados
+    evaluados (FASE-F A1).
+    """
+    state = result.get("state")
+    if state:
+        return state
+    return "PASSED" if result.get("passed") else "FAILED"
+
+
 @dataclass
 class DeliveryQualityReport:
     """
@@ -253,13 +284,13 @@ class DeliveryQualityReportGenerator:
                 "alignment": alignment.to_dict(),
             }
         else:
-            # No matrix available — gate skipped (not evaluated)
-            gate_results["proposal_asset_alignment"] = {
-                "passed": True,
-                "gate": "G9",
-                "skipped": True,
-                "reason": "proposal_asset_matrix.json not found",
-            }
+            # FASE-F (A1): gate no evaluado — NOT_EVALUATED, no cuenta como
+            # pasado y queda visible (antes: dict con skipped True y passed True).
+            gate_results["proposal_asset_alignment"] = _not_evaluated_g9()
+            human_review_items.append(
+                "G9: NOT_EVALUATED — proposal_asset_matrix.json not found; "
+                "proposal-asset alignment was not verified"
+            )
 
         # ── Evidence Gate ──────────────────────────────────────────────────
         evidence_passed, evidence_details = self._evaluate_evidence(
@@ -291,14 +322,21 @@ class DeliveryQualityReportGenerator:
                 })
 
         # ── Determine overall status ───────────────────────────────────────
+        # FASE-F (A1): la decisión usa ESTADOS — ``not passed`` solo decide
+        # sobre gates evaluados; un NOT_EVALUATED no bloquea ni advierte,
+        # pero tampoco figura como pasado (visible en summary).
         BLOCKING_GATE_NAMES = ("coherence", "coverage", "evidence", "proposal_asset_alignment")
         blocking_gates = [
             name for name, result in gate_results.items()
-            if not result["passed"] and name in BLOCKING_GATE_NAMES
+            if name in BLOCKING_GATE_NAMES and _gate_state(result) == "FAILED"
         ]
         warning_gates = [
             name for name, result in gate_results.items()
-            if not result["passed"] and name not in BLOCKING_GATE_NAMES
+            if _gate_state(result) == "FAILED" and name not in BLOCKING_GATE_NAMES
+        ]
+        not_evaluated_gates = [
+            name for name, result in gate_results.items()
+            if _gate_state(result) == "NOT_EVALUATED"
         ]
 
         if blocking_gates:
@@ -313,11 +351,17 @@ class DeliveryQualityReportGenerator:
 
         # ── Build summary ──────────────────────────────────────────────────
         total_gates = len(gate_results)
-        passed_count = sum(1 for r in gate_results.values() if r["passed"])
+        passed_count = sum(
+            1 for r in gate_results.values() if _gate_state(r) == "PASSED"
+        )
+        failed_count = sum(
+            1 for r in gate_results.values() if _gate_state(r) == "FAILED"
+        )
         summary = {
             "total_gates": total_gates,
             "passed": passed_count,
-            "failed": total_gates - passed_count,
+            "failed": failed_count,
+            "not_evaluated": not_evaluated_gates,
             "coherence_score": coherence_score,
             "blocking_gates": blocking_gates,
             "warning_gates": warning_gates,
@@ -327,7 +371,7 @@ class DeliveryQualityReportGenerator:
             status=status,
             blocking=blocking,
             coverage_gate=gate_results["coverage"],
-            proposal_asset_gate=gate_results.get("proposal_asset_alignment", {"passed": True, "gate": "G9"}),
+            proposal_asset_gate=gate_results.get("proposal_asset_alignment", _not_evaluated_g9()),
             asset_specificity_gate=gate_results["asset_specificity"],
             evidence_gate=gate_results["evidence"],
             advisory_warnings=advisory_warnings,

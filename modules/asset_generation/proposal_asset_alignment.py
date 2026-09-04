@@ -181,7 +181,9 @@ def verify_proposal_asset_alignment(
     """Verify that each promised service has a corresponding generated asset.
 
     FASE-D: Before marking as "missing", verifies via SitePresenceChecker if the asset
-    already exists in the production site. If EXISTS, marks as "present_in_production".
+    already exists in the production site. FASE-F (A4): la clasificación usa el
+    criterio canónico ``is_present_in_production`` — EXISTS y EXISTS_WITH_ISSUES
+    marcan "present_in_production" (un solo oráculo decide y narra).
 
     FASE-12B: Cross-references audit schema data with presence results to detect
     divergences (e.g., SitePresenceChecker reports EXISTS but audit says
@@ -203,6 +205,15 @@ def verify_proposal_asset_alignment(
         AlignmentReport with aligned, missing, present_in_production, redundant, and low_quality lists.
     """
     report = AlignmentReport()
+
+    # FASE-F (A4): un solo oráculo de presencia. La narrativa de este reporte
+    # usa el MISMO criterio canónico (``is_present_in_production``,
+    # PRODUCTION_PRESENT_STATUSES) con el que deciden ``AlignmentResult``,
+    # ``AssetAlignmentMatrix`` y ``committed_services_from_entries``. Antes
+    # este reporte clasificaba con ``== "exists"`` (oráculo estricto): un
+    # asset ``exists_with_issues`` se narraba como missing mientras el gate
+    # lo contaba presente — dossier §9.1 A4 / V15.
+    from modules.asset_generation.site_presence_checker import is_present_in_production
 
     # Default to all promised services if none specified
     services_to_check = proposal_services if proposal_services else ALL_PROMISED_SERVICES
@@ -267,11 +278,12 @@ def verify_proposal_asset_alignment(
             if presence_status is not None:
 
                 # FASE-12B: Coherence check — detect divergence between audit and presence
-                # When audit says hotel_schema_detected=false but presence says EXISTS,
-                # this is a false positive (e.g., org schema misidentified as hotel schema).
-                # Mark as divergent missing instead of present_in_production.
+                # When audit says hotel_schema_detected=false but presence claims the
+                # asset exists (exists OR exists_with_issues — criterio canónico),
+                # this is a false positive (e.g., org schema misidentified as hotel
+                # schema). Mark as divergent missing instead of present_in_production.
                 if (expected_asset_type == "hotel_schema"
-                        and presence_status_value == "exists"
+                        and is_present_in_production(presence_status_value)
                         and audit_schema is not None
                         and not audit_schema.get("hotel_schema_detected", True)):
                     report.missing.append(ServiceAlignment(
@@ -289,7 +301,10 @@ def verify_proposal_asset_alignment(
                     ))
                     continue
 
-                if presence_status_value == "exists":  # PresenceStatus.EXISTS
+                # FASE-F (A4): clasificación con el criterio canónico ÚNICO —
+                # exists Y exists_with_issues son presencia en producción
+                # (decisión FASE-SR-E H7/L-SR3, sin modificar).
+                if is_present_in_production(presence_status_value):
                     # Asset already exists in production — mark as present_in_production, not missing
                     report.present_in_production.append(ServiceAlignment(
                         service_name=service_name,

@@ -223,11 +223,17 @@ class CoherenceGate:
         
         coherence_score = max(0.0, min(1.0, float(coherence_score)))
         
-        # 2. Determinar si pasa el umbral
-        passed = coherence_score >= self.threshold
+        # 2. Determinar si pasa el umbral — FASE-F (N11/P9): vía el veredicto
+        # canónico; un is_coherent=False declarado en assessment_data también
+        # falla aquí (misma regla que publication_gates._coherence_gate).
+        assessment_data = assessment_data or {}
+        passed = coherence_verdict_passes(
+            coherence_score,
+            self.threshold,
+            assessment_data.get("is_coherent"),
+        )
         
         # 3. Identificar gaps si los hay
-        assessment_data = assessment_data or {}
         gaps = self._identify_gaps(coherence_score, assessment_data)
         
         # 4. Generar sugerencias de mejora
@@ -235,6 +241,12 @@ class CoherenceGate:
         
         # 5. Determinar estado de publicación
         status, pub_status = self._determine_status(coherence_score)
+        # FASE-F (N11/P9): el veredicto manda — score sobre umbral con
+        # veredicto binario negativo no puede quedar CERTIFIED (si el score
+        # estuviera bajo el umbral, el status ya no es CERTIFIED).
+        if not passed and status is CoherenceStatus.CERTIFIED:
+            status = CoherenceStatus.REVIEW
+            pub_status = PublicationStatus.REQUIRES_REVIEW
         
         return CoherenceGateResult(
             coherence_score=coherence_score,
@@ -300,6 +312,12 @@ class CoherenceGate:
         
         # 5. Determinar estado de publicación
         status, pub_status = self._determine_status(coherence_score)
+        # FASE-F (N11/P9): el veredicto manda — score sobre umbral con
+        # veredicto binario negativo no puede quedar CERTIFIED (si el score
+        # estuviera bajo el umbral, el status ya no es CERTIFIED).
+        if not passed and status is CoherenceStatus.CERTIFIED:
+            status = CoherenceStatus.REVIEW
+            pub_status = PublicationStatus.REQUIRES_REVIEW
         
         # 6. Convertir checks del validator a dicts serializables
         checks_dicts = [
@@ -513,6 +531,31 @@ class CoherenceGate:
             CoherenceGate con umbrales canonicos
         """
         return CoherenceGate()
+
+
+def coherence_verdict_passes(
+    coherence_score: float,
+    threshold: float,
+    declared_is_coherent: Optional[bool],
+) -> bool:
+    """FASE-F (N11/P9): ÚNICA definición del veredicto de publicación por coherencia.
+
+    El score NO basta solo: si el CoherenceValidator declaró
+    ``is_coherent=False`` (checks de severidad error sin resolver, p. ej.
+    ``assets_are_justified`` 3/4 en SalentoReal), el gate falla aunque el
+    score compile el umbral. ``declared_is_coherent=None`` (campo ausente en
+    assessments/artefactos legacy) conserva el comportamiento histórico por
+    score — vacío ≠ ausente (L-SR5): solo un ``False`` explícito bloquea.
+
+    Consumido por ``publication_gates._coherence_gate`` (conexión del módulo,
+    antes huérfano — dossier H10/N11). ``execute_from_validator`` ya aplicaba
+    esta semántica vía ``report.is_coherent``.
+    """
+    if coherence_score < threshold:
+        return False
+    if declared_is_coherent is False:
+        return False
+    return True
 
 
 def check_coherence(

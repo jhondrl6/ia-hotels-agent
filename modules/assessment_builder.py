@@ -57,6 +57,9 @@ class AssessmentPayload:
 
     # Coherence
     coherence_score: float = 0.0
+    # FASE-F (N11/P9): veredicto binario del CoherenceValidator. None =
+    # campo ausente (assessments legacy sin reporte) — vacío ≠ ausente.
+    is_coherent: Optional[bool] = None
 
     # Pain Ledger / FASE-0
     pain_ledger: List[Dict] = field(default_factory=list)
@@ -141,26 +144,29 @@ class AssessmentBuilder:
     def with_coherence(
         self, pre_coherence_report: Any, asset_result: Any
     ) -> "AssessmentBuilder":
+        # FASE-F (N11/P9): extraer score Y veredicto de la MISMA fuente
+        # canónica (final_coherence_report preferred, DT4-N4). El veredicto
+        # binario viaja al assessment para que _coherence_gate lo respete.
+        source = None
         if asset_result:
-            # DT4-N4: preferir final_coherence_report (canonical source) si existe
             if (
                 hasattr(asset_result, "final_coherence_report")
                 and asset_result.final_coherence_report
             ):
-                self._payload.coherence_score = (
-                    asset_result.final_coherence_report.overall_score
-                )
+                source = asset_result.final_coherence_report
+                self._payload.coherence_score = source.overall_score
             elif (
                 hasattr(asset_result, "coherence_report")
                 and asset_result.coherence_report
             ):
-                self._payload.coherence_score = (
-                    asset_result.coherence_report.overall_score
-                )
+                source = asset_result.coherence_report
+                self._payload.coherence_score = source.overall_score
             else:
                 self._payload.coherence_score = 0.0
         else:
             self._payload.coherence_score = 0.0
+        verdict = getattr(source, "is_coherent", None) if source is not None else None
+        self._payload.is_coherent = None if verdict is None else bool(verdict)
         # NO setear coherence_report en el payload (0 consumidores post-simplificación)
         return self
 

@@ -1549,3 +1549,85 @@ class TestFASEDGateSeverity:
     def test_blocking_gate_names_tiene_once_entradas(self):
         assert len(BLOCKING_GATE_NAMES) == 11
         assert len(ADVISORY_GATE_NAMES) == 2
+
+
+# =============================================================================
+# Test Class 12: TestFaseFCoherenceRespetaIsCoherent (N11/P9)
+# =============================================================================
+
+class TestFaseFCoherenceRespetaIsCoherent:
+    """FASE-F (N11/P9): el gate de coherencia respeta el veredicto binario.
+
+    Reproducción SalenteReal: los cuatro artefactos declaraban is_coherent=false
+    con score 0.88 y el paquete salió READY_FOR_PUBLICATION — el gate solo leía
+    el score. Ahora el veredicto del validador manda; el umbral 0.8 queda intacto.
+    """
+
+    def test_score_088_con_is_coherent_false_bloquea(self, orchestrator):
+        """Reproducción anti-N11: score >= umbral + is_coherent=False ⟹ BLOCKED."""
+        assessment = {
+            "coherence_score": 0.88,
+            "is_coherent": False,
+        }
+
+        result = orchestrator._coherence_gate(assessment)
+
+        assert result.passed is False
+        assert result.status == GateStatus.BLOCKED
+        assert result.value == 0.88
+        assert "is_coherent=False" in result.message
+        assert result.details["is_coherent"] is False
+
+    def test_score_088_con_is_coherent_true_pasa(self, orchestrator):
+        """Veredicto True con score sobre umbral ⟹ PASADO (sin cambio de conducta)."""
+        assessment = {
+            "coherence_score": 0.88,
+            "is_coherent": True,
+        }
+
+        result = orchestrator._coherence_gate(assessment)
+
+        assert result.passed is True
+        assert result.status == GateStatus.PASSED
+
+    def test_sin_is_coherent_mantiene_comportamiento_por_score(self, orchestrator):
+        """Vacío ≠ ausente (L-SR5): assessments legacy sin is_coherent no cambian."""
+        assessment = {"coherence_score": 0.85}
+
+        result = orchestrator._coherence_gate(assessment)
+
+        assert result.passed is True
+        assert result.status == GateStatus.PASSED
+
+    def test_score_bajo_umbral_con_is_coherent_true_falla(self, orchestrator):
+        """El umbral 0.8 NO se relaja: 0.79 + veredicto True ⟹ no pasa."""
+        assessment = {
+            "coherence_score": 0.79,
+            "is_coherent": True,
+        }
+
+        result = orchestrator._coherence_gate(assessment)
+
+        assert result.passed is False
+        assert result.status == GateStatus.FAILED  # 0.5 <= score < 0.8
+        assert result.value == 0.79
+
+    def test_ready_for_publication_con_is_coherent_false_es_not_ready(self):
+        """Extremo a extremo: la reprodución SalenteReal ya no sale READY."""
+        assessment = {
+            "coherence_score": 0.88,
+            "is_coherent": False,
+            "evidence_coverage": 0.96,
+            "hard_contradictions": 0,
+            "critical_recall": 0.95,
+        }
+
+        gate_results = run_publication_gates(assessment)
+        report = check_publication_readiness(assessment, gate_results)
+
+        assert report["ready"] is False
+        assert report["status"] == "NOT_READY"
+        coherence_results = [
+            r for r in report["gate_results"] if r["gate_name"] == "coherence"
+        ]
+        assert coherence_results and coherence_results[0]["passed"] is False
