@@ -2799,6 +2799,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 {
                     "asset_type": a.asset_type,
                     "confidence_score": a.confidence_score if hasattr(a, 'confidence_score') else 0.0,
+                    "path": a.path or None,  # FASE-E (A6): asset_path deja de ser null para LINKED
                 }
                 for a in asset_result.generated_assets
             ]
@@ -3153,6 +3154,20 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     from modules.quality_gates import DeliveryQualityReportGenerator
 
     v4_audit_dir = output_dir / hotel_id / "v4_audit"
+
+    # FASE-E (A2): persistir el snapshot canónico ya propagado (DT4-R2) —
+    # el oráculo de presencia (decide no_breach/unresolved/coverage_ratio/G9)
+    # deja de ser inauditable post-hoc. Un solo archivo por corrida.
+    try:
+        from modules.asset_generation.site_presence_adapter import (
+            save_site_presence_snapshot,
+        )
+        site_presence_snapshot_path = v4_audit_dir / "site_presence_snapshot.json"
+        save_site_presence_snapshot(site_presence_snapshot, site_presence_snapshot_path)
+        print(f"   📄 SitePresence snapshot: {site_presence_snapshot_path}")
+    except Exception as e:
+        print(f"   [WARN] SitePresence snapshot persistence failed: {e}")
+
     quality_generator = DeliveryQualityReportGenerator()
 
     quality_report_path = v4_audit_dir / "delivery_quality_report.json"

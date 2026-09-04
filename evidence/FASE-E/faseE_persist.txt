@@ -1,0 +1,42 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 10 items
+
+tests/test_site_presence_persistence.py::test_writer_escribe_el_archivo PASSED [ 10%]
+tests/test_site_presence_persistence.py::test_no_reconstruccion_campos_extra_sobreviven PASSED [ 20%]
+tests/test_site_presence_persistence.py::test_utf8_acentos_enie_sin_escape_ascii PASSED [ 30%]
+tests/test_site_presence_persistence.py::test_ruta_fallo_checker_snapshot_vacio_canonico PASSED [ 40%]
+tests/test_site_presence_persistence.py::test_snapshot_persistido_alimenta_los_oraculos PASSED [ 50%]
+tests/quality_gates/test_delivery_asset_path.py::test_linked_con_path_poblado PASSED [ 60%]
+tests/quality_gates/test_delivery_asset_path.py::test_linked_sin_archivoqueda_null_y_no_inventa PASSED [ 70%]
+tests/quality_gates/test_delivery_asset_path.py::test_missing_asset_ruta_null PASSED [ 80%]
+tests/quality_gates/test_delivery_asset_path.py::test_dict_sin_clave_path_no_inventa_ruta PASSED [ 90%]
+tests/quality_gates/test_delivery_asset_path.py::test_delivery_report_consumer_lee_asset_path PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 10 passed, 8 warnings in 1.39s ========================

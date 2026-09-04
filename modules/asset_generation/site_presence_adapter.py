@@ -17,7 +17,9 @@ This adapter is the SINGLE entry point — compute once, propagate everywhere.
 from __future__ import annotations
 
 import dataclasses
+import json
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
 
@@ -160,3 +162,20 @@ def _isoformat(dt: Optional[datetime]) -> str:
         return dt.isoformat()
     except Exception:
         return str(dt)
+
+
+SNAPSHOT_VERSION = "1.0"
+
+
+def save_site_presence_snapshot(snapshot: Dict[str, Any], path) -> None:
+    """FASE-E (A2): persiste el snapshot canónico YA propagado (DT4-R2).
+
+    Serializa el objeto tal cual — NO llama normalize_site_presence ni
+    reconstruye nada (DT4-N2: los gates validan, no descubren ni
+    reconstruyen la evidencia primaria). Un solo archivo por corrida.
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"snapshot_version": SNAPSHOT_VERSION, "snapshot": snapshot}
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False, sort_keys=True)
