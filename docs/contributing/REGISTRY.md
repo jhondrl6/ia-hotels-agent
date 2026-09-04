@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-09-03
+> **Ultima actualizacion:** 2026-09-04
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 461
+> **Total fases completadas:** 462
 
 ---
 
@@ -10785,6 +10785,23 @@ _Ninguno_
 
 ## FASE-F - 2026-09-03
 **Descripcion:** Oraculo unico presencia (A4) + skipped!=passed (A1) + gate respeta is_coherent (N11/P9)
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-G - 2026-09-04
+**Descripcion:** Ceguera de gates: doc_audit_consistency cableado (NR1) + critical_recall no vacuo (NR2) + escotilla V5 sin revertir BUG-6 (NR3) + escotilla V9 ledger vacio unificado (NR4)
 
 ### Archivos Nuevos
 _Ninguno_

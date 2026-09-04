@@ -28,7 +28,7 @@
 | **D** | ✅ Completada | 2026-09-03 | **F**, **I** — severidad explícita 11 blocking + 2 advisory con única fuente en `publication_gates.py` |
 | **E** | ✅ Completada | 2026-09-03 | **F**, **I** — oráculo persistido (`save_site_presence_snapshot`, passthrough) y `asset_path` poblado para LINKED (causa raíz en el caller de `main.py`) |
 | **F** | ✅ Completada | 2026-09-03 | **G**, **H**, **I** — oráculo único (`is_present_in_production` decide y narra; el consumo directo de la partición de C reconciliado con el DTO), `NOT_EVALUATED` ≠ passed con defaults G9 unificados, gate de coherencia respeta `is_coherent` (`coherence_verdict_passes()`, decisión (a): respetar), `publication_state.py` eliminado (H8). Código en `23d0978` |
-| G | ⬜ Pendiente | — | H, I |
+| **G** | ✅ Completada | 2026-09-04 | **H**, **I** — ceguera de gates cerrada (NR1-NR4): `doc_audit_consistency` cableado con `audit_data` y `NOT_EVALUATED` en datos ausentes, `critical_recall` no vacuo (PageSpeed ERROR + banda GEO critical califican), escotillas V5/V9 cerradas sin revertir BUG-6. Código en `c317cda`. ⚠️ **`pain_solution_mapper.py` NO fue tocado por G** (predicción de la matriz §3 era falsa — G2 vive en `v4_comprehensive.py`) ⟹ **H1/H3 sin orden forzoso real** |
 | H | ⬜ Pendiente | — | I |
 | I | ⬜ Pendiente | — | VERIFY |
 | VERIFY | ⬜ Pendiente | — | RELEASE |
@@ -324,6 +324,56 @@
   (`assessment_builder.py`, poblado en `with_coherence` desde `final_coherence_report`,
   preferido sobre `coherence_report` — DT4-N4).
 
+**Notas de ejecución de FASE-G** (relevantes para las fases que heredan sus archivos):
+
+- **G2 vive en `modules/auditors/v4_comprehensive.py`, NO en `pain_solution_mapper.py`** — la
+  predicción de la matriz §3 («G amplía `_identify_critical_issues` que lo consume») era falsa:
+  el detector está en `v4_comprehensive.py:1830`. `pain_solution_mapper.py` quedó intacto
+  ⟹ **H1/H3 (V13/V8) pierden el orden forzoso G→H por conflicto de archivo**: pueden correr
+  sobre el working tree de G sin esperarlo (los demás quirúrgicos tampoco lo comparten).
+- **Cableado G1/G2 — 2 puntos de inyección nuevos**: `AssessmentPayload.audit_data` (campo
+  crudo, poblado por `builder.with_audit_data(audit_result.to_dict())` en `main.py` ~:2935) y
+  `builder.with_geo_flow(json de `output_dir/hotel_id/v4_audit/geo_flow_result.json`)`.
+  El helper **`geo_band_critical_issue`** es módulo-level en `v4_comprehensive.py` (compartido
+  por el detector y el builder) — **no duplicarlo** (L-NC4). `main.py` tolera JSON ausente
+  (WARN y sigue): GEO crítico solo califica si el artefacto existe.
+- **SR-H2 condicionado (G2)**: el atajo favorable (critical_issues=[] + audit ejecutado →
+  recall 1.0) solo se mantiene si `audit_data.performance.status != "ERROR"`; con el eje caído
+  y sin issues registrados, recall = **0.0** y `_coverage_gate`-análogo BLOCKED. Con PageSpeed
+  ERROR + GEO 29/100 (SalentoReal), la corrida FASE-I producirá `critical_recall` BLOCKED —
+  **es el perfil esperado post-refactor, no una regresión**; comparar contra esto, no contra
+  13/13 en verde.
+- **G3 — péndulo BUG-6 resuelto por distinción de estados, no por reversión**: `ASSET_GENERATED`
+  SIGUE en `_JUSTIFIED_STATUSES`; la escotilla vive ahora en la regla de mención del loop de
+  coverage (mención en `diagnostic_pain_ids`/`proposal_pain_ids` ⟹ covered). El caso
+  «existe en producción y basta» es `VERIFIED_IN_SITE` (primera clase FASE-P1-D, preservada por
+  el reconciler) — el fixture anti-reversión (`evidence/FASE-G/faseG_anti_reveresion_fixture.py`)
+  corre el gate REAL y muestra a VERIFIED_IN_SITE silencioso pasando con `ASSET_GENERATED`
+  presente en la lista. **El gate NO re-detecta brechas** (DT4-N2 intacto).
+- **G4 — unificación vacío tras normalización**: el gate normaliza ledger dict/lista antes de
+  decidir, así que hay UNA rama por semántica, no una por forma: `resolved` vacío + `original`
+  no vacío ⟹ BLOCKED `coverage_basis=reconciler_dropped_entries`; vacío legítimo ⟹ PASSED con
+  traza `ledger_present_zero_entries` + `reconciler_ran`. `None` sigue siendo «no evaluado por
+  el reconciler» → fallback.
+- **Archivos nuevos que ninguna fase posterior debe duplicar**:
+  `tests/auditors/test_v4_comprehensive.py` (13 tests del detector: PageSpeed ERROR, GEO banda,
+  criterios legacy intactos), `tests/quality_gates/test_coverage_gate_v5.py` (15 tests V5+V9,
+  incluye el anti-reversión), `tests/quality_gates/test_doc_audit_consistency_gate.py`
+  (REESCRITO: 12 tests, contrato FAILED/NOT_EVALUATED sustituye al WARNING-mode pre-G).
+- **L-A6 — citas desplazadas por G**: `publication_gates.py` creció (NOT_EVALUATED en `__init__`
+  /`run_all`/summary, `_doc_audit_consistency_gate` reescrito ~:1654-1837, G4 en
+  `_coverage_gate` ~:1487-1521, G3 en el loop ~:1549, `_evident_critical_missed` ~:2073,
+  `_extract_critical_recall` ~:2099). **Usar símbolos**, no números.
+- **Lo que G NO tocó (sigue abierto para H)**: `coherence_validator.py`, `delivery_quality_report.py`
+  (F7 divulgación de gates en el DeliveryQualityReport), `v4_proposal_generator.py`
+  (`_generate_asset_quality_table:1730`, S-B12→H), `pain_solution_mapper.py` (guard `__iter__`
+  V7 + dedup V8). Seguimientos **S-C3/S-E2/S-F2** siguen abiertos → H (G no los cerró: la
+  interacción quedó registrada en DA, no implementada).
+- **Deuda del fixture citado**: el plan y el prompt G citaban
+  `audit_report_20260831_122803.json`; el real es `audit_report_20260831_122757.json`
+  (`output/v4_complete/*/v4_audit/`). Los tests usan fixtures sintéticos alineados al `to_dict()`
+  real del auditor.
+
 ## 1. Grafo de dependencias
 
 ```
@@ -410,7 +460,7 @@
 | **E** | B | A2 persiste el snapshot que los consumidores usan para resolver presencia; A6 puebla `asset_path` de assets cuya identidad fija la biyección | F, I |
 | **F** | C, E | F1 (oráculo único) consume el snapshot persistido por E1 y opera sobre una matriz donde C ya hizo `no_breach = 0`. F3 (N11) interactúa con la severidad de D | G, H, I |
 | **G** | F | G3/G4 cierran escotillas del `_coverage_gate` cuyo criterio de presencia ya unificó F1; cerrarlas antes fijaría el criterio doble | H, I |
-| **H** | B, F, **G** | H1 (V7) toca `pain_solution_mapper.py` que G también toca ⟹ **orden forzoso G→H**. H3 (V8) depende de la biyección de B | I |
+| **H** | B, F, ~~G~~ | ⚠️ **Predicción corregida 2026-09-04**: el orden forzoso G→H era por conflicto de archivo (H1 toca `pain_solution_mapper.py` que se predecía también tocado por G) — **G no lo tocó** (G2 vive en `v4_comprehensive.py`), así que ya no hay orden forzoso por archivo. H sigue heredando la biyección de B (H3) y el contexto de F | I |
 | **I** | A-H ✅ | Es la validación integrada; correrla antes mediría un sistema a medio refactorizar | VERIFY |
 | **VERIFY** | I | Certifica contra evidencia real de la corrida | RELEASE |
 | **RELEASE** | VERIFY | El CHANGELOG y GUIA_TECNICA se alimentan de `09` y `10`, que VERIFY completa | — |
@@ -424,8 +474,8 @@ D y E están fuera del camino crítico y pueden ejecutarse en cualquier hueco tr
 
 | Archivo | Fases que lo tocan | Orden forzoso | Naturaleza del conflicto |
 |---------|--------------------|---------------|--------------------------|
-| `modules/commercial_documents/pain_solution_mapper.py` | **B**, **G**, **H** | B → G → H | B edita `PAIN_SOLUTION_MAP` (`:60`) y `detect_pains` (`:339`); G amplía `_identify_critical_issues` que lo consume; H1 reemplaza el guard `__iter__` (`:453`) y H3 deduplica `low_organic_visibility` (`:677-701`) |
-| `modules/quality_gates/publication_gates.py` | **D**, **C**, **F**, **G** | D → C → F → G | D reestructura `self.gates` (`:181-195`) y `check_publication_readiness` (`:1919`) — ✅ cerrado; F3 modifica `_coherence_gate` (`:458`); G1/G3/G4 modifican `_doc_audit_consistency_gate` (`:1464`) y `_coverage_gate` (`:1244`). ⚠️ **C también lo editó, fuera de la predicción** (la matriz no lo listaba): **3 hunks `:979-1011`**, todos dentro de `_proposal_asset_alignment_gate` — (1) `assessment.get("pain_ledger") or []` → sin `or []`, que era el sitio de colapso **aguas arriba** y el que convirtió «sin ledger» en «resuelto con 0 brechas» (27 fallos en cadena hasta quitarlo), (2) `if pain_ledger:` → `if pain_ledger is not None:`, (3) el build de la matriz recibe `site_presence_report` (sin esto, gate y delivery report divergían y rompían AC3). **Ni la severidad de D, ni `:458`, ni `:1244`, ni `:1464` fueron tocados** |
+| `modules/commercial_documents/pain_solution_mapper.py` | **B**, **H** | B → H | ⚠️ **Predicción corregida 2026-09-04**: la matriz decía «B, G, H» porque se esperaba que G amplía `_identify_critical_issues` aquí — pero el detector vive en `modules/auditors/v4_comprehensive.py:1830` y **G no tocó este archivo** (verificado en `git show --stat c317cda`). B edita `PAIN_SOLUTION_MAP` (`:60`) y `detect_pains` (`:339`) — ✅ cerrado; H1 reemplaza el guard `__iter__` (`:447` tras B) y H3 deduplica `low_organic_visibility` (`:677-701`) |
+| `modules/quality_gates/publication_gates.py` | **D**, **C**, **F**, **G** | D → C → F → G | ✅ **Cerrado 2026-09-04 con G.** D reestructura `self.gates` (`:181-195`) y `check_publication_readiness` (`:1919`) — ✅ cerrado; F3 modifica `_coherence_gate`; G1/G3/G4 modificaron `_doc_audit_consistency_gate` y `_coverage_gate` (posiciones post-F en las Notas de ejecución de G) y añadieron NOT_EVALUATED a `__init__`/`run_all`/summary. ⚠️ **C también lo editó, fuera de la predicción** (la matriz no lo listaba): **3 hunks `:979-1011`**, todos dentro de `_proposal_asset_alignment_gate` — (1) `assessment.get("pain_ledger") or []` → sin `or []`, que era el sitio de colapso **aguas arriba** y el que convirtió «sin ledger» en «resuelto con 0 brechas» (27 fallos en cadena hasta quitarlo), (2) `if pain_ledger:` → `if pain_ledger is not None:`, (3) el build de la matriz recibe `site_presence_report` (sin esto, gate y delivery report divergían y rompían AC3) |
 | `modules/asset_generation/proposal_asset_alignment.py` | **A**, **C** | A → C | ✅ **Cerrado 2026-09-03.** A3 migró `PROPOSAL_SERVICE_TO_ASSET` (`:22`) al canónico; C3 modificó los dos builders (`:575`, `:748`) — pero **no parcheó sus rutas de skip silencioso** (`:609-612`, `:792-794`): las **eliminó** extrayendo una única `classify_promised_services()` que ambos consumen, así que ya no existen dos caminos que puedan divergir (A5 curado, no esquivado). Diff real: 359 líneas |
 | `modules/quality_gates/alignment_result.py` | ~~**C**~~, **F** | — | ⚠️ **Predicción corregida 2026-09-03**: se esperaba que C3 tocara `_from_entries` (`:222-276`) y `compute_unresolved` (`:175-212`), pero **C no modificó este archivo de producción** — verificado con `git show --stat c1bf5e2` (solo actualizó su test, `tests/quality_gates/test_alignment_result.py`). La región queda **libre para F1**, que ya no tiene conflicto con C. Lo que F1 **sí** hereda: la presencia ahora se resuelve **aguas arriba**, dentro de `classify_promised_services()` (`_presence_exists`), así que `_presence_resolved` (`:62`) puede haber quedado redundante para artefactos post-C → decidir en F1 junto a A4 |
 | `modules/quality_gates/delivery_quality_report.py` | **C** (comentario), ~~**E**~~, **F** | C → F | ⚠️ **Predicción corregida 2026-09-03**: se esperaba que E2 editara este archivo, pero la causa raíz del `asset_path` null estaba en el **caller** (`main.py`, dicts de `assets_for_quality` sin clave `path`) — E no tocó este archivo; su consumo de `asset_path` (`:244-246`) ya funcionaba y se verificó E2E en `tests/quality_gates/test_delivery_asset_path.py`. F2 modifica la región de skip (`:251-255`), el summary (`:310-319`) y los defaults (`:325`) — adyacentes. C dejó un hunk `:230-243` sin cambio de comportamiento (comentario «la matriz JSON nunca tiene `PRESENT_IN_PRODUCTION`» corregido, cross-reference conservado para artefactos pre-C). F hereda esa región ya reescrita |
