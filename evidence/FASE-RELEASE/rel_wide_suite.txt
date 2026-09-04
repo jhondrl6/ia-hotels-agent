@@ -1,0 +1,409 @@
+........................................................................ [  1%]
+................................................................s....... [  3%]
+........................................................................ [  5%]
+........................................................................ [  7%]
+........................................................................ [  9%]
+........................................................................ [ 10%]
+........................................................................ [ 12%]
+........................................................................ [ 14%]
+...............................................s........................ [ 16%]
+........................................................................ [ 18%]
+........................................................................ [ 20%]
+........................................................................ [ 21%]
+........................................................................ [ 23%]
+........................................................................ [ 25%]
+.......................................................FFFFF............ [ 27%]
+........................................................................ [ 29%]
+...........................................................s............ [ 31%]
+........................................................................ [ 32%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+...................................................FFFFFFFFEEEEEEEEsEsss [ 38%]
+........................................................................ [ 40%]
+........................................................................ [ 42%]
+.........x.............................................................. [ 43%]
+........................................................................ [ 45%]
+........................................................................ [ 47%]
+.......................................................................F [ 49%]
+........................................................................ [ 51%]
+........................................................................ [ 53%]
+........................................................................ [ 54%]
+........................................................................ [ 56%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 65%]
+........................................................................ [ 67%]
+........................................................................ [ 69%]
+.......................................................................s [ 71%]
+.....................................................................s.. [ 73%]
+...s.............ss..................................................... [ 75%]
+.....................................................s.................. [ 76%]
+........................................................................ [ 78%]
+.................F.x.................................F.................. [ 80%]
+.........F............................................sssss..s.......... [ 82%]
+......................sss.s........s.................................s.. [ 84%]
+........................................................................ [ 86%]
+........................................................ss.............. [ 87%]
+........................................................................ [ 89%]
+........................................................................ [ 91%]
+.................sss.....F.....F........................................ [ 93%]
+.................................................s...................... [ 95%]
+........................................................................ [ 97%]
+........................................................................ [ 98%]
+..........................................xx                             [100%]
+=================================== ERRORS ====================================
+___ ERROR at setup of TestHandlerReturnsOnboardingADR.test_handler_success ____
+tests\e2e\test_onboarding_to_harness_pipeline.py:152: in handler_result
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+__ ERROR at setup of TestHandlerReturnsOnboardingADR.test_adr_cop_is_330000 ___
+tests\e2e\test_onboarding_to_harness_pipeline.py:152: in handler_result
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestHandlerReturnsOnboardingADR.test_adr_source_is_user_provided _
+tests\e2e\test_onboarding_to_harness_pipeline.py:152: in handler_result
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestHandlerReturnsOnboardingADR.test_adr_source_is_not_handler _
+tests\e2e\test_onboarding_to_harness_pipeline.py:152: in handler_result
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestHandlerReturnsOnboardingADR.test_adr_source_is_not_regional _
+tests\e2e\test_onboarding_to_harness_pipeline.py:152: in handler_result
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestHandlerRespectsOnboardingOccupancy.test_occupancy_not_overwritten _
+tests\e2e\test_onboarding_to_harness_pipeline.py:190: in handler_result
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestHandlerRespectsOnboardingOccupancy.test_scenarios_exist _
+tests\e2e\test_onboarding_to_harness_pipeline.py:190: in handler_result
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestValidationSummaryConfidence.test_user_provided_adr_yields_estimated_or_verified_confidence _
+tests\e2e\test_onboarding_to_harness_pipeline.py:218: in handler_result
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ ERROR at setup of TestJSONAdrSourceNotHandler.test_adr_resolution_source_not_handler _
+tests\e2e\test_onboarding_to_harness_pipeline.py:248: in handler_result
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+================================== FAILURES ===================================
+_________ TestAssetQualityTable.test_proposal_includes_quality_table __________
+tests\commercial_documents\test_proposal_confidence_disclosure.py:23: in test_proposal_includes_quality_table
+    assert "| Nivel |" in table
+E   AssertionError: assert '| Nivel |' in '| Entregable | Momento de entrega | Qu\xe9 incluye |\\n|------------|-------------------|-------------|\\n| SEO Local | \u2705 ...or a la firma |\\n| Optimizaci\xf3n para IA Generativa | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |'
+______ TestAssetQualityTable.test_quality_table_reflects_real_confidence ______
+tests\commercial_documents\test_proposal_confidence_disclosure.py:52: in test_quality_table_reflects_real_confidence
+    assert "En preparacion" in table
+E   AssertionError: assert 'En preparacion' in '| Entregable | Momento de entrega | Qu\xe9 incluye |\\n|------------|-------------------|-------------|\\n| SEO Local | \u2705 ...or a la firma |\\n| Optimizaci\xf3n para IA Generativa | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |'
+______ TestAssetQualityTable.test_missing_asset_shows_incluido_en_su_kit ______
+tests\commercial_documents\test_proposal_confidence_disclosure.py:79: in test_missing_asset_shows_incluido_en_su_kit
+    schema_line = [l for l in lines if "Datos Estructurados" in l][0]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range
+_______ TestAssetQualityTable.test_none_assets_shows_incluido_en_su_kit _______
+tests\commercial_documents\test_proposal_confidence_disclosure.py:89: in test_none_assets_shows_incluido_en_su_kit
+    assert "Incluido en su kit" in table
+E   AssertionError: assert 'Incluido en su kit' in '| Entregable | Momento de entrega | Qu\xe9 incluye |\\n|------------|-------------------|-------------|\\n| SEO Local | \u2705 ...or a la firma |\\n| Optimizaci\xf3n para IA Generativa | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |'
+_______ TestAssetQualityTable.test_low_confidence_shows_en_optimizacion _______
+tests\commercial_documents\test_proposal_confidence_disclosure.py:105: in test_low_confidence_shows_en_optimizacion
+    assert "En optimizacion" in table
+E   AssertionError: assert 'En optimizacion' in '| Entregable | Momento de entrega | Qu\xe9 incluye |\\n|------------|-------------------|-------------|\\n| SEO Local | \U0001f527 ...or a la firma |\\n| Optimizaci\xf3n para IA Generativa | \u2705 D\xeda 1 (Activaci\xf3n inicial) | Preparacion posterior a la firma |'
+__________ TestOnboardingYAMLLoad.test_yaml_loads_with_expected_adr ___________
+tests\e2e\test_onboarding_to_harness_pipeline.py:92: in test_yaml_loads_with_expected_adr
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_______ TestOnboardingYAMLLoad.test_yaml_loads_with_expected_occupancy ________
+tests\e2e\test_onboarding_to_harness_pipeline.py:99: in test_yaml_loads_with_expected_occupancy
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_________ TestOnboardingYAMLLoad.test_yaml_loads_with_expected_rooms __________
+tests\e2e\test_onboarding_to_harness_pipeline.py:105: in test_yaml_loads_with_expected_rooms
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+___________ TestOnboardingYAMLLoad.test_yaml_has_required_metadata ____________
+tests\e2e\test_onboarding_to_harness_pipeline.py:110: in test_yaml_has_required_metadata
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+___ TestHarnessPayloadConstruction.test_payload_includes_user_provided_adr ____
+tests\e2e\test_onboarding_to_harness_pipeline.py:121: in test_payload_includes_user_provided_adr
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ TestHarnessPayloadConstruction.test_payload_occupancy_source_is_onboarding __
+tests\e2e\test_onboarding_to_harness_pipeline.py:126: in test_payload_occupancy_source_is_onboarding
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_ TestHarnessPayloadConstruction.test_payload_occupancy_rate_matches_onboarding _
+tests\e2e\test_onboarding_to_harness_pipeline.py:131: in test_payload_occupancy_rate_matches_onboarding
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+_______ TestHarnessPayloadConstruction.test_payload_has_required_fields _______
+tests\e2e\test_onboarding_to_harness_pipeline.py:136: in test_payload_has_required_fields
+    onboarding = load_onboarding_yaml()
+                 ^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_onboarding_to_harness_pipeline.py:29: in load_onboarding_yaml
+    with open(p, encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\output\\clientes\\donalfonsohotel_onboarding.yaml'
+______ TestCalculatePriceWithShadowFunction.test_function_default_flags _______
+tests\financial_engine\test_pricing_resolution_wrapper.py:606: in test_function_default_flags
+    assert result.monthly_price_cop == 2_500_000  # legacy 5% of 50M
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: assert 437500.0 == 2500000
+E    +  where 437500.0 = PricingResolutionResult(monthly_price_cop=437500.0, tier='boutique', pain_ratio=0.0088, is_compliant=False, expected_l...0000.0, 'max_price': 2500000.0, 'value_capture_cap': 0.5, 'operational_floor': 400000.0, 'pain_ratio_gate_max': 0.32}}).monthly_price_cop
+______________ TestNoCOPCOPRegression.test_no_cop_cop_in_modules ______________
+tests\test_cop_cop_regression.py:52: in test_no_cop_cop_in_modules
+    assert len(cop_cop_found) == 0, (
+E   AssertionError: Found 'COP COP' in modules:
+E     modules\quality_gates\publication_gates.py:177
+E   assert 1 == 0
+E    +  where 1 = len(['modules\\quality_gates\\publication_gates.py:177'])
+________ TestDiagnosticGEOMetrics.test_diagnostic_includes_geo_metrics ________
+tests\test_diagnostic_geo_metrics.py:68: in test_diagnostic_includes_geo_metrics
+    assert "Métricas de Optimización para IA" in result
+E   AssertionError: assert 'Métricas de Optimización para IA' in '\n|| Métrica | Score | Detalle | Estado ||\n|---------|-------|---------|--------|\n| Accesibilidad IA | 0.65/1.00 | ...Estas métricas evalúan cómo los motores de IA (ChatGPT, Claude, Perplexity) pueden descubrir y citar su contenido.\n\n'
+___ TestEvidenceTierIntegration.test_breakdown_preserves_hotel_data_sources ___
+tests\test_evidence_tier.py:255: in test_breakdown_preserves_hotel_data_sources
+    assert breakdown.ota_commission_source == "industry_standard_15pct"
+E   AssertionError: assert 'config/finan...pedia 18-25%)' == 'industry_standard_15pct'
+E     
+E     - industry_standard_15pct
+E     + config/financial_defaults.yaml — rango 18-22% basado en comisiones OTA típicas (Booking 15-20%, Expedia 18-25%)
+___________________ test_proposal_uses_real_impact_weights ____________________
+tests\test_proposal_alignment.py:205: in test_proposal_uses_real_impact_weights
+    assert result["brecha_4_costo"] == "$0"
+E   AssertionError: assert '$4.500.000 COP' == '$0'
+E     
+E     - $0
+E     + $4.500.000 COP
+___________________ test_gate_presence_with_skipped_assets ____________________
+tests\test_publication_gates_presence.py:129: in test_gate_presence_with_skipped_assets
+    assert "whatsapp_button" in present_assets, (
+E   AssertionError: whatsapp_button should be present_in_production, not missing. present_in_production=[], missing=[]
+E   assert 'whatsapp_button' in []
+============================== warnings summary ===============================
+tests\analytics\test_data_aggregator.py:17
+  C:\Users\Jhond\Github\iah-cli\tests\analytics\test_data_aggregator.py:17: DeprecationWarning: Este módulo está deprecado y no se usa en el pipeline v4complete. Sus funciones son cubiertas por GoogleAnalyticsClient y GoogleSearchConsoleClient. Se eliminará en v5.0.0.
+    from modules.analytics.data_aggregator import (
+
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+<unknown>:855
+tests/commercial_documents/test_pain_map_bijection.py::test_narratives_no_tiene_huerfanos
+tests/common/test_service_identity_registry.py::test_mensaje_no_narra_el_tamano_de_un_registro_estatico[modules/commercial_documents/v4_diagnostic_generator.py]
+tests/common/test_service_identity_registry.py::test_pain_to_type_es_un_puente_valido
+tests/common/test_service_identity_registry.py::test_narratives_subset_de_capa1
+  <unknown>:855: SyntaxWarning: invalid escape sequence '\W'
+
+tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/asset_generation/test_content_gates.py::TestContentGates::test_performance_audit_generates_with_zeros
+  C:\Users\Jhond\Github\iah-cli\tests\asset_generation\test_content_gates.py:84: DeprecationWarning: support for supplying keyword arguments to pathlib.PurePath is deprecated and scheduled for removal in Python 3.14
+    content = Path(result["file_path"], errors='ignore').read_text(encoding='utf-8', errors='ignore')
+
+tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/auditors/test_pagespeed_auditor_v2.py: 10 warnings
+tests/auditors/test_v4_comprehensive_competitors.py: 2 warnings
+tests/data_validation/test_metadata_validator.py: 20 warnings
+tests/data_validation/test_schema_validator_v2.py: 14 warnings
+tests/test_hotel_visperas_regression.py: 11 warnings
+  <string>:9: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+
+tests/financial_engine/test_adr_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_pricing_comparison_deltas
+  C:\Users\Jhond\Github\iah-cli\modules\financial_engine\shadow_logger.py:42: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return f"{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
+
+tests/financial_engine/test_adr_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_pricing_comparison_deltas
+  C:\Users\Jhond\Github\iah-cli\modules\financial_engine\shadow_logger.py:55: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow().isoformat(),
+
+tests/financial_engine/test_opportunity_scorer.py: 7 warnings
+tests/geo_enrichment/test_band_classification.py: 2 warnings
+tests/geo_enrichment/test_diagnose_hotelvisperas.py: 8 warnings
+tests/geo_enrichment/test_geo_dashboard.py: 13 warnings
+tests/geo_enrichment/test_hotel_schema_enricher.py: 14 warnings
+tests/geo_enrichment/test_llms_txt_generator.py: 9 warnings
+tests/regression/test_whatsapp_conflicts.py: 5 warnings
+tests/test_canonical_assessment.py: 51 warnings
+tests/test_hotel_visperas_regression.py: 13 warnings
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\main.py:250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+tests/test_audit_alignment.py::test_roas_calculation
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_roas_calculation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_package_recommendation
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_package_recommendation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_justification_block
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_justification_block returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_thresholds_loading
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_thresholds_loading returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_canonical_assessment.py::TestCanonicalAssessmentCreation::test_assessment_has_timestamp
+  C:\Users\Jhond\Github\iah-cli\tests\test_canonical_assessment.py:152: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    before = datetime.utcnow()
+
+tests/test_canonical_assessment.py::TestCanonicalAssessmentCreation::test_assessment_has_timestamp
+  C:\Users\Jhond\Github\iah-cli\tests\test_canonical_assessment.py:159: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    after = datetime.utcnow()
+
+tests/test_encoding_artifacts.py::TestEncodingContractStatic::test_no_write_text_without_encoding
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:112: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/test_encoding_artifacts.py::TestEncodingContractStatic::test_no_write_text_without_encoding
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+tests/test_harness_core.py::TestAgentHarness::test_run_task_calls_handler
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_success_on_valid_result
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_error_on_exception
+tests/test_harness_core.py::TestAgentHarness::test_run_task_logs_execution
+tests/test_harness_core.py::TestAgentHarness::test_run_task_injects_context_from_memory
+tests/test_harness_core.py::TestAgentHarness::test_validate_result_marks_empty_as_invalid
+  C:\Users\Jhond\Github\iah-cli\tests\..\agent_harness\core.py:201: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_proposal_includes_quality_table
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_quality_table_reflects_real_confidence
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_missing_asset_shows_incluido_en_su_kit
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_none_assets_shows_incluido_en_su_kit
+FAILED tests/commercial_documents/test_proposal_confidence_disclosure.py::TestAssetQualityTable::test_low_confidence_shows_en_optimizacion
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestOnboardingYAMLLoad::test_yaml_loads_with_expected_adr
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestOnboardingYAMLLoad::test_yaml_loads_with_expected_occupancy
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestOnboardingYAMLLoad::test_yaml_loads_with_expected_rooms
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestOnboardingYAMLLoad::test_yaml_has_required_metadata
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestHarnessPayloadConstruction::test_payload_includes_user_provided_adr
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestHarnessPayloadConstruction::test_payload_occupancy_source_is_onboarding
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestHarnessPayloadConstruction::test_payload_occupancy_rate_matches_onboarding
+FAILED tests/e2e/test_onboarding_to_harness_pipeline.py::TestHarnessPayloadConstruction::test_payload_has_required_fields
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+FAILED tests/test_cop_cop_regression.py::TestNoCOPCOPRegression::test_no_cop_cop_in_modules
+FAILED tests/test_diagnostic_geo_metrics.py::TestDiagnosticGEOMetrics::test_diagnostic_includes_geo_metrics
+FAILED tests/test_evidence_tier.py::TestEvidenceTierIntegration::test_breakdown_preserves_hotel_data_sources
+FAILED tests/test_proposal_alignment.py::test_proposal_uses_real_impact_weights
+FAILED tests/test_publication_gates_presence.py::test_gate_presence_with_skipped_assets
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerReturnsOnboardingADR::test_handler_success
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerReturnsOnboardingADR::test_adr_cop_is_330000
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerReturnsOnboardingADR::test_adr_source_is_user_provided
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerReturnsOnboardingADR::test_adr_source_is_not_handler
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerReturnsOnboardingADR::test_adr_source_is_not_regional
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerRespectsOnboardingOccupancy::test_occupancy_not_overwritten
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestHandlerRespectsOnboardingOccupancy::test_scenarios_exist
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestValidationSummaryConfidence::test_user_provided_adr_yields_estimated_or_verified_confidence
+ERROR tests/e2e/test_onboarding_to_harness_pipeline.py::TestJSONAdrSourceNotHandler::test_adr_resolution_source_not_handler
+19 failed, 3869 passed, 32 skipped, 4 xfailed, 216 warnings, 9 errors in 193.66s (0:03:13)
