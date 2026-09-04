@@ -425,9 +425,15 @@ class TestAssetAlignmentMatrixToDict:
     def test_empty_matrix_to_dict(self):
         aam = AssetAlignmentMatrix()
         d = aam.to_dict()
-        assert d["proposal_asset_matrix_version"] == "2.0"
+        # 2.1 = FASE-HOTFIX (AC6/S-V3): la matriz publica coverage_ratio y su
+        # denominador, calculados por el oraculo canonico (AlignmentResult).
+        assert d["proposal_asset_matrix_version"] == "2.1"
         assert d["delivery_ready"] is True
         assert d["entries"] == []
+        # vacio != ausente: nada comprometido se lee como denominador 0,
+        # no como «no se evaluo».
+        assert d["coverage_ratio"] == 1.0
+        assert d["alignment"]["actionable_total"] == 0
 
     def test_populated_matrix_to_dict_format(self):
         entries = [

@@ -2979,29 +2979,12 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         print(f"   ⚠️  Advisory no bloqueante ({issue['gate']}): {issue['message']}")
     
     # T2: Generate gate_report.json for independent audit and downstream systems
-    gate_report = {
-        "generated_at": datetime.now().isoformat(),
-        "hotel_url": args.url,
-        "gate_results": [
-            {
-                "gate_name": r.gate_name,
-                "passed": r.passed,
-                "status": r.status.value if hasattr(r.status, 'value') else str(r.status),
-                "message": r.message,
-                "value": r.value,
-                "suggestion": r.suggestion,
-                "details": r.details,
-            }
-            for r in gate_results
-        ],
-        "readiness": {
-            "status": readiness_report["status"],
-            "ready": readiness_report["ready"],
-            "blocking_issues": readiness_report["blocking_issues"],
-            "warnings": readiness_report.get("summary", {}).get("warnings", []),
-        },
-        "financial_sources": assessment.get("financial_sources", {}),
-    }
+    gate_report = _build_gate_report_payload(
+        gate_results,
+        readiness_report,
+        hotel_url=args.url,
+        financial_sources=assessment.get("financial_sources", {}),
+    )
     gate_report_path = _make_evidence_path(output_dir, hotel_id, "gate_report")
     with open(gate_report_path, "w", encoding="utf-8") as f:
         json.dump(gate_report, f, indent=2, ensure_ascii=False)
@@ -3818,6 +3801,53 @@ def _make_evidence_path(output_dir: Path, hotel_id: str, basename: str, timestam
     if timestamp is None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     return evidence_dir / f"{basename}_{timestamp}.json"
+
+
+def _build_gate_report_payload(
+    gate_results: list,
+    readiness_report: dict,
+    *,
+    hotel_url: str = "",
+    financial_sources: dict | None = None,
+    generated_at: str | None = None,
+) -> dict:
+    """Unica forma del `gate_report_*.json` (FASE-HOTFIX, AC7 / S-I2).
+
+    `severity` y `blocks_publication` se derivan del criterio canonico
+    (`gate_severity` / `gate_blocks_publication`), no de una lista de nombres
+    copiada aqui: una segunda representacion del mismo hecho es exactamente el
+    defecto que el plan ESTABILIZACION-PRE-TRIBUNAL vino a eliminar.
+    """
+    from modules.quality_gates.publication_gates import (
+        gate_blocks_publication,
+        gate_severity,
+    )
+
+    return {
+        "generated_at": generated_at or datetime.now().isoformat(),
+        "hotel_url": hotel_url,
+        "gate_results": [
+            {
+                "gate_name": r.gate_name,
+                "severity": gate_severity(r.gate_name),
+                "blocks_publication": gate_blocks_publication(r),
+                "passed": r.passed,
+                "status": r.status.value if hasattr(r.status, 'value') else str(r.status),
+                "message": r.message,
+                "value": r.value,
+                "suggestion": r.suggestion,
+                "details": r.details,
+            }
+            for r in gate_results
+        ],
+        "readiness": {
+            "status": readiness_report["status"],
+            "ready": readiness_report["ready"],
+            "blocking_issues": readiness_report["blocking_issues"],
+            "warnings": readiness_report.get("summary", {}).get("warnings", []),
+        },
+        "financial_sources": financial_sources or {},
+    }
 
 
 def _extract_rooms_from_audit(audit_result) -> int:

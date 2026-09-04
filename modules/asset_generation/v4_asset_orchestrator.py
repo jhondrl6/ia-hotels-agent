@@ -48,7 +48,15 @@ from data_models.canonical_assessment import (  # FASE-6: Canonical Assessment
 
 @dataclass
 class GeneratedAsset:
-    """Represents a successfully generated asset."""
+    """Represents a successfully generated asset.
+
+    Clave canónica de la ruta local **por artefacto** (FASE-HOTFIX, S-I3): este
+    DTO se serializa como `path` en `v4_complete_report.assets_generated[]` y en
+    `asset_generation_report.json`. La matriz `proposal_asset_matrix.json` usa
+    `asset_path` para el mismo hecho (es otro DTO, `ProposalAssetMatrixEntry`).
+    Las dos claves son contrato de lectura distinto y siguen siéndolo: quien lea
+    un artefacto debe usar la clave de ese artefacto, no conjetuar.
+    """
     asset_type: str
     filename: str
     path: str

@@ -666,6 +666,13 @@ class ProposalAssetMatrixEntry:
         MISSING_ASSET — service has a breach but no asset was generated
         NO_BREACH — service sold without a corresponding pain in the ledger
         GENERIC_DRAFT — fallback for services with partial match
+
+    Clave de la ruta local (FASE-HOTFIX, S-I3): `asset_path` es la clave
+    canónica de este hecho **en `proposal_asset_matrix.json`**. El mismo dato
+    viaja como `path` en `v4_complete_report.assets_generated[]` (otro DTO,
+    `GeneratedAsset`) y como `metadata_path` en `asset_generation_report.json`.
+    No se unifican: son contratos de lectura distintos. Lo fija
+    `tests/test_asset_path_clave_canonica.py` para que leerlos no sea conjetura.
     """
     service_name: str
     pain_ids: List[str] = field(default_factory=list)
@@ -842,6 +849,11 @@ class AssetAlignmentMatrix:
     # decide NO prometer se declara aquí — nunca se descarta en silencio.
     not_promised: List[str] = field(default_factory=list)
     unknown_services: List[str] = field(default_factory=list)
+    # FASE-HOTFIX (AC6 / S-V3): el snapshot con el que se construyo la matriz se
+    # conserva para que to_dict() pueda publicar el coverage_ratio **calculado
+    # por el oraculo canonico**. Sin el snapshot, el ratio serializado seria de
+    # otra corrida conceptual (contaria presencia solo por status explicito).
+    site_presence_report: Optional[Any] = field(default=None, repr=False)
 
     def __post_init__(self) -> None:
         """Rebuild entry map after initialization."""
@@ -899,6 +911,7 @@ class AssetAlignmentMatrix:
             entries=entries,
             not_promised=not_promised,
             unknown_services=unknown,
+            site_presence_report=site_presence_report,
         )
 
     # ── Lookup ──────────────────────────────────────────────────────────
@@ -961,18 +974,36 @@ class AssetAlignmentMatrix:
         """Serialize to dict for proposal_asset_matrix.json.
 
         Format is backward-compatible with ProposalAssetMatrix.save() output.
+
+        FASE-HOTFIX (AC6 / S-V3): el artefacto publica el `coverage_ratio` **y**
+        su denominador. El valor no se recalcula aqui: lo produce el unico
+        oraculo del ratio (`AlignmentResult._from_entries`, FASE-SR-B D-PF1), del
+        que esta matriz toma ademas el bloque completo `alignment`. Publicar el
+        denominador es lo que permite discriminar el case «nada comprometido»
+        (actionable_total = 0, ratio 1.0) de «no se evaluo» — vacio != ausente.
+        Import diferido por el mismo motivo que en ``classify_promised_services``:
+        evitar el ciclo de paquetes asset_generation <-> quality_gates.
         """
+        from modules.quality_gates.alignment_result import AlignmentResult
+
+        alignment = AlignmentResult.from_asset_alignment_matrix(
+            self, self.site_presence_report
+        ).to_dict()
         return {
-            "proposal_asset_matrix_version": "2.0",  # Unified contract
+            "proposal_asset_matrix_version": "2.1",  # + coverage publicado
             "alignment_status_version": "1.0",
             "delivery_ready": self.is_delivery_ready(),
             # FASE-C (Punto 8): lo que la propuesta dinámica NO promete.
             "not_promised": list(self.not_promised),
             "unknown_services": list(self.unknown_services),
+            "coverage_ratio": alignment["coverage_ratio"],
+            "alignment": alignment,
             "summary": {
                 "promised": len(self.entries),
                 "not_promised": len(self.not_promised),
                 "unknown": len(self.unknown_services),
+                "actionable_total": alignment["actionable_total"],
+                "unresolved": alignment["unresolved"],
             },
             "entries": [
                 {

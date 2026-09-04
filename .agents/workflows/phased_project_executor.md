@@ -1,6 +1,6 @@
 ---
-description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Máximo 60 iteraciones por fase. Ejecutado por agentes AI.
-version: v2.18.0
+description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código. Ejecutado por agentes AI.
+version: v2.19.0
 ---
 
 # Skill: Phased Project Executor
@@ -25,7 +25,84 @@ version: v2.18.0
 >
 > **R1: Una fase por sesión.** No se permite ejecutar múltiples fases en una misma sesión.
 >
-> **R2: Máximo 60 iteraciones del agente por fase.** Si se alcanza el límite, la fase se marca como incompleta y DEBE retomarse en una nueva sesión fresca. No se permite exceder este límite bajo ningún pretexto (ni "falta poco", ni "ya casi termino").
+> **R2: El presupuesto de iteraciones se MIDE, no se estima.** Instrumento canónico:
+> `evidence/FASE-D/measure_iterations.py`. Corte fijo: **hasta el commit de código** (lo que se
+> escriba después es cierre documental y no cuenta contra el presupuesto de implementación). Si la
+> fase no puede correr el instrumento, el auto-reporte se publica **en la unidad usada**
+> (`tool_use`, `ids únicos`, etc.) y se declara que no es comparable con las demás. Ver §R2.1-R2.4.
+
+## Reglas de Proceso v2.19.0 (OBLIGATORIO — propuestas por FASE-VERIFY, 2026-09-04)
+
+Las cuatro reglas siguientes existen porque un plan de 11 fases las violó o las descubrió tarde.
+Cada una lleva su medición de origen: una norma sin medición es la regla que se escribe y no se
+cumple (ver R2.4).
+
+### R2.1 — Presupuesto: medir o retirar la métrica, nunca estimar (S22 / DA-V6)
+
+**Medido**: nueve fases medibles del plan `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` excedieron su
+presupuesto (entre **2,4× y 8,6×**) y ni siquiera eran comparables entre sí: cada fase reportó en
+una unidad distinta porque el instrumento canónico no corre bajo la política de permisos actual.
+Un número que no se puede medir ni comparar no restringe nada (L-B3).
+
+**Regla**: toda fase declara presupuesto **y** el instrumento con que lo corta (corte: commit de
+código). Al cerrar, o (a) el presupuesto se recalibra **×3** sobre la distribución medida, o
+(b) **se retira la métrica** del plan y se declara fuera de servicio. Prohibido: reportar un
+cumplimiento estimado, o mezclar unidades en un total.
+
+### R2.2 — Prohibidos los números de línea en ACs y prompts de fase: citar símbolos (L-A6 / L-V4 / L-H4)
+
+**Medido**: **14 de 16** citas de línea que usaban los criterios de aceptación del plan estaban
+desfasadas al certificar (desplazamientos entre **−88 y +104** líneas); solo 2 seguían en su
+número. Y FASE-A encontró 4 citas **falsas** en el propio plan, una de ellas repetida 12 veces en
+6 archivos, incluidas 3 en el prompt de la fase que iba a editarla.
+
+**Regla**: en criterios de aceptación, prompts de fase y evidencia, se cita **símbolo**
+(`def classify_promised_services`, `BLOCKING_GATE_NAMES`, `_not_evaluated_g9()`), nunca `archivo:123`.
+Una cita de línea en un plan multi-fase caduca **durante la ejecución del propio plan**, porque cada
+fase desplaza las líneas que las siguientes citan. Antes de editar una región ya citada hay que
+confirmarla con `grep`/`Read` y, si difiere, corregir la cita y avisar.
+
+**Verificador mecánico**: `scripts/validate_plan_citations.py` (check 8 de
+`run_all_validations.py --quick`). Escribe la regla y no medirla es el mecanismo que acabó en S15.
+
+### R2.3 — No-regresión de conteos como **delta**, con par pre/post (S26 / DA-V2)
+
+**Medido**: una NR ordenaba preservar «848 passed / 2 skipped» a todas las fases; una fase agregó
+24 tests legítimos y la corrida dio 872 — una «violación» que era exactamente lo que la fase debía
+hacer. Con el número absoluto, **cumplir el plan cuenta como violación** (L-D3).
+
+**Regla**: todo invariante de conteo se formula como **delta**:
+
+```
+passed_post = passed_pre + tests nuevos de ESTA fase
+skipped_post == skipped_pre                      (idéntico)
+fallos_ajenos_a_la_fase == 0
+```
+
+y es **obligatorio** el par de archivos `*_baseline_pre.txt` / `*_baseline_post.txt` en
+`evidence/FASE-X/`, para que el delta sea verificable y no una afirmación. Antes de comparar dos
+cifras, decir **qué mide cada una** (unidad de corrida incluida: `def test_` vs `--collect-only`
+no coinciden).
+
+### R2.4 — Regla de certificación: AC no legible en el artefacto = ⚠️, nunca ✅ (L-V1 / DA-V3)
+
+**Medido**: AC6 y AC7 estuvieron ✅ durante nueve fases «en código y tests». Medidos sobre el
+artefacto de la única corrida: `gate_report_*.json` no tenía **ni una** ocurrencia de `severity` y
+`proposal_asset_matrix.json` no tenía la clave `coverage_ratio`. El sistema había decidido; el
+artefacto que lee el humano no lo reflejaba.
+
+**Regla**: *un criterio de aceptación que no es legible en el artefacto que el sistema produce se
+marca ⚠️, no ✅.* **Un ✅ cuyo único respaldo es «el string está en el código» no existe.**
+Consecuencias operativas:
+
+- Cada AC declara **el artefacto y la clave** donde se lee su valor. Si esa clave no existe, el AC
+  está incompleto **antes** de ejecutarse.
+- Toda propiedad de régimen que deba viajar a disco lleva un **test de serialización** que lee el
+  JSON del writer real, no el objeto en memoria.
+- Test práctico de completitud: si el AC no puede responder *«¿dónde lo vería un humano que solo
+  tiene el ZIP?»*, no está listo para certificarse.
+- Donde la corrida no ejercita el camino, se dice que no lo ejercita; no se cuenta el test como
+  hecho (el verde de un test prueba el régimen, no la salida).
 
 ## Regla de Scope de Fase (OBLIGATORIO — Al Crear el Plan)
 
@@ -87,7 +164,7 @@ ENTONCES:
 - "Docs cascade al final" → docs son su propia sub-fase
 
 > [!WARNING]
-> **El orquestador que crea fases demasiado grandes es responsable del agotamiento de las sesiones siguientes.** La regla R2 (60 iteraciones max) protege contra ejecucion excesiva, pero la prevencion empieza en el diseño del plan.
+> **El orquestador que crea fases demasiado grandes es responsable del agotamiento de las sesiones siguientes.** La regla R2 (§R2.1: presupuesto medido con el instrumento canónico) protege contra ejecución excesiva, pero la prevención empieza en el diseño del plan.
 
 > [!TIP]
 > **Convenciones de Nomenclatura de Fases**
@@ -150,7 +227,7 @@ ENTONCES:
 ### Regla de Iteraciones para Comandos de Larga Duración
 
 > [!CAUTION]
-> **GUIA CRITICA: 60 iteraciones vs. comandos que duran minutos**
+> **GUIA CRITICA: presupuesto de iteraciones vs. comandos que duran minutos**
 >
 > `v4complete` es un comando que tarda 5-10 minutos en ejecutarse (scraping + APIs + generación de documentos + assets). Aunque `terminal(..., timeout=600)` cuenta como **1 tool call**, el comando consume tiempo real de pared, no tiempo de iteraciones del agente.
 >
@@ -159,7 +236,8 @@ ENTONCES:
 #### Calculo del Presupuesto de Iteraciones
 
 ```
-Presupuesto total: 60 iteraciones
+Presupuesto total: el declarado por la fase (ver §R2.1: medido con
+evidence/FASE-D/measure_iterations.py, cortado en el commit de codigo)
 
 Gastos fijos por fase:
   - Leer plan y verificar estado previo: ~3 iteraciones
@@ -311,7 +389,7 @@ Cuando se usa `delegate_task` para ejecutar `v4complete`:
 
 **Esta regla no tiene excepciones.** Aunque la sesion termine en iteracion 1 y no haya hecho nada, el plan debe reflejar ese estado.
 
-### Recuperacion de Agotamiento (60 iteraciones o timeout de subagente)
+### Recuperacion de Agotamiento (presupuesto de la fase agotado o timeout de subagente)
 
 Cuando la fase no completa por agotamiento:
 
@@ -338,7 +416,7 @@ Cuando la fase no completa por agotamiento:
 |---------|-------|--------|
 | Subagente retorna sin output | Timeout 600s insuficiente | Re-spawn con delegate_task y timeout=900 |
 | v4complete nunca termina de generar | API rate limits / network | Verificar logs, retry con backoff |
-| Agent parent agota 60 iteraciones antes de v4complete | Presupuesto mal calculado | Dividir: subagente para v4complete |
+| Agent parent agota el presupuesto de la fase antes de v4complete | Presupuesto mal calculado | Dividir: subagente para v4complete |
 | Docs cascade no se ejecuta post-v4complete | Agent se agoto al final | Guardar evidencia ANTES, docs en sesion separada |
 
 ## Pre-requisitos
@@ -390,7 +468,7 @@ Usar template `.agents/workflows/templates/prompt-fase-template.md`
 - Seccion de documentacion post-fase (editar CHANGELOG, GUIA_TECNICA, y acumular en 09-documentacion-post-proyecto.md)
 - **Post-Ejecución** (marcar checklist, actualizar estados)
 - **Criterios de Completitud**
-- **Restricciones** (mínimo: máximo 60 iteraciones; según la fase: no modificar ROADMAP.md, no ejecutar v4complete, etc.)
+- **Restricciones** (mínimo: presupuesto de iteraciones declarado + instrumento y corte con que se mide, §R2.1; según la fase: no modificar ROADMAP.md, no ejecutar v4complete, etc.)
 
 **Verificación:**
 - [ ] Nombre de archivo coincide con título interno
@@ -1101,12 +1179,13 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - Sin estructura de planes → crear `.opencode/plans/` automáticamente
 - Sin división en fases → proponer estructura estándar (Fase 0-N) + FASE-RELEASE
 - Prompts muy grandes → dividir en secciones dentro del mismo archivo
-- **Límite de 60 iteraciones alcanzado** → marcar fase como `INCOMPLETA`, documentar progreso parcial en `dependencias-fases.md`, retomar en nueva sesión fresca
+- **Presupuesto declarado por la fase agotado (§R2.1)** → marcar fase como `INCOMPLETA`, documentar progreso parcial en `dependencias-fases.md`, retomar en nueva sesión fresca
 - Fase retomada (INCOMPLETA) → leer estado de `dependencias-fases.md`, continuar desde donde se dejó
 - **FASE-RELEASE ejecutada sin implementaciones completadas** → abortar; verificar `dependencias-fases.md` que todas las fases previas estén en `✅` (incluyendo FASE-VERIFY si aplica)
 - **FASE-VERIFY incluida en plan simple** → evaluar si los 3 criterios de activación se cumplen; si no, eliminar y documentar por qué en `dependencias-fases.md`
 
 ## Versiones
+- **v2.19.0** (2026-09-04): Cuatro reglas de proceso propuestas por FASE-VERIFY del plan `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`, que el archivo **no contenía** (medido: 0 coincidencias de «recalibr», «números de línea», «hasta el commit de código», «delta»). Nuevas §R2.1-§R2.4: **R2.1** presupuesto de iteraciones medido con `evidence/FASE-D/measure_iterations.py` y corte fijo «hasta el commit de código», con la orden de recalibrar ×3 **o retirar** la métrica (S22/DA-V6: nueve fases excedieron 2,4×-8,6× y reportaron en unidades distintas); **R2.2** prohibición de números de línea en ACs y prompts — citar símbolos (L-A6/L-V4/L-H4: 14 de 16 citas ya desfasadas al certificar) y su verificador mecánico nuevo `scripts/validate_plan_citations.py`, check 8 de `run_all_validations.py --quick`; **R2.3** no-regresión de conteos formulada como **delta** con par pre/post obligatorio (S26/DA-V2); **R2.4** regla de certificación — *un AC no legible en el artefacto que el sistema produce es ⚠️, no ✅; un ✅ que solo respalda un string en el código no existe* (L-V1/DA-V3). **R2 deja de prometer «máximo 60 iteraciones»**: la cabecera y la regla mandatoria ahora ordenan medir, no estimar.
 - **v2.18.0** (2026-09-02): Write-back de CONTEXT por aporte, no por edición. Los `CONTEXT-*.md` de `.opencode/context/` se ingieren a QMind solo cuando **autodeclaran** una lección durable con etiqueta explícita (`Lección de forma:`); el criterio es binario para que no dependa de un juicio de relevancia inferido (§4). La pregunta se hace en el Cierre Obligatorio de Sesión (paso 3 nuevo), que es donde el archivo se escribe, para que el disparador no sea letra muerta. Se aclara en el Paso 0 que un CONTEXT ausente del notebook no es un olvido. Origen medido: `CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` no estaba en el notebook (40 fuentes, última ingesta 2026-08-31) pese a declarar en §13.5 *"Lección de forma: revalidar citas de código no revalida premisas"* — el ciclo v2.17.0 solo disparaba sobre `10-analisis-post-implementacion.md` al cierre de fase, y un CONTEXT de análisis/auditoría no es cierre de fase.
 - **v2.17.0** (2026-08-28): Ciclo de capitalización de lecciones aprendidas. Nuevo Paso 0 obligatorio (recuperación desde memoria del proyecto + notebook QMind `iah-cli-lecciones` antes de planificar), inyección de lecciones pertinentes en prompts de fase (§2), y write-back al cierre de cada fase (§4): lecciones INCLUIR a memoria del proyecto y re-ingesta del 10-analisis a QMind. Fallback explícito si el notebook no está disponible.
 - **v2.16.0** (2026-08-24): Nueva etapa condicional FASE-VERIFY (§4.6) entre Implementación y RELEASE. Certificación formal de ACs contra output E2E real, sin modificar código. Criterios de activación: ≥3 fases impl + E2E + ACs cross-fase. Resuelve gap: la referencia "llenar en FASE-E o FASE-F" en la matriz de verificación no tenía definición formal. Metodología mínima generalizable (7 pasos). Origen: FASE-R0-F del plan REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 (12/12 ACs certificados con diff narrativo antes/después).

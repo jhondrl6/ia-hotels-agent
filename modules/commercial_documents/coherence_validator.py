@@ -634,8 +634,10 @@ class CoherenceValidator:
           (comportamiento legacy preservado para backward compatibility)
 
         FASE-SOL2-B (Option C1): Also cross-references PROPOSAL_SERVICE_TO_ASSET
-        to ensure all 7 promised services have implemented assets. This unifies
-        the baseline with proposal_asset_alignment_gate (Gate 9).
+        to ensure every service in the register maps to an implemented asset.
+        This unifies the baseline with proposal_asset_alignment_gate (Gate 9).
+        El registro se nombra, no se cuenta: el numero que va en el `message` es
+        el de los assets verificados en la pasada en curso (FASE-HOTFIX, S-C3).
 
         FASE-P2-A (F14): If site_presence_report confirms an asset exists in
         production (status "exists"/"redundant" + site_verified=True), it is
@@ -720,11 +722,20 @@ class CoherenceValidator:
             prod_note = ""
             if production_only_types:
                 prod_note = f" (incluye {len(production_only_types)} verificado(s) en producción: {', '.join(sorted(production_only_types))})"
+            # FASE-HOTFIX (S-C3, mitad textual): el conteo narrado es el de los
+            # assets verificados en ESTA pasada y la fuente realmente consultada
+            # en ella. Narrar el tamano del catalogo estatico convertia la prosa
+            # del artefacto en una segunda representacion del hecho, en la
+            # superficie que lee el cliente (defecto B2 en su tercera cara).
+            fuente = (
+                "generated_assets" if generated_assets is not None
+                else "catalogo_estatico"
+            )
             return CoherenceCheck(
                 name="promised_assets_exist",
                 passed=True,
                 score=1.0,
-                message=f"Todos los assets prometidos están implementados ({len(PROPOSAL_SERVICE_TO_ASSET)} servicios verificados via PROPOSAL_SERVICE_TO_ASSET){prod_note}",
+                message=f"Todos los assets prometidos están implementados ({len(promised_types)} assets verificados en esta pasada via {fuente}){prod_note}",
                 severity="info"
             )
 

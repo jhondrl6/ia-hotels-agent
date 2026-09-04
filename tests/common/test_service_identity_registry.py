@@ -80,11 +80,17 @@ NUMERAL_DESPUES = re.compile(r"\bservic\w*\s*\(\d+", re.IGNORECASE)
 # spark, no migrado en FASE-A), `quality_gates/alignment_result.py` y
 # `quality_gates/publication_gates.py` (prohibidos en esta fase: FASE-C/F/G) — sus
 # «0 servicios comprometidos» es un mensaje legítimo, no un conteo de catálogo.
+#
+# FASE-HOTFIX (S-C3 textual, L-V2): `coherence_validator.py` entra a la tupla. Su
+# mensaje de `promised_assets_exist` es la superficie que lee el cliente y antes
+# no estaba cubierta por el candado. Medido antes de extender: 0 coincidencias de
+# la forma numeral en ese archivo, así que la cobertura crece sin relajarse.
 MODULOS_NARRATIVA = (
     "modules/asset_generation/proposal_asset_alignment.py",
     "modules/asset_generation/conditional_generator.py",
     "modules/asset_generation/pain_ledger.py",
     "modules/common/service_identity.py",
+    "modules/commercial_documents/coherence_validator.py",
     "modules/commercial_documents/service_catalog.py",
     "modules/commercial_documents/v4_proposal_generator.py",
     "modules/commercial_documents/v4_diagnostic_generator.py",
@@ -507,6 +513,73 @@ def test_narrativa_no_hardcodea_conteo_de_servicios(rel):
         f"{rel} hardcodea un conteo de servicios en narrativa: " + " | ".join(culpables)
         + " || Nombrar el registro (PROPOSAL_SERVICE_TO_ASSET / SERVICE_IDENTITIES) en "
         "vez del número: el número es lo que derivó en «8 vs 7» (V14)."
+    )
+
+
+# Registros cuyo `len()` describe el CATALOGO, no lo verificado en runtime.
+REGISTROS_ESTATICOS = (
+    "PROPOSAL_SERVICE_TO_ASSET",
+    "ALL_PROMISED_SERVICES",
+    "SERVICE_IDENTITIES",
+    "SERVICE_CATALOG",
+    "ASSET_CATALOG",
+    "PAIN_SOLUTION_MAP",
+)
+
+
+def _funciones_con_mensaje(rel: str) -> List[Tuple[str, List[ast.expr]]]:
+    """`(nombre, [expresiones del keyword message])` de cada función del módulo."""
+    out: List[Tuple[str, List[ast.expr]]] = []
+    for node in ast.walk(_tree(rel)):
+        if not isinstance(node, ast.FunctionDef):
+            continue
+        mensajes = [
+            kw.value
+            for call in ast.walk(node)
+            if isinstance(call, ast.Call)
+            for kw in call.keywords
+            if kw.arg == "message"
+        ]
+        if mensajes:
+            out.append((node.name, mensajes))
+    return out
+
+
+@pytest.mark.parametrize("rel", MODULOS_NARRATIVA)
+def test_mensaje_no_narra_el_tamano_de_un_registro_estatico(rel):
+    """FASE-HOTFIX (S-C3, mitad textual) — el candado que la forma numeral no ve.
+
+    `test_narrativa_no_hardcodea_conteo_de_servicios` prohíbe el **numeral**. El
+    defecto medido por VERIFY en el artefacto del cliente no usaba un numeral:
+    usaba `len(REGISTRO)`, que imprime un número derivado del catálogo estático
+    como si fuera el conteo verificado en runtime. Misma clase (B2 / L-V3), otra
+    forma — y por eso el candado de forma no la frenó (L-V2).
+
+    Regla mecánica: un `message` no puede contener `len(<registro estático>)`.
+    """
+    if not (REPO_ROOT / rel).exists():
+        pytest.skip(f"{rel} aún no existe")
+    culpables = []
+    for function_name, mensajes in _funciones_con_mensaje(rel):
+        for msg in mensajes:
+            for call in ast.walk(msg):
+                if (
+                    isinstance(call, ast.Call)
+                    and isinstance(call.func, ast.Name)
+                    and call.func.id == "len"
+                    and call.args
+                    and isinstance(call.args[0], ast.Name)
+                    and call.args[0].id in REGISTROS_ESTATICOS
+                ):
+                    culpables.append(
+                        f"{rel}::{function_name}(message=...len({call.args[0].id}))"
+                    )
+    assert not culpables, (
+        "Un mensaje narra el tamaño de un catálogo, no lo verificado en runtime: "
+        + " | ".join(culpables)
+        + " || Narrar el conteo de la pasada (partición / matriz) o nombrar el "
+        "registro sin contar: el número impreso es la segunda representación del "
+        "hecho que ya mide el código (L-V3)."
     )
 
 

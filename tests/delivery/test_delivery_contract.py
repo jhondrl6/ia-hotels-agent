@@ -966,8 +966,12 @@ class TestP05G9Gate:
             f"G9 should PASS when all services aligned, got passed={g9['passed']}"
         assert g9["aligned"] == 2
 
-    def test_g9_gate_skipped_when_no_matrix(self, tmp_path):
-        """P-05: G9 debe marcar skipped=True cuando proposal_asset_matrix.json no existe."""
+    def test_g9_gate_not_evaluated_when_no_matrix(self, tmp_path):
+        """FASE-F (A1): sin matriz, G9 es NOT_EVALUATED — nunca un gate pasado.
+
+        Este test asertaba lo contrario («skipped cuenta como pasado») hasta
+        FASE-HOTFIX-PRE-RELEASE: codificaba el verde vacuo que A1 eliminó.
+        """
         v4_audit = tmp_path / "v4_audit"
         v4_audit.mkdir()
 
@@ -990,10 +994,19 @@ class TestP05G9Gate:
 
         g9 = report.proposal_asset_gate
         assert g9["gate"] == "G9"
-        assert g9.get("skipped") is True, \
-            f"G9 should be skipped when no matrix, got: {g9}"
-        assert g9["passed"] is True, \
-            "G9 should default-pass when skipped (no matrix = can't evaluate)"
+        assert g9["state"] == "NOT_EVALUATED", \
+            f"G9 sin matriz debe estar en estado explícito, got: {g9}"
+        assert g9["passed"] is False, \
+            "Un gate no ejecutado NO es un gate pasado (FASE-F A1)"
+        assert "skipped" not in g9, \
+            "La clave pre-A1 'skipped' ya no existe en el contrato de G9"
+
+        summary = report.summary
+        assert "proposal_asset_alignment" in summary["not_evaluated"]
+        assert "proposal_asset_alignment" not in summary["blocking_gates"]
+        assert summary["passed"] + summary["failed"] + len(summary["not_evaluated"]) \
+            == summary["total_gates"], \
+            "Los tres estados deben partir los gates: G9 no puede contar como pasado"
 
 
 class TestP06P07ResidualFixes:
