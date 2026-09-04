@@ -1,0 +1,177 @@
+{
+  "hotel_id": "hotelsalentoreal",
+  "hotel_name": "Hotelsalentoreal",
+  "timestamp": "2026-09-04T12:04:13.364579",
+  "output_dir": "output/FASE-I_salentoreal_post_estabilizacion/v4_complete/hotelsalentoreal",
+  "summary": {
+    "total_assets": 4,
+    "generated": 4,
+    "failed": 0,
+    "skipped": 0,
+    "can_use": 4,
+    "estimated": 2,
+    "delivery_ready_percentage": 100.0,
+    "site_verification_applied": false
+  },
+  "generated_assets": [
+    {
+      "asset_type": "analytics_setup_guide",
+      "filename": "ESTIMATED_guia_configuracion_ga4_20260904_120413.md",
+      "delivery_filename": "guia_configuracion_ga4_20260904_120413.md",
+      "path": "output/FASE-I_salentoreal_post_estabilizacion/v4_complete/hotelsalentoreal/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260904_120413.md",
+      "metadata_path": "output/FASE-I_salentoreal_post_estabilizacion/v4_complete/hotelsalentoreal/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260904_120413_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "no_analytics_configured"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "indirect_traffic_optimization",
+      "filename": "ESTIMATED_optimizacion_trafico_indirecto_20260904_120413.md",
+      "delivery_filename": "optimizacion_trafico_indirecto_20260904_120413.md",
+      "path": "output/FASE-I_salentoreal_post_estabilizacion/v4_complete/hotelsalentoreal/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260904_120413.md",
+      "metadata_path": "output/FASE-I_salentoreal_post_estabilizacion/v4_complete/hotelsalentoreal/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260904_120413_metadata.json",
+      "preflight_status": "WARNING",
+      "confidence_score": 0.8,
+      "pain_ids_resolved": [
+        "low_organic_visibility"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "llms_txt",
+      "filename": "llms_20260904_120413.txt",
+      "delivery_filename": "llms_20260904_120413.txt",
+      "path": "output/FASE-I_salentoreal_post_estabilizacion/v4_complete/hotelsalentoreal/llms_txt/llms_20260904_120413.txt",
+      "metadata_path": "output/FASE-I_salentoreal_post_estabilizacion/v4_complete/hotelsalentoreal/llms_txt/llms_20260904_120413_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 1.0,
+      "pain_ids_resolved": [
+        "ai_crawler_blocked"
+      ],
+      "can_use": true
+    },
+    {
+      "asset_type": "monthly_report",
+      "filename": "informe_mensual_20260904_120413.md",
+      "delivery_filename": "informe_mensual_20260904_120413.md",
+      "path": "output/FASE-I_salentoreal_post_estabilizacion/v4_complete/hotelsalentoreal/monthly_report/informe_mensual_20260904_120413.md",
+      "metadata_path": "output/FASE-I_salentoreal_post_estabilizacion/v4_complete/hotelsalentoreal/monthly_report/informe_mensual_20260904_120413_metadata.json",
+      "preflight_status": "PASSED",
+      "confidence_score": 1.0,
+      "pain_ids_resolved": [],
+      "can_use": true
+    }
+  ],
+  "failed_assets": [],
+  "skipped_assets": [],
+  "coherence_report": {
+    "is_coherent": true,
+    "overall_score": 0.83,
+    "checks": [
+      {
+        "name": "problems_have_solutions",
+        "passed": true,
+        "score": 0.6,
+        "message": "Solo 60% de problemas tienen solución (3/5)",
+        "severity": "warning"
+      },
+      {
+        "name": "assets_are_justified",
+        "passed": true,
+        "score": 1.0,
+        "message": "100% de assets justificados",
+        "severity": "info"
+      },
+      {
+        "name": "financial_data_validated",
+        "passed": true,
+        "score": 0.7,
+        "message": "Datos financieros validados (confidence promedio: 0.70)",
+        "severity": "info"
+      },
+      {
+        "name": "whatsapp_verified",
+        "passed": true,
+        "score": 1.0,
+        "message": "No hay asset de WhatsApp button",
+        "severity": "info"
+      },
+      {
+        "name": "price_matches_pain",
+        "passed": true,
+        "score": 0.8,
+        "message": "Precio en límite superior (9.9x) - rango ideal 3.0x-50.0x",
+        "severity": "warning"
+      },
+      {
+        "name": "promised_assets_exist",
+        "passed": true,
+        "score": 1.0,
+        "message": "Todos los assets prometidos están implementados (7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET)",
+        "severity": "info"
+      }
+    ],
+    "errors": [],
+    "warnings": [],
+    "timestamp": "2026-09-04T12:04:12.145424",
+    "version": "4.2.0"
+  },
+  "coherence_score_pre": 0.83,
+  "coherence_score_post": 0.83,
+  "coherence_score_final": 0.83,
+  "final_coherence_report": {
+    "is_coherent": true,
+    "overall_score": 0.83,
+    "checks": [
+      {
+        "name": "problems_have_solutions",
+        "passed": true,
+        "score": 0.6,
+        "message": "Solo 60% de problemas tienen solución (3/5)",
+        "severity": "warning"
+      },
+      {
+        "name": "assets_are_justified",
+        "passed": true,
+        "score": 1.0,
+        "message": "100% de assets justificados",
+        "severity": "info"
+      },
+      {
+        "name": "financial_data_validated",
+        "passed": true,
+        "score": 0.7,
+        "message": "Datos financieros validados (confidence promedio: 0.70)",
+        "severity": "info"
+      },
+      {
+        "name": "whatsapp_verified",
+        "passed": true,
+        "score": 1.0,
+        "message": "No hay asset de WhatsApp button",
+        "severity": "info"
+      },
+      {
+        "name": "price_matches_pain",
+        "passed": true,
+        "score": 0.8,
+        "message": "Precio en límite superior (9.9x) - rango ideal 3.0x-50.0x",
+        "severity": "warning"
+      },
+      {
+        "name": "promised_assets_exist",
+        "passed": true,
+        "score": 1.0,
+        "message": "Todos los assets prometidos están implementados (7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET)",
+        "severity": "info"
+      }
+    ],
+    "errors": [],
+    "warnings": [],
+    "timestamp": "2026-09-04T12:04:13.359458",
+    "version": "4.2.0"
+  }
+}

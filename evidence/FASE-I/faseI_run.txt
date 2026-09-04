@@ -1,0 +1,326 @@
+PageSpeed ERROR para https://www.hotelsalentoreal.com/: Request to PageSpeed API timed out.
+[INFO] Variables cargadas desde: C:\Users\Jhond\Github\iah-cli\.env
+============================================================
+VERIFICANDO CONFIGURACION DEL SISTEMA...
+============================================================
+[INFO] VERIFICANDO CONFIGURACION DEL SISTEMA...
+[INFO] Using DeepSeek as LLM provider
+[INFO] Using DeepSeek as LLM provider
+[INFO] Using DeepSeek as LLM provider
+
+==================================================
+REPORTE DE CONFIGURACION
+==================================================
+  [OK] Python 3.8+
+  [OK] requests
+  [OK] beautifulsoup4
+  [OK] selenium
+  [OK] pandas
+  [OK] openpyxl
+  [OK] reportlab
+  [OK] pillow
+  [OK] playwright (opcional)
+  [OK] lxml (opcional)
+  [OK] DEEPSEEK_API_KEY: sk-b...5a12
+  [OK] OPENAI_API_KEY: ***
+  [OK] GOOGLE_API_KEY: AIza...KJB8
+  [OK] GOOGLE_MAPS_API_KEY: AIza...KJB8
+  [OK] Permisos: ./output
+  [OK] Permisos: ./modules
+  [OK] Permisos: ./data
+  [OK] Permisos: ./temp
+  [OK] Directorio salida: output/FASE-I_salentoreal_post_estabilizacion
+  [OK] Conectividad: api.deepseek.com
+  [OK] Conectividad: api.anthropic.com
+  [OK] DeepSeek provider funcional
+  [OK] DeepSeek configurado correctamente
+  [OK] GapAnalyzer migrado
+  [OK] IATester migrado
+  Google Maps API Key disponible
+  Google Maps API Key formato válido
+  GBP_GEOGRAPHIC_VALIDATION_ENABLED configurado
+  Umbral de validación geográfica: 30.0km
+  googlemaps dependency instalada
+  geopy dependency instalada
+  GeoValidator inicializado correctamente
+
+[WARN]  ADVERTENCIAS (2):
+  -  Variable de entorno opcional no configurada: ANTHROPIC_API_KEY
+  -  Variable de entorno opcional no configurada: WEBDRIVER_PATH
+
+[CHART] RESUMEN: 32 OK, 2 advertencias, 0 errores
+[WARN]  Configuracion aceptable - Puede continuar
+[OK] Configuracion validada - Iniciando analisis...
+
+======================================================================
+V4.0 COMPLETE - Flujo Integral con Módulos Reales
+======================================================================
+[HARNESS] Usando AgentHarness + Módulos v4.0 Python
+[HARNESS] Flujo de dos fases: Hook → Validación → Assets
+======================================================================
+[ROUTER] Loaded 1 skills
+
+📍 FASE 1: Hook Generation (Automático)
+----------------------------------------------------------------------
+🔐 Permission Mode: auto
+🎯 Hotel: Hotelsalentoreal
+🌍 Región detectada: eje_cafetero
+[OK] Phase 1 iniciada: hotel_hotelsalentoreal.com
+📊 Progreso: 0%
+
+💬 Hook Message:
+   Hotelsalentoreal podria estar perdiendo entre **$1.118.208 y $5.591.040 COP mensuales** en comisiones de OTAs y reservas no capturadas por baja visibilidad en Inteligencia Artificial....
+
+📍 FASE 2: Validación Cruzada
+----------------------------------------------------------------------
+📂 Análisis previo encontrado: C:\Users\Jhond\Github\iah-cli\output\FASE-D_salentoreal_post_guard\v4_complete
+
+🔍 Ejecutando auditoría v4.0 con APIs...
+
+============================================================
+V4.0 COMPREHENSIVE AUDIT
+============================================================
+URL: https://www.hotelsalentoreal.com/
+Timestamp: 2026-09-04T12:01:40.816491
+
+[1/5] Validating structured data schemas...
+      Found 8 schemas
+      Hotel: verified
+      FAQ: verified
+
+[1.5/5] Validating metadata (CMS defaults)...
+      CMS Detected: wordpress
+      Default Title: False
+      Default Description: False
+
+[2/5] Retrieving GBP data via Places API...
+      Found: Hotel Salento Real
+      Rating: 4.5/5 (987 reviews)
+      Geo Score: 79/100
+
+[2.5/5] Analyzing nearby competitors...
+   [INFO] Usando GooglePlacesClient con geo_score real
+      Found 5 competitors
+
+[2.7/5] Auditing AI crawler access...
+      Score: 0.50/1.00
+      Robots.txt: Found
+      Blocked: 14 crawlers
+
+[2.8/5] Analyzing content citability...
+      Score: 57.4/100
+      [ADVISORY] Blocks analyzed: 21
+
+[2.9/5] Detecting SEO elements...
+      Open Graph: True
+      Images with Alt: True
+      Active Social: True
+
+[2.10/5] Checking featured snippets (AEO)... [ADVISORY]
+      Source: stub
+      [STUB] Sin API key SerpAPI - medicion no disponible
+
+[2.11/5] Checking LLM mentions (IAO)... [ADVISORY]
+      Source: llm_check
+      Mentions: 0/5
+      Mention rate: 0%
+      Mention score: 0/100
+      Providers: openrouter
+
+[3/5] Checking performance metrics...
+      Status: ERROR
+      API de PageSpeed no disponible
+
+[4/5] Running cross-validation...
+      WhatsApp: verified
+      ADR: estimated
+
+[5/5] Calculating overall assessment...
+
+[IA Readiness] Status: Ready
+
+============================================================
+AUDIT COMPLETE - Overall Confidence: verified
+============================================================
+[OK] Auditoría completada
+   - Schema Hotel: verified
+   - GBP Score: 79/100
+   - WhatsApp: verified
+
+Report saved to: C:\Users\Jhond\Github\iah-cli\output\FASE-I_salentoreal_post_estabilizacion\v4_complete\hotelsalentoreal\v4_audit\audit_report_20260904_120404.json
+   💾 Guardado: C:\Users\Jhond\Github\iah-cli\output\FASE-I_salentoreal_post_estabilizacion\v4_complete\hotelsalentoreal\v4_audit\audit_report_20260904_120404.json
+
+🔍 Validación Cruzada:
+   WhatsApp: VERIFIED (confidence: 100.0)
+
+📍 FASE 3: Escenarios Financieros
+----------------------------------------------------------------------
+[INFO] Onboarding not found in output\FASE-I_salentoreal_post_estabilizacion\clientes, falling back to output\clientes
+   ℹ️  Using defaults (no fresh onboarding data found)
+[HARNESS] Usando financial handlers v4.1.0 (regional_adr: active, pricing: active)
+[HARNESS] Contexto inyectado: 5 ejecucion(es) previa(s) encontrada(s).
+[HARNESS] OK Ejecutado en 0.01s - Outcome: success
+[HARNESS] Financial calculation completed via handlers
+
+💰 Pricing (Hybrid Model):
+   Tier: boutique
+   Monthly Price: $400,000 COP
+   Pain Ratio: 20.41%
+   GATE Compliant: ❌
+   Source: hybrid_v410
+[FASE-K] FinancialBreakdown derivado (camino unico):
+   Comision OTA: $6,881,280 COP
+   Evidence tier: B, disclaimer: Estimación basada en benchmarks regionales y datos de su web. Para mayor precisión, conecte Google Analytics 4.
+
+📍 FASE 3.5: Documentos Comerciales v4.0
+----------------------------------------------------------------------
+[OK] ValidationSummary creado con 5 campos:
+   [OK] whatsapp_number: +573166296142 (verified)
+   [WARN] rooms: 10 (estimated)
+   [WARN] adr_cop: 280000 (estimated)
+   [WARN] occupancy_rate: 0.512 (estimated)
+   [WARN] direct_channel_percentage: 0.2 (estimated)
+[OK] Escenarios financieros validados:
+   Conservador: $6,571,622 COP/mes
+   Realista: $4,042,752 COP/mes
+   Optimista: $1,264,435 COP/mes
+[INFO] Diagnóstico se generará después de validación de coherencia...
+
+ Generando plan de assets...
+   Problemas detectados: 5
+   - Alta Dependencia OTAs: high
+   - Sin Analytics Configurado: medium
+   - Baja Visibilidad de Trafico Organico: medium
+   - Crawlers de IA Bloqueados: medium
+   - Sin llms.txt: low
+   Assets planificados: 4
+   - llms_txt: Insufficient confidence (0.00 < 0.5) (confidence: 0.5)
+   - analytics_setup_guide: Confidence 0.00 vs required 0.0 (confidence: 0.0)
+   - indirect_traffic_optimization: Confidence 0.00 vs required 0.0 (confidence: 0.0)
+   - direct_booking_campaign: Asset is MANUAL_ONLY - requires manual implementation (confidence: 0.7)
+   [SitePresence] Verified 5 asset types on https://www.hotelsalentoreal.com/
+   [DEBUG] problems_have_solutions: score=0.800, passed=True
+   [DEBUG] assets_are_justified: score=1.000, passed=True
+   [DEBUG] financial_data_validated: score=0.700, passed=True
+   [DEBUG] whatsapp_verified: score=1.000, passed=True
+   [DEBUG] price_matches_pain: score=0.800, passed=True
+   [DEBUG] promised_assets_exist: score=0.900, passed=False
+🔒 Gate de Coherencia:
+   Score calculado: 0.85 (umbral: 0.8)
+   Checks: 5/6 pasados
+   [OK] Coherencia aceptable - Generando propuesta completa
+
+📍 FASE 4: Generación de Assets Validados
+Asset direct_booking_campaign is MANUAL_ONLY - requires manual implementation
+[BookingScraper] HTTP 202 from Booking.com
+[DataAssessment] Research gaps: ['Source not checked: booking']
+[LLMSTXTGenerator] 'region' not found in hotel_data. Geographic context will be limited. Ensure audit_data/hotel_data includes region.
+[LLMSTXTGenerator] 'city' not found in hotel_data. Location context will be limited.
+WARNING:modules.commercial_documents.v4_proposal_generator:[RC1] optimization_guide: ninguna brecha candidata ['low_seo_score', 'low_content_length'] presente en opportunity_scores — brecha sin costo atribuible (sin cifras inventadas)
+WARNING:modules.commercial_documents.v4_proposal_generator:[RC1] whatsapp_button: ninguna brecha candidata ['whatsapp_conflict', 'no_whatsapp_visible'] presente en opportunity_scores — brecha sin costo atribuible (sin cifras inventadas)
+WARNING:modules.commercial_documents.v4_proposal_generator:[RC1] hotel_schema: ninguna brecha candidata ['no_hotel_schema'] presente en opportunity_scores — brecha sin costo atribuible (sin cifras inventadas)
+WARNING:modules.commercial_documents.v4_proposal_generator:[RC1] org_schema: ninguna brecha candidata ['no_org_schema'] presente en opportunity_scores — brecha sin costo atribuible (sin cifras inventadas)
+WARNING:modules.commercial_documents.v4_proposal_generator:[RC1] faq_page: ninguna brecha candidata ['no_faq_schema'] presente en opportunity_scores — brecha sin costo atribuible (sin cifras inventadas)
+WARNING:modules.commercial_documents.v4_proposal_generator:[RC1] open_graph: ninguna brecha candidata ['no_og_tags'] presente en opportunity_scores — brecha sin costo atribuible (sin cifras inventadas)
+----------------------------------------------------------------------
+[OK] Assets generados: 4
+   Fallidos: 0
+   Coherencia: 0.83
+   ✅ analytics_setup_guide: WARNING
+   ✅ indirect_traffic_optimization: WARNING
+   ✅ llms_txt: PASSED
+   ✅ monthly_report: PASSED
+
+📍 [T4FIX] Regenerando diagnóstico POST-FASE4 (geo_flow ahora disponible)...
+[OK] Diagnóstico regenerado con coherence_score: 0.85 (gate: PASSED)
+   [SCRUB] Diagnostic (post-T4FIX): 1 fix(es) applied
+      - Moneda: "COP COP" -> "COP"
+   [FASE-6 G1] coherence_validation.json sincronizado con post-gen score=0.83
+
+📍 FASE 3.5: Generación de Propuesta Comercial
+----------------------------------------------------------------------
+   [SCRUB] Proposal (post-gen): 2 fix(es) applied
+[OK] Propuesta generada: C:\Users\Jhond\Github\iah-cli\output\FASE-I_salentoreal_post_estabilizacion\v4_complete\02_PROPUESTA_COMERCIAL_20260904_120413.md
+   💵 Precio: $400,000 COP/mes | ROI: 10.1x
+
+📍 FASE 4.5: Publication Gates (Quality Checks)
+----------------------------------------------------------------------
+🔒 Publication Gates:
+   ✅ hard_contradictions: No hard contradictions detected (count: 0)
+   ✅ evidence_coverage: Evidence coverage at 95.0% (threshold: 95%)
+   ✅ financial_validity: Financial data uses default/legacy values — Tier B evidence
+   ✅ coherence: Coherence score 0.83 meets threshold 0.8
+   ✅ critical_recall: Critical recall at 100.0% (threshold: 90%)
+   ✅ ethics: Ethics validation passed
+   ✅ content_quality: Document quality checks passed: no issues detected
+   ✅ asset_confidence: All 4 assets meet confidence threshold (0.7)
+   ✅ proposal_asset_alignment: 4/4 servicios comprometidos cubiertos (1 generados  + 3 ya en producción )
+   ✅ tier_c_onboarding_required: Tier B: Datos suficientes para propuesta activa.
+   ✅ coverage_no_silent_drop: Coverage completo: 5 en diagnostico/propuesta, 0 justificadas de 5 detectadas
+   ✅ doc_audit_consistency: Document consistent with audit data — no contradictions detected
+   ✅ pricing_compliance: Pricing compliance PASSED with WARNING: pain_ratio 0.2041 outside ideal range [0.03-0.06] — operational_floor $400,000 applied (tier 'boutique' gate_max 0.32: OK)
+
+📋 Publication Readiness: READY_FOR_PUBLICATION
+   ✅ Listo para publicación
+   📄 Gate report: C:\Users\Jhond\Github\iah-cli\output\FASE-I_salentoreal_post_estabilizacion\v4_complete\hotelsalentoreal\v4_audit\gate_report_20260904_120413.json
+
+📍 FASE 4.6: Consistency Checker (Validación Cruzada)
+----------------------------------------------------------------------
+🔍 Consistency Report:
+   Estado: CONSISTENTE
+   Conflictos Hard: 0
+   Conflictos Soft: 0
+   Confidence Score: 0.80
+
+📍 FASE 0E: Delivery Quality Report (Pre-ZIP Gate)
+----------------------------------------------------------------------
+   📄 SitePresence snapshot: C:\Users\Jhond\Github\iah-cli\output\FASE-I_salentoreal_post_estabilizacion\v4_complete\hotelsalentoreal\v4_audit\site_presence_snapshot.json
+   Status: PASS
+   Blocking: False
+   Gates: 5/5 passed
+   📋 Human checklist (2 items) → C:\Users\Jhond\Github\iah-cli\output\FASE-I_salentoreal_post_estabilizacion\v4_complete\hotelsalentoreal\v4_audit\human_checklist.md
+
+📍 FASE 7: Delivery Packaging (Automated)
+----------------------------------------------------------------------
+   [OK] Delivery package created: C:\Users\Jhond\Github\iah-cli\output\FASE-I_salentoreal_post_estabilizacion\v4_complete\deliveries\hotelsalentoreal_20260904.zip
+
+📍 FASE 10: Health Dashboard (System Health Monitor)
+----------------------------------------------------------------------
+   [OK] Health dashboard generated: C:\Users\Jhond\Github\iah-cli\output\FASE-I_salentoreal_post_estabilizacion\v4_complete\health_dashboard\health_dashboard.html
+   [OK] Health summary: C:\Users\Jhond\Github\iah-cli\output\FASE-I_salentoreal_post_estabilizacion\v4_complete\health_dashboard\health_dashboard_summary.json
+
+📍 FASE 5: Generación de Reporte
+----------------------------------------------------------------------
+[OK] Reporte completo guardado: C:\Users\Jhond\Github\iah-cli\output\FASE-I_salentoreal_post_estabilizacion\v4_complete\v4_complete_report.json
+
+======================================================================
+V4.0 COMPLETE - RESUMEN FINAL
+======================================================================
+
+🏨 Hotel: Hotelsalentoreal
+🔗 URL: https://www.hotelsalentoreal.com/
+🌍 Región: eje_cafetero
+
+💰 Proyección Financiera:
+   Rango: $6,571,622 - $1,264,435 COP/mes
+   Valor esperado: $4,042,752 COP/mes
+
+📁 Archivos generados en: C:\Users\Jhond\Github\iah-cli\output\FASE-I_salentoreal_post_estabilizacion\v4_complete/
+   - 01_DIAGNOSTICO_Y_OPORTUNIDAD.md
+   - 02_PROPUESTA_COMERCIAL.md
+   - v4_complete_report.json
+   - hotelsalentoreal/v4_audit/audit_report_*.json
+   - hotelsalentoreal/v4_audit/financial_scenarios_*.json
+   - hotelsalentoreal/v4_audit/gate_report_*.json
+   - delivery_assets/
+     ├── whatsapp_button/
+     ├── faq_page/
+     └── ...
+
+======================================================================
+✨ Flujo v4.0 completado exitosamente
+======================================================================
+
+⚠️  NOTA: Este es un análisis preliminar.
+    Para precisar las cifras, ejecute con datos operativos:
+    python main.py onboard --url https://www.hotelsalentoreal.com/

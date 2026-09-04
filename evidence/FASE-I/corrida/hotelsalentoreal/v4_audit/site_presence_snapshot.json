@@ -1,0 +1,59 @@
+{
+  "snapshot": {
+    "checked_at": "2026-09-04T12:04:04.766257",
+    "faq_page": {
+      "confidence": 0.9,
+      "site_verified": true,
+      "status": "exists"
+    },
+    "hotel_schema": {
+      "confidence": 0.95,
+      "site_verified": true,
+      "status": "exists_with_issues"
+    },
+    "llms_txt": {
+      "confidence": 0.7,
+      "site_verified": false,
+      "status": "not_exists"
+    },
+    "org_schema": {
+      "confidence": 0.95,
+      "site_verified": true,
+      "status": "exists_with_issues"
+    },
+    "results": {
+      "faq_page": {
+        "confidence": 0.9,
+        "site_verified": true,
+        "status": "exists"
+      },
+      "hotel_schema": {
+        "confidence": 0.95,
+        "site_verified": true,
+        "status": "exists_with_issues"
+      },
+      "llms_txt": {
+        "confidence": 0.7,
+        "site_verified": false,
+        "status": "not_exists"
+      },
+      "org_schema": {
+        "confidence": 0.95,
+        "site_verified": true,
+        "status": "exists_with_issues"
+      },
+      "whatsapp_button": {
+        "confidence": 0.7,
+        "site_verified": false,
+        "status": "not_exists"
+      }
+    },
+    "site_url": "https://www.hotelsalentoreal.com/",
+    "whatsapp_button": {
+      "confidence": 0.7,
+      "site_verified": false,
+      "status": "not_exists"
+    }
+  },
+  "snapshot_version": "1.0"
+}

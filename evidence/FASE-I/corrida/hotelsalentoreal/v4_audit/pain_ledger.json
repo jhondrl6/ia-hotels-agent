@@ -1,0 +1,55 @@
+{
+  "entries": [
+    {
+      "confidence": 0.7,
+      "evidence_refs": [],
+      "human_label": "Alta Dependencia OTAs",
+      "pain_id": "low_ota_divergence",
+      "severity": "HIGH",
+      "source_file": "validation",
+      "source_module": "pain_solution_mapper",
+      "status": "DETECTED"
+    },
+    {
+      "confidence": 0.9,
+      "evidence_refs": [],
+      "human_label": "Sin Analytics Configurado",
+      "pain_id": "no_analytics_configured",
+      "severity": "MEDIUM",
+      "source_file": "analytics",
+      "source_module": "pain_solution_mapper",
+      "status": "DETECTED"
+    },
+    {
+      "confidence": 0.8,
+      "evidence_refs": [],
+      "human_label": "Baja Visibilidad de Trafico Organico",
+      "pain_id": "low_organic_visibility",
+      "severity": "MEDIUM",
+      "source_file": "analytics",
+      "source_module": "pain_solution_mapper",
+      "status": "DETECTED"
+    },
+    {
+      "confidence": 0.5,
+      "evidence_refs": [],
+      "human_label": "Crawlers de IA Bloqueados",
+      "pain_id": "ai_crawler_blocked",
+      "severity": "MEDIUM",
+      "source_file": "ai_crawler_audit",
+      "source_module": "pain_solution_mapper",
+      "status": "DETECTED"
+    },
+    {
+      "confidence": 0.9,
+      "evidence_refs": [],
+      "human_label": "Sin llms.txt",
+      "pain_id": "missing_llmstxt",
+      "severity": "LOW",
+      "source_file": "ia_readiness_calculator",
+      "source_module": "pain_solution_mapper",
+      "status": "DETECTED"
+    }
+  ],
+  "pain_ledger_version": "1.0"
+}

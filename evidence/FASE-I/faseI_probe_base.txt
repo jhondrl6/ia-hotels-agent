@@ -1,0 +1,107 @@
+# PROBE output\FASE-D_salentoreal_post_guard\v4_complete
+EXISTS=True
+
+## v4_complete_report.json top keys
+['analytics', 'assets_generated', 'channel_context', 'coherence_score', 'financial_data', 'hotel_id', 'hotel_name', 'modules_used', 'opportunity_scores', 'phases', 'pricing', 'region', 'seo_score', 'url', 'v4_complete']
+  hotel_id = "hotel_hotelsalentoreal.com"
+  url = "https://www.hotelsalentoreal.com/"
+  coherence_score = 0.88
+  publication_state keys = null
+  assets_generated = 4
+    - {"asset_type": "analytics_setup_guide", "preflight_status": "WARNING", "confidence_score": 0.8, "asset_path": null, "is_orphan": null}
+    - {"asset_type": "indirect_traffic_optimization", "preflight_status": "WARNING", "confidence_score": 0.8, "asset_path": null, "is_orphan": null}
+    - {"asset_type": "llms_txt", "preflight_status": "PASSED", "confidence_score": 1.0, "asset_path": null, "is_orphan": null}
+    - {"asset_type": "monthly_report", "preflight_status": "PASSED", "confidence_score": 1.0, "asset_path": null, "is_orphan": null}
+
+## proposal_asset_matrix.json
+  keys = ['alignment_status_version', 'delivery_ready', 'entries', 'proposal_asset_matrix_version']
+  n_entries = 7
+  entry keys = ['alignment', 'asset_path', 'asset_type', 'confidence', 'pain_ids', 'service_name', 'status']
+    - {"service_id": null, "service": null, "name": null, "alignment": "no_breach", "status": "NO_BREACH", "classification": null, "asset_type": "optimization_guide", "asset_path": null, "pain_ids": [], "no_breach": null}
+    - {"service_id": null, "service": null, "name": null, "alignment": "no_breach", "status": "NO_BREACH", "classification": null, "asset_type": "whatsapp_button", "asset_path": null, "pain_ids": [], "no_breach": null}
+    - {"service_id": null, "service": null, "name": null, "alignment": "no_breach", "status": "NO_BREACH", "classification": null, "asset_type": "hotel_schema", "asset_path": null, "pain_ids": [], "no_breach": null}
+    - {"service_id": null, "service": null, "name": null, "alignment": "no_breach", "status": "NO_BREACH", "classification": null, "asset_type": "org_schema", "asset_path": null, "pain_ids": [], "no_breach": null}
+    - {"service_id": null, "service": null, "name": null, "alignment": "no_breach", "status": "NO_BREACH", "classification": null, "asset_type": "faq_page", "asset_path": null, "pain_ids": [], "no_breach": null}
+    - {"service_id": null, "service": null, "name": null, "alignment": "no_breach", "status": "NO_BREACH", "classification": null, "asset_type": "open_graph", "asset_path": null, "pain_ids": [], "no_breach": null}
+    - {"service_id": null, "service": null, "name": null, "alignment": "linked", "status": "LINKED", "classification": null, "asset_type": "llms_txt", "asset_path": null, "pain_ids": ["ai_crawler_blocked"], "no_breach": null}
+  summary = null
+  delivery_ready = true
+
+## coherence_validation.json
+  keys = ['checks', 'errors', 'is_coherent', 'overall_score', 'timestamp', 'version', 'warnings']
+  is_coherent = false
+  checks = [{"name": "problems_have_solutions", "passed": true, "score": 1.0, "message": "100% de problemas tienen solución automática", "severity": "info"}, {"name": "assets_are_justified", "passed": false, "score": 0.75, "message": "Solo 75% de assets tienen justificación", "severity": "error"}, {"name": "fi
+
+## coherence_validation_post_gen.json
+  keys = ['checks', 'errors', 'is_coherent', 'overall_score', 'timestamp', 'version', 'warnings']
+  is_coherent = false
+  checks = [{"name": "problems_have_solutions", "passed": true, "score": 1.0, "message": "100% de problemas tienen solución automática", "severity": "info"}, {"name": "assets_are_justified", "passed": false, "score": 0.75, "message": "Solo 75% de assets tienen justificación", "severity": "error"}, {"name": "fi
+
+## gate_report_20260831_122803.json
+  keys = ['financial_sources', 'gate_results', 'generated_at', 'hotel_url', 'readiness']
+  n_results = 13
+    - {"gate_name": "hard_contradictions", "name": null, "id": null, "passed": true, "status": "PASSED", "severity": null, "value": 0, "blocking": null}
+    - {"gate_name": "evidence_coverage", "name": null, "id": null, "passed": true, "status": "PASSED", "severity": null, "value": 0.95, "blocking": null}
+    - {"gate_name": "financial_validity", "name": null, "id": null, "passed": true, "status": "WARNING", "severity": null, "value": true, "blocking": null}
+    - {"gate_name": "coherence", "name": null, "id": null, "passed": true, "status": "PASSED", "severity": null, "value": 0.88, "blocking": null}
+    - {"gate_name": "critical_recall", "name": null, "id": null, "passed": true, "status": "PASSED", "severity": null, "value": 1.0, "blocking": null}
+    - {"gate_name": "ethics", "name": null, "id": null, "passed": true, "status": "PASSED", "severity": null, "value": null, "blocking": null}
+    - {"gate_name": "content_quality", "name": null, "id": null, "passed": true, "status": "PASSED", "severity": null, "value": 1.0, "blocking": null}
+    - {"gate_name": "asset_confidence", "name": null, "id": null, "passed": true, "status": "PASSED", "severity": null, "value": 1.0, "blocking": null}
+    - {"gate_name": "proposal_asset_alignment", "name": null, "id": null, "passed": true, "status": "WARNING", "severity": null, "value": 1.0, "blocking": null}
+    - {"gate_name": "tier_c_onboarding_required", "name": null, "id": null, "passed": true, "status": "PASSED", "severity": null, "value": null, "blocking": null}
+    - {"gate_name": "coverage_no_silent_drop", "name": null, "id": null, "passed": true, "status": "PASSED", "severity": null, "value": 1.0, "blocking": null}
+    - {"gate_name": "doc_audit_consistency", "name": null, "id": null, "passed": true, "status": "PASSED", "severity": null, "value": null, "blocking": null}
+    - {"gate_name": "pricing_compliance", "name": null, "id": null, "passed": true, "status": "WARNING", "severity": null, "value": 0.2041, "blocking": null}
+  readiness = {"status": "READY_FOR_PUBLICATION", "ready": true, "blocking_issues": [], "warnings": [{"gate": "financial_validity", "message": "Financial data uses default/legacy values — Tier B evidence"}, {"gate": "proposal_asset_alignment", "message":
+
+## commercial_gates_report.json
+  keys = ['all_passed', 'blocking_passed', 'results', 'summary']
+  n_results = 0
+  readiness = null
+
+## commercial_gates_report_diagnostic_20260831_122803.json
+  keys = ['all_passed', 'blocking_passed', 'results', 'summary']
+  n_results = 0
+  readiness = null
+
+## pain_ledger_resolved.json keys=['entries', 'source', 'summary', 'version'] n_entries=3
+    - {"pain_id": "no_analytics_configured", "status": "ASSET_GENERATED", "severity": "MEDIUM", "asset_type": null, "source": null, "asset_path": null}
+    - {"pain_id": "low_organic_visibility", "status": "ASSET_GENERATED", "severity": "MEDIUM", "asset_type": null, "source": null, "asset_path": null}
+    - {"pain_id": "ai_crawler_blocked", "status": "ASSET_GENERATED", "severity": "MEDIUM", "asset_type": null, "source": null, "asset_path": null}
+
+## pain_ledger.json keys=['entries', 'pain_ledger_version'] n_entries=3
+    - {"pain_id": "no_analytics_configured", "status": "DETECTED", "severity": "MEDIUM", "asset_type": null, "source": null, "asset_path": null}
+    - {"pain_id": "low_organic_visibility", "status": "DETECTED", "severity": "MEDIUM", "asset_type": null, "source": null, "asset_path": null}
+    - {"pain_id": "ai_crawler_blocked", "status": "DETECTED", "severity": "MEDIUM", "asset_type": null, "source": null, "asset_path": null}
+
+## asset_generation_report.json
+  keys = ['coherence_report', 'coherence_score_final', 'coherence_score_post', 'coherence_score_pre', 'failed_assets', 'final_coherence_report', 'generated_assets', 'hotel_id', 'hotel_name', 'output_dir', 'skipped_assets', 'summary', 'timestamp']
+  summary = {"total_assets": 4, "generated": 4, "failed": 0, "skipped": 0, "can_use": 4, "estimated": 2, "delivery_ready_percentage": 100.0, "site_verification_applied": false}
+
+## delivery_quality_report.json
+  keys = ['advisory_warnings', 'asset_specificity_gate', 'blocking', 'coverage_failure_rate', 'evidence_gate', 'human_review_items', 'proposal_asset_gate', 'status', 'summary']
+  summary = {"total_gates": 5, "passed": 5, "failed": 0, "coherence_score": 0.88, "blocking_gates": [], "warning_gates": []}
+  status = "PASS"
+
+## site_presence_snapshot.json -> AUSENTE
+
+## human_checklist.md bytes=424 lines=12
+   # Human Review Checklist |  | > Generated: 2026-08-31 12:28 | Status: **PASS** | Blocking: **False** | > Gates: 5/5 passed |  | The human reviews **exceptions only** — do NOT reconstruct coherence or re-validate gates. |  | - [ ] Commercial decision: All gates passed — confirm delivery is ready | - [ ] Final review: Coherence score 0.88 — acceptable range |  | --- | *Checklist generated by HumanChecklistGenerator (FASE
+
+## ia_readiness_report.json
+  keys = ['actionable_items', 'components', 'overall_score', 'status']
+  status = "Ready"
+
+## geo_flow_result.json
+  keys = ['assets_generated', 'case', 'errors', 'geo_assessment', 'responsibility_guide', 'success', 'sync_result']
+
+## site_presence matches en todo el arbol
+
+## deliveries
+  DIR/FILE hotelsalentoreal_20260831 dir=True
+  ZIP hotelsalentoreal_20260831.zip 46552B files=37
+
+## diagnosticos MD
+  01_DIAGNOSTICO_Y_OPORTUNIDAD_20260831_122803.md bytes=13824 lines=293
+  02_PROPUESTA_COMERCIAL_20260831_122803.md bytes=14478 lines=332

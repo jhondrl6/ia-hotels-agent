@@ -1,0 +1,35 @@
+<!-- DEPRECATED: Este archivo es generado por compatibilidad. La fuente oficial de llms.txt está en la carpeta llms_txt/. Generado por: modules/asset_generation/llmstxt_generator.py -->
+
+# Hotel Salento Real
+**URL:** https://www.hotelsalentoreal.com/
+
+## Acerca de
+Discover the charm of Salento at Hotel Salento Real. Enjoy colonial style, sustainability, and warm 
+
+
+## Ubicacion
+**Sitio web:** https://www.hotelsalentoreal.com/
+
+**País:** Colombia
+
+
+## Amenities y Servicios
+**Servicios:** Hospedaje, restaurante, WiFi, recepción 24 horas.
+
+
+## Contacto
+**Sitio web:** https://www.hotelsalentoreal.com/
+
+Para reservas directas y consultas específicas, 
+visite nuestro sitio web o contacte directamente.
+
+
+## Reserva y Contacto
+## Reserva tu experiencia
+
+**Reserva en línea:** Visite nuestro sitio web
+**URL:** https://www.hotelsalentoreal.com/
+
+Para obtener la mejor tarifa garantizada, reserve directamente 
+a través de nuestro sitio web oficial.
+

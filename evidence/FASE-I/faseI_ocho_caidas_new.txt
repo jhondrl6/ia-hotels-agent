@@ -1,0 +1,67 @@
+# OCHO CAIDAS — dir=output\FASE-I_salentoreal_post_estabilizacion\v4_complete
+n_pain_ledger=5 ids=['ai_crawler_blocked', 'low_organic_visibility', 'low_ota_divergence', 'missing_llmstxt', 'no_analytics_configured']
+n_resolved=5 ids=['ai_crawler_blocked', 'low_organic_visibility', 'low_ota_divergence', 'missing_llmstxt', 'no_analytics_configured']
+n_matrix=4 summary={"not_promised": 3, "promised": 4, "unknown": 0}
+
+## 1 PageSpeed ERROR
+  audit: SIN HIT
+  pain_ledger ids que calzan: NINGUNO
+  md: ['[PageSpeed] | Sin Datos de Campo (Core Web Vitals) | 🔴 Alta | API de PageSpeed no disponible |']
+
+## 2 GEO critico 29/100
+  audit: ['$.gbp.geo_score = 79', '$.gbp.geo_score_breakdown.rating_score = 27.0', '$.gbp.geo_score_breakdown.reviews_score = 19.74', '$.gbp.geo_score_breakdown.photos_score = 5.0', '$.gbp.geo_score_breakdown.hours_score = 10.0', '$.gbp.geo_score_breakdown.website_score = 10.0', '$.performance.mobile_score = null', '$.performance.desktop_score = 11', '$.competitors[0].geo_score = 83', '$.competitors[0].geo_score_formula.rating_score = 30.0', '$.competitors[0].geo_score_formula.reviews_score = 20.0', '$.competitors[0].geo_score_formula.photos_score = 5.0', '$.competitors[0].geo_score_formula.hours_score = 10.0', '$.competitors[0].geo_score_formula.website_score = 10.0', '$.competitors[0].score_source = "places_api_real"']
+  pain_ledger ids que calzan: NINGUNO
+  md: ['[GEO] | **GEO** (Para que te UBIQUEN) | 79/100 | 82/100 | ⚠️ Promedio |', '[29/100] | Salud Técnica GEO | 29/100 | critical | 🔴 |', '[critical] | Salud Técnica GEO | 29/100 | critical | 🔴 |']
+
+## 3 Visibilidad LLM = 0
+  audit: ['$.ia_readiness.components.llms_txt = 0', '$.aeo_snippets.snippets_captured = 0', '$.aeo_snippets.snippets_competitor = 0', '$.aeo_snippets.snippet_score = 0', '$.llm_report.mention_rate = 0.0', '$.llm_report.share_of_voice = 0.0']
+  pain_ledger ids que calzan: ['missing_llmstxt']
+  md: ['[Visibilidad] ### [BRECHA 3] Baja Visibilidad de Trafico Organico', '[menci] | Llaman o escriben por WhatsApp | Prefieren el primero que la IA menciona |', '[LLM] ### [BRECHA 5] Sin llms.txt', '[IA] document_type: DIAGNOSTICO_V6']
+
+## 4 missing_llmstxt
+  audit: ['$.ia_readiness.components.llms_txt = 0']
+  pain_ledger ids que calzan: ['missing_llmstxt']
+  md: ['[llms.txt] ### [BRECHA 5] Sin llms.txt']
+
+## 5 schema warnings image/priceRange
+  audit: ['$.seo_elements.imagenes_alt = true', '$.seo_elements.open_graph_tags.og:image = "https://static-resources-elementor.mirai.com/wp-content/uploads/sites/1849/Suite-Quindu.w', '$.seo_elements.open_graph_tags.og:image:width = "800"', '$.seo_elements.open_graph_tags.og:image:height = "551"', '$.seo_elements.open_graph_tags.og:image:type = "image/webp"', '$.seo_elements.images_without_alt = 0']
+  pain_ledger ids que calzan: NINGUNO
+  md: ['[imagen] **SEO Local 60/100** = ✅ ssl(15%) + ✅ schema_hotel(20%) + ✅ imagenes_alt(15%) + ✅ schema_reviews(10%)', '[schema] **GEO 85/100** = ✅ nap_consistente(15%) + ✅ redes_activas(10%) + ✅ geo_score_gbp(30%) + ✅ fotos_gbp(15%) + ✅ schema_reviews_geo(15%)']
+
+## 6 Fotos GBP 10/40
+  audit: ['$.gbp.photos = 10', '$.gbp.geo_score_breakdown.photos_score = 5.0', '$.competitors[0].fotos = 10', '$.competitors[0].geo_score_formula.photos_score = 5.0', '$.competitors[1].fotos = 10', '$.competitors[1].geo_score_formula.photos_score = 5.0', '$.competitors[2].fotos = 10', '$.competitors[2].geo_score_formula.photos_score = 5.0', '$.competitors[3].fotos = 10', '$.competitors[3].geo_score_formula.photos_score = 5.0', '$.competitors[4].fotos = 10', '$.competitors[4].geo_score_formula.photos_score = 5.0']
+  pain_ledger ids que calzan: NINGUNO
+  md: ['[Fotos] **GEO 85/100** = ✅ nap_consistente(15%) + ✅ redes_activas(10%) + ✅ geo_score_gbp(30%) + ✅ fotos_gbp(15%) + ✅ schema_reviews_geo(15%)', '[fotos GBP] | Fotos GBP Insuficientes | 🟡 Media | Subir al menos 30 fotos adicionales |']
+
+## 7 metadata vacios/None
+  audit: ['$.schema.properties.description = "Discover the charm of Salento at Hotel Salento Real. Enjoy colonial style, sustainability', '$.metadata.has_default_title = false', '$.metadata.title = ""', '$.metadata.has_default_description = false', '$.metadata.description = ""', '$.seo_elements.open_graph_tags.og:title = "Hotel Salento Real | Quindio, Colombia - Web Oficial"', '$.seo_elements.open_graph_tags.og:description = "Descubre el encanto de Salento en el Hotel Salento Real. Estilo colonial, sostenibilidad ']
+  pain_ledger ids que calzan: NINGUNO
+  md: SIN MENCION
+
+## 8 low_ota_divergence
+  audit: ['$.schema.total_schemas = 8', '$.competitors[0].geo_score_formula.total = 83', '$.competitors[1].geo_score_formula.total = 83', '$.competitors[2].geo_score_formula.total = 82', '$.competitors[3].geo_score_formula.total = 82', '$.competitors[4].geo_score_formula.total = 81', '$.llm_report.total_mentions = 0']
+  pain_ledger ids que calzan: ['low_ota_divergence']
+  md: ['[OTA] financial_ota_commission_real: $6.881.280 COP', '[divergencia] > ⚠️ **Nota sobre divergencia de scores**: El score GEO en la tabla principal viene directamente del `geo_score` de Google Business Profile (algoritmo', '[canal directo] - **Detalle:** Solo 20% de reservas por canal directo']
+
+## geo_flow_result.json
+  keys=['assets_generated', 'case', 'errors', 'geo_assessment', 'responsibility_guide', 'success', 'sync_result']
+  case="critical" success=True errors=[]
+  geo_assessment={"total_score": 29, "band": "critical"}
+  assets_generated=["C:\\Users\\Jhond\\Github\\iah-cli\\output\\FASE-I_salentoreal_post_estabilizacion\\v4_complete\\hotelsalentoreal\\geo_enriched\\geo_badge.md", "C:\\Users\\Jhond\\Github\\iah-cli\\output\\FASE-I_sale
+  sync_result={"is_consistent": true, "combination_tag": "Crisis técnica confirma pérdida", "recommendation": "CRISIS TÉCNICA: El sitio tiene score GEO crítico que contribuye directamente a la pérdida comercial. La
+
+## ia_readiness_report.json
+  overall=73.7851111111111 status=Ready
+  components={"schema_quality": 160.0, "crawler_access": 50.0, "citability": 57.42, "llms_txt": 0, "brand_signals": 50.0}
+  actionable=["Review robots.txt to ensure AI crawler access is permitted", "Add clear author attribution and citeable content sections", "Create /llms.txt file with content inventory for AI crawlers", "Strengthen brand signals: consistent NAP, social profiles, and entity markup", "Configure Google Analytics 4 t
+
+## site_presence_snapshot.json
+  {"snapshot": {"checked_at": "2026-09-04T12:04:04.766257", "faq_page": {"confidence": 0.9, "site_verified": true, "status": "exists"}, "hotel_schema": {"confidence": 0.95, "site_verified": true, "status": "exists_with_issues"}, "llms_txt": {"confidence": 0.7, "site_verified": false, "status": "not_exists"}, "org_schema": {"confidence": 0.95, "site_verified": true, "status": "exists_with_issues"}, "results": {"faq_page": {"confidence": 0.9, "site_verified": true, "status": "exists"}, "hotel_schema
+
+## performance / presencia en ledger y matriz
+  pains de performance en ledger: []
+  estados matriz: ['LINKED', 'PRESENT_IN_PRODUCTION']
+    - {"service_name": "Schema Hotel", "status": "PRESENT_IN_PRODUCTION", "alignment": "present_in_production", "asset_type": "hotel_schema", "asset_path": null, "pain_ids": []}
+    - {"service_name": "Schema Organization", "status": "PRESENT_IN_PRODUCTION", "alignment": "present_in_production", "asset_type": "org_schema", "asset_path": null, "pain_ids": []}
+    - {"service_name": "Página de FAQ", "status": "PRESENT_IN_PRODUCTION", "alignment": "present_in_production", "asset_type": "faq_page", "asset_path": null, "pain_ids": []}
+    - {"service_name": "Optimización para IA Generativa", "status": "LINKED", "alignment": "linked", "asset_type": "llms_txt", "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\FASE-I_salentoreal_post_estabilizacion\\v4_complete\\hotelsal

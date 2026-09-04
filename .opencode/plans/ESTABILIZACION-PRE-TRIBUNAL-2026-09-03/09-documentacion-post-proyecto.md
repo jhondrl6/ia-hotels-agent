@@ -65,21 +65,49 @@ fase con el nombre real. Lo importante para RELEASE es la **lista consolidada de
 ## Sección C — Ejecución E2E (FASE-I)
 
 > Resultado certificado de la **única** corrida `v4complete` del plan, sobre Hotel Salento Real.
-> La llena FASE-I y la certifica FASE-VERIFY. **Valores reales, no de fixture.**
+> Llena FASE-I (2026-09-04); certifica FASE-VERIFY. **Valores reales, no de fixture.**
+> Comando: `./venv/Scripts/python.exe main.py v4complete --url https://www.hotelsalentoreal.com/ --output output/FASE-I_salentoreal_post_estabilizacion`
+> → **EXIT_CODE 0 en 174 s** (12:01:24 → 12:04:18), 0 tracebacks, `"Using defaults"`, 0 interferencias del
+> `own_site_guard`, sin `clientes/`, sin `--ga4-property-id`, sin `--force`. **Comparación: 14/16 checks.**
 
-| Campo | Baseline (FASE-D 2026-08-31 12:28) | Corrida FASE-I | Delta | AC relacionado |
+| Campo | Baseline (FASE-D 2026-08-31 12:28) | Corrida FASE-I (2026-09-04 12:04) | Delta | AC relacionado |
 |-------|------------------------------------|----------------|-------|----------------|
-| `no_breach` (proposal_asset_matrix) | 6 | *(pendiente)* | *(pendiente)* | AC5 |
-| `coverage_ratio` | 1.000 (tautológico) | *(pendiente)* | *(pendiente)* | AC6 |
-| `is_coherent` (3 artefactos / 6 copias) | `false` | *(pendiente)* | *(pendiente)* | AC6, AC12 |
-| `coherence` score | 0.88 | *(pendiente)* | *(pendiente)* | NR2 |
-| Gates ejecutados | 13 | *(pendiente: 11+2)* | *(pendiente)* | NR3 |
-| `site_presence_snapshot` en disco | **ausente** | *(pendiente: presente)* | *(pendiente)* | AC9 |
-| `asset_path` en entradas LINKED | `null` | *(pendiente)* | *(pendiente)* | AC9 |
-| G9 (delivery_quality_report) | `skipped` contaba como `passed` | *(pendiente: NOT_EVALUATED)* | *(pendiente)* | AC11 |
-| ZIP de delivery | generado | *(pendiente)* | *(pendiente)* | NR4 |
+| `no_breach` (proposal_asset_matrix) | 6 | **0** — matriz de 4: 3 `PRESENT_IN_PRODUCTION` + 1 `LINKED` | **6 → 0** | **AC5 ✅** |
+| `coverage_ratio` | 1.000 (tautológico) | 1.000 **ya no algebraico**: `summary {promised 4, not_promised 3, unknown 0}`; `coverage_no_silent_drop` con `uncovered: []` sobre **5** brechas | discriminatorio | AC6 |
+| `is_coherent` (3 artefactos / 6 copias) | `false` (4 declaraciones, 8 copias en disco) | **`true`** (4 declaraciones, 4 copias) | **false → true** | **AC6, AC12 ✅** |
+| `coherence` score | 0.88 | **0.8333** (pre/post/final 0.83/0.83/0.83) | **−0.047, explicado** (ver abajo) | NR6 ✅ · **S-I4** |
+| Gates ejecutados | 13 (dict plano, `severity=null` en todos) | 13 → **11 `PASSED` + 2 `WARNING`**, `READY_FOR_PUBLICATION`, `blocking_issues: []` | el perfil se ve en el **veredicto**, no por gate | AC7 ⚠️ **S-I2** |
+| `doc_audit_consistency` | `PASSED` con `value=null` | `PASSED` con **`value=0`** y mensaje real | deja de ser vacuo | **NR1 ✅** |
+| `critical_recall` | 1.0 **vacuo** (0 críticos) | 1.0 con **2 críticos registrados** (PageSpeed ERROR + banda GEO `critical`) y **`details={}`** | **criterio literal `< 1.0` NO cumplido** | NR2 ⚠️ **S-I1** |
+| `site_presence_snapshot` en disco | **ausente** (deuda A2/H7) | **presente**: 1.421 B, 5 servicios, **y dentro del ZIP** | deuda A2 cerrada | **AC9 ✅** |
+| `asset_path` en entradas LINKED | `null` | **poblado** (ruta absoluta al `llms_txt` generado) | A6 cerrado | **AC9 ✅** *(S-I3: el report usa la clave `path`)* |
+| G9 (`delivery_quality_report`) | `skipped` contaba como `passed` | `status=PASS`, 5/5, `blocking_gates: []`; `human_checklist.md` 424 B sobre excepciones | NOT_EVALUATED disponible | AC11 ✅ |
+| ZIP de delivery | 46.552 B / 37 archivos, **con `is_coherent=false`** | 47.358 B / **38** archivos, **con `is_coherent=true` y `ready=true`** | **+1** = el snapshot | **AC12 ✅** |
+| `pain_ledger` | 3 entradas, **todas MEDIUM** | **5**: `low_ota_divergence` **HIGH**, `missing_llmstxt` LOW, 3 MEDIUM | **+2 pains antes invisibles** | AC4 (B) · V7 (H) |
+| Financiera | $6.571.622 / **$4.042.752** / $1.264.435 | **numéricamente idéntica** | **0** | equivalencia Tier B |
 
-**Anomalías preexistentes** (no cuentan como regresión): *(FASE-I las clasifica; VERIFY las confirma)*.
+**Anomalías clasificadas** (detalle en `evidence/FASE-I/comparacion-vs-baseline.md` §6):
+
+* **(i) fix esperado del plan — 9**: `is_coherent` true ×4 · `no_breach` 6→0 · `summary` de la matriz poblado ·
+  snapshot existente y viajando en el ZIP · `asset_path` LINKED · `doc_audit_consistency` null→0 ·
+  pains 3→5 · `assets_are_justified` 0.75→1.0 · PageSpeed ERROR divulgado y registrado como crítico.
+* **(ii) deuda del plan — 4**: **S-I1** `critical_recall` 1.0 con `details={}` — el artefacto no distingue
+  n/n del 0/0 y el detector G2 queda a la sombra del registro V6 de H · **S-I2** severidad 11+2 no
+  serializada en `gate_report_*.json` · **S-I4** `problems_have_solutions` 1.0→0.6 con
+  `mapped_to_service: 0` y `justified_skip: 0` pese a la Capa 1 de A/B · **S-I7** `proposal_asset_alignment`
+  narra `"4/4 servicios comprometidos"` mientras su `details.total_services = 1`.
+* **(iii) infraestructura preexistente — 3**: `performance.status=ERROR` con `PAGESPEED_API_KEY` válida
+  (39 chars) y `GOOGLE_PAGESPEED_API_KEY` placeholder (3 chars) conviviendo — la trampa **V12** ya medida en
+  H · `GEMINI_API_KEY` ausente · `CG-WHATSAPP-LEAD` en `passed:false` **idéntico al baseline** ⟹ no es regresión.
+* **(iv) variación natural del sitio vivo — 0**. Comprobado, no asumido: `gbp.photos=10`, rating/reviews,
+  `metadata.title=""`, los 5 competidores y los 3 escenarios financieros son **numéricamente idénticos** en
+  ambas corridas. Lo único que cambió es el `research_id` (se genera por corrida, no se cachea) y los timestamps.
+
+**Efecto que VERIFY debe conocer**: el plan esperaba «`coherence ≥ 0.80`» — se cumple — pero **no** esperaba
+que la coherencia **bajara**. La caída es aritmética de honestidad: el denominador de
+`problems_have_solutions` pasó de 3 a 5 porque el sistema ahora **conoce** dos pains que antes se tragaba.
+El «0.88 → 0.9133» que publicó FASE-C **no era una predicción de la corrida**: se midió sobre el ledger de
+3 pains del baseline → **S-I4**.
 
 ---
 
@@ -90,9 +118,9 @@ fase con el nombre real. Lo importante para RELEASE es la **lista consolidada de
 | Métrica | Valor inicial | Valor actual | Última fase que actualizó |
 |---------|---------------|--------------|---------------------------|
 | Tests totales (`def test_`) | 3,689 | **3,899** atribuibles al plan (**A 21 + B 29 + C 14 + D 24 + E 10 + F 23 = 121 funciones** + 3 netos de C + **G 40 netas** + **H 46 netas** = 210 funciones netas). Medición 2026-09-04 al cierre de H (árbol de trabajo): `grep -rE "^\s*def test_" tests --include=*.py \| wc -l` = **3,899** vs **3,853** en `HEAD` (post-G). **Delta H = +46 funciones / +74 casos** por archivo: `test_pain_solution_mapper.py` 5→**21** func (5→46 casos), `test_diagnostic_brechas.py` 42→**52**, `test_diagnostic_generator.py` 27→**36**, `test_metadata_validator.py` 22→**23**, `tests/auditors/test_v4_comprehensive.py` 16→**26** func (+13 casos), `test_hotel_visperas_regression.py` **intacto**. Aritmética verificada: 3,853 (post-G) + 46 = **3,899**. Archivos: **293** `.py` en `tests/` (**H no creó archivos de test nuevos**). ⚠️ `AGENTS.md`/README documentan **3,689** ⟹ desfase de **+210** pendiente de **S11/RELEASE** | H |
-| Tests quality_gates + asset_generation | 848 passed / 2 skipped | **944 passed / 2 skipped — SIN cambio tras H**. H no tocó ninguno de los dos directorios (sus tests viven en `tests/commercial_documents/`, `tests/data_validation/`, `tests/auditors/` y `tests/` raíz), así que el contador quedó idéntico al cierre de G ⟹ **0 regresiones** y delta de la fase = **0** en esta métrica (`evidence/FASE-H/faseH_baseline_pre.txt` = `faseH_baseline.txt` = 944/2). ⚠️ **El «848/2» que citaba el prompt de FASE-H estaba desactualizado**: es el baseline **pre-plan**, no el vigente — la fase lo re-verificó en su propio árbol antes de aceptar nada (S26: un conteo literal no puede ser invariante de un plan que agrega tests; lo único que funciona es medir el pre en el árbol propio). Árbol ancho: sigue el **1 fallo preexistente y ajeno** `tests/test_diagnostic_geo_metrics.py::test_diagnostic_includes_geo_metrics` → **S-H16** | H |
+| Tests quality_gates + asset_generation | 848 passed / 2 skipped | **944 passed / 2 skipped — delta cero tras FASE-I**. La corrida E2E no añade ni rompe tests: medido **antes** (`6.31 s`) y **después** (`5.86 s`) de la única corrida, ambos **944/2** (`evidence/FASE-I/faseI_pre_baseline.txt`, `faseI_post_baseline.txt`). `run_all_validations.py --quick` **7/7 en ambos puntos**. I **no sumó tests** — es fase de evidencia, no de código; su producto son los 16 checks de `comparar_faseI_vs_baseline.py` y los artefactos de `evidence/FASE-I/`. ⚠️ Pre-flight con **1 fallo documental preexistente en HEAD**: `validate_agents_md.py` → `test_count` **3689 (AGENTS) vs 3889 (pytest) = 5.1 % > ±5 %** → **S-I6**, le toca a RELEASE (S11), no a I. Árbol ancho: sigue el **1 fallo preexistente y ajeno** `tests/test_diagnostic_geo_metrics.py::test_diagnostic_includes_geo_metrics` → **S-H16** | I |
 | Contract tests agregados | 0 | **170 funciones** (sin cambio por H): A = 21/37 (`tests/common/test_service_identity_registry.py`) + B = 29/46 (`test_pain_map_bijection.py` 11/28 + `test_detect_pains_emisiones_faseB.py` 18/18) + C = 14/17 (`test_fase_c_propuesta_dinamica.py`) + D = 24/24 (`test_gate_severity_lists.py` 8 + `TestFASEDGateSeverity` 12 + `TestAdvisoryDisclosureFASED` 4; sin parametrizar) + E = 10/10 (`test_site_presence_persistence.py` 5 + `test_delivery_asset_path.py` 5) + F = 23/23 (anti-A4 en `test_alignment_result.py` 5 — fixture canónico `normalize_site_presence` + igualdad oráculo↔matriz; `TestFaseFCoherenceVerdictPasses` 7 en `test_coherence_gate.py` — única definición del veredicto; `test_delivery_quality_report.py` 6 — `NOT_EVALUATED` visible y único default; `TestFaseFCoherenceRespetaIsCoherent` 5 en `test_publication_gates.py` — repro 0.88/False) + G = **49** (16 detector + 14 V5/V9 + 12 doc_audit reescrito + 7 recall/summary en `test_publication_gates.py`; sin parametrizar salvo casos heredados). ⚠️ **H no sumó contract tests entre módulos**: sus 46 funciones son **units** de los seis quirúrgicos **más 2 guardianes anti-deriva** — `test_v6_estado_not_evaluated_reutiliza_literal_canonico_del_gate` (el literal replicado por el ciclo de imports no puede divergir del del gate) y `test_v13_no_existe_segunda_implementacion_del_validador` (fija la **identidad** de la clase, no su texto) — que van en la fila de arriba. Los **contratos de A y B se re-verificaron en verde: 83 passed** | H |
-| Fases completadas | 0 / 11 | **8 / 11** (A, B, C, D, E, F, G, **H**) — B y D en **sesiones paralelas** sobre el mismo working tree (L-D1); C en sesión propia sobre el árbol ya combinado; E en sesión propia, con sus 2 tracks **secuenciales** (ambos editan `main.py` — desviación justificada de §4); F en sesión propia (DIRECTO), commit de código `23d0978`; **G** en sesión propia (DIRECTO), commit de código `c317cda`; **H** en sesión propia (**DELEGADA con 2 subagentes + parent**), con el reparto **re-emitido por archivos disjuntos** porque dos tracks compartían `pain_solution_mapper.py` y `v4_diagnostic_generator.py` (L-H2, mismo defecto de §4 que S-E1); su código queda en el árbol de trabajo de la sesión y el parent lo commitea al cerrar | H |
+| Fases completadas | 0 / 11 | **9 / 11** (A, B, C, D, E, F, G, H, **I**) — B y D en **sesiones paralelas** sobre el mismo working tree (L-D1); C en sesión propia sobre el árbol ya combinado; E en sesión propia, con sus 2 tracks **secuenciales** (ambos editan `main.py` — desviación justificada de §4); F en sesión propia (DIRECTO), commit de código `23d0978`; **G** en sesión propia (DIRECTO), commit de código `c317cda`; **H** en sesión propia (**DELEGADA con 2 subagentes + parent**), con el reparto **re-emitido por archivos disjuntos** porque dos tracks compartían `pain_solution_mapper.py` y `v4_diagnostic_generator.py` (L-H2, mismo defecto de §4 que S-E1); **I** en sesión propia (**MIXTO**): la única corrida E2E delegada a un subagente que **solo ejecutó y capturó**, con pre-flight, evidencia proactiva, comparación y clasificación de anomalías en el parent (executor L30 RC1-RC2) — **0 archivos de código tocados**, como exigía su alcance | I |
 | Versión | 4.74.1 | 4.74.1 *(solo RELEASE la mueve)* | — |
 | Registros de identidad consolidados | ≥9 dispersos (dossier) → **15** reales tras el censo (C-5 añadió el #15) | **1 canónico** (`SERVICE_IDENTITIES`) + **Capa 1** (`PAIN_SOLUTION_MAP`) + **6 derivados** + **4 validados contra Capa 1** + **3 fuera de alcance** — censo §8.2. **B retiró 1 pain_id de Capa 1** (`no_ga4_enhanced`, guardia insatisfacible) ⟹ Capa 1 = **26**, no 27: cualquier cita de «27» en docs/prompts posteriores quedó desactualizada | B |
 | Peso de impacto de narratives (S14/C-5) | 16 valores × 4 copias YAML + 16 fallbacks Python = **80 literales** | **20 valores × 4 regiones** (los 4 pains nuevos declarados en `regional_benchmarks.yaml`) + fallback Python **derivado del `estimated_impact` de Capa 1** (nunca un default mudo). La costura de regionalización se preservó a propósito (S-B8 pide el lint, no el colapso) | B |

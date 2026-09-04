@@ -1,0 +1,57 @@
+{
+  "alignment_status_version": "1.0",
+  "delivery_ready": true,
+  "entries": [
+    {
+      "alignment": "present_in_production",
+      "asset_path": null,
+      "asset_type": "hotel_schema",
+      "confidence": 0.0,
+      "pain_ids": [],
+      "service_name": "Schema Hotel",
+      "status": "PRESENT_IN_PRODUCTION"
+    },
+    {
+      "alignment": "present_in_production",
+      "asset_path": null,
+      "asset_type": "org_schema",
+      "confidence": 0.0,
+      "pain_ids": [],
+      "service_name": "Schema Organization",
+      "status": "PRESENT_IN_PRODUCTION"
+    },
+    {
+      "alignment": "present_in_production",
+      "asset_path": null,
+      "asset_type": "faq_page",
+      "confidence": 0.0,
+      "pain_ids": [],
+      "service_name": "Página de FAQ",
+      "status": "PRESENT_IN_PRODUCTION"
+    },
+    {
+      "alignment": "linked",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\FASE-I_salentoreal_post_estabilizacion\\v4_complete\\hotelsalentoreal\\llms_txt\\llms_20260904_120413.txt",
+      "asset_type": "llms_txt",
+      "confidence": 1.0,
+      "pain_ids": [
+        "missing_llmstxt",
+        "ai_crawler_blocked"
+      ],
+      "service_name": "Optimización para IA Generativa",
+      "status": "LINKED"
+    }
+  ],
+  "not_promised": [
+    "SEO Local",
+    "Botón de WhatsApp",
+    "Meta Tags Sociales (Open Graph)"
+  ],
+  "proposal_asset_matrix_version": "2.0",
+  "summary": {
+    "not_promised": 3,
+    "promised": 4,
+    "unknown": 0
+  },
+  "unknown_services": []
+}

@@ -1,0 +1,151 @@
+{
+  "new_dir": "output\\FASE-I_salentoreal_post_estabilizacion\\v4_complete",
+  "baseline_dir": "output\\FASE-D_salentoreal_post_guard\\v4_complete",
+  "passed": 14,
+  "total": 16,
+  "gate_names_new": [
+    "asset_confidence",
+    "coherence",
+    "content_quality",
+    "coverage_no_silent_drop",
+    "critical_recall",
+    "doc_audit_consistency",
+    "ethics",
+    "evidence_coverage",
+    "financial_validity",
+    "hard_contradictions",
+    "pricing_compliance",
+    "proposal_asset_alignment",
+    "tier_c_onboarding_required"
+  ],
+  "checks": [
+    {
+      "id": "C1_identidad",
+      "ref": "equiv baseline",
+      "pass": true,
+      "baseline": "hotel_hotelsalentoreal.com | https://www.hotelsalentoreal.com/",
+      "new": "hotel_hotelsalentoreal.com | https://www.hotelsalentoreal.com/",
+      "note": "mismo sitio, mismos datos de entrada; distincto codigo"
+    },
+    {
+      "id": "C2_coherence_ge_0.80",
+      "ref": "NR6/AC6",
+      "pass": true,
+      "baseline": 0.88,
+      "new": 0.8333333333333334,
+      "note": "baseline 0.88 canónico (0.9133 no existe en artefactos: C1 del dossier)"
+    },
+    {
+      "id": "C3_is_coherent",
+      "ref": "AC6/V16",
+      "pass": true,
+      "baseline": "4 declaraciones, valores={'coherence_validation.json': False, 'asset_generation_report.coherence_report': False, 'asset_generation_report.final_coherence_report': False, 'coherence_validation_post_gen.json': False}, copias_en_disco=8",
+      "new": "valores={'coherence_validation.json': True, 'asset_generation_report.coherence_report': True, 'asset_generation_report.final_coherence_report': True, 'coherence_validation_post_gen.json': True}, copias_en_disco=4, archivos={'hotelsalentoreal\\\\v4_audit\\\\asset_generation_report.json': 2, 'hotelsalentoreal\\\\v4_audit\\\\coherence_validation.json': 1, 'hotelsalentoreal\\\\v4_audit\\\\coherence_validation_post_gen.json': 1}",
+      "note": "exigido: true en todas, o campo eliminado por decision F3 (copias=0)"
+    },
+    {
+      "id": "C4_no_breach_cero",
+      "ref": "AC5",
+      "pass": true,
+      "baseline": "no_breach=6 / enlaces=7 (6 NO_BREACH + 1 LINKED)",
+      "new": "no_breach=0 / enlaces=4",
+      "note": "summary nuevo={\"not_promised\": 3, \"promised\": 4, \"unknown\": 0}"
+    },
+    {
+      "id": "C5_site_presence_snapshot",
+      "ref": "AC9/A2",
+      "pass": true,
+      "baseline": "0 archivos (deuda A2/H7: inexistente)",
+      "new": "['hotelsalentoreal\\\\v4_audit\\\\site_presence_snapshot.json (1421B)']",
+      "note": "su aparicion es la prueba positiva de AC9"
+    },
+    {
+      "id": "C6_asset_path_poblado",
+      "ref": "AC9/A6",
+      "pass": true,
+      "baseline": "matriz=[{'asset_type': 'optimization_guide', 'status': 'NO_BREACH', 'asset_path': None}, {'asset_type': 'whatsapp_button', 'status': 'NO_BREACH', 'asset_path': None}, {'asset_type': 'hotel_schema', 'status': 'NO_BREACH', 'asset_path': None}, {'asset_type': 'org_schema', 'status': 'NO_BREACH', 'asset_path': None}, {'asset_type': 'faq_page', 'status': 'NO_BREACH', 'asset_path': None}, {'asset_type': 'open_graph', 'status': 'NO_BREACH', 'asset_path': None}, {'asset_type': 'llms_txt', 'status': 'LINKED', 'asset_path': None}] | report_rutas=['C:\\\\Users\\\\Jhond\\\\Github\\\\iah-cli\\\\output\\\\FASE-D_salentoreal_post_guard\\\\v4_complete\\\\hotelsalentoreal\\\\analytics_setup_guide\\\\ESTIMATED_guia_configuracion_ga4_20260831_122803.md', 'C:\\\\Users\\\\Jhond\\\\Github\\\\iah-cli\\\\output\\\\FASE-D_salentoreal_post_guard\\\\v4_complete\\\\hotelsalentoreal\\\\indirect_traffic_optimization\\\\ESTIMATED_optimizacion_trafico_indirecto_20260831_122803.md', 'C:\\\\Users\\\\Jhond\\\\Github\\\\iah-cli\\\\output\\\\FASE-D_salentoreal_post_guard\\\\v4_complete\\\\hotelsalentoreal\\\\llms_txt\\\\llms_20260831_122803.txt', 'C:\\\\Users\\\\Jhond\\\\Github\\\\iah-cli\\\\output\\\\FASE-D_salentoreal_post_guard\\\\v4_complete\\\\hotelsalentoreal\\\\monthly_report\\\\informe_mensual_20260831_122803.md']",
+      "new": "matriz=[{'asset_type': 'hotel_schema', 'status': 'PRESENT_IN_PRODUCTION', 'asset_path': None}, {'asset_type': 'org_schema', 'status': 'PRESENT_IN_PRODUCTION', 'asset_path': None}, {'asset_type': 'faq_page', 'status': 'PRESENT_IN_PRODUCTION', 'asset_path': None}, {'asset_type': 'llms_txt', 'status': 'LINKED', 'asset_path': 'C:\\\\Users\\\\Jhond\\\\Github\\\\iah-cli\\\\output\\\\FASE-I_salentoreal_post_estabilizacion\\\\v4_complete\\\\hotelsalentoreal\\\\llms_txt\\\\llms_20260904_120413.txt'}] | report_pobladas=4/4 | sin_ruta_injustificada=[]",
+      "note": "baseline: null incluso en la entrada LINKED (A6). PRESENT_IN_PRODUCTION se verifica via site_presence_snapshot"
+    },
+    {
+      "id": "C7_perfil_gates",
+      "ref": "AC7/D2",
+      "pass": false,
+      "baseline": "13 gates, severity=null en todos (dict plano)",
+      "new": "n=13 blocking=0 advisory=0",
+      "note": "blocking=[] advisory=[]"
+    },
+    {
+      "id": "C8_doc_audit_no_nulo",
+      "ref": "NR1/G1",
+      "pass": true,
+      "baseline": "status=PASSED value=None (PASSED con value=null)",
+      "new": "status=PASSED value=0 detail={\"gate_name\": \"doc_audit_consistency\", \"passed\": true, \"status\": \"PASSED\", \"message\": \"Document consistent with audit data — no contradictions detected\", \"value\": 0, \"suggestion\": \"\", \"details\": {}}",
+      "note": "exigido: evaluado de verdad, con value no nulo o NOT_EVALUATED visible"
+    },
+    {
+      "id": "C9_critical_recall_lt_1",
+      "ref": "NR2/G2",
+      "pass": false,
+      "baseline": "1.0 status=PASSED criticos_del_audit=0 geo_band=critical details={\"critical_issues_count\": 0, \"recall_basis\": \"audit_present_no_critical_issues\"}",
+      "new": "1.0 status=PASSED criticos_del_audit=['PageSpeed API ERROR - performance not measurable (API de PageSpeed no disponible)'] geo_band=critical details={}",
+      "note": "criterio literal: < 1.0. Si da 1.0 con criticos registrados, hay que distinguir 1.0=n/n (evidencia dura) del 1.0=0/0 vacuo del baseline; el artifact no lo distingue si details={}"
+    },
+    {
+      "id": "C10_coherencia_veredicto_zip",
+      "ref": "AC12",
+      "pass": true,
+      "baseline": "ZIP generado con is_coherent=false (incoherencia): [{'file': 'hotelsalentoreal_20260831.zip', 'bytes': 46552, 'files': 37}]",
+      "new": "zips=[{'file': 'hotelsalentoreal_20260904.zip', 'bytes': 47358, 'files': 38}] ready=True status=READY_FOR_PUBLICATION is_coherent_false=False",
+      "note": "no debe empaquetarse entrega si el veredicto de coherencia es negativo"
+    },
+    {
+      "id": "C11_commercial_gates",
+      "ref": "CG-* / D2",
+      "pass": true,
+      "baseline": "12 CG en 2 archivos: {\"commercial_gates_report.json\": 3, \"commercial_gates_report_diagnostic_20260831_122803.json\": 9} fallan={\"commercial_gates_report.json\": [], \"commercial_gates_report_diagnostic_20260831_122803.json\": [\"CG-WHATSAPP-LEAD\"]}",
+      "new": "12 CG en 2 archivos: {\"commercial_gates_report.json\": 3, \"commercial_gates_report_diagnostic_20260904_120413.json\": 9} fallan={\"commercial_gates_report.json\": [], \"commercial_gates_report_diagnostic_20260904_120413.json\": [\"CG-WHATSAPP-LEAD\"]}",
+      "note": "baseline: 3 verdes + 9 diagnosticos con CG-WHATSAPP-LEAD failed (WARNING)"
+    },
+    {
+      "id": "C12_pain_ledger_resolved",
+      "ref": "AC6/FASE-B",
+      "pass": true,
+      "baseline": "3 entradas: [('ai_crawler_blocked', 'ASSET_GENERATED', 'MEDIUM'), ('low_organic_visibility', 'ASSET_GENERATED', 'MEDIUM'), ('no_analytics_configured', 'ASSET_GENERATED', 'MEDIUM')]",
+      "new": "5 entradas: [('ai_crawler_blocked', 'ASSET_GENERATED', 'MEDIUM'), ('low_organic_visibility', 'ASSET_GENERATED', 'MEDIUM'), ('low_ota_divergence', 'DETECTED', 'HIGH'), ('missing_llmstxt', 'DETECTED', 'LOW'), ('no_analytics_configured', 'ASSET_GENERATED', 'MEDIUM')] summary={\"total\": 5, \"asset_generated\": 3, \"mapped_to_service\": 0, \"justified_skip\": 0}",
+      "note": "baseline: 3 MEDIUM ASSET_GENERATED; V7 (FASE-H) habilita un pain high desde default"
+    },
+    {
+      "id": "C13_pain_high_v7",
+      "ref": "V7/FASE-H",
+      "pass": true,
+      "baseline": "pain_ledger ids=['ai_crawler_blocked', 'low_organic_visibility', 'no_analytics_configured']",
+      "new": "pain_ledger ids=['ai_crawler_blocked', 'low_organic_visibility', 'low_ota_divergence', 'missing_llmstxt', 'no_analytics_configured'] resolved=['ai_crawler_blocked', 'low_organic_visibility', 'low_ota_divergence', 'missing_llmstxt', 'no_analytics_configured'] ota=['low_ota_divergence', 'low_ota_divergence']",
+      "note": "V7 reactiva low_ota_divergence: debe aparecer como pain real, no invisible"
+    },
+    {
+      "id": "C14_tier_B_defaults",
+      "ref": "equiv Tier B",
+      "pass": true,
+      "baseline": "warnings tier=['Financial data uses default/legacy values — Tier B evidence']",
+      "new": "log_con_defaults=True warnings tier=['Financial data uses default/legacy values — Tier B evidence']",
+      "note": "el baseline corrio CON DEFAULTS; sin clientes/ ni --ga4-property-id"
+    },
+    {
+      "id": "C15_plan_assets",
+      "ref": "AC6/FASE-C",
+      "pass": true,
+      "baseline": "[('analytics_setup_guide', 'WARNING', 0.8), ('indirect_traffic_optimization', 'WARNING', 0.8), ('llms_txt', 'PASSED', 1.0), ('monthly_report', 'PASSED', 1.0)] summary={\"total_assets\": 4, \"generated\": 4, \"failed\": 0, \"skipped\": 0, \"can_use\": 4, \"estimated\": 2, \"delivery_ready_percentage\": 100.0, \"site_verification_applied\": false}",
+      "new": "[('analytics_setup_guide', 'WARNING', 0.8), ('indirect_traffic_optimization', 'WARNING', 0.8), ('llms_txt', 'PASSED', 1.0), ('monthly_report', 'PASSED', 1.0)] summary={\"total_assets\": 4, \"generated\": 4, \"failed\": 0, \"skipped\": 0, \"can_use\": 4, \"estimated\": 2, \"delivery_ready_percentage\": 100.0, \"site_verification_applied\": false}",
+      "note": "baseline: 4 assets (2 huerfanos), estimated=2, delivery_ready_percentage=100.0"
+    },
+    {
+      "id": "C16_pagespeed",
+      "ref": "anomalia (iii)",
+      "pass": true,
+      "baseline": "status=ERROR en corrida baseline (anterior al fix OPS)",
+      "new": "log: ERROR",
+      "note": "GOOGLE_PAGESPEED_API_KEY de 3 chars es placeholder conocido (V12); PAGESPEED_API_KEY canónica presente"
+    }
+  ]
+}

@@ -448,6 +448,41 @@
   **83 passed**; `run_all_validations.py --quick` **7/7**. **Fallo preexistente NO corregido y ajeno
   a H**: `tests/test_diagnostic_geo_metrics.py::test_diagnostic_includes_geo_metrics` → **S-H16**.
 
+**Notas de ejecución de FASE-I** (la última fase con producto que VERIFY hereda):
+
+- **La corrida única salió bien**: `EXIT_CODE 0` en **174 s**, 0 tracebacks, `"Using defaults"`,
+  0 interferencias del `own_site_guard`, **sin** `clientes/`, **sin** `--ga4-property-id`, **sin**
+  `--force`/`--force-new`, y **sin re-corrida**. Verificado antes de ejecutar que `v4complete` **no**
+  recicla análisis previo — `find_latest_v4_analysis` se llama solo en la rama `execute` (`main.py:776`)
+  y los `research_*.json` no se leen de caché (único hit: `autonomous_researcher.py:86`). Sin esa
+  comprobación, una corrida sobre análisis del 31-08 habría parecido un éxito sin serlo.
+- **Modo MIXTO respetado**: el subagente **solo ejecutó y capturó**; toda la interpretación quedó en el
+  parent (executor L30 RC1-RC2). El parent **no tocó código** — la restricción de alcance se cumplió:
+  `git status` al cerrar solo muestra `evidence/FASE-I/` y los 5 archivos del plan.
+- **Los nombres timestamped se RESOLVIERON, no se asumieron** (deuda H7): `audit_report_20260904_120404`,
+  `financial_scenarios_20260904_120404`, `gate_report_20260904_120413`,
+  `commercial_gates_report_diagnostic_20260904_120413` — tabla completa en `evidence/FASE-I/MANIFIESTO.md` §3.
+- **Se leyeron los DOS archivos de commercial gates**: el conteo real es **12 CG-*** (3 + 9) y el único
+  fallo (`CG-WHATSAPP-LEAD`, `passed:false`) es **idéntico al baseline** ⟹ clasificado (iii), no regresión.
+- **Pre-flight con un fallo que NO es de código**: `validate_agents_md.py` **5 PASS / 1 FAIL**
+  (`test_count` 3689 AGENTS vs 3889 pytest = 5.1 % > ±5 %). Preexistente en HEAD; el prompt esperaba 6/0.
+  → **S-I6**, le toca a RELEASE.
+- **Los dos FAIL de la comparación son el producto real de la fase** y ambos traen causa raíz medida, no
+  supuesta: **S-I1** (`critical_recall` 1.0 con `details={}`; el detector G2 queda a la sombra del registro
+  V6 de H — falsada la predicción de `dependencias-fases.md:353`) y **S-I2** (la severidad 11+2 no se
+  serializa en `gate_report_*.json` ⟹ AC7 no verificable sobre artefactos). Ninguno se corrigió aquí.
+- **Dos premisas propias que hubo que corregir midiendo**: (a) el script de comparación leía `asset_path`
+  en `v4_complete_report.assets_generated[]` cuando la clave real es **`path`** — habría sentenciado «A6
+  sigue nulo» en ambas corridas (**S-I3**); (b) el «848/2» que citaba su propio prompt estaba desactualizado
+  (es **944/2** desde G), mismo defecto que S26 predice.
+- **La coherencia BAJÓ (0.88 → 0.8333) y está atribuida**: `problems_have_solutions` 1.0→0.6 porque el
+  ledger pasó de 3 a 5 pains. **Ninguna diferencia se cerró como «variación natural»**: fotos 10,
+  `metadata.title=""`, competidores y los 3 escenarios financieros son numéricamente idénticos. → **S-I4**.
+- **Hereda de VERIFY**: S-I1..S-I7 (`10-analisis` §5.7) más el residuo que I no podía cerrar —
+  **S-C3, S-E2, S-F2, S-H2, S-B12/S-C6, S-B13, S-B14, S-H16, S-H18** (esta última con resultado negativo
+  documentado: FASE-I leyó 41 artefactos de producción y no apareció ninguna cadena imperativa; el barrido
+  sigue **sin automatizar**).
+
 ## 1. Grafo de dependencias
 
 ```
@@ -601,4 +636,4 @@ Fases **A, B, C, F, G, VERIFY**: sin paralelización (decisión arquitectónica 
 | Fin de **FASE-C** | ✅ **Alcanzado 2026-09-03** (`c1bf5e2` + `552c190`) — `no_breach = 0` por construcción **y** complemento siempre-activo fuera del denominador de `assets_are_justified` | Volver a la lista estática re-introduce **las dos** caídas a la vez: la tautología de coverage (`total − no_breach` se auto-anula) y el `is_coherent = false` estructural. ⚠️ **Mecanismo corregido**: no era el que decía B5 (`promised_assets_exist`, que pasa en 1.0) sino `assets_are_justified = 0.75` → `severity="error"` → `errors` no vacío → `is_coherent=False` en **toda** corrida. Revertir C vuelve a dejar el denominador con un asset que **nunca** puede justificarse (`pain_ids=[]` ⟹ `any()` siempre False) |
 | Fin de **FASE-D** | Severidad 11+2 en código **y** en docs, mismo commit | Docs y código vuelven a divergir (estado actual: docstrings dicen 10+3, código bloquea con 13) |
 | Fin de **FASE-F** | `is_coherent` respetado o eliminado con decisión registrada | La deuda P9 (la más grave) sigue abierta y ningún acta futura hereda el veredicto real |
-| **FASE-I** | Única corrida E2E del plan | Si falla, no hay segunda oportunidad presupuestada: se registra la anomalía, se clasifica (regresión vs infraestructura) y se decide en VERIFY |
+| **FASE-I** | Única corrida E2E del plan | Si falla, no hay segunda oportunidad presupuestada: se registra la anomalía, se clasifica (regresión vs infraestructura) y se decide en VERIFY · **✅ corrida 2026-09-04 sin fallo: EXIT_CODE 0 en 174 s, comparación 14/16, 2 FAIL con causa raíz medida (S-I1/S-I2) y 0 diferencias cerradas como «variación natural»** |
