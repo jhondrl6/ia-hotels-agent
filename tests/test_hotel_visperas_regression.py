@@ -19,7 +19,7 @@ sys.path.insert(0, str(project_root))
 import pytest
 from typing import Dict, Any
 
-from modules.data_validation.metadata_validator import MetadataValidator
+from data_validation.metadata_validator import MetadataValidator
 from modules.data_validation.schema_validator_v2 import SchemaValidatorV2
 from modules.auditors.pagespeed_auditor_v2 import PageSpeedAuditorV2
 from data_models.canonical_assessment import (

@@ -657,6 +657,154 @@ class TestD6PerformanceStatusDinamico:
         assert "Core Web Vitals" not in result
 
 
+# ────────────────────────────────────────────────────────────────────────────
+# FASE-H (V11): residuos del fix D6 — la rama else seguía hardcodeada
+# ────────────────────────────────────────────────────────────────────────────
+
+
+def _audit_with_performance(status, message, has_field_data: bool = False) -> V4AuditResult:
+    """Audit mínimo con el eje performance en el estado pedido."""
+    audit = dataclass_replace(
+        _make_minimal_audit(),
+        performance=PerformanceData(
+            has_field_data=has_field_data,
+            mobile_score=None,
+            desktop_score=None,
+            lcp=None,
+            fid=None,
+            cls=None,
+            status=status,
+            message=message,
+        ),
+    )
+    # GBP limpio: evita filas extrañas para poder aislar la fila de performance
+    return dataclass_replace(
+        audit,
+        gbp=dataclass_replace(audit.gbp, geo_score=80, photos=60, reviews=100),
+        validation=dataclass_replace(audit.validation, conflicts=[]),
+    )
+
+
+def _row_cells(result: str):
+    """Filas de tabla Markdown (header, separador y datos) como listas de celdas."""
+    return [
+        [c.strip() for c in line.strip().strip("|").split("|")]
+        for line in result.splitlines()
+        if line.count("|") >= 2
+    ]
+
+
+class TestV11ResiduosFixD6:
+    """V11: "sitio nuevo o tráfico bajo" solo es válido si la API respondió bien."""
+
+    def test_v11_api_not_configured_muestra_mensaje_real_y_rojo(self):
+        """API_NOT_CONFIGURED es indisponibilidad nuestra: 🔴 Alta + mensaje fuente."""
+        gen = V4DiagnosticGenerator()
+        audit = _audit_with_performance(
+            "API_NOT_CONFIGURED", "API de PageSpeed no disponible (verificar clave)"
+        )
+
+        result = gen._build_manual_attention_table(audit)
+
+        # Mensaje real leído de la fuente (nunca narrativa paralela hardcodeada)
+        assert "API de PageSpeed no disponible (verificar clave)" in result
+        assert "🔴 Alta" in result
+        # La afirmación que D6 dejó viva en la rama else NO puede aparecer
+        assert "El sitio puede ser nuevo" not in result
+        assert "tráfico bajo" not in result
+
+    def test_v11_status_vacio_es_no_evaluado_no_sitio_nuevo(self):
+        """Status vacío != datos del sitio: se reporta como no evaluable (🔴 Alta)."""
+        gen = V4DiagnosticGenerator()
+        audit = _audit_with_performance("", "")
+
+        result = gen._build_manual_attention_table(audit)
+
+        assert "El sitio puede ser nuevo" not in result
+        assert "🔴 Alta" in result
+        # Hay una explicación explícita, no una celda vacía
+        row = next(r for r in _row_cells(result) if r[0].startswith("Sin Datos de Campo"))
+        assert row[2].strip() not in ("", "-")
+
+    def test_v11_status_none_es_no_evaluado(self):
+        """status=None (campo ausente) cae del lado no-evaluado, no del genérico."""
+        gen = V4DiagnosticGenerator()
+        audit = _audit_with_performance(None, None)
+
+        result = gen._build_manual_attention_table(audit)
+
+        assert "El sitio puede ser nuevo" not in result
+        assert "🔴 Alta" in result
+
+    def test_v11_status_desconocido_es_no_evaluado(self):
+        """Lista blanca: un estado jamás visto no autoriza afirmar nada del sitio."""
+        gen = V4DiagnosticGenerator()
+        audit = _audit_with_performance("QUOTA_EXCEEDED", "Cuota de la API agotada")
+
+        result = gen._build_manual_attention_table(audit)
+
+        assert "Cuota de la API agotada" in result
+        assert "El sitio puede ser nuevo" not in result
+        assert "🔴 Alta" in result
+
+    def test_v11_lab_data_only_conserva_texto_generico(self):
+        """LAB_DATA_ONLY (API respondió, CrUX sin datos) SÍ es el caso genérico."""
+        gen = V4DiagnosticGenerator()
+        audit = _audit_with_performance("LAB_DATA_ONLY", "Lighthouse lab data available.")
+
+        result = gen._build_manual_attention_table(audit)
+
+        assert "El sitio puede ser nuevo o tener tráfico bajo" in result
+        assert "🟡 Media" in result
+
+    def test_v11_ok_sin_field_data_conserva_texto_generico(self):
+        """Cualquier sinónimo de OK de la API mantiene el 🟡 Media histórico."""
+        gen = V4DiagnosticGenerator()
+        audit = _audit_with_performance("OK", "Success")
+
+        result = gen._build_manual_attention_table(audit)
+
+        assert "El sitio puede ser nuevo o tener tráfico bajo" in result
+        assert "🟡 Media" in result
+
+    def test_v11_error_sigue_mostrando_mensaje_api(self):
+        """Regresión D6: la rama ERROR conserva su comportamiento."""
+        gen = V4DiagnosticGenerator()
+        audit = _audit_with_performance("ERROR", "API key not valid")
+
+        result = gen._build_manual_attention_table(audit)
+
+        assert "API key not valid" in result
+        assert "🔴 Alta" in result
+        assert "El sitio puede ser nuevo" not in result
+
+    def test_v11_tabla_renderiza_con_header_y_separador(self):
+        """Punto (c) del dossier: las filas vivían sin cabecera y no renderizaban."""
+        gen = V4DiagnosticGenerator()
+        audit = _audit_with_performance("API_NOT_CONFIGURED", "sin clave")
+
+        result = gen._build_manual_attention_table(audit)
+        rows = _row_cells(result)
+
+        assert len(rows) >= 3, f"Esperaba header + separador + datos, obtuve {rows}"
+        # Header de 3 columnas, ninguna vacía
+        assert len(rows[0]) == 3 and all(rows[0]), rows[0]
+        # Separador Markdown en la segunda línea
+        assert all(cell and set(cell) <= {"-"} for cell in rows[1]), rows[1]
+        # Toda fila de datos respeta el contrato de 3 columnas del header
+        for row in rows[2:]:
+            assert len(row) == 3, f"Fila con columnas inconsistentes: {row}"
+
+    def test_v11_header_no_duplica_narrativa_de_fuente(self):
+        """El header no introduce textos de dolor propios (lección L-NC4)."""
+        from modules.commercial_documents.v4_diagnostic_generator import (
+            MANUAL_ATTENTION_TABLE_HEADER,
+        )
+
+        assert "Schema" not in MANUAL_ATTENTION_TABLE_HEADER
+        assert "WhatsApp" not in MANUAL_ATTENTION_TABLE_HEADER
+
+
 class TestD7ReviewsParametrizadas:
     """D7: el ejemplo de reseñas usa el conteo real del audit, no '203'."""
 

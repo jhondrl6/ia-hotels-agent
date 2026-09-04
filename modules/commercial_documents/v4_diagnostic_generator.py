@@ -52,6 +52,33 @@ def _get_pipeline_version() -> str:
 
 PIPELINE_VERSION = _get_pipeline_version()
 
+# ============================================================================
+# FASE-H (V6): estado visible de la deteccion de brechas
+# ============================================================================
+# El literal canonico es GateStatus.NOT_EVALUATED
+# (modules/quality_gates/publication_gates.py:90, introducido en FASE-F). NO se
+# importa GateStatus en top-level: publication_gates -> coherence_gate ->
+# commercial_documents.coherence_validator reactiva el __init__ del paquete y
+# deja este modulo parcialmente inicializado (ImportError verificado). La guardia
+# anti-deriva que compara este literal con GateStatus.NOT_EVALUATED.value vive en
+# tests/commercial_documents/test_diagnostic_brechas.py.
+BRECHAS_STATE_EVALUATED = "EVALUATED"
+BRECHAS_STATE_NOT_EVALUATED = "NOT_EVALUATED"
+
+# ============================================================================
+# FASE-H (V11): el vocabulario de performance.status y el predicado que decide
+# qué puede afirmarse ante el cliente viven en modules/common/performance_status
+# — el documento y las recomendaciones del audit comparten el mismo criterio.
+# ============================================================================
+from modules.common.performance_status import is_performance_api_unavailable
+
+# FASE-H (V11 / punto (c) del dossier §1): ${manual_attention_table} se inyectaba
+# en el template sin cabecera, asi que sus filas no renderizaban como tabla.
+MANUAL_ATTENTION_TABLE_HEADER = (
+    "| Atención manual requerida | Prioridad | Acción |\n"
+    "|---|---|---|"
+)
+
 
 def _get_opportunity_scorer():
     """Lazy import del OpportunityScorer para evitar import circular."""
@@ -518,6 +545,12 @@ class V4DiagnosticGenerator:
         # FASE-PROP-A: Initialize instance attributes used across methods
         self._region = None
         self._cached_brechas = None
+        # FASE-H (V6): estado de la deteccion de brechas del ultimo intento —
+        # None = aun no se ha ejecutado, BRECHAS_STATE_EVALUATED = detecto
+        # (aunque sea 0 brechas), BRECHAS_STATE_NOT_EVALUATED = el detector
+        # fallo. Consumido por _build_fugas_principales_section() para que
+        # "0 brechas por fallo" nunca se lea como "sitio sin fugas".
+        self._brechas_detection_state = None
         self._last_voice_score = None
         self._last_voice_level = None
         # FASE-SR-C (D-PF2): resultado del self-healing loop de la última
@@ -585,6 +618,9 @@ class V4DiagnosticGenerator:
         # Reset brechas cache per generate() call (FASE-H)
         self._cached_brechas = None
         self._cached_brechas_key = None  # FASE-A-COHERENCIA: invalidar key junto al caché
+        # FASE-H (V6): el estado de deteccion tampoco sobrevive entre runs — un
+        # fallo del generate() anterior no puede manchar el documento nuevo.
+        self._brechas_detection_state = None
         
         # Store region for use in _identify_brechas -> _pain_to_brecha (FASE-CONFIG-5)
         self._region = region if region else "eje_cafetero"
@@ -1021,8 +1057,12 @@ class V4DiagnosticGenerator:
             # D-NC1: el contador del título coincide con las fugas listadas.
             'fugas_principales_section': self._build_fugas_principales_section(audit_result, brechas_destacadas),
             'fugas_count_display': str(len(brechas_destacadas)),
+            # FASE-H (V6): con el detector caido el titulo tampoco puede
+            # afirmar "SIN FUGAS" — 0 brechas por fallo != 0 brechas por sitio sano.
             'fugas_title': (
-                "SIN FUGAS PRINCIPALES" if len(brechas_destacadas) == 0
+                "FUGAS PRINCIPALES (NO EVALUADAS)"
+                if self._brechas_detection_state == BRECHAS_STATE_NOT_EVALUATED
+                else "SIN FUGAS PRINCIPALES" if len(brechas_destacadas) == 0
                 else "LA FUGA PRINCIPAL" if len(brechas_destacadas) == 1
                 else f"LAS {len(brechas_destacadas)} FUGAS PRINCIPALES"
             ),
@@ -1936,10 +1976,18 @@ class V4DiagnosticGenerator:
     def _build_manual_attention_table(self, audit_result: V4AuditResult) -> str:
         """Build table of problems requiring manual attention."""
         rows = []
-        
+
+        def _render() -> str:
+            # FASE-H (V11 / punto (c)): el template inyectaba estas filas sin
+            # cabecera, así que Markdown no las renderizaba como tabla. La
+            # cabecera va aquí y no en el template porque las filas nacen de
+            # esta función: separarlas volvería a desincronizar columnas.
+            return "\n".join([MANUAL_ATTENTION_TABLE_HEADER, *rows])
+
         # Guard against None audit_result or gbp
         if audit_result is None or audit_result.gbp is None:
-            return "| Datos de GBP no disponibles | - | - | - |"
+            rows.append("| Datos de GBP no disponibles | - | - |")
+            return _render()
         
         # GBP issues
         # FASE-D (D9): target estandarizado de 40 fotos GBP (gbp_leak_detector)
@@ -1952,11 +2000,15 @@ class V4DiagnosticGenerator:
         
         # Performance without field data — FASE-C-B (D6): leer status real
         if audit_result.performance and not audit_result.performance.has_field_data:
-            perf_status = (audit_result.performance.status or "").upper()
-            if perf_status == "ERROR":
+            if is_performance_api_unavailable(audit_result.performance.status):
+                # FASE-H (V11): antes solo "ERROR" caía aquí, así que
+                # API_NOT_CONFIGURED y un status vacío afirmaban ante el cliente
+                # que su sitio era nuevo cuando la causa era nuestra.
                 msg = audit_result.performance.message or "API de PageSpeed no disponible"
                 rows.append(f"| Sin Datos de Campo (Core Web Vitals) | 🔴 Alta | {msg} |")
             else:
+                # Único caso donde "sitio nuevo o con poco tráfico" es cierto:
+                # la API respondió y CrUX todavía no tiene datos de campo.
                 rows.append("| Sin Datos de Campo (Core Web Vitals) | 🟡 Media | El sitio puede ser nuevo o tener tráfico bajo |")
         
         # Conflicts
@@ -1964,7 +2016,9 @@ class V4DiagnosticGenerator:
             for conflict in audit_result.validation.conflicts:
                 rows.append(f"| Conflicto: {conflict.get('field_name', 'Desconocido')} | 🔴 Alta | Revisión manual requerida |")
         
-        return "\n".join(rows) if rows else "| No se detectaron problemas que requieran atención manual | - | - |"
+        if not rows:
+            rows.append("| No se detectaron problemas que requieran atención manual | - | - |")
+        return _render()
     
     def _build_top_critical_problems(self, audit_result: V4AuditResult) -> str:
         """Build the top 3 critical problems section using shared function."""
@@ -2681,10 +2735,25 @@ class V4DiagnosticGenerator:
             return f"{recuperacion:,.0f}"
         return "0"
 
+    def _brechas_detection_failed(self) -> bool:
+        """True si la ULTIMA deteccion de brechas fallo (FASE-H / V6).
+
+        Leerlo despues de `_get_brecha_pesos()` es lo que hace el estado
+        fiable: ese
+        call es el que ejecuta `_identify_brechas()`.
+        """
+        return (
+            getattr(self, '_brechas_detection_state', None)
+            == BRECHAS_STATE_NOT_EVALUATED
+        )
+
     def _build_brechas_section(self, audit_result: V4AuditResult, financial_scenarios: FinancialScenarios) -> str:
         """Genera seccion markdown con TODAS las brechas detectadas (0-10+)."""
         brechas = self._get_brecha_pesos(audit_result)
         if not brechas:
+            # FASE-H (V6): 0 brechas por fallo del detector no es "sitio sano".
+            if self._brechas_detection_failed():
+                return self._FUGAS_NOT_EVALUATED_NOTICE
             return "No se detectaron brechas criticas. Su presencia digital esta en buen estado."
 
         sections = ["## 🔍 Trazabilidad: Brechas Identificadas"]
@@ -2703,6 +2772,8 @@ class V4DiagnosticGenerator:
         """Genera tabla resumen dinamica de N brechas -> oportunidades."""
         brechas = self._get_brecha_pesos(audit_result)
         if not brechas:
+            if self._brechas_detection_failed():
+                return "| Brechas no evaluables (falló en la detección) | — |"
             return "| Sin brechas detectadas | — |"
 
         rows = []
@@ -2716,6 +2787,18 @@ class V4DiagnosticGenerator:
             rows.append(f"| {detalle_corto} | +{recuperacion}/mes (Fuga mensual estimada) |")
         return "\n".join(rows)
 
+    # FASE-H (V6): aviso visible cuando el detector de brechas fallo.
+    # "0 fugas" nunca debe presentarse como "sitio sano" si la deteccion no
+    # se ejecuto. Texto en espanol de cliente, sin jerga tecnica (la Seccion 4
+    # cae dentro de la vista gerencia que audita CG-TECH-JARGON).
+    _FUGAS_NOT_EVALUATED_NOTICE = (
+        "⚠️ **Aún no pudimos evaluar sus fugas de visibilidad.** "
+        "La herramienta que detecta y prioriza las fugas no completó su revisión "
+        "en esta ejecución, por eso el listado aparece vacío. **Esto no significa "
+        "que su presencia digital esté sin fugas:** este punto queda PENDIENTE y "
+        "debe volver a ejecutarse antes de tomar una decisión de inversión."
+    )
+
     def _build_fugas_principales_section(self, audit_result: V4AuditResult,
                                          brechas_destacadas: List[Dict[str, Any]]) -> str:
         """FUGAS-WHATSAPP (B1+B4): Sección 4 dinámica derivada del pain_ledger.
@@ -2726,6 +2809,12 @@ class V4DiagnosticGenerator:
         campos dinámicos del dict de brecha (nombre/detalle derivados de
         _pain_to_brecha) — nunca hardcoded ni inventada (D-NC3, D-NC6).
 
+        FASE-H (V6): si la deteccion de brechas fallo
+        (``self._brechas_detection_state == BRECHAS_STATE_NOT_EVALUATED``) la
+        seccion renderiza un aviso honesto de "no evaluado" en lugar del texto
+        "su presencia digital está en buen estado": cero brechas por fallo NO es
+        cero brechas por sitio sano. En la ruta no degradada el render no cambia.
+
         Args:
             audit_result: Audit completo (se conserva en firma por extensibilidad).
             brechas_destacadas: Brechas con impacto > 0 (orden por severidad).
@@ -2733,7 +2822,19 @@ class V4DiagnosticGenerator:
         Returns:
             Bloques markdown '### Fuga {n} — {nombre}' numerados secuencialmente.
             Si la lista está vacía, texto neutro de fallback (nunca string vacío).
+            Si la detección quedó NO_EVALUADA, aviso explícito de pendiente.
         """
+        # FASE-H (V6): estado NO_EVALUADO tiene prioridad sobre el fallback.
+        if getattr(self, '_brechas_detection_state', None) == BRECHAS_STATE_NOT_EVALUATED:
+            if not brechas_destacadas:
+                return self._FUGAS_NOT_EVALUATED_NOTICE
+            degraded_blocks = [
+                f"### Fuga {n} — {b.get('nombre') or 'Brecha detectada'}\n"
+                f"{b.get('detalle') or ''}"
+                for n, b in enumerate(brechas_destacadas, 1)
+            ]
+            return "\n\n".join([self._FUGAS_NOT_EVALUATED_NOTICE] + degraded_blocks)
+
         if not brechas_destacadas:
             return (
                 "No se detectaron fugas críticas en este momento. "
@@ -3135,6 +3236,15 @@ class V4DiagnosticGenerator:
         orquestador (validation_summary, analytics_data, whatsapp_html_detected).
         Si no se pasan, hereda los guardados en generate() (self._current_*).
         Solo construye el ValidationSummary sintético como fallback legacy.
+
+        FASE-H (V6): si la detección delegada lanza, el fallo NO se traga —
+        se registra con traceback, deja ``self._brechas_detection_state ==
+        BRECHAS_STATE_NOT_EVALUATED``, retorna [] y NO escribe el caché (la
+        siguiente llamada con los mismos inputs debe reintentar). Los
+        consumidores que listen brechas deben consultar ese estado
+        (ver _build_fugas_principales_section) para que una lista vacía por
+        fallo nunca se presente como "sitio sin fugas". Un audit_result
+        ausente NO es un fallo de detección y no altera el estado.
         """
         # FASE-A-COHERENCIA: heredar inputs reales de generate() si no se pasan
         if validation_summary is None:
@@ -3158,6 +3268,10 @@ class V4DiagnosticGenerator:
         )
         if hasattr(self, '_cached_brechas') and self._cached_brechas is not None \
                 and getattr(self, '_cached_brechas_key', None) == cache_key:
+            # FASE-H (V6): servir del caché == servir un resultado de una
+            # deteccion que SI completo (el camino de fallo nunca escribe el
+            # caché), asi que el estado vuelve a ser EVALUATED.
+            self._brechas_detection_state = BRECHAS_STATE_EVALUATED
             return self._cached_brechas
 
         brechas = []
@@ -3195,10 +3309,21 @@ class V4DiagnosticGenerator:
             if verified_ids:
                 pains = [p for p in pains if p.id not in verified_ids]
         except Exception:
-            # If PainSolutionMapper fails, fall back to empty brechas
-            # (audit has critical errors — don't fabricate gaps)
-            self._cached_brechas = brechas
-            self._cached_brechas_key = cache_key
+            # FASE-H (V6): el detector FALLO — esto no es un "sitio sin brechas".
+            # 1) El traceback queda en el log (antes se tragaba en silencio).
+            # 2) El estado NOT_EVALUATED hace el fallo visible en el documento
+            #    (ver _build_fugas_principales_section).
+            # 3) NO se escribe _cached_brechas/_cached_brechas_key: un fallo
+            #    jamas debe servirse como resultado valido para los mismos
+            #    inputs; la siguiente llamada debe reintentar.
+            # Misma familia de patron que la deuda P11 (main.py: precision_tier
+            # defaulteando "C" bajo except desnudo) — esa NO se corrige aqui.
+            logging.getLogger(__name__).exception(
+                "[V6] PainSolutionMapper.detect_pains() fallo: deteccion de "
+                "brechas NO EVALUADA. El diagnostico sale con 0 brechas, lo que "
+                "NO debe leerse como 'sitio sin fugas'."
+            )
+            self._brechas_detection_state = BRECHAS_STATE_NOT_EVALUATED
             return brechas
 
         # Translate each Pain to breach format with commercial narrative
@@ -3213,6 +3338,9 @@ class V4DiagnosticGenerator:
         brechas.sort(key=lambda x: severity_order.get(x.get('severity', ''), 4))
 
         # Store cache (FASE-H) keyed por inputs (FASE-A-COHERENCIA)
+        # FASE-H (V6): ruta de exito — un intento anterior fallado queda
+        # explícitamente superado (incluye el caso "0 brechas en sitio sano").
+        self._brechas_detection_state = BRECHAS_STATE_EVALUATED
         self._cached_brechas = brechas
         self._cached_brechas_key = cache_key
         return brechas

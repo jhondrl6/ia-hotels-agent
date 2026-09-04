@@ -12,12 +12,19 @@ Tests:
 - test_brecha_impacts_sum_reasonable: Suma de impactos no excede 1.0
 """
 
+import logging
+from contextlib import contextmanager
+
 import pytest
 from unittest.mock import MagicMock, patch
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
 
-from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
+from modules.commercial_documents.v4_diagnostic_generator import (
+    BRECHAS_STATE_EVALUATED,
+    BRECHAS_STATE_NOT_EVALUATED,
+    V4DiagnosticGenerator,
+)
 from modules.data_validation.confidence_taxonomy import ConfidenceLevel
 
 
@@ -1193,3 +1200,267 @@ def test_generate_template_dynamic_brechas_count():
         brechas = gen._identify_brechas(audit, validation_summary=vs, analytics_data=analytics,
                                         whatsapp_html_detected=False)
         assert [b['pain_id'] for b in brechas] == [p.id for p in pains]
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FASE-H (V6): el `except Exception` de _identify_brechas ya no es silencioso
+# ═══════════════════════════════════════════════════════════════════════════
+# Dossier: "si detect_pains lanza, el diagnóstico sale con cero brechas y sin
+# señal". Aceptaciones: traceback en log, estado NOT_EVALUADO visible en el
+# documento, 0-brechas-por-fallo distinguible de 0-brechas-por-sitio-sano y
+# el fallo nunca se cachea como resultado válido.
+
+
+LOGGER_NAME = "modules.commercial_documents.v4_diagnostic_generator"
+
+
+def _audit_with_gaps():
+    """Audit con brechas reales (mismas 6 que usa test_identify_brechas_cached_once)."""
+    return create_audit(
+        schema_detected=False, faq_detected=False, gbp_geo_score=50,
+        phone_web=None, mobile_score=60,
+    )
+
+
+def test_v6_estado_not_evaluated_reutiliza_literal_canonico_del_gate():
+    """El literal local es el MISMO que GateStatus.NOT_EVALUATED (FASE-F).
+
+    Se replica el valor (no el import) para no crear el ciclo
+    publication_gates -> coherence_gate -> commercial_documents.__init__;
+    este test es la guardia anti-deriva de esa decisión.
+    """
+    from modules.quality_gates.publication_gates import GateStatus
+    from modules.commercial_documents.v4_diagnostic_generator import (
+        BRECHAS_STATE_NOT_EVALUATED,
+    )
+
+    assert BRECHAS_STATE_NOT_EVALUATED == "NOT_EVALUATED"
+    assert BRECHAS_STATE_NOT_EVALUATED == GateStatus.NOT_EVALUATED.value
+
+
+def test_v6_fallo_detect_pains_loguea_traceback_y_deja_estado_visible(caplog):
+    """AC1+AC2: detect_pains lanza ⟹ se registra el traceback y queda NOT_EVALUATED."""
+    from modules.commercial_documents.v4_diagnostic_generator import (
+        BRECHAS_STATE_NOT_EVALUATED,
+    )
+
+    audit = _audit_with_gaps()
+    gen = V4DiagnosticGenerator()
+
+    with caplog.at_level(logging.ERROR, logger=LOGGER_NAME):
+        with patch(f"{LOGGER_NAME}.PainSolutionMapper") as mock_mapper:
+            mock_mapper.return_value.detect_pains.side_effect = RuntimeError("boom V6")
+            brechas = gen._identify_brechas(audit)
+
+    # AC3: lista vacía...
+    assert brechas == []
+    # ...pero con estado visible que la distingue de un sitio sano (AC2)
+    assert gen._brechas_detection_state == BRECHAS_STATE_NOT_EVALUATED
+
+    # AC1: la excepción se loguea CON traceback (antes se tragaba en silencio)
+    error_records = [r for r in caplog.records if r.levelno >= logging.ERROR]
+    assert error_records, "El fallo de detect_pains debe registrarse (no tragarse)"
+    assert any(r.exc_info is not None for r in error_records), \
+        "Debe usarse logging.exception (exc_info) para conservar el traceback"
+    assert "boom V6" in caplog.text
+    assert "Traceback" in caplog.text, "El log debe incluir el traceback completo"
+
+
+def test_v6_fallo_detect_pains_no_se_cachea_como_resultado_valido():
+    """AC4: un fallo jamas se sirve del caché — la siguiente llamada reintenta."""
+    from modules.commercial_documents.v4_diagnostic_generator import (
+        BRECHAS_STATE_EVALUATED,
+    )
+
+    audit = _audit_with_gaps()
+    gen = V4DiagnosticGenerator()
+
+    with patch(f"{LOGGER_NAME}.PainSolutionMapper") as mock_mapper:
+        mock_mapper.return_value.detect_pains.side_effect = RuntimeError("boom V6")
+        assert gen._identify_brechas(audit) == []
+
+    # El resultado degradado no quedó escrito en el caché
+    assert gen._cached_brechas is None
+    assert getattr(gen, '_cached_brechas_key', None) is None
+
+    # Mismos inputs, detector sano: REINTENTA y devuelve brechas reales
+    brechas = gen._identify_brechas(audit)
+    assert len(brechas) > 0, "El fallo cacheado congeló una detección válida"
+    # AC2: la ruta de éxito restablece el estado a EVALUATED
+    assert gen._brechas_detection_state == BRECHAS_STATE_EVALUATED
+
+
+def test_v6_ruta_exito_estado_evaluated_inicialmente_none():
+    """Sin fallar, el estado nunca es NOT_EVALUATED (0 brechas ≠ fallo)."""
+    from modules.commercial_documents.v4_diagnostic_generator import (
+        BRECHAS_STATE_EVALUATED,
+        BRECHAS_STATE_NOT_EVALUATED,
+    )
+
+    gen = V4DiagnosticGenerator()
+    assert gen._brechas_detection_state is None  # aún no se ha detectado nada
+
+    # Hotel perfecto: 0 brechas por detección exitosa, NO por fallo
+    og = MagicMock()
+    og.open_graph = True
+    og.confidence = "high"
+    og.open_graph_tags = {f"og:tag{i}": f"val{i}" for i in range(12)}
+    og.imagenes_alt = True
+    audit = create_audit(
+        schema_detected=True, faq_detected=True, org_detected=True,
+        gbp_geo_score=80, mobile_score=85,
+        whatsapp_status=ConfidenceLevel.VERIFIED.value,
+        phone_web="+573****4567", whatsapp_html_detected=True,
+        seo_elements=og, citability=mock_citability(score=80),
+    )
+    assert gen._identify_brechas(audit) == []
+    assert gen._brechas_detection_state == BRECHAS_STATE_EVALUATED
+    assert gen._brechas_detection_state != BRECHAS_STATE_NOT_EVALUATED
+
+
+def test_v6_fugas_no_evaluado_distinguible_de_sitio_sano():
+    """AC3: el render de la Sección 4 distingue fallo de sitio sano."""
+    from modules.commercial_documents.v4_diagnostic_generator import (
+        BRECHAS_STATE_EVALUATED,
+        BRECHAS_STATE_NOT_EVALUATED,
+    )
+
+    audit = create_audit()
+    gen = V4DiagnosticGenerator()
+
+    # Sitio sano: detección completó y no encontró fugas
+    gen._brechas_detection_state = BRECHAS_STATE_EVALUATED
+    sano = gen._build_fugas_principales_section(audit, [])
+    assert "No se detectaron fugas críticas en este momento." in sano
+    assert "Su presencia digital está en buen estado." in sano
+
+    # Detector caído: aviso honesto, nunca "está en buen estado"
+    gen._brechas_detection_state = BRECHAS_STATE_NOT_EVALUATED
+    fallo = gen._build_fugas_principales_section(audit, [])
+    assert fallo != sano
+    assert "está en buen estado" not in fallo
+    assert "No se detectaron fugas críticas" not in fallo
+    assert "PENDIENTE" in fallo
+    # Sin variables sin sustituir y sin jerga (Sección 4 cae en vista gerencia)
+    assert "${" not in fallo
+    assert "Schema" not in fallo and "AEO" not in fallo and "IAO" not in fallo
+
+
+def test_v6_fugas_no_evaluado_con_brechas_lista_aviso_y_fugas():
+    """Defensivo: si llega una lista no vacía con estado caído, se avisa IGUAL."""
+    from modules.commercial_documents.v4_diagnostic_generator import (
+        BRECHAS_STATE_NOT_EVALUATED,
+    )
+
+    gen = V4DiagnosticGenerator()
+    gen._brechas_detection_state = BRECHAS_STATE_NOT_EVALUATED
+    out = gen._build_fugas_principales_section(
+        create_audit(), [{"nombre": "Fuga parcial", "detalle": "detalle"}]
+    )
+    assert "PENDIENTE" in out
+    assert "### Fuga 1 — Fuga parcial" in out
+
+
+def test_v6_documento_renderiza_estado_no_evaluado(caplog):
+    """AC3 end-to-end: el documento publicado dice que no se pudo evaluar."""
+    import tempfile
+    from pathlib import Path
+
+    audit = _real_zione_audit()
+    vs = _vs_whatsapp_conflict()
+    analytics = _analytics_no_ga4()
+    financial = _real_financial_scenarios()
+    gen = V4DiagnosticGenerator()
+
+    with caplog.at_level(logging.ERROR, logger=LOGGER_NAME):
+        with patch(f"{LOGGER_NAME}.PainSolutionMapper") as mock_mapper:
+            mock_mapper.return_value.detect_pains.side_effect = RuntimeError("boom V6")
+            with tempfile.TemporaryDirectory() as tmpdir:
+                path = gen.generate(
+                    audit_result=audit,
+                    validation_summary=vs,
+                    financial_scenarios=financial,
+                    hotel_name="Zione Test",
+                    hotel_url="https://zione-hotel.com",
+                    output_dir=tmpdir,
+                    coherence_score=0.85,
+                    gate_status="PASSED",
+                    region="eje_cafetero",
+                    analytics_data=analytics,
+                )
+                content = Path(path).read_text(encoding="utf-8")
+
+    # El fallo quedó en el log con traceback
+    assert "Traceback" in caplog.text
+    # Estado visible en el documento: titulo + aviso, NUNCA "todo en orden"
+    assert "FUGAS PRINCIPALES (NO EVALUADAS)" in content
+    assert "Aún no pudimos evaluar sus fugas de visibilidad." in content
+    assert "Su presencia digital está en buen estado." not in content
+    # Guard anti-residuos (safe_substitute): 0 variables sin renderizar
+    assert "${" not in content
+
+
+@contextmanager
+def _detector_caido():
+    """detect_pains en fallo permanente: el render debe ocurrir DENTRO del bloque.
+
+    `_build_brechas_section` y `_build_brechas_resumen_section` vuelven a ejecutar
+    `_identify_brechas()`; si el parche ya se salió, esa segunda detección tiene
+    éxito y resetea el estado a EVALUATED, que es justo lo que se quiere probar.
+    """
+    with patch(f"{LOGGER_NAME}.PainSolutionMapper") as mock_mapper:
+        mock_mapper.return_value.detect_pains.side_effect = RuntimeError("boom V6")
+        yield
+
+
+def test_v6_seccion_de_brechas_no_afirma_que_no_hay_brechas():
+    """El aviso no-evaluado debe llegar a TODAS las secciones derivadas."""
+    audit = _audit_with_gaps()
+    gen = V4DiagnosticGenerator()
+
+    with _detector_caido():
+        gen._identify_brechas(audit)
+        section = gen._build_brechas_section(audit, mock_financial_scenarios())
+
+    assert gen._brechas_detection_failed() is True
+    assert "Aún no pudimos evaluar" in section
+    assert "No se detectaron brechas criticas" not in section
+
+
+def test_v6_tabla_resumen_de_brechas_tampoco_dice_sin_brechas():
+    audit = _audit_with_gaps()
+    gen = V4DiagnosticGenerator()
+
+    with _detector_caido():
+        row = gen._build_brechas_resumen_section(audit, mock_financial_scenarios())
+
+    assert "Sin brechas detectadas" not in row
+    assert "falló en la detección" in row
+
+
+def test_v6_ruta_sana_deja_decir_sin_brechas():
+    """Sin fallo, el texto de sitio sano sigue siendo legítimo (no se censura)."""
+    og_tags = {f"og:tag{i}": f"val{i}" for i in range(12)}
+    seo = MagicMock()
+    seo.open_graph = True
+    seo.confidence = "high"
+    seo.open_graph_tags = og_tags
+    seo.imagenes_alt = True
+    audit = create_audit(
+        schema_detected=True, faq_detected=True, org_detected=True,
+        gbp_geo_score=80, gbp_reviews=50, gbp_place_found=True, mobile_score=85,
+        whatsapp_status=ConfidenceLevel.VERIFIED.value,
+        phone_web="+573001234567", whatsapp_html_detected=True,
+        metadata_has_issues=False, seo_elements=seo,
+        citability=mock_citability(score=80),
+    )
+    gen = V4DiagnosticGenerator()
+
+    assert gen._identify_brechas(audit) == []
+    assert gen._brechas_detection_failed() is False
+    assert "No se detectaron brechas criticas" in gen._build_brechas_section(
+        audit, mock_financial_scenarios()
+    )
+    assert gen._build_brechas_resumen_section(audit, mock_financial_scenarios()) == (
+        "| Sin brechas detectadas | — |"
+    )

@@ -32,6 +32,7 @@ from modules.scrapers.serpapi_client import SerpAPIClient
 from modules.analyzers.competitor_analyzer import CompetitorAnalyzer
 from data_validation.metadata_validator import MetadataValidator
 from modules.utils.http_client import HttpClient
+from modules.common.performance_status import is_performance_api_unavailable
 from modules.auditors.ai_crawler_auditor import AICrawlerAuditor
 from modules.auditors.citability_scorer import CitabilityScorer, CitabilityScore
 from modules.auditors.ia_readiness_calculator import IAReadinessCalculator, IAReadinessReport
@@ -42,6 +43,54 @@ from modules.financial_engine.regional_adr_resolver import RegionalADRResolver
 
 
 logger = logging.getLogger(__name__)
+
+# FASE-H (V11 / punto (b) del dossier §1): el crudo del API llegaba al cliente.
+# `PageSpeedClient` propaga `message=str(e)` ("Invalid URL or request: API key not
+# valid...") y el audit lo re-expone tal cual, de donde `critical_issues`
+# (:1864-1868) y `recommendations` lo toman textual — y `extract_top_problems`
+# (data_structures.py:532-536) vierte esas recomendaciones en el diagnóstico.
+# CONTEXT-H fijó el diseño: status ERROR -> "API de PageSpeed no disponible
+# (verificar clave)". Se define UNA sola vez aquí, en la fuente que publica el
+# audit, para que los consumidores lean `performance.message` y nadie monte una
+# tabla paralela pain_id->texto (lección L-NC4).
+PAGESPEED_KEY_MESSAGE = "API de PageSpeed no disponible (verificar clave)"
+PAGESPEED_GENERIC_MESSAGE = "API de PageSpeed no disponible"
+PAGESPEED_NOT_CONFIGURED_MESSAGE = "API de PageSpeed no disponible (clave no configurada)"
+
+_PAGESPEED_KEY_MARKERS = (
+    "api key",
+    "apikey",
+    "key not valid",
+    "invalid api",
+    "quota",
+    "permission",
+    "forbidden",
+)
+
+
+def sanitize_pagespeed_message(raw_message: Optional[str]) -> str:
+    """Traducir el fallo técnico de PageSpeed a un mensaje apto para el cliente.
+
+    Distingue fallo de credencial (verificable por OPS) de cualquier otra caída,
+    y conserva el detalle crudo solo en el log (`logger`), nunca en el documento.
+    """
+    text = (raw_message or "").lower()
+    if any(marker in text for marker in _PAGESPEED_KEY_MARKERS):
+        return PAGESPEED_KEY_MESSAGE
+    return PAGESPEED_GENERIC_MESSAGE
+
+
+def disjoint_executed_validators(
+    executed: List[str], skipped: List[str]
+) -> List[str]:
+    """`executed` sin los nombres que ya figuran en `skipped` (conserva el orden).
+
+    FASE-H (V11 / punto (d)): un validator no puede haberse ejecutado y haberse
+    saltado en el mismo `execution_trace`; la contradicción se leía como
+    "ejecutado" por cualquier consumidor que mirara solo esa lista.
+    """
+    skipped_set = set(skipped)
+    return [name for name in executed if name not in skipped_set]
 
 
 @dataclass
@@ -702,6 +751,15 @@ class V4ComprehensiveAuditor:
         
         if not perf_result.has_field_data:
             skipped_validators.append("pagespeed_api")
+        
+        # FASE-H (V11 / punto (d) del dossier §1): `pagespeed_api` —y cualquier
+        # otro nombre— podia aparecer en `executed` Y en `skipped` en el mismo
+        # trace. Las dos listas son excluyentes por definicion. El predicado de
+        # skip sigue siendo `not has_field_data`, que confunde "la API no
+        # devolvio datos de campo" con "no se llamo a la API": seguimiento S-H4.
+        executed_validators = disjoint_executed_validators(
+            executed_validators, skipped_validators
+        )
         
         # Calculate IA Readiness (ADVISORY)
         ia_readiness_result = None
@@ -1460,13 +1518,24 @@ class V4ComprehensiveAuditor:
                     fid=None,
                     cls=None,
                     status="API_NOT_CONFIGURED",
-                    message="PageSpeed API key not configured",
+                    message=PAGESPEED_NOT_CONFIGURED_MESSAGE,
                 )
         
         try:
             mobile_result = self.pagespeed.analyze_url(url, device="mobile")
             desktop_result = self.pagespeed.analyze_url(url, device="desktop")
-            
+
+            # PageSpeedClient atrapa sus propias excepciones y devuelve
+            # status="ERROR" con message=str(e) en ingles: el crudo se sanitiza
+            # aqui (FASE-H / V11) y se conserva solo en el log.
+            client_status = (mobile_result.status or "").upper()
+            client_message = mobile_result.message
+            if client_status == "ERROR":
+                logger.warning(
+                    "PageSpeed ERROR para %s: %s", url, mobile_result.message
+                )
+                client_message = sanitize_pagespeed_message(mobile_result.message)
+
             return PerformanceResult(
                 has_field_data=mobile_result.has_field_data,
                 mobile_score=mobile_result.performance_score,
@@ -1475,9 +1544,11 @@ class V4ComprehensiveAuditor:
                 fid=mobile_result.fid,
                 cls=mobile_result.cls,
                 status=mobile_result.status,
-                message=mobile_result.message,
+                message=client_message,
             )
         except Exception as e:
+            # FASE-H (V11): el detalle tecnico queda en el log, no en el documento.
+            logger.exception("PageSpeed audit fallo para %s", url)
             return PerformanceResult(
                 has_field_data=False,
                 mobile_score=None,
@@ -1486,7 +1557,7 @@ class V4ComprehensiveAuditor:
                 fid=None,
                 cls=None,
                 status="ERROR",
-                message=str(e),
+                message=sanitize_pagespeed_message(str(e)),
             )
     
     def _detect_whatsapp_from_html(self, html: str) -> bool:
@@ -1898,7 +1969,16 @@ class V4ComprehensiveAuditor:
             recs.append(f"Encourage more reviews (current: {gbp.reviews}, target: 100+)")
         
         if not perf.has_field_data:
-            recs.append("No Core Web Vitals data - site may be new or low traffic")
+            # FASE-H (V11): este texto estaba hardcodeado y afirmaba "site may be
+            # new or low traffic" tambien cuando la causa era nuestra (API caida o
+            # sin clave). Importa para el cliente porque `extract_top_problems`
+            # (data_structures.py:532-536) rellena los problemas top con estas
+            # recomendaciones textuales. Mismo criterio que el documento: lista
+            # blanca de status que si midieron (modules/common/performance_status).
+            if is_performance_api_unavailable(perf.status):
+                recs.append(perf.message or PAGESPEED_GENERIC_MESSAGE)
+            else:
+                recs.append("No Core Web Vitals data - site may be new or low traffic")
         elif perf.mobile_score and perf.mobile_score < 70:
             recs.append("Optimize mobile performance for better rankings")
         

@@ -12,7 +12,7 @@ sys.path.insert(0, project_root)
 
 import pytest
 
-from modules.data_validation.metadata_validator import MetadataValidator
+from data_validation.metadata_validator import MetadataValidator
 from enums.severity import Severity
 
 
@@ -294,3 +294,23 @@ class TestEdgeCases:
         assert len(title_claims) == 1
         assert title_claims[0].severity == Severity.CRITICAL
         assert "Sitio en construcción" in title_claims[0].message
+
+
+def test_v13_no_existe_segunda_implementacion_del_validador():
+    """V13: el gemelo `modules/data_validation/metadata_validator.py` NO existe.
+
+    Hubo dos `MetadataValidator` byte a byte idénticos y solo uno decide qué se
+    publica (`v4_comprehensive.py:33`). Se intentó mantener el gemelo como shim
+    de delegación y el usuario aprobó borrarlo físicamente (2026-09-04): este
+    test impide que una segunda implementación vuelva a aparecer en esa ruta.
+    """
+    import importlib.util
+    import data_validation.metadata_validator as vivo
+
+    assert importlib.util.find_spec(
+        "modules.data_validation.metadata_validator"
+    ) is None, (
+        "Volvió a aparecer un MetadataValidator gemelo en modules/data_validation: "
+        "un solo validador decide lo que se publica"
+    )
+    assert vivo.MetadataValidator is not None

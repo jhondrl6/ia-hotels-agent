@@ -441,23 +441,33 @@ class PainSolutionMapper:
             ))
         
         # Check OTA divergence (from validation)
+        # FASE-H (V7): el guard historico `hasattr(direct_field.value, '__iter__')` era
+        # insatisfacible para el valor canonico del pipeline — main.py:2306 registra
+        # direct_channel_percentage como float en fraccion 0-1 (main.py:1865 hace
+        # `canal_directo / 100`, default 0.20 en main.py:1890), de modo que el pain nunca
+        # disparaba y el `isinstance(..., (int, float, str))` interno era codigo muerto.
+        # Ahora: validacion numerica + normalizacion de unidades (0.2 == 20 == "0.2" == "20"
+        # => 20%). `ota_field` tampoco se registra en el flujo real (main.py solo anade
+        # adr_cop / occupancy_rate / direct_channel_percentage), por eso se usa como
+        # ENRIQUECIMIENTO no bloqueante del description y nunca como guard: como guard el
+        # pain volveria a ser codigo muerto.
         ota_field = validation_summary.get_field("ota_presence")
         direct_field = validation_summary.get_field("direct_channel_percentage")
-        
-        if direct_field and hasattr(direct_field.value, '__iter__'):
-            try:
-                direct_pct = float(direct_field.value) if isinstance(direct_field.value, (int, float, str)) else 0.3
-                if direct_pct < 0.3:
-                    pains.append(Pain(
-                        id="low_ota_divergence",
-                        name="Alta Dependencia OTAs",
-                        description=f"Solo {int(direct_pct * 100)}% de reservas por canal directo",
-                        severity="high",
-                        detected_by="validation",
-                        confidence=self._confidence_to_float(direct_field.confidence)
-                    ))
-            except (ValueError, TypeError):
-                pass
+        direct_pct = self._normalize_to_fraction(direct_field.value) if direct_field else None
+
+        if direct_pct is not None and direct_pct < 0.3:
+            description = f"Solo {round(direct_pct * 100)}% de reservas por canal directo"
+            ota_evidence = self._describe_ota_presence(ota_field)
+            if ota_evidence:
+                description = f"{description}. OTAs confirmadas: {ota_evidence}"
+            pains.append(Pain(
+                id="low_ota_divergence",
+                name="Alta Dependencia OTAs",
+                description=description,
+                severity="high",
+                detected_by="validation",
+                confidence=self._confidence_to_float(direct_field.confidence)
+            ))
         
         # Check metadata defaults
         if audit_result.metadata and audit_result.metadata.has_issues:
@@ -730,6 +740,13 @@ class PainSolutionMapper:
         status = analytics_data.get("analytics_status")
         ga4_available = analytics_data.get("use_ga4", False)
 
+        organic = analytics_data.get("organic_traffic")
+        organic_measured_low = (
+            organic is not None
+            and isinstance(organic, (int, float))
+            and organic < 1000
+        )
+
         if not ga4_available:
             error_text = ""
             if status and hasattr(status, "ga4_error") and status.ga4_error:
@@ -746,25 +763,39 @@ class PainSolutionMapper:
                 confidence=0.9
             ))
 
-            # Sin GA4 no se puede medir trafico organico → implicitamente baja visibilidad
-            pains.append(Pain(
-                id="low_organic_visibility",
-                name="Baja Visibilidad de Trafico Organico",
-                description="Sin analytics configurado, no se puede medir ni optimizar el trafico organico.",
-                severity="medium",
-                detected_by="analytics",
-                confidence=0.8
-            ))
+        # FASE-H (V8): antes este id se anexaba desde DOS ramas (sin GA4 + trafico medido
+        # bajo el umbral) y detect_pains recibia el pain duplicado, que se traduce en dos
+        # brechas identicas con costo propio. Ahora hay UN solo punto de emision para
+        # low_organic_visibility: se deciden primero las dos señales y se consolida la
+        # construccion. Cuando ambas aplican, la emision unica conserva el dato medido
+        # (sesiones/umbral) ADEMAS del motivo "sin analytics"; los nombres, severidades y
+        # detected_by de cada caso quedan intactos.
+        if not ga4_available or organic_measured_low:
+            if not ga4_available:
+                name = "Baja Visibilidad de Trafico Organico"
+                description = (
+                    "Sin analytics configurado, no se puede medir ni optimizar el trafico organico."
+                )
+                if organic_measured_low:
+                    description = (
+                        f"{description} Trafico organico estimado: {organic} sesiones/mes "
+                        "(umbral hotelero: 1000)"
+                    )
+                confidence = 0.8
+            else:
+                name = "Baja Visibilidad Organica"
+                description = (
+                    f"Trafico organico estimado: {organic} sesiones/mes (umbral hotelero: 1000)"
+                )
+                confidence = 0.7
 
-        organic = analytics_data.get("organic_traffic")
-        if organic is not None and isinstance(organic, (int, float)) and organic < 1000:
             pains.append(Pain(
                 id="low_organic_visibility",
-                name="Baja Visibilidad Organica",
-                description=f"Trafico organico estimado: {organic} sesiones/mes (umbral hotelero: 1000)",
+                name=name,
+                description=description,
                 severity="medium",
                 detected_by="analytics",
-                confidence=0.7
+                confidence=confidence
             ))
 
         return pains
@@ -1200,3 +1231,67 @@ class PainSolutionMapper:
     def _confidence_to_score(self, confidence: ConfidenceLevel) -> float:
         """Convert ConfidenceLevel to numeric score."""
         return self._confidence_to_float(confidence)
+
+    def _normalize_to_fraction(self, value: Any) -> Optional[float]:
+        """Normalizar un valor de porcentaje a fraccion 0-1.
+
+        FASE-H (V7): senal `direct_channel_percentage`. La unidad canonica del pipeline es
+        la fraccion (main.py:1865 `canal_directo / 100`; default `0.20` en main.py:1890;
+        calculator_v2.py:481 documenta "Porcentaje canal directo (0-1)"), pero un
+        ValidatedField puede llegar en porcentaje o como string de input humano. Criterio de
+        desempate: valor > 1 => porcentaje (se divide entre 100). Por eso `0.2`, `20`,
+        `"0.2"`, `"20"` y `"20 %"` significan todos 20%.
+
+        Devuelve None —y el caller no dispara el pain— para bool, negativo, NaN, inf, u
+        otro tipo no convertible. Nunca lanza.
+        """
+        if value is None or isinstance(value, bool):
+            return None
+
+        if isinstance(value, str):
+            text = value.strip().rstrip("%").strip()
+            if not text:
+                return None
+            try:
+                number = float(text)
+            except ValueError:
+                return None
+        elif isinstance(value, (int, float)):
+            number = float(value)
+        else:
+            return None
+
+        if number != number or number in (float("inf"), float("-inf")):
+            return None
+        if number < 0:
+            return None
+
+        return number / 100 if number > 1 else number
+
+    def _describe_ota_presence(self, ota_field: Any) -> str:
+        """Render (tolerante) de la evidencia OTA para el description de un pain.
+
+        Evidencia NO bloqueante: `ota_presence` es List[str] en el modelo del pipeline
+        (inputs_contract.py:49) pero main.py nunca lo registra en el ValidationSummary, asi
+        que devolver "" es el caso normal del flujo real y NUNCA debe condicionar la
+        emision del pain. Acepta str / dict / secuencias por tolerancia; devuelve "" si no
+        hay nada que nombrar.
+        """
+        value = getattr(ota_field, "value", None)
+
+        if isinstance(value, str):
+            nombres = [value]
+        elif isinstance(value, dict):
+            nombres = [str(clave) for clave in value.keys()]
+        elif isinstance(value, (list, tuple, set)):
+            nombres = [str(elemento) for elemento in value]
+        else:
+            nombres = []
+
+        nombres = [n.strip() for n in nombres if isinstance(n, str) and n.strip()]
+        if not nombres:
+            return ""
+
+        if len(nombres) > 3:
+            return ", ".join(nombres[:3]) + f", +{len(nombres) - 3} mas"
+        return ", ".join(nombres)

@@ -16,14 +16,20 @@ import pytest
 
 from modules.auditors.v4_comprehensive import (
     GEO_CRITICAL_MAX_SCORE,
+    PAGESPEED_GENERIC_MESSAGE,
+    PAGESPEED_KEY_MESSAGE,
+    PAGESPEED_NOT_CONFIGURED_MESSAGE,
     CrossValidationResult,
     GBPApiResult,
     PerformanceResult,
     SchemaAuditResult,
     V4ComprehensiveAuditor,
+    disjoint_executed_validators,
     geo_band_critical_issue,
+    sanitize_pagespeed_message,
 )
 from modules.data_validation import ConfidenceLevel
+from modules.data_validation.external_apis import PageSpeedResult
 
 
 # =============================================================================
@@ -239,3 +245,155 @@ class TestLegacyCriteriaIntact:
         """Audit sano completo → lista vacía (favorable SR-H2 no contaminado)."""
         issues = identify(auditor)
         assert issues == []
+
+
+# =============================================================================
+# FASE-H (V11): el crudo del API no se publica y el trace no se contradice
+# =============================================================================
+
+RAW_API_ERROR = "Invalid URL or request: API key not valid. Please pass a valid API key."
+
+
+def _client_result(status: str, message: str) -> PageSpeedResult:
+    return PageSpeedResult(
+        url="https://hotelsalentoreal.com",
+        device="mobile",
+        has_field_data=False,
+        performance_score=None,
+        lcp=None,
+        fid=None,
+        cls=None,
+        tbt=None,
+        status=status,
+        message=message,
+    )
+
+
+class _StubPageSpeedClient:
+    """Reproduce lo que PageSpeedClient hace hoy con una clave inválida.
+
+    El cliente atrapa su propia excepción y devuelve status="ERROR" con
+    message=str(e) en inglés — ese es el camino real por el que el crudo llegaba
+    al diagnóstico (no el except de _audit_performance).
+    """
+
+    def __init__(self, result: PageSpeedResult):
+        self._result = result
+
+    def analyze_url(self, url, device="mobile") -> PageSpeedResult:
+        return self._result
+
+
+class TestV11MensajeSanitizadoEnLaFuente:
+    """Punto (b) del dossier §1: el doc insertaba el string crudo del API."""
+
+    def test_sanitizador_detecta_fallo_de_credencial(self):
+        assert sanitize_pagespeed_message(RAW_API_ERROR) == PAGESPEED_KEY_MESSAGE
+
+    def test_sanitizador_cubre_cualquier_otra_caida(self):
+        assert (
+            sanitize_pagespeed_message("Request to PageSpeed API timed out.")
+            == PAGESPEED_GENERIC_MESSAGE
+        )
+        assert sanitize_pagespeed_message(None) == PAGESPEED_GENERIC_MESSAGE
+
+    def test_el_audit_publica_el_mensaje_sanitizado_no_el_crudo(self, auditor):
+        auditor.pagespeed = _StubPageSpeedClient(_client_result("ERROR", RAW_API_ERROR))
+
+        perf = auditor._audit_performance("https://hotelsalentoreal.com")
+
+        assert perf.status == "ERROR"
+        assert perf.message == PAGESPEED_KEY_MESSAGE
+        assert "API key not valid" not in perf.message
+
+    def test_sin_clave_estado_y_texto_propios(self, auditor, monkeypatch):
+        def _sin_clave():
+            raise ValueError("API key is required")
+
+        monkeypatch.setattr(
+            "modules.auditors.v4_comprehensive.PageSpeedClient", _sin_clave
+        )
+        auditor.pagespeed = None
+
+        perf = auditor._audit_performance("https://hotelsalentoreal.com")
+
+        # API_NOT_CONFIGURED ya no puede quedar disfrazado de "sitio nuevo":
+        # is_performance_api_unavailable lo clasifica como indisponibilidad nuestra.
+        assert perf.status == "API_NOT_CONFIGURED"
+        assert perf.message == PAGESPEED_NOT_CONFIGURED_MESSAGE
+
+
+class TestV11RecomendacionesLeenElEstadoReal:
+    """El residuo D6 en `_generate_recommendations` afirmaba "site may be new"."""
+
+    def _recs(self, auditor, perf):
+        return auditor._generate_recommendations(
+            schema=make_schema(), gbp=make_gbp(), perf=perf, validation=make_validation()
+        )
+
+    def test_error_nuestro_no_afirma_sitio_nuevo(self, auditor):
+        perf = PerformanceResult(
+            has_field_data=False,
+            mobile_score=None,
+            desktop_score=None,
+            lcp=None,
+            fid=None,
+            cls=None,
+            status="ERROR",
+            message=PAGESPEED_KEY_MESSAGE,
+        )
+
+        recs = self._recs(auditor, perf)
+
+        assert PAGESPEED_KEY_MESSAGE in recs
+        assert not any("site may be new" in rec for rec in recs)
+
+    def test_status_vacio_tampoco_afirma_sitio_nuevo(self, auditor):
+        perf = PerformanceResult(
+            has_field_data=False,
+            mobile_score=None,
+            desktop_score=None,
+            lcp=None,
+            fid=None,
+            cls=None,
+            status="",
+            message=PAGESPEED_GENERIC_MESSAGE,
+        )
+
+        recs = self._recs(auditor, perf)
+
+        assert not any("site may be new" in rec for rec in recs)
+        assert PAGESPEED_GENERIC_MESSAGE in recs
+
+    def test_api_ok_sin_crux_conserva_el_texto_generico(self, auditor):
+        """LAB_DATA_ONLY es el único caso donde 'site may be new' es cierto."""
+        recs = self._recs(
+            auditor, make_perf(status="LAB_DATA_ONLY", has_field_data=False)
+        )
+
+        assert any("site may be new or low traffic" in rec for rec in recs)
+
+
+class TestV11ExecutionTraceNoSeContradice:
+    """Punto (d): `pagespeed_api` figuraba en executed Y en skipped."""
+
+    def test_ejecuted_queda_excluido_de_skipped(self):
+        executed = ["schema_validation", "pagespeed_api", "gbp_api"]
+
+        assert disjoint_executed_validators(executed, ["pagespeed_api"]) == [
+            "schema_validation",
+            "gbp_api",
+        ]
+
+    def test_sin_skips_no_toqueada(self):
+        executed = ["schema_validation", "pagespeed_api"]
+
+        assert disjoint_executed_validators(executed, []) == executed
+
+    def test_el_trace_del_audit_aplica_el_filtro(self):
+        """Guarda de cableado: audit() construye el trace con el filtro."""
+        import inspect
+
+        assert "disjoint_executed_validators(" in inspect.getsource(
+            V4ComprehensiveAuditor.audit
+        )
