@@ -709,6 +709,23 @@ Estado: Documentado desde FASE-H, encoding issue con caracteres especiales. No r
    - Grupo D: crear fixture faltante o marcar tests como `@pytest.mark.skip`
    - Grupos E-F: investigación adicional, baja prioridad
 
+#### Actualización 2026-09-05 (sesión post-release) — los 6 grupos accionables quedaron resueltos
+
+> Nota datada; las decisiones 1-4 de arriba se conservan como registro del RELEASE. La sesión ejecutó
+> las recomendaciones (a veces con la decisión editorial tomada antes de tocar). Medición por archivo,
+> sin re-corrida completa de la suite.
+
+| Grupo | Resolución | Commit | Evidencia |
+|-------|-----------|--------|-----------|
+| A | Tests alineados al contrato vigente (decisión editorial: los tests siguen a la implementación; servicios derivados del canónico, no hardcodeados) | `7826084` | 5 passed en su archivo (antes 5 failed) |
+| D | Fixture versionado en `tests/fixtures/` (los valores ya estaban asertados por los tests; `output/` es gitignoreado y nunca pudo versionarlo) | `9ada903` | 17 passed / 4 skipped legítimos (antes 9 errors + 13 failures) |
+| C | Bug real corregido: absorción de diff en slots sin nombre eliminada (`round()` por slot, sin nombre ⟹ `$0`); el test mixto que codificaba el mecanismo fantasma se reescribió al contrato FASE-G | `4dd8e56` | 14 passed en los dos archivos de propuesta. **Alcance medido**: la propuesta v6 no consume `brecha_*` ⟹ el bug nunca llegó al cliente en las 2 corridas reales (la cifra «impacto marginal» del RELEASE era correcta por otra razón) |
+| B | Candado COP COP en AST (literales + f-strings; docstrings excluidos; comentarios invisibles por construcción) con sonda de no-ceguera | `1a6c487` | 5 passed + sonda: caza el literal real del scrubber, 0 hits en el comentario del gate |
+| E | Investigación resuelta: el lado correcto era la implementación — FIX F5 hizo la fuente OTA proveniencia de config; el test quedó contra el contrato pre-F5 | `a61ffe4` | 22 passed en su archivo |
+| F | Test reescrito al oráculo único (snapshot canónico `status: "exists"` → `present_in_production`); el mecanismo FASE-1B que guardaba estaba muerto desde DT4-R2 y el fixture activaba el PASS trivial (`pain_ledger: []`); lectura muerta de `skipped_assets` eliminada del gate | `43e2bf9` | 4 passed + 8 vecinos en verde |
+
+**Saldo**: de los 19 failed + 9 errors de la medición RELEASE quedan **0 atribuibles al plan**; el único rojo restante es el fallo de encoding **preexistente documentado desde FASE-H**. Los fallos de C y F fueron **preexistentes al plan** (verificados en `c317cda^` / con su causa en el contrato), no regresiones de v4.75.0.
+
 
 ---
 
