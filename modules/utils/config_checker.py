@@ -100,20 +100,29 @@ class ConfigChecker:
         """Verifica variables de entorno criticas"""
         env_vars = {
             'DEEPSEEK_API_KEY': 'optional',
-            'ANTHROPIC_API_KEY': 'optional', 
+            'ANTHROPIC_API_KEY': 'optional',
             'OPENAI_API_KEY': 'optional',
             'GOOGLE_API_KEY': 'optional',
             'GOOGLE_MAPS_API_KEY': 'optional',  # For geographic validation
+            'PAGESPEED_API_KEY': 'optional',  # V12: fallback canónico de PageSpeed
+            'GOOGLE_PAGESPEED_API_KEY': 'optional',  # V12: el placeholder de 3 chars vivía aquí
             'WEBDRIVER_PATH': 'optional',
         }
-        
+
         api_keys_found = 0
         for var, required in env_vars.items():
             value = os.getenv(var)
             if value:
                 if 'API' in var:
+                    # V12: un placeholder corto no debe leerse como clave configurada
+                    # (Google ~39 chars, DeepSeek/Anthropic >= 35)
+                    if len(value.strip()) < 20:
+                        self.warnings.append(
+                            f"{var} parece un placeholder ({len(value.strip())} chars) - no cuenta como clave configurada"
+                        )
+                        continue
                     # Mostrar solo primeros y ultimos 4 caracteres por seguridad
-                    masked = f"{value[:4]}...{value[-4:]}" if len(value) > 8 else "***"
+                    masked = f"{value[:4]}...{value[-4:]}"
                     self.checks.append((f"[OK] {var}: {masked}", "ok"))
                     api_keys_found += 1
                 else:
