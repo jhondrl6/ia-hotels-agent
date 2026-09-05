@@ -1023,7 +1023,6 @@ class PublicationGatesOrchestrator:
         from modules.quality_gates.alignment_result import AlignmentResult
 
         generated_assets = assessment.get("generated_assets", [])
-        skipped_assets = assessment.get("skipped_assets", [])  # FASE-1B: assets ya verificados por conditional_generator
 
         # FASE-2 (DT4-R2): site_presence_report is already canonical from the
         # assessment (computed ONCE in main.py via normalize_site_presence).

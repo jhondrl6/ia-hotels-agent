@@ -1,9 +1,12 @@
 """
-FASE-1B: Tests for publication gate presence fix.
+FASE-1B → Grupo F (2026-09-05): tests de presencia para el gate proposal_asset_alignment.
 
-Tests that skipped_assets from conditional_generator (SitePresenceChecker)
-are properly recognized by the proposal_asset_alignment gate,
-avoiding false "missing" reports for assets that already exist in production.
+El mecanismo original (reconstruir un reporte desde skipped_assets, FASE-1B) fue
+sustituido por DT4-R2: la presencia llega UNA vez en el assessment como snapshot
+canónico (normalize_site_presence) y el gate no reconstruye ni re-ejecuta nada —
+oráculo único de presencia (AC10). Estos tests verifican que el gate marca
+present_in_production desde ese snapshot y no reporta "missing" un asset que ya
+existe en producción.
 """
 
 import pytest
@@ -85,18 +88,41 @@ def base_assessment() -> Dict[str, Any]:
 
 
 # =============================================================================
-# Test 1: skipped_assets recognized — asset marked present_in_production
+# Test 1: presence desde el snapshot canónico — asset marked present_in_production
 # =============================================================================
 
-def test_gate_presence_with_skipped_assets(orchestrator, base_assessment):
-    """
-    Given an assessment with skipped_assets (whatsapp_button status=EXISTS),
-    the gate must mark whatsapp_button as present_in_production, NOT as missing.
+# Snapshot canónico (forma normalize_site_presence): el checker verificó que el
+# botón ya existe en el sitio del hotel.
+_PRESENCE_WHATSAPP_EXISTS = {
+    "site_url": "https://test-hotel.com",
+    "checked_at": "2026-09-05T00:00:00",
+    "results": {
+        "whatsapp_button": {
+            "status": "exists",
+            "site_verified": True,
+            "confidence": 1.0,
+        },
+    },
+    "whatsapp_button": {
+        "status": "exists",
+        "site_verified": True,
+        "confidence": 1.0,
+    },
+}
 
-    Before FASE-1B fix: skipped_assets were lost and the gate would run
-    a redundant SitePresenceChecker or mark the asset as missing.
+
+def test_gate_presence_with_canonical_site_presence(orchestrator, base_assessment):
+    """
+    Given an assessment whose canonical site_presence_report says whatsapp_button
+    status='exists', the gate must mark whatsapp_button as present_in_production,
+    NOT as missing.
+
+    El fixture NO incluye pain_ledger: [] hoy significa «ledger resuelto con 0
+    brechas» (FASE-C) y produce un PASS trivial sin detalles de presencia; la
+    ausencia de la clave toma la ruta del catálogo legacy que este test ejercita.
     """
     assessment = dict(base_assessment)
+    assessment.pop("pain_ledger", None)
     # generated_assets does NOT include whatsapp_button
     assessment["generated_assets"] = [
         {"asset_type": "faq_page", "confidence_score": 0.9, "filename": "faq.html", "path": "/tmp/faq.html", "preflight_status": "PASSED"},
@@ -107,15 +133,8 @@ def test_gate_presence_with_skipped_assets(orchestrator, base_assessment):
         {"asset_type": "open_graph", "confidence_score": 0.9, "filename": "og.html", "path": "/tmp/og.html", "preflight_status": "PASSED"},
         {"asset_type": "llms_txt", "confidence_score": 0.9, "filename": "llms.txt", "path": "/tmp/llms.txt", "preflight_status": "PASSED"},
     ]
-    # But skipped_assets says whatsapp_button already EXISTS
-    assessment["skipped_assets"] = [
-        {
-            "asset_type": "whatsapp_button",
-            "presence_status": "EXISTS",
-            "reason": "whatsapp_button already present on site",
-            "site_verified": True,
-        }
-    ]
+    # whatsapp_button ya existe en producción — snapshot canónico (DT4-R2)
+    assessment["site_presence_report"] = _PRESENCE_WHATSAPP_EXISTS
 
     result = orchestrator._proposal_asset_alignment_gate(assessment)
 
@@ -145,30 +164,29 @@ def test_gate_presence_with_skipped_assets(orchestrator, base_assessment):
 
 
 # =============================================================================
-# Test 2: No skipped_assets — fallback to current behavior
+# Test 2: sin site_presence_report — fallback a comportamiento legacy
 # =============================================================================
 
-def test_gate_presence_without_skipped_fallback(orchestrator, base_assessment):
+def test_gate_presence_without_presence_fallback(orchestrator, base_assessment):
     """
-    Without skipped_assets in assessment, the gate falls back to current behavior.
-    Assets not in generated_assets AND not in a pre-built site_presence_report
-    are marked as missing.
+    Without site_presence_report in the assessment, the gate falls back to
+    current behavior: assets not in generated_assets and not verified present
+    are marked as missing (WARNING/BLOCKED según coverage).
 
-    This test verifies backward compatibility.
+    Sin pain_ledger (ruta legacy del catálogo estático): con la clave presente
+    y [] el gate pasa trivial (FASE-C), así que el fixture la omite.
     """
     assessment = dict(base_assessment)
+    assessment.pop("pain_ledger", None)
     # generated_assets does NOT include whatsapp_button
     assessment["generated_assets"] = [
         {"asset_type": "faq_page", "confidence_score": 0.9, "filename": "faq.html", "path": "/tmp/faq.html", "preflight_status": "PASSED"},
     ]
-    # NO skipped_assets
     # NO site_presence_report
-    # We have hotel_url set but NO skipped_assets -> the fake report won't be built
-    # The gate will try SitePresenceChecker or mark as missing
 
     result = orchestrator._proposal_asset_alignment_gate(assessment)
 
-    # With missing assets and hotel_url, the gate should detect misalignment
+    # With missing assets and no presence info, the gate should detect misalignment
     # It might be BLOCKED or WARNING depending on P1/P2/P3 status of missing assets
     assert result is not None
     assert result.gate_name == "proposal_asset_alignment"
