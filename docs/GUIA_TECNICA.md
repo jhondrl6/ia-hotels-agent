@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.75.0 (Estabilización pre-tribunal)
-**Última actualización:** 2026-09-04
+**Última actualización:** 2026-09-05
 
 ---
 
