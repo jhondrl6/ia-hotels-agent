@@ -380,6 +380,52 @@ No consumir §3 ni §8 sin leer esto (§10 ya se autodescribe como stub supersed
 
 ---
 
+## 14. Adendum (2026-09-05) — estabilización COMPLETADA: precondiciones §12 cerradas, residuos heredados y reglas de concepción
+
+> Registrado por la sesión post-release v4.75.0. No reescribe §12: registra qué cerró el plan
+> **ESTABILIZACION-PRE-TRIBUNAL-2026-09-03** (v4.75.0 publicada 2026-09-04; 11/11 sesiones + HOTFIX;
+> ACs 11 ✅ / 1 ⚠️ con dueño; NRs 10 ✅ / 1 ⚠️ / 1 ❌ con decisión) sobre las precondiciones de esa
+> tabla. Fuentes: `10-analisis-post-implementacion.md` del plan (§2.2, §4, §5, §10) y
+> `09-documentacion-post-proyecto.md`. Leer §14 ANTES de concebir el plan del tribunal.
+
+### 14.1 Precondiciones §12 — estado tras la estabilización (certificado sobre artefacto, no sobre string)
+
+| Precondición §12 | Estado | Evidencia en artefacto de la corrida real (FASE-I) |
+|---|---|---|
+| Punto 8 — propuesta dinámica | ✅ Cerrado | `no_breach` **6→0** en `proposal_asset_matrix.json`; exclusión auditable vía `summary.not_promised` (AC5) |
+| A2 — oráculo de presencia persistido | ✅ Cerrado | `v4_audit/site_presence_snapshot.json` (1.421 B, 5 servicios) **dentro del ZIP** (AC9) |
+| A6 — `asset_path` poblado | ✅ Cerrado | entrada LINKED trae ruta real; `null` solo donde no hay asset (AC9) |
+| N11/P9 — gate respeta `is_coherent` | ✅ Cerrado | `coherence_verdict_passes()` única definición; corpus F4: 0 liberadas, 4 flips READY→NOT_READY (AC12) |
+| H10 — severidad 11 blocking + 2 advisory | ✅ Cerrado | `BLOCKING_GATE_NAMES`/`ADVISORY_GATE_NAMES` + `gate_blocks_publication()`; `severity` serializado 13/13 en `gate_report` tras HOTFIX (AC7/AC8) |
+| T0.2 (A4) — doble oráculo de presencia | ✅ Cerrado | `missing_count` == `alignment.unresolved` sobre artefacto; criterio canónico `is_present_in_production` (AC10; residuo → S-HF1, 14.2) |
+| T0.3 (A5) — skip silencioso en builders | ✅ Cerrado | `classify_promised_services()` única partición compartida; builders idénticos por test |
+
+### 14.2 Residuos heredados al tribunal (dueño asignado en `10-analisis` §5; ninguno a fases documentales, DA-V5)
+
+| Residuo | Qué es | Por qué toca al tribunal |
+|---|---|---|
+| **S-HF1** (AC10 ⚠️) | `message «4/4»` vs `details.total_services = 1` en el mismo gate | Bot 2/3 leen ese artefacto; decidir qué mide `total_services` es criterio de narración, no serialización |
+| **S-I1** (NR2 ❌) | `critical_recall = 1.0` con `details: {}` pese a 1 crítico registrado | Bot 1 debe distinguir recall fundado de vacuo; decisión tomada: `details` declara siempre `critical_issues_count` + `recall_basis` |
+| **P12 estructura** | `promised_assets_exist` con `score=1.0` hardcode en `coherence_validator.py` (el mensaje stale ya se corrigió en HOTFIX) | P6.3 es la cláusula de Bot 3; el check sigue dando 1.0 incondicional |
+| **S-C4** | tabla de assets técnicos sigue imprimiendo catálogo incondicional | tercera superficie de promesa; decide qué invariante manda (contrato C1 vs tests S-B10) |
+| S-E2 · S9 · S-I3 · S-V7 · S-V8 · S-H2 | NameError latente con `generate_proposal=False`; `INVALID_MAPPINGS` (#14); clave canónica por artefacto; nombres timestamped; kill switch H9; eje de performance caído sin pain | limpieza/precondición del tramo offline T1/T2 |
+| **S-V10** (B4) | banda de palancas 0.125-0.714 no re-medible | exige corpus ≥3 hoteles — incompatible con «una sola corrida» por diseño |
+
+### 14.3 Reglas de concepción que la certificación dejó medidas (aplicar al concebir FASE T)
+
+1. **Cada AC declara artefacto + clave donde se lee su valor** (L-V1/DA-V3): los 4 ⚠️ del plan tuvieron la misma forma — régimen correcto en código, invisible o contradictorio en el JSON. Un AC no legible en el artefacto no es certificable.
+2. **Presupuesto de iteraciones** (DA-V6): las 9 fases medibles excedieron (≥1.219 vs ≤440; R2 ≤60/fase). Recalibrar ×3 o retirar la métrica del executor, fijando el corte «hasta el commit de código».
+3. **Candados de serialización como patrón** (`test_gate_report_severity_artifact.py`, `test_matrix_coverage_artifact.py`, `test_promised_assets_message_artifact.py`): cubren S-I2 y la mitad serializable de S-V3 sin decisiones de negocio.
+4. **Regla de sincronización = patrón que su validador ejecuta** (L-R2.4): un mensaje «in sync» sobre una forma que ya no existe es el fallo silencioso más caro; el baseline de citas del plan se re-fija con acto visible, no reescribiendo registros.
+
+### 14.4 Baseline de arranque para FASE T
+
+- **v4.75.0** «Estabilización pre-tribunal» (`VERSION.yaml`); 3.934 funciones de test / 298 archivos; validadores del ecosistema 8/8; batería de contratos A-D 180/0.
+- Corrida de referencia: **FASE-I** (`evidence/FASE-I/` — coherence 0.8333 ≥ 0.80, `is_coherent: true`, 5 pains en ledger) + baseline `output/FASE-D_salentoreal_post_guard/` (solo lectura) para deltas.
+- Suite ancha post-release: los 6 grupos de fallos quedaron resueltos (31 tests recuperados, commits `7826084`…`43e2bf9`); el único rojo restante es el fallo de encoding **preexistente documentado desde FASE-H**. Mediciones por archivo, sin re-corrida completa.
+
 ---
 
-*Contexto generado 2026-09-01; auditado contra el código vivo el 2026-09-02 (plan migrado a `ROADMAP.md` §7.2, FASE T v4.2); reestructurado el 2026-09-03 como documento **exclusivo de bots** — la corrección de severidad de gates (ex §12.1-12.6) y los hallazgos estructurales del pipeline (ex §13: A1-A6, B1-B5/punto 8, mediciones, falsos positivos con su lección de forma) viven ahora en el dossier de estabilización `.opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md` (§8-§9; mapa de migración en su §10). Retomar cuando la sesión aborde: bots para iah-cli, credibilidad de diagnóstico, Capa 3 onboarding, Capa 4 delivery/deploy, tribunal de revisión multi-bot, debottlenecking del proceso de entrega, ejecución del plan anclado en P6 — **punto de entrada: §12 (precondiciones) y ROADMAP §7.2 T0.1-T0.4, y solo después T1 = Juez certificador**; el tramo offline T0/T1/T2/T4 es certificable ya, el tramo externo T3/T5/T6 depende de datos reales del hotel y credenciales FTP/WP.*
+*Contexto generado 2026-09-01; auditado contra el código vivo el 2026-09-02 (plan migrado a `ROADMAP.md` §7.2, FASE T v4.2); reestructurado el 2026-09-03 como documento **exclusivo de bots** — la corrección de severidad de gates (ex §12.1-12.6) y los hallazgos estructurales del pipeline (ex §13: A1-A6, B1-B5/punto 8, mediciones, falsos positivos con su lección de forma) viven ahora en el dossier de estabilización `.opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md` (§8-§9; mapa de migración en su §10). Retomar cuando la sesión aborde: bots para iah-cli, credibilidad de diagnóstico, Capa 3 onboarding, Capa 4 delivery/deploy, tribunal de revisión multi-bot, debottlenecking del proceso de entrega, ejecución del plan anclado en P6 — **punto de entrada: §14 (adendum 2026-09-05: precondiciones §12 cerradas por la estabilización v4.75.0, residuos heredados y reglas de concepción) y ROADMAP §7.2 T0.1-T0.4, y solo después T1 = Juez certificador**; el tramo offline T0/T1/T2/T4 es certificable ya, el tramo externo T3/T5/T6 depende de datos reales del hotel y credenciales FTP/WP.*
+
+
