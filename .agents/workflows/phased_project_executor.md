@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código. Ejecutado por agentes AI.
-version: v2.19.0
+version: v2.20.0
 ---
 
 # Skill: Phased Project Executor
@@ -29,11 +29,12 @@ version: v2.19.0
 > `evidence/FASE-D/measure_iterations.py`. Corte fijo: **hasta el commit de código** (lo que se
 > escriba después es cierre documental y no cuenta contra el presupuesto de implementación). Si la
 > fase no puede correr el instrumento, el auto-reporte se publica **en la unidad usada**
-> (`tool_use`, `ids únicos`, etc.) y se declara que no es comparable con las demás. Ver §R2.1-R2.4.
+> (`tool_use`, `ids únicos`, etc.) y se declara que no es comparable con las demás. Ver §R2.1-R2.5.
 
-## Reglas de Proceso v2.19.0 (OBLIGATORIO — propuestas por FASE-VERIFY, 2026-09-04)
+## Reglas de Proceso v2.20.0 (OBLIGATORIO — propuestas por FASE-VERIFY, 2026-09-04)
 
-Las cuatro reglas siguientes existen porque un plan de 11 fases las violó o las descubrió tarde.
+Las cinco reglas siguientes existen porque un plan de 11 fases las violó o las descubrió tarde
+(y la sesión post-release aportó la quinta: un archivado que quedó como reproceso, ver R2.5).
 Cada una lleva su medición de origen: una norma sin medición es la regla que se escribe y no se
 cumple (ver R2.4).
 
@@ -103,6 +104,27 @@ Consecuencias operativas:
   tiene el ZIP?»*, no está listo para certificarse.
 - Donde la corrida no ejercita el camino, se dice que no lo ejercita; no se cuenta el test como
   hecho (el verde de un test prueba el régimen, no la salida).
+
+### R2.5 — El cierre archiva: FASE-RELEASE termina con el plan en `Archives/` (2026-09-04)
+
+**Medido**: `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` se cerró con v4.75.0 y quedó en `plans/` raíz;
+el archivado se ejecutó como reproceso en la sesión siguiente, pese a que la convención ya existía
+(23 planes en `Archives/`, `archived_promotion()` en `validate_opencode_refs.py`, nota QMind).
+Una convención que ningún paso del flujo ejecuta es la que se descubre tarde.
+
+**Regla**: FASE-RELEASE termina con el plan archivado, dentro del mismo cierre documental:
+
+```bash
+git mv .opencode/plans/<PLAN> .opencode/plans/Archives/
+python scripts/validate_opencode_refs.py --fix                # promoción «archived» de referencias
+python scripts/validate_plan_citations.py --update-baseline   # claves cambian a plans/Archives/ — acto visible
+python scripts/run_all_validations.py --quick                 # verde
+```
+
+Un commit único cierra RELEASE + archivado y las referencias vivas (memoria de sesión, QMind)
+apuntan a la ruta nueva. `Archives/` queda fuera del alcance de `validate_plan_closure.py`
+(histórico congelado); salir de RELEASE con el plan en raíz garantiza el reproceso que esta
+regla elimina.
 
 ## Regla de Scope de Fase (OBLIGATORIO — Al Crear el Plan)
 
@@ -643,8 +665,11 @@ Plan de documentación (09-documentacion-post-proyecto.md)
     ├── Paso 4.5.4: Validar GUIA_TECNICA.md
     │   └── Verificar notas técnicas por fase
     │
-    └── Paso 4.5.5: Validación final
-        └── run_all_validations.py --quick
+    ├── Paso 4.5.5: Validación final
+    │   └── run_all_validations.py --quick
+    │
+    └── Paso 4.5.6: Archivar el plan (R2.5)
+        └── git mv a plans/Archives/ + refs --fix + citas --update-baseline + --quick (mismo commit)
 ```
 
 #### Paso 4.5.1: Registrar Fases en REGISTRY.md
@@ -1185,6 +1210,7 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - **FASE-VERIFY incluida en plan simple** → evaluar si los 3 criterios de activación se cumplen; si no, eliminar y documentar por qué en `dependencias-fases.md`
 
 ## Versiones
+- **v2.20.0** (2026-09-04): Nueva **R2.5** «El cierre archiva»: FASE-RELEASE termina con el plan movido a `.opencode/plans/Archives/` (git mv + `validate_opencode_refs.py --fix` + `validate_plan_citations.py --update-baseline` + `--quick` verde, un commit único), en lugar de archivarlo como reproceso en la sesión siguiente (medido: `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` se cerró con v4.75.0 y quedó en raíz pese a que la convención ya existía). Enforcement mecánico: dos checks nuevos en el pre-commit — `[4/5]` citas de línea en planes (R2.2, `validate_plan_citations.py`) y `[5/5]` cierre de planes (`scripts/validate_plan_closure.py`: un plan que declara «Cierre del plan» + COMPLETADO no puede publicar filas «⬜ Pendiente»; `Archives/` fuera de alcance). Paso 4.5.6 añadido al flujo documental §4.5.
 - **v2.19.0** (2026-09-04): Cuatro reglas de proceso propuestas por FASE-VERIFY del plan `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`, que el archivo **no contenía** (medido: 0 coincidencias de «recalibr», «números de línea», «hasta el commit de código», «delta»). Nuevas §R2.1-§R2.4: **R2.1** presupuesto de iteraciones medido con `evidence/FASE-D/measure_iterations.py` y corte fijo «hasta el commit de código», con la orden de recalibrar ×3 **o retirar** la métrica (S22/DA-V6: nueve fases excedieron 2,4×-8,6× y reportaron en unidades distintas); **R2.2** prohibición de números de línea en ACs y prompts — citar símbolos (L-A6/L-V4/L-H4: 14 de 16 citas ya desfasadas al certificar) y su verificador mecánico nuevo `scripts/validate_plan_citations.py`, check 8 de `run_all_validations.py --quick`; **R2.3** no-regresión de conteos formulada como **delta** con par pre/post obligatorio (S26/DA-V2); **R2.4** regla de certificación — *un AC no legible en el artefacto que el sistema produce es ⚠️, no ✅; un ✅ que solo respalda un string en el código no existe* (L-V1/DA-V3). **R2 deja de prometer «máximo 60 iteraciones»**: la cabecera y la regla mandatoria ahora ordenan medir, no estimar.
 - **v2.18.0** (2026-09-02): Write-back de CONTEXT por aporte, no por edición. Los `CONTEXT-*.md` de `.opencode/context/` se ingieren a QMind solo cuando **autodeclaran** una lección durable con etiqueta explícita (`Lección de forma:`); el criterio es binario para que no dependa de un juicio de relevancia inferido (§4). La pregunta se hace en el Cierre Obligatorio de Sesión (paso 3 nuevo), que es donde el archivo se escribe, para que el disparador no sea letra muerta. Se aclara en el Paso 0 que un CONTEXT ausente del notebook no es un olvido. Origen medido: `CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` no estaba en el notebook (40 fuentes, última ingesta 2026-08-31) pese a declarar en §13.5 *"Lección de forma: revalidar citas de código no revalida premisas"* — el ciclo v2.17.0 solo disparaba sobre `10-analisis-post-implementacion.md` al cierre de fase, y un CONTEXT de análisis/auditoría no es cierre de fase.
 - **v2.17.0** (2026-08-28): Ciclo de capitalización de lecciones aprendidas. Nuevo Paso 0 obligatorio (recuperación desde memoria del proyecto + notebook QMind `iah-cli-lecciones` antes de planificar), inyección de lecciones pertinentes en prompts de fase (§2), y write-back al cierre de cada fase (§4): lecciones INCLUIR a memoria del proyecto y re-ingesta del 10-analisis a QMind. Fallback explícito si el notebook no está disponible.

@@ -3,9 +3,11 @@
 # Versionado en scripts/git_hooks/ — instalar con: python scripts/install_git_hooks.py
 #
 # Checks:
-#   [1/3] Version consistency (version_consistency_checker.py)
-#   [2/3] File synchronization (sync_versions.py --check)
-#   [3/3] Referencias .opencode (validate_opencode_refs.py --fix, auto-fix)
+#   [1/5] Version consistency (version_consistency_checker.py)
+#   [2/5] File synchronization (sync_versions.py --check)
+#   [3/5] Referencias .opencode (validate_opencode_refs.py --fix, auto-fix)
+#   [4/5] Citas de línea en planes (validate_plan_citations.py — regla R2.2)
+#   [5/5] Cierre de planes sin filas pendientes (validate_plan_closure.py — regla R2.5)
 #
 # Si detecta gaps, el commit es bloqueado (salvo --no-verify, NO recomendado).
 
@@ -31,8 +33,8 @@ if [ -z "$PYTHON_CMD" ]; then
     exit 0
 fi
 
-# [1/3] Version consistency
-echo "[1/3] Checking version consistency..."
+# [1/5] Version consistency
+echo "[1/5] Checking version consistency..."
 CHECKER_OUT=$($PYTHON_CMD scripts/version_consistency_checker.py --verbose 2>&1) || CHECKER_EXIT=$?
 echo "$CHECKER_OUT" | head -30
 
@@ -53,10 +55,10 @@ if [ "${CHECKER_EXIT:-0}" -ne 0 ]; then
     exit 1
 fi
 
-echo "[1/3] OK: Version consistency PASSED"
+echo "[1/5] OK: Version consistency PASSED"
 
-# [2/3] File synchronization
-echo "[2/3] Checking file synchronization..."
+# [2/5] File synchronization
+echo "[2/5] Checking file synchronization..."
 SYNC_OUT=$($PYTHON_CMD scripts/sync_versions.py --check 2>&1) || SYNC_EXIT=$?
 echo "$SYNC_OUT" | grep -E "(OK|FAIL|WARN)" | head -20 || true
 
@@ -70,10 +72,10 @@ if [ "${SYNC_EXIT:-0}" -ne 0 ]; then
     exit 1
 fi
 
-echo "[2/3] OK: Files synchronized"
+echo "[2/5] OK: Files synchronized"
 
-# [3/3] Referencias .opencode (auto-fix)
-echo "[3/3] Checking .opencode references..."
+# [3/5] Referencias .opencode (auto-fix)
+echo "[3/5] Checking .opencode references..."
 REFS_OUT=$($PYTHON_CMD scripts/validate_opencode_refs.py --fix 2>&1) || REFS_EXIT=$?
 echo "$REFS_OUT"
 
@@ -91,7 +93,35 @@ elif [ "${REFS_EXIT:-0}" -ne 0 ]; then
     exit 1
 fi
 
-echo "[3/3] OK: OpenCode references PASSED"
+echo "[3/5] OK: OpenCode references PASSED"
+
+# [4/5] Citas de línea en planes (regla R2.2 — cero citas nuevas sin acto visible)
+echo "[4/5] Checking plan citations..."
+CIT_OUT=$($PYTHON_CMD scripts/validate_plan_citations.py 2>&1) || CIT_EXIT=$?
+if [ "${CIT_EXIT:-0}" -ne 0 ]; then
+    echo "$CIT_OUT" | head -20
+    echo ""
+    echo "FAIL: citas de línea nuevas o inventario crecido (regla R2.2)."
+    echo "Cita símbolos, no archivo:123. Si la medición nueva es legítima y la cita"
+    echo "sigue exacta, re-fija el baseline (acto visible):"
+    echo "  python scripts/validate_plan_citations.py --update-baseline"
+    echo ""
+    exit 1
+fi
+echo "[4/5] OK: Plan citations PASSED"
+
+# [5/5] Cierre de planes sin filas pendientes (regla R2.5)
+echo "[5/5] Checking plan closure rows..."
+CLO_OUT=$($PYTHON_CMD scripts/validate_plan_closure.py 2>&1) || CLO_EXIT=$?
+if [ "${CLO_EXIT:-0}" -ne 0 ]; then
+    echo "$CLO_OUT"
+    echo ""
+    echo "FAIL: un plan que declara cierre publica filas «⬜ Pendiente» (regla R2.5)."
+    echo "Actualiza la fila con nota datada (convención del archivo) y re-commitea."
+    echo ""
+    exit 1
+fi
+echo "[5/5] OK: Plan closure PASSED"
 
 echo ""
 echo "========================================"
