@@ -1,2 +1,0 @@
-URL rechazada: https://www.instagram.com/fincahoteldonjulio pertenece a una red social (instagram.com), no al sitio web propio del hotel. Proporciona la URL del sitio web propio del hotel (ej: https://www.tuhotel.com). Para auditar esta URL de todos modos usa --force (bypass explícito del operador; el evento queda registrado).
-EXIT_CODE=2

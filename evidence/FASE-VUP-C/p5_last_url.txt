@@ -1,5 +1,0 @@
-[HARNESS] 🔄 Usando URL persistente: https://www.booking.com/hotel/co/finca-don-julio.es.html
-URL rechazada: https://www.booking.com/hotel/co/finca-don-julio.es.html pertenece a un agregador de reservas (OTA) (booking.com), no al sitio web propio del hotel. Esta URL proviene del estado persistente (last_url), no de --url. Proporciona la URL del sitio web propio del hotel (ej: https://www.tuhotel.com). Para auditar esta URL de todos modos usa --force (bypass explícito del operador; el evento queda registrado).
-EXIT_CODE=2
-.agent/memory\current_state.json: last_url=https://www.booking.com/hotel/co/finca-don-julio.es.html
-FAIL: URL bloqueada fue re-persistida
