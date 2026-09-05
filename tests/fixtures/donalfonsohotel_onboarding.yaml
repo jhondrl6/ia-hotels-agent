@@ -1,0 +1,22 @@
+# Fixture versionado del onboarding de Don Alfonso Hotel.
+#
+# El archivo original vivía en output/clientes/ (gitignoreado) y se perdió; estos
+# tests e2e (plan BUGS-ONBOARDING-ADR-2026-07-22) quedaron bloqueados por su ausencia.
+# Los valores reproducen exactamente los que las aserciones de
+# tests/e2e/test_onboarding_to_harness_pipeline.py ya fijan (ADR 330.000 COP,
+# occupancy 0.4242, 11 habitaciones) — no introducen datos nuevos.
+hotel:
+  nombre: "Don Alfonso Hotel"
+  url: "https://www.donalfonsohotel.com/"
+
+datos_operativos:
+  habitaciones: 11
+  adr_cop: 330000
+  valor_reserva_cop: 330000
+  occupancy_rate: 0.4242
+  canal_directo_pct: 20.0
+
+metadatos:
+  fuente: "contacto_directo_observations_json"
+  epistemic_status: "verified"
+  confidence: 0.95

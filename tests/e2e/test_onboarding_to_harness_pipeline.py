@@ -19,7 +19,10 @@ import yaml
 # ── helpers ──────────────────────────────────────────────────────────────
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent
-ONBOARDING_YAML = PROJECT_ROOT / "output" / "clientes" / "donalfonsohotel_onboarding.yaml"
+# Fixture versionado: el YAML original vivía en output/clientes/ (gitignoreado) y se
+# perdió; la copia canónica ahora vive en tests/fixtures/ con los valores que estos
+# tests asertan.
+ONBOARDING_YAML = PROJECT_ROOT / "tests" / "fixtures" / "donalfonsohotel_onboarding.yaml"
 VENV_PYTHON = PROJECT_ROOT / "venv" / "Scripts" / "python.exe"
 
 
