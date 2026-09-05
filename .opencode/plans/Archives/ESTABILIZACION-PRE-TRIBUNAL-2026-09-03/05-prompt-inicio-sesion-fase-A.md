@@ -18,7 +18,7 @@ V2 (6 IDs fantasma), V3 (fragmentación ≥9 + perla `monthly_report → no_faq_
 ## Contexto
 
 El dossier de estabilización pre-tribunal
-(`.opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md`) identificó una
+(`/.opencode/context/Historico/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md`) identificó una
 causa raíz única con tres manifestaciones. Su §12.5 la nombra verbatim:
 
 > *"contrato de detección fragmentado y sin candado — ≥9 registros no canónicos, consumidores derivan
@@ -290,7 +290,7 @@ fuerte ante drift.
 
 CONTEXTO:
 - Plan: /.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
-- Dossier fuente: .opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md §12.3 (V2/V3/V14) y §12.5 Nivel 1.2
+- Dossier fuente: /.opencode/context/Historico/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md §12.3 (V2/V3/V14) y §12.5 Nivel 1.2
 - Repo v4.74.1, master limpio. Python: ./venv/Scripts/python.exe
 - Baseline de tests: 848 passed / 2 skipped en tests/quality_gates + tests/asset_generation
 - Patrón a copiar: guardián AST de FASE-SR-A

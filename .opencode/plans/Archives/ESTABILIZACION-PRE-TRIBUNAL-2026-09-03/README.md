@@ -4,7 +4,7 @@
 >
 > ⚠️ **Conflicto de concurrencia registrado (2026-09-03)**: esta línea llegó a afirmar que «FASE-B ✅ era falso, B sigue pendiente», escrita por la sesión de FASE-D cuando el trabajo de B aún no estaba commiteado. Era incorrecto: B está completa y su evidencia es re-ejecutable (`evidence/FASE-B/`, candado `tests/commercial_documents/test_pain_map_bijection.py` en verde). **Dos sesiones editando los mismos documentos de plan producen esta sobrescritura** → seguimiento **S-B15** en `10-analisis-post-implementacion.md` §5.
 > **Workflow**: `phased_project_executor.md` v2.18.0 (R1: una fase/sesión, R2: ≤60 iteraciones, R3: ≤4 tareas de investigación/fix ó 3 tareas + 1 comando largo)
-> **Contexto fuente**: `.opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md` (dossier de estabilización pre-tribunal, 717 líneas)
+> **Contexto fuente**: `/.opencode/context/Historico/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md` (dossier de estabilización pre-tribunal, 717 líneas)
 > **Anclaje estratégico**: `ROADMAP.md` v4.2 §7.2 (FASE T) y §13 (deudas P9/P10/P12/H7/H9/H10)
 > **Paso 0 completado**: 8 fuentes QMind `iah-cli-lecciones` + 3 memorias de proyecto releídas (ver §Reglas transversales)
 

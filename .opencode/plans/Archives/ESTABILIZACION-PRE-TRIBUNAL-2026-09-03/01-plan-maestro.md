@@ -1,7 +1,7 @@
 # 01 — Plan Maestro: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03
 
 > **Versión objetivo**: 4.75.0 · **Workflow**: `phased_project_executor.md` v2.18.0
-> **Fuente**: `.opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md`
+> **Fuente**: `/.opencode/context/Historico/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md`
 > **Reglas activas**: R1 (una fase/sesión) · R2 (≤60 iteraciones/fase) · R3 (≤4 tareas de fix ó 3 tareas + 1 comando largo)
 
 ---

@@ -391,7 +391,7 @@ candado.
 
 CONTEXTO:
 - Plan: /.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
-- Dossier: .opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md §12.3 V1 y §4 caída #4
+- Dossier: /.opencode/context/Historico/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md §12.3 V1 y §4 caída #4
 - FASE-A completada: registro canónico disponible (ver evidence/FASE-A/censo-registros.md §1-7 y las
   correcciones §8). Capa 1 = PAIN_SOLUTION_MAP; Capa 2 = modules/common/service_identity.py
 - N-A1 (precondición dura): evidence/FASE-A/faseA_narratives_audit.txt — Capa 1=27, narratives=16,
