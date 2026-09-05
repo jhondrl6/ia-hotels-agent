@@ -252,7 +252,12 @@ class TestEvidenceTierIntegration:
 
         assert breakdown.hotel_data_sources["adr"] == "onboarding"
         assert breakdown.hotel_data_sources["direct_channel"] == "user_provided"
-        assert breakdown.ota_commission_source == "industry_standard_15pct"
+        # Grupo E (2026-09-05): desde FIX F5 la fuente OTA es la proveniencia de
+        # config (contrato fijado por test_trace_data_sources_uses_config), no la
+        # clave corta 'industry_standard_15pct'. El intento original — comisión
+        # por estándar de industria, no provista por el hotel — se conserva vía
+        # la referencia a financial_defaults.yaml.
+        assert "financial_defaults.yaml" in breakdown.ota_commission_source
 
 
 # ──────────────────────────────────────────────────────────────
