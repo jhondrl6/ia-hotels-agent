@@ -9,6 +9,7 @@ Criterio de éxito:
 - modules/ no contiene "COP COP"
 - outputs no contienen "COP COP"
 """
+import ast
 import pytest
 from pathlib import Path
 
@@ -21,11 +22,43 @@ TEST_OUTPUT_DIR = PROJECT_ROOT / "test_output"
 ARCHIVES_DIR = PROJECT_ROOT / "archives"
 
 
+def _string_literals_without_docstrings(source: str):
+    """Literales de string del AST, excluyendo docstrings.
+
+    Grupo B (2026-09-05): el grep en texto crudo marcaba comentarios que CITAN
+    el defecto (publication_gates.py, ejemplo del gate content_quality). Los
+    comentarios no existen en el AST; los docstrings se excluyen porque no
+    llegan a artefactos del cliente. Lo que sí se caza: literales y partes de
+    f-strings, que es lo único que el código puede emitir.
+    """
+    tree = ast.parse(source)
+    docstring_ids = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+            body = node.body
+            if (body and isinstance(body[0], ast.Expr)
+                    and isinstance(body[0].value, ast.Constant)
+                    and isinstance(body[0].value.value, str)):
+                docstring_ids.add(id(body[0].value))
+    found = []
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.Constant) and isinstance(node.value, str)
+                and id(node) not in docstring_ids):
+            found.append((node.lineno, node.value))
+    return found
+
+
 class TestNoCOPCOPRegression:
     """Test suite para verificar que el bug COP COP no existe."""
 
     def test_no_cop_cop_in_modules(self):
-        """Verifica que modules/ no contenga 'COP COP'."""
+        """Verifica que ningún literal de código en modules/ pueda emitir 'COP COP'.
+
+        Escaneo AST (Grupo B, 2026-09-05), no grep crudo: los comentarios que
+        citan el defecto como ejemplo (p. ej. el gate content_quality) son
+        legítimos y no llegan a artefactos. Los archivos excluidos son los
+        detectores/limpiadores que mencionan el patrón por diseño.
+        """
         cop_cop_found = []
         # Exclude files that legitimately contain "COP COP" for detection/correction
         excluded_files = {
@@ -33,7 +66,7 @@ class TestNoCOPCOPRegression:
             "modules/postprocessors/content_scrubber.py",
             "modules/postprocessors/document_quality_gate.py",
         }
-        
+
         for py_file in MODULES_DIR.rglob("*.py"):
             if "__pycache__" in str(py_file):
                 continue
@@ -41,14 +74,14 @@ class TestNoCOPCOPRegression:
             if rel_path in excluded_files:
                 continue
             try:
-                content = py_file.read_text(encoding="utf-8")
-                lines = content.split("\n")
-                for i, line in enumerate(lines, 1):
-                    if "COP COP" in line:
-                        cop_cop_found.append(f"{py_file.relative_to(PROJECT_ROOT)}:{i}")
-            except Exception:
-                pass  # Skip binary or unreadable files
-        
+                source = py_file.read_text(encoding="utf-8")
+                literals = _string_literals_without_docstrings(source)
+            except (OSError, SyntaxError, UnicodeDecodeError):
+                continue  # ilegible o no parseable: no puede emitir literales
+            for lineno, value in literals:
+                if "COP COP" in value:
+                    cop_cop_found.append(f"{rel_path}:{lineno}")
+
         assert len(cop_cop_found) == 0, (
             f"Found 'COP COP' in modules:\n" + "\n".join(cop_cop_found)
         )
