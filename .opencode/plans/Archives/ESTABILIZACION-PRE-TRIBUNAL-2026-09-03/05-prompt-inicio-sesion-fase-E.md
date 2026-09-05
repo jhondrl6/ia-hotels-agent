@@ -269,7 +269,7 @@ coverage_ratio/G9 y NO se escribe a disco: find output -iname "*site_presence*" 
 histórico) + A6 poblar asset_path (hoy null incluso para la entrada LINKED cuyo asset sí se generó).
 
 CONTEXTO:
-- Plan: .opencode/plans/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
+- Plan: /.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
 - Dossier §9.1 A2 y A6 (verbatim), §10 precondiciones #2 y #3
 - Linaje: DT4-N2 diagnosticó 4 rutas de reconstrucción de SitePresence y prescribió "calcular una vez
   y propagar — los gates validan, no reconstruyen". DT4-R2 implementó la propagación EN MEMORIA

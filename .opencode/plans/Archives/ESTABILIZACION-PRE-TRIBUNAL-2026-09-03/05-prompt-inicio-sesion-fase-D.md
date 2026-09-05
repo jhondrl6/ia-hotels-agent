@@ -312,7 +312,7 @@ Advisory = {content_quality, proposal_asset_alignment}. asset_confidence CONSERV
 Mitad conductual + mitad documental en el MISMO COMMIT.
 
 CONTEXTO:
-- Plan: .opencode/plans/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
+- Plan: /.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
 - Dossier §8.3 (decisión), §8.4 (tareas), §8.5 (qué NO hacer)
 - Memoria: decision-advisory-gates-2-no-3
 - Estado actual: publication_gates.py:4 y :162 dicen "10 blocking + 3 advisory"; self.gates (:181-195)

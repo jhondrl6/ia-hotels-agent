@@ -328,7 +328,7 @@ __iter__ triple defecto), V8 (emisión duplicada), V11 (residuos D6), V13 (Metad
 V12 (trampa .env → DOCUMENTAR, no editar).
 
 CONTEXTO:
-- Plan: .opencode/plans/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
+- Plan: /.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
 - Dossier §12.3 V6/V7/V8/V11/V12/V13 (verbatim), §1 puntos (a)-(d) de PageSpeed, §12.5 Nivel 3.8
 - FASE-A…G ✅. pain_solution_mapper.py fue tocado por FASE-B; v4_comprehensive.py por FASE-G →
   re-verificar líneas antes de editar

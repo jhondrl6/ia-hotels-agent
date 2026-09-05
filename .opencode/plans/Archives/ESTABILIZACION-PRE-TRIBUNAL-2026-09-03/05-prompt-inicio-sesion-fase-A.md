@@ -289,7 +289,7 @@ registros censados (9 del dossier + 3 del complemento de auditoría), con contra
 fuerte ante drift.
 
 CONTEXTO:
-- Plan: .opencode/plans/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
+- Plan: /.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
 - Dossier fuente: .opencode/context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md §12.3 (V2/V3/V14) y §12.5 Nivel 1.2
 - Repo v4.74.1, master limpio. Python: ./venv/Scripts/python.exe
 - Baseline de tests: 848 passed / 2 skipped en tests/quality_gates + tests/asset_generation

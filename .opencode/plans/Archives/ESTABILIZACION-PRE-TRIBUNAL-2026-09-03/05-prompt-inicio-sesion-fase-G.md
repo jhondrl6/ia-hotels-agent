@@ -275,7 +275,7 @@ en verde; critical_recall=1.0 es vacuo; y el coverage gate tiene dos escotillas 
 mención en doc, V9 ledger vacío PASS vs BLOCKED).
 
 CONTEXTO:
-- Plan: .opencode/plans/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
+- Plan: /.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
 - Dossier §3 (candados rotos), §12.3 V5/V9/V10, §12.5 Nivel 3.7
 - TAUTOLOGÍA DE FONDO: coverage_no_silent_drop compara el ledger contra las brechas del doc y AMBOS
   salen de la MISMA llamada detect_pains (v4_asset_orchestrator.py:280; v4_diagnostic_generator.py:3178,

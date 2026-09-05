@@ -330,7 +330,7 @@ ajenos, con `faseHotfix_baseline_pre.txt` / `_post.txt`.
 ```
 Actúa como ejecutor de la sesión FASE-HOTFIX-PRE-RELEASE del plan
 ESTABILIZACION-PRE-TRIBUNAL-2026-09-03. Lee primero, íntegro:
-.opencode/plans/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-HOTFIX-PRE-RELEASE.md
+/.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-HOTFIX-PRE-RELEASE.md
 
 OBJETIVO: cerrar los 4 ACs ⚠️ que FASE-VERIFY certificó sobre artefactos y el único rojo que el plan
 introdujo (S-V1); rematar los dos puntos que VERIFY asignó a un hotfix (S-C3 textual, S-I3); y escribir en el

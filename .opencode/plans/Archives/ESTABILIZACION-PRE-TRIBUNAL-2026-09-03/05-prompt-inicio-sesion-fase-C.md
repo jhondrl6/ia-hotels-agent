@@ -347,7 +347,7 @@ detectada. Hoy promete los 7-8 del registro haya o no brecha → no_breach = 6/7
 algebraico. Con propuesta dinámica, no_breach = 0 POR CONSTRUCCIÓN.
 
 CONTEXTO:
-- Plan: .opencode/plans/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
+- Plan: /.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
 - Dossier §9.2 (B1-B5, mecanismo causal medido), §8.5 (punto 8 no es opcional), §12.5 Nivel 1.1
 - FASE-A ✅ (registro canónico) y FASE-B ✅ (biyección) completadas
 - Corpus real: output/FASE-D_salentoreal_post_guard/v4_complete/hotelsalentoreal/v4_audit/ (2026-08-31 12:28)

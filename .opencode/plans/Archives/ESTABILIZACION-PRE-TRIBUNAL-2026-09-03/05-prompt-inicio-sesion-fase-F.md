@@ -298,7 +298,7 @@ pasado, con dos defaults independientes) y N11/P9 (el gate de coherencia ignora 
 más grave abierta).
 
 CONTEXTO:
-- Plan: .opencode/plans/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
+- Plan: /.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
 - Dossier §9.1 A1/A4 (verbatim), §9.2 B5/N11, §12.3 V15/V16, §12.5 Nivel 2 (puntos 5 y 6), §10 #4
 - N11: los CUATRO artefactos de SalenteReal dicen is_coherent:false (causa: assets_are_justified 3/4)
   y el paquete salió READY_FOR_PUBLICATION con ZIP de 46.552 B / 37 archivos. _coherence_gate

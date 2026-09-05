@@ -347,7 +347,7 @@ OBJETIVO: Única ejecución v4complete del plan sobre Hotel Salento Real
 evidencia proactiva y comparación contra output/FASE-D_salentoreal_post_guard/.
 
 CONTEXTO:
-- Plan: .opencode/plans/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
+- Plan: /.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/
 - FASE-A…H ✅ (las ocho). Si alguna no está ✅, NO EJECUTAR — la corrida no es recuperable
 - Baseline: corrida 2026-08-31 12:28:03. Valores clave: coherence 0.88, is_coherent=FALSE en 3
   artefactos (6 copias en disco), matriz 7 servicios con 6 NO_BREACH + 1 LINKED, pain_ledger_resolved 3 entradas,
