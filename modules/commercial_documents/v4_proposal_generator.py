@@ -2111,11 +2111,14 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
     def _build_brecha_data(self, diagnostic_summary, main_scenario) -> Dict[str, str]:
         """Build brecha_1..4 nombre/costo dynamically using real impact weights.
 
-        FASE-4 (H3): Normalizes sum to financial_value_central exactly.
-        Previously: each brecha computed independently via int() causing
-        rounding errors that accumulated (e.g., $3,742,069 != $3,741,696).
-        Now: compute raw values, sum them, then adjust the LAST brecha
-        to absorb the difference and make total match exact central value.
+        FASE-4 (H3) normalizaba la suma al valor central absorbiendo la diferencia
+        en el ÚLTIMO slot. Post-release (Grupo C, 2026-09-05) esa absorción se
+        elimina: cuando los impactos reales no suman 1.0 o hay slots vacíos, el
+        último slot (sin nombre) terminaba mostrando dinero inventado
+        (ej. $4.500.000 COP con nombre ""). Contrato FASE-G vigente: costo por
+        slot = round(impacto × central) — el redondeo por slot deja error ≤ 1 COP,
+        que es el problema de acumulación que H3 quiso curar — y slots sin
+        nombre = $0 siempre.
 
         FASE-G: Usa brechas_reales (con impacto real de _identify_brechas) cuando
         está disponible. Fallback a top_problems con distribución equitativa.
@@ -2147,33 +2150,17 @@ monetizables incrementara su score y mejorara su visibilidad en Busqueda Google 
                 raw_values.append(0.0)
                 raw_names.append("")
 
-        # H3 FIX: normalize so sum equals exact central value
-        financial_central = float(self._get_main_value(main_scenario))
-        raw_sum = sum(raw_values)
-        diff = round(raw_sum - financial_central)
-
-        # Only normalize if there is at least one real brecha/problem
-        # If all slots are empty (no data), keep them at $0
-        has_real_data = any(raw_names)
-
-        # Assign final integer values, absorbing diff into last brecha
+        # Grupo C (2026-09-05): sin absorción de diff. Slots con nombre muestran
+        # su impacto real redondeado; slots sin nombre son $0 siempre.
         final_values: List[int] = []
         for i in range(max_brechas):
-            raw = raw_values[i]
-            if not has_real_data:
-                final_values.append(0)
-            elif i == max_brechas - 1:
-                # Last brecha absorbs rounding difference
-                final_values.append(int(round(raw - diff)))
-            else:
-                final_values.append(int(round(raw)))
+            final_values.append(int(round(raw_values[i])) if raw_names[i] else 0)
 
         # Build brecha_data dict
         for i in range(max_brechas):
             slot = i + 1
             brecha_data[f'brecha_{slot}_nombre'] = raw_names[i] if raw_names[i] else ""
-            # H3 FIX: costo always uses final_values (even if name is empty)
-            # This allows the last slot to absorb rounding diff even when it has no name
+            # Grupo C: los slots sin nombre quedaron en 0 ⟹ "$0" por el > 0.
             if final_values[i] > 0:
                 brecha_data[f'brecha_{slot}_costo'] = format_cop(final_values[i])
             else:

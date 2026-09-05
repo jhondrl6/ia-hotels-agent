@@ -1,8 +1,11 @@
 """
 FASE-4 Tests: H3 (brecha sum normalization) and H4 (pain_ratio vs recovery_factor separation).
 
-H3: _build_brecha_data() must return brechas whose sum exactly equals financial_value_central.
-     Previously, rounding errors accumulated (e.g., sum=$3,742,069 vs central=$3,741,696).
+H3: _build_brecha_data() debe redondear por slot (error ≤ 1 COP) y dejar los slots
+     sin nombre en $0. La absorción del diff en el último slot se eliminó post-release
+     (Grupo C 2026-09-05): con impactos reales que no suman 1.0 fabricaba dinero en
+     slots vacíos. Los tests 1-3 de la clase siguen fijando «suma == central» para el
+     caso legítimo (impactos que suman 1.0).
 H4: Template data must expose pain_ratio_pct, recovery_factor_pct, projected_real_gain
      separately so the proposal can distinguish addressable pain (41%) from realistic
      recovery effectiveness (20%).
@@ -33,7 +36,10 @@ def _extract_int(cop_str: str) -> int:
 
 
 class TestH3BrechaSumNormalization:
-    """H3: Brecha sum must exactly equal financial_value_central (0 COP difference)."""
+    """H3 (revisado Grupo C 2026-09-05): cuando los impactos suman 1.0 y los 4 slots
+    tienen nombre, la suma cae en el central con error ≤ 1 COP por slot (round por
+    slot, sin absorción). Cuando no suman 1.0, la suma visible es la de los impactos
+    reales y los slots sin nombre son $0 — nunca absorben el gap (costo fantasma)."""
 
     def test_sum_matches_central_with_integer_impacts(self):
         """Brechas with integer impact fractions: rounding must not accumulate."""
@@ -92,22 +98,21 @@ class TestH3BrechaSumNormalization:
         # So sum = 3 * (3741696 / 3) = 3741696 exactly
         assert total == 3741696, f"Sum {total} != central 3741696"
 
-    def test_sum_matches_central_with_mixed_brechas_and_problems(self):
-        """When brechas_reales fills first N slots, remaining slots fill from top_problems.
+    def test_mixed_brechas_no_phantom_absorption(self):
+        """Mixed data: los slots con nombre muestran su impacto real; los sin nombre, $0.
 
-        H3 guarantees: after normalization, sum == financial_value_central.
-        The raw gap between allocated and total is absorbed by the last non-empty slot
-        via the normalization step (not by filling empty slots from top_problems).
-
-        Case: 2 brechas_reales (slots 1-2) + 1 top_problems (slot 3... but slot 3's raw=0
-        because the top_problems index offset doesn't align). The gap of 1M COP is
-        absorbed into slot 4 (last non-empty slot).
+        Grupo C (2026-09-05): la versión anterior de este test exigía
+        «sum == central» con el gap absorbido en el slot 4 SIN nombre —
+        el mecanismo exacto del costo fantasma (un slot vacío mostrando
+        $4.500.000 COP). Contrato FASE-G vigente: la suma visible es la de
+        los impactos reales de los slots con nombre; nunca se rellena con
+        dinero inventado.
         """
         gen = V4ProposalGenerator()
         main_scenario = MockScenario(monthly_loss_cop=5000000)
 
-        # 2 brechas_reales: slots 1-2 get weighted values
-        # 1 top_problems: slot 3 stays at 0 (offset mismatch), slot 4 absorbs the gap
+        # 2 brechas_reales: slots 1-2 con impacto real
+        # (top_problems=['Problema X'] no aterriza: el índice 2 cae fuera de rango)
         diagnostic = MockDiagnosticSummary(
             top_problems=['Problema X'],
             brechas_reales=[
@@ -118,12 +123,20 @@ class TestH3BrechaSumNormalization:
 
         result = gen._build_brecha_data(diagnostic, main_scenario)
 
-        # H3 guarantee: sum must equal central after rounding normalization
-        total = sum(_extract_int(result[f'brecha_{i}_costo']) for i in range(1, 5))
-        assert total == 5000000, f"H3 guarantee: sum {total} must equal central 5000000"
-        # Verify brechas_reales are preserved
+        # Los slots con nombre muestran su impacto real
         assert 'Brecha 1' in result['brecha_1_nombre']
+        assert _extract_int(result['brecha_1_costo']) == 2500000
         assert 'Brecha 2' in result['brecha_2_nombre']
+        assert _extract_int(result['brecha_2_costo']) == 1500000
+
+        # Los slots sin nombre son $0 — ningún slot absorbe el gap de 1M
+        for slot in (3, 4):
+            assert result[f'brecha_{slot}_costo'] == '$0'
+            assert result[f'brecha_{slot}_nombre'] == ''
+
+        # La suma visible es la de los impactos reales (0.8 × 5M), no el central
+        total = sum(_extract_int(result[f'brecha_{i}_costo']) for i in range(1, 5))
+        assert total == 4000000, f"Suma de impactos reales esperada, obtenida {total}"
 
     def test_empty_slots_get_zero(self):
         """Slots with no data get $0, not phantom values."""
