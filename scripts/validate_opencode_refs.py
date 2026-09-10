@@ -42,8 +42,9 @@ OPENCODE_DIR = PROJECT_ROOT / ".opencode"
 BASELINE_FILE = OPENCODE_DIR / "refs_baseline.txt"
 
 # Matches .opencode/... (forward or back slashes) with common path chars.
-# Stops at whitespace, backticks, brackets, pipes, quotes, commas, < >.
-REF_RE = re.compile(r"\.opencode[/\\][A-Za-z0-9_\-./\\]+")
+# \w is Unicode so accented basenames (Regresión.md) stay intact; stops at
+# whitespace, backticks, brackets, pipes, quotes, commas, < >.
+REF_RE = re.compile(r"\.opencode[/\\][\w./\\-]+")
 
 # Markdown files never to scan (forensic/frozen artifacts).
 EXCLUDE_FILES = set()
