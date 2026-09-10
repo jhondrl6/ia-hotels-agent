@@ -132,5 +132,16 @@ yarn-error.log
 *#
 .~*
 
-# Ignorar archivo problem�tico en Windows
+# Ignorar archivo problem�tico en Windows
 nul
+
+# ===============================
+# Artefactos locales QMind (NUNCA versionar)
+# ===============================
+# Los planes referencian estas rutas como patrón de write-back; viven en
+# disco pero fuera del control de versiones.
+.opencode/context/QMIND-WRITE-BACK.md
+.opencode/context/QMIND-RECOVERY-MANIFEST.md
+
+# Configuración local del CLI (permisos por máquina)
+.qoder/settings.local.json
