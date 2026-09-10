@@ -426,6 +426,45 @@ No consumir §3 ni §8 sin leer esto (§10 ya se autodescribe como stub supersed
 
 ---
 
-*Contexto generado 2026-09-01; auditado contra el código vivo el 2026-09-02 (plan migrado a `ROADMAP.md` §7.2, FASE T v4.2); reestructurado el 2026-09-03 como documento **exclusivo de bots** — la corrección de severidad de gates (ex §12.1-12.6) y los hallazgos estructurales del pipeline (ex §13: A1-A6, B1-B5/punto 8, mediciones, falsos positivos con su lección de forma) viven ahora en el dossier de estabilización `/.opencode/context/Historico/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md` (§8-§9; mapa de migración en su §10). Retomar cuando la sesión aborde: bots para iah-cli, credibilidad de diagnóstico, Capa 3 onboarding, Capa 4 delivery/deploy, tribunal de revisión multi-bot, debottlenecking del proceso de entrega, ejecución del plan anclado en P6 — **punto de entrada: §14 (adendum 2026-09-05: precondiciones §12 cerradas por la estabilización v4.75.0, residuos heredados y reglas de concepción) y ROADMAP §7.2 T0.1-T0.4, y solo después T1 = Juez certificador**; el tramo offline T0/T1/T2/T4 es certificable ya, el tramo externo T3/T5/T6 depende de datos reales del hotel y credenciales FTP/WP.*
+## 15. Clarificación conceptual — los "bots" del tribunal son MÓDULOS, no agentes (adendum 2026-09-09)
+
+> Registrado por la sesión de clarificación previa a concebir el plan de FASE T. **No reescribe §5 ni §14**: fija la terminología y la decisión de implementación, y deja el documento listo como insumo para la **Etapa 1 (Preparación)** del executor. Leer **§14 y esta §15** antes de concebir el plan.
+
+### 15.1 Terminología resuelta
+
+- Los "bots" del tribunal (Bot 1-5 de §5) **no son agentes ni bots autónomos**: son **módulos de código** — clases de Python dentro de `modules/quality_gates/tribunal/` (gate-family), ejecutadas como un paso más del flujo `v4complete` junto a `delivery_quality_report` en `main.py`. La palabra "bot" en §5 es **metáfora de responsabilidad** (cada uno revisa una capa), no una afirmación de arquitectura de agentes.
+- Bots **1/3/5** (diagnóstico, completitud de assets, Juez) = **deterministas, sin LLM**. Bots **2/4** (alineación NL, honestidad) = usan LLM **solo para extraer** promesas verbales; el **veredicto siempre lo emite el Juez determinista**.
+
+### 15.2 Decisión de implementación: híbrido módulo + agente Hermes
+
+| Capa | Implementación | Quién opera |
+|---|---|---|
+| Núcleo del tribunal (Bots 1/3/5 + Juez) | **Módulos deterministas** en `modules/quality_gates/tribunal/`, ejecutados en `main.py` junto a `delivery_quality_report` | Paso del pipeline; standalone, testeable, sin depender de Hermes |
+| Orquestación de la corrida | Hermes lanza `v4complete`, verifica la salida y **audita `acta_revision.md` como evidencia de fase** (B-03) | Hermes (orquestador) |
+| Extracción NL (Bots 2/4) | **Intercambiable**: LLM del pipeline o subagente Hermes; **mockeado en tests** | El veredicto sigue siendo determinista (Juez) |
+| T5 (deploy) y T6 (throughput/gancho) | Tramo externo; coordinados por Hermes con decisión humana | Hermes (agente) |
+
+Consecuencia: el plan de FASE T **no implementa "bots de Hermes"**; implementa **módulos deterministas** en iah-cli. Hermes es orquestador/auditor, y solo en T5/T6 actúa como agente. La alternativa (un subagente Hermes por bot por corrida) se **descartó**: rompe auditabilidad (salida no determinista, no testeable con `pytest`), eleva el costo marginal (~0 hoy), acopla el pipeline a la presencia de Hermes y multiplica overhead por corrida — las mismas cuatro razones de §7 y de la regla `.venv`-Windows/subagente del executor.
+
+### 15.3 Alcance del plan a concebir (solo tramo offline)
+
+- **Dentro del plan**: T0.1-T0.4 (precondiciones + causa raíz/propuesta dinámica) → **T1** (Juez, `judge.py`, acta) → **T2** (revisores mecánicos Bots 1/3) → **T4** (revisores NL Bots 2/4, LLM mockeado) → **FASE-VERIFY** (si activa §4.6) → **FASE-RELEASE**. En una o varias fases según R3 (≤4 tareas y ≤1 comando largo por fase).
+- **Fuera del plan (tramo externo)**: T3, T5, T6 — documentarlos en `dependencias-fases.md` como dependencias externas (datos reales del hotel; credenciales FTP/WP + staging + deuda P1), **no como fases**. DoD-técnico certificable ya; DoD-comercial no (DoD partido de §7.2).
+
+### 15.4 Criterios que el plan debe respetar (heredados de §14.3 + executor v2.20.0)
+
+1. **Contrato de acta determinista fija en T1**, ANTES de T2/T4 (regla de dependencia fina §10.3).
+2. **T4 con extracción intercambiable** (LLM del pipeline o subagente) pero **mockeada en tests**; veredicto siempre del Juez.
+3. **Anfitrión real de T1** = `main.py` junto a `delivery_quality_report` (zona donde se decide el ZIP); **NO** `two_phase_flow.py` (huérfano). El veredicto del Juez debe **alimentar UNA de las tres rutas de bloqueo del ZIP ya existentes**, no añadir una cuarta.
+4. ACs con **artefacto + clave** legible (R2.4): un AC no legible en el artefacto es ⚠️, no ✅.
+5. **Sin números de línea** (R2.2): citar símbolos (`def judge`, `BLOCKING_GATE_NAMES`, `classify_promised_services`).
+6. Presupuesto medido con instrumento (`evidence/FASE-D/measure_iterations.py`), corte "hasta el commit de código"; recalibrar ×3 o retirar la métrica (R2.1).
+7. No-regresión como **delta** con par pre/post obligatorio (R2.3).
+8. Cada fase ≤4 tareas y ≤1 comando largo (R3); RELEASE termina archivando el plan (R2.5).
+9. **Residuos §14.2** (S-HF1, S-I1, P12 estructura, S-C4) son alcance de T1/T2/T4, no sorpresa.
+
+---
+
+*Contexto generado 2026-09-01; auditado contra el código vivo el 2026-09-02 (plan migrado a `ROADMAP.md` §7.2, FASE T v4.2); reestructurado el 2026-09-03 como documento **exclusivo de bots** — la corrección de severidad de gates (ex §12.1-12.6) y los hallazgos estructurales del pipeline (ex §13: A1-A6, B1-B5/punto 8, mediciones, falsos positivos con su lección de forma) viven ahora en el dossier de estabilización `/.opencode/context/Historico/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md` (§8-§9; mapa de migración en su §10). Retomar cuando la sesión aborde: bots para iah-cli, credibilidad de diagnóstico, Capa 3 onboarding, Capa 4 delivery/deploy, tribunal de revisión multi-bot, debottlenecking del proceso de entrega, ejecución del plan anclado en P6 — **punto de entrada: §14 (adendum 2026-09-05: precondiciones §12 cerradas por la estabilización v4.75.0, residuos heredados y reglas de concepción) + §15 (clarificación 2026-09-09: "bots" = módulos, decisión híbrida módulo+agente Hermes, alcance solo-tramo-offline, criterios de concepción), y ROADMAP §7.2 T0.1-T0.4, y solo después T1 = Juez certificador**; el tramo offline T0/T1/T2/T4 es certificable ya, el tramo externo T3/T5/T6 depende de datos reales del hotel y credenciales FTP/WP.*
 
 
