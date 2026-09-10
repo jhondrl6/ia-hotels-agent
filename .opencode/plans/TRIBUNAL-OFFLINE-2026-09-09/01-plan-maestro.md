@@ -12,21 +12,28 @@
 | # | Fase | Complejidad | Modo | Tareas (R3) | Presupuesto iter. | Depende de |
 |---|------|-------------|------|-------------|-------------------|------------|
 | 1 | FASE-T1 | **ALTA** | DIRECTO | 4 | 55 | — |
-| 2 | FASE-T2-A | MEDIA | DELEGADO | 3 | 35 | T1 |
-| 3 | FASE-T2-B | MEDIA | DELEGADO | 3 | 35 | T1 |
-| 4 | FASE-T4-A | **ALTA** | DIRECTO | 4 | 50 | T1, T2-A, T2-B |
-| 5 | FASE-T4-B | MEDIA | DELEGADO | 3 | 30 | T4-A |
-| 6 | FASE-E2E | BAJA | MIXTO | 3 + 1 largo | 25 | T1-T4-B ✅ |
-| 7 | FASE-VERIFY | MEDIA | DIRECTO | 4 | 40 | E2E |
-| 8 | FASE-RELEASE-4.76.0 | BAJA | DELEGABLE | 4 | 25 | VERIFY |
+| 2 | FASE-T2-A | MEDIA | DIRECTO | 3 | 35 | T1 |
+| 3 | FASE-T2-B | MEDIA | DIRECTO | 3 | 35 | T1 |
+| 4 | FASE-T2-C | MEDIA | DIRECTO | 3 | 40 | T1 |
+| 5 | FASE-T4-A | **ALTA** | DIRECTO | 4 | 50 | T1, T2-A, T2-B |
+| 6 | FASE-T4-B | MEDIA | DIRECTO | 3 | 30 | T4-A |
+| 7 | FASE-E2E | BAJA | MIXTO | 3 + 1 largo | 25 | T2-C, T4-B |
+| 8 | FASE-VERIFY | MEDIA | DIRECTO | 4 | 40 | E2E |
+| 9 | FASE-RELEASE-4.76.0 | BAJA | DELEGABLE | 4 | 25 | VERIFY |
 
-**Total**: 8 sesiones. Presupuesto máximo teórico 295 iteraciones; corte fijo: commit de código (R2.1).
+**Total**: 9 sesiones. Presupuesto máximo teórico 335 iteraciones; corte fijo: commit de código (R2.1).
+
+> [!IMPORTANT]
+> **Modo DIRECTO (no delegable) en T2-A, T2-B, T2-C y T4-B**: ejecutor v2.20.0, branch «SI la fase requiere imports del proyecto (tests, integración) Y el proyecto usa venv Windows accedido desde WSL → DIRECTA… NO delegar a subagentes» (lección FASE-4 BUGS-ONBOARDING-ADR: ~40 iteraciones perdidas). Estas fases crean módulos **y corren tests que importan el proyecto**; el modo por defecto es DIRECTO. `delegate_task` queda solo como opción condicionada a demostrar que los tests son stdlib-only y corridos por el parent.
+
+> [!WARNING]
+> **Riesgo de split en T1 (55) y T4-A (50)**: la heurística `30 + tareas×10` los estima en ~70 (umbral deep-audit D14). Ambos traen **punto de partición predefinido** en `dependencias-fases.md` (T1-part1/2 y T4-A-part1/2); aplicar solo si el presupuesto se agota, registrando la decisión en `10-analisis`.
 
 **Nota sobre presupuestos (lección §14.3.2 — recalibración)**: los números por fase son **orientativos**, no gate duro. El histórico medido del plan anterior fue ≥1.219 iteraciones en 9 fases (~3× los presupuestos escritos). El corte vinculante es el commit de código (R2.1); en fases sin código (E2E/VERIFY/RELEASE) el corte es el cierre documental de la fase.
 
 **Instrumento de medición**: `evidence/FASE-D/measure_iterations.py`. Si no corre bajo la política de permisos, el auto-reporte se publica en la unidad usada y se declara no comparable (R2.1).
 
-**Paralelismo**: FASE-T2-A y FASE-T2-B son independientes en **contenido** (ambas dependen solo de T1; cualquier orden). **NUNCA en ejecución simultánea**: sesiones paralelas sobre el mismo working tree sobrescribieron evidencia en el plan anterior (QMIND-WRITE-BACK, lecciones de sesiones D/B simultáneas) y ambas fases editan los mismos archivos (`__init__.py`, 09, 10, 06, README del plan). Siempre secuenciales, en cualquier orden.
+**Paralelismo**: FASE-T2-A, FASE-T2-B y FASE-T2-C son independientes en **contenido** (las tres dependen solo de T1; cualquier orden). **NUNCA en ejecución simultánea**: sesiones paralelas sobre el mismo working tree sobrescribieron evidencia en el plan anterior (QMIND-WRITE-BACK, lecciones de sesiones D/B simultáneas), y editan los mismos archivos (`__init__.py`, 09, 10, 06, README del plan) — **T2-C además comparte `main.py` con T1** → secuencial tras T1. Siempre secuenciales.
 
 ---
 
@@ -89,6 +96,24 @@
 
 ---
 
+### FASE-T2-C — Limpieza de precondiciones heredadas (S-E2, S9)
+
+**Complejidad: MEDIA.** Dos limpiezas acotadas en archivos ya identificados + tests de contrato. Absorbe los dos residuos que VERIFY del plan estabilizador asignó al tribunal (no re-diferibles, DA-V5).
+
+| # | Tarea | Archivos | AC |
+|---|-------|----------|-----|
+| T2C.1 | **S-E2**: eliminar el `NameError` latente de `site_presence_report` (asignado solo dentro de `if generate_proposal:`, consumido bajo `except` amplio) + retirar los 3 bloques `presence_lookup` muertos y la instanciación muerta | `main.py`, `modules/commercial_documents/v4_proposal_generator.py`, `modules/asset_generation/v4_asset_orchestrator.py` | AC15 |
+| T2C.2 | **S9**: certificar `INVALID_MAPPINGS` con test de contrato (claves ⊆ `PAIN_SOLUTION_MAP`, valores ⊆ `ASSET_CATALOG`) + verificar/curar el fósil V3 en `service_identity.py` | `modules/quality/asset_semantics_validator.py`, `modules/common/service_identity.py` | AC16 |
+| T2C.3 | **Tests + Docs**: sondas S-E2 (régimen `generate_proposal=False`) + test de contrato S9 + `log_phase_completion.py` | `tests/quality_gates/tribunal/`, `tests/quality/` | AC15, AC16 |
+
+**Residuos abordados**: S-E2 (NameError latente — precondición del régimen `generate_proposal=False`), S9 (`INVALID_MAPPINGS`, registro #14). Ambos con dueño «tribunal» asignado por VERIFY (2026-09-04).
+
+**ACs de FASE-T2-C**:
+- AC15: El camino `generate_proposal=False` no lanza `NameError` en `site_presence_report`. Artefacto: salida de la sonda/test. Clave: assertion (exit sin `NameError`).
+- AC16: `INVALID_MAPPINGS` pasa test de contrato (claves `pain_id` ∈ `PAIN_SOLUTION_MAP`, valores ∈ `ASSET_CATALOG`). Artefacto: salida de test. Clave: assertion del contrato.
+
+---
+
 ### FASE-T4-A — Revisor de Alineación NL (Bot 2) + Interfaz de Extracción LLM
 
 **Complejidad: ALTA.** Define la arquitectura híbrida: LLM solo extrae promesas verbales, capa determinista verifica contra matriz. Establece el patrón de mock para tests que T4-B replica.
@@ -143,12 +168,12 @@
 
 ### FASE-VERIFY — Certificación Formal de ACs
 
-**Complejidad: MEDIA.** Verificación sin código: certifica AC1-AC14 contra output E2E real.
+**Complejidad: MEDIA.** Verificación sin código: certifica AC1-AC16 contra output E2E real.
 
 | # | Tarea | AC |
 |---|-------|-----|
 | V.1 | Leer output post-fix (`evidence/FASE-E2E/`) y baseline (`output/FASE-D_salentoreal_post_guard/`) | — |
-| V.2 | Verificar cada AC (1-14) contra output real: lectura directa de JSONs, greps de claves, comparación de veredictos | AC1-AC14 |
+| V.2 | Verificar cada AC (1-16) contra output real: lectura directa de JSONs, greps de claves, comparación de veredictos | AC1-AC16 |
 | V.3 | Completar matriz de verificación en `10-analisis-post-implementacion.md` + diff antes/después | — |
 | V.4 | Registrar lecciones aprendidas (mínimo 3) + `log_phase_completion.py` | — |
 
@@ -169,7 +194,7 @@
 
 ---
 
-## 3. Criterios de Aceptación del Plan (AC1-AC14)
+## 3. Criterios de Aceptación del Plan (AC1-AC16)
 
 | AC | Descripción | Fase | Artefacto | Clave |
 |----|-------------|------|-----------|-------|
@@ -186,7 +211,9 @@
 | AC11 | `revision_honestidad.json` con `findings[]` | T4-B | `revision_honestidad.json` | `findings` |
 | AC12 | Bot 4 detecta CG-WHATSAPP-LEAD del archivo diagnóstico | T4-B | `revision_honestidad.json` | `cg_reference` |
 | AC13 | Acta + 6 cláusulas en output E2E real | E2E | `acta_revision.json` | `clauses_evaluated` == 6 |
-| AC14 | Los 4 reportes de revisión existen en `v4_audit/` | E2E | directorio | 4 archivos presentes |
+| 14 | AC14 | Los 4 reportes de revisión existen en `v4_audit/` | E2E | directorio | 4 archivos presentes |
+| 15 | AC15 | S-E2: `generate_proposal=False` no lanza NameError | T2-C | sonda/test output | assertion |
+| 16 | AC16 | S9: `INVALID_MAPPINGS` pasa test de contrato | T2-C | test output | assertion |
 
 ---
 
@@ -206,9 +233,9 @@
 
 | Criterio | ¿Se cumple? |
 |----------|-------------|
-| ≥3 fases de implementación | ✅ (T1, T2-A, T2-B, T4-A, T4-B, E2E = 6) |
+| ≥3 fases de implementación | ✅ (T1, T2-A, T2-B, T2-C, T4-A, T4-B, E2E = 7) |
 | Al menos una fase con ejecución E2E | ✅ (FASE-E2E: v4complete) |
-| ACs que cruzan múltiples fases | ✅ (AC1-AC4 en T1 pero verificados en E2E; AC13-AC14 cruzan T1-T4B) |
+| ACs que cruzan múltiples fases | ✅ (AC1-AC4 en T1 pero verificados en E2E; AC13-AC16 cruzan T1-T4-C) |
 
 **Resultado**: FASE-VERIFY INCLUIDA.
 
@@ -216,4 +243,4 @@
 
 ## 6. Versión
 
-- **4.76.0**: Tribunal offline (T1/T2/T4) — Juez certificador + 4 revisores + acta dual + integración main.py.
+- **4.76.0**: Tribunal offline (T1/T2/T4) — Juez certificador + 4 revisores + acta dual + integración main.py + limpieza de residuos heredados (S-E2, S9).

@@ -1,7 +1,7 @@
 # Dependencias entre Fases — TRIBUNAL-OFFLINE-2026-09-09
 
 > **Regla**: FASE-RELEASE solo se ejecuta cuando TODAS las fases previas están ✅.
-> **Orden T2**: T2-A y T2-B son independientes en contenido (cualquier orden), pero **NUNCA simultáneas**: sesiones paralelas sobre el mismo working tree sobrescribieron evidencia en el plan anterior, y ambas editan `__init__.py` + los docs compartidos del plan.
+> **Orden T2**: T2-A, T2-B y T2-C son independientes en contenido (cualquier orden), pero **NUNCA simultáneas**: sesiones paralelas sobre el mismo working tree sobrescribieron evidencia en el plan anterior, y editan `__init__.py`/`main.py` + los docs compartidos del plan. T2-C **además** comparte `main.py` con T1 → secuencial tras T1, nunca en paralelo.
 
 ---
 
@@ -12,7 +12,9 @@ FASE-T1 (Juez + contrato de acta)
     │
     ├──→ FASE-T2-A (Bot 1: Diagnóstico)  ──┐
     │                                       │
-    └──→ FASE-T2-B (Bot 3: Assets)  ───────┤
+    ├──→ FASE-T2-B (Bot 3: Assets)  ───────┤
+    │                                       │
+    └──→ FASE-T2-C (S-E2, S9)  ────────────┤
                                             │
                                             ▼
                                     FASE-T4-A (Bot 2: Alineación NL + interfaz LLM)
@@ -36,12 +38,13 @@ FASE-T1 (Juez + contrato de acta)
 
 | Fase | Depende de | Bloquea a | Tipo de dependencia |
 |------|-----------|-----------|---------------------|
-| FASE-T1 | — (baseline v4.75.0) | T2-A, T2-B, T4-A | Contrato de acta (T1 define el I/O que T2/T4 consumen) |
+| FASE-T1 | — (baseline v4.75.0) | T2-A, T2-B, T2-C, T4-A | Contrato de acta (T1 define el I/O que T2/T4 consumen) |
 | FASE-T2-A | T1 ✅ | T4-A | Acta contract estable + `revision_diagnostico.json` schema |
 | FASE-T2-B | T1 ✅ | T4-A | Acta contract estable + `revision_assets.json` schema |
+| FASE-T2-C | T1 ✅ | E2E | Toca `main.py` (secuencial tras T1, nunca paralela); precondición S-E2 del régimen `generate_proposal=False` |
 | FASE-T4-A | T1 ✅, T2-A ✅, T2-B ✅ | T4-B | Interfaz de extracción LLM (patrón que T4-B replica) |
 | FASE-T4-B | T4-A ✅ | E2E | Todos los revisores implementados |
-| FASE-E2E | T1-T4-B ✅ | VERIFY | Pipeline completo con tribunal integrado |
+| FASE-E2E | T1-T4-B ✅, T2-C ✅ | VERIFY | Pipeline completo con tribunal integrado + residuos heredados curados |
 | FASE-VERIFY | E2E ✅ | RELEASE | ACs certificados contra output real |
 | FASE-RELEASE-4.76.0 | VERIFY ✅ | — | Cierre documental |
 
@@ -51,9 +54,9 @@ FASE-T1 (Juez + contrato de acta)
 
 | Archivo | Fases que lo modifican | Riesgo | Mitigación |
 |---------|----------------------|--------|------------|
-| `main.py` | T1 (integración del Juez) | T1 es la única fase que toca `main.py` | Sin conflicto: una sola fase |
+| `main.py` | T1 (integración del Juez), T2-C (S-E2) | **Secuencial obligatorio**: T2-C re-verifica con `grep`/`Read` antes de editar; T1 va primero | Dependencia declarada: T2-C depende de T1 ✅; nunca en paralelo |
 | `modules/quality_gates/tribunal/__init__.py` | T1 (crea), T2-A/T2-B/T4-A/T4-B (añaden imports) | Bajo: cada fase añade su clase | T1 crea el `__init__` con estructura extensible |
-| `tests/quality_gates/tribunal/` | T1, T2-A, T2-B, T4-A, T4-B | Bajo: archivos de test disjuntos | Cada fase crea su propio `test_*.py` |
+| `tests/quality_gates/tribunal/` | T1, T2-A, T2-B, T2-C, T4-A, T4-B | Bajo: archivos de test disjuntos | Cada fase crea su propio `test_*.py` |
 | `09-documentacion-post-proyecto.md` | Todas | Acumulativo, no conflictivo | Cada fase añade su fila |
 | `10-analisis-post-implementacion.md` | Todas | Acumulativo | Cada fase añade lecciones |
 

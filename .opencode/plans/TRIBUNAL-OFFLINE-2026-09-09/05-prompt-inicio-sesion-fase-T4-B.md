@@ -4,7 +4,7 @@
 **Objetivo**: Implementar `tribunal/honesty_reviewer.py` — revisor híbrido que detecta sobre-presentación de datos ESTIMATED como verificados, verifica que los 3 escenarios (70/20/10) están presentes, y lee los 12 CG-* repartidos en DOS archivos comerciales. Produce `revision_honestidad.json`.
 **Dependencias**: FASE-T4-A ✅ (patrón de extracción LLM establecido)
 **Complejidad técnica**: **MEDIA** — replica el patrón de T4-A con diferentes inputs; la dificultad es leer los DOS archivos comerciales y resolver los 12 CG-*
-**Modo de ejecución**: **DELEGADO** (subagente vía `delegate_task`). Perfil delegable: implementación que replica patrón establecido, sin decisión arquitectónica nueva.
+**Modo de ejecución**: **DIRECTO** (agente principal). NO delegable: la fase crea un módulo **y corre tests que importan el proyecto**; el venv es Windows accedido desde WSL ⟹ ejecutor v2.20.0, branch «imports del proyecto + venv Windows → DIRECTA… NO delegar a subagentes».
 **Skill**: `phased_project_executor.md` v2.20.0
 
 ---
@@ -164,16 +164,4 @@
 - **NO modificar ROADMAP.md, `main.py`, `judge.py`, ni `llm_extractor.py`**
 - **NO llamar LLM real en tests** (siempre mock)
 - **NO usar números de línea** (R2.2)
-- **DELEGABLE**: replica patrón de T4-A. Si delega, incluir: protocolo `PromiseExtractor`, schema de salida, y la advertencia de los DOS archivos comerciales.
-
-### Protocolo de delegación
-
-```
-delegate_task(
-    goal="Implementar honesty_reviewer.py (Bot 4) + tests",
-    context="Patrón de T4-A en modules/quality_gates/tribunal/llm_extractor.py (protocolo PromiseExtractor + MockPromiseExtractor). Schema: revision_honestidad.json con findings[] + commercial_gates_read{}. CRÍTICO: leer AMBOS archivos comerciales (commercial_gates_report.json + commercial_gates_report_diagnostic_*.json) — el CG-WHATSAPP-LEAD WARNING está en el de diagnóstico. Total CG-* = 12. NO importar internals de gates. NO llamar LLM real en tests.",
-    timeout=600,
-    notify_on_complete=True,
-    toolsets=["terminal", "file"]
-)
-```
+- **DIRECTO (no delegable)**: los tests importan el proyecto y el venv es Windows/WSL. Si excepcionalmente se demuestra que los tests son stdlib-only, la delegación requeriría que el parent ejecute los tests.

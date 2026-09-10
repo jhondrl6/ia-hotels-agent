@@ -15,6 +15,8 @@
 | `modules/quality_gates/tribunal/` | `llm_extractor.py` | Interfaz de extracción LLM (protocolo + mock para tests) | T4-A |
 | `modules/quality_gates/tribunal/` | `alignment_reviewer.py` | Bot 2: revisor de alineación NL (promesas verbales vs matriz) | T4-A |
 | `modules/quality_gates/tribunal/` | `honesty_reviewer.py` | Bot 4: revisor de honestidad comercial (sobre-presentación vs tier + CG-*) | T4-B |
+| *(limpieza)* | `main.py`, `v4_proposal_generator.py`, `v4_asset_orchestrator.py` | S-E2: cura del NameError latente + retiro de bloques `presence_lookup` muertos | T2-C |
+| *(certificación)* | `modules/quality/asset_semantics_validator.py` | S9: contrato de `INVALID_MAPPINGS` (registro #14) | T2-C |
 
 ## Sección B: Funcionalidades Nuevas
 
@@ -28,6 +30,8 @@
 | Extracción NL de promesas | `tribunal/llm_extractor.py` | LLM propone, Juez decide (híbrido acotado) | T4-A |
 | Revisión de alineación | `tribunal/alignment_reviewer.py` | P6.2: promesas verbales vs matriz | T4-A |
 | Revisión de honestidad | `tribunal/honesty_reviewer.py` | P6.5: sobre-presentación vs tier labels + 12 CG-* | T4-B |
+| Limpieza S-E2 | `main.py`, `v4_proposal_generator.py`, `v4_asset_orchestrator.py` | `generate_proposal=False` sin `NameError`; código muerto retirado | T2-C |
+| Certificación S9 | `modules/quality/asset_semantics_validator.py` | Contrato de `INVALID_MAPPINGS` (registro #14) | T2-C |
 
 ## Sección D: Métricas Acumulativas
 
@@ -45,8 +49,25 @@
 | Archivo | Cambio | Fase |
 |---------|--------|------|
 | `main.py` | Integración del Juez junto a `delivery_quality_report` | T1 |
+| `main.py` | S-E2: `site_presence_report` fuera del bloque condicional (o guard en el consumidor) | T2-C |
+| `modules/commercial_documents/v4_proposal_generator.py` | S-E2: retiro de bloques `presence_lookup` muertos | T2-C |
+| `modules/asset_generation/v4_asset_orchestrator.py` | S-E2: retiro de instanciación muerta | T2-C |
+| `modules/quality/asset_semantics_validator.py` | S9: contrato de `INVALID_MAPPINGS` | T2-C |
 | `AGENTS.md` | Nuevo módulo `tribunal/` en tabla de Módulos Activos | RELEASE |
 | `VERSION.yaml` | 4.75.0 → 4.76.0 | RELEASE |
 | `CHANGELOG.md` | Entrada [4.76.0] | RELEASE |
 | `docs/GUIA_TECNICA.md` | Nota técnica v4.76.0 | RELEASE |
 | `README.md` | Test count + module count actualizados | RELEASE |
+
+## Sección F: Residuos heredados del plan estabilizador (asignación VERIFY 2026-09-04)
+
+| Residuo | Dueño asignado | Disposición en este plan |
+|---------|----------------|--------------------------|
+| S-HF1 | tribunal | FASE-T1 |
+| S-I1 | tribunal | FASE-T2-A |
+| P12 (estructura) | tribunal | FASE-T2-B |
+| S-C4 | tribunal | FASE-T4-A |
+| S-E2 | tribunal | FASE-T2-C |
+| S9 | tribunal | FASE-T2-C |
+| S-I3 · S-V7 · S-V8 | tribunal | Cubiertos por diseño (ver README del plan) |
+| S-H2 | tribunal (decisión de producto previa) | Fuera de alcance — documentado, no tocado |

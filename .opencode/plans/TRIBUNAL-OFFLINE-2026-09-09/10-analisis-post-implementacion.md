@@ -11,12 +11,13 @@
 | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
 |------|--------|--------|-------------|---------------|-------|
 | FASE-T1 | — | ⬜ | — | No | Juez + contrato de acta |
-| FASE-T2-A | — | ⬜ | — | Sí | Bot 1: Diagnóstico |
-| FASE-T2-B | — | ⬜ | — | Sí | Bot 3: Assets |
+| FASE-T2-A | — | ⬜ | — | No | Bot 1: Diagnóstico (DIRECTO: tests importan el proyecto) |
+| FASE-T2-B | — | ⬜ | — | No | Bot 3: Assets (DIRECTO) |
+| FASE-T2-C | — | ⬜ | — | No | Limpieza S-E2/S9 (DIRECTO: toca `main.py`) |
 | FASE-T4-A | — | ⬜ | — | No | Bot 2: Alineación NL + interfaz LLM |
-| FASE-T4-B | — | ⬜ | — | Sí | Bot 4: Honestidad NL |
+| FASE-T4-B | — | ⬜ | — | No | Bot 4: Honestidad NL (DIRECTO) |
 | FASE-E2E | — | ⬜ | — | Sí (v4complete) | Corrida Salento Real |
-| FASE-VERIFY | — | ⬜ | — | No | Certificación AC1-AC14 |
+| FASE-VERIFY | — | ⬜ | — | No | Certificación AC1-AC16 |
 | FASE-RELEASE-4.76.0 | — | ⬜ | — | Sí | Cierre + archivado |
 
 ---
@@ -39,6 +40,8 @@
 | 12 | AC12 | CG-WHATSAPP-LEAD detectado | — | ⬜ | `revision_honestidad.json` | `cg_reference` |
 | 13 | AC13 | Acta + 6 cláusulas en output E2E | — | ⬜ | `acta_revision.json` | `clauses_evaluated` |
 | 14 | AC14 | 4 reportes de revisión en `v4_audit/` | — | ⬜ | directorio | 4 archivos |
+| 15 | AC15 | S-E2: `generate_proposal=False` sin NameError | — | ⬜ | sonda/test output | assertion |
+| 16 | AC16 | S9: `INVALID_MAPPINGS` pasa contrato | — | ⬜ | test output | assertion |
 
 ---
 
@@ -71,6 +74,9 @@
 | T5 (deploy FTP/WP) | Fuera de alcance | Plan separado cuando haya credenciales + staging |
 | T6 (throughput + gancho) | Fuera de alcance | Plan separado sobre T3+T5 cerrados |
 | S-V10 (banda de palancas) | No re-medible con una corrida | Exige corpus ≥3 hoteles |
+| S-E2 (NameError latente) | **En alcance** | FASE-T2-C (dueño tribunal por VERIFY) |
+| S9 (`INVALID_MAPPINGS`) | **En alcance** | FASE-T2-C (dueño tribunal por VERIFY) |
+| S-H2 (performance pain) | Fuera de alcance | Requiere decisión de producto previa |
 | Lista blanca del ZIP (deuda P6) | Acta viaja al ZIP | Verificar en E2E que `delivery_packager.py` no excluye `acta_revision.*` |
 
 ---
@@ -102,7 +108,7 @@
 ## Checklist de Cierre (llenar en FASE-RELEASE)
 
 - [ ] Todas las fases ✅ en `06-checklist-implementacion.md`
-- [ ] AC1-AC14 certificados en FASE-VERIFY
+- [ ] AC1-AC16 certificados en FASE-VERIFY
 - [ ] NR1-NR5 sin violaciones
 - [ ] CHANGELOG.md entrada [4.76.0]
 - [ ] GUIA_TECNICA.md nota técnica

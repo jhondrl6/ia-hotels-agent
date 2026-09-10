@@ -12,11 +12,12 @@
 | 1 | FASE-T1 | ⬜ Pendiente | — | — | — | Juez + contrato de acta |
 | 2 | FASE-T2-A | ⬜ Pendiente | — | — | — | Bot 1: Diagnóstico |
 | 3 | FASE-T2-B | ⬜ Pendiente | — | — | — | Bot 3: Assets |
-| 4 | FASE-T4-A | ⬜ Pendiente | — | — | — | Bot 2: Alineación NL |
-| 5 | FASE-T4-B | ⬜ Pendiente | — | — | — | Bot 4: Honestidad NL |
-| 6 | FASE-E2E | ⬜ Pendiente | — | — | — | v4complete Salento Real |
-| 7 | FASE-VERIFY | ⬜ Pendiente | — | — | — | Certificación ACs |
-| 8 | FASE-RELEASE-4.76.0 | ⬜ Pendiente | — | — | — | Cierre + archivado |
+| 4 | FASE-T2-C | ⬜ Pendiente | — | — | — | Limpieza S-E2, S9 |
+| 5 | FASE-T4-A | ⬜ Pendiente | — | — | — | Bot 2: Alineación NL |
+| 6 | FASE-T4-B | ⬜ Pendiente | — | — | — | Bot 4: Honestidad NL |
+| 7 | FASE-E2E | ⬜ Pendiente | — | — | — | v4complete Salento Real |
+| 8 | FASE-VERIFY | ⬜ Pendiente | — | — | — | Certificación ACs |
+| 9 | FASE-RELEASE-4.76.0 | ⬜ Pendiente | — | — | — | Cierre + archivado |
 
 ---
 
@@ -68,6 +69,19 @@
 - [ ] `09-documentacion-post-proyecto.md` actualizado
 - [ ] `10-analisis-post-implementacion.md` actualizado
 
+### FASE-T2-C — Limpieza de precondiciones heredadas (S-E2, S9)
+
+- [ ] S-E2: `site_presence_report` ya no lanza `NameError` con `generate_proposal=False` (AC15)
+- [ ] S-E2: bloques `presence_lookup` muertos + instanciación muerta retirados (o justificada su permanencia)
+- [ ] S9: test de contrato de `INVALID_MAPPINGS` verde (AC16)
+- [ ] S9: fósil V3 en `service_identity.py` verificado con `grep` (curado o declarado cerrado)
+- [ ] Tests: `tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py` + `tests/quality/test_asset_semantics_registry.py` verdes
+- [ ] `run_all_validations.py --quick` TOTAL PASS
+- [ ] Baseline pre/post en `evidence/FASE-T2-C/`
+- [ ] `log_phase_completion.py` ejecutado
+- [ ] `09-documentacion-post-proyecto.md` actualizado
+- [ ] `10-analisis-post-implementacion.md` actualizado
+
 ### FASE-T4-A — Revisor de Alineación NL (Bot 2)
 
 - [ ] `modules/quality_gates/tribunal/llm_extractor.py` implementado (protocolo + mock)
@@ -115,7 +129,7 @@
 
 - [ ] Output E2E leído (`evidence/FASE-E2E/`)
 - [ ] Baseline leído (`output/FASE-D_salentoreal_post_guard/`)
-- [ ] AC1-AC14 verificados contra output real (no solo tests)
+- [ ] AC1-AC16 verificados contra output real (no solo tests)
 - [ ] Matriz de verificación completada en `10-analisis-post-implementacion.md`
 - [ ] Diff antes/después documentado
 - [ ] Greps residuales (strings que debieron desaparecer): 0 matches
@@ -146,7 +160,7 @@
 ## Cierre del plan
 
 - [ ] Todas las fases ✅
-- [ ] AC1-AC14 certificados en FASE-VERIFY
+- [ ] AC1-AC16 certificados en FASE-VERIFY
 - [ ] NR1-NR5 sin violaciones
 - [ ] Plan archivado en `Archives/` (R2.5: git mv + refs --fix + citas --update-baseline)
 - [ ] `10-analisis-post-implementacion.md` completo (lecciones, decisiones, métricas)

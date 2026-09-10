@@ -448,7 +448,7 @@ Consecuencia: el plan de FASE T **no implementa "bots de Hermes"**; implementa *
 
 ### 15.3 Alcance del plan a concebir (solo tramo offline)
 
-- **Dentro del plan**: T0.1-T0.4 (precondiciones + causa raíz/propuesta dinámica) → **T1** (Juez, `judge.py`, acta) → **T2** (revisores mecánicos Bots 1/3) → **T4** (revisores NL Bots 2/4, LLM mockeado) → **FASE-VERIFY** (si activa §4.6) → **FASE-RELEASE**. En una o varias fases según R3 (≤4 tareas y ≤1 comando largo por fase).
+- **Dentro del plan**: las precondiciones **T0.1-T0.4 ya están ✅ CERRADAS** por la estabilización v4.75.0 (§14.1) ⟹ **el plan arranca en T1, no re-ejecuta T0** → **T1** (Juez, `judge.py`, acta) → **T2** (revisores mecánicos Bots 1/3) → **T4** (revisores NL Bots 2/4, LLM mockeado) → **limpieza de residuos heredados** (S-E2, S9 — asignados al tribunal por VERIFY; ver §14.2) → **FASE-VERIFY** (si activa §4.6) → **FASE-RELEASE**. En una o varias fases según R3 (≤4 tareas y ≤1 comando largo por fase).
 - **Fuera del plan (tramo externo)**: T3, T5, T6 — documentarlos en `dependencias-fases.md` como dependencias externas (datos reales del hotel; credenciales FTP/WP + staging + deuda P1), **no como fases**. DoD-técnico certificable ya; DoD-comercial no (DoD partido de §7.2).
 
 ### 15.4 Criterios que el plan debe respetar (heredados de §14.3 + executor v2.20.0)

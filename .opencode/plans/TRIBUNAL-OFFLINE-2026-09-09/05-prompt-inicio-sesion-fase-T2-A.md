@@ -4,7 +4,7 @@
 **Objetivo**: Implementar `tribunal/diagnosis_reviewer.py` — revisor determinista que verifica trazabilidad brecha→pain_id, fuente declarada, y respeto a `is_coherent`. Produce `revision_diagnostico.json` que alimenta el acta del Juez.
 **Dependencias**: FASE-T1 ✅ (contrato de acta estable)
 **Complejidad técnica**: **MEDIA** — módulo determinista, lecturas de artefactos JSON, sin LLM
-**Modo de ejecución**: **DELEGADO** (subagente vía `delegate_task`). Perfil delegable: implementación pura con contrato I/O claro definido por T1, sin decisión arquitectónica.
+**Modo de ejecución**: **DIRECTO** (agente principal). NO delegable: la fase crea un módulo **y corre tests que importan el proyecto**; el venv es Windows accedido desde WSL ⟹ ejecutor v2.20.0, branch «imports del proyecto + venv Windows → DIRECTA… NO delegar a subagentes» (lección FASE-4 BUGS-ONBOARDING-ADR: ~40 iteraciones perdidas).
 **Skill**: `phased_project_executor.md` v2.20.0
 
 ---
@@ -153,16 +153,4 @@ Actualizar: `09-documentacion-post-proyecto.md` (Secciones A, B, D) + `10-analis
 - **NO modificar ROADMAP.md ni `main.py`**
 - **NO modificar `judge.py`** (el contrato de T1 es estable; si necesita cambio, documentar en seguimientos)
 - **NO usar números de línea** (R2.2)
-- **DELEGABLE**: el agente principal puede ejecutar esta fase directamente o delegar a subagente. Si delega, incluir en el contexto: contrato de acta de T1, schema de `revision_diagnostico.json`, y la lista de artefactos a leer.
-
-### Protocolo de delegación (si aplica)
-
-```
-delegate_task(
-    goal="Implementar diagnosis_reviewer.py (Bot 1) + tests",
-    context="Contrato de acta en modules/quality_gates/tribunal/judge.py. Schema de salida: revision_diagnostico.json con findings[]. Artefactos a leer: coherence_validation.json, pain_ledger.json, pain_ledger_resolved.json, gate_report_*.json, 01_DIAGNOSTICO_*.md. Residuo S-I1: critical_recall con details:{} es VACUOUS_RECALL. NO importar internals de publication_gates.",
-    timeout=600,
-    notify_on_complete=True,
-    toolsets=["terminal", "file"]
-)
-```
+- **DIRECTO (no delegable)**: los tests importan el proyecto y el venv es Windows/WSL. Si excepcionalmente se demuestra que los tests son stdlib-only, la delegación requeriría que el parent ejecute los tests (el subagente no corre el venv Windows).

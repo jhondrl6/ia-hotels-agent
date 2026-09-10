@@ -42,7 +42,9 @@
 
 ## Tareas
 
-### Tarea 1: Ejecutar v4complete (COMANDO LARGO)
+### Tarea 1: Ejecutar v4complete (COMANDO LARGO) + Protocolo de Evidencia Proactiva
+
+> **R3**: esta fase tiene **1 comando largo + 2 tareas** más (verificación y docs). La evidencia proactiva va **dentro** de esta tarea porque es inseparable de la ejecución (debe copiarse inmediatamente después del output).
 
 **Objetivo**: Corrida completa del pipeline con tribunal integrado.
 
@@ -64,7 +66,7 @@ delegate_task(
 
 **⚠️ NUNCA ejecutar sin `notify_on_complete=True` o sin subagente** (executor §WARNING).
 
-### Tarea 2: Protocolo de Evidencia Proactiva (OBLIGATORIO)
+**Protocolo de Evidencia Proactiva (OBLIGATORIO — parte de esta tarea)**
 
 **Objetivo**: Guardar artefactos críticos INMEDIATAMENTE después de que v4complete genera output, ANTES de cualquier verificación adicional.
 
@@ -82,7 +84,7 @@ cp -r output/v4_complete/deliveries/hotelsalentoreal_*/ evidence/FASE-E2E/delive
 
 **Esto es OBLIGATORIO sin importar cuánto tiempo quede en el presupuesto** (executor §Protocolo-Evidencia-Proactiva).
 
-### Tarea 3: Verificación + Delta contra baseline
+### Tarea 2: Verificación + Delta contra baseline
 
 **Objetivo**: Verificar que el tribunal produjo sus artefactos y comparar contra baseline.
 
@@ -108,7 +110,7 @@ cp -r output/v4_complete/deliveries/hotelsalentoreal_*/ evidence/FASE-E2E/delive
 
 **Guardar delta en**: `evidence/FASE-E2E/delta_vs_baseline.md`
 
-### Tarea 4: Docs + Post-ejecución
+### Tarea 3: Docs + Post-ejecución
 
 ```bash
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \

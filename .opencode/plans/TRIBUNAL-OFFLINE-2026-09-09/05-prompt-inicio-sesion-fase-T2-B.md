@@ -4,7 +4,7 @@
 **Objetivo**: Implementar `tribunal/asset_reviewer.py` — revisor determinista que verifica cobertura de assets por servicio, detecta assets genéricos, ESTIMATED no etiquetados, y `IMPLEMENTATION_ORDER.md` vacío. Produce `revision_assets.json`.
 **Dependencias**: FASE-T1 ✅ (contrato de acta estable)
 **Complejidad técnica**: **MEDIA** — módulo determinista, lectura de artefactos + filesystem, sin LLM
-**Modo de ejecución**: **DELEGADO** (subagente vía `delegate_task`). Perfil delegable: implementación pura con contrato I/O claro, sin decisión arquitectónica.
+**Modo de ejecución**: **DIRECTO** (agente principal). NO delegable: la fase crea un módulo **y corre tests que importan el proyecto**; el venv es Windows accedido desde WSL ⟹ ejecutor v2.20.0, branch «imports del proyecto + venv Windows → DIRECTA… NO delegar a subagentes».
 **Skill**: `phased_project_executor.md` v2.20.0
 
 ---
@@ -165,16 +165,4 @@
 - **NO ejecutar v4complete**
 - **NO modificar ROADMAP.md ni `main.py` ni `judge.py`**
 - **NO usar números de línea** (R2.2)
-- **DELEGABLE**: perfil de implementación pura. Si delega, incluir contrato de acta + schema de salida + lista de artefactos.
-
-### Protocolo de delegación
-
-```
-delegate_task(
-    goal="Implementar asset_reviewer.py (Bot 3) + tests",
-    context="Contrato de acta en modules/quality_gates/tribunal/judge.py. Firma: review(v4_audit_dir, deliveries_dir) — deliveries_dir = glob v4_complete/deliveries/<hotel>_* más reciente. Schema: revision_assets.json con coverage_by_service[] + findings[]. Artefactos en v4_audit: asset_generation_report.json, delivery_quality_report.json, proposal_asset_matrix.json. Artefactos en deliveries_dir: MANIFEST.json, IMPLEMENTATION_ORDER.md, archivos en ASSETS/. Residuo P12 (regla auditoría 2026-09-09): promised_assets_exist con message 'via catalogo_estatico' → P12_UNVERIFIABLE; con 'via generated_assets' + archivo en disco → sin finding. NO marcar por score==1.0. Vacío = 0 B o plantilla sin contenido por-hotel → EMPTY_DELIVERY_TEMPLATE. NO importar internals de gates.",
-    timeout=600,
-    notify_on_complete=True,
-    toolsets=["terminal", "file"]
-)
-```
+- **DIRECTO (no delegable)**: los tests importan el proyecto y el venv es Windows/WSL. Si excepcionalmente se demuestra que los tests son stdlib-only, la delegación requeriría que el parent ejecute los tests.

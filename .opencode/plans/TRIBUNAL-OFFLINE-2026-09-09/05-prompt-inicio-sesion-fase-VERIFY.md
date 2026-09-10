@@ -1,7 +1,7 @@
 # FASE-VERIFY: Certificación Formal de ACs contra Output E2E
 
 **ID**: TRIBUNAL-OFFLINE-2026-09-09 / FASE-VERIFY
-**Objetivo**: Certificar formalmente que los AC1-AC14 del plan se cumplen contra el output E2E real generado en FASE-E2E. No modifica código. Produce evidencia de certificación y completa la matriz de verificación.
+**Objetivo**: Certificar formalmente que los AC1-AC16 del plan se cumplen contra el output E2E real generado en FASE-E2E. No modifica código. Produce evidencia de certificación y completa la matriz de verificación.
 **Dependencias**: FASE-E2E ✅ (todas las fases de implementación completas)
 **Complejidad técnica**: **MEDIA** — requiere juicio y contexto completo del plan; lectura de artefactos reales, greps, comparación JSON
 **Modo de ejecución**: **DIRECTO** (agente principal). NO delegable: requiere juicio y contexto completo del plan (§4.6 del executor).
@@ -62,6 +62,8 @@
 | AC12 | Lectura directa JSON | Buscar finding con `cg_reference == "CG-WHATSAPP-LEAD"` |
 | AC13 | Lectura directa JSON | `acta_revision.json` → `clauses_evaluated` == 6 |
 | AC14 | `ls` del directorio | Los 4 archivos `revision_*.json` existen en `v4_audit/` |
+| AC15 | Lectura de sonda/test | S-E2: salida de `generate_proposal=False` sin `NameError` (test verde) |
+| AC16 | Lectura de test | S9: test de contrato de `INVALID_MAPPINGS` verde |
 
 ### Paso 3: Comparar antes/después (delta)
 
@@ -101,7 +103,7 @@ Mínimo 3 lecciones de la verificación. Formato: qué pasó / por qué / qué l
 ```bash
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-VERIFY \
-    --desc "Certificación AC1-AC14 contra output E2E real del tribunal" \
+    --desc "Certificación AC1-AC16 contra output E2E real del tribunal" \
     --check-manual-docs
 
 ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
@@ -121,8 +123,8 @@ Mínimo 3 lecciones de la verificación. Formato: qué pasó / por qué / qué l
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] AC1-AC14 verificados contra output REAL (no solo tests)
-- [ ] Matriz de verificación completa (14 filas con Real + Status)
+- [ ] AC1-AC16 verificados contra output REAL (no solo tests)
+- [ ] Matriz de verificación completa (16 filas con Real + Status)
 - [ ] Delta antes/después documentado
 - [ ] Greps residuales: 0 matches en los 4 patrones
 - [ ] Mínimo 3 lecciones aprendidas registradas

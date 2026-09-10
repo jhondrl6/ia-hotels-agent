@@ -1,7 +1,7 @@
 # TRIBUNAL-OFFLINE-2026-09-09
 
 > **Versión objetivo**: 4.76.0 · **Workflow**: `phased_project_executor.md` v2.20.0
-> **Estado**: ⬜ PREPARACIÓN COMPLETADA — pendiente de ejecución (8 sesiones)
+> **Estado**: ⬜ PREPARACIÓN COMPLETADA — pendiente de ejecución (9 sesiones)
 > **Contexto fuente**: `.opencode/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` §5, §14, §15 (movido a Historico el 2026-09-09; lecciones QMind: notebook `iah-cli-lecciones` — write-back automatizado vía `scripts/validate_qmind_writeback.py`)
 > **Anclaje estratégico**: `ROADMAP.md` v4.2 §7.2 (FASE T, tramo offline: T1/T2/T4)
 > **Baseline**: v4.75.0 «Estabilización pre-tribunal» — precondiciones T0.1-T0.4 ✅ CERRADAS (§14.1)
@@ -31,28 +31,36 @@ Módulos deterministas en `modules/quality_gates/tribunal/` (gate-family), ejecu
 | # | Fase | Objetivo | Complejidad | Modo | Estado |
 |---|------|----------|-------------|------|--------|
 | 1 | FASE-T1 | Juez certificador + contrato de acta + integración main.py | **ALTA** | DIRECTO | ⬜ Pendiente |
-| 2 | FASE-T2-A | Revisor de Diagnóstico (Bot 1) | MEDIA | DELEGADO | ⬜ Pendiente |
-| 3 | FASE-T2-B | Revisor de Assets (Bot 3) | MEDIA | DELEGADO | ⬜ Pendiente |
-| 4 | FASE-T4-A | Revisor de Alineación NL (Bot 2) + interfaz de extracción LLM | **ALTA** | DIRECTO | ⬜ Pendiente |
-| 5 | FASE-T4-B | Revisor de Honestidad NL (Bot 4) | MEDIA | DELEGADO | ⬜ Pendiente |
-| 6 | FASE-E2E | v4complete Hotel Salento Real + evidencia + acta en output | BAJA | MIXTO | ⬜ Pendiente |
-| 7 | FASE-VERIFY | Certificación formal de ACs contra output E2E real | MEDIA | DIRECTO | ⬜ Pendiente |
-| 8 | FASE-RELEASE-4.76.0 | Cierre documental + version bump + archivado (R2.5) | BAJA | DELEGABLE | ⬜ Pendiente |
+| 2 | FASE-T2-A | Revisor de Diagnóstico (Bot 1) | MEDIA | DIRECTO | ⬜ Pendiente |
+| 3 | FASE-T2-B | Revisor de Assets (Bot 3) | MEDIA | DIRECTO | ⬜ Pendiente |
+| 4 | FASE-T2-C | Limpieza de precondiciones heredadas (S-E2, S9) | MEDIA | DIRECTO | ⬜ Pendiente |
+| 5 | FASE-T4-A | Revisor de Alineación NL (Bot 2) + interfaz de extracción LLM | **ALTA** | DIRECTO | ⬜ Pendiente |
+| 6 | FASE-T4-B | Revisor de Honestidad NL (Bot 4) | MEDIA | DIRECTO | ⬜ Pendiente |
+| 7 | FASE-E2E | v4complete Hotel Salento Real + evidencia + acta en output | BAJA | MIXTO | ⬜ Pendiente |
+| 8 | FASE-VERIFY | Certificación formal de ACs (AC1-AC16) contra output E2E real | MEDIA | DIRECTO | ⬜ Pendiente |
+| 9 | FASE-RELEASE-4.76.0 | Cierre documental + version bump + archivado (R2.5) | BAJA | DELEGABLE | ⬜ Pendiente |
 
 ## Alcance
 
-**Dentro**: T1 (Juez) → T2 (revisores mecánicos) → T4 (revisores NL, LLM mockeado) → E2E → VERIFY → RELEASE.
+**Dentro**: T1 (Juez) → T2 (revisores mecánicos) → T2-C (limpieza heredada S-E2/S9) → T4 (revisores NL, LLM mockeado) → E2E → VERIFY → RELEASE.
 
 **Fuera (tramo externo, documentado en `dependencias-fases.md`)**: T3 (onboarding datos reales), T5 (deploy FTP/WP + staging), T6 (throughput + gancho).
 
-## Residuos heredados (§14.2) en alcance
+## Residuos heredados (§12/§14.2 + asignación VERIFY 2026-09-04) y su disposición
 
-| Residuo | Fase que lo aborda |
+| Residuo | Fase que lo aborda / disposición |
 |---------|-------------------|
 | S-HF1 (`message «4/4»` vs `details.total_services = 1`) | FASE-T1 (criterio de narración del Juez) |
 | S-I1 (`critical_recall = 1.0` con `details: {}`) | FASE-T2-A (Bot 1 distingue recall fundado de vacuo) |
 | P12 (promised_assets_exist verifica via catálogo estático pre-gen — P6.3 no verificable desde el artefacto) | FASE-T2-B (Bot 3 detecta la fuente declarada en el `message`, no el score) |
 | S-C4 (tabla assets técnicos imprime catálogo incondicional) | FASE-T4-A (tercera superficie de promesa) |
+| **S-E2** (NameError latente `site_presence_report` + bloques `presence_lookup` muertos) | **FASE-T2-C** (dueño «tribunal» asignado por VERIFY) |
+| **S9** (`asset_semantics_validator.INVALID_MAPPINGS`, registro #14) | **FASE-T2-C** (dueño «tribunal» asignado por VERIFY) |
+| S-I3 (clave canónica por artefacto: `asset_path` vs `path`) | Cubierto por diseño: T2-B lee `asset_path` de la matriz; HOTFIX fijó el contrato por test |
+| S-V7 (mitad «nombres timestamped» de H7) | Cubierto por diseño: resolución por `glob` de artefactos timestamped en T1/T2-B/T4-B |
+| S-V8 (mitad «kill switch» de H9) | Cubierto por diseño: T1.1 research del kill switch `GATE_BLOCKING_ENABLED` |
+| S-H2 (eje de performance caído sin pain) | **Fuera de alcance** — requiere decisión de producto (VERIFY rechazó la opción mínima); documentado, no tocado por este plan |
+| S-V10 (banda de palancas no re-medible) | Fuera de alcance: exige corpus ≥3 hoteles (incompatible con una sola corrida) |
 
 ## Reglas transversales (heredadas de §14.3 + executor v2.20.0)
 
