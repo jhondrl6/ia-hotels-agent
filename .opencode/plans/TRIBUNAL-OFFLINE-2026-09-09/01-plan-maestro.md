@@ -211,9 +211,9 @@
 | AC11 | `revision_honestidad.json` con `findings[]` | T4-B | `revision_honestidad.json` | `findings` |
 | AC12 | Bot 4 detecta CG-WHATSAPP-LEAD del archivo diagnóstico | T4-B | `revision_honestidad.json` | `cg_reference` |
 | AC13 | Acta + 6 cláusulas en output E2E real | E2E | `acta_revision.json` | `clauses_evaluated` == 6 |
-| 14 | AC14 | Los 4 reportes de revisión existen en `v4_audit/` | E2E | directorio | 4 archivos presentes |
-| 15 | AC15 | S-E2: `generate_proposal=False` no lanza NameError | T2-C | sonda/test output | assertion |
-| 16 | AC16 | S9: `INVALID_MAPPINGS` pasa test de contrato | T2-C | test output | assertion |
+| AC14 | Los 4 reportes de revisión existen en `v4_audit/` | E2E | directorio | 4 archivos presentes |
+| AC15 | S-E2: `generate_proposal=False` no lanza NameError | T2-C | sonda/test output | assertion |
+| AC16 | S9: `INVALID_MAPPINGS` pasa test de contrato | T2-C | test output | assertion |
 
 ---
 
