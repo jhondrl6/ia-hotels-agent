@@ -1,7 +1,7 @@
 # 01 — Plan Maestro: TRIBUNAL-OFFLINE-2026-09-09
 
 > **Versión objetivo**: 4.76.0 · **Workflow**: `phased_project_executor.md` v2.20.0
-> **Fuente**: `.opencode/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` §5, §14, §15 (movido a Historico; espejo lecciones QMind: `.opencode/context/QMIND-WRITE-BACK.md`)
+> **Fuente**: `.opencode/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` §5, §14, §15 (movido a Historico; lecciones QMind: notebook `iah-cli-lecciones` — write-back automatizado vía `scripts/validate_qmind_writeback.py`)
 > **Anclaje**: `ROADMAP.md` v4.2 §7.2 (FASE T, tramo offline)
 > **Reglas activas**: R1 (una fase/sesión) · R2.1 (presupuesto medido, corte en commit) · R2.2 (símbolos, no líneas) · R2.3 (delta pre/post) · R2.4 (AC legible en artefacto) · R2.5 (RELEASE archiva) · R3 (≤4 tareas ó 3+1 largo)
 

@@ -77,6 +77,7 @@ class ValidationRunner:
             self._check_dependencies()
             self._check_imports()
             self._check_tests_pass()
+            self._check_qmind_writeback()
         
         return self._print_summary()
     
@@ -503,6 +504,43 @@ class ValidationRunner:
                 details=[line for line in output.split("\n") if line.strip()][:10]
             ))
     
+    def _check_qmind_writeback(self) -> None:
+        """Check archived plans have their 10-analisis ingested into QMind.
+
+        Materializes the executor write-back contract (:572-574, :588) via the
+        `qmind` CLI. If the CLI is unavailable the validator itself degrades to
+        WARN + exit 0 (fallback :468); only a real missing ingestion fails.
+        """
+        print("[12/12] Checking QMind write-back (planes archivados)...")
+
+        script_path = ROOT_DIR / "scripts" / "validate_qmind_writeback.py"
+        if not script_path.exists():
+            self.results.append(ValidationResult(
+                name="QMind Write-back",
+                passed=False,
+                message="validate_qmind_writeback.py not found"
+            ))
+            return
+
+        exit_code, output = self._run_command([sys.executable, str(script_path)])
+
+        if exit_code == 0:
+            self.results.append(ValidationResult(
+                name="QMind Write-back",
+                passed=True,
+                message=(output.strip().splitlines() or ["OK"])[-1]
+            ))
+        else:
+            lines = output.split('\n')
+            issues = [l.strip()[2:] for l in lines if l.strip().startswith('- ')][:5]
+            self.results.append(ValidationResult(
+                name="QMind Write-back",
+                passed=False,
+                message="Archived plans missing QMind write-back "
+                        "(fix: python scripts/validate_qmind_writeback.py --upload <PLAN>)",
+                details=issues
+            ))
+
     def _print_summary(self) -> bool:
         """Print summary and return overall success."""
         print()

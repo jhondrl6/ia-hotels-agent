@@ -2,7 +2,7 @@
 
 > **Versión objetivo**: 4.76.0 · **Workflow**: `phased_project_executor.md` v2.20.0
 > **Estado**: ⬜ PREPARACIÓN COMPLETADA — pendiente de ejecución (8 sesiones)
-> **Contexto fuente**: `.opencode/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` §5, §14, §15 (movido a Historico el 2026-09-09; lecciones QMind espejo local: `.opencode/context/QMIND-WRITE-BACK.md`)
+> **Contexto fuente**: `.opencode/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` §5, §14, §15 (movido a Historico el 2026-09-09; lecciones QMind: notebook `iah-cli-lecciones` — write-back automatizado vía `scripts/validate_qmind_writeback.py`)
 > **Anclaje estratégico**: `ROADMAP.md` v4.2 §7.2 (FASE T, tramo offline: T1/T2/T4)
 > **Baseline**: v4.75.0 «Estabilización pre-tribunal» — precondiciones T0.1-T0.4 ✅ CERRADAS (§14.1)
 > **Corrida de referencia**: `evidence/FASE-I/` (coherence 0.8333, `is_coherent: true`, 5 pains)

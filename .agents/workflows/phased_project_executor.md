@@ -405,7 +405,7 @@ Cuando se usa `delegate_task` para ejecutar `v4complete`:
 >    - Si completo: marcar todos los items del checklist como ✅
 >    - Si incompleto: marcar como `⏳ INCOMPLETA` con checkpoint y que falta
 > 3. **Preguntar por el aporte durable de todo `CONTEXT-*.md` escrito o editado en la sesion** (criterio y write-back en §4): ¿contiene una leccion de forma o de metodo que cambie como trabajara una sesion futura?
->    - Si → etiquetarla en el propio archivo (`Leccion de forma:`) y ejecutar el write-back de CONTEXT: memoria del proyecto + `add_source` al notebook `iah-cli-lecciones`.
+>    - Si → etiquetarla en el propio archivo (`Leccion de forma:`) y ejecutar el write-back: `python scripts/validate_qmind_writeback.py --upload <PLAN>` (sube 10-analisis + CONTEXT con declaración durable al notebook `iah-cli-lecciones`).
 >    - No → no se etiqueta y no se ingiere; el archivo queda solo en el repo como estado de plan o medicion. No hace falta declarar la ausencia.
 > 4. **Solo entonces** cerrar la sesion.
 
@@ -571,7 +571,11 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
 
 **Write-back de lecciones (al cierre de cada fase)** — cierra el ciclo del Paso 0:
 - Cada lección nueva con pertinencia INCLUIR se persiste en la **memoria del proyecto** del agente (una entrada durable por lección).
-- El `10-analisis-post-implementacion.md` actualizado se re-ingere al notebook **`iah-cli-lecciones`** de QMind (si está disponible).
+- El `10-analisis-post-implementacion.md` actualizado se re-ingere al notebook **`iah-cli-lecciones`** de QMind vía el script automatizado:
+  ```bash
+  python scripts/validate_qmind_writeback.py --upload <NOMBRE_DEL_PLAN>
+  ```
+  El script sube el 10-analisis y cualquier `CONTEXT-*.md` con declaración durable, detecta si ya está ingestado (evita duplicados, ver :584), y retorna código 1 si la subida falla. **Reemplaza el `add_source` manual del MCP** (que depende del scope del agente, históricamente frágil).
 - Lecciones con pertinencia EXCLUIR quedan solo en el análisis del plan.
 
 **Write-back de CONTEXT (disparador por aporte, NO por edición)** — los `CONTEXT-*.md` de `.opencode/context/` no se ingieren por existir ni por editarse. Se ingieren cuando **autodeclaran un aporte durable**.
@@ -579,7 +583,7 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
 - **Criterio binario (sin juicio de relevancia):** ¿el archivo etiqueta explícitamente una lección de forma o de método — `Lección de forma:`, `Lección durable:`, o una sección `Lecciones capitalizadas`? Sí → ingerir. No → se queda solo en el repo.
   - Ejemplo real: `CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md` §9.5 — *"Lección de forma: en este pipeline, revalidar citas de código no revalida premisas. Todo hallazgo está anclado a un artefacto o a una corrida, no a una lectura."* Ese aporte cambia cómo trabaja cualquier sesión futura ⟹ se ingiere. Las tablas de medición del mismo archivo no cambian cómo se trabaja ⟹ no son, por sí solas, motivo de ingesta. (La lección nació como §13.5 de `CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` y migró al dossier el 2026-09-03.)
 - **Por qué autodeclarado y no inferido:** la relevancia la decide quien escribe el contexto, en el momento en que tiene la evidencia delante. Un agente futuro tendría que inferirla, y ese juicio subjetivo es exactamente lo que volvió letra muerta la sección "Lecciones capitalizadas" antes de v2.17.0. Declarar es además la única forma de que el disparador sea verificable.
-- **Si declara, dos acciones (mismo ciclo que el 10-analisis):** (1) persistir la lección como entrada durable en la **memoria del proyecto**; (2) `add_source` del CONTEXT al notebook `iah-cli-lecciones`, con título que lleve la fecha de la lección.
+- **Si declara, dos acciones (mismo ciclo que el 10-analisis):** (1) persistir la lección como entrada durable en la **memoria del proyecto**; (2) ejecutar `python scripts/validate_qmind_writeback.py --upload <PLAN>` — el script detecta automáticamente los CONTEXT con declaración durable y los sube al notebook `iah-cli-lecciones` (junto con el 10-analisis del plan).
 - **Si no declara:** nada. El contenido es estado de plan, decisión pendiente o medición, y vive en el repo. No ingerirlo no es perderlo.
 - **Re-ingesta:** solo cuando cambia el aporte declarado, no cuando cambian las secciones de estado o medición. El MCP no tiene `delete_source`: cada re-ingesta acumula una versión previa en el notebook, así que ingerir de más es ruido permanente.
 - **Dónde se declara:** en el Cierre Obligatorio de Sesión (ver §Cierre-Obligatorio-de-Sesion). La declaración es parte del cierre, no un paso opcional posterior.
@@ -668,7 +672,10 @@ Plan de documentación (09-documentacion-post-proyecto.md)
     ├── Paso 4.5.5: Validación final
     │   └── run_all_validations.py --quick
     │
-    └── Paso 4.5.6: Archivar el plan (R2.5)
+    ├── Paso 4.5.6: Write-back QMind (automatizado)
+    │   └── python scripts/validate_qmind_writeback.py --upload <PLAN>
+    │
+    └── Paso 4.5.7: Archivar el plan (R2.5)
         └── git mv a plans/Archives/ + refs --fix + citas --update-baseline + --quick (mismo commit)
 ```
 
@@ -766,6 +773,31 @@ Verificar que `docs/GUIA_TECNICA.md` tenga nota técnica para cada fase:
 - [ ] `version_consistency_checker.py` pasa
 - [ ] `sync_versions.py` ejecutado
 - [ ] Todos los archivos de documentación actualizados
+
+#### Paso 4.5.6: Write-back QMind (automatizado)
+
+> [!IMPORTANT]
+> **Obligatorio antes de archivar.** El script sube el `10-analisis-post-implementacion.md` del plan
+> y cualquier `CONTEXT-*.md` con declaración durable al notebook `iah-cli-lecciones` de QMind.
+> Usa el CLI `qmind` (plano local), no el plugin MCP (cuyo scope puede excluir el notebook).
+
+```bash
+# Write-back: sube 10-analisis + CONTEXT con declaración durable
+python scripts/validate_qmind_writeback.py --upload <NOMBRE_DEL_PLAN>
+
+# Verificar que todo plan archivado está ingestado
+python scripts/validate_qmind_writeback.py --strict
+```
+
+**Comportamiento del script:**
+- **Idempotente**: si el 10-analisis ya está ingestado (match por título), hace skip — evita duplicados permanentes (QMind no tiene `delete_source`).
+- **CONTEXT con declaración durable**: escanea `.opencode/context/CONTEXT-*.md` buscando marcadores `Lección de forma:`, `Lección durable:`, o `Lecciones capitalizadas`. Solo sube los que declaran.
+- **Código de salida 1**: si la subida falla o qmind no está disponible (en modo `--strict`).
+- **Código de salida 0**: write-back exitoso o skip por idempotencia.
+
+**Checklist Write-back:**
+- [ ] `validate_qmind_writeback.py --upload <PLAN>` retorna 0
+- [ ] `validate_qmind_writeback.py --strict` confirma N/N archivados ingeridos
 
 #### Ejemplo Completo de Ejecución
 
