@@ -43,8 +43,9 @@
 | Tests nuevos (tribunal T2-A) | 10 (DiagnosisReviewer) | T2-A |
 | Tests nuevos (tribunal T2-B) | 12 (AssetReviewer) | T2-B |
 | Tests nuevos (tribunal T2-C) | 7 (S-E2 presence_lookup + hoist) | T2-C |
-| Tests totales tribunal acumulados | 46 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C) | T2-C |
-| Tests colectados post-T2-C | 3,990 (3,983 T2-B + 7 T2-C) | T2-C |
+| Tests nuevos (tribunal T4-A) | 28 (15 llm_extractor + 13 alignment_reviewer, incl. fix post-auditoría) | T4-A |
+| Tests totales tribunal acumulados | 74 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C + 28 T4-A) | T4-A |
+| Tests colectados post-T4-A | 4,018 (3,990 T2-C + 28 T4-A) | T4-A |
 | Tests totales post-plan | — | E2E |
 | Coherence output E2E | — | E2E |
 | Veredicto del Juez (Salento Real) | — | E2E |
@@ -52,6 +53,7 @@
 | Archivos nuevos en `v4_audit/` | 2 (`acta_revision.json`, `acta_revision.md`) | T1 |
 | Archivos nuevos en `v4_audit/` (T2-A) | 1 (`revision_diagnostico.json`) | T2-A |
 | Archivos nuevos en `v4_audit/` (T2-B) | 1 (`revision_assets.json`) | T2-B |
+| Archivos nuevos en `v4_audit/` (T4-A) | 1 (`revision_alineacion.json`) | T4-A |
 
 ## Sección E: Archivos Afiliados Actualizados
 
