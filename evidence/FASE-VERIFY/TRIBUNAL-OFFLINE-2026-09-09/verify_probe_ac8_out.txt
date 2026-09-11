@@ -1,0 +1,26 @@
+======================================================================
+SONDA AC8 — AssetReviewer contra régimen real
+======================================================================
+
+[1] acta_revision.json VIVA: verdict='APROBADO-CONDICIONAL-PENDING-ONBOARDING' evidence_tier='C' clauses_evaluated=6
+
+[2] _resolve_delivery_dir() sobre deliveries/ vivo -> WindowsPath('C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/hotelsalentoreal_20260911.zip')
+    is_dir=False
+    entradas en deliveries/: ['hotelsalentoreal_20260911.zip']
+
+[3] _check_implementation_order(resolved_vivo) -> 0 findings
+
+[4] IMPLEMENTATION_ORDER.md real: 468 bytes
+    _is_template_stub(content_real) -> False
+    non_empty_lines (no '#') = 10  (umbral del heurístico: <= 3)
+    líneas '---' contadas como contenido: 5
+
+[5] _check_implementation_order(unpacked_evidencia) -> 0 findings
+
+======================================================================
+CONCLUSIÓN AC8:
+  Capa 1: deliveries/ vivo es ZIP-only -> _resolve_delivery_dir cae al
+          .zip; '<zip>/IMPLEMENTATION_ORDER.md' no existe -> 0 findings.
+  Capa 2: aun con el archivo disponible, _is_template_stub -> False
+          (non_empty_lines=10 > 3: los '---' y boilerplate cuentan).
+======================================================================

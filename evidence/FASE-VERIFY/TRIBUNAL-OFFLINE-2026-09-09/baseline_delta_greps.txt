@@ -1,0 +1,31 @@
+# Delta greps baseline FASE-D vs E2E (solo-lectura)
+# Fecha: 2026-09-11 18:37
+
+## Baseline v4_audit: artefactos tribunal (esperado 0)
+$ ls output/FASE-D_salentoreal_post_guard/v4_complete/hotelsalentoreal/v4_audit/ | grep -ciE "acta|revision"
+0
+## Baseline archivos totales: 15
+
+## Live v4_audit: artefactos tribunal (esperado 6)
+acta_revision.json
+acta_revision.md
+revision_alineacion.json
+revision_assets.json
+revision_diagnostico.json
+revision_honestidad.json
+## Live archivos totales: 22
+
+## Baseline coherence/is_coherent
+    "is_coherent": false,
+  "coherence_score_final": 0.88,
+    "is_coherent": false,
+
+## E2E coherence/is_coherent
+    "is_coherent": true,
+  "coherence_score_final": 0.83,
+    "is_coherent": true,
+
+## Baseline no_breach entradas: 6
+## E2E no_breach entradas: 0
+0
+## E2E alignment.no_breach: "no_breach":0

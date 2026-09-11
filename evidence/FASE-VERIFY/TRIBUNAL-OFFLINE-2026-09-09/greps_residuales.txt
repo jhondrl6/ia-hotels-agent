@@ -1,0 +1,19 @@
+# Greps residuales FASE-VERIFY — TRIBUNAL-OFFLINE-2026-09-09
+# Fecha: 2026-09-11 18:32 · HEAD: 488cdbb
+
+## G1: verdict APROBADO-PARA-ENTREGA en acta (esperado: 0)
+$ grep -c "APROBADO-PARA-ENTREGA" acta_revision.json (evidence + live)
+evidence/FASE-E2E/acta_revision.json:0
+output/v4_complete/hotelsalentoreal/v4_audit/acta_revision.json:0
+
+## G2: import publication_gates en tribunal/*.py (NR4, esperado: 0)
+$ grep -rn "import.*publication_gates" modules/quality_gates/tribunal/
+exit=1 (1 = sin matches)
+
+## G3: two_phase_flow en main.py (esperado: 0)
+$ grep -n "two_phase_flow" main.py
+exit=1 (1 = sin matches)
+
+## G4: score 1.0 hardcodeado en tribunal/*.py (esperado: 0 incondicionados)
+$ grep -rn "\"score\": 1.0\|score=1.0\|\"score\":1.0" modules/quality_gates/tribunal/*.py
+exit=1 (1 = sin matches)

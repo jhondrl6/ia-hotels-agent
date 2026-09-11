@@ -11,12 +11,12 @@
 |---|------|--------|-------------|-------------|-------------|-------|
 | 1 | FASE-T1 | ⚠️ Completada con reserva | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Juez + contrato de acta + integración main.py; auditada. Reserva: S-HF1 y R2.1 sin cerrar; D-T1.3 abierta |
 | 2 | FASE-T2-A | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 1: DiagnosisReviewer — 10 tests verdes, AC5+AC6 certificados |
-| 3 | FASE-T2-B | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 3: AssetReviewer — 12 tests verdes, AC7+AC8 certificados |
+| 3 | FASE-T2-B | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 3: AssetReviewer — 12 tests verdes, AC7+AC8 certificados. ⚠️ **VERIFY 2026-09-11**: AC7 ✅ sostenido en artefacto real; **AC8 ❌** — el fixture T2-B (stub sintético en dir descomprimido) no ejerció el régimen real ZIP-only (L-V.1, D-V.4); routed a seguimientos |
 | 4 | FASE-T2-C | ⚠️ Completada con reserva | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido + fósil V3 cerrado. Reserva: desvío D-T2C-A1 (AC no-regresión régimen True) — remediación ejecutada 2026-09-11 (+11 tests) |
 | 5 | FASE-T4-A | ✅ Completada | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 28 tests verdes (incl. fix post-auditoría) |
 | 6 | FASE-T4-B | ⚠️ Completada con reserva | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Bot 4: HonestyReviewer — lee CG-* en 2 archivos (12 entradas / 10 distintos) + sobre-presentación vs tier + 3 escenarios; 7 tests de fase. Reserva: desvío **D-T4B-A1** (auditoría 2026-09-11) — el revisor no operaba sobre los artefactos reales; remediación R1–R9 ejecutada el mismo día (+22 tests). Cableado en pipeline diferido a FASE-E2E (decisión Q1) |
 | 7 | FASE-E2E | ✅ Completada | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | v4complete Salento Real: veredicto condicional, coherence 0.83, 4/4 revisores en output real (cableado Q1/Vía A, commit `7e1bbc3`) |
-| 8 | FASE-VERIFY | ⬜ Pendiente | — | — | — | Certificación ACs |
+| 8 | FASE-VERIFY | ✅ Completada | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Certificación AC1-AC16 contra output E2E real: **15 ✅ + 1 ❌ (AC8**, causa raíz fijada por sonda read-only, routed a seguimientos con dueño**)**; ACs propuestos AC17 ✅/AC18 ✅/AC19 ⚠️; greps residuales 0 matches en 4/4; delta verificado (+6 artefactos tribunal, coherence 0.88→0.83 NR5 ✅); decisiones D-V.1–D-V.4; 4 lecciones L-V.1–.4; cero código de producción tocado |
 | 9 | FASE-RELEASE-4.76.0 | ⬜ Pendiente | — | — | — | Cierre + archivado |
 
 ---
@@ -143,7 +143,7 @@
 - [x] Delta vs baseline FASE-D documentado (R2.3) — `evidence/FASE-E2E/delta_vs_baseline.md`
 - [x] Coherence ≥ 0.80 (NR5) — 0.83, gate PASS 0.8333
 - [x] D-T2C-A1: veracidad «Presente en sitio» — VERAZ (3 servicios verificados en sitio; `llms_txt` no reclamado)
-- [x] §5.1 (AC17): verificado PARCIAL — `precision_tier: C` + `tier_explanation` declarados; `evidence_tier` ausente del artefacto (decisión para VERIFY)
+- [x] §5.1 (AC17): E2E lo registró PARCIAL (`evidence_tier` "ausente"). ⚠️ **VERIFY 2026-09-11 corrige (D-V.2)**: `financial_scenarios_*.json` SÍ declara `breakdown.evidence_tier: "B"` (+ `precision_tier: C` + `tier_explanation`); el delta E2E solo miró el nivel raíz. **AC17 ✅** (divulgación de tier completa)
 - [x] 7 fixes v4.75.0 verificados (tabla en `10-analisis` §Análisis de fixes)
 - [x] `log_phase_completion.py` ejecutado
 - [x] `09-documentacion-post-proyecto.md` actualizado
@@ -151,16 +151,16 @@
 
 ### FASE-VERIFY — Certificación Formal
 
-- [ ] Output E2E leído (`evidence/FASE-E2E/`)
-- [ ] Baseline leído (`output/FASE-D_salentoreal_post_guard/`)
-- [ ] AC1-AC16 verificados contra output real (no solo tests)
-- [ ] Matriz de verificación completada en `10-analisis-post-implementacion.md`
-- [ ] Diff antes/después documentado
-- [ ] Greps residuales (strings que debieron desaparecer): 0 matches
-- [ ] Mínimo 3 lecciones aprendidas registradas
-- [ ] `log_phase_completion.py` ejecutado (SIN `--release`)
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] NO modificó código fuente
+- [x] Output E2E leído (`evidence/FASE-E2E/`)
+- [x] Baseline leído (`output/FASE-D_salentoreal_post_guard/`)
+- [x] AC1-AC16 verificados contra output real (no solo tests) — 15 ✅ + 1 ❌ (AC8)
+- [x] Matriz de verificación completada en `10-analisis-post-implementacion.md` (+ AC17 ✅/AC18 ✅/AC19 ⚠️)
+- [x] Diff antes/después documentado (+6 artefactos tribunal, coherence 0.88→0.83, `is_coherent` false→true, `no_breach` 6→0)
+- [x] Greps residuales (strings que debieron desaparecer): 0 matches en 4/4 patrones
+- [x] Mínimo 3 lecciones aprendidas registradas (L-V.1–L-V.4)
+- [x] `log_phase_completion.py` ejecutado (SIN `--release`) — REGISTRY.md actualizado, `--check-manual-docs` OK
+- [x] `run_all_validations.py --quick` TOTAL PASS — 8/8 (`evidence/FASE-VERIFY/.../verify_validations.txt`)
+- [x] NO modificó código fuente (sonda read-only; `git diff --stat` solo docs del plan + evidencia)
 
 ### FASE-RELEASE-4.76.0 — Cierre
 

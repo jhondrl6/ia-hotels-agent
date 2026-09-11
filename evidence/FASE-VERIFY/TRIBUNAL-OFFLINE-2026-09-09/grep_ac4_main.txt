@@ -1,0 +1,26 @@
+# AC4 — grep tribunal/TribunalJudge en main.py
+# Fecha: 2026-09-11 18:32 · HEAD: 488cdbb
+
+$ grep -n "TribunalJudge\|tribunal\|_tribunal_blocks" main.py
+3218:    tribunal_acta = None
+3219:    _tribunal_blocks = False
+3221:        from modules.quality_gates.tribunal import TribunalJudge, blocks_delivery_zip
+3222:        from modules.quality_gates.tribunal.acta_writer import ActaWriter
+3225:        judge = TribunalJudge(
+3230:        tribunal_acta = judge.evaluate()
+3231:        _tribunal_blocks = blocks_delivery_zip(tribunal_acta)
+3234:        acta_json_path, acta_md_path = writer.write(tribunal_acta)
+3235:        print(f"   Verdict: {tribunal_acta['verdict']}")
+3236:        print(f"   Evidence Tier: {tribunal_acta['evidence_tier']}")
+3241:        tribunal_acta = None
+3242:        _tribunal_blocks = False
+3245:    # SKIP ZIP if quality report is FAIL (blocking) or tribunal verdict blocks delivery
+3249:    if (delivery_quality_report and delivery_quality_report.status == "FAIL") or _claim_escalated or _tribunal_blocks:
+3252:        elif _tribunal_blocks:
+3253:            print(f"\n   ⛔ ZIP ABORTED: Tribunal verdict is {tribunal_acta['verdict']}.")
+3342:        from modules.quality_gates.tribunal import (
+
+## Instanciaciones de TribunalJudge: 1
+## Condición ZIP-skip (ruta existente alimentada):
+3245:    # SKIP ZIP if quality report is FAIL (blocking) or tribunal verdict blocks delivery
+3249:    if (delivery_quality_report and delivery_quality_report.status == "FAIL") or _claim_escalated or _tribunal_blocks:

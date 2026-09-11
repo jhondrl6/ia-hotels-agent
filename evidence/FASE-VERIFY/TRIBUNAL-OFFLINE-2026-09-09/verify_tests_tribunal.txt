@@ -1,0 +1,155 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 123 items
+
+tests/quality_gates/tribunal/test_acta_serialization.py::test_acta_json_serialization PASSED [  0%]
+tests/quality_gates/tribunal/test_acta_serialization.py::test_acta_md_has_six_clauses PASSED [  1%]
+tests/quality_gates/tribunal/test_acta_serialization.py::test_acta_md_references_source_artifacts PASSED [  2%]
+tests/quality_gates/tribunal/test_acta_serialization.py::test_acta_json_roundtrip PASSED [  3%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_promise_without_matrix_detected PASSED [  4%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_aligned_service_not_flagged PASSED [  4%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_no_breach_associated_detected PASSED [  5%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_present_in_production_aligned PASSED [  6%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_s_c4_asset_table_detected PASSED [  7%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_serialization_to_disk PASSED [  8%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_summary_counts PASSED [  8%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_verdict_bloquear_on_critical PASSED [  9%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_verdict_aprobado_no_findings PASSED [ 10%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_no_breach_not_a_finding PASSED [ 11%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_promise_on_no_breach_entry_flagged PASSED [ 12%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_matrix_entries_covered_without_promise PASSED [ 13%]
+tests/quality_gates/tribunal/test_alignment_reviewer.py::TestAlignmentReviewer::test_promise_without_matrix_escalates_verdict PASSED [ 13%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_coverage_by_service_populated PASSED [ 14%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_empty_implementation_order_detected PASSED [ 15%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_empty_implementation_order_zero_bytes PASSED [ 16%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_p12_catalog_source_detected PASSED [ 17%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_p12_generated_assets_not_flagged PASSED [ 17%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_orphan_asset_detected PASSED [ 18%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_generic_asset_flagged PASSED [ 19%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_serialization_to_disk PASSED [ 20%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_asset_exists_on_disk_verified PASSED [ 21%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_never_block_on_missing_artifacts PASSED [ 21%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_does_not_import_gate_internals PASSED [ 22%]
+tests/quality_gates/tribunal/test_asset_reviewer.py::test_verdict_blocks_on_empty_template PASSED [ 23%]
+tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_review_produces_findings_list PASSED [ 24%]
+tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_vacuous_recall_detected PASSED [ 25%]
+tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_founded_recall_not_flagged PASSED [ 26%]
+tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_untraceable_pain_detected PASSED [ 26%]
+tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_serialization_to_disk PASSED [ 27%]
+tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_resolves_timestamped_gate_report PASSED [ 28%]
+tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_does_not_import_gate_internals PASSED [ 29%]
+tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_never_block_on_missing_artifacts PASSED [ 30%]
+tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_critical_priority_inflation_detected PASSED [ 30%]
+tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_verdict_blocks_on_critical_findings PASSED [ 31%]
+tests/quality_gates/tribunal/test_honesty_reviewer.py::test_reads_both_commercial_files PASSED [ 32%]
+tests/quality_gates/tribunal/test_honesty_reviewer.py::test_cg_whatsapp_lead_detected PASSED [ 33%]
+tests/quality_gates/tribunal/test_honesty_reviewer.py::test_over_presentation_detected PASSED [ 34%]
+tests/quality_gates/tribunal/test_honesty_reviewer.py::test_missing_scenario_detected PASSED [ 34%]
+tests/quality_gates/tribunal/test_honesty_reviewer.py::test_tier_mismatch_detected PASSED [ 35%]
+tests/quality_gates/tribunal/test_honesty_reviewer.py::test_serialization_to_disk PASSED [ 36%]
+tests/quality_gates/tribunal/test_honesty_reviewer.py::test_mock_extractor_no_real_llm PASSED [ 37%]
+tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py::test_gate_replicado_y_fallido_emite_un_solo_finding PASSED [ 38%]
+tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py::test_entradas_y_distintos_se_reportan_por_separado PASSED [ 39%]
+tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py::test_mencion_legitima_de_contacto_no_divulga_el_problema PASSED [ 39%]
+tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py::test_divulgacion_expresa_cierra_el_hallazgo PASSED [ 40%]
+tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py::test_gate_sin_criterio_de_divulgacion_no_se_juzga PASSED [ 41%]
+tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py::test_tier_del_manifest_llega_a_los_hallazgos_cg PASSED [ 42%]
+tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py::test_nombre_reportado_corresponde_al_archivo_cargado PASSED [ 43%]
+tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py::test_all_gates_no_infla_el_acta PASSED [ 43%]
+tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py::test_no_rejulga_un_gate_que_paso PASSED [ 44%]
+tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py::test_no_reimplementa_logica_de_publication_gates PASSED [ 45%]
+tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py::test_tabla_de_divulgacion_cubre_los_gates_warning_posibles PASSED [ 46%]
+tests/quality_gates/tribunal/test_honesty_reviewer_retro_reales.py::test_propuesta_real_resuelta_y_sin_missing_artifact PASSED [ 47%]
+tests/quality_gates/tribunal/test_honesty_reviewer_retro_reales.py::test_lee_los_cg_de_ambos_archivos_reales PASSED [ 47%]
+tests/quality_gates/tribunal/test_honesty_reviewer_retro_reales.py::test_nombre_reportado_es_el_archivo_realmente_leido PASSED [ 48%]
+tests/quality_gates/tribunal/test_honesty_reviewer_retro_reales.py::test_cg_whatsapp_lead_no_divulgado_en_propuesta_real PASSED [ 49%]
+tests/quality_gates/tribunal/test_honesty_reviewer_retro_reales.py::test_evidence_tier_no_degradado_a_unknown PASSED [ 50%]
+tests/quality_gates/tribunal/test_honesty_reviewer_retro_reales.py::test_veredicto_determinado_por_hallazgos_reales PASSED [ 51%]
+tests/quality_gates/tribunal/test_honesty_reviewer_retro_reales.py::test_serializacion_del_acta_real_es_releible PASSED [ 52%]
+tests/quality_gates/tribunal/test_judge.py::test_verdict_tier_b_is_conditional PASSED [ 52%]
+tests/quality_gates/tribunal/test_judge.py::test_verdict_tier_a_can_be_approved PASSED [ 53%]
+tests/quality_gates/tribunal/test_judge.py::test_first_floor_rule_blocks_delivery PASSED [ 54%]
+tests/quality_gates/tribunal/test_judge.py::test_resolves_timestamped_artifacts PASSED [ 55%]
+tests/quality_gates/tribunal/test_judge.py::test_does_not_reimplement_gates PASSED [ 56%]
+tests/quality_gates/tribunal/test_judge.py::test_never_block_on_missing_artifacts PASSED [ 56%]
+tests/quality_gates/tribunal/test_judge.py::test_p6_1_reads_critical_recall_gate PASSED [ 57%]
+tests/quality_gates/tribunal/test_judge.py::test_p6_3_reads_asset_generation_report PASSED [ 58%]
+tests/quality_gates/tribunal/test_judge.py::test_p6_4_reads_proposal_asset_matrix PASSED [ 59%]
+tests/quality_gates/tribunal/test_judge.py::test_zero_evidence_tier_a_is_not_approved PASSED [ 60%]
+tests/quality_gates/tribunal/test_judge.py::test_p6_2_deferred_does_not_block_approval PASSED [ 60%]
+tests/quality_gates/tribunal/test_judge.py::test_zip_blocking_policy_covers_both_negative_verdicts PASSED [ 61%]
+tests/quality_gates/tribunal/test_judge.py::test_devolver_correcciones_blocks_zip PASSED [ 62%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestVerbalPromise::test_to_dict PASSED [ 63%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestVerbalPromise::test_from_dict PASSED [ 64%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestVerbalPromise::test_roundtrip PASSED [ 65%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestPromiseExtractorProtocol::test_extractor_protocol_compliance PASSED [ 65%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestPromiseExtractorProtocol::test_mock_extractor_protocol_compliance PASSED [ 66%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestPromiseExtractorProtocol::test_protocol_runtime_checkable PASSED [ 67%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestMockPromiseExtractor::test_mock_extractor_used_in_tests PASSED [ 68%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestMockPromiseExtractor::test_mock_extractor_ignores_input PASSED [ 69%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestMockPromiseExtractor::test_mock_extractor_empty PASSED [ 69%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestLLMPromiseExtractor::test_llm_extractor_with_mock_provider PASSED [ 70%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestLLMPromiseExtractor::test_llm_extractor_cache_hit PASSED [ 71%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestLLMPromiseExtractor::test_llm_extractor_cache_miss PASSED [ 72%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestLLMPromiseExtractor::test_llm_extractor_parses_json_with_markdown PASSED [ 73%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestLLMPromiseExtractor::test_llm_extractor_handles_invalid_json PASSED [ 73%]
+tests/quality_gates/tribunal/test_llm_extractor.py::TestLLMPromiseExtractor::test_llm_extractor_filters_invalid_promises PASSED [ 74%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupCanonicalDict::test_none_normalize_produces_empty_results PASSED [ 75%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupCanonicalDict::test_canonical_dict_has_results_key PASSED [ 76%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupCanonicalDict::test_presence_lookup_extracts_status_from_canonical PASSED [ 77%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupCanonicalDict::test_presence_lookup_empty_when_none_report PASSED [ 78%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupCanonicalDict::test_presence_lookup_empty_when_empty_results PASSED [ 78%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestSitePresenceReportAlwaysDefined::test_site_presence_snapshot_initialized_before_proposal_gate PASSED [ 79%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestSitePresenceReportAlwaysDefined::test_no_duplicate_assignment_inside_proposal_block PASSED [ 80%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupLiveConsumers::test_services_table_canonical_dict_shows_presente_en_sitio PASSED [ 81%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupLiveConsumers::test_services_table_exists_with_issues_counts_as_presente PASSED [ 82%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupLiveConsumers::test_services_table_not_exists_does_not_claim_presente PASSED [ 82%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupLiveConsumers::test_services_table_none_report_preserves_legacy_behavior PASSED [ 83%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupLiveConsumers::test_services_table_empty_results_no_claim_no_crash PASSED [ 84%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupLiveConsumers::test_technical_assets_table_canonical_dict_shows_presente PASSED [ 85%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupLiveConsumers::test_technical_assets_table_none_shows_no_presente PASSED [ 86%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupLiveConsumers::test_quality_table_canonical_dict_shows_verificado PASSED [ 86%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupLiveConsumers::test_quality_table_none_no_verificado PASSED [ 87%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupLiveConsumers::test_services_table_dataclass_like_report_still_works PASSED [ 88%]
+tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py::TestPresenceLookupLiveConsumers::test_services_table_object_without_results_is_tolerated PASSED [ 89%]
+tests/quality_gates/tribunal/test_tribunal_propuesta_ubicacion.py::test_honesty_reviewer_encuentra_propuesta_en_v4_complete PASSED [ 90%]
+tests/quality_gates/tribunal/test_tribunal_propuesta_ubicacion.py::test_alignment_reviewer_encuentra_propuesta_en_v4_complete PASSED [ 91%]
+tests/quality_gates/tribunal/test_tribunal_propuesta_ubicacion.py::test_resolver_toma_el_mas_reciente_por_mtime_aun_de_otro_nivel PASSED [ 91%]
+tests/quality_gates/tribunal/test_tribunal_propuesta_ubicacion.py::test_resolutor_devuelve_none_cuando_realmente_no_existe PASSED [ 92%]
+tests/test_asset_semantics_validator.py::TestMonthlyReportSemanticBlocking::test_monthly_report_no_resuelve_faq PASSED [ 93%]
+tests/test_asset_semantics_validator.py::TestMonthlyReportSemanticBlocking::test_monthly_report_no_resuelve_hotel_schema PASSED [ 94%]
+tests/test_asset_semantics_validator.py::TestMonthlyReportSemanticBlocking::test_monthly_report_no_resuelve_llmstxt PASSED [ 95%]
+tests/test_asset_semantics_validator.py::TestFaqPageSolvesFaq::test_faq_page_si_resuelve_faq PASSED [ 95%]
+tests/test_asset_semantics_validator.py::TestWhatsAppNarrative::test_whatsapp_button_valid PASSED [ 96%]
+tests/test_asset_semantics_validator.py::TestWhatsAppNarrative::test_whatsapp_conflict_guide_blocked PASSED [ 97%]
+tests/test_asset_semantics_validator.py::TestInvalidMappingsComplete::test_keys_are_pain_ids PASSED [ 98%]
+tests/test_asset_semantics_validator.py::TestInvalidMappingsComplete::test_no_asset_type_keys PASSED [ 99%]
+tests/test_asset_semantics_validator.py::TestInvalidMappingsComplete::test_mapeos_no_invertidos PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 123 passed, 8 warnings in 2.22s =======================

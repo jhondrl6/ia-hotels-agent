@@ -62,6 +62,7 @@
 | Archivos nuevos en `v4_audit/` (T4-A) | 1 (`revision_alineacion.json`) | T4-A |
 | Archivos nuevos en `v4_audit/` (T4-B) | 1 (`revision_honestidad.json`) — ✅ **producido en FASE-E2E** (corrida 2026-09-11): los 4 `revision_*.json` existen en output real tras el cableado Q1/Vía A (commit `7e1bbc3`) | T4-B / E2E |
 | Hallazgos del tribunal en la corrida E2E | Bot 1: 1 CRITICAL (recall vacuo, `details: {}` real) → BLOQUEAR · Bot 2: 0 findings, 4/4 ALINEADO → APROBADO · Bot 3: 4/4 CON-ASSET (coverage 1.0) + 1 WARNING P12 → APROBADO · Bot 4: 1 CG_WARNING_UNDISCLOSED (`CG-WHATSAPP-LEAD`, AC12 en artefacto real) → DEVOLVER-PRUEBAS · Juez: condicional (no consume reportes — diseño T1) | E2E |
+| **Certificación FASE-VERIFY** | **AC1-AC16: 15 ✅ + 1 ❌ (AC8** — `EMPTY_DELIVERY_TEMPLATE` no detectado en régimen real ZIP-only; causa raíz fijada por sonda read-only, routed a seguimientos, D-V.4**)**. ACs propuestos (dueño VERIFY): AC17 ✅ (D-V.2 corrige nota E2E: `breakdown.evidence_tier: B` sí existe) / AC18 ✅ / AC19 ⚠️ (dos bases de pérdida). Greps residuales 0 matches en 4/4. NR4 ✅ · NR5 ✅ (coherence 0.83). Delta verificado: +6 artefactos tribunal, `is_coherent` false→true, `no_breach` 6→0. **VERIFY añade 0 tests y 0 cambios de código** | VERIFY |
 
 ## Sección E: Archivos Afiliados Actualizados
 
@@ -76,6 +77,8 @@
 | `tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py` | 7 tests de contrato S-E2 (presence_lookup canónico + hoist); +11 tests `TestPresenceLookupLiveConsumers` (remediación D-T2C-A1, métodos reales, 2026-09-11) = 18 | T2-C |
 | `evidence/FASE-T2-C/baseline-pre-post.md` | Baseline pre/post: 3,983→3,990 tests, AC15/AC16/NR1-NR4 | T2-C |
 | `evidence/FASE-T2-C/evidencia-final.md` | Diff completo + resumen + métricas + lecciones | T2-C |
+| `evidence/FASE-VERIFY/TRIBUNAL-OFFLINE-2026-09-09/` | `MATRIZ-CERTIFICACION.md` (matriz firmada AC1-16 + AC17-19 + delta + greps), `verify_probe_ac8.py`/`_out.txt` (sonda read-only causa raíz AC8), `greps_residuales.txt` (0/4), `grep_ac4_main.txt`, `baseline_delta_greps.txt`, `verify_tests_tribunal.txt` (123 passed) | VERIFY |
+| `.opencode/plans/TRIBUNAL-OFFLINE-2026-09-09/{10-analisis,06-checklist,dependencias-fases,README}.md` | Matriz de verificación completa + 4 lecciones L-V.1–.4 + decisiones D-V.1–D-V.4 + seguimientos (AC8 ❌, barreda D-V.1, §5.1/§5.4/§5.5, executor D-V.3) + estado 8/9. **Cero código de producción** | VERIFY |
 | `AGENTS.md` | Nuevo módulo `tribunal/` en tabla de Módulos Activos | RELEASE |
 | `modules/quality_gates/tribunal/__init__.py` | Export de `HonestyReviewer` (import + `__all__`) — contrato de `dependencias-fases.md` que T4-B no había cumplido (R2) | T4-B (remed.) |
 | `modules/quality_gates/tribunal/alignment_reviewer.py` | `_load_proposal` delega en el resolutor compartido: T4-A arrastraba el mismo defecto de ubicación (R1) | T4-B (remed.) |

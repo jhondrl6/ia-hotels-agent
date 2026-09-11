@@ -1,7 +1,7 @@
 # TRIBUNAL-OFFLINE-2026-09-09
 
 > **Versión objetivo**: 4.76.0 · **Workflow**: `phased_project_executor.md` v2.20.0
-> **Estado**: 🔶 7/9 sesiones ejecutadas — FASE-T1 ⚠️ + FASE-T2-A ✅ + FASE-T2-B ✅ + FASE-T2-C ⚠️ + FASE-T4-A ✅ + FASE-T4-B ⚠️ + **FASE-E2E ✅** completadas (T1 con reserva: S-HF1 y corte R2.1 sin cerrar; D-T1.3 ✅ resuelta opción a; T2-C con reserva: desvío D-T2C-A1 — cerrado en E2E; T4-B con reserva: desvío D-T4B-A1 — remediado R1–R9 y cableado en E2E, commit `7e1bbc3`)
+> **Estado**: 🔶 8/9 sesiones ejecutadas — FASE-T1 ⚠️ + FASE-T2-A ✅ + FASE-T2-B ✅ + FASE-T2-C ⚠️ + FASE-T4-A ✅ + FASE-T4-B ⚠️ + FASE-E2E ✅ + **FASE-VERIFY ✅** completadas (T1 con reserva: S-HF1 y corte R2.1 sin cerrar; D-T1.3 ✅ resuelta opción a; T2-C con reserva: desvío D-T2C-A1 — cerrado en E2E; T4-B con reserva: desvío D-T4B-A1 — remediado R1–R9 y cableado en E2E, commit `7e1bbc3`; VERIFY: AC1-AC16 certificados contra output real — 15 ✅ + 1 ❌ (AC8, causa raíz fijada por sonda, routed a seguimientos), AC17 ✅/AC18 ✅/AC19 ⚠️, greps 0/4, cero código tocado)
 > **Contexto fuente**: `.opencode/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` §5, §14, §15 (movido a Historico el 2026-09-09; lecciones QMind: notebook `iah-cli-lecciones` — write-back automatizado vía `scripts/validate_qmind_writeback.py`)
 > **Anclaje estratégico**: `ROADMAP.md` v4.2 §7.2 (FASE T, tramo offline: T1/T2/T4)
 > **Baseline**: v4.75.0 «Estabilización pre-tribunal» — precondiciones T0.1-T0.4 ✅ CERRADAS (§14.1)
@@ -37,7 +37,7 @@ Módulos deterministas en `modules/quality_gates/tribunal/` (gate-family), ejecu
 | 5 | FASE-T4-A | Revisor de Alineación NL (Bot 2) + interfaz de extracción LLM | **ALTA** | DIRECTO | ✅ Completada |
 | 6 | FASE-T4-B | Revisor de Honestidad NL (Bot 4) | MEDIA | DIRECTO | ⚠️ Completada con reserva (D-T4B-A1, remediado R1–R9) |
 | 7 | FASE-E2E | v4complete Hotel Salento Real + evidencia + acta en output | BAJA | MIXTO | ✅ Completada (veredicto condicional, coherence 0.83, 4/4 revisores en output real) |
-| 8 | FASE-VERIFY | Certificación formal de ACs (AC1-AC16) contra output E2E real | MEDIA | DIRECTO | ⬜ Pendiente |
+| 8 | FASE-VERIFY | Certificación formal de ACs (AC1-AC16) contra output E2E real | MEDIA | DIRECTO | ✅ Completada (15 ✅ + 1 ❌ AC8 routed a seguimientos; AC17 ✅/AC18 ✅/AC19 ⚠️; greps 0/4; cero código tocado) |
 | 9 | FASE-RELEASE-4.76.0 | Cierre documental + version bump + archivado (R2.5) | BAJA | DELEGABLE | ⬜ Pendiente |
 
 ## Alcance
