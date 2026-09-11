@@ -15,7 +15,7 @@
 | 4 | FASE-T2-C | ⚠️ Completada con reserva | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido + fósil V3 cerrado. Reserva: desvío D-T2C-A1 (AC no-regresión régimen True) — remediación ejecutada 2026-09-11 (+11 tests) |
 | 5 | FASE-T4-A | ✅ Completada | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 28 tests verdes (incl. fix post-auditoría) |
 | 6 | FASE-T4-B | ⚠️ Completada con reserva | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Bot 4: HonestyReviewer — lee CG-* en 2 archivos (12 entradas / 10 distintos) + sobre-presentación vs tier + 3 escenarios; 7 tests de fase. Reserva: desvío **D-T4B-A1** (auditoría 2026-09-11) — el revisor no operaba sobre los artefactos reales; remediación R1–R9 ejecutada el mismo día (+22 tests). Cableado en pipeline diferido a FASE-E2E (decisión Q1) |
-| 7 | FASE-E2E | ⬜ Pendiente | — | — | — | v4complete Salento Real |
+| 7 | FASE-E2E | ✅ Completada | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | v4complete Salento Real: veredicto condicional, coherence 0.83, 4/4 revisores en output real (cableado Q1/Vía A, commit `7e1bbc3`) |
 | 8 | FASE-VERIFY | ⬜ Pendiente | — | — | — | Certificación ACs |
 | 9 | FASE-RELEASE-4.76.0 | ⬜ Pendiente | — | — | — | Cierre + archivado |
 
@@ -133,17 +133,21 @@
 
 ### FASE-E2E — v4complete Hotel Salento Real
 
-- [ ] `v4complete --url https://www.hotelsalentoreal.com/` ejecutado (subagente, timeout=900)
-- [ ] Protocolo de Evidencia Proactiva: artefactos copiados a `evidence/FASE-E2E/` (incluye `deliveries/`: MANIFEST, IMPLEMENTATION_ORDER, ASSETS)
-- [ ] `acta_revision.json` presente en output con 6 cláusulas (AC13)
-- [ ] `acta_revision.md` presente y legible
-- [ ] 4 reportes de revisión presentes en `v4_audit/` (AC14)
-- [ ] Veredicto coherente con tier (Tier B → condicional)
-- [ ] Delta vs baseline FASE-D documentado (R2.3)
-- [ ] Coherence ≥ 0.80 (NR5)
-- [ ] `log_phase_completion.py` ejecutado
-- [ ] `09-documentacion-post-proyecto.md` actualizado
-- [ ] `10-analisis-post-implementacion.md` actualizado
+- [x] `v4complete --url https://www.hotelsalentoreal.com/` ejecutado (subagente, exit 0, ~2.5 min, log en `evidence/FASE-E2E/fase_e2e_v4complete.log`)
+- [x] Cableado de los 4 revisores en `main.py` (Q1/Vía A, commit `7e1bbc3`): tras el packaging, extractor LLM compartido, never-block por Bot
+- [x] Protocolo de Evidencia Proactiva: artefactos copiados a `evidence/FASE-E2E/` (incluye `deliveries/`: ZIP `hotelsalentoreal_20260911.zip` + descompresión `*_unpacked/` con MANIFEST, IMPLEMENTATION_ORDER, ASSETS — el layout actual es ZIP-only)
+- [x] `acta_revision.json` presente en output con 6 cláusulas (AC13) — `clauses_evaluated: 6`
+- [x] `acta_revision.md` presente y legible (6 secciones P6.x + Regla de Primer Piso)
+- [x] 4 reportes de revisión presentes en `v4_audit/` (AC14) — Bot 1–4 `[OK]` en log
+- [x] Veredicto coherente con tier — `APROBADO-CONDICIONAL-PENDING-ONBOARDING`; ⚠️ acta lee `evidence_tier C` (timing Juez/packaging, L-E2E.1) pero MANIFEST real = B y el primer piso aplica en ambos
+- [x] Delta vs baseline FASE-D documentado (R2.3) — `evidence/FASE-E2E/delta_vs_baseline.md`
+- [x] Coherence ≥ 0.80 (NR5) — 0.83, gate PASS 0.8333
+- [x] D-T2C-A1: veracidad «Presente en sitio» — VERAZ (3 servicios verificados en sitio; `llms_txt` no reclamado)
+- [x] §5.1 (AC17): verificado PARCIAL — `precision_tier: C` + `tier_explanation` declarados; `evidence_tier` ausente del artefacto (decisión para VERIFY)
+- [x] 7 fixes v4.75.0 verificados (tabla en `10-analisis` §Análisis de fixes)
+- [x] `log_phase_completion.py` ejecutado
+- [x] `09-documentacion-post-proyecto.md` actualizado
+- [x] `10-analisis-post-implementacion.md` actualizado (fila E2E + 4 lecciones L-E2E.1–.4 + seguimientos cerrados + métricas)
 
 ### FASE-VERIFY — Certificación Formal
 

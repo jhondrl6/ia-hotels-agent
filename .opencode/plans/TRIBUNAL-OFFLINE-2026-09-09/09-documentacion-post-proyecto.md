@@ -52,21 +52,23 @@
 | Tests colectados post-remediación D-T2C-A1 | 4,029 (4,018 + 11) | T2-C (remed.) |
 | Tests colectados post-T4-B | **4,036** (4,029 + 7). ⚠️ Rectificado: la fase registró 4,025 partiendo de 4,018, lo que omitía los +11 de D-T2C-A1 y no coincide con `pytest tests/ --collect-only -q` | T4-B |
 | Tests colectados post-remediación D-T4B-A1 | **4,058** (4,036 + 22); `passed` 3,998 → 4,020 | T4-B (remed.) |
-| Tests totales post-plan | — | E2E |
-| Coherence output E2E | — | E2E |
-| Veredicto del Juez (Salento Real) | — | E2E |
-| Cláusulas P6 evaluadas | 6, de las cuales 4 certificables por T1 (`P6.1`, `P6.3`, `P6.4`, `P6.6`); `P6.2` diferida a T4-A; `P6.5` liberada para T4-B tras D-T1.3 opción (a) — primer piso → `first_floor_rule`. ⚠️ `P6.5` sigue `NOT_EVALUABLE` en el acta: Bot 4 no está cableado en el pipeline (decisión Q1 → FASE-E2E) | T1 / T4-B |
+| Tests totales post-plan | — (E2E añade 0 tests; 4,058 colectados sin cambio) | E2E |
+| Coherence output E2E | **0.83** (`coherence_score_final`; gate coherence PASS 0.8333 ≥ 0.80 — NR5; baseline FASE-D 0.88, delta −0.05) | E2E |
+| Veredicto del Juez (Salento Real) | **APROBADO-CONDICIONAL-PENDING-ONBOARDING** (exit 0; ZIP creado; 13/13 gates). ⚠️ El acta lee `evidence_tier: C` (el Juez corre antes del packaging; MANIFEST real = B) — primer piso aplica igualmente | E2E |
+| Cláusulas P6 evaluadas | 6, de las cuales 4 certificables por T1 (`P6.1`, `P6.3`, `P6.4`, `P6.6`); `P6.2` diferida a T4-A; `P6.5` liberada para T4-B tras D-T1.3 opción (a) — primer piso → `first_floor_rule`. En la corrida E2E P6.2/P6.5 siguen `NOT_EVALUABLE` en el acta (diseño T1: el Juez no consume `reviewer_reports`; ver L-E2E.3 en `10-analisis`), pero los 4 `revision_*.json` SÍ existen y sus recomendaciones quedan registradas | T1 / T4-B / E2E |
 | Archivos nuevos en `v4_audit/` | 2 (`acta_revision.json`, `acta_revision.md`) | T1 |
 | Archivos nuevos en `v4_audit/` (T2-A) | 1 (`revision_diagnostico.json`) | T2-A |
 | Archivos nuevos en `v4_audit/` (T2-B) | 1 (`revision_assets.json`) | T2-B |
 | Archivos nuevos en `v4_audit/` (T4-A) | 1 (`revision_alineacion.json`) | T4-A |
-| Archivos nuevos en `v4_audit/` (T4-B) | 1 (`revision_honestidad.json`) — ⚠️ **se producirá en FASE-E2E**, no en esta fase: `find output/ -name "revision_*.json"` devuelve vacío porque ningún revisor está cableado | T4-B / E2E |
+| Archivos nuevos en `v4_audit/` (T4-B) | 1 (`revision_honestidad.json`) — ✅ **producido en FASE-E2E** (corrida 2026-09-11): los 4 `revision_*.json` existen en output real tras el cableado Q1/Vía A (commit `7e1bbc3`) | T4-B / E2E |
+| Hallazgos del tribunal en la corrida E2E | Bot 1: 1 CRITICAL (recall vacuo, `details: {}` real) → BLOQUEAR · Bot 2: 0 findings, 4/4 ALINEADO → APROBADO · Bot 3: 4/4 CON-ASSET (coverage 1.0) + 1 WARNING P12 → APROBADO · Bot 4: 1 CG_WARNING_UNDISCLOSED (`CG-WHATSAPP-LEAD`, AC12 en artefacto real) → DEVOLVER-PRUEBAS · Juez: condicional (no consume reportes — diseño T1) | E2E |
 
 ## Sección E: Archivos Afiliados Actualizados
 
 | Archivo | Cambio | Fase |
 |---------|--------|------|
 | `main.py` | Integración del Juez junto a `delivery_quality_report`; la decisión del ZIP consume `blocks_delivery_zip(acta)` en lugar de comparar strings de veredicto | T1 |
+| `main.py` | Cableado de los 4 revisores del tribunal tras el packaging (FASE 7) — Q1/Vía A: extractor LLM compartido (`LLMPromiseExtractor`) + never-block por Bot; revisan MANIFEST/ASSETS de la corrida actual | E2E |
 | `main.py` | S-E2: `site_presence_report` fuera del bloque condicional (o guard en el consumidor) | T2-C |
 | `modules/commercial_documents/v4_proposal_generator.py` | S-E2: guard de `presence_lookup` corregido (dict canónico + dataclass) — reactiva consumidores; desvío D-T2C-A1 | T2-C |
 | `modules/asset_generation/v4_asset_orchestrator.py` | S-E2: retiro de instanciación muerta | T2-C |

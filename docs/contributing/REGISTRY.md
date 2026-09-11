@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-11
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 473
+> **Total fases completadas:** 475
 
 ---
 
@@ -11081,6 +11081,25 @@ _Ninguno_ (la fase no tocó `main.py`, `judge.py`, `llm_extractor.py` ni `ROADMA
 - [x] NR1 de la remediación: `4020 = 3998 + 22`, colectados `4036 → 4058`
 - [x] `run_all_validations.py --quick` 8/8
 - [x] Restricciones vigentes respetadas: `main.py`, `judge.py`, `llm_extractor.py`, `ROADMAP.md` intactos; sin `v4complete`; sin LLM real en tests; citas por símbolo
+
+---
+
+
+## FASE-E2E - 2026-09-11
+**Descripcion:** Corrida v4complete Hotel Salento Real con tribunal integrado: acta + 4 reportes de revision; veredicto APROBADO-CONDICIONAL-PENDING-ONBOARDING, coherence 0.83, cableado Q1/Via A de los 4 revisores
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/FASE-E2E/` | NUEVO | Fase-E2E |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
 
 ---
 
