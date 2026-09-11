@@ -57,10 +57,10 @@
 4. Retirar los bloques muertos solo tras confirmar con `grep` que no tienen consumidor vivo (lección «dead-code-before-delete»).
 
 **Criterios de aceptación**:
-- [ ] El camino `generate_proposal=False` no produce `NameError` (sonda/test)
-- [ ] El régimen `generate_proposal=True` no cambia de comportamiento (test de no-regresión)
-- [ ] Los bloques `presence_lookup` muertos y la instanciación muerta retirados (o justificada su permanencia)
-- [ ] No se editó ninguna región de gates
+- [x] El camino `generate_proposal=False` no produce `NameError` (sonda/test) — certificado en auditoría 2026-09-11 (hoist verificado, test verde)
+- [ ] El régimen `generate_proposal=True` no cambia de comportamiento (test de no-regresión) — ⚠️ NO CUMPLIDO: los bloques `presence_lookup` fueron reactivados, no retirados; ver adenda D-T2C-A1 al final de este documento
+- [ ] Los bloques `presence_lookup` muertos y la instanciación muerta retirados (o justificada su permanencia) — ⚠️ PARCIAL: la instanciación muerta sí se retiró; los 3 bloques no se retiraron ni permanecieron muertos — el guard se corrigió y reactivó a sus consumidores vivos; ver adenda D-T2C-A1
+- [x] No se editó ninguna región de gates (verificado en auditoría 2026-09-11)
 
 ### Tarea 2: S9 — certificar `INVALID_MAPPINGS` (y curar el fósil V3 si sigue vivo)
 
@@ -76,9 +76,9 @@
 2. Escribir un **test de contrato** que fije: toda clave de `INVALID_MAPPINGS` ∈ `PAIN_SOLUTION_MAP`, y todo valor ∈ `ASSET_CATALOG` (misma forma que `test_service_identity_registry.py`).
 
 **Criterios de aceptación**:
-- [ ] Test de contrato verde: claves de `INVALID_MAPPINGS` ⊆ `PAIN_SOLUTION_MAP` y valores ⊆ `ASSET_CATALOG`
-- [ ] Fósil V3 verificado con `grep`: curado o declarado cerrado con evidencia
-- [ ] `validar_semantica_comercial` conserva su comportamiento (test de no-regresión)
+- [x] Test de contrato verde: claves de `INVALID_MAPPINGS` ⊆ `PAIN_SOLUTION_MAP` y valores ⊆ `ASSET_CATALOG` — vía `test_invalid_mappings_valida_contra_capa1` (preexistente; verificado en auditoría 2026-09-11)
+- [x] Fósil V3 verificado con `grep`: curado o declarado cerrado con evidencia — solo docstring en `service_identity.py`, candado AST en `test_service_identity_registry.py` (auditoría 2026-09-11)
+- [x] `validar_semantica_comercial` conserva su comportamiento (test de no-regresión) — sin test nuevo; cubierto por los tests preexistentes de `tests/test_asset_semantics_validator.py`, verdes en auditoría 2026-09-11
 
 ### Tarea 3: Tests + Docs + Post-ejecución
 
@@ -96,6 +96,8 @@
     --tests "N" \
     --check-manual-docs
 ```
+
+> **Anotación post-auditoría (2026-09-11) — D2**: el entregable `tests/quality/test_asset_semantics_registry.py` de estos comandos **nunca se creó** (el directorio `tests/quality/` tampoco existe; la ruta del primer `pytest` nunca se ejecutó). S9 quedó certificado sin código nuevo por `test_invalid_mappings_valida_contra_capa1` (preexistente en `tests/common/test_service_identity_registry.py`). La ejecución real de `log_phase_completion.py` no registró el archivo fantasma ni `modules/quality/asset_semantics_validator.py` (que `--archivos-mod` listaba como modificado sin estarlo): la entrada en REGISTRY quedó limpia. El texto prescrito se conserva íntegro como evidencia; la discrepancia quedó así registrada.
 
 ---
 
@@ -129,3 +131,17 @@
 - **NO usar números de línea** (R2.2: citar símbolos)
 - **NO delegar a subagente** (imports del proyecto + venv Windows desde WSL → DIRECTA)
 - **Re-verificar toda cita de región con `grep` antes de editar** (L-A6: `main.py` creció con T1)
+
+---
+
+## Adenda post-auditoría (2026-09-11) — D-T2C-A1
+
+**Desvío registrado**: el AC de Tarea 1 «El régimen `generate_proposal=True` no cambia de comportamiento» NO se cumplió tal como fue redactado. Los 3 bloques `presence_lookup` de `modules/commercial_documents/v4_proposal_generator.py` no se retiraron ni permanecieron muertos: el guard insatisfacible (`hasattr(site_presence_report, 'results')` contra el dict canónico que retorna `normalize_site_presence`) fue corregido a una cascada dict+dataclass, reactivando a los consumidores vivos de la tabla de servicios y de la rama AEO («ℹ️ Presente en sitio»). Sonda de auditoría: con el dict canónico, `presence_lookup` pasa de vacío a poblado, por lo que el contenido de la propuesta comercial cambia en el régimen `True`. El checklist de la fase (06) marcó el ítem equivalente como cumplido bajo la rama «retirados (o justificada su permanencia)» — rama que no ocurrió; los Criterios de aceptación de Tarea 1 de este prompt quedaron sin marcar en el cierre.
+
+**Decisión conservada (no se revierte)**: el propio plan condicionaba el retiro a que los bloques no tuvieran consumidor vivo vía `grep`; sí lo tienen, así que retirarlos habría sido incorrecto. La reactivación alinea `v4_proposal_generator` con `CoherenceValidator._check_promised_assets_exist`, que ya consumía el dict canónico.
+
+**Estado residual**: no existe test que fije la nueva salida contra el código real de producción — los 7 tests de la fase re-implementan la lógica del lookup o leen `main.py` como texto (posición relativa de `site_presence_report = site_presence_snapshot` respecto de `if generate_proposal:`). → **CIERRADO 2026-09-11**: clase `TestPresenceLookupLiveConsumers` (11 tests) en `tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py`, ejecutando directo `_generate_dynamic_services_table`, `_generate_technical_assets_table` y `_generate_asset_quality_table` con dict canónico (`exists`, `exists_with_issues`, `not_exists`), con `None`, con `results` vacíos, con objeto tipo dataclass (`.results`) y con objeto sin `results` (rama tolerada). El archivo pasó de 7 a 18 tests verdes; colectados 4,018→4,029.
+
+**Riesgo y remediación**: riesgo acotado a FASE-E2E, que debe validar la veracidad de las filas «Presente en sitio» contra el sitio real (no basta el diff contra un output pre-T2-C, cuyo estado anterior era el incorrecto). Remediación acordada: test dirigido a los métodos de `v4_proposal_generator.py` que construyen `presence_lookup`, con dict canónico y con `None`. → **Remediación ejecutada 2026-09-11**; a E2E solo le queda la verificación de veracidad en sitio real (registrada en `dependencias-fases.md`).
+
+**Alcance de esta adenda**: corrige el cierre documental; no toca código, no invalida AC15/AC16/NR3/NR4 y conserva íntegra la evidencia en `evidence/FASE-T2-C/`.

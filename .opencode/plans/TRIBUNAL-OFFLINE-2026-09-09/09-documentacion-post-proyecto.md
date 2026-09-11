@@ -15,8 +15,8 @@
 | `modules/quality_gates/tribunal/` | `llm_extractor.py` | Interfaz de extracción LLM (protocolo + mock para tests) | T4-A |
 | `modules/quality_gates/tribunal/` | `alignment_reviewer.py` | Bot 2: revisor de alineación NL (promesas verbales vs matriz) | T4-A |
 | `modules/quality_gates/tribunal/` | `honesty_reviewer.py` | Bot 4: revisor de honestidad comercial (sobre-presentación vs tier + CG-*) | T4-B |
-| *(limpieza)* | `main.py`, `v4_proposal_generator.py`, `v4_asset_orchestrator.py` | S-E2: cura del NameError latente + retiro de bloques `presence_lookup` muertos | T2-C |
-| *(certificación)* | `modules/quality/asset_semantics_validator.py` | S9: contrato de `INVALID_MAPPINGS` (registro #14) | T2-C |
+| *(limpieza)* | `main.py`, `v4_proposal_generator.py`, `v4_asset_orchestrator.py` | S-E2: cura del NameError latente (hoist) + guard de `presence_lookup` corregido (dict+dataclass; reactiva consumidores — desvío D-T2C-A1 en 10-analisis) + retiro de instanciación muerta | T2-C |
+| *(certificación, sin cambios de código)* | `tests/common/test_service_identity_registry.py` (preexistente) | S9: contrato de `INVALID_MAPPINGS` (registro #14); `asset_semantics_validator.py` no se modificó | T2-C |
 
 ## Sección B: Funcionalidades Nuevas
 
@@ -32,8 +32,8 @@
 | Extracción NL de promesas | `tribunal/llm_extractor.py` | LLM propone, Juez decide (híbrido acotado) | T4-A |
 | Revisión de alineación | `tribunal/alignment_reviewer.py` | P6.2: promesas verbales vs matriz | T4-A |
 | Revisión de honestidad | `tribunal/honesty_reviewer.py` | P6.5: sobre-presentación vs tier labels + 12 CG-* (P6.5 liberada tras D-T1.3 opción a) | T4-B |
-| Limpieza S-E2 | `main.py`, `v4_proposal_generator.py`, `v4_asset_orchestrator.py` | `generate_proposal=False` sin `NameError`; código muerto retirado | T2-C |
-| Certificación S9 | `modules/quality/asset_semantics_validator.py` | Contrato de `INVALID_MAPPINGS` (registro #14) | T2-C |
+| Limpieza S-E2 | `main.py`, `v4_proposal_generator.py`, `v4_asset_orchestrator.py` | `generate_proposal=False` sin `NameError`; instanciación muerta retirada; bloques `presence_lookup` reactivados (cambian la propuesta en régimen `True` — desvío D-T2C-A1) | T2-C |
+| Certificación S9 | `tests/common/test_service_identity_registry.py` (preexistente) | Contrato de `INVALID_MAPPINGS` (registro #14) — sin cambios de código | T2-C |
 
 ## Sección D: Métricas Acumulativas
 
@@ -42,10 +42,11 @@
 | Tests nuevos (tribunal) | 17 (13 de T1 + 4 de la auditoría) | T1 |
 | Tests nuevos (tribunal T2-A) | 10 (DiagnosisReviewer) | T2-A |
 | Tests nuevos (tribunal T2-B) | 12 (AssetReviewer) | T2-B |
-| Tests nuevos (tribunal T2-C) | 7 (S-E2 presence_lookup + hoist) | T2-C |
+| Tests nuevos (tribunal T2-C) | 18 (7 de la fase + 11 de remediación D-T2C-A1, auditoría 2026-09-11) | T2-C |
 | Tests nuevos (tribunal T4-A) | 28 (15 llm_extractor + 13 alignment_reviewer, incl. fix post-auditoría) | T4-A |
-| Tests totales tribunal acumulados | 74 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C + 28 T4-A) | T4-A |
+| Tests totales tribunal acumulados | 85 (17 T1 + 10 T2-A + 12 T2-B + 18 T2-C + 28 T4-A) | T2-C (remed.) |
 | Tests colectados post-T4-A | 4,018 (3,990 T2-C + 28 T4-A) | T4-A |
+| Tests colectados post-remediación D-T2C-A1 | 4,029 (4,018 + 11) | T2-C (remed.) |
 | Tests totales post-plan | — | E2E |
 | Coherence output E2E | — | E2E |
 | Veredicto del Juez (Salento Real) | — | E2E |
@@ -61,10 +62,10 @@
 |---------|--------|------|
 | `main.py` | Integración del Juez junto a `delivery_quality_report`; la decisión del ZIP consume `blocks_delivery_zip(acta)` en lugar de comparar strings de veredicto | T1 |
 | `main.py` | S-E2: `site_presence_report` fuera del bloque condicional (o guard en el consumidor) | T2-C |
-| `modules/commercial_documents/v4_proposal_generator.py` | S-E2: retiro de bloques `presence_lookup` muertos | T2-C |
+| `modules/commercial_documents/v4_proposal_generator.py` | S-E2: guard de `presence_lookup` corregido (dict canónico + dataclass) — reactiva consumidores; desvío D-T2C-A1 | T2-C |
 | `modules/asset_generation/v4_asset_orchestrator.py` | S-E2: retiro de instanciación muerta | T2-C |
-| `modules/quality/asset_semantics_validator.py` | S9: contrato de `INVALID_MAPPINGS` | T2-C |
-| `tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py` | 7 tests de contrato S-E2 (presence_lookup canónico + hoist) | T2-C |
+| `modules/quality/asset_semantics_validator.py` | S9: SIN cambios de código — contrato certificado por `test_invalid_mappings_valida_contra_capa1` (preexistente) | T2-C |
+| `tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py` | 7 tests de contrato S-E2 (presence_lookup canónico + hoist); +11 tests `TestPresenceLookupLiveConsumers` (remediación D-T2C-A1, métodos reales, 2026-09-11) = 18 | T2-C |
 | `evidence/FASE-T2-C/baseline-pre-post.md` | Baseline pre/post: 3,983→3,990 tests, AC15/AC16/NR1-NR4 | T2-C |
 | `evidence/FASE-T2-C/evidencia-final.md` | Diff completo + resumen + métricas + lecciones | T2-C |
 | `AGENTS.md` | Nuevo módulo `tribunal/` en tabla de Módulos Activos | RELEASE |

@@ -12,7 +12,7 @@
 | 1 | FASE-T1 | ⚠️ Completada con reserva | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Juez + contrato de acta + integración main.py; auditada. Reserva: S-HF1 y R2.1 sin cerrar; D-T1.3 abierta |
 | 2 | FASE-T2-A | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 1: DiagnosisReviewer — 10 tests verdes, AC5+AC6 certificados |
 | 3 | FASE-T2-B | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 3: AssetReviewer — 12 tests verdes, AC7+AC8 certificados |
-| 4 | FASE-T2-C | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido + fósil V3 cerrado |
+| 4 | FASE-T2-C | ⚠️ Completada con reserva | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido + fósil V3 cerrado. Reserva: desvío D-T2C-A1 (AC no-regresión régimen True) — remediación ejecutada 2026-09-11 (+11 tests) |
 | 5 | FASE-T4-A | ✅ Completada | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 28 tests verdes (incl. fix post-auditoría) |
 | 6 | FASE-T4-B | ⬜ Pendiente | — | — | — | Bot 4: Honestidad NL |
 | 7 | FASE-E2E | ⬜ Pendiente | — | — | — | v4complete Salento Real |
@@ -76,10 +76,11 @@
 ### FASE-T2-C — Limpieza de precondiciones heredadas (S-E2, S9)
 
 - [x] S-E2: `site_presence_report` ya no lanza `NameError` con `generate_proposal=False` (AC15)
-- [x] S-E2: bloques `presence_lookup` muertos + instanciación muerta retirados (o justificada su permanencia)
+- [ ] S-E2: bloques `presence_lookup` muertos + instanciación muerta retirados (o justificada su permanencia) — ⚠️ PARCIAL (D-T2C-A1): instanciación muerta retirada; los 3 bloques fueron reactivados (guard corregido dict+dataclass), lo que cambia la propuesta en régimen `generate_proposal=True`. Justificación en la adenda del prompt de la fase
 - [x] S9: test de contrato de `INVALID_MAPPINGS` verde (AC16)
 - [x] S9: fósil V3 en `service_identity.py` verificado con `grep` (curado o declarado cerrado)
-- [x] Tests: `tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py` verde (7 tests)
+- [x] Tests: `tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py` verdes (7 tests → 18: +11 de remediación D-T2C-A1, auditoría 2026-09-11)
+- [x] **Remediación D-T2C-A1** (post-auditoría 2026-09-11): `TestPresenceLookupLiveConsumers` ejecuta los tres métodos reales que construyen `presence_lookup` con dict canónico, `None`, `results` vacíos, dataclass-compat y objeto sin `results`; colectados 4,018→4,029. Queda solo la verificación de veracidad «Presente en sitio» en FASE-E2E
 - [x] `run_all_validations.py --quick` TOTAL PASS
 - [x] Baseline pre/post en `evidence/FASE-T2-C/`
 - [x] `log_phase_completion.py` ejecutado

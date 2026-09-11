@@ -6,11 +6,22 @@ consumen correctamente el dict canónico de normalize_site_presence
 
 AC15: generate_proposal=False no lanza NameError — la asignación de
 site_presence_report está hoisted fuera del bloque condicional.
+
+Remediación D-T2C-A1 (auditoría 2026-09-11): TestPresenceLookupLiveConsumers
+ejecuta los tres métodos reales de v4_proposal_generator.py que construyen
+presence_lookup (_generate_dynamic_services_table, _generate_technical_assets_table,
+_generate_asset_quality_table) con el dict canónico, con None y con variantes
+de estado — fija el delta post-T2-C contra código de producción, no contra una
+re-implementación de la lógica.
 """
+
+from types import SimpleNamespace
 
 import pytest
 
+from modules.asset_generation.proposal_asset_alignment import PROPOSAL_SERVICE_TO_ASSET
 from modules.asset_generation.site_presence_adapter import normalize_site_presence
+from modules.commercial_documents.v4_proposal_generator import V4ProposalGenerator
 
 
 CANONICAL_SNAPSHOT = normalize_site_presence(None)
@@ -138,3 +149,114 @@ class TestSitePresenceReportAlwaysDefined:
             f"Asignación duplicada encontrada dentro del bloque if generate_proposal "
             f"en línea(s) {inside_assignments} — debe estar hoisted fuera del bloque"
         )
+
+
+class TestPresenceLookupLiveConsumers:
+    """D-T2C-A1: los métodos reales que consumen presence_lookup, con el dict
+    canónico (reactivados) y con None/alternativas (sin regresión ni crash)."""
+
+    ASSET_PRESENT = "whatsapp_button"
+    ASSET_TECHNICAL = "analytics_setup_guide"
+
+    def setup_method(self):
+        self.gen = V4ProposalGenerator()
+
+    @classmethod
+    def _service_for(cls, asset_type: str) -> str:
+        return next(
+            name for name, at in PROPOSAL_SERVICE_TO_ASSET.items()
+            if at == asset_type
+        )
+
+    @staticmethod
+    def _snapshot(asset_type: str, status: str) -> dict:
+        return normalize_site_presence({
+            "results": {asset_type: {"status": status, "confidence": 1.0}}
+        })
+
+    @staticmethod
+    def _row_for(table: str, service_name: str) -> str:
+        return next(
+            line for line in table.splitlines()
+            if line.startswith("|") and service_name in line
+        )
+
+    # ---- _generate_dynamic_services_table --------------------------------
+
+    def test_services_table_canonical_dict_shows_presente_en_sitio(self):
+        table = self.gen._generate_dynamic_services_table(
+            site_presence_report=self._snapshot(self.ASSET_PRESENT, "exists")
+        )
+        row = self._row_for(table, self._service_for(self.ASSET_PRESENT))
+        assert "ℹ️ Presente en sitio" in row
+
+    def test_services_table_exists_with_issues_counts_as_presente(self):
+        """Criterio canónico FASE-SR-E (H7): exists_with_issues es presente."""
+        table = self.gen._generate_dynamic_services_table(
+            site_presence_report=self._snapshot(self.ASSET_PRESENT, "exists_with_issues")
+        )
+        row = self._row_for(table, self._service_for(self.ASSET_PRESENT))
+        assert "ℹ️ Presente en sitio" in row
+
+    def test_services_table_not_exists_does_not_claim_presente(self):
+        table = self.gen._generate_dynamic_services_table(
+            site_presence_report=self._snapshot(self.ASSET_PRESENT, "not_exists")
+        )
+        assert "Presente en sitio" not in table
+
+    def test_services_table_none_report_preserves_legacy_behavior(self):
+        """Con None no hay claim de presencia — el régimen pre-post idéntico."""
+        table = self.gen._generate_dynamic_services_table(site_presence_report=None)
+        assert "Presente en sitio" not in table
+
+    def test_services_table_empty_results_no_claim_no_crash(self):
+        table = self.gen._generate_dynamic_services_table(
+            site_presence_report=normalize_site_presence(None)
+        )
+        assert "Presente en sitio" not in table
+
+    # ---- _generate_technical_assets_table ---------------------------------
+
+    def test_technical_assets_table_canonical_dict_shows_presente(self):
+        table = self.gen._generate_technical_assets_table(
+            site_presence_report=self._snapshot(self.ASSET_TECHNICAL, "exists")
+        )
+        assert "ℹ️ Presente en sitio" in table
+
+    def test_technical_assets_table_none_shows_no_presente(self):
+        table = self.gen._generate_technical_assets_table(site_presence_report=None)
+        assert "Presente en sitio" not in table
+
+    # ---- _generate_asset_quality_table -------------------------------------
+
+    def test_quality_table_canonical_dict_shows_verificado(self):
+        table = self.gen._generate_asset_quality_table(
+            assets_generated=[],
+            site_presence_report=self._snapshot(self.ASSET_PRESENT, "exists"),
+        )
+        row = self._row_for(table, self._service_for(self.ASSET_PRESENT))
+        assert "✅ Día 1 (Verificado)" in row
+
+    def test_quality_table_none_no_verificado(self):
+        table = self.gen._generate_asset_quality_table(
+            assets_generated=[], site_presence_report=None
+        )
+        assert "(Verificado)" not in table
+
+    # ---- ramas de compatibilidad y robustez del guard -----------------------
+
+    def test_services_table_dataclass_like_report_still_works(self):
+        """Rama hasattr(report, 'results') — compat pre-dict preservada."""
+        report = SimpleNamespace(
+            results={self.ASSET_PRESENT: SimpleNamespace(status="exists")}
+        )
+        table = self.gen._generate_dynamic_services_table(site_presence_report=report)
+        row = self._row_for(table, self._service_for(self.ASSET_PRESENT))
+        assert "ℹ️ Presente en sitio" in row
+
+    def test_services_table_object_without_results_is_tolerated(self):
+        """Rama else: objeto truthy sin results → lookup vacío, sin crash."""
+        table = self.gen._generate_dynamic_services_table(
+            site_presence_report=object()
+        )
+        assert "Presente en sitio" not in table
