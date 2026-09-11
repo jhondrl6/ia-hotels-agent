@@ -42,7 +42,7 @@ FASE-T1 (Juez + contrato de acta)
 | FASE-T2-A ✅ | T1 ⚠️ | T4-A | Acta contract estable + `revision_diagnostico.json` schema |
 | FASE-T2-B ✅ | T1 ⚠️ | T4-A | Acta contract estable + `revision_assets.json` schema |
 | FASE-T2-C ✅ | T1 ⚠️ | E2E | Toca `main.py` (secuencial tras T1, nunca paralela); precondición S-E2 del régimen `generate_proposal=False` |
-| FASE-T4-A | T1 ⚠️, T2-A ✅, T2-B ✅ | T4-B | Interfaz de extracción LLM (patrón que T4-B replica) |
+| FASE-T4-A ✅ | T1 ⚠️, T2-A ✅, T2-B ✅ | T4-B | Interfaz de extracción LLM (patrón que T4-B replica) |
 | FASE-T4-B | T4-A ✅ | E2E | Todos los revisores implementados |
 | FASE-E2E | T1-T4-B ✅, T2-C ✅ | VERIFY | Pipeline completo con tribunal integrado + residuos heredados curados |
 | FASE-VERIFY | E2E ✅ | RELEASE | ACs certificados contra output real |

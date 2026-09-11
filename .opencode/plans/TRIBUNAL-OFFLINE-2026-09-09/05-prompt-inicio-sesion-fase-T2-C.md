@@ -112,12 +112,12 @@
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] **AC15**: S-E2 cerrado — `generate_proposal=False` no lanza `NameError` (test verde)
-- [ ] **AC16**: S9 certificado — test de contrato de `INVALID_MAPPINGS` verde
-- [ ] **NR1**: `passed_post = passed_pre + tests nuevos` (baseline pre/post)
-- [ ] **NR3**: `run_all_validations.py --quick` TOTAL PASS
-- [ ] **NR4**: No reimplementa gates
-- [ ] **Post-ejecución completada**
+- [x] **AC15**: S-E2 cerrado — `generate_proposal=False` no lanza `NameError` (test verde)
+- [x] **AC16**: S9 certificado — test de contrato de `INVALID_MAPPINGS` verde
+- [x] **NR1**: `passed_post = passed_pre + tests nuevos` (baseline pre/post)
+- [x] **NR3**: `run_all_validations.py --quick` TOTAL PASS
+- [x] **NR4**: No reimplementa gates
+- [x] **Post-ejecución completada**
 
 ---
 

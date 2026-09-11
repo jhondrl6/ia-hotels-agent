@@ -12,8 +12,8 @@
 | 1 | FASE-T1 | ⚠️ Completada con reserva | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Juez + contrato de acta + integración main.py; auditada. Reserva: S-HF1 y R2.1 sin cerrar; D-T1.3 abierta |
 | 2 | FASE-T2-A | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 1: DiagnosisReviewer — 10 tests verdes, AC5+AC6 certificados |
 | 3 | FASE-T2-B | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 3: AssetReviewer — 12 tests verdes, AC7+AC8 certificados |
-| 4 | FASE-T2-C | ⬜ Pendiente | — | — | — | Limpieza S-E2, S9 |
-| 5 | FASE-T4-A | ⬜ Pendiente | — | — | — | Bot 2: Alineación NL |
+| 4 | FASE-T2-C | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido + fósil V3 cerrado |
+| 5 | FASE-T4-A | ✅ Completada | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 25 tests verdes |
 | 6 | FASE-T4-B | ⬜ Pendiente | — | — | — | Bot 4: Honestidad NL |
 | 7 | FASE-E2E | ⬜ Pendiente | — | — | — | v4complete Salento Real |
 | 8 | FASE-VERIFY | ⬜ Pendiente | — | — | — | Certificación ACs |
@@ -88,18 +88,18 @@
 
 ### FASE-T4-A — Revisor de Alineación NL (Bot 2)
 
-- [ ] `modules/quality_gates/tribunal/llm_extractor.py` implementado (protocolo + mock)
-- [ ] `modules/quality_gates/tribunal/alignment_reviewer.py` implementado
-- [ ] `revision_alineacion.json` con `service_matrix[]` (AC9)
-- [ ] Promesa verbal sin matriz → `PROMESA-SIN-MATRIZ` (AC10)
-- [ ] S-C4: tabla assets técnicos detectada como tercera superficie
-- [ ] Tests con LLM mockeado verdes
-- [ ] Test de serialización (R2.4)
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] Baseline pre/post en `evidence/FASE-T4-A/`
-- [ ] `log_phase_completion.py` ejecutado
-- [ ] `09-documentacion-post-proyecto.md` actualizado
-- [ ] `10-analisis-post-implementacion.md` actualizado
+- [x] `modules/quality_gates/tribunal/llm_extractor.py` implementado (protocolo + mock)
+- [x] `modules/quality_gates/tribunal/alignment_reviewer.py` implementado
+- [x] `revision_alineacion.json` con `service_matrix[]` (AC9)
+- [x] Promesa verbal sin matriz → `PROMESA-SIN-MATRIZ` (AC10)
+- [x] S-C4: tabla assets técnicos detectada como tercera superficie
+- [x] Tests con LLM mockeado verdes (25 tests: 15 llm_extractor + 10 alignment_reviewer)
+- [x] Test de serialización (R2.4)
+- [x] `run_all_validations.py --quick` TOTAL PASS (7/8 — Version Sync esperado, se resuelve en RELEASE)
+- [x] Baseline pre/post en `evidence/FASE-T4-A/`
+- [x] `log_phase_completion.py` ejecutado
+- [x] `09-documentacion-post-proyecto.md` actualizado
+- [x] `10-analisis-post-implementacion.md` actualizado (lecciones + DA-T4A)
 
 ### FASE-T4-B — Revisor de Honestidad NL (Bot 4)
 

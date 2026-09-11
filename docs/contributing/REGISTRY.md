@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-09-10
+> **Ultima actualizacion:** 2026-09-11
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 471
+> **Total fases completadas:** 473
 
 ---
 
@@ -11000,6 +11000,45 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (7)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-T4-A - 2026-09-11
+**Descripcion:** Bot 2: revisor de alineación NL + interfaz de extracción LLM (protocolo PromiseExtractor, mock, S-C4)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/quality_gates/tribunal/llm_extractor.py` | NUEVO | Llm Extractor |
+| `modules/quality_gates/tribunal/alignment_reviewer.py` | NUEVO | Alignment Reviewer |
+| `tests/quality_gates/tribunal/test_alignment_reviewer.py` | NUEVO | Test Alignment Reviewer |
+| `tests/quality_gates/tribunal/test_llm_extractor.py` | NUEVO | Test Llm Extractor |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (25)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-T4-A - 2026-09-11
+**Descripcion:** Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 25 tests verdes
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

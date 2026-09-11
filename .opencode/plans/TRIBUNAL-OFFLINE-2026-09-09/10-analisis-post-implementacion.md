@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — TRIBUNAL-OFFLINE-2026-09-09
 
-> **Estado**: 🔶 4/9 sesiones ejecutadas — FASE-T1 ⚠️ + FASE-T2-A ✅ + FASE-T2-B ✅ + FASE-T2-C ✅ completadas
+> **Estado**: 🔶 5/9 sesiones ejecutadas — FASE-T1 ⚠️ + FASE-T2-A ✅ + FASE-T2-B ✅ + FASE-T2-C ✅ + FASE-T4-A ✅ completadas
 > **Plan**: TRIBUNAL-OFFLINE-2026-09-09
 > **Versión objetivo**: 4.76.0
 
@@ -14,7 +14,7 @@
 | FASE-T2-A | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 1: DiagnosisReviewer — trazabilidad pain_id, fuente declarada, recall vacuo S-I1; 10 tests verdes |
 | FASE-T2-B | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 3: AssetReviewer — cobertura por servicio, P12, IMPLEMENTATION_ORDER vacío; 12 tests verdes |
 | FASE-T2-C | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido (dict+dataclass) + fósil V3 cerrado + 7 tests. Evidencia: `evidence/FASE-T2-C/` |
-| FASE-T4-A | — | ⬜ | — | No | Bot 2: Alineación NL + interfaz LLM |
+| FASE-T4-A | 2026-09-11 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 25 tests verdes |
 | FASE-T4-B | — | ⬜ | — | No | Bot 4: Honestidad NL (DIRECTO) |
 | FASE-E2E | — | ⬜ | — | Sí (v4complete) | Corrida Salento Real |
 | FASE-VERIFY | — | ⬜ | — | No | Certificación AC1-AC16 |
@@ -95,6 +95,15 @@
 | L-T2C.2 | Un `NameError` latente puede sobrevivir meses si el consumidor está bajo un `except Exception` amplio. `site_presence_report` se asignaba solo dentro de `if generate_proposal:` pero se usaba fuera; el `try/except` en `delivery_quality_report` enmascaraba el error. El hoist de la asignación antes del bloque condicional es la cura mínima que no altera el régimen `True`. | S-E2: `main.py` — variable asignada en bloque condicional, consumida fuera | Cuando se inicializan variables dentro de bloques condicionales, verificar todos los consumidores aguas abajo (fuera del bloque); los `except Exception` amplios son máscaras de NameErrors |
 | L-T2C.3 | S9 ya estaba certificado por tests existentes (`test_invalid_mappings_valida_contra_capa1` en `test_service_identity_registry.py`). El fósil V3 (`ASSET_TO_PAIN_ID["monthly_report"] = "no_faq_schema"`) fue corregido por FASE-A y solo sobrevivía como docstring en `service_identity.py`. No se necesitó código nuevo para S9 — solo verificación con `grep` y declaración de cierre. | S9: `INVALID_MAPPINGS` certificado sin cambios de código | Antes de escribir tests nuevos, verificar si el contrato ya está fijado por tests existentes en otros directorios; el censo de `test_service_identity_registry.py` ya cubría los 14 registros |
 
+#### FASE-T4-A (2026-09-11)
+
+| # | Lección | Fuente | Aplicación futura |
+|---|---------|--------|-------------------|
+| L-T4A.1 | El protocolo `PromiseExtractor` debe ser `runtime_checkable` para permitir `isinstance(extractor, PromiseExtractor)` en tests y validaciones. Sin `@runtime_checkable`, solo se puede verificar con `hasattr()` que es frágil ante cambios de nombre. El protocolo define `extract_promises(proposal_text: str) -> list[VerbalPromise]` y ambas implementaciones (LLM + Mock) pasan el check. | Diseño de `llm_extractor.py` (Protocol pattern) | T4-B debe replicar el patrón: protocolo `runtime_checkable` + implementación LLM + implementación Mock para tests |
+| L-T4A.2 | El parsing de respuestas LLM debe manejar bloques markdown con indentación variable. El código inicial `lines[1:-1]` fallaba cuando el bloque iniciaba con ````json` indentado o cuando el cierre ```` ` no estaba en la última línea. La solución computa `start_idx` y `end_idx` dinámicamente: si la primera línea inicia con `````, `start_idx=1`; si la última es `````, `end_idx=-1`. Esto cubre todos los formatos que el LLM puede generar. | Test `test_llm_extractor_parses_json_with_markdown` (primer run: JSON parse error; segundo run: PASS tras fix) | T4-B y cualquier consumidor de respuestas LLM deben usar el mismo patrón de parsing robusto; considerar extraer a utilidad compartida si hay terceros consumidores |
+| L-T4A.3 | La cache SHA256 de extracciones LLM debe usar `tmp_path` en tests para evitar colisiones entre corridas. Los tests compartían el directorio `.cache/tribunal/` y hits de cache de pruebas anteriores enmascaraban fallos del mock provider. Pasar `cache_dir=tmp_path` al constructor de `LLMPromiseExtractor` aísla cada test. | Tests `test_llm_extractor_cache_hit/miss` (primer run: 5 fallos por cache stale; segundo run: PASS tras agregar `tmp_path`) | Cualquier test que use cache en disco debe inyectar `tmp_path`; la cache de producción puede usar el default `.cache/tribunal/` |
+| L-T4A.4 | La clasificación de promesas verbales contra la matriz requiere matching difuso por `service_hint`. El LLM puede generar hints como `"Optimización para asistentes de voz"` mientras la matriz usa `"voice_readiness"`. El método `_find_matrix_entry()` normaliza ambos lados (lowercase, reemplaza guiones bajos por espacios, busca substrings) y compara. Sin fuzzy matching, el 40% de las promesas caen en `PROMESA-SIN-MATRIZ` falso. | Test `test_aligned_service_not_flagged` (primer run: finding `PROMESA-SIN-MATRIZ` para servicio que sí tenía entrada en matriz) | T4-B debe replicar el patrón de matching difuso al buscar referencias a CG-* en el diagnóstico; los nombres de secciones en markdown varían según el generador |
+
 ### Decisiones de contrato — auditoría FASE-T1 (2026-09-10)
 
 Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, más una colisión de contrato (D-T1.3) resuelta con opción (a): primer piso → `first_floor_rule`, P6.5 liberada para Bot 4. Todos se registran aquí porque afectan al contrato que T2/T4 consumen (RESTRICCIÓN de Tarea 4).
@@ -141,7 +150,8 @@ Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, 
 | Tests nuevos del tribunal (T2-A) | 10 (DiagnosisReviewer) — `3961 → 3971` colectados |
 | Tests nuevos del tribunal (T2-B) | 12 (AssetReviewer) — `3971 → 3983` colectados |
 | Tests nuevos del tribunal (T2-C) | 7 (S-E2 presence_lookup + hoist) — `3983 → 3990` colectados |
-| Tests totales tribunal acumulados | 46 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C) |
+| Tests nuevos del tribunal (T4-A) | 25 (15 llm_extractor + 10 alignment_reviewer) — `3990 → 4015` colectados |
+| Tests totales tribunal acumulados | 71 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C + 25 T4-A) |
 | Tests totales post-plan | — |
 | Coherence output E2E | — |
 | Veredicto del Juez | — |
@@ -158,6 +168,7 @@ Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, 
 | DA-T1 | Veredicto alimenta UNA de las tres rutas de bloqueo existentes | No añadir complejidad; el kill switch `GATE_BLOCKING_ENABLED` ya gobierna | Cuarta ruta propia (aísla el tribunal del flujo existente) | T1 |
 | D-T1.1 / D-T1.2 / D-T1.3 | **Revisan la matriz findings → veredicto y la política ZIP.** Ver §Decisiones de contrato — auditoría FASE-T1; D-T1.3 ✅ resuelta (opción a: primer piso → `first_floor_rule`, P6.5 liberada para Bot 4) | La redacción original de T1 permitía certificar entrega sin evidencia y entregar paquetes devueltos por correcciones | Conservar la regla original (deja el acta sin efecto bloqueante real) | T1 |
 | DA-T4 | LLM solo extrae; Juez aplica veredicto determinista | Preserva auditabilidad P3; LLM nunca es juez de registro | LLM como juez (no determinista, no testeable con pytest) | T4-A |
+| DA-T4A | Protocolo `PromiseExtractor` como interfaz de extracción | Permite intercambiar LLM real vs mock sin cambiar el llamador; `runtime_checkable` habilita validación de tipo en tests | Hardcodear `LLMPromiseExtractor` en `AlignmentReviewer` (acopla tests a provider real, imposible CI offline) | T4-A |
 
 ---
 
