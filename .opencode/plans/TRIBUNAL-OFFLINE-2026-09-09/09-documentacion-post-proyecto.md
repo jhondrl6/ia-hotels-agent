@@ -62,6 +62,9 @@
 | `modules/commercial_documents/v4_proposal_generator.py` | S-E2: retiro de bloques `presence_lookup` muertos | T2-C |
 | `modules/asset_generation/v4_asset_orchestrator.py` | S-E2: retiro de instanciación muerta | T2-C |
 | `modules/quality/asset_semantics_validator.py` | S9: contrato de `INVALID_MAPPINGS` | T2-C |
+| `tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py` | 7 tests de contrato S-E2 (presence_lookup canónico + hoist) | T2-C |
+| `evidence/FASE-T2-C/baseline-pre-post.md` | Baseline pre/post: 3,983→3,990 tests, AC15/AC16/NR1-NR4 | T2-C |
+| `evidence/FASE-T2-C/evidencia-final.md` | Diff completo + resumen + métricas + lecciones | T2-C |
 | `AGENTS.md` | Nuevo módulo `tribunal/` en tabla de Módulos Activos | RELEASE |
 | `VERSION.yaml` | 4.75.0 → 4.76.0 | RELEASE |
 | `CHANGELOG.md` | Entrada [4.76.0] | RELEASE |

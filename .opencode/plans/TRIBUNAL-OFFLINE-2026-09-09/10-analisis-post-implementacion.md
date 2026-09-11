@@ -13,7 +13,7 @@
 | FASE-T1 | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Juez + contrato de acta + integración main.py; auditada y corregida D-T1.1/D-T1.2 el mismo día |
 | FASE-T2-A | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 1: DiagnosisReviewer — trazabilidad pain_id, fuente declarada, recall vacuo S-I1; 10 tests verdes |
 | FASE-T2-B | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 3: AssetReviewer — cobertura por servicio, P12, IMPLEMENTATION_ORDER vacío; 12 tests verdes |
-| FASE-T2-C | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido (dict+dataclass) + fósil V3 cerrado + 7 tests |
+| FASE-T2-C | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido (dict+dataclass) + fósil V3 cerrado + 7 tests. Evidencia: `evidence/FASE-T2-C/` |
 | FASE-T4-A | — | ⬜ | — | No | Bot 2: Alineación NL + interfaz LLM |
 | FASE-T4-B | — | ⬜ | — | No | Bot 4: Honestidad NL (DIRECTO) |
 | FASE-E2E | — | ⬜ | — | Sí (v4complete) | Corrida Salento Real |
@@ -40,8 +40,8 @@
 | 12 | AC12 | CG-WHATSAPP-LEAD detectado | — | ⬜ | `revision_honestidad.json` | `cg_reference` |
 | 13 | AC13 | Acta + 6 cláusulas en output E2E | — | ⬜ | `acta_revision.json` | `clauses_evaluated` |
 | 14 | AC14 | 4 reportes de revisión en `v4_audit/` | — | ⬜ | directorio | 4 archivos |
-| 15 | AC15 | S-E2: `generate_proposal=False` sin NameError | — | ⬜ | sonda/test output | assertion |
-| 16 | AC16 | S9: `INVALID_MAPPINGS` pasa contrato | — | ⬜ | test output | assertion |
+| 15 | AC15 | S-E2: `generate_proposal=False` sin NameError | ✅ T2-C | `evidence/FASE-T2-C/evidencia-final.md` | `test_site_presence_snapshot_initialized_before_proposal_gate` |
+| 16 | AC16 | S9: `INVALID_MAPPINGS` pasa contrato | ✅ T2-C | `evidence/FASE-T2-C/evidencia-final.md` | `test_invalid_mappings_valida_contra_capa1` (preexistente) |
 
 ---
 
