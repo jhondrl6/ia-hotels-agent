@@ -15,6 +15,7 @@
 | `modules/quality_gates/tribunal/` | `llm_extractor.py` | Interfaz de extracción LLM (protocolo + mock para tests) | T4-A |
 | `modules/quality_gates/tribunal/` | `alignment_reviewer.py` | Bot 2: revisor de alineación NL (promesas verbales vs matriz) | T4-A |
 | `modules/quality_gates/tribunal/` | `honesty_reviewer.py` | Bot 4: revisor de honestidad comercial (sobre-presentación vs tier + CG-*) | T4-B |
+| `modules/quality_gates/tribunal/` | `artifact_paths.py` | Resolución compartida de rutas de artefactos (propuesta en `v4_complete/`, timestamped por mtime). Una sola fuente para los revisores; consumida por `honesty_reviewer.py` y `alignment_reviewer.py` | T4-B (remediación R1) |
 | *(limpieza)* | `main.py`, `v4_proposal_generator.py`, `v4_asset_orchestrator.py` | S-E2: cura del NameError latente (hoist) + guard de `presence_lookup` corregido (dict+dataclass; reactiva consumidores — desvío D-T2C-A1 en 10-analisis) + retiro de instanciación muerta | T2-C |
 | *(certificación, sin cambios de código)* | `tests/common/test_service_identity_registry.py` (preexistente) | S9: contrato de `INVALID_MAPPINGS` (registro #14); `asset_semantics_validator.py` no se modificó | T2-C |
 
@@ -31,7 +32,7 @@
 | Revisión de assets | `tribunal/asset_reviewer.py` | Cobertura por servicio sobre P6.3/P6.4 | T2-B |
 | Extracción NL de promesas | `tribunal/llm_extractor.py` | LLM propone, Juez decide (híbrido acotado) | T4-A |
 | Revisión de alineación | `tribunal/alignment_reviewer.py` | P6.2: promesas verbales vs matriz | T4-A |
-| Revisión de honestidad | `tribunal/honesty_reviewer.py` | P6.5: sobre-presentación vs tier labels + 12 CG-* (P6.5 liberada tras D-T1.3 opción a) | T4-B |
+| Revisión de honestidad | `tribunal/honesty_reviewer.py` | P6.5: sobre-presentación vs tier labels + CG-* de ambos archivos (12 entradas = 10 gate_ids distintos). Divulgación de WARNINGs por frases que nombran el problema (`DISCLOSURE_PHRASES_BY_GATE`), tier del MANIFEST propagado al acta y extractor obligatorio (P6.5 liberada tras D-T1.3 opción a) | T4-B (+ remediación R1/R6/R8) |
 | Limpieza S-E2 | `main.py`, `v4_proposal_generator.py`, `v4_asset_orchestrator.py` | `generate_proposal=False` sin `NameError`; instanciación muerta retirada; bloques `presence_lookup` reactivados (cambian la propuesta en régimen `True` — desvío D-T2C-A1) | T2-C |
 | Certificación S9 | `tests/common/test_service_identity_registry.py` (preexistente) | Contrato de `INVALID_MAPPINGS` (registro #14) — sin cambios de código | T2-C |
 
@@ -45,19 +46,21 @@
 | Tests nuevos (tribunal T2-C) | 18 (7 de la fase + 11 de remediación D-T2C-A1, auditoría 2026-09-11) | T2-C |
 | Tests nuevos (tribunal T4-A) | 28 (15 llm_extractor + 13 alignment_reviewer, incl. fix post-auditoría) | T4-A |
 | Tests nuevos (tribunal T4-B) | 7 (HonestyReviewer) | T4-B |
-| Tests totales tribunal acumulados | 92 (17 T1 + 10 T2-A + 12 T2-B + 18 T2-C + 28 T4-A + 7 T4-B) | T4-B |
+| Tests de la remediación D-T4B-A1 | 22 (7 retro sobre baseline real + 4 contrato de ubicación + 11 fidelidad de salida) | T4-B (remed.) |
+| Tests totales tribunal acumulados | 92 al cierre de T4-B (17 T1 + 10 T2-A + 12 T2-B + 18 T2-C + 28 T4-A + 7 T4-B) → **114** tras la remediación | T4-B (remed.) |
 | Tests colectados post-T4-A | 4,018 (3,990 T2-C + 28 T4-A) | T4-A |
-| Tests colectados post-T4-B | 4,025 (4,018 + 7) | T4-B |
 | Tests colectados post-remediación D-T2C-A1 | 4,029 (4,018 + 11) | T2-C (remed.) |
+| Tests colectados post-T4-B | **4,036** (4,029 + 7). ⚠️ Rectificado: la fase registró 4,025 partiendo de 4,018, lo que omitía los +11 de D-T2C-A1 y no coincide con `pytest tests/ --collect-only -q` | T4-B |
+| Tests colectados post-remediación D-T4B-A1 | **4,058** (4,036 + 22); `passed` 3,998 → 4,020 | T4-B (remed.) |
 | Tests totales post-plan | — | E2E |
 | Coherence output E2E | — | E2E |
 | Veredicto del Juez (Salento Real) | — | E2E |
-| Cláusulas P6 evaluadas | 6, de las cuales 4 certificables por T1 (`P6.1`, `P6.3`, `P6.4`, `P6.6`); `P6.2` diferida a T4-A; `P6.5` liberada para T4-B tras D-T1.3 opción (a) — primer piso → `first_floor_rule` | T1 |
+| Cláusulas P6 evaluadas | 6, de las cuales 4 certificables por T1 (`P6.1`, `P6.3`, `P6.4`, `P6.6`); `P6.2` diferida a T4-A; `P6.5` liberada para T4-B tras D-T1.3 opción (a) — primer piso → `first_floor_rule`. ⚠️ `P6.5` sigue `NOT_EVALUABLE` en el acta: Bot 4 no está cableado en el pipeline (decisión Q1 → FASE-E2E) | T1 / T4-B |
 | Archivos nuevos en `v4_audit/` | 2 (`acta_revision.json`, `acta_revision.md`) | T1 |
 | Archivos nuevos en `v4_audit/` (T2-A) | 1 (`revision_diagnostico.json`) | T2-A |
 | Archivos nuevos en `v4_audit/` (T2-B) | 1 (`revision_assets.json`) | T2-B |
 | Archivos nuevos en `v4_audit/` (T4-A) | 1 (`revision_alineacion.json`) | T4-A |
-| Archivos nuevos en `v4_audit/` (T4-B) | 1 (`revision_honestidad.json`) | T4-B |
+| Archivos nuevos en `v4_audit/` (T4-B) | 1 (`revision_honestidad.json`) — ⚠️ **se producirá en FASE-E2E**, no en esta fase: `find output/ -name "revision_*.json"` devuelve vacío porque ningún revisor está cableado | T4-B / E2E |
 
 ## Sección E: Archivos Afiliados Actualizados
 
@@ -72,6 +75,14 @@
 | `evidence/FASE-T2-C/baseline-pre-post.md` | Baseline pre/post: 3,983→3,990 tests, AC15/AC16/NR1-NR4 | T2-C |
 | `evidence/FASE-T2-C/evidencia-final.md` | Diff completo + resumen + métricas + lecciones | T2-C |
 | `AGENTS.md` | Nuevo módulo `tribunal/` en tabla de Módulos Activos | RELEASE |
+| `modules/quality_gates/tribunal/__init__.py` | Export de `HonestyReviewer` (import + `__all__`) — contrato de `dependencias-fases.md` que T4-B no había cumplido (R2) | T4-B (remed.) |
+| `modules/quality_gates/tribunal/alignment_reviewer.py` | `_load_proposal` delega en el resolutor compartido: T4-A arrastraba el mismo defecto de ubicación (R1) | T4-B (remed.) |
+| `modules/quality_gates/tribunal/honesty_reviewer.py` | R1 (rutas), R6 (`DISCLOSURE_PHRASES_BY_GATE`), R8 (conteos, tier propagado, `Path` resuelto una vez, `all_gates` reducido), R3.2 (extractor obligatorio) | T4-B (remed.) |
+| `tests/quality_gates/tribunal/test_honesty_reviewer_retro_reales.py` | 7 tests retro sobre `output/FASE-D_salentoreal_post_guard/`, con skip si falta el baseline (R1.2) | T4-B (remed.) |
+| `tests/quality_gates/tribunal/test_tribunal_propuesta_ubicacion.py` | 4 tests del contrato de **ubicación** de la propuesta (R1) | T4-B (remed.) |
+| `tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py` | 11 tests de fidelidad de salida y contrato NR4 (R6/R8/R9) | T4-B (remed.) |
+| `evidence/FASE-T4-B/rectificacion-NR1.md` + `tests_baseline_pre_T4B_fase_real.txt` + `tests_baseline_post_T4B_remediacion.txt` | Recomposición de NR1 con baseline medido; el par original se conserva intacto (R4) | T4-B (remed.) |
+| `.opencode/plans/TRIBUNAL-OFFLINE-2026-09-09/{06,09,10,README,dependencias-fases}.md` | Correcciones factuales de R5, estado ⚠️ de T4-B, decisiones DA-T4B.1–.6 (Q1–Q4) | T4-B (remed.) |
 | `VERSION.yaml` | 4.75.0 → 4.76.0 | RELEASE |
 | `CHANGELOG.md` | Entrada [4.76.0] | RELEASE |
 | `docs/GUIA_TECNICA.md` | Nota técnica v4.76.0 | RELEASE |

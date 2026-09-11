@@ -19,6 +19,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+from modules.quality_gates.tribunal.artifact_paths import (
+    PROPOSAL_PATTERN,
+    read_text,
+    resolve_latest,
+)
 from modules.quality_gates.tribunal.llm_extractor import (
     LLMPromiseExtractor,
     PromiseExtractor,
@@ -124,20 +129,8 @@ class AlignmentReviewer:
         return output_path
 
     def _load_proposal(self) -> Optional[str]:
-        """Carga 02_PROPUESTA_COMERCIAL*.md (más reciente)."""
-        pattern = "02_PROPUESTA_COMERCIAL*.md"
-        matches = sorted(
-            self.v4_audit_dir.glob(pattern),
-            key=lambda p: p.stat().st_mtime if p.exists() else 0,
-            reverse=True,
-        )
-        if not matches:
-            return None
-        try:
-            with open(matches[0], "r", encoding="utf-8") as f:
-                return f.read()
-        except OSError:
-            return None
+        """Carga 02_PROPUESTA_COMERCIAL*.md (más reciente, buscándose en los ascendientes)."""
+        return read_text(resolve_latest(PROPOSAL_PATTERN, self.v4_audit_dir))
 
     def _load_proposal_matrix(self) -> Optional[dict]:
         """Carga proposal_asset_matrix.json."""

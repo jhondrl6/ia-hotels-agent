@@ -14,7 +14,7 @@
 | 3 | FASE-T2-B | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 3: AssetReviewer — 12 tests verdes, AC7+AC8 certificados |
 | 4 | FASE-T2-C | ⚠️ Completada con reserva | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido + fósil V3 cerrado. Reserva: desvío D-T2C-A1 (AC no-regresión régimen True) — remediación ejecutada 2026-09-11 (+11 tests) |
 | 5 | FASE-T4-A | ✅ Completada | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 28 tests verdes (incl. fix post-auditoría) |
-| 6 | FASE-T4-B | ✅ Completada | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Bot 4: HonestyReviewer — lee 12 CG-* en 2 archivos + sobre-presentación vs tier + escenarios 70/20/10; 7 tests verdes |
+| 6 | FASE-T4-B | ⚠️ Completada con reserva | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Bot 4: HonestyReviewer — lee CG-* en 2 archivos (12 entradas / 10 distintos) + sobre-presentación vs tier + 3 escenarios; 7 tests de fase. Reserva: desvío **D-T4B-A1** (auditoría 2026-09-11) — el revisor no operaba sobre los artefactos reales; remediación R1–R9 ejecutada el mismo día (+22 tests). Cableado en pipeline diferido a FASE-E2E (decisión Q1) |
 | 7 | FASE-E2E | ⬜ Pendiente | — | — | — | v4complete Salento Real |
 | 8 | FASE-VERIFY | ⬜ Pendiente | — | — | — | Certificación ACs |
 | 9 | FASE-RELEASE-4.76.0 | ⬜ Pendiente | — | — | — | Cierre + archivado |
@@ -102,19 +102,34 @@
 - [x] `09-documentacion-post-proyecto.md` actualizado
 - [x] `10-analisis-post-implementacion.md` actualizado (lecciones + DA-T4A)
 
-### FASE-T4-B — Revisor de Honestidad NL (Bot 4)
+### FASE-T4-B — Revisor de Honestidad NL (Bot 4) — ⚠️ Completada con reserva
+
+> **Nota de alcance (R7 de la auditoría 2026-09-11)**: Bot 4 **no** cubre la sección 5 del plan en su totalidad. De las 6 responsabilidades declaradas, están implementadas §5.2 (sobre-presentación), §5.3 (3 escenarios) y §5.6 (CG-* de ambos archivos). **§5.1, §5.4 y §5.5 están diferidas con dueño** (E2E / VERIFY, ACs propuestos AC17/AC18/AC19) — ver `10-analisis` §Seguimientos. Ninguna de las tres figura en los 5 checkboxes de aceptación de la fase, así que no violó sus AC; esta nota existe para que el checklist no se lea como cobertura completa de §5.
 
 - [x] `modules/quality_gates/tribunal/honesty_reviewer.py` implementado
-- [x] `revision_honestidad.json` con `findings[]` (AC11)
-- [x] Bot 4 detecta CG-WHATSAPP-LEAD del archivo diagnóstico (AC12)
-- [x] Lee AMBOS archivos comerciales (canónico + diagnóstico)
-- [x] Tests con LLM mockeado verdes (7 tests)
+- [x] `HonestyReviewer` exportado en `modules/quality_gates/tribunal/__init__.py` (**R2**, contrato de `dependencias-fases.md` que la fase no cumplió)
+- [ ] `revision_honestidad.json` con `findings[]` en output real (**AC11**) — ⚠️ **no producido**: ningún `revision_*.json` existe en `output/` porque los 4 revisores no están cableados en el pipeline. Entregable de **FASE-E2E** (decisión Q1, Vía A). El acta sí se escribe y re-leé a nivel test, incluido el baseline real
+- [x] Bot 4 detecta `CG-WHATSAPP-LEAD` del archivo diagnóstico sobre **la propuesta real** (**AC12**, ⚠️ a nivel test; certificación en artefacto pendiente de E2E)
+- [x] Lee AMBOS archivos comerciales (canónico + diagnóstico) y **funciona sobre los artefactos del pipeline** (**R1**: `artifact_paths.py`, antes devolvía `total_cg_count: 0`)
+- [x] Tests con LLM mockeado verdes (7 tests de fase) + **22 de la remediación**
 - [x] Test de serialización (R2.4)
 - [x] `run_all_validations.py --quick` TOTAL PASS (8/8)
-- [x] Baseline pre/post en `evidence/FASE-T4-B/`
+- [x] Baseline pre/post en `evidence/FASE-T4-B/` — ⚠️ el par original estaba contaminado; NR1 recompuesto con `tests_baseline_pre_T4B_fase_real.txt` + `rectificacion-NR1.md` (**R4**)
 - [x] `log_phase_completion.py` ejecutado
 - [x] `09-documentacion-post-proyecto.md` actualizado
-- [x] `10-analisis-post-implementacion.md` actualizado (3 lecciones: L-T4B.1/2/3)
+- [x] `10-analisis-post-implementacion.md` actualizado (5 lecciones: L-T4B.1–L-T4B.5; decisiones DA-T4B.1–.6 registrando Q1–Q4; desvío D-T4B-A1)
+
+**Remediación R1–R9 (auditoría 2026-09-11)**:
+- [x] **R1** — resolución compartida de `02_PROPUESTA_COMERCIAL*` (corrige también el defecto idéntico de T4-A)
+- [x] **R1.2** — `test_honesty_reviewer_retro_reales.py` sobre el baseline real, con skip si falta
+- [x] **R2** — export en `__init__.py`
+- [x] **R3** — decisión Q1 (Vía A): cableado diferido a E2E con fila y dueño; R3.2 extractor obligatorio
+- [x] **R4** — NR1 recompuesto con baseline medido + nota de rectificación (registro original conservado)
+- [x] **R5** — falsedades factuales corregidas en `evidencia-final.md` y L-T4B.1 (nombres de test, archivos, gates, ACs, cifras)
+- [x] **R6** — `DISCLOSURE_PHRASES_BY_GATE` (decisión Q2) + L-T4B.3 reescrita a lo que el código hace
+- [x] **R7** — §5.1/§5.4/§5.5 diferidas con dueño y nota (decisión Q3)
+- [x] **R8** — `distinct_cg_count`/`duplicate_gate_ids` (decisión Q4), tier propagado, `Path` resuelto una vez, `all_gates` reducido, extensiones de schema registradas
+- [x] **R9** — nota NR4 (verificar consistencia ≠ recalcular) + 2 tests de contrato
 
 ### FASE-E2E — v4complete Hotel Salento Real
 

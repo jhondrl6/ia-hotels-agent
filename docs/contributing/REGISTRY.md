@@ -11029,21 +11029,58 @@ _Ninguno_
 
 
 ## FASE-T4-B - 2026-09-11
-**Descripcion:** Bot 4: revisor de honestidad comercial (12 CG-* en 2 archivos, sobre-presentación, escenarios 70/20/10)
+**Descripcion:** Bot 4: revisor de honestidad comercial (CG-* en 2 archivos: 12 entradas = 10 gate_ids distintos; sobre-presentación vs tier; 3 escenarios)
+**Estado:** ⚠️ Completada con reserva — desvío **D-T4B-A1** detectado por auditoría forense el 2026-09-11 y remediado el mismo día (ver entrada FASE-T4-B-REMEDICION más abajo)
 
 ### Archivos Nuevos
 | Archivo | Tipo | Descripcion |
 |---------|------|-------------|
 | `modules/quality_gates/tribunal/honesty_reviewer.py` | NUEVO | Honesty Reviewer |
-| `tests/quality_gates/tribunal/test_honesty_reviewer.py` | NUEVO | Test Honesty Reviewer |
+| `tests/quality_gates/tribunal/test_honesty_reviewer.py` | NUEVO | Test Honesty Reviewer (7 tests: `test_reads_both_commercial_files`, `test_cg_whatsapp_lead_detected`, `test_over_presentation_detected`, `test_missing_scenario_detected`, `test_tier_mismatch_detected`, `test_serialization_to_disk`, `test_mock_extractor_no_real_llm`) |
 
 ### Archivos Modificados
-_Ninguno_
+_Ninguno_ (la fase no tocó `main.py`, `judge.py`, `llm_extractor.py` ni `ROADMAP.md`)
 
 ### Validaciones
 - [x] Tests passing (7)
 - [x] Suite NEVER_BLOCK passing
-- [x] Capability contract verificado
+- [ ] ~~Capability contract verificado~~ → **NO cumplido por la fase**: `HonestyReviewer` no quedó exportado en `modules/quality_gates/tribunal/__init__.py`, contrato que `dependencias-fases.md` declara a su cargo. Cerrado en la remediación (R2)
+- [ ] ~~`revision_honestidad.json` entregable~~ → el artefacto **no se produjo** en la fase: ningún `revision_*.json` existe en `output/` porque los 4 revisores no están cableados en el pipeline. Entregable de FASE-E2E
+
+---
+
+## FASE-T4-B-REMEDICION - 2026-09-11
+**Descripcion:** Remediación R1–R9 del desvío D-T4B-A1 (auditoría forense de sola lectura). El revisor no operaba sobre los artefactos del pipeline: devolvía `total_cg_count: 0` y un veredicto `BLOQUEAR` espurio porque `02_PROPUESTA_COMERCIAL*.md` vive en `v4_complete/`, no en `v4_audit_dir`
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/quality_gates/tribunal/artifact_paths.py` | NUEVO | Resolutor compartido de rutas de artefactos del tribunal (R1) |
+| `tests/quality_gates/tribunal/test_honesty_reviewer_retro_reales.py` | NUEVO | 7 tests retro sobre el baseline real, con skip si falta (R1.2) |
+| `tests/quality_gates/tribunal/test_tribunal_propuesta_ubicacion.py` | NUEVO | 4 tests del contrato de ubicación de la propuesta (R1) |
+| `tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py` | NUEVO | 11 tests de fidelidad de salida y contrato NR4 (R6/R8/R9) |
+| `evidence/FASE-T4-B/rectificacion-NR1.md` | NUEVO | Rectificación del par pre/post contaminado, conservando el registro original (R4) |
+| `evidence/FASE-T4-B/remediacion-d-t4b-a1.md` | NUEVO | Dossier de la remediación: Q1–Q4, salidas G1–G11 y leccion capitalizable |
+| `evidence/FASE-T4-B/sonda_contraste_pre_post.py` | NUEVO | Sonda reproducible que yuxtapone el revisor de `HEAD` y el del arbol sobre el baseline real |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/tribunal/honesty_reviewer.py` | R1 rutas, R6 divulgación por frases (`DISCLOSURE_PHRASES_BY_GATE`), R8 conteos/tier/`Path` reportado/`all_gates` reducido, R3.2 extractor obligatorio |
+| `modules/quality_gates/tribunal/alignment_reviewer.py` | R1 — mismo defecto de resolución (arrastrado desde T4-A) |
+| `modules/quality_gates/tribunal/__init__.py` | R2 — export de `HonestyReviewer` |
+| `evidence/FASE-T4-B/evidencia-final.md` | R4/R5 — NR1 recompuesto, 7 nombres reales, archivos y gates reales, AC11/AC12 con estado honesto |
+| `.opencode/plans/TRIBUNAL-OFFLINE-2026-09-09/{06,09,10,README,dependencias-fases}.md` | Estado ⚠️ de T4-B, L-T4B.1/.3 corregidas, L-T4B.4/.5 nuevas, DA-T4B.1–.6 (Q1–Q4), seguimientos, métricas re-medidas |
+| `AGENTS.md` | Cifra global de funciones de test re-medida con el método canónico del documento |
+
+### Validaciones
+- [x] `pytest tests/quality_gates/tribunal` → 114 passed (92 + 22 nuevos)
+- [x] Sonda sobre el baseline real: `propuesta cargada: True`, 12 entradas / 10 distintos, `evidence_tier_declared: "B"`, veredicto `DEVOLVER-PRUEBAS` por hallazgo real (antes: `total_cg_count: 0` / `BLOQUEAR` espurio)
+- [x] `from modules.quality_gates.tribunal import HonestyReviewer` → ok
+- [x] Suite completa: `3 failed, 4020 passed, 32 skipped, 4 xfailed` (0 regresión vs. los 3 preexistentes de `aba517a`; skipped delta 0)
+- [x] NR1 de la remediación: `4020 = 3998 + 22`, colectados `4036 → 4058`
+- [x] `run_all_validations.py --quick` 8/8
+- [x] Restricciones vigentes respetadas: `main.py`, `judge.py`, `llm_extractor.py`, `ROADMAP.md` intactos; sin `v4complete`; sin LLM real en tests; citas por símbolo
 
 ---
 

@@ -1,7 +1,7 @@
 """HonestyReviewer — Bot 4 del tribunal de certificación.
 
 Revisor híbrido que detecta sobre-presentación de datos ESTIMATED como verificados,
-verifica que los 3 escenarios (70/20/10) están presentes, y lee los 12 CG-* repartidos
+verifica que los 3 escenarios (70/20/10) están presentes, y lee los CG-* repartidos
 en DOS archivos comerciales (canónico + diagnóstico).
 
 Flujo:
@@ -10,9 +10,15 @@ Flujo:
 3. Clasifica: OVER_PRESENTATION / TIER_MISMATCH / CG_WARNING_UNDISCLOSED / MISSING_SCENARIO
 4. Produce revision_honestidad.json
 
-CRÍTICO: El reporte comercial está PARTIDO en dos archivos. Leer solo el canónico
+CRÍTICO 1: El reporte comercial está PARTIDO en dos archivos. Leer solo el canónico
 produce falso "todo pasó". El único gate que falló en la corrida real (CG-WHATSAPP-LEAD)
 está en el archivo de diagnóstico.
+
+CRÍTICO 2: La propuesta no vive en v4_audit_dir sino en v4_complete/, así que su
+resolución se hace con el resolutor compartido del paquete (``artifact_paths``).
+
+CRÍTICO 3: Los dos archivos comparten gate_ids, por lo que el conteo se reporta como
+entradas Y como gate_ids distintos; los hallazgos se emiten una vez por gate_id.
 """
 
 import json
@@ -21,8 +27,17 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+from modules.quality_gates.tribunal.artifact_paths import (
+    CG_CANONICAL_PATTERN,
+    CG_DIAGNOSTIC_PATTERN,
+    FINANCIAL_SCENARIOS_PATTERN,
+    PROPOSAL_PATTERN,
+    load_json,
+    pick_most_recent,
+    read_text,
+    resolve_latest,
+)
 from modules.quality_gates.tribunal.llm_extractor import (
-    LLMPromiseExtractor,
     PromiseExtractor,
     VerbalPromise,
 )
@@ -33,6 +48,8 @@ FINDING_TIER_MISMATCH = "TIER_MISMATCH"
 FINDING_CG_WARNING_UNDISCLOSED = "CG_WARNING_UNDISCLOSED"
 FINDING_MISSING_SCENARIO = "MISSING_SCENARIO"
 
+FINDING_MISSING_ARTIFACT = "MISSING_ARTIFACT"
+
 VERDICT_APROBADO = "APROBADO"
 VERDICT_DEVOLVER = "DEVOLVER-PRUEBAS"
 VERDICT_BLOQUEAR = "BLOQUEAR"
@@ -42,6 +59,36 @@ SCENARIO_LABELS = {
     "conservative": "conservador (70%)",
     "realistic": "realista (20%)",
     "optimistic": "optimista (10%)",
+}
+
+# Frases que nombran el PROBLEMA que cada WARNING detectó. Un gate_id sin entrada aquí
+# no se juzga: adivinar divulgación con tokens sueltos produce falsos positivos (una
+# propuesta que solo lista el número de contacto "divulgaría" CG-WHATSAPP-LEAD).
+DISCLOSURE_PHRASES_BY_GATE = {
+    "CG-WHATSAPP-LEAD": [
+        "no aparece en la sección inicial",
+        "sección inicial del diagnóstico",
+        "número equivocado",
+        "whatsapp web vs gbp",
+        "abrir el diagnóstico",
+        "gancho emocional",
+    ],
+    "CG-OTA-NARRATIVE": [
+        "sin narrativa ota",
+        "narrativa ota",
+        "dependencia de ota",
+        "mención a booking",
+    ],
+    "CG-TECH-JARGON": [
+        "jerga técnica",
+        "lenguaje técnico",
+        "términos técnicos",
+    ],
+    "CG-TIER-CONSISTENCY": [
+        "tier inconsistente",
+        "inconsistencia de tier",
+        "tier declarado",
+    ],
 }
 
 
@@ -68,28 +115,31 @@ class HonestyReviewer:
         """Resuelve deliveries_dir como v4_audit_dir/../deliveries."""
         return self.v4_audit_dir.parent.parent / "deliveries"
 
-    def review(self, extractor: Optional[PromiseExtractor] = None) -> dict:
+    def review(self, extractor: PromiseExtractor) -> dict:
         """Retorna revision_honestidad.json con findings y commercial_gates_read.
 
         Args:
-            extractor: Extractor de claims (si es None, usa LLMPromiseExtractor).
+            extractor: Extractor de claims, obligatorio. El tribunal corre en modo
+                offline y quien invoque desde el pipeline debe decidir qué extractor
+                usa; no existe un default que instancie el LLM real.
         """
-        proposal_text = self._load_proposal()
-        financial_scenarios = self._load_financial_scenarios()
-        manifest = self._load_manifest()
-        cg_canonical = self._load_commercial_gates_canonical()
-        cg_diagnostic = self._load_commercial_gates_diagnostic()
+        paths = self._resolve_artifact_paths()
+        proposal_text = read_text(paths["proposal"])
+        financial_scenarios = load_json(paths["scenarios"])
+        manifest = load_json(paths["manifest"])
 
         if proposal_text is None:
             return self._error_report("No se encontró 02_PROPUESTA_COMERCIAL*.md")
         if financial_scenarios is None:
             return self._error_report("No se encontró financial_scenarios_*.json")
 
-        if extractor is None:
-            extractor = LLMPromiseExtractor()
+        cg_canonical = load_json(paths["cg_canonical"])
+        cg_diagnostic = load_json(paths["cg_diagnostic"])
+        commercial_gates_read = self._merge_commercial_gates(
+            cg_canonical, cg_diagnostic, paths["cg_canonical"], paths["cg_diagnostic"]
+        )
 
         findings = []
-        commercial_gates_read = self._merge_commercial_gates(cg_canonical, cg_diagnostic)
 
         evidence_tier = self._extract_evidence_tier(manifest, financial_scenarios)
         precision_tier = self._extract_precision_tier(manifest, financial_scenarios)
@@ -104,13 +154,13 @@ class HonestyReviewer:
             if tier_mismatch:
                 findings.append(tier_mismatch)
 
-        missing_scenario = self._check_missing_scenarios(financial_scenarios)
+        missing_scenario = self._check_missing_scenarios(financial_scenarios, evidence_tier)
         if missing_scenario:
             findings.extend(missing_scenario)
 
-        cg_warnings = self._extract_cg_warnings(commercial_gates_read)
+        cg_warnings = self._extract_cg_warnings(cg_canonical, cg_diagnostic)
         for warning in cg_warnings:
-            undisclosed = self._check_cg_warning_undisclosed(warning, proposal_text)
+            undisclosed = self._check_cg_warning_undisclosed(warning, proposal_text, evidence_tier)
             if undisclosed:
                 findings.append(undisclosed)
 
@@ -128,7 +178,7 @@ class HonestyReviewer:
             "artifacts_read": self._list_artifacts_read(),
         }
 
-    def write_report(self, extractor: Optional[PromiseExtractor] = None, output_path: Optional[Path] = None) -> Path:
+    def write_report(self, extractor: PromiseExtractor, output_path: Optional[Path] = None) -> Path:
         """Escribe revision_honestidad.json y retorna la ruta."""
         report = self.review(extractor)
         if output_path is None:
@@ -138,124 +188,87 @@ class HonestyReviewer:
             json.dump(report, f, indent=2, ensure_ascii=False)
         return output_path
 
+    def _resolve_artifact_paths(self) -> dict:
+        """Resuelve cada artefacto una sola vez: el nombre reportado es el archivo leído."""
+        return {
+            "proposal": resolve_latest(PROPOSAL_PATTERN, self.v4_audit_dir, self.deliveries_dir),
+            "scenarios": resolve_latest(FINANCIAL_SCENARIOS_PATTERN, self.v4_audit_dir),
+            "manifest": self._resolve_manifest_path(),
+            "cg_canonical": resolve_latest(CG_CANONICAL_PATTERN, self.v4_audit_dir),
+            "cg_diagnostic": resolve_latest(CG_DIAGNOSTIC_PATTERN, self.v4_audit_dir),
+        }
+
+    def _resolve_manifest_path(self) -> Optional[Path]:
+        """Resuelve MANIFEST.json en deliveries_dir (más reciente)."""
+        if not self.deliveries_dir.exists():
+            return None
+        return pick_most_recent(self.deliveries_dir.glob("*/MANIFEST.json"))
+
     def _load_proposal(self) -> Optional[str]:
         """Carga 02_PROPUESTA_COMERCIAL*.md (más reciente)."""
-        pattern = "02_PROPUESTA_COMERCIAL*.md"
-        matches = sorted(
-            self.v4_audit_dir.glob(pattern),
-            key=lambda p: p.stat().st_mtime if p.exists() else 0,
-            reverse=True,
-        )
-        if not matches:
-            matches = sorted(
-                self.v4_audit_dir.parent.glob(pattern),
-                key=lambda p: p.stat().st_mtime if p.exists() else 0,
-                reverse=True,
-            )
-        if not matches:
-            return None
-        try:
-            with open(matches[0], "r", encoding="utf-8") as f:
-                return f.read()
-        except OSError:
-            return None
+        return read_text(resolve_latest(PROPOSAL_PATTERN, self.v4_audit_dir, self.deliveries_dir))
 
     def _load_financial_scenarios(self) -> Optional[dict]:
         """Carga financial_scenarios_*.json (más reciente)."""
-        pattern = "financial_scenarios_*.json"
-        matches = sorted(
-            self.v4_audit_dir.glob(pattern),
-            key=lambda p: p.stat().st_mtime if p.exists() else 0,
-            reverse=True,
-        )
-        if not matches:
-            return None
-        try:
-            with open(matches[0], "r", encoding="utf-8") as f:
-                return json.load(f)
-        except (json.JSONDecodeError, OSError):
-            return None
+        return load_json(resolve_latest(FINANCIAL_SCENARIOS_PATTERN, self.v4_audit_dir))
 
     def _load_manifest(self) -> Optional[dict]:
         """Carga MANIFEST.json desde deliveries_dir (más reciente)."""
-        if not self.deliveries_dir.exists():
-            return None
-        pattern = "*/MANIFEST.json"
-        matches = sorted(
-            self.deliveries_dir.glob(pattern),
-            key=lambda p: p.stat().st_mtime if p.exists() else 0,
-            reverse=True,
-        )
-        if not matches:
-            return None
-        try:
-            with open(matches[0], "r", encoding="utf-8") as f:
-                return json.load(f)
-        except (json.JSONDecodeError, OSError):
-            return None
+        return load_json(self._resolve_manifest_path())
 
     def _load_commercial_gates_canonical(self) -> Optional[dict]:
         """Carga commercial_gates_report.json (archivo canónico con 3 gates)."""
-        path = self.v4_audit_dir / "commercial_gates_report.json"
-        if not path.exists():
-            return None
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except (json.JSONDecodeError, OSError):
-            return None
+        return load_json(resolve_latest(CG_CANONICAL_PATTERN, self.v4_audit_dir))
 
     def _load_commercial_gates_diagnostic(self) -> Optional[dict]:
         """Carga commercial_gates_report_diagnostic_*.json (9 gates adicionales)."""
-        pattern = "commercial_gates_report_diagnostic_*.json"
-        matches = sorted(
-            self.v4_audit_dir.glob(pattern),
-            key=lambda p: p.stat().st_mtime if p.exists() else 0,
-            reverse=True,
-        )
-        if not matches:
-            return None
-        try:
-            with open(matches[0], "r", encoding="utf-8") as f:
-                return json.load(f)
-        except (json.JSONDecodeError, OSError):
-            return None
+        return load_json(resolve_latest(CG_DIAGNOSTIC_PATTERN, self.v4_audit_dir))
 
-    def _merge_commercial_gates(self, canonical: Optional[dict], diagnostic: Optional[dict]) -> dict:
+    def _merge_commercial_gates(self, canonical: Optional[dict], diagnostic: Optional[dict],
+                                canonical_path: Optional[Path] = None,
+                                diagnostic_path: Optional[Path] = None) -> dict:
         """Une los CG-* de AMBOS archivos y reporta metadata de lectura.
 
         CRÍTICO: Leer solo el canónico produce falso "todo pasó". El único gate
         que falló en la corrida real (CG-WHATSAPP-LEAD) está en el diagnóstico.
+
+        Los dos archivos comparten gate_ids, así que `total_cg_count` cuenta entradas
+        y `distinct_cg_count` cuenta gate_ids únicos; `duplicate_gate_ids` explicita la
+        diferencia en vez de dejarla ambigua.
         """
         all_gates = []
         warnings_found = []
-        canonical_file = None
-        diagnostic_file = None
+        seen_gate_ids = set()
+        duplicate_gate_ids = []
 
-        if canonical:
-            canonical_file = "commercial_gates_report.json"
-            for gate in canonical.get("results", []):
-                all_gates.append(gate)
-                if gate.get("severity") == "WARNING" and not gate.get("passed", True):
-                    warnings_found.append(gate.get("gate_id"))
-
-        if diagnostic:
-            pattern = "commercial_gates_report_diagnostic_*.json"
-            matches = list(self.v4_audit_dir.glob(pattern))
-            if matches:
-                diagnostic_file = matches[0].name
-            for gate in diagnostic.get("results", []):
-                all_gates.append(gate)
-                if gate.get("severity") == "WARNING" and not gate.get("passed", True):
-                    warnings_found.append(gate.get("gate_id"))
+        for gate in self._iter_source_gates(canonical, diagnostic):
+            gate_id = gate.get("gate_id")
+            all_gates.append({
+                "gate_id": gate_id,
+                "severity": gate.get("severity"),
+                "passed": gate.get("passed"),
+            })
+            if gate_id in seen_gate_ids and gate_id not in duplicate_gate_ids:
+                duplicate_gate_ids.append(gate_id)
+            seen_gate_ids.add(gate_id)
+            if gate.get("severity") == "WARNING" and not gate.get("passed", True):
+                if gate_id not in warnings_found:
+                    warnings_found.append(gate_id)
 
         return {
-            "canonical_file": canonical_file,
-            "diagnostic_file": diagnostic_file,
+            "canonical_file": canonical_path.name if canonical else None,
+            "diagnostic_file": diagnostic_path.name if diagnostic else None,
             "total_cg_count": len(all_gates),
+            "distinct_cg_count": len(seen_gate_ids),
+            "duplicate_gate_ids": duplicate_gate_ids,
             "warnings_found": warnings_found,
             "all_gates": all_gates,
         }
+
+    @staticmethod
+    def _iter_source_gates(canonical: Optional[dict], diagnostic: Optional[dict]) -> list[dict]:
+        """Gates crudos de ambos archivos, en orden canónico → diagnóstico."""
+        return list((canonical or {}).get("results", [])) + list((diagnostic or {}).get("results", []))
 
     def _extract_evidence_tier(self, manifest: Optional[dict], financial_scenarios: Optional[dict]) -> str:
         """Extrae evidence_tier del MANIFEST o financial_scenarios."""
@@ -339,7 +352,7 @@ class HonestyReviewer:
 
         return None
 
-    def _check_missing_scenarios(self, financial_scenarios: dict) -> list[dict]:
+    def _check_missing_scenarios(self, financial_scenarios: dict, evidence_tier: str) -> list[dict]:
         """Detecta MISSING_SCENARIO: falta alguno de los 3 escenarios (70/20/10)."""
         findings = []
         scenarios = financial_scenarios.get("scenarios", {})
@@ -350,57 +363,63 @@ class HonestyReviewer:
                     "severity": "CRITICAL",
                     "type": FINDING_MISSING_SCENARIO,
                     "claim_text": None,
-                    "evidence_tier_declared": self._extract_evidence_tier(None, financial_scenarios),
+                    "evidence_tier_declared": evidence_tier,
                     "cg_reference": None,
                     "description": f"Falta escenario {SCENARIO_LABELS.get(key, key)}",
                 })
 
         return findings
 
-    def _extract_cg_warnings(self, commercial_gates_read: dict) -> list[dict]:
-        """Extrae CG-* WARNING que no pasaron de all_gates."""
+    def _extract_cg_warnings(self, canonical: Optional[dict], diagnostic: Optional[dict]) -> list[dict]:
+        """Extrae CG-* WARNING que no pasaron, una entrada por gate_id.
+
+        Sin deduplicar, un gate presente en ambos archivos produciría dos findings
+        idénticos.
+        """
         warnings = []
-        for gate in commercial_gates_read.get("all_gates", []):
-            if gate.get("severity") == "WARNING" and not gate.get("passed", True):
-                warnings.append({
-                    "gate_id": gate.get("gate_id"),
-                    "name": gate.get("name"),
-                    "message": gate.get("message"),
-                    "suggestion": gate.get("suggestion"),
-                })
+        seen_gate_ids = set()
+        for gate in self._iter_source_gates(canonical, diagnostic):
+            gate_id = gate.get("gate_id")
+            if gate.get("severity") != "WARNING" or gate.get("passed", True):
+                continue
+            if gate_id in seen_gate_ids:
+                continue
+            seen_gate_ids.add(gate_id)
+            warnings.append({
+                "gate_id": gate_id,
+                "name": gate.get("name"),
+                "message": gate.get("message"),
+                "suggestion": gate.get("suggestion"),
+            })
         return warnings
 
-    def _check_cg_warning_undisclosed(self, warning: dict, proposal_text: str) -> Optional[dict]:
-        """Detecta CG_WARNING_UNDISCLOSED: WARNING no divulgado en la propuesta.
+    def _check_cg_warning_undisclosed(self, warning: dict, proposal_text: str,
+                                       evidence_tier: str) -> Optional[dict]:
+        """Detecta CG_WARNING_UNDISCLOSED: la propuesta no divulga el problema.
 
-        Si la propuesta no menciona el problema que el WARNING detectó, es un
-        warning no divulgado.
+        Se busca una frase que nombre el problema que el WARNING detectó
+        (``DISCLOSURE_PHRASES_BY_GATE``), no palabras sueltas: una propuesta que solo
+        lista el número de contacto menciona "WhatsApp" sin divulgar nada. Un gate_id
+        sin entrada en la tabla no se juzga, para no afirmar divulgación sin criterio.
         """
         gate_id = warning.get("gate_id", "")
-        message = warning.get("message", "").lower()
+        phrases = DISCLOSURE_PHRASES_BY_GATE.get(gate_id)
+        if not phrases:
+            return None
 
-        keywords_by_gate = {
-            "CG-WHATSAPP-LEAD": ["whatsapp", "número", "mensaje"],
-            "CG-OTA-NARRATIVE": ["ota", "booking", "expedia", "comisión"],
-            "CG-TECH-JARGON": ["jerga", "técnico", "api", "backend"],
-            "CG-TIER-CONSISTENCY": ["tier", "evidencia"],
-        }
-
-        keywords = keywords_by_gate.get(gate_id, [])
         proposal_lower = proposal_text.lower()
+        disclosed = any(phrase in proposal_lower for phrase in phrases)
+        if disclosed:
+            return None
 
-        mentioned = any(kw in proposal_lower for kw in keywords)
-        if not mentioned:
-            return {
-                "severity": "WARNING",
-                "type": FINDING_CG_WARNING_UNDISCLOSED,
-                "claim_text": None,
-                "evidence_tier_declared": self._extract_evidence_tier(None, None),
-                "cg_reference": gate_id,
-                "description": f"CG-* WARNING {gate_id} no divulgado en propuesta: {warning.get('message', '')[:100]}",
-            }
-
-        return None
+        return {
+            "severity": "WARNING",
+            "type": FINDING_CG_WARNING_UNDISCLOSED,
+            "claim_text": None,
+            "evidence_tier_declared": evidence_tier,
+            "cg_reference": gate_id,
+            "description": f"CG-* WARNING {gate_id} no divulgado en propuesta: {warning.get('message', '')[:100]}",
+        }
 
     def _compute_summary(self, findings: list) -> dict:
         """Calcula resumen de hallazgos."""
@@ -427,13 +446,17 @@ class HonestyReviewer:
         return VERDICT_APROBADO
 
     def _error_report(self, message: str) -> dict:
-        """Retorna reporte de error cuando faltan artefactos."""
+        """Retorna reporte de error cuando falta un artefacto imprescindible.
+
+        ``MISSING_ARTIFACT`` es la extensión de schema documentada: el error necesita
+        expresarse como hallazgo y ese tipo no estaba en el enumerado del plan.
+        """
         return {
             "reviewer": "honesty_reviewer",
             "clause": "P6.5",
             "findings": [{
                 "severity": "CRITICAL",
-                "type": "MISSING_ARTIFACT",
+                "type": FINDING_MISSING_ARTIFACT,
                 "claim_text": None,
                 "evidence_tier_declared": "UNKNOWN",
                 "cg_reference": None,
@@ -443,7 +466,10 @@ class HonestyReviewer:
                 "canonical_file": None,
                 "diagnostic_file": None,
                 "total_cg_count": 0,
+                "distinct_cg_count": 0,
+                "duplicate_gate_ids": [],
                 "warnings_found": [],
+                "all_gates": [],
             },
             "summary": {
                 "over_presentations": 0,

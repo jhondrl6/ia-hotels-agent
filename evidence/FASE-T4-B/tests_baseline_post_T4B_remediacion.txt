@@ -1,0 +1,271 @@
+........................................................................ [  1%]
+................................................................s....... [  3%]
+........................................................................ [  5%]
+........................................................................ [  7%]
+........................................................................ [  8%]
+........................................................................ [ 10%]
+........................................................................ [ 12%]
+........................................................................ [ 14%]
+...............................................s........................ [ 15%]
+........................................................................ [ 17%]
+........................................................................ [ 19%]
+........................................................................ [ 21%]
+........................................................................ [ 23%]
+........................................................................ [ 24%]
+........................................................................ [ 26%]
+........................................................................ [ 28%]
+...........................................................s............ [ 30%]
+........................................................................ [ 31%]
+........................................................................ [ 33%]
+........................................................................ [ 35%]
+...................................................................s.sss [ 37%]
+........................................................................ [ 39%]
+........................................................................ [ 40%]
+.........x.............................................................. [ 42%]
+........................................................................ [ 44%]
+........................................................................ [ 46%]
+.......................................................................F [ 47%]
+........................................................................ [ 49%]
+........................................................................ [ 51%]
+........................................................................ [ 53%]
+........................................................................ [ 55%]
+........................................................................ [ 56%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 62%]
+........................................................................ [ 63%]
+........................................................................ [ 65%]
+........................................................................ [ 67%]
+.......................................................................s [ 69%]
+........................................................................ [ 70%]
+........................................................................ [ 72%]
+.......................................s.....s.............ss........... [ 74%]
+...............................F........................................ [ 76%]
+.......................s................................................ [ 78%]
+.............................................................x.......... [ 79%]
+.......................F................................................ [ 81%]
+........................sssss..s................................sss.s... [ 83%]
+.....s.................................s................................ [ 85%]
+........................................................................ [ 86%]
+..........................ss............................................ [ 88%]
+........................................................................ [ 90%]
+...........................................................sss.......... [ 92%]
+........................................................................ [ 94%]
+...................s.................................................... [ 95%]
+........................................................................ [ 97%]
+........................................................................ [ 99%]
+........................xx                                               [100%]
+================================== FAILURES ===================================
+______ TestCalculatePriceWithShadowFunction.test_function_default_flags _______
+
+self = <financial_engine.test_pricing_resolution_wrapper.TestCalculatePriceWithShadowFunction object at 0x000001FE1FB2A3F0>
+
+    def test_function_default_flags(self):
+        """Test function works with default flags (SHADOW mode)."""
+        result = calculate_price_with_shadow(
+            rooms=20,
+            expected_loss_cop=50_000_000,
+        )
+    
+        # Default is SHADOW mode, but legacy is returned
+        assert isinstance(result, PricingResolutionResult)
+>       assert result.monthly_price_cop == 2_500_000  # legacy 5% of 50M
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 437500.0 == 2500000
+E        +  where 437500.0 = PricingResolutionResult(monthly_price_cop=437500.0, tier='boutique', pain_ratio=0.0088, is_compliant=False, expected_l...0000.0, 'max_price': 2500000.0, 'value_capture_cap': 0.5, 'operational_floor': 400000.0, 'pain_ratio_gate_max': 0.32}}).monthly_price_cop
+
+tests\financial_engine\test_pricing_resolution_wrapper.py:606: AssertionError
+____ TestDocumentacionDelContrato.test_barreda_un_solo_emisor_de_la_clave _____
+
+self = <test_asset_path_clave_canonica.TestDocumentacionDelContrato object at 0x000001FE2041ED70>
+
+    def test_barreda_un_solo_emisor_de_la_clave(self):
+        """Barreda L-H6: `asset_path` la EMITE un solo archivo y la CONSUME uno.
+    
+        Un segundo emisor significaria una segunda superficie del mismo hecho sin
+        contrato; aqui se cuenta y se nombra, no se supone.
+        """
+        import re
+    
+        raiz = Path(__file__).resolve().parents[1] / "modules"
+        emite = re.compile(r"""["']asset_path["']\s*:""")
+        consume = re.compile(r"""\[\s*["']asset_path["']\s*\]|get\(\s*["']asset_path["']""")
+        emisores: set = set()
+        consumidores: set = set()
+        for py in sorted(raiz.rglob("*.py")):
+            texto = py.read_text(encoding="utf-8")
+            rel = py.relative_to(raiz).as_posix()
+            if emite.search(texto):
+                emisores.add(rel)
+            if consume.search(texto):
+                consumidores.add(rel)
+>       assert emisores == {"asset_generation/proposal_asset_alignment.py"}, emisores
+E       AssertionError: {'asset_generation/proposal_asset_alignment.py', 'quality_gates/tribunal/asset_reviewer.py'}
+E       assert {'asset_gener..._reviewer.py'} == {'asset_gener...alignment.py'}
+E         
+E         Extra items in the left set:
+E         'quality_gates/tribunal/asset_reviewer.py'
+E         Use -v to get more diff
+
+tests\test_asset_path_clave_canonica.py:139: AssertionError
+________ TestDiagnosticGEOMetrics.test_diagnostic_includes_geo_metrics ________
+
+self = <test_diagnostic_geo_metrics.TestDiagnosticGEOMetrics object at 0x000001FE2058F250>
+
+    def test_diagnostic_includes_geo_metrics(self):
+        """Test que verifica que el diagnóstico incluye métricas GEO."""
+        # Crear generador
+        generator = V4DiagnosticGenerator()
+    
+        # Crear mock audit_result con datos GEO
+        audit_result = Mock()
+        audit_result.ai_crawlers = MockAICrawlerAuditResult()
+        audit_result.citability = MockCitabilityResult()
+        audit_result.ia_readiness = MockIAReadinessReport()
+    
+        # Llamar al método
+        result = generator._build_geo_problems_table(audit_result)
+    
+        # Verificar que contiene las métricas
+>       assert "Métricas de Optimización para IA" in result
+E       AssertionError: assert 'Métricas de Optimización para IA' in '\n|| Métrica | Score | Detalle | Estado ||\n|---------|-------|---------|--------|\n| Accesibilidad IA | 0.65/1.00 | ...Estas métricas evalúan cómo los motores de IA (ChatGPT, Claude, Perplexity) pueden descubrir y citar su contenido.\n\n'
+
+tests\test_diagnostic_geo_metrics.py:68: AssertionError
+============================== warnings summary ===============================
+tests\analytics\test_data_aggregator.py:17
+  C:\Users\Jhond\Github\iah-cli\tests\analytics\test_data_aggregator.py:17: DeprecationWarning: Este módulo está deprecado y no se usa en el pipeline v4complete. Sus funciones son cubiertas por GoogleAnalyticsClient y GoogleSearchConsoleClient. Se eliminará en v5.0.0.
+    from modules.analytics.data_aggregator import (
+
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+<unknown>:855
+tests/commercial_documents/test_pain_map_bijection.py::test_narratives_no_tiene_huerfanos
+tests/common/test_service_identity_registry.py::test_mensaje_no_narra_el_tamano_de_un_registro_estatico[modules/commercial_documents/v4_diagnostic_generator.py]
+tests/common/test_service_identity_registry.py::test_pain_to_type_es_un_puente_valido
+tests/common/test_service_identity_registry.py::test_narratives_subset_de_capa1
+tests/test_cop_cop_regression.py::TestNoCOPCOPRegression::test_no_cop_cop_in_modules
+  <unknown>:855: SyntaxWarning: invalid escape sequence '\W'
+
+tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/asset_generation/test_content_gates.py::TestContentGates::test_performance_audit_generates_with_zeros
+  C:\Users\Jhond\Github\iah-cli\tests\asset_generation\test_content_gates.py:84: DeprecationWarning: support for supplying keyword arguments to pathlib.PurePath is deprecated and scheduled for removal in Python 3.14
+    content = Path(result["file_path"], errors='ignore').read_text(encoding='utf-8', errors='ignore')
+
+tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/auditors/test_pagespeed_auditor_v2.py: 10 warnings
+tests/auditors/test_v4_comprehensive_competitors.py: 2 warnings
+tests/data_validation/test_metadata_validator.py: 20 warnings
+tests/data_validation/test_schema_validator_v2.py: 14 warnings
+tests/test_hotel_visperas_regression.py: 11 warnings
+  <string>:9: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+
+tests/financial_engine/test_adr_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_pricing_comparison_deltas
+  C:\Users\Jhond\Github\iah-cli\modules\financial_engine\shadow_logger.py:42: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return f"{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
+
+tests/financial_engine/test_adr_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_pricing_comparison_deltas
+  C:\Users\Jhond\Github\iah-cli\modules\financial_engine\shadow_logger.py:55: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow().isoformat(),
+
+tests/financial_engine/test_opportunity_scorer.py: 7 warnings
+tests/geo_enrichment/test_band_classification.py: 2 warnings
+tests/geo_enrichment/test_diagnose_hotelvisperas.py: 8 warnings
+tests/geo_enrichment/test_geo_dashboard.py: 13 warnings
+tests/geo_enrichment/test_hotel_schema_enricher.py: 14 warnings
+tests/geo_enrichment/test_llms_txt_generator.py: 9 warnings
+tests/regression/test_whatsapp_conflicts.py: 5 warnings
+tests/test_canonical_assessment.py: 51 warnings
+tests/test_hotel_visperas_regression.py: 13 warnings
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\main.py:250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+tests/test_audit_alignment.py::test_roas_calculation
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_roas_calculation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_package_recommendation
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_package_recommendation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_justification_block
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_justification_block returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_thresholds_loading
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_thresholds_loading returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_canonical_assessment.py::TestCanonicalAssessmentCreation::test_assessment_has_timestamp
+  C:\Users\Jhond\Github\iah-cli\tests\test_canonical_assessment.py:152: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    before = datetime.utcnow()
+
+tests/test_canonical_assessment.py::TestCanonicalAssessmentCreation::test_assessment_has_timestamp
+  C:\Users\Jhond\Github\iah-cli\tests\test_canonical_assessment.py:159: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    after = datetime.utcnow()
+
+tests/test_cop_cop_regression.py::TestNoCOPCOPRegression::test_no_cop_cop_in_modules
+  <unknown>:111: SyntaxWarning: invalid escape sequence '\)'
+
+tests/test_encoding_artifacts.py::TestEncodingContractStatic::test_no_write_text_without_encoding
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:111: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/test_encoding_artifacts.py::TestEncodingContractStatic::test_no_write_text_without_encoding
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+tests/test_harness_core.py::TestAgentHarness::test_run_task_calls_handler
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_success_on_valid_result
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_error_on_exception
+tests/test_harness_core.py::TestAgentHarness::test_run_task_logs_execution
+tests/test_harness_core.py::TestAgentHarness::test_run_task_injects_context_from_memory
+tests/test_harness_core.py::TestAgentHarness::test_validate_result_marks_empty_as_invalid
+  C:\Users\Jhond\Github\iah-cli\tests\..\agent_harness\core.py:201: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+FAILED tests/test_asset_path_clave_canonica.py::TestDocumentacionDelContrato::test_barreda_un_solo_emisor_de_la_clave
+FAILED tests/test_diagnostic_geo_metrics.py::TestDiagnosticGEOMetrics::test_diagnostic_includes_geo_metrics
+3 failed, 4020 passed, 32 skipped, 4 xfailed, 218 warnings in 139.82s (0:02:19)

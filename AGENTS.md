@@ -113,7 +113,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 3,934 funciones, 298 archivos, 0 regresion |
+| **Tests** | 4,060 funciones (canonico) / 4,058 colectadas, 292 archivos, 0 regresion (3 fallos preexistentes registrados en `aba517a`) |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -398,7 +398,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (3,934 funciones, 298 archivos)
+# Todas las pruebas (4,060 funciones canonicas / 4,058 colectadas, 292 archivos)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -413,16 +413,18 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (3,934 funciones totales)
+### Cobertura por Modulo (4,060 funciones totales)
 
-> Medido 2026-09-04 con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
-> (no `pytest --collect-only`, que da 3,932). Las filas suman el total.
+> Medido 2026-09-11 con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
+> (no `pytest --collect-only`, que da 4,058). Las filas suman el total.
+> Cifra anterior: 3,934 (medida 2026-09-04, antes del tribunal). La diferencia se concentra en
+> `quality_gates/` (573, incluye los 114 defs de `quality_gates/tribunal/`), `utils/` y los archivos raiz.
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
 | financial_engine | 549 | `tests/financial_engine/` |
 | asset_generation | 470 | `tests/asset_generation/` |
-| quality_gates | 459 | `tests/quality_gates/` |
+| quality_gates | 573 | `tests/quality_gates/` (573 = 459 pre-tribunal + 114 de `tribunal/`) |
 | commercial_documents | 351 | `tests/commercial_documents/` |
 | auditors | 202 | `tests/auditors/` |
 | geo_enrichment | 140 | `tests/geo_enrichment/` |
@@ -431,7 +433,7 @@ python scripts/run_all_validations.py           # Completo
 | orchestration_v4 | 93 | `tests/orchestration_v4/` |
 | delivery | 69 | `tests/delivery/` |
 | config | 61 | `tests/config/` |
-| utils | 57 | `tests/utils/` |
+| utils | 60 | `tests/utils/` |
 | postprocessors | 52 | `tests/postprocessors/` |
 | scrapers | 38 | `tests/scrapers/` |
 | common | 38 | `tests/common/` |
@@ -441,7 +443,7 @@ python scripts/run_all_validations.py           # Completo
 | providers | 18 | `tests/providers/` |
 | monitoring | 14 | `tests/monitoring/` |
 | archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
-| root test files | 768 | `tests/test_*.py` (integration, harness, data models) |
+| root test files | 777 | `tests/test_*.py` (integration, harness, data models) |
 
 ---
 
@@ -508,7 +510,7 @@ iah-cli/
 │   ├── common/                 # Loaders YAML/fallback compartidos
 │   ├── postprocessors/         # Quality gate + scrubber de contenido
 │   └── quality/                # Validadores semanticos y de coherencia financiera
-├── tests/                      # Suite de pruebas (3,934 funciones, 298 archivos)
+├── tests/                      # Suite de pruebas (4,060 funciones canonicas, 292 archivos)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/

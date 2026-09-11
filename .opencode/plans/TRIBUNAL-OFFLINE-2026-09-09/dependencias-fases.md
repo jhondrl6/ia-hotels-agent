@@ -43,8 +43,8 @@ FASE-T1 (Juez + contrato de acta)
 | FASE-T2-B ✅ | T1 ⚠️ | T4-A | Acta contract estable + `revision_assets.json` schema |
 | FASE-T2-C ⚠️ | T1 ⚠️ | E2E | Toca `main.py` (secuencial tras T1, nunca paralela); precondición S-E2 del régimen `generate_proposal=False`. ⚠️ Desvío D-T2C-A1: los bloques `presence_lookup` fueron reactivados (no retirados) y cambian la propuesta en régimen `True` — E2E debe validar la veracidad de «Presente en sitio» |
 | FASE-T4-A ✅ | T1 ⚠️, T2-A ✅, T2-B ✅ | T4-B | Interfaz de extracción LLM (patrón que T4-B replica) |
-| FASE-T4-B ✅ | T4-A ✅ | E2E | Todos los revisores implementados |
-| FASE-E2E | T1-T4-B ✅, T2-C ⚠️ | VERIFY | Pipeline completo con tribunal integrado + residuos heredados curados. Consume el desvío D-T2C-A1: validar veracidad de «Presente en sitio» en la propuesta |
+| FASE-T4-B ⚠️ | T4-A ✅ | E2E | Todos los revisores **implementados** (≠ cableados). ⚠️ Desvío D-T4B-A1 (auditoría 2026-09-11): el revisor no resolvía la propuesta donde el pipeline la escribe, así que no operaba sobre artefactos reales — remediado R1–R9. El contrato de "añade imports" en `__init__.py` se cumplió en la remediación (R2) |
+| FASE-E2E | T1-T4-B (T1/T2-C/T4-B ⚠️), T2-A/T2-B/T4-A ✅ | VERIFY | Pipeline completo con tribunal integrado + residuos heredados curados. **Dueña del cableado de los 4 revisores en `main.py`** (decisión Q1, Vía A): hoy solo corre el Juez, ningún `revision_*.json` existe en `output/` y `P6.5` queda `NOT_EVALUABLE`. Consume también el desvío D-T2C-A1: validar veracidad de «Presente en sitio» en la propuesta |
 | FASE-VERIFY | E2E ✅ | RELEASE | ACs certificados contra output real |
 | FASE-RELEASE-4.76.0 | VERIFY ✅ | — | Cierre documental |
 
@@ -55,7 +55,7 @@ FASE-T1 (Juez + contrato de acta)
 | Archivo | Fases que lo modifican | Riesgo | Mitigación |
 |---------|----------------------|--------|------------|
 | `main.py` | T1 (integración del Juez), T2-C (S-E2) | **Secuencial obligatorio**: T2-C re-verifica con `grep`/`Read` antes de editar; T1 va primero | Dependencia declarada: T2-C depende de T1 ⚠️; nunca en paralelo |
-| `modules/quality_gates/tribunal/__init__.py` | T1 (crea), T2-A/T2-B/T4-A/T4-B (añaden imports) | Bajo: cada fase añade su clase | T1 crea el `__init__` con estructura extensible |
+| `modules/quality_gates/tribunal/__init__.py` | T1 (crea), T2-A/T2-B/T4-A/T4-B (añaden imports) | Bajo: cada fase añade su clase | T1 crea el `__init__` con estructura extensible. ⚠️ **Auditado 2026-09-11**: T4-B no añadió la suya (`HonestyReviewer` quedó fuera del paquete y sin consumidor); cerrado en la remediación R2. Un `grep` de la clase en `__init__.py` debería añadirse al ritual de cierre de fase |
 | `tests/quality_gates/tribunal/` | T1, T2-A, T2-B, T2-C, T4-A, T4-B | Bajo: archivos de test disjuntos | Cada fase crea su propio `test_*.py` |
 | `09-documentacion-post-proyecto.md` | Todas | Acumulativo, no conflictivo | Cada fase añade su fila |
 | `10-analisis-post-implementacion.md` | Todas | Acumulativo | Cada fase añade lecciones |
