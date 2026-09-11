@@ -2782,6 +2782,12 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         voice_readiness_level=getattr(diagnostic_gen, '_last_voice_level', None),
     )
 
+    # FASE-2 (DT4-R2): SitePresenceSnapshot computed upfront — reuse it.
+    # No redundant re-check here. The canonical snapshot is already available.
+    # FASE-T2-C (S-E2): hoisted outside `if generate_proposal` — consumers at
+    # FASE 4.5 and delivery_quality_report need it regardless of proposal regime.
+    site_presence_report = site_presence_snapshot
+
     # PIPELINE-FIX: Initialize pain_ledger for assessment scope (loaded inside generate_proposal)
     pain_ledger_entries = []
     pain_ledger_resolved_entries = None  # DT4-R1: initialized here, loaded inside generate_proposal
@@ -2827,10 +2833,6 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         pain_ledger_resolved_entries = None
         if pain_ledger_resolved_path.exists():
             pain_ledger_resolved_entries = PainLedger().load(pain_ledger_resolved_path)
-
-        # FASE-2 (DT4-R2): SitePresenceSnapshot computed upfront — reuse it.
-        # No redundant re-check here. The canonical snapshot is already available.
-        site_presence_report = site_presence_snapshot
 
         # RC1 (FASE-B): opportunity_scores del pipeline — la MISMA fuente que el
         # diagnóstico (v4_complete_report.json) — para que la tabla de servicios

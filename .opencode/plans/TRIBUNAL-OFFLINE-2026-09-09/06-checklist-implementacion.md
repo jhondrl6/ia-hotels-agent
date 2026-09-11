@@ -75,16 +75,16 @@
 
 ### FASE-T2-C — Limpieza de precondiciones heredadas (S-E2, S9)
 
-- [ ] S-E2: `site_presence_report` ya no lanza `NameError` con `generate_proposal=False` (AC15)
-- [ ] S-E2: bloques `presence_lookup` muertos + instanciación muerta retirados (o justificada su permanencia)
-- [ ] S9: test de contrato de `INVALID_MAPPINGS` verde (AC16)
-- [ ] S9: fósil V3 en `service_identity.py` verificado con `grep` (curado o declarado cerrado)
-- [ ] Tests: `tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py` + `tests/quality/test_asset_semantics_registry.py` verdes
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] Baseline pre/post en `evidence/FASE-T2-C/`
-- [ ] `log_phase_completion.py` ejecutado
-- [ ] `09-documentacion-post-proyecto.md` actualizado
-- [ ] `10-analisis-post-implementacion.md` actualizado
+- [x] S-E2: `site_presence_report` ya no lanza `NameError` con `generate_proposal=False` (AC15)
+- [x] S-E2: bloques `presence_lookup` muertos + instanciación muerta retirados (o justificada su permanencia)
+- [x] S9: test de contrato de `INVALID_MAPPINGS` verde (AC16)
+- [x] S9: fósil V3 en `service_identity.py` verificado con `grep` (curado o declarado cerrado)
+- [x] Tests: `tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py` verde (7 tests)
+- [x] `run_all_validations.py --quick` TOTAL PASS
+- [x] Baseline pre/post en `evidence/FASE-T2-C/`
+- [x] `log_phase_completion.py` ejecutado
+- [x] `09-documentacion-post-proyecto.md` actualizado
+- [x] `10-analisis-post-implementacion.md` actualizado
 
 ### FASE-T4-A — Revisor de Alineación NL (Bot 2)
 

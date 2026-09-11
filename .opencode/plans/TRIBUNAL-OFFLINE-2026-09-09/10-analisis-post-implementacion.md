@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — TRIBUNAL-OFFLINE-2026-09-09
 
-> **Estado**: 🔶 3/9 sesiones ejecutadas — FASE-T1 ⚠️ + FASE-T2-A ✅ + FASE-T2-B ✅ completadas
+> **Estado**: 🔶 4/9 sesiones ejecutadas — FASE-T1 ⚠️ + FASE-T2-A ✅ + FASE-T2-B ✅ + FASE-T2-C ✅ completadas
 > **Plan**: TRIBUNAL-OFFLINE-2026-09-09
 > **Versión objetivo**: 4.76.0
 
@@ -13,7 +13,7 @@
 | FASE-T1 | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Juez + contrato de acta + integración main.py; auditada y corregida D-T1.1/D-T1.2 el mismo día |
 | FASE-T2-A | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 1: DiagnosisReviewer — trazabilidad pain_id, fuente declarada, recall vacuo S-I1; 10 tests verdes |
 | FASE-T2-B | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 3: AssetReviewer — cobertura por servicio, P12, IMPLEMENTATION_ORDER vacío; 12 tests verdes |
-| FASE-T2-C | — | ⬜ | — | No | Limpieza S-E2/S9 (DIRECTO: toca `main.py`) |
+| FASE-T2-C | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido (dict+dataclass) + fósil V3 cerrado + 7 tests |
 | FASE-T4-A | — | ⬜ | — | No | Bot 2: Alineación NL + interfaz LLM |
 | FASE-T4-B | — | ⬜ | — | No | Bot 4: Honestidad NL (DIRECTO) |
 | FASE-E2E | — | ⬜ | — | Sí (v4complete) | Corrida Salento Real |
@@ -87,6 +87,14 @@
 | L-T2B.2 | P12 se discrimina por la fuente declarada en el `message` del check `promised_assets_exist`, no por el `score`. Un `score=1.0` post-gen verificado es legítimo; `via catalogo_estatico` indica que el check corrió sin `generated_assets` (pre-gen). La detección busca substrings `via catalogo_estatico` y `via PROPOSAL_SERVICE_TO_ASSET` en el message. | Test `test_p12_catalog_source_detected` + `test_p12_generated_assets_not_flagged` | T4-B debe discriminar por fuente declarada en messages, no por valores numéricos de score |
 | L-T2B.3 | La clasificación de assets genéricos requiere que el check de contenido lea el archivo real en disco (no solo metadata). El regex de hotel keywords (`hotel|hostal|boutique|...`) y breach keywords (`brecha|gap|problema|...`) busca en los primeros 1000 caracteres. El orden de checks importa: primero estimated-no-etiquetado (confidence < 0.9 sin prefijo ESTIMATED_), luego genérico. | Test `test_generic_asset_flagged` (primer run: asset con confidence 0.8 se clasificaba como unlabeled_estimated antes de llegar al check genérico) | T4-A/B que lean contenido de assets deben considerar el orden de checks y la interacción entre metadata y contenido |
 
+#### FASE-T2-C (2026-09-10)
+
+| # | Lección | Fuente | Aplicación futura |
+|---|---------|--------|-------------------|
+| L-T2C.1 | El `hasattr(obj, 'results')` como guard de tipo es frágil cuando el consumidor canónico es un dict. `normalize_site_presence()` retorna un dict con clave `"results"`, pero tres bloques en `v4_proposal_generator.py` usaban `hasattr(site_presence_report, 'results')` que siempre era `False` contra dicts. El fix dual (dict + dataclass) cubre ambos formatos sin romper tests existentes que pasan el dataclass directo. | S-E2: 3 bloques `presence_lookup` muertos desde FASE-SR-E | Al escribir guards de tipo, verificar qué formato retorna la fuente canónica; `isinstance(x, dict)` + `hasattr(x, attr)` en cascada cubre ambos mundos |
+| L-T2C.2 | Un `NameError` latente puede sobrevivir meses si el consumidor está bajo un `except Exception` amplio. `site_presence_report` se asignaba solo dentro de `if generate_proposal:` pero se usaba fuera; el `try/except` en `delivery_quality_report` enmascaraba el error. El hoist de la asignación antes del bloque condicional es la cura mínima que no altera el régimen `True`. | S-E2: `main.py` — variable asignada en bloque condicional, consumida fuera | Cuando se inicializan variables dentro de bloques condicionales, verificar todos los consumidores aguas abajo (fuera del bloque); los `except Exception` amplios son máscaras de NameErrors |
+| L-T2C.3 | S9 ya estaba certificado por tests existentes (`test_invalid_mappings_valida_contra_capa1` en `test_service_identity_registry.py`). El fósil V3 (`ASSET_TO_PAIN_ID["monthly_report"] = "no_faq_schema"`) fue corregido por FASE-A y solo sobrevivía como docstring en `service_identity.py`. No se necesitó código nuevo para S9 — solo verificación con `grep` y declaración de cierre. | S9: `INVALID_MAPPINGS` certificado sin cambios de código | Antes de escribir tests nuevos, verificar si el contrato ya está fijado por tests existentes en otros directorios; el censo de `test_service_identity_registry.py` ya cubría los 14 registros |
+
 ### Decisiones de contrato — auditoría FASE-T1 (2026-09-10)
 
 Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, más una colisión de contrato (D-T1.3) resuelta con opción (a): primer piso → `first_floor_rule`, P6.5 liberada para Bot 4. Todos se registran aquí porque afectan al contrato que T2/T4 consumen (RESTRICCIÓN de Tarea 4).
@@ -111,8 +119,8 @@ Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, 
 | T5 (deploy FTP/WP) | Fuera de alcance | Plan separado cuando haya credenciales + staging |
 | T6 (throughput + gancho) | Fuera de alcance | Plan separado sobre T3+T5 cerrados |
 | S-V10 (banda de palancas) | No re-medible con una corrida | Exige corpus ≥3 hoteles |
-| S-E2 (NameError latente) | **En alcance** | FASE-T2-C (dueño tribunal por VERIFY) |
-| S9 (`INVALID_MAPPINGS`) | **En alcance** | FASE-T2-C (dueño tribunal por VERIFY) |
+| S-E2 (NameError latente) | ✅ **Cerrado** FASE-T2-C | `site_presence_report` hoisted fuera del bloque `if generate_proposal:`; 3 bloques `presence_lookup` corregidos (dict+dataclass); `SitePresenceChecker` muerto retirado de `v4_asset_orchestrator.py` |
+| S9 (`INVALID_MAPPINGS`) | ✅ **Cerrado** FASE-T2-C | Test de contrato existente (`test_invalid_mappings_valida_contra_capa1`) ya certificaba keys ⊆ PAIN_SOLUTION_MAP + values ⊆ ASSET_CATALOG; fósil V3 declarado cerrado (solo docstring en `service_identity.py`, no código vivo) |
 | S-H2 (performance pain) | Fuera de alcance | Requiere decisión de producto previa |
 | Lista blanca del ZIP (deuda P6) | Acta viaja al ZIP | Verificar en E2E que `delivery_packager.py` no excluye `acta_revision.*` |
 | **D-T1.3** colisión de ID `P6.5` | ✅ **Implementada** | `_evaluate_p6_5` eliminado; `P6.5` reservada como `NOT_EVALUABLE` en `_evaluate_clauses`; `T1_CERTIFIABLE_CLAUSES` = (`P6.1`, `P6.3`, `P6.4`, `P6.6`); `acta_writer` título P6.5 → "Honestidad Comercial (NL) — reservada Bot 4"; `first_floor_rule` section en MD referencia `MANIFEST.json` |
@@ -132,7 +140,8 @@ Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, 
 | Tests nuevos del tribunal (T1) | 17 (13 de T1 + 4 de la auditoría) — `3944 → 3961` colectados |
 | Tests nuevos del tribunal (T2-A) | 10 (DiagnosisReviewer) — `3961 → 3971` colectados |
 | Tests nuevos del tribunal (T2-B) | 12 (AssetReviewer) — `3971 → 3983` colectados |
-| Tests totales tribunal acumulados | 39 (17 T1 + 10 T2-A + 12 T2-B) |
+| Tests nuevos del tribunal (T2-C) | 7 (S-E2 presence_lookup + hoist) — `3983 → 3990` colectados |
+| Tests totales tribunal acumulados | 46 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C) |
 | Tests totales post-plan | — |
 | Coherence output E2E | — |
 | Veredicto del Juez | — |

@@ -1386,12 +1386,21 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                     asset_lookup[asset_type] = confidence
 
         presence_lookup = {}
-        if site_presence_report and hasattr(site_presence_report, 'results'):
-            for asset_type, result in site_presence_report.results.items():
+        if site_presence_report:
+            # FASE-T2-C (S-E2): canonical dict from normalize_site_presence —
+            # also handles the SitePresenceReport dataclass for backward compat.
+            if isinstance(site_presence_report, dict):
+                _results = site_presence_report.get("results", {})
+            elif hasattr(site_presence_report, "results"):
+                _results = getattr(site_presence_report, "results", {})
+            else:
+                _results = {}
+            for asset_type, result in _results.items():
+                status = result.get("status", "") if isinstance(result, dict) else getattr(result, "status", "")
                 presence_lookup[asset_type] = {
                     # FASE-SR-E (H7, L-SR3): criterio canónico —
                     # exists_with_issues también es presente en producción.
-                    'present_in_production': is_present_in_production(result.status),
+                    'present_in_production': is_present_in_production(status),
                     'presence_verified': True,
                 }
 
@@ -1615,12 +1624,21 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
                     asset_lookup[asset_type] = confidence
 
         presence_lookup = {}
-        if site_presence_report and hasattr(site_presence_report, 'results'):
-            for asset_type, result in site_presence_report.results.items():
+        if site_presence_report:
+            # FASE-T2-C (S-E2): canonical dict from normalize_site_presence —
+            # also handles the SitePresenceReport dataclass for backward compat.
+            if isinstance(site_presence_report, dict):
+                _results = site_presence_report.get("results", {})
+            elif hasattr(site_presence_report, "results"):
+                _results = getattr(site_presence_report, "results", {})
+            else:
+                _results = {}
+            for asset_type, result in _results.items():
+                status = result.get("status", "") if isinstance(result, dict) else getattr(result, "status", "")
                 presence_lookup[asset_type] = {
                     # FASE-SR-E (H7, L-SR3): criterio canónico —
                     # exists_with_issues también es presente en producción.
-                    'present_in_production': is_present_in_production(result.status),
+                    'present_in_production': is_present_in_production(status),
                     'presence_verified': True,
                 }
 
@@ -1683,12 +1701,21 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
         # FASE-D: Build presence_lookup from site_presence_report
         # presence_lookup[asset_type] = {'present_in_production': bool, 'presence_verified': bool}
         presence_lookup = {}
-        if site_presence_report and hasattr(site_presence_report, 'results'):
-            for asset_type, result in site_presence_report.results.items():
+        if site_presence_report:
+            # FASE-T2-C (S-E2): canonical dict from normalize_site_presence —
+            # also handles the SitePresenceReport dataclass for backward compat.
+            if isinstance(site_presence_report, dict):
+                _results = site_presence_report.get("results", {})
+            elif hasattr(site_presence_report, "results"):
+                _results = getattr(site_presence_report, "results", {})
+            else:
+                _results = {}
+            for asset_type, result in _results.items():
+                status = result.get("status", "") if isinstance(result, dict) else getattr(result, "status", "")
                 presence_lookup[asset_type] = {
                     # FASE-SR-E (H7, L-SR3): criterio canónico —
                     # exists_with_issues también es presente en producción.
-                    'present_in_production': is_present_in_production(result.status),
+                    'present_in_production': is_present_in_production(status),
                     'presence_verified': True,
                 }
 

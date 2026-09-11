@@ -31,7 +31,6 @@ from ..commercial_documents.coherence_validator import CoherenceValidator, Coher
 from .conditional_generator import ConditionalGenerator
 from .asset_diagnostic_linker import AssetDiagnosticLinker, AssetMetadata
 from .asset_content_validator import AssetContentValidator, ContentStatus
-from .site_presence_checker import SitePresenceChecker  # FASE-CAUSAL-01
 from .data_assessment import DataAssessment, DataClassification  # FASE-I-01
 from .geo_enriched_bridge import try_enrich_from_geo_enriched  # FASE-GEO-BRIDGE
 from .pain_ledger import PainLedger  # FASE-0B: PainLedger facade
@@ -245,7 +244,6 @@ class V4AssetOrchestrator:
         self.coherence_validator = CoherenceValidator()
         self.diagnostic_linker = AssetDiagnosticLinker()
         self.content_validator = AssetContentValidator()
-        self.site_checker = SitePresenceChecker()  # FASE-CAUSAL-01
         self.data_assessor = DataAssessment()  # FASE-I-01
         self.geo_flow = GeoFlow()  # FASE-6: GEO Flow
         self.pain_ledger = PainLedger()  # FASE-0B: PainLedger facade

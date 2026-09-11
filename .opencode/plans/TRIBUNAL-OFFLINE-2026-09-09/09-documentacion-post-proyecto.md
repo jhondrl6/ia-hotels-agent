@@ -42,8 +42,9 @@
 | Tests nuevos (tribunal) | 17 (13 de T1 + 4 de la auditoría) | T1 |
 | Tests nuevos (tribunal T2-A) | 10 (DiagnosisReviewer) | T2-A |
 | Tests nuevos (tribunal T2-B) | 12 (AssetReviewer) | T2-B |
-| Tests totales tribunal acumulados | 39 (17 T1 + 10 T2-A + 12 T2-B) | T2-B |
-| Tests colectados post-T2-B | 3,983 (3,971 T2-A + 12 T2-B) | T2-B |
+| Tests nuevos (tribunal T2-C) | 7 (S-E2 presence_lookup + hoist) | T2-C |
+| Tests totales tribunal acumulados | 46 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C) | T2-C |
+| Tests colectados post-T2-C | 3,990 (3,983 T2-B + 7 T2-C) | T2-C |
 | Tests totales post-plan | — | E2E |
 | Coherence output E2E | — | E2E |
 | Veredicto del Juez (Salento Real) | — | E2E |
