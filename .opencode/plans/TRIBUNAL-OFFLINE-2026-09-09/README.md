@@ -1,7 +1,7 @@
 # TRIBUNAL-OFFLINE-2026-09-09
 
 > **Versión objetivo**: 4.76.0 · **Workflow**: `phased_project_executor.md` v2.20.0
-> **Estado**: ⬜ PREPARACIÓN COMPLETADA — pendiente de ejecución (9 sesiones)
+> **Estado**: 🔶 1/9 sesiones ejecutadas — FASE-T1 ⚠️ completada con reserva (S-HF1 y corte R2.1 sin cerrar; D-T1.3 abierta)
 > **Contexto fuente**: `.opencode/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` §5, §14, §15 (movido a Historico el 2026-09-09; lecciones QMind: notebook `iah-cli-lecciones` — write-back automatizado vía `scripts/validate_qmind_writeback.py`)
 > **Anclaje estratégico**: `ROADMAP.md` v4.2 §7.2 (FASE T, tramo offline: T1/T2/T4)
 > **Baseline**: v4.75.0 «Estabilización pre-tribunal» — precondiciones T0.1-T0.4 ✅ CERRADAS (§14.1)
@@ -18,11 +18,11 @@ Módulos deterministas en `modules/quality_gates/tribunal/` (gate-family), ejecu
 
 | Bot | Módulo | LLM | Cláusulas P6 |
 |-----|--------|-----|--------------|
-| Bot 5 (Juez) | `tribunal/judge.py` | No | P6.1-P6.6 + P7 |
+| Bot 5 (Juez) | `tribunal/judge.py` | No | P6.1-P6.6 + P7 — en T1 evalúa las 6, certificables 5 (`P6.2` diferida a Bot 2) |
 | Bot 1 (Diagnóstico) | `tribunal/diagnosis_reviewer.py` | No | P6.1 |
 | Bot 3 (Assets) | `tribunal/asset_reviewer.py` | No | P6.3, P6.4 |
 | Bot 2 (Alineación) | `tribunal/alignment_reviewer.py` | Sí (extracción) | P6.2 |
-| Bot 4 (Honestidad) | `tribunal/honesty_reviewer.py` | Sí (extracción) | P6.5 |
+| Bot 4 (Honestidad) | `tribunal/honesty_reviewer.py` | Sí (extracción) | P6.5 ⚠️ **colisiona con la regla de primer piso que T1 ocupó en ese slot — resolver antes de T4-B (D-T1.3)** |
 
 **Regla arquitectónica inviolable**: el tribunal NO reimplementa lógica de gates. Lee outputs como revisor independiente.
 
@@ -30,7 +30,7 @@ Módulos deterministas en `modules/quality_gates/tribunal/` (gate-family), ejecu
 
 | # | Fase | Objetivo | Complejidad | Modo | Estado |
 |---|------|----------|-------------|------|--------|
-| 1 | FASE-T1 | Juez certificador + contrato de acta + integración main.py | **ALTA** | DIRECTO | ⬜ Pendiente |
+| 1 | FASE-T1 | Juez certificador + contrato de acta + integración main.py | **ALTA** | DIRECTO | ⚠️ Completada con reserva |
 | 2 | FASE-T2-A | Revisor de Diagnóstico (Bot 1) | MEDIA | DIRECTO | ⬜ Pendiente |
 | 3 | FASE-T2-B | Revisor de Assets (Bot 3) | MEDIA | DIRECTO | ⬜ Pendiente |
 | 4 | FASE-T2-C | Limpieza de precondiciones heredadas (S-E2, S9) | MEDIA | DIRECTO | ⬜ Pendiente |
@@ -50,7 +50,7 @@ Módulos deterministas en `modules/quality_gates/tribunal/` (gate-family), ejecu
 
 | Residuo | Fase que lo aborda / disposición |
 |---------|-------------------|
-| S-HF1 (`message «4/4»` vs `details.total_services = 1`) | FASE-T1 (criterio de narración del Juez) |
+| S-HF1 (`message «4/4»` vs `details.total_services = 1`) | ⚠️ **FASE-T1 no lo cierra**: el criterio quedó documentado de forma contradictoria y `total_services` no aparece en el tribunal. Ver D-T1/Seguimientos en `10-analisis` |
 | S-I1 (`critical_recall = 1.0` con `details: {}`) | FASE-T2-A (Bot 1 distingue recall fundado de vacuo) |
 | P12 (promised_assets_exist verifica via catálogo estático pre-gen — P6.3 no verificable desde el artefacto) | FASE-T2-B (Bot 3 detecta la fuente declarada en el `message`, no el score) |
 | S-C4 (tabla assets técnicos imprime catálogo incondicional) | FASE-T4-A (tercera superficie de promesa) |

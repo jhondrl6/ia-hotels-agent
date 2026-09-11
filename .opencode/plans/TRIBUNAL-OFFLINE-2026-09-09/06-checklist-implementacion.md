@@ -9,7 +9,7 @@
 
 | # | Fase | Estado | Fecha inicio | Fecha cierre | Iteraciones | Notas |
 |---|------|--------|-------------|-------------|-------------|-------|
-| 1 | FASE-T1 | ⬜ Pendiente | — | — | — | Juez + contrato de acta |
+| 1 | FASE-T1 | ⚠️ Completada con reserva | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Juez + contrato de acta + integración main.py; auditada. Reserva: S-HF1 y R2.1 sin cerrar; D-T1.3 abierta |
 | 2 | FASE-T2-A | ⬜ Pendiente | — | — | — | Bot 1: Diagnóstico |
 | 3 | FASE-T2-B | ⬜ Pendiente | — | — | — | Bot 3: Assets |
 | 4 | FASE-T2-C | ⬜ Pendiente | — | — | — | Limpieza S-E2, S9 |
@@ -25,22 +25,26 @@
 
 ### FASE-T1 — Juez Certificador
 
-- [ ] `modules/quality_gates/tribunal/__init__.py` creado
-- [ ] `modules/quality_gates/tribunal/judge.py` implementado (clase `TribunalJudge`)
-- [ ] `modules/quality_gates/tribunal/acta_writer.py` implementado
-- [ ] `acta_revision.json` con clave `verdict` (AC1)
-- [ ] Regla de primer piso: Tier B/C → condicional (AC2)
-- [ ] `acta_revision.md` legible con 6 cláusulas P6 (AC3)
-- [ ] Integración en `main.py` junto a `delivery_quality_report` (AC4)
-- [ ] NO añade cuarta ruta de bloqueo (AC4)
-- [ ] Tests: `tests/quality_gates/tribunal/test_judge.py` verdes
-- [ ] Tests: `tests/quality_gates/tribunal/test_acta_serialization.py` verdes
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] Baseline pre/post en `evidence/FASE-T1/`
-- [ ] `log_phase_completion.py` ejecutado
-- [ ] `09-documentacion-post-proyecto.md` actualizado
-- [ ] `10-analisis-post-implementacion.md` actualizado (lecciones)
-- [ ] S-HF1: criterio de narración `total_services` decidido y documentado
+- [x] `modules/quality_gates/tribunal/__init__.py` creado
+- [x] `modules/quality_gates/tribunal/judge.py` implementado (clase `TribunalJudge`)
+- [x] `modules/quality_gates/tribunal/acta_writer.py` implementado
+- [x] `acta_revision.json` con clave `verdict` (AC1)
+- [x] Regla de primer piso: Tier B/C → condicional (AC2)
+- [x] `acta_revision.md` legible con 6 cláusulas P6 (AC3)
+- [x] Integración en `main.py` junto a `delivery_quality_report` (AC4)
+- [x] NO añade cuarta ruta de bloqueo (AC4)
+- [x] Tests: `tests/quality_gates/tribunal/test_judge.py` verdes (13 T1 + 4 auditoría = 17; `3944 → 3961` colectados)
+- [x] Tests: `tests/quality_gates/tribunal/test_acta_serialization.py` verdes
+- [x] `run_all_validations.py --quick` TOTAL PASS (8/8)
+- [x] Baseline pre/post en `evidence/FASE-T1/`
+- [x] `log_phase_completion.py` ejecutado
+- [x] `09-documentacion-post-proyecto.md` actualizado
+- [x] `10-analisis-post-implementacion.md` actualizado (lecciones)
+- [x] **D-T1.1**: `DEVOLVER-CORRECCIONES` bloquea el ZIP vía `blocks_delivery_zip` / `BLOCKING_VERDICTS`
+- [x] **D-T1.2**: sin evidencia certificable no hay `APROBADO-PARA-ENTREGA` (`T1_CERTIFIABLE_CLAUSES`)
+- [ ] **D-T1.3**: colisión de ID `P6.5` (primer piso del Juez vs honestidad de T4-B) — requiere decisión
+- [ ] **S-HF1**: criterio de narración `total_services` decidido y documentado — ⚠️ los dos documentos de evidencia se contradicen (`alignment.promised_services_total` no existe en ningún artefacto real; el código y `baseline-pre-post.md` usan `summary.promised`) y `total_services` no aparece en ningún archivo del tribunal
+- [ ] **R2.1**: corte en commit de código — `modules/quality_gates/tribunal/` y la integración en `main.py` siguen sin commitear
 
 ### FASE-T2-A — Revisor de Diagnóstico (Bot 1)
 

@@ -38,11 +38,11 @@ FASE-T1 (Juez + contrato de acta)
 
 | Fase | Depende de | Bloquea a | Tipo de dependencia |
 |------|-----------|-----------|---------------------|
-| FASE-T1 | — (baseline v4.75.0) | T2-A, T2-B, T2-C, T4-A | Contrato de acta (T1 define el I/O que T2/T4 consumen) |
-| FASE-T2-A | T1 ✅ | T4-A | Acta contract estable + `revision_diagnostico.json` schema |
-| FASE-T2-B | T1 ✅ | T4-A | Acta contract estable + `revision_assets.json` schema |
-| FASE-T2-C | T1 ✅ | E2E | Toca `main.py` (secuencial tras T1, nunca paralela); precondición S-E2 del régimen `generate_proposal=False` |
-| FASE-T4-A | T1 ✅, T2-A ✅, T2-B ✅ | T4-B | Interfaz de extracción LLM (patrón que T4-B replica) |
+| FASE-T1 ⚠️ | — (baseline v4.75.0) | T2-A, T2-B, T2-C, T4-A, **T4-B** | Contrato de acta (T1 define el I/O que T2/T4 consumen). **Vincula a T4-B**: T1 ocupó `P6.5` con la regla de primer piso y D-T1.3 sigue abierta. Veredictos negativos bloquean ZIP por `blocks_delivery_zip` (D-T1.1) y sin evidencia certificable no hay `APROBADO-PARA-ENTREGA` (D-T1.2) — ver `10-analisis` §Decisiones de contrato |
+| FASE-T2-A | T1 ⚠️ | T4-A | Acta contract estable + `revision_diagnostico.json` schema |
+| FASE-T2-B | T1 ⚠️ | T4-A | Acta contract estable + `revision_assets.json` schema |
+| FASE-T2-C | T1 ⚠️ | E2E | Toca `main.py` (secuencial tras T1, nunca paralela); precondición S-E2 del régimen `generate_proposal=False` |
+| FASE-T4-A | T1 ⚠️, T2-A ✅, T2-B ✅ | T4-B | Interfaz de extracción LLM (patrón que T4-B replica) |
 | FASE-T4-B | T4-A ✅ | E2E | Todos los revisores implementados |
 | FASE-E2E | T1-T4-B ✅, T2-C ✅ | VERIFY | Pipeline completo con tribunal integrado + residuos heredados curados |
 | FASE-VERIFY | E2E ✅ | RELEASE | ACs certificados contra output real |
@@ -54,11 +54,12 @@ FASE-T1 (Juez + contrato de acta)
 
 | Archivo | Fases que lo modifican | Riesgo | Mitigación |
 |---------|----------------------|--------|------------|
-| `main.py` | T1 (integración del Juez), T2-C (S-E2) | **Secuencial obligatorio**: T2-C re-verifica con `grep`/`Read` antes de editar; T1 va primero | Dependencia declarada: T2-C depende de T1 ✅; nunca en paralelo |
+| `main.py` | T1 (integración del Juez), T2-C (S-E2) | **Secuencial obligatorio**: T2-C re-verifica con `grep`/`Read` antes de editar; T1 va primero | Dependencia declarada: T2-C depende de T1 ⚠️; nunca en paralelo |
 | `modules/quality_gates/tribunal/__init__.py` | T1 (crea), T2-A/T2-B/T4-A/T4-B (añaden imports) | Bajo: cada fase añade su clase | T1 crea el `__init__` con estructura extensible |
 | `tests/quality_gates/tribunal/` | T1, T2-A, T2-B, T2-C, T4-A, T4-B | Bajo: archivos de test disjuntos | Cada fase crea su propio `test_*.py` |
 | `09-documentacion-post-proyecto.md` | Todas | Acumulativo, no conflictivo | Cada fase añade su fila |
 | `10-analisis-post-implementacion.md` | Todas | Acumulativo | Cada fase añade lecciones |
+| **Claves de cláusula en `acta_revision.json`** | T1 (`P6.1`-`P6.6` + `first_floor_rule`), T2-A (`P6.1`), T2-B (`P6.3`/`P6.4`), T4-A (`P6.2`), T4-B (`P6.5`) | ⚠️ **Colisión de contrato, no de archivo**: T1 ocupó `P6.5` con la regla de primer piso y T4-B la declara para honestidad; ningún `grep` de conflictos lo detecta | Resolver D-T1.3 antes de T4-B. Cada revisor debe declarar su `clause` y el Juez fusionar sin pisar slots ya certificados |
 
 ---
 

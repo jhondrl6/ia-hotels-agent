@@ -3209,14 +3209,47 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         import traceback
         traceback.print_exc()
 
+    # FASE-T1: Tribunal Judge — Certificación P6 + P7
+    print("\n📍 FASE-T1: Tribunal Judge (Certificación)")
+    print("-" * 70)
+
+    tribunal_acta = None
+    _tribunal_blocks = False
+    try:
+        from modules.quality_gates.tribunal import TribunalJudge, blocks_delivery_zip
+        from modules.quality_gates.tribunal.acta_writer import ActaWriter
+
+        deliveries_dir = output_dir / "deliveries"
+        judge = TribunalJudge(
+            v4_audit_dir=v4_audit_dir,
+            deliveries_dir=deliveries_dir,
+            hotel_id=hotel_id,
+        )
+        tribunal_acta = judge.evaluate()
+        _tribunal_blocks = blocks_delivery_zip(tribunal_acta)
+
+        writer = ActaWriter(v4_audit_dir)
+        acta_json_path, acta_md_path = writer.write(tribunal_acta)
+        print(f"   Verdict: {tribunal_acta['verdict']}")
+        print(f"   Evidence Tier: {tribunal_acta['evidence_tier']}")
+        print(f"   📄 Acta JSON: {acta_json_path}")
+        print(f"   📄 Acta MD: {acta_md_path}")
+    except Exception as e:
+        print(f"   [WARN] Tribunal judge failed (never-block): {e}")
+        tribunal_acta = None
+        _tribunal_blocks = False
+
     # FASE 7: Delivery Packaging - Automated ZIP creation
-    # SKIP ZIP if quality report is FAIL (blocking)
+    # SKIP ZIP if quality report is FAIL (blocking) or tribunal verdict blocks delivery
     delivery_zip_path = None  # Pre-initialize for safety
     delivery_error = None  # NF-3: Preserve packaging error for report
 
-    if (delivery_quality_report and delivery_quality_report.status == "FAIL") or _claim_escalated:
+    if (delivery_quality_report and delivery_quality_report.status == "FAIL") or _claim_escalated or _tribunal_blocks:
         if _claim_escalated:
             print("\n   ⛔ ZIP ABORTED: CG-CLAIM-VS-EVIDENCE persistente (BLOCKED real por self-healing).")
+        elif _tribunal_blocks:
+            print(f"\n   ⛔ ZIP ABORTED: Tribunal verdict is {tribunal_acta['verdict']}.")
+            print(f"   Review: {v4_audit_dir / 'acta_revision.json'}")
         else:
             print(f"\n   ⛔ ZIP ABORTED: Delivery quality report status is FAIL.")
         print(f"   Review: {quality_report_path}")

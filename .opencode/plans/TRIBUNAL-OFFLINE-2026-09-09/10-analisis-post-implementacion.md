@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — TRIBUNAL-OFFLINE-2026-09-09
 
-> **Estado**: Preparación completada — pendiente de ejecución
+> **Estado**: 🔶 1/9 sesiones ejecutadas — FASE-T1 ⚠️ completada con reserva (auditada y corregida el 2026-09-10)
 > **Plan**: TRIBUNAL-OFFLINE-2026-09-09
 > **Versión objetivo**: 4.76.0
 
@@ -10,7 +10,7 @@
 
 | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
 |------|--------|--------|-------------|---------------|-------|
-| FASE-T1 | — | ⬜ | — | No | Juez + contrato de acta |
+| FASE-T1 | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Juez + contrato de acta + integración main.py; auditada y corregida D-T1.1/D-T1.2 el mismo día |
 | FASE-T2-A | — | ⬜ | — | No | Bot 1: Diagnóstico (DIRECTO: tests importan el proyecto) |
 | FASE-T2-B | — | ⬜ | — | No | Bot 3: Assets (DIRECTO) |
 | FASE-T2-C | — | ⬜ | — | No | Limpieza S-E2/S9 (DIRECTO: toca `main.py`) |
@@ -62,7 +62,28 @@
 
 ### Lecciones nuevas de este plan (llenar mínimo 3 por fase)
 
-*(Se llenará conforme avancen las fases)*
+#### FASE-T1 (2026-09-10)
+
+| # | Lección | Fuente | Aplicación futura |
+|---|---------|--------|-------------------|
+| L-T1.1 | `proposal_asset_matrix.json` tiene formato v2.0 (`delivery_ready` + `entries[]`) distinto al formato legacy (`alignment.passed`). El Juez debe manejar ambos formatos para ser retro-compatible con corridas pre y post-hotfix. | Artefactos FASE-I vs FASE-D | T2-B (asset_reviewer) debe usar `delivery_ready` como fuente primaria, no `alignment.passed` |
+| L-T1.2 | ⚠️ **Corregida en la auditoría.** La resolución por glob funciona sin hardcodear timestamps, pero los tests retro **solo ejercen la corrida FASE-I**: `FASE_D_DELIVERIES_DIR` está definido en `test_judge.py` y nunca se usa, así que el baseline FASE-D (Tier B real, `MANIFEST.json → quality_metadata.evidence_tier`) no está cubierto. Además `sorted(glob(), key=mtime, reverse=True)[0]` **no es reproducible**: `git checkout`, copias o restauraciones cambian el `mtime`. La fecha ya va embebida en el nombre (`gate_report_YYYYMMDD_HHMMSS.json`). | Releído `judge.py` + `test_judge.py` el 2026-09-10 | T2-B y T4-B deben ordenar por la fecha del nombre, no por `mtime`; ver seguimiento abierto |
+| L-T1.3 | La integración never-block (try/except que produce `acta = None`) es correcta: el tribunal no puede romper v4complete. Los veredictos negativos alimentan la Ruta 2 existente sin añadir una cuarta ruta. | Diseño de T2-A/T2-B (revisores también never-block) | Todos los revisores deben ser never-block; el Juez consolida sus outputs |
+| L-T1.4 | ⚠️ **Corregida en la auditoría.** En T1 solo **P6.2** queda `NOT_EVALUABLE` (requiere LLM y se difiere a T4-A). **P6.5 no**: el Juez la evalúa de forma determinista como regla de primer piso contra `MANIFEST.json`, y devuelve `PASS` (Tier A) o `ADVISORY` (Tier B/C). El contrato de acta exige que un revisor declare su `clause` antes de escribir sobre ella. | Releído `_evaluate_p6_5` contra `05-prompt-...-T4-B.md` | **Colisión de ID**: T1 define P6.5 = primer piso, pero README/09/T4-B asignan P6.5 = honestidad NL. Ver D-T1.3 |
+
+### Decisiones de contrato — auditoría FASE-T1 (2026-09-10)
+
+Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, más una colisión de contrato abierta que requiere decisión antes de T4-B. Todos se registran aquí porque afectan al contrato que T2/T4 consumen (RESTRICCIÓN de Tarea 4).
+
+| # | Decisión | Símbolo afectado | Regla antes → después |
+|---|--------|------------------|----------------------|
+| **D-T1.1** | `DEVOLVER-CORRECCIONES` bloquea el ZIP igual que `BLOQUEADO`. Antes solo `BLOQUEADO` interceptaba, así un acta que devuelve el paquete por assets fallidos se entregaba igual. La política vive en un único punto (`BLOCKING_VERDICTS` / `blocks_delivery_zip()` en `judge.py`), exportada por `__init__.py` y consumida por `main.py` en lugar de comparar strings de veredicto en el llamador. | `blocks_delivery_zip`, `BLOCKING_VERDICTS` | 1 de 2 veredictos negativos bloqueaba → ambos bloquean |
+| **D-T1.2** | Sin evidencia certificable no hay veredicto máximo. `APROBADO-PARA-ENTREGA` exige Tier **A** y que todas las cláusulas certificables de T1 estén en `PASS`; un `NOT_EVALUABLE` (artefacto ausente, p. ej. borrado por gate-blocking) degrada a condicional en vez de contar como no-bloqueante. `P6.2` queda exenta porque el plan la difiere a T4-A. | `T1_CERTIFIABLE_CLAUSES`, `_compute_verdict` | 0 artefactos + Tier A certificaba entrega → degrada a condicional |
+| **D-T1.3** ⚠️ | **Abierta — requiere decisión antes de FASE-T4-B.** `P6.5` está asignada a dos cláusulas distintas dentro del mismo plan. `05-prompt-...-T1.md` y `CONTEXT-BOTS` §5 (línea 148) la definen como *regla de primer piso* (determinista, dueño Juez); `README.md`, `09-documentacion-post-proyecto.md` y `05-prompt-...-T4-B.md` la definen como *honestidad NL* (dueño Bot 4, cuyo `revision_honestidad.json` declara `"clause": "P6.5"`). T1 ocupó el slot del primer piso, así que cuando T4-B escriba sobre `P6.5` pisará la cláusula del Juez. Opciones: (a) el primer piso deja de ser cláusula y queda solo en la clave top-level `first_floor_rule`, liberando `P6.5` para Bot 4; (b) se renumera honestidad y AC3 / AC13 / `test_acta_md_has_six_clauses` se ajustan. | `T1_CERTIFIABLE_CLAUSES`, contrato de acta, AC3, AC13 | pendiente — ninguna opción aplica todavía |
+
+**Verificado**: 17/17 tests de `tests/quality_gates/tribunal/` verdes (4 nuevos fijan D-T1.1 y D-T1.2); `3944 → 3961` colectados; `run_all_validations.py --quick` 8/8 PASS. Los 7 fallos preexistentes en `tests/test_never_block_architecture/test_never_block_integration.py` (`AssetContentValidator`, `PreflightChecker`) son ajenos a este plan: no importan ni `main.py` ni el tribunal.
+
+**Pendiente**: D-T1.3 sin resolver. Además `modules/quality_gates/tribunal/` y la integración en `main.py` **no están commiteados**, así que a T1 le falta el corte en commit de código que exige R2.1.
 
 ---
 
@@ -78,6 +99,12 @@
 | S9 (`INVALID_MAPPINGS`) | **En alcance** | FASE-T2-C (dueño tribunal por VERIFY) |
 | S-H2 (performance pain) | Fuera de alcance | Requiere decisión de producto previa |
 | Lista blanca del ZIP (deuda P6) | Acta viaja al ZIP | Verificar en E2E que `delivery_packager.py` no excluye `acta_revision.*` |
+| **D-T1.3** colisión de ID `P6.5` | ⚠️ **Abierta, bloquea T4-B** | Decidir antes de que `honesty_reviewer.py` escriba `"clause": "P6.5"` sobre la cláusula del Juez |
+| **S-HF1** (criterio de narración `total_services`) | ⚠️ **Documentación contradictoria** | `decision-integracion.md` cita `alignment.promised_services_total`, que no existe en ningún artefacto real (en FASE-I `alignment` es `null`); `baseline-pre-post.md` y el código usan `summary.promised`. Además `total_services` no aparece en ningún archivo del tribunal. Unificar en `decision-integracion.md` |
+| Resolución de artefactos por `mtime` | ⚠️ **No reproducible** | `_resolve_artifact` / `_resolve_manifest` ordenan por `st_mtime`; `git checkout` o una copia cambian el veredicto. Ordenar por la fecha embebida en el nombre |
+| Baseline FASE-D sin cubrir en tests | ⚠️ **Deuda de test** | `FASE_D_DELIVERIES_DIR` en `test_judge.py` está definido y sin usar; conéctalo al `MANIFEST.json` real (Tier B) para validar retro contra las dos corridas |
+| Versión hardcodeada en el acta | ⚠️ **Viola fuente única de versión** | `acta_writer.py` imprime `v4.76.0` con `VERSION.yaml = 4.75.0`; leer de `VERSION.yaml` o quitar el número |
+| Citas de línea en `decision-integracion.md` | ⚠️ **R2.2 + ya obsoletas** | `L2997/L3217/L3293` eran exactas contra `HEAD` pre-T1; tras la integración `main.py` pasó de 3.901 a 3.933 líneas y L3217/L3293 ya no apuntan a nada. Reemplazar por símbolos |
 
 ---
 
@@ -86,11 +113,11 @@
 | Métrica | Valor |
 |---------|-------|
 | Tests pre-plan (baseline v4.75.0) | 3.934 funciones / 298 archivos |
-| Tests nuevos del tribunal | — |
+| Tests nuevos del tribunal | 17 (13 de T1 + 4 de la auditoría) — `3944 → 3961` colectados |
 | Tests totales post-plan | — |
 | Coherence output E2E | — |
 | Veredicto del Juez | — |
-| Iteraciones totales (8 fases) | — |
+| Iteraciones totales (8 fases) | ⚠️ T1 sin medir (`evidence/FASE-D/measure_iterations.py` no ejecutado) |
 | Fases con delegate_task | — |
 
 ---
@@ -101,6 +128,7 @@
 |----|----------|-----------|------------------------|------|
 | DA-T1 | Anfitrión del tribunal = `main.py` junto a `delivery_quality_report` | Es donde hoy se decide el ZIP; `two_phase_flow.py` es huérfano | `two_phase_flow.py` (sin llamador de producción), módulo independiente (drift) | T1 |
 | DA-T1 | Veredicto alimenta UNA de las tres rutas de bloqueo existentes | No añadir complejidad; el kill switch `GATE_BLOCKING_ENABLED` ya gobierna | Cuarta ruta propia (aísla el tribunal del flujo existente) | T1 |
+| D-T1.1 / D-T1.2 / D-T1.3 | **Revisan la matriz findings → veredicto y la política ZIP.** Ver §Decisiones de contrato — auditoría FASE-T1; D-T1.3 queda abierta | La redacción original de T1 permitía certificar entrega sin evidencia y entregar paquetes devueltos por correcciones | Conservar la regla original (deja el acta sin efecto bloqueante real) | T1 |
 | DA-T4 | LLM solo extrae; Juez aplica veredicto determinista | Preserva auditabilidad P3; LLM nunca es juez de registro | LLM como juez (no determinista, no testeable con pytest) | T4-A |
 
 ---
