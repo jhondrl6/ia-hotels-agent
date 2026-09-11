@@ -3332,6 +3332,39 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             delivery_zip_path = None
             delivery_error = str(e)  # NF-3: Preserve for report final
 
+    # FASE-T2/T4: Tribunal Reviewers (4 Bots) — Q1/Vía A, cableado FASE-E2E.
+    # Tras el packaging: los revisores de assets/honestidad leen MANIFEST.json y
+    # ASSETS/ de la corrida actual, que solo existen después de packager.package().
+    print("\n📍 FASE-T2/T4: Tribunal Reviewers (4 Bots)")
+    print("-" * 70)
+
+    try:
+        from modules.quality_gates.tribunal import (
+            DiagnosisReviewer,
+            AssetReviewer,
+            AlignmentReviewer,
+            HonestyReviewer,
+            LLMPromiseExtractor,
+        )
+
+        _deliveries_dir = output_dir / "deliveries"
+        _extractor = LLMPromiseExtractor()
+
+        _reviewers = [
+            ("Bot 1 Diagnóstico", lambda: DiagnosisReviewer(v4_audit_dir).write_report()),
+            ("Bot 3 Assets", lambda: AssetReviewer(v4_audit_dir, _deliveries_dir).write_report()),
+            ("Bot 2 Alineación", lambda: AlignmentReviewer(v4_audit_dir).write_report(_extractor)),
+            ("Bot 4 Honestidad", lambda: HonestyReviewer(v4_audit_dir, _deliveries_dir).write_report(_extractor)),
+        ]
+        for _name, _run in _reviewers:
+            try:
+                _path = _run()
+                print(f"   [OK] {_name}: {_path}")
+            except Exception as e:
+                print(f"   [WARN] {_name} failed (never-block): {e}")
+    except Exception as e:
+        print(f"   [WARN] Tribunal reviewers failed (never-block): {e}")
+
     # FASE 10: Health Dashboard - System Health Metrics
     print("\n📍 FASE 10: Health Dashboard (System Health Monitor)")
     print("-" * 70)
