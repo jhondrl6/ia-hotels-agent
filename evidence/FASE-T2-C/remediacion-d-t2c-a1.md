@@ -42,6 +42,7 @@ reciben presencia; con `None` el comportamiento es idéntico al pre-T2-C.
 | `test_s_e2_generate_proposal_false.py` | 18/18 verdes (7 originales + 11 nuevos) |
 | `tests/quality_gates/tribunal/ + tests/commercial_documents/` | 489 verdes |
 | Colectados (`pytest tests/ --collect-only -q`) | 4,018 → 4,029 |
+| Suite completa (medición D5 con instrumento correcto, `pytest tests/ -q`) | 3,991 passed / 3 failed / 32 skipped / 4 xfailed — los 3 fallos son preexistentes y ajenos a esta remediación (2 deterministas + 1 flaky de orden; ver Seguimientos en `10-analisis`); delta +11 cumplido en passed (3,980 + 11 = 3,991 por resta directa) |
 | `run_all_validations.py --quick` | TOTAL PASS (8/8) |
 
 ## No-cambios

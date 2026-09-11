@@ -116,7 +116,7 @@
 
 - [x] **AC15**: S-E2 cerrado — `generate_proposal=False` no lanza `NameError` (test verde)
 - [x] **AC16**: S9 certificado — test de contrato de `INVALID_MAPPINGS` verde
-- [x] **NR1**: `passed_post = passed_pre + tests nuevos` (baseline pre/post)
+- [x] **NR1**: `passed_post = passed_pre + tests nuevos` (baseline pre/post) — ⚠️ **D5 (auditoría 2026-09-11)**: la fase midió el par con **colectados** (3,983→3,990), no con `passed`. Remedido el 2026-09-11 con el instrumento correcto: suite completa `3,991 passed / 3 failed / 32 skipped / 4 xfailed` (4,029 colectados); los 3 fallos son ajenos a T2-C y a esta remediación (2 deterministas preexistentes + 1 flaky de orden — ver Seguimientos en 10-analisis) y afectan por igual ambos lados del par, de modo que el delta +11 sí se cumple en `passed` (3,980 + 11 = 3,991 por resta directa). La evidencia original `baseline-pre-post.md` se conserva íntegra; esta nota corrige solo el instrumento declarado.
 - [x] **NR3**: `run_all_validations.py --quick` TOTAL PASS
 - [x] **NR4**: No reimplementa gates
 - [x] **Post-ejecución completada**
