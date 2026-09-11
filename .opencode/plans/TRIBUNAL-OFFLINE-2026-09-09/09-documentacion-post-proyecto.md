@@ -41,14 +41,16 @@
 |---------|-------|------|
 | Tests nuevos (tribunal) | 17 (13 de T1 + 4 de la auditoría) | T1 |
 | Tests nuevos (tribunal T2-A) | 10 (DiagnosisReviewer) | T2-A |
-| Tests totales tribunal acumulados | 27 (17 T1 + 10 T2-A) | T2-A |
-| Tests colectados post-T2-A | 3,971 (3,961 T1 + 10 T2-A) | T2-A |
+| Tests nuevos (tribunal T2-B) | 12 (AssetReviewer) | T2-B |
+| Tests totales tribunal acumulados | 39 (17 T1 + 10 T2-A + 12 T2-B) | T2-B |
+| Tests colectados post-T2-B | 3,983 (3,971 T2-A + 12 T2-B) | T2-B |
 | Tests totales post-plan | — | E2E |
 | Coherence output E2E | — | E2E |
 | Veredicto del Juez (Salento Real) | — | E2E |
 | Cláusulas P6 evaluadas | 6, de las cuales 4 certificables por T1 (`P6.1`, `P6.3`, `P6.4`, `P6.6`); `P6.2` diferida a T4-A; `P6.5` liberada para T4-B tras D-T1.3 opción (a) — primer piso → `first_floor_rule` | T1 |
 | Archivos nuevos en `v4_audit/` | 2 (`acta_revision.json`, `acta_revision.md`) | T1 |
 | Archivos nuevos en `v4_audit/` (T2-A) | 1 (`revision_diagnostico.json`) | T2-A |
+| Archivos nuevos en `v4_audit/` (T2-B) | 1 (`revision_assets.json`) | T2-B |
 
 ## Sección E: Archivos Afiliados Actualizados
 

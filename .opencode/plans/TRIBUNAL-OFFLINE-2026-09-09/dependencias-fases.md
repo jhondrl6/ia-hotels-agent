@@ -40,7 +40,7 @@ FASE-T1 (Juez + contrato de acta)
 |------|-----------|-----------|---------------------|
 | FASE-T1 ⚠️ | — (baseline v4.75.0) | T2-A, T2-B, T2-C, T4-A, **T4-B** | Contrato de acta (T1 define el I/O que T2/T4 consumen). **Vincula a T4-B**: D-T1.3 ✅ resuelta (opción a) — primer piso → `first_floor_rule`, `P6.5` liberada para Bot 4; implementación en auditoría T1 previa a T4-B. Veredictos negativos bloquean ZIP por `blocks_delivery_zip` (D-T1.1) y sin evidencia certificable no hay `APROBADO-PARA-ENTREGA` (D-T1.2) — ver `10-analisis` §Decisiones de contrato |
 | FASE-T2-A ✅ | T1 ⚠️ | T4-A | Acta contract estable + `revision_diagnostico.json` schema |
-| FASE-T2-B | T1 ⚠️ | T4-A | Acta contract estable + `revision_assets.json` schema |
+| FASE-T2-B ✅ | T1 ⚠️ | T4-A | Acta contract estable + `revision_assets.json` schema |
 | FASE-T2-C | T1 ⚠️ | E2E | Toca `main.py` (secuencial tras T1, nunca paralela); precondición S-E2 del régimen `generate_proposal=False` |
 | FASE-T4-A | T1 ⚠️, T2-A ✅, T2-B ✅ | T4-B | Interfaz de extracción LLM (patrón que T4-B replica) |
 | FASE-T4-B | T4-A ✅ | E2E | Todos los revisores implementados |

@@ -11,7 +11,7 @@
 |---|------|--------|-------------|-------------|-------------|-------|
 | 1 | FASE-T1 | ⚠️ Completada con reserva | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Juez + contrato de acta + integración main.py; auditada. Reserva: S-HF1 y R2.1 sin cerrar; D-T1.3 abierta |
 | 2 | FASE-T2-A | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 1: DiagnosisReviewer — 10 tests verdes, AC5+AC6 certificados |
-| 3 | FASE-T2-B | ⬜ Pendiente | — | — | — | Bot 3: Assets |
+| 3 | FASE-T2-B | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 3: AssetReviewer — 12 tests verdes, AC7+AC8 certificados |
 | 4 | FASE-T2-C | ⬜ Pendiente | — | — | — | Limpieza S-E2, S9 |
 | 5 | FASE-T4-A | ⬜ Pendiente | — | — | — | Bot 2: Alineación NL |
 | 6 | FASE-T4-B | ⬜ Pendiente | — | — | — | Bot 4: Honestidad NL |
@@ -61,17 +61,17 @@
 
 ### FASE-T2-B — Revisor de Assets (Bot 3)
 
-- [ ] `modules/quality_gates/tribunal/asset_reviewer.py` implementado
-- [ ] `revision_assets.json` con `coverage_by_service[]` (AC7)
-- [ ] Bot 3 señala `IMPLEMENTATION_ORDER.md` vacío (AC8)
-- [ ] Bot 3 detecta P12 (fuente catálogo estático en el `message`) como P6.3 no verificable — no por score
-- [ ] Tests: `tests/quality_gates/tribunal/test_asset_reviewer.py` verdes
-- [ ] Test de serialización (R2.4)
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] Baseline pre/post en `evidence/FASE-T2-B/`
-- [ ] `log_phase_completion.py` ejecutado
-- [ ] `09-documentacion-post-proyecto.md` actualizado
-- [ ] `10-analisis-post-implementacion.md` actualizado
+- [x] `modules/quality_gates/tribunal/asset_reviewer.py` implementado
+- [x] `revision_assets.json` con `coverage_by_service[]` (AC7)
+- [x] Bot 3 señala `IMPLEMENTATION_ORDER.md` vacío (AC8)
+- [x] Bot 3 detecta P12 (fuente catálogo estático en el `message`) como P6.3 no verificable — no por score
+- [x] Tests: `tests/quality_gates/tribunal/test_asset_reviewer.py` verdes (12 tests)
+- [x] Test de serialización (R2.4)
+- [x] `run_all_validations.py --quick` TOTAL PASS (8/8)
+- [x] Baseline pre/post en `evidence/FASE-T2-B/`
+- [x] `log_phase_completion.py` ejecutado
+- [x] `09-documentacion-post-proyecto.md` actualizado
+- [x] `10-analisis-post-implementacion.md` actualizado
 
 ### FASE-T2-C — Limpieza de precondiciones heredadas (S-E2, S9)
 

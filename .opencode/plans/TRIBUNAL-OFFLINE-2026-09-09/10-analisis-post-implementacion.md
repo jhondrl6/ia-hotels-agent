@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — TRIBUNAL-OFFLINE-2026-09-09
 
-> **Estado**: 🔶 1/9 sesiones ejecutadas — FASE-T1 ⚠️ completada con reserva (auditada y corregida el 2026-09-10; D-T1.3 ✅ resuelta opción a)
+> **Estado**: 🔶 3/9 sesiones ejecutadas — FASE-T1 ⚠️ + FASE-T2-A ✅ + FASE-T2-B ✅ completadas
 > **Plan**: TRIBUNAL-OFFLINE-2026-09-09
 > **Versión objetivo**: 4.76.0
 
@@ -12,7 +12,7 @@
 |------|--------|--------|-------------|---------------|-------|
 | FASE-T1 | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Juez + contrato de acta + integración main.py; auditada y corregida D-T1.1/D-T1.2 el mismo día |
 | FASE-T2-A | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 1: DiagnosisReviewer — trazabilidad pain_id, fuente declarada, recall vacuo S-I1; 10 tests verdes |
-| FASE-T2-B | — | ⬜ | — | No | Bot 3: Assets (DIRECTO) |
+| FASE-T2-B | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 3: AssetReviewer — cobertura por servicio, P12, IMPLEMENTATION_ORDER vacío; 12 tests verdes |
 | FASE-T2-C | — | ⬜ | — | No | Limpieza S-E2/S9 (DIRECTO: toca `main.py`) |
 | FASE-T4-A | — | ⬜ | — | No | Bot 2: Alineación NL + interfaz LLM |
 | FASE-T4-B | — | ⬜ | — | No | Bot 4: Honestidad NL (DIRECTO) |
@@ -79,6 +79,14 @@
 | L-T2A.2 | La distinción recall fundado vs vacuo (S-I1) se certifica con test de fixture, no con corrida E2E. En la corrida real el gate ya serializa `details.critical_issues_count`, así que el finding `VACUOUS_RECALL` no aparece. El AC6 es test-level. | Plan maestro §T2-A (nota de auditoría 2026-09-09) | VERIFY debe documentar que AC6 se verifica via tests, no via output E2E |
 | L-T2A.3 | El patrón never-block del Juez (T1) se replica naturalmente en Bot 1: `_load_json` retorna `None` sin excepción, los checks retornan listas vacías si el artefacto no existe. El veredicto final (`APROBADO`/`DEVOLVER`/`BLOQUEAR`) se computa sobre hallazgos, no sobre ausencia de datos. | Diseño de `DiagnosisReviewer` (mismo patrón que `TribunalJudge`) | T2-B y T4-A/B deben seguir el mismo patrón never-block |
 
+#### FASE-T2-B (2026-09-10)
+
+| # | Lección | Fuente | Aplicación futura |
+|---|---------|--------|-------------------|
+| L-T2B.1 | La detección de `IMPLEMENTATION_ORDER.md` vacío requiere dos niveles: 0 bytes (trivial) y plantilla stub (secciones ORDEN/GUÍA/CHECKLIST sin contenido por-hotel). El stub baseline pesa ~468 B, así que solo verificar `size == 0` es insuficiente. El detector cuenta líneas de contenido no-encabezado bajo secciones clave; si el total es ≤5, es stub. | Test `test_empty_implementation_order_detected` (primer run: stub de 468 B no detectado con check de 0 bytes) | T4-A/B que lean archivos de entrega deben manejar el caso "plantilla vacía" con heurística de contenido, no solo tamaño |
+| L-T2B.2 | P12 se discrimina por la fuente declarada en el `message` del check `promised_assets_exist`, no por el `score`. Un `score=1.0` post-gen verificado es legítimo; `via catalogo_estatico` indica que el check corrió sin `generated_assets` (pre-gen). La detección busca substrings `via catalogo_estatico` y `via PROPOSAL_SERVICE_TO_ASSET` en el message. | Test `test_p12_catalog_source_detected` + `test_p12_generated_assets_not_flagged` | T4-B debe discriminar por fuente declarada en messages, no por valores numéricos de score |
+| L-T2B.3 | La clasificación de assets genéricos requiere que el check de contenido lea el archivo real en disco (no solo metadata). El regex de hotel keywords (`hotel|hostal|boutique|...`) y breach keywords (`brecha|gap|problema|...`) busca en los primeros 1000 caracteres. El orden de checks importa: primero estimated-no-etiquetado (confidence < 0.9 sin prefijo ESTIMATED_), luego genérico. | Test `test_generic_asset_flagged` (primer run: asset con confidence 0.8 se clasificaba como unlabeled_estimated antes de llegar al check genérico) | T4-A/B que lean contenido de assets deben considerar el orden de checks y la interacción entre metadata y contenido |
+
 ### Decisiones de contrato — auditoría FASE-T1 (2026-09-10)
 
 Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, más una colisión de contrato (D-T1.3) resuelta con opción (a): primer piso → `first_floor_rule`, P6.5 liberada para Bot 4. Todos se registran aquí porque afectan al contrato que T2/T4 consumen (RESTRICCIÓN de Tarea 4).
@@ -123,7 +131,8 @@ Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, 
 | Tests pre-plan (baseline v4.75.0) | 3.934 funciones / 298 archivos |
 | Tests nuevos del tribunal (T1) | 17 (13 de T1 + 4 de la auditoría) — `3944 → 3961` colectados |
 | Tests nuevos del tribunal (T2-A) | 10 (DiagnosisReviewer) — `3961 → 3971` colectados |
-| Tests totales tribunal acumulados | 27 (17 T1 + 10 T2-A) |
+| Tests nuevos del tribunal (T2-B) | 12 (AssetReviewer) — `3971 → 3983` colectados |
+| Tests totales tribunal acumulados | 39 (17 T1 + 10 T2-A + 12 T2-B) |
 | Tests totales post-plan | — |
 | Coherence output E2E | — |
 | Veredicto del Juez | — |
