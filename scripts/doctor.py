@@ -96,7 +96,7 @@ def run_full() -> bool:
     readme = PROJECT_ROOT / "CHANGELOG.md"
 
     if version_file.exists():
-        content = version_file.read_text()
+        content = version_file.read_text(encoding="utf-8")
         for line in content.split("\n"):
             if line.startswith("version:"):
                 version = line.split('"')[1].strip('"') if '"' in line else line.split(":")[1].strip()
@@ -182,7 +182,7 @@ def run_status() -> bool:
     version = "unknown"
     version_file = PROJECT_ROOT / "VERSION.yaml"
     if version_file.exists():
-        for line in version_file.read_text().split("\n"):
+        for line in version_file.read_text(encoding="utf-8").split("\n"):
             if line.startswith("version:"):
                 version = line.split('"')[1].strip('"') if '"' in line else line.split(":")[1].strip()
                 break
@@ -255,7 +255,7 @@ def run_status() -> bool:
     last_updated = "N/A"
     if cs_file.exists():
         try:
-            cs = json.loads(cs_file.read_text())
+            cs = json.loads(cs_file.read_text(encoding="utf-8"))
             last_url = cs.get("last_url", "N/A")
             last_updated = cs.get("last_updated", "N/A")
         except Exception:
@@ -353,7 +353,7 @@ def run_regenerate_domain_primer() -> bool:
     plan_maestro = "unknown"
     version_file = PROJECT_ROOT / "VERSION.yaml"
     if version_file.exists():
-        for line in version_file.read_text().split("\n"):
+        for line in version_file.read_text(encoding="utf-8").split("\n"):
             if line.startswith("version:"):
                 version = line.split('"')[1].strip('"') if '"' in line else line.split(":")[1].strip()
             elif line.startswith("codename:"):
@@ -500,7 +500,7 @@ def run_regenerate_domain_primer() -> bool:
     harness_init = PROJECT_ROOT / "agent_harness" / "__init__.py"
     if harness_init.exists():
         try:
-            text = harness_init.read_text()
+            text = harness_init.read_text(encoding="utf-8")
             for line in text.split("\n"):
                 if line.startswith("__version__"):
                     harness_version = line.split("=")[1].strip().strip('"').strip("'")
@@ -611,7 +611,7 @@ def run_json() -> bool:
     # Version
     version_file = PROJECT_ROOT / "VERSION.yaml"
     if version_file.exists():
-        for line in version_file.read_text().split("\n"):
+        for line in version_file.read_text(encoding="utf-8").split("\n"):
             if line.startswith("version:"):
                 result["version"] = line.split('"')[1].strip('"') if '"' in line else line.split(":")[1].strip()
                 break
