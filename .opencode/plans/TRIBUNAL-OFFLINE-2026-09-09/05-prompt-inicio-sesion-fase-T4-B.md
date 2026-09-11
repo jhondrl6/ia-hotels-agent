@@ -40,6 +40,7 @@
 | LLM solo extrae, Juez decide | Mismo patrón de T4-A: extractor propone, determinista verifica |
 | R2.4: AC legible en artefacto | Test de serialización |
 | Nombres timestamped | Resolver por glob, no hardcodear |
+| **D-T1.3 ✅ resuelta (opción a)** | `P6.5` es limpiamente de Bot 4 (honestidad NL). El primer piso del Juez vive en `first_floor_rule` (top-level del acta), no en `clauses.P6.5`. El Juez reserva `P6.5` como `NOT_EVALUABLE` hasta que este revisor la certifique |
 
 ---
 

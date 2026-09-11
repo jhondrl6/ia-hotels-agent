@@ -31,7 +31,7 @@
 | Revisión de assets | `tribunal/asset_reviewer.py` | Cobertura por servicio sobre P6.3/P6.4 | T2-B |
 | Extracción NL de promesas | `tribunal/llm_extractor.py` | LLM propone, Juez decide (híbrido acotado) | T4-A |
 | Revisión de alineación | `tribunal/alignment_reviewer.py` | P6.2: promesas verbales vs matriz | T4-A |
-| Revisión de honestidad | `tribunal/honesty_reviewer.py` | P6.5: sobre-presentación vs tier labels + 12 CG-* | T4-B |
+| Revisión de honestidad | `tribunal/honesty_reviewer.py` | P6.5: sobre-presentación vs tier labels + 12 CG-* (P6.5 liberada tras D-T1.3 opción a) | T4-B |
 | Limpieza S-E2 | `main.py`, `v4_proposal_generator.py`, `v4_asset_orchestrator.py` | `generate_proposal=False` sin `NameError`; código muerto retirado | T2-C |
 | Certificación S9 | `modules/quality/asset_semantics_validator.py` | Contrato de `INVALID_MAPPINGS` (registro #14) | T2-C |
 
@@ -43,7 +43,7 @@
 | Tests totales post-plan | — | E2E |
 | Coherence output E2E | — | E2E |
 | Veredicto del Juez (Salento Real) | — | E2E |
-| Cláusulas P6 evaluadas | 6, de las cuales 5 certificables por T1; `P6.2` diferida a T4-A. ⚠️ `P6.5` colisiona con la cláusula que declara T4-B (D-T1.3 abierta) | T1 |
+| Cláusulas P6 evaluadas | 6, de las cuales 4 certificables por T1 (`P6.1`, `P6.3`, `P6.4`, `P6.6`); `P6.2` diferida a T4-A; `P6.5` liberada para T4-B tras D-T1.3 opción (a) — primer piso → `first_floor_rule` | T1 |
 | Archivos nuevos en `v4_audit/` | 2 (`acta_revision.json`, `acta_revision.md`) | T1 |
 
 ## Sección E: Archivos Afiliados Actualizados

@@ -1,7 +1,7 @@
 # TRIBUNAL-OFFLINE-2026-09-09
 
 > **Versión objetivo**: 4.76.0 · **Workflow**: `phased_project_executor.md` v2.20.0
-> **Estado**: 🔶 1/9 sesiones ejecutadas — FASE-T1 ⚠️ completada con reserva (S-HF1 y corte R2.1 sin cerrar; D-T1.3 abierta)
+> **Estado**: 🔶 1/9 sesiones ejecutadas — FASE-T1 ⚠️ completada con reserva (S-HF1 y corte R2.1 sin cerrar; D-T1.3 ✅ resuelta opción a)
 > **Contexto fuente**: `.opencode/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` §5, §14, §15 (movido a Historico el 2026-09-09; lecciones QMind: notebook `iah-cli-lecciones` — write-back automatizado vía `scripts/validate_qmind_writeback.py`)
 > **Anclaje estratégico**: `ROADMAP.md` v4.2 §7.2 (FASE T, tramo offline: T1/T2/T4)
 > **Baseline**: v4.75.0 «Estabilización pre-tribunal» — precondiciones T0.1-T0.4 ✅ CERRADAS (§14.1)
@@ -22,7 +22,7 @@ Módulos deterministas en `modules/quality_gates/tribunal/` (gate-family), ejecu
 | Bot 1 (Diagnóstico) | `tribunal/diagnosis_reviewer.py` | No | P6.1 |
 | Bot 3 (Assets) | `tribunal/asset_reviewer.py` | No | P6.3, P6.4 |
 | Bot 2 (Alineación) | `tribunal/alignment_reviewer.py` | Sí (extracción) | P6.2 |
-| Bot 4 (Honestidad) | `tribunal/honesty_reviewer.py` | Sí (extracción) | P6.5 ⚠️ **colisiona con la regla de primer piso que T1 ocupó en ese slot — resolver antes de T4-B (D-T1.3)** |
+| Bot 4 (Honestidad) | `tribunal/honesty_reviewer.py` | Sí (extracción) | P6.5 (liberada tras D-T1.3 opción a: primer piso → `first_floor_rule`) |
 
 **Regla arquitectónica inviolable**: el tribunal NO reimplementa lógica de gates. Lee outputs como revisor independiente.
 

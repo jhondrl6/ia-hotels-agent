@@ -2,7 +2,7 @@
 
 **ID**: TRIBUNAL-OFFLINE-2026-09-09 / FASE-T2-A
 **Objetivo**: Implementar `tribunal/diagnosis_reviewer.py` — revisor determinista que verifica trazabilidad brecha→pain_id, fuente declarada, y respeto a `is_coherent`. Produce `revision_diagnostico.json` que alimenta el acta del Juez.
-**Dependencias**: FASE-T1 ✅ (contrato de acta estable)
+**Dependencias**: FASE-T1 ✅ (contrato de acta estable; D-T1.3 resuelta — primer piso → `first_floor_rule`, P6.5 liberada para Bot 4)
 **Complejidad técnica**: **MEDIA** — módulo determinista, lecturas de artefactos JSON, sin LLM
 **Modo de ejecución**: **DIRECTO** (agente principal). NO delegable: la fase crea un módulo **y corre tests que importan el proyecto**; el venv es Windows accedido desde WSL ⟹ ejecutor v2.20.0, branch «imports del proyecto + venv Windows → DIRECTA… NO delegar a subagentes» (lección FASE-4 BUGS-ONBOARDING-ADR: ~40 iteraciones perdidas).
 **Skill**: `phased_project_executor.md` v2.20.0

@@ -82,7 +82,9 @@
     "clauses_evaluated": 6,
     "clauses": {
         "P6.1": {"status": "PASS"|"FAIL"|"ADVISORY"|"NOT_EVALUABLE", "source_artifact": "...", "finding": "..."},
-        "P6.2": {...}, "P6.3": {...}, "P6.4": {...}, "P6.5": {...}, "P6.6": {...}
+        "P6.2": {...}, "P6.3": {...}, "P6.4": {...},
+        "P6.5": {"status": "NOT_EVALUABLE", "source_artifact": null, "finding": "reservada para Bot 4 (honestidad NL) — D-T1.3 opción a"},
+        "P6.6": {...}
     },
     "reviewer_reports": ["revision_diagnostico.json", "revision_assets.json", ...],
     "first_floor_rule": {"applied": true, "reason": "evidence_tier B → máximo condicional"},
@@ -97,7 +99,7 @@
 - **`NOT_EVALUABLE`**: cláusula sin artefacto fuente disponible (p. ej. revisores aún no implementados, o artefacto eliminado por gate-blocking) → estado `NOT_EVALUABLE`, nunca PASS. El Juez NUNCA lanza excepción por artefacto ausente (never-block).
 - Constructor: `TribunalJudge(v4_audit_dir=..., deliveries_dir=...)` con `deliveries_dir` resuelto por glob (`v4_complete/deliveries/<hotel_id>_*` más reciente).
 
-**Regla de primer piso (P6.5 + gap G0)**: si `evidence_tier ∈ {B, C}` → veredicto máximo `APROBADO-CONDICIONAL-PENDING-ONBOARDING`. Sin LLM. Determinista.
+**Regla de primer piso (D-T1.3 opción a: NO es cláusula P6.5)**: si `evidence_tier ∈ {B, C}` → veredicto máximo `APROBADO-CONDICIONAL-PENDING-ONBOARDING`. Sin LLM. Determinista. Vive en la clave top-level `first_floor_rule` del acta, no en `clauses.P6.5`. `P6.5` queda reservada como `NOT_EVALUABLE` hasta que Bot 4 (T4-B) la certifique como honestidad NL.
 
 **Resolución de artefactos timestamped**: el Juez debe resolver nombres por glob (ej. `gate_report_*.json` → más reciente) o por índice si existe. NO hardcodear timestamps. `deliveries_dir` se resuelve por glob del `<hotel>_<fecha>` más reciente.
 

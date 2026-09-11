@@ -2,7 +2,7 @@
 
 **ID**: TRIBUNAL-OFFLINE-2026-09-09 / FASE-T2-B
 **Objetivo**: Implementar `tribunal/asset_reviewer.py` — revisor determinista que verifica cobertura de assets por servicio, detecta assets genéricos, ESTIMATED no etiquetados, y `IMPLEMENTATION_ORDER.md` vacío. Produce `revision_assets.json`.
-**Dependencias**: FASE-T1 ✅ (contrato de acta estable)
+**Dependencias**: FASE-T1 ✅ (contrato de acta estable; D-T1.3 resuelta — primer piso → `first_floor_rule`, P6.5 liberada para Bot 4)
 **Complejidad técnica**: **MEDIA** — módulo determinista, lectura de artefactos + filesystem, sin LLM
 **Modo de ejecución**: **DIRECTO** (agente principal). NO delegable: la fase crea un módulo **y corre tests que importan el proyecto**; el venv es Windows accedido desde WSL ⟹ ejecutor v2.20.0, branch «imports del proyecto + venv Windows → DIRECTA… NO delegar a subagentes».
 **Skill**: `phased_project_executor.md` v2.20.0

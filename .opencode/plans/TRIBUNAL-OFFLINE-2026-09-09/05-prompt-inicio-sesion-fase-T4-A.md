@@ -2,7 +2,7 @@
 
 **ID**: TRIBUNAL-OFFLINE-2026-09-09 / FASE-T4-A
 **Objetivo**: Diseñar la interfaz de extracción LLM compartida (`llm_extractor.py`) e implementar `tribunal/alignment_reviewer.py` — revisor híbrido que extrae promesas verbales de la propuesta y las verifica deterministamente contra la matriz. Produce `revision_alineacion.json`.
-**Dependencias**: FASE-T1 ✅, FASE-T2-A ✅, FASE-T2-B ✅
+**Dependencias**: FASE-T1 ✅, FASE-T2-A ✅, FASE-T2-B ✅ (D-T1.3 resuelta — contrato de acta estable, P6.5 liberada para Bot 4)
 **Complejidad técnica**: **ALTA** — define la arquitectura híbrida LLM+determinista que T4-B replica; decisión de diseño sobre el protocolo de extracción y la estrategia de mock
 **Modo de ejecución**: **DIRECTO** (agente principal). NO delegable: decisión arquitectónica (diseño del protocolo de extracción LLM + mock strategy que establece patrón para T4-B).
 **Skill**: `phased_project_executor.md` v2.20.0

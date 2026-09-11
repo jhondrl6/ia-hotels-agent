@@ -2,7 +2,7 @@
 
 **ID**: TRIBUNAL-OFFLINE-2026-09-09 / FASE-T2-C
 **Objetivo**: Cerrar los dos residuos heredados que VERIFY del plan `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` asignó **explícitamente al tribunal**: **S-E2** (NameError latente de `site_presence_report` + bloques `presence_lookup` muertos) y **S9** (`asset_semantics_validator.INVALID_MAPPINGS`, registro #14). No es alcance nuevo: es precondición del tramo offline que el plan no puede dejar caer sin repetir el anti-patrón **DA-V5** (seis filas re-asignadas C→F→G→H y nunca ejecutadas).
-**Dependencias**: FASE-T1 ✅ (ambas tocan `main.py`, que T1 también edita → secuencial, nunca paralela)
+**Dependencias**: FASE-T1 ✅ (ambas tocan `main.py`, que T1 también edita → secuencial, nunca paralela; D-T1.3 resuelta — contrato de acta estable)
 **Complejidad técnica**: **MEDIA** — dos limpiezas acotadas en archivos ya identificados + tests de contrato
 **Modo de ejecución**: **DIRECTO** (agente principal). NO delegable: los tests importan módulos del proyecto y el venv es Windows accedido desde WSL (executor v2.20.0, branch «imports del proyecto + venv Windows → DIRECTA»).
 **Skill**: `phased_project_executor.md` v2.20.0

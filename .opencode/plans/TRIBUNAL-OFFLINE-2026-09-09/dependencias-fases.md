@@ -38,7 +38,7 @@ FASE-T1 (Juez + contrato de acta)
 
 | Fase | Depende de | Bloquea a | Tipo de dependencia |
 |------|-----------|-----------|---------------------|
-| FASE-T1 ⚠️ | — (baseline v4.75.0) | T2-A, T2-B, T2-C, T4-A, **T4-B** | Contrato de acta (T1 define el I/O que T2/T4 consumen). **Vincula a T4-B**: T1 ocupó `P6.5` con la regla de primer piso y D-T1.3 sigue abierta. Veredictos negativos bloquean ZIP por `blocks_delivery_zip` (D-T1.1) y sin evidencia certificable no hay `APROBADO-PARA-ENTREGA` (D-T1.2) — ver `10-analisis` §Decisiones de contrato |
+| FASE-T1 ⚠️ | — (baseline v4.75.0) | T2-A, T2-B, T2-C, T4-A, **T4-B** | Contrato de acta (T1 define el I/O que T2/T4 consumen). **Vincula a T4-B**: D-T1.3 ✅ resuelta (opción a) — primer piso → `first_floor_rule`, `P6.5` liberada para Bot 4; implementación en auditoría T1 previa a T4-B. Veredictos negativos bloquean ZIP por `blocks_delivery_zip` (D-T1.1) y sin evidencia certificable no hay `APROBADO-PARA-ENTREGA` (D-T1.2) — ver `10-analisis` §Decisiones de contrato |
 | FASE-T2-A | T1 ⚠️ | T4-A | Acta contract estable + `revision_diagnostico.json` schema |
 | FASE-T2-B | T1 ⚠️ | T4-A | Acta contract estable + `revision_assets.json` schema |
 | FASE-T2-C | T1 ⚠️ | E2E | Toca `main.py` (secuencial tras T1, nunca paralela); precondición S-E2 del régimen `generate_proposal=False` |
@@ -59,7 +59,7 @@ FASE-T1 (Juez + contrato de acta)
 | `tests/quality_gates/tribunal/` | T1, T2-A, T2-B, T2-C, T4-A, T4-B | Bajo: archivos de test disjuntos | Cada fase crea su propio `test_*.py` |
 | `09-documentacion-post-proyecto.md` | Todas | Acumulativo, no conflictivo | Cada fase añade su fila |
 | `10-analisis-post-implementacion.md` | Todas | Acumulativo | Cada fase añade lecciones |
-| **Claves de cláusula en `acta_revision.json`** | T1 (`P6.1`-`P6.6` + `first_floor_rule`), T2-A (`P6.1`), T2-B (`P6.3`/`P6.4`), T4-A (`P6.2`), T4-B (`P6.5`) | ⚠️ **Colisión de contrato, no de archivo**: T1 ocupó `P6.5` con la regla de primer piso y T4-B la declara para honestidad; ningún `grep` de conflictos lo detecta | Resolver D-T1.3 antes de T4-B. Cada revisor debe declarar su `clause` y el Juez fusionar sin pisar slots ya certificados |
+| **Claves de cláusula en `acta_revision.json`** | T1 (`P6.1`-`P6.4`, `P6.6` + `first_floor_rule`), T2-A (`P6.1`), T2-B (`P6.3`/`P6.4`), T4-A (`P6.2`), T4-B (`P6.5`) | ✅ **Resuelto (D-T1.3 opción a)**: primer piso → `first_floor_rule` (top-level), `P6.5` liberada para Bot 4. Cada revisor declara su `clause` sin pisar slots | T1 ajusta `_evaluate_p6_5` → `_apply_first_floor_rule` en auditoría previa a T4-B |
 
 ---
 

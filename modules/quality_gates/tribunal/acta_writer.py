@@ -68,6 +68,7 @@ class ActaWriter:
                 f"## Regla de Primer Piso",
                 f"",
                 f"**Aplicada**: Sí",
+                f"**Artefacto fuente**: `MANIFEST.json` (evidence_tier)",
                 f"**Razón**: {first_floor.get('reason', 'N/A')}",
                 f"",
             ])
@@ -80,7 +81,7 @@ class ActaWriter:
             "P6.2": "Alineación de Promesas (NL)",
             "P6.3": "Completitud de Assets",
             "P6.4": "Cobertura Propuesta→Asset",
-            "P6.5": "Regla de Primer Piso (Tier)",
+            "P6.5": "Honestidad Comercial (NL) — reservada Bot 4",
             "P6.6": "Coherencia + Contradicciones",
         }
 

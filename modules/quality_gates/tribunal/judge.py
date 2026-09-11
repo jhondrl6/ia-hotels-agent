@@ -25,8 +25,9 @@ STATUS_NOT_EVALUABLE = "NOT_EVALUABLE"
 FIRST_FLOOR_TIERS = {"B", "C"}
 
 # Cláusulas que el Juez puede certificar en T1. P6.2 se excluye porque el plan
-# la difiere a T4-A (requiere LLM): no debe impedir el veredicto máximo en T1.
-T1_CERTIFIABLE_CLAUSES = ("P6.1", "P6.3", "P6.4", "P6.5", "P6.6")
+# la difiere a T4-A (requiere LLM). P6.5 se excluye porque D-T1.3 (opción a)
+# la libera para Bot 4 (honestidad NL); el primer piso vive en first_floor_rule.
+T1_CERTIFIABLE_CLAUSES = ("P6.1", "P6.3", "P6.4", "P6.6")
 
 # Veredictos que impiden emitir el ZIP. Un solo punto de decisión para main.py.
 BLOCKING_VERDICTS = frozenset({VERDICT_BLOCKED, VERDICT_RETURN})
@@ -133,7 +134,11 @@ class TribunalJudge:
             "P6.2": self._evaluate_p6_2(),
             "P6.3": self._evaluate_p6_3(),
             "P6.4": self._evaluate_p6_4(),
-            "P6.5": self._evaluate_p6_5(),
+            "P6.5": {
+                "status": STATUS_NOT_EVALUABLE,
+                "source_artifact": None,
+                "finding": "Reservada para Bot 4 (honestidad NL) — D-T1.3 opción a",
+            },
             "P6.6": self._evaluate_p6_6(),
         }
 
@@ -282,29 +287,6 @@ class TribunalJudge:
             "source_artifact": "proposal_asset_matrix.json",
             "finding": "Formato de proposal_asset_matrix no reconocido",
         }
-
-    def _evaluate_p6_5(self) -> dict:
-        """P6.5: Regla de primer piso — evidence_tier determina veredicto máximo."""
-        evidence_tier = self._read_evidence_tier()
-
-        if evidence_tier == "A":
-            return {
-                "status": STATUS_PASS,
-                "source_artifact": "MANIFEST.json",
-                "finding": f"Tier {evidence_tier}: elegible para APROBADO-PARA-ENTREGA",
-            }
-        elif evidence_tier in FIRST_FLOOR_TIERS:
-            return {
-                "status": STATUS_ADVISORY,
-                "source_artifact": "MANIFEST.json",
-                "finding": f"Tier {evidence_tier}: máximo APROBADO-CONDICIONAL-PENDING-ONBOARDING",
-            }
-        else:
-            return {
-                "status": STATUS_FAIL,
-                "source_artifact": "MANIFEST.json",
-                "finding": f"Tier {evidence_tier}: requiere onboarding obligatorio",
-            }
 
     def _evaluate_p6_6(self) -> dict:
         """P6.6: Coherencia + contradicciones — gate_report (coherence + hard_contradictions).
