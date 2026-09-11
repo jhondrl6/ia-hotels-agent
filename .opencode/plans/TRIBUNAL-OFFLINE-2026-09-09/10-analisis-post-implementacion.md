@@ -14,7 +14,7 @@
 | FASE-T2-A | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 1: DiagnosisReviewer — trazabilidad pain_id, fuente declarada, recall vacuo S-I1; 10 tests verdes |
 | FASE-T2-B | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 3: AssetReviewer — cobertura por servicio, P12, IMPLEMENTATION_ORDER vacío; 12 tests verdes |
 | FASE-T2-C | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido (dict+dataclass) + fósil V3 cerrado + 7 tests. Evidencia: `evidence/FASE-T2-C/` |
-| FASE-T4-A | 2026-09-11 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 25 tests verdes |
+| FASE-T4-A | 2026-09-11 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 28 tests verdes (incl. fix post-auditoría) |
 | FASE-T4-B | — | ⬜ | — | No | Bot 4: Honestidad NL (DIRECTO) |
 | FASE-E2E | — | ⬜ | — | Sí (v4complete) | Corrida Salento Real |
 | FASE-VERIFY | — | ⬜ | — | No | Certificación AC1-AC16 |
@@ -99,10 +99,11 @@
 
 | # | Lección | Fuente | Aplicación futura |
 |---|---------|--------|-------------------|
-| L-T4A.1 | El protocolo `PromiseExtractor` debe ser `runtime_checkable` para permitir `isinstance(extractor, PromiseExtractor)` en tests y validaciones. Sin `@runtime_checkable`, solo se puede verificar con `hasattr()` que es frágil ante cambios de nombre. El protocolo define `extract_promises(proposal_text: str) -> list[VerbalPromise]` y ambas implementaciones (LLM + Mock) pasan el check. | Diseño de `llm_extractor.py` (Protocol pattern) | T4-B debe replicar el patrón: protocolo `runtime_checkable` + implementación LLM + implementación Mock para tests |
+| L-T4A.1 | El protocolo `PromiseExtractor` debe ser `runtime_checkable` para permitir `isinstance(extractor, PromiseExtractor)` en tests y validaciones. Sin `@runtime_checkable`, solo se puede verificar con `hasattr()` que es frágil ante cambios de nombre. El protocolo define `extract_verbal_promises(proposal_text: str) -> list[VerbalPromise]` y ambas implementaciones (LLM + Mock) pasan el check. | Diseño de `llm_extractor.py` (Protocol pattern) | T4-B debe replicar el patrón: protocolo `runtime_checkable` + implementación LLM + implementación Mock para tests |
 | L-T4A.2 | El parsing de respuestas LLM debe manejar bloques markdown con indentación variable. El código inicial `lines[1:-1]` fallaba cuando el bloque iniciaba con ````json` indentado o cuando el cierre ```` ` no estaba en la última línea. La solución computa `start_idx` y `end_idx` dinámicamente: si la primera línea inicia con `````, `start_idx=1`; si la última es `````, `end_idx=-1`. Esto cubre todos los formatos que el LLM puede generar. | Test `test_llm_extractor_parses_json_with_markdown` (primer run: JSON parse error; segundo run: PASS tras fix) | T4-B y cualquier consumidor de respuestas LLM deben usar el mismo patrón de parsing robusto; considerar extraer a utilidad compartida si hay terceros consumidores |
 | L-T4A.3 | La cache SHA256 de extracciones LLM debe usar `tmp_path` en tests para evitar colisiones entre corridas. Los tests compartían el directorio `.cache/tribunal/` y hits de cache de pruebas anteriores enmascaraban fallos del mock provider. Pasar `cache_dir=tmp_path` al constructor de `LLMPromiseExtractor` aísla cada test. | Tests `test_llm_extractor_cache_hit/miss` (primer run: 5 fallos por cache stale; segundo run: PASS tras agregar `tmp_path`) | Cualquier test que use cache en disco debe inyectar `tmp_path`; la cache de producción puede usar el default `.cache/tribunal/` |
-| L-T4A.4 | La clasificación de promesas verbales contra la matriz requiere matching difuso por `service_hint`. El LLM puede generar hints como `"Optimización para asistentes de voz"` mientras la matriz usa `"voice_readiness"`. El método `_find_matrix_entry()` normaliza ambos lados (lowercase, reemplaza guiones bajos por espacios, busca substrings) y compara. Sin fuzzy matching, el 40% de las promesas caen en `PROMESA-SIN-MATRIZ` falso. | Test `test_aligned_service_not_flagged` (primer run: finding `PROMESA-SIN-MATRIZ` para servicio que sí tenía entrada en matriz) | T4-B debe replicar el patrón de matching difuso al buscar referencias a CG-* en el diagnóstico; los nombres de secciones en markdown varían según el generador |
+| L-T4A.4 | La clasificación de promesas verbales contra la matriz requiere matching difuso por `service_hint`. El LLM puede generar hints como `"Optimización para asistentes de voz"` mientras la matriz usa `"voice_readiness"`. El método `_find_matrix_entry()` normaliza ambos lados (lowercase, reemplaza guiones bajos y guiones por espacios, busca substrings) y compara. Sin fuzzy matching, varias promesas caían en `PROMESA-SIN-MATRIZ` falso. | Test `test_aligned_service_not_flagged` (primer run: finding `PROMESA-SIN-MATRIZ` para servicio que sí tenía entrada en matriz) | T4-B debe replicar el patrón de matching difuso al buscar referencias a CG-* en el diagnóstico; los nombres de secciones en markdown varían según el generador |
+| L-T4A.5 | Un test puede pasar sin ejecutar la rama que dice certificar: el `test_no_breach_not_a_finding` original usaba un extractor vacío y la clasificación nunca recorría entradas NO_BREACH, por lo que la aserción era trivialmente cierta. Además, `service_matrix` iteraba solo promesas (`verbal_promise_found` hardcodeado a `true`), dejando sin auditar las entradas de matriz. La auditoría forense post-ejecución detectó ambos patrones. | Auditoría FASE-T4-A: test vacuo + cruce unidireccional | Todo AC de clasificación exige un test cuyos datos alcancen esa rama; el cruce de artefactos debe cubrir ambas direcciones (promesa→matriz y matriz→promesa) |
 
 ### Decisiones de contrato — auditoría FASE-T1 (2026-09-10)
 
@@ -150,8 +151,8 @@ Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, 
 | Tests nuevos del tribunal (T2-A) | 10 (DiagnosisReviewer) — `3961 → 3971` colectados |
 | Tests nuevos del tribunal (T2-B) | 12 (AssetReviewer) — `3971 → 3983` colectados |
 | Tests nuevos del tribunal (T2-C) | 7 (S-E2 presence_lookup + hoist) — `3983 → 3990` colectados |
-| Tests nuevos del tribunal (T4-A) | 25 (15 llm_extractor + 10 alignment_reviewer) — `3990 → 4015` colectados |
-| Tests totales tribunal acumulados | 71 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C + 25 T4-A) |
+| Tests nuevos del tribunal (T4-A) | 28 (15 llm_extractor + 13 alignment_reviewer) — `3990 → 4018` colectados |
+| Tests totales tribunal acumulados | 74 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C + 28 T4-A) |
 | Tests totales post-plan | — |
 | Coherence output E2E | — |
 | Veredicto del Juez | — |
@@ -169,6 +170,7 @@ Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, 
 | D-T1.1 / D-T1.2 / D-T1.3 | **Revisan la matriz findings → veredicto y la política ZIP.** Ver §Decisiones de contrato — auditoría FASE-T1; D-T1.3 ✅ resuelta (opción a: primer piso → `first_floor_rule`, P6.5 liberada para Bot 4) | La redacción original de T1 permitía certificar entrega sin evidencia y entregar paquetes devueltos por correcciones | Conservar la regla original (deja el acta sin efecto bloqueante real) | T1 |
 | DA-T4 | LLM solo extrae; Juez aplica veredicto determinista | Preserva auditabilidad P3; LLM nunca es juez de registro | LLM como juez (no determinista, no testeable con pytest) | T4-A |
 | DA-T4A | Protocolo `PromiseExtractor` como interfaz de extracción | Permite intercambiar LLM real vs mock sin cambiar el llamador; `runtime_checkable` habilita validación de tipo en tests | Hardcodear `LLMPromiseExtractor` en `AlignmentReviewer` (acopla tests a provider real, imposible CI offline) | T4-A |
+| DA-T4A.2 | Política de veredicto post-auditoría: un hallazgo sustantivo (PROMESA-SIN-MATRIZ o SIN-BRECHA-ASOCIADA) → DEVOLVER-PRUEBAS; S-C4 pasa a severity INFO y no altera el veredicto | Con el umbral arbitrario «≥3 warnings», una sola promesa fantasma quedaba certificada como APROBADO | Umbral `warning>=3` (política original de la primera ejecución de T4-A, detectada en auditoría) | T4-A |
 
 ---
 

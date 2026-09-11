@@ -55,9 +55,9 @@ class TestVerbalPromise:
 class TestPromiseExtractorProtocol:
     """Tests para el protocolo PromiseExtractor (runtime_checkable)."""
 
-    def test_extractor_protocol_compliance(self):
+    def test_extractor_protocol_compliance(self, tmp_path):
         """LLMPromiseExtractor cumple PromiseExtractor protocol."""
-        extractor = LLMPromiseExtractor()
+        extractor = LLMPromiseExtractor(provider=MagicMock(), cache_dir=tmp_path)
         assert isinstance(extractor, PromiseExtractor)
 
     def test_mock_extractor_protocol_compliance(self):

@@ -5,9 +5,12 @@ deterministamente contra la matriz. Produce revision_alineacion.json.
 
 Flujo:
 1. LLM extrae promesas verbales de 02_PROPUESTA_COMERCIAL.md
-2. Capa determinista cruza cada promesa contra proposal_asset_matrix.json
+2. Capa determinista cruza en ambas direcciones: cada promesa contra la matriz
+   y cada entrada de matriz sin promesa también se clasifica
 3. Clasifica: ALINEADO / SIN-BRECHA-ASOCIADA / PROMESA-SIN-MATRIZ
 4. Detecta S-C4: tabla de assets técnicos como tercera superficie de promesa
+5. NO_BREACH: si el servicio NO fue prometido, es info legítima (no hallazgo);
+   si una promesa cae en una entrada NO_BREACH, es SIN-BRECHA-ASOCIADA (§5.2)
 """
 
 import json
@@ -48,9 +51,6 @@ class AlignmentReviewer:
         Args:
             extractor: Extractor de promesas (si es None, usa LLMPromiseExtractor).
         """
-        if extractor is None:
-            extractor = LLMPromiseExtractor()
-
         proposal_text = self._load_proposal()
         matrix = self._load_proposal_matrix()
         pain_ledger_resolved = self._load_pain_ledger_resolved()
@@ -60,28 +60,45 @@ class AlignmentReviewer:
         if matrix is None:
             return self._error_report("No se encontró proposal_asset_matrix.json")
 
+        if extractor is None:
+            extractor = LLMPromiseExtractor()
+
         verbal_promises = extractor.extract_verbal_promises(proposal_text)
         matrix_entries = self._build_matrix_lookup(matrix)
 
         service_matrix = []
         findings = []
+        matched_entry_keys = set()
 
         for promise in verbal_promises:
-            entry = self._find_matrix_entry(promise, matrix_entries)
-            classification = self._classify_promise(promise, entry, matrix)
-            service_matrix.append(classification)
-            if classification["status"] == STATUS_PROMESA_SIN_MATRIZ:
+            entry_key, entry = self._find_matrix_entry(promise, matrix_entries)
+            if entry_key is not None:
+                matched_entry_keys.add(entry_key)
+            row = self._classify_promise(promise, entry)
+            service_matrix.append(row)
+            if row["status"] == STATUS_PROMESA_SIN_MATRIZ:
                 findings.append(self._make_finding(
                     "PROMESA_SIN_MATRIZ",
-                    f"Promesa verbal '{promise.text[:50]}...' sin entrada en matriz",
+                    f"Promesa verbal '{row['promise_text'][:80]}' sin entrada en matriz",
                     promise.location,
                 ))
+            elif row["status"] == STATUS_SIN_BRECHA:
+                findings.append(self._make_finding(
+                    "SIN_BRECHA_ASOCIADA",
+                    row["finding"],
+                    promise.location,
+                ))
+
+        no_breach_info = self._cover_unmatched_entries(
+            matrix_entries, matched_entry_keys, service_matrix, findings
+        )
 
         s_c4_finding = self._detect_technical_assets_table(proposal_text)
         if s_c4_finding:
             findings.append(s_c4_finding)
 
         summary = self._compute_summary(service_matrix)
+        summary["no_breach_info"] = no_breach_info
         verdict = self._compute_verdict(findings)
 
         return {
@@ -91,6 +108,7 @@ class AlignmentReviewer:
             "findings": findings,
             "summary": summary,
             "verdict_recommendation": verdict,
+            "info": {"brechas_en_ledger": self._count_ledger_brechas(pain_ledger_resolved)},
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
         }
@@ -158,26 +176,34 @@ class AlignmentReviewer:
                 lookup[service_name.lower()] = entry
         return lookup
 
-    def _find_matrix_entry(self, promise: VerbalPromise, matrix_lookup: dict) -> Optional[dict]:
-        """Busca entrada de matriz correspondiente a una promesa verbal.
+    def _find_matrix_entry(self, promise: VerbalPromise, matrix_lookup: dict):
+        """Busca (entry_key, entry) correspondiente a una promesa verbal.
 
-        Usa service_hint del LLM para matching. Si no hay match exacto,
-        intenta fuzzy match por palabras clave.
+        Normaliza guiones bajos y guiones a espacios en ambos lados antes de
+        substring matching; si no hay match, intenta intersección de palabras.
         """
-        hint = promise.service_hint.lower()
-        for service_name, entry in matrix_lookup.items():
-            if hint in service_name or service_name in hint:
-                return entry
+        hint = self._normalize(promise.service_hint)
+        if not hint:
+            return None, None
 
-        for service_name, entry in matrix_lookup.items():
-            words = set(service_name.split())
-            hint_words = set(hint.split())
-            if words & hint_words:
-                return entry
+        for key, entry in matrix_lookup.items():
+            name = self._normalize(key)
+            if hint in name or name in hint:
+                return key, entry
 
-        return None
+        hint_words = set(hint.split())
+        for key, entry in matrix_lookup.items():
+            name_words = set(self._normalize(key).split())
+            if name_words & hint_words:
+                return key, entry
 
-    def _classify_promise(self, promise: VerbalPromise, entry: Optional[dict], matrix: dict) -> dict:
+        return None, None
+
+    @staticmethod
+    def _normalize(value: str) -> str:
+        return value.lower().replace("_", " ").replace("-", " ").strip()
+
+    def _classify_promise(self, promise: VerbalPromise, entry: Optional[dict]) -> dict:
         """Clasifica una promesa verbal contra la matriz.
 
         Retorna dict con: service, status, verbal_promise_found, promise_text,
@@ -214,7 +240,7 @@ class AlignmentReviewer:
             result["finding"] = "Presente en producción"
         elif status == "NO_BREACH":
             result["status"] = STATUS_SIN_BRECHA
-            result["finding"] = "Servicio sin brecha asociada (NO_BREACH)"
+            result["finding"] = "Servicio vendido sin brecha asociada (NO_BREACH)"
         else:
             result["status"] = STATUS_SIN_BRECHA
             result["finding"] = f"Estado no estándar: {status}"
@@ -224,20 +250,87 @@ class AlignmentReviewer:
     def _detect_technical_assets_table(self, proposal_text: str) -> Optional[dict]:
         """Detecta S-C4: tabla de assets técnicos como tercera superficie de promesa.
 
-        La tabla de assets técnicos se imprime incondicionalmente en la propuesta
-        (template línea 76: ${technical_assets_table}). Esto es una superficie de
-        promesa adicional que Bot 2 debe señalar.
+        La tabla la genera incondicionalmente
+        ``v4_proposal_generator._generate_technical_assets_table()`` y se inyecta
+        en el template vía ``${technical_assets_table}``. Es una superficie de
+        promesa adicional que Bot 2 debe señalar al Juez sin alterar el veredicto.
         """
         pattern = r"\|\s*Asset Técnico\s*\|\s*Estado\s*\|\s*Descripción\s*\|"
         if re.search(pattern, proposal_text, re.IGNORECASE):
             return {
                 "finding_type": "S_C4_TECHNICAL_ASSETS_TABLE",
                 "clause": "P6.2",
-                "severity": "WARNING",
+                "severity": "INFO",
                 "description": "Tabla de assets técnicos detectada como tercera superficie de promesa (S-C4)",
                 "source_artifact": "02_PROPUESTA_COMERCIAL.md",
             }
         return None
+
+    def _cover_unmatched_entries(
+        self,
+        matrix_entries: dict,
+        matched_entry_keys: set,
+        service_matrix: list,
+        findings: list,
+    ) -> int:
+        """Clasifica entradas de matriz sin promesa verbal (cruce inverso).
+
+        Una entrada LINKED con pain_ids sin promesa sigue siendo ALINEADO
+        (responden a una brecha diagnosticada). Una entrada NO_BREACH sin
+        promesa es un servicio legítimamente no prometido: se cuenta como
+        info, no como hallazgo.
+
+        Retorna el conteo de entradas NO_BREACH no prometidas.
+        """
+        no_breach_info = 0
+        for key, entry in matrix_entries.items():
+            if key in matched_entry_keys:
+                continue
+            status = entry.get("status", "")
+            pain_ids = entry.get("pain_ids") or []
+
+            if status == "NO_BREACH":
+                no_breach_info += 1
+                continue
+
+            row = {
+                "service": entry.get("service_name") or key,
+                "status": None,
+                "verbal_promise_found": False,
+                "promise_text": None,
+                "matrix_entry_found": True,
+                "pain_id": pain_ids[0] if pain_ids else None,
+                "finding": None,
+            }
+
+            if status == "LINKED" and pain_ids:
+                row["status"] = STATUS_ALINEADO
+            elif status == "LINKED":
+                row["status"] = STATUS_SIN_BRECHA
+                row["finding"] = "Servicio LINKED en matriz sin pain_id asociado"
+            elif status == "PRESENT_IN_PRODUCTION":
+                row["status"] = STATUS_ALINEADO
+                row["finding"] = "Presente en producción"
+            else:
+                row["status"] = STATUS_SIN_BRECHA
+                row["finding"] = f"Estado no estándar en matriz: {status}"
+
+            if row["status"] == STATUS_SIN_BRECHA:
+                findings.append(self._make_finding(
+                    "SIN_BRECHA_ASOCIADA",
+                    row["finding"],
+                    "proposal_asset_matrix.json",
+                ))
+            service_matrix.append(row)
+
+        return no_breach_info
+
+    @staticmethod
+    def _count_ledger_brechas(ledger) -> int:
+        """Brechas registradas en pain_ledger_resolved (divulgación informativa)."""
+        if not isinstance(ledger, dict):
+            return 0
+        return len(ledger.get("entries") or [])
 
     def _compute_summary(self, service_matrix: list) -> dict:
         """Calcula resumen de clasificaciones."""
@@ -252,13 +345,18 @@ class AlignmentReviewer:
         }
 
     def _compute_verdict(self, findings: list) -> str:
-        """Calcula veredicto recomendado basado en findings."""
-        critical_count = sum(1 for f in findings if f.get("severity") == "CRITICAL")
-        warning_count = sum(1 for f in findings if f.get("severity") == "WARNING")
-
-        if critical_count > 0:
+        """Veredicto recomendado: BLOQUEAR por artefacto faltante (CRITICAL),
+        DEVOLVER-PRUEBAS por hallazgo sustantivo (promesa sin matriz o servicio
+        sin brecha), APROBADO en otro caso. Los hallazgos INFO (S-C4) se
+        divulgan pero no alteran la recomendación.
+        """
+        if any(f.get("severity") == "CRITICAL" for f in findings):
             return VERDICT_BLOQUEAR
-        if warning_count >= 3:
+        escalate = {
+            "PROMESA_SIN_MATRIZ": True,
+            "SIN_BRECHA_ASOCIADA": True,
+        }
+        if any(f.get("finding_type") in escalate for f in findings):
             return VERDICT_DEVOLVER
         return VERDICT_APROBADO
 
@@ -286,8 +384,9 @@ class AlignmentReviewer:
                 "description": message,
                 "source_artifact": "N/A",
             }],
-            "summary": {"aligned": 0, "no_breach": 0, "promise_without_matrix": 0, "total": 0},
+            "summary": {"aligned": 0, "no_breach": 0, "promise_without_matrix": 0, "total": 0, "no_breach_info": 0},
             "verdict_recommendation": VERDICT_BLOQUEAR,
+            "info": {"brechas_en_ledger": 0},
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
         }

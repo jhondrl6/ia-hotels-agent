@@ -43,9 +43,9 @@
 | Tests nuevos (tribunal T2-A) | 10 (DiagnosisReviewer) | T2-A |
 | Tests nuevos (tribunal T2-B) | 12 (AssetReviewer) | T2-B |
 | Tests nuevos (tribunal T2-C) | 7 (S-E2 presence_lookup + hoist) | T2-C |
-| Tests nuevos (tribunal T4-A) | 25 (LLMPromiseExtractor + AlignmentReviewer) | T4-A |
-| Tests totales tribunal acumulados | 71 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C + 25 T4-A) | T4-A |
-| Tests colectados post-T4-A | 4,015 (3,990 T2-C + 25 T4-A) | T4-A |
+| Tests nuevos (tribunal T4-A) | 28 (15 llm_extractor + 13 alignment_reviewer, incl. fix post-auditoría) | T4-A |
+| Tests totales tribunal acumulados | 74 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C + 28 T4-A) | T4-A |
+| Tests colectados post-T4-A | 4,018 (3,990 T2-C + 28 T4-A) | T4-A |
 | Tests totales post-plan | — | E2E |
 | Coherence output E2E | — | E2E |
 | Veredicto del Juez (Salento Real) | — | E2E |

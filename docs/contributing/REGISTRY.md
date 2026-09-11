@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-11
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 473
+> **Total fases completadas:** 472
 
 ---
 
@@ -11021,24 +11021,7 @@ _Ninguno_
 _Ninguno_
 
 ### Validaciones
-- [x] Tests passing (25)
-- [x] Suite NEVER_BLOCK passing
-- [x] Capability contract verificado
-
----
-
-
-## FASE-T4-A - 2026-09-11
-**Descripcion:** Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 25 tests verdes
-
-### Archivos Nuevos
-_Ninguno_
-
-### Archivos Modificados
-_Ninguno_
-
-### Validaciones
-- [x] Tests passing
+- [x] Tests passing (28, incl. fix post-auditoría)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
