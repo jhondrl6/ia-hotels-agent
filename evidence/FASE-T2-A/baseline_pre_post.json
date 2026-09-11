@@ -1,0 +1,32 @@
+{
+    "phase": "FASE-T2-A",
+    "timestamp": "2026-09-10T20:21:00",
+    "baseline_pre": {
+        "tests_collected": 3961,
+        "tests_tribunal": 17,
+        "source": "FASE-T1 post-ejecucion"
+    },
+    "baseline_post": {
+        "tests_collected": 3971,
+        "tests_tribunal": 27,
+        "tests_t2a_new": 10,
+        "source": "pytest --co -q"
+    },
+    "delta": {
+        "tests_added": 10,
+        "tests_tribunal_added": 10,
+        "nr1_passed": true,
+        "nr2_skipped_unchanged": true
+    },
+    "validations": {
+        "run_all_validations_quick": "8/8 PASS",
+        "nr3_total_pass": true
+    },
+    "artifacts_created": [
+        "modules/quality_gates/tribunal/diagnosis_reviewer.py",
+        "tests/quality_gates/tribunal/test_diagnosis_reviewer.py"
+    ],
+    "artifacts_modified": [
+        "modules/quality_gates/tribunal/__init__.py"
+    ]
+}

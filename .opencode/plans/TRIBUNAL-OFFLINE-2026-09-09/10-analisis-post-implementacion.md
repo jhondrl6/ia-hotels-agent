@@ -11,7 +11,7 @@
 | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
 |------|--------|--------|-------------|---------------|-------|
 | FASE-T1 | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Juez + contrato de acta + integración main.py; auditada y corregida D-T1.1/D-T1.2 el mismo día |
-| FASE-T2-A | — | ⬜ | — | No | Bot 1: Diagnóstico (DIRECTO: tests importan el proyecto) |
+| FASE-T2-A | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 1: DiagnosisReviewer — trazabilidad pain_id, fuente declarada, recall vacuo S-I1; 10 tests verdes |
 | FASE-T2-B | — | ⬜ | — | No | Bot 3: Assets (DIRECTO) |
 | FASE-T2-C | — | ⬜ | — | No | Limpieza S-E2/S9 (DIRECTO: toca `main.py`) |
 | FASE-T4-A | — | ⬜ | — | No | Bot 2: Alineación NL + interfaz LLM |
@@ -71,6 +71,14 @@
 | L-T1.3 | La integración never-block (try/except que produce `acta = None`) es correcta: el tribunal no puede romper v4complete. Los veredictos negativos alimentan la Ruta 2 existente sin añadir una cuarta ruta. | Diseño de T2-A/T2-B (revisores también never-block) | Todos los revisores deben ser never-block; el Juez consolida sus outputs |
 | L-T1.4 | ⚠️ **Corregida en la auditoría.** En T1 solo **P6.2** queda `NOT_EVALUABLE` (requiere LLM y se difiere a T4-A). **P6.5** también queda `NOT_EVALUABLE` tras resolver D-T1.3 (opción a: primer piso → `first_floor_rule`, P6.5 liberada para Bot 4). El contrato de acta exige que un revisor declare su `clause` antes de escribir sobre ella. | Releído `_evaluate_p6_5` contra `05-prompt-...-T4-B.md` | **Resuelto (D-T1.3 opción a)**: primer piso vive en `first_floor_rule`; `P6.5` = honestidad NL (Bot 4) |
 
+#### FASE-T2-A (2026-09-10)
+
+| # | Lección | Fuente | Aplicación futura |
+|---|---------|--------|-------------------|
+| L-T2A.1 | El regex de extracción de `pain_id` del markdown debe manejar el formato `**pain_id:**` (bold+colon). El patrón inicial `pain_id[\`:\s]+` no capturaba el `*` de markdown bold. Se corrigió a `pain_id[\*\`:\s]+`. | Test `test_untraceable_pain_detected` (primer run: 0 findings; segundo run: 1 finding) | T2-B y T4-A deben manejar formatos markdown variados al extraer IDs de documentos comerciales |
+| L-T2A.2 | La distinción recall fundado vs vacuo (S-I1) se certifica con test de fixture, no con corrida E2E. En la corrida real el gate ya serializa `details.critical_issues_count`, así que el finding `VACUOUS_RECALL` no aparece. El AC6 es test-level. | Plan maestro §T2-A (nota de auditoría 2026-09-09) | VERIFY debe documentar que AC6 se verifica via tests, no via output E2E |
+| L-T2A.3 | El patrón never-block del Juez (T1) se replica naturalmente en Bot 1: `_load_json` retorna `None` sin excepción, los checks retornan listas vacías si el artefacto no existe. El veredicto final (`APROBADO`/`DEVOLVER`/`BLOQUEAR`) se computa sobre hallazgos, no sobre ausencia de datos. | Diseño de `DiagnosisReviewer` (mismo patrón que `TribunalJudge`) | T2-B y T4-A/B deben seguir el mismo patrón never-block |
+
 ### Decisiones de contrato — auditoría FASE-T1 (2026-09-10)
 
 Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, más una colisión de contrato (D-T1.3) resuelta con opción (a): primer piso → `first_floor_rule`, P6.5 liberada para Bot 4. Todos se registran aquí porque afectan al contrato que T2/T4 consumen (RESTRICCIÓN de Tarea 4).
@@ -113,7 +121,9 @@ Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, 
 | Métrica | Valor |
 |---------|-------|
 | Tests pre-plan (baseline v4.75.0) | 3.934 funciones / 298 archivos |
-| Tests nuevos del tribunal | 17 (13 de T1 + 4 de la auditoría) — `3944 → 3961` colectados |
+| Tests nuevos del tribunal (T1) | 17 (13 de T1 + 4 de la auditoría) — `3944 → 3961` colectados |
+| Tests nuevos del tribunal (T2-A) | 10 (DiagnosisReviewer) — `3961 → 3971` colectados |
+| Tests totales tribunal acumulados | 27 (17 T1 + 10 T2-A) |
 | Tests totales post-plan | — |
 | Coherence output E2E | — |
 | Veredicto del Juez | — |

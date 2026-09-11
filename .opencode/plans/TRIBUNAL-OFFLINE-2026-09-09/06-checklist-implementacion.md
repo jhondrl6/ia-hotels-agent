@@ -10,7 +10,7 @@
 | # | Fase | Estado | Fecha inicio | Fecha cierre | Iteraciones | Notas |
 |---|------|--------|-------------|-------------|-------------|-------|
 | 1 | FASE-T1 | ⚠️ Completada con reserva | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Juez + contrato de acta + integración main.py; auditada. Reserva: S-HF1 y R2.1 sin cerrar; D-T1.3 abierta |
-| 2 | FASE-T2-A | ⬜ Pendiente | — | — | — | Bot 1: Diagnóstico |
+| 2 | FASE-T2-A | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 1: DiagnosisReviewer — 10 tests verdes, AC5+AC6 certificados |
 | 3 | FASE-T2-B | ⬜ Pendiente | — | — | — | Bot 3: Assets |
 | 4 | FASE-T2-C | ⬜ Pendiente | — | — | — | Limpieza S-E2, S9 |
 | 5 | FASE-T4-A | ⬜ Pendiente | — | — | — | Bot 2: Alineación NL |
@@ -48,16 +48,16 @@
 
 ### FASE-T2-A — Revisor de Diagnóstico (Bot 1)
 
-- [ ] `modules/quality_gates/tribunal/diagnosis_reviewer.py` implementado
-- [ ] `revision_diagnostico.json` con `findings[]` (AC5)
-- [ ] Bot 1 marca recall vacuo (AC6, S-I1 — test-level; en corrida E2E el gate ya declara `details`, no dispara)
-- [ ] Tests: `tests/quality_gates/tribunal/test_diagnosis_reviewer.py` verdes
-- [ ] Test de serialización (R2.4)
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] Baseline pre/post en `evidence/FASE-T2-A/`
-- [ ] `log_phase_completion.py` ejecutado
-- [ ] `09-documentacion-post-proyecto.md` actualizado
-- [ ] `10-analisis-post-implementacion.md` actualizado
+- [x] `modules/quality_gates/tribunal/diagnosis_reviewer.py` implementado
+- [x] `revision_diagnostico.json` con `findings[]` (AC5)
+- [x] Bot 1 marca recall vacuo (AC6, S-I1 — test-level; en corrida E2E el gate ya declara `details`, no dispara)
+- [x] Tests: `tests/quality_gates/tribunal/test_diagnosis_reviewer.py` verdes (10 tests)
+- [x] Test de serialización (R2.4)
+- [x] `run_all_validations.py --quick` TOTAL PASS (8/8)
+- [x] Baseline pre/post en `evidence/FASE-T2-A/`
+- [x] `log_phase_completion.py` ejecutado
+- [x] `09-documentacion-post-proyecto.md` actualizado
+- [x] `10-analisis-post-implementacion.md` actualizado
 
 ### FASE-T2-B — Revisor de Assets (Bot 3)
 
