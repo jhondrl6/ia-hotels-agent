@@ -1,7 +1,7 @@
 # Remediación D-T4B-A1 — FASE-T4-B (2026-09-11)
 
 > **Aditiva**: no reescribe `evidencia-final.md` ni borra los snapshots originales; enlaza las salidas que cierran cada gate G1–G11 del dossier.
-> **Dossier de auditoría**: `.opencode/context/CONTEXT-AUDITORIA-FORENSE-FASE-T4B-REMEDIACION-2026-09-11.md`
+> **Dossier de auditoría**: «Auditoría forense FASE-T4-B + dossier de remediación (2026-09-11)», no versionado en este repo (movido fuera por su autor el 2026-09-11). Todas las mediciones que este documento cita fueron reproducidas en la sesión de remediación y quedan pegadas abajo o en `sonda_contraste_pre_post.py`.
 > **Modo**: DIRECTO, una fase por sesión (R1 del executor). Restricciones del plan vigentes: `main.py`, `judge.py`, `llm_extractor.py`, `ROADMAP.md` **sin tocar**; sin `v4complete`; sin LLM real en tests; citas por símbolo (R2.2).
 
 ---
@@ -81,9 +81,9 @@ $ grep -c "HonestyReviewer" modules/quality_gates/tribunal/__init__.py
 
 ### G6 — strings inventados
 
-El patron de grep esta en R5 del dossier (4 strings: dos nombres de archivo inexistentes y dos `gate_id` inexistentes). Aplicado sobre `.opencode/plans/` y `evidence/`: **0 coincidencias** (verificado con `grep -rE` usando ese patron, excluyendo el propio dossier de auditoria). Ademas: los 7 nombres de test que publica `evidencia-final.md` existen como `def` en `test_honesty_reviewer.py`, y no queda ninguna tabla "AC1..AC10" en la evidencia de T4-B.
+El patron de grep esta en R5 del dossier (4 strings: dos nombres de archivo inexistentes y dos `gate_id` inexistentes). Aplicado sobre `.opencode/plans/` y `evidence/`: **0 coincidencias** (verificado con `grep -rE` usando ese patron). Ademas: los 7 nombres de test que publica `evidencia-final.md` existen como `def` en `test_honesty_reviewer.py`, y no queda ninguna tabla "AC1..AC10" en la evidencia de T4-B.
 
-> **Unica coincidencia restante**: el dossier `.opencode/context/CONTEXT-AUDITORIA-FORENSE-FASE-T4B-REMEDIACION-2026-09-11.md` conserva los strings literales porque son la evidencia del hallazgo R5.2/R5.3. No se borran: borrarlos destruiria el registro de la auditoria. Esta nota tampoco los reproduce, para que el gate sea mechanically verificable sobre `evidence/`.
+> **Ninguna coincidencia en el repositorio**: el grep sobre `.opencode/` y `evidence/` devuelve 0, y el documento que conserva los strings literales (la auditoría del 2026-09-11) quedó fuera del repo. No se reproducen aquí ni en esta nota: borrar el rastro no es el objetivo, pero el criterio G6 exige que la evidencia de la fase no contenga afirmaciones no verificables.
 
 ### G7 — responsabilidades §5
 

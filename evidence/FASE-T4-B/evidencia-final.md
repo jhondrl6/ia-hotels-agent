@@ -4,7 +4,7 @@
 > **Fase**: FASE-T4-B (Revisor de Honestidad NL — Bot 4)
 > **Estado**: ⚠️ Completada con reserva (mismo tratamiento que FASE-T1 y FASE-T2-C)
 > **Reserva**: auditoría forense del 2026-09-11 encontró que el revisor no funcionaba sobre los artefactos reales del pipeline. Remediación R1–R9 ejecutada el mismo día — ver §Remediación post-auditoría.
-> **Dossier de auditoría**: `.opencode/context/CONTEXT-AUDITORIA-FORENSE-FASE-T4B-REMEDIACION-2026-09-11.md`
+> **Dossier de auditoría**: «Auditoría forense FASE-T4-B + dossier de remediación (2026-09-11)», documento de sola lectura del auditor. **No versionado en este repositorio** (movido fuera por su autor el 2026-09-11). Sus mediciones quedaron reproducidas en `remediacion-d-t4b-a1.md` (salidas G1–G11) y en la sonda ejecutable `sonda_contraste_pre_post.py`.
 >
 > Este documento fue corregido tras la auditoría. Las afirmaciones fácticas que resultaron falsas están rectificadas aquí y su rastro documentado en `rectificacion-NR1.md`; el registro original de `tests_baseline_pre.txt` / `..._post.txt` se conservó íntegro (borrarlo sería destruir evidencia).
 
@@ -72,7 +72,7 @@ python scripts/run_all_validations.py --quick
 
 **Composición real medida** (corrida 2026-08-31 12:28, Tier B): **12 entradas = 10 gate_ids distintos**; los duplicados son `CG-OTA-NARRATIVE` y `CG-TECH-JARGON`, que viven en ambos archivos. Por severidad: 5 BLOCKING / 6 WARNING / 1 INFO como entradas, 4 / 5 / 1 como distintos. **Ninguna de las dos lecturas coincide con la descomposición que declara el plan** ("6 blocking + 4 warning + 2 adicionales"). `total_cg_count` reporta entradas y `distinct_cg_count` + `duplicate_gate_ids` hacen explícita la diferencia (decisión Q4 de la remediación).
 
-**Rectificado en la auditoría**: esta sección afirmaba dos nombres de archivo y tres `gate_id` que no existen en el código ni en ningún artefacto (ver R5.2 y R5.3 del dossier, que conserva los strings). Describían una corrida que no corresponde ni a la realidad ni al fixture de la propia fase.
+**Rectificado en la auditoría**: esta sección afirmaba dos nombres de archivo y tres `gate_id` que no existen en el código ni en ningún artefacto. Describían una corrida que no corresponde ni a la realidad ni al fixture de la propia fase. Esos strings literales **no se reproducen aquí** (el criterio G6 del dossier los excluye de `evidence/` y `.opencode/`); solo figuran en el documento de auditoría del 2026-09-11, que no está versionado en este repo.
 
 **Lección**: L-T4B.1 en `10-analisis-post-implementacion.md`
 

@@ -1,7 +1,7 @@
 # Rectificación NR1 — FASE-T4-B (2026-09-11)
 
 > **Propósito**: registrar qué se midió mal en el criterio NR1 y por qué, **sin borrar el registro original**. Los archivos `tests_baseline_pre.txt` y `tests_baseline_post.txt` quedan intactos: destruir evidencia no es corregir evidencia.
-> **Disparador**: auditoría forense de sola lectura del 2026-09-11, hallazgo D3 (ALTO), tarea R4 del dossier `.opencode/context/CONTEXT-AUDITORIA-FORENSE-FASE-T4B-REMEDIACION-2026-09-11.md`.
+> **Disparador**: auditoría forense de sola lectura del 2026-09-11, hallazgo D3 (ALTO), tarea R4 del dossier «Auditoría forense FASE-T4-B + dossier de remediación (2026-09-11)», no versionado en este repo.
 
 ---
 
