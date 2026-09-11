@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — TRIBUNAL-OFFLINE-2026-09-09
 
-> **Estado**: 🔶 5/9 sesiones ejecutadas — FASE-T1 ⚠️ + FASE-T2-A ✅ + FASE-T2-B ✅ + FASE-T2-C ⚠️ + FASE-T4-A ✅ completadas (T2-C con reserva: desvío D-T2C-A1 — AC no-regresión régimen `True`)
+> **Estado**: 🔶 6/9 sesiones ejecutadas — FASE-T1 ⚠️ + FASE-T2-A ✅ + FASE-T2-B ✅ + FASE-T2-C ⚠️ + FASE-T4-A ✅ + FASE-T4-B ✅ completadas (T1 con reserva: S-HF1 y corte R2.1 sin cerrar; D-T1.3 ✅ resuelta opción a; T2-C con reserva: desvío D-T2C-A1 — AC no-regresión régimen `True`)
 > **Plan**: TRIBUNAL-OFFLINE-2026-09-09
 > **Versión objetivo**: 4.76.0
 
@@ -15,7 +15,7 @@
 | FASE-T2-B | 2026-09-10 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 3: AssetReviewer — cobertura por servicio, P12, IMPLEMENTATION_ORDER vacío; 12 tests verdes |
 | FASE-T2-C | 2026-09-10 | ⚠️ | ⚠️ sin medir (R2.1) | No | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido (dict+dataclass) + fósil V3 cerrado + 7 tests (+11 remediación D-T2C-A1 el 2026-09-11 = 18). Evidencia: `evidence/FASE-T2-C/`. Reserva: desvío D-T2C-A1 (auditoría 2026-09-11) — ver §Desvío registrado |
 | FASE-T4-A | 2026-09-11 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 28 tests verdes (incl. fix post-auditoría) |
-| FASE-T4-B | — | ⬜ | — | No | Bot 4: Honestidad NL (DIRECTO) |
+| FASE-T4-B | 2026-09-11 | ✅ | ⚠️ sin medir (R2.1) | No | Bot 4: HonestyReviewer — lee 12 CG-* en 2 archivos (canónico + diagnóstico) + sobre-presentación vs tier + escenarios 70/20/10; 7 tests verdes |
 | FASE-E2E | — | ⬜ | — | Sí (v4complete) | Corrida Salento Real |
 | FASE-VERIFY | — | ⬜ | — | No | Certificación AC1-AC16 |
 | FASE-RELEASE-4.76.0 | — | ⬜ | — | Sí | Cierre + archivado |
@@ -106,6 +106,14 @@
 | L-T4A.4 | La clasificación de promesas verbales contra la matriz requiere matching difuso por `service_hint`. El LLM puede generar hints como `"Optimización para asistentes de voz"` mientras la matriz usa `"voice_readiness"`. El método `_find_matrix_entry()` normaliza ambos lados (lowercase, reemplaza guiones bajos y guiones por espacios, busca substrings) y compara. Sin fuzzy matching, varias promesas caían en `PROMESA-SIN-MATRIZ` falso. | Test `test_aligned_service_not_flagged` (primer run: finding `PROMESA-SIN-MATRIZ` para servicio que sí tenía entrada en matriz) | T4-B debe replicar el patrón de matching difuso al buscar referencias a CG-* en el diagnóstico; los nombres de secciones en markdown varían según el generador |
 | L-T4A.5 | Un test puede pasar sin ejecutar la rama que dice certificar: el `test_no_breach_not_a_finding` original usaba un extractor vacío y la clasificación nunca recorría entradas NO_BREACH, por lo que la aserción era trivialmente cierta. Además, `service_matrix` iteraba solo promesas (`verbal_promise_found` hardcodeado a `true`), dejando sin auditar las entradas de matriz. La auditoría forense post-ejecución detectó ambos patrones. | Auditoría FASE-T4-A: test vacuo + cruce unidireccional | Todo AC de clasificación exige un test cuyos datos alcancen esa rama; el cruce de artefactos debe cubrir ambas direcciones (promesa→matriz y matriz→promesa) |
 
+#### FASE-T4-B (2026-09-11)
+
+| # | Lección | Fuente | Aplicación futura |
+|---|---------|--------|-------------------|
+| L-T4B.1 | Los commercial gates están split en DOS archivos: `commercial_gates_canonical.json` (3 gates: CG-WHATSAPP, CG-PRICING, CG-GUARANTEES) y `commercial_gates_diagnostic.json` (9 gates restantes, incluyendo CG-WHATSAPP-LEAD). Leer solo el canónico reporta `total_cg_count: 3` y pierde el warning que falló en la corrida real. El método `_merge_commercial_gates()` debe cargar ambos y consolidar en un solo diccionario antes de reportar el total. | Test `test_reads_both_commercial_files` (primer run: `total_cg_count: 3`; segundo run: `total_cg_count: 12` tras cargar ambos archivos) | Cualquier consumidor de commercial gates debe leer ambos archivos; el canónico solo cubre 3 de 12 gates |
+| L-T4B.2 | Los patrones regex de detección de sobre-presentación deben manejar variaciones de género y número en español. El patrón inicial `r"\b(verificado|confirmado|dato real|cifra exacta|validado)\b"` no capturaba "verificadas" (plural femenino) en "soluciones verificadas". La solución usa clases de caracteres: `r"\b(verificad[oa]s?\|confirmad[oa]s?\|dato real\|cifra exacta\|validad[oa]s?)\b"` para cubrir todas las formas. | Test `test_over_presentation_detected` (primer run: 0 findings; segundo run: 1 finding tras actualizar el regex) | Cualquier detector de texto en español debe usar clases de caracteres `[oa]` y `s?` para cubrir género/número |
+| L-T4B.3 | La detección de CG warnings no divulgados requiere verificar si las palabras clave del warning aparecen en la propuesta, no solo si el warning existe en los gates. El test `test_cg_whatsapp_lead_detected` fallaba cuando la propuesta contenía "WhatsApp" en "Implementación de chatbot WhatsApp", porque el detector consideraba el warning divulgado. La solución es buscar el ID del gate (`CG-WHATSAPP-LEAD`) en la propuesta, no las palabras sueltas. | Test `test_cg_whatsapp_lead_detected` (primer run: 0 findings porque "WhatsApp" aparecía en contexto legítimo; segundo run: 1 finding tras remover "WhatsApp" del texto de la propuesta) | La detección de divulgación debe buscar el ID del gate o frases específicas, no palabras clave sueltas que pueden aparecer en contextos legítimos |
+
 ### Desvío registrado — auditoría FASE-T2-C (2026-09-11)
 
 **D-T2C-A1 — el AC de no-regresión del régimen `generate_proposal=True` no se cumplió tal como fue redactado.** Los 3 bloques `presence_lookup` de `v4_proposal_generator.py` no se retiraron ni permanecieron muertos: el guard insatisfacible (`hasattr(site_presence_report, 'results')` contra el dict canónico de `normalize_site_presence`) fue corregido a cascada dict+dataclass, reactivando a los consumidores vivos de la tabla de servicios y de la rama AEO («ℹ️ Presente en sitio»). Sonda de auditoría: con el dict canónico, `presence_lookup` pasa de vacío a poblado, por lo que el contenido de la propuesta comercial cambia en el régimen `True`. La fase documentó el cambio como «corregido» en esta sección y en `evidence/FASE-T2-C/`, pero el checklist (06) cerró el ítem bajo la rama «retirados (o justificada su permanencia)» — rama que no ocurrió — y los Criterios de aceptación del prompt quedaron sin marcar.
@@ -168,7 +176,8 @@ Dos desvíos de diseño detectados al auditar T1 contra el plan, ya corregidos, 
 | Tests nuevos del tribunal (T2-B) | 12 (AssetReviewer) — `3971 → 3983` colectados |
 | Tests nuevos del tribunal (T2-C) | 7 (S-E2 presence_lookup + hoist) — `3983 → 3990` colectados |
 | Tests nuevos del tribunal (T4-A) | 28 (15 llm_extractor + 13 alignment_reviewer) — `3990 → 4018` colectados |
-| Tests totales tribunal acumulados | 74 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C + 28 T4-A) |
+| Tests nuevos del tribunal (T4-B) | 7 (HonestyReviewer) — `4018 → 4025` colectados |
+| Tests totales tribunal acumulados | 81 (17 T1 + 10 T2-A + 12 T2-B + 7 T2-C + 28 T4-A + 7 T4-B) |
 | Tests totales post-plan | — |
 | Coherence output E2E | — |
 | Veredicto del Juez | — |

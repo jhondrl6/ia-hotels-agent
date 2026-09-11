@@ -44,8 +44,10 @@
 | Tests nuevos (tribunal T2-B) | 12 (AssetReviewer) | T2-B |
 | Tests nuevos (tribunal T2-C) | 18 (7 de la fase + 11 de remediación D-T2C-A1, auditoría 2026-09-11) | T2-C |
 | Tests nuevos (tribunal T4-A) | 28 (15 llm_extractor + 13 alignment_reviewer, incl. fix post-auditoría) | T4-A |
-| Tests totales tribunal acumulados | 85 (17 T1 + 10 T2-A + 12 T2-B + 18 T2-C + 28 T4-A) | T2-C (remed.) |
+| Tests nuevos (tribunal T4-B) | 7 (HonestyReviewer) | T4-B |
+| Tests totales tribunal acumulados | 92 (17 T1 + 10 T2-A + 12 T2-B + 18 T2-C + 28 T4-A + 7 T4-B) | T4-B |
 | Tests colectados post-T4-A | 4,018 (3,990 T2-C + 28 T4-A) | T4-A |
+| Tests colectados post-T4-B | 4,025 (4,018 + 7) | T4-B |
 | Tests colectados post-remediación D-T2C-A1 | 4,029 (4,018 + 11) | T2-C (remed.) |
 | Tests totales post-plan | — | E2E |
 | Coherence output E2E | — | E2E |
@@ -55,6 +57,7 @@
 | Archivos nuevos en `v4_audit/` (T2-A) | 1 (`revision_diagnostico.json`) | T2-A |
 | Archivos nuevos en `v4_audit/` (T2-B) | 1 (`revision_assets.json`) | T2-B |
 | Archivos nuevos en `v4_audit/` (T4-A) | 1 (`revision_alineacion.json`) | T4-A |
+| Archivos nuevos en `v4_audit/` (T4-B) | 1 (`revision_honestidad.json`) | T4-B |
 
 ## Sección E: Archivos Afiliados Actualizados
 

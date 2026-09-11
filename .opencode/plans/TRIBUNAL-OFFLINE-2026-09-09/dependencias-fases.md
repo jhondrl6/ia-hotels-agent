@@ -43,7 +43,7 @@ FASE-T1 (Juez + contrato de acta)
 | FASE-T2-B ✅ | T1 ⚠️ | T4-A | Acta contract estable + `revision_assets.json` schema |
 | FASE-T2-C ⚠️ | T1 ⚠️ | E2E | Toca `main.py` (secuencial tras T1, nunca paralela); precondición S-E2 del régimen `generate_proposal=False`. ⚠️ Desvío D-T2C-A1: los bloques `presence_lookup` fueron reactivados (no retirados) y cambian la propuesta en régimen `True` — E2E debe validar la veracidad de «Presente en sitio» |
 | FASE-T4-A ✅ | T1 ⚠️, T2-A ✅, T2-B ✅ | T4-B | Interfaz de extracción LLM (patrón que T4-B replica) |
-| FASE-T4-B | T4-A ✅ | E2E | Todos los revisores implementados |
+| FASE-T4-B ✅ | T4-A ✅ | E2E | Todos los revisores implementados |
 | FASE-E2E | T1-T4-B ✅, T2-C ⚠️ | VERIFY | Pipeline completo con tribunal integrado + residuos heredados curados. Consume el desvío D-T2C-A1: validar veracidad de «Presente en sitio» en la propuesta |
 | FASE-VERIFY | E2E ✅ | RELEASE | ACs certificados contra output real |
 | FASE-RELEASE-4.76.0 | VERIFY ✅ | — | Cierre documental |

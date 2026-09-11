@@ -14,7 +14,7 @@
 | 3 | FASE-T2-B | ✅ Completada | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Bot 3: AssetReviewer — 12 tests verdes, AC7+AC8 certificados |
 | 4 | FASE-T2-C | ⚠️ Completada con reserva | 2026-09-10 | 2026-09-10 | ⚠️ sin medir | Limpieza S-E2/S9 — NameError hoisted + presence_lookup corregido + fósil V3 cerrado. Reserva: desvío D-T2C-A1 (AC no-regresión régimen True) — remediación ejecutada 2026-09-11 (+11 tests) |
 | 5 | FASE-T4-A | ✅ Completada | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Bot 2: AlignmentReviewer — protocolo PromiseExtractor + extracción LLM + clasificación determinista + S-C4; 28 tests verdes (incl. fix post-auditoría) |
-| 6 | FASE-T4-B | ⬜ Pendiente | — | — | — | Bot 4: Honestidad NL |
+| 6 | FASE-T4-B | ✅ Completada | 2026-09-11 | 2026-09-11 | ⚠️ sin medir | Bot 4: HonestyReviewer — lee 12 CG-* en 2 archivos + sobre-presentación vs tier + escenarios 70/20/10; 7 tests verdes |
 | 7 | FASE-E2E | ⬜ Pendiente | — | — | — | v4complete Salento Real |
 | 8 | FASE-VERIFY | ⬜ Pendiente | — | — | — | Certificación ACs |
 | 9 | FASE-RELEASE-4.76.0 | ⬜ Pendiente | — | — | — | Cierre + archivado |
@@ -104,17 +104,17 @@
 
 ### FASE-T4-B — Revisor de Honestidad NL (Bot 4)
 
-- [ ] `modules/quality_gates/tribunal/honesty_reviewer.py` implementado
-- [ ] `revision_honestidad.json` con `findings[]` (AC11)
-- [ ] Bot 4 detecta CG-WHATSAPP-LEAD del archivo diagnóstico (AC12)
-- [ ] Lee AMBOS archivos comerciales (canónico + diagnóstico)
-- [ ] Tests con LLM mockeado verdes
-- [ ] Test de serialización (R2.4)
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] Baseline pre/post en `evidence/FASE-T4-B/`
-- [ ] `log_phase_completion.py` ejecutado
-- [ ] `09-documentacion-post-proyecto.md` actualizado
-- [ ] `10-analisis-post-implementacion.md` actualizado
+- [x] `modules/quality_gates/tribunal/honesty_reviewer.py` implementado
+- [x] `revision_honestidad.json` con `findings[]` (AC11)
+- [x] Bot 4 detecta CG-WHATSAPP-LEAD del archivo diagnóstico (AC12)
+- [x] Lee AMBOS archivos comerciales (canónico + diagnóstico)
+- [x] Tests con LLM mockeado verdes (7 tests)
+- [x] Test de serialización (R2.4)
+- [x] `run_all_validations.py --quick` TOTAL PASS (8/8)
+- [x] Baseline pre/post en `evidence/FASE-T4-B/`
+- [x] `log_phase_completion.py` ejecutado
+- [x] `09-documentacion-post-proyecto.md` actualizado
+- [x] `10-analisis-post-implementacion.md` actualizado (3 lecciones: L-T4B.1/2/3)
 
 ### FASE-E2E — v4complete Hotel Salento Real
 
