@@ -65,6 +65,17 @@ repos:
         stages: [pre-commit]
         always_run: true
 
+      # Cold layer of executor Paso 0: the lesson index must reflect the corpus.
+      # Cure on failure = regenerate (python scripts/build_lesson_index.py); the
+      # index is a generated artifact, never hand-edited.
+      - id: lesson-index
+        name: Lesson Index Fresh (.opencode/LECCIONES-INDEX.md)
+        entry: python scripts/build_lesson_index.py --check
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
+        always_run: true
+
       # Validate Plan Maestro coherence
       - id: validate-plan
         name: Validate Plan Maestro

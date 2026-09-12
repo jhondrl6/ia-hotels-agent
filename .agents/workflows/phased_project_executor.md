@@ -1,6 +1,6 @@
 ---
-description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código. Ejecutado por agentes AI.
-version: v2.21.0
+description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código. El Paso 0 capitaliza lecciones en `00-lecciones-capitalizadas.md` consultando el índice generado del corpus. Ejecutado por agentes AI.
+version: v2.22.0
 ---
 
 # Skill: Phased Project Executor
@@ -117,11 +117,16 @@ Una convención que ningún paso del flujo ejecuta es la que se descubre tarde.
 **Regla**: FASE-RELEASE termina con el plan archivado, dentro del mismo cierre documental:
 
 ```bash
+python scripts/validate_qmind_writeback.py --upload <PLAN>    # write-back final, ANTES de archivar
+python scripts/build_lesson_index.py                          # el plan cerrado queda consultable
 git mv .opencode/plans/<PLAN> .opencode/plans/Archives/
 python scripts/validate_opencode_refs.py --fix                # promoción «archived» de referencias
 python scripts/validate_plan_citations.py --update-baseline   # claves cambian a plans/Archives/ — acto visible
 python scripts/run_all_validations.py --quick                 # verde
 ```
+
+Archivar primero es lo que rompe las dos cosas de arriba: el write-back resuelve la ruta del
+plan por nombre y el índice del corpus se queda sin sus lecciones hasta la próxima corrida.
 
 Un commit único cierra RELEASE + archivado y las referencias vivas (memoria de sesión, QMind)
 apuntan a la ruta nueva. `Archives/` queda fuera del alcance de `validate_plan_closure.py`
@@ -504,7 +509,7 @@ Cuando la fase no completa por agotamiento:
 ### 0. Recuperación de Lecciones Aprendidas (OBLIGATORIO — antes de planificar)
 
 > [!IMPORTANT]
-> Ningún plan se redacta desde cero: la experiencia de planes anteriores vive en dos capas y DEBE consultarse antes de diseñar fases, prompts o CONTEXT.
+> Ningún plan se redacta desde cero: la experiencia de planes anteriores vive en tres capas y DEBE consultarse antes de diseñar fases, prompts o CONTEXT. El output **no es una lectura mental**: es un archivo del plan, `00-lecciones-capitalizadas.md`, creado antes del plan maestro.
 
 **Capa caliente — memoria del proyecto** (siempre disponible):
 - Leer el índice `MEMORY.md` de la memoria de proyecto del agente y las entradas relevantes al tema del plan (pitfalls, convenciones de cierre de fase, decisiones resueltas).
@@ -513,12 +518,25 @@ Cuando la fase no completa por agotamiento:
 - `retrieve` sobre el notebook `iah-cli-lecciones` con el tema/objetivo del plan como query (2-3 queries acotadas: módulo afectado, tipo de fallo, etapa del workflow).
 - Corpus del notebook: `CONTEXT-*.md` (`.opencode/context/`) y `10-analisis-post-implementacion.md` de cada plan. Un CONTEXT entra al corpus **solo si autodeclara un aporte durable** (criterio binario en el write-back del paso 4); si no lo declara, es estado de plan o medición y se recupera del repo, no de QMind. Que un CONTEXT no esté en el notebook no es un olvido: o no declaró aporte, o la sesión que lo escribió incumplió el Cierre Obligatorio.
 
-**Output del paso** — lista corta de lecciones aplicables, que se inyecta en:
-1. `10-analisis-post-implementacion.md` del plan nuevo → tabla "Lecciones capitalizadas de planes anteriores".
-2. El contexto de los prompts de fase (§2) donde cada lección sea pertinente.
-3. El `CONTEXT-*.md` del plan (sección "Lecciones capitalizadas"), si el plan genera contexto.
+**Capa fría — índice generado del corpus** (`.opencode/LECCIONES-INDEX.md`):
+- `grep`-ear el índice por módulo afectado, síntoma o palabra clave es la forma barata de mirar el corpus **completo** (todos los IDs definidos en análisis y `CONTEXT-*.md`, con su dueño y sus citas — el conteo vigente está en el encabezado del índice) en vez de consultar solo al plan predecesor.
+- Se regenera con `python scripts/build_lesson_index.py`; el pre-commit lo verifica con `--check` (check `[6/6]` del hook versionado en `scripts/git_hooks/pre-commit`, instalar con `python scripts/install_git_hooks.py`). Si no existe o está vencido, **generarlo antes de consultar**.
+- Es un índice, no un juicio: dice qué existe y dónde está escrito; si una lección aplica, lo decide quien redacta el plan y lo registra en §2 del archivo.
 
-**Fallback**: si el notebook QMind no existe o no es accesible, continuar solo con la memoria del proyecto y registrar la limitación en `dependencias-fases.md`.
+**Output del paso** — `00-lecciones-capitalizadas.md`, creado con el template
+`.agents/workflows/templates/lecciones-capitalizadas-template.md` **antes** de `01-plan-maestro.md`:
+
+1. **§1 Consultas literales** re-ejecutables (comando o términos exactos). ≥1 dirigida al corpus completo, no solo al predecesor.
+2. **§2 Lecciones capitalizadas**, cada una con su ID, la ruta donde está definida y un **"qué cambia en este plan"** que nombra un AC, una tarea, un archivo o una restricción. Una fila sin efecto concreto citó pero no capitalizó.
+3. **§3 Candidatos descartados** (mínimo 3, con motivo): la única prueba de que se miró el corpus.
+4. **§4 Cobertura declarada**: si existe o no verificador mecánico sobre este archivo.
+
+Las lecciones de §2 se inyectan en el contexto de los prompts de fase (§2 del executor) donde sean pertinentes, y en el `CONTEXT-*.md` del plan si el plan genera contexto. El archivo se **actualiza al cierre de cada fase**, no solo al inicio.
+
+> [!WARNING]
+> **Por qué ahora es un archivo y no una instrucción.** Hasta v2.21.0 el Paso 0 ordenaba producir la tabla, pero su destino era una sección de `10-analisis-post-implementacion.md` marcada `(si aplica)`. Medido sobre los 24 planes archivados: la sección aparece en **6** (18 %). Y el plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` citaba únicamente a su predecesor teniendo 24 planes más en el corpus, con un defecto ya documentado desde `EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31`. Es L-R.1 en su forma exacta: una regla que vive solo en el workflow y no en el artefacto que la fase rellena, se cumple por coincidencia.
+
+**Fallback**: si el notebook QMind no existe o no es accesible, continuar con la memoria del proyecto y el índice generado, y registrar la limitación en `00-lecciones-capitalizadas.md` §4 y en `dependencias-fases.md`.
 
 ### 1. Analizar Plan y Detectar Conflictos
 Leer el plan maestro:
@@ -538,7 +556,7 @@ Usar template `.agents/workflows/templates/prompt-fase-template.md`
 
 **Obligatorio en cada prompt (segun CONTRIBUTING §Flujo-Post-Fase):**
 - Contexto de fases anteriores
-- **Lecciones aprendidas recuperadas en el Paso 0** que apliquen a esta fase (solo las pertinentes, no el corpus completo)
+- **Lecciones capitalizadas del Paso 0** que apliquen a esta fase (solo las pertinentes, no el corpus completo), **copiadas de las filas de `00-lecciones-capitalizadas.md` §2** con su ID: el prompt no inventa su lista de lecciones
 - Tareas específicas de la fase
 - Seccion de documentacion post-fase (editar CHANGELOG, GUIA_TECNICA, y acumular en 09-documentacion-post-proyecto.md)
 - **Post-Ejecución** (marcar checklist, actualizar estados)
@@ -569,9 +587,22 @@ Usar template `.agents/workflows/templates/prompt-fase-template.md`
   Las fases 1-5 DEBEN registrarse a sí mismas al completar.
 
 □ Si no existe prompt-fase-template.md → crear uno antes de planificar fases.
+
+□ Si 00-lecciones-capitalizadas.md NO existe, o su §2 no tiene ninguna fila con "qué
+  cambia" que nombre un AC/tarea/archivo → NO crear prompts de fase. Primero se
+  capitaliza, después se diseña la fase.
 ```
 
 **Error típico que este paso previene:**
+
+```
+Planificador diseña desde cero, sin leer el corpus:
+  FASE-1: T1=investigar, T2=fix, T3=tests
+  ...
+  y redescubre a mitad de camino una lección ya escrita en otro plan.
+
+Resultado: reproceso + un error ya superado vuelve a entrar al pipeline.
+```
 
 ```
 Planificador diseña:
@@ -600,7 +631,9 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
 ### 4. Documentación Incremental
 **Estrategia**: Documentar durante todo el proyecto, no solo al final.
 
-**Al inicio del proyecto**: Crear AMBOS archivos con estructura vacía:
+**Al inicio del proyecto**: Crear los TRES archivos. `00-…` llega **lleno** del Paso 0 (no se
+crea vacío); los otros dos se crean con estructura vacía:
+- `.opencode/plans/00-lecciones-capitalizadas.md` (output del Paso 0; template propio, ver §0)
 - `.opencode/plans/09-documentacion-post-proyecto.md` (métricas y archivos por fase)
 - `.opencode/plans/10-analisis-post-implementacion.md` (lecciones aprendidas, decisiones, matriz de verificación)
 
@@ -629,6 +662,12 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
   python scripts/validate_qmind_writeback.py --upload <NOMBRE_DEL_PLAN>
   ```
   El script sube el 10-analisis y cualquier `CONTEXT-*.md` con declaración durable, detecta si ya está ingestado (evita duplicados, ver :584), y retorna código 1 si la subida falla. **Reemplaza el `add_source` manual del MCP** (que depende del scope del agente, históricamente frágil).
+- El **índice del corpus** se regenera en el mismo ciclo, con el write-back ya ejecutado:
+  ```bash
+  python scripts/build_lesson_index.py
+  ```
+  Sin este paso las lecciones del plan recién cerrado no son consultables por el siguiente
+  plan (el Paso 0 consulta el índice). El pre-commit lo verifica con `--check`.
 - Lecciones con pertinencia EXCLUIR quedan solo en el análisis del plan.
 
 **Write-back de CONTEXT (disparador por aporte, NO por edición)** — los `CONTEXT-*.md` de `.opencode/context/` no se ingieren por existir ni por editarse. Se ingieren cuando **autodeclaran un aporte durable**.
@@ -642,7 +681,7 @@ Actualizar `.opencode/plans/06-checklist-implementacion.md`:
 - **Dónde se declara:** en el Cierre Obligatorio de Sesión (ver §Cierre-Obligatorio-de-Sesion). La declaración es parte del cierre, no un paso opcional posterior.
 
 > [!NOTE]
-> **QMind y archivado**: QMind indexa snapshots de contenido, no rutas locales. Mover un plan a `Archives/` o un contexto a `Historico/` NO requiere acción en QMind (solo actualizar referencias en repo/memoria). Re-ingerir SOLO cuando cambia el contenido. Orden correcto: write-back final → archivar el directorio (el contenido archivado queda congelado y no necesita mantenimiento).
+> **QMind y archivado**: QMind indexa snapshots de contenido, no rutas locales. Mover un plan a `Archives/` o un contexto a `Historico/` NO requiere acción en QMind (solo actualizar referencias en repo/memoria). Re-ingerir SOLO cuando cambia el contenido. Orden correcto: write-back final → `python scripts/build_lesson_index.py` → archivar el directorio (el contenido archivado queda congelado y no necesita mantenimiento).
 
 **Estructura concreta de 09-documentacion-post-proyecto.md:**
 
@@ -682,8 +721,9 @@ Cada fase completa su columna "Fase". FASE-RELEASE usa los datos acumulados para
 ## Lecciones Aprendidas (llenar — mínimo 3 por fase completada)
 Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXCLUIR)
 
-### Lecciones capitalizadas de planes anteriores (si aplica)
+### Lecciones capitalizadas de planes anteriores (espejo de `00-lecciones-capitalizadas.md` §2)
 | Lección | Aplicación en este plan |
+<!-- No se re-decide aqui: se copia del archivo 00 y se anota que paso realmente en cada fase. -->
 
 ### Lecciones nuevas de este plan (L16+ si continúa numeración previa)
 
@@ -1295,6 +1335,7 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - **FASE-VERIFY incluida en plan simple** → evaluar si los 3 criterios de activación se cumplen; si no, eliminar y documentar por qué en `dependencias-fases.md`
 
 ## Versiones
+- **v2.22.0** (2026-09-12): El Paso 0 deja de ser una instrucción y produce un artefacto. **Origen medido**: de los 24 planes archivados, la sección «Lecciones capitalizadas de planes anteriores» —que este workflow ordenaba escribir desde v2.17.0— aparece en **6** (18 %), y la plantilla la marcaba `(si aplica)`; el plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` citaba solo a su predecesor con 24 planes más en el corpus, y el defecto que descubrió esta sesión (Tier A inalcanzable en `v4complete`) ya estaba documentado en `EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31`. Cambios: **nueva capa fría** (`.opencode/LECCIONES-INDEX.md`, generado por `scripts/build_lesson_index.py` — cada ID con dueño, sección y citas, definido en análisis *y* `CONTEXT-*.md`; el conteo vigente está en el encabezado del índice, no en el workflow); **`00-lecciones-capitalizadas.md`** creado antes del plan maestro con template propio (`.agents/workflows/templates/lecciones-capitalizadas-template.md`): consultas literales re-ejecutables, «qué cambia en este plan» obligatorio por fila, ≥3 descartes motivados y cobertura declarada; gate nuevo en §2.5 (sin archivo lleno no se crean prompts de fase); §4 pasa de dos a tres archivos de concepción; el write-back del §4 y R2.5 ahora incluyen `build_lesson_index.py` **antes** del `git mv` a `Archives/`. **Lo que NO verifica todavía**: la *pertinencia* de lo capitalizado — ningún script comprueba que las filas de §2 sean lecciones reales aplicadas y no ceremonial; se declara en §4 del propio archivo, y el verificador queda como deuda con dueño (`TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`), misma política de R2.7.
 - **v2.21.0** (2026-09-11): Dos reglas endosadas por FASE-VERIFY del plan `TRIBUNAL-OFFLINE-2026-09-09` (decisión **D-V.3**, ejecutada en su FASE-RELEASE-4.76.0). **R2.6** — toda fase que escriba un lector de artefactos del pipeline debe tener ≥1 test contra el baseline real (`output/FASE-D_salentoreal_post_guard/`) con `skipif` explícito, y el ✅ de la fase lo exige: es la causa común de D1/D5/S1/S2/S3, causó el desvío D-T2C-A1 y dejó AC8 ❌ (la sonda `verify_probe_ac8.py` fijó 2 capas: `deliveries/` es ZIP-only y `_is_template_stub()` cuenta `---`/boilerplate como contenido). **R2.7** — el par pre/post de NR1 se valida **restando**: `suma_post − suma_pre` debe diferir en exactamente `tests_nuevos`, y una resta 0 significa baseline contaminado (medido: T4-B reportó `4018 → 4025` contra la pareja real `4029 → 4036`; los +11 de D-T2C-A1 faltaban en el `pre`). A diferencia de R2.2 y R2.5, **R2.7 nace sin verificador mecánico**: el script queda como deuda con dueño (`TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`), declarado en la propia regla para que la norma no se lea como ya cumplida.
 - **v2.20.0** (2026-09-04): Nueva **R2.5** «El cierre archiva»: FASE-RELEASE termina con el plan movido a `.opencode/plans/Archives/` (git mv + `validate_opencode_refs.py --fix` + `validate_plan_citations.py --update-baseline` + `--quick` verde, un commit único), en lugar de archivarlo como reproceso en la sesión siguiente (medido: `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` se cerró con v4.75.0 y quedó en raíz pese a que la convención ya existía). Enforcement mecánico: dos checks nuevos en el pre-commit — `[4/5]` citas de línea en planes (R2.2, `validate_plan_citations.py`) y `[5/5]` cierre de planes (`scripts/validate_plan_closure.py`: un plan que declara «Cierre del plan» + COMPLETADO no puede publicar filas «⬜ Pendiente»; `Archives/` fuera de alcance). Paso 4.5.6 añadido al flujo documental §4.5.
 - **v2.19.0** (2026-09-04): Cuatro reglas de proceso propuestas por FASE-VERIFY del plan `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`, que el archivo **no contenía** (medido: 0 coincidencias de «recalibr», «números de línea», «hasta el commit de código», «delta»). Nuevas §R2.1-§R2.4: **R2.1** presupuesto de iteraciones medido con `evidence/FASE-D/measure_iterations.py` y corte fijo «hasta el commit de código», con la orden de recalibrar ×3 **o retirar** la métrica (S22/DA-V6: nueve fases excedieron 2,4×-8,6× y reportaron en unidades distintas); **R2.2** prohibición de números de línea en ACs y prompts — citar símbolos (L-A6/L-V4/L-H4: 14 de 16 citas ya desfasadas al certificar) y su verificador mecánico nuevo `scripts/validate_plan_citations.py`, check 8 de `run_all_validations.py --quick`; **R2.3** no-regresión de conteos formulada como **delta** con par pre/post obligatorio (S26/DA-V2); **R2.4** regla de certificación — *un AC no legible en el artefacto que el sistema produce es ⚠️, no ✅; un ✅ que solo respalda un string en el código no existe* (L-V1/DA-V3). **R2 deja de prometer «máximo 60 iteraciones»**: la cabecera y la regla mandatoria ahora ordenan medir, no estimar.

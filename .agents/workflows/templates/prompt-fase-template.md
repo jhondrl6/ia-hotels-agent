@@ -1,6 +1,6 @@
 ---
 description: Template para prompts de inicio de fase en proyectos phased_project_executor
-version: v1.4.0
+version: v1.5.0
 ---
 
 # Template: Prompt de Inicio de Fase
@@ -47,7 +47,17 @@ Basado en la skill `phased_project_executor` v1.3.0.
 - Archivos existentes: [lista]
 - Tests base: [número aproximado]
 - Módulos disponibles: [lista]
+
+### Lecciones capitalizadas aplicables a esta fase
+| ID | Lección (una línea) | Qué cambia en ESTA fase |
+|----|---------------------|-------------------------|
+| L-X1 | Un gate que solo loggea no previene | Tarea 2: el gate nuevo escala a BLOCKED, no a WARN; AC-3 lo certifica |
 ```
+
+**OBLIGATORIO, y no se inventa aquí.** Las filas se copian de
+`00-lecciones-capitalizadas.md` §2 filtradas por pertinencia a esta fase. Cada lección
+listada debe nombrar qué **criterio, tarea o restricción** de esta fase modifica; si no
+modifica ninguno, no va en el prompt (es adorno, no capitalización).
 
 ### 3. Tareas Específicas
 
@@ -121,7 +131,12 @@ Al finalizar esta fase, actualizar INMEDIATAMENTE (antes de cerrar la sesión):
    - **Decisiones Arquitectónicas**: Si aplica, registrar decisión + rationale + alternativas rechazadas
    - **Importante**: Este archivo se crea DESDE LA CONCEPCIÓN del plan (no al final) para evitar reprocesos
 
-5. **`evidence/fase-{N}/`** (si aplica)
+5. **`00-lecciones-capitalizadas.md`** (ACUMULATIVO - capitalización en curso)
+   - **§2**: anotar en la columna "Qué cambia" lo que **realmente** pasó en esta fase (una lección citada y no aplicada se marca como tal, no se borra)
+   - **§1/§3**: si esta fase descubrió una fuente que el Paso 0 no consultó, agregar la consulta y su descarte
+   - **§4**: actualizar la declaración de cobertura al estado real del cierre
+
+6. **`evidence/fase-{N}/`** (si aplica)
    - Crear directorio si hay evidencia que preservar
    - Guardar logs, screenshots, reportes, etc.
 
@@ -196,6 +211,7 @@ Antes de usar este prompt, verificar:
 - [ ] **Referencias consistentes**: Fases previas referenciadas correctamente
 - [ ] **Tests acumulativos**: Conteo de tests incluye fases previas + nuevos
 - [ ] **Dependencias claras**: Qué se necesita de fases anteriores
+- [ ] **Lecciones capitalizadas presentes**: Section de lecciones en Contexto, copiada de `00-lecciones-capitalizadas.md` §2, con un criterio/tarea/restricción de esta fase por fila
 - [ ] **Criterios medibles**: Cada criterio es verificable (sí/no)
 - [ ] **Post-ejecución incluida**: Sección 5 no fue omitida
 - [ ] **Checklist completitud presente**: Sección 6 no fue omitida
@@ -232,6 +248,7 @@ Antes de usar este prompt, verificar:
 
 ## Versión
 
+- **v1.5.0** (2026-09-12): Dos secciones nuevas que el executor ordenaba desde v2.17.0 pero el template no tenía — por eso la capitalización aparecía en 6 de 24 planes. **§2 Contexto** gana «Lecciones capitalizadas aplicables a esta fase» (filas copiadas de `00-lecciones-capitalizadas.md` §2, cada una obligada a nombrar un criterio/tarea/restricción de la fase) y su ítem en el Checklist de Calidad. **§5 Post-Ejecución** pasa a 6 pasos: el nuevo 5 actualiza `00-lecciones-capitalizadas.md` al cierre de cada fase. Sale de la revisión del plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` y de executor v2.22.0.
 - **v1.4.0** (2026-08-05): Sección 5 (Post-Ejecución) — incluye actualización de `10-analisis-post-implementacion.md` como paso 4 obligatorio: lecciones aprendidas, métricas, seguimientos, decisiones. El archivo se crea desde la concepción del plan, no al final.
 - **v1.3.0** (2026-03-04): Template inicial para skill phased_project_executor v1.3.0
   - Incluye secciones Post-Ejecución y Criterios de Completitud obligatorios

@@ -3,11 +3,12 @@
 # Versionado en scripts/git_hooks/ — instalar con: python scripts/install_git_hooks.py
 #
 # Checks:
-#   [1/5] Version consistency (version_consistency_checker.py)
-#   [2/5] File synchronization (sync_versions.py --check)
-#   [3/5] Referencias .opencode (validate_opencode_refs.py --fix, auto-fix)
-#   [4/5] Citas de línea en planes (validate_plan_citations.py — regla R2.2)
-#   [5/5] Cierre de planes sin filas pendientes (validate_plan_closure.py — regla R2.5)
+#   [1/6] Version consistency (version_consistency_checker.py)
+#   [2/6] File synchronization (sync_versions.py --check)
+#   [3/6] Referencias .opencode (validate_opencode_refs.py --fix, auto-fix)
+#   [4/6] Citas de línea en planes (validate_plan_citations.py — regla R2.2)
+#   [5/6] Cierre de planes sin filas pendientes (validate_plan_closure.py — regla R2.5)
+#   [6/6] Índice de lecciones al día (build_lesson_index.py --check — capa fría del Paso 0)
 #
 # Si detecta gaps, el commit es bloqueado (salvo --no-verify, NO recomendado).
 
@@ -33,8 +34,8 @@ if [ -z "$PYTHON_CMD" ]; then
     exit 0
 fi
 
-# [1/5] Version consistency
-echo "[1/5] Checking version consistency..."
+# [1/6] Version consistency
+echo "[1/6] Checking version consistency..."
 CHECKER_OUT=$($PYTHON_CMD scripts/version_consistency_checker.py --verbose 2>&1) || CHECKER_EXIT=$?
 echo "$CHECKER_OUT" | head -30
 
@@ -55,10 +56,10 @@ if [ "${CHECKER_EXIT:-0}" -ne 0 ]; then
     exit 1
 fi
 
-echo "[1/5] OK: Version consistency PASSED"
+echo "[1/6] OK: Version consistency PASSED"
 
-# [2/5] File synchronization
-echo "[2/5] Checking file synchronization..."
+# [2/6] File synchronization
+echo "[2/6] Checking file synchronization..."
 SYNC_OUT=$($PYTHON_CMD scripts/sync_versions.py --check 2>&1) || SYNC_EXIT=$?
 echo "$SYNC_OUT" | grep -E "(OK|FAIL|WARN)" | head -20 || true
 
@@ -72,10 +73,10 @@ if [ "${SYNC_EXIT:-0}" -ne 0 ]; then
     exit 1
 fi
 
-echo "[2/5] OK: Files synchronized"
+echo "[2/6] OK: Files synchronized"
 
-# [3/5] Referencias .opencode (auto-fix)
-echo "[3/5] Checking .opencode references..."
+# [3/6] Referencias .opencode (auto-fix)
+echo "[3/6] Checking .opencode references..."
 REFS_OUT=$($PYTHON_CMD scripts/validate_opencode_refs.py --fix 2>&1) || REFS_EXIT=$?
 echo "$REFS_OUT"
 
@@ -93,10 +94,10 @@ elif [ "${REFS_EXIT:-0}" -ne 0 ]; then
     exit 1
 fi
 
-echo "[3/5] OK: OpenCode references PASSED"
+echo "[3/6] OK: OpenCode references PASSED"
 
-# [4/5] Citas de línea en planes (regla R2.2 — cero citas nuevas sin acto visible)
-echo "[4/5] Checking plan citations..."
+# [4/6] Citas de línea en planes (regla R2.2 — cero citas nuevas sin acto visible)
+echo "[4/6] Checking plan citations..."
 CIT_OUT=$($PYTHON_CMD scripts/validate_plan_citations.py 2>&1) || CIT_EXIT=$?
 if [ "${CIT_EXIT:-0}" -ne 0 ]; then
     echo "$CIT_OUT" | head -20
@@ -108,10 +109,10 @@ if [ "${CIT_EXIT:-0}" -ne 0 ]; then
     echo ""
     exit 1
 fi
-echo "[4/5] OK: Plan citations PASSED"
+echo "[4/6] OK: Plan citations PASSED"
 
-# [5/5] Cierre de planes sin filas pendientes (regla R2.5)
-echo "[5/5] Checking plan closure rows..."
+# [5/6] Cierre de planes sin filas pendientes (regla R2.5)
+echo "[5/6] Checking plan closure rows..."
 CLO_OUT=$($PYTHON_CMD scripts/validate_plan_closure.py 2>&1) || CLO_EXIT=$?
 if [ "${CLO_EXIT:-0}" -ne 0 ]; then
     echo "$CLO_OUT"
@@ -121,7 +122,23 @@ if [ "${CLO_EXIT:-0}" -ne 0 ]; then
     echo ""
     exit 1
 fi
-echo "[5/5] OK: Plan closure PASSED"
+echo "[5/6] OK: Plan closure PASSED"
+
+# [6/6] Índice de lecciones al día (capa fría del Paso 0 — executor v2.22.0)
+echo "[6/6] Checking lesson index freshness..."
+IDX_OUT=$($PYTHON_CMD scripts/build_lesson_index.py --check 2>&1) || IDX_EXIT=$?
+echo "$IDX_OUT"
+if [ "${IDX_EXIT:-0}" -ne 0 ]; then
+    echo ""
+    echo "FAIL: el indice de lecciones esta vencido (cambiaron .md de plans/ o context/)."
+    echo ""
+    echo "Es un artefacto generado: NO lo edites a mano. Regenera, re-stage y re-commit:"
+    echo "  python scripts/build_lesson_index.py"
+    echo "  git add .opencode/LECCIONES-INDEX.md .opencode/lecciones_index.json"
+    echo ""
+    exit 1
+fi
+echo "[6/6] OK: Lesson index PASSED"
 
 echo ""
 echo "========================================"
