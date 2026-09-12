@@ -20,7 +20,8 @@ solo si Q1=sí; opción O1/O2/O3)   barreda D-V.1 + versión acta)
         │                              │
         └──────────┬───────────────────┘
                    ▼  (secuenciales entre sí: comparten judge.py/main.py)
-        FASE-P4 (corrida observación Tier A — requiere datos reales T3;
+        FASE-P4 (corrida observación — T3a datos + T3b analítica;
+                 techo de tier según Q5: A o B_PLUS;
                  recomendada tras P3 para medir fidelidad del acta ya corregida)
                    ▼
         FASE-RELEASE-4.77.0 (cierre + archivado R2.5)
@@ -34,10 +35,10 @@ solo si Q1=sí; opción O1/O2/O3)   barreda D-V.1 + versión acta)
 
 | Fase | Depende de | Bloquea a | Tipo de dependencia |
 |------|-----------|-----------|---------------------|
-| FASE-P1 | RELEASE-4.76.0 del predecesor ✅ | P2, P3, P4 | Contrato (§15.4.1 heredada: lo decidido aquí obliga a P2/P3) |
+| FASE-P1 | RELEASE-4.76.0 del predecesor ✅ | P2, P3, P4 | Contrato (§15.4.1 heredada: lo decidido aquí obliga a P2/P3) — incluye Q1b, Q5 y Q6 |
 | FASE-P2 | P1 (Q1=sí + opción O1/O2/O3) | P4, RELEASE | El enforcement redefine dónde corren los revisores y quién decide el ZIP |
-| FASE-P3 | P1 (Q2b) | P4 (recomendado), RELEASE | Fixes localizados independientes del enforcement, pero tocan `judge.py` |
-| FASE-P4 | P1 (Q3/Q4) + **datos reales (T3)** + P3 recomendado | RELEASE | Corrida de observación; sin dato real no hay `evidence_tier: A` ni primer piso levantado |
+| FASE-P3 | P1 (Q2b, Q5) | P4 (recomendado), RELEASE | Fixes localizados independientes del enforcement, pero tocan `judge.py`; si Q5=(a) toca también `main.py` |
+| FASE-P4 | P1 (Q3/Q4/Q5) + **T3a datos operativos + T3b analítica** + P3 recomendado | RELEASE | Corrida de observación; sin T3a no hay dato verificado y sin T3b (o Q5=a) el techo es `B_PLUS`, no `A` |
 | FASE-RELEASE-4.77.0 | P2/P3 (si aplican) + P4 ✅ | — | Cierre documental |
 
 ---
@@ -46,8 +47,8 @@ solo si Q1=sí; opción O1/O2/O3)   barreda D-V.1 + versión acta)
 
 | Archivo | Fases que lo modifican | Riesgo | Mitigación |
 |---------|------------------------|--------|------------|
-| `main.py` | P2 (ordenamiento), P3 (posible hoist) | Alto | Secuencial obligatorio: P2 y P3 nunca en la misma sesión ni en paralelo |
-| `modules/quality_gates/tribunal/judge.py` | P2 (consume `reviewer_reports`), P3 (fuente del tier) | Alto | Mismo mitigation: secuencial |
+| `main.py` | P2 (ordenamiento), P3 (hoist de `ga4_available`/`gsc_available` hacia el bloque FASE-K si Q5=a) | Alto | Secuencial obligatorio: P2 y P3 nunca en la misma sesión ni en paralelo |
+| `modules/quality_gates/tribunal/judge.py` | P2 (consume `reviewer_reports`), P3 (fuente del tier; `FIRST_FLOOR_TIERS`/`_apply_first_floor_rule` si Q6 o AC-F4 lo requieren) | Alto | Mismo mitigation: secuencial |
 | `modules/quality_gates/tribunal/asset_reviewer.py` | P3 (AC8: ZIP o heurístico) | Bajo | Solo P3 |
 | `modules/delivery/delivery_packager.py` | P2 si O1/O3 | Medio | Cambio de contrato → tests de packaging primero |
 | `modules/quality_gates/tribunal/acta_writer.py` | P3 (versión desde `VERSION.yaml`) | Bajo | Solo P3 |
@@ -60,17 +61,20 @@ solo si Q1=sí; opción O1/O2/O3)   barreda D-V.1 + versión acta)
 
 | Sub-fase | Precondición externa | Por qué |
 |----------|---------------------|---------|
-| **FASE-P4** (corrida observación) | Datos operativos reales de un hotel propio: `rooms`, `occupancy_rate`, `direct_channel_percentage`, `ADR` con fuente declarada (precondición T3 del ROADMAP) | Sin dato real, `evidence_tier` no alcanza `A`, el primer piso no se levanta y `APROBADO-PARA-ENTREGA` sigue inalcanzable — la corrida no ejercitaría el régimen objetivo |
+| **FASE-P4 — T3a** (datos operativos) | Hotel propio: `rooms`, `occupancy_rate`, `direct_channel_percentage`, `ADR` con fuente declarada (precondición T3 del ROADMAP) | Sin dato verificado, `_determine_evidence_tier` cae en `B`/`C` y el primer piso no se levanta |
+| **FASE-P4 — T3b** (analítica) — nueva, medida 2026-09-12 | GA4 **y** GSC disponibles, y el cableado que propague esa disponibilidad al `HotelFinancialData` del bloque FASE-K (decisión Q5) | `_determine_evidence_tier` devuelve `A` solo con `ga4_enabled and gsc_enabled and has_verified_data`, y `_compute_verdict` exige `A` para `APROBADO-PARA-ENTREGA`. Con solo T3a el techo es `B_PLUS`: el régimen que motiva el plan sigue sin observarse |
 | FASE-P4 (consentimiento) | El hotel/dueño acepta que la corrida use sus datos | Es una corrida de observación, no una entrega; igual requiere autorización |
 | T5 / T6 (ROADMAP) | Credenciales FTP/WP + staging / escala | Fuera de alcance de este plan (igual que en el predecesor) |
 
-**Consecuencia**: P1–P3 son ejecutables sin dato real; P4 queda condicionada a que el usuario provea el hotel y sus datos.
+**Consecuencia**: P1–P3 son ejecutables sin dato real. P4 queda condicionada a T3a **y** T3b — y T3b no es solo externa: una de sus tres opciones (Q5=a) es código en `main.py`. Si ninguna vía T3b se cierra en este plan, P4 se especifica como corrida en `B_PLUS` con el límite declarado (AC-O0), no como corrida Tier A.
 
 ---
 
 ## Nota de rutas (post-R2.5 del predecesor)
 
-El archivado (R2.5) de TRIBUNAL-OFFLINE-2026-09-09 **ya se ejecutó** el 2026-09-11 (`bd2bf57`) y movió sólo los documentos del plan: `10-analisis-post-implementacion.md`, `06-checklist-implementacion.md` y los `05-prompt-...` viven ahora en `Archives/TRIBUNAL-OFFLINE-2026-09-09/`. La **evidencia no se mueve**: `MATRIZ-CERTIFICACION.md` sigue en `evidence/FASE-VERIFY/TRIBUNAL-OFFLINE-2026-09-09/` y `decision-integracion.md` en `evidence/FASE-T1/` (ambos rastreados, verificado con `git ls-files`). Este plan cita los documentos del predecesor por **nombre de archivo**, nunca por ruta completa — resolver al cargar.
+El archivado (R2.5) de TRIBUNAL-OFFLINE-2026-09-09 **ya se ejecutó** el 2026-09-11 (`bd2bf57`) y movió sólo los documentos del plan: `10-analisis-post-implementacion.md`, `06-checklist-implementacion.md` y los `05-prompt-...` viven ahora en `Archives/TRIBUNAL-OFFLINE-2026-09-09/`. La **evidencia no se mueve**: `MATRIZ-CERTIFICACION.md` sigue en `evidence/FASE-VERIFY/TRIBUNAL-OFFLINE-2026-09-09/` y `decision-integracion.md` en `evidence/FASE-T1/` (ambos rastreados, verificado con `git ls-files`).
+
+**Convención de rutas corregida (2026-09-12)**: lo que se escribe como plantilla `<PLAN>` son las **auto-referencias** a este plan — son las que `validate_opencode_refs.py --fix` reescribe a ciegas cuando ESTE plan se archive, y las que pueden destrozar un comando documentado. Las rutas ya archivadas del predecesor (`Archives/TRIBUNAL-OFFLINE-2026-09-09/…`) **sí** se citan completas: un directorio en `Archives/` no vuelve a moverse. El checklist de RELEASE exige revisar a mano el diff de `--fix` post-archivado.
 
 ---
 

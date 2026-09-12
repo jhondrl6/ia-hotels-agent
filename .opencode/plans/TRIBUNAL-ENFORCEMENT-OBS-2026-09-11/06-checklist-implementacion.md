@@ -2,18 +2,17 @@
 
 > **Regla**: Una fase se marca ✅ solo cuando TODOS sus criterios de completitud pasan.
 > **Fuente de estado**: este archivo + `dependencias-fases.md`.
-
----
+> **Regla nueva (cura de L-R.1 aplicada a este plan, 2026-09-12)**: la celda `Iteraciones` es **bloqueante del ✅**. Debe llevar la unidad medida — `ids` + `tool_use` con corte en el commit de código. Un `—` o un `⚠️ sin medir` impide cerrar la fase; el instrumento ya existe y funciona (`evidence/FASE-D/measure_iterations.py`).
 
 ## Estado Global
 
-| # | Fase | Estado | Fecha inicio | Fecha cierre | Iteraciones | Notas |
+| # | Fase | Estado | Fecha inicio | Fecha cierre | Iteraciones (ids + tool_use, corte = commit) | Notas |
 |---|------|--------|-------------|-------------|-------------|-------|
-| 0 | Precondición: FASE-RELEASE-4.76.0 (predecesor) | ✅ Completada | 2026-09-11 | 2026-09-11 | — | v4.76.0 publicada (local, sin push) + archivado R2.5 en `bd2bf57` — puerta de P1 abierta |
-| 1 | FASE-P1 | ⬜ Pendiente | — | — | — | Decisión Q1–Q4 + contrato del veredicto enriquecido + ACs finales |
+| 0 | Precondición: FASE-RELEASE-4.76.0 (predecesor) | ✅ Completada | 2026-09-11 | 2026-09-11 | n/a (predecesor, sin medición) | v4.76.0 publicada (local, sin push) + archivado R2.5 en `bd2bf57` — puerta de P1 abierta |
+| 1 | FASE-P1 | ⬜ Pendiente | — | — | — | Decisión Q1–Q6 + contrato (consecuencia del bloqueo + tri-estado) + ACs finales |
 | 2 | FASE-P2 | ⬜ Pendiente | — | — | — | Refactor de ordenamiento (solo si Q1=sí; opción O1/O2/O3) |
-| 3 | FASE-P3 | ⬜ Pendiente | — | — | — | Fixes: AC8 + tier acta + barreda D-V.1 + versión acta |
-| 4 | FASE-P4 | ⬜ Pendiente | — | — | — | Corrida observación Tier A + informe (requiere datos reales T3) |
+| 3 | FASE-P3 | ⬜ Pendiente | — | — | — | Fixes: AC8 + tier acta + barreda D-V.1 + versión acta + AC-F4 (`B_PLUS`) + AC-F5 si Q5=a |
+| 4 | FASE-P4 | ⬜ Pendiente | — | — | — | Corrida observación + informe (T3a datos + T3b analítica; techo de tier según Q5) |
 | 5 | FASE-RELEASE-4.77.0 | ⬜ Pendiente | — | — | — | Cierre + archivado R2.5 |
 
 ---
@@ -33,14 +32,19 @@
 ### FASE-P1 — Decisión y contrato
 
 - [ ] `evidence/FASE-P1/research-estado.md` con mapa confirmado símbolo-por-símbolo (R2.2)
-- [ ] Q1 (¿enforcement?) decidida con el usuario
+- [ ] §2.1 del plan maestro **confirmado o refutado con evidencia** (cadena `_compute_verdict` → `_determine_evidence_tier` → banderas del bloque FASE-K); si se refuta, corregir §2.1 y §9 en el mismo commit
+- [ ] Q1 (¿enforcement?), Q1b (consecuencia aguas abajo del bloqueo) decididas con el usuario
 - [ ] Q2 (opción O1/O2/O3) y Q2b (remediación AC8) decididas — o O4 documentado
-- [ ] Q3 (secuenciación) y Q4 (hotel + datos T3) decididas
-- [ ] `evidence/FASE-P1/decision-enforcement.md` con contrato del veredicto enriquecido + rationale (formato DA-*)
-- [ ] ACs finales con artefacto + clave (R2.4) fijados en `01-plan-maestro.md` §6
+- [ ] Q3 (secuenciación) y Q4 (hotel + datos **T3a**) decididas
+- [ ] Q5 (Tier A inalcanzable: propagar banderas / correr en `B_PLUS` / diferer P4) y Q6 (esquema de tri-estado) decididas
+- [ ] `evidence/FASE-P1/decision-enforcement.md` con contrato + rationale (formato DA-*), incluidas las secciones **"Consecuencia del bloqueo"** y **"Tri-estado de revisores"** (AC-D1)
+- [ ] ACs finales con artefacto + clave (R2.4) fijados en `01-plan-maestro.md` §6, y ningún AC de detección/bloqueo sin su verificación NR7 escrita
+- [ ] Decisión de §Deuda de proceso: qué ítems entran al alcance de este plan y cuáles quedan como límite declarado
 - [ ] `06-checklist` + `dependencias-fases` actualizados con lo decidido
+- [ ] `10-analisis-post-implementacion.md` y `09-documentacion-post-proyecto.md` creados (el executor los exige desde la concepción; no existían)
 - [ ] `log_phase_completion.py --fase FASE-P1` ejecutado (SIN `--release`)
 - [ ] `run_all_validations.py --quick` TOTAL PASS
+- [ ] **Iteraciones de P1 medidas y escritas** (`ids` + `tool_use`, corte = commit) — bloquea el ✅ (L-R.1)
 - [ ] NO modificó código de producción
 - [ ] Commit de cierre de fase
 
@@ -48,38 +52,55 @@
 
 - [ ] Opción elegida implementada (O1/O2/O3) manteniendo never-block
 - [ ] Camino de bloqueo ejercitado: recomendación BLOQUEAR de revisor → ZIP no emitido (AC-E2)
+- [ ] **NR7**: AC-E2 cerrado con mutation check — `_compute_verdict` sin el consumo de `reviewer_reports` y el test en rojo; el par de salidas queda en `evidence/FASE-P2/`
 - [ ] `acta_revision.json` → `reviewer_reports` no vacío con los 4 revisores (AC-E1)
+- [ ] **NR8**: tres tests nombrados por causa (sin hallazgos / artefacto ausente / lector fallido) y el Juez actuando distinto en cada uno (AC-E0)
+- [ ] Consecuencia del bloqueo implementada según el contrato (sección "Consecuencia del bloqueo" de AC-D1) — no solo el veredicto
 - [ ] Never-block: fallo de un revisor no rompe la corrida (AC-E3)
 - [ ] NR3: una sola ruta de bloqueo (grep en `main.py`)
 - [ ] NR2: tribunal no reimplementa gates (grep en `tribunal/*.py`)
 - [ ] Tests retro sobre `output/` vivo + corrida E2E del predecesor
-- [ ] Baseline pre/post medido con instrumento (NR1)
+- [ ] **Baseline NR1 sin contaminar**: snapshot `pre` con `--ignore` del archivo de tests de la fase (L-T4B.5) y resta R2.7 verificada (`suma_post − suma_pre == tests_nuevos`; 0 = baseline contaminado, no se declara el criterio)
+- [ ] **Iteraciones de P2 medidas y escritas** — bloquea el ✅ (L-R.1)
 - [ ] `run_all_validations.py --quick` TOTAL PASS
 
 ### FASE-P3 — Fixes localizados
 
 - [ ] AC8: `EMPTY_DELIVERY_TEMPLATE` dispara en régimen ZIP-only real (AC-F1, sonda re-ejecutable)
+- [ ] **NR7 sobre AC-F1**: fix desactivado → el test contra el layout ZIP-only se pone rojo (evidencia con el par de salidas)
 - [ ] `evidence_tier` del acta == MANIFEST en corrida real (AC-F2)
+- [ ] `first_floor_rule.reason` coherente con el veredicto en `B_PLUS` (AC-F4)
+- [ ] Si Q5=(a): banderas de analítica propagadas al `HotelFinancialData` del bloque FASE-K, con hoist verificado y test propio del tier con y sin analítica (AC-F5; advertencia L-T2C.2 sobre `except` anchos en `main.py`)
 - [ ] Whitelist barreda test-only (AC-F3, D-V.1)
 - [ ] `acta_writer.py` lee versión de `VERSION.yaml`
+- [ ] **Iteraciones de P3 medidas y escritas** — bloquea el ✅ (L-R.1)
 - [ ] `run_all_validations.py --quick` TOTAL PASS
 
-### FASE-P4 — Corrida de observación Tier A
+### FASE-P4 — Corrida de observación
 
-- [ ] Datos operativos reales recibidos con fuente declarada (T3)
+- [ ] Datos operativos reales recibidos con fuente declarada (T3a)
+- [ ] Techo de tier de la corrida fijado por Q5: T3b cumplido (Tier A observable) **o** corrida declarada en `B_PLUS` con el límite escrito (AC-O0)
+- [ ] `--help` de `onboard` y `v4complete` verificado **antes** de redactar el brief delegado (L-VUP-9)
+- [ ] `ls output/clientes/` y log de onboarding revisados antes de la corrida; si cae a defaults, la condición de equivalencia queda declarada (L-VUP-13)
 - [ ] Corrida v4complete + onboarding ejecutada (delegate_task, exit 0)
-- [ ] Informe `evidence/FASE-P4/informe-observacion.md` con los 7 puntos del plan maestro §5
+- [ ] **Evidencia copiada antes de analizar** y script de comparación versionado dentro de `evidence/FASE-P4/` (L-VUP-12)
+- [ ] Delta vs corrida E2E del predecesor con **diff estructural JSON** (claves numeradas), parseo probado contra el baseline antes de la corrida (L-VUP-14, R2.3)
+- [ ] Informe `evidence/FASE-P4/informe-observacion.md` con los 9 puntos del plan maestro §5 (AC-O2)
+- [ ] En el informe: estado real de `reviewer_reports` con los tres estados distinguibles (punto 8) y banderas de analítica efectivas (punto 9)
 - [ ] Provisionalidad de `APROBADO-PARA-ENTREGA` registrada si enforcement no cerrado
-- [ ] Delta vs corrida E2E del predecesor (R2.3)
+- [ ] **Iteraciones de P4 medidas y escritas** — bloquea el ✅ (L-R.1)
 - [ ] NO se usó como entrega a cliente
 
 ### FASE-RELEASE-4.77.0 — Cierre
 
-- [ ] ACs certificados contra artefacto real (patrón VERIFY, AC-V1)
+- [ ] ACs certificados contra artefacto real (patrón VERIFY, AC-V1), con NR7 cumplido en cada AC de detección/bloqueo
 - [ ] VERSION.yaml → 4.77.0 + `sync_versions.py` + CHANGELOG + GUIA_TECNICA
 - [ ] `run_all_validations.py --quick` TOTAL PASS
+- [ ] **Iteraciones de RELEASE medidas y escritas** — bloquea el ✅ (L-R.1)
 - [ ] `log_phase_completion.py --fase FASE-RELEASE-4.77.0 --release 4.77.0`
+- [ ] Write-back QMind ejecutado **antes** de archivar: `python scripts/validate_qmind_writeback.py --upload <PLAN>` (con título nuevo si el contenido del `10-analisis` cambió — la idempotencia es por título, no por contenido)
 - [ ] Plan archivado en `Archives/` (R2.5) + commit único de cierre
+- [ ] **Post-archivado**: `git diff` del `validate_opencode_refs.py --fix` revisado a mano — confirmar que no reescribió comandos dentro de bloques de código ni las auto-referencias de este plan
 
 ---
 
@@ -109,12 +130,52 @@ decir cuáles entran al alcance de este plan y cuáles se documentan como límit
 - [ ] **`version_consistency_checker.py` no lee encabezados `FASE-RELEASE-x.y.z`**: su regex excluye
   `.`, así que la fase recién registrada es invisible y reporta `FASE-T4-A`. Hoy es informativo
   (el check solo exige encontrar *alguna* fase), pero el hook muestra una fase equivocada.
-- [ ] **L-R.1: la columna `Iteraciones` de este checklist no obliga a medir**. En el predecesor 8 de 9
+- [ ] **L-R.1: la columna `Iteraciones` de este checklist no obligaba a medir**. En el predecesor 8 de 9
   fases cerraron con `⚠️ sin medir (R2.1)` y aun así con ✅ de fase; el instrumento
   (`evidence/FASE-D/measure_iterations.py`) funcionó sin obstáculo alguno cuando se usó (RELEASE:
   31 ids / 43 `tool_use` con corte en `6bbdba7`). La cura exigida por la lección es una casilla
   obligatoria "Iteraciones (ids + tool_use, corte = commit de código)" por fase, de modo que un `—`
-  impida cerrar el ✅. En este plan la columna existe pero admite el `—` sin consecuencia.
+  impida cerrar el ✅. **Estado 2026-09-12: aplicada a este plan** (regla en la cabecera + casilla
+  por fase). Sigue siendo deuda contra el executor: ninguna validación falla si otro plan la omite.
+
+### Deuda añadida por el Paso 0 horizontal (2026-09-12)
+
+- [~] **El Paso 0 seguía sin verificador mecánico** (misma familia que R2.6/R2.7 y L-R.4). El executor
+  lo declaraba obligatorio desde v2.17.0 y describía la pasada por memoria del proyecto + notebook
+  `iah-cli-lecciones`, pero ningún check comprueba que se hizo. La señal medida en este plan: sus
+  prompts citaban **solo** al predecesor, con 24 planes más en el corpus. Cura candidata: exigir en
+  el prompt de fase una sección "Consultas ejecutadas al notebook" y que `validate_plan_closure.py`
+  (o un check nuevo) verifique que al menos una fuente citada **no** sea el predecesor inmediato.
+  - **Estado 2026-09-12 (implementado A + C, fuera del perímetro de este plan)**: el Paso 0 ahora
+    produce un artefacto — `00-lecciones-capitalizadas.md`, con template propio
+    (`.agents/workflows/templates/lecciones-capitalizadas-template.md`) y gate en §2.5 del executor
+    (v2.22.0) — y consulta una **capa fría generada**: `.opencode/LECCIONES-INDEX.md`
+    (`scripts/build_lesson_index.py`; su `--check` es el guard `[6/6]` del hook versionado en
+    `scripts/git_hooks/pre-commit` — activo en la máquina tras `install_git_hooks.py`; el conteo
+    vigente de IDs vive en el encabezado del propio índice, no aquí). Medido al generarlo: las
+    lecciones más citadas del corpus (`L-SR3`, `L-SR5`) estaban definidas **solo**
+    en un `CONTEXT-*.md` y ningún análisis — el índice las
+    recuperó; sin esa capa, el Paso 0 seguiría ciego a lo más usado.
+  - **Deuda que queda (pertinencia)**: ningún check verifica que las filas del §2 sean lecciones
+    reales aplicadas y no ceremonial, ni que una consulta haya mirado más allá del predecesor.
+    Requiere lectura semántica → verificador propio (`validate_lesson_capitalization.py`), con su
+    cobertura declarada. **Dueño sugerido**: nuevo tramo con AC, no FASE-P1 (que ya va justa).
+  - **El plan ya tiene `00-lecciones-capitalizadas.md`** (instanciado el 2026-09-12, a posteriori:
+    el plan se concibió un día antes de la regla). Contiene las 8 consultas del Paso 0 con su
+    comando literal, 19 lecciones con dueño y efecto, 5 descartes y 4 hallazgos sin efecto
+    aplicado. Lo que queda para FASE-P1 es resolver **§3.b** (`D-T1.1`, `L-SR3`, `DA-C3`, `L-B4`
+    y la cola de adyacentes que mide Q7) y actualizar §2 al cierre de cada fase con lo que pasó.
+- [ ] **El verificador de R2.7 debe normalizar el fallo orden-dependiente**: `test_function_default_flags`
+  cambia entre órdenes de recolección (lección L-VUP-1, y hoy registrado en AGENTS.md como uno de los
+  2 fallos ajenos al plan). Un verificador que compare sumas crudas va a inventar causas para un delta
+  que es ruido de recolección. Requisito: el par pre/post se mide con la **combinación exacta de
+  archivos** declarada, y los flaky conocidos se listan explícitamente en la evidencia.
+- [ ] **Tier A inalcanzable en `v4complete` (defecto de producto, no de pruebas)**: `HotelFinancialData`
+  del bloque FASE-K fija `ga4_enabled=False, gsc_enabled=False` mientras `ga4_client.is_available()`
+  se calcula después en el mismo modo, así que `_determine_evidence_tier` no puede devolver `A` y
+  `_compute_verdict` no puede emitir `APROBADO-PARA-ENTREGA`. Dueño: **Q5 de FASE-P1** (decidir si P3
+  lo arregla con AC-F5, si P4 se corre en `B_PLUS` con límite declarado, o si se difiere a un plan de
+  analítica). No se arregla en silencio: el hoist toca `main.py` y cambia el tier de corridas reales.
 
 ---
 
@@ -122,7 +183,9 @@ decir cuáles entran al alcance de este plan y cuáles se documentan como límit
 
 - [ ] Todas las fases ✅
 - [ ] ACs finales certificados
-- [ ] NR1–NR6 sin violaciones
+- [ ] NR1–NR8 sin violaciones (NR7 con el par de salidas verde/rojo en evidencia; NR8 con los tres tests por estado)
+- [ ] Todas las fases cerradas con sus iteraciones medidas (ninguna celda en `—`)
+- [ ] `10-analisis-post-implementacion.md` completo (lecciones, decisiones, métricas) con la tabla "Lecciones capitalizadas de planes anteriores" incluyendo el Paso 0 horizontal
+- [ ] Write-back QMind ejecutado antes del archivado (`validate_qmind_writeback.py --upload <PLAN>`)
 - [ ] Plan archivado (R2.5)
-- [ ] `10-analisis-post-implementacion.md` completo (lecciones, decisiones, métricas)
 - [ ] v4.77.0 publicada
