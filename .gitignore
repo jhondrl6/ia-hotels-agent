@@ -143,5 +143,15 @@ nul
 .opencode/context/QMIND-WRITE-BACK.md
 .opencode/context/QMIND-RECOVERY-MANIFEST.md
 
+# ===============================
+# Entregable de cliente: en disco, fuera del control de versiones (2026-09-12)
+# ===============================
+# La corrida E2E del 2026-09-11 dejó aquí el paquete desplegado del cliente
+# (propuesta, diagnóstico, escenarios financieros y assets). Sirve como
+# evidencia local y baseline de sondas, pero no se versiona: el remoto es
+# público. Sus 66 archivos se excluyeron del historial local de los 13 commits
+# que aún no se habían empujado — no de commits ya publicados.
+evidence/FASE-E2E/
+
 # Configuración local del CLI (permisos por máquina)
 .qoder/settings.local.json
