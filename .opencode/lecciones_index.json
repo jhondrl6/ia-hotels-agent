@@ -511,7 +511,7 @@
       "seccion": "6. Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -1934,7 +1934,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
+      "total_citas": 9,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],

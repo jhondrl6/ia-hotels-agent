@@ -162,8 +162,16 @@ Cadena leída en tres símbolos, en orden inverso al veredicto:
 | NR4 | Coherence ≥ 0.80 en toda corrida nueva | `coherence_score_final` del reporte |
 | NR5 | El LLM extrae, el Juez decide (veredicto determinista) | tests del contrato (precedente: `test_no_rejulga_un_gate_que_paso`) |
 | NR6 | Resolución de artefactos por fecha embebida, no `mtime` (si se toca el resolutor) | tests del resolutor |
-| NR7 | Todo AC de detección o de bloqueo se cierra con **mutation check**: desactivar la detección/guard y ver el test en rojo (origen: L-T4A.5, L-T2C.4, L-VUP-5) | par de salidas en la evidencia de la fase (verde/rojo) |
-| NR8 | Un lector de artefactos expresa los tres estados — sin hallazgos / artefacto ausente / lector fallido — y ningún camino los colapsa (origen: L-PF6, L-PF10) | tests nombrados por causa, uno por estado |
+| NR7 | Todo AC de detección o de bloqueo se cierra con **mutation check**: desactivar la detección/guard y ver el test en rojo (origen: L-T4A.5, L-T2C.4, L-VUP-5) — **ascendida a regla global §R2.8 del executor v2.23.0** | par de salidas en la evidencia de la fase (verde/rojo); verificador mecánico **aún no existe** → §Deuda de `06-checklist-implementacion.md` |
+| NR8 | Un lector de artefactos expresa los tres estados — sin hallazgos / artefacto ausente / lector fallido — y ningún camino los colapsa (origen: L-PF6, L-PF10) — **ascendida a regla global §R2.9 del executor v2.23.0** | tests nombrados por causa, uno por estado; verificador mecánico **aún no existe** → mismo tramo de deuda |
+
+> **Trazabilidad de NR7/NR8 (2026-09-12).** Las dos subieron a global en executor v2.23.0 porque la
+> medición que las fundó no es particular de este plan: **NR7 → §R2.8**, **NR8 → §R2.9**. Lo que
+> sigue siendo de FASE-P1 **no es la norma sino el verificador** — ninguna de las dos nació con check
+> mecánico y ambas lo declaran en su propio texto (L-R.4), en el mismo tramo de deuda que R2.6 y
+> R2.7. Por tanto P1 **no** debe re-implementarlas como AC local: decide si instrumenta el check o si
+> lo reasigna con dueño explícito. La regla §R2.9 ya nombra **DA-C3** (`vacío ≠ ausente`) como el
+> contrato que NR8 subsume, que es lo que pedía §3.b de `00-lecciones-capitalizadas.md`.
 
 ---
 
