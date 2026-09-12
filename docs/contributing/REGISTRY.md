@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-12
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 477
+> **Total fases completadas:** 478
 
 ---
 
@@ -11148,6 +11148,27 @@ _Ninguno_
 - [x] Tests passing (3)
 - [x] Suite NEVER_BLOCK passing
 - [x] Coherence >= 0.8: 0.83 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-V1 - 2026-09-12
+**Descripcion:** PASO0-VERIFICADOR: Paso 0 en la concepcion (10 consultas, 18 lecciones con dueno, 6 descartes) + decisiones Q1-Q5 medidas y contrato C0-C8 del verificador de capitalizacion
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `.opencode/plans/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/00-lecciones-capitalizadas.md` | NUEVO | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/01-plan-maestro.md` | NUEVO | 01-Plan-Maestro |
+| `evidence/FASE-V1/decision-verificador.md` | NUEVO | Decision-Verificador |
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 
 ---
