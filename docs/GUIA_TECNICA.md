@@ -1,7 +1,77 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.75.0 (Estabilización pre-tribunal)
+**Versión:** v4.76.0 (Tribunal certificador P6+P7)
 **Última actualización:** 2026-09-11
+
+---
+
+### Notas de Cambios v4.76.0 — FASE-T1: Juez certificador y acta dual
+
+**Fecha:** 2026-09-10
+
+**Módulos afectados**: `modules/quality_gates/tribunal/{__init__,judge,acta_writer}.py` (NUEVOS), `main.py` (región FASE 5 / decisión del ZIP), `tests/quality_gates/tribunal/{test_judge,test_acta_serialization}.py` (NUEVOS)
+
+**Problema**: el pipeline respondía «¿se puede publicar?» pero ninguna parte respondía «¿quién firma lo que le prometemos al cliente?». El veredicto de entrega se decidía en `main.py` **comparando strings** de veredicto, y no existía un artefacto que un cliente pudiera leer para saber qué se revisó y qué no.
+
+**Solución**: `TribunalJudge.evaluate()` produce un acta determinista con las **6 cláusulas P6** y `verdict`; `ActaWriter` la escribe en doble forma (`acta_revision.json` machine + `acta_revision.md` legible). Tres candados de responsabilidad, cada uno con dueño único: la **regla de primer piso** (`first_floor_rule`: Tier B/C → techo `APROBADO-CONDICIONAL-PENDING-ONBOARDING`), `T1_CERTIFIABLE_CLAUSES = ("P6.1","P6.3","P6.4","P6.6")` (sin cláusula certificable en PASS no hay `APROBADO-PARA-ENTREGA`) y `BLOCKING_VERDICTS` + `blocks_delivery_zip(acta)` — **único** punto del que depende el ZIP (D-T1.1). El Juez corre junto a `delivery_quality_report` y **no añade una cuarta ruta de bloqueo**.
+
+**Backwards compatibility**: aditiva. El contrato del ZIP no cambia para el consumidor: solo pasa de comparar strings a preguntar al predicado. Con artefactos ausentes el acta degrada a condicional en vez de fallar.
+
+---
+
+### Notas de Cambios v4.76.0 — FASE-T2-A / T2-B: Bots 1 y 3 sobre los artefactos existentes
+
+**Fecha:** 2026-09-10
+
+**Módulos afectados**: `modules/quality_gates/tribunal/{diagnosis_reviewer,asset_reviewer}.py` (NUEVOS), `tests/quality_gates/tribunal/{test_diagnosis_reviewer,test_asset_reviewer}.py` (NUEVOS)
+
+**Problema**: `critical_recall` podía reportar `details: {}` y contar como pasada (recall vacuo, S-I1); y la cobertura de assets se leía como un número sin decir **de dónde** salía la fuente, así que una mención al catálogo estático (P12) pasaba por evidencia.
+
+**Solución**: Bot 1 (`revision_diagnostico.json`, `findings[]`) marca el recall vacuo como CRITICAL y funda cada hallazgo en `pain_id` + fuente + `is_coherent`. Bot 3 (`revision_assets.json`, `coverage_by_service[]`) clasifica CON-ASSET / SIN-ASSET / GENERICO / ESTIMATED y señala P12 como **P6.3 no verificable por la fuente declarada**, no por score — el criterio es la procedencia del dato, no su magnitud.
+
+**Backwards compatibility**: sin cambio en los gates. Los revisores **leen** los reportes que ya existían; ningún consumidor del `v4_audit/` preexistente cambia de forma.
+
+---
+
+### Notas de Cambios v4.76.0 — FASE-T2-C: precondiciones heredadas S-E2 y S9
+
+**Fecha:** 2026-09-10 (remediación D-T2C-A1: 2026-09-11)
+
+**Módulos afectados**: `main.py`, `modules/commercial_documents/v4_proposal_generator.py`, `modules/asset_generation/v4_asset_orchestrator.py`, `tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py` (NUEVO, 18 funciones)
+
+**Problema**: `site_presence_report` se referenciaba con `generate_proposal=False` sin estar definido → `NameError` latente (S-E2). Tres bloques que construían `presence_lookup` estaban muertos por un guard que suponía el tipo equivocado, y la certificación de S9 (`INVALID_MAPPINGS`, registro #14) no tenía contrato.
+
+**Solución**: hoist de `site_presence_report` fuera del bloque condicional; el guard de `presence_lookup` se corrige para aceptar **dict canónico y dataclass**, lo que **reactiva** los tres consumidores; se retira la instanciación muerta del orquestador. S9 queda certificado por el test preexistente `test_invalid_mappings_valida_contra_capa1`, sin tocar `asset_semantics_validator.py`.
+
+**Backwards compatibility**: ⚠️ **cambio de comportamiento deliberado y registrado** (desvío D-T2C-A1): al reactivarse los consumidores, la propuesta en régimen `generate_proposal=True` puede incluir presencia que antes se caía en silencio. La auditoría lo detectó como AC incumplido y se remedió con 11 tests (`TestPresenceLookupLiveConsumers`) sobre los tres métodos reales, con dict canónico, `None`, `results` vacíos, dataclass-compat y objeto sin `results`.
+
+---
+
+### Notas de Cambios v4.76.0 — FASE-T4-A / T4-B: híbrido acotado (Bots 2 y 4)
+
+**Fecha:** 2026-09-11
+
+**Módulos afectados**: `modules/quality_gates/tribunal/{llm_extractor,alignment_reviewer,honesty_reviewer,artifact_paths}.py` (NUEVOS), `modules/quality_gates/tribunal/__init__.py` (export de `HonestyReviewer`), 6 archivos de test nuevos (57 funciones)
+
+**Problema**: lo que el texto comercial **promete en lenguaje natural** no estaba frente a lo que la matriz **soporta** (P6.2), ni lo que promete estaba frente al **tier de evidencia** real (P6.5). La primera versión de los dos revisores, además, **no leía los artefactos del pipeline**: resolvía rutas por convención y devolvía `total_cg_count: 0`.
+
+**Solución**: `llm_extractor.py` define el protocolo `PromiseExtractor` (mock en tests) bajo la regla **el LLM propone, el Juez decide** — la clasificación de `PROMESA-SIN-MATRIZ` es determinista y la tabla de assets técnicos entra como tercera superficie (S-C4). `artifact_paths.py` es la **única** resolución de `02_PROPUESTA_COMERCIAL*` (`v4_complete/`, timestamped por mtime) y la comparten ambos revisores (R1). Bot 4 lee los `CG-*` de los **dos** archivos comerciales (12 entradas / 10 `gate_ids` distintos), propaga el tier del MANIFEST al acta y divulga cada WARNING con frases que nombran el problema (`DISCLOSURE_PHRASES_BY_GATE`, Q2). Auditoría de la fase → remediación R1–R9 con +22 tests y recomposición del baseline NR1.
+
+**Backwards compatibility**: el extractor es **obligatorio** en la firma (R3.2) para impedir un Bot 4 que finja haber leído el texto; los `revision_*.json` son artefactos nuevos, ningún consumidor previo cambia.
+
+---
+
+### Notas de Cambios v4.76.0 — FASE-E2E / VERIFY / RELEASE: cableado, certificación y cierre
+
+**Fecha:** 2026-09-11
+
+**Módulos afectados**: `main.py` (cableado tras el packaging, commit `7e1bbc3`), `scripts/doctor.py` (encoding), `.opencode/plans/TRIBUNAL-OFFLINE-2026-09-09/`
+
+**Problema**: los cuatro revisores existían y pasaban sus tests **sin estar conectados** al pipeline (decisión Q1: el cableado se diferiría explícitamente a E2E, no se improvisaría sobre la marcha). Y `doctor.py` leía `VERSION.yaml` sin encoding explícito, un defecto preexistente desde `082c9e1` que dejaba `--status` y `--regenerate-domain-primer` inservibles.
+
+**Solución**: Vía A — los 4 revisores corren **después** del packaging, comparten un único `LLMPromiseExtractor` y son **never-block por Bot**: producen hallazgos y acta, no abortan la corrida. La corrida Salento Real dejó 4/4 revisiones en output real, `clauses_evaluated: 6`, veredicto `APROBADO-CONDICIONAL-PENDING-ONBOARDING` y coherence 0.83 (gate PASS 0.8333; baseline 0.88, delta −0.05). FASE-VERIFY certificó **AC1-AC16 = 15 ✅ + 1 ❌** leyendo solo artefactos: **AC8 ❌** porque el fixture de T2-B descomprimía un directorio sintético y nunca ejerció el régimen real **ZIP-only** — causa raíz fijada por sonda read-only y routed a seguimientos con dueño (D-V.1/D-V.4), **sin parchear el test para que pase**. RELEASE arregló el encoding y regeneró los dos documentos que estaban congelados.
+
+**Backwards compatibility**: ninguna API pública cambia. El acto de entrega sigue siendo el mismo; lo que se suma es el acta y su predicado de bloqueo. Se corrige en el acta la nota E2E sobre el tier: `financial_scenarios_*.json` **sí** divulga `breakdown.evidence_tier` (AC17 ✅).
 
 ---
 

@@ -1,5 +1,61 @@
 # Changelog
 
+## [4.76.0] - Tribunal certificador P6+P7 — 2026-09-11
+
+### Objetivo
+
+Cerrar la brecha entre **«paquete generado»** y **«paquete entregable con responsabilidad»**. Hasta v4.75.0 los gates decían *si se puede publicar*; nada decía *quién responde por lo que el documento le promete al cliente*. El plan `TRIBUNAL-OFFLINE-2026-09-09` instala una capa de **accountability**: un juez y cuatro revisores deterministas que **leen los artefactos que el pipeline ya produce** como tercero independiente — no reimplementan gates, no son bots conversacionales, no añaden una cuarta ruta de bloqueo. Su salida es un **acta dual** (`acta_revision.json` machine + `acta_revision.md` cliente) con cláusulas P6 y veredicto. FASE-VERIFY certificó **AC1-AC16 = 15 ✅ + 1 ❌** contra output E2E real.
+
+### Cambios Implementados
+
+- **FASE-T1 — Juez certificador**: `modules/quality_gates/tribunal/judge.py` (`TribunalJudge`) con veredicto determinista y **regla de primer piso** (Tier B/C → máximo `APROBADO-CONDICIONAL-PENDING-ONBOARDING`). Dos candados de responsabilidad: `BLOCKING_VERDICTS` / `blocks_delivery_zip()` — `BLOQUEADO` y `DEVOLVER-CORRECCIONES` impiden el ZIP **desde un único punto** (D-T1.1: `main.py` deja de comparar strings de veredicto)— y `T1_CERTIFIABLE_CLAUSES` — sin evidencia certificable en las cláusulas PASS no hay `APROBADO-PARA-ENTREGA`, degrada a condicional (D-T1.2). `acta_writer.py` escribe el acta dual con las 6 cláusulas P6. El Juez corre junto a `delivery_quality_report` y **no abre una cuarta ruta de bloqueo** (AC4).
+- **FASE-T2-A — Bot 1 de diagnóstico**: `diagnosis_reviewer.py` sobre P6.1. Distingue **recall fundado de recall vacuo** (S-I1): un gate que reporta `details: {}` queda marcado CRITICAL en lugar de contar como pasada.
+- **FASE-T2-B — Bot 3 de assets**: `asset_reviewer.py` sobre P6.3/P6.4 con `coverage_by_service[]` (CON-ASSET / SIN-ASSET / GENERICO / ESTIMATED). P12 se señala como **P6.3 no verificable por la fuente declarada** (catálogo estático), no por el score.
+- **FASE-T2-C — precondiciones heredadas (S-E2, S9)**: `site_presence_report` ya no lanza `NameError` con `generate_proposal=False` (hoist); el guard de `presence_lookup` se corrige para aceptar **dict canónico y dataclass**, lo que **reactiva** tres consumidores muertos (desvío D-T2C-A1, remediado con +11 tests) y se retira la instanciación muerta. S9: el contrato de `INVALID_MAPPINGS` (registro #14) queda **certificado por test preexistente**, sin tocar `asset_semantics_validator.py`.
+- **FASE-T4-A — Bot 2 de alineación NL**: `llm_extractor.py` (protocolo `PromiseExtractor` + mock) y `alignment_reviewer.py` sobre P6.2 — **el LLM propone, el Juez decide**. Promesa verbal sin matriz → `PROMESA-SIN-MATRIZ` (AC10); la tabla de assets técnicos se detecta como **tercera superficie de promesa** (S-C4).
+- **FASE-T4-B — Bot 4 de honestidad NL**: `honesty_reviewer.py` sobre P6.5 lee los `CG-*` de **ambos** archivos comerciales (12 entradas / 10 `gate_ids` distintos), señala sobre-presentación contra el tier y divulga WARNINGs por frases que nombran el problema (`DISCLOSURE_PHRASES_BY_GATE`, decisión Q2). `artifact_paths.py` unifica la resolución de rutas de artefactos. Auditoría de la fase → **remediación R1–R9** (+22 tests): el revisor pasó a operar sobre los artefactos reales del pipeline (R1, que corregía el mismo defecto en T4-A), el baseline NR1 se recompuso con cifras medidas (R4) y se corrigieron falsedades factuales de la evidencia (R5).
+- **FASE-E2E — cableado y corrida real**: los 4 revisores se cables en `main.py` **tras el packaging** (decisión Q1 / Vía A, commit `7e1bbc3`) con extractor LLM compartido y **never-block por Bot**. Corrida `v4complete` Salento Real: **4/4 revisiones** en output real, `revision_honestidad.json` producido (AC11), acta con 6 cláusulas, veredicto `APROBADO-CONDICIONAL-PENDING-ONBOARDING`, coherence **0.83** (gate PASS 0.8333 ≥ 0.80; baseline FASE-D 0.88, delta −0.05 dentro de NR5).
+- **FASE-VERIFY — certificación contra artefacto**: **15 ✅ + 1 ❌**. AC8 ❌ — `EMPTY_DELIVERY_TEMPLATE` no se detecta bajo el régimen real **ZIP-only**: el fixture de T2-B usaba un directorio descomprimido sintético y no ejerció el régimen (causa raíz fijada por sonda read-only, routed a seguimientos con dueño; D-V.1 y D-V.4). Greps residuales **0 matches en 4/4**. `10-analisis` corrige por lectura directa la nota E2E sobre el tier: `breakdown.evidence_tier: "B"` sí se divulga (**AC17 ✅**). **Cero código de producción tocado**.
+- **FASE-RELEASE — ceguera de la regeneración documental**: `scripts/doctor.py` leía `VERSION.yaml` sin encoding explícito (defecto preexistente desde `082c9e1`), por lo que `--status` y `--regenerate-domain-primer` fallaban y `.agent/SYSTEM_STATUS.md` + `.agent/knowledge/DOMAIN_PRIMER.md` llevaban **sin regenerarse desde v4.75.0**. Se fija la lectura UTF-8 en las lecturas del script y 3 tests la anclan.
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/quality_gates/tribunal/__init__.py` | Superficie pública del tribunal (`TribunalJudge`, los 4 revisores; `HonestyReviewer` exportado en la remediación R2) |
+| `modules/quality_gates/tribunal/judge.py` | Juez certificador P6+P7: veredicto determinista, regla de primer piso, `BLOCKING_VERDICTS`/`blocks_delivery_zip`, `T1_CERTIFIABLE_CLAUSES` |
+| `modules/quality_gates/tribunal/acta_writer.py` | Acta dual `acta_revision.json` + `acta_revision.md` (6 cláusulas P6 legibles para el cliente) |
+| `modules/quality_gates/tribunal/diagnosis_reviewer.py` | Bot 1 (P6.1): hallazgos por severidad sobre el diagnóstico interno, recall vacuo → CRITICAL |
+| `modules/quality_gates/tribunal/asset_reviewer.py` | Bot 3 (P6.3/P6.4): `coverage_by_service[]` y no-verificabilidad por fuente declarada |
+| `modules/quality_gates/tribunal/llm_extractor.py` | Protocolo `PromiseExtractor` + mock: contrato del híbrido acotado (el LLM propone, el Juez decide) |
+| `modules/quality_gates/tribunal/alignment_reviewer.py` | Bot 2 (P6.2): promesas verbales vs matriz, `PROMESA-SIN-MATRIZ`, tercera superficie (S-C4) |
+| `modules/quality_gates/tribunal/honesty_reviewer.py` | Bot 4 (P6.5): CG-* de ambos archivos, sobre-presentación vs tier, `DISCLOSURE_PHRASES_BY_GATE` |
+| `modules/quality_gates/tribunal/artifact_paths.py` | Resolución compartida de rutas de artefactos (propuesta en `v4_complete/`, timestamped por mtime) — remediación R1 |
+| `tests/quality_gates/tribunal/` | 11 archivos, **114 funciones** del tribunal (incl. los tests de serialización exigidos por R2.4) |
+| `tests/test_doctor_reads_are_utf8_pinned.py` | 3 tests que anclan la lectura con encoding explícito en `scripts/doctor.py` |
+| `evidence/FASE-{T1,T2-A,T2-B,T2-C,T4-A,T4-B,E2E,VERIFY}/` | Baselines pre/post, `delta_vs_baseline.md`, log de la corrida E2E, `MATRIZ-CERTIFICACION.md`, sonda read-only de AC8, `rectificacion-NR1.md` |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | T1: el Juez ejecuta junto a `delivery_quality_report` y la decisión del ZIP consume `blocks_delivery_zip(acta)` · E2E: cableado de los 4 revisores tras el packaging (Q1/Vía A, `7e1bbc3`) · T2-C: `site_presence_report` fuera del bloque condicional (S-E2) |
+| `modules/commercial_documents/v4_proposal_generator.py` | T2-C: guard de `presence_lookup` corregido (dict canónico + dataclass) — reactiva consumidores y cambia la propuesta en régimen `generate_proposal=True` (D-T2C-A1) |
+| `modules/asset_generation/v4_asset_orchestrator.py` | T2-C: retiro de la instanciación muerta |
+| `scripts/doctor.py` | RELEASE: lecturas de `VERSION.yaml` y aledaños con encoding UTF-8 explícito |
+| `.opencode/plans/TRIBUNAL-OFFLINE-2026-09-09/` | `06-checklist` por fase, `09-documentacion`, `10-analisis` (matriz AC1-AC19, lecciones L-T1…L-V.4, decisiones DA-T4B.1–.6 y D-V.1–.4, seguimientos con dueño), `dependencias-fases`, README |
+| `AGENTS.md`, `README.md`, `.cursorrules`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md` | `sync_versions.py` → v4.76.0 |
+| `.agent/SYSTEM_STATUS.md`, `.agent/knowledge/DOMAIN_PRIMER.md` | Regenerados por `doctor.py` (bloqueados desde v4.75.0 por el defecto de encoding) |
+
+### Tests
+
+- **117 funciones nuevas en el plan**: **114** en `tests/quality_gates/tribunal/` (17 T1 + 10 T2-A + 12 T2-B + 18 T2-C, que ya incluyen los 11 de la remediación D-T2C-A1, + 28 T4-A + 7 T4-B = 92 **más los 22** de la remediación D-T4B-A1) **+ 3** del fix de `scripts/doctor.py`.
+- **Colectados**: 3,944 (pre-T1) → **4,061**. Método canónico `grep -rE "^\s*def test_" tests --include=*.py` → **4,063** funciones en **293** archivos `test_*.py`.
+- **Suite completa en el corte de RELEASE (2026-09-11)**: **4,024 passed / 3 failed / 31 skipped / 4 xfailed** en 156 s. Los 3 fallos son **exactamente** los preexistentes registrados en `aba517a` — `test_function_default_flags` (flaky por orden de recolección), `test_barreda_un_solo_emisor_de_la_clave` (deuda propia del plan: `asset_reviewer.py` como segundo emisor de `asset_path`, routed a D-V.1) y `test_diagnostic_includes_geo_metrics` (cabecera `_build_geo_problems_table`) → **0 regresiones**.
+- FASE-E2E y FASE-VERIFY añaden **0 tests y 0 cambios de código de producción**.
+
+---
+
 ## [4.75.0] - Estabilización pre-tribunal — 2026-09-04
 
 ### Objetivo

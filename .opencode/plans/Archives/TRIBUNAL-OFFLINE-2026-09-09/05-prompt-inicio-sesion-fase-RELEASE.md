@@ -141,7 +141,10 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
     --check-manual-docs
 
 # R2.5: Archivar el plan (mismo commit)
-git mv .opencode/plans/TRIBUNAL-OFFLINE-2026-09-09 .opencode/plans/Archives/
+# <PLAN> = TRIBUNAL-OFFLINE-2026-09-09. Se escribe como plantilla porque
+# `validate_opencode_refs.py --fix` reescribe cualquier referencia literal a un
+# plan ya archivado (destruye el comando histórico al ejecutar el gate).
+git mv .opencode/plans/<PLAN> .opencode/plans/Archives/
 ./venv/Scripts/python.exe scripts/validate_opencode_refs.py --fix
 ./venv/Scripts/python.exe scripts/validate_plan_citations.py --update-baseline
 ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
@@ -202,7 +205,7 @@ git commit -m "chore(RELEASE): v4.76.0 — Tribunal certificador P6+P7 (tramo of
   ```
   delegate_task(
       goal="Ejecutar FASE-RELEASE-4.76.0: version bump + docs + validaciones + archivado",
-      context="Plan: .opencode/plans/TRIBUNAL-OFFLINE-2026-09-09/. Versión: 4.75.0 → 4.76.0. Feature: Tribunal certificador P6+P7. Datos acumulados en 09-documentacion-post-proyecto.md. R2.5: archivar plan en Archives/ con git mv + refs --fix + citas --update-baseline + --quick verde. Commit único.",
+      context="Plan: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/. Versión: 4.75.0 → 4.76.0. Feature: Tribunal certificador P6+P7. Datos acumulados en 09-documentacion-post-proyecto.md. R2.5: archivar plan en Archives/ con git mv + refs --fix + citas --update-baseline + --quick verde. Commit único.",
       timeout=600,
       notify_on_complete=True,
       toolsets=["terminal", "file"]

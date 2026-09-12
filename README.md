@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.75.0** -- Estabilización pre-tribunal | Actualizado 4 Septiembre 2026
+**v4.76.0** -- Tribunal certificador P6+P7 | Actualizado 11 Septiembre 2026
 
 ---
 
@@ -68,7 +68,7 @@ IA Hoteles Agent opera como un **cerebro orquestador** (Agent Harness) que valid
 2. **Valida** -> Compara fuentes para detectar inconsistencias (validacion cruzada)
 3. **Calcula** -> Proyecciones financieras en 3 escenarios (70/20/10)
 4. **Genera** -> Diagnostico + Propuesta + Assets condicionales
-5. **Certifica** -> Controles de coherencia (gates) antes de entregar
+5. **Certifica** -> Controles de coherencia (gates) + acta de revision del tribunal (6 clausulas P6) antes de entregar
 
 Todos los parametros financieros, umbrales de scoring, fallbacks y narrativas de impacto son configurables via YAML sin tocar codigo. Sin YAML, el sistema usa defaults documentados.
 
@@ -190,7 +190,7 @@ Verifica symlink de workflows, skills, memoria del agente, gitignore, DOMAIN_PRI
 
 ---
 
-## Estado del Proyecto (v4.75.0 -- Estabilización pre-tribunal) vive en **[AGENTS.md](AGENTS.md)** — fuente unica del estado interno. Historial de cambios: [CHANGELOG.md](CHANGELOG.md). Registro de fases: [docs/contributing/REGISTRY.md](docs/contributing/REGISTRY.md).
+## Estado del Proyecto (v4.76.0 -- Tribunal certificador P6+P7) vive en **[AGENTS.md](AGENTS.md)** — fuente unica del estado interno. Historial de cambios: [CHANGELOG.md](CHANGELOG.md). Registro de fases: [docs/contributing/REGISTRY.md](docs/contributing/REGISTRY.md).
 
 ---
 
@@ -269,12 +269,13 @@ iah-cli/
     delivery_readme_template.md #   Template README de entrega
     diagnostico_ejecutivo.md    #   Template diagnostico ejecutivo
     local_content/              #   Templates de contenido local
-  modules/                    # Modulos funcionales (24 directorios)
+  modules/                    # Modulos funcionales (23 directorios)
     data_validation/          #   Validacion cruzada + guard de URL propia (own_site_guard)
     commercial_documents/     #   Diagnostico + Propuesta v4 + PDF gancho (hook-pdf)
     financial_engine/         #   Pricing, scenarios, loss projector
     asset_generation/         #   Generacion condicional de assets
     quality_gates/            #   Publication gates, commercial gate, ethics
+    quality_gates/tribunal/   #   Juez P6 + acta dual + 4 revisores (v4.76.0)
     orchestration_v4/         #   Two-phase flow, auditor
     auditors/                 #   APIs externas (Rich Results, Places, PageSpeed)
     analytics/                #   GA4, GSC, agregacion de datos
@@ -287,7 +288,7 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     ...                       #   analyzers, generators, monitoring, utils, validation
   agent_harness/              # Core del agente (memoria, routing, self-healing)
-  tests/                      # Suite de pruebas (25 directorios por modulo)
+  tests/                      # Suite de pruebas (24 subdirectorios, 21 con pruebas)
   scripts/                    # Scripts de automatizacion y validacion
     sync_versions.py          #   Sincronizacion versiones
     doctor.py                 #   Diagnostico ecosistema

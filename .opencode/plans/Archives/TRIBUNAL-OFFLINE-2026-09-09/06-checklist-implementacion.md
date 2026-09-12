@@ -164,28 +164,29 @@
 
 ### FASE-RELEASE-4.76.0 — Cierre
 
-- [ ] VERSION.yaml → 4.76.0
-- [ ] `sync_versions.py` ejecutado (6 archivos sincronizados)
-- [ ] `version_consistency_checker.py` pasa
-- [ ] CHANGELOG.md entrada `[4.76.0]` con formato CONTRIBUTING
-- [ ] GUIA_TECNICA.md nota técnica "Notas de Cambios v4.76.0"
-- [ ] `doctor.py --status` → SYSTEM_STATUS.md regenerado
-- [ ] `doctor.py --regenerate-domain-primer` ejecutado
-- [ ] `doctor.py --context` ejecutado (solo RELEASE)
-- [ ] Symlink `.agent/workflows` → `.agents/workflows` intacto
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] E8b: README.md audit (test count + module count + fecha)
-- [ ] `log_phase_completion.py --fase FASE-RELEASE-4.76.0` ejecutado
-- [ ] R2.5: Plan archivado en `Archives/` (git mv + refs --fix + citas --update-baseline + --quick)
-- [ ] Commit único cierra RELEASE + archivado
+- [x] VERSION.yaml → 4.76.0 (codename "Tribunal certificador P6+P7", release_date 2026-09-11)
+- [x] `sync_versions.py` ejecutado (6 archivos sincronizados: AGENTS, README, .cursorrules, CONTRIBUTING, GUIA_TECNICA, REGISTRY)
+- [x] `version_consistency_checker.py` pasa — "RESULTADO: ✅ TODO SINCRONIZADO"
+- [x] CHANGELOG.md entrada `[4.76.0]` con formato CONTRIBUTING (Objetivo / Cambios / Archivos Nuevos / Archivos Modificados / Tests)
+- [x] GUIA_TECNICA.md nota técnica "Notas de Cambios v4.76.0" (5 bloques por fase + header v4.76.0)
+- [x] `doctor.py --status` → SYSTEM_STATUS.md regenerado (1 skills, 1214 shadow logs, 18 sesiones)
+- [x] `doctor.py --regenerate-domain-primer` ejecutado — DOMAIN_PRIMER.md ahora 4.76.0 / "Tribunal certificador P6+P7"
+- [x] `doctor.py --context` ejecutado (solo RELEASE) — "RESULT: All validations passed" (5 checks)
+- [x] Symlink `.agent/workflows` → `.agents/workflows` intacto
+- [x] `run_all_validations.py --quick` TOTAL PASS — 8/8, citas históricas 739 / 0 nuevas / 0 crecimiento
+- [x] E8b: README.md audit (test count + module count + fecha) — 4 correcciones: fecha del banner, paso 5 "Certifica" + acta del tribunal, `modules/` 24→23 directorios (medido) y `tests/` 25→24 subdirectorios; + línea `quality_gates/tribunal/`. AGENTS.md: conteo canónico 4,060→4,063 y filas cuadran, +fila del tribunal, +árbol `tribunal/`
+- [x] Suite completa en el corte: 4,024 passed / 3 failed / 31 skipped / 4 xfailed en 156 s — ⚠️ **atribución rectificada en RELEASE**: 2 fallos ajenos al plan (`test_function_default_flags` flaky, `test_diagnostic_includes_geo_metrics`, registrados en `aba517a`) + **1 deuda propia** (`test_barreda_un_solo_emisor_de_la_clave`: Bot 3 llegó en `cb37076`, anterior a `aba517a`, así que no es "preexistente"; D-V.1 autoriza el emisor y la whitelist queda en FASE-P3) → **0 regresiones no causadas por el plan**
+- [x] `log_phase_completion.py --fase FASE-RELEASE-4.76.0` ejecutado — REGISTRY.md tiene la entrada `## FASE-RELEASE-4.76.0 - 2026-09-11`; ⚠️ la sección "Archivos Nuevos/Modificados" que escribió el script requirió corrección a mano (extensiones y contados erróneos)
+- [x] R2.5: Plan archivado en `Archives/` (`git mv` + `validate_opencode_refs.py --fix` + `validate_plan_citations.py --update-baseline` + `run_all_validations.py --quick` 8/8) — ejecutado **después** del write-back a QMind, porque el check `[12/12]` exige que el plan archivado esté ingestado
+- [x] Commit único cierra RELEASE + archivado
 
 ---
 
 ## Cierre del plan
 
-- [ ] Todas las fases ✅
-- [ ] AC1-AC16 certificados en FASE-VERIFY
-- [ ] NR1-NR5 sin violaciones
-- [ ] Plan archivado en `Archives/` (R2.5: git mv + refs --fix + citas --update-baseline)
-- [ ] `10-analisis-post-implementacion.md` completo (lecciones, decisiones, métricas)
-- [ ] v4.76.0 publicada
+- [x] Todas las fases ✅ — 9/9 cerradas, con las reservas ⚠️ declaradas en cada una (T1 corte en commit de código; T4-B ⚠️ por DA-T4B.1; VERIFY con AC8 ❌; RELEASE con deuda de barreda en rojo)
+- [x] AC1-AC16 certificados en FASE-VERIFY — **15 ✅ + AC8 ❌**, causa raíz fijada por sonda (`verify_probe_ac8.py`) y routed a `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` **FASE-P3**; ACs propuestos AC17 ✅ / AC18 ✅ / AC19 ⚠️
+- [x] NR1-NR5 sin violaciones — ✅ con **dos desviaciones de instrumento documentadas** (D5 medido con `colectados` en vez de funciones canónicas; baseline contaminado en T4-B, de ahí la regla R2.7) · NR3 ✅ 9/9 fases · NR4 ✅ 0 imports de `publication_gates` · NR5 ✅ coherence 0.83 ≥ 0.80
+- [x] Plan archivado en `Archives/` (R2.5: git mv + refs --fix + citas --update-baseline)
+- [x] `10-analisis-post-implementacion.md` completo (lecciones, decisiones, métricas) — métricas de RELEASE medidas, seguimiento de deudas por dueño (P1/P2/P3) y declaración de cierre
+- [x] v4.76.0 publicada — ⚠️ **publicación local**: `VERSION.yaml` = 4.76.0, docs sincronizados y commit de cierre; **sin push al remoto ni tag anotado** (el push se autoriza aparte)

@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-11
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 476
+> **Total fases completadas:** 477
 
 ---
 
@@ -11115,6 +11115,37 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Coherence >= 0.8: 0.83 (PASO)
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.76.0 - 2026-09-11
+**Descripcion:** Cierre documental v4.76.0: VERSION.yaml + sync_versions (6 archivos) + CHANGELOG con formato CONTRIBUTING + GUIA_TECNICA (5 bloques) + SYSTEM_STATUS y DOMAIN_PRIMER regenerados (desbloqueados por el fix de encoding UTF-8 en scripts/doctor.py) + auditoria E8b de README/AGENTS (conteo canonico 4,063 y filas que cuadran). Validaciones: version_consistency OK, doctor --context 5/5, run_all_validations --quick 8/8, suite 4.024 passed / 3 failed = 2 ajenos al plan + 1 deuda propia (test_barreda, D-V.1) → 0 regresiones no causadas por el plan.
+
+### Archivos Nuevos
+| Archivo | Descripcion |
+|---------|-------------|
+| `tests/test_doctor_reads_are_utf8_pinned.py` | 3 tests que anclan la lectura con encoding UTF-8 explícito en `scripts/doctor.py` |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | version 4.76.0 + codename "Tribunal certificador P6+P7" + release_date 2026-09-11 |
+| `AGENTS.md` | Conteo canónico 4,063 / 293 archivos, fila de `modules/quality_gates/tribunal/`, árbol con `tribunal/` |
+| `README.md` | Fecha del banner, paso "Certifica" + acta del tribunal, conteos de directorios medidos, `quality_gates/tribunal/` |
+| `.cursorrules` | Sync de versión desde VERSION.yaml |
+| `docs/CONTRIBUTING.md` | Sync de versión desde VERSION.yaml |
+| `docs/GUIA_TECNICA.md` | Header v4.76.0 + 5 bloques de notas técnicas por fase del tribunal |
+| `docs/contributing/REGISTRY.md` | Entrada de esta fase |
+| `.agent/SYSTEM_STATUS.md` | Regenerado por `doctor.py --status` |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | Regenerado por `doctor.py --regenerate-domain-primer` (sin regenerar desde v4.75.0) |
+| `scripts/doctor.py` | Lecturas de VERSION.yaml y aledaños con encoding UTF-8 explícito (defecto preexistente desde `082c9e1`) |
+
+### Validaciones
+- [x] Tests passing (3)
 - [x] Suite NEVER_BLOCK passing
 - [x] Coherence >= 0.8: 0.83 (PASO)
 - [x] Capability contract verificado

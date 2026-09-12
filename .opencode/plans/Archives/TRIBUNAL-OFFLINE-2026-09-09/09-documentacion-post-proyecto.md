@@ -63,6 +63,10 @@
 | Archivos nuevos en `v4_audit/` (T4-B) | 1 (`revision_honestidad.json`) — ✅ **producido en FASE-E2E** (corrida 2026-09-11): los 4 `revision_*.json` existen en output real tras el cableado Q1/Vía A (commit `7e1bbc3`) | T4-B / E2E |
 | Hallazgos del tribunal en la corrida E2E | Bot 1: 1 CRITICAL (recall vacuo, `details: {}` real) → BLOQUEAR · Bot 2: 0 findings, 4/4 ALINEADO → APROBADO · Bot 3: 4/4 CON-ASSET (coverage 1.0) + 1 WARNING P12 → APROBADO · Bot 4: 1 CG_WARNING_UNDISCLOSED (`CG-WHATSAPP-LEAD`, AC12 en artefacto real) → DEVOLVER-PRUEBAS · Juez: condicional (no consume reportes — diseño T1) | E2E |
 | **Certificación FASE-VERIFY** | **AC1-AC16: 15 ✅ + 1 ❌ (AC8** — `EMPTY_DELIVERY_TEMPLATE` no detectado en régimen real ZIP-only; causa raíz fijada por sonda read-only, routed a seguimientos, D-V.4**)**. ACs propuestos (dueño VERIFY): AC17 ✅ (D-V.2 corrige nota E2E: `breakdown.evidence_tier: B` sí existe) / AC18 ✅ / AC19 ⚠️ (dos bases de pérdida). Greps residuales 0 matches en 4/4. NR4 ✅ · NR5 ✅ (coherence 0.83). Delta verificado: +6 artefactos tribunal, `is_coherent` false→true, `no_breach` 6→0. **VERIFY añade 0 tests y 0 cambios de código** | VERIFY |
+| Suite completa en el corte de RELEASE | **4,024 passed / 3 failed / 31 skipped / 4 xfailed** en 156 s. Los 3 fallos son exactamente los preexistentes de `aba517a` (`test_function_default_flags` flaky, `test_barreda_un_solo_emisor_de_la_clave` → deuda D-V.1, `test_diagnostic_includes_geo_metrics`) → **0 regresiones** | RELEASE |
+| Conteo post-plan | **4,063** funciones por el método canónico (`grep -rE "^\s*def test_" tests --include=*.py`) / **4,061** colectadas sobre **293** archivos `test_*.py`. Delta comparable en la misma base: **3,944 → 4,061 colectados = +117** (114 del tribunal + 3 del fix de `doctor.py`) | RELEASE |
+| Ceguera documental curada | `scripts/doctor.py` leía `VERSION.yaml` sin encoding explícito (defecto desde `082c9e1`) → `--status` y `--regenerate-domain-primer` fallaban y `.agent/SYSTEM_STATUS.md` + `.agent/knowledge/DOMAIN_PRIMER.md` llevaban **sin regenerarse desde v4.75.0**. Fix + 3 tests que anclan la lectura UTF-8 | RELEASE |
+| Auditoría E8b (README/AGENTS) | Correcciones medidas: banner del README a 11-Sep, paso 5 "Certifica" + acta del tribunal, `modules/` 24→**23** directorios y `tests/` 25→**24** subdirectorios (21 con pruebas); AGENTS.md: conteo 4,060→4,063 con filas que cuadran exactamente, +fila de `tribunal/`, +árbol `tribunal/` | RELEASE |
 
 ## Sección E: Archivos Afiliados Actualizados
 
@@ -88,10 +92,16 @@
 | `tests/quality_gates/tribunal/test_honesty_reviewer_fidelidad_salida.py` | 11 tests de fidelidad de salida y contrato NR4 (R6/R8/R9) | T4-B (remed.) |
 | `evidence/FASE-T4-B/rectificacion-NR1.md` + `tests_baseline_pre_T4B_fase_real.txt` + `tests_baseline_post_T4B_remediacion.txt` | Recomposición de NR1 con baseline medido; el par original se conserva intacto (R4) | T4-B (remed.) |
 | `.opencode/plans/TRIBUNAL-OFFLINE-2026-09-09/{06,09,10,README,dependencias-fases}.md` | Correcciones factuales de R5, estado ⚠️ de T4-B, decisiones DA-T4B.1–.6 (Q1–Q4) | T4-B (remed.) |
-| `VERSION.yaml` | 4.75.0 → 4.76.0 | RELEASE |
-| `CHANGELOG.md` | Entrada [4.76.0] | RELEASE |
-| `docs/GUIA_TECNICA.md` | Nota técnica v4.76.0 | RELEASE |
-| `README.md` | Test count + module count actualizados | RELEASE |
+| `VERSION.yaml` | 4.75.0 → 4.76.0 + codename "Tribunal certificador P6+P7" + release_date 2026-09-11 + bloque de comentarios por fase | RELEASE |
+| `CHANGELOG.md` | Entrada `[4.76.0]` con formato CONTRIBUTING (Objetivo / Cambios Implementados / Archivos Nuevos / Archivos Modificados / Tests) | RELEASE |
+| `docs/GUIA_TECNICA.md` | Header v4.76.0 + 5 bloques de nota técnica (uno por fase del tribunal y el RELEASE) | RELEASE |
+| `README.md` | Auditoría E8b: fecha del banner, paso "Certifica" + acta del tribunal, conteos de directorios medidos, `quality_gates/tribunal/` en el árbol | RELEASE |
+| `AGENTS.md` | Nuevo módulo `tribunal/` en Módulos Activos, conteo canónico 4,063 / 293 con filas que cuadran, árbol con `tribunal/`, fila de mejoras | RELEASE |
+| `scripts/doctor.py` | Lecturas de `VERSION.yaml` y aledaños con encoding UTF-8 explícito — defecto preexistente desde `082c9e1` | RELEASE |
+| `tests/test_doctor_reads_are_utf8_pinned.py` | 3 tests nuevos que anclan la lectura con encoding explícito | RELEASE |
+| `.agent/SYSTEM_STATUS.md` · `.agent/knowledge/DOMAIN_PRIMER.md` | Regenerados por `doctor.py` — imposibles desde v4.75.0 por el defecto de encoding | RELEASE |
+| `docs/contributing/REGISTRY.md` | Entrada FASE-RELEASE-4.76.0 (477 fases) | RELEASE |
+| `.cursorrules` · `docs/CONTRIBUTING.md` | Sincronizados desde VERSION.yaml por `sync_versions.py` | RELEASE |
 
 ## Sección F: Residuos heredados del plan estabilizador (asignación VERIFY 2026-09-04)
 

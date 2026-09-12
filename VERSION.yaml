@@ -1,9 +1,30 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.75.0"
-codename: "Estabilización pre-tribunal"
-release_date: "2026-09-04"
+version: "4.76.0"
+codename: "Tribunal certificador P6+P7"
+release_date: "2026-09-11"
 plan_maestro_version: "v2.6.0"
+
+# v4.76.0 - TRIBUNAL-CERTIFICADOR-P6-P7 (2026-09-11)
+# Tribunal offline del plan TRIBUNAL-OFFLINE-2026-09-09: capa de accountability entre
+# "paquete generado" y "paquete entregable con responsabilidad". Modulos deterministas que
+# leen los artefactos existentes como revisor independiente — NO reimplementan gates ni son bots.
+# FASE-T1: judge.py (TribunalJudge, veredicto determinista + regla de primer piso + bloqueos del
+#         ZIP por blocks_delivery_zip) y acta_writer.py (acta dual acta_revision.json/.md, 6 cláusulas P6)
+# FASE-T2-A: diagnosis_reviewer.py (Bot 1, P6.1) — distingue recall fundado de vacuo (S-I1)
+# FASE-T2-B: asset_reviewer.py (Bot 3, P6.3/P6.4) — cobertura por servicio y P12 por fuente declarada
+# FASE-T2-C: limpieza heredada S-E2 (NameError latente + presence_lookup reactivado, desvío D-T2C-A1
+#         remediado con 11 tests) y S9 (contrato de INVALID_MAPPINGS certificado por test)
+# FASE-T4-A: llm_extractor.py (protocolo PromiseExtractor + mock) y alignment_reviewer.py (Bot 2,
+#         P6.2) — LLM propone, Juez decide; S-C4 como tercera superficie de promesa
+# FASE-T4-B: honesty_reviewer.py (Bot 4, P6.5) + artifact_paths.py — sobre-presentación vs tier y
+#         CG-* de ambos archivos; remediación R1-R9 tras auditoría (22 tests)
+# FASE-E2E: los 4 revisores cableados en main.py tras el packaging (Q1/Vía A, never-block por Bot);
+#         corrida Salento Real — 4/4 revisiones, veredicto APROBADO-CONDICIONAL-PENDING-ONBOARDING, coherence 0.83
+# FASE-VERIFY: AC1-AC16 contra output real = 15 ✅ + 1 ❌ (AC8, régimen ZIP-only, routed a seguimientos);
+#         AC17 ✅ / AC18 ✅ / AC19 ⚠️; greps residuales 0/4; cero código de producción tocado
+# FASE-RELEASE: fix preexistente de encoding en scripts/doctor.py (lecturas sin UTF-8 desde 082c9e1)
+#         que llevaba a SYSTEM_STATUS.md y DOMAIN_PRIMER.md sin regenerarse desde v4.75.0
 
 # v4.75.0 - ESTABILIZACION-PRE-TRIBUNAL (2026-09-04)
 # Dossier de estabilización pre-tribunal (ex auditoría SalentoReal): 8 caídas de detección y

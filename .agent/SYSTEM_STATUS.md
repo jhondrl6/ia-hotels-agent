@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-09-04 23:11:52 UTC
+> Auto-generado: 2026-09-12 00:52:40 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -9,7 +9,7 @@
 
 | Componente | Version | Fuente |
 |------------|---------|--------|
-| Proyecto | 4.75.0 | VERSION.yaml |
+| Proyecto | 4.76.0 | VERSION.yaml |
 | Ecosystem Convention | 1.0.0 | .agent/CONVENTION.md |
 
 ## Skills Activas (1)
@@ -23,12 +23,12 @@
 
 | Metrica | Valor |
 |---------|-------|
-| Shadow logs | 1201 archivos JSON |
+| Shadow logs | 1214 archivos JSON |
 | Sesiones activas | 18 |
 | Sesiones archivadas | 6 |
-| Ultimo shadow log | 20260903_212834_9d212284.json |
-| Ultima sesion activa | 2026-09-04_9d9b4f36.json |
-| Ultimo contexto actualizado | 2026-09-04T17:01:34.765883+00:00 |
+| Ultimo shadow log | 20260911_201548_5cb0086f.json |
+| Ultima sesion activa | 2026-09-11_9d9a1248.json |
+| Ultimo contexto actualizado | 2026-09-11T22:57:35.776731+00:00 |
 | Ultima URL procesada | https://www.hotelsalentoreal.com/ |
 
 ## Config Files (10/10 healthy)

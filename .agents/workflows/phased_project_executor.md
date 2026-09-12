@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código. Ejecutado por agentes AI.
-version: v2.20.0
+version: v2.21.0
 ---
 
 # Skill: Phased Project Executor
@@ -29,14 +29,16 @@ version: v2.20.0
 > `evidence/FASE-D/measure_iterations.py`. Corte fijo: **hasta el commit de código** (lo que se
 > escriba después es cierre documental y no cuenta contra el presupuesto de implementación). Si la
 > fase no puede correr el instrumento, el auto-reporte se publica **en la unidad usada**
-> (`tool_use`, `ids únicos`, etc.) y se declara que no es comparable con las demás. Ver §R2.1-R2.5.
+> (`tool_use`, `ids únicos`, etc.) y se declara que no es comparable con las demás. Ver §R2.1-R2.7.
 
-## Reglas de Proceso v2.20.0 (OBLIGATORIO — propuestas por FASE-VERIFY, 2026-09-04)
+## Reglas de Proceso v2.21.0 (OBLIGATORIO — propuestas por FASE-VERIFY, 2026-09-04 y 2026-09-11)
 
-Las cinco reglas siguientes existen porque un plan de 11 fases las violó o las descubrió tarde
-(y la sesión post-release aportó la quinta: un archivado que quedó como reproceso, ver R2.5).
-Cada una lleva su medición de origen: una norma sin medición es la regla que se escribe y no se
-cumple (ver R2.4).
+Las siete reglas siguientes existen porque un plan las violó o las descubrió tarde (y la sesión
+post-release de `ESTABILIZACION-PRE-TRIBUNAL` aportó la quinta: un archivado que quedó como
+reproceso, ver R2.5). R2.1-R2.5 vienen de la certificación de 2026-09-04; **R2.6 y R2.7** de la
+certificación del plan `TRIBUNAL-OFFLINE-2026-09-09` (decisión D-V.3, endosada por FASE-VERIFY
+2026-09-11 y ejecutada por su FASE-RELEASE). Cada una lleva su medición de origen: una norma sin
+medición es la regla que se escribe y no se cumple (ver R2.4).
 
 ### R2.1 — Presupuesto: medir o retirar la métrica, nunca estimar (S22 / DA-V6)
 
@@ -125,6 +127,57 @@ Un commit único cierra RELEASE + archivado y las referencias vivas (memoria de 
 apuntan a la ruta nueva. `Archives/` queda fuera del alcance de `validate_plan_closure.py`
 (histórico congelado); salir de RELEASE con el plan en raíz garantiza el reproceso que esta
 regla elimina.
+
+### R2.6 — Todo lector de artefactos del pipeline se prueba contra el baseline real (D1/D5/S1-S3 · D-T2C-A1 · L-V.1)
+
+**Medido**: en `TRIBUNAL-OFFLINE-2026-09-09` una sola causa produjo cinco defectos (D1, D5, S1, S2,
+S3), causó el desvío D-T2C-A1 y dejó **AC8 ❌ al certificar**: los revisores se probaban contra
+fixtures construidas por la propia fase, nunca contra un output real del pipeline. La sonda
+read-only `evidence/FASE-VERIFY/TRIBUNAL-OFFLINE-2026-09-09/verify_probe_ac8.py` fijó el defecto
+en **dos capas** que ningún test podía detectar: el régimen vivo de `deliveries/` es **ZIP-only**
+(así que `<zip>/IMPLEMENTATION_ORDER.md` no existe en disco y `_resolve_delivery_dir()` cae al
+`.zip`), y el heurístico `_is_template_stub()` contaba como contenido los separadores `---` y el
+boilerplate (`non_empty_lines = 10 > 3`). Un test en verde prueba **el régimen del fixture**, no la
+salida del sistema.
+
+**Regla**: una fase que escriba **un lector de artefactos del pipeline** —cualquier código que abra
+un JSON/MD/ZIP producido por otra etapa— no cierra con ✅ sin **≥1 test contra el baseline real**
+(`output/FASE-D_salentoreal_post_guard/` o el output de la corrida vigente):
+
+- El `skip` cuando falta el baseline es **explícito y visible** (`pytestmark =
+  pytest.mark.skipif(...)`, no un `return` silencioso). Modelo:
+  `tests/quality_gates/tribunal/test_honesty_reviewer_retro_reales.py`.
+- La evidencia de la fase declara **si el test corrió o se saltó**. Un skip silencioso es la
+  variante muda del mismo defecto: el verde no informa nada.
+- Contra fixtures propias solo se certifica lógica pura; todo supuesto sobre la **forma del
+  artefacto** (dónde vive, qué claves tiene, si está comprimido) se verifica contra disco real.
+
+### R2.7 — El par pre/post de NR1 se valida **restando**: una resta 0 es baseline contaminado (D-T2C-A1 · rectificación T4-B)
+
+**Medido**: la fase T4-B registró su no-regresión como `4018 → 4025` cuando la pareja medida era
+`4029 → 4036`: los **+11** tests de la remediación D-T2C-A1 se habían quedado fuera del `pre`. El
+informe cuadraba consigo mismo y no con el repo, y el delta quedó **inflado en 11** sin que nadie
+lo notara — porque nadie restaba.
+
+**Regla**: el par `*_baseline_pre*.txt` / `*_baseline_post*.txt` de `evidence/FASE-X/` se publica con
+la **suma** `failed+passed+skipped+xfailed` de cada corrida, y la resta se comprueba:
+
+```
+suma_post − suma_pre == tests_nuevos_de ESTA fase      (> 0 si la fase añadió tests)
+```
+
+- Resta **0** con tests nuevos declarados ⇒ **baseline contaminado**: el `pre` se tomó después de
+  escribir los tests, o se copió del `post`. La fase **no** puede cerrarse en ✅.
+- Diferencia ≠ `tests_nuevos` ⇒ falta una partida (tests de otra fase no contabilizados, tests
+  saltados o borrados). Se explica la diferencia en `baseline-pre-post.md`, no se redondea.
+- Las dos cifras se declaran **en la misma base de medición** (R2.3): `pytest --collect-only` no es
+  comparable con el conteo canónico `grep -rE "^\s*def test_" tests --include=*.py`.
+
+**Verificador mecánico**: **todavía no existe.** `validate_plan_closure.py` vigila el cierre (R2.5)
+y `validate_plan_citations.py` las citas (R2.2); ninguno valida la resta de este par. Mientras no
+exista, la resta se hace a mano y se publica en `evidence/FASE-X/baseline-pre-post.md`. La escritura
+del verificador queda como deuda con dueño: plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` (FASE-P1 la
+incluye en alcance o la reasigna explícitamente).
 
 ## Regla de Scope de Fase (OBLIGATORIO — Al Crear el Plan)
 
@@ -1242,6 +1295,7 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - **FASE-VERIFY incluida en plan simple** → evaluar si los 3 criterios de activación se cumplen; si no, eliminar y documentar por qué en `dependencias-fases.md`
 
 ## Versiones
+- **v2.21.0** (2026-09-11): Dos reglas endosadas por FASE-VERIFY del plan `TRIBUNAL-OFFLINE-2026-09-09` (decisión **D-V.3**, ejecutada en su FASE-RELEASE-4.76.0). **R2.6** — toda fase que escriba un lector de artefactos del pipeline debe tener ≥1 test contra el baseline real (`output/FASE-D_salentoreal_post_guard/`) con `skipif` explícito, y el ✅ de la fase lo exige: es la causa común de D1/D5/S1/S2/S3, causó el desvío D-T2C-A1 y dejó AC8 ❌ (la sonda `verify_probe_ac8.py` fijó 2 capas: `deliveries/` es ZIP-only y `_is_template_stub()` cuenta `---`/boilerplate como contenido). **R2.7** — el par pre/post de NR1 se valida **restando**: `suma_post − suma_pre` debe diferir en exactamente `tests_nuevos`, y una resta 0 significa baseline contaminado (medido: T4-B reportó `4018 → 4025` contra la pareja real `4029 → 4036`; los +11 de D-T2C-A1 faltaban en el `pre`). A diferencia de R2.2 y R2.5, **R2.7 nace sin verificador mecánico**: el script queda como deuda con dueño (`TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`), declarado en la propia regla para que la norma no se lea como ya cumplida.
 - **v2.20.0** (2026-09-04): Nueva **R2.5** «El cierre archiva»: FASE-RELEASE termina con el plan movido a `.opencode/plans/Archives/` (git mv + `validate_opencode_refs.py --fix` + `validate_plan_citations.py --update-baseline` + `--quick` verde, un commit único), en lugar de archivarlo como reproceso en la sesión siguiente (medido: `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` se cerró con v4.75.0 y quedó en raíz pese a que la convención ya existía). Enforcement mecánico: dos checks nuevos en el pre-commit — `[4/5]` citas de línea en planes (R2.2, `validate_plan_citations.py`) y `[5/5]` cierre de planes (`scripts/validate_plan_closure.py`: un plan que declara «Cierre del plan» + COMPLETADO no puede publicar filas «⬜ Pendiente»; `Archives/` fuera de alcance). Paso 4.5.6 añadido al flujo documental §4.5.
 - **v2.19.0** (2026-09-04): Cuatro reglas de proceso propuestas por FASE-VERIFY del plan `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`, que el archivo **no contenía** (medido: 0 coincidencias de «recalibr», «números de línea», «hasta el commit de código», «delta»). Nuevas §R2.1-§R2.4: **R2.1** presupuesto de iteraciones medido con `evidence/FASE-D/measure_iterations.py` y corte fijo «hasta el commit de código», con la orden de recalibrar ×3 **o retirar** la métrica (S22/DA-V6: nueve fases excedieron 2,4×-8,6× y reportaron en unidades distintas); **R2.2** prohibición de números de línea en ACs y prompts — citar símbolos (L-A6/L-V4/L-H4: 14 de 16 citas ya desfasadas al certificar) y su verificador mecánico nuevo `scripts/validate_plan_citations.py`, check 8 de `run_all_validations.py --quick`; **R2.3** no-regresión de conteos formulada como **delta** con par pre/post obligatorio (S26/DA-V2); **R2.4** regla de certificación — *un AC no legible en el artefacto que el sistema produce es ⚠️, no ✅; un ✅ que solo respalda un string en el código no existe* (L-V1/DA-V3). **R2 deja de prometer «máximo 60 iteraciones»**: la cabecera y la regla mandatoria ahora ordenan medir, no estimar.
 - **v2.18.0** (2026-09-02): Write-back de CONTEXT por aporte, no por edición. Los `CONTEXT-*.md` de `.opencode/context/` se ingieren a QMind solo cuando **autodeclaran** una lección durable con etiqueta explícita (`Lección de forma:`); el criterio es binario para que no dependa de un juicio de relevancia inferido (§4). La pregunta se hace en el Cierre Obligatorio de Sesión (paso 3 nuevo), que es donde el archivo se escribe, para que el disparador no sea letra muerta. Se aclara en el Paso 0 que un CONTEXT ausente del notebook no es un olvido. Origen medido: `CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` no estaba en el notebook (40 fuentes, última ingesta 2026-08-31) pese a declarar en §13.5 *"Lección de forma: revalidar citas de código no revalida premisas"* — el ciclo v2.17.0 solo disparaba sobre `10-analisis-post-implementacion.md` al cierre de fase, y un CONTEXT de análisis/auditoría no es cierre de fase.
