@@ -1,6 +1,6 @@
 ---
 description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código. El Paso 0 capitaliza lecciones en `00-lecciones-capitalizadas.md` consultando el índice generado del corpus. Ejecutado por agentes AI.
-version: v2.23.0
+version: v2.23.1
 ---
 
 # Skill: Phased Project Executor
@@ -31,7 +31,7 @@ version: v2.23.0
 > fase no puede correr el instrumento, el auto-reporte se publica **en la unidad usada**
 > (`tool_use`, `ids únicos`, etc.) y se declara que no es comparable con las demás. Ver §R2.1-R2.10.
 
-## Reglas de Proceso v2.23.0 (OBLIGATORIO — propuestas por FASE-VERIFY y por el Paso 0, 2026-09-04, 2026-09-11 y 2026-09-12)
+## Reglas de Proceso v2.23.1 (OBLIGATORIO — propuestas por FASE-VERIFY y por el Paso 0, 2026-09-04, 2026-09-11 y 2026-09-12)
 
 Las diez reglas siguientes existen porque un plan las violó o las descubrió tarde (y la sesión
 post-release de `ESTABILIZACION-PRE-TRIBUNAL` aportó la quinta: un archivado que quedó como
@@ -275,6 +275,10 @@ y se llamen por su causa. Dueño: el mismo tramo de deuda de `TRIBUNAL-ENFORCEME
   su ruta: en la tabla vigente conviven `Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` (definición
   archivada) y `9 en TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` (cita viva). Mover un plan cambia esas
   celdas, así que el índice regenerate de antes del `git mv` queda vencido contra el árbol final.
+- **Y no vence solo por rutas.** La última columna del índice es el **conteo de citas por ID y por
+  plan**, así que cualquier edición de un `.md` de `plans/` o `context/` que nombre un ID lo mueve.
+  Medido al escribir la trazabilidad de NR7/NR8 en el plan que originó estas reglas: dos menciones
+  nuevas en el §7 subieron `L-R.4` de 8 a 9 y `DA-C3` de 9 a 10, y `[6/6]` bloqueó ese commit.
 
 **Regla**: dentro del cierre de FASE-RELEASE el orden es fijo y no se permuta:
 
@@ -293,10 +297,16 @@ python scripts/build_lesson_index.py                          # 3b. el índice c
   invariante verificable es «el índice refleja el árbol al commitear», no «una sola corrida».
 - El bloque canónico de comandos del cierre sigue siendo el de R2.5; esta regla aporta el porqué del
   orden y qué se apaga si se invierte.
+- **Fuera del cierre también alcanza, pero ya está verificado**: `[6/6]` corre en **todo** commit, así
+  que un commit documental que edite un `.md` de `plans/` o `context/` lleva su índice regenerado
+  **en el mismo commit**. No es una obligación nueva sino lo que el hook comprueba; se escribe aquí
+  para que nadie lo descubra a mitad de un cierre, que fue el caso que lo midió.
 
 **Origen no-lección**: R2.10 no desciende de un ID del corpus. Consolida una restricción que estaba
 escrita en dos sitios sin nombre propio —el bloque de R2.5 y la nota «QMind y archivado» del §4— y
-los tres hechos de arriba, leídos en los scripts el 2026-09-12.
+los cuatro hechos de arriba, leídos en el código de los verificadores el 2026-09-12 y confirmados por
+`[6/6]` el mismo día: pasó el commit que solo tocaba el executor —ese directorio no se escanea— y
+bloqueó el que editó un plan.
 
 **Verificador mecánico**: **parcial, ya activo, con una pata que se degrada.**
 - Pata del índice: **dura** — `[6/6]` del pre-commit (`build_lesson_index.py --check`) bloquea el
@@ -1459,6 +1469,7 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - **FASE-VERIFY incluida en plan simple** → evaluar si los 3 criterios de activación se cumplen; si no, eliminar y documentar por qué en `dependencias-fases.md`
 
 ## Versiones
+- **v2.23.1** (2026-09-12): Corrección medida de **R2.10**, descubierta al cerrar la trazabilidad del plan que promovió R2.8/R2.9. La regla afirmaba que el índice vence **por rutas**; es más barato de lo pensado: el índice publica el **conteo de citas por ID y por plan**, así que dos menciones nuevas en el §7 de `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` bastaron para vencerlo (`L-R.4` 8→9, `DA-C3` 9→10) y `[6/6]` bloqueó ese commit. R2.10 pasa a cuatro hechos medidos, con el invariante explícito de que **todo** commit que edite un `.md` de `plans/` o `context/` lleva su índice regenerado en el mismo commit — lo que el hook ya comprobaba, escrito por primera vez. Sin cambios en R2.8/R2.9 ni en el resto de la familia; la cabecera de la sección sube a v2.23.1 por coherencia con el archivo. El propio commit quedó como evidencia: `docs(TRIBUNAL)` del §7 con el índice regenerado dentro.
 - **v2.23.0** (2026-09-12): Tres reglas nuevas a la familia R2 (la cabecera de la sección sube de v2.21.0 a v2.23.0), del Paso 0 horizontal del plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`. **R2.8** asciende **NR7** a regla global — *mutation check*: todo AC de detección o bloqueo se cierra revirtiendo el guard y mostrando el test en rojo, con las **dos salidas** en `evidence/FASE-X/`; origen medido **D-T4B-A1** (T4-B certificó ✅ con 7/7 verdes + test de serialización + `--quick` en paz, y `_load_proposal()` leía dos niveles por encima de donde el pipeline escribe la propuesta → `total_cg_count: 0` y `BLOQUEAR` espurio), con **L-T4A.5** y **L-VUP-5** como antecedentes del corpus y **L-T2C.4** como la razón de exigirlo por AC. **R2.9** asciende **NR8** — *tri-estado*: sin hallazgos / artefacto ausente / lector fallido tienen que ser distinguibles por quien lee el artefacto, cada uno con su test **nombrado por su causa**; origen **L-PF6** (parser de JSON-LD en ARRAY tragado como ERROR → audit publicando «0 schemas» y un pain falso HIGH con cifra económica), **L-PF10** (`critical_recall` BLOCKED «metric not found» sobre una lista vacía porque el fix había funcionado) y **DA-C3** (`vacío ≠ ausente`, el contrato ya vigente que NR8 subsume y que el plan dejaba pendiente en §3.b). **R2.10** nombra el timing que estaba disperso sin dueño de sección: write-back de QMind y `build_lesson_index.py` **antes** del `git mv` a `Archives/`, más la regeneración del índice **después** del movimiento; los tres hechos están leídos en el código de los verificadores (el `--upload` resuelve `.opencode/plans/<PLAN>` por nombre, su comprobación solo escanea `Archives/`, y `--check` compara byte a byte un índice que publica rutas). Se reflejan en el bloque de R2.5 y en la nota «QMind y archivado» del §4. **Lo que NO verifica todavía**: **R2.8 y R2.9 nacen sin verificador mecánico y lo declaran en su propio texto** (política **L-R.4**, precedente R2.7), con el verificador pedido en el mismo tramo de deuda de `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`; R2.10 sí trae checks pero **parciales** — `[6/6]` bloquea el índice vencido, la pata de QMind solo corre en el modo completo y degrada a WARN sin el CLI, y **ninguno comprueba el orden en el momento del `git mv`**, solo el resultado final. Cambio documental: no toca código de producción ni el template de prompt de fase.
 - **v2.22.0** (2026-09-12): El Paso 0 deja de ser una instrucción y produce un artefacto. **Origen medido**: de los 24 planes archivados, la sección «Lecciones capitalizadas de planes anteriores» —que este workflow ordenaba escribir desde v2.17.0— aparece en **6** (18 %), y la plantilla la marcaba `(si aplica)`; el plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` citaba solo a su predecesor con 24 planes más en el corpus, y el defecto que descubrió esta sesión (Tier A inalcanzable en `v4complete`) ya estaba documentado en `EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31`. Cambios: **nueva capa fría** (`.opencode/LECCIONES-INDEX.md`, generado por `scripts/build_lesson_index.py` — cada ID con dueño, sección y citas, definido en análisis *y* `CONTEXT-*.md`; el conteo vigente está en el encabezado del índice, no en el workflow); **`00-lecciones-capitalizadas.md`** creado antes del plan maestro con template propio (`.agents/workflows/templates/lecciones-capitalizadas-template.md`): consultas literales re-ejecutables, «qué cambia en este plan» obligatorio por fila, ≥3 descartes motivados y cobertura declarada; gate nuevo en §2.5 (sin archivo lleno no se crean prompts de fase); §4 pasa de dos a tres archivos de concepción; el write-back del §4 y R2.5 ahora incluyen `build_lesson_index.py` **antes** del `git mv` a `Archives/`. **Lo que NO verifica todavía**: la *pertinencia* de lo capitalizado — ningún script comprueba que las filas de §2 sean lecciones reales aplicadas y no ceremonial; se declara en §4 del propio archivo, y el verificador queda como deuda con dueño (`TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`), misma política de R2.7.
 - **v2.21.0** (2026-09-11): Dos reglas endosadas por FASE-VERIFY del plan `TRIBUNAL-OFFLINE-2026-09-09` (decisión **D-V.3**, ejecutada en su FASE-RELEASE-4.76.0). **R2.6** — toda fase que escriba un lector de artefactos del pipeline debe tener ≥1 test contra el baseline real (`output/FASE-D_salentoreal_post_guard/`) con `skipif` explícito, y el ✅ de la fase lo exige: es la causa común de D1/D5/S1/S2/S3, causó el desvío D-T2C-A1 y dejó AC8 ❌ (la sonda `verify_probe_ac8.py` fijó 2 capas: `deliveries/` es ZIP-only y `_is_template_stub()` cuenta `---`/boilerplate como contenido). **R2.7** — el par pre/post de NR1 se valida **restando**: `suma_post − suma_pre` debe diferir en exactamente `tests_nuevos`, y una resta 0 significa baseline contaminado (medido: T4-B reportó `4018 → 4025` contra la pareja real `4029 → 4036`; los +11 de D-T2C-A1 faltaban en el `pre`). A diferencia de R2.2 y R2.5, **R2.7 nace sin verificador mecánico**: el script queda como deuda con dueño (`TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`), declarado en la propia regla para que la norma no se lea como ya cumplida.
