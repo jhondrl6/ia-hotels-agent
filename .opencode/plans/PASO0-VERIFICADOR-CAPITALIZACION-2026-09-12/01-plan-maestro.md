@@ -80,10 +80,10 @@ estados, claves distintas en la salida, y **ningún verde desde el tercero**:
 |---|-------|--------------------------------------|--------------------------------|
 | C0 | Cobertura publicada | Toda corrida imprime: planes totales, en alcance, exentos por `Archives`, exentos por fecha anterior al corte, exentos **sin fecha parseable** (con sus nombres) | — |
 | C1 | Presencia | `00-lecciones-capitalizadas.md` existe y se lee | `AUSENTE` / `LECTOR-FALLIDO` |
-| C2 | Estructura | Encabezados `## 1.`, `## 2.`, `## 3.`, `## 4.` presentes | `LECTOR-FALLIDO` |
+| C2 | Estructura | Encabezados `## 1.`, `## 2.`, `## 3.`, `## 4.` presentes | `SIN-HALLAZGOS`, y los checks que dependen de la sección ausente reportan `LECTOR-FALLIDO` |
 | C3 | Consulta al corpus completo | ≥1 fila de §1 cuya celda **Capa** nombre una capa corpus-wide (`Índice`, `LECCIONES-INDEX`, `QMind`, `Memoria`, `Repo`) **y** cuya celda **Consulta literal** contenga un comando entre backticks | `SIN-HALLAZGOS` (violación) |
-| C4 | Anti-ceremonia sobre ACs | ≥1 fila de §2 cuya celda **Qué cambia** o **Dónde se aplica** nombre un token `AC-<letra><dígito>` que **existe** en la tabla de ACs de `01-plan-maestro.md` | `LECTOR-FALLIDO` si el maestro no tiene tabla parseable (no puede dar OK) |
-| C5 | Descartes | ≥3 filas de datos en §3 (umbrales medidos en Q7: el artefacto real tiene 5 y 18/6/…) | `SIN-HALLAZGOS` (violación) |
+| C4 | Anti-ceremonia sobre ACs | ≥1 fila de §2 cuya celda **Qué cambia** o **Dónde se aplica** nombre un AC (`AC-F1` **o** `AC8`: las dos convenciones vivas del repo, porque un candado de forma que castiga al que escribe bien es L-B1) que **existe** en la tabla de ACs de `01-plan-maestro.md` | `LECTOR-FALLIDO` si el maestro no tiene tabla parseable (no puede dar OK) |
+| C5 | Descartes | ≥3 filas de datos en §3 (umbral medido en Q7 sobre el único artefacto real: 18 filas en §2, 6 descartes, 5 dueños) | `SIN-HALLAZGOS` (violación) |
 | C6 | Declaración de cobertura | §4 contiene el nombre del verificador (`validate_lesson_capitalization.py`) **y** una frase de límite (`no verific`, `no comprueba`, `no garantiza`) | `SIN-HALLAZGOS` (violación) |
 | C7 | Atribución real de §2 | Para cada ID `L-*`/`DA-*`/`D-*`/`S-*` de la primera celda de §2: (a) está **definido** en el índice calculado en memoria, y (b) el **dueño** que publica el índice aparece literalmente en la celda **Definida en** | `LECTOR-FALLIDO` si el índice no puede calcularse |
 | C8 | Diversidad anti-predecesor | Los dueños resueltos en C7 cubren **≥2** planes/CONTEXTs distintos | `SIN-HALLAZGOS` (violación) |

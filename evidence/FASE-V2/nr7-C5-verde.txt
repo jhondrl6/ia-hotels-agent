@@ -1,0 +1,7 @@
+# comando: pytest test_c5_dos_descartes_no_prueban_que_se_miro_el_corpus -q (guard activo, archivo restaurado)
+# exit=0
+
+.                                                                        [100%]
+1 passed in 0.15s
+
+

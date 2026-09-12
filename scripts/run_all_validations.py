@@ -72,6 +72,7 @@ class ValidationRunner:
         self._check_prompts_no_release()
         self._check_opencode_refs()
         self._check_plan_citations()
+        self._check_lesson_capitalization()
         
         if not self.quick:
             self._check_dependencies()
@@ -96,7 +97,7 @@ class ValidationRunner:
     
     def _check_residual_files(self) -> None:
         """Check for residual/backup files."""
-        print("[1/8] Checking for residual files...")
+        print("[1/9] Checking for residual files...")
         
         residual_extensions = {".bak", ".backup", ".tmp", ".old"}
         residual_files = []
@@ -125,7 +126,7 @@ class ValidationRunner:
     
     def _check_plan_maestro_sync(self) -> None:
         """Check if Plan Maestro data is synchronized."""
-        print("[2/8] Checking Plan Maestro sync...")
+        print("[2/9] Checking Plan Maestro sync...")
         
         json_path = ROOT_DIR / "data" / "benchmarks" / "plan_maestro_data.json"
         md_path = ROOT_DIR / "data" / "benchmarks" / "Plan_maestro_v2_5.md"
@@ -168,7 +169,7 @@ class ValidationRunner:
     
     def _check_version_sync(self) -> None:
         """Check if versions are synchronized across files."""
-        print("[3/8] Checking version synchronization...")
+        print("[3/9] Checking version synchronization...")
         
         version_file = ROOT_DIR / "VERSION.yaml"
         if not version_file.exists():
@@ -210,7 +211,7 @@ class ValidationRunner:
     
     def _check_no_secrets(self) -> None:
         """Check for hardcoded secrets."""
-        print("[4/8] Checking for hardcoded secrets...")
+        print("[4/9] Checking for hardcoded secrets...")
         
         import re
         secret_patterns = [
@@ -249,7 +250,7 @@ class ValidationRunner:
     
     def _check_document_integration(self) -> None:
         """Check cross-document integration consistency."""
-        print("[5/8] Checking document integration...")
+        print("[5/9] Checking document integration...")
         
         script_path = ROOT_DIR / "scripts" / "validate_document_integration.py"
         if not script_path.exists():
@@ -285,7 +286,7 @@ class ValidationRunner:
         log_phase_completion.py commands. Excludes Archives, RELEASE plans/prompts,
         and documentation-only references to --release.
         """
-        print("[6/8] Checking prompts for --release flag in intermediate phases...")
+        print("[6/9] Checking prompts for --release flag in intermediate phases...")
         
         import re
         
@@ -348,7 +349,7 @@ class ValidationRunner:
         Catches forgotten reference updates after archiving plans (Archives/)
         or contexts (Historico/). Repair manually with --fix on the script.
         """
-        print("[7/8] Checking .opencode references...")
+        print("[7/9] Checking .opencode references...")
         
         script_path = ROOT_DIR / "scripts" / "validate_opencode_refs.py"
         if not script_path.exists():
@@ -389,7 +390,7 @@ class ValidationRunner:
         numbers, because a rewritten line citation is the same defect dressed up as
         a fix.
         """
-        print("[8/8] Checking plan citations (simbolos, no numeros de linea)...")
+        print("[8/9] Checking plan citations (simbolos, no numeros de linea)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_plan_citations.py"
         if not script_path.exists():
@@ -419,9 +420,51 @@ class ValidationRunner:
                 details=issues
             ))
 
+    def _check_lesson_capitalization(self) -> None:
+        """Check that plans conceived under executor v2.22.0 capitalized the corpus.
+
+        Materializes the Paso 0 artifact contract (`00-lecciones-capitalizadas.md`):
+        literal queries, lessons whose "what changes" names an AC that really exists,
+        >=3 discarded candidates, a declared coverage section, and lesson IDs whose owner
+        matches the generated index (>=2 distinct owners, so citing only the immediate
+        predecessor stops being enough).
+
+        A green here means FORM AND TRACEABILITY, never relevance: the script publishes
+        the population it looked at because an [OK] without a denominator is L-R.3.
+        """
+        print("[9/9] Checking lesson capitalization (Paso 0 del executor)...")
+
+        script_path = ROOT_DIR / "scripts" / "validate_lesson_capitalization.py"
+        if not script_path.exists():
+            self.results.append(ValidationResult(
+                name="Lesson Capitalization",
+                passed=False,
+                message="validate_lesson_capitalization.py not found"
+            ))
+            return
+
+        exit_code, output = self._run_command([sys.executable, str(script_path)])
+
+        if exit_code == 0:
+            self.results.append(ValidationResult(
+                name="Lesson Capitalization",
+                passed=True,
+                message=(output.strip().splitlines() or ["OK"])[-1]
+            ))
+        else:
+            lines = output.split('\n')
+            issues = [l.strip()[2:] for l in lines if l.strip().startswith('- ')][:5]
+            self.results.append(ValidationResult(
+                name="Lesson Capitalization",
+                passed=False,
+                message=("Paso 0 sin capitalizar (fix: completar 00-lecciones-capitalizadas.md "
+                         "a mano; el verificador reporta, no reescribe)"),
+                details=issues
+            ))
+
     def _check_dependencies(self) -> None:
         """Check if all dependencies are installed."""
-        print("[9/11] Checking dependencies...")
+        print("[10/12] Checking dependencies...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pip", "check"
@@ -443,7 +486,7 @@ class ValidationRunner:
     
     def _check_imports(self) -> None:
         """Check if core modules can be imported."""
-        print("[10/11] Checking core module imports...")
+        print("[11/12] Checking core module imports...")
         
         core_modules = [
             "src.config",
@@ -479,7 +522,7 @@ class ValidationRunner:
     
     def _check_tests_pass(self) -> None:
         """Run tests and check if they pass."""
-        print("[11/11] Running tests...")
+        print("[12/12] Running tests...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pytest", "-q", "--tb=no"
@@ -511,7 +554,7 @@ class ValidationRunner:
         `qmind` CLI. If the CLI is unavailable the validator itself degrades to
         WARN + exit 0 (fallback :468); only a real missing ingestion fails.
         """
-        print("[12/12] Checking QMind write-back (planes archivados)...")
+        print("[13/13] Checking QMind write-back (planes archivados)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_qmind_writeback.py"
         if not script_path.exists():

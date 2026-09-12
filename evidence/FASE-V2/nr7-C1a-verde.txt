@@ -1,0 +1,7 @@
+# comando: pytest test_c1_plan_en_alcance_sin_artefacto_declara_ausente_con_su_ruta -q (guard activo, archivo restaurado)
+# exit=0
+
+.                                                                        [100%]
+1 passed in 0.26s
+
+

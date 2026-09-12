@@ -1,0 +1,25 @@
+# comando: pytest test_c6_declaracion_que_no_nombra_al_verificador_queda_fosil -q
+# guard mutado: 'if VERIFICADOR not in seccion:' -> 'if False:'
+# exit=1
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_c6_declaracion_que_no_nombra_al_verificador_queda_fosil _________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-336/test_c6_declaracion_que_no_nom0')
+
+    def test_c6_declaracion_que_no_nombra_al_verificador_queda_fosil(tmp_path: Path):
+        """El l�mite de L-NC10: decir �no tengo verificador� cuando ya existe."""
+        roto = CONFORME.replace("`validate_lesson_capitalization.py`", "ninguno hasta la fecha")
+        vs = _violar(tmp_path, artefacto=roto)
+>       assert _hay(vs, "C6", "SIN-HALLAZGOS"), vs
+E       AssertionError: []
+E       assert False
+E        +  where False = _hay([], 'C6', 'SIN-HALLAZGOS')
+
+tests\test_validate_lesson_capitalization.py:228: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c6_declaracion_que_no_nombra_al_verificador_queda_fosil
+1 failed in 0.29s
+
+

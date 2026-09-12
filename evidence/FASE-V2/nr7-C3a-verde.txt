@@ -1,0 +1,7 @@
+# comando: pytest test_c3_consultas_que_solo_miran_al_predecesor_no_cuentan test_c3_consulta_corpus_wide_sin_comando_no_es_reejecutable -q (guard activo, archivo restaurado)
+# exit=0
+
+..                                                                       [100%]
+2 passed in 0.16s
+
+

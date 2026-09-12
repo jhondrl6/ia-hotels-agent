@@ -1,0 +1,7 @@
+# comando: pytest test_c6_declaracion_que_no_nombra_al_verificador_queda_fosil -q (guard activo, archivo restaurado)
+# exit=0
+
+.                                                                        [100%]
+1 passed in 0.17s
+
+

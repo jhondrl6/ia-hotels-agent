@@ -1,0 +1,7 @@
+# comando: pytest test_c1_artefacto_ilegible_es_lector_fallido_y_no_ausente -q (guard activo, archivo restaurado)
+# exit=0
+
+.                                                                        [100%]
+1 passed in 0.15s
+
+

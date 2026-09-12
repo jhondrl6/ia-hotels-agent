@@ -1,0 +1,14 @@
+=== PRE (sin el archivo de tests de V2) ===
+=========================== short test summary info ===========================
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+FAILED tests/test_asset_path_clave_canonica.py::TestDocumentacionDelContrato::test_barreda_un_solo_emisor_de_la_clave
+FAILED tests/test_diagnostic_geo_metrics.py::TestDiagnosticGEOMetrics::test_diagnostic_includes_geo_metrics
+FAILED tests/test_validate_plan_closure.py::TestIntegracionRepoReal::test_registrado_como_check_5_en_el_hook
+4 failed, 4041 passed, 31 skipped, 4 xfailed, 218 warnings in 842.28s (0:14:02)
+=== POST (con el archivo de V2) ===
+=========================== short test summary info ===========================
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+FAILED tests/test_asset_path_clave_canonica.py::TestDocumentacionDelContrato::test_barreda_un_solo_emisor_de_la_clave
+FAILED tests/test_diagnostic_geo_metrics.py::TestDiagnosticGEOMetrics::test_diagnostic_includes_geo_metrics
+FAILED tests/test_validate_plan_closure.py::TestIntegracionRepoReal::test_registrado_como_check_5_en_el_hook
+4 failed, 4068 passed, 31 skipped, 4 xfailed, 218 warnings in 162.62s (0:02:42)

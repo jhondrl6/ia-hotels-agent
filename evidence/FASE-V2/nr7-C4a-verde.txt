@@ -1,0 +1,7 @@
+# comando: pytest test_c4_fila_de_leccion_sin_efecto_nombrado_es_citar_no_capitalizar -q (guard activo, archivo restaurado)
+# exit=0
+
+.                                                                        [100%]
+1 passed in 0.15s
+
+

@@ -149,7 +149,7 @@
   ".agents/workflows/phased_project_executor.md": "FASE-C",
   "docs/contributing/documentation_rules.md": "FASE-D",
   "scripts/validate_document_integration.py": "FASE-C",
-  "scripts/run_all_validations.py": "FASE-E",
+  "scripts/run_all_validations.py": "FASE-V2",
   "docs/contributing/validation.md": "FASE-C",
   "modules/delivery/generators/indirect_traffic_optimization_gen.py": "FASE-2-A",
   "modules/asset_generation/open_graph_generator.py": "FASE-2-ASSET-ALIGNMENT",
@@ -261,5 +261,7 @@
   ".opencode/plans/VALIDADOR-URL-PROPIA-2026-08-30/10-analisis-post-implementacion.md": "FASE-B (VALIDADOR-URL-PROPIA)",
   ".opencode/plans/VALIDADOR-URL-PROPIA-2026-08-30/README.md": "FASE-B (VALIDADOR-URL-PROPIA)",
   ".opencode/plans/VALIDADOR-URL-PROPIA-2026-08-30/dependencias-fases.md": "FASE-B (VALIDADOR-URL-PROPIA)",
-  "tests/test_doctor_reads_are_utf8_pinned.md": "FASE-RELEASE-4.76.0"
+  "tests/test_doctor_reads_are_utf8_pinned.md": "FASE-RELEASE-4.76.0",
+  "scripts/git_hooks/pre-commit": "FASE-V2",
+  "tests/test_validate_plan_closure.py": "FASE-V2"
 }

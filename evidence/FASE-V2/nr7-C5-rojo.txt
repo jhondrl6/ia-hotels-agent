@@ -1,0 +1,25 @@
+# comando: pytest test_c5_dos_descartes_no_prueban_que_se_miro_el_corpus -q
+# guard mutado: 'if len(datos) >= MIN_DESCARTES:' -> 'if True:'
+# exit=1
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_c5_dos_descartes_no_prueban_que_se_miro_el_corpus ____________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-334/test_c5_dos_descartes_no_prueb0')
+
+    def test_c5_dos_descartes_no_prueban_que_se_miro_el_corpus(tmp_path: Path):
+        cuerpo = re.sub(r"\| L-FT-A1 \| motivo tres, medido \|\n", "", CONFORME)
+        assert cuerpo.count("motivo") == 2
+        vs = _violar(tmp_path, artefacto=cuerpo)
+>       assert _hay(vs, "C5", "SIN-HALLAZGOS"), vs
+E       AssertionError: []
+E       assert False
+E        +  where False = _hay([], 'C5', 'SIN-HALLAZGOS')
+
+tests\test_validate_lesson_capitalization.py:217: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c5_dos_descartes_no_prueban_que_se_miro_el_corpus
+1 failed in 0.29s
+
+

@@ -1,0 +1,45 @@
+# comando: pytest test_c3_consultas_que_solo_miran_al_predecesor_no_cuentan test_c3_consulta_corpus_wide_sin_comando_no_es_reejecutable -q
+# guard mutado: 'if any(t in fila[capa].lower() for t in CORPUS_WIDE) and "`" in fila[consulta]:' -> 'if True:'
+# exit=1
+
+FF                                                                       [100%]
+================================== FAILURES ===================================
+__________ test_c3_consultas_que_solo_miran_al_predecesor_no_cuentan __________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-328/test_c3_consultas_que_solo_mir0')
+
+    def test_c3_consultas_que_solo_miran_al_predecesor_no_cuentan(tmp_path: Path):
+        """La se�al que origin� el encargo: un Paso 0 que solo ley� al plan de al lado."""
+        roto = CONFORME.replace("| Q1 | �ndice generado |", "| Q1 | Plan predecesor |")
+        roto = roto.replace("| Q2 | Notebook QMind |", "| Q2 | Plan predecesor |")
+        vs = _violar(tmp_path, artefacto=roto)
+>       assert _hay(vs, "C3", "SIN-HALLAZGOS"), vs
+E       AssertionError: []
+E       assert False
+E        +  where False = _hay([], 'C3', 'SIN-HALLAZGOS')
+
+tests\test_validate_lesson_capitalization.py:163: AssertionError
+_________ test_c3_consulta_corpus_wide_sin_comando_no_es_reejecutable _________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-328/test_c3_consulta_corpus_wide_s0')
+
+    def test_c3_consulta_corpus_wide_sin_comando_no_es_reejecutable(tmp_path: Path):
+        roto = CONFORME.replace(
+            '`grep -in "leccion" .opencode/LECCIONES-INDEX.md`', "revis� el indice generado"
+        )
+        roto = roto.replace(
+            '`qmind retrieve --nb fixture -q "consulta" --format agent`', "consult� el notebook"
+        )
+        vs = _violar(tmp_path, artefacto=roto)
+>       assert _hay(vs, "C3", "SIN-HALLAZGOS"), vs
+E       AssertionError: []
+E       assert False
+E        +  where False = _hay([], 'C3', 'SIN-HALLAZGOS')
+
+tests\test_validate_lesson_capitalization.py:174: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c3_consultas_que_solo_miran_al_predecesor_no_cuentan
+FAILED tests/test_validate_lesson_capitalization.py::test_c3_consulta_corpus_wide_sin_comando_no_es_reejecutable
+2 failed in 0.31s
+
+

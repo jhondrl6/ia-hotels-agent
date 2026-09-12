@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-12
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 478
+> **Total fases completadas:** 479
 
 ---
 
@@ -11168,6 +11168,31 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-V2 - 2026-09-12
+**Descripcion:** PASO0-VERIFICADOR: validate_lesson_capitalization.py con C0-C8 y tres estados, 29 tests, NR7 sobre 13 detecciones y cableado [7/7] del hook + [9/9] de --quick
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `scripts/validate_lesson_capitalization.py` | NUEVO | Validate Lesson Capitalization |
+| `tests/test_validate_lesson_capitalization.py` | NUEVO | Test Validate Lesson Capitalization |
+| `evidence/FASE-V2/run_nr7_capitalizacion.py` | NUEVO | Run Nr7 Capitalizacion |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/git_hooks/pre-commit` | Pre-Commit |
+| `scripts/run_all_validations.py` | Run All Validations |
+| `tests/test_validate_plan_closure.py` | Test Validate Plan Closure |
+
+### Validaciones
+- [x] Tests passing (29)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

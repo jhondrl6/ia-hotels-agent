@@ -1,0 +1,7 @@
+# comando: pytest test_c6_declaracion_sin_limite_es_un_ok_sin_denominador -q (guard activo, archivo restaurado)
+# exit=0
+
+.                                                                        [100%]
+1 passed in 0.16s
+
+

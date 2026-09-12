@@ -1,0 +1,28 @@
+# comando: pytest test_c4_fila_de_leccion_sin_efecto_nombrado_es_citar_no_capitalizar -q
+# guard mutado: 'if not prometidos:' -> 'if False:'
+# exit=1
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_c4_fila_de_leccion_sin_efecto_nombrado_es_citar_no_capitalizar _____
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-330/test_c4_fila_de_leccion_sin_ef0')
+
+    def test_c4_fila_de_leccion_sin_efecto_nombrado_es_citar_no_capitalizar(tmp_path: Path):
+        roto = CONFORME.replace("Fija el criterio AC-F1", "se tuvo en cuenta").replace(
+            "Cambia AC-F2", "contexto general"
+        )
+        roto = roto.replace("| AC-F1 |", "| � |").replace("| AC-F2 |", "| � |")
+        vs = _violar(tmp_path, artefacto=roto)
+        assert _hay(vs, "C4", "SIN-HALLAZGOS"), vs
+>       assert any("nombra un AC" in v.mensaje for v in vs), vs
+E       AssertionError: [Violacion(check='C4', estado='SIN-HALLAZGOS', mensaje='PLAN-FT-2026-09-12: los ACs nombrados en �2 () no existen en l...Cs de 01-plan-maestro.md (2 declarados). Un AC inventado para rellenar la fila es la ceremonia que este check busca.')]
+E       assert False
+E        +  where False = any(<generator object test_c4_fila_de_leccion_sin_efecto_nombrado_es_citar_no_capitalizar.<locals>.<genexpr> at 0x0000021F1E6AA670>)
+
+tests\test_validate_lesson_capitalization.py:195: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c4_fila_de_leccion_sin_efecto_nombrado_es_citar_no_capitalizar
+1 failed in 0.31s
+
+

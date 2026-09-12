@@ -1,0 +1,7 @@
+# comando: pytest test_c2_sin_seccion_tres_no_hay_descartes_que_contar -q (guard activo, archivo restaurado)
+# exit=0
+
+.                                                                        [100%]
+1 passed in 0.15s
+
+

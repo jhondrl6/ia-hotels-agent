@@ -1,0 +1,94 @@
+# comando: pytest test_c7_id_inventado_no_esta_definido_en_el_corpus -q
+# guard mutado: 'if dueno is None:' -> 'if False:'
+# exit=1
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_c7_id_inventado_no_esta_definido_en_el_corpus ______________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-342/test_c7_id_inventado_no_esta_d0')
+
+    def test_c7_id_inventado_no_esta_definido_en_el_corpus(tmp_path: Path):
+        roto = CONFORME.replace("| L-FT-A1 | Primera |", "| L-FT-QUE-NO-EXISTE | Primera |")
+>       vs = _violar(tmp_path, artefacto=roto)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_validate_lesson_capitalization.py:250: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_validate_lesson_capitalization.py:113: in _violar
+    violaciones, _ = vlc.verificar(plans, context, vlc.date.fromisoformat(CUTOFF), verbose=False)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts\validate_lesson_capitalization.py:523: in verificar
+    v, duenos = analizar_plan(plan, plans_dir, owners, indice_motivo)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts\validate_lesson_capitalization.py:509: in analizar_plan
+    c78, duenos = c7_c8_atribucion(rel, secciones["2"], owners, indice_motivo)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+rel = 'PLAN-FT-2026-09-12'
+seccion = '\n\n| ID | Enunciado | Definida en | Qu� cambia en ESTE plan | D�nde se aplica |\n|----|-----------|-------------|---...XT-FT-A` | Fija el criterio AC-F1 | AC-F1 |\n| L-FT-B1 | Segunda | `context/CONTEXT-FT-B` | Cambia AC-F2 | AC-F2 |\n\n'
+owners = {'L-FT-A1': 'context/CONTEXT-FT-A', 'L-FT-B1': 'context/CONTEXT-FT-B'}
+indice_motivo = ''
+
+    def c7_c8_atribucion(
+        rel: str, seccion: str | None, owners: dict[str, str] | None, indice_motivo: str
+    ) -> tuple[list[Violacion], list[str]]:
+        if seccion is None:
+            return [
+                Violacion("C7", "LECTOR-FALLIDO", f"{rel}: sin �2 no hay atribuciones que verificar")
+            ], []
+        if owners is None:
+            return [Violacion("C7", "LECTOR-FALLIDO", f"{rel}: {indice_motivo}")], []
+        filas = _filas(seccion)
+        if len(filas) < 2:
+            return [Violacion("C7", "SIN-HALLAZGOS", f"{rel}: �2 sin filas de lecci�n")], []
+        definida = _columna(filas[0], "definida en", "definida")
+        if definida is None:
+            return [
+                Violacion(
+                    "C7",
+                    "LECTOR-FALLIDO",
+                    f"{rel}: la tabla de �2 necesita la columna �Definida en� (le�da: {filas[0]})",
+                )
+            ], []
+        violaciones: list[Violacion] = []
+        duenos: set[str] = set()
+        for fila in filas[1:]:
+            if not fila or not fila[0]:
+                continue
+            lid = fila[0].strip().strip("`")
+            if not LESSON_ID_RE.match(lid):
+                violaciones.append(
+                    Violacion(
+                        "C7",
+                        "SIN-HALLAZGOS",
+                        f"{rel}: la primera celda de una fila de �2 debe ser un ID del corpus "
+                        f"(L-*, DA-*, D-*, S-*) y se ley� �{lid}�",
+                    )
+                )
+                continue
+            dueno = owners.get(lid)
+            if False:
+                violaciones.append(
+                    Violacion(
+                        "C7",
+                        "SIN-HALLAZGOS",
+                        f"{rel}: {lid} no est� definido en el corpus de definiciones (los "
+                        "an�lisis de plan y .opencode/context/). O est� mal escrito o la "
+                        "lecci�n nunca se redact�.",
+                    )
+                )
+                continue
+            duenos.add(dueno)
+            publicada = fila[definida] if definida < len(fila) else ""
+>           if dueno not in publicada:
+               ^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: 'in <string>' requires string as left operand, not NoneType
+
+scripts\validate_lesson_capitalization.py:456: TypeError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c7_id_inventado_no_esta_definido_en_el_corpus
+1 failed in 0.41s
+
+

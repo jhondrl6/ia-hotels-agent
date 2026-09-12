@@ -1,0 +1,23 @@
+# comando: pytest test_c1_plan_en_alcance_sin_artefacto_declara_ausente_con_su_ruta -q
+# guard mutado: 'if not ruta.exists():\n        return [\n            Violacion(\n                "C1",\n                "AUSENTE",' -> 'if False:\n        return [\n            Violacion(\n                "C1",\n                "AUSENTE",'
+# exit=1
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_c1_plan_en_alcance_sin_artefacto_declara_ausente_con_su_ruta ______
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-322/test_c1_plan_en_alcance_sin_ar0')
+
+    def test_c1_plan_en_alcance_sin_artefacto_declara_ausente_con_su_ruta(tmp_path: Path):
+        vs = _violar(tmp_path, artefacto=None)
+>       assert _hay(vs, "C1", "AUSENTE"), vs
+E       AssertionError: [Violacion(check='C1', estado='LECTOR-FALLIDO', mensaje="PLAN-FT-2026-09-12: no se pudo leer 00-lecciones-capitalizada...nd\\\\pytest-322\\\\test_c1_plan_en_alcance_sin_ar0\\\\plans\\\\PLAN-FT-2026-09-12\\\\00-lecciones-capitalizadas.md'")]
+E       assert False
+E        +  where False = _hay([Violacion(check='C1', estado='LECTOR-FALLIDO', mensaje="PLAN-FT-2026-09-12: no se pudo leer 00-lecciones-capitalizada...nd\\\\pytest-322\\\\test_c1_plan_en_alcance_sin_ar0\\\\plans\\\\PLAN-FT-2026-09-12\\\\00-lecciones-capitalizadas.md'")], 'C1', 'AUSENTE')
+
+tests\test_validate_lesson_capitalization.py:134: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c1_plan_en_alcance_sin_artefacto_declara_ausente_con_su_ruta
+1 failed in 0.40s
+
+

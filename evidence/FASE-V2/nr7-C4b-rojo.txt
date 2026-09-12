@@ -1,0 +1,25 @@
+# comando: pytest test_c4_un_ac_inventado_no_existe_en_el_maestro -q
+# guard mutado: 'if prometidos & acs:' -> 'if True:'
+# exit=1
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______________ test_c4_un_ac_inventado_no_existe_en_el_maestro _______________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-332/test_c4_un_ac_inventado_no_exi0')
+
+    def test_c4_un_ac_inventado_no_existe_en_el_maestro(tmp_path: Path):
+        """Forma v�lida de AC, pero no declarado en el maestro: la ceremonia con aspecto de efecto."""
+        roto = CONFORME.replace("AC-F1", "AC-F9").replace("AC-F2", "AC-F9")
+        vs = _violar(tmp_path, artefacto=roto)
+>       assert _hay(vs, "C4", "SIN-HALLAZGOS"), vs
+E       AssertionError: []
+E       assert False
+E        +  where False = _hay([], 'C4', 'SIN-HALLAZGOS')
+
+tests\test_validate_lesson_capitalization.py:184: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c4_un_ac_inventado_no_existe_en_el_maestro
+1 failed in 0.30s
+
+

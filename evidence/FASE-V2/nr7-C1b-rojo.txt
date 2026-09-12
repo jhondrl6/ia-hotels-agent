@@ -1,0 +1,47 @@
+# comando: pytest test_c1_artefacto_ilegible_es_lector_fallido_y_no_ausente -q
+# guard mutado: 'if texto is None:\n        return [\n            Violacion("C1", "LECTOR-FALLIDO"' -> 'if False:\n        return [\n            Violacion("C1", "LECTOR-FALLIDO"'
+# exit=1
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_c1_artefacto_ilegible_es_lector_fallido_y_no_ausente __________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-324/test_c1_artefacto_ilegible_es_0')
+
+    def test_c1_artefacto_ilegible_es_lector_fallido_y_no_ausente(tmp_path: Path):
+        plans, context = _corpus(tmp_path, artefacto=None)
+        (plans / PLAN / vlc.ARTIFACTO).write_bytes(b"\xff\xfe\x00\x01 no es utf-8")
+>       vs, _ = vlc.verificar(plans, context, vlc.date.fromisoformat(CUTOFF), verbose=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_validate_lesson_capitalization.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\validate_lesson_capitalization.py:523: in verificar
+    v, duenos = analizar_plan(plan, plans_dir, owners, indice_motivo)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts\validate_lesson_capitalization.py:504: in analizar_plan
+    violaciones, secciones = c2_secciones(rel, texto)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^
+scripts\validate_lesson_capitalization.py:248: in c2_secciones
+    secciones[numero] = _seccion(texto, numero)
+                        ^^^^^^^^^^^^^^^^^^^^^^^
+scripts\validate_lesson_capitalization.py:183: in _seccion
+    cabecera = re.search(rf"^##\s*{numero}\.\s.*$", texto, re.MULTILINE)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+pattern = '^##\\s*1\\.\\s.*$', string = None, flags = re.MULTILINE
+
+    def search(pattern, string, flags=0):
+        """Scan through string looking for a match to the pattern, returning
+        a Match object, or None if no match was found."""
+>       return _compile(pattern, flags).search(string)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: expected string or bytes-like object, got 'NoneType'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\re\__init__.py:177: TypeError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c1_artefacto_ilegible_es_lector_fallido_y_no_ausente
+1 failed in 0.31s
+
+

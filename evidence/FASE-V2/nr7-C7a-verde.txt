@@ -1,0 +1,7 @@
+# comando: pytest test_c7_celda_de_identificacion_que_no_es_un_id_del_corpus -q (guard activo, archivo restaurado)
+# exit=0
+
+.                                                                        [100%]
+1 passed in 0.15s
+
+

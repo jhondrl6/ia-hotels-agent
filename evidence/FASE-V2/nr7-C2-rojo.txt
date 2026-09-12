@@ -1,0 +1,24 @@
+# comando: pytest test_c2_sin_seccion_tres_no_hay_descartes_que_contar -q
+# guard mutado: 'if secciones[numero] is None:' -> 'if False:'
+# exit=1
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________ test_c2_sin_seccion_tres_no_hay_descartes_que_contar _____________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-326/test_c2_sin_seccion_tres_no_ha0')
+
+    def test_c2_sin_seccion_tres_no_hay_descartes_que_contar(tmp_path: Path):
+        roto = CONFORME.replace("## 3. Candidatos evaluados y descartados", "## 3x. Candidatos")
+        vs = _violar(tmp_path, artefacto=roto)
+>       assert _hay(vs, "C2"), vs
+E       AssertionError: [Violacion(check='C5', estado='LECTOR-FALLIDO', mensaje='PLAN-FT-2026-09-12: sin �3 no se pueden contar los descartes')]
+E       assert False
+E        +  where False = _hay([Violacion(check='C5', estado='LECTOR-FALLIDO', mensaje='PLAN-FT-2026-09-12: sin �3 no se pueden contar los descartes')], 'C2')
+
+tests\test_validate_lesson_capitalization.py:152: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c2_sin_seccion_tres_no_hay_descartes_que_contar
+1 failed in 0.30s
+
+

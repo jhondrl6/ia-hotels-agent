@@ -5,8 +5,8 @@
     "archivos_analysis_escaneados": 12,
     "archivos_contexto_escaneados": 35,
     "archivos_md_escaneados": 354,
-    "ids_con_definicion": 246,
-    "ids_citados_sin_definicion": 39,
+    "ids_con_definicion": 251,
+    "ids_citados_sin_definicion": 38,
     "familias_incluidas": [
       "L",
       "DA",
@@ -288,6 +288,20 @@
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
       "total_citas": 12,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "D-V2.1",
+      "familia": "D",
+      "enunciado": "el instrumento canónico de R2.1 no alcanza el transcript de sesión bajo el",
+      "plan": "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "5. Seguimientos abiertos detectados",
+      "fecha_plan": "2026-09-12",
+      "fuente_fecha": "nombre",
+      "total_citas": 6,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -717,7 +731,7 @@
       "seccion": "6. Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 5,
+      "total_citas": 6,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
@@ -1001,7 +1015,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 16,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
@@ -1089,7 +1103,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 5,
+      "total_citas": 6,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
@@ -1164,7 +1178,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 14,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
@@ -1492,7 +1506,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 19,
+      "total_citas": 20,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
@@ -1522,7 +1536,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
+      "total_citas": 8,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
@@ -1681,7 +1695,7 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 68,
+      "total_citas": 69,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
@@ -1869,7 +1883,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 21,
+      "total_citas": 22,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -1933,8 +1947,9 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 4,
       "planes_que_lo_citan": [
+        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -1949,7 +1964,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
+      "total_citas": 9,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -1966,7 +1981,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2256,7 +2271,7 @@
       "seccion": "FASE-T2-C (2026-09-10)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 12,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2401,7 +2416,7 @@
       "seccion": "FASE-T4-B (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 11,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -2435,6 +2450,48 @@
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
       "total_citas": 6,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-V2.1",
+      "familia": "L",
+      "enunciado": "Un test que solo mira qué check disparó puede quedar verde por una rama distinta de la que pretendía observar — El runner de NR7 mutó dos guards (C4a «ninguna fila nombra un AC» y C7a «la celda no es un ID») y sus tests siguieron en verde: otra rama del mismo check producía una violación con el mismo código",
+      "plan": "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "2. Lecciones Aprendidas nuevas",
+      "fecha_plan": "2026-09-12",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-V2.2",
+      "familia": "L",
+      "enunciado": "Un verificador no debe apoyar su conclusión en el artefacto generado por otro gate — C7/C8 necesitan el mapa {ID → dueño}. Leer .opencode/lecciones_index.json era lo obvio, pero ese archivo lo produce otro check ([6/7]): si ese gate no corrió —otro clon, hook no instalado— el verificador nuevo hereda un verde prestado",
+      "plan": "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "2. Lecciones Aprendidas nuevas",
+      "fecha_plan": "2026-09-12",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-V2.3",
+      "familia": "L",
+      "enunciado": "Una medición de seguridad sobre el artefacto equivocado deja pasar el rojo que pretendía descartar — Para renumerar el hook, Q10 midió «0 contract tests afirman el número de checks» buscando en tests/ quién menciona run_all_validations. El riesgo real era la numeración del hook, y ahí sí había un contract test: test_registrado_como_check_5_en_el_hook, rojo y sin declarar desde 4a066e1, que cambió [5/5] a [5/6] sin seguirlo",
+      "plan": "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "2. Lecciones Aprendidas nuevas",
+      "fecha_plan": "2026-09-12",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2493,10 +2550,10 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
+      "total_citas": 9,
       "planes_que_lo_citan": [
-        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
     },
@@ -2524,7 +2581,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -2541,7 +2598,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 14,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -2602,7 +2659,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2666,7 +2723,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 11,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -3437,7 +3494,7 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
@@ -3640,6 +3697,20 @@
       "redefiniciones": []
     },
     {
+      "id": "S-V2.1",
+      "familia": "S",
+      "enunciado": "el conteo canónico de AGENTS.md va 16 funciones por detrás del árbol: la",
+      "plan": "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "5. Seguimientos abiertos detectados",
+      "fecha_plan": "2026-09-12",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "S-V3",
       "familia": "S",
       "enunciado": "✅ CERRADO por FASE-HOTFIX (mitad serialización, 2026-09-04) — coverage_ratio no se serializaba en proposal_asset_matrix.json — FASE-VERIFY (2026-09-04)",
@@ -3812,14 +3883,6 @@
       "total_citas": 12,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
-      ]
-    },
-    {
-      "id": "D-V2.1",
-      "familia": "D",
-      "total_citas": 6,
-      "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ]
     },
     {

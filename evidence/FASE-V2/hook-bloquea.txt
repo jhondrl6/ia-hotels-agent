@@ -1,0 +1,73 @@
+# AC-B4 · El check [7/7] del hook bloquea de verdad (S-H17: se ejecuta, no se afirma)
+
+Fecha: 2026-09-12 · Comando: bash scripts/git_hooks/pre-commit (hook versionado, identico al instalado)
+Arbol: sonda .opencode/plans/PLAN-SONDA-2026-09-12/01-plan-maestro.md, plan en alcance SIN su 00-,
+       creada para la corrida y borrada despues de ella.
+Nota medida: la primera corrida se corto en [6/7] y no por la sonda — un .md nuevo cambia el conteo
+       de cobertura que publica el indice, asi que el indice se regenero CON la sonda presente para
+       aislar el motivo. Ese es el mismo invariante de R2.10.
+
+
+========================================
+Pre-Commit Hook - IA Hoteles Agent
+========================================
+
+[1/7] Checking version consistency...
+============================================================
+VERSION CONSISTENCY CHECKER
+============================================================
+
+[1/3] CHANGELOG vs VERSION.yaml
+----------------------------------------
+  CHANGELOG.md:  4.76.0
+  VERSION.yaml:   4.76.0
+  Codename:       Tribunal certificador P6+P7
+  Status: ✅ SINCRONIZADO
+
+[2/3] REGISTRY - Ultima Fase
+----------------------------------------
+  Ultima fase: FASE-V1
+  Status: ✅ REGISTRY OK
+
+[3/3] CONTRIBUTING.md Consistency
+----------------------------------------
+  Status: ✅ SINCRONIZADO
+
+============================================================
+RESULTADO: ✅ TODO SINCRONIZADO
+============================================================
+[1/7] OK: Version consistency PASSED
+[2/7] Checking file synchronization...
+OK: README.md (readme_version_header) - in sync
+OK: AGENTS.md (agents_version_comment) - in sync
+OK: AGENTS.md (agents_header_banner) - in sync
+OK: .cursorrules (cursorrules_header) - in sync
+OK: docs/CONTRIBUTING.md (contributing_version_header) - in sync
+OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - in sync
+OK: docs/contributing/REGISTRY.md (registry_last_update) - in sync
+[2/7] OK: Files synchronized
+[3/7] Checking .opencode references...
+[PASS] OpenCode References: todas las referencias existen
+[3/7] OK: OpenCode references PASSED
+[4/7] Checking plan citations...
+[4/7] OK: Plan citations PASSED
+[5/7] Checking plan closure rows...
+[5/7] OK: Plan closure PASSED
+[6/7] Checking lesson index freshness...
+[OK] Índice de lecciones fresco (246 IDs)
+[6/7] OK: Lesson index PASSED
+[7/7] Checking lesson capitalization...
+  PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  - [C1/AUSENTE] PLAN-SONDA-2026-09-12: no existe 00-lecciones-capitalizadas.md. Desde executor v2.22.0 el Paso 0 produce este artefacto ANTES del plan maestro.
+cobertura: 2 plan(es) en alcance (PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, PLAN-SONDA-2026-09-12) | 25 archivados excluidos | 1 exentos por fecha anterior a 2026-09-12 | 0 exentos SIN FECHA PARSEABLE (—)
+[FAIL] Capitalización del Paso 0: 1 violacion(es) (C1=1)
+El artefacto se corrige a mano: este script reporta, no reescribe.
+
+FAIL: un plan en alcance no capitalizo el corpus como exige el Paso 0.
+
+El artefacto es 00-lecciones-capitalizadas.md del plan y se corrige A MANO:
+este verificador reporta, no reescribe (capitalizar es una decision de quien
+disena el plan). Verifica ademas que el indice este regenerado en este commit:
+  python scripts/build_lesson_index.py
+
+exit_code_del_hook=1

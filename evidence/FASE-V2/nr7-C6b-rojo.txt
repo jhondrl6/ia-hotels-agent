@@ -1,0 +1,24 @@
+# comando: pytest test_c6_declaracion_sin_limite_es_un_ok_sin_denominador -q
+# guard mutado: 'if not any(f in bajo for f in LIMIT_PHRASES):' -> 'if False:'
+# exit=1
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_c6_declaracion_sin_limite_es_un_ok_sin_denominador ___________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-338/test_c6_declaracion_sin_limite0')
+
+    def test_c6_declaracion_sin_limite_es_un_ok_sin_denominador(tmp_path: Path):
+        roto = CONFORME.replace("- No verifico la pertinencia de estas filas.\n", "")
+        vs = _violar(tmp_path, artefacto=roto)
+>       assert _hay(vs, "C6", "SIN-HALLAZGOS"), vs
+E       AssertionError: []
+E       assert False
+E        +  where False = _hay([], 'C6', 'SIN-HALLAZGOS')
+
+tests\test_validate_lesson_capitalization.py:234: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c6_declaracion_sin_limite_es_un_ok_sin_denominador
+1 failed in 0.33s
+
+

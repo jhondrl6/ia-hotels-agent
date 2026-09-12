@@ -106,12 +106,31 @@ perímetro de otro plan o exigiría una decisión del usuario, no de un registro
   de trazabilidad: presencia, existencia del AC nombrado, correspondencia ID↔dueño con el índice,
   diversidad de dueños y declaración de límite. **Un `[OK]` del verificador va a significar «el artefacto
   tiene la forma exigida», nunca «capitalicé bien».**
-- **Verificador mecánico sobre este archivo**: **no existe todavía.** Lo crea este plan
-  (`scripts/validate_lesson_capitalization.py`, propuesto como check `[7/7]` del hook versionado
-  `scripts/git_hooks/pre-commit` y check 9 de `run_all_validations.py --quick`). Hasta que ese commit
-  exista, este Paso 0 está **disciplinado, no verificado** (L-R.4). Al cerrar la FASE-V2 esta línea debe
-  quedar actualizada con el nombre del verificador — el check C6 exigirá nombrarlo, que es la cura del
-  fósil (L-NC10).
+- **Verificador mecánico sobre este archivo**: **existe desde FASE-V2 de este plan**
+  (`scripts/validate_lesson_capitalization.py`), cableado como check `[7/7]` del hook versionado
+  `scripts/git_hooks/pre-commit` —bloqueo demostrado en `evidence/FASE-V2/hook-bloquea.txt`, con
+  `exit_code_del_hook=1`— y como `[9/9]` de `run_all_validations.py --quick`. Este Paso 0 pasó de
+  «disciplinado, no verificado» a **verificado en su forma**; el límite de pertinencia de arriba
+  sigue vigente y C6 lo exige nombrado aquí (L-R.4, L-NC10).
+
+### 4.1 Actualización al cierre de FASE-V2 (2026-09-12)
+
+- **Filas de §2 que se cumplieron como se prometieron**: L-HF1, L-R.3, L-R.4, DA-HF3, L-D3, L-B1,
+  L-VUP-5, L-T2C.4, L-T4B.5, L-VUP-1, L-PF10, L-VUP-9, S-H17, L-V.2, L-I1 y L-V.4 (el umbral ≥3 de
+  C5 no se rebajó cuando un fixture lo incumplía: se corrigió el fixture).
+- **La fila que NO se aplicó como estaba redactada, y su costo medido**: **L-C2** ordenaba «buscar el
+  contract test antes de tocar». Se buscó, pero sobre el artefacto equivocado: Q10 preguntó quién
+  menciona `run_all_validations` dentro de `tests/` y midió **0**, mientras el riesgo de la fase era la
+  **numeración del hook**. Ahí sí había un contract test —`test_registrado_como_check_5_en_el_hook`—
+  rojo y **sin declarar** desde `4a066e1`, que cambió `[5/5]` a `[5/6]` sin seguirlo. Lo encontró esta
+  fase al correr el par pre/post, se arregló en la misma fase y su forma corregida quedó como **L-V2.3**
+  en `10-analisis-post-implementacion.md` §2. Se registra aquí, y no solo en el análisis, porque el
+  punto del Paso 0 es que el error de búsqueda conste en el lugar donde se prometió acertar.
+- **Dos filas cuyo efecto cambió durante la implementación**: L-B1 obligó a ampliar `AC_TOKEN_RE` a las
+  dos formas vivas del repo (`AC-F1` **y** `AC8`) y obligó también a conservar los backticks de las
+  celdas para que C3 pueda distinguir un comando de una intención; L-NC10 es la razón de que C6 exija
+  nombrar al verificador, que es lo que hace que la línea de arriba caducara y se actualizara en vez
+  de quedar mentida.
 - **Orden del Paso 0**: este archivo se escribió **antes** de `01-plan-maestro.md`. La columna «qué cambia»
   de §2 nombra ACs aún inexistentes; el contrato del verificador (AC-B2, check C4) convierte esa promesa en
   bloqueo: si el maestro no los crea, el artefacto no pasa.

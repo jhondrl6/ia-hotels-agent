@@ -1,0 +1,7 @@
+# comando: pytest test_c8_todo_de_un_mismo_dueno_no_mira_el_corpus_completo test_corpus_sin_definiciones_no_produce_un_verde -q (guard activo, archivo restaurado)
+# exit=0
+
+..                                                                       [100%]
+2 passed in 0.20s
+
+

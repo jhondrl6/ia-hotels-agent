@@ -1,0 +1,25 @@
+# comando: pytest test_c7_dueno_real_distinto_al_publicado_es_una_fila_mal_atribuida -q
+# guard mutado: 'if dueno not in publicada:' -> 'if False:'
+# exit=1
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_c7_dueno_real_distinto_al_publicado_es_una_fila_mal_atribuida ______
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-344/test_c7_dueno_real_distinto_al0')
+
+    def test_c7_dueno_real_distinto_al_publicado_es_una_fila_mal_atribuida(tmp_path: Path):
+        """El defecto medido del predecesor: siete filas que citaban a un plan que no las defin�a."""
+        roto = CONFORME.replace("`context/CONTEXT-FT-B`", "`context/CONTEXT-FT-A`")
+        vs = _violar(tmp_path, artefacto=roto)
+>       assert _hay(vs, "C7", "SIN-HALLAZGOS"), vs
+E       AssertionError: []
+E       assert False
+E        +  where False = _hay([], 'C7', 'SIN-HALLAZGOS')
+
+tests\test_validate_lesson_capitalization.py:259: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c7_dueno_real_distinto_al_publicado_es_una_fila_mal_atribuida
+1 failed in 0.28s
+
+

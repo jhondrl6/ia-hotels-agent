@@ -10,7 +10,7 @@
 |---|------|--------|-------------|-------------|-------------|-------|
 | 0 | Paso 0 (`00-lecciones-capitalizadas.md`) | ✅ Completada | 2026-09-12 | 2026-09-12 | auto-reporte **sin instrumento**: 10 consultas Q1–Q10; `tool_use` no comparable (ver Deuda D-V2.1) | Primera vez que el artefacto precede al diseño. 18 lecciones con dueño, 6 descartes, 5 hallazgos sin efecto |
 | 1 | FASE-V1 — decisión y contrato | ✅ Completada | 2026-09-12 | 2026-09-12 | auto-reporte **sin instrumento**: unidad = peticiones al modelo con tool calls, conteo a mano no auditable; **no comparable** con las fases medidas por `measure_iterations.py` (D-V2.1) | Q1–Q5 decididas con medición; contrato C0–C8 fijado |
-| 2 | FASE-V2 — verificador + tests + cableado | ⬜ Pendiente | — | — | — | `scripts/validate_lesson_capitalization.py`, NR7 por check, hook `[7/7]` + `--quick` `[9/9]` |
+| 2 | FASE-V2 — verificador + tests + cableado | ✅ Completada | 2026-09-12 | 2026-09-12 | auto-reporte **sin instrumento** (D-V2.1): unidad = tool calls del orquestador, **no comparable** con `measure_iterations.py` | Script C0–C8, 29 tests, NR7 13/13, `[7/7]` con bloqueo ejecutado, `--quick` 9/9, resta R2.7 29 = 29 |
 | 3 | FASE-V3 — cierre documental y archivado | ⬜ Pendiente | — | — | — | Sin bump de versión (Q5); orden R2.10 en el cierre |
 
 ---
@@ -36,20 +36,23 @@
 
 ## FASE-V2 — Verificador, tests y cableado
 
-- [ ] `scripts/validate_lesson_capitalization.py` con C0–C8, tri-estado (`SIN-HALLAZGOS` / `AUSENTE` / `LECTOR-FALLIDO`) y **sin** `--fix` (AC-B1)
-- [ ] `--help` del script leído antes de citar cualquier comando suyo en docs o prompts (L-VUP-9)
-- [ ] `tests/test_validate_lesson_capitalization.py`: ≥1 test por check, nombrado por su causa, y un test por estado de R2.9 (AC-B2)
-- [ ] Los tests usan el archivo real del repo **y** fixtures en `tmp_path` (L-B1): ninguna aserción sobre un fixture inventado que no reproduzca la convención de tabla
-- [ ] **NR7 por check** (AC-B3): con el guard de C1…C8 desactivado sobre el archivo versionado, su test cae en rojo; las dos salidas quedan en `evidence/FASE-V2/nr7-C<n>-{rojo,verde}.txt`
-- [ ] Cableado `[7/7]` en `scripts/git_hooks/pre-commit` (con `[1/6]`→`[1/7]`) y check `[9/9]` en `run_all_validations.py --quick` (AC-B4)
-- [ ] El bloqueo se **ejecuta**, no se afirma: `bash scripts/git_hooks/pre-commit` sobre un árbol con `00-` defectuoso devuelve exit ≠ 0 y su salida va a `evidence/FASE-V2/hook-bloquea.txt` (S-H17)
-- [ ] La salida del script publica su población (AC-B5): 5 conteos de C0 en la línea `cobertura:`
-- [ ] NR1/R2.7: par pre/post con el `--ignore` del archivo de tests nuevo, resta == tests nuevos, flaky `test_function_default_flags` declarado (L-T4B.5, L-VUP-1) → `evidence/FASE-V2/baseline-pre-post.md`
-- [ ] R2.2: 0 citas `archivo:123` en los archivos nuevos (lo verifica `validate_plan_citations.py`, check `[8/8]`→`[9/9]`)
-- [ ] `run_all_validations.py --quick` TOTAL PASS
-- [ ] `log_phase_completion.py --fase FASE-V2` ejecutado (SIN `--release`)
-- [ ] Iteraciones medidas y escritas en la tabla de arriba
-- [ ] Commit de cierre de fase
+- [x] `scripts/validate_lesson_capitalization.py` con C0–C8, tri-estado (`SIN-HALLAZGOS` / `AUSENTE` / `LECTOR-FALLIDO`) y **sin** `--fix` (AC-B1)
+- [x] `--help` del script leído antes de citar cualquier comando suyo en docs o prompts (L-VUP-9): `--plans-dir`, `--context-dir`, `--cutoff`, `--quiet`
+- [x] `tests/test_validate_lesson_capitalization.py`: **29** funciones, ≥1 test por detección nombrado por su causa y un test por estado de R2.9 (AC-B2)
+- [x] Los tests usan el archivo real del repo **y** fixtures en `tmp_path` (L-B1), con un control positivo del artefacto conforme para que ningún rojo sea culpa del fixture
+- [x] **NR7 por detección** (AC-B3): **13** guards revertidos sobre el archivo versionado, cada uno con su rojo y su verde en `evidence/FASE-V2/nr7-<id>-{rojo,verde}.txt` (runner: `run_nr7_capitalizacion.py`)
+- [x] El mutation check reveló dos tests que no observaban su rama (C4a, C7a): ahora anclan el mensaje de la violación, y el runner **se niega** si una ancla desaparece (dos veces lo hizo, en vez de simular)
+- [x] Cableado `[7/7]` en `scripts/git_hooks/pre-commit` (los seis anteriores renumerados a `/7`) y check `[9/9]` en `run_all_validations.py --quick` (AC-B4); hook reinstalado con `install_git_hooks.py`
+- [x] El bloqueo se **ejecutó**, no se afirmó: `bash scripts/git_hooks/pre-commit` sobre un árbol con un plan en alcance sin `00-` devolvió `exit_code_del_hook=1` → `evidence/FASE-V2/hook-bloquea.txt` (S-H17)
+- [x] La salida del script publica su población (AC-B5): línea `cobertura:` con los conteos de C0 y los nombres de los exentos
+- [x] NR1/R2.7: par pre/post con la combinación exacta declarada (`--ignore` / `--exclude` del archivo nuevo), resta **29 = 29** en las dos bases, flaky `test_function_default_flags` declarado → `evidence/FASE-V2/baseline-pre-post.md` (L-T4B.5, L-VUP-1)
+- [x] R2.2: 0 citas `archivo:123` en los archivos nuevos (check `[8/9]` de `--quick`: 743 históricas, 0 nuevas, 0 crecimientos)
+- [x] Rojo **heredado y no declarado** encontrado y arreglado: `test_registrado_como_check_5_en_el_hook` asertaba `[5/5]` desde que el hook tiene seis checks (`4a066e1`); la posición 5 sigue siendo el contrato y el denominador pasa a `[5/7]` con nota
+- [x] Dos tests de coherencia de numeración (hook y `--quick`) para que el próximo cambio de denominador no pueda repetir el rojo en silencio
+- [x] `run_all_validations.py --quick` TOTAL PASS (9/9) y suite completa: 3 rojos, exactamente los ajenos ya publicados
+- [x] `log_phase_completion.py --fase FASE-V2` ejecutado (SIN `--release`)
+- [x] Iteraciones declaradas en la tabla de arriba (unidad usada y no comparabilidad escritas)
+- [x] Commit de cierre de fase
 
 ## FASE-V3 — Cierre documental y archivado
 

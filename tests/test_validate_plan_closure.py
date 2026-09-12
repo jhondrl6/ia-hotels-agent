@@ -115,6 +115,13 @@ class TestIntegracionRepoReal:
         assert "[OK] Cierre de planes" in r.stdout
 
     def test_registrado_como_check_5_en_el_hook(self):
+        """El verificador de cierre ocupa el hueco 5 del hook, con el denominador vigente.
+
+        Estaba rojo desde que el hook ganó el sexto check (indice de lecciones) y despues el
+        septimo (capitalizacion del Paso 0): la asercion pinaba `[5/5]`, una etiqueta que el
+        hook ya no publicaba. La posicion 5 del cierre es el contrato; el denominador es
+        historia de la numeracion y se actualiza aqui cuando cambia.
+        """
         src = (ROOT / "scripts" / "git_hooks" / "pre-commit").read_text(encoding="utf-8")
         assert "validate_plan_closure.py" in src
-        assert "[5/5]" in src
+        assert "[5/7]" in src

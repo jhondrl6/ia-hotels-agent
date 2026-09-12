@@ -1,0 +1,7 @@
+# comando: pytest test_c4_un_ac_inventado_no_existe_en_el_maestro -q (guard activo, archivo restaurado)
+# exit=0
+
+.                                                                        [100%]
+1 passed in 0.16s
+
+

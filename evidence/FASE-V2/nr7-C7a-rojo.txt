@@ -1,0 +1,26 @@
+# comando: pytest test_c7_celda_de_identificacion_que_no_es_un_id_del_corpus -q
+# guard mutado: 'if not LESSON_ID_RE.match(lid):' -> 'if False:'
+# exit=1
+
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_c7_celda_de_identificacion_que_no_es_un_id_del_corpus __________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-340/test_c7_celda_de_identificacio0')
+
+    def test_c7_celda_de_identificacion_que_no_es_un_id_del_corpus(tmp_path: Path):
+        """C7a: una fila que empieza con prosa en vez de con un ID no capitaliza nada."""
+        roto = CONFORME.replace("| L-FT-A1 | Primera |", "| leido de memoria | Primera |")
+        vs = _violar(tmp_path, artefacto=roto)
+        assert _hay(vs, "C7", "SIN-HALLAZGOS"), vs
+>       assert any("debe ser un ID del corpus" in v.mensaje for v in vs), vs
+E       AssertionError: [Violacion(check='C7', estado='SIN-HALLAZGOS', mensaje='PLAN-FT-2026-09-12: leido de memoria no est\xe1 definido en el co...fuente(s) (context/CONTEXT-FT-B) y se exigen \u22652. Capitalizar solo al predecesor deja el corpus entero sin consultar.')]
+E       assert False
+E        +  where False = any(<generator object test_c7_celda_de_identificacion_que_no_es_un_id_del_corpus.<locals>.<genexpr> at 0x000001AEF004A670>)
+
+tests\test_validate_lesson_capitalization.py:245: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c7_celda_de_identificacion_que_no_es_un_id_del_corpus
+1 failed in 0.29s
+
+

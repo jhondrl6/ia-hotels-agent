@@ -1,0 +1,27 @@
+# comando: pytest test_c8_todo_de_un_mismo_dueno_no_mira_el_corpus_completo test_corpus_sin_definiciones_no_produce_un_verde -q
+# guard mutado: 'if len(duenos) < MIN_DUENOS:' -> 'if False:'
+# exit=1
+
+F.                                                                       [100%]
+================================== FAILURES ===================================
+__________ test_c8_todo_de_un_mismo_dueno_no_mira_el_corpus_completo __________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-346/test_c8_todo_de_un_mismo_dueno0')
+
+    def test_c8_todo_de_un_mismo_dueno_no_mira_el_corpus_completo(tmp_path: Path):
+        """Un solo due\xf1o = capitaliz\xf3 una fuente. C8 lo impide con \u22652."""
+        roto = CONFORME.replace(
+            "| L-FT-B1 | Segunda | `context/CONTEXT-FT-B`", "| L-FT-A1 | Otra | `context/CONTEXT-FT-A`"
+        )
+        vs = _violar(tmp_path, artefacto=roto)
+>       assert _hay(vs, "C8", "SIN-HALLAZGOS"), vs
+E       AssertionError: []
+E       assert False
+E        +  where False = _hay([], 'C8', 'SIN-HALLAZGOS')
+
+tests\test_validate_lesson_capitalization.py:269: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_c8_todo_de_un_mismo_dueno_no_mira_el_corpus_completo
+1 failed, 1 passed in 0.31s
+
+
