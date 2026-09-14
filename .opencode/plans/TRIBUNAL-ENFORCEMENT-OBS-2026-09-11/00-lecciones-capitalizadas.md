@@ -63,37 +63,30 @@ el Paso 0 debía producir y no producía.
 | L-VUP-7 | Misma clase de defecto que L-T2C.2 (`except` anchos de `main.py` que tragan el fallo), ya cubierta por su fila sobre AC-F5: no duplicar un AC con segundo ID |
 | L-D2 | La evidencia se fosiliza si se captura antes de estabilizar los tests: el orden que lo previene ya lo fija L-VUP-12 en la misma fase, sin efecto adicional que añadir |
 
-## 3.b Hallazgos de la capa fría **sin efecto aplicado**
+## 3.b Hallazgos de la capa fría — **resueltos en FASE-P1 (2026-09-14)**
 
-No son descartes. Son candidatos que el corpus encontró y que este archivo no capitaliza
-porque aplicarlos cambiaría el contrato del plan, y eso le toca a FASE-P1, no a un registro.
+No son descartes y **dejaron de estar sin efecto**: FASE-P1 los midió y cada uno produjo un efecto sobre
+el contrato. El efecto se registra **en esta sección**, con su AC de destino, en lugar de mover filas al
+§2 — así el conteo de lecciones del §4 (19) sigue diciendo lo que es y nadie tiene que adivinar de qué
+capa vino cada fila.
 
-- **`D-T1.1`** (`Archives/TRIBUNAL-OFFLINE-2026-09-09`, Decisiones Arquitectónicas):
-  «DEVOLVER-CORRECCIONES bloquea el ZIP igual que BLOQUEADO… la política vive en un único
-  punto». Si es vigente, AC-D1 no debe **definir** la consecuencia del bloqueo sino **verificar
-  por qué no se observó** en FASE-E2E. Re-verificar con símbolos en FASE-P1 (L-V.2); estar
-  archivado no le da validez.
-- **`L-SR3`** (mismo CONTEXT que L-SR5): promesa, matriz y gate deben compartir **una** fuente
-  de verdad para el estado de un servicio. Es la lección gemela del hueco de AC-D1 y el plan la
-  omite: citó L-SR5/L-PF3 (el síntoma) y no L-SR3 (la causa estructural).
-- **`DA-C3`** (`Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`): `vacío ≠ ausente` como
-  contrato. Es el ancestro directo de NR8, que el plan apoyó en L-PF6/L-PF10. Falta una fila
-  que lo nombre o que declare que NR8 lo subsume.
-- **`L-B4`** (`Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`): dos planes pueden compartir el
-  nombre de una carpeta de evidencia. **Medido**: `evidence/` es raíz **global** y este plan lee
-  `evidence/FASE-E2E/`, `evidence/FASE-VERIFY/`, `evidence/FASE-T1/` y `evidence/FASE-D/` que
-  escribieron otros planes. Ningún AC de FASE-P4 declara ese baseline inmutable ni lo copia a
-  `evidence/FASE-P4/`. Cura posible: snapshot del baseline ajeno dentro de la carpeta propia
-  (mismo principio que L-VUP-12).
-- **Cola sin evaluar**: Q7 devolvió **78** IDs adyacentes no citados (medido 2026-09-12 con este
-  archivo ya escrito; se reproduce con el comando de §1). Este archivo no los evaluó
-  uno por uno; FASE-P1 decide si la revisión lleva lista propia o se declara fuera de alcance.
+| Hallazgo | Resolución | Efecto sobre el plan |
+|----------|-----------|----------------------|
+| **`D-T1.1`** (`Archives/TRIBUNAL-OFFLINE-2026-09-09`, Decisiones Arquitectónicas): «DEVOLVER-CORRECCIONES bloquea el ZIP igual que BLOQUEADO… la política vive en un único punto» | **VIGENTE confirmado con símbolos** (no por estar archivado): `BLOCKING_VERDICTS` incluye `VERDICT_RETURN` y el único consumidor es `blocks_delivery_zip`, llamado una sola vez en `main.py`. Por tanto AC-D1 **no define** una consecuencia nueva: registra la causa medida de no observación — `_compute_verdict` no recibía los hallazgos, así que el veredicto salió condicional por gates + primer piso | **AC-D1** §2.1/§3 de `decision-enforcement.md` · DA-P1.1 |
+| **`L-SR3`** (mismo CONTEXT que L-SR5): promesa, matriz y gate deben compartir **una** fuente de verdad para el estado de un servicio | **Capitalizado: es la causa estructural, no el síntoma.** La divergencia `C`↔`B` del acta no es un bug de lectura sino dos emisores del mismo hecho (`MANIFEST` por una ruta y `financial_scenarios.breakdown` por otra). Lo que el plan citó como L-SR5/L-PF3 es el síntoma; L-SR3 nombra la causa | **AC-F2** y su raíz común con **AC-F1** (DA-P1.5) |
+| **`DA-C3`**: `vacío ≠ ausente` como contrato | **NR8/Q6 lo subsume, con nombre propio.** Medición que lo exige: `acta_writer` renderiza la sección de revisores **solo si la lista no está vacía**, así que en el MD del acta "no corrieron", "corrieron limpios" y "fallaron" son el mismo documento | **AC-E0** (cuatro estados) + regla 1 de DA-P1.6: la sección nunca se omite |
+| **`L-B4`**: dos planes pueden compartir el nombre de una carpeta de evidencia | **Confirmado.** `evidence/` es raíz **global** y este plan lee `evidence/FASE-E2E/`, `-VERIFY/`, `-T1/`, `-D/` escritos por otros. Cura fijada: snapshot del baseline ajeno **dentro** de la carpeta propia (mismo principio que L-VUP-12) | **AC-O2** — solo produce efecto si P4 no se difiere (Q4/DA-P1.9) |
+| **Cola sin evaluar**: Q7 devolvió **78** IDs adyacentes no citados | **Fuera de alcance, con razón escrita**: ninguno nombra los símbolos que este plan toca (`judge.py`, acta, resolutor de entrega, bloque FASE-K), y la pasada por el corpus se hace **por síntoma**, no por volumen — los cinco hallazgos reales del corpus ya están resueltos arriba. Si una fase de código encuentra un candidato que sí nombra su símbolo, se capitaliza ahí y se anota en este archivo | Sin AC · declarada en `10-analisis` §Seguimientos |
 
 ## 4. Cobertura declarada de este documento
 
 - **Qué deja como evidencia**: 8 consultas con comando literal y resultado medido; 19 lecciones
-  con dueño, ruta y el artefacto del plan que modificaron; 5 descartes con motivo; 4 hallazgos
-  nombrados sin efecto aplicado, más la cola de 78 adyacentes sin evaluar.
+  con dueño, ruta y el artefacto del plan que modificaron; 5 descartes con motivo; **4 hallazgos
+  nombrados y RESUELTOS en FASE-P1 (2026-09-14) con su AC de destino** (§3.b), más la cola de 78
+  adyacentes **declarada fuera de alcance con razón escrita** (misma sección).
+- **Qué NO contiene esta viñeta**: lecciones nuevas de FASE-P1. Lo que produjo esa fase son
+  **decisiones** (DA-P1.1…DA-P1.10 en `10-analisis`), no lecciones del corpus; el §2 sigue en
+  19 filas y el conteo del encabezado es exacto, no redondeado.
 - **Qué no verifico**: que cada fila de §2 sea **pertinente** —si esa era la lección que había que
   capitalizar, y si el efecto alegado es real—. Dos afirmaciones de esta viñeta quedaron falsas el
   2026-09-13, al cerrarse `PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12`, y se corrigen con su

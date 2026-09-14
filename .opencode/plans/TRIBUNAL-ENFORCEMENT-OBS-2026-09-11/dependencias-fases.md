@@ -13,24 +13,36 @@ El executor (§Aplicación) exige que la Etapa 1 genere **todos** los prompts de
 |--------------------|--------|
 | `05-prompt-inicio-sesion-fase-P1.md` | ✅ (revisado en el ajuste: citas, divisiones, escenarios) |
 | `05-prompt-inicio-sesion-fase-P3-A.md` · `-P3-B.md` · `-P4.md` · `-RELEASE.md` | ✅ Creados 2026-09-14 con placeholders `⟨P1 fija⟩` donde la decisión manda |
-| `05-prompt-inicio-sesion-fase-P2.md` | ⏸️ **Diferido conscientemente**: P2 es la única fase condicional a una respuesta de P1 (Q1=sí + opción O1/O2/O3). Escribir su prompt antes de conocer la opción produciría un prompt falso, no incompleto. **Dueño de crearlo: FASE-P1** (Tarea 3 fija la opción; el AC correspondiente está en su prompt). Este párrafo es la declaración del desvío que exige la disciplina documental del repo. |
+| `05-prompt-inicio-sesion-fase-P2.md` | ✅ **Creado por FASE-P1 el 2026-09-14**, con la opción elegida (O1-cuarentena) y el contrato vinculante en su encabezado. El diferimiento estaba declarado en la fila original de esta tabla y en la cabecera del propio P1: escribir un prompt antes de conocer la opción habría producido un prompt falso, no incompleto |
 | `09-documentacion-post-proyecto.md` · `10-analisis-post-implementacion.md` | ✅ Creados 2026-09-14 con estructura base; el `10-` ya registra la decisión del ajuste (D-AJUST.1–.3) |
-| Decisión FASE-VERIFY (§4.6) | ✅ Registrada como **condicionada** (§FASE-VERIFY abajo); su cierre definitivo es AC de FASE-P1 |
+| Decisión FASE-VERIFY (§4.6) | ✅ **CERRADA por FASE-P1: no activa** (§FASE-VERIFY abajo). AC-V1 de RELEASE es el sustituto declarado |
 | Escenario de cierre sin P4 | ✅ Fijado (§Cierre válido sin P4 abajo) |
 
 ---
 
-## Decisión FASE-VERIFY (§4.6 del executor) — condicionada, la cierra FASE-P1
+## Decisión FASE-VERIFY (§4.6 del executor) — **CERRADA en FASE-P1: NO activa**
 
 Los tres criterios de activación se evalúan sobre la división de fases **post-ajuste** (P1 decide; P2/P3-B son condicionales):
 
 | Criterio §4.6 | Evaluación |
 |---------------|------------|
-| 1. ≥3 fases de implementación | P3-A es fija; P2 (Q1=sí) y P3-B con AC-F5 (Q5=a) son condicionales; P4 cuenta como fase de ejecución **solo si no se difiere**. Escenarios: Q1=sí + P4 en pie → 4 fases ✅ · Q1=no (O4) + P4 en pie → 3 ✅ · P4 diferido y Q1=no → 2 ❌ |
-| 2. Al menos una fase con ejecución E2E | P4 (corrida `v4complete`) — se cumple **solo si P4 no se difiere** (Q5=c o T3a sin cerrar → ❌) |
-| 3. ACs que cruzan fases | Sí, hoy: AC-E0 (P1→P2), AC-F2 (P3-A→P4 lo verifica), AC-O0/AC-O1 (P4 depende del estado que deje P2/P3-B) |
+| 1. ≥3 fases de implementación | **Sí**: P3-A, P3-B y P2 (Q1=sí). P4 no cuenta |
+| 2. Al menos una fase con ejecución E2E | **No garantizable**: P4 depende de T3a, una precondición **comercial externa** (Q4/DA-P1.9). Atar la certificación del plan a que un hotel responda convierte el cierre en un `—` indefinido |
+| 3. ACs que cruzan fases | Sí: AC-E0 (P1→P2), AC-F2↔AC-F5 (P3-A↔P3-B), AC-O0 (P4 sobre lo que deje P3-B) |
 
-**Decisión registrada 2026-09-14**: FASE-VERIFY **queda condicionada** a lo que salga de Q1/Q4/Q5. Si al cerrar P1 se cumplen los tres criterios, el plan gana una sesión `05-prompt-inicio-sesion-fase-VERIFY.md` (patrón del predecesor: certificación ACs contra output E2E real, sin código). Si no se cumplen, **el patrón VERIFY embebido en RELEASE (AC-V1) es el sustituto declarado** y esta sección queda como constancia de por qué no activó. FASE-P1 cierra la decisión en este archivo; no se improvisa en RELEASE.
+> **Decisión registrada 2026-09-14 por FASE-P1**: **no se crea sesión FASE-VERIFY propia**. El criterio 2
+> no se cumple y **no puede garantizarse desde la ingeniería**, así que la certificación se ancla a algo
+> que sí depende de este plan. El patrón VERIFY pasa a ejecutarse como **AC-V1 dentro de FASE-RELEASE**,
+> con dos sustituciones explícitas que reemplazan lo que VERIFY habría aportado:
+>
+> 1. La certificación **no depende de una corrida real** sino del **par NR7 por AC** (verde/rojo), obligatorio
+>    en la evidencia de P2, P3-A y P3-B. Un AC sin su par queda ⚠️, nunca ✅.
+> 2. Si P4 **llega** a ejecutarse, su evidencia entra a la matriz de AC-V1 y responde los 9 puntos del §5 del
+>    maestro. Si no, AC-V1 certifica contra los artefactos de P2/P3-A/P3-B y **declara la ausencia de corrida
+>    como límite de esta decisión**, no como fallo de la fase.
+>
+> Esta sección es el cierre del ítem: no se improvisa en RELEASE. Rationale completo en §7 de
+> `evidence/FASE-P1/decision-enforcement.md`.
 
 ---
 
@@ -40,29 +52,36 @@ Los tres criterios de activación se evalúan sobre la división de fases **post
 FASE-RELEASE-4.76.0 del predecesor ✅ cumplida 2026-09-11 (`3bdc14e`)   ← PRECONDICIÓN
         │
         ▼
-FASE-P1 (decisión Q1–Q6 + contrato + cierre FASE-VERIFY + prompt de P2 si Q1=sí)
+FASE-P1 ✅ (2026-09-14) — Q1=sí · Q1b=escalar · Q2=O1-cuarentena · Q2b=ambas capas
+                           Q3=P3→P2 · Q4=el hotel (T3a externa) · Q5=a · Q6=4 estados
+                           Q7=hereda GATE_BLOCKING_ENABLED · VERIFY=no activa
+                           Contrato: evidence/FASE-P1/decision-enforcement.md
         │
-        ├──────────────────────────────────────┐
-        ▼                                      ▼
-FASE-P2 (refactor ordenamiento,        FASE-P3-A (fixes de detección y fidelidad:
-solo si Q1=sí; opción O1/O2/O3)        AC8 + tier acta + AC-F4)  ← siempre se ejecuta
-        │                                      │
-        └──────────┬───────────────────────────┘
-                   ▼  (secuenciales entre sí: comparten judge.py/main.py y conteo NR1)
-        FASE-P3-B (fixes de cableado y test: barreda D-V.1 + versión acta
-                   + AC-F5 solo si Q5=a)
-                   ▼
-        FASE-P4 (corrida observación — T3a datos + T3b analítica;   ← OPCIONAL:
-                 techo de tier según Q5: A o B_PLUS;                ver §Cierre válido sin P4
-                 recomendada tras P3-A/P3-B para medir fidelidad
-                 del acta ya corregida)
-                   ▼
-        FASE-VERIFY (solo si los 3 criterios §4.6 se cumplen al cerrar P1)
-                   ▼
-        FASE-RELEASE-4.77.0 (cierre + archivado R2.5)
+        ▼  (orden fijado por DA-P1.3: substrato confiable antes que dientes)
+FASE-P3-A (detección y fidelidad: AC-F1 dos capas ZIP-aware + AC-F2 fuente del tier
+           + AC-F4 primer piso en B_PLUS)  ← siempre se ejecuta
+        │
+        ▼
+FASE-P3-B (cableado y test: AC-F5 banderas reales [disparado por Q5=a, toca main.py]
+           + AC-F3 whitelist barreda + AC-F6 versión del acta)
+        │
+        ▼  (P2 llega con judge.py y el resolutor de entrega ya corregidos)
+FASE-P2 (O1-cuarentena: package write→revisar→decidir→publish; AC-E0…AC-E5;
+         su prompt existe: 05-prompt-inicio-sesion-fase-P2.md)
+        │
+        ▼
+FASE-P4 (corrida observación — T3a por Q4; techo de tier con dueño declarado;  ← OPCIONAL:
+         recomendada tras P3-A/P3-B/P2                                        ver §Cierre válido sin P4)
+        │
+        ▼
+FASE-RELEASE-4.77.0 (cierre + tag + AC-V1 con el patrón VERIFY embebido + archivado R2.5)
+
+FASE-VERIFY: NO crea sesión (decisión cerrada en P1, §FASE-VERIFY arriba).
 ```
 
-**Variante si Q1=(c)** (decidir enforcement tras observar): P4 se adelanta antes de P2, con veredicto provisional documentado; P3-A/P3-B pueden ir antes de P4 (recomendado: el informe mide la fidelidad del acta ya corregida).
+**P2 y P3-A/P3-B comparten `judge.py`/`main.py` y el conteo NR1 → secuenciales entre sí, nunca simultáneas** (regla de cabecera). El reordenamiento P3→P2 no cambia eso: lo hace más limpio, porque P2 ya no pisa el archivo que P3-A está corrigiendo.
+
+> **Queda sin efecto**: la variante "Q1=(c) — P4 antes que P2". Q1 se respondió **sí** con refactor, y la opción (c) fue explícitamente rechazada (DA-P1.1) porque con el cableado actual la corrida no puede observar Tier A, así que "observar antes de decidir" no mostraba el caso que motiva la decisión.
 
 ---
 
@@ -70,13 +89,13 @@ solo si Q1=sí; opción O1/O2/O3)        AC8 + tier acta + AC-F4)  ← siempre s
 
 | Fase | Depende de | Bloquea a | Tipo de dependencia |
 |------|-----------|-----------|---------------------|
-| FASE-P1 | RELEASE-4.76.0 del predecesor ✅ | P2, P3-A, P3-B, P4, RELEASE | Contrato (§15.4.1 heredada: lo decidido aquí obliga a P2/P3-A/P3-B) — incluye Q1b, Q5, Q6, cierre FASE-VERIFY y creación del prompt P2 si Q1=sí |
-| FASE-P2 | P1 (Q1=sí + opción O1/O2/O3) | P4, RELEASE | El enforcement redefine dónde corren los revisores y quién decide el ZIP |
-| FASE-P3-A | P1 (Q2b + contrato) | P3-B, P4 (recomendado), RELEASE | Fixes de detección/fidelidad sobre `judge.py` + `asset_reviewer.py`; independientes del enforcement |
-| FASE-P3-B | P1 (Q5) + P3-A (baseline NR1 y `acta_writer.py`) | P4 (recomendado), RELEASE | Barreda test-only + versión del acta; **AC-F5 solo si Q5=a** (entonces toca `main.py`) |
-| FASE-P4 | P1 (Q3/Q4/Q5) + **T3a datos operativos + T3b analítica** + P3-A/P3-B recomendado | RELEASE | Corrida de observación **opcional**: sin T3a no hay dato verificado y sin T3b (o Q5≠a) el techo es `B_PLUS`, no `A`; aplica §Cierre válido sin P4 |
-| FASE-VERIFY | Criterios §4.6 cumplidos al cerrar P1 | RELEASE | Condicional (§4.6); si no activa, AC-V1 de RELEASE la sustituye como patrón declarado |
-| FASE-RELEASE-4.77.0 | P2/P3-A/P3-B (si aplican) + **P4 ✅ o diferida por decisión registrada** + VERIFY si activó | — | Cierre documental |
+| FASE-P1 ✅ (2026-09-14) | RELEASE-4.76.0 del predecesor ✅ | P3-A, P3-B, P2, P4, RELEASE | **Contrato cerrado** en `evidence/FASE-P1/decision-enforcement.md` — Q1=sí, Q1b=escalar, Q2=O1-cuarentena, Q2b=ambas capas, Q3=P3→P2, Q5=a, Q6=4 estados, Q7=knob heredado, VERIFY=no activa. Lo decidido aquí obliga a las fases de código (regla §15.4.1) |
+| FASE-P3-A | P1 (Q2b = las dos capas) | P3-B, P2, P4, RELEASE | AC-F1 (lectura ZIP + stub estructural), AC-F2 (fuente del tier pre-packaging), AC-F4 (`B_PLUS`). **AC8 y AC-F2 complan el mismo resolutor** (raíz común, DA-P1.5). No toca `main.py` |
+| FASE-P3-B | P1 (Q5=a) + P3-A (baseline NR1 y `acta_writer.py`) | P2, P4, RELEASE | AC-F5 **disparado**: hoist de `ga4_available`/`gsc_available` al `HotelFinancialData` de FASE-K (toca `main.py`); AC-F3 (whitelist barreda, test-only) y AC-F6 (versión desde `VERSION.yaml`) |
+| FASE-P2 | **P3-A ✅ + P3-B ✅** + contrato P1 (Q1/Q1b/Q2/Q6/Q7) | P4, RELEASE | O1-cuarentena: `package()` partido en write/publish, `reviewer_reports` tipado y poblado, `_compute_verdict` con el cuarto argumento, AC-E0…AC-E5. Su prompt existe y **no re-decide** el contrato |
+| FASE-P4 | P2 + **T3a datos operativos** (Q4: el hotel, por contacto directo del operador) | RELEASE | Corrida de observación **opcional**. Techo de tier con **dueño declarado** (AC-O0): cableado (ya arreglado por AC-F5) vs analítica del hotel (T3b). Sin proveedor con fuente → §Cierre válido sin P4 |
+| FASE-VERIFY | — | — | **No activa** (decisión cerrada en P1 arriba). AC-V1 de RELEASE la sustituye como patrón declarado |
+| FASE-RELEASE-4.77.0 | P3-A + P3-B + P2 + **P4 ✅ o diferida por decisión registrada** | — | Cierre documental + tag anotado + **AC-V1** (certificación contra artefactos de fase + pares NR7) |
 
 ---
 

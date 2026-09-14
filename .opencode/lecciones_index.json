@@ -4,8 +4,8 @@
   "cobertura": {
     "archivos_analysis_escaneados": 13,
     "archivos_contexto_escaneados": 35,
-    "archivos_md_escaneados": 360,
-    "ids_con_definicion": 259,
+    "archivos_md_escaneados": 361,
+    "ids_con_definicion": 274,
     "ids_citados_sin_definicion": 38,
     "familias_incluidas": [
       "L",
@@ -285,7 +285,7 @@
       "seccion": "Decisiones de contrato — auditoría FASE-T1 (2026-09-10)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 12,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -343,7 +343,7 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 14,
+      "total_citas": 23,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -373,7 +373,7 @@
       "seccion": "Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 32,
+      "total_citas": 29,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -589,7 +589,7 @@
       "seccion": "6. Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 14,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -793,6 +793,146 @@
       "planes_que_lo_citan": [
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P1.1",
+      "familia": "DA",
+      "enunciado": "Enforcement sí — G0 (ROADMAP.md §9) exige acta APROBADO-PARA-ENTREGA, y esa rama está cerrada por un guard que hoy no puede recibir los hallazgos: auditoría-only = G0 incerrable por diseño",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 7,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P1.2",
+      "familia": "DA",
+      "enunciado": "Escalar, no ciclar — Los defectos que bloquean son estructurales (stub, asset ausente): regenerar produce el mismo stub. El suggestion de L-PF3 no tiene forma de restricción aquí",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P1.3",
+      "familia": "DA",
+      "enunciado": "Orden P3-A → P3-B → P2 → P4 — Cablear dientes sobre detecciones rotas produce bloqueos inevaluables y invita a apagar el tribunal",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 9,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P1.4",
+      "familia": "DA",
+      "enunciado": "O1-cuarentena — El packager ya escribe .zip.tmp y renombra de forma atómica con los bytes finalizados: la decisión se mueve del *write* al publish sin duplicar serialización ni cambiar el contrato ZIP-only",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P1.5",
+      "familia": "DA",
+      "enunciado": "AC8 en dos capas — Arreglar solo la lectura deja pasar el stub; arreglar solo el heurístico no sirve porque el archivo nunca se lee. AC8 y AC-F2 son el mismo bug con dos víctimas",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P1.6",
+      "familia": "DA",
+      "enunciado": "Cuatro estados, no tres — El tri-estado omitía NOT_RUN, que es el estado que la corrida real ya exhibe; diseñar los estados alrededor del bug dejaría P2 sin palabra para nombrar su propio fallo",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P1.7",
+      "familia": "DA",
+      "enunciado": "Heredar GATE_BLOCKING_ENABLED + enforcement.suppressed_by_operator en el acta — Medido: el tribunal no heredaba el knob. Un solo botón para todo lo que suprime entrega, y el escape queda declarado en el artefacto en vez de ser silencio",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P1.8",
+      "familia": "DA",
+      "enunciado": "Q5=(a) como par con AC-F2 — Propagar banderas sin arreglar la fuente del tier es invisible: _read_evidence_tier seguiría leyendo \"C\"",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P1.9",
+      "familia": "DA",
+      "enunciado": "T3a la da el hotel, por contacto del operador — Es la única decisión del plan que no es de diseño sino comercial; sus líneas rojas (el agente jamás llena el YAML, nada de datos plausibles para destrabar, consentimiento y frescura) son la garantía de que el tier no vuelve a mentir",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 6,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P1.10",
+      "familia": "DA",
+      "enunciado": "FASE-VERIFY no activa — El criterio §4.6-2 depende de que un hotel responda: atar la certificación a eso deja el cierre en — indefinido. La certificación se ancla al par NR7 por fase, que sí depende de este plan",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [],
       "redefiniciones": []
     },
     {
@@ -1139,7 +1279,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
+      "total_citas": 11,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -1822,6 +1962,76 @@
       "redefiniciones": []
     },
     {
+      "id": "L-P1.1",
+      "familia": "L",
+      "enunciado": "La opción barata de Q2 estaba fuera de la lista: O1/O2/O3/O4 se concibieron como alternativas mutuamente excluyentes y ninguna aprovechaba que _create_zip_single_write ya recibe manifest_bytes/implementation_order_bytes finalizados y que package() escribe .zip.tmp antes del rename atómico — El menú se escribió desde el diseño concepción (\"¿dónde corren los revisores?\") y no desde la medición del artefacto (\"¿qué costura ya existe?\"); la pregunta bien hecha — *¿dónde cae la decisión?* — no estaba en la tabla",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P1.2",
+      "familia": "L",
+      "enunciado": "El docstring de _compute_verdict prometía \"Finding CRITICAL de revisores → DEVOLVER-CORRECCIONES\" y el cuerpo de la función no tenía ni el parámetro: contrato documentado y código divergían — Un docstring escrito en T1 describió la intención del plan, no lo que se implementó, y ningún check compara el texto con la firma",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P1.3",
+      "familia": "L",
+      "enunciado": "La pregunta Q2b estaba formulada como \"(a) o (b)\" y la medición mostró que eran las dos mitades de un mismo fix; además AC8 y AC-F2 resultaron ser el mismo defecto (un lector escrito contra un layout descomprimido) con dos víctimas — El plan ereditó la disyuntiva de la concepción sin medirla; al medir las dos capas, la disyunción se autodestruyó",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P1.4",
+      "familia": "L",
+      "enunciado": "Presupuesto superado: 30 iteraciones declaradas ≈ 30 ids / 58 tool_use (unidad auto-reportada, D-V2.1) — Causa medida: (i) el Paso 0 de fuentes obligatorias de esta fase son 11 documentos y hubo que leerlos; (ii) la Tarea 1 exige re-leer 14 símbolos por evidencia propia (L-V.2) y no heredar; (iii) 8 preguntas de decisión con su tanda, dos de ellas corregidas en vivo",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P1.5",
+      "familia": "L",
+      "enunciado": "Un except Exception que solo imprime un warning envuelve las tres cadenas que este plan decide (FASE-K, el bloque del Juez y el de cada revisor): en las tres, el fallo se manifiesta como ausencia silenciosa, no como error — No es un defecto de la fase: es el patrón never-block del repo aplicado a código que además declara valores por defecto (\"C\", [], financial_breakdown = None)",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "L-PF1",
       "familia": "L",
       "enunciado": "QUÉ PASÓ: dos reportes del MISMO run reportaban unresolved distinto (4 vs 1). POR QUÉ: el DTO AlignmentResult tenía dos paths de construcción que re-derivaban \"unresolved\" con reglas distintas (len(report.missing) vs suma de estados) — el AlignmentReport pierde la taxonomía NO_BREACH. QUÉ LO PREVIENE: UN helper canónico (compute_unresolved) consumido por ambos reportes + el caller deriva la taxonomía con el MISMO builder que ya produce el artefacto (AssetAlignmentMatrix.build desde pain_ledger) + test de igualdad entre paths. Pertinencia: INCLUIR en memoria (patrón de unificación de conteo en DTOs multi-consumer). — SR-A",
@@ -1861,7 +2071,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 12,
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -1905,7 +2115,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 14,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -1963,7 +2173,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 24,
+      "total_citas": 27,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2061,7 +2271,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 21,
+      "total_citas": 23,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2111,7 +2321,7 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 41,
+      "total_citas": 44,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
@@ -2146,7 +2356,7 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 40,
+      "total_citas": 42,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -2321,7 +2531,7 @@
       "seccion": "FASE-T2-C (2026-09-10)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2496,7 +2706,7 @@
       "seccion": "FASE-T4-B (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 12,
+      "total_citas": 13,
       "planes_que_lo_citan": [
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -2657,7 +2867,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2674,10 +2884,10 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 14,
       "planes_que_lo_citan": [
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -2722,7 +2932,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -2783,7 +2993,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 17,
+      "total_citas": 19,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2800,7 +3010,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
+      "total_citas": 9,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2925,7 +3135,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
+      "total_citas": 11,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -3343,10 +3553,11 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 54,
+      "total_citas": 55,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-OFFLINE-2026-09-09",
-        "context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01"
+        "context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01",
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
     },
