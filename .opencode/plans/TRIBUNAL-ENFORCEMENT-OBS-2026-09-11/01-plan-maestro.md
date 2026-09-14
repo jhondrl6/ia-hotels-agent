@@ -1,7 +1,7 @@
 # 01 — Plan Maestro: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
 
 > **Origen**: síntesis de FASE-VERIFY del plan TRIBUNAL-OFFLINE-2026-09-09 (certificación 2026-09-11, commit `e6161a3`). Este documento desarrolla lo que sus lecciones y seguimientos apuntan pero no cierran: L-E2E.1 (timing), L-E2E.3 (advisory de facto), AC8 ❌ (D-V.4), D-V.1, D-V.3.
-> **Precondición global**: ✅ cumplida el 2026-09-11 — FASE-RELEASE-4.76.0 del predecesor cerró en `bd2bf57` (v4.76.0 publicada **localmente, sin push ni tag**; plan archivado por R2.5; `--quick` 8/8).
+> **Precondición global**: ✅ cumplida el 2026-09-11 — FASE-RELEASE-4.76.0 del predecesor cerró en `3bdc14e` (corregido 2026-09-14: el `bd2bf57` citado en la concepción es el duplicado pre-rebase, fuera de `origin`). v4.76.0 **está en `origin/master`** y lleva tag anotado `v4.76.0` creado 2026-09-14 (push del tag pendiente); plan archivado por R2.5; `--quick` 8/8 el día del cierre (hoy son 9 checks).
 > **Arrastre del predecesor para P1**: a los residuos técnicos de este plan se suman **9 ítems de deuda** (ver §Deuda de proceso de `06-checklist-implementacion.md`): 6 de gates medidos en el R2.5 del predecesor (verificador de R2.6/R2.7, cobertura 12,5 % de `validate_plan_closure.py`, campo `Version actual` del REGISTRY, reescrito ciego de `validate_opencode_refs.py --fix`, punto ciego de `version_consistency_checker.py`, y L-R.1 — ya aplicada a este plan) + 3 añadidos por el Paso 0 horizontal de 2026-09-12 (§9: Paso 0 sin verificador, normalización del flaky de orden en R2.7, y Tier A inalcanzable en `v4complete`).
 
 ---
@@ -12,13 +12,15 @@
 |------|-----------|--------------------|---------------|--------|
 | FASE-P1 | RELEASE-4.76.0 ✅ | 30 | No | No (decisión) |
 | FASE-P2 | P1 (Q1=sí + opción elegida) | 55 | No | Sí |
-| FASE-P3 | P1 (Q2b, Q5) | 30 | No | Sí |
-| FASE-P4 | P1 (Q3/Q4/Q5) + P3 recomendado + **T3a datos operativos + T3b analítica** | 40 | Sí (corrida) | No |
-| FASE-RELEASE-4.77.0 | P2/P3 (si aplican) + P4 | 30 | Sí | Docs |
+| FASE-P3-A | P1 (Q2b) | 20 | No | Sí |
+| FASE-P3-B | P1 (Q5) + P3-A | 15 (Q5≠a) / 25 (Q5=a) | No | Sí |
+| FASE-P4 | P1 (Q3/Q4/Q5) + P3-A/P3-B recomendado + **T3a datos operativos + T3b analítica** — opcional, ver §Cierre válido sin P4 en `dependencias-fases.md` | 40 | Sí (corrida) | No |
+| FASE-VERIFY | criterios §4.6 cumplidos al cerrar P1 (§4.6 del executor) | 25 | No | No |
+| FASE-RELEASE-4.77.0 | P2/P3-A/P3-B (si aplican) + P4 ✅ **o diferida por decisión registrada** + VERIFY si activó | 30 | Sí | Docs |
 
-Presupuesto medido con `evidence/FASE-D/measure_iterations.py` (R2.1); corte en commit.
+Presupuesto medido con `evidence/FASE-D/measure_iterations.py` (R2.1); corte en commit. La división P3-A/P3-B (sesión de ajuste 2026-09-14) reparte los 30 originales en 20 + 15/25: cada fase nueva paga su propio overhead de apertura/cierre, por eso la suma excede el presupuesto único.
 
-> ⚠️ **Revisión 2026-09-12**: P4 no puede alcanzar Tier A con el cableado actual (ver §2.1). Si Q5 = (a) propagar banderas, el cambio toca `main.py` y **debe entrar en el presupuesto de P3**, que hoy no lo contempla.
+> ⚠️ **Revisión 2026-09-12 / ajuste 2026-09-14**: P4 no puede alcanzar Tier A con el cableado actual (ver §2.1). Si Q5 = (a) propagar banderas, el cambio toca `main.py` y entra en el **presupuesto de P3-B** (los 25 de Q5=a), que antes de dividir a P3-A/P3-B no lo contemplaba.
 
 ---
 
@@ -53,7 +55,7 @@ Cadena leída en tres símbolos, en orden inverso al veredicto:
 **Consecuencias para este plan**:
 - **(a)** La precondición T3 de P4 está incompleta tal como está redactada: `rooms`/`occupancy_rate`/`direct_channel_percentage`/`ADR` con fuente no bastan. Falta **T3b** (GA4 **y** GSC conectados) y el cableado de banderas (decisión Q5).
 - **(b)** El argumento de secuenciación ("decidir E antes de correr O porque Tier A es el único régimen con dientes") **se sostiene** — solo Tier A puede decir "entrega" — pero se vuelve **inobservable** dentro de este plan si Q5 se difiere: P4 no podría mostrar el caso que motiva la decisión.
-- **(c)** Efecto colateral útil: el `first_floor_rule` no cubre `B_PLUS` (`FIRST_FLOOR_TIERS = {B, C}`), así que un acta en `B_PLUS` declara "sin restricción de primer piso" mientras el veredicto sale condicional por el guard de Tier A. Es un defecto de fidelidad de la familia de AC-F2 → **FASE-P3**.
+- **(c)** Efecto colateral útil: el `first_floor_rule` no cubre `B_PLUS` (`FIRST_FLOOR_TIERS = {B, C}`), así que un acta en `B_PLUS` declara "sin restricción de primer piso" mientras el veredicto sale condicional por el guard de Tier A. Es un defecto de fidelidad de la familia de AC-F2 → **FASE-P3-A**.
 
 > ⚠️ Esto es una lectura de código de la concepción del plan, **no** un AC certificado. Tarea 1 de P1 debe re-verificar los tres símbolos antes de decidir Q5 (L-V.2: VERIFY/P1 re-lee artefactos, no hereda conclusiones).
 
@@ -72,7 +74,7 @@ Cadena leída en tres símbolos, en orden inverso al veredicto:
 
 **Hueco común a las cuatro opciones (lección cruzada L-SR5 / L-PF3)**: ninguna define qué pasa **aguas abajo** del bloqueo. `L-PF3` ya validó la cura en este repo para un gate de contenido: regenerar con el `suggestion` del detector como restricción, **un** reintento con guard anti-bucle, y si persiste, escalar a bloqueo real con DTO tipado (no parseando JSON). El contrato de P1 debe fijar las dos mitades — *decisión* (matriz recomendación→veredicto) **y** *consecuencia* (qué recibe el operador cuando el veredicto es `DEVOLVER-CORRECCIONES` o `BLOQUEADO`: ¿se re-genera?, ¿se entrega diagnóstico sin ZIP?, ¿se aborta en seco?). Sin la segunda mitad, el enforcement propuesto replica el defecto que denuncia: un veredicto que bloquea y deja al cliente sin paquete y al operador sin ciclo de reparación.
 
-**Precedente aprovechable**: `_extract_evidence_tier` de `honesty_reviewer.py` ya lee `financial_scenarios.breakdown.evidence_tier` — la fuente de tier pre-packaging existe para el fix de fidelidad (P3) y como entrada del Juez si se elige reordenarlo.
+**Precedente aprovechable**: `_extract_evidence_tier` de `honesty_reviewer.py` ya lee `financial_scenarios.breakdown.evidence_tier` — la fuente de tier pre-packaging existe para el fix de fidelidad (P3-A) y como entrada del Juez si se elige reordenarlo.
 
 ---
 
@@ -82,7 +84,7 @@ Cadena leída en tres símbolos, en orden inverso al veredicto:
 - **Tarea 1 — Research (solo lectura)**: confirmar el mapa con símbolos: `TribunalJudge.evaluate` / `_compute_verdict` (`judge.py`), `blocks_delivery_zip` + condición ZIP-skip (`main.py`), bloque FASE 7 de revisores (`main.py`) y **el punto exacto donde `reviewer_reports` se inicializa y jamás se puebla**, `package()` (`delivery_packager.py`), `_resolve_delivery_dir` / `_is_template_stub` (`asset_reviewer.py`), `_extract_evidence_tier` (`honesty_reviewer.py`). **Nuevo (§2.1)**: re-verificar `_compute_verdict` (guard `evidence_tier == "A"`), `_determine_evidence_tier` (`scenario_calculator.py`) y la construcción de `HotelFinancialData` en el bloque FASE-K de `main.py` antes de decidir Q5. Verificar si D-V.3 (endurecimiento del executor) ya se ejecutó en RELEASE-4.76.0 — **resuelto: sí**, executor v2.21.0 con R2.6 y R2.7; lo abierto es su verificador mecánico y que el baseline que exige R2.6 vive bajo `output/`, excluido por `.gitignore`. Entregable: `evidence/FASE-P1/research-estado.md`.
 - **Tarea 2 — Decisión con el usuario (una tanda de preguntas)**: Q1–Q6 (ver prompt de inicio). **Q1b** (consecuencia del bloqueo) y **Q5** (cableado de banderas de analítica) **no son opcionales**: sin Q1b el contrato queda incompleto (§3) y sin Q5 la fase P4 no puede especificarse (§2.1). **Q6** fija el esquema de tri-estado que NR8 exige.
 - **Tarea 3 — Contrato + ACs finales**: `evidence/FASE-P1/decision-enforcement.md` con: decisión, opción elegida, matriz recomendación→veredicto propuesta (hereda la de T1: finding CRITICAL o veredicto BLOQUEAR de revisor → DEVOLVER-CORRECCIONES/BLOQUEADO; WARNING no degrada bajo el primer piso; never-block preservado), **comportamiento aguas abajo del bloqueo** (ciclar/escalar/entregar-parcial, según §3), **tri-estado de `reviewer_reports`** (NR8: sin hallazgos / artefacto ausente / lector fallido, con las claves del acta que lo expresan), y ACs finales con artefacto+clave (R2.4) **cada uno con su verificación por mutation check cuando sea de detección o bloqueo** (NR7).
-- **Regla heredada (§15.4.1)**: el contrato fijado aquí obliga a P2/P3; cambios posteriores requieren decisión registrada.
+- **Regla heredada (§15.4.1)**: el contrato fijado aquí obliga a P2/P3-A/P3-B; cambios posteriores requieren decisión registrada.
 
 ### FASE-P2 — Refactor de ordenamiento (ALTA · solo si Q1=sí y opción ≠ O4)
 - Implementar O1/O2/O3 manteniendo never-block, NR2 y NR3.
@@ -92,15 +94,19 @@ Cadena leída en tres símbolos, en orden inverso al veredicto:
 - **Baseline NR1**: snapshot `pre` tomado con `--ignore` del archivo de tests de la fase (L-T4B.5) y verificación por resta R2.7 (`suma_post − suma_pre == tests_nuevos`; diferencia 0 = baseline contaminado).
 - Si Q1=no (O4): la fase se sustituye por documentación de la decisión y se cierra sin código.
 
-### FASE-P3 — Fixes localizados (MEDIA)
+### FASE-P3-A — Detección y fidelidad del acta (MEDIA · 3 tareas, R3)
+Dividida de la P3 original en la sesión de ajuste 2026-09-14: la suma de 6 fixes excedía el máximo de 4 tareas/fase de R3 (decisión D-AJUST.1 en `10-analisis`).
 - **AC8**: opción a fijar en P1 (Q2b) — (a) `_resolve_delivery_dir()` lee `IMPLEMENTATION_ORDER.md` del ZIP vía `zipfile`, o (b) recalibrar `_is_template_stub()` (excluir `---` y boilerplate Fecha/Score/footer del conteo). **Cierre con mutation check (NR7)**: con el fixture del caso real, desactivar el fix y ver el test en rojo — AC8 ya falló por heurístico que "pasaba" sobre un layout que no existía (L-V.1).
 - **Tier del acta**: el Juez lee el tier de una fuente disponible pre-packaging (`financial_scenarios.breakdown.evidence_tier`) o se reordena — converger con P2 si hay reordenamiento.
 - **AC-F4 · Fidelidad del primer piso en `B_PLUS`**: `FIRST_FLOOR_TIERS` = {`B`,`C`} deja pasar `B_PLUS`, así que el acta afirma "sin restricción de primer piso" en un caso que sale condicional por el guard de Tier A. El `reason` debe decir por qué el veredicto es el que es (o `FIRST_FLOOR_TIERS` debe cubrir todo lo que no sea `A` — decidir en P1 y fijar en el contrato, no improvisar aquí).
-- **AC-F5 · Banderas de analítica (solo si Q5=(a))**: propagar la disponibilidad real (`ga4_available`, `gsc_available`) al `HotelFinancialData` del bloque FASE-K, lo que exige **hoist** de esas variables por encima del bloque. L-T2C.2 es la advertencia directa: un hoist en `main.py` con un `except Exception` ancho alrededor puede enmascarar un `NameError` y cambiar el tier de corridas reales. Test obligatorio: `tier` con analítica disponible y sin ella, más delta NR1 con par pre/post.
+
+### FASE-P3-B — Cableado y test (BAJA, o MEDIA si Q5=a · 2–3 tareas, R3)
 - **Whitelist barreda (D-V.1)**: test-only — autorizar a Bot 3 como emisor legítimo de `asset_path` en `test_barreda_un_solo_emisor_de_la_clave`.
 - **Versión del acta**: `acta_writer.py` lee de `VERSION.yaml` (fuente única).
+- **AC-F5 · Banderas de analítica (solo si Q5=(a))**: propagar la disponibilidad real (`ga4_available`, `gsc_available`) al `HotelFinancialData` del bloque FASE-K, lo que exige **hoist** de esas variables por encima del bloque. L-T2C.2 es la advertencia directa: un hoist en `main.py` con un `except Exception` ancho alrededor puede enmascarar un `NameError` y cambiar el tier de corridas reales. Test obligatorio: `tier` con analítica disponible y sin ella, más delta NR1 con par pre/post. Si Q5≠(a), la fase ejecuta solo las dos tareas fijas y AC-F5 queda registrado como condicional no disparado.
 
-### FASE-P4 — Corrida de observación (MEDIA · MIXTO)
+### FASE-P4 — Corrida de observación (MEDIA · MIXTO · opcional)
+- **Cierre válido sin P4**: si T3a no se cierra (nadie provee el dato con fuente), P4 se difiere con la mecánica de `dependencias-fases.md` §Cierre válido sin P4 — decisión registrada, no precondición "en espera". El fallo de T3b **no** difiere la fase: AC-O0 (`B_PLUS` con límite declarado).
 - **Precondición T3a (datos operativos)**: hotel propio — `rooms`, `occupancy_rate`, `direct_channel_percentage`, `ADR` con fuente declarada. Sin esto el tier queda en `B`/`C` y no se levanta el primer piso.
 - **Precondición T3b (analítica) — nueva, medido 2026-09-12**: `evidence_tier: A` exige además GA4 **y** GSC disponibles **y** que el bloque FASE-K propague las banderas (Q5, §2.1). Si Q5=(b), **el techo de esta fase es `B_PLUS` y el `APROBADO-PARA-ENTREGA` no es observable**: el informe debe declararlo como límite, no como corrida fallida.
 - **Antes de redactar el brief delegado (L-VUP-9)**: verificar `--help` de `onboard` y `v4complete` y usar solo argumentos reales; un prompt con un argumento inexistente produce un FAIL que no evalúa ningún AC.
@@ -112,6 +118,8 @@ Cadena leída en tres símbolos, en orden inverso al veredicto:
 
 ### FASE-RELEASE-4.77.0 (BAJA · DELEGABLE)
 - Flujo documental estándar: `log_phase_completion.py --release`, `sync_versions.py`, CHANGELOG, GUIA_TECNICA, doctor, R2.5 archivado de este plan.
+- **Tag anotado `v4.77.0` al cerrar** (lección del ajuste 2026-09-14: 4.76.0 cerró sin tag y los tags llegaban solo hasta v4.68.0; el déficit de v4.76.0 quedó sanado, el de v4.77.0 no debe repetirse).
+- Si FASE-VERIFY no activó (§4.6, decisión de P1): AC-V1 se ejecuta dentro de esta fase y el `10-analisis` declara por qué no hubo sesión propia.
 
 ---
 
@@ -120,7 +128,7 @@ Cadena leída en tres símbolos, en orden inverso al veredicto:
 1. `evidence_tier` resultante con dato real (¿A?) y `first_floor_rule` levantado.
 2. Veredicto: ¿alcanza `APROBADO-PARA-ENTREGA`? (provisional si E no cerrado).
 3. Comportamiento de Bots 1–4 con dato rico: nuevos findings, falsos positivos/negativos.
-4. Fidelidad del acta: `evidence_tier` del acta vs MANIFEST (post-P3 debe coincidir).
+4. Fidelidad del acta: `evidence_tier` del acta vs MANIFEST (post-P3-A debe coincidir).
 5. Gap advisory: recomendaciones de revisores vs veredicto (si P2 cerró enforcement, ya no debe existir).
 6. AC17/AC19 del predecesor con cifras reales: `precision_tier`, `can_show_exact_money`, bases de pérdida (`expected_loss_cop` vs fuga mensual).
 7. Delta vs corrida E2E del predecesor (R2.3: par pre/post).
@@ -138,15 +146,15 @@ Cadena leída en tres símbolos, en orden inverso al veredicto:
 | AC-E1 | P2 | El acta refleja `reviewer_reports` (no vacío cuando los 4 revisores corrieron) | `acta_revision.json` → `reviewer_reports` |
 | AC-E2 | P2 | Recomendación BLOQUEAR de un revisor → ZIP no emitido (una sola ruta) | `main.py` (grep) + corrida/test |
 | AC-E3 | P2 | Never-block: fallo de un revisor no rompe la corrida | test output |
-| AC-F1 | P3 | `EMPTY_DELIVERY_TEMPLATE` dispara en régimen ZIP-only real | `revision_assets.json` → `finding_type` |
-| AC-F2 | P3 | `evidence_tier` del acta == MANIFEST en corrida real | `acta_revision.json` vs `MANIFEST.json` |
-| AC-F3 | P3 | Barreda `asset_path` verde (whitelist test-only) | test output |
-| AC-F4 | P3 | En `B_PLUS` el `reason` del primer piso describe por qué el veredicto es condicional | `acta_revision.json` → `first_floor_rule.reason` |
-| AC-F5 | P3 (solo Q5=a) | Con GA4+GSC disponibles el pipeline produce `evidence_tier: A` (hoy imposible: banderas fijas en `False`) | `financial_scenarios_*.json` → `breakdown.evidence_tier` |
+| AC-F1 | P3-A | `EMPTY_DELIVERY_TEMPLATE` dispara en régimen ZIP-only real | `revision_assets.json` → `finding_type` |
+| AC-F2 | P3-A | `evidence_tier` del acta == MANIFEST en corrida real | `acta_revision.json` vs `MANIFEST.json` |
+| AC-F3 | P3-B | Barreda `asset_path` verde (whitelist test-only) | test output |
+| AC-F4 | P3-A | En `B_PLUS` el `reason` del primer piso describe por qué el veredicto es condicional | `acta_revision.json` → `first_floor_rule.reason` |
+| AC-F5 | P3-B (solo Q5=a) | Con GA4+GSC disponibles el pipeline produce `evidence_tier: A` (hoy imposible: banderas fijas en `False`) | `financial_scenarios_*.json` → `breakdown.evidence_tier` |
 | AC-O0 | P4 | El informe declara el techo de tier de la corrida y las banderas efectivas | `evidence/FASE-P4/informe-observacion.md` → §Techo de tier |
 | AC-O1 | P4 | Corrida Tier A real produce acta + veredicto (provisionalidad registrada) | `acta_revision.json` → `verdict` + `evidence_tier` |
 | AC-O2 | P4 | Informe de observación con los 9 puntos de §5 | `evidence/FASE-P4/informe-observacion.md` |
-| AC-V1 | RELEASE | Certificación formal de todos los ACs contra artefacto real (patrón VERIFY) | matriz en `10-analisis` |
+| AC-V1 | RELEASE (o FASE-VERIFY si activa) | Certificación formal de todos los ACs contra artefacto real (patrón VERIFY) | matriz en `10-analisis` |
 
 > **Verificación NR7 (mutación)**: los AC de detección o bloqueo (AC-E2, AC-F1, AC-F3, AC-F5) no se cierran solo con el test verde — la evidencia guarda el **par de salidas**: test con el guard/detección activo (verde) y con él desactivado (rojo). Sin el segundo lado, el AC queda ⚠️ y no ✅ (R2.4 + L-VUP-5).
 
@@ -177,7 +185,7 @@ Cadena leída en tres símbolos, en orden inverso al veredicto:
 
 ## 8. Versión
 
-Objetivo **4.77.0** (confirmar en P1). Fuente única: `VERSION.yaml`. Nunca hardcodear versiones en código — incluye `acta_writer.py` (fix P3).
+Objetivo **4.77.0** (confirmar en P1). Fuente única: `VERSION.yaml`. Nunca hardcodear versiones en código — incluye `acta_writer.py` (fix P3-B). Tags: `v4.76.0` creado 2026-09-14 sobre `3bdc14e` (push pendiente); `v4.77.0` se crea al cerrar RELEASE — la omisión del anterior es la lección.
 
 ---
 

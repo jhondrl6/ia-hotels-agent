@@ -8,12 +8,14 @@
 
 | # | Fase | Estado | Fecha inicio | Fecha cierre | Iteraciones (ids + tool_use, corte = commit) | Notas |
 |---|------|--------|-------------|-------------|-------------|-------|
-| 0 | Precondición: FASE-RELEASE-4.76.0 (predecesor) | ✅ Completada | 2026-09-11 | 2026-09-11 | n/a (predecesor, sin medición) | v4.76.0 publicada (local, sin push) + archivado R2.5 en `bd2bf57` — puerta de P1 abierta |
-| 1 | FASE-P1 | ⬜ Pendiente | — | — | — | Decisión Q1–Q6 + contrato (consecuencia del bloqueo + tri-estado) + ACs finales |
-| 2 | FASE-P2 | ⬜ Pendiente | — | — | — | Refactor de ordenamiento (solo si Q1=sí; opción O1/O2/O3) |
-| 3 | FASE-P3 | ⬜ Pendiente | — | — | — | Fixes: AC8 + tier acta + barreda D-V.1 + versión acta + AC-F4 (`B_PLUS`) + AC-F5 si Q5=a |
-| 4 | FASE-P4 | ⬜ Pendiente | — | — | — | Corrida observación + informe (T3a datos + T3b analítica; techo de tier según Q5) |
-| 5 | FASE-RELEASE-4.77.0 | ⬜ Pendiente | — | — | — | Cierre + archivado R2.5 |
+| 0 | Precondición: FASE-RELEASE-4.76.0 (predecesor) | ✅ Completada | 2026-09-11 | 2026-09-11 | n/a (predecesor, sin medición) | v4.76.0 publicada (en `origin/master` como `3bdc14e`; `bd2bf57` es su duplicado pre-rebase) + archivado R2.5 — puerta de P1 abierta. Tag `v4.76.0` creado 2026-09-14 (push pendiente) |
+| 1 | FASE-P1 | ⬜ Pendiente | — | — | — | Decisión Q1–Q6 + contrato (consecuencia del bloqueo + tri-estado) + ACs finales + cierre FASE-VERIFY + prompt P2 si Q1=sí |
+| 2 | FASE-P2 | ⬜ Pendiente | — | — | — | Refactor de ordenamiento (solo si Q1=sí; opción O1/O2/O3). Prompt se crea en P1 |
+| 3a | FASE-P3-A | ⬜ Pendiente | — | — | — | Detección y fidelidad: AC8 + tier acta + AC-F4 (`B_PLUS`) |
+| 3b | FASE-P3-B | ⬜ Pendiente | — | — | — | Cableado y test: barreda D-V.1 + versión acta + AC-F5 solo si Q5=a |
+| 4 | FASE-P4 | ⬜ Pendiente | — | — | — | Corrida observación + informe (T3a datos + T3b analítica; techo de tier según Q5) — **opcional**: véase cierre válido sin P4 en `dependencias-fases.md` |
+| — | FASE-VERIFY | ⬜ Condicionada | — | — | — | Solo si los 3 criterios §4.6 se cumplen al cerrar P1; si no, la sustituye AC-V1 de RELEASE |
+| 5 | FASE-RELEASE-4.77.0 | ⬜ Pendiente | — | — | — | Cierre + tag + archivado R2.5 |
 
 ---
 
@@ -21,12 +23,12 @@
 
 ### Precondición — FASE-RELEASE-4.76.0 del predecesor
 
-- [x] VERSION.yaml = 4.76.0 y `version_consistency_checker.py` pasa (hook pre-commit `bd2bf57`, 5/5 en verde)
+- [x] VERSION.yaml = 4.76.0 y `version_consistency_checker.py` pasa (hook pre-commit `3bdc14e`, 5/5 en verde)
 - [x] Plan TRIBUNAL-OFFLINE-2026-09-09 archivado en `Archives/` (R2.5, 12 renombres, `--quick` 8/8 post-archivado)
 - [x] Endosos D-V.1 (whitelist barreda) y D-V.3 (executor) ejecutados o explícitamente reasignados a este plan
   - D-V.3 **ejecutado**: executor v2.20.0 → v2.21.0 con R2.6 y R2.7. Ninguna de las dos tiene verificador
     mecánico todavía → esa parte queda **reasignada a P1** (ver §Deuda de proceso).
-  - D-V.1 **reasignado**: la whitelist del emisor barreda es FASE-P3; `test_barreda_un_solo_emisor_de_la_clave`
+  - D-V.1 **reasignado**: la whitelist del emisor barreda es FASE-P3-B; `test_barreda_un_solo_emisor_de_la_clave`
     sigue en rojo y v4.76.0 se publicó así, con la limitación declarada.
 
 ### FASE-P1 — Decisión y contrato
@@ -40,8 +42,11 @@
 - [ ] `evidence/FASE-P1/decision-enforcement.md` con contrato + rationale (formato DA-*), incluidas las secciones **"Consecuencia del bloqueo"** y **"Tri-estado de revisores"** (AC-D1)
 - [ ] ACs finales con artefacto + clave (R2.4) fijados en `01-plan-maestro.md` §6, y ningún AC de detección/bloqueo sin su verificación NR7 escrita
 - [ ] Decisión de §Deuda de proceso: qué ítems entran al alcance de este plan y cuáles quedan como límite declarado
+- [ ] **Decisión FASE-VERIFY cerrada** en `dependencias-fases.md` (§4.6: los 3 criterios sobre las fases que resulten de Q1/Q4/Q5; si no activa, AC-V1 queda como sustituto declarado)
+- [ ] Si Q1=sí: **creado `05-prompt-inicio-sesion-fase-P2.md`** con la opción elegida (el diferimiento del prompt está declarado en `dependencias-fases.md` §Estado de la Etapa 1; P1 lo levanta)
+- [ ] Si Q5=(c) **o T3a no se cierra por Q4**: P4 diferida con la mecánica de §Cierre válido sin P4 (`dependencias-fases.md`) — README a 5 sesiones, decisión registrada, nada en espera
 - [ ] `06-checklist` + `dependencias-fases` actualizados con lo decidido
-- [ ] `10-analisis-post-implementacion.md` y `09-documentacion-post-proyecto.md` creados (el executor los exige desde la concepción; no existían)
+- [x] `10-analisis-post-implementacion.md` y `09-documentacion-post-proyecto.md` creados — **la estructura la creó la sesión de ajuste 2026-09-14** (eran deudores de la Etapa 1); P1 los rellena en su Post-Ejecución
 - [ ] `log_phase_completion.py --fase FASE-P1` ejecutado (SIN `--release`)
 - [ ] `run_all_validations.py --quick` TOTAL PASS
 - [ ] **Iteraciones de P1 medidas y escritas** (`ids` + `tool_use`, corte = commit) — bloquea el ✅ (L-R.1)
@@ -64,19 +69,27 @@
 - [ ] **Iteraciones de P2 medidas y escritas** — bloquea el ✅ (L-R.1)
 - [ ] `run_all_validations.py --quick` TOTAL PASS
 
-### FASE-P3 — Fixes localizados
+### FASE-P3-A — Detección y fidelidad del acta
 
 - [ ] AC8: `EMPTY_DELIVERY_TEMPLATE` dispara en régimen ZIP-only real (AC-F1, sonda re-ejecutable)
 - [ ] **NR7 sobre AC-F1**: fix desactivado → el test contra el layout ZIP-only se pone rojo (evidencia con el par de salidas)
 - [ ] `evidence_tier` del acta == MANIFEST en corrida real (AC-F2)
 - [ ] `first_floor_rule.reason` coherente con el veredicto en `B_PLUS` (AC-F4)
-- [ ] Si Q5=(a): banderas de analítica propagadas al `HotelFinancialData` del bloque FASE-K, con hoist verificado y test propio del tier con y sin analítica (AC-F5; advertencia L-T2C.2 sobre `except` anchos en `main.py`)
+- [ ] **Iteraciones de P3-A medidas y escritas** — bloquea el ✅ (L-R.1)
+- [ ] `run_all_validations.py --quick` TOTAL PASS
+
+### FASE-P3-B — Cableado y test
+
 - [ ] Whitelist barreda test-only (AC-F3, D-V.1)
 - [ ] `acta_writer.py` lee versión de `VERSION.yaml`
-- [ ] **Iteraciones de P3 medidas y escritas** — bloquea el ✅ (L-R.1)
+- [ ] Si Q5=(a): banderas de analítica propagadas al `HotelFinancialData` del bloque FASE-K, con hoist verificado y test propio del tier con y sin analítica (AC-F5; advertencia L-T2C.2 sobre `except` anchos en `main.py`)
+- [ ] Si Q5≠(a): AC-F5 **no** se ejecuta — queda registrado en esta sección con la decisión de Q5 como causa (no se borra la línea: es el rastro del condicional)
+- [ ] **Iteraciones de P3-B medidas y escritas** — bloquea el ✅ (L-R.1)
 - [ ] `run_all_validations.py --quick` TOTAL PASS
 
 ### FASE-P4 — Corrida de observación
+
+> **Precondición abierta o fase diferida**: si T3a no llega a cerrarse con proveedor y fuente, P4 **no queda "en espera"** — aplica §Cierre válido sin P4 de `dependencias-fases.md` (diferimiento registrado, README a 5 sesiones, RELEASE ejecuta sin ella).
 
 - [ ] Datos operativos reales recibidos con fuente declarada (T3a)
 - [ ] Techo de tier de la corrida fijado por Q5: T3b cumplido (Tier A observable) **o** corrida declarada en `B_PLUS` con el límite escrito (AC-O0)
@@ -93,8 +106,9 @@
 
 ### FASE-RELEASE-4.77.0 — Cierre
 
-- [ ] ACs certificados contra artefacto real (patrón VERIFY, AC-V1), con NR7 cumplido en cada AC de detección/bloqueo
+- [ ] ACs certificados contra artefacto real: **FASE-VERIFY propia si P1 la activó; si no, AC-V1 dentro de RELEASE** (patrón VERIFY, con NR7 cumplido en cada AC de detección/bloqueo) — qué vía se usó queda declarado aquí, con referencia a la decisión en `dependencias-fases.md`
 - [ ] VERSION.yaml → 4.77.0 + `sync_versions.py` + CHANGELOG + GUIA_TECNICA
+- [ ] **Tag anotado `v4.77.0` creado al cerrar** (el predecesor cerró 4.76.0 sin tag; ese déficit quedó saneado el 2026-09-14 — no repetir la omisión) y comprobar que `v4.76.0` esté también empujado junto con master
 - [ ] `run_all_validations.py --quick` TOTAL PASS
 - [ ] **Iteraciones de RELEASE medidas y escritas** — bloquea el ✅ (L-R.1)
 - [ ] `log_phase_completion.py --fase FASE-RELEASE-4.77.0 --release 4.77.0`
@@ -190,8 +204,8 @@ decir cuáles entran al alcance de este plan y cuáles se documentan como límit
 
 ## Cierre del plan
 
-- [ ] Todas las fases ✅
-- [ ] ACs finales certificados
+- [ ] Todas las fases ✅ — P4 admitida como **diferida** solo con la decisión registrada según §Cierre válido sin P4 (`dependencias-fases.md`); "en espera" no cierra
+- [ ] ACs finales certificados (vía FASE-VERIFY o AC-V1 en RELEASE, según la decisión de P1)
 - [ ] NR1–NR8 sin violaciones (NR7 con el par de salidas verde/rojo en evidencia; NR8 con los tres tests por estado)
 - [ ] Todas las fases cerradas con sus iteraciones medidas (ninguna celda en `—`)
 - [ ] `10-analisis-post-implementacion.md` completo (lecciones, decisiones, métricas) con la tabla "Lecciones capitalizadas de planes anteriores" incluyendo el Paso 0 horizontal

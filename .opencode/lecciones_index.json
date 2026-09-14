@@ -2,10 +2,10 @@
   "_generated_by": "scripts/build_lesson_index.py",
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
-    "archivos_analysis_escaneados": 12,
+    "archivos_analysis_escaneados": 13,
     "archivos_contexto_escaneados": 35,
-    "archivos_md_escaneados": 354,
-    "ids_con_definicion": 255,
+    "archivos_md_escaneados": 360,
+    "ids_con_definicion": 259,
     "ids_citados_sin_definicion": 38,
     "familias_incluidas": [
       "L",
@@ -22,6 +22,48 @@
     ]
   },
   "lecciones": [
+    {
+      "id": "D-AJUST.1",
+      "familia": "D",
+      "enunciado": "División de FASE-P3 en P3-A / P3-B (2026-09-14)",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "D-AJUST.1 — División de FASE-P3 en P3-A / P3-B (2026-09-14)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "D-AJUST.2",
+      "familia": "D",
+      "enunciado": "FASE-VERIFY condicionada, no decidida en la preparación (2026-09-14)",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "D-AJUST.2 — FASE-VERIFY condicionada, no decidida en la preparación (2026-09-14)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "D-AJUST.3",
+      "familia": "D",
+      "enunciado": "Escenario de cierre sin P4 (2026-09-14)",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "D-AJUST.3 — Escenario de cierre sin P4 (2026-09-14)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
     {
       "id": "D-NC1",
       "familia": "D",
@@ -301,7 +343,7 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 14,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -331,7 +373,7 @@
       "seccion": "Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 26,
+      "total_citas": 32,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -1030,6 +1072,20 @@
       "redefiniciones": []
     },
     {
+      "id": "L-AJUST.1",
+      "familia": "L",
+      "enunciado": "Un plan citaba como viva (bd2bf57, \"local sin push\", \"sin tag\") una verdad que un rebase y un push posteriores invalidaron — Las citas de commit se escribieron en presente en la concepción y ningún check las contra-verifica al re-verificar el plan",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "L-B1",
       "familia": "L",
       "enunciado": "Un candado que nace con la forma equivocada falla en rojo aunque el código esté bien *(FASE-B)*",
@@ -1083,7 +1139,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 5,
+      "total_citas": 8,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -1849,7 +1905,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 13,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -1907,7 +1963,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 22,
+      "total_citas": 24,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -1954,7 +2010,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 17,
+      "total_citas": 24,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -1988,7 +2044,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -2005,7 +2061,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 17,
+      "total_citas": 21,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2265,7 +2321,7 @@
       "seccion": "FASE-T2-C (2026-09-10)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 5,
+      "total_citas": 7,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2295,7 +2351,7 @@
       "seccion": "FASE-T2-C (2026-09-10)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 12,
+      "total_citas": 13,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2368,7 +2424,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2440,7 +2496,7 @@
       "seccion": "FASE-T4-B (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 12,
       "planes_que_lo_citan": [
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -2601,7 +2657,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2618,7 +2674,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 11,
       "planes_que_lo_citan": [
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -2649,10 +2705,10 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 13,
       "planes_que_lo_citan": [
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -2666,7 +2722,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 16,
       "planes_que_lo_citan": [
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -2727,7 +2783,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2744,10 +2800,10 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 7,
       "planes_que_lo_citan": [
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -2791,10 +2847,10 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 13,
       "planes_que_lo_citan": [
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -2836,7 +2892,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 5,
+      "total_citas": 6,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2852,7 +2908,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
+      "total_citas": 9,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2869,7 +2925,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
+      "total_citas": 8,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
