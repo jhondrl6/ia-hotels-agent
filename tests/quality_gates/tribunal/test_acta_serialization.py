@@ -107,12 +107,19 @@ def test_acta_md_has_six_clauses(acta_output):
 
 
 def test_acta_md_references_source_artifacts(acta_output):
-    """El MD referencia los artefactos fuente de cada cláusula."""
+    """El MD referencia los artefactos fuente que el Juez efectivamente leyó.
+
+    FASE-P2 cierra el seguimiento que este plan asignaba a P2: la línea del primer
+    piso ya no es un literal del writer, sale de `first_floor_rule.source_artifact`.
+    Con AC-F2 la fuente real del tier es `financial_scenarios_*.json`; MANIFEST es
+    solo fallback, y por tanto ya no puede aparecer como si fuera la fuente.
+    """
     md_path = acta_output["md_path"]
     content = md_path.read_text(encoding="utf-8")
 
     assert "gate_report" in content
-    assert "MANIFEST.json" in content
+    assert "financial_scenarios" in content
+    assert acta_output["acta"]["first_floor_rule"]["source_artifact"].startswith("financial_scenarios")
 
 
 def test_acta_json_roundtrip(acta_output):

@@ -189,7 +189,12 @@ class AssetReviewer:
         return None
 
     def _resolve_delivery_zip(self) -> Optional[Path]:
-        """Resuelve el ``.zip`` de entrega más reciente (régimen ZIP-only, AC-F1)."""
+        """Resuelve el ``.zip`` de entrega más reciente (régimen ZIP-only, AC-F1).
+
+        Incluye la cuarentena ``.zip.tmp`` (FASE-P2 / O1): los revisores corren
+        mientras el paquete aún no tiene nombre definitivo, y un lector que solo
+        mira ``*.zip`` reportaría como ausente el artefacto que sí está en disco.
+        """
         if self._resolved_delivery_zip is not None:
             return self._resolved_delivery_zip
 
@@ -197,7 +202,10 @@ class AssetReviewer:
             return None
 
         zips = sorted(
-            self.deliveries_dir.glob("*.zip"),
+            [
+                p for p in self.deliveries_dir.iterdir()
+                if p.is_file() and (p.suffix == ".zip" or p.name.endswith(".zip.tmp"))
+            ],
             key=lambda p: p.stat().st_mtime if p.exists() else 0,
             reverse=True,
         )

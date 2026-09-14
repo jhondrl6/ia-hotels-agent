@@ -1,0 +1,86 @@
+# NR7 mutation check — AC-E0-b
+# Mutacion: Devolver al writer el guard que omite la seccion cuando la lista viene vacia
+# Archivo: modules/quality_gates/tribunal/acta_writer.py
+# Tests dirigidos: 1
+#
+# VERDE (sin mutar): rc=0 — esperado 0
+# ROJO (mutado):     rc=1 — esperado != 0 → OK, el test puede fallar
+
+======================================================================
+=== SALIDA VERDE (rc=0) ===
+======================================================================
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 1 item
+
+tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py::test_la_seccion_de_revisores_nunca_se_omite PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 1 passed, 8 warnings in 0.95s ========================
+
+
+======================================================================
+=== SALIDA ROJA — MUTADO (rc=1) ===
+======================================================================
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 1 item
+
+tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py::test_la_seccion_de_revisores_nunca_se_omite FAILED [100%]
+
+================================== FAILURES ===================================
+E   assert '## Reportes de Revisores' in '# Acta de Revisión — Tribunal de Certificación\n\n**Hotel**: testhotel\n**Fecha**: 2026-09-14T17:25:53.901148\n**Veredicto**: ⚠️ APROBADO-CONDICIONAL-PENDING-ONBOARDING\n**Evidence Tier**: C\n**Cláusulas evaluadas**: 6\n\n## Regla de Primer Piso\n\n**Aplicada**: Sí\n**Artefacto fuente**: `sin fuente de tier: fallback declarado "C"`\n**Razón**: evidence_tier C → máximo condicional\n\n## Cláusulas P6 Evaluadas\n\n### P6.1: Critical Recall (Diagnóstico)\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `gate_report_*.json`\n- **Finding**: gate_report no disponible\n\n### P6.2: Alineación de Promesas (NL)\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `revision_alineacion.json (T4-A)`\n- **Finding**: Requiere Bot 2 (alignment_reviewer) — no implementado en T1\n\n### P6.3: Completitud de Assets\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `asset_generation_report.json`\n- **Finding**: asset_generation_report no disponible\n\n### P6.4: Cobertura Propuesta→Asset\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `proposal_asset_matrix.json`\n- **Finding**: proposal_asset_matrix no disponible\n\n### P6.5: Honestidad Comercial (NL) — reservada Bot 4\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `None`\n- **Finding**: Reservada para Bot 4 (honestidad NL) — D-T1.3 opción a\n\n### P6.6: Coherencia + Contradicciones\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `gate_report_*.json`\n- **Finding**: gate_report no disponible\n\n## Acciones correctivas\n\nNinguna: el acta no declaró hallazgos bloqueantes.\n\n## Enforcement\n\n- **Knob**: `desconocido`\n- **Bloqueo activo**: Desconocido\n- **Suprimido por el operador**: No\n\n---\n\n*Generado por TribunalJudge v4.76.0 — 2026-09-14 17:25*'
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_p2_veredicto_enriquecido.py:215: assert '## Reportes de Revisores' in '# Acta de Revisión — Tribunal de Certificación\n\n**Hotel**: testhotel\n**Fecha**: 2026-09-14T17:25:53.901148\n**Veredicto**: ⚠️ APROBADO-CONDICIONAL-PENDING-ONBOARDING\n**Evidence Tier**: C\n**Cláusulas evaluadas**: 6\n\n## Regla de Primer Piso\n\n**Aplicada**: Sí\n**Artefacto fuente**: `sin fuente de tier: fallback declarado "C"`\n**Razón**: evidence_tier C → máximo condicional\n\n## Cláusulas P6 Evaluadas\n\n### P6.1: Critical Recall (Diagnóstico)\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `gate_report_*.json`\n- **Finding**: gate_report no disponible\n\n### P6.2: Alineación de Promesas (NL)\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `revision_alineacion.json (T4-A)`\n- **Finding**: Requiere Bot 2 (alignment_reviewer) — no implementado en T1\n\n### P6.3: Completitud de Assets\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `asset_generation_report.json`\n- **Finding**: asset_generation_report no disponible\n\n### P6.4: Cobertura Propuesta→Asset\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `proposal_asset_matrix.json`\n- **Finding**: proposal_asset_matrix no disponible\n\n### P6.5: Honestidad Comercial (NL) — reservada Bot 4\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `None`\n- **Finding**: Reservada para Bot 4 (honestidad NL) — D-T1.3 opción a\n\n### P6.6: Coherencia + Contradicciones\n\n- **Status**: ⬜ NOT_EVALUABLE\n- **Artefacto fuente**: `gate_report_*.json`\n- **Finding**: gate_report no disponible\n\n## Acciones correctivas\n\nNinguna: el acta no declaró hallazgos bloqueantes.\n\n## Enforcement\n\n- **Knob**: `desconocido`\n- **Bloqueo activo**: Desconocido\n- **Suprimido por el operador**: No\n\n---\n\n*Generado por TribunalJudge v4.76.0 — 2026-09-14 17:25*'
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py::test_la_seccion_de_revisores_nunca_se_omite
+======================== 1 failed, 8 warnings in 0.97s ========================
+

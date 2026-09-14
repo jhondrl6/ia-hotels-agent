@@ -9,6 +9,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+from .outcome import EXPECTED_REVIEWERS, ReviewerStatus
+
 VERSION_FILE = Path(__file__).resolve().parents[3] / "VERSION.yaml"
 
 VERSION_NO_DISPONIBLE = "version-no-disponible"
@@ -89,7 +91,7 @@ class ActaWriter:
                 f"## Regla de Primer Piso",
                 f"",
                 f"**Aplicada**: Sí",
-                f"**Artefacto fuente**: `MANIFEST.json` (evidence_tier)",
+                f"**Artefacto fuente**: `{first_floor.get('source_artifact') or 'no informado por el Juez'}`",
                 f"**Razón**: {first_floor.get('reason', 'N/A')}",
                 f"",
             ])
@@ -130,15 +132,9 @@ class ActaWriter:
                 f"",
             ])
 
-        reviewer_reports = acta.get("reviewer_reports", [])
-        if reviewer_reports:
-            lines.extend([
-                f"## Reportes de Revisores",
-                f"",
-            ])
-            for report in reviewer_reports:
-                lines.append(f"- `{report}`")
-            lines.append(f"")
+        lines.extend(self._render_reviewer_reports(acta.get("reviewer_reports") or []))
+        lines.extend(self._render_corrective_actions(acta.get("corrective_actions") or []))
+        lines.extend(self._render_enforcement(acta.get("enforcement")))
 
         lines.extend([
             f"---",
@@ -148,3 +144,77 @@ class ActaWriter:
 
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(lines))
+
+    _STATUS_LABELS = {
+        "OK_NO_FINDINGS": "✅ sin hallazgos",
+        "OK_WITH_FINDINGS": "⚠️ con hallazgos",
+        "ARTIFACT_MISSING": "⬜ artefacto ausente",
+        "READER_FAILED": "🔴 lector fallido",
+        "NOT_RUN": "🚫 no corrió",
+    }
+
+    def _render_reviewer_reports(self, reviewer_reports: list) -> list:
+        """Sección `Reportes de Revisores`: **siempre**, una fila por Bot (AC-E0).
+
+        Omitirla cuando la lista viene vacía es justo lo que NR8 prohíbe: en el MD
+        «no corrieron», «sin hallazgos» y «fallaron» quedaban indistinguibles.
+        """
+        by_reviewer = {
+            r.get("reviewer"): r for r in reviewer_reports if isinstance(r, dict)
+        }
+        expected = {spec.reviewer for spec in EXPECTED_REVIEWERS}
+        ordered = [spec.reviewer for spec in EXPECTED_REVIEWERS]
+        ordered += [r for r in by_reviewer if r not in expected]
+
+        lines = [
+            f"## Reportes de Revisores",
+            f"",
+            f"| Bot | Estado | Hallazgos | CRITICAL | Recomendación | Informe |",
+            f"|-----|--------|-----------|----------|---------------|---------|",
+        ]
+        for reviewer in ordered:
+            report = by_reviewer.get(reviewer) or {}
+            status = report.get("status") or ReviewerStatus.NOT_RUN.value
+            lines.append(
+                f"| {reviewer} "
+                f"| {self._STATUS_LABELS.get(status, status)} "
+                f"| {report.get('findings_count', 0)} "
+                f"| {report.get('critical_count', 0)} "
+                f"| {report.get('recommendation') or 'N/A'} "
+                f"| {report.get('report_path') or '—'} |"
+            )
+        lines.append(f"")
+        return lines
+
+    def _render_corrective_actions(self, corrective_actions: list) -> list:
+        """Sección `Acciones correctivas`: qué hace el humano ante el bloqueo (§3.2)."""
+        lines = [f"## Acciones correctivas", f""]
+        if not corrective_actions:
+            lines.extend([f"Ninguna: el acta no declaró hallazgos bloqueantes.", f""])
+            return lines
+        for action in corrective_actions:
+            if not isinstance(action, dict):
+                continue
+            lines.extend([
+                f"- **[{action.get('severity', '?')}] {action.get('finding_type', '?')}** "
+                f"— dueño: `{action.get('owner', '?')}`",
+                f"  - Artefacto: `{action.get('artifact', 'N/A')}`",
+                f"  - Instrucción: {action.get('instruction', 'N/A')}",
+            ])
+        lines.append(f"")
+        return lines
+
+    def _render_enforcement(self, enforcement: Optional[dict]) -> list:
+        """Sección `Enforcement`: el acta declara si el operador apagó el bloqueo (Q7)."""
+        state = enforcement if isinstance(enforcement, dict) else {}
+        enabled = state.get("enabled")
+        suppressed = state.get("suppressed_by_operator")
+        return [
+            f"## Enforcement",
+            f"",
+            f"- **Knob**: `{state.get('blocking_env', 'desconocido')}`",
+            f"- **Bloqueo activo**: {'Sí' if enabled else 'No' if enabled is False else 'Desconocido'}",
+            f"- **Suprimido por el operador**: "
+            f"{'SÍ — el ZIP se publicó sin aplicar el veredicto' if suppressed else 'No'}",
+            f"",
+        ]

@@ -3222,56 +3222,50 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         import traceback
         traceback.print_exc()
 
-    # FASE-T1: Tribunal Judge — Certificación P6 + P7
-    print("\n📍 FASE-T1: Tribunal Judge (Certificación)")
+    # FASE-T1: Tribunal Judge — primera pasada (certificación P6 + P7)
+    # FASE-P2 (O1-cuarentena): aquí los 4 Bots aún no han leído nada, así que el
+    # acta nace con los cuatro en NOT_RUN y el veredicto máximo ya es imposible.
+    # La decisión que gatea el ZIP se toma después, sobre el paquete en cuarentena.
+    print("\n📍 FASE-T1: Tribunal Judge (Certificación — primera pasada)")
     print("-" * 70)
 
     tribunal_acta = None
-    _tribunal_blocks = False
+    tribunal_judge = None
+    deliveries_dir = output_dir / "deliveries"
     try:
-        from modules.quality_gates.tribunal import TribunalJudge, blocks_delivery_zip
-        from modules.quality_gates.tribunal.acta_writer import ActaWriter
+        from modules.quality_gates.tribunal import TribunalJudge
 
-        deliveries_dir = output_dir / "deliveries"
-        judge = TribunalJudge(
+        tribunal_judge = TribunalJudge(
             v4_audit_dir=v4_audit_dir,
             deliveries_dir=deliveries_dir,
             hotel_id=hotel_id,
         )
-        tribunal_acta = judge.evaluate()
-        _tribunal_blocks = blocks_delivery_zip(tribunal_acta)
-
-        writer = ActaWriter(v4_audit_dir)
-        acta_json_path, acta_md_path = writer.write(tribunal_acta)
-        print(f"   Verdict: {tribunal_acta['verdict']}")
+        tribunal_acta = tribunal_judge.evaluate()
+        print(f"   Verdict (pre-revision): {tribunal_acta['verdict']}")
         print(f"   Evidence Tier: {tribunal_acta['evidence_tier']}")
-        print(f"   📄 Acta JSON: {acta_json_path}")
-        print(f"   📄 Acta MD: {acta_md_path}")
     except Exception as e:
         print(f"   [WARN] Tribunal judge failed (never-block): {e}")
         tribunal_acta = None
-        _tribunal_blocks = False
+        tribunal_judge = None
 
-    # FASE 7: Delivery Packaging - Automated ZIP creation
-    # SKIP ZIP if quality report is FAIL (blocking) or tribunal verdict blocks delivery
+    # FASE 7: Delivery Packaging — escritura en CUARENTENA (.zip.tmp)
+    # El nombre definitivo no existe todavía: lo otorga publish() después del
+    # veredicto enriquecido. SKIP total si los gates ya abortaron el paquete.
     delivery_zip_path = None  # Pre-initialize for safety
     delivery_error = None  # NF-3: Preserve packaging error for report
+    quarantine_tmp_path = None
 
-    if (delivery_quality_report and delivery_quality_report.status == "FAIL") or _claim_escalated or _tribunal_blocks:
+    if (delivery_quality_report and delivery_quality_report.status == "FAIL") or _claim_escalated:
         if _claim_escalated:
             print("\n   ⛔ ZIP ABORTED: CG-CLAIM-VS-EVIDENCE persistente (BLOCKED real por self-healing).")
-        elif _tribunal_blocks:
-            print(f"\n   ⛔ ZIP ABORTED: Tribunal verdict is {tribunal_acta['verdict']}.")
-            print(f"   Review: {v4_audit_dir / 'acta_revision.json'}")
         else:
             print(f"\n   ⛔ ZIP ABORTED: Delivery quality report status is FAIL.")
         print(f"   Review: {quality_report_path}")
         delivery_zip_path = None
     else:
-        print("\n📍 FASE 7: Delivery Packaging (Automated)")
+        print("\n📍 FASE 7: Delivery Packaging (Automated — cuarentena)")
         print("-" * 70)
 
-        delivery_zip_path = None
         try:
             from modules.delivery.delivery_packager import DeliveryPackager
 
@@ -3280,7 +3274,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
 
             packager = DeliveryPackager(
                 base_output_dir=str(output_dir),
-                deliveries_dir=str(output_dir / "deliveries")
+                deliveries_dir=str(deliveries_dir)
             )
 
             # FASE-3 NP6: Set quality metadata for MANIFEST enrichment
@@ -3319,7 +3313,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             if audit_result and hasattr(audit_result, 'gbp') and audit_result.gbp:
                 _geo_score = audit_result.gbp.geo_score
 
-            delivery_zip_path = packager.package(
+            quarantine_tmp_path = packager.write(
                 hotel_id=hotel_id,
                 output_dir=asset_output_dir,
                 diagnostic_path=diag_path,
@@ -3330,21 +3324,23 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 geo_assets=_geo_assets,
             )
 
-            print(f"   [OK] Delivery package created: {delivery_zip_path}")
+            print(f"   [OK] Paquete en cuarentena: {quarantine_tmp_path}")
 
         except Exception as e:
             print(f"   [ERROR] Delivery packaging FAILED: {e}")
             print(f"   [ERROR] Content is ready but ZIP delivery could not be created.")
             print(f"   [ERROR] Review deliveries/ directory for orphaned artifacts.")
+            quarantine_tmp_path = None
             delivery_zip_path = None
             delivery_error = str(e)  # NF-3: Preserve for report final
 
     # FASE-T2/T4: Tribunal Reviewers (4 Bots) — Q1/Vía A, cableado FASE-E2E.
-    # Tras el packaging: los revisores de assets/honestidad leen MANIFEST.json y
-    # ASSETS/ de la corrida actual, que solo existen después de packager.package().
+    # FASE-P2: leen el paquete YA ESCRITO en cuarentena (MANIFEST.json,
+    # IMPLEMENTATION_ORDER.md y ASSETS/ existen dentro del .zip.tmp).
     print("\n📍 FASE-T2/T4: Tribunal Reviewers (4 Bots)")
     print("-" * 70)
 
+    _reviewer_reports_written: dict = {}
     try:
         from modules.quality_gates.tribunal import (
             DiagnosisReviewer,
@@ -3354,23 +3350,90 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             LLMPromiseExtractor,
         )
 
-        _deliveries_dir = output_dir / "deliveries"
         _extractor = LLMPromiseExtractor()
 
         _reviewers = [
-            ("Bot 1 Diagnóstico", lambda: DiagnosisReviewer(v4_audit_dir).write_report()),
-            ("Bot 3 Assets", lambda: AssetReviewer(v4_audit_dir, _deliveries_dir).write_report()),
-            ("Bot 2 Alineación", lambda: AlignmentReviewer(v4_audit_dir).write_report(_extractor)),
-            ("Bot 4 Honestidad", lambda: HonestyReviewer(v4_audit_dir, _deliveries_dir).write_report(_extractor)),
+            ("Bot 1 Diagnóstico", "diagnosis_reviewer", lambda: DiagnosisReviewer(v4_audit_dir).write_report()),
+            ("Bot 3 Assets", "asset_reviewer", lambda: AssetReviewer(v4_audit_dir, deliveries_dir).write_report()),
+            ("Bot 2 Alineación", "alignment_reviewer", lambda: AlignmentReviewer(v4_audit_dir).write_report(_extractor)),
+            ("Bot 4 Honestidad", "honesty_reviewer", lambda: HonestyReviewer(v4_audit_dir, deliveries_dir).write_report(_extractor)),
         ]
-        for _name, _run in _reviewers:
+        for _name, _key, _run in _reviewers:
             try:
                 _path = _run()
+                _reviewer_reports_written[_key] = _path
                 print(f"   [OK] {_name}: {_path}")
             except Exception as e:
+                # Never-block (AC-E3): el fallo se registra como READER_FAILED.
+                _reviewer_reports_written[_key] = None
                 print(f"   [WARN] {_name} failed (never-block): {e}")
     except Exception as e:
         print(f"   [WARN] Tribunal reviewers failed (never-block): {e}")
+
+    # FASE-T1b: segunda pasada del veredicto + decisión de publicar o suprimir.
+    # La decisión gatea el rename (contrato DA-P1.4); el único predicado de entrega
+    # es blocks_delivery_zip y se consulta una sola vez (NR3).
+    if tribunal_judge is not None and tribunal_acta is not None:
+        print("\n📍 FASE-T1b: Tribunal — veredicto enriquecido y entrega")
+        print("-" * 70)
+        try:
+            from modules.quality_gates.tribunal import blocks_delivery_zip
+            from modules.quality_gates.tribunal.acta_writer import ActaWriter
+
+            _reports = tribunal_judge.collect_reviewer_reports(_reviewer_reports_written)
+            tribunal_acta = tribunal_judge.enrich(tribunal_acta, _reports)
+            _tribunal_blocks = blocks_delivery_zip(tribunal_acta)
+            _outcome = tribunal_judge.finalize(
+                tribunal_acta,
+                _reports,
+                blocks=_tribunal_blocks,
+                gate_blocking_enabled=_gate_blocking_enabled,
+            )
+
+            writer = ActaWriter(v4_audit_dir)
+            acta_json_path, acta_md_path = writer.write(tribunal_acta)
+            print(f"   Verdict: {tribunal_acta['verdict']}")
+            print(f"   Evidence Tier: {tribunal_acta['evidence_tier']}")
+            print(f"   📄 Acta JSON: {acta_json_path}")
+            print(f"   📄 Acta MD: {acta_md_path}")
+
+            if quarantine_tmp_path is None:
+                if _tribunal_blocks:
+                    print("\n   ⛔ ZIP ABORTED: Tribunal verdict is "
+                          f"{tribunal_acta['verdict']} (no se escribió paquete).")
+            elif _outcome.blocks_publish:
+                print(f"\n   ⛔ ZIP SUPPRIMIDO: Tribunal verdict is {tribunal_acta['verdict']}.")
+                print(f"   Revisión: {acta_md_path}")
+                if _outcome.corrective_actions:
+                    print(f"   Acciones correctivas ({len(_outcome.corrective_actions)}) — decide un humano:")
+                    for _action in _outcome.corrective_actions:
+                        print(f"     - [{_action.severity}] {_action.finding_type} "
+                              f"({_action.artifact}) → dueño: {_action.owner}")
+                        print(f"       {_action.instruction}")
+                print("   Sin reintento automático y sin entrega parcial (Q1b).")
+                try:
+                    packager.suppress(quarantine_tmp_path)
+                except Exception as e:
+                    delivery_error = str(e)
+                    print(f"   [ERROR] INFRAESTRUCTURA: la cuarentena no se pudo borrar: {e}")
+            else:
+                if _outcome.enforcement.suppressed_by_operator:
+                    print(f"\n   ⚠️  Enforcement apagado por el operador "
+                          f"({_outcome.enforcement.blocking_env}=false): el veredicto "
+                          f"{tribunal_acta['verdict']} NO se aplicó y el ZIP se publicó igual.")
+                delivery_zip_path = packager.publish(quarantine_tmp_path)
+                print(f"   [OK] Delivery package created: {delivery_zip_path}")
+
+        except Exception as e:
+            print(f"   [WARN] Tribunal enrichment failed (never-block): {e}")
+            if quarantine_tmp_path is not None and delivery_zip_path is None:
+                try:
+                    delivery_zip_path = packager.publish(quarantine_tmp_path)
+                    print(f"   [OK] Delivery package created: {delivery_zip_path}")
+                except Exception as pe:
+                    print(f"   [ERROR] No se pudo publicar la cuarentena: {pe}")
+                    delivery_zip_path = None
+                    delivery_error = str(pe)
 
     # FASE 10: Health Dashboard - System Health Metrics
     print("\n📍 FASE 10: Health Dashboard (System Health Monitor)")

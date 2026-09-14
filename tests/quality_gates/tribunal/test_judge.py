@@ -15,6 +15,11 @@ from modules.quality_gates.tribunal.judge import (
     VERDICT_RETURN,
     blocks_delivery_zip,
 )
+from modules.quality_gates.tribunal.outcome import (
+    EXPECTED_REVIEWERS,
+    ReviewerReport,
+    ReviewerStatus,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 FASE_I_AUDIT_DIR = (
@@ -90,6 +95,18 @@ def tmp_deliveries_dir_c(tmp_path):
     return deliveries
 
 
+def _informes_sin_hallazgos() -> list:
+    """Los 4 Bots corriendo limpios: el estado que hace falta para certificar entrega."""
+    return [
+        ReviewerReport(
+            reviewer=spec.reviewer,
+            status=ReviewerStatus.OK_NO_FINDINGS,
+            clauses=spec.clauses,
+        )
+        for spec in EXPECTED_REVIEWERS
+    ]
+
+
 def test_verdict_tier_b_is_conditional(tmp_audit_dir, tmp_deliveries_dir_b):
     """Artefacto SalenteReal (Tier B) → APROBADO-CONDICIONAL-PENDING-ONBOARDING."""
     judge = TribunalJudge(
@@ -105,14 +122,21 @@ def test_verdict_tier_b_is_conditional(tmp_audit_dir, tmp_deliveries_dir_b):
 
 
 def test_verdict_tier_a_can_be_approved(tmp_audit_dir, tmp_deliveries_dir_a):
-    """Fixture Tier A + coherence ≥ 0.8 + gates en verde → APROBADO-PARA-ENTREGA."""
+    """Fixture Tier A + gates en verde + revisores leídos → APROBADO-PARA-ENTREGA.
+
+    FASE-P2: la primera pasada ya no certifica la entrega con los 4 Bots en
+    NOT_RUN; el veredicto máximo solo existe en la segunda pasada (contrato §2.1).
+    """
     judge = TribunalJudge(
         v4_audit_dir=tmp_audit_dir,
         deliveries_dir=tmp_deliveries_dir_a,
         hotel_id="testhotel",
     )
     acta = judge.evaluate()
+    assert acta["verdict"] == VERDICT_CONDITIONAL
+    assert {r["status"] for r in acta["reviewer_reports"]} == {"NOT_RUN"}
 
+    acta = judge.enrich(acta, _informes_sin_hallazgos())
     assert acta["verdict"] == VERDICT_APPROVED
     assert acta["evidence_tier"] == "A"
     assert acta["first_floor_rule"]["applied"] is False
@@ -258,13 +282,13 @@ def test_zero_evidence_tier_a_is_not_approved(tmp_deliveries_dir_a, tmp_path):
 
 
 def test_p6_2_deferred_does_not_block_approval(tmp_audit_dir, tmp_deliveries_dir_a):
-    """P6.2 difiere a T4-A: su NOT_EVALUABLE no impide el veredicto máximo en T1."""
+    """P6.2 difiere a T4-A: su NOT_EVALUABLE no impide el veredicto máximo."""
     judge = TribunalJudge(
         v4_audit_dir=tmp_audit_dir,
         deliveries_dir=tmp_deliveries_dir_a,
         hotel_id="testhotel",
     )
-    acta = judge.evaluate()
+    acta = judge.enrich(judge.evaluate(), _informes_sin_hallazgos())
 
     assert acta["clauses"]["P6.2"]["status"] == "NOT_EVALUABLE"
     assert acta["verdict"] == VERDICT_APPROVED

@@ -40,6 +40,30 @@ class DeliveryValidationError(Exception):
     pass
 
 
+class QuarantineSuppressionError(Exception):
+    """La cuarentena no pudo borrarse: el ZIP sigue en disco.
+
+    Error de infraestructura, no éxito de la supresión (contrato §3.4).
+    """
+    pass
+
+
+QUARANTINE_SUFFIX = ".tmp"
+
+
+def quarantine_path_for(zip_path: Path) -> Path:
+    """Ruta de cuarentena del ZIP definitivo (``x.zip`` → ``x.zip.tmp``)."""
+    return zip_path.with_name(zip_path.name + QUARANTINE_SUFFIX)
+
+
+def published_path_for(tmp_zip_path: Path) -> Path:
+    """Ruta definitiva de una cuarentena (``x.zip.tmp`` → ``x.zip``)."""
+    name = Path(tmp_zip_path).name
+    if not name.endswith(QUARANTINE_SUFFIX):
+        raise ValueError(f"No es una ruta de cuarentena: {name}")
+    return Path(tmp_zip_path).with_name(name[: -len(QUARANTINE_SUFFIX)])
+
+
 # FASE-C: Import DeliveryContext for dynamic README generation
 try:
     from modules.delivery.delivery_context import DeliveryContext, DeliveryAssetEntry, DeliveryAssetState
@@ -78,6 +102,33 @@ class DeliveryPackager:
         output_dir: Optional[str] = None,
         diagnostic_path: Optional[str] = None,
         proposal_path: Optional[str] = None,
+        hotel_name: Optional[str] = None,
+        geo_score: Optional[int] = None,
+        core_assets: Optional[List[str]] = None,
+        geo_assets: Optional[List[str]] = None,
+    ) -> str:
+        """Write + publish en una sola llamada: paquete sin cuarentena.
+
+        Usar cuando ningún tribunal gatea la entrega. El flujo ``v4complete`` usa
+        ``write()`` → revisores → veredicto → ``publish()``/``suppress()``.
+        """
+        return self.publish(self.write(
+            hotel_id,
+            output_dir=output_dir,
+            diagnostic_path=diagnostic_path,
+            proposal_path=proposal_path,
+            hotel_name=hotel_name,
+            geo_score=geo_score,
+            core_assets=core_assets,
+            geo_assets=geo_assets,
+        ))
+
+    def write(
+        self,
+        hotel_id: str,
+        output_dir: Optional[str] = None,
+        diagnostic_path: Optional[str] = None,
+        proposal_path: Optional[str] = None,
         # FASE-5: Asset Responsibility parameters
         hotel_name: Optional[str] = None,
         geo_score: Optional[int] = None,
@@ -91,6 +142,11 @@ class DeliveryPackager:
         in memory first, then the ZIP is written in one atomic pass.
         This eliminates size mismatches caused by multi-write approaches.
 
+        FASE-P2 (O1-cuarentena, contrato §1.4): el archivo resultante queda en
+        ``<hotel>_<fecha>.zip.tmp`` y **no** se renombra. La decisión del tribunal
+        gatea ``publish()``; ``suppress()`` borra la cuarentena. El nombre
+        definitivo no existe hasta ese momento.
+
         Args:
             hotel_id: Hotel identifier (used to find output directory)
             output_dir: Override path to output directory (auto-detected if None)
@@ -102,7 +158,7 @@ class DeliveryPackager:
             geo_assets: FASE-5 - List of GEO asset filenames generated
 
         Returns:
-            Path to created ZIP file
+            Path to the quarantined ``.zip.tmp`` file
         """
         # ── NF-5: Single datetime per packaging run ──
         now = datetime.now()
@@ -228,7 +284,7 @@ class DeliveryPackager:
         manifest_bytes = json.dumps(manifest, indent=2, ensure_ascii=False).encode("utf-8")
 
         # Step 7: Write ZIP in a single atomic pass
-        tmp_zip_path = zip_path.with_suffix(".zip.tmp")
+        tmp_zip_path = quarantine_path_for(zip_path)
         try:
             self._create_zip_single_write(
                 tmp_zip_path, files_to_package, source_dir,
@@ -236,10 +292,6 @@ class DeliveryPackager:
                 implementation_order_bytes=impl_bytes,
                 manifest_bytes=manifest_bytes,
             )
-            # Atomic rename
-            if zip_path.exists():
-                zip_path.unlink()
-            tmp_zip_path.rename(zip_path)
         except Exception:
             # Cleanup partial ZIP on failure
             if tmp_zip_path.exists():
@@ -247,16 +299,51 @@ class DeliveryPackager:
             raise
 
         # ── FASE-D T4: Validate ZIP ↔ manifest consistency (blocking gate) ──
-        validation_errors = self._validate_zip(zip_path, manifest)
+        # FASE-P2 (O1-cuarentena): se valida el `.tmp`, no el nombre definitivo,
+        # para que un paquete inválido no exista nunca ni un instante publicado.
+        validation_errors = self._validate_zip(tmp_zip_path, manifest)
         if validation_errors:
             error_msg = "ZIP validation failed:\n" + "\n".join(f"  - {e}" for e in validation_errors)
             logger.error(f"[DeliveryPackager] {error_msg}")
-            # Delete invalid ZIP
-            if zip_path.exists():
-                zip_path.unlink()
+            # Delete invalid quarantine ZIP
+            if tmp_zip_path.exists():
+                tmp_zip_path.unlink()
             raise DeliveryValidationError(error_msg)
 
+        return str(tmp_zip_path)
+
+    def publish(self, tmp_zip_path: str | Path) -> str:
+        """Publica la cuarentena con su nombre definitivo (rename atómico).
+
+        Es el único punto donde el ZIP pasa de `.zip.tmp` a `.zip`: el tribunal
+        decide antes, y esta llamada solo ocurre si la decisión es publicar.
+        """
+        tmp = Path(tmp_zip_path)
+        zip_path = published_path_for(tmp)
+        if not tmp.exists():
+            raise DeliveryValidationError(
+                f"No hay paquete en cuarentena que publicar: {tmp}"
+            )
+        if zip_path.exists():
+            zip_path.unlink()
+        tmp.rename(zip_path)
         return str(zip_path)
+
+    def suppress(self, tmp_zip_path: str | Path) -> None:
+        """Suprime la cuarentena: el ZIP final nunca existe para el cliente.
+
+        Si el propio borrado falla se lanza ``QuarantineSuppressionError``: no puede
+        reportarse como éxito de la supresión un paquete que sigue en disco.
+        """
+        tmp = Path(tmp_zip_path)
+        if not tmp.exists():
+            return
+        try:
+            tmp.unlink()
+        except OSError as e:
+            raise QuarantineSuppressionError(
+                f"El ZIP suprimido sigue en disco: {tmp} ({e})"
+            ) from e
 
     def _collect_files(
         self,
@@ -335,12 +422,23 @@ class DeliveryPackager:
 
     # FASE-D (N16): Archivos internos excluidos del ZIP de cliente
     _GATE_REPORT_PREFIXES = ("commercial_gates_report",)
+    # FASE-P2 (medición obligatoria de la Tarea 1): el ZIP empaquetaba
+    # ASSETS/v4_audit/acta_revision.{json,md}. Bajo O1-cuarentena esos bytes se
+    # serializan ANTES de que los revisores lean el ZIP, así que publicarlos
+    # fijaría el acta pre-veredicto dentro del paquete que ese acta decide — el
+    # acto de fe circular que DA-P1.4 prohíbe. El acta vive en v4_audit/, que es
+    # la ruta que se le muestra al operador.
+    _INTERNAL_DOC_PREFIXES = ("acta_revision",)
 
     @staticmethod
     def _is_excluded_from_zip(filename: str) -> bool:
-        """Check if a file is an internal gate report that must NOT travel to client ZIP."""
+        """Check if a file is an internal artifact that must NOT travel to client ZIP."""
         name_lower = filename.lower()
-        return any(name_lower.startswith(prefix) for prefix in DeliveryPackager._GATE_REPORT_PREFIXES)
+        return any(
+            name_lower.startswith(prefix)
+            for prefix in (*DeliveryPackager._GATE_REPORT_PREFIXES,
+                           *DeliveryPackager._INTERNAL_DOC_PREFIXES)
+        )
 
     @staticmethod
     def _get_latest_run_timestamp(v4_audit_dir: Path) -> Optional[float]:

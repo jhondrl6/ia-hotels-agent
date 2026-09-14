@@ -1,7 +1,8 @@
 """TribunalJudge — Juez determinista del tribunal de certificación.
 
 Lee outputs de gates y artefactos existentes; NUNCA reimplementa lógica de gates.
-Produce un veredicto determinista sobre las 6 cláusulas P6 + regla de primer piso.
+Produce un veredicto determinista sobre las 6 cláusulas P6 + regla de primer piso,
+consumiendo los informes de los 4 revisores como DTOs tipados (contrato P1 §2).
 """
 
 import json
@@ -12,6 +13,13 @@ from pathlib import Path
 from typing import Any, Optional
 
 from .artifact_paths import FINANCIAL_SCENARIOS_PATTERN
+from .outcome import (
+    ReviewerReport,
+    TribunalOutcome,
+    build_outcome,
+    collect_reviewer_reports,
+    not_run_reports,
+)
 
 
 VERDICT_APPROVED = "APROBADO-PARA-ENTREGA"
@@ -60,24 +68,75 @@ class TribunalJudge:
         self.deliveries_dir = Path(deliveries_dir)
         self.hotel_id = hotel_id
         self._manifest_cache: Optional[dict] = None
+        self._evidence_tier_source: str = "sin lectura de tier"
 
     def evaluate(self) -> dict:
-        """Retorna el acta de revisión con veredicto determinista."""
+        """Retorna el acta de revisión con veredicto determinista.
+
+        Primera pasada: sin informes de revisor todavía, los cuatro Bots constan en
+        ``NOT_RUN`` y esa sola circunstancia ya impide ``APROBADO-PARA-ENTREGA``
+        (regla 2 de DA-P1.6: ausencia jamás es PASS).
+        """
         evidence_tier = self._read_evidence_tier()
         clauses = self._evaluate_clauses()
         first_floor = self._apply_first_floor_rule(evidence_tier)
-        verdict = self._compute_verdict(clauses, evidence_tier, first_floor)
+        reports = not_run_reports()
+        verdict = self._compute_verdict(clauses, evidence_tier, first_floor, reports)
 
         return {
             "verdict": verdict,
             "evidence_tier": evidence_tier,
             "clauses_evaluated": 6,
             "clauses": clauses,
-            "reviewer_reports": [],
+            "reviewer_reports": [r.to_dict() for r in reports],
             "first_floor_rule": first_floor,
             "timestamp": datetime.now().isoformat(),
             "hotel_id": self.hotel_id,
         }
+
+    def collect_reviewer_reports(
+        self, written: Optional[dict] = None
+    ) -> list[ReviewerReport]:
+        """Los 4 `ReviewerReport` de la corrida, leídos del disco (AC-E1).
+
+        ``written`` es el mapa revisor → ruta que el propio Bot escribió en esta
+        corrida (``None`` si reventó); sin clave significa que no corrió.
+        """
+        return collect_reviewer_reports(self.v4_audit_dir, written)
+
+    def enrich(self, acta: dict, reports: list[ReviewerReport]) -> dict:
+        """Segunda pasada del veredicto sobre el mismo acta, con los revisores.
+
+        El acta se deriva de los DTOs (fila→documento); ninguna clave del acta se
+        re-parsea para decidir (contrato §2.3).
+        """
+        acta["reviewer_reports"] = [r.to_dict() for r in reports]
+        acta["verdict"] = self._compute_verdict(
+            acta["clauses"], acta["evidence_tier"], acta["first_floor_rule"], reports
+        )
+        return acta
+
+    def finalize(
+        self,
+        acta: dict,
+        reports: list[ReviewerReport],
+        blocks: bool,
+        gate_blocking_enabled: bool = True,
+    ) -> TribunalOutcome:
+        """Cierra el acta con `enforcement` y `corrective_actions` y retorna el outcome.
+
+        `blocks` es el único predicado de entrega ya resuelto por el llamador con
+        ``blocks_delivery_zip`` (NR3): el tribunal no vuelve a consultar el veredicto.
+        """
+        outcome = build_outcome(
+            verdict=acta["verdict"],
+            blocks=blocks,
+            reports=reports,
+            clauses=acta.get("clauses", {}),
+            gate_blocking_enabled=gate_blocking_enabled,
+        )
+        acta.update(outcome.acta_fields())
+        return outcome
 
     def _resolve_manifest(self) -> Optional[dict]:
         """Resuelve MANIFEST.json por glob en deliveries_dir (más reciente)."""
@@ -112,20 +171,30 @@ class TribunalJudge:
         breakdown.evidence_tier``, escrita por main.py ANTES del bloque del Juez
         y disponible en régimen ZIP-only. MANIFEST.json (post-packaging) es solo
         fallback; si ninguno aporta tier, "C".
+
+        Además publica en ``_evidence_tier_source`` cuál de las tres vías aportó el
+        valor, para que el acta describa el mecanismo que realmente se usó.
         """
         scenarios_path = self._resolve_artifact(FINANCIAL_SCENARIOS_PATTERN)
         scenarios = self._load_json(scenarios_path)
         if scenarios is not None:
             tier = scenarios.get("breakdown", {}).get("evidence_tier")
             if tier:
+                self._evidence_tier_source = (
+                    f"{scenarios_path.name} → breakdown.evidence_tier"
+                )
                 return tier
 
         manifest = self._resolve_manifest()
         if manifest is not None:
             tier = manifest.get("quality_metadata", {}).get("evidence_tier")
             if tier:
+                self._evidence_tier_source = (
+                    "MANIFEST.json → quality_metadata.evidence_tier (fallback)"
+                )
                 return tier
 
+        self._evidence_tier_source = 'sin fuente de tier: fallback declarado "C"'
         return "C"
 
     def _resolve_artifact(self, pattern: str) -> Optional[Path]:
@@ -386,19 +455,32 @@ class TribunalJudge:
             if applied
             else f"evidence_tier {evidence_tier} → sin restricción de primer piso"
         )
-        return {"applied": applied, "reason": reason}
+        return {
+            "applied": applied,
+            "reason": reason,
+            "source_artifact": self._evidence_tier_source,
+        }
 
     def _compute_verdict(
-        self, clauses: dict, evidence_tier: str, first_floor: dict
+        self,
+        clauses: dict,
+        evidence_tier: str,
+        first_floor: dict,
+        reviewer_reports: list[ReviewerReport],
     ) -> str:
-        """Matriz findings → veredicto.
+        """Matriz §2.1 del contrato P1 — el orden de evaluación ES el contrato.
 
-        - Gate blocking fallido → BLOQUEADO
-        - Finding CRITICAL de revisores → DEVOLVER-CORRECCIONES
-        - Solo WARNING/INFO con gates en verde → primer piso por tier
-        - Un WARNING NO degrada por debajo del primer piso
-        - APROBADO-PARA-ENTREGA exige Tier A y todas las cláusulas certificables
-          de T1 en PASS: sin evidencia evaluable no se certifica la entrega.
+        1. Gate blocking fallido (P6.1/P6.6 en FAIL) → BLOQUEADO
+        2. CRITICAL verificado de un revisor (status OK_* con critical_count>=1) o
+           su recomendación BLOQUEAR → BLOQUEADO
+        3. CRITICAL de consistencia (DEVOLVER-PRUEBAS con CRITICAL) o P6.3/P6.4 en
+           FAIL → DEVOLVER-CORRECCIONES
+        4. ARTIFACT_MISSING / READER_FAILED / NOT_RUN: no cambian el veredicto, pero
+           hacen APROBADO-PARA-ENTREGA imposible (ausencia jamás es PASS)
+        5. Solo WARNING/INFO: nunca degrada por debajo del primer piso
+        6. Primer piso aplicado → condicional
+        7. Tier A con todas las cláusulas certificables en PASS → aprobado
+        8. Cualquier otro caso → condicional
         """
         has_blocking_fail = any(
             c.get("status") == STATUS_FAIL
@@ -409,14 +491,21 @@ class TribunalJudge:
         if has_blocking_fail:
             return VERDICT_BLOCKED
 
+        if any(r.verified_critical or r.verified_block for r in reviewer_reports):
+            return VERDICT_BLOCKED
+
         has_critical_finding = any(
             c.get("status") == STATUS_FAIL
             for key, c in clauses.items()
             if key in ("P6.3", "P6.4")
-        )
+        ) or any(r.verified_return_for_tests for r in reviewer_reports)
 
         if has_critical_finding:
             return VERDICT_RETURN
+
+        # Filas 4 y 5: un fallo de lectura no bloquea, pero impide certificar la
+        # entrega; un WARNING/INFO de revisor no degrada nada por debajo del piso.
+        reviewer_unread = any(r.status.blocks_approval for r in reviewer_reports)
 
         if first_floor["applied"]:
             return VERDICT_CONDITIONAL
@@ -427,7 +516,7 @@ class TribunalJudge:
             clauses[key].get("status") == STATUS_PASS for key in T1_CERTIFIABLE_CLAUSES
         )
 
-        if certifiable and evidence_tier == "A":
+        if certifiable and not reviewer_unread and evidence_tier == "A":
             return VERDICT_APPROVED
 
         return VERDICT_CONDITIONAL
