@@ -348,29 +348,47 @@ def test_exit_code_cero_y_dos_segun_el_estado_del_directorio(tmp_path: Path):
 # ------------------------------------------------------- R2.6: el artefacto real del repo
 
 
-def test_el_unico_artefacto_real_del_repo_pasa_todos_los_checks():
-    """Contra el árbol versionado, no contra un fixture: es el plan que concibió este script."""
-    vs, pobo = vlc.verificar(vlc.DEFAULT_PLANS, vlc.DEFAULT_CONTEXT, vlc.CUTOFF_DATE, verbose=False)
-    assert vs == [], [str(v) for v in vs]
-    assert pobo["alcance"], "el corpus real debe tener al menos un plan en alcance"
+def test_los_artefactos_reales_del_repo_pasan_todos_los_checks_aunque_esten_archivados():
+    """Contra el árbol versionado, no contra un fixture: es el plan que concibió este script.
+
+    Medido al cerrar este plan: la versión anterior pedía además `pobo["alcance"]` no vacío, y el
+    propio `git mv` de R2.5 sacó al plan de alcance. El test puso rojo sin que el artefacto
+    hubiera cambiado — el mismo defecto de aserción-anclada-a-una-variable-que-muta que la
+    lección L-V3.2. Lo que se quiere observar es la forma del `00-` real, y eso vale igual
+    archivado; la no-vacuidad la asegura el conteo de testigos, no la clasificación de alcance.
+    """
+    owners, indice_motivo = vlc.duenos_del_corpus(vlc.DEFAULT_PLANS, vlc.DEFAULT_CONTEXT)
+    planes = sorted({p.parent for p in vlc.DEFAULT_PLANS.rglob(vlc.ARTIFACTO)})
+    assert planes, "el repo debe conservar al menos un 00- real que sirva de testigo"
+    violaciones: list[vlc.Violacion] = []
+    for plan in planes:
+        vs, _ = vlc.analizar_plan(plan, vlc.DEFAULT_PLANS, owners, indice_motivo)
+        violaciones += vs
+    assert violaciones == [], [str(v) for v in violaciones]
 
 
 @pytest.mark.parametrize(
     "cutoff,plan_esperado", [("2026-09-11", "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11")]
 )
-def test_medido_contra_el_predecesor_la_unica_violacion_es_su_limite_no_actualizado(
+def test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme(
     cutoff: str, plan_esperado: str
 ):
-    """Cobertura real del gate sobre el segundo artefacto del repo (medición, no aspiración).
+    """Cobertura real del gate sobre el segundo `00-` del repo (medición, no aspiración).
 
-    El predecesor escribió su §4 declarando que el verificador **no** existía; ahora existe,
-    así que C6 es la única violación legítima y las otras siete formas ya se cumplen.
+    Atrás del corte a 2026-09-11 para que el predecesor deje de estar exento por fecha: si el
+    verde viniera de que nadie lo miró, este test sería decorativo, así que primero exige que
+    esté en la población evaluada. **Historia medida**: desde que existió el verificador hasta el
+    cierre de FASE-V3 (2026-09-13) este plan devolvía exactamente una violación, C6, porque su §4
+    seguía declarando que el verificador no existía. Se corrigió esa declaración en la misma
+    fecha en que se publicó el cierre, y ahora lo verificable es la conformidad de su forma — que
+    su §2 sea pertinente sigue sin verificarlo ningún check (límite del propio §4).
     """
-    vs, _ = vlc.verificar(
+    vs, pobo = vlc.verificar(
         vlc.DEFAULT_PLANS, vlc.DEFAULT_CONTEXT, vlc.date.fromisoformat(cutoff), verbose=False
     )
+    assert plan_esperado in pobo["alcance"], pobo["alcance"]
     del_plan = [v for v in vs if plan_esperado in v.mensaje]
-    assert {v.check for v in del_plan} == {"C6"}, [str(v) for v in del_plan]
+    assert del_plan == [], [str(v) for v in del_plan]
 
 
 # ---------------------------------------------------------------- cableado (AC-B4)

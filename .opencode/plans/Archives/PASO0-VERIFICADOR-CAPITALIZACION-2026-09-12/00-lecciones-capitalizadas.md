@@ -113,7 +113,7 @@ perímetro de otro plan o exigiría una decisión del usuario, no de un registro
   «disciplinado, no verificado» a **verificado en su forma**; el límite de pertinencia de arriba
   sigue vigente y C6 lo exige nombrado aquí (L-R.4, L-NC10).
 
-### 4.1 Actualización al cierre de FASE-V2 (2026-09-12)
+### 4.1 Actualizaciones al cierre de FASE-V2 y FASE-V3 (2026-09-12)
 
 - **Filas de §2 que se cumplieron como se prometieron**: L-HF1, L-R.3, L-R.4, DA-HF3, L-D3, L-B1,
   L-VUP-5, L-T2C.4, L-T4B.5, L-VUP-1, L-PF10, L-VUP-9, S-H17, L-V.2, L-I1 y L-V.4 (el umbral ≥3 de
@@ -131,6 +131,16 @@ perímetro de otro plan o exigiría una decisión del usuario, no de un registro
   celdas para que C3 pueda distinguir un comando de una intención; L-NC10 es la razón de que C6 exija
   nombrar al verificador, que es lo que hace que la línea de arriba caducara y se actualizara en vez
   de quedar mentida.
+- **Filas que trabajaron en el cierre de FASE-V3**: **L-NC10** es la razón de que el template
+  (`v1.1.0`) y el executor (`v2.24.0`) dejen de enseñar «no existe verificador» el mismo día que
+  existe; **L-V.2** obligó a releer las menciones al `[6/6]` antes de tocarlas y produjo el reparto
+  5 normativas / 4 históricas (comprobable con `grep -n "\[6/6\]" .agents/workflows/phased_project_executor.md`:
+  solo quedan las cuatro de medición); **DA-V5** impidió reasignar la deuda (i) del predecesor por
+  inercia — quedó cerrada en su propio checklist con fecha, commit y cobertura medida.
+- **Lo que este Paso 0 prometió y sigue sin estar cubierto**, declarado para que no se lea como
+  cerrado: que los prompts de fase copien las filas pertinentes de §2 (el verificador no abre los
+  prompts), y el juicio de pertinencia. Ambos límites viven en §4 de este archivo y en la salida del
+  script.
 - **Orden del Paso 0**: este archivo se escribió **antes** de `01-plan-maestro.md`. La columna «qué cambia»
   de §2 nombra ACs aún inexistentes; el contrato del verificador (AC-B2, check C4) convierte esa promesa en
   bloqueo: si el maestro no los crea, el artefacto no pasa.

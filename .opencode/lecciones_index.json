@@ -5,7 +5,7 @@
     "archivos_analysis_escaneados": 12,
     "archivos_contexto_escaneados": 35,
     "archivos_md_escaneados": 354,
-    "ids_con_definicion": 251,
+    "ids_con_definicion": 255,
     "ids_citados_sin_definicion": 38,
     "familias_incluidas": [
       "L",
@@ -48,7 +48,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 6,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -78,7 +78,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 6,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -108,7 +108,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 18,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -295,13 +295,27 @@
       "id": "D-V2.1",
       "familia": "D",
       "enunciado": "el instrumento canónico de R2.1 no alcanza el transcript de sesión bajo el",
-      "plan": "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "plan": "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 6,
+      "total_citas": 9,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "D-V3.1",
+      "familia": "D",
+      "enunciado": "[3/9] Version Sync compara las cabeceras contra datetime.now(): se puso rojo",
+      "plan": "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "5. Seguimientos abiertos detectados",
+      "fecha_plan": "2026-09-12",
+      "fuente_fecha": "nombre",
+      "total_citas": 5,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -689,7 +703,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -733,7 +747,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 6,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -835,9 +849,11 @@
       "fuente_fecha": "nombre",
       "total_citas": 9,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+      ]
     },
     {
       "id": "DA-V2",
@@ -851,7 +867,9 @@
       "fuente_fecha": "nombre",
       "total_citas": 9,
       "planes_que_lo_citan": [],
-      "redefiniciones": []
+      "redefiniciones": [
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+      ]
     },
     {
       "id": "DA-V3",
@@ -867,7 +885,9 @@
       "planes_que_lo_citan": [
         "context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+      ]
     },
     {
       "id": "DA-V4",
@@ -881,7 +901,9 @@
       "fuente_fecha": "nombre",
       "total_citas": 1,
       "planes_que_lo_citan": [],
-      "redefiniciones": []
+      "redefiniciones": [
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+      ]
     },
     {
       "id": "DA-V5",
@@ -893,10 +915,10 @@
       "seccion": "6. Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 26,
+      "total_citas": 27,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-OFFLINE-2026-09-09",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01"
       ],
       "redefiniciones": []
@@ -985,7 +1007,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 11,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -1017,7 +1039,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 16,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -1105,7 +1127,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 6,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -1163,7 +1185,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 6,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -1178,9 +1200,9 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 14,
+      "total_citas": 15,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -1506,9 +1528,9 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 20,
+      "total_citas": 22,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -1538,7 +1560,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 8,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -1601,7 +1623,7 @@
       "total_citas": 44,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
       ],
       "redefiniciones": []
@@ -1695,11 +1717,11 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 69,
+      "total_citas": 70,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27",
         "Archives/VALIDADOR-URL-PROPIA-2026-08-30",
         "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
@@ -1737,7 +1759,7 @@
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -1886,7 +1908,7 @@
       "total_citas": 22,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -1933,7 +1955,7 @@
       "total_citas": 17,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -1949,7 +1971,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -1966,7 +1988,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 9,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -1984,7 +2006,7 @@
       "total_citas": 17,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -2185,7 +2207,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -2274,7 +2296,7 @@
       "total_citas": 12,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -2418,7 +2440,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 11,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -2457,7 +2479,7 @@
       "id": "L-V2.1",
       "familia": "L",
       "enunciado": "Un test que solo mira qué check disparó puede quedar verde por una rama distinta de la que pretendía observar — El runner de NR7 mutó dos guards (C4a «ninguna fila nombra un AC» y C7a «la celda no es un ID») y sus tests siguieron en verde: otra rama del mismo check producía una violación con el mismo código",
-      "plan": "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "plan": "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "2. Lecciones Aprendidas nuevas",
@@ -2471,13 +2493,13 @@
       "id": "L-V2.2",
       "familia": "L",
       "enunciado": "Un verificador no debe apoyar su conclusión en el artefacto generado por otro gate — C7/C8 necesitan el mapa {ID → dueño}. Leer .opencode/lecciones_index.json era lo obvio, pero ese archivo lo produce otro check ([6/7]): si ese gate no corrió —otro clon, hook no instalado— el verificador nuevo hereda un verde prestado",
-      "plan": "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "plan": "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
+      "total_citas": 1,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2485,7 +2507,7 @@
       "id": "L-V2.3",
       "familia": "L",
       "enunciado": "Una medición de seguridad sobre el artefacto equivocado deja pasar el rojo que pretendía descartar — Para renumerar el hook, Q10 midió «0 contract tests afirman el número de checks» buscando en tests/ quién menciona run_all_validations. El riesgo real era la numeración del hook, y ahí sí había un contract test: test_registrado_como_check_5_en_el_hook, rojo y sin declarar desde 4a066e1, que cambió [5/5] a [5/6] sin seguirlo",
-      "plan": "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "plan": "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "2. Lecciones Aprendidas nuevas",
@@ -2506,6 +2528,48 @@
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
       "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-V3.1",
+      "familia": "L",
+      "enunciado": "Una documentación que describe un gate que no corre enseña a no verificarlo — Al actualizar los conteos de docs/contributing/validation.md se leyó su §13.3: «el gate se ejecuta automáticamente en el hook agent-ecosystem de pre-commit vía run_all_validations.py --quick». Medido: el hook activo es el versionado (scripts/git_hooks/pre-commit, 7 checks) y no invoca run_all_validations.py; agent-ecosystem pertenece a .pre-commit-config.yaml, que la propia decisión del 2026-08-29 declara «sin enforcement real»",
+      "plan": "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "2. Lecciones Aprendidas nuevas",
+      "fecha_plan": "2026-09-12",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-V3.2",
+      "familia": "L",
+      "enunciado": "Un gate que compara contra «hoy» no informa nada: su rojo y su verde son igualmente mudos — --quick dio 9/9 al cierre de FASE-V2 (2026-09-12) y 8/9 al reanudar la sesión el 2026-09-13 sin que se tocara ninguno de los archivos implicados. [3/9] Version Sync exige que cuatro cabeceras (agents_version_comment, cursorrules_header, guia_tecnica_header, registry_last_update) carryen la fecha que resuelve sync_versions.py, y como VERSION.yaml no define la clave date esa fecha sale de datetime.now()",
+      "plan": "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "2. Lecciones Aprendidas nuevas",
+      "fecha_plan": "2026-09-12",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-V3.3",
+      "familia": "L",
+      "enunciado": "Al archivar un plan se consume el testimonial con el que sus propios tests evitaban ser vacíos, y eso rompe la suite en el commit de cierre — El git mv de R2.5 sacó a este plan de plans/ y, con él, al único 00-lecciones-capitalizadas.md en alcance. test_el_unico_artefacto_real_del_repo_pasa_todos_los_checks exigía pobo[\"alcance\"] no vacío y puso rojo con el artefacto intacto; el test hermano pineaba además una medición (el C6 del predecesor) que la propia fase acababa de invalidar al corregir ese §4",
+      "plan": "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "2. Lecciones Aprendidas nuevas",
+      "fecha_plan": "2026-09-12",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2536,7 +2600,7 @@
       "total_citas": 13,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -2550,9 +2614,9 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
+      "total_citas": 10,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -2583,7 +2647,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 10,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -2600,7 +2664,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 15,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -2662,7 +2726,7 @@
       "total_citas": 15,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -2678,7 +2742,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -2725,7 +2789,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 11,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -2787,7 +2851,7 @@
       "total_citas": 8,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -2804,7 +2868,7 @@
       "total_citas": 7,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -3496,7 +3560,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 17,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -3664,7 +3728,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 12,
       "planes_que_lo_citan": [
-        "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -3700,13 +3764,13 @@
       "id": "S-V2.1",
       "familia": "S",
       "enunciado": "el conteo canónico de AGENTS.md va 16 funciones por detrás del árbol: la",
-      "plan": "PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+      "plan": "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
+      "total_citas": 2,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },

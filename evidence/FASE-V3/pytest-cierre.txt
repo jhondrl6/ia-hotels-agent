@@ -1,0 +1,15 @@
+tests/test_harness_core.py::TestAgentHarness::test_run_task_calls_handler
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_success_on_valid_result
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_error_on_exception
+tests/test_harness_core.py::TestAgentHarness::test_run_task_logs_execution
+tests/test_harness_core.py::TestAgentHarness::test_run_task_injects_context_from_memory
+tests/test_harness_core.py::TestAgentHarness::test_validate_result_marks_empty_as_invalid
+  C:\Users\Jhond\Github\iah-cli\tests\..\agent_harness\core.py:201: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+FAILED tests/test_asset_path_clave_canonica.py::TestDocumentacionDelContrato::test_barreda_un_solo_emisor_de_la_clave
+FAILED tests/test_diagnostic_geo_metrics.py::TestDiagnosticGEOMetrics::test_diagnostic_includes_geo_metrics
+3 failed, 4071 passed, 31 skipped, 4 xfailed, 218 warnings in 174.73s (0:02:54)

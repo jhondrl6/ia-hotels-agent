@@ -94,10 +94,15 @@ porque aplicarlos cambiaría el contrato del plan, y eso le toca a FASE-P1, no a
 - **Qué deja como evidencia**: 8 consultas con comando literal y resultado medido; 19 lecciones
   con dueño, ruta y el artefacto del plan que modificaron; 5 descartes con motivo; 4 hallazgos
   nombrados sin efecto aplicado, más la cola de 78 adyacentes sin evaluar.
-- **Qué no verifico**: que cada fila de §2 sea pertinente. Ningún check comprueba que el
-  «qué cambia» nombre un AC que exista o que el efecto sea real. Ese verificador falta
-  (ítem (i) de §Deuda de `06-checklist-implementacion.md`): **este Paso 0 sigue disciplinado,
-  no verificado** (L-R.4).
+- **Qué no verifico**: que cada fila de §2 sea **pertinente** —si esa era la lección que había que
+  capitalizar, y si el efecto alegado es real—. Dos afirmaciones de esta viñeta quedaron falsas el
+  2026-09-13, al cerrarse `PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12`, y se corrigen con su
+  verificador ya en marcha: **sí** existe un check que comprueba que el «qué cambia» nombre un AC
+  que exista en `01-plan-maestro.md` (**C4**), y el ítem (i) de §Deuda de
+  `06-checklist-implementacion.md` ya no falta: lo cierra `scripts/validate_lesson_capitalization.py`
+  como `[7/7]` del hook versionado. Lo que ningún check hace es juzgar la pertinencia, y este plan no
+  debe dar por hecho lo que no se verificó: **su forma queda verificada, su pertinencia sigue
+  disciplinada** (L-R.4).
 - **Origen no-lección**: la convención de rutas del plan (`<PLAN>` para autorreferencias, rutas
   archivadas citadas completas, revisión manual del diff de `validate_opencode_refs.py --fix`)
   no viene de un ID del corpus sino del ítem de deuda «reescrito ciego de `--fix`» medido en el

@@ -39,8 +39,8 @@ python .agents/workflows/v4_regression_guardian.py --quick
 
 | Comando | Descripcion |
 |---------|-------------|
-| `python scripts/run_all_validations.py` | Todas las validaciones (7 checks) |
-| `python scripts/run_all_validations.py --quick` | Validaciones esenciales (4 checks) |
+| `python scripts/run_all_validations.py` | Todas las validaciones (13 checks; 9 de ellos en modo rapido) |
+| `python scripts/run_all_validations.py --quick` | Validaciones esenciales (9 checks) |
 | `python scripts/validate.py --plan` | Validar coherencia Plan Maestro |
 | `python scripts/validate.py --security` | Detectar secrets hardcoded |
 | `python scripts/validate.py --content <file>` | Validar contenido de archivo |
@@ -304,14 +304,19 @@ Ejecuta validaciones cruzadas:
 # Directo
 python scripts/validate_document_integration.py
 
-# Integrado en run_all_validations.py (5/8 en modo quick)
+# Integrado en run_all_validations.py (check 5/9 en modo quick)
 python scripts/run_all_validations.py --quick
 ```
 
 ### 13.3 Integracion en Pre-commit
 
-El gate se ejecuta automaticamente en el hook `agent-ecosystem` de pre-commit
-via `run_all_validations.py --quick`.
+Medido el 2026-09-12: **no** hay gate automatico sobre este check. El hook activo es el
+versionado en `scripts/git_hooks/pre-commit` (7 checks, instalar con
+`python scripts/install_git_hooks.py`), que **no** invoca `run_all_validations.py`; la entrada
+`agent-ecosystem` de `.pre-commit-config.yaml` corre `scripts/doctor.py --agent` y hoy esta
+configuracion esta declarada pero no instalada (ver
+`.opencode/context/Historico/CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29.md`).
+El gate corre, por tanto, cuando se ejecuta `run_all_validations.py --quick` o `--check`.
 
 ### 13.4 Flujo de Correccion
 

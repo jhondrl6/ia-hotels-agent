@@ -54,6 +54,48 @@ Cerrar la brecha entre **«paquete generado»** y **«paquete entregable con res
 - **Suite completa en el corte de RELEASE (2026-09-11)**: **4,024 passed / 3 failed / 31 skipped / 4 xfailed** en 156 s. Los 3 fallos son **exactamente** los preexistentes registrados en `aba517a` — `test_function_default_flags` (flaky por orden de recolección), `test_barreda_un_solo_emisor_de_la_clave` (deuda propia del plan: `asset_reviewer.py` como segundo emisor de `asset_path`, routed a D-V.1) y `test_diagnostic_includes_geo_metrics` (cabecera `_build_geo_problems_table`) → **0 regresiones**.
 - FASE-E2E y FASE-VERIFY añaden **0 tests y 0 cambios de código de producción**.
 
+### Post-4.76.0 (validación-only) — 2026-09-12 → cierre 2026-09-13 — verificador del Paso 0
+
+Sin bump de versión (regla de validación-only del executor): no toca código de producción y `4.77.0`
+sigue reservado por el plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`. Plan:
+`PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12` (cerró el ítem **(i)** de su §Deuda de proceso).
+
+- **`scripts/validate_lesson_capitalization.py`**: verifica **forma y trazabilidad** del
+  `00-lecciones-capitalizadas.md` de los planes nacidos desde executor v2.22.0 — ocho checks (C0
+  publica la población mirada; C3 consulta a una capa corpus-wide con comando copy-pasteable; C4 el
+  AC nombrado en §2 tiene que **existir** en `01-plan-maestro.md`; C5 ≥3 descartes; C6 §4 nombra al
+  verificador y declara su límite; C7 cada ID atribuido al dueño que publica el índice generado; C8
+  ≥2 fuentes distintas, que es la cura directa de «citó solo al predecesor»). Tres estados
+  distinguibles (R2.9) y **sin auto-fix**: el script reporta.
+- **Dónde corre**: `[7/7]` del hook versionado `scripts/git_hooks/pre-commit` (bloqueo demostrado
+  sobre un árbol con un plan en alcance sin artefacto) y `[9/9]` de `run_all_validations.py --quick`.
+- **Alcance medido**: 1 plan en alcance sobre 27 directorios (25 archivados excluidos, 1 exento por
+  fecha anterior al corte `2026-09-12`). Medido en FASE-V2 con `--cutoff 2026-09-11`, el `00-` del
+  predecesor arrojaba **una** violación: su §4 declarando que el verificador no existía — C6 cazando
+  el fósil (L-NC10). Ese §4 se corrigió en el cierre de FASE-V3.
+- **Executor v2.24.0** y **template v1.1.0**: el Paso 0 documenta su verificador y su límite; las 5
+  referencias **normativas** al `[6/6]` pasan a `[6/7]` y las 4 **mediciones históricas** que citan
+  `[6/6]` se conservan literales.
+- **Tests**: +**29** (`tests/test_validate_lesson_capitalization.py`), con **13** detecciones
+  revertidas sobre el archivo versionado (NR7, `evidence/FASE-V2/`). Arreglado un rojo **heredado y
+  no declarado**: `test_registrado_como_check_5_en_el_hook` pinaba `[5/5]` desde `4a066e1`.
+- **Conteo canónico real medido hoy**: `4.079` antes de la fase → **`4.108`** después
+  (resta = 29 = tests nuevos, R2.7). El `4.063` que publican esta entrada y `AGENTS.md` era
+  de 2026-09-11 y quedó desactualizado por los commits de tooling posteriores; la diferencia se
+  registra como **S-V2.1** en el análisis del plan, no se maquilla.
+- **Cierre (FASE-V3, 2026-09-13)**: write-back de QMind ejecutado **antes** del `git mv` y el índice
+  regenerado en los dos puntos del orden R2.10 (252 → **255** IDs por `L-V3.1`–`L-V3.3`); plan
+  archivado y `--quick` **9/9** post-archivado, con el verificador publicando su nueva realidad:
+  **0 planes en alcance** hasta el próximo plan nacido bajo v2.24.0. Dos tests de V2 se pusieron
+  rojos **por el propio archivado** y no por un defecto del artefacto: anclaban su no-vacuidad a la
+  clasificación de alcance; reescritos para anclarla al archivo (`29 passed`) → lección **L-V3.3**.
+  Y **D-V3.1**: `[3/9] Version Sync` resuelve su fecha con `datetime.now()` porque `VERSION.yaml` no
+  define `date`, así que `--quick` pasó de 9/9 a 8/9 solo por avanzar el calendario —arreglado con
+  el escritor canónico (`sync_versions.py`), con el defecto de fondo registrado y con dueño.
+- **Alcance de esta subsección**: cubre el trabajo de este plan. Los commits de tooling que lo
+  precedieron (executor v2.22.0–v2.23.1, `build_lesson_index.py`, `00-` del predecesor) entraron sin
+  entrada propia y no se reescriben aquí hacia atrás.
+
 ---
 
 ## [4.75.0] - Estabilización pre-tribunal — 2026-09-04

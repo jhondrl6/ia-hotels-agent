@@ -1,6 +1,6 @@
 ---
 description: Template de 00-lecciones-capitalizadas.md — output del Paso 0, se crea ANTES de diseñar fases
-version: v1.0.0
+version: v1.1.0
 ---
 
 # Template: Lecciones Capitalizadas (`00-lecciones-capitalizadas.md`)
@@ -65,9 +65,17 @@ predecesor. Descartar con motivo es un resultado, no un fracaso.
 
 - Qué **sí** deja evidencia: las consultas re-ejecutables, las lecciones con dueño y ruta,
   los descartes con motivo.
-- Qué **no** verifica nada aún: [ ] este documento **no tiene verificador mecánico**
-  (hasta que exista). Declararlo es la regla: una norma sin check automático solo es
-  publicable si dice que no lo tiene.
+- Qué **no** verifica el check mecánico: la **pertinencia**. Escribir el límite es
+  obligatorio, y su forma debe poder comprobarse — una frase de las formas «no verifico…»,
+  «no comprueba…» o «no garantiza…»:
+  - [ ] Este archivo es verificado por `scripts/validate_lesson_capitalization.py`
+    (check `[7/7]` del hook `scripts/git_hooks/pre-commit` y `[9/9]` de
+    `run_all_validations.py --quick`), que comprueba **forma y trazabilidad**: consultas a
+    una capa corpus-wide, ≥3 descartes, AC nombrado que existe en el plan maestro, ID con el
+    dueño que publica el índice generado y ≥2 fuentes distintas. Un `[OK]` suyo significa
+    «la forma exigida está», nunca «capitalicé bien».
+  - [ ] Si el verificador aún no existiera, declararlo aquí con su dueño: una norma sin
+    check automático solo es publicable si dice que no lo tiene (L-R.4).
 - [ ] Actualizado al cierre de la última fase, y el write-back de QMind se ejecutó **antes**
   de archivar el plan (`git mv` a `Archives/`).
 ```
@@ -76,15 +84,25 @@ predecesor. Descartar con motivo es un resultado, no un fracaso.
 
 ## Checklist del orquestador (al concebir el plan)
 
-- [ ] `00-lecciones-capitalizadas.md` existe con §1, §2, §3 y §4 llenados
-- [ ] §1 tiene ≥1 consulta al corpus completo, con el comando literal
+- [ ] `00-lecciones-capitalizadas.md` existe con §1, §2, §3 y §4 llenados → **C1, C2**
+- [ ] §1 tiene ≥1 consulta al corpus completo, con el comando literal → **C3**
 - [ ] §2 tiene ≥1 fila cuyo "Qué cambia" nombra un AC, tarea, archivo o restricción del plan
-- [ ] §3 tiene ≥3 descartes con motivo
-- [ ] §4 declara si existe verificador mecánico sobre este archivo
+      → **C4**, que además exige que el AC nombrado **exista** en `01-plan-maestro.md`
+- [ ] §3 tiene ≥3 descartes con motivo → **C5**
+- [ ] §4 declara si existe verificador mecánico sobre este archivo → **C6** (nombrarlo y
+      declarar el límite)
+- [ ] Cada ID de §2 está definido en el corpus y atribuido al dueño que publica el índice, y
+      las fuentes son ≥2 → **C7, C8**
 - [ ] Los prompts de fase (§2 del executor) referencian las filas de §2 que les corresponden
+      → **sin check mecánico**: el verificador no abre los prompts (límite declarado)
 
 ## Versión
 
+- **v1.1.0** (2026-09-12): El §4 deja de enseñar la casilla «no tiene verificador mecánico
+  (hasta que exista)», que el plan `PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12` convirtió en
+  falsa al escribir `scripts/validate_lesson_capitalization.py`. Un template que manda declarar
+  lo que ya dejó de ser cierto es la fosilización que el propio corpus nombra (L-NC10). El
+  checklist marca ahora qué casilla sostiene cada check (C1–C8) y cuál sigue siendo humana.
 - **v1.0.0** (2026-09-12): Primera versión. Sale de la evaluación del plan
   `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` (capitalización horizontal 0 %) y de la
   medición del corpus (6/24 planes con la sección, marcada `(si aplica)`).

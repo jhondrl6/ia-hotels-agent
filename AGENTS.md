@@ -1,4 +1,4 @@
-<!-- agents_version: v4.76.0 | last_update: 2026-09-12 -->
+<!-- agents_version: v4.76.0 | last_update: 2026-09-13 -->
 
 # IA Hoteles Agent (iah-cli)
 
@@ -82,7 +82,7 @@ Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto
 4. Verificar GUIA_TECNICA.md tiene nota técnica por fase
 
 5. run_all_validations.py --quick
-   → Validación final (4/4 checks)
+   → Validación final (9/9 checks en modo rápido; 13 en el completo)
 
 5b. validate_agents_md.py
    → Gate de coherencia AGENTS.md (gate count, module refs, etc.)

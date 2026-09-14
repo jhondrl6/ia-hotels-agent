@@ -140,7 +140,7 @@ decir cuáles entran al alcance de este plan y cuáles se documentan como límit
 
 ### Deuda añadida por el Paso 0 horizontal (2026-09-12)
 
-- [~] **El Paso 0 seguía sin verificador mecánico** (misma familia que R2.6/R2.7 y L-R.4). El executor
+- [x] **El Paso 0 seguía sin verificador mecánico** (misma familia que R2.6/R2.7 y L-R.4). El executor
   lo declaraba obligatorio desde v2.17.0 y describía la pasada por memoria del proyecto + notebook
   `iah-cli-lecciones`, pero ningún check comprueba que se hizo. La señal medida en este plan: sus
   prompts citaban **solo** al predecesor, con 24 planes más en el corpus. Cura candidata: exigir en
@@ -156,6 +156,15 @@ decir cuáles entran al alcance de este plan y cuáles se documentan como límit
     lecciones más citadas del corpus (`L-SR3`, `L-SR5`) estaban definidas **solo**
     en un `CONTEXT-*.md` y ningún análisis — el índice las
     recuperó; sin esa capa, el Paso 0 seguiría ciego a lo más usado.
+  - **Cerrada 2026-09-12 por `PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12`** (FASE-V2, commit
+    `e02a688`): existe `scripts/validate_lesson_capitalization.py`, cableado como `[7/7]` del hook
+    versionado y `[9/9]` de `run_all_validations.py --quick`, con ocho checks de forma y trazabilidad
+    (C0 publica la población mirada), tres estados conforme a R2.9 y sin auto-fix. Cobertura medida el
+    día del cierre: **1** plan en alcance sobre **27** directorios (25 archivados excluidos por regla),
+    y `--cutoff 2026-09-11` lo arrojó sobre el `00-` de este plan con **una sola** violación — su §4
+    declarando que el verificador no existía, que es justo lo que el check C6 caza. **Lo que sigue sin
+    verificarse, declarado por el propio script**: la pertinencia. FASE-P1 de este plan ya no es dueña
+    de este ítem; conserva §3.b y la cola de adyacentes que mide Q7.
   - **Deuda que queda (pertinencia)**: ningún check verifica que las filas del §2 sean lecciones
     reales aplicadas y no ceremonial, ni que una consulta haya mirado más allá del predecesor.
     Requiere lectura semántica → verificador propio (`validate_lesson_capitalization.py`), con su
