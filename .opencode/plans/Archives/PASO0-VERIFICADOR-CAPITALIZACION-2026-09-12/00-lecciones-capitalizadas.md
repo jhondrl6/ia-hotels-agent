@@ -79,10 +79,16 @@ perímetro de otro plan o exigiría una decisión del usuario, no de un registro
   Medido hoy con Q6: **25** — el archivado de `TRIBUNAL-OFFLINE-2026-09-09` sumó uno y nadie actualizó la
   prosa. Es L-NC10 en miniatura. **Dueño**: el próximo cierre que edite el executor; **no** se corrige en
   este commit para no mezclar un arreglo de docs con el del verificador.
-- **`§4` del predecesor declara «19 lecciones» y su tabla §2 tiene 18 filas** (medido en Q7 con el script
-  ad-hoc). Un verificador podría exigir que los conteos declarados cuadren con la tabla; **no entra** al
-  alcance de este plan (es un check nuevo, no el que se pidió) y su dueño natural es `FASE-P1` del
-  `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`, que es el plan que lo publica.
+- **`§4` del predecesor «declara 19 lecciones y su tabla §2 tiene 18 filas»** — así se midió en Q7 con el
+  script ad-hoc, y **esa medición está mal**: re-medida en el cierre (2026-09-13) con el parser del propio
+  verificador (`_filas` de `validate_lesson_capitalization.py` sobre §2) el `00-` del
+  `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` tiene **19** filas de lección y **19** declaradas, o sea cuadran.
+  El **18** es el conteo del §2 de **este** archivo, atribuido al plan equivocado: la misma familia que
+  **L-V2.3** (medir sobre el artefacto que tenías en la cabeza, no sobre el que ibas a afirmar). Lo que
+  sobrevive es el motivo, ahora más débil: un verificador podría exigir que los conteos declarados cuadren
+  con la tabla. **No entra** al alcance de este plan (es un check nuevo, no el que se pidió) y su dueño
+  sigue siendo `FASE-P1` del `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`, que hereda el ítem **sin** la
+  justificación que lo motivó.
 - **`.pre-commit-config.yaml` con 13 hooks declarados y sin enforcement** (Q4): la decisión del
   2026-08-29 sigue pendiente. Si se activara la Opción 2, el check de este plan tendría que migrar o
   duplicarse allí. Queda declarado para que el `[7/7]` no se lea como «el pre-commit framework lo cubre».

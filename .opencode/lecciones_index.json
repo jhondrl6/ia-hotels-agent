@@ -301,8 +301,10 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
-      "planes_que_lo_citan": [],
+      "total_citas": 10,
+      "planes_que_lo_citan": [
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+      ],
       "redefiniciones": []
     },
     {
@@ -2513,8 +2515,10 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
-      "planes_que_lo_citan": [],
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+      ],
       "redefiniciones": []
     },
     {

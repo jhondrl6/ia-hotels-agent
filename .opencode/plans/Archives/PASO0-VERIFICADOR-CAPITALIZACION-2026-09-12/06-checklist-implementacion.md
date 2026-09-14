@@ -88,8 +88,13 @@
 - [ ] **Promoción a regla R2.11** del executor («ningún plan se concibe sin `00-` verificado»): requiere
   texto de medición propia y no es el encargo de este plan. Dueño: quien cierre la §Deuda del
   `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`.
-- [ ] **§4 no cuadra con la tabla**: verificador de conteos declarados (el `00-` del predecesor dice 19
-  lecciones y su §2 tiene 18 filas, medido). Dueño: FASE-P1 del predecesor, que es el plan que lo publica.
+- [ ] **Verificador de conteos declarados en §4**: ítem **abierto pero sin el caso que lo motivó**. Se
+  justificó diciendo que el `00-` del predecesor declaraba 19 lecciones con 18 filas en §2; re-medido el
+  2026-09-13 con `_filas` del propio verificador, ese archivo tiene **19 y 19** y el de este plan **18 y
+  18** — los dos cuadran, así que la discordancia nunca existió (fue el conteo de un archivo atribuido al
+  otro, familia **L-V2.3**). Sobrevive solo el motivo genérico: nada comprueba hoy que un §4 declarado
+  coincida con su §2. **Dueño**: FASE-P1 del `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`, que debe **re-justificar
+  el check con un caso real o retirarlo** en vez de heredarlo por inercia.
 - [ ] **Prompts de fase vs §2 del `00-`**: el executor exige que cada prompt copie las filas pertinentes;
   ningún check lo comprueba (límite §4.3 del maestro). Dueño: futuro tramo de enforcement del executor.
 - [ ] **`.pre-commit-config.yaml` inerte**: si se activara la Opción 2 (decisión del 2026-08-29 pendiente),
