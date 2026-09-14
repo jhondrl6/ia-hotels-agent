@@ -83,6 +83,38 @@ el Paso 0 debía producir y no producía.
 > capitalizó lección externa nueva; consumió cinco de estas. Sus tres lecciones propias
 > (**L-P3B.1/.2/.3**) viven en `10-analisis` §Lecciones.
 
+> **Estado al cerrar FASE-P2 (2026-09-14) — qué de §2 se ejercitó de verdad sobre artefactos**:
+> **L-V.1 (fixture ≠ régimen real)** dejó de ser una preferencia y pasó a ser el criterio que decide
+> si AC-E2 está cerrado: los nueve tests de enforcement corren contra un **ZIP real** escrito por
+> `DeliveryPackager` en `tmp_path`, y el que NR7 dirige es
+> `test_veredicto_bloqueante_del_tribunal_suprime_el_zip_real`, no un acta emitida a mano — el contrato
+> lo decía explícitamente y sin esa elección el AC se habría cerrado en verde. **NR8 / L-PF6 / L-PF10**:
+> los cuatro estados se producen por cuatro **mecanismos** distintos (informe limpio / archivo que no
+> está / JSON ilegible / Bot que nadie llamó), y la sección del MD se imprime siempre;
+> `test_los_tres_estados_no_colapsan` es el candado que se rompe si alguien vuelve a colapsarlos.
+> **L-T4A.5 / L-T2C.4 / L-VUP-5 (NR7)**: **8 pares** verde/rojo, y en dos AC se hicieron **dos**
+> mutaciones donde el plan pedía una (AC-E0 y AC-E5), porque colapsar estados y vaciar acciones son
+> mitades distintas del contrato. **L-VUP-5 en su forma fuerte**: la fase tiene ocho rojos reales, no
+> un verde por fase. **L-T2C.2** reapareció en una variante que la lección no cubría: no un `except`
+> ancho sino un **parámetro sombreado por un local homónimo** (`blocking` en
+> `derive_corrective_actions`) que dejó muerta la rama de fallback — 17 tests verdes no lo vieron y lo
+> cazó el test nº 18, escrito para la otra mitad del mismo AC (L-P2.3). **L-SR3**: la fuente del tier
+> del acta pasó a publicarla el propio lector (`_evidence_tier_source`) en lugar de fijarla el writer
+> con un literal, que era justo la cura que el seguimiento de `10-analisis` prescribía para P2.
+> **L-V.4 en sus dos caras**: el seguimiento que P1 asignaba a P2 (el ``Artefacto fuente:
+> MANIFEST.json`` obsoleto) **sí** se cerró en la fase dueña y con la cura nombrada; la divergencia
+> `diagnóstico↔tier` que P3-B registró con dueño en T3b **no** se tocó. **R2.7**: resta contra el PRE
+> propio (4.153, que es el POST de P3-B) y no contra el ancla pre-plan; y el primer POST se descartó
+> por una edición posterior (L-P2.4). **El §2 sigue en 19 filas** (contadas al cerrar, no heredadas):
+> P2 no capitalizó lección externa nueva — consumió siete de estas (L-V.1, NR7/L-T4A.5/L-T2C.4/L-VUP-5,
+> NR8/L-PF6/L-PF10, L-T2C.2, L-SR3, L-V.4, R2.7) sobre artefactos reales. Sus cuatro lecciones propias
+> (**L-P2.1** el contrato puede contener un imperativo insatisfacible, **L-P2.2** una enumeración que
+> no cubre el ejemplo del propio contrato, **L-P2.3** el sombreado que el verde no ve, **L-P2.4**
+> presupuestar por coste de verificación + la regla de orden del POST) viven en `10-analisis` §Lecciones.
+> **Candidatas a la capa fría en el archivado**: L-P2.1 y L-P2.3 — la primera nombra una clase de
+> defecto de contrato que ninguna lección de la familia L-P1.2 cubría; la segunda añade a la familia
+> L-T4A.5 un caso que NR7 no mira (no «si puede fallar» sino «si la rama se ejecutó»).
+
 ## 3. Candidatos evaluados y descartados
 
 | ID | Por qué NO aplica a este plan |

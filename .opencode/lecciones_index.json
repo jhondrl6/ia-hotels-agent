@@ -5,7 +5,7 @@
     "archivos_analysis_escaneados": 13,
     "archivos_contexto_escaneados": 35,
     "archivos_md_escaneados": 361,
-    "ids_con_definicion": 280,
+    "ids_con_definicion": 288,
     "ids_citados_sin_definicion": 38,
     "familias_incluidas": [
       "L",
@@ -343,7 +343,7 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 38,
+      "total_citas": 45,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -589,7 +589,7 @@
       "seccion": "6. Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 14,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -847,7 +847,7 @@
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 7,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -875,7 +875,7 @@
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 6,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -929,6 +929,62 @@
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P2.1",
+      "familia": "DA",
+      "enunciado": "el acta deja de viajar dentro del ZIP de cliente (respuesta a la",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P2 (2026-09-14) — decisiones DA-P2.1 … DA-P2.4",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 15,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P2.2",
+      "familia": "DA",
+      "enunciado": "la familia OK_* tiene dos miembros, no uno",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P2 (2026-09-14) — decisiones DA-P2.1 … DA-P2.4",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P2.3",
+      "familia": "DA",
+      "enunciado": "_validate_zip corre sobre el .tmp, antes del rename",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P2 (2026-09-14) — decisiones DA-P2.1 … DA-P2.4",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-P2.4",
+      "familia": "DA",
+      "enunciado": "la fila 4 de la matriz se implementa como guard del veredicto, no como",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "FASE-P2 (2026-09-14) — decisiones DA-P2.1 … DA-P2.4",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
       "total_citas": 3,
@@ -1985,7 +2041,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
+      "total_citas": 2,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1999,7 +2055,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
+      "total_citas": 2,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2032,6 +2088,62 @@
       "redefiniciones": []
     },
     {
+      "id": "L-P2.1",
+      "familia": "L",
+      "enunciado": "La «verificación obligatoria antes de tocar» de la Tarea 1 no confirmó un supuesto: demostró que el enunciado que la pedía es insatisfacible. Medido: el ZIP contenía el acta (ASSETS/v4_audit/acta_revision.{json,md}, 2 de 40 miembros). Bajo O1-cuarentena el acta enriquecida necesita los informes de los Bots, los Bots necesitan leer ese ZIP, y el contrato pide que el ZIP contenga ese acta. Círculo estricto, no un problema de orden que «P2 resuelve reordenando» — El contrato redactó la cláusula como imperativo condicional («si la contuviera, que sea la enriquecida») sin preguntar si las dos mitades del condicional pueden coexistir en el mismo objeto. Es la misma forma de defecto que L-P1.3 cazó en Q2b: un enunciado que supone un «o» donde la medición encuentra una imposibilidad",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P2.2",
+      "familia": "L",
+      "enunciado": "El enum de estados del contrato no alcanzaba para decir la verdad: su §4 fijaba cuatro nombres y su propio ejemplo ponía \"status\": \"OK_NO_FINDINGS\" junto con \"findings_count\": 1. Con un solo OK_, el acta de la corrida real de Salento habría dicho «sin hallazgos» sobre el informe que contiene el CRITICAL VACUOUS_RECALL que el predecesor celebró como detección viva — La matriz §2.1 ya escribía la condición como status == OK_* — un comodín que presupone una familia que la enumeración no definía. El hueco estaba en el contrato, no en el código, y solo se hace visible al implementar la serialización del DTO",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P2.3",
+      "familia": "L",
+      "enunciado": "Un bug de sombreado de variable sobrevivió a 17 tests verdes: dentro de derive_corrective_actions el acumulador local se llamaba blocking, igual que el parámetro, así que al salir del bucle if not blocking or actions: return actions leía el valor del último informe y el fallback de bloqueo por gate no se ejecutaba nunca. Lo cazó el test nº 18, escrito para la *otra* mitad de AC-E5 — El test que cubría el camino obvio (CRITICAL de revisor → acciones) nunca pasaba por la rama posterior al bucle, y el mutante NR7 tampoco la ejercía: NR7-AC-E5-b.txt vacía las acciones desde el inicio, no desde el sombreado. NR7 pregunta «¿puede fallar este test?», no «¿llegó a ejecutarse esta rama» — hermano de L-P3B.2, que encontró lo mismo con una aserción que jamás se evaluaba",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 4,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P2.4",
+      "familia": "L",
+      "enunciado": "Presupuesto superado por cuarta fase consecutiva: 55 declaradas vs auto-reporte con unidad declarada (D-V2.1 sí se reprodujo bajo este cliente: el instrumento exige un transcript .jsonl y su directorio no es alcanzable desde el workspace — el acceso fue rechazado por el clasificador, no omitido). Novedad de la fase: el primer POST de NR1 quedó invalidado por una edición posterior — daba +27, se añadió un test al cerrar un seguimiento y hubo que repetir la corrida completa para no declarar R2.7 contra un árbol que ya no existía — La causa del presupuesto es la misma de P3-A/P3-B (verificación cara, código chico: dos corridas completas + 8 pares NR7 que lanzan verde y rojo cada uno). La del POST repetido es de orden, no de volumen: el plan permite cerrar un seguimiento de otra fase «porque P2 toca el mismo archivo», y eso puede ocurrir *después* de tomar el POST",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 11,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "L-P3A.1",
       "familia": "L",
       "enunciado": "Presupuesto superado otra vez: 20 declaradas, 106 ids / 126 tool_use medidas (corte = 0d4d072). A diferencia de P1, el instrumento sí alcanzó el transcript → D-V2.1 no se reprodujo y la cifra es medida — Causa medida: una fase de detección/fidelidad paga su verificación, no su código — el delta R2.7 exige dos corridas de la suite completa (4.130 tests, ~7-9 min cada una) y NR7 exige 4 pares verde/rojo que a su vez relanzan subsets; el código editado son 2 archivos. 20 era un presupuesto de \"tamaño del entregable\", y el entregable chico esconde la verificación cara",
@@ -2041,7 +2153,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 13,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2083,7 +2195,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 12,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2097,7 +2209,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 5,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2199,7 +2311,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 17,
+      "total_citas": 20,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2257,7 +2369,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 30,
+      "total_citas": 34,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2355,7 +2467,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 25,
+      "total_citas": 26,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2405,10 +2517,10 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 56,
+      "total_citas": 59,
       "planes_que_lo_citan": [
-        "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
       ],
@@ -2615,7 +2727,7 @@
       "seccion": "FASE-T2-C (2026-09-10)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 20,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2645,7 +2757,7 @@
       "seccion": "FASE-T2-C (2026-09-10)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2718,7 +2830,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 21,
+      "total_citas": 25,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2790,7 +2902,7 @@
       "seccion": "FASE-T4-B (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 12,
       "planes_que_lo_citan": [
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -2951,7 +3063,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 22,
+      "total_citas": 26,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2968,7 +3080,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 18,
+      "total_citas": 19,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2999,7 +3111,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 18,
+      "total_citas": 22,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -3077,7 +3189,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 26,
+      "total_citas": 30,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"

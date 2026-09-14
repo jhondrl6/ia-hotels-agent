@@ -108,8 +108,11 @@ nuevo. Se listan porque un lector de `git diff` los verá y debe poder distingui
 1. `tests/financial_engine/test_pricing_resolution_wrapper.py::...::test_function_default_flags` — flaky conocido (L-VUP-1)
 2. `tests/test_diagnostic_geo_metrics.py::...::test_diagnostic_includes_geo_metrics` — ajeno conocido
 
-**0 regresiones.** `test_faq_generator_output_is_jsonld`, que estaba rojo al concebir el
-plan, ya venía verde desde el PRE de P3-B.
+**0 regresiones.** `test_faq_generator_output_is_jsonld`, que sí estaba rojo en el POST de
+P3-B, ya venía verde en el PRE de esta fase: recuperó **entre** los dos baselines y **no
+por mano de P2** (que no tocó `tests/delivery/test_faq_generator_improvements.py`). Se
+anota porque es el único delta de color entre el POST de P3-B (3 fallos) y el PRE de P2
+(2 fallos) y no debe leerse como resultado de esta fase.
 
 ## Conteo canónico (el del `grep`, no el de pytest)
 

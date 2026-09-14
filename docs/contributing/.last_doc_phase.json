@@ -15,7 +15,7 @@
   "modules/geo_enrichment/geo_diagnostic.py": "FASE-2",
   "tests/geo_enrichment/*.py": "FASE-2",
   "modules/geo_enrichment/geo_enrichment_layer.py": "FASE-3",
-  "modules/delivery/delivery_packager.py": "FASE-D",
+  "modules/delivery/delivery_packager.py": "FASE-P2",
   "modules/geo_enrichment/geo_flow.py": "FASE-6",
   "CHANGELOG.md": "FASE-V3",
   "docs/GUIA_TECNICA.md": "FASE-RELEASE-4.76.0",
@@ -23,7 +23,7 @@
   "modules/asset_generation/asset_catalog.py": "FASE-B (ESTABILIZACION-PRE-TRIBUNAL)",
   "modules/commercial_documents/data_structures.py": "FASE-1-HOOK-PDF",
   "data_models/aeo_kpis.py": "GAP-IAO-01-05",
-  "main.py": "FASE-P3-B",
+  "main.py": "FASE-P2",
   "cross_validator.py": "E2E-CERT-0331",
   "v4_diagnostic_generator.py": "FASE-TRAZABILIDAD-RAIZ",
   "modules/commercial_documents/templates/diagnostico_v6_template.md": "FASE-R0-C",
@@ -266,7 +266,12 @@
   "tests/test_validate_plan_closure.py": "FASE-V2",
   ".agents/workflows/templates/lecciones-capitalizadas-template.md": "FASE-V3",
   ".opencode/plans/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/06-checklist-implementacion.md": "FASE-V3",
-  "modules/quality_gates/tribunal/acta_writer.py": "FASE-P3-B",
+  "modules/quality_gates/tribunal/acta_writer.py": "FASE-P2",
   "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py": "FASE-P3-B",
-  "tests/test_asset_path_clave_canonica.py": "FASE-P3-B"
+  "tests/test_asset_path_clave_canonica.py": "FASE-P3-B",
+  "modules/quality_gates/tribunal/judge.py": "FASE-P2",
+  "modules/quality_gates/tribunal/asset_reviewer.py": "FASE-P2",
+  "modules/quality_gates/tribunal/__init__.py": "FASE-P2",
+  "tests/quality_gates/tribunal/test_judge.py": "FASE-P2",
+  "tests/quality_gates/tribunal/test_acta_serialization.py": "FASE-P2"
 }
