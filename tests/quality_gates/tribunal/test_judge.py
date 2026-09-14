@@ -31,11 +31,20 @@ FASE_D_DELIVERIES_DIR = (
 
 @pytest.fixture
 def tmp_audit_dir(tmp_path):
-    """Copia artefactos de FASE-I a un directorio temporal."""
+    """Copia artefactos de FASE-I a un directorio temporal.
+
+    AC-F2: el Juez ahora lee evidence_tier de ``financial_scenarios_*.json``
+    (fuente pre-packaging) ANTES que del MANIFEST. El scenarios de FASE-I trae
+    tier "B", que pisaría los fixtures de MANIFEST (A/B/C) que estos tests
+    assertan. Se poda para que ejerzan la rama de fallback del MANIFEST; la rama
+    primaria (scenarios-first) la cubren los tests nuevos de P3-A.
+    """
     if not FASE_I_AUDIT_DIR.exists():
         pytest.skip("FASE-I artifacts not available")
     dest = tmp_path / "v4_audit"
     shutil.copytree(FASE_I_AUDIT_DIR, dest)
+    for scenarios in dest.glob("financial_scenarios_*.json"):
+        scenarios.unlink()
     return dest
 
 

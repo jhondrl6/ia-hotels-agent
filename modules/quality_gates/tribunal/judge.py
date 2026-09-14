@@ -11,6 +11,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
 
+from .artifact_paths import FINANCIAL_SCENARIOS_PATTERN
+
 
 VERDICT_APPROVED = "APROBADO-PARA-ENTREGA"
 VERDICT_CONDITIONAL = "APROBADO-CONDICIONAL-PENDING-ONBOARDING"
@@ -22,7 +24,10 @@ STATUS_FAIL = "FAIL"
 STATUS_ADVISORY = "ADVISORY"
 STATUS_NOT_EVALUABLE = "NOT_EVALUABLE"
 
-FIRST_FLOOR_TIERS = {"B", "C"}
+# EvidenceTier.B_PLUS se serializa como "B+" (ver data_structures.EvidenceTier),
+# no como "B_PLUS". El primer piso cubre B, B+ y C: son los tiers cuyo veredicto
+# sale condicional, así la razón del acta no miente (AC-F4).
+FIRST_FLOOR_TIERS = {"B", "B+", "C"}
 
 # Cláusulas que el Juez puede certificar en T1. P6.2 se excluye porque el plan
 # la difiere a T4-A (requiere LLM). P6.5 se excluye porque D-T1.3 (opción a)
@@ -101,12 +106,27 @@ class TribunalJudge:
         return None
 
     def _read_evidence_tier(self) -> str:
-        """Lee evidence_tier de MANIFEST.json → quality_metadata.evidence_tier."""
+        """Lee evidence_tier de la fuente pre-packaging (AC-F2).
+
+        DA-P1.5: la fuente de verdad es ``financial_scenarios_*.json →
+        breakdown.evidence_tier``, escrita por main.py ANTES del bloque del Juez
+        y disponible en régimen ZIP-only. MANIFEST.json (post-packaging) es solo
+        fallback; si ninguno aporta tier, "C".
+        """
+        scenarios_path = self._resolve_artifact(FINANCIAL_SCENARIOS_PATTERN)
+        scenarios = self._load_json(scenarios_path)
+        if scenarios is not None:
+            tier = scenarios.get("breakdown", {}).get("evidence_tier")
+            if tier:
+                return tier
+
         manifest = self._resolve_manifest()
-        if manifest is None:
-            return "C"
-        quality_metadata = manifest.get("quality_metadata", {})
-        return quality_metadata.get("evidence_tier", "C")
+        if manifest is not None:
+            tier = manifest.get("quality_metadata", {}).get("evidence_tier")
+            if tier:
+                return tier
+
+        return "C"
 
     def _resolve_artifact(self, pattern: str) -> Optional[Path]:
         """Resuelve artifact timestamped por glob (más reciente)."""

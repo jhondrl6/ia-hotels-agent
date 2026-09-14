@@ -1,0 +1,21 @@
+======================================================================
+AC-F1 · AssetReviewer sobre deliveries/ real (FASE-D baseline)
+======================================================================
+ZIPs encontrados: ['hotelsalentoreal_20260831.zip']
+  hotelsalentoreal_20260831.zip: IMPLEMENTATION_ORDER.md en ZIP = True
+findings EMPTY_DELIVERY_TEMPLATE: 1
+  severity=CRITICAL desc='IMPLEMENTATION_ORDER.md es plantilla sin contenido por-hotel (468 bytes, secciones vacías)'
+implementation_order_check: {"status": "OK", "source": "dir"}
+verdict_recommendation: BLOQUEAR
+======================================================================
+AC-F2/AC-F4 · TribunalJudge sobre audit real (FASE-I) sin MANIFEST en disco
+======================================================================
+fuente pre-packaging: financial_scenarios_20260904_120404.json → breakdown.evidence_tier = 'B'
+acta → evidence_tier = 'B'  (¿== pipeline? True)
+acta → first_floor_rule = {"applied": true, "reason": "evidence_tier B → máximo condicional"}
+acta → verdict = APROBADO-CONDICIONAL-PENDING-ONBOARDING
+----------------------------------------------------------------------
+AC-F4 sintético · tier B+ sin MANIFEST:
+acta → evidence_tier = 'B+'
+acta → first_floor_rule = {"applied": true, "reason": "evidence_tier B+ → máximo condicional"}
+acta → verdict = APROBADO-CONDICIONAL-PENDING-ONBOARDING

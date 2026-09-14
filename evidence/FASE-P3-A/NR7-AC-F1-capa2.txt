@@ -1,0 +1,108 @@
+# NR7 mutation check — AC-F1-capa2
+# Mutación: Revertir _is_template_stub al conteo non_empty_lines<=3 (boilerplate cuenta como contenido)
+# Archivo: modules\quality_gates\tribunal\asset_reviewer.py
+# Tests dirigidos: 4
+#
+# VERDE (sin mutar): rc=0 — esperado 0
+# ROJO (mutado):     rc=1 — esperado != 0 → OK, el test puede fallar
+
+======================================================================
+=== SALIDA VERDE (rc=0) ===
+======================================================================
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 4 items
+
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_structural_stub_excludes_boilerplate PASSED [ 25%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_zip_only_stub_detected_from_zip_member PASSED [ 50%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_real_baseline_zip_only_stub_detected PASSED [ 75%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_dir_path_still_reads_unzipped_backward_compat PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 4 passed, 8 warnings in 1.10s ========================
+
+
+======================================================================
+=== SALIDA ROJA — MUTADO (rc=1) ===
+======================================================================
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 4 items
+
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_structural_stub_excludes_boilerplate FAILED [ 25%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_zip_only_stub_detected_from_zip_member FAILED [ 50%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_real_baseline_zip_only_stub_detected FAILED [ 75%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_dir_path_still_reads_unzipped_backward_compat FAILED [100%]
+
+================================== FAILURES ===================================
+E   AssertionError: assert False is True
+     +  where False = _is_template_stub('# 📦 Delivery Package - Hotelsalentoreal\n\n**Fecha:** 2026-08-31 12:28\n**Score GEO:** 79 (OPCIONAL)\n\n---\n\n## ⚠️ REGLA DE ORO: NUNCA REEMPLAZAR, SIEMPRE ENRIQUECER\n\nLos archivos CORE son **OBLIGATORIOS**.\nLos archivos GEO son **ENRICHMENT ADICIONAL**.\n\n---\n\n## 📋 ORDEN DE IMPLEMENTACIÓN\n\n---\n\n## 🔗 GUÍA DE RELACIONES ENTRE ARCHIVOS\n\n---\n\n## ✅ CHECKLIST DE IMPLEMENTACIÓN\n\n\n---\n\n*Generado por IA Hoteles Agent v4.0 - FASE-5 Asset Responsibility Contract*')
+     +    where _is_template_stub = <modules.quality_gates.tribunal.asset_reviewer.AssetReviewer object at 0x0000022008FFECF0>._is_template_stub
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:233: AssertionError: assert False is True
+E   assert 0 == 1
+     +  where 0 = len([])
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:156: assert 0 == 1
+E   AssertionError: el stub real de 468 B debe detectarse desde el ZIP
+    assert 0 == 1
+     +  where 0 = len([])
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:280: AssertionError: el stub real de 468 B debe detectarse desde el ZIP
+E   AssertionError: assert 0 == 1
+     +  where 0 = len([])
+     +    where [] = _impl_findings({'artifacts_read': ['asset_generation_report.json', 'delivery_quality_report.json', 'proposal_asset_matrix.json', 'MANIFEST.json', 'IMPLEMENTATION_ORDER.md (dir descomprimido o miembro del ZIP)', 'deliveries/*.zip (régimen ZIP-only)', ...], 'clauses': ['P6.3', 'P6.4'], 'coverage_by_service': [], 'findings': [], ...})
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:224: AssertionError: assert 0 == 1
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_structural_stub_excludes_boilerplate
+FAILED tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_zip_only_stub_detected_from_zip_member
+FAILED tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_real_baseline_zip_only_stub_detected
+FAILED tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_dir_path_still_reads_unzipped_backward_compat
+======================== 4 failed, 8 warnings in 1.11s ========================
+

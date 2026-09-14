@@ -1,0 +1,102 @@
+# NR7 mutation check — AC-F4
+# Mutación: Quitar 'B+' de FIRST_FLOOR_TIERS (la razón del acta vuelve a mentir)
+# Archivo: modules\quality_gates\tribunal\judge.py
+# Tests dirigidos: 4
+#
+# VERDE (sin mutar): rc=0 — esperado 0
+# ROJO (mutado):     rc=1 — esperado != 0 → OK, el test puede fallar
+
+======================================================================
+=== SALIDA VERDE (rc=0) ===
+======================================================================
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 4 items
+
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_b_plus_in_first_floor_tiers PASSED [ 25%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_first_floor_applies_to_b_plus PASSED [ 50%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_first_floor_reason_not_lying_in_b_plus PASSED [ 75%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_b_plus_verdict_is_conditional PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 4 passed, 8 warnings in 1.07s ========================
+
+
+======================================================================
+=== SALIDA ROJA — MUTADO (rc=1) ===
+======================================================================
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 4 items
+
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_b_plus_in_first_floor_tiers FAILED [ 25%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_first_floor_applies_to_b_plus FAILED [ 50%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_first_floor_reason_not_lying_in_b_plus FAILED [ 75%]
+tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_b_plus_verdict_is_conditional PASSED [100%]
+
+================================== FAILURES ===================================
+E   AssertionError: assert 'B+' in {'B', 'C'}
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:347: AssertionError: assert 'B+' in {'B', 'C'}
+E   assert False is True
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:355: assert False is True
+E   AssertionError: assert 'sin restricción' not in 'evidence_ti... primer piso'
+      
+      'sin restricción' is contained here:
+        evidence_tier B+ → sin restricción de primer piso
+      ?                    +++++++++++++++
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:364: AssertionError: assert 'sin restricción' not in 'evidence_ti... primer piso'
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_b_plus_in_first_floor_tiers
+FAILED tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_first_floor_applies_to_b_plus
+FAILED tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py::test_first_floor_reason_not_lying_in_b_plus
+=================== 3 failed, 1 passed, 8 warnings in 1.07s ===================
+

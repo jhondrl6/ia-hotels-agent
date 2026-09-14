@@ -10,6 +10,7 @@ Produce revision_assets.json que alimenta el acta del Juez.
 
 import json
 import re
+import zipfile
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
@@ -36,10 +37,22 @@ VERDICT_BLOQUEAR = "BLOQUEAR"
 
 _CONFIDENCE_VERIFIED_THRESHOLD = 0.9
 
-_IMPL_ORDER_EMPTY_PATTERNS = [
-    re.compile(r"^##\s+ORDEN", re.IGNORECASE),
-    re.compile(r"^##\s+GU", re.IGNORECASE),
-    re.compile(r"^##\s+CHECKLIST", re.IGNORECASE),
+# Estados de la lectura de IMPLEMENTATION_ORDER.md (AC-F1, NR8/DA-P1.6 regla 3):
+# un fallo de lectura NO bloquea — se publica el estado, no un finding CRITICAL.
+IMPL_ORDER_OK = "OK"
+IMPL_ORDER_ARTIFACT_MISSING = "ARTIFACT_MISSING"
+IMPL_ORDER_READER_FAILED = "READER_FAILED"
+IMPL_ORDER_NOT_RUN = "NOT_RUN"
+
+# Líneas que el criterio estructural de _is_template_stub NO cuenta como
+# contenido real por-hotel: separadores, cabecera Fecha/Score, las dos líneas
+# estáticas de la REGLA DE ORO y el footer del generador.
+_IMPL_ORDER_BOILERPLATE = [
+    re.compile(r"^-{3,}$"),
+    re.compile(r"^\*\*Fecha:\*\*", re.IGNORECASE),
+    re.compile(r"^\*\*Score GEO:\*\*", re.IGNORECASE),
+    re.compile(r"^\*Generado por ", re.IGNORECASE),
+    re.compile(r"^Los archivos (CORE|GEO) son ", re.IGNORECASE),
 ]
 
 
@@ -54,6 +67,11 @@ class AssetReviewer:
         self.v4_audit_dir = Path(v4_audit_dir)
         self.deliveries_dir = Path(deliveries_dir)
         self._resolved_delivery_dir: Optional[Path] = None
+        self._resolved_delivery_zip: Optional[Path] = None
+        self._impl_order_check: dict = {
+            "status": IMPL_ORDER_NOT_RUN,
+            "source": None,
+        }
 
     def review(self) -> dict:
         """Retorna revision_assets.json con cobertura, hallazgos y veredicto."""
@@ -71,7 +89,7 @@ class AssetReviewer:
         )
 
         findings.extend(self._check_p12_source(asset_report, delivery_qr))
-        findings.extend(self._check_implementation_order(delivery_dir))
+        findings.extend(self._check_implementation_order())
         findings.extend(self._check_orphan_assets(asset_report, matrix, delivery_dir))
         findings.extend(self._check_unlabeled_estimated(asset_report, coverage))
 
@@ -83,6 +101,7 @@ class AssetReviewer:
             "clauses": ["P6.3", "P6.4"],
             "coverage_by_service": coverage,
             "findings": findings,
+            "implementation_order_check": self._impl_order_check,
             "summary": summary,
             "verdict_recommendation": verdict,
             "timestamp": datetime.now().isoformat(),
@@ -140,7 +159,12 @@ class AssetReviewer:
         return self._load_json(manifest_path if manifest_path.exists() else None)
 
     def _resolve_delivery_dir(self) -> Optional[Path]:
-        """Resuelve el directorio de entrega más reciente por glob."""
+        """Resuelve el directorio de entrega más reciente por glob.
+
+        DA-P1.5: solo devuelve directorios reales, NUNCA un ``.zip``. En régimen
+        ZIP-only no hay directorio descomprimido → retorna None y la lectura de
+        IMPLEMENTATION_ORDER.md pasa a ``_resolve_delivery_zip`` (AC-F1).
+        """
         if self._resolved_delivery_dir is not None:
             return self._resolved_delivery_dir
 
@@ -148,19 +172,38 @@ class AssetReviewer:
             return None
 
         hotel_dirs = sorted(
-            self.deliveries_dir.glob("*"),
+            (d for d in self.deliveries_dir.glob("*") if d.is_dir()),
             key=lambda p: p.stat().st_mtime if p.exists() else 0,
             reverse=True,
         )
 
         for d in hotel_dirs:
-            if d.is_dir() and (d / "MANIFEST.json").exists():
+            if (d / "MANIFEST.json").exists():
                 self._resolved_delivery_dir = d
                 return d
 
         if hotel_dirs:
             self._resolved_delivery_dir = hotel_dirs[0]
             return hotel_dirs[0]
+
+        return None
+
+    def _resolve_delivery_zip(self) -> Optional[Path]:
+        """Resuelve el ``.zip`` de entrega más reciente (régimen ZIP-only, AC-F1)."""
+        if self._resolved_delivery_zip is not None:
+            return self._resolved_delivery_zip
+
+        if not self.deliveries_dir.exists():
+            return None
+
+        zips = sorted(
+            self.deliveries_dir.glob("*.zip"),
+            key=lambda p: p.stat().st_mtime if p.exists() else 0,
+            reverse=True,
+        )
+        if zips:
+            self._resolved_delivery_zip = zips[0]
+            return zips[0]
 
         return None
 
@@ -426,27 +469,58 @@ class AssetReviewer:
 
     # ── IMPLEMENTATION_ORDER.md vacío ─────────────────────────────────
 
-    def _check_implementation_order(
-        self, delivery_dir: Optional[Path]
-    ) -> list:
-        """Detecta IMPLEMENTATION_ORDER.md vacío.
+    def _read_implementation_order(self):
+        """Lee IMPLEMENTATION_ORDER.md desde el directorio o, en su defecto, el ZIP.
 
-        Vacío = 0 bytes O plantilla con secciones sin contenido por-hotel
-        (el stub baseline pesa ~468 B con secciones ORDEN/GUÍA/CHECKLIST vacías).
+        Retorna ``(content, status, source)``. AC-F1 capa 1: en régimen ZIP-only
+        el archivo vive dentro del ``.zip`` (single-write, nunca descomprimido en
+        disco), así que se lee el miembro con ``zipfile``. Un miembro ausente es
+        ARTIFACT_MISSING y un ZIP ilegible es READER_FAILED — jamás "vacío sin
+        error" (DA-P1.6 regla 3).
         """
-        findings = []
+        delivery_dir = self._resolve_delivery_dir()
+        zip_path = self._resolve_delivery_zip()
 
-        if delivery_dir is None:
+        # 1) Directorio descomprimido (baseline FASE-D / compatibilidad hacia atrás)
+        if delivery_dir is not None:
+            impl_path = delivery_dir / "IMPLEMENTATION_ORDER.md"
+            if impl_path.exists():
+                try:
+                    return impl_path.read_text(encoding="utf-8"), IMPL_ORDER_OK, "dir"
+                except OSError:
+                    return None, IMPL_ORDER_READER_FAILED, "dir"
+
+        # 2) Régimen ZIP-only: leer el miembro desde el ZIP
+        if zip_path is not None:
+            try:
+                with zipfile.ZipFile(zip_path) as zf:
+                    raw = zf.read("IMPLEMENTATION_ORDER.md")
+                return raw.decode("utf-8"), IMPL_ORDER_OK, "zip"
+            except KeyError:
+                return None, IMPL_ORDER_ARTIFACT_MISSING, "zip"
+            except (zipfile.BadZipFile, OSError, UnicodeDecodeError):
+                return None, IMPL_ORDER_READER_FAILED, "zip"
+
+        # 3) Ni directorio ni ZIP → artefacto ausente
+        return None, IMPL_ORDER_ARTIFACT_MISSING, None
+
+    def _check_implementation_order(self) -> list:
+        """Detecta IMPLEMENTATION_ORDER.md vacío/plantilla (AC-F1, dos capas).
+
+        Capa 1: lee el miembro desde el ZIP en régimen ZIP-only (antes resolvía
+        un directorio fantasma ``<hotel>.zip/IMPLEMENTATION_ORDER.md`` y callaba).
+        Capa 2: criterio estructural en ``_is_template_stub``. Un fallo de
+        lectura (ARTIFACT_MISSING/READER_FAILED) NO emite finding ni bloquea —
+        solo publica su estado en ``implementation_order_check``.
+        """
+        findings: list = []
+        content, status, source = self._read_implementation_order()
+        self._impl_order_check = {"status": status, "source": source}
+
+        if status != IMPL_ORDER_OK or content is None:
             return findings
 
-        impl_order = delivery_dir / "IMPLEMENTATION_ORDER.md"
-        if not impl_order.exists():
-            return findings
-
-        try:
-            size = impl_order.stat().st_size
-        except OSError:
-            return findings
+        size = len(content.encode("utf-8"))
 
         if size == 0:
             findings.append(self._make_finding(
@@ -454,11 +528,6 @@ class AssetReviewer:
                 finding_type=FINDING_EMPTY_DELIVERY_TEMPLATE,
                 description="IMPLEMENTATION_ORDER.md tiene 0 bytes",
             ))
-            return findings
-
-        try:
-            content = impl_order.read_text(encoding="utf-8")
-        except OSError:
             return findings
 
         if self._is_template_stub(content):
@@ -474,50 +543,47 @@ class AssetReviewer:
         return findings
 
     def _is_template_stub(self, content: str) -> bool:
-        """Detecta si el contenido es una plantilla con secciones vacías.
+        """Criterio estructural de plantilla vacía (AC-F1 capa 2).
 
-        El stub baseline tiene secciones ORDEN/GUÍA/CHECKLIST pero sin
-        contenido específico por hotel debajo de cada encabezado.
+        Stub ⟺ contenido en blanco, O bien ≥1 sección declarada (cabecera ``#``
+        o ``##``; ``###`` cuenta como contenido) y TODAS sus secciones con 0
+        líneas de contenido real — excluyendo separadores ``---`` y el
+        boilerplate Fecha/Score/REGLA DE ORO/footer. Reemplaza el conteo frágil
+        ``non_empty_lines <= 3`` que contaba el boilerplate del stub como
+        contenido y dejaba pasar la plantilla real de 468 bytes.
         """
-        lines = content.strip().splitlines()
-        if not lines:
+        if not content.strip():
             return True
 
-        section_headers = []
-        section_content_lines: dict[int, int] = {}
-        current_section = -1
+        def is_header(s: str) -> bool:
+            return s.startswith("# ") or s.startswith("## ")
 
-        for line in lines:
-            stripped = line.strip()
-            if stripped.startswith("## ") or stripped.startswith("# "):
-                current_section += 1
-                section_headers.append(stripped)
-                section_content_lines[current_section] = 0
-            elif stripped and current_section >= 0:
-                if not stripped.startswith("-") or stripped == "-":
-                    section_content_lines[current_section] = (
-                        section_content_lines.get(current_section, 0) + 1
-                    )
+        def is_boilerplate(s: str) -> bool:
+            return any(p.match(s) for p in _IMPL_ORDER_BOILERPLATE)
 
-        if not section_headers:
-            return len(content.strip()) < 100
+        section_count = 0
+        sections_with_content = 0
+        current_has_content = False
 
-        key_sections_found = 0
-        for header in section_headers:
-            header_lower = header.lower()
-            if any(kw in header_lower for kw in ("orden", "guía", "guia", "checklist", "implementaci", "prioridad")):
-                key_sections_found += 1
+        for raw_line in content.splitlines():
+            stripped = raw_line.strip()
+            if not stripped:
+                continue
+            if is_header(stripped):
+                if section_count > 0 and current_has_content:
+                    sections_with_content += 1
+                section_count += 1
+                current_has_content = False
+            elif not is_boilerplate(stripped):
+                current_has_content = True
 
-        if key_sections_found == 0:
+        if section_count > 0 and current_has_content:
+            sections_with_content += 1
+
+        if section_count == 0:
             return False
 
-        total_content = sum(section_content_lines.values())
-        non_empty_lines = sum(1 for line in lines if line.strip() and not line.strip().startswith("#"))
-
-        if non_empty_lines <= 3 and total_content <= 5:
-            return True
-
-        return False
+        return sections_with_content == 0
 
     # ── Orphan assets ─────────────────────────────────────────────────
 
@@ -640,7 +706,8 @@ class AssetReviewer:
             "delivery_quality_report.json",
             "proposal_asset_matrix.json",
             "MANIFEST.json",
-            "IMPLEMENTATION_ORDER.md",
+            "IMPLEMENTATION_ORDER.md (dir descomprimido o miembro del ZIP)",
+            "deliveries/*.zip (régimen ZIP-only)",
             "coherence_validation*.json",
             "ASSETS/* (archivos reales en disco)",
         ]
