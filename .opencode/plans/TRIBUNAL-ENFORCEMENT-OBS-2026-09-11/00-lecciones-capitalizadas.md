@@ -66,6 +66,23 @@ el Paso 0 debía producir y no producía.
 > `10-analisis` §Lecciones; **L-P3A.1 y L-P3A.2 son candidatas a ascender a la capa fría en el archivado
 > de RELEASE** (presupuestar fases de detección por coste de verificación; assertuar contra `Enum.x.value`).
 
+> **Estado al cerrar FASE-P3-B (2026-09-14) — qué de §2 se ejercitó de verdad sobre artefactos**:
+> **L-T2C.2** dejó de ser advertencia: el hoist de `ga4_available`/`gsc_available` vive **fuera** de
+> todo `try` con handler ancho y **antes** del guard `if generate_proposal:`, y las dos condiciones se
+> verifican por AST sobre el fuente de producción, no por lectura humana — con sus mutaciones
+> correspondientes (`NR7-AC-F5-b.txt` envuelve el hoist en `except Exception`, `NR7-AC-F5-c.txt` lo
+> mete dentro del guard; en ambas el test dirigido se pone rojo). **L-T4A.5 / L-VUP-5 (NR7)**: **6 pares
+> verde/rojo**, y el de AC-F3 incluye la mutación que ninguna de las dos capas anteriores exigía —
+> **aparece un emisor no contratado** (`NR7-AC-F3-b.txt`), porque una whitelist que solo puede fallar
+> por retirada no demuestra que la barra siga viva. **L-VUP-1**: el par NR1 se tomó con la combinación
+> exacta de archivos declarada y el flaky (`test_function_default_flags`) nombrado en la evidencia;
+> PRE y POST difieren solo en los +23 tests propios. **L-SR3**: propagar la bandera real de GSC sin
+> tocar `gsc_configured` del MANIFEST habría creado una segunda fuente del mismo hecho — se apuntó a
+> la variable única, y donde quedaba divergencia (diagnóstico↔tier) **no** se cerró de paso: **L-V.4**
+> manda registrarla con causa y dueño (`constancia-Q5.md` §4). **El §2 sigue en 19 filas**: P3-B no
+> capitalizó lección externa nueva; consumió cinco de estas. Sus tres lecciones propias
+> (**L-P3B.1/.2/.3**) viven en `10-analisis` §Lecciones.
+
 ## 3. Candidatos evaluados y descartados
 
 | ID | Por qué NO aplica a este plan |
@@ -117,4 +134,4 @@ capa vino cada fila.
   `01-plan-maestro.md` y `README.md` cuando este archivo se instanció. El orden correcto —
   consultar, luego diseñar— no se puede retrodatar; lo que este archivo recupera es la
   trazabilidad, no la secuencia.
-- **Pendiente (acotado a las fases que faltan)**: FASE-P1 y FASE-P3-A **ya registraron** su estado contra §2 (P1 resolvió los 4 hallazgos de §3.b; P3-A añadió el bloque "Estado al cerrar FASE-P3-A" tras la tabla). Lo pendiente es el mismo gesto para **P3-B, P2 y P4**: anotar al cerrar cada una qué lecciones de §2 se ejercitaron de verdad y con qué evidencia. (`10-analisis-post-implementacion.md` y `09-documentacion-post-proyecto.md` **ya existen**: los creó la sesión de ajuste 2026-09-14 con la estructura que el executor exigía desde la concepción — el registro de que llegaron tarde está en el propio `10-analisis`.)
+- **Pendiente (acotado a las fases que faltan)**: FASE-P1, FASE-P3-A y FASE-P3-B **ya registraron** su estado contra §2 (P1 resolvió los 4 hallazgos de §3.b; P3-A y P3-B añadieron su bloque "Estado al cerrar…" tras la tabla). Lo pendiente es el mismo gesto para **P2 y P4**: anotar al cerrar cada una qué lecciones de §2 se ejercitaron de verdad y con qué evidencia. (`10-analisis-post-implementacion.md` y `09-documentacion-post-proyecto.md` **ya existen**: los creó la sesión de ajuste 2026-09-14 con la estructura que el executor exigía desde la concepción — el registro de que llegaron tarde está en el propio `10-analisis`.)

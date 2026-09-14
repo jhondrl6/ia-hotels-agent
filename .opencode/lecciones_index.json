@@ -5,7 +5,7 @@
     "archivos_analysis_escaneados": 13,
     "archivos_contexto_escaneados": 35,
     "archivos_md_escaneados": 361,
-    "ids_con_definicion": 277,
+    "ids_con_definicion": 280,
     "ids_citados_sin_definicion": 38,
     "familias_incluidas": [
       "L",
@@ -343,7 +343,7 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 31,
+      "total_citas": 38,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -373,7 +373,7 @@
       "seccion": "Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 29,
+      "total_citas": 38,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -875,7 +875,7 @@
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 4,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -903,7 +903,7 @@
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 4,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2041,7 +2041,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 11,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2063,6 +2063,48 @@
       "id": "L-P3A.3",
       "familia": "L",
       "enunciado": "El conteo canónico había derivado: 4.063 (v4.76.0) → 4.109 en el PRE de P3-A, porque el plan ajeno PASO0-VERIFICADOR-CAPITALIZACION añadió ~45 funciones test entre medias. Restar contra el ancla \"pre-plan\" documentada habría dado un +66 falso y se habría leído como baseline contaminado — El número \"pre-plan\" del 09/AGENTS es un ancla histórica de v4.76.0, no el baseline R2.7 de la fase; entre una y otra entraron commits ajenos",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P3B.1",
+      "familia": "L",
+      "enunciado": "Presupuesto superado por tercera fase consecutiva: 25 declaradas, 120 ids / 120 tool_use medidas (corte = bad0a5e). P1: 30→≈30/58 (auto-reporte). P3-A: 20→106/126. P3-B: 25→120/120. La serie es el hallazgo, no el caso — El presupuesto se declara por tamaño del entregable y lo que domina el coste es la verificación: el par NR1 son dos corridas de la suite completa (4.130+ tests, 7:30 y 10:21 min), y NR7 son 6 mutaciones que cada una lanza el verde y el rojo. En P3-B el código editado son 2 archivos de producción; la verificación costó ~6× más que el fix",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 10,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P3B.2",
+      "familia": "L",
+      "enunciado": "test_barreda_un_solo_emisor_de_la_clave tenía dos aserciones y solo una se ejecutaba: la de emisores fallaba desde v4.76.0, así que la de consumidores —escrita debajo— nunca fue evaluada. Al arreglar la primera resultó que la segunda también estaba rota (Bot 3 consume entry.get(\"asset_path\") desde que existe) — Un test en rojo por su primera causa deja sin vigilar todo lo que hay después de esa causa, y el rojo visible ocultaba un segundo defecto. Es la cara opuesta de L-T4A.5: allí un verde no probaba nada; aquí un rojo no probaba nada de lo que venía después. NR7 mira si el test *puede* fallar; no mira si llegó a la aserción",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P3B.3",
+      "familia": "L",
+      "enunciado": "La promesa de Q5/AC-F5 decía \"propagar la disponibilidad real\", y medido en main.py solo existía la mitad: ga4_available se calculaba y se tiraba, pero gsc_available no se calculaba en ninguna parte del flujo — AnalyticsStatus lo declara en False y nadie lo asigna en v4complete. Propagar solo lo que había habría dejado el Tier A exactamente igual de inalcanzable (la regla exige ga4_enabled and gsc_enabled) y el AC se habría cerrado en verde sin arreglar el síntoma que lo justificó — El plan heredó del párrafo §2.1 del maestro una premisa formulada en plural (\"la disponibilidad real se calcula más abajo\") y la midió solo en su caso GA4. La restricción \"NO re-decidir Q5\" (L-VUP-6) no obliga a ejecutar literalmente un enunciado cuyo input resultó no existir",
       "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
@@ -2262,7 +2304,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 25,
+      "total_citas": 27,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2313,7 +2355,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 24,
+      "total_citas": 25,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2363,11 +2405,11 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 48,
+      "total_citas": 56,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
-        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
       ],
       "redefiniciones": []
@@ -2573,7 +2615,7 @@
       "seccion": "FASE-T2-C (2026-09-10)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 16,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2676,7 +2718,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 21,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2926,7 +2968,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2957,7 +2999,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2974,10 +3016,10 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 17,
+      "total_citas": 22,
       "planes_que_lo_citan": [
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -3035,7 +3077,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 22,
+      "total_citas": 26,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -3052,7 +3094,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -3595,11 +3637,11 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 55,
+      "total_citas": 56,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-OFFLINE-2026-09-09",
-        "context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01",
-        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01"
       ],
       "redefiniciones": []
     },

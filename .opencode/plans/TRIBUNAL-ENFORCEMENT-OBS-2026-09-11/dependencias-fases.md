@@ -62,8 +62,8 @@ FASE-P3-A ✅ (2026-09-14) (detección y fidelidad: AC-F1 dos capas ZIP-aware + 
            fuente del tier + AC-F4 primer piso en B+)  ← ejecutada; no tocó main.py
         │
         ▼
-FASE-P3-B (cableado y test: AC-F5 banderas reales [disparado por Q5=a, toca main.py]
-           + AC-F3 whitelist barreda + AC-F6 versión del acta)
+FASE-P3-B ✅ (2026-09-14) (cableado y test: AC-F5 banderas reales [disparado por Q5=a]
+           + AC-F3 whitelist barreda + AC-F6 versión del acta)  ← ejecutada; **sí tocó main.py**
         │
         ▼  (P2 llega con judge.py y el resolutor de entrega ya corregidos)
 FASE-P2 (O1-cuarentena: package write→revisar→decidir→publish; AC-E0…AC-E5;
@@ -91,7 +91,7 @@ FASE-VERIFY: NO crea sesión (decisión cerrada en P1, §FASE-VERIFY arriba).
 |------|-----------|-----------|---------------------|
 | FASE-P1 ✅ (2026-09-14) | RELEASE-4.76.0 del predecesor ✅ | P3-A, P3-B, P2, P4, RELEASE | **Contrato cerrado** en `evidence/FASE-P1/decision-enforcement.md` — Q1=sí, Q1b=escalar, Q2=O1-cuarentena, Q2b=ambas capas, Q3=P3→P2, Q5=a, Q6=4 estados, Q7=knob heredado, VERIFY=no activa. Lo decidido aquí obliga a las fases de código (regla §15.4.1) |
 | FASE-P3-A ✅ (2026-09-14) | P1 (Q2b = las dos capas) ✅ | P3-B, P2, P4, RELEASE | **Cerrada**: AC-F1 (lectura ZIP-aware + stub estructural, 4 estados NR8 en `_impl_order_check`), AC-F2 (tier desde `financial_scenarios_*.json → breakdown.evidence_tier`, MANIFEST fallback), AC-F4 (`FIRST_FLOOR_TIERS` extendido a `"B+"`). **AC8 y AC-F2 complan el mismo resolutor** (raíz común DA-P1.5: `_resolve_delivery_dir` de Bot 3 y `_read_evidence_tier` del Juez, ambos contra un layout descomprimido). **No tocó `main.py`** (verificado con `git status`). 4 pares NR7 verde/rojo, R2.7 4.109→4.130 (+21) |
-| FASE-P3-B | P1 (Q5=a) + P3-A (baseline NR1 y `acta_writer.py`) | P2, P4, RELEASE | AC-F5 **disparado**: hoist de `ga4_available`/`gsc_available` al `HotelFinancialData` de FASE-K (toca `main.py`); AC-F3 (whitelist barreda, test-only) y AC-F6 (versión desde `VERSION.yaml`) |
+| FASE-P3-B ✅ (2026-09-14) | P1 (Q5=a) ✅ + P3-A ✅ (baseline NR1 y `acta_writer.py`) | P2, P4, RELEASE | **Cerrada**: AC-F5 **disparado y ejecutado** — hoist de `ga4_available`/`gsc_available` al `HotelFinancialData` de FASE-K (toca `main.py`); **medido**: GSC no tenía valor real que hoistear (nadie lo computaba en `v4complete`), así que hubo que calcularlo, y `gsc_configured` del MANIFEST se apuntó a la misma variable para no divergir del tier (L-SR3). AC-F3 whitelist barreda **test-only** justificada por §5.1 del contrato — **se cierra D-V.1**, la deuda que v4.76.0 publicó abierta. AC-F6 versión del acta desde `VERSION.yaml` leída en cada escritura. **Cero cambios en `judge.py`/`asset_reviewer.py`** (verificado con `git show --stat`). 6 pares NR7 verde/rojo, R2.7 4.130→4.153 (+23), 0 regresiones |
 | FASE-P2 | **P3-A ✅ + P3-B ✅** + contrato P1 (Q1/Q1b/Q2/Q6/Q7) | P4, RELEASE | O1-cuarentena: `package()` partido en write/publish, `reviewer_reports` tipado y poblado, `_compute_verdict` con el cuarto argumento, AC-E0…AC-E5. Su prompt existe y **no re-decide** el contrato |
 | FASE-P4 | P2 + **T3a datos operativos** (Q4: el hotel, por contacto directo del operador) | RELEASE | Corrida de observación **opcional**. Techo de tier con **dueño declarado** (AC-O0): cableado (ya arreglado por AC-F5) vs analítica del hotel (T3b). Sin proveedor con fuente → §Cierre válido sin P4 |
 | FASE-VERIFY | — | — | **No activa** (decisión cerrada en P1 arriba). AC-V1 de RELEASE la sustituye como patrón declarado |
@@ -103,14 +103,14 @@ FASE-VERIFY: NO crea sesión (decisión cerrada en P1, §FASE-VERIFY arriba).
 
 | Archivo | Fases que lo modifican | Riesgo | Mitigación |
 |---------|------------------------|--------|------------|
-| `main.py` | P2 (ordenamiento), P3-B (hoist de `ga4_available`/`gsc_available` hacia el bloque FASE-K si Q5=a) | Alto | Secuencial obligatorio: P2 y P3-B nunca en la misma sesión ni en paralelo |
-| `modules/quality_gates/tribunal/judge.py` | P2 (consume `reviewer_reports`), P3-A (fuente del tier AC-F2; `FIRST_FLOOR_TIERS`/`_apply_first_floor_rule` AC-F4), P3-B (solo si Q6/AC-F4 lo reabre) | Alto | Secuencial obligatorio |
-| `modules/quality_gates/tribunal/asset_reviewer.py` | P3-A (AC8: ZIP o heurístico) | Bajo | Solo P3-A |
-| `modules/delivery/delivery_packager.py` | P2 si O1/O3 | Medio | Cambio de contrato → tests de packaging primero |
-| `modules/quality_gates/tribunal/acta_writer.py` | P3-B (versión desde `VERSION.yaml`) | Bajo | Solo P3-B |
-| `tests/quality_gates/tribunal/` | P2, P3-A, P3-B | Bajo | Archivos de test disjuntos por fase; ritual de cierre: `grep` de la clase en `__init__.py` (lección del predecesor, R2) |
-| `test_barreda_un_solo_emisor_de_la_clave` | P3-B (whitelist test-only, D-V.1) | Bajo | Edición test-only; no tocar el emisor |
-| Conteo NR1 (suma de tests) | P2, P3-A, P3-B en secuencia | Medio | Cada fase toma su snapshot `pre` con `--ignore` de sus propios tests (L-T4B.5) y resta R2.7; nunca dos fases miden el mismo baseline |
+| `main.py` | P2 (ordenamiento) ⬜; **P3-B ✅ lo modificó** (hoist AC-F5 de `ga4_available`/`gsc_available` sobre el bloque FASE-K + `gsc_configured` del MANIFEST leyendo la misma variable) | Alto | Secuencial obligatorio: P2 y P3-B nunca en la misma sesión ni en paralelo — **cumplido**: P3-B se cerró en `bad0a5e` y P2 no ha empezado |
+| `modules/quality_gates/tribunal/judge.py` | P2 (consume `reviewer_reports`), P3-A (✅ AC-F2/AC-F4), **P3-B: NO lo tocó** (el AC-F6 vive en `acta_writer.py`; Q6 no se reabrió) | Alto | Secuencial obligatorio — verificado con `git show --stat bad0a5e` |
+| `modules/quality_gates/tribunal/asset_reviewer.py` | P3-A ✅ (AC-F1 dos capas). **P3-B: NO lo tocó** — la promesa exacta de D-V.1 era edición test-only | Bajo | Línea roja cumplida: la whitelist se escribió en el test, no en el emisor (`NR7-AC-F3-a/b.txt` prueban la barra sin mutar el emisor) |
+| `modules/delivery/delivery_packager.py` | P2 si O1/O3 | Medio | Cambio de contrato → tests de packaging primero. **P3-B no lo tocó** (no existía todavía; la restricción del prompt lo verificó) |
+| `modules/quality_gates/tribunal/acta_writer.py` | **P3-B ✅ (AC-F6: versión desde `VERSION.yaml`)**; P2 ⬜ (quitará el guard `if reviewer_reports:` — DA-P1.6 regla 1) | Bajo | Secuencial: la segunda pata es P2 y queda escrita en su prompt |
+| `tests/quality_gates/tribunal/` | P2 ⬜, P3-A ✅, P3-B ✅ (`test_p3b_analytics_flags_wiring.py` y `test_acta_version_desde_yaml.py` nuevos; `test_s_e2_generate_proposal_false.py` ampliado) | Bajo | Archivos de test disjuntos por fase. El `__init__.py` del paquete está vacío, así que el ritual de cierre (`grep` de la clase en `__init__.py`) no aplica a esta carpeta — verificado al cerrar P3-B |
+| `test_barreda_un_solo_emisor_de_la_clave` | **P3-B ✅ (whitelist test-only, D-V.1 CERRADA)** | Bajo | Edición test-only; el emisor quedó intacto. La barra sigue siendo igualdad de conjuntos |
+| Conteo NR1 (suma de tests) | P2 ⬜, P3-A ✅ (4.109→4.130), **P3-B ✅ (4.130→4.153)** en secuencia | Medio | Cada fase toma su snapshot `pre` con `--ignore` de sus propios tests (L-T4B.5) y resta R2.7; nunca dos fases miden el mismo baseline — el PRE de P3-B es el POST de P3-A, no el mismo snapshot |
 
 ---
 
@@ -133,11 +133,11 @@ P4 depende de dos precondiciones que pueden no cerrarse nunca: **T3a** (hotel co
 | Sub-fase | Precondición externa | Por qué |
 |----------|---------------------|---------|
 | **FASE-P4 — T3a** (datos operativos) | Hotel propio: `rooms`, `occupancy_rate`, `direct_channel_percentage`, `ADR` con fuente declarada (precondición T3 del ROADMAP) | Sin dato verificado, `_determine_evidence_tier` cae en `B`/`C` y el primer piso no se levanta. Su fallo **sí** difiere P4 (§Cierre válido sin P4) |
-| **FASE-P4 — T3b** (analítica) — nueva, medida 2026-09-12 | GA4 **y** GSC disponibles, y el cableado que propague esa disponibilidad al `HotelFinancialData` del bloque FASE-K (decisión Q5) | `_determine_evidence_tier` devuelve `A` solo con `ga4_enabled and gsc_enabled and has_verified_data`, y `_compute_verdict` exige `A` para `APROBADO-PARA-ENTREGA`. Con solo T3a el techo es `B_PLUS`: el régimen que motiva el plan sigue sin observarse. Su fallo **no** difiere P4: AC-O0 |
+| **FASE-P4 — T3b** (analítica) — nueva, medida 2026-09-12; **su mitad de código la cerró AC-F5 en P3-B (2026-09-14)** | Credenciales y propiedad de **GA4 y GSC** configuradas. El cableado que propaga esa disponibilidad al `HotelFinancialData` del bloque FASE-K **ya existe** (Q5=a ejecutada): `ga4_available`/`gsc_available` se calculan antes de FASE-K y alimentan el tier. Lo que queda externo es el dato, no el pipeline | `_determine_evidence_tier` devuelve `A` solo con `ga4_enabled and gsc_enabled and has_verified_data`, y `_compute_verdict` exige `A` para `APROBADO-PARA-ENTREGA`. Con solo T3a el techo es `B_PLUS`. Su fallo **no** difiere P4: AC-O0. **Hecho nuevo medido en P3-B**: el pipeline **no consume** datos de GSC en `v4complete` (nadie llama `get_search_analytics()`); la regla FASE-1 decide por **conectividad**, no por dato consumido, así que un `A` con GSC configurado y sin datos leídos descansa en esa distinción — y es el punto que AC-O0 debe declarar si P4 llega a ella |
 | FASE-P4 (consentimiento) | El hotel/dueño acepta que la corrida use sus datos | Es una corrida de observación, no una entrega; igual requiere autorización |
 | T5 / T6 (ROADMAP) | Credenciales FTP/WP + staging / escala | Fuera de alcance de este plan (igual que en el predecesor) |
 
-**Consecuencia**: P1–P3-A/P3-B son ejecutables sin dato real. P4 queda condicionada a T3a **y** T3b — y T3b no es solo externa: una de sus tres opciones (Q5=a) es código en `main.py`. Si T3b no se cierra, P4 se corre en `B_PLUS` con el límite declarado (AC-O0); si T3a no se cierra, aplica §Cierre válido sin P4.
+**Consecuencia**: P1–P3-A/P3-B **se ejecutaron** sin dato real. P4 queda condicionada a T3a **y** T3b; desde el 2026-09-14 ambas son puramente externas, porque la tercera pata que tenía T3b (cablear las banderas en `main.py`, Q5=a) la cerró **AC-F5 en P3-B**. Si T3b no se cierra, P4 se corre en `B_PLUS` con el límite declarado (AC-O0); si T3a no se cierra, aplica §Cierre válido sin P4. Lo que ya **no** puede alegar un `B_PLUS` en P4 es "el pipeline no propaga las banderas": esa excusa quedó cerrada, y AC-O0 obliga a nombrar el dueño real del techo (dato verificado ausente, o credenciales GA4/GSC ausentes).
 
 ---
 
