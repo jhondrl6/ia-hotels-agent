@@ -53,7 +53,7 @@
 - [x] `run_all_validations.py --quick` → **9/9 TOTAL PASS** (2026-09-14 14:00). Incluidos los dos checks que esta sesión ponía a prueba: `[8/9] Plan Citations` (**743 citas históricas, 0 nuevas, 0 crecimientos** — P1 no introdujo números de línea) y `[9/9] Lesson Capitalization` (forma y trazabilidad del `00-` verificadas; **no** verifica pertinencia, declarado por el propio check)
 - [x] **Iteraciones de P1 medidas y escritas** — auto-reporte con unidad declarada (D-V2.1), celda rellenada en Estado Global; la celda ya no está en `—`
 - [x] **NO modificó código de producción** — verificado con `git status`: `NINGUN .py modificado`; los 10 caminos tocados son `.opencode/plans/<PLAN>/*` (7), `evidence/FASE-P1/` (2 nuevos) y `docs/contributing/REGISTRY.md`
-- [ ] Commit de cierre de fase → hash `⟨este commit⟩`
+- [x] Commit de cierre de fase → **`fd8e4f4`** (13 archivos, +1.045/−229; hooks 7/7). La higiene que este commit exigía — regenerar `.opencode/LECCIONES-INDEX.md` y `lecciones_index.json` tras editar los `.md` del plan — viaja en el commit siguiente, que es el que estás leyendo
 
 ### FASE-P3-A — Detección y fidelidad del acta **(primera fase de ejecución — orden DA-P1.3)**
 

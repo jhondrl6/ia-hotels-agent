@@ -29,7 +29,7 @@
 | Funciones test (canónico `grep -rE "^\s*def test_" tests --include=*.py`) | 4.063 | **4.063** (sin cambio) | — | — | — | — | — |
 | Archivos `test_*.py` | 293 | **293** (sin cambio) | — | — | — | — | — |
 | Fallos conocidos (suite en HEAD) | 3 (2 ajenos + barreda/D-V.1) | **3** (sin cambio) | — | — | ⟨P3-B cierra barreda → 2⟩ | — | — |
-| `--quick` checks | 9/9 | ⟨resultado del cierre de esta sesión⟩ | — | — | — | — | — |
+| `--quick` checks | 9/9 | **9/9** (2026-09-14 14:00, medido en el cierre; re-verificado por los 7 hooks de `fd8e4f4`) | — | — | — | — | — |
 | Iteraciones de fase (unidad declarada, D-V2.1) | — | ≈30 `ids` / ≈58 `tool_use` | — | — | — | — | — |
 
 > La fila de barreda asume que P3-B se ejecuta con Q5≠(a) o (a); si P4 se difiere, la columna P4 se marca "Diferida" con referencia a la decisión.

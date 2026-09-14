@@ -76,7 +76,7 @@ Desarrollo completo con alternativas rechazadas: `evidence/FASE-P1/decision-enfo
 ## Métricas de Ejecución (al cerrar cada fase)
 
 - Tests canonónicos: pre-plan 4.063 / 293 archivos (medido 2026-09-11, v4.76.0) — actualizar con delta R2.7 por fase. **P1: 4.063 / 293 sin cambio** (fase de decisión, cero código, cero tests nuevos ni tocados; verificado por `git status` en el commit de cierre).
-- `--quick`: 9 checks desde `4ac139a` (eran 8 al cierre del predecesor). **P1: resultado en la evidencia del commit de cierre.**
+- `--quick`: 9 checks desde `4ac139a` (eran 8 al cierre del predecesor). **P1: 9/9 al cierre (2026-09-14 14:00).** Además, el pre-commit aportó un dato propio: el hook `[6/7]` **rechazó el primer intento** de `fd8e4f4` porque editar los `.md` del plan vence el índice de lecciones generado — la regla existe, falla fuerte y obligó a regenerar el par `.md`+`.json`. Es el patrón que este repo prefiere (verificador que truena antes que disciplina manual).
 - Coherence / publicación: sin cambio en P1 (no hay corrida).
 - Archivos tocados por P1: `evidence/FASE-P1/` (2 nuevos), `05-prompt-inicio-sesion-fase-P2.md` (nuevo), y los **7** documentos de plan actualizados (`00`, `01`, `06`, `README`, `dependencias`, este `10`, más `09`).
 
