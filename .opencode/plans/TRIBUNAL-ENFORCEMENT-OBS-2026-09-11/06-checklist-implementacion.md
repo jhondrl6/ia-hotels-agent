@@ -8,7 +8,7 @@
 
 | # | Fase | Estado | Fecha inicio | Fecha cierre | Iteraciones (ids + tool_use, corte = commit) | Notas |
 |---|------|--------|-------------|-------------|-------------|-------|
-| 0 | Precondición: FASE-RELEASE-4.76.0 (predecesor) | ✅ Completada | 2026-09-11 | 2026-09-11 | n/a (predecesor, sin medición) | v4.76.0 publicada (en `origin/master` como `3bdc14e`; `bd2bf57` es su duplicado pre-rebase) + archivado R2.5 — puerta de P1 abierta. Tag `v4.76.0` creado 2026-09-14 (push pendiente) |
+| 0 | Precondición: FASE-RELEASE-4.76.0 (predecesor) | ✅ Completada | 2026-09-11 | 2026-09-11 | n/a (predecesor, sin medición) | v4.76.0 publicada (en `origin/master` como `3bdc14e`; `bd2bf57` es su duplicado pre-rebase) + archivado R2.5 — puerta de P1 abierta. Tag `v4.76.0` creado y empujado a origin 2026-09-14 |
 | 1 | FASE-P1 | ⬜ Pendiente | — | — | — | Decisión Q1–Q6 + contrato (consecuencia del bloqueo + tri-estado) + ACs finales + cierre FASE-VERIFY + prompt P2 si Q1=sí |
 | 2 | FASE-P2 | ⬜ Pendiente | — | — | — | Refactor de ordenamiento (solo si Q1=sí; opción O1/O2/O3). Prompt se crea en P1 |
 | 3a | FASE-P3-A | ⬜ Pendiente | — | — | — | Detección y fidelidad: AC8 + tier acta + AC-F4 (`B_PLUS`) |

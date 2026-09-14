@@ -1,7 +1,7 @@
 # 01 — Plan Maestro: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
 
 > **Origen**: síntesis de FASE-VERIFY del plan TRIBUNAL-OFFLINE-2026-09-09 (certificación 2026-09-11, commit `e6161a3`). Este documento desarrolla lo que sus lecciones y seguimientos apuntan pero no cierran: L-E2E.1 (timing), L-E2E.3 (advisory de facto), AC8 ❌ (D-V.4), D-V.1, D-V.3.
-> **Precondición global**: ✅ cumplida el 2026-09-11 — FASE-RELEASE-4.76.0 del predecesor cerró en `3bdc14e` (corregido 2026-09-14: el `bd2bf57` citado en la concepción es el duplicado pre-rebase, fuera de `origin`). v4.76.0 **está en `origin/master`** y lleva tag anotado `v4.76.0` creado 2026-09-14 (push del tag pendiente); plan archivado por R2.5; `--quick` 8/8 el día del cierre (hoy son 9 checks).
+> **Precondición global**: ✅ cumplida el 2026-09-11 — FASE-RELEASE-4.76.0 del predecesor cerró en `3bdc14e` (corregido 2026-09-14: el `bd2bf57` citado en la concepción es el duplicado pre-rebase, fuera de `origin`). v4.76.0 **está en `origin/master`** y lleva tag anotado `v4.76.0` (creado y empujado a origin el 2026-09-14); plan archivado por R2.5; `--quick` 8/8 el día del cierre (hoy son 9 checks).
 > **Arrastre del predecesor para P1**: a los residuos técnicos de este plan se suman **9 ítems de deuda** (ver §Deuda de proceso de `06-checklist-implementacion.md`): 6 de gates medidos en el R2.5 del predecesor (verificador de R2.6/R2.7, cobertura 12,5 % de `validate_plan_closure.py`, campo `Version actual` del REGISTRY, reescrito ciego de `validate_opencode_refs.py --fix`, punto ciego de `version_consistency_checker.py`, y L-R.1 — ya aplicada a este plan) + 3 añadidos por el Paso 0 horizontal de 2026-09-12 (§9: Paso 0 sin verificador, normalización del flaky de orden en R2.7, y Tier A inalcanzable en `v4complete`).
 
 ---
@@ -185,7 +185,7 @@ Dividida de la P3 original en la sesión de ajuste 2026-09-14: la suma de 6 fixe
 
 ## 8. Versión
 
-Objetivo **4.77.0** (confirmar en P1). Fuente única: `VERSION.yaml`. Nunca hardcodear versiones en código — incluye `acta_writer.py` (fix P3-B). Tags: `v4.76.0` creado 2026-09-14 sobre `3bdc14e` (push pendiente); `v4.77.0` se crea al cerrar RELEASE — la omisión del anterior es la lección.
+Objetivo **4.77.0** (confirmar en P1). Fuente única: `VERSION.yaml`. Nunca hardcodear versiones en código — incluye `acta_writer.py` (fix P3-B). Tags: `v4.76.0` creado y empujado el 2026-09-14 sobre `3bdc14e`; `v4.77.0` se crea al cerrar RELEASE — la omisión del anterior es la lección.
 
 ---
 

@@ -62,7 +62,7 @@
 
 ## Seguimientos Abiertos
 
-- Empujar el tag `v4.76.0` (creado local 2026-09-14 sobre `3bdc14e`) junto con el push que autorice el usuario — no se empuja solo.
+- ~~Empujar el tag `v4.76.0`~~ — **hecho 2026-09-14**: master `8cbcb05..3f026d2` y tag `v4.76.0` (`2df9dbc`→`3bdc14e`) en origin, tras L3 sin hallazgos. La convención sigue para los futuros: los tags no se empujan solos, se preguntan.
 - La rama local `backup/pre-sanidad-evidence-20260912` conserva el objeto `bd2bf57`: candidata a podar cuando el usuario confirme que nada la referencia (no borrar desde un agente sin pedirlo).
 - ⟨P1 añade: decisión sobre la cola de 78 adyacentes (Q7) y §3.b⟩
 

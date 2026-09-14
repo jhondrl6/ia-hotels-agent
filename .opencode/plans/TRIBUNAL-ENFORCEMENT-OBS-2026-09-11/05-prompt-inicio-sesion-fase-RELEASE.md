@@ -27,7 +27,7 @@
 | L-R.1 | R2.1 era medible y no se midió en 8 de 9 fases | Antes de dar el ✅ global: **ninguna** fila de `06-checklist-implementacion.md` puede quedar en `—` sin que su fase esté diferida por decisión |
 | L-R.3 / `validate_plan_closure.py` | La regla de forma de los cierres solo cubre 1 de 8 planes | El cierre de ESTE plan pasa el verificador a mano: `python scripts/validate_plan_closure.py` y revisar su salida contra este checklist |
 | L-R.4 | Una regla sin verificador se publica declarándolo | El `10-analisis` declara qué gates del §Deuda se resolvieron, cuáles siguen y quién es el dueño nuevo |
-| Lección del predecesor (tag) | v4.76.0 cerró sin tag y el hash citado quedó fuera de origin tras un rebase | El tag `v4.77.0` se crea **en el mismo cierre**, sobre el commit final; se verifica que `v4.76.0` (creado 2026-09-14) quede empujado junto con master |
+| Lección del predecesor (tag) | v4.76.0 cerró sin tag y el hash citado quedó fuera de origin tras un rebase | El tag `v4.77.0` se crea **en el mismo cierre**, sobre el commit final, y se empuja junto con master solo con autorización (el déficit de `v4.76.0` ya no existe: creado y empujado 2026-09-14) |
 | R2.5 + convención `<PLAN>` | `validate_opencode_refs.py --fix` reescribe a ciegas y destrozó comandos archivados | Las auto-referencias de este plan ya son plantilla `<PLAN>`; tras el archivado, el diff del `--fix` se revisa a mano antes del commit único |
 
 ---
