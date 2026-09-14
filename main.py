@@ -2094,6 +2094,21 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         'optimistic': get_scenario_value(scenarios, ScenarioType.OPTIMISTIC),
     }
     
+    # AC-F5 (FASE-P3-B, Q5=a): disponibilidad REAL de analitica, calculada ANTES del
+    # bloque FASE-K porque sus banderas alimentan evidence_tier (regla FASE-1 de
+    # _determine_evidence_tier). A nivel del cuerpo de la funcion y SIN try: dentro
+    # del `except Exception` de FASE-K un NameError degradaria el tier en silencio
+    # en las corridas reales (L-T2C.2).
+    from modules.analytics.google_analytics_client import GoogleAnalyticsClient
+    from modules.analytics.google_search_console_client import GoogleSearchConsoleClient
+
+    # GSC se consulta sin site_url: su propiedad es GSC_SITE_URL (config), no la URL
+    # auditada, que puede ser un dominio distinto.
+    ga4_hotel_property_id = getattr(args, 'ga4_property_id', None) or None
+    ga4_client = GoogleAnalyticsClient(property_id=ga4_hotel_property_id)
+    ga4_available = ga4_client.is_available()
+    gsc_available = GoogleSearchConsoleClient().is_configured()
+
     # FASE-K: Calcular FinancialBreakdown desde camino unico (derivado de calc_v2)
     financial_breakdown = None
     try:
@@ -2110,8 +2125,8 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             # evita que el label diverja del valor real usado (lección L26/L28).
             occupancy_source=_occupancy_source,
             channel_source='onboarding' if onboarding_data is not None else 'default',
-            ga4_enabled=False,
-            gsc_enabled=False,
+            ga4_enabled=ga4_available,
+            gsc_enabled=gsc_available,
         )
         financial_breakdown = _sc.calculate_breakdown(_hotel_fin_data)
         print(f"[FASE-K] FinancialBreakdown derivado (camino unico):")
@@ -2396,14 +2411,10 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
 
     # Construir analytics_data para V4DiagnosticGenerator
     # Esto activa la seccion de transparencia analytics en el diagnostico
-    from modules.analytics.google_analytics_client import GoogleAnalyticsClient
     from data_models.analytics_status import AnalyticsStatus
 
-    # GA4 Property ID por hotel (CLI flag) — NO global en .env
-    # GA4_CREDENTIALS_PATH si es global (mismo service account para todos)
-    ga4_hotel_property_id = getattr(args, 'ga4_property_id', None) or None
-    ga4_client = GoogleAnalyticsClient(property_id=ga4_hotel_property_id)
-    ga4_available = ga4_client.is_available()
+    # ga4_hotel_property_id / ga4_client / ga4_available vienen del hoist AC-F5
+    # (sobre el bloque FASE-K). Reevaluarlos aqui daria dos fuentes del mismo hecho.
 
     analytics_status = AnalyticsStatus()
     analytics_status.ga4_available = ga4_available
@@ -3277,11 +3288,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                 "evidence_tier": _breakdown_dict.get('evidence_tier', 'C'),
                 "precision_tier": _precision_tier,
                 "ga4_configured": ga4_available,
-                "gsc_configured": (
-                    analytics_data.get('analytics_status').gsc_available
-                    if analytics_data and analytics_data.get('analytics_status')
-                    else False
-                ),
+                "gsc_configured": gsc_available,
                 "onboarding_used": onboarding_data is not None,
                 "coherence_score": pre_coherence_score,
                 "contradictions_detected": [],  # FASE-3: populated by coherence gate in future phases

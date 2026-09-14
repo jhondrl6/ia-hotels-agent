@@ -28,6 +28,24 @@ CORRIDA = Path("evidence/FASE-I/corrida")
 MATRIZ_REAL = CORRIDA / "hotelsalentoreal/v4_audit/proposal_asset_matrix.json"
 REPORT_REAL = CORRIDA / "v4_complete_report.json"
 
+# Whitelist AC-F3 (FASE-P3-B) — contrato de §5.1 en
+# evidence/FASE-P1/decision-enforcement.md. NO es un xfail ni una rendición: cada
+# nombre extra tiene un contrato escrito que lo limita a re-publicar un hecho que ya
+# resolvió otro, no a afirmar uno nuevo sobre la producción del asset.
+EMISORES_LEGITIMOS = {
+    # Emisor canónico: la ruta prometida al cliente.
+    "asset_generation/proposal_asset_alignment.py",
+    # Bot 3: eco de la ruta que ya resolvió al leer la matriz, dentro de su propio
+    # `revision_assets.json`. No añade un hecho nuevo sobre la producción del asset.
+    "quality_gates/tribunal/asset_reviewer.py",
+}
+CONSUMIDORES_LEGITIMOS = {
+    # Lector QA del entregable.
+    "quality_gates/delivery_quality_report.py",
+    # Bot 3 lee la clave canónica de la matriz para poder hacer su eco contratado.
+    "quality_gates/tribunal/asset_reviewer.py",
+}
+
 
 def _entries_reales() -> list:
     data = json.loads(MATRIZ_REAL.read_text(encoding="utf-8"))
@@ -119,8 +137,13 @@ class TestDocumentacionDelContrato:
     def test_barreda_un_solo_emisor_de_la_clave(self):
         """Barreda L-H6: `asset_path` la EMITE un solo archivo y la CONSUME uno.
 
-        Un segundo emisor significaria una segunda superficie del mismo hecho sin
-        contrato; aqui se cuenta y se nombra, no se supone.
+        La barra es una **igualdad de conjuntos**, no una contención: un emisor o
+        consumidor nuevo sin contrato la pone en rojo, y retirar la autorización de
+        Bot 3 también (AC-F3, NR7).
+
+        Medido en FASE-P3-B: hasta esta fase la segunda aserción nunca se había
+        evaluado — la primera fallaba antes, así que el conjunto de consumidores
+        estaba sin vigilar pese a que el test estaba en rojo por otra causa.
         """
         import re
 
@@ -136,5 +159,5 @@ class TestDocumentacionDelContrato:
                 emisores.add(rel)
             if consume.search(texto):
                 consumidores.add(rel)
-        assert emisores == {"asset_generation/proposal_asset_alignment.py"}, emisores
-        assert consumidores == {"quality_gates/delivery_quality_report.py"}, consumidores
+        assert emisores == EMISORES_LEGITIMOS, emisores
+        assert consumidores == CONSUMIDORES_LEGITIMOS, consumidores

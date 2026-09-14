@@ -1,0 +1,105 @@
+# NR7 mutation check — AC-F6
+# Mutacion: La version del acta se hardcodea de nuevo en acta_writer.py
+# Archivo: modules/quality_gates/tribunal/acta_writer.py
+# Tests dirigidos: 3
+#
+# VERDE (sin mutar): rc=0 — esperado 0
+# ROJO (mutado):     rc=1 — esperado != 0 → OK, el test puede fallar
+
+======================================================================
+=== SALIDA VERDE (rc=0) ===
+======================================================================
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 3 items
+
+tests/quality_gates/tribunal/test_acta_version_desde_yaml.py::TestVersionDelActa::test_refleja_un_yaml_distinto_sin_tocar_codigo PASSED [ 33%]
+tests/quality_gates/tribunal/test_acta_version_desde_yaml.py::TestVersionDelActa::test_el_writer_no_lleva_un_literal_de_version PASSED [ 66%]
+tests/quality_gates/tribunal/test_acta_version_desde_yaml.py::TestVersionDelActa::test_sin_yaml_legible_lo_declara PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 3 passed, 8 warnings in 1.02s ========================
+
+
+======================================================================
+=== SALIDA ROJA — MUTADO (rc=1) ===
+======================================================================
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 3 items
+
+tests/quality_gates/tribunal/test_acta_version_desde_yaml.py::TestVersionDelActa::test_refleja_un_yaml_distinto_sin_tocar_codigo FAILED [ 33%]
+tests/quality_gates/tribunal/test_acta_version_desde_yaml.py::TestVersionDelActa::test_el_writer_no_lleva_un_literal_de_version FAILED [ 66%]
+tests/quality_gates/tribunal/test_acta_version_desde_yaml.py::TestVersionDelActa::test_sin_yaml_legible_lo_declara FAILED [100%]
+
+================================== FAILURES ===================================
+E   AssertionError: assert '4.76.0' == '9.9.9-test'
+      
+      - 9.9.9-test
+      + 4.76.0
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_acta_version_desde_yaml.py:64: AssertionError: assert '4.76.0' == '9.9.9-test'
+E   AssertionError: acta_writer.py volvio a llevar una version literal: la fuente unica es VERSION.yaml (AC-F6)
+    assert not <re.Match object; span=(5029, 5036), match='v4.76.0'>
+     +  where <re.Match object; span=(5029, 5036), match='v4.76.0'> = <function search at 0x000001D77D6398A0>('v\\d+\\.\\d+\\.\\d+', '"""ActaWriter — Writer de acta dual (JSON + MD) para el tribunal.\n\nProduce ``acta_revision.json`` (machine-readable) y ``acta_revision.md``\n(human-readable) a partir del veredicto del ``TribunalJudge``.\n"""\n\nimport json\nfrom datetime import datetime\nfrom pathlib import Path\nfrom typing import Optional\n\nVERSION_FILE = Path(__file__).resolve().parents[3] / "VERSION.yaml"\n\nVERSION_NO_DISPONIBLE = "version-no-disponible"\n\n\ndef _read_project_version() -> str:\n    """Version del pipeline leida de VERSION.yaml (fuente unica del repo, AC-F6).\n\n    Sin literal de respaldo: si VERSION.yaml no se puede leer el acta lo declara,\n    porque una version plausible pero falsa es justo el defecto de fidelidad que\n    este tribunal existe para evitar.\n    """\n    try:\n        with open(VERSION_FILE, "r", encoding="utf-8") as f:\n            for line in f:\n                if line.startswith("version:"):\n                    return line.split(":", 1)[1].strip().strip(\'"\').strip("\'")\n    except (OSError, UnicodeDecodeError):\n        pass\n    return VERSION_NO_DISPONIBLE\n\n\nclass ActaWriter:\n    """Escribe el acta de revisión en formato JSON y Markdown."""\n\n    def ...se.get("finding", "Sin evaluación")\n\n            status_emoji = {\n                "PASS": "✅",\n                "FAIL": "❌",\n                "ADVISORY": "⚠️",\n                "NOT_EVALUABLE": "⬜",\n            }.get(status, "❓")\n\n            title = clause_titles.get(clause_id, clause_id)\n\n            lines.extend([\n                f"### {clause_id}: {title}",\n                f"",\n                f"- **Status**: {status_emoji} {status}",\n                f"- **Artefacto fuente**: `{source}`",\n                f"- **Finding**: {finding}",\n                f"",\n            ])\n\n        reviewer_reports = acta.get("reviewer_reports", [])\n        if reviewer_reports:\n            lines.extend([\n                f"## Reportes de Revisores",\n                f"",\n            ])\n            for report in reviewer_reports:\n                lines.append(f"- `{report}`")\n            lines.append(f"")\n\n        lines.extend([\n            f"---",\n            f"",\n            f"*Generado por TribunalJudge v4.76.0 — {datetime.now().strftime(\'%Y-%m-%d %H:%M\')}*",\n        ])\n\n        with open(path, "w", encoding="utf-8") as f:\n            f.write("\\n".join(lines))\n')
+     +    where <function search at 0x000001D77D6398A0> = re.search
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_acta_version_desde_yaml.py:81: AssertionError: acta_writer.py volvio a llevar una version literal: la fuente unica es VERSION.yaml (AC-F6)
+E   AssertionError: assert '4.76.0' == 'version-no-disponible'
+      
+      - version-no-disponible
+      + 4.76.0
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_acta_version_desde_yaml.py:74: AssertionError: assert '4.76.0' == 'version-no-disponible'
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_acta_version_desde_yaml.py::TestVersionDelActa::test_refleja_un_yaml_distinto_sin_tocar_codigo
+FAILED tests/quality_gates/tribunal/test_acta_version_desde_yaml.py::TestVersionDelActa::test_el_writer_no_lleva_un_literal_de_version
+FAILED tests/quality_gates/tribunal/test_acta_version_desde_yaml.py::TestVersionDelActa::test_sin_yaml_legible_lo_declara
+======================== 3 failed, 8 warnings in 1.07s ========================
+

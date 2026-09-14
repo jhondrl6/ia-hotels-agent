@@ -9,6 +9,27 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+VERSION_FILE = Path(__file__).resolve().parents[3] / "VERSION.yaml"
+
+VERSION_NO_DISPONIBLE = "version-no-disponible"
+
+
+def _read_project_version() -> str:
+    """Version del pipeline leida de VERSION.yaml (fuente unica del repo, AC-F6).
+
+    Sin literal de respaldo: si VERSION.yaml no se puede leer el acta lo declara,
+    porque una version plausible pero falsa es justo el defecto de fidelidad que
+    este tribunal existe para evitar.
+    """
+    try:
+        with open(VERSION_FILE, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.startswith("version:"):
+                    return line.split(":", 1)[1].strip().strip('"').strip("'")
+    except (OSError, UnicodeDecodeError):
+        pass
+    return VERSION_NO_DISPONIBLE
+
 
 class ActaWriter:
     """Escribe el acta de revisión en formato JSON y Markdown."""
@@ -122,7 +143,7 @@ class ActaWriter:
         lines.extend([
             f"---",
             f"",
-            f"*Generado por TribunalJudge v4.76.0 — {datetime.now().strftime('%Y-%m-%d %H:%M')}*",
+            f"*Generado por TribunalJudge v{_read_project_version()} — {datetime.now().strftime('%Y-%m-%d %H:%M')}*",
         ])
 
         with open(path, "w", encoding="utf-8") as f:

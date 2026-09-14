@@ -1,0 +1,18 @@
+== Capa 1: cableado (lo que FASE-K propaga desde AC-F5) ==
+  ga4_available (is_available)     = False
+  gsc_available (is_configured)    = False
+  -> en este entorno sin credenciales ambas son False: el hoist no inventa
+     conectividad, solo deja de negar la que exista.
+
+== Capa 2: el dato (regla FASE-1, intacta) ==
+  artefacto real: financial_scenarios_20260904_120404.json
+  tier publicado por la corrida : B
+  fuentes: adr='regional_v410' occupancy='regional' direct_channel='default'
+  tier con ga4=False gsc=False -> B
+  tier con ga4=True  gsc=False -> B
+  tier con ga4=False gsc=True  -> B
+  tier con ga4=True  gsc=True  -> B
+
+  Lectura: con las fuentes de esta corrida el techo NO lo pone el cableado
+  sino la ausencia de dato verificado (adr=regional_v410, canal=default).
+  Por eso AC-O0 exige declarar el dueno del techo, no solo su letra.

@@ -1,0 +1,93 @@
+# NR7 mutation check — AC-F5-b
+# Mutacion: El hoist vuelve a quedar envuelto en try/except Exception (L-T2C.2)
+# Archivo: main.py
+# Tests dirigidos: 2
+#
+# VERDE (sin mutar): rc=0 — esperado 0
+# ROJO (mutado):     rc=1 — esperado != 0 → OK, el test puede fallar
+
+======================================================================
+=== SALIDA VERDE (rc=0) ===
+======================================================================
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 2 items
+
+tests/quality_gates/tribunal/test_p3b_analytics_flags_wiring.py::TestCableadoBanderasEnFASEK::test_hoist_fuera_de_todo_except_ancho[ga4_available] PASSED [ 50%]
+tests/quality_gates/tribunal/test_p3b_analytics_flags_wiring.py::TestCableadoBanderasEnFASEK::test_hoist_fuera_de_todo_except_ancho[gsc_available] PASSED [100%]
+
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 2 passed, 8 warnings in 1.11s ========================
+
+
+======================================================================
+=== SALIDA ROJA — MUTADO (rc=1) ===
+======================================================================
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Jhond\AppData\Local\Programs\Python\Python313\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.12.1, Faker-37.12.0, langsmith-0.7.26, cov-6.2.1, mock-3.14.1
+collecting ... collected 2 items
+
+tests/quality_gates/tribunal/test_p3b_analytics_flags_wiring.py::TestCableadoBanderasEnFASEK::test_hoist_fuera_de_todo_except_ancho[ga4_available] FAILED [ 50%]
+tests/quality_gates/tribunal/test_p3b_analytics_flags_wiring.py::TestCableadoBanderasEnFASEK::test_hoist_fuera_de_todo_except_ancho[gsc_available] FAILED [100%]
+
+================================== FAILURES ===================================
+E   AssertionError: ga4_available se calcula dentro de un try con handler ancho (linea [2107]); un NameError enmascarado baja el tier sin que nadie lo vea
+    assert not [2107]
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_p3b_analytics_flags_wiring.py:169: AssertionError: ga4_available se calcula dentro de un try con handler ancho (linea [2107]); un NameError enmascarado baja el tier sin que nadie lo vea
+E   AssertionError: gsc_available se calcula dentro de un try con handler ancho (linea [2107]); un NameError enmascarado baja el tier sin que nadie lo vea
+    assert not [2107]
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\tribunal\test_p3b_analytics_flags_wiring.py:169: AssertionError: gsc_available se calcula dentro de un try con handler ancho (linea [2107]); un NameError enmascarado baja el tier sin que nadie lo vea
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_p3b_analytics_flags_wiring.py::TestCableadoBanderasEnFASEK::test_hoist_fuera_de_todo_except_ancho[ga4_available]
+FAILED tests/quality_gates/tribunal/test_p3b_analytics_flags_wiring.py::TestCableadoBanderasEnFASEK::test_hoist_fuera_de_todo_except_ancho[gsc_available]
+======================== 2 failed, 8 warnings in 1.10s ========================
+

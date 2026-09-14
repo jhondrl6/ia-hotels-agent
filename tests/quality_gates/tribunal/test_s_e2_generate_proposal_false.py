@@ -7,6 +7,10 @@ consumen correctamente el dict canónico de normalize_site_presence
 AC15: generate_proposal=False no lanza NameError — la asignación de
 site_presence_report está hoisted fuera del bloque condicional.
 
+FASE-P3-B amplía el mismo contrato al segundo hoist del flujo (AC-F5): las banderas
+reales de analítica que consume el bloque FASE-K también deben asignarse fuera del
+guard `if generate_proposal:` — ver TestAnalyticsFlagsReachableWithoutProposal.
+
 Remediación D-T2C-A1 (auditoría 2026-09-11): TestPresenceLookupLiveConsumers
 ejecuta los tres métodos reales de v4_proposal_generator.py que construyen
 presence_lookup (_generate_dynamic_services_table, _generate_technical_assets_table,
@@ -15,6 +19,8 @@ de estado — fija el delta post-T2-C contra código de producción, no contra u
 re-implementación de la lógica.
 """
 
+import ast
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -148,6 +154,110 @@ class TestSitePresenceReportAlwaysDefined:
         assert not inside_assignments, (
             f"Asignación duplicada encontrada dentro del bloque if generate_proposal "
             f"en línea(s) {inside_assignments} — debe estar hoisted fuera del bloque"
+        )
+
+
+class TestAnalyticsFlagsReachableWithoutProposal:
+    """AC-F5 (FASE-P3-B): las banderas de analitica heredan el contrato de AC15.
+
+    Ampliacion del patron S-E2 sobre el segundo hoist del mismo flujo. El consumidor
+    (bloque FASE-K) vive ANTES del guard `if generate_proposal:`, asi que si el hoist
+    de `ga4_available`/`gsc_available` cayera dentro de ese guard, el regimen
+    generate_proposal=False producira un NameError que el `except Exception` de FASE-K
+    traga imprimiendo un warning: el tier de las corridas reales bajaria en silencio y
+    nada lo diria (L-T2C.2). Por eso se comprueba por AST, no por busqueda de texto.
+    """
+
+    MAIN_SOURCE = (Path(__file__).parents[3] / "main.py").read_text(encoding="utf-8")
+
+    @classmethod
+    def _tree(cls):
+        return ast.parse(cls.MAIN_SOURCE)
+
+    @classmethod
+    def _func(cls):
+        for node in ast.walk(cls._tree()):
+            if isinstance(node, ast.FunctionDef) and node.name == "run_v4_complete_mode":
+                return node
+        raise AssertionError("main.py ya no define run_v4_complete_mode()")
+
+    @classmethod
+    def _parents(cls):
+        parents = {}
+        for node in ast.walk(cls._tree()):
+            for child in ast.iter_child_nodes(node):
+                parents[child] = node
+        return parents
+
+    @staticmethod
+    def _assignments(func, target):
+        return [
+            node
+            for node in ast.walk(func)
+            if isinstance(node, ast.Assign)
+            and any(isinstance(t, ast.Name) and t.id == target for t in node.targets)
+        ]
+
+    @staticmethod
+    def _proposal_guards(func):
+        """Nodos `if` cuya condicion es exactamente el nombre generate_proposal."""
+        return [
+            node
+            for node in ast.walk(func)
+            if isinstance(node, ast.If)
+            and isinstance(node.test, ast.Name)
+            and node.test.id == "generate_proposal"
+        ]
+
+    @classmethod
+    def _under_guard(cls, node, parents, guards):
+        cur = node
+        parent = parents.get(cur)
+        while parent is not None:
+            if parent in guards and any(cur is b for b in parent.body):
+                return True
+            cur = parent
+            parent = parents.get(cur)
+        return False
+
+    @pytest.mark.parametrize("target", ["ga4_available", "gsc_available"])
+    def test_banderas_calculadas_antes_de_decidir_generate_proposal(self, target):
+        func = self._func()
+        assigns = self._assignments(func, target)
+        assert len(assigns) == 1, f"{target} debe asignarse una sola vez, hay {len(assigns)}"
+
+        gate = self._assignments(func, "generate_proposal")
+        assert gate, "main.py ya no asigna generate_proposal"
+        assert assigns[0].lineno < min(a.lineno for a in gate), (
+            f"{target} se calcula despues de decidir generate_proposal: con el flag "
+            f"falso el bloque FASE-K lo consumiria sin asignar"
+        )
+
+    @pytest.mark.parametrize("target", ["ga4_available", "gsc_available"])
+    def test_banderas_no_bajo_el_guard_de_propuesta(self, target):
+        func = self._func()
+        parents = self._parents()
+        guards = self._proposal_guards(func)
+        assert guards, "no existe el bloque if generate_proposal:"
+        assign = self._assignments(func, target)[0]
+        assert not self._under_guard(assign, parents, guards), (
+            f"{target} quedo dentro de `if generate_proposal:` — regimen False produce "
+            f"NameError y el except ancho de FASE-K lo enmascara"
+        )
+
+    def test_bloque_fase_k_tampoco_bajo_el_guard(self):
+        """Si ambos cayeran dentro del guard el pair anterior pasaria y el tier desapareceria."""
+        func = self._func()
+        parents = self._parents()
+        guards = self._proposal_guards(func)
+        call = next(
+            n for n in ast.walk(func)
+            if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
+            and n.func.id == "HotelFinancialData"
+        )
+        assert not self._under_guard(call, parents, guards), (
+            "el bloque FASE-K se volvio condicional a la propuesta: sin propuesta no "
+            "hay evidence_tier y el acta cae al default"
         )
 
 
