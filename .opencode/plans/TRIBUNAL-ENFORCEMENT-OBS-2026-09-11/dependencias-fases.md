@@ -58,8 +58,8 @@ FASE-P1 ✅ (2026-09-14) — Q1=sí · Q1b=escalar · Q2=O1-cuarentena · Q2b=am
                            Contrato: evidence/FASE-P1/decision-enforcement.md
         │
         ▼  (orden fijado por DA-P1.3: substrato confiable antes que dientes)
-FASE-P3-A (detección y fidelidad: AC-F1 dos capas ZIP-aware + AC-F2 fuente del tier
-           + AC-F4 primer piso en B_PLUS)  ← siempre se ejecuta
+FASE-P3-A ✅ (2026-09-14) (detección y fidelidad: AC-F1 dos capas ZIP-aware + AC-F2
+           fuente del tier + AC-F4 primer piso en B+)  ← ejecutada; no tocó main.py
         │
         ▼
 FASE-P3-B (cableado y test: AC-F5 banderas reales [disparado por Q5=a, toca main.py]
@@ -90,7 +90,7 @@ FASE-VERIFY: NO crea sesión (decisión cerrada en P1, §FASE-VERIFY arriba).
 | Fase | Depende de | Bloquea a | Tipo de dependencia |
 |------|-----------|-----------|---------------------|
 | FASE-P1 ✅ (2026-09-14) | RELEASE-4.76.0 del predecesor ✅ | P3-A, P3-B, P2, P4, RELEASE | **Contrato cerrado** en `evidence/FASE-P1/decision-enforcement.md` — Q1=sí, Q1b=escalar, Q2=O1-cuarentena, Q2b=ambas capas, Q3=P3→P2, Q5=a, Q6=4 estados, Q7=knob heredado, VERIFY=no activa. Lo decidido aquí obliga a las fases de código (regla §15.4.1) |
-| FASE-P3-A | P1 (Q2b = las dos capas) | P3-B, P2, P4, RELEASE | AC-F1 (lectura ZIP + stub estructural), AC-F2 (fuente del tier pre-packaging), AC-F4 (`B_PLUS`). **AC8 y AC-F2 complan el mismo resolutor** (raíz común, DA-P1.5). No toca `main.py` |
+| FASE-P3-A ✅ (2026-09-14) | P1 (Q2b = las dos capas) ✅ | P3-B, P2, P4, RELEASE | **Cerrada**: AC-F1 (lectura ZIP-aware + stub estructural, 4 estados NR8 en `_impl_order_check`), AC-F2 (tier desde `financial_scenarios_*.json → breakdown.evidence_tier`, MANIFEST fallback), AC-F4 (`FIRST_FLOOR_TIERS` extendido a `"B+"`). **AC8 y AC-F2 complan el mismo resolutor** (raíz común DA-P1.5: `_resolve_delivery_dir` de Bot 3 y `_read_evidence_tier` del Juez, ambos contra un layout descomprimido). **No tocó `main.py`** (verificado con `git status`). 4 pares NR7 verde/rojo, R2.7 4.109→4.130 (+21) |
 | FASE-P3-B | P1 (Q5=a) + P3-A (baseline NR1 y `acta_writer.py`) | P2, P4, RELEASE | AC-F5 **disparado**: hoist de `ga4_available`/`gsc_available` al `HotelFinancialData` de FASE-K (toca `main.py`); AC-F3 (whitelist barreda, test-only) y AC-F6 (versión desde `VERSION.yaml`) |
 | FASE-P2 | **P3-A ✅ + P3-B ✅** + contrato P1 (Q1/Q1b/Q2/Q6/Q7) | P4, RELEASE | O1-cuarentena: `package()` partido en write/publish, `reviewer_reports` tipado y poblado, `_compute_verdict` con el cuarto argumento, AC-E0…AC-E5. Su prompt existe y **no re-decide** el contrato |
 | FASE-P4 | P2 + **T3a datos operativos** (Q4: el hotel, por contacto directo del operador) | RELEASE | Corrida de observación **opcional**. Techo de tier con **dueño declarado** (AC-O0): cableado (ya arreglado por AC-F5) vs analítica del hotel (T3b). Sin proveedor con fuente → §Cierre válido sin P4 |

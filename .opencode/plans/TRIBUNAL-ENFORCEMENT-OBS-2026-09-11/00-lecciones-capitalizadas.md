@@ -53,6 +53,19 @@ el Paso 0 debía producir y no producía.
 | L-R.1 | R2.1 era medible y no se midió en 8 de 9 fases | `Archives/TRIBUNAL-OFFLINE-2026-09-09/…` (FASE-RELEASE) | La celda `Iteraciones` pasa a ser **bloqueante del ✅** en el checklist de este plan | regla de cabecera de `06-checklist-implementacion.md` |
 | L-R.4 | Una regla de proceso sin verificador es publicable solo si la regla lo declara | `Archives/TRIBUNAL-OFFLINE-2026-09-09/…` (FASE-RELEASE) | §9 de `01-plan-maestro.md` y §4 de este archivo declaran que el Paso 0 sigue sin verificador | §9 · ítem (i) de §Deuda |
 
+> **Estado al cerrar FASE-P3-A (2026-09-14) — qué de §2 se ejercitó de verdad sobre artefactos**:
+> **L-V.1** dejó de ser teoría: la detección se probó contra el **stub real de 468 B** en régimen
+> ZIP-only, no contra un fixture ingenuo (los 2 tests R2.6 del baseline **corrieron**, no se saltaron).
+> **L-T4A.5 / L-T2C.4 / L-VUP-5 (NR7)**: 4 pares verde/rojo, **uno por capa y por AC**, con el árbol
+> restaurado — un verde inmediato se reportó como sospechoso y se falsó con mutación. **L-PF6 /
+> L-PF10 (NR8)**: `_impl_order_check` publica los **cuatro** estados (`OK`/`ARTIFACT_MISSING`/
+> `READER_FAILED`/`NOT_RUN`) y un fallo de lectura ya no puede leerse como "vacío". **L-SR3**: AC-F2
+> unificó la fuente del hecho "tier" (leer `financial_scenarios.breakdown.evidence_tier`, MANIFEST solo
+> fallback). **El §2 sigue en 19 filas**: P3-A no capitalizó ninguna lección externa nueva — consumió
+> seis de estas sobre evidencia real. Sus tres lecciones propias (**L-P3A.1/.2/.3**) viven en la tabla de
+> `10-analisis` §Lecciones; **L-P3A.1 y L-P3A.2 son candidatas a ascender a la capa fría en el archivado
+> de RELEASE** (presupuestar fases de detección por coste de verificación; assertuar contra `Enum.x.value`).
+
 ## 3. Candidatos evaluados y descartados
 
 | ID | Por qué NO aplica a este plan |
@@ -104,4 +117,4 @@ capa vino cada fila.
   `01-plan-maestro.md` y `README.md` cuando este archivo se instanció. El orden correcto —
   consultar, luego diseñar— no se puede retrodatar; lo que este archivo recupera es la
   trazabilidad, no la secuencia.
-- **Pendiente**: actualizar este §2 al cierre de cada fase con lo que realmente pasó. (`10-analisis-post-implementacion.md` y `09-documentacion-post-proyecto.md` **ya existen**: los creó la sesión de ajuste 2026-09-14 con la estructura que el executor exigía desde la concepción — el registro de que llegaron tarde está en el propio `10-analisis`.)
+- **Pendiente (acotado a las fases que faltan)**: FASE-P1 y FASE-P3-A **ya registraron** su estado contra §2 (P1 resolvió los 4 hallazgos de §3.b; P3-A añadió el bloque "Estado al cerrar FASE-P3-A" tras la tabla). Lo pendiente es el mismo gesto para **P3-B, P2 y P4**: anotar al cerrar cada una qué lecciones de §2 se ejercitaron de verdad y con qué evidencia. (`10-analisis-post-implementacion.md` y `09-documentacion-post-proyecto.md` **ya existen**: los creó la sesión de ajuste 2026-09-14 con la estructura que el executor exigía desde la concepción — el registro de que llegaron tarde está en el propio `10-analisis`.)
