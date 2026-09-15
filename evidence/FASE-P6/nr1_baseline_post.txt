@@ -18,3 +18,13 @@ Nuevos archivos de test:
   tests/test_ac_g3_package_evidence.py (6 funciones)
   tests/test_ac_g4_g5_multi_hotel_matrix.py (5 funciones)
   Total: 20 funciones nuevas
+
+--- ANOTACION P6-R (2026-09-15, auditoria forense) ---
+El "Corte: HEAD con AC-G1..AC-G5 implementados" de arriba era FALSO al momento de
+escribirse: ningun cambio de P6 estaba commiteado (HEAD era 48a242b, de P5). El
+registro se conserva intacto por L-P5.2 (la evidencia vieja muestra su propio error).
+Corte real: commit c31422a (P6 original + remediacion P6-R en un solo commit por
+estar el trabajo de P6 sin commitear cuando llego la auditoria). Los numeros
+(4189 passed, 2 fallos ajenos identicos, 41 skipped, 4 xfailed) SI fueron verificados
+en corrida independiente de la auditoria. POST-P6R re-medido en la fila "Iteraciones/
+Metricas" del 10-analisis (delta R2.7 de la remediacion aparte).
