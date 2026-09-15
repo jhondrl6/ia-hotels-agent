@@ -1,0 +1,14 @@
+$ git tag -n v4.76.0 v4.77.0
+v4.76.0         v4.76.0: Tribunal certificador P6+P7 (tramo offline) — FASE-RELEASE plan TRIBUNAL-OFFLINE-2026-09-09
+v4.77.0         v4.77.0 - Tribunal con dientes: enforcement O1-cuarentena + certificacion 25 ACs (plan TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, 9/9)
+
+$ git rev-parse v4.76.0 v4.76.0^{} v4.77.0 v4.77.0^{}
+2df9dbcdda456fb683691b9eb9f4b82d6bedf74c
+3bdc14e8a5c4ee2624a6c008bcf4d885854e872e
+85deab638aad9c41978a442abbfbc8c930eaab32
+9c4a0014e8a4f5a725b6635097ddad47fd84556a
+
+v4.76.0 en origin (verificado 2026-09-15, NO se vuelve a empujar):
+2df9dbcdda456fb683691b9eb9f4b82d6bedf74c	refs/tags/v4.76.0
+
+De esta fase solo sale v4.77.0 (local, pendiente de autorizacion de push).
