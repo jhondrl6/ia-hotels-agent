@@ -1,9 +1,9 @@
 # FASE-RELEASE-4.77.0: Cierre documental + archivado
 
 **ID**: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 / FASE-RELEASE-4.77.0
-**Objetivo**: Publicar v4.77.0 con la documentación oficial sincronizada, certificar los ACs por la vía que decidió P1 (FASE-VERIFY propia o AC-V1 dentro de esta fase), crear el tag anotado, y archivar el plan (R2.5) en el orden de cierre que fija §R2.10 del executor. **NO modifica código fuente.**
-**Dependencias**: P2 (si Q1=sí), P3-A, P3-B ✅ + **P4 ✅ o oficialmente diferida** (§Cierre válido sin P4 en `dependencias-fases.md` — "en espera" no abre esta puerta) + FASE-VERIFY ✅ si activó.
-**Presupuesto**: 30 iteraciones (R2.1, corte = commit de docs; D-V2.1: auto-reporte con unidad declarada si el instrumento no alcanza el transcript).
+**Objetivo**: Preparar v4.77.0 con la documentación oficial sincronizada, certificar AC-V1 (incluye AC-S1…AC-S4 y AC-G1…AC-G5), y cerrar el plan según §R2.10. **Solo documentación: no corrige código, no remedia incidentes ni habilita entregas por excepción.** Commit, tag y publicación se realizan únicamente con su autorización correspondiente.
+**Dependencias**: P1/P3-A/P3-B/P2/P4 cerradas + **P5 y P6 certificadas** + puerta de seguridad AC-S4 resuelta. No se invoca el antiguo diferimiento de P4 ni se crea sesión VERIFY. La siguiente sesión tras P4 es P5, no RELEASE (D-PRE.1).
+**Presupuesto**: 30 iteraciones (R2.1, corte = commit de docs autorizado; D-V2.1: auto-reporte con unidad declarada si el instrumento no alcanza el transcript).
 **Complejidad técnica**: BAJA
 **Modo de ejecución**: DELEGABLE (con revisión final del orquestador)
 **Skill**: `phased_project_executor.md` v2.24.0

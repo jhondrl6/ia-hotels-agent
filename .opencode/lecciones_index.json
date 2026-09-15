@@ -4,9 +4,9 @@
   "cobertura": {
     "archivos_analysis_escaneados": 13,
     "archivos_contexto_escaneados": 35,
-    "archivos_md_escaneados": 361,
-    "ids_con_definicion": 292,
-    "ids_citados_sin_definicion": 39,
+    "archivos_md_escaneados": 363,
+    "ids_con_definicion": 293,
+    "ids_citados_sin_definicion": 42,
     "familias_incluidas": [
       "L",
       "DA",
@@ -180,7 +180,7 @@
       "seccion": "FASE-P4 (2026-09-14) — decisión D-P4.1",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 6,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -290,6 +290,20 @@
       "redefiniciones": []
     },
     {
+      "id": "D-PRE.1",
+      "familia": "D",
+      "enunciado": "«sesión propia antes» se concreta en DOS fases: P5 (seguridad/privacidad) y P6 (generación multi-hotel). Decide el operador al revisar los 9 hallazgos de P4, ante la pregunta de si P5/P6 se fusionaban en una sola fase o se dejaban como seguimientos de RELEASE. Elección: dos fases secuenciales antes de RELEASE — P4 → P5 → P6 → RELEASE (progreso 5/8). Refina, no reabre, D-P4.1: la «fase nueva» de aquella decisión resultan ser dos, porque los hallazgos tienen dueños y naturalezas distintas",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Actualización del plan (2026-09-15) — decisión D-PRE.1",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 11,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "D-T1.1",
       "familia": "D",
       "enunciado": "DEVOLVER-CORRECCIONES bloquea el ZIP igual que BLOQUEADO. Antes solo BLOQUEADO interceptaba, así un acta que devuelve el paquete por assets fallidos se entregaba igual. La política vive en un único punto (BLOCKING_VERDICTS / blocks_delivery_zip() en judge.py), exportada por __init__.py y consumida por main.py en lugar de comparar strings de veredicto en el llamador. — blocks_delivery_zip, BLOCKING_VERDICTS",
@@ -357,7 +371,7 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 48,
+      "total_citas": 57,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -603,7 +617,7 @@
       "seccion": "6. Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 16,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2265,7 +2279,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 5,
+      "total_citas": 6,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2323,7 +2337,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 17,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2367,7 +2381,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 23,
+      "total_citas": 25,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2425,7 +2439,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 37,
+      "total_citas": 41,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2608,7 +2622,7 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 42,
+      "total_citas": 43,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -2886,7 +2900,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 26,
+      "total_citas": 28,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -3370,7 +3384,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 12,
+      "total_citas": 14,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -4590,6 +4604,14 @@
       ]
     },
     {
+      "id": "L-P4",
+      "familia": "L",
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+      ]
+    },
+    {
       "id": "L-PF",
       "familia": "L",
       "total_citas": 2,
@@ -4671,11 +4693,27 @@
       ]
     },
     {
+      "id": "L-P4.5",
+      "familia": "L",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+      ]
+    },
+    {
       "id": "L-R2.4",
       "familia": "L",
       "total_citas": 1,
       "planes_que_lo_citan": [
         "context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01"
+      ]
+    },
+    {
+      "id": "L-T4A",
+      "familia": "L",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ]
     },
     {

@@ -14,13 +14,15 @@
 | FASE-P3-A | P1 (Q2b=ambas capas) | 20 | No | Sí |
 | FASE-P3-B | P1 (Q5=a) + P3-A | 25 | No | Sí |
 | FASE-P2 | **P3-A ✅ + P3-B ✅** (orden DA-P1.3) + contrato de P1 (Q1=sí, Q2=O1-cuarentena) | 55 | No | Sí |
-| FASE-P4 | P2 + **T3a datos operativos** (Q4: el hotel, por contacto del operador) + T3b analítica — **opcional**, ver §Cierre válido sin P4 en `dependencias-fases.md` | 40 | Sí (corrida) | No |
+| FASE-P4 | P2 + T3a — cerrada 2026-09-14; T3b ausente, techo B+ declarado | 40 (histórico) | Sí (corrida) | No |
+| FASE-P5 — Seguridad y privacidad | P4 cerrada; inventario y límites de autorización de §4 | Fuera de servicio (R2.1, D-PRE.1) | No | Sí, en su futura sesión |
+| FASE-P6 — Generación y validación multi-hotel | Cierre técnico P5; no requiere Tier A real | Fuera de servicio (R2.1, D-PRE.1) | No | Sí, en su futura sesión |
 | FASE-VERIFY | **NO activa** (cerrado en P1, §7 de `evidence/FASE-P1/decision-enforcement.md`) | — | — | — |
-| FASE-RELEASE-4.77.0 | P2 + P3-A + P3-B + P4 ✅ **o diferida por decisión registrada** | 30 | Sí | Docs |
+| FASE-RELEASE-4.77.0 | P2 + P3-A + P3-B + P4 cerradas; P5 + P6 certificadas y puerta de seguridad resuelta (§6.1) | 30 | Sí | Solo documentación |
 
-Presupuesto medido con `evidence/FASE-D/measure_iterations.py` (R2.1); corte en commit. La división P3-A/P3-B (sesión de ajuste 2026-09-14) reparte los 30 originales en 20 + 15/25: cada fase nueva paga su propio overhead de apertura/cierre, por eso la suma excede el presupuesto único.
+Presupuesto medido con `evidence/FASE-D/measure_iterations.py` (R2.1); corte en commit autorizado. La división P3-A/P3-B conserva sus presupuestos históricos. Para P5/P6 se retira la métrica numérica no calibrada (R2.1, D-V2.1): no se inventa una estimación comparable; se registra medición instrumental o auto-reporte con unidad y limitación explícitas, sin declarar cumplimiento estimado. El alcance sí queda limitado: cuatro tareas y cero comandos largos por fase.
 
-> **Orden fijado en FASE-P1 (2026-09-14, DA-P1.3)**: **P3-A → P3-B → P2 → P4**. Primero el substrato confiable (detección y fuente del tier), después los dientes: cablear enforcement sobre revisores con detecciones rotas produce bloqueos que el operador no puede evaluar. Como consecuencia, **P2 depende ahora de P3-A y P3-B** (llega con `judge.py` y el resolutor de entrega ya corregidos), y el presupuesto de **P3-B es 25** porque Q5=(a) disparó AC-F5, que toca `main.py`.
+> **Orden vigente (D-PRE.1, 2026-09-15)**: **P1 → P3-A → P3-B → P2 → P4 → P5 → P6 → RELEASE**, cinco de ocho fases cerradas. El tramo completado conserva DA-P1.3; P4 no se reabre. La solicitud de actualizar el plan autoriza esta preparación documental, no la implementación ni actuaciones sobre credenciales, datos publicados o historial.
 
 ---
 
@@ -135,10 +137,33 @@ Dividida de la P3 original en la sesión de ajuste 2026-09-14: la suma de 6 fixe
 - **Encuadre**: corrida de observación/diagnóstico, NO entrega a cliente. `APROBADO-PARA-ENTREGA` = provisional si el enforcement no está cerrado.
 - Entregable: `evidence/FASE-P4/informe-observacion.md` (checklist §5) + delta vs corrida E2E del predecesor (R2.3).
 
-### FASE-RELEASE-4.77.0 (BAJA · DELEGABLE)
-- Flujo documental estándar: `log_phase_completion.py --release`, `sync_versions.py`, CHANGELOG, GUIA_TECNICA, doctor, R2.5 archivado de este plan.
-- **Tag anotado `v4.77.0` al cerrar** (lección del ajuste 2026-09-14: 4.76.0 cerró sin tag y los tags llegaban solo hasta v4.68.0; el déficit de v4.76.0 quedó sanado, el de v4.77.0 no debe repetirse).
-- Si FASE-VERIFY no activó (§4.6, decisión de P1): AC-V1 se ejecuta dentro de esta fase y el `10-analisis` declara por qué no hubo sesión propia.
+### FASE-P5 — Seguridad y privacidad (pendiente · DIRECTO · 4 tareas, sin comandos largos)
+
+Prioridad anterior a nuevas corridas o publicaciones. Dueños: mantenimiento de validaciones/providers (controles técnicos) y operador (credenciales, autorización y disposición de datos).
+
+1. **Inventario y decisiones operativas (AC-S3/AC-S4):** medir la superficie pública por commit, ruta y clase de material; registrar estado de rotación preventiva de la clave y contención de datos con dueño y evidencia no secreta. Comparar retirada de HEAD con saneamiento del historial y sus consecuencias antes de pedir autorización específica. No ejecutar estas acciones por haber aprobado el plan.
+2. **Sanear errores del provider (AC-S1):** corregir `_query_gemini`/`_query_provider` en `modules/auditors/llm_mention_checker.py` para que secretos de URL, headers o excepciones no lleguen a logs ni stderr; probar el error HTTP 403 con un token sintético, sin llamada de red.
+3. **Controlar lo que se prepara para publicar (AC-S2):** ampliar `_check_no_secrets` de `scripts/run_all_validations.py` sobre contenido staged, no solo asignaciones en Python; incluir textos de cualquier extensión y tests, salida redactada y estados explícitos para archivos no legibles/no cubiertos. Separar detección de claves de la política que impide versionar material de cliente. Verificar la conexión del control con los hooks existentes; cambios de hooks/configuración o dependencias requieren alcance autorizado, nunca un bypass.
+4. **Certificar los controles:** pares NR7, baseline NR1 pre/post, pruebas staged/worktree divergentes y registro de la puerta operativa AC-S4. No escaneo en nube, rotación automática, subida de evidencia, retirada ni reescritura de historial en esta tarea.
+
+Prompt: `05-prompt-inicio-sesion-fase-P5.md`. El cierre técnico permite P6 sin esperar acceso a cuentas externas; **no habilita RELEASE público** mientras rotación/contención sigan pendientes sin resolución verificable o aceptación explícita del riesgo por el operador.
+
+### FASE-P6 — Generación y validación multi-hotel (pendiente · DIRECTO · 4 tareas, sin comandos largos)
+
+Dueños: equipo-assets (G1), mantenimiento onboarding (G2), mantenimiento tribunal/delivery (G3/G5) y QA del pipeline (G4). Se corrige el productor, no un archivo de Don Alfonso ni el detector para hacerlo pasar.
+
+1. **Instrucciones desde la entrega real (AC-G1):** revisar el paso de `Path(a.path).name` en `main.py`, `AssetResponsibilityContract.get_implementation_order`/`generate_delivery_template`, `ImplementationOrderGenerator` y `DeliveryPackager.write`; relacionar identidad de asset con su ruta real dentro del ZIP, preservando fecha y prefijo `ESTIMATED_`. Los tipos fuera del catálogo fijo deben tener disposición explícita, nunca desaparecer en silencio. No rellenar la plantilla ni ampliar una whitelist de nombres por hotel.
+2. **Entrada de datos independiente del entorno (AC-G2):** corregir `_load_latest_onboarding_data` y su invocación FASE-D para resolver `observations.json` aunque falte `clientes/` o no haya YAML ajeno, tanto en output por defecto como alternativo. Rastrear WhatsApp fuente → `_observation_to_onboarding_format` → validación: propagar solo evidencia realmente disponible; ausencia de dato no se convierte en teléfono inventado, `verified` ni aprobación automática.
+3. **Identidad del paquete suprimido (AC-G3):** guardar `package_evidence.sha256` y `package_evidence.member_count` en el acta desde el `.zip.tmp` real leído por los revisores, antes de `suppress()`. Mantener la supresión y el contrato single-write; no conservar/publicar el ZIP bloqueado. La huella identifica el objeto, no reconstruye su contenido.
+4. **Matriz multi-hotel y causalidad (AC-G4/AC-G5):** reproducir al menos tres perfiles, incluido el caso Don Alfonso sin datos sensibles y dos perfiles adicionales sintéticos/anonimizados, en un entorno limpio. Probar el productor, ZIP real, revisores y Juez juntos en los tres caminos separados: gates permiten/revisores permiten; mismos gates permiten/revisor objeta; gates ya bloquean. Conservar NR1 y NR7; no escribir un acta a mano como sustituto del flujo ni debilitar los gates para obtener un ZIP.
+
+Prompt: `05-prompt-inicio-sesion-fase-P6.md`. La matriz offline no es una muestra estadística ni tres corridas reales; una nueva corrida de red exige otra sesión y consentimiento/frescura/coste explícitos. Tier A real sigue pendiente de GA4/GSC del hotel. Funcionar para cualquier hotel significa decidir correctamente según su evidencia, no aprobar siempre.
+
+### FASE-RELEASE-4.77.0 (solo documental · DELEGABLE)
+- Dependencia obligatoria: P5/P6 certificadas y puerta AC-S4 resuelta; no remediar aquí F-P4.1/F-P4.5/F-P4.9 ni otros defectos descubiertos.
+- AC-V1 certifica AC-E*/AC-F* y los nuevos AC-S*/AC-G* contra sus artefactos y pares NR7; distingue prueba offline de observación real. P4 conserva su cierre y sus límites.
+- Flujo documental estándar: `log_phase_completion.py --release`, `sync_versions.py`, CHANGELOG, GUIA_TECNICA, doctor, write-back e índice antes del archivado R2.5.
+- Commit final y tag anotado `v4.77.0` solo con autorización; el tag apunta al commit final, no se crea antes de él. Push requiere confirmación propia. `v4.76.0` ya se publicó el 2026-09-14, no se presume pendiente.
 
 ---
 

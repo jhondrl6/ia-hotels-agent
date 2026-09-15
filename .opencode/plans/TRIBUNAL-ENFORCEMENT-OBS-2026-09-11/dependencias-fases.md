@@ -1,7 +1,8 @@
 # Dependencias entre Fases — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
 
-> **Regla**: FASE-RELEASE solo se ejecuta cuando TODAS las fases previas están ✅ — **o** cuando una fase no ejecutada está **oficialmente diferida por decisión registrada** (véase §Cierre válido sin P4). Un diferimiento silencioso no cierra el paso a RELEASE.
-> **Regla heredada**: nunca sesiones paralelas sobre el mismo working tree (el plan predecesor documentó sobrescritura de evidencia). P2, P3-A y P3-B comparten `judge.py`/`main.py`/`acta_writer.py` y el conteo NR1 → **secuenciales entre sí, nunca simultáneas**.
+> **Regla vigente (D-PRE.1, 2026-09-15)**: P4 permanece cerrada; siguen **P5 → P6 → RELEASE**, una fase por sesión, cinco de ocho cerradas. RELEASE exige certificación técnica P5/P6 y la puerta de seguridad de AC-S4 resuelta; nombrar un dueño no resuelve un riesgo. El antiguo escenario de diferimiento de P4 se conserva solo como antecedente, no permite omitir las fases nuevas.
+> **Regla heredada**: nunca sesiones de implementación paralelas sobre el mismo working tree. P2, P3-A y P3-B compartieron `judge.py`/`main.py`/`acta_writer.py`; P5/P6 también se ejecutan secuencialmente y con baselines NR1 independientes.
+> **Autorización de esta actualización**: solo documentos del plan. No ejecución de P5/P6, rotación, retirada de datos, reescritura, cambio de visibilidad ni push.
 
 ---
 
@@ -77,17 +78,20 @@ FASE-P4 ✅ (2026-09-14) — corrida de observación REAL con Hotel Don Alfonso 
          verdict `BLOQUEADO` → **ZIP SUPPRIMIDO** (primer caso real), 9 hallazgos con dueño
         │
         ▼
-FASE-RELEASE-4.77.0 (cierre + tag + AC-V1 con el patrón VERIFY embebido + archivado R2.5)
+FASE-P5 (pendiente) — seguridad y privacidad; AC-S1…AC-S4
+        │ cierre técnico; estado operativo de AC-S4 siempre visible
+        ▼
+FASE-P6 (pendiente) — generación y validación multi-hotel; AC-G1…AC-G5
+        │ certificación técnica + puerta operativa AC-S4 resuelta
+        ▼
+FASE-RELEASE-4.77.0 (solo documentación + AC-V1 ampliado + cierre autorizado)
 
-FASE-VERIFY: NO crea sesión (decisión cerrada en P1, §FASE-VERIFY arriba).
+FASE-VERIFY: NO crea sesión (decisión cerrada en P1; AC-V1 verifica también P5/P6).
 ```
 
-**NO OBSTACULIZA — pero sí reordena (D-P4.1, decidida al cerrar P4 el 2026-09-14):** la sesión
-siguiente a P4 **no** es RELEASE. Se abre una fase propia de remediación de los hallazgos de la
-corrida — **F-P4.1** (el stub `IMPLEMENTATION_ORDER.md` que bloquea toda corrida real y hace
-inobservable el contrafactual de Q1), **F-P4.5** (cobertura del barrido de secretos: hoy solo `*.py`
-con 4 patrones de asignación) y **F-P4.9** (`suppress()` borra el ZIP que los revisores leyeron) —,
-con sus ACs y su par NR7. RELEASE (AC-V1 + bump + tag + R2.5) se ejecuta después de esa fase.
+**D-PRE.1 (2026-09-15) concreta D-P4.1 en dos sesiones:** P5 atiende F-P4.5 y la exposición de datos; P6 atiende F-P4.1, los prerrequisitos de datos F-P4.3/F-P4.7 y la huella F-P4.9. Su matriz reproducible atiende F-P4.8 y separa las causas de F-P4.2 sin cambiar la matriz de veredictos. RELEASE no recibe correcciones de código.
+
+**Rectificación causal:** la muestra de P4 fue una corrida Don Alfonso y tres ZIP de Salento Real, no una tasa universal de bloqueo. El stub impide el control positivo de entrega válida; no vuelve imposible «gates permiten/revisor objeta». P4 no ejercitó ese caso porque los gates de coherencia ya bloqueaban antes de los revisores. P6 prueba ambos controles con el mismo input salvo el defecto plantado y registra por separado el bloqueo previo por gates.
 
 **P2 y P3-A/P3-B comparten `judge.py`/`main.py` y el conteo NR1 → secuenciales entre sí, nunca simultáneas** (regla de cabecera). El reordenamiento P3→P2 no cambia eso: lo hace más limpio, porque P2 ya no pisa el archivo que P3-A está corrigiendo.
 

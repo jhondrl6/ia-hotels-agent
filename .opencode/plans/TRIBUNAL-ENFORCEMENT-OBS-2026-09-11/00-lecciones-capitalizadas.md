@@ -29,6 +29,44 @@ mal atribuidas y fue el índice el que las corrigió.
 Antes de Q1–Q5 el plan citaba **una sola fuente**: su predecesor. Ese contraste es el dato que
 el Paso 0 debía producir y no producía.
 
+### 1.b Paso 0 de D-PRE.1 — actualización del plan (2026-09-15)
+
+**Ejecución ya realizada y comunicada en la delegación del usuario**, no repetida por esta edición.
+Se registra su resultado sin generar índices, subir fuentes a QMind ni copiar URLs firmadas.
+
+- `python scripts/build_lesson_index.py --check`: índice fresco, **292 IDs** al corte de este Paso 0.
+- Grep sobre el índice con el patrón literal siguiente:
+
+```text
+L-PF10|L-VUP-13|L-T4A\\.5|L-P4\\.3|L-P4\\.5|secret|catálogo|catalogo
+```
+
+  Resultado comunicado: **L-PF10** en `Archives/SR-PIPELINE-FIXES-2026-08-27`, **L-VUP-13** en
+  `Archives/VALIDADOR-URL-PROPIA-2026-08-30`, **L-T4A.5** en
+  `Archives/TRIBUNAL-OFFLINE-2026-09-09`, **L-P4.3** en este plan y **DA-C3** en
+  `Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`. Buscar L-P4.5 no acredita que exista ese ID:
+  el hallazgo de seguridad se llama **F-P4.5**.
+- QMind `retrieve`, notebook `01a04d98-b7bd-778c-8441-26fdc7e35f45`, `maxResults=3`, `topK=5`:
+  - Consulta literal 1: **«Secretos en logs y evidencia de clientes en repositorio público: cobertura
+    del verificador, redacción de errores y autorización para retirar historial»**. Tres chunks de
+    ESTABILIZACION, scores **0.269 / 0.221 / 0.204**; **sin evidencia específica útil de seguridad**.
+    No es un escaneo ni permite certificar ausencia de secretos o privacidad del cliente.
+  - Consulta literal 2: **«Contrato de assets entregados frente a catálogo estático, onboarding sin
+    defaults silenciosos y prueba causal gates permiten revisor bloquea con mutation check»**.
+    Tres chunks de la misma fuente, scores **0.497 / 0.431 / 0.405**: **DA6/DA7** (identidad frente a
+    catálogo), **DA5** (configuración OPS separada) y **DA12** (orden del contrato).
+  - Fuente por título: **ESTABILIZACION-PRE-TRIBUNAL-2026-09-03**;
+    `sourceId=01a06ebb-001b-7a1a-a195-2714a9db271e`. No se reproducen `originURL` firmadas.
+
+**Efecto, no implementación**: D-PRE.1 refina D-P4.1 a **dos sesiones pendientes**:
+P4 cerrada → **FASE-P5 Seguridad y privacidad** → **FASE-P6 Generación y validación multi-hotel** →
+**RELEASE documental**. Progreso **5/8 fases**; cuatro tareas por fase nueva, sin nueva VERIFY:
+**AC-V1 de RELEASE se amplía a AC-S1…AC-S4 y AC-G1…AC-G5** (contrato de destino:
+`01-plan-maestro.md` §6.1). No reabre Q1/Q1b/Q2/Q5/Q6/Q7. Se capitalizan los IDs ya presentes en §2;
+no se añaden lecciones por el mero hecho de planificar. Presupuestos numéricos P5/P6 **fuera de
+servicio por R2.1/D-V2.1**; registrar medida real, unidad y corte cuando estén disponibles, sin
+inventar estimaciones. Esta actualización no ejecuta fixes, pruebas, bump ni cierre en REGISTRY.
+
 ## 2. Lecciones capitalizadas
 
 | ID | Enunciado del corpus | Definida en | Qué cambia en ESTE plan | Dónde se aplica |
