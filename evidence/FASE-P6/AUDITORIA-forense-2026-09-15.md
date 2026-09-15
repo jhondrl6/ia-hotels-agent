@@ -105,4 +105,11 @@ Baja probabilidad, blast radius alto (entrega de paquete no certificado).
 - **R7**: commits con corte real, REGISTRY P5+P6, README 7/8, celda de iteraciones con
   unidad+valor+corte, NR1 re-medido tras la remediación.
 
-**Estado R1-R7**: pendiente al crear este archivo; se actualiza al cerrar P6-R.
+**Estado R1-R7**: ✅ CERRADOS el 2026-09-15 en la misma sesión de remediación.
+R1/R2 → `tests/test_p6r_full_flow_matrix.py` (5/5 verdes) y `nr7_p6r_mutation_checks.py`
+(5/5 pares verde→rojo→restaurado). R3 → anotaciones en `00`/`06`/`09`/`10` y en el propio
+`nr7_mutation_checks.md`. R4/R5/R6 → commit `c31422a`. R7 → REGISTRY P5+P6 vía
+`log_phase_completion.py`, README 7/8, iteraciones con unidad+valor+corte, NR1 POST-P6-R
+**4.196 passed** (`nr1_post_p6r.txt`), `--quick` 10/10 e índice regenerado.
+Lección nueva nacida de la remediación: **L-P6.4** en `10-analisis` (el instrumento de
+reversión falló tres veces por criterios propios no auto-verificados).

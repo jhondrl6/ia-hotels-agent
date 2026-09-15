@@ -1,0 +1,23 @@
+NR1 POST-P6-R — FASE-P6 (remediacion post-auditoria)
+=====================================================
+Fecha: 2026-09-15
+Corte: commit c31422a (P6+P6-R) + commit documental de cierre (HEAD al escribir)
+Instrumento: `python -m pytest tests/ -q` (corrida completa, sin -x)
+
+Resultados pytest (POST-P6-R):
+  passed: 4196
+  failed: 2 (identicos al PRE y al POST de P6: test_function_default_flags flaky,
+             test_diagnostic_geo_metrics/test_diagnostic_includes_geo_metrics — ambos ajenos)
+  skipped: 41
+  xfailed: 4
+
+Delta P6-R: 4189 -> 4196 = +7
+  - tests/test_p6r_full_flow_matrix.py: 6 funciones nuevas (flujo real)
+  - tests/test_onboarding_injection.py: +1 neta (test_missing_fields_use_defaults
+    MIGRADO a test_missing_fields_propagate_nothing con causa + test_partial_fields_
+    confirm_only_present_ones nuevo)
+NR1 verificado: 4196 >= 4189 + 7 = 4196 (los 2 fallos son el mismo par ajeno)
+Regresiones: 0
+
+Par NR7 del delta: evidence/FASE-P6/nr7_p6r_mutation_checks.py (5 pares por
+inversion del fix, restauracion verificada por hash fsync+reintento).

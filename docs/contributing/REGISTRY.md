@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-15
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 485
+> **Total fases completadas:** 487
 
 ---
 
@@ -11315,6 +11315,40 @@ _Ninguno_
 
 ## FASE-P4 - 2026-09-14
 **Descripcion:** corrida de observacion con datos reales (Hotel Don Alfonso, T3a): BLOQUEADO y ZIP suprimido por el tribunal, reviewer_reports de longitud 4, techo B_PLUS con dueno nombrado (AC-O0), 9 hallazgos con dueno y cero codigo de produccion tocado
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-P5 - 2026-09-15
+**Descripcion:** SEGURIDAD Y PRIVACIDAD: AC-S1 sanitizacion providers LLM (key a header, _sanitize_text/_sanitize_error); AC-S2 checker tracked+staged con NO_CUBIERTO bloqueante (remendado post-auditoria: el escaneo original estaba muerto por NameError); AC-S3/S4 inventario de superficie publica + puerta operativa con dueno (rotacion pendiente del operador). NR1 4.155 (+10 remediacion), --quick 10/10. Evidencia: evidence/FASE-P5/REMEDIACION-auditoria-2026-09-15.md
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-P6 - 2026-09-15
+**Descripcion:** GENERACION MULTI-HOTEL + REMEDIACION P6-R: AC-G1 rutas reales del ZIP (fuente unica: el packager deriva el mapeo de sus propios dest), AC-G2 fallback observations.json sin clientes/ + converter sin defaults inventados (verified/rooms/pct), AC-G3 package_evidence sha256/member_count del .zip.tmp antes de suppress, AC-G4/G5 matriz contra FLUJO REAL (packager.write → ZIP → 4 Bots → Juez → publish/suppress; 5 perfiles incl. B+ Don Alfonso anonimizado y kill switch de dos llaves). Disparador: auditoria forense del mismo dia (evidence/FASE-P6/AUDITORIA-forense-2026-09-15.md). NR1 4.169→4.189 (+20) y POST-P6R 4.196 (+7), 0 regresiones; 5 pares NR7 por INVERSION del fix con restauracion verificada por hash. Cero cambios en judge.py. Corte: c31422a
 
 ### Archivos Nuevos
 _Ninguno_

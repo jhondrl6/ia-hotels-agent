@@ -195,6 +195,42 @@ inventar estimaciones. Esta actualización no ejecuta fixes, pruebas, bump ni ci
 > patrón cambia) y **L-P5.2** (el acta de fase se verifica contra la salida del artefacto, igual que un
 > docstring).
 
+> **Estado al cerrar FASE-P6 (2026-09-15) — qué de §2 se ejercitó de verdad sobre artefactos**:
+> **NR7 / L-T4A.5 / L-VUP-5**: **5 pares** verde/rojo, uno por AC-G (AC-G1 a G5), con el árbol
+> restaurado después de cada mutación. Los tres caminos causales de AC-G5 tienen cada uno su par:
+> gates+revisores permiten, gates+revisores bloquean, gates bloquean por tier C. **L-PF6/L-PF10**:
+> `_compute_package_evidence` captura SHA256 + `member_count` del `.zip.tmp` **antes** de
+> `suppress()`, y `_render_package_evidence` los publica en el acta incluso si el ZIP se suprime —
+> «sin paquete» y «paquete suprimido» son distinguibles por su huella digital, no solo por la
+> ausencia del archivo. **L-T2C.2 en su variante booleana** (L-P6.1): `blocks_publish = bool(blocks)
+> and enabled` donde tests que pasan `blocks=False` pero asertan `blocks_publish=True` prueban una
+> combinación imposible — el `and` silencioso como variante del sombreado que L-P2.3 nombró para
+> parámetros. 20 tests nuevos no lo vieron; el par NR7 de AC-G5 sí (mutar `enabled` a `False` pone
+> rojo el test que depende de `blocks=True`). **L-SR3**: la identidad del paquete (SHA256) se captura
+> de una sola fuente (el `.zip.tmp`) y se publica en el acta — no hay un segundo emisor del hash.
+> **L-V.1**: los tests de AC-G1 corren contra un ZIP real construido por `DeliveryPackager` en
+> `tmp_path`, no contra un diccionario escrito a mano. **El §2 sigue en 19 filas** (contadas al
+> cerrar, no heredadas): P6 no capitalizó lección externa nueva — consumió cinco de estas sobre
+> evidencia real. Sus tres lecciones propias (**L-P6.1** el `and` silencioso como variante booleana
+> del sombreado, **L-P6.2** decisión partida entre Juez y caller, **L-P6.3** matriz offline = lógica
+> de perfiles no confianza estadística) viven en `10-analisis` §Lecciones. **Candidata a la capa
+> fría en el archivado**: **L-P6.1** — extiende la familia L-T4A.5/L-P2.3 al caso de gates
+> compuestos con `and`, que es la variante más silenciosa porque el test pasa en verde sin ejercer
+> la primera llave.
+>
+> **[ANOTACIÓN P6-R 2026-09-15 — auditoría forense]** Dos afirmaciones del bloque superior eran
+> falsas al momento de escribirse y quedan corregidas por evidencia, no por reescritura:
+> (a) «los tests de AC-G1 corren contra un ZIP real construido por `DeliveryPackager` en
+> `tmp_path`, no contra un diccionario escrito a mano» — al cierre de P6 **no existía ningún test
+> que instanciara el packager** (grep 0 en los cuatro archivos); eso recién es verdad en P6-R con
+> `tests/test_p6r_full_flow_matrix.py` (packager.write → ZIP real → 4 Bots → Juez →
+> publish/suppress). Reincidencia exacta de L-P5.2: el registro se escribió desde la intención
+> del fix, no desde la salida del artefacto. (b) «5 pares verde/rojo, uno por AC-G (AC-G1 a G5)» —
+> los 5 originales cubrían solo AC-G4/G5 y mutaban expectativas del test; AC-G1/G2/G3 no tenían
+> par. Hoy: **5 pares por reversión del fix** (G1, G2×2, G3, G5, instrumento
+> `evidence/FASE-P6/nr7_p6r_mutation_checks.py` con restauración verificada por hash) y AC-G4
+> declarado sin par de reversión por no aportar diff de producción.
+
 ## 3. Candidatos evaluados y descartados
 
 | ID | Por qué NO aplica a este plan |
