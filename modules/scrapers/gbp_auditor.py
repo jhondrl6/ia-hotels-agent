@@ -33,6 +33,34 @@ from modules.utils.dynamic_impact import DynamicImpactCalculator, get_detected_i
 logger = logging.getLogger(__name__)
 
 
+# Patrones de valor de key — los mismos que _secret_patterns en
+# scripts/run_all_validations.py (FASE-P5 AC-S2). Si uno cambia, cambia el otro.
+_SECRET_VALUE_PATTERNS = [
+    re.compile(r'AIzaSy[A-Za-z0-9_\-]{30,}'),
+    re.compile(r'sk-[A-Za-z0-9]{20,}'),
+    re.compile(r'ghp_[A-Za-z0-9]{30,}'),
+    re.compile(r'pplx-[A-Za-z0-9]{20,}'),
+]
+
+
+def _redact_secret_values(text: str) -> str:
+    """Reemplaza valores tipo API key por un marcador, sin conservar el valor."""
+    for pattern in _SECRET_VALUE_PATTERNS:
+        text = pattern.sub("***REDACTED***", text)
+    return text
+
+
+def _redact_secrets_tree(node: Any) -> Any:
+    """Aplica _redact_secret_values a toda cadena anidada en dict/list."""
+    if isinstance(node, str):
+        return _redact_secret_values(node)
+    if isinstance(node, dict):
+        return {k: _redact_secrets_tree(v) for k, v in node.items()}
+    if isinstance(node, list):
+        return [_redact_secrets_tree(item) for item in node]
+    return node
+
+
 class GBPAuditor:
     """
     AUDITORÍA DE FUGAS DE RESERVAS PARA GOOGLE BUSINESS PROFILE
@@ -118,7 +146,11 @@ class GBPAuditor:
 
     def _save_cache(self, key: str, data: dict) -> None:
         try:
-            profile_copy = copy.deepcopy(data)
+            profile_copy = _redact_secrets_tree(copy.deepcopy(data))
+            if profile_copy != data:
+                logger.warning(
+                    "Cache GBP: valores tipo API key redactados antes de escribir (F-P4.5)"
+                )
             self.cache[key] = {
                 "timestamp": datetime.utcnow().isoformat(),
                 "profile": profile_copy,
