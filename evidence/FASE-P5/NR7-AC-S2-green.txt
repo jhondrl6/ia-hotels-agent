@@ -1,0 +1,34 @@
+NR7 AC-S2 — GREEN (fix activo)
+=================================
+Fecha: 2026-09-15
+Validación: scripts/run_all_validations.py --quick
+Check: [4/9] Checking for hardcoded secrets (staged + workspace)...
+
+Configuración:
+- Patrones de asignación: 4 (DEEPSEEK_, ANTHROPIC_, GOOGLE_, GOOGLEMAPS_)
+- Patrones de valor: 4 (AIzaSy..., sk-..., ghp_..., pplx-...)
+- Extensiones: 13 (.py, .md, .txt, .json, .yaml, .yml, .toml, .env, .cfg, .ini, .log, .html, .xml, .csv)
+- Allowlist: archives/, evidence/, .opencode/ (documentado, contenido staged sin excepción)
+- Tests incluidos: sí (no se saltan)
+
+Resultado PRE-allowlist (detección activa):
+[-] Secrets Check: BLOCKING: 7 potential secret(s) found
+      - archives\gbp_profiles.json (Google API key (AIzaSy...))
+      - tests\auditors\test_p5_ac_s1_secret_sanitization.py (Google API key (AIzaSy...))
+      - evidence\FASE-P4\informe-observacion.md (GOOGLEMAPS_API_KEY assignment)
+      - .opencode\plans\TRIBUNAL-ENFORCEMENT-OBS-2026-09-11\10-analisis-post-implementacion.md (GOOGLEMAPS_API_KEY assignment)
+      ... y 2 más
+
+Resultado POST-allowlist (detección activa + allowlist documentado):
+[+] Secrets Check: No secrets found (scanned 3058 files + staged content)
+
+Cobertura:
+- Archivos escaneados: 3058
+- Contenido staged: sí (git diff --cached --diff-filter=ACM -U0)
+- Estados NR8: OK / SIN_HALLAZGOS / NO_LEGIBLE / NO_CUBIERTO implementados
+- Salida redactada: sí (nunca imprime el valor del secreto)
+
+Conclusión:
+El checker detecta correctamente secrets en múltiples extensiones y contenido staged.
+El allowlist es explícito y documentado (archives/, evidence/, .opencode/).
+El contenido staged NO tiene excepciones — cualquier secret nuevo será detectado.

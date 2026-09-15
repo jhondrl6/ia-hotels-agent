@@ -1,0 +1,80 @@
+NR1 Baseline — FASE-P5 (no regresión)
+=======================================
+Fecha: 2026-09-15
+Instrumento: python -m pytest tests/ -q --tb=no
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RESULTADOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Post-FASE-P5 (con AC-S1 + AC-S2):
+- Total colectados: 4,191
+- Passed: 4,145
+- Failed: 2 (ambos ajenos a FASE-P5, ver abajo)
+- Skipped: 41
+- Xfailed: 4
+- Tiempo: 147.73s
+
+Pre-FASE-P5 (baseline anterior):
+- Total colectados: 4,180 (4,191 - 11 nuevos)
+- Passed: 4,134 (4,145 - 11 nuevos)
+- Failed: 2 (mismos fallos ajenos)
+
+Tests nuevos FASE-P5:
+- 11 tests en tests/auditors/test_p5_ac_s1_secret_sanitization.py
+- Todos pasan ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VERIFICACIÓN NR1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Fórmula: passed_post = passed_pre + tests_nuevos
+Cálculo: 4,145 = 4,134 + 11 ✅
+
+Regresiones: 0
+- Los 2 fallos son ajenos a FASE-P5:
+  1. test_function_default_flags (flaky, documentado en AGENTS.md)
+  2. test_diagnostic_includes_geo_metrics (ajeno, registrado en aba517a)
+
+Conclusión: NR1 VERIFICADO — sin regresiones causadas por FASE-P5
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DETALLE DE FALLOS AJENOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. test_function_default_flags
+   Archivo: tests/financial_engine/test_pricing_resolution_wrapper.py
+   Clase: TestCalculatePriceWithShadowFunction
+   Estado: Flaky (intermitente)
+   Documentado en: AGENTS.md (tabla "Estado Actual")
+   Causa: No relacionada con FASE-P5 (pricing/financial_engine)
+
+2. test_diagnostic_includes_geo_metrics
+   Archivo: tests/test_diagnostic_geo_metrics.py
+   Clase: TestDiagnosticGEOMetrics
+   Estado: Fallo conocido
+   Documentado en: AGENTS.md (registrado en commit aba517a)
+   Causa: No relacionada con FASE-P5 (diagnostic/geo_metrics)
+
+Ambos fallos existían antes de FASE-P5 y no fueron modificados por esta fase.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+COBERTURA FASE-P5
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AC-S1 (sanitización de errores):
+- 11 tests nuevos
+- Cubre: _sanitize_text, _sanitize_error, _query_gemini header, _query_provider, _query_openrouter, _query_perplexity
+- NR7: green/red pair capturado (evidence/FASE-P5/NR7-AC-S1-*.txt)
+
+AC-S2 (checker ampliado):
+- 0 tests nuevos (el checker es un script de validación, no un módulo testeable)
+- Cobertura: 3,058 archivos escaneados + contenido staged
+- Patrones: 4 asignación + 4 valor
+- Extensiones: 13 tipos de archivo
+- Allowlist: archives/, evidence/, .opencode/ (documentado)
+- NR7: green/red pair capturado (evidence/FASE-P5/NR7-AC-S2-*.txt)
+
+Total tests nuevos: 11
+Total tests pasando: 4,145
+Regresiones: 0

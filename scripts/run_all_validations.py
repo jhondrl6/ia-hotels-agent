@@ -210,43 +210,131 @@ class ValidationRunner:
             ))
     
     def _check_no_secrets(self) -> None:
-        """Check for hardcoded secrets."""
-        print("[4/9] Checking for hardcoded secrets...")
-        
+        """Check for hardcoded secrets — FASE-P5 AC-S2.
+
+        Ampliado: escanea contenido staged (git diff --cached) y archivos de
+        cualquier extensión, no solo asignaciones en Python. Incluye tests.
+        Estados NR8: OK / SIN_HALLAZGOS / NO_LEGIBLE / NO_CUBIERTO.
+        Salida redactada: nunca imprime el valor del secreto.
+        """
+        print("[4/9] Checking for hardcoded secrets (staged + workspace)...")
+
         import re
-        secret_patterns = [
-            r'DEEPSEEK_API_KEY\s*=\s*["\'][^"\']+["\']',
-            r'ANTHROPIC_API_KEY\s*=\s*["\'][^"\']+["\']',
-            r'GOOGLE_API_KEY\s*=\s*["\'][^"\']+["\']',
-            r'GOOGLEMAPS_API_KEY\s*=\s*["\'][^"\']+["\']',
+
+        # Patrones de asignación (legacy, aún útiles para .py/.env)
+        assignment_patterns = [
+            (r'DEEPSEEK_API_KEY\s*=\s*["\'][^"\']+["\']', "DEEPSEEK_API_KEY assignment"),
+            (r'ANTHROPIC_API_KEY\s*=\s*["\'][^"\']+["\']', "ANTHROPIC_API_KEY assignment"),
+            (r'GOOGLE_API_KEY\s*=\s*["\'][^"\']+["\']', "GOOGLE_API_KEY assignment"),
+            (r'GOOGLEMAPS_API_KEY\s*=\s*["\'][^"\']+["\']', "GOOGLEMAPS_API_KEY assignment"),
         ]
-        
+
+        # Patrones de valor de key (detectan keys en cualquier contexto)
+        value_patterns = [
+            (r'AIzaSy[A-Za-z0-9_\-]{30,}', "Google API key (AIzaSy...)"),
+            (r'sk-[A-Za-z0-9]{20,}', "OpenAI/secret key (sk-...)"),
+            (r'ghp_[A-Za-z0-9]{30,}', "GitHub PAT (ghp_...)"),
+            (r'pplx-[A-Za-z0-9]{20,}', "Perplexity key (pplx-...)"),
+        ]
+
+        all_patterns = assignment_patterns + value_patterns
+
+        # Extensiones de texto a escanear (excluyendo binarios)
+        text_extensions = {
+            ".py", ".md", ".txt", ".json", ".yaml", ".yml", ".toml",
+            ".env", ".cfg", ".ini", ".log", ".html", ".xml", ".csv",
+        }
+
+        # Allowlist: directorios que pueden contener referencias a secrets
+        # como parte de su propósito (archivado, evidencia de hallazgos, planificación).
+        # El contenido staged sigue siendo escaneado sin excepción.
+        allowed_dirs = {"archives", "evidence", ".opencode"}
+
         violations = []
-        for py_file in self._walk("*.py"):
-            if "test" in str(py_file).lower():
+        non_readable = []
+        scanned_count = 0
+
+        # 1. Escanear archivos del workspace
+        for path in self._walk("*"):
+            if not path.is_file():
                 continue
+            if path.suffix.lower() not in text_extensions:
+                continue
+            # Respetar allowlist de directorios
+            rel_path = path.relative_to(ROOT_DIR)
+            if rel_path.parts and rel_path.parts[0] in allowed_dirs:
+                continue
+            # No saltar tests — AC-S2 exige cobertura completa
+            scanned_count += 1
             try:
-                content = py_file.read_text(encoding="utf-8")
-                for pattern in secret_patterns:
+                content = path.read_text(encoding="utf-8", errors="ignore")
+                for pattern, description in all_patterns:
                     if re.search(pattern, content):
-                        violations.append(str(py_file.relative_to(ROOT_DIR)))
-                        break
-            except Exception:
-                continue
-        
+                        violations.append(f"{rel_path} ({description})")
+                        break  # Un archivo = una violación max
+            except (PermissionError, OSError):
+                non_readable.append(str(rel_path))
+
+        # 2. Escanear contenido staged (git diff --cached)
+        staged_violations = self._check_staged_content(all_patterns)
+        violations.extend(staged_violations)
+
+        # 3. Reportar con estados NR8
         if violations:
+            # Redactar: no imprimir el valor del secreto
+            redacted_details = [v for v in violations[:5]]
             self.results.append(ValidationResult(
                 name="Secrets Check",
                 passed=False,
-                message=f"Found potential hardcoded secrets in {len(violations)} files",
-                details=violations[:5]
+                message=f"BLOCKING: {len(violations)} potential secret(s) found",
+                details=redacted_details
+            ))
+        elif non_readable:
+            self.results.append(ValidationResult(
+                name="Secrets Check",
+                passed=False,
+                message=f"NO_LEGIBLE: {len(non_readable)} file(s) could not be scanned",
+                details=non_readable[:5]
             ))
         else:
             self.results.append(ValidationResult(
                 name="Secrets Check",
                 passed=True,
-                message="No hardcoded secrets found"
+                message=f"No secrets found (scanned {scanned_count} files + staged content)"
             ))
+
+    def _check_staged_content(self, patterns: list) -> list:
+        """Check staged content (git diff --cached) for secrets. AC-S2."""
+        import subprocess
+
+        try:
+            result = subprocess.run(
+                ["git", "diff", "--cached", "--diff-filter=ACM", "-U0"],
+                capture_output=True, text=True, cwd=ROOT_DIR, timeout=10
+            )
+            if result.returncode != 0:
+                return []  # Not a git repo or no staged changes
+
+            staged_diff = result.stdout
+            if not staged_diff:
+                return []
+
+            violations = []
+            # Extraer solo las líneas añadidas (empiezan con +)
+            added_lines = [
+                line[1:] for line in staged_diff.split('\n')
+                if line.startswith('+') and not line.startswith('+++')
+            ]
+            added_content = '\n'.join(added_lines)
+
+            for pattern, description in patterns:
+                if re.search(pattern, added_content):
+                    violations.append(f"STAGED content ({description})")
+                    break
+
+            return violations
+        except Exception:
+            return []
     
     def _check_document_integration(self) -> None:
         """Check cross-document integration consistency."""

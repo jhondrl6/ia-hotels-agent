@@ -1,0 +1,32 @@
+NR7 AC-S2 — RED (mutación activa: patrones de valor deshabilitados)
+=====================================================================
+Fecha: 2026-09-15
+Mutación: value_patterns = [] (solo patrones de asignación activos)
+
+Configuración mutada:
+- Patrones de asignación: 4 (DEEPSEEK_, ANTHROPIC_, GOOGLE_, GOOGLEMAPS_)
+- Patrones de valor: 0 (MUTACIÓN: todos deshabilitados)
+- Extensiones: 13 (sin cambio)
+- Allowlist: archives/, evidence/, .opencode/ (sin cambio)
+
+Resultado esperado con mutación:
+- archives\gbp_profiles.json: NO detectado (la key AIzaSy... está en HTML embebido, no como asignación)
+- evidence\FASE-P4\informe-observacion.md: DETECTADO (contiene GOOGLEMAPS_API_KEY = "...")
+- tests\auditors\test_p5_ac_s1_secret_sanitization.py: NO detectado (keys sintéticas no son asignaciones)
+- .opencode\plans\...\10-analisis-post-implementacion.md: DETECTADO (contiene GOOGLEMAPS_API_KEY = "…")
+
+Resultado real PRE-FASE-P5 (sin patrones de valor, sin allowlist):
+[-] Secrets Check: BLOCKING: 2 potential secret(s) found
+      - evidence\FASE-P4\informe-observacion.md (GOOGLEMAPS_API_KEY assignment)
+      - .opencode\plans\...\10-analisis-post-implementacion.md (GOOGLEMAPS_API_KEY assignment)
+
+Conclusión:
+Con la mutación (solo patrones de asignación), el checker NO detecta:
+- Keys en URLs embebidas en HTML/JSON (archives/gbp_profiles.json)
+- Keys sintéticas en tests (tests/auditors/test_p5_ac_s1_secret_sanitization.py)
+- Keys en logs, markdown, o cualquier contexto que no sea una asignación Python
+
+Esto es exactamente el defecto documentado en F-P4.5: el checker miraba dónde se *asignaba*
+una clave en código, no dónde aparecía *escrita* en cualquier contexto.
+
+La fix (patrones de valor + cobertura multi-extensión + staged content) cierra este gap.

@@ -1,0 +1,32 @@
+t_gemini_403_does_not_leak_key_in_log FAILED [ 33%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestOpenRouterErrorNoKeyLeak::test_openrouter_500_does_not_leak_key PASSED [ 66%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestPerplexityErrorNoKeyLeak::test_perplexity_401_does_not_leak_key FAILED [100%]
+
+================================== FAILURES ===================================
+_______ TestGemini403NoKeyLeak.test_gemini_403_does_not_leak_key_in_log _______
+tests\auditors\test_p5_ac_s1_secret_sanitization.py:128: in test_gemini_403_does_not_leak_key_in_log
+    assert SYNTHETIC_GEMINI_KEY not in record.getMessage(), (
+E   AssertionError: Key leaked in log: LLM query failed for gemini: 403 Forbidden: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyFAKE_TESTING_KEY_1234567890abcdef
+E   assert 'AIzaSyFAKE_...567890abcdef' not in 'LLM query f...567890abcdef'
+E     
+E     'AIzaSyFAKE_TESTING_KEY_1234567890abcdef' is contained here:
+E       LLM query failed for gemini: 403 Forbidden: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyFAKE_TESTING_KEY_1234567890abcdef
+E     ?                                                                                                                                          +++++++++++++++++++++++++++++++++++++++
+------------------------------ Captured log call ------------------------------
+WARNING  modules.auditors.llm_mention_checker:llm_mention_checker.py:256 LLM query failed for gemini: 403 Forbidden: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyFAKE_TESTING_KEY_1234567890abcdef
+_____ TestPerplexityErrorNoKeyLeak.test_perplexity_401_does_not_leak_key ______
+tests\auditors\test_p5_ac_s1_secret_sanitization.py:180: in test_perplexity_401_does_not_leak_key
+    assert SYNTHETIC_PERPLEXITY_KEY not in record.getMessage()
+E   AssertionError: assert 'pplx-fake-t...ef1234567890' not in 'LLM query f...ef1234567890'
+E     
+E     'pplx-fake-testing-key-abcdef1234567890' is contained here:
+E       LLM query failed for perplexity: 401 Unauthorized — bad key: pplx-fake-testing-key-abcdef1234567890
+E     ?                                                              ++++++++++++++++++++++++++++++++++++++
+------------------------------ Captured log call ------------------------------
+WARNING  modules.auditors.llm_mention_checker:llm_mention_checker.py:256 LLM query failed for perplexity: 401 Unauthorized — bad key: pplx-fake-testing-key-abcdef1234567890
+=========================== short test summary info ===========================
+FAILED tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestGemini403NoKeyLeak::test_gemini_403_does_not_leak_key_in_log
+FAILED tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestPerplexityErrorNoKeyLeak::test_perplexity_401_does_not_leak_key
+================== 2 failed, 1 passed, 8 deselected in 0.49s ==================
+
+Exit code: 1

@@ -124,6 +124,29 @@ class LLMMentionChecker:
         """True si al menos un provider tiene API key."""
         return len(self._available_providers) > 0
 
+    def _sanitize_text(self, text: str) -> str:
+        """Reemplaza valores de API keys conocidas por *** en texto arbitrario.
+
+        Defensa en profundidad: si una key llega a un mensaje de error o log,
+        el valor real nunca se publica. FASE-P5 AC-S1.
+        """
+        for key_value in (self._gemini_key, self._openrouter_key, self._perplexity_key):
+            if key_value:
+                text = text.replace(key_value, "***")
+        return text
+
+    @staticmethod
+    def _sanitize_error(error: Exception) -> str:
+        """Sanitiza el mensaje de una excepción: redacta params `key=...` de URLs.
+
+        Captura el patrón `?key=<valor>` o `&key=<valor>` que aparece cuando
+        requests incluye la URL en HTTPError. Defensa en profundidad junto a
+        _sanitize_text. FASE-P5 AC-S1.
+        """
+        msg = str(error)
+        msg = re.sub(r'([?&]key=)[^&\s"\']+', r'\1***', msg)
+        return msg
+
     def check_mentions(self, hotel_name: str, hotel_url: str,
                        location: str, landmark: str = "") -> LLMReport:
         """
@@ -229,7 +252,8 @@ class LLMMentionChecker:
             elif provider == "perplexity":
                 return self._query_perplexity(query)
         except Exception as e:
-            logger.warning(f"LLM query failed for {provider}: {e}")
+            safe_msg = self._sanitize_text(self._sanitize_error(e))
+            logger.warning(f"LLM query failed for {provider}: {safe_msg}")
             return None
 
     def _query_openrouter(self, query: str) -> Optional[dict]:
@@ -302,36 +326,41 @@ class LLMMentionChecker:
                     )
                     last_error = e
                     continue
-                # Non-404 HTTP errors: no reintentar (auth, rate limit, etc.)
-                logger.warning(f"OpenRouter query failed for '{model}': {e}")
+                safe_msg = self._sanitize_text(self._sanitize_error(e))
+                logger.warning(f"OpenRouter query failed for '{model}': {safe_msg}")
                 return None
 
             except Exception as e:
-                logger.warning(f"OpenRouter query failed for '{model}': {e}")
+                safe_msg = self._sanitize_text(self._sanitize_error(e))
+                logger.warning(f"OpenRouter query failed for '{model}': {safe_msg}")
                 return None
 
         # Todos los modelos fallaron
+        safe_last = self._sanitize_text(self._sanitize_error(last_error)) if last_error else "n/a"
         logger.warning(
             f"OpenRouter: todos los modelos fallaron (primario='{primary_model}', "
             f"fallbacks={self._OPENROUTER_FALLBACK_MODELS}). "
-            f"Último error: {last_error}"
+            f"Último error: {safe_last}"
         )
         return None
 
     def _query_gemini(self, query: str) -> Optional[dict]:
-        """Llama Gemini API directo (no via OpenRouter)."""
+        """Llama Gemini API directo (no via OpenRouter).
+        La key viaja en header x-goog-api-key, nunca en la URL (AC-S1).
+        """
         import requests
 
         url = (
-            f"https://generativelanguage.googleapis.com/v1beta/"
-            f"models/gemini-2.0-flash:generateContent?key={self._gemini_key}"
+            "https://generativelanguage.googleapis.com/v1beta/"
+            "models/gemini-2.0-flash:generateContent"
         )
+        headers = {"x-goog-api-key": self._gemini_key}
         payload = {
             "contents": [{"parts": [{"text": query}]}],
             "generationConfig": {"maxOutputTokens": 1024},
         }
 
-        response = requests.post(url, json=payload, timeout=30)
+        response = requests.post(url, json=payload, headers=headers, timeout=30)
         response.raise_for_status()
         data = response.json()
         text = data["candidates"][0]["content"]["parts"][0]["text"]

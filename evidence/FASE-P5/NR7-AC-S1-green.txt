@@ -1,0 +1,12 @@
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestSanitizeText::test_replaces_gemini_key PASSED [  9%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestSanitizeText::test_replaces_multiple_keys PASSED [ 18%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestSanitizeText::test_no_keys_is_noop PASSED [ 27%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestSanitizeText::test_none_keys_is_noop PASSED [ 36%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestSanitizeError::test_redacts_key_param PASSED [ 45%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestSanitizeError::test_preserves_other_params PASSED [ 54%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestSanitizeError::test_no_key_param_is_noop PASSED [ 63%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestGeminiKeyNotInUrl::test_gemini_uses_header_not_url PASSED [ 72%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestGemini403NoKeyLeak::test_gemini_403_does_not_leak_key_in_log PASSED [ 81%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestOpenRouterErrorNoKeyLeak::test_openrouter_500_does_not_leak_key PASSED [ 90%]
+tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestPerplexityErrorNoKeyLeak::test_perplexity_401_does_not_leak_key PASSED [100%]
+======================= 11 passed, 8 warnings in 1.50s ========================
