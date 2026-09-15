@@ -135,6 +135,7 @@ class ActaWriter:
         lines.extend(self._render_reviewer_reports(acta.get("reviewer_reports") or []))
         lines.extend(self._render_corrective_actions(acta.get("corrective_actions") or []))
         lines.extend(self._render_enforcement(acta.get("enforcement")))
+        lines.extend(self._render_package_evidence(acta.get("package_evidence")))
 
         lines.extend([
             f"---",
@@ -218,3 +219,41 @@ class ActaWriter:
             f"{'SÍ — el ZIP se publicó sin aplicar el veredicto' if suppressed else 'No'}",
             f"",
         ]
+
+    def _render_package_evidence(self, package_evidence: Optional[dict]) -> list:
+        """Sección `Evidencia del Paquete`: identidad criptográfica del ZIP suprimido (AC-G3).
+
+        Solo se renderiza si hay evidencia (paquete fue suprimido). Muestra SHA256
+        y conteo de miembros para que el operador pueda auditar qué se eliminó.
+        """
+        if not package_evidence or not isinstance(package_evidence, dict):
+            return []
+
+        suppressed = package_evidence.get("suppressed", False)
+        if not suppressed:
+            return []
+
+        sha256 = package_evidence.get("sha256")
+        member_count = package_evidence.get("member_count")
+        path = package_evidence.get("path", "N/A")
+        error = package_evidence.get("error")
+
+        lines = [
+            f"## Evidencia del Paquete Suprimido",
+            f"",
+            f"- **Ruta**: `{path}`",
+        ]
+
+        if error:
+            lines.extend([
+                f"- **Error al computar evidencia**: {error}",
+                f"",
+            ])
+        else:
+            lines.extend([
+                f"- **SHA256**: `{sha256 or 'no computado'}`",
+                f"- **Miembros en el ZIP**: {member_count if member_count is not None else 'no computado'}",
+                f"",
+            ])
+
+        return lines

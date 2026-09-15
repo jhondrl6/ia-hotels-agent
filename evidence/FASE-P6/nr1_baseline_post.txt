@@ -1,0 +1,20 @@
+NR1 Baseline POST — FASE-P6
+============================
+Fecha: 2026-09-15
+Corte: HEAD con AC-G1..AC-G5 implementados
+
+Resultados pytest (POST):
+  passed: 4189
+  failed: 2 (identicos al PRE: test_function_default_flags flaky, test_diagnostic_includes_geo_metrics)
+  skipped: 41
+  xfailed: 4
+
+Funciones test (grep canonico): 4226
+Archivos test_*.py: 302 (+4 propios de P6)
+
+Nuevos archivos de test:
+  tests/test_ac_g1_implementation_order.py (5 funciones)
+  tests/test_ac_g2_onboarding_fallback.py (4 funciones)
+  tests/test_ac_g3_package_evidence.py (6 funciones)
+  tests/test_ac_g4_g5_multi_hotel_matrix.py (5 funciones)
+  Total: 20 funciones nuevas

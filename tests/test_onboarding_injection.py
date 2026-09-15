@@ -262,8 +262,14 @@ class TestObservationToOnboardingFormat:
         assert "campos_confirmados" in result["metadatos"]
         assert "habitaciones" in result["metadatos"]["campos_confirmados"]
 
-    def test_missing_fields_use_defaults(self):
-        """Campos faltantes usan defaults seguros."""
+    def test_missing_fields_propagate_nothing(self):
+        """AC-G2 (P6-R/R4): ausencia de dato NO se convierte en valor inventado.
+
+        Migrado desde `test_missing_fields_use_defaults`, que codificaba el defecto
+        (rooms=10, pct=20.0, epistemic_status='verified' por omisión) que el plan
+        TRIBUNAL-ENFORCEMENT-OBS prohíbe expresamente. Causa completa:
+        evidence/FASE-P6/AUDITORIA-forense-2026-09-15.md (I4).
+        """
         obs = {"hotel_name": "Minimal Hotel"}
 
         result = _observation_to_onboarding_format(obs)
@@ -271,11 +277,24 @@ class TestObservationToOnboardingFormat:
         assert result["hotel"]["nombre"] == "Minimal Hotel"
         assert result["hotel"]["url"] == ""
         assert result["hotel"]["ubicacion"] == ""
-        assert result["datos_operativos"]["habitaciones"] == 10
-        assert result["datos_operativos"]["reservas_mes"] == 0
-        assert result["datos_operativos"]["valor_reserva_cop"] == 0
-        assert result["datos_operativos"]["canal_directo_pct"] == 20.0
+        assert result["datos_operativos"] == {}
+        assert result["metadatos"]["campos_confirmados"] == []
         assert result["metadatos"]["confidence"] == 0.0
+        assert result["metadatos"]["epistemic_status"] == "no_declarado"
+        assert result["metadatos"]["epistemic_status"] != "verified"
+        assert result["metadatos"]["fecha_captura"] is None
+
+    def test_partial_fields_confirm_only_present_ones(self):
+        """AC-G2 (P6-R/R4): campos_confirmados enumera solo lo realmente presente."""
+        obs = {
+            "hotel_name": "Parcial",
+            "rooms": 22,
+            "collected_at": "2026-09-01",
+            "epistemic_status": "verified",
+        }
+        result = _observation_to_onboarding_format(obs)
+        assert result["datos_operativos"] == {"habitaciones": 22}
+        assert result["metadatos"]["campos_confirmados"] == ["habitaciones"]
         assert result["metadatos"]["epistemic_status"] == "verified"
 
     def test_source_note_includes_confidence(self):

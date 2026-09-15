@@ -1,0 +1,13 @@
+NR1 Baseline PRE — FASE-P6
+===========================
+Fecha: 2026-09-15
+Corte: commit anterior a cambios de P6 (HEAD antes de AC-G1..AC-G5)
+
+Resultados pytest (PRE):
+  passed: 4169
+  failed: 2 (test_function_default_flags flaky, test_diagnostic_includes_geo_metrics — ambos ajenos)
+  skipped: 41
+  xfailed: 4
+
+Funciones test (grep canonico): 4206 (sin los 4 archivos nuevos de P6)
+Archivos test_*.py: 298 (sin los 4 nuevos)

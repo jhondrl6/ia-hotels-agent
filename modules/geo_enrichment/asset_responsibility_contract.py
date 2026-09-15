@@ -300,25 +300,33 @@ class AssetResponsibilityContract:
         hotel_name: str,
         core_assets: Optional[List[str]] = None,
         geo_assets: Optional[List[str]] = None,
-        geo_score: Optional[int] = None
+        geo_score: Optional[int] = None,
+        asset_zip_paths: Optional[Dict[str, str]] = None,  # AC-G1: filename → ZIP path
     ) -> str:
         """Genera un template de entrega con instrucciones claras.
-        
+
         Args:
             hotel_name: Nombre del hotel para el template.
             core_assets: Lista de filenames CORE generados.
             geo_assets: Lista de filenames GEO generados.
             geo_score: Score GEO para determinar si GEO assets son obligatorios.
-            
+            asset_zip_paths: AC-G1: Mapping de filename → ruta real en el ZIP.
+
         Returns:
             String con el template de entrega formateado en Markdown.
         """
         core_assets = core_assets or []
         geo_assets = geo_assets or []
         geo_score = geo_score or 100
+        asset_zip_paths = asset_zip_paths or {}
 
         # Determinar si GEO assets son obligatorios
         geo_mandatory = geo_score < 68
+
+        # AC-G1: Detectar assets fuera del catálogo de 6 nombres
+        known_assets = set(self.CORE_TO_GEO_MAP.keys()) | set(self.GEO_TO_CORE_MAP.keys())
+        all_provided = set(core_assets) | set(geo_assets)
+        unknown_assets = all_provided - known_assets
 
         lines = [
             f"# 📦 Delivery Package - {hotel_name}",
@@ -344,13 +352,32 @@ class AssetResponsibilityContract:
         for i, resp in enumerate(order, 1):
             mandatory_mark = "✅" if resp.mandatory else "⬜"
             type_mark = "[CORE]" if resp.type == AssetType.CORE else "[GEO]"
+            # AC-G1: Show actual ZIP path if available
+            zip_path = asset_zip_paths.get(resp.filename, resp.filename)
+            display_name = zip_path if zip_path != resp.filename else resp.filename
 
-            lines.append(f"### {i}. {resp.filename} {mandatory_mark} {type_mark}")
+            lines.append(f"### {i}. {display_name} {mandatory_mark} {type_mark}")
             lines.append(f"   - **Descripción:** {resp.description}")
             lines.append(f"   - **Prioridad:** {resp.priority} ({'primero' if resp.priority == 1 else 'después'})")
             lines.append(f"   - **Obligatorio:** {'Sí' if resp.mandatory else 'No'}")
             if resp.implementation_note:
                 lines.append(f"   - **Cómo implementar:** {resp.implementation_note}")
+            lines.append("")
+
+        # AC-G1: Explicit disposition for assets outside the catalog
+        if unknown_assets:
+            lines.extend([
+                "---",
+                "",
+                "## 📦 ASSETS ADICIONALES (fuera del catálogo CORE/GEO)",
+                "",
+                "Los siguientes assets no tienen relación CORE↔GEO registrada. "
+                "Implementar según su propósito específico:",
+                "",
+            ])
+            for asset in sorted(unknown_assets):
+                zip_path = asset_zip_paths.get(asset, asset)
+                lines.append(f"- **`{zip_path}`**: Asset adicional sin par conocido. Revisar contenido para determinar propósito.")
             lines.append("")
 
         # Agregar guía de relaciones

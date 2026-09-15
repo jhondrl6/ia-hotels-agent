@@ -3296,6 +3296,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             asset_output_dir = str(output_dir / hotel_id)
 
             # NF-6: Derive FASE-5 params for IMPLEMENTATION_ORDER generation
+            # P6-R (R6): solo se pasan los filenames; la ruta real dentro del ZIP
+            # la deriva DeliveryPackager.write() de los dest que él mismo escribe
+            # (una sola representación del hecho — L-SR3).
             _core_assets = None
             _geo_assets = None
             _geo_score = None
@@ -3411,6 +3414,21 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                               f"({_action.artifact}) → dueño: {_action.owner}")
                         print(f"       {_action.instruction}")
                 print("   Sin reintento automático y sin entrega parcial (Q1b).")
+                # AC-G3: Capturar evidencia del paquete antes de suprimirlo.
+                # P6-R (R5): su propio try — si la re-escritura del acta falla,
+                # el bloqueo se aplica igual; nunca debe caer al except exterior
+                # que publicaría la cuarentena.
+                try:
+                    package_evidence = _compute_package_evidence(quarantine_tmp_path)
+                    tribunal_acta["package_evidence"] = {
+                        "suppressed": True,
+                        "path": str(quarantine_tmp_path),
+                        **package_evidence,
+                    }
+                    writer = ActaWriter(v4_audit_dir)
+                    writer.write(tribunal_acta)
+                except Exception as e:
+                    print(f"   [WARN] Evidencia del paquete no pudo registrarse en el acta: {e}")
                 try:
                     packager.suppress(quarantine_tmp_path)
                 except Exception as e:
@@ -3808,14 +3826,67 @@ def _normalize_url(url: str) -> str:
     return p.netloc.replace('www.', '').lower()
 
 
+def _compute_package_evidence(zip_path: Path) -> dict:
+    """Computa evidencia criptográfica del paquete ZIP antes de suprimirlo (AC-G3).
+
+    Args:
+        zip_path: Ruta al archivo .zip.tmp
+
+    Returns:
+        Dict con sha256 (hex) y member_count (int). Si falla, retorna valores nulos.
+    """
+    import hashlib
+
+    try:
+        # Calcular sha256
+        sha256_hash = hashlib.sha256()
+        with open(zip_path, "rb") as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                sha256_hash.update(byte_block)
+        sha256_hex = sha256_hash.hexdigest()
+
+        # Contar miembros del ZIP
+        import zipfile
+        with zipfile.ZipFile(zip_path, 'r') as zf:
+            member_count = len(zf.namelist())
+
+        return {
+            "sha256": sha256_hex,
+            "member_count": member_count,
+        }
+    except Exception as e:
+        # Si falla, retornar valores nulos pero con el error
+        return {
+            "sha256": None,
+            "member_count": None,
+            "error": str(e),
+        }
+
+
 def _observation_to_onboarding_format(obs: dict) -> dict:
     """Convierte un observation de observations.json al formato de onboarding YAML.
 
     El formato retornado debe ser compatible con lo que espera run_v4_complete_mode()
     en main.py: datos_operativos.habitaciones, .reservas_mes, .valor_reserva_cop,
     .canal_directo_pct, y metadatos.fecha_captura, .campos_confirmados.
+
+    AC-G2 (P6-R/R4): se propaga **solo** evidencia realmente disponible. La
+    ausencia de un campo no se convierte en valor inventado, en `verified` ni en
+    campo confirmado.
     """
-    from datetime import datetime, timezone
+    _FIELD_MAP = {
+        'habitaciones': 'rooms',
+        'reservas_mes': 'monthly_reservations',
+        'valor_reserva_cop': 'avg_reservation_cop',
+        'canal_directo_pct': 'direct_channel_percentage',
+    }
+    datos_operativos = {}
+    campos_confirmados = []
+    for campo, obs_key in _FIELD_MAP.items():
+        valor = obs.get(obs_key)
+        if valor is not None:
+            datos_operativos[campo] = valor
+            campos_confirmados.append(campo)
 
     return {
         'hotel': {
@@ -3823,18 +3894,13 @@ def _observation_to_onboarding_format(obs: dict) -> dict:
             'url': obs.get('website', ''),
             'ubicacion': obs.get('region', ''),
         },
-        'datos_operativos': {
-            'habitaciones': obs.get('rooms', 10),
-            'reservas_mes': obs.get('monthly_reservations', 0),
-            'valor_reserva_cop': obs.get('avg_reservation_cop', 0),
-            'canal_directo_pct': obs.get('direct_channel_percentage', 20.0),
-        },
+        'datos_operativos': datos_operativos,
         'metadatos': {
             'fuente': 'observations_tier_a',
-            'fecha_captura': obs.get('collected_at', datetime.now(timezone.utc).isoformat()),
+            'fecha_captura': obs.get('collected_at'),
             'confidence': obs.get('confidence', 0.0),
-            'epistemic_status': obs.get('epistemic_status', 'verified'),
-            'campos_confirmados': ['habitaciones', 'reservas_mes', 'valor_reserva_cop', 'canal_directo_pct'],
+            'epistemic_status': obs.get('epistemic_status') or 'no_declarado',
+            'campos_confirmados': campos_confirmados,
             'source_note': f"Datos de observations.json (Tier A, confidence {obs.get('confidence', 'N/A')})",
         },
     }
@@ -3861,43 +3927,42 @@ def _load_latest_onboarding_data(
     import yaml
 
     clientes_dir = output_dir or Path("output/clientes")
-    if not clientes_dir.exists():
-        return None
-
     normalized_url = _normalize_url(hotel_url)
 
-    for yaml_file in clientes_dir.glob("*_onboarding.yaml"):
-        try:
-            with open(yaml_file, 'r', encoding='utf-8') as f:
-                data = yaml.safe_load(f)
-        except Exception:
-            continue
+    # Buscar primero en YAMLs de clientes (si el directorio existe)
+    if clientes_dir.exists():
+        for yaml_file in clientes_dir.glob("*_onboarding.yaml"):
+            try:
+                with open(yaml_file, 'r', encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+            except Exception:
+                continue
 
-        if not data or 'metadatos' not in data:
-            continue
+            if not data or 'metadatos' not in data:
+                continue
 
-        yaml_url = data.get('hotel', {}).get('url', '')
-        if not yaml_url:
-            continue
+            yaml_url = data.get('hotel', {}).get('url', '')
+            if not yaml_url:
+                continue
 
-        if _normalize_url(yaml_url) != normalized_url:
-            continue
+            if _normalize_url(yaml_url) != normalized_url:
+                continue
 
-        # Frescura: verificación via env var (Fix 3)
-        # Si ONBOARDING_FRESHNESS_HOURS no está seteada, no hay límite
-        import os
-        freshness_hours = os.getenv("ONBOARDING_FRESHNESS_HOURS")
-        if freshness_hours:
-            from datetime import datetime, timezone, timedelta
-            fecha_str = data.get('metadatos', {}).get('fecha_captura')
-            if fecha_str:
-                fecha = datetime.fromisoformat(fecha_str.replace('Z', '+00:00'))
-                if fecha.tzinfo is None:
-                    fecha = fecha.replace(tzinfo=timezone.utc)
-                if datetime.now(timezone.utc) - fecha > timedelta(hours=int(freshness_hours)):
-                    continue  # Data demasiado vieja, seguir buscando
+            # Frescura: verificación via env var (Fix 3)
+            # Si ONBOARDING_FRESHNESS_HOURS no está seteada, no hay límite
+            import os
+            freshness_hours = os.getenv("ONBOARDING_FRESHNESS_HOURS")
+            if freshness_hours:
+                from datetime import datetime, timezone, timedelta
+                fecha_str = data.get('metadatos', {}).get('fecha_captura')
+                if fecha_str:
+                    fecha = datetime.fromisoformat(fecha_str.replace('Z', '+00:00'))
+                    if fecha.tzinfo is None:
+                        fecha = fecha.replace(tzinfo=timezone.utc)
+                    if datetime.now(timezone.utc) - fecha > timedelta(hours=int(freshness_hours)):
+                        continue  # Data demasiado vieja, seguir buscando
 
-        return data
+            return data
 
     # Fallback: buscar en observations.json (warehouse de datos verificados)
     obs_path = Path("data/hotel_observations/observations.json")

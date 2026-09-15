@@ -190,6 +190,16 @@ class DeliveryPackager:
         # Collect files to package
         files_to_package = self._collect_files(source_dir, diagnostic_path, proposal_path)
 
+        # AC-G1 (P6-R/R6): la identidad del asset con su ruta real dentro del ZIP
+        # se deriva de los dest que este packager escribe — no de una segunda
+        # representación calculada aguas arriba (L-SR3).
+        _asset_names = set(core_assets or []) | set(geo_assets or [])
+        asset_zip_paths: Dict[str, str] = {}
+        for _f in files_to_package:
+            _name = Path(_f["dest"]).name
+            if _name in _asset_names:
+                asset_zip_paths.setdefault(_name, _f["dest"])
+
         # FASE-5: Generate IMPLEMENTATION_ORDER.md content in memory
         implementation_order_content: Optional[str] = None
         if HAS_ASSET_CONTRACT and (core_assets or geo_assets):
@@ -199,7 +209,8 @@ class DeliveryPackager:
                     hotel_name=hotel_name or hotel_id,
                     core_assets=core_assets,
                     geo_assets=geo_assets,
-                    geo_score=geo_score
+                    geo_score=geo_score,
+                    asset_zip_paths=asset_zip_paths,  # AC-G1 (R6): mapping derivado de los dest reales
                 )
             except Exception as e:
                 logger.warning(f"[DeliveryPackager] Could not generate implementation order: {e}")
