@@ -303,4 +303,4 @@ decir cuáles entran al alcance de este plan y cuáles se documentan como límit
 - [x] `10-analisis-post-implementacion.md` completo (lecciones, decisiones, métricas) con la tabla "Lecciones capitalizadas de planes anteriores" incluyendo el Paso 0 horizontal
 - [ ] Write-back QMind ejecutado antes del archivado (`validate_qmind_writeback.py --upload <PLAN>`) — *en Tarea 3*
 - [ ] Plan archivado (R2.5) — *en Tarea 4*
-- [ ] v4.77.0 publicada (push de master + tag, solo con confirmación explícita del usuario)
+- [x] v4.77.0 publicada — master `0ce57a2..3d25778` y tag `v4.77.0` empujados a origin el 2026-09-15 con confirmación escrita del operador y L3 de pre-push **descartado explícitamente por él**; `v4.76.0` verificado en origin, no se volvió a empujar

@@ -11,4 +11,4 @@ $ git rev-parse v4.76.0 v4.76.0^{} v4.77.0 v4.77.0^{}
 v4.76.0 en origin (verificado 2026-09-15, NO se vuelve a empujar):
 2df9dbcdda456fb683691b9eb9f4b82d6bedf74c	refs/tags/v4.76.0
 
-De esta fase solo sale v4.77.0 (local, pendiente de autorizacion de push).
+De esta fase solo salio v4.77.0: EMPUJADO a origin 2026-09-15 tras confirmacion escrita del operador (L3 de pre-push ofrecido y descartado por el operador). refs/tags/v4.77.0 = 85deab638aad9c41978a442abbfbc8c930eaab32 (objeto de tag).
