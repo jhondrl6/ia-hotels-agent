@@ -1,0 +1,16 @@
+NR1 baseline POST-REMEDIACION — FASE-P5 (2026-09-15)
+Comando: python -m pytest -q --tb=no  (suite completa)
+
+RESULTADO: 2 failed, 4155 passed, 41 skipped, 4 xfailed — 134.02s
+
+Fallos (ambos ajenos, ya presentes en el POST original de P5, 4145 passed):
+  - tests/financial_engine/.../test_function_default_flags  (flaky, registrado aba517a)
+  - tests/test_diagnostic_geo_metrics.py::test_diagnostic_includes_geo_metrics  (ajeno, registrado aba517a)
+
+Delta R2.7: 4.145 -> 4.155 = +10 (tests/test_p5_ac_s2_remediacion.py), 0 regresiones
+Canónico (grep '^\s*def test_' tests --include=*.py): 4.195 funciones / 302 archivos
+
+NOTA de honestidad del baseline: una primera corrida POST dio 4.153 passed / 4 failed;
+los 2 rojos extra los causaba config/client_material_policy.yaml (sin version/description
+según el contract test de config/). Fue fallo PROPIO detectado por un contrato existente,
+no ajeno: se corrigió el YAML y esta corrida es la segunda, íntegra.

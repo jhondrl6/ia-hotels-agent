@@ -5,8 +5,8 @@
     "archivos_analysis_escaneados": 13,
     "archivos_contexto_escaneados": 35,
     "archivos_md_escaneados": 363,
-    "ids_con_definicion": 293,
-    "ids_citados_sin_definicion": 42,
+    "ids_con_definicion": 296,
+    "ids_citados_sin_definicion": 43,
     "familias_incluidas": [
       "L",
       "DA",
@@ -371,7 +371,7 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 57,
+      "total_citas": 63,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2069,7 +2069,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 4,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2223,7 +2223,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 6,
+      "total_citas": 8,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2294,6 +2294,48 @@
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
       "total_citas": 6,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P5.1",
+      "familia": "L",
+      "enunciado": "El escaneo de secretos staged nunca corrió: import re quedó solo dentro de _check_no_secrets (scope de función) y _check_staged_content usaba el global → NameError → su propio except Exception: return [] lo tragaba. El check [4/9] de b25b63a daba verde con secretos en el índice. Reproducido en repo temporal antes de arreglar (ver REMEDIACION-auditoria-2026-09-15.md §1) — L-T2C.2 reproduce dentro del instrumento de este plan, dos planes después de haberse capitalizado: un NameError latente sobrevive si su consumidor está bajo un except Exception ancho. Y el par NR7 de AC-S2 no lo cazó porque mutaba los patrones de valor, no la ruta staged — el test jamás llegó a la rama (hermano de L-P3B.2: no «si puede fallar» sino «si se ejecutó»)",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 5,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P5.2",
+      "familia": "L",
+      "enunciado": "NR7-AC-S2-green.txt declaró «Estados NR8: OK / SIN_HALLAZGOS / NO_LEGIBLE / NO_CUBIERTO implementados» cuando dos de los cuatro solo existían en el docstring, y «Contenido staged: sí» cuando estaba muerto (L-P5.1). La auditoría forense lo encontró leyendo el código, no la evidencia — El registro de cierre se escribió desde la intención del fix, no desde la salida del artefacto — exactamente lo que L-P1.2 prohíbe («un docstring no es evidencia»), pero aplicado al acta de fase: la promesa publicada sin verificar contra la ejecución es EVIDENCE-TIER-FALSE-CONFIDENCE con sello de verde",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-P5.3",
+      "familia": "L",
+      "enunciado": "El checklist de P5 exigía «Iteraciones medidas y escritas (unidad + corte declarado — un — no cierra)» y la fase cerró con la celda vacía en 06 y sin registro en dependencias — el presupuesto FUERA DE SERVICIO se leyó como exención de medir, cuando exige lo contrario: registrar medida real con unidad declarada al cerrar — L-R.1 nombró esta falla en 8 de 9 fases del predecesor y este plan la reprodujo en la primera fase con presupuesto suspendido: «fuera de servicio» cancela la estimación, no la constatación",
+      "plan": "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
+      "fecha_plan": "2026-09-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2381,7 +2423,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 25,
+      "total_citas": 26,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2439,7 +2481,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 41,
+      "total_citas": 42,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2486,7 +2528,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 27,
+      "total_citas": 28,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2537,7 +2579,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 28,
+      "total_citas": 30,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2622,7 +2664,7 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 43,
+      "total_citas": 44,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -2797,7 +2839,7 @@
       "seccion": "FASE-T2-C (2026-09-10)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 20,
+      "total_citas": 25,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -2900,7 +2942,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 28,
+      "total_citas": 29,
       "planes_que_lo_citan": [
         "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -4694,6 +4736,14 @@
     },
     {
       "id": "L-P4.5",
+      "familia": "L",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+      ]
+    },
+    {
+      "id": "L-P5.2-adjunto",
       "familia": "L",
       "total_citas": 1,
       "planes_que_lo_citan": [

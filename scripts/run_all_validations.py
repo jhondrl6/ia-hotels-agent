@@ -11,6 +11,7 @@ Usage:
 """
 
 import argparse
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -40,11 +41,24 @@ class ValidationRunner:
     _SKIP_DIRS = {".venv-wsl", "venv", ".venv", "__pycache__", ".git", "node_modules",
                   ".mypy_cache", ".pytest_cache", ".tox", "dist", "build", ".eggs"}
 
-    def __init__(self, check_only: bool = False, quick: bool = False, verbose: bool = True):
+    # Binarios conocidos: se excluyen del escaneo de secretos PERO se declaran
+    # en el mensaje. Lo que no es texto ni binario conocido es NO_CUBIERTO (bloquea).
+    _KNOWN_BINARY_EXTS = {
+        ".zip", ".gz", ".bz2", ".xz", ".7z", ".tar", ".whl",
+        ".png", ".jpg", ".jpeg", ".gif", ".ico", ".webp", ".bmp",
+        ".pdf", ".woff", ".woff2", ".ttf", ".eot", ".otf",
+        ".pyc", ".pyo", ".exe", ".dll", ".pyd", ".so", ".class", ".o", ".a",
+        ".mp3", ".mp4", ".avi", ".mov", ".db", ".sqlite3",
+    }
+    _MAX_SCAN_BYTES = 5_000_000
+
+    def __init__(self, check_only: bool = False, quick: bool = False, verbose: bool = True,
+                 repo_root=None):
         self.check_only = check_only
         self.quick = quick
         self.verbose = verbose
         self.results: list = []
+        self.repo_root = Path(repo_root) if repo_root else ROOT_DIR
 
     def _walk(self, pattern: str):
         """rglob wrapper that prunes _SKIP_DIRS for performance on WSL."""
@@ -68,6 +82,7 @@ class ValidationRunner:
         self._check_plan_maestro_sync()
         self._check_version_sync()
         self._check_no_secrets()
+        self._check_client_material()
         self._check_document_integration()
         self._check_prompts_no_release()
         self._check_opencode_refs()
@@ -97,7 +112,7 @@ class ValidationRunner:
     
     def _check_residual_files(self) -> None:
         """Check for residual/backup files."""
-        print("[1/9] Checking for residual files...")
+        print("[1/10] Checking for residual files...")
         
         residual_extensions = {".bak", ".backup", ".tmp", ".old"}
         residual_files = []
@@ -126,7 +141,7 @@ class ValidationRunner:
     
     def _check_plan_maestro_sync(self) -> None:
         """Check if Plan Maestro data is synchronized."""
-        print("[2/9] Checking Plan Maestro sync...")
+        print("[2/10] Checking Plan Maestro sync...")
         
         json_path = ROOT_DIR / "data" / "benchmarks" / "plan_maestro_data.json"
         md_path = ROOT_DIR / "data" / "benchmarks" / "Plan_maestro_v2_5.md"
@@ -169,7 +184,7 @@ class ValidationRunner:
     
     def _check_version_sync(self) -> None:
         """Check if versions are synchronized across files."""
-        print("[3/9] Checking version synchronization...")
+        print("[3/10] Checking version synchronization...")
         
         version_file = ROOT_DIR / "VERSION.yaml"
         if not version_file.exists():
@@ -209,85 +224,113 @@ class ValidationRunner:
                 details=[line for line in output.split("\n") if "FAIL" in line or "needs update" in line]
             ))
     
-    def _check_no_secrets(self) -> None:
-        """Check for hardcoded secrets — FASE-P5 AC-S2.
-
-        Ampliado: escanea contenido staged (git diff --cached) y archivos de
-        cualquier extensión, no solo asignaciones en Python. Incluye tests.
-        Estados NR8: OK / SIN_HALLAZGOS / NO_LEGIBLE / NO_CUBIERTO.
-        Salida redactada: nunca imprime el valor del secreto.
-        """
-        print("[4/9] Checking for hardcoded secrets (staged + workspace)...")
-
-        import re
-
-        # Patrones de asignación (legacy, aún útiles para .py/.env)
-        assignment_patterns = [
+    def _secret_patterns(self) -> list:
+        """Patrones de secreto: asignaciones legacy + valores de key en cualquier contexto."""
+        return [
             (r'DEEPSEEK_API_KEY\s*=\s*["\'][^"\']+["\']', "DEEPSEEK_API_KEY assignment"),
             (r'ANTHROPIC_API_KEY\s*=\s*["\'][^"\']+["\']', "ANTHROPIC_API_KEY assignment"),
             (r'GOOGLE_API_KEY\s*=\s*["\'][^"\']+["\']', "GOOGLE_API_KEY assignment"),
             (r'GOOGLEMAPS_API_KEY\s*=\s*["\'][^"\']+["\']', "GOOGLEMAPS_API_KEY assignment"),
-        ]
-
-        # Patrones de valor de key (detectan keys en cualquier contexto)
-        value_patterns = [
             (r'AIzaSy[A-Za-z0-9_\-]{30,}', "Google API key (AIzaSy...)"),
             (r'sk-[A-Za-z0-9]{20,}', "OpenAI/secret key (sk-...)"),
             (r'ghp_[A-Za-z0-9]{30,}', "GitHub PAT (ghp_...)"),
             (r'pplx-[A-Za-z0-9]{20,}', "Perplexity key (pplx-...)"),
         ]
 
-        all_patterns = assignment_patterns + value_patterns
+    def _git_tracked_files(self) -> list:
+        """Archivos versionados (index). Fallback a _walk si git falla."""
+        try:
+            result = subprocess.run(
+                ["git", "ls-files", "-z"],
+                capture_output=True, text=True, cwd=self.repo_root, timeout=30
+            )
+            if result.returncode == 0:
+                return [self.repo_root / p for p in result.stdout.split("\0") if p]
+        except Exception:
+            pass
+        return [p for p in self._walk("*") if p.is_file()]
 
-        # Extensiones de texto a escanear (excluyendo binarios)
-        text_extensions = {
-            ".py", ".md", ".txt", ".json", ".yaml", ".yml", ".toml",
-            ".env", ".cfg", ".ini", ".log", ".html", ".xml", ".csv",
-        }
+    def _git_staged_paths(self) -> list:
+        """Rutas con cambios staged (añadidos/copiados/modificados)."""
+        try:
+            result = subprocess.run(
+                ["git", "diff", "--cached", "--name-only", "-z", "--diff-filter=ACM"],
+                capture_output=True, text=True, cwd=self.repo_root, timeout=30
+            )
+            if result.returncode == 0:
+                return [p for p in result.stdout.split("\0") if p]
+        except Exception:
+            pass
+        return []
 
-        # Allowlist: directorios que pueden contener referencias a secrets
-        # como parte de su propósito (archivado, evidencia de hallazgos, planificación).
-        # El contenido staged sigue siendo escaneado sin excepción.
+    def _check_no_secrets(self) -> None:
+        """Check for hardcoded secrets — FASE-P5 AC-S2 (remendada 2026-09-15).
+
+        Alcance: lo que se prepara para publicar = archivos tracked + contenido
+        staged. La clasificación es por sniff NUL, no por whitelist de extensiones:
+        todo tracked con pinta de texto se lee. Los binarios conocidos se excluyen
+        pero se declaran en el mensaje; lo no clasificable es NO_CUBIERTO y bloquea
+        (L-PF6: ningún verde por no-leer). Estados NR8: SIN_HALLAZGOS / BLOCKING /
+        NO_LEGIBLE / NO_CUBIERTO. Salida redactada: nunca imprime el valor del secreto.
+        """
+        print("[4/10] Checking for hardcoded secrets (tracked + staged)...")
+
+        patterns = self._secret_patterns()
+
+        # Allowlist: directorios de cuarentena que pueden contener referencias a
+        # secrets como parte de su propósito (archivado, evidencia, planificación).
+        # El contenido staged y el material de cliente se siguen evaluando sin
+        # excepción de lectura directa sobre estos directorios.
         allowed_dirs = {"archives", "evidence", ".opencode"}
 
         violations = []
         non_readable = []
+        non_covered = []
         scanned_count = 0
+        binaries_excluded = 0
+        symlinks_excluded = 0
 
-        # 1. Escanear archivos del workspace
-        for path in self._walk("*"):
-            if not path.is_file():
-                continue
-            if path.suffix.lower() not in text_extensions:
-                continue
-            # Respetar allowlist de directorios
-            rel_path = path.relative_to(ROOT_DIR)
+        # 1. Escanear archivos versionables (tracked en disco)
+        for path in self._git_tracked_files():
+            rel_path = path.relative_to(self.repo_root)
             if rel_path.parts and rel_path.parts[0] in allowed_dirs:
                 continue
-            # No saltar tests — AC-S2 exige cobertura completa
-            scanned_count += 1
             try:
-                content = path.read_text(encoding="utf-8", errors="ignore")
-                for pattern, description in all_patterns:
-                    if re.search(pattern, content):
-                        violations.append(f"{rel_path} ({description})")
-                        break  # Un archivo = una violación max
+                if path.is_symlink():
+                    symlinks_excluded += 1
+                    continue
+                if not path.is_file():
+                    continue
+                if path.suffix.lower() in self._KNOWN_BINARY_EXTS:
+                    binaries_excluded += 1
+                    continue
+                if path.stat().st_size > self._MAX_SCAN_BYTES:
+                    non_covered.append(f"{rel_path} (supera {_MAX_SCAN_BYTES} bytes)")
+                    continue
+                raw = path.read_bytes()
             except (PermissionError, OSError):
                 non_readable.append(str(rel_path))
+                continue
+            if b"\x00" in raw[:8192]:
+                non_covered.append(str(rel_path))
+                continue
+            scanned_count += 1
+            content = raw.decode("utf-8", errors="ignore")
+            for pattern, description in patterns:
+                if re.search(pattern, content):
+                    violations.append(f"{rel_path} ({description})")
+                    break  # Un archivo = una violación max
 
         # 2. Escanear contenido staged (git diff --cached)
-        staged_violations = self._check_staged_content(all_patterns)
-        violations.extend(staged_violations)
+        violations.extend(self._check_staged_content(patterns))
 
         # 3. Reportar con estados NR8
         if violations:
-            # Redactar: no imprimir el valor del secreto
-            redacted_details = [v for v in violations[:5]]
             self.results.append(ValidationResult(
                 name="Secrets Check",
                 passed=False,
                 message=f"BLOCKING: {len(violations)} potential secret(s) found",
-                details=redacted_details
+                details=violations[:5]
             ))
         elif non_readable:
             self.results.append(ValidationResult(
@@ -296,21 +339,88 @@ class ValidationRunner:
                 message=f"NO_LEGIBLE: {len(non_readable)} file(s) could not be scanned",
                 details=non_readable[:5]
             ))
+        elif non_covered:
+            self.results.append(ValidationResult(
+                name="Secrets Check",
+                passed=False,
+                message=f"NO_CUBIERTO: {len(non_covered)} file(s) not classifiable as text",
+                details=non_covered[:5]
+            ))
         else:
             self.results.append(ValidationResult(
                 name="Secrets Check",
                 passed=True,
-                message=f"No secrets found (scanned {scanned_count} files + staged content)"
+                message=(f"SIN_HALLAZGOS: {scanned_count} tracked files + staged "
+                         f"(excluidos declarados: {binaries_excluded} binarios conocidos, "
+                         f"{symlinks_excluded} symlinks)")
+            ))
+
+    def _check_client_material(self) -> None:
+        """Política de material de cliente — AC-S2 remendada, separada de la
+        detección de claves.
+
+        Impide versionar (tracked o staged) archivos cuya ruta contenga marcadores
+        de cliente fuera de los directorios de cuarentena. Lo ya versionado antes
+        de la política queda grandfathered en el config, con dueño declarado y
+        disposición pendiente de la puerta AC-S4.
+        """
+        print("[5/10] Checking client material policy (tracked + staged)...")
+
+        policy_path = ROOT_DIR / "config" / "client_material_policy.yaml"
+        policy = None
+        try:
+            import yaml
+            policy = yaml.safe_load(policy_path.read_text(encoding="utf-8"))
+        except Exception:
+            policy = None
+
+        if not policy:
+            self.results.append(ValidationResult(
+                name="Client Material",
+                passed=False,
+                message="POLICY_MISSING: config/client_material_policy.yaml no encontrado o ilegible"
+            ))
+            return
+
+        markers = [m.lower() for m in policy.get("client_markers", [])]
+        quarantine = [q.lower() for q in policy.get("quarantine_dirs", [])]
+        grandfathered = {g.lower() for g in policy.get("grandfathered_paths", [])}
+
+        paths = {p.relative_to(self.repo_root).as_posix() for p in self._git_tracked_files()}
+        paths.update(self._git_staged_paths())
+
+        violations = []
+        for posix in sorted(paths):
+            low = posix.lower()
+            if any(low.startswith(q) for q in quarantine):
+                continue
+            if low in grandfathered:
+                continue
+            hits = [m for m in markers if m in low]
+            if hits:
+                violations.append(f"{posix} (marcadores: {', '.join(hits)})")
+
+        if violations:
+            self.results.append(ValidationResult(
+                name="Client Material",
+                passed=False,
+                message=f"BLOCKING: {len(violations)} archivo(s) de cliente fuera de cuarentena",
+                details=violations[:10]
+            ))
+        else:
+            self.results.append(ValidationResult(
+                name="Client Material",
+                passed=True,
+                message=(f"SIN_HALLAZGOS: {len(paths)} rutas contra {len(markers)} marcadores "
+                         f"({len(grandfathered)} grandfathered con dueño)")
             ))
 
     def _check_staged_content(self, patterns: list) -> list:
         """Check staged content (git diff --cached) for secrets. AC-S2."""
-        import subprocess
-
         try:
             result = subprocess.run(
                 ["git", "diff", "--cached", "--diff-filter=ACM", "-U0"],
-                capture_output=True, text=True, cwd=ROOT_DIR, timeout=10
+                capture_output=True, text=True, cwd=self.repo_root, timeout=10
             )
             if result.returncode != 0:
                 return []  # Not a git repo or no staged changes
@@ -330,7 +440,6 @@ class ValidationRunner:
             for pattern, description in patterns:
                 if re.search(pattern, added_content):
                     violations.append(f"STAGED content ({description})")
-                    break
 
             return violations
         except Exception:
@@ -338,7 +447,7 @@ class ValidationRunner:
     
     def _check_document_integration(self) -> None:
         """Check cross-document integration consistency."""
-        print("[5/9] Checking document integration...")
+        print("[6/10] Checking document integration...")
         
         script_path = ROOT_DIR / "scripts" / "validate_document_integration.py"
         if not script_path.exists():
@@ -374,7 +483,7 @@ class ValidationRunner:
         log_phase_completion.py commands. Excludes Archives, RELEASE plans/prompts,
         and documentation-only references to --release.
         """
-        print("[6/9] Checking prompts for --release flag in intermediate phases...")
+        print("[7/10] Checking prompts for --release flag in intermediate phases...")
         
         import re
         
@@ -437,7 +546,7 @@ class ValidationRunner:
         Catches forgotten reference updates after archiving plans (Archives/)
         or contexts (Historico/). Repair manually with --fix on the script.
         """
-        print("[7/9] Checking .opencode references...")
+        print("[8/10] Checking .opencode references...")
         
         script_path = ROOT_DIR / "scripts" / "validate_opencode_refs.py"
         if not script_path.exists():
@@ -478,7 +587,7 @@ class ValidationRunner:
         numbers, because a rewritten line citation is the same defect dressed up as
         a fix.
         """
-        print("[8/9] Checking plan citations (simbolos, no numeros de linea)...")
+        print("[9/10] Checking plan citations (simbolos, no numeros de linea)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_plan_citations.py"
         if not script_path.exists():
@@ -520,7 +629,7 @@ class ValidationRunner:
         A green here means FORM AND TRACEABILITY, never relevance: the script publishes
         the population it looked at because an [OK] without a denominator is L-R.3.
         """
-        print("[9/9] Checking lesson capitalization (Paso 0 del executor)...")
+        print("[10/10] Checking lesson capitalization (Paso 0 del executor)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_lesson_capitalization.py"
         if not script_path.exists():
@@ -552,7 +661,7 @@ class ValidationRunner:
 
     def _check_dependencies(self) -> None:
         """Check if all dependencies are installed."""
-        print("[10/12] Checking dependencies...")
+        print("[11/14] Checking dependencies...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pip", "check"
@@ -574,7 +683,7 @@ class ValidationRunner:
     
     def _check_imports(self) -> None:
         """Check if core modules can be imported."""
-        print("[11/12] Checking core module imports...")
+        print("[12/14] Checking core module imports...")
         
         core_modules = [
             "src.config",
@@ -610,7 +719,7 @@ class ValidationRunner:
     
     def _check_tests_pass(self) -> None:
         """Run tests and check if they pass."""
-        print("[12/12] Running tests...")
+        print("[13/14] Running tests...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pytest", "-q", "--tb=no"
@@ -642,7 +751,7 @@ class ValidationRunner:
         `qmind` CLI. If the CLI is unavailable the validator itself degrades to
         WARN + exit 0 (fallback :468); only a real missing ingestion fails.
         """
-        print("[13/13] Checking QMind write-back (planes archivados)...")
+        print("[14/14] Checking QMind write-back (planes archivados)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_qmind_writeback.py"
         if not script_path.exists():

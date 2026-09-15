@@ -418,6 +418,6 @@ def test_el_hook_versionado_invoca_el_script_y_su_numeracion_no_tiene_huecos():
 def test_run_all_validations_registra_el_check_dentro_del_modo_rapido():
     src = (ROOT / "scripts" / "run_all_validations.py").read_text(encoding="utf-8")
     assert src.index("self._check_lesson_capitalization()") < src.index("if not self.quick:")
-    assert "[9/9] Checking lesson capitalization" in src
-    rapidos = {n for i, n in _etiquetas(src) if i <= 9}
-    assert rapidos == {9}, f"los checks del modo rapido comparten denominador: {rapidos}"
+    assert "[10/10] Checking lesson capitalization" in src
+    rapidos = {n for i, n in _etiquetas(src) if i <= 10}
+    assert rapidos == {10}, f"los checks del modo rapido comparten denominador: {rapidos}"

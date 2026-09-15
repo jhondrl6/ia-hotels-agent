@@ -1,0 +1,34 @@
+# FASE-P5 AC-S2 (remendada 2026-09-15) — Politica de material de cliente
+version: "1.0"
+description: >
+  Politica anti-material-de-cliente (check [5/10] de run_all_validations):
+  marcadores de cliente que no pueden versionarse fuera de cuarentena, con
+  lo ya publicado grandfathered con dueno y pendencia AC-S4. Separada de la
+  deteccion de claves.
+# Separada de la deteccion de claves (scripts/run_all_validations.py::
+# ValidationRunner._check_client_material). Impide versionar material de
+# cliente fuera de cuarentena; NO es un control de secretos.
+#
+# Cerrar cada fila grandfathered exige una accion externa del operador
+# (puerta AC-S4: evidence/FASE-P5/AC-S3-S4-inventario-superficie.md).
+# Borrar una linea de grandfathered sin borrar el archivo reactiva el bloqueo.
+
+quarantine_dirs:
+  - archives/
+  - evidence/
+  - .opencode/
+
+# Marcadores medidos (F-P4.5 / inventario AC-S3): slugs de hoteles cliente y
+# rutas de perfiles GBP reales.
+client_markers:
+  - donalfonso
+  - hotelsalentoreal
+  - barreda
+  - gbp_profiles
+
+# Material ya versionado fuera de cuarentena al dictar la politica: inventario
+# con dueno y disposition pendiente de AC-S4.
+grandfathered_paths:
+  # dueno: operador — blob de cliente real en origin/master (F-P4.5);
+  # disposicion: retirada o aceptacion explicita de riesgo (AC-S4)
+  - tests/fixtures/donalfonsohotel_onboarding.yaml

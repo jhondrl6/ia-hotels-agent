@@ -28,7 +28,23 @@ Cobertura:
 - Estados NR8: OK / SIN_HALLAZGOS / NO_LEGIBLE / NO_CUBIERTO implementados
 - Salida redactada: sí (nunca imprime el valor del secreto)
 
+CORRECCIÓN (remediación 2026-09-15, auditoría forense de b25b63a) — dos afirmaciones
+de este registro eran falsas en el momento de escribirse:
+1. "Estados NR8 … implementados": NO_CUBIERTO y SIN_HALLAZGOS solo existían en el
+   docstring; el código no los emitía. Implementados de verdad en la remediación
+   (sniff NUL sobre tracked, NO_CUBIERTO bloqueante, verde nombrado SIN_HALLAZGOS).
+2. "Contenido staged: sí": `re` solo se importaba dentro de _check_no_secrets, el
+   NameError de _check_staged_content lo tragaba su `except Exception` y devolvía
+   [] — L-T2C.2 reproduce aquí, en el checker de secretos. El escaneo staged estaba
+   MUERTO también en producción (ver REMEDIACION-auditoria-2026-09-15.md, repro).
+El conteo de archivos cambió con el alcance (workspace → tracked + staged): medir
+el valor actual en la salida de `run_all_validations.py --quick`.
+
 Conclusión:
 El checker detecta correctamente secrets en múltiples extensiones y contenido staged.
 El allowlist es explícito y documentado (archives/, evidence/, .opencode/).
 El contenido staged NO tiene excepciones — cualquier secret nuevo será detectado.
+
+[La conclusión anterior quedó SIN EFECTO en su punto 3: por el bug de `re`, ningún
+secret staged era detectado. Corregido en la remediación; ver el par divergente
+staged-vs-worktree en REMEDIACION-auditoria-2026-09-15.md.]

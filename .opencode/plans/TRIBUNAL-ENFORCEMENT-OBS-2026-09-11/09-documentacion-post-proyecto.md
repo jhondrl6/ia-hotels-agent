@@ -174,6 +174,48 @@
   la barreda como fallo conocido y cuatro fallos; hoy son 3, todos ajenos). Su actualización es de
   RELEASE con el bump, no de esta fase.
 
+## Aporte de FASE-P5 para GUIA_TECNICA
+
+> Sin módulos nuevos de negocio: el aporte son **dos controles** sobre el árbol de
+> validaciones (`run_all_validations.py`) y su remediación post-auditoría del mismo
+> día. Cero cambios en `main.py`/`judge.py`/`acta_writer.py`.
+
+- **Sanitización de errores del provider LLM (AC-S1)**: la key de Gemini viaja en
+  header `x-goog-api-key`, **nunca** en la URL (los `HTTPError` de requests incluyen
+  la URL). Dos capas en `LLMMentionChecker`: `_sanitize_text` (sustituye el valor de
+  cada key conocida por `***`) y `_sanitize_error` (redacta `?key=`/`&key=` en el
+  mensaje). Todo `logger.warning` de los tres providers pasa por ambas. Reproducir:
+  `python -m pytest tests/auditors/test_p5_ac_s1_secret_sanitization.py` (11 tests,
+  token sintético, sin red).
+- **Checker de secretos (AC-S2, remendado)**: alcance = lo que se prepara para
+  publicar (**tracked** vía `git ls-files` **+ staged** vía `git diff --cached`), no
+  el workspace completo. Clasificación por **sniff NUL**, no por whitelist de
+  extensiones: `.cursorrules`, hooks sin sufijo, `.ps1`/`.diff` se leen; binarios
+  conocidos se excluyen **declarados en el mensaje**; lo no clasificable es
+  `NO_CUBIERTO` y **bloquea**. Estados visibles: `SIN_HALLAZGOS` / `BLOCKING` /
+  `NO_LEGIBLE` / `NO_CUBIERTO`. La cuarentena `archives/`, `evidence/`, `.opencode/`
+  queda fuera del barrido de workspace (documentado; el staged se escanea sin
+  excepción). **Hallazgo de la auditoría**: en b25b63a el escaneo staged estaba muerto
+  (`re` importado dentro de otra función → `NameError` tragado por `except Exception`)
+  — ver `evidence/FASE-P5/REMEDIACION-auditoria-2026-09-15.md` §1 y L-P5.1.
+- **Política de material de cliente (separada del detector de claves)**: check
+  `[5/10]` `_check_client_material` lee `config/client_material_policy.yaml`
+  (marcadores × cuarentena × grandfathered con dueño). Impide **versionar** rutas con
+  marcador de cliente fuera de cuarentena; lo ya publicado en `origin/master`
+  (p. ej. `tests/fixtures/donalfonsohotel_onboarding.yaml`) queda grandfathered con
+  disposición pendiente de la **puerta AC-S4** — no es condonación, es inventario
+  vigilado: borrar la fila reactiva el bloqueo.
+- **Denominadores**: `--quick` pasó de 9 a **10** checks; modo completo 13 → **14**
+  (las etiquetas full venían mezclando denominadores desde antes de P5; homogeneizado
+  con contract test en `test_validate_lesson_capitalization.py`). `AGENTS.md` aún dice
+  "9/9 rápidos; 13 en el completo" — su actualización es de RELEASE con el bump
+  (archivo bajo instrucción explícita de commit).
+- **Lo que P5 NO cerró (publicar en RELEASE, no esconder)**: la rotación de las 3
+  keys, la retirada/saneamiento de los blobs de cliente y la visibilidad del repo son
+  **acciones del operador** registradas en `evidence/FASE-P5/AC-S3-S4-inventario-superficie.md`;
+  mientras no haya resolución verificable o aceptación explícita del riesgo, **la
+  puerta AC-S4 bloquea el RELEASE público** aunque el cierre técnico esté ✅.
+
 ## Volcado para FASE-RELEASE
 
 RELEASE (Tarea 3) verifica que cada fase cerrada ✅ tenga su aporte aquí; una fase sin fila en A/B/D/E se marca en el `10-analisis` como omisión detectada en el cierre, no se inventa.

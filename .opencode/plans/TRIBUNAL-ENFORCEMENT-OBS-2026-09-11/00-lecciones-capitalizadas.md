@@ -176,6 +176,25 @@ inventar estimaciones. Esta actualización no ejecuta fixes, pruebas, bump ni ci
 > ningún plan anterior nombró; la segunda advierte que un gate exitoso puede cegar la medición del
 > mecanismo que acaba de instalarse.
 
+> **Estado al cerrar FASE-P5 (2026-09-15, con remediación post-auditoría el mismo día) — qué de §2 se
+> ejercitó de verdad**: **L-SR5** se cumplió fuerte: un secreto detectado en contenido staged escala a
+> BLOQUEO (`passed=False`), no a advertencia, y el bloque se comprueba con el par divergente
+> staged-vs-worktree sobre un repo git real. **L-PF6/L-PF10** es el caso de la fase: el plan exigía que
+> el checker reportara **no-leíbles/no-cubiertos** y que `SIN-HALLAZGOS` saliera de un lector que sí leyó
+> — b25b63a emitió solo `NO_LEGIBLE`, dejó `NO_CUBIERTO` en el docstring y su escaneo staged **no leía
+> nada** (NameError tragado). La remediación cierra las dos patas: sniff NUL sobre tracked, `NO_CUBIERTO`
+> bloqueante y verde nombrado `SIN_HALLAZGOS` con el conteo de leídos. **EVIDENCE-TIER-FALSE-CONFIDENCE**:
+> cumplido en el inventario AC-S3 (medido por ruta/commit, con la comparación retirada-vs-historial antes
+> de pedir autorización) pero **violado por el propio acta NR7** — ver L-P5.2: una afirmación publicada
+> sin contra-verificar contra el código. **L-T2C.2** (la lección del NameError bajo `except` ancho)
+> reproduce dentro del detector de secretos de la fase que debía cerrar secretos: capitalizada tres veces
+> y aun así viva — la cura mecánica ahora es un test, no una nota. **El §2 sigue en 19 filas** (contadas
+> al cerrar, no heredadas): P5 no capitalizó lección externa nueva. Sus tres lecciones propias
+> (**L-P5.1/.2/.3**) viven en `10-analisis` §Lecciones. **Candidatas a la capa fría en el archivado**:
+> **L-P5.1** (todo detector nuevo lleva un test que falle si su lector interno muere, no solo si el
+> patrón cambia) y **L-P5.2** (el acta de fase se verifica contra la salida del artefacto, igual que un
+> docstring).
+
 ## 3. Candidatos evaluados y descartados
 
 | ID | Por qué NO aplica a este plan |
