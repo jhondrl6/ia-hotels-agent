@@ -59,7 +59,7 @@
 Si **T3a no se cierra** (no hay hotel con datos y fuente, ni aparece antes de la sesión): esta fase **no se fuerza ni queda "en espera"** — aplica §Cierre válido sin P4 de `dependencias-fases.md`:
 1. Registrar el diferimiento con fecha y causa en `10-analisis-post-implementacion.md` §Decisiones (hereda lo que P1 decidió en Q4/Q5).
 2. README pasa a 5 sesiones; la fila P4 del checklist se marca **Diferida**, no `—` vacío.
-3. FASE-VERIFY pierde el criterio 2 → no activa; AC-V1 en RELEASE la sustituye.
+3. FASE-VERIFY pierde el criterio 2 → no activa; AC-V1 en RELEASE la sustituye. *(no invocado: P4 se corrió, y D-AJUST.4 reabrió la sesión VERIFY el 2026-09-15)*
 4. P4 se transfiere al plan de analítica sucesor como fase propia, con el régimen Tier A declarado **no observado** por este plan.
 
 El fallo de **T3b NO cierra este escenario**: con T3a cumplido la corrida se hace en `B_PLUS` con AC-O0.

@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-15
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 487
+> **Total fases completadas:** 489
 
 ---
 
@@ -11349,6 +11349,40 @@ _Ninguno_
 
 ## FASE-P6 - 2026-09-15
 **Descripcion:** GENERACION MULTI-HOTEL + REMEDIACION P6-R: AC-G1 rutas reales del ZIP (fuente unica: el packager deriva el mapeo de sus propios dest), AC-G2 fallback observations.json sin clientes/ + converter sin defaults inventados (verified/rooms/pct), AC-G3 package_evidence sha256/member_count del .zip.tmp antes de suppress, AC-G4/G5 matriz contra FLUJO REAL (packager.write → ZIP → 4 Bots → Juez → publish/suppress; 5 perfiles incl. B+ Don Alfonso anonimizado y kill switch de dos llaves). Disparador: auditoria forense del mismo dia (evidence/FASE-P6/AUDITORIA-forense-2026-09-15.md). NR1 4.169→4.189 (+20) y POST-P6R 4.196 (+7), 0 regresiones; 5 pares NR7 por INVERSION del fix con restauracion verificada por hash. Cero cambios en judge.py. Corte: c31422a
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-VERIFY - 2026-09-15
+**Descripcion:** Certificación de 25 ACs con profundidad RE-V/CIT/CON + integración cross-fase + greps residuales + triaje Seguimientos
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+_Ninguno_
+
+### Validaciones
+- [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-RELEASE-4.77.0 - 2026-09-15
+**Descripcion:** Cierre documental 4.77.0: enforcement del tribunal + certificacion VERIFY de 25 ACs + bump/sync CHANGELOG/GUIA + archivado R2.5
 
 ### Archivos Nuevos
 _Ninguno_

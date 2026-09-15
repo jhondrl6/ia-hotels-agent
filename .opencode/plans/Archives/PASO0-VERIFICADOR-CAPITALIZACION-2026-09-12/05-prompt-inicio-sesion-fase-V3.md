@@ -32,7 +32,7 @@ del plan predecesor y archivar este plan en el orden de R2.10. **Sin bump de ver
    las 4 menciones históricas de medición.
 3. `00-lecciones-capitalizadas.md` de este plan: actualizar §4 (el verificador existe, nombra su límite) y
    las filas de §2 que V2 o V3 hayan dejado obsoletas. **Comprobar que el propio C6 pasa.**
-4. Cierre de la deuda (i) en `.opencode/plans/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/06-checklist-implementacion.md`
+4. Cierre de la deuda (i) en `.opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/06-checklist-implementacion.md`
    con fecha, resultado y ACs certificados (AC-C2).
 5. `CHANGELOG.md`: subsection de validación-only bajo la versión vigente; `VERSION.yaml` intacto (AC-A5).
 6. `10-analisis-post-implementacion.md`: §1, §2 (lecciones nuevas con formato completo), §3 matriz de ACs,

@@ -3,15 +3,15 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.76.0 | **Codename**: Tribunal certificador P6+P7
-> **Release date**: 2026-09-11 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.77.0 | **Codename**: Tribunal con dientes: enforcement + certificacion 25 ACs
+> **Release date**: 2026-09-15 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
 
 ## Modulos del Repositorio (auto-generado)
 
-> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 205 archivos Python en total.
+> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 206 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
@@ -52,7 +52,7 @@
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **quality_gates/** | 17 | ActaWriter; _DerivedEntry, AlignmentResult; AlignmentReviewer; AssetReviewer; ClaimHealingAction, ClaimHealingResult, ClaimSelfHealer; CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateRe |
+| **quality_gates/** | 18 | ActaWriter; _DerivedEntry, AlignmentResult; AlignmentReviewer; AssetReviewer; ClaimHealingAction, ClaimHealingResult, ClaimSelfHealer; CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateRe |
 
 ### UTILIDADES Y VALIDACION
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-09-12 | v4.76.0 Tribunal certificador P6+P7*
+*Auto-generado: 2026-09-15 | v4.77.0 Tribunal con dientes: enforcement + certificacion 25 ACs*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

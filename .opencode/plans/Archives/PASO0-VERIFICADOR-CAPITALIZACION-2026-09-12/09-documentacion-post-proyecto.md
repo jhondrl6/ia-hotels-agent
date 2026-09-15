@@ -38,4 +38,4 @@
 | `.agents/workflows/templates/lecciones-capitalizadas-template.md` | §4 deja de declarar que el verificador no existe (L-NC10) | V3 |
 | `.agents/workflows/phased_project_executor.md` | Referencias normativas al `[6/6]` y descripción del Paso 0 | V3 |
 | `CHANGELOG.md` | subsection de validación-only (sin bump) | V3 |
-| `.opencode/plans/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/06-checklist-implementacion.md` | Ítem (i) de §Deuda cerrado con fecha | V3 |
+| `.opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/06-checklist-implementacion.md` | Ítem (i) de §Deuda cerrado con fecha | V3 |

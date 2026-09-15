@@ -1,0 +1,35 @@
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-09-15 18:29:50
+Mode: FULL
+============================================================
+
+[1/10] Checking for residual files...
+[2/10] Checking Plan Maestro sync...
+[3/10] Checking version synchronization...
+[4/10] Checking for hardcoded secrets (tracked + staged)...
+[5/10] Checking client material policy (tracked + staged)...
+[6/10] Checking document integration...
+[7/10] Checking prompts for --release flag in intermediate phases...
+[8/10] Checking .opencode references...
+[9/10] Checking plan citations (simbolos, no numeros de linea)...
+[10/10] Checking lesson capitalization (Paso 0 del executor)...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1288 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 2200 rutas contra 4 marcadores (1 grandfathered con due�o)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+
+------------------------------------------------------------
+  TOTAL: 10/10 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED

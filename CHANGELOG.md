@@ -1,5 +1,62 @@
 # Changelog
 
+## [4.77.0] - Tribunal con dientes: enforcement + certificación 25 ACs — 2026-09-15
+
+### Objetivo
+
+v4.76.0 cerró el tribunal como **capa de auditoría** (Sentido A: funciona) pero **sin enforcement** (Sentido B: el Juez corría antes del packaging, `reviewer_reports` quedaba `[]` y las recomendaciones BLOQUEAR no afectaban ni el veredicto ni el ZIP). El plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` cierra ese hueco: **la decisión del tribunal ahora gatea la entrega**. Un veredicto `BLOQUEADO`/`DEVOLVER-CORRECCIONES` **suprime el ZIP** (O1-cuarentena, decisión Q1=sí), sin reintento automático y sin entrega parcial (Q1b=escalar: el humano decide con acta + `corrective_actions[]` con dueño). FASE-VERIFY certificó los **25 ACs** del plan con matriz RE-V/CIT/CON, 6 cruces cross-fase y triaje de seguimientos (0 bloqueantes).
+
+### Cambios Implementados
+
+- **FASE-P1 — decisión y contrato**: enforcement **sí**; ordenamiento **O1-cuarentena** (la decisión vive en el *publish*, no en el *write*); AC-F1 en **dos capas**; T3a con **el hotel** como proveedor; Q5=a (propagar banderas, par con AC-F2); **cuatro** estados de revisor; kill switch **heredado** de `GATE_BLOCKING_ENABLED` — un solo knob (⚠️ documentos del plan afirman dos: no existe `GATE_ENFORCEMENT_ENABLED`, corrección registrada en el `10-analisis` del plan). Contrato: `evidence/FASE-P1/decision-enforcement.md`.
+- **FASE-P2 — enforcement (los dientes)**: `DeliveryPackager` partido en `write()` (deja `<hotel>_<fecha>.zip.tmp`) / `publish()` (rename atómico solo si el veredicto lo permite) / `suppress()` (unlink; fallo de borrado = `QuarantineSuppressionError`, no éxito). Los 4 Bots leen **ese ZIP en cuarentena**; `_compute_verdict` recibe `reviewer_reports` tipados (DTOs nuevos en `tribunal/outcome.py`) y evalúa la matriz §2.1 **en su orden contractual**. El **acta deja de viajar dentro del ZIP de cliente** (medido: contenía `ASSETS/v4_audit/acta_revision.{json,md}` → DA-P2.1; **cambio visible: el paquete pierde 2 miembros**). Con `GATE_BLOCKING_ENABLED=false` se publica pero el acta declara `enforcement.suppressed_by_operator: true`.
+- **FASE-P3-A — detección y fidelidad**: AC-F1 `EMPTY_DELIVERY_TEMPLATE` dispara en régimen ZIP-only real leyendo `IMPLEMENTATION_ORDER.md` **desde el ZIP** con criterio **estructural** de stub (4 estados NR8; un fallo de lectura nunca publica "vacío"); AC-F2 el `evidence_tier` del acta se lee de `financial_scenarios_*.json → breakdown.evidence_tier` (fuente pre-packaging, MANIFEST solo fallback) — fin de la divergencia acta `C` vs pipeline `B`; AC-F4 `FIRST_FLOOR_TIERS` incluye `"B+"` (la serialización del enum) y el `reason` del primer piso ya no miente en `B_PLUS`.
+- **FASE-P3-B — cableado y test**: **AC-F5 cambia el `evidence_tier` de corridas reales (comportamiento visible)**: el bloque FASE-K de `main.py` construía `HotelFinancialData(ga4_enabled=False, gsc_enabled=False)` mientras la disponibilidad real se calculaba más abajo y se descartaba — Tier A era **inalcanzable por construcción**. Desde `bad0a5e` `ga4_available`/`gsc_available` (GSC: `is_configured()`, nadie lo computaba) alimentan el tier: una corrida con credenciales GA4+GSC **y** onboarding verificado puede salir `A` donde antes salía `B+`. La regla FASE-1 no se tocó; cambió su input. AC-F3 cierra **D-V.1** (whitelist barreda test-only justificada por contrato). AC-F6: la versión del acta se lee de `VERSION.yaml` en cada escritura.
+- **FASE-P4 — observación real**: corrida `v4complete` con Hotel Don Alfonso (consentimiento registrado): **primer `BLOQUEADO` + ZIP suprimido del pipeline**, `reviewer_reports` de longitud 4 en el artefacto, AC-F2/AC-F4 vistos en vivo. Techo `B_PLUS` con dueño nombrado: la analítica del hotel (T3b), no el cableado. Límites: Tier A y el contrafactual "gates aprueban + revisor objeta" **no observados en corrida real** (solo en tests).
+- **FASE-P5 — seguridad y privacidad** (+remediación post-auditoría): keys de providers LLM sanitizadas en errores/logs (Gemini via header, nunca URL); checker de secretos **tracked+staged** vivo con estados NR8 (`NO_CUBIERTO` bloquea); política de material de cliente (`config/client_material_policy.yaml`, check `[5/10]`); puerta AC-S4 cerrada por rotación verificable + prevención en la captura (`_save_cache` redacta secretos).
+- **FASE-P6 + P6-R — multi-hotel** (+remediación post-auditoría): rutas ZIP de fuente única derivadas por el propio packager; onboarding fallback independiente del YAML ajeno y **converter sin defaults inventados** (`no_declarado` si falta el estado epistémico); `package_evidence` (SHA256 + `member_count` del `.zip.tmp`) publicada en el acta **antes** de `suppress()` — un ZIP suprimido deja evidencia verificable de su contenido; matriz de flujo real `tests/test_p6r_full_flow_matrix.py` (write → ZIP real → 4 Bots → Juez → publish/suppress) con 5 perfiles y **5 pares NR7 por reversión del fix**.
+- **FASE-VERIFY — certificación**: matriz de 25 ACs (`evidence/FASE-VERIFY/MATRIZ-CERTIFICACION.md`: 22 ✅, 2 ⚠️ declarados, 1 ✅ con deuda menor), 6 cruces cross-fase (5 coherentes; el incoherente — `google_places_client._save_cache` sin redacción — va a plan sucesor con dueño), 6 greps residuales, triaje 0 bloqueantes / 5 límites / 9 sucesor.
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/quality_gates/tribunal/outcome.py` | DTOs del contrato del veredicto enriquecido (`ReviewerReport`, `CorrectiveAction`, `TribunalOutcome`, `EnforcementState`, `collect_reviewer_reports`) |
+| `tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py` · `test_p3b_analytics_flags_wiring.py` · `test_acta_version_desde_yaml.py` · `test_p2_veredicto_enriquecido.py` | Cobertura AC-F1/F2/F4, AC-F5/F6/F3 y AC-E0…E5 |
+| `tests/delivery/test_p2_cuarentena_zip.py` | 9 tests del ciclo write/publish/suppress **contra ZIP real** |
+| `tests/auditors/test_p5_ac_s1_secret_sanitization.py` · `tests/test_p5_ac_s2_remediacion.py` | AC-S1 (11) y AC-S2 remendado (10) |
+| `tests/test_ac_g1_implementation_order.py` · `test_ac_g2_onboarding_fallback.py` · `test_ac_g3_package_evidence.py` · `test_ac_g4_g5_multi_hotel_matrix.py` · `test_p6r_full_flow_matrix.py` | AC-G1…G5 (P6) + matriz contra el flujo real (P6-R) |
+| `config/client_material_policy.yaml` | Política de material de cliente separada del detector de claves |
+| `evidence/FASE-{P1,P3-A,P3-B,P2,P4,P5,P6,VERIFY}/` | Contratos, baselines NR1, pares NR7, informe de observación, matriz de certificación |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Reordenamiento FASE-T1 → cuarentena (FASE 7) → 4 Bots → **FASE-T1b** decide publish/suppress; hoist AC-F5 de banderas de analítica; converter onboarding honesto; `_compute_package_evidence` |
+| `modules/quality_gates/tribunal/judge.py` | `_compute_verdict` con 4º argumento (`reviewer_reports`), matriz §2.1 en orden; tier desde scenarios (AC-F2); `FIRST_FLOOR_TIERS` + `"B+"` (AC-F4) |
+| `modules/quality_gates/tribunal/acta_writer.py` | Sección de revisores **siempre visible**; secciones `Acciones correctivas` / `Enforcement` / `package_evidence`; versión desde `VERSION.yaml` |
+| `modules/quality_gates/tribunal/asset_reviewer.py` | Lectura ZIP-aware de `IMPLEMENTATION_ORDER.md` + stub estructural (AC-F1); acepta `.zip.tmp` |
+| `modules/delivery/delivery_packager.py` | `write()`/`publish()`/`suppress()`; `_validate_zip` sobre el `.tmp`; acta excluida del paquete; rutas ZIP de fuente única |
+| `modules/geo_enrichment/asset_responsibility_contract.py` | Rutas de assets en el ZIP + sección de unknown assets |
+| `modules/auditors/llm_mention_checker.py` (+ providers) | `_sanitize_text`/`_sanitize_error`; key Gemini en header |
+| `scripts/run_all_validations.py` | Checker de secretos tracked+staged + check de material de cliente (`--quick` 9→10; completo 13→14) |
+
+### Tests
+
+- Canónico (método grep): **4,063 → 4,233 funciones** (+170). Corrida completa de referencia (POST-P6-R): **4,196 passed**, 2 fallos ajenos (`test_function_default_flags` flaky, `test_diagnostic_includes_geo_metrics`), 41 skipped, 4 xfailed → **0 regresiones no causadas por el plan**.
+- Delta R2.7 por fase (resta con par pre/post propio): P3-A **+21**, P3-B **+23**, P2 **+28**, P5 **+10** (tras remediación), P6 **+20**, P6-R **+7**.
+- **NR7**: 28 pares verde/rojo acumulados en el plan (P3-A 4, P3-B 6, P2 8, P6-R 5 por reversión del fix, P5 2×…), evidencia en `evidence/FASE-*/`.
+- `run_all_validations.py --quick`: **10/10** (14 en el modo completo). `test_barreda_un_solo_emisor_de_la_clave`: de rojo publicado (D-V.1) a **verde** con whitelist justificada.
+
+### Límites declarados (no escondidos)
+
+- **Tier A no observado en corrida real** — requiere GA4+GSC del hotel (T3b, externa); `APROBADO-PARA-ENTREGA` no se ejercitó end-to-end.
+- **Contrafactual "gates aprueban + revisor objeta" no observado en corrida real** — se produce y certifica en tests (perfil 2 de la matriz P6-R), no en producción.
+- **Muestra de observación: 2 hoteles** (Don Alfonso + Salento Real), no una tasa universal.
+- Cláusulas P6.2/P6.5 del acta conservan `NOT_EVALUABLE` pre-revisores por diseño (DA-P2.4): el veredicto sí consume los reportes; límite documentado (B3).
+- `google_places_client._save_cache` sin redacción de secretos y `analytics_status.gsc_available` sin asignar en `v4complete` → planes sucesores con dueño (C1/C-B5 del triaje VERIFY).
+
 ## [4.76.0] - Tribunal certificador P6+P7 — 2026-09-11
 
 ### Objetivo

@@ -1,0 +1,21 @@
+# Revisión manual del diff de `validate_opencode_refs.py --fix` (post-archivado R2.5)
+
+## Qué reescribió --fix (2026-09-15, 5 referencias)
+
+Todas en `Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/` (00, 01, 05-V3, 09, dependencias):
+referencias a `plans/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/...` → ruta archivada. Los archivos del
+propio plan no fueron tocados (sus auto-referencias ya son plantilla `<PLAN>` — convención 2026-09-12).
+
+## Defecto medido y corregido a mano (la deuda del reescrito ciego se reprodujo)
+
+--fix insertó las rutas con **slash inicial** (`/.opencode/plans/Archives/...`), incluso **dentro de un
+bloque de código** (línea de comando en `01-plan-maestro.md` de PASO0) — exactamente el modo que la
+§Deuda de proceso describe ("hace text.replace a ciegas y destruye comandos"). Corrección manual:
+6 ocurrencias en 5 archivos, `/.opencode/...` → `.opencode/...` (verificado con grep → 0 restantes;
+`git diff --stat` = 6 líneas, solo la parte de ruta).
+
+## Post-corrección
+
+- `python scripts/validate_opencode_refs.py` (sin --fix) → `[PASS] OpenCode References: todas las referencias existen`
+- `run_all_validations.py --quick` → **10/10** (ver `rel_validations_quick_FINAL.txt`)
+- La deuda "no reescribir dentro de bloques de código" sigue abierta (no era alcance de RELEASE — sin código).

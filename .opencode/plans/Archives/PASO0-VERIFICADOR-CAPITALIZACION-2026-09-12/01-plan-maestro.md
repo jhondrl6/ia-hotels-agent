@@ -128,7 +128,7 @@ Cada AC declara **artefacto** y **clave legible** (R2.4). Ninguno se certifica �
 | AC-B4 | V2 | Cableado activo en los dos puntos: el hook bloquea un commit real y el check aparece en `--quick` | `evidence/FASE-V2/hook-bloquea.txt` (exit code ≠ 0 de `scripts/git_hooks/pre-commit` sobre un árbol con `00-` defectuoso) + salida de `run_all_validations.py --quick` con `[9/9] Lesson Capitalization` |
 | AC-B5 | V2 | Ningún `[OK]` sin denominador: la salida publica la población mirada | salida del script → línea `cobertura:` con los 5 conteos de C0 |
 | AC-C1 | V3 | Las declaraciones «no existe verificador» del template y del executor se actualizan; las mediciones históricas no se reescriben | `git diff` de FASE-V3 sobre `.agents/workflows/templates/lecciones-capitalizadas-template.md` y `.agents/workflows/phased_project_executor.md` |
-| AC-C2 | V3 | La deuda (i) del predecesor queda cerrada **con dueño y fecha** y el plan se archiva en el orden de R2.10 | `.opencode/plans/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/06-checklist-implementacion.md` §Deuda + `git log` del `git mv` con el índice regenerado en el mismo commit |
+| AC-C2 | V3 | La deuda (i) del predecesor queda cerrada **con dueño y fecha** y el plan se archiva en el orden de R2.10 | `.opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/06-checklist-implementacion.md` §Deuda + `git log` del `git mv` con el índice regenerado en el mismo commit |
 
 ## 7. No-regresiones aplicables
 

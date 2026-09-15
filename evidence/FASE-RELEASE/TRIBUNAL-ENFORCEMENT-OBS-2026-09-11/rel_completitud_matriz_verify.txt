@@ -1,0 +1,12 @@
+# Evidencia FASE-RELEASE-4.77.0 — Tarea 1: completitud de la matriz de VERIFY (AC-V1 = verificar y citar)
+
+Matriz: `evidence/FASE-VERIFY/MATRIZ-CERTIFICACION.md` (corte `cff695d`).
+**No se reproduce aquí** (así lo fija la Tarea 1 de `05-prompt-inicio-sesion-fase-RELEASE.md`); se registra la comprobación.
+
+- (a) 25 filas con AC / Fase / Nivel (RE-V/CIT/CON) / Real (artefacto + medición) / Status — verificado fila por fila; 18 RE-V / 4 CIT / 3 CON; 3 filas CIT re-medidas en disco (11 tests passed).
+- (b) Cero filas en `—`; ninguna fase diferida sin decisión registrada (L-R.1). 22 ✅, 2 ⚠️ declarados (AC-E4 mitad documental → cerrado por RELEASE con anotación CON-1 en `01-plan-maestro` y `10-analisis`; AC-S2 evidencia anotada-pendiente), 1 ✅ con deuda menor (AC-S4 → C1 sucesor).
+- (c) Cero ❌ duros; los 2 hallazgos CON con dueño (CON-1→C8, cerrado documentalmente por RELEASE sin tocar código; CON-2→B3, límite de diseño). Ninguna fase de código reabierta.
+- (d) `T2-crosses.md`: tabla de 6 cruces (5 coherentes + 1 incoherente con dueño C1); riesgo residual "el pipeline no volvió a correrse desde P5" declarado (B1).
+- Verificador a mano (L-R.3): `python scripts/validate_plan_closure.py` → `[OK] Cierre de planes: ningún plan vivo declara cierre con filas pendientes`.
+
+Cita publicada en `10-analisis-post-implementacion.md` §Matriz de certificación (desde FASE-RELEASE-4.77.0).

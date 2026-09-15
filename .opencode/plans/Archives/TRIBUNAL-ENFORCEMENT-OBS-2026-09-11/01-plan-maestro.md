@@ -17,12 +17,12 @@
 | FASE-P4 | P2 + T3a — cerrada 2026-09-14; T3b ausente, techo B+ declarado | 40 (histórico) | Sí (corrida) | No |
 | FASE-P5 — Seguridad y privacidad | P4 cerrada; inventario y límites de autorización de §4 | Fuera de servicio (R2.1, D-PRE.1) | No | Sí, en su futura sesión |
 | FASE-P6 — Generación y validación multi-hotel | Cierre técnico P5; no requiere Tier A real | Fuera de servicio (R2.1, D-PRE.1) | No | Sí, en su futura sesión |
-| FASE-VERIFY | **NO activa** (cerrado en P1, §7 de `evidence/FASE-P1/decision-enforcement.md`) | — | — | — |
-| FASE-RELEASE-4.77.0 | P2 + P3-A + P3-B + P4 cerradas; P5 + P6 certificadas y puerta de seguridad resuelta (§6.1) | 30 | Sí | Solo documentación |
+| FASE-VERIFY | P6-R ✅ (todas las fases de implementación cerradas) — 🔁 **reabierta por D-AJUST.4** (2026-09-15): P4 sí se corrió, el plan llegó a 5 fases de implementación con 25 ACs y AC-V1 no cabía en RELEASE | 60 | **No** (DIRECTO, no delegable según §4.6) | **No** — certifica sobre el artefacto real; no corre `v4complete` (la corrida ya está en P4) ni produce código |
+| FASE-RELEASE-4.77.0 | P2 + P3-A + P3-B + P4 cerradas; P5 + P6 certificadas; **VERIFY ✅** y puerta de seguridad resuelta (§6.1) | 30 | Sí | Solo documentación + **citar** la matriz de VERIFY |
 
 Presupuesto medido con `evidence/FASE-D/measure_iterations.py` (R2.1); corte en commit autorizado. La división P3-A/P3-B conserva sus presupuestos históricos. Para P5/P6 se retira la métrica numérica no calibrada (R2.1, D-V2.1): no se inventa una estimación comparable; se registra medición instrumental o auto-reporte con unidad y limitación explícitas, sin declarar cumplimiento estimado. El alcance sí queda limitado: cuatro tareas y cero comandos largos por fase.
 
-> **Orden vigente (D-PRE.1, 2026-09-15)**: **P1 → P3-A → P3-B → P2 → P4 → P5 → P6 → RELEASE**, cinco de ocho fases cerradas. El tramo completado conserva DA-P1.3; P4 no se reabre. La solicitud de actualizar el plan autoriza esta preparación documental, no la implementación ni actuaciones sobre credenciales, datos publicados o historial.
+> **Orden vigente (D-PRE.1 + D-AJUST.4, 2026-09-15)**: **P1 → P3-A → P3-B → P2 → P4 → P5 → P6 → VERIFY → RELEASE**, siete de nueve fases cerradas (+ P6-R como remediación dentro de P6). El tramo completado conserva DA-P1.3; P4 no se reabre. La solicitud de actualizar el plan autoriza esta preparación documental, no la implementación ni actuaciones sobre credenciales, datos publicados o historial.
 
 ---
 
@@ -159,9 +159,16 @@ Dueños: equipo-assets (G1), mantenimiento onboarding (G2), mantenimiento tribun
 
 Prompt: `05-prompt-inicio-sesion-fase-P6.md`. La matriz offline no es una muestra estadística ni tres corridas reales; una nueva corrida de red exige otra sesión y consentimiento/frescura/coste explícitos. Tier A real sigue pendiente de GA4/GSC del hotel. Funcionar para cualquier hotel significa decidir correctamente según su evidencia, no aprobar siempre.
 
+### FASE-VERIFY (reabierta por D-AJUST.4 · DIRECTO, no delegable · sin código)
+- **Qué produce**: la matriz de certificación de los **25 ACs** (AC-D1, E0–E5, F1–F6, G1–G5, O0–O2, S1–S4) contra artefacto real, con profundidad declarada por fila (**RE-V** re-medido / **CIT** citado con comprobación de existencia / **CON** contradicho si no se sostiene) y muestreo obligatorio de ≥3 filas.
+- **Qué añade sobre lo que ya midieron P5-R y P6-R**: la **integración coherente** de la ruta de delivery — P2 (`write`/`publish`/`suppress`) × P3-A (detección ZIP-aware y fidelidad del tier) × P3-B (banderas reales → techo de tier) × P6 (huella del `.zip.tmp` y matriz multi-hotel) × P5 (redacción de secretos en artefacto) × P1 (las **dos** llaves del bloqueo declaradas en el acta: `GATE_BLOCKING_ENABLED` heredado y `GATE_ENFORCEMENT_ENABLED`) **[ANOTACIÓN RELEASE 2026-09-15 — CON-1/C8: falso, el código tiene UNA sola llave, `GATE_BLOCKING_ENABLED`; `GATE_ENFORCEMENT_ENABLED` no existe en producción (grep 0 en `modules/` y `main.py`, ver `evidence/FASE-VERIFY/T3-greps.md`). DA-P1.7 («un solo botón») se implementó correctamente; la afirmación equivocada era de este documento]** — más los greps residuales y el triaje de Seguimientos. §4.6 del executor: cada fase verifica sus criterios locales; VERIFY verifica el conjunto.
+- **Piso que conserva de la decisión de P1**: el par NR7 por AC de detección/bloqueo sigue siendo obligatorio y un AC sin él queda ⚠️, nunca ✅ (R2.4 + NR7). Se revierte la exclusión de la sesión, no el criterio.
+- **Límites que declara, no remedia**: Tier A y el contrafactual del enforcement siguen sin observar (T3b es precondición del hotel); un ❌ abre sesión de recuperación con el patrón P5-R/P6-R.
+- Prompt: `05-prompt-inicio-sesion-fase-VERIFY.md`. Presupuesto 60 iteraciones, 4 tareas / 0 comandos largos, NO ejecuta `v4complete`, NO modifica código.
+
 ### FASE-RELEASE-4.77.0 (solo documental · DELEGABLE)
-- Dependencia obligatoria: P5/P6 certificadas y puerta AC-S4 resuelta; no remediar aquí F-P4.1/F-P4.5/F-P4.9 ni otros defectos descubiertos.
-- AC-V1 certifica AC-E*/AC-F* y los nuevos AC-S*/AC-G* contra sus artefactos y pares NR7; distingue prueba offline de observación real. P4 conserva su cierre y sus límites.
+- Dependencia obligatoria: P5/P6 certificadas, **VERIFY ✅** y puerta AC-S4 resuelta; no remediar aquí F-P4.1/F-P4.5/F-P4.9 ni otros defectos descubiertos.
+- **AC-V1 (reducido por D-AJUST.4)**: verificar que la matriz de VERIFY existe y está completa — las 25 filas con Real/Status, ningún `—` sin fase diferida por decisión (L-R.1) — y citarla desde el `10-analisis`. Ya no produce la certificación. P4 conserva su cierre y sus límites; los 9 puntos del §5 quedaron respondidos por AC-O2 y VERIFY los constata en la matriz.
 - Flujo documental estándar: `log_phase_completion.py --release`, `sync_versions.py`, CHANGELOG, GUIA_TECNICA, doctor, write-back e índice antes del archivado R2.5.
 - Commit final y tag anotado `v4.77.0` solo con autorización; el tag apunta al commit final, no se crea antes de él. Push requiere confirmación propia. `v4.76.0` ya se publicó el 2026-09-14, no se presume pendiente.
 
@@ -203,10 +210,11 @@ Versión canónica con el enunciado completo: §5 de `evidence/FASE-P1/decision-
 | **AC-O0** | P4 | El informe declara el techo de tier **y a quién pertenece ese techo** (cableado ya arreglado por AC-F5, o T3b del hotel sin resolver) | `evidence/FASE-P4/informe-observacion.md` → §Techo de tier | n/a |
 | **AC-O1** | P4 | Corrida con acta enriquecida y veredicto (provisionalidad registrada si algo de P2 queda abierto) | `acta_revision.json` → `verdict` + `evidence_tier` + `reviewer_reports` | n/a |
 | **AC-O2** | P4 | Informe con los 9 puntos del §5 + **snapshot del baseline ajeno** dentro de la carpeta propia (cura de `L-B4`) | `evidence/FASE-P4/informe-observacion.md` + `evidence/FASE-P4/baseline-predecesor/` | n/a |
-| **AC-V1** | RELEASE | Patrón VERIFY embebido: certificación de AC-E*/AC-F* contra artefacto de fase + los pares NR7, **sin exigir corrida P4** | matriz en `10-analisis-post-implementacion.md` | cada AC trae el suyo |
+| **AC-V0** | **VERIFY** (D-AJUST.4) | Matriz de certificación de los **25 ACs** contra artefacto real, con nivel RE-V/CIT/CON declarado por fila, tabla de 6 cruces cross-fase sobre la ruta de delivery, greps residuales con salida y triaje de Seguimientos con dueño | `evidence/FASE-VERIFY/MATRIZ-CERTIFICACION.md` + sección homónima del `10-analisis` | filas CIT re-medidas en disco: si el registro no coincide, la fila pasa a ❌ (nivel CON) |
+| **AC-V1** | RELEASE | **Citar** la matriz de VERIFY y comprobar que está completa (25 filas con Real/Status, ningún `—` sin fase diferida). Ya no produce la certificación | `10-analisis-post-implementacion.md` → referencia a `evidence/FASE-VERIFY/MATRIZ-CERTIFICACION.md` | cada AC trae el suyo |
 
 > **Verificación NR7 (mutación)**: los AC de detección o bloqueo (**AC-E0, AC-E2, AC-E3, AC-E4, AC-E5, AC-F1, AC-F2, AC-F3, AC-F4, AC-F5, AC-F6**) no se cierran solo con el test verde — la evidencia guarda el **par de salidas**: con la detección/guard activo (verde) y con él desactivado (rojo). Sin el segundo lado, el AC queda ⚠️ y no ✅ (R2.4 + L-VUP-5).
-> **AC retirados en P1**: ninguno. **Cambios respecto al borrador**: AC-E0 de tres a cuatro estados (DA-P1.6); nacen AC-E4 (Q7), AC-E5 (Q1b) y AC-F6 (versión del acta, que estaba en el plan de fase sin AC propio); AC-F5 deja de ser condicional porque Q5=(a); AC-O2 incorpora el snapshot de `L-B4`.
+> **AC retirados en P1**: ninguno. **Cambios respecto al borrador**: AC-E0 de tres a cuatro estados (DA-P1.6); nacen AC-E4 (Q7), AC-E5 (Q1b) y AC-F6 (versión del acta, que estaba en el plan de fase sin AC propio); AC-F5 deja de ser condicional porque Q5=(a); AC-O2 incorpora el snapshot de `L-B4`. **Tras D-AJUST.4 (2026-09-15)**: nace **AC-V0** (matriz de la sesión VERIFY) y **AC-V1** deja de producirla — pasa a citarla y comprobar su completitud.
 
 ---
 

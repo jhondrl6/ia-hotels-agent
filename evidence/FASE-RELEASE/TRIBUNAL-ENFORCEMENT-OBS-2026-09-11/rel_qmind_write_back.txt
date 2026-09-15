@@ -1,0 +1,9 @@
+$ python scripts/validate_qmind_writeback.py --upload TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+[UP] 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+[OK] Subido: 10-analisis-post-implementacion
+
+[RESUMEN] upload=1 skip=0 fail=0
+
+Ejecutado ANTES del archivado (R2.5 / prohibición de invertir el orden — restricción del prompt RELEASE).
+Notebook: iah-cli-lecciones (01a04d98). El 10-analisis cambió tras la concepción (VERIFY + RELEASE +
+anotaciones CON-1/C8); la subida creó el source del plan (upload=1, skip=0).

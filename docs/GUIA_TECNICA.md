@@ -1,9 +1,44 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.76.0 (Tribunal certificador P6+P7)
+**Versión:** v4.77.0 (Tribunal con dientes: enforcement + certificacion 25 ACs)
 **Última actualización:** 2026-09-15
 
 ---
+
+### Notas de Cambios v4.77.0 — FASE-P1 / P3-A / P3-B: sustrato confiable antes que dientes
+
+**Fecha:** 2026-09-14
+**Plan:** TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (orden de ejecución DA-P1.3: P3-A → P3-B → P2)
+
+- **Decisión contractual (P1)**: enforcement sí, consecuencia escalar sin reintento, O1-cuarentena, cuatro estados de revisor, kill switch heredado de `GATE_BLOCKING_ENABLED` (uno solo; `GATE_ENFORCEMENT_ENABLED` **no existe en código** — donde un documento del plan lo cite, es afirmación corregida en el cierre). Contrato: `evidence/FASE-P1/decision-enforcement.md`.
+- **Una raíz, dos víctimas (DA-P1.5)**: `_resolve_delivery_dir` (Bot 3) y `_read_evidence_tier` (Juez) estaban escritos contra un directorio descomprimido que el packaging single-write ZIP-only nunca produce. La cura no es una función compartida sino **una fuente de verdad por hecho**: el resolutor lee un ZIP esté publicado o en cuarentena (4 estados NR8), y el tier se lee de `financial_scenarios_*.json`, que existe **antes** del packaging.
+- **Detalle que muerde**: `EvidenceTier.B_PLUS` **serializa como `"B+"`**, no `"B_PLUS"` — `FIRST_FLOOR_TIERS` llevaba la clave equivocada y por eso el primer piso no se aplicaba en `B+` (AC-F4).
+- **AC-F5 es un fix de honestidad del input, no de la regla**: el guard `ga4_enabled and gsc_enabled and has_verified_data` de `_determine_evidence_tier` jamás pudo ser cierto porque el llamador le pasaba `False, False` fijos. GSC no tenía valor real que hoistear (nadie lo computaba en `v4complete`): se calcula con `is_configured()` (sin red: credenciales + propiedad) y `gsc_configured` del MANIFEST apunta a la misma variable. Verificaciones de cableado por **AST** (hoist fuera de todo `except` ancho — L-T2C.2).
+- **Barreda (AC-F3)**: un test que falla por su primera aserción deja sin vigilar todo lo que está después — la aserción de `consumidores` nunca se había ejecutado y también estaba rota.
+
+**Cómo verificar**: `python -m pytest tests/quality_gates/tribunal/test_p3a_zip_tier_firstfloor.py tests/quality_gates/tribunal/test_p3b_analytics_flags_wiring.py tests/quality_gates/tribunal/test_acta_version_desde_yaml.py -q`
+
+### Notas de Cambios v4.77.0 — FASE-P2: enforcement O1-cuarentena (los dientes)
+
+**Fecha:** 2026-09-14
+
+- **El punto de decisión del delivery se movió del *write* al *rename***: `DeliveryPackager.write()` produce `<hotel>_<fecha>.zip.tmp` con todos los bytes finalizados; los 4 Bots leen **ese** archivo; `blocks_delivery_zip` (una sola llamada, NR3) decide `publish()` o `suppress()`. `_validate_zip` corre **antes** del rename: el nombre definitivo no existe ni un instante para un paquete inválido.
+- **El acta dejó de viajar dentro del ZIP**: medido, el paquete contenía `ASSETS/v4_audit/acta_revision.{json,md}`; pedir que contenga la versión enriquecida es pedir un objeto que contiene su propia consecuencia (círculo estricto, DA-P2.1). Vive solo en `v4_audit/`, la ruta que ve el operador.
+- **Cómo leer el acta a partir de 4.77.0**: `reviewer_reports[]` con `status` por Bot (cinco valores; la sección **nunca** se omite), `enforcement.{blocking_env,enabled,suppressed_by_operator}`, `corrective_actions[]` con `owner`, `package_evidence` (SHA256 + member_count) incluso con el ZIP suprimido. `NOT_RUN` post-P2 es un **defecto de cableado**, no un resultado. Con el knob apagado se publica pero el acta lo declara: un CI apagado no puede reportar el enforcement como ejercitado.
+- **El orden de la matriz §2.1 es parte del contrato**: `test_el_orden_de_la_matriz_es_parte_del_contrato` fija que un CRITICAL de revisor manda sobre un `P6.3` en FAIL; la fila 4 se implementó como guard del veredicto, no como reescritura de la cláusula que midió el gate (DA-P2.4).
+
+**Cómo verificar**: `python -m pytest tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py tests/delivery/test_p2_cuarentena_zip.py -q` (los 9 de cuarentena corren contra ZIP real generado en `tmp_path`)
+
+### Notas de Cambios v4.77.0 — FASE-P4 / P5 / P6+P6-R / VERIFY: observación, seguridad, multi-hotel y certificación
+
+**Fecha:** 2026-09-15
+
+- **P4 (observación, cero código)**: primera corrida real con enforcement — `write()` → 4 Bots → `BLOQUEADO` → `suppress()`, `deliveries/` sin ningún `*.zip`. Reproducir: `python main.py v4complete --url <URL> --output <dir>` (sin `--force-new`, que es de `execute`; un solo parser global). Verificar en el log `✅ Onboarding data loaded: N campos confirmados` — el fallback del warehouse exige que `output/clientes/` tenga al menos un YAML ajeno (F-P4.7). Límites: techo `B_PLUS` por analítica del hotel (T3b), Tier A y el contrafactual sin observar en corrida real.
+- **P5 (seguridad)**: la key de Gemini viaja en header, nunca en URL; `_sanitize_text`/`_sanitize_error` en todo `logger.warning` de providers. El checker de secretos cubre **tracked+staged** (lo que se prepara para publicar), clasifica por sniff NUL, y `NO_CUBIERTO` **bloquea**. Política de material de cliente separada del detector de claves (`config/client_material_policy.yaml`, check `[5/10]`; `--quick` 9→10, completo 13→14). Hallazgo de la auditoría: un `import re` fuera de scope dejaba el escaneo staged **muerto** tragado por su propio `except` — el parche a un `except Exception` puede ser peor que el bug.
+- **P6/P6-R (multi-hotel)**: el packager deriva las rutas ZIP de los `dest` que él mismo escribe (fuente única; retirar el parámetro `asset_zip_paths` eliminó la segunda representación en `main.py`); el converter onboarding propaga **solo claves presentes** (`no_declarado` si falta el estado epistémico — nunca un `verified` plausible); `package_evidence` captura SHA256+member_count del `.tmp` antes de `suppress()`; la re-escritura del acta vive **fuera** del `try` cuyo `except` publicaba la cuarentena (un fallo de I/O del writer no puede entregar un ZIP bloqueado).
+- **VERIFY (certificación)**: matriz de 25 ACs con nivel RE-V/CIT/CON + muestreo de ≥3 filas CIT re-medidas en disco; los cruces cross-fase ven huecos que ninguna fase individual ve (C1: `google_places_client._save_cache` persiste sin redacción mientras `gbp_auditor` sí redacta). Lección documental: todo documento que nombre un símbolo de código se verifica con grep antes de publicarse (L-VERIFY.1).
+
+**Cómo verificar**: `python -m pytest tests/test_p6r_full_flow_matrix.py tests/auditors/test_p5_ac_s1_secret_sanitization.py -q` · certificación: `evidence/FASE-VERIFY/MATRIZ-CERTIFICACION.md`
 
 ### Notas de Cambios v4.76.0 — FASE-T1: Juez certificador y acta dual
 

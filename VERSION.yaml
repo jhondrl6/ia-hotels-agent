@@ -1,9 +1,40 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.76.0"
-codename: "Tribunal certificador P6+P7"
-release_date: "2026-09-11"
+version: "4.77.0"
+codename: "Tribunal con dientes: enforcement + certificacion 25 ACs"
+release_date: "2026-09-15"
 plan_maestro_version: "v2.6.0"
+
+# v4.77.0 - TRIBUNAL-ENFORCEMENT-OBS (2026-09-15)
+# Plan TRIBUNAL-ENFORCEMENT-OBS-2026-09-11: el tribunal pasa de capa de auditoria (v4.76.0)
+# a capa de enforcement, certificado por FASE-VERIFY con matriz de 25 ACs.
+# FASE-P1: decision de enforcement (Q1=si, O1-cuarentena, Q1b=escalar sin reintento, Q6=4
+#         estados, Q7=knob heredado GATE_BLOCKING_ENABLED) — contrato en
+#         evidence/FASE-P1/decision-enforcement.md
+# FASE-P3-A: AC-F1 deteccion ZIP-only de plantilla vacia (lectura desde el ZIP + stub
+#         estructural, 4 estados NR8), AC-F2 tier del acta desde financial_scenarios_*.json,
+#         AC-F4 primer piso coherente en B+
+# FASE-P3-B: AC-F5 banderas reales de analitica al HotelFinancialData de FASE-K (Tier A
+#         deja de ser inalcanzable por construccion), AC-F3 whitelist barreda test-only
+#         (cierra D-V.1), AC-F6 version del acta desde VERSION.yaml
+# FASE-P2: enforcement O1-cuarentena — DeliveryPackager partido en write()/publish()/
+#         suppress(), los 4 Bots leen el .zip.tmp real, _compute_verdict consume
+#         reviewer_reports (DTOs en tribunal/outcome.py), rename gateado por el veredicto;
+#         el acta deja de viajar en el ZIP de cliente (DA-P2.1)
+# FASE-P4: corrida de observacion real (Hotel Don Alfonso) — primer BLOQUEADO + ZIP
+#         suprimido del pipeline; techo B_PLUS con dueno nombrado (analitica, no cableado)
+# FASE-P5: seguridad — sanitizacion de secretos en providers LLM, checker de secretos
+#         tracked+staged vivo, politica de material de cliente, puerta AC-S4 resuelta por
+#         rotacion verificable + prevencion en la captura (_save_cache redacta secretos)
+# FASE-P6+P6-R: generacion multi-hotel (rutas ZIP de fuente unica, onboarding fallback
+#         independiente, package_evidence SHA256/member_count sobrevive a suppress) +
+#         remediacion post-auditoria: matriz contra flujo real
+#         (tests/test_p6r_full_flow_matrix.py) y 5 pares NR7 por reversión del fix
+# FASE-VERIFY: matriz de 25 ACs (22 OK, 2 warning declarados, 1 con deuda menor),
+#         6 cruces cross-fase (5 coherentes), 6 greps, triaje 0 bloqueantes
+# +170 funciones test canonicas (4.063 -> 4.233); suite 4.196 passed, 0 regresiones no
+# causadas por el plan; --quick 9 -> 10 checks (full 14)
+#
 
 # v4.76.0 - TRIBUNAL-CERTIFICADOR-P6-P7 (2026-09-11)
 # Tribunal offline del plan TRIBUNAL-OFFLINE-2026-09-09: capa de accountability entre

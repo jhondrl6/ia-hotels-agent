@@ -1,8 +1,8 @@
-<!-- agents_version: v4.76.0 | last_update: 2026-09-14 -->
+<!-- agents_version: v4.77.0 | last_update: 2026-09-15 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.76.0 -- Tribunal certificador P6+P7 COMPLETADO**
+> **v4.77.0 -- Tribunal con dientes: enforcement + certificacion 25 ACs COMPLETADO**
 
 ---
 
@@ -82,7 +82,7 @@ Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto
 4. Verificar GUIA_TECNICA.md tiene nota técnica por fase
 
 5. run_all_validations.py --quick
-   → Validación final (9/9 checks en modo rápido; 13 en el completo)
+   → Validación final (10/10 checks en modo rápido; 14 en el completo)
 
 5b. validate_agents_md.py
    → Gate de coherencia AGENTS.md (gate count, module refs, etc.)
@@ -113,11 +113,11 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 4,063 funciones (canonico) / 4,061 colectadas, 293 archivos — 0 regresiones no causadas por el plan: de los 3 fallos en rojo, 2 son ajenos (`test_function_default_flags` flaky, `test_diagnostic_includes_geo_metrics`, registrados en `aba517a`) y 1 es deuda propia del tribunal (`test_barreda_un_solo_emisor_de_la_clave` → D-V.1, whitelist pendiente en FASE-P3) |
+| **Tests** | 4,233 funciones (canonico, metodo grep) / corrida completa POST-P6-R: 4,196 passed, 2 fallos ajenos al plan (`test_function_default_flags` flaky, `test_diagnostic_includes_geo_metrics`, registrados en `aba517a`) → 0 regresiones. **D-V.1 cerrada en FASE-P3-B**: `test_barreda_un_solo_emisor_de_la_clave` ya no falla |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
-| **Mejoras** | TDD Gate, Parallel Execution, FAQGenerator, GA4 Multi-Hotel, **Doctor CLI**, **Pre-commit ecosystem validation**, **v4_quality_validator unificado**, **4 Pilares Alignment**, **Voice Readiness Proxy**, **DT-4 Residual Fixes (pain_ledger + SitePresence + coherence/alignment unify + gate idempotency)**, **Tribunal certificador P6+P7 (Juez determinista + acta dual + 4 revisores sobre artefactos)** |
+| **Mejoras** | TDD Gate, Parallel Execution, FAQGenerator, GA4 Multi-Hotel, **Doctor CLI**, **Pre-commit ecosystem validation**, **v4_quality_validator unificado**, **4 Pilares Alignment**, **Voice Readiness Proxy**, **DT-4 Residual Fixes (pain_ledger + SitePresence + coherence/alignment unify + gate idempotency)**, **Tribunal certificador P6+P7 (Juez determinista + acta dual + 4 revisores sobre artefactos)**, **Tribunal con dientes: enforcement O1-cuarentena (el veredicto gatea rename/suppresion del ZIP) + generacion multi-hotel + certificacion 25 ACs (FASE-VERIFY)** |
 
 ---
 
@@ -197,12 +197,12 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `agent_harness/` | Memoria, auto-corrección, routing, MCP | Todos los comandos |
 | `agent_harness/memory.py` | Persistencia de estado y vigencia de análisis | Todos |
 | `modules/quality_gates/` | 13 publication gates — blocking (11): evidence_coverage, coherence, hard_contradictions, coverage_no_silent_drop, financial_validity, critical_recall, ethics, tier_c_onboarding_required, doc_audit_consistency, pricing_compliance, asset_confidence; advisory (2): content_quality, proposal_asset_alignment (degraden a blocking bajo su piso — `publication_gates.py`) | v4complete |
-| `modules/quality_gates/tribunal/` | Tribunal certificador P6: `judge.py` (veredicto determinista sobre 6 cláusulas, regla del primer piso, política de bloqueo del ZIP) + `acta_writer.py` (acta dual JSON+MD) + 4 revisores que **leen los artefactos ya producidos** por el pipeline (Bot 1 `diagnosis_reviewer` P6.1, Bot 2 `alignment_reviewer` P6.2, Bot 3 `asset_reviewer` P6.3-P6.4, Bot 4 `honesty_reviewer` P6.5) + `artifact_paths.py` y `llm_extractor.py` (protocolo `PromiseExtractor`: el LLM propone, el Juez decide). 9 archivos, 2.730 líneas, 114 tests | v4complete |
+| `modules/quality_gates/tribunal/` | Tribunal certificador P6 con enforcement (v4.77.0): `judge.py` (veredicto determinista sobre 6 cláusulas, regla del primer piso, `_compute_verdict` consume `reviewer_reports`) + `outcome.py` (DTOs del contrato: `ReviewerReport`/`CorrectiveAction`/`TribunalOutcome`/`EnforcementState`, `blocks_publish = blocks ∧ GATE_BLOCKING_ENABLED`) + `acta_writer.py` (acta dual JSON+MD, secciones de revisores siempre visibles, `enforcement`, `corrective_actions`, `package_evidence`) + 4 revisores que **leen el ZIP en cuarentena** (`.zip.tmp`) + `artifact_paths.py` y `llm_extractor.py` (protocolo `PromiseExtractor`: el LLM propone, el Juez decide) | v4complete |
 | `data_models/` | Modelos: CanonicalAssessment, Claim, AnalyticsStatus, AEOKPIs | v4complete, v4audit |
 | `enums/` | Enumeraciones: Severity, ConfidenceLevel | Todos |
 | `modules/geo_enrichment/` | Enriquecimiento geográfico (GEO) | v4complete |
 | `modules/scrapers/` | Scrapers externos (Booking, TripAdvisor, etc.) | v4audit |
-| `modules/delivery/` | Packaging y entrega de resultados | execute |
+| `modules/delivery/` | Packaging y entrega de resultados — O1-cuarentena: `write()` deja `<hotel>_<fecha>.zip.tmp`, `publish()` renombra solo si el veredicto lo permite, `suppress()` borra la cuarentena | execute, v4complete |
 | `modules/commercial_documents/pain_solution_mapper.py` | Mapeo problemas→assets con pain types analytics | v4complete |
 | `modules/utils/` | Utilidades transversales (config_checker, benchmarks, http_client) | Todos los comandos |
 | `modules/common/` | Loaders compartidos YAML/fallback | financial_engine, commercial_documents |
@@ -399,7 +399,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (4,063 funciones canonicas / 4,061 colectadas, 293 archivos)
+# Todas las pruebas (4,233 funciones canonicas)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -414,29 +414,31 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,063 funciones totales)
+### Cobertura por Modulo (4,233 funciones totales)
 
-> Medido 2026-09-11 (v4.76.0) con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
-> (no `pytest --collect-only`, que da 4,061 sobre 293 archivos `test_*.py`). Las filas suman el total.
-> Cifra anterior: 4,060 (v4.75.0). La diferencia corresponde a los tests del fix de encoding en
-> `scripts/doctor.py`, que habia entrado sin actualizar el conteo.
+> Medido 2026-09-15 (v4.77.0) con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
+> (no `pytest --collect-only`; la corrida completa de referencia es la POST-P6-R de `evidence/FASE-P6/`:
+> 4,196 passed, 2 fallos ajenos, 41 skipped, 4 xfailed). Las filas suman el total.
+> Cifra anterior: 4,063 (v4.76.0). La diferencia (+170) corresponde a los tests del plan
+> TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (P3-A +21, P3-B +17, P2 +28, P5 +21, P6 +20, P6-R +7 funciones
+> propias) y a entradas ajenas al plan medidas en el intervalo.
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
 | financial_engine | 549 | `tests/financial_engine/` |
 | asset_generation | 470 | `tests/asset_generation/` |
-| quality_gates | 573 | `tests/quality_gates/` (573 = 459 pre-tribunal + 114 de `tribunal/`) |
+| quality_gates | 630 | `tests/quality_gates/` (incl. `tribunal/` con los tests del enforcement P2/P3 y la matriz P6-R) |
 | commercial_documents | 351 | `tests/commercial_documents/` |
-| auditors | 202 | `tests/auditors/` |
+| auditors | 213 | `tests/auditors/` (incl. +11 de AC-S1 en P5) |
 | geo_enrichment | 140 | `tests/geo_enrichment/` |
 | data_validation | 133 | `tests/data_validation/` |
 | test_never_block_architecture | 122 | `tests/test_never_block_architecture/` |
 | orchestration_v4 | 93 | `tests/orchestration_v4/` |
-| delivery | 69 | `tests/delivery/` |
+| delivery | 78 | `tests/delivery/` (+9 de cuarentena O1 en P2) |
 | config | 61 | `tests/config/` |
 | utils | 60 | `tests/utils/` |
 | postprocessors | 52 | `tests/postprocessors/` |
-| scrapers | 38 | `tests/scrapers/` |
+| scrapers | 49 | `tests/scrapers/` |
 | common | 38 | `tests/common/` |
 | analytics | 33 | `tests/analytics/` |
 | regression | 26 | `tests/regression/` |
@@ -444,7 +446,7 @@ python scripts/run_all_validations.py           # Completo
 | providers | 18 | `tests/providers/` |
 | monitoring | 14 | `tests/monitoring/` |
 | archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
-| root test files | 780 | `tests/*.py` (integration, harness, data models) |
+| root test files | 862 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`) |
 
 ---
 
@@ -520,7 +522,7 @@ iah-cli/
 │   ├── common/                 # Loaders YAML/fallback compartidos
 │   ├── postprocessors/         # Quality gate + scrubber de contenido
 │   └── quality/                # Validadores semanticos y de coherencia financiera
-├── tests/                      # Suite de pruebas (4,063 funciones canonicas, 293 archivos)
+├── tests/                      # Suite de pruebas (4,233 funciones canonicas)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/
