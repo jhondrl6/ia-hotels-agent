@@ -153,5 +153,12 @@ nul
 # que aún no se habían empujado — no de commits ya publicados.
 evidence/FASE-E2E/
 
+# FASE-P4 (2026-09-14): la corrida de observacion de Hotel Don Alfonso y las copias
+# locales del baseline ajeno producen material de cliente real (diagnostico, propuesta,
+# escenarios con cifras COP, ZIP, log con claves de API). Mismo criterio que arriba: el
+# remoto es publico, asi que solo se versionan el manifiesto de hashes, los scripts y el
+# informe de observacion.
+evidence/FASE-P4/corrida/
+
 # Configuración local del CLI (permisos por máquina)
 .qoder/settings.local.json

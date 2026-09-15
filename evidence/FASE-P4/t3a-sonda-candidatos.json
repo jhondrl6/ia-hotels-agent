@@ -1,0 +1,187 @@
+{
+  "medido_el": "2026-09-14",
+  "flags": {
+    "ga4_available": false,
+    "gsc_available": false
+  },
+  "candidatos": [
+    {
+      "hotel": "Hotel Luxor",
+      "url": "https://hotelluxor.com/",
+      "loader_resuelve": true,
+      "loader_detalle": {
+        "resuelve": true,
+        "fuente": "observations_tier_a",
+        "fecha_captura": "2026-07-16",
+        "campos": 4,
+        "from_observations_fallback": true
+      },
+      "dias_desde_captura": 60,
+      "tier_con_onboarding": {
+        "tier": "B+",
+        "carga": true,
+        "sources": {
+          "adr": "user_provided",
+          "occupancy": "onboarding",
+          "direct_channel": "onboarding"
+        },
+        "verified": true
+      },
+      "yaml_en_clientes": null,
+      "source": "contacto_directo",
+      "confidence": 0.95,
+      "epistemic_status": "verified",
+      "is_transit_hotel": true,
+      "notes": "Datos entregados por contacto directo con el hotel en sesion 2026-07-16. Hotel aun NO ha visto el documento 01_DIAGNOSTICO_Y_OPORTUNIDAD_20260710_101420.md (decision del usuario para evitar presentar cifras infladas). Caso de referencia para recalibracion del motor. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita."
+    },
+    {
+      "hotel": "Hotel Don Alfonso",
+      "url": "https://hoteldonalfonso.com/",
+      "loader_resuelve": true,
+      "loader_detalle": {
+        "resuelve": true,
+        "fuente": "observations_tier_a",
+        "fecha_captura": "2026-07-22",
+        "campos": 4,
+        "from_observations_fallback": true
+      },
+      "dias_desde_captura": 54,
+      "tier_con_onboarding": {
+        "tier": "B+",
+        "carga": true,
+        "sources": {
+          "adr": "user_provided",
+          "occupancy": "onboarding",
+          "direct_channel": "onboarding"
+        },
+        "verified": true
+      },
+      "yaml_en_clientes": null,
+      "source": "contacto_directo",
+      "confidence": 0.95,
+      "epistemic_status": "verified",
+      "is_transit_hotel": false,
+      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (42.4% > 30% = destino), contradice etiqueta original del hotel. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita."
+    },
+    {
+      "hotel": "Luma Plaza Hotel",
+      "url": "https://lumaplazahotel.com/",
+      "loader_resuelve": true,
+      "loader_detalle": {
+        "resuelve": true,
+        "fuente": "observations_tier_a",
+        "fecha_captura": "2026-07-22",
+        "campos": 4,
+        "from_observations_fallback": true
+      },
+      "dias_desde_captura": 54,
+      "tier_con_onboarding": {
+        "tier": "B+",
+        "carga": true,
+        "sources": {
+          "adr": "user_provided",
+          "occupancy": "onboarding",
+          "direct_channel": "onboarding"
+        },
+        "verified": true
+      },
+      "yaml_en_clientes": null,
+      "source": "contacto_directo",
+      "confidence": 0.95,
+      "epistemic_status": "verified",
+      "is_transit_hotel": true,
+      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (13.2% < 15% = paso), contradice etiqueta original del hotel. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita."
+    },
+    {
+      "hotel": "GHL Hotel Abadia Plaza",
+      "url": "https://ghlhotelabadiaplaza.com/",
+      "loader_resuelve": true,
+      "loader_detalle": {
+        "resuelve": true,
+        "fuente": "observations_tier_a",
+        "fecha_captura": "2026-07-22",
+        "campos": 4,
+        "from_observations_fallback": true
+      },
+      "dias_desde_captura": 54,
+      "tier_con_onboarding": {
+        "tier": "B+",
+        "carga": true,
+        "sources": {
+          "adr": "user_provided",
+          "occupancy": "onboarding",
+          "direct_channel": "onboarding"
+        },
+        "verified": true
+      },
+      "yaml_en_clientes": null,
+      "source": "contacto_directo",
+      "confidence": 0.95,
+      "epistemic_status": "verified",
+      "is_transit_hotel": true,
+      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (9.3% < 15% = paso), contradice etiqueta original del hotel. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita."
+    },
+    {
+      "hotel": "Hotel Castilla Real",
+      "url": "https://hotelcastillareal.com/",
+      "loader_resuelve": true,
+      "loader_detalle": {
+        "resuelve": true,
+        "fuente": "observations_tier_a",
+        "fecha_captura": "2026-07-22",
+        "campos": 4,
+        "from_observations_fallback": true
+      },
+      "dias_desde_captura": 54,
+      "tier_con_onboarding": {
+        "tier": "B+",
+        "carga": true,
+        "sources": {
+          "adr": "user_provided",
+          "occupancy": "onboarding",
+          "direct_channel": "onboarding"
+        },
+        "verified": true
+      },
+      "yaml_en_clientes": null,
+      "source": "contacto_directo",
+      "confidence": 0.95,
+      "epistemic_status": "verified",
+      "is_transit_hotel": true,
+      "notes": "Datos por contacto directo. Municipio: Pereira. ADR corregido de $2,820,000 a $282,000 (confirmado typo). Clasificación por heurística occupancy (13.9% < 15% = paso), contradice etiqueta original del hotel. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita."
+    },
+    {
+      "hotel": "Zi One Luxury",
+      "url": "https://zione.co/",
+      "loader_resuelve": true,
+      "loader_detalle": {
+        "resuelve": true,
+        "fuente": "observations_tier_a",
+        "fecha_captura": "2026-07-23T10:00:00+00:00",
+        "campos": 4,
+        "from_observations_fallback": true
+      },
+      "dias_desde_captura": 54,
+      "tier_con_onboarding": {
+        "tier": "B+",
+        "carga": true,
+        "sources": {
+          "adr": "user_provided",
+          "occupancy": "onboarding",
+          "direct_channel": "onboarding"
+        },
+        "verified": true
+      },
+      "yaml_en_clientes": null,
+      "source": "contacto_directo",
+      "confidence": 0.95,
+      "epistemic_status": "verified",
+      "is_transit_hotel": false,
+      "notes": "Datos por contacto directo. Municipio: Pereira. Clasificación por heurística occupancy (78.4% > 30% = destino), contradice etiqueta original del hotel. FASE B backfill: hotel_self_label extraído de notes. avg_stay_nights y trip_purpose pendientes de recolectar en próxima visita."
+    }
+  ],
+  "baseline": {
+    "url": "https://www.hotelsalentoreal.com/",
+    "tier": "B"
+  }
+}

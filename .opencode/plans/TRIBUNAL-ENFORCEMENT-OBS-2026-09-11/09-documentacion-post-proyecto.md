@@ -127,6 +127,53 @@
 - **Efecto visible para el cliente**: el paquete pierde los dos miembros del acta. El
   primer `BLOQUEADO` real del tribunal **suprime el ZIP**: no hay entrega parcial.
 
+## Aporte de FASE-P4 para GUIA_TECNICA
+
+> Una corrida de observación **no genera módulos**: su aporte es lo que demostró del pipeline y los
+> hallazgos que deja con dueño. Cero `.py` de producción tocados (restricción del prompt + L-V.4).
+
+- **Lo que quedó demostrado en el pipeline real** (hasta ahora solo visto en tests): el veredicto del
+  tribunal **suprime el ZIP** de una corrida de verdad — `write()` deja `<hotel>_<fecha>.zip.tmp`, los
+  4 Bots lo leen, `BLOQUEADO` → `suppress()`, y `deliveries/` queda sin `*.zip` ni `*.zip.tmp`. En el
+  acta real: `reviewer_reports` de **longitud 4**, `corrective_actions[]` con `owner`, `enforcement`
+  con el knob declarado. Y **AC-F2/AC-F4 observados en vivo**: `evidence_tier "B+"` con
+  `first_floor_rule.applied=true` y `source_artifact` apuntando a `financial_scenarios_*.json` — la
+  divergencia C↔B del plan anterior ya no es alcanzable por su ruta vieja.
+- **Reproducir una observación equivalente** (los detalles que no son evidentes):
+  `python main.py v4complete --url <URL-del-hotel> --output output/<dir-de-la-fase>` — **sin**
+  `--permission-mode` (el default `auto` es el que usó el baseline; `chat` omitiría la auditoría
+  externa y la corrida quedaría en defaults) y **sin** `--force-new` (esa bandera la lee `execute`, no
+  `v4complete`). `v4complete` solo consume `--url/--output/--nombre/--debug`. Un solo parser global:
+  `X --help` imprime el help completo para cualquier subcomando.
+- **Cómo llega el dato de un hotel sin YAML**: `_load_latest_onboarding_data` matchea por URL
+  normalizada, y si no hay YAML cae al warehouse `data/hotel_observations/observations.json` vía
+  `_observation_to_onboarding_format`. **Fragilidad medida (F-P4.7)**: ese camino depende de que el
+  fallback S7 se active, y S7 exige que `output/clientes/` contenga **al menos un** YAML ajeno. Con el
+  directorio vacío, la corrida usa defaults **en silencio**. Verificar siempre en el log:
+  `✅ Onboarding data loaded: N campos confirmados`.
+- **Por qué la evidencia de esta fase está partida en dos**: el remoto es **público**. Lo versionado es
+  informe, consentimiento, sondas, scripts y el manifiesto de hashes del baseline ajeno; la corrida
+  completa (62 archivos), su log y el detalle con cifras COP viven en `evidence/FASE-P4/corrida/`,
+  excluido en `.gitignore` con el mismo criterio que ya excluye `evidence/FASE-E2E/`.
+- **Límites que RELEASE debe publicar, no esconder**: (i) **Tier A no observado** — el techo `B_PLUS`
+  lo puso la analítica del hotel (`ga4_available`/`gsc_available` medidos en `False`), no el cableado
+  que AC-F5 cerró; (ii) **el contrafactual del enforcement no se ejercitó** — los gates ya daban
+  `BLOQUEADO` antes de los revisores, y mientras F-P4.1 siga abierto ninguna corrida real puede dar el
+  caso "gates aprueban + un revisor objeta"; (iii) **una sola corrida de un solo hotel** — S-V10 pide
+  ≥3 hoteles para confianza estadística.
+- **Los 9 hallazgos con dueño** (F-P4.1…F-P4.9 en `evidence/FASE-P4/informe-observacion.md` §3), de los
+  cuales dos piden decisión antes de volver a correr: **F-P4.1** `IMPLEMENTATION_ORDER.md` es un stub de
+  ~470 B en todos los paquetes medidos → con los dientes puestos bloquea el 100 % de las corridas
+  reales, y hay que decidir si un stub debe bloquear; **F-P4.5** el log de corrida imprime una clave de
+  API en texto plano y el repo es público — el check de secretos `[4/9]` **sí** corre en pre-commit (vía
+  `validate-plan`), pero su cobertura medida es solo `*.py` con 4 patrones de *asignación*, así que una
+  clave escrita en un `.log` o un `.md` queda fuera (la cura es extender el barrido y secar el error del
+  provider) — a la vez, `evidence/FASE-I/corrida/` ya tiene 59 archivos
+  versionados en `origin/master` con material de un cliente real.
+- **Pendiente documental heredado**: la fila de **Tests** de `AGENTS.md` sigue desactualizada (declara
+  la barreda como fallo conocido y cuatro fallos; hoy son 3, todos ajenos). Su actualización es de
+  RELEASE con el bump, no de esta fase.
+
 ## Volcado para FASE-RELEASE
 
 RELEASE (Tarea 3) verifica que cada fase cerrada ✅ tenga su aporte aquí; una fase sin fila en A/B/D/E se marca en el `10-analisis` como omisión detectada en el cierre, no se inventa.

@@ -13,7 +13,7 @@
 | 3a | **FASE-P3-A** | ✅ **Cerrada** | 2026-09-14 | 2026-09-14 | **106 `ids` / 126 `tool_use`** — medido con `evidence/FASE-D/measure_iterations.py`, corte = commit de código `0d4d072`. **El instrumento SÍ alcanzó el transcript → D-V2.1 NO se reprodujo.** Presupuesto de 20 superado → causa y cura en L-P3A.1 de `10-analisis` | Detección y fidelidad: AC-F1 (dos capas, ZIP-aware) + AC-F2 (fuente del tier) + AC-F4 (`B+`). R2.7: 4.109→4.130 = +21 = tests nuevos; 4 pares NR7 verde/rojo |
 | 3b | **FASE-P3-B** | ✅ **Cerrada** | 2026-09-14 | 2026-09-14 | **120 `ids` / 120 `tool_use`** — medido con `evidence/FASE-D/measure_iterations.py`, corte = commit de código `bad0a5e`. **El instrumento SÍ alcanzó el transcript (segunda fase seguida: D-V2.1 no se reprodujo).** **Presupuesto de 25 superado** (tercera fase seguida) → causa y cura en L-P3B.1 de `10-analisis` | Cableado y test: **AC-F5 ejecutado** (Q5=a — hoist de `ga4_available`/`gsc_available` al `HotelFinancialData` de FASE-K, toca `main.py`), AC-F3 (whitelist barreda test-only, se cierra **D-V.1**) y AC-F6 (versión del acta desde `VERSION.yaml`). R2.7: 4.130→4.153 = **+23** íntegros en `passed` (4.091→4.115 = +24: los 23 nuevos **más** `test_barreda…` que migró de rojo a verde), 3 fallos restantes todos ajenos → **0 regresiones**. **6 pares NR7** verde/rojo. `--quick` 9/9 |
 | 2 | **FASE-P2** | ✅ **Cerrada** | 2026-09-14 | 2026-09-14 | **≈65 `tool_use` / ≈60 `ids`** — auto-reporte con unidad declarada (**D-V2.1 se reprodujo**: el instrumento exige el transcript del cliente, que vive fuera del workspace y el acceso lo negó el clasificador); corte = commit de código `df60c24`. **Presupuesto de 55 superado = cuarta fase consecutiva** → L-P2.4 | **O1-cuarentena**: `write()`/`publish()`/`suppress()` con el rename gateado por el veredicto, `reviewer_reports` tipado y poblado, `_compute_verdict` con la matriz §2.1 en su orden, AC-E0…AC-E5. **8 pares NR7** con rojo real, R2.7 **4.153→4.181 (+28)**, 0 regresiones, `--quick` 9/9. **Cero re-decisiones del contrato**: las cuatro consecuencias que la medición obligó a nombrar son DA-P2.1…P2.4 en `10-analisis`. Medición destacada: **el ZIP contenía el acta** → el enunciado de DA-P1.4 era un círculo y el acta deja de viajar con el cliente |
-| 4 | FASE-P4 | ⬜ Pendiente (opcional) | — | — | — | Corrida observación + informe. T3a asignada a **el hotel, por contacto del operador** (Q4/DA-P1.9); techo de tier con dueño declarado (AC-O0). Si al iniciar no hay dato con fuente → §Cierre válido sin P4, **sin reabrir decisión** |
+| 4 | FASE-P4 | ✅ **Cerrada 2026-09-14** | ≈52 `tool_use` (auto-reporte, unidad declarada — D-V2.1 se reprodujo) | Sí (corrida larga, 3 min de reloj) | **Se corrió, no se difirió**: el disparador «no hay dato con fuente» **midió falso** (6 de 6 hoteles del warehouse resuelven por el fallback `observations.json` del cargador). Corrida real con **Hotel Don Alfonso** con consentimiento y límite de frescura registrados antes (`consentimiento-donalfonso.md`). **El tribunal suprimió el ZIP por veredicto** (`BLOQUEADO`, primer caso en el pipeline real), `reviewer_reports` de longitud 4 en el artefacto, **AC-F2/AC-F4 observados en vivo**. Techo `B_PLUS` con **dueño nombrado (AC-O0)**: analítica del hotel, no cableado. **Tier A NO observado.** 9 hallazgos con dueño, **cero código de producción tocado**. Detalle: `evidence/FASE-P4/informe-observacion.md` |
 | — | FASE-VERIFY | ❌ **No activa** (decidido en P1) | — | — | n/a | Criterio §4.6-2 no garantizable desde la ingeniería. AC-V1 de RELEASE ejecuta el patrón contra artefactos de fase + pares NR7 |
 | 5 | FASE-RELEASE-4.77.0 | ⬜ Pendiente | — | — | — | Cierre + tag + AC-V1 + archivado R2.5 |
 
@@ -99,19 +99,50 @@
 ### FASE-P4 — Corrida de observación
 
 > **Precondición abierta o fase diferida**: si T3a no llega a cerrarse con proveedor y fuente, P4 **no queda "en espera"** — aplica §Cierre válido sin P4 de `dependencias-fases.md` (diferimiento registrado, README a 5 sesiones, RELEASE ejecuta sin ella).
+> **No invocado (2026-09-14)**: T3a **sí** estaba cerrada para 6 hoteles del warehouse, así que P4 se ejecutó y el README sigue en 6 sesiones.
 
-- [ ] Datos operativos reales recibidos con fuente declarada (T3a)
-- [ ] Techo de tier de la corrida fijado por Q5: T3b cumplido (Tier A observable) **o** corrida declarada en `B_PLUS` con el límite escrito (AC-O0)
-- [ ] `--help` de `onboard` y `v4complete` verificado **antes** de redactar el brief delegado (L-VUP-9)
-- [ ] `ls output/clientes/` y log de onboarding revisados antes de la corrida; si cae a defaults, la condición de equivalencia queda declarada (L-VUP-13)
-- [ ] Corrida v4complete + onboarding ejecutada (delegate_task, exit 0)
-- [ ] **Evidencia copiada antes de analizar** y script de comparación versionado dentro de `evidence/FASE-P4/` (L-VUP-12)
-- [ ] Delta vs corrida E2E del predecesor con **diff estructural JSON** (claves numeradas), parseo probado contra el baseline antes de la corrida (L-VUP-14, R2.3)
-- [ ] Informe `evidence/FASE-P4/informe-observacion.md` con los 9 puntos del plan maestro §5 (AC-O2)
-- [ ] En el informe: estado real de `reviewer_reports` con los tres estados distinguibles (punto 8) y banderas de analítica efectivas (punto 9)
-- [ ] Provisionalidad de `APROBADO-PARA-ENTREGA` registrada si enforcement no cerrado
-- [ ] **Iteraciones de P4 medidas y escritas** — bloquea el ✅ (L-R.1)
-- [ ] NO se usó como entrega a cliente
+- [x] Datos operativos reales recibidos con fuente declarada (T3a) — **6 de 6** hoteles del warehouse
+  resuelven en el pipeline (`t3a_sonda_candidatos.py`); el operador eligió **Hotel Don Alfonso** y
+  registró consentimiento y límite de frescura antes de correr (`consentimiento-donalfonso.md`). El
+  disparador del diferimiento **no se cumplió**, así que P4 se ejecutó
+- [x] Techo de tier de la corrida fijado por Q5: **corrida declarada en `B_PLUS` con el límite escrito** (AC-O0) —
+  `ga4_available=False`/`gsc_available=False` medidos con los predicados de AC-F5; **T3b no cumplido →
+  Tier A no observable** y dueño nombrado: la analítica del hotel, no el cableado
+- [x] `--help` de `onboard` y `v4complete` verificado **antes** de redactar el brief delegado (L-VUP-9)
+  → `help-v4complete.txt`/`help-onboard.txt`. Hallazgo del paso: **un solo parser global** (ambas
+  salidas son los mismos 98 bytes); el brief usó solo `--url/--output` (el modo no lee `--force-new`,
+  que es de `execute`) y se omitió `--permission-mode` para quedar en `auto`, como el baseline
+- [x] `ls output/clientes/` y log de onboarding revisados antes de la corrida; si cae a defaults, la
+  condición de equivalencia queda declarada (L-VUP-13) → **no cayó a defaults**: `✅ Onboarding data
+  loaded: 4 campos confirmados` en el log y `adr=user_provided`/`occupancy=onboarding`/
+  `direct_channel=onboarding` en el `breakdown`. Declarado además: Don Alfonso **no tiene YAML propio**,
+  consume el warehouse por el fallback S7, que depende de que `output/clientes/` tenga al menos un YAML
+  ajeno (F-P4.7)
+- [x] Corrida v4complete + onboarding ejecutada (exit 0) → 18:36–18:39, «Flujo v4.0 completado
+  exitosamente», 0 `Traceback`. **Sin `delegate_task` en este harness**: corrió en segundo plano desde
+  la sesión principal, con el log fuera del version (declarado en `10-analisis`)
+- [x] **Evidencia copiada antes de analizar** y script de comparación versionado dentro de
+  `evidence/FASE-P4/` (L-VUP-12) → `corrida/run/` (62 archivos) copiado antes de abrir un JSON;
+  `diff_estructural_corridas.py` versionado
+- [x] ⚠️ Delta vs corrida E2E del predecesor con **diff estructural JSON** (claves numeradas), parseo
+  probado contra el baseline antes de la corrida (L-VUP-14, R2.3) → **el parseo sí se probó antes**
+  (`--selftest`: 15 artefactos, diff cero, mutación plantada, y cazó una colisión de stems del propio
+  instrumento → L-P4.4). **Parcial: no es un delta de pipeline comparable**, son dos hoteles
+  distintos (435 cambios de valor); se publica como límite, no como evidencia de no-regresión
+- [x] Informe `evidence/FASE-P4/informe-observacion.md` con los 9 puntos del plan maestro §5 (AC-O2)
+  → los 9, con §6 de artefactos y §7 de iteraciones
+- [x] En el informe: estado real de `reviewer_reports` con los tres estados distinguibles (punto 8) y
+  banderas de analítica efectivas (punto 9) → `reviewer_reports` de **longitud 4**, los cuatro estados
+  distinguibles **en el esquema**; esta corrida ejerció **uno** (`OK_WITH_FINDINGS` ×4) y se dice
+- [x] Provisionalidad de `APROBADO-PARA-ENTREGA` registrada si enforcement no cerrado → **no aplica**:
+  P2 cerró el enforcement (Q1=sí) y el veredicto de esta corrida fue `BLOQUEADO`. Se registra en su
+  lugar el límite que sí importa: el **contrafactual** (gates OK + revisor objeta) no se observó
+- [x] **Iteraciones de P4 escritas** con la unidad declarada (L-R.1: un `—` no cierra) — pero
+  **auto-reportadas, no medidas**: D-V2.1 se reprodujo (ningún `.jsonl` dentro del workspace; el
+  acceso al del cliente lo denegó el clasificador). Por eso **no se declara cumplimiento ni
+  incumplimiento del presupuesto de 40**: la unidad no es comparable
+- [x] NO se usó como entrega a cliente → no se envió nada al hotel y, verificado en disco, **no existe
+  ningún `*.zip` ni `*.zip.tmp` del hotel**: el tribunal lo suprimió
 
 ### FASE-RELEASE-4.77.0 — Cierre
 

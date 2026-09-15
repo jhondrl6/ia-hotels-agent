@@ -1,0 +1,98 @@
+usage: main.py [-h] [--url URL] [--output OUTPUT] [--nombre NOMBRE]
+               [--package PACKAGE] [--input-data INPUT_DATA] [--debug]
+               [--mode {generativo,deterministico}]
+               [--provider {auto,deepseek,anthropic}] [--skip-check]
+               [--skip-posts]
+               [--permission-mode {auto,smart_approve,approve,chat}]
+               [--posts-max-wait POSTS_MAX_WAIT] [--skip-competitors]
+               [--ga4-property-id GA4_PROPERTY_ID]
+               [--stages STAGES [STAGES ...]] [--target TARGET]
+               [--method {ftp,wp-api}] [--dry-run] [--no-dry-run]
+               [--preflight] [--bypass-harness] [--force-new]
+               [--hotel-name HOTEL_NAME] [--output-format {yaml,json}]
+               [--run-audit] [--doctor] [--output-dir OUTPUT_DIR]
+               [--template TEMPLATE] [--style STYLE] [--force]
+               [{audit,v4audit,v4complete,stage,spark,execute,deploy,setup,onboard,validate-guarantee,hook-pdf}]
+
+IA Hoteles Agent - Analisis Automatizado
+
+positional arguments:
+  {audit,v4audit,v4complete,stage,spark,execute,deploy,setup,onboard,validate-guarantee,hook-pdf}
+                        Comando a ejecutar: setup (configuración inicial),
+                        audit (diagnóstico legacy), v4audit (auditoría v4.0
+                        con APIs), v4complete (flujo completo v4.0 con Meta-
+                        Skills), stage (pasos manuales), spark (diagnóstico
+                        rápido <5min), execute (implementación paquete),
+                        deploy (despliegue remoto), onboard (captura datos
+                        operativos), validate-guarantee (valida garantía Día
+                        55) (default: audit)
+
+options:
+  -h, --help            show this help message and exit
+  --url URL             URL del hotel a analizar (default: None)
+  --output OUTPUT       Directorio de salida base (default: ./output)
+  --nombre NOMBRE       Nombre del hotel (opcional) (default: None)
+  --package PACKAGE     Paquete a ejecutar (solo para comando execute)
+                        (default: pro_aeo)
+  --input-data INPUT_DATA
+                        Ruta a datos del hotel JSON (opcional para execute)
+                        (default: None)
+  --debug               Modo debug (default: False)
+  --mode {generativo,deterministico}
+                        Modo de generación de narrativas (default: generativo)
+                        (default: generativo)
+  --provider {auto,deepseek,anthropic}
+                        Proveedor LLM a usar (default: auto)
+  --skip-check          Saltar verificacion de configuracion (default: False)
+  --skip-posts          Desactivar auditoria de posts (opcional) (default:
+                        False)
+  --permission-mode {auto,smart_approve,approve,chat}
+                        Modo de permisos: auto (todo sin preguntar),
+                        smart_approve (preguntar si costo > $0.05), approve
+                        (preguntar siempre para llamadas externas), chat (sin
+                        llamadas externas) (default: auto)
+  --posts-max-wait POSTS_MAX_WAIT
+                        Tiempo maximo de espera para auditoria de posts
+                        (opcional) (default: None)
+  --skip-competitors    Omitir analisis de competidores cercanos (opcional)
+                        (default: False)
+  --ga4-property-id GA4_PROPERTY_ID
+                        GA4 Property ID del hotel (opcional). Si no se pasa,
+                        analytics funciona en modo fallback. (default: None)
+  --stages STAGES [STAGES ...]
+                        Listado de etapas a ejecutar (geo ia seo outputs).
+                        Solo valido con 'stage'. (default: None)
+  --target TARGET       Nombre del hotel o ruta a delivery_assets (para
+                        deploy) (default: None)
+  --method {ftp,wp-api}
+                        Método de conexión para deploy (default: wp-api)
+  --dry-run             Solo simular despliegue (default en v2.5) (default:
+                        True)
+  --no-dry-run          Ejecutar despliegue real (v2.6 experimental) (default:
+                        True)
+  --preflight           Ejecutar solo verificaciones previas (default: False)
+  --bypass-harness      Bypass Agent Harness (legacy CLI mode, no memory)
+                        (default: False)
+  --force-new           Force new analysis, ignore prior analysis (for execute
+                        command) (default: False)
+  --hotel-name HOTEL_NAME
+                        Nombre del hotel para onboarding (opcional) (default:
+                        None)
+  --output-format {yaml,json}
+                        Formato de salida para datos de onboarding (default:
+                        yaml)
+  --run-audit           Ejecutar auditoria automaticamente despues del
+                        onboarding (default: False)
+  --doctor              Ejecutar diagnostico completo del ecosistema de
+                        agentes (skills + contexto) (default: False)
+  --output-dir OUTPUT_DIR
+                        Directorio con output de v4_complete (obligatorio para
+                        hook-pdf) (default: None)
+  --template TEMPLATE   Ruta al template HTML (default:
+                        templates/hook_template.md) (default: None)
+  --style STYLE         Ruta al CSS (default: templates/hook_styles.css)
+                        (default: None)
+  --force               Sobrescribir PDF si ya existe; además, bypass
+                        explícito del guard de URL propia (permite URLs de
+                        OTA/red social/buscador y registra el evento)
+                        (default: False)

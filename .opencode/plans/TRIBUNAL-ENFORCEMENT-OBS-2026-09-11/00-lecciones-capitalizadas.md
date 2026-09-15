@@ -115,6 +115,29 @@ el Paso 0 debía producir y no producía.
 > defecto de contrato que ninguna lección de la familia L-P1.2 cubría; la segunda añade a la familia
 > L-T4A.5 un caso que NR7 no mira (no «si puede fallar» sino «si la rama se ejecutó»).
 
+> **Estado al cerrar FASE-P4 (2026-09-14) — qué de §2 se ejercitó en una corrida real**: **L-VUP-9**
+> dejó de ser formalidad: los dos `--help` resultaron **los mismos 98 bytes** (un solo parser global), así
+> que el brief se escribió con las banderas que el modo lee y se descartó `--force-new` (es de `execute`).
+> **L-VUP-13** confirmó empíricamente que la corrida no cayó a defaults (`✅ Onboarding data loaded: 4
+> campos`, y `adr=user_provided` en el `breakdown`) y además destapó que la ruta depende de que
+> `output/clientes/` tenga al menos un YAML ajeno (F-P4.7). **L-VUP-12**: 62 archivos copiados antes de
+> abrir un JSON. **L-VUP-14**: el selftest previo cazó una **colisión de stems del instrumento de esta
+> fase**, que habría producido un verde falso (L-P4.4). **L-B4**: el baseline compartido quedó congelado
+> con sha256 de sus 66 archivos. **L-PF6/L-PF10** a medias: los cuatro estados son distinguibles en el
+> esquema, pero la corrida ejerció **uno** (`OK_WITH_FINDINGS` ×4) → el acta real no prueba la
+> distinción, la prueban los tests de P2. **L-V.4 cumplida**: nueve hallazgos en la mano y **cero `.py` de
+> producción tocados**. **L-E2E.3** (el tribunal es advisory de facto) queda **observada como superada**
+> en el pipeline real: `BLOQUEADO` → `⛔ ZIP SUPPRIMIDO`. **El §2 sigue en 19 filas** (contadas al cerrar,
+> no heredadas): P4 no capitalizó lección externa nueva. Sus cuatro lecciones propias viven en
+> `10-analisis` §Lecciones: **L-P4.1** (un disparador de diferimiento redactado como pregunta de
+> existencia hay que medirlo contra el runtime), **L-P4.2** (`suppress()` borra el artefacto que los
+> revisores leyeron → el enforcement pierde su propia prueba), **L-P4.3** (bloquear todo por una plantilla
+> stub hace inobservable el contrafactual que justificó Q1), **L-P4.4** (selftest que solo prueba
+> identidad no distingue «sin delta» de «no miro dos cosas»). **Candidatas a la capa fría en el
+> archivado**: **L-P4.2** y **L-P4.3** — la primera es una consecuencia estructural de O1-cuarentena que
+> ningún plan anterior nombró; la segunda advierte que un gate exitoso puede cegar la medición del
+> mecanismo que acaba de instalarse.
+
 ## 3. Candidatos evaluados y descartados
 
 | ID | Por qué NO aplica a este plan |

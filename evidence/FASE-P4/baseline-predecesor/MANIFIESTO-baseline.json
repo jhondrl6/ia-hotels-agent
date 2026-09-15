@@ -1,0 +1,340 @@
+{
+  "plan_origen": "TRIBUNAL-OFFLINE-2026-09-09 (FASE-E2E)",
+  "por_que_snapshot": "L-B4 / AC-O2: evidence/ es raiz global compartida; ningun AC del plan origen declara el baseline inmutable",
+  "medido_el": "2026-09-14",
+  "baseline_gitignorado": true,
+  "motivo_no_versionado": "evidence/FASE-E2E/ esta en .gitignore linea 154 porque el remoto github.com/jhondrl6/ia-hotels-agent es PUBLICO y el paquete contiene material de cliente real",
+  "total_archivos": 66,
+  "archivos": [
+    {
+      "ruta": "evidence/FASE-E2E/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260911_180006.md",
+      "sha256": "eda35181d5916a91a936d7f9d00a1f8626eb7bbd2e5319886d7b1c9c22b095dc",
+      "bytes": 14425
+    },
+    {
+      "ruta": "evidence/FASE-E2E/02_PROPUESTA_COMERCIAL_20260911_180006.md",
+      "sha256": "00070f04f96dcf607c83f4586af14551757c2d1afbc5c92f58871fa4476756f5",
+      "bytes": 14685
+    },
+    {
+      "ruta": "evidence/FASE-E2E/acta_revision.json",
+      "sha256": "da9130dc5d3d1b6fcab7837a7c847a50202aeb3a576a91049f0150c045a938e1",
+      "bytes": 1392
+    },
+    {
+      "ruta": "evidence/FASE-E2E/acta_revision.md",
+      "sha256": "14a01dcf6a9a6766015caf269c4cd19da50a1b95ad76ce878a1a29c1a57d4268",
+      "bytes": 1615
+    },
+    {
+      "ruta": "evidence/FASE-E2E/asset_generation_report.json",
+      "sha256": "3836a132ba9901b0f1c8ed800ea544623cb4daf1a6677e0146b458a90ecc3007",
+      "bytes": 5831
+    },
+    {
+      "ruta": "evidence/FASE-E2E/audit_report_20260911_175958.json",
+      "sha256": "9ab6193ca8e89f0be7100d72f309399ad584fac1e84560e8854a3acb6f689350",
+      "bytes": 9849
+    },
+    {
+      "ruta": "evidence/FASE-E2E/coherence_validation.json",
+      "sha256": "6977063e8579377b8a28a1317c6f463ea17ceca3adc527837e03db7592d8c708",
+      "bytes": 1334
+    },
+    {
+      "ruta": "evidence/FASE-E2E/coherence_validation_post_gen.json",
+      "sha256": "6977063e8579377b8a28a1317c6f463ea17ceca3adc527837e03db7592d8c708",
+      "bytes": 1334
+    },
+    {
+      "ruta": "evidence/FASE-E2E/commercial_gates_report.json",
+      "sha256": "2fc9995cf92e4708ae8363a52bf657c59f2ce729b0411126980ec42375b9d3a6",
+      "bytes": 860
+    },
+    {
+      "ruta": "evidence/FASE-E2E/commercial_gates_report_diagnostic_20260911_180006.json",
+      "sha256": "daba35e838f1ef5c45c6c9b8880836e0f2000ad8e6fa02d16be5fb2569c0c70d",
+      "bytes": 2577
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911.zip",
+      "sha256": "12be9ada42366c15f86a252f4e79cbc11119e5c585bb84474d11817c59271093",
+      "bytes": 49276
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260911_180006.md",
+      "sha256": "f87c91a11adb9cfd91589879e66651111ca2c7227634cc6ed45d9090db70b176",
+      "bytes": 4881
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260911_180006_metadata.json",
+      "sha256": "3f9ab6bcc787024cca7d14ec2cb27a196b38d03781287fa11f7a5c3261c09b01",
+      "bytes": 794
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/geo_enriched/faq_schema.json",
+      "sha256": "330774867d88c111421dcab6d4213611e7de9ed90f1720fc089994aab804349e",
+      "bytes": 1652
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/geo_enriched/geo_badge.md",
+      "sha256": "6eaf1453939c1cd35027dae6a9fc8fa013861b4efd6cb7385479582310a7d553",
+      "bytes": 939
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/geo_enriched/geo_checklist_min.md",
+      "sha256": "23fe6bdc911cb290b674964f3abaa581363f3227ef1a63e3d3b0b6ca8b4a2071",
+      "bytes": 546
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/geo_enriched/geo_dashboard.md",
+      "sha256": "46bb633509ff84ca47b4a47aeff613961cc8fb82395cc6fb51e8ce047428bbf3",
+      "bytes": 2803
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/geo_enriched/geo_fix_kit.md",
+      "sha256": "5d6e78ed56c702fbd76e527ae5f726b44dbf30326bc263f06e716f3cbfcc3bdb",
+      "bytes": 2223
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/geo_enriched/hotel_schema_rich.json",
+      "sha256": "a211dc47024e4ef9e42403b91074eabebce5bbaadc58fee82e0bfdf53e7dac9d",
+      "bytes": 1211
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/geo_enriched/llms.txt",
+      "sha256": "b99d5655deacabe067a2d1a0d4d83a6f7c21221b22a02b671349f1fd122523d2",
+      "bytes": 957
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/geo_enriched/robots_fix.txt",
+      "sha256": "e94898ebb34dc8d2b025b0aac3b8a1dd9f5d907f5339ded45bdcc38653c90fd5",
+      "bytes": 1722
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/geo_enriched/seo_fix_kit.md",
+      "sha256": "bc548258000381ea7b3b5efe2c1f82b8350b738286c2688deb753ef05b53b611",
+      "bytes": 712
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/geo_enriched/sync_report.md",
+      "sha256": "5285888787916412bcab82be641819cefce862faff085c16c38264fcf233c196",
+      "bytes": 931
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260911_180006.md",
+      "sha256": "24631a28e5642eebe4d8cfa230b94803e410c0b6104cd50453434b97c8d80166",
+      "bytes": 5111
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260911_180006_metadata.json",
+      "sha256": "c15e59e78be6140545d5cfcef7e2a295d27ee4909f146b58ccaa4bdbe4652720",
+      "bytes": 813
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/llms_txt/llms_20260911_180006.txt",
+      "sha256": "137e07d6ad644613a145c8cfcfd6d350dffa52bda3eef31eaf1e351f207be4ba",
+      "bytes": 750
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/llms_txt/llms_20260911_180006_metadata.json",
+      "sha256": "e11daed0bda462b0081f5f832a01dcffd529a97c72373166ffcbc3af6a55c744",
+      "bytes": 850
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/monthly_report/informe_mensual_20260911_180006.md",
+      "sha256": "9d4e986088ff0f62df9d087ff53417a240c665af88a3805dc78261ef27e5bcde",
+      "bytes": 5195
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/monthly_report/informe_mensual_20260911_180006_metadata.json",
+      "sha256": "653425675cd25a6789a7f5e8879c27be9e9d367afc7e043b1bf1c08796760741",
+      "bytes": 756
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/research_59bd1b431b34_Hotelsalentoreal.json",
+      "sha256": "c8b7f9dd034f1523902098ca0090ba43c21d82b16c579b5e2cfbc3c910e5b39b",
+      "bytes": 252
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/acta_revision.json",
+      "sha256": "da9130dc5d3d1b6fcab7837a7c847a50202aeb3a576a91049f0150c045a938e1",
+      "bytes": 1392
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/acta_revision.md",
+      "sha256": "14a01dcf6a9a6766015caf269c4cd19da50a1b95ad76ce878a1a29c1a57d4268",
+      "bytes": 1615
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/asset_generation_report.json",
+      "sha256": "3836a132ba9901b0f1c8ed800ea544623cb4daf1a6677e0146b458a90ecc3007",
+      "bytes": 5831
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/audit_report_20260911_175958.json",
+      "sha256": "9ab6193ca8e89f0be7100d72f309399ad584fac1e84560e8854a3acb6f689350",
+      "bytes": 9849
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/coherence_validation.json",
+      "sha256": "6977063e8579377b8a28a1317c6f463ea17ceca3adc527837e03db7592d8c708",
+      "bytes": 1334
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/coherence_validation_post_gen.json",
+      "sha256": "6977063e8579377b8a28a1317c6f463ea17ceca3adc527837e03db7592d8c708",
+      "bytes": 1334
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/delivery_quality_report.json",
+      "sha256": "470dedcfeb25522036c53115a71d633243cd71bfe759187befa548f1edcdae46",
+      "bytes": 1455
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/financial_scenarios_20260911_175958.json",
+      "sha256": "b5985d002244c1be48bbb7a66346eb8c3f8204db0333f27183ce2163d860af18",
+      "bytes": 2009
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/gate_report_20260911_180006.json",
+      "sha256": "d4ee6e0b9b4e9f4c182aeaa36860bac1d33b1bf45b0a33c4692630a828e218c6",
+      "bytes": 7375
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/geo_flow_result.json",
+      "sha256": "bf13ab5bc78ccf95da2e143f9b35647394972d95c35f25e0f74ac33f12a6f26e",
+      "bytes": 4721
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/human_checklist.md",
+      "sha256": "67b7886d5d92ba26051e53e771d10e7c48fa74a6c0e10fd590ae3962c595c771",
+      "bytes": 412
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/ia_readiness_report.json",
+      "sha256": "1b1055138a06c14f0204cc9061a76101183faa0fb32c07cdc19fdc677f8c5264",
+      "bytes": 604
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/pain_ledger.json",
+      "sha256": "cb9ad2faa6b6e5dd1ae7c7255ed06b5abfa9031a5aba3ab9144933450d590b12",
+      "bytes": 1520
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/pain_ledger_resolved.json",
+      "sha256": "c2ceae22b8426670fae19a0214d986c21040686bbfb3870f19e323ce9ffa01e6",
+      "bytes": 1687
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/proposal_asset_matrix.json",
+      "sha256": "2fcab63da3cf85d5d87bbc4fd064f41e44187174f57ea50207716ce5f4915092",
+      "bytes": 1999
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/ASSETS/v4_audit/site_presence_snapshot.json",
+      "sha256": "28bea9ba8bf7d2d9b3940e37114f71b7cc15ac50c1049dd14685bef8b4e361d4",
+      "bytes": 1363
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/DIAGNOSTICO.md",
+      "sha256": "eda35181d5916a91a936d7f9d00a1f8626eb7bbd2e5319886d7b1c9c22b095dc",
+      "bytes": 14425
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/IMPLEMENTATION_ORDER.md",
+      "sha256": "f5009781fc526d94a8c2bbbdb164bf54989cf1060eb57d2c71e27dbf3b9dfaa4",
+      "bytes": 468
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/MANIFEST.json",
+      "sha256": "4654ff8f9f21810080d3a1a9f526fcd68153158d7e10da67fe6a2602cc6e7909",
+      "bytes": 5381
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/PROPUESTA_COMERCIAL.md",
+      "sha256": "00070f04f96dcf607c83f4586af14551757c2d1afbc5c92f58871fa4476756f5",
+      "bytes": 14685
+    },
+    {
+      "ruta": "evidence/FASE-E2E/deliveries/hotelsalentoreal_20260911_unpacked/README_DELIVERY.md",
+      "sha256": "5fd2d457b5f15de93bcd3bfa6d3ae38b2defee0682267c6657acfd96de3c6ab5",
+      "bytes": 3722
+    },
+    {
+      "ruta": "evidence/FASE-E2E/delivery_quality_report.json",
+      "sha256": "470dedcfeb25522036c53115a71d633243cd71bfe759187befa548f1edcdae46",
+      "bytes": 1455
+    },
+    {
+      "ruta": "evidence/FASE-E2E/delta_vs_baseline.md",
+      "sha256": "80eaf2644a6bbaa19e03d3345e2108f6a1e78676dd0b58b5b6c53b59e8640314",
+      "bytes": 5905
+    },
+    {
+      "ruta": "evidence/FASE-E2E/fase_e2e_v4complete.log",
+      "sha256": "246183c53e497d758cef8f33f52c885eaf8897f51f10616ccd3c24a0a4c3e908",
+      "bytes": 15804
+    },
+    {
+      "ruta": "evidence/FASE-E2E/financial_scenarios_20260911_175958.json",
+      "sha256": "b5985d002244c1be48bbb7a66346eb8c3f8204db0333f27183ce2163d860af18",
+      "bytes": 2009
+    },
+    {
+      "ruta": "evidence/FASE-E2E/gate_report_20260911_180006.json",
+      "sha256": "d4ee6e0b9b4e9f4c182aeaa36860bac1d33b1bf45b0a33c4692630a828e218c6",
+      "bytes": 7375
+    },
+    {
+      "ruta": "evidence/FASE-E2E/geo_flow_result.json",
+      "sha256": "bf13ab5bc78ccf95da2e143f9b35647394972d95c35f25e0f74ac33f12a6f26e",
+      "bytes": 4721
+    },
+    {
+      "ruta": "evidence/FASE-E2E/ia_readiness_report.json",
+      "sha256": "1b1055138a06c14f0204cc9061a76101183faa0fb32c07cdc19fdc677f8c5264",
+      "bytes": 604
+    },
+    {
+      "ruta": "evidence/FASE-E2E/pain_ledger.json",
+      "sha256": "cb9ad2faa6b6e5dd1ae7c7255ed06b5abfa9031a5aba3ab9144933450d590b12",
+      "bytes": 1520
+    },
+    {
+      "ruta": "evidence/FASE-E2E/pain_ledger_resolved.json",
+      "sha256": "c2ceae22b8426670fae19a0214d986c21040686bbfb3870f19e323ce9ffa01e6",
+      "bytes": 1687
+    },
+    {
+      "ruta": "evidence/FASE-E2E/proposal_asset_matrix.json",
+      "sha256": "2fcab63da3cf85d5d87bbc4fd064f41e44187174f57ea50207716ce5f4915092",
+      "bytes": 1999
+    },
+    {
+      "ruta": "evidence/FASE-E2E/revision_alineacion.json",
+      "sha256": "c3db2be26b289b5500a252cef43e1259d2db3f5019bf1aff4285384ef559fd71",
+      "bytes": 1740
+    },
+    {
+      "ruta": "evidence/FASE-E2E/revision_assets.json",
+      "sha256": "f7562a649b84e825f88c27043362bcf73617bdcd0cc80211b912a9dca1d6ee5d",
+      "bytes": 1774
+    },
+    {
+      "ruta": "evidence/FASE-E2E/revision_diagnostico.json",
+      "sha256": "ea70cf5699fd5286169693db7d69ea0728aad656e460ea881b49d5578f63c5d4",
+      "bytes": 784
+    },
+    {
+      "ruta": "evidence/FASE-E2E/revision_honestidad.json",
+      "sha256": "f4005dc56a4df72eff0ddec04cd519efa3797fcc2d8b575fe8b7b8abe9a0eb5b",
+      "bytes": 2648
+    },
+    {
+      "ruta": "evidence/FASE-E2E/site_presence_snapshot.json",
+      "sha256": "28bea9ba8bf7d2d9b3940e37114f71b7cc15ac50c1049dd14685bef8b4e361d4",
+      "bytes": 1363
+    }
+  ]
+}

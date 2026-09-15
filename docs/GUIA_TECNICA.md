@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.76.0 (Tribunal certificador P6+P7)
-**Última actualización:** 2026-09-14
+**Última actualización:** 2026-09-15
 
 ---
 

@@ -71,14 +71,23 @@ FASE-P2 ✅ (2026-09-14) (O1-cuarentena: package write→revisar→decidir→pub
          `judge.py`, `main.py`, `delivery_packager.py`, `acta_writer.py` y `asset_reviewer.py`
         │
         ▼
-FASE-P4 (corrida observación — T3a por Q4; techo de tier con dueño declarado;  ← OPCIONAL:
-         recomendada tras P3-A/P3-B/P2                                        ver §Cierre válido sin P4)
+FASE-P4 ✅ (2026-09-14) — corrida de observación REAL con Hotel Don Alfonso  ← EJECUTADA:
+         (T3a ✅ por el operador · techo `B_PLUS` con     el escenario "cierre sin P4" **no se
+          dueño nombrado por AC-O0)                       invocó** — su disparador midió falso
+         verdict `BLOQUEADO` → **ZIP SUPPRIMIDO** (primer caso real), 9 hallazgos con dueño
         │
         ▼
 FASE-RELEASE-4.77.0 (cierre + tag + AC-V1 con el patrón VERIFY embebido + archivado R2.5)
 
 FASE-VERIFY: NO crea sesión (decisión cerrada en P1, §FASE-VERIFY arriba).
 ```
+
+**NO OBSTACULIZA — pero sí reordena (D-P4.1, decidida al cerrar P4 el 2026-09-14):** la sesión
+siguiente a P4 **no** es RELEASE. Se abre una fase propia de remediación de los hallazgos de la
+corrida — **F-P4.1** (el stub `IMPLEMENTATION_ORDER.md` que bloquea toda corrida real y hace
+inobservable el contrafactual de Q1), **F-P4.5** (cobertura del barrido de secretos: hoy solo `*.py`
+con 4 patrones de asignación) y **F-P4.9** (`suppress()` borra el ZIP que los revisores leyeron) —,
+con sus ACs y su par NR7. RELEASE (AC-V1 + bump + tag + R2.5) se ejecuta después de esa fase.
 
 **P2 y P3-A/P3-B comparten `judge.py`/`main.py` y el conteo NR1 → secuenciales entre sí, nunca simultáneas** (regla de cabecera). El reordenamiento P3→P2 no cambia eso: lo hace más limpio, porque P2 ya no pisa el archivo que P3-A está corrigiendo.
 
@@ -94,7 +103,7 @@ FASE-VERIFY: NO crea sesión (decisión cerrada en P1, §FASE-VERIFY arriba).
 | FASE-P3-A ✅ (2026-09-14) | P1 (Q2b = las dos capas) ✅ | P3-B, P2, P4, RELEASE | **Cerrada**: AC-F1 (lectura ZIP-aware + stub estructural, 4 estados NR8 en `_impl_order_check`), AC-F2 (tier desde `financial_scenarios_*.json → breakdown.evidence_tier`, MANIFEST fallback), AC-F4 (`FIRST_FLOOR_TIERS` extendido a `"B+"`). **AC8 y AC-F2 complan el mismo resolutor** (raíz común DA-P1.5: `_resolve_delivery_dir` de Bot 3 y `_read_evidence_tier` del Juez, ambos contra un layout descomprimido). **No tocó `main.py`** (verificado con `git status`). 4 pares NR7 verde/rojo, R2.7 4.109→4.130 (+21) |
 | FASE-P3-B ✅ (2026-09-14) | P1 (Q5=a) ✅ + P3-A ✅ (baseline NR1 y `acta_writer.py`) | P2, P4, RELEASE | **Cerrada**: AC-F5 **disparado y ejecutado** — hoist de `ga4_available`/`gsc_available` al `HotelFinancialData` de FASE-K (toca `main.py`); **medido**: GSC no tenía valor real que hoistear (nadie lo computaba en `v4complete`), así que hubo que calcularlo, y `gsc_configured` del MANIFEST se apuntó a la misma variable para no divergir del tier (L-SR3). AC-F3 whitelist barreda **test-only** justificada por §5.1 del contrato — **se cierra D-V.1**, la deuda que v4.76.0 publicó abierta. AC-F6 versión del acta desde `VERSION.yaml` leída en cada escritura. **Cero cambios en `judge.py`/`asset_reviewer.py`** (verificado con `git show --stat`). 6 pares NR7 verde/rojo, R2.7 4.130→4.153 (+23), 0 regresiones |
 | FASE-P2 ✅ (2026-09-14) | **P3-A ✅ + P3-B ✅** + contrato P1 (Q1/Q1b/Q2/Q6/Q7) | P4, RELEASE | **Cerrada**: O1-cuarentena ejecutada — `DeliveryPackager` partido en `write()` (deja `<hotel>_<fecha>.zip.tmp`) / `publish()` (rename) / `suppress()` (unlink), con `_validate_zip` ahora sobre el `.tmp`; `reviewer_reports` tipado (`ReviewerReport`/`CorrectiveAction`/`TribunalOutcome`/`EnforcementState` en `tribunal/outcome.py`) y poblado; `_compute_verdict` con el cuarto argumento y la matriz §2.1 en su orden. **AC-E0…AC-E5** con **8 pares NR7** verde/rojo, R2.7 **4.153→4.181 = +28**, 0 regresiones, `--quick` 9/9. **Las dos verificaciones obligatorias se midieron**: el ZIP **sí** empaquetaba el acta (`ASSETS/v4_audit/acta_revision.{json,md}`, medido sobre `output/v4_complete/deliveries/hotelsalentoreal_20260911.zip`) → DA-P2.1; y el resolutor de Bot 3 veía solo `*.zip`, no la cuarentena → la **tensión heredada** (Q2b asumía ZIP publicado / Q2 pone los revisores sobre el `.zip.tmp`, registrada en Seguimientos) se cerró con un resolutor que lee un ZIP en cualquiera de los dos estados. **Cero re-decisiones de Q1/Q1b/Q2/Q5/Q6/Q7**; lo que el contrato no dejaba decidir quedó como DA-P2.1/2/3/4 con su causa |
-| FASE-P4 | P2 + **T3a datos operativos** (Q4: el hotel, por contacto directo del operador) | RELEASE | Corrida de observación **opcional**. Techo de tier con **dueño declarado** (AC-O0): cableado (ya arreglado por AC-F5) vs analítica del hotel (T3b). Sin proveedor con fuente → §Cierre válido sin P4 |
+| FASE-P4 ✅ (2026-09-14) | P2 ✅ + **T3a datos operativos** ✅ (6 hoteles resuelven por el fallback del cargador; el operador eligió **Hotel Don Alfonso** y registró consentimiento y límite de frescura en `evidence/FASE-P4/consentimiento-donalfonso.md`) | RELEASE | **Cerrada corriendo, no difiriendo**: el disparador de §Cierre válido sin P4 («no hay dato con fuente») **midió falso**. Corrida de observación real → **`verdict BLOQUEADO` y ZIP suprimido**, primer caso en el pipeline; `reviewer_reports` de longitud 4 en el artefacto; **AC-F2/AC-F4 observados en vivo**; techo `B_PLUS` con dueño nombrado (**AC-O0: analítica del hotel, no cableado**). **Quedan sin observar**: Tier A (sigue abierta **T3b**, la única precondición externa viva) y el **contrafactual** del enforcement (los gates ya bloqueaban antes). **9 hallazgos con dueño (F-P4.1…F-P4.9), cero código de producción tocado**. Informe: `evidence/FASE-P4/informe-observacion.md` |
 | FASE-VERIFY | — | — | **No activa** (decisión cerrada en P1 arriba). AC-V1 de RELEASE la sustituye como patrón declarado |
 | FASE-RELEASE-4.77.0 | P3-A + P3-B + P2 + **P4 ✅ o diferida por decisión registrada** | — | Cierre documental + tag anotado + **AC-V1** (certificación contra artefactos de fase + pares NR7) |
 
@@ -116,6 +125,14 @@ FASE-VERIFY: NO crea sesión (decisión cerrada en P1, §FASE-VERIFY arriba).
 ---
 
 ## Cierre válido sin P4 (fijado en la sesión de ajuste 2026-09-14)
+
+> **Resuelto el 2026-09-14 en FASE-P4: este escenario NO se invocó.** Medido con
+> `evidence/FASE-P4/t3a_sonda_candidatos.py`, **T3a ya estaba satisfecha** para los 6 hoteles de
+> `data/hotel_observations/observations.json` — el propio cargador los resuelve por URL normalizada
+> vía `_observation_to_onboarding_format` —, de modo que el disparador («no hay dato con fuente») no
+> se cumplió y **P4 se corrió**. La sección se conserva tal cual: es la mecánica que hereda el plan
+> de analítica sucesor si ahí sí falta el dato, y L-P4.1 deja escrita la advertencia — un disparador
+> redactado como pregunta de existencia hay que **medirlo contra el runtime**, no leerlo literal.
 
 P4 depende de dos precondiciones que pueden no cerrarse nunca: **T3a** (hotel con datos operativos y fuente) y **T3b** (GA4+GSC, y bajo Q5=a además código en `main.py`). El plan **no queda bloqueado** por su incumplimiento:
 
