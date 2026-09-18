@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
 **Versión:** v4.77.0 (Tribunal con dientes: enforcement + certificacion 25 ACs)
-**Última actualización:** 2026-09-15
+**Última actualización:** 2026-09-17
 
 ---
 
