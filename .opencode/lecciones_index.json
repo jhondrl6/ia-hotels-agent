@@ -3,8 +3,8 @@
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
     "archivos_analysis_escaneados": 13,
-    "archivos_contexto_escaneados": 35,
-    "archivos_md_escaneados": 364,
+    "archivos_contexto_escaneados": 36,
+    "archivos_md_escaneados": 365,
     "ids_con_definicion": 305,
     "ids_citados_sin_definicion": 43,
     "familias_incluidas": [
@@ -3338,8 +3338,10 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
-      "planes_que_lo_citan": [],
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17"
+      ],
       "redefiniciones": []
     },
     {
