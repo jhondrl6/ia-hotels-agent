@@ -104,7 +104,10 @@ AC-S4: PUERTA OPERATIVA
      * Gemini (AIzaSyDqMau…JB8): la key COMPLETA aparece **solo** en el log local
        gitignored `evidence/FASE-P4/corrida/corrida.log` (1 ocurrencia); en este
        inventario queda únicamente el prefijo de 8 caracteres en prosa. Nunca fue
-       pública ni está versionada; rotación NO CONFIRMADA (riesgo local, no de repo).
+       pública ni está versionada. ✅ ROTACIÓN CONFIRMADA POR EL OPERADOR
+       (2026-09-18, con ocasión de la intervención previa; registrado 2026-09-19).
+       Como toda revocación, no es inferible desde el repo: el estado descansa en
+       la afirmación del operador, no en verificación del proyecto.
      * OpenRouter / Perplexity: sin exposición pública medida en repo o
        remoto; la contención técnica AC-S1 impide fuga futura vía logs.
        Rotación preventiva = decisión opcional del operador.
@@ -143,8 +146,9 @@ AC-S4: PUERTA OPERATIVA
 3. Estados explícitos
    - Técnico: ✅ DONE (fix implementado y testeado)
    - Operativo: 🟡 PARCIAL — exposición pública de credencial RESUELTA
-     (key rotada 2026-09-15, verificado); filas abiertas: confirmación
-     rotación Gemini-local y disposición de datos con cliente
+     (key rotada 2026-09-15, verificado); rotación Gemini-local CONFIRMADA POR
+     EL OPERADOR (2026-09-18); fila abierta restante: disposición de datos con
+     cliente
    - Publicación: ✅ DESBLOQUEADA por el criterio de cierre §5
      "contención verificable: key ya rotada" (2026-09-15). Las filas
      abiertas de §2 no bloquean RELEASE; se heredan como seguimientos
@@ -162,6 +166,9 @@ AC-S4: PUERTA OPERATIVA
      ✅ CUMPLIDO (2026-09-15): la key expuesta fue rotada por el operador
      y su vigencia fue retirada; la key nueva está verificada como ausente
      del repo y del remoto.
+     ✅ Gemini-local (AIzaSyDq…): rotación confirmada por el operador el
+     2026-09-18 (registrada 2026-09-19). Criterio cubierto por afirmación
+     del operador; no verificable desde el repo.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 DEPENDENCIAS
@@ -171,7 +178,8 @@ DEPENDENCIAS
 - FASE-RELEASE: ✅ DESBLOQUEADA (2026-09-15) — la exposición pública de
   credencial quedó resuelta por rotación verificable (§5, tercera vía).
   * Seguimientos heredados (no bloqueantes, dueño=operador):
-    confirmación de rotación de la key Gemini-local (log gitignored) y
+    ~~confirmación de rotación de la key Gemini-local (log gitignored)~~ ✅
+    CERRADO 2026-09-19: confirmada por el operador el 2026-09-18; y
     disposición de datos con cliente (retención/notificación)
 - AC-S1 (sanitización): ✅ DONE (11 tests, NR7 green/red, NR1 baseline)
 - AC-S2 (checker ampliado): ✅ DONE (3058 archivos escaneados, NR7 green/red)
