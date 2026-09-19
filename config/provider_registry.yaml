@@ -111,3 +111,17 @@ providers:
     cost_per_call: variable
     retry_count: 2
     timeout_seconds: 120
+
+  gemini:
+    type: llm
+    description: Google Gemini API (directa, no via OpenRouter)
+    endpoint: https://generativelanguage.googleapis.com/v1beta
+    auth_type: api_key
+    env_vars:
+      - GEMINI_API_KEY
+    # Alias rotativo: evita que el default se vuelva 404 cuando Google retira una version.
+    default_model: gemini-flash-latest
+    enabled: true
+    cost_per_call: 0.00
+    retry_count: 2
+    timeout_seconds: 30

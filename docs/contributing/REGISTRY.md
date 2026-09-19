@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-09-17
+> **Ultima actualizacion:** 2026-09-19
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 489
+> **Total fases completadas:** 490
 
 ---
 
@@ -11392,6 +11392,27 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-GEMINI-REGISTRY - 2026-09-19
+**Descripcion:** Parametrizacion del modelo de Gemini en provider_registry.yaml (gemini-2.0-flash retirado -> 404) + fallbacks solo-por-404 + 7 tests
+
+### Archivos Nuevos
+_Ninguno_
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/llm_mention_checker.py` | Llm Mention Checker |
+| `config/provider_registry.yaml` | Provider Registry |
+| `tests/auditors/test_llm_mention_checker.py` | Test Llm Mention Checker |
+
+### Validaciones
+- [x] Tests passing (7)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

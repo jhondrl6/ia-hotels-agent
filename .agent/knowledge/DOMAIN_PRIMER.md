@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.77.0 | **Codename**: Tribunal con dientes: enforcement + certificacion 25 ACs
-> **Release date**: 2026-09-15 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.77.1 | **Codename**: Modelo de Gemini parametrizado en el registry
+> **Release date**: 2026-09-19 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-09-15 | v4.77.0 Tribunal con dientes: enforcement + certificacion 25 ACs*
+*Auto-generado: 2026-09-19 | v4.77.1 Modelo de Gemini parametrizado en el registry*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

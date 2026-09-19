@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.77.0 (Tribunal con dientes: enforcement + certificacion 25 ACs)
-**Última actualización:** 2026-09-17
+**Versión:** v4.77.1 (Modelo de Gemini parametrizado en el registry)
+**Última actualización:** 2026-09-19
 
 ---
 

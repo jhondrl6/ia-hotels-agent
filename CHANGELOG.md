@@ -1,5 +1,45 @@
 # Changelog
 
+## [4.77.1] - Modelo de Gemini parametrizado en el registry — 2026-09-19
+
+### Objetivo
+
+`LLMMentionChecker._query_gemini` hardcodeaba `gemini-2.0-flash`, un modelo que Google ya retiró: toda llamada real devolvía **404** y el checker de menciones LLM caía en silencio a Perplexity o a `None`. El resultado no era un diagnóstico degradado sino un **falso "sin menciones"**, porque el contrato actual devuelve `queries_tested=0` con `source="llm_check"` indistinguible de "el hotel no aparece en los LLM". El fix sigue el patrón que ya existía para OpenRouter: el modelo deja de vivir en el `.py` y pasa al `provider_registry.yaml`, con fallbacks declarados para que la retirada de una versión no vuelva a romper el código.
+
+### Cambios Implementados
+
+- **`_query_gemini` lee `default_model` del provider `gemini`** en `config/provider_registry.yaml` (`registry.load()` → `registry.get("gemini")`), igual que `_query_openrouter`. Sin configuración, cae al primer elemento de `_GEMINI_FALLBACK_MODELS`, nunca a un modelo fijo del fuente.
+- **`_GEMINI_FALLBACK_MODELS` con alias rotativo primero**: `gemini-flash-latest` → `gemini-3.5-flash` → `gemini-2.5-flash` → `gemini-flash-lite-latest`. El default del registry es `gemini-flash-latest`, un alias que Google redirige a la versión vigente: el valor *debe* rotar, no es una versión a fijar después.
+- **Semántica de reintento acotada al error que la justifica**: **solo el 404** (modelo retirado) pasa al siguiente modelo. **429** (cuota del proyecto agotada) y **403** retornan `None` a la primera — son del proyecto, no del modelo, y reintentarlos quemaría 4 llamadas para producir el mismo fallo.
+- **El bloque gemini se declara en el registry** (`type: llm`, `endpoint` v1beta, `env_vars: [GEMINI_API_KEY]`, `default_model`, `timeout_seconds: 30`), con comentario de por qué el modelo es un alias.
+- **AC-S1 se preserva y se prueba**: la key sigue viajando en el header `x-goog-api-key`, nunca en la URL, y todo mensaje de error pasa por `_sanitize_error`/`_sanitize_text` antes de loguearse — incluido el aggregated "todos los modelos fallaron".
+- Se corrige la documentación interna del docstring y de `__init__`: Gemini **no es "gratis / free tier generoso"**; consumes saldo del proyecto de Google en cuanto este tiene billing activo. La afirmación anterior es la que dejó pasar 404s como si fueran normales.
+
+### Archivos Nuevos
+
+Sin archivos nuevos: el cambio parametriza una ruta existente y añade su cobertura al módulo de tests del checker.
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/llm_mention_checker.py` | `_query_gemini` resuelve el modelo en `ProviderRegistry` + bucle de fallback solo-por-404; `_GEMINI_FALLBACK_MODELS`; corrección de docstring/costo |
+| `config/provider_registry.yaml` | Nuevo bloque `gemini` con `default_model: gemini-flash-latest` y `env_vars: [GEMINI_API_KEY]` |
+| `tests/auditors/test_llm_mention_checker.py` | Clase `TestGeminiModelFromRegistry` (+7 funciones) |
+
+### Tests
+
+- Canónico (método grep): **4,233 → 4,240 funciones** (+7).
+- `TestGeminiModelFromRegistry`: el modelo no vuelve al fuente (anti-regresión por `inspect.getsource`), el bloque existe en el YAML, la URL se arma con el `default_model` del registry, fallback sin configuración, **404 prueba el siguiente** y **429 no reintenta** (1 sola llamada), y la key redactada en el log de error.
+- `pytest tests/auditors tests/quality_gates`: **845 passed, 11 skipped**.
+- **Verificado en vivo** (billing recargado, no solo mocks): `_query_gemini` devolvió respuesta real con `gemini-flash-latest` y ~400 tokens consumidos. Este punto es la razón por la que el 404 dejado por escrito en el fuente contaba como defecto y no como nota.
+
+### Límites declarados (no escondidos)
+
+- **`cost_usd=0.0` sigue hardcodeado** en `_query_gemini` y `_query_openrouter`; solo Perplexity calcula. Con billing activo cada query quema saldo real que la contabilidad no registra → plan propio (`LLMReport.cost_usd`).
+- **El contrato de `LLMReport` cuando ningún provider responde sigue sin resolver**: `queries_tested=0` + `source="llm_check"` se lee "cero menciones" cuando significa "no medible". Este fix evita una causa del 404, no elimina la ambigüedad semántica.
+- Fallbacks anclados a nombres que existen a 2026-09-19; si Google retira también `gemini-2.5-flash`, la lista envejece. El alias `gemini-flash-latest` mitiga esto en la posición del default, no en la de los fallbacks.
+
 ## [4.77.0] - Tribunal con dientes: enforcement + certificación 25 ACs — 2026-09-15
 
 ### Objetivo

@@ -451,3 +451,174 @@ class TestOpenRouterModelFromRegistry:
         assert len(result["text"]) > 0
         assert result["cost_usd"] == 0.0
         assert result["tokens_used"] > 0
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# Gemini: modelo parametrizado en provider_registry.yaml (mismo patron que OpenRouter)
+# ═══════════════════════════════════════════════════════════════════════
+
+def _gemini_ok(text="Hotel Visperas es una buena opcion.", tokens=7):
+    response = Mock()
+    response.json.return_value = {
+        "candidates": [{"content": {"parts": [{"text": text}]}}],
+        "usageMetadata": {"totalTokenCount": tokens},
+    }
+    response.raise_for_status = MagicMock()
+    return response
+
+
+def _gemini_http_error(status):
+    """Mock de respuesta que lanza requests.HTTPError con .response.status_code."""
+    import requests
+
+    error_response = Mock()
+    error_response.status_code = status
+    error_response.json.return_value = {"error": {"message": f"HTTP {status}"}}
+    exc = requests.HTTPError(f"{status} Error", response=error_response)
+
+    response = Mock()
+    response.raise_for_status = Mock(side_effect=exc)
+    return response
+
+
+class TestGeminiModelFromRegistry:
+    """El modelo de Gemini se lee del registry; no esta hardcodeado en el .py."""
+
+    def test_model_not_hardcoded_in_source(self):
+        """gemini-2.0-flash (retirado por Google, da 404) no debe volver al fuente."""
+        import inspect
+        source = inspect.getsource(LLMMentionChecker._query_gemini)
+        assert "gemini-2.0-flash" not in source, (
+            "regresion: modelo de Gemini hardcodeado en _query_gemini"
+        )
+
+    def test_gemini_registered_en_yaml(self):
+        """provider_registry.yaml define el provider gemini con default_model."""
+        import yaml
+        from pathlib import Path
+
+        config_path = Path(__file__).resolve().parent.parent.parent / "config" / "provider_registry.yaml"
+        with open(config_path, "r", encoding="utf-8") as f:
+            raw = yaml.safe_load(f)
+
+        gemini = raw["providers"]["gemini"]
+        assert gemini["type"] == "llm"
+        assert "GEMINI_API_KEY" in gemini["env_vars"]
+        assert gemini["default_model"], "default_model vacio"
+
+    def test_url_usa_modelo_del_registry(self):
+        """La URL se arma con el default_model del registry, y la key va en header."""
+        ProviderRegistry.reset()
+
+        mock_cfg = ProviderConfig(
+            id="gemini",
+            type="llm",
+            description="Test",
+            auth_type="api_key",
+            default_model="test-gemini-v9",
+            env_vars=["GEMINI_API_KEY"],
+        )
+
+        with patch.object(ProviderRegistry, 'load', return_value=None):
+            with patch.object(ProviderRegistry, 'get', return_value=mock_cfg):
+                with patch('requests.post') as mock_post:
+                    mock_post.return_value = _gemini_ok()
+
+                    checker = LLMMentionChecker(gemini_key="test-key")
+                    result = checker._query_gemini("test query")
+
+                    assert result is not None
+                    assert result["tokens_used"] == 7
+
+                    mock_post.assert_called_once()
+                    url = mock_post.call_args[0][0]
+                    assert "models/test-gemini-v9:generateContent" in url, (
+                        f"Expected modelo del registry en la URL, got {url}"
+                    )
+                    # AC-S1: la key viaja en header, nunca en la URL
+                    assert "test-key" not in url
+
+    def test_url_fallback_cuando_registry_vacio(self):
+        """Sin config de gemini, se usa el primer fallback model declarado."""
+        ProviderRegistry.reset()
+        expected = LLMMentionChecker._GEMINI_FALLBACK_MODELS[0]
+
+        with patch.object(ProviderRegistry, 'load', return_value=None):
+            with patch.object(ProviderRegistry, 'get', return_value=None):
+                with patch('requests.post') as mock_post:
+                    mock_post.return_value = _gemini_ok()
+
+                    checker = LLMMentionChecker(gemini_key="test-key")
+                    result = checker._query_gemini("fallback test")
+
+                    assert result is not None
+                    url = mock_post.call_args[0][0]
+                    assert f"models/{expected}:generateContent" in url, (
+                        f"Fallback model fallo: got {url}"
+                    )
+
+    def test_404_prueba_el_siguiente_modelo(self):
+        """Un modelo retirado (404) degrada al siguiente fallback, sin abortar."""
+        ProviderRegistry.reset()
+
+        mock_cfg = ProviderConfig(
+            id="gemini",
+            type="llm",
+            description="Test",
+            auth_type="api_key",
+            default_model="modelo-retirado",
+            env_vars=["GEMINI_API_KEY"],
+        )
+
+        with patch.object(ProviderRegistry, 'load', return_value=None):
+            with patch.object(ProviderRegistry, 'get', return_value=mock_cfg):
+                with patch('requests.post') as mock_post:
+                    mock_post.side_effect = [
+                        _gemini_http_error(404),
+                        _gemini_ok(text="respuesta del fallback"),
+                    ]
+
+                    checker = LLMMentionChecker(gemini_key="test-key")
+                    result = checker._query_gemini("test query")
+
+                    assert result is not None
+                    assert result["text"] == "respuesta del fallback"
+                    assert mock_post.call_count == 2
+                    segundo_url = mock_post.call_args_list[1][0][0]
+                    assert "modelo-retirado" not in segundo_url
+
+    def test_429_no_reintenta_otros_modelos(self):
+        """Cuota agotada (429) es del proyecto, no del modelo: una sola llamada."""
+        ProviderRegistry.reset()
+
+        with patch.object(ProviderRegistry, 'load', return_value=None):
+            with patch.object(ProviderRegistry, 'get', return_value=None):
+                with patch('requests.post') as mock_post:
+                    mock_post.return_value = _gemini_http_error(429)
+
+                    checker = LLMMentionChecker(gemini_key="test-key")
+                    result = checker._query_gemini("test query")
+
+                    assert result is None
+                    assert mock_post.call_count == 1, (
+                        "429 no debe reintentarse contra todos los fallback models"
+                    )
+
+    def test_key_redactada_en_el_log_de_error(self):
+        """AC-S1: un error de Gemini no filtra la key al log."""
+        ProviderRegistry.reset()
+        synthetic_key = "AIzaSySINTETICA_PARA_TEST_000000"
+
+        with patch.object(ProviderRegistry, 'load', return_value=None):
+            with patch.object(ProviderRegistry, 'get', return_value=None):
+                with patch('requests.post') as mock_post:
+                    mock_post.side_effect = Exception(f"connection reset key={synthetic_key}")
+
+                    checker = LLMMentionChecker(gemini_key=synthetic_key)
+                    with patch('modules.auditors.llm_mention_checker.logger') as mock_logger:
+                        result = checker._query_gemini("test query")
+
+                    assert result is None
+                    logged = " ".join(str(c) for c in mock_logger.warning.call_args_list)
+                    assert synthetic_key not in logged
+

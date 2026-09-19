@@ -75,7 +75,7 @@ class LLMMentionChecker:
 
     Providers (orden de prioridad):
     1. OpenRouter (principal, ~$0.01-0.03/query)
-    2. Gemini (gratis, free tier generoso)
+    2. Gemini (sin costo por query, pero limitado por la cuota del proyecto de Google)
     3. Perplexity (mejor para IAO porque cita fuentes, ~$0.02-0.05/query)
     """
 
@@ -96,6 +96,14 @@ class LLMMentionChecker:
         "qwen/qwen3-next-80b-a3b-instruct:free",     # 80B MoE, 262K ctx
     ]
 
+    # Fallback models para Gemini si el default_model da 404 (modelo retirado).
+    _GEMINI_FALLBACK_MODELS = [
+        "gemini-flash-latest",   # alias rotativo, no se deprecara
+        "gemini-3.5-flash",      # version fija mas reciente
+        "gemini-2.5-flash",      # version fija estable
+        "gemini-flash-lite-latest",
+    ]
+
     def __init__(self, openrouter_key: Optional[str] = None,
                  gemini_key: Optional[str] = None,
                  perplexity_key: Optional[str] = None):
@@ -104,7 +112,7 @@ class LLMMentionChecker:
 
         Costo estimado por hotel:
         - OpenRouter: ~$0.01-0.03/query (5 queries = $0.05-0.15)
-        - Gemini: GRATIS (free tier generoso)
+        - Gemini: sin cargo por query, sujeto a la cuota/billing del proyecto de Google
         - Perplexity: ~$0.02-0.05/query
         """
         self._openrouter_key = openrouter_key or os.environ.get("OPENROUTER_API_KEY")
@@ -347,27 +355,82 @@ class LLMMentionChecker:
     def _query_gemini(self, query: str) -> Optional[dict]:
         """Llama Gemini API directo (no via OpenRouter).
         La key viaja en header x-goog-api-key, nunca en la URL (AC-S1).
+        Usa el modelo configurado en provider_registry.yaml (default_model de gemini).
+        Si el modelo configurado da 404 (retirado), prueba los fallback en orden.
+        Cualquier otro error (429 de cuota, 403) no se reintenta: aplica a todos los modelos.
+        Returns dict with 'text', 'cost_usd', 'tokens_used' or None on failure.
         """
         import requests
 
-        url = (
-            "https://generativelanguage.googleapis.com/v1beta/"
-            "models/gemini-2.0-flash:generateContent"
+        # Leer modelo del provider_registry.yaml (no hardcoded)
+        registry = ProviderRegistry()
+        registry.load()
+        gemini_cfg = registry.get("gemini")
+        primary_model = (
+            gemini_cfg.default_model
+            if gemini_cfg and gemini_cfg.default_model
+            else self._GEMINI_FALLBACK_MODELS[0]
         )
-        headers = {"x-goog-api-key": self._gemini_key}
-        payload = {
-            "contents": [{"parts": [{"text": query}]}],
-            "generationConfig": {"maxOutputTokens": 1024},
-        }
 
-        response = requests.post(url, json=payload, headers=headers, timeout=30)
-        response.raise_for_status()
-        data = response.json()
-        text = data["candidates"][0]["content"]["parts"][0]["text"]
-        # Gemini free tier: no cost
-        usage = data.get("usageMetadata", {})
-        total_tokens = usage.get("totalTokenCount", 0)
-        return {"text": text, "cost_usd": 0.0, "tokens_used": total_tokens}
+        models_to_try = [primary_model] + [
+            m for m in self._GEMINI_FALLBACK_MODELS if m != primary_model
+        ]
+
+        headers = {"x-goog-api-key": self._gemini_key}
+        last_error = None
+        for model in models_to_try:
+            url = (
+                "https://generativelanguage.googleapis.com/v1beta/"
+                f"models/{model}:generateContent"
+            )
+            payload = {
+                "contents": [{"parts": [{"text": query}]}],
+                "generationConfig": {"maxOutputTokens": 1024},
+            }
+
+            try:
+                response = requests.post(url, json=payload, headers=headers, timeout=30)
+                response.raise_for_status()
+                data = response.json()
+                text = data["candidates"][0]["content"]["parts"][0]["text"]
+                # Gemini free tier: no cost
+                usage = data.get("usageMetadata", {})
+                total_tokens = usage.get("totalTokenCount", 0)
+
+                if model != primary_model:
+                    logger.info(
+                        f"Gemini: usado fallback model '{model}' "
+                        f"(primario '{primary_model}' no disponible)"
+                    )
+
+                return {"text": text, "cost_usd": 0.0, "tokens_used": total_tokens}
+
+            except requests.HTTPError as e:
+                status = e.response.status_code if hasattr(e, 'response') else None
+                if status == 404:
+                    logger.debug(
+                        f"Gemini model '{model}' no encontrado (404), "
+                        f"probando siguiente..."
+                    )
+                    last_error = e
+                    continue
+                safe_msg = self._sanitize_text(self._sanitize_error(e))
+                logger.warning(f"Gemini query failed for '{model}': {safe_msg}")
+                return None
+
+            except Exception as e:
+                safe_msg = self._sanitize_text(self._sanitize_error(e))
+                logger.warning(f"Gemini query failed for '{model}': {safe_msg}")
+                return None
+
+        # Todos los modelos fallaron
+        safe_last = self._sanitize_text(self._sanitize_error(last_error)) if last_error else "n/a"
+        logger.warning(
+            f"Gemini: todos los modelos fallaron (primario='{primary_model}', "
+            f"fallbacks={self._GEMINI_FALLBACK_MODELS}). "
+            f"Ultimo error: {safe_last}"
+        )
+        return None
 
     def _query_perplexity(self, query: str) -> Optional[dict]:
         """Llama Perplexity API. Mejor para IAO porque cita fuentes."""
