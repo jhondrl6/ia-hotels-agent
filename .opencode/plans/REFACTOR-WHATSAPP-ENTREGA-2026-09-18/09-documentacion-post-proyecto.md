@@ -20,8 +20,8 @@ Estado: PREPARACIÓN. Ninguna fase ejecutada. No sustituye la documentación inc
 |---|---|---|
 | HEAD de preparación | `7d91c9f` | Preparación |
 | Corridas v4complete de este plan | 0; presupuesto total 1 | Preparación |
-| Validaciones rápidas PRE | 9/10; único rojo Version Sync, ya presente en HEAD y no imputable al plan | Preparación |
-| Causa del rojo Version Sync | Medido 2026-09-19: `sync_versions.py --check` y `version_consistency_checker.py` exit 0 sobre los 7 campos; el check del quick compara contra `full_version` de cuatro segmentos. Desacuerdo verificador↔escritor | Preparación |
+| Validaciones rápidas PRE | 9/10 el 2026-09-18 (rojo Version Sync por cuatro documentos sucios en el árbol) y 10/10 al re-medir el 2026-09-19 | Preparación |
+| Causa del rojo Version Sync | **Causa real, medida 2026-09-19:** el quick del 2026-09-18 fallaba porque `AGENTS.md`, `VERSION.yaml`, `docs/GUIA_TECNICA.md` y `REGISTRY.md` estaban modificados en el árbol; hoy esos cuatro archivos son idénticos a HEAD (revertidos fuera de esta sesión, mtime 11:06-11:10) y el quick da 10/10. `_check_version_sync` se limita a invocar `sync_versions.py --check`, así que la hipótesis de un desacuerdo verificador↔escritor queda retractada: era estado transitorio del working tree, ya resuelto. | Preparación |
 | Sitio del hotel verificado en preparación | NXDOMAIN en la URL del warehouse; 200 en la del usuario; canal presente vía plugin, ausente del HTML estático que lee el detector (AC19) | Preparación |
 | Índice PRE | 305 IDs, fresco | Preparación |
 | Tests nuevos / casos recogidos / passed | No medidos; no confundir funciones con casos parametrizados | Pendiente |
@@ -40,6 +40,6 @@ Estado: PREPARACIÓN. Ninguna fase ejecutada. No sustituye la documentación inc
 
 Cada cierre anota: archivos exactos, tests añadidos, PRE/POST con misma unidad, resultados de mutaciones, limitaciones, estado real y autorización de commit si existe. No elevar versión en fases intermedias. Registrar con `scripts/log_phase_completion.py --check-manual-docs` solo la fase que acaba de completarse.
 
-## Bloqueante documental preexistente
+## Rojo documental del PRE, cerrado por re-medición
 
-`run_all_validations.py --quick` devuelve 9/10 desde antes de crear el plan; el único rojo es Version Sync. Medido el 2026-09-19: `sync_versions.py --check` pasa los siete campos gobernados y el pre-commit `[1/7]`/`[2/7]` no bloquea, de modo que la causa es un desacuerdo entre el verificador del quick (cuatro segmentos) y el escritor canónico (tres), no documentos desincronizados. A decide a quién alinear; la resolución no exige tocar AGENTS.md ni .cursorrules, y no se modifican hooks, baseline de citas ni configuración para ocultar el rojo.
+`run_all_validations.py --quick` dio 9/10 el 2026-09-18 y **10/10** al re-medirlo el 2026-09-19. La causa medida del rojo: `AGENTS.md`, `VERSION.yaml`, `docs/GUIA_TECNICA.md` y `REGISTRY.md` estaban modificados en el árbol y hoy son idénticos a HEAD tras una reversión ajena a esta sesión. Se retracta la explicación previa por cuatro segmentos: `_check_version_sync` solo ejecuta `sync_versions.py --check`. Regla conservada: re-medir el quick al abrir cada fase y no modificar hooks, baselines de citas ni configuración para forzar un verde.

@@ -50,7 +50,7 @@ Todas las filas requieren evidencia del writer/consumidor real. Separar después
 
 ## Prerrequisitos de entrada
 
-- [ ] A registra el PRE quick 9/10 y su único rojo: medido el 2026-09-19, `sync_versions.py --check` y `version_consistency_checker.py` pasan, así que es desacuerdo verificador↔escritor y no deriva documental. A decide a quién alinear; no requiere tocar configuración central ni bloquea el pre-commit.
+- [ ] A re-mide el quick al inicio y registra el resultado observado. El 9/10 del 2026-09-18 quedó resuelto solo: eran cuatro documentos sucios en el árbol y el 2026-09-19 marca 10/10 con esos archivos ya idénticos a HEAD. No se arrastra como prerrequisito de autorización central.
 - [ ] B/C gobernan AC19: el lector declara qué rutas inspeccionó y B no convierte una señal negativa sin alcance verificado en ausencia confirmada del canal.
 - [ ] A resuelve el mandato documental de DOMAIN_PRIMER antes de regenerarlo; no cambia reglas centrales para eliminar la divergencia.
 - [ ] A mantiene F-B privacidad/D1 diferida: no PII WhatsApp nueva en warehouse ni cambios de formulario/esquema sin decisión escrita. El setup no certifica cierre de esa deuda.

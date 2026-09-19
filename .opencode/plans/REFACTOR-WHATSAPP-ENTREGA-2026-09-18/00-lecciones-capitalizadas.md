@@ -39,6 +39,10 @@ Creado el 2026-09-18, antes del maestro y los prompts. Preparación documental; 
 | L-T4A.4 | No se cambia el matching difuso de promesas; solo se verifica que el nuevo servicio conserve identidad entre consumidores. |
 | L-VUP-3 | La blocklist de plataformas no se refactoriza. La identidad exacta del hotel se valida sin introducir matching por substring. |
 
+## 3bis. Lecciones definidas por este plan
+
+Este archivo capitaliza lecciones **de planes anteriores**. Las definidas aquí —`L-ENT.1` a `L-ENT.6`— viven en `10-analisis-post-implementacion.md`, subsección "Lecciones nuevas de este plan", registradas el 2026-09-19 durante la **preparación** con su evidencia medida (sondeo del lector real sobre las URLs del hotel, snapshot archivado de FASE-P4, fixture y test e2e, y los `--check` de los verificadores de versión). Ninguna está certificada post-implementación: VERIFY las contrasta contra lo realmente ejecutado y puede degradarlas o reescribirlas.
+
 ## 4. Cobertura declarada
 
 Este archivo es verificado por `scripts/validate_lesson_capitalization.py`: forma, consultas, al menos tres descartes, AC existente, IDs y dueños reales, y al menos dos fuentes. **No verifica la pertinencia**, ni que los prompts hayan aplicado las lecciones. El orquestador debe revisar esto por separado.

@@ -38,7 +38,7 @@ A–H no ejecutan auditorías externas ni v4complete. H prepara tests/runner sin
 
 ## Prerrequisitos y límites visibles
 
-- El maestro registra un PRE quick **9/10** con fallo preexistente de Version Sync. No se ha repetido aquí. A necesita autorización central para resolverlo; no se asume permiso sobre AGENTS.md, .cursorrules o configuración.
+- El PRE quick del 2026-09-18 fue **9/10** por Version Sync y la re-medición del 2026-09-19 da **10/10**: eran cuatro documentos sucios en el árbol, hoy idénticos a HEAD. No queda prerrequisito de autorización central; A vuelve a medir el quick al abrir la fase.
 - La deuda **F-B de privacidad** permanece diferida: no transportar WhatsApp/PII en warehouse ni cambiar formulario/esquema sin decisión escrita. No confundir esta deuda con la sesión B.
 - Fuente Don Alfonso: observación del **2026-07-22**. A resuelve vigencia y H contrasta `ONBOARDING_FRESHNESS_HOURS` efectivo; no cambiar fechas, desactivar frescura ni sustituir por defaults.
 - Binding explícito y local: URL original **https://hoteldonalfonso.com/**; solicitada **https://www.donalfonsohotel.com/**. Conservar ambas y su procedencia; no afirmar redirección ni crear alias global.

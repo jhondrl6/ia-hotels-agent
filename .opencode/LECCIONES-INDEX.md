@@ -13,7 +13,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 ## Cobertura medida (lo que este índice NO garantiza)
 
 - Corpus de **definiciones**: `14` análisis de plan + `36` archivos de `.opencode/context/`. `384` `.md` en total como corpus de **citas**.
-- 305 IDs con definición detectada; 43 IDs citados sin definición (ver última sección).
+- 311 IDs con definición detectada; 43 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -29,13 +29,13 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 
 | Familia | Significado | IDs |
 |---------|-------------|-----|
-| `L-*` | Lecciones aprendidas | 161 |
+| `L-*` | Lecciones aprendidas | 167 |
 | `DA-*` | Decisiones / reglas de alineación | 43 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 62 |
 | — | Citados sin definición | 43 |
 
-## `L-*` — Lecciones aprendidas (161)
+## `L-*` — Lecciones aprendidas (167)
 
 | ID | Enunciado | Plan dueño | Sección | Citas |
 |----|-----------|------------|---------|-------|
@@ -67,6 +67,12 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-E2E.3` | El tribunal es advisory de facto: Bot 1 recomendó BLOQUEAR y Bot 4 DEVOLVER-PRUEBAS, pero el veredicto del Juez salió APROBADO-CONDICIONAL y el ZIP se emitió, porque _compute_verdict (T1) solo… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-E2E (2026-09-11) | 9 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-E2E.4` | El layout de deliveries/ cambió: ya no hay directorio descomprimido con MANIFEST.json/IMPLEMENTATION_ORDER.md/ASSETS/ — todo vive dentro del ZIP. La nota de la auditoría de E2E previa ("viven en… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-E2E (2026-09-11) | 0 (solo el plan dueño) |
 | `L-E3` | La «no-reconstrucción» de un oráculo no se declara, se hace observable con un test sonda *(FASE-E)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 2 (solo el plan dueño) |
+| `L-ENT.1` | Un estado agregado archivado se hereda como si fuera causa. Un snapshot de FASE-P4 registró confidence 0.3, site_verified false en los cinco probes; el plan heredó la lectura "el sitio era… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 2 (solo el plan dueño) |
+| `L-ENT.2` | La pregunta no es "¿existe el canal?" sino "¿puede el lector observarlo, en qué ruta y en qué marcaje?". La home del sitio vivo tiene 0 referencias a WhatsApp y /contacto/ tiene 54, todas dentro de… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 0 (solo el plan dueño) |
+| `L-ENT.3` | Un default de código se fosiliza como dato verificado cuando viaja por un fixture. El fixture versionado del hotel fija canal directo 20.0 contra los 30.0 del warehouse, con epistemic_status… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 1 (solo el plan dueño) |
+| `L-ENT.4` | Un rojo del working tree caduca: se hereda como prerrequisito y al re-medirlo ya no existe — y mi explicación del mecanismo también cayó. El quick PRE del 2026-09-18 daba 9/10 por Version Sync y se… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 0 (solo el plan dueño) |
+| `L-ENT.5` | Editar una tabla anclando en otra fila completa la reemplaza. Al insertar AC19 en la matriz del checklist, el ancla fue la fila AC18 y el resultado quedó sin AC18. / Por qué: la coincidencia de texto… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 0 (solo el plan dueño) |
+| `L-ENT.6` | El consentimiento liga una identidad concreta, no un nombre comercial. La autorización de FASE-P4 amparaba una corrida de diagnóstico sobre la URL del warehouse —hoy inexistente— y declaraba… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 3 (solo el plan dueño) |
 | `L-F1` | Un fixture en forma tolerada pero no canónica probaba un defecto que producción no puede producir *(FASE-F)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 3 (solo el plan dueño) |
 | `L-F2` | Score continuo y veredicto binario son dos representaciones del mismo hecho *(FASE-F)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 4 (solo el plan dueño) |
 | `L-F3` | La re-evaluación de artefactos persistidos debe reproducir la lectura del consumidor de producción *(FASE-F)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 4 (solo el plan dueño) |
