@@ -2,9 +2,9 @@
   "_generated_by": "scripts/build_lesson_index.py",
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
-    "archivos_analysis_escaneados": 13,
+    "archivos_analysis_escaneados": 14,
     "archivos_contexto_escaneados": 36,
-    "archivos_md_escaneados": 365,
+    "archivos_md_escaneados": 384,
     "ids_con_definicion": 305,
     "ids_citados_sin_definicion": 43,
     "familias_incluidas": [
@@ -1824,9 +1824,10 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 22,
+      "total_citas": 23,
       "planes_que_lo_citan": [
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -1948,8 +1949,9 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 10,
       "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17",
         "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27"
       ],
@@ -2014,14 +2016,14 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 70,
+      "total_citas": 74,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27",
-        "Archives/VALIDADOR-URL-PROPIA-2026-08-30",
-        "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/VALIDADOR-URL-PROPIA-2026-08-30"
       ],
       "redefiniciones": []
     },
@@ -2494,9 +2496,10 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 27,
+      "total_citas": 34,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -2552,10 +2555,11 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 43,
+      "total_citas": 48,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -2650,9 +2654,10 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 31,
+      "total_citas": 40,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
@@ -2735,12 +2740,13 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 45,
+      "total_citas": 46,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17"
       ],
       "redefiniciones": []
@@ -2958,8 +2964,10 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -2972,8 +2980,10 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -3000,8 +3010,10 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -3014,9 +3026,10 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 39,
+      "total_citas": 47,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3247,9 +3260,10 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 33,
+      "total_citas": 37,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
@@ -3295,10 +3309,11 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 31,
+      "total_citas": 34,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3401,9 +3416,10 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 2,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3431,10 +3447,11 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 31,
+      "total_citas": 36,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3495,10 +3512,11 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 21,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3540,9 +3558,10 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
+      "total_citas": 12,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3619,8 +3638,10 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
