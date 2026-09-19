@@ -136,7 +136,9 @@ AC-S4: PUERTA OPERATIVA
      * No se ha hecho escaneo en nube
      * No se ha hecho rotación automática
      * No se ha subido evidencia a terceros
-   - Disposición de datos con cliente: pendiente
+   - Disposición de datos con cliente: ✅ ARCHIVADA COMO PENDIENTE DE OPERADOR
+     (cierre de sesión 2026-09-19, v4.77.3) — no cierra por medición; requiere
+     decisión escrita del operador
      * No se ha definido política de retención
      * No se ha definido política de notificación
      * Material de cliente versionado (59 blobs evidence/FASE-I/corrida/,
@@ -147,8 +149,8 @@ AC-S4: PUERTA OPERATIVA
    - Técnico: ✅ DONE (fix implementado y testeado)
    - Operativo: 🟡 PARCIAL — exposición pública de credencial RESUELTA
      (key rotada 2026-09-15, verificado); rotación Gemini-local CONFIRMADA POR
-     EL OPERADOR (2026-09-18); fila abierta restante: disposición de datos con
-     cliente
+     EL OPERADOR (2026-09-18); única fila restante — disposición de datos con
+     cliente — ARCHIVADA COMO PENDIENTE DE OPERADOR (2026-09-19), no bloqueante
    - Publicación: ✅ DESBLOQUEADA por el criterio de cierre §5
      "contención verificable: key ya rotada" (2026-09-15). Las filas
      abiertas de §2 no bloquean RELEASE; se heredan como seguimientos
@@ -180,7 +182,11 @@ DEPENDENCIAS
   * Seguimientos heredados (no bloqueantes, dueño=operador):
     ~~confirmación de rotación de la key Gemini-local (log gitignored)~~ ✅
     CERRADO 2026-09-19: confirmada por el operador el 2026-09-18; y
-    disposición de datos con cliente (retención/notificación)
+    ~~disposición de datos con cliente (retención/notificación)~~ ✅ ARCHIVADA
+    COMO PENDIENTE DE OPERADOR (cierre de sesión 2026-09-19): condición de
+    cierre = política escrita de retención/notificación decidida por el
+    operador (§2); con esto, AC-S3/AC-S4 no deja seguimientos vivos en el
+    registro de esta sesión
 - AC-S1 (sanitización): ✅ DONE (11 tests, NR7 green/red, NR1 baseline)
 - AC-S2 (checker ampliado): ✅ DONE (3058 archivos escaneados, NR7 green/red)
 
