@@ -341,6 +341,23 @@ class TestCheckMentionsMocked:
         assert report.total_mentions == 0
         assert report.mention_rate == 0.0
 
+    @patch('modules.auditors.llm_mention_checker.time.sleep')
+    @patch.object(LLMMentionChecker, "_query_provider", return_value=None)
+    def test_check_mentions_all_providers_fail_is_not_measured(self, mock_query, mock_sleep):
+        """Con keys pero todos los proveedores fallando: source="stub" (no medible),
+        NO "llm_check" con 0/0 que se lee como "cero menciones"."""
+        checker = LLMMentionChecker(openrouter_key="fake-key")
+        assert checker.is_available, "precondicion: hay key, no es el stub sin keys"
+        report = checker.check_mentions(
+            hotel_name="Hotel Test",
+            hotel_url="https://test.com",
+            location="Bogota",
+        )
+        assert report.queries_tested == 0
+        assert report.source == "stub"
+        assert report.mention_score == 0
+        assert report.query_results == []
+
 
 # ═══════════════════════════════════════════════════════════════════════
 # FASE-2 BUG-4a: Model externalization to provider_registry.yaml

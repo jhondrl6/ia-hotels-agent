@@ -1,5 +1,34 @@
 # Changelog
 
+## [4.77.3] - LLMReport honesto cuando ningún provider responde — 2026-09-19
+
+### Objetivo
+
+`check_mentions` fijaba `source="llm_check"` incondicionalmente, incluso cuando ningún proveedor respondía y `queries_tested` quedaba en 0. Un `0/0` impreso en consola y serializado en el audit se lee "cero menciones" cuando la verdad es "no medible". El fix hace el contrato honesto: sin consultas efectivamente respondidas, el reporte es `source="stub"` — el mismo estado que ya significa "sin API keys" y que todos los consumidores tratan como no-medido.
+
+### Cambios Implementados
+
+- **`source` condicional en `check_mentions`**: `source="llm_check" if queries_tested > 0 else "stub"`. El campo `source` pasa a significar "¿hay medición?" y no "¿se intentó?".
+- **Mensaje de consola corregido** en `v4_comprehensive`: el ramo stub ya no afirma "Sin API keys LLM" (falso cuando las keys existen pero fallaron los proveedores); ahora dice "Medición LLM no medible (sin keys o ningún proveedor respondió)".
+- **Semántica verificada en consumidores**: `v4_diagnostic_generator._score_iao` ya estaba blindado (`mention_score > 0` exige medición real) y `data_derivation_layer` filtra proxy por `> 0`; ningún gate de publicación consume `llm_report` (ADVISORY). El fix cierra el caso 0/0 sin cambiar contratos de terceros.
+
+### Archivos Nuevos
+
+Sin archivos nuevos.
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/llm_mention_checker.py` | `source` condicional a `queries_tested > 0`; docstrings y comentario del campo documentan "no medible" |
+| `modules/auditors/v4_comprehensive.py` | Mensaje del ramo stub no afirma "sin API keys" cuando la causa fue fallo de proveedores |
+| `tests/auditors/test_llm_mention_checker.py` | Test de regresión `test_check_mentions_all_providers_fail_is_not_measured` (+1 función) |
+
+### Tests
+
+- `tests/auditors/test_llm_mention_checker.py::TestCheckMentionsMocked::test_check_mentions_all_providers_fail_is_not_measured` — con key configurada y `_query_provider` devolviendo `None` para todos los proveedores: `queries_tested == 0`, `source == "stub"`, `mention_score == 0`.
+- Suite de referencia: `pytest tests/auditors tests/quality_gates tests/config` → 911 passed, 12 skipped (910 + 1 nuevo).
+
 ## [4.77.2] - Contabilidad de coste del checker LLM (Gemini) — 2026-09-19
 
 ### Objetivo

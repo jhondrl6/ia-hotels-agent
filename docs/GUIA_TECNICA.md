@@ -1,6 +1,6 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.77.2 (Contabilidad de coste del checker LLM (Gemini))
+**Versión:** v4.77.3 (LLMReport honesto cuando ningún provider responde)
 **Última actualización:** 2026-09-19
 
 ---

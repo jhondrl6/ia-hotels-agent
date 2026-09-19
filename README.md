@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.77.2** -- Contabilidad de coste del checker LLM (Gemini) | Actualizado 11 Septiembre 2026
+**v4.77.3** -- LLMReport honesto cuando ningún provider responde | Actualizado 11 Septiembre 2026
 
 ---
 
@@ -190,7 +190,7 @@ Verifica symlink de workflows, skills, memoria del agente, gitignore, DOMAIN_PRI
 
 ---
 
-## Estado del Proyecto (v4.77.2 -- Contabilidad de coste del checker LLM (Gemini)) vive en **[AGENTS.md](AGENTS.md)** — fuente unica del estado interno. Historial de cambios: [CHANGELOG.md](CHANGELOG.md). Registro de fases: [docs/contributing/REGISTRY.md](docs/contributing/REGISTRY.md).
+## Estado del Proyecto (v4.77.3 -- LLMReport honesto cuando ningún provider responde) vive en **[AGENTS.md](AGENTS.md)** — fuente unica del estado interno. Historial de cambios: [CHANGELOG.md](CHANGELOG.md). Registro de fases: [docs/contributing/REGISTRY.md](docs/contributing/REGISTRY.md).
 
 ---
 

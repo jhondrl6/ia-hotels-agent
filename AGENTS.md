@@ -1,8 +1,8 @@
-<!-- agents_version: v4.77.2 | last_update: 2026-09-19 -->
+<!-- agents_version: v4.77.3 | last_update: 2026-09-19 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.77.2 -- Contabilidad de coste del checker LLM (Gemini) COMPLETADO**
+> **v4.77.3 -- LLMReport honesto cuando ningún provider responde COMPLETADO**
 
 ---
 

@@ -3,7 +3,7 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.77.2 | **Codename**: Contabilidad de coste del checker LLM (Gemini)
+> **Version del sistema**: 4.77.3 | **Codename**: LLMReport honesto cuando ningún provider responde
 > **Release date**: 2026-09-19 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-09-19 | v4.77.2 Contabilidad de coste del checker LLM (Gemini)*
+*Auto-generado: 2026-09-19 | v4.77.3 LLMReport honesto cuando ningún provider responde*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

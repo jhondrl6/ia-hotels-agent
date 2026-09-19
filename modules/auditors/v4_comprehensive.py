@@ -675,7 +675,7 @@ class V4ComprehensiveAuditor:
                     print(f"      Costo IAO: ${llm_report.cost_usd:.4f} USD")
                     print(f"      Tokens: {llm_report.tokens_used}")
             else:
-                print(f"      [STUB] Sin API keys LLM - medicion no disponible")
+                print(f"      [STUB] Medicion LLM no medible (sin keys o ningún proveedor respondio)")
         except Exception as e:
             logger.warning(f"LLM Mention Checker failed: {e}")
             print(f"      [ADVISORY] LLM mention checker no disponible: {e}")

@@ -48,7 +48,7 @@ class LLMReport:
     providers_used: List[str]
     query_results: List[LLMQueryResult] = field(default_factory=list)
     mention_score: int = 0        # 0-100
-    source: str = "stub"          # "llm_check" | "stub"
+    source: str = "stub"          # "llm_check" (medido) | "stub" (no medible: sin keys o sin respuestas)
     cost_usd: Optional[float] = None  # Costo total en USD
     tokens_used: Optional[int] = None  # Tokens totales consumidos
     provider_name: Optional[str] = None  # "openrouter" | "gemini" | "perplexity"
@@ -161,6 +161,9 @@ class LLMMentionChecker:
         Ejecuta queries de recomendación y analiza menciones.
 
         Si no hay API keys, retorna stub con source="stub".
+        Si habiendo keys ningún proveedor responde (queries_tested == 0),
+        el reporte tambien es source="stub": significa "no medible", no
+        "cero menciones".
         """
         if not self.is_available:
             return self._build_stub_report(hotel_name, hotel_url, location)
@@ -244,7 +247,10 @@ class LLMMentionChecker:
             providers_used=providers_used,
             query_results=query_results,
             mention_score=mention_score,
-            source="llm_check",
+            # Si ningun proveedor respondio (queries_tested == 0) la medicion
+            # NO es "cero menciones" sino "no medible": se reporta como stub
+            # para que los consumidores no interpreten un 0/0 como evidencia.
+            source="llm_check" if queries_tested > 0 else "stub",
             cost_usd=total_cost if total_cost > 0 else None,
             tokens_used=total_tokens if total_tokens > 0 else None,
             provider_name=dominant_provider,
