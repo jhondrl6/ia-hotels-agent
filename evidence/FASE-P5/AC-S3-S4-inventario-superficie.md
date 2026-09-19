@@ -81,15 +81,30 @@ AC-S4: PUERTA OPERATIVA
      * _query_openrouter: excepción sanitizada en sus dos except internos
      * _query_perplexity: excepciones burbujean a _query_provider (ya sanitizado)
 
-2. Contención operativa (actualizada 2026-09-15)
+2. Contención operativa (actualizada 2026-09-15; re-verificada 2026-09-19)
    - Rotación de keys:
      * Key expuesta públicamente (AIzaSyBoYje…hB0, archives/gbp_profiles.json):
-       ✅ ROTADA por el operador (declaración 2026-09-15). La key vigente
-       (sufijo MnP_Y) verificada ausente en origin/master, HEAD, worktree,
-       .env y logs locales. El material en el historial público es inerte.
-     * Gemini (AIzaSyDqMau…JB8, SOLO en log local gitignored
-       evidence/FASE-P4/corrida/corrida.log): nunca fue pública; estado de
-       rotación NO CONFIRMADO por el operador (fila abierta, riesgo local).
+       ❌ CORREGIDO 2026-09-19 — la afirmación de 2026-09-15 ("✅ ROTADA… verificada
+       ausente en origin/master, HEAD, worktree") **era FALSA**. Medición con el
+       patrón completo `AIzaSy[A-Za-z0-9_-]{25,}` sobre worktree e `HEAD:archives/
+       gbp_profiles.json`: la key **AIzaSyBoYj…ShB0 está presente 8 veces en el
+       archivo TRACKED y también en HEAD** (historial). El sufijo "vigente" MnP_Y
+       **no aparece ninguna vez** en ese archivo. Por tanto el material **no es
+       inerte**: sigue versionado. La rotación en la consola de Google Cloud es
+       acción del operador y no puede verificarse desde el repo; lo que SÍ está
+       medido es que la copia comprometida persiste en el historial. Fix real =
+       rotar la key (operador) + purgar el blob del historial (aprobación explícita).
+     * Vector de emisión re-verificado 2026-09-19: el pipeline ACTUAL no vuelve a
+       escribir la key. El cliente Places (New) envía la credencial por header
+       `X-Goog-Api-Key` (nunca `?key=`/`&key=` en URL), no hay construcción de
+       `photoreference?key=` en `modules/`, y `gbp_auditor._save_cache` redacta
+       patrones `AIzaSy*` con `_redact_secrets_tree` antes de tocar disco. La copia
+       comprometida en `archives/outputs/.../raw_data/analisis_completo.json` (2026-02-25)
+       es anterior a esa redacción y **está gitignored** (no es superficie de repo).
+     * Gemini (AIzaSyDqMau…JB8): la key COMPLETA aparece **solo** en el log local
+       gitignored `evidence/FASE-P4/corrida/corrida.log` (1 ocurrencia); en este
+       inventario queda únicamente el prefijo de 8 caracteres en prosa. Nunca fue
+       pública ni está versionada; rotación NO CONFIRMADA (riesgo local, no de repo).
      * OpenRouter / Perplexity: sin exposición pública medida en repo o
        remoto; la contención técnica AC-S1 impide fuga futura vía logs.
        Rotación preventiva = decisión opcional del operador.
