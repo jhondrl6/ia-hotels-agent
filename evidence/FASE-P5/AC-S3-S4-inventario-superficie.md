@@ -108,6 +108,27 @@ AC-S4: PUERTA OPERATIVA
      * OpenRouter / Perplexity: sin exposición pública medida en repo o
        remoto; la contención técnica AC-S1 impide fuga futura vía logs.
        Rotación preventiva = decisión opcional del operador.
+   - ✅ CIERRE DE HIGIENE 2026-09-19 (autorización del operador, opción 1):
+     * `archives/gbp_profiles.json` redactado en HEAD: las 8 ocurrencias de la
+       key (todas dentro de `html_sample_end`) sustituidas por
+       `***REMOVED_SECRET***`. El JSON permanece válido. Las keys SINTÉTICAS
+       de fixtures (`AIzaSyFAKE*`, `AIzaSySINT*` en
+       `tests/auditors/test_llm_mention_checker.py` y
+       `evidence/FASE-P5/NR7-AC-S1-red.txt`) se preservan deliberadamente.
+     * Naturaleza re-medida: la key comprometida es el key estático que Google
+       incrusta en su propio markup de `maps.google.com` (URL `staticmap` con
+       `signature` ligada a los parámetros), capturada vía scraping — no es
+       credencial del operador ni coincide con ninguna key de `.env` viva
+       (`AIzaSyC8…ARss`, `AIzaSyCF…nP_Y`). Urgencia de contención: nula.
+     * Riesgo residual ACEPTADO: el blob persiste en el historial (`c7aab68`
+       v4.40.0 y tags v4.60.0/4.63.2/4.64.0/4.65.0/4.68.0/4.76.0/4.77.0).
+       Se descarta la purga con `git filter-repo` + force-push por coste/
+       beneficio: reescribiría todos los SHA del master compartido y, aun así,
+       GitHub retendría los objetos viejos por SHA directo hasta una purga de
+       soporte. Condición de escalada: si un escaneo futuro identifica una key
+       REAL VIGENTE en historia, entonces sí se ejecuta la purga completa
+       (bundle de seguridad: C:\Users\Jhond\iah-cli-PRE-SECRET-PURGE.bundle,
+       pendiente de regenerar porque está anclado en 6765576).
    - Contención de datos: no se ha ejecutado
      * No se ha hecho escaneo en nube
      * No se ha hecho rotación automática
