@@ -27,6 +27,9 @@ class ProviderConfig:
     timeout_seconds: int = 15
     credentials_file: Optional[str] = None
     default_model: Optional[str] = None
+    # Precios por 1M de tokens (USD). 0.0 = sin dato => coste no se deriva.
+    price_per_1m_input: float = 0.0
+    price_per_1m_output: float = 0.0
 
 
 class ProviderRegistry:
@@ -63,6 +66,8 @@ class ProviderRegistry:
                 timeout_seconds=pdata.get("timeout_seconds", 15),
                 credentials_file=pdata.get("credentials_file"),
                 default_model=pdata.get("default_model"),
+                price_per_1m_input=pdata.get("price_per_1m_input", 0.0),
+                price_per_1m_output=pdata.get("price_per_1m_output", 0.0),
             )
         self._loaded = True
 

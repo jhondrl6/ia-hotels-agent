@@ -622,3 +622,108 @@ class TestGeminiModelFromRegistry:
                     logged = " ".join(str(c) for c in mock_logger.warning.call_args_list)
                     assert synthetic_key not in logged
 
+
+# ═══════════════════════════════════════════════════════════════════════
+# Tarea 4: contabilidad de coste de Gemini (ya no cost_usd=0.0 hardcodeado)
+# ═══════════════════════════════════════════════════════════════════════
+
+def _gemini_ok_usage(prompt=0, candidates=0, thoughts=0, total=None,
+                     text="Hotel Visperas es una buena opcion."):
+    """Mock con el desglose usageMetadata real de Gemini (no solo totalTokenCount)."""
+    usage = {
+        "promptTokenCount": prompt,
+        "candidatesTokenCount": candidates,
+        "thoughtsTokenCount": thoughts,
+        "totalTokenCount": total if total is not None else prompt + candidates + thoughts,
+    }
+    response = Mock()
+    response.json.return_value = {
+        "candidates": [{"content": {"parts": [{"text": text}]}}],
+        "usageMetadata": usage,
+    }
+    response.raise_for_status = MagicMock()
+    return response
+
+
+class TestGeminiCostAccounting:
+    """Con billing activo cada query quema saldo real: cost_usd debe derivarse del usage."""
+
+    def test_gemini_declara_precios_en_yaml(self):
+        """provider_registry.yaml declara precios por 1M tokens para gemini."""
+        import yaml
+        from pathlib import Path
+
+        config_path = Path(__file__).resolve().parent.parent.parent / "config" / "provider_registry.yaml"
+        with open(config_path, "r", encoding="utf-8") as f:
+            raw = yaml.safe_load(f)
+        gemini = raw["providers"]["gemini"]
+        assert gemini.get("price_per_1m_input", 0) > 0
+        assert gemini.get("price_per_1m_output", 0) > 0
+
+    def test_cost_se_deriva_del_desglose_no_del_total(self):
+        """totalTokenCount NO basta: el coste usa prompt/candidates por separado."""
+        ProviderRegistry.reset()
+        mock_cfg = ProviderConfig(
+            id="gemini", type="llm", description="Test", auth_type="api_key",
+            default_model="test-gemini", env_vars=["GEMINI_API_KEY"],
+            price_per_1m_input=0.30, price_per_1m_output=2.50,
+        )
+        with patch.object(ProviderRegistry, 'load', return_value=None):
+            with patch.object(ProviderRegistry, 'get', return_value=mock_cfg):
+                with patch('requests.post') as mock_post:
+                    # prompt=1000 @0.30 + (candidates=500 + thoughts=200) @2.50
+                    mock_post.return_value = _gemini_ok_usage(prompt=1000, candidates=500, thoughts=200)
+                    checker = LLMMentionChecker(gemini_key="test-key")
+                    result = checker._query_gemini("q")
+        expected = (1000 * 0.30 + (500 + 200) * 2.50) / 1_000_000
+        assert result["cost_usd"] == pytest.approx(expected)
+        assert result["cost_usd"] > 0, "el coste debe ser no-cero con uso real"
+
+    def test_thinking_tokens_se_coban_a_tarifa_de_salida(self):
+        """Los modelos de razonamiento cobran thoughtsTokenCount a precio de salida."""
+        ProviderRegistry.reset()
+        mock_cfg = ProviderConfig(
+            id="gemini", type="llm", description="Test", auth_type="api_key",
+            default_model="test-gemini", env_vars=["GEMINI_API_KEY"],
+            price_per_1m_input=0.30, price_per_1m_output=2.50,
+        )
+        base = None
+        with_costs = None
+        for thoughts in (0, 1000):
+            with patch.object(ProviderRegistry, 'load', return_value=None):
+                with patch.object(ProviderRegistry, 'get', return_value=mock_cfg):
+                    with patch('requests.post') as mock_post:
+                        mock_post.return_value = _gemini_ok_usage(prompt=100, candidates=100, thoughts=thoughts)
+                        checker = LLMMentionChecker(gemini_key="test-key")
+                        r = checker._query_gemini("q")
+            if thoughts == 0:
+                base = r["cost_usd"]
+            else:
+                with_costs = r["cost_usd"]
+        # 1000 thinking tokens @2.50/1M = 0.0025 de delta
+        assert with_costs - base == pytest.approx(1000 * 2.50 / 1_000_000)
+
+    def test_cost_cero_si_registry_no_declara_precios(self):
+        """Sin precios declarados se degrada a 0.0, pero tokens_used se registra."""
+        ProviderRegistry.reset()
+        mock_cfg = ProviderConfig(
+            id="gemini", type="llm", description="Test", auth_type="api_key",
+            default_model="test-gemini", env_vars=["GEMINI_API_KEY"],
+        )
+        with patch.object(ProviderRegistry, 'load', return_value=None):
+            with patch.object(ProviderRegistry, 'get', return_value=mock_cfg):
+                with patch('requests.post') as mock_post:
+                    mock_post.return_value = _gemini_ok_usage(prompt=1000, candidates=500, thoughts=0)
+                    checker = LLMMentionChecker(gemini_key="test-key")
+                    result = checker._query_gemini("q")
+        assert result["cost_usd"] == 0.0
+        assert result["tokens_used"] == 1500
+
+    def test_cost_no_hardcoded_en_gemini(self):
+        """Regresion: 'cost_usd": 0.0' fijo ya no es el valor devuelto incondicionalmente."""
+        import inspect
+        source = inspect.getsource(LLMMentionChecker._query_gemini)
+        assert "price_per_1m_input" in source or "input_price" in source, (
+            "el coste de Gemini debe derivarse de precios del registry, no hardcodear 0.0"
+        )
+

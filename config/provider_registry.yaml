@@ -123,5 +123,11 @@ providers:
     default_model: gemini-flash-latest
     enabled: true
     cost_per_call: 0.00
+    # Precios por 1M tokens (USD) para derivar cost_usd del usageMetadata.
+    # Mantener en sincronia con la tarifa vigente de Google para gemini-flash-latest
+    # (a 2026-09-19 los valores reflejan Gemini 2.5 Flash). Google cobra los thinking
+    # tokens a la tarifa de salida, por eso thoughtsTokenCount usa price_per_1m_output.
+    price_per_1m_input: 0.30
+    price_per_1m_output: 2.50
     retry_count: 2
     timeout_seconds: 30

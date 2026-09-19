@@ -1,5 +1,39 @@
 # Changelog
 
+## [4.77.2] - Contabilidad de coste del checker LLM (Gemini) — 2026-09-19
+
+### Objetivo
+
+`_query_gemini` devolvía `cost_usd=0.0` hardcodeado con el comentario "Gemini free tier: no cost". Con el billing del proyecto de Google recargado (condición de la sesión 2026-09-18), cada query **quema saldo real** que la contabilidad no registraba: `LLMReport.cost_usd` salía `None` para Gemini y el costo por corrida quedaba subdeclarado. El fix deriva el coste del desglose `usageMetadata` de la respuesta, con precios por 1M tokens declarados en el registry — el mismo patrón de externalización que ya se usó para el modelo en 4.77.1. Cierra el primer "límite declarado" que 4.77.1 dejó por escrito.
+
+### Cambios Implementados
+
+- **`cost_usd` derivado de `usageMetadata`**, no de `totalTokenCount`: se leen `promptTokenCount` (entrada), `candidatesTokenCount` (salida) y `thoughtsTokenCount` (razonamiento). Usar el total no basta porque entrada y salida tienen precios distintos y los modelos de razonamiento cobran los thinking tokens.
+- **Los thinking tokens se cobran a tarifa de salida**: `cost = (prompt·precio_entrada + (candidates + thoughts)·precio_salida) / 1_000_000`. Es el modelo de facturación de Google para Gemini.
+- **Precios por 1M en el registry**: `ProviderConfig` gana `price_per_1m_input` / `price_per_1m_output`, cargados desde `config/provider_registry.yaml`. El bloque `gemini` declara `0.30` / `2.50` USD por 1M (tarifa Gemini 2.5 Flash a 2026-09-19), con comentario de que deben mantenerse en sincronía con la tarifa vigente de Google.
+- **Degradación honesta**: si el provider no declara precios, el coste cae a `0.0` pero `tokens_used` se registra igual — el 0 queda *derivado de precios ausentes*, no hardcodeado incondicionalmente.
+- **OpenRouter se deja en `cost=0.0`**: sus modelos configurados son `:free`, así que 0 es el valor correcto, no un silencio. La infraestructura de precios queda lista para modelos de pago.
+
+### Archivos Nuevos
+
+Sin archivos nuevos.
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/auditors/llm_mention_checker.py` | `_query_gemini` deriva `cost_usd` del desglose `usageMetadata`; lee precios del registry |
+| `modules/utils/provider_registry.py` | `ProviderConfig.price_per_1m_input/output` + carga desde YAML |
+| `config/provider_registry.yaml` | Bloque `gemini` con `price_per_1m_input: 0.30` / `price_per_1m_output: 2.50` |
+| `tests/auditors/test_llm_mention_checker.py` | Clase `TestGeminiCostAccounting` (+5 funciones) |
+
+### Tests
+
+- Canónico (método grep): **4,240 → 4,245 funciones** (+5).
+- `TestGeminiCostAccounting`: precios declarados en YAML, el coste se deriva del desglose (no del total), thinking a tarifa de salida, `cost=0.0` graceful sin precios, y anti-regresión por `inspect.getsource` contra el hardcodeo.
+- `pytest tests/auditors tests/quality_gates tests/config`: **910 passed, 12 skipped**.
+- TDD rojo-primero: 4 de los 5 tests fallaban antes de la implementación (el de degradación a 0 ya pasaba como guard de regresión).
+
 ## [4.77.1] - Modelo de Gemini parametrizado en el registry — 2026-09-19
 
 ### Objetivo

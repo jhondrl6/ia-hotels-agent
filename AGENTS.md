@@ -1,8 +1,8 @@
-<!-- agents_version: v4.77.1 | last_update: 2026-09-19 -->
+<!-- agents_version: v4.77.2 | last_update: 2026-09-19 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.77.1 -- Modelo de Gemini parametrizado en el registry COMPLETADO**
+> **v4.77.2 -- Contabilidad de coste del checker LLM (Gemini) COMPLETADO**
 
 ---
 
@@ -113,7 +113,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 4,240 funciones (canonico, metodo grep) / corrida completa POST-P6-R: 4,196 passed, 2 fallos ajenos al plan (`test_function_default_flags` flaky, `test_diagnostic_includes_geo_metrics`, registrados en `aba517a`) → 0 regresiones. **D-V.1 cerrada en FASE-P3-B**: `test_barreda_un_solo_emisor_de_la_clave` ya no falla |
+| **Tests** | 4,245 funciones (canonico, metodo grep) / corrida completa POST-P6-R: 4,196 passed, 2 fallos ajenos al plan (`test_function_default_flags` flaky, `test_diagnostic_includes_geo_metrics`, registrados en `aba517a`) → 0 regresiones. **D-V.1 cerrada en FASE-P3-B**: `test_barreda_un_solo_emisor_de_la_clave` ya no falla |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -399,7 +399,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (4,240 funciones canonicas)
+# Todas las pruebas (4,245 funciones canonicas)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -414,13 +414,14 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,240 funciones totales)
+### Cobertura por Modulo (4,245 funciones totales)
 
-> Medido 2026-09-19 (v4.77.1) con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
+> Medido 2026-09-19 (v4.77.2) con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
 > (no `pytest --collect-only`; la corrida completa de referencia es la POST-P6-R de `evidence/FASE-P6/`:
 > 4,196 passed, 2 fallos ajenos, 41 skipped, 4 xfailed). Las filas suman el total.
-> Cifra anterior: 4,233 (v4.77.0). La diferencia (+7) son los tests de `TestGeminiModelFromRegistry`
-> en `tests/auditors/test_llm_mention_checker.py`.
+> Cifra anterior: 4,240 (v4.77.1). La diferencia (+5) son los tests de `TestGeminiCostAccounting`
+> en `tests/auditors/test_llm_mention_checker.py`. Previa: 4,233 (v4.77.0), +7 por
+> `TestGeminiModelFromRegistry`.
 > Previa: 4,063 (v4.76.0). La diferencia (+170) corresponde a los tests del plan
 > TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (P3-A +21, P3-B +17, P2 +28, P5 +21, P6 +20, P6-R +7 funciones
 > propias) y a entradas ajenas al plan medidas en el intervalo.
@@ -431,7 +432,7 @@ python scripts/run_all_validations.py           # Completo
 | asset_generation | 470 | `tests/asset_generation/` |
 | quality_gates | 630 | `tests/quality_gates/` (incl. `tribunal/` con los tests del enforcement P2/P3 y la matriz P6-R) |
 | commercial_documents | 351 | `tests/commercial_documents/` |
-| auditors | 220 | `tests/auditors/` (incl. +11 de AC-S1 en P5, +7 de TestGeminiModelFromRegistry en v4.77.1) |
+| auditors | 225 | `tests/auditors/` (incl. +11 de AC-S1 en P5, +7 de TestGeminiModelFromRegistry en v4.77.1, +5 de TestGeminiCostAccounting en v4.77.2) |
 | geo_enrichment | 140 | `tests/geo_enrichment/` |
 | data_validation | 133 | `tests/data_validation/` |
 | test_never_block_architecture | 122 | `tests/test_never_block_architecture/` |
@@ -524,7 +525,7 @@ iah-cli/
 │   ├── common/                 # Loaders YAML/fallback compartidos
 │   ├── postprocessors/         # Quality gate + scrubber de contenido
 │   └── quality/                # Validadores semanticos y de coherencia financiera
-├── tests/                      # Suite de pruebas (4,240 funciones canonicas)
+├── tests/                      # Suite de pruebas (4,245 funciones canonicas)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/

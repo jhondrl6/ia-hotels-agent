@@ -376,6 +376,10 @@ class LLMMentionChecker:
             m for m in self._GEMINI_FALLBACK_MODELS if m != primary_model
         ]
 
+        # Precios por 1M tokens del registry; 0.0 si no estan declarados => coste no derivable.
+        input_price = gemini_cfg.price_per_1m_input if gemini_cfg else 0.0
+        output_price = gemini_cfg.price_per_1m_output if gemini_cfg else 0.0
+
         headers = {"x-goog-api-key": self._gemini_key}
         last_error = None
         for model in models_to_try:
@@ -393,9 +397,20 @@ class LLMMentionChecker:
                 response.raise_for_status()
                 data = response.json()
                 text = data["candidates"][0]["content"]["parts"][0]["text"]
-                # Gemini free tier: no cost
+                # Coste derivado del desglose usageMetadata (billing activo quema saldo real).
+                # totalTokenCount NO basta: hace falta el desglose para precios input/output.
                 usage = data.get("usageMetadata", {})
-                total_tokens = usage.get("totalTokenCount", 0)
+                prompt_tokens = usage.get("promptTokenCount", 0) or 0
+                candidates_tokens = usage.get("candidatesTokenCount", 0) or 0
+                thoughts_tokens = usage.get("thoughtsTokenCount", 0) or 0
+                total_tokens = usage.get("totalTokenCount") or (
+                    prompt_tokens + candidates_tokens + thoughts_tokens
+                )
+                # Google cobra los thinking tokens a tarifa de salida.
+                cost_usd = (
+                    prompt_tokens * input_price
+                    + (candidates_tokens + thoughts_tokens) * output_price
+                ) / 1_000_000
 
                 if model != primary_model:
                     logger.info(
@@ -403,7 +418,7 @@ class LLMMentionChecker:
                         f"(primario '{primary_model}' no disponible)"
                     )
 
-                return {"text": text, "cost_usd": 0.0, "tokens_used": total_tokens}
+                return {"text": text, "cost_usd": cost_usd, "tokens_used": total_tokens}
 
             except requests.HTTPError as e:
                 status = e.response.status_code if hasattr(e, 'response') else None
