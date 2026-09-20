@@ -81,7 +81,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-ENT.12` | El verde del verificador no probaba su propia cobertura: el hueco estaba en su resolutor de tipos, y lo delató una cuenta que el verificador exige de sí mismo. La primera versión escaneaba solo… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 4 en VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-ENT.13` | Un registro de excepciones sin regla de caducidad es un allowlist con mejor prosa. AC7 exige «excepciones tipadas y justificadas», y G las necesitaba: tres hallazgos reales siguen abiertos con dueño… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 3 (solo el plan dueño) |
 | `L-ENT.14` | Una prueba de NO-existencia recortada por un head no prueba nada: afirmó en cuatro documentos commiteados que el verificador de write-back no existía. Esta sesión midió grep -rln… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 4 en VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
-| `L-ENT.15` | Para medir el estado anterior no se usa git stash sobre trabajo sin commitear: existían git grep <rev> y git archive. La sesión midió el conteo canónico de HEAD con git stash push --include-untracked… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 3 (solo el plan dueño) |
+| `L-ENT.15` | Para medir el estado anterior no se usa git stash sobre trabajo sin commitear: existían git grep <rev> y git archive. La sesión midió el conteo canónico de HEAD con git stash push --include-untracked… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 4 (solo el plan dueño) |
 | `L-F1` | Un fixture en forma tolerada pero no canónica probaba un defecto que producción no puede producir *(FASE-F)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 3 (solo el plan dueño) |
 | `L-F2` | Score continuo y veredicto binario son dos representaciones del mismo hecho *(FASE-F)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 4 (solo el plan dueño) |
 | `L-F3` | La re-evaluación de artefactos persistidos debe reproducir la lectura del consumidor de producción *(FASE-F)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 4 (solo el plan dueño) |
@@ -389,28 +389,28 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-B12` | 12 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B15` | 12 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `L-P2.4` | 11 | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
+| `S-B1` | 7 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-B8` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B13` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B14` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `DA-T4B.1` | 5 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |
 | `S-12` | 5 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/DT-4-ROOT-CAUSE-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-13` | 5 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/DT-4-ROOT-CAUSE-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
-| `S-B1` | 5 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-B6` | 5 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `D-1` | 4 | Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24 |
 | `S-14` | 4 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
-| `D-E` | 3 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `S-B2` | 4 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-QW.1` | 3 | VERIFICADOR-ESCRITURA-QMIND-2026-09-20, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-QW.4` | 3 | VERIFICADOR-ESCRITURA-QMIND-2026-09-20, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `S-B2` | 3 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `S-B3` | 3 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B4` | 3 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `D-2` | 2 | Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24 |
 | `D-3` | 2 | Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24 |
+| `D-E` | 2 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `DA-T4B.3` | 2 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |
 | `L-P4` | 2 | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-PF` | 2 | Archives/SR-PIPELINE-FIXES-2026-08-27, context/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29 |
 | `L-VUP-n` | 2 | Archives/VALIDADOR-URL-PROPIA-2026-08-30, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `S-B3` | 2 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-B5` | 2 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B9` | 2 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-I1..S-I8` | 2 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |

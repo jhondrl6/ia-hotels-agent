@@ -807,11 +807,23 @@ class TestPublicationGatesOrchestrator:
                 "adr_cop": 450000.0,
             },
             # FASE-0C: Provide coverage data so coverage gate does NOT block
+            # FASE-B (A4, 2026-09-20): el pain del fixture pasa de
+            # `no_whatsapp_visible` a `whatsapp_conflict`. NO es un afeitado: este
+            # test prueba que `get_blocking_gates` devuelve SOLO los gates fallidos,
+            # y su tercer bloqueante (`proposal_asset_alignment`) se obtenia porque
+            # `no_whatsapp_visible` prometia `whatsapp_button`, un servicio CONTADO.
+            # Tras AC2 ese dolor promete `whatsapp_setup_guide`, un servicio
+            # condicional que el gate no cuenta (deuda AC5, dueno C-D: ver
+            # `test_deuda_ac5_...` abajo, que caracteriza el hoy). El dolor de
+            # WhatsApp que sigue prometiendo un servicio contado es
+            # `whatsapp_conflict` -> `boton_whatsapp`: mismo dominio, misma barra,
+            # y el gate vuelve a bloquear de verdad (medido: actionable_total=1,
+            # coverage_ratio=0.0, status=BLOCKED).
             "pain_ledger": [
-                {"pain_id": "no_whatsapp_visible", "status": "DETECTED"},
+                {"pain_id": "whatsapp_conflict", "status": "DETECTED"},
                 {"pain_id": "low_gbp_score", "status": "DETECTED"},
             ],
-            "diagnostic_pain_ids": ["no_whatsapp_visible"],
+            "diagnostic_pain_ids": ["whatsapp_conflict"],
             "proposal_pain_ids": ["low_gbp_score"],
             # FASE-3 FIX-10: Set tier to B so tier_c_onboarding does NOT block
             "financial_evidence_tier": "B",
@@ -828,10 +840,73 @@ class TestPublicationGatesOrchestrator:
         blocking_names = {r.gate_name for r in blocking}
         assert "evidence_coverage" in blocking_names
         assert "critical_recall" in blocking_names
+        assert "proposal_asset_alignment" in blocking_names
         assert "coherence" not in blocking_names
         assert "hard_contradictions" not in blocking_names
         assert "coverage" not in blocking_names  # coverage passes with data
         assert "tier_c_onboarding_required" not in blocking_names  # tier B passes
+
+    def test_deuda_ac5_ledger_solo_condicional_pasa_trivial(self, orchestrator):
+        """CARACTERIZA un punto ciego del gate; NO lo aprueba (A4, FASE-B 2026-09-20).
+
+        Medido: con un ledger que compromete SOLO un servicio condicional
+        (`no_whatsapp_visible` -> `guia_configuracion_whatsapp`,
+        `counts_in_alignment=False`), `proposal_asset_alignment` toma el pase
+        trivial y reporta `actionable_total = 0` con `coverage_ratio = 1.0` y el
+        mensaje "0 servicios comprometidos — nada prometido". Eso es falso en el
+        dominio del negocio: hay una brecha mapeada y un entregable prometido. El
+        gate no verifica que la guía se haya generado ni entregado, así que hoy
+        una corrida que promete la guía y no la produce puede publicarse.
+
+        Por qué sigue así en FASE-B: gobernarlo exige cambiar qué cuenta el gate
+        (superficie AC5, dueño C-D según maestro §4 y la matriz de fases). Las dos
+        variantes medidas en B se descartaron por su costo: contar la guía
+        (`counts_in_alignment=True`) dejó 15 rojos porque el gate la exigió en
+        toda corrida, y ampliar el universo de la matriz dejó 13 rojos incluido el
+        anti-A5 `test_particion_identica`. B deja el hecho assertionado para que
+        la deuda no dependa de que alguien lea el plan.
+
+        Si AC5 la goberna, ESTE test debe ponerse rojo y actualizarse a
+        `passed is False` / `status BLOCKED`: asertar lo contrario sería borrar la
+        evidencia del hoy.
+        """
+        assessment = {
+            "coherence_score": 0.85,
+            "evidence_coverage": 0.96,
+            "hard_contradictions": 0,
+            "critical_recall": 0.95,
+            "financial_data": {
+                "occupancy_rate": 75.0,
+                "direct_channel_percentage": 30.0,
+                "adr_cop": 450000.0,
+            },
+            "pain_ledger": [
+                {"pain_id": "no_whatsapp_visible", "status": "DETECTED"},
+            ],
+            "diagnostic_pain_ids": ["no_whatsapp_visible"],
+            "proposal_pain_ids": [],
+            "financial_evidence_tier": "B",
+        }
+
+        results = orchestrator.run_all(assessment)
+        alignment = [
+            r for r in results if r.gate_name == "proposal_asset_alignment"
+        ][0]
+
+        # El hoy medido: pase trivial pese a haber un dolor con servicio prometido.
+        assert alignment.passed is True
+        assert alignment.status == GateStatus.PASSED
+        details = alignment.details["alignment"]
+        assert details["actionable_total"] == 0
+        assert details["coverage_ratio"] == 1.0
+        # Y el dolor sigue visible en el ledger: no se pierde, no se finge resuelto.
+        assert any(
+            r.gate_name == "coverage_no_silent_drop" for r in results
+        )
+        # Nunca-bloqueo: este gate no puede aparecer entre los bloqueantes asi.
+        assert "proposal_asset_alignment" not in {
+            r.gate_name for r in orchestrator.get_blocking_gates(results)
+        }
 
     def test_multiple_gates_block(self, orchestrator):
         """

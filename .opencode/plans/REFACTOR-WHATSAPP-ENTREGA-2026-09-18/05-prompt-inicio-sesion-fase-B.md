@@ -1,21 +1,28 @@
 # FASE-B — Promesas realizables y pains coherentes
 
-**Estado:** INCOMPLETA (2026-09-20). **Dependencias:** FASE-0 cerrada con AC20 verde — ya no A directamente: la cadena es A → G → 0 → B — y matriz ratificada por A. **Complejidad técnica:** ALTA: mapper, catálogo, generador, identidad comercial y ledger son consumidores distintos. **Modo:** DIRECTO, no delegate_task para decidir o implementar esta política. **R3:** 4 tareas, 0 comandos largos externos.
+**Estado:** CERRADA CON DEUDA REGISTRADA (2026-09-20) — la deuda es AC5 y su dueño es **C-D**, no B. **Dependencias:** FASE-0 cerrada con AC20 verde — ya no A directamente: la cadena es A → G → 0 → B — y matriz ratificada por A. **Complejidad técnica:** ALTA: mapper, catálogo, generador, identidad comercial y ledger son consumidores distintos. **Modo:** DIRECTO, no delegate_task para decidir o implementar esta política. **R3:** 4 tareas, 0 comandos largos externos.
 
 > **Checkpoint de la sesión del 2026-09-20 (no borrar al reanudar).** T1, T2 y T3 están
 > ejecutados y medidos en `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-B/`
-> (`resultados-y-observaciones.md`, `tests_baseline_pre/post.txt`,
+> (`resultados-y-observaciones.md`, `A4-decision.md`, `tests_baseline_pre/post.txt`,
 > `run_mutations.py` + `mutation_report.json` 8/8 (M1–M8), `CHECKPOINT-autorizaciones-pendientes.md`).
 > AC1 quedó cerrado y verificado por el guard de cableado (21 conformes, 0 omisiones,
 > excepciones retiradas). AC2 y AC19a-consumo están implementados. **A1 fue autorizado
 > y ejecutado dentro de la misma sesión**: `proposal_asset_alignment.py` separa ahora la
 > tabla de resolución del universo contado del gate, sin mover el denominador, y con eso
-> cerraron los 7 rojos de matriz (POST-C 83 passed; canónicas 4.285 → 4.299). **Queda
-> un rojo con dueño:** `test_publication_gates.py::test_get_blocking_issues` (espera 3
-> gates bloqueantes, ve 2) porque el gate toma el "PASS trivial" cuando el único servicio
-> comprometido es condicional — decisión A4 del checkpoint, superficie AC5 de D/E, no se
-> tocó el gate. **No se ejecutó el commit** (A2/A3 pendientes). Contador v4complete 0/1.
-> El árbol quedó con los cambios de B sin commitear.
+> cerraron los 7 rojos de matriz (POST-C 83 passed; canónicas 4.285 → 4.299). **A4 quedó
+> decidido con la opción O5** (`A4-decision.md`): el fixture de
+> `test_get_blocking_issues` se re-ancló a `whatsapp_conflict` —el dolor de WhatsApp que
+> sigue prometiendo un servicio contado— y se reforzó con
+> `assert "proposal_asset_alignment" in blocking_names`; el punto ciego del gate
+> (`counts_in_alignment=False` → "PASS trivial") queda assertionado en
+> `test_deuda_ac5_ledger_solo_condicional_pasa_trivial`, que debe ponerse rojo cuando AC5
+> lo gobierne. El gate no se tocó. Superficie **AC5, dueño C-D** (maestro §4 y filas C y D
+> de la matriz; el "D/E" escrito antes en este archivo era un error de registro). **A2
+> ejecutado con autorización del operador: commit `473ed0f`** (42 archivos, +1.907/−266,
+> 7/7 checks del pre-commit sin saltar ninguno); **A3 (push) sigue pendiente de
+> autorización**. Contador v4complete 0/1.
+
 
 ## Contexto
 

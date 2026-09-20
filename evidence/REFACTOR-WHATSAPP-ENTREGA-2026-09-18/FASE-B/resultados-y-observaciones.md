@@ -1,8 +1,11 @@
 # FASE-B — resultados y observaciones medidas (2026-09-20)
 
-**Estado de la fase: INCOMPLETA.** El producto de AC1 y AC2 está implementado y medido;
-el cierre queda detenido por un bloqueo de alcance medido (§Bloqueo) y por falta de
-autorización de commit. Contador v4complete: **0/1** (no se ejecutó ninguna corrida).
+**Estado de la fase: CERRADA CON DEUDA REGISTRADA (AC5 → dueño C-D).** El producto de AC1 y
+AC2 está implementado y medido; el cierre se había detenido por un bloqueo de alcance medido
+(§Bloqueo) y por falta de autorización de commit, y **ambos se resolvieron en la misma
+sesión**: A1 autorizado y ejecutado (§3 y §7), A4 decidido con O5 (§7), commit
+`473ed0f` con autorización literal. Solo queda pendiente el push (A3). Contador v4complete:
+**0/1** (no se ejecutó ninguna corrida).
 
 HEAD de partida: `cf3ddc2` (árbol limpio, paridad 0/0 con `origin/master`). Código de
 FASE-0 (`7c6e75f`) y de FASE-G (`66e17bd`) ya estaban en `master`, como declaraba el
@@ -48,7 +51,7 @@ guard exige las tres, no una); M3 reintroducir `can_generate=True` para conflict
 la guía emita un número (pytest 1); M6 dejar una excepción tipada sin hallazgo (pytest
 1, wiring 1 por `EXCEPCION_VAGA`). **M7** contar el servicio condicional dentro del universo contado del gate (pytest 1); **M8** hacer que la tabla de resolucion vuelva a ser copia del universo contado (pytest 1).
 
-## 3. Bloqueo de alcance (por lo que la fase no se cierra)
+## 3. Bloqueo de alcance (medido en la fase; resuelto dentro de la misma sesión con A1 y A4)
 
 `modules/asset_generation/proposal_asset_alignment.py` **no está en la allowlist de B**
 y es a la vez (i) el universo de servicios que el gate `proposal_asset_alignment`
@@ -153,7 +156,8 @@ El operador autorizó extender la allowlist de B a `proposal_asset_alignment.py`
   que `ProposalAssetMatrix.build(["Servicio Inexistente", "Botón de WhatsApp"], …)`
   devolviera filas de servicios que nadie pidió y rompió el par anti-A5
   `test_particion_identica` (13 rojos en lugar de 7). Se revirtió; gobernar el universo
-  de la matriz es AC5 de D/E.
+  de la matriz es AC5, cuyo dueño vinculante es **C-D** (maestro §4 y filas C y D de la
+  matriz; donde este archivo decía "D/E" estaba mal atribuido).
 - Los 7 rojos de matriz se cerraron **re-ancorando el dolor de los fixtures**, no la
   aserción: `no_whatsapp_visible` → `whatsapp_conflict` en
   `test_proposal_asset_matrix.py` (3 sitios) y en el fixture compartido de
@@ -169,10 +173,21 @@ espera 3 gates bloqueantes y ve 2. Causa: el assessment del test pone
 `no_whatsapp_visible` en el ledger sin assets entregados; tras AC2 el único servicio
 que responde ese dolor es condicional y no está en el universo contado, así que
 `committed` queda vacío y `_proposal_asset_alignment_gate` toma el
-`PASS trivial (never-block)`. **No se re-ancló ese test**: su propósito —una brecha sin
-asset entregado debe verse como deuda— sigue vigente, y cambiarlo sería debilitar un
-guard del gate desde una fase que no lo posee. Queda como **A4** en
-`CHECKPOINT-autorizaciones-pendientes.md`, con superficie AC5 (D/E).
+`PASS trivial (never-block)`. **Posición inicial (se retracta abajo):** no re-anclar el test
+porque su propósito —una brecha sin asset entregado debe verse como deuda— seguía vigente, y
+cambiarlo podía leerse como debilitar un guard del gate desde una fase que no lo posee.
+
+**Retractación y decisión (A4, misma sesión, O5 en `A4-decision.md`):** al medir el fixture se
+vio que el propósito del test es otro —`get_blocking_gates` devuelve **solo** los gates
+fallidos— y que su tercer bloqueante era incidental: venía de que `no_whatsapp_visible`
+prometía `whatsapp_button`, servicio contado antes de B. Se re-ancló el dolor a
+`whatsapp_conflict` (sigue prometiendo `boton_whatsapp`: `actionable_total=1`,
+`coverage_ratio=0.0`, `BLOCKED`), se **reforzó** la aserción con
+`assert "proposal_asset_alignment" in blocking_names`, y la denuncia del punto ciego no se
+perdió: vive en `test_deuda_ac5_ledger_solo_condicional_pasa_trivial`, que aserta el pase
+trivial de hoy y **debe ponerse rojo cuando AC5 lo gobierne**. El gate no se tocó. Superficie
+**AC5, dueño C-D** (el "D/E" escrito aquí era un error de registro: E no posee AC5; maestro §4
+y filas C y D de la matriz).
 
 **Cierre ejecutado tras A1:** CHANGELOG (subsección FASE-B bajo 4.77.3), nota técnica en
 `docs/GUIA_TECNICA.md`, aplicación efectiva de lecciones en `00`, estados en `05`/`06`/

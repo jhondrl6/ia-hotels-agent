@@ -91,6 +91,7 @@ Al cierre de cada fase registrar al menos tres observaciones sustentadas: **qué
 
 | L-ENT.14 | **Una prueba de NO-existencia recortada por un `head` no prueba nada: afirmó en cuatro documentos commiteados que el verificador de write-back no existía.** Esta sesión midió `grep -rln "validate_qmind_writeback" . \| head -20`, el corte se comió el único archivo que la refutaba porque `scripts/` ordena después de `.agents/` y `.opencode/`, y la conclusión («saltárselo es silencioso», «no está en `run_all_validations.py`») entró al prompt de RELEASE, a 09, a 10, a dependencias y al registro de evidencia. Y el corpus ya la desmentía por otro eje: `Archives/TRIBUNAL-OFFLINE-2026-09-09/10-analisis-post-implementacion.md`, en su checklist de cierre de FASE-RELEASE, documenta el 2026-09-11 que el script «no tiene vía de actualización» y que `is_ingested` corta por título ⇒ `SKIP`. / Por qué: un corte de salida protege el contexto pero se lee idéntico a una ausencia, y una proposición universal negativa exige el conteo completo, no el primer pantallazo. / Qué lo previene: dos reglas — (1) en toda afirmación de ausencia, correr la búsqueda **sin corte** y publicar el conteo total junto al listado; (2) antes de escribir «no existe verificador», buscar el verificador por el artefacto que gobernaría, no por la cadena exacta que uno espera. | `run_all_validations.py` — método `run()`, rama `if not self.quick:`, y `_check_qmind_writeback()`, que lo lanza sin `--strict`; `grep -rln "validate_qmind_writeback" scripts/` → 2 archivos; retractación aplicada el 2026-09-20 en los cinco documentos citados | Proceso de medición propio; nace el mini-plan `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` | INCLUIR |
 | L-ENT.15 | **Para medir el estado anterior no se usa `git stash` sobre trabajo sin commitear: existían `git grep <rev>` y `git archive`.** La sesión midió el conteo canónico de HEAD con `git stash push --include-untracked` y eso ponía el trabajo de la fase —cinco archivos modificados, sin commit— a merced de un pop fallido o de un hook. Se revirtió en la misma sesión con `git stash pop` y verificación símbolo a símbolo, y la medición se rehízo sin tocar el árbol: `git grep -h -E "^[[:space:]]*def test_" HEAD -- tests` (4.264) y `git archive HEAD` extraído en un temporal para ejecutar la suite nueva contra el código sin el fix. / Por qué: el `stash` es una operación sobre el estado del usuario, no una lectura; la pregunta «¿qué decía HEAD?» nunca necesitó modificarlo. / Qué lo previene: regla de instrumento — medir revisiones con comandos de revisión (`git grep <rev>`, `git show`, `git archive`), y reservar las destructivas para cuando exista instrucción expresa | Registro de la propia sesión y `tests_baseline_pre.txt` (bloque PRE-c); restauración verificada con `git status --porcelain` y los símbolos de la fase presentes | Proceso de medición propia; la fase ya usó copia temporal (`tempfile`) para las mutaciones | INCLUIR |
+| **Confirmación medida, sin ID nuevo:** `L-ENT.15` se volvió a cumplir en la decisión A4, con un **tercer instrumento** de la misma familia: el PRE de la selección extendida se midió sobre `473ed0f` en `git worktree add --detach .a4-pre HEAD` (620 casos, 1 failed) mientras el árbol de trabajo conservaba el fix sin commitear; el worktree y su registro se eliminaron después (`git worktree remove`, `git worktree prune`) y `git status --porcelain` quedó con un solo archivo modificado. Ni `stash`, ni copia manual: la pregunta «¿qué marcaba HEAD?» se respondió con comandos de revisión. Sirve además como contrafactual del test re-anclado — con el dolor antiguo el `assert len(blocking) == 3` falla, así que el test no es decorativo | `git worktree list` tras la limpieza (solo el principal); `A4-decision.md` §Contrafactuales | Proceso de medición propia (instrumento: `git worktree --detach` sobre HEAD) | INCLUIR |
 | **Confirmación medida, sin ID nuevo:** `L-V.3` («toda premisa que dependa de que el código hoy hace X cae contra el artefacto real») se cumplió sobre una fila del propio plan: F-A' del maestro §1 describe **una** invocación divergente (`generate_assets` → `detect_pains`) donde el AST midió **tres** (286, 309 y 447, dos sobre `CoherenceValidator.validate`). No se define fila nueva porque la convención ya existe y repetirla no cambia ninguna tarea; lo que cambia es el alcance de FASE-B, registrado en `inventario-callers.md` §1.2 |
 | **Confirmación medida, sin ID nuevo:** `L-V2.3` («antes de cambiar un artefacto, ve a los tests que asertan sobre ese artefacto; si pinan una numeración o una forma, átalos a coherencia interna y no al literal») se cumplió por segunda vez dentro del plan, esta vez **dentro de la propia fase**: `test_reviewer_reports_refleja_los_cuatro_revisores` asertaba `set(entry) == {6 claves}` y cualquier clave nueva del acta la habría puesto rojo por forma, no por contrato. Se re-ató a superconjunto de las seis heredadas + subconjunto declarado + coherencia interna (`len(findings) <= findings_count`). No nace fila propia porque la convención ya existe y repetirla no cambia ninguna tarea |
 
@@ -140,19 +141,36 @@ casos nuevos de AC19a dentro de un archivo de la selección) → POST-B 552 con 
 nueva (12 casos por 11 funciones, una parametrizada en dos). POST-C de la superficie de
 matriz/gate tras A1: **83 passed / 0 failed**. Regresión completa: **4 failed / 4.261
 passed / 41 skipped / 4 xfailed en 244 s**. Funciones canónicas
-`grep -rE "^\s*def test_" tests --include=*.py`: **4.285 → 4.299 (+14)**. Quick **11/11**
+`grep -rE "^\s*def test_" tests --include=*.py`: **4.285 → 4.299 (+14)**, y tras la decisión
+A4 **4.300 (+1)** (el test de caracterización de la deuda AC5). Quick **11/11**
 antes y después. Guard de cableado: 174 llamadas / 614 archivos, gobernadas 75, conformes
-**21**, omisiones **0**, violaciones 0, excepciones amparando 0. Mutantes **6/6** rojos por
-el guard, restauración sha256 8/8 (M1–M8). Diff: 22 archivos, **+543 / −218**. R2 **FUERA DE
-SERVICIO (R2.1)**: auto-reporte ~165 intervenciones, unidad propia, no comparable con el
-instrumento. Contador v4complete **0/1**.
+**21**, omisiones **0**, violaciones 0, excepciones amparando 0. Mutantes **8/8 (M1–M8)**
+rojos por el guard, restauración sha256 8/8. Diff: 22 archivos, **+543 / −218**. R2 **FUERA DE
+SERVICIO (R2.1)**: auto-reporte de la sesión sin instrumento, unidad propia, no comparable
+con el instrumento; los dígitos intermedios que figuraban aquí eran autocuentos a mitad de
+sesión y quedan retirados por no haber medido el instrumento. Contador v4complete **0/1**.
+
+**A4 (2026-09-20), medición propia.** Selección extendida con
+`tests/quality_gates/test_publication_gates.py` añadida a la pertinente: PRE sobre `473ed0f`
+en `git worktree --detach` (árbol intacto) = **1 failed / 619 passed / 1 skipped** en 46,5 s
+(620 casos); POST con el re-anclaje = **0 failed / 621 passed / 1 skipped** en 45,5 s (621
+casos). Regresión completa tras A4: `FASE-B/tests_a4_postfull.txt`.
 
 **Seguimientos abiertos con dueño.**
-- **S-B1 (A4 / AC5, dueño D-E):** `test_publication_gates.py::test_get_blocking_issues`
-  espera 3 gates bloqueantes y ve 2, porque `_proposal_asset_alignment_gate` toma el
+- **S-B1 (A4 / AC5, dueño C-D — DECIDIDO en B el 2026-09-20):** `test_publication_gates.py::test_get_blocking_issues`
+  esperaba 3 gates bloqueantes y veía 2, porque `_proposal_asset_alignment_gate` toma el
   "PASS trivial (never-block)" cuando el único servicio comprometido por el ledger es
-  condicional (`guia_configuracion_whatsapp`, no contado). La gobernanza del universo de
-  la matriz y de su denominador es AC5; no se debilitó el test desde B.
+  condicional (`guia_configuracion_whatsapp`, no contado). A4 se decidió con **O5** en
+  `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-B/A4-decision.md`: el fixture se
+  re-ancla a `whatsapp_conflict` (dolor de WhatsApp que sigue prometiendo un servicio
+  contado: `actionable_total=1`, `coverage_ratio=0.0`, `BLOCKED`) y se refuerza con
+  `assert "proposal_asset_alignment" in blocking_names`; el caso perdido queda
+  assertionado en `test_deuda_ac5_ledger_solo_condicional_pasa_trivial`, que **debe ponerse
+  rojo cuando C/D gobierne la deuda**. Lo que recibe C/D no es un test roto sino la decisión
+  de producto: ¿debe un servicio condicional comprometido bloquear la publicación si su
+  entregable no se genera, y con qué denominador? Dueño vinculante **C-D** (maestro §4 AC5;
+  filas C y D de la matriz) — el "D-E" del checkpoint y del resumen de §06 era un error de
+  registro y quedó corregido.
 - **S-B2 (AC6, dueño C):** `main.py` sigue registrando `can_use_in_assets=True` para el
   centinela `detected_via_html` (fuera de la allowlist de B), y `wa_button_gen` conserva
   el número de placeholder `573001234567` con dos `wa.me/` sin guarda en
