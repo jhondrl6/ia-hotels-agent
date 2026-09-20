@@ -3,6 +3,12 @@ project: "IA Hoteles Agent CLI"
 version: "4.77.3"
 codename: "LLMReport honesto cuando ningún provider responde"
 release_date: "2026-09-19"
+# `date` es el valor que sincroniza scripts/sync_config.yaml en los encabezados
+# versionados (AGENTS.md, .cursorrules, GUIA_TECNICA, REGISTRY). Si falta,
+# scripts/sync_versions.py lo inyecta con datetime.now() y el check de Version Sync
+# caduca a las 00:00 de cada dia: marca FAIL contra encabezados correctos de la release
+# anterior sin que haya cambiado ninguna version. Debe ir igual a release_date.
+date: "2026-09-19"
 plan_maestro_version: "v2.6.0"
 
 # v4.77.0 - TRIBUNAL-ENFORCEMENT-OBS (2026-09-15)
