@@ -1,5 +1,5 @@
 ########################### POST A — seleccion IDENTICA a la del PRE
-# HEAD: d7ff932 (sin commitear)  Entorno: ./venv/Scripts/python.exe Python 3.13.3, pytest 9.0.0
+# HEAD: d7ff932 (sin commitear al medir; la superficie entro en 66e17bd el mismo dia)  Entorno: ./venv/Scripts/python.exe Python 3.13.3, pytest 9.0.0
 # Misma seleccion y mismo entorno que PRE; unicamente el codigo/tests de ESTA fase cambiaron
 ........................................................................ [  5%]
 ........................................................................ [ 10%]

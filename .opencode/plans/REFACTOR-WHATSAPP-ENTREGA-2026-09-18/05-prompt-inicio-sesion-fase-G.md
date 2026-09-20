@@ -1,6 +1,6 @@
 # FASE-G — Verificador de cableado y retiro del contrato muerto
 
-**Estado:** COMPLETADA el 2026-09-20 (cierre documental sin commit autorizado; ver §Post-ejecución). **Dependencia inmediata:** FASE-A completa (matriz ratificada). G es ahora la **segunda sesión** del plan — cadena `A → G → 0 → B → C → D → E → F → H → E2E → VERIFY → RELEASE`—: adelanta porque su verificador es el guard de las ediciones de B–F y, por tanto, corre **antes** de FASE-0, de B y de F; no depende de F ni de su acreditación operativa.
+**Estado:** COMPLETADA el 2026-09-20 y **commiteada y empujada el mismo día** (`66e17bd` → `origin/master`, paridad 0/0; ver §Post-ejecución). **Dependencia inmediata:** FASE-A completa (matriz ratificada). G es ahora la **segunda sesión** del plan — cadena `A → G → 0 → B → C → D → E → F → H → E2E → VERIFY → RELEASE`—: adelanta porque su verificador es el guard de las ediciones de B–F y, por tanto, corre **antes** de FASE-0, de B y de F; no depende de F ni de su acreditación operativa.
 **Complejidad técnica:** ALTA: descubrimiento de población sin lista fija, riesgo de falsos verdes y limpieza de firma cross-module.
 **Scope R3:** 4 tareas, 0 comandos largos externos. Una sesión exclusivamente para G.
 
