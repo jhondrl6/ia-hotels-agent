@@ -2363,12 +2363,13 @@
   "mediciones_de_la_revision_2": [
     {
       "id": "M4-blast-radius",
-      "afirmacion": "52 archivos y 816 funciones canónicas (866 casos collectados), 476 en los 26 archivos con estado hardcodeado, 4 asserts de igualdad exacta de forma",
+      "afirmacion": "52 archivos y 816 funciones canónicas (866 casos collectados), 545 en los 31 archivos que citan las claves de estado entre comillas dobles, 4 asserts de igualdad exacta de forma",
+      "afirmacion_anterior_refutada": "26 archivos / 476 funciones (anotada en la primera pasada de la revision 2 sin criterio reproducible; sustituida el 2026-09-19 por decision del operador). Previa a esa: 50 archivos / 779 / 328 / 2, tomada de un subagente sin re-medir.",
       "commands": [
         "$W='grep -rlE \"whatsapp_button|site_presence_report\" tests --include=*.py | sort'   # -> 52 archivos",
         "$W | xargs grep -hE \"^\\s*def test_\" | wc -l   # -> 816 funciones canonicas",
         "pytest $W --collect-only -q | tail -1   # -> 866 tests collected",
-        "$H=grep -rlE \"whatsapp_button|site_presence_report\" tests --include=*.py | sort | xargs grep -lE \"\"(status|site_verified|presence_status)\"\" | sort   # -> 31 archivos",
+        "$H=$W | xargs grep -lE '\"(status|site_verified|presence_status)\"' | sort   # -> 31 archivos",
         "$H | xargs grep -hE \"^\\s*def test_\" | wc -l   # -> 545 funciones",
         "A122..A125 de este anexo enumeran los 4 asserts de igualdad exacta de forma"
       ],
@@ -2380,9 +2381,9 @@
         "archivos_con_estado_hardcodeado": 31,
         "funciones_en_esos_archivos": 545
       },
-      "estado": "parcialmente-no-reproducible",
-      "detalle": "52 / 816 / 866 / 4 se reproducen exactamente. El par 26 / 476 no se reproduce con el criterio redactado en el propio plan: bajo `\"(status|site_verified|presence_status)\"` la intersección con los 52 archivos es 31 archivos y 545 funciones. Variantes probadas y descartadas: con clave citada y dos puntos (22 / 427), con valor literal string (21 / 413), solo presence_status (9 / 160), solo site_verified (8 / 107), y sobre todo tests/ sin restringir al vecindario (59 / 965). Ninguna da 26 / 476.",
-      "nota_reproduccion": "La interseccion del paso 4 se hace con la clave literal entre comillas dobles, que es la redaccion del criterio en 00-lecciones-capitalizadas.md M4 y en el maestro; con otras variantes plausibles tampoco sale 26/476 (ver variantes_descartadas).",
+      "estado": "resuelta-cifra-sustituida",
+      "detalle": "52 / 816 / 866 / 4 se reproducen exactamente y se conservan. El par 26 / 476 no se reprodujo con ninguno de los trece criterios medidos (banda 22/427 a 32/552), asi que el 2026-09-19, por decision del operador, el plan adopta 31 archivos / 545 funciones y enuncia su criterio: de los 52 archivos del vecindario, los que citan `\"(status|site_verified|presence_status)\"` entre comillas dobles. Admitir tambien la comilla simple desplaza el par a 32 / 552, diferencia que queda declarada para que la medicion sea reproducible.",
+      "nota_reproduccion": "Paso 4: $W filtrado por xargs grep -lE con la clave entre comillas dobles literales. Verificado otra vez el 2026-09-19 despues de la sustitucion: 31 archivos y 545 funciones.",
       "variantes_descartadas": {
         "criterio (status|site_verified|presence_status) sin comillas": [
           45,
@@ -2434,7 +2435,7 @@
         ]
       },
       "banda_observada": "22/427 (minima) a 32/552 (maxima) sobre los 52 archivos del vecindario; 26 cae dentro de la banda pero 476 no es el conteo de ninguna de sus fronteras, y las doce variantes mas el criterio redactado (13 criterios) no devuelven el par.",
-      "aclaricion_no_bloqueante": "Las cifras que si se reproducen (52/816/866/4) son las que dimensionan la division AC19a/AC19b; 26/476 es una fila accesoria de esa misma medicion."
+      "aclaricion_no_bloqueante": "Las cifras que dimensionan la division AC19a/AC19b son las reproducibles (52/816/866/4 y 31/545 con su criterio enunciado); 26/476 era una fila accesoria de esa misma medicion y desde el 2026-09-19 no figura como afirmacion del plan, solo como antecedente refutado en esta fila."
     },
     {
       "id": "M-snapshot-p4",

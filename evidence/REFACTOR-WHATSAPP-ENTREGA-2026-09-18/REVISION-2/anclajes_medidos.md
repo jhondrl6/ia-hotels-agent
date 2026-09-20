@@ -42,9 +42,11 @@ Sin citas: `04-contrato-ejecucion.md`, `05-prompt-inicio-sesion-fase-A.md`, `05-
 
 ## 2. Mediciones de la revisión 2 verificadas en disco
 
-### `M4-blast-radius` — estado: parcialmente-no-reproducible
+### `M4-blast-radius` — estado: resuelta-cifra-sustituida
 
-Afirmación verificada: 52 archivos y 816 funciones canónicas (866 casos collectados), 476 en los 26 archivos con estado hardcodeado, 4 asserts de igualdad exacta de forma
+Afirmación verificada: 52 archivos y 816 funciones canónicas (866 casos collectados), 545 en los 31 archivos que citan las claves de estado entre comillas dobles, 4 asserts de igualdad exacta de forma
+
+Afirmación anterior refutada: 26 archivos / 476 funciones (anotada en la primera pasada de la revisión 2 sin criterio reproducible; sustituida el 2026-09-19 por decisión del operador). Previa a esa: 50 archivos / 779 / 328 / 2, tomada de un subagente sin re-medir.
 
 | Medido | Valor |
 |---|---|
@@ -59,12 +61,12 @@ Afirmación verificada: 52 archivos y 816 funciones canónicas (866 casos collec
 $W='grep -rlE "whatsapp_button|site_presence_report" tests --include=*.py | sort'   # -> 52 archivos
 $W | xargs grep -hE "^\s*def test_" | wc -l   # -> 816 funciones canonicas
 pytest $W --collect-only -q | tail -1   # -> 866 tests collected
-$H=grep -rlE "whatsapp_button|site_presence_report" tests --include=*.py | sort | xargs grep -lE ""(status|site_verified|presence_status)"" | sort   # -> 31 archivos
+$H=$W | xargs grep -lE '"(status|site_verified|presence_status)"' | sort   # -> 31 archivos
 $H | xargs grep -hE "^\s*def test_" | wc -l   # -> 545 funciones
 A122..A125 de este anexo enumeran los 4 asserts de igualdad exacta de forma
 ```
 
-Detalle: 52 / 816 / 866 / 4 se reproducen exactamente. El par 26 / 476 no se reproduce con el criterio redactado en el propio plan: bajo `"(status|site_verified|presence_status)"` la intersección con los 52 archivos es 31 archivos y 545 funciones. Variantes probadas y descartadas: con clave citada y dos puntos (22 / 427), con valor literal string (21 / 413), solo presence_status (9 / 160), solo site_verified (8 / 107), y sobre todo tests/ sin restringir al vecindario (59 / 965). Ninguna da 26 / 476.
+Detalle: 52 / 816 / 866 / 4 se reproducen exactamente y se conservan. El par 26 / 476 no se reprodujo con ninguno de los trece criterios medidos (banda 22/427 a 32/552), así que el 2026-09-19, por decisión del operador, el plan adopta **31 archivos / 545 funciones** y enuncia su criterio: de los 52 archivos del vecindario, los que citan `"(status|site_verified|presence_status)"` entre comillas dobles. Admitir también la comilla simple desplaza el par a 32 / 552, diferencia que queda declarada para que la medición sea reproducible.
 
 | Variante del criterio probada | archivos / funciones |
 |---|---|
@@ -83,9 +85,9 @@ Detalle: 52 / 816 / 866 / 4 se reproducen exactamente. El par 26 / 476 no se rep
 
 Banda observada: 22/427 (mínima) a 32/552 (máxima) sobre los 52 archivos del vecindario. 26 cae dentro de la banda pero 476 no es el conteo de ninguna de sus fronteras; los doce criterios anteriores más el redactado en el plan (13 en total) no devuelven el par.
 
-La interseccion del paso 4 se hace con la clave literal entre comillas dobles, que es la redaccion del criterio en 00-lecciones-capitalizadas.md M4 y en el maestro; con otras variantes plausibles tampoco sale 26/476 (ver variantes_descartadas).
+Paso 4: `$W` filtrado por `xargs grep -lE` con la clave entre comillas dobles literales. Verificado otra vez el 2026-09-19 después de la sustitución: 31 archivos y 545 funciones.
 
-Las cifras que si se reproducen (52/816/866/4) son las que dimensionan la division AC19a/AC19b; 26/476 es una fila accesoria de esa misma medicion.
+Las cifras que dimensionan la división AC19a/AC19b son las reproducibles (52/816/866/4 y 31/545 con su criterio enunciado); 26/476 era una fila accesoria de esa misma medición y desde el 2026-09-19 no figura como afirmación del plan, solo como antecedente refutado en esta fila.
 
 ### `M-snapshot-p4` — estado: verificada
 
