@@ -114,10 +114,19 @@ def test_reviewer_reports_refleja_los_cuatro_revisores(judge, audit_dir):
         spec.reviewer for spec in EXPECTED_REVIEWERS
     ]
     for entry in acta["reviewer_reports"]:
-        assert set(entry) == {
+        # FASE-0 (AC20-ii) amplió la forma declarada del bloque: `findings` es
+        # clave fija y `findings_omitted` solo aparece cuando se supera el tope.
+        # Se ata a esa regla y a la coherencia interna (findings ⊂ conteo), no a
+        # un literal congelado — L-V2.3.
+        assert set(entry) >= {
             "reviewer", "status", "findings_count", "critical_count",
-            "recommendation", "report_path",
+            "recommendation", "report_path", "findings",
         }
+        assert set(entry) <= {
+            "reviewer", "status", "findings_count", "critical_count",
+            "recommendation", "report_path", "findings", "findings_omitted",
+        }
+        assert len(entry["findings"]) <= entry["findings_count"]
         assert entry["report_path"] == REPORT_FILES[entry["reviewer"]]
 
 

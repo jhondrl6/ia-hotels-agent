@@ -16,6 +16,32 @@ RECOMMENDATION_BLOCK = "BLOQUEAR"
 RECOMMENDATION_RETURN_TESTS = "DEVOLVER-PRUEBAS"
 SEVERITY_CRITICAL = "CRITICAL"
 
+# FASE-0 (AC20-ii): proyección que el acta publica de cada hallazgo.
+# ``ACTA_FINDING_KEYS`` es la lista blanca de claves y ``ACTA_FINDING_TEXT_LIMIT``
+# acota la descripción: el acta debe nombrar la causa sin convertirse en una
+# segunda copia de los ``revision_*.json``, que ya llevan el hallazgo completo.
+# ``ACTA_FINDING_CAP`` acota CUÁNTOS hallazgos por revisor se proyectan; se
+# declara aquí y viaja en ``findings_omitted`` para que un techo nunca se lea
+# como "sin causas" (L-R.4: una regla sin verificador declara su límite).
+ACTA_FINDING_KEYS = ("finding_type", "severity", "clause", "description")
+ACTA_FINDING_TEXT_LIMIT = 240
+ACTA_FINDING_CAP = 20
+
+
+def _acta_finding_projection(finding: Any) -> Optional[Mapping[str, Any]]:
+    """Recorta un hallazgo a las claves que el acta necesita; ``None`` si no es mapeable."""
+    if not isinstance(finding, Mapping):
+        return None
+    projected: dict = {}
+    for key in ACTA_FINDING_KEYS:
+        value = finding.get(key)
+        if value is None:
+            continue
+        if isinstance(value, str) and len(value) > ACTA_FINDING_TEXT_LIMIT:
+            value = value[:ACTA_FINDING_TEXT_LIMIT] + "…"
+        projected[key] = value
+    return projected or None
+
 
 class ReviewerStatus(str, Enum):
     """Estado de lectura de un revisor (Q6 / NR8).
@@ -82,14 +108,35 @@ class ReviewerReport:
     findings: list = field(default_factory=list)
 
     def to_dict(self) -> dict:
-        return {
+        """Forma del bloque ``reviewer_reports`` del acta (JSON y MD).
+
+        FASE-0 (AC20-ii): antes proyectaba solo conteos, así que un acta con
+        ``critical_count: 1`` no decía CUÁL era el hallazgo y AC12 no tenía de
+        dónde leer la causa. Se agregan ``findings`` (proyección de
+        :data:`ACTA_FINDING_KEYS`, tope :data:`ACTA_FINDING_CAP`) y
+        ``findings_omitted`` solo cuando se supera ese tope. Es un cambio de
+        serialización, no de veredicto: ``verified_critical``, ``verified_block``
+        y demás predicados siguen mirando los mismos campos de siempre.
+        """
+        payload = {
             "reviewer": self.reviewer,
             "status": self.status.value,
             "findings_count": self.findings_count,
             "critical_count": self.critical_count,
             "recommendation": self.recommendation,
             "report_path": self.report_path,
+            "findings": [
+                projected
+                for projected in (
+                    _acta_finding_projection(f) for f in self.findings[:ACTA_FINDING_CAP]
+                )
+                if projected is not None
+            ],
         }
+        omitted = len(self.findings) - min(len(self.findings), ACTA_FINDING_CAP)
+        if omitted > 0:
+            payload["findings_omitted"] = omitted
+        return payload
 
     @property
     def verified_critical(self) -> bool:

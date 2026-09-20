@@ -128,7 +128,15 @@ def audit_with_founded_recall(tmp_path):
                 "message": "critical_recall OK",
                 "details": {
                     "critical_issues_count": 3,
-                    "recall_basis": "audit_present_no_critical_issues",
+                    # FASE-0 (AC20-i): el conteo 3 va con la base del camino
+                    # fundado. Antes emparejaba `critical_issues_count: 3` con
+                    # `audit_present_no_critical_issues`, que es la base del
+                    # camino derivado (cero criticos): una combinacion
+                    # internamente contradictoria que solo pasaba porque el
+                    # revisor mira la presencia de la clave, no su coherencia. La
+                    # correccion es del fixture: la asercion sigue intacta y el
+                    # revisor no se toco.
+                    "recall_basis": "all_critical_issues_detected",
                 },
             }
         ],

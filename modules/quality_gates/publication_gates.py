@@ -709,16 +709,14 @@ class PublicationGatesOrchestrator:
             # FASE-SR-H2 traceability: annotate the derived favorable path
             # (audit executed, zero critical issues → recall 1.0), never a
             # direct metric value. Empty details keeps legacy serialization.
-            details: Dict[str, Any] = {}
-            if (
-                "critical_recall" not in assessment
-                and not assessment.get("critical_issues")
-                and assessment.get("audit_schema")
-            ):
-                details = {
-                    "critical_issues_count": 0,
-                    "recall_basis": "audit_present_no_critical_issues",
-                }
+            # FASE-0 (AC20-i): la anotación ya no puede quedarse solo en ese
+            # camino. `_extract_critical_recall` tiene un SEGUNDO camino a 1.0
+            # —critical_issues no vacío y nada evidente sin cubrir— cuyo recall
+            # está fundado pero viajaba mudo (`details: {}`), y un recall mudo
+            # es indistinguible del vacuo que S-I1 denuncia. Medido en la
+            # corrida `output/TAREA7-2026-09-19/`: `value: 1.0, details: {}` →
+            # `VACUOUS_RECALL` CRITICAL → `BLOQUEADO` con ZIP suprimido.
+            details = self._critical_recall_details(assessment)
             return PublicationGateResult(
                 gate_name=gate_name,
                 passed=True,
@@ -748,6 +746,54 @@ class PublicationGatesOrchestrator:
                 }
             )
     
+    def _critical_recall_details(
+        self, assessment: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Serie de confianza del recall favorable: cuantos criticos se evaluaron y por que.
+
+        FASE-0 (AC20-i). Un `value: 1.0` sin conteo no distingue el recall
+        fundado del vacuo, y el revisor lo denuncia con razon (S-I1). La
+        anotacion se ancla a los caminos grounded de `_extract_critical_recall`
+        y a ninguno mas:
+
+        - ``audit_present_no_critical_issues``: camino derivado SR-H2 (audit
+          ejecutado, lista vacia) — el unico que ya se anotaba desde FASE-SR-H2.
+        - ``all_critical_issues_detected``: la lista registrada no esta vacia y
+          los datos primarios del audit no contradicen su completitud.
+        - ``evident_critical_issues_missed``: el valor paso el umbral pero el
+          audit evidencia criticos que la lista no cubre; se declara el conteo y
+          ademas ``evident_critical_missed``.
+
+        Cualquier otro caso —p. ej. un ``critical_recall`` declarado sin lista y
+        sin audit— queda con ``details`` vacio A PROPOSITO: ahi la ausencia si es
+        la senal de vacuidad que L-SR5 manda conservar, y aflojarla dejaria sin
+        defensa el caso genuinamente vacuo de SR-H2.
+        """
+        critical_issues = assessment.get("critical_issues") or []
+        if critical_issues:
+            missed = self._evident_critical_missed(assessment, list(critical_issues))
+            details: Dict[str, Any] = {
+                "critical_issues_count": len(critical_issues),
+                "recall_basis": (
+                    "all_critical_issues_detected"
+                    if not missed
+                    else "evident_critical_issues_missed"
+                ),
+            }
+            if missed:
+                details["evident_critical_missed"] = missed
+            return details
+        if (
+            "critical_recall" not in assessment
+            and not critical_issues
+            and assessment.get("audit_schema")
+        ):
+            return {
+                "critical_issues_count": 0,
+                "recall_basis": "audit_present_no_critical_issues",
+            }
+        return {}
+
     def _ethics_gate(self, assessment: Dict[str, Any]) -> PublicationGateResult:
         """
         Gate 6: Ethics Check

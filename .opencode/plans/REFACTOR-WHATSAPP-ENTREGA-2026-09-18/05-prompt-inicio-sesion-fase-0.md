@@ -1,6 +1,20 @@
 # FASE-0 — Evidencia del veredicto serializada (entrega publicable)
 
-**Estado:** PENDIENTE. **Dependencia inmediata:** FASE-A completa y FASE-G cerrada (G es la segunda sesión del orden revisado). **Complejidad técnica:** MEDIA técnica / ALTA consecuencia: no cambia decisiones, pero sin ella la entrega publicable es inalcanzable para cualquier hotel con issues críticos. **Modo:** DIRECTO. **R3:** 4 tareas, 0 comandos largos externos.
+**Estado: CERRADA el 2026-09-20** sobre HEAD `ad0cc84`, con código de producto y
+cierre documental. AC20 **VERIFICADO OFFLINE** con su par contrafactual medido
+(`BLOQUEADO → APROBADO-CONDICIONAL-PENDING-ONBOARDING`) y 6/6 mutaciones rojas
+por el guard. **Sin commit ni push: esa autorización no se pidió en la sesión**
+(checkpoint en `evidence/…/FASE-0/resultados-y-observaciones.md`). Los tres
+cambios aditivos y nada más; Juez, cláusulas, umbrales, `BLOCKING_VERDICTS`,
+`GATE_BLOCKING_ENABLED` y `write/publish/suppress` verificados idénticos a HEAD
+por `git diff --numstat`. Evidencia: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-0/`.
+
+**Estado previsto antes de ejecutar (histórico):** PENDIENTE. **Dependencia
+inmediata:** FASE-A completa y FASE-G cerrada (G es la segunda sesión del orden
+revisado). **Complejidad técnica:** MEDIA técnica / ALTA consecuencia: no cambia
+decisiones, pero sin ella la entrega publicable es inalcanzable para cualquier
+hotel con issues críticos. **Modo:** DIRECTO. **R3:** 4 tareas, 0 comandos largos
+externos.
 
 ## Contexto
 
@@ -72,13 +86,13 @@ Confirmar REGISTRY sin GAP y TOTAL PASS dinámico. Sin commit, push ni release i
 
 Referencia **60 tool_use hasta el commit de código**; instrumento `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`, duración de pared aparte, corte en el commit de código. Sin transcript o con acceso denegado: **FUERA DE SERVICIO (R2.1)** con auto-reporte separado por unidad; nunca estimar cumplimiento.
 
-- [ ] PRE tomado antes de editar y POST conciliado con la misma selección y entorno.
-- [ ] Camino real del `1.0` de la corrida identificado y documentado por el símbolo que lo produce (rama de `_critical_recall_gate` o `return 1.0` de `_extract_critical_recall`), no por número de línea (R2.2).
-- [ ] Anotación del camino fundado añadida; `test_empty_critical_issues_with_audit_passes` de `test_publication_gates.py` sigue verde.
-- [ ] `to_dict()` publica hallazgos (o proyección) con crecimiento del acta medido y sin duplicar los `revision_*.json`.
-- [ ] `package_evidence` presente en la rama publish; `write`/`publish`/`suppress` intactos.
-- [ ] Contrafactual reproducido en memoria y registrado; mutante con solo cero del conteo verificado como falsamente negativo.
-- [ ] Juez, cláusulas, umbrales, `BLOCKING_VERDICTS` y `GATE_BLOCKING_ENABLED` sin cambios; P6.2 y P6.5 declarados no activados.
-- [ ] Cierre incremental completo y R2 medido o retirado.
+- [x] PRE tomado antes de editar y POST conciliado con la misma selección y entorno. — PRE 189 passed / 1 skipped (exit 0) y POST-B con la selección literal idéntica: **delta 0**; POST-A (selección + suite nuevo) 210 passed / 1 skipped. Funciones canónicas 4.264 → 4.285 (+21). Además PRE-c: la suite nueva sobre `git archive HEAD` rompe 16 (13 por aserción, 3 por `ImportError` del helper nuevo, declarados).
+- [x] Camino real del `1.0` identificado y documentado por el símbolo que lo produce (R2.2), no por número de línea (R2.2). — `_extract_critical_recall` → rama `if critical_issues:` → `return 1.0  # All critical issues were detected`: **recall fundado**. Reconstruido con `AssessmentBuilder` real + `audit_report` archivado, el gate reproduce `value: 1.0, details: {}` (`coincide_con_el_archivo: true`). El campo directo `assessment["critical_recall"]` no existe en el payload y el camino SR-H2 exige lista vacía: ambos descartados por medición. `_build_gate_report_payload` ya serializaba `"details": r.details` → el writer del reporte **no se tocó**.
+- [x] Anotación del camino fundado añadida; `test_empty_critical_issues_with_audit_passes` de `test_publication_gates.py` sigue verde. — Nueva `_critical_recall_details`: `all_critical_issues_detected` (fundado), `evident_critical_issues_missed` (umbral pasado con críticos evidentes no cubiertos) y SR-H2 intacto. Ese test y los tres del camino derivado pasan sin cambiar su expectativa; M6 demuestra que sustituir en vez de sumar pone 3 rojos.
+- [x] `to_dict()` publica hallazgos (o proyección) con crecimiento del acta medido y sin duplicar los `revision_*.json`. — Proyección por lista blanca (`finding_type`, `severity`, `clause`, `description`), texto acotado a 240 y tope 20 con `findings_omitted`. Medido sobre el acta real de la corrida: JSON 1.362 → 2.513 bytes (**+1.151, +84 %**), **MD +0 bytes** (la tabla de `_render_reviewer_reports` no consume `findings`); los cuatro `revision_*.json` suman 9.155 bytes.
+- [x] `package_evidence` presente en la rama publish; `write`/`publish`/`suppress` intactos. — `main._record_published_package_evidence`, llamado tras **cada** `packager.publish(` en las dos ramas (normal y `except` never-block), con `suppressed: False` y hash/miembros de la **ruta publicada** (`publish()` es `rename`: mismos bytes). `git diff --numstat` de `modules/delivery/delivery_packager.py`: vacío.
+- [x] Contrafactual reproducido en memoria y registrado; mutante con solo cero del conteo verificado como falsamente negativo. — `baseline_vs_contrafactual.json`, copia temporal del acta archivada (el `output/` del baseline re-verificado intacto: 60 archivos y `details: {}`). A `BLOQUEADO` (1 hallazgo) → B `APROBADO-CONDICIONAL-PENDING-ONBOARDING` (0 hallazgos, `OK_NO_FINDINGS`, recomendación `APROBADO`, no está en `BLOCKING_VERDICTS`); C: `critical_count = 0` sin recalcular la recomendación **sigue `BLOQUEADO`** por `ReviewerReport.verified_block`.
+- [x] Juez, cláusulas, umbrales, `BLOCKING_VERDICTS` y `GATE_BLOCKING_ENABLED` sin cambios; P6.2 y P6.5 declarados no activados. — `judge.py` y `diagnosis_reviewer.py` idénticos a HEAD; `thresholds.json` lee del código: 0.9 / 0.8 / 0.95, `BLOCKING_VERDICTS = {BLOQUEADO, DEVOLVER-CORRECCIONES}`, `T1_CERTIFIABLE_CLAUSES = (P6.1, P6.3, P6.4, P6.6)` → 4. M5 (relajar el detector, prohibida) se aplicó en copia y rompió 3: el límite está vigilado.
+- [x] Cierre incremental completo y R2 medido o retirado. — Cierre documental ejecutado; **R2 retirado: métrica FUERA DE SERVICIO (R2.1)**, el instrumento sigue pidiendo el transcript. **Sin commit ni push: no autorizados en la sesión** → checkpoint con el árbol de la fase documentado.
 
 Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/REVISION-2/anclajes_medidos.json`

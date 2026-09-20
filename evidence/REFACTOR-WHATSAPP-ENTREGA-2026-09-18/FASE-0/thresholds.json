@@ -1,0 +1,109 @@
+{
+  "fase": "FASE-0",
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "medido_el": "2026-09-20",
+  "head": "ad0cc84",
+  "leer_como": "Valores leidos del codigo vivo el dia de la fase. `cambio: no` = el plan lo tenia congelado y sigue intacto; `cambio: si (serializacion)` = clave nueva anadida por AC20 sin tocar la regla de decision.",
+  "umbrales_existentes": {
+    "critical_recall_threshold": {
+      "valor": 0.9,
+      "fuente": "PublicationGateConfig.critical_recall_threshold",
+      "cambio": "no"
+    },
+    "coherence_threshold": {
+      "valor": 0.8,
+      "fuente": "PublicationGateConfig.coherence_threshold",
+      "cambio": "no"
+    },
+    "evidence_coverage_threshold": {
+      "valor": 0.95,
+      "fuente": "PublicationGateConfig.evidence_coverage_threshold",
+      "cambio": "no"
+    },
+    "critical_recall_de_umbral_para_pas": {
+      "valor": ">= 0.9",
+      "fuente": "PublicationGatesOrchestrator._critical_recall_gate (comparacion `passed`)",
+      "cambio": "no: la anotacion no entra en la comparacion"
+    }
+  },
+  "congelados_por_el_plan_y_verificados": {
+    "BLOCKING_VERDICTS": {
+      "valor": [
+        "BLOQUEADO",
+        "DEVOLVER-CORRECCIONES"
+      ],
+      "fuente": "modules/quality_gates/tribunal/judge.py",
+      "cambio": "no"
+    },
+    "T1_CERTIFIABLE_CLAUSES": {
+      "valor": [
+        "P6.1",
+        "P6.3",
+        "P6.4",
+        "P6.6"
+      ],
+      "cambio": "no",
+      "limite_declarado": "P6.2 y P6.5 siguen NOT_EVALUABLE por diseno; esta fase no las activo y el acta no puede afirmar seis clausulas certificadas"
+    },
+    "GATE_BLOCKING_ENABLED": {
+      "valor": "GATE_BLOCKING_ENABLED",
+      "default": "true (literal de getenv en run_v4_complete_mode, via el alias _os_gate_block)",
+      "cambio": "no"
+    },
+    "contratos_de_cuarentena": {
+      "simbolos": [
+        "DeliveryPackager.write",
+        "DeliveryPackager.publish",
+        "DeliveryPackager.suppress"
+      ],
+      "cambio": "no",
+      "verificacion": "identico a HEAD"
+    }
+  },
+  "nuevo_por_fase_0": {
+    "gate_details_del_camino_fundado": {
+      "clave": "details.critical_issues_count",
+      "valores_de_recall_basis": [
+        "audit_present_no_critical_issues (SR-H2, preexistente)",
+        "all_critical_issues_detected (nuevo: recall fundado)",
+        "evident_critical_issues_missed (nuevo: paso el umbral con criticos evidentes no cubiertos)"
+      ],
+      "fuente": "PublicationGatesOrchestrator._critical_recall_details",
+      "cambio": "si (serializacion)"
+    },
+    "acta_findings_projection": {
+      "claves": [
+        "finding_type",
+        "severity",
+        "clause",
+        "description"
+      ],
+      "limite_de_texto": 240,
+      "tope_por_revisor": 20,
+      "contador_de_omisos": "findings_omitted (solo cuando el tope se supera)",
+      "fuente": "modules/quality_gates/tribunal/outcome.py",
+      "cambio": "si (serializacion)"
+    },
+    "package_evidence_en_publish": {
+      "clave": "package_evidence.suppressed = False + sha256 + member_count + path",
+      "fuente": "main._record_published_package_evidence, llamado en las dos ramas de publish",
+      "cambio": "si (serializacion)"
+    }
+  },
+  "crecimiento_medido_del_acta": {
+    "json_bytes_sin_proyeccion": 1362,
+    "json_bytes_con_proyeccion": 2513,
+    "json_delta_bytes": 1151,
+    "md_bytes_antes": 1961,
+    "md_bytes_despues": 1961,
+    "md_delta_bytes": 0,
+    "revision_bytes_total": 9155
+  },
+  "archivos_con_diferencia_contra_HEAD": {
+    "main.py": "46\t0\tmain.py",
+    "modules/quality_gates/publication_gates.py": "56\t10\tmodules/quality_gates/publication_gates.py",
+    "modules/quality_gates/tribunal/outcome.py": "48\t1\tmodules/quality_gates/tribunal/outcome.py",
+    "modules/quality_gates/tribunal/judge.py": "identico a HEAD",
+    "modules/quality_gates/tribunal/diagnosis_reviewer.py": "identico a HEAD"
+  }
+}

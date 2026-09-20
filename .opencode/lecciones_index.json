@@ -5,7 +5,7 @@
     "archivos_analysis_escaneados": 14,
     "archivos_contexto_escaneados": 36,
     "archivos_md_escaneados": 389,
-    "ids_con_definicion": 319,
+    "ids_con_definicion": 320,
     "ids_citados_sin_definicion": 48,
     "familias_incluidas": [
       "L",
@@ -891,7 +891,7 @@
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -1806,7 +1806,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
+      "total_citas": 7,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1820,7 +1820,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 4,
       "planes_que_lo_citan": [
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
@@ -1850,10 +1850,24 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 4,
       "planes_que_lo_citan": [
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-ENT.15",
+      "familia": "L",
+      "enunciado": "Para medir el estado anterior no se usa git stash sobre trabajo sin commitear: existían git grep <rev> y git archive. La sesión midió el conteo canónico de HEAD con git stash push --include-untracked y eso ponía el trabajo de la fase —cinco archivos modificados, sin commit— a merced de un pop fallido o de un hook. Se revirtió en la misma sesión con git stash pop y verificación símbolo a símbolo, y la medición se rehízo sin tocar el árbol: git grep -h -E \"^[[:space:]]*def test_\" HEAD -- tests (4.264) y git archive HEAD extraído en un temporal para ejecutar la suite nueva contra el código sin el fix. / Por qué: el stash es una operación sobre el estado del usuario, no una lectura; la pregunta «¿qué decía HEAD?» nunca necesitó modificarlo. / Qué lo previene: regla de instrumento — medir revisiones con comandos de revisión (git grep <rev>, git show, git archive), y reservar las destructivas para cuando exista instrucción expresa — Registro de la propia sesión y tests_baseline_pre.txt (bloque PRE-c); restauración verificada con git status --porcelain y los símbolos de la fase presentes",
+      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-09-18",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [],
       "redefiniciones": []
     },
     {
@@ -2175,7 +2189,7 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 16,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17",
@@ -2242,13 +2256,13 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 74,
+      "total_citas": 75,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27",
         "Archives/VALIDADOR-URL-PROPIA-2026-08-30"
       ],
       "redefiniciones": []
@@ -2726,7 +2740,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 35,
+      "total_citas": 36,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -2785,11 +2799,11 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 48,
+      "total_citas": 49,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -2887,7 +2901,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 43,
+      "total_citas": 44,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
@@ -2974,13 +2988,13 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 46,
+      "total_citas": 48,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
-        "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17"
       ],
       "redefiniciones": []
@@ -3065,7 +3079,7 @@
       "seccion": "FASE-T2-A (2026-09-10)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
+      "total_citas": 9,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -3262,7 +3276,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 50,
+      "total_citas": 51,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -3414,7 +3428,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 6,
+      "total_citas": 11,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -3541,7 +3555,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 16,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -3695,11 +3709,11 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 37,
+      "total_citas": 38,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },

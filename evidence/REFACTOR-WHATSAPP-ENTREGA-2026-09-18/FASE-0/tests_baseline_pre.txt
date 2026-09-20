@@ -1,0 +1,48 @@
+............................................................s........... [ 37%]
+........................................................................ [ 75%]
+..............................................                           [100%]
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+189 passed, 1 skipped, 8 warnings in 3.67s
+# FASE-0 PRE-c — suite NUEVA ejecutada contra el arbol HEAD (git archive de e544a59... ad0cc84, extraido a fase0-head-aks7kn, sin el codigo de la fase)
+# entorno: mismo interprete ./venv/Scripts/python.exe; cwd = la copia
+# los 2 skips son las pruebas sobre output/TAREA7-2026-09-19: esa corrida no esta versionada, no entra en git archive
+# 16 rompen: 13 por asercion (guard) y 3 por ImportError del helper nuevo (se declara, no se cuenta como prueba de guard)
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_recall_fundado_declara_conteo_y_base
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_el_acta_del_revisor_ya_no_denuncia_vacuidad
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_camino_derivado_sr_h2_conserva_su_serializacion
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_recall_declarado_sin_lista_sin_audit_sigue_vacio
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_base_distinta_cuando_el_audit_evidencia_criticos_no_cubiertos
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_umbral_y_veredicto_del_gate_intactos
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestToDictPublicaHallazgos::test_los_cuatro_campos_de_la_causa_estan
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestToDictPublicaHallazgos::test_no_duplica_lo_que_ya_escriben_los_revision
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestToDictPublicaHallazgos::test_descripcion_larga_se_acota
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestToDictPublicaHallazgos::test_tope_declarado_con_su_contador
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestToDictPublicaHallazgos::test_hallazgo_no_mapeable_no_rompe_y_se_omite
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestActaPublicaLaCausa::test_el_acta_serializada_conserva_el_hallazgo
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestPackageEvidenceEnRamaPublish::test_del_paquete_entregado
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestPackageEvidenceEnRamaPublish::test_never_block_no_propaga_ni_con_acta_incompleta
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestPackageEvidenceEnRamaPublish::test_paquete_inexistente_viaja_con_error_declarado
+FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestCableadoPublishPublicaEvidencia::test_cada_publish_va_seguido_de_su_evidencia
+16 failed, 3 passed, 2 skipped, 8 warnings in 2.11s
+# EXIT_CODE pytest = 1 (el 0 anterior era el exit del pipe grep)

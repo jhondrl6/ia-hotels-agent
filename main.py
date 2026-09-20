@@ -3439,15 +3439,27 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
                     print(f"\n   ⚠️  Enforcement apagado por el operador "
                           f"({_outcome.enforcement.blocking_env}=false): el veredicto "
                           f"{tribunal_acta['verdict']} NO se aplicó y el ZIP se publicó igual.")
+                # AC20 (iii): la rama publish también registra `package_evidence`.
+                # Antes solo la supresión la escribía, así que el paquete ENTREGADO
+                # quedaba sin hash ni conteo y AC12 no tenía de dónde certificarlo.
                 delivery_zip_path = packager.publish(quarantine_tmp_path)
                 print(f"   [OK] Delivery package created: {delivery_zip_path}")
+                _record_published_package_evidence(
+                    tribunal_acta, delivery_zip_path, v4_audit_dir
+                )
 
         except Exception as e:
             print(f"   [WARN] Tribunal enrichment failed (never-block): {e}")
             if quarantine_tmp_path is not None and delivery_zip_path is None:
+                # AC20 (iii), segunda rama: este `except` también publica, así que
+                # registra la misma evidencia. El helper es never-block por dentro:
+                # un fallo escribiendo el acta no puede deshacer un ZIP ya publicado.
                 try:
                     delivery_zip_path = packager.publish(quarantine_tmp_path)
                     print(f"   [OK] Delivery package created: {delivery_zip_path}")
+                    _record_published_package_evidence(
+                        tribunal_acta, delivery_zip_path, v4_audit_dir
+                    )
                 except Exception as pe:
                     print(f"   [ERROR] No se pudo publicar la cuarentena: {pe}")
                     delivery_zip_path = None
@@ -3861,6 +3873,40 @@ def _compute_package_evidence(zip_path: Path) -> dict:
             "member_count": None,
             "error": str(e),
         }
+
+
+def _record_published_package_evidence(
+    tribunal_acta, published_zip_path, v4_audit_dir
+) -> None:
+    """Anota en el acta la evidencia criptográfica del paquete PUBLICADO (AC20-iii).
+
+    La rama de supresión ya registraba `package_evidence` antes de borrar la
+    cuarentena (AC-G3); la de publish no, así que del ZIP realmente entregado no
+    quedaba ni hash ni conteo de entradas y AC12 no tenía de dónde leer.
+
+    Se llama DESPUÉS de `packager.publish()` y sobre la ruta publicada: `publish()`
+    hace `rename`, la cuarentena deja de existir y los bytes son los mismos, de modo
+    que el hash que se registra es el del archivo que recibe el cliente.
+
+    Never-block por diseño (P6-R/R5): no propaga excepciones al `except` exterior
+    del Tribunal, cuya única salida sería volver a publicar la cuarentena.
+    Si el acta no es un dict o no se puede reescribir, se reporta y se sigue.
+    """
+    try:
+        if not isinstance(tribunal_acta, dict):
+            print("   [WARN] Sin acta donde anotar la evidencia del paquete publicado.")
+            return
+        evidence = _compute_package_evidence(Path(published_zip_path))
+        tribunal_acta["package_evidence"] = {
+            "suppressed": False,
+            "path": str(published_zip_path),
+            **evidence,
+        }
+        from modules.quality_gates.tribunal.acta_writer import ActaWriter
+
+        ActaWriter(v4_audit_dir).write(tribunal_acta)
+    except Exception as e:
+        print(f"   [WARN] Evidencia del paquete publicado no pudo registrarse: {e}")
 
 
 def _observation_to_onboarding_format(obs: dict) -> dict:

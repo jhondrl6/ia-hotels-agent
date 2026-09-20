@@ -1,0 +1,33 @@
+{
+  "fuente": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit",
+  "critical_issues_reconstruidos": [
+    "No Hotel schema detected - critical for SEO",
+    "PageSpeed API ERROR - performance not measurable (API de PageSpeed no disponible)",
+    "Metadata: Meta description está vacía",
+    "GEO readiness critical (score 23/100, band 'critical') - crisis técnica GEO"
+  ],
+  "critical_issues_count": 4,
+  "critical_issues_detectados_por_el_audit": 3,
+  "geo_flow_aporto_issue": 1,
+  "performance_status": "ERROR",
+  "audit_schema_no_vacio": true,
+  "critical_recall_directo_en_assessment": false,
+  "evident_critical_missed": 0,
+  "valor_extraido": 1.0,
+  "ruta_identificada_por_simbolo": "_extract_critical_recall: `return 1.0  # All critical issues were detected` (critical_issues no vacio y _evident_critical_missed == 0) -> RECALL FUNDADO",
+  "gate_reconstruido": {
+    "passed": true,
+    "status": "PASSED",
+    "value": 1.0,
+    "details": {}
+  },
+  "gate_archivado": {
+    "passed": true,
+    "status": "PASSED",
+    "value": 1.0,
+    "details": {}
+  },
+  "coincide_con_el_archivo": true,
+  "_build_gate_report_payload_ya_serializa_details": true,
+  "conclusion": "El 1.0 viajó con details vacío porque la única rama anotada del gate es la derivada SR-H2; la corrida tomó la rama FUNDADA (critical_issues no vacío y _evident_critical_missed == 0). El writer del reporte NO filtra details, así que no se toca."
+}

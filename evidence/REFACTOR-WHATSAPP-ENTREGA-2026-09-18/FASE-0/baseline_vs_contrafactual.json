@@ -1,0 +1,46 @@
+{
+  "fuente": "output/TAREA7-2026-09-19 (copias temporales; el baseline no se escribe)",
+  "details_del_gate": {
+    "antes": {},
+    "despues": {
+      "critical_issues_count": 3,
+      "recall_basis": "all_critical_issues_detected"
+    }
+  },
+  "A_baseline": {
+    "hallazgos_VACUOUS_RECALL": 1,
+    "recommendation_diagnosis": "BLOQUEAR",
+    "veredicto": "BLOQUEADO",
+    "bloqueante_por_BLOCKING_VERDICTS": true
+  },
+  "B_contrafactual": {
+    "hallazgos_VACUOUS_RECALL": 0,
+    "status_diagnosis": "OK_NO_FINDINGS",
+    "recommendation_diagnosis": "APROBADO",
+    "veredicto": "APROBADO-CONDICIONAL-PENDING-ONBOARDING",
+    "bloqueante_por_BLOCKING_VERDICTS": false,
+    "critical_count_revisores": {
+      "diagnosis_reviewer": 0,
+      "asset_reviewer": 0,
+      "alignment_reviewer": 0,
+      "honesty_reviewer": 0
+    }
+  },
+  "C_mutante_zero_sin_recalculo": {
+    "veredicto": "BLOQUEADO",
+    "bloqueantes": [
+      "diagnosis_reviewer"
+    ],
+    "conclusion": "sigue BLOQUEADO: `verified_block` decide por la recomendacion, por eso el mutante del contrafactual debe eliminar el hallazgo Y recalcular `verdict_recommendation`"
+  },
+  "par_exigido_por_AC20": "BLOQUEADO -> APROBADO-CONDICIONAL-PENDING-ONBOARDING",
+  "medicion_acta": {
+    "json_bytes_sin_proyeccion": 1362,
+    "json_bytes_con_proyeccion": 2513,
+    "json_delta_bytes": 1151,
+    "md_bytes_antes": 1961,
+    "md_bytes_despues": 1961,
+    "md_delta_bytes": 0,
+    "revision_bytes_total": 9155
+  }
+}

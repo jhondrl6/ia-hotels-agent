@@ -1,0 +1,233 @@
+{
+  "seleccion_de_tests": [
+    "tests/test_fase_0_ac20_evidencia_veredicto.py",
+    "tests/quality_gates/test_publication_gates.py",
+    "tests/quality_gates/tribunal/test_diagnosis_reviewer.py",
+    "tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py",
+    "tests/test_ac_g3_package_evidence.py"
+  ],
+  "archivos_mutables": [
+    "main.py",
+    "modules\\quality_gates\\publication_gates.py",
+    "modules\\quality_gates\\tribunal\\diagnosis_reviewer.py",
+    "modules\\quality_gates\\tribunal\\outcome.py"
+  ],
+  "mutaciones": [
+    {
+      "mutacion": "M1",
+      "ac": "AC20-i",
+      "prohibida_por_el_plan": false,
+      "que_se_rompe": "apagar la anotacion del camino FUNDADO (dejar solo el derivado SR-H2)",
+      "guard_objetivo": "TestAnotacionDelCaminoFundado + TestCaminoFundadoSobreBaselineReal",
+      "tests": [
+        "tests/test_fase_0_ac20_evidencia_veredicto.py",
+        "tests/quality_gates/test_publication_gates.py",
+        "tests/quality_gates/tribunal/test_diagnosis_reviewer.py"
+      ],
+      "aplicada": true,
+      "antes": {
+        "exit_code": 0
+      },
+      "despues": {
+        "exit_code": 1,
+        "resumen": "5 failed, 107 passed, 1 skipped, 8 warnings in 2.00s",
+        "causa_rojo": [
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py"
+        ],
+        "rojos": [
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_recall_fundado_declara_conteo_y_base",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_el_acta_del_revisor_ya_no_denuncia_vacuidad",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_base_distinta_cuando_el_audit_evidencia_criticos_no_cubiertos",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_umbral_y_veredicto_del_gate_intactos",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestCaminoFundadoSobreBaselineReal::test_sobre_el_audit_real_el_fundado_viaja_anotado"
+        ]
+      },
+      "rompio": true,
+      "causa_del_rojo": "guard",
+      "restaurado_sha256_ok": false
+    },
+    {
+      "mutacion": "M2",
+      "ac": "AC20-ii",
+      "prohibida_por_el_plan": false,
+      "que_se_rompe": "quitar la proyeccion `findings` de `ReviewerReport.to_dict`",
+      "guard_objetivo": "TestToDictPublicaHallazgos + TestActaPublicaLaCausa + AC-E1 (forma del acta)",
+      "tests": [
+        "tests/test_fase_0_ac20_evidencia_veredicto.py",
+        "tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py"
+      ],
+      "aplicada": true,
+      "antes": {
+        "exit_code": 0
+      },
+      "despues": {
+        "exit_code": 1,
+        "resumen": "7 failed, 33 passed, 8 warnings in 1.84s",
+        "causa_rojo": [
+          "FAILED tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py"
+        ],
+        "rojos": [
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestToDictPublicaHallazgos::test_los_cuatro_campos_de_la_causa_estan",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestToDictPublicaHallazgos::test_no_duplica_lo_que_ya_escriben_los_revision",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestToDictPublicaHallazgos::test_descripcion_larga_se_acota",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestToDictPublicaHallazgos::test_tope_declarado_con_su_contador",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestToDictPublicaHallazgos::test_hallazgo_no_mapeable_no_rompe_y_se_omite",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestActaPublicaLaCausa::test_el_acta_serializada_conserva_el_hallazgo",
+          "FAILED tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py::test_reviewer_reports_refleja_los_cuatro_revisores"
+        ]
+      },
+      "rompio": true,
+      "causa_del_rojo": "guard",
+      "restaurado_sha256_ok": true
+    },
+    {
+      "mutacion": "M3",
+      "ac": "AC20-iii",
+      "prohibida_por_el_plan": false,
+      "que_se_rompe": "quitar la llamada de evidencia en la rama publish de `run_v4_complete_mode`",
+      "guard_objetivo": "TestCableadoPublishPublicaEvidencia (regla AST propia, L-V2.2)",
+      "tests": [
+        "tests/test_fase_0_ac20_evidencia_veredicto.py"
+      ],
+      "aplicada": true,
+      "antes": {
+        "exit_code": 0
+      },
+      "despues": {
+        "exit_code": 1,
+        "resumen": "1 failed, 20 passed, 8 warnings in 1.58s",
+        "causa_rojo": [
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py"
+        ],
+        "rojos": [
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestCableadoPublishPublicaEvidencia::test_cada_publish_va_seguido_de_su_evidencia"
+        ]
+      },
+      "rompio": true,
+      "causa_del_rojo": "guard",
+      "restaurado_sha256_ok": true
+    },
+    {
+      "mutacion": "M4",
+      "ac": "AC20-iii",
+      "prohibida_por_el_plan": false,
+      "que_se_rompe": "el helper sigue siendo llamado pero ya no anota `package_evidence` en el acta",
+      "guard_objetivo": "TestPackageEvidenceEnRamaPublish::test_del_paquete_entregado",
+      "tests": [
+        "tests/test_fase_0_ac20_evidencia_veredicto.py"
+      ],
+      "aplicada": true,
+      "antes": {
+        "exit_code": 0
+      },
+      "despues": {
+        "exit_code": 1,
+        "resumen": "2 failed, 19 passed, 8 warnings in 1.55s",
+        "causa_rojo": [
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py"
+        ],
+        "rojos": [
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestPackageEvidenceEnRamaPublish::test_del_paquete_entregado",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestPackageEvidenceEnRamaPublish::test_paquete_inexistente_viaja_con_error_declarado"
+        ]
+      },
+      "rompio": true,
+      "causa_del_rojo": "guard",
+      "restaurado_sha256_ok": true
+    },
+    {
+      "mutacion": "M5",
+      "ac": "AC20-i (limite prohibido por el plan)",
+      "prohibida_por_el_plan": true,
+      "que_se_rompe": "relajar `DiagnosisReviewer._check_vacuous_recall` para que deje de denunciar",
+      "guard_objetivo": "test_recall_declarado_sin_lista_sin_audit_sigue_vacio + suite del revisor",
+      "tests": [
+        "tests/test_fase_0_ac20_evidencia_veredicto.py",
+        "tests/quality_gates/tribunal/test_diagnosis_reviewer.py"
+      ],
+      "aplicada": true,
+      "antes": {
+        "exit_code": 0
+      },
+      "despues": {
+        "exit_code": 1,
+        "resumen": "3 failed, 28 passed, 8 warnings in 1.76s",
+        "causa_rojo": [
+          "FAILED tests/quality_gates/tribunal/test_diagnosis_reviewer.py",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py"
+        ],
+        "rojos": [
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_recall_declarado_sin_lista_sin_audit_sigue_vacio",
+          "FAILED tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_vacuous_recall_detected",
+          "FAILED tests/quality_gates/tribunal/test_diagnosis_reviewer.py::test_verdict_blocks_on_critical_findings"
+        ]
+      },
+      "rompio": true,
+      "causa_del_rojo": "guard",
+      "restaurado_sha256_ok": false
+    },
+    {
+      "mutacion": "M6",
+      "ac": "AC20-i (limite prohibido por el plan)",
+      "prohibida_por_el_plan": true,
+      "que_se_rompe": "sustituir (en vez de sumar) la anotacion SR-H2: `details` vacios con cero criticos",
+      "guard_objetivo": "TestCriticalRecallGate::test_empty_critical_issues_with_audit_passes",
+      "tests": [
+        "tests/quality_gates/test_publication_gates.py",
+        "tests/test_fase_0_ac20_evidencia_veredicto.py"
+      ],
+      "aplicada": true,
+      "antes": {
+        "exit_code": 0
+      },
+      "despues": {
+        "exit_code": 1,
+        "resumen": "3 failed, 99 passed, 1 skipped, 8 warnings in 1.90s",
+        "causa_rojo": [
+          "FAILED tests/quality_gates/test_publication_gates.py",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py"
+        ],
+        "rojos": [
+          "FAILED tests/quality_gates/test_publication_gates.py::TestCriticalRecallGate::test_empty_critical_issues_with_audit_passes",
+          "FAILED tests/quality_gates/test_publication_gates.py::TestFaseGCriticalRecallNoVacuo::test_srh2_favorable_preservado_sin_datos_contradictorios",
+          "FAILED tests/test_fase_0_ac20_evidencia_veredicto.py::TestAnotacionDelCaminoFundado::test_camino_derivado_sr_h2_conserva_su_serializacion"
+        ]
+      },
+      "rompio": true,
+      "causa_del_rojo": "guard",
+      "restaurado_sha256_ok": false
+    }
+  ],
+  "sombra_sin_mutar": {
+    "exit_code": 0,
+    "resumen": "137 passed, 1 skipped, 8 warnings in 2.32s",
+    "causa_rojo": [],
+    "rojos": []
+  },
+  "restauracion": {
+    "main.py": {
+      "sha_esperado": "1733abbf1d63cb3d42c75cad1556372b436a0e908ff64f9cf1e39c8840a0dd5e",
+      "sha_final": "1733abbf1d63cb3d42c75cad1556372b436a0e908ff64f9cf1e39c8840a0dd5e",
+      "identico": true
+    },
+    "modules\\quality_gates\\publication_gates.py": {
+      "sha_esperado": "9276f73a665ce3e5442395802f865f8438e4ec6601f4353b521222f045f4f52e",
+      "sha_final": "9276f73a665ce3e5442395802f865f8438e4ec6601f4353b521222f045f4f52e",
+      "identico": true
+    },
+    "modules\\quality_gates\\tribunal\\diagnosis_reviewer.py": {
+      "sha_esperado": "3deb8d8e991a60e1de4e56e506b5ef61512f8ae678750508ae443baa653e8c54",
+      "sha_final": "3deb8d8e991a60e1de4e56e506b5ef61512f8ae678750508ae443baa653e8c54",
+      "identico": true
+    },
+    "modules\\quality_gates\\tribunal\\outcome.py": {
+      "sha_esperado": "f2f897797c1857ce7e90f7262d40c6615ff715d7d7f92592ad1f675f2de7873d",
+      "sha_final": "f2f897797c1857ce7e90f7262d40c6615ff715d7d7f92592ad1f675f2de7873d",
+      "identico": true
+    }
+  },
+  "total_rompio": 6,
+  "total_aplicadas": 6,
+  "todo_restaurado": true
+}
