@@ -91,4 +91,6 @@ PRE/POST de cada implementación usan la misma selección y entorno; mutantes pr
 
 R2 conserva la referencia de **60 tool_use hasta el commit de código autorizado**, medida con el instrumento del contrato y corte temporal. Sin transcript o ante acceso denegado: **FUERA DE SERVICIO (R2.1)**, auto-reporte con unidad separado y sin comparaciones inventadas. Sin autorización de commit no se declara ese corte consumado; sin código se usa corte documental. Agotar presupuesto exige checkpoint y nueva sesión, nunca adelantar otra fase.
 
-Estado actual de validación y medición de estas sesiones: **PENDIENTE / no ejecutado**. No se ha consumido el intento ni autorizado subida, commit, push o release operativo.
+**Cierre de sesión (preparación 2026-09-18 y revisión 2 2026-09-19):** documentación y validaciones, sin código de producto; cerrado con commit y push autorizados en su turno, lo que no prueba ninguna fase A–H.
+
+Estado actual de validación y medición de estas sesiones: **PENDIENTE / no ejecutado** para A–H. Las doce fases siguen pendientes y el contador v4complete en 0/1; lo ya ejecutado y publicado es la medición y el cierre documental de la preparación y de la revisión 2, con validaciones locales en verde y su push a `origin/master`. Sigue sin autorización e implícitamente no hecho: subida de datos, release operativo y cualquier auditoría externa preliminar.
