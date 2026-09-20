@@ -3,8 +3,9 @@
 **Estado: CERRADA el 2026-09-20** sobre HEAD `ad0cc84`, con código de producto y
 cierre documental. AC20 **VERIFICADO OFFLINE** con su par contrafactual medido
 (`BLOQUEADO → APROBADO-CONDICIONAL-PENDING-ONBOARDING`) y 6/6 mutaciones rojas
-por el guard. **Sin commit ni push: esa autorización no se pidió en la sesión**
-(checkpoint en `evidence/…/FASE-0/resultados-y-observaciones.md`). Los tres
+por el guard. **Commit `7c6e75f` y push a `origin/master` ejecutados el mismo día**
+con instrucción literal del operador (paridad 0/0 verificada por `git ls-remote`;
+registro en `evidence/…/FASE-0/resultados-y-observaciones.md` §6). Los tres
 cambios aditivos y nada más; Juez, cláusulas, umbrales, `BLOCKING_VERDICTS`,
 `GATE_BLOCKING_ENABLED` y `write/publish/suppress` verificados idénticos a HEAD
 por `git diff --numstat`. Evidencia: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-0/`.
