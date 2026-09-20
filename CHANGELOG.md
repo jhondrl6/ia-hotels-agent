@@ -29,6 +29,20 @@ Sin archivos nuevos.
 - `tests/auditors/test_llm_mention_checker.py::TestCheckMentionsMocked::test_check_mentions_all_providers_fail_is_not_measured` — con key configurada y `_query_provider` devolviendo `None` para todos los proveedores: `queries_tested == 0`, `source == "stub"`, `mention_score == 0`.
 - Suite de referencia: `pytest tests/auditors tests/quality_gates tests/config` → 911 passed, 12 skipped (910 + 1 nuevo).
 
+#### FASE-A del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 — contratos, baseline y prerrequisitos (2026-09-19)
+
+**Objetivo**: ratificar por escrito el contrato de fixes y el baseline del plan antes de cualquier edición de código, sin reinterpretar ninguna restricción de la revisión 2.
+
+**Cambios**: fase **documental** — no toca código de producto, no ejecuta `v4complete` (contador **0/1**) y no abre la fase G. Veinte premisas del maestro se re-midieron contra HEAD `d4dacb4`, el árbol limpio y la corrida ajena `output/TAREA7-2026-09-19/` (leída, **0 escrituras**, 60 archivos con sha256 inventariados). Dos rectificaciones de precisión: los "13/13 gates verdes" del baseline son **10 PASSED + 3 WARNING con 0 fallidos**, y AC20 (iii) incorpora una **tercera** ruta de publicación sin `package_evidence` — el `except` never-block de `main.py`. Se re-confirmaron por símbolo: el hueco de `details` en `_critical_recall_gate`, la ausencia de `findings` en `ReviewerReport.to_dict` (con la causa sí presente en `revision_diagnostico.json`), la forma cerrada de `_presence_result_to_canonical`, `ASSET_GENERATED` ya en `_JUSTIFIED_STATUSES`, `asset_zip_paths` del escritor P6-R y los ocho productores de promesa de F-F ampliada — incluido `block_on_failure=False  # NEVER_BLOCK` del catálogo, que instruye generar el botón sin dato. El blast radius de AC19 se midió por tercera vez con el método canónico y reproduce **52/816** y **31/545**. La consulta QMind denegada en la revisión 2 quedó **recuperada** y aporta una dependencia: `CrossValidator._reconcile_whatsapp_multisede` ya cierra el falso positivo entre sedes. La divergencia documental de DOMAIN_PRIMER se resolvió **sin editar** `AGENTS.md` ni el workflow: rigen el executor §E7 y CONTRIBUTING L400 (regenerar por fase de implementación, verificar en RELEASE).
+
+**Archivos Nuevos**: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-A/` — `decisiones.md`, `baseline_inventory.json`, `qmind-consulta-reintentada.md`, `tests_pertinentes_pre.txt`.
+
+**Archivos Modificados**: los ocho documentos del plan (`README.md`, `00`, `01`, `05-…-fase-A`, `06`, `09`, `10`, `dependencias-fases.md`) — `04-contrato-ejecucion.md` no se modificó, `CHANGELOG.md`, `docs/GUIA_TECNICA.md`, `docs/contributing/REGISTRY.md` y el par `.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json`.
+
+**Tests**: **0 tests nuevos**. Como observación de lectura se corrieron en offline las 7 superficies que el prompt de A enumeraba: **130 funciones canónicas → 134 casos, 133 passed + 1 skipped, exit 0** (se archiva en `tests_pertinentes_pre.txt`; no es un POST de fase porque A no modifica tests). Validaciones: `run_all_validations.py --quick` **10/10** al abrir y al cerrar la fase.
+
+**Cierre**: **checkpoint** — falta la autorización de commit del cierre y la reconfirmación de vigencia/consentimiento del operador (requerida antes de H/E2E, no para G).
+
 ## [4.77.2] - Contabilidad de coste del checker LLM (Gemini) — 2026-09-19
 
 ### Objetivo

@@ -1,6 +1,6 @@
 # FASE-A — Contratos, baseline y prerrequisitos
 
-**Estado:** PENDIENTE. **Dependencias:** preparación leída y mandato de ejecutar A. **Complejidad técnica:** ALTA por decisiones cross-module, datos reales y seguridad. **Modo:** principal DIRECTO; delegate_task solo para recuperaciones independientes read-only, nunca para decidir arquitectura. **R3:** 4 tareas, 0 comandos largos externos.
+**Estado:** EJECUTADA 2026-09-19 con **checkpoint documental pendiente de autorización de commit** (HEAD `d4dacb4`, contador **0/1**). Evidencia: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-A/` (`decisiones.md`, `baseline_inventory.json`, `qmind-consulta-reintentada.md`, `tests_pertinentes_pre.txt`). Las cuatro ratificaciones (§3 de `decisiones.md`) se cerraron sin reinterpretar; los textos de "13/13 gates verdes" quedan rectificados a **10 PASSED + 3 WARNING, 0 fallidos** y AC20 (iii) incorpora la tercera ruta de publicación (el `except` never-block de `main.py`). **Dependencias:** preparación leída y mandato de ejecutar A. **Complejidad técnica:** ALTA por decisiones cross-module, datos reales y seguridad. **Modo:** principal DIRECTO; delegate_task solo para recuperaciones independientes read-only, nunca para decidir arquitectura. **R3:** 4 tareas, 0 comandos largos externos.
 
 ## Contexto
 
@@ -41,9 +41,9 @@ Aplicar cierre incremental del contrato, incluida nota de fase en CHANGELOG/GUIA
 
 ## Completitud y restricciones
 
-- [ ] Decisiones de matriz, diferidos, legado y evidencia cerradas por escrito.
-- [ ] Baseline real preservado y F-P4.1 clasificado correctamente.
-- [ ] Identidad, fecha, frescura, revocación y permiso documental con estado explícito.
-- [ ] Cierre incremental y validaciones completos o checkpoint INCOMPLETA.
-- Presupuesto 60 tool_use de referencia; instrumento `measure_iterations.py`. A es documental: declarar corte documental, no simular commit de código. Si acceso no disponible, métrica FUERA DE SERVICIO.
-- No implementar B–H, ejecutar v4complete, leer secretos, modificar observations ni evidence P4, subir datos o hacer push. Nueva sesión para B.
+- [x] Decisiones de matriz, diferidos, legado y evidencia cerradas por escrito. (`decisiones.md` §2: 8 ratificaciones + 3 precisiones; F-B/F-E diferidas conservadas)
+- [x] Baseline real preservado y F-P4.1 clasificado correctamente. (60 archivos leídos, **0 escrituras**, hashes en `baseline_inventory.json`; `asset_zip_paths` verificado en el writer)
+- [x] Identidad, fecha, frescura, revocación y permiso documental con estado explícito. (`decisiones.md` §4; la **reconfirmación de vigencia queda abierta con dueño: operador**, necesaria para H/E2E y no para B)
+- [ ] Cierre incremental y validaciones completos o checkpoint INCOMPLETA. **CHECKPOINT**: validaciones, índice y registro ejecutados; **falta la autorización de commit**, por lo que el corte de R2 no se declara consumado.
+- Presupuesto 60 tool_use de referencia; instrumento `measure_iterations.py`. **A es documental: se declara corte documental, no commit de código simulado. El instrumento quedó FUERA DE SERVICIO (R2.1): el transcript no está disponible; se conserva el auto-reporte con su unidad sin sumarlo.**
+- No implementar B–H, ejecutar v4complete, leer secretos, modificar observations ni evidence P4, subir datos o hacer push. **Cumplido: 0 corridas, 0 escrituras fuera de `evidence/…/FASE-A/` y los documentos del plan; `.env` leído solo por nombres de clave; la lectura denegada de `evidence/FASE-P5/…` no se evadió. G no iniciada.**

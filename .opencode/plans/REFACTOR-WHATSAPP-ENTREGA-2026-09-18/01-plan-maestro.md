@@ -35,6 +35,9 @@ La historia es insumo, no prueba del estado actual. No hubo cambios de código e
 La propuesta supera el alcance de F-F + F-A' en una sola fase porque incluye seguridad, coherencia, lectores y certificación. Se divide conforme a R3, no se empaquetan todos los fixes en una sesión.
 
 Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/REVISION-2/anclajes_medidos.json`
+> **Rectificación medida por FASE-A (2026-09-19, HEAD `d4dacb4`).** Toda mención de este plan a «**13/13 gates verdes**» o «13 gates verdes» del baseline `output/TAREA7-2026-09-19/` se lee como **10 PASSED + 3 WARNING (`financial_validity`, `asset_confidence`, `pricing_compliance`), 0 fallidos y `blocks_publication=False` en los 13**. El argumento no cambia —ningún gate falló y aun así el ZIP se suprimió— pero la cifra publicada era imprecisa y A no la propaga. Segunda precisión, sobre AC20 (iii): `package_evidence` falta en **dos** ramas de `main.py`, no en una —`packager.publish()` y el `except Exception` "Tribunal enrichment failed (never-block)", que re-publica la cuarentena sin hash ni conteo—, así que FASE-0 debe cubrirlas ambas. Tercera: la causa del `VACUOUS_RECALL` **sí** está serializada en `revision_diagnostico.json`; lo que AC20 (ii) exige es su **agregación** al acta, no inventar un diagnóstico. Detalle completo y las veinte premisas re-medidas: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-A/decisiones.md`.
+
+
 
 ## 2. Decisiones de diseño y alcance
 

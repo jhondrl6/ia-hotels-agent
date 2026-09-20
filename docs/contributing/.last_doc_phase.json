@@ -275,5 +275,6 @@
   "tests/quality_gates/tribunal/test_judge.py": "FASE-P2",
   "tests/quality_gates/tribunal/test_acta_serialization.py": "FASE-P2",
   "tests/auditors/test_llm_mention_checker.py": "FASE-GEMINI-REGISTRY",
-  "modules/utils/provider_registry.py": "FASE-COSTE-GEMINI"
+  "modules/utils/provider_registry.py": "FASE-COSTE-GEMINI",
+  "11": "FASE-A"
 }

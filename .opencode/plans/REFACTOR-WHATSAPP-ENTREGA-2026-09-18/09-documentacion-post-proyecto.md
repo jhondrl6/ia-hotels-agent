@@ -29,7 +29,12 @@ Estado: PREPARACIÓN. Ninguna fase ejecutada. No sustituye la documentación inc
 | Índice | 305 IDs, fresco (preparación) · **314** tras la intervención del 2026-09-19 · **316 tras la revisión 2** (nacen `L-ENT.10` y `L-ENT.11`); «citados sin definición» permanece en **43**, sin citas huérfanas nuevas | Preparación / revisiones |
 | Tests nuevos / casos recogidos / passed | No medidos; no confundir funciones con casos parametrizados | Pendiente |
 | Coherencia / veredicto / ZIP | **Ninguna corrida de este plan.** Baseline leído de una corrida ajena ya archivada: coherencia 0.8633, `readiness: READY_FOR_PUBLICATION`, veredicto `BLOQUEADO`, ZIP suprimido tras `member_count: 52` | Revisión 2 (lectura de `output/TAREA7-2026-09-19/`) |
-| Presupuesto de iteraciones | Medir con instrumento canónico y corte; nunca estimar cumplimiento | Todas |
+| **FASE-A: gates de la corrida de referencia, re-medidos** | **Rectificación de P3:** los "13/13 gates verdes" son en realidad **10 PASSED + 3 WARNING** (`financial_validity`, `asset_confidence`, `pricing_compliance`), **0 fallidos** y `blocks_publication=False` en los 13. El razonamiento no cambia — el ZIP se suprimió sin ningún gate fallido— pero la cifra publicada era imprecisa | FASE-A (lectura de `gate_report_20260919_150131.json`) |
+| **FASE-A: tercera ruta de publicación sin evidencia** | `package_evidence` se escribe solo en la rama `_outcome.blocks_publish` de `main.py`; **además** del `packager.publish()` que ya conocía el plan, el `except` "Tribunal enrichment failed (never-block)" publica una segunda vez sin hash ni conteo. AC20 (iii) la incorpora | FASE-A → FASE-0 |
+| **FASE-A: superficies de tests pertinentes** | 7 archivos, **130 funciones canónicas** → **134 casos** recolectados, **133 passed + 1 skipped**, exit 0, sin red (0 coincidencias de `requests/urllib/socket`). Incluye las dos superficies que gobernará FASE-0 | FASE-A (`tests_pertinentes_pre.txt`) |
+| **FASE-A: blast radius de AC19, tercera medición** | Reproduce el método canónico y da **52 archivos / 816 funciones** y **31 / 545**, idéntico a lo publicado en `d4dacb4`; los 4 asserts de igualdad exacta localizados por símbolo | FASE-A |
+| **FASE-A: QMind** | Consulta **recuperada** tras la denegación de la revisión 2; 6 aportes, 3 ya cerrados en código vivo. Sin subida | FASE-A |
+| Presupuesto de iteraciones | **FUERA DE SERVICIO (R2.1) en A**: el instrumento pide el transcript y su acceso no está disponible; se declara **corte documental** y auto-reporte con su unidad, sin sumarlo al instrumento | Todas |
 
 ## Sección E: Archivos afiliados actualizados
 

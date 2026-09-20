@@ -10,7 +10,7 @@ Contratos: [maestro](01-plan-maestro.md), [ejecución](04-contrato-ejecucion.md)
 
 | Fase | Prerrequisito | Foco de aceptación | Estado | Evidencia de cierre |
 |---|---|---|---|---|
-| A | Mandato de sesión | Baseline, permisos, matriz ratificada (incluida FASE-0 y AC19a/AC19b), identidad/vigencia; AC14 | PENDIENTE | PENDIENTE |
+| A | Mandato de sesión | Baseline, permisos, matriz ratificada (incluida FASE-0 y AC19a/AC19b), identidad/vigencia; AC14 | **EJECUTADA 2026-09-19 · CHECKPOINT (falta autorización de commit)** | `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-A/`: `decisiones.md`, `baseline_inventory.json`, `qmind-consulta-reintentada.md`, `tests_pertinentes_pre.txt` |
 | G | A cerrada | AC7, AC16, AC15. **Guard de las ediciones de B–F** | PENDIENTE | PENDIENTE |
 | **0** | G cerrada | AC20; AC12 en su rama publish | PENDIENTE | PENDIENTE |
 | B | 0 cerrada | AC1, AC2, AC15, AC19a (consumo) | PENDIENTE | PENDIENTE |
@@ -59,7 +59,7 @@ Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATS
 ## Prerrequisitos de entrada
 
 - [ ] A re-mide el quick al inicio y registra el resultado observado. El 9/10 del 2026-09-18 quedó resuelto solo: eran cuatro documentos sucios en el árbol y el 2026-09-19 marca 10/10 con esos archivos ya idénticos a HEAD. No se arrastra como prerrequisito de autorización central.
-- [ ] **FASE-0 antes de E2E:** AC20 cerrado con su contrafactual medido. Medido el 2026-09-19: con `VACUOUS_RECALL` abierto, la corrida del hotel destino termina `BLOQUEADO` y ZIP suprimido **aunque los 13 gates estén verdes**; consumir el intento único sin cerrarlo gastaría la muestra en un resultado ya conocido.
+- [ ] **FASE-0 antes de E2E:** AC20 cerrado con su contrafactual medido. Medido el 2026-09-19: con `VACUOUS_RECALL` abierto, la corrida del hotel destino terminó `BLOQUEADO` y ZIP suprimido **aunque ninguno de los 13 gates estuviera fallido** (10 PASSED + 3 WARNING, re-medido por A); consumir el intento único sin cerrarlo gastaría la muestra en un resultado ya conocido.
 - [ ] G cierra **antes** de B: el verificador AST es el guard de las ediciones de callers de B–F, no un cierre de calidad posterior.
 - [ ] B/C gobernan AC19a: el lector declara qué rutas inspeccionó, C unifica o designa los dos lectores de WhatsApp, y B no convierte una señal negativa sin alcance verificado en ausencia confirmada del canal. **Y su inverso medido:** tampoco convierte una huella de plugin en número verificado.
 - [ ] H prueba **qué sucursal** tomó el loader y congela `--permission-mode` efectivo y snapshot de `.agent/memory`; `--output` no aísla la memoria compartida.
@@ -111,4 +111,4 @@ Aplicar dentro de la fase correspondiente, no diferir todo a RELEASE. Esta check
 - [ ] Presupuesto agotado o requisito pendiente producen checkpoint y nueva sesión para retomar; no se inicia otra fase ni se repite trabajo ya completado.
 - [ ] VERIFY distingue SUPERADO, FALLA y NO EJERCITADO con régimen offline/E2E explícito. RELEASE refleja esa conclusión sin prometer certificación universal a partir de un hotel.
 
-**Resumen inicial:** doce estados PENDIENTES; AC1–AC20 PENDIENTES; intento 0/1; siguiente sesión A. Evidencia, permisos adicionales, validaciones y medición de ejecución permanecen pendientes.
+**Resumen tras FASE-A (2026-09-19):** A **EJECUTADA** en checkpoint documental; once sesiones PENDIENTES; AC1–AC20 siguen PENDIENTES (A no certifica ninguno: certifican las fases dueñas y VERIFY); intento **0/1**; siguiente sesión **G**. De los prerrequisitos de entrada, A cerró con medición o decisión: quick re-medido 10/10, baseline preservado (0 escrituras), AC19 dimensionado por tercera vez, DOMAIN_PRIMER resuelto sin editar documentos centrales, identidad/URL con redirección observada, revocación acreditada por referencia y QMind recuperado. **Quedan abiertos con dueño:** la reconfirmación de vigencia/consentimiento (operador, antes de H/E2E), la autorización de commit de este cierre y, más abajo, F-B (decisión escrita de privacidad). El quick histórico 9/10 no se rebautiza verde: se midió de nuevo.

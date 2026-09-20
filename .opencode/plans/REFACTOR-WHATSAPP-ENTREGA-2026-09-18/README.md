@@ -1,6 +1,6 @@
 # REFACTOR-WHATSAPP-ENTREGA-2026-09-18
 
-**Estado: DISEÑADO, SIN IMPLEMENTAR.** Diseño congelado en el maestro y el contrato. Las doce sesiones están PENDIENTES; no hay aprobación, certificación ni resultado de implementación declarado. **Contador v4complete: 0/1. Siguiente sesión: A.**
+**Estado: FASE-A EJECUTADA (documental) el 2026-09-19, en checkpoint por autorización de commit; G–RELEASE pendientes.** No hay aprobación, certificación ni resultado de implementación declarado. **Contador v4complete: 0/1. Siguiente sesión: G.**
 
 **Revisión 2 (2026-09-19).** El plan se re-midió contra código vivo y contra una corrida real ya archivada (`output/TAREA7-2026-09-19/`, mismo hotel y URL del §5, 2026-09-19 15:01). Cuatro premisas del maestro cayeron, se añadieron **AC20** y **FASE-0**, **G adelanta a segunda sesión** y **AC19 se parte en 19a (aditivo) y 19b (diferido)**. Motivo central: la corrida medida terminó `BLOQUEADO` con ZIP suprimido **con los 13 gates verdes y readiness `READY_FOR_PUBLICATION`**, por un único hallazgo CRITICAL (`VACUOUS_RECALL`) que ninguna fase cubría y que el Knowledge Center registró el 2026-09-11 como "fix candidato fuera de este plan". Sin FASE-0, la meta de entrega de este plan era inalcanzable con independencia de B–H. Detalle en maestro §1, §2, §4 y §7.
 
@@ -22,7 +22,7 @@ Los enlaces a prompts y documentos de cierre identifican los destinos previstos 
 
 | Orden / prompt | Objetivo | Complejidad técnica | Estado |
 |---|---|---|---|
-| 1 · [A](05-prompt-inicio-sesion-fase-A.md) | Baseline, ratificación de contratos (incluida FASE-0 y AC19a/AC19b) y resolución de prerrequisitos | ALTA: producto, identidad y permisos transversales | PENDIENTE |
+| 1 · [A](05-prompt-inicio-sesion-fase-A.md) | Baseline, ratificación de contratos (incluida FASE-0 y AC19a/AC19b) y resolución de prerrequisitos | ALTA: producto, identidad y permisos transversales | **EJECUTADA 2026-09-19 (checkpoint: falta autorización de commit)** |
 | 2 · [G](05-prompt-inicio-sesion-fase-G.md) | Descubrimiento AST de callers y retirada del contrato muerto. **Adelantado: es el guard de las ediciones de B–F** | ALTA: cobertura sin lista fija y firmas compartidas | PENDIENTE |
 | 3 · [0](05-prompt-inicio-sesion-fase-0.md) | **Nueva.** Evidencia del veredicto serializada: recall fundado, hallazgos en el acta y hash del paquete publicado | MEDIA técnica / ALTA consecuencia: decide si puede existir un ZIP entregable | PENDIENTE |
 | 4 · [B](05-prompt-inicio-sesion-fase-B.md) | Pains, promesas y guía de setup sin número | ALTA: mapper, catálogo y productores de narrativa/coverage | PENDIENTE |

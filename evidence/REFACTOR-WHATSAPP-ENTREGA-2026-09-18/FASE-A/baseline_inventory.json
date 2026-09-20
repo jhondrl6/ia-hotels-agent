@@ -1,0 +1,442 @@
+{
+  "fase": "FASE-A",
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "medido_el": "2026-09-19",
+  "head": {
+    "commit": "d4dacb4",
+    "rama": "master",
+    "arbol": "?? evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-A/",
+    "frente_a_origin": "0 ahead / 0 behind",
+    "nota": "la revision 2 anclo simbolos en 938f59f; los 3 commits siguientes (9b0af4f, 4a8d61f, d4dacb4) tocan solo documentos del plan y el indice de lecciones, ningun codigo de producto"
+  },
+  "quick": {
+    "comando": "./venv/Scripts/python.exe scripts/run_all_validations.py --quick",
+    "resultado": "10/10",
+    "exit_code": 0,
+    "repite_el_rojo_del_2026_09_18": false
+  },
+  "baseline_ajeno": {
+    "ruta": "output/TAREA7-2026-09-19",
+    "rol": "baseline medido del plan (contrato, limites, lectura de corridas ajenas)",
+    "escrituras": 0,
+    "archivos": 60,
+    "zips_presentes": 0,
+    "leidos_sin_modificar": [
+      "acta_revision.json",
+      "gate_report_20260919_150131.json",
+      "revision_diagnostico.json",
+      "coherence_validation.json",
+      "pain_ledger.json",
+      "site_presence_snapshot.json",
+      "asset_generation_report.json",
+      "v4_complete_report.json"
+    ],
+    "inventario": [
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260919_150131.md",
+        "bytes": 18230,
+        "sha256": "6ceac64824863031be9bbffe26001d81cb83289d5ab1fbc7980924bb5b728326",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/02_PROPUESTA_COMERCIAL_20260919_150131.md",
+        "bytes": 16024,
+        "sha256": "3ffc105c416f102dc8b689a88e6382589993d7a0949f766254201b5bd864420b",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/health_dashboard/health_dashboard.html",
+        "bytes": 14270,
+        "sha256": "95c7e9fbf42b79ae4a8db15bd605c186779e0a06a91574fd4685e8d06d205a89",
+        "mtime_utc": "2026-09-19T20:01:38Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/health_dashboard/health_dashboard_summary.json",
+        "bytes": 1088,
+        "sha256": "74c201b7c164ca901d3068dc30ead43385e3b306bbd99d0701074af845345810",
+        "mtime_utc": "2026-09-19T20:01:38Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/alt_text_guide/ESTIMATED_guia_alt_text_20260919_150131.md",
+        "bytes": 2119,
+        "sha256": "154f64c0239920ef61a7ed74dcd1caf45d51960f185d10e94154cb3b359170c5",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/alt_text_guide/ESTIMATED_guia_alt_text_20260919_150131_metadata.json",
+        "bytes": 817,
+        "sha256": "e0c5d903090e9eabffee2969bd644241a64c3894408bbf0c32ae4bbc2f1362c6",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260919_150131.md",
+        "bytes": 5010,
+        "sha256": "e6aa67b9c67405f7144dd88303b4bb96df2274cf28dfe62bb41ec1115bc3c21c",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20260919_150131_metadata.json",
+        "bytes": 818,
+        "sha256": "68adde0842fdb536b95594f801819c674b5887861b5e0e565ae51f5dafbb61aa",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/faq_page/ESTIMATED_faqs_20260919_150131.json",
+        "bytes": 874,
+        "sha256": "df1b7289897b0ec3463efd215ba91f9594be708774c11e373fda70b4635eedba",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/faq_page/ESTIMATED_faqs_20260919_150131_metadata.json",
+        "bytes": 827,
+        "sha256": "4bcd4e448a0a78edc160876da8592bba410af26a3bd69a63d26a422ed2cf7079",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/geo_enriched/faq_schema.json",
+        "bytes": 1689,
+        "sha256": "36aa325527fa432b5e0a34c71ea7df07ca7626796f813916c76476d4e8f2e861",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/geo_enriched/geo_badge.md",
+        "bytes": 1011,
+        "sha256": "948847352f59d18eacd4f6270088d175c6213625a5de02ad7d1df58b9ce7cd0a",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/geo_enriched/geo_checklist_min.md",
+        "bytes": 561,
+        "sha256": "8745900731af13e85f0df243a59105479121a5e5e0de4f1b3a7ee61b5c8c6868",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/geo_enriched/geo_dashboard.md",
+        "bytes": 2925,
+        "sha256": "3113e8cfe45b3d6e3bf0bcfa426a1e8a33a6e0e017555fcee3a90854f2a68b1c",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/geo_enriched/geo_fix_kit.md",
+        "bytes": 2418,
+        "sha256": "55fa480e96445d3197173b4b7d30b127c30c4739bf088dba820f229590220587",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/geo_enriched/hotel_schema_rich.json",
+        "bytes": 1073,
+        "sha256": "7b27aa24abc03ad5278a294e6eb5f5cd5bbc4894cf6475f20898b1639bdc02bf",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/geo_enriched/llms.txt",
+        "bytes": 1065,
+        "sha256": "b641054c70ac22166fb634c2ccdb452d93f2a1230566c147e819e92b2e6cee0e",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/geo_enriched/robots_fix.txt",
+        "bytes": 1823,
+        "sha256": "4122d5933a00eff374684d1fc37288c414bba93ddc403f244f39b9eea559ceea",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/geo_enriched/seo_fix_kit.md",
+        "bytes": 847,
+        "sha256": "abf6f03848405dd48f14ea07101e23e7347f5aadd72760ca17606b9ea8ddecad",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/geo_enriched/sync_report.md",
+        "bytes": 959,
+        "sha256": "e4ea5f3715652e1a649f954111db7b63df22a57bfa4b030bf9acd6ab0d806dcb",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/hotel_schema/hotel_schema_20260919_150131.json",
+        "bytes": 938,
+        "sha256": "c91df99855c6cbe0191d6619795aa8d7583f7a4ef6677537e11046f7f7aae981",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/hotel_schema/hotel_schema_20260919_150131_metadata.json",
+        "bytes": 892,
+        "sha256": "fff810dc19e63919f75dee7cc95940db0f3b17d0505e7729a17ee61880303269",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260919_150131.md",
+        "bytes": 5235,
+        "sha256": "53e92a90fd466057ca23383df9a64ad4603e11abe982c1c4f9b9bc55942e385e",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20260919_150131_metadata.json",
+        "bytes": 837,
+        "sha256": "47466a4ce1f3cb74c8be14a3ec2fd741dcec01577ef0393bfb29ab2fa8183ac9",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/llms_txt/llms_20260919_150131.txt",
+        "bytes": 769,
+        "sha256": "d87d8ebdeae138d14ffdd92f39a0f4f1a40554747f9a95138a112045e33a3f30",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/llms_txt/llms_20260919_150131_metadata.json",
+        "bytes": 874,
+        "sha256": "c1f8270f29b886b94df849e30cec1cd3c492f8cb7080c46ac7a7b9bfd3e4038e",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/monthly_report/informe_mensual_20260919_150131.md",
+        "bytes": 5405,
+        "sha256": "a9fb0fdfdfe006eda187a95d61a05b061bdef4d400f5b9cdf617345e93e173a0",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/monthly_report/informe_mensual_20260919_150131_metadata.json",
+        "bytes": 778,
+        "sha256": "40fd4c8195a3eb6564c8e81eac7798b55470c7ec0648e4d346be81519cc6238d",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/og_tags_guide/ESTIMATED_guia_og_tags_20260919_150131.md",
+        "bytes": 1630,
+        "sha256": "f4aa83bc7154bf565db2209d378d1ef026ea4819c736143928a74ea48e1a8d70",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/og_tags_guide/ESTIMATED_guia_og_tags_20260919_150131_metadata.json",
+        "bytes": 812,
+        "sha256": "c94de52cfa81068bfd907ab454c8a0720c8edc960c1a85de5c4b654097860dfe",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/open_graph/open_graph_meta_20260919_150131.html",
+        "bytes": 2026,
+        "sha256": "4c3f6d8c41c015b598ee3912aaba2d61a421de2bd94513580ae70ae45019ced7",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/open_graph/open_graph_meta_20260919_150131_metadata.json",
+        "bytes": 809,
+        "sha256": "1472939333c7c8939d717fd0019ae938dd004976e4ed2ed76192eea7d84f80f6",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/optimization_guide/ESTIMATED_guia_optimizacion_20260919_150131.md",
+        "bytes": 5360,
+        "sha256": "3977a0dd5db3e7209f4a0d2be79763b1a4f3318959d109b2b46e6b32caf27f8a",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/optimization_guide/ESTIMATED_guia_optimizacion_20260919_150131_metadata.json",
+        "bytes": 947,
+        "sha256": "c9e4f659ba6aab6a29849b7276f41dc4fd420dd2cb13599412230ab9902b65dc",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/research_df55f4db71f3_Hotel_Don_Alfonso.json",
+        "bytes": 264,
+        "sha256": "d193cd3beea4d59ef28128e49512260f767863f6ae38d93fb20634072c23b699",
+        "mtime_utc": "2026-09-19T20:01:27Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/review_plan/ESTIMATED_plan_reviews_20260919_150131.md",
+        "bytes": 479,
+        "sha256": "39d69b8d1cb1e336728c21b1c5e3919070ea33d88d7ce8a688030b162b78c4ad",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/review_plan/ESTIMATED_plan_reviews_20260919_150131_metadata.json",
+        "bytes": 841,
+        "sha256": "67096765f93bb650d6e135130c7e0c60a3413bde5afc831c83e71230bc3db208",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/acta_revision.json",
+        "bytes": 3229,
+        "sha256": "5f7f271d739d12fcc9b92ede6055290c48f9c2572037527c561c582ecc917b99",
+        "mtime_utc": "2026-09-19T20:01:38Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/acta_revision.md",
+        "bytes": 2896,
+        "sha256": "9301da068f1be6d07c8fafecaeb9224a2bec9ccf30a64018ad0fcb4dbfeb9dd5",
+        "mtime_utc": "2026-09-19T20:01:38Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/asset_generation_report.json",
+        "bytes": 10449,
+        "sha256": "197062fe4e9ae957330e3cd1ebcea501f7439bdb8a3768ee0b0584bf08cc774c",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/audit_report_20260919_150111.json",
+        "bytes": 9869,
+        "sha256": "70c655172b1d913fe87203e5a99efd6e80d5e0a834a4a7c573cdf2842ab6e394",
+        "mtime_utc": "2026-09-19T20:01:11Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/coherence_validation.json",
+        "bytes": 1388,
+        "sha256": "513c5b042a10598a8e72d35d1354e53d65d9864f3ff8004b38cd7c3d653fa54d",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/coherence_validation_post_gen.json",
+        "bytes": 1388,
+        "sha256": "513c5b042a10598a8e72d35d1354e53d65d9864f3ff8004b38cd7c3d653fa54d",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/commercial_gates_report.json",
+        "bytes": 890,
+        "sha256": "597a97ece70d3934f2fb130737e4309e091037e548397b17b4148687fee6f738",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/commercial_gates_report_diagnostic_20260919_150131.json",
+        "bytes": 3554,
+        "sha256": "ad043ac701f585b4a16fb9c0334b2397c9c372fa02f85a17f923d59d2776b1f4",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/delivery_quality_report.json",
+        "bytes": 1675,
+        "sha256": "bb60b5887b4e5600aec44a97ca7094e683cdba704dca4d4de406fc4513e3863e",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/financial_scenarios_20260919_150111.json",
+        "bytes": 2061,
+        "sha256": "29f18e34b39e2ef2f37820ff03c15a63d8a2e9a4a307845a40b278f49e8b5cc4",
+        "mtime_utc": "2026-09-19T20:01:11Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/gate_report_20260919_150131.json",
+        "bytes": 8379,
+        "sha256": "5ce4fbe1807a4c5a60e57e7b0e6092039d497e039e9650867a04682285bf96d6",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/geo_flow_result.json",
+        "bytes": 5234,
+        "sha256": "3cead82d928f0b67de15126a2a4246088a4e682e805f3cf97e30b181c7d60229",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/human_checklist.md",
+        "bytes": 688,
+        "sha256": "7bb815007583a7bba0f0f534ecc61bf41d9882f6c7d1daea9ccc845385d0f9b1",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/ia_readiness_report.json",
+        "bytes": 622,
+        "sha256": "27ee8411fa61539efea21cf5f1737eb7db6be089c4028f65b9c2a85c1457c5c3",
+        "mtime_utc": "2026-09-19T20:01:11Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/pain_ledger.json",
+        "bytes": 3615,
+        "sha256": "a3bfb46b558ff1a0d9b02ff9b8dc1389e8d242d646325d80f050a7a838ebb0cc",
+        "mtime_utc": "2026-09-19T20:01:26Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/pain_ledger_resolved.json",
+        "bytes": 3832,
+        "sha256": "a9ebfc4a73953750a503b82bbd5cd09dc61b48fd72129da8e3f21b253acbf3e3",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/proposal_asset_matrix.json",
+        "bytes": 3391,
+        "sha256": "b59ca7175f31be22843bf5ab76a4a47053b7589167e5ceaf192ff5f630f12faa",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/revision_alineacion.json",
+        "bytes": 2537,
+        "sha256": "fe155a60b5ec119fc6b8f9e03816be56b36929a387e45f52fadf2ab034a58593",
+        "mtime_utc": "2026-09-19T20:01:38Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/revision_assets.json",
+        "bytes": 3054,
+        "sha256": "a4dd80b352b72e4e1054d8e8cafba93a909a1125455f61e36e76cc7d325ec8ef",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/revision_diagnostico.json",
+        "bytes": 812,
+        "sha256": "a9419d3ed638287c8d2cbc84527489364d3904686531def87af2d94d063db932",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/revision_honestidad.json",
+        "bytes": 2752,
+        "sha256": "b45d6f6374000ef2f33b46578107af8d92438decf62157cca1d25ff3762ca366",
+        "mtime_utc": "2026-09-19T20:01:38Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/site_presence_snapshot.json",
+        "bytes": 1382,
+        "sha256": "1159659ac470338e2c49e896608d8ed247db75fd4dab0f3d94cce22202f233b1",
+        "mtime_utc": "2026-09-19T20:01:31Z"
+      },
+      {
+        "ruta": "output/TAREA7-2026-09-19/v4_complete/v4_complete_report.json",
+        "bytes": 21567,
+        "sha256": "a5af2fb72b662bc88f772c9c21a6597a3b533fb17c0037c77db82129a58c64e9",
+        "mtime_utc": "2026-09-19T20:01:38Z"
+      }
+    ]
+  },
+  "superficies_de_tests": {
+    "seleccion": [
+      {
+        "archivo": "tests/regression/test_whatsapp_conflicts.py",
+        "funciones_canonicas": 4,
+        "sha256": "94d0b75cd9c352701e85fafd8a949dedd5669ac45cfce03efb253be41344b12f"
+      },
+      {
+        "archivo": "tests/commercial_documents/test_promised_assets_production.py",
+        "funciones_canonicas": 11,
+        "sha256": "5d901731e60abdbdabf17cb831d17a6d72b78aa79fc19cba376e12a09b0364f8"
+      },
+      {
+        "archivo": "tests/asset_generation/test_site_presence_adapter.py",
+        "funciones_canonicas": 6,
+        "sha256": "3d5a33e7748e384e0a2257d9ce9931bf30a3f5fcb7bdc3f4cd51de618f8594f8"
+      },
+      {
+        "archivo": "tests/test_p6r_full_flow_matrix.py",
+        "funciones_canonicas": 6,
+        "sha256": "da8c663629123436e941fcdc654d3da65eadeeb444b4e6b3c19da544f7a4b08c"
+      },
+      {
+        "archivo": "tests/quality_gates/test_publication_gates.py",
+        "funciones_canonicas": 82,
+        "sha256": "f8ad8d56ebc00e3d4cde990898058f18bdcbcd7a85064351388664de3f5e6328"
+      },
+      {
+        "archivo": "tests/quality_gates/tribunal/test_diagnosis_reviewer.py",
+        "funciones_canonicas": 10,
+        "sha256": "f07e70f2388496f77f4053856a301eba639ec7137c12b5d08e69226715bfceca"
+      },
+      {
+        "archivo": "tests/auditors/test_p5_ac_s1_secret_sanitization.py",
+        "funciones_canonicas": 11,
+        "sha256": "6e869efd54c6285fcde8c617c13050ac4b829f6e3882b19f8f53d0b30fdbf7bd"
+      }
+    ],
+    "total_funciones_canonicas": 130,
+    "corrida": "pytest -q offline, venv Python 3.13.3",
+    "resultado": "133 passed, 1 skipped",
+    "exit_code": 0,
+    "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-A/tests_pertinentes_pre.txt",
+    "notas": "130 funciones canonicas vs 134 casos recolectados (+4 por parametrizacion); 0 coincidencias de requests/urllib/socket en la salida"
+  }
+}

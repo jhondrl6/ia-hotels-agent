@@ -2459,3 +2459,21 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 **Backwards compatibility**: Sí. Campos nuevos adicionales (`error_message=None` por defecto); `exists` sigue contando como presente.
 
 **Tests**: 31 nuevos (11 `test_fase_sr_e_schema_detection.py` + 20 `test_fase_sr_e_presence_accounting.py`); regresión 148 aislada (58 data_validation + 81 asset_generation + 9 auditors), 0 fallos; `run_all_validations --quick` 6/6.
+---
+
+## Nota Técnica — FASE-A del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (2026-09-19)
+
+**Qué se hizo**: sesión documental de contratos y baseline. Ninguna edición de código, ninguna corrida (`v4complete` sigue en 0/1), ninguna escritura sobre `output/TAREA7-2026-09-19/` ni sobre `evidence/FASE-P4/`.
+
+**Cómo se midió**: cada premisa del maestro se volvió a comprobar contra HEAD `d4dacb4` por símbolo o por lectura del artefacto que la produce, y quedó tabulada en `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-A/decisiones.md` (§1, veinte filas P1-P20). El método canónico usado para el vecindario: para el blast radius de AC19 (`grep -rlE` del vecindario + `grep -hE "^\s*def test_"`, subconjunto por comillas dobles): 52 archivos / 816 funciones y 31 / 545, idéntico a la medición publicada.
+
+**Hallazgos técnicos que cambian un enunciado**:
+- El baseline ajeno no tenía 13 gates verdes sino **10 PASSED + 3 WARNING, 0 fallidos**, todos con `blocks_publication=False`; el bloqueo vino de un revisor, no de un gate.
+- `package_evidence` falta en **dos** ramas de publicación, no en una: `packager.publish()` y el `except Exception` "Tribunal enrichment failed (never-block)" de `main.py`, que re-publica la cuarentena sin hash ni conteo.
+- La causa del `VACUOUS_RECALL` **sí** está serializada en `revision_diagnostico.json`; lo que falta es su agregación al acta (`ReviewerReport.to_dict`). AC20 (ii) se enuncia como agregación, no como diagnóstico inexistente.
+- `ASSET_CATALOG["whatsapp_button"]` instruye `block_on_failure=False  # NEVER_BLOCK: generar botón básico aunque falte WhatsApp`: una quinta fuente de la promesa que B/C deben gobernar.
+- Dos dependencias reveladas por la consulta recuperada a QMind: `CrossValidator._reconcile_whatsapp_multisede` (el falso positivo entre sedes ya está cerrado y testado) y `DeliveryPackager._INTERNAL_DOC_PREFIXES` (el acta no viaja en el ZIP de cliente, por construcción).
+
+**Decisión documental**: la divergencia sobre DOMAIN_PRIMER se resolvió aplicando el executor §E7 y `docs/CONTRIBUTING.md` L400 — regenerar con `doctor.py --regenerate-domain-primer` al cerrar cada fase de implementación y verificar (`--context`) en RELEASE — **sin editar** `AGENTS.md` ni el workflow. A no es fase de implementación, así que no regenera.
+
+**Límites**: el instrumento `measure_iterations.py` quedó FUERA DE SERVICIO (R2.1) porque exige el transcript de la sesión; se declara corte documental. A no certifica ningún AC y no habilita G hasta cerrar el commit.
