@@ -1,0 +1,3422 @@
+{
+  "cobertura": {
+    "archivos_en_alcance": 611,
+    "archivos_excluidos_por_rol": 8285,
+    "exclusiones_por_clase": {
+      "ContentValidator": "valida contenido generado",
+      "EnvValidator": "valida variables de entorno",
+      "NoDefaultsValidator": "audita defaults financieros, no senales de canal",
+      "PlanValidator": "valida planes de contenido",
+      "PrecisionValidator": "audita precision numerica, no promesa WhatsApp (AC7: excluir)"
+    },
+    "gobernadas_resueltas": 70,
+    "llamadas_descubiertas": 169,
+    "por_clasificacion": {
+      "EXCLUIDA_POR_CLASE": 43,
+      "EXCLUIDA_POR_CLASE_NO_GOBERNADA": 31,
+      "GOBERNADA_CONFORME": 14,
+      "GOBERNADA_CON_OMISION": 3,
+      "RECEPTOR_NO_RESUELTO": 25,
+      "TEST_EXENTO_DE_SENAL": 53
+    },
+    "receptores_no_resueltos": 25,
+    "receptores_no_resueltos_en_produccion": 0
+  },
+  "comando": "python scripts/validate_wiring.py --write-report",
+  "excepciones_aplicadas": [
+    {
+      "ac": "AC1",
+      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
+      "baja_cuando": "generate_assets propague whatsapp_html_detected a detect_pains",
+      "dueno": "FASE-B",
+      "linea_amparada": 286,
+      "motivo": "Divergencia real de la fila F-A' del maestro §1: es el hallazgo que este verificador debe poder nombrar, no un falso positivo. Sigue abierto porque corregir el caller le toca a FASE-B (AC1) y G corre antes.",
+      "senal": "whatsapp_html_detected",
+      "simbolo": "PainSolutionMapper.detect_pains",
+      "tipo_excepcion": "HALLAZGO_CONOCIDO"
+    },
+    {
+      "ac": "AC1",
+      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
+      "baja_cuando": "el caller propague la senal",
+      "dueno": "FASE-B",
+      "linea_amparada": 309,
+      "motivo": "Misma causa, invocacion pre-gen del orquestador. Precision medida por G: la divergencia no es una linea, son tres.",
+      "senal": "whatsapp_html_detected",
+      "simbolo": "CoherenceValidator.validate",
+      "tipo_excepcion": "HALLAZGO_CONOCIDO"
+    },
+    {
+      "ac": "AC1",
+      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
+      "baja_cuando": "el caller propague la senal",
+      "dueno": "FASE-B",
+      "linea_amparada": 447,
+      "motivo": "Misma causa, invocacion post-gen. Registrada aparte para que el conteo de hallazgos no se reduzca corrigiendo solo una de las tres.",
+      "senal": "whatsapp_html_detected",
+      "simbolo": "CoherenceValidator.validate",
+      "tipo_excepcion": "HALLAZGO_CONOCIDO"
+    }
+  ],
+  "exclusiones_por_rol": {
+    ".venv-wsl": {
+      "cantidad": 582,
+      "ejemplo": ".venv-wsl/bin/activate_this.py",
+      "motivo": "entorno virtual de terceros"
+    },
+    "archives": {
+      "cantidad": 12,
+      "ejemplo": "archives/deprecated_modules_20260304/assessment.py",
+      "motivo": "registro historico cerrado; gobernarlo implicaria reescribir historia"
+    },
+    "build": {
+      "cantidad": 8,
+      "ejemplo": "venv/Lib/site-packages/pip/_internal/operations/build/__init__.py",
+      "motivo": "artefacto de empaquetado"
+    },
+    "evidence": {
+      "cantidad": 34,
+      "ejemplo": "evidence/FASE-A/faseA_contrafactual.py",
+      "motivo": "scripts de medicion historicos; el contrato del plan prohibe reescribirlos"
+    },
+    "temp": {
+      "cantidad": 60,
+      "ejemplo": "temp/_verify_salentoreal.py",
+      "motivo": "scratch y respaldos locales (gitignorado), no fuente versionada"
+    },
+    "venv": {
+      "cantidad": 7589,
+      "ejemplo": "venv/Lib/site-packages/_pytest/__init__.py",
+      "motivo": "entorno virtual de terceros"
+    }
+  },
+  "generado": "2026-09-20T15:15:18+00:00",
+  "git_sha": "d7ff932",
+  "limites": [
+    "dispatch dinamico (`getattr(obj, nombre)(...)`): el AST no ve que metodo se invoca",
+    "receptores cuyo tipo no se deduce estaticamente: se publican en `poblacion` con clasificacion RECEPTOR_NO_RESUELTO y se cuentan en `cobertura`",
+    "metaprogramacion (decoradores que reescriben llamadas, `__getattr__`)",
+    "los tests estan exentos de la exigencia de `senales` (ejercitan defaults a proposito) pero NO de `argumentos_prohibidos`",
+    "gobernar `validate` por nombre de metodo seria un falso verde: solo se gobierna cuando el receptor resuelve a una clase de `GOBERNADOS`",
+    "una funcion de MODULO que se llame como un metodo gobernado (`validate_opencode_refs.validate(...)`) resuelve a su modulo y queda excluida: gobernar funciones de modulo pediria tabla propia de (modulo, funcion), no la de clases. Limite medido al inventariar las 74 exclusiones del arbol",
+    "un ✅ prueba que la poblacion descubierta esta conforme o registrada; NO prueba que no existan callers fuera del alcance del AST"
+  ],
+  "modo_excepciones": "APLICADAS",
+  "poblacion": [
+    {
+      "archivo": "agent_harness/self_healer.py",
+      "clase_resuelta": "PlanValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 410,
+      "metodo": "validate",
+      "motivo": "valida planes de contenido",
+      "posicionales": 0,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "main.py",
+      "clase_resuelta": "PrecisionValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "adr_cop",
+        "adr_source",
+        "channel_source",
+        "direct_channel_pct",
+        "occupancy_rate",
+        "occupancy_source"
+      ],
+      "linea": 2171,
+      "metodo": "validate",
+      "motivo": "audita precision numerica, no promesa WhatsApp (AC7: excluir)",
+      "posicionales": 0,
+      "receptor": "PrecisionValidator",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "main.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": false,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 2445,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "pain_mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "main.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": false,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "generated_assets",
+        "site_presence_report",
+        "whatsapp_html_detected"
+      ],
+      "linea": 2539,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "coherence_validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "main.py",
+      "clase_resuelta": "AssessmentBuilder",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": false,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 2938,
+      "metodo": "with_validation",
+      "posicionales": 1,
+      "prohibidos_presentes": [],
+      "receptor": "builder",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "validation_summary"
+      ]
+    },
+    {
+      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CON_OMISION",
+      "en_tests": false,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 286,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "self.pain_mapper",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "GOBERNADA_CON_OMISION",
+      "en_tests": false,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "site_presence_report"
+      ],
+      "linea": 309,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "self.coherence_validator",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "GOBERNADA_CON_OMISION",
+      "en_tests": false,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "generated_assets",
+        "site_presence_report"
+      ],
+      "linea": 447,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "self.coherence_validator",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "modules/commercial_documents/v4_diagnostic_generator.py",
+      "clase_resuelta": "PrecisionValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "adr_cop",
+        "adr_source",
+        "channel_source",
+        "direct_channel_pct",
+        "occupancy_rate",
+        "occupancy_source"
+      ],
+      "linea": 1591,
+      "metodo": "validate",
+      "motivo": "audita precision numerica, no promesa WhatsApp (AC7: excluir)",
+      "posicionales": 0,
+      "receptor": "PrecisionValidator",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "modules/commercial_documents/v4_diagnostic_generator.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": false,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "analytics_data",
+        "audit_result",
+        "validation_summary",
+        "whatsapp_html_detected"
+      ],
+      "linea": 3300,
+      "metodo": "detect_pains",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "pain_mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "modules/commercial_documents/v4_proposal_generator.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": false,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "committed_services",
+        "detected_pain_ids",
+        "opportunity_scores",
+        "score_aeo",
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "linea": 1061,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self",
+      "resolucion": "self_metodo_propio",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "modules/delivery/manager.py",
+      "clase_resuelta": "PlanValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 181,
+      "metodo": "validate",
+      "motivo": "valida planes de contenido",
+      "posicionales": 0,
+      "receptor": "plan_validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "modules/delivery/manager.py",
+      "clase_resuelta": "ContentValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 196,
+      "metodo": "validate",
+      "motivo": "valida contenido generado",
+      "posicionales": 1,
+      "receptor": "content_validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "modules/delivery/manager.py",
+      "clase_resuelta": "ContentValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 228,
+      "metodo": "validate",
+      "motivo": "valida contenido generado",
+      "posicionales": 1,
+      "receptor": "content_validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "modules/financial_engine/calculator_v2.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "sources"
+      ],
+      "linea": 211,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal",
+      "posicionales": 1,
+      "receptor": "self.validator",
+      "resolucion": "self_binding_en_la_clase"
+    },
+    {
+      "archivo": "modules/financial_engine/inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 156,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado",
+      "posicionales": 0,
+      "receptor": "self",
+      "resolucion": "self_metodo_propio"
+    },
+    {
+      "archivo": "modules/financial_engine/precision_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 58,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal",
+      "posicionales": 2,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "modules/quality_gates/coherence_gate.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": false,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets",
+        "diagnostic",
+        "generated_assets",
+        "proposal",
+        "validation_summary",
+        "whatsapp_html_detected"
+      ],
+      "linea": 289,
+      "metodo": "validate",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self._validator",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "modules/quality_gates/ethics_gate.py",
+      "clase_resuelta": "EthicsGate",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 220,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a EthicsGate, que no es un productor gobernado",
+      "posicionales": 1,
+      "receptor": "self",
+      "resolucion": "self_metodo_propio"
+    },
+    {
+      "archivo": "modules/quality_gates/publication_gates.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 493,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "modules/utils/env_validator.py",
+      "clase_resuelta": "EnvValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 38,
+      "metodo": "validate",
+      "motivo": "valida variables de entorno",
+      "posicionales": 0,
+      "receptor": "EnvValidator",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "scripts/validate.py",
+      "clase_resuelta": "PlanValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 116,
+      "metodo": "validate",
+      "motivo": "valida planes de contenido",
+      "posicionales": 0,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "scripts/validate.py",
+      "clase_resuelta": "ContentValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 136,
+      "metodo": "validate",
+      "motivo": "valida contenido generado",
+      "posicionales": 2,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "scripts/validate.py",
+      "clase_resuelta": "PlanValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": false,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 170,
+      "metodo": "validate",
+      "motivo": "valida planes de contenido",
+      "posicionales": 0,
+      "receptor": "plan_validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/asset_generation/test_coherence_post_generation.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "generated_assets"
+      ],
+      "linea": 180,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/asset_generation/test_coherence_post_generation.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "generated_assets"
+      ],
+      "linea": 186,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/asset_generation/test_coherence_post_generation.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "generated_assets"
+      ],
+      "linea": 226,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/asset_generation/test_coherence_post_generation.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "generated_assets"
+      ],
+      "linea": 266,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/asset_generation/test_fase_sr_e_presence_accounting.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "committed_services",
+        "opportunity_scores",
+        "site_presence_report"
+      ],
+      "linea": 172,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "generator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/asset_generation/test_fase_sr_e_presence_accounting.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 299,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/asset_generation/test_fase_sr_e_presence_accounting.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 308,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/asset_generation/test_open_graph_generation.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 58,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/asset_generation/test_open_graph_generation.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 96,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/auditors/test_fase_sr_f_probe_url_canonicalization.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 326,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "PainSolutionMapper()",
+      "resolucion": "constructor_en_linea",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/auditors/test_fase_sr_f_probe_url_canonicalization.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 353,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 83,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 88,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 95,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 102,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 107,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 123,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 129,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 140,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 149,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 156,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 161,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 169,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 176,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 181,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 186,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_detect_pains_emisiones_faseB.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "analytics_data"
+      ],
+      "linea": 212,
+      "metodo": "detect_pains",
+      "motivo": "metodo de nombre gobernado (detect_pains) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "mapper",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_diagnostic_brechas.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 1051,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_diagnostic_brechas.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 1151,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_diagnostic_brechas.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 1187,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 91,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 106,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 122,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 148,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 205,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 218,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 228,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 239,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 246,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 257,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 281,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 294,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 306,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 331,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 346,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 413,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_promised_assets_message_artifact.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets",
+        "diagnostic",
+        "generated_assets",
+        "proposal",
+        "site_presence_report",
+        "validation_summary"
+      ],
+      "linea": 93,
+      "metodo": "validate",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_promised_assets_message_artifact.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets",
+        "diagnostic",
+        "generated_assets",
+        "proposal",
+        "site_presence_report",
+        "validation_summary"
+      ],
+      "linea": 158,
+      "metodo": "validate",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_breach_consistency.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "opportunity_scores",
+        "whatsapp_conflict"
+      ],
+      "linea": 103,
+      "metodo": "_generate_dynamic_services_table",
+      "motivo": "metodo de nombre gobernado (_generate_dynamic_services_table) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "gen",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_breach_consistency.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "opportunity_scores"
+      ],
+      "linea": 126,
+      "metodo": "_generate_dynamic_services_table",
+      "motivo": "metodo de nombre gobernado (_generate_dynamic_services_table) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "gen",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_breach_consistency.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "opportunity_scores"
+      ],
+      "linea": 138,
+      "metodo": "_generate_dynamic_services_table",
+      "motivo": "metodo de nombre gobernado (_generate_dynamic_services_table) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "gen",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_breach_consistency.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "opportunity_scores",
+        "whatsapp_conflict"
+      ],
+      "linea": 148,
+      "metodo": "_generate_dynamic_services_table",
+      "motivo": "metodo de nombre gobernado (_generate_dynamic_services_table) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "gen",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_breach_consistency.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "opportunity_scores",
+        "whatsapp_conflict"
+      ],
+      "linea": 161,
+      "metodo": "_generate_dynamic_services_table",
+      "motivo": "metodo de nombre gobernado (_generate_dynamic_services_table) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "gen",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "detected_pain_ids"
+      ],
+      "linea": 131,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "detected_pain_ids"
+      ],
+      "linea": 163,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated"
+      ],
+      "linea": 319,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated"
+      ],
+      "linea": 326,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "site_presence_report"
+      ],
+      "linea": 338,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated"
+      ],
+      "linea": 350,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "score_aeo"
+      ],
+      "linea": 355,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "score_aeo"
+      ],
+      "linea": 360,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated"
+      ],
+      "linea": 410,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated"
+      ],
+      "linea": 453,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "site_presence_report"
+      ],
+      "linea": 473,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated"
+      ],
+      "linea": 499,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "detected_pain_ids",
+        "opportunity_scores",
+        "whatsapp_conflict"
+      ],
+      "linea": 607,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "detected_pain_ids",
+        "opportunity_scores",
+        "whatsapp_conflict"
+      ],
+      "linea": 645,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/data_validation/test_schema_validator_v2.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "is_hotel_site",
+        "url"
+      ],
+      "linea": 298,
+      "metodo": "validate",
+      "motivo": "metodo de nombre gobernado (validate) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/data_validation/test_schema_validator_v2.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "is_hotel_site",
+        "url"
+      ],
+      "linea": 311,
+      "metodo": "validate",
+      "motivo": "metodo de nombre gobernado (validate) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/data_validation/test_schema_validator_v2.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "is_hotel_site",
+        "url"
+      ],
+      "linea": 329,
+      "metodo": "validate",
+      "motivo": "metodo de nombre gobernado (validate) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/financial_engine/test_financial_4b_integration.py",
+      "clase_resuelta": "PrecisionValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "adr_cop",
+        "adr_source",
+        "channel_source",
+        "direct_channel_pct",
+        "occupancy_rate",
+        "occupancy_source"
+      ],
+      "linea": 160,
+      "metodo": "validate",
+      "motivo": "audita precision numerica, no promesa WhatsApp (AC7: excluir) (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "PrecisionValidator",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 22,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 34,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 40,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 45,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 53,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 58,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 63,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 74,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 84,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 96,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 107,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 117,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 128,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 138,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "from_dict",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 153,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a from_dict, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 191,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 202,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_inputs_contract.py",
+      "clase_resuelta": "FinancialInputsContract",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 212,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a FinancialInputsContract, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "contract",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_precision.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "data",
+        "sources"
+      ],
+      "linea": 72,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_precision.py",
+      "clase_resuelta": "PrecisionValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "adr_cop",
+        "adr_source",
+        "channel_source",
+        "direct_channel_pct",
+        "occupancy_rate",
+        "occupancy_source"
+      ],
+      "linea": 93,
+      "metodo": "validate",
+      "motivo": "audita precision numerica, no promesa WhatsApp (AC7: excluir) (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "PrecisionValidator",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_precision.py",
+      "clase_resuelta": "PrecisionValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "adr_cop",
+        "adr_source",
+        "channel_source",
+        "direct_channel_pct",
+        "occupancy_rate",
+        "occupancy_source"
+      ],
+      "linea": 108,
+      "metodo": "validate",
+      "motivo": "audita precision numerica, no promesa WhatsApp (AC7: excluir) (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "PrecisionValidator",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_precision.py",
+      "clase_resuelta": "PrecisionValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "adr_cop",
+        "adr_source",
+        "channel_source",
+        "direct_channel_pct",
+        "occupancy_rate",
+        "occupancy_source"
+      ],
+      "linea": 127,
+      "metodo": "validate",
+      "motivo": "audita precision numerica, no promesa WhatsApp (AC7: excluir) (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "PrecisionValidator",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_source_aware.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "sources"
+      ],
+      "linea": 55,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_source_aware.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "sources"
+      ],
+      "linea": 81,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_source_aware.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "sources"
+      ],
+      "linea": 98,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_source_aware.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 119,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_source_aware.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "sources"
+      ],
+      "linea": 131,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 39,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 56,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 74,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 91,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 108,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 122,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 138,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 169,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 210,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 231,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 248,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 266,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 283,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 309,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 310,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/financial_engine/test_no_defaults_validator.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 326,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/quality_gates/test_alignment_contract.py",
+      "clase_resuelta": "_generator",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "committed_services",
+        "site_presence_report"
+      ],
+      "linea": 115,
+      "metodo": "_generate_dynamic_services_table",
+      "motivo": "el receptor resuelve a _generator, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "gen",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/quality_gates/test_alignment_contract.py",
+      "clase_resuelta": "_generator",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "committed_services",
+        "site_presence_report"
+      ],
+      "linea": 157,
+      "metodo": "_generate_dynamic_services_table",
+      "motivo": "el receptor resuelve a _generator, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "gen",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/quality_gates/test_alignment_contract.py",
+      "clase_resuelta": "__new__",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "committed_services",
+        "site_presence_report"
+      ],
+      "linea": 203,
+      "metodo": "_generate_dynamic_services_table",
+      "motivo": "el receptor resuelve a __new__, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "gen",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "site_presence_report"
+      ],
+      "linea": 297,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "site_presence_report"
+      ],
+      "linea": 305,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "site_presence_report"
+      ],
+      "linea": 312,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "site_presence_report"
+      ],
+      "linea": 319,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "site_presence_report"
+      ],
+      "linea": 323,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "site_presence_report"
+      ],
+      "linea": 363,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "site_presence_report"
+      ],
+      "linea": 369,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/regression/test_fase3_guardrails_integration.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 268,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/regression/test_fase3_guardrails_integration.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 279,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/regression/test_fase3_guardrails_integration.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 290,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/regression/test_fase3_guardrails_integration.py",
+      "clase_resuelta": "NoDefaultsValidator",
+      "clasificacion": "EXCLUIDA_POR_CLASE",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 309,
+      "metodo": "validate",
+      "motivo": "audita defaults financieros, no senales de canal (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/test_assessment_builder.py",
+      "clase_resuelta": "AssessmentBuilder",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 310,
+      "metodo": "with_validation",
+      "posicionales": 1,
+      "prohibidos_presentes": [],
+      "receptor": "b",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "validation_summary"
+      ]
+    },
+    {
+      "archivo": "tests/test_assessment_builder.py",
+      "clase_resuelta": "AssessmentBuilder",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 582,
+      "metodo": "with_validation",
+      "posicionales": 1,
+      "prohibidos_presentes": [],
+      "receptor": "b",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "validation_summary"
+      ]
+    },
+    {
+      "archivo": "tests/test_commercial_documents_phase2.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 142,
+      "metodo": "validate",
+      "motivo": "metodo de nombre gobernado (validate) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 4,
+      "receptor": "validator",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/test_commercial_documents_phase2.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 216,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/test_commercial_documents_phase2.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 279,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/test_commercial_documents_phase2.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 381,
+      "metodo": "detect_pains",
+      "posicionales": 2,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/test_commercial_documents_phase2.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 409,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/test_commercial_documents_phase2.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 475,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/test_commercial_documents_phase2.py",
+      "clase_resuelta": "CoherenceValidator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 538,
+      "metodo": "validate",
+      "posicionales": 4,
+      "prohibidos_presentes": [],
+      "receptor": "validator",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [
+        "whatsapp_html_detected"
+      ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/test_hotel_visperas_regression.py",
+      "clase_resuelta": "SchemaValidatorV2",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "is_hotel_site"
+      ],
+      "linea": 164,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a SchemaValidatorV2, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 2,
+      "receptor": "schema_validator",
+      "resolucion": "asignacion_o_anotacion_local"
+    },
+    {
+      "archivo": "tests/test_validate_opencode_refs.py",
+      "clase_resuelta": "validate_opencode_refs",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 64,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a validate_opencode_refs, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "vor",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "tests/test_validate_opencode_refs.py",
+      "clase_resuelta": "validate_opencode_refs",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 71,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a validate_opencode_refs, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "vor",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "tests/test_validate_opencode_refs.py",
+      "clase_resuelta": "validate_opencode_refs",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 78,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a validate_opencode_refs, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "vor",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "tests/test_validate_opencode_refs.py",
+      "clase_resuelta": "validate_opencode_refs",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 91,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a validate_opencode_refs, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "vor",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "tests/test_validate_opencode_refs.py",
+      "clase_resuelta": "validate_opencode_refs",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 105,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a validate_opencode_refs, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "vor",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "tests/test_validate_opencode_refs.py",
+      "clase_resuelta": "validate_opencode_refs",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [],
+      "linea": 118,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a validate_opencode_refs, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "vor",
+      "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "tests/test_validate_opencode_refs.py",
+      "clase_resuelta": "validate_opencode_refs",
+      "clasificacion": "EXCLUIDA_POR_CLASE_NO_GOBERNADA",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "apply_baseline"
+      ],
+      "linea": 120,
+      "metodo": "validate",
+      "motivo": "el receptor resuelve a validate_opencode_refs, que no es un productor gobernado (llamada bajo tests/)",
+      "posicionales": 1,
+      "receptor": "vor",
+      "resolucion": "clase_importada_o_alias"
+    }
+  ],
+  "politica": {
+    "AssessmentBuilder.with_validation": {
+      "argumentos_prohibidos": [
+        "whatsapp_validation"
+      ],
+      "firma_real": {
+        "archivo": "modules/assessment_builder.py",
+        "defaults": [],
+        "kwonly": [],
+        "parametros": [
+          "self",
+          "validation_summary"
+        ],
+        "parametros_de_llamada": [
+          "validation_summary"
+        ]
+      },
+      "fuente": "maestro §2 F-D' · AC16",
+      "por_que": "`validation_summary` es el dato upstream que llega al payload; `whatsapp_validation` era un contrato muerto cuyo dato ya viaja dentro de aquel",
+      "senales_requeridas": [
+        "validation_summary"
+      ]
+    },
+    "CoherenceValidator.validate": {
+      "argumentos_prohibidos": [],
+      "firma_real": {
+        "archivo": "modules/commercial_documents/coherence_validator.py",
+        "defaults": [
+          "False",
+          "None",
+          "None"
+        ],
+        "kwonly": [],
+        "parametros": [
+          "self",
+          "diagnostic",
+          "proposal",
+          "assets",
+          "validation_summary",
+          "whatsapp_html_detected",
+          "generated_assets",
+          "site_presence_report"
+        ],
+        "parametros_de_llamada": [
+          "diagnostic",
+          "proposal",
+          "assets",
+          "validation_summary",
+          "whatsapp_html_detected",
+          "generated_assets",
+          "site_presence_report"
+        ]
+      },
+      "fuente": "maestro §1 filas F-A'/CONFLICT · AC7",
+      "por_que": "`_check_whatsapp_verified` decide con la senal; omitirla evalua el check bajo el supuesto de que no hay canal visible",
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    "PainSolutionMapper.detect_pains": {
+      "argumentos_prohibidos": [],
+      "firma_real": {
+        "archivo": "modules/commercial_documents/pain_solution_mapper.py",
+        "defaults": [
+          "None",
+          "False"
+        ],
+        "kwonly": [],
+        "parametros": [
+          "self",
+          "audit_result",
+          "validation_summary",
+          "analytics_data",
+          "whatsapp_html_detected"
+        ],
+        "parametros_de_llamada": [
+          "audit_result",
+          "validation_summary",
+          "analytics_data",
+          "whatsapp_html_detected"
+        ]
+      },
+      "fuente": "maestro §1 fila F-A' · AC7",
+      "por_que": "su default False produce el pain `no_whatsapp_visible` que las otras dos rutas no producen cuando hay HTML y el campo esta UNKNOWN/CONFLICT",
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    "V4ProposalGenerator._generate_dynamic_services_table": {
+      "argumentos_prohibidos": [],
+      "firma_real": {
+        "archivo": "modules/commercial_documents/v4_proposal_generator.py",
+        "defaults": [
+          "None",
+          "None",
+          "None",
+          "None",
+          "False",
+          "None",
+          "None"
+        ],
+        "kwonly": [],
+        "parametros": [
+          "self",
+          "detected_pain_ids",
+          "score_aeo",
+          "assets_generated",
+          "site_presence_report",
+          "whatsapp_conflict",
+          "opportunity_scores",
+          "committed_services"
+        ],
+        "parametros_de_llamada": [
+          "detected_pain_ids",
+          "score_aeo",
+          "assets_generated",
+          "site_presence_report",
+          "whatsapp_conflict",
+          "opportunity_scores",
+          "committed_services"
+        ]
+      },
+      "fuente": "maestro §1 fila F-F ampliada · AC7",
+      "por_que": "su default retira la presencia verificada y el conflicto de la tabla de servicios: la propuesta queda prometedora por omision, no por evidencia",
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    }
+  },
+  "schema_version": "1.0",
+  "verificador": "scripts/validate_wiring.py",
+  "violaciones": []
+}

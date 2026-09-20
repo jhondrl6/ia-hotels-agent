@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-19
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 493
+> **Total fases completadas:** 494
 
 ---
 
@@ -11473,6 +11473,35 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (0)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-G - 2026-09-20
+**Descripcion:** REFACTOR-WHATSAPP-ENTREGA: verificador AST de cableado y retiro de parámetro muerto
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `scripts/validate_wiring.py` | NUEVO | Validate Wiring |
+| `tests/test_validate_wiring.py` | NUEVO | Test Validate Wiring |
+| `.opencode/wiring_report.json` | NUEVO | Wiring Report |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `main.py` | Main |
+| `modules/assessment_builder.py` | Assessment Builder |
+| `scripts/run_all_validations.py` | Run All Validations |
+| `tests/test_assessment_builder.py` | Test Assessment Builder |
+| `tests/test_validate_lesson_capitalization.py` | Test Validate Lesson Capitalization |
+| `CHANGELOG.md` | Changelog |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
+
+### Validaciones
+- [x] Tests passing (18)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

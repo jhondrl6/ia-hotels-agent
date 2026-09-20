@@ -45,6 +45,51 @@ Sin archivos nuevos.
 
 **Cierre**: fase cerrada con commit `3e97d95` y push a `origin/master`, ambos autorizados y ejecutados en la misma sesión. Queda abierta la reconfirmación de vigencia/consentimiento del operador (requerida antes de H/E2E, no para G).
 
+
+#### FASE-G del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 — verificador AST de cableado y retiro del contrato muerto (2026-09-20)
+
+**Objetivo**: que omitir una señal necesaria sea detectable por un verificador, no por un test escrito a mano para cada caller (AC7), y retirar el contrato muerto `whatsapp_validation` sin crear una segunda fuente de verdad (AC16). Primera sesión de este plan con código de producto; no ejecuta `v4complete` (contador **0/1**).
+
+**Cambios**:
+
+- **`scripts/validate_wiring.py` (nuevo, 905 líneas)**: descubre la población por AST **sin lista fija de archivos** y exige las señales cuyo default cambia la conducta en silencio. La política vive centralizada en `GOBERNADOS` y goberna **cuatro productores**, no cuatro símbolos: `PainSolutionMapper.detect_pains` y `CoherenceValidator.validate` (señal `whatsapp_html_detected`), `AssessmentBuilder.with_validation` (`validation_summary` obligatorio, `whatsapp_validation` **prohibido**) y `V4ProposalGenerator._generate_dynamic_services_table` (`site_presence_report` + `whatsapp_conflict`). Goberna por **tipo del receptor resuelto**, no por nombre de método: gobernar `validate` por nombre habría metido en la población 71 llamadas de `PrecisionValidator`, `NoDefaultsValidator`, `PlanValidator`, `ContentValidator`, `EnvValidator` y funciones de módulo.
+- **Check 11 del modo rápido**: `_check_wiring` registrado en `run_all_validations.py --quick`; el modo completo pasa a numerarse /15. Un `[OK]` del check publica su denominador (población, gobernadas, amparadas, no resueltas), porque un ✅ sin cuenta es `L-R.3`. **Límite declarado y no disfrazado**: el check corre al validar, **no** en el hook de pre-commit, que además no invoca `run_all_validations.py` (`L-V3.1`); tocar hooks está prohibido en fases intermedias.
+- **Excepciones tipadas con diente propio**: los tres hallazgos vigentes quedan registrados con dueño (FASE-B / AC1) y condición de baja; una excepción que ya no ampara nada produce ella misma una violación (`EXCEPCION_VAGA`), y `--ignore-known` exhibe el total sin excepciones. Así el registro no puede degradarse a allowlist.
+- **F-D' ejecutada**: `AssessmentBuilder.with_validation` queda en `(self, validation_summary)` y se retira de sus tres callers (`main.py` y dos tests que, dicho sea de paso, le pasaban `None`). Las ocho líneas de `main.py` que construyen el dato upstream de `ValidationSummary` **no** se tocan: retirar el parámetro no es borrar la variable.
+- **Contract test de numeración endurecido**: `test_run_all_validations_registra_el_check_dentro_del_modo_rapido` pineaba el literal `[10/10]`, que la fase re-numeraba por diseño. Reescrito a **coherencia estructural** derivada de `run_all` (grupo rápido obtenido de los métodos invocados antes de `if not self.quick:`, ordinales exactos 1..D y D igual al número de invocados). Es más fuerte que el literal: detecta borrar, duplicar o re-ordenar un check. El aviso vino del corpus (`L-V2.3`, recuperado por la consulta Q12 de QMind), que documenta un rojo de numeración que vivió dos commits sin declararse.
+
+**Hallazgo medido que corrige al plan**: la fila F-A' del maestro §1 describe **una** invocación divergente; el AST midió **tres** en `modules/asset_generation/v4_asset_orchestrator.py` — `detect_pains` (línea medida 286) y dos `CoherenceValidator.validate` (309 pre-gen y 447 post-gen) — todas omitiendo `whatsapp_html_detected`. El rojo de AC7 se demostró sobre esa divergencia **tal como estaba, antes de corregirla** (no es trabajo de G: FASE-B es dueña de la fila). Consecuencia registrada para B: arreglar solo una deja dos rojos y convierte dos excepciones en `EXCEPCION_VAGA`.
+
+**Autocrítica medida del propio verificador**: la primera versión solo escaneaba sentencias directas del cuerpo de una función, así que `pain_mapper = PainSolutionMapper()` dentro de un `try` (caller productivo de `_identify_brechas`) quedó `RECEPTOR_NO_RESUELTO` con el check **en verde**. Reconstruido ese «antes»: 8 receptores productivos sin resolver; tras descender por `try`/`if`/`with`, **0**, y esa cuenta quedó asertada (`cobertura.receptores_no_resueltos_en_produccion == 0`). Nace `L-ENT.12`.
+
+**Archivos Nuevos**:
+
+| Archivo | Propósito |
+|---------|-----------|
+| `scripts/validate_wiring.py` | Verificador AST de cableado (AC7) y guard del contrato muerto (AC16) |
+| `tests/test_validate_wiring.py` | Suite propia: **18 funciones canónicas**; rojos por guard, serialización del reporte, tres estados del lector y CLI |
+| `.opencode/wiring_report.json` | Artefacto legible del AC7: política con la firma real leída del árbol, población, cobertura, excepciones y 7 límites |
+| `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-G/` | `wiring_report.json`, `inventario-callers.md`, `resultados-y-observaciones.md`, `premediciones.md`, `qmind-eje-cierre.md`, `tests_baseline_pre.txt`, `tests_baseline_post.txt`, `mutation_report.json`, `mutaciones_fase_g.py` |
+
+**Archivos Modificados**:
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/assessment_builder.py` | `with_validation` sin `whatsapp_validation`; docstring de F-D' con el dato upstream declarado |
+| `main.py` | Único caller productivo actualizado a la firma nueva (1 línea) |
+| `scripts/run_all_validations.py` | `_check_wiring` registrado en el modo rápido; re-numeración 1..11 (rápido) y 12..15 (completo) |
+| `tests/test_assessment_builder.py` | Dos callers de test adaptados (de `(..., None)` a un argumento) |
+| `tests/test_validate_lesson_capitalization.py` | Contract test de numeración reescrito a coherencia interna |
+| `docs/GUIA_TECNICA.md` | Nota técnica de la fase |
+| `REGISTRY.md` / archivos del plan | Registro y estados por `log_phase_completion.py` |
+
+**Tests**:
+
+- Par con **selección literal** archivada: PRE **1.313 passed / 1 failed / 2 skipped** y POST-A con la misma selección **idéntico (delta 0)**; POST-B sumando el suite nuevo → **1.331 passed** (+18), mismo único fallo. Funciones canónicas del repo: **4.246 → 4.264** (método canónico `grep -rE "^\s*def test_"`).
+- **El fallo es preexistente y con causa raíz medida, no una regresión ni una exclusion**: `test_medido_contra_el_predecesor_entra_en_alcance…` está rojo desde `9c4a001` (RELEASE v4.77.0 archivó `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` y `clasificar_planes` solo recorre hijos directos de `.opencode/plans/`). G lo midió, lo atribuyó y lo dejó rojo en PRE y POST en lugar de ocultarlo.
+- **`mutation_report.json`: 7/7 mutaciones con rojo causado por el guard, 0 por syntax/import** y worktree restaurado verificado por sha256. M1 vaciar la política · M2 aceptar `**kwargs` opacos · M3 gobernar por nombre de método (denuncia el homónimo) · M4 quitar el diente a `EXCEPCION_VAGA` · M5 re-introducir el parámetro en la firma · M6 desactivar la detección del argumento prohibido · M7 des-registrar el check del quick.
+- Quick **11/11** y `validate_document_integration.py` en paz al cerrar. R2: métrica **FUERA DE SERVICIO (R2.1)**, con auto-reporte en unidad contable propia y sin comparación con la referencia de 60.
+
 ## [4.77.2] - Contabilidad de coste del checker LLM (Gemini) — 2026-09-19
 
 ### Objetivo

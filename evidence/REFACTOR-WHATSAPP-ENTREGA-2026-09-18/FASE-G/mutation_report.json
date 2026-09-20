@@ -1,0 +1,144 @@
+{
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "fase": "FASE-G",
+  "instrumento": "temp/mutaciones_fase_g.py (R2.8: sin el rojo no hay verde)",
+  "reglas": [
+    "cada mutacion debilita el GUARD real, no la asercion del test",
+    "un rojo por SyntaxError/ImportError no cuenta como guard funcionando",
+    "el worktree se restaura byte a byte y se verifica por sha256",
+    "los tres anclajes de M3/M6/M7 se corrigieron tras la primera corrida: el rojo era el correcto pero el texto esperado no coincidia con lo que imprime pytest (pytest trunca el dict de la violacion en M3; M6 falla con lista vacia; M7 falla por coherencia de ordinales, no por la cadena `_check_wiring`)"
+  ],
+  "mutaciones": [
+    {
+      "id": "M1",
+      "ac": "AC7",
+      "aplicable": true,
+      "guard": "politica GOBERNADOS (la tabla de senales exigidas)",
+      "que_se_debilta": "vacia la politica: el verificador deja de exigir senales",
+      "test_objetivo": "-q tests/test_validate_wiring.py::test_caller_nuevo_en_archivo_nuevo_que_omite_la_senal_rompe",
+      "exit_code": 1,
+      "rompio": true,
+      "rojo_por_el_guard": true,
+      "vio_la_asercion_esperada": true,
+      "invalida_por_syntax_o_import": false,
+      "extracto_ultima_linea": [
+        "E       AssertionError: []",
+        "tests\\test_validate_wiring.py:121: AssertionError",
+        "FAILED tests/test_validate_wiring.py::test_caller_nuevo_en_archivo_nuevo_que_omite_la_senal_rompe"
+      ]
+    },
+    {
+      "id": "M2",
+      "ac": "AC7",
+      "aplicable": true,
+      "guard": "clasificacion KWARGS_OPACOS",
+      "que_se_debilta": "permite esconder la senal detras de **kwargs",
+      "test_objetivo": "-q tests/test_validate_wiring.py::test_ocultar_la_senal_tras_kwargs_opacos_rompe",
+      "exit_code": 1,
+      "rompio": true,
+      "rojo_por_el_guard": true,
+      "vio_la_asercion_esperada": true,
+      "invalida_por_syntax_o_import": false,
+      "extracto_ultima_linea": [
+        "E       AssertionError: [{'archivo': 'modules/envoltorio.py', 'detalle': \"falta ['whatsapp_html_detected']; su default cambia la conducta en s... cuando hay HTML y el campo esta UNKNOWN/CONFLICT)\", 'fuente_politica': \"maestro §1 fila F-A' · AC7\", 'linea': 3, ...}]",
+        "tests\\test_validate_wiring.py:142: AssertionError",
+        "FAILED tests/test_validate_wiring.py::test_ocultar_la_senal_tras_kwargs_opacos_rompe"
+      ]
+    },
+    {
+      "id": "M3",
+      "ac": "AC7",
+      "aplicable": true,
+      "guard": "gobernar por clase resuelta (exclusion de homonimos)",
+      "que_se_debilta": "gobierna por NOMBRE de metodo: `validate` de cualquier clase entra en la poblacion",
+      "test_objetivo": "-q tests/test_validate_wiring.py::test_clases_validate_no_relacionadas_quedan_excluidas",
+      "exit_code": 1,
+      "rompio": true,
+      "rojo_por_el_guard": true,
+      "vio_la_asercion_esperada": true,
+      "invalida_por_syntax_o_import": false,
+      "extracto_ultima_linea": [
+        "E       AssertionError: [{'archivo': 'modules/ajeno.py', 'detalle': \"falta ['whatsapp_html_detected']; su default cambia la conducta en silenc...el supuesto de que no hay canal visible)\", 'fuente_politica': \"maestro §1 filas F-A'/CONFLICT · AC7\", 'linea': 3, ...}]",
+        "tests\\test_validate_wiring.py:190: AssertionError",
+        "FAILED tests/test_validate_wiring.py::test_clases_validate_no_relacionadas_quedan_excluidas"
+      ]
+    },
+    {
+      "id": "M4",
+      "ac": "AC7",
+      "aplicable": true,
+      "guard": "baja automatica de una excepcion que ya no ampara nada",
+      "que_se_debilta": "las excepciones tipadas se vuelven allowlist permanente (una excepcion vaga ya no rompe)",
+      "test_objetivo": "-q tests/test_validate_wiring.py::test_excepcion_que_ya_no_ampa_nada_es_en_si_una_violacion",
+      "exit_code": 1,
+      "rompio": true,
+      "rojo_por_el_guard": true,
+      "vio_la_asercion_esperada": true,
+      "invalida_por_syntax_o_import": false,
+      "extracto_ultima_linea": [
+        "E       AssertionError: assert 'EXCEPCION_VAGA_MUTADA' == 'EXCEPCION_VAGA'",
+        "tests\\test_validate_wiring.py:294: AssertionError",
+        "FAILED tests/test_validate_wiring.py::test_excepcion_que_ya_no_ampa_nada_es_en_si_una_violacion"
+      ]
+    },
+    {
+      "id": "M5",
+      "ac": "AC16",
+      "aplicable": true,
+      "guard": "retiro del contrato muerto `whatsapp_validation`",
+      "que_se_debilta": "re-introduce el parametro descartado en la firma",
+      "test_objetivo": "-q tests/test_validate_wiring.py::test_retiro_real_en_el_repo_deja_el_contrato_cerrado",
+      "exit_code": 1,
+      "rompio": true,
+      "rojo_por_el_guard": true,
+      "vio_la_asercion_esperada": true,
+      "invalida_por_syntax_o_import": false,
+      "extracto_ultima_linea": [
+        "E       AssertionError: assert 'whatsapp_validation' not in ['self', 'validation_summary', 'whatsapp_validation']",
+        "tests\\test_validate_wiring.py:264: AssertionError",
+        "FAILED tests/test_validate_wiring.py::test_retiro_real_en_el_repo_deja_el_contrato_cerrado"
+      ]
+    },
+    {
+      "id": "M6",
+      "ac": "AC16",
+      "aplicable": true,
+      "guard": "deteccion del argumento prohibido en el caller",
+      "que_se_debilta": "deja de mirar los argumentos prohibidos: un caller con la firma vieja pasaria",
+      "test_objetivo": "-q tests/test_validate_wiring.py::test_caller_con_la_firma_vieja_rompe_el_contrato",
+      "exit_code": 1,
+      "rompio": true,
+      "rojo_por_el_guard": true,
+      "vio_la_asercion_esperada": true,
+      "invalida_por_syntax_o_import": false,
+      "extracto_ultima_linea": [
+        "E       AssertionError: []",
+        "tests\\test_validate_wiring.py:236: AssertionError",
+        "FAILED tests/test_validate_wiring.py::test_caller_con_la_firma_vieja_rompe_el_contrato"
+      ]
+    },
+    {
+      "id": "M7",
+      "ac": "AC7",
+      "aplicable": true,
+      "guard": "registro del check dentro del modo rapido",
+      "que_se_debilta": "des-registra el check del quick: el verde del rapido dejaria de decir nada del cableado",
+      "test_objetivo": "-q tests/test_validate_lesson_capitalization.py::test_run_all_validations_registra_el_check_dentro_del_modo_rapido",
+      "exit_code": 1,
+      "rompio": true,
+      "rojo_por_el_guard": true,
+      "vio_la_asercion_esperada": true,
+      "invalida_por_syntax_o_import": false,
+      "extracto_ultima_linea": [
+        "E       AssertionError: ordinales del modo rapido que no son exactamente 1..11: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",
+        "tests\\test_validate_lesson_capitalization.py:449: AssertionError",
+        "FAILED tests/test_validate_lesson_capitalization.py::test_run_all_validations_registra_el_check_dentro_del_modo_rapido"
+      ]
+    }
+  ],
+  "aplicadas": 7,
+  "con_rojo_del_guard": 7,
+  "asercion_esperada_en_el_rojo": 7,
+  "worktree_restaurado_sin_pendencias": true,
+  "problemas_de_restauracion": []
+}

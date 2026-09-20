@@ -416,8 +416,43 @@ def test_el_hook_versionado_invoca_el_script_y_su_numeracion_no_tiene_huecos():
 
 
 def test_run_all_validations_registra_el_check_dentro_del_modo_rapido():
+    """El check del Paso 0 sigue corriendo en `--quick`, y su numeracion es coherente.
+
+    **Historia medida (L-V2.3).** Este test pinaba la etiqueta literal `[10/10]`, y el hook
+    de pre-commit tenia su propio contract test pinned a `[5/5]`: cuando el hook cambio a
+    `[5/6]` el rojo vivio dos commits sin declarar. FASE-G aniade un check once al modo
+    rapido, o sea que el literal `[10/10]` caducaba por disenio. Se reemplaza el literal
+    por la **coherencia interna de la numeracion**, que es lo que realmente importa: que
+    los ordinales no tengan huecos y que compartan un unico denominador. Un literal suelto
+    no distingue un check re-ordenado de un check borrado.
+    """
     src = (ROOT / "scripts" / "run_all_validations.py").read_text(encoding="utf-8")
     assert src.index("self._check_lesson_capitalization()") < src.index("if not self.quick:")
-    assert "[10/10] Checking lesson capitalization" in src
-    rapidos = {n for i, n in _etiquetas(src) if i <= 10}
-    assert rapidos == {10}, f"los checks del modo rapido comparten denominador: {rapidos}"
+
+    # Grupo rapido **derivado de la estructura**, no de una cota magicada: son los metodos
+    # que `run_all` invoca antes de `if not self.quick:`. Si se borra, duplica o re-numera
+    # uno, la comprobacion exacta 1..D rompe.
+    cuerpo_rapido = src.split("if not self.quick:", 1)[0]
+    invocados = re.findall(r"self\.(_check_\w+)\(\)", cuerpo_rapido)
+    assert invocados, "run_all ya no invoca checks en el modo rapido"
+    etiquetas = []
+    for nombre in invocados:
+        bloque = src.split(f"def {nombre}(self)", 1)
+        assert len(bloque) == 2, f"{nombre} no esta definido"
+        encontrados = re.findall(r"\[(\d+)/(\d+)\]", bloque[1].split("\n    def ", 1)[0])
+        assert len(encontrados) == 1, f"{nombre} no imprime exactamente una etiqueta: {encontrados}"
+        etiquetas.append((int(encontrados[0][0]), int(encontrados[0][1])))
+
+    denominadores = {n for _, n in etiquetas}
+    assert len(denominadores) == 1, f"denominadores mezclados en el rapido: {denominadores}"
+    d = denominadores.pop()
+    assert sorted(i for i, _ in etiquetas) == list(range(1, d + 1)), (
+        f"ordinales del modo rapido que no son exactamente 1..{d}: "
+        f"{sorted(i for i, _ in etiquetas)}"
+    )
+    assert d == len(invocados), f"{d} etiquetados pero {len(invocados)} invocados"
+
+    # Y el check nuevo tiene que estar registrado en el rapido, o el verde del rapido no
+    # diria nada de el.
+    assert "self._check_wiring()" in src
+    assert src.index("self._check_wiring()") < src.index("if not self.quick:")

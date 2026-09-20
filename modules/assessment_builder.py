@@ -116,8 +116,15 @@ class AssessmentBuilder:
     def with_validation(
         self,
         validation_summary: Dict[str, Any],
-        whatsapp_validation: Any,
     ) -> "AssessmentBuilder":
+        """Carga el resumen de validacion cruzada en el payload.
+
+        F-D' (FASE-G, AC16): el antiguo segundo parametro `whatsapp_validation` se retiro.
+        No se descartaba en el vacio: su cuerpo nunca lo leia, y el dato que transportaba
+        (confianza y estado de WhatsApp) ya viaja **dentro de `validation_summary`**, que
+        `run_v4_complete_mode` construye a partir de ese mismo objeto aguas arriba. Pedirlo
+        otra vez era un contrato muerto que invitaba a una segunda fuente de verdad.
+        """
         self._payload.validation_summary = validation_summary
         return self
 

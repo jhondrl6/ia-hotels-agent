@@ -1,6 +1,6 @@
 # FASE-G — Verificador de cableado y retiro del contrato muerto
 
-**Estado:** PENDIENTE. **Dependencia inmediata:** FASE-A completa (matriz ratificada). G es ahora la **segunda sesión** del plan — cadena `A → G → 0 → B → C → D → E → F → H → E2E → VERIFY → RELEASE`—: adelanta porque su verificador es el guard de las ediciones de B–F y, por tanto, corre **antes** de FASE-0, de B y de F; no depende de F ni de su acreditación operativa.
+**Estado:** COMPLETADA el 2026-09-20 (cierre documental sin commit autorizado; ver §Post-ejecución). **Dependencia inmediata:** FASE-A completa (matriz ratificada). G es ahora la **segunda sesión** del plan — cadena `A → G → 0 → B → C → D → E → F → H → E2E → VERIFY → RELEASE`—: adelanta porque su verificador es el guard de las ediciones de B–F y, por tanto, corre **antes** de FASE-0, de B y de F; no depende de F ni de su acreditación operativa.
 **Complejidad técnica:** ALTA: descubrimiento de población sin lista fija, riesgo de falsos verdes y limpieza de firma cross-module.
 **Scope R3:** 4 tareas, 0 comandos largos externos. Una sesión exclusivamente para G.
 
@@ -65,12 +65,12 @@ Confirmar REGISTRY sin GAP y TOTAL PASS dinámico; el nuevo check debe quedar ve
 
 Referencia **60 tool_use hasta el commit de código**; instrumento `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`, duración de pared aparte. Sin transcript o con acceso denegado: **FUERA DE SERVICIO (R2.1)** con auto-reporte separado por unidad; nunca estimar cumplimiento.
 
-- [ ] A cerrada con la matriz ratificada; PRE tomado antes de editar y POST conciliado.
-- [ ] Inventario de callers completo y clasificado, con exclusiones justificadas.
-- [ ] `wiring_report.json` publicado, conectado al quick y con límites declarados.
-- [ ] AC7 rojo con caller nuevo en archivo nuevo y rojo ya demostrado sobre la divergencia actual de `V4AssetOrchestrator.generate_assets`; AC16 rojo con firma vieja.
-- [ ] Parámetro muerto retirado sin verdad paralela ni variable upstream eliminada indebidamente.
-- [ ] Legacy `domain_gates` intacto y clasificado; umbrales, Juez y O1 sin cambios; serialización del acta (AC20) sin tocar, es de FASE-0.
-- [ ] Cierre incremental completo y R2 medido o retirado; FASE-0, B y H serán otras sesiones.
+- [x] A cerrada con la matriz ratificada; PRE tomado antes de editar y POST conciliado (PRE 1.313 passed / 1 failed / 2 skipped · POST-A idéntico, delta 0 · POST-B 1.331, +18 del suite nuevo).
+- [x] Inventario de callers completo y clasificado, con exclusiones justificadas (`evidence/…/FASE-G/inventario-callers.md`): 169 llamadas, 70 gobernadas, **0 receptores sin resolver en producción**, 74 exclusiones por clase homónima con motivo.
+- [x] `wiring_report.json` publicado (`.opencode/`, copia saneada en la evidencia), conectado al quick como check **11/11** y con 7 límites declarados. No está en el hook de pre-commit (no se tocaron hooks) y eso se declara como límite, no como enforcement.
+- [x] AC7 rojo con caller nuevo en archivo nuevo, con `**kwargs` opacos, cubriendo alias y `self`, y excluyendo homónimos; **y rojo ya demostrado sobre la divergencia actual antes de corregirla — medida en TRES invocaciones, no una** (`inventario-callers.md` §1.2). AC16 rojo por caller con firma vieja y por re-introducir el parámetro en la firma.
+- [x] Parámetro muerto retirado (1 firma + 3 callers) sin verdad paralela; las ocho líneas de `main.py` que construyen el dato upstream de `ValidationSummary` quedaron intactas.
+- [x] Legacy `domain_gates` intacto y clasificado test/legacy; umbrales 0.8/0.9, Juez, flags de bloqueo y `write/publish/suppress` sin cambios; AC20 sin tocar (es de FASE-0). No se ejecutó `v4complete`, ni red, ni scraping: contador **0/1**.
+- [x] Cierre incremental completo. **R2: métrica FUERA DE SERVICIO (R2.1)** — el instrumento exige el transcript y no estuvo disponible; auto-reporte con unidad contable propia, sin compararla con la referencia de 60. FASE-0, B y H siguen siendo otras sesiones.
 
 Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/REVISION-2/anclajes_medidos.json`

@@ -1,0 +1,122 @@
+# FASE-G PRE â€” pytest baseline antes de editar codigo o tests
+# Fecha: 2026-09-20T09:03:19-05:00  HEAD: d7ff932  Rama: master
+# Entorno: ./venv/Scripts/python.exe (Python 3.13.3), pytest 9.0.0, sin plugin de orden (coleccion determinista)
+# Offline: si (seleccion focalizada, sin main.py v4complete, sin red, sin scraping)
+# Seleccion (literal):
+#   tests/commercial_documents/ tests/asset_generation/ tests/data_validation/
+#   tests/quality_gates/test_coherence_gate.py tests/quality_gates/test_publication_gates.py
+#   tests/test_assessment_builder.py tests/test_asset_write_validation_order.py
+#   tests/test_commercial_documents_phase2.py tests/test_price_pain_ratio_alignment.py
+#   tests/regression/test_whatsapp_conflicts.py
+#   tests/test_validate_plan_citations.py tests/test_validate_lesson_capitalization.py
+#   tests/test_validate_plan_closure.py tests/test_p5_ac_s2_remediacion.py
+#   tests/auditors/test_fase_sr_f_probe_url_canonicalization.py
+# Comando:
+#   ./venv/Scripts/python.exe -m pytest -q <seleccion>
+########################### salida
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 16%]
+........................................................................ [ 21%]
+........................................................................ [ 27%]
+........................................................................ [ 32%]
+........................................................................ [ 38%]
+...s.................................................................... [ 43%]
+........................................................................ [ 49%]
+........................................................................ [ 54%]
+........................................................................ [ 60%]
+........................................................................ [ 65%]
+........................................................................ [ 71%]
+........................................................................ [ 76%]
+........................................................................ [ 82%]
+........................................................................ [ 87%]
+..........s............................................................. [ 93%]
+.......................................................F................ [ 98%]
+....................                                                     [100%]
+================================== FAILURES ===================================
+_ test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11] _
+
+cutoff = '2026-09-11', plan_esperado = 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11'
+
+    @pytest.mark.parametrize(
+        "cutoff,plan_esperado", [("2026-09-11", "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11")]
+    )
+    def test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme(
+        cutoff: str, plan_esperado: str
+    ):
+        """Cobertura real del gate sobre el segundo `00-` del repo (medición, no aspiración).
+    
+        Atrás del corte a 2026-09-11 para que el predecesor deje de estar exento por fecha: si el
+        verde viniera de que nadie lo miró, este test sería decorativo, así que primero exige que
+        esté en la población evaluada. **Historia medida**: desde que existió el verificador hasta el
+        cierre de FASE-V3 (2026-09-13) este plan devolvía exactamente una violación, C6, porque su §4
+        seguía declarando que el verificador no existía. Se corrigió esa declaración en la misma
+        fecha en que se publicó el cierre, y ahora lo verificable es la conformidad de su forma — que
+        su §2 sea pertinente sigue sin verificarlo ningún check (límite del propio §4).
+        """
+        vs, pobo = vlc.verificar(
+            vlc.DEFAULT_PLANS, vlc.DEFAULT_CONTEXT, vlc.date.fromisoformat(cutoff), verbose=False
+        )
+>       assert plan_esperado in pobo["alcance"], pobo["alcance"]
+E       AssertionError: ['REFACTOR-WHATSAPP-ENTREGA-2026-09-18']
+E       assert 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11' in ['REFACTOR-WHATSAPP-ENTREGA-2026-09-18']
+
+tests\test_validate_lesson_capitalization.py:389: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+<unknown>:855
+tests/commercial_documents/test_pain_map_bijection.py::test_narratives_no_tiene_huerfanos
+  <unknown>:855: SyntaxWarning: invalid escape sequence '\W'
+
+tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/asset_generation/test_content_gates.py::TestContentGates::test_performance_audit_generates_with_zeros
+  C:\Users\Jhond\Github\iah-cli\tests\asset_generation\test_content_gates.py:84: DeprecationWarning: support for supplying keyword arguments to pathlib.PurePath is deprecated and scheduled for removal in Python 3.14
+    content = Path(result["file_path"], errors='ignore').read_text(encoding='utf-8', errors='ignore')
+
+tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/data_validation/test_metadata_validator.py: 20 warnings
+tests/data_validation/test_schema_validator_v2.py: 14 warnings
+  <string>:9: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_web_vs_gbp_conflict_detected
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_web_vs_gbp_conflict_detected
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_consistent_across_sources
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_schema_extraction
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_verified_status_assigned
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\main.py:250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]
+1 failed, 1313 passed, 2 skipped, 52 warnings in 20.60s
+EXIT=1

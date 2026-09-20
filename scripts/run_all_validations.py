@@ -88,6 +88,7 @@ class ValidationRunner:
         self._check_opencode_refs()
         self._check_plan_citations()
         self._check_lesson_capitalization()
+        self._check_wiring()
         
         if not self.quick:
             self._check_dependencies()
@@ -112,7 +113,7 @@ class ValidationRunner:
     
     def _check_residual_files(self) -> None:
         """Check for residual/backup files."""
-        print("[1/10] Checking for residual files...")
+        print("[1/11] Checking for residual files...")
         
         residual_extensions = {".bak", ".backup", ".tmp", ".old"}
         residual_files = []
@@ -141,7 +142,7 @@ class ValidationRunner:
     
     def _check_plan_maestro_sync(self) -> None:
         """Check if Plan Maestro data is synchronized."""
-        print("[2/10] Checking Plan Maestro sync...")
+        print("[2/11] Checking Plan Maestro sync...")
         
         json_path = ROOT_DIR / "data" / "benchmarks" / "plan_maestro_data.json"
         md_path = ROOT_DIR / "data" / "benchmarks" / "Plan_maestro_v2_5.md"
@@ -184,7 +185,7 @@ class ValidationRunner:
     
     def _check_version_sync(self) -> None:
         """Check if versions are synchronized across files."""
-        print("[3/10] Checking version synchronization...")
+        print("[3/11] Checking version synchronization...")
         
         version_file = ROOT_DIR / "VERSION.yaml"
         if not version_file.exists():
@@ -273,7 +274,7 @@ class ValidationRunner:
         (L-PF6: ningún verde por no-leer). Estados NR8: SIN_HALLAZGOS / BLOCKING /
         NO_LEGIBLE / NO_CUBIERTO. Salida redactada: nunca imprime el valor del secreto.
         """
-        print("[4/10] Checking for hardcoded secrets (tracked + staged)...")
+        print("[4/11] Checking for hardcoded secrets (tracked + staged)...")
 
         patterns = self._secret_patterns()
 
@@ -364,7 +365,7 @@ class ValidationRunner:
         de la política queda grandfathered en el config, con dueño declarado y
         disposición pendiente de la puerta AC-S4.
         """
-        print("[5/10] Checking client material policy (tracked + staged)...")
+        print("[5/11] Checking client material policy (tracked + staged)...")
 
         policy_path = ROOT_DIR / "config" / "client_material_policy.yaml"
         policy = None
@@ -447,7 +448,7 @@ class ValidationRunner:
     
     def _check_document_integration(self) -> None:
         """Check cross-document integration consistency."""
-        print("[6/10] Checking document integration...")
+        print("[6/11] Checking document integration...")
         
         script_path = ROOT_DIR / "scripts" / "validate_document_integration.py"
         if not script_path.exists():
@@ -483,7 +484,7 @@ class ValidationRunner:
         log_phase_completion.py commands. Excludes Archives, RELEASE plans/prompts,
         and documentation-only references to --release.
         """
-        print("[7/10] Checking prompts for --release flag in intermediate phases...")
+        print("[7/11] Checking prompts for --release flag in intermediate phases...")
         
         import re
         
@@ -546,7 +547,7 @@ class ValidationRunner:
         Catches forgotten reference updates after archiving plans (Archives/)
         or contexts (Historico/). Repair manually with --fix on the script.
         """
-        print("[8/10] Checking .opencode references...")
+        print("[8/11] Checking .opencode references...")
         
         script_path = ROOT_DIR / "scripts" / "validate_opencode_refs.py"
         if not script_path.exists():
@@ -587,7 +588,7 @@ class ValidationRunner:
         numbers, because a rewritten line citation is the same defect dressed up as
         a fix.
         """
-        print("[9/10] Checking plan citations (simbolos, no numeros de linea)...")
+        print("[9/11] Checking plan citations (simbolos, no numeros de linea)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_plan_citations.py"
         if not script_path.exists():
@@ -629,7 +630,7 @@ class ValidationRunner:
         A green here means FORM AND TRACEABILITY, never relevance: the script publishes
         the population it looked at because an [OK] without a denominator is L-R.3.
         """
-        print("[10/10] Checking lesson capitalization (Paso 0 del executor)...")
+        print("[10/11] Checking lesson capitalization (Paso 0 del executor)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_lesson_capitalization.py"
         if not script_path.exists():
@@ -659,9 +660,70 @@ class ValidationRunner:
                 details=issues
             ))
 
+    def _check_wiring(self) -> None:
+        """Verificador AST de cableado de senales requeridas (FASE-G, AC7 + AC16).
+
+        Que gobierna: que todo caller de un productor gobernado propague la senal cuyo
+        default cambia la conducta en silencio (`whatsapp_html_detected`), y que el
+        contrato muerto retirado por F-D' (`whatsapp_validation`) no reaparezca ni en un
+        caller ni en la firma. La poblacion se descubre por AST sobre el arbol, sin lista
+        fija de archivos: un caller nuevo en un archivo nuevo cae gobernado sin que nadie
+        lo registre.
+
+        Por que corre aqui y no solo en un test: la divergencia F-A' es la tercera
+        recidiva de cable perdido (L-NC6, DT4-R2), y las dos anteriores se detectaron
+        leyendo un output, despues de la entrega. Un rojo por fase no protege las
+        ediciones de las fases siguientes; este check es el guard de B-F (por eso G corre
+        antes que ellas).
+
+        Limite declarado (L-R.4): el AST no ve dispatch dinamico ni receptores de tipo no
+        deducible; el verificador los cuenta y los publica. Un verde aqui prueba que la
+        poblacion descubierta esta conforme o registrada, NO que no existan callers
+        invisibles.
+        """
+        print("[11/11] Checking signal wiring by AST (AC7/AC16)...")
+
+        script_path = ROOT_DIR / "scripts" / "validate_wiring.py"
+        if not script_path.exists():
+            self.results.append(ValidationResult(
+                name="Wiring",
+                passed=False,
+                message="validate_wiring.py not found"
+            ))
+            return
+
+        exit_code, output = self._run_command([sys.executable, str(script_path)])
+        lineas = [l for l in output.splitlines() if l.strip()]
+
+        if exit_code == 0 and lineas:
+            self.results.append(ValidationResult(
+                name="Wiring",
+                passed=True,
+                # El mensaje LLEVA el denominador: un [OK] sin poblacion contada es L-R.3.
+                message=lineas[-1].replace("[OK] Wiring: ", ""),
+            ))
+        elif exit_code == 2:
+            # LECTOR-FALLIDO con nombre propio: nunca un favorable, nunca un 0 (R2.9).
+            self.results.append(ValidationResult(
+                name="Wiring",
+                passed=False,
+                message="verificador no pudo medir (READ_ERROR, no ausencia de hallazgos)",
+                details=lineas[:5],
+            ))
+        else:
+            issues = [l.strip()[2:] for l in lineas if l.strip().startswith("- ")][:5]
+            self.results.append(ValidationResult(
+                name="Wiring",
+                passed=False,
+                message=("cableado divergente: falta una senal requerida en algun caller, "
+                         "o el contrato muerto reaparece (el verificador reporta, no "
+                         "reescribe)"),
+                details=issues or lineas[:5],
+            ))
+
     def _check_dependencies(self) -> None:
         """Check if all dependencies are installed."""
-        print("[11/14] Checking dependencies...")
+        print("[12/15] Checking dependencies...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pip", "check"
@@ -683,7 +745,7 @@ class ValidationRunner:
     
     def _check_imports(self) -> None:
         """Check if core modules can be imported."""
-        print("[12/14] Checking core module imports...")
+        print("[13/15] Checking core module imports...")
         
         core_modules = [
             "src.config",
@@ -719,7 +781,7 @@ class ValidationRunner:
     
     def _check_tests_pass(self) -> None:
         """Run tests and check if they pass."""
-        print("[13/14] Running tests...")
+        print("[14/15] Running tests...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pytest", "-q", "--tb=no"
@@ -751,7 +813,7 @@ class ValidationRunner:
         `qmind` CLI. If the CLI is unavailable the validator itself degrades to
         WARN + exit 0 (fallback :468); only a real missing ingestion fails.
         """
-        print("[14/14] Checking QMind write-back (planes archivados)...")
+        print("[15/15] Checking QMind write-back (planes archivados)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_qmind_writeback.py"
         if not script_path.exists():

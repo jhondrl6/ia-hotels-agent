@@ -6,13 +6,15 @@ Estado: PREPARACIÓN. Ninguna fase ejecutada. No sustituye la documentación inc
 
 | Módulo | Archivos | Descripción | Fase |
 |---|---|---|---|
-| Por medir | Ninguno implementado | Registrar solo lo realmente creado | Pendiente |
+| Verificador AST de cableado (`scripts/`) | `scripts/validate_wiring.py` (905 líneas), `tests/test_validate_wiring.py` (464 líneas, 18 funciones canónicas), artefacto `.opencode/wiring_report.json` | Check 11 del modo rápido: descubre por AST la población de callers de los productores gobernados sin lista fija de archivos, exige las señales cuyo default cambia la conducta en silencio, prohíbe el contrato muerto retirado, y publica población, cobertura, excepciones tipadas y límites. Reporta y **no** reescribe callers | **FASE-G (2026-09-20)** |
 
 ## Sección B: Funcionalidades nuevas
 
 | Feature | Módulo | Descripción | Fase |
 |---|---|---|---|
-| Por medir | Ninguno implementado | Diferenciar refactor, fix y contrato ya existente | Pendiente |
+| Gobierna señales por productor (no fix) | `validate_wiring.py` | Refactor de guard: 4 productores en política (`PainSolutionMapper.detect_pains`, `CoherenceValidator.validate`, `AssessmentBuilder.with_validation`, `V4ProposalGenerator._generate_dynamic_services_table`) con sus señales y argumentos prohibidos. **No arregla** la divergencia: la registra con dueño | FASE-G |
+| Contrato muerto retirado (F-D') | `modules/assessment_builder.py` + `main.py` | `with_validation(self, validation_summary)`: se quita `whatsapp_validation` de la firma y de sus 3 callers. El dato upstream (8 líneas de `main.py` que construyen los `ValidatedField`) se conserva: no es un fix, es limpieza de firma cross-module | FASE-G |
+| Numeración del quick re-estimada | `scripts/run_all_validations.py`, `tests/test_validate_lesson_capitalization.py` | El modo rápido pasa de 10 a 11 checks y el completo a /15. El contract test que pineaba el literal `[10/10]` se reescribió a **coherencia estructural** (grupo derivado de `run_all`, ordinales exactos 1..D), que es más fuerte: detecta borrar, duplicar o re-ordenar, no solo escribir mal un número | FASE-G |
 
 ## Sección D: Métricas acumulativas
 
@@ -34,6 +36,12 @@ Estado: PREPARACIÓN. Ninguna fase ejecutada. No sustituye la documentación inc
 | **FASE-A: superficies de tests pertinentes** | 7 archivos, **130 funciones canónicas** → **134 casos** recolectados, **133 passed + 1 skipped**, exit 0, sin red (0 coincidencias de `requests/urllib/socket`). Incluye las dos superficies que gobernará FASE-0 | FASE-A (`tests_pertinentes_pre.txt`) |
 | **FASE-A: blast radius de AC19, tercera medición** | Reproduce el método canónico y da **52 archivos / 816 funciones** y **31 / 545**, idéntico a lo publicado en `d4dacb4`; los 4 asserts de igualdad exacta localizados por símbolo | FASE-A |
 | **FASE-A: QMind** | Consulta **recuperada** tras la denegación de la revisión 2; 6 aportes, 3 ya cerrados en código vivo. Sin subida | FASE-A |
+| **FASE-G: población medida por el verificador** | 611 archivos en alcance, **169 llamadas descubiertas**, **70 gobernadas** (14 conformes, 3 omisiones con dueño), 74 exclusiones por clase (71 de ellas a un método que se llama `validate` en clase ajena), 25 receptores sin resolver de los cuales **0 en producción** | FASE-G |
+| **FASE-G: quick y firmas** | Quick **10/10 al abrir** y **11/11 al cerrar**; 4.246 → **4.264** funciones canónicas del repo (+18); par PRE/POST con selección literal: PRE 1.313 passed / 1 failed / 2 skipped, POST-A idéntico (delta 0), POST-B 1.331 (+18); 7/7 mutaciones con rojo causado por el guard | FASE-G |
+| **FASE-G: precisión nueva sobre la fila F-A'** | El maestro §1 describe **una** invocación divergente; el AST midió **tres** en `v4_asset_orchestrator.py` (286 `detect_pains`, 309 y 447 `CoherenceValidator.validate`), todas omitiendo `whatsapp_html_detected`. Segunda confirmación interna de `L-V.3` sobre una premisa del propio plan | FASE-G |
+| **FASE-G: QMind** | Consulta por el eje de cierre **permitida y respondida** (Q12); tres de sus filas se aplicaron y midieron. Sin subida | FASE-G |
+| **FASE-G: rojo preexistente con causa medida** | `test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-…]` está rojo desde `9c4a001` (archivó `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` y `clasificar_planes` solo mira hijos directos de `.opencode/plans/`). G lo conserva igual en PRE y POST, sin excluirlo ni cambiar su expectativa | FASE-G → dueño: deuda del verificador de capitalización |
+| Presupuesto de iteraciones | **FUERA DE SERVICIO (R2.1) también en G** (2026-09-20): el instrumento sigue pidiendo el transcript. Auto-reporte en unidad contable (9 rutas tocadas, 2 corridas de baseline + 1 extendida, 7 mutaciones, 2 quicks) con corte de código y corte documental separados; **no se comparó con la referencia de 60 porque esa unidad no era medible** | Todas |
 | Presupuesto de iteraciones | **FUERA DE SERVICIO (R2.1) en A**: el instrumento pide el transcript y su acceso no está disponible; se declara **corte documental** y auto-reporte con su unidad, sin sumarlo al instrumento | Todas |
 
 ## Sección E: Archivos afiliados actualizados
@@ -44,6 +52,7 @@ Estado: PREPARACIÓN. Ninguna fase ejecutada. No sustituye la documentación inc
 | **Revisión 2 (2026-09-19): archivos del plan tocados** | `README.md`, `01-plan-maestro.md` (§1, §2, §3, §4, §5, §6, §7), `04-contrato-ejecucion.md` (límite de lectura de corridas ajenas), `00-lecciones-capitalizadas.md` (§1bis nuevo, Q7-Q10, siete filas en §2, §3bis, §4), `06-checklist-implementacion.md`, `dependencias-fases.md`, `09`, `10-analisis`, `05-…-fase-VERIFY` corregidos; **nuevo** `05-prompt-inicio-sesion-fase-0.md`; A/B/C/G/H/E2E actualizados al nuevo orden. **Sin cambios de código, tests, VERSION ni evidencia** | Revisión 2 |
 | `.opencode/LECCIONES-INDEX.md` y `.opencode/lecciones_index.json` | Regenerados tras la revisión 2 (316 IDs); cada fase vuelve a regenerarlos al cerrar | Revisión 2 |
 | CHANGELOG.md / docs/GUIA_TECNICA.md / docs/contributing/REGISTRY.md | Cada fase registra su propio trabajo; no modificados en preparación ni en la revisión 2 | Pendiente |
+| **FASE-G (2026-09-20): archivos afiliados tocados** | `CHANGELOG.md` (subsección G bajo 4.77.3, sin anticipar versión), `docs/GUIA_TECNICA.md` (nota técnica G), `docs/contributing/REGISTRY.md` (registro por `log_phase_completion.py`), `.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json` (regenerados al cerrar), `.opencode/wiring_report.json` (nuevo artefacto del AC7), y `DOMAIN_PRIMER.md` regenerado **solo por su writer** (`doctor.py --regenerate-domain-primer`), que por ser archivo versionado ensucia el árbol | FASE-G |
 
 ## Registro documental por fase
 

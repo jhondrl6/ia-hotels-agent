@@ -2935,7 +2935,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
 
     builder = AssessmentBuilder()
     builder.with_core(args.url, hotel_name)
-    builder.with_validation(validation_summary, whatsapp_validation)
+    builder.with_validation(validation_summary)
     builder.with_financial(
         rooms, adr_cop, occupancy_rate, direct_channel_pct,
         financial_sources, financial_breakdown

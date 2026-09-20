@@ -5,7 +5,7 @@
     "archivos_analysis_escaneados": 14,
     "archivos_contexto_escaneados": 36,
     "archivos_md_escaneados": 385,
-    "ids_con_definicion": 316,
+    "ids_con_definicion": 318,
     "ids_citados_sin_definicion": 43,
     "familias_incluidas": [
       "L",
@@ -1594,7 +1594,7 @@
       "seccion": "FASE-E2E (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 11,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -1657,7 +1657,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 6,
+      "total_citas": 7,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1699,7 +1699,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 5,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1798,6 +1798,34 @@
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
       "total_citas": 8,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-ENT.12",
+      "familia": "L",
+      "enunciado": "El verde del verificador no probaba su propia cobertura: el hueco estaba en su resolutor de tipos, y lo delató una cuenta que el verificador exige de sí mismo. La primera versión escaneaba solo sentencias directas del cuerpo de una función, así que un pain_mapper = PainSolutionMapper() dentro de un try —el caller productivo de _identify_brechas— quedó RECEPTOR_NO_RESUELTO: el check estaba verde mientras gobernaba a menos. Reconstruido ese «antes» en memoria: 8 receptores productivos sin resolver; tras descender por try/if/with, 0, con gobernadas 67 → 70. / Por qué: un verificador de población describe lo que encontró, no lo que buscó; la ausencia de hallazgos y la ausencia de mirada se escriben igual en un JSON sin denominador. / Qué lo previene: que todo verificador de población publique y aserte su propio denominador (cobertura.receptores_no_resueltos_en_produccion == 0), como test y no como línea de reporte — evidence/…/FASE-G/resultados-y-observaciones.md obs. 3 (medición comparativa sin mutar el árbol)",
+      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-09-18",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-ENT.13",
+      "familia": "L",
+      "enunciado": "Un registro de excepciones sin regla de caducidad es un allowlist con mejor prosa. AC7 exige «excepciones tipadas y justificadas», y G las necesitaba: tres hallazgos reales siguen abiertos con dueño en FASE-B, y un check rojo desde hoy no protege las ediciones de nadie. El peligro no era tenerlas, era quedárselas. Lo que las vuelve honestas son dos piezas medidas: una excepción que ya no ampara ningún hallazgo produce ella misma una violación (EXCEPCION_VAGA, mutación M4), y --ignore-known deja ver el total sin excepciones (4 violaciones en el árbol de hoy). / Por qué: el allowlist no nace de una decisión torpe, nace de una excepción razonable que sobrevive a su causa — el mismo mecanismo con el que L-ENT.4 hizo caducar estados heredados. / Qué lo previene: apareamiento biunívoco (sobrantes en cualquiera de los dos lados = rojo) y una bandera que exhibe el total — aplicar_excepciones() en scripts/validate_wiring.py, test_excepcion_que_ya_no_ampa_nada_es_en_si_una_violacion, mutation_report.json M4",
+      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-09-18",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2118,7 +2146,7 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 14,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17",
@@ -2829,7 +2857,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 41,
+      "total_citas": 42,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
@@ -3203,7 +3231,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 49,
+      "total_citas": 50,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -3323,8 +3351,10 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -3337,8 +3367,10 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
-      "planes_que_lo_citan": [],
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -3351,8 +3383,9 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 6,
       "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -3381,8 +3414,10 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
-      "planes_que_lo_citan": [],
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -3395,8 +3430,10 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
-      "planes_que_lo_citan": [],
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -3472,7 +3509,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 12,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -3661,9 +3698,10 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 3,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },

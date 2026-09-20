@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-09-19 | v4.77.3 LLMReport honesto cuando ningún provider responde*
+*Auto-generado: 2026-09-20 | v4.77.3 LLMReport honesto cuando ningún provider responde*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

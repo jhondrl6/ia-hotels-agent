@@ -307,7 +307,7 @@ class TestAssessmentBuilderWithValidation:
             "conflicts": [],
         }
         b = AssessmentBuilder()
-        b.with_validation(validation_summary, None)
+        b.with_validation(validation_summary)
         assert b._payload.validation_summary == validation_summary
         assert b._payload.validation_summary["whatsapp_status"] == "HIGH"
 
@@ -579,7 +579,7 @@ class TestAssessmentBuilderFullPipeline:
         try:
             b = AssessmentBuilder()
             b.with_core("https://www.hotel.com", "Hotel Completo")
-            b.with_validation({"whatsapp_status": "HIGH", "overall_confidence": "HIGH", "conflicts": []}, None)
+            b.with_validation({"whatsapp_status": "HIGH", "overall_confidence": "HIGH", "conflicts": []})
             b.with_financial(30, 450000, 0.75, 0.40, {"direct": "Scraped"}, None)
             b.with_coherence(None, mock_asset)
             b.with_pain_ledger([], mock_ds, mock_ap)
