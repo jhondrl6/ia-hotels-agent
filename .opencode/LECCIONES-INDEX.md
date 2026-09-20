@@ -12,8 +12,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 
 ## Cobertura medida (lo que este índice NO garantiza)
 
-- Corpus de **definiciones**: `14` análisis de plan + `36` archivos de `.opencode/context/`. `385` `.md` en total como corpus de **citas**.
-- 318 IDs con definición detectada; 43 IDs citados sin definición (ver última sección).
+- Corpus de **definiciones**: `14` análisis de plan + `36` archivos de `.opencode/context/`. `389` `.md` en total como corpus de **citas**.
+- 319 IDs con definición detectada; 48 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -29,13 +29,13 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 
 | Familia | Significado | IDs |
 |---------|-------------|-----|
-| `L-*` | Lecciones aprendidas | 174 |
+| `L-*` | Lecciones aprendidas | 175 |
 | `DA-*` | Decisiones / reglas de alineación | 43 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 62 |
-| — | Citados sin definición | 43 |
+| — | Citados sin definición | 48 |
 
-## `L-*` — Lecciones aprendidas (174)
+## `L-*` — Lecciones aprendidas (175)
 
 | ID | Enunciado | Plan dueño | Sección | Citas |
 |----|-----------|------------|---------|-------|
@@ -45,11 +45,11 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-A4` | Derivar no es sinónimo de unificar *(FASE-A)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 3 (solo el plan dueño) |
 | `L-A5` | Un test fosilizado puede estar codificando el invariante invertido *(FASE-A)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 11 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-A6` | Una cita de línea en un plan se vuelve falsa con la primera edición de código *(FASE-A)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 33 en Archives/TRIBUNAL-OFFLINE-2026-09-09 |
-| `L-AJUST.1` | Un plan citaba como viva (bd2bf57, "local sin push", "sin tag") una verdad que un rebase y un push posteriores invalidaron — Las citas de commit se escribieron en presente en la concepción y ningún… | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase) | 0 (solo el plan dueño) |
+| `L-AJUST.1` | Un plan citaba como viva (bd2bf57, "local sin push", "sin tag") una verdad que un rebase y un push posteriores invalidaron — Las citas de commit se escribieron en presente en la concepción y ningún… | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase) | 1 en VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-B1` | Un candado que nace con la forma equivocada falla en rojo aunque el código esté bien *(FASE-B)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 16 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-B2` | Un censo por regex cuenta puntos del fuente, no hechos alcanzables *(FASE-B)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 3 (solo el plan dueño) |
-| `L-B3` | Un presupuesto sin instrumento de medida no restringe nada, y un instrumento sin corte definido mide una foto *(FASE-B)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 14 (solo el plan dueño) |
-| `L-B4` | Dos planes distintos pueden compartir el nombre de una carpeta de evidencia *(FASE-B)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 15 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-B3` | Un presupuesto sin instrumento de medida no restringe nada, y un instrumento sin corte definido mide una foto *(FASE-B)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 15 en VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
+| `L-B4` | Dos planes distintos pueden compartir el nombre de una carpeta de evidencia *(FASE-B)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 16 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-B5` | Dos sesiones del mismo plan sobre el mismo directorio se contradicen entre sí *(FASE-B)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 9 (solo el plan dueño) |
 | `L-C1` | Un parafraseo de una fuente en tu propia evidencia se convierte en premisa *(FASE-C)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 3 (solo el plan dueño) |
 | `L-C2` | Un test rojo heredado entre fases puede contradecir un candado más nuevo: buscar el contract test antes de «arreglar» código *(FASE-C)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 6 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
@@ -59,7 +59,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-D2` | La evidencia también se fosiliza: un log capturado antes de estabilizar los tests miente *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 6 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-D3` | Un baseline numérico hace que cumplir el plan cuente como violación *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 15 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-D4` | Cuatro regímenes para el mismo hecho: cerrar H10 exigió contarlos, no elegir uno *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 2 (solo el plan dueño) |
-| `L-D5` | Un instrumento de medición sin verificar devolvió 0 y casi lo reporto como resultado *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 7 (solo el plan dueño) |
+| `L-D5` | Un instrumento de medición sin verificar devolvió 0 y casi lo reporto como resultado *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 9 en VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-E1` | La paralelización de tracks se decide contra los archivos reales, no contra la tabla del plan *(FASE-E)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 9 (solo el plan dueño) |
 | `L-E2` | La causa raíz de un campo null puede vivir en el caller, no en el módulo que lo serializa *(FASE-E)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 1 (solo el plan dueño) |
 | `L-E2E.1` | El punto de cableado importa tanto como el cableado: MANIFEST.json y ASSETS/ de la corrida solo existen después de packager.package() (estrategia single-write, solo ZIP), así que los revisores de… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-E2E (2026-09-11) | 18 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
@@ -75,11 +75,12 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-ENT.6` | El consentimiento liga una identidad concreta, no un nombre comercial. La autorización de FASE-P4 amparaba una corrida de diagnóstico sobre la URL del warehouse —hoy inexistente— y declaraba… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 2 (solo el plan dueño) |
 | `L-ENT.7` | Todo estado heredado caduca, incluido el que el prompt de apertura afirma como hecho — segunda confirmación medida del patrón de L-ENT.4, ya no solo de rojos. El prompt de la intervención del… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 1 (solo el plan dueño) |
 | `L-ENT.8` | Un hit de escáner es una forma, no una credencial: la naturaleza medida rebajó el nivel de contención de force-push a redacción de 8 líneas. La key marcada para purga de historial (reescribiría todos… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 0 (solo el plan dueño) |
-| `L-ENT.9` | Un proveedor configurado no es un proveedor ejercitado: la métrica agregada verde oculta qué rama corrió. La corrida e2e salió verde (source=llm_check, 5/5 consultas medidas) con Gemini vigente en el… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 5 (solo el plan dueño) |
+| `L-ENT.9` | Un proveedor configurado no es un proveedor ejercitado: la métrica agregada verde oculta qué rama corrió. La corrida e2e salió verde (source=llm_check, 5/5 consultas medidas) con Gemini vigente en el… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 6 en VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-ENT.10` | Se re-midió el símbolo y no la ruta viva; el plan quedó bien construido sobre un caso que ya no ocurre. La preparación verificó cada símbolo del contexto de 2026-09-17 contra el código (y acertó: F-A… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 6 (solo el plan dueño) |
 | `L-ENT.11` | La consulta de lecciones se hizo por el síntoma y devolvió solo el síntoma; la causa del fracaso estaba en el índice desde once días antes. L-E2E.2 y L-V.3 (2026-09-11) documentan el… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 8 (solo el plan dueño) |
-| `L-ENT.12` | El verde del verificador no probaba su propia cobertura: el hueco estaba en su resolutor de tipos, y lo delató una cuenta que el verificador exige de sí mismo. La primera versión escaneaba solo… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 1 (solo el plan dueño) |
-| `L-ENT.13` | Un registro de excepciones sin regla de caducidad es un allowlist con mejor prosa. AC7 exige «excepciones tipadas y justificadas», y G las necesitaba: tres hallazgos reales siguen abiertos con dueño… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 2 (solo el plan dueño) |
+| `L-ENT.12` | El verde del verificador no probaba su propia cobertura: el hueco estaba en su resolutor de tipos, y lo delató una cuenta que el verificador exige de sí mismo. La primera versión escaneaba solo… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 3 en VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
+| `L-ENT.13` | Un registro de excepciones sin regla de caducidad es un allowlist con mejor prosa. AC7 exige «excepciones tipadas y justificadas», y G las necesitaba: tres hallazgos reales siguen abiertos con dueño… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 3 (solo el plan dueño) |
+| `L-ENT.14` | Una prueba de NO-existencia recortada por un head no prueba nada: afirmó en cuatro documentos commiteados que el verificador de write-back no existía. Esta sesión midió grep -rln… | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | Lecciones nuevas de este plan | 3 en VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-F1` | Un fixture en forma tolerada pero no canónica probaba un defecto que producción no puede producir *(FASE-F)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 3 (solo el plan dueño) |
 | `L-F2` | Score continuo y veredicto binario son dos representaciones del mismo hecho *(FASE-F)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 4 (solo el plan dueño) |
 | `L-F3` | La re-evaluación de artefactos persistidos debe reproducir la lectura del consumidor de producción *(FASE-F)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 4 (solo el plan dueño) |
@@ -87,7 +88,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-G2` | Un atajo favorable-vacuo se cura contrastándolo con datos primarios del audit, no endureciendo el default *(FASE-G)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 1 (solo el plan dueño) |
 | `L-G3` | Los tests de integración codifican el contrato vigente: al cambiar un contrato, reescribir sus tests en el mismo commit y con registro (patrón S-B11) *(FASE-G)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 6 (solo el plan dueño) |
 | `L-H1` | Un subagente puede reportar cambios que aún no están en el árbol: el parent debe validar con git diff --stat ANTES de dar por perdido un track *(FASE-H)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 7 (solo el plan dueño) |
-| `L-H2` | Dos actores con reescritura completa del archivo sobre el mismo archivo es una condición de carrera, no «regiones distintas» *(FASE-H)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 19 (solo el plan dueño) |
+| `L-H2` | Dos actores con reescritura completa del archivo sobre el mismo archivo es una condición de carrera, no «regiones distintas» *(FASE-H)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 20 en VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-H3` | Un estado «del último intento» solo es verificable por render si el render ocurre DENTRO del parche que provoca el fallo *(FASE-H)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 1 (solo el plan dueño) |
 | `L-H4` | El prompt de una fase puede llegar con citas fósiles y con un archivo de test que no existe: la regla de re-verificar sigue siendo load-bearing *(FASE-H)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 12 (solo el plan dueño) |
 | `L-H5` | Cuando solo necesitas un literal, replicarlo con test anti-deriva es más barato que re-arquitectar el grafo de imports *(FASE-H)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 6 (solo el plan dueño) |
@@ -143,12 +144,12 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-PF8` | QUÉ PASÓ: el gate CG-TIER-CONSISTENCY comparaba frontmatter 'B' vs texto 'D'; la hipótesis del plan ("string de presentación vs valor crudo") era FALSA — el documento renderizaba el valor canónico… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales) | 0 (solo el plan dueño) |
 | `L-PF9` | QUÉ PASÓ: la jerga detectada al cliente (H6.4) requería dos comportamientos coordinados — el gate DETECTA términos prohibidos y los generadores TRADUCEN antes de publicar; duplicar la lista en el… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales) | 0 (solo el plan dueño) |
 | `L-PF10` | QUÉ PASÓ: la corrida E2E final bloqueó con critical_recall BLOCKED "metric not found" — el ÚNICO critical issue del baseline era el falso negativo de schema que SR-E corrigió; al quedar… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales) | 48 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `L-PF11` | QUÉ PASÓ: la corrida post-hotfix (H2, output salentoreal_final_v4c_h2) encontró el análisis previo de la corrida SR-H (output salentoreal_final_v4c) — directorios distintos, mismo hotel — vía memoria… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales) | 14 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-PF11` | QUÉ PASÓ: la corrida post-hotfix (H2, output salentoreal_final_v4c_h2) encontró el análisis previo de la corrida SR-H (output salentoreal_final_v4c) — directorios distintos, mismo hotel — vía memoria… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales) | 15 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18, VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-PF12` | QUÉ PASÓ: tras el fix de sondas (SR-F), el plan de assets quedó determinista y estable entre corridas (3 pains → 3 assets pain-mapeados + monthly_report estándar en H2), mientras corridas históricas… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales) | 6 en Archives/VALIDADOR-URL-PROPIA-2026-08-30 |
 | `L-R.1` | R2.1 era medible y no se midió en 8 de 9 fases. El instrumento canónico corrió sin ningún obstáculo de permisos en esta sesión: ./venv/Scripts/python.exe evidence/FASE-D/measure_iterations.py… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 34 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-R.2` | Hay campos que ningún writer escribe y ningún reader valida. docs/contributing/REGISTRY.md seguía publicando > Version actual: v4.66.0 con VERSION.yaml = 4.76.0. Medido: grep -rln "Version actual"… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 4 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-R.3` | El gate anti-contradicción de R2.5 tiene cobertura medida del 12,5 %. validate_plan_closure.py dispara solo si el 10-analisis-post-implementacion.md de un plan vivo tiene a la vez un heading que… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 12 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
-| `L-R.4` | Una regla de proceso sin verificador es publicable solo si la regla lo declara. D-V.3 se ejecutó como R2.6 y R2.7 en el executor (v2.21.0); R2.7 se escribió con su propio párrafo "Verificador… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 42 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
+| `L-R.4` | Una regla de proceso sin verificador es publicable solo si la regla lo declara. D-V.3 se ejecutó como R2.6 y R2.7 en el executor (v2.21.0); R2.7 se escribió con su propio párrafo "Verificador… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 43 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-SR1` | Las ramas no ejercitadas por la corrida estándar acumulan defectos latentes. / Qué pasó: el fallback FASE-D S7 con logger inexistente convivió con el código desde su fase sin detonar hasta una prueba… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 24 en Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/VALIDADOR-URL-PROPIA-2026-08-30 |
 | `L-SR2` | La identidad de memoria debe derivarse de la URL canónica, no de la raw. / Qué pasó: los UTM params llegaron íntegros al target_id, fragmentando la memoria del mismo hotel en N identidades según cómo… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 17 en Archives/SR-PIPELINE-FIXES-2026-08-27 |
 | `L-SR3` | Promesa, matriz y gate deben compartir UNA fuente de verdad para el estado de un servicio. / Qué pasó: RC1 declara "sin costo", la matriz registra NO_BREACH, y el gate cuenta missing — el mismo… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 64 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
@@ -184,7 +185,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-V2.2` | Un verificador no debe apoyar su conclusión en el artefacto generado por otro gate — C7/C8 necesitan el mapa {ID → dueño}. Leer .opencode/lecciones_index.json era lo obvio, pero ese archivo lo… | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 2. Lecciones Aprendidas nuevas | 2 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-V2.3` | Una medición de seguridad sobre el artefacto equivocado deja pasar el rojo que pretendía descartar — Para renumerar el hook, Q10 midió «0 contract tests afirman el número de checks» buscando en… | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 2. Lecciones Aprendidas nuevas | 6 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-V3` | La prosa de un artefacto que llega al cliente es superficie de contrato, no comentario *(FASE-VERIFY)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 1 (solo el plan dueño) |
-| `L-V3.1` | Una documentación que describe un gate que no corre enseña a no verificarlo — Al actualizar los conteos de docs/contributing/validation.md se leyó su §13.3: «el gate se ejecuta automáticamente en el… | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 2. Lecciones Aprendidas nuevas | 3 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-V3.1` | Una documentación que describe un gate que no corre enseña a no verificarlo — Al actualizar los conteos de docs/contributing/validation.md se leyó su §13.3: «el gate se ejecuta automáticamente en el… | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 2. Lecciones Aprendidas nuevas | 4 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18, VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-V3.2` | Un gate que compara contra «hoy» no informa nada: su rojo y su verde son igualmente mudos — --quick dio 9/9 al cierre de FASE-V2 (2026-09-12) y 8/9 al reanudar la sesión el 2026-09-13 sin que se… | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 2. Lecciones Aprendidas nuevas | 3 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-V3.3` | Al archivar un plan se consume el testimonial con el que sus propios tests evitaban ser vacíos, y eso rompe la suite en el commit de cierre — El git mv de R2.5 sacó a este plan de plans/ y, con él… | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 2. Lecciones Aprendidas nuevas | 3 (solo el plan dueño) |
 | `L-V4` | Una cita de línea caduca antes de que se certifique el fix: 14 de 16 ya estaban desfasadas *(FASE-VERIFY)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 15 (solo el plan dueño) |
@@ -373,7 +374,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-V9` | La tabla §4.2 del análisis estaba incompleta: faltaba B3 (dossier §9.2 enumera B1-B5) — FASE-VERIFY (2026-09-04), al pasar el criterio V3 «ningún hallazgo del dossier queda sin estado» | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 3 (solo el plan dueño) |
 | `S-V10` | B4 (palancas de coverage 0.125-0.714) no se re-midió — la fila decía «→ VERIFY/FASE-I» — FASE-VERIFY (2026-09-04) | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 14 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 
-## Citados sin definición (43)
+## Citados sin definición (48)
 
 > Señal accionable: el ID circula por los planes pero nadie lo redactó con la
 > convención de definición. O está mal formulado, o la lección nunca se escribió.
@@ -397,6 +398,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `D-1` | 4 | Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24 |
 | `S-14` | 4 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-B1` | 4 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
+| `L-QW.1` | 3 | VERIFICADOR-ESCRITURA-QMIND-2026-09-20, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-QW.4` | 3 | VERIFICADOR-ESCRITURA-QMIND-2026-09-20, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `D-2` | 2 | Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24 |
 | `D-3` | 2 | Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24 |
 | `DA-T4B.3` | 2 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |
@@ -414,6 +417,9 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-H1..L-H7` | 1 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `L-P4.5` | 1 | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-P5.2-adjunto` | 1 | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
+| `L-QW` | 1 | VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
+| `L-QW.2` | 1 | VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
+| `L-QW.3` | 1 | VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-R2.4` | 1 | context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 | `L-T4A` | 1 | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-X` | 1 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |

@@ -71,11 +71,25 @@ plan TRIBUNAL-OFFLINE con contenidos distintos.
 
 ## Límite: nada de esto está gateado
 
-`validate_qmind_writeback.py` no lo invoca ni `run_all_validations.py` ni ningún pre-commit hook (medido
-sobre `scripts/`, `.agents/` y los planes: sus únicos convocantes son documentos). Y su modo
-verificación escanea **solo** `.opencode/plans/Archives/`, así que con el plan aún en raíz este
-registro no produce ningún verde ni rojo: la señal llegará cuando RELEASE lo ejecute, y **ningún
-check avisaría** si en RELEASE se omite el paso.
+> **Esta sección estaba mal y se rectifica el mismo día.** La medición que la originó fue
+> `grep -rln "validate_qmind_writeback" … | head -20`, y el `head` se comió el resultado: `scripts/`
+> aparece después de `.agents/` y `.opencode/` en el orden del grep. Re-medido sin corte, el
+> validador **sí** está invocado: `scripts/run_all_validations.py:97` lo corre como check **[15/15]**.
+
+Los límites reales, leídos en el código de los dos archivos:
+
+- **[15/15] solo existe en el modo completo.** Dentro de `if not self.quick:`, así que la validación
+  rápida de todas las fases intermedias nunca lo ve. Tampoco está en `scripts/git_hooks/pre-commit`.
+- **Escanea solo `.opencode/plans/Archives/`** (`collect_archived_analisis()`): con el plan en raíz no
+  hay verde ni rojo, como sucedió durante toda esta sesión.
+- **Degrada a exit 0 si el CLI `qmind` no está disponible**, porque el check lo invoca sin `--strict`
+  (`run_all_validations.py:827`). Es un verde producido por la ausencia del instrumento.
+- **Decide por título** (`is_ingested()`): la fuente de la era G satisface el check para siempre, de
+  modo que un contenido obsoleto pasa por cierre publicado.
+
+Consecuencia: el hueco no es «no hay verificador», es «el verificador comprueba la clave y no el
+contenido, y solo en un modo que nadie corre a mitad de plan». Eso es lo que el mini-plan
+`VERIFICADOR-ESCRITURA-QMIND-2026-09-20` ataca.
 
 ## Precedente observado, registrado y no corregido aquí
 
@@ -99,9 +113,9 @@ de FASE-G.
 `10-analisis: <PLAN> (lecciones aprendidas y decisiones)` y la ruta se deriva de `plan_dir`. Como
 `is_ingested()` decide **por título**, la ingesta de RELEASE respondería `SKIP` y dejaría visible en
 el notebook el contenido de la era G como si fuera el cierre. La idempotencia que protege contra
-duplicados es exactamente la que produce la obsolescencia silenciosa, y ningún check lo avisa: el
-modo verificación solo mira `Archives/` y el script no está en `run_all_validations.py` ni en
-pre-commit.
+duplicados es exactamente la que produce la obsolescencia silenciosa, y el único check que podría
+verla —[15/15] de la validación completa— decide por título, así que también la da por buena. Su
+modo verificación, además, solo mira `Archives/`.
 
 - **Esquive usado por G:** subir por el mismo canal (`upload_source()` del validador) una copia
   saneada y con el título canónico, de modo que `is_ingested()` siga siendo verdadero.
