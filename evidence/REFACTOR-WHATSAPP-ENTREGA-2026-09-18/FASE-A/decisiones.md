@@ -96,7 +96,7 @@ El operador no pidió rectificación de ninguno de los cuatro; **no se reinterpr
 **Abiertas — y su efecto sobre el cierre:**
 
 1. **Reconfirmación de vigencia/consentimiento sobre la URL viva** — necesaria para **H/E2E**, **no** para B. A la registra con dueño (operador) y condición ("datado sobre la URL viva, con límite escrito, antes de consumir el intento"). **No bloquea el cierre de A ni la arista A→G.**
-2. **Autorización de commit** de los documentos y evidencia de esta fase — **no concedida en esta sesión**. A dejó ejecutado el cierre incremental (registro en `REGISTRY.md` incluido, con `--check-manual-docs` → "No se detectaron gaps") y queda en **checkpoint documental** solo por el commit, por lo que **no** se declara el corte de R2 consumado.
+2. **Autorización de commit y de push** — **concedida y ejecutada en la misma sesión** tras el checkpoint: commit `3e97d95` (18 archivos, +750, hooks 7/7 en verde) y push `d4dacb4..3e97d95` a `origin/master`, paridad 0/0. El cierre incremental quedó completo, incluido el registro en `REGISTRY.md` con `--check-manual-docs` → "No se detectaron gaps".
 3. **Write-back a QMind** — no autorizado (solo se consultó). Ninguna subida se simula.
 
 Ninguna decisión necesaria para B quedó abierta, pero **A no se declara COMPLETADA** sin el corte documental + commit (§6).

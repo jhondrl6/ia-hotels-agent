@@ -41,7 +41,7 @@ Sin archivos nuevos.
 
 **Tests**: **0 tests nuevos**. Como observación de lectura se corrieron en offline las 7 superficies que el prompt de A enumeraba: **130 funciones canónicas → 134 casos, 133 passed + 1 skipped, exit 0** (se archiva en `tests_pertinentes_pre.txt`; no es un POST de fase porque A no modifica tests). Validaciones: `run_all_validations.py --quick` **10/10** al abrir y al cerrar la fase.
 
-**Cierre**: **checkpoint** — falta la autorización de commit del cierre y la reconfirmación de vigencia/consentimiento del operador (requerida antes de H/E2E, no para G).
+**Cierre**: fase cerrada con commit `3e97d95` y push a `origin/master`, ambos autorizados y ejecutados en la misma sesión. Queda abierta la reconfirmación de vigencia/consentimiento del operador (requerida antes de H/E2E, no para G).
 
 ## [4.77.2] - Contabilidad de coste del checker LLM (Gemini) — 2026-09-19
 
