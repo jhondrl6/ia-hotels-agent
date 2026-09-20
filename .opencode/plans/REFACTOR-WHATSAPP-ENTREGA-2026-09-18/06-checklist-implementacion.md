@@ -68,7 +68,7 @@ Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATS
 - [ ] A/H conservan fuente del 2026-07-22 y comprueban vigencia frente a `ONBOARDING_FRESHNESS_HOURS`, sin leer secretos ni falsear fecha o defaults.
 - [ ] A/H registran binding local explícito: original `https://hoteldonalfonso.com/`, solicitada `https://www.donalfonsohotel.com/`; selector único y hash, sin alias universal ni redirección inferida.
 - [ ] F/H acreditan revocación mediante evidencia operativa sin secreto, o mantienen pendiente AC13 y el cierre correspondiente; no inferirla de tests o key nueva.
-- [ ] Se distingue QMind accesible para consulta de upload autorizado. Sin autorización de subida, no subir material ni declarar write-back exitoso; registrar checkpoint si bloquea el cierre requerido.
+- [ ] Se distingue QMind accesible para consulta de upload autorizado. Sin autorización de subida, no subir material ni declarar write-back exitoso; registrar checkpoint si bloquea el cierre requerido. **G distinguió los dos permisos y ejecutó ambos el 2026-09-20** (consulta Q12 y subida con autorización literal aparte, saneada y verificada por descarga); la caja sigue sin marcar porque es control de **cierre de plan** y la ingesta final de RELEASE no existe aún — ver `evidence/…/FASE-G/qmind-writeback-G.md`.
 
 ## Gates, contratos y no regresión
 
