@@ -11,6 +11,7 @@ Cada prompt es ejecutable en una sesión nueva leyendo este contrato, el maestro
 - Configuración central, rotación remota, commit, push, tag y subida a QMind requieren autorización expresa para esa acción. El plan describe pasos futuros; no los autoriza ahora. Un permiso negado no se evade.
 - Si hay autorización explícita de commit: revisar diff y staged, stagear archivos concretos, commit nuevo sin saltar hooks. Sin ella, dejar checkpoint y pedirla; no declarar el corte de R2 consumado.
 - No tocar `evidence/FASE-P4/` ni históricos archivados. Evidencia nueva exclusivamente bajo `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-<ID>/`.
+- **Lectura de corridas ajenas (añadido en la revisión 2, 2026-09-19).** `output/TAREA7-2026-09-19/` es baseline medido de este plan: se permite **leerlo** y se permite invocar código del repo sobre sus artefactos **en memoria** (p. ej. `TribunalJudge._compute_verdict` para el contrafactual de AC20). Prohibido escribir, borrar o reordenar cualquier archivo bajo `output/` de esa corrida, y prohibido presentar una lectura de artefactos ajenos como propia de este plan. Una ejecución de lectura no consume el contador v4complete: solo el spawn del hijo de E2E lo hace.
 - No leer ni imprimir valores de secretos. Los fixtures usan marcadores sintéticos. Nuevas salidas se sanean antes de disco/consola; no subir datos reales por defecto.
 
 ## Inicio de cada fase

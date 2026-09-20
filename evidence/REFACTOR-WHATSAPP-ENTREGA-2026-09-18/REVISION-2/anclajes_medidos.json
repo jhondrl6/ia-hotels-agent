@@ -1,0 +1,2482 @@
+{
+  "schema_version": "1.0",
+  "artefacto": "anclajes_medidos",
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "revision": 2,
+  "fecha": "2026-09-19",
+  "head": "938f59f",
+  "version_repo": "4.77.3",
+  "proposito": "Anexo de precisión. Conserva, fuera de los documentos del plan, la posición exacta de cada ancla medida, para que los *.md del plan puedan citar símbolos (R2.2 del executor) sin perder la referencia verificable. No sustituye la verificación: cada ancla se abrió en disco.",
+  "instruccion_de_medicion": {
+    "conteo_de_citas": "python scripts/validate_plan_citations.py  (rojo Plan Citations del quick)",
+    "reproduccion_manual": "grep -rEoh \"[A-Za-z0-9_/]+\\.(py|md|yaml|json|txt|html):[0-9]+\" .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 --include=*.md | wc -l",
+    "simbolo_contenedor": "ast.iter_child_nodes sobre el archivo objetivo: se toma el nodo FunctionDef/AsyncFunctionDef/ClassDef más interno cuyo intervalo [lineno,end_lineno] contenga la línea citada; para .md se toma el encabezado precedente",
+    "verificacion_de_rango": "len(splitlines()) del archivo objetivo >= ultima linea del rango"
+  },
+  "contabilidad": {
+    "ocurrencias_contadas_por_el_verificador": 167,
+    "anclas_unicas_de_esas_ocurrencias": 104,
+    "ocurrencias_numericas_en_forma_breve_o_por_continuacion": 81,
+    "anclas_unicas_adicionales_aportadas_por_las_formas_breves": 37,
+    "total_anclas_registradas": 133,
+    "documentos_del_plan_con_citas": {
+      "00-lecciones-capitalizadas.md": 7,
+      "01-plan-maestro.md": 108,
+      "05-prompt-inicio-sesion-fase-0.md": 10,
+      "05-prompt-inicio-sesion-fase-B.md": 7,
+      "05-prompt-inicio-sesion-fase-C.md": 10,
+      "05-prompt-inicio-sesion-fase-G.md": 9,
+      "05-prompt-inicio-sesion-fase-H.md": 10,
+      "06-checklist-implementacion.md": 1,
+      "10-analisis-post-implementacion.md": 2,
+      "dependencias-fases.md": 3
+    },
+    "documentos_del_plan_sin_citas": [
+      "04-contrato-ejecucion.md",
+      "05-prompt-inicio-sesion-fase-A.md",
+      "05-prompt-inicio-sesion-fase-D.md",
+      "05-prompt-inicio-sesion-fase-E.md",
+      "05-prompt-inicio-sesion-fase-E2E.md",
+      "05-prompt-inicio-sesion-fase-F.md",
+      "05-prompt-inicio-sesion-fase-RELEASE.md",
+      "05-prompt-inicio-sesion-fase-VERIFY.md",
+      "09-documentacion-post-proyecto.md",
+      "README.md"
+    ],
+    "correccion_al_enunciado_de_la_revision": "El desglose de la tarea 0.1 atribuía 1 cita a 09-documentacion-post-proyecto.md. Medido: ese documento tiene 0 citas y el resto del desglose suma exactamente 167, que es el total declarado. Las dos coincidencias `:NNN` de ese archivo son horarios (`11:06-11:10`, `15:01`), no anclas de línea, y el verificador no las cuenta.",
+    "total_ocurrencias_registradas": 248,
+    "suma_citas_en_iguales_a_ocurrencias": true,
+    "cotejo_de_cobertura": {
+      "metodo": "por cada token del verificador se buscó una entrada con (basename de ruta_relativa, linea_o_rango) igual",
+      "tokens_sin_cobertura": 0,
+      "entradas_tocadas_por_la_poblacion_del_verificador": 96,
+      "anclas_unicas_de_las_167_ocurrencias": 104,
+      "nota": "104 tokens únicos se fusionan en 96 entradas porque el plan cita el mismo ancla a veces con basename y a veces con ruta completa (p. ej. judge.py:46 y modules/quality_gates/tribunal/outcome.py:84-92)."
+    }
+  },
+  "convenciones": {
+    "ruta_relativa": "ruta del archivo objetivo desde la raíz del repo (las citas del plan abrevian con basename; la columna cita_literal preserva cómo estaba escrita)",
+    "forma": "calificada = `archivo.py:NNN` (la que cuenta el verificador) | breve = `:NNN` o `~NNN` aislado | continuacion = `,NNN` dentro de un rango",
+    "estado": "verificada | verificada-con-nota | no-cuadraba-corregida"
+  },
+  "anclas": [
+    {
+      "id": "A001",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "43-176",
+      "linea_actual_del_simbolo": 43,
+      "simbolo_que_lo_contiene": "build_parser",
+      "cita_literal": "main.py:43-176",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:30"
+      ],
+      "hecho_que_prueba": "build_parser declara el comando `command` posicional y todas las opciones con parser.add_argument sobre un único parser: no hay subparsers, así que las opciones aplican a cualquier comando.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A002",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "166-176",
+      "linea_actual_del_simbolo": null,
+      "simbolo_que_lo_contiene": "build_parser",
+      "cita_literal": "~27 opciones",
+      "forma": [
+        "cantidad-no-ancla"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:30"
+      ],
+      "hecho_que_prueba": "Cantidad de opciones globales del parser. Medido con AST sobre build_parser: 31 llamadas a add_argument y 30 flags largos distintos.",
+      "estado": "no-cuadraba-corregida",
+      "nota": "El maestro decía \"~27 opciones\". Medido el 2026-09-19: 31 llamadas a `add_argument`, 30 flags largos únicos. Se corrige la cifra en el documento."
+    },
+    {
+      "id": "A003",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "84-88",
+      "linea_actual_del_simbolo": 84,
+      "simbolo_que_lo_contiene": "build_parser",
+      "cita_literal": "main.py:84-88",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:142",
+        "05-prompt-inicio-sesion-fase-H.md:54",
+        "01-plan-maestro.md:31"
+      ],
+      "hecho_que_prueba": "`--permission-mode` se declara con choices auto|smart_approve|approve|chat y default=\"auto\": si el argv no lo fija, la corrida autoriza las llamadas externas.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A004",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "220-231",
+      "linea_actual_del_simbolo": 220,
+      "simbolo_que_lo_contiene": "ensure_url",
+      "cita_literal": "main.py:220-231",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:31",
+        "01-plan-maestro.md:116"
+      ],
+      "hecho_que_prueba": "ensure_url reinyecta el `last_url` persistido cuando `--url` falta: `--url` es opcional y una corrida puede apuntar a un hotel distinto del pretendido.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A005",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "1433",
+      "linea_actual_del_simbolo": 1433,
+      "simbolo_que_lo_contiene": "main",
+      "cita_literal": ":1433",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:31"
+      ],
+      "hecho_que_prueba": "MemoryManager().save_state({\"last_url\": args.url}) muta estado compartido en cada invocación.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A006",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "1666",
+      "linea_actual_del_simbolo": 1666,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": "main.py:1666",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:31",
+        "01-plan-maestro.md:116",
+        "05-prompt-inicio-sesion-fase-H.md:55"
+      ],
+      "hecho_que_prueba": "memory.cleanup_old_sessions(days=20) se invoca dentro del propio v4complete: la corrida borra sesiones de .agent/memory antes de trabajar.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A007",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "1686",
+      "linea_actual_del_simbolo": 1686,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": ":1686",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:32",
+        "01-plan-maestro.md:142",
+        "05-prompt-inicio-sesion-fase-H.md:46"
+      ],
+      "hecho_que_prueba": "canonical_url = _normalize_url(args.url): tercera identidad de la corrida, la que indexa la memoria.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A008",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "1703-1706",
+      "linea_actual_del_simbolo": 1703,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": ":1703-1706",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:32",
+        "01-plan-maestro.md:142",
+        "05-prompt-inicio-sesion-fase-H.md:46"
+      ],
+      "hecho_que_prueba": "hotel_name = args.nombre or _extract_hotel_name_from_url(args.url): el nombre del paquete sale de --nombre, no de la URL.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A009",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "1736",
+      "linea_actual_del_simbolo": 1736,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": "main.py:1736 / :1736",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-H.md:53",
+        "01-plan-maestro.md:31"
+      ],
+      "hecho_que_prueba": "discovered_analysis = memory.find_latest_analysis(canonical_url): la corrida puede reutilizar un análisis previo en vez de auditar.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A010",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "1744-1749",
+      "linea_actual_del_simbolo": 1744,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode (OperationPermission V4ComprehensiveAuditor.audit)",
+      "cita_literal": ":1744",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:142"
+      ],
+      "hecho_que_prueba": "estimated_cost=0.03 e is_external=True en la operación de auditoría: la llamada externa tiene coste y se gatea por permission-mode.",
+      "estado": "verificada-con-nota",
+      "nota": "El literal `estimated_cost=0.03` está en la línea 1746; la 1744 es el comentario que abre el bloque. Se cita por símbolo."
+    },
+    {
+      "id": "A011",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "1750-1756",
+      "linea_actual_del_simbolo": 1750,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": "main.py:1750-1756",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:116",
+        "05-prompt-inicio-sesion-fase-H.md:54",
+        "01-plan-maestro.md:31"
+      ],
+      "hecho_que_prueba": "Si check_permission(audit_op, perm_mode) falla, el pipeline continúa sin auditoría (audit_result=None) y con defaults: mismo exit code, otro flujo.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A012",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "1864",
+      "linea_actual_del_simbolo": 1864,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": "main.py:1864",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:29",
+        "01-plan-maestro.md:130"
+      ],
+      "hecho_que_prueba": "canal_directo = datos_operativos.get('canal_directo_pct', 20.0): el default de canal directo del pipeline es 20.0.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A013",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "1872",
+      "linea_actual_del_simbolo": 1872,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": "main.py:1872",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:113",
+        "05-prompt-inicio-sesion-fase-H.md:37",
+        "01-plan-maestro.md:29",
+        "01-plan-maestro.md:130"
+      ],
+      "hecho_que_prueba": "print(\"   ℹ️  Using defaults (no fresh onboarding data found)\"): sucursal de defaults del loader, visible solo en el log.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A014",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "1890",
+      "linea_actual_del_simbolo": 1890,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": ":1890",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:29",
+        "01-plan-maestro.md:130"
+      ],
+      "hecho_que_prueba": "direct_channel_pct = 0.20 # Default 20%: segundo punto de default del mismo canal.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A015",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "1909",
+      "linea_actual_del_simbolo": 1909,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": "main.py:1909",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:32",
+        "01-plan-maestro.md:142",
+        "05-prompt-inicio-sesion-fase-H.md:46"
+      ],
+      "hecho_que_prueba": "\"hotel_id\": args.url: el hotel_id del reporte sale de la URL, no del nombre comercial.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A016",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "2263",
+      "linea_actual_del_simbolo": 2263,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode > get_scenario_value",
+      "cita_literal": "main.py:2263,2273",
+      "forma": [
+        "calificada",
+        "continuacion"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:104"
+      ],
+      "hecho_que_prueba": "match_percentage=0.5 y 0.6 en los escenarios: dos barras de coincidencia distintas sobre el mismo hecho.",
+      "estado": "verificada",
+      "continuaciones_asociadas": [
+        "2273"
+      ]
+    },
+    {
+      "id": "A017",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "2445-2446",
+      "linea_actual_del_simbolo": 2445,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode > get_scenario_value",
+      "cita_literal": "main.py:2445-2446",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:18"
+      ],
+      "hecho_que_prueba": "detected_pains = pain_mapper.detect_pains(...) en main sí propaga la señal HTML: una de las tres rutas que divergen.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A018",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "2657",
+      "linea_actual_del_simbolo": 2657,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode > V4DiagnosticGenerator.generate",
+      "cita_literal": "main.py:2657",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:24"
+      ],
+      "hecho_que_prueba": "El diagnóstico se escribe con output_dir=str(output_dir) (padre), no en el directorio del hotel: por eso el glob de ascendientes lo alcanza.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A019",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "2865",
+      "linea_actual_del_simbolo": 2865,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode > V4ProposalGenerator.generate",
+      "cita_literal": ":2865",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:24"
+      ],
+      "hecho_que_prueba": "La propuesta se escribe con el mismo output_dir padre que el diagnóstico.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A020",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "2807",
+      "linea_actual_del_simbolo": 2807,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode (comentario FIX-D7, junto al guard `if generate_proposal`)",
+      "cita_literal": "main.py:2807",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:19",
+        "05-prompt-inicio-sesion-fase-B.md:21",
+        "05-prompt-inicio-sesion-fase-B.md:30",
+        "01-plan-maestro.md:19"
+      ],
+      "hecho_que_prueba": "El comentario dice \"(which includes promised_by=always assets like voice_assistant_guide, whatsapp_button, monthly_report)\": afirma que whatsapp_button SÍ es promised_by=always.",
+      "estado": "verificada",
+      "nota": "Confirmado contra AssetCatalog[\"whatsapp_button\"].promised_by, que solo lista no_whatsapp_visible y whatsapp_conflict con el comentario `FASE-5: \"always\" ELIMINADO`. La contradicción es en el sentido que declara el maestro: el comentario de main.py es el que se quedó atrás."
+    },
+    {
+      "id": "A021",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3009-3012",
+      "linea_actual_del_simbolo": 3009,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": "main.py:3009-3012",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:24"
+      ],
+      "hecho_que_prueba": "_gate_blocking_enabled = getenv(\"GATE_BLOCKING_ENABLED\", \"true\") y su rama: el borrado de documentos exige NOT_READY o claim escalado, no ocurre en cualquier bloqueo.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A022",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3019-3021",
+      "linea_actual_del_simbolo": 3019,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": "main.py:3019-3021",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "dependencias-fases.md:47"
+      ],
+      "hecho_que_prueba": "_diag_var = \"diagnostic_path\" + `if _diag_var in locals() and locals()[_diag_var]`: resolución de rutas por lookup de locals().",
+      "estado": "verificada"
+    },
+    {
+      "id": "A023",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3027-3029",
+      "linea_actual_del_simbolo": 3027,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode",
+      "cita_literal": ":3027-3029",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "dependencias-fases.md:47"
+      ],
+      "hecho_que_prueba": "Mismo patrón para _prop_var = \"proposal_path\": segunda instancia del lookup frágil.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A024",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3421-3429",
+      "linea_actual_del_simbolo": 3421,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode (rama de supresión del Tribunal)",
+      "cita_literal": "main.py:3421-3429",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:63",
+        "01-plan-maestro.md:111",
+        "05-prompt-inicio-sesion-fase-0.md:27"
+      ],
+      "hecho_que_prueba": "package_evidence = _compute_package_evidence(quarantine_tmp_path) y su re-escritura del acta ocurren SOLO en la rama que suprime, antes de packager.suppress().",
+      "estado": "verificada"
+    },
+    {
+      "id": "A025",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3437-3443",
+      "linea_actual_del_simbolo": 3443,
+      "simbolo_que_lo_contiene": "run_v4_complete_mode (rama publish)",
+      "cita_literal": "main.py:3437-3443",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:111",
+        "01-plan-maestro.md:119",
+        "05-prompt-inicio-sesion-fase-0.md:27"
+      ],
+      "hecho_que_prueba": "delivery_zip_path = packager.publish(quarantine_tmp_path): la rama publish no calcula ni registra package_evidence.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A026",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3829-3863",
+      "linea_actual_del_simbolo": 3829,
+      "simbolo_que_lo_contiene": "_compute_package_evidence",
+      "cita_literal": "~3829-3863",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-0.md:27"
+      ],
+      "hecho_que_prueba": "Productor de la evidencia del paquete: sha256 y member_count del ZIP en cuarentena.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A027",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3866-3906",
+      "linea_actual_del_simbolo": 3866,
+      "simbolo_que_lo_contiene": "_observation_to_onboarding_format",
+      "cita_literal": "main.py:3866-3906",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-H.md:38"
+      ],
+      "hecho_que_prueba": "Transformador observación → YAML de onboarding.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A028",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3877-3882",
+      "linea_actual_del_simbolo": 3877,
+      "simbolo_que_lo_contiene": "_observation_to_onboarding_format._FIELD_MAP",
+      "cita_literal": "main.py:3877-3882",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:29",
+        "01-plan-maestro.md:113",
+        "01-plan-maestro.md:130",
+        "05-prompt-inicio-sesion-fase-H.md:38"
+      ],
+      "hecho_que_prueba": "_FIELD_MAP tiene exactamente 4 claves: habitaciones→rooms, reservas_mes→monthly_reservations, valor_reserva_cop→avg_reservation_cop, canal_directo_pct→direct_channel_percentage.",
+      "estado": "verificada",
+      "nota": "Verificado además que la observación de Don Alfonso en data/hotel_observations/observations.json sí contiene adr_cop (330000) y occupancy_rate (0.4242): el transformador los descarta, no es un problema de la fuente."
+    },
+    {
+      "id": "A029",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3909-3980",
+      "linea_actual_del_simbolo": 3909,
+      "simbolo_que_lo_contiene": "_load_latest_onboarding_data",
+      "cita_literal": "main.py:3909-3980",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:113",
+        "05-prompt-inicio-sesion-fase-H.md:36",
+        "01-plan-maestro.md:30"
+      ],
+      "hecho_que_prueba": "Firma del loader: (hotel_url, hotel_name, output_dir=None). Contiene las tres ramas de salida.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A030",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3921",
+      "linea_actual_del_simbolo": 3921,
+      "simbolo_que_lo_contiene": "_load_latest_onboarding_data (docstring, Args → hotel_name)",
+      "cita_literal": ":3921",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:30",
+        "01-plan-maestro.md:113",
+        "05-prompt-inicio-sesion-fase-H.md:36"
+      ],
+      "hecho_que_prueba": "La docstring declara `hotel_name: Nombre del hotel (solo para logging, no se usa para matching)`.",
+      "estado": "verificada",
+      "nota": "3920 es la línea de `hotel_url`. El ancla correcta es 3921, como queda registrado aquí y como símbolo en el documento."
+    },
+    {
+      "id": "A031",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3933-3965",
+      "linea_actual_del_simbolo": 3933,
+      "simbolo_que_lo_contiene": "_load_latest_onboarding_data (rama YAML de clientes_dir)",
+      "cita_literal": ":3933-3965",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-H.md:37"
+      ],
+      "hecho_que_prueba": "clientes_dir = output_dir or Path(\"output/clientes\"); la rama YAML va del guard `if clientes_dir.exists():` (3933) al `return data` (3965).",
+      "estado": "verificada"
+    },
+    {
+      "id": "A032",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3934",
+      "linea_actual_del_simbolo": 3934,
+      "simbolo_que_lo_contiene": "_load_latest_onboarding_data (rama YAML)",
+      "cita_literal": ":3934",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:30"
+      ],
+      "hecho_que_prueba": "clientes_dir.glob(\"*_onboarding.yaml\"): glob no recursivo.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A033",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3941",
+      "linea_actual_del_simbolo": 3941,
+      "simbolo_que_lo_contiene": "_load_latest_onboarding_data (rama YAML)",
+      "cita_literal": ":3941",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:30"
+      ],
+      "hecho_que_prueba": "`if not data or 'metadatos' not in data: continue`: exige la clave metadatos para considerar el YAML.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A034",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3948",
+      "linea_actual_del_simbolo": 3948,
+      "simbolo_que_lo_contiene": "_load_latest_onboarding_data (rama YAML)",
+      "cita_literal": "main.py:3948",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:132",
+        "01-plan-maestro.md:30",
+        "01-plan-maestro.md:113",
+        "05-prompt-inicio-sesion-fase-H.md:36"
+      ],
+      "hecho_que_prueba": "`if _normalize_url(yaml_url) != normalized_url: continue`: la clave de coincidencia es la URL normalizada; el nombre no participa.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A035",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3954-3963",
+      "linea_actual_del_simbolo": 3954,
+      "simbolo_que_lo_contiene": "_load_latest_onboarding_data (control de frescura)",
+      "cita_literal": "main.py:3954-3963",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:134"
+      ],
+      "hecho_que_prueba": "freshness_hours = os.getenv(\"ONBOARDING_FRESHNESS_HOURS\") y su bloque de descarte por antigüedad.",
+      "estado": "verificada",
+      "nota": "Medido además: ONBOARDING_FRESHNESS_HOURS no aparece en .env ni en .env.template (0 coincidencias en cada archivo), así que el bloque hoy no corre."
+    },
+    {
+      "id": "A036",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3957-3958",
+      "linea_actual_del_simbolo": 3957,
+      "simbolo_que_lo_contiene": "_load_latest_onboarding_data (control de frescura)",
+      "cita_literal": "main.py:3957-3958",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-H.md:39",
+        "01-plan-maestro.md:113",
+        "01-plan-maestro.md:134"
+      ],
+      "hecho_que_prueba": "fecha_str = data.get('metadatos', {}).get('fecha_captura') seguido de `if fecha_str:`: sin fecha capturada el control se omite en silencio.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A037",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "3967-3978",
+      "linea_actual_del_simbolo": 3967,
+      "simbolo_que_lo_contiene": "_load_latest_onboarding_data (fallback warehouse)",
+      "cita_literal": ":3967-3976 / :3967-3978",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:30",
+        "05-prompt-inicio-sesion-fase-H.md:37"
+      ],
+      "hecho_que_prueba": "Comentario \"# Fallback: buscar en observations.json\", re-conversión con _observation_to_onboarding_format y `except Exception: pass  # Fallback silencioso`.",
+      "estado": "verificada",
+      "nota": "Las dos formas del rango conviven en el plan (3976 en el maestro, 3978 en el prompt H). El bloque termina en 3978 (`pass`); ambas caen dentro. Se unifica al símbolo."
+    },
+    {
+      "id": "A038",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "4009-4045",
+      "linea_actual_del_simbolo": 4009,
+      "simbolo_que_lo_contiene": "_build_gate_report_payload",
+      "cita_literal": "main.py:4009-4045",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-0.md:26"
+      ],
+      "hecho_que_prueba": "Writer del gate_report: serializa el payload de cada gate.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A039",
+      "ruta_relativa": "main.py",
+      "linea_o_rango": "4042",
+      "linea_actual_del_simbolo": 4042,
+      "simbolo_que_lo_contiene": "_build_gate_report_payload",
+      "cita_literal": "~4042",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-0.md:26"
+      ],
+      "hecho_que_prueba": "\"details\": r.details: el writer del reporte no filtra el diccionario; el hueco de serialización está en el productor del gate, no aquí.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A040",
+      "ruta_relativa": "agent_harness/memory.py",
+      "linea_o_rango": "334-357",
+      "linea_actual_del_simbolo": 334,
+      "simbolo_que_lo_contiene": "MemoryManager.find_latest_analysis",
+      "cita_literal": "agent_harness/memory.py:334-357",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-H.md:53"
+      ],
+      "hecho_que_prueba": "Definición de find_latest_analysis(target_id).",
+      "estado": "verificada"
+    },
+    {
+      "id": "A041",
+      "ruta_relativa": "agent_harness/memory.py",
+      "linea_o_rango": "357",
+      "linea_actual_del_simbolo": 357,
+      "simbolo_que_lo_contiene": "MemoryManager.find_latest_analysis",
+      "cita_literal": "agent_harness/memory.py:357",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:31",
+        "01-plan-maestro.md:116",
+        "05-prompt-inicio-sesion-fase-H.md:53"
+      ],
+      "hecho_que_prueba": "output_dir = Path(\"output\"): el escaneo de análisis previos usa un directorio fijo, relativo al cwd, no el --output de la corrida.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A042",
+      "ruta_relativa": "agent_harness/memory.py",
+      "linea_o_rango": "405-417",
+      "linea_actual_del_simbolo": 405,
+      "simbolo_que_lo_contiene": "MemoryManager.cleanup_old_sessions",
+      "cita_literal": "agent_harness/memory.py:405-417",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:31"
+      ],
+      "hecho_que_prueba": "cleanup_old_sessions(self, days: int = 20) borra sesiones de más de N días.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A043",
+      "ruta_relativa": "modules/asset_generation/site_presence_checker.py",
+      "linea_o_rango": "343",
+      "linea_actual_del_simbolo": 343,
+      "simbolo_que_lo_contiene": "SitePresenceChecker._check_asset_presence",
+      "cita_literal": ":343",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:27",
+        "05-prompt-inicio-sesion-fase-C.md:9"
+      ],
+      "hecho_que_prueba": "_check_html_element(site_url, ...): la sonda HTML recibe la URL raíz; no hay crawl ni /contacto/.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A044",
+      "ruta_relativa": "modules/asset_generation/site_presence_checker.py",
+      "linea_o_rango": "371-374",
+      "linea_actual_del_simbolo": 371,
+      "simbolo_que_lo_contiene": "SitePresenceChecker._check_asset_presence",
+      "cita_literal": "site_presence_checker.py:371-374",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:47",
+        "10-analisis-post-implementacion.md:69",
+        "05-prompt-inicio-sesion-fase-C.md:9",
+        "01-plan-maestro.md:27"
+      ],
+      "hecho_que_prueba": "`if not schema_report.get(\"schemas_encontrados\"): if \"error\" in schema_report: status = PresenceStatus.VERIFICATION_FAILED`: el verification_failed lo estampa el error del schema report, no el fetch HTML.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A045",
+      "ruta_relativa": "modules/asset_generation/site_presence_checker.py",
+      "linea_o_rango": "447-502",
+      "linea_actual_del_simbolo": 447,
+      "simbolo_que_lo_contiene": "SitePresenceChecker._check_html_element",
+      "cita_literal": "modules/asset_generation/site_presence_checker.py:447-502",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:27",
+        "05-prompt-inicio-sesion-fase-C.md:9"
+      ],
+      "hecho_que_prueba": "Lector HTML canónico completo: sondas de texto, href y clases CSS.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A046",
+      "ruta_relativa": "modules/asset_generation/site_presence_checker.py",
+      "linea_o_rango": "477",
+      "linea_actual_del_simbolo": 477,
+      "simbolo_que_lo_contiene": "SitePresenceChecker._check_html_element",
+      "cita_literal": "site_presence_checker.py:477",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:27",
+        "01-plan-maestro.md:67",
+        "01-plan-maestro.md:160",
+        "05-prompt-inicio-sesion-fase-C.md:9",
+        "05-prompt-inicio-sesion-fase-C.md:23"
+      ],
+      "hecho_que_prueba": "Primer lector: `any(pattern in href.lower() for pattern in ['wa.me','api.whatsapp.com','whatsapp'])` sobre <a href>.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A047",
+      "ruta_relativa": "modules/asset_generation/site_presence_checker.py",
+      "linea_o_rango": "480-483",
+      "linea_actual_del_simbolo": 480,
+      "simbolo_que_lo_contiene": "SitePresenceChecker._check_html_element",
+      "cita_literal": ":480-483",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:27",
+        "05-prompt-inicio-sesion-fase-C.md:9"
+      ],
+      "hecho_que_prueba": "re.search(r'wa\\.me/(\\d+)') → whatsapp_href_number: el lector sí extrae el número, que el adaptador luego descarta.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A048",
+      "ruta_relativa": "modules/asset_generation/site_presence_checker.py",
+      "linea_o_rango": "501-502",
+      "linea_actual_del_simbolo": 501,
+      "simbolo_que_lo_contiene": "SitePresenceChecker._check_html_element",
+      "cita_literal": ":501-502",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:27",
+        "05-prompt-inicio-sesion-fase-C.md:9"
+      ],
+      "hecho_que_prueba": "`except Exception: return {\"found\": False}`: cualquier fallo de transporte colapsa a no-encontrado.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A049",
+      "ruta_relativa": "modules/asset_generation/site_presence_adapter.py",
+      "linea_o_rango": "107-127",
+      "linea_actual_del_simbolo": 107,
+      "simbolo_que_lo_contiene": "_presence_result_to_canonical",
+      "cita_literal": "modules/asset_generation/site_presence_adapter.py:107-127",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-C.md:9",
+        "01-plan-maestro.md:27",
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "Única puerta de forma del reporte canónico: devuelve exactamente status, site_verified y confidence; no propaga details.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A050",
+      "ruta_relativa": "modules/asset_generation/preflight_checks.py",
+      "linea_o_rango": "44-51",
+      "linea_actual_del_simbolo": 46,
+      "simbolo_que_lo_contiene": "NEW_HOTEL_THRESHOLDS (constante de módulo)",
+      "cita_literal": "preflight_checks.py:44-51",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:19"
+      ],
+      "hecho_que_prueba": "Diccionario de umbrales para hoteles nuevos.",
+      "estado": "verificada-con-nota",
+      "nota": "El diccionario vive a nivel de módulo (clave NEW_HOTEL_THRESHOLDS en 46); no está dentro de la dataclass PreflightReport. Se cita por clave."
+    },
+    {
+      "id": "A051",
+      "ruta_relativa": "modules/asset_generation/preflight_checks.py",
+      "linea_o_rango": "48",
+      "linea_actual_del_simbolo": 48,
+      "simbolo_que_lo_contiene": "NEW_HOTEL_THRESHOLDS[\"whatsapp_button\"]",
+      "cita_literal": "preflight_checks.py:48",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:104",
+        "05-prompt-inicio-sesion-fase-G.md:24",
+        "06-checklist-implementacion.md:55",
+        "05-prompt-inicio-sesion-fase-B.md:21"
+      ],
+      "hecho_que_prueba": "\"whatsapp_button\": 0.3,  # Reduced from 0.7: la barra más baja que planifica el botón en hotel nuevo.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A052",
+      "ruta_relativa": "modules/asset_generation/asset_catalog.py",
+      "linea_o_rango": "58-68",
+      "linea_actual_del_simbolo": 58,
+      "simbolo_que_lo_contiene": "ASSET_CATALOG[\"whatsapp_button\"]",
+      "cita_literal": "asset_catalog.py:58-68",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:19",
+        "05-prompt-inicio-sesion-fase-B.md:21",
+        "05-prompt-inicio-sesion-fase-G.md:24"
+      ],
+      "hecho_que_prueba": "Entrada completa del asset: required_field=\"whatsapp\", required_confidence=0.7, block_on_failure=False.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A053",
+      "ruta_relativa": "modules/asset_generation/asset_catalog.py",
+      "linea_o_rango": "63",
+      "linea_actual_del_simbolo": 63,
+      "simbolo_que_lo_contiene": "ASSET_CATALOG[\"whatsapp_button\"].required_confidence",
+      "cita_literal": "asset_catalog.py:63",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:104"
+      ],
+      "hecho_que_prueba": "required_confidence=0.7 con block_on_failure=False: tercera barra sobre el mismo hecho, no bloqueante.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A054",
+      "ruta_relativa": "modules/asset_generation/asset_catalog.py",
+      "linea_o_rango": "67",
+      "linea_actual_del_simbolo": 67,
+      "simbolo_que_lo_contiene": "ASSET_CATALOG[\"whatsapp_button\"].promised_by",
+      "cita_literal": "asset_catalog.py:67",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:19",
+        "01-plan-maestro.md:19",
+        "05-prompt-inicio-sesion-fase-B.md:21"
+      ],
+      "hecho_que_prueba": "promised_by=[\"no_whatsapp_visible\", \"whatsapp_conflict\"]  # FASE-5: \"always\" ELIMINADO - bug sistemico.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A055",
+      "ruta_relativa": "modules/asset_generation/conditional_generator.py",
+      "linea_o_rango": "241-264",
+      "linea_actual_del_simbolo": 241,
+      "simbolo_que_lo_contiene": "ConditionalGenerator.PAIN_TO_ASSET",
+      "cita_literal": "conditional_generator.py:241-264",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:19",
+        "05-prompt-inicio-sesion-fase-B.md:21",
+        "05-prompt-inicio-sesion-fase-G.md:24"
+      ],
+      "hecho_que_prueba": "Segundo mapa pain→asset. Medido sobre el rango: no contiene la clave no_whatsapp_visible.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A056",
+      "ruta_relativa": "modules/asset_generation/conditional_generator.py",
+      "linea_o_rango": "427",
+      "linea_actual_del_simbolo": 427,
+      "simbolo_que_lo_contiene": "ConditionalGenerator._generate_content",
+      "cita_literal": "conditional_generator.py:427",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:46"
+      ],
+      "hecho_que_prueba": "validated_data.get(\"whatsapp\") or validated_data.get(\"whatsapp_number\", {}): la clave whatsapp tiene precedencia, y phone_web viaja por esa clave.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A057",
+      "ruta_relativa": "modules/asset_generation/v4_asset_orchestrator.py",
+      "linea_o_rango": "286",
+      "linea_actual_del_simbolo": 286,
+      "simbolo_que_lo_contiene": "V4AssetOrchestrator.generate_assets",
+      "cita_literal": "modules/asset_generation/v4_asset_orchestrator.py:286",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-G.md:24",
+        "01-plan-maestro.md:18",
+        "05-prompt-inicio-sesion-fase-G.md:69"
+      ],
+      "hecho_que_prueba": "pains = self.pain_mapper.detect_pains(audit_result, validation_summary, analytics_data) sin whatsapp_html_detected: la divergencia viva entre rutas.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A058",
+      "ruta_relativa": "modules/asset_generation/v4_asset_orchestrator.py",
+      "linea_o_rango": "701-758",
+      "linea_actual_del_simbolo": 701,
+      "simbolo_que_lo_contiene": "V4AssetOrchestrator._solutions_to_asset_specs",
+      "cita_literal": "v4_asset_orchestrator.py:701-758",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:19"
+      ],
+      "hecho_que_prueba": "Convertidor solutions→AssetSpec: cuarto punto donde se decide el plan de assets.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A059",
+      "ruta_relativa": "modules/asset_generation/v4_asset_orchestrator.py",
+      "linea_o_rango": "871-877",
+      "linea_actual_del_simbolo": 871,
+      "simbolo_que_lo_contiene": "V4AssetOrchestrator._extract_validated_fields",
+      "cita_literal": "v4_asset_orchestrator.py:871-877",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:46"
+      ],
+      "hecho_que_prueba": "validated_data[\"whatsapp\"] = validated_data.get(\"phone_web\", \"\") (FIX-A2): el teléfono web se asigna a la clave whatsapp.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A060",
+      "ruta_relativa": "modules/asset_generation/pain_ledger.py",
+      "linea_o_rango": "137-168",
+      "linea_actual_del_simbolo": 137,
+      "simbolo_que_lo_contiene": "PainLedger.apply_site_verification",
+      "cita_literal": "pain_ledger.py:137-168",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "Consumer 1 del reporte canónico: results = site_presence_report.get(\"results\", {}) y promoción a VERIFIED_IN_SITE.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A061",
+      "ruta_relativa": "modules/asset_generation/proposal_asset_alignment.py",
+      "linea_o_rango": "461-497",
+      "linea_actual_del_simbolo": 461,
+      "simbolo_que_lo_contiene": "_presence_exists",
+      "cita_literal": "proposal_asset_alignment.py:461-497",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "Consumer 2: resuelve presencia canónica con is_present_in_production.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A062",
+      "ruta_relativa": "modules/quality_gates/alignment_result.py",
+      "linea_o_rango": "62-77",
+      "linea_actual_del_simbolo": 62,
+      "simbolo_que_lo_contiene": "_presence_resolved",
+      "cita_literal": "alignment_result.py:62-77",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "Consumer 3: presence.get(\"status\") bajo el criterio canónico.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A063",
+      "ruta_relativa": "modules/quality_gates/delivery_quality_report.py",
+      "linea_o_rango": "266-276",
+      "linea_actual_del_simbolo": 266,
+      "simbolo_que_lo_contiene": "DeliveryQualityReportGenerator.generate",
+      "cita_literal": "delivery_quality_report.py:266-276",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "Consumer 5: el QA de entrega lee site_presence_report dentro de la partición canónica.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A064",
+      "ruta_relativa": "modules/delivery/delivery_context.py",
+      "linea_o_rango": "48-78",
+      "linea_actual_del_simbolo": 48,
+      "simbolo_que_lo_contiene": "DeliveryAssetEntry.from_skipped_asset",
+      "cita_literal": "delivery_context.py:48-78",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "Consumer 6: lee presence_status y site_verified del skipped_asset y deriva el estado de entrega.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A065",
+      "ruta_relativa": "modules/auditors/v4_comprehensive.py",
+      "linea_o_rango": "278",
+      "linea_actual_del_simbolo": 278,
+      "simbolo_que_lo_contiene": "V4AuditResult.to_dict",
+      "cita_literal": "v4_comprehensive.py:278",
+      "forma": [
+        "calificada",
+        "continuacion"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:25"
+      ],
+      "hecho_que_prueba": "\"error_message\": self.schema.error_message (278) y self.gbp.error_message (296): el texto crudo de la excepción se persiste en el audit_report.",
+      "estado": "verificada",
+      "continuaciones_asociadas": [
+        "296"
+      ]
+    },
+    {
+      "id": "A066",
+      "ruta_relativa": "modules/auditors/v4_comprehensive.py",
+      "linea_o_rango": "1563-1599",
+      "linea_actual_del_simbolo": 1563,
+      "simbolo_que_lo_contiene": "V4ComprehensiveAuditor._detect_whatsapp_from_html",
+      "cita_literal": "modules/auditors/v4_comprehensive.py:1563-1599",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:27",
+        "01-plan-maestro.md:67",
+        "01-plan-maestro.md:160",
+        "05-prompt-inicio-sesion-fase-C.md:9",
+        "05-prompt-inicio-sesion-fase-C.md:23"
+      ],
+      "hecho_que_prueba": "Segundo lector de WhatsApp, con su propia lista de patrones por regex sobre html.lower(): produce whatsapp_html_detected, goberna el pain.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A067",
+      "ruta_relativa": "modules/auditors/llm_mention_checker.py",
+      "linea_o_rango": "118-120",
+      "linea_actual_del_simbolo": 118,
+      "simbolo_que_lo_contiene": "LLMMentionChecker.__init__",
+      "cita_literal": ":118-120",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:25"
+      ],
+      "hecho_que_prueba": "Se guardan exactamente 3 valores de key (gemini, openrouter, perplexity): el universo que el redactor puede reconocer.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A068",
+      "ruta_relativa": "modules/auditors/llm_mention_checker.py",
+      "linea_o_rango": "135-144",
+      "linea_actual_del_simbolo": 135,
+      "simbolo_que_lo_contiene": "LLMMentionChecker._sanitize_text",
+      "cita_literal": "llm_mention_checker.py:135-144",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:25"
+      ],
+      "hecho_que_prueba": "Bucle `for key_value in (self._gemini_key, self._openrouter_key, self._perplexity_key): text.replace(key_value, \"***\")`: redacción solo por igualdad literal de 3 keys.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A069",
+      "ruta_relativa": "modules/auditors/llm_mention_checker.py",
+      "linea_o_rango": "146-156",
+      "linea_actual_del_simbolo": 147,
+      "simbolo_que_lo_contiene": "LLMMentionChecker._sanitize_error",
+      "cita_literal": ":146-156",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:25"
+      ],
+      "hecho_que_prueba": "re.sub(r'([?&]key=)[^&\\s\"\\']+', r'\\1***', msg): solo el patrón key= de query.",
+      "estado": "verificada-con-nota",
+      "nota": "146 es el decorador @staticmethod; la definición es 147. Se cita por símbolo."
+    },
+    {
+      "id": "A070",
+      "ruta_relativa": "modules/commercial_documents/pain_solution_mapper.py",
+      "linea_o_rango": "60-78",
+      "linea_actual_del_simbolo": 60,
+      "simbolo_que_lo_contiene": "PainSolutionMapper.PAIN_SOLUTION_MAP",
+      "cita_literal": "pain_solution_mapper.py:60-78",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:19"
+      ],
+      "hecho_que_prueba": "Primer mapa pain→soluciones, con confidence_required por pain.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A071",
+      "ruta_relativa": "modules/commercial_documents/pain_solution_mapper.py",
+      "linea_o_rango": "63",
+      "linea_actual_del_simbolo": 63,
+      "simbolo_que_lo_contiene": "PainSolutionMapper.PAIN_SOLUTION_MAP[\"no_whatsapp_visible\"]",
+      "cita_literal": "pain_solution_mapper.py:63",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:104"
+      ],
+      "hecho_que_prueba": "\"confidence_required\": 0.9 para no_whatsapp_visible.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A072",
+      "ruta_relativa": "modules/commercial_documents/pain_solution_mapper.py",
+      "linea_o_rango": "72",
+      "linea_actual_del_simbolo": 72,
+      "simbolo_que_lo_contiene": "PainSolutionMapper.PAIN_SOLUTION_MAP[\"whatsapp_conflict\"]",
+      "cita_literal": ":72",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:104"
+      ],
+      "hecho_que_prueba": "\"confidence_required\": 0.5 y assets [whatsapp_button, whatsapp_conflict_guide] para whatsapp_conflict.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A073",
+      "ruta_relativa": "modules/commercial_documents/pain_solution_mapper.py",
+      "linea_o_rango": "333-339",
+      "linea_actual_del_simbolo": 333,
+      "simbolo_que_lo_contiene": "PainSolutionMapper.detect_pains",
+      "cita_literal": "pain_solution_mapper.py:333-339",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:18"
+      ],
+      "hecho_que_prueba": "Firma real de detect_pains, con whatsapp_html_detected: bool = False al final.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A074",
+      "ruta_relativa": "modules/commercial_documents/pain_solution_mapper.py",
+      "linea_o_rango": "338",
+      "linea_actual_del_simbolo": 338,
+      "simbolo_que_lo_contiene": "PainSolutionMapper.detect_pains (parámetro whatsapp_html_detected)",
+      "cita_literal": "pain_solution_mapper.py:338",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-G.md:24"
+      ],
+      "hecho_que_prueba": "El parámetro sí existe en la firma: la omisión del orquestador es un olvido de cableado, no una inexistencia.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A075",
+      "ruta_relativa": "modules/commercial_documents/pain_solution_mapper.py",
+      "linea_o_rango": "355",
+      "linea_actual_del_simbolo": 355,
+      "simbolo_que_lo_contiene": "PainSolutionMapper.detect_pains (rama no_whatsapp_visible)",
+      "cita_literal": "pain_solution_mapper.py:355",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:18"
+      ],
+      "hecho_que_prueba": "`if (not whatsapp_field or whatsapp_field.confidence in (UNKNOWN, CONFLICT)) and not whatsapp_html_detected:`: con centinela ESTIMATED no dispara; la divergencia exige campo UNKNOWN/CONFLICT + HTML.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A076",
+      "ruta_relativa": "modules/commercial_documents/pain_solution_mapper.py",
+      "linea_o_rango": "890-934",
+      "linea_actual_del_simbolo": 890,
+      "simbolo_que_lo_contiene": "PainSolutionMapper.get_assets_for_pain",
+      "cita_literal": ":890-934",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:19"
+      ],
+      "hecho_que_prueba": "Método completo que decide can_generate por pain.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A077",
+      "ruta_relativa": "modules/commercial_documents/pain_solution_mapper.py",
+      "linea_o_rango": "925-927",
+      "linea_actual_del_simbolo": 925,
+      "simbolo_que_lo_contiene": "PainSolutionMapper.get_assets_for_pain (especial whatsapp_conflict)",
+      "cita_literal": "pain_solution_mapper.py:925-927",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:20",
+        "01-plan-maestro.md:105"
+      ],
+      "hecho_que_prueba": "`if pain_id == \"whatsapp_conflict\": can_generate = True`: fuerza el botón ante conflicto, saltando la comparación de confianza.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A078",
+      "ruta_relativa": "modules/commercial_documents/coherence_validator.py",
+      "linea_o_rango": "409-414",
+      "linea_actual_del_simbolo": 409,
+      "simbolo_que_lo_contiene": "CoherenceValidator._check_whatsapp_verified",
+      "cita_literal": "coherence_validator.py:409-414",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:20"
+      ],
+      "hecho_que_prueba": "Lectura del presence report dentro del check (site_whatsapp_exists / whatsapp_presence = site_presence_report.get(\"whatsapp_button\", {})).",
+      "estado": "verificada"
+    },
+    {
+      "id": "A079",
+      "ruta_relativa": "modules/commercial_documents/coherence_validator.py",
+      "linea_o_rango": "411-414",
+      "linea_actual_del_simbolo": 411,
+      "simbolo_que_lo_contiene": "CoherenceValidator._check_whatsapp_verified",
+      "cita_literal": "coherence_validator.py:411-414",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "Consumer 8 del reporte canónico: lee la clave whatsapp_button y su estado.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A080",
+      "ruta_relativa": "modules/commercial_documents/coherence_validator.py",
+      "linea_o_rango": "437,446",
+      "linea_actual_del_simbolo": 437,
+      "simbolo_que_lo_contiene": "CoherenceValidator._check_whatsapp_verified (dos retornos por campo ausente)",
+      "cita_literal": ":437, :446",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:20"
+      ],
+      "hecho_que_prueba": "Las dos ramas `if not whatsapp_field [and whatsapp_html_detected]: return CoherenceCheck(...)` retornan antes del boost: el boost solo actúa cuando existe campo.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A081",
+      "ruta_relativa": "modules/commercial_documents/coherence_validator.py",
+      "linea_o_rango": "457-459",
+      "linea_actual_del_simbolo": 457,
+      "simbolo_que_lo_contiene": "CoherenceValidator._check_whatsapp_verified (boost DT-4)",
+      "cita_literal": "coherence_validator.py:409-414,457-459",
+      "forma": [
+        "continuacion"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:20"
+      ],
+      "hecho_que_prueba": "`if site_whatsapp_exists: confidence_score = max(confidence_score, 0.95)`.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A082",
+      "ruta_relativa": "modules/commercial_documents/coherence_validator.py",
+      "linea_o_rango": "586-620",
+      "linea_actual_del_simbolo": 586,
+      "simbolo_que_lo_contiene": "CoherenceValidator._extract_verified_in_production_types",
+      "cita_literal": "coherence_validator.py:411-414,586-620",
+      "forma": [
+        "continuacion"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "Consumer 8 (segundo punto): itera top-level keys y results del reporte canónico.",
+      "estado": "verificada",
+      "nota": "La continuacion 586-620 NO pertenece a _check_whatsapp_verified: cae en _extract_verified_in_production_types. El rango compuesto del maestro mezclaba dos métodos; se separan."
+    },
+    {
+      "id": "A083",
+      "ruta_relativa": "modules/commercial_documents/coherence_config.py",
+      "linea_o_rango": "60-65",
+      "linea_actual_del_simbolo": 60,
+      "simbolo_que_lo_contiene": "CoherenceConfig.DEFAULT_RULES[\"whatsapp_verified\"]",
+      "cita_literal": "coherence_config.py:60-65",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:104"
+      ],
+      "hecho_que_prueba": "confidence_threshold=0.9 con blocking=True para whatsapp_verified.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A084",
+      "ruta_relativa": "modules/commercial_documents/v4_diagnostic_generator.py",
+      "linea_o_rango": "177",
+      "linea_actual_del_simbolo": 177,
+      "simbolo_que_lo_contiene": "ELEMENTO_KB_TO_PAIN_ID[\"nap_consistente\"]",
+      "cita_literal": "modules/commercial_documents/v4_diagnostic_generator.py:177",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-B.md:21",
+        "01-plan-maestro.md:19",
+        "05-prompt-inicio-sesion-fase-G.md:24"
+      ],
+      "hecho_que_prueba": "\"nap_consistente\": (\"whatsapp_conflict\", \"whatsapp_button\", None): un gap de NAP produce pain y asset de WhatsApp.",
+      "estado": "verificada-con-nota",
+      "nota": "El contenedor es el diccionario de módulo ELEMENTO_KB_TO_PAIN_ID (clave en 166), no un método. Se cita por clave."
+    },
+    {
+      "id": "A085",
+      "ruta_relativa": "modules/commercial_documents/v4_diagnostic_generator.py",
+      "linea_o_rango": "3300-3305",
+      "linea_actual_del_simbolo": 3300,
+      "simbolo_que_lo_contiene": "V4DiagnosticGenerator._identify_brechas",
+      "cita_literal": "v4_diagnostic_generator.py:3300-3305",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:18",
+        "05-prompt-inicio-sesion-fase-G.md:24"
+      ],
+      "hecho_que_prueba": "detect_pains(..., whatsapp_html_detected=whatsapp_html_detected) en el generador de diagnóstico: segunda ruta que sí propaga la señal.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A086",
+      "ruta_relativa": "modules/commercial_documents/v4_proposal_generator.py",
+      "linea_o_rango": "1388-1405",
+      "linea_actual_del_simbolo": 1388,
+      "simbolo_que_lo_contiene": "V4ProposalGenerator._generate_dynamic_services_table",
+      "cita_literal": "v4_proposal_generator.py:1388-1405",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "Consumer 7: construcción de presence_lookup desde site_presence_report.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A087",
+      "ruta_relativa": "modules/commercial_documents/v4_proposal_generator.py",
+      "linea_o_rango": "1437",
+      "linea_actual_del_simbolo": 1437,
+      "simbolo_que_lo_contiene": "V4ProposalGenerator._generate_dynamic_services_table",
+      "cita_literal": "modules/commercial_documents/v4_proposal_generator.py:1437",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-B.md:21",
+        "01-plan-maestro.md:19",
+        "05-prompt-inicio-sesion-fase-G.md:24"
+      ],
+      "hecho_que_prueba": "`if asset_type == \"whatsapp_button\" and whatsapp_conflict:` → override del estado mostrado en la matriz de servicios.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A088",
+      "ruta_relativa": "modules/commercial_documents/v4_proposal_generator.py",
+      "linea_o_rango": "1559-1582",
+      "linea_actual_del_simbolo": 1559,
+      "simbolo_que_lo_contiene": "V4ProposalGenerator._generate_dynamic_services_table",
+      "cita_literal": "v4_proposal_generator.py:1437,1559-1582",
+      "forma": [
+        "continuacion"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:19",
+        "05-prompt-inicio-sesion-fase-B.md:21",
+        "05-prompt-inicio-sesion-fase-G.md:24"
+      ],
+      "hecho_que_prueba": "whatsapp_service_name derivado de PROPOSAL_SERVICE_TO_ASSET y el filtro whatsapp_sin_brecha que excluye el servicio de la lista.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A089",
+      "ruta_relativa": "modules/quality_gates/publication_gates.py",
+      "linea_o_rango": "709-721",
+      "linea_actual_del_simbolo": 709,
+      "simbolo_que_lo_contiene": "PublicationGatesOrchestrator._critical_recall_gate (rama PASSED)",
+      "cita_literal": "publication_gates.py:709-721",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:28",
+        "01-plan-maestro.md:63",
+        "01-plan-maestro.md:119",
+        "dependencias-fases.md:64",
+        "05-prompt-inicio-sesion-fase-0.md:11"
+      ],
+      "hecho_que_prueba": "details: Dict[str, Any] = {} y la anotación con critical_issues_count/recall_basis SOLO cuando critical_issues está vacío y hay audit_schema.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A090",
+      "ruta_relativa": "modules/quality_gates/publication_gates.py",
+      "linea_o_rango": "2124-2127",
+      "linea_actual_del_simbolo": 2124,
+      "simbolo_que_lo_contiene": "PublicationGatesOrchestrator._extract_critical_recall (return 1.0)",
+      "cita_literal": ":2124-2127",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:28",
+        "01-plan-maestro.md:63",
+        "01-plan-maestro.md:119",
+        "dependencias-fases.md:64",
+        "05-prompt-inicio-sesion-fase-0.md:11"
+      ],
+      "hecho_que_prueba": "critical_issues NO vacío y _evident_critical_missed == 0 → return 1.0: el recall fundado que viaja sin details.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A091",
+      "ruta_relativa": "modules/quality_gates/publication_gates.py",
+      "linea_o_rango": "1030",
+      "linea_actual_del_simbolo": 1030,
+      "simbolo_que_lo_contiene": "PublicationGatesOrchestrator._proposal_asset_alignment_gate",
+      "cita_literal": "publication_gates.py:1030,1064-1077",
+      "forma": [
+        "calificada",
+        "continuacion"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "Consumer 4: assessment.get(\"site_presence_report\") y su paso al matrix y a AlignmentResult.",
+      "estado": "verificada",
+      "continuaciones_asociadas": [
+        "1064-1077"
+      ]
+    },
+    {
+      "id": "A092",
+      "ruta_relativa": "modules/quality_gates/domain_gates.py",
+      "linea_o_rango": "312-314",
+      "linea_actual_del_simbolo": 312,
+      "simbolo_que_lo_contiene": "CommercialGate.__init__",
+      "cita_literal": "domain_gates.py:312-314",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:104"
+      ],
+      "hecho_que_prueba": "whatsapp_confidence_threshold con default 0.9: sexta barra, en el módulo legado no productivo.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A093",
+      "ruta_relativa": "modules/quality_gates/tribunal/judge.py",
+      "linea_o_rango": "43",
+      "linea_actual_del_simbolo": 43,
+      "simbolo_que_lo_contiene": "T1_CERTIFIABLE_CLAUSES (constante de módulo)",
+      "cita_literal": "judge.py:43",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-0.md:36",
+        "01-plan-maestro.md:111"
+      ],
+      "hecho_que_prueba": "T1_CERTIFIABLE_CLAUSES = (\"P6.1\", \"P6.3\", \"P6.4\", \"P6.6\"): son 4 cláusulas, no 6.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A094",
+      "ruta_relativa": "modules/quality_gates/tribunal/judge.py",
+      "linea_o_rango": "46",
+      "linea_actual_del_simbolo": 46,
+      "simbolo_que_lo_contiene": "BLOCKING_VERDICTS (constante de módulo)",
+      "cita_literal": "judge.py:46",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "00-lecciones-capitalizadas.md:13",
+        "01-plan-maestro.md:28",
+        "01-plan-maestro.md:63",
+        "01-plan-maestro.md:124",
+        "05-prompt-inicio-sesion-fase-0.md:28"
+      ],
+      "hecho_que_prueba": "BLOCKING_VERDICTS = frozenset({VERDICT_BLOCKED, VERDICT_RETURN}): APROBADO-CONDICIONAL-PENDING-ONBOARDING no está, así que es publicable.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A095",
+      "ruta_relativa": "modules/quality_gates/tribunal/judge.py",
+      "linea_o_rango": "141-165",
+      "linea_actual_del_simbolo": 141,
+      "simbolo_que_lo_contiene": "TribunalJudge._resolve_manifest",
+      "cita_literal": "judge.py:141-165",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:24",
+        "01-plan-maestro.md:110"
+      ],
+      "hecho_que_prueba": "Resuelve MANIFEST.json por glob en deliveries_dir: en modo ZIP-only ese archivo no existe.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A096",
+      "ruta_relativa": "modules/quality_gates/tribunal/judge.py",
+      "linea_o_rango": "226-230",
+      "linea_actual_del_simbolo": 226,
+      "simbolo_que_lo_contiene": "TribunalJudge._evaluate_clauses (entrada P6.5)",
+      "cita_literal": ":226-230",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:111",
+        "05-prompt-inicio-sesion-fase-0.md:36"
+      ],
+      "hecho_que_prueba": "P6.5 fijada a STATUS_NOT_EVALUABLE por diseño (D-T1.3 opción a).",
+      "estado": "verificada"
+    },
+    {
+      "id": "A097",
+      "ruta_relativa": "modules/quality_gates/tribunal/judge.py",
+      "linea_o_rango": "269-279",
+      "linea_actual_del_simbolo": 269,
+      "simbolo_que_lo_contiene": "TribunalJudge._evaluate_p6_2",
+      "cita_literal": "judge.py:269-279",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:111",
+        "05-prompt-inicio-sesion-fase-0.md:36"
+      ],
+      "hecho_que_prueba": "P6.2 retorna NOT_EVALUABLE: \"no implementado en T1\".",
+      "estado": "verificada"
+    },
+    {
+      "id": "A098",
+      "ruta_relativa": "modules/quality_gates/tribunal/judge.py",
+      "linea_o_rango": "450-462",
+      "linea_actual_del_simbolo": 450,
+      "simbolo_que_lo_contiene": "TribunalJudge._apply_first_floor_rule",
+      "cita_literal": "judge.py:450-462",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:117"
+      ],
+      "hecho_que_prueba": "Regla de primer piso: evidence_tier in FIRST_FLOOR_TIERS (B/C) → máximo APROBADO-CONDICIONAL.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A099",
+      "ruta_relativa": "modules/quality_gates/tribunal/judge.py",
+      "linea_o_rango": "494",
+      "linea_actual_del_simbolo": 464,
+      "simbolo_que_lo_contiene": "TribunalJudge._compute_verdict",
+      "cita_literal": "judge.py:494",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:28",
+        "01-plan-maestro.md:119",
+        "05-prompt-inicio-sesion-fase-0.md:11"
+      ],
+      "hecho_que_prueba": "`if any(r.verified_critical or r.verified_block for r in reviewer_reports): return VERDICT_BLOCKED`: por aquí el hallazgo CRITICAL de Bot 1 suprimió el ZIP.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A100",
+      "ruta_relativa": "modules/quality_gates/tribunal/outcome.py",
+      "linea_o_rango": "84-92",
+      "linea_actual_del_simbolo": 84,
+      "simbolo_que_lo_contiene": "ReviewerReport.to_dict",
+      "cita_literal": "modules/quality_gates/tribunal/outcome.py:84-92",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-0.md:27",
+        "01-plan-maestro.md:63",
+        "01-plan-maestro.md:111",
+        "01-plan-maestro.md:119"
+      ],
+      "hecho_que_prueba": "to_dict serializa reviewer/status/findings_count/critical_count/recommendation/report_path y OMITE findings (el campo existe en la dataclass).",
+      "estado": "verificada"
+    },
+    {
+      "id": "A101",
+      "ruta_relativa": "modules/quality_gates/tribunal/outcome.py",
+      "linea_o_rango": "101",
+      "linea_actual_del_simbolo": 100,
+      "simbolo_que_lo_contiene": "ReviewerReport.verified_block",
+      "cita_literal": "outcome.py:101",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "00-lecciones-capitalizadas.md:13",
+        "05-prompt-inicio-sesion-fase-0.md:28"
+      ],
+      "hecho_que_prueba": "status.is_ok and recommendation == RECOMMENDATION_BLOCK: basta la recomendación para bloquear, aunque el conteo crítico sea 0 (intermedio falso del contrafactual).",
+      "estado": "verificada-con-nota",
+      "nota": "La propiedad se define en 100 y su cuerpo retorna en 101. Se cita por símbolo."
+    },
+    {
+      "id": "A102",
+      "ruta_relativa": "modules/quality_gates/tribunal/diagnosis_reviewer.py",
+      "linea_o_rango": "81-88",
+      "linea_actual_del_simbolo": 81,
+      "simbolo_que_lo_contiene": "DiagnosisReviewer._resolve_artifact",
+      "cita_literal": "diagnosis_reviewer.py:81-88",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:24"
+      ],
+      "hecho_que_prueba": "Glob limitado a self.v4_audit_dir: no alcanza los documentos escritos en el output_dir padre.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A103",
+      "ruta_relativa": "modules/quality_gates/tribunal/diagnosis_reviewer.py",
+      "linea_o_rango": "120-128",
+      "linea_actual_del_simbolo": 120,
+      "simbolo_que_lo_contiene": "DiagnosisReviewer._load_diagnostic_md",
+      "cita_literal": ":120-128",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:24"
+      ],
+      "hecho_que_prueba": "Usa _resolve_artifact y devuelve None si no resuelve.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A104",
+      "ruta_relativa": "modules/quality_gates/tribunal/diagnosis_reviewer.py",
+      "linea_o_rango": "136-137",
+      "linea_actual_del_simbolo": 136,
+      "simbolo_que_lo_contiene": "DiagnosisReviewer._check_pain_traceability",
+      "cita_literal": "diagnosis_reviewer.py:136-137",
+      "forma": [
+        "calificada",
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:110",
+        "01-plan-maestro.md:24"
+      ],
+      "hecho_que_prueba": "`if pain_ledger is None or diagnostic_md is None: return findings` con findings vacío: verde silencioso ante documento no resuelto.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A105",
+      "ruta_relativa": "modules/quality_gates/tribunal/diagnosis_reviewer.py",
+      "linea_o_rango": "199",
+      "linea_actual_del_simbolo": 180,
+      "simbolo_que_lo_contiene": "DiagnosisReviewer._check_vacuous_recall",
+      "cita_literal": "modules/quality_gates/tribunal/diagnosis_reviewer.py:199",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-0.md:11",
+        "01-plan-maestro.md:28",
+        "05-prompt-inicio-sesion-fase-0.md:34",
+        "dependencias-fases.md:64"
+      ],
+      "hecho_que_prueba": "`if recall_value == 1.0 and not has_critical_count:` (198) y el append del hallazgo SEVERITY_CRITICAL / FINDING_VACUOUS_RECALL / clause P6.1 (199).",
+      "estado": "verificada-con-nota",
+      "nota": "El prompt de FASE-0 transcribía el `if` como contenido de la línea 199; el `if` está en 198 y el append en 199. Al citar `_check_vacuous_recall` la precisión se conserva y el desfase desaparece.",
+      "continuaciones_asociadas": [
+        "198 (el if; el append citado cae en 199)"
+      ]
+    },
+    {
+      "id": "A106",
+      "ruta_relativa": "modules/quality_gates/tribunal/asset_reviewer.py",
+      "linea_o_rango": "123-130",
+      "linea_actual_del_simbolo": 123,
+      "simbolo_que_lo_contiene": "AssetReviewer._resolve_artifact",
+      "cita_literal": "asset_reviewer.py:123-130",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:24"
+      ],
+      "hecho_que_prueba": "Mismo patrón que Bot 1: glob propio sobre v4_audit_dir.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A107",
+      "ruta_relativa": "modules/quality_gates/tribunal/asset_reviewer.py",
+      "linea_o_rango": "191-214",
+      "linea_actual_del_simbolo": 191,
+      "simbolo_que_lo_contiene": "AssetReviewer._resolve_delivery_zip",
+      "cita_literal": ":191-214",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:110"
+      ],
+      "hecho_que_prueba": "Único revisor que abre el ZIP en cuarentena (.zip.tmp).",
+      "estado": "verificada"
+    },
+    {
+      "id": "A108",
+      "ruta_relativa": "modules/quality_gates/tribunal/honesty_reviewer.py",
+      "linea_o_rango": "201-205",
+      "linea_actual_del_simbolo": 201,
+      "simbolo_que_lo_contiene": "HonestyReviewer._resolve_manifest_path",
+      "cita_literal": "honesty_reviewer.py:201-205",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:24",
+        "01-plan-maestro.md:110"
+      ],
+      "hecho_que_prueba": "pick_most_recent(self.deliveries_dir.glob(\"*/MANIFEST.json\")): nunca encuentra manifiesto en modo ZIP-only.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A109",
+      "ruta_relativa": "modules/quality_gates/tribunal/artifact_paths.py",
+      "linea_o_rango": "44-49",
+      "linea_actual_del_simbolo": 34,
+      "simbolo_que_lo_contiene": "resolve_latest (bucle de ascendientes)",
+      "cita_literal": "artifact_paths.py:44-49",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:24"
+      ],
+      "hecho_que_prueba": "for _ in range(ancestor_levels + 1) con ANCESTOR_LEVELS = 3: recorre 4 directorios hacia arriba, sí alcanza el output_dir padre.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A110",
+      "ruta_relativa": "modules/quality_gates/tribunal/acta_writer.py",
+      "linea_o_rango": "135",
+      "linea_actual_del_simbolo": 62,
+      "simbolo_que_lo_contiene": "ActaWriter._write_md",
+      "cita_literal": "acta_writer.py:135",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-0.md:27"
+      ],
+      "hecho_que_prueba": "lines.extend(self._render_reviewer_reports(acta.get(\"reviewer_reports\"))): to_dict alimenta también el acta en MD.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A111",
+      "ruta_relativa": "modules/quality_gates/tribunal/acta_writer.py",
+      "linea_o_rango": "157",
+      "linea_actual_del_simbolo": 157,
+      "simbolo_que_lo_contiene": "ActaWriter._render_reviewer_reports",
+      "cita_literal": ":157",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-0.md:27"
+      ],
+      "hecho_que_prueba": "Renderizador de la sección Reportes de Revisores (una fila por Bot, AC-E0).",
+      "estado": "verificada"
+    },
+    {
+      "id": "A112",
+      "ruta_relativa": "modules/delivery/delivery_packager.py",
+      "linea_o_rango": "343-357",
+      "linea_actual_del_simbolo": 343,
+      "simbolo_que_lo_contiene": "DeliveryPackager.suppress",
+      "cita_literal": "delivery_packager.py:343-357",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:109"
+      ],
+      "hecho_que_prueba": "tmp.unlink(): la supresión borra el .zip.tmp, de modo que el contenido del ZIP no es legible después de la decisión.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A113",
+      "ruta_relativa": "modules/financial_engine/scenario_calculator.py",
+      "linea_o_rango": "508-509",
+      "linea_actual_del_simbolo": 508,
+      "simbolo_que_lo_contiene": "ScenarioCalculator._determine_evidence_tier",
+      "cita_literal": "scenario_calculator.py:508-509",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:124"
+      ],
+      "hecho_que_prueba": "ga4_enabled and gsc_enabled and has_verified_data → EvidenceTier.A: tier A exige los dos conectores.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A114",
+      "ruta_relativa": "modules/financial_engine/scenario_calculator.py",
+      "linea_o_rango": "520",
+      "linea_actual_del_simbolo": 520,
+      "simbolo_que_lo_contiene": "ScenarioCalculator._determine_evidence_tier",
+      "cita_literal": ":520",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:124"
+      ],
+      "hecho_que_prueba": "return EvidenceTier.B al final del cascada: B es el default, no una excepción.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A115",
+      "ruta_relativa": "modules/scrapers/google_places_client.py",
+      "linea_o_rango": "356",
+      "linea_actual_del_simbolo": 356,
+      "simbolo_que_lo_contiene": "GooglePlacesClient.search_by_name",
+      "cita_literal": "google_places_client.py:356",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:25",
+        "01-plan-maestro.md:112"
+      ],
+      "hecho_que_prueba": "error_message=f\"Request error: {str(e)}\": texto crudo de excepción, sin redacción, que se persiste vía V4AuditResult.to_dict.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A116",
+      "ruta_relativa": "modules/utils/http_client.py",
+      "linea_o_rango": "259-267",
+      "linea_actual_del_simbolo": 259,
+      "simbolo_que_lo_contiene": "HttpClient._sanitize_error",
+      "cita_literal": "http_client.py:259-267",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:25",
+        "01-plan-maestro.md:112"
+      ],
+      "hecho_que_prueba": "Trunca el mensaje a 100 caracteres pero no redacta: devuelve str(error) con la URL.",
+      "estado": "verificada-con-nota",
+      "nota": "El maestro encadena `http_client.py:259-267 → logs/ssl_fallback.log`. El sumidero que escribe ese log es modules/utils/ssl_logger.py (LOG_FILE = \"ssl_fallback.log\"), no este método. Se corrige la atribución en el documento."
+    },
+    {
+      "id": "A117",
+      "ruta_relativa": "modules/data_validation/external_apis/pagespeed_client.py",
+      "linea_o_rango": "34-39",
+      "linea_actual_del_simbolo": 34,
+      "simbolo_que_lo_contiene": "PageSpeedClient._make_request",
+      "cita_literal": "pagespeed_client.py:34-39",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:25",
+        "01-plan-maestro.md:112"
+      ],
+      "hecho_que_prueba": "params = {\"url\": url, \"key\": self.api_key, ...}: la key viaja en query.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A118",
+      "ruta_relativa": "modules/data_validation/external_apis/pagespeed_client.py",
+      "linea_o_rango": "53,62",
+      "linea_actual_del_simbolo": 53,
+      "simbolo_que_lo_contiene": "PageSpeedClient._make_request",
+      "cita_literal": "pagespeed_client.py:34-39,53,62",
+      "forma": [
+        "continuacion"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:25",
+        "01-plan-maestro.md:112"
+      ],
+      "hecho_que_prueba": "raise Exception(f\"...{response.status_code}: {response.text}\") (53) y f\"Request failed: {str(e)}\" (62): interpolan cuerpo y excepción crudos.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A119",
+      "ruta_relativa": "scripts/run_all_validations.py",
+      "linea_o_rango": "240-264",
+      "linea_actual_del_simbolo": 240,
+      "simbolo_que_lo_contiene": "ValidationRunner._git_tracked_files",
+      "cita_literal": "run_all_validations.py:240-264",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:112"
+      ],
+      "hecho_que_prueba": "Población que recorre el quick: git ls-files + staged.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A120",
+      "ruta_relativa": "scripts/run_all_validations.py",
+      "linea_o_rango": "266-356",
+      "linea_actual_del_simbolo": 266,
+      "simbolo_que_lo_contiene": "ValidationRunner._check_no_secrets",
+      "cita_literal": "run_all_validations.py:266-356",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:25"
+      ],
+      "hecho_que_prueba": "El verificador de secretos solo itera archivos versionados: output/ y logs/ quedan fuera por construcción.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A121",
+      "ruta_relativa": ".gitignore",
+      "linea_o_rango": "20,54,77",
+      "linea_actual_del_simbolo": null,
+      "simbolo_que_lo_contiene": ".gitignore — patrones *.log (20), output/*/ (54), .env (77); logs/* en 18",
+      "cita_literal": ":54 / :20 / :77",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:25"
+      ],
+      "hecho_que_prueba": "Las rutas de mayor riesgo están declaradas ignoradas, así que nunca entran al escaneo de secretos.",
+      "estado": "verificada-con-nota",
+      "nota": "`logs/*` es la línea 18, no la 20; la 20 es `*.log`. El maestro agrupa ambas bajo `:20`. Se citan por patrón."
+    },
+    {
+      "id": "A122",
+      "ruta_relativa": "tests/asset_generation/test_site_presence_adapter.py",
+      "linea_o_rango": "68",
+      "linea_actual_del_simbolo": 64,
+      "simbolo_que_lo_contiene": "TestNormalizeSitePresence.test_normalize_from_none",
+      "cita_literal": "tests/asset_generation/test_site_presence_adapter.py:68",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67",
+        "05-prompt-inicio-sesion-fase-C.md:3",
+        "05-prompt-inicio-sesion-fase-C.md:47"
+      ],
+      "hecho_que_prueba": "assert result == {\"results\": {}}: igualdad exacta de forma (assert 1 de 4).",
+      "estado": "verificada"
+    },
+    {
+      "id": "A123",
+      "ruta_relativa": "tests/test_site_presence_persistence.py",
+      "linea_o_rango": "104",
+      "linea_actual_del_simbolo": 97,
+      "simbolo_que_lo_contiene": "test_ruta_fallo_checker_snapshot_vacio_canonico",
+      "cita_literal": "tests/test_site_presence_persistence.py:104",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67",
+        "05-prompt-inicio-sesion-fase-C.md:3",
+        "05-prompt-inicio-sesion-fase-C.md:47"
+      ],
+      "hecho_que_prueba": "assert payload[\"snapshot\"] == {\"results\": {}}: assert 2 de 4. El archivo está en la raíz de tests/, no bajo tests/asset_generation/.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A124",
+      "ruta_relativa": "tests/test_assessment_builder.py",
+      "linea_o_rango": "267",
+      "linea_actual_del_simbolo": 247,
+      "simbolo_que_lo_contiene": "TestAssessmentPayloadSerialization.test_payload_serialization",
+      "cita_literal": "tests/test_assessment_builder.py:267",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "assert d[\"site_presence_report\"] == {\"presence_status\": \"unknown\"}: assert 3 de 4.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A125",
+      "ruta_relativa": "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py",
+      "linea_o_rango": "42",
+      "linea_actual_del_simbolo": 40,
+      "simbolo_que_lo_contiene": "TestPresenceLookupCanonicalDict.test_none_normalize_produces_empty_results",
+      "cita_literal": "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py:42",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "01-plan-maestro.md:67"
+      ],
+      "hecho_que_prueba": "assert snapshot == {\"results\": {}}: assert 4 de 4.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A126",
+      "ruta_relativa": "tests/quality_gates/test_publication_gates.py",
+      "linea_o_rango": "622",
+      "linea_actual_del_simbolo": 606,
+      "simbolo_que_lo_contiene": "TestCriticalRecallGate.test_empty_critical_issues_with_audit_passes",
+      "cita_literal": "~622",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-0.md:41",
+        "05-prompt-inicio-sesion-fase-0.md:69"
+      ],
+      "hecho_que_prueba": "assert result.details.get(\"critical_issues_count\") == 0 en el camino de cero issues: contrato que el cambio de FASE-0 debe dejar verde.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A127",
+      "ruta_relativa": "tests/quality_gates/tribunal/test_diagnosis_reviewer.py",
+      "linea_o_rango": "115,130-131",
+      "linea_actual_del_simbolo": 113,
+      "simbolo_que_lo_contiene": "audit_with_founded_recall (fixture)",
+      "cita_literal": "~115 / ~130 / :130-131",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-0.md:41",
+        "05-prompt-inicio-sesion-fase-0.md:43"
+      ],
+      "hecho_que_prueba": "Fixture con critical_recall=1.0 y details {critical_issues_count: 3, recall_basis: \"audit_present_no_critical_issues\"}: demuestra que el revisor acepta un conteo >0 y, a la vez, empareja un conteo con una base contradictoria.",
+      "estado": "verificada",
+      "nota": "El prompt de FASE-0 apunta correctamente a tests/quality_gates/tribunal/test_diagnosis_reviewer.py (no al de publication_gates). La observación de la combinación internamente contradictoria es exacta."
+    },
+    {
+      "id": "A128",
+      "ruta_relativa": "tests/delivery/test_p2_cuarentena_zip.py",
+      "linea_o_rango": "188",
+      "linea_actual_del_simbolo": 180,
+      "simbolo_que_lo_contiene": "_informe_bloqueante (helper de fixture)",
+      "cita_literal": "~188",
+      "forma": [
+        "breve"
+      ],
+      "citas_en": [
+        "05-prompt-inicio-sesion-fase-0.md:41"
+      ],
+      "hecho_que_prueba": "Construye un hallazgo con \"finding_type\": \"VACUOUS_RECALL\" para probar la cuarentena.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A129",
+      "ruta_relativa": "evidence/FASE-I/comparacion-vs-baseline.md",
+      "linea_o_rango": "81",
+      "linea_actual_del_simbolo": 65,
+      "simbolo_que_lo_contiene": "MD: ## 2. NRs verificados",
+      "cita_literal": "evidence/FASE-I/comparacion-vs-baseline.md:81",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "00-lecciones-capitalizadas.md:27",
+        "10-analisis-post-implementacion.md:79"
+      ],
+      "hecho_que_prueba": "Fila `details` con el delta {critical_issues_count: 0, recall_basis: \"audit_present_no_critical_issues\"} frente a {}: el hueco de serialización ya estaba medido en 2026-09-11.",
+      "estado": "verificada"
+    },
+    {
+      "id": "A130",
+      "ruta_relativa": ".opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/10-analisis-post-implementacion.md",
+      "linea_o_rango": "133-134",
+      "linea_actual_del_simbolo": 129,
+      "simbolo_que_lo_contiene": "MD: #### FASE-E2E (2026-09-11)",
+      "cita_literal": "Archives/TRIBUNAL-OFFLINE-2026-09-09/10-analisis-post-implementacion.md:133-134",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "00-lecciones-capitalizadas.md:29"
+      ],
+      "hecho_que_prueba": "Definición original de L-E2E.1 (el punto de cableado importa tanto como el cableado).",
+      "estado": "verificada"
+    },
+    {
+      "id": "A131",
+      "ruta_relativa": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/10-analisis-post-implementacion.md",
+      "linea_o_rango": "125",
+      "linea_actual_del_simbolo": 109,
+      "simbolo_que_lo_contiene": "MD: ### Lecciones nuevas de este plan (L-PF1+ …)",
+      "cita_literal": "Archives/SR-PIPELINE-FIXES-2026-08-27/10-analisis-post-implementacion.md:125",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "00-lecciones-capitalizadas.md:29"
+      ],
+      "hecho_que_prueba": "Definición original de L-PF11 (dos corridas del mismo hotel comparten identidad de memoria).",
+      "estado": "verificada"
+    },
+    {
+      "id": "A132",
+      "ruta_relativa": ".opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/10-analisis-post-implementacion.md",
+      "linea_o_rango": "65",
+      "linea_actual_del_simbolo": 50,
+      "simbolo_que_lo_contiene": "MD: ### Lecciones nuevas de este plan (numeración L-VUP-n)",
+      "cita_literal": "Archives/VALIDADOR-URL-PROPIA-2026-08-30/10-analisis-post-implementacion.md:65",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "00-lecciones-capitalizadas.md:29"
+      ],
+      "hecho_que_prueba": "Definición original de L-VUP-13 (\"Using defaults\" es condición de equivalencia).",
+      "estado": "verificada"
+    },
+    {
+      "id": "A133",
+      "ruta_relativa": ".opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/10-analisis-post-implementacion.md",
+      "linea_o_rango": "68",
+      "linea_actual_del_simbolo": 54,
+      "simbolo_que_lo_contiene": "MD: ### FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
+      "cita_literal": "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/10-analisis-post-implementacion.md:68",
+      "forma": [
+        "calificada"
+      ],
+      "citas_en": [
+        "00-lecciones-capitalizadas.md:29"
+      ],
+      "hecho_que_prueba": "Definición original de DA-P1.9 (T3a la da el hotel, por contacto del operador).",
+      "estado": "verificada"
+    }
+  ],
+  "mediciones_de_la_revision_2": [
+    {
+      "id": "M4-blast-radius",
+      "afirmacion": "52 archivos y 816 funciones canónicas (866 casos collectados), 476 en los 26 archivos con estado hardcodeado, 4 asserts de igualdad exacta de forma",
+      "commands": [
+        "$W='grep -rlE \"whatsapp_button|site_presence_report\" tests --include=*.py | sort'   # -> 52 archivos",
+        "$W | xargs grep -hE \"^\\s*def test_\" | wc -l   # -> 816 funciones canonicas",
+        "pytest $W --collect-only -q | tail -1   # -> 866 tests collected",
+        "$H=grep -rlE \"whatsapp_button|site_presence_report\" tests --include=*.py | sort | xargs grep -lE \"\"(status|site_verified|presence_status)\"\" | sort   # -> 31 archivos",
+        "$H | xargs grep -hE \"^\\s*def test_\" | wc -l   # -> 545 funciones",
+        "A122..A125 de este anexo enumeran los 4 asserts de igualdad exacta de forma"
+      ],
+      "medido_2026_09_19": {
+        "archivos_del_vecindario": 52,
+        "funciones_canonicas": 816,
+        "casos_collectados_pytest": 866,
+        "asserts_igualdad_exacta_de_forma": 4,
+        "archivos_con_estado_hardcodeado": 31,
+        "funciones_en_esos_archivos": 545
+      },
+      "estado": "parcialmente-no-reproducible",
+      "detalle": "52 / 816 / 866 / 4 se reproducen exactamente. El par 26 / 476 no se reproduce con el criterio redactado en el propio plan: bajo `\"(status|site_verified|presence_status)\"` la intersección con los 52 archivos es 31 archivos y 545 funciones. Variantes probadas y descartadas: con clave citada y dos puntos (22 / 427), con valor literal string (21 / 413), solo presence_status (9 / 160), solo site_verified (8 / 107), y sobre todo tests/ sin restringir al vecindario (59 / 965). Ninguna da 26 / 476.",
+      "nota_reproduccion": "La interseccion del paso 4 se hace con la clave literal entre comillas dobles, que es la redaccion del criterio en 00-lecciones-capitalizadas.md M4 y en el maestro; con otras variantes plausibles tampoco sale 26/476 (ver variantes_descartadas).",
+      "variantes_descartadas": {
+        "criterio (status|site_verified|presence_status) sin comillas": [
+          45,
+          739
+        ],
+        "clave + dos puntos": [
+          22,
+          427
+        ],
+        "clave: valor string": [
+          21,
+          413
+        ],
+        "solo \"status\":": [
+          21,
+          391
+        ],
+        "solo presence_status": [
+          9,
+          160
+        ],
+        "solo site_verified": [
+          8,
+          107
+        ],
+        "sin restringir a las 52 (todo tests/)": [
+          59,
+          965
+        ],
+        "clave citada indistintamente con comilla simple o doble + dos puntos": [
+          23,
+          434
+        ],
+        "clave citada indistintamente con comilla simple o doble": [
+          32,
+          552
+        ],
+        "asignacion status|site_verified|presence_status = literal": [
+          18,
+          260
+        ],
+        "solo site_verified o presence_status entre comillas": [
+          12,
+          186
+        ],
+        "union de clave + dos puntos con la palabra status entre comillas": [
+          29,
+          509
+        ]
+      },
+      "banda_observada": "22/427 (minima) a 32/552 (maxima) sobre los 52 archivos del vecindario; 26 cae dentro de la banda pero 476 no es el conteo de ninguna de sus fronteras, y las doce variantes mas el criterio redactado (13 criterios) no devuelven el par.",
+      "aclaricion_no_bloqueante": "Las cifras que si se reproducen (52/816/866/4) son las que dimensionan la division AC19a/AC19b; 26/476 es una fila accesoria de esa misma medicion."
+    },
+    {
+      "id": "M-snapshot-p4",
+      "afirmacion": "5 assets con verification_failed en el snapshot de FASE-P4 (10 ocurrencias por duplicarse el bloque results)",
+      "command": "grep -o verification_failed evidence/FASE-P4/corrida/run/v4_complete/hoteldonalfonso/v4_audit/site_presence_snapshot.json | wc -l",
+      "medido_2026_09_19": {
+        "ocurrencias": 10,
+        "assets_distintos": 5,
+        "assets": [
+          "faq_page",
+          "hotel_schema",
+          "llms_txt",
+          "org_schema",
+          "whatsapp_button"
+        ],
+        "explicacion_duplicacion": "snapshot/<asset>/status y snapshot/results/<asset>/status"
+      },
+      "estado": "verificada"
+    },
+    {
+      "id": "M-catalogo-vs-comentario",
+      "afirmacion": "El comentario de main.py afirma que whatsapp_button SÍ es promised_by=always, y el catálogo lo tiene ELIMINADO",
+      "medido_2026_09_19": {
+        "comentario": "# (which includes promised_by=always assets like voice_assistant_guide, whatsapp_button, monthly_report)",
+        "catalogo": "promised_by=[\"no_whatsapp_visible\", \"whatsapp_conflict\"]  # FASE-5: \"always\" ELIMINADO - bug sistemico"
+      },
+      "estado": "verificada"
+    },
+    {
+      "id": "M-consentimiento-y-defaults",
+      "afirmacion": "Premisas del §5 y del AC14",
+      "medido_2026_09_19": {
+        "observaciones_don_alfonso": 1,
+        "claves_de_contacto_en_la_observacion": 0,
+        "adr_cop_y_occupancy_rate_presentes": true,
+        "ONBOARDING_FRESHNESS_HOURS_en_env": 0,
+        "ONBOARDING_FRESHNESS_HOURS_en_env_template": 0,
+        "fixture_canal_directo_pct": 20.0,
+        "warehouse_canal_directo_pct": 30.0,
+        "default_cristalizado_en_test_e2e": "tests/e2e/test_onboarding_to_harness_pipeline.py:41 datos.get(\"canal_directo_pct\", 20.0)"
+      },
+      "estado": "verificada"
+    }
+  ]
+}

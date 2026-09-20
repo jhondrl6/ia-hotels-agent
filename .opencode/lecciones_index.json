@@ -4,8 +4,8 @@
   "cobertura": {
     "archivos_analysis_escaneados": 14,
     "archivos_contexto_escaneados": 36,
-    "archivos_md_escaneados": 384,
-    "ids_con_definicion": 314,
+    "archivos_md_escaneados": 385,
+    "ids_con_definicion": 316,
     "ids_citados_sin_definicion": 43,
     "familias_incluidas": [
       "L",
@@ -847,8 +847,10 @@
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
-      "planes_que_lo_citan": [],
+      "total_citas": 9,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -889,8 +891,10 @@
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
-      "planes_que_lo_citan": [],
+      "total_citas": 8,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -959,8 +963,10 @@
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 5,
-      "planes_que_lo_citan": [],
+      "total_citas": 10,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -973,8 +979,10 @@
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
-      "planes_que_lo_citan": [],
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -1377,9 +1385,10 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 14,
+      "total_citas": 15,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -1568,8 +1577,9 @@
       "seccion": "FASE-E2E (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 17,
       "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -1584,8 +1594,10 @@
       "seccion": "FASE-E2E (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 10,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -1635,7 +1647,21 @@
     {
       "id": "L-ENT.1",
       "familia": "L",
-      "enunciado": "Un estado agregado archivado se hereda como si fuera causa. Un snapshot de FASE-P4 registró confidence 0.3, site_verified false en los cinco probes; el plan heredó la lectura \"el sitio era inalcanzable, la señal es falsa por honestidad\". Re-medido hoy: el dominio del warehouse no resuelve y el sitio real responde 200 con el canal servido por un plugin. / Por qué: el artefacto guarda un resultado, no el modo de fallo, así que DNS vacío, respuesta sin cuerpo, HTML sin marcaje y excepción tragada comparten el mismo valor. / Qué lo previene: publicar alcance de observación y estado de lectura separados, nunca un único agregado. — evidence/FASE-P4/corrida/run/v4_complete/hoteldonalfonso/v4_audit/site_presence_snapshot.json + sonda HTTP del 2026-09-19",
+      "enunciado": "Un estado agregado archivado se hereda como si fuera causa. Un snapshot de FASE-P4 registró confidence 0.3, site_verified false en los cinco probes; el plan heredó la lectura \"el sitio era inalcanzable, la señal es falsa por honestidad\". Re-medido hoy: el dominio del warehouse no resuelve y el sitio real responde 200 con el canal servido por un plugin. / Por qué: el artefacto guarda un resultado, no el modo de fallo, así que DNS vacío, respuesta sin cuerpo, HTML sin marcaje y excepción tragada comparten el mismo valor. / Qué lo previene: publicar alcance de observación y estado de lectura separados, nunca un único agregado. Rectificación de la revisión 2: el patrón se mantiene y se aplica a esta propia fila. El snapshot de P4 no registraba \"el lector no vio el botón\": registraba verification_failed en los cinco assets porque falló el *schema report* (la rama de SitePresenceChecker._check_asset_presence que lo consulta). La lectura de la home viva con el código del repo devuelve found=True por clase CSS. Un estado agregado me pasó factura dos veces: primero el de P4, después el mío propio — evidence/FASE-P4/.../site_presence_snapshot.json + output/TAREA7-2026-09-19/.../site_presence_snapshot.json + sonda HTTP y M1 del 2026-09-19",
+      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-09-18",
+      "fuente_fecha": "nombre",
+      "total_citas": 6,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-ENT.2",
+      "familia": "L",
+      "enunciado": "La pregunta no es \"¿existe el canal?\" sino \"¿puede el lector observarlo, en qué ruta y en qué marcaje?\". La home del sitio vivo tiene 0 referencias a WhatsApp y /contacto/ tiene 54, todas dentro de <style> o de href/src del plugin; ningún wa.me ni número en HTML estático y el método de detección devuelve found: False ante cualquier excepción. / Por qué: F-F y F-A' gobiernan promesas y cableado, pero el falso positivo nace aguas arriba, en la cobertura del detector; corregir el dato no cambia lo que el lector no mira. / Qué lo previene: gobernar el lector como parte del fix, y prohibir que una señal negativa sin alcance verificado se redacte como ausencia. Rectificación de la revisión 2 — el signo estaba invertido: la pregunta correcta resultó ser \"¿qué está viendo el lector cuando dice exists?\". Medido con el checker real sobre la raíz viva: found=True por la sonda de clases CSS (joinchat joinchat--left joinchat--btn), no por texto visible ni wa.me. El riesgo no era fabricar una ausencia, era certificar una presencia como si fuera un número (exists/0.85 → boost a 0.95 sobre un campo que no es teléfono). La lección sobrevive; la dirección del peligro no — M1 y M2 de 00-lecciones-capitalizadas.md §1bis (checker ejecutado + snapshot archivado de la corrida del 2026-09-19)",
       "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
@@ -1643,20 +1669,6 @@
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
       "total_citas": 2,
-      "planes_que_lo_citan": [],
-      "redefiniciones": []
-    },
-    {
-      "id": "L-ENT.2",
-      "familia": "L",
-      "enunciado": "La pregunta no es \"¿existe el canal?\" sino \"¿puede el lector observarlo, en qué ruta y en qué marcaje?\". La home del sitio vivo tiene 0 referencias a WhatsApp y /contacto/ tiene 54, todas dentro de <style> o de href/src del plugin; ningún wa.me ni número en HTML estático y el método de detección devuelve found: False ante cualquier excepción. / Por qué: F-F y F-A' gobiernan promesas y cableado, pero el falso positivo nace aguas arriba, en la cobertura del detector; corregir el dato no cambia lo que el lector no mira. / Qué lo previene: gobernar el lector como parte del fix, y prohibir que una señal negativa sin alcance verificado se redacte como ausencia. — Sonda con el código real del checker sobre ambas URLs, 2026-09-19",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-      "origen": "plan",
-      "archivo": "10-analisis-post-implementacion.md",
-      "seccion": "Lecciones nuevas de este plan",
-      "fecha_plan": "2026-09-18",
-      "fuente_fecha": "nombre",
-      "total_citas": 0,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1684,14 +1696,14 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 3,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
     {
       "id": "L-ENT.5",
       "familia": "L",
-      "enunciado": "Editar una tabla anclando en otra fila completa la reemplaza. Al insertar AC19 en la matriz del checklist, el ancla fue la fila AC18 y el resultado quedó sin AC18. / Por qué: la coincidencia de texto no valida la estructura del documento; la pérdida era invisible sin contar. / Qué lo previene: conteo de miembros antes y después de editar, y comprobación de persistencia sobre el commit y no sobre el buffer. Detectado en la misma sesión y remediado. — Registro del error y su reparación en la sesión del 2026-09-19; matriz re-verificada con 19 filas AC en maestro y checklist",
+      "enunciado": "Editar una tabla anclando en otra fila completa la reemplaza. Al insertar AC19 en la matriz del checklist, el ancla fue la fila AC18 y el resultado quedó sin AC18. / Por qué: la coincidencia de texto no valida la estructura del documento; la pérdida era invisible sin contar. / Qué lo previene: conteo de miembros antes y después de editar, y comprobación de persistencia sobre el commit y no sobre el buffer. Detectado en la misma sesión y remediado. — Registro del error y su reparación en la sesión del 2026-09-19; matriz re-verificada con 20 filas AC (AC1–AC20) en maestro y checklist —19 cuando se registró esta fila, antes de nacer AC20",
       "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
@@ -1726,7 +1738,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
+      "total_citas": 1,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1754,7 +1766,35 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 5,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-ENT.10",
+      "familia": "L",
+      "enunciado": "Se re-midió el símbolo y no la ruta viva; el plan quedó bien construido sobre un caso que ya no ocurre. La preparación verificó cada símbolo del contexto de 2026-09-17 contra el código (y acertó: F-A es no-op, F-A' sí decide, el centinela viaja como teléfono). Pero nunca ejecutó la cadena completa sobre la URL alcanzable, y ahí el cuadro cambia de signo: sin pain de WhatsApp, sin botón en el plan, whatsapp_verified en verde vacuo y los 13 gates pasando. / Por qué: un símbolo leído dice qué haría el código, no qué hizo la corrida; y el defecto que se buscaba era el del contexto viejo, no el del camino nuevo. / Qué lo previene: antes de cerrar un diseño, ejecutar el lector o el verificador afectado sobre la entrada real del objetivo —aquí costó dos comandos— y tratar toda premisa \"el producto hoy hace X\" como refutable por un artefacto ya archivado — M1-M4 de 00-lecciones-capitalizadas.md §1bis frente a maestro §1",
+      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-09-18",
+      "fuente_fecha": "nombre",
+      "total_citas": 6,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-ENT.11",
+      "familia": "L",
+      "enunciado": "La consulta de lecciones se hizo por el síntoma y devolvió solo el síntoma; la causa del fracaso estaba en el índice desde once días antes. L-E2E.2 y L-V.3 (2026-09-11) documentan el critical_recall.details: {} real y el CRITICAL que produce; evidence/FASE-I/comparacion-vs-baseline.md midió el delta de serialización en su sección «2. NRs verificados». Cerraron como \"fix candidato fuera de este plan\", sin dueño ni AC, y once días después eran la única causa de supresión de la corrida que este plan quería certificar. / Por qué: la recuperación por palabras del síntoma (\"WhatsApp\", \"promesa\") no alcanza la superficie donde vive la causa (acta, veredicto, cuarentena); y un hallazgo sin dueño ni AC no se cierra, se reencuentra. / Qué lo previene: capitalizar por dos ejes —síntoma y superficie de cierre— y prohibir la frase \"fix candidato\" sin fila con dueño y AC. Ahora FASE-0/AC20 — Q7-Q10 y las filas nuevas de 00-lecciones-capitalizadas.md §1-§2",
+      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-09-18",
+      "fuente_fecha": "nombre",
+      "total_citas": 8,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2075,7 +2115,7 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 12,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17",
@@ -2548,8 +2588,10 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
-      "planes_que_lo_citan": [],
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -2608,8 +2650,10 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
-      "planes_que_lo_citan": [],
+      "total_citas": 5,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -2622,7 +2666,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 34,
+      "total_citas": 35,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -2699,8 +2743,10 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
-      "planes_que_lo_citan": [],
+      "total_citas": 13,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -2780,7 +2826,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 40,
+      "total_citas": 41,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
@@ -2957,8 +3003,10 @@
       "seccion": "FASE-T2-A (2026-09-10)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
-      "planes_que_lo_citan": [],
+      "total_citas": 8,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -3152,7 +3200,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 47,
+      "total_citas": 49,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -3421,8 +3469,10 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 11,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -3573,7 +3623,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 36,
+      "total_citas": 37,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
@@ -3701,9 +3751,10 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 19,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17"
       ],
@@ -4941,6 +4992,15 @@
       ]
     },
     {
+      "id": "L-VUP-n",
+      "familia": "L",
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "Archives/VALIDADOR-URL-PROPIA-2026-08-30",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
       "id": "S-B2",
       "familia": "S",
       "total_citas": 2,
@@ -5042,14 +5102,6 @@
       "total_citas": 1,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
-      ]
-    },
-    {
-      "id": "L-VUP-n",
-      "familia": "L",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "Archives/VALIDADOR-URL-PROPIA-2026-08-30"
       ]
     },
     {

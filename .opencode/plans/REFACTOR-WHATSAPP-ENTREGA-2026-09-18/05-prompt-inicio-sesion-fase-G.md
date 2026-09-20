@@ -1,6 +1,6 @@
 # FASE-G — Verificador de cableado y retiro del contrato muerto
 
-**Estado:** PENDIENTE. **Dependencia inmediata:** FASE-F completa (incluida acreditación operativa o pendiente explícito de AC13).
+**Estado:** PENDIENTE. **Dependencia inmediata:** FASE-A completa (matriz ratificada). G es ahora la **segunda sesión** del plan — cadena `A → G → 0 → B → C → D → E → F → H → E2E → VERIFY → RELEASE`—: adelanta porque su verificador es el guard de las ediciones de B–F y, por tanto, corre **antes** de FASE-0, de B y de F; no depende de F ni de su acreditación operativa.
 **Complejidad técnica:** ALTA: descubrimiento de población sin lista fija, riesgo de falsos verdes y limpieza de firma cross-module.
 **Scope R3:** 4 tareas, 0 comandos largos externos. Una sesión exclusivamente para G.
 
@@ -21,16 +21,19 @@ Evidencia propia: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-G/`.
 
 ## Tareas
 
-1. **PRE e inventario de firmas.** Captura baseline focalizado antes de editar. Construye el inventario completo de callers de `validate`, `detect_pains` y `with_validation` (incluidos aliases, instancias asignadas a `self.*` y wrappers), clasificando cada uno: señal requerida presente, ausente, no aplicable, y clase homónima ajena que debe excluirse. Documenta el rol test/legacy de `CommercialGate._check_whatsapp_verified` sin modificarlo.
+1. **PRE e inventario de firmas.** Captura baseline focalizado antes de editar. Construye el inventario completo de callers de `validate`, `detect_pains` y `with_validation` (incluidos aliases, instancias asignadas a `self.*` y wrappers), clasificando cada uno: señal requerida presente, ausente, no aplicable, y clase homónima ajena que debe excluirse. La matriz de cableado debe cubrir también los **productores de promesas** del inventario actualizado de B (`preflight_checks.NEW_HOTEL_THRESHOLDS`, `ELEMENTO_KB_TO_PAIN_ID` y sus llamadas a `detect_pains`, las ramas WhatsApp de `V4ProposalGenerator._generate_dynamic_services_table`, `ASSET_CATALOG["whatsapp_button"]` y el `PAIN_TO_ASSET` de `ConditionalGenerator`, que hoy no tiene clave `no_whatsapp_visible`): el verificador gobierna señales por productor, no solo por símbolo. Documenta el rol test/legacy de `CommercialGate._check_whatsapp_verified` sin modificarlo. **Caso rojo contra la divergencia vigente:** la divergencia real que hoy mide el repo está en `modules/asset_generation/v4_asset_orchestrator.py`, donde `V4AssetOrchestrator.generate_assets` invoca `detect_pains(audit_result, validation_summary, analytics_data)` **sin** `whatsapp_html_detected` —parámetro que sí existe en la firma de `PainSolutionMapper.detect_pains` y que `V4DiagnosticGenerator._identify_brechas` sí propaga—. El verificador debe demostrar su rojo **sobre esa invocación tal como está hoy, antes de corregirla**: si en el código actual sale verde, la cobertura del verificador está mal, no el producto.
 2. **Verificador AST (V-1).** Implementa un verificador que descubra la población por AST —sin lista fija de archivos— y exija los kwargs declarados como obligatorios para cada símbolo gobernado, con excepciones tipadas y justificadas. Emite `wiring_report.json` con población descubierta, kwargs exigidos, fuentes, excepciones y límites declarados, y se conecta a `run_all_validations.py --quick` sin debilitar checks existentes ni modificar baselines de validadores.
 3. **Retiro del contrato muerto (F-D').** Elimina el parámetro descartado `whatsapp_validation` de `AssessmentBuilder.with_validation` y de sus callers, conservando el dato upstream que alimenta `ValidationSummary`. Inventario de firma antes y después; no borrar variables todavía consumidas ni crear una verdad paralela dentro del builder.
 4. **POST, mutaciones y cierre.** AC7: agregar un caller nuevo en un archivo nuevo que omita la señal, u ocultarla tras kwargs opacos, rompe el verificador; los aliases/`self` quedan cubiertos y las clases `validate` no relacionadas excluidas. AC16: inyectar un caller con la firma vieja rompe el contrato; los tests pertinentes pasan. Ejecuta el contrato de cierre completo y actualiza AC7/AC16, PRE/POST, delta y `mutation_report.json`.
+
+Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/REVISION-2/anclajes_medidos.json`
 
 ## Reglas y límites
 
 - El verificador declara su cobertura medida: qué ve, qué no ve y por qué. Un ✅ no prueba ausencia de callers no gobernados.
 - Prohibido convertir el verificador en un allowlist de archivos conocidos, o silenciar un hallazgo con una excepción sin justificación tipada.
 - No tocar `TribunalJudge._compute_verdict`, flags de bloqueo, umbrales (0.8 / 0.9) ni `write/publish/suppress`.
+- **AC20 no es de G:** la serialización de la evidencia del veredicto (acta, `reviewer_reports[].findings`, `package_evidence`, `details` del gate `critical_recall`) es propiedad de FASE-0. G corre antes y no la toca ni la declara cubierta.
 - El módulo legacy de `domain_gates.py` se conserva sin cambios; no archivarlo en esta fase ni usar sus tests como certificación del check productivo.
 - Ninguna prueba ejecuta `main.py v4complete`; no hay red ni scraping.
 
@@ -62,10 +65,12 @@ Confirmar REGISTRY sin GAP y TOTAL PASS dinámico; el nuevo check debe quedar ve
 
 Referencia **60 tool_use hasta el commit de código**; instrumento `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`, duración de pared aparte. Sin transcript o con acceso denegado: **FUERA DE SERVICIO (R2.1)** con auto-reporte separado por unidad; nunca estimar cumplimiento.
 
-- [ ] F cerrada; PRE tomado antes de editar y POST conciliado.
+- [ ] A cerrada con la matriz ratificada; PRE tomado antes de editar y POST conciliado.
 - [ ] Inventario de callers completo y clasificado, con exclusiones justificadas.
 - [ ] `wiring_report.json` publicado, conectado al quick y con límites declarados.
-- [ ] AC7 rojo con caller nuevo en archivo nuevo; AC16 rojo con firma vieja.
+- [ ] AC7 rojo con caller nuevo en archivo nuevo y rojo ya demostrado sobre la divergencia actual de `V4AssetOrchestrator.generate_assets`; AC16 rojo con firma vieja.
 - [ ] Parámetro muerto retirado sin verdad paralela ni variable upstream eliminada indebidamente.
-- [ ] Legacy `domain_gates` intacto y clasificado; umbrales, Juez y O1 sin cambios.
-- [ ] Cierre incremental completo y R2 medido o retirado; H será otra sesión.
+- [ ] Legacy `domain_gates` intacto y clasificado; umbrales, Juez y O1 sin cambios; serialización del acta (AC20) sin tocar, es de FASE-0.
+- [ ] Cierre incremental completo y R2 medido o retirado; FASE-0, B y H serán otras sesiones.
+
+Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/REVISION-2/anclajes_medidos.json`

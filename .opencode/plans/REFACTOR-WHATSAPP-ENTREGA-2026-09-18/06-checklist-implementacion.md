@@ -4,25 +4,28 @@
 
 Contratos: [maestro](01-plan-maestro.md), [ejecución](04-contrato-ejecucion.md), [lecciones](00-lecciones-capitalizadas.md) y [dependencias](dependencias-fases.md). Las rutas de evidencia citadas son salidas futuras bajo `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-<ID>/`, no archivos cuya existencia se afirme aquí.
 
-## Estados de las once sesiones
+## Estados de las doce sesiones
+
+**Revisión 2 (2026-09-19):** se añade FASE-0 (AC20) y G pasa a segunda sesión. Cadena: `A → G → 0 → B → C → D → E → F → H → E2E → VERIFY → RELEASE`.
 
 | Fase | Prerrequisito | Foco de aceptación | Estado | Evidencia de cierre |
 |---|---|---|---|---|
-| A | Mandato de sesión | Baseline, permisos, matriz ratificada, identidad/vigencia; AC14 | PENDIENTE | PENDIENTE |
-| B | A cerrada | AC1, AC2, AC15, AC19 (consumo) | PENDIENTE | PENDIENTE |
-| C | B cerrada | AC3, AC5, AC6, AC15, AC19 (lector) | PENDIENTE | PENDIENTE |
+| A | Mandato de sesión | Baseline, permisos, matriz ratificada (incluida FASE-0 y AC19a/AC19b), identidad/vigencia; AC14 | PENDIENTE | PENDIENTE |
+| G | A cerrada | AC7, AC16, AC15. **Guard de las ediciones de B–F** | PENDIENTE | PENDIENTE |
+| **0** | G cerrada | AC20; AC12 en su rama publish | PENDIENTE | PENDIENTE |
+| B | 0 cerrada | AC1, AC2, AC15, AC19a (consumo) | PENDIENTE | PENDIENTE |
+| C | B cerrada | AC3, AC5, AC6, AC15, AC19a (lector aditivo + unificación de lectores) | PENDIENTE | PENDIENTE |
 | D | C cerrada | AC4, AC5, AC8, AC9, AC15 | PENDIENTE | PENDIENTE |
 | E | D cerrada | AC9, AC10, AC11, AC12, AC15 | PENDIENTE | PENDIENTE |
 | F | E cerrada | AC13, AC15 | PENDIENTE | PENDIENTE |
-| G | F cerrada | AC7, AC16, AC15 | PENDIENTE | PENDIENTE |
-| H | G cerrada | AC9, AC12, AC13, AC14, AC15, AC17 offline | PENDIENTE | PENDIENTE |
-| E2E | H cerrada y preflight favorable | AC17 real; preservación del único resultado para AC18 | PENDIENTE | PENDIENTE |
-| VERIFY | E2E cerrada con evidencia | AC18; contraste transversal AC1–AC19, directo y sin ejecución | PENDIENTE | PENDIENTE |
+| H | F cerrada | AC9, AC12–AC14, AC15, AC17 offline | PENDIENTE | PENDIENTE |
+| E2E | H cerrada y preflight favorable | AC17 real, AC20 en flujo real; preservación del único resultado para AC18 | PENDIENTE | PENDIENTE |
+| VERIFY | E2E cerrada con evidencia | AC18; contraste transversal AC1–AC20, directo y sin ejecución | PENDIENTE | PENDIENTE |
 | RELEASE | VERIFY cerrada y alcance de cierre explícito | Cierre documental autorizado y límites publicados | PENDIENTE | PENDIENTE |
 
 Una fase por sesión y cadena estrictamente secuencial. Un checkpoint INCOMPLETA no habilita la siguiente. Registrar el estado observado sin sustituir un fallo legítimo por una aprobación documental.
 
-## Matriz AC1–AC19
+## Matriz AC1–AC20
 
 Todas las filas requieren evidencia del writer/consumidor real. Separar después resultado offline, ejercicio real E2E y dictamen de VERIFY; hoy los tres están PENDIENTES. Los casos no ejercitados no pasan a SUPERADO EN E2E por tener tests verdes.
 
@@ -41,17 +44,25 @@ Todas las filas requieren evidencia del writer/consumidor real. Separar después
 | AC11 | E; VERIFY contrasta | `review_input_manifest.json.documents` contiene run_id, fuente original, hash, ruta interna, read_status y disposition=retained_by_gate cuando corresponda; revisores leen snapshot | Borrado sin snapshot o pérdida de ruta hace rojo; nunca generado sigue ausente; snapshot fuera del árbol exportable | PENDIENTE |
 | AC12 | E/H; VERIFY contrasta | `acta_revision.json.enforcement` y `package_evidence` conservan decisión/hash/conteo; solo publish permitido crea ZIP final y bloqueo suprime cuarentena | Pares permitir/bloquear del flujo real, sin snapshot retenido en ZIP público ni doble hallazgo por borrado propio; distinguir cuál ocurrió en E2E | PENDIENTE |
 | AC13 | F/H; VERIFY contrasta | Consola, archivos y snapshots nuevos redactan antes de persistir; `sanitization_report.json` sin valores y `credential_status.json` con prueba operativa o pendiente | Desactivar redacción produce rojo con secretos sintéticos; tests o key nueva no prueban revocación | PENDIENTE |
-| AC14 | A/H; VERIFY contrasta | `onboarding_provenance.json`: hash de observations original, selector único, URLs histórica/solicitada y fechas; loader real toma YAML derivado y output declara fuente | Nombre ausente/ambiguo, hash cambiado o frescura rechazada detienen preflight, sin defaults, alias global o fecha alterada | PENDIENTE |
+| AC14 | A/H; VERIFY contrasta | `onboarding_provenance.json`: hash de observations original, URLs histórica/solicitada, fechas con `fecha_captura` presente, y **qué sucursal tomó el loader** (YAML derivado / warehouse / `Using defaults`) con productor declarado por campo | Hash cambiado, URL del YAML que no normaliza a la de la corrida, `fecha_captura` ausente o un valor publicado sin productor detienen preflight. **No** se prueba por nombre: el loader lo ignora. Sin defaults, alias global ni fecha alterada | PENDIENTE |
 | AC15 | Todas las implementaciones/H; VERIFY contrasta | PRE/POST con misma selección/entorno, exit codes y delta explicado; `mutation_report.json` por AC, guard y test | PRE antes de editar tests; rojo causado por guard y no syntax/import; no ocultar regresiones ni mezclar funciones con casos parametrizados | PENDIENTE |
 | AC16 | G; VERIFY contrasta | Inventario AST de with_validation sin argumento descartado; check legacy clasificado; ValidationSummary conserva su dato upstream | Caller con firma vieja hace rojo; no crear verdad paralela whatsapp_validation ni borrar variable todavía consumida | PENDIENTE |
 | AC17 | H/E2E; VERIFY contrasta | `run_control.json` con state, attempts, PID, argv, timestamps, hashes, exit_code y snapshot; preflight attempts=0, proceso único attempts=1 | Segundo lanzamiento rechazado antes de spawn aun tras fallo/timeout; pruebas con hijo falso, nunca otra v4complete | PENDIENTE |
 | AC18 | VERIFY | Matriz final en `10-analisis-post-implementacion.md` y `certificacion.json`, diff estructural, lecciones, límites y dueños | Un resultado offline no demuestra rama E2E; READY exige gates/acta favorables y ZIP válido, no exit 0. Parcial/FALLA impide cerrar como éxito integral | PENDIENTE |
-| AC19 | C (lector) y B (consumo); VERIFY contrasta | Reporte de presencia con `observation_scope`, `read_status` del fetch y `presence_evidence_kind`; señal negativa sin alcance verificado registra `no_verificado_en_sitio` y no crea dolor de ausencia confirmada | Reducir el lector a la raíz, tragar la excepción como `found=False` o derivar un número de la huella del plugin hace rojo. Don Alfonso es el caso real esperado, no un test | PENDIENTE |
+| AC19 | C (19a lector) y B (consumo); VERIFY contrasta | **19a aditivo:** el reporte publica `observation_scope`, `read_status` del fetch y `presence_evidence_kind` **como claves nuevas**, sin redefinir `status/site_verified/confidence`, y conserva `details` en el adaptador. Prerrequisito: unificar o designar los dos lectores de WhatsApp. **19b diferido (maestro §6):** migración de los 8 consumidores al tri-estado | Huella de plugin sin `href` → presencia con `plugin_fingerprint` y **cero número derivado**; el rojo invertido es que esa huella produzca `exists` ≥0.9 y un botón con número. Excepción de transporte → `READ_ERROR`, nunca `found=False`. **Don Alfonso ya ejercitó la rama de huella en `output/TAREA7-2026-09-19/`: ese es el caso real, y no es el que el plan esperaba** | PENDIENTE |
+| AC20 | **0**; E/H y VERIFY contrastan | La evidencia del veredicto se serializa en las dos ramas: `details.critical_issues_count`/`recall_basis` en el recall **fundado** del gate, `findings` dentro de `reviewer_reports` del acta, y `package_evidence` también en publish | Contrafactual obligatorio sobre el acta archivada: `BLOQUEADO` → `APROBADO-CONDICIONAL-PENDING-ONBOARDING`. Quitar la anotación reintroduce el CRITICAL y el rojo es real. Prohibido el verde por severidades, `BLOCKING_VERDICTS` o `GATE_BLOCKING_ENABLED` | PENDIENTE |
+
+**Nota de esta matriz (revisión 2, 2026-09-19).** El texto vinculante de cada AC es el del maestro §4; esta matriz es índice. Cinco filas estaban redactadas contra un comportamiento que el código no tiene y se corrigieron allí: **AC5** (no existe "el umbral de WhatsApp": hay cinco barras, incl. la de `preflight_checks.NEW_HOTEL_THRESHOLDS["whatsapp_button"] = 0.3`), **AC6** (la entrada del centinela deja de ser producible tras B), **AC10** (`DeliveryPackager.suppress()` destruye el ZIP del que hay que leer), **AC14** (el loader iguala por URL normalizada y **ignora el nombre**: "nombre ambiguo" no es condición verificable), **AC17** (`--output` no aísla la memoria compartida). Releer el maestro antes de aceptar cualquiera de esas cinco.
+
+Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/REVISION-2/anclajes_medidos.json`
 
 ## Prerrequisitos de entrada
 
 - [ ] A re-mide el quick al inicio y registra el resultado observado. El 9/10 del 2026-09-18 quedó resuelto solo: eran cuatro documentos sucios en el árbol y el 2026-09-19 marca 10/10 con esos archivos ya idénticos a HEAD. No se arrastra como prerrequisito de autorización central.
-- [ ] B/C gobernan AC19: el lector declara qué rutas inspeccionó y B no convierte una señal negativa sin alcance verificado en ausencia confirmada del canal.
+- [ ] **FASE-0 antes de E2E:** AC20 cerrado con su contrafactual medido. Medido el 2026-09-19: con `VACUOUS_RECALL` abierto, la corrida del hotel destino termina `BLOQUEADO` y ZIP suprimido **aunque los 13 gates estén verdes**; consumir el intento único sin cerrarlo gastaría la muestra en un resultado ya conocido.
+- [ ] G cierra **antes** de B: el verificador AST es el guard de las ediciones de callers de B–F, no un cierre de calidad posterior.
+- [ ] B/C gobernan AC19a: el lector declara qué rutas inspeccionó, C unifica o designa los dos lectores de WhatsApp, y B no convierte una señal negativa sin alcance verificado en ausencia confirmada del canal. **Y su inverso medido:** tampoco convierte una huella de plugin en número verificado.
+- [ ] H prueba **qué sucursal** tomó el loader y congela `--permission-mode` efectivo y snapshot de `.agent/memory`; `--output` no aísla la memoria compartida.
 - [ ] A resuelve el mandato documental de DOMAIN_PRIMER antes de regenerarlo; no cambia reglas centrales para eliminar la divergencia.
 - [ ] A mantiene F-B privacidad/D1 diferida: no PII WhatsApp nueva en warehouse ni cambios de formulario/esquema sin decisión escrita. El setup no certifica cierre de esa deuda.
 - [ ] A/H conservan fuente del 2026-07-22 y comprueban vigencia frente a `ONBOARDING_FRESHNESS_HOURS`, sin leer secretos ni falsear fecha o defaults.
@@ -100,4 +111,4 @@ Aplicar dentro de la fase correspondiente, no diferir todo a RELEASE. Esta check
 - [ ] Presupuesto agotado o requisito pendiente producen checkpoint y nueva sesión para retomar; no se inicia otra fase ni se repite trabajo ya completado.
 - [ ] VERIFY distingue SUPERADO, FALLA y NO EJERCITADO con régimen offline/E2E explícito. RELEASE refleja esa conclusión sin prometer certificación universal a partir de un hotel.
 
-**Resumen inicial:** once estados PENDIENTES; AC1–AC19 PENDIENTES; intento 0/1; siguiente sesión A. Evidencia, permisos adicionales, validaciones y medición de ejecución permanecen pendientes.
+**Resumen inicial:** doce estados PENDIENTES; AC1–AC20 PENDIENTES; intento 0/1; siguiente sesión A. Evidencia, permisos adicionales, validaciones y medición de ejecución permanecen pendientes.
