@@ -57,7 +57,10 @@ def _entry(pain_id: str, severity: str = "HIGH") -> PainLedgerEntry:
 @pytest.fixture
 def ledger_dos_brechas():
     """Ledger resuelto con 2 brechas de los 7 servicios alineables."""
-    return [_entry("no_whatsapp_visible"), _entry("no_hotel_schema")]
+    # FASE-B (AC2): la brecha que compromete el boton es `whatsapp_conflict`. Tras B,
+    # `no_whatsapp_visible` entrega la guia de preparacion (servicio condicional, no
+    # contado), asi que un ledger de ausencia ya no puede justify un boton.
+    return [_entry("whatsapp_conflict"), _entry("no_hotel_schema")]
 
 
 @pytest.fixture
@@ -70,7 +73,7 @@ def assets_whatsapp_schema():
             metadata_path="/tmp/o/wa.json",
             preflight_status="PASSED",
             confidence_score=0.95,
-            pain_ids_resolved=["no_whatsapp_visible"],
+            pain_ids_resolved=["whatsapp_conflict"],
             can_use=True,
             delivery_filename="boton_whatsapp.html",
         ),

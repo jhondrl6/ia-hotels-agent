@@ -3390,9 +3390,20 @@ class V4DiagnosticGenerator:
         # Commercial narratives per pain_id
         narratives = {
             'no_whatsapp_visible': {
-                'nombre': 'Canal Directo Cerrado (Sin WhatsApp)',
+                # FASE-B (REFACTOR-WHATSAPP, AC19a-consumo · L-PF6): la lectura
+                # anterior decia "Canal Directo Cerrado (Sin WhatsApp)" y
+                # "Sin boton WhatsApp, pierden el impulso", que afirma una ausencia
+                # confirmada del canal. El lector solo inspecciona la raiz y su
+                # excepcion colapsa a "no encontrado": ausencia observada y lector
+                # que no pudo observar no son equivalentes. La narrativa ahora pide
+                # confirmacion y no cierra el canal en ninguna direccion.
+                'nombre': 'Canal de WhatsApp sin verificar',
                 'impacto': pain_narratives.get('no_whatsapp_visible', 0.20),
-                'detalle': 'Viajeros quieren reservar instantaneamente. Sin boton WhatsApp, pierden el impulso de compra.'
+                'detalle': (
+                    'Viajeros quieren reservar instantaneamente. No se confirmo un '
+                    'numero de WhatsApp publicable en la ruta inspeccionada: falta '
+                    'verificar el canal con el hotel antes de ofrecer boton directo.'
+                ),
             },
             'whatsapp_conflict': {
                 'nombre': 'Datos Inconsistentes (Confusión Cliente)',

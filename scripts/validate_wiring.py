@@ -157,46 +157,12 @@ EXCLUSIONES_POR_CLASE: dict[str, str] = {
 # violacion (`EXCEPCION_VAGA`): asi el registro no puede degradarse a allowlist.
 
 EXCEPCIONES: list[dict] = [
-    {
-        "tipo": "HALLAZGO_CONOCIDO",
-        "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
-        "simbolo": "PainSolutionMapper.detect_pains",
-        "senal": "whatsapp_html_detected",
-        "motivo": (
-            "Divergencia real de la fila F-A' del maestro §1: es el hallazgo que este "
-            "verificador debe poder nombrar, no un falso positivo. Sigue abierto porque "
-            "corregir el caller le toca a FASE-B (AC1) y G corre antes."
-        ),
-        "dueno": "FASE-B",
-        "ac": "AC1",
-        "baja_cuando": "generate_assets propague whatsapp_html_detected a detect_pains",
-    },
-    {
-        "tipo": "HALLAZGO_CONOCIDO",
-        "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
-        "simbolo": "CoherenceValidator.validate",
-        "senal": "whatsapp_html_detected",
-        "motivo": (
-            "Misma causa, invocacion pre-gen del orquestador. Precision medida por G: la "
-            "divergencia no es una linea, son tres."
-        ),
-        "dueno": "FASE-B",
-        "ac": "AC1",
-        "baja_cuando": "el caller propague la senal",
-    },
-    {
-        "tipo": "HALLAZGO_CONOCIDO",
-        "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
-        "simbolo": "CoherenceValidator.validate",
-        "senal": "whatsapp_html_detected",
-        "motivo": (
-            "Misma causa, invocacion post-gen. Registrada aparte para que el conteo de "
-            "hallazgos no se reduzca corrigiendo solo una de las tres."
-        ),
-        "dueno": "FASE-B",
-        "ac": "AC1",
-        "baja_cuando": "el caller propague la senal",
-    },
+    # FASE-B (REFACTOR-WHATSAPP, AC1) retira las tres excepciones que amparaban las
+    # omisiones de `whatsapp_html_detected` en v4_asset_orchestrator.py: los tres
+    # callers (detect_pains + validate pre-gen + validate post-gen) ya propagan la
+    # senal, asi que cada una habria caido en `EXCEPCION_VAGA`. Historial completo
+    # en `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-G/wiring_report.json`
+    # (dueno FASE-B, ac AC1, `baja_cuando` cumplido el 2026-09-20).
 ]
 
 

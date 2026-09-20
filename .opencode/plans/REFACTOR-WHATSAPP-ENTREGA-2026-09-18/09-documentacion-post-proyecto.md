@@ -63,9 +63,43 @@ Estado: PREPARACIÓN. Ninguna fase ejecutada. No sustituye la documentación inc
 | **FASE-0 (2026-09-20): archivos afiliados tocados** | Producto: `modules/quality_gates/publication_gates.py`, `modules/quality_gates/tribunal/outcome.py`, `main.py`. Tests: nuevo `tests/test_fase_0_ac20_evidencia_veredicto.py`; re-atados a coherencia interna `tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py` (asertaba la forma exacta de `reviewer_reports`) y corregido el fixture contradictorio `tests/quality_gates/tribunal/test_diagnosis_reviewer.py`. Evidencia: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-0/` (12 archivos: 4 instrumentos reejecutables —`pre_camino_gate.py`, `contrafactual_ac20.py`, `run_mutations.py`, `build_thresholds.py`—, 4 salidas medidas en JSON, 3 registros de tests y 1 informe). Documental: `CHANGELOG.md`, `docs/GUIA_TECNICA.md`, `docs/contributing/REGISTRY.md` (por `log_phase_completion.py`), el par del indice regenerado (319 → 320 IDs) y los siete documentos del plan (§00, §05 de la fase, §06, §09, §10, README y dependencias). La autorización de commit no se pidió durante la fase; **commit `7c6e75f` y push a `origin/master` ejecutados el mismo 2026-09-20 con instrucción literal del operador** (paridad 0/0 verificada con `git ls-remote`; los 7 checks del pre-commit pasaron sin saltar ninguno) — incluyendo índice, registro y documentos del plan | FASE-0 |
 | **FASE-G (2026-09-20): archivos afiliados tocados** | `CHANGELOG.md` (subsección G bajo 4.77.3, sin anticipar versión), `docs/GUIA_TECNICA.md` (nota técnica G), `docs/contributing/REGISTRY.md` (registro por `log_phase_completion.py`), `.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json` (regenerados al cerrar), `.opencode/wiring_report.json` (nuevo artefacto del AC7), y `DOMAIN_PRIMER.md` regenerado **solo por su writer** (`doctor.py --regenerate-domain-primer`), que por ser archivo versionado ensucia el árbol | FASE-G |
 
+| **FASE-B (2026-09-20): archivos afiliados tocados** | Producto: 11 archivos de `modules/` + `main.py` (solo comentario) — detalle en la sección "Cierre incremental de FASE-B" de este documento. Tests: nuevo `tests/commercial_documents/test_fase_b_promesa_whatsapp.py` (12 funciones canónicas) y re-vinculaciones en 8 archivos, todas por cambio de forma o de ejemplo, ninguna aflojando una expectativa. Evidencia: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-B/` (9 artefactos, incluidos `run_mutations.py` reejecutable, `mutation_report.json` 6/6, los tres registros de tests y el `CHECKPOINT-autorizaciones-pendientes.md`). Documental: `CHANGELOG.md` (subsección B bajo 4.77.3, sin anticipar versión), `docs/GUIA_TECNICA.md` (nota técnica del patrón resolución ≠ conteo), `docs/contributing/REGISTRY.md` (por `log_phase_completion.py`), el par del índice regenerado y los cinco documentos del plan (§00, §05 de la fase, §06, §09, dependencias). **Commit y push NO ejecutados**: la autorización se pidió al cierre de la sesión | FASE-B |
+
 ## Registro documental por fase
 
 Cada cierre anota: archivos exactos, tests añadidos, PRE/POST con misma unidad, resultados de mutaciones, limitaciones, estado real y autorización de commit si existe. No elevar versión en fases intermedias. Registrar con `scripts/log_phase_completion.py --check-manual-docs` solo la fase que acaba de completarse.
+
+## Cierre incremental de FASE-B (2026-09-20)
+
+**Archivos exactos de producto (12):** `modules/asset_generation/v4_asset_orchestrator.py`,
+`pain_ledger.py`, `asset_catalog.py`, `conditional_generator.py`,
+`whatsapp_conflict_guide.py`, `whatsapp_setup_guide.py` (nuevo),
+`modules/commercial_documents/pain_solution_mapper.py`, `v4_diagnostic_generator.py`,
+`modules/common/service_identity.py`, `modules/asset_generation/proposal_asset_alignment.py`
+(A1 autorizado en la misma sesión), `scripts/validate_wiring.py`, `main.py` (solo el
+comentario `FIX-D7`).
+
+**Tests:** nuevos `tests/commercial_documents/test_fase_b_promesa_whatsapp.py` con 12
+funciones canónicas; re-vinculaciones en 8 archivos existentes (forma o ejemplo, nunca
+expectativa aflojada). Mismo unidad PRE/POST: selección literal de 25 archivos,
+537 → 539 (delta +2 explicado) → 552 con la suite nueva. Regresión completa 4 failed /
+4.261 passed, tres rojos preexistentes con dueño y **uno de B con causa medida**
+(`test_get_blocking_issues`, gate de alignment con servicio condicional).
+
+**Mutaciones:** 8/8 (M1–M8) rojos causados por el guard; restauración por sha256 (tras corregir
+el falso negativo de `write_text()` en Windows, que convertía los archivos a CRLF).
+
+**Limitaciones declaradas:** (i) el servicio de preparación queda fuera del universo
+contado, así que el gate de alignment no lo ve como deuda cuando es el único
+comprometido — dueño A4/AC5 (D/E); (ii) `run_v4_complete_mode` sigue registrando el centinela
+`detected_via_html` en el `ValidationSummary` con `can_use_in_assets=True` (fuera de la
+allowlist de B; dueño C/AC6); (iii) `wa_button_gen` conserva su número de placeholder y
+`local_content_generator` construye dos `wa.me/` sin guarda (C/D); (iv) umbrales de
+WhatsApp (0.9 coherencia / 0.7 catálogo / 0.3 hotel nuevo / 0.5 conflicto) quedan
+inventariados pero sin gobernar: AC5 es de C/D.
+
+**Estado real:** B **INCOMPLETA**. **Commit y push sin autorización ni ejecución.**
+Contador v4complete 0/1. R2 FUERA DE SERVICIO (R2.1).
 
 ## Rojo documental del PRE, cerrado por re-medición
 

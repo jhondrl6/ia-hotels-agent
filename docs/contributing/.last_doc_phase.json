@@ -280,5 +280,6 @@
   "tests/test_validate_lesson_capitalization.py": "FASE-G",
   "modules/quality_gates/tribunal/outcome.py": "FASE-0",
   "tests/quality_gates/tribunal/test_diagnosis_reviewer.py": "FASE-0",
-  "tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py": "FASE-0"
+  "tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py": "FASE-0",
+  "22": "FASE-B"
 }

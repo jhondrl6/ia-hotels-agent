@@ -133,6 +133,38 @@ Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATS
 | **Nueva (FASE-A / QMind R6): el acta no viaja en el ZIP de cliente** | `DeliveryPackager._INTERNAL_DOC_PREFIXES = ("acta_revision",)` (`modules/delivery/delivery_packager.py`, constante de clase): el acta queda solo en `v4_audit/`, y DA-P1.4 registra el círculo estricto (los bytes del ZIP nacen en `write()`, el acta se enriquece después) | Entrega + tribunal; **E** | El resolvedor único de AC11 no debe esperar `acta_revision.json` dentro del ZIP; "snapshot interno fuera del árbol exportado" pasa de disciplina a **construcción vigente** y así se redacta en su prompt |
 | Una corrida insuficiente por fallo externo | Condicional | Operador | Conservar resultado; nueva corrida requiere ampliar expresamente presupuesto y plan |
 
+## FASE-B (2026-09-20) — métricas y seguimientos, medidos
+
+**Métricas.** Selección literal de 25 archivos: PRE 537 → POST-A 539 (delta +2 = dos
+casos nuevos de AC19a dentro de un archivo de la selección) → POST-B 552 con la suite
+nueva (12 casos por 11 funciones, una parametrizada en dos). POST-C de la superficie de
+matriz/gate tras A1: **83 passed / 0 failed**. Regresión completa: **4 failed / 4.261
+passed / 41 skipped / 4 xfailed en 244 s**. Funciones canónicas
+`grep -rE "^\s*def test_" tests --include=*.py`: **4.285 → 4.299 (+14)**. Quick **11/11**
+antes y después. Guard de cableado: 174 llamadas / 614 archivos, gobernadas 75, conformes
+**21**, omisiones **0**, violaciones 0, excepciones amparando 0. Mutantes **6/6** rojos por
+el guard, restauración sha256 8/8 (M1–M8). Diff: 22 archivos, **+543 / −218**. R2 **FUERA DE
+SERVICIO (R2.1)**: auto-reporte ~165 intervenciones, unidad propia, no comparable con el
+instrumento. Contador v4complete **0/1**.
+
+**Seguimientos abiertos con dueño.**
+- **S-B1 (A4 / AC5, dueño D-E):** `test_publication_gates.py::test_get_blocking_issues`
+  espera 3 gates bloqueantes y ve 2, porque `_proposal_asset_alignment_gate` toma el
+  "PASS trivial (never-block)" cuando el único servicio comprometido por el ledger es
+  condicional (`guia_configuracion_whatsapp`, no contado). La gobernanza del universo de
+  la matriz y de su denominador es AC5; no se debilitó el test desde B.
+- **S-B2 (AC6, dueño C):** `main.py` sigue registrando `can_use_in_assets=True` para el
+  centinela `detected_via_html` (fuera de la allowlist de B), y `wa_button_gen` conserva
+  el número de placeholder `573001234567` con dos `wa.me/` sin guarda en
+  `local_content_generator`.
+- **S-B3 (AC5, dueño C-D):** los cinco umbrales de WhatsApp quedan inventariados y sin
+  gobernar (0.9 coherencia, 0.7 catálogo, **0.3** en `NEW_HOTEL_THRESHOLDS`, 0.5
+  conflicto, 0.9 legado).
+- **S-B4 (invariante verificada):** `counts_in_alignment=True` para un servicio condicional
+  **no** es una alternativa viable: medido, obligaba a entregar la guía en hoteles sin la
+  brecha y produjo 15 rojos. Registrar un servicio condicional exige la separación
+  resolución/conteo que quedó en `proposal_asset_alignment.py`.
+
 ## Métricas de ejecución
 
 Registrar por fase funciones canónicas, casos pytest, passed/failed/skipped/xfailed, delta, hashes de PRE/POST, mutaciones por AC y tiempo real de ejecución. No sumar unidades incompatibles. Mantener contador único de invocaciones v4complete: actualmente 0, máximo autorizado en el diseño 1.

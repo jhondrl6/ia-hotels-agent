@@ -5,6 +5,22 @@
 
 ---
 
+### Notas de Cambios v4.77.3 — FASE-B del plan REFACTOR-WHATSAPP: cadena de promesa de WhatsApp y resolución ≠ conteo
+
+**Fecha:** 2026-09-20
+
+**Quién decide hoy que el canal es un dolor.** Una sola señal, tres consumidores. `V4ComprehensiveAuditor._detect_whatsapp_from_html` produce `validation.whatsapp_html_detected`, y `V4AssetOrchestrator.generate_assets` la deriva **una vez** al inicio de la fase de assets para entregarla a `PainSolutionMapper.detect_pains` y a las dos pasadas de `CoherenceValidator.validate` (pre-gen y post-gen). Antes el orquestador preguntaba sin ella mientras `main.py` y `V4DiagnosticGenerator._identify_brechas` sí la pasaban: tres rutas, dos respuestas. El guard `scripts/validate_wiring.py` (FASE-G) es quien lo impide ahora, con las excepciones tipadas que la amparaban retiradas.
+
+**La promesa por estado del canal.** `no_whatsapp_visible` (campo UNKNOWN/CONFLICT **y** sin HTML) promete `whatsapp_setup_guide`: catálogo, generador propio (`modules/asset_generation/whatsapp_setup_guide.py`) y entrada en `PAIN_TO_ASSET`, sin número, sin `wa.me` y sin placeholder numérico. `whatsapp_conflict` sigue siendo la única vía que planifica `whatsapp_button`, y sin `can_generate=True` forzado: decide la barra del mapping. La guía de conflicto lista candidatos pero **no elige** número — la selección por cantidad de reseñas fue retirada porque un perfil con reseñas no prueba que alguien conteste ese WhatsApp.
+
+**Presencia no es verificación.** `PainLedger.PAIN_TO_PRESENCE_ASSET["no_whatsapp_visible"]` apunta a la guía, no al botón, así que un `exists` producido por huella de plugin (el caso medido de Don Alfonso: `exists`/0.85 sin número) ya no promociona el pain a `VERIFIED_IN_SITE`. El estado `NO_VERIFICADO_EN_SITIO` se registra en `evidence_refs` del ledger y no en `status`, porque `status` lo consumen el gate de cobertura, el reconciliador y `_load_verified_in_site_pain_ids`; la migración al tri-estado es AC19b, diferida.
+
+**Tabla de resolución vs universo contado (patrón reutilizable).** `modules/asset_generation/proposal_asset_alignment.py` cumplía dos roles con un solo diccionario: resolver qué asset entrega un servicio y fijar el denominador del gate `proposal_asset_alignment`. Por eso no había forma de registrar un servicio **condicional** sin prometerlo en toda corrida. Hoy son dos estructuras: `RESOLUCION_SERVICIO_A_ASSET` / `ALL_RESOLVABLE_SERVICES` (todo `SERVICE_IDENTITIES`) y `PROPOSAL_SERVICE_TO_ASSET` / `ALL_PROMISED_SERVICES` (solo `counts_in_alignment=True`). Regla práctica: si un servicio nuevo depende de un dolor, decláralo en `modules/common/service_identity.py` con `counts_in_alignment=False` y verifica que la matriz lo resuelva; si lo metes en el universo contado, el gate empezará a exigir su entrega en hoteles que nunca tuvieron ese dolor.
+
+**Límite declarado.** Con un único servicio comprometido condicional, `PublicationGatesOrchestrator._proposal_asset_alignment_gate` toma el camino "PASS trivial: sin deuda de entrega" y no reporta la guía como deuda; `test_publication_gates.py::test_get_blocking_issues` lo mide (espera 3 gates bloqueantes, ve 2). Gobernar el universo de la matriz —con su efecto sobre el denominador— corresponde a AC5 (FASE-D/E).
+
+---
+
 ### Notas de Cambios v4.77.0 — FASE-P1 / P3-A / P3-B: sustrato confiable antes que dientes
 
 **Fecha:** 2026-09-14

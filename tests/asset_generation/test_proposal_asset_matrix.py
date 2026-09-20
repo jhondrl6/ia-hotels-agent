@@ -25,7 +25,7 @@ def sample_pain_ledger():
     """Pain ledger with WhatsApp, Schema Hotel, and Schema Org breaches."""
     return [
         PainLedgerEntry(
-            pain_id="no_whatsapp_visible",
+            pain_id="whatsapp_conflict",
             source_module="pain_solution_mapper",
             source_file="schema_validator_v2.py",
             severity="HIGH",
@@ -68,7 +68,7 @@ def sample_generated_assets():
             metadata_path="/tmp/output/whatsapp_button_metadata.json",
             preflight_status="PASSED",
             confidence_score=0.95,
-            pain_ids_resolved=["no_whatsapp_visible"],
+            pain_ids_resolved=["whatsapp_conflict"],
             can_use=True,
             delivery_filename="boton_whatsapp.html",
         ),
@@ -176,7 +176,7 @@ class TestProposalAssetMatrixServiceLinked:
         assert wa_entry.status == "LINKED", (
             f"Expected LINKED for WhatsApp, got {wa_entry.status}"
         )
-        assert "no_whatsapp_visible" in wa_entry.pain_ids
+        assert "whatsapp_conflict" in wa_entry.pain_ids
         assert wa_entry.asset_type == "whatsapp_button"
         assert wa_entry.asset_path is not None
         assert wa_entry.confidence > 0.8

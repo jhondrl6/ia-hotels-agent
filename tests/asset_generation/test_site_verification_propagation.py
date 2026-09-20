@@ -41,11 +41,12 @@ def _entry(pain_id: str, status: str = "DETECTED", severity: str = "HIGH"):
     )
 
 
-def _presence(status: str, site_verified: bool = True):
+def _presence(status: str, site_verified: bool = True,
+              asset: str = "whatsapp_button"):
     """Dict canónico en la forma que produce normalize_site_presence()."""
     return {
         "results": {
-            "whatsapp_button": {
+            asset: {
                 "status": status,
                 "site_verified": site_verified,
                 "confidence": 0.85,
@@ -57,10 +58,18 @@ def _presence(status: str, site_verified: bool = True):
 # ─── C1: PainLedger.apply_site_verification ─────────────────────────────────
 
 def test_verified_asset_moves_pain_to_verified_in_site():
-    """no_whatsapp_visible DETECTED HIGH + botón existente → VERIFIED_IN_SITE LOW."""
+    """no_hotel_schema DETECTED HIGH + schema existente en el sitio → VERIFIED_IN_SITE LOW.
+
+    Re-anclado por FASE-B: antes este mecanismo se ejemplificaba con
+    `no_whatsapp_visible` + boton, que es justo el caso que B retiro del mapeo
+    (`PAIN_TO_PRESENCE_ASSET`): la presencia de un boton con huella de plugin no
+    verifica el canal. El mecanismo de propagacion sigue probandose, ahora con un
+    asset que si es verificable en sitio; la regla de WhatsApp tiene sus propios
+    tests abajo.
+    """
     ledger = PainLedger()
-    entries = [_entry("no_whatsapp_visible")]
-    result = ledger.apply_site_verification(entries, _presence("exists"))
+    entries = [_entry("no_hotel_schema")]
+    result = ledger.apply_site_verification(entries, _presence("exists", asset="hotel_schema"))
     assert result[0].status == "VERIFIED_IN_SITE"
     assert result[0].severity == "LOW", "La brecha verificada no sigue siendo HIGH"
     assert any("site_verification" in ref for ref in result[0].evidence_refs)
@@ -79,20 +88,64 @@ def test_exists_with_issues_verifies_presence():
 
     El asset existe en producción; sus campos faltantes son mejora
     sugerida, no brecha activa — el sitio vivo es fuente de verdad.
+    (Re-anclado FASE-B a `hotel_schema`, ver
+    `test_verified_asset_moves_pain_to_verified_in_site`.)
     """
     ledger = PainLedger()
-    entries = [_entry("no_whatsapp_visible")]
+    entries = [_entry("no_hotel_schema")]
     result = ledger.apply_site_verification(
-        entries, _presence("exists_with_issues", True)
+        entries, _presence("exists_with_issues", True, asset="hotel_schema")
     )
     assert result[0].status == "VERIFIED_IN_SITE"
 
 
 def test_redundant_delivery_also_verified():
+    """(Re-anclado FASE-B a `hotel_schema`.)"""
+    ledger = PainLedger()
+    entries = [_entry("no_hotel_schema")]
+    result = ledger.apply_site_verification(
+        entries, _presence("redundant", asset="hotel_schema")
+    )
+    assert result[0].status == "VERIFIED_IN_SITE"
+
+
+def test_whatsapp_fingerprint_no_verifica_el_pain_de_ausencia():
+    """FASE-B (AC19a-consumo · L-PF6): `whatsapp_button: exists` NO cierra el pain.
+
+    Es el caso medido en Don Alfonso: la home devuelve `exists`/0.85 por una huella
+    del plugin, sin numero. Antes de B eso promocionaba `no_whatsapp_visible` a
+    VERIFIED_IN_SITE con severidad LOW, es decir, convertia una huella en canal
+    verificado. Ahora el pain queda DETECTED (sigue divulgado) y el ledger registra
+    la accion pendiente `presence:NO_VERIFICADO_EN_SITIO:whatsapp_setup_guide`.
+    """
     ledger = PainLedger()
     entries = [_entry("no_whatsapp_visible")]
-    result = ledger.apply_site_verification(entries, _presence("redundant"))
-    assert result[0].status == "VERIFIED_IN_SITE"
+    result = ledger.apply_site_verification(entries, _presence("exists"))
+    assert result[0].status == "DETECTED", (
+        "una huella de presencia no puede verificar el canal del hotel"
+    )
+    assert result[0].severity == "HIGH"
+    assert any(
+        ref == "presence:NO_VERIFICADO_EN_SITIO:whatsapp_setup_guide"
+        for ref in result[0].evidence_refs
+    ), result[0].evidence_refs
+
+
+def test_whatsapp_sin_reporte_de_presencia_registra_pendiente():
+    """FASE-B (AC19a-consumo): se senal negativa sin alcance verificado.
+
+    Un ledger sin `site_presence_report` no afirma ausencia confirmada: registra la
+    verificacion pendiente y conserva el pain.
+    """
+    ledger = PainLedger()
+    entries = [_entry("no_whatsapp_visible")]
+    result = ledger.apply_site_verification(
+        entries, {"results": {"faq_page": {"status": "exists", "site_verified": True}}}
+    )
+    assert result[0].status == "DETECTED"
+    assert any(
+        "NO_VERIFICADO_EN_SITIO" in ref for ref in result[0].evidence_refs
+    ), result[0].evidence_refs
 
 
 def test_unmapped_pain_not_touched():

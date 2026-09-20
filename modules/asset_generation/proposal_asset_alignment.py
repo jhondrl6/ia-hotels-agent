@@ -43,6 +43,30 @@ PROPOSAL_SERVICE_TO_ASSET: Dict[str, str] = {
     if identidad.counts_in_alignment
 }
 
+# FASE-B (REFACTOR-WHATSAPP, AC2) — TABLA DE RESOLUCION ≠ UNIVERSO CONTADO.
+#
+# `PROPOSAL_SERVICE_TO_ASSET` cumple dos papeles a la vez: resuelve qué asset
+# entrega un servicio nombrado, y fija el denominador del gate
+# `proposal_asset_alignment`. Ese doble uso impedía registrar un servicio
+# CONDICIONAL sin prometerlo en toda corrida: `guia_configuracion_whatsapp` se
+# entrega solo cuando el dolor de ausencia de WhatsApp existe, y en cambio
+# incluirlo en el universo contado obligaba a entregarlo siempre (medido: caían
+# 15 pruebas de gate/matrix y degradeaba la cobertura de hoteles sin esa brecha).
+#
+# Se separan los dos papeles. `RESOLUCION_SERVICIO_A_ASSET` es la tabla de
+# resolucion: cubre TODOS los servicios del registro canonico, contados o no, y
+# por eso la matriz puede nombrar y clasificar la guia en vez de reportarla como
+# `unknown_services`. `PROPOSAL_SERVICE_TO_ASSET` sigue siendo el universo contado
+# por el gate, sin cambiar su regla ni su denominador.
+RESOLUCION_SERVICIO_A_ASSET: Dict[str, str] = {
+    identidad.service_name: identidad.asset_type
+    for identidad in SERVICE_IDENTITIES
+}
+
+# Mismo orden canonico que la proyeccion contada; se usa como universo de
+# iteration de la matriz cuando hay ledger resuelto (ver AssetAlignmentMatrix.build).
+ALL_RESOLVABLE_SERVICES: List[str] = list(RESOLUCION_SERVICIO_A_ASSET.keys())
+
 # Servicios que la propuesta promete: las claves de la proyección anterior.
 ALL_PROMISED_SERVICES: List[str] = list(PROPOSAL_SERVICE_TO_ASSET.keys())
 
@@ -240,7 +264,9 @@ def verify_proposal_asset_alignment(
             presence_lookup = site_presence_report['results']
 
     for service_name in services_to_check:
-        expected_asset_type = PROPOSAL_SERVICE_TO_ASSET.get(service_name)
+        # FASE-B: resuelve en la tabla completa; el universo que se recorre sigue
+        # siendo el contado (`ALL_PROMISED_SERVICES` por defecto).
+        expected_asset_type = RESOLUCION_SERVICIO_A_ASSET.get(service_name)
 
         if not expected_asset_type:
             # Unknown service — skip
@@ -577,8 +603,22 @@ def classify_promised_services(
     not_promised: List[str] = []
     unknown_services: List[str] = []
 
+    # FASE-B (REFACTOR-WHATSAPP, AC2): NO se amplía la lista que trajo el llamador.
+    # Medido en esta fase: ampliar con los servicios condicionales cuyo dolor aparece
+    # en el ledger hizo que `ProposalAssetMatrix.build(proposal_services=["Servicio
+    # Fantasma"])` devolviera filas de servicios que nadie pidio (3 en
+    # `test_unknown_service_is_skipped`) y que el par de builders dejara de coincidir
+    # en los casos con ledger. El universo de la matriz sigue siendo el que decide el
+    # llamador; lo que se separó es solo la TABLA DE RESOLUCION, para que un servicio
+    # condicional registrado (`guia_configuracion_whatsapp`) se resuelva en vez de
+    # caer a `unknown_services`. Gobernar el universo de la matriz —y con él el
+    # denominador del gate— es AC5, de FASE-D/E.
     for service_name in proposal_services:
-        expected_asset = PROPOSAL_SERVICE_TO_ASSET.get(service_name)
+        # FASE-B: resolucion sobre el registro completo (ver
+        # `RESOLUCION_SERVICIO_A_ASSET`); un servicio fuera del registro canonico
+        # sigue cayendo en `unknown_services`, que es el descarte visible que
+        # exigia la anti-A5.
+        expected_asset = RESOLUCION_SERVICIO_A_ASSET.get(service_name)
         if not expected_asset:
             # FASE-C: el descarte deja de ser silencioso (anti-A5).
             unknown_services.append(service_name)

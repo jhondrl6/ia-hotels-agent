@@ -1,0 +1,14 @@
+E   AssertionError: assert 2 == 3
+     +  where 2 = len([PublicationGateResult(gate_name='evidence_coverage', passed=False, status=<GateStatus.BLOCKED: 'BLOCKED'>, message='E...critical schema. Gap: 40% of critical issues missed.', details={'critical_recall': 0.5, 'threshold': 0.9, 'gap': 0.4})])
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\test_publication_gates.py:826: AssertionError: assert 2 == 3
+E   AssertionError: assert 'Métricas de Optimización para IA' in '\n|| Métrica | Score | Detalle | Estado ||\n|---------|-------|---------|--------|\n| Accesibilidad IA | 0.65/1.00 | ...Estas métricas evalúan cómo los motores de IA (ChatGPT, Claude, Perplexity) pueden descubrir y citar su contenido.\n\n'
+C:\Users\Jhond\Github\iah-cli\tests\test_diagnostic_geo_metrics.py:68: AssertionError: assert 'Métricas de Optimización para IA' in '\n|| Métrica | Score | Detalle | Estado ||\n|---------|-------|---------|--------|\n| Accesibilidad IA | 0.65/1.00 | ...Estas métricas evalúan cómo los motores de IA (ChatGPT, Claude, Perplexity) pueden descubrir y citar su contenido.\n\n'
+E   AssertionError: ['REFACTOR-WHATSAPP-ENTREGA-2026-09-18', 'VERIFICADOR-ESCRITURA-QMIND-2026-09-20']
+    assert 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11' in ['REFACTOR-WHATSAPP-ENTREGA-2026-09-18', 'VERIFICADOR-ESCRITURA-QMIND-2026-09-20']
+C:\Users\Jhond\Github\iah-cli\tests\test_validate_lesson_capitalization.py:389: AssertionError: ['REFACTOR-WHATSAPP-ENTREGA-2026-09-18', 'VERIFICADOR-ESCRITURA-QMIND-2026-09-20']
+=========================== short test summary info ===========================
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+FAILED tests/quality_gates/test_publication_gates.py::TestPublicationGatesOrchestrator::test_get_blocking_issues
+FAILED tests/test_diagnostic_geo_metrics.py::TestDiagnosticGEOMetrics::test_diagnostic_includes_geo_metrics
+FAILED tests/test_validate_lesson_capitalization.py::test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]
+4 failed, 4261 passed, 41 skipped, 4 xfailed in 244.42s (0:04:04)

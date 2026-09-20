@@ -63,10 +63,28 @@ class PainLedger:
     # Lo consumirá FASE-P2-A/F14 (promised_assets_exist).
     STATUS_VERIFIED_IN_SITE = "VERIFIED_IN_SITE"
 
+    # FASE-B (REFACTOR-WHATSAPP, AC19a-consumo). Estado que define B y que C amplía
+    # despues: "el sitio no permite verificar el canal", ni a favor ni en contra.
+    # Se registra en `evidence_refs`, NO en `status`, a proposito: `status` es una
+    # enumeracion consumida por el gate de cobertura (`_JUSTIFIED_STATUSES`), por el
+    # reconciliador y por `_load_verified_in_site_pain_ids`; un valor nuevo ahi
+    # cambiaria la contabilidad de brechas sin decision de C. La migracion al
+    # tri-estado es AC19b (§6 del maestro), con dueno y sesion propios.
+    STATUS_NOT_VERIFIED_IN_SITE = "NO_VERIFICADO_EN_SITIO"
+
+    # Pains cuyo cierre exige confirmacion humana: una senal negativa sin alcance
+    # verificado NUNCA se redacta como ausencia confirmada (L-PF6).
+    PAINS_QUE_PIDEN_CONFIRMACION = ("no_whatsapp_visible",)
+
     # Mapping pain_id → asset_type cuya presencia en el sitio vivo resuelve el pain.
     # Base para propagar site_verification al ledger (FASE-P1-D F13).
+    # FASE-B: `no_whatsapp_visible` apunta ahora al entregable que si resuelve el pain
+    # (la guia de preparacion). Con `whatsapp_button` el ledger convertia una huella
+    # de plugin en "verificado en sitio", que es exactamente el falso positivo medido
+    # en Don Alfonso (`exists`/0.85 sin numero). Guardado por
+    # `test_pain_to_presence_asset_valida_contra_capa1`: debe ser assets[0] de Capa 1.
     PAIN_TO_PRESENCE_ASSET = {
-        "no_whatsapp_visible": "whatsapp_button",
+        "no_whatsapp_visible": "whatsapp_setup_guide",
         "whatsapp_conflict": "whatsapp_button",
         "no_hotel_schema": "hotel_schema",
         "no_org_schema": "org_schema",
@@ -144,6 +162,24 @@ class PainLedger:
                 continue
             presence = results.get(asset_type) or site_presence_report.get(asset_type)
             if not isinstance(presence, dict):
+                # FASE-B (REFACTOR-WHATSAPP, AC19a-consumo · L-PF6): el reporte no
+                # trae evidencia de presencia para el asset que resuelve el pain.
+                # Eso NO es una ausencia observada: es canal no verificado, y se
+                # registra como accion pendiente para que la narrativa pida
+                # confirmacion en vez de redactar "el hotel no tiene WhatsApp".
+                # El `status` sigue DETECTED (ver comentario de
+                # STATUS_NOT_VERIFIED_IN_SITE): la brecha continua divulgada.
+                if entry.pain_id in self.PAINS_QUE_PIDEN_CONFIRMACION:
+                    ref = (
+                        f"presence:{self.STATUS_NOT_VERIFIED_IN_SITE}:{asset_type}"
+                    )
+                    if ref not in entry.evidence_refs:
+                        entry.evidence_refs.append(ref)
+                        logger.info(
+                            "[PainLedger] %s → NO_VERIFICADO_EN_SITIO (asset %s sin "
+                            "evidencia verificada; se requiere confirmacion humana)",
+                            entry.pain_id, asset_type,
+                        )
                 continue
             status = str(presence.get("status", "")).lower()
             # FASE-SR-E (H7, L-SR3): criterio canónico — exists_with_issues

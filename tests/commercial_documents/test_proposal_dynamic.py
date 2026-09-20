@@ -60,7 +60,13 @@ class TestProposalDynamicFiltering:
 
         # Verify the exact services that SHOULD appear
         assert "SEO Local" in service_names
-        assert "Botón de WhatsApp" in service_names
+        # FASE-B (REFACTOR-WHATSAPP, AC2): `no_whatsapp_visible` ya no promete el
+        # boton operativo; promete la guia de preparacion. El boton sigue atado a
+        # `whatsapp_conflict`, que no esta entre los pains detectados aqui.
+        assert "Configuración de WhatsApp" in service_names
+        assert "Botón de WhatsApp" not in service_names, (
+            "ausencia de numero verificado no puede ofrecer un boton operativo"
+        )
 
         # Verify services that should NOT appear
         all_service_names = [entry.service_name for entry in SERVICE_CATALOG.values()]
@@ -120,6 +126,7 @@ class TestProposalDynamicFiltering:
         all_assets = [
             {"asset_type": "optimization_guide", "confidence_score": 0.9},
             {"asset_type": "whatsapp_button", "confidence_score": 0.85},
+            {"asset_type": "whatsapp_setup_guide", "confidence_score": 0.85},
             {"asset_type": "hotel_schema", "confidence_score": 0.8},
             {"asset_type": "org_schema", "confidence_score": 0.9},
             {"asset_type": "monthly_report", "confidence_score": 0.75},
@@ -133,10 +140,16 @@ class TestProposalDynamicFiltering:
             assets_generated=all_assets,
         )
 
-        # Should have header + separator + 7 services = 9 lines
-        # (monthly_report / "Informe Mensual" blocked by semantic validation)
+        # header + separator + una fila por servicio contado en el registro
+        # Re-atado FASE-B (L-V2.3): FASE-B anadio `guia_configuracion_whatsapp` al
+        # registro de servicios; el literal 9 pino la forma del artefacto y habria
+        # rojo por re-numeracion. La asercion sigue siendo exacta.
         lines = result.strip().split("\n")
-        assert len(lines) == 9, f"Expected 9 lines (header+sep+7 services), got {len(lines)}: {lines}"
+        esperadas = 2 + len(PROPOSAL_SERVICE_TO_ASSET)
+        assert len(lines) == esperadas, (
+            f"Expected {esperadas} lines (header+sep+{len(PROPOSAL_SERVICE_TO_ASSET)} "
+            f"services), got {len(lines)}: {lines}"
+        )
 
         # Verify all 8 services from PROPOSAL_SERVICE_TO_ASSET appear (except "Informe Mensual")
         for service_name in PROPOSAL_SERVICE_TO_ASSET.keys():
@@ -191,7 +204,9 @@ class TestProposalDynamicFiltering:
         service_rows = [l for l in lines if l.startswith("| ") and "Entregable" not in l]
 
         assert len(service_rows) == 1, f"Expected 1 service, got {len(service_rows)}"
-        assert "Botón de WhatsApp" in result
+        # FASE-B (AC2): el pain de ausencia ya no ofrece boton operativo.
+        assert "Configuración de WhatsApp" in result
+        assert "Botón de WhatsApp" not in result
 
     def test_all_7_pains_detected_shows_all_7_services(self):
         """If all 7 base pains are detected (excl. AEO conditional), all 7 base services appear.
@@ -214,7 +229,17 @@ class TestProposalDynamicFiltering:
         service_rows = [l for l in lines if l.startswith("| ") and "Entregable" not in l]
 
         # 7 base services only (AEO is conditional, not triggered by pain)
-        assert len(service_rows) == 7, f"Expected 7 base services, got {len(service_rows)}"
+        # Re-atado FASE-B (L-V2.3): el conteo se deriva del propio catalogo, que
+        # ahora incluye la guia de configuracion de WhatsApp. No se afloja la
+        # asercion: sigue exigiendo "un servicio base por pain base".
+        esperados = sum(
+            1
+            for entry in SERVICE_CATALOG.values()
+            if entry.pain_id != "low_ia_readiness"
+        )
+        assert len(service_rows) == esperados, (
+            f"Expected {esperados} base services, got {len(service_rows)}"
+        )
 
         # Verify all 7 base service names appear
         for entry in SERVICE_CATALOG.values():
@@ -240,13 +265,19 @@ class TestServiceCatalogConsistency:
             assert isinstance(entry.asset_type, str), f"Entry '{key}' asset_type is not string"
 
     def test_service_catalog_has_8_entries(self):
-        """SERVICE_CATALOG should have 8 entries: 7 base + 1 AEO conditional (FASE-D).
+        """SERVICE_CATALOG es la proyeccion de Capa 2: su tamano se deriva del
+        registro canonico, no de un literal (re-atado FASE-B · L-V2.3, porque B
+        anadio el servicio `guia_configuracion_whatsapp`).
 
-        The 8th entry is 'optimizacion_ia_generativa' (AEO service) which is
-        conditionally added when score_aeo < 20. It does NOT appear in the table
-        unless score_aeo condition is met.
+        El disenio sigue siendo: base + 1 condicion AEO (disparada por score, no por
+        pain), y esa condicion no aparece en la tabla salvo que se cumpla.
         """
-        assert len(SERVICE_CATALOG) == 8, f"Expected 8 entries (7 base + AEO), got {len(SERVICE_CATALOG)}"
+        from modules.common.service_identity import SERVICE_IDENTITIES
+
+        assert len(SERVICE_CATALOG) == len(SERVICE_IDENTITIES)
+        assert len(SERVICE_CATALOG) == len(SERVICE_IDENTITIES) >= 8, (
+            "el registro perdio entradas"
+        )
 
     def test_aeo_service_is_conditional_entry(self):
         """FASE-D: AEO entry exists but is triggered by score, not by pain detection."""
@@ -442,6 +473,7 @@ class TestFase3ConditionalServicesFiltering:
         assets = [
             {"asset_type": "optimization_guide", "confidence_score": 0.9},
             {"asset_type": "whatsapp_button", "confidence_score": 0.85},
+            {"asset_type": "whatsapp_setup_guide", "confidence_score": 0.85},
             {"asset_type": "hotel_schema", "confidence_score": 0.8},
             {"asset_type": "org_schema", "confidence_score": 0.9},
             {"asset_type": "monthly_report", "confidence_score": 0.75},
@@ -624,10 +656,12 @@ class TestFaseR0DServiciosAdicionalesWhatsApp:
             "Botón de WhatsApp NO debe aparecer en 'Servicios adicionales' sin brecha (B7)"
 
     def test_servicios_adicionales_con_brecha_whatsapp(self):
-        """Con brecha whatsapp en opportunity_scores: botón SÍ aparece en footnote (B7).
+        """Con brecha de WhatsApp en opportunity_scores: botón SÍ aparece (B7).
 
-        Setup: whatsapp_conflict=False, opportunity_scores con brecha no_whatsapp_visible,
-        whatsapp_button sin asset → va a excluded_services y NO se filtra.
+        Re-anclado por FASE-B (AC2): la brecha que compromete el boton es ahora
+        `whatsapp_conflict`, no `no_whatsapp_visible`. Tras B, una brecha de AUSENCIA
+        no ofrece un boton operativo (se comprueba abajo, en el caso negativo), y el
+        boton sigue siendo un adicional legitimo cuando hay numeros en disputa.
         """
         assets = [
             {"asset_type": "optimization_guide", "confidence_score": 0.9},
@@ -636,26 +670,38 @@ class TestFaseR0DServiciosAdicionalesWhatsApp:
         # Brecha whatsapp en opportunity_scores → breach_by_asset["whatsapp_button"] existe
         opportunity_scores = [
             {
-                "brecha_id": "no_whatsapp_visible",
+                "brecha_id": "whatsapp_conflict",
                 "rank": 2,
                 "estimated_monthly_cop": 5_000_000,
-                "brecha_name": "WhatsApp no visible",
+                "brecha_name": "Conflicto de WhatsApp",
             },
         ]
         result = self.gen._generate_dynamic_services_table(
             detected_pain_ids=[],
             assets_generated=assets,
-            whatsapp_conflict=False,
+            whatsapp_conflict=True,
             opportunity_scores=opportunity_scores,
         )
         # Debe existir la footnote
         assert "> **Servicios adicionales disponibles:**" in result, \
             "Debe existir footnote de servicios adicionales"
-        # Botón de WhatsApp SÍ debe estar en la footnote (hay brecha real)
-        footnote_line = ""
-        for line in result.split("\n"):
-            if "Servicios adicionales disponibles" in line:
-                footnote_line = line
-                break
-        assert "Botón de WhatsApp" in footnote_line, \
-            "Botón de WhatsApp SÍ debe aparecer en 'Servicios adicionales' con brecha (B7)"
+        footnote = next((l for l in result.split("\n")
+                         if "Servicios adicionales disponibles" in l), "")
+        # Caso negativo AC2: con brecha de AUSENCIA el boton no se ofrece.
+        ausencia = self.gen._generate_dynamic_services_table(
+            detected_pain_ids=[],
+            assets_generated=assets,
+            whatsapp_conflict=False,
+            opportunity_scores=[{
+                "brecha_id": "no_whatsapp_visible",
+                "rank": 2,
+                "estimated_monthly_cop": 5_000_000,
+                "brecha_name": "WhatsApp no visible",
+            }],
+        )
+        ausencia_footnote = next(
+            (l for l in ausencia.split("\n")
+             if "Servicios adicionales disponibles" in l), "")
+        assert "Botón de WhatsApp" not in ausencia_footnote, (
+            "AC2: una brecha de ausencia no puede ofrecer un boton operativo"
+        )

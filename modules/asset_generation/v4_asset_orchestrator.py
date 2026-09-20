@@ -283,7 +283,25 @@ class V4AssetOrchestrator:
         output_dir = self._prepare_output_directory(hotel_id, timestamp)
         
         # 2. Detectar problemas
-        pains = self.pain_mapper.detect_pains(audit_result, validation_summary, analytics_data)
+        # FASE-B (REFACTOR-WHATSAPP, AC1 · L-NC6 · DT4-R2): la señal HTML del canal
+        # se DERIVA UNA VEZ desde `audit_result.validation` y viaja a los TRES
+        # productores que deciden sobre WhatsApp (detect_pains y las dos pasadas de
+        # CoherenceValidator.validate). Antes de esto el orquestador preguntaba sin
+        # la señal y `main.py` / `V4DiagnosticGenerator` sí la pasaban: tres rutas,
+        # dos respuestas para la misma entrada (la divergencia que AC1 castiga).
+        whatsapp_html_detected = bool(
+            getattr(
+                getattr(audit_result, "validation", None),
+                "whatsapp_html_detected",
+                False,
+            )
+        )
+        pains = self.pain_mapper.detect_pains(
+            audit_result,
+            validation_summary,
+            analytics_data,
+            whatsapp_html_detected=whatsapp_html_detected,
+        )
 
         # FASE-0B: Crear PainLedger y guardar como fuente de verdad de brechas
         pain_ledger_path = output_dir / "v4_audit" / "pain_ledger.json"
@@ -308,6 +326,7 @@ class V4AssetOrchestrator:
         # 4. Validar coherencia ANTES de generar
         coherence = self.coherence_validator.validate(
             diagnostic_doc, proposal_doc, asset_specs, validation_summary,
+            whatsapp_html_detected=whatsapp_html_detected,  # FASE-B (AC1)
             site_presence_report=site_presence_report,  # FASE-2 (DT4-R2)
         )
         
@@ -446,6 +465,7 @@ class V4AssetOrchestrator:
             # Re-run coherence validation with real assets
             post_coherence_report = self.coherence_validator.validate(
                 diagnostic_doc, proposal_doc, asset_specs, validation_summary,
+                whatsapp_html_detected=whatsapp_html_detected,  # FASE-B (AC1)
                 generated_assets=generated_assets_dict,
                 site_presence_report=site_presence_report,  # FASE-2 (DT4-R2)
             )

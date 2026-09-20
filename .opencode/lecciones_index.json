@@ -6,7 +6,7 @@
     "archivos_contexto_escaneados": 36,
     "archivos_md_escaneados": 389,
     "ids_con_definicion": 320,
-    "ids_citados_sin_definicion": 48,
+    "ids_citados_sin_definicion": 49,
     "familias_incluidas": [
       "L",
       "DA",
@@ -2189,7 +2189,7 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17",
@@ -2256,7 +2256,7 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 75,
+      "total_citas": 76,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
@@ -2740,7 +2740,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 36,
+      "total_citas": 37,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -2799,7 +2799,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 49,
+      "total_citas": 50,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
@@ -3276,7 +3276,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 51,
+      "total_citas": 52,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -3428,7 +3428,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 12,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -3555,7 +3555,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -5005,6 +5005,15 @@
       ]
     },
     {
+      "id": "S-B1",
+      "familia": "S",
+      "total_citas": 5,
+      "planes_que_lo_citan": [
+        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
       "id": "S-B6",
       "familia": "S",
       "total_citas": 5,
@@ -5030,11 +5039,11 @@
       ]
     },
     {
-      "id": "S-B1",
-      "familia": "S",
-      "total_citas": 4,
+      "id": "D-E",
+      "familia": "D",
+      "total_citas": 3,
       "planes_que_lo_citan": [
-        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5052,6 +5061,24 @@
       "total_citas": 3,
       "planes_que_lo_citan": [
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-B2",
+      "familia": "S",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-B4",
+      "familia": "S",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
@@ -5106,19 +5133,12 @@
       ]
     },
     {
-      "id": "S-B2",
+      "id": "S-B3",
       "familia": "S",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
-      ]
-    },
-    {
-      "id": "S-B4",
-      "familia": "S",
-      "total_citas": 2,
-      "planes_que_lo_citan": [
-        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
+        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5263,14 +5283,6 @@
       "total_citas": 1,
       "planes_que_lo_citan": [
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29"
-      ]
-    },
-    {
-      "id": "S-B3",
-      "familia": "S",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
       ]
     },
     {

@@ -103,12 +103,16 @@ class TestPromisedAssetsProductionVerification:
         """C1: multiple assets verified in production → all PASSED."""
         all_planned = self._make_asset_specs(PROPOSAL_SERVICE_TO_ASSET.values())
 
-        # Only 4 generated, 3 verified in production
+        # Only 5 generated, 3 verified in production
+        # (FASE-B: +whatsapp_setup_guide, que es un asset entregado, nunca
+        #  "verificado en produccion": no existe en el sitio hasta que el hotel
+        #  confirma el numero)
         generated_assets = {
             "optimization_guide": {"can_use": True, "confidence_score": 0.9},
             "hotel_schema": {"can_use": True, "confidence_score": 0.8},
             "org_schema": {"can_use": True, "confidence_score": 0.7},
             "open_graph": {"can_use": True, "confidence_score": 0.6},
+            "whatsapp_setup_guide": {"can_use": True, "confidence_score": 0.6},
         }
 
         site_report = self._make_site_presence_report({
@@ -226,10 +230,11 @@ class TestPromisedAssetsProductionVerification:
         """C3: some generated, some in production, all covered → PASSED."""
         all_planned = self._make_asset_specs(PROPOSAL_SERVICE_TO_ASSET.values())
 
-        # 5 generated
+        # 6 generated (FASE-B: +whatsapp_setup_guide, nuevo servicio del registro)
         generated_assets = {
             "optimization_guide": {"can_use": True, "confidence_score": 0.9},
             "whatsapp_button": {"can_use": True, "confidence_score": 0.8},
+            "whatsapp_setup_guide": {"can_use": True, "confidence_score": 0.8},
             "hotel_schema": {"can_use": True, "confidence_score": 0.7},
             "org_schema": {"can_use": True, "confidence_score": 0.6},
             "open_graph": {"can_use": True, "confidence_score": 0.5},

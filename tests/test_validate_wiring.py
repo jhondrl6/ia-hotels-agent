@@ -295,14 +295,28 @@ def test_excepcion_que_ya_no_ampa_nada_es_en_si_una_violacion(tmp_path):
     assert "allowlist" in emparejado["abiertas"][0]["detalle"]
 
 
-def test_ignore_known_deja_ver_lo_que_tapan_las_excepciones(reporte_repo,                                                   reporte_repo_sin_excepciones):
-    """El mecanismo anti-allowlist: cualquiera puede pedir el rojo completo del repo real."""
+def test_ignore_known_deja_ver_lo_que_tapan_las_excepciones(reporte_repo,
+                                                            reporte_repo_sin_excepciones):
+    """El mecanismo anti-allowlist: cualquiera puede pedir el rojo completo del repo real.
+
+    Re-anclado por FASE-B (AC1): las tres omisiones de `v4_asset_orchestrator.py` que
+    G registro con dueno FASE-B quedaron corregidas y sus excepciones tipadas se
+    retiraron, asi que sobre el arbol vivo ya no hay nada que tapar y las dos pasadas
+    coinciden en cero. El mecanismo de `--ignore-known` no queda huerfano: lo cubren
+    los casos sinteticos de este archivo (`test_caller_nuevo_en_archivo_nuevo_que_omite_
+    la_senal_rompe`, `test_ocultar_la_senal_tras_kwargs_opacos_rompe`), que no dependen
+    del estado del repo y por tanto no se vuelven verdes al cerrarse un hallazgo.
+    """
     con_exc = reporte_repo
     sin_exc = reporte_repo_sin_excepciones
     assert con_exc["violaciones"] == [], (
         "el quick va a rojo sobre el arbol vivo; los hallazgos conocidos deberian estar "
         "registrados con dueno, no sin registrar")
-    assert len(sin_exc["violaciones"]) > len(con_exc["violaciones"])
+    assert sin_exc["violaciones"] == [], (
+        "sin excepciones aparece un hallazgo que la pasada normal tapo: alguna "
+        "excepcion sigue vigente y deberia estar declarada")
+    assert con_exc["excepciones_aplicadas"] == [], (
+        "quedan excepciones tipadas sin hallazgo que amparar: borrarlas")
     assert len(con_exc["excepciones_aplicadas"]) == len(sin_exc["violaciones"]) - \
         len(con_exc["violaciones"])
 
@@ -333,30 +347,28 @@ def test_una_politica_que_declara_un_simbolo_inexistente_hace_rojo(tmp_path):
 
 
 # ------------------------------------------------- AC7 sobre la divergencia real de hoy
-def test_el_rojo_de_ac7_llega_a_la_divergencia_vigente_en_el_repo(        reporte_repo_sin_excepciones, reporte_repo):
-    """El verificador debe poder nombrar la divergencia F-A' tal como esta hoy.
+def test_el_rojo_de_ac7_llega_a_la_divergencia_vigente_en_el_repo(
+        reporte_repo_sin_excepciones, reporte_repo):
+    """El verificador debe poder nombrar la divergencia F-A' y ahora debe probar que se cerró.
 
-    Si en el codigo actual saliera verde, la cobertura del verificador estaria mal, no el
-    producto. Medido: `V4AssetOrchestrator.generate_assets` omite la senal en TRES
+    Medido por G: `V4AssetOrchestrator.generate_assets` omitia la senal en TRES
     invocaciones (una a `detect_pains`, dos a `validate`), no en una como decia el plan.
+    FASE-B (AC1) propago la senal en las tres, asi que la cobertura del guard se
+    re-medida aqui en el sentido contrario: cero omisiones en el orquestador y cero
+    excepciones vigentes. Si alguien vuelve a quitar el kwarg, este test y el check 11
+    del quick vuelven a rojo con nombre y linea.
     """
     reporte = reporte_repo_sin_excepciones
     hallazgos = [v for v in reporte["violaciones"] if v["tipo"] == "SENAL_OMITIDA"]
     del_orquestador = [h for h in hallazgos
                        if h["archivo"] == "modules/asset_generation/v4_asset_orchestrator.py"]
-    assert len(del_orquestador) == 3, [h["linea"] for h in del_orquestador]
-    simbolos = sorted(h["simbolo"] for h in del_orquestador)
-    assert simbolos == ["CoherenceValidator.validate", "CoherenceValidator.validate",
-                        "PainSolutionMapper.detect_pains"]
-    for h in del_orquestador:
-        assert "whatsapp_html_detected" in h["detalle"]
-    # Y estan publicados con dueno y condicion de baja, no silenciados.
-    amparadas = {a["linea_amparada"]: a for a in
-                 reporte_repo["excepciones_aplicadas"]}
-    for h in del_orquestador:
-        assert h["linea"] in amparadas, f"halla {h['linea']} sin excepcion registrada"
-        assert amparadas[h["linea"]]["dueno"] == "FASE-B"
-        assert amparadas[h["linea"]]["ac"] == "AC1"
+    assert del_orquestador == [], (
+        "las tres invocaciones del orquestador deben propagar whatsapp_html_detected "
+        "(FASE-B/AC1); rojos: " + str([(h["linea"], h["simbolo"]) for h in del_orquestador])
+    )
+    # Y el registro de excepciones quedo vacio: una excepcion sin hallazgo seria
+    # `EXCEPCION_VAGA` y romper el quick, no un permiso silencioso.
+    assert reporte_repo["excepciones_aplicadas"] == []
 
 
 def test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion(reporte_repo):
@@ -419,12 +431,25 @@ def _correr(*args: str) -> subprocess.CompletedProcess:
                           capture_output=True, text=True)
 
 
-def test_exit_codes_del_cli():
-    """0 conforme, 1 violaciones, 2 arbol inexistente. Un 2 no puede leerse como verde."""
+def test_exit_codes_del_cli(tmp_path):
+    """0 conforme, 1 violaciones, 2 arbol inexistente. Un 2 no puede leerse como verde.
+
+    Re-anclado por FASE-B (AC1): el rojo del repo real se conseguia con
+    `--ignore-known` sobre las tres omisiones del orquestador, que B corrigio. Para
+    que el codigo de salida 1 siga cubierto sin depender del estado del arbol, se
+    produce la violacion en un arbol sintetico.
+    """
     ok = _correr("--root", str(ROOT))
     assert ok.returncode == 0, ok.stdout + ok.stderr
 
-    rojo = _correr("--root", str(ROOT), "--ignore-known")
+    culpable = _arbol(tmp_path, {
+        "productores.py": PRODUCTORES,
+        "caller_olvidado.py": (
+            "from .productores import PainSolutionMapper\n"
+            "PainSolutionMapper().detect_pains(a, s, x)\n"
+        ),
+    })
+    rojo = _correr("--root", str(culpable))
     assert rojo.returncode == 1
     assert "SENAL_OMITIDA" in rojo.stdout
 

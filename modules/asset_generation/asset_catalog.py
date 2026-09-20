@@ -66,6 +66,25 @@ ASSET_CATALOG: Dict[str, AssetCatalogEntry] = {
         status=AssetStatus.IMPLEMENTED,
         promised_by=["no_whatsapp_visible", "whatsapp_conflict"]  # FASE-5: "always" ELIMINADO - bug sistemico
     ),
+    # FASE-B (REFACTOR-WHATSAPP, AC2): entregable honesto de solicitud/validacion.
+    # No necesita un numero verificado para existir: su contenido es precisamente la
+    # peticion de ese numero. Por eso `required_field` es `hotel_data` (siempre
+    # presente) y no "whatsapp": enlazarlo al numero reconvertiria la ausencia en un
+    # boton con wa.me vacio (AC6, rama C). `required_confidence` respeta el piso del
+    # guard `test_all_implemented_assets_keep_minimum_floor` (0.4): con ausencia de
+    # datos el preflight degrada a WARNING y el archivo sale marcado ESTIMATED_, que
+    # es exactamente lo que es — una peticion, no una instalacion verificada.
+    "whatsapp_setup_guide": AssetCatalogEntry(
+        asset_type="whatsapp_setup_guide",
+        template="whatsapp_setup_guide_template.md",
+        output_name="{prefix}guia_configuracion_whatsapp{suffix}.md",
+        required_field="hotel_data",
+        required_confidence=0.4,
+        fallback=None,
+        block_on_failure=False,
+        status=AssetStatus.IMPLEMENTED,
+        promised_by=["no_whatsapp_visible"]
+    ),
     "whatsapp_conflict_guide": AssetCatalogEntry(
         asset_type="whatsapp_conflict_guide",
         template="whatsapp_conflict_guide_template.md",

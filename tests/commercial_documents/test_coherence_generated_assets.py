@@ -54,18 +54,19 @@ class TestCoherenceGeneratedAssets:
         assert result.passed is False
 
     def test_generated_assets_7_of_8_score(self, validator, mock_diagnostic):
-        """All 8 assets generated with can_use=True → score = 1.0."""
+        """Todos los assets planificados salen con can_use=True → score 1.0.
+
+        Re-atado FASE-B (L-V2.3): el fixture se DERIVA del universo planificado en
+        vez de enumerar 8 literales. FASE-B anyadio `whatsapp_setup_guide` al
+        registro de servicios; pinear la lista dejaba el gate rojo por re-numeracion,
+        no por el contrato que esta prueba protege.
+        """
         all_planned = self._make_asset_specs(PROPOSAL_SERVICE_TO_ASSET.values())
         generated_assets = {
-            'optimization_guide': {'can_use': True, 'confidence_score': 0.9},
-            'whatsapp_button': {'can_use': True, 'confidence_score': 0.8},
-            'hotel_schema': {'can_use': True, 'confidence_score': 0.7},
-            'monthly_report': {'can_use': True, 'confidence_score': 0.6},
-            'faq_page': {'can_use': True, 'confidence_score': 0.5},
-            'open_graph': {'can_use': True, 'confidence_score': 0.4},
-            'llms_txt': {'can_use': True, 'confidence_score': 0.3},
-            'org_schema': {'can_use': True, 'confidence_score': 0.85},
+            spec.asset_type: {"can_use": True, "confidence_score": 0.8}
+            for spec in all_planned
         }
+        assert len(generated_assets) == len(PROPOSAL_SERVICE_TO_ASSET)
         result = validator._check_promised_assets_exist(
             all_planned, mock_diagnostic, generated_assets=generated_assets
         )

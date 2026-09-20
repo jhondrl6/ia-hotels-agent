@@ -155,40 +155,55 @@ class WhatsAppConflictGuideGenerator:
         gbp_rating: Optional[float],
         gbp_review_count: Optional[int],
     ) -> str:
-        """Build recommendation for which number to use.
-        
-        Logic:
-        1. If GBP has 10+ reviews, recommend GBP number (more public trust)
-        2. If web number is in schema, recommend it (more recent)
-        3. If neither has clear advantage, show both and let client decide
+        """Devuelve la seccion de cierre: NINGUN numero se declara operativo.
+
+        FASE-B (REFACTOR-WHATSAPP, AC2). Logica retirada: hasta aqui la guia elegia
+        el numero "correcto" por cantidad de reseñas de GBP (>=10) y, a falta de
+        esas, por antiguedad aparente de la web. Un numero en CONFLICTO no es un
+        numero verificado: el conteo de reseñas mide confianza del perfil, no que
+        alguien conteste ese WhatsApp. Como un numero elegido mal se publica como
+        boton operativo, la eleccion corresponde exclusivamente al hotel.
+
+        `gbp_rating` y `gbp_review_count` se conservan en la firma porque son
+        contexto que el llamador ya tiene, y ahora son solo informativos: ninguna
+        decision se apoya en ellos.
         """
-        if phone_gbp and gbp_review_count and gbp_review_count >= 10:
+        candidatos = []
+        if phone_web:
+            candidatos.append(f"- **Web:** `{phone_web}`")
+        if phone_gbp:
+            linea = f"- **Google Business Profile:** `{phone_gbp}`"
+            if gbp_review_count:
+                linea += f" (perfil con {gbp_review_count} reseñas"
+                linea += (
+                    f" y nota {gbp_rating}/5)"
+                    if gbp_rating is not None
+                    else ")"
+                )
+            candidatos.append(linea)
+
+        if not candidatos:
             return (
-                f"**Recomendamos usar el numero de Google Business Profile:** "
-                f"`{phone_gbp}`\n\n"
-                f"Razon: Su perfil de Google tiene {gbp_review_count} reseñas y "
-                f"calificacion de {gbp_rating}/5. Este es el numero que los "
-                f"viajeros confian al buscar su hotel. Unificarlo en su web "
-                f"eliminara la confusion."
+                "**Ningun candidato de numero fue capturado en esta auditoria.** "
+                "El canal queda sin resolver hasta que el hotel indique cual es el "
+                "numero que atiende. Sin ese dato no se publica boton alguno."
             )
-        elif phone_web:
-            return (
-                f"**Recomendamos usar el numero de su sitio web:** "
-                f"`{phone_web}`\n\n"
-                f"Razon: Este es el numero que aparece en su propio sitio web. "
-                f"Unifiquelo en Google Business Profile para que todos los "
-                f"canales muestren el mismo contacto."
-            )
-        elif phone_gbp:
-            return (
-                f"**Recomendamos usar el numero de Google Business Profile:** "
-                f"`{phone_gbp}`\n\n"
-                f"Razon: Este es el numero visible en Google. Unifiquelo en "
-                f"su sitio web para mantener consistencia."
-            )
-        else:
-            return (
-                "No se pudo determinar cual numero es el correcto. "
-                "Por favor, verifique cual numero vigila activamente y "
-                "actualice ambos canales (web y Google) con ese numero."
-            )
+
+        return (
+            "**Los dos numeros son candidatos, ninguno es el oficial hasta que usted "
+            "lo confirme.**\n\n"
+            + "\n".join(candidatos)
+            + "\n\n"
+            "Esta guia **no elige** cual de ellos publicar. Elegir por cantidad de "
+            "resenas o por cual aparece en la web volveria a producir el defecto que "
+            "se esta corrigiendo: un boton operativo apuntando a un numero que nadie "
+            "confirma como canal de reservas.\n\n"
+            "Acciones requeridas antes de dar el canal por resuelto:\n"
+            "1. Confirmar por escrito cual de los numeros atiende WhatsApp hoy.\n"
+            "2. Retirar o actualizar el otro en su canal (web o Google Business "
+            "Profile) para que no queden dos versiones en publico.\n"
+            "3. Verificar que el boton, una vez generado, abre el chat del numero "
+            "confirmado.\n\n"
+            "Hasta el paso 1 el canal se reporta como **preparacion pendiente**, no "
+            "como instalacion realizada, y no se promete boton listo."
+        )

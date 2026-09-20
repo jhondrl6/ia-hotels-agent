@@ -81,9 +81,33 @@ SERVICE_IDENTITIES: Tuple[ServiceIdentity, ...] = (
         key="boton_whatsapp",
         service_name="Botón de WhatsApp",
         asset_type="whatsapp_button",
-        pain_id="no_whatsapp_visible",
+        # FASE-B (REFACTOR-WHATSAPP, AC2): el disparador pasa a `whatsapp_conflict`.
+        # `no_whatsapp_visible` ya NO planifica el boton (promete la guia de
+        # preparacion de abajo), y `test_pain_ids_are_unique_in_catalog` exige un
+        # servicio por pain. Tras B el boton entra al plan solo por conflicto, que
+        # es ademas la ruta producible que AC6 reclama para su prueba.
+        pain_id="whatsapp_conflict",
         description="Sus huéspedes reservan con 1 clic desde su web",
-        brecha_candidates=("whatsapp_conflict", "no_whatsapp_visible"),
+        brecha_candidates=("whatsapp_conflict",),
+    ),
+    # FASE-B (REFACTOR-WHATSAPP, AC2): cuando no hay numero verificable el servicio
+    # entregable es la SOLICITUD de configuracion, no un boton operativo.
+    # `counts_in_alignment=False` es decision MEDIDA, no comodidad: con True el
+    # servicio entraba al universo fijo que el gate `proposal_asset_alignment` y la
+    # matriz exigen ver entregado en TODA corrida (el dolor no es condicional al
+    # pain), y eso rompio 15 pruebas del gate/matrix ademas de degradar la cobertura
+    # de hoteles que nunca tuvieron brecha de WhatsApp. La identidad, la matriz de
+    # calidad de la propuesta (que recorre SERVICE_CATALOG por pain detectado), el
+    # ledger y la generacion si propagan el servicio; lo que no se hace es prometerlo
+    # siempre. Dueño de reabrirlo con su contrato de denominador: FASE-D/E.
+    ServiceIdentity(
+        key="guia_configuracion_whatsapp",
+        service_name="Configuración de WhatsApp",
+        asset_type="whatsapp_setup_guide",
+        pain_id="no_whatsapp_visible",
+        description="Preparación y validación del canal WhatsApp: qué número publicar y cómo",
+        brecha_candidates=(),
+        counts_in_alignment=False,
     ),
     ServiceIdentity(
         key="schema_hotel",

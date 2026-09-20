@@ -1,0 +1,125 @@
+{
+  "fase": "FASE-B",
+  "generado": "2026-09-20T22:23:37.352710+00:00",
+  "instrumento": "run_mutations.py (mutar el guard, no la asercion)",
+  "mutaciones": [
+    {
+      "id": "M1",
+      "guard": "AC1 · senal propagate a detect_pains",
+      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
+      "espera": "rojo por AST: la invocacion pierde el kwarg",
+      "pytest_exit_code": 1,
+      "pytest_resumen": [
+        "1 failed in 1.92s"
+      ],
+      "wiring_exit_code": 1,
+      "wiring_linea": [
+        "[FAIL] Wiring: 1 violacion(es) de cableado | 174 llamadas descubiertas en 614 archivos | gobernadas 75 (conformes 20, omisiones 1) | amparadas por excepcion 0 | violaciones 1 | receptores no resueltos 25"
+      ],
+      "rojo_como_se_esperaba": true,
+      "restaurado_sha256": true
+    },
+    {
+      "id": "M2",
+      "guard": "AC1 · las TRES invocaciones, no una",
+      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
+      "espera": "rojo: pre-gen sin senal (y wiring lo reporta)",
+      "pytest_exit_code": 1,
+      "pytest_resumen": [
+        "1 failed, 12 passed in 1.58s"
+      ],
+      "wiring_exit_code": 1,
+      "wiring_linea": [
+        "[FAIL] Wiring: 1 violacion(es) de cableado | 174 llamadas descubiertas en 614 archivos | gobernadas 75 (conformes 20, omisiones 1) | amparadas por excepcion 0 | violaciones 1 | receptores no resueltos 25"
+      ],
+      "rojo_como_se_esperaba": true,
+      "restaurado_sha256": true
+    },
+    {
+      "id": "M3",
+      "guard": "AC2 · can_generate incondicional retirado",
+      "archivo": "modules/commercial_documents/pain_solution_mapper.py",
+      "espera": "rojo: el conflicto vuelve a prometer boton listo",
+      "pytest_exit_code": 1,
+      "pytest_resumen": [
+        "1 failed in 1.69s"
+      ],
+      "wiring_exit_code": null,
+      "wiring_linea": [],
+      "rojo_como_se_esperaba": true,
+      "restaurado_sha256": true
+    },
+    {
+      "id": "M4",
+      "guard": "AC2 · ausencia promete setup",
+      "archivo": "modules/commercial_documents/pain_solution_mapper.py",
+      "espera": "rojo: la ausencia ofrece boton operativo otra vez",
+      "pytest_exit_code": 1,
+      "pytest_resumen": [
+        "1 failed in 1.47s"
+      ],
+      "wiring_exit_code": null,
+      "wiring_linea": [],
+      "rojo_como_se_esperaba": true,
+      "restaurado_sha256": true
+    },
+    {
+      "id": "M5",
+      "guard": "AC2 · la guia no lleva numero ni enlace",
+      "archivo": "modules/asset_generation/whatsapp_setup_guide.py",
+      "espera": "rojo: la guia de preparacion publica un numero (y con el, un destino)",
+      "pytest_exit_code": 1,
+      "pytest_resumen": [
+        "1 failed in 1.58s"
+      ],
+      "wiring_exit_code": null,
+      "wiring_linea": [],
+      "rojo_como_se_esperaba": true,
+      "restaurado_sha256": true
+    },
+    {
+      "id": "M6",
+      "guard": "AC7/B · excepciones tipadas retiradas",
+      "archivo": "scripts/validate_wiring.py",
+      "espera": "rojo: excepcion vigente sin hallazgo que amparar (EXCEPCION_VAGA)",
+      "pytest_exit_code": 1,
+      "pytest_resumen": [
+        "1 failed in 26.66s"
+      ],
+      "wiring_exit_code": 1,
+      "wiring_linea": [
+        "[FAIL] Wiring: 1 violacion(es) de cableado | 174 llamadas descubiertas en 614 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 1 | receptores no resueltos 25"
+      ],
+      "rojo_como_se_esperaba": true,
+      "restaurado_sha256": true
+    },
+    {
+      "id": "M7",
+      "guard": "A1 · resolucion separada del universo contado",
+      "archivo": "modules/asset_generation/proposal_asset_alignment.py",
+      "espera": "rojo: el servicio condicional entra al universo contado del gate",
+      "pytest_exit_code": 1,
+      "pytest_resumen": [
+        "1 failed in 1.71s"
+      ],
+      "wiring_exit_code": null,
+      "wiring_linea": [],
+      "rojo_como_se_esperaba": true,
+      "restaurado_sha256": true
+    },
+    {
+      "id": "M8",
+      "guard": "A1 · la tabla de resolucion cubre el registro completo",
+      "archivo": "modules/asset_generation/proposal_asset_alignment.py",
+      "espera": "rojo: resolver vuelve a ser igual a contar (el doble uso que A1 separo)",
+      "pytest_exit_code": 1,
+      "pytest_resumen": [
+        "1 failed in 1.47s"
+      ],
+      "wiring_exit_code": null,
+      "wiring_linea": [],
+      "rojo_como_se_esperaba": true,
+      "restaurado_sha256": true
+    }
+  ]
+}

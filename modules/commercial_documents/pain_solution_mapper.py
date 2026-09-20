@@ -58,14 +58,21 @@ class PainSolutionMapper:
     """
     
     PAIN_SOLUTION_MAP = {
+        # FASE-B (REFACTOR-WHATSAPP, AC2): la AUSENCIA de un numero verificable no
+        # promete un boton operativo. Entrega una guia de configuracion/solicitud de
+        # validacion, que no contiene numero ni enlace. El boton sigue planificable
+        # solo por `whatsapp_conflict`, que si tiene candidatos de numero.
         "no_whatsapp_visible": {
-            "assets": ["whatsapp_button"],
+            "assets": ["whatsapp_setup_guide"],
             "confidence_required": 0.9,
             "priority": 1,
             "validation_fields": ["whatsapp_number"],
             "estimated_impact": "high",
             "name": "Sin WhatsApp Visible",
-            "description": "No se detecta botón o enlace de WhatsApp en la web"
+            "description": (
+                "No se confirmo un numero de WhatsApp utilizable en el sitio; "
+                "requiere validacion del hotel antes de publicar boton"
+            )
         },
         "whatsapp_conflict": {
             "assets": ["whatsapp_button", "whatsapp_conflict_guide"],
@@ -304,6 +311,10 @@ class PainSolutionMapper:
     
     ASSET_NAMES = {
         "whatsapp_button": "Botón WhatsApp",
+        # FASE-B (REFACTOR-WHATSAPP, AC2): nombre comercial del entregable de
+        # solicitud/validacion. Sin esta clave `Solution.asset_name` caeria al
+        # fallback del `asset_type` crudo y la propuesta mostraria un id tecnico.
+        "whatsapp_setup_guide": "Configuración de WhatsApp",
         "faq_page": "Página de FAQ",
         "review_plan": "Plan de Gestión de Reviews",
         "barra_reserva_movil": "Barra de Reserva Móvil",
@@ -920,50 +931,51 @@ class PainSolutionMapper:
             
             avg_confidence = sum(field_confidences) / len(field_confidences) if field_confidences else 0.0
             
-            # Special case: whatsapp_conflict always generates whatsapp_button
-            # because the conflict itself justifies the asset as solution
-            if pain_id == "whatsapp_conflict":
-                can_generate = True  # El conflicto justifica generar el asset
-                reason = f"Confidence {avg_confidence:.2f} vs required {min_confidence}"
-            else:
-                can_generate = avg_confidence >= min_confidence
-                reason = (
-                    f"Confidence {avg_confidence:.2f} vs required {min_confidence}"
-                    if can_generate
-                    else f"Insufficient confidence ({avg_confidence:.2f} < {min_confidence})"
+            # FASE-B (REFACTOR-WHATSAPP, AC2): se RETIRA el caso especial que
+            # forzaba can_generate=True para `whatsapp_conflict`. Un numero en
+            # conflicto no es un numero verificado: la barra del mapping manda, y
+            # el boton deja de prometerse "listo" por el solo hecho de haber
+            # candidatos en disputa. El conflicto sigue divulgado (el pain y la
+            # guia de conflicto permanecen); lo que desaparece es la promesa
+            # automatica de resolucion.
+            can_generate = avg_confidence >= min_confidence
+            reason = (
+                f"Confidence {avg_confidence:.2f} vs required {min_confidence}"
+                if can_generate
+                else f"Insufficient confidence ({avg_confidence:.2f} < {min_confidence})"
+            )
+            # FASE-SR-E (D-PF3, L-SR4): para la brecha de AUSENCIA genuina
+            # de schema, el contrato del catálogo manda — con fuentes
+            # disponibles (GBP/web) el fallback ``generate_basic_schema``
+            # (block_on_failure=False) permite generar la versión básica;
+            # sin fuentes → bloqueo explícito con justified_skip. La
+            # confianza de la brecha ("schema_hotel_detected") no mide las
+            # fuentes para CONSTRUIR el asset (L-SR4).
+            if not can_generate and pain_id == "no_hotel_schema":
+                from modules.asset_generation.asset_catalog import ASSET_CATALOG
+                catalog_entry = ASSET_CATALOG.get(asset_type)
+                has_sources = any(
+                    score > 0 for score in available_confidence.values()
                 )
-                # FASE-SR-E (D-PF3, L-SR4): para la brecha de AUSENCIA genuina
-                # de schema, el contrato del catálogo manda — con fuentes
-                # disponibles (GBP/web) el fallback ``generate_basic_schema``
-                # (block_on_failure=False) permite generar la versión básica;
-                # sin fuentes → bloqueo explícito con justified_skip. La
-                # confianza de la brecha ("schema_hotel_detected") no mide las
-                # fuentes para CONSTRUIR el asset (L-SR4).
-                if not can_generate and pain_id == "no_hotel_schema":
-                    from modules.asset_generation.asset_catalog import ASSET_CATALOG
-                    catalog_entry = ASSET_CATALOG.get(asset_type)
-                    has_sources = any(
-                        score > 0 for score in available_confidence.values()
+                if (
+                    catalog_entry is not None
+                    and catalog_entry.fallback
+                    and not catalog_entry.block_on_failure
+                    and has_sources
+                ):
+                    can_generate = True
+                    reason = (
+                        f"D-PF3 fallback '{catalog_entry.fallback}': ausencia "
+                        f"genuina con fuentes disponibles (confianza media "
+                        f"{avg_confidence:.2f} < {min_confidence} requerida "
+                        f"por la brecha)"
                     )
-                    if (
-                        catalog_entry is not None
-                        and catalog_entry.fallback
-                        and not catalog_entry.block_on_failure
-                        and has_sources
-                    ):
-                        can_generate = True
-                        reason = (
-                            f"D-PF3 fallback '{catalog_entry.fallback}': ausencia "
-                            f"genuina con fuentes disponibles (confianza media "
-                            f"{avg_confidence:.2f} < {min_confidence} requerida "
-                            f"por la brecha)"
-                        )
-                    elif not has_sources:
-                        reason = (
-                            f"Sin fuentes para generar el asset (confianza "
-                            f"{avg_confidence:.2f}) — bloqueo con justified_skip "
-                            f"(D-PF3)"
-                        )
+                elif not has_sources:
+                    reason = (
+                        f"Sin fuentes para generar el asset (confianza "
+                        f"{avg_confidence:.2f}) — bloqueo con justified_skip "
+                        f"(D-PF3)"
+                    )
             
             # Determine confidence level
             if avg_confidence >= 0.9:

@@ -9,6 +9,7 @@ Google Maps Optimizado was removed in FASE-PROP-D.
 """
 
 import pytest
+from modules.common.service_identity import SERVICE_IDENTITIES
 from modules.asset_generation.proposal_asset_alignment import (
     PROPOSAL_SERVICE_TO_ASSET,
     ALL_PROMISED_SERVICES,
@@ -30,12 +31,18 @@ class TestProposalAssetMapping:
     """Test the proposal service to asset mapping."""
 
     def test_all_7_services_mapped(self):
-        """FASE-3 (BUG-10): 7 promised services mapped (monthly_report excluded)."""
-        assert len(PROPOSAL_SERVICE_TO_ASSET) == 7
+        """FASE-3 (BUG-10) · re-atado FASE-B (L-V2.3): el universo contado se deriva
+        del registro canonico (Capa 2), no de un literal. FASE-B anadio el servicio
+        `guia_configuracion_whatsapp`, que entra en el conteo; pinear `7` habria
+        producido un rojo por re-numeracion y no por el contrato."""
+        esperado = sum(
+            1 for i in SERVICE_IDENTITIES if i.counts_in_alignment
+        )
+        assert len(PROPOSAL_SERVICE_TO_ASSET) == esperado
 
     def test_all_promised_services_count(self):
-        """FASE-3 (BUG-10): ALL_PROMISED_SERVICES must have 7 entries (monthly_report excluded)."""
-        assert len(ALL_PROMISED_SERVICES) == 7
+        """FASE-3 (BUG-10) · re-atado FASE-B: coherencia interna del registro."""
+        assert len(ALL_PROMISED_SERVICES) == len(PROPOSAL_SERVICE_TO_ASSET)
 
     def test_mapping_covers_all_services(self):
         """Every service in ALL_PROMISED_SERVICES must be in the mapping."""
@@ -76,6 +83,7 @@ class TestVerifyAlignment:
             {"asset_type": "faq_page", "confidence_score": 0.8},
             {"asset_type": "open_graph", "confidence_score": 0.8},
             {"asset_type": "llms_txt", "confidence_score": 0.8},
+            {"asset_type": "whatsapp_setup_guide", "confidence_score": 0.8},
         ]
         report = verify_proposal_asset_alignment(
             proposal_services=ALL_PROMISED_SERVICES,
@@ -83,10 +91,10 @@ class TestVerifyAlignment:
         )
         assert report.all_aligned is True
         assert len(report.missing) == 0
-        assert len(report.aligned) == 7
+        assert len(report.aligned) == len(PROPOSAL_SERVICE_TO_ASSET)
 
     def test_missing_assets_detected(self):
-        """FASE-3 (BUG-10): 6 of 7 missing (monthly_report excluded)."""
+        """FASE-3 (BUG-10) · re-atado FASE-B: solo optimization_guide esta presente."""
         assets = [
             {"asset_type": "optimization_guide", "confidence_score": 0.8},
         ]
@@ -95,7 +103,7 @@ class TestVerifyAlignment:
             generated_assets=assets,
         )
         assert report.all_aligned is False
-        assert len(report.missing) == 6
+        assert len(report.missing) == len(PROPOSAL_SERVICE_TO_ASSET) - 1
         assert len(report.aligned) == 1
 
     def test_low_quality_assets_detected(self):
@@ -118,12 +126,12 @@ class TestVerifyAlignment:
         assert report.low_quality[0].service_name == "Optimización para IA Generativa"
 
     def test_empty_assets_all_missing(self):
-        """FASE-3 (BUG-10): With no assets, all 7 services missing (monthly_report excluded)."""
+        """FASE-3 (BUG-10) · re-atado FASE-B: con cero assets falta todo el registro."""
         report = verify_proposal_asset_alignment(
             proposal_services=ALL_PROMISED_SERVICES,
             generated_assets=[],
         )
-        assert len(report.missing) == 7
+        assert len(report.missing) == len(PROPOSAL_SERVICE_TO_ASSET)
         assert len(report.aligned) == 0
         assert report.alignment_percentage == 0.0
 
@@ -137,13 +145,14 @@ class TestVerifyAlignment:
             {"asset_type": "faq_page", "confidence_score": 0.8},
             {"asset_type": "open_graph", "confidence_score": 0.8},
             {"asset_type": "llms_txt", "confidence_score": 0.8},
+            {"asset_type": "whatsapp_setup_guide", "confidence_score": 0.8},
         ]
         report = verify_proposal_asset_alignment(
             proposal_services=[],
             generated_assets=assets,
         )
         assert report.all_aligned is True
-        assert report.total_services == 7
+        assert report.total_services == len(PROPOSAL_SERVICE_TO_ASSET)
 
 
 class TestAlignmentReport:
@@ -162,7 +171,7 @@ class TestAlignmentReport:
         assert "total_services" in d
         assert "aligned_count" in d
         assert "missing_count" in d
-        assert d["total_services"] == 7
+        assert d["total_services"] == len(PROPOSAL_SERVICE_TO_ASSET)
 
 
 class TestHelpers:
@@ -175,7 +184,7 @@ class TestHelpers:
             generated_assets=[],
         )
         missing = get_missing_services(report)
-        assert len(missing) == 7
+        assert len(missing) == len(PROPOSAL_SERVICE_TO_ASSET)
         assert "Botón de WhatsApp" in missing
         assert "Optimización para IA Generativa" in missing
 
@@ -275,7 +284,9 @@ class TestDivergenceDetection:
         )
 
         # Should be in missing (not present_in_production)
-        assert len(report.missing) == 7, f"Expected 7 missing, got {len(report.missing)}"
+        assert len(report.missing) == len(
+            PROPOSAL_SERVICE_TO_ASSET
+        ), f"Expected {len(PROPOSAL_SERVICE_TO_ASSET)} missing, got {len(report.missing)}"
         assert len(report.present_in_production) == 0
         assert report.all_aligned is False
 
@@ -315,8 +326,9 @@ class TestDivergenceDetection:
         assert hotel_entry.asset_type == "hotel_schema"
         assert hotel_entry.presence_status == "exists"
         assert hotel_entry.status == "present_in_production"
-        # Other 6 services still missing (org_schema + 5 others, monthly_report excluded)
-        assert len(report.missing) == 6
+        # Todos los demas servicios siguen faltando (re-atado FASE-B: se deriva del
+        # registro, porque FASE-B anadio el servicio de configuracion de WhatsApp)
+        assert len(report.missing) == len(PROPOSAL_SERVICE_TO_ASSET) - 1
 
     def test_no_audit_schema_backward_compat(self):
         """FASE-12B: Without audit_schema, presence EXISTS → present_in_production (backward compatible)."""

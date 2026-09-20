@@ -255,6 +255,12 @@ class ConditionalGenerator:
         "no_faq_schema": "faq_page",
         # NAP/WhatsApp
         "whatsapp_conflict": ["whatsapp_button", "whatsapp_conflict_guide"],
+        # FASE-B (REFACTOR-WHATSAPP, AC2): `no_whatsapp_visible` NO tiene clave aqui
+        # desde siempre, y por eso pain y asset decidian aparte (maestro §1, fila
+        # F-F): el generador caia a `no_asset_mapping` y no producía nada, mientras
+        # el mapper prometía boton. Ahora la ruta del generador coincide con la del
+        # mapper: ausencia verificada -> guia de preparacion, nunca boton.
+        "no_whatsapp_visible": "whatsapp_setup_guide",
         # imágenes
         "missing_alt_text": "alt_text_guide",
         # blog
@@ -427,6 +433,20 @@ class ConditionalGenerator:
             phone_data = validated_data.get("whatsapp") or validated_data.get("whatsapp_number", {})
             phone = getattr(phone_data, 'value', str(phone_data)) if not isinstance(phone_data, str) else phone_data
             content = self._generate_whatsapp_button(phone, hotel_name)
+
+        elif asset_type == "whatsapp_setup_guide":
+            # FASE-B (REFACTOR-WHATSAPP, AC2): guia de preparacion/validacion, sin
+            # numero y sin enlace. Se le `hotel_data` solo para tomar la URL ya
+            # observada; el generador no recibe ningun telefono por diseno.
+            from .whatsapp_setup_guide import WhatsAppSetupGuideGenerator
+            hotel_data = validated_data.get("hotel_data", {}) or {}
+            site_url = ""
+            if isinstance(hotel_data, dict):
+                site_url = str(hotel_data.get("url") or "")
+            content = WhatsAppSetupGuideGenerator().generate(
+                hotel_name=hotel_name,
+                site_url=site_url or None,
+            )
         
         elif asset_type == "whatsapp_conflict_guide":
             from .whatsapp_conflict_guide import WhatsAppConflictGuideGenerator

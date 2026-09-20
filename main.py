@@ -2804,7 +2804,12 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     pain_ledger_resolved_entries = None  # DT4-R1: initialized here, loaded inside generate_proposal
 
     # FIX-D7: Proposal generation now AFTER assets so we can use asset_result.generated_assets
-    # (which includes promised_by=always assets like voice_assistant_guide, whatsapp_button, monthly_report)
+    # (which includes catalog-promised assets such as voice_assistant_guide and
+    # monthly_report). FASE-B (REFACTOR-WHATSAPP) corrige el texto: `whatsapp_button`
+    # ya NO es un asset `promised_by=always` -- FASE-5 elimino esa condicion en
+    # `ASSET_CATALOG["whatsapp_button"].promised_by` y FASE-B la retira tambien del
+    # pain de ausencia (`no_whatsapp_visible` promete `whatsapp_setup_guide`). Este
+    # comentario seguia presentandolo como siempre-prometido; el catalogo manda.
     if generate_proposal:
         print("\n📍 FASE 3.5: Generación de Propuesta Comercial")
         print("-" * 70)
