@@ -2,12 +2,14 @@
 
 **Plan:** REFACTOR-WHATSAPP-ENTREGA-2026-09-18 · **Fase:** G · **Fecha:** 2026-09-20
 **HEAD de partida:** `d7ff932` (paridad 0/0 con `origin/master` al abrir)
-**HEAD al cerrar la sesión:** `0e47151`, en **paridad 0/0** con `origin/master`. Tres commits
+**HEAD al cerrar la sesión:** `aa1ce9f`, en **paridad 0/0** con `origin/master`. Cuatro commits
 salieron de esta fase el mismo día: `66e17bd` (código y cierre de G, 32 rutas +10.074 / −217),
-`748e230` (barrido de citas que el propio push venció) y `0e47151` (write-back de G + blindaje del
-de RELEASE, 8 rutas +304 / −5). Autorizaciones literales separadas: «Git Commit y push» para los dos
-primeros y «Ejecuta el punto 1 y también el write-back de G» para el tercero, cuyo push se pidió
-y autorizó aparte. Queda sin autorización solo el tag, que no corresponde en fase intermedia.
+`748e230` (barrido de citas que el propio push venció), `0e47151` (write-back de G + blindaje del
+de RELEASE, 8 rutas +304 / −5) y `aa1ce9f` (retractación de la inexistencia del verificador +
+mini-plan `VERIFICADOR-ESCRITURA-QMIND-2026-09-20`, 12 rutas +392 / −56). Cada uno con su
+autorización literal separada —«Git Commit y push», «Ejecuta el punto 1 y también el write-back
+de G», y «push» dos veces más—, y los cuatro empujados. Queda sin autorización solo el tag, que no
+corresponde en fase intermedia.
 
 ## Estado de la fase
 
@@ -78,6 +80,10 @@ arrastró trabajo ajeno.
 5. Cada fase intermedia re-abrirá el rojo `Version Sync` en `registry_last_update` al registrar con
    `log_phase_completion.py`; la cura usada por G fue `sync_versions.py --rule registry_last_update`
    (el escritor oficial, acotado). La cura de fondo tiene dueño: RELEASE/operador.
+
+## Corrección publicada después de este cierre documental
+
+Un párrafo de esta fase afirmaba que el write-back no estaba conectado a ninguna validación. Era falso y se retractó en `aa1ce9f`: `run_all_validations.py` lo invoca como check **[15/15]**, solo en el modo completo, sin `--strict` (PASS si falta el CLI), escaneando solo `Archives/` y decidiendo por título. La causa y la regla que nace (`L-ENT.14`) están en `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-G/qmind-writeback-G.md`.
 
 ## Autorizaciones pendientes (se piden por separado)
 
