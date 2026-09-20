@@ -2,9 +2,12 @@
 
 **Plan:** REFACTOR-WHATSAPP-ENTREGA-2026-09-18 · **Fase:** G · **Fecha:** 2026-09-20
 **HEAD de partida:** `d7ff932` (paridad 0/0 con `origin/master` al abrir)
-**HEAD al cerrar la sesión:** `66e17bd` — **32 rutas, +10.074 / −217**, empujado a `origin/master`
-y en **paridad 0/0**. El usuario autorizó commit y push con texto literal («Git Commit y push») en
-una petición separada; tag y write-back no se pidieron y siguen sin autorización.
+**HEAD al cerrar la sesión:** `0e47151`, en **paridad 0/0** con `origin/master`. Tres commits
+salieron de esta fase el mismo día: `66e17bd` (código y cierre de G, 32 rutas +10.074 / −217),
+`748e230` (barrido de citas que el propio push venció) y `0e47151` (write-back de G + blindaje del
+de RELEASE, 8 rutas +304 / −5). Autorizaciones literales separadas: «Git Commit y push» para los dos
+primeros y «Ejecuta el punto 1 y también el write-back de G» para el tercero, cuyo push se pidió
+y autorizó aparte. Queda sin autorización solo el tag, que no corresponde en fase intermedia.
 
 ## Estado de la fase
 
@@ -21,7 +24,8 @@ medidas. Contador **v4complete 0/1** (intacto).
 | QMind por el eje de cierre | ✅ permitida y respondida (6 aportes, 3 aplicados y medidos) | `qmind-eje-cierre.md` |
 | Cierre incremental completo | ✅ | ver lista abajo |
 | Commit / push | ✅ ejecutados el 2026-09-20 con autorización literal | `66e17bd` → `origin/master` (paridad 0/0) |
-| Tag / write-back a QMind | ⛔ **sin autorización** (no pedidos) | §Autorizaciones pendientes |
+| Write-back a QMind | ✅ **ejecutado y verificado el 2026-09-20** con autorización literal separada: copia saneada del `10-analisis` (5 identidades del cliente sustituidas), fuente `01a0bfc9-5f5a-783e-9492-16367bbff596`, comprobada por **descarga byte a byte y sha256**, no por título | `qmind-writeback-G.md` |
+| Tag | ⛔ sin autorización, y no corresponde (no se cambió `VERSION.yaml`) | §Autorizaciones pendientes |
 
 ## Validaciones al cerrar (medidas, no previstas)
 
@@ -78,7 +82,11 @@ arrastró trabajo ajeno.
 ## Autorizaciones pendientes (se piden por separado)
 
 - **Tag** — no corresponde en fase intermedia (no se cambió `VERSION.yaml`).
-- **Write-back a QMind** — requiere autorización expresa y título nuevo si el aporte cambió
-  (`--upload` es idempotente por título).
 
-Commit y push **ya ejecutados** el 2026-09-20. FASE-0 sigue sin iniciar (R1).
+Commit, push y write-back **ya ejecutados** el 2026-09-20. FASE-0 sigue sin iniciar (R1).
+
+Consecuencia que hay que llevar a RELEASE: el título con el que se ingirió G es el canónico fijo
+del writer (`10-analisis: <PLAN> (lecciones aprendidas y decisiones)`) y `is_ingested()` decide por
+título, así que un segundo `--upload` de este plan responde **SKIP**. La ingesta del cierre necesita
+título nuevo y el writer no expone `--title` ni `--file`. Está escrito en `qmind-writeback-G.md`, en
+la fila QMind/write-back de `dependencias-fases.md` y como condición del prompt de RELEASE.
