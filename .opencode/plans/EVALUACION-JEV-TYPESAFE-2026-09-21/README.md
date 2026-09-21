@@ -1,6 +1,6 @@
 # EVALUACION-JEV-TYPESAFE-2026-09-21
 
-**Estado: PREPARACIÓN COMITEADA Y EMPUJADA el 2026-09-21 (push efectivo `2c966f6..03b9929` en `origin/master`, verificado con `git ls-remote`; 7/7 checks del hook en cada commit). Corrección del punto 4 y pendientes commiteados localmente (serie de docs que incluye `bf24b1b`), **por delante de `origin/master` (`03b9929`) y sin empujar** (P0 autoriza solo commit). Ninguna fase implementada ni inferencia ejecutada.** Autorizado y hecho: ajustar el plan, commitear, empujar, e instalar el SDK en un entorno aislado para una sonda sin red. Sigue sin autorización: ejecutar FASE-A o posteriores, llamar a APIs de inferencia, escribir la evidencia de FASE-B, write-back a QMind y archivado.
+**Estado: PREPARACIÓN COMITEADA Y EMPUJADA el 2026-09-21. La corrección del punto 4 y los pendientes están publicados en `origin/master` (push `03b9929..60cce03`, verificado con `git ls-remote`; 7/7 checks del hook en cada commit). Ninguna fase implementada ni inferencia ejecutada.** Autorizado y hecho: ajustar el plan, commitear, empujar, e instalar el SDK en un entorno aislado para una sonda sin red. Sigue sin autorización: ejecutar FASE-A o posteriores, llamar a APIs de inferencia, escribir la evidencia de FASE-B, write-back a QMind y archivado.
 
 Objetivo: medir si Jev mejora el triaje aditivo de pertinencia frente a la búsqueda fría y **DeepSeek**, con corpus propio saneado y coste acotado. DeepSeek es el proveedor habilitado por defecto según confirmación del operador del 2026-09-21. **Anthropic no tiene API habilitada, queda fuera del piloto y no es un fallback.** No se modifica `modules/providers/llm_provider.py`.
 
@@ -34,7 +34,7 @@ Cada ítem conserva su puerta de autorización propia: "ejecutar" solo lo inmedi
 
 | # | Pendiente | Estado hoy | Puerta (qué lo desbloquea) | Tipo |
 |---|---|---|---|---|
-| P0 | Commitear la corrección del punto 4 + re-anclajes (README, `04-contrato`, `09-documentacion`, `10-analisis`) | **Commiteado** (`bf24b1b` + este barrido de citas); serie de docs por delante de `origin` (`03b9929`) | Falta **push** (autorización aparte) | Higiene documental |
+| P0 | Commitear la corrección del punto 4 + re-anclajes (README, `04-contrato`, `09-documentacion`, `10-analisis`) | **Completado** — corrección del punto 4 + pendientes publicados en `origin/master` (push `03b9929..60cce03`, hook 7/7) | Sin puerta pendiente | Higiene documental |
 | P1 | FASE-A: muestra humana/saneada, protocolo y checker **offline** | PENDIENTE | Instrucción de fase; corpus y revisión humana accesibles; **no** requiere B/C del hermano para preparar | Ejecución (offline) |
 | P2 | Re-medir la dependencia externa `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` (B/C offline, AC15 parcial) | Escrita, no evidenciada | Al abrir B; un estado escrito no sustituye tests | Verificación |
 | P3 | FASE-B: Jev/DeepSeek tras la costura, SDK y controles probados **sin red** | BLOQUEADA (por P1 y P2) | A con muestra/protocolo + P2 verde; entorno aislado e instalación autorizados; `requirements-pilot.txt` y `entorno.json` se congelan aquí | Ejecución (offline) |
