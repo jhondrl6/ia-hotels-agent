@@ -20,8 +20,7 @@
 > lo gobierne. El gate no se tocó. Superficie **AC5, dueño C-D** (maestro §4 y filas C y D
 > de la matriz; el "D/E" escrito antes en este archivo era un error de registro). **A2
 > ejecutado con autorización del operador: commit `473ed0f`** (42 archivos, +1.907/−266,
-> 7/7 checks del pre-commit sin saltar ninguno); **A3 (push) sigue pendiente de
-> autorización**. Contador v4complete 0/1.
+> 7/7 checks del pre-commit sin saltar ninguno); **A3 (push) ejecutado el mismo 2026-09-20**: `cf3ddc2..05d0cc6`, paridad 0/0 verificada con `git ls-remote`. Contador v4complete 0/1.
 
 
 ## Contexto

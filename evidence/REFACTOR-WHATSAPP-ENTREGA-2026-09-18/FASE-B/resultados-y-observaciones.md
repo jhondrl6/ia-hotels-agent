@@ -4,7 +4,7 @@
 AC2 está implementado y medido; el cierre se había detenido por un bloqueo de alcance medido
 (§Bloqueo) y por falta de autorización de commit, y **ambos se resolvieron en la misma
 sesión**: A1 autorizado y ejecutado (§3 y §7), A4 decidido con O5 (§7), commit
-`473ed0f` con autorización literal. Solo queda pendiente el push (A3). Contador v4complete:
+`473ed0f` con autorización literal. Y el push a `origin/master` se ejecutó con instrucción literal (`cf3ddc2..05d0cc6`, paridad 0/0). Contador v4complete:
 **0/1** (no se ejecutó ninguna corrida).
 
 HEAD de partida: `cf3ddc2` (árbol limpio, paridad 0/0 con `origin/master`). Código de
@@ -192,7 +192,7 @@ y filas C y D de la matriz).
 **Cierre ejecutado tras A1:** CHANGELOG (subsección FASE-B bajo 4.77.3), nota técnica en
 `docs/GUIA_TECNICA.md`, aplicación efectiva de lecciones en `00`, estados en `05`/`06`/
 `dependencias`, `log_phase_completion.py --fase FASE-B`, `build_lesson_index.py` +
-`--check`, quick y `validate_document_integration.py`. **Commit y push sin ejecutar.**
+`--check`, quick y `validate_document_integration.py`. **Commit `473ed0f` + A4 `05d0cc6` y push a `origin/master` ejecutados con instrucción literal.**
 Medidas finales: selección PRE 537 → POST-A 539 → POST-B 552; canónicas
 **4.285 → 4.299 (+14)**; mutantes 8/8 (M1-M8); quick **11/11**.
 

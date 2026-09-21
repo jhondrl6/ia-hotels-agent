@@ -65,7 +65,7 @@ Estado: PREPARACIÓN. Ninguna fase ejecutada. No sustituye la documentación inc
 
 | **FASE-B (2026-09-20): archivos afiliados tocados** | Producto: 11 archivos de `modules/` + `main.py` (solo comentario) — detalle en la sección "Cierre incremental de FASE-B" de este documento. Tests: nuevo `tests/commercial_documents/test_fase_b_promesa_whatsapp.py` (12 funciones canónicas) y re-vinculaciones en 8 archivos, todas por cambio de forma o de ejemplo, ninguna aflojando una expectativa. Evidencia: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-B/` (9 artefactos, incluidos `run_mutations.py` reejecutable, `mutation_report.json` **8/8 (M1–M8)**, `A4-decision.md`, los cuatro registros de tests y el `CHECKPOINT-autorizaciones-pendientes.md`). Documental: `CHANGELOG.md` (subsección B bajo 4.77.3, sin anticipar versión), `docs/GUIA_TECNICA.md` (nota técnica del patrón resolución ≠ conteo), `docs/contributing/REGISTRY.md` (por `log_phase_completion.py`), el par del índice regenerado y los cinco documentos del plan (§00, §05 de la fase, §06, §09, dependencias). **Commit `473ed0f` ejecutado el 2026-09-20 con instrucción literal del operador** (42 archivos,
 +1.907/−266; los 7 checks del pre-commit pasaron sin saltar ninguno) más el commit de A4
-(test re-anclado + registro documental); **push pendiente de autorización (A3)** | FASE-B |
+(test re-anclado + registro documental); **push a `origin/master` ejecutado el 2026-09-20 con instrucción literal del operador (`cf3ddc2..05d0cc6`; paridad 0/0 verificada con `git ls-remote`)** | FASE-B |
 
 ## Registro documental por fase
 
@@ -112,7 +112,7 @@ inventariados pero sin gobernar: AC5 es de C/D.
 **Estado real:** B **CERRADA CON DEUDA REGISTRADA (AC5 → C-D)**. **Commit `473ed0f`
 ejecutado con autorización del operador** (42 archivos, +1.907/−266, 7/7 checks del
 pre-commit sin saltar ninguno) y commit de A4 con `tests/quality_gates/test_publication_gates.py`
-más su registro documental; **push pendiente de autorización**. Tras A4 la regresión completa
+más su registro documental; **push a `origin/master` ejecutado el 2026-09-20 con instrucción literal del operador (`cf3ddc2..05d0cc6`; paridad 0/0 verificada con `git ls-remote`)**. Tras A4 la regresión completa
 es **3 failed / 4.263 passed / 41 skipped / 4 xfailed** y los 3 rojos son los mismos que ya
 estaban en la evidencia de FASE-0 — ninguno atribuible a B. Contador v4complete 0/1. R2
 FUERA DE SERVICIO (R2.1).

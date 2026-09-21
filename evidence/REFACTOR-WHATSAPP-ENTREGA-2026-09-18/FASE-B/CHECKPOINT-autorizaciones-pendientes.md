@@ -3,12 +3,13 @@
 **Actualizado al cerrar A4 y el commit.** La fase quedó **CERRADA CON DEUDA REGISTRADA
 (AC5, dueño C-D)** y su código de producto **ya está commiteado** (`473ed0f`, 42 archivos,
 +1.907/−266, 7/7 checks del pre-commit sin saltar ninguno). Lo que sigue abierto es una
-decisión de C/D y el push. Ningún permiso se evadió ni se asumió.
+decisión de C/D (AC5). El push también se ejecutó: `cf3ddc2..05d0cc6`, paridad 0/0. Ningún permiso se evadió ni se asumió.
 
 > Historia de este archivo: se escribió con la fase en **INCOMPLETA** y el árbol sin
 > commitear, porque A2/A3/A4 esperaban autorización. Las tres se resolvieron en la misma
-> sesión: A2 con instrucción literal del operador, A4 con la decisión O5 (§A4 abajo y
-> `A4-decision.md`) y A3 sigue pendiente.
+> sesión: A2 con instrucción literal (`473ed0f`), A4 con la decisión O5 (§A4 abajo y
+> `A4-decision.md`, commit `05d0cc6`) y A3 con instrucción literal de push
+> (`cf3ddc2..05d0cc6`, paridad 0/0). Lo que queda abierto es trabajo de C/D, no un permiso.
 
 ## Árbol modificado (medido con `git diff --numstat`)
 
@@ -30,7 +31,7 @@ Evidencia: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-B/` (9 artefactos
 |---|---|---|---|
 | A1 | Extender la allowlist de B a `proposal_asset_alignment.py` (tabla de resolución ≠ universo contado) | **AUTORIZADA Y EJECUTADA en la misma sesión** | Cerró los 7 rojos de matriz (POST-C 83 passed) sin mover el denominador del gate. Se midieron y descartaron dos variantes: contar la guía (15 rojos, degrada cobertura) y ampliar el universo de la matriz (13 rojos, el builder devolvía filas que nadie pidió) |
 | A2 | **Commit** del trabajo de B | **AUTORIZADO Y EJECUTADO el 2026-09-20** — `473ed0f` (42 archivos, +1.907/−266; 7/7 checks del pre-commit, ninguno saltado) | Instrucción literal "Procede con el commit." El commit anterior a este decía "sin commit" en cuatro documentos; ya barrido |
-| A3 | **Push** a `origin/master` | **PENDIENTE** | Solo con instrucción literal y pedida por separado del commit. Pre-flight medido: remoto en `cf3ddc2`, local adelante en 1 (`git rev-list --left-right --count origin/master...master` = `0 1`), fast-forward sin divergencia |
+| A3 | **Push** a `origin/master` | **AUTORIZADO Y EJECUTADO el 2026-09-20** — `cf3ddc2..05d0cc6` (2 commits), paridad 0/0 verificada con `git ls-remote` y `git rev-list --left-right --count` | Solo con instrucción literal y pedida por separado del commit. Pre-flight medido: remoto en `cf3ddc2`, local adelante en 1 (`git rev-list --left-right --count origin/master...master` = `0 1`), fast-forward sin divergencia |
 | A4 | Decisión de producto/gate: deuda de entrega de un servicio condicional | **DECIDIDA el 2026-09-20 con la opción O5** — ver `A4-decision.md` | `test_publication_gates.py::test_get_blocking_issues` esperaba 3 gates bloqueantes y veía 2: el gate toma el "PASS trivial" cuando el único comprometido es condicional. Se re-ancló el fixture a `whatsapp_conflict` (dolor de WhatsApp que sigue prometiendo servicio contado) y se reforzó la aserción; el punto ciego queda assertionado en `test_deuda_ac5_ledger_solo_condicional_pasa_trivial`, que debe ponerse rojo cuando AC5 lo gobierne. **Superficie AC5, dueño C-D** (maestro §4; el "D-E" que figuraba aquí era un error de registro). El gate no se tocó |
 
 ## Cierre documental ejecutado (T4)
