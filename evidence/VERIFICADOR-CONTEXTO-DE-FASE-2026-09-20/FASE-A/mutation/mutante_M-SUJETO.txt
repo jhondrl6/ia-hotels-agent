@@ -1,0 +1,13 @@
+# AC4 ROJO — mutante M-SUJETO · objetivo: la atribucion asercion -> check (sin sujeto no hay contraste posible)
+simbolo real apagado: sujeto_de_la_instancia()
+aserciones en verde: ['validate_plan_citations.py|check 8|phased_project_executor', 'validate_lesson_capitalization.py|[9/9]|phased_project_executor', 'validate_qmind_writeback.py|[12/12]|phased_project_executor', 'validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template']
+aserciones en rojo: []
+perdidos: ['validate_plan_citations.py|check 8|phased_project_executor', 'validate_lesson_capitalization.py|[9/9]|phased_project_executor', 'validate_qmind_writeback.py|[12/12]|phased_project_executor', 'validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template']
+gained: []
+reasons en rojo: {}
+ids en rojo (posicionales, se re-numerican): {}
+no resueltas: 5 | historicas: 8
+esperado por el test: {"perdidos": ["validate_plan_citations.py|check 8|phased_project_executor", "validate_lesson_capitalization.py|[9/9]|phased_project_executor", "validate_qmind_writeback.py|[12/12]|phased_project_executor", "validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template"], "presentes": []}
+
+comando de reproduccion (mismo que genero este archivo):
+  python -m pytest tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py -q

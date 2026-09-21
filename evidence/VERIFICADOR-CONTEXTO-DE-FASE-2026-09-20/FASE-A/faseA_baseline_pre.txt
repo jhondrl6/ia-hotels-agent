@@ -1,0 +1,78 @@
+# FASE-A baseline PRE — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+medido: 2026-09-21 · HEAD: 2deddee · git status --porcelain: 2 lineas
+
+## unidad 1: checks del modo completo/rapido (etiqueta emparejada con su def _check_*)
+comando: grep -nE '^\s*(def _check|print\(f?"\[[0-9]+/[0-9]+\])' scripts/run_all_validations.py
+114:    def _check_residual_files(self) -> None:
+116:        print("[1/11] Checking for residual files...")
+143:    def _check_plan_maestro_sync(self) -> None:
+145:        print("[2/11] Checking Plan Maestro sync...")
+186:    def _check_version_sync(self) -> None:
+188:        print("[3/11] Checking version synchronization...")
+267:    def _check_no_secrets(self) -> None:
+277:        print("[4/11] Checking for hardcoded secrets (tracked + staged)...")
+359:    def _check_client_material(self) -> None:
+368:        print("[5/11] Checking client material policy (tracked + staged)...")
+419:    def _check_staged_content(self, patterns: list) -> list:
+449:    def _check_document_integration(self) -> None:
+451:        print("[6/11] Checking document integration...")
+480:    def _check_prompts_no_release(self) -> None:
+487:        print("[7/11] Checking prompts for --release flag in intermediate phases...")
+544:    def _check_opencode_refs(self) -> None:
+550:        print("[8/11] Checking .opencode references...")
+579:    def _check_plan_citations(self) -> None:
+591:        print("[9/11] Checking plan citations (simbolos, no numeros de linea)...")
+621:    def _check_lesson_capitalization(self) -> None:
+633:        print("[10/11] Checking lesson capitalization (Paso 0 del executor)...")
+663:    def _check_wiring(self) -> None:
+684:        print("[11/11] Checking signal wiring by AST (AC7/AC16)...")
+724:    def _check_dependencies(self) -> None:
+726:        print("[12/15] Checking dependencies...")
+746:    def _check_imports(self) -> None:
+748:        print("[13/15] Checking core module imports...")
+782:    def _check_tests_pass(self) -> None:
+784:        print("[14/15] Running tests...")
+809:    def _check_qmind_writeback(self) -> None:
+816:        print("[15/15] Checking QMind write-back (planes archivados)...")
+
+totales vigentes: quick=11 etiquetas /11 · full=4 etiquetas /15
+
+## unidad 2: pasos del hook versionado
+comando: grep -nE '^#   \[[0-9]+/[0-9]+\]' scripts/git_hooks/pre-commit
+6:#   [1/7] Version consistency (version_consistency_checker.py)
+7:#   [2/7] File synchronization (sync_versions.py --check)
+8:#   [3/7] Referencias .opencode (validate_opencode_refs.py --fix, auto-fix)
+9:#   [4/7] Citas de línea en planes (validate_plan_citations.py — regla R2.2)
+10:#   [5/7] Cierre de planes sin filas pendientes (validate_plan_closure.py — regla R2.5)
+11:#   [6/7] Índice de lecciones al día (build_lesson_index.py --check — capa fría del Paso 0)
+12:#   [7/7] Capitalización del Paso 0 verificada (validate_lesson_capitalization.py — executor v2.22.0)
+total hook = 7
+
+## unidad 3: quien afirma el 11 (quick) y el 7 (hook) — barrido tests/ + docs (L-V2.3 / AC16)
+comando A: grep -rhoE '\[[0-9]+/11\]|11 checks?' tests/ --include=*.py | sort | uniq -c
+(0 lineas = ningun test pinea el 11)
+
+comando B: grep -rhoE '\[[0-9]+/7\]|7 pasos' tests/ --include=*.py | sort | uniq -c
+      1 [5/7]
+archivos: tests/test_validate_plan_closure.py
+
+comando C (documentos que afirman el 11, excluyendo este plan):
+.opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/01-plan-maestro.md
+.opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/dependencias-fases.md
+.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/06-checklist-implementacion.md
+.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/09-documentacion-post-proyecto.md
+.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md
+.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/README.md
+
+## unidad 4: seleccion de tests de la fase (contable en disco, metodo canonico grep)
+comando: grep -rE '^\s*def test_' tests/quality_gates/governance_numbers --include=*.py | wc -l
+PRE = 0 (el directorio se crea en esta fase)
+comando repo: grep -rE '^\s*def test_' tests --include=*.py | wc -l
+PRE repo = 4307 funciones canonicas
+
+## unidad 5: poblacion A8 de los documentos de gobierno (pre)
+comando: grep -rhoE '\[[0-9]+/[0-9]+\]' <los dos documentos> | wc -l
+[N/M] instancias = 22
+formas 'check N' = 2
+lineas con [N/M] = 17 (workflow 16 + template 1)
+complemento: formas 'check N' en 1 archivo(s), 2 sitios (workflow)

@@ -1,0 +1,25 @@
+# AC4 VERDE (baseline, guards activos)
+arbol: iah-cli · script: scripts/validate_governance_numbers.py
+assertion_ids: {'validate_plan_citations.py|check 8|phased_project_executor': 'A1', 'validate_lesson_capitalization.py|[9/9]|phased_project_executor': 'A2', 'validate_qmind_writeback.py|[12/12]|phased_project_executor': 'A3', 'validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template': 'A4'}
+reasons: {
+ "validate_plan_citations.py|check 8|phased_project_executor": [
+  "ordinal"
+ ],
+ "validate_lesson_capitalization.py|[9/9]|phased_project_executor": [
+  "denominador",
+  "ordinal"
+ ],
+ "validate_qmind_writeback.py|[12/12]|phased_project_executor": [
+  "denominador",
+  "ordinal"
+ ],
+ "validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template": [
+  "denominador"
+ ]
+}
+occurrences por asercion: {"validate_plan_citations.py|check 8|phased_project_executor": 2, "validate_lesson_capitalization.py|[9/9]|phased_project_executor": 1, "validate_qmind_writeback.py|[12/12]|phased_project_executor": 1, "validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template": 1}
+instancias no resueltas: 0
+instancias historicas congeladas: 8
+
+comando de reproduccion:
+  python -m pytest tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py -q

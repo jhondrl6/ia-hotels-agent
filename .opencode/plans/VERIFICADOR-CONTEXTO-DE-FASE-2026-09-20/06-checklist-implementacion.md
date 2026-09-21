@@ -9,11 +9,11 @@ estado) · `NO-EJERCITADO` (el camino no se ejercitó; con el motivo) · `FUERA 
 
 | AC | Fase | Enunciado corto | Artefacto donde se lee | Estado |
 |---|---|---|---|---|
-| AC1 | A | reproduce **las cuatro aserciones normativas vivas** A1–A4 y ninguna otra, con la regla de población de A8 aplicada | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/informe.json` → `findings[]` (con `occurrences[]`) | PENDIENTE |
-| AC2 | A | publica denominador: población, **las tres clases y las cuatro familias no cubiertas** | ídem → `coverage_basis`, `historical_excluded[]` | PENDIENTE |
-| AC3 | A | tres estados sin colapsar | ídem → `status` + 3 tests | PENDIENTE |
-| AC4 | A | mutation check **por aserción** | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/mutation/` (rojo + verde) | PENDIENTE |
-| AC5 | A | conteo del quick y del hook como delta 0 | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/baseline-pre-post.md` | PENDIENTE |
+| AC1 | A | reproduce **las cuatro aserciones normativas vivas** A1–A4 y ninguna otra, con la regla de población de A8 aplicada | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/informe.json` → `findings[]` (con `occurrences[]`) | **VERIFICADO OFFLINE** 2026-09-21 |
+| AC2 | A | publica denominador: población, **las tres clases y las cuatro familias no cubiertas** | ídem → `coverage_basis`, `historical_excluded[]`, `excluded[]` | **VERIFICADO OFFLINE** 2026-09-21 |
+| AC3 | A | tres estados sin colapsar | ídem → `status` + 3 archivos de test (un estado cada uno) | **VERIFICADO OFFLINE** 2026-09-21 |
+| AC4 | A | mutation check **por aserción** | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/mutation/` (verde + 6 rojos anclados por `assertion_key`) | **VERIFICADO OFFLINE** 2026-09-21 |
+| AC5 | A | conteo del quick y del hook como delta 0 | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/baseline-pre-post.md` | **VERIFICADO OFFLINE** 2026-09-21 (quick 0, hook 0; tests +23 declarado) |
 | AC6 | B | aislamiento de imports | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/import_scanner.txt` (conteo + población) | PENDIENTE |
 | AC7 | B | proveedor no configurado no decide | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/informe.json` → `provider_status` | PENDIENTE |
 | AC8 | B | contract test de forma con proveedor falso | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/contract.txt` | PENDIENTE |
@@ -24,30 +24,27 @@ estado) · `NO-EJERCITADO` (el camino no se ejercitó; con el motivo) · `FUERA 
 | AC13 | C | ≥1 test contra corpus real, skip declarado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/r26.txt` | PENDIENTE |
 | AC14 | C | mutation check del guard de no-filtrado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/` | PENDIENTE |
 | AC15 | C | denominador, términos, ceros **y aceptabilidad** (dispara D6) | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json` | PENDIENTE |
-| AC16 | A,B,C,D | quick en 11 y hook en 7, inalterados en todo el plan | los cuatro `baseline-pre-post.md` | PENDIENTE |
-| AC17 | A,B,C,D | `.agents/` intocado; familias no cubiertas declaradas | `coverage.json` → `families_not_covered[]` + `git status .agents/` | PENDIENTE |
-| AC18 | A,B,C,D | capitalización, citas e índice verdes en el mismo commit | salida de los tres verificadores | PENDIENTE |
+| AC16 | A,B,C,D | quick en 11 y hook en 7, inalterados en todo el plan | los cuatro `baseline-pre-post.md` | **A: delta 0 verificado 2026-09-21** · B/C/D pendientes |
+| AC17 | A,B,C,D | `.agents/` intocado; familias no cubiertas declaradas | `evidence/…/FASE-A/informe.json` → `families_not_covered[]` + `ac17-y-presupuesto.md` + `git status --porcelain .agents/` (vacio) | **A: VERIFICADO OFFLINE 2026-09-21** · B/C/D pendientes |
+| AC18 | A,B,C,D | capitalización, citas e índice verdes en el mismo commit | salida de los tres verificadores | **A: los tres verdes el 2026-09-21** (`[9/11]`, `[10/11]` en el quick 11/11 + indice regenerado) · el commit aun no hecho |
 | AC19 | D | un pack por fase, declarando qué **no** incluye | `…/briefing/FASE-X.md` + `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/informe.json` → `packs[]` | PENDIENTE |
 | AC20 | D | delta de carga de lectura con el **mismo comando** en ambos lados | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/carga.json` → `before`, `after`, `method` | PENDIENTE |
 | AC21 | D | proveniencia con HEAD y sha por fuente; `--check` vence | ídem → `provenance` | PENDIENTE |
 | AC22 | D | prohibido emitir un pack más corto en silencio | ídem → `status ∈ {COMPLETO, SECCION-NO-RESUELTA, FUENTE-AUSENTE}` | PENDIENTE |
 | AC23 | D | mutation check del guard de truncamiento | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/mutation/` | PENDIENTE |
 
-## FASE-A — `validate_governance_numbers.py`
+## FASE-A — `validate_governance_numbers.py` — **cerrada VERIFICADO OFFLINE el 2026-09-21** (AC1–AC5; y AC16/AC17/AC18 en la parte que corresponde a esta fase)
 
-- [ ] Script standalone, invocable sin tocar `run_all_validations.py`.
-- [ ] A1–A4 reproducidas; cualquier hallazgo adicional se explica o se corrige el patrón.
-- [ ] **Regla de población aplicada y publicada (A8)**: viva / histórica congelada / vigente-correcta,
-  con los conteos de cada clase y la frase del workflow (`v2.24.0`) que ampara la exclusión.
-- [ ] **Un hallazgo por aserción, con sus `occurrences[]`**: A1 en dos sitios sigue siendo un hallazgo.
-- [ ] `coverage_basis` con población, exenciones y `families_not_covered` — **las cuatro medidas**:
-  prosa sin patrón, conteos fuera de los documentos de gobierno (`AGENTS.md`, `docs/GUIA_TECNICA.md`,
-  `docs/contributing/REGISTRY.md`), pins de conteo en `tests/`, y fuentes dinámicas no-etiqueta.
-- [ ] Tres tests de estado, cada uno cubriendo **un** estado.
-- [ ] `mutation/` con rojo y verde por aserción, **afirmando el `assertion_id` del mutante (L-V2.1)**.
-- [ ] «Quién afirma el 11 y el 7» medido **también en `tests/`** (L-V2.3).
-- [ ] Par pre/post con la resta comprobada, delta 0.
-- [ ] `log_phase_completion.py --fase FASE-A` ejecutado; índice regenerado en el mismo commit.
+- [x] Script standalone, invocable sin tocar `run_all_validations.py`. **Verificado offline el 2026-09-21**: `--report`, `--json` y rutas inyectables (`--governance-doc`/`--source`/`--hook`) para probarlo sobre fixtures en `tmp_path`.
+- [x] A1–A4 reproducidas y **cero hallazgos adicionales**: A1 `check 8` vs `9/11`, A2 `9/9` vs `10/11`, A3 `12/12` vs `15/15`, A4 `10/10` vs `10/11`; ademas 11 aserciones vigentes-correctas publicadas en `assertions_checked`.
+- [x] **Regla de población aplicada y publicada (A8)**: viva-hallazgo **5 instancias en 4 aserciones** / vigente-correcta **11** / histórica congelada **8** / no resuelta **0** = **24** instancias (22 con corchete + 2 formas «check N»). Dos rutas de congelacion publicadas con su marca: `H1` (denominador de otra epoca dentro de `## Versiones`) y `H2` (clausula que narra un evento pasado). La frase del workflow que ampara la exclusion (`v2.24.0`) se copia en `historical_excluded[].authorized_by` y en `regla_de_poblacion.historical_authorizing_phrase`.
+- [x] **Un hallazgo por aserción, con sus `occurrences[]`**: A1 sigue siendo **un** hallazgo con **dos** occurrences (el parrafo «Verificador mecanico» de R2.2 y la entrada v2.19.0 de `## Versiones`); demostrado tambien al inverso — un fixture con la frase escrita tres veces da 1 hallazgo con 3 occurrences.
+- [x] `coverage_basis` con población, exenciones y `families_not_covered` — **las cuatro medidas en runtime**, no de oido: (i) prosa sin patron: **3** coincidencias en los documentos auditados (+1 en el template excluido: `pasa 4/4`); (ii) fuera de los documentos de gobierno: **245** instancias (`AGENTS.md` 1 —«10/10 checks», vencido—, `docs/GUIA_TECNICA.md` 107, `docs/contributing/REGISTRY.md` 137); (iii) pins en `tests/`: **4 archivos**, incluido el pin que **esta fase añadio**; (iv) fuentes dinamicas no etiqueta: **4.330** funciones en disk contra las 4.246 que publica `AGENTS.md`.
+- [x] Tres archivos de estado, **cada uno cubriendo un solo estado**: `test_governance_numbers_sin_hallazgos.py`, `test_governance_numbers_ausente.py`, `test_governance_numbers_lector_fallido.py`. Nota de forma: la tabla de tests obligatorios del prompt lista **cinco** archivos y sus criterios de completitud decian «los cuatro tests pasan»; se escribieron los cinco mas el de mutantes (23 funciones, 28 casos).
+- [x] `mutation/` con **verde + seis rojos** (`verde_baseline.txt`, `mutante_M-A1`, `M-A2`, `M-A3`, `M-A4`, `M-POBLACION`, `M-SUJETO`). El anclaje se afirmo **por `assertion_key`** (sujeto + afirmacion + documento), no por `assertion_id`: el primer intento con ids posicionales produjo un rojo que nombraba a otra asercion (perdia A4 al mutar el guard de A1) — eso es literalmente L-V2.1 y queda capitalizado en `10-analisis-post-implementacion.md`.
+- [x] Medido con los mismos comandos en los dos lados. PRE: nada en `tests/` afirmaba el 11, y un `[5/7]` en `test_validate_plan_closure.py` afirmaba el hook. **POST: 4 coincidencias nuevas del denominador 11 creadas por esta fase** (`test_governance_numbers_reproduce_A1_A4.py`), declaradas con dueño D1/D2 en `baseline-pre-post.md` en lugar de limar la asercion.
+- [x] Par `faseA_baseline_pre.txt` / `faseA_baseline_post.txt` + `baseline-pre-post.md` con la resta: quick **11→11 (0)**, hook **7→7 (0)**, poblacion A8 **22/17/2 → 22/17/2 (0)**. Y **sin** fingir delta 0 donde la fase si movio la metrica: seleccion de tests **0→23 funciones (+23)**, que es justo lo que AC5 exige publicar por separado.
+- [x] `log_phase_completion.py --fase FASE-A --check-manual-docs` ejecutado y `build_lesson_index.py` regenerado el 2026-09-21. El commit queda pendiente de instruccion literal y **lleva el indice dentro** (R2.10, lo comprueba `[6/7]`).
 
 ## FASE-B — `decision_client.py`
 

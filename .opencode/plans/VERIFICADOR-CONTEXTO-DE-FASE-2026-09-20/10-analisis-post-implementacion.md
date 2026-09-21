@@ -7,7 +7,7 @@
 
 | Fase | Estado | Iteraciones medidas (unidad e instrumento) | Cortes autorizados | Notas |
 |---|---|---|---|---|
-| FASE-A | PENDIENTE | — | — | — |
+| FASE-A | **VERIFICADO OFFLINE 2026-09-21** (AC1–AC5; AC16/AC17/AC18 en su parte de A) | Instrumento canónico **no corrió**: `find . -name "*.jsonl"` = 0 en el workspace (condición D-V2.1, re-medida el 2026-09-21). Se retira la métrica de iteraciones y se publica en unidad contable en disco: **14 rutas propias** en el árbol de trabajo, 933 líneas de instrumento, 23 funciones de test / 28 casos. **No comparable** con auto-reportes en `tool_use` de otros planes | Ninguno: la fase cerró su presupuesto documental y sus 3 tareas de código en la sesión (R3 permitía 4) | Evidencia en `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/`: `informe.json`, `baseline-pre-post.md`, `ac17-y-presupuesto.md`, `mutation/` (verde + 6 rojos), par pre/post y las dos corridas del quick. Sin commit: pide instrucción literal |
 | FASE-B | PENDIENTE | — | — | — |
 | FASE-C | PENDIENTE | — | — | — |
 | FASE-D | PENDIENTE | — | — | — |
@@ -52,13 +52,23 @@ atribución vencida del documento de este propio plan, y el conteo se corrigió 
 
 ### Lecciones nuevas de este plan (L-VCF-1+)
 
-- *(pendiente — se llenan al cerrar cada fase)*
+Cerradas en FASE-A (2026-09-21). Cada una con su medición, no con su impresión.
+
+| ID | Qué pasó | Por qué | Qué lo previene | Pertinencia para el siguiente plan |
+|---|---|---|---|---|
+| **L-VCF-1** | El primer mutation check **falló nombrando a otra aserción**: al apagar el guard de A1 el rojo reportó «se perdió A4» | `assertion_id` se asigna por orden de aparición (así reproduce la tabla A1–A4 del maestro sin pinearla). Es **posicional**: en cuanto un hallazgo desaparece, los demás se re-numeran, y el rojo pasa a hablar de un tercero | `findings[]` publica además `assertion_key` (sujeto + afirmación + documento), que es invariante; todo anclaje de mutante, contract test o diff entre corridas mira la clave, nunca el id. Los seis archivos de `mutation/` muestran las dos columnas | **INCLUIR** — es L-V2.1 en una variante nueva y barata: «el anclaje del mutante no puede ser un entero de posición». Le aplica a cualquier verificador que numere hallazgos |
+| **L-VCF-2** | Resolver el sujeto de cada mención por «el script más cercano» produjo un **hallazgo fantasma**: dentro del changelog, un `[6/7]` que *nombra el token* («las 5 referencias normativas al `[6/6]` se actualizan a `[6/7]»`) se atribuyó al verificador de capitalización y dio claimed 6 vs observed 7 | Una instancia puede ser **mención de sí misma** (metarreferencia) en vez de atribución, y la distancia textual no las distingue | Regla de dos partes publicada en el script: (a) una afirmación «del hook» se contrasta **solo por forma** (sus N pasos), sin sujeto; (b) las congeladas salen por H1 (denominador de otra época dentro de `## Versiones`) o H2 (cláusula de evento pasado). Prueba: el mutante `M-POBLACION` — apagar la regla convierte las 8 congeladas en **4 hallazgos extra** | **INCLUIR** — sirve a cualquier lector que empareje texto con código por proximidad |
+| **L-VCF-3** | Dos defectos de la **salida**, encontrados al escribir la prueba de estados y no al leer el codigo: (1) la primera linea de la consola no era ASCII —el guion largo de la cabecera llegaba al lector convertido en caracter de reemplazo—; (2) la marca corta esta contenida en la larga, asi que buscar el veredicto con una prueba de subcadena **tambien** es verdad cuando el veredicto es el contrario | La salida legible por maquinas es parte del contrato del instrumento, y la consola de este entorno no es UTF-8 (leccion ya capitalizada: «evidencia de consola no es UTF-8») | `_estado_a_imprimir()` deja la marca en ASCII fija; `test_marca_de_estado_en_ascii` exige `isascii()` y el estado exacto, y los archivos de estado comparan la **primera linea**, no un `in` sobre todo el stdout | **INCLUIR** — para todo verificador cuyo verde se consume por grep o por log |
+| **L-VCF-4** | El disparador de **D1** estaba redactado en círculo: «verificador verde y decisión escrita» — pero el verificador solo está verde *después* de la corrección que D1 pide, y esta fase, por diseño (AC17), no puede dar ese verde | Una condición de cierre que solo se cumple al ejecutar lo que condiciona no es un disparador: es una traba | Disparador re-escrito en `dependencias-fases.md` y en la matriz de deuda: *verificador operativo con su mutation check en disco* (cumplido el 2026-09-21) **+** decisión escrita del operador | **INCLUIR** — releer los disparadores de deuda «contra el árbol de la fase que los ejecuta», no solo contra la concepción |
+| **L-VCF-5** | Al medir «quién afirma el 11» (AC5/AC16, barrido de `tests/` por L-V2.3) resultó que **esta misma fase añadió 4 pins nuevos del denominador 11** en `tests/`: la aserción `observed == 9/11` del contrato AC1 es, literalmente, un pin | Un test que fija el valor observado de una fuente dinámica *es* una de las fuentes estáticas que el plan denuncia; la familia no cubierta (iii) de AC2 no era teoría | Se declaró en `baseline-pre-post.md` con dueño (D1/D2: al corregir `.agents/` o renumerar el quick, el test se re-ancla con su nota datada) en lugar de debilitar la aserción para que la resta quedara limpia | **INCLUIR** — «medir a quién le duele la renumeración» incluye medirse a uno mismo |
 
 ## Seguimientos abiertos
 
 | # | Tema | Dueño | Disparador |
 |---|---|---|---|
-| S1 | D1: corregir o retirar las aserciones A1–A4 en `.agents/` | FASE-RELEASE de este plan | Decisión escrita del operador; configuración central |
+| S1 | D1: corregir o retirar las aserciones A1–A4 en `.agents/` | FASE-RELEASE de este plan | **Disparador reformulado el 2026-09-21 (era circular, L-VCF-4):** verificador operativo con mutation check en disco (ya cumplido) **y** decisión escrita del operador sobre la forma de la corrección; configuración central |
+| S8 | Los **4 pins del denominador 11** que FASE-A escribió en `tests/` al fijar el contrato AC1 (`test_governance_numbers_reproduce_A1_A4.py`) | D1/D2 de este plan | Al corregir `.agents/` (D1) o al promover el verificador a check 12 (D2): re-anclar el test con nota datada, **sin** limar la aserción (L-VCF-5) |
+| S9 | El verificador **no está cableado** a ningún gate: corre suelto (`python scripts/validate_governance_numbers.py --report`, salida 1 con A1–A4 presentes). Promoverlo al `--quick` es exactamente **D2** y rompería la cifra que `REFACTOR-WHATSAPP` pinea en cuatro documentos | D2 | Sesión previa al `FASE-RELEASE` de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` |
 | S2 | D2/D3: promover el verificador al `--quick` y rebanar el workflow | Plan propio posterior | Sesión previa a `FASE-RELEASE` de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` |
 | S3 | **D6: lint de contradicciones semánticas** (`validate_plan_semantics.py`) | Plan propio posterior; entra en **este** directorio si el disparador se cumple vigente este plan | El `acceptance` que publique AC15 en FASE-C. Si el triaje sale inaceptable, **no se activa** |
 | S4 | **D7: activar el proveedor de decisiones ya habilitado** y correr la comparación | Plan propio posterior | Decisión del operador del 2026-09-20 de no entrar ahora; AC9 ya dejó la costura probada |
@@ -68,8 +78,14 @@ atribución vencida del documento de este propio plan, y el conteo se corrigió 
 
 ## Métricas de Ejecución
 
-- [ ] Tests de la fase, en la **misma base de medición** que su par pre/post (R2.3).
-- [ ] Coherencia del índice de lecciones al commitear.
+- [x] **FASE-A (2026-09-21), en la misma base de medición que su par pre/post** (R2.3): quick
+  11→11 (resta 0), hook 7→7 (resta 0), población A8 22/17/2 → 22/17/2 (resta 0), selección de tests
+  0→23 funciones (+23, **no** 0: la fase agrega tests y lo dice), canónicas del repo
+  4.307→4.330 (resta +23, coherente con la fila anterior). Crudos en
+  `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/`.
+- [x] Coherencia del índice de lecciones al commitear: `build_lesson_index.py` regenerado el
+  2026-09-21 tras escribir los `.md` de esta fase; el commit debe llevar los dos archivos dentro
+  (`[6/7]` del hook lo corta).
 - [ ] **Carga de lectura por fase, antes y después del pack (AC20)** — con su comando y su divisor.
 - [ ] Aceptabilidad del triaje (AC15): propuestos pertinentes / total propuestos.
 
@@ -81,7 +97,19 @@ atribución vencida del documento de este propio plan, y el conteo se corrigió 
   AC9 de comparación, que con un solo proveedor se cerraba declarando `NO-EJERCITADO` y certificaba
   humo).
 - [ ] El triaje es aditivo y no filtro, con el coste de esa elección medido en FASE-C.
-- [ ] Forma de descubrir aserciones en los documentos: patrón sobre la fuente, no lista fija.
+- [x] Forma de descubrir aserciones en los documentos: **patrón sobre la fuente, no lista fija**
+  (decisión aplicada el 2026-09-21 en FASE-A). Alternativas descartadas, con su coste:
+  (a) *hardcodear A1–A4* — cerraba AC1 en verde y dejaba el verificador ciego ante la aserción
+  siguiente, que es el defecto L-NC10 que este plan denuncia;
+  (b) *descubrir sin regla de clases* — producía 8+ hallazgos sobre menciones históricas que el
+  propio workflow declara literales, es decir el rojo «por diseño, no por defecto» que A8 anticipó;
+  (c) *excluir lo histórico sin publicarlo* — un candado que excluye en silencio (L-HF1).
+  Coste de la ruta elegida: dos tablas de marcadores (`KIND_MARKERS`, `HISTORICAL_EVENT_MARKERS`)
+  publicadas en el script y mutables: la exclusión es auditable y reversible, no magia.
+- [x] FASE-A **no edita `.agents/`** ni toca la composición del `--quick` (AC17/AC16): el verificador
+  reporta; la corrección de las cuatro aserciones es D1 con instrucción literal.
+- [x] FASE-A **no se cablea** a ningún gate ni al hook: se promueve o no en D2, con la medición de
+  quién afirma el 11 ya hecha (AC5/AC16).
 
 ## Checklist de Cierre (llenar en FASE-RELEASE)
 

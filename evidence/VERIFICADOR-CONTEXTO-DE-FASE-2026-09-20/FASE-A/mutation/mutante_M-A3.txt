@@ -1,0 +1,13 @@
+# AC4 ROJO — mutante M-A3 · objetivo: validate_qmind_writeback.py|[12/12]|phased_project_executor — sin marcador de modo completo su [12/12] no resuelve fuente
+simbolo real apagado: KIND_MARKERS["full"]
+aserciones en verde: ['validate_plan_citations.py|check 8|phased_project_executor', 'validate_lesson_capitalization.py|[9/9]|phased_project_executor', 'validate_qmind_writeback.py|[12/12]|phased_project_executor', 'validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template']
+aserciones en rojo: ['validate_plan_citations.py|check 8|phased_project_executor', 'validate_lesson_capitalization.py|[9/9]|phased_project_executor', 'validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template']
+perdidos: ['validate_qmind_writeback.py|[12/12]|phased_project_executor']
+gained: []
+reasons en rojo: {"validate_plan_citations.py|check 8|phased_project_executor": ["ordinal"], "validate_lesson_capitalization.py|[9/9]|phased_project_executor": ["denominador", "ordinal"], "validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template": ["denominador"]}
+ids en rojo (posicionales, se re-numerican): {"validate_plan_citations.py|check 8|phased_project_executor": "A1", "validate_lesson_capitalization.py|[9/9]|phased_project_executor": "A2", "validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template": "A3"}
+no resueltas: 1 | historicas: 8
+esperado por el test: {"perdidos": ["validate_qmind_writeback.py|[12/12]|phased_project_executor"], "presentes": ["validate_plan_citations.py|check 8|phased_project_executor", "validate_lesson_capitalization.py|[9/9]|phased_project_executor", "validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template"], "no_resueltas_suben": true}
+
+comando de reproduccion (mismo que genero este archivo):
+  python -m pytest tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py -q

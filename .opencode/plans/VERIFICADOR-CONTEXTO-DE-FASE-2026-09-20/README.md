@@ -1,10 +1,15 @@
 # VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
 
-**Estado: CONCIBIDO y AJUSTADO el 2026-09-20 (Etapa 1 — Preparación, sin ejecutar); AUDITADO y
-CORREGIDO el 2026-09-20 contra código vivo y contra el Knowledge Center** (ver §Correcciones
-aplicadas). Renombrado desde `PASO0-VERIFICADOR-PERTINENCIA-2026-09-20` cuando entró FASE-D, porque
-el contenido dejó de ser solo pertinencia. Cuatro fases de implementación + RELEASE, todas
-pendientes. Ninguna escribió código.
+**Estado: FASE-A ✅ CERRADA el 2026-09-21 (VERIFICADO OFFLINE, AC1–AC5) — 1 de 4 fases de
+implementación ejecutadas. FASE-B, C, D y RELEASE pendientes.** Concepción: AUDITADA y CORREGIDA
+el 2026-09-20 contra código vivo y contra el Knowledge Center (ver §Correcciones aplicadas).
+Renombrado desde `PASO0-VERIFICADOR-PERTINENCIA-2026-09-20` cuando entró FASE-D, porque el
+contenido dejó de ser solo pertinencia.
+
+**Contador de ACs (medido al cerrar FASE-A, 2026-09-21):** 5 `VERIFICADO OFFLINE` con su mutation
+check en disco (AC1–AC5) · 3 con su parte de FASE-A verificada y el resto abierto (AC16, AC17,
+AC18) · 15 pendientes (AC6–AC15, AC19–AC23). Ningún AC del plan puede llegar a `SUPERADO EN E2E`
+(no hay FASE-VERIFY ni corrida).
 
 Objetivo: arreglar las tres cosas que hacen que un plan de este repo se lea caro, se juzgue mal y se
 desfasen solo. **Coherencia** de las aserciones sobre conteos en los documentos de gobierno,
@@ -27,7 +32,8 @@ R5: la evidencia de este plan vive en su propio subdirectorio). Detalle en `depe
 
 - [Lecciones capitalizadas](00-lecciones-capitalizadas.md): ocho consultas re-ejecutables con su
   resultado medido, catorce lecciones con dueño y efecto concreto sobre ACs reales, cinco descartes, y
-  la capa tibia (QMind) **ya consultada** el 2026-09-20 con su comando corregido.
+  la capa tibia (QMind) **ya consultada** el 2026-09-20 con su comando corregido, y el
+  balance de lo que FASE-A aplicó de verdad (§5, 2026-09-21).
 - [Plan maestro](01-plan-maestro.md): las mediciones A1–A8 (cuatro aserciones vencidas —con A3
   re-medida—, un grep con cero coincidencias, la auto-refutación A6, la carga de lectura A7 y la
   población bajo el patrón A8), la matriz de decisión, AC1–AC23 y la deuda D1–D10.
@@ -45,7 +51,7 @@ R5: la evidencia de este plan vive en su propio subdirectorio). Detalle en `depe
 
 | Orden / prompt | Objetivo | Complejidad | Estado |
 |---|---|---|---|
-| 1 · [A](05-prompt-inicio-sesion-fase-A.md) | `validate_governance_numbers.py`: aserción contra fuente dinámica, denominador, tres estados. AC1–AC5 | MEDIA / alta consecuencia: es el guard de cualquier edición futura de `.agents/` | PENDIENTE |
+| 1 · [A](05-prompt-inicio-sesion-fase-A.md) | `validate_governance_numbers.py`: aserción contra fuente dinámica, denominador, tres estados. AC1–AC5 | MEDIA / alta consecuencia: es el guard de cualquier edición futura de `.agents/` | **✅ VERIFICADO OFFLINE 2026-09-21** (rojo y verde en `evidence/…/FASE-A/mutation/`) |
 | 2 · [B](05-prompt-inicio-sesion-fase-B.md) | `decision_client.py`: costura neutra, contract test de forma, extensión a un segundo proveedor **probada**. AC6–AC9 | MEDIA-ALTA | PENDIENTE |
 | 3 · [C](05-prompt-inicio-sesion-fase-C.md) | `triage_lesson_relevance.py`: pertinencia **aditiva** sobre el índice generado, con su aceptabilidad medida. AC10–AC15 | ALTA | PENDIENTE |
 | 4 · [D](05-prompt-inicio-sesion-fase-D.md) | `build_phase_briefing.py`: pack derivado por fase, proveniencia con sha, negativa a truncar y **delta de carga de lectura**. AC19–AC23 | MEDIA: gobierna lo que todas las sesiones futuras van a leer | PENDIENTE |
@@ -136,44 +142,29 @@ quedan intactas.
 
 ## Inicio de la siguiente sesión
 
-Copiar en una sesión nueva. **Se reescribe en cada cierre de fase** y su frescura la mira
-`validate_plan_closure.py`.
+**FASE-A está cerrada (VERIFICADO OFFLINE el 2026-09-21), así que la sesión que sigue abre
+FASE-B.** El prompt canónico vive en `05-prompt-inicio-sesion-fase-B.md` y **no se copia aquí**:
+copiarlo sería fabricar la segunda fuente estática que este plan existe para cazar (medición A6).
+Lo que sí se publica aquí es el estado re-medido al cerrar A, con su comando y su fecha, para que
+B no lo asuma:
 
-```text
-Ejecuta únicamente FASE-A del plan
-C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/.
-Lee 05-prompt-inicio-sesion-fase-A.md, 01-plan-maestro.md §1 (la tabla A1-A4 con su rectificacion de
-A3, la medicion A7 y la poblacion A8) y §4 (AC1-AC5 con la regla de poblacion, AC16, AC17),
-04-contrato-ejecucion.md, 00-lecciones-capitalizadas.md §2 y §4, dependencias-fases.md y el workflow
-canonico. A es la primera fase de este plan y no consume nada de REFACTOR-WHATSAPP, que corre por
-separado. **Estado medido del arbol tras publicarse la auditoria: limpio y en paridad 0/0 con
-`origin/master` sobre `2c9d0c1` (verificado con `git ls-remote` el 2026-09-20), y el indice de
-lecciones ya esta fresco.** No lo des por supuesto: vuelve a medirlo al abrir, porque una fase viva de
-REFACTOR-WHATSAPP comparte esa pareja de archivos y puede entregar el arbol modificado.
-Re-mide antes de la primera tarea y publica el numero que obtengas: git HEAD/status, la etiqueta que
-imprime CADA def _check_* de run_all_validations.py (emparejando etiqueta y metodo, que es como nacio
-la medicion vencida de A3: el write-back imprime [15/15], no [12/15]), los siete pasos del hook
-versionado, y el tamano en bytes de los siete documentos que suma A7 (valor de referencia 2026-09-20:
-263.973). Si alguna de las cuatro aserciones del maestro §1 ya no esta vencida, o si A7 vuelve a moverse,
-dilo: la premisa del plan se re-mide, no se asume (A6 es exactamente lo que pasa cuando no se hace).
-Escribe scripts/validate_governance_numbers.py: compara cada asercion sobre un conteo en los documentos
-de gobierno contra la etiqueta que el codigo imprime, descubre las aserciones escaneando los documentos
-(no hardcodeando las cuatro), **aplica la regla de poblacion de A8 con sus tres clases (viva /
-historica congelada / vigente-correcta) y publica findings[] con occurrences[] y historical_excluded[]**,
-y publica coverage_basis con la poblacion mirada y las familias no cubiertas (las cuatro de AC2, una por
-una: prosa sin patron, conteos fuera de los documentos de gobierno incluyendo AGENTS.md, pins de conteo
-en tests/, y fuentes dinamicas que no sean etiqueta impresa). Expresa los tres estados sin que ninguno
-colapse. Reutiliza el diseno de validate_plan_citations.py (reporta, no reescribe) y de
-validate_lesson_capitalization.py (R2.9 sobre si mismo).
-No toques run_all_validations.py, el hook, .agents/, build_lesson_index.py ni ningun plan vivo.
-Todo AC de detencion se cierra con mutation check sobre el simbolo real del guard, **por asercion y
-afirmando el assertion_id del mutante (L-V2.1)**, con las dos salidas en
-evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/; sin el rojo, AC4 es ⚠️. El conteo del quick y
-del hook se expresa como delta con par pre/post, resta comprobada y delta esperado 0, y la pregunta
-«quien afirma el 11 y el 7» se responde barriendo tambien tests/ (L-V2.3).
-Registra la fase con log_phase_completion.py y regenera el indice de lecciones en el mismo commit. Deja
-checkpoint si falta autorizacion y conserva cada AC en el estado que pueda probar.
-```
+| Qué re-medir al abrir FASE-B | Valor del 2026-09-21 (cierre de FASE-A) | Comando |
+|---|---|---|
+| HEAD y limpieza | `2deddee`, `git status --porcelain` con las rutas de esta fase sin commitear | `git rev-parse --short HEAD`, `git status --porcelain` |
+| Paridad con el remoto | `0/0` con `origin/master` | `git ls-remote origin refs/heads/master` |
+| Checks del `--quick` | **11** (composición intacta, AC16) | `grep -c 'print(f?"\[[0-9]*/11\]' scripts/run_all_validations.py` |
+| Pasos del hook | **7** | `grep -cE '^#   \[[0-9]+/[0-9]+\]' scripts/git_hooks/pre-commit` |
+| Etiquetas emparejadas | `validate_plan_citations` 9/11 · `validate_lesson_capitalization` 10/11 · `validate_qmind_writeback` **15/15** (full) | ver `faseA_baseline_pre.txt` unidad 1 |
+| Carga de lectura A7 | **263.973 bytes ≈ 65.993 tokens** (sin cambio desde el 2026-09-20) | `stat -c %s` sobre los siete documentos |
+| Población A8 | 22 instancias `con corchete` en 17 líneas + 2 formas «check N» = **24 auditables** | `grep -rhoE '\[[0-9]+/[0-9]+\]' .agents/ \| wc -l` |
+| Hallazgos que A deja abiertos | A1–A4 vencidas **sin corregir** (AC17): son trabajo de **D1** con instrucción literal | `python scripts/validate_governance_numbers.py --report` |
+| Herencia de forma para B | `coverage_basis` y el tri-estado de AC3 son la convención que B **reutiliza**, no reinventa | `evidence/…/FASE-A/informe.json` |
+
+Además, dos cosas que A midió y B no debe volver a descubrir: el árbol de `run_all_validations.py`
+**no está libre** (`VERIFICADOR-ESCRITURA-QMIND-2026-09-20` lo declara en su alcance → deuda **D10**),
+y el `2026-09-21` otra sesión dejó escrita en su plan la regla de **orden de cierre**: este hermano
+se cierra (incl. su RELEASE) antes de que `EVALUACION-JEV` publique, por la pareja del índice
+compartido. No es dependencia técnica de B, que se desbloquea en B+C de este plan.
 
 ## Cierre y aceptación
 

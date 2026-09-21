@@ -1,0 +1,13 @@
+# AC4 ROJO — mutante M-A2 · objetivo: validate_lesson_capitalization.py|[9/9]|phased_project_executor — el guard mutado aportaba su motivo «ordinal»
+simbolo real apagado: ordinal_discrepa()
+aserciones en verde: ['validate_plan_citations.py|check 8|phased_project_executor', 'validate_lesson_capitalization.py|[9/9]|phased_project_executor', 'validate_qmind_writeback.py|[12/12]|phased_project_executor', 'validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template']
+aserciones en rojo: ['validate_plan_citations.py|check 8|phased_project_executor', 'validate_lesson_capitalization.py|[9/9]|phased_project_executor', 'validate_qmind_writeback.py|[12/12]|phased_project_executor', 'validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template']
+perdidos: []
+gained: []
+reasons en rojo: {"validate_plan_citations.py|check 8|phased_project_executor": ["ordinal"], "validate_lesson_capitalization.py|[9/9]|phased_project_executor": ["denominador"], "validate_qmind_writeback.py|[12/12]|phased_project_executor": ["denominador"], "validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template": ["denominador"]}
+ids en rojo (posicionales, se re-numerican): {"validate_plan_citations.py|check 8|phased_project_executor": "A1", "validate_lesson_capitalization.py|[9/9]|phased_project_executor": "A2", "validate_qmind_writeback.py|[12/12]|phased_project_executor": "A3", "validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template": "A4"}
+no resueltas: 0 | historicas: 8
+esperado por el test: {"perdidos": [], "presentes": ["validate_plan_citations.py|check 8|phased_project_executor", "validate_lesson_capitalization.py|[9/9]|phased_project_executor", "validate_qmind_writeback.py|[12/12]|phased_project_executor", "validate_lesson_capitalization.py|[10/10]|lecciones-capitalizadas-template"], "reasons_de": {"validate_lesson_capitalization.py|[9/9]|phased_project_executor": ["denominador"], "validate_qmind_writeback.py|[12/12]|phased_project_executor": ["denominador"]}}
+
+comando de reproduccion (mismo que genero este archivo):
+  python -m pytest tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py -q

@@ -281,5 +281,7 @@
   "modules/quality_gates/tribunal/outcome.py": "FASE-0",
   "tests/quality_gates/tribunal/test_diagnosis_reviewer.py": "FASE-0",
   "tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py": "FASE-0",
-  "22": "FASE-B"
+  "22": "FASE-B",
+  "scripts/validate_governance_numbers.py": "FASE-A",
+  "tests/quality_gates/governance_numbers": "FASE-A"
 }
