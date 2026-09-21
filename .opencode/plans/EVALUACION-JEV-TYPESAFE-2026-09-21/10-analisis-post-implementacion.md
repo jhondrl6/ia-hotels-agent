@@ -101,7 +101,7 @@ Instrucción del operador: "Ejecutar FASE-A". Cero red, cero clientes, cero cred
 
 **Frontera humana respetada:** las etiquetas son del agente como candidatos; `etiquetas.review_status = sin_revisar`, `label = null`. No se atribuyó al operador ninguna etiqueta (L-R.4). Los umbrales de `protocolo.json` están en `null` = a-decidir; eso **impide** FASE-C, no se rellenaron.
 
-**No se declaró FASE-A plenamente verificada:** AC3 queda PARCIAL porque faltan revisión humana y umbrales acordados (los artefactos ya están commiteados en `71b85b7`; el push es aparte). El corpus de 4 pares es exploratorio, muy por debajo del objetivo 60–100 (L-P6.3), y `MUESTRA-INSUFICIENTE` sigue siendo el estado honesto para cualquier comparación.
+**No se declaró FASE-A plenamente verificada:** AC3 queda PARCIAL porque faltan revisión humana y umbrales acordados (los artefactos ya están publicados en `origin/master`, push `9665c57..51b0793`). El corpus de 4 pares es exploratorio, muy por debajo del objetivo 60–100 (L-P6.3), y `MUESTRA-INSUFICIENTE` sigue siendo el estado honesto para cualquier comparación.
 
 ## Decisiones de diseño y alternativas
 

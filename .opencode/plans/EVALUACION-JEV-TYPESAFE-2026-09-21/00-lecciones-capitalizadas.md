@@ -90,4 +90,4 @@ Solo se anotan las lecciones cuyo efecto ya se puede leer en evidencia de esta f
 | L-P6.3 | Con 4 pares y umbrales nulos, el estado honesto registrado es **MUESTRA-INSUFICIENTE**; `run`/`decide` se niegan con exit 2 | Calidad de decisión del proveedor: no se ejercitó ningún proveedor |
 
 - Atribución respetada: los candidatos los produjo el agente; no se atribuyó al operador ninguna etiqueta.
-- Los artefactos de FASE-A quedaron commiteados en `71b85b7`; el push sigue siendo autorización separada y no se declara hecho.
+- Los artefactos de FASE-A quedaron publicados en `origin/master` (push `9665c57..51b0793`); write-back y archivado siguen sin autorización.
