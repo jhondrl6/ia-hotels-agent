@@ -118,16 +118,21 @@ quedan intactas.
   Límite: el triaje calibra contra 320 IDs definidos y 50 citados sin definición — **re-medido**,
   porque al crearse este plan sus propias cifras vencieron (medición A6).
 - **Commitir requiere regenerar el índice** en el mismo commit (`[6/7]` del hook): los archivos de este
-  plan nombran IDs reales del corpus. Medido el 2026-09-20: el índice **ya está regenerado y fresco**
-  (`build_lesson_index.py --check` → `[OK] … (320 IDs)`; 0 coincidencias con el nombre anterior del
-  directorio, 15 con el vigente) y sus dos archivos están **modificados sin commitear**, junto con este
-  plan, que está **sin trackear**. O sea: el árbol **no** está limpio, y lo que falta aquí no es una
-  regeneración pendiente sino un **commit** pendiente (con instrucción literal del operador).
+  plan nombran IDs reales del corpus. Medido el 2026-09-20 al auditar: el índice **ya estaba regenerado
+  y fresco** (`build_lesson_index.py --check` → `[OK] … (320 IDs)`; 0 coincidencias con el nombre
+  anterior del directorio, 15 con el vigente) y sus dos archivos estaban **modificados sin commitear**,
+  con el plan **sin trackear**. **Ese estado ya no existe**: la auditoría se commiteó y empujó con
+  instrucción literal del operador el 2026-09-20 — `2c9d0c1`, paridad `0/0` con `origin/master`
+  verificada con `git ls-remote`—, así que desde aquí el árbol de partida es limpio y lo que cada fase
+  encuentra modificado proviene de su propia edición o de la fase viva de `REFACTOR-WHATSAPP`.
 - **Las cifras de este README son estimaciones con divisor declarado** (bytes/4), no recuento de
   tokenizer. A7 suma **siete** documentos (el octavo que declara leer la fase medida es un archivo de
   `evidence/` y queda fuera de la suma, como dice su pie) y caducan cuando cambia cualquiera de ellos:
   **ya caducaron el mismo día de la concepción** (254.010 → 263.973 bytes; ver maestro §1, A7).
-- Commit y push **no** están autorizados por la existencia de este plan; cada fase deja checkpoint.
+- Commit y push **no** están autorizados por la existencia de este plan; cada fase deja checkpoint y
+  pide su propia instrucción literal. Así se hizo con la auditoría del 2026-09-20: `2c9d0c1` se
+  commiteó y se empujó solo tras la instrucción escrita del operador (y tras ofrecer el escaneo L3, que
+  el operador saltó).
 
 ## Inicio de la siguiente sesión
 
@@ -141,10 +146,10 @@ Lee 05-prompt-inicio-sesion-fase-A.md, 01-plan-maestro.md §1 (la tabla A1-A4 co
 A3, la medicion A7 y la poblacion A8) y §4 (AC1-AC5 con la regla de poblacion, AC16, AC17),
 04-contrato-ejecucion.md, 00-lecciones-capitalizadas.md §2 y §4, dependencias-fases.md y el workflow
 canonico. A es la primera fase de este plan y no consume nada de REFACTOR-WHATSAPP, que corre por
-separado. **El arbol NO esta limpio, medido el 2026-09-20**: los dos archivos del indice de lecciones
-estan modificados sin commitear y este plan esta sin trackear; el indice ya esta fresco
-(build_lesson_index.py --check), asi que no hay nada que regenerar antes de empezar pero si un commit
-pendiente que no autorizas tu.
+separado. **Estado medido del arbol tras publicarse la auditoria: limpio y en paridad 0/0 con
+`origin/master` sobre `2c9d0c1` (verificado con `git ls-remote` el 2026-09-20), y el indice de
+lecciones ya esta fresco.** No lo des por supuesto: vuelve a medirlo al abrir, porque una fase viva de
+REFACTOR-WHATSAPP comparte esa pareja de archivos y puede entregar el arbol modificado.
 Re-mide antes de la primera tarea y publica el numero que obtengas: git HEAD/status, la etiqueta que
 imprime CADA def _check_* de run_all_validations.py (emparejando etiqueta y metodo, que es como nacio
 la medicion vencida de A3: el write-back imprime [15/15], no [12/15]), los siete pasos del hook

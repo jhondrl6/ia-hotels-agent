@@ -193,10 +193,11 @@ C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-
 Lee 05-prompt-inicio-sesion-fase-A.md, 01-plan-maestro.md §1 (la tabla A1-A4 con su rectificacion de
 A3, la medicion A7 y la poblacion A8) y §4 (AC1-AC5 con la regla de poblacion, AC16, AC17),
 04-contrato-ejecucion.md, 00-lecciones-capitalizadas.md §2 y §4,
-dependencias-fases.md y el workflow canónico. **El arbol NO esta limpio: medido el 2026-09-20 hay dos
-archivos modificados sin commitear (la pareja del indice de lecciones, ya regenerada y fresca) y este
-plan esta sin trackear.** No hay nada que rescatar de una fase anterior -A es la primera- pero si un
-commit documental pendiente que tu no autorizas: registra el estado en tu checkpoint y sigue.
+dependencias-fases.md y el workflow canónico. **Estado medido del árbol al publicarse la auditoría
+(`2c9d0c1`, 2026-09-20, paridad 0/0 con `origin/master` verificada con `git ls-remote`): limpio, con
+el índice de lecciones ya regenerado y fresco.** No lo des por supuesto: re-mide HEAD/status al abrir,
+porque la pareja del índice la comparte con las fases vivas de `REFACTOR-WHATSAPP` y puede llegarte
+modificada. No hay nada que rescatar de una fase anterior —A es la primera de este plan.
 Re-mide antes de la primera tarea y publica el numero: git HEAD/status, la etiqueta que imprime CADA
 def _check_* (emparejando etiqueta y metodo: [15/15] es el write-back de QMind y [12/15] es
 dependencias; confundirlas fue el error de A3), los siete pasos del hook, y el tamano en bytes de los

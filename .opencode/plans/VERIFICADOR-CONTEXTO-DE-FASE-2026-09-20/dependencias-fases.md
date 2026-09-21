@@ -28,7 +28,7 @@ habilita la fase siguiente.
 
 | Fase | Hereda de | Pieza concreta |
 |---|---|---|
-| A | — | **Estado medido del árbol, no asumido**: el 2026-09-20 hay dos archivos modificados sin commitear (la pareja del índice, ya regenerada y fresca) y este plan sin trackear — no es «árbol limpio», es un commit documental pendiente que la fase no autoriza; se registra en el checkpoint y se sigue. Las cuatro aserciones vencidas A1–A4 medidas y copiadas en el maestro §1 (con **A3 rectificada: el write-back imprime `[15/15]`**), la medición A7 de carga de lectura re-medida (263.973 bytes) y la población A8 que obliga a la regla de clases de AC1 |
+| A | — | **Estado medido del árbol, no asumido**: al publicarse la auditoría (`2c9d0c1`, 2026-09-20, paridad 0/0 con `origin/master` verificada con `git ls-remote`) el árbol está **limpio** y el índice viene regenerado y fresco; A re-mide HEAD/status al abrir porque la pareja del índice se comparte con las fases vivas de `REFACTOR-WHATSAPP`. Las cuatro aserciones vencidas A1–A4 medidas y copiadas en el maestro §1 (con **A3 rectificada: el write-back imprime `[15/15]`**), la medición A7 de carga de lectura re-medida (263.973 bytes) y la población A8 que obliga a la regla de clases de AC1 |
 | B | A | El `status` de tres estados de AC3 y la convención `coverage_basis` de AC2, reutilizados, no reinventados |
 | C | A y B | La costura de B como única puerta al proveedor; los estados `AUSENTE`/`VENCIDO` de A aplicados al índice de lecciones |
 | D | A, B y C | Los tres estados y `coverage_basis`; el informe de candidatos de C, que el pack exhibe como sección propia; el **número de aceptabilidad** de C, que es el disparador de la deuda D6 |
