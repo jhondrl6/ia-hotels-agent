@@ -14,7 +14,7 @@ Complementa el workflow canónico, no lo sustituye. Una fase por sesión; la ins
 | Integrar Jev/DeepSeek en la costura entregada | Solo B propia, tras dependencias verificadas y sin edición concurrente |
 | Modificar `llm_provider.py`, su selección automática o configuración global | Fuera de alcance; este plan no modifica producción |
 | Habilitar o usar Anthropic | Fuera del piloto; no tiene API habilitada y no es fallback |
-| Instalar paquetes | Requiere autorización de instalación; entorno aislado, nunca instalación implícita por leer el plan |
+| Instalar paquetes | Requiere autorización de instalación; entorno aislado, nunca instalación implícita por leer el plan. **Medido el 2026-09-21:** el SDK resuelve `pydantic 2.13.5` contra el pin `pydantic==2.12.5` de `requirements.txt`, así que instalarlo en `venv/` subiría una dependencia del producto; queda prohibido salvo decisión explícita de re-pinear |
 | Inferencias Jev/DeepSeek | Solo C con autorización literal por etapa, hashes y límites finitos |
 | Material del cliente / repositorio completo a APIs | Prohibido; únicamente inputs de corpus propio saneados y aprobados |
 | Modificar planes hermanos | No; excepción futura solo D7/D6 con instrucción que delimite archivos |
@@ -41,7 +41,7 @@ Probar el control de saneamiento con fixtures sintéticos, no con secretos reale
 
 Conectividad/ajuste y evaluación se autorizan por separado. La muestra inicial y su protocolo deben estar versionados antes de la primera inferencia. No se usa el split de evaluación para depurar conectividad ni ajustar prompts. Un cambio al payload que altera el alcance requiere actualizar hashes y autorización.
 
-El SDK no puede reintentar por debajo de la contabilidad del runner: desactivar reintentos ocultos, registrar cada intento y aplicar reserva conservadora antes de enviar. Timeout con usage desconocido no equivale a coste cero. Presupuesto agotado detiene nuevos intentos y conserva la evidencia parcial, sin repetir automáticamente la corrida.
+El SDK no puede reintentar por debajo de la contabilidad del runner: construir el cliente con `RetryPolicy(max_retries=0)` —los defaults medidos son `max_retries=2` con `http_statuses` incluyendo 408/429/5xx, o sea **3 intentos** ante un 429—, registrar cada intento y aplicar reserva conservadora antes de enviar. Timeout con usage desconocido no equivale a coste cero. Presupuesto agotado detiene nuevos intentos y conserva la evidencia parcial, sin repetir automáticamente la corrida. Una respuesta 200 a la que le falte `usage` se trata como fallo de validación (`TypeSafeAPIResponseValidationError`), no como consumo cero.
 
 ## Estados y pruebas
 

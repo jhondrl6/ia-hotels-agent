@@ -13,8 +13,8 @@ Estado de preparación: AJUSTADA el 2026-09-21. Ninguna casilla de implementaci�
 | AC5 | C | `FASE-C/decision.json`, `decision.md`: regla pre-registrada y ejecución válida, o impedimento explícito | PENDIENTE |
 | AC6 | B/C | `FASE-B/mutation.json`, `FASE-C/aditividad.json`: guard real, causa del rojo y removed vacío | PENDIENTE |
 | AC7 | C/RELEASE | `FASE-C/decision.json`: Jev y D6 independientes; transferencia autorizada o pendiente explícita | PENDIENTE |
-| AC8 | B/C | `FASE-B/budget_tests.txt`, `FASE-C/preflight.json`, `consumo.json`: ninguna llamada sin reserva y permiso | PENDIENTE |
-| AC9 | B | `FASE-B/entorno.json`, `requirements-pilot.txt`, `sdk_contract.txt`, `mutation.json`: SDK real sin red | PENDIENTE |
+| AC8 | B/C | `FASE-B/budget_tests.txt`, `FASE-C/preflight.json`, `consumo.json`: ninguna llamada sin reserva y permiso; cliente con `RetryPolicy(max_retries=0)` verificado contando intentos | PENDIENTE |
+| AC9 | B | `FASE-B/entorno.json`, `requirements-pilot.txt`, `sdk_contract.txt`, `mutation.json`: SDK real sin red; errores asertados por clase y 200 sin `usage` tratado como fallo de validación, no como consumo cero | PENDIENTE |
 | AC10 | A/B | `FASE-A/selftest.txt`, `FASE-B/metrics_tests.txt`: instrumentos contra valores conocidos | PENDIENTE |
 | AC11 | Preparación / cada fase | Paso 0, documentación cruzada y validadores; ver registro de preparación en `10-analisis-post-implementacion.md` | PREPARACIÓN VALIDADA el 2026-09-21; se revalida en cada fase, no certifica el piloto |
 | AC12 | B/C | `FASE-C/preflight.json`: habilitación declarada distinta de autenticación/cuota; Anthropic excluido | PENDIENTE |

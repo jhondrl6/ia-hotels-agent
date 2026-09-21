@@ -11,6 +11,7 @@ Objetivo: medir si Jev mejora el triaje aditivo de pertinencia frente a la búsq
 - El comparador queda fijado en DeepSeek, con captura de usage/modelo efectivo detrás de la costura. El wrapper actual devuelve solo texto; no sirve como instrumento de coste y no se usa su selección automática.
 - Se concretan muestra, saneamiento, aislamiento por plan, métricas, presupuesto, errores y los instrumentos que los producirán. Todos siguen sin implementar.
 - La documentación actual de Jev sí publica límites de contexto; Noul no ofrece confidence separada y la calidad en español se debe medir, no heredar del inglés.
+- Sonda ejecutada en el SDK real 0.7.0 (entorno aislado, `httpx2.MockTransport`, cero red): el transporte es inyectable, los reintentos por defecto dan **3 intentos** ante un 429 y un 200 sin `usage` lanza error de validación. Por eso AC8 exige `RetryPolicy(max_retries=0)` y AC9 aserta clases de error en lugar de `usage = null`. El `venv` del producto quedó intacto: el SDK resuelve pydantic por encima del pin del proyecto.
 - D6 se evalúa por aceptabilidad y candidatos nuevos, aunque gane DeepSeek; adoptar Jev y modificar la deuda del hermano son decisiones distintas.
 - Se subsana el Paso 0 ausente y se incorpora la preparación ejecutora. No se atribuye a la concepción original una consulta realizada después.
 

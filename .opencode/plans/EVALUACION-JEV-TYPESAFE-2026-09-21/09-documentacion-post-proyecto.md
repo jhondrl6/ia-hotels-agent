@@ -18,9 +18,11 @@ Pendientes: comparación búsqueda fría/DeepSeek/Jev, contabilidad por intento,
 
 DeepSeek habilitado por defecto y Anthropic sin API son información del operador, no capacidades nuevas implementadas en esta sesión. La selección explícita y la captura de usage todavía se deben construir detrás de la costura.
 
+El SDK `typesafe-sdk==0.7.0` quedó instalado **solo en un entorno aislado** (`tmp_test/venv-jev-sdk`) para una sonda offline documentada en `10-analisis-post-implementacion.md` §Sonda de instalación. No es una capacidad entregada ni un cambio de dependencias del producto: `requirements.txt` y `venv/` no se tocaron, y la instalación principal está prohibida mientras el SDK resuelva pydantic por encima del pin del proyecto.
+
 ## C. Límites
 
-No hay inferencias, etiquetas humanas del piloto, muestra congelada, presupuesto aprobado ni decisión de adopción. El SDK no se instaló. La cuenta no fue autenticada ni se verificó saldo. El plan hermano no se modificó y su AC15 semántico parcial será admisible como entrada futura.
+No hay inferencias, etiquetas humanas del piloto, muestra congelada, presupuesto aprobado ni decisión de adopción. La autenticación, la cuota y el saldo de la cuenta Jev **no** se comprobaron: la sonda usó una clave sintética con transporte falso. El plan hermano no se modificó y su AC15 semántico parcial será admisible como entrada futura.
 
 ## D. Métricas acumulativas
 

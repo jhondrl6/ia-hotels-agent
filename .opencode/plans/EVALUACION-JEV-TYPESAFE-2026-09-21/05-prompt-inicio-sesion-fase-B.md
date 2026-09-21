@@ -19,11 +19,11 @@ No modificar `modules/providers/llm_provider.py`: el comparador es DeepSeek expl
 ## Tareas
 
 1. Verificar docs actuales de Jev/DeepSeek: paquetes, modelos, payload, usage, errores, tarifas y límites. No hacer una inferencia para «ver si responde». Fijar modelos solicitados y reglas de validación del modelo devuelto; el efectivo real queda NO-EJERCITADO hasta C. Identificar como simulados los valores efectivos de los tests y declarar cualquier alias DeepSeek que impida reproducibilidad estricta.
-2. Con autorización de instalación, resolver SDK candidato en un entorno aislado y no versionado cuya ubicación/exclusión Git se haya comprobado. No instalar en el entorno principal ni modificar requisitos globales. Escribir `FASE-B/requirements-pilot.txt` y `entorno.json` con versiones efectivamente resueltas, no solo mínimos de PyPI.
+2. Con autorización de instalación, resolver el SDK en un entorno aislado cuya ubicación y exclusión de git se hayan comprobado. La sonda del 2026-09-21 usó `tmp_test/venv-jev-sdk` (ignorado, 28 MB) y **no** instaló en el `venv` principal: el SDK resuelve `pydantic 2.13.5` contra el pin `pydantic==2.12.5` del proyecto. B elige una ruta duradera, no reutiliza ese entorno de sonda sin verificarlo, no modifica `requirements.txt` y escribe `FASE-B/requirements-pilot.txt` con `entorno.json` de versiones efectivamente resueltas, no solo los mínimos de PyPI.
 3. Integrar Jev y DeepSeek en `scripts/decision_client.py`, respetando frontera e interfaz pública. Conservar telemetría sin cambiar lo que consume C. Si hace falta otro archivo de producción para añadir el proveedor o cambiar el consumidor, registrar la incompatibilidad y pedir decisión, no relajar AC1 silenciosamente.
 4. Probar Noul sin confidence inventada y la etiqueta/abstención DeepSeek sin presentar score autorreportado como probabilidad calibrada. Resolver compatibilidad con la interfaz real antes de permitir ejecución externa.
 5. Completar runner en `scripts/evaluate_jev_pilot.py`: ejecución explícita por proveedor, ledger de intentos, reserva de presupuesto, comparación y generación de decisión. `check`/`report` continúan sin red. Autorización ausente, hashes modificados o presupuesto incompleto impiden construir/enviar peticiones reales.
-6. Desactivar reintentos ocultos del SDK; timeout, 429 y 5xx no producen un intento extra fuera del ledger. Separar tokens observados, coste calculado y cargo facturado, incluido uso desconocido y caché DeepSeek cuando exista.
+6. Construir el cliente Jev con `RetryPolicy(max_retries=0)`: los defaults medidos del SDK 0.7.0 son `max_retries=2` (3 intentos ante un 429, cada uno potencialmente facturable). Timeout, 429 y 5xx no producen un intento extra fuera del ledger. Separar tokens observados, coste calculado y cargo facturado, incluido uso desconocido y caché DeepSeek cuando exista.
 7. Probar aditividad importando el guard real del consumidor. No modificar la lógica del triaje ajeno para que el piloto parezca compatible. Medir imports con la población completa del piloto y la misma regla de aislamiento de B del hermano.
 
 ## Tests y evidencia
@@ -36,9 +36,10 @@ Tests previstos bajo `tests/quality_gates/jev_pilot/`; no se declaran existentes
 | `test_raw_usage_and_effective_model_survive_adapter` | AC4: metadatos preservados junto con la decisión |
 | `test_noul_probability_is_not_confidence` | AC2: p_yes bajo no se clasifica como incierto automáticamente |
 | `test_sdk_transport_is_exercised_offline` | AC9: el SDK real serializa/parsea, transporte falso invocado, red bloqueada |
-| `test_partial_answers_and_invalid_schema_fail` | AC9: IDs ausentes/duplicados o forma inválida no son respuesta negativa |
-| `test_http_failure_cases_remain_distinct` | AC9: 401/422/429/5xx/timeout con causas verificadas |
+| `test_partial_answers_and_invalid_schema_fail` | AC9: IDs ausentes o duplicados no son respuesta negativa; un 200 **sin `usage`** debe lanzar `TypeSafeAPIResponseValidationError` (medido), nunca dar `usage = null` ni coste cero |
+| `test_http_failure_cases_remain_distinct` | AC9: 401 → `TypeSafeAuthenticationError`, 429 → `TypeSafeRateLimitError`, timeout → `TypeSafeAPIConnectionError`; aserción por clase y `status`, no por `Exception` genérica |
 | `test_budget_reserves_before_each_attempt` | AC8: presupuesto ausente/excedido implica cero envíos |
+| `test_sdk_retries_disabled_and_attempts_counted` | AC8: con los defaults el mismo 429 da 3 intentos (medido); con `max_retries=0` da 1 y el ledger coincide |
 | `test_timeout_keeps_unknown_cost_reserved` | AC8/AC10: uso desconocido no libera reserva como cero |
 | `test_report_replays_without_network` | AC4/AC10: reproducción desde logs, sin clientes |
 | `test_real_triage_guard_preserves_anchored_rows` | AC6: removed vacío con respuestas no vacías; mutarlo vuelve rojo el test por la causa prevista |

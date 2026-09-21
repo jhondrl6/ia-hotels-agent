@@ -25,6 +25,26 @@ Correcciones de diseño:
 - D6 no exige que gane Jev; cambios de deuda requieren autorización adicional.
 - Paso 0 realizado después de la concepción y antes de implementación; no atribuido retroactivamente. Dos consultas MCP a QMind funcionaron y se contrastaron con el corpus local.
 
+## Sonda de instalación
+
+El operador autorizó instalar el SDK el 2026-09-21 (sin autorizar FASE-B, inferencias ni push). La sonda corrió en un entorno aislado y **sin red**: `TYPESAFE_API_KEY` se eliminó del entorno del subproceso y se usó una clave literal sintética con `httpx2.MockTransport`, que intercepta la petición dentro del proceso. No se escribieron archivos de plan ni de evidencia: `requirements-pilot.txt` y `entorno.json` siguen siendo artefactos de FASE-B.
+
+| Medición | Valor |
+|---|---|
+| Entorno | `tmp_test/venv-jev-sdk` (Python 3.13.3, ignorado por git, 28 MB); `venv/` del proyecto quedó intacto |
+| SDK | `typesafe-sdk==0.7.0` |
+| Resolución de dependencias | httpx2 2.13.0, httpcore2 2.13.0, anyio 4.15.1, pydantic 2.13.5, pydantic-core 2.46.5, tenacity 9.1.4, truststore 0.10.4, typing-extensions 4.16.0 |
+| Conflicto que exige aislamiento | pydantic 2.13.5 resuelto contra el pin `pydantic==2.12.5` de `requirements.txt` y el 2.12.3 realmente instalado en el venv del producto |
+| Interfaz real | `TypeSafeClient(api_key, model, retry, timeout, headers, transport, http_client, base_url)`; `system_one(state, questions, model, retry, timeout, extra_headers, extra_body, response_model)` |
+| Reintentos por defecto | `max_retries=2`, `backoff_initial=0.5`, `backoff_max=5.0`, `backoff_jitter=0.25`, `respect_retry_after=True`, `timeout=30.0` (presupuesto total de la llamada) |
+| Intentos medidos ante 429 | 3 con defaults; 1 con `max_retries=0` |
+| Sin API key | `TypeSafeError` antes de cualquier acceso de red |
+| 401 / 429 | `TypeSafeAuthenticationError` / `TypeSafeRateLimitError`, ambos con `.status` |
+| 200 sin `usage` | `TypeSafeAPIResponseValidationError`: `usage` es obligatorio en el modelo, no degrada a `null` |
+| Noul | `NoulAnswer` expone solo `.noul` (sin confidence); respuestas indexadas por los IDs enviados; `resp.model` = `jev-1.13.0` |
+
+Consecuencia en el diseño: AC8 fija `max_retries=0` como requisito y AC9 aserta clases de error y trata un 200 sin `usage` como fallo, no como coste cero. La reproducibilidad del pin `jev-1.13.0` queda corroborada en el SDK real, no solo en la documentación. La sonda **no** prueba autenticación, cuota, saldo ni calidad de decisiones: sigue vigente `NO-EJERCITADO` para esos aspectos.
+
 ## Validaciones de preparación
 
 Ejecutados el 2026-09-21 con el Python del proyecto y `PYTHONDONTWRITEBYTECODE=1`. No se ejecutó pytest ni el quick de runtime en este ajuste exclusivamente documental; se aplicaron los controles focalizados siguientes.
