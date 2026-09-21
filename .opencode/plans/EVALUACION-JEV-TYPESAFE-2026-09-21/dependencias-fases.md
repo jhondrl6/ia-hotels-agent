@@ -63,7 +63,7 @@ El maestro original de D7 pide AC9 verde y un consumidor real solicitante, **no 
 | Modelo DeepSeek y primitiva Jev | Ejecutor B + operador si cambia el diseño | Docs actuales, interfaz efectiva y pruebas offline | Checkpoint; no cambiar a Anthropic |
 | Entorno aislado e instalación | Operador | B, una vez resueltas dependencias del SDK y exclusión Git del entorno | No instalar en el entorno principal |
 | Presupuesto de solicitudes, tokens, USD, tiempo y reintentos | Operador | Antes de cada etapa con inferencias, ligado a hashes | COSTE-NO-PAGADO si no se autoriza financiar/ejecutar |
-| Commit de muestra/protocolo | Operador | Antes de primera inferencia y de cada nuevo congelado usado | No inferir; el usuario ha diferido commits en la preparación |
+| Commit de muestra/protocolo | Operador | Antes de primera inferencia y de cada nuevo congelado usado | No inferir. La preparación se comiteó por instrucción separada el 2026-09-21 (`2c966f6`); eso no anticipa el permiso de la muestra |
 | Transferencia de D7/D6 | Operador | Tras decisión y lectura del estado vigente del hermano | `transfer_status = PENDIENTE`; sin cierre ajeno |
 | Registro oficial, write-back y archivado | Operador | RELEASE, interfaz vigente verificada y alcance autorizado | Checkpoint documental; no cierre final ficticio |
 

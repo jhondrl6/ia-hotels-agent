@@ -14,7 +14,7 @@
 
 ## Registro de preparación
 
-La auditoría encontró disparadores B/B+C inconsistentes, circularidad potencial con AC15, comparador textual sin usage, coste sin distinción contable, Paso 0 ausente e índice vencido. El operador ordenó ajustar documentos y confirmó DeepSeek habilitado por defecto / Anthropic sin API. No autorizó inferencias ni commits.
+La auditoría encontró disparadores B/B+C inconsistentes, circularidad potencial con AC15, comparador textual sin usage, coste sin distinción contable, Paso 0 ausente e índice vencido. El operador ordenó ajustar documentos y confirmó DeepSeek habilitado por defecto / Anthropic sin API. En ese momento no autorizó inferencias ni commits; después pidió explícitamente commitear la preparación antes de ejecutar nada, y entró como `2c966f6`.
 
 Correcciones de diseño:
 
@@ -67,4 +67,4 @@ Etiquetas/saneamiento humanos, criterios/umbrales, presupuesto, entorno aislado,
 
 ## Cierre del plan — PENDIENTE
 
-Sin inferencias, commit, write-back ni archivado. El cierre futuro exige la revisión de artefactos y los permisos del contrato; una decisión administrativa de no ejecutar debe conservar los AC no ejercitados.
+Sin inferencias, write-back ni archivado. La preparación quedó comiteada el 2026-09-21 en `2c966f6` (base `99a33d8`, par de índices en el mismo commit, 7/7 checks del hook en verde); el **push no está ejecutado ni autorizado**. El cierre futuro exige la revisión de artefactos y los permisos del contrato; una decisión administrativa de no ejecutar debe conservar los AC no ejercitados.

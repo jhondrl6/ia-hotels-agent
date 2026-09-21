@@ -2,7 +2,7 @@
 
 **Estado: PREPARACIÓN AJUSTADA el 2026-09-21; implementación e inferencias PENDIENTES.** La preparación offline puede avanzar con una instrucción de fase. La integración y la comparación siguen bloqueadas por las dependencias de §5. Ninguna fase se ejecutó durante este ajuste documental.
 
-Base de la concepción y de la auditoría: HEAD `99a33d8`, medido con `git rev-parse --short HEAD`. Antes del ajuste, `git status --short` mostraba el plan y su contexto sin seguimiento; no se interpreta ese estado posterior como refutación de la limpieza anterior a su creación. El usuario pidió seguir preparando **sin commit**.
+Base de la concepción y de la auditoría: HEAD `99a33d8`, medido con `git rev-parse --short HEAD`. Antes del ajuste, `git status --short` mostraba el plan y su contexto sin seguimiento; no se interpreta ese estado posterior como refutación de la limpieza anterior a su creación. El operador pidió primero seguir preparando sin commitear y después autorizó el commit de la preparación: **`2c966f6`**, sobre `99a33d8`, con el par de índices en el mismo commit.
 
 Objetivo: comparar la búsqueda fría, **DeepSeek** y Jev para proponer lecciones pertinentes que el Paso 0 pudo omitir. El resultado es consultivo y aditivo: ni filtra lecciones ancladas, ni decide permisos, ni sustituye verificaciones exactas. `triage_lesson_relevance.py` es el consumidor diseñado, todavía no implementado; no es el único componente semántico del repositorio.
 
@@ -151,7 +151,7 @@ La matriz operativa está en `04-contrato-ejecucion.md`; dependencias y conflict
 
 Pendientes antes de gastar: designar quien etiqueta/revisa saneamiento, fijar umbrales y suficiencia, elegir configuración exacta DeepSeek y primitiva Jev, aprobar presupuesto finito y acceso al entorno aislado. No se solicitan valores de credenciales. El acceso habilitado no acredita cuota, saldo ni permiso de consumo.
 
-Commit, push, write-back, archivado, instalación de dependencias e inferencias requieren sus instrucciones de alcance. Hoy solo están autorizados estos documentos y la regeneración derivada del índice. La muestra necesita un commit aprobado **más adelante**, antes de la primera inferencia; no se ejecuta ahora.
+Commit, push, write-back, archivado, instalación de dependencias e inferencias requieren sus instrucciones de alcance. La instrucción del 2026-09-21 cubrió **únicamente** el commit de estos documentos y de la regeneración derivada del índice (`2c966f6`); no autoriza push ni ninguna otra escritura futura. La muestra necesita un commit aprobado **más adelante**, antes de la primera inferencia; no se ejecuta ahora.
 
 Por defecto no se edita ningún plan hermano. Única excepción futura: actualizar D7/D6 con instrucción literal que nombre archivos y alcance, tras re-leer su estado; si ya fue archivado, registrar el destino vigente en vez de inventar una ruta. Sin permiso, se deja transferencia PENDIENTE en este plan. No declarar la deuda cerrada ni activar D6 automáticamente.
 

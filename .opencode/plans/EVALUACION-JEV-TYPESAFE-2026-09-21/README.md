@@ -1,6 +1,6 @@
 # EVALUACION-JEV-TYPESAFE-2026-09-21
 
-**Estado: PREPARACIÓN AJUSTADA el 2026-09-21. Ninguna fase implementada ni inferencia ejecutada.** El usuario autorizó ajustar el plan, no ejecutar código del piloto ni hacer commit.
+**Estado: PREPARACIÓN AJUSTADA Y COMITEADA el 2026-09-21 (`2c966f6`, 7/7 checks del hook en verde). Ninguna fase implementada ni inferencia ejecutada.** El usuario autorizó ajustar el plan, commitear esa preparación y nada más: ejecutar código del piloto, instalar el SDK, llamar a las APIs y hacer push siguen sin autorización.
 
 Objetivo: medir si Jev mejora el triaje aditivo de pertinencia frente a la búsqueda fría y **DeepSeek**, con corpus propio saneado y coste acotado. DeepSeek es el proveedor habilitado por defecto según confirmación del operador del 2026-09-21. **Anthropic no tiene API habilitada, queda fuera del piloto y no es un fallback.** No se modifica `modules/providers/llm_provider.py`.
 
