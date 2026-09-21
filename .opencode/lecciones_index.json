@@ -1545,7 +1545,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 14,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "EVALUACION-JEV-TYPESAFE-2026-09-21",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
@@ -2644,7 +2644,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 13,
       "planes_que_lo_citan": [
         "EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
@@ -2899,12 +2899,12 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 26,
+      "total_citas": 27,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "EVALUACION-JEV-TYPESAFE-2026-09-21"
+        "EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
     },
@@ -2918,7 +2918,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 53,
+      "total_citas": 55,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",

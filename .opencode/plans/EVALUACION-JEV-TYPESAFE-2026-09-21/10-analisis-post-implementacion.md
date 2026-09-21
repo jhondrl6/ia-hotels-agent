@@ -84,6 +84,25 @@ También se comprobó por aserciones locales la igualdad exacta del conjunto AC1
 
 Estos checks no verifican pertinencia, saldo, autenticación, exactitud de etiquetas ni que los controles futuros ya existan. La verificación de estructura de ACs/prompts complementa su cobertura limitada.
 
+## Ejecución de FASE-A (offline, 2026-09-21)
+
+Instrucción del operador: "Ejecutar FASE-A". Cero red, cero clientes, cero credenciales; `run`/`decide` se niegan con exit 2 sin instanciar nada (AC11).
+
+**Artefactos creados (NUEVOS):**
+- `scripts/evaluate_jev_pilot.py` — modos locales `prepare`/`check` + métricas deterministas. Solo stdlib.
+- `tests/quality_gates/jev_pilot/test_jev_pilot_offline.py` — 7 tests; cada guard con par verde/rojo causal.
+- `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/{muestra.json,etiquetas.json,protocolo.json}` y `FASE-A/{selftest.txt,muestra_check.json}`.
+
+**Medido:**
+- `pytest tests/quality_gates/jev_pilot -v` → **7 passed**; salida y exit code copiados a `selftest.txt`.
+- `check` sobre la muestra → `check_status OK` en los 5 guards (schema, content_sha, split_disjoint, labels_not_in_payload, unreviewed_not_frozen).
+- Muestra: **BORRADOR**, `counts = {total 4, dev 2, eval 2, excluidos 1}`. Unidad de conteo: parejas (plan, lección); corte: hash determinista de `target_plan` fija el split, garantizando que un plan no aparece en ambos sets.
+- Métricas auto-verificadas con valores comprobables por otra vía: `score(3,4)=0.75`; `score(0,0)→ value None, motivo denominador_cero` (no 100 %).
+
+**Frontera humana respetada:** las etiquetas son del agente como candidatos; `etiquetas.review_status = sin_revisar`, `label = null`. No se atribuyó al operador ninguna etiqueta (L-R.4). Los umbrales de `protocolo.json` están en `null` = a-decidir; eso **impide** FASE-C, no se rellenaron.
+
+**No se declaró FASE-A plenamente verificada:** AC3 queda PARCIAL porque faltan revisión humana, umbrales acordados y el commit de los artefactos (autorización aparte). El corpus de 4 pares es exploratorio, muy por debajo del objetivo 60–100 (L-P6.3), y `MUESTRA-INSUFICIENTE` sigue siendo el estado honesto para cualquier comparación.
+
 ## Decisiones de diseño y alternativas
 
 | Tema | Decisión | Alternativa no elegida / motivo |

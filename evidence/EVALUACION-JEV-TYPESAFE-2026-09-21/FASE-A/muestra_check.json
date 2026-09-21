@@ -1,0 +1,37 @@
+{
+  "check_status": "OK",
+  "muestra_status": "BORRADOR",
+  "counts": {
+    "total": 4,
+    "dev": 2,
+    "eval": 2,
+    "excluidos": 1
+  },
+  "findings": [
+    {
+      "guard": "schema",
+      "ok": true,
+      "motivo": ""
+    },
+    {
+      "guard": "content_sha",
+      "ok": true,
+      "motivo": ""
+    },
+    {
+      "guard": "split_disjoint",
+      "ok": true,
+      "motivo": ""
+    },
+    {
+      "guard": "labels_not_in_payload",
+      "ok": true,
+      "motivo": ""
+    },
+    {
+      "guard": "unreviewed_not_frozen",
+      "ok": true,
+      "motivo": ""
+    }
+  ]
+}

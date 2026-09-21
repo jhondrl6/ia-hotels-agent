@@ -1,0 +1,46 @@
+{
+  "schema": "jev-pilot-protocolo/v1",
+  "status": "BORRADOR",
+  "reglas_recuperacion": "top-k por consulta fria sobre lecciones_index, mismo conjunto elegible para los tres brazos",
+  "rubrica": {
+    "valores": [
+      "pertinente",
+      "no_pertinente",
+      "insuficiente"
+    ],
+    "importancia": [
+      "alta",
+      "media",
+      "baja"
+    ]
+  },
+  "modelos": {
+    "jev_pin": "jev-1.13.0",
+    "comparador": "DeepSeek",
+    "excluido": "Anthropic"
+  },
+  "parametros": {
+    "retry_policy": {
+      "max_retries": 0
+    },
+    "timeout_s": null
+  },
+  "politica_cache": "sin cache entre brazos; cada llamada declarada con proveedor/modelo efectivo",
+  "splits": "determinista por plan (un plan no aparece en dev y eval a la vez)",
+  "limites_gasto": {
+    "usd": null,
+    "llamadas": null,
+    "tokens_in": null,
+    "tokens_out": null,
+    "motivo": "sin presupuesto aprobado"
+  },
+  "criterios_adopcion": {
+    "cobertura_min": null,
+    "margen_vs_deepseek": null,
+    "tratamiento_abstenciones": null,
+    "suficiencia_minima": null,
+    "latencia_max": null,
+    "revision_humana": "obligatoria, pendiente de designar responsable"
+  },
+  "nota": "Los valores nulos son a-decidir por el operador antes de cualquier inferencia; bloquean FASE-C."
+}

@@ -1,6 +1,6 @@
 # EVALUACION-JEV-TYPESAFE-2026-09-21
 
-**Estado: PREPARACIÓN COMITEADA Y EMPUJADA el 2026-09-21. La corrección del punto 4 y los pendientes están publicados en `origin/master` (push `03b9929..60cce03`, verificado con `git ls-remote`; 7/7 checks del hook en cada commit). Ninguna fase implementada ni inferencia ejecutada.** Autorizado y hecho: ajustar el plan, commitear, empujar, e instalar el SDK en un entorno aislado para una sonda sin red. Sigue sin autorización: ejecutar FASE-A o posteriores, llamar a APIs de inferencia, escribir la evidencia de FASE-B, write-back a QMind y archivado.
+**Estado: FASE-A EJECUTADA offline el 2026-09-21 (instruemento `scripts/evaluate_jev_pilot.py` + suite auto-verificada en verde; muestra en **BORRADOR**). Sin inferencias ejecutadas y sin commit de los artefactos de A (autorización aparte). La preparación documental sigue publicada en `origin/master` (push `03b9929..60cce03`, verificado con `git ls-remote`; 7/7 checks del hook).** Autorizado y hecho: ajustar el plan, commitear/empujar la preparación, instalar el SDK en entorno aislado para una sonda sin red, y ejecutar FASE-A offline. Sigue sin autorización: ejecutar FASE-B o posteriores, llamar a APIs de inferencia, commitear los artefactos de FASE-A, write-back a QMind y archivado.
 
 Objetivo: medir si Jev mejora el triaje aditivo de pertinencia frente a la búsqueda fría y **DeepSeek**, con corpus propio saneado y coste acotado. DeepSeek es el proveedor habilitado por defecto según confirmación del operador del 2026-09-21. **Anthropic no tiene API habilitada, queda fuera del piloto y no es un fallback.** No se modifica `modules/providers/llm_provider.py`.
 
@@ -19,7 +19,7 @@ Objetivo: medir si Jev mejora el triaje aditivo de pertinencia frente a la búsq
 
 | Fase | Objetivo | Estado |
 |---|---|---|
-| FASE-A | Muestra humana/saneada, protocolo y checker offline | PENDIENTE; requiere instrucción de fase |
+| FASE-A | Muestra humana/saneada, protocolo y checker offline | **EJECITADA offline 2026-09-21**: checker+métricas en verde (AC10); muestra **BORRADOR** con etiquetas y umbrales pendientes de humano (AC3 parcial) |
 | FASE-B | Jev/DeepSeek detrás de la costura, SDK y controles probados sin red | BLOQUEADA POR DEPENDENCIA: A y B/C offline del hermano |
 | FASE-C | Comparación autorizada y decisión, sin cambios de código | BLOQUEADA POR DEPENDENCIA Y AUTORIZACIÓN |
 | FASE-RELEASE | Revisión de evidencia y cierre documental | PENDIENTE |
@@ -35,7 +35,7 @@ Cada ítem conserva su puerta de autorización propia: "ejecutar" solo lo inmedi
 | # | Pendiente | Estado hoy | Puerta (qué lo desbloquea) | Tipo |
 |---|---|---|---|---|
 | P0 | Commitear la corrección del punto 4 + re-anclajes (README, `04-contrato`, `09-documentacion`, `10-analisis`) | **Completado** — corrección del punto 4 + pendientes publicados en `origin/master` (push `03b9929..60cce03`, hook 7/7) | Sin puerta pendiente | Higiene documental |
-| P1 | FASE-A: muestra humana/saneada, protocolo y checker **offline** | PENDIENTE | Instrucción de fase; corpus y revisión humana accesibles; **no** requiere B/C del hermano para preparar | Ejecución (offline) |
+| P1 | FASE-A: muestra humana/saneada, protocolo y checker **offline** | **Parcialmente hecho**: checker+métricas en verde; muestra **BORRADOR** (4 pares), etiquetas `sin_revisar` y umbrales nulos | Falta: designar revisor humano que etiquete, acordar umbrales del protocolo, y **commitear** los artefactos de A (autorización aparte). No bloquea B/C para preparar, pero sí para congelar | Ejecución (offline) |
 | P2 | Re-medir la dependencia externa `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` (B/C offline, AC15 parcial) | Escrita, no evidenciada | Al abrir B; un estado escrito no sustituye tests | Verificación |
 | P3 | FASE-B: Jev/DeepSeek tras la costura, SDK y controles probados **sin red** | BLOQUEADA (por P1 y P2) | A con muestra/protocolo + P2 verde; entorno aislado e instalación autorizados; `requirements-pilot.txt` y `entorno.json` se congelan aquí | Ejecución (offline) |
 | P4 (portón de P5) | Preflight de autenticación/cuota/saldo de Jev (AC12/AC8, etiquetadas `B/C`) | **NO-EJERCITADO** (sonda con clave sintética y cero red) | No es fase propia: es el primer paso de FASE-C. Exige el cliente con `RetryPolicy(max_retries=0)` de B antes de llamar (defaults = 3 intentos ante 429, gastarían cuota sin contabilidad) + autorización literal y presupuesto | Medición (con red) |

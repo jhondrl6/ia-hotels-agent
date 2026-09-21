@@ -7,9 +7,9 @@ Preparación ajustada el 2026-09-21. No es una declaración de implementación n
 | Superficie | Trabajo previsto | Resultado real |
 |---|---|---|
 | Documentos de este plan y su contexto | Contratos, evidencia de preparación, prompts y checklist | Ajustados en preparación; no código |
-| `scripts/evaluate_jev_pilot.py` | A/B: muestra, checker, ejecución y reporte | PENDIENTE |
+| `scripts/evaluate_jev_pilot.py` | A/B: muestra, checker, ejecución y reporte | **PARCIAL (A 2026-09-21)**: modos offline `prepare`/`check` + métricas creados y auto-verificados; `run`/`decide` se niegan (B/C) |
 | `scripts/decision_client.py` | B externa crea; B propia integra proveedores con metadatos | PENDIENTE |
-| `tests/quality_gates/jev_pilot/` | Tests deterministas, SDK y presupuesto | PENDIENTE |
+| `tests/quality_gates/jev_pilot/` | Tests deterministas, SDK y presupuesto | **PARCIAL (A)**: `test_jev_pilot_offline.py` 7/7 verde (guards con par causal); tests de SDK/presupuesto en B |
 | `modules/providers/llm_provider.py` | Ninguna modificación | FUERA DE ALCANCE |
 
 ## B. Capacidades

@@ -1,0 +1,65 @@
+{
+  "schema": "jev-pilot-muestra/v1",
+  "status": "BORRADOR",
+  "corpus_source": "own:lecciones_index",
+  "temporal_cut": "2026-09-12",
+  "review": {
+    "human_reviewed": false,
+    "reviewer": null,
+    "reviewed_at": null
+  },
+  "pairs": [
+    {
+      "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+      "target_plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "target_phase": "FASE-B",
+      "lesson_id": "D-AJUST.1",
+      "input_fragment": "Al cerrar FASE-B separar la division en subfases cuando un gate depende de otro.",
+      "original_sha256": "3be902d85bb1c4266638ac71690f38b1e653a7d3c1e96ec6c2e738f26a41035d",
+      "sanitized_sha256": "727e55303731c7df78964eea1bd3ab4b21cad7294eb4ee1569d0f3908a204337",
+      "split": "eval"
+    },
+    {
+      "pair_id": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20::D-AJUST.2",
+      "target_plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "target_phase": "FASE-C",
+      "lesson_id": "D-AJUST.2",
+      "input_fragment": "Una fase condicionada por evidencia no se declara decidida en la preparacion.",
+      "original_sha256": "7c22017d5c7d9c32cfbd4450d5b7c2a38fff9fd4c27126257f4877a71df1e1df",
+      "sanitized_sha256": "558dc0ac993416e68abfdd0ca0a120ba1ca611c45d067a2fc0183038548932eb",
+      "split": "dev"
+    },
+    {
+      "pair_id": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20::D-NC2",
+      "target_plan": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
+      "target_phase": "FASE-B",
+      "lesson_id": "D-NC2",
+      "input_fragment": "En templates conservar el intro y mover solo contadores dinamicos (diff minimo).",
+      "original_sha256": "8790a0996be513ef37f0afcc4e8f2ff8de730a3e327dea2a51df78248c029aa7",
+      "sanitized_sha256": "c3bccb03f11adda1c21e24be18039bbe6182ca5d0eb99f73a1ca32553183cec5",
+      "split": "dev"
+    },
+    {
+      "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+      "target_plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+      "target_phase": "FASE-C",
+      "lesson_id": "D-AJUST.4",
+      "input_fragment": "La reapertura de una fase de verificacion ocurre en sesion de decision, no dentro de la fase.",
+      "original_sha256": "1d9617b2d0f459e9d3a56284e281ab197f7d35e366800e55a0eddae88018bbc9",
+      "sanitized_sha256": "f387e6b5ed36f69588fa02de8814435b21096b77138e6b864ae8cd988125661e",
+      "split": "eval"
+    }
+  ],
+  "exclusions": [
+    {
+      "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-NC6",
+      "motivo": "enunciado truncado del indice, sin revision"
+    }
+  ],
+  "counts": {
+    "total": 4,
+    "dev": 2,
+    "eval": 2,
+    "excluidos": 1
+  }
+}

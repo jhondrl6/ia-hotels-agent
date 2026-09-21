@@ -1,0 +1,34 @@
+$ venv/Scripts/python.exe -m pytest tests/quality_gates/jev_pilot -v
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 7 items
+
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_prepare_dedups_and_marks_draft PASSED [ 14%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_sample_detects_content_change PASSED [ 28%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_split_rejects_same_plan_in_both_sets PASSED [ 42%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_labels_do_not_enter_payload PASSED [ 57%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_unreviewed_sample_is_not_frozen PASSED [ 71%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_metrics_known_counts_and_empty_denominator PASSED [ 85%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_prepare_and_check_do_not_construct_clients PASSED [100%]
+
+============================== 7 passed in 0.12s ==============================
+exit_code=0
+
+$ venv/Scripts/python.exe scripts/evaluate_jev_pilot.py --help
+usage: evaluate_jev_pilot.py [-h] {prepare,check,run,decide} ...
+
+Instrumento offline del piloto Jev (prepare/check/metricas).
+
+positional arguments:
+  {prepare,check,run,decide}
+    prepare             prepara muestra y etiquetas desde candidatos (offline)
+    check               verifica esquema/hashes/splits/etiquetas (offline)
+    run                 [FASE-B/C] no disponible en modo offline
+    decide              [FASE-C] no disponible en modo offline
+
+options:
+  -h, --help            show this help message and exit

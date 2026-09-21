@@ -77,3 +77,17 @@ Los enunciados siguientes son síntesis de las definiciones leídas; los nombres
 - QMind fue accesible en estas dos consultas; sus resultados fueron acotados y no constituyen un inventario completo. Las fuentes se contrastaron con archivos locales.
 - `scripts/build_lesson_index.py --check` comprueba frescura del índice generado, no saneamiento de datos ni calidad de etiquetas. Regenerar tras terminar las ediciones.
 - No se ha ejecutado write-back ni archivado. Crear este documento corrige la omisión de preparación, no autoriza el piloto ni simula un cierre de fase.
+
+## 5. Efectos observados al ejecutar FASE-A (2026-09-21)
+
+Solo se anotan las lecciones cuyo efecto ya se puede leer en evidencia de esta fase; las demás siguen como diseño pendiente.
+
+| ID | Efecto realmente observado | Qué NO demostró todavía |
+|---|---|---|
+| L-D5 | `test_metrics_known_counts_and_empty_denominator` fija un valor comprobable a mano (`3/4=0.75`) y un denominador cero que devuelve `None`, no 100 % | Coste/latencia reales: son de FASE-B/C |
+| L-R.3 | `muestra_check.json` publica población y exclusiones (`total 4, dev 2, eval 2, excluidos 1`) en denominadores separados por métrica | Cobertura sobre muestra completa; la recuperación todavía no corre contra los tres brazos |
+| L-R.4 | `test_unreviewed_sample_is_not_frozen` y `test_labels_do_not_enter_payload` verifican los guards mecánicos; el documento declara que rúbrica y etiquetas requieren humano | Que la etiqueta humana exista: `review_status = sin_revisar` |
+| L-P6.3 | Con 4 pares y umbrales nulos, el estado honesto registrado es **MUESTRA-INSUFICIENTE**; `run`/`decide` se niegan con exit 2 | Calidad de decisión del proveedor: no se ejercitó ningún proveedor |
+
+- Atribución respetada: los candidatos los produjo el agente; no se atribuyó al operador ninguna etiqueta.
+- El commit de los artefactos de FASE-A y el push siguen siendo autorizaciones separadas; esta sección no las declara hechas.

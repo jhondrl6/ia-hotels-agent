@@ -1,0 +1,34 @@
+{
+  "schema": "jev-pilot-etiquetas/v1",
+  "review_status": "sin_revisar",
+  "labels": [
+    {
+      "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+      "label": null,
+      "importance": null,
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "pair_id": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20::D-AJUST.2",
+      "label": null,
+      "importance": null,
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "pair_id": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20::D-NC2",
+      "label": null,
+      "importance": null,
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    {
+      "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+      "label": null,
+      "importance": null,
+      "reviewer": null,
+      "reviewed_at": null
+    }
+  ]
+}
