@@ -31,10 +31,10 @@ El operador autorizó instalar el SDK el 2026-09-21; en ese momento no estaban a
 
 | Medición | Valor |
 |---|---|
-| Entorno | `tmp_test/venv-jev-sdk` (Python 3.13.3, ignorado por git, 28 MB); `venv/` del proyecto quedó intacto |
+| Entorno | `tmp_test/venv-jev-sdk` (Python 3.13.3, ignorado por git, 28 MB); el SDK no se instaló en `venv/` del proyecto (su pydantic se alineó al pin más tarde ese día, ver §Alineación de pydantic en el venv) |
 | SDK | `typesafe-sdk==0.7.0` |
 | Resolución de dependencias | httpx2 2.13.0, httpcore2 2.13.0, anyio 4.15.1, pydantic 2.13.5, pydantic-core 2.46.5, tenacity 9.1.4, truststore 0.10.4, typing-extensions 4.16.0 |
-| Conflicto que exige aislamiento | pydantic 2.13.5 resuelto contra el pin `pydantic==2.12.5` de `requirements.txt` y el 2.12.3 realmente instalado en el venv del producto |
+| Conflicto que exige aislamiento | pydantic 2.13.5 resuelto contra el pin `pydantic==2.12.5` de `requirements.txt`; en el momento de la sonda el venv del producto tenía `2.12.3` (desajuste preexistente con el pin), alineado a `2.12.5` después — ver §Alineación de pydantic en el venv |
 | Interfaz real | `TypeSafeClient(api_key, model, retry, timeout, headers, transport, http_client, base_url)`; `system_one(state, questions, model, retry, timeout, extra_headers, extra_body, response_model)` |
 | Reintentos por defecto | `max_retries=2`, `backoff_initial=0.5`, `backoff_max=5.0`, `backoff_jitter=0.25`, `respect_retry_after=True`, `timeout=30.0` (presupuesto total de la llamada) |
 | Intentos medidos ante 429 | 3 con defaults; 1 con `max_retries=0` |
@@ -44,6 +44,27 @@ El operador autorizó instalar el SDK el 2026-09-21; en ese momento no estaban a
 | Noul | `NoulAnswer` expone solo `.noul` (sin confidence); respuestas indexadas por los IDs enviados; `resp.model` = `jev-1.13.0` |
 
 Consecuencia en el diseño: AC8 fija `max_retries=0` como requisito y AC9 aserta clases de error y trata un 200 sin `usage` como fallo, no como coste cero. La reproducibilidad del pin `jev-1.13.0` queda corroborada en el SDK real, no solo en la documentación. La sonda **no** prueba autenticación, cuota, saldo ni calidad de decisiones: sigue vigente `NO-EJERCITADO` para esos aspectos.
+
+## Alineación de pydantic en el venv (post-sonda, mismo día)
+
+**Qué se corrigió:** desajuste preexistente entre `requirements.txt` y el `venv/` del producto, ajeno al SDK de Jev. `requirements.txt` pinea `pydantic==2.12.5` / `pydantic_core==2.41.5` / `pydantic-settings==2.10.1` (bump de seguridad, commit `967b13d`); el venv tenía `2.12.3` / `2.41.4` y `pydantic-settings` **sin instalar**.
+
+**Dirección elegida:** sincronizar el venv **al pin**, no bajar el pin al venv. Bajarlo habría deshecho el parche de CVEs y habría dejado el venv por debajo de `pydantic>=2.12.0` que exige el SDK del hermano. Se verificó que `2.12.5` y `2.41.5` son versiones reales y coherentes (par `2.12.x`↔core `2.41.x`).
+
+| paquete | antes (sonda) | después (alineado) | pin en `requirements.txt` |
+|---|---|---|---|
+| pydantic | 2.12.3 | 2.12.5 | 2.12.5 |
+| pydantic_core | 2.41.4 | 2.41.5 | 2.41.5 |
+| pydantic-settings | no instalado | 2.10.1 | 2.10.1 |
+
+**Límites que esto NO cambia:**
+- El SDK `typesafe-sdk` / `httpx2` / `tenacity` **sigue sin instalarse** en `venv/` del producto; vive aislado en `tmp_test/venv-jev-sdk`. Esta sonda y la prohibición de AC9/contrato de instalarlo en el entorno principal permanecen vigentes.
+- `requirements.txt` **no se modificó**: el pin ya era correcto; lo que estaba desviado era el entorno.
+- No se tocó el runtime de producción ni `modules/providers/llm_provider.py`.
+
+**Efecto documental:** las afirmaciones "el venv quedó intacto / no se tocó" de esta preparación se leen ahora en dos sentidos: *SDK aislado* (SIGUE CIERTO) vs *venv sin tocar* (YA NO — se alineó su pydantic). Las citas antiguas quedan re-ancladas aquí y en README §Qué cambió / `09-documentacion-post-proyecto.md` §B.
+
+**Verificación tras la alineación:** `pip freeze` coincide con las tres líneas de `requirements.txt`; `run_all_validations.py --quick` → 11/11 PASSED (sin regresión).
 
 ## Validaciones de preparación
 

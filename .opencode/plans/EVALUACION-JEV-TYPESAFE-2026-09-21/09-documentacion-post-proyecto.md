@@ -18,7 +18,7 @@ Pendientes: comparación búsqueda fría/DeepSeek/Jev, contabilidad por intento,
 
 DeepSeek habilitado por defecto y Anthropic sin API son información del operador, no capacidades nuevas implementadas en esta sesión. La selección explícita y la captura de usage todavía se deben construir detrás de la costura.
 
-El SDK `typesafe-sdk==0.7.0` quedó instalado **solo en un entorno aislado** (`tmp_test/venv-jev-sdk`) para una sonda offline documentada en `10-analisis-post-implementacion.md` §Sonda de instalación. No es una capacidad entregada ni un cambio de dependencias del producto: `requirements.txt` y `venv/` no se tocaron, y la instalación principal está prohibida mientras el SDK resuelva pydantic por encima del pin del proyecto.
+El SDK `typesafe-sdk==0.7.0` quedó instalado **solo en un entorno aislado** (`tmp_test/venv-jev-sdk`) para una sonda offline documentada en `10-analisis-post-implementacion.md` §Sonda de instalación. No es una capacidad entregada ni un cambio de dependencias del producto: `requirements.txt` no se tocó y el SDK sigue fuera de `venv/`, con la instalación principal prohibida mientras el SDK resuelva pydantic por encima del pin del proyecto. **Corrección posterior del mismo día:** `venv/` sí cambió, pero no por el SDK — se alineó su pydantic al pin (`2.12.3`→`2.12.5`, core `2.41.4`→`2.41.5`, +`pydantic-settings 2.10.1`) para cerrar un desajuste preexistente; ver `10-analisis-post-implementacion.md` §Alineación de pydantic en el venv.
 
 ## C. Límites
 
