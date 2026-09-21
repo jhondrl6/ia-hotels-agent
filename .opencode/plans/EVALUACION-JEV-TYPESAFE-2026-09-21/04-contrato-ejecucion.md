@@ -18,7 +18,7 @@ Complementa el workflow canónico, no lo sustituye. Una fase por sesión; la ins
 | Inferencias Jev/DeepSeek | Solo C con autorización literal por etapa, hashes y límites finitos |
 | Material del cliente / repositorio completo a APIs | Prohibido; únicamente inputs de corpus propio saneados y aprobados |
 | Modificar planes hermanos | No; excepción futura solo D7/D6 con instrucción que delimite archivos |
-| Commit, push, write-back y archivado | Cada acción requiere autorización separada; ninguna está autorizada hoy |
+| Commit, push, write-back y archivado | Cada acción requiere autorización separada. El 2026-09-21 se autorizaron y ejecutaron el commit y el push de la preparación; **write-back y archivado siguen sin autorización** |
 | VERSION, AGENTS.md, .cursorrules, .agents, hooks y gates | No modificar |
 
 ## Qué significa offline

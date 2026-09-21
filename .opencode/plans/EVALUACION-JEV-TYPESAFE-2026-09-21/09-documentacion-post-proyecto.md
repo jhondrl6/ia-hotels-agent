@@ -43,4 +43,4 @@ Las validaciones documentales de preparación se registran en el análisis, no s
 - Índice generado: regenerar con su script y verificar tras la última edición.
 - CHANGELOG, GUIA_TECNICA y REGISTRY: no se actualizan para simular una fase ejecutada; en fases futuras seguir CONTRIBUTING y resolver alcance antes de escribir.
 - VERSION, AGENTS.md, .cursorrules y .agents: no se modifican.
-- Write-back, archivado y push: no autorizados por la preparación. El commit de estos documentos sí se autorizó y ejecutó el 2026-09-21 (`2c966f6`).
+- Write-back y archivado: no autorizados por la preparación. El commit de estos documentos (`2c966f6`) y su push a `origin/master` (rango hasta `99ac860`) sí se autorizaron y ejecutaron el 2026-09-21.

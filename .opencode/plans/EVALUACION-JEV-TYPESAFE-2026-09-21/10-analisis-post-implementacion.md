@@ -27,7 +27,7 @@ Correcciones de diseño:
 
 ## Sonda de instalación
 
-El operador autorizó instalar el SDK el 2026-09-21 (sin autorizar FASE-B, inferencias ni push). La sonda corrió en un entorno aislado y **sin red**: `TYPESAFE_API_KEY` se eliminó del entorno del subproceso y se usó una clave literal sintética con `httpx2.MockTransport`, que intercepta la petición dentro del proceso. No se escribieron archivos de plan ni de evidencia: `requirements-pilot.txt` y `entorno.json` siguen siendo artefactos de FASE-B.
+El operador autorizó instalar el SDK el 2026-09-21; en ese momento no estaban autorizados FASE-B, inferencias ni push (el push se pidió y ejecutó después). La sonda corrió en un entorno aislado y **sin red**: `TYPESAFE_API_KEY` se eliminó del entorno del subproceso y se usó una clave literal sintética con `httpx2.MockTransport`, que intercepta la petición dentro del proceso. No se escribieron archivos de plan ni de evidencia: `requirements-pilot.txt` y `entorno.json` siguen siendo artefactos de FASE-B.
 
 | Medición | Valor |
 |---|---|
@@ -87,4 +87,4 @@ Etiquetas/saneamiento humanos, criterios/umbrales, presupuesto, entorno aislado,
 
 ## Cierre del plan — PENDIENTE
 
-Sin inferencias, write-back ni archivado. La preparación quedó comiteada el 2026-09-21 en `2c966f6` (base `99a33d8`, par de índices en el mismo commit, 7/7 checks del hook en verde); el **push no está ejecutado ni autorizado**. El cierre futuro exige la revisión de artefactos y los permisos del contrato; una decisión administrativa de no ejecutar debe conservar los AC no ejercitados.
+Sin inferencias, write-back ni archivado. La preparación quedó comiteada y **empujada** el 2026-09-21: base `99a33d8`, rango `2c966f6..99ac860` en `origin/master`, paridad `0/0` verificada con `git ls-remote` y 7/7 checks del hook en cada commit; la instalación del SDK quedó limitada a un entorno aislado. El cierre futuro exige la revisión de artefactos y los permisos del contrato; una decisión administrativa de no ejecutar debe conservar los AC no ejercitados.
