@@ -118,8 +118,11 @@ commit, `git show --stat eecf246` muestra que la otra sesión ya se llevó `ROAD
 el PRE, el POST y las dos corridas del quick) y pasó a `eecf246`, con paridad `0/1` contra
 `origin/master`: el commit de FASE-B se apoya sobre **un commit ajeno todavía sin empujar**. **Ese commit
 ya está hecho: `647f436`, el 2026-09-22, con el par del índice dentro y los 7 checks del pre-commit en
-verde; la paridad measureada hoy es `0/2`** (`git rev-list --left-right --count origin/master...HEAD`),
-porque `eecf246` sigue sin empujar delante del de esta fase y el push no está autorizado. Nada de esto
+verde; la paridad medida ese día fue `0/2`** (`git rev-list --left-right --count origin/master...HEAD`),
+porque `eecf246` sigue sin empujar delante del de esta fase y el push no está autorizado (la paridad
+medida el 2026-09-22 era `0/2` al cerrar el commit de la fase y quedó en **`0/3`** tras su propio barrido
+de citas, `612efd0`, el mismo día: cada commit documental suma uno, y por eso la cifra se re-mide). Nada
+de esto
 mueve las restas —los cuatro archivos gobernados por AC16/AC17 no están en ninguno de los dos commits y
 `git diff --numstat` sobre ellos sigue vacío—, pero sí invalida la lectura «el árbol de partida es solo
 mío», que es justo el tipo de premisa que este plan caza (medición A6).

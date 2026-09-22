@@ -20,10 +20,11 @@ mutante en disco.
 
 ## Lo que la fase **no** cerró (para que FASE-C no lo lea como cerrado)
 
-- **Commit**: **cerrado el 2026-09-22 en `647f436`** con instrucción literal del operador, y llevó dentro
-  el par del índice (ver la última fila de la tabla). **Push**: sigue **sin autorizar** — paridad
-  `0/2` contra `origin/master` medida con `git rev-list --left-right --count origin/master...HEAD`, y
-  por delante de esta fase está el commit ajeno `eecf246`, también sin empujar.
+- **Push**: sigue **sin autorizar** — el commit de la fase (`647f436`) y su barrido de citas (`612efd0`)
+  están en el árbol local, así que la paridad contra `origin/master` era `0/2` al commitear la fase y
+  quedó en **`0/3`** el mismo día (medida con `git rev-list --left-right --count origin/master...HEAD`;
+  cada commit documental suma uno, por eso se re-mide). Por delante de esta fase está el commit ajeno
+  `eecf246`, también sin empujar.
 - **Rutas ajenas**: al cerrar la sesión de fase había **tres** sucias (`EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md`,
   `.opencode/context/Refuerzo.md` y `ROADMAP.md`, esta última aparecida durante la sesión, mtime 22:17:38).
   Las dos últimas se las llevó la otra sesión en `eecf246`; lo único que quedó **fuera** del commit de

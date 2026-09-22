@@ -116,8 +116,9 @@ comandos y mtimes en `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/ba
 **Cerrado el 2026-09-22.** El commit de FASE-B está hecho — **`647f436`** (46 archivos, +4.412/−97), con
 instrucción literal del operador y con el par del índice de lecciones dentro, así que `[6/7]` del hook no
 lo cortó y los **7** checks pasaron. Dos consecuencias re-medidas para quien abra FASE-C: la paridad con
-`origin/master` es ahora **`0/2`** (`eecf246`, ajeno, sigue por delante y sin empujar) y el **push no está
-autorizado**; y el propio commit movió el denominador que la fase había publicado — **678 → 691** `.py`
+`origin/master` era **`0/2`** al cerrarlo y es **`0/3`** tras su propio barrido de citas (`612efd0`, el
+mismo día: `eecf246`, ajeno, sigue por delante y sin empujar) — **cada commit documental suma uno, así que
+la cifra se re-mide y no se copia**— y el **push no está autorizado**; y el propio commit movió el denominador que la fase había publicado — **678 → 691** `.py`
 rastreados —, con lo que la resta de AC6 quedó rectificada con su nota y su residuo de un archivo
 (`.venv-wsl/bin/activate_this.py`, exclusión no declarada) registrado como **S11** con su lección
 **L-VCF-11**. Y el re-muestreo que hizo falta para medir esa rectificación **pisó la evidencia cerrada de

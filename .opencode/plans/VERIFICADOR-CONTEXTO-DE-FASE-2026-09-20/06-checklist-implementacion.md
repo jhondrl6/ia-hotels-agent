@@ -94,7 +94,9 @@ estado) · `NO-EJERCITADO` (el camino no se ejercitó; con el motivo) · `FUERA 
       número inexistente se cerraría como `NO-EJERCITADO` certificando humo).
 - [x] **Commit cerrado el 2026-09-22 en `647f436`** (46 archivos, +4.412/−97) con instrucción literal,
       con el par del índice dentro y con los **7** checks del pre-commit en verde. El push **no** está
-      autorizado: paridad `0/2` con `origin/master` y el commit ajeno `eecf246` por delante. El commit
+      autorizado: paridad `0/2` al commitear la fase y **`0/3`** tras su barrido (`612efd0`, 2026-09-22;
+      cada commit documental suma uno, así que se re-mide) con `origin/master` y el commit ajeno
+      `eecf246` por delante. El commit
       además **movió el denominador que la fase había publicado**: `git ls-files '*.py'` pasó de 678 a
       **691** (+13 archivos propios) y AC6 sigue en **0** re-medido con la puerta; la brecha restante
       contra los 692 del escáner se desglosó archivo por archivo y dio un nombre —
