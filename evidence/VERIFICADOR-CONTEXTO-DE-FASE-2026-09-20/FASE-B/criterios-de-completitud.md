@@ -1,7 +1,10 @@
 # FASE-B — criterios de completitud, uno por uno, con su medición
 
-Cerrada el **2026-09-21** sobre HEAD `74d8ff5`. Cada fila cita el artefacto donde un humano lo vería
-sin abrir el código (R2.4). Techo alcanzable: `VERIFICADO OFFLINE` con su rojo o su mutante en disco.
+Cerrada el **2026-09-21** sobre HEAD `74d8ff5` y **commiteada el 2026-09-22 en `647f436`** (46 archivos,
++4.412/−97), que se apoya sobre el commit ajeno `eecf246`. Los HEADs citados en las filas de abajo son el
+árbol sobre el que cada medición se tomó, no el del commit (R2.3). Cada fila cita el artefacto donde un
+humano lo vería sin abrir el código (R2.4). Techo alcanzable: `VERIFICADO OFFLINE` con su rojo o su
+mutante en disco.
 
 | Criterio del prompt de fase | Estado | Dónde se lee / comando |
 |---|---|---|
@@ -13,17 +16,29 @@ sin abrir el código (R2.4). Techo alcanzable: `VERIFICADO OFFLINE` con su rojo 
 | `--quick` verde **sin** haber tocado su composición (AC16) | ✅ 11/11 en los dos lados con `exit 0` (`faseB_quick_pre.txt` / `faseB_quick_post.txt`), `grep` de `[N/11]` y de los 7 pasos del hook idénticos, y `git diff` **vacío** sobre `run_all_validations.py`, el hook, `build_lesson_index.py` y `validate_governance_numbers.py` (esta última se consumió como heredera, no se reescribió). **Con un rojo propio intermedio declarado**: tras registrar la fase cayó `[3/11]` por la fecha de `REGISTRY.md` y se resolvió con su writer (`sync_versions.py --rule registry_last_update`), no a mano — segunda reproducción del conflicto de los dos escritores (FASE-A lo documentó; dueño y nota en `baseline-pre-post.md`) | `baseline-pre-post.md` §Rojo propio intermedio, comando de la unidad 10 del par |
 | `.agents/` y los planes vivos intactos (AC17) | ✅ `git status --porcelain .agents/` vacío; 98.694 y 6.123 bytes sin cambio. No se tocó ningún `05-prompt-*.md` ajeno, ni `.agents/workflows/**` | `faseB_baseline_post.txt` unidades 8 y 11 |
 | Herencia de FASE-A re-utilizada, no reinventada | ✅ `coverage_basis` con el mismo esqueleto (`archivos_escaneados`, `poblacion`, `excluidos_por_directorio`, `limites`, `comando`, `medido_el`) y el tri-estado con `motivo_clase`. **Diferencia declarada**: el `status` del escaneo es binario porque el `AUSENTE` y el `LECTOR-FALLIDO` de esta puerta viven en la resolución del proveedor y ahí el tercero se llama `estado_lector` — no se colapsó con `NO-CONFIGURADO` | `import_scanner.txt` → `coverage_basis`, `informe.json` |
-| Post-ejecución completa, incluido el índice regenerado en el mismo commit | ⚠️ **parcial por autorización, no por olvido**: los seis documentos están escritos (`dependencias-fases.md`, `README.md`, `06-`, `09-`, `10-`, `00-` con su balance §6), `log_phase_completion.py --fase FASE-B` ejecutado y `build_lesson_index.py` regenerado con el par `.md`+`.json` en el árbol
-  (**330 IDs** definidos + 51 sin definición, `--check` → `[OK] Índice de lecciones fresco (330 IDs)`;
-  eran 325 al cerrar FASE-A — sube porque esta fase define L-VCF-6 a L-VCF-10, que es A6 golpeando otra
-  vez: la cifra del propio documento caduca al escribirlo, así que se re-mide y se publica). **El commit no se hizo**: pide instrucción literal y no llegó, así que «el mismo commit» queda pendiente del autorizador — es el único criterio de esta fase que no puede cerrarse en verde sin esa instrucción, y así se declara | `git status --porcelain`, salida de `build_lesson_index.py`, `docs/contributing/REGISTRY.md` |
+| Post-ejecución completa, incluido el índice regenerado en el mismo commit | ✅ **cerrado el 2026-09-22 con la instrucción literal del operador («Commit»)**: `647f436` llevó **dentro** el par `.md`+`.json` (`git show --numstat 647f436` → `LECCIONES-INDEX.md` 24+/17−, `lecciones_index.json` 100+/14−) y los **7** checks del pre-commit pasaron en esa corrida, así que `[6/7]` encontró la pareja fresca y no cortó. Hasta el 2026-09-22 este criterio estaba en ⚠️ **parcial por autorización, no por olvido**: los seis documentos escritos (`dependencias-fases.md`, `README.md`, `06-`, `09-`, `10-`, `00-` con su balance §6), `log_phase_completion.py --fase FASE-B` ejecutado y el índice regenerado en el árbol (**330 IDs** definidos + 51 sin definición al cerrar B; eran 325 al cerrar FASE-A — sube porque esta fase define L-VCF-6 a L-VCF-10, que es A6 golpeando otra vez: la cifra caduca al escribirla, así que se re-mide y se publica). De ese cierre queda **una** cosa fuera y declarada: `EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md`, ajena, sin `git checkout` sobre ella | `git show --numstat 647f436`, `git status --porcelain`, salida de `build_lesson_index.py --check`, `docs/contributing/REGISTRY.md` |
 
 ## Lo que la fase **no** cerró (para que FASE-C no lo lea como cerrado)
 
-- **Commit y push**: no autorizados; la fase deja su checkpoint en el árbol de trabajo. Dos rutas
-  ajenas preexistentes siguen ahí y **no** son de este plan
-  (`EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md` modificado y
-  `.opencode/context/Refuerzo.md` sin trackear), **más una tercera que apareció durante la sesión**: `ROADMAP.md` (mtime 22:17:38). **Rectificado en el tramo de commit**: esas dos últimas rutas ya no estaban sucias al commitear —la otra sesión se las llevó en `eecf246`, hoy HEAD y **sin empujar** (`0/1` con `origin/master`), así que el commit de esta fase se apoya sobre un commit ajeno—; lo único que quedó **fuera** del commit de FASE-B es `EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md`, sin `git checkout` sobre ella. Detalle en `baseline-pre-post.md` §Rutas ajenas.
+- **Commit**: **cerrado el 2026-09-22 en `647f436`** con instrucción literal del operador, y llevó dentro
+  el par del índice (ver la última fila de la tabla). **Push**: sigue **sin autorizar** — paridad
+  `0/2` contra `origin/master` medida con `git rev-list --left-right --count origin/master...HEAD`, y
+  por delante de esta fase está el commit ajeno `eecf246`, también sin empujar.
+- **Rutas ajenas**: al cerrar la sesión de fase había **tres** sucias (`EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md`,
+  `.opencode/context/Refuerzo.md` y `ROADMAP.md`, esta última aparecida durante la sesión, mtime 22:17:38).
+  Las dos últimas se las llevó la otra sesión en `eecf246`; lo único que quedó **fuera** del commit de
+  FASE-B es `EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md`, sin `git checkout` sobre ella
+  (es trabajo en curso de otra sesión, no basura que limpiar). Detalle en `baseline-pre-post.md`
+  §Rutas ajenas.
+- **La población que el propio commit movió, y el archivo que nadie había excluido**: al commitear, los
+  `.py` rastreados por git pasaron de **678** (PRE/POST medidos el 2026-09-21) a **691** —los
+  **13** `.py` de esta fase—, así que la fila «la fase no commitea `.py`» de la tabla pre/post quedó
+  refutada por el propio commit y está rectificada con su nota. Y al reconciliar las dos poblaciones de
+  AC6 quedó el residuo: el escáner ve **692** y git **691**; el `+1` es
+  `.venv-wsl/bin/activate_this.py`, un archivo de entorno que entra en el denominador porque
+  `.venv-wsl` **no está** en `ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION`. No se arregló en este barrido
+  (tocar la puerta obliga a re-ejecuciones de sus 53 casos y sus mutantes): quedó como **S11** en
+  `10-analisis-post-implementacion.md`, con el 0 de AC6 intacto porque ese archivo no importa el SDK.
 - **D7** (activar el proveedor) y con ella la comparación entre proveedores: sigue debida, con su
   disparador cumplido en la parte que gobernaba a AC9 («que AC9 haya cerrado en verde la costura»).
 - **S10** (nueva, abierta por esta fase): dónde vivirá el `import` del SDK cuando D7 se active. No se

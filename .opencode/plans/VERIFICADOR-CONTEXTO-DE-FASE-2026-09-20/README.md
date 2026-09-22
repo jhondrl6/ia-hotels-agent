@@ -1,7 +1,11 @@
 # VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
 
-**Estado: FASE-A ✅ CERRADA el 2026-09-21 (VERIFICADO OFFLINE, AC1–AC5) — 1 de 4 fases de
-implementación ejecutadas. FASE-B, C, D y RELEASE pendientes.** Concepción: AUDITADA y CORREGIDA
+**Estado: FASE-A ✅ CERRADA el 2026-09-21 (VERIFICADO OFFLINE, AC1–AC5) y FASE-B ✅ CERRADA el
+2026-09-21 (VERIFICADO OFFLINE, AC6–AC9), commiteada el 2026-09-22 en `647f436` — 2 de 4 fases de
+implementación ejecutadas. FASE-C, D y RELEASE pendientes.** *(Esta cabecera estuvo vencida: decía «1 de
+4» y «FASE-B pendiente» mientras la tabla de fases y el contador de ACs del propio README ya contaban B
+por cerrada — el defecto que este plan caza, reproducido sobre su propio índice de entrada y corregido
+el 2026-09-22 al medirlo.)* Concepción: AUDITADA y CORREGIDA
 el 2026-09-20 contra código vivo y contra el Knowledge Center (ver §Correcciones aplicadas).
 Renombrado desde `PASO0-VERIFICADOR-PERTINENCIA-2026-09-20` cuando entró FASE-D, porque el
 contenido dejó de ser solo pertinencia.
@@ -9,7 +13,7 @@ contenido dejó de ser solo pertinencia.
 **Contador de ACs (medido al cerrar FASE-B, 2026-09-21):** 9 `VERIFICADO OFFLINE` con su mutation
 check o su rojo en disco (AC1–AC5 de FASE-A; AC6–AC9 de FASE-B, con 9 mutantes y el rojo del contract
 test capturado) · 3 con su parte verificada fase a fase y el resto abierto (AC16 con delta 0 en A y B,
-AC17 ídem, AC18 con el quick 11/11 y el índice regenerado) · **11 pendientes** (AC10–AC15 de C,
+AC17 ídem, AC18 con el quick 11/11 y el índice regenerado **y ya dentro del commit** `647f436`) · **11 pendientes** (AC10–AC15 de C,
 AC19–AC23 de D, y el tramo transversal de los tres anteriores). Ningún AC del plan puede llegar a
 `SUPERADO EN E2E` (no hay FASE-VERIFY ni corrida).
 
@@ -150,26 +154,30 @@ copiarlo sería fabricar la segunda fuente estática que este plan existe para c
 Lo que sí se publica aquí es el estado re-medido al cerrar B, con su comando y su fecha, para que
 C no lo asuma:
 
-| Qué re-medir al abrir FASE-C | Valor del 2026-09-21 (cierre de FASE-B) | Comando |
+| Qué re-medir al abrir FASE-C | Valor del **2026-09-22** (commit de FASE-B) | Comando |
 |---|---|---|
-| HEAD y limpieza | `74d8ff5` al abrir B; B **no commiteó** (el commit pide instrucción literal), así que su trabajo está en el árbol de trabajo junto con dos rutas ajenas preexistentes (`EVALUACION-JEV/dependencias-fases.md` modificado y `.opencode/context/Refuerzo.md` sin trackear), que **no** son de este plan | `git rev-parse --short HEAD`, `git status --porcelain` |
+| HEAD y limpieza | `647f436` — FASE-B **sí está commiteada** (instrucción literal «Commit» del operador, 46 archivos, +4.412/−97) y se apoya sobre `eecf246`, un commit **ajeno** todavía sin empujar; paridad **`0/2`** con `origin/master` y el push **no** está autorizado. En `git status` queda **una** ruta ajena (`EVALUACION-JEV/dependencias-fases.md`, modificada), que no es de este plan y sobre la que no se hace `git checkout` | `git rev-parse --short HEAD`, `git status --porcelain`, `git rev-list --left-right --count origin/master...HEAD` |
 | Checks del `--quick` | **11** (delta 0, AC16) | `grep -cE '^\\s*print\\(f?"\\[[0-9]+/11\\]' scripts/run_all_validations.py` |
 | Pasos del hook | **7** (delta 0, AC16) | `grep -cE '^#   \\[[0-9]+/[0-9]+\\]' scripts/git_hooks/pre-commit` |
 | Funciones de test canónicas (método grep) | **4.378** (4.330 PRE + 48 de B); `AGENTS.md` sigue publicando 4.246 y su cifra está vencida por tráfico ajeno | `grep -rE '^\\s*def test_' tests --include=*.py \\| wc -l` |
 | Herencia de forma para C | `coverage_basis` y el tri-estado, ya re-utilizados por B **sin reinventarlos**; y la costura de B como **única** puerta al proveedor (C no debe importar un SDK: es AC6, no estilo) | `evidence/…/FASE-A/informe.json`, `evidence/…/FASE-B/informe.json` → `costura` |
-| Población AC6 que C no debe mover | **0** imports del SDK/adapter fuera de `scripts/decision_client.py`, sobre **692** `.py` del árbol (678 rastreados); re-medir tras escribir sus tests, porque C es el consumidor que podría tentar un import | `python scripts/decision_client.py --scan-imports` |
-| Índice de lecciones | regenerado al cerrar B con el par `.md`+`.json` en el árbol de trabajo; **el mismo commit** es lo que corta `[6/7]`, y B no commiteó (pide instrucción literal), así que la pareja viaja con el commit que el operador autorice | `python scripts/build_lesson_index.py --check` |
+| Población AC6 que C no debe mover | **0** imports del SDK/adapter fuera de `scripts/decision_client.py`, **re-medido el 2026-09-22** sobre **692** `.py` del árbol / **691** rastreados por git (678 a 2026-09-21, antes del commit de B: +13 por sus propios archivos). El residuo de 1 entre las dos cifras **no** es tráfico ajeno: es `.venv-wsl/bin/activate_this.py`, una exclusión no declarada del denominador, con dueño en **S11**. Re-medir tras escribir los tests de C, porque C es el consumidor que podría tentar un import | `python scripts/decision_client.py --scan-imports`, `git ls-files '*.py' \| wc -l` |
+| Índice de lecciones | el par `.md`+`.json` **viajó dentro de `647f436`** (`--numstat`: `LECCIONES-INDEX.md` 24+/17−, `lecciones_index.json` 100+/14−), así que `[6/7]` del hook ya no corta este cierre. **330 IDs** definidos al cerrar B y **332** re-medidos el 2026-09-22 tras el barrido de citas (sube porque el propio barrido define L-VCF-11 y L-VCF-12 — A6 otra vez: la cifra caduca al escribirla); re-medir al abrir C | `python scripts/build_lesson_index.py --check` |
 | Carga de lectura A7 | **263.973 bytes ≈ 65.993 tokens** — re-medidos con `stat -c %s` al cerrar B y **sin cambio** desde el 2026-09-20 (los siete documentos son del plan medido, no de este) | `stat -c %s` sobre los siete documentos |
-| Presupuesto (R2.1) | el instrumento **sigue sin correr**: `find . -name "*.jsonl"` devuelve **0** dentro del workspace, medido otra vez el 2026-09-21 (la precondición que capitalizó **D-V2.1**, reproducida por esta fase); métrica retirada y unidad contable declarada en `FASE-B/baseline-pre-post.md` | `find . -name "*.jsonl" \| wc -l` |
+| Presupuesto (R2.1) | el instrumento **sigue sin correr**: `find . -name "*.jsonl"` (sin contar `venv/`) devuelve **0** también medido el **2026-09-22**, sexta reproducción de la precondición que capitalizó **D-V2.1**; métrica retirada y unidad contable declarada en `FASE-B/baseline-pre-post.md` | `find . -name "*.jsonl" -not -path "./venv/*" \| wc -l` |
 
-Además, tres cosas que B midió y C no debe volver a descubrir: la costura resuelve al proveedor
+Además, cuatro cosas que B midió y C no debe volver a descubrir: la costura resuelve al proveedor
 **por entorno** (`IAH_DECISION_PROVIDER` + `IAH_DECISION_PROVIDERS_DIR`, sin default alguno) y su
 `provider_status` es el tri-estado que C reutiliza; **ningún proveedor entra en este plan** (la deuda
 **D7** sigue abierta y su consumidor natural es **D6**, no C); y donde B dejó escrito el problema que
 C hereda sin resolverlo — **dónde vivirá el `import` del SDK cuando D7 se active** — está en
 `10-analisis-post-implementacion.md`, no en el código. Y sigue en pie lo que A midió: el árbol de
 `run_all_validations.py` **no está libre** (**D10**) y la regla de **orden de cierre** del hermano
-`EVALUACION-JEV` deja este plan cerrarse antes de que aquel publique.
+`EVALUACION-JEV` deja este plan cerrarse antes de que aquel publique. Y una guarda operativa que este
+barrido aprendió a costa de la evidencia de FASE-A: **no correr
+`python scripts/validate_governance_numbers.py --report` sin destino** — su default está fijado dentro de
+`evidence/…/FASE-A/informe.json` y cada corrida re-escribe ese registro cerrado (deuda **S12**, lección
+**L-VCF-12**); para re-muestrear, `--report temp/<archivo>` y comparar contra el `HALLAZGOS` de A1–A4.
 
 ## Cierre y aceptación
 

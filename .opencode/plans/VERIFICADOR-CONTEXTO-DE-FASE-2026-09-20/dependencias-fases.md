@@ -112,3 +112,17 @@ dos commits y su `git diff --numstat` sigue vacío—, pero la premisa «el árb
 queda refutada y así queda escrita (medición A6 del maestro, cumplida sobre esta propia fase). Detalle con
 comandos y mtimes en `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/baseline-pre-post.md`
 §Rutas ajenas.
+
+**Cerrado el 2026-09-22.** El commit de FASE-B está hecho — **`647f436`** (46 archivos, +4.412/−97), con
+instrucción literal del operador y con el par del índice de lecciones dentro, así que `[6/7]` del hook no
+lo cortó y los **7** checks pasaron. Dos consecuencias re-medidas para quien abra FASE-C: la paridad con
+`origin/master` es ahora **`0/2`** (`eecf246`, ajeno, sigue por delante y sin empujar) y el **push no está
+autorizado**; y el propio commit movió el denominador que la fase había publicado — **678 → 691** `.py`
+rastreados —, con lo que la resta de AC6 quedó rectificada con su nota y su residuo de un archivo
+(`.venv-wsl/bin/activate_this.py`, exclusión no declarada) registrado como **S11** con su lección
+**L-VCF-11**. Y el re-muestreo que hizo falta para medir esa rectificación **pisó la evidencia cerrada de
+FASE-A**: `validate_governance_numbers.py --report` tiene su destino hardcodeado en
+`evidence/…/FASE-A/informe.json`, así que el comando canónico del plan re-escribe el registro de otra
+fase en cada corrida. Se revirtió (`git checkout --` sobre ese archivo) y se re-muestreó con destino
+explícito, que da el mismo `HALLAZGOS` (A1–A4, 24 instancias, `exit 1`) sin tocarlo → **S12** /
+**L-VCF-12**, con su guarda publicada en el README para quien abra FASE-C.

@@ -26,7 +26,7 @@ estado) · `NO-EJERCITADO` (el camino no se ejercitó; con el motivo) · `FUERA 
 | AC15 | C | denominador, términos, ceros **y aceptabilidad** (dispara D6) | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json` | PENDIENTE |
 | AC16 | A,B,C,D | quick en 11 y hook en 7, inalterados en todo el plan | los cuatro `baseline-pre-post.md` | **A: delta 0** y **B: delta 0 verificados 2026-09-21** (quick 11→11, hook 7→7, `git diff` vacío en los cuatro scripts gobernados; +48 funciones de test declaradas aparte) · C/D pendientes |
 | AC17 | A,B,C,D | `.agents/` intocado; familias no cubiertas declaradas | `evidence/…/FASE-A/informe.json` → `families_not_covered[]` + `ac17-y-presupuesto.md` + `git status --porcelain .agents/` (vacio) | **A: VERIFICADO OFFLINE 2026-09-21** · **B: VERIFICADO OFFLINE 2026-09-21** (`git status --porcelain .agents/` vacío; 98.694 / 6.123 bytes idénticos en PRE y POST) · C/D pendientes |
-| AC18 | A,B,C,D | capitalización, citas e índice verdes en el mismo commit | salida de los tres verificadores | **A: los tres verdes el 2026-09-21** (`[9/11]`, `[10/11]` en el quick 11/11 + indice regenerado) · cumplido en el mismo commit `a7564ae` · **B: quick 11/11 verde con el índice regenerado en el cierre de la fase** |
+| AC18 | A,B,C,D | capitalización, citas e índice verdes en el mismo commit | salida de los tres verificadores | **A: los tres verdes el 2026-09-21** (`[9/11]`, `[10/11]` en el quick 11/11 + indice regenerado) · cumplido en el mismo commit `a7564ae` · **B: quick 11/11 verde con el índice regenerado en el cierre de la fase**, y el par viajó **dentro** del commit `647f436` (2026-09-22) con los **7** checks del pre-commit en verde |
 | AC19 | D | un pack por fase, declarando qué **no** incluye | `…/briefing/FASE-X.md` + `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/informe.json` → `packs[]` | PENDIENTE |
 | AC20 | D | delta de carga de lectura con el **mismo comando** en ambos lados | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/carga.json` → `before`, `after`, `method` | PENDIENTE |
 | AC21 | D | proveniencia con HEAD y sha por fuente; `--check` vence | ídem → `provenance` | PENDIENTE |
@@ -92,6 +92,14 @@ estado) · `NO-EJERCITADO` (el camino no se ejercitó; con el motivo) · `FUERA 
 - [x] Ninguna comparación de proveedores intentada: es D7 y se dice en el cierre. `extensibilidad.txt`
       lo declara con su porqué (con un solo proveedor real no hay elección que medir, y exigir un
       número inexistente se cerraría como `NO-EJERCITADO` certificando humo).
+- [x] **Commit cerrado el 2026-09-22 en `647f436`** (46 archivos, +4.412/−97) con instrucción literal,
+      con el par del índice dentro y con los **7** checks del pre-commit en verde. El push **no** está
+      autorizado: paridad `0/2` con `origin/master` y el commit ajeno `eecf246` por delante. El commit
+      además **movió el denominador que la fase había publicado**: `git ls-files '*.py'` pasó de 678 a
+      **691** (+13 archivos propios) y AC6 sigue en **0** re-medido con la puerta; la brecha restante
+      contra los 692 del escáner se desglosó archivo por archivo y dio un nombre —
+      `.venv-wsl/bin/activate_this.py`, exclusión no declarada en `iterar_py()` — que queda como
+      **S11** con su lección **L-VCF-11**.
 
 **Lo que esta fase no cerró, con su motivo**: activar el proveedor (**D7**), el lint que lo consumiría
 (**D6**) y una decisión que este repo no puede tomar sola: dónde vivirá el `import` del SDK cuando

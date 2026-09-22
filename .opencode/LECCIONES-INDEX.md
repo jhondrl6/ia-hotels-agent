@@ -13,7 +13,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 ## Cobertura medida (lo que este índice NO garantiza)
 
 - Corpus de **definiciones**: `16` análisis de plan + `38` archivos de `.opencode/context/`. `416` `.md` en total como corpus de **citas**.
-- 330 IDs con definición detectada; 51 IDs citados sin definición (ver última sección).
+- 332 IDs con definición detectada; 51 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -29,13 +29,13 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 
 | Familia | Significado | IDs |
 |---------|-------------|-----|
-| `L-*` | Lecciones aprendidas | 186 |
+| `L-*` | Lecciones aprendidas | 188 |
 | `DA-*` | Decisiones / reglas de alineación | 43 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 62 |
 | — | Citados sin definición | 51 |
 
-## `L-*` — Lecciones aprendidas (186)
+## `L-*` — Lecciones aprendidas (188)
 
 | ID | Enunciado | Plan dueño | Sección | Citas |
 |----|-----------|------------|---------|-------|
@@ -201,9 +201,11 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-VCF-5` | Al medir «quién afirma el 11» (AC5/AC16, barrido de tests/ por L-V2.3) resultó que esta misma fase añadió 4 pins nuevos del denominador 11 en tests/: la aserción observed == 9/11 del contrato AC1 es… | VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 4 (solo el plan dueño) |
 | `L-VCF-6` | El primer mutation check de AC7 apagaba VERIFICACIONES_DE_FORMA entera, y con la lista vacía la puerta seguía negándose a decidir: la conversión a tipos se negó a rellenar la confidence ausente. El… | VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 6 (solo el plan dueño) |
 | `L-VCF-7` | La primera versión de la regla de aislamiento marcaba cualquier import_module/exec_module como sospechoso: sobre el árbol real eso producía 16 hallazgos ajenos (fixtures de otros planes, cargadores… | VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 2 (solo el plan dueño) |
-| `L-VCF-8` | El «0» de AC6 tiene dos poblaciones y no eran la misma: git grep ve 678 .py rastreados y el escáner AST ve 692 en el árbol de trabajo (los archivos de esta fase, aún sin commitear). Y el SDK sí está… | VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 1 (solo el plan dueño) |
+| `L-VCF-8` | El «0» de AC6 tiene dos poblaciones y no eran la misma: git grep ve 678 .py rastreados y el escáner AST ve 692 en el árbol de trabajo (los archivos de esta fase, aún sin commitear — rectificado el… | VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 1 (solo el plan dueño) |
 | `L-VCF-9` | Apareció una contradicción entre dos ACs del propio plan, latente hasta que exista un proveedor real: AC6 dice «ningún archivo fuera de decision_client.py importa el SDK» y AC9 dice «añadir un… | VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 3 (solo el plan dueño) |
 | `L-VCF-10` | «Cero llamadas de red» escrito como afirmación del informe no era verificable, y el primer intento de probarlo con from conftest import RedProhibida falló en colección: resolvía al tests/conftest.py… | VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 2 (solo el plan dueño) |
+| `L-VCF-11` | Al commitear FASE-B, la resta que la propia fase había publicado dejó de cerrar por un archivo: git pasó de 678 a 691 .py (+13, los de la fase) pero el escáner seguía en 692, así que la explicación… | VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 12 (solo el plan dueño) |
+| `L-VCF-12` | Al re-medir AC6/A1–A4 para escribir este barrido, python scripts/validate_governance_numbers.py --report sobrescribió la evidencia commiteada de FASE-A: la ruta de escritura está hardcodeada como… | VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 7 (solo el plan dueño) |
 | `L-VERIFY.1` | Los documentos del plan (D-AJUST.4, 01-plan-maestro.md) mencionan GATE_BLOCKING_ENABLED y GATE_ENFORCEMENT_ENABLED como dos llaves del bloqueo. Medido con grep: solo GATE_BLOCKING_ENABLED existe en… | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase) | 5 (solo el plan dueño) |
 | `L-VERIFY.2` | La matriz T1 buscaba blocks_publish en el acta JSON y no lo encontró. Existe en TribunalOutcome (outcome.py L153) como atributo DTO, pero acta_writer.py no lo serializa. El acta comunica el bloqueo… | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase) | 2 (solo el plan dueño) |
 | `L-VERIFY.3` | El cruce P5×todo (T2) reveló que google_places_client.py:_save_cache persiste caché sin redacción, mientras gbp_auditor.py:_save_cache sí redacta. P5 había certificado AC-S2/AC-S4 pero ninguno cubría… | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase) | 5 en context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17 |
@@ -302,7 +304,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `D-T1.2` | Sin evidencia certificable no hay veredicto máximo. APROBADO-PARA-ENTREGA exige Tier A y que todas las cláusulas certificables de T1 estén en PASS; un NOT_EVALUABLE (artefacto ausente, p. ej. borrado… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | Decisiones de contrato — auditoría FASE-T1 (2026-09-10) | 6 (solo el plan dueño) |
 | `D-T2C-A1` | el AC de no-regresión del régimen generate_proposal=True no se cumplió tal como fue redactado. Los 3 bloques presence_lookup de v4_proposal_generator.py no se retiraron ni permanecieron muertos: el… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | Desvío registrado — auditoría FASE-T2-C (2026-09-11) | 29 (solo el plan dueño) |
 | `D-T4B-A1` | la fase certificó ✅ con una suite verde que nunca ejerció el contrato de lectura sobre artefactos reales. HonestyReviewer devolvía total_cg_count: 0, propuesta cargada: False y un veredicto BLOQUEAR… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 12 (solo el plan dueño) |
-| `D-V2.1` | el instrumento canónico de R2.1 no alcanza el transcript de sesión bajo el | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 5. Seguimientos abiertos detectados | 114 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 |
+| `D-V2.1` | el instrumento canónico de R2.1 no alcanza el transcript de sesión bajo el | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 5. Seguimientos abiertos detectados | 115 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 |
 | `D-V3.1` | [3/9] Version Sync compara las cabeceras contra datetime.now(): se puso rojo | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 5. Seguimientos abiertos detectados | 5 (solo el plan dueño) |
 | `D-V.1` | Se autoriza a Bot 3 (asset_reviewer.py) como emisor legítimo de la clave canónica asset_path (AC7 lo nombra explícitamente en el contrato de coverage_by_service[]). La remediación es test-only… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | Decisiones Arquitectónicas | 43 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `D-V.2` | AC17 pasa ✅ corrigiendo la nota E2E: financial_scenarios_*.json sí declara evidence_tier (en breakdown.evidence_tier: "B"), además de precision_tier: "C" y tier_explanation. El delta E2E solo miró el… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | Decisiones Arquitectónicas | 4 (solo el plan dueño) |

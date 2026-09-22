@@ -33,7 +33,7 @@ stat -c "%s %n" .agents/workflows/phased_project_executor.md \
 | Bytes de los dos documentos de gobierno (AC17) | 98.694 / 6.123 | 98.694 / 6.123 | **0 / 0** | 0 (`.agents/` intocado) | ✅ |
 | `git status --porcelain .agents/` | — | **vacío** | 0 | ✅ |
 | Imports del SDK/adapter fuera de la puerta (AC6, `git grep`) | 0 | 0 | **0** | 0 | ✅ |
-| Población AC6 rastreada por git (`.py`) | 678 | 678 | 0 | la fase no commitea `.py` | ✅ |
+| Población AC6 rastreada por git (`.py`) | 678 | 678 | 0 | ~~la fase no commitea `.py`~~ → **expectativa refutada por el propio commit**: 678 → **691** (+13) el 2026-09-22; ver **nota 4** | ⚠️ rectificado |
 | Archivos `.py` del árbol de trabajo que **sí** escanea AC6 | **no medible en el PRE** (el instrumento nace en esta fase) | **692** | n/a | ver nota 1 y nota 3 | ⚠️ declarado |
 | Nodos de import vistos por el escáner · menciones-no-import · cargas no resueltas | — | 4.379 · 21 · 16 | n/a | ídem | ✅ publicados |
 | **Población AC6 dentro de la propia fase** | 690 (primer escaneo, tras escribir puerta y tests) | **692** (escaneo final) | **+2** | — | ⚠️ **se movió ella sola: ver nota 3** |
@@ -49,8 +49,9 @@ nuevas escritas aquí sería un baseline contaminado.
 el escáner de la fase (`scripts/decision_client.py --scan-imports`) recorre el **árbol de trabajo** y
 cuenta **692** `.py` tras excluir directorios declarados, cada uno con su conteo (`venv` 7.618,
 `site-packages` 8.889, `tmp_test` 690 —donde el plan hermano aisló el SDK real—, `temp` 65,
-`build` 14). La diferencia con el número de git son los archivos de esta fase, que aún no están
-commiteados. Publicar una sola de las dos cifras dejaría al lector sin saber cuál sostiene el 0.
+`build` 14). La diferencia con el número de git eran los archivos de esta fase, que entonces aún no
+estaban commiteados. Publicar una sola de las dos cifras dejaría al lector sin saber cuál sostiene el 0.
+**Y las dos cifras siguen siendo necesarias después del commit, por un motivo distinto: ver nota 4.**
 
 **Nota 1b — el SDK sí está en el disco.** `typesafe-sdk` fue instalado por `EVALUACION-JEV` en un
 entorno aislado (`tmp_test/venv-jev-sdk`), no en el venv del producto. Eso no contradice AC6 (que
@@ -64,6 +65,30 @@ bajo `instrumentos/` para poder generar su evidencia. Cada cifra copiada de una 
 al producirla (medición A6 del maestro, ya reproducida tres veces en la concepción), y aquí la
 corrección no es borrar el instrumento —sin él la evidencia no es re-ejecutable— sino **re-medir al
 cerrar y publicar el +2**, que es lo que hacen las filas de arriba.
+
+**Nota 4 — el commit de la fase movió el denominador que esta tabla acababa de publicar, y reconcilió
+las dos poblaciones (medido el 2026-09-22).** `647f436` añadió **13** `.py` rastreados: la puerta (1) +
+selección de tests (6 archivos) + `conftest.py` + `__init__.py` + proveedores falsos (2) = **11**, más los
+**2** instrumentos de evidencia bajo `evidence/…/instrumentos/`, que también cuentan por su extensión.
+Consecuencias medidas:
+
+- `git ls-files '*.py' | wc -l`: **678 → 691** (+13). La resta PRE/POST de arriba **no se re-escribe**:
+  ambas columnas se midieron sobre `74d8ff5` antes del commit y siguen siendo verdad de ese árbol; lo que
+  estaba vencido era el **esperado** («la fase no commitea `.py`»), y así queda tachado en la fila.
+- AC6 **sigue en 0** re-medido hoy con la puerta (`--scan-imports` → `SIN-HALLAZGOS`, 0 imports
+  prohibidos, 0 cargas dinámicas, 21 menciones no-import), sobre 692 `.py` del árbol.
+- La brecha de 14 entre las dos poblaciones del PRE/POST se **descompuso**, y no era toda de esta fase:
+  691 rastreados frente a 692 escaneados deja un residuo de **1**, que es
+  `.venv-wsl/bin/activate_this.py` — entra al denominador porque `.venv-wsl` no está en
+  `ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION`, y explica también por qué el total excluido del escáner
+  (`venv` 7.618 + `site-packages` 8.889 + `tmp_test` 690 + `temp` 68 + `build` 14) no cuadra con los
+  8.958 `.py` que git reporta como ignorados: `site-packages` está **anidada** dentro de los entornos y
+  el escáner incrementa los dos marcadores por la misma ruta. **Los dos son hallazgos del instrumento,
+  no de la fase**: el 0 de AC6 no se mueve porque ese archivo no importa el SDK. No se arreglan aquí —
+  editar la puerta obliga a re-ejecuciones de sus 53 casos y sus 9 mutantes en un barrido documental —
+  y quedan registrados como **S11** con su disparador.
+- El `temp` excluido pasó de 65 a **68** entre los dos escaneos: tráfico de otra sesión sobre un
+  directorio excluido, sin efecto sobre el numerador ni sobre el denominador gobernado.
 
 **Nota 2 — quién afirma el 11 y el 7 (barrido de `tests/`, L-V2.3).** Esta fase no añadió ningún pin de
 esos denominadores: sus pruebas afirman formas, estados y conteos propios (`files_changed…`, `48`), y
@@ -91,10 +116,31 @@ esta fase redactó la tabla anterior, las tres rutas estaban sucias en el árbol
 commit, `git show --stat eecf246` muestra que la otra sesión ya se llevó `ROADMAP.md` y
 `.opencode/context/Refuerzo.md`, así que el HEAD del repo **dejó de ser `74d8ff5`** (sobre el que midieron
 el PRE, el POST y las dos corridas del quick) y pasó a `eecf246`, con paridad `0/1` contra
-`origin/master`: el commit de FASE-B se apoya sobre **un commit ajeno todavía sin empujar**. Nada de esto
+`origin/master`: el commit de FASE-B se apoya sobre **un commit ajeno todavía sin empujar**. **Ese commit
+ya está hecho: `647f436`, el 2026-09-22, con el par del índice dentro y los 7 checks del pre-commit en
+verde; la paridad measureada hoy es `0/2`** (`git rev-list --left-right --count origin/master...HEAD`),
+porque `eecf246` sigue sin empujar delante del de esta fase y el push no está autorizado. Nada de esto
 mueve las restas —los cuatro archivos gobernados por AC16/AC17 no están en ninguno de los dos commits y
 `git diff --numstat` sobre ellos sigue vacío—, pero sí invalida la lectura «el árbol de partida es solo
 mío», que es justo el tipo de premisa que este plan caza (medición A6).
+
+## Efecto colateral del re-muestreo, medido y revertido (2026-09-22)
+
+Para rectificar las cifras de arriba con el árbol vigente se corrió el verificador de la fase hermana, y
+**ese comando escribió evidencia de otra fase**: `python scripts/validate_governance_numbers.py --report`
+tiene su destino **hardcodeado** (`REPORT_DEFAULT` → `evidence/…/FASE-A/informe.json`) y el comando
+canónico que el plan publica no lleva ruta. El `git diff` mostró **3 líneas** cambiadas en el artefacto
+commiteado de FASE-A: `generated_at` (→ `2026-09-22T09:41:05`), `medido_el` (→ `2026-09-22`) y
+`funciones_test_en_disk` (**4.330 → 4.378**) — la tercera es una medición **verdadera**, y por eso mismo
+no puede vivir en el registro cerrado de otra fase.
+
+**Revertido con `git checkout -- evidence/…/FASE-A/informe.json`** (es un archivo que esta sesión acababa
+de mover por efecto colateral, no trabajo ajeno en curso; el árbol vuelve a `68cdbb2`) y **re-muestreado
+con destino explícito**: `--report temp/sweep_informe.json` → salida `HALLAZGOS` idéntica (población 24 ·
+viva-hallazgo 5 en 4 aserciones · viva-correcta 11 · histórica 8 · no resuelta 0) y `exit 1`, con FASE-A
+sin tocar (`git status` sobre esa ruta: vacío). Queda registrado como **S12** con su lección
+**L-VCF-12**: un verificador que también es writer gobierna dos artefactos, y aquí el segundo es historia
+cerrada de otra sesión.
 
 ## Rojo propio intermedio, resuelto con su writer (segunda reproducción del conflicto de fechas)
 

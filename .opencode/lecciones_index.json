@@ -5,7 +5,7 @@
     "archivos_analysis_escaneados": 16,
     "archivos_contexto_escaneados": 38,
     "archivos_md_escaneados": 416,
-    "ids_con_definicion": 330,
+    "ids_con_definicion": 332,
     "ids_citados_sin_definicion": 51,
     "familias_incluidas": [
       "L",
@@ -385,7 +385,7 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 114,
+      "total_citas": 115,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
@@ -3711,7 +3711,7 @@
     {
       "id": "L-VCF-8",
       "familia": "L",
-      "enunciado": "El «0» de AC6 tiene dos poblaciones y no eran la misma: git grep ve 678 .py rastreados y el escáner AST ve 692 en el árbol de trabajo (los archivos de esta fase, aún sin commitear). Y el SDK sí está en el disco: bajo tmp_test/venv-jev-sdk, donde lo aisló el plan hermano — Un «cero coincidencias» afirmado sobre una población que nadie definió se lee como «no existe», cuando lo medido es «nadie lo importa»",
+      "enunciado": "El «0» de AC6 tiene dos poblaciones y no eran la misma: git grep ve 678 .py rastreados y el escáner AST ve 692 en el árbol de trabajo (los archivos de esta fase, aún sin commitear — rectificado el 2026-09-22: tras el commit git ve 691 y la diferencia no era toda de la fase, ver L-VCF-11). Y el SDK sí está en el disco: bajo tmp_test/venv-jev-sdk, donde lo aisló el plan hermano — Un «cero coincidencias» afirmado sobre una población que nadie definió se lee como «no existe», cuando lo medido es «nadie lo importa»",
       "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
@@ -3747,6 +3747,34 @@
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
       "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-11",
+      "familia": "L",
+      "enunciado": "Al commitear FASE-B, la resta que la propia fase había publicado dejó de cerrar por un archivo: git pasó de 678 a 691 .py (+13, los de la fase) pero el escáner seguía en 692, así que la explicación escrita en baseline-pre-post.md («la diferencia son los archivos de esta fase, que aún no están commiteados») quedó refutada por el commit que debía reconciliarla — El denominador se construye excluyendo por nombre de componente de ruta, y .venv-wsl no está en ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION: su bin/activate_this.py entra al universo. Y las exclusiones se solapan (site-packages está anidada dentro de venv/tmp_test, y el walker incrementa los dos marcadores por la misma ruta), de modo que la suma de las exclusiones no reproduce el universo y no sirve de comprobación aritmética",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 12,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-12",
+      "familia": "L",
+      "enunciado": "Al re-medir AC6/A1–A4 para escribir este barrido, python scripts/validate_governance_numbers.py --report sobrescribió la evidencia commiteada de FASE-A: la ruta de escritura está hardcodeada como default (REPORT_DEFAULT → evidence/…/FASE-A/informe.json) y el comando canónico que el propio plan publica no lleva destino. Cambió tres campos: generated_at, medido_el y funciones_test_en_disk (4.330 → 4.378, que es una medición verdadera escrita sobre el registro de otra fase). Se revirtió con git checkout -- <ese archivo> y se re-midió con destino explícito (--report temp/…), que deja FASE-A limpia y da el mismo HALLAZGOS con exit 1 — Un verificador que además es writer gobierna dos artefactos, y aquí el segundo es un registro fechado de otra sesión: cada corrida re-escribe el pasado. Es la familia de L-VCF-11 (el instrumento afectado por su propio uso) y la de «quién produce el dato publicado», en su variante peligrosa: el verde se publica pisando una evidencia ajena",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 7,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
