@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-09-19
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 497
+> **Total fases completadas:** 498
 
 ---
 
@@ -11568,6 +11568,30 @@ _Ninguno_
 
 ### Validaciones
 - [x] Tests passing (28)
+- [x] Suite NEVER_BLOCK passing
+- [x] Capability contract verificado
+
+---
+
+
+## FASE-B - 2026-09-21
+**Descripcion:** decision_client.py: costura neutra, contract test de forma y extensibilidad a un segundo proveedor probada (AC6-AC9)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `scripts/decision_client.py` | NUEVO | Decision Client |
+| `tests/quality_gates/decision_client` | NUEVO | Decision Client |
+| `tests/quality_gates/decision_client/falsos_proveedores` | NUEVO | Falsos Proveedores |
+| `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B` | NUEVO | Fase-B |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` | Verificador-Contexto-De-Fase-2026-09-20 |
+
+### Validaciones
+- [x] Tests passing (48)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
 

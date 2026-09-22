@@ -1,0 +1,36 @@
+# Mutante M-AC6-token
+
+Guard real apagado: `NOMBRES_PROHIBIDOS` y `ALIAS_ADAPTER` vaciados; el escaneo corre sobre el mismo arbol fixture (`modules/fuga.py` con `import typesafe`).
+
+## VERDE (tokens declarados)
+```json
+{
+ "coincidencias_de_import_total": 1,
+ "coincidencias_de_import_fuera_de_la_puerta": 1,
+ "cargas_dinamicas_prohibidas": 0,
+ "cargas_dinamicas_no_resueltas": 0,
+ "cargas_no_resueltas_en_directorios_de_proveedor": 0,
+ "hallazgos_de_carga_dinamica": 0,
+ "menciones_no_import": 1,
+ "archivos_no_parseables": 0
+}
+```
+hallazgos: `[{"archivo": "modules/fuga.py", "linea": 1, "import": "typesafe", "token": "typesafe", "en_la_puerta": false}]`
+
+## ROJO (lista de tokens vacia)
+```json
+{
+ "coincidencias_de_import_total": 0,
+ "coincidencias_de_import_fuera_de_la_puerta": 0,
+ "cargas_dinamicas_prohibidas": 0,
+ "cargas_dinamicas_no_resueltas": 0,
+ "cargas_no_resueltas_en_directorios_de_proveedor": 0,
+ "hallazgos_de_carga_dinamica": 0,
+ "menciones_no_import": 0,
+ "archivos_no_parseables": 0
+}
+```
+hallazgos: `[]`
+
+## Lectura
+Con los tokens, la fuga es `HALLAZGOS`. Con la lista vacia el mismo arbol da `SIN-HALLAZGOS` y el escaneo **sigue informado** (no revienta, publica su poblacion): ese es el peligro que este mutation check documenta, un guard vaciado produce un verde perfectamente silencioso.

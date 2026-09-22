@@ -1,0 +1,13 @@
+# FASE-B — verde de la seleccion (baseline con TODOS los guards activos)
+
+Comando:
+
+```bash
+./venv/Scripts/python.exe -m pytest tests/quality_gates/decision_client -q
+```
+
+Resultado medido: **53 passed** (ver `runn_tests.txt`). Este archivo es el lado verde del par que exige R2.8: cada `mutante_M-*.txt` de este directorio apaga UN symbolo y muestra que su detencion desaparece. Sin el lado verde, un rojo no informa — un guard que nunca estuvo activo tambien da rojo.
+
+## Declaracion L-VUP-5 (el verde a la primera era sospechoso, y lo era)
+
+La primera corrida de esta seleccion **no** dio verde: 30 fallos por dos errores de bulto (un f-string mal cerrado en el modulo, y argumentos posicionales de `score` cayendo en `opciones` en el fixture y en dos call sites del propio modulo) mas 8 fallos de las pruebas. Y el primer mutation check apagaba `VERIFICACIONES_DE_FORMA` **entera**, que no aislaba ningun guard: con la lista vacia la conversión a tipos sigue fallando, asi que ese mutante habria dicho «el guard no existe» sin poder nombrar cual. Se re-escribio guard a guard, un payload por guard, con la asercion de que **un solo** guard ve cada payload roto.

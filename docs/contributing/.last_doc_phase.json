@@ -283,5 +283,6 @@
   "tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py": "FASE-0",
   "22": "FASE-B",
   "scripts/validate_governance_numbers.py": "FASE-A",
-  "tests/quality_gates/governance_numbers": "FASE-A"
+  "tests/quality_gates/governance_numbers": "FASE-A",
+  ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20": "FASE-B"
 }

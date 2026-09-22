@@ -1,0 +1,12 @@
+# Mutante M-AC7-proveedor-por-defecto (el anti-default de L-PF6)
+
+Guard real: `scripts/decision_client.py::resolver_proveedor`, que no tiene candidato propio.
+
+## VERDE (resolucion intacta, entorno vacio)
+NO-CONFIGURADO motivo_clase=env-de-proveedor-sin-definir — IAH_DECISION_PROVIDER no esta definido: no hay proveedor nombrado y esta costura no elige uno por su cuenta
+
+## ROJO (resolucion mutada para ceder un default)
+`provider_status = RESUELTO`, `proveedor = falso-forma`, `respuestas = ['c1', 's1', 'n1']`
+
+## Lectura
+Si la resolucion cediera un proveedor por defecto, habria **decision sin proveedor nombrado**. La costura real no la cede: `NO-CONFIGURADO` con su motivo y su ruta buscada. Este es el mutante que la fase prohibe por nombre, y esta ejecutado, no afirmado.

@@ -14,19 +14,19 @@ estado) · `NO-EJERCITADO` (el camino no se ejercitó; con el motivo) · `FUERA 
 | AC3 | A | tres estados sin colapsar | ídem → `status` + 3 archivos de test (un estado cada uno) | **VERIFICADO OFFLINE** 2026-09-21 |
 | AC4 | A | mutation check **por aserción** | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/mutation/` (verde + 6 rojos anclados por `assertion_key`) | **VERIFICADO OFFLINE** 2026-09-21 |
 | AC5 | A | conteo del quick y del hook como delta 0 | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/baseline-pre-post.md` | **VERIFICADO OFFLINE** 2026-09-21 (quick 0, hook 0; tests +23 declarado) |
-| AC6 | B | aislamiento de imports | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/import_scanner.txt` (conteo + población) | PENDIENTE |
-| AC7 | B | proveedor no configurado no decide | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/informe.json` → `provider_status` | PENDIENTE |
-| AC8 | B | contract test de forma con proveedor falso | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/contract.txt` | PENDIENTE |
-| AC9 | B | añadir un 2º proveedor cuesta **un** archivo | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/costura.json` → `files_changed_to_add_provider` | PENDIENTE |
+| AC6 | B | aislamiento de imports | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/import_scanner.txt` (conteo + población) | **VERIFICADO OFFLINE** 2026-09-21 (0 imports fuera de la puerta sobre **692** `.py` del árbol de trabajo / 678 rastreados por git; mutante `M-AC6-token` y `M-AC6-carga-dinamica` en `mutation/`) |
+| AC7 | B | proveedor no configurado no decide | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/informe.json` → `provider_status` | **VERIFICADO OFFLINE** 2026-09-21 (los tres estados provocados cada uno por su causa, 5 `motivo_clase` distintos sin colapsar; mutante `M-AC7-proveedor-por-defecto` muestra que un default sí fabricaría decisión) |
+| AC8 | B | contract test de forma con proveedor falso | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/contract.txt` | **VERIFICADO OFFLINE** 2026-09-21 (verde exit 0 y **rojo exit 1 del mismo test** contra una copia del proveedor falso sin `confidence`; pin del modelo declarado y probado por AST como no-used) |
+| AC9 | B | añadir un 2º proveedor cuesta **un** archivo | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/costura.json` → `files_changed_to_add_provider` | **VERIFICADO OFFLINE** 2026-09-21 (valor **1**, `agregados=[falsos_proveedores/falso_segundo.py]`, `modificados=[]`; los dos proveedores se despachan por la misma puerta y contestan distinto. tests paralelos = 1, declarados aparte) |
 | AC10 | C | el triaje **no elimina** fila anclada alguna | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/ac10_delta.json` → `removed: []` | PENDIENTE |
 | AC11 | C | índice ausente/vencido ≠ sin candidatos | ídem → `index_status` | PENDIENTE |
 | AC12 | C | umbral con valor, base y acción por debajo | ídem → `threshold` | PENDIENTE |
 | AC13 | C | ≥1 test contra corpus real, skip declarado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/r26.txt` | PENDIENTE |
 | AC14 | C | mutation check del guard de no-filtrado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/` | PENDIENTE |
 | AC15 | C | denominador, términos, ceros **y aceptabilidad** (dispara D6) | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json` | PENDIENTE |
-| AC16 | A,B,C,D | quick en 11 y hook en 7, inalterados en todo el plan | los cuatro `baseline-pre-post.md` | **A: delta 0 verificado 2026-09-21** · B/C/D pendientes |
-| AC17 | A,B,C,D | `.agents/` intocado; familias no cubiertas declaradas | `evidence/…/FASE-A/informe.json` → `families_not_covered[]` + `ac17-y-presupuesto.md` + `git status --porcelain .agents/` (vacio) | **A: VERIFICADO OFFLINE 2026-09-21** · B/C/D pendientes |
-| AC18 | A,B,C,D | capitalización, citas e índice verdes en el mismo commit | salida de los tres verificadores | **A: los tres verdes el 2026-09-21** (`[9/11]`, `[10/11]` en el quick 11/11 + indice regenerado) · cumplido en el mismo commit `a7564ae` |
+| AC16 | A,B,C,D | quick en 11 y hook en 7, inalterados en todo el plan | los cuatro `baseline-pre-post.md` | **A: delta 0** y **B: delta 0 verificados 2026-09-21** (quick 11→11, hook 7→7, `git diff` vacío en los cuatro scripts gobernados; +48 funciones de test declaradas aparte) · C/D pendientes |
+| AC17 | A,B,C,D | `.agents/` intocado; familias no cubiertas declaradas | `evidence/…/FASE-A/informe.json` → `families_not_covered[]` + `ac17-y-presupuesto.md` + `git status --porcelain .agents/` (vacio) | **A: VERIFICADO OFFLINE 2026-09-21** · **B: VERIFICADO OFFLINE 2026-09-21** (`git status --porcelain .agents/` vacío; 98.694 / 6.123 bytes idénticos en PRE y POST) · C/D pendientes |
+| AC18 | A,B,C,D | capitalización, citas e índice verdes en el mismo commit | salida de los tres verificadores | **A: los tres verdes el 2026-09-21** (`[9/11]`, `[10/11]` en el quick 11/11 + indice regenerado) · cumplido en el mismo commit `a7564ae` · **B: quick 11/11 verde con el índice regenerado en el cierre de la fase** |
 | AC19 | D | un pack por fase, declarando qué **no** incluye | `…/briefing/FASE-X.md` + `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/informe.json` → `packs[]` | PENDIENTE |
 | AC20 | D | delta de carga de lectura con el **mismo comando** en ambos lados | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/carga.json` → `before`, `after`, `method` | PENDIENTE |
 | AC21 | D | proveniencia con HEAD y sha por fuente; `--check` vence | ídem → `provenance` | PENDIENTE |
@@ -46,15 +46,60 @@ estado) · `NO-EJERCITADO` (el camino no se ejercitó; con el motivo) · `FUERA 
 - [x] Par `faseA_baseline_pre.txt` / `faseA_baseline_post.txt` + `baseline-pre-post.md` con la resta: quick **11→11 (0)**, hook **7→7 (0)**, poblacion A8 **22/17/2 → 22/17/2 (0)**. Y **sin** fingir delta 0 donde la fase si movio la metrica: seleccion de tests **0→23 funciones (+23)**, que es justo lo que AC5 exige publicar por separado.
 - [x] `log_phase_completion.py --fase FASE-A --check-manual-docs` ejecutado y `build_lesson_index.py` regenerado el 2026-09-21. El commit se hizo con instruccion literal del operador el 2026-09-21 (`a7564ae`, 34 archivos) y **llevo el indice dentro**, como exige R2.10 y comprueba `[6/7]`.
 
-## FASE-B — `decision_client.py`
+## FASE-B — `decision_client.py` — **cerrada VERIFICADO OFFLINE el 2026-09-21** (AC6–AC9; y AC16/AC17/AC18 en su parte)
 
-- [ ] Un solo archivo importa SDK/adapter; verificado sobre el árbol real con población.
-- [ ] `provider_status` con los tres estados; ningún `except` produce una decisión.
-- [ ] Contract test que se pone rojo si cambia la forma del proveedor falso.
-- [ ] Versión de modelo pineada y declarada; sin literales del proveedor pineados.
-- [ ] `costura.json` con `files_changed_to_add_provider == 1`, o la explicación de por qué es mayor.
-- [ ] **Cero llamadas de red** y cero credenciales en el árbol, la evidencia y los logs.
-- [ ] Ninguna comparación de proveedores intentada: es D7 y se dice en el cierre.
+- [x] Un solo archivo importa SDK/adapter; verificado sobre el árbol real con población. **Medido**: `0`
+      imports prohibidos fuera de la puerta sobre **692** `.py` del árbol de trabajo (4.379 nodos de
+      import vistos), y `0` cargas dinámicas de paquete. El escáner es **AST, no grep**: distingue
+      `import typesafe` (hallazgo) de `typesafe` en un docstring (mención: **21**, publicadas y no
+      contadas como hallazgo). Población con sus exclusiones declaradas (`venv` 7.618,
+      `site-packages` 8.889, `tmp_test` 690 —donde el plan hermano aisló el SDK real—, `temp` 65,
+      `build` 14). Dos caminos con dientes propios: `M-AC6-token` (vaciar la lista de tokens devuelve
+      un verde silencioso) y `M-AC6-carga-dinamica`/`M-AC6-superficie` (una carga con el nombre armado
+      en runtime bajo un directorio `*proveedores*` **sí** es hallazgo; fuera de esa superficie es un
+      límite publicado, no un silencio: **16** cargas no resueltas en el árbol real).
+- [x] `provider_status` con los tres estados; ningún `except` produce una decisión. Cada estado
+      provocado por su causa y **ningún test cubre dos**: `RESUELTO` (contract test), `NO-CONFIGURADO`
+      (4 `motivo_clase` distintas que no colapsan: env sin definir, directorio sin definir, ruta
+      inexistente —con la ruta impresa—, nombre no registrado —con los nombres que sí están—) e
+      `ILEGIBLE` (6 guards de forma, cada motivo nombra al suyo). La conversión a tipos **no rellena
+      campos**: con los seis guards apagados sigue sin producir decisión (`M-AC7-forma` apagado guard
+      a guard, y el caso anti-default explícito `M-AC7-proveedor-por-defecto`).
+- [x] Contract test que se pone rojo si cambia la forma del proveedor falso. `contract.txt` guarda el
+      verde (`exit 0`) y el **rojo** (`exit 1`) corriendo **el mismo test** contra una copia de
+      `falso_forma.py` a la que se le quitó `confidence`; el rojo nombra a los dos guards que cayeron
+      (`campos-conocidos`, `forma-choice`), comprobado en el proceso padre porque la anchura del
+      terminal del hijo trunca los motivos.
+- [x] Versión de modelo pineada y declarada; sin literales del proveedor pineados.
+      `PIN_MODELO_DECLARADO` = `jev-1.13.0` con su fuente, `verificado_desde_este_repo: false` y
+      `usado_por_el_codigo: false`; un test lee el AST de la puerta y afirma que el pin aparece **una
+      sola vez** (su definición), y otro afirma que ningún literal de este archivo de tests contiene
+      un token prohibido. La comparación del contract test es contra lo que **el proveedor falso
+      declara**, no contra una cadena.
+- [x] `costura.json` con `files_changed_to_add_provider == 1`. Medido por sha256 sobre la copia
+      temporal de la frontera completa (puerta incluida), no afirmado: `agregados =
+      [falsos_proveedores/falso_segundo.py]`, `modificados = []`. Y el `1` no sirve si la puerta
+      devuelve siempre el mismo módulo: los dos proveedores se despachan y **contestan distinto**.
+      Los tests paralelos (`1`) se declaran aparte, como hace el AC1 del plan hermano.
+- [x] **Cero llamadas de red** y cero credenciales en el árbol, la evidencia y los logs. Verificado,
+      no afirmado (`cero-red.txt`): guard autouse que hace explotar `socket.socket`,
+      `create_connection`, `getaddrinfo` y `gethostbyname` en **todos** los casos, con una prueba de
+      que el guard está puesto y otra de que la costura llega a `RESUELTO` con el guard armado;
+      denegatoria AST de 19 módulos capaces de hacer red sobre la puerta y sus proveedores; y el SDK
+      **no instalado** en el venv del producto (`typesafe/jev/httpx2/tenacity = AUSENTE`). De la
+      credencial solo se publica `presente` (bool) — hay dos tests que lo afirman, incluido que ni su
+      longitud ni un preficio salen del volcado.
+- [x] Ninguna comparación de proveedores intentada: es D7 y se dice en el cierre. `extensibilidad.txt`
+      lo declara con su porqué (con un solo proveedor real no hay elección que medir, y exigir un
+      número inexistente se cerraría como `NO-EJERCITADO` certificando humo).
+
+**Lo que esta fase no cerró, con su motivo**: activar el proveedor (**D7**), el lint que lo consumiría
+(**D6**) y una decisión que este repo no puede tomar sola: dónde vivirá el `import` del SDK cuando
+D7 se active. AC6 (solo la puerta importa) y AC9 (añadir cuesta un archivo) se satisfacen hoy con
+**0 coincidencias**, pero con un proveedor real en un archivo propio la geometría exige elegir entre
+(a) que la puerta posea el `import` y el archivo nuevo solo declare, o (b) re-anclar AC6 a «la puerta
+y su directorio de proveedores». Queda escrito en `10-analisis-post-implementacion.md` para que D7 lo
+decida, no para que esta fase lo reinterpretara.
 
 ## FASE-C — `triage_lesson_relevance.py`
 

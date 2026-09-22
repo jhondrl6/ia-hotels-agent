@@ -6,10 +6,12 @@ el 2026-09-20 contra código vivo y contra el Knowledge Center (ver §Correccion
 Renombrado desde `PASO0-VERIFICADOR-PERTINENCIA-2026-09-20` cuando entró FASE-D, porque el
 contenido dejó de ser solo pertinencia.
 
-**Contador de ACs (medido al cerrar FASE-A, 2026-09-21):** 5 `VERIFICADO OFFLINE` con su mutation
-check en disco (AC1–AC5) · 3 con su parte de FASE-A verificada y el resto abierto (AC16, AC17,
-AC18) · 15 pendientes (AC6–AC15, AC19–AC23). Ningún AC del plan puede llegar a `SUPERADO EN E2E`
-(no hay FASE-VERIFY ni corrida).
+**Contador de ACs (medido al cerrar FASE-B, 2026-09-21):** 9 `VERIFICADO OFFLINE` con su mutation
+check o su rojo en disco (AC1–AC5 de FASE-A; AC6–AC9 de FASE-B, con 9 mutantes y el rojo del contract
+test capturado) · 3 con su parte verificada fase a fase y el resto abierto (AC16 con delta 0 en A y B,
+AC17 ídem, AC18 con el quick 11/11 y el índice regenerado) · **11 pendientes** (AC10–AC15 de C,
+AC19–AC23 de D, y el tramo transversal de los tres anteriores). Ningún AC del plan puede llegar a
+`SUPERADO EN E2E` (no hay FASE-VERIFY ni corrida).
 
 Objetivo: arreglar las tres cosas que hacen que un plan de este repo se lea caro, se juzgue mal y se
 desfasen solo. **Coherencia** de las aserciones sobre conteos en los documentos de gobierno,
@@ -52,7 +54,7 @@ R5: la evidencia de este plan vive en su propio subdirectorio). Detalle en `depe
 | Orden / prompt | Objetivo | Complejidad | Estado |
 |---|---|---|---|
 | 1 · [A](05-prompt-inicio-sesion-fase-A.md) | `validate_governance_numbers.py`: aserción contra fuente dinámica, denominador, tres estados. AC1–AC5 | MEDIA / alta consecuencia: es el guard de cualquier edición futura de `.agents/` | **✅ VERIFICADO OFFLINE 2026-09-21** (rojo y verde en `evidence/…/FASE-A/mutation/`) |
-| 2 · [B](05-prompt-inicio-sesion-fase-B.md) | `decision_client.py`: costura neutra, contract test de forma, extensión a un segundo proveedor **probada**. AC6–AC9 | MEDIA-ALTA | PENDIENTE |
+| 2 · [B](05-prompt-inicio-sesion-fase-B.md) | `decision_client.py`: costura neutra, contract test de forma, extensión a un segundo proveedor **probada**. AC6–AC9 | MEDIA-ALTA | **✅ VERIFICADO OFFLINE 2026-09-21** (`files_changed_to_add_provider: 1`, rojo del contract test en `contract.txt`, 9 mutantes en `mutation/`) |
 | 3 · [C](05-prompt-inicio-sesion-fase-C.md) | `triage_lesson_relevance.py`: pertinencia **aditiva** sobre el índice generado, con su aceptabilidad medida. AC10–AC15 | ALTA | PENDIENTE |
 | 4 · [D](05-prompt-inicio-sesion-fase-D.md) | `build_phase_briefing.py`: pack derivado por fase, proveniencia con sha, negativa a truncar y **delta de carga de lectura**. AC19–AC23 | MEDIA: gobierna lo que todas las sesiones futuras van a leer | PENDIENTE |
 | 5 · [RELEASE](05-prompt-inicio-sesion-fase-RELEASE.md) | Sync, CHANGELOG, `REGISTRY.md`, decisión sobre D1 y D2/D3, write-back (re-leyendo su interfaz: **D10**) y archivado | MEDIA | PENDIENTE |
@@ -142,29 +144,32 @@ quedan intactas.
 
 ## Inicio de la siguiente sesión
 
-**FASE-A está cerrada (VERIFICADO OFFLINE el 2026-09-21), así que la sesión que sigue abre
-FASE-B.** El prompt canónico vive en `05-prompt-inicio-sesion-fase-B.md` y **no se copia aquí**:
+**FASE-A y FASE-B están cerradas (VERIFICADO OFFLINE el 2026-09-21), así que la sesión que sigue abre
+FASE-C.** El prompt canónico vive en `05-prompt-inicio-sesion-fase-C.md` y **no se copia aquí**:
 copiarlo sería fabricar la segunda fuente estática que este plan existe para cazar (medición A6).
-Lo que sí se publica aquí es el estado re-medido al cerrar A, con su comando y su fecha, para que
-B no lo asuma:
+Lo que sí se publica aquí es el estado re-medido al cerrar B, con su comando y su fecha, para que
+C no lo asuma:
 
-| Qué re-medir al abrir FASE-B | Valor del 2026-09-21 (cierre de FASE-A) | Comando |
+| Qué re-medir al abrir FASE-C | Valor del 2026-09-21 (cierre de FASE-B) | Comando |
 |---|---|---|
-| HEAD y limpieza | `2deddee` al abrir FASE-A; FASE-A dejó **dos commits** (`a7564ae` de cierre + `e3c4573` de barrido de sus propias citas) y al empujar **ambos están empujados**: HEAD `e3c4573` con su árbol de trabajo despejado (solo dos rutas ajenas sin commitear) | `git rev-parse --short HEAD`, `git status --porcelain` |
-| Paridad con el remoto | `0/2` al commitear FASE-A → **`0/0`** tras el push del 2026-09-21 (`2deddee..e3c4573`), con instrucción literal del operador y escaneo L3 ofrecido y saltado | `git rev-list --left-right --count origin/master...HEAD`, `git ls-remote origin refs/heads/master` |
-| Checks del `--quick` | **11** (composición intacta, AC16) | `grep -c 'print(f?"\[[0-9]*/11\]' scripts/run_all_validations.py` |
-| Pasos del hook | **7** | `grep -cE '^#   \[[0-9]+/[0-9]+\]' scripts/git_hooks/pre-commit` |
-| Etiquetas emparejadas | `validate_plan_citations` 9/11 · `validate_lesson_capitalization` 10/11 · `validate_qmind_writeback` **15/15** (full) | ver `faseA_baseline_pre.txt` unidad 1 |
-| Carga de lectura A7 | **263.973 bytes ≈ 65.993 tokens** (sin cambio desde el 2026-09-20) | `stat -c %s` sobre los siete documentos |
-| Población A8 | 22 instancias `con corchete` en 17 líneas + 2 formas «check N» = **24 auditables** | `grep -rhoE '\[[0-9]+/[0-9]+\]' .agents/ \| wc -l` |
-| Hallazgos que A deja abiertos | A1–A4 vencidas **sin corregir** (AC17): son trabajo de **D1** con instrucción literal | `python scripts/validate_governance_numbers.py --report` |
-| Herencia de forma para B | `coverage_basis` y el tri-estado de AC3 son la convención que B **reutiliza**, no reinventa | `evidence/…/FASE-A/informe.json` |
+| HEAD y limpieza | `74d8ff5` al abrir B; B **no commiteó** (el commit pide instrucción literal), así que su trabajo está en el árbol de trabajo junto con dos rutas ajenas preexistentes (`EVALUACION-JEV/dependencias-fases.md` modificado y `.opencode/context/Refuerzo.md` sin trackear), que **no** son de este plan | `git rev-parse --short HEAD`, `git status --porcelain` |
+| Checks del `--quick` | **11** (delta 0, AC16) | `grep -cE '^\\s*print\\(f?"\\[[0-9]+/11\\]' scripts/run_all_validations.py` |
+| Pasos del hook | **7** (delta 0, AC16) | `grep -cE '^#   \\[[0-9]+/[0-9]+\\]' scripts/git_hooks/pre-commit` |
+| Funciones de test canónicas (método grep) | **4.378** (4.330 PRE + 48 de B); `AGENTS.md` sigue publicando 4.246 y su cifra está vencida por tráfico ajeno | `grep -rE '^\\s*def test_' tests --include=*.py \\| wc -l` |
+| Herencia de forma para C | `coverage_basis` y el tri-estado, ya re-utilizados por B **sin reinventarlos**; y la costura de B como **única** puerta al proveedor (C no debe importar un SDK: es AC6, no estilo) | `evidence/…/FASE-A/informe.json`, `evidence/…/FASE-B/informe.json` → `costura` |
+| Población AC6 que C no debe mover | **0** imports del SDK/adapter fuera de `scripts/decision_client.py`, sobre **692** `.py` del árbol (678 rastreados); re-medir tras escribir sus tests, porque C es el consumidor que podría tentar un import | `python scripts/decision_client.py --scan-imports` |
+| Índice de lecciones | regenerado al cerrar B con el par `.md`+`.json` en el árbol de trabajo; **el mismo commit** es lo que corta `[6/7]`, y B no commiteó (pide instrucción literal), así que la pareja viaja con el commit que el operador autorice | `python scripts/build_lesson_index.py --check` |
+| Carga de lectura A7 | **263.973 bytes ≈ 65.993 tokens** — re-medidos con `stat -c %s` al cerrar B y **sin cambio** desde el 2026-09-20 (los siete documentos son del plan medido, no de este) | `stat -c %s` sobre los siete documentos |
+| Presupuesto (R2.1) | el instrumento **sigue sin correr**: `find . -name "*.jsonl"` devuelve **0** dentro del workspace, medido otra vez el 2026-09-21 (la precondición que capitalizó **D-V2.1**, reproducida por esta fase); métrica retirada y unidad contable declarada en `FASE-B/baseline-pre-post.md` | `find . -name "*.jsonl" \| wc -l` |
 
-Además, dos cosas que A midió y B no debe volver a descubrir: el árbol de `run_all_validations.py`
-**no está libre** (`VERIFICADOR-ESCRITURA-QMIND-2026-09-20` lo declara en su alcance → deuda **D10**),
-y el `2026-09-21` otra sesión dejó escrita en su plan la regla de **orden de cierre**: este hermano
-se cierra (incl. su RELEASE) antes de que `EVALUACION-JEV` publique, por la pareja del índice
-compartido. No es dependencia técnica de B, que se desbloquea en B+C de este plan.
+Además, tres cosas que B midió y C no debe volver a descubrir: la costura resuelve al proveedor
+**por entorno** (`IAH_DECISION_PROVIDER` + `IAH_DECISION_PROVIDERS_DIR`, sin default alguno) y su
+`provider_status` es el tri-estado que C reutiliza; **ningún proveedor entra en este plan** (la deuda
+**D7** sigue abierta y su consumidor natural es **D6**, no C); y donde B dejó escrito el problema que
+C hereda sin resolverlo — **dónde vivirá el `import` del SDK cuando D7 se active** — está en
+`10-analisis-post-implementacion.md`, no en el código. Y sigue en pie lo que A midió: el árbol de
+`run_all_validations.py` **no está libre** (**D10**) y la regla de **orden de cierre** del hermano
+`EVALUACION-JEV` deja este plan cerrarse antes de que aquel publique.
 
 ## Cierre y aceptación
 

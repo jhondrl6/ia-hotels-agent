@@ -1,0 +1,35 @@
+# FASE-B - cero llamadas de red, verificadas y no afirmadas
+
+El contrato de ejecucion de este plan prohibe **una sola** llamada a un proveedor real, y la completitud de la fase pide que eso sea «verificable, no afirmado». Tres instrumentos, y cada uno falla solo:
+
+## 1. Guard vivo en tiempo de ejecucion (`conftest.py`, fixture autouse `sin_red`)
+
+`socket.socket`, `socket.create_connection`, `socket.getaddrinfo` y `socket.gethostbyname` estan reemplazados por un explosivo para **todos** los casos de la seleccion. Dos pruebas: `test_el_guard_de_red_explota_si_alguien_intenta_llamar` (el guard esta puesto: llamarlo produce `RedProhibida`) y `test_la_costura_trabaja_bajo_el_guard_sin_dispararlo` (la costura llega a `RESUELTO` con el guard armado, o sea: su verde no vino de la red).
+
+## 2. Escaneo AST de los modulos de esta fase
+
+`test_la_puerta_y_sus_proveedores_no_importan_nada_que_pueda_hacer_red` usa una **denegatoria**: ningun modulo de la puerta ni de los proveedores falsos importa `socket`, `ssl`, `select`, `asyncio`, `subprocess`, `threading`, `multiprocessing`, `http`, `httpx`, `httpx2`, `httpcore`, `urllib`, `urllib3`, `requests`, `aiohttp`, `ftplib`, `smtplib`, `telnetlib`, `tenacity`, `typesafe` ni `jev`. Con lista negra y no con whitelist, para que aniadir un cliente nuevo ponga el test rojo en vez de pasar por omision.
+
+## 3. El SDK ni siquiera esta instalado en el venv del producto
+
+```bash
+./venv/Scripts/python.exe -c "import importlib.util as u; print([(m, bool(u.find_spec(m))) for m in ('typesafe','jev','httpx2','tenacity')])"
+```
+
+`[('typesafe', False), ('jev', False), ('httpx2', False), ('tenacity', False)]` — medido el 2026-09-21 (ver `faseB_baseline_pre.txt`, unidad 9). El SDK que probo el plan hermano quedo aislado en `tmp_test/venv-jev-sdk`, directorio **excluido** de la poblacion del escaneo AC6 y publicado con su conteo en `import_scanner.txt`.
+
+## Salida de las pruebas del guard (exit 0)
+
+```text
+============================= test session starts =============================
+collecting ... collected 11 items / 9 deselected / 2 selected
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_la_puerta_y_sus_proveedores_no_importan_nada_que_pueda_hacer_red PASSED [ 50%]
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_el_guard_de_red_explota_si_alguien_intenta_llamar PASSED [100%]
+
+======================= 2 passed, 9 deselected in 0.07s =======================
+```
+
+## Credenciales
+
+Ninguna credencial existe en esta fase y ninguna se leyo. `provider_status` es lo que se registra; la puerta solo publica de una credencial **si esta o no** (`credencial.presente`, un bool), nunca el valor, su longitud ni un prefijo - hay dos casos que lo afirman (`test_con_la_clave_en_el_entorno_solo_se_publica_el_bool`, `test_evaluar_tampoco_filtra_la_clave`). Una clave que aparece en un transcript obliga a rotarla, asi que ni enmascarada entra en evidencia.

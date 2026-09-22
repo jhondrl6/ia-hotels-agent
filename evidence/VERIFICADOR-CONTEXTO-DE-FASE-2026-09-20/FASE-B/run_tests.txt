@@ -1,0 +1,72 @@
+============================= test session starts =============================
+collecting ... collected 53 items
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter PASSED [  1%]
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_el_escaneo_publica_la_poblacion_que_lo_sostiene PASSED [  3%]
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_sin_poblacion_no_hay_favorable PASSED [  5%]
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_un_import_prohibido_plantado_fuera_de_la_puerta_es_hallazgo PASSED [  7%]
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_la_misma_carga_dentro_de_la_puerta_no_es_hallazgo PASSED [  9%]
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_un_proveedor_que_cuela_el_sdk_por_nombre_armado_es_hallazgo PASSED [ 11%]
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_un_archivo_que_no_parsea_no_se_cuenta_como_limpio PASSED [ 13%]
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_en_el_arbol_real_no_hay_archivos_no_parseables PASSED [ 15%]
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_la_puerta_y_sus_proveedores_no_importan_nada_que_pueda_hacer_red PASSED [ 16%]
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_el_guard_de_red_explota_si_alguien_intenta_llamar PASSED [ 18%]
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_la_costura_trabaja_bajo_el_guard_sin_dispararlo PASSED [ 20%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_evaluar_devuelve_una_respuesta_tipada_por_pregunta PASSED [ 22%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_la_forma_de_choice_incluye_probabilidades_sobre_todas_las_opciones PASSED [ 24%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_la_forma_de_score_devuelve_el_nivel_con_su_leyenda PASSED [ 26%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_la_forma_de_noul_no_inventa_confidence PASSED [ 28%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_el_modelo_reportado_sobrevive_a_la_costura_sin_quedar_pineado PASSED [ 30%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_el_pin_del_modelo_esta_declarado_y_no_decide_nada PASSED [ 32%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_alterar_la_forma_del_proveedor_falso_rompe_este_mismo_test PASSED [ 33%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[campos-conocidos] PASSED [ 35%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[cobertura-de-preguntas] PASSED [ 37%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[forma-choice] PASSED [ 39%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[forma-score] PASSED [ 41%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[forma-noul] PASSED [ 43%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[metadata-modelo-usage] PASSED [ 45%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_apagar_toda_la_lista_no_hace_que_la_puerta_invente_campos PASSED [ 47%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_M_AC6_token_prohibido_deja_de_ver_el_import PASSED [ 49%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_M_AC6_carga_dinamica_deja_de_ver_el_contrabando PASSED [ 50%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_M_AC6_superficie_de_proveedores_deja_de_aplicar PASSED [ 52%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_M_AC7_proveedor_por_defecto_inventa_una_decision PASSED [ 54%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_mutante_apunta_a_un_simbolo_distinto_y_vigente PASSED [ 56%]
+tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py::test_sin_la_variable_del_proveedor_falla_y_no_decide PASSED [ 58%]
+tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py::test_sin_directorio_de_proveedores_falla_y_no_decide PASSED [ 60%]
+tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py::test_un_directorio_que_no_existe_imprime_lo_buscado PASSED [ 62%]
+tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py::test_un_nombre_no_registrado_lista_los_que_si_lo_estan PASSED [ 64%]
+tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py::test_los_tres_motivos_no_colapsan_entre_si PASSED [ 66%]
+tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py::test_estado_proveedor_publica_el_estado_sin_llamar_a_nadie PASSED [ 67%]
+tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py::test_un_proveedor_sin_credencial_declara_que_no_la_necesita PASSED [ 69%]
+tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py::test_con_la_clave_en_el_entorno_solo_se_publica_el_bool PASSED [ 71%]
+tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py::test_evaluar_tampoco_filtra_la_clave PASSED [ 73%]
+tests/quality_gates/decision_client/test_decision_client_respuesta_ilegible.py::test_choice_sin_confidence_es_ilegible_no_favorable PASSED [ 75%]
+tests/quality_gates/decision_client/test_decision_client_respuesta_ilegible.py::test_pregunta_sin_respuesta_es_ilegible PASSED [ 77%]
+tests/quality_gates/decision_client/test_decision_client_respuesta_ilegible.py::test_payload_vacio_no_es_decision_favorable PASSED [ 79%]
+tests/quality_gates/decision_client/test_decision_client_respuesta_ilegible.py::test_payload_no_dict_no_se_traga PASSED [ 81%]
+tests/quality_gates/decision_client/test_decision_client_respuesta_ilegible.py::test_campo_nuevo_de_una_primitiva_es_ilegible PASSED [ 83%]
+tests/quality_gates/decision_client/test_decision_client_respuesta_ilegible.py::test_probabilidades_que_no_sumen_uno_es_ilegible PASSED [ 84%]
+tests/quality_gates/decision_client/test_decision_client_respuesta_ilegible.py::test_el_nivel_y_su_leyenda_tienen_que_cuadrar PASSED [ 86%]
+tests/quality_gates/decision_client/test_decision_client_respuesta_ilegible.py::test_noul_con_confidence_inventada_es_ilegible PASSED [ 88%]
+tests/quality_gates/decision_client/test_decision_client_respuesta_ilegible.py::test_la_costura_no_convierte_un_ilegible_en_heuristica PASSED [ 90%]
+tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_anadir_un_segundo_proveedor_toca_un_archivo PASSED [ 92%]
+tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_los_dos_proveedores_se_despachan_por_la_misma_puerta PASSED [ 94%]
+tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_el_arbol_del_repo_no_se_toca_para_medir PASSED [ 96%]
+tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_la_prueba_de_extensibilidad_declara_lo_que_no_cuenta PASSED [ 98%]
+tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_costura_json_publica_su_clave_con_su_poblacion PASSED [100%]
+
+============================== warnings summary ===============================
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_el_escaneo_publica_la_poblacion_que_lo_sostiene
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_en_el_arbol_real_no_hay_archivos_no_parseables
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:111: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_el_escaneo_publica_la_poblacion_que_lo_sostiene
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_en_el_arbol_real_no_hay_archivos_no_parseables
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 53 passed, 6 warnings in 17.14s =======================

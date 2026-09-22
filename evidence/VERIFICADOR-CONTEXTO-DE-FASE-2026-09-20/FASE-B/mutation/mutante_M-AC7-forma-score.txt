@@ -1,0 +1,14 @@
+# Mutante M-AC7-forma-score
+
+Guard real apagado: `scripts/decision_client.py::VERIFICACIONES_DE_FORMA` **sin la entrada `forma-score`**, con los otros cinco intactos (el mutante aisla un guard, L-V2.1: apagar la lista entera no diria cual de los seis cargaba con el caso).
+
+Instrumento: el modulo cargado por `importlib`, payload inyectado por `evaluar(_payload=...)` sobre el proveedor falso `falso-forma`. Cero red.
+
+## VERDE (guard activo)
+ILEGIBLE motivos=["forma-score: s1: el nivel 2 y su leyenda 'bajo' no cuadran (la leyenda declarada es 'alto')"]
+
+## ROJO (guard apagado)
+RESUELTO provider_status=RESUELTO respuestas=["c1", "s1", "n1"]
+
+## Lectura
+Con el guard puesto la puerta dice `ILEGIBLE` y el motivo nombra a `forma-score`. Apagado ese guard y solo ese, la misma respuesta se lee `RESUELTO`: la detencion existia y era de ese simbolo.

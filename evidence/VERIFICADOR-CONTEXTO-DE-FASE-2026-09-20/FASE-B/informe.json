@@ -1,0 +1,422 @@
+{
+  "tool": "scripts/decision_client.py",
+  "esquema": "FASE-B del plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+  "schema_version": "1.0",
+  "generated_at": "2026-09-21T22:33:12",
+  "status": "SIN-HALLAZGOS",
+  "provider_status": {
+    "RESUELTO": {
+      "provider_status": "RESUELTO",
+      "proveedor": "falso-forma",
+      "modelo_reportado_por_el_proveedor": "falso-forma-0.1",
+      "respuestas": [
+        {
+          "tipo": "choice",
+          "pregunta_id": "p1",
+          "eleccion": "si",
+          "probabilidades": {
+            "si": 0.7,
+            "no": 0.15,
+            "quiza": 0.15
+          },
+          "confidence": 0.91
+        },
+        {
+          "tipo": "score",
+          "pregunta_id": "p2",
+          "nivel": 1,
+          "leyenda": "medio",
+          "confidence": 0.83
+        },
+        {
+          "tipo": "noul",
+          "pregunta_id": "p3",
+          "probabilidad_si": 0.68,
+          "confidence": null,
+          "confidence_motivo": "la primitiva noul no expone confidence"
+        }
+      ],
+      "credencial": {
+        "env_var": null,
+        "presente": false,
+        "motivo": "el proveedor no declara credencial"
+      },
+      "provocado_por": "falso-forma a traves de la costura, sin red"
+    },
+    "NO-CONFIGURADO": {
+      "provider_status": "NO-CONFIGURADO",
+      "motivo_clase": "env-de-directorio-sin-definir",
+      "motivo": "IAH_DECISION_PROVIDERS_DIR no esta definido: no se busca en ninguna ruta por defecto (el proveedor nombrado era 'falso-forma')",
+      "buscado": {
+        "IAH_DECISION_PROVIDER": "falso-forma",
+        "IAH_DECISION_PROVIDERS_DIR": null
+      },
+      "decision_devuelta": null,
+      "provocado_por": "IAH_DECISION_PROVIDER definido, IAH_DECISION_PROVIDERS_DIR no"
+    },
+    "ILEGIBLE": {
+      "provider_status": "ILEGIBLE",
+      "motivos": [
+        "campos-conocidos: p1 (choice): faltan campos ['confidence']",
+        "cobertura-de-preguntas: sin respuesta para ['p3']",
+        "forma-choice: p1: confidence ausente o fuera de [0,1] - sin ella no se puede separar «actue» de «no estoy seguro» (AC12 de FASE-C)"
+      ],
+      "proveedor": "falso-ilegible",
+      "decision_devuelta": null,
+      "provocado_por": "falso-ilegible devuelve choice sin confidence y una pregunta sin responder"
+    }
+  },
+  "aislamiento_imports": {
+    "status": "SIN-HALLAZGOS",
+    "regla": "ningun archivo fuera de la puerta importa el SDK, el adapter ni su transporte; la carga dinamica de paquetes esta prohibida salvo la carga por ruta que hace la propia puerta de sus modulos de proveedor",
+    "puerta": "scripts/decision_client.py",
+    "conteos": {
+      "coincidencias_de_import_total": 0,
+      "coincidencias_de_import_fuera_de_la_puerta": 0,
+      "cargas_dinamicas_prohibidas": 0,
+      "cargas_dinamicas_no_resueltas": 16,
+      "cargas_no_resueltas_en_directorios_de_proveedor": 0,
+      "hallazgos_de_carga_dinamica": 0,
+      "menciones_no_import": 21,
+      "archivos_no_parseables": 0
+    },
+    "hallazgos": [],
+    "hallazgos_carga_dinamica": [],
+    "cargas_dinamicas_no_resueltas": [
+      {
+        "archivo": "archives/deprecated_workflows_20260824/v4_regression_guardian.py",
+        "linea": 198,
+        "marca": "carga-no-resuelta:__import__(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "evidence/FASE-T4-B/sonda_contraste_pre_post.py",
+        "linea": 41,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/instrumentos/faseB_mutation_harness.py",
+        "linea": 170,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/instrumentos/faseB_mutation_harness.py",
+        "linea": 27,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "modules/utils/config_checker.py",
+        "linea": 81,
+        "marca": "carga-no-resuelta:__import__(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "scripts/decision_client.py",
+        "linea": 580,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": true
+      },
+      {
+        "archivo": "scripts/run_all_validations.py",
+        "linea": 762,
+        "marca": "carga-no-resuelta:__import__(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/conftest.py",
+        "linea": 82,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_contract_forma.py",
+        "linea": 136,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_mutation_guards.py",
+        "linea": 171,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "tests/quality_gates/governance_numbers/conftest.py",
+        "linea": 98,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py",
+        "linea": 46,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "tests/quality_gates/governance_numbers/test_governance_numbers_sin_hallazgos.py",
+        "linea": 52,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "tests/quality_gates/jev_pilot/test_jev_pilot_offline.py",
+        "linea": 22,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "tests/test_p5_ac_s2_remediacion.py",
+        "linea": 31,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      },
+      {
+        "archivo": "tests/test_validate_wiring.py",
+        "linea": 33,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": false
+      }
+    ],
+    "en_la_puerta": [
+      {
+        "archivo": "scripts/decision_client.py",
+        "linea": 580,
+        "marca": "carga-no-resuelta:exec_module(argumento no literal)",
+        "clase": "no-resuelta",
+        "en_la_puerta": true,
+        "en_directorio_de_proveedores": false
+      }
+    ],
+    "menciones_no_import": [
+      {
+        "archivo": "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/instrumentos/faseB_evidencia.py",
+        "linea": 171,
+        "token": "httpx2",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/instrumentos/faseB_evidencia.py",
+        "linea": 173,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/instrumentos/faseB_evidencia.py",
+        "linea": 178,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/instrumentos/faseB_evidencia.py",
+        "linea": 180,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/instrumentos/faseB_mutation_harness.py",
+        "linea": 110,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/instrumentos/faseB_mutation_harness.py",
+        "linea": 118,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "scripts/decision_client.py",
+        "linea": 119,
+        "token": "httpx2",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "scripts/decision_client.py",
+        "linea": 120,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "scripts/decision_client.py",
+        "linea": 122,
+        "token": "typesafe_adapter",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "scripts/decision_client.py",
+        "linea": 683,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "scripts/evaluate_jev_pilot.py",
+        "linea": 26,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py",
+        "linea": 53,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py",
+        "linea": 60,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py",
+        "linea": 70,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py",
+        "linea": 123,
+        "token": "httpx2",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py",
+        "linea": 124,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_mutation_guards.py",
+        "linea": 118,
+        "token": "typesafe",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py",
+        "linea": 22,
+        "token": "jev",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py",
+        "linea": 30,
+        "token": "jev",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py",
+        "linea": 49,
+        "token": "jev",
+        "es_linea_de_import": false
+      },
+      {
+        "archivo": "tests/quality_gates/decision_client/test_decision_client_provider_no_configurado.py",
+        "linea": 50,
+        "token": "jev",
+        "es_linea_de_import": false
+      }
+    ],
+    "no_parseables": [],
+    "coverage_basis": {
+      "archivos_py_en_el_arbol": 17970,
+      "archivos_escaneados": 692,
+      "nodos_de_import_vistos": 4379,
+      "excluidos_por_directorio": {
+        "venv": 7618,
+        "tmp_test": 690,
+        "site-packages": 8889,
+        "build": 14,
+        "temp": 67
+      },
+      "tokens_buscados": [
+        "typesafe",
+        "typesafe_sdk",
+        "typesafe-sdk",
+        "jev",
+        "httpx2",
+        "typesafe_adapter",
+        "adapter_typesafe",
+        "system_one_adapter"
+      ],
+      "archivos_mirados": null,
+      "poblacion_truncada": true,
+      "comando": "python scripts/decision_client.py --scan-imports",
+      "medido_el": "2026-09-21",
+      "limites": [
+        "cuenta imports staticos y cargas dinamicas con argumento literal; una carga con el nombre construido en runtime (\"types\" + \"afe\") no es resoluble estaticamente: se publica en `cargas_dinamicas_no_resueltas`, y SOLO cuenta como hallazgo si el archivo vive bajo un directorio `*proveedores*` (la superficie de contrabando)",
+        "no mira dependencias declaradas (requirements/pyproject): un paquete instalado sin que nadie lo importe no lo detecta; eso es D7",
+        "las menciones en prosa o docstring se publican aparte y NO son hallazgos",
+        "archivos excluidos por directorio: {'build': 14, 'site-packages': 8889, 'temp': 67, 'tmp_test': 690, 'venv': 7618}"
+      ]
+    }
+  },
+  "costura": {
+    "files_changed_to_add_provider": 1,
+    "archivos_tocados": [
+      "falsos_proveedores/falso_segundo.py"
+    ],
+    "agregados": [
+      "falsos_proveedores/falso_segundo.py"
+    ],
+    "modificados": [],
+    "costura_funciona_con_ambos": [
+      "falso-forma",
+      "falso-segundo-medido"
+    ],
+    "los_dos_despachan_respuestas_distintas": true,
+    "provider_status": [
+      "RESUELTO",
+      "RESUELTO"
+    ],
+    "archivos_de_test_paralelos": {
+      "valor": 1,
+      "nota": "un proveedor falso nuevo necesita un caso que lo despache; se declara aparte, no se esconde para inflar el «1» (AC1 del plan hermano EVALUACION-JEV: tests, runner y manifiesto se contabilizan aparte)"
+    },
+    "coverage_basis": {
+      "directorio_base": "C:\\Users\\Jhond\\Github\\iah-cli\\tests\\quality_gates\\decision_client\\falsos_proveedores",
+      "proveedor_base_usado": "falso-forma",
+      "archivos_base_antes": [
+        "decision_client.py",
+        "falsos_proveedores/falso_forma.py",
+        "falsos_proveedores/falso_ilegible.py"
+      ],
+      "archivos_base_despues": [
+        "decision_client.py",
+        "falsos_proveedores/falso_forma.py",
+        "falsos_proveedores/falso_ilegible.py",
+        "falsos_proveedores/falso_segundo.py"
+      ],
+      "instrumento": "sha256 por archivo + despacho real por la costura",
+      "comando": "python scripts/decision_client.py --costura --falsos-directorio tests/quality_gates/decision_client/falsos_proveedores",
+      "medido_el": "2026-09-21",
+      "corte": "copias temporales bajo iah-costura-l6msisdf; el arbol del repo no se modifico"
+    }
+  },
+  "corte_de_red": {
+    "llamadas_de_red_en_esta_fase": 0,
+    "como_se_verifica": "guard de socket en conftest.py + escaneo ast de imports de esta puerta y de los proveedores falsos (ninguno importa un cliente HTTP)",
+    "credenciales_leidas": false
+  },
+  "cobertura_de_la_fase": {
+    "comando": "python scripts/decision_client.py --report",
+    "medido_el": "2026-09-21"
+  }
+}

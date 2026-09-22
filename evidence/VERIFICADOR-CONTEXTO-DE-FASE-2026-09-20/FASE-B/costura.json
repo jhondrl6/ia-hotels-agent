@@ -1,0 +1,42 @@
+{
+  "files_changed_to_add_provider": 1,
+  "archivos_tocados": [
+    "falsos_proveedores/falso_segundo.py"
+  ],
+  "agregados": [
+    "falsos_proveedores/falso_segundo.py"
+  ],
+  "modificados": [],
+  "costura_funciona_con_ambos": [
+    "falso-forma",
+    "falso-segundo-medido"
+  ],
+  "los_dos_despachan_respuestas_distintas": true,
+  "provider_status": [
+    "RESUELTO",
+    "RESUELTO"
+  ],
+  "archivos_de_test_paralelos": {
+    "valor": 1,
+    "nota": "un proveedor falso nuevo necesita un caso que lo despache; se declara aparte, no se esconde para inflar el Â«1Â» (AC1 del plan hermano EVALUACION-JEV: tests, runner y manifiesto se contabilizan aparte)"
+  },
+  "coverage_basis": {
+    "directorio_base": "C:\\Users\\Jhond\\Github\\iah-cli\\tests\\quality_gates\\decision_client\\falsos_proveedores",
+    "proveedor_base_usado": "falso-forma",
+    "archivos_base_antes": [
+      "decision_client.py",
+      "falsos_proveedores/falso_forma.py",
+      "falsos_proveedores/falso_ilegible.py"
+    ],
+    "archivos_base_despues": [
+      "decision_client.py",
+      "falsos_proveedores/falso_forma.py",
+      "falsos_proveedores/falso_ilegible.py",
+      "falsos_proveedores/falso_segundo.py"
+    ],
+    "instrumento": "sha256 por archivo + despacho real por la costura",
+    "comando": "python scripts/decision_client.py --costura --falsos-directorio tests/quality_gates/decision_client/falsos_proveedores",
+    "medido_el": "2026-09-21",
+    "corte": "copias temporales bajo iah-costura-ad8wxu8r; el arbol del repo no se modifico"
+  }
+}

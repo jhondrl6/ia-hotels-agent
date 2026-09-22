@@ -1,0 +1,14 @@
+# Mutante M-AC7-cobertura-de-preguntas
+
+Guard real apagado: `scripts/decision_client.py::VERIFICACIONES_DE_FORMA` **sin la entrada `cobertura-de-preguntas`**, con los otros cinco intactos (el mutante aisla un guard, L-V2.1: apagar la lista entera no diria cual de los seis cargaba con el caso).
+
+Instrumento: el modulo cargado por `importlib`, payload inyectado por `evaluar(_payload=...)` sobre el proveedor falso `falso-forma`. Cero red.
+
+## VERDE (guard activo)
+ILEGIBLE motivos=["cobertura-de-preguntas: sin respuesta para ['n1']"]
+
+## ROJO (guard apagado)
+RESUELTO provider_status=RESUELTO respuestas=["c1", "s1"]
+
+## Lectura
+Con el guard puesto la puerta dice `ILEGIBLE` y el motivo nombra a `cobertura-de-preguntas`. Apagado ese guard y solo ese, la misma respuesta se lee `RESUELTO`: la detencion existia y era de ese simbolo.

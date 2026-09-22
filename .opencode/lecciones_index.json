@@ -5,8 +5,8 @@
     "archivos_analysis_escaneados": 16,
     "archivos_contexto_escaneados": 38,
     "archivos_md_escaneados": 416,
-    "ids_con_definicion": 325,
-    "ids_citados_sin_definicion": 49,
+    "ids_con_definicion": 330,
+    "ids_citados_sin_definicion": 51,
     "familias_incluidas": [
       "L",
       "DA",
@@ -385,7 +385,7 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 109,
+      "total_citas": 114,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
@@ -1514,7 +1514,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 25,
+      "total_citas": 26,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2073,7 +2073,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 32,
+      "total_citas": 33,
       "planes_que_lo_citan": [
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
@@ -2752,7 +2752,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 49,
+      "total_citas": 52,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
@@ -2812,7 +2812,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 61,
+      "total_citas": 62,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
@@ -2899,7 +2899,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 28,
+      "total_citas": 30,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
@@ -2918,7 +2918,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 55,
+      "total_citas": 56,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
@@ -3299,7 +3299,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 65,
+      "total_citas": 66,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
@@ -3421,7 +3421,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 20,
+      "total_citas": 25,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "EVALUACION-JEV-TYPESAFE-2026-09-21",
@@ -3439,7 +3439,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -3456,7 +3456,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 30,
+      "total_citas": 32,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
@@ -3681,6 +3681,76 @@
       "redefiniciones": []
     },
     {
+      "id": "L-VCF-6",
+      "familia": "L",
+      "enunciado": "El primer mutation check de AC7 apagaba VERIFICACIONES_DE_FORMA entera, y con la lista vacía la puerta seguía negándose a decidir: la conversión a tipos se negó a rellenar la confidence ausente. El mutante no podía dar verde, así que no probaba nada sobre los seis guards — Un guard que es una lista de verificaciones no es un símbolo mutable atómico: apagarla entera borra seis guards a la vez y, si hay una segunda línea defensiva, el rojo deja de atribuirse a ninguno (L-V2.1 aplicado a una colección, no a un id posicional)",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 6,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-7",
+      "familia": "L",
+      "enunciado": "La primera versión de la regla de aislamiento marcaba cualquier import_module/exec_module como sospechoso: sobre el árbol real eso producía 16 hallazgos ajenos (fixtures de otros planes, cargadores de skills) y AC6 habría quedado rojo por diseño — Una regla pensada para un contrabando concreto, aplicada sin distinguir lo resoluble en estático de lo que no, convierte un candado en ruido; y el ruido invita a apagar el candado",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-8",
+      "familia": "L",
+      "enunciado": "El «0» de AC6 tiene dos poblaciones y no eran la misma: git grep ve 678 .py rastreados y el escáner AST ve 692 en el árbol de trabajo (los archivos de esta fase, aún sin commitear). Y el SDK sí está en el disco: bajo tmp_test/venv-jev-sdk, donde lo aisló el plan hermano — Un «cero coincidencias» afirmado sobre una población que nadie definió se lee como «no existe», cuando lo medido es «nadie lo importa»",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-9",
+      "familia": "L",
+      "enunciado": "Apareció una contradicción entre dos ACs del propio plan, latente hasta que exista un proveedor real: AC6 dice «ningún archivo fuera de decision_client.py importa el SDK» y AC9 dice «añadir un proveedor es un archivo». Con el proveedor en su propio módulo, la primera obliga a que ese módulo no importe nada y la segunda prohíbe tocar la puerta — Los dos enunciados son ciertos hoy (0 imports, 1 archivo) pero no son compatibles en el único escenario para el que se escribió la costura: D7. Decidirlo aquí habría sido reinterpretar una restricción del plan en silencio",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-10",
+      "familia": "L",
+      "enunciado": "«Cero llamadas de red» escrito como afirmación del informe no era verificable, y el primer intento de probarlo con from conftest import RedProhibida falló en colección: resolvía al tests/conftest.py raíz, no al de esta selección (1 test rojo antes de la corrección) — Un guard que no se ejecuta no existe; y en pytest conftest no es un importable único bajo colecciones anidadas (es la familia de «la cobertura del verificador se mide»: un ✅ no prueba ausencia)",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "L-VERIFY.1",
       "familia": "L",
       "enunciado": "Los documentos del plan (D-AJUST.4, 01-plan-maestro.md) mencionan GATE_BLOCKING_ENABLED y GATE_ENFORCEMENT_ENABLED como dos llaves del bloqueo. Medido con grep: solo GATE_BLOCKING_ENABLED existe en código. DA-P1.7 decidió correctamente «un solo botón», pero la documentación no se actualizó — L-P1.2 aplicada a documentos de plan: el texto afirma la existencia de un símbolo que el código no tiene. Las sesiones de decisión no contra-verificaron nombres de variables contra el código",
@@ -3811,7 +3881,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 47,
+      "total_citas": 48,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
@@ -5266,6 +5336,22 @@
       "total_citas": 2,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
+      ]
+    },
+    {
+      "id": "D-09",
+      "familia": "D",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "context/Refuerzo"
+      ]
+    },
+    {
+      "id": "D-10",
+      "familia": "D",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "context/Refuerzo"
       ]
     },
     {

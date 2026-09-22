@@ -1,0 +1,114 @@
+# FASE-B / AC8 - contract test de forma: verde con la forma actual, ROJO al alterarla
+
+Plan: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 · Medido: 2026-09-21 · HEAD: 74d8ff5
+
+Archivo de tests: `tests/quality_gates/decision_client/test_decision_client_contract_forma.py`
+Simbolo gobernado: `scripts/decision_client.py::VERIFICACIONES_DE_FORMA` (seis guards, cada uno con su mutante en `mutation/`).
+
+## Que fija el contrato (la forma, no los literales del proveedor: L-V2.3)
+
+| Forma | Campos exigidos | Que la rompe |
+|---|---|---|
+| `choice` | `eleccion` entre las opciones declaradas, `probabilidades` sobre **todas** ellas sumando 1 ± 0.02, `confidence` en [0,1] | un campo nuevo, uno que falta, una suma que no cuadra, confidence ausente |
+| `score` | `nivel` dentro de la leyenda declarada **y** su `leyenda` correspondiente, `confidence` en [0,1] | nivel y etiqueta desalineados (la primitiva re-definio criterios) |
+| `noul` | `probabilidad_si` en [0,1] y **ninguna** `confidence` | inventarle una confidence: la primitiva no la expone, y rellenarla fabricaria el eje que FASE-C usa en AC12 |
+| envelope | `modelo` no vacio, `usage` dict o `None`, sin claves fuera de contrato | un 200 sin `usage` sigue siendo `None`, **no** consumo cero |
+
+## Version del modelo: declarada, no pineada
+
+`PIN_MODELO_DECLARADO` en la puerta publica `modelo = jev-1.13.0` con su fuente (docs publicos consultados el 2026-09-21 por el plan hermano `EVALUACION-JEV-TYPESAFE-2026-09-21`), `verificado_desde_este_repo = false` y `usado_por_el_codigo = false`. `test_el_pin_del_modelo_esta_declarado_y_no_decide_nada` lo afirma leyendo el AST de la puerta: el pin aparece **una sola vez** (su propia definicion). El contract test compara el modelo contra lo que **el proveedor declara** en su modulo, nunca contra una cadena: asi sigue siendo de forma cuando el proveedor cambie de version, y asi el repo no se acopla al nombre del proveedor (maestro §2).
+
+## VERDE — `pytest -v ... -k contract_forma` (exit 0)
+
+```text
+============================= test session starts =============================
+collecting ... collected 53 items / 46 deselected / 7 selected
+
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_evaluar_devuelve_una_respuesta_tipada_por_pregunta PASSED [ 14%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_la_forma_de_choice_incluye_probabilidades_sobre_todas_las_opciones PASSED [ 28%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_la_forma_de_score_devuelve_el_nivel_con_su_leyenda PASSED [ 42%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_la_forma_de_noul_no_inventa_confidence PASSED [ 57%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_el_modelo_reportado_sobrevive_a_la_costura_sin_quedar_pineado PASSED [ 71%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_el_pin_del_modelo_esta_declarado_y_no_decide_nada PASSED [ 85%]
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_alterar_la_forma_del_proveedor_falso_rompe_este_mismo_test PASSED [100%]
+
+====================== 7 passed, 46 deselected in 0.57s =======================
+```
+
+## ROJO — el MISMO test, contra una copia del proveedor falso sin `confidence`
+
+Comando (capturado tal cual, con el entorno apuntando a la copia alterada en `temp/`):
+
+```bash
+IAH_DECISION_PROVIDER=falso-forma \
+IAH_DECISION_PROVIDERS_DIR=<copia alterada> \
+./venv/Scripts/python.exe -m pytest \
+  tests/quality_gates/decision_client/test_decision_client_contract_forma.py \
+  -k test_evaluar_devuelve_una_respuesta_tipada_por_pregunta -v
+```
+
+La mutacion es una sola linea del proveedor falso: se le quita `"confidence": 0.91` de la respuesta `choice`. El assert del hijo no depende de que el hijo imprima los motivos, asi que el nombre del guard que cayo se comprueba ademas en el proceso padre (`test_alterar_la_forma_del_proveedor_falso_rompe_este_mismo_test`, ver `run_tests.txt`).
+
+exit 1 — distinto de cero, que es lo que AC8 exige:
+
+```text
+============================= test session starts =============================
+collecting ... collected 7 items / 6 deselected / 1 selected
+
+tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_evaluar_devuelve_una_respuesta_tipada_por_pregunta FAILED [100%]
+
+================================== FAILURES ===================================
+___________ test_evaluar_devuelve_una_respuesta_tipada_por_pregunta ___________
+
+dc = <module 'decision_client_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\decision_client.py'>
+preguntas = [Pregunta(id='c1', tipo='choice'), Pregunta(id='s1', tipo='score'), Pregunta(id='n1', tipo='noul')]
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_evaluar_devuelve_una_respuesta_tipada_por_pregunta(dc, preguntas, entorno_falso):
+>       r = dc.evaluar("estado de prueba", preguntas, entorno_falso)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\decision_client\test_decision_client_contract_forma.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\decision_client.py:616: in evaluar
+    validar_payload(payload, preguntas, prov["nombre"])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+payload = {'modelo': 'falso-forma-0.1', 'request_id': 'falso-req-1', 'respuestas': [{'eleccion': 'pertinente', 'pregunta_id': 'c..., {'pregunta_id': 'n1', 'probabilidad_si': 0.68, 'tipo': 'noul'}], 'usage': {'input_tokens': 120, 'output_tokens': 34}}
+preguntas = [Pregunta(id='c1', tipo='choice'), Pregunta(id='s1', tipo='score'), Pregunta(id='n1', tipo='noul')]
+proveedor = 'falso-forma'
+
+    def validar_payload(payload, preguntas: Sequence[Pregunta], proveedor: str = None) -> dict:
+        """Del payload crudo al contrato, o a `RespuestaIlegible`. **Nunca** a una decision implicita."""
+        if not isinstance(payload, dict):
+            raise RespuestaIlegible(
+                f"el proveedor {proveedor!r} devolvio {type(payload).__name__}, no un payload",
+                [f"payload-no-dict:{type(payload).__name__}"], proveedor)
+        respuestas = payload.get("respuestas")
+        if respuestas is None:
+            raise RespuestaIlegible(f"el payload del proveedor {proveedor!r} no trae respuestas",
+                                    ["respuesta-ausente:'respuestas' no esta en el payload"], proveedor)
+        if not isinstance(respuestas, list) or not respuestas:
+            # L-PF10: vacio != ausente, y una lista vacia tampoco es « cero decisiones favorables».
+            raise RespuestaIlegible(
+                f"el proveedor {proveedor!r} devolvio una lista de respuestas vacia",
+                [f"respuesta-vacia:{type(respuestas).__name__}"], proveedor)
+        motivos = []
+        for nombre, fn in VERIFICACIONES_DE_FORMA:
+            for m in fn(payload, preguntas):
+                motivos.append(f"{nombre}: {m}")
+        if motivos:
+>           raise RespuestaIlegible(
+                f"respuesta de {proveedor!r} fuera de forma ({len(motivos)} motivo(s))",
+                motivos, proveedor)
+E           decision_client_bajo_prueba.RespuestaIlegible: respuesta de 'falso-forma' fuera de forma (2 motivo(s))
+
+scripts\decision_client.py:487: RespuestaIlegible
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_evaluar_devuelve_una_respuesta_tipada_por_pregunta
+======================= 1 failed, 6 deselected in 0.12s =======================
+```
+
+## Nota L-VUP-5
+
+El verde de esta fase no llego a la primera: la primera corrida dio 30 fallos y el primer intento de mutation check apagaba la lista de guards **entera**, lo que no aislaba a ninguno. Ambos hechos estan escritos en `mutation/verde_baseline.txt`.

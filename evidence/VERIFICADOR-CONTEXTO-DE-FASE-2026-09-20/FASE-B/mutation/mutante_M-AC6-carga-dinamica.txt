@@ -1,0 +1,49 @@
+# Mutantes M-AC6-carga-dinamica y M-AC6-superficie-proveedores
+
+Arbol fixture: `decision_proveedores/tramposo.py` con `importlib.import_module('je' + 'v')` — el nombre se arma en runtime, no es resoluble estaticamente, y por eso la superficie de proveedores lo cuenta como hallazgo.
+
+## VERDE (ambos guards activos)
+```json
+{
+ "coincidencias_de_import_total": 0,
+ "coincidencias_de_import_fuera_de_la_puerta": 0,
+ "cargas_dinamicas_prohibidas": 0,
+ "cargas_dinamicas_no_resueltas": 1,
+ "cargas_no_resueltas_en_directorios_de_proveedor": 1,
+ "hallazgos_de_carga_dinamica": 1,
+ "menciones_no_import": 0,
+ "archivos_no_parseables": 0
+}
+```
+hallazgos: `[{"archivo": "decision_proveedores/tramposo.py", "linea": 2, "marca": "carga-no-resuelta:import_module(argumento no literal)", "clase": "no-resuelta", "en_la_puerta": false, "en_directorio_de_proveedores": true}]`
+
+## ROJO 1 — `FUNCIONES_DE_CARGA` vaciada
+```json
+{
+ "coincidencias_de_import_total": 0,
+ "coincidencias_de_import_fuera_de_la_puerta": 0,
+ "cargas_dinamicas_prohibidas": 0,
+ "cargas_dinamicas_no_resueltas": 0,
+ "cargas_no_resueltas_en_directorios_de_proveedor": 0,
+ "hallazgos_de_carga_dinamica": 0,
+ "menciones_no_import": 0,
+ "archivos_no_parseables": 0
+}
+```
+
+## ROJO 2 — `DIRECTORIO_PROVEEDORES_RE` que nunca cuadra
+```json
+{
+ "coincidencias_de_import_total": 0,
+ "coincidencias_de_import_fuera_de_la_puerta": 0,
+ "cargas_dinamicas_prohibidas": 0,
+ "cargas_dinamicas_no_resueltas": 1,
+ "cargas_no_resueltas_en_directorios_de_proveedor": 0,
+ "hallazgos_de_carga_dinamica": 0,
+ "menciones_no_import": 0,
+ "archivos_no_parseables": 0
+}
+```
+
+## Lectura
+Apagada la deteccion de carga dinamica, el contador cae a 0 y el status pasa a `SIN-HALLAZGOS`. Apagada solo la superficie, la carga **sigue contada** (1) pero deja de ser hallazgo: son dos guards distintos y el mutante los nombra por separado (L-V2.1).

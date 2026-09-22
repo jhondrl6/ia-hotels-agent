@@ -1,0 +1,25 @@
+# FASE-B baseline PRE - medido 2026-09-21 sobre HEAD 74d8ff5
+# git status --porcelain (rutas ajenas preexistentes)
+ M .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+?? .opencode/context/Refuerzo.md
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/
+
+## 1. checks del --quick y del modo completo
+11
+4
+## 2. pasos del hook
+7
+## 3. funciones de test canonicas del repo (metodo grep)
+4330
+## 4. seleccion de tests de FASE-B (aun inexistente)
+## 5. poblacion escaneada para AC6 (.py rastreados por git)
+678
+## 6. coincidencias de import del SDK/adapter fuera de la puerta (no existe aun)
+0
+## 7. menciones del SDK en cualquier .py (informativo, no es import)
+1
+## 8. bytes de los documentos de gobierno (AC17)
+98694 .agents/workflows/phased_project_executor.md
+6123 .agents/workflows/templates/lecciones-capitalizadas-template.md
+## 9. SDK disponible en el venv del producto
+typesafe=AUSENTE; jev=AUSENTE; httpx2=AUSENTE; tenacity=AUSENTE

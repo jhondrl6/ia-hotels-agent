@@ -1,0 +1,38 @@
+# FASE-B / AC9 - extensibilidad probada: anadir un segundo proveedor cuesta UN archivo
+
+Test: `test_decision_client_segundo_proveedor_un_archivo.py` (5 casos) + el instrumento que mide: `scripts/decision_client.py::medir_costura`, cuya salida esta en `costura.json`.
+
+## Como se mide, para que el 1 no sea una afirmacion
+
+1. Copia la puerta (`scripts/decision_client.py`) y sus proveedores falsos a un directorio temporal; el arbol del repo no se toca (hay un caso que lo prueba por `st_mtime_ns`).
+2. `sha256` de **todos** los `.py` copiados -> `antes`.
+3. Escribe **un** archivo nuevo, `falsos_proveedores/falso_segundo.py`, que solo declara `PROVEEDOR` y su `evaluar()`. No se registra en ninguna parte: la costura descubre proveedores escaneando el directorio nombrado por `IAH_DECISION_PROVIDERS_DIR`.
+4. `sha256` otra vez -> `despues`; `files_changed_to_add_provider = |agregados| + |modificados|`.
+5. Despacha **los dos** proveedores por la misma `evaluar()` y exige que contesten distinto: si la costura devolviera siempre el primer modulo, el 1 seria humo.
+
+## Valor publicado
+
+`files_changed_to_add_provider = 1` · `agregados = ["falsos_proveedores/falso_segundo.py"]` · `modificados = []`. No hay que explicar un numero mayor: no lo hubo.
+
+## Lo que el 1 NO incluye (declarado, no escondido)
+
+Igual que hace el AC1 del plan hermano: **tests, runner y manifiesto de dependencias se contabilizan aparte**. `archivos_de_test_paralelos = 1` (el caso que despacha al proveedor nuevo). Y cuando D7 active un proveedor **real** habra que anadir, ademas del modulo de declaracion, la entrada de dependencias del SDK - eso no esta medido aqui porque no se activa ningun proveedor en este plan.
+
+## Comparacion de proveedores: NO es de esta fase
+
+Con un solo proveedor real no hay eleccion que medir, y exigir la produccion de un numero inexistente se cerraria como `NO-EJERCITADO` certificando humo. La comparacion queda como deuda **D7** con su disparador (maestro §6), y su consumidor natural es **D6**.
+
+## Salida del test (exit 0)
+
+```text
+============================= test session starts =============================
+collecting ... collected 5 items
+
+tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_anadir_un_segundo_proveedor_toca_un_archivo PASSED [ 20%]
+tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_los_dos_proveedores_se_despachan_por_la_misma_puerta PASSED [ 40%]
+tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_el_arbol_del_repo_no_se_toca_para_medir PASSED [ 60%]
+tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_la_prueba_de_extensibilidad_declara_lo_que_no_cuenta PASSED [ 80%]
+tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_costura_json_publica_su_clave_con_su_poblacion PASSED [100%]
+
+============================== 5 passed in 0.16s ==============================
+```
