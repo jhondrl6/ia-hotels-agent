@@ -16,11 +16,13 @@ sin abrir el código (R2.4). Techo alcanzable: `VERIFICADO OFFLINE` con mutation
 
 ## Lo que la fase **no** cerró (para que el siguiente no lo lea como cerrado)
 
-- **Commit**: no hecho. El prompt lo prohíbe sin instrucción literal. El árbol tiene **14 rutas
-  propias** de la fase, más dos ajenas que esta sesión **no** tocó:
-  `.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md` (llegó modificado por
-  otra sesión) y nada más. El commit que se autorice debe llevar **dentro** el par
-  `.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json` (`[6/7]` del hook lo corta si no).
+- **Commit**: **hecho el 2026-09-21 en `a7564ae`** (34 archivos, +2.981/-142) con instrucción literal del operador, y llevó **dentro** el par `.opencode/LECCIONES-INDEX.md` +
+  `.opencode/lecciones_index.json`, que es lo que corta `[6/7]` del hook. Dos rutas ajenas quedaron **excluidas a propósito** y siguen en el árbol de trabajo:
+  `.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md` (modificado por otra sesión antes de abrir esta) y `.opencode/context/Refuerzo.md`
+  (sin trackear, apareció durante la sesión). El push **no** estaba autorizado y no se hizo.
+
+  *Nota de auto-aplicación (medición A6 del maestro, reproducida por esta fase): el párrafo decía «Commit: no hecho» y lo invalidó el propio commit que
+  lo registró. Es el defecto que este plan caza, esta vez dentro de su propia fase — de ahí que la higiene se commitee aparte.*
 - **D1** (corregir `.agents/`): sigue debida, con su disparador **re-formulado** porque estaba
   redactado en círculo (L-VCF-4).
 - **D2** (promover el verificador al `--quick`): sigue debida. El script corre suelto y su salida 1

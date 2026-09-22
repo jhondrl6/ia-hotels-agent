@@ -150,7 +150,7 @@ B no lo asuma:
 
 | Qué re-medir al abrir FASE-B | Valor del 2026-09-21 (cierre de FASE-A) | Comando |
 |---|---|---|
-| HEAD y limpieza | `2deddee`, `git status --porcelain` con las rutas de esta fase sin commitear | `git rev-parse --short HEAD`, `git status --porcelain` |
+| HEAD y limpieza | `2deddee` al abrir FASE-A; al cerrarla quedo **`a7564ae`** con su arbol de trabajo despejado (solo dos rutas ajenas sin commitear) | `git rev-parse --short HEAD`, `git status --porcelain` |
 | Paridad con el remoto | `0/0` con `origin/master` | `git ls-remote origin refs/heads/master` |
 | Checks del `--quick` | **11** (composición intacta, AC16) | `grep -c 'print(f?"\[[0-9]*/11\]' scripts/run_all_validations.py` |
 | Pasos del hook | **7** | `grep -cE '^#   \[[0-9]+/[0-9]+\]' scripts/git_hooks/pre-commit` |
