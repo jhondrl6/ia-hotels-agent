@@ -93,10 +93,12 @@ estado) · `NO-EJERCITADO` (el camino no se ejercitó; con el motivo) · `FUERA 
       lo declara con su porqué (con un solo proveedor real no hay elección que medir, y exigir un
       número inexistente se cerraría como `NO-EJERCITADO` certificando humo).
 - [x] **Commit cerrado el 2026-09-22 en `647f436`** (46 archivos, +4.412/−97) con instrucción literal,
-      con el par del índice dentro y con los **7** checks del pre-commit en verde. El push **no** está
-      autorizado: paridad `0/2` al commitear la fase y **`0/3`** tras su barrido (`612efd0`, 2026-09-22;
-      cada commit documental suma uno, así que se re-mide) con `origin/master` y el commit ajeno
-      `eecf246` por delante. El commit
+      con el par del índice dentro y con los **7** checks del pre-commit en verde. **Push hecho el
+      2026-09-22** por instrucción literal del operador: `origin/master` quedó en `b764e8d` y la paridad
+      re-medida tras `git fetch` es **`0/0`** (antes: `0/2` al commitear la fase, `0/3` tras su barrido
+      `612efd0`, `0/5` tras `cf64faf` — cada commit documental suma uno, por eso la cifra se re-mide y no
+      se copia). El push publicó también el commit **ajeno** `eecf246` (ROADMAP v4.3), que era ancestro
+      obligado de esta fase y no podía quedar atrás. El commit
       además **movió el denominador que la fase había publicado**: `git ls-files '*.py'` pasó de 678 a
       **691** (+13 archivos propios) y AC6 sigue en **0** re-medido con la puerta; la brecha restante
       contra los 692 del escáner se desglosó archivo por archivo y dio un nombre —

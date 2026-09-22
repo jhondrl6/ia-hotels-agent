@@ -116,12 +116,13 @@ esta fase redactó la tabla anterior, las tres rutas estaban sucias en el árbol
 commit, `git show --stat eecf246` muestra que la otra sesión ya se llevó `ROADMAP.md` y
 `.opencode/context/Refuerzo.md`, así que el HEAD del repo **dejó de ser `74d8ff5`** (sobre el que midieron
 el PRE, el POST y las dos corridas del quick) y pasó a `eecf246`, con paridad `0/1` contra
-`origin/master`: el commit de FASE-B se apoya sobre **un commit ajeno todavía sin empujar**. **Ese commit
-ya está hecho: `647f436`, el 2026-09-22, con el par del índice dentro y los 7 checks del pre-commit en
-verde; la paridad medida ese día fue `0/2`** (`git rev-list --left-right --count origin/master...HEAD`),
-porque `eecf246` sigue sin empujar delante del de esta fase y el push no está autorizado (la paridad
-medida el 2026-09-22 era `0/2` al cerrar el commit de la fase y quedó en **`0/3`** tras su propio barrido
-de citas, `612efd0`, el mismo día: cada commit documental suma uno, y por eso la cifra se re-mide). Nada
+`origin/master`: el commit de FASE-B se apoyaba sobre **un commit ajeno todavía sin empujar**. **Ese
+commit de la fase está hecho (`647f436`, el 2026-09-22, con el par del índice dentro y los 7 checks del
+pre-commit en verde), y el push también: `74d8ff5..b764e8d` publicado el mismo 2026-09-22 con instrucción
+literal del operador, cinco commits —los cuatro de esta fase y el ajeno `eecf246`, que era su ancestro
+obligado— y paridad `0/0` re-medida tras `git fetch`. La secuencia de paridad del día queda como
+antecedente de por qué esta cifra no se copia: `0/1` antes del commit de la fase, `0/2` al cerrarlo,
+`0/3` tras `612efd0`, `0/5` tras `cf64faf` —cada commit documental suma uno—, `0/0` al empujar.** Nada
 de esto
 mueve las restas —los cuatro archivos gobernados por AC16/AC17 no están en ninguno de los dos commits y
 `git diff --numstat` sobre ellos sigue vacío—, pero sí invalida la lectura «el árbol de partida es solo

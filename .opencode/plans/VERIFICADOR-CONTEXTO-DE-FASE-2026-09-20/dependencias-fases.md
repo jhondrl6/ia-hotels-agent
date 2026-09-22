@@ -104,9 +104,10 @@ commit de esta fase **deja fuera** y sobre la que no se hace `git checkout` (es 
 sesión, no basura que limpiar; precedente: FASE-A excluyó a propósito sus dos rutas ajenas).
 
 Las otras dos —`ROADMAP.md` y `.opencode/context/Refuerzo.md`— se las llevó la otra sesión en `eecf246`,
-que hoy es el HEAD del repo y está **sin empujar** (`git rev-list --left-right --count
-origin/master...HEAD` → `0/1`). Consecuencia declarada: **el commit de FASE-B se apoya sobre un commit
-ajeno todavía no publicado**, y el HEAD sobre el que esta fase midió su par pre/post (`74d8ff5`) ya no es
+que ese día era el HEAD del repo y estaba **sin empujar** (`git rev-list --left-right --count
+origin/master...HEAD` → `0/1`). Consecuencia declarada: **el commit de FASE-B se apoyaba sobre un commit
+ajeno todavía no publicado** — y el push del mismo 2026-09-22 lo publicó con los cuatro de esta fase,
+como queda escrito debajo, y el HEAD sobre el que esta fase midió su par pre/post (`74d8ff5`) ya no es
 el HEAD. Las restas no se mueven —los cuatro archivos gobernados por AC16/AC17 no están en ninguno de los
 dos commits y su `git diff --numstat` sigue vacío—, pero la premisa «el árbol de partida es solo mío»
 queda refutada y así queda escrita (medición A6 del maestro, cumplida sobre esta propia fase). Detalle con
@@ -116,9 +117,11 @@ comandos y mtimes en `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/ba
 **Cerrado el 2026-09-22.** El commit de FASE-B está hecho — **`647f436`** (46 archivos, +4.412/−97), con
 instrucción literal del operador y con el par del índice de lecciones dentro, así que `[6/7]` del hook no
 lo cortó y los **7** checks pasaron. Dos consecuencias re-medidas para quien abra FASE-C: la paridad con
-`origin/master` era **`0/2`** al cerrarlo y es **`0/3`** tras su propio barrido de citas (`612efd0`, el
-mismo día: `eecf246`, ajeno, sigue por delante y sin empujar) — **cada commit documental suma uno, así que
-la cifra se re-mide y no se copia**— y el **push no está autorizado**; y el propio commit movió el denominador que la fase había publicado — **678 → 691** `.py`
+`origin/master` era **`0/2`** al cerrarlo, **`0/3`** tras su propio barrido de citas (`612efd0`) y
+**`0/5`** tras el micro-barrido (`cf64faf`) — cada commit documental suma uno, así que la cifra se re-mide
+y no se copia—; y **el push se hizo el 2026-09-22 con instrucción literal del operador**, que publicó
+`74d8ff5..b764e8d` —los cinco commits, incluido el ajeno `eecf246` que era su ancestro obligado— y dejó
+paridad **`0/0`** medida tras `git fetch`; y el propio commit movió el denominador que la fase había publicado — **678 → 691** `.py`
 rastreados —, con lo que la resta de AC6 quedó rectificada con su nota y su residuo de un archivo
 (`.venv-wsl/bin/activate_this.py`, exclusión no declarada) registrado como **S11** con su lección
 **L-VCF-11**. Y el re-muestreo que hizo falta para medir esa rectificación **pisó la evidencia cerrada de
