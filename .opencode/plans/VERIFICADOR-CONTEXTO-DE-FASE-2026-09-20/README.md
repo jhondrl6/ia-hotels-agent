@@ -156,8 +156,9 @@ C no lo asuma. **Con una excepción deliberada, añadida el 2026-09-22 tras tres
 a sí mismos: la fila de HEAD y paridad ya no publica cifra, publica solo el comando.** El motivo es
 medición A6 aplicada al dato más inestable del repo — cada commit documental mueve el HEAD y suma uno a
 la paridad, así que cualquier cifra que escriba esta tabla nace refutada por el commit que la lleva
-dentro. Lo que la tabla sí sostiene son los **hechos no numéricos** (FASE-B commiteada, push sin
-autorizar, `eecf246` ajeno por delante, qué ruta queda fuera y cómo se trata):
+dentro. Lo que la tabla sí sostiene son los **hechos no numéricos** (FASE-B commiteada y empujada, su
+barrido documental y su push con instrucción literal del 2026-09-22, `eecf246` ajeno publicado con ella,
+qué ruta queda fuera del commit y cómo se trata):
 
 | Qué re-medir al abrir FASE-C | Antecedente medido al cerrar B — **no es un valor para copiar**: la columna de la derecha manda el comando | Comando |
 |---|---|---|
