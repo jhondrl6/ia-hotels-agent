@@ -150,8 +150,8 @@ B no lo asuma:
 
 | Qué re-medir al abrir FASE-B | Valor del 2026-09-21 (cierre de FASE-A) | Comando |
 |---|---|---|
-| HEAD y limpieza | `2deddee` al abrir FASE-A; al cerrarla quedo **`a7564ae`** con su arbol de trabajo despejado (solo dos rutas ajenas sin commitear) | `git rev-parse --short HEAD`, `git status --porcelain` |
-| Paridad con el remoto | `0/0` con `origin/master` | `git ls-remote origin refs/heads/master` |
+| HEAD y limpieza | `2deddee` al abrir FASE-A; FASE-A dejó **dos commits** (`a7564ae` de cierre + `e3c4573` de barrido de sus propias citas) y al empujar **ambos están empujados**: HEAD `e3c4573` con su árbol de trabajo despejado (solo dos rutas ajenas sin commitear) | `git rev-parse --short HEAD`, `git status --porcelain` |
+| Paridad con el remoto | `0/2` al commitear FASE-A → **`0/0`** tras el push del 2026-09-21 (`2deddee..e3c4573`), con instrucción literal del operador y escaneo L3 ofrecido y saltado | `git rev-list --left-right --count origin/master...HEAD`, `git ls-remote origin refs/heads/master` |
 | Checks del `--quick` | **11** (composición intacta, AC16) | `grep -c 'print(f?"\[[0-9]*/11\]' scripts/run_all_validations.py` |
 | Pasos del hook | **7** | `grep -cE '^#   \[[0-9]+/[0-9]+\]' scripts/git_hooks/pre-commit` |
 | Etiquetas emparejadas | `validate_plan_citations` 9/11 · `validate_lesson_capitalization` 10/11 · `validate_qmind_writeback` **15/15** (full) | ver `faseA_baseline_pre.txt` unidad 1 |
