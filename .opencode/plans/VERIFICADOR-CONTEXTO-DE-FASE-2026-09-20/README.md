@@ -152,11 +152,16 @@ quedan intactas.
 FASE-C.** El prompt canónico vive en `05-prompt-inicio-sesion-fase-C.md` y **no se copia aquí**:
 copiarlo sería fabricar la segunda fuente estática que este plan existe para cazar (medición A6).
 Lo que sí se publica aquí es el estado re-medido al cerrar B, con su comando y su fecha, para que
-C no lo asuma:
+C no lo asuma. **Con una excepción deliberada, añadida el 2026-09-22 tras tres commits que se vencieron
+a sí mismos: la fila de HEAD y paridad ya no publica cifra, publica solo el comando.** El motivo es
+medición A6 aplicada al dato más inestable del repo — cada commit documental mueve el HEAD y suma uno a
+la paridad, así que cualquier cifra que escriba esta tabla nace refutada por el commit que la lleva
+dentro. Lo que la tabla sí sostiene son los **hechos no numéricos** (FASE-B commiteada, push sin
+autorizar, `eecf246` ajeno por delante, qué ruta queda fuera y cómo se trata):
 
-| Qué re-medir al abrir FASE-C | Valor del **2026-09-22** (commit de FASE-B) | Comando |
+| Qué re-medir al abrir FASE-C | Antecedente medido al cerrar B — **no es un valor para copiar**: la columna de la derecha manda el comando | Comando |
 |---|---|---|
-| HEAD y limpieza | **`612efd0`** (el barrido de citas que este propio commit venció) sobre `647f436` (FASE-B: 46 archivos, +4.412/−97) y sobre `eecf246`, un commit **ajeno** todavía sin empujar. Paridad **`0/3`** con `origin/master` medida el 2026-09-22 con el comando de la derecha — **cada commit documental suma uno: re-medir, no copiar esta cifra** — y el push **no** está autorizado. En `git status` queda **una** ruta ajena (`EVALUACION-JEV/dependencias-fases.md`, modificada), que no es de este plan y sobre la que no se hace `git checkout` | `git rev-parse --short HEAD`, `git status --porcelain`, `git rev-list --left-right --count origin/master...HEAD` |
+| HEAD y limpieza | **No se publica cifra de HEAD ni de paridad**: son el dato más inestable que este plan escribe y **cada commit documental las mueve** (antecedentes del 2026-09-22, ya refutados por el paso del tiempo: HEAD `612efd0`, paridad `0/3`). Lo que C sí necesita saber y no se deduce del comando: que **FASE-B está commiteada** (`647f436`) con su barrido documental encima, que **el push no está autorizado** y que `eecf246`, un commit **ajeno**, sigue sin empujar delante de todo eso. Y en `git status` queda **una** ruta ajena (`EVALUACION-JEV/dependencias-fases.md`, modificada), que no es de este plan y sobre la que **no** se hace `git checkout` | `git rev-parse --short HEAD`, `git status --porcelain`, `git rev-list --left-right --count origin/master...HEAD` |
 | Checks del `--quick` | **11** (delta 0, AC16) | `grep -cE '^\\s*print\\(f?"\\[[0-9]+/11\\]' scripts/run_all_validations.py` |
 | Pasos del hook | **7** (delta 0, AC16) | `grep -cE '^#   \\[[0-9]+/[0-9]+\\]' scripts/git_hooks/pre-commit` |
 | Funciones de test canónicas (método grep) | **4.378** (4.330 PRE + 48 de B); `AGENTS.md` sigue publicando 4.246 y su cifra está vencida por tráfico ajeno | `grep -rE '^\\s*def test_' tests --include=*.py \\| wc -l` |
