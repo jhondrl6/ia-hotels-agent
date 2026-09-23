@@ -124,8 +124,11 @@ en `tests/quality_gates/decision_client/test_decision_client_aislamiento_imports
 
 ## Lo que queda pendiente de autorización
 
-1. **Commit** de este árbol documental — y con él la decisión sobre las cabeceras versionadas que toca el
-   hook `version-sync`. **No se hizo commit en esta sesión.**
+1. **Commit** de este árbol documental — **VENCIDO por el commit `cea8259` de la misma sesión (2026-09-23)**:
+   87 archivos, +2.794/−88, con las 13 rutas del plan y la evidencia nueva. **Excluido** el trabajo ajeno
+   `EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md`, que sigue modificado sin trackear en el
+   stage (` M`). Las cabeceras versionadas no se movieron: `version-sync` reportó las siete reglas
+   `in sync`. **El push no está hecho ni autorizado** (`origin/master..HEAD` = **1**).
 2. **Push**, instrucción aparte.
 3. **FASE-C**: su ejecución pide mandato propio (esta sesión **preparó** su contrato y **no** lo ejecutó).
 4. Bloques **B** y **C** de la orden de calidad, cada uno con su autorización.

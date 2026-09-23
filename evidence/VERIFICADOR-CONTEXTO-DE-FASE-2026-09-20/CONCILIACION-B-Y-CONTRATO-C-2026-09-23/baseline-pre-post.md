@@ -118,8 +118,16 @@ dentro del `--quick`; no significa que el verde del quick lo implique. **El hook
 ejecutó**:
 `scripts/git_hooks/pre-commit` tiene `set -e`, su `[3/7]` corre con `--fix` (auto-arregla) y su `[6/7]`
 regenera el índice — ejecutarlo habría escrito en el árbol y requeriría staged files, que esta sesión no
-produce (commit no autorizado). Lo que se afirma es lo que puede afirmarse sin eso: los siete payload en
-modo lectura dan verde y el conteo de pasos no se movió.
+produce (commit no autorizado en ese momento). Lo que se afirma es lo que puede afirmarse sin eso: los
+siete payload en modo lectura dan verde y el conteo de pasos no se movió.
+
+**⟦Rectificada por el cierre de la misma sesión⟧ El hook SÍ llegó a ejecutarse como gate**: al commitear
+(`cea8259`) corrió sus siete pasos y los siete dieron OK — `[1/7]` versión sincronizada, `[2/7]` las siete
+reglas de sync `in sync`, `[3/7]` referencias `PASS`, `[4/7]` citas `PASS`, `[5/7]` cierre `PASS`, `[6/7]`
+índice fresco con **332 IDs**, `[7/7]` capitalización `OK` → «All checks PASSED - Commit allowed». Con eso
+queda observada la precondición que arriba se declaraba no ejecutable: el gate no encontró filas pendientes
+en los planes que esta sesión reescribió, y **no** escribió en el árbol (`git status` después del commit
+solo muestra la ruta ajena de JEV).
 
 ## Lo que esta par NO afirma
 

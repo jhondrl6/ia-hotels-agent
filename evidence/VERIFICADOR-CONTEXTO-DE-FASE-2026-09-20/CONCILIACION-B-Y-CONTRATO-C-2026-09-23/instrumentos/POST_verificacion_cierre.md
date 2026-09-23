@@ -201,8 +201,10 @@ Estas son las cifras que valen; las de `FINAL2_*` y `SEGUNDA_*` quedan como cons
 - Que el bloque A de la orden esté cerrado **contractualmente por completo**: lo que se cerró es su
   pendiente con CONTEXTO (S11/S12, README, AC9). Su bloque **B** (proceso común, fecha de `REGISTRY.md`)
   y su bloque **C** (los otros tres planes) siguen **sin autorización y sin aplicar**.
-- Que no quede nada por commitear: **no se hizo commit**, y el árbol documental de esta sesión está sin
-  registrar. El commit y el push piden instrucción literal del operador.
+- ~~Que no quede nada por commitear~~ — **vencido por el propio cierre de esta sesión**: el commit
+  `cea8259` registró las 13 rutas del plan y la evidencia (87 archivos, +2.794/−88), con el par del índice
+  en el mismo commit (R2.10) y el trabajo ajeno de JEV excluido del stage. **Lo que sigue pendiente: el
+  push** (`origin/master..HEAD` = 1), que pide instrucción literal aparte.
 - ~~Que los mutantes se hayan re-evidenciado **uno por uno**~~ — **cerrado en la segunda pasada**: los dos
   arneses corrieron con `-v` y cada mutante aparece por su id (`MUT_governance_numbers_por_asercion.txt`,
   7 passed; `MUT_decision_client_guards.txt`, 13 passed). Lo que sigue sin afirmarse: que esta sesión haya
