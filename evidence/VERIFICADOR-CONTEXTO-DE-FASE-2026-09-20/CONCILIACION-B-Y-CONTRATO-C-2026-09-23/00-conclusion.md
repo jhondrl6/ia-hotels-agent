@@ -128,8 +128,11 @@ en `tests/quality_gates/decision_client/test_decision_client_aislamiento_imports
    87 archivos, +2.794/−88, con las 13 rutas del plan y la evidencia nueva. **Excluido** el trabajo ajeno
    `EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md`, que sigue modificado sin trackear en el
    stage (` M`). Las cabeceras versionadas no se movieron: `version-sync` reportó las siete reglas
-   `in sync`. **El push no está hecho ni autorizado** (`origin/master..HEAD` = **1**).
-2. **Push**, instrucción aparte.
+   `in sync`. **Y empujado**: `d576368` (esta conciliación + su higiene) es ancestro de `origin/master`; la
+   paridad se verificó por identidad de objeto contra el remoto (`git ls-remote origin refs/heads/master`,
+   `ahead 0` / `behind 0` al comprobarla), no por el mensaje del push ni por el título del ref.
+2. **Push** — **hecho** en esta sesión por instrucción literal (`fdd397f..d576368`, y esta misma higiene
+   detrás de esa misma verificación). No queda push pendiente de este trabajo.
 3. **FASE-C**: su ejecución pide mandato propio (esta sesión **preparó** su contrato y **no** lo ejecutó).
 4. Bloques **B** y **C** de la orden de calidad, cada uno con su autorización.
 
